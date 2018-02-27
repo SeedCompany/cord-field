@@ -1,5 +1,6 @@
 // These are important and needed before anything else
 import 'zone.js/dist/zone-node';
+// tslint:disable-next-line:ordered-imports
 import 'reflect-metadata';
 
 import { enableProdMode } from '@angular/core';
@@ -22,7 +23,7 @@ const {AppServerModuleNgFactory, LAZY_MODULE_MAP} = require('./dist/server/main.
 app.engine('html', ngExpressEngine({
   bootstrap: AppServerModuleNgFactory,
   providers: [
-    provideModuleMap(LAZY_MODULE_MAP)
+    provideModuleMap(LAZY_MODULE_MAP),
   ],
 }));
 app.set('view engine', 'html');
