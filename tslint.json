@@ -3,6 +3,10 @@
     "node_modules/codelyzer"
   ],
   "rules": {
+    "array-type": [
+      true,
+      "array-simple"
+    ],
     "arrow-return-shorthand": true,
     "callable-types": true,
     "class-name": true,
@@ -24,7 +28,8 @@
     "import-spacing": true,
     "indent": [
       true,
-      "spaces"
+      "spaces",
+      2
     ],
     "interface-over-type-literal": true,
     "label-position": true,
@@ -44,6 +49,7 @@
         ]
       }
     ],
+    "no-angle-bracket-type-assertion": true,
     "no-arg": true,
     "no-bitwise": true,
     "no-console": [
@@ -56,6 +62,8 @@
     ],
     "no-construct": true,
     "no-debugger": true,
+    "no-default-export": true,
+    "no-duplicate-imports": true,
     "no-duplicate-super": true,
     "no-empty": false,
     "no-empty-interface": true,
@@ -83,15 +91,34 @@
       "check-else",
       "check-whitespace"
     ],
+    "ordered-imports": [
+      true,
+      {
+        "group-imports": true
+      }
+    ],
     "prefer-const": true,
+    "prefer-object-spread": true,
     "quotemark": [
       true,
-      "single"
+      "single",
+      "avoid-escape"
     ],
     "radix": true,
     "semicolon": [
       true,
-      "always"
+      "always",
+      "ignore-bound-class-methods"
+    ],
+    "trailing-comma": [
+      true,
+      {
+        "multiline": {
+          "objects": "always",
+          "arrays": "always"
+        },
+        "singleline": "never"
+      }
     ],
     "triple-equals": [
       true,
@@ -105,6 +132,13 @@
         "parameter": "nospace",
         "property-declaration": "nospace",
         "variable-declaration": "nospace"
+      },
+      {
+        "call-signature": "onespace",
+        "index-signature": "onespace",
+        "parameter": "onespace",
+        "property-declaration": "onespace",
+        "variable-declaration": "onespace"
       }
     ],
     "unified-signatures": true,
@@ -113,31 +147,55 @@
       true,
       "check-branch",
       "check-decl",
+      "check-module",
       "check-operator",
+      "check-rest-spread",
       "check-separator",
       "check-type"
     ],
-    "directive-selector": [
+    "angular-whitespace": [
       true,
-      "attribute",
-      "app",
-      "camelCase"
+      "check-interpolation",
+      "check-pipe",
+      "check-semicolon"
     ],
+    "banana-in-box": true,
+    "component-class-suffix": true,
     "component-selector": [
       true,
       "element",
-      "app",
+      [],
       "kebab-case"
     ],
+    "contextual-life-cycle": true,
+    "decorator-not-allowed": true,
+    "directive-class-suffix": true,
+    "directive-selector": [
+      true,
+      "attribute",
+      [],
+      "camelCase"
+    ],
+    "pipe-impure": true,
+    "no-attribute-parameter-decorator": true,
+    "no-forward-ref": true,
+    "no-input-rename": true,
+    "no-output-named-after-standard-event": true,
     "no-output-on-prefix": true,
+    "no-output-rename": true,
+    "no-unused-css": true,
+    "pipe-naming": [
+      true,
+      "camelCase"
+    ],
+    "templates-no-negated-async": true,
+    "trackBy-function": true,
+    "use-host-property-decorator": true,
+    "use-life-cycle-interface": true,
     "use-input-property-decorator": true,
     "use-output-property-decorator": true,
-    "use-host-property-decorator": true,
-    "no-input-rename": true,
-    "no-output-rename": true,
-    "use-life-cycle-interface": true,
+    "use-pipe-decorator": true,
     "use-pipe-transform-interface": true,
-    "component-class-suffix": true,
-    "directive-class-suffix": true
+    "use-view-encapsulation": true
   }
 }
