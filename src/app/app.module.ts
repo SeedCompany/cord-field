@@ -3,6 +3,7 @@ import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { TransferHttpCacheModule } from '@nguniversal/common';
+import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { CoreModule } from './core/core.module';
 import { MaterialModule } from './material.module';
@@ -16,6 +17,7 @@ import { MaterialModule } from './material.module';
     BrowserModule.withServerTransition({appId: 'cord-field'}),
     BrowserAnimationsModule,
     TransferHttpCacheModule,
+    AppRoutingModule,
     MaterialModule,
     CoreModule,
   ],
