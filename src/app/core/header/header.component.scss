@@ -1,0 +1,25 @@
+@import "~styles/imports";
+
+.nav-toolbar {
+  display: flex;
+}
+
+.toolbar-icon {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  margin-right: 1em;
+}
+
+.nav-spacer {
+  flex: 1 1 auto;
+}
+
+.profile-menu-button {
+  // reduce button padding because arrow has padding built in
+  padding-right: 8px;
+}
+
+.profile-menu-arrow-down {
+  vertical-align: middle;
+}

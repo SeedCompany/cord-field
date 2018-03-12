@@ -5,3 +5,17 @@
 
 @include mat-core();
 @include angular-material-theme($app-theme);
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  -webkit-font-smoothing: antialiased;
+  -ms-overflow-style: none;
+  overflow: auto;
+}
+
+body {
+  margin: 0;
+}
