@@ -1,0 +1,10 @@
+@import "~styles/imports";
+
+:host {
+  display: flex;
+  align-items: center;
+}
+
+.hidden {
+  visibility: hidden;
+}
