@@ -4,6 +4,7 @@ import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { TransferHttpCacheModule } from '@nguniversal/common';
 import { AppComponent } from './app.component';
+import { CoreModule } from './core/core.module';
 import { MaterialModule } from './material.module';
 
 @NgModule({
@@ -16,6 +17,7 @@ import { MaterialModule } from './material.module';
     BrowserAnimationsModule,
     TransferHttpCacheModule,
     MaterialModule,
+    CoreModule,
   ],
   providers: [],
   bootstrap: [AppComponent],
