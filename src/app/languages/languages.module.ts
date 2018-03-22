@@ -1,10 +1,10 @@
-import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
+import { SharedModule } from '../shared/shared.module';
 import { LanguagesRoutingModule } from './languages-routing.module';
 
 @NgModule({
   imports: [
-    CommonModule,
+    SharedModule,
     LanguagesRoutingModule,
   ],
   declarations: [],

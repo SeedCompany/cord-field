@@ -1,8 +1,7 @@
-import { CommonModule } from '@angular/common';
 import { NgModule, Optional, SkipSelf } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
-import { MaterialModule } from '../material.module';
+import { SharedModule } from '../shared/shared.module';
 import { AutofocusDirective } from './directives/autofocus.directive';
 import { HeaderSearchComponent } from './header-search/header-search.component';
 import { HeaderComponent } from './header/header.component';
@@ -11,9 +10,8 @@ import { WelcomeComponent } from './welcome/welcome.component';
 
 @NgModule({
   imports: [
-    CommonModule,
+    SharedModule,
     RouterModule,
-    MaterialModule,
     FormsModule,
   ],
   exports: [
