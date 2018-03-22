@@ -1,0 +1,24 @@
+version: '2'
+services:
+
+  ilb-profile-db:
+    image: mongo
+
+  ilb-profile-service:
+    image: 103805181946.dkr.ecr.us-west-2.amazonaws.com/client/tsco-ilb-profile:latest
+    links:
+      - ilb-profile-db
+    environment:
+      MONGO_DB_ADDRESS: ilb-profile-db
+      MONGO_DB_PORT: 27017
+      NODE_ENV: docker
+      ECHO_ENABLED: "true"
+      BOOTSTRAP: "qa"
+      TRACE_REQ: "true"
+
+  test-service:
+    image: cord-field:tests
+    volumes:
+      - ../testResults:/opt/portal/testResults
+    links:
+      - ilb-profile-service

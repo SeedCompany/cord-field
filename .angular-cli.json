@@ -24,7 +24,9 @@
       "scripts": [],
       "environmentSource": "environments/environment.ts",
       "environments": {
-        "dev": "environments/environment.ts",
+        "bamboo": "environments/environment.bamboo.ts",
+        "dev": "environments/environment.dev.ts",
+        "local": "environments/environment.ts",
         "prod": "environments/environment.prod.ts"
       }
     },
@@ -48,7 +50,9 @@
       "scripts": [],
       "environmentSource": "environments/environment.ts",
       "environments": {
-        "dev": "environments/environment.ts",
+        "bamboo": "environments/environment.bamboo.ts",
+        "dev": "environments/environment.dev.ts",
+        "local": "environments/environment.ts",
         "prod": "environments/environment.prod.ts"
       }
     }
