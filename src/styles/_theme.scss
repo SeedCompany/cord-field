@@ -61,4 +61,6 @@ $seed-gray-palette: (
   '200-contrast': $dark-primary-text,
 );
 
-$app-theme: mat-light-theme($seed-gray-palette, $underbelly-green-palette);
+$primary: $seed-gray-palette;
+$accent: $underbelly-green-palette;
+$theme: mat-light-theme($primary, $accent);

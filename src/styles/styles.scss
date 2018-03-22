@@ -4,7 +4,7 @@
 @import "imports";
 
 @include mat-core();
-@include angular-material-theme($app-theme);
+@include angular-material-theme($theme);
 
 * {
   box-sizing: border-box;
