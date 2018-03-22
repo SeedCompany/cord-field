@@ -1,0 +1,12 @@
+<?xml version="1.0"?>
+<testsuite name="HeadlessChrome 0.0.0 (Linux 0.0.0)" package="" timestamp="2018-03-22T21:43:29" id="0" hostname="d01c859e1e9d" tests="1" errors="0" failures="0" time="0.094">
+  <properties>
+    <property name="browser.fullName" value="Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome Safari/537.36"/>
+  </properties>
+  <testcase name="BaseApiService injects base url" time="0.094" classname="HeadlessChrome_0_0_0_(Linux_0_0_0).BaseApiService"/>
+  <system-out>
+    <![CDATA[
+]]>
+  </system-out>
+  <system-err/>
+</testsuite>
