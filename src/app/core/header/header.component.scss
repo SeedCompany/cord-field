@@ -27,3 +27,7 @@
 .profile-menu-arrow-down {
   vertical-align: middle;
 }
+
+a.active {
+  color: mat-color($accent);
+}
