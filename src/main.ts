@@ -9,10 +9,10 @@ const bootstrap = () => platformBrowserDynamic().bootstrapModule(AppModule);
 
 if (environment.production) {
   enableProdMode();
-  document.addEventListener('DOMContentLoaded', bootstrap);
-} else if (module['hot']) {
+}
+
+if (module['hot']) {
   hmrBootstrap(module, bootstrap);
 } else {
-  console.error('HMR is not enabled for webpack-dev-server!');
-  console.log('Are you using the --hmr flag for ng serve?');
+  document.addEventListener('DOMContentLoaded', bootstrap);
 }
