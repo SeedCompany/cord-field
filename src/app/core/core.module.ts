@@ -2,7 +2,6 @@ import { NgModule, Optional, SkipSelf } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
 import { SharedModule } from '../shared/shared.module';
-import { AutofocusDirective } from './directives/autofocus.directive';
 import { HeaderSearchComponent } from './header-search/header-search.component';
 import { HeaderComponent } from './header/header.component';
 import { NotFoundPageComponent } from './not-found-page/not-found-page.component';
@@ -18,7 +17,6 @@ import { WelcomeComponent } from './welcome/welcome.component';
     HeaderComponent,
   ],
   declarations: [
-    AutofocusDirective,
     WelcomeComponent,
     NotFoundPageComponent,
     HeaderComponent,
