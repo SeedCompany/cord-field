@@ -5,6 +5,7 @@ import { SharedModule } from '../shared/shared.module';
 import { HeaderSearchComponent } from './header-search/header-search.component';
 import { HeaderComponent } from './header/header.component';
 import { NotFoundPageComponent } from './not-found-page/not-found-page.component';
+import { LoggerService } from './services/logger.service';
 import { WelcomeComponent } from './welcome/welcome.component';
 
 @NgModule({
@@ -21,6 +22,9 @@ import { WelcomeComponent } from './welcome/welcome.component';
     NotFoundPageComponent,
     HeaderComponent,
     HeaderSearchComponent,
+  ],
+  providers: [
+    LoggerService,
   ],
 })
 export class CoreModule {

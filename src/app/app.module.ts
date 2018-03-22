@@ -8,9 +8,8 @@ import { AppComponent } from './app.component';
 import { CoreModule } from './core/core.module';
 
 @NgModule({
-  declarations: [
-    AppComponent,
-  ],
+  bootstrap: [AppComponent],
+  declarations: [AppComponent],
   imports: [
     BrowserModule.withServerTransition({appId: 'cord-field'}),
     BrowserAnimationsModule,
@@ -19,8 +18,6 @@ import { CoreModule } from './core/core.module';
     CoreModule,
     AppRoutingModule,
   ],
-  providers: [],
-  bootstrap: [AppComponent],
 })
 export class AppModule {
 }
