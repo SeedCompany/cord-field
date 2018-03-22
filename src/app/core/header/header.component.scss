@@ -1,5 +1,9 @@
 @import "~styles/imports";
 
+:host {
+  @extend %component-defaults;
+}
+
 .nav-toolbar {
   display: flex;
 }

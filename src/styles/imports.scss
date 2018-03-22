@@ -3,3 +3,8 @@
 
 @import "theme";
 @import "variables";
+
+%component-defaults {
+  display: flex;
+  flex-direction: column;
+}

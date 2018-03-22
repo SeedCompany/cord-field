@@ -1,7 +1,8 @@
 @import "~styles/imports";
 
 :host {
-  display: flex;
+  @extend %component-defaults;
+  flex-direction: row;
   align-items: center;
 }
 
