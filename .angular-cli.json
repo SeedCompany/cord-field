@@ -27,7 +27,9 @@
         "bamboo": "environments/environment.bamboo.ts",
         "dev": "environments/environment.dev.ts",
         "local": "environments/environment.ts",
-        "prod": "environments/environment.prod.ts"
+        "prod": "environments/environment.prod.ts",
+        "sqa": "environments/environment.sqa.ts",
+        "uat": "environments/environment.uat.ts"
       }
     },
     {
@@ -53,7 +55,9 @@
         "bamboo": "environments/environment.bamboo.ts",
         "dev": "environments/environment.dev.ts",
         "local": "environments/environment.ts",
-        "prod": "environments/environment.prod.ts"
+        "prod": "environments/environment.prod.ts",
+        "sqa": "environments/environment.sqa.ts",
+        "uat": "environments/environment.uat.ts"
       }
     }
   ],
