@@ -1,0 +1,20 @@
+<mat-toolbar>
+  Project Red
+</mat-toolbar>
+
+<mat-tab-group color="accent" [selectedIndex]="" (selectedIndexChange)="onTabChange($event)">
+  <mat-tab *ngFor="let tab of tabs; trackBy: trackTabsBy" [label]="tab.label">
+    {{ tab.label }}
+  </mat-tab>
+</mat-tab-group>
+
+<nav mat-tab-nav-bar color="accent">
+  <a mat-tab-link
+     *ngFor="let tab of tabs; trackBy: trackTabsBy"
+     [routerLink]="'/projects/' + id + '/' + tab.path"
+     routerLinkActive #rla="routerLinkActive"
+     [active]="rla.isActive"
+  >{{ tab.label }}</a>
+</nav>
+
+<router-outlet></router-outlet>

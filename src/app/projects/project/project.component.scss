@@ -1,0 +1,13 @@
+@import "~styles/imports";
+
+:host {
+  @extend %component-defaults;
+}
+
+mat-toolbar {
+  padding-left: 3.6em;
+}
+
+.mat-tab-nav-bar {
+  background-color: mat-background($theme, app-bar);
+}

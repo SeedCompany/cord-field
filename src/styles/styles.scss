@@ -37,3 +37,8 @@ body {
     margin-top: 6px !important;
   }
 }
+
+// Change tab active text color to stand out more (matches focus)
+.mat-tab-link.mat-tab-label-active {
+  opacity: 1;
+}
