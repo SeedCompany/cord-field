@@ -2,9 +2,9 @@ version: '2'
 services:
 
   local-test-service: # prefixed with "local-" to skip trying to pull image
-    image: ilb-portal:tests
+    image: cord-field:tests
     volumes:
-      - ../testResults:/opt/portal/testResults
+      - ../testResults:/opt/build/testResults
     links:
       - ilb-profile-service
 

@@ -3,8 +3,8 @@ FROM node:slim
 ENV CHROME_BIN /usr/bin/chromium
 
 RUN set -ex; \
-    mkdir -p /opt/portal; \
-    mkdir -p /opt/portal/testResults; \
+    mkdir -p /opt/build; \
+    mkdir -p /opt/build/testResults; \
     mkdir -p /var/log/nginx/log/; \
     \
     apt-get update && \
@@ -16,7 +16,7 @@ RUN set -ex; \
     curl \
     && rm -rf /var/lib/apt/lists/*
 
-WORKDIR /opt/portal
+WORKDIR /opt/build
 
 COPY package.json .
 COPY yarn.lock .
@@ -28,7 +28,7 @@ COPY . .
 COPY docker/docker-entrypoint-tests.sh /usr/local/bin/
 RUN chmod +x /usr/local/bin/docker-entrypoint-tests.sh
 
-VOLUME [/opt/portal/testResults]
+VOLUME [/opt/build/testResults]
 
 ENTRYPOINT ["docker-entrypoint-tests.sh"]
 CMD yarn ng test --watch=false --browsers=docker --config karma.bamboo.conf.js --sourcemap --progress=false
