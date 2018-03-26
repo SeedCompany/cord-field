@@ -11,7 +11,7 @@
     "docker:build:tests": "docker build -f Dockerfile.test.dokr -t cord-field:tests .",
     "docker:verify": "scripts/docker:verify.sh",
     "e2e": "ng e2e",
-    "lint": "ng lint",
+    "lint": "ng lint --format stylish",
     "ng": "ng",
     "serve:ssr": "node dist/server",
     "start": "scripts/with-local-services.sh ng serve --environment local",
