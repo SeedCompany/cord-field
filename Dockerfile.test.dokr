@@ -5,7 +5,6 @@ ENV CHROME_BIN /usr/bin/chromium
 RUN set -ex; \
     mkdir -p /opt/build; \
     mkdir -p /opt/build/testResults; \
-    mkdir -p /var/log/nginx/log/; \
     \
     apt-get update && \
     DEBIAN_FRONTEND="noninteractive" \
