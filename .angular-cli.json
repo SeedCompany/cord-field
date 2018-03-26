@@ -90,6 +90,9 @@
     "styleExt": "scss",
     "component": {
       "spec": false
+    },
+    "serve": {
+      "host": "0.0.0.0"
     }
   },
   "warnings": {
