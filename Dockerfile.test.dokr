@@ -1,0 +1,39 @@
+FROM node:slim
+
+ENV CHROME_BIN /usr/bin/chromium
+
+RUN set -ex; \
+    mkdir -p /opt/portal; \
+    mkdir -p /opt/portal/testResults; \
+    mkdir -p /var/log/nginx/log/; \
+    \
+    apt-get update && \
+    DEBIAN_FRONTEND="noninteractive" \
+    apt-get install -y --no-install-recommends \
+    chromium \
+    libgconf-2-4 \
+    openjdk-7-jre-headless \
+    curl \
+    && rm -rf /var/lib/apt/lists/*
+
+WORKDIR /opt/portal
+
+COPY package.json .
+COPY yarn.lock .
+
+RUN set -ex; \
+    yarn global add install node-gyp ; \
+    yarn install; \
+    yarn global add @angular/cli; \
+    yarn global remove node-gyp;
+
+COPY . .
+
+COPY docker/docker-entrypoint-tests.sh /usr/local/bin/
+RUN chmod +x /usr/local/bin/docker-entrypoint-tests.sh
+
+VOLUME [/opt/portal/testResults]
+
+ENTRYPOINT ["docker-entrypoint-tests.sh"]
+CMD ["echo", "Done Testing Illuminations.bible Portal"]
+

@@ -1,0 +1,34 @@
+# Developer Note:
+# These files are for the CI/CD system. The passwords used here are for testing purposes only and should only
+# be used on systems that are not publicly accessible (i.e., behind an ACL of some sort). Each of these
+# `ecs-*-compose.yml` files represents one of the deployment environments for the Bamboo CI/CD system.
+
+version: '2'
+
+services:
+  portal:
+    image: 103805181946.dkr.ecr.us-west-2.amazonaws.com/client/cord-field:${BAMBOO_BRANCH_TAG}
+    ports:
+      - "80"
+    env_file: .env
+    environment:
+      NG_BUILD_TARGET: uat
+      SERVICE_80_NAME: client-tsco-cord-field-uat
+    mem_limit: 256000000
+
+  ilb-profile-service:
+    image: 103805181946.dkr.ecr.us-west-2.amazonaws.com/client/tsco-ilb-profile:latest
+    ports:
+      - "8001"
+    links:
+      - ilb-profile-db
+    environment:
+      MONGO_DB_ADDRESS: ilb-profile-db
+      MONGO_DB_PORT: 27017
+      NODE_ENV: uat
+      SERVICE_8001_NAME: client-tsco-illumination-profile-uat
+    mem_limit: 256000000
+
+  ilb-profile-db:
+    image: mongo
+    mem_limit: 256000000

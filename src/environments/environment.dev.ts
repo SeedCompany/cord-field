@@ -15,6 +15,6 @@ export const environment = {
     ]
   },
   services: {
-    'profile.illuminations.bible': 'http://localhost:8001/api'
+    'profile.illuminations.bible': 'https://ilb-dev-profile.ci.olivetech.com/api',
   }
 };

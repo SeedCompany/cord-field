@@ -1,0 +1,23 @@
+# Used for all local npm scripts/commands that require the full stack
+
+version: '2'
+services:
+
+  ilb-profile-service:
+    image: 103805181946.dkr.ecr.us-west-2.amazonaws.com/client/tsco-ilb-profile:latest
+    ports:
+      - 8001:8001
+    links:
+      - ilb-profile-db
+    environment:
+      MONGO_DB_ADDRESS: ilb-profile-db
+      MONGO_DB_PORT: 27017
+      NODE_ENV: docker
+      ECHO_ENABLED: "true"
+      BOOTSTRAP: "qa"
+      TRACE_REQ: "true"
+
+  ilb-profile-db:
+    image: mongo
+    ports:
+      - 37001:27017
