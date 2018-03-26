@@ -5,11 +5,11 @@ export const environment = {
     apiCalls: '*',
     noBody: [
       '/api/auth/native/login',
-      '/api/sisense/sql'
-    ]
+      '/api/sisense/sql',
+    ],
   },
   services: {
-    'profile.illuminations.bible': 'http://ilb-profile-service:8001/api'
+    'profile.illuminations.bible': 'http://ilb-profile-service:8001/api',
   },
   trace: 'bamboo environment',
 };
