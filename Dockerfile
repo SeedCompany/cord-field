@@ -16,9 +16,6 @@ WORKDIR /usr/share/nginx/html
 
 COPY ./docker/nginx.conf /etc/nginx
 
-RUN set -ex; \
-    yarn global add @angular/cli;
-
 COPY package.json /opt/build
 COPY yarn.lock /opt/build
 
@@ -34,7 +31,7 @@ COPY . /opt/build
 RUN set -ex; \
     cd /opt/build; \
     echo ${GIT_HASH:-"unknown"} > src/git.txt; \
-    ng build --environment $NG_BUILD_TARGET --progress=false; \
+    yarn ng build --environment $NG_BUILD_TARGET --progress=false; \
     cp -R ./dist/* /usr/share/nginx/html; \
     cd /usr/share/nginx/html; \
     rm -rf /opt/build; \

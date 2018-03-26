@@ -1,8 +1,12 @@
 version: '2'
 services:
 
-  ilb-profile-db:
-    image: mongo
+  local-test-service: # prefixed with "local-" to skip trying to pull image
+    image: ilb-portal:tests
+    volumes:
+      - ../testResults:/opt/portal/testResults
+    links:
+      - ilb-profile-service
 
   ilb-profile-service:
     image: 103805181946.dkr.ecr.us-west-2.amazonaws.com/client/tsco-ilb-profile:latest
@@ -16,9 +20,5 @@ services:
       BOOTSTRAP: "qa"
       TRACE_REQ: "true"
 
-  test-service:
-    image: cord-field:tests
-    volumes:
-      - ../testResults:/opt/portal/testResults
-    links:
-      - ilb-profile-service
+  ilb-profile-db:
+    image: mongo
