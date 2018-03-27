@@ -12,7 +12,7 @@ type HttpHeaders = HttpHeadersObject | { [header: string]: string | string[] };
 type HttpParams = HttpParamsObject | { [param: string]: string | string[] };
 type ResponseType = 'arraybuffer' | 'blob' | 'json' | 'text';
 
-export interface IHttpClientOptionsRequest extends IHttpClientOptions {
+export interface IOptionsWithBody extends IHttpClientOptions {
   body?: any;
 }
 
@@ -97,16 +97,7 @@ export abstract class BaseApiService {
     responseType: 'text',
     withCredentials?: boolean,
   }): Observable<HttpEvent<string>>;
-  request(method: string, url: string, options: {
-    body?: any,
-    headers?: HttpHeaders,
-    observe: 'events',
-    params?: HttpParams,
-    reportProgress?: boolean,
-    responseType?: 'json',
-    withCredentials?: boolean,
-  }): Observable<HttpEvent<any>>;
-  request<R>(method: string, url: string, options: {
+  request<R = any>(method: string, url: string, options: {
     body?: any,
     headers?: HttpHeaders,
     reportProgress?: boolean,
@@ -142,16 +133,7 @@ export abstract class BaseApiService {
     responseType: 'text',
     withCredentials?: boolean,
   }): Observable<HttpResponse<string>>;
-  request(method: string, url: string, options: {
-    body?: any,
-    headers?: HttpHeaders,
-    observe: 'response',
-    params?: HttpParams,
-    reportProgress?: boolean,
-    responseType?: 'json',
-    withCredentials?: boolean,
-  }): Observable<HttpResponse<Object>>;
-  request<R>(method: string, url: string, options: {
+  request<R = Object>(method: string, url: string, options: {
     body?: any,
     headers?: HttpHeaders,
     observe: 'response',
@@ -160,16 +142,7 @@ export abstract class BaseApiService {
     responseType?: 'json',
     withCredentials?: boolean,
   }): Observable<HttpResponse<R>>;
-  request(method: string, url: string, options?: {
-    body?: any,
-    headers?: HttpHeaders,
-    observe?: 'body',
-    params?: HttpParams,
-    reportProgress?: boolean,
-    responseType?: 'json',
-    withCredentials?: boolean,
-  }): Observable<Object>;
-  request<R>(method: string, url: string, options?: {
+  request<R = Object>(method: string, url: string, options?: {
     body?: any,
     headers?: HttpHeaders,
     observe?: 'body',
@@ -178,16 +151,7 @@ export abstract class BaseApiService {
     responseType?: 'json',
     withCredentials?: boolean,
   }): Observable<R>;
-  request(method: string, url: string, options?: {
-    body?: any,
-    headers?: HttpHeaders,
-    params?: HttpParams,
-    observe?: HttpObserve,
-    reportProgress?: boolean,
-    responseType?: ResponseType,
-    withCredentials?: boolean,
-  }): Observable<any>;
-  request(method: string, url?: string, options: IHttpClientOptionsRequest = {}): Observable<any> {
+  request(method: string, url: string, options?: IOptionsWithBody): Observable<any> {
     const path = this.url(url);
 
     if (this.debugApiCallLogger) {
@@ -245,15 +209,7 @@ export abstract class BaseApiService {
     responseType: 'text',
     withCredentials?: boolean,
   }): Observable<HttpEvent<string>>;
-  delete(url: string, options: {
-    headers?: HttpHeaders,
-    observe: 'events',
-    params?: HttpParams,
-    reportProgress?: boolean,
-    responseType?: 'json',
-    withCredentials?: boolean,
-  }): Observable<HttpEvent<Object>>;
-  delete<T>(url: string, options: {
+  delete<T = Object>(url: string, options: {
     headers?: HttpHeaders,
     observe: 'events',
     params?: HttpParams,
@@ -285,15 +241,7 @@ export abstract class BaseApiService {
     responseType: 'text',
     withCredentials?: boolean,
   }): Observable<HttpResponse<string>>;
-  delete(url: string, options: {
-    headers?: HttpHeaders,
-    observe: 'response',
-    params?: HttpParams,
-    reportProgress?: boolean,
-    responseType?: 'json',
-    withCredentials?: boolean,
-  }): Observable<HttpResponse<Object>>;
-  delete<T>(url: string, options: {
+  delete<T = Object>(url: string, options: {
     headers?: HttpHeaders,
     observe: 'response',
     params?: HttpParams,
@@ -301,15 +249,7 @@ export abstract class BaseApiService {
     responseType?: 'json',
     withCredentials?: boolean,
   }): Observable<HttpResponse<T>>;
-  delete(url: string, options?: {
-    headers?: HttpHeaders,
-    observe?: 'body',
-    params?: HttpParams,
-    reportProgress?: boolean,
-    responseType?: 'json',
-    withCredentials?: boolean,
-  }): Observable<Object>;
-  delete<T>(url: string, options?: {
+  delete<T = Object>(url: string, options?: {
     headers?: HttpHeaders,
     observe?: 'body',
     params?: HttpParams,
@@ -369,15 +309,7 @@ export abstract class BaseApiService {
     responseType: 'text',
     withCredentials?: boolean,
   }): Observable<HttpEvent<string>>;
-  get(url: string, options: {
-    headers?: HttpHeaders,
-    observe: 'events',
-    params?: HttpParams,
-    reportProgress?: boolean,
-    responseType?: 'json',
-    withCredentials?: boolean,
-  }): Observable<HttpEvent<Object>>;
-  get<T>(url: string, options: {
+  get<T = Object>(url: string, options: {
     headers?: HttpHeaders,
     observe: 'events',
     params?: HttpParams,
@@ -409,15 +341,7 @@ export abstract class BaseApiService {
     responseType: 'text',
     withCredentials?: boolean,
   }): Observable<HttpResponse<string>>;
-  get(url: string, options: {
-    headers?: HttpHeaders,
-    observe: 'response',
-    params?: HttpParams,
-    reportProgress?: boolean,
-    responseType?: 'json',
-    withCredentials?: boolean,
-  }): Observable<HttpResponse<Object>>;
-  get<T>(url: string, options: {
+  get<T = Object>(url: string, options: {
     headers?: HttpHeaders,
     observe: 'response',
     params?: HttpParams,
@@ -425,15 +349,7 @@ export abstract class BaseApiService {
     responseType?: 'json',
     withCredentials?: boolean,
   }): Observable<HttpResponse<T>>;
-  get(url: string, options?: {
-    headers?: HttpHeaders,
-    observe?: 'body',
-    params?: HttpParams,
-    reportProgress?: boolean,
-    responseType?: 'json',
-    withCredentials?: boolean,
-  }): Observable<Object>;
-  get<T>(url: string, options?: {
+  get<T = Object>(url: string, options?: {
     headers?: HttpHeaders,
     observe?: 'body',
     params?: HttpParams,
@@ -493,15 +409,7 @@ export abstract class BaseApiService {
     responseType: 'text',
     withCredentials?: boolean,
   }): Observable<HttpEvent<string>>;
-  head(url: string, options: {
-    headers?: HttpHeaders,
-    observe: 'events',
-    params?: HttpParams,
-    reportProgress?: boolean,
-    responseType?: 'json',
-    withCredentials?: boolean,
-  }): Observable<HttpEvent<Object>>;
-  head<T>(url: string, options: {
+  head<T = Object>(url: string, options: {
     headers?: HttpHeaders,
     observe: 'events',
     params?: HttpParams,
@@ -533,15 +441,7 @@ export abstract class BaseApiService {
     responseType: 'text',
     withCredentials?: boolean,
   }): Observable<HttpResponse<string>>;
-  head(url: string, options: {
-    headers?: HttpHeaders,
-    observe: 'response',
-    params?: HttpParams,
-    reportProgress?: boolean,
-    responseType?: 'json',
-    withCredentials?: boolean,
-  }): Observable<HttpResponse<Object>>;
-  head<T>(url: string, options: {
+  head<T = Object>(url: string, options: {
     headers?: HttpHeaders,
     observe: 'response',
     params?: HttpParams,
@@ -549,15 +449,7 @@ export abstract class BaseApiService {
     responseType?: 'json',
     withCredentials?: boolean,
   }): Observable<HttpResponse<T>>;
-  head(url: string, options?: {
-    headers?: HttpHeaders,
-    observe?: 'body',
-    params?: HttpParams,
-    reportProgress?: boolean,
-    responseType?: 'json',
-    withCredentials?: boolean,
-  }): Observable<Object>;
-  head<T>(url: string, options?: {
+  head<T = Object>(url: string, options?: {
     headers?: HttpHeaders,
     observe?: 'body',
     params?: HttpParams,
@@ -617,15 +509,7 @@ export abstract class BaseApiService {
     responseType: 'text',
     withCredentials?: boolean,
   }): Observable<HttpEvent<string>>;
-  options(url: string, options: {
-    headers?: HttpHeaders,
-    observe: 'events',
-    params?: HttpParams,
-    reportProgress?: boolean,
-    responseType?: 'json',
-    withCredentials?: boolean,
-  }): Observable<HttpEvent<Object>>;
-  options<T>(url: string, options: {
+  options<T = Object>(url: string, options: {
     headers?: HttpHeaders,
     observe: 'events',
     params?: HttpParams,
@@ -657,15 +541,7 @@ export abstract class BaseApiService {
     responseType: 'text',
     withCredentials?: boolean,
   }): Observable<HttpResponse<string>>;
-  options(url: string, options: {
-    headers?: HttpHeaders,
-    observe: 'response',
-    params?: HttpParams,
-    reportProgress?: boolean,
-    responseType?: 'json',
-    withCredentials?: boolean,
-  }): Observable<HttpResponse<Object>>;
-  options<T>(url: string, options: {
+  options<T = Object>(url: string, options: {
     headers?: HttpHeaders,
     observe: 'response',
     params?: HttpParams,
@@ -673,15 +549,7 @@ export abstract class BaseApiService {
     responseType?: 'json',
     withCredentials?: boolean,
   }): Observable<HttpResponse<T>>;
-  options(url: string, options?: {
-    headers?: HttpHeaders,
-    observe?: 'body',
-    params?: HttpParams,
-    reportProgress?: boolean,
-    responseType?: 'json',
-    withCredentials?: boolean,
-  }): Observable<Object>;
-  options<T>(url: string, options?: {
+  options<T = Object>(url: string, options?: {
     headers?: HttpHeaders,
     observe?: 'body',
     params?: HttpParams,
@@ -741,15 +609,7 @@ export abstract class BaseApiService {
     responseType: 'text',
     withCredentials?: boolean,
   }): Observable<HttpEvent<string>>;
-  patch(url: string, options: {
-    headers?: HttpHeaders,
-    observe: 'events',
-    params?: HttpParams,
-    reportProgress?: boolean,
-    responseType?: 'json',
-    withCredentials?: boolean,
-  }): Observable<HttpEvent<Object>>;
-  patch<T>(url: string, options: {
+  patch<T = Object>(url: string, options: {
     headers?: HttpHeaders,
     observe: 'events',
     params?: HttpParams,
@@ -781,15 +641,7 @@ export abstract class BaseApiService {
     responseType: 'text',
     withCredentials?: boolean,
   }): Observable<HttpResponse<string>>;
-  patch(url: string, options: {
-    headers?: HttpHeaders,
-    observe: 'response',
-    params?: HttpParams,
-    reportProgress?: boolean,
-    responseType?: 'json',
-    withCredentials?: boolean,
-  }): Observable<HttpResponse<Object>>;
-  patch<T>(url: string, options: {
+  patch<T = Object>(url: string, options: {
     headers?: HttpHeaders,
     observe: 'response',
     params?: HttpParams,
@@ -797,15 +649,7 @@ export abstract class BaseApiService {
     responseType?: 'json',
     withCredentials?: boolean,
   }): Observable<HttpResponse<T>>;
-  patch(url: string, options?: {
-    headers?: HttpHeaders,
-    observe?: 'body',
-    params?: HttpParams,
-    reportProgress?: boolean,
-    responseType?: 'json',
-    withCredentials?: boolean,
-  }): Observable<Object>;
-  patch<T>(url: string, options?: {
+  patch<T = Object>(url: string, options?: {
     headers?: HttpHeaders,
     observe?: 'body',
     params?: HttpParams,
@@ -865,15 +709,7 @@ export abstract class BaseApiService {
     responseType: 'text',
     withCredentials?: boolean,
   }): Observable<HttpEvent<string>>;
-  post(url: string, options: {
-    headers?: HttpHeaders,
-    observe: 'events',
-    params?: HttpParams,
-    reportProgress?: boolean,
-    responseType?: 'json',
-    withCredentials?: boolean,
-  }): Observable<HttpEvent<Object>>;
-  post<T>(url: string, options: {
+  post<T = Object>(url: string, options: {
     headers?: HttpHeaders,
     observe: 'events',
     params?: HttpParams,
@@ -905,15 +741,7 @@ export abstract class BaseApiService {
     responseType: 'text',
     withCredentials?: boolean,
   }): Observable<HttpResponse<string>>;
-  post(url: string, options: {
-    headers?: HttpHeaders,
-    observe: 'response',
-    params?: HttpParams,
-    reportProgress?: boolean,
-    responseType?: 'json',
-    withCredentials?: boolean,
-  }): Observable<HttpResponse<Object>>;
-  post<T>(url: string, options: {
+  post<T = Object>(url: string, options: {
     headers?: HttpHeaders,
     observe: 'response',
     params?: HttpParams,
@@ -921,15 +749,7 @@ export abstract class BaseApiService {
     responseType?: 'json',
     withCredentials?: boolean,
   }): Observable<HttpResponse<T>>;
-  post(url: string, options?: {
-    headers?: HttpHeaders,
-    observe?: 'body',
-    params?: HttpParams,
-    reportProgress?: boolean,
-    responseType?: 'json',
-    withCredentials?: boolean,
-  }): Observable<Object>;
-  post<T>(url: string, options?: {
+  post<T = Object>(url: string, options?: {
     headers?: HttpHeaders,
     observe?: 'body',
     params?: HttpParams,
@@ -989,15 +809,7 @@ export abstract class BaseApiService {
     responseType: 'text',
     withCredentials?: boolean,
   }): Observable<HttpEvent<string>>;
-  put(url: string, options: {
-    headers?: HttpHeaders,
-    observe: 'events',
-    params?: HttpParams,
-    reportProgress?: boolean,
-    responseType?: 'json',
-    withCredentials?: boolean,
-  }): Observable<HttpEvent<Object>>;
-  put<T>(url: string, options: {
+  put<T = Object>(url: string, options: {
     headers?: HttpHeaders,
     observe: 'events',
     params?: HttpParams,
@@ -1029,15 +841,7 @@ export abstract class BaseApiService {
     responseType: 'text',
     withCredentials?: boolean,
   }): Observable<HttpResponse<string>>;
-  put(url: string, options: {
-    headers?: HttpHeaders,
-    observe: 'response',
-    params?: HttpParams,
-    reportProgress?: boolean,
-    responseType?: 'json',
-    withCredentials?: boolean,
-  }): Observable<HttpResponse<Object>>;
-  put<T>(url: string, options: {
+  put<T = Object>(url: string, options: {
     headers?: HttpHeaders,
     observe: 'response',
     params?: HttpParams,
@@ -1045,15 +849,7 @@ export abstract class BaseApiService {
     responseType?: 'json',
     withCredentials?: boolean,
   }): Observable<HttpResponse<T>>;
-  put(url: string, options?: {
-    headers?: HttpHeaders,
-    observe?: 'body',
-    params?: HttpParams,
-    reportProgress?: boolean,
-    responseType?: 'json',
-    withCredentials?: boolean,
-  }): Observable<Object>;
-  put<T>(url: string, options?: {
+  put<T = Object>(url: string, options?: {
     headers?: HttpHeaders,
     observe?: 'body',
     params?: HttpParams,
