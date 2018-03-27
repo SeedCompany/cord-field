@@ -3,3 +3,73 @@
 :host {
   @extend %component-defaults;
 }
+
+.add-new {
+  height: 85px;
+  .second-row {
+    height: 32px;
+    background: map_get(map_get($theme, background), card);
+  }
+
+  .first-row {
+    height: 53px;
+    padding-top: 50px;
+  }
+
+  .add {
+    margin-right: 80px;
+  }
+}
+
+.project-menu-button {
+  font-size: 20px;
+}
+
+.project-menu-arrow-down {
+  vertical-align: middle;
+}
+
+.mat-header-row {
+  border-bottom-style: solid;
+}
+
+.mat-row {
+  border-bottom-style: none;
+}
+
+.nav-spacer {
+  flex: auto;
+}
+
+.toolbar {
+  background: map_get(map_get($theme, background), card);
+}
+
+.title {
+  color: map-get($underbelly-green, 500);
+  font-weight: 500;
+}
+
+.filter-menu {
+  margin-right: 68px;
+}
+
+.status-circle {
+  border-radius: 4px;
+  height: 7px;
+  width: 7px;
+  display: inline-block;
+  margin-right: 5px;
+}
+
+.capitalize {
+  text-transform: capitalize;
+}
+
+.language-none {
+  font-family: 'Work Sans';
+  font-weight: 500;
+  font-size: 14px;
+  line-height: 26px;
+  color: map-get($seed-gray-palette, darker);
+}
