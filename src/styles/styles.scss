@@ -4,4 +4,18 @@
 @import "imports";
 
 @include mat-core();
-@include angular-material-theme($app-theme);
+@include angular-material-theme($theme);
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  -webkit-font-smoothing: antialiased;
+  -ms-overflow-style: none;
+  overflow: auto;
+}
+
+body {
+  margin: 0;
+}

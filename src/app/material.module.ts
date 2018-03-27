@@ -5,6 +5,7 @@ import {
   MatIconModule,
   MatInputModule,
   MatListModule,
+  MatMenuModule,
   MatProgressSpinnerModule,
   MatToolbarModule,
 } from '@angular/material';
@@ -15,6 +16,7 @@ const components = [
   MatIconModule,
   MatInputModule,
   MatListModule,
+  MatMenuModule,
   MatProgressSpinnerModule,
   MatToolbarModule,
 ];
