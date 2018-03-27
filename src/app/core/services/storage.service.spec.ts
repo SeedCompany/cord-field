@@ -114,10 +114,10 @@ describe('StorageService', () => {
     });
   });
 
-  it('getStorageEngine', async (done) => {
+  it('getStorageEngineType', async (done) => {
     try {
       for (const type of stores) {
-        const result = await store[type].getStorageEngine().toPromise();
+        const result = await store[type].getStorageEngineType().toPromise();
         expect(result).toBe((type === 'session') ? 'session' : 'asyncStorage', type);
         done();
       }

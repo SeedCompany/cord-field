@@ -4,7 +4,7 @@ import { Observable } from 'rxjs/Observable';
 import { Subject } from 'rxjs/Subject';
 import { BrowserService } from './browser.service';
 
-export type StorageEngine = 'asyncStorage' | 'localStorageWrapper' | 'session' | 'webSQLStorage';
+export type StorageEngineType = 'asyncStorage' | 'localStorageWrapper' | 'session' | 'webSQLStorage';
 
 /**
  * Base class for storage services. Supports:
@@ -139,7 +139,7 @@ export abstract class BaseStorageService {
    * Should return the name of the storage engine being used.
    * @returns {Observable<string>}
    */
-  abstract getStorageEngine(): Observable<StorageEngine>;
+  abstract getStorageEngineType(): Observable<StorageEngineType>;
 
   getCachedObservable<T>(key: string, observable: Observable<T>, cacheTTL = 0, gc = false): Observable<T> {
     return this
@@ -360,7 +360,7 @@ export abstract class BaseStorageService {
 @Injectable()
 export class LocalStorageService extends BaseStorageService {
 
-  private storageEngine: StorageEngine;
+  private storageEngine: StorageEngineType;
 
   get dbName(): string {
     return 'app_db';
@@ -383,14 +383,14 @@ export class LocalStorageService extends BaseStorageService {
       });
   }
 
-  getStorageEngine(): Observable<StorageEngine> {
+  getStorageEngineType(): Observable<StorageEngineType> {
     if (!this.storageEngine) {
       return Observable
         .fromPromise(
           localforage
             .ready()
             .then(() => {
-              this.storageEngine = localforage.driver() as StorageEngine;
+              this.storageEngine = localforage.driver() as StorageEngineType;
               return this.storageEngine;
             })
             .catch(Promise.reject),
@@ -436,8 +436,8 @@ export class SessionStorageService extends BaseStorageService {
       });
   }
 
-  getStorageEngine(): Observable<StorageEngine> {
-    return Observable.of<StorageEngine>('session');
+  getStorageEngineType(): Observable<StorageEngineType> {
+    return Observable.of<StorageEngineType>('session');
   }
 
   setItem<T>(key: string, value: T, cacheTTL = 0, gc = false): Observable<T> {
