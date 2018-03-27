@@ -5,7 +5,9 @@ import { SharedModule } from '../shared/shared.module';
 import { HeaderSearchComponent } from './header-search/header-search.component';
 import { HeaderComponent } from './header/header.component';
 import { NotFoundPageComponent } from './not-found-page/not-found-page.component';
+import { BrowserService } from './services/browser.service';
 import { LoggerService } from './services/logger.service';
+import { LocalStorageService, SessionStorageService } from './services/storage.service';
 import { WelcomeComponent } from './welcome/welcome.component';
 
 @NgModule({
@@ -24,7 +26,10 @@ import { WelcomeComponent } from './welcome/welcome.component';
     HeaderSearchComponent,
   ],
   providers: [
+    BrowserService,
+    LocalStorageService,
     LoggerService,
+    SessionStorageService,
   ],
 })
 export class CoreModule {
