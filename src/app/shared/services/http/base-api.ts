@@ -1,12 +1,6 @@
-import {
-  HttpClient,
-  HttpEvent,
-  HttpHeaders,
-  HttpParams,
-  HttpResponse
-}                    from '@angular/common/http';
-import {HttpObserve} from '@angular/common/http/src/client';
-import {Observable}  from 'rxjs/Observable';
+import { HttpClient, HttpEvent, HttpHeaders, HttpParams, HttpResponse } from '@angular/common/http';
+import { HttpObserve } from '@angular/common/http/src/client';
+import { Observable } from 'rxjs/Observable';
 
 export interface IHttpClientOptionsRequest {
   body?: any;
@@ -46,12 +40,12 @@ export interface IHttpClientOptionsHead {
 }
 
 export interface IHttpClientOptionsOptions {
-  headers?: HttpHeaders | { [header: string]: string | string[] },
-  observe?: HttpObserve,
-  params?: HttpParams | { [param: string]: string | string[] },
-  reportProgress?: boolean,
-  responseType?: 'arraybuffer' | 'blob' | 'json' | 'text',
-  withCredentials?: boolean,
+  headers?: HttpHeaders | { [header: string]: string | string[] };
+  observe?: HttpObserve;
+  params?: HttpParams | { [param: string]: string | string[] };
+  reportProgress?: boolean;
+  responseType?: 'arraybuffer' | 'blob' | 'json' | 'text';
+  withCredentials?: boolean;
 }
 
 export interface IHttpClientOptionsPatch {

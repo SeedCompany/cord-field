@@ -1,11 +1,8 @@
-import {HttpClient}     from '@angular/common/http';
-import {
-  HttpClientTestingModule,
-  HttpTestingController
-}                       from '@angular/common/http/testing';
-import {Injectable}     from '@angular/core';
-import {TestBed}        from '@angular/core/testing';
-import {BaseApiService} from './base-api';
+import { HttpClient } from '@angular/common/http';
+import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
+import { Injectable } from '@angular/core';
+import { TestBed } from '@angular/core/testing';
+import { BaseApiService } from './base-api';
 
 describe('BaseApiService', () => {
   let request: HttpTestingController;
@@ -22,11 +19,11 @@ describe('BaseApiService', () => {
     TestBed
       .configureTestingModule({
         imports: [
-          HttpClientTestingModule
+          HttpClientTestingModule,
         ],
         providers: [
-          MockApiService
-        ]
+          MockApiService,
+        ],
       });
 
     api = TestBed.get(MockApiService);

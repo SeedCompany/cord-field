@@ -3,7 +3,7 @@
 version: '2'
 services:
 
-  cord-field:
+  local-cord-field: # prefixed with "local-" to skip trying to pull image
     image: cord-field
     ports:
       - 4200:80
