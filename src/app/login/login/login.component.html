@@ -1,0 +1,40 @@
+<section>
+  <div class="login-container">
+    <div>
+    <span class="toolbar-icon">
+      <mat-icon svgIcon="cord"></mat-icon>
+    </span>
+      <span>
+      <h3>Sign In</h3>
+    </span>
+    </div>
+    <form [formGroup]="loginForm">
+      <div class="wrapper">
+        <mat-form-field>
+          <input
+            matInput
+            placeholder="Email"
+            formControlName="email"
+            type="text"
+          >
+        </mat-form-field>
+        <mat-form-field>
+          <input
+            matInput
+            placeholder="Password"
+            formControlName="password"
+            type="password"
+          >
+        </mat-form-field>
+      </div>
+    </form>
+    <div class="login-container-footer">
+      <div>
+        <a> FORGOT EMAIL/PASSWORD?</a>
+      </div>
+      <div>
+        <button mat-raised-button color="primary">LOG IN</button>
+      </div>
+    </div>
+  </div>
+</section>

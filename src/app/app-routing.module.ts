@@ -4,7 +4,7 @@ import { NotFoundPageComponent } from './core/not-found-page/not-found-page.comp
 import { WelcomeComponent } from './core/welcome/welcome.component';
 
 const routes: Routes = [
-  {path: '', component: WelcomeComponent, pathMatch: 'full'},
+  {path: 'welcome', component: WelcomeComponent, pathMatch: 'full'},
   {path: 'languages', loadChildren: 'app/languages/languages.module#LanguagesModule'},
   {path: 'organizations', loadChildren: 'app/organizations/organizations.module#OrganizationsModule'},
   {path: 'projects', loadChildren: 'app/projects/projects.module#ProjectsModule'},
