@@ -1,5 +1,4 @@
 import { Injectable } from '@angular/core';
-import * as localforage from 'localforage';
 import { Observable } from 'rxjs/Observable';
 import { Subject } from 'rxjs/Subject';
 import { BrowserService } from './browser.service';
@@ -12,7 +11,7 @@ export type StorageEngineType = 'asyncStorage' | 'localStorageWrapper' | 'sessio
  *  - observing entries for changes
  *  - intercepting an observable and returning a cache result, if valid
  */
-export abstract class BaseStorageService {
+export abstract class BaseStorageService<TStore extends any> {
 
   /**
    * Sets the name of the database in IndexedDB or Web SQL, otherwise sets the first part of the prefix for the item
@@ -48,7 +47,7 @@ export abstract class BaseStorageService {
   private subjects = {};
   private isLocalForage = false;
 
-  constructor(protected store: any) {
+  constructor(protected store: TStore) {
     this.isLocalForage = 'setDriver' in this.store;
   }
 
@@ -358,7 +357,7 @@ export abstract class BaseStorageService {
  * Values can be any valid type supported by localForage.
  */
 @Injectable()
-export class LocalStorageService extends BaseStorageService {
+export class LocalStorageService extends BaseStorageService<LocalForage> {
 
   private storageEngine: StorageEngineType;
 
@@ -376,7 +375,7 @@ export class LocalStorageService extends BaseStorageService {
 
   constructor(browserService: BrowserService) {
     super(browserService.localforage);
-    browserService.localforage
+    this.store
       .config({
         name: this.dbName,
         storeName: this.collectionName,
@@ -387,10 +386,10 @@ export class LocalStorageService extends BaseStorageService {
     if (!this.storageEngine) {
       return Observable
         .fromPromise(
-          localforage
+          this.store
             .ready()
             .then(() => {
-              this.storageEngine = localforage.driver() as StorageEngineType;
+              this.storageEngine = this.store.driver() as StorageEngineType;
               return this.storageEngine;
             })
             .catch(Promise.reject),
@@ -405,7 +404,7 @@ export class LocalStorageService extends BaseStorageService {
  * Stores items in session. Use getJson and setJson to store non-string values.
  */
 @Injectable()
-export class SessionStorageService extends BaseStorageService {
+export class SessionStorageService extends BaseStorageService<Storage> {
   get dbName(): string {
     return 'app_db';
   }
