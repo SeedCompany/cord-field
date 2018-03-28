@@ -7,7 +7,7 @@ import {
   MatListModule,
   MatMenuModule,
   MatProgressSpinnerModule,
-  MatToolbarModule,
+  MatToolbarModule
 } from '@angular/material';
 
 const components = [
@@ -18,12 +18,12 @@ const components = [
   MatListModule,
   MatMenuModule,
   MatProgressSpinnerModule,
-  MatToolbarModule,
+  MatToolbarModule
 ];
 
 @NgModule({
   imports: components,
-  exports: components,
+  exports: components
 })
 export class MaterialModule {
 }

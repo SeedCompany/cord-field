@@ -5,9 +5,9 @@ import { LanguagesRoutingModule } from './languages-routing.module';
 @NgModule({
   imports: [
     SharedModule,
-    LanguagesRoutingModule,
+    LanguagesRoutingModule
   ],
-  declarations: [],
+  declarations: []
 })
 export class LanguagesModule {
 }

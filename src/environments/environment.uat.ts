@@ -11,10 +11,10 @@ export const environment = {
     noBody: [
       '/api/auth/native/login',
       '/api/donations/history',
-      '/api/sisense/sql',
-    ],
+      '/api/sisense/sql'
+    ]
   },
   services: {
-    'profile.illuminations.bible': 'http://localhost:8001/api',
-  },
+    'profile.illuminations.bible': 'http://localhost:8001/api'
+  }
 };

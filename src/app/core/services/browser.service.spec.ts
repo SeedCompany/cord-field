@@ -6,11 +6,11 @@ describe('BrowserService', () => {
   beforeEach(() => {
     TestBed.configureTestingModule({
       imports: [
-        CoreModule,
+        CoreModule
       ],
       providers: [
-        BrowserService,
-      ],
+        BrowserService
+      ]
     });
   });
 

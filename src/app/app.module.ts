@@ -17,8 +17,8 @@ import './rxjs-imports';
     TransferHttpCacheModule,
     HttpClientModule,
     CoreModule,
-    AppRoutingModule,
-  ],
+    AppRoutingModule
+  ]
 })
 export class AppModule {
 }
