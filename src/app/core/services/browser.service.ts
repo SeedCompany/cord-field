@@ -29,7 +29,7 @@ export class BrowserService {
     return window;
   }
 
-  get sessionStorage(): WindowSessionStorage | null {
+  get sessionStorage(): Storage | null {
     return (this.window || {} as any).sessionStorage || null;
   }
 
