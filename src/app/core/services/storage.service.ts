@@ -208,7 +208,7 @@ export abstract class BaseStorageService<TStore extends any> {
 
       await Promise.all([
         this.store.removeItem(this.getKey(key)),
-        this.store.removeItem(this.getCacheKey(key)),
+        this.store.removeItem(this.getCacheKey(key))
       ]);
 
       if (key in this.subjects) {
@@ -254,7 +254,7 @@ export abstract class BaseStorageService<TStore extends any> {
 
       await Promise.all([
         this.store.setItem(this.getKey(key), value),
-        this.store.setItem(this.getCacheKey(key), cacheTTL),
+        this.store.setItem(this.getCacheKey(key), cacheTTL)
       ]);
 
       this.subjects[key].next(value);
@@ -378,7 +378,7 @@ export class LocalStorageService extends BaseStorageService<LocalForage> {
     this.store
       .config({
         name: this.dbName,
-        storeName: this.collectionName,
+        storeName: this.collectionName
       });
   }
 
@@ -392,7 +392,7 @@ export class LocalStorageService extends BaseStorageService<LocalForage> {
               this.storageEngine = this.store.driver() as StorageEngineType;
               return this.storageEngine;
             })
-            .catch(Promise.reject),
+            .catch(Promise.reject)
         );
     }
 

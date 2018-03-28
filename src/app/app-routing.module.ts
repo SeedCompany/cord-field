@@ -9,16 +9,16 @@ const routes: Routes = [
   {path: 'organizations', loadChildren: 'app/organizations/organizations.module#OrganizationsModule'},
   {path: 'projects', loadChildren: 'app/projects/projects.module#ProjectsModule'},
   {path: 'tasks', loadChildren: 'app/tasks/tasks.module#TasksModule'},
-  {path: '**', component: NotFoundPageComponent},
+  {path: '**', component: NotFoundPageComponent}
 ];
 
 @NgModule({
   imports: [
-    RouterModule.forRoot(routes),
+    RouterModule.forRoot(routes)
   ],
   exports: [
-    RouterModule,
-  ],
+    RouterModule
+  ]
 })
 export class AppRoutingModule {
 }

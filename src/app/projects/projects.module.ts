@@ -6,11 +6,11 @@ import { ProjectsRoutingModule } from './projects-routing.module';
 @NgModule({
   imports: [
     SharedModule,
-    ProjectsRoutingModule,
+    ProjectsRoutingModule
   ],
   declarations: [
-    ProjectListComponent,
-  ],
+    ProjectListComponent
+  ]
 })
 export class ProjectsModule {
 }

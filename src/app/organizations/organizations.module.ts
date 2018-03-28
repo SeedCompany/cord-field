@@ -5,9 +5,9 @@ import { OrganizationsRoutingModule } from './organizations-routing.module';
 @NgModule({
   imports: [
     SharedModule,
-    OrganizationsRoutingModule,
+    OrganizationsRoutingModule
   ],
-  declarations: [],
+  declarations: []
 })
 export class OrganizationsModule {
 }

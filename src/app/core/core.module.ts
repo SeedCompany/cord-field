@@ -14,23 +14,23 @@ import { WelcomeComponent } from './welcome/welcome.component';
   imports: [
     SharedModule,
     RouterModule,
-    FormsModule,
+    FormsModule
   ],
   exports: [
-    HeaderComponent,
+    HeaderComponent
   ],
   declarations: [
     WelcomeComponent,
     NotFoundPageComponent,
     HeaderComponent,
-    HeaderSearchComponent,
+    HeaderSearchComponent
   ],
   providers: [
     BrowserService,
     LocalStorageService,
     LoggerService,
-    SessionStorageService,
-  ],
+    SessionStorageService
+  ]
 })
 export class CoreModule {
   constructor(@Optional() @SkipSelf() private parentModule: CoreModule) {

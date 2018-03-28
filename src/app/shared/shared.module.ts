@@ -6,15 +6,15 @@ import { AutofocusDirective } from './directives/autofocus.directive';
 @NgModule({
   imports: [
     CommonModule,
-    MaterialModule,
+    MaterialModule
   ],
   exports: [
     CommonModule,
-    MaterialModule,
+    MaterialModule
   ],
   declarations: [
-    AutofocusDirective,
-  ],
+    AutofocusDirective
+  ]
 })
 export class SharedModule {
 }

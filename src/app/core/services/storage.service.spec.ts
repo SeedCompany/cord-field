@@ -7,7 +7,7 @@ describe('StorageService', () => {
 
   const store = {
     local: undefined as LocalStorageService,
-    session: undefined as SessionStorageService,
+    session: undefined as SessionStorageService
   };
   const stores = Object.keys(store);
 
@@ -15,12 +15,12 @@ describe('StorageService', () => {
     TestBed
       .configureTestingModule({
         imports: [
-          CoreModule,
+          CoreModule
         ],
         providers: [
           LocalStorageService,
-          SessionStorageService,
-        ],
+          SessionStorageService
+        ]
       });
 
     store.local = TestBed.get(LocalStorageService);
@@ -29,7 +29,7 @@ describe('StorageService', () => {
     Observable
       .forkJoin([
         store.local.clear(),
-        store.session.clear(),
+        store.session.clear()
       ])
       .subscribe(done, done.fail);
   });
@@ -38,7 +38,7 @@ describe('StorageService', () => {
     Observable
       .forkJoin([
         store.local.clear(),
-        store.session.clear(),
+        store.session.clear()
       ])
       .subscribe(done, done.fail);
   });
