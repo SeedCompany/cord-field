@@ -42,8 +42,10 @@
     "express": "^4.16.2",
     "hammerjs": "^2.0.8",
     "localforage": "^1.6.0",
+    "moment": "^2.21.0",
     "rxjs": "^5.5.6",
     "ts-loader": "^3.5.0",
+    "urlsafe-base64": "^1.0.0",
     "zone.js": "^0.8.19"
   },
   "devDependencies": {
