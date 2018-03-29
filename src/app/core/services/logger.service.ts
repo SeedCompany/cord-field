@@ -1,6 +1,6 @@
-import {Injectable} from '@angular/core';
-import {environment} from '../../../environments/environment';
-import {GoogleAnalyticsService} from './google-analytics.service';
+import { Injectable } from '@angular/core';
+import { environment } from '../../../environments/environment';
+import { GoogleAnalyticsService } from './google-analytics.service';
 
 const endpointRegex = new RegExp(`^[^#]*?://.*?(/.*)$`);
 
@@ -168,8 +168,8 @@ export class LoggerService {
   }
 
   private logApiCall(method: string, path: string, source: any, body: any) {
-    const apiCalls = (environment.debug || <any>{}).apiCalls;
-    const noBody = (environment.debug || <any>{}).noBody;
+    const apiCalls = (environment.debug || {} as any).apiCalls;
+    const noBody = (environment.debug || {} as any).noBody;
 
     if (!apiCalls) {
       return;
@@ -183,8 +183,8 @@ export class LoggerService {
       return;
     }
 
-    source = (source || <any>{}).name
-      || ((source || <any>{}).constructor || <any>{}).name
+    source = (source || {} as any).name
+      || ((source || {} as any).constructor || {} as any).name
       || source;
 
     method = method.toUpperCase();
