@@ -10,7 +10,7 @@
     </mat-card-header>
 
     <mat-card-content>
-      <form [formGroup]="loginForm">
+      <form [formGroup]="loginForm" (submit)="onSubmit(loginForm)">
         <div class="wrapper">
           <mat-form-field>
             <input
@@ -29,16 +29,18 @@
             >
           </mat-form-field>
         </div>
+
+
+        <div class="login-container-footer">
+          <div>
+            <a> FORGOT EMAIL/PASSWORD?</a>
+          </div>
+          <div>
+            <button type="submit" mat-raised-button color="primary">LOG IN</button>
+          </div>
+        </div>
       </form>
     </mat-card-content>
-    <div class="login-container-footer">
-      <div>
-        <a> FORGOT EMAIL/PASSWORD?</a>
-      </div>
-      <div>
-        <button mat-raised-button color="primary">LOG IN</button>
-      </div>
-    </div>
   </mat-card>
 </section>
 

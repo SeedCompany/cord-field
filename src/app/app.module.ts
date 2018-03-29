@@ -6,7 +6,6 @@ import { TransferHttpCacheModule } from '@nguniversal/common';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { CoreModule } from './core/core.module';
-import { LoginModule } from './login/login.module';
 import './rxjs-imports';
 
 
@@ -16,7 +15,6 @@ import './rxjs-imports';
   imports: [
     BrowserModule.withServerTransition({appId: 'cord-field'}),
     BrowserAnimationsModule,
-    LoginModule,
     TransferHttpCacheModule,
     HttpClientModule,
     CoreModule,

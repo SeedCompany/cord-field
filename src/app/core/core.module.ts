@@ -2,6 +2,7 @@ import { NgModule, Optional, SkipSelf } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { SharedModule } from '../shared/shared.module';
 import { HeaderComponent } from './header/header.component';
+import { LoginModule } from './login/login.module';
 import { NotFoundPageComponent } from './not-found-page/not-found-page.component';
 import { BrowserService } from './services/browser.service';
 import { GoogleAnalyticsService } from './services/google-analytics.service';
@@ -13,6 +14,7 @@ import { WelcomeComponent } from './welcome/welcome.component';
 
 @NgModule({
   imports: [
+    LoginModule,
     SharedModule,
     RouterModule
   ],

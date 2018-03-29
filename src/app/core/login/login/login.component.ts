@@ -25,4 +25,8 @@ export class LoginComponent implements OnInit {
   ngOnInit() {
   }
 
+  onSubmit(values) {
+    console.log('Values are', values);
+  }
+
 }

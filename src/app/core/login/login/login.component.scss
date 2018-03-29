@@ -6,16 +6,15 @@
   height: 400px;
   margin: 10em;
   padding: 1em;
-  z-index: 1;
 
   .login-container-header {
     display: flex;
     flex-direction: column;
   }
   .wrapper {
+    margin-top: 1em;
     display: flex;
     flex-direction: column;
-
   }
 
   .toolbar-icon {
@@ -26,7 +25,7 @@
   }
 
   .login-container-footer {
-    margin-top: 5em;
+    margin-top: 8em;
     display: flex;
     justify-content: space-between;
     .mat-raised-button.mat-primary, .mat-fab.mat-primary, .mat-mini-fab.mat-primary {
