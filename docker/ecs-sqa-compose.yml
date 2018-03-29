@@ -16,7 +16,6 @@ services:
       SERVICE_80_NAME: client-tsco-cord-field-sqa
     mem_limit: 256000000
 
-
   cord-api-plo:
     image: 103805181946.dkr.ecr.us-west-2.amazonaws.com/client/cord-api-plo:latest
     ports:
