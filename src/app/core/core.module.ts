@@ -1,14 +1,15 @@
-import { NgModule, Optional, SkipSelf } from '@angular/core';
-import { FormsModule } from '@angular/forms';
-import { RouterModule } from '@angular/router';
-import { SharedModule } from '../shared/shared.module';
-import { HeaderSearchComponent } from './header-search/header-search.component';
-import { HeaderComponent } from './header/header.component';
-import { NotFoundPageComponent } from './not-found-page/not-found-page.component';
-import { BrowserService } from './services/browser.service';
-import { LoggerService } from './services/logger.service';
-import { LocalStorageService, SessionStorageService } from './services/storage.service';
-import { WelcomeComponent } from './welcome/welcome.component';
+import {NgModule, Optional, SkipSelf} from '@angular/core';
+import {FormsModule} from '@angular/forms';
+import {RouterModule} from '@angular/router';
+import {SharedModule} from '../shared/shared.module';
+import {HeaderSearchComponent} from './header-search/header-search.component';
+import {HeaderComponent} from './header/header.component';
+import {NotFoundPageComponent} from './not-found-page/not-found-page.component';
+import {BrowserService} from './services/browser.service';
+import {LoggerService} from './services/logger.service';
+import {LocalStorageService, SessionStorageService} from './services/storage.service';
+import {WelcomeComponent} from './welcome/welcome.component';
+import {GoogleAnalyticsService} from "./services/google-analytics.service";
 
 @NgModule({
   imports: [
@@ -27,6 +28,7 @@ import { WelcomeComponent } from './welcome/welcome.component';
   ],
   providers: [
     BrowserService,
+    GoogleAnalyticsService,
     LocalStorageService,
     LoggerService,
     SessionStorageService
