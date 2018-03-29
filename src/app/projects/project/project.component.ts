@@ -1,6 +1,6 @@
-import { Component, OnInit } from '@angular/core';
-import { MatTabChangeEvent } from '@angular/material';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
+import { Subscription } from 'rxjs/Subscription';
 
 interface TabConfig {
   path: string;
@@ -12,9 +12,10 @@ interface TabConfig {
   templateUrl: './project.component.html',
   styleUrls: ['./project.component.scss']
 })
-export class ProjectComponent implements OnInit {
+export class ProjectComponent implements OnInit, OnDestroy {
   id: string;
-  selectedTab: number;
+  selectedIndex: number;
+  private subscription: Subscription;
 
   readonly tabs: TabConfig[] = [
     {path: '', label: 'Overview'},
@@ -31,15 +32,21 @@ export class ProjectComponent implements OnInit {
   ) {}
 
   ngOnInit() {
-    this.id = this.route.snapshot.paramMap.get('id');
-    const tab = this.route.snapshot.paramMap.get('tab');
-    this.selectedTab = Math.min(this.tabs.findIndex((item) => item.path === tab), 0);
+    this.subscription = this.route.params.subscribe(params => {
+      this.id = params.id;
+      this.selectedIndex = Math.max(this.tabs.findIndex((item) => item.path === params.tab), 0);
+    });
   }
 
-  onTabChange(event: MatTabChangeEvent) {
-    this.selectedTab = event.index;
-    const path = this.tabs[this.selectedTab].path;
-    this.router.navigateByUrl(`/projects/${this.id}/${path}`);
+  ngOnDestroy() {
+    this.subscription.unsubscribe();
+  }
+
+  onTabChange(index: number) {
+    let path = this.tabs[index].path;
+    path = path ? '/' + path : '';
+
+    this.router.navigateByUrl(`/projects/${this.id}${path}`);
   }
 
   trackTabsBy(index: number, tab: TabConfig) {
