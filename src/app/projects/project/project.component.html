@@ -2,8 +2,23 @@
   Project Red
 </mat-toolbar>
 
-<mat-tab-group color="accent" [selectedIndex]="" (selectedIndexChange)="onTabChange($event)">
-  <mat-tab *ngFor="let tab of tabs; trackBy: trackTabsBy" [label]="tab.label">
-    {{ tab.label }}
+<mat-tab-group color="accent" [(selectedIndex)]="selectedIndex" (selectedIndexChange)="onTabChange($event)">
+  <mat-tab label="Overview">
+    <app-project-overview [id]="id"></app-project-overview>
+  </mat-tab>
+  <mat-tab label="Plan">
+    <app-project-plan [id]="id"></app-project-plan>
+  </mat-tab>
+  <mat-tab label="Budget">
+    <app-project-budget [id]="id"></app-project-budget>
+  </mat-tab>
+  <mat-tab label="Files">
+    <app-project-files [id]="id"></app-project-files>
+  </mat-tab>
+  <mat-tab label="People">
+    <app-project-people [id]="id"></app-project-people>
+  </mat-tab>
+  <mat-tab label="Updates">
+    <app-project-updates [id]="id"></app-project-updates>
   </mat-tab>
 </mat-tab-group>
