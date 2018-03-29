@@ -6,6 +6,12 @@
   height: 400px;
   margin: 10em;
   padding: 1em;
+  z-index: 1;
+
+  .login-container-header {
+    display: flex;
+    flex-direction: column;
+  }
   .wrapper {
     display: flex;
     flex-direction: column;
@@ -30,5 +36,6 @@
   }
 
 }
+
 
 
