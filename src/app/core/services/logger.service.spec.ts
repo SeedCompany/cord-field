@@ -1,11 +1,12 @@
-import { inject, TestBed } from '@angular/core/testing';
+import {inject, TestBed} from '@angular/core/testing';
 
-import { LoggerService } from './logger.service';
+import {LoggerService} from './logger.service';
+import {GoogleAnalyticsService} from "./google-analytics.service";
 
 describe('LoggerService', () => {
   beforeEach(() => {
     TestBed.configureTestingModule({
-      providers: [LoggerService]
+      providers: [LoggerService, GoogleAnalyticsService]
     });
   });
 
