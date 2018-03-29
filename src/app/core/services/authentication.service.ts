@@ -37,7 +37,7 @@ export class AuthenticationService {
   //   }
   //   return true;
   // }
-
+  //
   // get currentUser(): User {
   //   const tokens = this.authStorage.getAuthenticationTokens();
   //   if (tokens && tokens.length > 0) {
@@ -48,62 +48,27 @@ export class AuthenticationService {
   constructor(private api: ProfileApiService,
               private authStorage: AuthenticationStorageService,
               private log: LoggerService) {
-    // api.source = this;
+    api.source = this;
   }
 
-  //
-  // changePassword(email: string, currentPassword: string, newPassword: string): Observable<Response> {
-  //   return this
-  //     .api
-  //     .put('/auth/native/change-password', {
-  //       email,
-  //       currentPassword,
-  //       newPassword
-  //     });
-  // }
-  //
-  // forgotPassword(email: string): Observable<Response> {
-  //   return this
-  //     .api
-  //     .put('/auth/native/forgot-password', {email});
-  // }
-  //
-  // resetPassword(confirmationToken: string, newPassword: any): Observable<Response> {
-  //   return this
-  //     .api
-  //     .put(`/auth/native/reset-password/${confirmationToken}`, newPassword);
-  // }
-  //
-  // confirmEmail(confirmationToken: string): Observable<Response> {
-  //   return this
-  //     .api
-  //     .get(`/auth/native/confirm/${confirmationToken}`);
-  // }
-  //
-  // resendEmailConfirmation(email: string): Observable<Response> {
-  //   return this
-  //     .api
-  //     .post('/auth/native/confirm', {email});
-  // }
 
-  // login(email: string, password: string, rememberLogin: boolean): Observable<AuthenticationToken[]> {
-  //   const body = {
-  //     email,
-  //     password
-  //   };
-  //
-  //   const reqOptions: IApiServiceOptions = {
-  //     disableServerDown: true
-  //   };
-  //
-  //   return this
-  //     .api
-  //     .post('/auth/native/login', body, {}, reqOptions)
-  //     .map((res: Response) => res)
-  //     .map((json: any) => AuthenticationToken.fromTokenMap(json))
-  //     .do((tokens: AuthenticationToken[]) => this.authStorage.saveTokens(tokens, rememberLogin))
-  //     .do((tokens: AuthenticationToken[]) => this._login$.next(tokens));
-  // }
+  login(email: string, password: string, rememberLogin: boolean): Observable<AuthenticationToken[]> {
+    const body = {
+      email,
+      password
+    };
+
+    const reqOptions: IApiServiceOptions = {
+      disableServerDown: true
+    };
+
+    return this
+      .api
+      .request('POST', '/auth/native/login', {body: body})
+      .map((json: any) => AuthenticationToken.fromTokenMap(json))
+      .do((tokens: AuthenticationToken[]) => this.authStorage.saveTokens(tokens, rememberLogin))
+      .do((tokens: AuthenticationToken[]) => this._login$.next(tokens));
+  }
 
   logout(): Observable<void> {
     this.authStorage.clearTokens();

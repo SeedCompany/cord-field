@@ -5,7 +5,7 @@ import { WelcomeComponent } from './core/welcome/welcome.component';
 
 const routes: Routes = [
   {path: 'login', loadChildren: 'app/core/login/login.module#LoginModule'},
-  {path: '', component: WelcomeComponent, pathMatch: 'full'},
+  {path: 'welcome', component: WelcomeComponent, pathMatch: 'full'},
   {path: 'languages', loadChildren: 'app/languages/languages.module#LanguagesModule'},
   {path: 'organizations', loadChildren: 'app/organizations/organizations.module#OrganizationsModule'},
   {path: 'projects', loadChildren: 'app/projects/projects.module#ProjectsModule'},

@@ -1,10 +1,12 @@
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs/Observable';
+import { environment } from '../../../../environments/environment';
 import { AbstractHttpClient, IRequestOptionsWithBody } from './abstract-http-client';
 
 export abstract class BaseApiService extends AbstractHttpClient {
 
   protected _baseUrl: string;
+  source: any = {name: 'source not set'};
 
   get baseUrl(): string {
     return this._baseUrl;
@@ -14,7 +16,7 @@ export abstract class BaseApiService extends AbstractHttpClient {
 
   constructor(httpClient: HttpClient, baseUrl: string) {
     super(httpClient);
-    this._baseUrl = baseUrl;
+    this._baseUrl = environment.services[baseUrl];
   }
 
   url(endpoint: string): string {
