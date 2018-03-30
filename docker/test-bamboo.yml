@@ -10,16 +10,15 @@ services:
 
   cord-api-plo:
     image: 103805181946.dkr.ecr.us-west-2.amazonaws.com/client/cord-api-plo:latest
-    ports:
-        - "8001"
     links:
         - mongo-db
     environment:
       MONGO_DB_ADDRESS: mongo-db
       MONGO_DB_PORT: 27017
-      NODE_ENV: dev
-      SERVICE_8001_NAME: client-tsco-cord-field-uat
-    mem_limit: 256000000
+      NODE_ENV: docker
+      ECHO_ENABLED: "true"
+      BOOTSTRAP: "qa"
+      TRACE_REQ: "true"
 
   ilb-profile-service:
     image: 103805181946.dkr.ecr.us-west-2.amazonaws.com/client/tsco-ilb-profile:latest
