@@ -117,9 +117,7 @@ export abstract class BaseStorageService<TStore extends any> {
    * @returns {Observable<T>}
    */
   getItem<T>(key: string): Observable<T> {
-
     const p = async (): Promise<T> => {
-
       let val = await this.store.getItem(this.getKey(key));
       const cache = await this.getItemCache(key);
 
@@ -130,7 +128,6 @@ export abstract class BaseStorageService<TStore extends any> {
 
       return val;
     };
-
     return Observable.fromPromise(p());
   }
 

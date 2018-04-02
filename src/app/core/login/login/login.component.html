@@ -10,7 +10,7 @@
     </mat-card-header>
 
     <mat-card-content>
-      <form [formGroup]="loginForm" (submit)="onSubmit(loginForm)">
+      <form [formGroup]="loginForm" (submit)="onLogin(loginForm)">
         <div class="wrapper">
           <mat-form-field>
             <input
@@ -25,18 +25,16 @@
               matInput
               placeholder="Password"
               formControlName="password"
-              type="password"
-            >
+              [type]="hide ? 'password' : 'text'">
+            <mat-icon matSuffix (click)="hide = !hide">{{hide ? 'visibility' : 'visibility_off'}}</mat-icon>
           </mat-form-field>
         </div>
-
-
         <div class="login-container-footer">
           <div>
             <a> FORGOT EMAIL/PASSWORD?</a>
           </div>
           <div>
-            <button type="submit" mat-raised-button color="primary">LOG IN</button>
+            <button type="submit" mat-raised-button color="primary" [disabled]="!loginForm.valid">LOG IN</button>
           </div>
         </div>
       </form>

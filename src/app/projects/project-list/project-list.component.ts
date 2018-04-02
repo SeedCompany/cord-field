@@ -7,6 +7,7 @@ import {
   ProjectCreationResult
 } from '../project-create-dialog/project-create-dialog.component';
 
+
 @Component({
   selector: 'app-project-list',
   templateUrl: './project-list.component.html',
@@ -38,10 +39,9 @@ export class ProjectListComponent implements OnInit, AfterViewInit {
     [ProjectStatus.InDevelopment]: 'orange'
   };
 
-  constructor(
-    private projectService: ProjectService,
-    private dialog: MatDialog
-  ) {}
+  constructor(private projectService: ProjectService,
+              private dialog: MatDialog) {
+  }
 
   ngAfterViewInit() {
     this.projectSource.paginator = this.paginator;

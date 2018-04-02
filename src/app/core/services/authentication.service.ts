@@ -24,26 +24,26 @@ export class AuthenticationService {
     return this._logout$.asObservable();
   }
 
-  // get loggedIn(): boolean {
-  //   const tokens = this.authStorage.getAuthenticationTokens();
-  //   if (!tokens || tokens.length === 0) {
-  //     return false;
-  //   }
-  //
-  //   for (const token of tokens) {
-  //     if (token.expired) {
-  //       return false;
-  //     }
-  //   }
-  //   return true;
-  // }
-  //
-  // get currentUser(): User {
-  //   const tokens = this.authStorage.getAuthenticationTokens();
-  //   if (tokens && tokens.length > 0) {
-  //     return tokens[0].toUser();
-  //   }
-  // }
+  get loggedIn(): boolean {
+    const tokens = this.authStorage.getAuthenticationTokens();
+    if (!tokens || tokens.length === 0) {
+      return false;
+    }
+
+    for (const token of tokens) {
+      if (token.expired) {
+        return false;
+      }
+    }
+    return true;
+  }
+
+  get currentUser(): User {
+    const tokens = this.authStorage.getAuthenticationTokens();
+    if (tokens && tokens.length > 0) {
+      return tokens[0].toUser();
+    }
+  }
 
   constructor(private api: ProfileApiService,
               private authStorage: AuthenticationStorageService,

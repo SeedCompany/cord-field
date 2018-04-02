@@ -4,6 +4,7 @@ import { MatIconRegistry } from '@angular/material';
 import { DomSanitizer } from '@angular/platform-browser';
 import { Route, Router } from '@angular/router';
 import { AuthenticationService } from '../../services/authentication.service';
+import { LoggerService } from '../../services/logger.service';
 
 @Component({
   selector: 'app-login',
@@ -12,6 +13,7 @@ import { AuthenticationService } from '../../services/authentication.service';
 })
 export class LoginComponent implements OnInit {
 
+  hide = true;
   loginForm: FormGroup = this.fb.group({
     email: ['', Validators.required],
     password: ['', Validators.required]
@@ -20,29 +22,30 @@ export class LoginComponent implements OnInit {
   constructor(private fb: FormBuilder,
               private auth: AuthenticationService,
               private router: Router,
+              private logService: LoggerService,
               iconRegistry: MatIconRegistry,
               sanitizer: DomSanitizer) {
     iconRegistry.addSvgIcon('cord', sanitizer.bypassSecurityTrustResourceUrl('assets/images/cord-icon.svg'));
   }
 
+
+  get isLoggedIn(): boolean {
+    return this.auth.loggedIn;
+  }
+
   ngOnInit() {
   }
 
-  onSubmit(form) {
-    console.log('Values are', form.value.email);
+  onLogin(form) {
     this
       .auth
       .login(form.value.email, form.value.password, true)
       .toPromise()
-      .then((resp) => {
-        console.log('Resp is', resp);
-        if (resp.length > 0) {
-          this.router.navigate(['/welcome']);
-        }
+      .then(() => {
+        this.router.navigate(['/welcome']);
       })
       .catch((err) => {
-        console.log('Error is', err);
-      })
+        this.logService.error(err, 'error at onLogin');
+      });
   }
-
 }
