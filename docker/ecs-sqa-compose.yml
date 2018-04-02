@@ -30,7 +30,7 @@ services:
     mem_limit: 256000000
 
   profile-service:
-    image: 103805181946.dkr.ecr.us-west-2.amazonaws.com/client/tsco-cord-profile:latest
+    image: 103805181946.dkr.ecr.us-west-2.amazonaws.com/client/tsco-ilb-profile:latest
     ports:
       - "8001"
     links:
