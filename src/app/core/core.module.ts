@@ -1,7 +1,7 @@
 import { NgModule, Optional, SkipSelf } from '@angular/core';
 import { RouterModule } from '@angular/router';
+import { HeaderComponent } from '../shared/components/header/header.component';
 import { SharedModule } from '../shared/shared.module';
-import { HeaderComponent } from './header/header.component';
 import { LoginModule } from './login/login.module';
 import { NotFoundPageComponent } from './not-found-page/not-found-page.component';
 import { AuthenticationStorageService } from './services/authentication-storage.service';
