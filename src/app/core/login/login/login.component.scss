@@ -28,10 +28,12 @@
     margin-top: 8em;
     display: flex;
     justify-content: space-between;
-    .mat-raised-button.mat-primary, .mat-fab.mat-primary, .mat-mini-fab.mat-primary {
-      background-color: green;
-      color: white;
+    a {
+      color: #409e04;
     }
+  }
+  .request-access {
+    margin: 3em 0em 0em 0em;
   }
 
 }

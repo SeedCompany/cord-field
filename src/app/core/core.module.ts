@@ -21,9 +21,6 @@ import { WelcomeComponent } from './welcome/welcome.component';
     SharedModule,
     RouterModule
   ],
-  exports: [
-    HeaderComponent
-  ],
   declarations: [
     HeaderComponent,
     NotFoundPageComponent,

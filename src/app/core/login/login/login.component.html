@@ -19,6 +19,7 @@
               formControlName="email"
               type="text"
             >
+            <mat-error *ngIf="loginForm.controls['email'].invalid">Please enter a valid email</mat-error>
           </mat-form-field>
           <mat-form-field>
             <input
@@ -34,11 +35,14 @@
             <a> FORGOT EMAIL/PASSWORD?</a>
           </div>
           <div>
-            <button type="submit" mat-raised-button color="primary" [disabled]="!loginForm.valid">LOG IN</button>
+            <button type="submit" mat-raised-button color="accent" [disabled]="!loginForm.valid">LOG IN</button>
           </div>
         </div>
       </form>
     </mat-card-content>
+    <mat-card-footer class="request-access">
+      Don't have an account? <a>REQUEST ACCESS</a>
+    </mat-card-footer>
   </mat-card>
 </section>
 
