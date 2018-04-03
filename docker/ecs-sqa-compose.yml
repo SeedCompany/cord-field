@@ -29,7 +29,7 @@ services:
       SERVICE_8001_NAME: client-tsco-cord-field-sqa
     mem_limit: 256000000
 
-  ilb-profile-service:
+  profile-service:
     image: 103805181946.dkr.ecr.us-west-2.amazonaws.com/client/tsco-ilb-profile:latest
     ports:
       - "8001"
