@@ -1,0 +1,14 @@
+.request-access-container {
+  width: 400px;
+  margin: 8em;
+  .formFieldsWrapper {
+    display: flex;
+    flex-direction: column;
+  }
+  .container-footer {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+    margin-top: 3em;
+  }
+}

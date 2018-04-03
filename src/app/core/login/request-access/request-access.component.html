@@ -1,0 +1,69 @@
+<section class="request-access-container">
+  <mat-card>
+    <mat-card-header>
+      <mat-card-title>Request Access</mat-card-title>
+    </mat-card-header>
+    <mat-card-content>
+      <form [formGroup]="requestAccessForm">
+        <div class="formFieldsWrapper">
+          <mat-form-field class="accent">
+            <input
+              matInput
+              placeholder="First Name"
+              formControlName="firstName"
+              type="text"
+            >
+          </mat-form-field>
+          <mat-form-field class="accent">
+            <input
+              matInput
+              placeholder="Last Name"
+              formControlName="lastName"
+              type="text"
+            >
+          </mat-form-field>
+          <mat-form-field color="accent">
+            <input
+              matInput
+              placeholder="Email"
+              formControlName="email"
+              type="text"
+            >
+            <mat-error *ngIf="requestAccessForm.controls['email'].invalid">Please enter a valid email</mat-error>
+          </mat-form-field>
+          <mat-form-field class="accent">
+            <input
+              matInput
+              placeholder="Organization"
+              formControlName="organization"
+              type="text"
+            >
+          </mat-form-field>
+          <mat-form-field color="accent">
+            <input
+              matInput
+              placeholder="Password"
+              formControlName="password"
+              type="password"
+            >
+          </mat-form-field>
+          <mat-form-field color="accent">
+            <input
+              matInput
+              placeholder="Confirm Password"
+              formControlName="confirmPassword"
+              type="password"
+            >
+          </mat-form-field>
+        </div>
+        <div class="container-footer">
+          <a>CANCEL</a>
+          <button type="submit"
+                  mat-raised-button color="accent"
+                  [disabled]="!requestAccessForm.valid">Request Access
+          </button>
+        </div>
+      </form>
+    </mat-card-content>
+  </mat-card>
+</section>
