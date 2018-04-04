@@ -1,0 +1,38 @@
+@import "~styles/imports";
+
+.project-form {
+  width: 100%;
+}
+
+.dialog {
+  margin: auto;
+}
+
+.mat-dialog-content {
+  margin: auto;
+}
+
+.mat-dialog-actions {
+  margin: auto 20px;
+  float: right;
+}
+
+.mat-form-field {
+  display: block;
+}
+
+.cancel {
+  color: mat-color($accent);
+}
+
+.capitalize {
+  text-transform: capitalize;
+}
+
+.primary {
+  font-size: 14px;
+  letter-spacing: 0.5px;
+  text-align: center;
+  background-color: map-get($underbelly-green, 500);
+  color: map_get(map_get($theme, background), card);
+}

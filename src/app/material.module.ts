@@ -3,12 +3,14 @@ import {
   MatButtonModule,
   MatCardModule,
   MatChipsModule,
+  MatDialogModule,
   MatIconModule,
   MatInputModule,
   MatListModule,
   MatMenuModule,
   MatPaginatorModule,
   MatProgressSpinnerModule,
+  MatSelectModule,
   MatSortModule,
   MatTableModule,
   MatToolbarModule
@@ -17,6 +19,7 @@ import {
 const components = [
   MatCardModule,
   MatChipsModule,
+  MatDialogModule,
   MatButtonModule,
   MatIconModule,
   MatInputModule,
@@ -24,6 +27,7 @@ const components = [
   MatMenuModule,
   MatPaginatorModule,
   MatProgressSpinnerModule,
+  MatSelectModule,
   MatSortModule,
   MatTableModule,
   MatToolbarModule

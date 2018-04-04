@@ -1,6 +1,7 @@
 import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
-import { MatPaginator, MatSort, MatTableDataSource } from '@angular/material';
+import { MatDialog, MatPaginator, MatSort, MatTableDataSource } from '@angular/material';
 import { ProjectService } from '../../core/services/project.service';
+import { ProjectCreateDialogComponent } from '../project-create-dialog/project-create-dialog.component';
 
 export interface Element {
   name: string;
@@ -44,7 +45,8 @@ export class ProjectListComponent implements OnInit, AfterViewInit {
   };
 
   constructor(
-    private projectService: ProjectService
+    private projectService: ProjectService,
+    private dialog: MatDialog
   ) {}
 
   ngAfterViewInit() {
@@ -66,6 +68,17 @@ export class ProjectListComponent implements OnInit, AfterViewInit {
 
   getColor(status) {
     return this.backgroundColor[status] || 'red';
+  }
+
+  openDialog(): void {
+    const dialogRef = this.dialog.open(ProjectCreateDialogComponent, {
+      width: '400px',
+      data: this.projectTypes
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      console.log(result);
+    });
   }
 
   trackByFn(index, project) {

@@ -1,0 +1,36 @@
+<section class="dialog">
+  <h1 mat-dialog-title>New Project</h1>
+  <div mat-dialog-content>
+    <form [formGroup]="projectForm">
+      <mat-form-field color="accent">
+        <mat-select class="capitalize"
+                    placeholder="Project Type"
+                    formControlName="projectType"
+                    name="projectType">
+          <mat-option class="capitalize" *ngFor="let projectType of projectTypes ; trackBy: trackByFn ;"
+                      [value]="projectType">
+            {{ projectType }}
+          </mat-option>
+        </mat-select>
+        <mat-error *ngIf="projectForm.controls['projectType'].invalid">Please select project type</mat-error>
+      </mat-form-field>
+      <mat-form-field color="accent">
+        <input matInput maxlength="140"
+               name="projectName"
+               formControlName="projectName"
+               placeholder="Project Name">
+        <mat-hint align="end">{{ projectName?.length }}/140</mat-hint>
+        <mat-error *ngIf="projectForm.controls['projectName'].invalid">Please enter project name</mat-error>
+      </mat-form-field>
+    </form>
+  </div>
+  <div mat-dialog-actions>
+    <button mat-button class="mat-accent cancel" (click)="onClose()">CANCEL</button>
+    <button mat-raised-button class="primary" [disabled]="!projectForm.valid"
+            [mat-dialog-close]="{ type:projectForm.controls['projectType'].value ,
+              name:projectForm.controls['projectName'].value }"
+            cdkFocusInitial>
+      CREATE
+    </button>
+  </div>
+</section>
