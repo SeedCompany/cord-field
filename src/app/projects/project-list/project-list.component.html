@@ -1,92 +1,84 @@
-<section class="project-list">
-  <div>
-    <mat-toolbar class="add-new">
-      <mat-toolbar-row class="first-row">
-        <span class="nav-spacer"></span>
-        <button mat-fab class="add" (click)="openDialog()">
-          <mat-icon aria-label="create new project">add</mat-icon>
-        </button>
-      </mat-toolbar-row>
-      <mat-toolbar-row class="second-row"></mat-toolbar-row>
-    </mat-toolbar>
-  </div>
-  <div>
-    <mat-toolbar class="toolbar">
-      <mat-toolbar-row>
-        <button mat-button class="project-menu-button capitalize" color="primary" [matMenuTriggerFor]="projectMenu">
-          {{ projectTitle }}
-          <mat-icon class="project-menu-arrow-down">arrow_drop_down</mat-icon>
-        </button>
+<mat-toolbar class="add-new">
+  <mat-toolbar-row class="first-row">
+    <span class="spacer"></span>
+    <button mat-fab class="add" (click)="openDialog()">
+      <mat-icon aria-label="create new project">add</mat-icon>
+    </button>
+  </mat-toolbar-row>
+  <mat-toolbar-row class="second-row"></mat-toolbar-row>
+</mat-toolbar>
 
-        <mat-menu #projectMenu="matMenu">
-          <button mat-menu-item class="capitalize" *ngFor="let project of projects; trackBy: trackByFn ; "
-                  (click)="setMenuItem(project)">
-            {{ project }}
-          </button>
-        </mat-menu>
+<mat-toolbar class="toolbar">
+  <button mat-button class="project-menu-button" color="primary" [matMenuTriggerFor]="projectMenu">
+    {{ currentListSelector }}
+    <mat-icon>arrow_drop_down</mat-icon>
+  </button>
+  <mat-menu #projectMenu="matMenu">
+    <button mat-menu-item
+            (click)="currentListSelector = selector"
+            *ngFor="let selector of listSelectorOptions; trackBy: trackByValue">
+      {{ selector }}
+    </button>
+  </mat-menu>
 
-        <span class="nav-spacer"></span>
-        <app-search (search)="onSearch($event)"></app-search>
-        <button mat-icon-button [matMenuTriggerFor]="filterMenu" class="mat-primary filter-menu">
-          <mat-icon>
-            filter_list
-          </mat-icon>
-        </button>
+  <span class="spacer"></span>
 
-        <mat-menu #filterMenu="matMenu">
-          <button mat-menu-item>filter1</button>
-          <button mat-menu-item>filter2</button>
-          <button mat-menu-item>filter3</button>
-        </mat-menu>
-      </mat-toolbar-row>
-    </mat-toolbar>
+  <app-search class="search" (search)="onSearch($event)"></app-search>
 
-    <mat-table [dataSource]="projectSource" matSort>
+  <button mat-icon-button [matMenuTriggerFor]="filterMenu" color="primary">
+    <mat-icon>filter_list</mat-icon>
+  </button>
+  <mat-menu #filterMenu="matMenu">
+    <button mat-menu-item>filter1</button>
+    <button mat-menu-item>filter2</button>
+    <button mat-menu-item>filter3</button>
+  </mat-menu>
+</mat-toolbar>
 
-      <ng-container matColumnDef="name">
-        <mat-header-cell *matHeaderCellDef mat-sort-header> Project Title</mat-header-cell>
-        <mat-cell *matCellDef="let project" class="title capitalize"> {{ project.name }}</mat-cell>
-      </ng-container>
+<mat-table [dataSource]="projectSource" matSort>
 
-      <ng-container matColumnDef="lastModified">
-        <mat-header-cell *matHeaderCellDef mat-sort-header> Last Modified</mat-header-cell>
-        <mat-cell *matCellDef="let project"> {{ project.lastModified | date : 'shortDate' }}</mat-cell>
-      </ng-container>
+  <ng-container matColumnDef="name">
+    <mat-header-cell *matHeaderCellDef mat-sort-header>Project Title</mat-header-cell>
+    <mat-cell *matCellDef="let project" class="title capitalize"> {{ project.name }}</mat-cell>
+  </ng-container>
+
+  <ng-container matColumnDef="lastModified">
+    <mat-header-cell *matHeaderCellDef mat-sort-header> Last Modified</mat-header-cell>
+    <mat-cell *matCellDef="let project"> {{ project.lastModified | date : 'shortDate' }}</mat-cell>
+  </ng-container>
 
 
-      <ng-container matColumnDef="languages" class="languages">
-        <mat-header-cell *matHeaderCellDef mat-sort-header> Languages</mat-header-cell>
-        <mat-cell *matCellDef="let project">
+  <ng-container matColumnDef="languages">
+    <mat-header-cell *matHeaderCellDef mat-sort-header>Languages</mat-header-cell>
+    <mat-cell *matCellDef="let project">
 
-          <mat-chip-list *ngIf="project.languages.length > 0">
-            <mat-chip *ngFor="let language of project.languages; trackBy: trackByFn ;" class="capitalize">
-              {{ language }}
-            </mat-chip>
-          </mat-chip-list>
-          <span *ngIf="project.languages.length === 0" class="language-none">None</span>
-        </mat-cell>
-      </ng-container>
+      <mat-chip-list *ngIf="project.languages.length > 0">
+        <mat-chip *ngFor="let language of project.languages; trackBy: trackByValue" class="capitalize">
+          {{ language }}
+        </mat-chip>
+      </mat-chip-list>
+      <span *ngIf="project.languages.length === 0" class="language-none">None</span>
+    </mat-cell>
+  </ng-container>
 
-      <ng-container matColumnDef="type">
-        <mat-header-cell *matHeaderCellDef mat-sort-header> Type</mat-header-cell>
-        <mat-cell *matCellDef="let project" class="capitalize"> {{ project.type }}</mat-cell>
-      </ng-container>
+  <ng-container matColumnDef="type">
+    <mat-header-cell *matHeaderCellDef mat-sort-header>Type</mat-header-cell>
+    <mat-cell *matCellDef="let project" class="capitalize"> {{ project.type }}</mat-cell>
+  </ng-container>
 
-      <ng-container matColumnDef="status">
-        <mat-header-cell *matHeaderCellDef mat-sort-header> Status</mat-header-cell>
-        <mat-cell *matCellDef="let project" class="capitalize">
-          <span class="status-circle"
-                [ngStyle]="{'background':getColor(project.status)}"></span>
-          <span>{{ project.status }}</span>
-        </mat-cell>
-      </ng-container>
+  <ng-container matColumnDef="status">
+    <mat-header-cell *matHeaderCellDef mat-sort-header>Status</mat-header-cell>
+    <mat-cell *matCellDef="let project" class="capitalize">
+      <span class="status-circle"
+            [ngStyle]="{'background':getColor(project.status)}"></span>
+      <span>{{ project.status }}</span>
+    </mat-cell>
+  </ng-container>
 
-      <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
-      <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
-    </mat-table>
-    <mat-paginator [pageSize]=pageSize
-                   [pageSizeOptions]=pageSizeOptions
-                   [showFirstLastButtons]="false">
-    </mat-paginator>
-  </div>
-</section>
+  <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+  <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
+</mat-table>
+<mat-paginator [pageSize]=pageSize
+               [pageSizeOptions]=pageSizeOptions
+               [showFirstLastButtons]="false">
+</mat-paginator>

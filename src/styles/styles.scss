@@ -19,3 +19,7 @@ html {
 body {
   margin: 0;
 }
+
+.mat-sort-header-sorted {
+  color: mat-foreground($theme, text);
+}

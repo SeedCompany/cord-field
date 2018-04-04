@@ -17,20 +17,22 @@ export interface Element {
   styleUrls: ['./project-list.component.scss']
 })
 export class ProjectListComponent implements OnInit, AfterViewInit {
+  currentListSelector = 'All Projects';
+  listSelectorOptions = [
+    'All Projects',
+    'My Projects'
+  ];
+
+  projectSource;
   displayedColumns = ['name', 'lastModified', 'languages', 'type', 'status'];
-  projectTitle = 'my projects';
   pageSize = 10;
   pageSizeOptions = [5, 10, 20];
-  projectSource;
-  projects = [
-    'my projects',
-    'all projects'
-  ];
   projectTypes = [
     'internship',
     'translation',
     'partner capacity'
   ];
+
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
 
@@ -62,10 +64,6 @@ export class ProjectListComponent implements OnInit, AfterViewInit {
     this.projectSource.filter = query;
   }
 
-  setMenuItem(projectTitle) {
-    this.projectTitle = projectTitle;
-  }
-
   getColor(status) {
     return this.backgroundColor[status] || 'red';
   }
@@ -81,9 +79,7 @@ export class ProjectListComponent implements OnInit, AfterViewInit {
     });
   }
 
-  trackByFn(index, project) {
-    return index;
+  trackByValue(index, value) {
+    return value;
   }
 }
-
-
