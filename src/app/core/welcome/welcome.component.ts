@@ -13,6 +13,6 @@ export class WelcomeComponent implements OnInit {
   }
 
   ngOnInit() {
-    // this.authStore.getAuthenticationTokens();
+    console.log(this.authStore.getAuthenticationTokens());
   }
 }

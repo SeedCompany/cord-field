@@ -11,56 +11,19 @@ export const AUTH_STORAGE_KEY = 'ilb_auth';
 @Injectable()
 export class AuthenticationStorageService {
 
-  private authTokens: any[];
-
-  private authToken: AuthenticationToken;
+  private authTokens: AuthenticationToken[];
 
   constructor(private localStore: LocalStorageService,
               private sessionStore: SessionStorageService,
               private log: LoggerService) {
   }
 
-  // getAuthenticationToken(service: string): AuthenticationToken {
-  //
-  //   if (!this.authToken) {
-  //
-  //     const tokensJson = (this.localStore.getItem(AUTH_STORAGE_KEY) || this.sessionStore.getItem(AUTH_STORAGE_KEY));
-  //
-  //     tokensJson
-  //       .toPromise()
-  //       .then((tokens) => {
-  //         if (!tokens) {
-  //           return null;
-  //         }
-  //         try {
-  //           if (!Array.isArray(tokens)) {
-  //             this.log.error(new Error('stored tokens should have been in an array'));
-  //           }
-  //         } catch (err) {
-  //           this.log.info(err, 'stored auth tokens are corrupted... deleting them from the store');
-  //           this.clearTokens();
-  //           return null;
-  //         }
-  //         for (const token of tokens) {
-  //           if (token.key === service) {
-  //             return AuthenticationToken.fromJson(token);
-  //           }
-  //         }
-  //         return null;
-  //       })
-  //       .catch(Promise.reject);
-  //   }
-  //
-  //   return this.authToken;
-  // }
-
   getAuthenticationTokens(): AuthenticationToken[] {
-
     if (!this.authTokens) {
-      const tokensJson = (this.localStore.getItem(AUTH_STORAGE_KEY) || this.sessionStore.getItem(AUTH_STORAGE_KEY));
-      tokensJson
+      const tokensFromLocalDb = this.localStore.getItem(AUTH_STORAGE_KEY) || this.sessionStore.getItem(AUTH_STORAGE_KEY)
+      tokensFromLocalDb
         .toPromise()
-        .then((tokens) => {
+        .then((tokens: AuthenticationToken[]) => {
           if (!tokens) {
             return null;
           }
@@ -73,8 +36,8 @@ export class AuthenticationStorageService {
             this.clearTokens();
             return null;
           }
+          this.authTokens = tokens;
           return this.authTokens;
-
         })
         .catch(Promise.reject);
     }

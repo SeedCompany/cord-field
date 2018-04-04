@@ -101,7 +101,7 @@ describe('StorageService', () => {
       }
     });
 
-    it('array', async (done) => {
+    fit('array', async (done) => {
       try {
         for (const type of stores) {
           await store[type].setItem('test', [1, 2, 3, 4, 5]).toPromise();

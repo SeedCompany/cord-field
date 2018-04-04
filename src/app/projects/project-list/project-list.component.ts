@@ -7,7 +7,6 @@ import {
   ProjectCreationResult
 } from '../project-create-dialog/project-create-dialog.component';
 
-
 @Component({
   selector: 'app-project-list',
   templateUrl: './project-list.component.html',

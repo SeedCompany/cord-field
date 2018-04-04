@@ -66,10 +66,6 @@ export class AuthenticationService {
       domain: environment.services.domain
     };
 
-    const reqOptions: IApiServiceOptions = {
-      disableServerDown: true
-    };
-
     return this
       .api
       .request('POST', '/auth/native/login', {body: body})

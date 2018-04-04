@@ -51,7 +51,7 @@ export class RequestAccessComponent implements OnInit {
       email: form.value.email,
       password: form.value.password,
       organization: form.value.organization,
-      domain: environment.services.domain
+      domain: environment.services['domain']
     };
 
     this
