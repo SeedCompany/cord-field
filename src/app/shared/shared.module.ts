@@ -1,19 +1,27 @@
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MaterialModule } from '../material.module';
+import { SearchComponent } from './components/search/search.component';
 import { AutofocusDirective } from './directives/autofocus.directive';
 
 @NgModule({
   imports: [
     CommonModule,
-    MaterialModule
+    FormsModule,
+    MaterialModule,
+    ReactiveFormsModule
   ],
   exports: [
     CommonModule,
-    MaterialModule
+    FormsModule,
+    MaterialModule,
+    ReactiveFormsModule,
+    SearchComponent
   ],
   declarations: [
-    AutofocusDirective
+    AutofocusDirective,
+    SearchComponent
   ]
 })
 export class SharedModule {

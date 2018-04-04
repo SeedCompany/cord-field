@@ -1,0 +1,33 @@
+<h1 mat-dialog-title>New Project</h1>
+<form mat-dialog-content [formGroup]="form">
+  <mat-form-field color="accent">
+    <mat-select formControlName="type"
+                placeholder="Type">
+      <mat-option *ngFor="let type of types ; trackBy: trackByValue;"
+                  [value]="type">
+        {{ typeToString(type) }}
+      </mat-option>
+    </mat-select>
+    <mat-error *ngIf="type.invalid">Please select a type</mat-error>
+  </mat-form-field>
+
+  <mat-form-field color="accent">
+    <input matInput
+           maxlength="140"
+           formControlName="name"
+           placeholder="Name">
+    <mat-hint align="end">{{ name.value.length }}/140</mat-hint>
+    <mat-error *ngIf="name.invalid">Please enter a name</mat-error>
+  </mat-form-field>
+</form>
+<div mat-dialog-actions>
+  <button mat-button color="accent" (click)="onClose()">CANCEL</button>
+  <button mat-button color="accent"
+          [disabled]="!form.valid"
+          [mat-dialog-close]="{
+            type: type.value,
+            name: name.value
+          }">
+    CREATE
+  </button>
+</div>

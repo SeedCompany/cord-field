@@ -3,3 +3,49 @@
 :host {
   @extend %component-defaults;
 }
+
+.add-button {
+  // The top of fab button starts half way down the height of the parent element
+  // 49% aligns better than 50% as long as the element's height is < 150px which should mostly be the case for toolbars.
+  top: 49%;
+}
+
+.toolbar {
+  background: mat-background($theme, card);
+  margin-top: (56px / 2); // Make room for half of the fab button's height
+
+  .project-menu-button {
+    padding-right: 8px;
+    color: mat-foreground($theme, text);
+    font-size: mat-font-size($config, title);
+  }
+
+  .search {
+    font-size: mat-font-size($config, body-1);
+  }
+}
+
+.spacer {
+  flex: auto;
+}
+
+.mat-row {
+  border-bottom-style: none;
+}
+
+.title {
+  color: mat-color($accent);
+  @include mat-typography-level-to-styles($config, body-2);
+}
+
+.language-none {
+  color: mat-foreground($theme, disabled);
+}
+
+.status-circle {
+  border-radius: 4px;
+  height: 7px;
+  width: 7px;
+  display: inline-block;
+  margin-right: 5px;
+}

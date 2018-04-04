@@ -3,7 +3,7 @@
 
 @import "imports";
 
-@include mat-core();
+@include mat-core($config);
 @include angular-material-theme($theme);
 
 * {
@@ -18,4 +18,22 @@ html {
 
 body {
   margin: 0;
+}
+
+// Text color for sorted headers on tables should match the sorting arrow (be darker)
+.mat-sort-header-sorted {
+  color: mat-foreground($theme, text);
+}
+
+// Provide room for clickable chips shadows
+.mat-chip:not(.mat-basic-chip) {
+  margin: 0 3px 6px !important;
+  & + & {
+    margin-left: 5px !important;
+  }
+
+  // Keep chips centered vertically and text aligned inside of tables
+  .mat-cell & {
+    margin-top: 6px !important;
+  }
 }

@@ -64,3 +64,5 @@ $seed-gray-palette: (
 $primary: $seed-gray-palette;
 $accent: $underbelly-green-palette;
 $theme: mat-light-theme($primary, $accent);
+
+$config: mat-typography-config();
