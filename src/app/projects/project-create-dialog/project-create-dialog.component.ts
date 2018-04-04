@@ -1,6 +1,12 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatDialogRef } from '@angular/material';
+import { ProjectType, projectTypeList, projectTypeToString } from '../../core/models/project';
+
+export interface ProjectCreationResult {
+  name: string;
+  type: ProjectType;
+}
 
 @Component({
   selector: 'app-project-create-dialog',
@@ -9,10 +15,8 @@ import { MatDialogRef } from '@angular/material';
 })
 export class ProjectCreateDialogComponent implements OnInit {
 
-  types = [
-    'Translation',
-    'Internship'
-  ];
+  readonly types = projectTypeList;
+  readonly typeToString = projectTypeToString;
 
   form: FormGroup;
 

@@ -5,7 +5,7 @@
                 placeholder="Type">
       <mat-option *ngFor="let type of types ; trackBy: trackByValue;"
                   [value]="type">
-        {{ type }}
+        {{ typeToString(type) }}
       </mat-option>
     </mat-select>
     <mat-error *ngIf="type.invalid">Please select a type</mat-error>

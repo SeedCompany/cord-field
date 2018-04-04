@@ -36,12 +36,12 @@
 
   <ng-container matColumnDef="name">
     <mat-header-cell *matHeaderCellDef mat-sort-header>Project Title</mat-header-cell>
-    <mat-cell *matCellDef="let project" class="title capitalize"> {{ project.name }}</mat-cell>
+    <mat-cell *matCellDef="let project" class="title"> {{ project.name }}</mat-cell>
   </ng-container>
 
   <ng-container matColumnDef="lastModified">
     <mat-header-cell *matHeaderCellDef mat-sort-header> Last Modified</mat-header-cell>
-    <mat-cell *matCellDef="let project"> {{ project.lastModified | date : 'shortDate' }}</mat-cell>
+    <mat-cell *matCellDef="let project"> {{ project.updatedAt | date : 'shortDate' }}</mat-cell>
   </ng-container>
 
 
@@ -50,7 +50,7 @@
     <mat-cell *matCellDef="let project">
 
       <mat-chip-list *ngIf="project.languages.length > 0">
-        <mat-chip *ngFor="let language of project.languages; trackBy: trackByValue" class="capitalize">
+        <mat-chip *ngFor="let language of project.languages; trackBy: trackByValue">
           {{ language }}
         </mat-chip>
       </mat-chip-list>
@@ -60,15 +60,15 @@
 
   <ng-container matColumnDef="type">
     <mat-header-cell *matHeaderCellDef mat-sort-header>Type</mat-header-cell>
-    <mat-cell *matCellDef="let project" class="capitalize"> {{ project.type }}</mat-cell>
+    <mat-cell *matCellDef="let project">{{ projectTypeToString(project.type) }}</mat-cell>
   </ng-container>
 
   <ng-container matColumnDef="status">
     <mat-header-cell *matHeaderCellDef mat-sort-header>Status</mat-header-cell>
-    <mat-cell *matCellDef="let project" class="capitalize">
+    <mat-cell *matCellDef="let project">
       <span class="status-circle"
-            [ngStyle]="{'background':getColor(project.status)}"></span>
-      <span>{{ project.status }}</span>
+            [ngStyle]="{'background': getStatusColor(project.status)}"></span>
+      <span>{{ projectStatusToString(project.status) }}</span>
     </mat-cell>
   </ng-container>
 

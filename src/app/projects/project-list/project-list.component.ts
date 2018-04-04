@@ -1,15 +1,11 @@
 import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
 import { MatDialog, MatPaginator, MatSort, MatTableDataSource } from '@angular/material';
+import { Project, ProjectStatus, projectStatusToString, projectTypeToString } from '../../core/models/project';
 import { ProjectService } from '../../core/services/project.service';
-import { ProjectCreateDialogComponent } from '../project-create-dialog/project-create-dialog.component';
-
-export interface Element {
-  name: string;
-  lastModified: number;
-  type: string;
-  languages: string[];
-  status: string;
-}
+import {
+  ProjectCreateDialogComponent,
+  ProjectCreationResult
+} from '../project-create-dialog/project-create-dialog.component';
 
 @Component({
   selector: 'app-project-list',
@@ -23,7 +19,7 @@ export class ProjectListComponent implements OnInit, AfterViewInit {
     'My Projects'
   ];
 
-  projectSource;
+  projectSource: MatTableDataSource<Project>;
   displayedColumns = ['name', 'lastModified', 'languages', 'type', 'status'];
   pageSize = 10;
   pageSizeOptions = [5, 10, 20];
@@ -31,14 +27,15 @@ export class ProjectListComponent implements OnInit, AfterViewInit {
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
 
-  private backgroundColor = {
-    active: 'green',
-    rejected: 'red',
-    suspended: 'gray',
-    completed: 'green',
-    archived: 'red',
-    'pending approval': 'yellow',
-    'in development': 'yellow'
+  readonly projectTypeToString = projectTypeToString;
+  readonly projectStatusToString = projectStatusToString;
+
+  private statusColor = {
+    [ProjectStatus.Active]: 'green',
+    [ProjectStatus.Rejected]: 'red',
+    [ProjectStatus.Completed]: 'green',
+    [ProjectStatus.Inactive]: 'red',
+    [ProjectStatus.InDevelopment]: 'orange'
   };
 
   constructor(
@@ -52,15 +49,15 @@ export class ProjectListComponent implements OnInit, AfterViewInit {
   }
 
   ngOnInit() {
-    this.projectSource = new MatTableDataSource<Element>(this.projectService.getProjects());
+    this.projectSource = new MatTableDataSource(this.projectService.getProjects());
   }
 
   onSearch(query: string) {
     this.projectSource.filter = query;
   }
 
-  getColor(status) {
-    return this.backgroundColor[status] || 'red';
+  getStatusColor(status: ProjectStatus) {
+    return this.statusColor[status];
   }
 
   openDialog(): void {
@@ -68,7 +65,7 @@ export class ProjectListComponent implements OnInit, AfterViewInit {
       width: '400px'
     });
 
-    dialogRef.afterClosed().subscribe(result => {
+    dialogRef.afterClosed().subscribe((result?: ProjectCreationResult) => {
       if (!result) {
         return;
       }
