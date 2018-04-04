@@ -8,3 +8,11 @@
   display: flex;
   flex-direction: column;
 }
+
+@function mat-foreground($theme, $item) {
+  @return map-get(map-get($theme, foreground), $item);
+}
+
+@function mat-background($theme, $item) {
+  @return map-get(map-get($theme, background), $item);
+}
