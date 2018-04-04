@@ -3,7 +3,7 @@
 
 @import "imports";
 
-@include mat-core();
+@include mat-core($config);
 @include angular-material-theme($theme);
 
 * {
