@@ -4,7 +4,7 @@
       <mat-card-title>Request Access</mat-card-title>
     </mat-card-header>
     <mat-card-content>
-      <form [formGroup]="requestAccessForm">
+      <form [formGroup]="requestAccessForm" (submit)="onRequestAccess(requestAccessForm)">
         <div class="formFieldsWrapper">
           <mat-form-field class="accent">
             <input

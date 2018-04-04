@@ -1,5 +1,14 @@
 import { ObjectId } from './object-id';
 
+export interface IRequestAccess {
+  firstName: string;
+  lastName: string;
+  email: string;
+  password: string;
+  domain: string;
+  organization: string;
+}
+
 export class Address {
 
   address1: string;

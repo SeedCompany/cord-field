@@ -3,8 +3,9 @@ import 'rxjs/add/observable/of';
 import 'rxjs/add/operator/map';
 import { Observable } from 'rxjs/Observable';
 import { Subject } from 'rxjs/Subject';
+import { environment } from '../../../environments/environment';
 import { AuthenticationToken } from '../models/authentication-token';
-import { User } from '../models/user';
+import { IRequestAccess, User } from '../models/user';
 import { AuthenticationStorageService } from './authentication-storage.service';
 import { IApiServiceOptions } from './http/abstract-http-client';
 import { ProfileApiService } from './http/profile-api.service';
@@ -51,11 +52,18 @@ export class AuthenticationService {
     api.source = this;
   }
 
+  requestAccess(newUser: IRequestAccess) {
+    return this
+      .api
+      .request('POST', '/users/request-account', {body: newUser});
+  }
+
 
   login(email: string, password: string, rememberLogin: boolean): Observable<AuthenticationToken[]> {
     const body = {
-      email,
-      password
+      email: email,
+      password: password,
+      domain: environment.services.domain
     };
 
     const reqOptions: IApiServiceOptions = {

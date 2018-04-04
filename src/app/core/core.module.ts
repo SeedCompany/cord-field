@@ -4,6 +4,7 @@ import { HeaderComponent } from '../shared/components/header/header.component';
 import { SharedModule } from '../shared/shared.module';
 import { LoginModule } from './login/login.module';
 import { NotFoundPageComponent } from './not-found-page/not-found-page.component';
+import { CanActivateIfAuthenticated } from './route-guards/can-activate-if-authenticated';
 import { AuthenticationStorageService } from './services/authentication-storage.service';
 import { AuthenticationService } from './services/authentication.service';
 import { BrowserService } from './services/browser.service';
@@ -30,6 +31,7 @@ import { WelcomeComponent } from './welcome/welcome.component';
     AuthenticationService,
     AuthenticationStorageService,
     BrowserService,
+    CanActivateIfAuthenticated,
     GoogleAnalyticsService,
     LocalStorageService,
     LoggerService,
