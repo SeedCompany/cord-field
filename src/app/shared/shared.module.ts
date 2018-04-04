@@ -2,6 +2,7 @@ import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MaterialModule } from '../material.module';
+import { SearchComponent } from './components/search/search.component';
 import { AutofocusDirective } from './directives/autofocus.directive';
 
 @NgModule({
@@ -15,10 +16,12 @@ import { AutofocusDirective } from './directives/autofocus.directive';
     CommonModule,
     FormsModule,
     MaterialModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    SearchComponent
   ],
   declarations: [
-    AutofocusDirective
+    AutofocusDirective,
+    SearchComponent
   ]
 })
 export class SharedModule {

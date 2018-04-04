@@ -1,8 +1,6 @@
-import { AfterViewInit, Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
 import { MatPaginator, MatSort, MatTableDataSource } from '@angular/material';
-import { Subscription } from 'rxjs/Subscription';
 import { ProjectService } from '../../core/services/project.service';
-import { ProjectSearchService } from '../project-search.service';
 
 export interface Element {
   name: string;
@@ -17,7 +15,7 @@ export interface Element {
   templateUrl: './project-list.component.html',
   styleUrls: ['./project-list.component.scss']
 })
-export class ProjectListComponent implements OnInit, AfterViewInit, OnDestroy {
+export class ProjectListComponent implements OnInit, AfterViewInit {
   displayedColumns = ['name', 'lastModified', 'languages', 'type', 'status'];
   projectTitle = 'my projects';
   pageSize = 10;
@@ -35,7 +33,6 @@ export class ProjectListComponent implements OnInit, AfterViewInit, OnDestroy {
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
 
-  searchResults: Subscription;
   private backgroundColor = {
     active: 'green',
     rejected: 'red',
@@ -46,12 +43,9 @@ export class ProjectListComponent implements OnInit, AfterViewInit, OnDestroy {
     'in development': 'yellow'
   };
 
-  constructor(private projectService: ProjectService,
-              private projectSearchService: ProjectSearchService) {
-    this.searchResults = this.projectSearchService.searchCriteria.subscribe(query => {
-      this.projectSource.filter = (query || '').trim().toLowerCase();
-    });
-  }
+  constructor(
+    private projectService: ProjectService
+  ) {}
 
   ngAfterViewInit() {
     this.projectSource.paginator = this.paginator;
@@ -62,8 +56,8 @@ export class ProjectListComponent implements OnInit, AfterViewInit, OnDestroy {
     this.projectSource = new MatTableDataSource<Element>(this.projectService.getProjects());
   }
 
-  ngOnDestroy() {
-    this.searchResults.unsubscribe();
+  onSearch(query: string) {
+    this.projectSource.filter = query;
   }
 
   setMenuItem(projectTitle) {
