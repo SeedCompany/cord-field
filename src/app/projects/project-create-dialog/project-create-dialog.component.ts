@@ -1,6 +1,6 @@
-import { Component, Inject, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material';
+import { MatDialogRef } from '@angular/material';
 
 @Component({
   selector: 'app-project-create-dialog',
@@ -9,29 +9,38 @@ import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material';
 })
 export class ProjectCreateDialogComponent implements OnInit {
 
-  projectTypes: string[];
-  projectName = '';
-  projectType = '';
+  types = [
+    'Translation',
+    'Internship'
+  ];
 
-  projectForm: FormGroup;
+  form: FormGroup;
 
-  constructor(public dialogRef: MatDialogRef<ProjectCreateDialogComponent>,
-              @Inject(MAT_DIALOG_DATA) public data: string[],
-              private formBuilder: FormBuilder) {
-    this.projectForm = this.formBuilder.group({
-      projectName: ['', Validators.required],
-      projectType: ['', Validators.required]
+  constructor(
+    public dialogRef: MatDialogRef<ProjectCreateDialogComponent>,
+    private formBuilder: FormBuilder
+  ) {}
+
+  ngOnInit() {
+    this.form = this.formBuilder.group({
+      type: ['', Validators.required],
+      name: ['', Validators.required]
     });
   }
 
-  ngOnInit() {
-    this.projectTypes = this.data;
+  get type() {
+    return this.form.get('type');
+  }
+
+  get name() {
+    return this.form.get('name');
   }
 
   onClose() {
     this.dialogRef.close();
   }
-  trackByFn(index, project) {
-    return index;
+
+  trackByValue(index, value) {
+    return value;
   }
 }

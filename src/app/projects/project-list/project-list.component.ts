@@ -27,11 +27,6 @@ export class ProjectListComponent implements OnInit, AfterViewInit {
   displayedColumns = ['name', 'lastModified', 'languages', 'type', 'status'];
   pageSize = 10;
   pageSizeOptions = [5, 10, 20];
-  projectTypes = [
-    'internship',
-    'translation',
-    'partner capacity'
-  ];
 
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
@@ -70,11 +65,13 @@ export class ProjectListComponent implements OnInit, AfterViewInit {
 
   openDialog(): void {
     const dialogRef = this.dialog.open(ProjectCreateDialogComponent, {
-      width: '400px',
-      data: this.projectTypes
+      width: '400px'
     });
 
     dialogRef.afterClosed().subscribe(result => {
+      if (!result) {
+        return;
+      }
       console.log(result);
     });
   }
