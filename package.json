@@ -14,9 +14,9 @@
     "e2e": "ng e2e",
     "lint": "ng lint --format stylish",
     "serve:ssr": "node dist/server",
-    "start": "scripts/with-local-services.sh ng serve --environment local",
-    "start:manual": "ng serve --environment local",
-    "start:production": "scripts/with-local-services.sh ng serve --environment prod",
+    "start": "scripts/with-local-services.sh ng serve --hmr --environment local",
+    "start:manual": "ng serve --hmr --environment local",
+    "start:production": "scripts/with-local-services.sh ng serve --hmr --environment prod",
     "test": "scripts/with-local-services.sh ng test --sourcemap",
     "test:bamboo": "scripts/test:bamboo.sh",
     "test:once": "yarn test --watch=false"
