@@ -19,7 +19,8 @@ import { AutofocusDirective } from './directives/autofocus.directive';
     FormsModule,
     MaterialModule,
     ReactiveFormsModule,
-    SearchComponent
+    SearchComponent,
+    HeaderRouterOutletComponent
   ],
   declarations: [
     AutofocusDirective,
