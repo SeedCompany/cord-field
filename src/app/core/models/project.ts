@@ -1,6 +1,16 @@
+<<<<<<< HEAD
 export enum ProjectType {
   Translation = 'translation',
   Internship = 'internship'
+=======
+export interface IProject {
+  id: string;
+  name: string;
+  type: ProjectType;
+  status: ProjectStatus;
+  updatedAt: Timestamp;
+  languages: string[];
+>>>>>>> CF2- mock data removed , service call added
 }
 
 export const projectTypeList = [
@@ -45,7 +55,11 @@ export class Project {
   name: string;
   type: ProjectType;
   status: ProjectStatus;
+<<<<<<< HEAD
   updatedAt: Date;
+=======
+  updatedAt: Timestamp;
+>>>>>>> CF2- mock data removed , service call added
   languages: string[];
 
 
@@ -57,15 +71,22 @@ export class Project {
     project.name = json.name || '';
     project.type = json.type || ProjectType.Translation;
     project.languages = json.languages || [];
+<<<<<<< HEAD
     project.updatedAt = json.updatedAt ? new Date(json.updatedAt) : new Date();
+=======
+    project.updatedAt = json.updatedAt || '2018-03-28T14:33:13.559Z';
+>>>>>>> CF2- mock data removed , service call added
     project.status = json.status || ProjectStatus.Active;
 
     return project;
   }
+<<<<<<< HEAD
 
   static fromJsonArray(projects: any): Project[] {
     projects = projects || [];
     return projects.map(project => this.fromJson(project));
   }
 
+=======
+>>>>>>> CF2- mock data removed , service call added
 }
