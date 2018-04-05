@@ -2,10 +2,7 @@ import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
 import { MatDialog, MatPaginator, MatSort, MatTableDataSource } from '@angular/material';
 import { Project, ProjectStatus, projectStatusToString, projectTypeToString } from '../../core/models/project';
 import { ProjectService } from '../../core/services/project.service';
-import {
-  ProjectCreateDialogComponent,
-  ProjectCreationResult
-} from '../project-create-dialog/project-create-dialog.component';
+import { ProjectCreateDialogComponent, ProjectCreationResult } from '../project-create-dialog/project-create-dialog.component';
 
 @Component({
   selector: 'app-project-list',
@@ -48,7 +45,11 @@ export class ProjectListComponent implements OnInit, AfterViewInit {
   }
 
   ngOnInit() {
-    this.projectSource = new MatTableDataSource(this.projectService.getProjects());
+    // this.projectService.getProjects().subscribe((projects: any) => {
+    //   debugger;
+    //   this.projectSource = projects;
+    // });
+    this.projectService.getProjects().then(projects => console.log('proj ========', projects)).catch(err => console.log(err));
   }
 
   onSearch(query: string) {

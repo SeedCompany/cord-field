@@ -1,4 +1,4 @@
-export interface Project {
+export interface IProject {
   id: string;
   name: string;
   type: ProjectType;
@@ -48,3 +48,28 @@ export function projectStatusToString(value: ProjectStatus): string {
  * Example: "2018-09-30T05:00:00.000Z"
  */
 export type Timestamp = string;
+
+export class Project {
+
+  id: string;
+  name: string;
+  type: ProjectType;
+  status: ProjectStatus;
+  updatedAt: Timestamp;
+  languages: string[];
+
+
+  static fromJson(json: any): Project {
+    json = json || {};
+    const project = new Project();
+
+    project.id = json.id;
+    project.name = json.name || '';
+    project.type = json.type || ProjectType.Translation;
+    project.languages = json.languages || [];
+    project.updatedAt = json.updatedAt || '2018-03-28T14:33:13.559Z';
+    project.status = json.status || ProjectStatus.Active;
+
+    return project;
+  }
+}
