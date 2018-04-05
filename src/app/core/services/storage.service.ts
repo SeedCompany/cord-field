@@ -106,9 +106,9 @@ export abstract class BaseStorageService<TStore extends any> {
    * Gets an item from the storage library and supplies the result as an observable.
    * If the key does not exist, getItem() will return null to the subscriber.
    * @param {string} key
-   * @returns {Observable<T>}
+   * @returns {Promise<T | null>}
    */
-  async getItem<T>(key: string): Promise<T> {
+  async getItem<T>(key: string): Promise<T | null> {
 
     let val = await this.store.getItem(this.getKey(key));
     const cache = await this.getItemCache(key);
@@ -123,7 +123,7 @@ export abstract class BaseStorageService<TStore extends any> {
 
   /**
    * Should return the name of the storage engine being used.
-   * @returns {Observable<string>}
+   * @returns {Promise<StorageEngineType>}
    */
   abstract getStorageEngineType(): Promise<StorageEngineType>;
 

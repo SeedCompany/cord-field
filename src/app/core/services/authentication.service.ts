@@ -17,15 +17,15 @@ const domain = environment.services['domain'];
 @Injectable()
 export class AuthenticationService {
 
-  private _login$ = new Subject<AuthenticationToken[]>();
-  private _logout$ = new Subject<void>();
+  private _login = new Subject<AuthenticationToken[]>();
+  private _logout = new Subject<void>();
 
   get login$(): Observable<AuthenticationToken[]> {
-    return this._login$.asObservable();
+    return this._login.asObservable();
   }
 
   get logout$(): Observable<void> {
-    return this._logout$.asObservable();
+    return this._logout.asObservable();
   }
 
   async isLoggedIn(): Promise<boolean> {
@@ -63,11 +63,11 @@ export class AuthenticationService {
       .post('/auth/native/login', {body})
       .map((json) => AuthenticationToken.fromTokenMap(json))
       .do(async (tokens: AuthenticationToken[]) => await this.authStorage.saveTokens(tokens, rememberLogin))
-      .do((tokens: AuthenticationToken[]) => this._login$.next(tokens));
+      .do((tokens: AuthenticationToken[]) => this._login.next(tokens));
   }
 
   async logout(): Promise<void> {
     await this.authStorage.clearTokens();
-    this._logout$.next();
+    this._logout.next();
   }
 }
