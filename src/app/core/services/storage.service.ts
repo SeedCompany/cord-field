@@ -154,7 +154,7 @@ export abstract class BaseStorageService<TStore extends any> {
   /**
    * Get the name of a key based on its ID.
    * @param {number} keyIndex
-   * @returns {Observable<T>}
+   * @returns {Promise<string>}
    */
   async key(keyIndex: number): Promise<string> {
     return await this.store.key(keyIndex);
