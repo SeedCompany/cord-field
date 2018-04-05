@@ -5,11 +5,14 @@ import { Observable } from 'rxjs/Observable';
 import { Subject } from 'rxjs/Subject';
 import { environment } from '../../../environments/environment';
 import { AuthenticationToken } from '../models/authentication-token';
-import { IRequestAccess, User } from '../models/user';
+import {
+  IRequestAccess,
+  User
+} from '../models/user';
 import { AuthenticationStorageService } from './authentication-storage.service';
-import { IApiServiceOptions } from './http/abstract-http-client';
 import { ProfileApiService } from './http/profile-api.service';
-import { LoggerService } from './logger.service';
+
+const domain = environment.services.domain;
 
 @Injectable()
 export class AuthenticationService {
@@ -25,58 +28,46 @@ export class AuthenticationService {
     return this._logout$.asObservable();
   }
 
-  get loggedIn(): boolean {
-    const tokens = this.authStorage.getAuthenticationTokens();
-    if (!tokens || tokens.length === 0) {
-      return false;
-    }
-
-    for (const token of tokens) {
-      if (token.expired) {
-        return false;
-      }
-    }
-    return true;
+  async isLoggedIn(): Promise<boolean> {
+    const tokens = await this.authStorage.getAuthenticationTokens();
+    return !(!tokens || tokens.length === 0 || tokens.find((t) => t.expired));
   }
 
-  get currentUser(): User {
-    const tokens = this.authStorage.getAuthenticationTokens();
-    if (tokens && tokens.length > 0) {
-      return tokens[0].toUser();
-    }
+  async getCurrentUser(): Promise<User> {
+    const tokens = await this.authStorage.getAuthenticationTokens();
+    return (tokens && tokens.length > 0)
+      ? tokens[0].toUser()
+      : null;
   }
 
   constructor(private api: ProfileApiService,
-              private authStorage: AuthenticationStorageService,
-              private log: LoggerService) {
+              private authStorage: AuthenticationStorageService) {
     api.source = this;
   }
 
-  requestAccess(newUser: IRequestAccess) {
+  requestAccess(newUser: IRequestAccess): Observable<void> {
     return this
       .api
-      .request('POST', '/users/request-account', {body: newUser});
+      .post('/users/request-account', {body: newUser});
   }
-
 
   login(email: string, password: string, rememberLogin: boolean): Observable<AuthenticationToken[]> {
     const body = {
+      domain,
       email: email,
-      password: password,
-      domain: environment.services.domain
+      password: password
     };
 
     return this
       .api
-      .request('POST', '/auth/native/login', {body: body})
-      .map((json: any) => AuthenticationToken.fromTokenMap(json))
-      .do((tokens: AuthenticationToken[]) => this.authStorage.saveTokens(tokens, rememberLogin))
+      .post('/auth/native/login', {body})
+      .map((json) => AuthenticationToken.fromTokenMap(json))
+      .do(async (tokens: AuthenticationToken[]) => await this.authStorage.saveTokens(tokens, rememberLogin))
       .do((tokens: AuthenticationToken[]) => this._login$.next(tokens));
   }
 
-  logout(): Observable<void> {
-    this.authStorage.clearTokens();
+  async logout(): Promise<void> {
+    await this.authStorage.clearTokens();
     this._logout$.next();
-    return Observable.of(null);
   }
 }

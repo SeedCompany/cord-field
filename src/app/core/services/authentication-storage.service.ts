@@ -1,9 +1,12 @@
 import { Injectable } from '@angular/core';
 import { AuthenticationToken } from '../models/authentication-token';
 import { LoggerService } from './logger.service';
-import { LocalStorageService, SessionStorageService } from './storage.service';
+import {
+  LocalStorageService,
+  SessionStorageService
+} from './storage.service';
 
-export const AUTH_STORAGE_KEY = 'ilb_auth';
+export const AUTH_STORAGE_KEY = 'auth';
 
 /**
  * Stores and retrieves AuthenticationTokens from Session or Local Storage
@@ -18,40 +21,43 @@ export class AuthenticationStorageService {
               private log: LoggerService) {
   }
 
-  getAuthenticationTokens(): AuthenticationToken[] {
+  async getAuthenticationTokens(): Promise<AuthenticationToken[]> {
     if (!this.authTokens) {
-      const tokensFromLocalDb = this.localStore.getItem(AUTH_STORAGE_KEY) || this.sessionStore.getItem(AUTH_STORAGE_KEY)
-      tokensFromLocalDb
-        .toPromise()
-        .then((tokens: AuthenticationToken[]) => {
-          if (!tokens) {
-            return null;
-          }
-          try {
-            if (!Array.isArray(tokens)) {
-              this.log.error(new Error('stored tokens should have been in an array'));
-            }
-          } catch (err) {
-            this.log.info(err, 'stored auth tokens are corrupted... deleting them from the store');
-            this.clearTokens();
-            return null;
-          }
-          this.authTokens = tokens;
-          return this.authTokens;
-        })
-        .catch(Promise.reject);
+
+      const tokens = await this.localStore.getItem<AuthenticationToken[]>(AUTH_STORAGE_KEY)
+        || await this.sessionStore.getItem<AuthenticationToken[]>(AUTH_STORAGE_KEY);
+
+      if (!tokens) {
+        return null;
+      }
+
+      try {
+
+        if (!Array.isArray(tokens)) {
+          this.log.error(new Error('stored tokens should have been in an array'));
+        }
+
+      } catch (err) {
+
+        this.log.info(err, 'stored auth tokens are corrupted... deleting them from the store');
+        await this.clearTokens();
+
+        return null;
+      }
+
+      this.authTokens = tokens;
     }
     return this.authTokens;
   }
 
-  saveTokens(tokens: AuthenticationToken[], remember: boolean) {
-    this.clearTokens();
+  async saveTokens(tokens: AuthenticationToken[], remember: boolean): Promise<void> {
+    await this.clearTokens();
     const store = (remember) ? this.localStore : this.sessionStore;
-    store.setItem(AUTH_STORAGE_KEY, tokens);
+    await store.setItem(AUTH_STORAGE_KEY, tokens);
   }
 
-  clearTokens() {
-    this.sessionStore.removeItem(AUTH_STORAGE_KEY);
-    this.localStore.removeItem(AUTH_STORAGE_KEY);
+  async clearTokens(): Promise<void> {
+    await this.sessionStore.removeItem(AUTH_STORAGE_KEY);
+    await this.localStore.removeItem(AUTH_STORAGE_KEY);
   }
 }

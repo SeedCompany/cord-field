@@ -1,5 +1,8 @@
 import { HttpClientModule } from '@angular/common/http';
-import { inject, TestBed } from '@angular/core/testing';
+import {
+  inject,
+  TestBed
+} from '@angular/core/testing';
 import { environment } from '../../../environments/environment';
 import { AuthenticationStorageService } from './authentication-storage.service';
 
@@ -8,8 +11,10 @@ import { BrowserService } from './browser.service';
 import { GoogleAnalyticsService } from './google-analytics.service';
 import { ProfileApiService } from './http/profile-api.service';
 import { LoggerService } from './logger.service';
-import { LocalStorageService, SessionStorageService } from './storage.service';
-
+import {
+  LocalStorageService,
+  SessionStorageService
+} from './storage.service';
 
 let authService: AuthenticationService;
 
@@ -18,7 +23,7 @@ const testUsers = {
     email: 'testuser1@test.com',
     password: 'testPassword'
   }
-}
+};
 
 const authUrl = `${environment.services['profile.illuminations.bible']}/`;
 
@@ -46,9 +51,10 @@ describe('AuthenticationService', () => {
     expect(service).toBeTruthy();
   }));
 
-
   describe('login', () => {
-    it('login$ observable triggers when successfully logged in', () => {
+
+    it('login$ observable triggers when successfully logged in', async (done) => {
+      
       const user = testUsers.testUser1;
 
       let loggedIn;
@@ -72,8 +78,9 @@ describe('AuthenticationService', () => {
             expect(loggedIn).toBeTruthy('login$ should have been called upon login');
             expect(order).toBe('12', 'something is wrong with this test if this occurs out of order');
             expect(tokens.length).toBe(1);
+            done();
           },
-          error: fail
+          error: done.fail
         });
     });
   });

@@ -1,4 +1,7 @@
-import { Component, OnInit } from '@angular/core';
+import {
+  Component,
+  OnInit
+} from '@angular/core';
 import { AuthenticationStorageService } from '../services/authentication-storage.service';
 
 @Component({
@@ -13,6 +16,5 @@ export class WelcomeComponent implements OnInit {
   }
 
   ngOnInit() {
-    console.log(this.authStore.getAuthenticationTokens());
   }
 }

@@ -1,4 +1,7 @@
-import { Component, OnInit } from '@angular/core';
+import {
+  Component,
+  OnInit
+} from '@angular/core';
 import { MatIconRegistry } from '@angular/material';
 import { DomSanitizer } from '@angular/platform-browser';
 import { Router } from '@angular/router';
@@ -18,10 +21,11 @@ export class HeaderComponent implements OnInit {
     iconRegistry.addSvgIcon('cord', sanitizer.bypassSecurityTrustResourceUrl('assets/images/cord-icon.svg'));
   }
 
-  ngOnInit() {
-    const tokens = this
+  async ngOnInit() {
+    const tokens = await this
       .authStore
       .getAuthenticationTokens();
+
     console.log('Tokens are', tokens);
   }
 
@@ -29,6 +33,7 @@ export class HeaderComponent implements OnInit {
     this
       .auth
       .logout();
+
     this.router.navigate(['/login']);
   }
 }

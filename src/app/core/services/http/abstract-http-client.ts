@@ -652,6 +652,7 @@ export abstract class AbstractHttpClient {
   }
 
   post(url: string, options: {
+    body?: any,
     headers?: HttpHeaders,
     observe?: 'body',
     params?: HttpParams,
@@ -660,6 +661,7 @@ export abstract class AbstractHttpClient {
     withCredentials?: boolean
   }): Observable<ArrayBuffer>;
   post(url: string, options: {
+    body?: any,
     headers?: HttpHeaders,
     observe?: 'body',
     params?: HttpParams,
@@ -668,6 +670,7 @@ export abstract class AbstractHttpClient {
     withCredentials?: boolean
   }): Observable<Blob>;
   post(url: string, options: {
+    body?: any,
     headers?: HttpHeaders,
     observe?: 'body',
     params?: HttpParams,
@@ -676,6 +679,7 @@ export abstract class AbstractHttpClient {
     withCredentials?: boolean
   }): Observable<string>;
   post(url: string, options: {
+    body?: any,
     headers?: HttpHeaders,
     observe: 'events',
     params?: HttpParams,
@@ -684,6 +688,7 @@ export abstract class AbstractHttpClient {
     withCredentials?: boolean
   }): Observable<HttpEvent<ArrayBuffer>>;
   post(url: string, options: {
+    body?: any,
     headers?: HttpHeaders,
     observe: 'events',
     params?: HttpParams,
@@ -692,6 +697,7 @@ export abstract class AbstractHttpClient {
     withCredentials?: boolean
   }): Observable<HttpEvent<Blob>>;
   post(url: string, options: {
+    body?: any,
     headers?: HttpHeaders,
     observe: 'events',
     params?: HttpParams,
@@ -700,6 +706,7 @@ export abstract class AbstractHttpClient {
     withCredentials?: boolean
   }): Observable<HttpEvent<string>>;
   post<T = Object>(url: string, options: {
+    body?: any,
     headers?: HttpHeaders,
     observe: 'events',
     params?: HttpParams,
@@ -708,6 +715,7 @@ export abstract class AbstractHttpClient {
     withCredentials?: boolean
   }): Observable<HttpEvent<T>>;
   post(url: string, options: {
+    body?: any,
     headers?: HttpHeaders,
     observe: 'response',
     params?: HttpParams,
@@ -716,6 +724,7 @@ export abstract class AbstractHttpClient {
     withCredentials?: boolean
   }): Observable<HttpResponse<ArrayBuffer>>;
   post(url: string, options: {
+    body?: any,
     headers?: HttpHeaders,
     observe: 'response',
     params?: HttpParams,
@@ -724,6 +733,7 @@ export abstract class AbstractHttpClient {
     withCredentials?: boolean
   }): Observable<HttpResponse<Blob>>;
   post(url: string, options: {
+    body?: any,
     headers?: HttpHeaders,
     observe: 'response',
     params?: HttpParams,
@@ -732,6 +742,7 @@ export abstract class AbstractHttpClient {
     withCredentials?: boolean
   }): Observable<HttpResponse<string>>;
   post<T = Object>(url: string, options: {
+    body?: any,
     headers?: HttpHeaders,
     observe: 'response',
     params?: HttpParams,
@@ -740,6 +751,7 @@ export abstract class AbstractHttpClient {
     withCredentials?: boolean
   }): Observable<HttpResponse<T>>;
   post<T = Object>(url: string, options?: {
+    body?: any,
     headers?: HttpHeaders,
     observe?: 'body',
     params?: HttpParams,
@@ -752,6 +764,7 @@ export abstract class AbstractHttpClient {
   }
 
   put(url: string, options: {
+    body?: any,
     headers?: HttpHeaders,
     observe?: 'body',
     params?: HttpParams,
@@ -760,6 +773,7 @@ export abstract class AbstractHttpClient {
     withCredentials?: boolean
   }): Observable<ArrayBuffer>;
   put(url: string, options: {
+    body?: any,
     headers?: HttpHeaders,
     observe?: 'body',
     params?: HttpParams,
@@ -768,6 +782,7 @@ export abstract class AbstractHttpClient {
     withCredentials?: boolean
   }): Observable<Blob>;
   put(url: string, options: {
+    body?: any,
     headers?: HttpHeaders,
     observe?: 'body',
     params?: HttpParams,
@@ -776,6 +791,7 @@ export abstract class AbstractHttpClient {
     withCredentials?: boolean
   }): Observable<string>;
   put(url: string, options: {
+    body?: any,
     headers?: HttpHeaders,
     observe: 'events',
     params?: HttpParams,
@@ -784,6 +800,7 @@ export abstract class AbstractHttpClient {
     withCredentials?: boolean
   }): Observable<HttpEvent<ArrayBuffer>>;
   put(url: string, options: {
+    body?: any,
     headers?: HttpHeaders,
     observe: 'events',
     params?: HttpParams,
@@ -792,6 +809,7 @@ export abstract class AbstractHttpClient {
     withCredentials?: boolean
   }): Observable<HttpEvent<Blob>>;
   put(url: string, options: {
+    body?: any,
     headers?: HttpHeaders,
     observe: 'events',
     params?: HttpParams,
@@ -800,6 +818,7 @@ export abstract class AbstractHttpClient {
     withCredentials?: boolean
   }): Observable<HttpEvent<string>>;
   put<T = Object>(url: string, options: {
+    body?: any,
     headers?: HttpHeaders,
     observe: 'events',
     params?: HttpParams,
@@ -808,6 +827,7 @@ export abstract class AbstractHttpClient {
     withCredentials?: boolean
   }): Observable<HttpEvent<T>>;
   put(url: string, options: {
+    body?: any,
     headers?: HttpHeaders,
     observe: 'response',
     params?: HttpParams,
@@ -816,6 +836,7 @@ export abstract class AbstractHttpClient {
     withCredentials?: boolean
   }): Observable<HttpResponse<ArrayBuffer>>;
   put(url: string, options: {
+    body?: any,
     headers?: HttpHeaders,
     observe: 'response',
     params?: HttpParams,
@@ -824,6 +845,7 @@ export abstract class AbstractHttpClient {
     withCredentials?: boolean
   }): Observable<HttpResponse<Blob>>;
   put(url: string, options: {
+    body?: any,
     headers?: HttpHeaders,
     observe: 'response',
     params?: HttpParams,
@@ -832,6 +854,7 @@ export abstract class AbstractHttpClient {
     withCredentials?: boolean
   }): Observable<HttpResponse<string>>;
   put<T = Object>(url: string, options: {
+    body?: any,
     headers?: HttpHeaders,
     observe: 'response',
     params?: HttpParams,
@@ -840,6 +863,7 @@ export abstract class AbstractHttpClient {
     withCredentials?: boolean
   }): Observable<HttpResponse<T>>;
   put<T = Object>(url: string, options?: {
+    body?: any,
     headers?: HttpHeaders,
     observe?: 'body',
     params?: HttpParams,

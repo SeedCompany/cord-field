@@ -1,8 +1,15 @@
-import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
+import {
+  Component,
+  OnInit
+} from '@angular/core';
+import {
+  FormBuilder,
+  FormGroup,
+  Validators
+} from '@angular/forms';
 import { MatIconRegistry } from '@angular/material';
 import { DomSanitizer } from '@angular/platform-browser';
-import { Route, Router } from '@angular/router';
+import { Router } from '@angular/router';
 import { AuthenticationService } from '../../services/authentication.service';
 import { LoggerService } from '../../services/logger.service';
 
@@ -26,11 +33,6 @@ export class LoginComponent implements OnInit {
               iconRegistry: MatIconRegistry,
               sanitizer: DomSanitizer) {
     iconRegistry.addSvgIcon('cord', sanitizer.bypassSecurityTrustResourceUrl('assets/images/cord-icon.svg'));
-  }
-
-
-  get isLoggedIn(): boolean {
-    return this.auth.loggedIn;
   }
 
   ngOnInit() {
