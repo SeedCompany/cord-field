@@ -9,12 +9,5 @@ import { AuthenticationStorageService } from '../services/authentication-storage
   templateUrl: './welcome.component.html',
   styleUrls: ['./welcome.component.scss']
 })
-export class WelcomeComponent implements OnInit {
-
-  constructor(private authStore: AuthenticationStorageService) {
-
-  }
-
-  ngOnInit() {
-  }
+export class WelcomeComponent {
 }

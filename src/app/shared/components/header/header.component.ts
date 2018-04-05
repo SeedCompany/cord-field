@@ -13,7 +13,7 @@ import { AuthenticationService } from '../../../core/services/authentication.ser
   templateUrl: './header.component.html',
   styleUrls: ['./header.component.scss']
 })
-export class HeaderComponent implements OnInit {
+export class HeaderComponent {
   constructor(private auth: AuthenticationService,
               private authStore: AuthenticationStorageService,
               private router: Router,
@@ -21,19 +21,8 @@ export class HeaderComponent implements OnInit {
     iconRegistry.addSvgIcon('cord', sanitizer.bypassSecurityTrustResourceUrl('assets/images/cord-icon.svg'));
   }
 
-  async ngOnInit() {
-    const tokens = await this
-      .authStore
-      .getAuthenticationTokens();
-
-    console.log('Tokens are', tokens);
-  }
-
-  logout() {
-    this
-      .auth
-      .logout();
-
+  async logout() {
+    await this.auth.logout();
     this.router.navigate(['/login']);
   }
 }
