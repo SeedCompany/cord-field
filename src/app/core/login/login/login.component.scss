@@ -1,3 +1,4 @@
+@import "~styles/imports";
 
 .login-container {
 
@@ -29,7 +30,7 @@
     display: flex;
     justify-content: space-between;
     a {
-      color: #409e04;
+      color: mat-color($accent);
     }
   }
   .request-access {

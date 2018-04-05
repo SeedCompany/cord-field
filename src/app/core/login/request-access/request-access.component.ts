@@ -18,14 +18,12 @@ export class RequestAccessComponent implements OnInit {
       [Validators.compose([
         Validators.required,
         Validators.min(5),
-        Validators.maxLength(20),
-        Validators.pattern(/^[a-zA-Z ]{2,30}$/)
+        Validators.maxLength(20)
       ])]],
     lastName: ['', [Validators.compose([
       Validators.required,
       Validators.min(5),
-      Validators.maxLength(20),
-      Validators.pattern(/^[a-zA-Z ]{2,30}$/)
+      Validators.maxLength(20)
     ])]],
     email: ['', Validators.compose([
       Validators.required,
