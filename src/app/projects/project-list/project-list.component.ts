@@ -1,6 +1,6 @@
 import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
 import { MatDialog, MatPaginator, MatSort, MatTableDataSource } from '@angular/material';
-import { Project, ProjectStatus, projectStatusToString, projectTypeToString } from '../../core/models/project';
+import { IProject, Project, ProjectStatus, projectStatusToString, projectTypeToString } from '../../core/models/project';
 import { ProjectService } from '../../core/services/project.service';
 import { ProjectCreateDialogComponent, ProjectCreationResult } from '../project-create-dialog/project-create-dialog.component';
 
@@ -45,12 +45,12 @@ export class ProjectListComponent implements OnInit, AfterViewInit {
   }
 
   ngOnInit() {
-    // this.projectService.getProjects().subscribe((projects: any) => {
-    //   debugger;
-    //   this.projectSource = projects;
-    // });
-    this.projectService.getProjects().then(projects => console.log('proj ========', projects)).catch(err => console.log(err));
-  }
+    this.projectService.getProjects().subscribe(projects => {
+      this.projectSource = projects;
+    }, err => {
+      console.log(err);
+    });
+ }
 
   onSearch(query: string) {
     this.projectSource.filter = query;
