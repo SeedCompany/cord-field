@@ -1,17 +1,15 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
+import { ProjectTabComponent } from '../abstract-project-tab';
 
 @Component({
   selector: 'app-project-plan',
   templateUrl: './project-plan.component.html',
-  styleUrls: ['./project-plan.component.scss'],
+  styleUrls: ['./project-plan.component.scss']
 })
-export class ProjectPlanComponent implements OnInit {
+export class ProjectPlanComponent extends ProjectTabComponent {
 
-  @Input() id: string;
-
-  constructor() {
-  }
-
-  ngOnInit() {
+  constructor(route: ActivatedRoute) {
+    super(route);
   }
 }

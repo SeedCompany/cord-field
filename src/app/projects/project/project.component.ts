@@ -14,16 +14,15 @@ interface TabConfig {
 })
 export class ProjectComponent implements OnInit, OnDestroy {
   id: string;
-  selectedIndex: number;
-  private subscription: Subscription;
+  private idSub = Subscription.EMPTY;
 
   readonly tabs: TabConfig[] = [
     {path: '', label: 'Overview'},
-    {path: 'plan', label: 'Plan'},
-    {path: 'budget', label: 'Budget'},
-    {path: 'files', label: 'Files'},
-    {path: 'people', label: 'People'},
-    {path: 'updates', label: 'Updates'}
+    {path: '/plan', label: 'Plan'},
+    {path: '/budget', label: 'Budget'},
+    {path: '/files', label: 'Files'},
+    {path: '/people', label: 'People'},
+    {path: '/updates', label: 'Updates'}
   ];
 
   constructor(
@@ -32,21 +31,13 @@ export class ProjectComponent implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit() {
-    this.subscription = this.route.params.subscribe(params => {
+    this.idSub = this.route.params.subscribe(params => {
       this.id = params.id;
-      this.selectedIndex = Math.max(this.tabs.findIndex((item) => item.path === params.tab), 0);
     });
   }
 
   ngOnDestroy() {
-    this.subscription.unsubscribe();
-  }
-
-  onTabChange(index: number) {
-    let path = this.tabs[index].path;
-    path = path ? '/' + path : '';
-
-    this.router.navigateByUrl(`/projects/${this.id}${path}`);
+    this.idSub.unsubscribe();
   }
 
   trackTabsBy(index: number, tab: TabConfig) {
