@@ -1,12 +1,3 @@
-export interface IProject {
-  id: string;
-  name: string;
-  type: ProjectType;
-  status: ProjectStatus;
-  updatedAt: Timestamp;
-  languages: string[];
-}
-
 export enum ProjectType { Translation, Internship }
 
 export const projectTypeList = [
@@ -16,8 +7,8 @@ export const projectTypeList = [
 
 export function projectTypeToString(value: ProjectType): string {
   const mapping = {
-    [ProjectType.Translation]: 'Translation',
-    [ProjectType.Internship]: 'Internship'
+    [ProjectType.Translation]: 'translation',
+    [ProjectType.Internship]: 'internship'
   };
 
   return mapping[value];
@@ -33,11 +24,11 @@ export enum ProjectStatus {
 
 export function projectStatusToString(value: ProjectStatus): string {
   const mapping = {
-    [ProjectStatus.Active]: 'Active',
-    [ProjectStatus.Inactive]: 'Inactive',
-    [ProjectStatus.InDevelopment]: 'In Development',
-    [ProjectStatus.Completed]: 'Completed',
-    [ProjectStatus.Rejected]: 'Rejected'
+    [ProjectStatus.Active]: 'active',
+    [ProjectStatus.Inactive]: 'inactive',
+    [ProjectStatus.InDevelopment]: 'in development',
+    [ProjectStatus.Completed]: 'completed',
+    [ProjectStatus.Rejected]: 'rejected'
   };
   return mapping[value];
 }
@@ -71,5 +62,9 @@ export class Project {
     project.status = json.status || ProjectStatus.Active;
 
     return project;
+  }
+  static fromJsonArray(projects: any): Project[] {
+    projects = projects || [];
+    return projects.map(project => this.fromJson(project));
   }
 }

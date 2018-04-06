@@ -1,7 +1,9 @@
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs/Observable';
-import { Project } from '../models/project';
 import { PloApiService } from './http/plo-api.service';
+import { Project } from '../models/project';
+import 'rxjs/operators/map';
+import { Observable } from 'rxjs/Observable';
+
 
 @Injectable()
 export class ProjectService {
@@ -14,7 +16,7 @@ export class ProjectService {
     return this
       .ploApiSerivce
       .get('/projects')
-      .map((projects: any) => projects.map(project => Project.fromJson(project)));
+      .map((projects: any) => Project.fromJsonArray(projects));
   }
 }
 

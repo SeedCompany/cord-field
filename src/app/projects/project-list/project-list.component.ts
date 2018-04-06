@@ -1,6 +1,6 @@
 import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
 import { MatDialog, MatPaginator, MatSort, MatTableDataSource } from '@angular/material';
-import { IProject, Project, ProjectStatus, projectStatusToString, projectTypeToString } from '../../core/models/project';
+import { Project, ProjectStatus, projectStatusToString, projectTypeToString } from '../../core/models/project';
 import { ProjectService } from '../../core/services/project.service';
 import { ProjectCreateDialogComponent, ProjectCreationResult } from '../project-create-dialog/project-create-dialog.component';
 
@@ -9,7 +9,7 @@ import { ProjectCreateDialogComponent, ProjectCreationResult } from '../project-
   templateUrl: './project-list.component.html',
   styleUrls: ['./project-list.component.scss']
 })
-export class ProjectListComponent implements OnInit, AfterViewInit {
+export class ProjectListComponent implements OnInit {
   currentListSelector = 'All Projects';
   listSelectorOptions = [
     'All Projects',
@@ -39,18 +39,13 @@ export class ProjectListComponent implements OnInit, AfterViewInit {
               private dialog: MatDialog) {
   }
 
-  ngAfterViewInit() {
-    this.projectSource.paginator = this.paginator;
-    this.projectSource.sort = this.sort;
-  }
-
   ngOnInit() {
     this.projectService.getProjects().subscribe(projects => {
-      this.projectSource = projects;
-    }, err => {
-      console.log(err);
-    });
- }
+      this.projectSource = new MatTableDataSource<Project>(projects);
+      this.projectSource.paginator = this.paginator;
+      this.projectSource.sort = this.sort;
+    }, err => console.log(err));
+  }
 
   onSearch(query: string) {
     this.projectSource.filter = query;
