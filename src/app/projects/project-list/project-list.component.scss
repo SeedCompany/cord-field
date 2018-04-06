@@ -29,10 +29,6 @@
   flex: auto;
 }
 
-.mat-row {
-  border-bottom-style: none;
-}
-
 .title {
   color: mat-color($accent);
   @include mat-typography-level-to-styles($config, body-2);

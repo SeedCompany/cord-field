@@ -25,6 +25,23 @@ body {
   color: mat-foreground($theme, text);
 }
 
+.mat-row {
+  // Hide row borders by default.
+  .mat-table & { // extra selection here to override base styles without using !important
+    border-bottom-style: none;
+  }
+
+  // In case rows are clickable don't show outline
+  &:focus {
+    outline: 0;
+  }
+
+  &.row-hover:hover {
+    // TODO CF2-200 Define via theme variable. It isn't defined by material library.
+    background-color: map-get($mat-grey, 200);
+  }
+}
+
 // Provide room for clickable chips shadows
 .mat-chip:not(.mat-basic-chip) {
   margin: 0 3px 6px !important;
