@@ -1,4 +1,7 @@
-export enum ProjectType { Translation, Internship }
+export enum ProjectType {
+  Translation = 'translation',
+  Internship = 'internship'
+}
 
 export const projectTypeList = [
   ProjectType.Translation,
@@ -7,28 +10,28 @@ export const projectTypeList = [
 
 export function projectTypeToString(value: ProjectType): string {
   const mapping = {
-    [ProjectType.Translation]: 'translation',
-    [ProjectType.Internship]: 'internship'
+    [ProjectType.Translation]: 'Translation',
+    [ProjectType.Internship]: 'Internship'
   };
 
   return mapping[value];
 }
 
 export enum ProjectStatus {
-  Active,
-  Inactive,
-  InDevelopment,
-  Completed,
-  Rejected
+  Active = 'active',
+  Inactive = 'inactive',
+  InDevelopment = 'in development',
+  Completed = 'completed',
+  Rejected = 'rejected'
 }
 
 export function projectStatusToString(value: ProjectStatus): string {
   const mapping = {
-    [ProjectStatus.Active]: 'active',
-    [ProjectStatus.Inactive]: 'inactive',
-    [ProjectStatus.InDevelopment]: 'in development',
-    [ProjectStatus.Completed]: 'completed',
-    [ProjectStatus.Rejected]: 'rejected'
+    [ProjectStatus.Active]: 'Active',
+    [ProjectStatus.Inactive]: 'Inactive',
+    [ProjectStatus.InDevelopment]: 'In Development',
+    [ProjectStatus.Completed]: 'Completed',
+    [ProjectStatus.Rejected]: 'Rejected'
   };
   return mapping[value];
 }
