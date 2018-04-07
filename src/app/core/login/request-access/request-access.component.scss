@@ -1,17 +1,21 @@
-.request-access-container {
+@import "~styles/imports";
+
+:host {
+  @extend %component-defaults;
+  align-items: center;
+
+}
+
+mat-card {
   width: 400px;
-  margin: 8em;
-  .formFieldsWrapper {
-    display: flex;
-    flex-direction: column;
-  }
-  .container-footer {
-    display: flex;
-    flex-direction: row;
-    justify-content: space-around;
-    margin-top: 3em;
-    a {
-      text-decoration: none;
-    }
-  }
+}
+
+form {
+  display: flex;
+  flex-direction: column;
+}
+
+mat-card-actions {
+  display: flex;
+  justify-content: flex-end;
 }

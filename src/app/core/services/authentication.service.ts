@@ -6,7 +6,7 @@ import { Subject } from 'rxjs/Subject';
 import { environment } from '../../../environments/environment';
 import { AuthenticationToken } from '../models/authentication-token';
 import {
-  IRequestAccess,
+  IUserRequestAccess,
   User
 } from '../models/user';
 import { AuthenticationStorageService } from './authentication-storage.service';
@@ -30,6 +30,8 @@ export class AuthenticationService {
 
   async isLoggedIn(): Promise<boolean> {
     const tokens = await this.authStorage.getAuthenticationTokens();
+    console.log('tokens are ---->', tokens);
+    console.log('Trace login status------>', !(!tokens || tokens.length === 0 || tokens.find((t) => t.expired)));
     return !(!tokens || tokens.length === 0 || tokens.find((t) => t.expired));
   }
 
@@ -45,7 +47,7 @@ export class AuthenticationService {
     api.source = this;
   }
 
-  requestAccess(newUser: IRequestAccess): Observable<void> {
+  requestAccess(newUser: IUserRequestAccess): Observable<void> {
     return this
       .api
       .post('/users/request-account', {body: newUser});

@@ -1,12 +1,12 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
+import { LoginModule } from './core/login/login.module';
 import { NotFoundPageComponent } from './core/not-found-page/not-found-page.component';
-import { CanActivateIfAuthenticated } from './core/route-guards/can-activate-if-authenticated';
+import { AuthenticationGuard } from './core/route-guards/authentication-guard';
 import { WelcomeComponent } from './core/welcome/welcome.component';
-import { HeaderComponent } from './shared/components/header/header.component';
+import { HeaderComponent } from './core/header/header.component';
 
 const routes: Routes = [
-  {path: 'login', loadChildren: 'app/core/login/login.module#LoginModule'},
   {
     path: '',
     component: HeaderComponent,
@@ -15,11 +15,13 @@ const routes: Routes = [
       {path: 'languages', loadChildren: 'app/languages/languages.module#LanguagesModule'},
       {path: 'organizations', loadChildren: 'app/organizations/organizations.module#OrganizationsModule'},
       {path: 'projects', loadChildren: 'app/projects/projects.module#ProjectsModule'},
-      {path: 'tasks', loadChildren: 'app/tasks/tasks.module#TasksModule'},
-      {path: '**', component: NotFoundPageComponent}
+      {path: 'tasks', loadChildren: 'app/tasks/tasks.module#TasksModule'}
     ],
-    canActivate: [CanActivateIfAuthenticated]
-  }
+    canActivate: [AuthenticationGuard]
+  },
+  {path: 'login', loadChildren: () => LoginModule},
+  {path: '**', component: NotFoundPageComponent}
+
 
 ];
 

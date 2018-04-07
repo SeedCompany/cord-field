@@ -19,10 +19,6 @@ describe('StorageService', () => {
       .configureTestingModule({
         imports: [
           CoreModule
-        ],
-        providers: [
-          LocalStorageService,
-          SessionStorageService
         ]
       });
 

@@ -5,8 +5,8 @@ import {
 import { MatIconRegistry } from '@angular/material';
 import { DomSanitizer } from '@angular/platform-browser';
 import { Router } from '@angular/router';
-import { AuthenticationStorageService } from '../../../core/services/authentication-storage.service';
-import { AuthenticationService } from '../../../core/services/authentication.service';
+import { AuthenticationStorageService } from '../services/authentication-storage.service';
+import { AuthenticationService } from '../services/authentication.service';
 
 @Component({
   selector: 'app-header',

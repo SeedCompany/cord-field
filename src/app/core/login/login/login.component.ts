@@ -22,7 +22,7 @@ export class LoginComponent implements OnInit {
 
   hide = true;
   loginForm: FormGroup = this.fb.group({
-    email: ['', Validators.required],
+    email: ['', Validators.email],
     password: ['', Validators.required]
   });
 
@@ -38,16 +38,24 @@ export class LoginComponent implements OnInit {
   ngOnInit() {
   }
 
-  onLogin(form) {
+  onLogin() {
     this
       .auth
-      .login(form.value.email, form.value.password, true)
+      .login(this.loginForm.value.email, this.loginForm.value.password, true)
       .toPromise()
-      .then(() => {
-        this.router.navigate(['/welcome']);
-      })
-      .catch((err) => {
-        this.logService.error(err, 'error at onLogin');
-      });
+      .then(() => this.router.navigate(['/']))
+      .catch((err) => this.logService.error(err, 'error at onLogin'));
+  }
+
+  onRequestAccess() {
+    this.router.navigate(['/login/request-access']);
+  }
+
+  get email() {
+    return this.loginForm.get('email');
+  }
+
+  get password() {
+    return this.loginForm.get('password');
   }
 }

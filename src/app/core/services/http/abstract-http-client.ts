@@ -16,10 +16,6 @@ export interface IRequestOptionsWithBody extends IRequestOptions {
   body?: any;
 }
 
-export interface IApiServiceOptions {
-  disableServerDown?: boolean;
-}
-
 export interface IRequestOptions {
   headers?: HttpHeaders;
   observe?: HttpObserve;

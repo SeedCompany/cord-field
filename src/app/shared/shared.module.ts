@@ -1,8 +1,8 @@
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { RouterModule } from '@angular/router';
 import { MaterialModule } from '../material.module';
-import { HeaderRouterOutletComponent } from './components/header-router-outlet/header-router-outlet.component';
 import { SearchComponent } from './components/search/search.component';
 import { AutofocusDirective } from './directives/autofocus.directive';
 
@@ -19,13 +19,11 @@ import { AutofocusDirective } from './directives/autofocus.directive';
     FormsModule,
     MaterialModule,
     ReactiveFormsModule,
-    SearchComponent,
-    HeaderRouterOutletComponent
+    SearchComponent
   ],
   declarations: [
     AutofocusDirective,
-    SearchComponent,
-    HeaderRouterOutletComponent
+    SearchComponent
   ]
 })
 export class SharedModule {

@@ -1,10 +1,10 @@
 import { NgModule, Optional, SkipSelf } from '@angular/core';
 import { RouterModule } from '@angular/router';
-import { HeaderComponent } from '../shared/components/header/header.component';
 import { SharedModule } from '../shared/shared.module';
+import { HeaderComponent } from './header/header.component';
 import { LoginModule } from './login/login.module';
 import { NotFoundPageComponent } from './not-found-page/not-found-page.component';
-import { CanActivateIfAuthenticated } from './route-guards/can-activate-if-authenticated';
+import { AuthenticationGuard } from './route-guards/authentication-guard';
 import { AuthenticationStorageService } from './services/authentication-storage.service';
 import { AuthenticationService } from './services/authentication.service';
 import { BrowserService } from './services/browser.service';
@@ -18,7 +18,6 @@ import { WelcomeComponent } from './welcome/welcome.component';
 
 @NgModule({
   imports: [
-    LoginModule,
     SharedModule,
     RouterModule
   ],
@@ -28,10 +27,11 @@ import { WelcomeComponent } from './welcome/welcome.component';
     WelcomeComponent
   ],
   providers: [
+    AuthenticationGuard,
     AuthenticationService,
     AuthenticationStorageService,
     BrowserService,
-    CanActivateIfAuthenticated,
+    AuthenticationGuard,
     GoogleAnalyticsService,
     LocalStorageService,
     LoggerService,

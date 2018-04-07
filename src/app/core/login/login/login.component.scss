@@ -1,46 +1,63 @@
 @import "~styles/imports";
 
-.login-container {
+:host {
+  @extend %component-defaults;
+}
 
-  border: 1px solid antiquewhite;
+mat-card {
   width: 400px;
   height: 400px;
-  margin: 10em;
-  padding: 1em;
-
-  .login-container-header {
-    display: flex;
-    flex-direction: column;
-  }
-  .wrapper {
-    margin-top: 1em;
-    display: flex;
-    flex-direction: column;
-  }
-
-  .toolbar-icon {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    margin-right: 1em;
-  }
-
-  .login-container-footer {
-    margin-top: 8em;
-    display: flex;
-    justify-content: space-between;
-    a {
-      color: mat-color($accent);
-    }
-  }
-  .request-access {
-    margin: 3em 0em 0em 0em;
-    a {
-      text-decoration: none;
-    }
-  }
-
 }
+
+mat-card-actions {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-around;
+  flex-wrap: wrap;
+  margin: 70px auto;
+}
+
+mat-card-footer {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-around;
+  align-items: center;
+}
+
+.login-container-header {
+  display: flex;
+  flex-direction: column;
+}
+
+form {
+  margin-top: 1em;
+  display: flex;
+  flex-direction: column;
+}
+
+.toolbar-icon {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  margin-right: 1em;
+}
+
+.login-container-footer {
+  margin-top: 8em;
+  display: flex;
+  justify-content: space-between;
+  a {
+    color: mat-color($accent);
+  }
+}
+
+.request-access {
+  margin: 3em 0em 0em 0em;
+  a {
+    text-decoration: none;
+  }
+}
+
 
 
 

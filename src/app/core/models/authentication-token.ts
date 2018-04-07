@@ -88,7 +88,7 @@ export class AuthenticationToken {
   }
 
   public get expired(): boolean {
-    return moment().isAfter(this.expires);
+    return new Date() >= this.expires;
   }
 
   constructor(public userId: ObjectId,

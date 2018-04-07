@@ -4,8 +4,8 @@ import { LoginComponent } from './login/login.component';
 import { RequestAccessComponent } from './request-access/request-access.component';
 
 const routes: Routes = [
-  {path: '', component: LoginComponent},
-  {path: 'login/request-access', component: RequestAccessComponent}
+  {path: '', component: LoginComponent, pathMatch: 'full'},
+  {path: 'request-access', component: RequestAccessComponent}
 ];
 
 @NgModule({

@@ -21,7 +21,7 @@ export class AuthenticationStorageService {
               private log: LoggerService) {
   }
 
-  async getAuthenticationTokens(): Promise<AuthenticationToken[]> {
+  async getAuthenticationTokens(): Promise<AuthenticationToken[] | null> {
     if (!this.authTokens) {
 
       const tokens = await this.localStore.getItem<AuthenticationToken[]>(AUTH_STORAGE_KEY)

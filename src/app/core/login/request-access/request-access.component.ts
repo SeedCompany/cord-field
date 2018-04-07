@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { environment } from '../../../../environments/environment';
-import { IRequestAccess } from '../../models/user';
+import { IUserRequestAccess } from '../../models/user';
 import { AuthenticationService } from '../../services/authentication.service';
 import { LoggerService } from '../../services/logger.service';
 
@@ -15,22 +15,27 @@ export class RequestAccessComponent implements OnInit {
 
   requestAccessForm: FormGroup = this.fb.group({
     firstName: ['',
-      [Validators.compose([
+      [
         Validators.required,
         Validators.min(5),
         Validators.maxLength(20)
-      ])]],
-    lastName: ['', [Validators.compose([
-      Validators.required,
-      Validators.min(5),
-      Validators.maxLength(20)
-    ])]],
-    email: ['', Validators.compose([
-      Validators.required,
-      Validators.pattern(/^([a-zA-Z0-9_\.\-])+\@(([a-zA-Z0-9\-])+\.)+([a-zA-Z0-9]{2,4})+$/)])],
+      ]
+    ],
+    lastName: ['',
+      [
+        Validators.required,
+        Validators.min(5),
+        Validators.maxLength(20)
+      ]
+    ],
+    email: ['', Validators.email],
     organization: ['', Validators.required],
     password: ['', Validators.required],
-    confirmPassword: ['', Validators.required]
+    confirmPassword: ['',
+      [
+        Validators.required
+      ]
+    ]
   });
 
   constructor(private fb: FormBuilder,
@@ -42,13 +47,13 @@ export class RequestAccessComponent implements OnInit {
   ngOnInit() {
   }
 
-  onRequestAccess(form) {
-    const userObj: IRequestAccess = {
-      firstName: form.value.firstName,
-      lastName: form.value.lastName,
-      email: form.value.email,
-      password: form.value.password,
-      organization: form.value.organization,
+  onRequestAccess() {
+    const userObj: IUserRequestAccess = {
+      firstName: this.requestAccessForm.value.firstName,
+      lastName: this.requestAccessForm.value.lastName,
+      email: this.requestAccessForm.value.email,
+      password: this.requestAccessForm.value.password,
+      organization: this.requestAccessForm.value.organization,
       domain: environment.services['domain']
     };
 
@@ -56,12 +61,13 @@ export class RequestAccessComponent implements OnInit {
       .authService
       .requestAccess(userObj)
       .toPromise()
-      .then(() => {
-        this.router.navigate(['/login']);
-      })
-      .catch((err) => {
-        this.logService.error(err, 'error at request access');
-      });
+      .then(() => this.router.navigate(['/login']))
+      .catch((err) => this.logService.error(err, 'error at request access'));
   }
+
+  onCancel() {
+    this.router.navigate(['/login']);
+  }
+
 
 }

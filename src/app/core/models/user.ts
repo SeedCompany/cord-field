@@ -1,12 +1,60 @@
 import { ObjectId } from './object-id';
 
-export interface IRequestAccess {
+
+export interface IUserRequestAccess {
+  domain: string;
+  email: string;
+  firstName: string;
+  lastName: string;
+  organization: string;
+  password: string;
+}
+
+export class User {
+
+  id: ObjectId;
   firstName: string;
   lastName: string;
   email: string;
-  password: string;
-  domain: string;
-  organization: string;
+  phone: string;
+  mailingAddress?: Address;
+
+  static fromJson(json: any): User {
+    json = json || {};
+
+    const obj = new User();
+
+    obj.id = json.id;
+    obj.firstName = json.firstName;
+    obj.lastName = json.lastName;
+    obj.email = json.email;
+    obj.phone = json.phone;
+    obj.mailingAddress = Address.fromJson(json.mailingAddress);
+
+    return obj;
+  }
+
+  static fromJsonArray(jsons: any[]): User[] {
+    const results = [];
+    if (!Array.isArray(jsons)) {
+      for (const json of jsons) {
+        results.push(User.fromJson(json));
+      }
+    }
+    return results;
+  }
+
+  get fullName(): string {
+    return `${this.firstName || ''}${this.lastName && this.lastName !== '' ? ' ' : ''}${this.lastName || ''}`;
+  }
+
+  get created(): Date {
+    return (this.id || {} as any).timeStamp || null;
+  }
+
+  constructor() {
+  }
+
 }
 
 export class Address {
@@ -47,77 +95,3 @@ export class Address {
   }
 }
 
-export class BillingDetails {
-
-  brand: string;
-  expiresMonth: number;
-  expiresYear: number;
-  last4: string;
-  name: string;
-
-  static fromJson(json: any): BillingDetails {
-    json = json || {};
-
-    const obj = new BillingDetails();
-
-    obj.brand = json.brand || '';
-    obj.expiresMonth = json.expiresMonth || '';
-    obj.expiresYear = json.expiresYear || '';
-    obj.last4 = json.last4 || '';
-    obj.name = json.name || '';
-
-    return obj;
-  }
-
-}
-
-export class User {
-
-  id: ObjectId;
-  firstName: string;
-  lastName: string;
-  email: string;
-  phone: string;
-  mailingAddress?: Address;
-  billingAddress?: Address;
-  billingDetails?: BillingDetails;
-
-  static fromJson(json: any): User {
-    json = json || {};
-
-    const obj = new User();
-
-    obj.id = json.id;
-    obj.firstName = json.firstName;
-    obj.lastName = json.lastName;
-    obj.email = json.email;
-    obj.phone = json.phone;
-    obj.mailingAddress = Address.fromJson(json.mailingAddress);
-    obj.billingAddress = Address.fromJson(json.billingAddress);
-    obj.billingDetails = BillingDetails.fromJson(json.billingDetails);
-
-    return obj;
-  }
-
-  static fromJsonArray(jsons: any[]): User[] {
-    const results = [];
-    if (!Array.isArray(jsons)) {
-      for (const json of jsons) {
-        results.push(User.fromJson(json));
-      }
-    }
-    return results;
-  }
-
-  get fullName(): string {
-    return `${this.firstName || ''}${this.lastName && this.lastName !== '' ? ' ' : ''}${this.lastName || ''}`;
-  }
-
-  get created(): Date {
-    return (this.id || {} as any).timeStamp || null;
-  }
-
-  constructor() {
-  }
-
-}

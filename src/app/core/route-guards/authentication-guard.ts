@@ -1,15 +1,12 @@
 import { Injectable } from '@angular/core';
 import {
-  ActivatedRoute,
-  ActivatedRouteSnapshot,
-  CanActivate,
-  Router,
-  RouterStateSnapshot
+  ActivatedRoute, ActivatedRouteSnapshot, CanActivate,
+  Router, RouterStateSnapshot
 } from '@angular/router';
 import { AuthenticationService } from '../services/authentication.service';
 
 @Injectable()
-export class CanActivateIfAuthenticated implements CanActivate {
+export class AuthenticationGuard implements CanActivate {
 
   constructor(private auth: AuthenticationService,
               private route: ActivatedRoute,
