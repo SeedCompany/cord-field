@@ -31,21 +31,16 @@ export class AuthenticationStorageService {
         return null;
       }
 
-      try {
-
-        if (!Array.isArray(tokens)) {
-          this.log.error(new Error('stored tokens should have been in an array'));
-        }
-
-      } catch (err) {
-
-        this.log.info(err, 'stored auth tokens are corrupted... deleting them from the store');
+      if (!Array.isArray(tokens)) {
+        this.log.info('stored tokens should have been in an array');
+        this.log.info('stored auth tokens are corrupted... deleting them from the store');
         await this.clearTokens();
-
         return null;
       }
 
       this.authTokens = tokens;
+
+      return this.authTokens;
     }
     return this.authTokens;
   }

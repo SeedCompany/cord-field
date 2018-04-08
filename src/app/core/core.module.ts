@@ -18,8 +18,8 @@ import { WelcomeComponent } from './welcome/welcome.component';
 
 @NgModule({
   imports: [
-    SharedModule,
-    RouterModule
+    RouterModule,
+    SharedModule
   ],
   declarations: [
     HeaderComponent,
@@ -37,8 +37,8 @@ import { WelcomeComponent } from './welcome/welcome.component';
     LoggerService,
     PloApiService,
     ProjectService,
-    SessionStorageService,
-    ProfileApiService
+    ProfileApiService,
+    SessionStorageService
   ]
 })
 export class CoreModule {

@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { environment } from '../../../../environments/environment';
 import { IUserRequestAccess } from '../../models/user';
@@ -13,7 +13,7 @@ import { LoggerService } from '../../services/logger.service';
 })
 export class RequestAccessComponent implements OnInit {
 
-  requestAccessForm: FormGroup = this.fb.group({
+  form: FormGroup = this.fb.group({
     firstName: ['',
       [
         Validators.required,
@@ -31,11 +31,7 @@ export class RequestAccessComponent implements OnInit {
     email: ['', Validators.email],
     organization: ['', Validators.required],
     password: ['', Validators.required],
-    confirmPassword: ['',
-      [
-        Validators.required
-      ]
-    ]
+    confirmPassword: ['', Validators.required, this.validatePasswords]
   });
 
   constructor(private fb: FormBuilder,
@@ -47,13 +43,21 @@ export class RequestAccessComponent implements OnInit {
   ngOnInit() {
   }
 
+  async validatePasswords(control: FormControl): Promise<null | {}> {
+    if (!control.root) {
+      return null;
+    }
+    const exactMatch = control.root.value.password === control.value;
+    return exactMatch ? null : {mismatchedPassword: true};
+  }
+
   onRequestAccess() {
     const userObj: IUserRequestAccess = {
-      firstName: this.requestAccessForm.value.firstName,
-      lastName: this.requestAccessForm.value.lastName,
-      email: this.requestAccessForm.value.email,
-      password: this.requestAccessForm.value.password,
-      organization: this.requestAccessForm.value.organization,
+      firstName: this.form.value.firstName,
+      lastName: this.form.value.lastName,
+      email: this.form.value.email,
+      password: this.form.value.password,
+      organization: this.form.value.organization,
       domain: environment.services['domain']
     };
 
@@ -67,6 +71,10 @@ export class RequestAccessComponent implements OnInit {
 
   onCancel() {
     this.router.navigate(['/login']);
+  }
+
+  get confirmPassword() {
+    return this.form.get('confirmPassword');
   }
 
 

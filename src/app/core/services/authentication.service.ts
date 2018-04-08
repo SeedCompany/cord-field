@@ -35,7 +35,7 @@ export class AuthenticationService {
     return !(!tokens || tokens.length === 0 || tokens.find((t) => t.expired));
   }
 
-  async getCurrentUser(): Promise<User> {
+  async getCurrentUser(): Promise<User | null> {
     const tokens = await this.authStorage.getAuthenticationTokens();
     return (tokens && tokens.length > 0)
       ? tokens[0].toUser()
@@ -48,9 +48,11 @@ export class AuthenticationService {
   }
 
   requestAccess(newUser: IUserRequestAccess): Observable<void> {
+    const body = newUser;
     return this
       .api
-      .post('/users/request-account', {body: newUser});
+      .post('/users/request-account', {body});
+
   }
 
   login(email: string, password: string, rememberLogin: boolean): Observable<AuthenticationToken[]> {

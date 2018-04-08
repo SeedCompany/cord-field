@@ -1,7 +1,7 @@
 <mat-card>
   <mat-card-title>Request Access</mat-card-title>
   <mat-card-content>
-    <form [formGroup]="requestAccessForm">
+    <form [formGroup]="form">
       <mat-form-field class="accent">
         <input
           matInput
@@ -50,8 +50,12 @@
           placeholder="Confirm Password"
           formControlName="confirmPassword"
           type="password"
+          name="confirmPassword"
         >
-        <mat-error> Password & Confirm Password should match</mat-error>
+        <mat-error
+          *ngIf="confirmPassword.hasError('mismatchedPassword')">
+          Password & Confirm Password should match
+        </mat-error>
       </mat-form-field>
     </form>
   </mat-card-content>
@@ -59,8 +63,8 @@
     <button mat-button (click)="onCancel()" color="accent">CANCEL</button>
     <button
       mat-button color="accent"
-      (click)=" onRequestAccess(requestAccessForm)"
-      [disabled]="!requestAccessForm.valid">Request Access
+      (click)=" onRequestAccess(form)"
+      [disabled]="!form.valid">Request Access
     </button>
   </mat-card-actions>
 </mat-card>

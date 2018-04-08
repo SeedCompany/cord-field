@@ -18,9 +18,9 @@ export abstract class BaseApiService extends AbstractHttpClient {
 
   debugApiCallLogger: (path: string, source: any, body: any, method: string) => void;
 
-  constructor(httpClient: HttpClient, baseUrl: string) {
+  constructor(httpClient: HttpClient, serviceName: string) {
     super(httpClient);
-    this._baseUrl = environment.services[baseUrl];
+    this._baseUrl = environment.services[serviceName];
   }
 
   url(endpoint: string): string {
