@@ -1,11 +1,9 @@
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { RouterModule } from '@angular/router';
 import { MaterialModule } from '../material.module';
 import { SearchComponent } from './components/search/search.component';
 import { AutofocusDirective } from './directives/autofocus.directive';
-
 
 @NgModule({
   imports: [
