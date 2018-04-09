@@ -30,8 +30,6 @@ export class AuthenticationService {
 
   async isLoggedIn(): Promise<boolean> {
     const tokens = await this.authStorage.getAuthenticationTokens();
-    console.log('tokens are ---->', tokens);
-    console.log('Trace login status------>', !(!tokens || tokens.length === 0 || tokens.find((t) => t.expired)));
     return !(!tokens || tokens.length === 0 || tokens.find((t) => t.expired));
   }
 
