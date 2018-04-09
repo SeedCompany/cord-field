@@ -36,7 +36,7 @@ export class User {
 
   static fromJsonArray(jsons: any[]): User[] {
     const results = [];
-    if (!Array.isArray(jsons)) {
+    if (Array.isArray(jsons)) {
       for (const json of jsons) {
         results.push(User.fromJson(json));
       }
@@ -51,10 +51,6 @@ export class User {
   get created(): Date {
     return (this.id || {} as any).timeStamp || null;
   }
-
-  constructor() {
-  }
-
 }
 
 export class Address {

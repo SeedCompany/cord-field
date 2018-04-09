@@ -18,13 +18,13 @@ export class RequestAccessComponent implements OnInit {
       [
         Validators.required,
         Validators.min(5),
-        Validators.maxLength(20)
+        Validators.maxLength(40)
       ]
     ],
     lastName: ['',
       [
         Validators.required,
-        Validators.min(5),
+        Validators.min(2),
         Validators.maxLength(20)
       ]
     ],
