@@ -13,10 +13,7 @@ mat-card {
 
 mat-card-actions {
   display: flex;
-  flex-direction: row;
-  justify-content: space-around;
-  flex-wrap: wrap;
-  margin: 70px auto;
+  justify-content: space-between;
 }
 
 mat-card-header {
