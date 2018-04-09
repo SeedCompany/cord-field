@@ -6,7 +6,6 @@ import { AbstractHttpClient, IRequestOptionsWithBody } from './abstract-http-cli
 export abstract class BaseApiService extends AbstractHttpClient {
 
   protected _baseUrl: string;
-  source: any = {name: 'source not set'};
 
   get baseUrl(): string {
     return this._baseUrl;
@@ -16,6 +15,10 @@ export abstract class BaseApiService extends AbstractHttpClient {
 
   constructor(httpClient: HttpClient, serviceName: string) {
     super(httpClient);
+
+    if (!environment.services || !environment.services[serviceName]) {
+      throw new Error(`environment.services is misconfigured for ProfileApiService, expecting key ${serviceName}`);
+    }
     this._baseUrl = environment.services[serviceName];
   }
 
