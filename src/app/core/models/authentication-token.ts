@@ -1,6 +1,4 @@
-import * as moment from 'moment';
 import { decode as decodeBase64url } from 'urlsafe-base64';
-import { LoggerService } from '../services/logger.service';
 import { ObjectId } from './object-id';
 import { ServerDate } from './server-date';
 import { User } from './user';
