@@ -1,7 +1,6 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { HeaderComponent } from './core/header/header.component';
-import { LoginModule } from './core/login/login.module';
 import { NotFoundPageComponent } from './core/not-found-page/not-found-page.component';
 import { AuthenticationGuard } from './core/route-guards/authentication-guard';
 import { WelcomeComponent } from './core/welcome/welcome.component';
@@ -21,8 +20,6 @@ const routes: Routes = [
   },
   {path: 'login', loadChildren: 'app/core/login/login.module#LoginModule'},
   {path: '**', component: NotFoundPageComponent}
-
-
 ];
 
 @NgModule({

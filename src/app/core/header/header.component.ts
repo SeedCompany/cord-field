@@ -1,7 +1,4 @@
-import {
-  Component,
-  OnInit
-} from '@angular/core';
+import { Component } from '@angular/core';
 import { MatIconRegistry } from '@angular/material';
 import { DomSanitizer } from '@angular/platform-browser';
 import { Router } from '@angular/router';
@@ -15,7 +12,6 @@ import { AuthenticationService } from '../services/authentication.service';
 })
 export class HeaderComponent {
   constructor(private auth: AuthenticationService,
-              private authStore: AuthenticationStorageService,
               private router: Router,
               iconRegistry: MatIconRegistry, sanitizer: DomSanitizer) {
     iconRegistry.addSvgIcon('cord', sanitizer.bypassSecurityTrustResourceUrl('assets/images/cord-icon.svg'));

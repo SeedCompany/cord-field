@@ -3,10 +3,6 @@ import { Observable } from 'rxjs/Observable';
 import { environment } from '../../../../environments/environment';
 import { AbstractHttpClient, IRequestOptionsWithBody } from './abstract-http-client';
 
-export interface IApiServiceOptions {
-  disableServerDown?: boolean;
-}
-
 export abstract class BaseApiService extends AbstractHttpClient {
 
   protected _baseUrl: string;

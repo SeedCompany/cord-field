@@ -19,20 +19,12 @@ mat-card-actions {
   margin: 70px auto;
 }
 
-mat-card-footer {
-  display: flex;
-  flex-direction: row;
-  justify-content: space-around;
-  align-items: center;
-}
-
 mat-card-header {
   display: flex;
   flex-direction: column;
 }
 
 form {
-  margin-top: 1em;
   display: flex;
   flex-direction: column;
 }
