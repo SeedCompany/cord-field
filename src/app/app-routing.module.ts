@@ -19,7 +19,7 @@ const routes: Routes = [
     ],
     canActivate: [AuthenticationGuard]
   },
-  {path: 'login', loadChildren: () => LoginModule},
+  {path: 'login', loadChildren: 'app/core/login/login.module#LoginModule'},
   {path: '**', component: NotFoundPageComponent}
 
 
