@@ -1,21 +1,18 @@
-<mat-card>
-  <mat-card-header>
-    <span class="toolbar-icon">
-      <mat-icon svgIcon="cord"></mat-icon>
-    </span>
-    <span>
-      <h3>Sign In</h3>
-    </span>
-  </mat-card-header>
+<div><!-- Needed to align footer on left side of the card, but everything centered in middle of screen -->
+  <mat-card>
+    <mat-card-title>
+      <span class="icon">
+        <mat-icon svgIcon="cord"></mat-icon>
+      </span>
+      <span>Sign In</span>
+    </mat-card-title>
 
-  <mat-card-content>
-    <form [formGroup]="form">
+    <mat-card-content [formGroup]="form" (keyup.enter)="form.valid ? onLogin() : null">
       <mat-form-field color="accent">
         <input
           matInput
           placeholder="Email"
           formControlName="email"
-          type="text"
         >
         <mat-error>Please enter a valid email</mat-error>
       </mat-form-field>
@@ -24,25 +21,30 @@
           matInput
           placeholder="Password"
           formControlName="password"
-          [type]="hide ? 'password' : 'text'">
+          [type]="hidePassword ? 'password' : 'text'">
+        <mat-icon matSuffix
+                  color="primary"
+                  (click)="hidePassword = !hidePassword"
+        >
+          {{ hidePassword ? 'visibility' : 'visibility_off' }}
+        </mat-icon>
         <mat-error>Please enter your password</mat-error>
-        <mat-icon matSuffix (click)="hide = !hide">{{ hide ? 'visibility' : 'visibility_off' }}</mat-icon>
       </mat-form-field>
-    </form>
-  </mat-card-content>
-  <mat-card-actions>
-    <button mat-button color="accent"> FORGOT EMAIL/PASSWORD?</button>
-    <button type="submit"
-            mat-raised-button
-            color="accent"
-            (click)="onLogin()"
-            [disabled]="!form.valid">LOG IN
-    </button>
-  </mat-card-actions>
-</mat-card>
-<mat-card-footer>
-  Don't have an account?
-  <button mat-button color="accent" (click)="onRequestAccess()">REQUEST ACCESS</button>
-</mat-card-footer>
+    </mat-card-content>
 
-
+    <mat-card-actions>
+      <button mat-raised-button
+              color="accent"
+              (click)="onLogin()"
+              [disabled]="!form.valid"
+      >
+        SIGN IN
+      </button>
+      <button mat-button color="accent">FORGOT EMAIL/PASSWORD?</button>
+    </mat-card-actions>
+  </mat-card>
+  <div class="mat-typography footer">
+    Don't have an account?
+    <button mat-button color="accent" routerLink="/login/request-access">REQUEST ACCESS</button>
+  </div>
+</div>

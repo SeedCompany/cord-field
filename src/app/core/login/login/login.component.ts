@@ -1,12 +1,5 @@
-import {
-  Component,
-  OnInit
-} from '@angular/core';
-import {
-  FormBuilder,
-  FormGroup,
-  Validators
-} from '@angular/forms';
+import { Component } from '@angular/core';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatIconRegistry } from '@angular/material';
 import { DomSanitizer } from '@angular/platform-browser';
 import { Router } from '@angular/router';
@@ -18,9 +11,10 @@ import { LoggerService } from '../../services/logger.service';
   templateUrl: './login.component.html',
   styleUrls: ['./login.component.scss']
 })
-export class LoginComponent implements OnInit {
+export class LoginComponent {
 
-  hide = true;
+  hidePassword = true;
+
   form: FormGroup = this.fb.group({
     email: ['', Validators.email],
     password: ['', Validators.required]
@@ -32,24 +26,16 @@ export class LoginComponent implements OnInit {
               private logService: LoggerService,
               iconRegistry: MatIconRegistry,
               sanitizer: DomSanitizer) {
-    iconRegistry
-      .addSvgIcon('cord', sanitizer.bypassSecurityTrustResourceUrl('assets/images/cord-icon.svg'));
-  }
-
-  ngOnInit() {
+    iconRegistry.addSvgIcon('cord', sanitizer.bypassSecurityTrustResourceUrl('assets/images/cord-icon.svg'));
   }
 
   onLogin() {
     this
       .auth
-      .login(this.form.value.email, this.form.value.password, true)
+      .login(this.email.value, this.password.value, true)
       .toPromise()
       .then(() => this.router.navigate(['/']))
       .catch((err) => this.logService.error(err, 'error at onLogin'));
-  }
-
-  onRequestAccess() {
-    this.router.navigate(['/login/request-access']);
   }
 
   get email() {
