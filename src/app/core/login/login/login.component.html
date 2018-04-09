@@ -9,7 +9,7 @@
   </mat-card-header>
 
   <mat-card-content>
-    <form [formGroup]="loginForm">
+    <form [formGroup]="form">
       <mat-form-field color="accent">
         <input
           matInput
@@ -36,7 +36,7 @@
             mat-raised-button
             color="accent"
             (click)="onLogin()"
-            [disabled]="!loginForm.valid">LOG IN
+            [disabled]="!form.valid">LOG IN
     </button>
   </mat-card-actions>
   <mat-card-footer>

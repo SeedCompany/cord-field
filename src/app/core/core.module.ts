@@ -31,7 +31,6 @@ import { WelcomeComponent } from './welcome/welcome.component';
     AuthenticationService,
     AuthenticationStorageService,
     BrowserService,
-    AuthenticationGuard,
     GoogleAnalyticsService,
     LocalStorageService,
     LoggerService,

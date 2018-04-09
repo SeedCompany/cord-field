@@ -21,7 +21,7 @@ import { LoggerService } from '../../services/logger.service';
 export class LoginComponent implements OnInit {
 
   hide = true;
-  loginForm: FormGroup = this.fb.group({
+  form: FormGroup = this.fb.group({
     email: ['', Validators.email],
     password: ['', Validators.required]
   });
@@ -32,7 +32,8 @@ export class LoginComponent implements OnInit {
               private logService: LoggerService,
               iconRegistry: MatIconRegistry,
               sanitizer: DomSanitizer) {
-    iconRegistry.addSvgIcon('cord', sanitizer.bypassSecurityTrustResourceUrl('assets/images/cord-icon.svg'));
+    iconRegistry
+      .addSvgIcon('cord', sanitizer.bypassSecurityTrustResourceUrl('assets/images/cord-icon.svg'));
   }
 
   ngOnInit() {
@@ -41,7 +42,7 @@ export class LoginComponent implements OnInit {
   onLogin() {
     this
       .auth
-      .login(this.loginForm.value.email, this.loginForm.value.password, true)
+      .login(this.form.value.email, this.form.value.password, true)
       .toPromise()
       .then(() => this.router.navigate(['/']))
       .catch((err) => this.logService.error(err, 'error at onLogin'));
@@ -52,10 +53,10 @@ export class LoginComponent implements OnInit {
   }
 
   get email() {
-    return this.loginForm.get('email');
+    return this.form.get('email');
   }
 
   get password() {
-    return this.loginForm.get('password');
+    return this.form.get('password');
   }
 }

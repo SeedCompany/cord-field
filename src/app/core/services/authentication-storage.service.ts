@@ -30,7 +30,6 @@ export class AuthenticationStorageService {
       if (!tokens) {
         return null;
       }
-
       if (!Array.isArray(tokens)) {
         this.log.info('stored tokens should have been in an array');
         this.log.info('stored auth tokens are corrupted... deleting them from the store');

@@ -50,7 +50,6 @@ export class AuthenticationService {
     return this
       .api
       .post('/users/request-account', {body});
-
   }
 
   login(email: string, password: string, rememberLogin: boolean): Observable<AuthenticationToken[]> {
