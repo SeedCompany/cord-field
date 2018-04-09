@@ -26,7 +26,7 @@ services:
       MONGO_DB_ADDRESS: mongo-db
       MONGO_DB_PORT: 27017
       NODE_ENV: dev
-      SERVICE_8001_NAME: client-tsco-cord-field-uat
+      SERVICE_8001_NAME: client-tsco-cord-plo-uat
     mem_limit: 256000000
 
   profile-service:
