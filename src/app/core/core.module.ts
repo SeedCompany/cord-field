@@ -2,7 +2,6 @@ import { NgModule, Optional, SkipSelf } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { SharedModule } from '../shared/shared.module';
 import { HeaderComponent } from './header/header.component';
-import { LoginModule } from './login/login.module';
 import { NotFoundPageComponent } from './not-found-page/not-found-page.component';
 import { AuthenticationGuard } from './route-guards/authentication-guard';
 import { AuthenticationStorageService } from './services/authentication-storage.service';
@@ -18,8 +17,8 @@ import { WelcomeComponent } from './welcome/welcome.component';
 
 @NgModule({
   imports: [
-    RouterModule,
-    SharedModule
+    SharedModule,
+    RouterModule
   ],
   declarations: [
     HeaderComponent,
