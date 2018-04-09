@@ -40,7 +40,10 @@ export class ProjectListComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.projectService.getProjects().subscribe(projects => {
+    this
+      .projectService
+      .getProjects()
+      .subscribe(projects => {
       this.projectSource = new MatTableDataSource<Project>(projects);
       this.projectSource.paginator = this.paginator;
       this.projectSource.sort = this.sort;

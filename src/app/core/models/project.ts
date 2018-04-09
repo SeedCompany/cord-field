@@ -20,7 +20,7 @@ export function projectTypeToString(value: ProjectType): string {
 export enum ProjectStatus {
   Active = 'active',
   Inactive = 'inactive',
-  InDevelopment = 'in development',
+  InDevelopment = 'in_development',
   Completed = 'completed',
   Rejected = 'rejected'
 }
@@ -49,7 +49,7 @@ export class Project {
   name: string;
   type: ProjectType;
   status: ProjectStatus;
-  updatedAt: Timestamp;
+  updatedAt: Date;
   languages: string[];
 
 
@@ -61,13 +61,15 @@ export class Project {
     project.name = json.name || '';
     project.type = json.type || ProjectType.Translation;
     project.languages = json.languages || [];
-    project.updatedAt = json.updatedAt || '2018-03-28T14:33:13.559Z';
+    project.updatedAt = json.updatedAt ? new Date(json.updatedAt) : new Date();
     project.status = json.status || ProjectStatus.Active;
 
     return project;
   }
+
   static fromJsonArray(projects: any): Project[] {
     projects = projects || [];
     return projects.map(project => this.fromJson(project));
   }
+
 }

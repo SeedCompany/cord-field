@@ -1,8 +1,7 @@
 import { Injectable } from '@angular/core';
-import { PloApiService } from './http/plo-api.service';
-import { Project } from '../models/project';
-import 'rxjs/operators/map';
 import { Observable } from 'rxjs/Observable';
+import { Project } from '../models/project';
+import { PloApiService } from './http/plo-api.service';
 
 
 @Injectable()
