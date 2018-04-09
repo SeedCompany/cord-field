@@ -2,26 +2,23 @@ import { browser, by, element } from 'protractor';
 import { ProjectList } from './project-list.po';
 
 describe('cord-field App', () => {
-  let page: ProjectList;
+  let projectListPage: ProjectList;
 
   beforeEach(() => {
-    page = new ProjectList();
+    projectListPage = new ProjectList();
     browser.waitForAngularEnabled(true);
+    projectListPage.navigateTo();
   });
 
   afterEach( () => {
-    page.navigateTo();
   });
 
   it ( 'title should match', () => {
-    page.navigateTo();
-    console.log(page.getTitleInHeader());
-    expect(page.getTitleInHeader()).toEqual('Cord Field');
+    expect(projectListPage.getTitleInHeader()).toEqual('Cord Field');
   });
 
   it ( 'navigate to project list and find All Projects button', () => {
-    page.navigateToProjectList();
-    const buttonTxt = page.getAppProjectsButton().getText();
+    const buttonTxt = projectListPage.getAppProjectsButton().getText();
     expect(buttonTxt).toEqual(('All Projects arrow_drop_down'));
   });
 

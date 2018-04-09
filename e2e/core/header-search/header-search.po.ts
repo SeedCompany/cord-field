@@ -1,24 +1,19 @@
 import { browser, by, element } from 'protractor';
-
-const byMatIcon = (name: string) => by.xpath(`//mat-icon[. = '${name}']`);
+import { ProtractorLocators } from '../../utils/locators';
 
 export class HeaderSearch {
+  protLocator = new ProtractorLocators();
+
   navigateTo() {
     return browser.get('/');
   }
 
-  getSearchInput2() {
-    const searchInput = element(by.model('value'));
-    return searchInput;
-  }
-
   getSearchIcon() {
-    return element(by.tagName('app-header')).element(byMatIcon('search'));
+    return element(by.tagName('app-header')).element(this.protLocator.byMatIcon('search'));
   }
 
   getSearchInput() {
-    const searchInput = element(by.tagName('app-header')).element(by.tagName('input'));
-    return searchInput;
+    return element(by.tagName('app-header')).element(by.tagName('input'));
   }
 }
 
