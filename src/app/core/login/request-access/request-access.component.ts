@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
+import { CustomValidators } from '../../models/custom-validators';
 import { IUserRequestAccess } from '../../models/user';
 import { AuthenticationService } from '../../services/authentication.service';
 import { LoggerService } from '../../services/logger.service';
@@ -17,7 +18,7 @@ export class RequestAccessComponent {
   form: FormGroup = this.fb.group({
     firstName: ['', Validators.required],
     lastName: ['', Validators.required],
-    email: ['', Validators.email],
+    email: ['', Validators.required, this.validateEmail.bind(this)],
     organization: ['', Validators.required],
     password: ['', Validators.required],
     confirmPassword: ['', Validators.required, this.validatePasswords.bind(this)]
@@ -33,8 +34,12 @@ export class RequestAccessComponent {
     return this.password.value === this.confirmPassword.value ? null : {mismatchedPassword: true};
   }
 
+  async validateEmail() {
+    return CustomValidators.isValidEmail(this.email.value) ? null : {invalidEmail: true};
+  }
+
   onRequestAccess() {
-    const {confirmPassword, ...user} = this.form.value as IUserRequestAccess & {confirmPassword: string};
+    const {confirmPassword, ...user} = this.form.value as IUserRequestAccess & { confirmPassword: string };
 
     this
       .authService
@@ -42,6 +47,10 @@ export class RequestAccessComponent {
       .toPromise()
       .then(() => this.router.navigate(['/login']))
       .catch((err) => this.logService.error(err, 'error at request access'));
+  }
+
+  get email() {
+    return this.form.get('email');
   }
 
   get password() {
