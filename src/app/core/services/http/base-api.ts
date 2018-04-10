@@ -6,7 +6,6 @@ import { AbstractHttpClient, IRequestOptionsWithBody } from './abstract-http-cli
 export abstract class BaseApiService extends AbstractHttpClient {
 
   protected _baseUrl: string;
-  source: any = {name: 'source not set'};
 
   get baseUrl(): string {
     return this._baseUrl;

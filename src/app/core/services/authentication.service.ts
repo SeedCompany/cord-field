@@ -42,7 +42,6 @@ export class AuthenticationService {
 
   constructor(private api: ProfileApiService,
               private authStorage: AuthenticationStorageService) {
-    api.source = this;
   }
 
   requestAccess(newUser: IUserRequestAccess): Observable<void> {
