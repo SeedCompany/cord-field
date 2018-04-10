@@ -4,6 +4,10 @@
   @extend %component-defaults;
 }
 
+mat-toolbar {
+  z-index: 10;
+}
+
 .nav-toolbar {
   display: flex;
 }

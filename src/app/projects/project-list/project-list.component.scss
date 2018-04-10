@@ -2,6 +2,12 @@
 
 :host {
   @extend %component-defaults;
+  @include mat-elevation(2);
+}
+
+.header {
+  @include mat-elevation(4);
+  z-index: 1;
 }
 
 .add-button {
