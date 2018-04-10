@@ -17,7 +17,7 @@ export abstract class BaseApiService extends AbstractHttpClient {
     super(httpClient);
 
     if (!environment.services || !environment.services[serviceName]) {
-      // throw new Error(`environment.services is misconfigured for ${this.constructor.name}, expecting key ${serviceName}`);
+      throw new Error(`environment.services is misconfigured for ${this.constructor.name}, expecting key ${serviceName}`);
     }
     this._baseUrl = environment.services[serviceName];
   }
