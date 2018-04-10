@@ -15,20 +15,8 @@ export class RequestAccessComponent {
   hidePassword = true;
 
   form: FormGroup = this.fb.group({
-    firstName: ['',
-      [
-        Validators.required,
-        Validators.min(5),
-        Validators.maxLength(40)
-      ]
-    ],
-    lastName: ['',
-      [
-        Validators.required,
-        Validators.min(2),
-        Validators.maxLength(20)
-      ]
-    ],
+    firstName: ['', Validators.required],
+    lastName: ['', Validators.required],
     email: ['', Validators.email],
     organization: ['', Validators.required],
     password: ['', Validators.required],
