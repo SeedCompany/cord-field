@@ -32,13 +32,6 @@ export function projectStatusToString(value: ProjectStatus): string {
   return mapping[value];
 }
 
-/**
- * A string representation of a date.
- *
- * Example: "2018-09-30T05:00:00.000Z"
- */
-export type Timestamp = string;
-
 export class Project {
 
   id: string;
@@ -48,7 +41,6 @@ export class Project {
   updatedAt: Date;
   languages: string[];
 
-
   static fromJson(json: any): Project {
     json = json || {};
     const project = new Project();
@@ -57,7 +49,7 @@ export class Project {
     project.name = json.name || '';
     project.type = json.type || ProjectType.Translation;
     project.languages = json.languages || [];
-    project.updatedAt = json.updatedAt ? new Date(json.updatedAt) : new Date();
+    project.updatedAt = json.updatedAt ? new Date(json.updatedAt) : null;
     project.status = json.status || ProjectStatus.Active;
 
     return project;

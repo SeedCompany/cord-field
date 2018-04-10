@@ -52,14 +52,7 @@
     "no-angle-bracket-type-assertion": true,
     "no-arg": true,
     "no-bitwise": true,
-    "no-console": [
-      true,
-      "debug",
-      "info",
-      "time",
-      "timeEnd",
-      "trace"
-    ],
+    "no-console": true,
     "no-construct": true,
     "no-debugger": true,
     "no-default-export": true,

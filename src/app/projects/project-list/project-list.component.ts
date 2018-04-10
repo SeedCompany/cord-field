@@ -1,8 +1,25 @@
-import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
-import { MatDialog, MatPaginator, MatSort, MatTableDataSource } from '@angular/material';
-import { Project, ProjectStatus } from '../../core/models/project';
+import {
+  AfterViewInit,
+  Component,
+  OnInit,
+  ViewChild
+} from '@angular/core';
+import {
+  MatDialog,
+  MatPaginator,
+  MatSort,
+  MatTableDataSource
+} from '@angular/material';
+import {
+  Project,
+  ProjectStatus
+} from '../../core/models/project';
+import { LoggerService } from '../../core/services/logger.service';
 import { ProjectService } from '../../core/services/project.service';
-import { ProjectCreateDialogComponent, ProjectCreationResult } from '../project-create-dialog/project-create-dialog.component';
+import {
+  ProjectCreateDialogComponent,
+  ProjectCreationResult
+} from '../project-create-dialog/project-create-dialog.component';
 
 @Component({
   selector: 'app-project-list',
@@ -20,7 +37,6 @@ export class ProjectListComponent implements OnInit, AfterViewInit {
   pageSize = 10;
   pageSizeOptions = [5, 10, 20];
 
-
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
 
@@ -30,8 +46,9 @@ export class ProjectListComponent implements OnInit, AfterViewInit {
     [ProjectStatus.InDevelopment]: 'orange'
   };
 
-  constructor(private projectService: ProjectService,
-              private dialog: MatDialog) {
+  constructor(private dialog: MatDialog,
+              private log: LoggerService,
+              private projectService: ProjectService) {
   }
 
   ngOnInit() {
@@ -60,7 +77,6 @@ export class ProjectListComponent implements OnInit, AfterViewInit {
       if (!result) {
         return;
       }
-      console.log(result);
     });
   }
 
@@ -75,7 +91,7 @@ export class ProjectListComponent implements OnInit, AfterViewInit {
       .subscribe(projects => {
         this.projectSource.data = projects;
       }, err => {
-        console.log(err);
+        this.log.error(err, 'ProjectListComponent.getProjects');
       });
   }
 
