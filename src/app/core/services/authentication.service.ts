@@ -46,22 +46,15 @@ export class AuthenticationService {
   }
 
   requestAccess(newUser: IUserRequestAccess): Observable<void> {
-    const body = {...newUser, domain};
     return this
       .api
-      .post('/users/request-account', {body});
+      .post('/users/request-account', {...newUser, domain});
   }
 
   login(email: string, password: string, rememberLogin: boolean): Observable<AuthenticationToken[]> {
-    const body = {
-      domain,
-      email: email,
-      password: password
-    };
-
     return this
       .api
-      .post('/auth/native/login', {body})
+      .post('/auth/native/login', {domain, email, password})
       .map((json) => AuthenticationToken.fromTokenMap(json))
       .do(async (tokens: AuthenticationToken[]) => await this.authStorage.saveTokens(tokens, rememberLogin))
       .do((tokens: AuthenticationToken[]) => this._login.next(tokens));
