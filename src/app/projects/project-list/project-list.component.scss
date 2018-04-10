@@ -10,9 +10,13 @@
   top: 49%;
 }
 
+.header-spacing {
+  height: (56px / 2); // Make room for half of the fab button's height
+  background: mat-background($theme, card);
+}
+
 .toolbar {
   background: mat-background($theme, card);
-  margin-top: (56px / 2); // Make room for half of the fab button's height
 
   .project-menu-button {
     padding-right: 8px;
