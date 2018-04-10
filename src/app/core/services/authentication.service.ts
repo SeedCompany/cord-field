@@ -11,6 +11,7 @@ import {
 } from '../models/user';
 import { AuthenticationStorageService } from './authentication-storage.service';
 import { ProfileApiService } from './http/profile-api.service';
+import { HttpErrorResponse } from '@angular/common/http';
 
 const domain = environment.services['domain'];
 
@@ -62,5 +63,39 @@ export class AuthenticationService {
   async logout(): Promise<void> {
     await this.authStorage.clearTokens();
     this._logout.next();
+  }
+
+  getErrorMessage(error: HttpErrorResponse): string {
+    // error messages needs tobe more verbose after discussion with team.
+    let errMsg = '';
+    const serverMsg = error.error;
+    switch (error.status) {
+      case 400:
+        errMsg = 'Something went wrong with the system, Please try after some time';
+        break;
+      case 401:
+        errMsg = 'You entered wrong email or password';
+        break;
+      case 403:
+        errMsg = serverMsg;
+        break;
+      case 404:
+        errMsg = serverMsg;
+        break;
+      case 409:
+        errMsg = serverMsg;
+        break;
+      case 422:
+        errMsg = '';
+        break;
+      case 500:
+        errMsg = serverMsg;
+        break;
+      case 503:
+        errMsg = 'Your requested service is not available';
+        break;
+    }
+
+    return errMsg;
   }
 }

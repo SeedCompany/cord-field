@@ -14,6 +14,10 @@ import { LoggerService } from '../../services/logger.service';
 export class LoginComponent {
 
   hidePassword = true;
+  serverError = {
+    status: false,
+    message: ''
+  };
 
   form: FormGroup = this.fb.group({
     email: ['', Validators.email],
@@ -35,7 +39,10 @@ export class LoginComponent {
       .login(this.email.value, this.password.value, true)
       .toPromise()
       .then(() => this.router.navigate(['/']))
-      .catch((err) => this.logService.error(err, 'error at onLogin'));
+      .catch((err) => {
+        this.serverError.status = true;
+        this.serverError.message = this.auth.getErrorMessage(err);
+      });
   }
 
   get email() {
