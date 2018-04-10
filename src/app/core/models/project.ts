@@ -20,18 +20,14 @@ export function projectTypeToString(value: ProjectType): string {
 export enum ProjectStatus {
   Active = 'active',
   Inactive = 'inactive',
-  InDevelopment = 'in_development',
-  Completed = 'completed',
-  Rejected = 'rejected'
+  InDevelopment = 'in_development'
 }
 
 export function projectStatusToString(value: ProjectStatus): string {
   const mapping = {
     [ProjectStatus.Active]: 'Active',
     [ProjectStatus.Inactive]: 'Inactive',
-    [ProjectStatus.InDevelopment]: 'In Development',
-    [ProjectStatus.Completed]: 'Completed',
-    [ProjectStatus.Rejected]: 'Rejected'
+    [ProjectStatus.InDevelopment]: 'In Development'
   };
   return mapping[value];
 }

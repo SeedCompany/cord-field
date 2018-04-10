@@ -81,5 +81,6 @@
 </mat-table>
 <mat-paginator [pageSize]=pageSize
                [pageSizeOptions]=pageSizeOptions
+               (page)="onPaginatorChange($event)"
                [showFirstLastButtons]="false">
 </mat-paginator>

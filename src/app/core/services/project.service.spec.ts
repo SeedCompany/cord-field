@@ -30,32 +30,42 @@ describe('ProjectService', () => {
   }));
 
   it('should get project list', done => {
-    const projectListUrl = `${testBaseUrl}/projects`;
-    const mockResponse = [
-      {
-        'id': '5acbba0c70db6a1781ece783',
-        'status': 'active',
-        'name': 'Elhomwe Bible (395)',
-        'updatedAt': '2018-03-26T05:27:49.000Z',
-        'type': 'translation'
-      }];
+
+    const sort = 'updatedAt';
+    const skip = 0;
+    const limit = 10;
+    const projectListUrl = `${testBaseUrl}/projects?sort=${sort}&skip=${skip}&limit=${limit}`;
+    const mockResponse = [{
+      'id': '5acbba0c70db6a1781ece783',
+      'status': 'active',
+      'name': 'Elhomwe Bible (395)',
+      'updatedAt': '2018-03-26T05:27:49.000Z',
+      'type': 'translation'
+    }];
 
     projectService
-      .getProjects()
+      .getProjects('updatedAt', 0, 10)
       .toPromise()
       .then((projects) => {
         expect(projects.length).not.toBe(0);
         expect(projects[0].id).toBeDefined();
+        expect(projects[0].id).toBe('5acbba0c70db6a1781ece783');
         expect(projects[0].name).toBeDefined();
-        expect(projects[0].languages).toBeDefined();
+        expect(projects[0].name).toBe('Elhomwe Bible (395)');
         expect(projects[0].status).toBeDefined();
+        expect(projects[0].status).toBe('active');
         expect(projects[0].type).toBeDefined();
+        expect(projects[0].type).toBe('translation');
+        expect(projects[0].languages).toBeDefined();
         expect(Array.isArray(projects[0].languages)).toBe(true);
       })
       .then(done)
       .catch(done.fail);
 
-    httpMockService.expectOne(projectListUrl).flush(mockResponse);
+    httpMockService
+      .expectOne(projectListUrl)
+      .flush(mockResponse);
     httpMockService.verify();
+
   });
 });

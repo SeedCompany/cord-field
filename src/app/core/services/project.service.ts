@@ -3,6 +3,9 @@ import { Observable } from 'rxjs/Observable';
 import { Project } from '../models/project';
 import { PloApiService } from './http/plo-api.service';
 
+const SORT = 'updatedAt';
+const SKIP = 0;
+const LIMIT = 10;
 
 @Injectable()
 export class ProjectService {
@@ -11,10 +14,13 @@ export class ProjectService {
 
   }
 
-  getProjects(): Observable<Project[]> {
+  getProjects(sort = SORT, skip = SKIP, limit = LIMIT): Observable<Project[]> {
+
+    const projectUrl = `/projects?sort=${sort}&skip=${skip}&limit=${limit}`;
+
     return this
       .ploApiSerivce
-      .get('/projects')
+      .get(projectUrl)
       .map((projects: any) => Project.fromJsonArray(projects));
   }
 }

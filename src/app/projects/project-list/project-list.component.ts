@@ -1,6 +1,6 @@
 import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
 import { MatDialog, MatPaginator, MatSort, MatTableDataSource } from '@angular/material';
-import { Project, ProjectStatus, projectStatusToString, projectTypeToString } from '../../core/models/project';
+import { Project, ProjectStatus } from '../../core/models/project';
 import { ProjectService } from '../../core/services/project.service';
 import { ProjectCreateDialogComponent, ProjectCreationResult } from '../project-create-dialog/project-create-dialog.component';
 
@@ -9,28 +9,23 @@ import { ProjectCreateDialogComponent, ProjectCreationResult } from '../project-
   templateUrl: './project-list.component.html',
   styleUrls: ['./project-list.component.scss']
 })
-export class ProjectListComponent implements OnInit {
+export class ProjectListComponent implements OnInit, AfterViewInit {
   currentListSelector = 'All Projects';
   listSelectorOptions = [
     'All Projects',
     'My Projects'
   ];
-
-  projectSource: MatTableDataSource<Project>;
+  projectSource = new MatTableDataSource<Project>();
   displayedColumns = ['name', 'lastModified', 'languages', 'type', 'status'];
   pageSize = 10;
   pageSizeOptions = [5, 10, 20];
 
+
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
 
-  readonly projectTypeToString = projectTypeToString;
-  readonly projectStatusToString = projectStatusToString;
-
   private statusColor = {
     [ProjectStatus.Active]: 'green',
-    [ProjectStatus.Rejected]: 'red',
-    [ProjectStatus.Completed]: 'green',
     [ProjectStatus.Inactive]: 'red',
     [ProjectStatus.InDevelopment]: 'orange'
   };
@@ -40,14 +35,12 @@ export class ProjectListComponent implements OnInit {
   }
 
   ngOnInit() {
-    this
-      .projectService
-      .getProjects()
-      .subscribe(projects => {
-      this.projectSource = new MatTableDataSource<Project>(projects);
-      this.projectSource.paginator = this.paginator;
-      this.projectSource.sort = this.sort;
-    }, err => console.log(err));
+    this.getProjects('updatedAt', 0, this.pageSize);
+  }
+
+  ngAfterViewInit() {
+    this.projectSource.sort = this.sort;
+    this.projectSource.paginator = this.paginator;
   }
 
   onSearch(query: string) {
@@ -73,5 +66,21 @@ export class ProjectListComponent implements OnInit {
 
   trackByValue(index, value) {
     return value;
+  }
+
+  getProjects(sort, skip, limit) {
+    this
+      .projectService
+      .getProjects(sort, skip, limit)
+      .subscribe(projects => {
+        this.projectSource.data = projects;
+      }, err => {
+        console.log(err);
+      });
+  }
+
+  onPaginatorChange(event) {
+    const skip = event.pageIndex * event.pageSize;
+    this.getProjects('updatedAt', skip, event.pageSize);
   }
 }
