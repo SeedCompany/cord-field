@@ -1,6 +1,20 @@
-import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
-import { MatDialog, MatPaginator, MatSort, MatTableDataSource } from '@angular/material';
-import { Project, ProjectStatus, projectStatusToString, projectTypeToString } from '../../core/models/project';
+import {
+  AfterViewInit,
+  Component,
+  OnInit,
+  ViewChild
+} from '@angular/core';
+import {
+  MatDialog,
+  MatPaginator,
+  MatSort,
+  MatTableDataSource
+} from '@angular/material';
+import {
+  Project,
+  ProjectStatus
+} from '../../core/models/project';
+import { LoggerService } from '../../core/services/logger.service';
 import { ProjectService } from '../../core/services/project.service';
 import {
   ProjectCreateDialogComponent,
@@ -18,8 +32,7 @@ export class ProjectListComponent implements OnInit, AfterViewInit {
     'All Projects',
     'My Projects'
   ];
-
-  projectSource: MatTableDataSource<Project>;
+  projectSource = new MatTableDataSource<Project>();
   displayedColumns = ['name', 'lastModified', 'languages', 'type', 'status'];
   pageSize = 10;
   pageSizeOptions = [5, 10, 20];
@@ -27,28 +40,24 @@ export class ProjectListComponent implements OnInit, AfterViewInit {
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
 
-  readonly projectTypeToString = projectTypeToString;
-  readonly projectStatusToString = projectStatusToString;
-
   private statusColor = {
     [ProjectStatus.Active]: 'green',
-    [ProjectStatus.Rejected]: 'red',
-    [ProjectStatus.Completed]: 'green',
     [ProjectStatus.Inactive]: 'red',
     [ProjectStatus.InDevelopment]: 'orange'
   };
 
-  constructor(private projectService: ProjectService,
-              private dialog: MatDialog) {
-  }
-
-  ngAfterViewInit() {
-    this.projectSource.paginator = this.paginator;
-    this.projectSource.sort = this.sort;
+  constructor(private dialog: MatDialog,
+              private log: LoggerService,
+              private projectService: ProjectService) {
   }
 
   ngOnInit() {
-    this.projectSource = new MatTableDataSource(this.projectService.getProjects());
+    this.getProjects('updatedAt', 0, this.pageSize);
+  }
+
+  ngAfterViewInit() {
+    this.projectSource.sort = this.sort;
+    this.projectSource.paginator = this.paginator;
   }
 
   onSearch(query: string) {
@@ -68,11 +77,26 @@ export class ProjectListComponent implements OnInit, AfterViewInit {
       if (!result) {
         return;
       }
-      console.log(result);
     });
   }
 
   trackByValue(index, value) {
     return value;
+  }
+
+  getProjects(sort, skip, limit) {
+    this
+      .projectService
+      .getProjects(sort, skip, limit)
+      .subscribe(projects => {
+        this.projectSource.data = projects;
+      }, err => {
+        this.log.error(err, 'ProjectListComponent.getProjects');
+      });
+  }
+
+  onPaginatorChange(event) {
+    const skip = event.pageIndex * event.pageSize;
+    this.getProjects('updatedAt', skip, event.pageSize);
   }
 }

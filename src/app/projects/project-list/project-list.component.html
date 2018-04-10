@@ -61,7 +61,7 @@
 
   <ng-container matColumnDef="type">
     <mat-header-cell *matHeaderCellDef mat-sort-header>Type</mat-header-cell>
-    <mat-cell *matCellDef="let project">{{ projectTypeToString(project.type) }}</mat-cell>
+    <mat-cell *matCellDef="let project">{{ project.type }}</mat-cell>
   </ng-container>
 
   <ng-container matColumnDef="status">
@@ -69,7 +69,7 @@
     <mat-cell *matCellDef="let project">
       <span class="status-circle"
             [ngStyle]="{'background': getStatusColor(project.status)}"></span>
-      <span>{{ projectStatusToString(project.status) }}</span>
+      <span>{{ project.status }}</span>
     </mat-cell>
   </ng-container>
 
@@ -81,5 +81,6 @@
 </mat-table>
 <mat-paginator [pageSize]=pageSize
                [pageSizeOptions]=pageSizeOptions
+               (page)="onPaginatorChange($event)"
                [showFirstLastButtons]="false">
 </mat-paginator>

@@ -1,13 +1,7 @@
-export interface Project {
-  id: string;
-  name: string;
-  type: ProjectType;
-  status: ProjectStatus;
-  updatedAt: Timestamp;
-  languages: string[];
+export enum ProjectType {
+  Translation = 'translation',
+  Internship = 'internship'
 }
-
-export enum ProjectType { Translation, Internship }
 
 export const projectTypeList = [
   ProjectType.Translation,
@@ -24,27 +18,46 @@ export function projectTypeToString(value: ProjectType): string {
 }
 
 export enum ProjectStatus {
-  Active,
-  Inactive,
-  InDevelopment,
-  Completed,
-  Rejected
+  Active = 'active',
+  Inactive = 'inactive',
+  InDevelopment = 'in_development'
 }
 
 export function projectStatusToString(value: ProjectStatus): string {
   const mapping = {
     [ProjectStatus.Active]: 'Active',
     [ProjectStatus.Inactive]: 'Inactive',
-    [ProjectStatus.InDevelopment]: 'In Development',
-    [ProjectStatus.Completed]: 'Completed',
-    [ProjectStatus.Rejected]: 'Rejected'
+    [ProjectStatus.InDevelopment]: 'In Development'
   };
   return mapping[value];
 }
 
-/**
- * A string representation of a date.
- *
- * Example: "2018-09-30T05:00:00.000Z"
- */
-export type Timestamp = string;
+export class Project {
+
+  id: string;
+  name: string;
+  type: ProjectType;
+  status: ProjectStatus;
+  updatedAt: Date;
+  languages: string[];
+
+  static fromJson(json: any): Project {
+    json = json || {};
+    const project = new Project();
+
+    project.id = json.id;
+    project.name = json.name || '';
+    project.type = json.type || ProjectType.Translation;
+    project.languages = json.languages || [];
+    project.updatedAt = json.updatedAt ? new Date(json.updatedAt) : null;
+    project.status = json.status || ProjectStatus.Active;
+
+    return project;
+  }
+
+  static fromJsonArray(projects: any): Project[] {
+    projects = projects || [];
+    return projects.map(project => this.fromJson(project));
+  }
+
+}
