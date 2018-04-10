@@ -46,7 +46,7 @@ export class AuthenticationService {
   }
 
   requestAccess(newUser: IUserRequestAccess): Observable<void> {
-    const body = newUser;
+    const body = {...newUser, domain};
     return this
       .api
       .post('/users/request-account', {body});

@@ -2,7 +2,6 @@ import { ObjectId } from './object-id';
 
 
 export interface IUserRequestAccess {
-  domain: string;
   email: string;
   firstName: string;
   lastName: string;

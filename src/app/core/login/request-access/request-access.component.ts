@@ -1,7 +1,6 @@
-import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
+import { Component } from '@angular/core';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
-import { environment } from '../../../../environments/environment';
 import { IUserRequestAccess } from '../../models/user';
 import { AuthenticationService } from '../../services/authentication.service';
 import { LoggerService } from '../../services/logger.service';
@@ -11,7 +10,9 @@ import { LoggerService } from '../../services/logger.service';
   templateUrl: './request-access.component.html',
   styleUrls: ['./request-access.component.scss']
 })
-export class RequestAccessComponent implements OnInit {
+export class RequestAccessComponent {
+
+  hidePassword = true;
 
   form: FormGroup = this.fb.group({
     firstName: ['',
@@ -31,7 +32,7 @@ export class RequestAccessComponent implements OnInit {
     email: ['', Validators.email],
     organization: ['', Validators.required],
     password: ['', Validators.required],
-    confirmPassword: ['', Validators.required, this.validatePasswords]
+    confirmPassword: ['', Validators.required, this.validatePasswords.bind(this)]
   });
 
   constructor(private fb: FormBuilder,
@@ -40,42 +41,26 @@ export class RequestAccessComponent implements OnInit {
               private logService: LoggerService) {
   }
 
-  ngOnInit() {
-  }
-
-  async validatePasswords(control: FormControl): Promise<null | {}> {
-    if (!control.root) {
-      return null;
-    }
-    const exactMatch = control.root.value.password === control.value;
-    return exactMatch ? null : {mismatchedPassword: true};
+  async validatePasswords() {
+    return this.password.value === this.confirmPassword.value ? null : {mismatchedPassword: true};
   }
 
   onRequestAccess() {
-    const userObj: IUserRequestAccess = {
-      firstName: this.form.value.firstName,
-      lastName: this.form.value.lastName,
-      email: this.form.value.email,
-      password: this.form.value.password,
-      organization: this.form.value.organization,
-      domain: environment.services['domain']
-    };
+    const {confirmPassword, ...user} = this.form.value as IUserRequestAccess & {confirmPassword: string};
 
     this
       .authService
-      .requestAccess(userObj)
+      .requestAccess(user)
       .toPromise()
       .then(() => this.router.navigate(['/login']))
       .catch((err) => this.logService.error(err, 'error at request access'));
   }
 
-  onCancel() {
-    this.router.navigate(['/login']);
+  get password() {
+    return this.form.get('password');
   }
 
   get confirmPassword() {
     return this.form.get('confirmPassword');
   }
-
-
 }
