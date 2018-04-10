@@ -2,9 +2,9 @@
 
 :host {
   @extend %component-defaults;
+  flex: 1;
+  justify-content: center;
   align-items: center;
-  margin-top: 10em;
-
 }
 
 mat-card {
