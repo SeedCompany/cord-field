@@ -13,16 +13,20 @@
     <span class="nav-spacer"></span>
 
     <app-search></app-search>
-    <button mat-icon-button class="mat-primary"><mat-icon>notifications</mat-icon></button>
+    <button mat-icon-button color="primary">
+      <mat-icon>notifications</mat-icon>
+    </button>
 
     <button mat-button class="profile-menu-button" color="primary" [matMenuTriggerFor]="profileMenu">
-      My Name<mat-icon class="profile-menu-arrow-down">arrow_drop_down</mat-icon>
+      My Name
+      <mat-icon class="profile-menu-arrow-down">arrow_drop_down</mat-icon>
     </button>
     <mat-menu #profileMenu="matMenu">
       <button mat-menu-item>Profile</button>
       <button mat-menu-item>Settings</button>
-      <button mat-menu-item>Logout</button>
+      <button mat-menu-item (click)="logout()">Logout</button>
     </mat-menu>
 
   </mat-toolbar-row>
 </mat-toolbar>
+<router-outlet></router-outlet>

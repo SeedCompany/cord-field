@@ -1,9 +1,10 @@
-<mat-toolbar>
+<mat-toolbar class="header">
   <span class="spacer"></span>
   <button mat-fab class="add-button" (click)="openDialog()">
     <mat-icon aria-label="create new project">add</mat-icon>
   </button>
 </mat-toolbar>
+<div class="header-spacing"></div>
 
 <mat-toolbar class="toolbar">
   <button mat-button class="project-menu-button" color="primary" [matMenuTriggerFor]="projectMenu">

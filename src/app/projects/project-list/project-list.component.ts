@@ -38,10 +38,9 @@ export class ProjectListComponent implements OnInit, AfterViewInit {
     [ProjectStatus.InDevelopment]: 'orange'
   };
 
-  constructor(
-    private projectService: ProjectService,
-    private dialog: MatDialog
-  ) {}
+  constructor(private projectService: ProjectService,
+              private dialog: MatDialog) {
+  }
 
   ngAfterViewInit() {
     this.projectSource.paginator = this.paginator;

@@ -2,6 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
 import { Injectable } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
+import { environment } from '../../../../environments/environment';
 import { BaseApiService } from './base-api';
 
 describe('BaseApiService', () => {
@@ -11,7 +12,7 @@ describe('BaseApiService', () => {
   @Injectable()
   class MockApiService extends BaseApiService {
     constructor(http: HttpClient) {
-      super(http, 'http://base');
+      super(http, 'profile.illuminations.bible');
     }
   }
 
@@ -40,7 +41,7 @@ describe('BaseApiService', () => {
       .subscribe(done, done.fail);
 
     request
-      .expectOne('http://base/test')
+      .expectOne(`${environment.services['profile.illuminations.bible']}/test`)
       .flush({});
   });
 });

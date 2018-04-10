@@ -1,5 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs/Observable';
+import { environment } from '../../../../environments/environment';
 import { AbstractHttpClient, IRequestOptionsWithBody } from './abstract-http-client';
 
 export abstract class BaseApiService extends AbstractHttpClient {
@@ -12,9 +13,13 @@ export abstract class BaseApiService extends AbstractHttpClient {
 
   debugApiCallLogger: (path: string, source: any, body: any, method: string) => void;
 
-  constructor(httpClient: HttpClient, baseUrl: string) {
+  constructor(httpClient: HttpClient, serviceName: string) {
     super(httpClient);
-    this._baseUrl = baseUrl;
+
+    if (!environment.services || !environment.services[serviceName]) {
+      // throw new Error(`environment.services is misconfigured for ${this.constructor.name}, expecting key ${serviceName}`);
+    }
+    this._baseUrl = environment.services[serviceName];
   }
 
   url(endpoint: string): string {

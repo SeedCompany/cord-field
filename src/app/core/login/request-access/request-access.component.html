@@ -1,0 +1,80 @@
+<mat-card>
+  <mat-card-title>Request Access</mat-card-title>
+  <mat-card-content [formGroup]="form" (keyup.enter)="form.valid ? onRequestAccess() : null">
+    <mat-form-field color="accent">
+      <input
+        matInput
+        placeholder="First Name"
+        formControlName="firstName"
+      >
+      <mat-error>Please enter your first name</mat-error>
+    </mat-form-field>
+    <mat-form-field color="accent">
+      <input
+        matInput
+        placeholder="Last Name"
+        formControlName="lastName"
+      >
+      <mat-error>Please enter your last name</mat-error>
+    </mat-form-field>
+    <mat-form-field color="accent">
+      <input
+        matInput
+        placeholder="Email"
+        formControlName="email"
+      >
+      <mat-error>Please enter a valid email</mat-error>
+    </mat-form-field>
+    <mat-form-field color="accent">
+      <input
+        matInput
+        placeholder="Organization"
+        formControlName="organization"
+      >
+      <mat-error>Please enter an organization</mat-error>
+    </mat-form-field>
+    <mat-form-field color="accent">
+      <input
+        matInput
+        placeholder="Password"
+        formControlName="password"
+        [type]="hidePassword ? 'password' : 'text'"
+      >
+      <mat-icon matSuffix
+                color="primary"
+                (click)="hidePassword = !hidePassword"
+      >
+        {{ hidePassword ? 'visibility' : 'visibility_off' }}
+      </mat-icon>
+      <mat-error>Please enter a password</mat-error>
+    </mat-form-field>
+    <mat-form-field color="accent">
+      <input
+        matInput
+        placeholder="Confirm Password"
+        formControlName="confirmPassword"
+        [type]="hidePassword ? 'password' : 'text'"
+      >
+      <mat-icon matSuffix
+                color="primary"
+                (click)="hidePassword = !hidePassword"
+      >
+        {{ hidePassword ? 'visibility' : 'visibility_off' }}
+      </mat-icon>
+      <mat-error *ngIf="confirmPassword.hasError('mismatchedPassword')">
+        Passwords should match
+      </mat-error>
+    </mat-form-field>
+  </mat-card-content>
+  <mat-card-actions>
+    <button mat-button
+            color="accent"
+            [style.order]="1"
+            (click)="onRequestAccess()"
+            [disabled]="!form.valid"
+    >
+      REQUEST ACCESS
+    </button>
+    <button mat-button color="accent" routerLink="/login">CANCEL</button>
+  </mat-card-actions>
+</mat-card>

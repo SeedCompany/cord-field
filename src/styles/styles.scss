@@ -18,6 +18,9 @@ html {
 
 body {
   margin: 0;
+  display: flex;
+  min-height: 100vh;
+  background-color: mat-background($theme, background);
 }
 
 // Text color for sorted headers on tables should match the sorting arrow (be darker)

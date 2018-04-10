@@ -1,0 +1,22 @@
+@import "~styles/imports";
+
+:host {
+  @extend %component-defaults;
+  flex: 1;
+  justify-content: center;
+  align-items: center;
+}
+
+mat-card {
+  width: 400px;
+}
+
+mat-card-content {
+  display: flex;
+  flex-direction: column;
+}
+
+mat-card-actions {
+  display: flex;
+  justify-content: flex-end;
+}

@@ -54,99 +54,87 @@ export abstract class BaseStorageService<TStore extends any> {
   /**
    * Clears all entries for the data store
    * @param {boolean} all
-   * @returns {Observable<number>}
+   * @returns {Promise<number>}
    */
-  clear(all = true): Observable<number> {
-    const p = async (): Promise<number> => {
+  async clear(all = true): Promise<number> {
+    const len = await this.length();
+    await this.store.clear();
 
-      const len = await this.length().toPromise();
-      await this.store.clear();
+    const keys = Object.keys(this.subjects);
+    for (const key of keys) {
+      this.subjects[key].complete();
+      delete this.subjects[key];
+    }
 
-      const keys = Object.keys(this.subjects);
-      for (const key of keys) {
-        this.subjects[key].complete();
-        delete this.subjects[key];
-      }
-
-      return len;
-    };
-
-    return Observable.fromPromise(p());
+    return len;
   }
 
   /**
    * Purges all expired cache entries in storage. This should be called during application startup
    * to remove any entries that weren't actively removed prior to application shutdown. You could
    * also call this in the onDestroy hook for your application.
-   * @returns {Observable<void>}
+   * @returns {Promise<void>}
    */
-  clearExpiredCache(): Observable<void> {
-    return this
-      .length()
-      .do(async (len) => {
-        // build an immutable list of keys
-        const keys = [];
-        for (let i = 0; i < len; i++) {
-          keys.push(await this.key(i).toPromise());
-        }
+  async clearExpiredCache(): Promise<void> {
+    const len = await this.length();
 
-        for (const key of keys) {
-          if (this.isCacheKey(key)) {
-            continue;
-          }
+    // build an immutable list of keys
+    const keys = [];
+    for (let i = 0; i < len; i++) {
+      keys.push(await this.key(i));
+    }
 
-          const rawKey = this.getRawKey(key);
-          if (rawKey === null) {
-            // isn't a key being managed by the storage service
-            continue;
-          }
+    for (const key of keys) {
+      if (this.isCacheKey(key)) {
+        continue;
+      }
 
-          const cache = await this.getItemCache(rawKey);
-          if (this.isCacheExpired(cache)) {
-            await this.removeItem(key);
-          }
-        }
-      })
-      .map(() => null);
+      const rawKey = this.getRawKey(key);
+      if (rawKey === null) {
+        // isn't a key being managed by the storage service
+        continue;
+      }
+
+      const cache = await this.getItemCache(rawKey);
+      if (this.isCacheExpired(cache)) {
+        await this.removeItem(key);
+      }
+    }
   }
 
   /**
    * Gets an item from the storage library and supplies the result as an observable.
    * If the key does not exist, getItem() will return null to the subscriber.
    * @param {string} key
-   * @returns {Observable<T>}
+   * @returns {Promise<T | null>}
    */
-  getItem<T>(key: string): Observable<T> {
+  async getItem<T>(key: string): Promise<T | null> {
 
-    const p = async (): Promise<T> => {
+    let val = await this.store.getItem(this.getKey(key));
+    const cache = await this.getItemCache(key);
 
-      let val = await this.store.getItem(this.getKey(key));
-      const cache = await this.getItemCache(key);
+    if (this.isCacheExpired(cache)) {
+      await this.removeItem(key);
+      val = null;
+    }
 
-      if (this.isCacheExpired(cache)) {
-        await this.removeItem(key).toPromise();
-        val = null;
-      }
-
-      return val;
-    };
-
-    return Observable.fromPromise(p());
+    return val;
   }
 
   /**
    * Should return the name of the storage engine being used.
-   * @returns {Observable<string>}
+   * @returns {Promise<StorageEngineType>}
    */
-  abstract getStorageEngineType(): Observable<StorageEngineType>;
+  abstract getStorageEngineType(): Promise<StorageEngineType>;
 
   getCachedObservable<T>(key: string, observable: Observable<T>, cacheTTL = 0, gc = false): Observable<T> {
-    return this
-      .getItem(key)
-      .map((val) => val || null)
-      .flatMap((val: any) => (val !== null)
-        ? Observable.of(val)
-        : observable.flatMap((obsVal: any) => this.setItem(key, obsVal, cacheTTL, gc)));
+    return Observable
+      .fromPromise(this.getItem(key))
+      .flatMap((val: any) => {
+        return (val !== null)
+          ? Observable.of(val)
+          : observable.flatMap((obsVal: any) => this.setItem(key, obsVal, cacheTTL, gc));
+      });
   }
 
   /**
@@ -166,58 +154,43 @@ export abstract class BaseStorageService<TStore extends any> {
   /**
    * Get the name of a key based on its ID.
    * @param {number} keyIndex
-   * @returns {Observable<T>}
+   * @returns {Promise<string>}
    */
-  key(keyIndex: number): Observable<string> {
-    const p = async () => {
-      return await this.store.key(keyIndex);
-    };
-
-    return Observable.fromPromise(p());
+  async key(keyIndex: number): Promise<string> {
+    return await this.store.key(keyIndex);
   }
 
   /**
    * Gets the number of keys in the store. Note that the count will be double what you're expecting because each
    * entry has a corresponding cache ttl entry.
-   * @returns {Observable<number>}
+   * @returns {Promise<number>}
    */
-  length(): Observable<number> {
-    const p = async () => {
-      if (typeof this.store.length === 'function') {
-        return await this.store.length();
-      } else {
-        return this.store.length;
-      }
-    };
-
-    return Observable.fromPromise(p());
+  async length(): Promise<number> {
+    return (typeof this.store.length === 'function')
+      ? await this.store.length()
+      : await this.store.length;
   }
 
   /**
    * Removes the value of a key from the store.
    * @param {string} key
-   * @returns {Observable<void>}
+   * @returns {Promise<void>}
    */
-  removeItem(key: string): Observable<void> {
-    const p = async () => {
+  async removeItem(key: string): Promise<void> {
+    if (key in this.gcs) {
+      clearTimeout(this.gcs[key]);
+      delete this.gcs[key];
+    }
 
-      if (key in this.gcs) {
-        clearTimeout(this.gcs[key]);
-        delete this.gcs[key];
-      }
+    await Promise.all([
+      this.store.removeItem(this.getKey(key)),
+      this.store.removeItem(this.getCacheKey(key))
+    ]);
 
-      await Promise.all([
-        this.store.removeItem(this.getKey(key)),
-        this.store.removeItem(this.getCacheKey(key))
-      ]);
-
-      if (key in this.subjects) {
-        this.subjects[key].complete();
-        delete this.subjects[key];
-      }
-    };
-
-    return Observable.fromPromise(p());
+    if (key in this.subjects) {
+      this.subjects[key].complete();
+      delete this.subjects[key];
+    }
   }
 
   /**
@@ -226,43 +199,39 @@ export abstract class BaseStorageService<TStore extends any> {
    * @param {T} value
    * @param {number} cacheTTL the title to live for the item in seconds. Defaults to 0 (disabled)
    * @param {boolean} gc if true, the entry will be actively garbage collected
-   * @returns {Observable<T>}
+   * @returns {Promise<T>}
    */
-  setItem<T>(key: string, value: T, cacheTTL = 0, gc = false): Observable<T> {
-    const p = async () => {
-      if (!(key in this.subjects)) {
-        this.subjects[key] = new Subject<string>();
+  async setItem<T>(key: string, value: T, cacheTTL = 0, gc = false): Promise<T> {
+    if (!(key in this.subjects)) {
+      this.subjects[key] = new Subject<string>();
+    }
+
+    if (cacheTTL > 0) {
+      const now = new Date();
+      now.setSeconds(now.getSeconds() + cacheTTL);
+      cacheTTL = +now;
+    }
+
+    if (cacheTTL > 0 && gc) {
+      if (key in this.gcs) {
+        clearTimeout(this.gcs[key]);
+        delete this.gcs[key];
       }
 
-      if (cacheTTL > 0) {
-        const now = new Date();
-        now.setSeconds(now.getSeconds() + cacheTTL);
-        cacheTTL = +now;
+      const ms = cacheTTL - +(new Date());
+      if (ms > 0) {
+        this.gcs[key] = setTimeout(async () => await this.removeItem(key), ms);
       }
+    }
 
-      if (cacheTTL > 0 && gc) {
-        if (key in this.gcs) {
-          clearTimeout(this.gcs[key]);
-          delete this.gcs[key];
-        }
+    await Promise.all([
+      this.store.setItem(this.getKey(key), value),
+      this.store.setItem(this.getCacheKey(key), cacheTTL)
+    ]);
 
-        const ms = cacheTTL - +(new Date());
-        if (ms > 0) {
-          this.gcs[key] = setTimeout(() => this.removeItem(key), ms);
-        }
-      }
+    this.subjects[key].next(value);
 
-      await Promise.all([
-        this.store.setItem(this.getKey(key), value),
-        this.store.setItem(this.getCacheKey(key), cacheTTL)
-      ]);
-
-      this.subjects[key].next(value);
-
-      return value;
-    };
-
-    return Observable.fromPromise(p());
+    return value;
   }
 
   /**
@@ -382,21 +351,12 @@ export class LocalStorageService extends BaseStorageService<LocalForage> {
       });
   }
 
-  getStorageEngineType(): Observable<StorageEngineType> {
+  async getStorageEngineType(): Promise<StorageEngineType> {
     if (!this.storageEngine) {
-      return Observable
-        .fromPromise(
-          this.store
-            .ready()
-            .then(() => {
-              this.storageEngine = this.store.driver() as StorageEngineType;
-              return this.storageEngine;
-            })
-            .catch(Promise.reject)
-        );
+      await this.store.ready();
+      this.storageEngine = this.store.driver() as StorageEngineType;
     }
-
-    return Observable.of(this.storageEngine);
+    return this.storageEngine;
   }
 }
 
@@ -421,25 +381,22 @@ export class SessionStorageService extends BaseStorageService<Storage> {
     super(browserService.sessionStorage);
   }
 
-  getItem<T>(key: string): Observable<T> {
-    return super
-      .getItem<T>(key)
-      .map((r: any) => {
-        let val;
-        try {
-          val = JSON.parse(r);
-        } catch (e) {
-          val = r;
-        }
-        return val;
-      });
+  async getItem<T>(key: string): Promise<T> {
+    const r = await super.getItem(key);
+    let val;
+    try {
+      val = JSON.parse(r as string);
+    } catch (e) {
+      val = r;
+    }
+    return val;
   }
 
-  getStorageEngineType(): Observable<StorageEngineType> {
-    return Observable.of<StorageEngineType>('session');
+  async getStorageEngineType(): Promise<StorageEngineType> {
+    return 'session';
   }
 
-  setItem<T>(key: string, value: T, cacheTTL = 0, gc = false): Observable<T> {
+  async setItem<T>(key: string, value: T, cacheTTL = 0, gc = false): Promise<T> {
     let val: any = value;
     if (typeof value !== 'string') {
       try {
@@ -449,17 +406,15 @@ export class SessionStorageService extends BaseStorageService<Storage> {
       }
     }
 
-    return super
-      .setItem<T>(key, val, cacheTTL, gc)
-      .map((r: any) => {
-        let result;
-        try {
-          result = JSON.parse(r);
-        } catch (e) {
-          result = r;
-        }
+    const r = await super.setItem(key, val, cacheTTL, gc);
 
-        return result;
-      });
+    let result;
+    try {
+      result = JSON.parse(r as string);
+    } catch (e) {
+      result = r;
+    }
+
+    return result;
   }
 }
