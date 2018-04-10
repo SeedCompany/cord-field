@@ -15,6 +15,7 @@ export const environment = {
     ]
   },
   services: {
-    'profile.illuminations.bible': 'http://localhost:8001/api'
+    'profile.illuminations.bible': 'https://cord-field-uat.ci.olivetech.com/api',
+    'plo.cord.bible': 'http://cord-plo-uat.ci.olivetech.com/api',
   }
 };
