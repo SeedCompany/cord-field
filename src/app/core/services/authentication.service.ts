@@ -13,7 +13,7 @@ import {
 import { AuthenticationStorageService } from './authentication-storage.service';
 import { ProfileApiService } from './http/profile-api.service';
 
-const domain = environment.services['domain'];
+const domain = environment.domain;
 
 @Injectable()
 export class AuthenticationService {

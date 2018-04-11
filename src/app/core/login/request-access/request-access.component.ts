@@ -4,7 +4,6 @@ import { Router } from '@angular/router';
 import { CustomValidators } from '../../models/custom-validators';
 import { IUserRequestAccess } from '../../models/user';
 import { AuthenticationService } from '../../services/authentication.service';
-import { LoggerService } from '../../services/logger.service';
 
 @Component({
   selector: 'app-request-access',
@@ -30,8 +29,7 @@ export class RequestAccessComponent {
 
   constructor(private fb: FormBuilder,
               private authService: AuthenticationService,
-              private router: Router,
-              private logService: LoggerService) {
+              private router: Router) {
   }
 
   async validatePasswords() {
@@ -53,7 +51,6 @@ export class RequestAccessComponent {
       .catch((err) => {
         this.serverError.status = true;
         this.serverError.message = this.authService.getErrorMessage(err);
-        this.logService.error(err, 'error at request access');
       });
   }
 

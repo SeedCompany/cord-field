@@ -1,5 +1,5 @@
 import { HttpClientTestingModule } from '@angular/common/http/testing';
-import { TestBed } from '@angular/core/testing';
+import { inject, TestBed } from '@angular/core/testing';
 import { CoreModule } from '../core.module';
 import { AuthenticationToken } from '../models/authentication-token';
 import { AUTH_STORAGE_KEY, AuthenticationStorageService } from './authentication-storage.service';
@@ -32,6 +32,10 @@ describe('AuthenticationStorageService', () => {
     authStoreService = TestBed.get(AuthenticationStorageService);
     localStore = TestBed.get(LocalStorageService);
   });
+
+  it('should be created', inject([AuthenticationStorageService], (service: AuthenticationStorageService) => {
+    expect(service).toBeTruthy();
+  }));
 
   describe('authentication tokens', () => {
 
