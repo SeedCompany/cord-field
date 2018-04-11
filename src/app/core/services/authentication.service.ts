@@ -68,20 +68,19 @@ export class AuthenticationService {
   getErrorMessage(error: HttpErrorResponse): string {
     // error messages needs tobe more verbose after discussion with team.
     let errMsg = '';
-    const serverError = error.error || '';
-
-    if (serverError && serverError.feedback) {
-      const errorString = 'Invalid Password.';
-      const warning = serverError.feedback.warning;
-      serverError.feedback.suggestions.forEach((suggestion) => {
-        errMsg += suggestion;
-      });
-
-      return errorString + warning + '\n' + errMsg;
-    }
+    const serverError = error.error;
 
     switch (error.status) {
       case 400:
+        if (serverError && serverError.feedback) {
+          const errorString = 'Invalid Password.';
+          const warning = serverError.feedback.warning;
+          serverError.feedback.suggestions.forEach((suggestion) => {
+            errMsg += suggestion;
+          });
+
+          return errorString + warning + '\n' + errMsg;
+        }
         errMsg = 'Something went wrong with the system, Please try after some time';
         break;
       case 401:
