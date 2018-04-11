@@ -31,13 +31,14 @@ export class LoginComponent {
     iconRegistry.addSvgIcon('cord', sanitizer.bypassSecurityTrustResourceUrl('assets/images/cord-icon.svg'));
   }
 
-  async onLogin() {
-    try {
-      await this.auth.login(this.email.value, this.password.value, true).toPromise();
-      this.router.navigate(['/']);
-    } catch (err) {
-      this.serverError = this.auth.getErrorMessage(err);
-    }
+  onLogin() {
+    this
+      .auth
+      .login(this.email.value, this.password.value, true)
+      .then(() => {
+        this.router.navigate(['/']);
+      })
+      .catch(err => this.serverError = err);
   }
 
   get email() {

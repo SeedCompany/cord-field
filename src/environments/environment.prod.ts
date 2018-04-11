@@ -1,6 +1,4 @@
 export const environment = {
   production: true,
-  services: {
-    'domain': 'field'
-  }
+  domain: 'field'
 };

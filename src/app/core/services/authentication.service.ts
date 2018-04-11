@@ -13,7 +13,7 @@ import {
 import { AuthenticationStorageService } from './authentication-storage.service';
 import { ProfileApiService } from './http/profile-api.service';
 
-const domain = environment.domain;
+const domain = environment['domain'];
 
 @Injectable()
 export class AuthenticationService {
@@ -54,13 +54,22 @@ export class AuthenticationService {
     }
   }
 
-  login(email: string, password: string, rememberLogin: boolean): Observable<AuthenticationToken[]> {
-    return this
-      .api
-      .post('/auth/native/login', {domain, email, password})
-      .map((json) => AuthenticationToken.fromTokenMap(json))
-      .do(async (tokens: AuthenticationToken[]) => await this.authStorage.saveTokens(tokens, rememberLogin))
-      .do((tokens: AuthenticationToken[]) => this._login.next(tokens));
+  async login(email: string, password: string, rememberLogin: boolean): Promise<AuthenticationToken[] | string> {
+
+    return new Promise<AuthenticationToken[] | string>((resolve, reject) => {
+      this
+        .api
+        .post('/auth/native/login', {domain, email, password})
+        .map((json) => AuthenticationToken.fromTokenMap(json))
+        .do(async (tokens: AuthenticationToken[]) => await this.authStorage.saveTokens(tokens, rememberLogin))
+        .do((tokens: AuthenticationToken[]) => this._login.next(tokens))
+        .toPromise()
+        .then(resolve)
+        .catch((err) => {
+          const errors = this.getErrorMessage(err);
+          reject(errors);
+        });
+    });
   }
 
   async logout(): Promise<void> {

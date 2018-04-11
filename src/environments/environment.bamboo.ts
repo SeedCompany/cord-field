@@ -13,6 +13,5 @@ export const environment = {
     'profile.illuminations.bible': 'http://ilb-profile-service:8001/api',
     'plo.cord.bible': 'http://cord-api-plo:8001/api'
   },
-  domain: 'field',
   trace: 'bamboo environment'
 };

@@ -13,7 +13,7 @@ import { AuthenticationService } from '../../services/authentication.service';
 export class RequestAccessComponent {
 
   hidePassword = true;
-  serverError: string;
+  serverError: string | null;
 
   form: FormGroup = this.fb.group({
     firstName: ['', Validators.required],
