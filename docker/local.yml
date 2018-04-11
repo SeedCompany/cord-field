@@ -15,7 +15,18 @@ services:
       NODE_ENV: docker
     mem_limit: 256000000
 
-  ilb-profile-service:
+  migrator:
+    image: 103805181946.dkr.ecr.us-west-2.amazonaws.com/client/cord-api-plo:latest
+    command: ["npm","run","start:cli","m"]
+    links:
+      - mongo-db
+    environment:
+      MONGO_DB_ADDRESS: mongo-db
+      MONGO_DB_PORT: 27017
+      NODE_ENV: docker
+    mem_limit: 256000000
+
+  profile-service:
     image: 103805181946.dkr.ecr.us-west-2.amazonaws.com/client/tsco-ilb-profile:latest
     ports:
       - 8001:8001
