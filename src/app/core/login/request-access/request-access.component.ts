@@ -14,6 +14,10 @@ import { LoggerService } from '../../services/logger.service';
 export class RequestAccessComponent {
 
   hidePassword = true;
+  serverError = {
+    status: false,
+    message: ''
+  };
 
   form: FormGroup = this.fb.group({
     firstName: ['', Validators.required],
@@ -46,7 +50,11 @@ export class RequestAccessComponent {
       .requestAccess(user)
       .toPromise()
       .then(() => this.router.navigate(['/login']))
-      .catch((err) => this.logService.error(err, 'error at request access'));
+      .catch((err) => {
+        this.serverError.status = true;
+        this.serverError.message = this.authService.getErrorMessage(err);
+        this.logService.error(err, 'error at request access');
+      });
   }
 
   get email() {

@@ -1,3 +1,4 @@
+import { HttpErrorResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import 'rxjs/add/observable/of';
 import 'rxjs/add/operator/map';
@@ -11,7 +12,6 @@ import {
 } from '../models/user';
 import { AuthenticationStorageService } from './authentication-storage.service';
 import { ProfileApiService } from './http/profile-api.service';
-import { HttpErrorResponse } from '@angular/common/http';
 
 const domain = environment.services['domain'];
 
@@ -68,7 +68,18 @@ export class AuthenticationService {
   getErrorMessage(error: HttpErrorResponse): string {
     // error messages needs tobe more verbose after discussion with team.
     let errMsg = '';
-    const serverMsg = error.error;
+    const serverError = error.error || '';
+
+    if (serverError && serverError.feedback) {
+      const errorString = 'Invalid Password.';
+      const warning = serverError.feedback.warning;
+      serverError.feedback.suggestions.forEach((suggestion) => {
+        errMsg += suggestion;
+      });
+
+      return errorString + warning + '\n' + errMsg;
+    }
+
     switch (error.status) {
       case 400:
         errMsg = 'Something went wrong with the system, Please try after some time';
@@ -77,19 +88,19 @@ export class AuthenticationService {
         errMsg = 'You entered wrong email or password';
         break;
       case 403:
-        errMsg = serverMsg;
+        errMsg = serverError;
         break;
       case 404:
-        errMsg = serverMsg;
+        errMsg = serverError;
         break;
       case 409:
-        errMsg = serverMsg;
+        errMsg = serverError;
         break;
       case 422:
-        errMsg = '';
+        errMsg = serverError;
         break;
       case 500:
-        errMsg = serverMsg;
+        errMsg = serverError;
         break;
       case 503:
         errMsg = 'Your requested service is not available';
