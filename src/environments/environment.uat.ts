@@ -15,6 +15,7 @@ export const environment = {
     ]
   },
   services: {
+    'domain': 'field',
     'profile.illuminations.bible': 'https://cord-field-uat.ci.olivetech.com/api',
     'plo.cord.bible': 'https://cord-plo-uat.ci.olivetech.com/api'
   }

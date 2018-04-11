@@ -9,6 +9,7 @@ export const environment = {
     ]
   },
   services: {
+    'domain': 'field',
     'profile.illuminations.bible': 'http://ilb-profile-service:8001/api',
     'plo.cord.bible': 'http://cord-api-plo:8001/api'
   },
