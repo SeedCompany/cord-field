@@ -13,15 +13,12 @@ import { AuthenticationService } from '../../services/authentication.service';
 export class RequestAccessComponent {
 
   hidePassword = true;
-  serverError = {
-    status: false,
-    message: ''
-  };
+  serverError: string;
 
   form: FormGroup = this.fb.group({
     firstName: ['', Validators.required],
     lastName: ['', Validators.required],
-    email: ['', Validators.required, this.validateEmail.bind(this)],
+    email: ['', Validators.required, CustomValidators.email],
     organization: ['', Validators.required],
     password: ['', Validators.required],
     confirmPassword: ['', Validators.required, this.validatePasswords.bind(this)]
@@ -36,22 +33,14 @@ export class RequestAccessComponent {
     return this.password.value === this.confirmPassword.value ? null : {mismatchedPassword: true};
   }
 
-  async validateEmail() {
-    return CustomValidators.isValidEmail(this.email.value) ? null : {invalidEmail: true};
-  }
-
   onRequestAccess() {
     const {confirmPassword, ...user} = this.form.value as IUserRequestAccess & { confirmPassword: string };
 
     this
       .authService
       .requestAccess(user)
-      .toPromise()
       .then(() => this.router.navigate(['/login']))
-      .catch((err) => {
-        this.serverError.status = true;
-        this.serverError.message = this.authService.getErrorMessage(err);
-      });
+      .catch((err) => this.serverError = err);
   }
 
   get email() {

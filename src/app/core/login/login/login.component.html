@@ -30,9 +30,7 @@
         </mat-icon>
         <mat-error>Please enter your password</mat-error>
       </mat-form-field>
-      <mat-error *ngIf="serverError.status">
-        {{ serverError.message }}
-      </mat-error>
+      <mat-error *ngIf="serverError"> {{ serverError }}</mat-error>
     </mat-card-content>
 
     <mat-card-actions>

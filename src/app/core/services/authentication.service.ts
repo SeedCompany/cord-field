@@ -45,10 +45,13 @@ export class AuthenticationService {
               private authStorage: AuthenticationStorageService) {
   }
 
-  requestAccess(newUser: IUserRequestAccess): Observable<void> {
-    return this
-      .api
-      .post('/users/request-account', {...newUser, domain});
+  async requestAccess(newUser: IUserRequestAccess) {
+    try {
+      await this.api.post('/users/request-account', {...newUser, domain}).toPromise();
+    } catch (err) {
+      const error = this.getErrorMessage(err);
+      throw new Error(error);
+    }
   }
 
   login(email: string, password: string, rememberLogin: boolean): Observable<AuthenticationToken[]> {

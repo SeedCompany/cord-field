@@ -5,9 +5,6 @@ import { AuthenticationToken } from '../models/authentication-token';
 import { AUTH_STORAGE_KEY, AuthenticationStorageService } from './authentication-storage.service';
 import { LocalStorageService } from './storage.service';
 
-let authStoreService: AuthenticationStorageService;
-let localStore: LocalStorageService;
-
 const mockToken = {
   'token': {
     'profile.illuminations.bible': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6Imdvd3RoYW1Ab2xpdmV0' +
@@ -22,6 +19,10 @@ const mockToken = {
 const mockAuthToken: AuthenticationToken[] = AuthenticationToken.fromTokenMap(mockToken);
 
 describe('AuthenticationStorageService', () => {
+
+  let authStoreService: AuthenticationStorageService;
+  let localStore: LocalStorageService;
+
   beforeEach(() => {
     TestBed.configureTestingModule({
       imports: [
