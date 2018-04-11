@@ -47,7 +47,7 @@
 
 
   <ng-container matColumnDef="languages">
-    <mat-header-cell *matHeaderCellDef mat-sort-header>Languages</mat-header-cell>
+    <mat-header-cell *matHeaderCellDef>Languages</mat-header-cell>
     <mat-cell *matCellDef="let project">
 
       <mat-chip-list *ngIf="project.languages.length > 0">
@@ -80,7 +80,5 @@
   </mat-row>
 </mat-table>
 <mat-paginator [pageSize]=pageSize
-               [pageSizeOptions]=pageSizeOptions
-               (page)="onPaginatorChange($event)"
-               [showFirstLastButtons]="false">
+               [length]="totalCount">
 </mat-paginator>

@@ -1,32 +1,22 @@
-import {
-  AfterViewInit,
-  Component,
-  OnInit,
-  ViewChild
-} from '@angular/core';
-import {
-  MatDialog,
-  MatPaginator,
-  MatSort,
-  MatTableDataSource
-} from '@angular/material';
-import {
-  Project,
-  ProjectStatus
-} from '../../core/models/project';
+import { Component, OnInit, ViewChild } from '@angular/core';
+import { MatDialog, MatPaginator, MatSort, MatTableDataSource } from '@angular/material';
+import { merge } from 'rxjs/observable/merge';
+import { of as observableOf } from 'rxjs/observable/of';
+import { catchError } from 'rxjs/operators/catchError';
+import { map } from 'rxjs/operators/map';
+import { startWith } from 'rxjs/operators/startWith';
+import { switchMap } from 'rxjs/operators/switchMap';
+import { Project, ProjectStatus } from '../../core/models/project';
 import { LoggerService } from '../../core/services/logger.service';
 import { ProjectService } from '../../core/services/project.service';
-import {
-  ProjectCreateDialogComponent,
-  ProjectCreationResult
-} from '../project-create-dialog/project-create-dialog.component';
+import { ProjectCreateDialogComponent, ProjectCreationResult } from '../project-create-dialog/project-create-dialog.component';
 
 @Component({
   selector: 'app-project-list',
   templateUrl: './project-list.component.html',
   styleUrls: ['./project-list.component.scss']
 })
-export class ProjectListComponent implements OnInit, AfterViewInit {
+export class ProjectListComponent implements OnInit {
   currentListSelector = 'All Projects';
   listSelectorOptions = [
     'All Projects',
@@ -35,7 +25,7 @@ export class ProjectListComponent implements OnInit, AfterViewInit {
   projectSource = new MatTableDataSource<Project>();
   displayedColumns = ['name', 'lastModified', 'languages', 'type', 'status'];
   pageSize = 10;
-  pageSizeOptions = [5, 10, 20];
+  totalCount = 0;
 
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
@@ -52,12 +42,8 @@ export class ProjectListComponent implements OnInit, AfterViewInit {
   }
 
   ngOnInit() {
-    this.getProjects('updatedAt', 0, this.pageSize);
-  }
-
-  ngAfterViewInit() {
-    this.projectSource.sort = this.sort;
-    this.projectSource.paginator = this.paginator;
+    this.sort.sortChange.subscribe(() => this.paginator.pageIndex = 0);
+    this.getProjects();
   }
 
   onSearch(query: string) {
@@ -84,19 +70,30 @@ export class ProjectListComponent implements OnInit, AfterViewInit {
     return value;
   }
 
-  getProjects(sort, skip, limit) {
-    this
-      .projectService
-      .getProjects(sort, skip, limit)
-      .subscribe(projects => {
-        this.projectSource.data = projects;
-      }, err => {
-        this.log.error(err, 'ProjectListComponent.getProjects');
-      });
+  getProjects() {
+    merge(this.sort.sortChange, this.paginator.page)
+      .pipe(
+        startWith({}),
+        switchMap(() => {
+          return this
+            .projectService
+            .getProjects(this.getSortFieldName(this.sort),
+              this.sort.direction,
+              this.paginator.pageIndex * this.pageSize,
+              this.pageSize);
+        }),
+        map(projectsWithCount => {
+          this.totalCount = projectsWithCount.count;
+          return projectsWithCount.projects;
+        }),
+        catchError(() => {
+          return observableOf([]);
+        })
+      ).subscribe(projects => this.projectSource.data = projects);
   }
 
-  onPaginatorChange(event) {
-    const skip = event.pageIndex * event.pageSize;
-    this.getProjects('updatedAt', skip, event.pageSize);
+  getSortFieldName(sort) {
+    return sort.active === 'lastModified' ? 'updatedAt' : sort.active;
   }
+
 }
