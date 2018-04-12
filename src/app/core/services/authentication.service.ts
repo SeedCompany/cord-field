@@ -81,10 +81,10 @@ export class AuthenticationService {
         return 'Your account request cannot be completed because the organization you provided is not valid.' +
           ' Please try again or contact Field Support Services for assistance.';
       case 'login_failed':
-        return 'Email or Password is incorrect';
+        return 'Email or password is incorrect';
       case 'email_validation_required':
-        return 'Sorry, our system does not identify any account with the credentials you provided. If you already created as account' +
-          'Please verify by clicking on the link provided in the email you received ';
+        return 'Sorry, our system does not have any account with the credentials you provided. If you already created an account' +
+          'please verify it by clicking on the link provided in the email you should have received.';
       case 'ACCOUNT_NOT_APPROVED':
         return 'Your account is not approved yet. Please try again or contact Field Support Services for assistance.';
     }
