@@ -18,7 +18,7 @@ export class RequestAccessComponent {
   form: FormGroup = this.fb.group({
     firstName: ['', Validators.required],
     lastName: ['', Validators.required],
-    email: ['', Validators.required, CustomValidators.email],
+    email: ['', CustomValidators.email],
     organization: ['', Validators.required],
     password: ['', Validators.required],
     confirmPassword: ['', Validators.required, this.validatePasswords.bind(this)]
@@ -40,7 +40,7 @@ export class RequestAccessComponent {
       .authService
       .requestAccess(user)
       .then(() => this.router.navigate(['/login']))
-      .catch((err) => this.serverError = err);
+      .catch((err) => this.serverError = err.message);
   }
 
   get email() {

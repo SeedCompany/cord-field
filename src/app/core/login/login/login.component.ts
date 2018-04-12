@@ -18,7 +18,7 @@ export class LoginComponent {
   serverError: string;
 
   form: FormGroup = this.fb.group({
-    email: ['', Validators.required, CustomValidators.email],
+    email: ['', CustomValidators.email],
     password: ['', Validators.required]
   });
 
