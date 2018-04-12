@@ -11,6 +11,12 @@ export class ProjectService {
   constructor(private ploApi: PloApiService) {
   }
 
+  getProject(id: string): Observable<Project> {
+    return this.ploApi
+      .get(`/projects/${id}`)
+      .map(Project.fromJson);
+  }
+
   getProjects(sort: keyof Project = 'updatedAt', order: SortDirection = 'desc', skip = 0, limit = 10): Observable<ProjectsWithCount> {
     const url = `/projects?sort=${sort}&skip=${skip}&limit=${limit}&order=${order}`;
 

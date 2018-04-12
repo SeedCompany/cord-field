@@ -2,6 +2,7 @@
 
 :host {
   @extend %component-defaults;
+  flex: 1;
 }
 
 mat-toolbar {

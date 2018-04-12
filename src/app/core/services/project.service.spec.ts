@@ -1,6 +1,7 @@
 import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
 import { inject, TestBed } from '@angular/core/testing';
 import { environment } from '../../../environments/environment';
+import { Project } from '../models/project';
 import { PloApiService } from './http/plo-api.service';
 import { ProjectService } from './project.service';
 
@@ -28,6 +29,40 @@ describe('ProjectService', () => {
   it('should be created', inject([ProjectService], (service: ProjectService) => {
     expect(service).toBeTruthy();
   }));
+
+  it('should get a project by id', done => {
+    const id = '5acbba0c70db6a1781ece783';
+    const url = `${testBaseUrl}/projects/${id}`;
+    const mockResponse = {
+      'id': '5acbba0c70db6a1781ece783',
+      'status': 'active',
+      'name': 'Elhomwe Bible (395)',
+      'updatedAt': '2018-03-26T05:27:49.000Z',
+      'type': 'translation'
+    };
+
+    projectService
+      .getProject(id)
+      .toPromise()
+      .then((project: Project) => {
+        expect(project.id).toBeDefined();
+        expect(project.id).toBe('5acbba0c70db6a1781ece783');
+        expect(project.name).toBeDefined();
+        expect(project.name).toBe('Elhomwe Bible (395)');
+        expect(project.status).toBeDefined();
+        expect(project.status).toBe('active');
+        expect(project.type).toBeDefined();
+        expect(project.type).toBe('translation');
+        expect(project.languages).toBeDefined();
+      })
+      .then(done)
+      .catch(done.fail);
+
+    httpMockService
+      .expectOne(url)
+      .flush(mockResponse);
+    httpMockService.verify();
+  });
 
   it('should get project list', done => {
 

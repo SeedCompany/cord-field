@@ -2,4 +2,15 @@
 
 :host {
   @extend %component-defaults;
+  flex: 1;
+  flex-direction: row;
+}
+
+app-project-overview-sidebar {
+  width: 300px;
+}
+
+.main {
+  flex: 1;
+  background: mat-background($theme, background);
 }
