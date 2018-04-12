@@ -1,6 +1,8 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute } from '@angular/router';
 import { Subscription } from 'rxjs/Subscription';
+import { Project } from '../../core/models/project';
+import { ProjectService } from '../../core/services/project.service';
 
 interface TabConfig {
   path: string;
@@ -14,6 +16,7 @@ interface TabConfig {
 })
 export class ProjectComponent implements OnInit, OnDestroy {
   id: string;
+  project = new Project();
   private idSub = Subscription.EMPTY;
 
   readonly tabs: TabConfig[] = [
@@ -26,13 +29,14 @@ export class ProjectComponent implements OnInit, OnDestroy {
   ];
 
   constructor(
-    private router: Router,
+    private projectService: ProjectService,
     private route: ActivatedRoute
   ) {}
 
   ngOnInit() {
     this.idSub = this.route.params.subscribe(params => {
       this.id = params.id;
+      this.projectService.getProject(this.id).subscribe(project => this.project = project);
     });
   }
 
