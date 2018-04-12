@@ -1,9 +1,9 @@
+import { HttpErrorResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import 'rxjs/add/observable/of';
 import 'rxjs/add/operator/map';
 import { Observable } from 'rxjs/Observable';
 import { Subject } from 'rxjs/Subject';
-import { environment } from '../../../environments/environment';
 import { AuthenticationToken } from '../models/authentication-token';
 import {
   IUserRequestAccess,
@@ -12,7 +12,7 @@ import {
 import { AuthenticationStorageService } from './authentication-storage.service';
 import { ProfileApiService } from './http/profile-api.service';
 
-const domain = environment.services['domain'];
+const DOMAIN = 'field';
 
 @Injectable()
 export class AuthenticationService {
@@ -44,23 +44,49 @@ export class AuthenticationService {
               private authStorage: AuthenticationStorageService) {
   }
 
-  requestAccess(newUser: IUserRequestAccess): Observable<void> {
-    return this
-      .api
-      .post('/users/request-account', {...newUser, domain});
+  async requestAccess(newUser: IUserRequestAccess) {
+    try {
+      await this.api.post('/users/request-account', {...newUser, domain: DOMAIN}).toPromise();
+    } catch (err) {
+      throw new Error(this.getErrorMessage(err));
+    }
   }
 
-  login(email: string, password: string, rememberLogin: boolean): Observable<AuthenticationToken[]> {
-    return this
-      .api
-      .post('/auth/native/login', {domain, email, password})
-      .map((json) => AuthenticationToken.fromTokenMap(json))
-      .do(async (tokens: AuthenticationToken[]) => await this.authStorage.saveTokens(tokens, rememberLogin))
-      .do((tokens: AuthenticationToken[]) => this._login.next(tokens));
+  async login(email: string, password: string, rememberLogin: boolean): Promise<AuthenticationToken[]> {
+    try {
+      return await this
+        .api
+        .post('/auth/native/login', {domain: DOMAIN, email, password})
+        .map((json) => AuthenticationToken.fromTokenMap(json))
+        .do(async (tokens: AuthenticationToken[]) => await this.authStorage.saveTokens(tokens, rememberLogin))
+        .do((tokens: AuthenticationToken[]) => this._login.next(tokens))
+        .toPromise();
+    } catch (err) {
+      throw new Error(this.getErrorMessage(err));
+    }
   }
 
   async logout(): Promise<void> {
     await this.authStorage.clearTokens();
     this._logout.next();
+  }
+
+  private getErrorMessage(response: HttpErrorResponse): string {
+    switch (response.error.error) {
+      case 'INVALID_PASSWORD':
+        const {warning = '', suggestions = []} = response.error.feedback || {};
+        const feedback = '. ' + warning + '\n' + suggestions.join(' ');
+        return 'Please use a strong password' + feedback;
+      case 'INVALID_ORGANIZATION':
+        return 'Your account request cannot be completed because the organization you provided is not valid.' +
+          ' Please try again or contact Field Support Services for assistance.';
+      case 'login_failed':
+        return 'Email or password is incorrect';
+      case 'email_validation_required':
+        return 'Sorry, our system does not have any account with the credentials you provided. If you already created an account' +
+          'please verify it by clicking on the link provided in the email you should have received.';
+      case 'ACCOUNT_NOT_APPROVED':
+        return 'Your account is not approved yet. Please try again or contact Field Support Services for assistance.';
+    }
   }
 }

@@ -3,6 +3,7 @@ import { HttpClientTestingModule, HttpTestingController } from '@angular/common/
 import { inject, TestBed } from '@angular/core/testing';
 import { environment } from '../../../environments/environment';
 import { CoreModule } from '../core.module';
+import { AuthenticationToken } from '../models/authentication-token';
 import { AuthenticationService } from './authentication.service';
 
 
@@ -53,8 +54,7 @@ describe('AuthenticationService', () => {
 
       authService
         .login(testUser.email, testUser.password, false)
-        .toPromise()
-        .then((response) => {
+        .then((response: AuthenticationToken[]) => {
           expect(response[0].email).toBe('gowtham@olivetech.net');
           expect(response[0].key).toBe('profile.illuminations.bible');
           expect(response[0].domain).toBe('field');
@@ -85,14 +85,12 @@ describe('AuthenticationService', () => {
       order += '1';
       authService
         .login(user.email, user.password, false)
-        .subscribe({
-          next(tokens) {
-            expect(loggedIn).toBeTruthy('login$ should have been called upon login');
-            expect(order).toBe('12', 'something is wrong with this test if this occurs out of order');
-            expect(tokens.length).toBe(1);
-          },
-          error: fail
-        });
+        .then(tokens => {
+          expect(loggedIn).toBeTruthy('login$ should have been called upon login');
+          expect(order).toBe('12', 'something is wrong with this test if this occurs out of order');
+          expect(tokens.length).toBe(1);
+        })
+        .catch(error => error.fail);
     });
   });
 

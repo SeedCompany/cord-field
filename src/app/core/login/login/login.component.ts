@@ -3,6 +3,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatIconRegistry } from '@angular/material';
 import { DomSanitizer } from '@angular/platform-browser';
 import { Router } from '@angular/router';
+import { CustomValidators } from '../../models/custom-validators';
 import { AuthenticationService } from '../../services/authentication.service';
 import { LoggerService } from '../../services/logger.service';
 
@@ -14,9 +15,10 @@ import { LoggerService } from '../../services/logger.service';
 export class LoginComponent {
 
   hidePassword = true;
+  serverError: string;
 
   form: FormGroup = this.fb.group({
-    email: ['', Validators.email],
+    email: ['', CustomValidators.email],
     password: ['', Validators.required]
   });
 
@@ -33,9 +35,10 @@ export class LoginComponent {
     this
       .auth
       .login(this.email.value, this.password.value, true)
-      .toPromise()
-      .then(() => this.router.navigate(['/']))
-      .catch((err) => this.logService.error(err, 'error at onLogin'));
+      .then(() => {
+        this.router.navigate(['/']);
+      })
+      .catch(err => this.serverError = err.message);
   }
 
   get email() {
