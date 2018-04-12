@@ -1,5 +1,6 @@
 import { NgModule } from '@angular/core';
 import {
+  MatAutocompleteModule,
   MatButtonModule,
   MatCardModule,
   MatChipsModule,
@@ -21,6 +22,7 @@ import {
 } from '@angular/material';
 
 const components = [
+  MatAutocompleteModule,
   MatCardModule,
   MatChipsModule,
   MatDialogModule,

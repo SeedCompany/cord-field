@@ -1,0 +1,43 @@
+<mat-card>
+  <mat-card-subtitle>Languages</mat-card-subtitle>
+  <mat-card-content>
+
+    <mat-list>
+      <mat-list-item *ngFor="let language of listedLanguages; trackBy: trackLanguageById">
+        <mat-icon mat-list-avatar>{{ language.name.charAt(0) }}</mat-icon>
+        <h3 mat-line> {{ language.name }} </h3>
+        <small matLine> {{ language.ethnologueCode }} | {{ language.rodNumber }} | {{ language.ethnologuePopulation }}
+        </small>
+        <button mat-icon-button (click)="onDelete(language.id)" color="primary">
+          <mat-icon>close</mat-icon>
+        </button>
+        <mat-divider></mat-divider>
+      </mat-list-item>
+    </mat-list>
+
+    <form *ngIf="addingLanguage">
+      <button mat-icon-button color="primary" (click)="addingLanguage = false">
+        <mat-icon>close</mat-icon>
+      </button>
+      <mat-form-field color="accent">
+        <input matInput placeholder="Search Language"
+               [matAutocomplete]="auto"
+               [formControl]="searchLanguage">
+        <mat-autocomplete #auto="matAutocomplete" (optionSelected)="onSelectLanguage()">
+          <mat-option *ngFor="let language of filteredLanguages; trackBy: trackLanguageById" [value]="language.id">
+            <div class="options">
+              {{ language.name }}
+              <span>{{ language.ethnologueCode }} |
+              {{ language.rodNumber }} | {{ language.ethnologuePopulation }}
+            </span>
+            </div>
+          </mat-option>
+        </mat-autocomplete>
+      </mat-form-field>
+    </form>
+  </mat-card-content>
+  <mat-card-actions>
+    <button *ngIf="!addingLanguage" mat-button color="accent" (click)="addingLanguage = true">Add Language</button>
+  </mat-card-actions>
+
+</mat-card>
