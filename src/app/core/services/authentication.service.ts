@@ -78,7 +78,6 @@ export class AuthenticationService {
   }
 
   getErrorMessage(httpError: HttpErrorResponse): string {
-    // error messages needs tobe more verbose after discussion with team.
     let errMsg, suggestions = '';
     const serverError = httpError.error;
 
