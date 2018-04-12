@@ -20,7 +20,7 @@ export class ProjectComponent implements OnInit, OnDestroy {
   private idSub = Subscription.EMPTY;
 
   readonly tabs: TabConfig[] = [
-    {path: '', label: 'Overview'},
+    {path: '/overview', label: 'Overview'},
     {path: '/plan', label: 'Plan'},
     {path: '/budget', label: 'Budget'},
     {path: '/files', label: 'Files'},

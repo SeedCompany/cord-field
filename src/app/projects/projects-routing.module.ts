@@ -1,7 +1,9 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { ProjectBudgetComponent } from './project-budget/project-budget.component';
+import { ProjectEngagementDetailsComponent } from './project-engagement-details/project-engagement-details.component';
 import { ProjectFilesComponent } from './project-files/project-files.component';
+import { ProjectFormsComponent } from './project-forms/project-forms.component';
 import { ProjectListComponent } from './project-list/project-list.component';
 import { ProjectOverviewComponent } from './project-overview/project-overview.component';
 import { ProjectPeopleComponent } from './project-people/project-people.component';
@@ -15,7 +17,15 @@ const routes: Routes = [
     path: ':id',
     component: ProjectComponent,
     children: [
-      {path: '', component: ProjectOverviewComponent, pathMatch: 'full'},
+      {path: '', redirectTo: 'overview', pathMatch: 'full'},
+      {
+        path: 'overview',
+        component: ProjectOverviewComponent,
+        children: [
+          {path: '', component: ProjectEngagementDetailsComponent, pathMatch: 'full'},
+          {path: 'forms', component: ProjectFormsComponent}
+        ]
+      },
       {path: 'plan', component: ProjectPlanComponent},
       {path: 'budget', component: ProjectBudgetComponent},
       {path: 'files', component: ProjectFilesComponent},

@@ -7,7 +7,6 @@
      *ngFor="let tab of tabs; trackBy: trackTabsBy"
      [routerLink]="'/projects/' + id + tab.path"
      routerLinkActive
-     [routerLinkActiveOptions]="{exact: true}"
      #rla="routerLinkActive"
      [active]="rla.isActive"
   >{{ tab.label }}</a>
