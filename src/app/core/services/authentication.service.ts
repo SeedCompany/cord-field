@@ -48,13 +48,11 @@ export class AuthenticationService {
     try {
       await this.api.post('/users/request-account', {...newUser, domain: DOMAIN}).toPromise();
     } catch (err) {
-      const error = this.getErrorMessage(err);
-      throw new Error(error);
+      throw new Error(this.getErrorMessage(err));
     }
   }
 
   async login(email: string, password: string, rememberLogin: boolean): Promise<AuthenticationToken[]> {
-
     try {
       return await this
         .api
@@ -64,8 +62,7 @@ export class AuthenticationService {
         .do((tokens: AuthenticationToken[]) => this._login.next(tokens))
         .toPromise();
     } catch (err) {
-      const errors = this.getErrorMessage(err);
-      throw new Error(errors);
+      throw new Error(this.getErrorMessage(err));
     }
   }
 
@@ -74,35 +71,22 @@ export class AuthenticationService {
     this._logout.next();
   }
 
-  private getErrorMessage(httpError: HttpErrorResponse): string {
-    let errMsg;
-    const serverError = httpError.error;
-
-    switch (serverError.error) {
+  private getErrorMessage(response: HttpErrorResponse): string {
+    switch (response.error.error) {
       case 'INVALID_PASSWORD':
-        if (serverError.feedback) {
-          const errorString = 'Invalid Password.';
-          const warning = serverError.feedback.warning;
-          return errorString + warning + '\n' + serverError.feedback.suggestions.join(' ');
-        }
-        errMsg = 'Please enter a strong password';
-        break;
+        const {warning = '', suggestions = []} = response.error.feedback || {};
+        const feedback = '. ' + warning + '\n' + suggestions.join(' ');
+        return 'Please use a strong password' + feedback;
       case 'INVALID_ORGANIZATION':
-        errMsg = 'Your account request cannot be completed because the organization you provided is not valid.' +
+        return 'Your account request cannot be completed because the organization you provided is not valid.' +
           ' Please try again or contact Field Support Services for assistance.';
-        break;
       case 'login_failed':
-        errMsg = 'Email or Password is incorrect';
-        break;
+        return 'Email or Password is incorrect';
       case 'email_validation_required':
-        errMsg = 'Sorry, our system does not identify any account with the credentials you provided. If you already created as account' +
+        return 'Sorry, our system does not identify any account with the credentials you provided. If you already created as account' +
           'Please verify by clicking on the link provided in the email you received ';
-        break;
       case 'ACCOUNT_NOT_APPROVED':
-        errMsg = 'Your account is not approved yet. Please try again or contact Field Support Services for assistance.';
-        break;
+        return 'Your account is not approved yet. Please try again or contact Field Support Services for assistance.';
     }
-
-    return errMsg;
   }
 }
