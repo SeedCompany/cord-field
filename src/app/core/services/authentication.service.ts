@@ -4,7 +4,6 @@ import 'rxjs/add/observable/of';
 import 'rxjs/add/operator/map';
 import { Observable } from 'rxjs/Observable';
 import { Subject } from 'rxjs/Subject';
-import { environment } from '../../../environments/environment';
 import { AuthenticationToken } from '../models/authentication-token';
 import {
   IUserRequestAccess,
@@ -13,7 +12,7 @@ import {
 import { AuthenticationStorageService } from './authentication-storage.service';
 import { ProfileApiService } from './http/profile-api.service';
 
-const domain = environment['domain'];
+const DOMAIN = 'field';
 
 @Injectable()
 export class AuthenticationService {
@@ -47,7 +46,7 @@ export class AuthenticationService {
 
   async requestAccess(newUser: IUserRequestAccess) {
     try {
-      await this.api.post('/users/request-account', {...newUser, domain}).toPromise();
+      await this.api.post('/users/request-account', {...newUser, domain: DOMAIN}).toPromise();
     } catch (err) {
       const error = this.getErrorMessage(err);
       throw new Error(error);
@@ -59,7 +58,7 @@ export class AuthenticationService {
     return new Promise<AuthenticationToken[] | string>((resolve, reject) => {
       this
         .api
-        .post('/auth/native/login', {domain, email, password})
+        .post('/auth/native/login', {domain: DOMAIN, email, password})
         .map((json) => AuthenticationToken.fromTokenMap(json))
         .do(async (tokens: AuthenticationToken[]) => await this.authStorage.saveTokens(tokens, rememberLogin))
         .do((tokens: AuthenticationToken[]) => this._login.next(tokens))
@@ -81,36 +80,30 @@ export class AuthenticationService {
     let errMsg, suggestions = '';
     const serverError = httpError.error;
 
-    switch (httpError.status) {
-      case 400:
-        if (serverError.error && serverError.error === 'INVALID_PASSWORD') {
-          if (serverError.feedback) {
-            const errorString = 'Invalid Password.';
-            const warning = serverError.feedback.warning;
-            serverError.feedback.suggestions.forEach((suggestion) => {
-              suggestions += suggestion;
-            });
-            errMsg = errorString + warning + '\n' + suggestions;
-          }
-        }
-        if (serverError.error && serverError.error === 'INVALID_ORGANIZATION') {
-          errMsg = 'Your account request cannot be completed because the organization you provided is not valid.' +
-            ' Please try again or contact Field Support Services for assistance.';
+    switch (serverError.error) {
+      case 'INVALID_PASSWORD':
+        if (serverError.feedback) {
+          const errorString = 'Invalid Password.';
+          const warning = serverError.feedback.warning;
+          serverError.feedback.suggestions.forEach((suggestion) => {
+            suggestions += suggestion + ' ';
+          });
+          errMsg = errorString + warning + '\n' + suggestions;
         }
         break;
-      case 401:
-        if (serverError.error && serverError.error === 'login_failed') {
-          errMsg = 'Email or Password is incorrect';
-        }
+      case 'INVALID_ORGANIZATION':
+        errMsg = 'Your account request cannot be completed because the organization you provided is not valid.' +
+          ' Please try again or contact Field Support Services for assistance.';
         break;
-      case 403:
-        if (serverError.error && serverError.error === 'email_validation_required') {
-          errMsg = 'Sorry, our system does not identify any account with the credentials you provided. If you already created as account' +
-            'Please verify by clicking on the link provided in the email you received ';
-        }
-        if (serverError.error && serverError.error === 'ACCOUNT_NOT_APPROVED') {
-          errMsg = 'Your account is not approved yet. Please try again or contact Field Support Services for assistance.';
-        }
+      case 'login_failed':
+        errMsg = 'Email or Password is incorrect';
+        break;
+      case 'email_validation_required':
+        errMsg = 'Sorry, our system does not identify any account with the credentials you provided. If you already created as account' +
+          'Please verify by clicking on the link provided in the email you received ';
+        break;
+      case 'ACCOUNT_NOT_APPROVED':
+        errMsg = 'Your account is not approved yet. Please try again or contact Field Support Services for assistance.';
         break;
     }
 
