@@ -55,20 +55,18 @@ export class AuthenticationService {
 
   async login(email: string, password: string, rememberLogin: boolean): Promise<AuthenticationToken[] | string> {
 
-    return new Promise<AuthenticationToken[] | string>((resolve, reject) => {
-      this
+    try {
+      return await this
         .api
         .post('/auth/native/login', {domain: DOMAIN, email, password})
         .map((json) => AuthenticationToken.fromTokenMap(json))
         .do(async (tokens: AuthenticationToken[]) => await this.authStorage.saveTokens(tokens, rememberLogin))
         .do((tokens: AuthenticationToken[]) => this._login.next(tokens))
-        .toPromise()
-        .then(resolve)
-        .catch((err) => {
-          const errors = this.getErrorMessage(err);
-          reject(errors);
-        });
-    });
+        .toPromise();
+    } catch (err) {
+      const errors = this.getErrorMessage(err);
+      throw new Error(errors);
+    }
   }
 
   async logout(): Promise<void> {

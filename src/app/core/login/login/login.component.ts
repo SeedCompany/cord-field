@@ -38,7 +38,7 @@ export class LoginComponent {
       .then(() => {
         this.router.navigate(['/']);
       })
-      .catch(err => this.serverError = err);
+      .catch(err => this.serverError = err.message);
   }
 
   get email() {
