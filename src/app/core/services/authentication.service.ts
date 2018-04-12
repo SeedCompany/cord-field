@@ -53,7 +53,7 @@ export class AuthenticationService {
     }
   }
 
-  async login(email: string, password: string, rememberLogin: boolean): Promise<AuthenticationToken[] | string> {
+  async login(email: string, password: string, rememberLogin: boolean): Promise<AuthenticationToken[]> {
 
     try {
       return await this
@@ -74,8 +74,8 @@ export class AuthenticationService {
     this._logout.next();
   }
 
-  getErrorMessage(httpError: HttpErrorResponse): string {
-    let errMsg, suggestions = '';
+  private getErrorMessage(httpError: HttpErrorResponse): string {
+    let errMsg;
     const serverError = httpError.error;
 
     switch (serverError.error) {
@@ -83,11 +83,9 @@ export class AuthenticationService {
         if (serverError.feedback) {
           const errorString = 'Invalid Password.';
           const warning = serverError.feedback.warning;
-          serverError.feedback.suggestions.forEach((suggestion) => {
-            suggestions += suggestion + ' ';
-          });
-          errMsg = errorString + warning + '\n' + suggestions;
+          return errorString + warning + '\n' + serverError.feedback.suggestions.join(' ');
         }
+        errMsg = 'Please enter a strong password';
         break;
       case 'INVALID_ORGANIZATION':
         errMsg = 'Your account request cannot be completed because the organization you provided is not valid.' +
