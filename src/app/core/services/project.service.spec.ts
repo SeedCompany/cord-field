@@ -34,7 +34,8 @@ describe('ProjectService', () => {
     const sort = 'updatedAt';
     const skip = 0;
     const limit = 10;
-    const projectListUrl = `${testBaseUrl}/projects?sort=${sort}&skip=${skip}&limit=${limit}`;
+    const order = 'desc';
+    const projectListUrl = `${testBaseUrl}/projects?sort=${sort}&skip=${skip}&limit=${limit}&order=${order}`;
     const mockResponse = [{
       'id': '5acbba0c70db6a1781ece783',
       'status': 'active',
@@ -44,9 +45,11 @@ describe('ProjectService', () => {
     }];
 
     projectService
-      .getProjects('updatedAt', 0, 10)
+      .getProjects('updatedAt', 'desc', 0, 10)
       .toPromise()
-      .then((projects) => {
+      .then((projectsWithCount) => {
+        const projects = projectsWithCount.projects;
+        expect(projectsWithCount.count).toBe(0);
         expect(projects.length).not.toBe(0);
         expect(projects[0].id).toBeDefined();
         expect(projects[0].id).toBe('5acbba0c70db6a1781ece783');

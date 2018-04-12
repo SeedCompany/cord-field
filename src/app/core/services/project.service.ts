@@ -1,27 +1,27 @@
+import { HttpResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { SortDirection } from '@angular/material';
 import { Observable } from 'rxjs/Observable';
-import { Project } from '../models/project';
+import { Project, ProjectsWithCount } from '../models/project';
 import { PloApiService } from './http/plo-api.service';
-
-const SORT = 'updatedAt';
-const SKIP = 0;
-const LIMIT = 10;
 
 @Injectable()
 export class ProjectService {
 
-  constructor(private ploApiSerivce: PloApiService) {
-
+  constructor(private ploApi: PloApiService) {
   }
 
-  getProjects(sort = SORT, skip = SKIP, limit = LIMIT): Observable<Project[]> {
-
-    const projectUrl = `/projects?sort=${sort}&skip=${skip}&limit=${limit}`;
+  getProjects(sort: keyof Project = 'updatedAt', order: SortDirection = 'desc', skip = 0, limit = 10): Observable<ProjectsWithCount> {
+    const url = `/projects?sort=${sort}&skip=${skip}&limit=${limit}&order=${order}`;
 
     return this
-      .ploApiSerivce
-      .get(projectUrl)
-      .map((projects: any) => Project.fromJsonArray(projects));
+      .ploApi
+      .get(url, {observe: 'response'})
+      .map((response: HttpResponse<Project[]>) => {
+        return {
+          projects: Project.fromJsonArray(response.body),
+          count: Number(response.headers.get('x-sc-total-count')) || 0
+        };
+      });
   }
 }
-

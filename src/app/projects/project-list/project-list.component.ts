@@ -1,63 +1,65 @@
-import {
-  AfterViewInit,
-  Component,
-  OnInit,
-  ViewChild
-} from '@angular/core';
-import {
-  MatDialog,
-  MatPaginator,
-  MatSort,
-  MatTableDataSource
-} from '@angular/material';
+import { AfterViewInit, Component, ViewChild } from '@angular/core';
+import { MatDialog, MatPaginator, MatSort, MatTableDataSource } from '@angular/material';
+import { Observable } from 'rxjs/Observable';
 import {
   Project,
-  ProjectStatus
+  ProjectStatus,
+  projectStatusToString,
+  ProjectsWithCount,
+  projectTypeToString
 } from '../../core/models/project';
-import { LoggerService } from '../../core/services/logger.service';
 import { ProjectService } from '../../core/services/project.service';
-import {
-  ProjectCreateDialogComponent,
-  ProjectCreationResult
-} from '../project-create-dialog/project-create-dialog.component';
+import { ProjectCreateDialogComponent, ProjectCreationResult } from '../project-create-dialog/project-create-dialog.component';
 
 @Component({
   selector: 'app-project-list',
   templateUrl: './project-list.component.html',
   styleUrls: ['./project-list.component.scss']
 })
-export class ProjectListComponent implements OnInit, AfterViewInit {
+export class ProjectListComponent implements AfterViewInit {
   currentListSelector = 'All Projects';
   listSelectorOptions = [
     'All Projects',
     'My Projects'
   ];
+  readonly displayedColumns = ['name', 'updatedAt', 'languages', 'type', 'status'];
+  readonly pageSizeOptions = [10, 25, 50];
   projectSource = new MatTableDataSource<Project>();
-  displayedColumns = ['name', 'lastModified', 'languages', 'type', 'status'];
-  pageSize = 10;
-  pageSizeOptions = [5, 10, 20];
+  totalCount = 0;
 
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
 
-  private statusColor = {
+  readonly projectTypeToString = projectTypeToString;
+  readonly projectStatusToString = projectStatusToString;
+  private readonly statusColor = {
     [ProjectStatus.Active]: 'green',
     [ProjectStatus.Inactive]: 'red',
     [ProjectStatus.InDevelopment]: 'orange'
   };
 
   constructor(private dialog: MatDialog,
-              private log: LoggerService,
               private projectService: ProjectService) {
   }
 
-  ngOnInit() {
-    this.getProjects('updatedAt', 0, this.pageSize);
-  }
-
   ngAfterViewInit() {
-    this.projectSource.sort = this.sort;
-    this.projectSource.paginator = this.paginator;
+    this.sort.sortChange.subscribe(() => this.paginator.pageIndex = 0);
+
+    Observable
+      .merge(this.sort.sortChange, this.paginator.page)
+      .startWith({})
+      .switchMap(() => {
+        return this.projectService.getProjects(
+          this.sort.active as keyof Project,
+          this.sort.direction,
+          this.paginator.pageIndex * this.paginator.pageSize,
+          this.paginator.pageSize
+        );
+      })
+      .subscribe((data: ProjectsWithCount) => {
+        this.totalCount = data.count;
+        this.projectSource.data = data.projects;
+      });
   }
 
   onSearch(query: string) {
@@ -82,21 +84,5 @@ export class ProjectListComponent implements OnInit, AfterViewInit {
 
   trackByValue(index, value) {
     return value;
-  }
-
-  getProjects(sort, skip, limit) {
-    this
-      .projectService
-      .getProjects(sort, skip, limit)
-      .subscribe(projects => {
-        this.projectSource.data = projects;
-      }, err => {
-        this.log.error(err, 'ProjectListComponent.getProjects');
-      });
-  }
-
-  onPaginatorChange(event) {
-    const skip = event.pageIndex * event.pageSize;
-    this.getProjects('updatedAt', skip, event.pageSize);
   }
 }

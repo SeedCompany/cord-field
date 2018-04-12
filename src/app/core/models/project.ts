@@ -61,3 +61,8 @@ export class Project {
   }
 
 }
+
+export interface ProjectsWithCount {
+  projects: Project[];
+  count: number;
+}

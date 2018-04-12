@@ -40,14 +40,14 @@
     <mat-cell *matCellDef="let project" class="title"> {{ project.name }}</mat-cell>
   </ng-container>
 
-  <ng-container matColumnDef="lastModified">
+  <ng-container matColumnDef="updatedAt">
     <mat-header-cell *matHeaderCellDef mat-sort-header> Last Modified</mat-header-cell>
     <mat-cell *matCellDef="let project"> {{ project.updatedAt | date : 'shortDate' }}</mat-cell>
   </ng-container>
 
 
   <ng-container matColumnDef="languages">
-    <mat-header-cell *matHeaderCellDef mat-sort-header>Languages</mat-header-cell>
+    <mat-header-cell *matHeaderCellDef>Languages</mat-header-cell>
     <mat-cell *matCellDef="let project">
 
       <mat-chip-list *ngIf="project.languages.length > 0">
@@ -61,15 +61,15 @@
 
   <ng-container matColumnDef="type">
     <mat-header-cell *matHeaderCellDef mat-sort-header>Type</mat-header-cell>
-    <mat-cell *matCellDef="let project">{{ project.type }}</mat-cell>
+    <mat-cell *matCellDef="let project">{{ projectTypeToString(project.type) }}</mat-cell>
   </ng-container>
 
   <ng-container matColumnDef="status">
     <mat-header-cell *matHeaderCellDef mat-sort-header>Status</mat-header-cell>
     <mat-cell *matCellDef="let project">
       <span class="status-circle"
-            [ngStyle]="{'background': getStatusColor(project.status)}"></span>
-      <span>{{ project.status }}</span>
+            [style.background]="getStatusColor(project.status)"></span>
+      <span>{{ projectStatusToString(project.status) }}</span>
     </mat-cell>
   </ng-container>
 
@@ -79,8 +79,6 @@
            *matRowDef="let project; columns: displayedColumns;">
   </mat-row>
 </mat-table>
-<mat-paginator [pageSize]=pageSize
-               [pageSizeOptions]=pageSizeOptions
-               (page)="onPaginatorChange($event)"
-               [showFirstLastButtons]="false">
+<mat-paginator [pageSizeOptions]="pageSizeOptions"
+               [length]="totalCount">
 </mat-paginator>
