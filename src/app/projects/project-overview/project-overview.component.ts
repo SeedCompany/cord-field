@@ -1,5 +1,7 @@
 import { Component } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
+import { Project } from '../../core/models/project';
+import { ProjectService } from '../../core/services/project.service';
 import { ProjectTabComponent } from '../abstract-project-tab';
 
 @Component({
@@ -9,7 +11,13 @@ import { ProjectTabComponent } from '../abstract-project-tab';
 })
 export class ProjectOverviewComponent extends ProjectTabComponent {
 
-  constructor(route: ActivatedRoute) {
+  project: Project = new Project();
+
+  constructor(route: ActivatedRoute, private projectService: ProjectService) {
     super(route);
+  }
+
+  public onId(id: string): void {
+    this.projectService.getProject(id).subscribe(project => this.project = project);
   }
 }

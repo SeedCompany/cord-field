@@ -1,0 +1,34 @@
+@import "~styles/imports";
+
+:host {
+  @extend %component-defaults;
+  background: mat-background($theme, card);
+}
+
+.picture {
+  display: flex;
+  flex-direction: column;
+  height: 150px;
+  padding: 24px;
+  color: white; //TODO Doesn't match theme since the image is (can be?) a dark background
+}
+
+.flex-grow {
+  flex: 1;
+}
+
+.location, .sensitivity {
+  margin: 0;
+}
+
+.stage {
+  padding: 16px;
+}
+
+mat-progress-bar {
+  margin: 8px 0;
+}
+
+a.active {
+  color: mat-color($accent);
+}
