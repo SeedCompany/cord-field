@@ -40,7 +40,7 @@
     <mat-cell *matCellDef="let project" class="title"> {{ project.name }}</mat-cell>
   </ng-container>
 
-  <ng-container matColumnDef="lastModified">
+  <ng-container matColumnDef="updatedAt">
     <mat-header-cell *matHeaderCellDef mat-sort-header> Last Modified</mat-header-cell>
     <mat-cell *matCellDef="let project"> {{ project.updatedAt | date : 'shortDate' }}</mat-cell>
   </ng-container>
@@ -79,6 +79,6 @@
            *matRowDef="let project; columns: displayedColumns;">
   </mat-row>
 </mat-table>
-<mat-paginator [pageSize]=pageSize
+<mat-paginator [pageSizeOptions]="pageSizeOptions"
                [length]="totalCount">
 </mat-paginator>
