@@ -77,44 +77,41 @@ export class AuthenticationService {
     this._logout.next();
   }
 
-  getErrorMessage(error: HttpErrorResponse): string {
+  getErrorMessage(httpError: HttpErrorResponse): string {
     // error messages needs tobe more verbose after discussion with team.
-    let errMsg = '';
-    const serverError = error.error;
+    let errMsg, suggestions = '';
+    const serverError = httpError.error;
 
-    switch (error.status) {
+    switch (httpError.status) {
       case 400:
-        if (serverError && serverError.feedback) {
-          const errorString = 'Invalid Password.';
-          const warning = serverError.feedback.warning;
-          serverError.feedback.suggestions.forEach((suggestion) => {
-            errMsg += suggestion;
-          });
-
-          return errorString + warning + '\n' + errMsg;
+        if (serverError.error && serverError.error === 'INVALID_PASSWORD') {
+          if (serverError.feedback) {
+            const errorString = 'Invalid Password.';
+            const warning = serverError.feedback.warning;
+            serverError.feedback.suggestions.forEach((suggestion) => {
+              suggestions += suggestion;
+            });
+            errMsg = errorString + warning + '\n' + suggestions;
+          }
         }
-        errMsg = 'Something went wrong with the system, Please try after some time';
+        if (serverError.error && serverError.error === 'INVALID_ORGANIZATION') {
+          errMsg = 'Your account request cannot be completed because the organization you provided is not valid.' +
+            ' Please try again or contact Field Support Services for assistance.';
+        }
         break;
       case 401:
-        errMsg = 'You entered wrong email or password';
+        if (serverError.error && serverError.error === 'login_failed') {
+          errMsg = 'Email or Password is incorrect';
+        }
         break;
       case 403:
-        errMsg = serverError;
-        break;
-      case 404:
-        errMsg = serverError;
-        break;
-      case 409:
-        errMsg = serverError;
-        break;
-      case 422:
-        errMsg = serverError;
-        break;
-      case 500:
-        errMsg = serverError;
-        break;
-      case 503:
-        errMsg = 'Your requested service is not available';
+        if (serverError.error && serverError.error === 'email_validation_required') {
+          errMsg = 'Sorry, our system does not identify any account with the credentials you provided. If you already created as account' +
+            'Please verify by clicking on the link provided in the email you received ';
+        }
+        if (serverError.error && serverError.error === 'ACCOUNT_NOT_APPROVED') {
+          errMsg = 'Your account is not approved yet. Please try again or contact Field Support Services for assistance.';
+        }
         break;
     }
 
