@@ -1,23 +1,21 @@
-import { browser, ExpectedConditions } from 'protractor';
-import { HeaderSearch } from './header-search.po';
+  import { HeaderSearch } from './header-search.po';
 
-describe('cord-field App', () => {
+describe('cord-field header search', () => {
   let headerSearch: HeaderSearch;
 
   beforeEach(() => {
     headerSearch = new HeaderSearch();
   });
 
-  afterEach( () => {
-  });
-
-  it ( 'click search icon and enter text', () => {
+  it('click search icon and enter text', async(done) => {
     headerSearch.navigateTo();
-    headerSearch.getSearchIcon().click();
-    browser.wait(ExpectedConditions.visibilityOf(headerSearch.getSearchInput()), 10000);
+    const button = headerSearch.getSearchIcon();
+    await button.isEnabled();
+    await button.click();
     const searchInput = headerSearch.getSearchInput();
-    searchInput.sendKeys('type something to search..........00000000..........=+=+=........................searcj searh learn to spell...');
+    await searchInput.isDisplayed();
+    await searchInput.sendKeys('type something to search..........00000000..........=+=+=..................searcj searh learn to spell...');
+    done();
   });
-
 });
 
