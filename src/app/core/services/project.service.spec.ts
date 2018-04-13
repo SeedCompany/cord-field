@@ -1,7 +1,8 @@
 import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
 import { inject, TestBed } from '@angular/core/testing';
 import { environment } from '../../../environments/environment';
-import { Project } from '../models/project';
+import { ProjectCreationResult } from '../../projects/project-create-dialog/project-create-dialog.component';
+import { Project, ProjectType } from '../models/project';
 import { PloApiService } from './http/plo-api.service';
 import { ProjectService } from './project.service';
 
@@ -102,6 +103,48 @@ describe('ProjectService', () => {
 
     httpMockService
       .expectOne(projectListUrl)
+      .flush(mockResponse);
+    httpMockService.verify();
+
+  });
+
+  it('check existing project name availability', done => {
+    const mockResponse = {status: false};
+    const isProjectNameUrl = `${testBaseUrl}/projects/exists?name=Elhomwe Bible (395)`;
+    projectService
+      .isProjectNameTaken('Elhomwe Bible (395)')
+      .then((response) => {
+        expect(response).toBe(false);
+        done();
+      })
+      .catch(done.fail);
+
+    httpMockService
+      .expectOne(isProjectNameUrl)
+      .flush(mockResponse);
+    httpMockService.verify();
+
+  });
+
+  it('create project', done => {
+    const project: ProjectCreationResult = {
+      'name': 'newProject',
+      'type': ProjectType.Internship
+    };
+    const mockResponse = {
+      'id': '5ace5faee23fc6685b6e40c6'
+    };
+    const projectUrl = `${testBaseUrl}/projects`;
+    projectService
+      .createProject(project)
+      .then((id) => {
+        expect(id).toBe('5ace5faee23fc6685b6e40c6');
+        done();
+      })
+      .catch(done.fail);
+
+    httpMockService
+      .expectOne(projectUrl)
       .flush(mockResponse);
     httpMockService.verify();
 

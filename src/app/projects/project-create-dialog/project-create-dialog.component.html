@@ -15,14 +15,17 @@
     <input matInput
            maxlength="140"
            formControlName="name"
-           placeholder="Name">
+           placeholder="Name"
+           autocomplete="off">
+    <mat-hint align="start" *ngIf="name.pending">Checking availability...</mat-hint>
     <mat-hint align="end">{{ name.value.length }}/140</mat-hint>
-    <mat-error *ngIf="name.invalid">Please enter a name</mat-error>
+    <mat-error *ngIf="name.errors?.required">Please enter a name</mat-error>
+    <mat-error *ngIf="name.errors?.duplicate">A project with this name already exists</mat-error>
   </mat-form-field>
 </form>
 <div mat-dialog-actions>
-  <button mat-button color="accent" (click)="onClose()">CANCEL</button>
   <button mat-button color="accent"
+          [style.order]="1"
           [disabled]="!form.valid"
           [mat-dialog-close]="{
             type: type.value,
@@ -30,4 +33,5 @@
           }">
     CREATE
   </button>
+  <button mat-button color="accent" (click)="onClose()">CANCEL</button>
 </div>
