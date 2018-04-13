@@ -1,3 +1,4 @@
+import { animate, state, style, transition, trigger } from '@angular/animations';
 import { AfterViewInit, Component, ViewChild } from '@angular/core';
 import { MatDialog, MatPaginator, MatSort, MatTableDataSource } from '@angular/material';
 import { Observable } from 'rxjs/Observable';
@@ -8,7 +9,14 @@ import { ProjectCreateDialogComponent } from '../project-create-dialog/project-c
 @Component({
   selector: 'app-project-list',
   templateUrl: './project-list.component.html',
-  styleUrls: ['./project-list.component.scss']
+  styleUrls: ['./project-list.component.scss'],
+  animations: [
+    trigger('slideRight', [
+      state('shown', style({transform: 'translateX(0)'})),
+      state('hidden', style({transform: 'translateX(200%)'})),
+      transition('shown <=> hidden', animate('200ms ease-out'))
+    ])
+  ]
 })
 export class ProjectListComponent implements AfterViewInit {
   currentListSelector = 'All Projects';
@@ -16,6 +24,7 @@ export class ProjectListComponent implements AfterViewInit {
     'All Projects',
     'My Projects'
   ];
+
   readonly displayedColumns = ['name', 'updatedAt', 'languages', 'type', 'status'];
   readonly pageSizeOptions = [10, 25, 50];
   projectSource = new MatTableDataSource<Project>();
