@@ -32,12 +32,12 @@ export class ProjectService {
       });
   }
 
-  isProjectNameAvailable(name: string): Promise<boolean> {
+  isProjectNameTaken(name: string): Promise<boolean> {
     return this
       .ploApi
       .get(`/projects/exists?name=${name}`)
       .toPromise()
-      .then(data => false)
+      .then(() => false)
       .catch(err => err.status === 409);
   }
 

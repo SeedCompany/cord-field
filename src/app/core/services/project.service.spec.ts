@@ -112,7 +112,7 @@ describe('ProjectService', () => {
     const mockResponse = {status: false};
     const isProjectNameUrl = `${testBaseUrl}/projects/exists?name=Elhomwe Bible (395)`;
     projectService
-      .isProjectNameAvailable('Elhomwe Bible (395)')
+      .isProjectNameTaken('Elhomwe Bible (395)')
       .then((response) => {
         expect(response).toBe(false);
         done();
