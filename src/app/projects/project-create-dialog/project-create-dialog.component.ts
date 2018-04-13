@@ -36,6 +36,7 @@ export class ProjectCreateDialogComponent implements OnInit {
       .filter(name => name.length > 0)
       .debounceTime(500)
       .distinctUntilChanged()
+      .filter(() => !this.name.hasError('required')) // Don't continue if user has already cleared the text
       .do(() => this.name.markAsPending())
       .switchMap(name => this.projectService.isProjectNameTaken(name))
       .subscribe(taken => {
@@ -44,7 +45,7 @@ export class ProjectCreateDialogComponent implements OnInit {
           // Even if the name is available, we don't want to remove the required error.
           return;
         }
-        this.name.markAsTouched();
+        this.name.markAsTouched(); // Be sure first error shows immediately instead of waiting for field to blur
         this.name.setErrors(taken ? {duplicate: true} : null);
       });
   }
