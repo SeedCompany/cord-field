@@ -20,17 +20,7 @@
   </mat-menu>
 
   <span class="spacer"></span>
-
-  <app-search class="search" (search)="onSearch($event)"></app-search>
-
-  <button mat-icon-button [matMenuTriggerFor]="filterMenu" color="primary">
-    <mat-icon>filter_list</mat-icon>
-  </button>
-  <mat-menu #filterMenu="matMenu">
-    <button mat-menu-item>filter1</button>
-    <button mat-menu-item>filter2</button>
-    <button mat-menu-item>filter3</button>
-  </mat-menu>
+  
 </mat-toolbar>
 
 <mat-table [dataSource]="projectSource" matSort>
