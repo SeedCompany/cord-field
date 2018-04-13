@@ -24,8 +24,8 @@
   </mat-form-field>
 </form>
 <div mat-dialog-actions>
-  <button mat-button color="accent" (click)="onClose()">CANCEL</button>
   <button mat-button color="accent"
+          [style.order]="1"
           [disabled]="!form.valid"
           [mat-dialog-close]="{
             type: type.value,
@@ -33,4 +33,5 @@
           }">
     CREATE
   </button>
+  <button mat-button color="accent" (click)="onClose()">CANCEL</button>
 </div>
