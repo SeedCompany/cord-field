@@ -25,14 +25,20 @@
   </mat-form-field>
 </form>
 <div mat-dialog-actions>
-  <button mat-button color="accent"
-          [style.order]="1"
-          [disabled]="!form.valid"
-          [mat-dialog-close]="{
-            type: type.value,
-            name: name.value
-          }">
-    CREATE
+  <button
+    mat-button color="accent"
+    [style.order]="1"
+    [disabled]="!form.valid || submitting "
+    (click)="onCreate()">
+    <span *ngIf="!submitting">CREATE</span>
+    <mat-progress-spinner *ngIf="submitting"
+                          class="spinner"
+                          color="primary"
+                          mode="indeterminate"
+                          strokeWidth="3"
+                          [diameter]="30">
+    </mat-progress-spinner>
   </button>
   <button mat-button color="accent" (click)="onClose()">CANCEL</button>
+
 </div>

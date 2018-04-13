@@ -12,3 +12,15 @@
   margin-left: 0;
   margin-right: 8px;
 }
+
+button ::ng-deep .mat-button-wrapper {
+  display: flex
+}
+
+button.active {
+  cursor: not-allowed
+}
+
+.spinner {
+  margin-left: 5px;
+}

@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatDialogRef } from '@angular/material';
+import { Router } from '@angular/router';
 import { ProjectType, projectTypeList, projectTypeToString } from '../../core/models/project';
 import { ProjectService } from '../../core/services/project.service';
 
@@ -19,10 +20,12 @@ export class ProjectCreateDialogComponent implements OnInit {
   readonly types = projectTypeList;
   readonly typeToString = projectTypeToString;
   form: FormGroup;
+  submitting = false;
 
   constructor(public dialogRef: MatDialogRef<ProjectCreateDialogComponent>,
               private formBuilder: FormBuilder,
-              private projectService: ProjectService) {
+              private projectService: ProjectService,
+              private router: Router) {
   }
 
   ngOnInit() {
@@ -58,6 +61,25 @@ export class ProjectCreateDialogComponent implements OnInit {
     return this.form.get('name');
   }
 
+  async onCreate() {
+    const project = {
+      type: this.type.value,
+      name: this.name.value
+    };
+    this.submitting = true;
+    try {
+      this.dialogRef.disableClose = true;
+      const projectId = await this.projectService.createProject(project);
+      if (projectId) {
+        this.submitting = false;
+        this.dialogRef.close();
+        this.router.navigate(['/projects', projectId]);
+      }
+    } catch (e) {
+      this.submitting = false;
+      this.dialogRef.disableClose = false;
+    }
+  }
   onClose() {
     this.dialogRef.close();
   }
