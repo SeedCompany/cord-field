@@ -13,7 +13,6 @@ import { ProfileApiService } from './services/http/profile-api.service';
 import { LoggerService } from './services/logger.service';
 import { ProjectService } from './services/project.service';
 import { LocalStorageService, SessionStorageService } from './services/storage.service';
-import { WelcomeComponent } from './welcome/welcome.component';
 
 @NgModule({
   imports: [
@@ -22,8 +21,7 @@ import { WelcomeComponent } from './welcome/welcome.component';
   ],
   declarations: [
     HeaderComponent,
-    NotFoundPageComponent,
-    WelcomeComponent
+    NotFoundPageComponent
   ],
   providers: [
     AuthenticationGuard,
