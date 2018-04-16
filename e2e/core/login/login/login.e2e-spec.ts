@@ -26,6 +26,7 @@ describe('cord-field Login screen', () => {
     const button = loginPage.getForgotLoginButton();
     expect(button.getText()).toEqual(('FORGOT EMAIL/PASSWORD?'));
     await button.isEnabled();
+    // sample of using console.log for debugging
     await button.click().then( () => { console.log('button forgot email was  clicked'); });
     done();
   });
