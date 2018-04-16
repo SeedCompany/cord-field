@@ -1,4 +1,3 @@
-import { browser } from 'protractor';
 import { RequestAccessPage } from './request-access.po';
 
 describe('cord-field Login screen then request access', () => {
@@ -44,17 +43,12 @@ describe('cord-field Login screen then request access', () => {
     await inputFld.clear();
     inputFld = requestAccessPage.getFormInputControl('confirmPassword');
     await inputFld.clear();
-    // sample of using console.log for debugging
-    await inputFld.sendKeys('testymessyblessycoolmanfromtheisleofMull').then(() => console.log('confirmPassword async done'));
+    await inputFld.sendKeys('testymessyblessycoolmanfromtheisleofMull');
     button = requestAccessPage.getCancelButton();
     expect(button.getText()).toEqual(('CANCEL'));
     await button.click();
     button = await requestAccessPage.getRequestAccessButton();
     expect(button.getText()).toEqual(('REQUEST ACCESS'));
-    // sample of using console.log for debugging
-    const result = await browser.waitForAngularEnabled();
-    console.log('is angular enabled');
-    console.log(result);
     done();
   });
 });
