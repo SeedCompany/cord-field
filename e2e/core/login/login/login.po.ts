@@ -1,19 +1,9 @@
-import { browser, by, element } from 'protractor';
-import { ProtractorLocators } from '../../../utils/locators';
+import { by, element } from 'protractor';
+import { byCardTitle, byFormControlName } from '../../../utils/locators';
 
 export class Login {
-  cordLocator = new ProtractorLocators();
-
-  navigateTo() {
-    return browser.get('/');
-  }
-
-  navigateToTab(name: string) {
-    return browser.get('/' + name);
-  }
-
   getTitle() {
-    return element(by.tagName('mat-card')).element(this.cordLocator.byCardTitle());
+    return element(by.tagName('mat-card')).element(byCardTitle());
   }
 
   getSignInButton() {
@@ -29,7 +19,7 @@ export class Login {
   }
 
   getFormInputControl(formControlName: string) {
-    return element(this.cordLocator.byFormControlName(formControlName));
+    return element(byFormControlName(formControlName));
   }
 }
 

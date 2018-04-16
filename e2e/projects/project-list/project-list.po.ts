@@ -1,10 +1,6 @@
 import { browser, by, element } from 'protractor';
 
-export class ProjectList {
-  navigateTo() {
-    return browser.get('/projects');
-  }
-
+export class ProjectListPage {
   getTitleInHeader() {
     return browser.getTitle();
   }

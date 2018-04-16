@@ -1,25 +1,26 @@
 import { browser } from 'protractor';
+import { CordNagivation } from '../../../utils/nagivation';
 import { Login } from './login.po';
 
 describe('cord-field Login screen', () => {
   let loginPage: Login;
+  let cordNav: CordNagivation;
 
   beforeEach(() => {
     loginPage = new Login();
-    loginPage.navigateTo();
-    // TODO: add code to bring Chrome window to front to avoid intermittent failures
+    cordNav = new CordNagivation();
+    cordNav.navigateToLogin();
+    // TODO: JIRA ticket CF2-259 -> add code to bring Chrome window to front to avoid intermittent failures
   });
 
-  it('search for title in login screen', async(done) => {
+  it('search for title in login screen', () => {
     const loginTitle = loginPage.getTitle();
     expect(loginTitle.getText()).toEqual('Sign In');
-    done();
   });
 
-  it('find and click the SIGN IN button', async(done) => {
+  it('find and click the SIGN IN button', () => {
     const button = loginPage.getSignInButton();
     expect(button.getText()).toEqual(('SIGN IN'));
-    done();
   });
 
   it('find and click the FORGOT EMAIL/PASSWORD? button', async(done) => {
@@ -46,12 +47,12 @@ describe('cord-field Login screen', () => {
     await button.isEnabled();
     await button.click();
     await browser.waitForAngularEnabled();
-    await loginPage.navigateTo();
-    await loginPage.navigateToTab('projects');
-    await loginPage.navigateToTab('tasks');
-    await loginPage.navigateToTab('languages');
-    await loginPage.navigateToTab('people');
-    await loginPage.navigateToTab('organizations');
+    await cordNav.navigateToRoot();
+    await cordNav.navigateToProjects();
+    await cordNav.navigateToTasks();
+    await cordNav.navigateToPeople();
+    await cordNav.navigateToLanguages();
+    await cordNav.navigateToOrganizations();
     done();
   });
 });

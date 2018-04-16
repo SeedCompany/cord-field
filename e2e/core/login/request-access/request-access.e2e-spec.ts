@@ -1,49 +1,28 @@
+import { CordNagivation } from '../../../utils/nagivation';
 import { RequestAccessPage } from './request-access.po';
 
 describe('cord-field Login screen then request access', () => {
   let requestAccessPage: RequestAccessPage;
+  let cordNav: CordNagivation;
 
   beforeEach(() => {
     requestAccessPage = new RequestAccessPage();
-    requestAccessPage.navigateTo();
+    cordNav = new CordNagivation();
+    cordNav.navigateToRoot();
   });
 
   it('find and click the REQUEST ACCESS button', async(done) => {
     const button = requestAccessPage.getRequestAccessButton();
     expect(button.getText()).toEqual(('REQUEST ACCESS'));
     await button.click();
-    let inputFld = requestAccessPage.getInputFirstName();
-    inputFld.sendKeys('FirstNameoh ya ya ya ya ya ');
-    inputFld = requestAccessPage.getInputLastName();
-    inputFld.sendKeys('LLLLLLLLLLLLLLLASTNameoh ya ya ya ya ya ');
-    inputFld = requestAccessPage.getInputLastName();
-    inputFld.sendKeys('LLLLLLLLLLLLLLLASTNameoh ya ya ya ya ya ');
-    inputFld = requestAccessPage.getInputEmail();
-    inputFld.sendKeys('dkfkheisihfifesdfkh@tsco.com');
-    inputFld = requestAccessPage.getInputOrg();
-    inputFld.sendKeys('org ORG ord org ORG ord org ORG ord org ORG ord org ORG ord org ORG ord ');
-    inputFld = requestAccessPage.getInputPassword();
-    inputFld.sendKeys('dblikityBokityBlakitikinotogobonga');
-    inputFld = requestAccessPage.getInputConfirmPassword();
-    inputFld.sendKeys('dblikityBokityBlakitikinotogobonga');
-    inputFld = requestAccessPage.getFormInputControl('firstName');
-    inputFld.sendKeys('FirstNameoh ya ya ya ya ya FirstName');
-    inputFld = requestAccessPage.getFormInputControl('lastName');
-    inputFld.sendKeys('LastName');
-    inputFld = requestAccessPage.getFormInputControl('email');
-    await inputFld.clear();
-    inputFld.sendKeys('shawnRing@tsco.com');
-    inputFld = requestAccessPage.getFormInputControl('organization');
-    await inputFld.clear();
-    inputFld.sendKeys('organizationdkfjdflkdjfsdklfjsdlkfjdsfkdsfsdfjdssdfsdkjlfkjdslkf');
-    await inputFld.clear();
-    inputFld = requestAccessPage.getFormInputControl('password');
-    await inputFld.clear();
-    inputFld.sendKeys('testymessyblessycoolmanfromtheislesofMull');
-    await inputFld.clear();
-    inputFld = requestAccessPage.getFormInputControl('confirmPassword');
-    await inputFld.clear();
-    await inputFld.sendKeys('testymessyblessycoolmanfromtheisleofMull');
+    requestAccessPage.getInputFirstName().sendKeys('FirstNameoh ya ya ya ya ya ');
+    requestAccessPage.getInputLastName().sendKeys('LLLLLLLLLLLLLLLASTNameoh ya ya ya ya ya ');
+    requestAccessPage.getInputEmail().sendKeys('dkfkheisihfifesdfkh@tsco.com');
+    requestAccessPage.getInputOrg().sendKeys('org ORG ord org ORG ord org ORG ord org ORG ord org ORG ord org ORG ord ');
+    requestAccessPage.getInputPassword().sendKeys('dblikityBokityBlakitikinotogobonga');
+    requestAccessPage.getInputConfirmPassword().sendKeys('dblikityBokityBlakitikinotogobonga');
+    await requestAccessPage.getInputEmail().clear();
+    requestAccessPage.getInputEmail().sendKeys('shonRing@tsco.com');
     button = requestAccessPage.getCancelButton();
     expect(button.getText()).toEqual(('CANCEL'));
     await button.click();

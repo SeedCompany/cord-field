@@ -1,47 +1,37 @@
-import { browser, by, element } from 'protractor';
-import { ProtractorLocators } from '../../../utils/locators';
+import { by, element } from 'protractor';
+import { byFormControlName } from '../../../utils/locators';
 
 export class RequestAccessPage {
-  cordLocator = new ProtractorLocators();
-
-  navigateTo() {
-    return browser.get('/login');
-  }
-
-  getRequestAccessButton() {
-    return element(by.partialButtonText('REQUEST ACCESS'));
-  }
-
   getCancelButton() {
     return element(by.partialButtonText('CANCEL'));
   }
 
-  getFormInputControl(formControlName: string) {
-    return element(this.cordLocator.byFormControlName(formControlName));
-  }
-
   getInputFirstName () {
-    return element(by.css('input[formControlName="firstName"]'));
+    return element(byFormControlName('firstName'));
   }
 
   getInputLastName () {
-    return element(by.css('input[formControlName="lastName"]'));
+    return element(byFormControlName('lastName'));
   }
 
   getInputEmail () {
-    return element(by.css('input[formControlName="email"]'));
+    return element(byFormControlName('email'));
   }
 
   getInputOrg () {
-    return element(by.css('input[formControlName="organization"]'));
+    return element(byFormControlName('organization'));
   }
 
   getInputPassword () {
-    return element(by.css('input[formControlName="password"]'));
+    return element(byFormControlName('password'));
   }
 
   getInputConfirmPassword () {
-    return element(by.css('input[formControlName="confirmPassword"]'));
+    return element(byFormControlName('confirmPassword'));
+  }
+
+  getRequestAccessButton() {
+    return element(by.partialButtonText('REQUEST ACCESS'));
   }
 
 }
