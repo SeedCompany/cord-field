@@ -62,23 +62,23 @@ export class ProjectCreateDialogComponent implements OnInit {
   }
 
   async onCreate() {
+    this.form.disable();
     const project = {
       type: this.type.value,
       name: this.name.value
     };
+    let projectId;
     this.submitting = true;
     try {
       this.dialogRef.disableClose = true;
-      const projectId = await this.projectService.createProject(project);
-      if (projectId) {
-        this.submitting = false;
-        this.dialogRef.close();
-        this.router.navigate(['/projects', projectId]);
-      }
+      projectId = await this.projectService.createProject(project);
     } catch (e) {
-      this.submitting = false;
       this.dialogRef.disableClose = false;
     }
+    this.form.enable();
+    this.submitting = false;
+    this.dialogRef.close();
+    this.router.navigate(['/projects', projectId]);
   }
   onClose() {
     this.dialogRef.close();

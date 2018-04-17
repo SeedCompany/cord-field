@@ -1,6 +1,5 @@
 import { AfterViewInit, Component, ViewChild } from '@angular/core';
 import { MatDialog, MatPaginator, MatSort, MatTableDataSource } from '@angular/material';
-import { Router } from '@angular/router';
 import { Observable } from 'rxjs/Observable';
 import { Project, ProjectStatus, projectStatusToString, ProjectsWithCount, projectTypeToString } from '../../core/models/project';
 import { ProjectService } from '../../core/services/project.service';
@@ -34,8 +33,7 @@ export class ProjectListComponent implements AfterViewInit {
   };
 
   constructor(private dialog: MatDialog,
-              private projectService: ProjectService,
-              private router: Router) {
+              private projectService: ProjectService) {
   }
 
   ngAfterViewInit() {

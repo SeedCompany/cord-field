@@ -6,21 +6,11 @@
 
 .mat-dialog-actions {
   float: right;
+  justify-content: space-between;
+  width: 185px;
 }
 
 .mat-dialog-actions .mat-button+.mat-button {
   margin-left: 0;
   margin-right: 8px;
-}
-
-button ::ng-deep .mat-button-wrapper {
-  display: flex
-}
-
-button.active {
-  cursor: not-allowed
-}
-
-.spinner {
-  margin-left: 5px;
 }
