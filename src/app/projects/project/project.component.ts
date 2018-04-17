@@ -1,3 +1,4 @@
+import { animate, state, style, transition, trigger } from '@angular/animations';
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { Subscription } from 'rxjs/Subscription';
@@ -12,7 +13,19 @@ interface TabConfig {
 @Component({
   selector: 'app-project',
   templateUrl: './project.component.html',
-  styleUrls: ['./project.component.scss']
+  styleUrls: ['./project.component.scss'],
+  animations: [
+    trigger('popInOut', [
+      state('in', style({transform: 'scale(1)', opacity: '1'})),
+      transition(':enter', [
+        style({transform: 'scale(0)', opacity: '0'}),
+        animate('300ms ease-in-out')
+      ]),
+      transition(':leave', [
+        animate('300ms ease-in-out', style({transform: 'scale(0)', opacity: '0'}))
+      ])
+    ])
+  ]
 })
 export class ProjectComponent implements OnInit, OnDestroy {
   id: string;
