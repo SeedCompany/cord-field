@@ -10,7 +10,7 @@
      #rla="routerLinkActive"
      [active]="rla.isActive"
   >{{ tab.label }}</a>
-  <app-speed-dial align="below" icon="save" *ngIf="dirty" [@popInOut]>
+  <app-speed-dial align="below" icon="save" *ngIf="showSaveFab" [@popInOut]>
     <app-speed-dial-item tooltip="Discard" color="warn" (click)="onSave()">
       <mat-icon>delete</mat-icon>
     </app-speed-dial-item>
