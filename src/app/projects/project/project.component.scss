@@ -11,4 +11,11 @@ mat-toolbar {
 
 .mat-tab-nav-bar {
   background-color: mat-background($theme, app-bar);
+  overflow: initial;
+}
+
+app-speed-dial {
+  position: absolute;
+  bottom: -($mat-fab-height / 2);
+  right: 24px; // matches tab padding
 }

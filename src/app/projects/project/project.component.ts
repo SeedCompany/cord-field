@@ -17,6 +17,9 @@ interface TabConfig {
 export class ProjectComponent implements OnInit, OnDestroy {
   id: string;
   project = new Project();
+
+  dirty = true;
+
   private idSub = Subscription.EMPTY;
 
   readonly tabs: TabConfig[] = [
@@ -46,5 +49,13 @@ export class ProjectComponent implements OnInit, OnDestroy {
 
   trackTabsBy(index: number, tab: TabConfig) {
     return tab.path;
+  }
+
+  onSave() {
+    this.dirty = false;
+  }
+
+  onDiscard() {
+    this.dirty = false;
   }
 }
