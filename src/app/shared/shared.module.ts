@@ -1,8 +1,11 @@
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { SatPopoverModule } from '@ncstate/sat-popover';
 import { MaterialModule } from '../material.module';
 import { SearchComponent } from './components/search/search.component';
+import { SpeedDialItemComponent } from './components/speed-dial-item/speed-dial-item.component';
+import { SpeedDialComponent } from './components/speed-dial/speed-dial.component';
 import { AutofocusDirective } from './directives/autofocus.directive';
 
 @NgModule({
@@ -10,18 +13,23 @@ import { AutofocusDirective } from './directives/autofocus.directive';
     CommonModule,
     FormsModule,
     MaterialModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    SatPopoverModule
   ],
   exports: [
     CommonModule,
     FormsModule,
     MaterialModule,
     ReactiveFormsModule,
-    SearchComponent
+    SearchComponent,
+    SpeedDialComponent,
+    SpeedDialItemComponent
   ],
   declarations: [
     AutofocusDirective,
-    SearchComponent
+    SearchComponent,
+    SpeedDialComponent,
+    SpeedDialItemComponent
   ]
 })
 export class SharedModule {
