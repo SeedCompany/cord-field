@@ -4,13 +4,19 @@
   display: block;
 }
 
+// Flip direction so tab index prioritizes the forward action
 .mat-dialog-actions {
-  float: right;
-  justify-content: space-between;
-  width: 185px;
+  display: flex;
+  flex-direction: row-reverse;
 }
 
+// Flip margin for spacing between buttons since we flipped the direction
 .mat-dialog-actions .mat-button+.mat-button {
   margin-left: 0;
   margin-right: 8px;
+}
+
+// Center spinner within button
+mat-progress-spinner {
+  margin: 0 auto;
 }
