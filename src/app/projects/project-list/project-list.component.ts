@@ -1,10 +1,9 @@
 import { AfterViewInit, Component, ViewChild } from '@angular/core';
 import { MatDialog, MatPaginator, MatSort, MatTableDataSource } from '@angular/material';
-import { Router } from '@angular/router';
 import { Observable } from 'rxjs/Observable';
 import { Project, ProjectStatus, projectStatusToString, ProjectsWithCount, projectTypeToString } from '../../core/models/project';
 import { ProjectService } from '../../core/services/project.service';
-import { ProjectCreateDialogComponent, ProjectCreationResult } from '../project-create-dialog/project-create-dialog.component';
+import { ProjectCreateDialogComponent } from '../project-create-dialog/project-create-dialog.component';
 
 @Component({
   selector: 'app-project-list',
@@ -34,8 +33,7 @@ export class ProjectListComponent implements AfterViewInit {
   };
 
   constructor(private dialog: MatDialog,
-              private projectService: ProjectService,
-              private router: Router) {
+              private projectService: ProjectService) {
   }
 
   ngAfterViewInit() {
@@ -69,15 +67,6 @@ export class ProjectListComponent implements AfterViewInit {
   openDialog(): void {
     const dialogRef = this.dialog.open(ProjectCreateDialogComponent, {
       width: '400px'
-    });
-
-    dialogRef.afterClosed().subscribe((result?: ProjectCreationResult) => {
-      if (!result) {
-        return;
-      }
-      this.projectService.createProject(result)
-        .then(id => this.router.navigate(['/projects', id]));
-
     });
   }
 

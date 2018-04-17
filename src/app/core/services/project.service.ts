@@ -38,7 +38,13 @@ export class ProjectService {
       .get(`/projects/exists?name=${name}`)
       .toPromise()
       .then(() => false)
-      .catch(err => err.status === 409);
+      .catch(err => {
+        if (err.status === 409) {
+          return true;
+        }
+
+        throw err;
+      });
   }
 
   async createProject(project: ProjectCreationResult): Promise<string> {
