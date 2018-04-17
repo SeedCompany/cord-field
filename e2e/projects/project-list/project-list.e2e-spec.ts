@@ -6,7 +6,7 @@ describe('cord-field projects list', () => {
   let cordNav: CordNagivation;
 
   beforeEach(() => {
-    projectListPage = new ProjectList();
+    projectListPage = new ProjectListPage();
     cordNav = new CordNagivation();
     cordNav.navigateToRoot();
   });

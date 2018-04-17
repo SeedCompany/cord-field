@@ -12,7 +12,7 @@ describe('cord-field Login screen then request access', () => {
   });
 
   it('find and click the REQUEST ACCESS button', async(done) => {
-    const button = requestAccessPage.getRequestAccessButton();
+    let button = requestAccessPage.getRequestAccessButton();
     expect(button.getText()).toEqual(('REQUEST ACCESS'));
     await button.click();
     requestAccessPage.getInputFirstName().sendKeys('FirstNameoh ya ya ya ya ya ');
