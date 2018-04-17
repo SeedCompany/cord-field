@@ -28,12 +28,12 @@ export class ProjectCreateDialogComponent implements OnInit {
   ngOnInit() {
     this.form = this.formBuilder.group({
       type: ['', Validators.required],
-      name: ['', Validators.required]
+      name: ['', [Validators.required, Validators.minLength(2)]]
     });
     this.name
       .valueChanges
       .map(name => name.trim())
-      .filter(name => name.length > 0)
+      .filter(name => name.length > 1)
       .debounceTime(500)
       .distinctUntilChanged()
       .filter(() => !this.name.hasError('required')) // Don't continue if user has already cleared the text
