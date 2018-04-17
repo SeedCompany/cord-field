@@ -1,5 +1,5 @@
 <h1 mat-dialog-title>New Project</h1>
-<form mat-dialog-content [formGroup]="form">
+<form mat-dialog-content [formGroup]="form" (keyup.enter)="form.valid ? onCreate() : null">
   <mat-form-field color="accent">
     <mat-select formControlName="type"
                 placeholder="Type">
