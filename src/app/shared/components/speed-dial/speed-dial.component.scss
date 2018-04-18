@@ -1,0 +1,19 @@
+// Position the icon in the center so multiple
+// ones will overlap
+.mat-fab .mat-icon {
+  position: absolute;
+  top: 16px;
+  left: 16px;
+}
+
+.dial {
+  display: flex;
+  flex-direction: column-reverse; // Tab direction moves away from anchor
+
+  &.actions-above {
+    margin-bottom: 8px;
+  }
+  &.actions-below {
+    margin-top: 8px;
+  }
+}
