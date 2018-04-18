@@ -4,7 +4,7 @@
 
     <mat-list>
       <mat-list-item *ngFor="let language of listedLanguages; trackBy: trackLanguageById">
-        <mat-icon mat-list-avatar>{{ language.name.charAt(0) }}</mat-icon>
+        <app-avatar-letter color="primary" mat-list-avatar>{{ language.name.charAt(0) }}</app-avatar-letter>
         <h3 mat-line> {{ language.name }} </h3>
         <small matLine> {{ language.ethnologueCode }} | {{ language.rodNumber }} | {{ language.ethnologuePopulation }}
         </small>
