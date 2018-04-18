@@ -4,6 +4,7 @@ import { ActivatedRoute, NavigationEnd, Router, UrlSegment } from '@angular/rout
 import { Subscription } from 'rxjs/Subscription';
 import { Project } from '../../core/models/project';
 import { ProjectService } from '../../core/services/project.service';
+import { ProjectViewStateService } from '../project-view-state.service';
 
 interface TabConfig {
   path: string;
@@ -26,6 +27,9 @@ interface TabConfig {
         animate('300ms ease-in-out', style({transform: 'scale(0)', opacity: '0'}))
       ])
     ])
+  ],
+  providers: [
+    ProjectViewStateService
   ]
 })
 export class ProjectComponent implements OnInit, OnDestroy {
