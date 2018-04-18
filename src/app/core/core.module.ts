@@ -10,6 +10,7 @@ import { BrowserService } from './services/browser.service';
 import { GoogleAnalyticsService } from './services/google-analytics.service';
 import { PloApiService } from './services/http/plo-api.service';
 import { ProfileApiService } from './services/http/profile-api.service';
+import { LanguageService } from './services/language.service';
 import { LoggerService } from './services/logger.service';
 import { ProjectService } from './services/project.service';
 import { LocalStorageService, SessionStorageService } from './services/storage.service';
@@ -29,6 +30,7 @@ import { LocalStorageService, SessionStorageService } from './services/storage.s
     AuthenticationStorageService,
     BrowserService,
     GoogleAnalyticsService,
+    LanguageService,
     LocalStorageService,
     LoggerService,
     PloApiService,

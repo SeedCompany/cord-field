@@ -62,3 +62,11 @@ body {
 .mat-tab-link.mat-tab-label-active {
   opacity: 1;
 }
+
+// Use secondary text color for secondary text on lists
+// MD doesn't explicitly specify this but all of their images show it
+.mat-list, .mat-nav-list, .mat-selection-list {
+  .mat-list-item .mat-line:nth-child(n+2) {
+    color: mat-foreground($theme, secondary-text);
+  }
+}

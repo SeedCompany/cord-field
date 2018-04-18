@@ -5,6 +5,7 @@ import { ProjectCreateDialogComponent } from './project-create-dialog/project-cr
 import { ProjectEngagementDetailsComponent } from './project-engagement-details/project-engagement-details.component';
 import { ProjectFilesComponent } from './project-files/project-files.component';
 import { ProjectFormsComponent } from './project-forms/project-forms.component';
+import { ProjectLanguagesComponent } from './project-languages/project-languages.component';
 import { ProjectListComponent } from './project-list/project-list.component';
 import { ProjectOverviewSidebarComponent } from './project-overview-sidebar/project-overview-sidebar.component';
 import { ProjectOverviewComponent } from './project-overview/project-overview.component';
@@ -31,7 +32,8 @@ import { ProjectsRoutingModule } from './projects-routing.module';
     ProjectOverviewSidebarComponent,
     ProjectPeopleComponent,
     ProjectPlanComponent,
-    ProjectUpdatesComponent
+    ProjectUpdatesComponent,
+    ProjectLanguagesComponent
   ],
   entryComponents: [
     ProjectCreateDialogComponent
