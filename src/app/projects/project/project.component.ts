@@ -3,7 +3,6 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute, NavigationEnd, Router, UrlSegment } from '@angular/router';
 import { Subscription } from 'rxjs/Subscription';
 import { Project } from '../../core/models/project';
-import { ProjectService } from '../../core/services/project.service';
 import { ProjectViewStateService } from '../project-view-state.service';
 
 interface TabConfig {
@@ -34,7 +33,7 @@ interface TabConfig {
 })
 export class ProjectComponent implements OnInit, OnDestroy {
   id: string;
-  project = new Project();
+  project: Project;
 
   dirty = true;
   private shouldCurrentTabShowSaveFab: boolean;
@@ -51,7 +50,7 @@ export class ProjectComponent implements OnInit, OnDestroy {
   ];
 
   constructor(
-    private projectService: ProjectService,
+    private projectViewState: ProjectViewStateService,
     private route: ActivatedRoute,
     private router: Router
   ) {}
@@ -59,8 +58,9 @@ export class ProjectComponent implements OnInit, OnDestroy {
   ngOnInit() {
     this.idSub = this.route.params.subscribe(params => {
       this.id = params.id;
-      this.projectService.getProject(this.id).subscribe(project => this.project = project);
+      this.projectViewState.onNewId(params.id);
     });
+    this.projectViewState.project.subscribe(project => this.project = project);
 
     this.router.events
       .filter(event => event instanceof NavigationEnd)

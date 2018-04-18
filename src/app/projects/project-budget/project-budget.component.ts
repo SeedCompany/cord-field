@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
 import { ProjectTabComponent } from '../abstract-project-tab';
+import { ProjectViewStateService } from '../project-view-state.service';
 
 @Component({
   selector: 'app-project-budget',
@@ -9,7 +9,7 @@ import { ProjectTabComponent } from '../abstract-project-tab';
 })
 export class ProjectBudgetComponent extends ProjectTabComponent {
 
-  constructor(route: ActivatedRoute) {
-    super(route);
+  constructor(projectViewState: ProjectViewStateService) {
+    super(projectViewState);
   }
 }
