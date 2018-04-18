@@ -19,8 +19,11 @@
     <mat-form-field color="accent" *ngIf="addingLanguage">
       <input matInput placeholder="Search Language"
              [matAutocomplete]="auto"
-             [formControl]="search">
-      <button mat-icon-button matSuffix (click)="addingLanguage = false">
+             [formControl]="search"
+             (keyup.esc)="onCancel()"
+             #searchInput
+      >
+      <button mat-icon-button matSuffix (click)="onCancel()">
         <mat-icon>close</mat-icon>
       </button>
       <mat-autocomplete #auto="matAutocomplete" (optionSelected)="onSelectLanguage($event)">

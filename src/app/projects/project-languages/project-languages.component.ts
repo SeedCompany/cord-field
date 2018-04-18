@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { MatAutocompleteSelectedEvent } from '@angular/material/autocomplete/typings/autocomplete';
 import { Observable } from 'rxjs/Observable';
@@ -16,6 +16,11 @@ export class ProjectLanguagesComponent implements OnInit {
   addingLanguage = false;
   search = new FormControl();
   filteredLanguages: Observable<Language[]>;
+
+  /** Autofocus search input when it is created */
+  @ViewChild('searchInput') set searchInput(el: ElementRef) {
+    el.nativeElement.focus();
+  }
 
   constructor(private languageService: LanguageService) {
   }
@@ -36,6 +41,14 @@ export class ProjectLanguagesComponent implements OnInit {
     this.languages.push(event.option.value);
     this.addingLanguage = false;
     this.search.setValue('');
+  }
+
+  onCancel() {
+    if (this.search.value) {
+      this.search.setValue('');
+    } else {
+      this.addingLanguage = false;
+    }
   }
 
   onDelete(id: string) {
