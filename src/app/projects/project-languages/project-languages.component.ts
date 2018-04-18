@@ -1,5 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormControl } from '@angular/forms';
+import { MatAutocompleteSelectedEvent } from '@angular/material/autocomplete/typings/autocomplete';
+import { Observable } from 'rxjs/Observable';
 import { Language } from '../../core/models/language';
 import { LanguageService } from '../../core/services/language.service';
 
@@ -10,60 +12,40 @@ import { LanguageService } from '../../core/services/language.service';
 })
 export class ProjectLanguagesComponent implements OnInit {
 
-  languages: Language[];
-  listedLanguages: Language[] = [];
-  filteredLanguages: Language[];
+  languages: Language[] = [];
   addingLanguage = false;
-
-  searchLanguage: FormControl = new FormControl();
+  search = new FormControl();
+  filteredLanguages: Observable<Language[]>;
 
   constructor(private languageService: LanguageService) {
   }
 
   ngOnInit() {
-    this.languages = this.languageService.getLanguages();
-    this.filteredLanguages = this.languages;
-    const newFilter = this.languages;
-    this.searchLanguage
+    this.filteredLanguages = this.search
       .valueChanges
-      .subscribe((searchTerm) => {
-        if (searchTerm.length > 0) {
-          this.filteredLanguages = this.filteredLanguages.filter((element) => element.name.search(searchTerm) > -1);
-        } else {
-          newFilter.map((ele, index) => {
-            const final = this.listedLanguages.filter(element => element.id === ele.id);
-            if (final.length > 0) {
-              newFilter.splice(index, 1);
-            }
-          });
-          this.filteredLanguages = newFilter;
-        }
+      .filter(term => term.length > 1)
+      .debounceTime(300)
+      .switchMap(term => this.languageService.search(term))
+      .map((languages: Language[]) => {
+        const currentIds = this.languages.map(language => language.id);
+        return languages.filter(language => !currentIds.includes(language.id));
       });
   }
 
-  onSelectLanguage() {
-    const selectedLang = this.languages.filter((element) => element.id === this.searchLanguage.value)[0];
-    this.listedLanguages.push(selectedLang);
-    this.filteredLanguages = this.filteredLanguages.filter((element) => element.id !== selectedLang.id);
-    this.flipState();
-    this.searchLanguage.setValue('');
+  onSelectLanguage(event: MatAutocompleteSelectedEvent) {
+    this.languages.push(event.option.value);
+    this.addingLanguage = false;
+    this.search.setValue('');
   }
 
-  onDelete(langId) {
-    this.listedLanguages.map((element, index) => {
-      if (element.id === langId) {
-        this.listedLanguages.splice(index, 1);
-        this.filteredLanguages.push(element);
-      }
-    });
-  }
-
-  flipState() {
-    this.addingLanguage = !this.addingLanguage;
+  onDelete(id: string) {
+    const index = this.languages.findIndex(language => language.id === id);
+    if (index !== -1) {
+      this.languages.splice(index, 1);
+    }
   }
 
   trackLanguageById(index: number, language: Language) {
     return language.id;
   }
-
 }

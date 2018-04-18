@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import { Observable } from 'rxjs/Observable';
 import { Language } from '../models/language';
 
 @Injectable()
@@ -77,11 +78,9 @@ export class LanguageService {
     }
   ];
 
-  constructor() {
-  }
+  search(term: string): Observable<Language[]> {
+    const filter = language => language.name.toLowerCase().includes(term.toLowerCase());
 
-  getLanguages(): Language[] {
-    return this.languages;
+    return Observable.of(this.languages.filter(filter));
   }
-
 }
