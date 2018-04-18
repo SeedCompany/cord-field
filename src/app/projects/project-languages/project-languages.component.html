@@ -16,13 +16,13 @@
     </mat-list>
 
     <form *ngIf="addingLanguage">
-      <button mat-icon-button color="primary" (click)="addingLanguage = false">
-        <mat-icon>close</mat-icon>
-      </button>
       <mat-form-field color="accent">
         <input matInput placeholder="Search Language"
                [matAutocomplete]="auto"
                [formControl]="searchLanguage">
+        <button mat-icon-button matSuffix (click)="addingLanguage = false">
+          <mat-icon>close</mat-icon>
+        </button>
         <mat-autocomplete #auto="matAutocomplete" (optionSelected)="onSelectLanguage()">
           <mat-option *ngFor="let language of filteredLanguages; trackBy: trackLanguageById" [value]="language.id">
             <div class="options">
