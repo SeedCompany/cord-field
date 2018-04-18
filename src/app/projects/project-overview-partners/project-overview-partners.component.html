@@ -1,0 +1,111 @@
+<mat-card>
+  <mat-card-subtitle>Partners</mat-card-subtitle>
+  <mat-accordion>
+    <mat-expansion-panel>
+      <mat-expansion-panel-header>
+        <mat-panel-title>
+          <mat-icon>account_circle</mat-icon>
+        </mat-panel-title>
+        <mat-panel-description>
+          <div class="header">
+            <div class="title">
+              <span class="name">Partner's Display Name</span>
+              <small>partners role</small>
+            </div>
+          </div>
+        </mat-panel-description>
+        <mat-panel-description>
+          MOU Status : <span class="name">Signed & Attched</span>
+        </mat-panel-description>
+        <mat-panel-description>
+          Partner Agreement Status : <span class="name">Awaiting Signature</span>
+        </mat-panel-description>
+      </mat-expansion-panel-header>
+
+      <form class="partnerForm">
+        <mat-form-field color="accent">
+          <mat-select placeholder="Partner Type">
+            <mat-option *ngFor="let partnerType of partnerTypes" [value]="partnerType.name">
+              {{ partnerType.name }}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+        <div class="name">
+          <mat-label>MOU</mat-label>
+        </div>
+        <div class="mou">
+          <br>
+          <div>
+            <button input type="file" mat-button color="accent">
+              UPLOAD
+              <mat-icon>file_upload</mat-icon>
+            </button>
+          </div>
+          <mat-form-field color="accent">
+            <mat-select placeholder="Status">
+              <mat-option *ngFor="let status of mouAgreementStatuses" [value]="status.name">
+                {{ status.name }}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+        <div class="name">
+          <mat-label>MOU</mat-label>
+        </div>
+        <div class="mou">
+          <br>
+          <div>
+            <button mat-button color="accent">
+              UPLOAD
+              <mat-icon>file_upload</mat-icon>
+            </button>
+          </div>
+          <mat-form-field color="accent">
+            <mat-select placeholder="Status">
+              <mat-option *ngFor="let status of mouAgreementStatuses" [value]="status.name">
+                {{ status.name }}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+      </form>
+    </mat-expansion-panel>
+
+    <mat-expansion-panel (opened)="panelOpenState = true"
+                         (closed)="panelOpenState = false">
+      <mat-expansion-panel-header>
+        <mat-panel-title>
+          Self aware panel
+        </mat-panel-title>
+        <mat-panel-description>
+          Currently I am {{panelOpenState ? 'open' : 'closed'}}
+        </mat-panel-description>
+      </mat-expansion-panel-header>
+      <p>I'm visible because I am open</p>
+    </mat-expansion-panel>
+    <mat-expansion-panel (opened)="panelOpenState = true"
+                         (closed)="panelOpenState = false">
+      <mat-expansion-panel-header>
+        <mat-panel-title>
+          Self aware panel
+        </mat-panel-title>
+        <mat-panel-description>
+          Currently I am {{panelOpenState ? 'open' : 'closed'}}
+        </mat-panel-description>
+      </mat-expansion-panel-header>
+      <p>I'm visible because I am open</p>
+    </mat-expansion-panel>
+    <mat-expansion-panel (opened)="panelOpenState = true"
+                         (closed)="panelOpenState = false">
+      <mat-expansion-panel-header>
+        <mat-panel-title>
+          Self aware panel
+        </mat-panel-title>
+        <mat-panel-description>
+          Currently I am {{panelOpenState ? 'open' : 'closed'}}
+        </mat-panel-description>
+      </mat-expansion-panel-header>
+      <p>I'm visible because I am open</p>
+    </mat-expansion-panel>
+  </mat-accordion>
+</mat-card>

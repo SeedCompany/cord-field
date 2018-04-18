@@ -7,7 +7,7 @@ import { ProjectFilesComponent } from './project-files/project-files.component';
 import { ProjectFormsComponent } from './project-forms/project-forms.component';
 import { ProjectLanguagesComponent } from './project-languages/project-languages.component';
 import { ProjectListComponent } from './project-list/project-list.component';
-import { ProjectLocationTimeframeComponent } from './project-location-timeframe/project-location-timeframe.component';
+import { ProjectOverviewPartnersComponent } from './project-overview-partners/project-overview-partners.component';
 import { ProjectOverviewSidebarComponent } from './project-overview-sidebar/project-overview-sidebar.component';
 import { ProjectOverviewComponent } from './project-overview/project-overview.component';
 import { ProjectPeopleComponent } from './project-people/project-people.component';
@@ -28,14 +28,14 @@ import { ProjectsRoutingModule } from './projects-routing.module';
     ProjectEngagementDetailsComponent,
     ProjectFilesComponent,
     ProjectFormsComponent,
-    ProjectLanguagesComponent,
     ProjectListComponent,
-    ProjectLocationTimeframeComponent,
     ProjectOverviewComponent,
+    ProjectOverviewPartnersComponent,
     ProjectOverviewSidebarComponent,
     ProjectPeopleComponent,
     ProjectPlanComponent,
-    ProjectUpdatesComponent
+    ProjectUpdatesComponent,
+    ProjectLanguagesComponent
   ],
   entryComponents: [
     ProjectCreateDialogComponent

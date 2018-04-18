@@ -1,0 +1,18 @@
+@import "~styles/imports";
+
+.header {
+  display: flex;
+}
+
+.title {
+  display: flex;
+  flex-direction: column;
+}
+
+.name {
+  font-weight: 500;
+}
+
+.mou {
+  display: flex;
+}
