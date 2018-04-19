@@ -71,7 +71,7 @@
     <button mat-button
             color="accent"
             [style.order]="1"
-            (click)="onRequestAccess(); loading = true;"
+            (click)="onRequestAccess();"
             [disabled]="!form.valid || submitting"
     >
       <ng-container *ngIf="!submitting">REQUEST ACCESS</ng-container>

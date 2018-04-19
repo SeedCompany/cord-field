@@ -15,7 +15,6 @@ import { AuthenticationService } from '../../services/authentication.service';
 export class RequestAccessComponent {
 
   hidePassword = true;
-  loading = false;
   serverError: string | null;
   submitting = false;
 
@@ -54,7 +53,6 @@ export class RequestAccessComponent {
         });
       this.router.navigate(['/login']);
     } catch (e) {
-      this.loading = false;
       this.serverError = e.message;
       this.showSnackBar('Failed to Create Account');
       return;
