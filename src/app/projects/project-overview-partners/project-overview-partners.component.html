@@ -3,17 +3,18 @@
   <mat-card-content>
     <mat-accordion>
 
-      <mat-expansion-panel (opened)="panelOpenState = true"
-                           (closed)="panelOpenState = false">
+      <mat-expansion-panel *ngFor="let partner of partners;trackBy: trackPartnerById"
+                           (opened)="setOpenPartner(partner)"
+                           (closed)="setOpenPartnerToNull()">
         <mat-expansion-panel-header>
           <mat-panel-title>
             <mat-icon>account_circle</mat-icon>
             <div class="title">
               <span class="name">Partner's Display Name</span>
-              <small *ngIf="!panelOpenState">partners role</small>
+              <small *ngIf="!isCardOpened(partner)">partners role</small>
             </div>
           </mat-panel-title>
-          <mat-panel-description *ngIf="!panelOpenState">
+          <mat-panel-description *ngIf="!isCardOpened(partner)">
             <div class="header">
               <div class="add-space">
                 MOU Status : <span class="name">Signed & Attched</span>
@@ -28,8 +29,8 @@
         <form class="partnerForm">
           <mat-form-field color="accent" class="add-width">
             <mat-select placeholder="Partner Type">
-              <mat-option *ngFor="let partnerType of partnerTypes" [value]="partnerType.name">
-                {{ partnerType.name }}
+              <mat-option *ngFor="let partnerType of partnerTypes" [value]="partnerTypeToString(partnerType)">
+                {{ partnerTypeToString(partnerType) }}
               </mat-option>
             </mat-select>
           </mat-form-field>
@@ -42,8 +43,8 @@
           </button>
           <mat-form-field color="accent" class="upload-status">
             <mat-select placeholder="Status">
-              <mat-option *ngFor="let status of mouAgreementStatuses" [value]="status.name">
-                {{ status.name }}
+              <mat-option *ngFor="let status of mouAgreementStatuses" [value]="partnerAgreementStatusToString(status)">
+                {{ partnerAgreementStatusToString(status) }}
               </mat-option>
             </mat-select>
           </mat-form-field>
@@ -56,206 +57,8 @@
           </button>
           <mat-form-field color="accent" class="upload-status">
             <mat-select placeholder="Status">
-              <mat-option *ngFor="let status of mouAgreementStatuses" [value]="status.name">
-                {{ status.name }}
-              </mat-option>
-            </mat-select>
-          </mat-form-field>
-          <div>
-            <button mat-button color="accent">
-              REMOVE PARTNER
-            </button>
-          </div>
-        </form>
-      </mat-expansion-panel>
-
-      <mat-expansion-panel (opened)="panelOpenState = true"
-                           (closed)="panelOpenState = false">
-        <mat-expansion-panel-header>
-          <mat-panel-title>
-            <mat-icon>account_circle</mat-icon>
-            <div class="title">
-              <span class="name">Partner's Display Name</span>
-              <small *ngIf="!panelOpenState">partners role</small>
-            </div>
-          </mat-panel-title>
-          <mat-panel-description *ngIf="!panelOpenState">
-            <div class="header">
-              <div class="add-space">
-                MOU Status : <span class="name">Signed & Attched</span>
-              </div>
-              <div class="add-space">
-                Partner Agreement Status : <span class="name">Awaiting Signature</span>
-              </div>
-            </div>
-          </mat-panel-description>
-        </mat-expansion-panel-header>
-
-        <form class="partnerForm">
-          <mat-form-field color="accent" class="add-width">
-            <mat-select placeholder="Partner Type">
-              <mat-option *ngFor="let partnerType of partnerTypes" [value]="partnerType.name">
-                {{ partnerType.name }}
-              </mat-option>
-            </mat-select>
-          </mat-form-field>
-          <div class="name">
-            <mat-label class="name">MOU</mat-label>
-          </div>
-          <button input type="file" mat-button color="accent" class="upload-button">
-            UPLOAD
-            <mat-icon>file_upload</mat-icon>
-          </button>
-          <mat-form-field color="accent" class="upload-status">
-            <mat-select placeholder="Status">
-              <mat-option *ngFor="let status of mouAgreementStatuses" [value]="status.name">
-                {{ status.name }}
-              </mat-option>
-            </mat-select>
-          </mat-form-field>
-          <div class="name">
-            <mat-label>Partner Agreement</mat-label>
-          </div>
-          <button input type="file" mat-button color="accent" class="upload-button">
-            UPLOAD
-            <mat-icon>file_upload</mat-icon>
-          </button>
-          <mat-form-field color="accent" class="upload-status">
-            <mat-select placeholder="Status">
-              <mat-option *ngFor="let status of mouAgreementStatuses" [value]="status.name">
-                {{ status.name }}
-              </mat-option>
-            </mat-select>
-          </mat-form-field>
-          <div>
-            <button mat-button color="accent">
-              REMOVE PARTNER
-            </button>
-          </div>
-        </form>
-      </mat-expansion-panel>
-
-      <mat-expansion-panel (opened)="panelOpenState = true"
-                           (closed)="panelOpenState = false">
-        <mat-expansion-panel-header>
-          <mat-panel-title>
-            <mat-icon>account_circle</mat-icon>
-            <div class="title">
-              <span class="name">Partner's Display Name</span>
-              <small *ngIf="!panelOpenState">partners role</small>
-            </div>
-          </mat-panel-title>
-          <mat-panel-description *ngIf="!panelOpenState">
-            <div class="header">
-              <div class="add-space">
-                MOU Status : <span class="name">Signed & Attched</span>
-              </div>
-              <div class="add-space">
-                Partner Agreement Status : <span class="name">Awaiting Signature</span>
-              </div>
-            </div>
-          </mat-panel-description>
-        </mat-expansion-panel-header>
-
-        <form class="partnerForm">
-          <mat-form-field color="accent" class="add-width">
-            <mat-select placeholder="Partner Type">
-              <mat-option *ngFor="let partnerType of partnerTypes" [value]="partnerType.name">
-                {{ partnerType.name }}
-              </mat-option>
-            </mat-select>
-          </mat-form-field>
-          <div class="name">
-            <mat-label class="name">MOU</mat-label>
-          </div>
-          <button input type="file" mat-button color="accent" class="upload-button">
-            UPLOAD
-            <mat-icon>file_upload</mat-icon>
-          </button>
-          <mat-form-field color="accent" class="upload-status">
-            <mat-select placeholder="Status">
-              <mat-option *ngFor="let status of mouAgreementStatuses" [value]="status.name">
-                {{ status.name }}
-              </mat-option>
-            </mat-select>
-          </mat-form-field>
-          <div class="name">
-            <mat-label>Partner Agreement</mat-label>
-          </div>
-          <button input type="file" mat-button color="accent" class="upload-button">
-            UPLOAD
-            <mat-icon>file_upload</mat-icon>
-          </button>
-          <mat-form-field color="accent" class="upload-status">
-            <mat-select placeholder="Status">
-              <mat-option *ngFor="let status of mouAgreementStatuses" [value]="status.name">
-                {{ status.name }}
-              </mat-option>
-            </mat-select>
-          </mat-form-field>
-          <div>
-            <button mat-button color="accent">
-              REMOVE PARTNER
-            </button>
-          </div>
-        </form>
-      </mat-expansion-panel>
-
-      <mat-expansion-panel (opened)="panelOpenState = true"
-                           (closed)="panelOpenState = false">
-        <mat-expansion-panel-header>
-          <mat-panel-title>
-            <mat-icon>account_circle</mat-icon>
-            <div class="title">
-              <span class="name">Partner's Display Name</span>
-              <small *ngIf="!panelOpenState">partners role</small>
-            </div>
-          </mat-panel-title>
-          <mat-panel-description *ngIf="!panelOpenState">
-            <div class="header">
-              <div class="add-space">
-                MOU Status : <span class="name">Signed & Attched</span>
-              </div>
-              <div class="add-space">
-                Partner Agreement Status : <span class="name">Awaiting Signature</span>
-              </div>
-            </div>
-          </mat-panel-description>
-        </mat-expansion-panel-header>
-
-        <form class="partnerForm">
-          <mat-form-field color="accent" class="add-width">
-            <mat-select placeholder="Partner Type">
-              <mat-option *ngFor="let partnerType of partnerTypes" [value]="partnerType.name">
-                {{ partnerType.name }}
-              </mat-option>
-            </mat-select>
-          </mat-form-field>
-          <div class="name">
-            <mat-label class="name">MOU</mat-label>
-          </div>
-          <button mat-button color="accent" class="upload-button">
-            UPLOAD
-            <mat-icon>file_upload</mat-icon>
-          </button>
-          <mat-form-field color="accent" class="upload-status">
-            <mat-select placeholder="Status">
-              <mat-option *ngFor="let status of mouAgreementStatuses" [value]="status.name">
-                {{ status.name }}
-              </mat-option>
-            </mat-select>
-          </mat-form-field>
-          <div class="name">
-            <mat-label>Partner Agreement</mat-label>
-          </div>
-          <button mat-button color="accent" class="upload-button">
-            UPLOAD
-            <mat-icon>file_upload</mat-icon>
-          </button>
-          <mat-form-field color="accent" class="upload-status">
-            <mat-select placeholder="Status">
-              <mat-option *ngFor="let status of mouAgreementStatuses" [value]="status.name">
-                {{ status.name }}
+              <mat-option *ngFor="let status of mouAgreementStatuses" [value]="partnerAgreementStatusToString(status)">
+                {{ partnerAgreementStatusToString(status) }}
               </mat-option>
             </mat-select>
           </mat-form-field>

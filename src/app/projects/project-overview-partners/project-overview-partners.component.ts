@@ -1,4 +1,11 @@
 import { Component, OnInit } from '@angular/core';
+import {
+  Partner,
+  PartnerAgreementStatusList,
+  PartnerAgreementStatusToString,
+  PartnerTypeList,
+  PartnerTypeToString
+} from '../../core/models/partner';
 
 @Component({
   selector: 'app-project-overview-partners',
@@ -8,18 +15,31 @@ import { Component, OnInit } from '@angular/core';
 export class ProjectOverviewPartnersComponent implements OnInit {
 
   panelOpenState = false;
-  partnerTypes = [
-    {id: 1, name: 'Managing'},
-    {id: 2, name: 'Funding'},
-    {id: 3, name: 'Impact'},
-    {id: 4, name: 'Technical'},
-    {id: 5, name: 'Resource'}
+  partnerTypes = PartnerTypeList;
+  mouAgreementStatuses = PartnerAgreementStatusList;
+  partnerTypeToString = PartnerTypeToString;
+  partnerAgreementStatusToString = PartnerAgreementStatusToString;
+  open = false;
+
+  partners: Partner[] = [
+    {
+      id: '1',
+      name: 'Partner - 1'
+    },
+    {
+      id: '2',
+      name: 'Partner - 2'
+    },
+    {
+      id: '3',
+      name: 'Partner - 3'
+    },
+    {
+      id: '4',
+      name: 'Partner - 4'
+    }
   ];
-  mouAgreementStatuses = [
-    {id: 1, name: 'Not Attached'},
-    {id: 2, name: 'Awaiting Signature'},
-    {id: 3, name: 'Signed'}
-  ]
+  openPartner: Partner;
 
   constructor() {
   }
@@ -27,4 +47,22 @@ export class ProjectOverviewPartnersComponent implements OnInit {
   ngOnInit() {
   }
 
+  trackPartnerById(index: number, partner: Partner): string {
+    return partner.id;
+  }
+
+  setOpenPartner(partner: Partner): void {
+    this.openPartner = partner;
+    this.open = true;
+  }
+
+  isCardOpened(partner: Partner): boolean {
+    this.openPartner = this.openPartner || {} as Partner;
+    return partner.id === this.openPartner.id && this.open;
+  }
+
+  setOpenPartnerToNull(): void {
+    this.openPartner = {} as Partner;
+    this.open = false;
+  }
 }
