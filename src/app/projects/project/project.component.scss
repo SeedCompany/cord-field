@@ -7,15 +7,19 @@
 
 mat-toolbar {
   padding-left: 3.6em;
+  z-index: 3;
 }
 
 .mat-tab-nav-bar {
   background-color: mat-background($theme, app-bar);
   overflow: initial;
+  @include mat-elevation(4);
+  z-index: 2;
 }
 
 app-speed-dial {
   position: absolute;
   bottom: -($mat-fab-height / 2);
   right: 24px; // matches tab padding
+  z-index: 1;
 }
