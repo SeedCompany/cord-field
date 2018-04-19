@@ -2,28 +2,21 @@
 
 :host {
   @extend %component-defaults;
-  @include mat-elevation(2);
 }
 
-.mat-form-field {
-  width: 49%;
-}
-
-.language-time-full-width {
-  width: 98.5%;
-}
-
-.language-time-container {
+mat-card, mat-card-content {
   display: flex;
-  margin: 50px;
   flex-direction: column;
 }
 
 .date-container {
-  flex-direction: row;
+  display: flex;
 }
 
-.hidden {
-  visibility: hidden;
-}
+mat-form-field {
+  flex: 1;
 
+  & + & {
+    margin-left: 24px;
+  }
+}
