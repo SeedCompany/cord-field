@@ -2,4 +2,8 @@
 
 :host {
   @extend %component-defaults;
+
+  > * {
+    margin-bottom: 24px;
+  }
 }
