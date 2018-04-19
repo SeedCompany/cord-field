@@ -42,6 +42,7 @@ body {
   &.row-hover:hover {
     // TODO CF2-200 Define via theme variable. It isn't defined by material library.
     background-color: map-get($mat-grey, 200);
+    cursor: pointer;
   }
 }
 
