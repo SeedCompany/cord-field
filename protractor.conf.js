@@ -8,6 +8,13 @@ exports.config = {
   specs: [
     './e2e/**/*.e2e-spec.ts'
   ],
+  suites: {
+    firsttests: './e2e/*.e2e-spec.ts',
+    projects: './e2e/projects/**/*.e2e-spec.ts',
+    headersearch: './e2e/core/header-search/*.e2e-spec.ts',
+    login: './e2e/core/login/login/*.e2e-spec.ts',
+    requestaccess: './e2e/core/login/request-access/*.e2e-spec.ts'
+  },
   capabilities: {
     'browserName': 'chrome'
   },
