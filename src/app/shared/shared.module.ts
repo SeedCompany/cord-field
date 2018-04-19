@@ -5,6 +5,7 @@ import { SatPopoverModule } from '@ncstate/sat-popover';
 import { MaterialModule } from '../material.module';
 import { AvatarLetterComponent } from './components/avatar-letter/avatar-letter.component';
 import { SearchComponent } from './components/search/search.component';
+import { SnackBarComponent } from './components/snack-bar/snack-bar.component';
 import { SpeedDialItemComponent } from './components/speed-dial-item/speed-dial-item.component';
 import { SpeedDialComponent } from './components/speed-dial/speed-dial.component';
 import { AutofocusDirective } from './directives/autofocus.directive';
@@ -24,6 +25,7 @@ import { AutofocusDirective } from './directives/autofocus.directive';
     MaterialModule,
     ReactiveFormsModule,
     SearchComponent,
+    SnackBarComponent,
     SpeedDialComponent,
     SpeedDialItemComponent
   ],
@@ -32,7 +34,11 @@ import { AutofocusDirective } from './directives/autofocus.directive';
     AvatarLetterComponent,
     SearchComponent,
     SpeedDialComponent,
-    SpeedDialItemComponent
+    SpeedDialItemComponent,
+    SnackBarComponent
+  ],
+  entryComponents: [
+    SnackBarComponent
   ]
 })
 export class SharedModule {
