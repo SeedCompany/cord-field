@@ -8,6 +8,8 @@
 
 app-project-overview-sidebar {
   width: 300px;
+  @include mat-elevation(2);
+  z-index: 1;
 }
 
 .main {
