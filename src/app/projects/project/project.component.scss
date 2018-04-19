@@ -18,4 +18,5 @@ app-speed-dial {
   position: absolute;
   bottom: -($mat-fab-height / 2);
   right: 24px; // matches tab padding
+  z-index: 1;
 }
