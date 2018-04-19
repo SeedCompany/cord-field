@@ -2,10 +2,10 @@ import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatSnackBar, MatSnackBarRef, SimpleSnackBar } from '@angular/material';
 import { Router } from '@angular/router';
+import { SnackBarComponent } from '../../../shared/components/snack-bar/snack-bar.component';
 import { CustomValidators } from '../../models/custom-validators';
 import { IUserRequestAccess } from '../../models/user';
 import { AuthenticationService } from '../../services/authentication.service';
-import { SnackBarComponent } from '../../../shared/components/snack-bar/snack-bar.component';
 
 @Component({
   selector: 'app-request-access',
