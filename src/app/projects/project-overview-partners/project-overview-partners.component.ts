@@ -14,13 +14,11 @@ import {
 })
 export class ProjectOverviewPartnersComponent implements OnInit {
 
-  panelOpenState = false;
   partnerTypes = PartnerTypeList;
   mouAgreementStatuses = PartnerAgreementStatusList;
   partnerTypeToString = PartnerTypeToString;
   partnerAgreementStatusToString = PartnerAgreementStatusToString;
-  open = false;
-
+  isCardOpen = false;
   partners: Partner[] = [
     {
       id: '1',
@@ -39,7 +37,7 @@ export class ProjectOverviewPartnersComponent implements OnInit {
       name: 'Partner - 4'
     }
   ];
-  openPartner: Partner;
+  partner: Partner;
 
   constructor() {
   }
@@ -51,18 +49,21 @@ export class ProjectOverviewPartnersComponent implements OnInit {
     return partner.id;
   }
 
-  setOpenPartner(partner: Partner): void {
-    this.openPartner = partner;
-    this.open = true;
+  setPartner(partner: Partner | undefined): void {
+    if (partner) {
+      this.partner = partner;
+      this.isCardOpen = true;
+    } else {
+      this.partner = {
+        id: '',
+        name: ''
+      };
+      this.isCardOpen = false;
+    }
   }
 
   isCardOpened(partner: Partner): boolean {
-    this.openPartner = this.openPartner || {} as Partner;
-    return partner.id === this.openPartner.id && this.open;
-  }
-
-  setOpenPartnerToNull(): void {
-    this.openPartner = {} as Partner;
-    this.open = false;
+    this.partner = this.partner || {id: '', name: ''};
+    return partner.id === this.partner.id && this.isCardOpen;
   }
 }

@@ -4,8 +4,8 @@
     <mat-accordion>
 
       <mat-expansion-panel *ngFor="let partner of partners;trackBy: trackPartnerById"
-                           (opened)="setOpenPartner(partner)"
-                           (closed)="setOpenPartnerToNull()">
+                           (opened)="setPartner(partner)"
+                           (closed)="setPartner()">
         <mat-expansion-panel-header>
           <mat-panel-title>
             <mat-icon>account_circle</mat-icon>
