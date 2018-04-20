@@ -18,8 +18,10 @@ export class ProjectLanguagesComponent implements OnInit {
   filteredLanguages: Observable<Language[]>;
 
   /** Autofocus search input when it is created */
-  @ViewChild('searchInput') set searchInput(el: ElementRef) {
-    el.nativeElement.focus();
+  @ViewChild('searchInput') set searchInput(el: ElementRef | null) {
+    if (el) {
+      window.setTimeout(() => el.nativeElement.focus(), 0);
+    }
   }
 
   constructor(private languageService: LanguageService) {
