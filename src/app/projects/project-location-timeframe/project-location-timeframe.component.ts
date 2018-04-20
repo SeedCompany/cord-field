@@ -1,8 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatAutocompleteSelectedEvent } from '@angular/material';
-import { map } from 'rxjs/operators/map';
-import { startWith } from 'rxjs/operators/startWith';
 import { Location } from '../../core/models/location';
 
 @Component({
@@ -12,10 +10,10 @@ import { Location } from '../../core/models/location';
 })
 export class ProjectLocationTimeframeComponent implements OnInit {
   form: FormGroup;
-  locationCtrl: FormControl;
+  minDate;
   locationList = [];
   locSelected;
-  locations = [
+  locations: Location[] = [
     {
       area: {
         id: 'someid1',
@@ -31,7 +29,7 @@ export class ProjectLocationTimeframeComponent implements OnInit {
     {
       area: {
         id: 'someid2',
-        name: 'jublee hills'
+        name: 'lanco hills'
       },
       region: {
         id: 'someid2',
@@ -43,7 +41,7 @@ export class ProjectLocationTimeframeComponent implements OnInit {
     {
       area: {
         id: 'someid3',
-        name: 'jublee hills'
+        name: 'hiltop hills'
       },
       region: {
         id: 'someid3',
@@ -55,7 +53,7 @@ export class ProjectLocationTimeframeComponent implements OnInit {
     {
       area: {
         id: 'someid4',
-        name: 'jublee hills'
+        name: 'kesava hills'
       },
       region: {
         id: 'someid4',
@@ -75,12 +73,26 @@ export class ProjectLocationTimeframeComponent implements OnInit {
       startDate: ['', Validators.required],
       endDate: ['', Validators.required]
     });
-    this.locationCtrl = new FormControl();
-    this.locationCtrl.valueChanges
-      .pipe(
-        startWith(''),
-        map(area => area ? this.filterAreas(area) : this.locations.slice())
-      ).subscribe(data => this.locationList = data);
+    this.location.valueChanges
+      .filter(loc => typeof loc === 'string')
+      .startWith('')
+      .do(() => {
+        this.locSelected = null;
+      })
+      .map(loc => loc ? this.filterAreas(loc) : this.locations.slice())
+      .subscribe(data => this.locationList = data);
+
+    this.startDate.valueChanges.subscribe(value => {
+      this.minDate = value;
+    });
+  }
+
+  get location() {
+    return this.form.get('location');
+  }
+
+  get startDate() {
+    return this.form.get('startDate');
   }
 
   trackLocationsById(index: number, location: Location): string {
@@ -92,21 +104,18 @@ export class ProjectLocationTimeframeComponent implements OnInit {
       location.area.name.toLowerCase().indexOf(area.toLowerCase()) === 0);
   }
 
-  optionSelected(event: MatAutocompleteSelectedEvent): void {
+  onLocationSelected(event: MatAutocompleteSelectedEvent): void {
     this.locSelected = event.option.value;
   }
 
   onLocationBlur(): void {
-    if (this.locationCtrl.value) {
-      if (!this.validateArea(this.locationCtrl.value)) {
-        this.locationCtrl.setValue('');
-      }
+    if (!this.locSelected) {
+      this.location.setValue('');
     }
   }
 
-  validateArea(area: string): boolean {
-    const locations = this.locations.filter(location =>
-      location.area.name.toLowerCase() === area.toLowerCase());
-    return locations.length !== 0;
+  showLocationName(loc?: Location): string {
+    return loc ? `${loc.country} | ${loc.area.name} | ${loc.region.name}` : '';
   }
+
 }

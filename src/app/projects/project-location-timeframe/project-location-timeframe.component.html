@@ -6,14 +6,13 @@
              placeholder="Location"
              [matAutocomplete]="auto"
              formControlName="location"
-             (blur)="onLocationBlur()"
-             [formControl]="locationCtrl" />
-      <mat-autocomplete #auto="matAutocomplete" (optionSelected)="optionSelected($event)">
+             (blur)="onLocationBlur()" />
+      <mat-autocomplete #auto="matAutocomplete" (optionSelected)="onLocationSelected($event)" [displayWith]="showLocationName">
         <mat-option *ngFor="let location of locationList; trackBy: trackLocationsById"
-                    [value]="location.area.name">
+                    [value]="location" >
+          <span>{{ location.country }}</span> |
           <span>{{ location.area.name }}</span> |
-          <span>{{ location.region.name }}</span> |
-          <span>{{ location.country }}</span>
+          <span>{{ location.region.name }}</span>
         </mat-option>
       </mat-autocomplete>
     </mat-form-field>
@@ -24,7 +23,7 @@
         <mat-datepicker #startDate></mat-datepicker>
       </mat-form-field>
       <mat-form-field color="accent">
-        <input matInput [matDatepicker]="endDate" placeholder="End Date" formControlName="endDate">
+        <input matInput [min]="minDate" [matDatepicker]="endDate" placeholder="End Date" formControlName="endDate">
         <mat-datepicker-toggle matSuffix [for]="endDate"></mat-datepicker-toggle>
         <mat-datepicker #endDate></mat-datepicker>
       </mat-form-field>
