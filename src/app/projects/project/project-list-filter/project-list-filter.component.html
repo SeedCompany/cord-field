@@ -1,54 +1,45 @@
+<form [formGroup]="form">
 <mat-form-field color="accent">
-  <mat-select placeholder="State" multiple>
-    <mat-option>Active</mat-option>
-    <mat-option>Active 1</mat-option>
-    <mat-option>Active 2</mat-option>
-    <mat-option>In Development</mat-option>
-    <mat-option>In Dev 1</mat-option>
-    <mat-option>In Dev 2</mat-option>
-    <mat-option>Inactive</mat-option>
-    <mat-option>Inactive 2</mat-option>
-
+  <mat-select formControlName="stage" placeholder="Stage" multiple>
     <mat-optgroup label="Active">
-      <mat-option>Active 1</mat-option>
-      <mat-option>Active 2</mat-option>
+      <mat-option [value]="option" *ngFor="let option of getProjectStages(ProjectStatus.Active)">{{option}}
+      </mat-option>
     </mat-optgroup>
     <mat-optgroup label="In Development">
-      <mat-option>In Dev 1</mat-option>
-      <mat-option>In Dev 2</mat-option>
+      <mat-option [value]="option" *ngFor="let option of getProjectStages(ProjectStatus.InDevelopment)">{{option}}
+      </mat-option>
     </mat-optgroup>
     <mat-optgroup label="Inactive">
-      <mat-option>Inactive 1</mat-option>
-      <mat-option>Inactive 2</mat-option>
+      <mat-option [value]="option" *ngFor="let option of getProjectStages(ProjectStatus.Inactive)">{{option}}
+      </mat-option>
     </mat-optgroup>
   </mat-select>
 </mat-form-field>
 
-<mat-form-field color="accent">
-  <mat-select placeholder="Type">
-    <mat-option>Any</mat-option>
-    <mat-option value="translation">Translation</mat-option>
-    <mat-option value="internship">Internship</mat-option>
-  </mat-select>
+  <mat-form-field color="accent">
+    <mat-select placeholder="Type" formControlName="type">
+      <mat-option [value]="option" *ngFor="let option of projectTypeList">{{option}}
+      </mat-option>
+    </mat-select>
 </mat-form-field>
 
-<mat-form-field color="accent">
-  <mat-chip-list #chipList>
-    <mat-chip *ngFor="let language of languages" (remove)="removeLanguage(language)" [selectable]="false">
-      {{ language.name }}
-      <mat-icon matChipRemove>cancel</mat-icon>
-    </mat-chip>
-    <input placeholder="Languages"
-           [matChipInputFor]="chipList"
-           (matChipInputTokenEnd)="addLanguage($event)"
-    >
-  </mat-chip-list>
+  <mat-form-field color="accent">
+    <mat-chip-list #chipList>
+      <mat-chip *ngFor="let language of languages" (remove)="removeLanguage(language)" [selectable]="false">
+        {{ language.name }}
+        <mat-icon matChipRemove>cancel</mat-icon>
+      </mat-chip>
+      <input placeholder="Languages"
+             [matChipInputFor]="chipList"
+             (matChipInputTokenEnd)="addLanguage($event)"
+      >
+    </mat-chip-list>
 </mat-form-field>
 
-<mat-form-field color="accent">
-  <mat-select multiple placeholder="Sensitivity">
-    <mat-option value="1">1</mat-option>
-    <mat-option value="2">2</mat-option>
-    <mat-option value="3">3</mat-option>
-  </mat-select>
+  <mat-form-field color="accent">
+    <mat-select multiple placeholder="Sensitivity" formControlName="sensitivity">
+      <mat-option [value]="option" *ngFor="let option of projectSensitivities">{{option}}
+      </mat-option>
+    </mat-select>
 </mat-form-field>
+</form>

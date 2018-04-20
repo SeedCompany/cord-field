@@ -32,6 +32,9 @@ export function projectStatusToString(value: ProjectStatus): string {
   return mapping[value];
 }
 
+export type ProjectSensitivity = 1 | 2 | 3;
+export const ProjectSensitivities = [1, 2, 3];
+
 export class Project {
 
   id: string;
@@ -40,6 +43,7 @@ export class Project {
   status: ProjectStatus;
   updatedAt: Date;
   languages: string[];
+  sensitivity: ProjectSensitivity;
 
   static fromJson(json: any): Project {
     json = json || {};
@@ -51,6 +55,7 @@ export class Project {
     project.languages = json.languages || [];
     project.updatedAt = json.updatedAt ? new Date(json.updatedAt) : null;
     project.status = json.status || ProjectStatus.Active;
+    project.sensitivity = json.sensitivity || 1;
 
     return project;
   }
@@ -66,3 +71,33 @@ export interface ProjectsWithCount {
   projects: Project[];
   count: number;
 }
+
+
+export function getProjectStages(value: ProjectStatus): string[] {
+  const mapping = {
+    [ProjectStatus.InDevelopment]: [
+      'Concept Development',
+      'Concept Approval',
+      'Plan Development',
+      'Consultant Review',
+      'Budget Development',
+      'Financial Analyst Endorsement',
+      'Proposal Completion',
+      'Project Approval',
+      'Finance Confirmation'],
+    [ProjectStatus.Active]: [
+      'In Progress',
+      'Pending Suspension',
+      'Pending Termination',
+      'Pending Completion',
+      'Completed Active'
+    ],
+    [ProjectStatus.Inactive]: [
+      'Suspended',
+      'Terminated',
+      'Completed Inactive'
+    ]
+  };
+  return mapping[value];
+}
+
