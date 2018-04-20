@@ -1,0 +1,22 @@
+@import "~styles/imports";
+
+:host {
+  @extend %component-defaults;
+}
+
+mat-card, mat-card-content {
+  display: flex;
+  flex-direction: column;
+}
+
+.date-container {
+  display: flex;
+}
+
+mat-form-field {
+  flex: 1;
+
+  & + & {
+    margin-left: 24px;
+  }
+}
