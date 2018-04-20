@@ -49,7 +49,7 @@ export class ProjectOverviewPartnersComponent implements OnInit {
     return partner.id;
   }
 
-  setPartner(partner: Partner | undefined): void {
+  setPartner(partner?: Partner): void {
     if (partner) {
       this.partner = partner;
       this.isCardOpen = true;
