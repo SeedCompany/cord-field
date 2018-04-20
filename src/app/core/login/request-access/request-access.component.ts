@@ -2,7 +2,6 @@ import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatSnackBar, MatSnackBarRef, SimpleSnackBar } from '@angular/material';
 import { Router } from '@angular/router';
-import { SnackBarComponent } from '../../../shared/components/snack-bar/snack-bar.component';
 import { CustomValidators } from '../../models/custom-validators';
 import { IUserRequestAccess } from '../../models/user';
 import { AuthenticationService } from '../../services/authentication.service';
@@ -46,12 +45,6 @@ export class RequestAccessComponent {
 
     try {
       await this.authService.requestAccess(user);
-      this
-        .snackBar
-        .openFromComponent(SnackBarComponent, {
-          data: 'Please activate your account by clicking on the link sent to your email'
-        });
-      this.router.navigate(['/login']);
     } catch (e) {
       this.serverError = e.message;
       this.showSnackBar('Failed to Create Account');
@@ -60,6 +53,14 @@ export class RequestAccessComponent {
       this.submitting = false;
       this.form.enable();
     }
+
+    if (this.snackBarRef) {
+      this.snackBarRef.dismiss();
+    }
+
+    const ref = this.snackBar.open('Please activate your account by clicking on the link sent to your email', 'Close');
+    ref.onAction().subscribe(() => ref.dismiss());
+    this.router.navigate(['/login']);
   }
 
   get email() {
