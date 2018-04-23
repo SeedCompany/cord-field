@@ -1,6 +1,16 @@
 export class Partner {
   id: string;
   name: string;
+
+  static fromJson(json: any): Partner {
+    json = json || {};
+    const partner = new Partner();
+
+    partner.id = json.id || '';
+    partner.name = json.name || 0;
+
+    return partner;
+  }
 }
 
 export enum PartnerType {

@@ -74,10 +74,28 @@
         </form>
       </mat-expansion-panel>
     </mat-accordion>
+    <span class="add-space"></span>
+    <mat-form-field color="accent" *ngIf="addingPartner" class="full-width">
+      <input matInput placeholder="Search Partner"
+             [matAutocomplete]="auto"
+             [formControl]="search"
+             (keyup.esc)="onCancel()"
+      >
+      <button mat-icon-button matSuffix (click)="onCancel()">
+        <mat-icon>close</mat-icon>
+      </button>
+      <mat-autocomplete #auto="matAutocomplete" (optionSelected)="onSelectPartner($event)">
+        <mat-option *ngFor="let partner of filteredPartners | async; trackBy: trackPartnerById" [value]="partner">
+          <div class="option-text">
+            {{ partner.name }}
+          </div>
+        </mat-option>
+      </mat-autocomplete>
+    </mat-form-field>
   </mat-card-content>
 
-  <mat-card-actions>
-    <button mat-button color="accent">
+  <mat-card-actions *ngIf="!addingPartner">
+    <button mat-button color="accent" (click)="addingPartner = true">
       ADD PARTNER
     </button>
   </mat-card-actions>
