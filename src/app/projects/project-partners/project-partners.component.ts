@@ -8,17 +8,16 @@ import {
 } from '../../core/models/partner';
 
 @Component({
-  selector: 'app-project-overview-partners',
-  templateUrl: './project-overview-partners.component.html',
-  styleUrls: ['./project-overview-partners.component.scss']
+  selector: 'app-project-partners',
+  templateUrl: './project-partners.component.html',
+  styleUrls: ['./project-partners.component.scss']
 })
-export class ProjectOverviewPartnersComponent implements OnInit {
+export class ProjectPartnersComponent implements OnInit {
 
   partnerTypes = PartnerTypeList;
   mouAgreementStatuses = PartnerAgreementStatusList;
   partnerTypeToString = PartnerTypeToString;
   partnerAgreementStatusToString = PartnerAgreementStatusToString;
-  isCardOpen = false;
   partners: Partner[] = [
     {
       id: '1',
@@ -37,7 +36,8 @@ export class ProjectOverviewPartnersComponent implements OnInit {
       name: 'Partner - 4'
     }
   ];
-  partner: Partner;
+  activePartner: Partner;
+  activePartnerId: string;
 
   constructor() {
   }
@@ -49,21 +49,22 @@ export class ProjectOverviewPartnersComponent implements OnInit {
     return partner.id;
   }
 
-  setPartner(partner?: Partner): void {
-    if (partner) {
-      this.partner = partner;
-      this.isCardOpen = true;
-    } else {
-      this.partner = {
-        id: '',
-        name: ''
-      };
-      this.isCardOpen = false;
-    }
+  trackByValue(index: Number, value: string): string {
+    return value;
   }
 
-  isCardOpened(partner: Partner): boolean {
-    this.partner = this.partner || {id: '', name: ''};
-    return partner.id === this.partner.id && this.isCardOpen;
+  isCardOpened(id: string): boolean {
+    return id === this.activePartnerId;
+  }
+
+  onCardOpen(partner: Partner): void {
+    this.activePartner = partner;
+    this.activePartnerId = partner.id;
+  }
+
+  onCardClose(id: string): void {
+    if (this.activePartner.id === id) {
+      this.activePartnerId = '';
+    }
   }
 }

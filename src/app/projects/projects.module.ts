@@ -8,9 +8,9 @@ import { ProjectFormsComponent } from './project-forms/project-forms.component';
 import { ProjectLanguagesComponent } from './project-languages/project-languages.component';
 import { ProjectListComponent } from './project-list/project-list.component';
 import { ProjectLocationTimeframeComponent } from './project-location-timeframe/project-location-timeframe.component';
-import { ProjectOverviewPartnersComponent } from './project-overview-partners/project-overview-partners.component';
 import { ProjectOverviewSidebarComponent } from './project-overview-sidebar/project-overview-sidebar.component';
 import { ProjectOverviewComponent } from './project-overview/project-overview.component';
+import { ProjectPartnersComponent } from './project-partners/project-partners.component';
 import { ProjectPeopleComponent } from './project-people/project-people.component';
 import { ProjectPlanComponent } from './project-plan/project-plan.component';
 import { ProjectUpdatesComponent } from './project-updates/project-updates.component';
@@ -31,8 +31,8 @@ import { ProjectsRoutingModule } from './projects-routing.module';
     ProjectFormsComponent,
     ProjectListComponent,
     ProjectOverviewComponent,
-    ProjectOverviewPartnersComponent,
     ProjectOverviewSidebarComponent,
+    ProjectPartnersComponent,
     ProjectPeopleComponent,
     ProjectPlanComponent,
     ProjectUpdatesComponent,
