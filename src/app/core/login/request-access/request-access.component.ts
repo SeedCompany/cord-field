@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { MatSnackBar, MatSnackBarRef, SimpleSnackBar } from '@angular/material';
 import { Router } from '@angular/router';
 import { CustomValidators } from '../../models/custom-validators';
 import { IUserRequestAccess } from '../../models/user';
@@ -14,6 +15,9 @@ export class RequestAccessComponent {
 
   hidePassword = true;
   serverError: string | null;
+  submitting = false;
+
+  private snackBarRef?: MatSnackBarRef<SimpleSnackBar>;
 
   form: FormGroup = this.fb.group({
     firstName: ['', Validators.required],
@@ -26,21 +30,40 @@ export class RequestAccessComponent {
 
   constructor(private fb: FormBuilder,
               private authService: AuthenticationService,
-              private router: Router) {
+              private router: Router,
+              private snackBar: MatSnackBar) {
   }
 
   async validatePasswords() {
     return this.password.value === this.confirmPassword.value ? null : {mismatchedPassword: true};
   }
 
-  onRequestAccess() {
+  async onRequestAccess() {
+    this.submitting = true;
+    this.form.disable();
     const {confirmPassword, ...user} = this.form.value as IUserRequestAccess & { confirmPassword: string };
 
-    this
-      .authService
-      .requestAccess(user)
-      .then(() => this.router.navigate(['/login']))
-      .catch((err) => this.serverError = err.message);
+    try {
+      await this.authService.requestAccess(user);
+    } catch (e) {
+      if (e.message === 'SERVER_ERROR') {
+        this.showSnackBar('Sorry, failed to create your account, Please try again or contact Field Support Services for assistance.');
+      } else {
+        this.serverError = e.message;
+      }
+      return;
+    } finally {
+      this.submitting = false;
+      this.form.enable();
+    }
+
+    if (this.snackBarRef) {
+      this.snackBarRef.dismiss();
+    }
+
+    const ref = this.snackBar.open('Please activate your account by clicking on the link sent to your email', 'Close');
+    ref.onAction().subscribe(() => ref.dismiss());
+    this.router.navigate(['/login']);
   }
 
   get email() {
@@ -53,5 +76,11 @@ export class RequestAccessComponent {
 
   get confirmPassword() {
     return this.form.get('confirmPassword');
+  }
+
+  private showSnackBar(message: string) {
+    this.snackBarRef = this.snackBar.open(message, null, {
+      duration: 300
+    });
   }
 }

@@ -87,6 +87,8 @@ export class AuthenticationService {
           'please verify it by clicking on the link provided in the email you should have received.';
       case 'ACCOUNT_NOT_APPROVED':
         return 'Your account is not approved yet. Please try again or contact Field Support Services for assistance.';
+      case 'SERVER_ERROR':
+        return 'SERVER_ERROR';
     }
   }
 }

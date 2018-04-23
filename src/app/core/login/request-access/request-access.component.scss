@@ -20,3 +20,8 @@ mat-card-actions {
   display: flex;
   justify-content: flex-end;
 }
+
+// Center spinner within button
+mat-progress-spinner {
+  margin: 0 auto;
+}
