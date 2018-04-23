@@ -1,5 +1,9 @@
 @import "~styles/imports";
 
+:host {
+  @extend %component-defaults;
+}
+
 .header {
   display: flex;
 }
