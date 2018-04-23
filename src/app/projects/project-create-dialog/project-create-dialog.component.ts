@@ -60,7 +60,7 @@ export class ProjectCreateDialogComponent implements OnInit {
         this.name.markAsTouched(); // Be sure first error shows immediately instead of waiting for field to blur
 
         if (taken instanceof HttpErrorResponse) {
-          this.showSnackBar('Failed to create project');
+          this.showSnackBar('Failed to check project name availability');
           return;
         }
 
