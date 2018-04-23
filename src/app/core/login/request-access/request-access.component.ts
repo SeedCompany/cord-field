@@ -46,8 +46,10 @@ export class RequestAccessComponent {
     try {
       await this.authService.requestAccess(user);
     } catch (e) {
+      if (e.message === 'SERVER_ERROR') {
+        this.showSnackBar('Sorry, failed to create your account, Please try again or contact Field Support Services for assistance.');
+      }
       this.serverError = e.message;
-      this.showSnackBar('Failed to Create Account');
       return;
     } finally {
       this.submitting = false;
