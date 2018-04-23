@@ -48,8 +48,9 @@ export class RequestAccessComponent {
     } catch (e) {
       if (e.message === 'SERVER_ERROR') {
         this.showSnackBar('Sorry, failed to create your account, Please try again or contact Field Support Services for assistance.');
+      } else {
+        this.serverError = e.message;
       }
-      this.serverError = e.message;
       return;
     } finally {
       this.submitting = false;
