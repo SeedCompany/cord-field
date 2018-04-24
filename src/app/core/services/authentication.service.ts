@@ -74,16 +74,16 @@ export class AuthenticationService {
   private getErrorMessage(response: HttpErrorResponse): string {
     switch (response.error.error) {
       case 'INVALID_PASSWORD':
-        const {warning = '', suggestions = []} = response.error.feedback || {};
-        const feedback = '. ' + warning + '\n' + suggestions.join(' ');
-        return 'Please use a strong password' + feedback;
+        return 'Your password is too simple or is a known, commonly used password.' +
+          'Strong passwords are generally longer; incorporate a mixture of letters, numbers & special characters;' +
+          '& avoid common words. Please enter a new password.';
       case 'INVALID_ORGANIZATION':
         return 'Your account request cannot be completed because the organization you provided is not valid.' +
           ' Please try again or contact Field Support Services for assistance.';
       case 'login_failed':
         return 'Email or password is incorrect';
       case 'email_validation_required':
-        return 'Sorry, our system does not have any account with the credentials you provided. If you already created an account' +
+        return 'Sorry, our system does not have any account with the credentials you provided. If you already created an account, ' +
           'please verify it by clicking on the link provided in the email you should have received.';
       case 'ACCOUNT_NOT_APPROVED':
         return 'Your account is not approved yet. Please try again or contact Field Support Services for assistance.';
