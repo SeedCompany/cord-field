@@ -1,0 +1,24 @@
+<mat-card>
+  <mat-card-title>
+      <span class="icon">
+        <mat-icon svgIcon="cord"></mat-icon>
+      </span>
+    <span>Verifying Email</span>
+  </mat-card-title>
+  <mat-card-content>
+    <p *ngIf="isValidToken; else tokenFailed">
+      Thank you for verifying your email. If your account is approved, you can now login.
+    </p>
+    <ng-template #tokenFailed>
+      Weird, your token is invalid. If you copied the link emailed to you, make sure you got it exactly as it was
+      sent. Please contact Cord Field Support Services.
+    </ng-template>
+    <p *ngIf="serverError">
+      Oh noooooooo! Something went terribly wrong, Please try again later. If the problem continues, please contact Cord
+      Field Support Services.
+    </p>
+  </mat-card-content>
+  <mat-card-actions>
+    <button *ngIf="isValidToken" mat-button color="accent" (click)="onLogin()">Login</button>
+  </mat-card-actions>
+</mat-card>

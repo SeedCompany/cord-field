@@ -1,4 +1,4 @@
-import { HttpErrorResponse } from '@angular/common/http';
+import { HttpErrorResponse, HttpResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import 'rxjs/add/observable/of';
 import 'rxjs/add/operator/map';
@@ -90,5 +90,9 @@ export class AuthenticationService {
       case 'SERVER_ERROR':
         return 'SERVER_ERROR';
     }
+  }
+
+  async confirmEmail(confirmationToken: string): Promise<Object | HttpErrorResponse> {
+    return this.api.get(`/auth/native/confirm/${confirmationToken}`).toPromise();
   }
 }
