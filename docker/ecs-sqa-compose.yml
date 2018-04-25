@@ -48,7 +48,7 @@ services:
   mongo-db:
     image: mongo
     ports:
-      - "37001:27017"
+      - "27017"
     environment:
-      SERVICE_37001_NAME: client-tsco-cord-mongo-sqa
+      SERVICE_27017_NAME: client-tsco-cord-mongo-sqa
     mem_limit: 256000000
