@@ -13,6 +13,9 @@
       Weird, your token is invalid. If you copied the link emailed to you, make sure you got it exactly as it was
       sent. Please contact cord field support services.
     </ng-template>
+    <p *ngIf="serverError">
+      Oh noooooooo! Something went terribly wrong, Please try again later.
+    </p>
   </mat-card-content>
   <mat-card-actions>
     <button *ngIf="isValidToken" mat-button color="accent" (click)="onLogin()">Login</button>

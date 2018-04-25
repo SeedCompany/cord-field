@@ -14,6 +14,7 @@ export class ConfirmEmailComponent implements OnInit {
 
   token: string;
   isValidToken: boolean;
+  serverError: boolean;
 
   constructor(private auth: AuthenticationService,
               private route: ActivatedRoute,
@@ -40,7 +41,10 @@ export class ConfirmEmailComponent implements OnInit {
     } catch (e) {
       if (e.error === 'invalid_token') {
         this.isValidToken = false;
+      } else if (e.error === 'internal_server_error') {
+        this.serverError = true;
       }
+
     }
   }
 
