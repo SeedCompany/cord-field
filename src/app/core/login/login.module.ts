@@ -11,9 +11,9 @@ import { RequestAccessComponent } from './request-access/request-access.componen
     LoginRoutingModule
   ],
   declarations: [
+    ConfirmEmailComponent,
     LoginComponent,
-    RequestAccessComponent,
-    ConfirmEmailComponent
+    RequestAccessComponent
   ]
 })
 export class LoginModule {

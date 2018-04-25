@@ -7,14 +7,15 @@
   </mat-card-title>
   <mat-card-content>
     <p *ngIf="isValidToken; else tokenFailed">
-      Your email is verified succesfully, you can try login to Cord now.
+      Thank you for verifying your email. If your account is approved, you can now login.
     </p>
     <ng-template #tokenFailed>
       Weird, your token is invalid. If you copied the link emailed to you, make sure you got it exactly as it was
-      sent. Please contact cord field support services.
+      sent. Please contact Cord Field Support Services.
     </ng-template>
     <p *ngIf="serverError">
-      Oh noooooooo! Something went terribly wrong, Please try again later.
+      Oh noooooooo! Something went terribly wrong, Please try again later. If the problem continues, please contact Cord
+      Field Support Services.
     </p>
   </mat-card-content>
   <mat-card-actions>
