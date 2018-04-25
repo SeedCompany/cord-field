@@ -158,28 +158,20 @@ export class ProjectListFilterComponent implements OnInit {
   }
 
 
-  // removes the languages based on its name
   onRemoveLanguage(itemName: string): void {
     this.selectedLanguages = this.selectedLanguages.filter((name: string) => name !== itemName);
-    this.chipInput['nativeElement'].blur();
   }
 
-  // adding languages
   onAddLanguage(event: MatAutocompleteSelectedEvent) {
     const language: Language = event.option.value;
-    // if array is empty then push the elements
     if (this.selectedLanguages.length === 0) {
       this.selectedLanguages.push(language.name);
     } else {
-      // if languages already present then languages will not be added to the array
-      // stringfying the array to find names similiar
       const selectLanguageStr = JSON.stringify(this.selectedLanguages);
       if (selectLanguageStr.indexOf(language.name) === -1) {
         this.selectedLanguages.push(language.name);
       }
     }
-    // filter those languages that are selected to avoid duplication
-    this.chipInput['nativeElement'].blur();
     this.chipInput['nativeElement'].value = '';
     this.language.setValue(this.selectedLanguages);
   }

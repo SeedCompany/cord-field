@@ -1,5 +1,5 @@
 <form [formGroup]="form">
-<mat-form-field color="accent">
+  <mat-form-field color="accent">
   <mat-select formControlName="stage" placeholder="Stage" multiple>
     <mat-optgroup label="Active">
       <mat-option [value]="option" *ngFor="let option of getProjectStages(ProjectStatus.Active)">{{option}}
@@ -15,14 +15,12 @@
     </mat-optgroup>
   </mat-select>
 </mat-form-field>
-
   <mat-form-field color="accent">
     <mat-select placeholder="Type" formControlName="type">
       <mat-option [value]="option" *ngFor="let option of projectTypeList">{{option}}
       </mat-option>
     </mat-select>
 </mat-form-field>
-
   <mat-form-field color="accent">
     <mat-chip-list #chipList>
       <mat-chip color="accent" *ngFor="let lang of selectedLanguages" (remove)="onRemoveLanguage(lang)">
@@ -47,7 +45,7 @@
     </mat-chip-list>
 
 </mat-form-field>
-  <mat-form-field>
+  <mat-form-field color="accent">
     <mat-select placeholder="Date Range" formControlName="dateRange">
       <mat-option value="createdAt">Created At
       </mat-option>
@@ -81,7 +79,6 @@
       </mat-option>
     </mat-autocomplete>
   </mat-form-field>
-
   <mat-form-field color="accent">
     <mat-select multiple placeholder="Sensitivity" formControlName="sensitivity">
       <mat-option [value]="option" *ngFor="let option of projectSensitivities">{{option}}
