@@ -1,0 +1,8 @@
+@import "~styles/imports";
+
+:host {
+  @extend %component-defaults;
+  padding: 0 16px;
+  display: flex;
+  flex-direction: column;
+}

@@ -14,6 +14,7 @@ import { ProjectPartnersComponent } from './project-partners/project-partners.co
 import { ProjectPeopleComponent } from './project-people/project-people.component';
 import { ProjectPlanComponent } from './project-plan/project-plan.component';
 import { ProjectUpdatesComponent } from './project-updates/project-updates.component';
+import { ProjectListFilterComponent } from './project/project-list-filter/project-list-filter.component';
 import { ProjectComponent } from './project/project.component';
 import { ProjectsRoutingModule } from './projects-routing.module';
 
@@ -30,6 +31,8 @@ import { ProjectsRoutingModule } from './projects-routing.module';
     ProjectFilesComponent,
     ProjectFormsComponent,
     ProjectListComponent,
+    ProjectLocationTimeframeComponent,
+    ProjectListFilterComponent,
     ProjectOverviewComponent,
     ProjectOverviewSidebarComponent,
     ProjectPartnersComponent,

@@ -1,0 +1,98 @@
+<form [formGroup]="form">
+  <mat-form-field color="accent">
+  <mat-select formControlName="stage" placeholder="Stage" multiple>
+    <mat-optgroup label="Active">
+      <mat-option [value]="status"
+                  *ngFor="let status of getProjectStages(ProjectStatus.Active); trackBy:trackProjectStatus">
+        <ng-container>{{ status }}</ng-container>
+      </mat-option>
+    </mat-optgroup>
+    <mat-optgroup label="In Development">
+      <mat-option [value]="status"
+                  *ngFor="let status of getProjectStages(ProjectStatus.InDevelopment); trackBy:trackProjectStatus">
+        <ng-container>{{ status }}</ng-container>
+      </mat-option>
+    </mat-optgroup>
+    <mat-optgroup label="Inactive">
+      <mat-option [value]="status"
+                  *ngFor="let status of getProjectStages(ProjectStatus.Inactive); trackBy:trackProjectStatus">
+        <ng-container>{{ status }}</ng-container>
+      </mat-option>
+    </mat-optgroup>
+  </mat-select>
+</mat-form-field>
+  <mat-form-field color="accent">
+    <mat-select placeholder="Type" formControlName="type">
+      <mat-option [value]="projectType" *ngFor="let projectType of projectTypeList; trackBy:trackByIndex">
+        <ng-container>{{ projectType }}</ng-container>
+      </mat-option>
+    </mat-select>
+</mat-form-field>
+  <mat-form-field color="accent">
+    <mat-chip-list #chipList>
+      <mat-chip color="accent" *ngFor="let lang of selectedLanguages; trackBy:trackLanguageById"
+                (remove)="onRemoveLanguage(lang)">
+        <ng-container>{{ lang }}</ng-container>
+        <mat-icon matChipRemove>cancel</mat-icon>
+      </mat-chip>
+      <input placeholder="Languages"
+             matInput
+             [matChipInputFor]="chipList"
+             [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+             [matChipInputAddOnBlur]="true"
+             [matAutocomplete]="language"
+             formControlName="language"
+             #chipInput/>
+      <mat-autocomplete
+        #language="matAutocomplete"
+        (optionSelected)="onAddLanguage($event)">
+        <mat-option *ngFor="let language of filteredLanguages | async ; trackBy:trackLanguageById "
+                    [value]="language">
+          <span>{{ language.name }}</span>
+        </mat-option>
+      </mat-autocomplete>
+    </mat-chip-list>
+
+</mat-form-field>
+  <mat-form-field color="accent">
+    <mat-select placeholder="Date Range" formControlName="dateRange">
+      <mat-option value="createdAt">Created At
+      </mat-option>
+      <mat-option value="updatedAt">Modified At
+      </mat-option>
+    </mat-select>
+  </mat-form-field>
+  <mat-form-field color="accent">
+    <input matInput [matDatepicker]="startDate" placeholder="Start Date" formControlName="startDate">
+    <mat-datepicker-toggle matSuffix [for]="startDate"></mat-datepicker-toggle>
+    <mat-datepicker #startDate></mat-datepicker>
+  </mat-form-field>
+  <mat-form-field color="accent">
+    <input matInput [min]="minDate" [matDatepicker]="endDate" placeholder="End Date" formControlName="endDate">
+    <mat-datepicker-toggle matSuffix [for]="endDate"></mat-datepicker-toggle>
+    <mat-datepicker #endDate></mat-datepicker>
+  </mat-form-field>
+  <mat-form-field color="accent">
+    <input matInput
+           placeholder="Location"
+           [matAutocomplete]="auto"
+           formControlName="location"
+           (blur)="onLocationBlur()"/>
+    <mat-autocomplete #auto="matAutocomplete" (optionSelected)="onLocationSelected($event)"
+                      [displayWith]="showLocationName">
+      <mat-option *ngFor="let location of locationList; trackBy: trackLocationsById"
+                  [value]="location">
+        <span>{{ location.country }}</span> |
+        <span>{{ location.area.name }}</span> |
+        <span>{{ location.region.name }}</span>
+      </mat-option>
+    </mat-autocomplete>
+  </mat-form-field>
+  <mat-form-field color="accent">
+    <mat-select multiple placeholder="Sensitivity" formControlName="sensitivity">
+      <mat-option [value]="option" *ngFor="let option of projectSensitivities ; trackBy:trackByIndex">
+        <ng-container>{{ option }}</ng-container>
+      </mat-option>
+    </mat-select>
+</mat-form-field>
+</form>
