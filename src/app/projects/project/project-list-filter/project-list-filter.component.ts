@@ -132,6 +132,18 @@ export class ProjectListFilterComponent implements OnInit {
   trackLocationsById(index: number, location: Location): string {
     return location.id;
   }
+  trackLanguageById(index: number, language: Location): string {
+    return language.id;
+  }
+
+  trackProjectStatus(index: number): number {
+    return index;
+  }
+
+  trackByIndex(index: number): number {
+    return index;
+  }
+
 
   filterAreas(area: string): Location[] {
     return this.locations.filter(location =>

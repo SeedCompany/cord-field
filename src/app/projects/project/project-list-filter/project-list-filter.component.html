@@ -2,29 +2,37 @@
   <mat-form-field color="accent">
   <mat-select formControlName="stage" placeholder="Stage" multiple>
     <mat-optgroup label="Active">
-      <mat-option [value]="option" *ngFor="let option of getProjectStages(ProjectStatus.Active)">{{option}}
+      <mat-option [value]="option"
+                  *ngFor="let option of getProjectStages(ProjectStatus.Active); trackBy:trackProjectStatus">
+        <ng-container>{{ option }}</ng-container>
       </mat-option>
     </mat-optgroup>
     <mat-optgroup label="In Development">
-      <mat-option [value]="option" *ngFor="let option of getProjectStages(ProjectStatus.InDevelopment)">{{option}}
+      <mat-option [value]="option"
+                  *ngFor="let option of getProjectStages(ProjectStatus.InDevelopment); trackBy:trackProjectStatus">
+        <ng-container>{{ option }}</ng-container>
       </mat-option>
     </mat-optgroup>
     <mat-optgroup label="Inactive">
-      <mat-option [value]="option" *ngFor="let option of getProjectStages(ProjectStatus.Inactive)">{{option}}
+      <mat-option [value]="option"
+                  *ngFor="let option of getProjectStages(ProjectStatus.Inactive); trackBy:trackProjectStatus">
+        <ng-container>{{ option }}</ng-container>
       </mat-option>
     </mat-optgroup>
   </mat-select>
 </mat-form-field>
   <mat-form-field color="accent">
     <mat-select placeholder="Type" formControlName="type">
-      <mat-option [value]="option" *ngFor="let option of projectTypeList">{{option}}
+      <mat-option [value]="option" *ngFor="let option of projectTypeList; trackBy:trackByIndex">
+        <ng-container>{{ option }}</ng-container>
       </mat-option>
     </mat-select>
 </mat-form-field>
   <mat-form-field color="accent">
     <mat-chip-list #chipList>
-      <mat-chip color="accent" *ngFor="let lang of selectedLanguages" (remove)="onRemoveLanguage(lang)">
-        {{lang}}
+      <mat-chip color="accent" *ngFor="let lang of selectedLanguages; trackBy:trackLanguageById"
+                (remove)="onRemoveLanguage(lang)">
+        <ng-container>{{ lang }}</ng-container>
         <mat-icon matChipRemove>cancel</mat-icon>
       </mat-chip>
       <input placeholder="Languages"
@@ -38,7 +46,8 @@
       <mat-autocomplete
         #language="matAutocomplete"
         (optionSelected)="onAddLanguage($event)">
-        <mat-option *ngFor="let language of filteredLanguages | async" [value]="language">
+        <mat-option *ngFor="let language of filteredLanguages | async ; trackBy:trackLanguageById "
+                    [value]="language">
           <span>{{ language.name }}</span>
         </mat-option>
       </mat-autocomplete>
@@ -81,7 +90,8 @@
   </mat-form-field>
   <mat-form-field color="accent">
     <mat-select multiple placeholder="Sensitivity" formControlName="sensitivity">
-      <mat-option [value]="option" *ngFor="let option of projectSensitivities">{{option}}
+      <mat-option [value]="option" *ngFor="let option of projectSensitivities ; trackBy:trackByIndex">
+        <ng-container>{{ option }}</ng-container>
       </mat-option>
     </mat-select>
 </mat-form-field>
