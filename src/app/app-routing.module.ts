@@ -18,6 +18,7 @@ const routes: Routes = [
     canActivate: [AuthenticationGuard]
   },
   {path: 'login', loadChildren: 'app/core/login/login.module#LoginModule'},
+  {path: 'confirm-email', redirectTo: 'login/confirm-email'},
   {path: '**', component: NotFoundPageComponent}
 ];
 

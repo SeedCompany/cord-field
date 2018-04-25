@@ -1,5 +1,6 @@
 import { NgModule } from '@angular/core';
 import { SharedModule } from '../../shared/shared.module';
+import { ConfirmEmailComponent } from './confirm-email/confirm-email.component';
 import { LoginRoutingModule } from './login-routing.module';
 import { LoginComponent } from './login/login.component';
 import { RequestAccessComponent } from './request-access/request-access.component';
@@ -11,7 +12,8 @@ import { RequestAccessComponent } from './request-access/request-access.componen
   ],
   declarations: [
     LoginComponent,
-    RequestAccessComponent
+    RequestAccessComponent,
+    ConfirmEmailComponent
   ]
 })
 export class LoginModule {

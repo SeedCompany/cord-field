@@ -91,4 +91,8 @@ export class AuthenticationService {
         return 'SERVER_ERROR';
     }
   }
+
+  async confirmEmail(confirmationToken: string) {
+    return await this.api.get(`/auth/native/confirm/${confirmationToken}`).toPromise();
+  }
 }
