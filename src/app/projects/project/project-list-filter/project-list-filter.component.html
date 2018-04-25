@@ -2,29 +2,29 @@
   <mat-form-field color="accent">
   <mat-select formControlName="stage" placeholder="Stage" multiple>
     <mat-optgroup label="Active">
-      <mat-option [value]="option"
-                  *ngFor="let option of getProjectStages(ProjectStatus.Active); trackBy:trackProjectStatus">
-        <ng-container>{{ option }}</ng-container>
+      <mat-option [value]="status"
+                  *ngFor="let status of getProjectStages(ProjectStatus.Active); trackBy:trackProjectStatus">
+        <ng-container>{{ status }}</ng-container>
       </mat-option>
     </mat-optgroup>
     <mat-optgroup label="In Development">
-      <mat-option [value]="option"
-                  *ngFor="let option of getProjectStages(ProjectStatus.InDevelopment); trackBy:trackProjectStatus">
-        <ng-container>{{ option }}</ng-container>
+      <mat-option [value]="status"
+                  *ngFor="let status of getProjectStages(ProjectStatus.InDevelopment); trackBy:trackProjectStatus">
+        <ng-container>{{ status }}</ng-container>
       </mat-option>
     </mat-optgroup>
     <mat-optgroup label="Inactive">
-      <mat-option [value]="option"
-                  *ngFor="let option of getProjectStages(ProjectStatus.Inactive); trackBy:trackProjectStatus">
-        <ng-container>{{ option }}</ng-container>
+      <mat-option [value]="status"
+                  *ngFor="let status of getProjectStages(ProjectStatus.Inactive); trackBy:trackProjectStatus">
+        <ng-container>{{ status }}</ng-container>
       </mat-option>
     </mat-optgroup>
   </mat-select>
 </mat-form-field>
   <mat-form-field color="accent">
     <mat-select placeholder="Type" formControlName="type">
-      <mat-option [value]="option" *ngFor="let option of projectTypeList; trackBy:trackByIndex">
-        <ng-container>{{ option }}</ng-container>
+      <mat-option [value]="projectType" *ngFor="let projectType of projectTypeList; trackBy:trackByIndex">
+        <ng-container>{{ projectType }}</ng-container>
       </mat-option>
     </mat-select>
 </mat-form-field>
