@@ -1,0 +1,38 @@
+@import "~styles/imports";
+
+:host {
+  @extend %component-defaults;
+}
+
+.toolbar {
+  background: mat-background($theme, card);
+}
+
+.spacer {
+  flex: auto;
+}
+
+.space {
+  margin-right: 10px;
+}
+
+.title {
+  color: mat-color($accent);
+  @include mat-typography-level-to-styles($config, body-2);
+}
+
+.project-role-menu {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.content-align {
+  display: flex;
+  align-items: center;
+}
+
+img {
+  border-radius: 50%;
+  height: 35px;
+}

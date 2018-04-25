@@ -48,7 +48,7 @@ export class ProjectComponent implements OnInit, OnDestroy {
     {path: '/plan', label: 'Plan', saveFab: true},
     {path: '/budget', label: 'Budget', saveFab: true},
     {path: '/files', label: 'Files'},
-    {path: '/people', label: 'People'},
+    {path: '/team', label: 'Team'},
     {path: '/updates', label: 'Updates'}
   ];
 

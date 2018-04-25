@@ -1,4 +1,6 @@
+import { Location } from './location';
 import { ObjectId } from './object-id';
+import { ProjectRole } from './team-member';
 
 
 export interface IUserRequestAccess {
@@ -17,6 +19,9 @@ export class User {
   email: string;
   phone: string;
   mailingAddress?: Address;
+  assignableRoles: AssignableRole[];
+  authRoles: string[];
+  imgSrc: string;
 
   static fromJson(json: any): User {
     json = json || {};
@@ -29,18 +34,15 @@ export class User {
     obj.email = json.email;
     obj.phone = json.phone;
     obj.mailingAddress = Address.fromJson(json.mailingAddress);
+    obj.assignableRoles = AssignableRole.fromJsonArray(json.roles);
+    obj.authRoles = json.authRoles || [];
+    obj.imgSrc = json.imgSrc || '';
 
     return obj;
   }
 
   static fromJsonArray(jsons: any[]): User[] {
-    const results = [];
-    if (Array.isArray(jsons)) {
-      for (const json of jsons) {
-        results.push(User.fromJson(json));
-      }
-    }
-    return results;
+    return jsons.map(json => User.fromJson(json));
   }
 
   get fullName(): string {
@@ -77,16 +79,28 @@ export class Address {
   }
 
   static fromJsonArray(jsons: any[]): Address[] {
-    const results = [];
-    if (!Array.isArray(jsons)) {
-      for (const json of jsons) {
-        results.push(Address.fromJson(json));
-      }
-    }
-    return results;
+    return jsons.map(json => Address.fromJson(json));
   }
 
   constructor() {
   }
 }
 
+export class AssignableRole {
+  role: ProjectRole;
+  location: Location;
+
+  static fromJson(json: any): AssignableRole {
+    json = json || {};
+
+    const assignableRole = new AssignableRole();
+    assignableRole.role = json.role || null;
+    assignableRole.location = Location.fromJson(json.location);
+
+    return assignableRole;
+  }
+
+  static fromJsonArray(jsons: any[]): AssignableRole[] {
+    return jsons.map(json => AssignableRole.fromJson(json));
+  }
+}

@@ -12,8 +12,8 @@ import { ProjectLocationTimeframeComponent } from './project-location-timeframe/
 import { ProjectOverviewSidebarComponent } from './project-overview-sidebar/project-overview-sidebar.component';
 import { ProjectOverviewComponent } from './project-overview/project-overview.component';
 import { ProjectPartnershipsComponent } from './project-partnerships/project-partnerships.component';
-import { ProjectPeopleComponent } from './project-people/project-people.component';
 import { ProjectPlanComponent } from './project-plan/project-plan.component';
+import { ProjectTeamComponent } from './project-team/project-team.component';
 import { ProjectUpdatesComponent } from './project-updates/project-updates.component';
 import { ProjectComponent } from './project/project.component';
 import { ProjectsRoutingModule } from './projects-routing.module';
@@ -36,8 +36,8 @@ import { ProjectsRoutingModule } from './projects-routing.module';
     ProjectOverviewComponent,
     ProjectOverviewSidebarComponent,
     ProjectPartnershipsComponent,
-    ProjectPeopleComponent,
     ProjectPlanComponent,
+    ProjectTeamComponent,
     ProjectUpdatesComponent,
     ProjectLanguagesComponent,
     ProjectLocationTimeframeComponent

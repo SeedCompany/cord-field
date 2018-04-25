@@ -9,7 +9,7 @@ export interface EnumListEntry<T> {
 export interface GoodEnum<T> {
   values(): T[];
   entries(): EnumList<T>;
-  forUI(value: T): string | null;
+  forUI(value: any): string | null;
   trackEntryBy(index: number, entry: EnumListEntry<T>): T;
   trackValueBy(index: number, value: T): T;
 }

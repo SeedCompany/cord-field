@@ -1,0 +1,54 @@
+<mat-toolbar class="toolbar">
+  <mat-toolbar-row>
+    <h2 class="mat-title">People</h2>
+    <span class="spacer"></span>
+
+    <button mat-icon-button>
+      <mat-icon>filter_list</mat-icon>
+    </button>
+
+    <button mat-icon-button>
+      <mat-icon>person_add</mat-icon>
+    </button>
+  </mat-toolbar-row>
+</mat-toolbar>
+
+<mat-table [dataSource]="dataSource" matSort>
+
+  <ng-container matColumnDef="firstName">
+    <mat-header-cell *matHeaderCellDef mat-sort-header>First Name</mat-header-cell>
+    <mat-cell *matCellDef="let people" class="title content-align">
+      <img [src]="people.user.imgSrc" class="space">
+      {{ people.user.firstName }}
+    </mat-cell>
+  </ng-container>
+
+
+  <ng-container matColumnDef="lastName">
+    <mat-header-cell *matHeaderCellDef mat-sort-header>Last Name</mat-header-cell>
+    <mat-cell *matCellDef="let people" class="title">{{ people.user.lastName }}
+    </mat-cell>
+  </ng-container>
+
+  <ng-container matColumnDef="updatedAt">
+    <mat-header-cell *matHeaderCellDef mat-sort-header>Date Added</mat-header-cell>
+    <mat-cell *matCellDef="let people">{{ people.updatedAt | date : 'shortDate' }}</mat-cell>
+  </ng-container>
+
+  <ng-container matColumnDef="projectRole">
+    <mat-header-cell *matHeaderCellDef>Project Role</mat-header-cell>
+    <mat-cell *matCellDef="let people" class="project-role-menu">
+      <span>{{ showRoles(people.role) }}</span>
+      <button mat-icon-button>
+        <mat-icon>more_vert</mat-icon>
+      </button>
+    </mat-cell>
+  </ng-container>
+  <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+  <mat-row *matRowDef="let people; columns: displayedColumns;">
+  </mat-row>
+
+</mat-table>
+<mat-paginator [pageSizeOptions]="pageSizeOptions"
+               [length]="totalCount">
+</mat-paginator>
