@@ -11,9 +11,8 @@ describe('cord-field projects list', () => {
     cordNav.navigateToRoot();
   });
 
-  it('title should match', async(done) => {
+  it('title should match', async () => {
     expect(projectListPage.getTitleInHeader()).toEqual('Cord Field');
-    done();
   });
 });
 

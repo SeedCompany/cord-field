@@ -44,11 +44,11 @@ describe('AuthenticationStorageService', () => {
       await authStoreService.clearTokens();
     });
 
-    it('should store tokens', (done) => {
+    it('should store tokens', (done: DoneFn) => {
       authStoreService
         .saveTokens(mockAuthToken, true)
         .then(async () => {
-          const tokens = await localStore.getItem<AuthenticationToken[]>(AUTH_STORAGE_KEY);
+          const tokens = (await localStore.getItem<AuthenticationToken[]>(AUTH_STORAGE_KEY))!;
           expect(tokens.length).toBe(1);
           expect(tokens[0].issuer).toBe('profile.illuminations.bible');
           done();
@@ -56,10 +56,10 @@ describe('AuthenticationStorageService', () => {
         .catch(done.fail);
     });
 
-    it('should get tokens', async (done) => {
+    it('should get tokens', async (done: DoneFn) => {
       try {
         await authStoreService.saveTokens(mockAuthToken, true);
-        const tokens = await authStoreService.getAuthenticationTokens();
+        const tokens = (await authStoreService.getAuthenticationTokens())!;
         expect(tokens.length).toEqual(1);
         done();
       } catch (err) {
@@ -67,7 +67,7 @@ describe('AuthenticationStorageService', () => {
       }
     });
 
-    it('should clear the tokens', async (done) => {
+    it('should clear the tokens', async (done: DoneFn) => {
       try {
         await authStoreService.saveTokens(mockAuthToken, true);
         await authStoreService.clearTokens();

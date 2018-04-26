@@ -30,7 +30,7 @@ describe('LocationService', () => {
     expect(service).toBeTruthy();
   }));
 
-  it('Get Location Details', done => {
+  it('Get Location Details', (done: DoneFn) => {
     const mockResponse: Location[] = [
       {
         'area': {

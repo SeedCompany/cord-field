@@ -35,7 +35,7 @@ describe('BaseApiService', () => {
     request.verify();
   });
 
-  it('injects base url', (done) => {
+  it('injects base url', (done: DoneFn) => {
     api
       .get('/test')
       .subscribe(done, done.fail);

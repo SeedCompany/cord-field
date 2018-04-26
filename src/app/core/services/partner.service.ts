@@ -24,7 +24,7 @@ export class PartnerService {
   ];
 
   search(term: string): Observable<Partner[]> {
-    const filter = partner => partner.name.toLowerCase().includes(term.toLowerCase());
+    const filter = (partner: Partner) => partner.name.toLowerCase().includes(term.toLowerCase());
 
     return Observable.of(this.partners.filter(filter));
   }

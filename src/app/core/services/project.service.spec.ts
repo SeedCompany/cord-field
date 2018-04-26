@@ -31,7 +31,7 @@ describe('ProjectService', () => {
     expect(service).toBeTruthy();
   }));
 
-  it('should get a project by id', done => {
+  it('should get a project by id', (done: DoneFn) => {
     const id = '5acbba0c70db6a1781ece783';
     const url = `${testBaseUrl}/projects/${id}`;
     const mockResponse = {
@@ -65,7 +65,7 @@ describe('ProjectService', () => {
     httpMockService.verify();
   });
 
-  it('should get project list', done => {
+  it('should get project list', (done: DoneFn) => {
 
     const sort = 'updatedAt';
     const skip = 0;
@@ -108,7 +108,7 @@ describe('ProjectService', () => {
 
   });
 
-  it('check existing project name availability', done => {
+  it('check existing project name availability', (done: DoneFn) => {
     const mockResponse = {status: false};
     const isProjectNameUrl = `${testBaseUrl}/projects/exists?name=Elhomwe Bible (395)`;
     projectService
@@ -126,7 +126,7 @@ describe('ProjectService', () => {
 
   });
 
-  it('create project', done => {
+  it('create project', (done: DoneFn) => {
     const project: ProjectCreationResult = {
       'name': 'newProject',
       'type': ProjectType.Internship

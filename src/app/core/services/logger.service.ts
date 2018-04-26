@@ -26,10 +26,10 @@ export class LoggerService {
     }
 
     const logLevel = (environment.debug || {} as any).level;
-    this.logLevel = LogLevel[logLevel || 'warn'] as any;
+    this.logLevel = (LogLevel as any)[logLevel || 'warn'];
 
     if (this.logLevel === undefined) {
-      const values = [];
+      const values: string[] = [];
       Object.keys(LogLevel).forEach((key) => values.push(key));
       // tslint:disable-next-line
       console.log(`[error] logging system set to invalid log level (${logLevel}). Valid values are: ` +
@@ -38,7 +38,7 @@ export class LoggerService {
     }
   }
 
-  debug(msg: string | object, ...parts) {
+  debug(msg: string | object, ...parts: any[]) {
     if (this.logLevel > LogLevel.debug) {
       return;
     }
@@ -47,7 +47,7 @@ export class LoggerService {
     console.log(`[debug] ${msg}`, ...parts);
   }
 
-  debugJson(obj: any, msg?: string, ...parts) {
+  debugJson(obj: any, msg?: string, ...parts: any[]) {
     if (this.logLevel > LogLevel.debug) {
       return;
     }
@@ -127,24 +127,24 @@ export class LoggerService {
     this.logApiCall(method, path, source, body);
   }
 
-  info(msg, ...parts) {
+  info(msg: string, ...parts: any[]) {
     if (this.logLevel > LogLevel.info) {
       return;
     }
 
     // tslint:disable-next-line:no-console
-    console.log(`[info] ${msg}`, ...msg);
+    console.log(`[info] ${msg}`, ...parts);
   }
 
-  warn(msg, ...parts) {
+  warn(msg: string, ...parts: any[]) {
     if (this.logLevel > LogLevel.warn) {
       return;
     }
     // tslint:disable-next-line:no-console
-    console.log(`[warn] ${msg}`, ...msg);
+    console.log(`[warn] ${msg}`, ...parts);
   }
 
-  error(err: Error | Response, msg?: string, ...parts) {
+  error(err: Error | Response, msg?: string, ...parts: any[]) {
     let message: string;
 
     if (err instanceof Response) {
@@ -164,19 +164,19 @@ export class LoggerService {
 
     // tslint:disable-next-line:no-console
     console.log(message, ...parts);
-    this.ga.error(message);
+    this.ga!.error(message);
   }
 
   private logApiCall(method: string, path: string, source: any, body: any) {
     const apiCalls = (environment.debug || {} as any).apiCalls;
-    const noBody = (environment.debug || {} as any).noBody;
+    const noBody: string | string[] | null = (environment.debug || {} as any).noBody;
 
     if (!apiCalls) {
       return;
     }
 
-    const matches = (typeof path === 'string') ? endpointRegex.exec(path) : '';
-    const rawEndpoint = ((matches || []).length > 1) ? matches[1] : '';
+    const matches = (typeof path === 'string') ? endpointRegex.exec(path) : null;
+    const rawEndpoint = ((matches || []).length > 1) ? matches![1] : '';
     const endPoint = rawEndpoint.split('?')[0];
 
     if (apiCalls !== '*' && !(Array.isArray(apiCalls) && apiCalls.indexOf(endPoint) > -1)) {
@@ -191,7 +191,10 @@ export class LoggerService {
 
     let json = '{suppressed by debug config}';
 
-    if (!noBody || (noBody !== '*' && (Array.isArray(noBody) && noBody.indexOf(endPoint) === -1))) {
+    if (!noBody || (
+      (typeof noBody === 'string' && noBody !== '*') &&
+      (Array.isArray(noBody) && (noBody as string[]).indexOf(endPoint) === -1)
+    )) {
       try {
         json = body ? JSON.stringify(body, null, 2) : body;
       } catch (err) {

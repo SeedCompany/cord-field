@@ -7,7 +7,7 @@ describe('cord-field header search', () => {
     headerSearch = new HeaderSearch();
   });
 
-  it('click search icon and enter text', async(done) => {
+  it('click search icon and enter text', async () => {
     headerSearch.navigateTo();
     const button = headerSearch.getSearchIcon();
     await button.isEnabled();
@@ -15,7 +15,6 @@ describe('cord-field header search', () => {
     const searchInput = headerSearch.getSearchInput();
     await searchInput.isDisplayed();
     await searchInput.sendKeys('type something to search..........00000000..........=+=+=..................searcj searh learn to spell...');
-    done();
   });
 });
 

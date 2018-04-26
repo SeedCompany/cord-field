@@ -2,6 +2,7 @@ import { TestBed } from '@angular/core/testing';
 import { Observable } from 'rxjs/Observable';
 import { CoreModule } from '../core.module';
 import {
+  BaseStorageService,
   LocalStorageService,
   SessionStorageService
 } from './storage.service';
@@ -9,12 +10,13 @@ import {
 describe('StorageService', () => {
 
   let store: {
+    [key: string]: BaseStorageService<any>;
     local: LocalStorageService;
     session: SessionStorageService;
   };
-  let stores;
+  let stores: string[];
 
-  beforeEach(async (done) => {
+  beforeEach(async (done: DoneFn) => {
     TestBed
       .configureTestingModule({
         imports: [
@@ -38,7 +40,7 @@ describe('StorageService', () => {
       .subscribe(done, done.fail);
   });
 
-  afterEach((done) => {
+  afterEach((done: DoneFn) => {
     Observable
       .forkJoin([
         store.local.clear(),
@@ -47,7 +49,7 @@ describe('StorageService', () => {
       .subscribe(done, done.fail);
   });
 
-  it('clear', async (done) => {
+  it('clear', async (done: DoneFn) => {
     try {
 
       for (const type of stores) {
@@ -65,7 +67,7 @@ describe('StorageService', () => {
   });
 
   describe('getItem', () => {
-    it('string', async (done) => {
+    it('string', async (done: DoneFn) => {
       try {
         for (const type of stores) {
           await store[type].setItem('test', 'test value');
@@ -78,7 +80,7 @@ describe('StorageService', () => {
       }
     });
 
-    it('number', async (done) => {
+    it('number', async (done: DoneFn) => {
       try {
         for (const type of stores) {
           await store[type].setItem('test', 777);
@@ -93,11 +95,11 @@ describe('StorageService', () => {
       }
     });
 
-    it('object', async (done) => {
+    it('object', async (done: DoneFn) => {
       try {
         for (const type of stores) {
           await store[type].setItem('test', {test: 'value'});
-          expect((await store[type].getItem('test')).test).toBe('value');
+          expect((await store[type].getItem<{test: string}>('test'))!.test).toBe('value');
         }
         done();
       } catch (err) {
@@ -105,7 +107,7 @@ describe('StorageService', () => {
       }
     });
 
-    it('array', async (done) => {
+    it('array', async (done: DoneFn) => {
       try {
         for (const type of stores) {
           await store[type].setItem('test', [1, 2, 3, 4, 5]);
@@ -118,7 +120,7 @@ describe('StorageService', () => {
     });
   });
 
-  it('getStorageEngineType', async (done) => {
+  it('getStorageEngineType', async (done: DoneFn) => {
     try {
       for (const type of stores) {
         const result = await store[type].getStorageEngineType();
@@ -131,7 +133,7 @@ describe('StorageService', () => {
   });
 
   describe('observe', () => {
-    it('emits when setItem updates an entry', async (done) => {
+    it('emits when setItem updates an entry', async (done: DoneFn) => {
       try {
         for (const type of stores) {
 
@@ -140,7 +142,7 @@ describe('StorageService', () => {
 
           let updatedValue = '';
           const o = store[type]
-            .observe('test')
+            .observe<string>('test')
             .subscribe((update) => updatedValue = update);
 
           await store[type].setItem('test', 'test value updated');
@@ -153,12 +155,12 @@ describe('StorageService', () => {
       }
     });
 
-    it('allows subscription before value set', async (done) => {
+    it('allows subscription before value set', async (done: DoneFn) => {
       try {
         for (const type of stores) {
           let updatedValue = '';
           const o = store[type]
-            .observe('test')
+            .observe<string>('test')
             .subscribe((update) => updatedValue = update);
 
           await store[type].setItem('test', 'test value');
@@ -175,7 +177,7 @@ describe('StorageService', () => {
     });
   });
 
-  it('key', async (done) => {
+  it('key', async (done: DoneFn) => {
     try {
       for (const type of stores) {
         await store[type].setItem('val1', 1);
@@ -193,7 +195,7 @@ describe('StorageService', () => {
     }
   });
 
-  it('length', async (done) => {
+  it('length', async (done: DoneFn) => {
     try {
 
       for (const type of stores) {
@@ -211,7 +213,7 @@ describe('StorageService', () => {
 
   });
 
-  it('removeItem', async (done) => {
+  it('removeItem', async (done: DoneFn) => {
     try {
       for (const type of stores) {
         await store[type].setItem('test', 'test value');
@@ -228,7 +230,7 @@ describe('StorageService', () => {
   });
 
   describe('setItem', () => {
-    it('basic function', async (done) => {
+    it('basic function', async (done: DoneFn) => {
       // developer note: the various tests for setting are taken care of in the getItem section above.
       try {
         for (const type of stores) {
@@ -242,7 +244,7 @@ describe('StorageService', () => {
       }
     });
 
-    it('sets value and cache entry', async (done) => {
+    it('sets value and cache entry', async (done: DoneFn) => {
       try {
         for (const type of stores) {
           await store[type].setItem('test', 'test value');
@@ -261,7 +263,7 @@ describe('StorageService', () => {
   });
 
   describe('cache', () => {
-    it('getItem expires value', async (done) => {
+    it('getItem expires value', async (done: DoneFn) => {
 
       try {
 
@@ -279,7 +281,7 @@ describe('StorageService', () => {
       }
     });
 
-    it('getItem removes expired value', async (done) => {
+    it('getItem removes expired value', async (done: DoneFn) => {
 
       try {
 
@@ -298,7 +300,7 @@ describe('StorageService', () => {
       }
     });
 
-    it('clearExpiredCache', async (done) => {
+    it('clearExpiredCache', async (done: DoneFn) => {
       try {
         for (const type of stores) {
           await store[type].setItem('test', 'some value', 1);
@@ -315,7 +317,7 @@ describe('StorageService', () => {
       }
     });
 
-    it('garbage collects if told to', async (done) => {
+    it('garbage collects if told to', async (done: DoneFn) => {
       try {
         for (const type of stores) {
           await store[type].setItem('test', 'a value', 1, true);
@@ -332,7 +334,7 @@ describe('StorageService', () => {
       }
     });
 
-    it('does not garbage collect by default', async (done) => {
+    it('does not garbage collect by default', async (done: DoneFn) => {
       try {
         for (const type of stores) {
           await store[type].setItem('test', 'a value', 1, false);
@@ -351,7 +353,7 @@ describe('StorageService', () => {
     });
 
     describe('getCachedObservable', () => {
-      it('calls observable if not yet cached', async (done) => {
+      it('calls observable if not yet cached', async (done: DoneFn) => {
         try {
           for (const type of stores) {
             const obs = Observable.of('observable called');
@@ -364,7 +366,7 @@ describe('StorageService', () => {
         }
       });
 
-      it('returns cached value instead of observable', async (done) => {
+      it('returns cached value instead of observable', async (done: DoneFn) => {
         try {
           for (const type of stores) {
 
@@ -378,7 +380,7 @@ describe('StorageService', () => {
         }
       });
 
-      it('returns observable value after cache expiration', async (done) => {
+      it('returns observable value after cache expiration', async (done: DoneFn) => {
         try {
           for (const type of stores) {
             const obs = Observable.of('observable called');

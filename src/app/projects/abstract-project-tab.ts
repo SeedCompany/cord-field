@@ -11,7 +11,7 @@ export abstract class ProjectTabComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
-    this.idSub = this.route.parent.params.subscribe(params => {
+    this.idSub = this.route.parent!.params.subscribe(params => {
       this.id = params.id;
       this.onId(this.id);
     });

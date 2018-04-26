@@ -1,6 +1,6 @@
 import { HttpErrorResponse } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { AbstractControl, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatDialogRef, MatSnackBar, MatSnackBarRef, SimpleSnackBar } from '@angular/material';
 import { Router } from '@angular/router';
 import { ProjectType, projectTypeList, projectTypeToString } from '../../core/models/project';
@@ -68,12 +68,12 @@ export class ProjectCreateDialogComponent implements OnInit {
       });
   }
 
-  get type() {
-    return this.form.get('type');
+  get type(): AbstractControl {
+    return this.form.get('type')!;
   }
 
-  get name() {
-    return this.form.get('name');
+  get name(): AbstractControl {
+    return this.form.get('name')!;
   }
 
   async onCreate() {
@@ -104,12 +104,12 @@ export class ProjectCreateDialogComponent implements OnInit {
     this.dialogRef.close();
   }
 
-  trackByValue(index, value) {
+  trackByValue(index: number, value: any) {
     return value;
   }
 
   private showSnackBar(message: string) {
-    this.snackBarRef = this.snackBar.open(message, null, {
+    this.snackBarRef = this.snackBar.open(message, undefined, {
       duration: 3000
     });
   }

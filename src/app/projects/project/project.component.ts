@@ -62,8 +62,8 @@ export class ProjectComponent implements OnInit, OnDestroy {
       .filter(event => event instanceof NavigationEnd)
       .startWith({}) // for first load
       .switchMap(() => this.route.firstChild ? this.route.firstChild.snapshot.url : [])
-      .map((segment: UrlSegment) => this.tabs.find((tab) => tab.path === '/' + segment.path))
-      .subscribe(tab => this.shouldCurrentTabShowSaveFab = tab.saveFab);
+      .map((segment: UrlSegment) => this.tabs.find((tab) => tab.path === '/' + segment.path)!)
+      .subscribe(tab => this.shouldCurrentTabShowSaveFab = !!tab.saveFab);
   }
 
   ngOnDestroy() {

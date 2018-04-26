@@ -74,12 +74,12 @@ export class ProjectListComponent implements AfterViewInit {
   }
 
   openDialog(): void {
-    const dialogRef = this.dialog.open(ProjectCreateDialogComponent, {
+    this.dialog.open(ProjectCreateDialogComponent, {
       width: '400px'
     });
   }
 
-  trackByValue(index, value) {
+  trackByValue(index: number, value: any) {
     return value;
   }
 }
