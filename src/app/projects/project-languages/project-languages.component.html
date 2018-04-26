@@ -9,7 +9,7 @@
         <app-avatar-letter color="primary" mat-list-avatar>{{ language.name.charAt(0) }}</app-avatar-letter>
         <div mat-line>{{ language.name }}</div>
         <div mat-line>{{ language.ethnologueCode }} | {{ language.rodNumber }} | {{ language.ethnologuePopulation }}</div>
-        <button mat-icon-button (click)="onDelete(language.id)" color="primary">
+        <button mat-icon-button (click)="onDelete(language)" color="primary">
           <mat-icon>close</mat-icon>
         </button>
         <mat-divider [inset]="true"></mat-divider>

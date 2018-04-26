@@ -4,6 +4,7 @@ import { MatAutocompleteSelectedEvent } from '@angular/material/autocomplete/typ
 import { Observable } from 'rxjs/Observable';
 import { Language } from '../../core/models/language';
 import { LanguageService } from '../../core/services/language.service';
+import { ProjectViewStateService } from '../project-view-state.service';
 
 @Component({
   selector: 'app-project-languages',
@@ -24,10 +25,15 @@ export class ProjectLanguagesComponent implements OnInit {
     }
   }
 
-  constructor(private languageService: LanguageService) {
+  constructor(private languageService: LanguageService,
+              private projectViewState: ProjectViewStateService) {
   }
 
   ngOnInit() {
+    this.projectViewState.project.subscribe(project => {
+      this.languages = project.languages;
+    });
+
     this.filteredLanguages = this.search
       .valueChanges
       .filter(term => term.length > 1)
@@ -40,7 +46,9 @@ export class ProjectLanguagesComponent implements OnInit {
   }
 
   onSelectLanguage(event: MatAutocompleteSelectedEvent) {
-    this.languages.push(event.option.value);
+    const language = event.option.value as Language;
+    this.projectViewState.change({languages: {added: language}});
+    this.languages.push(language);
     this.addingLanguage = false;
     this.search.setValue('');
   }
@@ -53,11 +61,9 @@ export class ProjectLanguagesComponent implements OnInit {
     }
   }
 
-  onDelete(id: string) {
-    const index = this.languages.findIndex(language => language.id === id);
-    if (index !== -1) {
-      this.languages.splice(index, 1);
-    }
+  onDelete(language: Language) {
+    this.projectViewState.change({languages: {removed: language}});
+    this.languages = this.languages.filter(current => current.id !== language.id);
   }
 
   trackLanguageById(index: number, language: Language) {
