@@ -6,10 +6,14 @@
              placeholder="Location"
              [matAutocomplete]="auto"
              formControlName="location"
-             (blur)="onLocationBlur()" />
-      <mat-autocomplete #auto="matAutocomplete" (optionSelected)="onLocationSelected($event)" [displayWith]="showLocationName">
+             (blur)="onLocationBlur()"/>
+      <mat-hint align="start" *ngIf="location.pending">Searching...</mat-hint>
+      <mat-error *ngIf="location.errors?.required">Please enter location</mat-error>
+      <mat-error *ngIf="location.errors?.noMatches">No matches found</mat-error>
+      <mat-autocomplete #auto="matAutocomplete" (optionSelected)="onLocationSelected($event)"
+                        [displayWith]="showLocationName">
         <mat-option *ngFor="let location of locationList; trackBy: trackLocationsById"
-                    [value]="location" >
+                    [value]="location">
           <span>{{ location.country }}</span> |
           <span>{{ location.area.name }}</span> |
           <span>{{ location.region.name }}</span>

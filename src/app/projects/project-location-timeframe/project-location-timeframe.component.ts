@@ -1,7 +1,10 @@
+import { HttpErrorResponse } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { MatAutocompleteSelectedEvent } from '@angular/material';
+import { AbstractControl } from '@angular/forms/src/model';
+import { MatAutocompleteSelectedEvent, MatSnackBar, MatSnackBarRef, SimpleSnackBar } from '@angular/material';
 import { Location } from '../../core/models/location';
+import { LocationService } from '../../core/services/location.service';
 
 @Component({
   selector: 'app-project-location-timeframe',
@@ -10,61 +13,12 @@ import { Location } from '../../core/models/location';
 })
 export class ProjectLocationTimeframeComponent implements OnInit {
   form: FormGroup;
-  minDate;
-  locationList = [];
-  locSelected;
-  locations: Location[] = [
-    {
-      area: {
-        id: 'someid1',
-        name: 'jublee hills'
-      },
-      region: {
-        id: 'someid1',
-        name: 'hyderabad'
-      },
-      country: 'india',
-      id: '1'
-    },
-    {
-      area: {
-        id: 'someid2',
-        name: 'lanco hills'
-      },
-      region: {
-        id: 'someid2',
-        name: 'hyderabad'
-      },
-      country: 'india',
-      id: '2'
-    },
-    {
-      area: {
-        id: 'someid3',
-        name: 'hiltop hills'
-      },
-      region: {
-        id: 'someid3',
-        name: 'hyderabad'
-      },
-      country: 'india',
-      id: '3'
-    },
-    {
-      area: {
-        id: 'someid4',
-        name: 'kesava hills'
-      },
-      region: {
-        id: 'someid4',
-        name: 'hyderabad'
-      },
-      country: 'india',
-      id: '4'
-    }
-  ];
+  minDate: Date;
+  locationList: Location[] = [];
+  private locSelected: Location;
+  private snackBarRef?: MatSnackBarRef<SimpleSnackBar>;
 
-  constructor(private formBuilder: FormBuilder) {
+  constructor(private formBuilder: FormBuilder, private locationService: LocationService, private snackBar: MatSnackBar) {
   }
 
   ngOnInit() {
@@ -79,29 +33,55 @@ export class ProjectLocationTimeframeComponent implements OnInit {
       .do(() => {
         this.locSelected = null;
       })
-      .map(loc => loc ? this.filterAreas(loc) : this.locations.slice())
-      .subscribe(data => this.locationList = data);
+      .map(loc => loc.trim())
+      .filter(loc => loc.length > 1)
+      .debounceTime(500)
+      .distinctUntilChanged()
+      .filter(() => !this.location.hasError('required')) // Don't continue if user has already cleared the text
+      .do(() => {
+        this.location.markAsPending();
+        this.locationList.length = 0;
+      })
+      .switchMap(async (term: string) => {
+        try {
+          return await this.locationService.search(term);
+        } catch (e) {
+          return e; // returning error to prevent observable from completing
+        }
+      })
+      .subscribe((locations: Location[] | HttpErrorResponse) => {
+        if (this.location.hasError('required')) {
+          return;
+        }
+
+        if (locations instanceof HttpErrorResponse) {
+          this.showSnackBar('Failed to fetch locations');
+          return;
+        }
+
+        // Be sure first error shows immediately instead of waiting for field to blur
+        this.location.markAsTouched();
+
+        (locations.length > 0)
+          ? this.locationList = locations
+          : this.location.setErrors({noMatches: true});
+      });
 
     this.startDate.valueChanges.subscribe(value => {
       this.minDate = value;
     });
   }
 
-  get location() {
+  get location(): AbstractControl {
     return this.form.get('location');
   }
 
-  get startDate() {
+  get startDate(): AbstractControl {
     return this.form.get('startDate');
   }
 
   trackLocationsById(index: number, location: Location): string {
     return location.id;
-  }
-
-  filterAreas(area: string): Location[] {
-    return this.locations.filter(location =>
-      location.area.name.toLowerCase().indexOf(area.toLowerCase()) === 0);
   }
 
   onLocationSelected(event: MatAutocompleteSelectedEvent): void {
@@ -118,4 +98,9 @@ export class ProjectLocationTimeframeComponent implements OnInit {
     return loc ? `${loc.country} | ${loc.area.name} | ${loc.region.name}` : '';
   }
 
+  private showSnackBar(message: string): void {
+    this.snackBarRef = this.snackBar.open(message, null, {
+      duration: 3000
+    });
+  }
 }
