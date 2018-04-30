@@ -28,7 +28,7 @@ export class ForgotPasswordComponent {
 
   async onResetPassword(): Promise<void> {
     this.submitting = true;
-    await this.auth.forgotPassword(this.form.get('email').value);
+    await this.auth.forgotPassword(this.form.get('email')!.value);
     this.submitting = false;
     this.reset = true;
   }
