@@ -38,9 +38,7 @@ export class ResetPasswordComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.token = this.route.snapshot.queryParams.token
-      ? this.route.snapshot.queryParams.token
-      : '';
+    this.token = this.route.snapshot.queryParams.token || '';
     if (this.token.length === 0) {
       this.router.navigate(['/login']);
     }
@@ -51,11 +49,11 @@ export class ResetPasswordComponent implements OnInit {
   }
 
   get password(): AbstractControl {
-    return this.form.get('password');
+    return this.form.get('password')!;
   }
 
   get confirmPassword(): AbstractControl {
-    return this.form.get('confirmPassword');
+    return this.form.get('confirmPassword')!;
   }
 
   async onResetPassword(): Promise<void> {
