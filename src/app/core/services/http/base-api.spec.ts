@@ -1,9 +1,14 @@
 import { HttpClient } from '@angular/common/http';
-import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
+import {
+  HttpClientTestingModule,
+  HttpTestingController
+} from '@angular/common/http/testing';
 import { Injectable } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
 import { environment } from '../../../../environments/environment';
+import { AuthenticationStorageService } from '../authentication-storage.service';
 import { BaseApiService } from './base-api';
+import { SERVICE_AUDIENCE } from './profile-api.service';
 
 describe('BaseApiService', () => {
   let request: HttpTestingController;
@@ -11,8 +16,8 @@ describe('BaseApiService', () => {
 
   @Injectable()
   class MockApiService extends BaseApiService {
-    constructor(http: HttpClient) {
-      super(http, 'profile.illuminations.bible');
+    constructor(authStorage: AuthenticationStorageService, httpClient: HttpClient) {
+      super(authStorage, 'profile.illuminations.bible', httpClient);
     }
   }
 
