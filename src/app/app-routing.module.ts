@@ -19,6 +19,7 @@ const routes: Routes = [
   },
   {path: 'login', loadChildren: 'app/core/login/login.module#LoginModule'},
   {path: 'confirm-email', redirectTo: 'login/confirm-email'},
+  {path: 'forgot-password', redirectTo: 'login/reset-password'},
   {path: '**', component: NotFoundPageComponent}
 ];
 

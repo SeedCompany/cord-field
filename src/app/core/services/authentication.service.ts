@@ -1,4 +1,4 @@
-import { HttpErrorResponse, HttpResponse } from '@angular/common/http';
+import { HttpErrorResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import 'rxjs/add/observable/of';
 import 'rxjs/add/operator/map';
@@ -89,6 +89,12 @@ export class AuthenticationService {
         return 'Your account is not approved yet. Please try again or contact Field Support Services for assistance.';
       case 'SERVER_ERROR':
         return 'SERVER_ERROR';
+      case 'bad_request':
+        return 'Oh noooooooo! Something went terribly wrong, Please try again later. ' +
+          'If the problem continues, please contact Cord Field Support Services.';
+      case 'invalid_token':
+        return 'Weird, your token is invalid. If you copied the link emailed to you, make sure you got it exactly as it was' +
+          ' sent. Please contact Cord Field Support Services.';
     }
 
     return 'Unknown error';
@@ -96,5 +102,17 @@ export class AuthenticationService {
 
   async confirmEmail(confirmationToken: string): Promise<Object | HttpErrorResponse> {
     return this.api.get(`/auth/native/confirm/${confirmationToken}`).toPromise();
+  }
+
+  async forgotPassword(email: string): Promise<void> {
+    await this.api.put('/auth/native/forgot-password', {email: email, domain: DOMAIN}).toPromise();
+  }
+
+  async resetPassword(confirmationToken: string, newPassword: string): Promise<void> {
+    try {
+      await this.api.put(`/auth/native/reset-password/${confirmationToken}`, {password: newPassword, domain: DOMAIN}).toPromise();
+    } catch (e) {
+      throw new Error(this.getErrorMessage(e));
+    }
   }
 }
