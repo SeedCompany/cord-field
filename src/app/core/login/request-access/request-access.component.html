@@ -46,7 +46,8 @@
       >
         {{ hidePassword ? 'visibility' : 'visibility_off' }}
       </mat-icon>
-      <mat-error>Please enter a password</mat-error>
+      <mat-error *ngIf="password.errors?.required">Please enter a valid password</mat-error>
+      <mat-error *ngIf="password.errors?.passwordMismatch">Passwords should match</mat-error>
     </mat-form-field>
     <mat-form-field color="accent">
       <input
@@ -61,9 +62,8 @@
       >
         {{ hidePassword ? 'visibility' : 'visibility_off' }}
       </mat-icon>
-      <mat-error *ngIf="confirmPassword.hasError('mismatchedPassword')">
-        Passwords should match
-      </mat-error>
+      <mat-error *ngIf="confirmPassword.errors?.required">Please enter a valid password</mat-error>
+      <mat-error *ngIf="confirmPassword.errors?.passwordMismatch">Passwords should match</mat-error>
     </mat-form-field>
     <mat-error *ngIf="serverError">{{ serverError }}</mat-error>
   </mat-card-content>

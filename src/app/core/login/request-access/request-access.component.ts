@@ -25,7 +25,9 @@ export class RequestAccessComponent {
     email: ['', CustomValidators.email],
     organization: ['', Validators.required],
     password: ['', Validators.required],
-    confirmPassword: ['', Validators.required, this.validatePasswords.bind(this)]
+    confirmPassword: ['', Validators.required]
+  }, {
+    validator: this.validateForm.bind(this)
   });
 
   constructor(private fb: FormBuilder,
@@ -34,8 +36,39 @@ export class RequestAccessComponent {
               private snackBar: MatSnackBar) {
   }
 
-  async validatePasswords() {
-    return this.password.value === this.confirmPassword.value ? null : {mismatchedPassword: true};
+  validateForm(): void {
+    // make sure form is initialized
+    if (!this.form) { return; }
+
+    // remove previous validation attempt
+    const passwordErrors = this.password.errors || {};
+    const confirmErrors = this.confirmPassword.errors || {};
+
+    // check for password mismatch
+    if (this.passwordsMatch()) {
+      // if the passwords match, remove the mismatch error
+      delete passwordErrors.passwordMismatch;
+      delete confirmErrors.passwordMismatch;
+    } else if (this.password.value && this.confirmPassword.value) {
+      // if they don't match, and both fields have a value
+      // set the mismatch error
+      passwordErrors.passwordMismatch = true;
+      confirmErrors.passwordMismatch = true;
+    }
+
+    // if there are errors, ensure they are set on the fields
+    // otherwise set them to null so the error is cleared
+    this.setOrClearErrors(this.password, passwordErrors);
+    this.setOrClearErrors(this.confirmPassword, confirmErrors);
+  }
+
+  setOrClearErrors(field: AbstractControl, errors: any): void {
+    const err = (Object.keys(errors).length > 0) ? errors : null;
+    field.setErrors(err);
+  }
+
+  passwordsMatch(): boolean {
+    return this.password.value === this.confirmPassword.value;
   }
 
   async onRequestAccess() {
