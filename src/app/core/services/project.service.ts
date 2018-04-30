@@ -23,7 +23,7 @@ export class ProjectService {
 
     return this
       .ploApi
-      .get(url, {observe: 'response'})
+      .get<Project[]>(url, {observe: 'response'})
       .map((response: HttpResponse<Project[]>) => {
         return {
           projects: Project.fromJsonArray(response.body),
@@ -48,7 +48,7 @@ export class ProjectService {
   }
 
   async createProject(project: ProjectCreationResult): Promise<string> {
-      const proObj = await this.ploApi.post('/projects', project).toPromise();
-      return proObj['id'];
+    const obj = await this.ploApi.post<{id: string}>('/projects', project).toPromise();
+    return obj.id;
   }
 }

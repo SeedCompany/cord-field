@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { AbstractControl, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatSnackBar, MatSnackBarRef, SimpleSnackBar } from '@angular/material';
 import { Router } from '@angular/router';
 import { CustomValidators } from '../../models/custom-validators';
@@ -66,20 +66,20 @@ export class RequestAccessComponent {
     this.router.navigate(['/login']);
   }
 
-  get email() {
-    return this.form.get('email');
+  get email(): AbstractControl {
+    return this.form.get('email')!;
   }
 
-  get password() {
-    return this.form.get('password');
+  get password(): AbstractControl {
+    return this.form.get('password')!;
   }
 
-  get confirmPassword() {
-    return this.form.get('confirmPassword');
+  get confirmPassword(): AbstractControl {
+    return this.form.get('confirmPassword')!;
   }
 
   private showSnackBar(message: string) {
-    this.snackBarRef = this.snackBar.open(message, null, {
+    this.snackBarRef = this.snackBar.open(message, undefined, {
       duration: 300
     });
   }

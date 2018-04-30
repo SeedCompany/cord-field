@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { AbstractControl, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatIconRegistry } from '@angular/material';
 import { DomSanitizer } from '@angular/platform-browser';
 import { Router } from '@angular/router';
@@ -41,11 +41,11 @@ export class LoginComponent {
       .catch(err => this.serverError = err.message);
   }
 
-  get email() {
-    return this.form.get('email');
+  get email(): AbstractControl {
+    return this.form.get('email')!;
   }
 
-  get password() {
-    return this.form.get('password');
+  get password(): AbstractControl {
+    return this.form.get('password')!;
   }
 }

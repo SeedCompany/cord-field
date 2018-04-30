@@ -25,7 +25,7 @@ export class AuthenticationToken {
   }
 
   static fromJsonArray(jsons: any[]): AuthenticationToken[] {
-    const results = [];
+    const results: AuthenticationToken[] = [];
     if (Array.isArray(jsons)) {
       for (const json of jsons) {
         results.push(AuthenticationToken.fromJson(json));

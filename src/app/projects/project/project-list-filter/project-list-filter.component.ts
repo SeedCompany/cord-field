@@ -1,7 +1,7 @@
 import { COMMA, ENTER } from '@angular/cdk/keycodes';
-import { Component, OnInit, ViewChild } from '@angular/core';
-import { FormBuilder, FormGroup } from '@angular/forms';
-import { MatAutocompleteSelectedEvent, MatInput } from '@angular/material';
+import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
+import { AbstractControl, FormBuilder, FormGroup } from '@angular/forms';
+import { MatAutocompleteSelectedEvent } from '@angular/material';
 import { Observable } from 'rxjs/Observable';
 import { map } from 'rxjs/operators/map';
 import { startWith } from 'rxjs/operators/startWith';
@@ -17,14 +17,14 @@ import { LanguageService } from '../../../core/services/language.service';
 })
 export class ProjectListFilterComponent implements OnInit {
 
-  minDate;
+  minDate: Date;
   form: FormGroup;
   readonly getProjectStages = getProjectStages;
   readonly ProjectStatus = ProjectStatus;
   readonly projectTypeList = projectTypeList;
   readonly projectSensitivities = ProjectSensitivities;
-  locationList = [];
-  locSelected;
+  locationList: Location[] = [];
+  locSelected: Location | null;
   locations: Location[] = [
     {
       area: {
@@ -76,25 +76,25 @@ export class ProjectListFilterComponent implements OnInit {
     }
   ];
   selectedLanguages: string[] = [];
-  languagesData;
+  languagesData: Language[];
   filteredLanguages: Observable<any[]>;
   separatorKeysCodes = [ENTER, COMMA];
-  @ViewChild('chipInput') chipInput: MatInput;
+  @ViewChild('chipInput') chipInput: ElementRef;
 
   constructor(private formBuilder: FormBuilder, private languageService: LanguageService) {
   }
 
 
-  get location() {
-    return this.form.get('location');
+  get location(): AbstractControl {
+    return this.form.get('location')!;
   }
 
-  get language() {
-    return this.form.get('language');
+  get language(): AbstractControl {
+    return this.form.get('language')!;
   }
 
-  get startDate() {
-    return this.form.get('startDate');
+  get startDate(): AbstractControl {
+    return this.form.get('startDate')!;
   }
 
   ngOnInit() {
@@ -164,7 +164,7 @@ export class ProjectListFilterComponent implements OnInit {
     return loc ? `${loc.country} | ${loc.area.name} | ${loc.region.name}` : '';
   }
 
-  filterLanguages(language) {
+  filterLanguages(language: string) {
     return this.languagesData
       .filter(item => item.name.toLowerCase().indexOf(language.toLowerCase()) === 0);
   }
@@ -184,7 +184,7 @@ export class ProjectListFilterComponent implements OnInit {
         this.selectedLanguages.push(language.name);
       }
     }
-    this.chipInput['nativeElement'].value = '';
+    this.chipInput.nativeElement.value = '';
     this.language.setValue(this.selectedLanguages);
   }
 }

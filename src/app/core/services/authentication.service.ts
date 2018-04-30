@@ -90,6 +90,8 @@ export class AuthenticationService {
       case 'SERVER_ERROR':
         return 'SERVER_ERROR';
     }
+
+    return 'Unknown error';
   }
 
   async confirmEmail(confirmationToken: string): Promise<Object | HttpErrorResponse> {

@@ -38,7 +38,7 @@ describe('AuthenticationService', () => {
 
   describe('login', () => {
 
-    it('should test login using test user', (done) => {
+    it('should test login using test user', (done: DoneFn) => {
 
       const loginUrl = `${testBaseUrl}/auth/native/login`;
       const mockResponse = {
@@ -69,7 +69,7 @@ describe('AuthenticationService', () => {
     it('login$ observable triggers when successfully logged in', () => {
       const user = testUser;
 
-      let loggedIn;
+      let loggedIn: boolean;
       let order = '';
 
       authService
@@ -95,8 +95,8 @@ describe('AuthenticationService', () => {
   });
 
   describe('logout', () => {
-    it('logout$ observable triggered when loggout out', (done) => {
-      let loggedOut;
+    it('logout$ observable triggered when loggout out', (done: DoneFn) => {
+      let loggedOut: boolean;
       let order = '';
 
       authService

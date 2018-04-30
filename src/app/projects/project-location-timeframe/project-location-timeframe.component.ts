@@ -15,7 +15,7 @@ export class ProjectLocationTimeframeComponent implements OnInit {
   form: FormGroup;
   minDate: Date;
   locationList: Location[] = [];
-  private locSelected: Location;
+  private locSelected: Location | null;
   private snackBarRef?: MatSnackBarRef<SimpleSnackBar>;
 
   constructor(private formBuilder: FormBuilder, private locationService: LocationService, private snackBar: MatSnackBar) {
@@ -73,11 +73,11 @@ export class ProjectLocationTimeframeComponent implements OnInit {
   }
 
   get location(): AbstractControl {
-    return this.form.get('location');
+    return this.form.get('location')!;
   }
 
   get startDate(): AbstractControl {
-    return this.form.get('startDate');
+    return this.form.get('startDate')!;
   }
 
   trackLocationsById(index: number, location: Location): string {
@@ -99,7 +99,7 @@ export class ProjectLocationTimeframeComponent implements OnInit {
   }
 
   private showSnackBar(message: string): void {
-    this.snackBarRef = this.snackBar.open(message, null, {
+    this.snackBarRef = this.snackBar.open(message, undefined, {
       duration: 3000
     });
   }

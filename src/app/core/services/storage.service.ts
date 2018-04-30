@@ -39,12 +39,12 @@ export abstract class BaseStorageService<TStore extends any> {
    * As garbage collected items are set, the reference to their timers are kept here. They are removed
    * upon completion, upon `setItem` with an existing timer being called, or upon `removeItem` being called
    */
-  private gcs = {};
+  private gcs: {[key: string]: number} = {};
   /**
    * As items are added, their Subjects are instantiated to allow Observing of that item via
    * [[StorageService.observe]].
    */
-  private subjects = {};
+  private subjects: {[key: string]: Subject<any>} = {};
   private isLocalForage = false;
 
   constructor(protected store: TStore) {
@@ -85,7 +85,7 @@ export abstract class BaseStorageService<TStore extends any> {
     }
 
     for (const key of keys) {
-      if (this.isCacheKey(key)) {
+      if (key == null || this.isCacheKey(key)) {
         continue;
       }
 
@@ -154,9 +154,9 @@ export abstract class BaseStorageService<TStore extends any> {
   /**
    * Get the name of a key based on its ID.
    * @param {number} keyIndex
-   * @returns {Promise<string>}
+   * @returns {Promise<string | null>}
    */
-  async key(keyIndex: number): Promise<string> {
+  async key(keyIndex: number): Promise<string | null> {
     return await this.store.key(keyIndex);
   }
 
@@ -220,7 +220,7 @@ export abstract class BaseStorageService<TStore extends any> {
 
       const ms = cacheTTL - +(new Date());
       if (ms > 0) {
-        this.gcs[key] = setTimeout(async () => await this.removeItem(key), ms);
+        this.gcs[key] = window.setTimeout(async () => await this.removeItem(key), ms);
       }
     }
 
@@ -267,7 +267,7 @@ export abstract class BaseStorageService<TStore extends any> {
    * @returns {string} returns null if the key is not a key compatible with the storage system (it got into the store
    * by some other means than this library).
    */
-  private getRawKey(key: string): string {
+  private getRawKey(key: string): string | null {
     if (this.isLocalForage) {
       return key;
     }
@@ -300,7 +300,7 @@ export abstract class BaseStorageService<TStore extends any> {
     const keyParts = key.split('/');
     return keyParts.length === 3
       ? keyParts[2].endsWith(`-${this.cachePostfix}`)
-      : null;
+      : false;
   }
 
   /**
@@ -378,7 +378,7 @@ export class SessionStorageService extends BaseStorageService<Storage> {
   }
 
   constructor(browserService: BrowserService) {
-    super(browserService.sessionStorage);
+    super(browserService.sessionStorage!);
   }
 
   async getItem<T>(key: string): Promise<T> {

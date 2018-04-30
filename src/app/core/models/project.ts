@@ -53,7 +53,7 @@ export class Project {
     project.name = json.name || '';
     project.type = json.type || ProjectType.Translation;
     project.languages = json.languages || [];
-    project.updatedAt = json.updatedAt ? new Date(json.updatedAt) : null;
+    project.updatedAt = new Date(json.updatedAt);
     project.status = json.status || ProjectStatus.Active;
     project.sensitivity = json.sensitivity || 1;
 
@@ -62,7 +62,7 @@ export class Project {
 
   static fromJsonArray(projects: any): Project[] {
     projects = projects || [];
-    return projects.map(project => this.fromJson(project));
+    return projects.map(Project.fromJson);
   }
 
 }

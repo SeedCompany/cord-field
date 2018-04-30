@@ -23,23 +23,21 @@ describe('cord-field Login screen', () => {
     expect(button.getText()).toEqual(('SIGN IN'));
   });
 
-  it('find and click the FORGOT EMAIL/PASSWORD? button', async(done) => {
+  it('find and click the FORGOT EMAIL/PASSWORD? button', async () => {
     const button = loginPage.getForgotLoginButton();
     expect(button.getText()).toEqual(('FORGOT EMAIL/PASSWORD?'));
     await button.isEnabled();
     await button.click();
-    done();
   });
 
-  it('find and click the REQUEST ACCESS button', async(done) => {
+  it('find and click the REQUEST ACCESS button', async () => {
     const button = loginPage.getRequestAccessButton();
     expect(button.getText()).toEqual(('REQUEST ACCESS'));
     await button.isEnabled();
     await button.click();
-    done();
   });
 
-  it('enter email and password and click sign in', async(done) => {
+  it('enter email and password and click sign in', async () => {
     loginPage.getFormInputControl('email').sendKeys('rick_maclean@tsco.org');
     loginPage.getFormInputControl('password').sendKeys('test');
     const button = loginPage.getSignInButton();
@@ -53,7 +51,6 @@ describe('cord-field Login screen', () => {
     await cordNav.navigateToPeople();
     await cordNav.navigateToLanguages();
     await cordNav.navigateToOrganizations();
-    done();
   });
 });
 

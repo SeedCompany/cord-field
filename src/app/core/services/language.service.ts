@@ -79,7 +79,7 @@ export class LanguageService {
   ];
 
   search(term: string): Observable<Language[]> {
-    const filter = language => language.name.toLowerCase().includes(term.toLowerCase());
+    const filter = (language: Language) => language.name.toLowerCase().includes(term.toLowerCase());
 
     return Observable.of(this.languages.filter(filter));
   }

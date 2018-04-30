@@ -11,7 +11,7 @@ describe('cord-field Login screen then request access', () => {
     cordNav.navigateToRoot();
   });
 
-  it('find and click the REQUEST ACCESS button', async(done) => {
+  it('find and click the REQUEST ACCESS button', async () => {
     let button = requestAccessPage.getRequestAccessButton();
     expect(button.getText()).toEqual(('REQUEST ACCESS'));
     await button.click();
@@ -28,6 +28,5 @@ describe('cord-field Login screen then request access', () => {
     await button.click();
     button = await requestAccessPage.getRequestAccessButton();
     expect(button.getText()).toEqual(('REQUEST ACCESS'));
-    done();
   });
 });

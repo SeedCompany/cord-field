@@ -11,7 +11,7 @@ if (environment.production) {
   enableProdMode();
 }
 
-if (module['hot']) {
+if (module.hot) {
   hmrBootstrap(module, bootstrap);
 } else {
   document.addEventListener('DOMContentLoaded', bootstrap);

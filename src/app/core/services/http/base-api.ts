@@ -13,7 +13,7 @@ export abstract class BaseApiService extends AbstractHttpClient {
 
   debugApiCallLogger: (path: string, source: any, body: any, method: string) => void;
 
-  constructor(httpClient: HttpClient, serviceName: string) {
+  constructor(httpClient: HttpClient, serviceName: keyof typeof environment.services) {
     super(httpClient);
 
     if (!environment.services || !environment.services[serviceName]) {
@@ -30,7 +30,7 @@ export abstract class BaseApiService extends AbstractHttpClient {
     const path = this.url(url);
 
     if (this.debugApiCallLogger) {
-      this.debugApiCallLogger(method, path, this.constructor, options.body);
+      this.debugApiCallLogger(method, path, this.constructor, options ? options.body : null);
     }
 
     return super.request(method, path, options as any);
