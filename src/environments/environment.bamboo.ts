@@ -4,8 +4,7 @@ export const environment = {
     level: 'debug',
     apiCalls: '*',
     noBody: [
-      '/api/auth/native/login',
-      '/api/sisense/sql'
+      '/api/auth/native/login'
     ]
   },
   services: {
