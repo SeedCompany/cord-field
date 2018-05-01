@@ -19,7 +19,7 @@ export class AuthenticationStorageService {
               private log: LoggerService) {
   }
 
-  async getAuthenticationToken(service: string): Promise<AuthenticationToken> {
+  async getAuthenticationToken(service: string): Promise<AuthenticationToken | null> {
     const tokens = await this.getAuthenticationTokens();
 
     if (tokens) {

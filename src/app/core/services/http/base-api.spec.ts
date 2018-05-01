@@ -1,8 +1,5 @@
 import { HttpClient } from '@angular/common/http';
-import {
-  HttpClientTestingModule,
-  HttpTestingController
-} from '@angular/common/http/testing';
+import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
 import { Injectable } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
 import { environment } from '../../../../environments/environment';
@@ -43,6 +40,7 @@ describe('BaseApiService', () => {
   });
 
   it('injects base url', (done: DoneFn) => {
+
     api
       .get('/test')
       .subscribe(done, done.fail);
