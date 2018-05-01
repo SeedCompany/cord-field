@@ -6,6 +6,7 @@ import {
 import { Injectable } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
 import { environment } from '../../../../environments/environment';
+import { CoreModule } from '../../core.module';
 import { AuthenticationStorageService } from '../authentication-storage.service';
 import { BaseApiService } from './base-api';
 import { SERVICE_AUDIENCE } from './profile-api.service';
@@ -17,7 +18,7 @@ describe('BaseApiService', () => {
   @Injectable()
   class MockApiService extends BaseApiService {
     constructor(authStorage: AuthenticationStorageService, httpClient: HttpClient) {
-      super(authStorage, 'profile.illuminations.bible', httpClient);
+      super(authStorage, SERVICE_AUDIENCE, httpClient);
     }
   }
 
@@ -25,6 +26,7 @@ describe('BaseApiService', () => {
     TestBed
       .configureTestingModule({
         imports: [
+          CoreModule,
           HttpClientTestingModule
         ],
         providers: [

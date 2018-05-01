@@ -4,6 +4,7 @@ import { environment } from '../../../environments/environment';
 import { Location } from '../models/location';
 import { PloApiService } from './http/plo-api.service';
 
+import { CoreModule } from '../core.module';
 import { LocationService } from './location.service';
 
 const testBaseUrl = environment.services['plo.cord.bible'];
@@ -15,6 +16,7 @@ describe('LocationService', () => {
   beforeEach(() => {
     TestBed.configureTestingModule({
       imports: [
+        CoreModule,
         HttpClientTestingModule
       ],
       providers: [

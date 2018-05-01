@@ -18,12 +18,11 @@ const testUser = {
   domain: 'field'
 };
 
-describe('AuthenticationService', () => {
+fdescribe('AuthenticationService', () => {
   beforeEach(() => {
     TestBed.configureTestingModule({
       imports: [
         CoreModule,
-        HttpClientModule,
         HttpClientTestingModule
       ]
     });
@@ -38,29 +37,21 @@ describe('AuthenticationService', () => {
 
   describe('login', () => {
 
-    it('should test login using test user', (done: DoneFn) => {
+    it('should test login using test user', async () => {
 
       const loginUrl = `${testBaseUrl}/auth/native/login`;
-      const mockResponse = {
-        'token': {
-          'profile.illuminations.bible': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6Imdvd3RoYW1Ab2xpdmV0' +
-          'ZWNoLm5ldCIsImRvbWFpbiI6ImZpZWxkIiwiZmlyc3ROYW1lIjoiR293dGhhbSIsImxhc3ROYW1lIjoiUm9kZGEiLCJpZCI6IjVhY' +
-          '2I0NjNkY2YwYmRjMDc4MjgzMGJjNSIsImlzc1NpZyI6IjYzNjJkZjQxNzM2MTE1YzE1YTUwMDUzZDQyM2RlYzQwOTRhYzQzZjFiODR' +
-          'lNjUwM2QxNTIxM2UyNzcwMGZhZWQiLCJpYXQiOjE1MjMyNzI0MzIsImV4cCI6MTUyMzQ0NTIzMiwiYXVkIjoicHJvZmlsZS5pbGx1b' +
-          'WluYXRpb25zLmJpYmxlIiwiaXNzIjoicHJvZmlsZS5pbGx1bWluYXRpb25zLmJpYmxlIiwianRpIjoiOTI1OWM5NzAtZjk1YS00Y2V' +
-          'lLTgyN2QtMzMwYjEwY2JlNTk0In0.6qYGuESle_M1oGpQ1HrbqH4gzEkK96e5r7tvT26cFP4'
+      const mockResponse = [
+        {
+          email: 'gowtham@olivetech.net',
+          key: 'profile.illuminations.bible',
+          domain: 'field'
         }
-      };
+      ];
 
-      authService
-        .login(testUser.email, testUser.password, false)
-        .then((response: AuthenticationToken[]) => {
-          expect(response[0].email).toBe('gowtham@olivetech.net');
-          expect(response[0].key).toBe('profile.illuminations.bible');
-          expect(response[0].domain).toBe('field');
-          done();
-        })
-        .catch(done.fail);
+      const authTokens = await authService.login(testUser.email, testUser.password, false);
+      expect(authTokens[0].email).toBe('gowtham@olivetech.net');
+      expect(authTokens[0].key).toBe('profile.illuminations.bible');
+      expect(authTokens[0].domain).toBe('field');
       httpMockService.expectOne(loginUrl).flush(mockResponse);
       httpMockService.verify();
 
