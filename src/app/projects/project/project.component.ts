@@ -35,7 +35,7 @@ export class ProjectComponent implements OnInit, OnDestroy {
   id: string;
   project: Project;
 
-  dirty = true;
+  dirty = false;
   private shouldCurrentTabShowSaveFab: boolean;
 
   private idSub = Subscription.EMPTY;
@@ -61,6 +61,7 @@ export class ProjectComponent implements OnInit, OnDestroy {
       this.projectViewState.onNewId(params.id);
     });
     this.projectViewState.project.subscribe(project => this.project = project);
+    this.projectViewState.isDirty.subscribe(dirty => this.dirty = dirty);
 
     this.router.events
       .filter(event => event instanceof NavigationEnd)
@@ -83,10 +84,10 @@ export class ProjectComponent implements OnInit, OnDestroy {
   }
 
   onSave() {
-    this.dirty = false;
+    this.projectViewState.save();
   }
 
   onDiscard() {
-    this.dirty = false;
+    this.projectViewState.discard();
   }
 }

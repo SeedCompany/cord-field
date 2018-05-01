@@ -11,10 +11,10 @@
      [active]="rla.isActive"
   >{{ tab.label }}</a>
   <app-speed-dial align="below" icon="save" *ngIf="showSaveFab" [@popInOut]>
-    <app-speed-dial-item tooltip="Discard" color="warn" (click)="onSave()">
+    <app-speed-dial-item tooltip="Discard" color="warn" (click)="onDiscard()">
       <mat-icon>delete</mat-icon>
     </app-speed-dial-item>
-    <app-speed-dial-item tooltip="Save" color="accent" (click)="onDiscard()">
+    <app-speed-dial-item tooltip="Save" color="accent" (click)="onSave()">
       <mat-icon>save</mat-icon>
     </app-speed-dial-item>
   </app-speed-dial>
