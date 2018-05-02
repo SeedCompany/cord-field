@@ -5,7 +5,8 @@ services:
     image: cord-field:tests
     volumes:
       - ../testResults:/opt/build/testResults
-    links:
+    links: # services must be linked to or they will not start during testing
+      - cord-api-plo
       - profile-service
 
   cord-api-plo:
@@ -19,6 +20,8 @@ services:
       ECHO_ENABLED: "true"
       BOOTSTRAP: "qa"
       TRACE_REQ: "true"
+      DUMP_CONFIG: "true"
+      DEBUG: "sapi:*,plo:*"
 
   profile-service:
     image: 103805181946.dkr.ecr.us-west-2.amazonaws.com/client/tsco-ilb-profile:latest

@@ -14,34 +14,41 @@ export const AUTH_STORAGE_KEY = 'auth';
 @Injectable()
 export class AuthenticationStorageService {
 
-  private authTokens: AuthenticationToken[];
-
   constructor(private localStore: LocalStorageService,
               private sessionStore: SessionStorageService,
               private log: LoggerService) {
   }
 
-  async getAuthenticationTokens(): Promise<AuthenticationToken[] | null> {
-    if (!this.authTokens) {
+  async getAuthenticationToken(service: string): Promise<AuthenticationToken | null> {
+    const tokens = await this.getAuthenticationTokens();
 
-      const tokens = await this.localStore.getItem<AuthenticationToken[]>(AUTH_STORAGE_KEY)
-        || await this.sessionStore.getItem<AuthenticationToken[]>(AUTH_STORAGE_KEY);
-
-      if (!tokens) {
-        return null;
+    if (tokens) {
+      for (const token of tokens) {
+        if (token.key === service) {
+          return AuthenticationToken.fromJson(token);
+        }
       }
-      if (!Array.isArray(tokens)) {
-        this.log.info('stored tokens should have been in an array');
-        this.log.info('stored auth tokens are corrupted... deleting them from the store');
-        await this.clearTokens();
-        return null;
-      }
-
-      this.authTokens = tokens;
-
-      return this.authTokens;
     }
-    return this.authTokens;
+
+    return null;
+  }
+
+  async getAuthenticationTokens(): Promise<AuthenticationToken[] | null> {
+
+    const tokens = await this.localStore.getItem<AuthenticationToken[]>(AUTH_STORAGE_KEY)
+      || await this.sessionStore.getItem<AuthenticationToken[]>(AUTH_STORAGE_KEY);
+
+    if (!tokens) {
+      return null;
+    }
+    if (!Array.isArray(tokens)) {
+      this.log.info('stored tokens should have been in an array');
+      this.log.info('stored auth tokens are corrupted... deleting them from the store');
+      await this.clearTokens();
+      return null;
+    }
+
+    return tokens;
   }
 
   async saveTokens(tokens: AuthenticationToken[], remember: boolean): Promise<void> {

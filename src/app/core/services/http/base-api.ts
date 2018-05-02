@@ -1,6 +1,7 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs/Observable';
 import { environment } from '../../../../environments/environment';
+import { AuthenticationStorageService } from '../authentication-storage.service';
 import { AbstractHttpClient, IRequestOptionsWithBody } from './abstract-http-client';
 
 export abstract class BaseApiService extends AbstractHttpClient {
@@ -13,13 +14,15 @@ export abstract class BaseApiService extends AbstractHttpClient {
 
   debugApiCallLogger: (path: string, source: any, body: any, method: string) => void;
 
-  constructor(httpClient: HttpClient, serviceName: keyof typeof environment.services) {
+  constructor(private authStorage: AuthenticationStorageService,
+              private serviceName: string,
+              httpClient: HttpClient) {
     super(httpClient);
 
-    if (!environment.services || !environment.services[serviceName]) {
-      throw new Error(`environment.services is misconfigured for ${this.constructor.name}, expecting key ${serviceName}`);
+    if (!environment.services || !(environment.services as any)[this.serviceName]) {
+      throw new Error(`environment.services is misconfigured for ${this.constructor.name}, expecting key ${this.serviceName}`);
     }
-    this._baseUrl = environment.services[serviceName];
+    this._baseUrl = (environment.services as any)[this.serviceName];
   }
 
   url(endpoint: string): string {

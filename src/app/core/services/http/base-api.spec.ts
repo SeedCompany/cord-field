@@ -3,7 +3,10 @@ import { HttpClientTestingModule, HttpTestingController } from '@angular/common/
 import { Injectable } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
 import { environment } from '../../../../environments/environment';
+import { CoreModule } from '../../core.module';
+import { AuthenticationStorageService } from '../authentication-storage.service';
 import { BaseApiService } from './base-api';
+import { SERVICE_AUDIENCE } from './profile-api.service';
 
 describe('BaseApiService', () => {
   let request: HttpTestingController;
@@ -11,8 +14,8 @@ describe('BaseApiService', () => {
 
   @Injectable()
   class MockApiService extends BaseApiService {
-    constructor(http: HttpClient) {
-      super(http, 'profile.illuminations.bible');
+    constructor(authStorage: AuthenticationStorageService, httpClient: HttpClient) {
+      super(authStorage, SERVICE_AUDIENCE, httpClient);
     }
   }
 
@@ -20,6 +23,7 @@ describe('BaseApiService', () => {
     TestBed
       .configureTestingModule({
         imports: [
+          CoreModule,
           HttpClientTestingModule
         ],
         providers: [
@@ -45,3 +49,6 @@ describe('BaseApiService', () => {
       .flush({});
   });
 });
+
+
+

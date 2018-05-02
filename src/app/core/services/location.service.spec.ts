@@ -1,20 +1,20 @@
 import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
 import { inject, TestBed } from '@angular/core/testing';
 import { environment } from '../../../environments/environment';
+import { CoreModule } from '../core.module';
 import { Location } from '../models/location';
 import { PloApiService } from './http/plo-api.service';
-
 import { LocationService } from './location.service';
 
 const testBaseUrl = environment.services['plo.cord.bible'];
 describe('LocationService', () => {
-
 
   let httpMockService: HttpTestingController;
   let locationService: LocationService;
   beforeEach(() => {
     TestBed.configureTestingModule({
       imports: [
+        CoreModule,
         HttpClientTestingModule
       ],
       providers: [

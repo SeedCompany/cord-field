@@ -2,6 +2,7 @@ import { HttpClientTestingModule, HttpTestingController } from '@angular/common/
 import { inject, TestBed } from '@angular/core/testing';
 import { environment } from '../../../environments/environment';
 import { ProjectCreationResult } from '../../projects/project-create-dialog/project-create-dialog.component';
+import { CoreModule } from '../core.module';
 import { Project, ProjectType } from '../models/project';
 import { PloApiService } from './http/plo-api.service';
 import { ProjectService } from './project.service';
@@ -16,6 +17,7 @@ describe('ProjectService', () => {
   beforeEach(() => {
     TestBed.configureTestingModule({
       imports: [
+        CoreModule,
         HttpClientTestingModule
       ],
       providers: [
