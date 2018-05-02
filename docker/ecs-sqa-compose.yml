@@ -28,6 +28,7 @@ services:
       NODE_ENV: sqa
       SERVICE_8001_NAME: client-tsco-cord-plo-sqa
       MIGRATE: "true"
+      DUMP_CONFIG: "true"
     mem_limit: 256000000
 
   profile-service:

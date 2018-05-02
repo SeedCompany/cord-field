@@ -20,6 +20,7 @@ services:
       NODE_ENV: dev
       SERVICE_8001_NAME: client-tsco-cord-field-uat
       MIGRATE: "true"
+      DUMP_CONFIG: "true"
     mem_limit: 256000000
 
   ilb-profile-service:

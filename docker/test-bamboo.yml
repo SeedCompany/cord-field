@@ -19,6 +19,7 @@ services:
       ECHO_ENABLED: "true"
       BOOTSTRAP: "qa"
       TRACE_REQ: "true"
+      DUMP_CONFIG: "true"
 
   profile-service:
     image: 103805181946.dkr.ecr.us-west-2.amazonaws.com/client/tsco-ilb-profile:latest
