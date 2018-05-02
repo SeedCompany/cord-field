@@ -1,4 +1,3 @@
-import { HttpClientModule } from '@angular/common/http';
 import {
   HttpClientTestingModule,
   HttpTestingController
@@ -8,8 +7,7 @@ import {
   TestBed
 } from '@angular/core/testing';
 import { environment } from '../../../environments/environment';
-import { CoreModule } from '../core.module';
-import { AuthenticationToken } from '../models/authentication-token';
+import { CoreModule, httpInterceptorProviders } from '../core.module';
 import { AuthenticationService } from './authentication.service';
 
 let httpMockService: HttpTestingController;
@@ -41,26 +39,6 @@ describe('AuthenticationService', () => {
   }));
 
   describe('login', () => {
-
-    xit('should test login using test user', async () => {
-
-      const loginUrl = `${testBaseUrl}/auth/native/login`;
-      const mockResponse = [
-        {
-          email: 'gowtham@olivetech.net',
-          key: 'profile.illuminations.bible',
-          domain: 'field'
-        }
-      ];
-
-      const authTokens = await authService.login(testUser.email, testUser.password, false);
-      expect(authTokens[0].email).toBe('gowtham@olivetech.net');
-      expect(authTokens[0].key).toBe('profile.illuminations.bible');
-      expect(authTokens[0].domain).toBe('field');
-      httpMockService.expectOne(loginUrl).flush(mockResponse);
-      httpMockService.verify();
-
-    });
 
     it('login$ observable triggers when successfully logged in', () => {
       const user = testUser;

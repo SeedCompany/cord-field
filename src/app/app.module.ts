@@ -5,7 +5,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { TransferHttpCacheModule } from '@nguniversal/common';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
-import { CoreModule } from './core/core.module';
+import { CoreModule, httpInterceptorProviders } from './core/core.module';
 import './rxjs-imports';
 
 @NgModule({
@@ -18,6 +18,9 @@ import './rxjs-imports';
     HttpClientModule,
     CoreModule,
     AppRoutingModule
+  ],
+  providers: [
+    httpInterceptorProviders
   ]
 })
 export class AppModule {

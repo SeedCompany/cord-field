@@ -40,7 +40,6 @@ describe('BaseApiService', () => {
   });
 
   it('injects base url', (done: DoneFn) => {
-
     api
       .get('/test')
       .subscribe(done, done.fail);
@@ -50,3 +49,6 @@ describe('BaseApiService', () => {
       .flush({});
   });
 });
+
+
+
