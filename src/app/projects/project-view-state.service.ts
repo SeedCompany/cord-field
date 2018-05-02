@@ -13,7 +13,12 @@ type Comparator = (a: any, b: any) => boolean;
 /**
  * Definition of how changes should be processed.
  */
-type ChangeConfig = {[key in keyof Partial<Project>]: Accessor};
+type ChangeConfig = {
+  [key in keyof Partial<Project>]: {
+    accessor: Accessor,
+    toServer?: (val: any) => any
+  }
+};
 
 /**
  * Changes that can be processed with the change() method.
@@ -59,10 +64,19 @@ export class ProjectViewStateService {
   private modified: Changes;
 
   private config: ChangeConfig = {
-    startDate: (date: Date) => date.getTime(),
-    endDate: (date: Date) => date.getTime(),
-    location: (location: Location) => location.id,
-    languages: (language: Language) => language.id
+    startDate: {
+      accessor: (date: Date) => date.getTime()
+    },
+    endDate: {
+      accessor: (date: Date) => date.getTime()
+    },
+    location: {
+      accessor: (location: Location) => location.id,
+      toServer: (location: Location) => location.id
+    },
+    languages: {
+      accessor: (language: Language) => language.id
+    }
   };
 
   constructor(private projectService: ProjectService) {}
@@ -86,7 +100,7 @@ export class ProjectViewStateService {
       if (!(key in this.config)) {
         continue;
       }
-      const comparator = compareNullable(compareBy(this.config[key]));
+      const comparator = compareNullable(compareBy(this.config[key].accessor));
       if (!(key in this.modified) || !comparator(this.modified[key], change)) {
         if (!comparator(project[key], change)) {
           this.modified[key] = change;
@@ -106,6 +120,11 @@ export class ProjectViewStateService {
 
     for (const [key, change] of Object.entries(this.modified) as ChangeEntries) {
       project[key] = change;
+    }
+
+    const modified: Changes = {};
+    for (const [key, change] of Object.entries(this.modified) as ChangeEntries) {
+      modified[key] = this.config[key].toServer ? this.config[key].toServer!(change) : change;
     }
 
     // TODO Call API
