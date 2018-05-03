@@ -3,7 +3,6 @@ import { HttpErrorResponse } from '@angular/common/http';
 import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { AbstractControl, FormBuilder, FormGroup } from '@angular/forms';
 import { MatAutocompleteSelectedEvent, MatSnackBar, MatSnackBarRef, SimpleSnackBar } from '@angular/material';
-import { Observable } from 'rxjs/Observable';
 import { Language } from '../../../core/models/language';
 import { Location } from '../../../core/models/location';
 import {
@@ -43,8 +42,7 @@ export class ProjectListFilterComponent implements OnInit {
   });
 
   selectedLanguages: Language[] = [];
-  languagesData: Language[];
-  filteredLanguages: Observable<any[]>;
+  filteredLanguages: Language[] = [];
 
   filteredLocations: Location[] = [];
   selectedLocations: Location[] = [];
@@ -99,27 +97,54 @@ export class ProjectListFilterComponent implements OnInit {
         }
       })
       .subscribe((locations: Location[] | HttpErrorResponse) => {
-        if (this.location.hasError('required')) {
-          return;
-        }
 
         if (locations instanceof HttpErrorResponse) {
-          this.showSnackBar('Failed to fetch location');
+          this.showSnackBar('Failed to fetch locations');
           return;
         }
         // Be sure first error shows immediately instead of waiting for field to blur
         this.location.markAsTouched();
 
         this.filteredLocations = locations;
-        this.location.setErrors(locations.length > 0 ? {noMatches: true} : null);
+        this.location.setErrors(locations.length === 0 ? {noMatches: true} : null);
       });
 
     this.startDate.valueChanges.subscribe(value => {
       this.minDate = value;
     });
 
-    this.filteredLanguages = this.language.valueChanges
-        .map(input => input ? this.filterLanguages(input.toString()) : this.languagesData.slice());
+    this.language.valueChanges
+      .filter(lang => typeof lang === 'string')
+      .startWith('')
+      .map(lang => lang.trim())
+      .filter(lang => lang.length > 1)
+      .debounceTime(500)
+      .distinctUntilChanged()
+      .do(() => {
+        this.filteredLanguages.length = 0;
+        this.language.markAsPending();
+      })
+      .switchMap(async (term: string) => {
+        try {
+          return await this.languageService.search(term);
+        } catch (e) {
+          return e; // returning error to prevent observable from completing
+        }
+      }).subscribe((languages: Language[] | HttpErrorResponse) => {
+
+
+      if (languages instanceof HttpErrorResponse) {
+        this.showSnackBar('Failed to fetch languages');
+        return;
+      }
+      // Be sure first error shows immediately instead of waiting for field to blur
+      this.language.markAsTouched();
+
+      this.filteredLanguages = languages.filter((value) =>
+        !this.selectedLanguages.filter((v) => value.id === v.id).length);
+
+      this.language.setErrors(languages.length === 0 ? {noMatches: true} : null);
+    });
 
     this.form.valueChanges.subscribe(val => {
     });
@@ -144,7 +169,11 @@ export class ProjectListFilterComponent implements OnInit {
 
 
   onLocationSelected(event: MatAutocompleteSelectedEvent): void {
-    this.selectedLocations.push(event.option.value);
+    const location: Location = event.option.value;
+
+    if (!this.selectedLocations.some(loc => loc.id === location.id)) {
+      this.selectedLocations.push(event.option.value);
+    }
     if (this.locationChipInput) {
       this.locationChipInput.nativeElement.value = '';
     }
@@ -154,26 +183,22 @@ export class ProjectListFilterComponent implements OnInit {
     if (this.locationChipInput) {
       this.locationChipInput.nativeElement.value = '';
     }
+    this.location.setErrors(null);
   }
 
   showLocationName(loc?: Location): string {
     return loc ? `${loc.country} | ${loc.area.name} | ${loc.region.name}` : '';
   }
 
-  filterLanguages(language: string) {
-    return this.languagesData
-      .filter(item => item.name.toLowerCase().indexOf(language.toLowerCase()) === 0);
+  onRemoveLocation(location: Location): void {
+    this.selectedLocations = this.selectedLocations.filter((loc) => loc.id !== location.id);
   }
 
   onRemoveLanguage(language: Language): void {
     this.selectedLanguages = this.selectedLanguages.filter((lang) => lang.id !== language.id);
   }
 
-  onRemoveLocation(location: Location): void {
-    this.selectedLocations = this.selectedLocations.filter((loc) => loc.id !== location.id);
-  }
-
-  onAddLanguage(event: MatAutocompleteSelectedEvent) {
+  onLanguageSelected(event: MatAutocompleteSelectedEvent) {
     const language: Language = event.option.value;
 
     if (!this.selectedLanguages.some(lang => lang.id === language.id)) {
@@ -183,10 +208,14 @@ export class ProjectListFilterComponent implements OnInit {
     if (this.chipInput) {
       this.chipInput.nativeElement.value = '';
     }
-
-    this.language.setValue(this.selectedLanguages);
   }
 
+  onLanguageBlur(): void {
+    if (this.chipInput) {
+      this.chipInput.nativeElement.value = '';
+    }
+    this.language.setErrors(null);
+  }
   private showSnackBar(message: string): void {
     this.snackBarRef = this.snackBar.open(message, undefined, {
       duration: 3000
