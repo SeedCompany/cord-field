@@ -140,8 +140,19 @@ export class Project {
 
 }
 
+export interface ProjectFilter {
+  type?: ProjectType;
+  status?: ProjectStatus[];
+  stage?: ProjectStage[];
+  languages?: Language[];
+  location?: Location[];
+  sensitivity?: ProjectSensitivity[];
+  dateRange?: string;
+  startDate?: Date;
+  endDate?: Date;
+}
+
 export interface ProjectsWithCount {
   projects: Project[];
   count: number;
 }
-
