@@ -84,7 +84,6 @@ export class ProjectListFilterComponent implements OnInit {
       .map(loc => loc.trim())
       .filter(loc => loc.length > 1)
       .debounceTime(500)
-      .distinctUntilChanged()
       .do(() => {
         this.filteredLocations.length = 0;
         this.location.markAsPending();
@@ -105,6 +104,9 @@ export class ProjectListFilterComponent implements OnInit {
         // Be sure first error shows immediately instead of waiting for field to blur
         this.location.markAsTouched();
 
+        const currentIds = this.selectedLocations.map(loc => loc.id);
+        locations = locations.filter(loc => !currentIds.includes(loc.id));
+
         this.filteredLocations = locations;
         this.location.setErrors(locations.length === 0 ? {noMatches: true} : null);
       });
@@ -119,7 +121,6 @@ export class ProjectListFilterComponent implements OnInit {
       .map(lang => lang.trim())
       .filter(lang => lang.length > 1)
       .debounceTime(500)
-      .distinctUntilChanged()
       .do(() => {
         this.filteredLanguages.length = 0;
         this.language.markAsPending();
@@ -140,9 +141,10 @@ export class ProjectListFilterComponent implements OnInit {
       // Be sure first error shows immediately instead of waiting for field to blur
       this.language.markAsTouched();
 
-      this.filteredLanguages = languages.filter((value) =>
-        !this.selectedLanguages.filter((v) => value.id === v.id).length);
+      const currentIds = this.selectedLanguages.map(lang => lang.id);
+      languages = languages.filter(lang => !currentIds.includes(lang.id));
 
+      this.filteredLanguages = languages;
       this.language.setErrors(languages.length === 0 ? {noMatches: true} : null);
     });
 
@@ -173,6 +175,7 @@ export class ProjectListFilterComponent implements OnInit {
 
     if (!this.selectedLocations.some(loc => loc.id === location.id)) {
       this.selectedLocations.push(event.option.value);
+      this.filteredLocations.length = 0;
     }
     if (this.locationChipInput) {
       this.locationChipInput.nativeElement.value = '';
@@ -203,6 +206,7 @@ export class ProjectListFilterComponent implements OnInit {
 
     if (!this.selectedLanguages.some(lang => lang.id === language.id)) {
       this.selectedLanguages.push(language);
+      this.filteredLanguages.length = 0;
     }
 
     if (this.chipInput) {
