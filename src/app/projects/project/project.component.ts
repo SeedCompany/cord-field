@@ -3,7 +3,7 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute, NavigationEnd, Router, UrlSegment } from '@angular/router';
 import { Subscription } from 'rxjs/Subscription';
 import { Project } from '../../core/models/project';
-import { ProjectService } from '../../core/services/project.service';
+import { ProjectViewStateService } from '../project-view-state.service';
 
 interface TabConfig {
   path: string;
@@ -26,13 +26,16 @@ interface TabConfig {
         animate('300ms ease-in-out', style({transform: 'scale(0)', opacity: '0'}))
       ])
     ])
+  ],
+  providers: [
+    ProjectViewStateService
   ]
 })
 export class ProjectComponent implements OnInit, OnDestroy {
   id: string;
-  project = new Project();
+  project: Project;
 
-  dirty = true;
+  dirty = false;
   private shouldCurrentTabShowSaveFab: boolean;
 
   private idSub = Subscription.EMPTY;
@@ -47,7 +50,7 @@ export class ProjectComponent implements OnInit, OnDestroy {
   ];
 
   constructor(
-    private projectService: ProjectService,
+    private projectViewState: ProjectViewStateService,
     private route: ActivatedRoute,
     private router: Router
   ) {}
@@ -55,8 +58,10 @@ export class ProjectComponent implements OnInit, OnDestroy {
   ngOnInit() {
     this.idSub = this.route.params.subscribe(params => {
       this.id = params.id;
-      this.projectService.getProject(this.id).subscribe(project => this.project = project);
+      this.projectViewState.onNewId(params.id);
     });
+    this.projectViewState.project.subscribe(project => this.project = project);
+    this.projectViewState.isDirty.subscribe(dirty => this.dirty = dirty);
 
     this.router.events
       .filter(event => event instanceof NavigationEnd)
@@ -79,10 +84,10 @@ export class ProjectComponent implements OnInit, OnDestroy {
   }
 
   onSave() {
-    this.dirty = false;
+    this.projectViewState.save();
   }
 
   onDiscard() {
-    this.dirty = false;
+    this.projectViewState.discard();
   }
 }

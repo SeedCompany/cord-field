@@ -1,29 +1,15 @@
-import { OnDestroy, OnInit } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
-import { Subscription } from 'rxjs/Subscription';
+import { OnInit } from '@angular/core';
+import { Project } from '../core/models/project';
+import { ProjectViewStateService } from './project-view-state.service';
 
-export abstract class ProjectTabComponent implements OnInit, OnDestroy {
+export abstract class ProjectTabComponent implements OnInit {
 
-  public id: string;
-  private idSub = Subscription.EMPTY;
+  public project: Project;
 
-  constructor(protected route: ActivatedRoute) {
+  constructor(protected projectViewState: ProjectViewStateService) {
   }
 
   ngOnInit() {
-    this.idSub = this.route.parent!.params.subscribe(params => {
-      this.id = params.id;
-      this.onId(this.id);
-    });
-  }
-
-  ngOnDestroy() {
-    this.idSub.unsubscribe();
-  }
-
-  /**
-   * Override this to do logic with project ID.
-   */
-  onId(id: string): void {
+    this.projectViewState.project.subscribe(project => this.project = project);
   }
 }

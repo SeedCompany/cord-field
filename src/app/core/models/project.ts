@@ -1,3 +1,6 @@
+import { Language } from './language';
+import { Location } from './location';
+
 export enum ProjectType {
   Translation = 'translation',
   Internship = 'internship'
@@ -115,9 +118,12 @@ export class Project {
   name: string;
   type: ProjectType;
   status: ProjectStatus;
-  updatedAt: Date;
-  languages: string[];
+  location: Location | null;
+  startDate: Date | null;
+  endDate: Date | null;
+  languages: Language[];
   sensitivity: ProjectSensitivity;
+  updatedAt: Date;
 
   static fromJson(json: any): Project {
     json = json || {};
@@ -126,10 +132,13 @@ export class Project {
     project.id = json.id;
     project.name = json.name || '';
     project.type = json.type || ProjectType.Translation;
-    project.languages = json.languages || [];
-    project.updatedAt = new Date(json.updatedAt);
     project.status = json.status || ProjectStatus.Active;
+    project.location = json.location ? Location.fromJson(json.location) : null;
+    project.startDate = json.startDate ? new Date(json.startDate) : null;
+    project.endDate = json.endDate ? new Date(json.endDate) : null;
+    project.languages = (json.languages || []).map(Language.fromJson);
     project.sensitivity = json.sensitivity || 1;
+    project.updatedAt = new Date(json.updatedAt || 0);
 
     return project;
   }

@@ -5,6 +5,7 @@ import { AbstractControl } from '@angular/forms/src/model';
 import { MatAutocompleteSelectedEvent, MatSnackBar, MatSnackBarRef, SimpleSnackBar } from '@angular/material';
 import { Location } from '../../core/models/location';
 import { LocationService } from '../../core/services/location.service';
+import { ProjectViewStateService } from '../project-view-state.service';
 
 @Component({
   selector: 'app-project-location-timeframe',
@@ -18,7 +19,10 @@ export class ProjectLocationTimeframeComponent implements OnInit {
   private locSelected: Location | null;
   private snackBarRef?: MatSnackBarRef<SimpleSnackBar>;
 
-  constructor(private formBuilder: FormBuilder, private locationService: LocationService, private snackBar: MatSnackBar) {
+  constructor(private formBuilder: FormBuilder,
+              private projectViewState: ProjectViewStateService,
+              private locationService: LocationService,
+              private snackBar: MatSnackBar) {
   }
 
   ngOnInit() {
@@ -27,6 +31,19 @@ export class ProjectLocationTimeframeComponent implements OnInit {
       startDate: ['', Validators.required],
       endDate: ['', Validators.required]
     });
+
+    this.projectViewState.project.subscribe(project => {
+      this.form.reset({
+        location: project.location,
+        startDate: project.startDate,
+        endDate: project.endDate
+      });
+    });
+
+    this.form.valueChanges.subscribe(({startDate, endDate, location}) => {
+      this.projectViewState.change({startDate, endDate});
+    });
+
     this.location.valueChanges
       .filter(loc => typeof loc === 'string')
       .startWith('')
@@ -86,11 +103,13 @@ export class ProjectLocationTimeframeComponent implements OnInit {
 
   onLocationSelected(event: MatAutocompleteSelectedEvent): void {
     this.locSelected = event.option.value;
+    this.projectViewState.change({location: event.option.value});
   }
 
   onLocationBlur(): void {
     if (!this.locSelected) {
       this.location.setValue('');
+      this.projectViewState.change({location: undefined});
     }
   }
 
