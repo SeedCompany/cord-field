@@ -3,21 +3,21 @@
     <mat-select formControlName="stage" placeholder="Stage" multiple>
       <mat-optgroup label="Active">
         <mat-option
-          *ngFor="let stage of projectStagesForStatus(ProjectStage.Active); trackBy: trackByProjectStage"
+          *ngFor="let stage of projectStagesForStatus(projectStatus.Active); trackBy: trackByProjectStage"
           [value]="stage">
           {{ projectStageToString(stage) }}
         </mat-option>
       </mat-optgroup>
       <mat-optgroup label="In Development">
         <mat-option
-          *ngFor="let stage of projectStagesForStatus(ProjectStage.InDevelopment); trackBy: trackByProjectStage"
+          *ngFor="let stage of projectStagesForStatus(projectStatus.InDevelopment); trackBy: trackByProjectStage"
           [value]="stage">
           {{ projectStageToString(stage) }}
         </mat-option>
       </mat-optgroup>
       <mat-optgroup label="Inactive">
         <mat-option
-          *ngFor="let stage of projectStagesForStatus(ProjectStage.Inactive); trackBy: trackByProjectStage"
+          *ngFor="let stage of projectStagesForStatus(projectStatus.Inactive); trackBy: trackByProjectStage"
           [value]="stage">
           {{ projectStageToString(stage) }}
         </mat-option>

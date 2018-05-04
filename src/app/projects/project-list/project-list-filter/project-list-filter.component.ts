@@ -24,7 +24,7 @@ import { LocationService } from '../../../core/services/location.service';
 export class ProjectListFilterComponent implements OnInit {
 
   readonly projectStageToString = projectStageToString;
-  readonly ProjectStage = ProjectStatus;
+  readonly projectStatus = ProjectStatus;
   readonly projectStagesForStatus = projectStagesForStatus;
   readonly projectTypeList = projectTypeList;
   readonly projectSensitivities = ProjectSensitivities;
