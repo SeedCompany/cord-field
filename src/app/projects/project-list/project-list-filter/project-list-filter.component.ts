@@ -131,22 +131,22 @@ export class ProjectListFilterComponent implements OnInit {
         } catch (e) {
           return e; // returning error to prevent observable from completing
         }
-      }).subscribe((languages: Language[] | HttpErrorResponse) => {
+      })
+      .subscribe((languages: Language[] | HttpErrorResponse) => {
 
+        if (languages instanceof HttpErrorResponse) {
+          this.showSnackBar('Failed to fetch languages');
+          return;
+        }
+        // Be sure first error shows immediately instead of waiting for field to blur
+        this.language.markAsTouched();
 
-      if (languages instanceof HttpErrorResponse) {
-        this.showSnackBar('Failed to fetch languages');
-        return;
-      }
-      // Be sure first error shows immediately instead of waiting for field to blur
-      this.language.markAsTouched();
+        const currentIds = this.selectedLanguages.map(lang => lang.id);
+        languages = languages.filter(lang => !currentIds.includes(lang.id));
 
-      const currentIds = this.selectedLanguages.map(lang => lang.id);
-      languages = languages.filter(lang => !currentIds.includes(lang.id));
-
-      this.filteredLanguages = languages;
-      this.language.setErrors(languages.length === 0 ? {noMatches: true} : null);
-    });
+        this.filteredLanguages = languages;
+        this.language.setErrors(languages.length === 0 ? {noMatches: true} : null);
+      });
 
     this.form.valueChanges.subscribe(val => {
     });
@@ -220,6 +220,7 @@ export class ProjectListFilterComponent implements OnInit {
     }
     this.language.setErrors(null);
   }
+
   private showSnackBar(message: string): void {
     this.snackBarRef = this.snackBar.open(message, undefined, {
       duration: 3000
