@@ -29,6 +29,7 @@ services:
       SERVICE_8001_NAME: client-tsco-cord-plo-uat
       MIGRATE: "true"
       DUMP_CONFIG: "true"
+      DOMO: "false"
     mem_limit: 256000000
 
   profile-service:
