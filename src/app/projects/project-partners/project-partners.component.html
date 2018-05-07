@@ -30,9 +30,9 @@
         <form class="partnerForm">
           <mat-form-field color="accent" class="add-width">
             <mat-select placeholder="Partner Type">
-              <mat-option *ngFor="let partnerType of partnerTypes; trackBy: trackByValue;"
-                          [value]="partnerTypeToString(partnerType)">
-                {{ partnerTypeToString(partnerType) }}
+              <mat-option *ngFor="let partnerType of PartnerType.entries(); trackBy: PartnerType.trackEntryBy"
+                          [value]="partnerType.value">
+                {{ partnerType.ui }}
               </mat-option>
             </mat-select>
           </mat-form-field>
@@ -45,9 +45,9 @@
           </button>
           <mat-form-field color="accent" class="upload-status">
             <mat-select placeholder="Status">
-              <mat-option *ngFor="let status of mouAgreementStatuses; trackBy: trackByValue;"
-                          [value]="partnerAgreementStatusToString(status)">
-                {{ partnerAgreementStatusToString(status) }}
+              <mat-option *ngFor="let status of PartnerAgreementStatus.entries(); trackBy: PartnerAgreementStatus.trackEntryBy"
+                          [value]="status.value">
+                {{ status.ui }}
               </mat-option>
             </mat-select>
           </mat-form-field>
@@ -60,9 +60,9 @@
           </button>
           <mat-form-field color="accent" class="upload-status">
             <mat-select placeholder="Status">
-              <mat-option *ngFor="let status of mouAgreementStatuses; trackBy: trackByValue;"
-                          [value]="partnerAgreementStatusToString(status)">
-                {{ partnerAgreementStatusToString(status) }}
+              <mat-option *ngFor="let status of PartnerAgreementStatus.entries(); trackBy: PartnerAgreementStatus.trackEntryBy"
+                          [value]="status.value">
+                {{ status.ui }}
               </mat-option>
             </mat-select>
           </mat-form-field>

@@ -1,25 +1,12 @@
 <form [formGroup]="form">
   <mat-form-field color="accent">
     <mat-select formControlName="stage" placeholder="Stage" multiple>
-      <mat-optgroup label="Active">
+      <mat-optgroup *ngFor="let status of ProjectStatus.entries(); trackBy: ProjectStatus.trackEntryBy"
+        label="{{ status.ui }}">
         <mat-option
-          *ngFor="let stage of projectStagesForStatus(projectStatus.Active); trackBy: trackByProjectStage"
+          *ngFor="let stage of ProjectStage.forStatus(status.value); trackBy: ProjectStage.trackValueBy"
           [value]="stage">
-          {{ projectStageToString(stage) }}
-        </mat-option>
-      </mat-optgroup>
-      <mat-optgroup label="In Development">
-        <mat-option
-          *ngFor="let stage of projectStagesForStatus(projectStatus.InDevelopment); trackBy: trackByProjectStage"
-          [value]="stage">
-          {{ projectStageToString(stage) }}
-        </mat-option>
-      </mat-optgroup>
-      <mat-optgroup label="Inactive">
-        <mat-option
-          *ngFor="let stage of projectStagesForStatus(projectStatus.Inactive); trackBy: trackByProjectStage"
-          [value]="stage">
-          {{ projectStageToString(stage) }}
+          {{ ProjectStage.forUI(stage) }}
         </mat-option>
       </mat-optgroup>
     </mat-select>
@@ -27,9 +14,9 @@
   <mat-form-field color="accent">
     <mat-select placeholder="Type" formControlName="type">
       <mat-option
-        *ngFor="let projectType of projectTypeList; trackBy: trackByIndex"
-        [value]="projectType">
-        {{ projectType }}
+        *ngFor="let projectType of ProjectType.entries(); trackBy: ProjectType.trackEntryBy"
+        [value]="projectType.value">
+        {{ projectType.ui }}
       </mat-option>
     </mat-select>
   </mat-form-field>

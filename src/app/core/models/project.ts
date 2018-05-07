@@ -1,3 +1,4 @@
+import { buildEnum } from './enum';
 import { Language } from './language';
 import { Location } from './location';
 
@@ -5,19 +6,11 @@ export enum ProjectType {
   Translation = 'translation',
   Internship = 'internship'
 }
-
-export const projectTypeList = [
-  ProjectType.Translation,
-  ProjectType.Internship
-];
-
-export function projectTypeToString(value: ProjectType): string {
-  const mapping = {
+export namespace ProjectType {
+  export const {entries, forUI, values, trackEntryBy, trackValueBy} = buildEnum(ProjectType, {
     [ProjectType.Translation]: 'Translation',
     [ProjectType.Internship]: 'Internship'
-  };
-
-  return mapping[value];
+  });
 }
 
 export enum ProjectStatus {
@@ -25,16 +18,13 @@ export enum ProjectStatus {
   Inactive = 'inactive',
   InDevelopment = 'in_development'
 }
-
-export function projectStatusToString(value: ProjectStatus): string {
-  const mapping = {
+export namespace ProjectStatus {
+  export const {entries, forUI, values, trackEntryBy, trackValueBy} = buildEnum(ProjectStatus, {
     [ProjectStatus.Active]: 'Active',
     [ProjectStatus.Inactive]: 'Inactive',
     [ProjectStatus.InDevelopment]: 'In Development'
-  };
-  return mapping[value];
+  });
 }
-
 
 export enum ProjectStage {
   InProgress = 'in_progress',
@@ -55,39 +45,8 @@ export enum ProjectStage {
   ProjectApproval = 'project_approval',
   FinanceConfirmation = 'finance_confirmation'
 }
-
-
-export function projectStagesForStatus(value: ProjectStatus) {
-  const mapping = {
-    [ProjectStatus.Active]: [
-      ProjectStage.InProgress,
-      ProjectStage.PendingSuspension,
-      ProjectStage.PendingTermination,
-      ProjectStage.PendingCompletion,
-      ProjectStage.CompletedActive
-    ],
-    [ProjectStatus.Inactive]: [
-      ProjectStage.Suspended,
-      ProjectStage.Terminated,
-      ProjectStage.CompletedInactive
-    ],
-    [ProjectStatus.InDevelopment]: [
-      ProjectStage.ConceptDevelopment,
-      ProjectStage.ConceptApproval,
-      ProjectStage.PlanDevelopment,
-      ProjectStage.ConsultantReview,
-      ProjectStage.BudgetDevelopment,
-      ProjectStage.FinancialAnalystEndorsement,
-      ProjectStage.ProposalCompletion,
-      ProjectStage.ProjectApproval,
-      ProjectStage.FinanceConfirmation
-    ]
-  };
-  return mapping[value];
-}
-
-export function projectStageToString(projectStage: ProjectStage) {
-  const mapping = {
+export namespace ProjectStage {
+  export const {entries, forUI, values, trackEntryBy, trackValueBy} = buildEnum(ProjectStage, {
     [ProjectStage.InProgress]: 'In Progress',
     [ProjectStage.PendingSuspension]: 'Pending Suspension',
     [ProjectStage.PendingTermination]: 'Pending Termination',
@@ -105,8 +64,36 @@ export function projectStageToString(projectStage: ProjectStage) {
     [ProjectStage.ProposalCompletion]: 'Proposal Completion',
     [ProjectStage.ProjectApproval]: 'Project Approval',
     [ProjectStage.FinanceConfirmation]: 'Finance Confirmation'
-  };
-  return mapping[projectStage];
+  });
+
+  export function forStatus(status: ProjectStatus): ProjectStage[] {
+    const mapping = {
+      [ProjectStatus.Active]: [
+        ProjectStage.InProgress,
+        ProjectStage.PendingSuspension,
+        ProjectStage.PendingTermination,
+        ProjectStage.PendingCompletion,
+        ProjectStage.CompletedActive
+      ],
+      [ProjectStatus.Inactive]: [
+        ProjectStage.Suspended,
+        ProjectStage.Terminated,
+        ProjectStage.CompletedInactive
+      ],
+      [ProjectStatus.InDevelopment]: [
+        ProjectStage.ConceptDevelopment,
+        ProjectStage.ConceptApproval,
+        ProjectStage.PlanDevelopment,
+        ProjectStage.ConsultantReview,
+        ProjectStage.BudgetDevelopment,
+        ProjectStage.FinancialAnalystEndorsement,
+        ProjectStage.ProposalCompletion,
+        ProjectStage.ProjectApproval,
+        ProjectStage.FinanceConfirmation
+      ]
+    };
+    return mapping[status];
+  }
 }
 
 export type ProjectSensitivity = 1 | 2 | 3;
