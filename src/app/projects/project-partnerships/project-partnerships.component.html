@@ -3,19 +3,19 @@
   <mat-card-content>
     <mat-accordion>
 
-      <mat-expansion-panel *ngFor="let partner of partners; trackBy: trackPartnerById;"
-                           [expanded]="isCardOpened(partner.id)"
-                           (opened)="onCardOpen(partner)"
-                           (closed)="onCardClose(partner.id)">
+      <mat-expansion-panel *ngFor="let partnership of partnerships; trackBy: trackPartnershipById;"
+                           [expanded]="isCardOpened(partnership.id)"
+                           (opened)="onCardOpen(partnership)"
+                           (closed)="onCardClose(partnership.id)">
         <mat-expansion-panel-header>
           <mat-panel-title>
             <mat-icon>account_circle</mat-icon>
             <div class="title">
-              <span class="name">{{ partner.name }}</span>
-              <small *ngIf="!isCardOpened(partner.id)">partners role</small>
+              <span class="name">{{ partnership.name }}</span>
+              <small *ngIf="!isCardOpened(partnership.id)">partners role</small>
             </div>
           </mat-panel-title>
-          <mat-panel-description *ngIf="!isCardOpened(partner.id)">
+          <mat-panel-description *ngIf="!isCardOpened(partnership.id)">
             <div class="header">
               <div class="add-space">
                 MOU Status : <span class="name">Signed & Attched</span>
@@ -30,9 +30,9 @@
         <form class="partnerForm">
           <mat-form-field color="accent" class="add-width">
             <mat-select placeholder="Partner Type">
-              <mat-option *ngFor="let partnerType of PartnerType.entries(); trackBy: PartnerType.trackEntryBy"
-                          [value]="partnerType.value">
-                {{ partnerType.ui }}
+              <mat-option *ngFor="let type of PartnershipType.entries(); trackBy: PartnershipType.trackEntryBy"
+                          [value]="type.value">
+                {{ type.ui }}
               </mat-option>
             </mat-select>
           </mat-form-field>
@@ -45,7 +45,7 @@
           </button>
           <mat-form-field color="accent" class="upload-status">
             <mat-select placeholder="Status">
-              <mat-option *ngFor="let status of PartnerAgreementStatus.entries(); trackBy: PartnerAgreementStatus.trackEntryBy"
+              <mat-option *ngFor="let status of PartnershipAgreementStatus.entries(); trackBy: PartnershipAgreementStatus.trackEntryBy"
                           [value]="status.value">
                 {{ status.ui }}
               </mat-option>
@@ -60,7 +60,7 @@
           </button>
           <mat-form-field color="accent" class="upload-status">
             <mat-select placeholder="Status">
-              <mat-option *ngFor="let status of PartnerAgreementStatus.entries(); trackBy: PartnerAgreementStatus.trackEntryBy"
+              <mat-option *ngFor="let status of PartnershipAgreementStatus.entries(); trackBy: PartnershipAgreementStatus.trackEntryBy"
                           [value]="status.value">
                 {{ status.ui }}
               </mat-option>
@@ -75,7 +75,7 @@
       </mat-expansion-panel>
     </mat-accordion>
     <span class="add-space"></span>
-    <mat-form-field color="accent" *ngIf="addingPartner" class="full-width">
+    <mat-form-field color="accent" *ngIf="adding" class="full-width">
       <input matInput placeholder="Search Partner"
              [matAutocomplete]="auto"
              [formControl]="search"
@@ -84,8 +84,8 @@
       <button mat-icon-button matSuffix (click)="onCancel()">
         <mat-icon>close</mat-icon>
       </button>
-      <mat-autocomplete #auto="matAutocomplete" (optionSelected)="onSelectPartner($event)">
-        <mat-option *ngFor="let partner of filteredPartners | async; trackBy: trackPartnerById" [value]="partner">
+      <mat-autocomplete #auto="matAutocomplete" (optionSelected)="onSelectPartnership($event)">
+        <mat-option *ngFor="let partner of filteredPartnerships | async; trackBy: trackPartnershipById" [value]="partner">
           <div class="option-text">
             {{ partner.name }}
           </div>
@@ -94,8 +94,8 @@
     </mat-form-field>
   </mat-card-content>
 
-  <mat-card-actions *ngIf="!addingPartner">
-    <button mat-button color="accent" (click)="addingPartner = true">
+  <mat-card-actions *ngIf="!adding">
+    <button mat-button color="accent" (click)="adding = true">
       ADD PARTNER
     </button>
   </mat-card-actions>
