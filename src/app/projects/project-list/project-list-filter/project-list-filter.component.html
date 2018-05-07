@@ -3,21 +3,21 @@
     <mat-select formControlName="stage" placeholder="Stage" multiple>
       <mat-optgroup label="Active">
         <mat-option
-          *ngFor="let stage of projectStagesForStatus(ProjectStage.Active); trackBy: trackByProjectStage"
+          *ngFor="let stage of projectStagesForStatus(projectStatus.Active); trackBy: trackByProjectStage"
           [value]="stage">
           {{ projectStageToString(stage) }}
         </mat-option>
       </mat-optgroup>
       <mat-optgroup label="In Development">
         <mat-option
-          *ngFor="let stage of projectStagesForStatus(ProjectStage.InDevelopment); trackBy: trackByProjectStage"
+          *ngFor="let stage of projectStagesForStatus(projectStatus.InDevelopment); trackBy: trackByProjectStage"
           [value]="stage">
           {{ projectStageToString(stage) }}
         </mat-option>
       </mat-optgroup>
       <mat-optgroup label="Inactive">
         <mat-option
-          *ngFor="let stage of projectStagesForStatus(ProjectStage.Inactive); trackBy: trackByProjectStage"
+          *ngFor="let stage of projectStagesForStatus(projectStatus.Inactive); trackBy: trackByProjectStage"
           [value]="stage">
           {{ projectStageToString(stage) }}
         </mat-option>
@@ -38,28 +38,31 @@
       <mat-chip color="accent"
                 *ngFor="let language of selectedLanguages; trackBy: trackLanguageById"
                 (remove)="onRemoveLanguage(language)">
-        {{ language }}
+        {{ language.name }}
         <mat-icon matChipRemove>cancel</mat-icon>
       </mat-chip>
       <input placeholder="Languages"
              matInput
              [matChipInputFor]="chipList"
              [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
-             [matChipInputAddOnBlur]="true"
-             [matAutocomplete]="language"
+             [matAutocomplete]="languageAutoComplete"
              formControlName="language"
+             (blur)="onLanguageBlur()"
              #chipInput/>
-      <mat-autocomplete #language="matAutocomplete"
-                        (optionSelected)="onAddLanguage($event)">
+      <mat-autocomplete #languageAutoComplete="matAutocomplete"
+                        (optionSelected)="onLanguageSelected($event)">
         <mat-option
-          *ngFor="let language of filteredLanguages | async; trackBy: trackLanguageById"
+          *ngFor="let language of filteredLanguages; trackBy: trackLanguageById"
           [value]="language">
           {{ language.name }}
         </mat-option>
       </mat-autocomplete>
     </mat-chip-list>
-
+    <mat-hint align="start" *ngIf="language.pending">Searching...</mat-hint>
+    <mat-hint class="mat-error" *ngIf="language.errors?.noMatches">No matches found</mat-hint>
   </mat-form-field>
+
+
   <mat-form-field color="accent">
     <mat-select placeholder="Date Range" formControlName="dateRange">
       <mat-option value="createdAt">Created At
@@ -111,7 +114,7 @@
       </mat-autocomplete>
     </mat-chip-list>
     <mat-hint align="start" *ngIf="location.pending">Searching...</mat-hint>
-    <mat-error *ngIf="location.errors?.noMatches">No matches found</mat-error>
+    <mat-hint class="mat-error" *ngIf="location.errors?.noMatches">No matches found</mat-hint>
   </mat-form-field>
   <mat-form-field color="accent">
     <mat-select multiple
