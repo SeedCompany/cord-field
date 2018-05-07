@@ -1,3 +1,5 @@
+import { buildEnum } from './enum';
+
 export class Partner {
   id: string;
   name: string;
@@ -14,51 +16,31 @@ export class Partner {
 }
 
 export enum PartnerType {
-  Managing = 'managing',
-  Funding = 'funcding',
-  Impact = 'impact',
-  Technical = 'technical',
-  Resource = 'resource'
+  Managing = 'm',
+  Funding = 'f',
+  Impact = 'i',
+  Technical = 't',
+  Resource = 'r'
+}
+export namespace PartnerType {
+  export const {entries, forUI, values, trackEntryBy, trackValueBy} = buildEnum(PartnerType, {
+    [PartnerType.Managing]: 'Managing',
+    [PartnerType.Funding]: 'Funding',
+    [PartnerType.Impact]: 'Impact',
+    [PartnerType.Technical]: 'Technical',
+    [PartnerType.Resource]: 'Resource'
+  });
 }
 
 export enum PartnerAgreementStatus {
-  NotAttached = 'not_attached',
-  AwaitingSignature = 'awaiting_signature',
-  Signed = 'signed'
+  NotAttached = 'na',
+  AwaitingSignature = 'as',
+  Signed = 's'
 }
-
-export const PartnerTypeList = [
-  PartnerType.Managing,
-  PartnerType.Funding,
-  PartnerType.Impact,
-  PartnerType.Technical,
-  PartnerType.Resource
-];
-
-export const PartnerAgreementStatusList = [
-  PartnerAgreementStatus.AwaitingSignature,
-  PartnerAgreementStatus.NotAttached,
-  PartnerAgreementStatus.Signed
-];
-
-export function PartnerTypeToString(partnerType: PartnerType): string {
-  const partnerTypes = {
-    [PartnerType.Resource]: 'Resource',
-    [PartnerType.Technical]: 'Technical',
-    [PartnerType.Impact]: 'Impact',
-    [PartnerType.Funding]: 'Funding',
-    [PartnerType.Managing]: 'Managing'
-  };
-
-  return partnerTypes[partnerType];
-}
-
-export function PartnerAgreementStatusToString(partnerAgreementStatus: PartnerAgreementStatus): string {
-  const partnerAgreementStatuses = {
+export namespace PartnerAgreementStatus {
+  export const {entries, forUI, values, trackEntryBy, trackValueBy} = buildEnum(PartnerAgreementStatus, {
     [PartnerAgreementStatus.Signed]: 'Signed',
     [PartnerAgreementStatus.NotAttached]: 'Not Attached',
     [PartnerAgreementStatus.AwaitingSignature]: 'Awaiting Signature'
-  };
-
-  return partnerAgreementStatuses[partnerAgreementStatus];
+  });
 }

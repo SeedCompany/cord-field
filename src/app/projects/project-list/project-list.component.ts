@@ -2,7 +2,7 @@ import { animate, state, style, transition, trigger } from '@angular/animations'
 import { AfterViewInit, Component, ViewChild } from '@angular/core';
 import { MatDialog, MatPaginator, MatSort, MatTableDataSource } from '@angular/material';
 import { Observable } from 'rxjs/Observable';
-import { Project, ProjectStatus, projectStatusToString, ProjectsWithCount, projectTypeToString } from '../../core/models/project';
+import { Project, ProjectStatus, ProjectsWithCount, ProjectType } from '../../core/models/project';
 import { ProjectService } from '../../core/services/project.service';
 import { ProjectCreateDialogComponent } from '../project-create-dialog/project-create-dialog.component';
 
@@ -33,8 +33,8 @@ export class ProjectListComponent implements AfterViewInit {
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
 
-  readonly projectTypeToString = projectTypeToString;
-  readonly projectStatusToString = projectStatusToString;
+  readonly ProjectType = ProjectType;
+  readonly ProjectStatus = ProjectStatus;
   private readonly statusColor = {
     [ProjectStatus.Active]: 'green',
     [ProjectStatus.Inactive]: 'red',

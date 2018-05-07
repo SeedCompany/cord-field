@@ -3,7 +3,7 @@ import { Component, OnInit } from '@angular/core';
 import { AbstractControl, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatDialogRef, MatSnackBar, MatSnackBarRef, SimpleSnackBar } from '@angular/material';
 import { Router } from '@angular/router';
-import { ProjectType, projectTypeList, projectTypeToString } from '../../core/models/project';
+import { ProjectType } from '../../core/models/project';
 import { ProjectService } from '../../core/services/project.service';
 
 export interface ProjectCreationResult {
@@ -18,8 +18,7 @@ export interface ProjectCreationResult {
 })
 export class ProjectCreateDialogComponent implements OnInit {
 
-  readonly types = projectTypeList;
-  readonly typeToString = projectTypeToString;
+  readonly ProjectType = ProjectType;
   form: FormGroup;
   submitting = false;
   private snackBarRef?: MatSnackBarRef<SimpleSnackBar>;
@@ -102,10 +101,6 @@ export class ProjectCreateDialogComponent implements OnInit {
 
   onClose() {
     this.dialogRef.close();
-  }
-
-  trackByValue(index: number, value: any) {
-    return value;
   }
 
   private showSnackBar(message: string) {

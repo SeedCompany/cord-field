@@ -2,13 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { MatAutocompleteSelectedEvent } from '@angular/material/autocomplete/typings/autocomplete';
 import { Observable } from 'rxjs/Observable';
-import {
-  Partner,
-  PartnerAgreementStatusList,
-  PartnerAgreementStatusToString,
-  PartnerTypeList,
-  PartnerTypeToString
-} from '../../core/models/partner';
+import { Partner, PartnerAgreementStatus, PartnerType } from '../../core/models/partner';
 import { PartnerService } from '../../core/services/partner.service';
 
 @Component({
@@ -18,10 +12,9 @@ import { PartnerService } from '../../core/services/partner.service';
 })
 export class ProjectPartnersComponent implements OnInit {
 
-  partnerTypes = PartnerTypeList;
-  mouAgreementStatuses = PartnerAgreementStatusList;
-  partnerTypeToString = PartnerTypeToString;
-  partnerAgreementStatusToString = PartnerAgreementStatusToString;
+  readonly PartnerType = PartnerType;
+  readonly PartnerAgreementStatus = PartnerAgreementStatus;
+
   partners: Partner[];
   activePartner: Partner;
   activePartnerId: string;
@@ -46,10 +39,6 @@ export class ProjectPartnersComponent implements OnInit {
 
   trackPartnerById(index: number, partner: Partner): string {
     return partner.id;
-  }
-
-  trackByValue(index: Number, value: string): string {
-    return value;
   }
 
   isCardOpened(id: string): boolean {

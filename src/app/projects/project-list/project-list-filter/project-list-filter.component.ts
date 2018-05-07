@@ -5,14 +5,7 @@ import { AbstractControl, FormBuilder, FormGroup } from '@angular/forms';
 import { MatAutocompleteSelectedEvent, MatSnackBar, MatSnackBarRef, SimpleSnackBar } from '@angular/material';
 import { Language } from '../../../core/models/language';
 import { Location } from '../../../core/models/location';
-import {
-  ProjectSensitivities,
-  ProjectStage,
-  projectStagesForStatus,
-  projectStageToString,
-  ProjectStatus,
-  projectTypeList
-} from '../../../core/models/project';
+import { ProjectSensitivities, ProjectStage, ProjectStatus, ProjectType } from '../../../core/models/project';
 import { LanguageService } from '../../../core/services/language.service';
 import { LocationService } from '../../../core/services/location.service';
 
@@ -23,10 +16,9 @@ import { LocationService } from '../../../core/services/location.service';
 })
 export class ProjectListFilterComponent implements OnInit {
 
-  readonly projectStageToString = projectStageToString;
-  readonly projectStatus = ProjectStatus;
-  readonly projectStagesForStatus = projectStagesForStatus;
-  readonly projectTypeList = projectTypeList;
+  readonly ProjectStage = ProjectStage;
+  readonly ProjectStatus = ProjectStatus;
+  readonly ProjectType = ProjectType;
   readonly projectSensitivities = ProjectSensitivities;
 
   minDate: Date;
@@ -159,10 +151,6 @@ export class ProjectListFilterComponent implements OnInit {
 
   trackLocationById(index: number, location: Location): string {
     return location.id;
-  }
-
-  trackByProjectStage(index: number, stage: ProjectStage): string {
-    return stage;
   }
 
   trackByIndex(index: number): number {
