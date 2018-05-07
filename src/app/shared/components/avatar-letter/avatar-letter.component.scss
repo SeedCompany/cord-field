@@ -5,6 +5,11 @@
   justify-content: center;
   align-items: center;
 
+  flex-shrink: 0;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+
   &.mat-primary {
     color: mat-color($primary, default-contrast);
     background: mat-color($primary);

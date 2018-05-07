@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { MatAutocompleteSelectedEvent } from '@angular/material/autocomplete/typings/autocomplete';
 import { Observable } from 'rxjs/Observable';
@@ -22,6 +22,13 @@ export class ProjectPartnershipsComponent implements OnInit {
   adding = false;
   search = new FormControl();
   searchResults: Observable<Organization[]>;
+
+  /** Autofocus search input when it is created */
+  @ViewChild('searchInput') set searchInput(el: ElementRef | null) {
+    if (el) {
+      window.setTimeout(() => el.nativeElement.focus(), 0);
+    }
+  }
 
   constructor(private organizationService: OrganizationService) {
   }

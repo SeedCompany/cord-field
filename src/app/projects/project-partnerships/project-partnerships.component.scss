@@ -8,40 +8,53 @@
   display: flex;
 }
 
+mat-card {
+  padding-left: 0;
+  padding-right: 0;
+}
+mat-card-title, mat-card-actions {
+  padding-left: 24px;
+  padding-right: 24px;
+}
+mat-expansion-panel {
+  border-bottom: 1px solid mat-foreground($theme, divider);
+}
+
+mat-panel-title {
+  align-items: center;
+}
+
 .title {
   display: flex;
   flex-direction: column;
-  margin-left: 20px;
-}
-
-.name {
-  font-weight: 500;
-}
-
-.upload-button {
-  width: 160px;
-  text-align: left;
-  .mat-icon {
-    padding-left: 50px;
+  padding-left: 16px;
+  .name {
+    font-size: 16px; // match list
   }
+  small {
+    @include mat-typography-level-to-styles($config, body-1);
+    color: mat-foreground($theme, secondary-text);
+  }
+}
+
+.description-line {
+  display: flex;
+  justify-content: space-between;
 }
 
 .upload-status {
   margin-left: 100px;
 }
 
-.add-space {
-  margin: auto 30px;
+// Keep same spacing between accordion and autocomplete input
+// Keep margin bottom same as add button
+mat-card-content {
+  display: flex;
+  flex-direction: column;
 }
-
-.partnerForm {
-  padding-left: 50px;
-}
-
-.add-width {
-  width: 30%;
-}
-
-.full-width {
+.add-partner {
+  padding: 0 24px;
   width: 100%;
+  margin-top: 16px;
+  margin-bottom: - (20px + 8px + 1px) !important; // field hint space + default action offset + something else
 }
