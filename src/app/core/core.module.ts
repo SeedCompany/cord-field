@@ -15,7 +15,7 @@ import { ProfileApiService } from './services/http/profile-api.service';
 import { LanguageService } from './services/language.service';
 import { LocationService } from './services/location.service';
 import { LoggerService } from './services/logger.service';
-import { PartnershipService } from './services/partnership.service';
+import { OrganizationService } from './services/organization.service';
 import { ProjectService } from './services/project.service';
 import { LocalStorageService, SessionStorageService } from './services/storage.service';
 
@@ -38,7 +38,7 @@ import { LocalStorageService, SessionStorageService } from './services/storage.s
     LocalStorageService,
     LocationService,
     LoggerService,
-    PartnershipService,
+    OrganizationService,
     PloApiService,
     ProjectService,
     ProfileApiService,

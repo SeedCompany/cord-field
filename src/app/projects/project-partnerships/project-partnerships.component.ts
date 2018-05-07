@@ -2,8 +2,9 @@ import { Component, OnInit } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { MatAutocompleteSelectedEvent } from '@angular/material/autocomplete/typings/autocomplete';
 import { Observable } from 'rxjs/Observable';
+import { Organization } from '../../core/models/organization';
 import { Partnership, PartnershipAgreementStatus, PartnershipType } from '../../core/models/partnership';
-import { PartnershipService } from '../../core/services/partnership.service';
+import { OrganizationService } from '../../core/services/organization.service';
 
 @Component({
   selector: 'app-project-partnerships',
@@ -15,58 +16,62 @@ export class ProjectPartnershipsComponent implements OnInit {
   readonly PartnershipType = PartnershipType;
   readonly PartnershipAgreementStatus = PartnershipAgreementStatus;
 
-  partnerships: Partnership[];
-  activePartnership: Partnership;
-  activePartnershipId: string;
-  adding = false;
-  filteredPartnerships: Observable<Partnership[]>;
-  search = new FormControl();
+  partnerships: Partnership[] = [];
+  private opened: Partnership | null;
 
-  constructor(private partnershipService: PartnershipService) {
+  adding = false;
+  search = new FormControl();
+  searchResults: Observable<Organization[]>;
+
+  constructor(private organizationService: OrganizationService) {
   }
 
-  ngOnInit() {
-    this.filteredPartnerships = this.search
+  ngOnInit(): void {
+    this.searchResults = this.search
       .valueChanges
       .filter(term => term.length > 1)
       .debounceTime(300)
-      .switchMap(term => this.partnershipService.search(term));
-
-    this.partnershipService.getPartnerships().subscribe(partnerships => {
-      this.partnerships = partnerships;
-    });
+      .switchMap(term => this.organizationService.search(term))
+      .map((organizations: Organization[]) => {
+        const currentIds = this.partnerships.map(p => p.id);
+        return organizations.filter(org => !currentIds.includes(org.id));
+      });
   }
 
-  trackPartnershipById(index: number, partnership: Partnership): string {
-    return partnership.id;
+  trackById(index: number, object: {id: string}): string {
+    return object.id;
   }
 
-  isCardOpened(id: string): boolean {
-    return id === this.activePartnershipId;
+  isCardOpened(partnership: Partnership): boolean {
+    return this.opened ? this.opened.id === partnership.id : false;
   }
 
   onCardOpen(partnership: Partnership): void {
-    this.activePartnership = partnership;
-    this.activePartnershipId = partnership.id;
+    this.opened = partnership;
   }
 
-  onCardClose(id: string): void {
-    if (this.activePartnership.id === id) {
-      this.activePartnershipId = '';
-    }
+  onCardClose(): void {
+    this.opened = null;
   }
 
-  onSelectPartnership(event: MatAutocompleteSelectedEvent) {
-    this.partnerships.push(event.option.value);
+  onSelectOrganization(event: MatAutocompleteSelectedEvent): void {
+    const org: Organization = event.option.value;
+    const partnership = Partnership.fromOrganization(org);
+
+    this.partnerships.push(partnership);
     this.adding = false;
     this.search.setValue('');
   }
 
-  onCancel() {
+  onCancel(): void {
     if (this.search.value) {
       this.search.setValue('');
     } else {
       this.adding = false;
     }
+  }
+
+  onDelete(partnership: Partnership): void {
+    this.partnerships = this.partnerships.filter(current => current.id !== partnership.id);
   }
 }

@@ -3,19 +3,19 @@
   <mat-card-content>
     <mat-accordion>
 
-      <mat-expansion-panel *ngFor="let partnership of partnerships; trackBy: trackPartnershipById;"
-                           [expanded]="isCardOpened(partnership.id)"
+      <mat-expansion-panel *ngFor="let partnership of partnerships; trackBy: trackById"
+                           [expanded]="isCardOpened(partnership)"
                            (opened)="onCardOpen(partnership)"
-                           (closed)="onCardClose(partnership.id)">
+                           (closed)="onCardClose()">
         <mat-expansion-panel-header>
           <mat-panel-title>
             <mat-icon>account_circle</mat-icon>
             <div class="title">
               <span class="name">{{ partnership.name }}</span>
-              <small *ngIf="!isCardOpened(partnership.id)">partners role</small>
+              <small *ngIf="!isCardOpened(partnership)">{{ partnership.types.join(', ') }}</small>
             </div>
           </mat-panel-title>
-          <mat-panel-description *ngIf="!isCardOpened(partnership.id)">
+          <mat-panel-description *ngIf="!isCardOpened(partnership)">
             <div class="header">
               <div class="add-space">
                 MOU Status : <span class="name">Signed & Attched</span>
@@ -66,17 +66,16 @@
               </mat-option>
             </mat-select>
           </mat-form-field>
-          <div>
-            <button mat-button color="accent">
-              REMOVE PARTNER
-            </button>
+
+          <div class="actions">
+            <button mat-button color="warn" (click)="onDelete(partnership)">REMOVE</button>
           </div>
         </form>
       </mat-expansion-panel>
     </mat-accordion>
     <span class="add-space"></span>
     <mat-form-field color="accent" *ngIf="adding" class="full-width">
-      <input matInput placeholder="Search Partner"
+      <input matInput placeholder="Search Organizations"
              [matAutocomplete]="auto"
              [formControl]="search"
              (keyup.esc)="onCancel()"
@@ -84,10 +83,10 @@
       <button mat-icon-button matSuffix (click)="onCancel()">
         <mat-icon>close</mat-icon>
       </button>
-      <mat-autocomplete #auto="matAutocomplete" (optionSelected)="onSelectPartnership($event)">
-        <mat-option *ngFor="let partner of filteredPartnerships | async; trackBy: trackPartnershipById" [value]="partner">
+      <mat-autocomplete #auto="matAutocomplete" (optionSelected)="onSelectOrganization($event)">
+        <mat-option *ngFor="let org of searchResults | async; trackBy: trackById" [value]="org">
           <div class="option-text">
-            {{ partner.name }}
+            {{ org.name }}
           </div>
         </mat-option>
       </mat-autocomplete>
