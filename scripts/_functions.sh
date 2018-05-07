@@ -20,5 +20,5 @@ function pull {
     fi
   done
 
-  compose pull --parallel ${remoteServices}
+  compose pull ${remoteServices}
 }
