@@ -3,6 +3,7 @@ import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { Observable } from 'rxjs/Observable';
 import { Language } from '../core/models/language';
 import { Location } from '../core/models/location';
+import { Partnership } from '../core/models/partnership';
 import { Project } from '../core/models/project';
 import { ProjectService } from '../core/services/project.service';
 
@@ -129,6 +130,10 @@ export class ProjectViewStateService {
     languages: {
       accessor: (language: Language) => language.id,
       toServer: mapChangeList<Language, string, string>(language => language.id, language => language.id)
+    },
+    partnerships: {
+      accessor: (partnership: Partnership) => partnership.id,
+      toServer: mapChangeList<Partnership, Partnership, string>(partnership => partnership, partnership => partnership.id)
     }
   };
 
