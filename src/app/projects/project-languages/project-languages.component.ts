@@ -23,7 +23,7 @@ export class ProjectLanguagesComponent implements OnInit {
 
   onSelect(language: Language) {
     this.projectViewState.change({languages: {added: language}});
-    this.languages.push(language);
+    this.languages = [...this.languages, language];
     this.addingLanguage = false;
   }
 

@@ -36,7 +36,7 @@ export class ProjectPartnershipsComponent {
   onSelect(org: Organization): void {
     const partnership = Partnership.fromOrganization(org);
 
-    this.partnerships.push(partnership);
+    this.partnerships = [...this.partnerships, partnership];
     this.adding = false;
   }
 

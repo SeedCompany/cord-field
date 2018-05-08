@@ -57,7 +57,7 @@ export class ProjectListFilterComponent implements OnInit {
   }
 
   onLanguageSelected(language: Language): void {
-    this.languages.push(language);
+    this.languages = [...this.languages, language];
   }
 
   onLanguageRemoved(language: Language): void {
@@ -65,7 +65,7 @@ export class ProjectListFilterComponent implements OnInit {
   }
 
   onLocationSelected(location: Location): void {
-    this.locations.push(location);
+    this.locations = [...this.locations, location];
   }
 
   onLocationRemoved(location: Location): void {
