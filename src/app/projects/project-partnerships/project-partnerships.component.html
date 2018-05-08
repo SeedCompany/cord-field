@@ -82,24 +82,15 @@
       </mat-expansion-panel>
     </mat-accordion>
 
-    <mat-form-field color="accent" *ngIf="adding" class="add-partner">
-      <input matInput placeholder="Search Organizations"
-             [matAutocomplete]="auto"
-             [formControl]="search"
-             (keyup.esc)="onCancel()"
-             #searchInput
-      >
-      <button mat-icon-button matSuffix (click)="onCancel()">
-        <mat-icon>close</mat-icon>
-      </button>
-      <mat-autocomplete #auto="matAutocomplete" (optionSelected)="onSelectOrganization($event)">
-        <mat-option *ngFor="let org of searchResults | async; trackBy: trackById" [value]="org">
-          <div class="option-text">
-            {{ org.name }}
-          </div>
-        </mat-option>
-      </mat-autocomplete>
-    </mat-form-field>
+    <app-autocomplete-organization
+      *ngIf="adding"
+      [list]="partnerships"
+      [autoFocus]="true"
+      placeholder="Search Organizations"
+      (optionSelected)="onSelect($event)"
+      (cancel)="onCancel()"
+    >
+    </app-autocomplete-organization>
 
   </mat-card-content>
 

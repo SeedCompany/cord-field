@@ -20,35 +20,14 @@
       </mat-option>
     </mat-select>
   </mat-form-field>
-  <mat-form-field color="accent">
-    <mat-chip-list #chipList>
-      <mat-chip color="accent"
-                *ngFor="let language of selectedLanguages; trackBy: trackLanguageById"
-                (remove)="onRemoveLanguage(language)">
-        {{ language.name }}
-        <mat-icon matChipRemove>cancel</mat-icon>
-      </mat-chip>
-      <input placeholder="Languages"
-             matInput
-             [matChipInputFor]="chipList"
-             [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
-             [matAutocomplete]="languageAutoComplete"
-             formControlName="language"
-             (blur)="onLanguageBlur()"
-             #chipInput/>
-      <mat-autocomplete #languageAutoComplete="matAutocomplete"
-                        (optionSelected)="onLanguageSelected($event)">
-        <mat-option
-          *ngFor="let language of filteredLanguages; trackBy: trackLanguageById"
-          [value]="language">
-          {{ language.name }}
-        </mat-option>
-      </mat-autocomplete>
-    </mat-chip-list>
-    <mat-hint align="start" *ngIf="language.pending">Searching...</mat-hint>
-    <mat-hint class="mat-error" *ngIf="language.errors?.noMatches">No matches found</mat-hint>
-  </mat-form-field>
 
+  <app-autocomplete-language
+    [chips]="true"
+    [list]="languages"
+    (optionSelected)="onLanguageSelected($event)"
+    (removed)="onLanguageRemoved($event)"
+  >
+  </app-autocomplete-language>
 
   <mat-form-field color="accent">
     <mat-select placeholder="Date Range" formControlName="dateRange">
@@ -75,34 +54,15 @@
     <mat-datepicker-toggle matSuffix [for]="endDate"></mat-datepicker-toggle>
     <mat-datepicker #endDate></mat-datepicker>
   </mat-form-field>
-  <mat-form-field color="accent">
-    <mat-chip-list #locationChipList>
-      <mat-chip color="accent"
-                *ngFor="let location of selectedLocations; trackBy: trackLocationById"
-                (remove)="onRemoveLocation(location)">
-        {{ showLocationName(location) }}
-        <mat-icon matChipRemove>cancel</mat-icon>
-      </mat-chip>
-      <input matInput
-             placeholder="Location"
-             [matChipInputFor]="locationChipList"
-             [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
-             [matAutocomplete]="auto" formControlName="location"
-             (blur)="onLocationBlur()"
-             #locationChipInput/>
-      <mat-autocomplete #auto="matAutocomplete"
-                        (optionSelected)="onLocationSelected($event)"
-                        [displayWith]="showLocationName">
-        <mat-option
-          *ngFor="let location of filteredLocations; trackBy: trackLocationById"
-          [value]="location">
-          {{ showLocationName(location) }}
-        </mat-option>
-      </mat-autocomplete>
-    </mat-chip-list>
-    <mat-hint align="start" *ngIf="location.pending">Searching...</mat-hint>
-    <mat-hint class="mat-error" *ngIf="location.errors?.noMatches">No matches found</mat-hint>
-  </mat-form-field>
+
+  <app-autocomplete-location
+    [chips]="true"
+    [list]="locations"
+    (optionSelected)="onLocationSelected($event)"
+    (removed)="onLocationRemoved($event)"
+  >
+  </app-autocomplete-location>
+
   <mat-form-field color="accent">
     <mat-select multiple
                 placeholder="Sensitivity"

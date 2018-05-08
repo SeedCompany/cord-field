@@ -71,3 +71,9 @@ body {
     color: mat-foreground($theme, secondary-text);
   }
 }
+
+// Keep input suffixes at the same height as the text input for chip lists
+.mat-form-field.mat-form-field-type-mat-chip-list .mat-input-suffix {
+  align-self: flex-end;
+  margin-bottom: 6px;
+}

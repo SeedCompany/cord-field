@@ -46,15 +46,14 @@ mat-panel-title {
   margin-left: 100px;
 }
 
-// Keep same spacing between accordion and autocomplete input
-// Keep margin bottom same as add button
 mat-card-content {
   display: flex;
   flex-direction: column;
 }
-.add-partner {
+app-autocomplete-organization {
   padding: 0 24px;
-  width: 100%;
+  // Keep same spacing between accordion and autocomplete input
   margin-top: 16px;
-  margin-bottom: - (20px + 8px + 1px) !important; // field hint space + default action offset + something else
+  // Keep margin bottom same as add button
+  margin-bottom: - (8px + 1px) !important; // default action offset + something else
 }

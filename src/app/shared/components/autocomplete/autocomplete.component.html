@@ -1,0 +1,59 @@
+<ng-container *ngIf="chips">
+  <mat-form-field color="accent" [class.mat-form-field-invalid]="search.invalid">
+    <mat-chip-list #chipList>
+      <mat-chip color="accent"
+                *ngFor="let item of list; trackBy: trackByFn"
+                (removed)="removed.next(item)"
+      >
+        {{ displayItem(item) }}
+        <mat-icon matChipRemove>cancel</mat-icon>
+      </mat-chip>
+      <input
+        [placeholder]="placeholder"
+        [formControl]="search"
+        [matAutocomplete]="auto"
+        [matChipInputFor]="chipList"
+        (keyup.esc)="clearThenClose()"
+        #searchInput
+      />
+      <mat-autocomplete #auto="matAutocomplete"
+                        [displayWith]="displayWith"
+                        (optionSelected)="onSelect($event)">
+        <mat-option *ngFor="let result of searchResults; trackBy: trackByFn" [value]="result">
+          {{ displayItem(result) }}
+        </mat-option>
+      </mat-autocomplete>
+    </mat-chip-list>
+    <button *ngIf="clearButton" mat-icon-button matSuffix (click)="clearThenClose()">
+      <mat-icon>close</mat-icon>
+    </button>
+    <mat-hint *ngIf="search.pending">{{ pendingMessage }}</mat-hint>
+    <mat-hint class="mat-error" *ngIf="search.errors?.noMatches">{{ noMatchesMessage }}</mat-hint>
+  </mat-form-field>
+</ng-container>
+
+<ng-container *ngIf="!chips">
+  <mat-form-field color="accent">
+    <input
+      matInput
+      [placeholder]="placeholder"
+      [matAutocomplete]="singleAuto"
+      [formControl]="search"
+      (keyup.esc)="clearThenClose()"
+      #searchInput
+    />
+    <button *ngIf="clearButton" mat-icon-button matSuffix (click)="clearThenClose()">
+      <mat-icon>close</mat-icon>
+    </button>
+    <mat-hint *ngIf="search.pending">{{ pendingMessage }}</mat-hint>
+    <mat-error *ngIf="search.errors?.noMatches">{{ noMatchesMessage }}</mat-error>
+    <mat-error *ngIf="search.errors?.required">{{ requiredMessage }}</mat-error>
+    <mat-autocomplete #singleAuto="matAutocomplete"
+                      [displayWith]="displayWith"
+                      (optionSelected)="onSelect($event)">
+      <mat-option *ngFor="let result of searchResults; trackBy: trackByFn" [value]="result">
+        {{ displayItem(result) }}
+      </mat-option>
+    </mat-autocomplete>
+  </mat-form-field>
+</ng-container>

@@ -11,6 +11,7 @@ export class LocationService {
   search(term: string): Promise<Location[]> {
     return this.ploApi
       .get<Location[]>(`/locations/suggestions?term=${term}`)
+      .map(list => list.map(Location.fromJson))
       .toPromise();
   }
 }

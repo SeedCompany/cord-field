@@ -14,19 +14,9 @@ mat-card-content {
   flex-direction: column;
 }
 
-// Keep same spacing between list and autocomplete input
-// Keep margin bottom same as add button
-mat-form-field {
+app-autocomplete-language {
+  // Keep same spacing between list and autocomplete input
   margin-top: 16px;
-  margin-bottom: - (20px + 8px + 1px) !important; // field hint space + default action offset + something else
-}
-
-.option-text {
-  display: grid;
-  line-height: normal;
-
-  .secondary {
-    @include mat-typography-level-to-styles($config, body-1);
-    color: mat-foreground($theme, secondary-text);
-  }
+  // Keep margin bottom same as add button
+  margin-bottom: - (8px + 1px) !important; // default action offset + something else
 }
