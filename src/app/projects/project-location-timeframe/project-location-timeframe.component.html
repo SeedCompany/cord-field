@@ -1,25 +1,15 @@
 <mat-card>
   <mat-card-title>Location and Timeframe</mat-card-title>
   <mat-card-content [formGroup]="form">
-    <mat-form-field color="accent">
-      <input matInput
-             placeholder="Location"
-             [matAutocomplete]="auto"
-             formControlName="location"
-             (blur)="onLocationBlur()"/>
-      <mat-hint align="start" *ngIf="location.pending">Searching...</mat-hint>
-      <mat-error *ngIf="location.errors?.required">Please enter location</mat-error>
-      <mat-error *ngIf="location.errors?.noMatches">No matches found</mat-error>
-      <mat-autocomplete #auto="matAutocomplete" (optionSelected)="onLocationSelected($event)"
-                        [displayWith]="showLocationName">
-        <mat-option *ngFor="let location of locationList; trackBy: trackLocationsById"
-                    [value]="location">
-          <span>{{ location.country }}</span> |
-          <span>{{ location.area.name }}</span> |
-          <span>{{ location.region.name }}</span>
-        </mat-option>
-      </mat-autocomplete>
-    </mat-form-field>
+    <app-autocomplete-location
+      placeholder="Location"
+      [clearButton]="false"
+      [keepInput]="true"
+      [required]="true"
+      [value]="location.value"
+      (optionSelected)="location.setValue($event)"
+    >
+    </app-autocomplete-location>
     <div class="date-container">
       <mat-form-field color="accent">
         <input matInput [matDatepicker]="startDate" placeholder="Start Date" formControlName="startDate">

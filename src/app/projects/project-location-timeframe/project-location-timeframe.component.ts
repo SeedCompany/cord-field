@@ -1,10 +1,6 @@
-import { HttpErrorResponse } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { AbstractControl } from '@angular/forms/src/model';
-import { MatAutocompleteSelectedEvent, MatSnackBar, MatSnackBarRef, SimpleSnackBar } from '@angular/material';
-import { Location } from '../../core/models/location';
-import { LocationService } from '../../core/services/location.service';
 import { ProjectViewStateService } from '../project-view-state.service';
 
 @Component({
@@ -15,14 +11,9 @@ import { ProjectViewStateService } from '../project-view-state.service';
 export class ProjectLocationTimeframeComponent implements OnInit {
   form: FormGroup;
   minDate: Date;
-  locationList: Location[] = [];
-  private locSelected: Location | null;
-  private snackBarRef?: MatSnackBarRef<SimpleSnackBar>;
 
   constructor(private formBuilder: FormBuilder,
-              private projectViewState: ProjectViewStateService,
-              private locationService: LocationService,
-              private snackBar: MatSnackBar) {
+              private projectViewState: ProjectViewStateService) {
   }
 
   ngOnInit() {
@@ -40,49 +31,7 @@ export class ProjectLocationTimeframeComponent implements OnInit {
       });
     });
 
-    this.form.valueChanges.subscribe(({startDate, endDate, location}) => {
-      this.projectViewState.change({startDate, endDate});
-    });
-
-    this.location.valueChanges
-      .filter(loc => typeof loc === 'string')
-      .startWith('')
-      .do(() => {
-        this.locSelected = null;
-      })
-      .map(loc => loc.trim())
-      .filter(loc => loc.length > 1)
-      .debounceTime(500)
-      .distinctUntilChanged()
-      .filter(() => !this.location.hasError('required')) // Don't continue if user has already cleared the text
-      .do(() => {
-        this.location.markAsPending();
-        this.locationList.length = 0;
-      })
-      .switchMap(async (term: string) => {
-        try {
-          return await this.locationService.search(term);
-        } catch (e) {
-          return e; // returning error to prevent observable from completing
-        }
-      })
-      .subscribe((locations: Location[] | HttpErrorResponse) => {
-        if (this.location.hasError('required')) {
-          return;
-        }
-
-        if (locations instanceof HttpErrorResponse) {
-          this.showSnackBar('Failed to fetch locations');
-          return;
-        }
-
-        // Be sure first error shows immediately instead of waiting for field to blur
-        this.location.markAsTouched();
-
-        (locations.length > 0)
-          ? this.locationList = locations
-          : this.location.setErrors({noMatches: true});
-      });
+    this.form.valueChanges.subscribe(changes => this.projectViewState.change(changes));
 
     this.startDate.valueChanges.subscribe(value => {
       this.minDate = value;
@@ -95,31 +44,5 @@ export class ProjectLocationTimeframeComponent implements OnInit {
 
   get startDate(): AbstractControl {
     return this.form.get('startDate')!;
-  }
-
-  trackLocationsById(index: number, location: Location): string {
-    return location.id;
-  }
-
-  onLocationSelected(event: MatAutocompleteSelectedEvent): void {
-    this.locSelected = event.option.value;
-    this.projectViewState.change({location: event.option.value});
-  }
-
-  onLocationBlur(): void {
-    if (!this.locSelected) {
-      this.location.setValue('');
-      this.projectViewState.change({location: undefined});
-    }
-  }
-
-  showLocationName(loc?: Location): string {
-    return loc ? `${loc.country} | ${loc.area.name} | ${loc.region.name}` : '';
-  }
-
-  private showSnackBar(message: string): void {
-    this.snackBarRef = this.snackBar.open(message, undefined, {
-      duration: 3000
-    });
   }
 }

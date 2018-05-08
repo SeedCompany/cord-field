@@ -19,7 +19,7 @@ html {
 body {
   margin: 0;
   display: flex;
-  min-height: 100vh;
+  height: 100vh;
   background-color: mat-background($theme, background);
 }
 
@@ -70,4 +70,10 @@ body {
   .mat-list-item .mat-line:nth-child(n+2) {
     color: mat-foreground($theme, secondary-text);
   }
+}
+
+// Keep input suffixes at the same height as the text input for chip lists
+.mat-form-field.mat-form-field-type-mat-chip-list .mat-input-suffix {
+  align-self: flex-end;
+  margin-bottom: 6px;
 }

@@ -1,0 +1,102 @@
+<mat-card class="partners">
+  <mat-card-title>Partners</mat-card-title>
+  <mat-card-content>
+    <mat-accordion displayMode="flat">
+
+      <mat-expansion-panel *ngFor="let partnership of partnerships; trackBy: trackById"
+                           [expanded]="isCardOpened(partnership)"
+                           (opened)="onCardOpen(partnership)"
+                           (closed)="onCardClose()"
+                           [class.mat-elevation-z0]="true"
+      >
+        <mat-expansion-panel-header collapsedHeight="72px" expandedHeight="72px">
+          <mat-panel-title>
+            <app-avatar-letter color="primary">{{ partnership.name.charAt(0) }}</app-avatar-letter>
+            <div class="title">
+              <span class="name">{{ partnership.name }}</span>
+              <small *ngIf="!isCardOpened(partnership)">{{ partnership.types.join(', ') }}</small>
+            </div>
+          </mat-panel-title>
+          <mat-panel-description *ngIf="!isCardOpened(partnership)">
+            <div>
+              <div class="description-line">
+                <span>MOU:</span>&nbsp;
+                <span>{{ PartnershipAgreementStatus.forUI(partnership.mouStatus) }}</span>
+              </div>
+              <div class="description-line">
+                <span>Partner Agreement:</span>&nbsp;
+                <span>{{ PartnershipAgreementStatus.forUI(partnership.agreementStatus) }}</span>
+              </div>
+            </div>
+          </mat-panel-description>
+        </mat-expansion-panel-header>
+
+        <ng-template matExpansionPanelContent>
+          <mat-form-field color="accent">
+            <mat-select multiple placeholder="Roles">
+              <mat-option *ngFor="let type of PartnershipType.entries(); trackBy: PartnershipType.trackEntryBy"
+                          [value]="type.value">
+                {{ type.ui }}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+
+          <div class="name">
+            <mat-label class="name">MOU</mat-label>
+          </div>
+          <button mat-button color="accent">
+            UPLOAD
+            <mat-icon>file_upload</mat-icon>
+          </button>
+
+          <mat-form-field color="accent" class="upload-status">
+            <mat-select placeholder="Status">
+              <mat-option *ngFor="let status of PartnershipAgreementStatus.entries(); trackBy: PartnershipAgreementStatus.trackEntryBy"
+                          [value]="status.value">
+                {{ status.ui }}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+
+          <div class="name">
+            <mat-label>Partner Agreement</mat-label>
+          </div>
+          <button mat-button color="accent" class="upload-button">
+            UPLOAD
+            <mat-icon>file_upload</mat-icon>
+          </button>
+
+          <mat-form-field color="accent" class="upload-status">
+            <mat-select placeholder="Status">
+              <mat-option *ngFor="let status of PartnershipAgreementStatus.entries(); trackBy: PartnershipAgreementStatus.trackEntryBy"
+                          [value]="status.value">
+                {{ status.ui }}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+
+          <div class="actions">
+            <button mat-button color="warn" (click)="onDelete(partnership)">REMOVE</button>
+          </div>
+        </ng-template>
+      </mat-expansion-panel>
+    </mat-accordion>
+
+    <app-autocomplete-organization
+      *ngIf="adding"
+      [list]="partnerships"
+      [autoFocus]="true"
+      placeholder="Search Organizations"
+      (optionSelected)="onSelect($event)"
+      (cancel)="onCancel()"
+    >
+    </app-autocomplete-organization>
+
+  </mat-card-content>
+
+  <mat-card-actions *ngIf="!adding">
+    <button mat-button color="accent" (click)="adding = true">
+      ADD PARTNER
+    </button>
+  </mat-card-actions>
+</mat-card>
