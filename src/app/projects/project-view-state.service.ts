@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { Observable } from 'rxjs/Observable';
 import { Language } from '../core/models/language';
-import { Partnership } from '../core/models/partnership';
+import { Partnership, PartnershipForSaveAPI } from '../core/models/partnership';
 import { Project } from '../core/models/project';
 import { ProjectService } from '../core/services/project.service';
 
@@ -139,7 +139,7 @@ export class ProjectViewStateService {
     },
     partnerships: {
       accessor: returnId,
-      toServer: mapChangeList<Partnership, Partnership, string>(returnSelf, returnId)
+      toServer: mapChangeList<Partnership, PartnershipForSaveAPI, string>(Partnership.forSaveAPI, returnId)
     }
   };
 

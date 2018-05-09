@@ -1,6 +1,15 @@
 import { buildEnum } from './enum';
 import { Organization } from './organization';
 
+export interface PartnershipForSaveAPI {
+  agreementStatus: PartnershipAgreementStatus;
+  mouStatus: PartnershipAgreementStatus;
+  mouStart: Date | null;
+  mouEnd: Date | null;
+  organizationId: string;
+  types: PartnershipType[];
+}
+
 export class Partnership {
   agreementStatus: PartnershipAgreementStatus;
   mouStatus: PartnershipAgreementStatus;
@@ -42,6 +51,12 @@ export class Partnership {
     partnership.types = [];
 
     return partnership;
+  }
+
+  static forSaveAPI(partnership: Partnership): PartnershipForSaveAPI {
+    // replace organization object with orgId
+    const {organization, ...rest} = partnership;
+    return {...rest, organizationId: partnership.id} as PartnershipForSaveAPI;
   }
 }
 
