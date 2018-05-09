@@ -3,6 +3,7 @@ import { Injectable } from '@angular/core';
 import { SortDirection } from '@angular/material';
 import { Observable } from 'rxjs/Observable';
 import { ProjectCreationResult } from '../../projects/project-create-dialog/project-create-dialog.component';
+import { ModifiedProject } from '../../projects/project-view-state.service';
 import { Project, ProjectsWithCount } from '../models/project';
 import { PloApiService } from './http/plo-api.service';
 
@@ -50,5 +51,9 @@ export class ProjectService {
   async createProject(project: ProjectCreationResult): Promise<string> {
     const obj = await this.ploApi.post<{id: string}>('/projects', project).toPromise();
     return obj.id;
+  }
+
+  async save(id: string, modified: ModifiedProject): Promise<void> {
+    await this.ploApi.put(`/projects/${id}/save`, modified).toPromise();
   }
 }

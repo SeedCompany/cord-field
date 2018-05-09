@@ -22,8 +22,8 @@ export class ProjectLanguagesComponent implements OnInit {
   }
 
   onSelect(language: Language) {
-    this.projectViewState.change({languages: {added: language}});
-    this.languages.push(language);
+    this.projectViewState.change({languages: {add: language}});
+    this.languages = [...this.languages, language];
     this.addingLanguage = false;
   }
 
@@ -32,7 +32,7 @@ export class ProjectLanguagesComponent implements OnInit {
   }
 
   onDelete(language: Language) {
-    this.projectViewState.change({languages: {removed: language}});
+    this.projectViewState.change({languages: {remove: language}});
     this.languages = this.languages.filter(current => current.id !== language.id);
   }
 
