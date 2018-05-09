@@ -69,7 +69,7 @@ type ChangeEntries = Array<[keyof Project, any]>;
 /**
  * These are for the collective changes that will be processed on save().
  */
-type ModifiedProject = {[key in keyof Partial<Project>]: any | ModifiedList<any>};
+export type ModifiedProject = {[key in keyof Partial<Project>]: any | ModifiedList<any>};
 
 /**
  * The collective changes for a list field.
@@ -116,6 +116,8 @@ export class ProjectViewStateService {
   private dirty = new BehaviorSubject<boolean>(false);
   private modified: ModifiedProject;
 
+  private submitting = new BehaviorSubject<boolean>(false);
+
   private config: ChangeConfig = {
     startDate: {
       accessor: (date: Date) => date.getTime()
@@ -145,6 +147,10 @@ export class ProjectViewStateService {
 
   get isDirty(): Observable<boolean> {
     return this.dirty.asObservable().distinctUntilChanged();
+  }
+
+  get isSubmitting(): Observable<boolean> {
+    return this.submitting.asObservable();
   }
 
   onNewId(id: string): void {
@@ -240,11 +246,22 @@ export class ProjectViewStateService {
     }
   }
 
-  save(): void {
+  async save(): Promise<void> {
+    const modified: ModifiedProject = {};
+    for (const [key, change] of Object.entries(this.modified) as ChangeEntries) {
+      modified[key] = this.config[key].toServer ? this.config[key].toServer!(change) : change;
+    }
+    this.submitting.next(true);
+    try {
+      await this.projectService.save(this._project.value.id, modified);
+    } finally {
+      this.submitting.next(false);
+    }
+
+    // Apply changes to a new project object, so we don't have to ask the server for a new version
     const previous = this._project.value;
     // clone project
     const project: Project = Object.assign(Object.create(Object.getPrototypeOf(previous)), previous);
-
     for (const [key, change] of Object.entries(this.modified) as ChangeEntries) {
       if (!isChangeForList(change)) {
         project[key] = change;
@@ -259,12 +276,6 @@ export class ProjectViewStateService {
         project[key] = (project[key] as any[]).concat(change.added);
       }
     }
-
-    const modified: ModifiedProject = {};
-    for (const [key, change] of Object.entries(this.modified) as ChangeEntries) {
-      modified[key] = this.config[key].toServer ? this.config[key].toServer!(change) : change;
-    }
-    // TODO Call API
 
     this.onNewProject(project);
   }

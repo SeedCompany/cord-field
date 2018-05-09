@@ -223,14 +223,18 @@ describe('ProjectViewStateService', () => {
       });
 
       it('save changes', async () => {
-        initializeProject();
+        const service: ProjectService = TestBed.get(ProjectService);
+        spyOn(service, 'save');
 
+        initializeProject();
         viewState.change({
           startDate: new Date('1/2/2018'), // changed
           endDate: new Date('3/4/2018') // changed
         });
 
-        viewState.save();
+        await viewState.save();
+
+        expect(service.save).toHaveBeenCalledTimes(1);
         expect(dirty).toBeFalsy();
         expectModified({});
         const p: Project = await viewState.project.first().toPromise();
@@ -475,6 +479,9 @@ describe('ProjectViewStateService', () => {
       });
 
       it('save changes', async () => {
+        const service: ProjectService = TestBed.get(ProjectService);
+        spyOn(service, 'save');
+
         initializeProject({
           languages: [
             Language.fromJson({id: '1'}),
@@ -488,8 +495,9 @@ describe('ProjectViewStateService', () => {
           }
         });
 
-        viewState.save();
+        await viewState.save();
 
+        expect(service.save).toHaveBeenCalledTimes(1);
         expect(dirty).toBeFalsy();
         expectModified({});
         const p: Project = await viewState.project.first().toPromise();
