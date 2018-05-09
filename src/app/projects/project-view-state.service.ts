@@ -2,7 +2,6 @@ import { Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { Observable } from 'rxjs/Observable';
 import { Language } from '../core/models/language';
-import { Location } from '../core/models/location';
 import { Partnership } from '../core/models/partnership';
 import { Project } from '../core/models/project';
 import { ProjectService } from '../core/services/project.service';
@@ -108,6 +107,9 @@ const isChangeForList = (change: any): boolean => {
   return change != null && typeof change === 'object' && ('add' in change || 'remove' in change);
 };
 
+const returnSelf = (val: any) => val;
+const returnId = (val: {id: string}) => val.id;
+
 @Injectable()
 export class ProjectViewStateService {
 
@@ -126,16 +128,16 @@ export class ProjectViewStateService {
       accessor: (date: Date) => date.getTime()
     },
     location: {
-      accessor: (location: Location) => location.id,
-      toServer: (location: Location) => location.id
+      accessor: returnId,
+      toServer: returnId
     },
     languages: {
-      accessor: (language: Language) => language.id,
-      toServer: mapChangeList<Language, string, string>(language => language.id, language => language.id)
+      accessor: returnId,
+      toServer: mapChangeList<Language, string, string>(returnId, returnId)
     },
     partnerships: {
-      accessor: (partnership: Partnership) => partnership.id,
-      toServer: mapChangeList<Partnership, Partnership, string>(partnership => partnership, partnership => partnership.id)
+      accessor: returnId,
+      toServer: mapChangeList<Partnership, Partnership, string>(returnSelf, returnId)
     }
   };
 
