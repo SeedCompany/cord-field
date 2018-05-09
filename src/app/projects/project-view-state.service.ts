@@ -16,7 +16,8 @@ type Comparator = (a: any, b: any) => boolean;
 type ChangeConfig = {
   [key in keyof Partial<Project>]: {
     accessor: Accessor,
-    toServer?: (val: any) => any
+    toServer?: (val: any) => any,
+    key?: string // The key the server is looking for
   }
 };
 
@@ -129,7 +130,8 @@ export class ProjectViewStateService {
     },
     location: {
       accessor: returnId,
-      toServer: returnId
+      toServer: returnId,
+      key: 'locationId'
     },
     languages: {
       accessor: returnId,
@@ -249,9 +251,9 @@ export class ProjectViewStateService {
   }
 
   async save(): Promise<void> {
-    const modified: ModifiedProject = {};
+    const modified: any = {};
     for (const [key, change] of Object.entries(this.modified) as ChangeEntries) {
-      modified[key] = this.config[key].toServer ? this.config[key].toServer!(change) : change;
+      modified[this.config[key].key || key] = this.config[key].toServer ? this.config[key].toServer!(change) : change;
     }
     this.submitting.next(true);
     try {
