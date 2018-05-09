@@ -22,26 +22,26 @@ type ChangeConfig = {
 };
 
 /**
- * Given mappers for added items and removed items return a function for config.toServer.
+ * Given mappers for add items and remove items return a function for config.toServer.
  * This makes it easier to map the items (differently for adding and removing) to their server values.
  *
  * For example:
  *   // When adding items give the server the full objects, but when removing only give the IDs.
  *   mapChangeList(item => item, item => item.id);
  *
- * @param {(item: T) => A} mapAdded
- * @param {(item: T) => R} mapRemoved
- * @returns {(changes: ModifiedList<T>) => {added?: A[]; removed?: R[]}}
+ * @param {(item: T) => A} mapAdd
+ * @param {(item: T) => R} mapRemove
+ * @returns {(changes: ModifiedList<T>) => {add?: A[]; remove?: R[]}}
  */
-const mapChangeList = <T, A, R>(mapAdded: (item: T) => A, mapRemoved: (item: T) => R) => {
+const mapChangeList = <T, A, R>(mapAdd: (item: T) => A, mapRemove: (item: T) => R) => {
   return (changes: ModifiedList<T>) => {
-    const result: {added?: A[], removed?: R[]} = {};
+    const result: {add?: A[], remove?: R[]} = {};
 
-    if ('added' in changes && changes.added) {
-      result.added = changes.added.map(mapAdded);
+    if ('add' in changes && changes.add) {
+      result.add = changes.add.map(mapAdd);
     }
-    if ('removed' in changes && changes.removed) {
-      result.removed = changes.removed.map(mapRemoved);
+    if ('remove' in changes && changes.remove) {
+      result.remove = changes.remove.map(mapRemove);
     }
 
     return result;
@@ -57,8 +57,8 @@ type Changes = {[key in keyof Partial<Project>]: any | ChangeList<any>};
  * One of the changes can be for field that is a list, which will use this structure.
  */
 interface ChangeList<T> {
-  added?: T;
-  removed?: T;
+  add?: T;
+  remove?: T;
 }
 
 /**
@@ -75,8 +75,8 @@ export type ModifiedProject = {[key in keyof Partial<Project>]: any | ModifiedLi
  * The collective changes for a list field.
  */
 interface ModifiedList<T> {
-  added?: T[];
-  removed?: T[];
+  add?: T[];
+  remove?: T[];
 }
 
 /**
@@ -105,7 +105,7 @@ const compareNullable = (compare: Comparator): Comparator => {
 };
 
 const isChangeForList = (change: any): boolean => {
-  return change != null && typeof change === 'object' && ('added' in change || 'removed' in change);
+  return change != null && typeof change === 'object' && ('add' in change || 'remove' in change);
 };
 
 @Injectable()
@@ -169,11 +169,11 @@ export class ProjectViewStateService {
         this.changeSingle(key, change, project[key]);
         continue;
       }
-      if ('removed' in change) {
-        this.removeList(key, change.removed, project[key] as any[] | null);
+      if ('remove' in change) {
+        this.removeList(key, change.remove, project[key] as any[] | null);
       }
-      if ('added' in change) {
-        this.addList(key, change.added, project[key] as any[] | null);
+      if ('add' in change) {
+        this.addList(key, change.add, project[key] as any[] | null);
       }
     }
 
@@ -183,21 +183,21 @@ export class ProjectViewStateService {
   private addList(key: keyof Project, newValue: any, originalValue: any[] | null): void {
     const comparator = compareBy(this.config[key].accessor);
     const matchChanged = (current: any) => comparator(current, newValue);
-    // If item is not in added list...
-    if (!(key in this.modified && 'added' in this.modified[key] && this.modified[key].added.some(matchChanged))) {
+    // If item is not in add list...
+    if (!(key in this.modified && 'add' in this.modified[key] && this.modified[key].add.some(matchChanged))) {
       // And original list does not have item, add it
       if (originalValue == null || !originalValue.some(matchChanged)) {
-        const newList = [...(this.modified[key] ? (this.modified[key].added || []) : []), newValue];
-        this.modified[key] = {...this.modified[key] || {}, added: newList};
+        const newList = [...(this.modified[key] ? (this.modified[key].add || []) : []), newValue];
+        this.modified[key] = {...this.modified[key] || {}, add: newList};
       }
     }
-    // If item is in removed list, remove it
-    if (key in this.modified && 'removed' in this.modified[key] && this.modified[key].removed.some(matchChanged)) {
-      const newList = [...this.modified[key].removed.filter((current: any) => !comparator(current, newValue))];
+    // If item is in remove list, remove it
+    if (key in this.modified && 'remove' in this.modified[key] && this.modified[key].remove.some(matchChanged)) {
+      const newList = [...this.modified[key].remove.filter((current: any) => !comparator(current, newValue))];
       if (newList.length === 0) {
-        delete this.modified[key].removed;
+        delete this.modified[key].remove;
       } else {
-        this.modified[key].removed = newList;
+        this.modified[key].remove = newList;
       }
     }
 
@@ -209,21 +209,21 @@ export class ProjectViewStateService {
   private removeList(key: keyof Project, newValue: any, originalValue: any[] | null): void {
     const comparator = compareBy(this.config[key].accessor);
     const matchChanged = (current: any) => comparator(current, newValue);
-    // If item is not in removed list...
-    if (!(key in this.modified && 'removed' in this.modified[key] && this.modified[key].removed.some(matchChanged))) {
+    // If item is not in remove list...
+    if (!(key in this.modified && 'remove' in this.modified[key] && this.modified[key].remove.some(matchChanged))) {
       // And original list has item, remove it
       if (originalValue == null || originalValue.some(matchChanged)) {
-        const newList = [...(this.modified[key] ? (this.modified[key].removed || []) : []), newValue];
-        this.modified = {...this.modified, [key]: {removed: newList}};
+        const newList = [...(this.modified[key] ? (this.modified[key].remove || []) : []), newValue];
+        this.modified = {...this.modified, [key]: {remove: newList}};
       }
     }
-    // If item is in added list, remove it
-    if (key in this.modified && 'added' in this.modified[key] && this.modified[key].added.some(matchChanged)) {
-      const newList = [...this.modified[key].added.filter((current: any) => !comparator(current, newValue))];
+    // If item is in add list, remove it
+    if (key in this.modified && 'add' in this.modified[key] && this.modified[key].add.some(matchChanged)) {
+      const newList = [...this.modified[key].add.filter((current: any) => !comparator(current, newValue))];
       if (newList.length === 0) {
-        delete this.modified[key].added;
+        delete this.modified[key].add;
       } else {
-        this.modified[key].added = newList;
+        this.modified[key].add = newList;
       }
     }
 
@@ -267,13 +267,13 @@ export class ProjectViewStateService {
         project[key] = change;
         continue;
       }
-      if ('removed' in change) {
+      if ('remove' in change) {
         const accessor = this.config[key].accessor;
-        const toRemove = (change.removed as any[]).map(accessor);
+        const toRemove = (change.remove as any[]).map(accessor);
         project[key] = (project[key] as any[]).filter(current => !toRemove.includes(accessor(current)));
       }
-      if ('added' in change) {
-        project[key] = (project[key] as any[]).concat(change.added);
+      if ('add' in change) {
+        project[key] = (project[key] as any[]).concat(change.add);
       }
     }
 

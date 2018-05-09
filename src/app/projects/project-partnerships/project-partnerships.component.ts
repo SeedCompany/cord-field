@@ -46,7 +46,7 @@ export class ProjectPartnershipsComponent implements OnInit {
   onSelect(org: Organization): void {
     const partnership = Partnership.fromOrganization(org);
 
-    this.projectViewState.change({partnerships: {added: partnership}});
+    this.projectViewState.change({partnerships: {add: partnership}});
     this.partnerships = [...this.partnerships, partnership];
     this.adding = false;
   }
@@ -56,7 +56,7 @@ export class ProjectPartnershipsComponent implements OnInit {
   }
 
   onDelete(partnership: Partnership): void {
-    this.projectViewState.change({partnerships: {removed: partnership}});
+    this.projectViewState.change({partnerships: {remove: partnership}});
     this.partnerships = this.partnerships.filter(current => current.id !== partnership.id);
   }
 }

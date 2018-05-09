@@ -253,7 +253,7 @@ describe('ProjectViewStateService', () => {
 
         viewState.change({
           languages: {
-            added: Language.fromJson({id: '1'})
+            add: Language.fromJson({id: '1'})
           }
         });
         expect(dirty).toBeFalsy();
@@ -267,13 +267,13 @@ describe('ProjectViewStateService', () => {
 
         viewState.change({
           languages: {
-            added: Language.fromJson({id: '1'})
+            add: Language.fromJson({id: '1'})
           }
         });
         expect(dirty).toBeTruthy();
         expectModified({
           languages: {
-            added: [
+            add: [
               Language.fromJson({id: '1'})
             ]
           }
@@ -287,13 +287,13 @@ describe('ProjectViewStateService', () => {
 
         viewState.change({
           languages: {
-            added: Language.fromJson({id: '1'})
+            add: Language.fromJson({id: '1'})
           }
         });
         expect(dirty).toBeTruthy();
         expectModified({
           languages: {
-            added: [
+            add: [
               Language.fromJson({id: '1'})
             ]
           }
@@ -307,20 +307,20 @@ describe('ProjectViewStateService', () => {
 
         viewState.change({
           languages: {
-            added: Language.fromJson({id: '1'})
+            add: Language.fromJson({id: '1'})
           }
         });
 
         viewState.change({
           languages: {
-            added: Language.fromJson({id: '2'})
+            add: Language.fromJson({id: '2'})
           }
         });
         expect(dirty).toBeTruthy();
         // only test that asserts multiple values here
         expectModified({
           languages: {
-            added: [
+            add: [
               Language.fromJson({id: '1'}),
               Language.fromJson({id: '2'})
             ]
@@ -335,12 +335,12 @@ describe('ProjectViewStateService', () => {
 
         viewState.change({
           languages: {
-            added: Language.fromJson({id: '1'})
+            add: Language.fromJson({id: '1'})
           }
         });
         viewState.change({
           languages: {
-            removed: Language.fromJson({id: '1'})
+            remove: Language.fromJson({id: '1'})
           }
         });
         expect(dirty).toBeFalsy();
@@ -353,24 +353,24 @@ describe('ProjectViewStateService', () => {
         });
         viewState.change({
           languages: {
-            added: Language.fromJson({id: '1'})
+            add: Language.fromJson({id: '1'})
           }
         });
         viewState.change({
           languages: {
-            added: Language.fromJson({id: '2'})
+            add: Language.fromJson({id: '2'})
           }
         });
 
         viewState.change({
           languages: {
-            removed: Language.fromJson({id: '1'})
+            remove: Language.fromJson({id: '1'})
           }
         });
         expect(dirty).toBeTruthy();
         expectModified({
           languages: {
-            added: [
+            add: [
               Language.fromJson({id: '2'})
             ]
           }
@@ -386,13 +386,13 @@ describe('ProjectViewStateService', () => {
 
         viewState.change({
           languages: {
-            removed: Language.fromJson({id: '1'})
+            remove: Language.fromJson({id: '1'})
           }
         });
         expect(dirty).toBeTruthy();
         expectModified({
           languages: {
-            removed: [
+            remove: [
               Language.fromJson({id: '1'})
             ]
           }
@@ -408,12 +408,12 @@ describe('ProjectViewStateService', () => {
 
         viewState.change({
           languages: {
-            removed: Language.fromJson({id: '1'})
+            remove: Language.fromJson({id: '1'})
           }
         });
         viewState.change({
           languages: {
-            added: Language.fromJson({id: '1'})
+            add: Language.fromJson({id: '1'})
           }
         });
         expect(dirty).toBeFalsy();
@@ -429,24 +429,24 @@ describe('ProjectViewStateService', () => {
         });
         viewState.change({
           languages: {
-            removed: Language.fromJson({id: '1'})
+            remove: Language.fromJson({id: '1'})
           }
         });
         viewState.change({
           languages: {
-            removed: Language.fromJson({id: '2'})
+            remove: Language.fromJson({id: '2'})
           }
         });
 
         viewState.change({
           languages: {
-            added: Language.fromJson({id: '1'})
+            add: Language.fromJson({id: '1'})
           }
         });
         expect(dirty).toBeTruthy();
         expectModified({
           languages: {
-            removed: [
+            remove: [
               Language.fromJson({id: '2'})
             ]
           }
@@ -462,8 +462,8 @@ describe('ProjectViewStateService', () => {
         });
         viewState.change({
           languages: {
-            added: Language.fromJson({id: '3'}),
-            removed: Language.fromJson({id: '1'})
+            add: Language.fromJson({id: '3'}),
+            remove: Language.fromJson({id: '1'})
           }
         });
 
@@ -490,8 +490,8 @@ describe('ProjectViewStateService', () => {
         });
         viewState.change({
           languages: {
-            added: Language.fromJson({id: '3'}),
-            removed: Language.fromJson({id: '1'})
+            add: Language.fromJson({id: '3'}),
+            remove: Language.fromJson({id: '1'})
           }
         });
 
