@@ -1,5 +1,12 @@
+<mat-progress-spinner
+  [class.is-active]="progress"
+  [diameter]="68"
+  mode="indeterminate"
+  color="accent"
+></mat-progress-spinner>
 <!-- Fab -->
 <button mat-fab
+        [disabled]="disabled"
         [@preventInitialAnimation]
         [satPopoverAnchorFor]="dial"
         (click)="dial.toggle()">

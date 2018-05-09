@@ -28,6 +28,8 @@ export class SpeedDialComponent {
   @Input() icon = 'edit';
   @Input() closeIcon = 'close';
   @Input() align: 'above' | 'below' = 'above';
+  @Input() disabled = false;
+  @Input() progress = false;
 
   @ViewChild('dial') private dial: SatPopover;
 
