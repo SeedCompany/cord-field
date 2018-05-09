@@ -5,7 +5,7 @@ function compose {
 }
 
 function down {
-  compose down --remove-orphans
+  compose down --rmi local
   docker volume prune -f || echo "skipped docker volume prune"
 }
 
