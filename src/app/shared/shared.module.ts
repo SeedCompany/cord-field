@@ -1,4 +1,4 @@
-import { CommonModule } from '@angular/common';
+import { CommonModule, DecimalPipe } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { SatPopoverModule } from '@ncstate/sat-popover';
@@ -12,6 +12,7 @@ import { SearchComponent } from './components/search/search.component';
 import { SpeedDialItemComponent } from './components/speed-dial-item/speed-dial-item.component';
 import { SpeedDialComponent } from './components/speed-dial/speed-dial.component';
 import { AutofocusDirective } from './directives/autofocus.directive';
+import { LanguageInfoPipe } from './pipes/language-info.pipe';
 
 @NgModule({
   imports: [
@@ -29,6 +30,7 @@ import { AutofocusDirective } from './directives/autofocus.directive';
     AvatarLetterComponent,
     CommonModule,
     FormsModule,
+    LanguageInfoPipe,
     MaterialModule,
     ReactiveFormsModule,
     SearchComponent,
@@ -42,9 +44,13 @@ import { AutofocusDirective } from './directives/autofocus.directive';
     AutocompleteComponent,
     AutofocusDirective,
     AvatarLetterComponent,
+    LanguageInfoPipe,
     SearchComponent,
     SpeedDialComponent,
     SpeedDialItemComponent
+  ],
+  providers: [
+    DecimalPipe
   ]
 })
 export class SharedModule {

@@ -31,4 +31,8 @@ export class Language {
   get nameOrDisplayName(): string {
     return this.name || this.displayName;
   }
+
+  get population(): number | null {
+    return this.organizationPopulation || this.ethnologuePopulation;
+  }
 }
