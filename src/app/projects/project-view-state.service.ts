@@ -22,20 +22,17 @@ type ChangeConfig = {
 };
 
 /**
- * Given mappers for add items and remove items return a function for config.toServer.
- * This makes it easier to map the items (differently for adding and removing) to their server values.
+ * Given mappers for add/remove/update items return a function for config.toServer.
+ * This makes it easier to map the items differently for each change to their server values.
+ * By default, `mapUpdate` uses the same function as `mapAdd`.
  *
  * For example:
  *   // When adding items give the server the full objects, but when removing only give the IDs.
  *   mapChangeList(item => item, item => item.id);
- *
- * @param {(item: T) => A} mapAdd
- * @param {(item: T) => R} mapRemove
- * @returns {(changes: ModifiedList<T>) => {add?: A[]; remove?: R[]}}
  */
-const mapChangeList = <T, A, R>(mapAdd: (item: T) => A, mapRemove: (item: T) => R) => {
+function mapChangeList<T, A, R, C = A>(mapAdd: (item: T) => A, mapRemove: (item: T) => R, mapUpdate?: (item: T) => C) {
   return (changes: ModifiedList<T>) => {
-    const result: {add?: A[], remove?: R[]} = {};
+    const result: {add?: A[], remove?: R[], update?: C[]} = {};
 
     if ('add' in changes && changes.add) {
       result.add = changes.add.map(mapAdd);
@@ -43,10 +40,13 @@ const mapChangeList = <T, A, R>(mapAdd: (item: T) => A, mapRemove: (item: T) => 
     if ('remove' in changes && changes.remove) {
       result.remove = changes.remove.map(mapRemove);
     }
+    if ('update' in changes && changes.update) {
+      result.update = changes.update.map(mapUpdate || mapAdd as any as (item: T) => C);
+    }
 
     return result;
   };
-};
+}
 
 /**
  * Changes that can be processed with the change() method.
@@ -59,6 +59,7 @@ type Changes = {[key in keyof Partial<Project>]: any | ChangeList<any>};
 interface ChangeList<T> {
   add?: T;
   remove?: T;
+  update?: T;
 }
 
 /**
@@ -74,10 +75,7 @@ export type ModifiedProject = {[key in keyof Partial<Project>]: any | ModifiedLi
 /**
  * The collective changes for a list field.
  */
-interface ModifiedList<T> {
-  add?: T[];
-  remove?: T[];
-}
+type ModifiedList<T> = Record<keyof ChangeList<T>, T[]>;
 
 /**
  * Compare objects by mapping them to comparable values with the given accessor.
@@ -105,7 +103,7 @@ const compareNullable = (compare: Comparator): Comparator => {
 };
 
 const isChangeForList = (change: any): boolean => {
-  return change != null && typeof change === 'object' && ('add' in change || 'remove' in change);
+  return change != null && typeof change === 'object' && ('add' in change || 'remove' in change || 'update' in change);
 };
 
 const returnSelf = (val: any) => val;
@@ -179,6 +177,9 @@ export class ProjectViewStateService {
       if ('add' in change) {
         this.addList(key, change.add, project[key] as any[] | null);
       }
+      if ('update' in change) {
+        this.updateListItem(key, change.update, project[key] as any[] | null);
+      }
     }
 
     this.dirty.next(Object.keys(this.modified).length > 0);
@@ -236,6 +237,49 @@ export class ProjectViewStateService {
     }
   }
 
+  private updateListItem(key: keyof Project, newValue: any, originalList: any[] | null): void {
+    const comparator = compareBy(this.config[key].accessor);
+    const matchChanged = (current: any) => comparator(current, newValue);
+    // If item is in add list...
+    if (key in this.modified && 'add' in this.modified[key] && this.modified[key].add.some(matchChanged)) {
+      const index = this.modified[key].add.findIndex(matchChanged);
+      this.modified[key].add[index] = newValue;
+      return;
+    }
+    // If item is not update list, add it
+    if (!(key in this.modified && 'update' in this.modified[key] && this.modified[key].update.some(matchChanged))) {
+      const newChangeList = [...(this.modified[key] ? (this.modified[key].update || []) : []), newValue];
+      this.modified[key] = {...this.modified[key] || {}, update: newChangeList};
+      return;
+    }
+    // Get original value or fix dev mistake
+    const originalValue = originalList ? originalList.find(matchChanged) : null;
+    if (!originalValue) {
+      // item isn't in original list, it should be added instead of changed. We should warn dev on this.
+      this.addList(key, newValue, originalList);
+      return;
+    }
+    // If update is still different than original replace item in update list.
+    // tslint:disable-next-line:triple-equals
+    if (newValue != originalValue) {
+      const index = this.modified[key].update.findIndex(matchChanged);
+      this.modified[key].update[index] = newValue;
+      return;
+    }
+
+    // Remove from update list
+    const newList = [...this.modified[key].update.filter((current: any) => !comparator(current, newValue))];
+    if (newList.length === 0) {
+      delete this.modified[key].update;
+    } else {
+      this.modified[key].update = newList;
+    }
+
+    if (Object.keys(this.modified[key]).length === 0) {
+      delete this.modified[key];
+    }
+  }
+
   private changeSingle(key: keyof Project, newValue: any, originalValue: any): void {
     const comparator = compareNullable(compareBy(this.config[key].accessor));
 
@@ -278,6 +322,15 @@ export class ProjectViewStateService {
       }
       if ('add' in change) {
         project[key] = (project[key] as any[]).concat(change.add);
+      }
+      if ('update' in change) {
+        const comparator = compareBy(this.config[key].accessor);
+        for (const item of change.update) {
+          const index = (project[key] as any[]).findIndex(current => comparator(current, item));
+          if (index !== -1) {
+            (project[key] as any[])[index] = item;
+          }
+        }
       }
     }
 
