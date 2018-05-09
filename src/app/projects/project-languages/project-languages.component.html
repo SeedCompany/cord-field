@@ -6,9 +6,9 @@
 
     <mat-list>
       <mat-list-item *ngFor="let language of languages; trackBy: trackLanguageById">
-        <app-avatar-letter color="primary" mat-list-avatar>{{ language.name.charAt(0) }}</app-avatar-letter>
-        <div mat-line>{{ language.name }}</div>
-        <div mat-line>{{ language.ethnologueCode }} | {{ language.rodNumber }} | {{ language.ethnologuePopulation }}</div>
+        <app-avatar-letter color="primary" mat-list-avatar>{{ language.nameOrDisplayName.charAt(0) }}</app-avatar-letter>
+        <div mat-line>{{ language.nameOrDisplayName }}</div>
+        <div mat-line>{{ language | languageInfo }}</div>
         <button mat-icon-button (click)="onDelete(language)" color="primary">
           <mat-icon>close</mat-icon>
         </button>

@@ -14,7 +14,7 @@ export class AutocompleteLanguageComponent extends AutocompleteComponent<Languag
   @Input() placeholder = 'Languages';
   @Input() requiredMessage = 'Please enter a language';
   @Input() serverErrorMessage = 'Failed to fetch languages';
-  @Input() displayItem = (language: Language) => language.name;
+  @Input() displayItem = (language: Language) => language.nameOrDisplayName;
   @Input() trackBy = (language: Language) => language.id;
   @Input() fetcher = (term: string) => this.languageService.search(term);
 
