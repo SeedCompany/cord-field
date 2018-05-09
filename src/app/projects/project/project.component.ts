@@ -1,5 +1,6 @@
 import { animate, state, style, transition, trigger } from '@angular/animations';
 import { Component, OnDestroy, OnInit } from '@angular/core';
+import { MatSnackBar, MatSnackBarRef, SimpleSnackBar } from '@angular/material';
 import { ActivatedRoute, NavigationEnd, Router, UrlSegment } from '@angular/router';
 import { Subscription } from 'rxjs/Subscription';
 import { Project } from '../../core/models/project';
@@ -40,6 +41,7 @@ export class ProjectComponent implements OnInit, OnDestroy {
   private shouldCurrentTabShowSaveFab: boolean;
 
   private idSub = Subscription.EMPTY;
+  private snackBarRef: MatSnackBarRef<SimpleSnackBar> | null;
 
   readonly tabs: TabConfig[] = [
     {path: '/overview', label: 'Overview', saveFab: true},
@@ -53,7 +55,8 @@ export class ProjectComponent implements OnInit, OnDestroy {
   constructor(
     private projectViewState: ProjectViewStateService,
     private route: ActivatedRoute,
-    private router: Router
+    private router: Router,
+    private snackBar: MatSnackBar
   ) {}
 
   ngOnInit() {
@@ -85,8 +88,18 @@ export class ProjectComponent implements OnInit, OnDestroy {
     return tab.path;
   }
 
-  onSave() {
-    this.projectViewState.save();
+  async onSave() {
+    try {
+      await this.projectViewState.save();
+    } catch (e) {
+      this.snackBarRef = this.snackBar.open('Failed to save project', undefined, {
+        duration: 3000
+      });
+      return;
+    }
+    if (this.snackBarRef) {
+      this.snackBarRef.dismiss();
+    }
   }
 
   onDiscard() {
