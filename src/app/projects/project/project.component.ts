@@ -36,6 +36,7 @@ export class ProjectComponent implements OnInit, OnDestroy {
   project: Project;
 
   dirty = false;
+  submitting = false;
   private shouldCurrentTabShowSaveFab: boolean;
 
   private idSub = Subscription.EMPTY;
@@ -62,6 +63,7 @@ export class ProjectComponent implements OnInit, OnDestroy {
     });
     this.projectViewState.project.subscribe(project => this.project = project);
     this.projectViewState.isDirty.subscribe(dirty => this.dirty = dirty);
+    this.projectViewState.isSubmitting.subscribe(submitting => this.submitting = submitting);
 
     this.router.events
       .filter(event => event instanceof NavigationEnd)

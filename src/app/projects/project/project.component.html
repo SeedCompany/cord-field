@@ -1,4 +1,4 @@
-<mat-toolbar (click)="dirty = true">
+<mat-toolbar>
   {{ project.name }}
 </mat-toolbar>
 
@@ -10,7 +10,14 @@
      #rla="routerLinkActive"
      [active]="rla.isActive"
   >{{ tab.label }}</a>
-  <app-speed-dial align="below" icon="save" *ngIf="showSaveFab" [@popInOut]>
+  <app-speed-dial
+    *ngIf="showSaveFab"
+    align="below"
+    icon="save"
+    [disabled]="submitting"
+    [progress]="submitting"
+    [@popInOut]
+  >
     <app-speed-dial-item tooltip="Discard" color="warn" (click)="onDiscard()">
       <mat-icon>delete</mat-icon>
     </app-speed-dial-item>
