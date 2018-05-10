@@ -49,8 +49,4 @@ services:
 
   mongo-db:
     image: mongo
-    ports:
-      - "27017"
-    environment:
-      SERVICE_27017_NAME: client-tsco-cord-mongo-sqa
     mem_limit: 256000000
