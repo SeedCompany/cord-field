@@ -35,7 +35,7 @@ export class Partnership {
     partnership.mouStatus = json.mouStatus || PartnershipAgreementStatus.NotAttached;
     partnership.mouStart = json.mouStart ? new Date(json.mouStart) : null;
     partnership.mouEnd = json.mouEnd ? new Date(json.mouEnd) : null;
-    partnership.types = json.type || [];
+    partnership.types = json.types || [];
 
     return partnership;
   }

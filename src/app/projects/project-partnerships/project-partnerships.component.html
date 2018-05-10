@@ -1,31 +1,32 @@
 <mat-card class="partners">
   <mat-card-title>Partners</mat-card-title>
-  <mat-card-content>
-    <mat-accordion displayMode="flat">
+  <mat-card-content [formGroup]="form">
+    <mat-accordion displayMode="flat" formArrayName="partnerships">
 
-      <mat-expansion-panel *ngFor="let partnership of partnerships; trackBy: trackById"
-                           [expanded]="isCardOpened(partnership)"
-                           (opened)="onCardOpen(partnership)"
-                           (closed)="onCardClose()"
+      <mat-expansion-panel *ngFor="let partnership of partnerships.controls; trackBy: trackById; let index=index"
+                           [formGroupName]="index"
+                           [expanded]="isCardOpened(index)"
+                           (opened)="onCardOpen(index)"
+                           (closed)="onCardClose(index)"
                            [class.mat-elevation-z0]="true"
       >
         <mat-expansion-panel-header collapsedHeight="72px" expandedHeight="72px">
           <mat-panel-title>
-            <app-avatar-letter color="primary">{{ partnership.name.charAt(0) }}</app-avatar-letter>
+            <app-avatar-letter color="primary">{{ partnership.value.organization?.name.charAt(0) }}</app-avatar-letter>
             <div class="title">
-              <span class="name">{{ partnership.name }}</span>
-              <small *ngIf="!isCardOpened(partnership)">{{ partnership.types.join(', ') }}</small>
+              <span class="name">{{ partnership.value.organization?.name }}</span>
+              <small *ngIf="!isCardOpened(index)">{{ partnership.value.types?.map(PartnershipType.forUI).join(', ') }}</small>
             </div>
           </mat-panel-title>
-          <mat-panel-description *ngIf="!isCardOpened(partnership)">
+          <mat-panel-description *ngIf="!isCardOpened(index)">
             <div>
               <div class="description-line">
                 <span>MOU:</span>&nbsp;
-                <span>{{ PartnershipAgreementStatus.forUI(partnership.mouStatus) }}</span>
+                <span>{{ PartnershipAgreementStatus.forUI(partnership.value.mouStatus) }}</span>
               </div>
               <div class="description-line">
                 <span>Partner Agreement:</span>&nbsp;
-                <span>{{ PartnershipAgreementStatus.forUI(partnership.agreementStatus) }}</span>
+                <span>{{ PartnershipAgreementStatus.forUI(partnership.value.agreementStatus) }}</span>
               </div>
             </div>
           </mat-panel-description>
@@ -33,7 +34,7 @@
 
         <ng-template matExpansionPanelContent>
           <mat-form-field color="accent">
-            <mat-select multiple placeholder="Roles">
+            <mat-select multiple placeholder="Types" formControlName="types">
               <mat-option *ngFor="let type of PartnershipType.entries(); trackBy: PartnershipType.trackEntryBy"
                           [value]="type.value">
                 {{ type.ui }}
@@ -50,7 +51,7 @@
           </button>
 
           <mat-form-field color="accent" class="upload-status">
-            <mat-select placeholder="Status">
+            <mat-select placeholder="Status" formControlName="mouStatus">
               <mat-option *ngFor="let status of PartnershipAgreementStatus.entries(); trackBy: PartnershipAgreementStatus.trackEntryBy"
                           [value]="status.value">
                 {{ status.ui }}
@@ -67,7 +68,7 @@
           </button>
 
           <mat-form-field color="accent" class="upload-status">
-            <mat-select placeholder="Status">
+            <mat-select placeholder="Status" formControlName="agreementStatus">
               <mat-option *ngFor="let status of PartnershipAgreementStatus.entries(); trackBy: PartnershipAgreementStatus.trackEntryBy"
                           [value]="status.value">
                 {{ status.ui }}
@@ -76,7 +77,7 @@
           </mat-form-field>
 
           <div class="actions">
-            <button mat-button color="warn" (click)="onDelete(partnership)">REMOVE</button>
+            <button mat-button color="warn" (click)="onDelete(index)">REMOVE</button>
           </div>
         </ng-template>
       </mat-expansion-panel>
@@ -84,11 +85,12 @@
 
     <app-autocomplete-organization
       *ngIf="adding"
-      [list]="partnerships"
-      [autoFocus]="true"
       placeholder="Search Organizations"
+      [autoFocus]="true"
+      [clearButton]="true"
+      [list]="partnerships.value"
       (optionSelected)="onSelect($event)"
-      (cancel)="onCancel()"
+      (cancel)="adding = false"
     >
     </app-autocomplete-organization>
 
