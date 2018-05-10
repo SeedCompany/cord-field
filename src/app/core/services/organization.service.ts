@@ -1,25 +1,14 @@
-import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Organization } from '../models/organization';
+import { PloApiService } from './http/plo-api.service';
 
 @Injectable()
 export class OrganizationService {
 
-  private organizations: Organization[];
-
-  constructor(private http: HttpClient) {
+  constructor(private plo: PloApiService) {
   }
 
-  async search(term: string): Promise<Organization[]> {
-    if (!this.organizations) {
-      this.organizations = await this.http
-        .get<Organization[]>('https://api.mockaroo.com/api/47c0bce0?count=1000&key=fe2eb390')
-        .map(list => list.map(Organization.fromJson))
-        .toPromise();
-    }
-
-    const filter = (org: Organization) => org.name.toLowerCase().includes(term.toLowerCase());
-
-    return this.organizations.filter(filter);
+  search(term: string): Promise<Organization[]> {
+    return this.plo.get<Organization[]>(`/organizations/suggestions?term=${term}`).toPromise();
   }
 }

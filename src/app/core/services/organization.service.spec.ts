@@ -40,7 +40,7 @@ describe('OrganizationService', () => {
       .catch(done.fail);
 
     httpMock
-      .expectOne('https://api.mockaroo.com/api/47c0bce0?count=1000&key=fe2eb390')
+      .expectOne(`${testBaseUrl}/organizations/suggestions?term=zer`)
       .flush([
         {id: '5ae06f3da9941545df22cd03', name: 'Buzzer'},
         {id: '5ae06f3da9941545df22cd49', name: 'Buzz'}
