@@ -2,6 +2,7 @@ import { animate, state, style, transition, trigger } from '@angular/animations'
 import { AfterViewInit, Component, ViewChild } from '@angular/core';
 import { MatDialog, MatPaginator, MatSort, MatTableDataSource } from '@angular/material';
 import { Observable } from 'rxjs/Observable';
+import { Language } from '../../core/models/language';
 import { Project, ProjectStatus, ProjectsWithCount, ProjectType } from '../../core/models/project';
 import { ProjectService } from '../../core/services/project.service';
 import { ProjectCreateDialogComponent } from '../project-create-dialog/project-create-dialog.component';
@@ -81,5 +82,9 @@ export class ProjectListComponent implements AfterViewInit {
 
   trackByValue(index: number, value: any) {
     return value;
+  }
+
+  trackLanguageById(index: number, language: Language): string {
+    return language.id;
   }
 }

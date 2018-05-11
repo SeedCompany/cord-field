@@ -46,8 +46,8 @@
       <mat-cell *matCellDef="let project">
 
         <mat-chip-list *ngIf="project.languages.length > 0">
-          <mat-chip *ngFor="let language of project.languages; trackBy: trackByValue">
-            {{ language }}
+          <mat-chip *ngFor="let language of project.languages; trackBy: trackLanguageById">
+            {{ language.nameOrDisplayName }}
           </mat-chip>
         </mat-chip-list>
         <span *ngIf="project.languages.length === 0" class="language-none">None</span>
