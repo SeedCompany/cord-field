@@ -104,6 +104,15 @@ const compareNullable = (compare: Comparator): Comparator => {
   };
 };
 
+const findBy = (accessor: Accessor) => {
+  const comparator = compareBy(accessor);
+  return (value: any) => (current: any) => comparator(current, value);
+};
+const excludeBy = (accessor: Accessor) => {
+  const comparator = compareBy(accessor);
+  return (value: any) => (current: any) => !comparator(current, value);
+};
+
 const isChangeForList = (change: any): boolean => {
   return change != null && typeof change === 'object' && ('add' in change || 'remove' in change || 'update' in change);
 };
@@ -188,19 +197,19 @@ export class ProjectViewStateService {
   }
 
   private addList(key: keyof Project, newValue: any, originalValue: any[] | null): void {
-    const comparator = compareBy(this.config[key].accessor);
-    const matchChanged = (current: any) => comparator(current, newValue);
+    const finder = findBy(this.config[key].accessor)(newValue);
     // If item is not in add list...
-    if (!(key in this.modified && 'add' in this.modified[key] && this.modified[key].add.some(matchChanged))) {
+    if (!(key in this.modified && 'add' in this.modified[key] && this.modified[key].add.some(finder))) {
       // And original list does not have item, add it
-      if (originalValue == null || !originalValue.some(matchChanged)) {
+      if (originalValue == null || !originalValue.some(finder)) {
         const newList = [...(this.modified[key] ? (this.modified[key].add || []) : []), newValue];
         this.modified[key] = {...this.modified[key] || {}, add: newList};
       }
     }
     // If item is in remove list, remove it
-    if (key in this.modified && 'remove' in this.modified[key] && this.modified[key].remove.some(matchChanged)) {
-      const newList = [...this.modified[key].remove.filter((current: any) => !comparator(current, newValue))];
+    if (key in this.modified && 'remove' in this.modified[key] && this.modified[key].remove.some(finder)) {
+      const excluder = excludeBy(this.config[key].accessor)(newValue);
+      const newList = [...this.modified[key].remove.filter(excluder)];
       if (newList.length === 0) {
         delete this.modified[key].remove;
       } else {
@@ -214,19 +223,19 @@ export class ProjectViewStateService {
   }
 
   private removeList(key: keyof Project, newValue: any, originalValue: any[] | null): void {
-    const comparator = compareBy(this.config[key].accessor);
-    const matchChanged = (current: any) => comparator(current, newValue);
+    const finder = findBy(this.config[key].accessor)(newValue);
     // If item is not in remove list...
-    if (!(key in this.modified && 'remove' in this.modified[key] && this.modified[key].remove.some(matchChanged))) {
+    if (!(key in this.modified && 'remove' in this.modified[key] && this.modified[key].remove.some(finder))) {
       // And original list has item, remove it
-      if (originalValue == null || originalValue.some(matchChanged)) {
+      if (originalValue == null || originalValue.some(finder)) {
         const newList = [...(this.modified[key] ? (this.modified[key].remove || []) : []), newValue];
         this.modified = {...this.modified, [key]: {remove: newList}};
       }
     }
     // If item is in add list, remove it
-    if (key in this.modified && 'add' in this.modified[key] && this.modified[key].add.some(matchChanged)) {
-      const newList = [...this.modified[key].add.filter((current: any) => !comparator(current, newValue))];
+    if (key in this.modified && 'add' in this.modified[key] && this.modified[key].add.some(finder)) {
+      const excluder = excludeBy(this.config[key].accessor)(newValue);
+      const newList = [...this.modified[key].add.filter(excluder)];
       if (newList.length === 0) {
         delete this.modified[key].add;
       } else {
@@ -240,22 +249,21 @@ export class ProjectViewStateService {
   }
 
   private updateListItem(key: keyof Project, newValue: any, originalList: any[] | null): void {
-    const comparator = compareBy(this.config[key].accessor);
-    const matchChanged = (current: any) => comparator(current, newValue);
+    const finder = findBy(this.config[key].accessor)(newValue);
     // If item is in add list...
-    if (key in this.modified && 'add' in this.modified[key] && this.modified[key].add.some(matchChanged)) {
-      const index = this.modified[key].add.findIndex(matchChanged);
+    if (key in this.modified && 'add' in this.modified[key] && this.modified[key].add.some(finder)) {
+      const index = this.modified[key].add.findIndex(finder);
       this.modified[key].add[index] = newValue;
       return;
     }
     // If item is not update list, add it
-    if (!(key in this.modified && 'update' in this.modified[key] && this.modified[key].update.some(matchChanged))) {
+    if (!(key in this.modified && 'update' in this.modified[key] && this.modified[key].update.some(finder))) {
       const newChangeList = [...(this.modified[key] ? (this.modified[key].update || []) : []), newValue];
       this.modified[key] = {...this.modified[key] || {}, update: newChangeList};
       return;
     }
     // Get original value or fix dev mistake
-    const originalValue = originalList ? originalList.find(matchChanged) : null;
+    const originalValue = originalList ? originalList.find(finder) : null;
     if (!originalValue) {
       // item isn't in original list, it should be added instead of changed. We should warn dev on this.
       this.addList(key, newValue, originalList);
@@ -263,13 +271,14 @@ export class ProjectViewStateService {
     }
     // If update is still different than original replace item in update list.
     if (!isEqual(newValue, originalValue)) {
-      const index = this.modified[key].update.findIndex(matchChanged);
+      const index = this.modified[key].update.findIndex(finder);
       this.modified[key].update[index] = newValue;
       return;
     }
 
     // Remove from update list
-    const newList = [...this.modified[key].update.filter((current: any) => !comparator(current, newValue))];
+    const excluder = excludeBy(this.config[key].accessor)(newValue);
+    const newList = [...this.modified[key].update.filter(excluder)];
     if (newList.length === 0) {
       delete this.modified[key].update;
     } else {
