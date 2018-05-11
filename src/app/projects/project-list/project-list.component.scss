@@ -82,4 +82,8 @@ mat-header-row {
   width: 7px;
   display: inline-block;
   margin-right: 5px;
+
+  &.status-active { background: green; }
+  &.status-inactive { background: red; }
+  &.status-in_development { background: orange; }
 }

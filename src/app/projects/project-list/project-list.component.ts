@@ -41,12 +41,6 @@ export class ProjectListComponent implements AfterViewInit {
   @ViewChild(MatSort) sort: MatSort;
   @ViewChild(ProjectListFilterComponent) filtersComponent: ProjectListFilterComponent;
 
-  private readonly statusColor = {
-    [ProjectStatus.Active]: 'green',
-    [ProjectStatus.Inactive]: 'red',
-    [ProjectStatus.InDevelopment]: 'orange'
-  };
-
   constructor(private dialog: MatDialog,
               private projectService: ProjectService) {
   }
@@ -81,10 +75,6 @@ export class ProjectListComponent implements AfterViewInit {
 
   onClearFilters() {
     this.filtersComponent.reset();
-  }
-
-  getStatusColor(status: ProjectStatus) {
-    return this.statusColor[status];
   }
 
   openDialog(): void {
