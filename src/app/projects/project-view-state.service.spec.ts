@@ -66,11 +66,11 @@ describe('ProjectViewStateService', () => {
     describe('Single Item', () => {
       it('original value = clean', async () => {
         initializeProject({
-          startDate: new Date('1/1/2018')
+          mouStart: new Date('1/1/2018')
         });
 
         viewState.change({
-          startDate: new Date('1/1/2018')
+          mouStart: new Date('1/1/2018')
         });
         expect(dirty).toBeFalsy();
         expectModified({});
@@ -78,80 +78,80 @@ describe('ProjectViewStateService', () => {
 
       it('original value -> different value = dirty', async () => {
         initializeProject({
-          startDate: new Date('1/1/2018'),
-          endDate: new Date('3/3/2018')
+          mouStart: new Date('1/1/2018'),
+          mouEnd: new Date('3/3/2018')
         });
 
         viewState.change({
-          startDate: new Date('1/2/2018'), // changed
-          endDate: new Date('3/3/2018') // original
+          mouStart: new Date('1/2/2018'), // changed
+          mouEnd: new Date('3/3/2018') // original
         });
         expect(dirty).toBeTruthy();
         expectModified({
-          startDate: new Date('1/2/2018')
+          mouStart: new Date('1/2/2018')
         });
       });
       it('original NULL value -> different value = dirty', () => {
         initializeProject({
-          startDate: null
+          mouStart: null
         });
 
         viewState.change({
-          startDate: new Date('1/2/2018') // changed
+          mouStart: new Date('1/2/2018') // changed
         });
         expect(dirty).toBeTruthy();
         expectModified({
-          startDate: new Date('1/2/2018')
+          mouStart: new Date('1/2/2018')
         });
       });
       it('original value -> different NULL value = dirty', () => {
         initializeProject({
-          startDate: new Date('1/1/2018')
+          mouStart: new Date('1/1/2018')
         });
 
         viewState.change({
-          startDate: null
+          mouStart: null
         });
         expect(dirty).toBeTruthy();
         expectModified({
-          startDate: null
+          mouStart: null
         });
       });
 
       it('different values add to modified object', async () => {
         initializeProject({
-          startDate: new Date('1/1/2018'),
-          endDate: new Date('3/3/2018')
+          mouStart: new Date('1/1/2018'),
+          mouEnd: new Date('3/3/2018')
         });
 
         viewState.change({
-          startDate: new Date('1/2/2018'), // changed
-          endDate: new Date('3/3/2018') // original
+          mouStart: new Date('1/2/2018'), // changed
+          mouEnd: new Date('3/3/2018') // original
         });
 
         viewState.change({
-          startDate: new Date('1/2/2018'), // not changed
-          endDate: new Date('3/4/2018') // changed
+          mouStart: new Date('1/2/2018'), // not changed
+          mouEnd: new Date('3/4/2018') // changed
         });
         expect(dirty).toBeTruthy();
         // only test that asserts multiple values here
         expectModified({
-          startDate: new Date('1/2/2018'),
-          endDate: new Date('3/4/2018')
+          mouStart: new Date('1/2/2018'),
+          mouEnd: new Date('3/4/2018')
         });
       });
 
       it('different value -> revert to original value = clean', () => {
         initializeProject({
-          startDate: new Date('1/1/2018'),
-          endDate: new Date('3/3/2018')
+          mouStart: new Date('1/1/2018'),
+          mouEnd: new Date('3/3/2018')
         });
 
         viewState.change({
-          startDate: new Date('1/2/2018') // changed
+          mouStart: new Date('1/2/2018') // changed
         });
         viewState.change({
-          startDate: new Date('1/1/2018') // changed & original
+          mouStart: new Date('1/1/2018') // changed & original
         });
         expect(dirty).toBeFalsy();
         expectModified({});
@@ -159,14 +159,14 @@ describe('ProjectViewStateService', () => {
 
       it('different value -> original NULL value = clean', () => {
         initializeProject({
-          startDate: null
+          mouStart: null
         });
 
         viewState.change({
-          startDate: new Date('1/2/2018') // changed
+          mouStart: new Date('1/2/2018') // changed
         });
         viewState.change({
-          startDate: null // changed & original
+          mouStart: null // changed & original
         });
 
         expect(dirty).toBeFalsy();
@@ -175,21 +175,21 @@ describe('ProjectViewStateService', () => {
 
       it('two different values -> revert one value = dirty', () => {
         initializeProject({
-          startDate: new Date('1/1/2018'),
-          endDate: new Date('3/3/2018')
+          mouStart: new Date('1/1/2018'),
+          mouEnd: new Date('3/3/2018')
         });
 
         viewState.change({
-          startDate: new Date('1/2/2018'), // changed
-          endDate: new Date('3/4/2018') // changed
+          mouStart: new Date('1/2/2018'), // changed
+          mouEnd: new Date('3/4/2018') // changed
         });
         viewState.change({
-          startDate: new Date('1/1/2018'), // changed & original
-          endDate: new Date('3/4/2018') // not changed
+          mouStart: new Date('1/1/2018'), // changed & original
+          mouEnd: new Date('3/4/2018') // not changed
         });
         expect(dirty).toBeTruthy();
         expectModified({
-          endDate: new Date('3/4/2018')
+          mouEnd: new Date('3/4/2018')
         });
       });
 
@@ -205,12 +205,12 @@ describe('ProjectViewStateService', () => {
 
       it('discard changes', async () => {
         initializeProject({
-          startDate: new Date('1/1/2018'),
-          endDate: new Date('3/3/2018')
+          mouStart: new Date('1/1/2018'),
+          mouEnd: new Date('3/3/2018')
         });
         viewState.change({
-          startDate: new Date('1/2/2018'), // changed
-          endDate: new Date('3/4/2018') // changed
+          mouStart: new Date('1/2/2018'), // changed
+          mouEnd: new Date('3/4/2018') // changed
         });
 
         viewState.discard();
@@ -218,8 +218,8 @@ describe('ProjectViewStateService', () => {
         expect(dirty).toBeFalsy();
         expectModified({});
         const p: Project = await viewState.project.first().toPromise();
-        expect(p.startDate).toEqual(new Date('1/1/2018'));
-        expect(p.endDate).toEqual(new Date('3/3/2018'));
+        expect(p.mouStart).toEqual(new Date('1/1/2018'));
+        expect(p.mouEnd).toEqual(new Date('3/3/2018'));
       });
 
       it('save changes', async () => {
@@ -228,8 +228,8 @@ describe('ProjectViewStateService', () => {
 
         initializeProject();
         viewState.change({
-          startDate: new Date('1/2/2018'), // changed
-          endDate: new Date('3/4/2018') // changed
+          mouStart: new Date('1/2/2018'), // changed
+          mouEnd: new Date('3/4/2018') // changed
         });
 
         await viewState.save();
@@ -238,8 +238,8 @@ describe('ProjectViewStateService', () => {
         expect(dirty).toBeFalsy();
         expectModified({});
         const p: Project = await viewState.project.first().toPromise();
-        expect(p.startDate).toEqual(new Date('1/2/2018'));
-        expect(p.endDate).toEqual(new Date('3/4/2018'));
+        expect(p.mouStart).toEqual(new Date('1/2/2018'));
+        expect(p.mouEnd).toEqual(new Date('3/4/2018'));
       });
     });
 

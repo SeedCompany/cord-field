@@ -117,8 +117,8 @@ export class Project {
   type: ProjectType;
   status: ProjectStatus;
   location: Location | null;
-  startDate: Date | null;
-  endDate: Date | null;
+  mouStart: Date | null;
+  mouEnd: Date | null;
   languages: Language[];
   partnerships: Partnership[];
   sensitivity: ProjectSensitivity;
@@ -133,8 +133,8 @@ export class Project {
     project.type = json.type || ProjectType.Translation;
     project.status = json.status || ProjectStatus.Active;
     project.location = json.location ? Location.fromJson(json.location) : null;
-    project.startDate = json.startDate ? new Date(json.startDate) : null;
-    project.endDate = json.endDate ? new Date(json.endDate) : null;
+    project.mouStart = json.mouStart ? new Date(json.mouStart) : null;
+    project.mouEnd = json.mouEnd ? new Date(json.mouEnd) : null;
     project.languages = (json.languages || []).map(Language.fromJson);
     project.partnerships = (json.partnerships || []).map(Partnership.fromJson);
     project.sensitivity = json.sensitivity || 1;

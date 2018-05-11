@@ -131,10 +131,10 @@ export class ProjectViewStateService {
   private submitting = new BehaviorSubject<boolean>(false);
 
   private config: ChangeConfig = {
-    startDate: {
+    mouStart: {
       accessor: (date: Date) => date.getTime()
     },
-    endDate: {
+    mouEnd: {
       accessor: (date: Date) => date.getTime()
     },
     location: {
