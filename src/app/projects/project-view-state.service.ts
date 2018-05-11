@@ -6,6 +6,8 @@ import { Partnership, PartnershipForSaveAPI } from '../core/models/partnership';
 import { Project } from '../core/models/project';
 import { ProjectService } from '../core/services/project.service';
 
+const isEqual = require('lodash.isequal');
+
 type Scalar = string | number | boolean;
 type Accessor = (val: any) => Scalar;
 type Comparator = (a: any, b: any) => boolean;
@@ -260,8 +262,7 @@ export class ProjectViewStateService {
       return;
     }
     // If update is still different than original replace item in update list.
-    // tslint:disable-next-line:triple-equals
-    if (newValue != originalValue) {
+    if (!isEqual(newValue, originalValue)) {
       const index = this.modified[key].update.findIndex(matchChanged);
       this.modified[key].update[index] = newValue;
       return;
