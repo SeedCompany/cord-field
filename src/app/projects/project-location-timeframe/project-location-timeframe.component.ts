@@ -19,15 +19,15 @@ export class ProjectLocationTimeframeComponent implements OnInit {
   ngOnInit() {
     this.form = this.formBuilder.group({
       location: ['', Validators.required],
-      startDate: ['', Validators.required],
-      endDate: ['', Validators.required]
+      mouStart: ['', Validators.required],
+      mouEnd: ['', Validators.required]
     });
 
     this.projectViewState.project.subscribe(project => {
       this.form.reset({
         location: project.location,
-        startDate: project.startDate,
-        endDate: project.endDate
+        mouStart: project.mouStart,
+        mouEnd: project.mouEnd
       });
     });
 
@@ -43,6 +43,6 @@ export class ProjectLocationTimeframeComponent implements OnInit {
   }
 
   get startDate(): AbstractControl {
-    return this.form.get('startDate')!;
+    return this.form.get('mouStart')!;
   }
 }
