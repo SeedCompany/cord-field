@@ -1,8 +1,15 @@
-import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
-import { AbstractControl, FormBuilder, FormGroup } from '@angular/forms';
+import { Component, OnInit, Output } from '@angular/core';
+import { AbstractControl, FormBuilder } from '@angular/forms';
+import { Observable } from 'rxjs/Observable';
 import { Language } from '../../../core/models/language';
 import { Location } from '../../../core/models/location';
-import { ProjectSensitivities, ProjectStage, ProjectStatus, ProjectType } from '../../../core/models/project';
+import {
+  ProjectFilter,
+  ProjectSensitivity,
+  ProjectStage,
+  ProjectStatus,
+  ProjectType
+} from '../../../core/models/project';
 
 @Component({
   selector: 'app-project-list-filter',
@@ -14,25 +21,30 @@ export class ProjectListFilterComponent implements OnInit {
   readonly ProjectStage = ProjectStage;
   readonly ProjectStatus = ProjectStatus;
   readonly ProjectType = ProjectType;
-  readonly projectSensitivities = ProjectSensitivities;
+  readonly ProjectSensitivity = ProjectSensitivity;
 
-  minDate: Date;
-  form: FormGroup = this.formBuilder.group({
-    stage: [''],
-    type: [''],
-    sensitivity: [''],
-    dateRange: [''],
-    startDate: [''],
-    endDate: ['']
+  form = this.formBuilder.group({
+    languages: [[]],
+    location: [[]],
+    status: [null],
+    stage: [null],
+    type: [null],
+    sensitivity: [null],
+    dateRange: [null],
+    startDate: [null],
+    endDate: [null]
   });
-
-  languages: Language[] = [];
-  locations: Location[] = [];
-
-  @ViewChild('chipInput') chipInput: ElementRef;
-  @ViewChild('locationChipInput') locationChipInput: ElementRef;
+  minDate: Date;
 
   constructor(private formBuilder: FormBuilder) {
+  }
+
+  get languages(): AbstractControl {
+    return this.form.get('languages')!;
+  }
+
+  get locations(): AbstractControl {
+    return this.form.get('location')!;
   }
 
   get dateRange(): AbstractControl {
@@ -43,32 +55,51 @@ export class ProjectListFilterComponent implements OnInit {
     return this.form.get('startDate')!;
   }
 
-  ngOnInit() {
-    this.startDate.valueChanges.subscribe(value => {
-      this.minDate = value;
-    });
+  @Output() get filters(): Observable<ProjectFilter> {
+    return this.form.valueChanges
+      .map(filters => {
+        const result: any = {};
+        for (const [key, value] of Object.entries(filters)) {
+          if (!value) {
+            continue;
+          }
+          if (Array.isArray(value)) {
+            if (value.length === 0) {
+              continue;
+            }
+          }
 
-    this.form.valueChanges.subscribe(val => {
-    });
+          result[key] = value;
+        }
+
+        return result;
+      });
   }
 
-  trackByIndex(index: number): number {
-    return index;
+  ngOnInit() {
+    this.startDate.valueChanges.subscribe(date => this.minDate = date);
   }
 
   onLanguageSelected(language: Language): void {
-    this.languages = [...this.languages, language];
+    this.languages.setValue([...this.languages.value, language]);
   }
 
   onLanguageRemoved(language: Language): void {
-    this.languages = this.languages.filter((lang) => lang.id !== language.id);
+    this.languages.setValue((this.languages.value as Language[]).filter(lang => lang.id !== language.id));
   }
 
   onLocationSelected(location: Location): void {
-    this.locations = [...this.locations, location];
+    this.locations.setValue([...this.locations.value, location]);
   }
 
   onLocationRemoved(location: Location): void {
-    this.locations = this.locations.filter((loc) => loc.id !== location.id);
+    this.locations.setValue((this.locations.value as Location[]).filter(loc => loc.id !== location.id));
+  }
+
+  reset() {
+    this.form.reset({
+      languages: [],
+      location: []
+    });
   }
 }

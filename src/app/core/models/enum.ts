@@ -1,3 +1,5 @@
+import { isNumeric } from 'rxjs/util/isNumeric';
+
 export type EnumList<T> = Array<EnumListEntry<T>>;
 export interface EnumListEntry<T> {
   value: T;
@@ -30,7 +32,8 @@ function enumValues<T>(object: T): () => T[] {
 function enumEntries<T>(mapping: { [key: string]: string }): () => EnumList<T> {
   const entries: EnumList<T> = [];
   for (const [value, ui] of Object.entries(mapping) as any as Array<[T, string]>) {
-    entries.push({value, ui});
+    const val = isNumeric(value) ? parseInt(value.toString(), 10) as any as T : value;
+    entries.push({value: val, ui});
   }
 
   return () => entries;

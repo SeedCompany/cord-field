@@ -1,8 +1,33 @@
 <form [formGroup]="form">
+  <app-autocomplete-language
+    [chips]="true"
+    [list]="languages.value"
+    (optionSelected)="onLanguageSelected($event)"
+    (removed)="onLanguageRemoved($event)"
+  >
+  </app-autocomplete-language>
+
+  <app-autocomplete-location
+    [chips]="true"
+    [list]="locations.value"
+    (optionSelected)="onLocationSelected($event)"
+    (removed)="onLocationRemoved($event)"
+  >
+  </app-autocomplete-location>
+
+  <mat-form-field color="accent">
+    <mat-select formControlName="status" placeholder="Status" multiple>
+      <mat-option *ngFor="let status of ProjectStatus.entries(); trackBy: ProjectStatus.trackEntryBy"
+                  [value]="status.value">
+        {{ status.ui }}
+      </mat-option>
+    </mat-select>
+  </mat-form-field>
+
   <mat-form-field color="accent">
     <mat-select formControlName="stage" placeholder="Stage" multiple>
       <mat-optgroup *ngFor="let status of ProjectStatus.entries(); trackBy: ProjectStatus.trackEntryBy"
-        label="{{ status.ui }}">
+        [label]="status.ui">
         <mat-option
           *ngFor="let stage of ProjectStage.forStatus(status.value); trackBy: ProjectStage.trackValueBy"
           [value]="stage">
@@ -11,8 +36,10 @@
       </mat-optgroup>
     </mat-select>
   </mat-form-field>
+
   <mat-form-field color="accent">
     <mat-select placeholder="Type" formControlName="type">
+      <mat-option>Any</mat-option>
       <mat-option
         *ngFor="let projectType of ProjectType.entries(); trackBy: ProjectType.trackEntryBy"
         [value]="projectType.value">
@@ -21,23 +48,27 @@
     </mat-select>
   </mat-form-field>
 
-  <app-autocomplete-language
-    [chips]="true"
-    [list]="languages"
-    (optionSelected)="onLanguageSelected($event)"
-    (removed)="onLanguageRemoved($event)"
-  >
-  </app-autocomplete-language>
-
   <mat-form-field color="accent">
-    <mat-select placeholder="Date Range" formControlName="dateRange">
-      <mat-option value="createdAt">Created At
-      </mat-option>
-      <mat-option value="updatedAt">Modified At
+    <mat-select multiple
+                placeholder="Sensitivity"
+                formControlName="sensitivity">
+      <mat-option
+        *ngFor="let entry of ProjectSensitivity.entries(); trackBy: ProjectSensitivity.trackEntryBy"
+        [value]="entry.value">
+        {{ entry.ui }}
       </mat-option>
     </mat-select>
   </mat-form-field>
-  <mat-form-field color="accent" *ngIf="dateRange.value !== ''">
+
+  <mat-form-field color="accent">
+    <mat-select placeholder="Date Range" formControlName="dateRange">
+      <mat-option>None</mat-option>
+      <mat-option value="createdAt">Created At</mat-option>
+      <mat-option value="updatedAt">Modified At</mat-option>
+    </mat-select>
+  </mat-form-field>
+
+  <mat-form-field color="accent" *ngIf="dateRange.value">
     <input matInput
            [matDatepicker]="startDate"
            placeholder="Start Date"
@@ -45,7 +76,8 @@
     <mat-datepicker-toggle matSuffix [for]="startDate"></mat-datepicker-toggle>
     <mat-datepicker #startDate></mat-datepicker>
   </mat-form-field>
-  <mat-form-field color="accent" *ngIf="dateRange.value !== ''">
+
+  <mat-form-field color="accent" *ngIf="dateRange.value">
     <input matInput
            [min]="minDate"
            [matDatepicker]="endDate"
@@ -53,23 +85,5 @@
            formControlName="endDate">
     <mat-datepicker-toggle matSuffix [for]="endDate"></mat-datepicker-toggle>
     <mat-datepicker #endDate></mat-datepicker>
-  </mat-form-field>
-
-  <app-autocomplete-location
-    [chips]="true"
-    [list]="locations"
-    (optionSelected)="onLocationSelected($event)"
-    (removed)="onLocationRemoved($event)"
-  >
-  </app-autocomplete-location>
-
-  <mat-form-field color="accent">
-    <mat-select multiple
-                placeholder="Sensitivity"
-                formControlName="sensitivity">
-      <mat-option *ngFor="let option of projectSensitivities; trackBy: trackByIndex" [value]="option">
-        {{ option }}
-      </mat-option>
-    </mat-select>
   </mat-form-field>
 </form>
