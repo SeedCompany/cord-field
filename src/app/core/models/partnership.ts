@@ -1,6 +1,15 @@
 import { buildEnum } from './enum';
 import { Organization } from './organization';
 
+export interface PartnershipForSaveAPI {
+  agreementStatus: PartnershipAgreementStatus;
+  mouStatus: PartnershipAgreementStatus;
+  mouStart: Date | null;
+  mouEnd: Date | null;
+  organizationId: string;
+  types: PartnershipType[];
+}
+
 export class Partnership {
   agreementStatus: PartnershipAgreementStatus;
   mouStatus: PartnershipAgreementStatus;
@@ -26,7 +35,7 @@ export class Partnership {
     partnership.mouStatus = json.mouStatus || PartnershipAgreementStatus.NotAttached;
     partnership.mouStart = json.mouStart ? new Date(json.mouStart) : null;
     partnership.mouEnd = json.mouEnd ? new Date(json.mouEnd) : null;
-    partnership.types = json.type || [];
+    partnership.types = json.types || [];
 
     return partnership;
   }
@@ -42,6 +51,12 @@ export class Partnership {
     partnership.types = [];
 
     return partnership;
+  }
+
+  static forSaveAPI(partnership: Partnership): PartnershipForSaveAPI {
+    // replace organization object with orgId
+    const {organization, ...rest} = partnership;
+    return {...rest, organizationId: partnership.id} as PartnershipForSaveAPI;
   }
 }
 
@@ -69,8 +84,8 @@ export enum PartnershipAgreementStatus {
 }
 export namespace PartnershipAgreementStatus {
   export const {entries, forUI, values, trackEntryBy, trackValueBy} = buildEnum(PartnershipAgreementStatus, {
-    [PartnershipAgreementStatus.Signed]: 'Signed',
     [PartnershipAgreementStatus.NotAttached]: 'Not Attached',
-    [PartnershipAgreementStatus.AwaitingSignature]: 'Awaiting Signature'
+    [PartnershipAgreementStatus.AwaitingSignature]: 'Awaiting Signature',
+    [PartnershipAgreementStatus.Signed]: 'Signed'
   });
 }
