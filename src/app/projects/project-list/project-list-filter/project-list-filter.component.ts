@@ -5,7 +5,7 @@ import { Language } from '../../../core/models/language';
 import { Location } from '../../../core/models/location';
 import {
   ProjectFilter,
-  ProjectSensitivities,
+  ProjectSensitivity,
   ProjectStage,
   ProjectStatus,
   ProjectType
@@ -21,7 +21,7 @@ export class ProjectListFilterComponent implements OnInit {
   readonly ProjectStage = ProjectStage;
   readonly ProjectStatus = ProjectStatus;
   readonly ProjectType = ProjectType;
-  readonly projectSensitivities = ProjectSensitivities;
+  readonly ProjectSensitivity = ProjectSensitivity;
 
   form = this.formBuilder.group({
     languages: [[]],
@@ -78,10 +78,6 @@ export class ProjectListFilterComponent implements OnInit {
 
   ngOnInit() {
     this.startDate.valueChanges.subscribe(date => this.minDate = date);
-  }
-
-  trackByIndex(index: number): number {
-    return index;
   }
 
   onLanguageSelected(language: Language): void {

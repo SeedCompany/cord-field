@@ -97,8 +97,18 @@ export namespace ProjectStage {
   }
 }
 
-export type ProjectSensitivity = 1 | 2 | 3;
-export const ProjectSensitivities = [1, 2, 3];
+export enum ProjectSensitivity {
+  Low = 1,
+  Medium = 2,
+  High = 3
+}
+export namespace ProjectSensitivity {
+  export const {entries, forUI, values, trackEntryBy, trackValueBy} = buildEnum(ProjectSensitivity, {
+    [ProjectSensitivity.Low]: 'Low',
+    [ProjectSensitivity.Medium]: 'Medium',
+    [ProjectSensitivity.High]: 'High'
+  });
+}
 
 export class Project {
 

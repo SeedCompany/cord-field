@@ -52,8 +52,10 @@
     <mat-select multiple
                 placeholder="Sensitivity"
                 formControlName="sensitivity">
-      <mat-option *ngFor="let option of projectSensitivities; trackBy: trackByIndex" [value]="option">
-        {{ option }}
+      <mat-option
+        *ngFor="let entry of ProjectSensitivity.entries(); trackBy: ProjectSensitivity.trackEntryBy"
+        [value]="entry.value">
+        {{ entry.ui }}
       </mat-option>
     </mat-select>
   </mat-form-field>
