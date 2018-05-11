@@ -84,8 +84,8 @@ export enum PartnershipAgreementStatus {
 }
 export namespace PartnershipAgreementStatus {
   export const {entries, forUI, values, trackEntryBy, trackValueBy} = buildEnum(PartnershipAgreementStatus, {
-    [PartnershipAgreementStatus.Signed]: 'Signed',
     [PartnershipAgreementStatus.NotAttached]: 'Not Attached',
-    [PartnershipAgreementStatus.AwaitingSignature]: 'Awaiting Signature'
+    [PartnershipAgreementStatus.AwaitingSignature]: 'Awaiting Signature',
+    [PartnershipAgreementStatus.Signed]: 'Signed'
   });
 }

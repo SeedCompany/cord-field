@@ -20,7 +20,7 @@ mat-expansion-panel {
   border-bottom: 1px solid mat-foreground($theme, divider);
 }
 
-mat-panel-title {
+mat-panel-title, mat-panel-description {
   align-items: center;
 }
 
@@ -37,13 +37,12 @@ mat-panel-title {
   }
 }
 
-.description-line {
-  display: flex;
-  justify-content: space-between;
+.types {
+  width: 100%;
 }
 
 .upload-status {
-  margin-left: 100px;
+  margin-left: 32px;
 }
 
 mat-card-content {

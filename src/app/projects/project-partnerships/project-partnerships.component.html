@@ -20,20 +20,14 @@
           </mat-panel-title>
           <mat-panel-description *ngIf="!isCardOpened(index)">
             <div>
-              <div class="description-line">
-                <span>MOU:</span>&nbsp;
-                <span>{{ PartnershipAgreementStatus.forUI(partnership.value.mouStatus) }}</span>
-              </div>
-              <div class="description-line">
-                <span>Partner Agreement:</span>&nbsp;
-                <span>{{ PartnershipAgreementStatus.forUI(partnership.value.agreementStatus) }}</span>
-              </div>
+              <div>MOU — {{ PartnershipAgreementStatus.forUI(partnership.value.mouStatus) }}</div>
+              <div>Partner Agreement — {{ PartnershipAgreementStatus.forUI(partnership.value.agreementStatus) }}</div>
             </div>
           </mat-panel-description>
         </mat-expansion-panel-header>
 
         <ng-template matExpansionPanelContent>
-          <mat-form-field color="accent">
+          <mat-form-field color="accent" class="types">
             <mat-select multiple placeholder="Types" formControlName="types">
               <mat-option *ngFor="let type of PartnershipType.entries(); trackBy: PartnershipType.trackEntryBy"
                           [value]="type.value">
@@ -42,9 +36,7 @@
             </mat-select>
           </mat-form-field>
 
-          <div class="name">
-            <mat-label class="name">MOU</mat-label>
-          </div>
+          <div class="mat-body-2">MOU</div>
           <button mat-button color="accent">
             UPLOAD
             <mat-icon>file_upload</mat-icon>
@@ -59,10 +51,8 @@
             </mat-select>
           </mat-form-field>
 
-          <div class="name">
-            <mat-label>Partner Agreement</mat-label>
-          </div>
-          <button mat-button color="accent" class="upload-button">
+          <div class="mat-body-2">Partner Agreement</div>
+          <button mat-button color="accent">
             UPLOAD
             <mat-icon>file_upload</mat-icon>
           </button>
