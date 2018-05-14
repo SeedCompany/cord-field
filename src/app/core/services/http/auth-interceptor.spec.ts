@@ -1,7 +1,7 @@
 import { HttpClient, HttpClientModule } from '@angular/common/http';
 import { TestBed } from '@angular/core/testing';
 import { removeTestCredentials, saveTestCredentials } from '../../../../test.spec';
-import { CoreModule, httpInterceptorProviders } from '../../core.module';
+import { CoreModule } from '../../core.module';
 import { AuthenticationStorageService } from '../authentication-storage.service';
 import { AuthInterceptor } from './auth-interceptor';
 import { PloApiService } from './plo-api.service';
@@ -19,7 +19,7 @@ describe('AuthInterceptor', () => {
       ],
       providers: [
         HttpClient,
-        httpInterceptorProviders
+        AuthInterceptor.inject()
       ]
     });
 

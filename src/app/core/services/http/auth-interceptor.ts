@@ -1,10 +1,11 @@
 import {
+  HTTP_INTERCEPTORS,
   HttpEvent,
   HttpHandler, HttpHeaders,
   HttpInterceptor,
   HttpRequest
 } from '@angular/common/http';
-import { Injectable } from '@angular/core';
+import { ExistingProvider, Injectable } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 import { environment } from '../../../../environments/environment';
 import { AuthenticationStorageService } from '../authentication-storage.service';
@@ -13,6 +14,10 @@ import { AuthenticationStorageService } from '../authentication-storage.service'
 export class AuthInterceptor implements HttpInterceptor {
 
   private serviceLookup: Array<{ id: string, baseUrl: string }> = [];
+
+  static inject(): ExistingProvider {
+    return {provide: HTTP_INTERCEPTORS, useExisting: AuthInterceptor, multi: true};
+  }
 
   constructor(private authStorage: AuthenticationStorageService) {
     const services: { [key: string]: string } = environment.services;

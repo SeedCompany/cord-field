@@ -1,5 +1,5 @@
 import { HTTP_INTERCEPTORS } from '@angular/common/http';
-import { NgModule, Optional, SkipSelf } from '@angular/core';
+import { ModuleWithProviders, NgModule, Optional, SkipSelf } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { SharedModule } from '../shared/shared.module';
 import { HeaderComponent } from './header/header.component';
@@ -52,11 +52,13 @@ export class CoreModule {
       throw new Error('CoreModule has already been loaded. Import CoreModule in the AppModule only.');
     }
   }
-}
 
-/**
- * Do not include these in CoreModule or you'll break all the tests that mock http calls
- */
-export const httpInterceptorProviders = [
-  {provide: HTTP_INTERCEPTORS, useExisting: AuthInterceptor, multi: true}
-];
+  static forRoot(): ModuleWithProviders {
+    return {
+      ngModule: CoreModule,
+      providers: [
+        AuthInterceptor.inject()
+      ]
+    };
+  }
+}
