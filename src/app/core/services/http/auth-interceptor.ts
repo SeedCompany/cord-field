@@ -1,12 +1,15 @@
 import {
   HTTP_INTERCEPTORS,
+  HttpErrorResponse,
   HttpEvent,
-  HttpHandler, HttpHeaders,
+  HttpHandler,
+  HttpHeaders,
   HttpInterceptor,
   HttpRequest
 } from '@angular/common/http';
 import { ExistingProvider, Injectable } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
+import { Subject } from 'rxjs/Subject';
 import { environment } from '../../../../environments/environment';
 import { AuthenticationStorageService } from '../authentication-storage.service';
 
@@ -14,6 +17,7 @@ import { AuthenticationStorageService } from '../authentication-storage.service'
 export class AuthInterceptor implements HttpInterceptor {
 
   private serviceLookup: Array<{ id: string, baseUrl: string }> = [];
+  private _authError = new Subject<void>();
 
   static inject(): ExistingProvider {
     return {provide: HTTP_INTERCEPTORS, useExisting: AuthInterceptor, multi: true};
@@ -21,6 +25,10 @@ export class AuthInterceptor implements HttpInterceptor {
 
   constructor(private authStorage: AuthenticationStorageService) {
     this.serviceLookup = Object.entries(environment.services).map(([id, baseUrl]) => ({id, baseUrl}));
+  }
+
+  get authError(): Observable<void> {
+    return this._authError.asObservable();
   }
 
   intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
@@ -53,6 +61,12 @@ export class AuthInterceptor implements HttpInterceptor {
           headers: new HttpHeaders(headers)
         });
       })
-      .switchMap((newReq) => next.handle(newReq));
+      .switchMap(newReq => next.handle(newReq))
+      .catch(e => {
+        if (e instanceof HttpErrorResponse && e.status === 401) {
+          this._authError.next();
+        }
+        return Observable.throw(e);
+      });
   }
 }
