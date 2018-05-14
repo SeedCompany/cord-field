@@ -20,12 +20,7 @@ export class AuthInterceptor implements HttpInterceptor {
   }
 
   constructor(private authStorage: AuthenticationStorageService) {
-    const services: { [key: string]: string } = environment.services;
-    if (services) {
-      Object.keys(services).forEach((key) => this.serviceLookup.push({baseUrl: services[key], id: key}));
-    } else {
-      throw new Error(`environment.services is misconfigured for ${this.constructor.name}`);
-    }
+    this.serviceLookup = Object.entries(environment.services).map(([id, baseUrl]) => ({id, baseUrl}));
   }
 
   intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
@@ -48,8 +43,7 @@ export class AuthInterceptor implements HttpInterceptor {
 
         // any header set to 'undefined'  cause a "Cannot read property 'length' of undefined" error, which is hard
         // to debug, so spend a few cycles making sure that none of the keys have a value of undefined.
-        const keys = Object.keys(headers);
-        for (const key of keys) {
+        for (const key of Object.keys(headers)) {
           if (headers[key] == null) {
             delete headers[key];
           }
