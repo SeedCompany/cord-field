@@ -29,6 +29,7 @@ import { LocalStorageService, SessionStorageService } from './services/storage.s
     NotFoundPageComponent
   ],
   providers: [
+    AuthInterceptor,
     AuthenticationGuard,
     AuthenticationService,
     AuthenticationStorageService,
@@ -57,5 +58,5 @@ export class CoreModule {
  * Do not include these in CoreModule or you'll break all the tests that mock http calls
  */
 export const httpInterceptorProviders = [
-  {provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true}
+  {provide: HTTP_INTERCEPTORS, useExisting: AuthInterceptor, multi: true}
 ];

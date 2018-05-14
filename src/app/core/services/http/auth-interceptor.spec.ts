@@ -1,4 +1,4 @@
-import { HTTP_INTERCEPTORS, HttpClient, HttpClientModule } from '@angular/common/http';
+import { HttpClient, HttpClientModule } from '@angular/common/http';
 import { TestBed } from '@angular/core/testing';
 import { removeTestCredentials, saveTestCredentials } from '../../../../test.spec';
 import { CoreModule, httpInterceptorProviders } from '../../core.module';
@@ -25,13 +25,7 @@ describe('AuthInterceptor', () => {
 
     authStorageService = TestBed.get(AuthenticationStorageService);
     ploApiService = TestBed.get(PloApiService);
-
-    const interceptors = TestBed.get(HTTP_INTERCEPTORS);
-    for (const interceptor of interceptors) {
-      if (interceptor instanceof AuthInterceptor) {
-        authInterceptor = interceptor;
-      }
-    }
+    authInterceptor = TestBed.get(AuthInterceptor);
   });
 
   afterEach(async () => {
