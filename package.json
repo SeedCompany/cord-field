@@ -9,7 +9,7 @@
     "build:server": "webpack --config webpack.server.config.js --progress --colors",
     "coverage": "scripts/with-local-services.sh ng test --code-coverage --single-run; (open coverage/index.html || true)",
     "docker:build": "docker build --build-arg NG_BUILD_TARGET=local -t cord-field:latest .",
-    "docker:build:tests": "docker build -f Dockerfile.test.dokr -t cord-field:tests .",
+    "docker:build:tests": "scripts/docker:build:tests.sh",
     "docker:verify": "scripts/docker:verify.sh",
     "e2e": "ng e2e",
     "lint": "tsc -p src/tsconfig.app.json --noEmit --pretty && tsc -p src/tsconfig.spec.json --noEmit --pretty && tsc -p e2e/tsconfig.e2e.json --noEmit --pretty && ng lint --format stylish",

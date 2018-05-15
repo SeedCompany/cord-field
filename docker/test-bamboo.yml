@@ -1,8 +1,8 @@
-version: '2'
+version: '3'
 services:
 
   local-test-service: # prefixed with "local-" to skip trying to pull image
-    image: cord-field:tests
+    image: "cord-field:tests.${TAG}"
     volumes:
       - ../testResults:/opt/build/testResults
     links: # services must be linked to or they will not start during testing

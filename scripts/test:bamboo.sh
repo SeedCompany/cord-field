@@ -7,9 +7,9 @@ COMPOSE_FILE="docker/test-bamboo.yml"
 DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 . ${DIR}/_functions.sh
 
-yarn run docker:build:tests
+scripts/docker:build:tests.sh ${1:-local}
 
-pull
+TAG=${1:-local} pull
 trap down EXIT
 
-compose run local-test-service
+TAG=${1:-local} compose run local-test-service
