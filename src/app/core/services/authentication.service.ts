@@ -5,10 +5,7 @@ import 'rxjs/add/operator/map';
 import { Observable } from 'rxjs/Observable';
 import { Subject } from 'rxjs/Subject';
 import { AuthenticationToken } from '../models/authentication-token';
-import {
-  IUserRequestAccess,
-  User
-} from '../models/user';
+import { IUserRequestAccess, User } from '../models/user';
 import { AuthenticationStorageService } from './authentication-storage.service';
 import { ProfileApiService } from './http/profile-api.service';
 
@@ -53,17 +50,18 @@ export class AuthenticationService {
   }
 
   async login(email: string, password: string, rememberLogin: boolean): Promise<AuthenticationToken[]> {
+    let json = {};
     try {
-      return this
-        .api
-        .post('/auth/native/login', {domain: DOMAIN, email, password})
-        .map((json) => AuthenticationToken.fromTokenMap(json))
-        .do(async (tokens: AuthenticationToken[]) => await this.authStorage.saveTokens(tokens, rememberLogin))
-        .do((tokens: AuthenticationToken[]) => this._login.next(tokens))
-        .toPromise();
+      json = await this.api.post('/auth/native/login', {domain: DOMAIN, email, password}).toPromise();
     } catch (err) {
       throw new Error(this.getErrorMessage(err));
     }
+
+    const tokens = AuthenticationToken.fromTokenMap(json);
+    await this.authStorage.saveTokens(tokens, rememberLogin);
+    this._login.next(tokens);
+
+    return tokens;
   }
 
   async logout(): Promise<void> {
