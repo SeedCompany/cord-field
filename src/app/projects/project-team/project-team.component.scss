@@ -16,6 +16,12 @@
   margin-right: 10px;
 }
 
+.mat-column-avatar {
+  flex: none;
+  width: 40px; // so header column is aligned (same as avatar width)
+  margin-right: 24px; // same as left for table
+}
+
 .title {
   color: mat-color($accent);
   @include mat-typography-level-to-styles($config, body-2);
@@ -30,9 +36,4 @@
 .content-align {
   display: flex;
   align-items: center;
-}
-
-img {
-  border-radius: 50%;
-  height: 35px;
 }

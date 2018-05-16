@@ -15,6 +15,13 @@
 
 <mat-table [dataSource]="dataSource" matSort>
 
+  <ng-container matColumnDef="avatar">
+    <mat-header-cell *matHeaderCellDef></mat-header-cell>
+    <mat-cell *matCellDef="let member">
+      <app-avatar-letter color="accent">{{ member.firstName.charAt(0) + member.lastName.charAt(0) }}</app-avatar-letter>
+    </mat-cell>
+  </ng-container>
+
   <ng-container matColumnDef="firstName">
     <mat-header-cell *matHeaderCellDef mat-sort-header>First Name</mat-header-cell>
     <mat-cell *matCellDef="let member" class="title content-align">
