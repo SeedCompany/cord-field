@@ -1,3 +1,4 @@
+import { ProjectRole } from './project-role';
 import { User } from './user';
 
 export class TeamMember {
@@ -27,27 +28,4 @@ export class TeamMember {
     teamMembers = teamMembers || [];
     return teamMembers.map(TeamMember.fromJson);
   }
-}
-
-export enum ProjectRole {
-  RegionalDirector = 'regional_director',
-  AreaDirector = 'area_director',
-  FieldCoordinator = 'field_coordinator',
-  LeadFinancialAnalyst = 'lead_financial_analyst',
-  FinancialAnalyst = 'financial_analyst',
-  Consultant = 'consultant'
-}
-
-
-export function projectRoleToString(role: ProjectRole): string {
-  const projectRole = {
-    [ProjectRole.RegionalDirector]: 'Regional Director',
-    [ProjectRole.AreaDirector]: 'Area Director',
-    [ProjectRole.FieldCoordinator]: 'Field Coordinator',
-    [ProjectRole.LeadFinancialAnalyst]: 'Lead Financial Analyst',
-    [ProjectRole.FinancialAnalyst]: 'Financial Analyst',
-    [ProjectRole.Consultant]: 'Consultant'
-  };
-
-  return projectRole[role];
 }

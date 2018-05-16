@@ -1,6 +1,7 @@
 import { AfterViewInit, Component, ViewChild } from '@angular/core';
 import { MatPaginator, MatSort, MatTableDataSource } from '@angular/material';
-import { ProjectRole, projectRoleToString, TeamMember } from '../../core/models/team-member';
+import { ProjectRole } from '../../core/models/project-role';
+import { TeamMember } from '../../core/models/team-member';
 import { ProjectService } from '../../core/services/project.service';
 import { ProjectTabComponent } from '../abstract-project-tab';
 import { ProjectViewStateService } from '../project-view-state.service';
@@ -34,6 +35,6 @@ export class ProjectTeamComponent extends ProjectTabComponent implements AfterVi
   }
 
   showRoles(roles: ProjectRole[]): string {
-    return roles.map(role => projectRoleToString(role)).join(',');
+    return roles.map(role => ProjectRole.forUI(role)).join(', ');
   }
 }

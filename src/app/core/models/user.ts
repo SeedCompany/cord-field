@@ -1,6 +1,6 @@
 import { Location } from './location';
 import { ObjectId } from './object-id';
-import { ProjectRole } from './team-member';
+import { ProjectRole } from './project-role';
 
 
 export interface IUserRequestAccess {
