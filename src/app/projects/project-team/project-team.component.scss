@@ -2,9 +2,10 @@
 
 :host {
   @extend %component-defaults;
+  flex: 1;
 }
 
-.toolbar {
+mat-toolbar {
   background: mat-background($theme, card);
 }
 
@@ -12,8 +13,16 @@
   flex: auto;
 }
 
-.space {
-  margin-right: 10px;
+mat-table {
+  flex: 1;
+  overflow-y: scroll;
+}
+
+mat-header-row {
+  position: sticky;
+  top: 0;
+  background: mat-background($theme, card);
+  z-index: 1;
 }
 
 .mat-column-avatar {
@@ -22,18 +31,16 @@
   margin-right: 24px; // same as left for table
 }
 
-.title {
+.name {
   color: mat-color($accent);
   @include mat-typography-level-to-styles($config, body-2);
 }
 
-.project-role-menu {
+.mat-column-roles {
+  flex: 3;
+
+  // Move context button to the right
   display: flex;
   justify-content: space-between;
-  align-items: center;
-}
-
-.content-align {
-  display: flex;
   align-items: center;
 }

@@ -1,14 +1,11 @@
-<mat-toolbar class="toolbar">
+<mat-toolbar>
   <mat-toolbar-row>
-    <h2 class="mat-title">People</h2>
     <span class="spacer"></span>
-
-    <button mat-icon-button>
-      <mat-icon>filter_list</mat-icon>
-    </button>
-
-    <button mat-icon-button>
+    <button mat-icon-button color="primary">
       <mat-icon>person_add</mat-icon>
+    </button>
+    <button mat-icon-button color="primary">
+      <mat-icon>filter_list</mat-icon>
     </button>
   </mat-toolbar-row>
 </mat-toolbar>
@@ -24,14 +21,14 @@
 
   <ng-container matColumnDef="firstName">
     <mat-header-cell *matHeaderCellDef mat-sort-header>First Name</mat-header-cell>
-    <mat-cell *matCellDef="let member" class="title content-align">
+    <mat-cell *matCellDef="let member" class="name">
       {{ member.firstName }}
     </mat-cell>
   </ng-container>
 
   <ng-container matColumnDef="lastName">
     <mat-header-cell *matHeaderCellDef mat-sort-header>Last Name</mat-header-cell>
-    <mat-cell *matCellDef="let member" class="title">{{ member.lastName }}
+    <mat-cell *matCellDef="let member" class="name">{{ member.lastName }}
     </mat-cell>
   </ng-container>
 
@@ -42,7 +39,7 @@
 
   <ng-container matColumnDef="roles">
     <mat-header-cell *matHeaderCellDef>Role(s)</mat-header-cell>
-    <mat-cell *matCellDef="let member" class="project-role-menu">
+    <mat-cell *matCellDef="let member">
       <span>{{ showRoles(member.roles) }}</span>
       <button mat-icon-button>
         <mat-icon>more_vert</mat-icon>
