@@ -140,7 +140,7 @@ export class Project {
     project.languages = (json.languages || []).map(Language.fromJson);
     project.partnerships = (json.partnerships || []).map(Partnership.fromJson);
     project.sensitivity = json.sensitivity || 1;
-    project.team = TeamMember.fromJsonArray(json.team);
+    project.team = (json.team || []).map(TeamMember.fromJson);
     project.updatedAt = new Date(json.updatedAt || 0);
 
     return project;

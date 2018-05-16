@@ -13,7 +13,7 @@ import { ProjectViewStateService } from '../project-view-state.service';
 })
 export class ProjectTeamComponent extends ProjectTabComponent implements AfterViewInit {
 
-  readonly displayedColumns = ['firstName', 'lastName', 'updatedAt', 'projectRole'];
+  readonly displayedColumns = ['firstName', 'lastName', 'updatedAt', 'roles'];
   readonly pageSizeOptions = [10, 25, 50];
   dataSource = new MatTableDataSource<TeamMember>();
   totalCount = 0;

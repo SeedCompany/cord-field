@@ -17,36 +17,34 @@
 
   <ng-container matColumnDef="firstName">
     <mat-header-cell *matHeaderCellDef mat-sort-header>First Name</mat-header-cell>
-    <mat-cell *matCellDef="let people" class="title content-align">
-      <img [src]="people.user.imgSrc" class="space">
-      {{ people.user.firstName }}
+    <mat-cell *matCellDef="let member" class="title content-align">
+      {{ member.firstName }}
     </mat-cell>
   </ng-container>
 
-
   <ng-container matColumnDef="lastName">
     <mat-header-cell *matHeaderCellDef mat-sort-header>Last Name</mat-header-cell>
-    <mat-cell *matCellDef="let people" class="title">{{ people.user.lastName }}
+    <mat-cell *matCellDef="let member" class="title">{{ member.lastName }}
     </mat-cell>
   </ng-container>
 
   <ng-container matColumnDef="updatedAt">
     <mat-header-cell *matHeaderCellDef mat-sort-header>Date Added</mat-header-cell>
-    <mat-cell *matCellDef="let people">{{ people.updatedAt | date : 'shortDate' }}</mat-cell>
+    <mat-cell *matCellDef="let member">{{ member.updatedAt | date : 'shortDate' }}</mat-cell>
   </ng-container>
 
-  <ng-container matColumnDef="projectRole">
-    <mat-header-cell *matHeaderCellDef>Project Role</mat-header-cell>
-    <mat-cell *matCellDef="let people" class="project-role-menu">
-      <span>{{ showRoles(people.role) }}</span>
+  <ng-container matColumnDef="roles">
+    <mat-header-cell *matHeaderCellDef>Role(s)</mat-header-cell>
+    <mat-cell *matCellDef="let member" class="project-role-menu">
+      <span>{{ showRoles(member.roles) }}</span>
       <button mat-icon-button>
         <mat-icon>more_vert</mat-icon>
       </button>
     </mat-cell>
   </ng-container>
+
   <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
-  <mat-row *matRowDef="let people; columns: displayedColumns;">
-  </mat-row>
+  <mat-row *matRowDef="let member; columns: displayedColumns;"></mat-row>
 
 </mat-table>
 <mat-paginator [pageSizeOptions]="pageSizeOptions"

@@ -2,30 +2,34 @@ import { ProjectRole } from './project-role';
 import { User } from './user';
 
 export class TeamMember {
-  id: string;
   user: User;
-  role: ProjectRole[];
+  roles: ProjectRole[];
   description: string;
   editable: boolean;
-  updatedAt: Date | null;
-
+  updatedAt: Date;
 
   static fromJson(json: any): TeamMember {
     json = json || {};
 
     const teamMember = new TeamMember();
-    teamMember.id = json.id;
+    teamMember.user = User.fromJson(json.user);
+    teamMember.roles = json.roles;
     teamMember.description = json.description || '';
     teamMember.editable = json.editable || false;
-    teamMember.user = User.fromJson(json.user);
-    teamMember.role = json.role || null;
-    teamMember.updatedAt = json.updatedAt ? new Date(json.updatedAt) : null;
+    teamMember.updatedAt = new Date(json.updatedAt);
 
     return teamMember;
   }
 
-  static fromJsonArray(teamMembers: any): TeamMember[] {
-    teamMembers = teamMembers || [];
-    return teamMembers.map(TeamMember.fromJson);
+  get id() {
+    return this.user.id;
+  }
+
+  get firstName() {
+    return this.user.publicFirstName;
+  }
+
+  get lastName() {
+    return this.user.publicLastName;
   }
 }
