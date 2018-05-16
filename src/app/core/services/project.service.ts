@@ -1,4 +1,4 @@
-import { HttpResponse } from '@angular/common/http';
+import { HttpClient, HttpResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { SortDirection } from '@angular/material';
 import { Observable } from 'rxjs/Observable';
@@ -13,6 +13,7 @@ import {
   ProjectsWithCount,
   ProjectType
 } from '../models/project';
+import { TeamMember } from '../models/team-member';
 import { PloApiService } from './http/plo-api.service';
 
 export interface ProjectFilterAPI {
@@ -29,13 +30,17 @@ export interface ProjectFilterAPI {
 @Injectable()
 export class ProjectService {
 
-  constructor(private ploApi: PloApiService) {
+  constructor(private ploApi: PloApiService, private http: HttpClient) {
   }
 
   getProject(id: string): Observable<Project> {
-    return this.ploApi
-      .get(`/projects/${id}`)
-      .map(Project.fromJson);
+    return Observable.combineLatest(
+      this.ploApi.get<Project>(`/projects/${id}`),
+      this.http.get<TeamMember[]>('https://api.mockaroo.com/api/73ff61e0?count=15&key=fe2eb390')
+    )
+      .map(([project, team]) => {
+        return Project.fromJson({...project, team: project.team.length > 0 ? project.team : team});
+      });
   }
 
   getProjects(sort: keyof Project = 'updatedAt',

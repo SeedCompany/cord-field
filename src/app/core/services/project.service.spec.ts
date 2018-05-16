@@ -36,7 +36,8 @@ describe('ProjectService', () => {
       status: ProjectStatus.Active,
       name: 'Elhomwe Bible (395)',
       updatedAt: '2018-03-26T05:27:49.000Z',
-      type: ProjectType.Translation
+      type: ProjectType.Translation,
+      team: []
     };
 
     projectService
@@ -59,6 +60,9 @@ describe('ProjectService', () => {
     httpMock
       .expectOne(url)
       .flush(mockResponse);
+    httpMock
+      .expectOne('https://api.mockaroo.com/api/73ff61e0?count=15&key=fe2eb390')
+      .flush([]);
     httpMock.verify();
   });
 
