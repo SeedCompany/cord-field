@@ -14,7 +14,6 @@ export class ProjectTeamComponent implements AfterViewInit {
   readonly displayedColumns = ['firstName', 'lastName', 'updatedAt', 'roles'];
   readonly pageSizeOptions = [10, 25, 50];
   dataSource = new MatTableDataSource<TeamMember>();
-  totalCount = 0;
 
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
