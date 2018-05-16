@@ -27,9 +27,22 @@ export class ProjectTeamComponent implements AfterViewInit {
     });
     this.dataSource.sort = this.sort;
     this.dataSource.paginator = this.paginator;
+    this.dataSource.filterPredicate = (data: TeamMember, term: string) => {
+      const fields = [
+        data.firstName,
+        data.lastName,
+        this.showRoles(data.roles)
+      ];
+
+      return fields.join(' ').toLowerCase().includes(term.trim().toLowerCase());
+    };
   }
 
   showRoles(roles: ProjectRole[]): string {
     return roles.map(role => ProjectRole.forUI(role)).join(', ');
+  }
+
+  onSearch(term: string) {
+    this.dataSource.filter = term;
   }
 }

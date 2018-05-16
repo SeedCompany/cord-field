@@ -25,6 +25,10 @@ mat-header-row {
   z-index: 1;
 }
 
+app-search {
+  @include mat-typography-level-to-styles($config, body-1);
+}
+
 .mat-column-avatar {
   flex: none;
   width: 40px; // so header column is aligned (same as avatar width)
