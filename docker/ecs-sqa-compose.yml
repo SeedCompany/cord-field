@@ -30,7 +30,7 @@ services:
       MIGRATE: "true"
       DUMP_CONFIG: "true"
       DOMO: "true"
-    mem_limit: 256000000
+    mem_limit: 512000000
 
   profile-service:
     image: 103805181946.dkr.ecr.us-west-2.amazonaws.com/client/tsco-ilb-profile:latest
