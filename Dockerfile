@@ -22,6 +22,8 @@ ARG GIT_HASH
 
 RUN set -e; \
   echo ${GIT_HASH:-"unknown"} > src/git.txt; \
+  yarn lint; \
+  yarn ng test --watch=false --browsers=docker --config karma.bamboo.conf.js --sourcemap --progress=false \
   # Build angular client bundles
   yarn ng build --prod --environment $NG_BUILD_TARGET --progress=false; \
   # Build angular server bundles
