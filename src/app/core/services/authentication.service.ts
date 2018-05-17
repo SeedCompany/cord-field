@@ -54,7 +54,7 @@ export class AuthenticationService {
 
   async login(email: string, password: string, rememberLogin: boolean): Promise<AuthenticationToken[]> {
     try {
-      return await this
+      return this
         .api
         .post('/auth/native/login', {domain: DOMAIN, email, password})
         .map((json) => AuthenticationToken.fromTokenMap(json))
