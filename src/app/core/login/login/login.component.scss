@@ -44,3 +44,8 @@ mat-card-actions {
 mat-error {
   width: 400px;
 }
+
+// Center spinner within button
+mat-progress-spinner {
+  margin: 0 auto;
+}

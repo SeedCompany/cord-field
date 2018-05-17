@@ -16,6 +16,7 @@ export class LoginComponent {
 
   hidePassword = true;
   serverError: string;
+  submitting = false;
 
   form: FormGroup = this.fb.group({
     email: ['', CustomValidators.email],
@@ -31,14 +32,20 @@ export class LoginComponent {
     iconRegistry.addSvgIcon('cord', sanitizer.bypassSecurityTrustResourceUrl('assets/images/cord-icon.svg'));
   }
 
-  onLogin() {
-    this
-      .auth
-      .login(this.email.value, this.password.value, true)
-      .then(() => {
-        this.router.navigate(['/']);
-      })
-      .catch(err => this.serverError = err.message);
+  async onLogin() {
+    this.submitting = true;
+    this.form.disable();
+    try {
+      await this.auth.login(this.email.value, this.password.value, true);
+    } catch (err) {
+      this.serverError = err.message;
+      return;
+    } finally {
+      this.submitting = false;
+      this.form.enable();
+    }
+
+    this.router.navigate(['/']);
   }
 
   get email(): AbstractControl {

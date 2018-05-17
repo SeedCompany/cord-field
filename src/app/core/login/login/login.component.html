@@ -37,9 +37,16 @@
       <button mat-raised-button
               color="accent"
               (click)="onLogin()"
-              [disabled]="!form.valid"
+              [disabled]="!form.valid || submitting"
       >
-        SIGN IN
+        <ng-container *ngIf="!submitting">SIGN IN</ng-container>
+        <mat-progress-spinner
+          *ngIf="submitting"
+          color="accent"
+          mode="indeterminate"
+          strokeWidth="3"
+          [diameter]="24"
+        ></mat-progress-spinner>
       </button>
       <button mat-button color="accent" routerLink="/login/forgot-password">FORGOT PASSWORD?</button>
     </mat-card-actions>
