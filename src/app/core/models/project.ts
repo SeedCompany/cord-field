@@ -2,6 +2,7 @@ import { buildEnum } from './enum';
 import { Language } from './language';
 import { Location } from './location';
 import { Partnership } from './partnership';
+import { TeamMember } from './team-member';
 
 export enum ProjectType {
   Translation = 'translation',
@@ -122,6 +123,7 @@ export class Project {
   languages: Language[];
   partnerships: Partnership[];
   sensitivity: ProjectSensitivity;
+  team: TeamMember[];
   updatedAt: Date;
 
   static fromJson(json: any): Project {
@@ -138,6 +140,7 @@ export class Project {
     project.languages = (json.languages || []).map(Language.fromJson);
     project.partnerships = (json.partnerships || []).map(Partnership.fromJson);
     project.sensitivity = json.sensitivity || 1;
+    project.team = (json.team || []).map(TeamMember.fromJson);
     project.updatedAt = new Date(json.updatedAt || 0);
 
     return project;

@@ -1,0 +1,53 @@
+<mat-toolbar>
+  <mat-toolbar-row>
+    <span class="spacer"></span>
+    <app-search (search)="onSearch($event)"></app-search>
+    <button mat-icon-button color="primary">
+      <mat-icon>person_add</mat-icon>
+    </button>
+  </mat-toolbar-row>
+</mat-toolbar>
+
+<mat-table [dataSource]="dataSource" matSort>
+
+  <ng-container matColumnDef="avatar">
+    <mat-header-cell *matHeaderCellDef></mat-header-cell>
+    <mat-cell *matCellDef="let member">
+      <app-avatar-letter color="accent">{{ member.firstName.charAt(0) + member.lastName.charAt(0) }}</app-avatar-letter>
+    </mat-cell>
+  </ng-container>
+
+  <ng-container matColumnDef="firstName">
+    <mat-header-cell *matHeaderCellDef mat-sort-header>First Name</mat-header-cell>
+    <mat-cell *matCellDef="let member" class="name">
+      {{ member.firstName }}
+    </mat-cell>
+  </ng-container>
+
+  <ng-container matColumnDef="lastName">
+    <mat-header-cell *matHeaderCellDef mat-sort-header>Last Name</mat-header-cell>
+    <mat-cell *matCellDef="let member" class="name">{{ member.lastName }}
+    </mat-cell>
+  </ng-container>
+
+  <ng-container matColumnDef="updatedAt">
+    <mat-header-cell *matHeaderCellDef mat-sort-header>Date Added</mat-header-cell>
+    <mat-cell *matCellDef="let member">{{ member.updatedAt | date : 'shortDate' }}</mat-cell>
+  </ng-container>
+
+  <ng-container matColumnDef="roles">
+    <mat-header-cell *matHeaderCellDef>Role(s)</mat-header-cell>
+    <mat-cell *matCellDef="let member">
+      <span>{{ showRoles(member.roles) }}</span>
+      <button mat-icon-button>
+        <mat-icon>more_vert</mat-icon>
+      </button>
+    </mat-cell>
+  </ng-container>
+
+  <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+  <mat-row *matRowDef="let member; columns: displayedColumns;"></mat-row>
+
+</mat-table>
+<mat-paginator [pageSizeOptions]="pageSizeOptions"
+></mat-paginator>

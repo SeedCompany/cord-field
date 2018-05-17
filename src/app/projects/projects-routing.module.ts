@@ -6,8 +6,8 @@ import { ProjectFilesComponent } from './project-files/project-files.component';
 import { ProjectFormsComponent } from './project-forms/project-forms.component';
 import { ProjectListComponent } from './project-list/project-list.component';
 import { ProjectOverviewComponent } from './project-overview/project-overview.component';
-import { ProjectPeopleComponent } from './project-people/project-people.component';
 import { ProjectPlanComponent } from './project-plan/project-plan.component';
+import { ProjectTeamComponent } from './project-team/project-team.component';
 import { ProjectUpdatesComponent } from './project-updates/project-updates.component';
 import { ProjectComponent } from './project/project.component';
 
@@ -29,7 +29,7 @@ const routes: Routes = [
       {path: 'plan', component: ProjectPlanComponent},
       {path: 'budget', component: ProjectBudgetComponent},
       {path: 'files', component: ProjectFilesComponent},
-      {path: 'people', component: ProjectPeopleComponent},
+      {path: 'team', component: ProjectTeamComponent},
       {path: 'updates', component: ProjectUpdatesComponent}
     ]
   }
