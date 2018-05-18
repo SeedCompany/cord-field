@@ -46,6 +46,7 @@
         <button mat-menu-item><mat-icon>assignment</mat-icon>Change Roles</button>
         <button mat-menu-item
                 [disabled]="member.editable"
+                (click)="onRemove(member)"
         >
           <mat-icon>delete</mat-icon>
           Remove
