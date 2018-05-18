@@ -43,6 +43,10 @@ app-search {
 .mat-column-roles {
   flex: 3;
 
+  .none {
+    color: mat-foreground($theme, disabled);
+  }
+
   // Move context button to the right
   display: flex;
   justify-content: space-between;

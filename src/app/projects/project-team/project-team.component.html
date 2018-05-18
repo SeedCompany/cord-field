@@ -38,7 +38,7 @@
   <ng-container matColumnDef="roles">
     <mat-header-cell *matHeaderCellDef>Role(s)</mat-header-cell>
     <mat-cell *matCellDef="let member">
-      <span>{{ showRoles(member.roles) }}</span>
+      <span [class.none]="member.roles.length === 0">{{ showRoles(member.roles) || 'None' }}</span>
       <button mat-icon-button mat-button [matMenuTriggerFor]="context">
         <mat-icon>more_vert</mat-icon>
       </button>
