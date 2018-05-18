@@ -1,6 +1,11 @@
 import { ProjectRole } from './project-role';
 import { User } from './user';
 
+export interface TeamMemberForSaveAPI {
+  userId: string;
+  roles: ProjectRole[];
+}
+
 export class TeamMember {
   user: User;
   roles: ProjectRole[];
@@ -21,8 +26,15 @@ export class TeamMember {
     return teamMember;
   }
 
+  static forSaveAPI(member: TeamMember): TeamMemberForSaveAPI {
+    return {
+      userId: member.id,
+      roles: member.roles
+    };
+  }
+
   get id() {
-    return this.user.id;
+    return this.user.id!;
   }
 
   get firstName() {

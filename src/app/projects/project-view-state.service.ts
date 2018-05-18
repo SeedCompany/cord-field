@@ -4,6 +4,7 @@ import { Observable } from 'rxjs/Observable';
 import { Language } from '../core/models/language';
 import { Partnership, PartnershipForSaveAPI } from '../core/models/partnership';
 import { Project } from '../core/models/project';
+import { TeamMember, TeamMemberForSaveAPI } from '../core/models/team-member';
 import { ProjectService } from '../core/services/project.service';
 
 const isEqual = require('lodash.isequal');
@@ -149,6 +150,10 @@ export class ProjectViewStateService {
     partnerships: {
       accessor: returnId,
       toServer: mapChangeList<Partnership, PartnershipForSaveAPI, string>(Partnership.forSaveAPI, returnId)
+    },
+    team: {
+      accessor: returnId,
+      toServer: mapChangeList<TeamMember, TeamMemberForSaveAPI, string>(TeamMember.forSaveAPI, returnId)
     }
   };
 
