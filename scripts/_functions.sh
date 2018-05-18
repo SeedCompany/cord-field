@@ -1,7 +1,9 @@
 #!/usr/bin/env bash
+PROJECT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
+PROJECT_NAME="$(basename ${PROJECT_DIR})"
 
 function compose {
-  docker-compose --file ${COMPOSE_FILE} $@
+  docker-compose --project-name ${PROJECT_NAME} --file ${COMPOSE_FILE} $@
 }
 
 function down {
