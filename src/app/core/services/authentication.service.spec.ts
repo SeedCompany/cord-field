@@ -1,13 +1,7 @@
-import {
-  HttpClientTestingModule,
-  HttpTestingController
-} from '@angular/common/http/testing';
-import {
-  inject,
-  TestBed
-} from '@angular/core/testing';
+import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
+import { inject, TestBed } from '@angular/core/testing';
 import { environment } from '../../../environments/environment';
-import { CoreModule, httpInterceptorProviders } from '../core.module';
+import { CoreModule } from '../core.module';
 import { AuthenticationService } from './authentication.service';
 
 let httpMockService: HttpTestingController;
