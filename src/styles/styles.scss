@@ -77,3 +77,8 @@ body {
   align-self: flex-end;
   margin-bottom: 6px;
 }
+
+// Fix icons in disabled menu items to also be disabled color (matches MD spec).
+.mat-menu-item[disabled] .mat-icon {
+  color: mat-foreground($theme, disabled);
+}

@@ -47,4 +47,9 @@ app-search {
   display: flex;
   justify-content: space-between;
   align-items: center;
+
+  // Exclude menu from flexing, it's opened in an overlay outside of the cell so this doesn't keep the menu from showing
+  mat-menu {
+    display: none;
+  }
 }

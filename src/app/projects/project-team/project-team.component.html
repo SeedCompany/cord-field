@@ -2,7 +2,7 @@
   <mat-toolbar-row>
     <span class="spacer"></span>
     <app-search (search)="onSearch($event)"></app-search>
-    <button mat-icon-button color="primary">
+    <button mat-icon-button color="primary" matTooltip="Add User">
       <mat-icon>person_add</mat-icon>
     </button>
   </mat-toolbar-row>
@@ -39,9 +39,18 @@
     <mat-header-cell *matHeaderCellDef>Role(s)</mat-header-cell>
     <mat-cell *matCellDef="let member">
       <span>{{ showRoles(member.roles) }}</span>
-      <button mat-icon-button>
+      <button mat-icon-button mat-button [matMenuTriggerFor]="context">
         <mat-icon>more_vert</mat-icon>
       </button>
+      <mat-menu #context="matMenu">
+        <button mat-menu-item><mat-icon>assignment</mat-icon>Change Roles</button>
+        <button mat-menu-item
+                [disabled]="member.editable"
+        >
+          <mat-icon>delete</mat-icon>
+          Remove
+        </button>
+      </mat-menu>
     </mat-cell>
   </ng-container>
 
