@@ -12,6 +12,7 @@ const routes: Routes = [
       {path: '', redirectTo: 'projects', pathMatch: 'full'},
       {path: 'languages', loadChildren: 'app/languages/languages.module#LanguagesModule'},
       {path: 'organizations', loadChildren: 'app/organizations/organizations.module#OrganizationsModule'},
+      {path: 'people', loadChildren: 'app/people/people.module#PeopleModule'},
       {path: 'projects', loadChildren: 'app/projects/projects.module#ProjectsModule'},
       {path: 'tasks', loadChildren: 'app/tasks/tasks.module#TasksModule'}
     ],
