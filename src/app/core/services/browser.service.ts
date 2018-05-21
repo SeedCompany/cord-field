@@ -26,11 +26,11 @@ export class BrowserService {
 
   get window(): Window {
     // https://developer.mozilla.org/en-US/docs/Web/API/Window
-    return window;
+    return typeof window === 'undefined' ? {} as Window : window;
   }
 
   get sessionStorage(): Storage | null {
-    return (this.window || {} as any).sessionStorage || null;
+    return this.hasSessionStorage ? this.window.sessionStorage : null;
   }
 
   get localforage(): LocalForage {
