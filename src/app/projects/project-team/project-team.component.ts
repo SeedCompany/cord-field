@@ -45,4 +45,9 @@ export class ProjectTeamComponent implements AfterViewInit {
   onSearch(term: string) {
     this.dataSource.filter = term;
   }
+
+  onRemove(member: TeamMember) {
+    this.projectViewState.change({team: {remove: member}});
+    this.projectViewState.save();
+  }
 }
