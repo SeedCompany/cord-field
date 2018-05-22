@@ -4,7 +4,7 @@ import { RouterModule } from '@angular/router';
 import { SharedModule } from '../shared/shared.module';
 import { HeaderComponent } from './header/header.component';
 import { NotFoundPageComponent } from './not-found-page/not-found-page.component';
-import { AuthenticationGuard } from './route-guards/authentication-guard';
+import { AlreadyLoggedInGuard, AuthenticationGuard } from './route-guards/authentication-guard';
 import { AuthenticationStorageService } from './services/authentication-storage.service';
 import { AuthenticationService } from './services/authentication.service';
 import { BrowserService } from './services/browser.service';
@@ -29,6 +29,7 @@ import { LocalStorageService, SessionStorageService } from './services/storage.s
     NotFoundPageComponent
   ],
   providers: [
+    AlreadyLoggedInGuard,
     AuthInterceptor,
     AuthenticationGuard,
     AuthenticationService,

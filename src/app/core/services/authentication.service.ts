@@ -8,6 +8,7 @@ import { AuthenticationToken } from '../models/authentication-token';
 import { IUserRequestAccess, User } from '../models/user';
 import { AuthenticationStorageService } from './authentication-storage.service';
 import { ProfileApiService } from './http/profile-api.service';
+import { SessionStorageService } from './storage.service';
 
 const DOMAIN = 'field';
 
@@ -25,6 +26,22 @@ export class AuthenticationService {
     return this._logout.asObservable();
   }
 
+  async popNextUrl(): Promise<string | null> {
+    const url = await this.sessionStorage.getItem<string>('nextUrl');
+    if (url) {
+      await this.setNextUrl(null);
+    }
+    return url;
+  }
+
+  async setNextUrl(url: string | null) {
+    if (url) {
+      await this.sessionStorage.setItem('nextUrl', url);
+    } else {
+      await this.sessionStorage.removeItem('nextUrl');
+    }
+  }
+
   async isLoggedIn(): Promise<boolean> {
     const tokens = await this.authStorage.getAuthenticationTokens();
     return !(!tokens || tokens.length === 0 || tokens.find((t) => t.expired));
@@ -38,7 +55,8 @@ export class AuthenticationService {
   }
 
   constructor(private api: ProfileApiService,
-              private authStorage: AuthenticationStorageService) {
+              private authStorage: AuthenticationStorageService,
+              private sessionStorage: SessionStorageService) {
   }
 
   async requestAccess(newUser: IUserRequestAccess) {
