@@ -45,7 +45,7 @@ export class LoginComponent {
       this.form.enable();
     }
 
-    this.router.navigateByUrl(await this.auth.popNextUrl() || '/');
+    this.router.navigateByUrl(await this.auth.popNextUrl() || '/', {replaceUrl: true});
   }
 
   get email(): AbstractControl {

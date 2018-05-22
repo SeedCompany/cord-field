@@ -23,7 +23,7 @@ export class AppComponent implements OnInit, OnDestroy {
       .takeUntil(this.ngUnsubscribe)
       .subscribe(async () => {
         await this.auth.setNextUrl(this.router.url);
-        this.router.navigateByUrl('/login');
+        this.router.navigateByUrl('/login', {replaceUrl: true});
       });
   }
 

@@ -13,7 +13,7 @@ export class AuthenticationGuard implements CanActivate {
     const loggedIn = await this.auth.isLoggedIn();
     if (!loggedIn) {
       await this.auth.setNextUrl(state.url);
-      this.router.navigateByUrl('/login');
+      this.router.navigateByUrl('/login', {replaceUrl: true});
     }
     return loggedIn;
   }
