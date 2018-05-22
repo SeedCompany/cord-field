@@ -48,7 +48,7 @@ export abstract class BaseStorageService<TStore extends any> {
   private isLocalForage = false;
 
   constructor(protected store: TStore) {
-    this.isLocalForage = 'setDriver' in this.store;
+    this.isLocalForage = this.store && 'setDriver' in this.store;
   }
 
   /**

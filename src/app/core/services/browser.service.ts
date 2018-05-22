@@ -1,6 +1,20 @@
 import { Injectable } from '@angular/core';
 import * as localforage from 'localforage';
 
+// Temp fix until auth can be done on SSR as well
+localforage.defineDriver({
+  _driver: 'null',
+  _initStorage: () => {},
+  clear: async () => {},
+  getItem: async <T>() => (null as any as T),
+  key: async () => '',
+  keys: async () => [],
+  setItem: async <T>(key: string, value: T) => value,
+  removeItem: async () => {},
+  length: async () => 0,
+  iterate: async <T, U>() => (null as any as U)
+});
+
 @Injectable()
 export class BrowserService {
 
@@ -26,11 +40,11 @@ export class BrowserService {
 
   get window(): Window {
     // https://developer.mozilla.org/en-US/docs/Web/API/Window
-    return window;
+    return typeof window === 'undefined' ? {} as Window : window;
   }
 
   get sessionStorage(): Storage | null {
-    return (this.window || {} as any).sessionStorage || null;
+    return this.hasSessionStorage ? this.window.sessionStorage : null;
   }
 
   get localforage(): LocalForage {
