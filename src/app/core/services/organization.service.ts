@@ -9,6 +9,6 @@ export class OrganizationService {
   }
 
   search(term: string): Promise<Organization[]> {
-    return this.plo.get<Organization[]>(`/organizations/suggestions?term=${term}`).toPromise();
+    return this.plo.get<Organization[]>('/organizations/suggestions', {params: {term}}).toPromise();
   }
 }

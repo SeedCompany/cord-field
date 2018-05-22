@@ -10,7 +10,7 @@ export class LanguageService {
 
   search(term: string): Promise<Language[]> {
     return this.ploApi
-      .get<Language[]>(`/languages/suggestions?term=${term}`)
+      .get<Language[]>('/languages/suggestions', {params: {term}})
       .map(languages => languages.map(Language.fromJson))
       .toPromise();
   }

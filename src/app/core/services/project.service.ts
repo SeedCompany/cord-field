@@ -13,6 +13,7 @@ import {
   ProjectsWithCount,
   ProjectType
 } from '../models/project';
+import { HttpParams } from './http/abstract-http-client';
 import { PloApiService } from './http/plo-api.service';
 
 export interface ProjectFilterAPI {
@@ -44,15 +45,20 @@ export class ProjectService {
               limit = 10,
               filter?: ProjectFilter): Observable<ProjectsWithCount> {
 
-    let url = `/projects?sort=${sort}&skip=${skip}&limit=${limit}&order=${order}`;
+    const params: HttpParams = {
+      sort,
+      skip: skip.toString(),
+      limit: limit.toString(),
+      order
+    };
     if (filter) {
       const filterAPI = this.buildFilter(filter);
-      url += `&filter=${JSON.stringify(filterAPI)}`;
+      params.filter = JSON.stringify(filterAPI);
     }
 
     return this
       .ploApi
-      .get<Project[]>(url, {observe: 'response'})
+      .get<Project[]>('/projects', {params, observe: 'response'})
       .map((response: HttpResponse<Project[]>) => {
         return {
           projects: Project.fromJsonArray(response.body),
