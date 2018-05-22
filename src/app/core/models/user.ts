@@ -19,7 +19,7 @@ export class User {
   displayFirstName: string;
   displayLastName: string;
   email: string | null;
-  assignableRoles: AssignableRole[];
+  private assignableRoles: AssignableRole[];
 
   static fromJson(json: any): User {
     json = json || {};
@@ -32,7 +32,7 @@ export class User {
     obj.lastName = json.lastName !== REDACTED ? json.lastName : null;
     obj.displayLastName = json.displayLastName;
     obj.email = json.email !== REDACTED ? json.email : null;
-    obj.assignableRoles = (json.assignableRoles || []).map(AssignableRole.fromJson);
+    obj.assignableRoles = json.assignableRoles || [];
 
     return obj;
   }
@@ -48,18 +48,15 @@ export class User {
   get fullName(): string {
     return `${this.publicFirstName} ${this.publicLastName}`.trim();
   }
+
+  getAssignableRoles(location: Location): ProjectRole[] {
+    return this.assignableRoles
+      .filter(role => role.locationIds.includes(location.id))
+      .map(role => role.role);
+  }
 }
 
-export class AssignableRole {
+export interface AssignableRole {
   role: ProjectRole;
-  location: Location;
-
-  static fromJson(json: any): AssignableRole {
-    const assignableRole = new AssignableRole();
-
-    assignableRole.role = json.role;
-    assignableRole.location = Location.fromJson(json.location);
-
-    return assignableRole;
-  }
+  locationIds: string[];
 }
