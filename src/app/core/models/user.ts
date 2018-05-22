@@ -32,7 +32,7 @@ export class User {
     obj.lastName = json.lastName !== REDACTED ? json.lastName : null;
     obj.displayLastName = json.displayLastName;
     obj.email = json.email !== REDACTED ? json.email : null;
-    obj.assignableRoles = json.assignableRoles.map(AssignableRole.fromJson);
+    obj.assignableRoles = (json.assignableRoles || []).map(AssignableRole.fromJson);
 
     return obj;
   }
