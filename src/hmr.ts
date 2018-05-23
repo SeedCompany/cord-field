@@ -20,4 +20,33 @@ export const hmrBootstrap = (module: any, bootstrap: () => Promise<NgModuleRef<a
 
     makeVisible();
   });
+
+  // Group up and collapse HMR updated modules, Try to filter out other noise.
+  // On Chrome, you can put `-HMR -WDS` in console log filter to filter out all the messages.
+  const origLog = window.console.log;
+  let grouping = false;
+  window.console.log = function() {
+    if (arguments.length === 1 && typeof arguments[0] === 'string') {
+      if (arguments[0] === '[HMR] Updated modules:') {
+        // tslint:disable-next-line:no-console
+        console.groupCollapsed('[HMR] Updated modules');
+        grouping = true;
+        return;
+      } else if (arguments[0] === '[HMR] App is up to date.') {
+        grouping = false;
+        // tslint:disable-next-line:no-console
+        console.groupEnd();
+      } else if (arguments[0] === 'Angular is running in the development mode. Call enableProdMode() to enable the production mode.') {
+        return;
+      } else if (arguments[0].match(/^\[(HMR|WDS)\].+\.\.\.$/)) {
+        return;
+      }
+      if (grouping) {
+        origLog.call(window.console, arguments[0].substr(9));
+        return;
+      }
+    }
+
+    origLog.apply(window.console, arguments);
+  };
 };
