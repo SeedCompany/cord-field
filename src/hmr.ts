@@ -10,6 +10,14 @@ export const hmrBootstrap = (module: any, bootstrap: () => Promise<NgModuleRef<a
     const elements = appRef.components.map(c => c.location.nativeElement);
     const makeVisible = createNewHosts(elements);
     ngModule.destroy();
+
+    // Hack to remove old overlay components
+    // https://github.com/angular/material2/issues/749
+    const overlays = document.querySelectorAll('.cdk-overlay-container, .cdk-visually-hidden');
+    for (let i = 0; i < overlays.length; i++) {
+      overlays[i].remove();
+    }
+
     makeVisible();
   });
 };
