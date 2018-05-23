@@ -34,6 +34,8 @@ mat-panel-title, mat-panel-description {
   small {
     @include mat-typography-level-to-styles($config, body-1);
     color: mat-foreground($theme, secondary-text);
+    word-wrap: break-word;
+    width: 250px;
   }
 }
 
