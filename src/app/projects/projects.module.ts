@@ -13,6 +13,7 @@ import { ProjectOverviewSidebarComponent } from './project-overview-sidebar/proj
 import { ProjectOverviewComponent } from './project-overview/project-overview.component';
 import { ProjectPartnershipsComponent } from './project-partnerships/project-partnerships.component';
 import { ProjectPlanComponent } from './project-plan/project-plan.component';
+import { ProjectTeamMemberRoleDialogComponent } from './project-team-member-role-dialog/project-team-member-role-dialog.component';
 import { ProjectTeamMemberAddComponent } from './project-team/project-team-member-add/project-team-member-add.component';
 import { ProjectTeamComponent } from './project-team/project-team.component';
 import { ProjectUpdatesComponent } from './project-updates/project-updates.component';
@@ -40,13 +41,15 @@ import { ProjectsRoutingModule } from './projects-routing.module';
     ProjectPlanComponent,
     ProjectTeamComponent,
     ProjectTeamMemberAddComponent,
+    ProjectTeamMemberRoleDialogComponent,
     ProjectUpdatesComponent,
     ProjectLanguagesComponent,
     ProjectLocationTimeframeComponent
   ],
   entryComponents: [
     ProjectCreateDialogComponent,
-    ProjectTeamMemberAddComponent
+    ProjectTeamMemberAddComponent,
+    ProjectTeamMemberRoleDialogComponent
   ]
 })
 export class ProjectsModule {

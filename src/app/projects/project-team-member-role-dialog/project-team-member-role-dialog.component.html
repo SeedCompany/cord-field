@@ -1,0 +1,17 @@
+<h1 mat-dialog-title>Update Team Member Role</h1>
+<form mat-dialog-content>
+  <mat-form-field color="accent" class="types">
+    <mat-select multiple placeholder="Project Roles" [formControl]="role" [compareWith]="assignProjectRoles">
+      <mat-option *ngFor="let role of ProjectRole.entries(); trackBy: ProjectRole.trackEntryBy;"
+                  [value]="role.value" [disabled]="isAssignable(role.value)">
+        {{ role.ui }}
+      </mat-option>
+    </mat-select>
+  </mat-form-field>
+</form>
+<div mat-dialog-actions>
+  <button mat-button color="accent" (click)="updateTeamMember()">
+    UPDATE
+  </button>
+  <button mat-button color="accent" (click)="onClose()">CANCEL</button>
+</div>
