@@ -60,9 +60,6 @@ describe('ProjectService', () => {
     httpMock
       .expectOne(url)
       .flush(mockResponse);
-    httpMock
-      .expectOne('https://api.mockaroo.com/api/73ff61e0?count=15&key=fe2eb390')
-      .flush([]);
     httpMock.verify();
   });
 
