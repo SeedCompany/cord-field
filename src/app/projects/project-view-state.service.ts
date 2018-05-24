@@ -127,7 +127,7 @@ export class ProjectViewStateService {
   private _project = new BehaviorSubject<Project>(Project.fromJson({}));
 
   private dirty = new BehaviorSubject<boolean>(false);
-  private modified: ModifiedProject;
+  private modified: ModifiedProject = {};
 
   private submitting = new BehaviorSubject<boolean>(false);
 
