@@ -1,4 +1,3 @@
-import { HTTP_INTERCEPTORS } from '@angular/common/http';
 import { ModuleWithProviders, NgModule, Optional, SkipSelf } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { SharedModule } from '../shared/shared.module';
@@ -18,6 +17,7 @@ import { LoggerService } from './services/logger.service';
 import { OrganizationService } from './services/organization.service';
 import { ProjectService } from './services/project.service';
 import { LocalStorageService, SessionStorageService } from './services/storage.service';
+import { UserService } from './services/user.service';
 
 @NgModule({
   imports: [
@@ -44,7 +44,8 @@ import { LocalStorageService, SessionStorageService } from './services/storage.s
     PloApiService,
     ProjectService,
     ProfileApiService,
-    SessionStorageService
+    SessionStorageService,
+    UserService
   ]
 })
 export class CoreModule {

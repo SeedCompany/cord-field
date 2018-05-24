@@ -9,7 +9,7 @@ import { HttpObserve } from '@angular/common/http/src/client';
 import { Observable } from 'rxjs/Observable';
 
 type HttpHeaders = HttpHeadersObject | { [header: string]: string | string[] };
-type HttpParams = HttpParamsObject | { [param: string]: string | string[] };
+export type HttpParams = HttpParamsObject | { [param: string]: string | string[] };
 export type ResponseType = 'arraybuffer' | 'blob' | 'json' | 'text';
 
 export interface IRequestOptionsWithBody extends IRequestOptions {

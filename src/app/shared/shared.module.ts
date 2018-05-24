@@ -6,6 +6,7 @@ import { MaterialModule } from '../material.module';
 import { AutocompleteLanguageComponent } from './components/autocomplete/autocomplete-language.component';
 import { AutocompleteLocationComponent } from './components/autocomplete/autocomplete-location.component';
 import { AutocompleteOrganizationComponent } from './components/autocomplete/autocomplete-organization.component';
+import { AutocompleteUserComponent } from './components/autocomplete/autocomplete-user.component';
 import { AutocompleteComponent } from './components/autocomplete/autocomplete.component';
 import { AvatarLetterComponent } from './components/avatar-letter/avatar-letter.component';
 import { SearchComponent } from './components/search/search.component';
@@ -26,6 +27,7 @@ import { LanguageInfoPipe } from './pipes/language-info.pipe';
     AutocompleteLanguageComponent,
     AutocompleteLocationComponent,
     AutocompleteOrganizationComponent,
+    AutocompleteUserComponent,
     AutocompleteComponent,
     AvatarLetterComponent,
     CommonModule,
@@ -41,6 +43,7 @@ import { LanguageInfoPipe } from './pipes/language-info.pipe';
     AutocompleteLanguageComponent,
     AutocompleteLocationComponent,
     AutocompleteOrganizationComponent,
+    AutocompleteUserComponent,
     AutocompleteComponent,
     AutofocusDirective,
     AvatarLetterComponent,
