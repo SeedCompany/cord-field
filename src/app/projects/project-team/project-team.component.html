@@ -43,7 +43,10 @@
         <mat-icon>more_vert</mat-icon>
       </button>
       <mat-menu #context="matMenu">
-        <button mat-menu-item><mat-icon>assignment</mat-icon>Change Roles</button>
+        <button mat-menu-item (click)="onChangeRoles(member)">
+          <mat-icon>assignment</mat-icon>
+          Change Roles
+        </button>
         <button mat-menu-item
                 [disabled]="member.removable"
                 (click)="onRemove(member)"

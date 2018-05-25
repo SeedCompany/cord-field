@@ -3,6 +3,7 @@ import { MatDialog, MatPaginator, MatSnackBar, MatSort, MatTableDataSource } fro
 import { Project } from '../../core/models/project';
 import { ProjectRole } from '../../core/models/project-role';
 import { TeamMember } from '../../core/models/team-member';
+import { ProjectTeamMemberRoleDialogComponent } from '../project-team-member-role-dialog/project-team-member-role-dialog.component';
 import { ProjectViewStateService } from '../project-view-state.service';
 import { ProjectTeamMemberAddComponent } from './project-team-member-add/project-team-member-add.component';
 
@@ -69,6 +70,17 @@ export class ProjectTeamComponent implements AfterViewInit {
     this.dialog.open(ProjectTeamMemberAddComponent, {
       width: '400px',
       data: {
+        project: this.project,
+        projectViewState: this.projectViewState
+      }
+    });
+  }
+
+  onChangeRoles(teamMember: TeamMember) {
+    this.dialog.open(ProjectTeamMemberRoleDialogComponent, {
+      width: '400px',
+      data: {
+        teamMember,
         project: this.project,
         projectViewState: this.projectViewState
       }

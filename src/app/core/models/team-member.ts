@@ -59,4 +59,15 @@ export class TeamMember {
   get removable() {
     return this.roles.some(role => ProjectRole.implicit.includes(role));
   }
+
+  clone(): TeamMember {
+    return Object.assign(Object.create(Object.getPrototypeOf(this)), this);
+  }
+
+  withRoles(roles: ProjectRole[]): TeamMember {
+    const cloned = this.clone();
+    cloned.roles = roles;
+
+    return cloned;
+  }
 }

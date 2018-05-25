@@ -1,0 +1,19 @@
+@import "~styles/imports";
+
+.mat-form-field {
+  display: block;
+}
+
+.mat-dialog-actions {
+  display: flex;
+  flex-direction: row-reverse;
+}
+
+.mat-dialog-actions .mat-button + .mat-button {
+  margin-left: 0;
+  margin-right: 8px;
+}
+
+mat-progress-spinner {
+  margin: 0 auto;
+}
