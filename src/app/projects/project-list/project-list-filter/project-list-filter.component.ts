@@ -34,13 +34,13 @@ export class ProjectListFilterComponent implements OnInit {
     startDate: [null],
     endDate: [null]
   });
-  myDate = new Date();
+  today = new Date();
   minDate: Date;
   // sets the maxDate to today's date, avoiding the future date selection
   maxDate: Date = new Date(
-    this.myDate.getFullYear(),
-    this.myDate.getMonth(),
-    this.myDate.getDate()
+    this.today.getFullYear(),
+    this.today.getMonth(),
+    this.today.getDate()
   );
 
   constructor(private formBuilder: FormBuilder) {
