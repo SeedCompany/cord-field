@@ -44,4 +44,8 @@ export class TeamMember {
   get lastName() {
     return this.user.publicLastName;
   }
+
+  get removable() {
+    return this.roles.some(role => ProjectRole.implicit.includes(role));
+  }
 }

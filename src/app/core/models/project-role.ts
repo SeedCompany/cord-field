@@ -41,4 +41,10 @@ export namespace ProjectRole {
     ProjectRole.LeadFinancialAnalyst,
     ProjectRole.Writer
   ];
+  export const implicit = [
+    ProjectRole.AreaDirector,
+    ProjectRole.BIAnalyst,
+    ProjectRole.RegionalDirector,
+    ProjectRole.SystemsAdmin
+  ];
 }
