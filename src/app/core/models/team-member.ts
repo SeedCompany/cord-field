@@ -26,6 +26,17 @@ export class TeamMember {
     return teamMember;
   }
 
+  static new(user: User, roles: ProjectRole[]): TeamMember {
+    const member = new TeamMember();
+    member.user = user;
+    member.roles = roles;
+    member.description = '';
+    member.editable = true;
+    member.dateAdded = new Date();
+
+    return member;
+  }
+
   static forSaveAPI(member: TeamMember): TeamMemberForSaveAPI {
     return {
       userId: member.id,

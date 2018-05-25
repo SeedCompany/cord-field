@@ -11,8 +11,8 @@ import { AutocompleteComponent } from './autocomplete.component';
 })
 export class AutocompleteUserComponent extends AutocompleteComponent<User> {
 
-  @Input() placeholder = 'Users';
-  @Input() requiredMessage = 'Please enter a user';
+  @Input() placeholder = 'User';
+  @Input() requiredMessage = 'Please specify a user';
   @Input() serverErrorMessage = 'Failed to fetch users';
   @Input() displayItem = (user: User) => user.fullName;
   @Input() trackBy = (user: User) => user.id;
