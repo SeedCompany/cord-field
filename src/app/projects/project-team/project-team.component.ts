@@ -11,7 +11,7 @@ import { ProjectViewStateService } from '../project-view-state.service';
 })
 export class ProjectTeamComponent implements AfterViewInit {
 
-  readonly displayedColumns = ['avatar', 'firstName', 'lastName', 'updatedAt', 'roles'];
+  readonly displayedColumns = ['avatar', 'firstName', 'lastName', 'dateAdded', 'roles'];
   readonly pageSizeOptions = [10, 25, 50];
   dataSource = new MatTableDataSource<TeamMember>();
 
