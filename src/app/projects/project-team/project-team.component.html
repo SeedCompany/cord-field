@@ -2,7 +2,7 @@
   <mat-toolbar-row>
     <span class="spacer"></span>
     <app-search (search)="onSearch($event)"></app-search>
-    <button mat-icon-button color="primary" matTooltip="Add User">
+    <button mat-icon-button color="primary" matTooltip="Assign User" (click)="onAssign()">
       <mat-icon>person_add</mat-icon>
     </button>
   </mat-toolbar-row>
@@ -30,9 +30,9 @@
     </mat-cell>
   </ng-container>
 
-  <ng-container matColumnDef="updatedAt">
+  <ng-container matColumnDef="dateAdded">
     <mat-header-cell *matHeaderCellDef mat-sort-header>Date Added</mat-header-cell>
-    <mat-cell *matCellDef="let member">{{ member.updatedAt | date : 'shortDate' }}</mat-cell>
+    <mat-cell *matCellDef="let member">{{ member.dateAdded | date : 'shortDate' }}</mat-cell>
   </ng-container>
 
   <ng-container matColumnDef="roles">
@@ -45,7 +45,7 @@
       <mat-menu #context="matMenu">
         <button mat-menu-item><mat-icon>assignment</mat-icon>Change Roles</button>
         <button mat-menu-item
-                [disabled]="member.editable"
+                [disabled]="member.removable"
                 (click)="onRemove(member)"
         >
           <mat-icon>delete</mat-icon>

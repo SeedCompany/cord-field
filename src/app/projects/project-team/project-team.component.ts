@@ -1,8 +1,10 @@
 import { AfterViewInit, Component, ViewChild } from '@angular/core';
-import { MatPaginator, MatSort, MatTableDataSource } from '@angular/material';
+import { MatDialog, MatPaginator, MatSnackBar, MatSort, MatTableDataSource } from '@angular/material';
+import { Project } from '../../core/models/project';
 import { ProjectRole } from '../../core/models/project-role';
 import { TeamMember } from '../../core/models/team-member';
 import { ProjectViewStateService } from '../project-view-state.service';
+import { ProjectTeamMemberAddComponent } from './project-team-member-add/project-team-member-add.component';
 
 @Component({
   selector: 'app-project-team',
@@ -11,18 +13,23 @@ import { ProjectViewStateService } from '../project-view-state.service';
 })
 export class ProjectTeamComponent implements AfterViewInit {
 
-  readonly displayedColumns = ['avatar', 'firstName', 'lastName', 'updatedAt', 'roles'];
+  readonly displayedColumns = ['avatar', 'firstName', 'lastName', 'dateAdded', 'roles'];
   readonly pageSizeOptions = [10, 25, 50];
+
+  project: Project;
   dataSource = new MatTableDataSource<TeamMember>();
 
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
 
-  constructor(private projectViewState: ProjectViewStateService) {
+  constructor(private projectViewState: ProjectViewStateService,
+              private snackBar: MatSnackBar,
+              private dialog: MatDialog) {
   }
 
   ngAfterViewInit(): void {
     this.projectViewState.project.subscribe(project => {
+      this.project = project;
       this.dataSource.data = project.team;
     });
     this.dataSource.sort = this.sort;
@@ -49,5 +56,22 @@ export class ProjectTeamComponent implements AfterViewInit {
   onRemove(member: TeamMember) {
     this.projectViewState.change({team: {remove: member}});
     this.projectViewState.save();
+  }
+
+  onAssign() {
+    if (!this.project.location) {
+      this.snackBar.open('Set the project location to assign users', undefined, {
+        duration: 3000
+      });
+      return;
+    }
+
+    this.dialog.open(ProjectTeamMemberAddComponent, {
+      width: '400px',
+      data: {
+        project: this.project,
+        projectViewState: this.projectViewState
+      }
+    });
   }
 }

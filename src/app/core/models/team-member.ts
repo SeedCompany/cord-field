@@ -11,7 +11,7 @@ export class TeamMember {
   roles: ProjectRole[];
   description: string;
   editable: boolean;
-  updatedAt: Date;
+  dateAdded: Date;
 
   static fromJson(json: any): TeamMember {
     json = json || {};
@@ -21,9 +21,20 @@ export class TeamMember {
     teamMember.roles = json.roles;
     teamMember.description = json.description || '';
     teamMember.editable = json.editable || false;
-    teamMember.updatedAt = new Date(json.updatedAt);
+    teamMember.dateAdded = new Date(json.dateAdded);
 
     return teamMember;
+  }
+
+  static new(user: User, roles: ProjectRole[]): TeamMember {
+    const member = new TeamMember();
+    member.user = user;
+    member.roles = roles;
+    member.description = '';
+    member.editable = true;
+    member.dateAdded = new Date();
+
+    return member;
   }
 
   static forSaveAPI(member: TeamMember): TeamMemberForSaveAPI {
@@ -43,5 +54,9 @@ export class TeamMember {
 
   get lastName() {
     return this.user.publicLastName;
+  }
+
+  get removable() {
+    return this.roles.some(role => ProjectRole.implicit.includes(role));
   }
 }
