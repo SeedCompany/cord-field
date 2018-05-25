@@ -1,6 +1,6 @@
-import { Component, Inject, OnInit } from '@angular/core';
-import { FormControl } from '@angular/forms';
-import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material';
+import { Component, Inject } from '@angular/core';
+import { FormControl, Validators } from '@angular/forms';
+import { MAT_DIALOG_DATA, MatDialogRef, MatSnackBar } from '@angular/material';
 import { Project } from '../../core/models/project';
 import { ProjectRole } from '../../core/models/project-role';
 import { TeamMember } from '../../core/models/team-member';
@@ -11,44 +11,51 @@ import { ProjectViewStateService } from '../project-view-state.service';
   templateUrl: './project-team-member-role-dialog.component.html',
   styleUrls: ['./project-team-member-role-dialog.component.scss']
 })
-export class ProjectTeamMemberRoleDialogComponent implements OnInit {
+export class ProjectTeamMemberRoleDialogComponent {
 
-  role: FormControl;
   readonly ProjectRole = ProjectRole;
-  assignableRoles: ProjectRole[] = [];
 
-  constructor(public projectTeamMemberRoleDialogRef: MatDialogRef<ProjectTeamMemberRoleDialogComponent>,
-              @Inject(MAT_DIALOG_DATA) public data: IProjectTeamMemberRoleDialog) {
+  readonly projectViewState: ProjectViewStateService;
+  readonly teamMember: TeamMember;
+  readonly assignableRoles: ProjectRole[];
+
+  roles = new FormControl([], Validators.required);
+  submitting = false;
+
+  constructor(private dialogRef: MatDialogRef<ProjectTeamMemberRoleDialogComponent>,
+              private snackBar: MatSnackBar,
+              @Inject(MAT_DIALOG_DATA) data: DialogData) {
+    this.projectViewState = data.projectViewState;
+    this.teamMember = data.teamMember;
+    this.assignableRoles = data.teamMember.user.getAssignableRoles(data.project.location!);
+
+    this.roles.reset(this.teamMember.roles);
+
+    this.projectViewState.isSubmitting.subscribe(s => this.submitting = s);
   }
 
-  ngOnInit() {
-    this.role = new FormControl();
-    if (this.data.project.location) {
-      this.assignableRoles = this.data.teamMember.user.getAssignableRoles(this.data.project.location!);
+  async onSubmit() {
+    const member = this.teamMember.withRoles(this.roles.value);
+    this.projectViewState.change({team: {update: member}});
+
+    try {
+      await this.projectViewState.save();
+    } catch (e) {
+      this.snackBar.open(`Failed to change team member's roles`, undefined, {
+        duration: 3000
+      });
+      return;
     }
+
+    this.dialogRef.close();
   }
 
   onClose() {
-    this.projectTeamMemberRoleDialogRef.close();
+    this.dialogRef.close();
   }
-
-  assignProjectRoles(projectRole: ProjectRole) {
-    return this.data.teamMember.roles.find(role => role !== projectRole);
-  }
-
-  isAssignable(projectRole: ProjectRole) {
-    return ProjectRole.addable.find(role => role === projectRole) && this.assignableRoles.find(role => role !== projectRole);
-  }
-
-  updateTeamMember() {
-    this.data.teamMember.roles = this.role.value;
-    this.data.projectViewState.change({team: {update: this.data.teamMember}});
-    this.projectTeamMemberRoleDialogRef.close();
-  }
-
 }
 
-interface IProjectTeamMemberRoleDialog {
+interface DialogData {
   project: Project;
   projectViewState: ProjectViewStateService;
   teamMember: TeamMember;
