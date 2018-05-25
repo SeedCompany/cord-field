@@ -3,6 +3,7 @@
 <mat-form-field color="accent">
   <mat-select multiple placeholder="Roles" [formControl]="roles">
     <mat-option *ngFor="let role of assignableRoles; trackBy: ProjectRole.trackValueBy"
+                [disabled]="ProjectRole.implicit.includes(role)"
                 [value]="role">
       {{ ProjectRole.forUI(role) }}
     </mat-option>
