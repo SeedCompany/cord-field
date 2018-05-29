@@ -1,4 +1,4 @@
-FROM node:slim
+FROM node:8
 
 RUN set -ex; \
     mkdir -p /opt/build; \

@@ -1,4 +1,4 @@
-FROM node:slim
+FROM node:8
 
 ENV CHROME_BIN /usr/bin/chromium
 
