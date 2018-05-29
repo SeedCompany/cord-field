@@ -27,7 +27,7 @@
   <mat-form-field color="accent">
     <mat-select formControlName="stage" placeholder="Stage" multiple>
       <mat-optgroup *ngFor="let status of ProjectStatus.entries(); trackBy: ProjectStatus.trackEntryBy"
-        [label]="status.ui">
+                    [label]="status.ui">
         <mat-option
           *ngFor="let stage of ProjectStage.forStatus(status.value); trackBy: ProjectStage.trackValueBy"
           [value]="stage">
@@ -70,6 +70,7 @@
 
   <mat-form-field color="accent" *ngIf="dateRange.value">
     <input matInput
+           [max]="maxDate"
            [matDatepicker]="startDate"
            placeholder="Start Date"
            formControlName="startDate">
@@ -80,6 +81,7 @@
   <mat-form-field color="accent" *ngIf="dateRange.value">
     <input matInput
            [min]="minDate"
+           [max]="maxDate"
            [matDatepicker]="endDate"
            placeholder="End Date"
            formControlName="endDate">
