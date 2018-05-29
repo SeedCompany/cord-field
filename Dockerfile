@@ -1,4 +1,4 @@
-FROM node:8.9
+FROM node:8
 
 RUN set -ex; \
     mkdir -p /opt/build; \
