@@ -22,6 +22,8 @@ mat-expansion-panel {
 
 mat-panel-title, mat-panel-description {
   align-items: center;
+  word-wrap: break-word;
+  max-width: 350px;
 }
 
 .title {
