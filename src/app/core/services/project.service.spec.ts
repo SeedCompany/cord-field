@@ -43,16 +43,19 @@ describe('ProjectService', () => {
     projectService
       .getProject(id)
       .toPromise()
-      .then((project: Project) => {
-        expect(project.id).toBeDefined();
-        expect(project.id).toBe('5acbba0c70db6a1781ece783');
-        expect(project.name).toBeDefined();
-        expect(project.name).toBe('Elhomwe Bible (395)');
-        expect(project.status).toBeDefined();
-        expect(project.status).toBe(ProjectStatus.Active);
-        expect(project.type).toBeDefined();
-        expect(project.type).toBe(ProjectType.Translation);
-        expect(project.languages).toBeDefined();
+      .then((project: Project | boolean) => {
+        if (project) {
+          project = project as Project;
+          expect(project.id).toBeDefined();
+          expect(project.id).toBe('5acbba0c70db6a1781ece783');
+          expect(project.name).toBeDefined();
+          expect(project.name).toBe('Elhomwe Bible (395)');
+          expect(project.status).toBeDefined();
+          expect(project.status).toBe(ProjectStatus.Active);
+          expect(project.type).toBeDefined();
+          expect(project.type).toBe(ProjectType.Translation);
+          expect(project.languages).toBeDefined();
+        }
       })
       .then(done)
       .catch(done.fail);

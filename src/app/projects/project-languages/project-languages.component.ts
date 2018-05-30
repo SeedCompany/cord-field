@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Language } from '../../core/models/language';
+import { Project } from '../../core/models/project';
 import { ProjectViewStateService } from '../project-view-state.service';
 
 @Component({
@@ -16,8 +17,11 @@ export class ProjectLanguagesComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.projectViewState.project.subscribe(project => {
-      this.languages = project.languages;
+    this.projectViewState.project.subscribe((project: Project | boolean) => {
+      if (project) {
+        project = project as Project;
+        this.languages = project.languages;
+      }
     });
   }
 

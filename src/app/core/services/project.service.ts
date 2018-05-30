@@ -4,15 +4,7 @@ import { SortDirection } from '@angular/material';
 import { Observable } from 'rxjs/Observable';
 import { ProjectCreationResult } from '../../projects/project-create-dialog/project-create-dialog.component';
 import { ModifiedProject } from '../../projects/project-view-state.service';
-import {
-  Project,
-  ProjectFilter,
-  ProjectSensitivity,
-  ProjectStage,
-  ProjectStatus,
-  ProjectsWithCount,
-  ProjectType
-} from '../models/project';
+import { Project, ProjectFilter, ProjectSensitivity, ProjectStage, ProjectStatus, ProjectsWithCount, ProjectType } from '../models/project';
 import { HttpParams } from './http/abstract-http-client';
 import { PloApiService } from './http/plo-api.service';
 
@@ -33,10 +25,16 @@ export class ProjectService {
   constructor(private ploApi: PloApiService) {
   }
 
-  getProject(id: string): Observable<Project> {
+  getProject(id: string): Observable<Project | boolean> {
     return this.ploApi
-      .get(`/projects/${id}`)
-      .map(Project.fromJson);
+      .get(`/projects/${id}`, {observe: 'response'})
+      .map((response) => {
+        if (response.status === 200) {
+          return Project.fromJson(response.body);
+        } else {
+          return false;
+        }
+      });
   }
 
   getProjects(sort: keyof Project = 'updatedAt',
