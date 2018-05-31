@@ -68,11 +68,10 @@ describe('ProjectService', () => {
     httpMock.verify();
   });
 
-  it('return status false when API returns an error', (done: DoneFn) => {
+  fit('return status false when API returns an error', (done: DoneFn) => {
     const id = '5acbba0c70db6a1781ece783';
     const url = `${testBaseUrl}/projects/${id}`;
     const mockResponse = {status: false};
-    const req = httpMock.expectOne(url);
     projectService.getProject(id)
       .catch((response: HttpErrorResponse) => {
         expect(Observable.of(response)).toBeTruthy();
@@ -83,7 +82,7 @@ describe('ProjectService', () => {
       .toPromise()
       .then(done)
       .catch(done.fail);
-
+    const req = httpMock.expectOne(url);
     req.flush(mockResponse, {status: 500, statusText: 'internal server error'});
     httpMock.verify();
   });
