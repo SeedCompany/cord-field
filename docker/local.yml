@@ -17,6 +17,7 @@ services:
       DUMP_CONFIG: "true"
       CREATE_FAKE_USERS: "true"
       DOMO: "false"
+      DEV_API: "true"
     mem_limit: 256000000
 
   profile-service:
