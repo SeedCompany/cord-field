@@ -124,7 +124,7 @@ const returnId = (val: {id: string}) => val.id;
 @Injectable()
 export class ProjectViewStateService {
 
-  private _project = new BehaviorSubject<Project>(Project.fromJson({}));
+  private _project = new BehaviorSubject<Project | boolean>(Project.fromJson({}));
 
   private dirty = new BehaviorSubject<boolean>(false);
   private modified: ModifiedProject = {};
@@ -159,7 +159,7 @@ export class ProjectViewStateService {
 
   constructor(private projectService: ProjectService) {}
 
-  get project(): Observable<Project> {
+  get project(): Observable<Project | boolean> {
     return this._project.asObservable();
   }
 
@@ -176,7 +176,7 @@ export class ProjectViewStateService {
   }
 
   change(changes: Changes): void {
-    const project = this._project.value;
+    const project = this._project.value as Project;
 
     for (const [key, change] of Object.entries(changes) as ChangeEntries) {
       if (!(key in this.config)) {
@@ -316,7 +316,8 @@ export class ProjectViewStateService {
     }
     this.submitting.next(true);
     try {
-      await this.projectService.save(this._project.value.id, modified);
+      const modifedProject = this._project.value as Project;
+      await this.projectService.save(modifedProject.id, modified);
     } finally {
       this.submitting.next(false);
     }
@@ -356,7 +357,7 @@ export class ProjectViewStateService {
     this.onNewProject(this._project.value);
   }
 
-  private onNewProject(project: Project): void {
+  private onNewProject(project: Project | boolean): void {
     this.modified = {};
     this._project.next(project);
     this.dirty.next(false);

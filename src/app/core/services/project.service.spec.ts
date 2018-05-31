@@ -1,5 +1,7 @@
+import { HttpErrorResponse } from '@angular/common/http';
 import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
 import { inject, TestBed } from '@angular/core/testing';
+import { Observable } from 'rxjs/Observable';
 import { environment } from '../../../environments/environment';
 import { ProjectCreationResult } from '../../projects/project-create-dialog/project-create-dialog.component';
 import { CoreModule } from '../core.module';
@@ -43,16 +45,19 @@ describe('ProjectService', () => {
     projectService
       .getProject(id)
       .toPromise()
-      .then((project: Project) => {
-        expect(project.id).toBeDefined();
-        expect(project.id).toBe('5acbba0c70db6a1781ece783');
-        expect(project.name).toBeDefined();
-        expect(project.name).toBe('Elhomwe Bible (395)');
-        expect(project.status).toBeDefined();
-        expect(project.status).toBe(ProjectStatus.Active);
-        expect(project.type).toBeDefined();
-        expect(project.type).toBe(ProjectType.Translation);
-        expect(project.languages).toBeDefined();
+      .then((project: Project | boolean) => {
+        if (project) {
+          project = project as Project;
+          expect(project.id).toBeDefined();
+          expect(project.id).toBe('5acbba0c70db6a1781ece783');
+          expect(project.name).toBeDefined();
+          expect(project.name).toBe('Elhomwe Bible (395)');
+          expect(project.status).toBeDefined();
+          expect(project.status).toBe(ProjectStatus.Active);
+          expect(project.type).toBeDefined();
+          expect(project.type).toBe(ProjectType.Translation);
+          expect(project.languages).toBeDefined();
+        }
       })
       .then(done)
       .catch(done.fail);
@@ -60,6 +65,25 @@ describe('ProjectService', () => {
     httpMock
       .expectOne(url)
       .flush(mockResponse);
+    httpMock.verify();
+  });
+
+  it('return status false when API returns an error', (done: DoneFn) => {
+    const id = '5acbba0c70db6a1781ece783';
+    const url = `${testBaseUrl}/projects/${id}`;
+    const mockResponse = {status: false};
+    projectService.getProject(id)
+      .catch((response: HttpErrorResponse) => {
+        expect(Observable.of(response)).toBeTruthy();
+        expect(response).toBeTruthy();
+        expect(response.error.status).toEqual(false);
+        return Observable.of(response);
+      })
+      .toPromise()
+      .then(done)
+      .catch(done.fail);
+    const req = httpMock.expectOne(url);
+    req.flush(mockResponse, {status: 500, statusText: 'internal server error'});
     httpMock.verify();
   });
 
