@@ -79,7 +79,10 @@ describe('ProjectService', () => {
         expect(response).toBeTruthy();
         expect(response.error.status).toEqual(false);
         return Observable.of(response);
-      }).toPromise().then(done).catch(done.fail);
+      })
+      .toPromise()
+      .then(done)
+      .catch(done.fail);
 
     req.flush(mockResponse, {status: 500, statusText: 'internal server error'});
     httpMock.verify();
