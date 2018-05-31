@@ -1,5 +1,7 @@
+import { HttpErrorResponse } from '@angular/common/http';
 import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
 import { inject, TestBed } from '@angular/core/testing';
+import { Observable } from 'rxjs/Observable';
 import { environment } from '../../../environments/environment';
 import { ProjectCreationResult } from '../../projects/project-create-dialog/project-create-dialog.component';
 import { CoreModule } from '../core.module';
@@ -63,6 +65,24 @@ describe('ProjectService', () => {
     httpMock
       .expectOne(url)
       .flush(mockResponse);
+    httpMock.verify();
+  });
+
+  it('return status false when API returns an error', () => {
+    const id = '5acbba0c70db6a1781ece783';
+    const url = `${testBaseUrl}/projects/${id}`;
+    const mockResponse = {status: false};
+    projectService.getProject(id)
+      .catch((response: HttpErrorResponse) => {
+        expect(Observable.of(response)).toBeTruthy();
+        expect(response).toBeTruthy();
+        expect(response.error.status).toEqual(false);
+        return Observable.of(response);
+      })
+      .subscribe();
+    const req = httpMock.expectOne(url);
+    expect(req.request.method).toEqual('GET');
+    req.flush(mockResponse, {status: 500, statusText: 'internal server error'});
     httpMock.verify();
   });
 
