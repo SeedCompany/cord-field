@@ -68,7 +68,7 @@ describe('ProjectService', () => {
     httpMock.verify();
   });
 
-  fit('return status false when API returns an error', (done: DoneFn) => {
+  it('return status false when API returns an error', (done: DoneFn) => {
     const id = '5acbba0c70db6a1781ece783';
     const url = `${testBaseUrl}/projects/${id}`;
     const mockResponse = {status: false};
