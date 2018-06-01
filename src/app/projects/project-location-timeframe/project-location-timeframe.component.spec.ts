@@ -55,13 +55,13 @@ describe('ProjectLocationTimeframeComponent', () => {
     component.form.controls['mouStart'].setValue(startDate);
     component.form.controls['mouEnd'].setValue(startDate);
     const result = component.dateValidator(component.form);
-    expect(result!.invalidDates).toBeTruthy();
+    expect(result!.isInValidDateRange).toBeTruthy();
   });
 
   it('End date should not be less than start date', () => {
     component.form.controls['mouStart'].setValue(endDate);
     component.form.controls['mouEnd'].setValue(startDate);
     const result = component.dateValidator(component.form);
-    expect(result!.invalidDates).toBeTruthy();
+    expect(result!.isInValidDateRange).toBeTruthy();
   });
 });

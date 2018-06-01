@@ -46,7 +46,7 @@ export class ProjectLocationTimeframeComponent implements OnInit {
     const startDate = new Date(group.controls.mouStart.value);
     const endDate = new Date(group.controls.mouEnd.value);
     if (startDate >= endDate) {
-      return {'invalidDates': true};
+      return {'isInValidDateRange': true};
     }
     return null;
   }

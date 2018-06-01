@@ -22,6 +22,6 @@
         <mat-datepicker #mouEnd></mat-datepicker>
       </mat-form-field>
     </div>
-    <mat-hint class="mat-error" *ngIf="form.hasError('invalidDates')">Invalid date selection</mat-hint>
+    <mat-hint class="mat-error" *ngIf="form.hasError('isInValidDateRange')">Invalid date range</mat-hint>
   </mat-card-content>
 </mat-card>
