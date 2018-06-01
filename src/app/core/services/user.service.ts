@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import { ProjectRole } from '../models/project-role';
 import { User } from '../models/user';
 import { PloApiService } from './http/plo-api.service';
 
@@ -15,9 +16,9 @@ export class UserService {
       .toPromise();
   }
 
-  getAssignableRoles(userId: string, locationId: string): Promise<any> {
+  getAssignableRoles(userId: string, locationId: string): Promise<ProjectRole[]> {
     return this.plo
-      .get(`/users/${userId!}/assignable-roles/${locationId!}`)
+      .get<ProjectRole[]>(`/users/${userId}/assignable-roles/${locationId}`)
       .toPromise();
   }
 

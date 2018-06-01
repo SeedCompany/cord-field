@@ -5,9 +5,9 @@ import { Project } from '../../../core/models/project';
 import { ProjectRole } from '../../../core/models/project-role';
 import { TeamMember } from '../../../core/models/team-member';
 import { User } from '../../../core/models/user';
+import { UserService } from '../../../core/services/user.service';
 import { AutocompleteUserComponent } from '../../../shared/components/autocomplete/autocomplete-user.component';
 import { ProjectViewStateService } from '../../project-view-state.service';
-import { UserService } from '../../../core/services/user.service';
 
 @Component({
   selector: 'app-project-team-member-add',
@@ -35,7 +35,7 @@ export class ProjectTeamMemberAddComponent implements AfterViewInit {
               private userService: UserService,
               @Inject(MAT_DIALOG_DATA) data: { project: Project, projectViewState: ProjectViewStateService }) {
     this.projectViewState = data.projectViewState;
-    this.project = data.project;
+    this.project = data.project as Project;
 
     this.projectViewState.isSubmitting.subscribe(s => this.submitting = s);
   }
@@ -48,12 +48,19 @@ export class ProjectTeamMemberAddComponent implements AfterViewInit {
     return this.project.team.map(member => member.user);
   }
 
-  onUserSelected(user: User | null) {
-    this.user = user;
-    this.userService.getAssignableRoles(this.user!.id, this.project.location.id)
-      .then(r => console.log(r))
-      .catch(e => console.log(e));
-    // this.availableRoles = user ? user.getAssignableRoles(this.project.location!) : [];
+  async onUserSelected(user: User | null) {
+    if (user) {
+      this.user = user!;
+      const id = this.user.id!;
+      const locationId = this.project.location!.id;
+      try {
+        this.availableRoles = await this.userService.getAssignableRoles(id, locationId);
+      } catch (e) {
+        this.snackBar.open('Failed to fetch project roles', undefined, {
+          duration: 3000
+        });
+      }
+    }
   }
 
   async onSubmit() {
