@@ -14,4 +14,11 @@ export class UserService {
       .map(users => users.map(User.fromJson))
       .toPromise();
   }
+
+  getAssignableRoles(userId: string, locationId: string): Promise<any> {
+    return this.plo
+      .get(`/users/${userId!}/assignable-roles/${locationId!}`)
+      .toPromise();
+  }
+
 }

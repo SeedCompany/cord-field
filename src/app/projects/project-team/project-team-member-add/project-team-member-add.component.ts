@@ -7,6 +7,7 @@ import { TeamMember } from '../../../core/models/team-member';
 import { User } from '../../../core/models/user';
 import { AutocompleteUserComponent } from '../../../shared/components/autocomplete/autocomplete-user.component';
 import { ProjectViewStateService } from '../../project-view-state.service';
+import { UserService } from '../../../core/services/user.service';
 
 @Component({
   selector: 'app-project-team-member-add',
@@ -29,11 +30,10 @@ export class ProjectTeamMemberAddComponent implements AfterViewInit {
   availableRoles: ProjectRole[] = [];
   submitting = false;
 
-  constructor(
-    private dialogRef: MatDialogRef<ProjectTeamMemberAddComponent>,
-    private snackBar: MatSnackBar,
-    @Inject(MAT_DIALOG_DATA) data: {project: Project, projectViewState: ProjectViewStateService}
-  ) {
+  constructor(private dialogRef: MatDialogRef<ProjectTeamMemberAddComponent>,
+              private snackBar: MatSnackBar,
+              private userService: UserService,
+              @Inject(MAT_DIALOG_DATA) data: { project: Project, projectViewState: ProjectViewStateService }) {
     this.projectViewState = data.projectViewState;
     this.project = data.project;
 
@@ -50,7 +50,10 @@ export class ProjectTeamMemberAddComponent implements AfterViewInit {
 
   onUserSelected(user: User | null) {
     this.user = user;
-    this.availableRoles = user ? user.getAssignableRoles(this.project.location!) : [];
+    this.userService.getAssignableRoles(user.id, this.project.location.id)
+      .then(r => console.log(r))
+      .catch(e => console.log(e));
+    // this.availableRoles = user ? user.getAssignableRoles(this.project.location!) : [];
   }
 
   async onSubmit() {
