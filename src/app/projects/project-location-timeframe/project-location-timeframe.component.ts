@@ -22,7 +22,7 @@ export class ProjectLocationTimeframeComponent implements OnInit {
       location: ['', Validators.required],
       mouStart: ['', Validators.required],
       mouEnd: ['', Validators.required]
-    });
+    }, {validator: this.dateValidator});
 
     this.projectViewState.project.subscribe((project: Project | boolean) => {
       if (project) {
@@ -40,6 +40,15 @@ export class ProjectLocationTimeframeComponent implements OnInit {
     this.startDate.valueChanges.subscribe(value => {
       this.minDate = value;
     });
+  }
+
+  dateValidator(group: FormGroup) {
+    const startDate = new Date(group.controls.mouStart.value);
+    const endDate = new Date(group.controls.mouEnd.value);
+    if (startDate >= endDate) {
+      return {'isInValidDateRange': true};
+    }
+    return null;
   }
 
   get location(): AbstractControl {

@@ -22,5 +22,7 @@
         <mat-datepicker #mouEnd></mat-datepicker>
       </mat-form-field>
     </div>
+    <mat-hint class="mat-error" *ngIf="form.hasError('isInValidDateRange')">Start date must be before End Date
+    </mat-hint>
   </mat-card-content>
 </mat-card>
