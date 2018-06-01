@@ -35,8 +35,7 @@ export class ProjectTeamMemberAddComponent implements AfterViewInit {
               private userService: UserService,
               @Inject(MAT_DIALOG_DATA) data: { project: Project, projectViewState: ProjectViewStateService }) {
     this.projectViewState = data.projectViewState;
-    this.project = data.project as Project;
-
+    this.project = data.project;
     this.projectViewState.isSubmitting.subscribe(s => this.submitting = s);
   }
 
@@ -53,6 +52,7 @@ export class ProjectTeamMemberAddComponent implements AfterViewInit {
       this.user = user!;
       const id = this.user.id!;
       const locationId = this.project.location!.id;
+
       try {
         this.availableRoles = await this.userService.getAssignableRoles(id, locationId);
       } catch (e) {
@@ -60,6 +60,7 @@ export class ProjectTeamMemberAddComponent implements AfterViewInit {
           duration: 3000
         });
       }
+
     }
   }
 
