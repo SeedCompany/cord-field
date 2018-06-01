@@ -50,7 +50,7 @@ export class ProjectTeamMemberAddComponent implements AfterViewInit {
 
   onUserSelected(user: User | null) {
     this.user = user;
-    this.userService.getAssignableRoles(user.id, this.project.location.id)
+    this.userService.getAssignableRoles(user.id!, this.project.location.id)
       .then(r => console.log(r))
       .catch(e => console.log(e));
     // this.availableRoles = user ? user.getAssignableRoles(this.project.location!) : [];
