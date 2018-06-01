@@ -47,7 +47,6 @@ services:
       SERVICE_8001_NAME: client-tsco-cord-profile-uat
     mem_limit: 256000000
 
-
   mongo-db:
     image: mongo
     mem_limit: 256000000
