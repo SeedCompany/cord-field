@@ -48,19 +48,18 @@ export class ProjectTeamMemberAddComponent implements AfterViewInit {
   }
 
   async onUserSelected(user: User | null) {
-    if (user) {
-      this.user = user!;
-      const id = this.user.id!;
-      const locationId = this.project.location!.id;
+    this.user = user;
+    if (!user) {
+      this.availableRoles = [];
+      return;
+    }
 
-      try {
-        this.availableRoles = await this.userService.getAssignableRoles(id, locationId);
-      } catch (e) {
-        this.snackBar.open('Failed to fetch project roles', undefined, {
-          duration: 3000
-        });
-      }
-
+    try {
+      this.availableRoles = await this.userService.getAssignableRoles(this.user!.id, this.project.location!.id);
+    } catch (e) {
+      this.snackBar.open('Failed to fetch project roles', undefined, {
+        duration: 3000
+      });
     }
   }
 
