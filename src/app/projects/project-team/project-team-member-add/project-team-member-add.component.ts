@@ -1,13 +1,12 @@
-import { AfterViewInit, Component, Inject, ViewChild } from '@angular/core';
+import { Component, Inject, ViewChild } from '@angular/core';
 import { Validators } from '@angular/forms';
-import { MAT_DIALOG_DATA, MatDialogRef, MatSnackBar, MatStep, MatStepper } from '@angular/material';
+import { MAT_DIALOG_DATA, MatDialogRef, MatSnackBar, MatStepper } from '@angular/material';
 import { Project } from '../../../core/models/project';
 import { ProjectRole } from '../../../core/models/project-role';
 import { TeamMember } from '../../../core/models/team-member';
 import { User } from '../../../core/models/user';
 import { TypedFormControl } from '../../../core/models/util';
 import { UserService } from '../../../core/services/user.service';
-import { AutocompleteUserComponent } from '../../../shared/components/autocomplete/autocomplete-user.component';
 import { ProjectViewStateService } from '../../project-view-state.service';
 
 @Component({
@@ -15,18 +14,16 @@ import { ProjectViewStateService } from '../../project-view-state.service';
   templateUrl: './project-team-member-add.component.html',
   styleUrls: ['./project-team-member-add.component.scss']
 })
-export class ProjectTeamMemberAddComponent implements AfterViewInit {
+export class ProjectTeamMemberAddComponent {
 
   readonly ProjectRole = ProjectRole;
 
   @ViewChild(MatStepper) stepper: MatStepper;
-  @ViewChild('userStep') userStep: MatStep;
-  @ViewChild(AutocompleteUserComponent) autocomplete: AutocompleteUserComponent;
 
   readonly projectViewState: ProjectViewStateService;
   readonly project: Project;
 
-  user: User | null;
+  user = new TypedFormControl<User | null>(null, Validators.required);
   roles = new TypedFormControl<ProjectRole[]>([], Validators.required);
   availableRoles: ProjectRole[] = [];
   submitting = false;
@@ -40,32 +37,36 @@ export class ProjectTeamMemberAddComponent implements AfterViewInit {
     this.projectViewState.isSubmitting.subscribe(s => this.submitting = s);
   }
 
-  ngAfterViewInit(): void {
-    this.userStep.stepControl = this.autocomplete.search;
-  }
-
   get currentUsers() {
     return this.project.team.map(member => member.user);
   }
 
+  get pending() {
+    return this.user.pending || this.submitting;
+  }
+
   async onUserSelected(user: User | null) {
-    this.user = user;
     if (!user) {
+      this.user.setValue(user);
       this.availableRoles = [];
       return;
     }
 
+    this.user.setValue(null);
+    this.user.markAsPending();
     try {
-      this.availableRoles = await this.userService.getAssignableRoles(this.user!.id, this.project.location!.id);
+      this.availableRoles = await this.userService.getAssignableRoles(user!.id, this.project.location!.id);
     } catch (e) {
       this.snackBar.open('Failed to fetch project roles', undefined, {
         duration: 3000
       });
+    } finally {
+      this.user.reset(user);
     }
   }
 
   async onSubmit() {
-    const member = TeamMember.new(this.user!, this.roles.value);
+    const member = TeamMember.new(this.user.value!, this.roles.value);
     this.projectViewState.change({team: {add: member}});
 
     try {

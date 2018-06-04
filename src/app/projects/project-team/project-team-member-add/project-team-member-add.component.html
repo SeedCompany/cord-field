@@ -1,7 +1,7 @@
 <h1 mat-dialog-title>Assign User</h1>
 
 <mat-horizontal-stepper [linear]="true">
-  <mat-step #userStep>
+  <mat-step [stepControl]="user">
     <ng-template matStepLabel>Select User</ng-template>
     <app-autocomplete-user
       [keepInput]="true"
@@ -22,27 +22,19 @@
       <mat-error>Please select one or more roles</mat-error>
     </mat-form-field>
     <ng-template #noRoles>
-      {{ user?.fullName }} cannot be assigned to any roles on this project.
+      {{ user.value?.fullName }} cannot be assigned to any roles on this project.
     </ng-template>
   </mat-step>
 </mat-horizontal-stepper>
 
 <mat-dialog-actions>
   <button mat-button color="accent"
-          *ngIf="stepper.selectedIndex == 0"
-          [disabled]="!user"
-          (click)="stepper.next()"
+          [disabled]="user.invalid || pending || (stepper.selectedIndex == 1 && roles.invalid)"
+          (click)="stepper.selectedIndex == 0 ? stepper.next() : onSubmit()"
   >
-    NEXT
-  </button>
-  <button mat-button color="accent"
-          *ngIf="stepper.selectedIndex == 1"
-          [disabled]="submitting || roles.invalid || roles.value.length == 0"
-          (click)="onSubmit()"
-  >
-    <ng-container *ngIf="!submitting">ASSIGN</ng-container>
+    <ng-container *ngIf="!pending">{{ stepper.selectedIndex == 0 ? 'NEXT' : 'ASSIGN' }}</ng-container>
     <mat-progress-spinner
-      *ngIf="submitting"
+      *ngIf="pending"
       color="accent"
       mode="indeterminate"
       strokeWidth="3"
