@@ -1,10 +1,11 @@
 import { AfterViewInit, Component, Inject, ViewChild } from '@angular/core';
-import { FormControl, Validators } from '@angular/forms';
+import { Validators } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialogRef, MatSnackBar, MatStep, MatStepper } from '@angular/material';
 import { Project } from '../../../core/models/project';
 import { ProjectRole } from '../../../core/models/project-role';
 import { TeamMember } from '../../../core/models/team-member';
 import { User } from '../../../core/models/user';
+import { TypedFormControl } from '../../../core/models/util';
 import { UserService } from '../../../core/services/user.service';
 import { AutocompleteUserComponent } from '../../../shared/components/autocomplete/autocomplete-user.component';
 import { ProjectViewStateService } from '../../project-view-state.service';
@@ -26,7 +27,7 @@ export class ProjectTeamMemberAddComponent implements AfterViewInit {
   readonly project: Project;
 
   user: User | null;
-  roles = new FormControl([], Validators.required);
+  roles = new TypedFormControl<ProjectRole[]>([], Validators.required);
   availableRoles: ProjectRole[] = [];
   submitting = false;
 
@@ -64,7 +65,7 @@ export class ProjectTeamMemberAddComponent implements AfterViewInit {
   }
 
   async onSubmit() {
-    const member = TeamMember.new(this.user!, this.roles.value as ProjectRole[]);
+    const member = TeamMember.new(this.user!, this.roles.value);
     this.projectViewState.change({team: {add: member}});
 
     try {
