@@ -23,6 +23,7 @@ export class AppComponent implements OnInit, OnDestroy {
       .takeUntil(this.ngUnsubscribe)
       .filter(() => this.router.url !== '/login') // Ignore login errors
       .subscribe(async () => {
+        await this.auth.logout();
         await this.auth.setNextUrl(this.router.url);
         this.router.navigateByUrl('/login', {replaceUrl: true});
       });
