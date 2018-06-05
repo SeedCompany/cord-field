@@ -1,6 +1,15 @@
 <h1 mat-dialog-title>Change Roles</h1>
 
-<mat-form-field color="accent">
+<mat-progress-spinner
+  class="loading"
+  *ngIf="loading"
+  color="accent"
+  mode="indeterminate"
+  strokeWidth="3"
+  [diameter]="48"
+></mat-progress-spinner>
+
+<mat-form-field color="accent" *ngIf="!loading">
   <mat-select multiple placeholder="Roles" [formControl]="roles">
     <mat-option *ngFor="let role of assignableRoles; trackBy: ProjectRole.trackValueBy"
                 [disabled]="ProjectRole.implicit.includes(role)"
