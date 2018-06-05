@@ -1,12 +1,18 @@
 import { animate, state, style, transition, trigger } from '@angular/animations';
 import { AfterViewInit, Component, ViewChild } from '@angular/core';
 import { MatDialog, MatPaginator, MatSort, MatTableDataSource, PageEvent, Sort } from '@angular/material';
+import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { Observable } from 'rxjs/Observable';
 import { Language } from '../../core/models/language';
 import { Project, ProjectFilter, ProjectStatus, ProjectsWithCount, ProjectType } from '../../core/models/project';
 import { ProjectService } from '../../core/services/project.service';
 import { ProjectCreateDialogComponent } from '../project-create-dialog/project-create-dialog.component';
 import { ProjectListFilterComponent } from './project-list-filter/project-list-filter.component';
+
+interface ListOption {
+  label: string;
+  value: boolean;
+}
 
 @Component({
   selector: 'app-project-list',
@@ -25,10 +31,10 @@ export class ProjectListComponent implements AfterViewInit {
   readonly ProjectType = ProjectType;
   readonly ProjectStatus = ProjectStatus;
 
-  currentListSelector = 'All Projects';
-  listSelectorOptions = [
-    'All Projects',
-    'My Projects'
+  listSelector: BehaviorSubject<ListOption>;
+  listSelectorOptions: ListOption[] = [
+    {label: 'My Projects', value: true},
+    {label: 'All Projects', value: false}
   ];
 
   readonly displayedColumns = ['name', 'updatedAt', 'languages', 'type', 'status'];
@@ -43,6 +49,7 @@ export class ProjectListComponent implements AfterViewInit {
 
   constructor(private dialog: MatDialog,
               private projectService: ProjectService) {
+    this.listSelector = new BehaviorSubject(this.listSelectorOptions[0]);
   }
 
   ngAfterViewInit() {
@@ -54,9 +61,10 @@ export class ProjectListComponent implements AfterViewInit {
         this.paginator.page
           .startWith({pageIndex: 0, pageSize: 10, length: 0} as PageEvent),
         this.filtersComponent.filters
-          .startWith({})
+          .startWith({}),
+        this.listSelector
       )
-      .switchMap(([sort, page, filters]: [Sort, PageEvent, ProjectFilter]) => {
+      .switchMap(([sort, page, filters, listSelector]: [Sort, PageEvent, ProjectFilter, ListOption]) => {
         this.filtersActive = Object.keys(filters).length > 0;
 
         return this.projectService.getProjects(
@@ -64,7 +72,8 @@ export class ProjectListComponent implements AfterViewInit {
           sort.direction,
           page.pageIndex * page.pageSize,
           page.pageSize,
-          filters
+          filters,
+          listSelector.value
         );
       })
       .subscribe((data: ProjectsWithCount) => {

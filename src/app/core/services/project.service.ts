@@ -41,7 +41,8 @@ export class ProjectService {
               order: SortDirection = 'desc',
               skip = 0,
               limit = 10,
-              filter?: ProjectFilter): Observable<ProjectsWithCount> {
+              filter?: ProjectFilter,
+              isMine?: boolean): Observable<ProjectsWithCount> {
 
     const params: HttpParams = {
       sort,
@@ -49,6 +50,10 @@ export class ProjectService {
       limit: limit.toString(),
       order
     };
+
+    if (isMine) {
+      params.userId = 'me';
+    }
     if (filter) {
       const filterAPI = this.buildFilter(filter);
       params.filter = JSON.stringify(filterAPI);

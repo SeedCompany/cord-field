@@ -10,14 +10,14 @@
   <mat-drawer-content>
     <mat-toolbar class="toolbar">
       <button mat-button class="project-menu-button" color="primary" [matMenuTriggerFor]="projectMenu">
-        {{ currentListSelector }}
+        {{ listSelector.value.label }}
         <mat-icon>arrow_drop_down</mat-icon>
       </button>
       <mat-menu #projectMenu="matMenu">
         <button mat-menu-item
-                (click)="currentListSelector = selector"
+                (click)="listSelector.next(selector)"
                 *ngFor="let selector of listSelectorOptions; trackBy: trackByValue">
-          {{ selector }}
+          {{ selector.label }}
         </button>
       </mat-menu>
 

@@ -35,6 +35,7 @@ interface TabConfig {
 export class ProjectComponent implements OnInit, OnDestroy {
   id: string;
   project: Project;
+  isMine: boolean;
 
   dirty = false;
   submitting = false;
