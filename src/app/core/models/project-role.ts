@@ -25,16 +25,7 @@ export namespace ProjectRole {
     [ProjectRole.AreaDirector]: 'Area Director',
     [ProjectRole.RegionalDirector]: 'Regional Director'
   });
-  export const addable = [
-    ProjectRole.Consultant,
-    ProjectRole.ConsultantManager,
-    ProjectRole.Controller,
-    ProjectRole.FieldCoordinator,
-    ProjectRole.FieldPartner,
-    ProjectRole.FinancialAnalyst,
-    ProjectRole.LeadFinancialAnalyst,
-    ProjectRole.Writer
-  ];
+
   export const implicit = [
     ProjectRole.AreaDirector,
     ProjectRole.RegionalDirector
