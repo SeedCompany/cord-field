@@ -1,6 +1,5 @@
 <h1 mat-dialog-title>Assign User</h1>
-
-<mat-horizontal-stepper [linear]="true">
+<mat-horizontal-stepper [linear]="true" (keyup.enter)="stepper.selectedIndex == 0 ? stepper.next() : onSubmit()">
   <mat-step [stepControl]="user">
     <ng-template matStepLabel>Select User</ng-template>
     <app-autocomplete-user
@@ -26,7 +25,6 @@
     </ng-template>
   </mat-step>
 </mat-horizontal-stepper>
-
 <mat-dialog-actions>
   <button mat-button color="accent"
           [disabled]="user.invalid || pending || (stepper.selectedIndex == 1 && roles.invalid)"
