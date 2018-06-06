@@ -1,6 +1,7 @@
 import { buildEnum } from './enum';
 
 export enum ProjectRole {
+  AreaDirector = 'ad',
   Consultant = 'c',
   ConsultantManager = 'cm',
   Controller = 'con',
@@ -8,13 +9,8 @@ export enum ProjectRole {
   FieldPartner = 'fp',
   FinancialAnalyst = 'fa',
   LeadFinancialAnalyst = 'lfa',
-  Writer = 'w',
-
-  // implicit roles (these are calculated, not explicitly added to a Project.team):
-  AreaDirector = 'ad',
-  BIAnalyst = 'bi',
   RegionalDirector = 'rd',
-  SystemsAdmin = 'sys'
+  Writer = 'w'
 }
 export namespace ProjectRole {
   export const {entries, forUI, values, trackEntryBy, trackValueBy} = buildEnum(ProjectRole, {
@@ -27,24 +23,11 @@ export namespace ProjectRole {
     [ProjectRole.LeadFinancialAnalyst]: 'Lead Financial Analyst',
     [ProjectRole.Writer]: 'Writer',
     [ProjectRole.AreaDirector]: 'Area Director',
-    [ProjectRole.BIAnalyst]: 'BI Analyst',
-    [ProjectRole.RegionalDirector]: 'Regional Director',
-    [ProjectRole.SystemsAdmin]: 'Systems Admin'
+    [ProjectRole.RegionalDirector]: 'Regional Director'
   });
-  export const addable = [
-    ProjectRole.Consultant,
-    ProjectRole.ConsultantManager,
-    ProjectRole.Controller,
-    ProjectRole.FieldCoordinator,
-    ProjectRole.FieldPartner,
-    ProjectRole.FinancialAnalyst,
-    ProjectRole.LeadFinancialAnalyst,
-    ProjectRole.Writer
-  ];
+
   export const implicit = [
     ProjectRole.AreaDirector,
-    ProjectRole.BIAnalyst,
-    ProjectRole.RegionalDirector,
-    ProjectRole.SystemsAdmin
+    ProjectRole.RegionalDirector
   ];
 }
