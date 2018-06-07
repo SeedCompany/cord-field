@@ -4,9 +4,9 @@ import { TestBed } from '@angular/core/testing';
 import { Observable } from 'rxjs/Observable';
 import { CoreModule } from '../core/core.module';
 import { Language } from '../core/models/language';
+import { Location } from '../core/models/location';
 import { Project } from '../core/models/project';
 import { ProjectService } from '../core/services/project.service';
-
 import { ProjectViewStateService } from './project-view-state.service';
 
 describe('ProjectViewStateService', () => {
@@ -28,6 +28,13 @@ describe('ProjectViewStateService', () => {
     viewState = TestBed.get(ProjectViewStateService);
     spyOn(TestBed.get(ProjectService), 'getProject').and.returnValue(Observable.of(project));
   });
+
+  function initializeProject(initial: Partial<Project> | {languages: null} = {}) {
+    for (const [key, value] of Object.entries(initial) as Array<[keyof Project, any]>) {
+      project[key] = value;
+    }
+    viewState.onNewId('id');
+  }
 
   it('should be created', () => {
     expect(viewState).toBeTruthy();
@@ -54,13 +61,6 @@ describe('ProjectViewStateService', () => {
     function expectModified(value: any) {
       // I don't want to expose the modified property so cast to any
       expect((viewState as any).modified).toEqual(value);
-    }
-
-    function initializeProject(initial: Partial<Project> | {languages: null} = {}) {
-      for (const [key, value] of Object.entries(initial) as Array<[keyof Project, any]>) {
-        project[key] = value;
-      }
-      viewState.onNewId('id');
     }
 
     describe('Single Item', () => {
@@ -506,6 +506,35 @@ describe('ProjectViewStateService', () => {
           Language.fromJson({id: '3'})
         ]);
       });
+    });
+  });
+
+  describe('Force Refresh', () => {
+    it('Should call getProject when change with forceRefresh is saved',   async () => {
+      const service: ProjectService = TestBed.get(ProjectService);
+      spyOn(service, 'save');
+      initializeProject({
+        location: Location.fromJson({id: 'xyz'})
+      });
+      viewState.change({
+        location: Location.fromJson({id: 'abc'})
+      });
+      await viewState.save();
+      expect(service.getProject).toHaveBeenCalledTimes(2);
+    });
+
+    it('Should not call getProject when change that does not have forceRefresh is saved', async () => {
+      const service: ProjectService = TestBed.get(ProjectService);
+      spyOn(service, 'save');
+      initializeProject({
+        mouStart: new Date('1/1/2018')
+      });
+
+      viewState.change({
+        mouStart: new Date('3/3/2018')
+      });
+      await viewState.save();
+      expect(service.getProject).toHaveBeenCalledTimes(1);
     });
   });
 });

@@ -21,7 +21,8 @@ type ChangeConfig = {
   [key in keyof Partial<Project>]: {
     accessor: Accessor,
     toServer?: (val: any) => any,
-    key?: string // The key the server is looking for
+    key?: string, // The key the server is looking for
+    forceRefresh?: boolean
   }
 };
 
@@ -143,7 +144,8 @@ export class ProjectViewStateService {
     location: {
       accessor: returnId,
       toServer: returnId,
-      key: 'locationId'
+      key: 'locationId',
+      forceRefresh: true
     },
     languages: {
       accessor: returnId,
@@ -335,7 +337,11 @@ export class ProjectViewStateService {
     const previous = this._project.value;
     // clone project
     const project: Project = Object.assign(Object.create(Object.getPrototypeOf(previous)), previous);
+    let needsRefresh = false;
     for (const [key, change] of Object.entries(this.modified) as ChangeEntries) {
+      if (this.config[key].forceRefresh) {
+        needsRefresh = true;
+      }
       if (!isChangeForList(change)) {
         project[key] = change;
         continue;
@@ -360,6 +366,10 @@ export class ProjectViewStateService {
     }
 
     this.onNewProject(project);
+
+    if (needsRefresh) {
+      this.onNewId(project.id);
+    }
   }
 
   discard(): void {
