@@ -12,6 +12,7 @@ export enum ProjectRole {
   RegionalDirector = 'rd',
   Writer = 'w'
 }
+
 export namespace ProjectRole {
   export const {entries, forUI, values, trackEntryBy, trackValueBy} = buildEnum(ProjectRole, {
     [ProjectRole.Consultant]: 'Consultant',
@@ -29,5 +30,14 @@ export namespace ProjectRole {
   export const implicit = [
     ProjectRole.AreaDirector,
     ProjectRole.RegionalDirector
+  ];
+
+  export const unique = [
+    ProjectRole.AreaDirector,
+    ProjectRole.RegionalDirector,
+    ProjectRole.FieldCoordinator,
+    ProjectRole.FinancialAnalyst,
+    ProjectRole.LeadFinancialAnalyst,
+    ProjectRole.ConsultantManager
   ];
 }
