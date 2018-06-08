@@ -49,7 +49,7 @@
           <mat-chip-list *ngIf="project.languages.length > 0">
             <mat-chip>{{ project.languages[0].nameOrDisplayName }}</mat-chip>
             <ng-container *ngIf="project.languages.length > 1">
-              <mat-chip [matMenuTriggerFor]="languageMenu" class="language-count">
+              <mat-chip [matMenuTriggerFor]="languageMenu" class="language-overflow-chip">
                 +{{ project.languages.length - 1 }}
                 <mat-icon>arrow_drop_down</mat-icon>
               </mat-chip>
