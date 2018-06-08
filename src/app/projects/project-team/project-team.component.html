@@ -32,7 +32,7 @@
 
   <ng-container matColumnDef="dateAdded">
     <mat-header-cell *matHeaderCellDef mat-sort-header>Date Added</mat-header-cell>
-    <mat-cell *matCellDef="let member">{{ member.dateAdded | date : 'shortDate' }}</mat-cell>
+    <mat-cell *matCellDef="let member">{{ member.dateAdded ? (member.dateAdded | date : 'shortDate') : '' }}</mat-cell>
   </ng-container>
 
   <ng-container matColumnDef="roles">
