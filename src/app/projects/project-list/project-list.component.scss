@@ -83,7 +83,26 @@ mat-header-row {
   display: inline-block;
   margin-right: 5px;
 
-  &.status-active { background: green; }
-  &.status-inactive { background: red; }
-  &.status-in_development { background: orange; }
+  &.status-active {
+    background: green;
+  }
+  &.status-inactive {
+    background: red;
+  }
+  &.status-in_development {
+    background: orange;
+  }
+}
+
+.language-overflow-chip {
+  background-color: white;
+  border: 1px solid mat-background($theme, unselected-chip);
+  cursor: pointer !important;
+
+  // adjust drop down arrow to fit better within chip
+  .mat-icon {
+    height: 18px;
+    width: 18px;
+    margin-top: -7px;
+  }
 }

@@ -47,10 +47,20 @@
         <mat-cell *matCellDef="let project">
 
           <mat-chip-list *ngIf="project.languages.length > 0">
-            <mat-chip *ngFor="let language of project.languages; trackBy: trackLanguageById">
-              {{ language.nameOrDisplayName }}
-            </mat-chip>
+            <mat-chip>{{ project.languages[0].nameOrDisplayName }}</mat-chip>
+            <ng-container *ngIf="project.languages.length > 1">
+              <mat-chip [matMenuTriggerFor]="languageMenu" class="language-overflow-chip">
+                +{{ project.languages.length - 1 }}
+                <mat-icon>arrow_drop_down</mat-icon>
+              </mat-chip>
+              <mat-menu #languageMenu="matMenu">
+                <button mat-menu-item *ngFor="let language of project.languages.slice(1); trackBy: trackLanguageById">
+                  {{ language.nameOrDisplayName }}
+                </button>
+              </mat-menu>
+            </ng-container>
           </mat-chip-list>
+
           <span *ngIf="project.languages.length === 0" class="language-none">None</span>
         </mat-cell>
       </ng-container>
