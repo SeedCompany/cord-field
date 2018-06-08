@@ -43,8 +43,7 @@ export class ProjectTeamMemberRoleDialogComponent {
   async loadRoles() {
     this.loading = true;
     try {
-      this.assignableRoles = await this.userService
-        .getAssignableRoles(this.teamMember.id, this.project.location!.id, this.project, this.teamMember);
+      this.assignableRoles = await this.userService.getAssignableRoles(this.teamMember.id, this.project, this.teamMember);
       this.loading = false;
     } catch (e) {
       this.snackBar.open(`Failed to fetch team member's available roles`, undefined, {

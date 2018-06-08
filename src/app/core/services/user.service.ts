@@ -18,18 +18,20 @@ export class UserService {
       .toPromise();
   }
 
-  async getAssignableRoles(userId: string, locationId: string, project: Project, teamMember?: TeamMember): Promise<ProjectRole[]> {
+  async getAssignableRoles(userId: string, project: Project, teamMember?: TeamMember): Promise<ProjectRole[]> {
     const roles = await this.plo
-      .get<ProjectRole[]>(`/users/${userId}/assignable-roles/${locationId}`)
+      .get<ProjectRole[]>(`/users/${userId}/assignable-roles/${project.location!.id}`)
       .toPromise();
+
+    // Exclude unique roles that are already assigned
     return roles.filter(role => {
       if (!ProjectRole.unique.includes(role)) {
         return true;
       }
-      if (teamMember) {
-        return !project.team.find(member => member.roles.includes(role) && member.id !== teamMember.id);
-      }
-      return !project.team.find(member => member.roles.includes(role));
+      return !project.team.find(member =>
+        // Don't filter out unique roles for the team member given
+        (teamMember ? member.id !== teamMember.id : true)
+        && member.roles.includes(role));
     });
   }
 }

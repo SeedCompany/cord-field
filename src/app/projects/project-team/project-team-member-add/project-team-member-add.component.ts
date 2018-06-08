@@ -55,7 +55,7 @@ export class ProjectTeamMemberAddComponent {
     this.user.setValue(null);
     this.user.markAsPending();
     try {
-      this.availableRoles = await this.userService.getAssignableRoles(user!.id, this.project.location!.id, this.project);
+      this.availableRoles = await this.userService.getAssignableRoles(user!.id, this.project);
     } catch (e) {
       this.snackBar.open('Failed to fetch project roles', undefined, {
         duration: 3000
