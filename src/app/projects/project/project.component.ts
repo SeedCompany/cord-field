@@ -1,4 +1,5 @@
 import { animate, state, style, transition, trigger } from '@angular/animations';
+import { HttpErrorResponse } from '@angular/common/http';
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { MatSnackBar, MatSnackBarRef, SimpleSnackBar } from '@angular/material';
 import { ActivatedRoute, NavigationEnd, Router, UrlSegment } from '@angular/router';
@@ -35,7 +36,6 @@ interface TabConfig {
 export class ProjectComponent implements OnInit, OnDestroy {
   id: string;
   project: Project;
-  isMine: boolean;
 
   dirty = false;
   submitting = false;
@@ -64,6 +64,13 @@ export class ProjectComponent implements OnInit, OnDestroy {
     this.idSub = this.route.params.subscribe(params => {
       this.id = params.id;
       this.projectViewState.onNewId(params.id);
+    });
+    this.projectViewState.loadError.subscribe(err => {
+      const message = (err instanceof HttpErrorResponse && err.status === 404)
+        ? 'Could not find project'
+        : 'Failed to fetch project details';
+      this.snackBar.open(message, undefined, {duration: 5000});
+      this.router.navigateByUrl('/projects', {replaceUrl: true});
     });
     this.projectViewState.project.subscribe(project => this.project = project);
     this.projectViewState.isDirty.subscribe(dirty => this.dirty = dirty);

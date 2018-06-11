@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { Observable } from 'rxjs/Observable';
+import { Subject } from 'rxjs/Subject';
 import { Language } from '../core/models/language';
 import { Partnership, PartnershipForSaveAPI } from '../core/models/partnership';
 import { Project } from '../core/models/project';
@@ -130,6 +131,7 @@ export class ProjectViewStateService {
   private modified: ModifiedProject = {};
 
   private submitting = new BehaviorSubject<boolean>(false);
+  private _loadError = new Subject<Error>();
 
   private config: ChangeConfig = {
     mouStart: {
@@ -171,8 +173,16 @@ export class ProjectViewStateService {
     return this.submitting.asObservable();
   }
 
+  get loadError(): Observable<Error> {
+    return this._loadError.asObservable();
+  }
+
   onNewId(id: string): void {
-    this.projectService.getProject(id).subscribe(this.onNewProject.bind(this));
+    this.projectService.getProject(id)
+      .subscribe(
+        this.onNewProject.bind(this),
+        (err: Error) => this._loadError.next(err)
+      );
   }
 
   change(changes: Changes): void {
