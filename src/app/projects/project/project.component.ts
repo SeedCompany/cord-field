@@ -65,16 +65,7 @@ export class ProjectComponent implements OnInit, OnDestroy {
       this.id = params.id;
       this.projectViewState.onNewId(params.id);
     });
-    this.projectViewState.project.subscribe((project: Project | boolean) => {
-      if (project) {
-        this.project = project as Project;
-      } else {
-        this.snackBar.open('Failed to fetch project details', undefined, {
-          duration: 3000
-        });
-      }
-
-    });
+    this.projectViewState.project.subscribe(project => this.project = project);
     this.projectViewState.isDirty.subscribe(dirty => this.dirty = dirty);
     this.projectViewState.isSubmitting.subscribe(submitting => this.submitting = submitting);
 

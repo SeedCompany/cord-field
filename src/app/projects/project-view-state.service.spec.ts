@@ -34,13 +34,13 @@ describe('ProjectViewStateService', () => {
   });
 
   it('initial project should be empty project', async () => {
-    const p: Project = await viewState.project.first().toPromise() as Project;
+    const p: Project = await viewState.project.first().toPromise();
     expect(p instanceof Project).toBeTruthy();
   });
 
   it('Given new project ID -> fetch project', async () => {
     viewState.onNewId('id');
-    const p: Project = await viewState.project.first().toPromise() as Project;
+    const p: Project = await viewState.project.first().toPromise();
     expect(p instanceof Project).toBeTruthy();
     expect(p.id).toBe('id');
   });
@@ -217,7 +217,7 @@ describe('ProjectViewStateService', () => {
 
         expect(dirty).toBeFalsy();
         expectModified({});
-        const p: Project = await viewState.project.first().toPromise() as Project;
+        const p: Project = await viewState.project.first().toPromise();
         expect(p.mouStart).toEqual(new Date('1/1/2018'));
         expect(p.mouEnd).toEqual(new Date('3/3/2018'));
       });
@@ -237,7 +237,7 @@ describe('ProjectViewStateService', () => {
         expect(service.save).toHaveBeenCalledTimes(1);
         expect(dirty).toBeFalsy();
         expectModified({});
-        const p: Project = await viewState.project.first().toPromise() as Project;
+        const p: Project = await viewState.project.first().toPromise();
         expect(p.mouStart).toEqual(new Date('1/2/2018'));
         expect(p.mouEnd).toEqual(new Date('3/4/2018'));
       });
@@ -471,7 +471,7 @@ describe('ProjectViewStateService', () => {
 
         expect(dirty).toBeFalsy();
         expectModified({});
-        const p: Project = await viewState.project.first().toPromise() as Project;
+        const p: Project = await viewState.project.first().toPromise();
         expect(p.languages).toEqual([
           Language.fromJson({id: '1'}),
           Language.fromJson({id: '2'})
@@ -500,7 +500,7 @@ describe('ProjectViewStateService', () => {
         expect(service.save).toHaveBeenCalledTimes(1);
         expect(dirty).toBeFalsy();
         expectModified({});
-        const p: Project = await viewState.project.first().toPromise() as Project;
+        const p: Project = await viewState.project.first().toPromise();
         expect(p.languages).toEqual([
           Language.fromJson({id: '2'}),
           Language.fromJson({id: '3'})

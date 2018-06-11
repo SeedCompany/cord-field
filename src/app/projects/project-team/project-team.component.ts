@@ -29,12 +29,9 @@ export class ProjectTeamComponent implements AfterViewInit {
   }
 
   ngAfterViewInit(): void {
-    this.projectViewState.project.subscribe((project: Project | boolean) => {
-      if (project) {
-        project = project as Project;
-        this.project = project;
-        this.dataSource.data = project.team;
-      }
+    this.projectViewState.project.subscribe(project => {
+      this.project = project;
+      this.dataSource.data = project.team;
     });
     this.dataSource.sort = this.sort;
     this.dataSource.paginator = this.paginator;

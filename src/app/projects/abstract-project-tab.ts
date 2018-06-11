@@ -10,6 +10,6 @@ export abstract class ProjectTabComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.projectViewState.project.subscribe(project => this.project = project as Project);
+    this.projectViewState.project.subscribe(project => this.project = project);
   }
 }
