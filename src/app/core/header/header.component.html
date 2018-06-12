@@ -18,7 +18,7 @@
     </button>
 
     <button mat-button class="profile-menu-button" color="primary" [matMenuTriggerFor]="profileMenu">
-      My Name
+      {{ currentUser?.fullName }}
       <mat-icon class="profile-menu-arrow-down">arrow_drop_down</mat-icon>
     </button>
     <mat-menu #profileMenu="matMenu">
