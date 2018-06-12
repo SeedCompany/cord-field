@@ -11,7 +11,7 @@ export class TeamMember {
   roles: ProjectRole[];
   description: string;
   editable: boolean;
-  dateAdded: Date;
+  dateAdded: Date | null; // Nullable until CF2-512 is resolved
 
   static fromJson(json: any): TeamMember {
     json = json || {};
@@ -21,7 +21,7 @@ export class TeamMember {
     teamMember.roles = json.roles;
     teamMember.description = json.description || '';
     teamMember.editable = json.editable || false;
-    teamMember.dateAdded = new Date(json.dateAdded);
+    teamMember.dateAdded = json.dateAdded ? new Date(json.dateAdded) : null;
 
     return teamMember;
   }

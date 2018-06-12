@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { Observable } from 'rxjs/Observable';
+import { Subject } from 'rxjs/Subject';
 import { Language } from '../core/models/language';
 import { Partnership, PartnershipForSaveAPI } from '../core/models/partnership';
 import { Project } from '../core/models/project';
@@ -124,12 +125,13 @@ const returnId = (val: {id: string}) => val.id;
 @Injectable()
 export class ProjectViewStateService {
 
-  private _project = new BehaviorSubject<Project | boolean>(Project.fromJson({}));
+  private _project = new BehaviorSubject<Project>(Project.fromJson({}));
 
   private dirty = new BehaviorSubject<boolean>(false);
   private modified: ModifiedProject = {};
 
   private submitting = new BehaviorSubject<boolean>(false);
+  private _loadError = new Subject<Error>();
 
   private config: ChangeConfig = {
     mouStart: {
@@ -159,7 +161,7 @@ export class ProjectViewStateService {
 
   constructor(private projectService: ProjectService) {}
 
-  get project(): Observable<Project | boolean> {
+  get project(): Observable<Project> {
     return this._project.asObservable();
   }
 
@@ -171,12 +173,20 @@ export class ProjectViewStateService {
     return this.submitting.asObservable();
   }
 
+  get loadError(): Observable<Error> {
+    return this._loadError.asObservable();
+  }
+
   onNewId(id: string): void {
-    this.projectService.getProject(id).subscribe(this.onNewProject.bind(this));
+    this.projectService.getProject(id)
+      .subscribe(
+        this.onNewProject.bind(this),
+        (err: Error) => this._loadError.next(err)
+      );
   }
 
   change(changes: Changes): void {
-    const project = this._project.value as Project;
+    const project = this._project.value;
 
     for (const [key, change] of Object.entries(changes) as ChangeEntries) {
       if (!(key in this.config)) {
@@ -316,8 +326,7 @@ export class ProjectViewStateService {
     }
     this.submitting.next(true);
     try {
-      const modifedProject = this._project.value as Project;
-      await this.projectService.save(modifedProject.id, modified);
+      await this.projectService.save(this._project.value.id, modified);
     } finally {
       this.submitting.next(false);
     }
@@ -357,7 +366,7 @@ export class ProjectViewStateService {
     this.onNewProject(this._project.value);
   }
 
-  private onNewProject(project: Project | boolean): void {
+  private onNewProject(project: Project): void {
     this.modified = {};
     this._project.next(project);
     this.dirty.next(false);

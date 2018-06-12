@@ -4,7 +4,6 @@ import { Subject } from 'rxjs/Subject';
 import { ISubscription } from 'rxjs/Subscription';
 import { Organization } from '../../core/models/organization';
 import { Partnership, PartnershipAgreementStatus, PartnershipType } from '../../core/models/partnership';
-import { Project } from '../../core/models/project';
 import { ProjectViewStateService } from '../project-view-state.service';
 
 @Component({
@@ -34,12 +33,9 @@ export class ProjectPartnershipsComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
-    this.projectViewState.project.subscribe((project: Project | boolean) => {
+    this.projectViewState.project.subscribe(project => {
       this.form.setControl('partnerships', this.fb.array([])); // reset form array
-      if (project) {
-        project = project as Project;
-        project.partnerships.forEach(p => this.addPartnership(p));
-      }
+      project.partnerships.forEach(p => this.addPartnership(p));
     });
   }
 

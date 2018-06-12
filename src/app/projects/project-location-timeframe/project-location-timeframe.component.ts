@@ -1,7 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { AbstractControl } from '@angular/forms/src/model';
-import { Project } from '../../core/models/project';
 import { ProjectViewStateService } from '../project-view-state.service';
 
 @Component({
@@ -24,15 +23,12 @@ export class ProjectLocationTimeframeComponent implements OnInit {
       mouEnd: ['', Validators.required]
     }, {validator: this.dateValidator});
 
-    this.projectViewState.project.subscribe((project: Project | boolean) => {
-      if (project) {
-        project = project as Project;
-        this.form.reset({
-          location: project.location,
-          mouStart: project.mouStart,
-          mouEnd: project.mouEnd
-        });
-      }
+    this.projectViewState.project.subscribe(project => {
+      this.form.reset({
+        location: project.location,
+        mouStart: project.mouStart,
+        mouEnd: project.mouEnd
+      });
     });
 
     this.form.valueChanges.subscribe(changes => this.projectViewState.change(changes));
