@@ -1,5 +1,6 @@
+import { Organization } from './organization';
+import { ProjectRole } from './project-role';
 import { REDACTED } from './util';
-
 
 export interface IUserRequestAccess {
   email: string;
@@ -44,4 +45,28 @@ export class User {
   get fullName(): string {
     return `${this.publicFirstName} ${this.publicLastName}`.trim();
   }
+}
+
+export class UserListItem extends User {
+  projectCount: number;
+  roles: ProjectRole[];
+  organization: Organization;
+  isActive: boolean;
+
+  static fromJson(json: any): UserListItem {
+    json = json || {};
+    const obj = {...new UserListItem(), ...User.fromJson(json)};
+
+    obj.projectCount = json.projectCount || 0;
+    obj.roles = json.roles;
+    obj.organization = json.organization || Organization.fromJson({});
+    obj.isActive = json.isActive;
+
+    return obj;
+  }
+}
+
+export interface UsersWithTotal {
+  users: UserListItem[];
+  total: number;
 }

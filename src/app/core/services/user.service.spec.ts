@@ -5,7 +5,7 @@ import { CoreModule } from '../core.module';
 import { Location } from '../models/location';
 import { Project } from '../models/project';
 import { ProjectRole } from '../models/project-role';
-import { User } from '../models/user';
+import { User, UserListItem, UsersWithTotal } from '../models/user';
 import { UserService } from './user.service';
 
 const testBaseUrl = environment.services['plo.cord.bible'];
@@ -67,6 +67,20 @@ describe('UserService', () => {
     httpMock
       .expectOne(`${testBaseUrl}/users/${userId}/assignable-roles/${locationId}`)
       .flush(['ad', 'fa']);
+  });
+
+  it('get users', (done: DoneFn) => {
+    userService
+      .getUsers()
+      .subscribe((data: UsersWithTotal) => {
+        expect(data.total).toBeDefined();
+        expect(Array.isArray(data.users)).toBeTruthy();
+        done();
+      }, done.fail);
+
+    httpMock
+      .expectOne({url: `${testBaseUrl}/users?skip=0&limit=10`, method: 'GET'})
+      .flush([]);
   });
 
 });
