@@ -6,6 +6,7 @@ import { Language } from '../core/models/language';
 import { Partnership, PartnershipForSaveAPI } from '../core/models/partnership';
 import { Project } from '../core/models/project';
 import { TeamMember, TeamMemberForSaveAPI } from '../core/models/team-member';
+import { clone } from '../core/models/util';
 import { ProjectService } from '../core/services/project.service';
 
 const isEqual = require('lodash.isequal');
@@ -334,9 +335,7 @@ export class ProjectViewStateService {
     }
 
     // Apply changes to a new project object, so we don't have to ask the server for a new version
-    const previous = this._project.value;
-    // clone project
-    const project: Project = Object.assign(Object.create(Object.getPrototypeOf(previous)), previous);
+    const project = clone(this._project.value);
     let needsRefresh = false;
     for (const [key, change] of Object.entries(this.modified) as ChangeEntries) {
       if (this.config[key].forceRefresh) {
