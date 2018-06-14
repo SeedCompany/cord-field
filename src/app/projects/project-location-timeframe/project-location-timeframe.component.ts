@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { AbstractControl } from '@angular/forms/src/model';
+import { onlyValidValues } from '../../core/models/util';
 import { ProjectViewStateService } from '../project-view-state.service';
 
 @Component({
@@ -31,7 +32,11 @@ export class ProjectLocationTimeframeComponent implements OnInit {
       });
     });
 
-    this.form.valueChanges.subscribe(changes => this.projectViewState.change(changes));
+    this.form.valueChanges
+      .pipe(onlyValidValues(this.form))
+      .subscribe(changes => {
+        this.projectViewState.change(changes);
+      });
 
     this.startDate.valueChanges.subscribe(value => {
       this.minDate = value;

@@ -1,5 +1,6 @@
-import { AsyncValidatorFn, FormControl, ValidatorFn } from '@angular/forms';
+import { AsyncValidatorFn, FormControl, FormGroup, ValidatorFn } from '@angular/forms';
 import { AbstractControlOptions } from '@angular/forms/src/model';
+import { Observable } from 'rxjs/Observable';
 
 export const REDACTED = '🙈';
 
@@ -43,3 +44,27 @@ export class TypedFormControl<T> extends FormControl {
 export function clone<T>(obj: T): T {
   return Object.assign(Object.create(Object.getPrototypeOf(obj)), obj);
 }
+
+/**
+ * A helper to filter objects by their key/values via a predicate function
+ *
+ *   filterEntries(obj, (key, value) => value.keep == true);
+ */
+export function filterEntries<T>(obj: T, predicate: (key: keyof T, value: T[keyof T]) => boolean): T {
+  const filtered: any = {};
+
+  for (const [key, value] of Object.entries(obj) as [keyof T, any]) {
+    if (predicate(key, value)) {
+      filtered[key] = value;
+    }
+  }
+
+  return filtered;
+}
+
+/**
+ * An RXJs pipeable operator that filters form values to only ones that are valid.
+ */
+export const onlyValidValues = <T>(form: FormGroup) => (source: Observable<T>): Observable<Partial<T>> => {
+  return source.map(values => filterEntries<Partial<T>>(values, key => form.get(key)!.valid));
+};
