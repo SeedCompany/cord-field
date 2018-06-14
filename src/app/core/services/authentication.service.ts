@@ -50,7 +50,7 @@ export class AuthenticationService {
   async getCurrentUser(): Promise<User | null> {
     const tokens = await this.authStorage.getAuthenticationTokens();
     return (tokens && tokens.length > 0)
-      ? AuthenticationToken.fromJson(tokens[0]).user
+      ? tokens[0].user
       : null;
   }
 
