@@ -1,5 +1,5 @@
+import { DateTime } from 'luxon';
 import { decode as decodeBase64url } from 'urlsafe-base64';
-import { ServerDate } from './server-date';
 import { User } from './user';
 
 export class AuthenticationToken {
@@ -37,8 +37,8 @@ export class AuthenticationToken {
 
     return new AuthenticationToken(
       user,
-      ServerDate.fromEpochSeconds(json.iat),
-      ServerDate.fromEpochSeconds(json.exp),
+      DateTime.fromMillis(json.iat * 1000).toJSDate(),
+      DateTime.fromMillis(json.exp * 1000).toJSDate(),
       json.aud,
       json.iss,
       json.jti,
@@ -69,6 +69,7 @@ export class AuthenticationToken {
 
   private constructor(
     readonly user: User,
+    // These are not Luxon's DateTime objects because IndexDB cannot (un)serialize them correctly.
     readonly issued: Date,
     readonly expires: Date,
     readonly audience: string,
