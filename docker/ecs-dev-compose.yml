@@ -4,6 +4,8 @@
 # `ecs-*-compose.yml` files represents one of the deployment environments for the Bamboo CI/CD system.
 
 version: '2'
+networks:
+  cord-net:
 
 services:
   cord-field:
@@ -15,16 +17,22 @@ services:
       NG_BUILD_TARGET: dev
       SERVICE_80_NAME: client-tsco-cord-field-develop
     mem_limit: 256000000
+    networks:
+      - cord-net
 
   cord-api-plo:
     image: 103805181946.dkr.ecr.us-west-2.amazonaws.com/client/cord-api-plo:latest
     ports:
         - "8001"
     links:
-        - mongo-db
+        - mongo1
     environment:
-      MONGO_DB_ADDRESS: mongo-db
-      MONGO_DB_PORT: 27017
+      MONGO_DB_ADDRESS1: mongo1
+      MONGO_DB_PORT1: 27017
+      MONGO_DB_ADDRESS2: mongo2
+      MONGO_DB_PORT2: 27017
+      MONGO_DB_ADDRESS3: mongo3
+      MONGO_DB_PORT3: 27017
       NODE_ENV: dev
       CREATE_FAKE_USERS: "true"
       SERVICE_8001_NAME: client-tsco-cord-plo-dev
@@ -32,22 +40,79 @@ services:
       DUMP_CONFIG: "true"
       DOMO: "false"
     mem_limit: 512000000
+    networks:
+      - cord-net
 
   profile-service:
     image: 103805181946.dkr.ecr.us-west-2.amazonaws.com/client/tsco-ilb-profile:latest
     ports:
       - "8001"
     links:
-      - mongo-db
+      - mongo-profile
     environment:
-      MONGO_DB_ADDRESS: mongo-db
+      MONGO_DB_ADDRESS: mongo-profile
       MONGO_DB_PORT: 27017
       NODE_ENV: cord-dev
       ECHO_ENABLED: "true"
       BOOTSTRAP: "qa"
       SERVICE_8001_NAME: client-tsco-cord-profile-develop
     mem_limit: 256000000
+    networks:
+      - cord-net
 
-  mongo-db:
-    image: mongo
-    mem_limit: 256000000
+  mongo-profile:
+    image: mongo:4.0-rc
+    networks:
+      - cord-net
+
+  mongo1:
+      image: mongo:4.0-rc
+      ports:
+        - 127.0.0.1:37001:27017
+      networks:
+        - cord-net
+      command: |
+        /bin/bash -c "
+        set -e
+        (mongod --replSet "rs" --bind_ip_all) &
+        getent hosts host.docker.internal | awk '{ print $$1  \" dev.docker.internal\" }' >> /etc/hosts
+        while ! mongo mongodb://mongo1 --eval \"db.stats()\"; do sleep 1 ; done
+        while ! mongo mongodb://mongo2 --eval \"db.stats()\"; do sleep 1 ; done
+        while ! mongo mongodb://mongo3 --eval \"db.stats()\"; do sleep 1 ; done
+        mongo --eval 'rs.initiate({_id: \"rs\", members: [
+          { _id: 0, host:\"mongo1\" },
+          { _id: 1, host:\"mongo2\" },
+          { _id: 2, host:\"mongo3\" }
+        ]})'
+        mongo --eval 'rs.config()'
+        wait
+        "
+
+  mongo2:
+    image: mongo:4.0-rc
+    ports:
+      - 127.0.0.1:37002:27017
+    networks:
+      - cord-net
+    command: |
+      /bin/bash -c "
+      set -e
+      getent hosts host.docker.internal | awk '{ print $$1  \" mongo\" }' >> /etc/hosts
+      (mongod --replSet "rs" --bind_ip_all) &
+      wait
+      "
+
+  mongo3:
+    image: mongo:4.0-rc
+    ports:
+      - 127.0.0.1:37003:27017
+    networks:
+      - cord-net
+    command: |
+      /bin/bash -c "
+      set -e
+      getent hosts host.docker.internal | awk '{ print $$1  \" mongo\" }' >> /etc/hosts
+      (mongod --replSet "rs" --bind_ip_all) &
+      wait
+      "
+

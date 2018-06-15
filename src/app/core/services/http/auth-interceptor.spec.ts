@@ -6,7 +6,7 @@ import { AuthenticationStorageService } from '../authentication-storage.service'
 import { AuthInterceptor } from './auth-interceptor';
 import { PloApiService } from './plo-api.service';
 
-describe('AuthInterceptor', () => {
+xdescribe('AuthInterceptor', () => {
   let authInterceptor: AuthInterceptor;
   let authStorageService: AuthenticationStorageService;
   let ploApiService: PloApiService;
