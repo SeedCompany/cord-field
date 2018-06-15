@@ -1,8 +1,8 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { MatIconRegistry } from '@angular/material';
 import { DomSanitizer } from '@angular/platform-browser';
 import { Router } from '@angular/router';
-import { AuthenticationStorageService } from '../services/authentication-storage.service';
+import { User } from '../models/user';
 import { AuthenticationService } from '../services/authentication.service';
 
 @Component({
@@ -10,7 +10,9 @@ import { AuthenticationService } from '../services/authentication.service';
   templateUrl: './header.component.html',
   styleUrls: ['./header.component.scss']
 })
-export class HeaderComponent {
+export class HeaderComponent implements OnInit {
+  currentUser: User | null;
+
   constructor(private auth: AuthenticationService,
               private router: Router,
               iconRegistry: MatIconRegistry, sanitizer: DomSanitizer) {
@@ -20,5 +22,9 @@ export class HeaderComponent {
   async logout() {
     await this.auth.logout();
     this.router.navigate(['/login']);
+  }
+
+  async ngOnInit() {
+    this.currentUser = await this.auth.getCurrentUser();
   }
 }
