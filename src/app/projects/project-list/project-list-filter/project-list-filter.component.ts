@@ -34,14 +34,8 @@ export class ProjectListFilterComponent implements OnInit {
     startDate: [null],
     endDate: [null]
   });
-  today = new Date();
   minDate: Date;
-  // sets the maxDate to today's date, avoiding the future date selection
-  maxDate: Date = new Date(
-    this.today.getFullYear(),
-    this.today.getMonth(),
-    this.today.getDate()
-  );
+  maxDate = new Date();
 
   constructor(private formBuilder: FormBuilder) {
   }
@@ -88,10 +82,10 @@ export class ProjectListFilterComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.startDate.valueChanges.subscribe(date => this.minDate = date);
-    this.endDate.valueChanges.subscribe(date => {
-      if (date !== null) {
-        date.setHours(23, 59, 59, 999);
+    this.startDate.valueChanges.subscribe(date => {
+      this.minDate = date;
+      if (this.endDate.value && this.endDate.value < date) {
+        this.endDate.setValue(date);
       }
     });
   }
