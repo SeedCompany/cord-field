@@ -31,7 +31,6 @@ services:
     networks:
       - cord-net
 
-
   profile-service:
     image: 103805181946.dkr.ecr.us-west-2.amazonaws.com/client/tsco-ilb-profile:latest
     ports:

@@ -4,7 +4,8 @@
 # `ecs-*-compose.yml` files represents one of the deployment environments for the Bamboo CI/CD system.
 
 version: '2'
-
+networks:
+  cord-net:
 
 services:
   cord-field:
