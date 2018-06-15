@@ -69,8 +69,6 @@ services:
 
   mongo1:
       image: mongo:4.0-rc
-      ports:
-        - 127.0.0.1:37001:27017
       networks:
         - cord-net
       command: |
@@ -92,8 +90,6 @@ services:
 
   mongo2:
     image: mongo:4.0-rc
-    ports:
-      - 127.0.0.1:37002:27017
     networks:
       - cord-net
     command: |
@@ -106,8 +102,6 @@ services:
 
   mongo3:
     image: mongo:4.0-rc
-    ports:
-      - 127.0.0.1:37003:27017
     networks:
       - cord-net
     command: |
