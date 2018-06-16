@@ -12,17 +12,19 @@
     </app-autocomplete-location>
     <div class="date-container">
       <mat-form-field color="accent">
-        <input matInput [matDatepicker]="mouStart" placeholder="Start Date" formControlName="mouStart">
-        <mat-datepicker-toggle matSuffix [for]="mouStart"></mat-datepicker-toggle>
-        <mat-datepicker #mouStart></mat-datepicker>
+        <input matInput [matDatepicker]="startDatepicker" placeholder="Start Date" formControlName="mouStart">
+        <mat-datepicker-toggle matSuffix [for]="startDatepicker"></mat-datepicker-toggle>
+        <mat-datepicker #startDatepicker></mat-datepicker>
+        <mat-error *ngIf="startDate.errors?.matDatepickerParse">Please provide a valid date</mat-error>
+        <mat-error *ngIf="startDate.errors?.invalidRange">Must be before end date</mat-error>
       </mat-form-field>
       <mat-form-field color="accent">
-        <input matInput [min]="minDate" [matDatepicker]="mouEnd" placeholder="End Date" formControlName="mouEnd">
-        <mat-datepicker-toggle matSuffix [for]="mouEnd"></mat-datepicker-toggle>
-        <mat-datepicker #mouEnd></mat-datepicker>
+        <input matInput [min]="minDate" [matDatepicker]="endDatepicker" placeholder="End Date" formControlName="mouEnd">
+        <mat-datepicker-toggle matSuffix [for]="endDatepicker"></mat-datepicker-toggle>
+        <mat-datepicker #endDatepicker></mat-datepicker>
+        <mat-error *ngIf="endDate.errors?.matDatepickerParse">Please provide a valid date</mat-error>
+        <mat-error *ngIf="endDate.errors?.invalidRange">Must be after start date</mat-error>
       </mat-form-field>
     </div>
-    <mat-hint class="mat-error" *ngIf="form.hasError('isInValidDateRange')">Start date must be before End Date
-    </mat-hint>
   </mat-card-content>
 </mat-card>

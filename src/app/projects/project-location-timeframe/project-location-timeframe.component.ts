@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { AbstractControl } from '@angular/forms/src/model';
+import { CustomValidators } from '../../core/models/custom-validators';
 import { onlyValidValues } from '../../core/models/util';
 import { ProjectViewStateService } from '../project-view-state.service';
 
@@ -22,7 +23,9 @@ export class ProjectLocationTimeframeComponent implements OnInit {
       location: ['', Validators.required],
       mouStart: ['', Validators.required],
       mouEnd: ['', Validators.required]
-    }, {validator: this.dateValidator});
+    }, {
+      validator: CustomValidators.dateRange('mouStart', 'mouEnd')
+    });
 
     this.projectViewState.project.subscribe(project => {
       this.form.reset({
@@ -43,20 +46,15 @@ export class ProjectLocationTimeframeComponent implements OnInit {
     });
   }
 
-  dateValidator(group: FormGroup) {
-    const startDate = new Date(group.controls.mouStart.value);
-    const endDate = new Date(group.controls.mouEnd.value);
-    if (startDate >= endDate) {
-      return {'isInValidDateRange': true};
-    }
-    return null;
-  }
-
   get location(): AbstractControl {
     return this.form.get('location')!;
   }
 
   get startDate(): AbstractControl {
     return this.form.get('mouStart')!;
+  }
+
+  get endDate(): AbstractControl {
+    return this.form.get('mouEnd')!;
   }
 }
