@@ -162,8 +162,8 @@ export interface ProjectFilter {
   location?: Location[];
   sensitivity?: ProjectSensitivity[];
   dateRange?: string;
-  startDate?: Date;
-  endDate?: Date;
+  startDate?: DateTime;
+  endDate?: DateTime;
 }
 
 export interface ProjectsWithCount {

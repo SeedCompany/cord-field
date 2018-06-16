@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import { DateTime } from 'luxon';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { Observable } from 'rxjs/Observable';
 import { Subject } from 'rxjs/Subject';
@@ -123,6 +124,8 @@ const isChangeForList = (change: any): boolean => {
 
 const returnSelf = (val: any) => val;
 const returnId = (val: {id: string}) => val.id;
+// Ignores times
+const accessDates = (date: DateTime) => date.startOf('day').valueOf();
 
 @Injectable()
 export class ProjectViewStateService {
@@ -137,10 +140,10 @@ export class ProjectViewStateService {
 
   private config: ChangeConfig = {
     mouStart: {
-      accessor: (date: Date) => date.getTime()
+      accessor: accessDates
     },
     mouEnd: {
-      accessor: (date: Date) => date.getTime()
+      accessor: accessDates
     },
     location: {
       accessor: returnId,

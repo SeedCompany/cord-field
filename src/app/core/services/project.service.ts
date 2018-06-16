@@ -1,6 +1,7 @@
 import { HttpResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { SortDirection } from '@angular/material';
+import { DateTime } from 'luxon';
 import { Observable } from 'rxjs/Observable';
 import { ProjectCreationResult } from '../../projects/project-create-dialog/project-create-dialog.component';
 import { ModifiedProject } from '../../projects/project-view-state.service';
@@ -23,8 +24,8 @@ export interface ProjectFilterAPI {
   languages?: string[];
   locationId?: string[];
   sensitivity?: ProjectSensitivity[];
-  createdAt?: {gte?: Date, lte?: Date};
-  updatedAt?: {gte?: Date, lte?: Date};
+  createdAt?: {gte?: DateTime, lte?: DateTime};
+  updatedAt?: {gte?: DateTime, lte?: DateTime};
 }
 
 @Injectable()

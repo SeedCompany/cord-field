@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { AbstractControl } from '@angular/forms/src/model';
+import { DateTime } from 'luxon';
 import { CustomValidators } from '../../core/models/custom-validators';
 import { onlyValidValues } from '../../core/models/util';
 import { ProjectViewStateService } from '../project-view-state.service';
@@ -12,7 +13,7 @@ import { ProjectViewStateService } from '../project-view-state.service';
 })
 export class ProjectLocationTimeframeComponent implements OnInit {
   form: FormGroup;
-  minDate: Date;
+  minDate: DateTime;
 
   constructor(private formBuilder: FormBuilder,
               private projectViewState: ProjectViewStateService) {
