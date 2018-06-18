@@ -1,6 +1,7 @@
 import { Component, OnInit, Output } from '@angular/core';
 import { AbstractControl, FormBuilder } from '@angular/forms';
 import { Observable } from 'rxjs/Observable';
+import { CustomValidators } from '../../../core/models/custom-validators';
 import { Language } from '../../../core/models/language';
 import { Location } from '../../../core/models/location';
 import {
@@ -33,6 +34,8 @@ export class ProjectListFilterComponent implements OnInit {
     dateRange: [null],
     startDate: [null],
     endDate: [null]
+  }, {
+    validator: CustomValidators.dateRange('startDate', 'endDate')
   });
   minDate: Date;
   maxDate = new Date();

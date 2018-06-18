@@ -71,20 +71,25 @@
   <mat-form-field color="accent" *ngIf="dateRange.value">
     <input matInput
            [max]="maxDate"
-           [matDatepicker]="startDate"
+           [matDatepicker]="startDatepicker"
            placeholder="Start Date"
            formControlName="startDate">
-    <mat-datepicker-toggle matSuffix [for]="startDate"></mat-datepicker-toggle>
-    <mat-datepicker #startDate></mat-datepicker>
+    <mat-datepicker-toggle matSuffix [for]="startDatepicker"></mat-datepicker-toggle>
+    <mat-datepicker #startDatepicker></mat-datepicker>
+    <mat-error *ngIf="startDate.errors?.matDatepickerParse">Please provide a valid date</mat-error>
+    <mat-error *ngIf="startDate.errors?.matDatepickerMax">Please pick a date in the past</mat-error>
+    <mat-error *ngIf="startDate.errors?.invalidRange && !startDate.errors?.matDatepickerMax">Must be before end date</mat-error>
   </mat-form-field>
 
   <mat-form-field color="accent" *ngIf="dateRange.value">
     <input matInput
            [min]="minDate"
-           [matDatepicker]="endDate"
+           [matDatepicker]="endDatepicker"
            placeholder="End Date"
            formControlName="endDate">
-    <mat-datepicker-toggle matSuffix [for]="endDate"></mat-datepicker-toggle>
-    <mat-datepicker #endDate></mat-datepicker>
+    <mat-datepicker-toggle matSuffix [for]="endDatepicker"></mat-datepicker-toggle>
+    <mat-datepicker #endDatepicker></mat-datepicker>
+    <mat-error *ngIf="endDate.errors?.matDatepickerParse">Please provide a valid date</mat-error>
+    <mat-error *ngIf="endDate.errors?.invalidRange">Must be after start date</mat-error>
   </mat-form-field>
 </form>
