@@ -3,7 +3,7 @@
 # be used on systems that are not publicly accessible (i.e., behind an ACL of some sort). Each of these
 # `ecs-*-compose.yml` files represents one of the deployment environments for the Bamboo CI/CD system.
 
-version: '2'
+version: '3'
 networks:
   cord-net:
 
@@ -68,6 +68,9 @@ services:
   mongo1:
       image: mongo:4.0-rc
       hostname: mongo1
+      links:
+        - mongo2
+        - mongo3
       networks:
         - cord-net
       command: |
@@ -90,8 +93,11 @@ services:
   mongo2:
     image: mongo:4.0-rc
     hostname: mongo2
+    links:
+      - mongo1
+      - mongo3
     networks:
-      - cord-net
+         - cord-net
     command: |
       /bin/bash -c "
       set -e
@@ -103,6 +109,9 @@ services:
   mongo3:
     image: mongo:4.0-rc
     hostname: mongo3
+    links:
+      - mongo1
+      - mongo2
     networks:
       - cord-net
     command: |
