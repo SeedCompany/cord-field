@@ -67,6 +67,9 @@ services:
 
   mongo1:
       image: mongo:4.0-rc
+      links:
+        - mongo2
+        - mongo3
       networks:
         - cord-net
       command: |
@@ -88,6 +91,9 @@ services:
 
   mongo2:
     image: mongo:4.0-rc
+    links:
+      - mongo1
+      - mongo3
     networks:
       - cord-net
     command: |
@@ -100,6 +106,9 @@ services:
 
   mongo3:
     image: mongo:4.0-rc
+    links:
+      - mongo1
+      - mongo2
     networks:
       - cord-net
     command: |
