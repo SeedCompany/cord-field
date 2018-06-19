@@ -1,6 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { AbstractControl } from '@angular/forms/src/model';
+import { DateTime } from 'luxon';
+import { CustomValidators } from '../../core/models/custom-validators';
+import { onlyValidValues } from '../../core/models/util';
 import { ProjectViewStateService } from '../project-view-state.service';
 
 @Component({
@@ -10,7 +13,7 @@ import { ProjectViewStateService } from '../project-view-state.service';
 })
 export class ProjectLocationTimeframeComponent implements OnInit {
   form: FormGroup;
-  minDate: Date;
+  minDate: DateTime;
 
   constructor(private formBuilder: FormBuilder,
               private projectViewState: ProjectViewStateService) {
@@ -21,7 +24,9 @@ export class ProjectLocationTimeframeComponent implements OnInit {
       location: ['', Validators.required],
       mouStart: ['', Validators.required],
       mouEnd: ['', Validators.required]
-    }, {validator: this.dateValidator});
+    }, {
+      validator: CustomValidators.dateRange('mouStart', 'mouEnd')
+    });
 
     this.projectViewState.project.subscribe(project => {
       this.form.reset({
@@ -31,20 +36,15 @@ export class ProjectLocationTimeframeComponent implements OnInit {
       });
     });
 
-    this.form.valueChanges.subscribe(changes => this.projectViewState.change(changes));
+    this.form.valueChanges
+      .pipe(onlyValidValues(this.form))
+      .subscribe(changes => {
+        this.projectViewState.change(changes);
+      });
 
     this.startDate.valueChanges.subscribe(value => {
       this.minDate = value;
     });
-  }
-
-  dateValidator(group: FormGroup) {
-    const startDate = new Date(group.controls.mouStart.value);
-    const endDate = new Date(group.controls.mouEnd.value);
-    if (startDate >= endDate) {
-      return {'isInValidDateRange': true};
-    }
-    return null;
   }
 
   get location(): AbstractControl {
@@ -53,5 +53,9 @@ export class ProjectLocationTimeframeComponent implements OnInit {
 
   get startDate(): AbstractControl {
     return this.form.get('mouStart')!;
+  }
+
+  get endDate(): AbstractControl {
+    return this.form.get('mouEnd')!;
   }
 }

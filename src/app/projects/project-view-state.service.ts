@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import { DateTime } from 'luxon';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { Observable } from 'rxjs/Observable';
 import { Subject } from 'rxjs/Subject';
@@ -6,6 +7,7 @@ import { Language } from '../core/models/language';
 import { Partnership, PartnershipForSaveAPI } from '../core/models/partnership';
 import { Project } from '../core/models/project';
 import { TeamMember, TeamMemberForSaveAPI } from '../core/models/team-member';
+import { clone } from '../core/models/util';
 import { ProjectService } from '../core/services/project.service';
 
 const isEqual = require('lodash.isequal');
@@ -122,6 +124,8 @@ const isChangeForList = (change: any): boolean => {
 
 const returnSelf = (val: any) => val;
 const returnId = (val: {id: string}) => val.id;
+// Ignores times
+const accessDates = (date: DateTime) => date.startOf('day').valueOf();
 
 @Injectable()
 export class ProjectViewStateService {
@@ -136,10 +140,10 @@ export class ProjectViewStateService {
 
   private config: ChangeConfig = {
     mouStart: {
-      accessor: (date: Date) => date.getTime()
+      accessor: accessDates
     },
     mouEnd: {
-      accessor: (date: Date) => date.getTime()
+      accessor: accessDates
     },
     location: {
       accessor: returnId,
@@ -334,9 +338,7 @@ export class ProjectViewStateService {
     }
 
     // Apply changes to a new project object, so we don't have to ask the server for a new version
-    const previous = this._project.value;
-    // clone project
-    const project: Project = Object.assign(Object.create(Object.getPrototypeOf(previous)), previous);
+    const project = clone(this._project.value);
     let needsRefresh = false;
     for (const [key, change] of Object.entries(this.modified) as ChangeEntries) {
       if (this.config[key].forceRefresh) {

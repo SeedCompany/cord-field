@@ -14,6 +14,8 @@ export const AUTH_STORAGE_KEY = 'auth';
 @Injectable()
 export class AuthenticationStorageService {
 
+  private tokens: AuthenticationToken[] | null;
+
   constructor(private localStore: LocalStorageService,
               private sessionStore: SessionStorageService,
               private log: LoggerService) {
@@ -21,21 +23,19 @@ export class AuthenticationStorageService {
 
   async getAuthenticationToken(service: string): Promise<AuthenticationToken | null> {
     const tokens = await this.getAuthenticationTokens();
-
-    if (tokens) {
-      for (const token of tokens) {
-        if (token.key === service) {
-          return AuthenticationToken.fromJson(token);
-        }
-      }
+    if (!tokens) {
+      return null;
     }
 
-    return null;
+    return tokens.find(token => token.key === service) || null;
   }
 
   async getAuthenticationTokens(): Promise<AuthenticationToken[] | null> {
+    if (this.tokens) {
+      return this.tokens;
+    }
 
-    const tokens = await this.localStore.getItem<AuthenticationToken[]>(AUTH_STORAGE_KEY)
+    let tokens = await this.localStore.getItem<AuthenticationToken[]>(AUTH_STORAGE_KEY)
       || await this.sessionStore.getItem<AuthenticationToken[]>(AUTH_STORAGE_KEY);
 
     if (!tokens) {
@@ -48,6 +48,9 @@ export class AuthenticationStorageService {
       return null;
     }
 
+    tokens = tokens.map(AuthenticationToken.fromJson);
+    this.tokens = tokens;
+
     return tokens;
   }
 
@@ -55,10 +58,12 @@ export class AuthenticationStorageService {
     await this.clearTokens();
     const store = (remember) ? this.localStore : this.sessionStore;
     await store.setItem(AUTH_STORAGE_KEY, tokens);
+    this.tokens = tokens;
   }
 
   async clearTokens(): Promise<void> {
     await this.sessionStore.removeItem(AUTH_STORAGE_KEY);
     await this.localStore.removeItem(AUTH_STORAGE_KEY);
+    this.tokens = null;
   }
 }

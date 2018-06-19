@@ -1,6 +1,8 @@
 import { Component, OnInit, Output } from '@angular/core';
 import { AbstractControl, FormBuilder } from '@angular/forms';
+import { DateTime } from 'luxon';
 import { Observable } from 'rxjs/Observable';
+import { CustomValidators } from '../../../core/models/custom-validators';
 import { Language } from '../../../core/models/language';
 import { Location } from '../../../core/models/location';
 import {
@@ -33,15 +35,11 @@ export class ProjectListFilterComponent implements OnInit {
     dateRange: [null],
     startDate: [null],
     endDate: [null]
+  }, {
+    validator: CustomValidators.dateRange('startDate', 'endDate')
   });
-  today = new Date();
-  minDate: Date;
-  // sets the maxDate to today's date, avoiding the future date selection
-  maxDate: Date = new Date(
-    this.today.getFullYear(),
-    this.today.getMonth(),
-    this.today.getDate()
-  );
+  minDate: DateTime;
+  maxDate = DateTime.local();
 
   constructor(private formBuilder: FormBuilder) {
   }
@@ -88,10 +86,10 @@ export class ProjectListFilterComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.startDate.valueChanges.subscribe(date => this.minDate = date);
-    this.endDate.valueChanges.subscribe(date => {
-      if (date !== null) {
-        date.setHours(23, 59, 59, 999);
+    this.startDate.valueChanges.subscribe(date => {
+      this.minDate = date;
+      if (this.endDate.value && this.endDate.value < date) {
+        this.endDate.setValue(date);
       }
     });
   }

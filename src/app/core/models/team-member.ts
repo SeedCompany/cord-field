@@ -1,5 +1,7 @@
+import { DateTime } from 'luxon';
 import { ProjectRole } from './project-role';
 import { User } from './user';
+import { clone } from './util';
 
 export interface TeamMemberForSaveAPI {
   userId: string;
@@ -11,7 +13,7 @@ export class TeamMember {
   roles: ProjectRole[];
   description: string;
   editable: boolean;
-  dateAdded: Date | null; // Nullable until CF2-512 is resolved
+  dateAdded: DateTime | null; // Nullable until CF2-512 is resolved
 
   static fromJson(json: any): TeamMember {
     json = json || {};
@@ -21,7 +23,7 @@ export class TeamMember {
     teamMember.roles = json.roles;
     teamMember.description = json.description || '';
     teamMember.editable = json.editable || false;
-    teamMember.dateAdded = json.dateAdded ? new Date(json.dateAdded) : null;
+    teamMember.dateAdded = json.dateAdded ? DateTime.fromISO(json.dateAdded) : null;
 
     return teamMember;
   }
@@ -32,7 +34,7 @@ export class TeamMember {
     member.roles = roles;
     member.description = '';
     member.editable = true;
-    member.dateAdded = new Date();
+    member.dateAdded = DateTime.local();
 
     return member;
   }
@@ -60,12 +62,8 @@ export class TeamMember {
     return this.roles.some(role => ProjectRole.implicit.includes(role));
   }
 
-  clone(): TeamMember {
-    return Object.assign(Object.create(Object.getPrototypeOf(this)), this);
-  }
-
   withRoles(roles: ProjectRole[]): TeamMember {
-    const cloned = this.clone();
+    const cloned = clone(this);
     cloned.roles = roles;
 
     return cloned;

@@ -1,3 +1,4 @@
+import { DateTime } from 'luxon';
 import { buildEnum } from './enum';
 import { Language } from './language';
 import { Location } from './location';
@@ -118,13 +119,13 @@ export class Project {
   type: ProjectType;
   status: ProjectStatus;
   location: Location | null;
-  mouStart: Date | null;
-  mouEnd: Date | null;
+  mouStart: DateTime | null;
+  mouEnd: DateTime | null;
   languages: Language[];
   partnerships: Partnership[];
   sensitivity: ProjectSensitivity;
   team: TeamMember[];
-  updatedAt: Date;
+  updatedAt: DateTime;
 
   static fromJson(json: any): Project {
     json = json || {};
@@ -135,13 +136,13 @@ export class Project {
     project.type = json.type || ProjectType.Translation;
     project.status = json.status || ProjectStatus.Active;
     project.location = json.location ? Location.fromJson(json.location) : null;
-    project.mouStart = json.mouStart ? new Date(json.mouStart) : null;
-    project.mouEnd = json.mouEnd ? new Date(json.mouEnd) : null;
+    project.mouStart = json.mouStart ? DateTime.fromISO(json.mouStart) : null;
+    project.mouEnd = json.mouEnd ? DateTime.fromISO(json.mouEnd) : null;
     project.languages = (json.languages || []).map(Language.fromJson);
     project.partnerships = (json.partnerships || []).map(Partnership.fromJson);
     project.sensitivity = json.sensitivity || 1;
     project.team = (json.team || []).map(TeamMember.fromJson);
-    project.updatedAt = new Date(json.updatedAt || 0);
+    project.updatedAt = json.updatedAt ? DateTime.fromISO(json.updatedAt) : DateTime.fromMillis(0);
 
     return project;
   }
@@ -161,8 +162,8 @@ export interface ProjectFilter {
   location?: Location[];
   sensitivity?: ProjectSensitivity[];
   dateRange?: string;
-  startDate?: Date;
-  endDate?: Date;
+  startDate?: DateTime;
+  endDate?: DateTime;
 }
 
 export interface ProjectsWithCount {

@@ -1,11 +1,12 @@
+import { DateTime } from 'luxon';
 import { buildEnum } from './enum';
 import { Organization } from './organization';
 
 export interface PartnershipForSaveAPI {
   agreementStatus: PartnershipAgreementStatus;
   mouStatus: PartnershipAgreementStatus;
-  mouStart: Date | null;
-  mouEnd: Date | null;
+  mouStart: DateTime | null;
+  mouEnd: DateTime | null;
   organizationId: string;
   types: PartnershipType[];
 }
@@ -13,8 +14,8 @@ export interface PartnershipForSaveAPI {
 export class Partnership {
   agreementStatus: PartnershipAgreementStatus;
   mouStatus: PartnershipAgreementStatus;
-  mouStart: Date | null;
-  mouEnd: Date | null;
+  mouStart: DateTime | null;
+  mouEnd: DateTime | null;
   organization: Organization;
   types: PartnershipType[];
 
@@ -33,8 +34,8 @@ export class Partnership {
     partnership.organization = Organization.fromJson(json.organization || {});
     partnership.agreementStatus = json.agreementStatus || PartnershipAgreementStatus.NotAttached;
     partnership.mouStatus = json.mouStatus || PartnershipAgreementStatus.NotAttached;
-    partnership.mouStart = json.mouStart ? new Date(json.mouStart) : null;
-    partnership.mouEnd = json.mouEnd ? new Date(json.mouEnd) : null;
+    partnership.mouStart = json.mouStart ? DateTime.fromISO(json.mouStart) : null;
+    partnership.mouEnd = json.mouEnd ? DateTime.fromISO(json.mouEnd) : null;
     partnership.types = json.types || [];
 
     return partnership;
