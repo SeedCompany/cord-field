@@ -3,7 +3,10 @@
 # be used on systems that are not publicly accessible (i.e., behind an ACL of some sort). Each of these
 # `ecs-*-compose.yml` files represents one of the deployment environments for the Bamboo CI/CD system.
 
-version: '3'
+version: '2'
+networks:
+  cord-net:
+
 services:
   cord-field:
     image: 103805181946.dkr.ecr.us-west-2.amazonaws.com/client/cord-field:${BAMBOO_BRANCH_TAG}
@@ -12,8 +15,10 @@ services:
     env_file: .env
     environment:
       NG_BUILD_TARGET: dev
-      SERVICE_80_NAME: client-tsco-cord-field-develop
-
+      SERVICE_80_NAME: client-tsco-cord-field-dev
+    mem_limit: 256000000
+    networks:
+      - cord-net
 
   cord-api-plo:
     image: 103805181946.dkr.ecr.us-west-2.amazonaws.com/client/cord-api-plo:latest
@@ -21,6 +26,8 @@ services:
         - "8001"
     links:
         - mongo1
+        - mongo2
+        - mongo3
     environment:
       MONGO_DB_ADDRESS1: mongo1
       MONGO_DB_PORT1: 27017
@@ -33,8 +40,10 @@ services:
       SERVICE_8001_NAME: client-tsco-cord-plo-dev
       MIGRATE: "true"
       DUMP_CONFIG: "true"
-      DOMO: "false"
-
+      DOMO: "true"
+    mem_limit: 512000000
+    networks:
+      - cord-net
 
   profile-service:
     image: 103805181946.dkr.ecr.us-west-2.amazonaws.com/client/tsco-ilb-profile:latest
@@ -48,19 +57,20 @@ services:
       NODE_ENV: cord-dev
       ECHO_ENABLED: "true"
       BOOTSTRAP: "qa"
-      SERVICE_8001_NAME: client-tsco-cord-profile-develop
-
+      SERVICE_8001_NAME: client-tsco-cord-profile-dev
+    mem_limit: 256000000
+    networks:
+      - cord-net
 
   mongo-profile:
     image: mongo:4.0-rc
-
+    networks:
+      - cord-net
 
   mongo1:
       image: mongo:4.0-rc
-      hostname: mongo1
-      links:
-        - mongo2
-        - mongo3
+      networks:
+        - cord-net
       command: |
         /bin/bash -c "
         set -e
@@ -80,23 +90,24 @@ services:
 
   mongo2:
     image: mongo:4.0-rc
-    hostname: mongo2
+    networks:
+      - cord-net
     command: |
       /bin/bash -c "
       set -e
-      getent hosts host.docker.internal | awk '{ print $$1  \" mongo\" }' >> /etc/hosts
+      getent hosts host.docker.internal | awk '{ print $$1  \" dev.docker.internal\" }' >> /etc/hosts
       (mongod --replSet "rs" --bind_ip_all) &
       wait
       "
 
   mongo3:
     image: mongo:4.0-rc
-    hostname: mongo3
+    networks:
+      - cord-net
     command: |
       /bin/bash -c "
       set -e
-      getent hosts host.docker.internal | awk '{ print $$1  \" mongo\" }' >> /etc/hosts
+      getent hosts host.docker.internal | awk '{ print $$1  \" dev.docker.internal\" }' >> /etc/hosts
       (mongod --replSet "rs" --bind_ip_all) &
       wait
       "
-
