@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
 import { MatDialog, MatPaginator, MatSnackBar, MatSort, MatTableDataSource } from '@angular/material';
 import { Project } from '../../core/models/project';
 import { ProjectRole } from '../../core/models/project-role';
@@ -12,7 +12,7 @@ import { ProjectTeamMemberAddComponent } from './project-team-member-add/project
   templateUrl: './project-team.component.html',
   styleUrls: ['./project-team.component.scss']
 })
-export class ProjectTeamComponent implements AfterViewInit {
+export class ProjectTeamComponent implements OnInit, AfterViewInit {
 
   readonly displayedColumns = ['avatar', 'firstName', 'lastName', 'dateAdded', 'roles'];
   readonly pageSizeOptions = [10, 25, 50];
@@ -28,11 +28,14 @@ export class ProjectTeamComponent implements AfterViewInit {
               private dialog: MatDialog) {
   }
 
-  ngAfterViewInit(): void {
+  ngOnInit(): void {
     this.projectViewState.project.subscribe(project => {
       this.project = project;
       this.dataSource.data = project.team;
     });
+  }
+
+  ngAfterViewInit(): void {
     this.dataSource.sort = this.sort;
     this.dataSource.paginator = this.paginator;
     this.dataSource.filterPredicate = (data: TeamMember, term: string) => {
