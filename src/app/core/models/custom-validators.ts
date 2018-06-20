@@ -30,7 +30,7 @@ export class CustomValidators {
       assertNullableDateTime(start.value);
       assertNullableDateTime(end.value);
 
-      if (!start.value || !end.value || start.value <= end.value) {
+      if (!start.value || !end.value || start.value.startOf('day') <= end.value.startOf('day')) {
         // Remove invalidRange error if it was previously set. Reasons below.
         if (start.hasError('invalidRange')) {
           const {invalidRange: startInvalidRange = null, ...startErrors} = start.errors!;

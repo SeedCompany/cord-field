@@ -19,8 +19,8 @@ describe('CustomValidators', () => {
 
     const setValidRange = () =>
       form.setValue({
-        start: DateTime.fromISO('2018-07-01'),
-        end: DateTime.fromISO('2018-07-02')
+        start: DateTime.fromISO('2018-09-29T19:00:00.000'),
+        end: DateTime.fromISO('2018-09-29T00:00:00.000')
       });
 
     const setInvalidRange = () =>
