@@ -9,6 +9,7 @@ import { AuthenticationService } from './services/authentication.service';
 import { BrowserService } from './services/browser.service';
 import { GoogleAnalyticsService } from './services/google-analytics.service';
 import { AuthInterceptor } from './services/http/auth-interceptor';
+import { ErrorInterceptor } from './services/http/error-interceptor';
 import { PloApiService } from './services/http/plo-api.service';
 import { ProfileApiService } from './services/http/profile-api.service';
 import { LanguageService } from './services/language.service';
@@ -59,7 +60,8 @@ export class CoreModule {
     return {
       ngModule: CoreModule,
       providers: [
-        AuthInterceptor.inject()
+        AuthInterceptor.inject(),
+        ErrorInterceptor.inject()
       ]
     };
   }
