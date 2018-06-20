@@ -1,5 +1,18 @@
 import { AbstractControl } from '@angular/forms';
+import { DateTime } from 'luxon';
 import { TypedFormControl } from './util';
+
+function assertNullableDateTime(value: any): void {
+  if (value && !(value instanceof DateTime)) {
+    throw new Error('Value is not an not a DateTime object.');
+  }
+}
+
+export function isValidDateRange(start: DateTime, end: DateTime, allowSameDay: boolean) {
+  return allowSameDay
+    ? start.startOf('day') <= end.startOf('day')
+    : start.startOf('day') < end.startOf('day');
+}
 
 export class CustomValidators {
 
@@ -8,10 +21,10 @@ export class CustomValidators {
     return regex.test(control.value) ? null : {invalidEmail: true};
   }
 
-  static dateRange(startFieldName: string, endFieldName: string) {
+  static dateRange(startFieldName: string, endFieldName: string, allowSameDay = true) {
     return (control: AbstractControl) => {
-      const start = control.get(startFieldName) as TypedFormControl<Date | null> | null;
-      const end = control.get(endFieldName) as TypedFormControl<Date | null> | null;
+      const start = control.get(startFieldName) as TypedFormControl<DateTime | null> | null;
+      const end = control.get(endFieldName) as TypedFormControl<DateTime | null> | null;
 
       if (!start) {
         throw new Error(`Form does not have control named: "${startFieldName}".`);
@@ -20,7 +33,10 @@ export class CustomValidators {
         throw new Error(`Form does not have control named: "${endFieldName}".`);
       }
 
-      if (!start.value || !end.value || start.value <= end.value) {
+      assertNullableDateTime(start.value);
+      assertNullableDateTime(end.value);
+
+      if (!start.value || !end.value || isValidDateRange(start.value, end.value, allowSameDay)) {
         // Remove invalidRange error if it was previously set. Reasons below.
         if (start.hasError('invalidRange')) {
           const {invalidRange: startInvalidRange = null, ...startErrors} = start.errors!;

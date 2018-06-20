@@ -39,7 +39,7 @@
 
       <ng-container matColumnDef="updatedAt">
         <mat-header-cell *matHeaderCellDef mat-sort-header> Last Modified</mat-header-cell>
-        <mat-cell *matCellDef="let project"> {{ project.updatedAt | date : 'shortDate' }}</mat-cell>
+        <mat-cell *matCellDef="let project"> {{ project.updatedAt.toLocaleString() }}</mat-cell>
       </ng-container>
 
       <ng-container matColumnDef="languages">
