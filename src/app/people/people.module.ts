@@ -1,5 +1,6 @@
 import { NgModule } from '@angular/core';
 import { SharedModule } from '../shared/shared.module';
+import { PeopleListComponent } from './people-list/people-list.component';
 import { PeopleRoutingModule } from './people-routing.module';
 
 @NgModule({
@@ -8,6 +9,7 @@ import { PeopleRoutingModule } from './people-routing.module';
     PeopleRoutingModule
   ],
   declarations: [
+    PeopleListComponent
   ]
 })
 export class PeopleModule {
