@@ -29,6 +29,12 @@ describe('CustomValidators', () => {
         end: DateTime.fromISO('2018-07-02')
       });
 
+    const setSameDay = () =>
+      form.setValue({
+        start: DateTime.fromISO('2018-07-03'),
+        end: DateTime.fromISO('2018-07-03')
+      });
+
     it('Unknown field names throws error', () => {
       form.setValidators(CustomValidators.dateRange('unknown', 'end'));
       expect(setValidRange).toThrow(new Error('Form does not have control named: "unknown".'));
@@ -56,6 +62,23 @@ describe('CustomValidators', () => {
 
     it('Start date after end date is invalid', () => {
       setInvalidRange();
+
+      expect(start.hasError('invalidRange')).toBeTruthy();
+      expect(end.hasError('invalidRange')).toBeTruthy();
+      expect(form.hasError('invalidRange')).toBeTruthy();
+    });
+
+    it('Same date with same day allowed is valid', () => {
+      setSameDay();
+
+      expect(start.hasError('invalidRange')).toBeFalsy();
+      expect(end.hasError('invalidRange')).toBeFalsy();
+      expect(form.hasError('invalidRange')).toBeFalsy();
+    });
+
+    it('Same date with same day not allowed is invalid', () => {
+      form.setValidators(CustomValidators.dateRange('start', 'end', false));
+      setSameDay();
 
       expect(start.hasError('invalidRange')).toBeTruthy();
       expect(end.hasError('invalidRange')).toBeTruthy();

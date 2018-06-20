@@ -25,7 +25,7 @@ export class ProjectLocationTimeframeComponent implements OnInit {
       mouStart: ['', Validators.required],
       mouEnd: ['', Validators.required]
     }, {
-      validator: CustomValidators.dateRange('mouStart', 'mouEnd')
+      validator: CustomValidators.dateRange('mouStart', 'mouEnd', false)
     });
 
     this.projectViewState.project.subscribe(project => {

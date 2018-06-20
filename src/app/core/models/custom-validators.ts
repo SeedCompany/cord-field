@@ -8,6 +8,12 @@ function assertNullableDateTime(value: any): void {
   }
 }
 
+export function isValidDateRange(start: DateTime, end: DateTime, allowSameDay: boolean) {
+  return allowSameDay
+    ? start.startOf('day') <= end.startOf('day')
+    : start.startOf('day') < end.startOf('day');
+}
+
 export class CustomValidators {
 
   static email(control: AbstractControl) {
@@ -15,7 +21,7 @@ export class CustomValidators {
     return regex.test(control.value) ? null : {invalidEmail: true};
   }
 
-  static dateRange(startFieldName: string, endFieldName: string) {
+  static dateRange(startFieldName: string, endFieldName: string, allowSameDay = true) {
     return (control: AbstractControl) => {
       const start = control.get(startFieldName) as TypedFormControl<DateTime | null> | null;
       const end = control.get(endFieldName) as TypedFormControl<DateTime | null> | null;
@@ -30,7 +36,7 @@ export class CustomValidators {
       assertNullableDateTime(start.value);
       assertNullableDateTime(end.value);
 
-      if (!start.value || !end.value || start.value.startOf('day') <= end.value.startOf('day')) {
+      if (!start.value || !end.value || isValidDateRange(start.value, end.value, allowSameDay)) {
         // Remove invalidRange error if it was previously set. Reasons below.
         if (start.hasError('invalidRange')) {
           const {invalidRange: startInvalidRange = null, ...startErrors} = start.errors!;
