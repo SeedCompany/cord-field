@@ -1,4 +1,5 @@
 import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { DateTime } from 'luxon';
 import { CustomValidators } from './custom-validators';
 
 
@@ -18,14 +19,14 @@ describe('CustomValidators', () => {
 
     const setValidRange = () =>
       form.setValue({
-        start: new Date('2018-07-01'),
-        end: new Date('2018-07-02')
+        start: DateTime.fromISO('2018-07-01'),
+        end: DateTime.fromISO('2018-07-02')
       });
 
     const setInvalidRange = () =>
       form.setValue({
-        start: new Date('2018-07-03'),
-        end: new Date('2018-07-02')
+        start: DateTime.fromISO('2018-07-03'),
+        end: DateTime.fromISO('2018-07-02')
       });
 
     it('Unknown field names throws error', () => {
@@ -34,6 +35,15 @@ describe('CustomValidators', () => {
 
       form.setValidators(CustomValidators.dateRange('start', 'unknown2'));
       expect(setValidRange).toThrow(new Error('Form does not have control named: "unknown2".'));
+    });
+
+    it('Value other than DateTime or null throws error', () => {
+      expect(() => start.setValue('asdf')).toThrow(new Error('Value is not an not a DateTime object.'));
+
+      start.setValue('');
+      start.setValue(null);
+      start.setValue(undefined);
+      start.setValue(DateTime.local());
     });
 
     it('Start date before end date is valid', () => {

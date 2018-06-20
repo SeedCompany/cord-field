@@ -1,5 +1,12 @@
 import { AbstractControl } from '@angular/forms';
+import { DateTime } from 'luxon';
 import { TypedFormControl } from './util';
+
+function assertNullableDateTime(value: any): void {
+  if (value && !(value instanceof DateTime)) {
+    throw new Error('Value is not an not a DateTime object.');
+  }
+}
 
 export class CustomValidators {
 
@@ -10,8 +17,8 @@ export class CustomValidators {
 
   static dateRange(startFieldName: string, endFieldName: string) {
     return (control: AbstractControl) => {
-      const start = control.get(startFieldName) as TypedFormControl<Date | null> | null;
-      const end = control.get(endFieldName) as TypedFormControl<Date | null> | null;
+      const start = control.get(startFieldName) as TypedFormControl<DateTime | null> | null;
+      const end = control.get(endFieldName) as TypedFormControl<DateTime | null> | null;
 
       if (!start) {
         throw new Error(`Form does not have control named: "${startFieldName}".`);
@@ -19,6 +26,9 @@ export class CustomValidators {
       if (!end) {
         throw new Error(`Form does not have control named: "${endFieldName}".`);
       }
+
+      assertNullableDateTime(start.value);
+      assertNullableDateTime(end.value);
 
       if (!start.value || !end.value || start.value <= end.value) {
         // Remove invalidRange error if it was previously set. Reasons below.
