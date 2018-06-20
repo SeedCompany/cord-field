@@ -55,11 +55,11 @@ export class UserListItem extends User {
 
   static fromJson(json: any): UserListItem {
     json = json || {};
-    const obj = {...new UserListItem(), ...User.fromJson(json)};
+    const obj = Object.assign(new UserListItem(), User.fromJson(json));
 
     obj.projectCount = json.projectCount || 0;
     obj.roles = json.roles;
-    obj.organization = json.organization || Organization.fromJson({});
+    obj.organization = Organization.fromJson(json.organization || {});
     obj.isActive = json.isActive;
 
     return obj;
