@@ -41,7 +41,7 @@
       <mat-header-cell *matHeaderCellDef>Role(s)</mat-header-cell>
       <mat-cell *matCellDef="let person">
         <mat-chip-list *ngIf="person.roles.length > 0">
-          <mat-chip>{{ ProjectRole.forUI(person.roles[0]) || 'None' }} </mat-chip>
+          <mat-chip>{{ ProjectRole.forUI(person.roles[0]) }} </mat-chip>
           <ng-container *ngIf="person.roles.length > 1">
             <mat-chip [matMenuTriggerFor]="peopleMenu" class="people-overflow-chip">
               +{{ person.roles.length - 1 }}
@@ -54,6 +54,7 @@
             </mat-menu>
           </ng-container>
         </mat-chip-list>
+        <span *ngIf="person.roles.length === 0" class="none">None</span>
       </mat-cell>
     </ng-container>
 
@@ -66,7 +67,8 @@
       </ng-container>
       <ng-container matColumnDef="organization">
         <mat-header-cell *matHeaderCellDef mat-sort-header>Organization</mat-header-cell>
-        <mat-cell *matCellDef="let person">{{ person.organization.name }}
+        <mat-cell *matCellDef="let person" [class.none]="!person.organization">
+          {{ person.organization?.name || 'None' }}
         </mat-cell>
       </ng-container>
 
