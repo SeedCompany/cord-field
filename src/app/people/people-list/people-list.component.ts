@@ -1,5 +1,5 @@
 import { AfterViewInit, Component, ViewChild } from '@angular/core';
-import { MatDialog, MatPaginator, MatSort, MatTableDataSource, PageEvent } from '@angular/material';
+import { MatDialog, MatPaginator, MatSort, MatTableDataSource, PageEvent, Sort } from '@angular/material';
 import { Observable } from 'rxjs/Observable';
 import { ProjectRole } from '../../core/models/project-role';
 import { UserListItem, UsersWithTotal } from '../../core/models/user';
@@ -28,11 +28,16 @@ export class PeopleListComponent implements AfterViewInit {
   ngAfterViewInit() {
     Observable.
       combineLatest(
+        this.sort.sortChange
+          .do(() => this.paginator.pageIndex = 0)
+          .startWith({active: '', direction: 'desc'} as Sort),
         this.paginator.page
-        .startWith({pageIndex: 0, pageSize: 10, length: 0} as PageEvent)
+          .startWith({pageIndex: 0, pageSize: 10, length: 0} as PageEvent)
       )
-      .switchMap(([page]) => {
+      .switchMap(([sort, page]: [Sort, PageEvent]) => {
         return this.userService.getUsers(
+          sort.active as keyof UserListItem,
+          sort.direction,
           page.pageIndex * page.pageSize,
           page.pageSize
         );

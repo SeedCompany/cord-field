@@ -1,5 +1,6 @@
 import { HttpResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { SortDirection } from '@angular/material';
 import { Observable } from 'rxjs/Observable';
 import { Project } from '../models/project';
 import { ProjectRole } from '../models/project-role';
@@ -21,11 +22,22 @@ export class UserService {
       .toPromise();
   }
 
-  getUsers(skip = 0, limit = 10): Observable<UsersWithTotal> {
+  getUsers(
+    // tslint:disable-next-line:no-unnecessary-initializer
+    sort: keyof UserListItem | undefined = undefined,
+    order: SortDirection = 'desc',
+    skip = 0,
+    limit = 10
+  ): Observable<UsersWithTotal> {
     const params: HttpParams = {
       skip: skip.toString(),
       limit: limit.toString()
     };
+    if (sort) {
+      params.sort = sort;
+      params.order = order;
+    }
+
     return this
       .plo
       .get<UserListItem[]>('/users', {params, observe: 'response'})
