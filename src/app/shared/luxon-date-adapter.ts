@@ -65,7 +65,7 @@ export class LuxonDateAdapter extends DateAdapter<DateTime> {
   }
 
   getYearName(date: DateTime): string {
-    const dtf = new Intl.DateTimeFormat(this.locale, {year: 'numeric'});
+    const dtf = new Intl.DateTimeFormat(this.locale, {year: 'numeric', timeZone: 'UTC'});
     const valueOfDate = date.valueOf();
     return this.stripDirectionalityCharacters(dtf.format(valueOfDate));
   }
