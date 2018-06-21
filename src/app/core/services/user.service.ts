@@ -7,7 +7,7 @@ import { SaveResult } from '../abstract-view-state';
 import { Project } from '../models/project';
 import { ProjectRole } from '../models/project-role';
 import { TeamMember } from '../models/team-member';
-import { User, UserListItem, UserProfile, UsersWithTotal } from '../models/user';
+import { User, UserFilter, UserListItem, UserProfile, UsersWithTotal } from '../models/user';
 import { HttpParams } from './http/abstract-http-client';
 import { PloApiService } from './http/plo-api.service';
 
@@ -39,7 +39,8 @@ export class UserService {
     sort: keyof UserListItem | undefined = undefined,
     order: SortDirection = 'desc',
     skip = 0,
-    limit = 10
+    limit = 10,
+    filters: UserFilter = {}
   ): Observable<UsersWithTotal> {
     const params: HttpParams = {
       skip: skip.toString(),
@@ -48,6 +49,15 @@ export class UserService {
     if (sort) {
       params.sort = sort;
       params.order = order;
+    }
+
+    if (filters && Object.keys(filters).length > 0) {
+      const filtersAPI = {
+        organizationIds: filters.organizations ? filters.organizations.map(org => org.id) : undefined,
+        roles: filters.roles ? filters.roles : undefined,
+        isActive: 'isActive' in filters ? filters.isActive : undefined
+      };
+      params.filter = JSON.stringify(filtersAPI);
     }
 
     return this

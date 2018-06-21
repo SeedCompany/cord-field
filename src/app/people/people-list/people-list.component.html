@@ -2,14 +2,22 @@
   <mat-drawer-content>
     <mat-toolbar>
       <h3 class="mat-title">People</h3>
+
       <span class="spacer"></span>
+
+      <button mat-icon-button
+              [color]="filtersActive ? 'accent' : 'primary'"
+              [@slideRight]="filterDrawer.opened ? 'hidden' : 'shown'"
+              (click)="filterDrawer.toggle()">
+        <mat-icon>filter_list</mat-icon>
+      </button>
     </mat-toolbar>
+
     <mat-table [dataSource]="peopleSource" matSort>
       <ng-container matColumnDef="avatar">
         <mat-header-cell *matHeaderCellDef></mat-header-cell>
         <mat-cell *matCellDef="let person">
-          <app-avatar-letter color="accent">{{ person.avatarLetters }}
-          </app-avatar-letter>
+          <app-avatar-letter color="accent">{{ person.avatarLetters }}</app-avatar-letter>
         </mat-cell>
       </ng-container>
 
@@ -25,6 +33,7 @@
         <mat-cell *matCellDef="let person" class="name">{{ person.displayLastName }}
         </mat-cell>
       </ng-container>
+
       <ng-container matColumnDef="projectCount">
         <mat-header-cell *matHeaderCellDef>Total Projects</mat-header-cell>
         <mat-cell *matCellDef="let person">{{ person.projectCount }}
@@ -35,12 +44,8 @@
         <mat-header-cell *matHeaderCellDef>Role(s)</mat-header-cell>
         <mat-cell *matCellDef="let person">
           <app-collapsed-chip-list [list]="person.roles">
-            <ng-template let-role>
-                  {{ ProjectRole.forUI(role) }}
-
-            </ng-template>
+            <ng-template let-role>{{ ProjectRole.forUI(role) }}</ng-template>
           </app-collapsed-chip-list>
-
         </mat-cell>
       </ng-container>
 
@@ -70,4 +75,23 @@
                    [length]="totalCount">
     </mat-paginator>
   </mat-drawer-content>
+
+  <mat-drawer mode="side" position="end" #filterDrawer>
+    <mat-toolbar class="toolbar">
+      Filter
+      <div class="spacer"></div>
+      <button mat-icon-button color="primary"
+              *ngIf="filtersActive"
+              (click)="onClearFilters()">
+        <mat-icon>remove_circle</mat-icon>
+      </button>
+      <button mat-icon-button
+              [color]="filtersActive ? 'accent' : 'primary'"
+              (click)="filterDrawer.toggle()">
+        <mat-icon>filter_list</mat-icon>
+      </button>
+    </mat-toolbar>
+    <app-people-list-filter></app-people-list-filter>
+  </mat-drawer>
+
 </mat-drawer-container>

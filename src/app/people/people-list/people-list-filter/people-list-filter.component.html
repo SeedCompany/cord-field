@@ -1,0 +1,25 @@
+<form [formGroup]="form">
+  <app-autocomplete-organization
+    [chips]="true"
+    [list]="organizations.value"
+    (optionSelected)="onOrganizationSelected($event)"
+    (removed)="onOrganizationRemoved($event)"
+  ></app-autocomplete-organization>
+
+  <mat-form-field color="accent">
+    <mat-select placeholder="Roles" [multiple]="true" [formControl]="roles">
+      <mat-option *ngFor="let entry of ProjectRole.entries(); trackBy: ProjectRole.trackEntryBy"
+                  [value]="entry.value">
+        {{ entry.ui }}
+      </mat-option>
+    </mat-select>
+  </mat-form-field>
+
+  <mat-form-field color="accent">
+    <mat-select placeholder="Status" formControlName="isActive">
+      <mat-option>Any</mat-option>
+      <mat-option [value]="true">Active</mat-option>
+      <mat-option [value]="false">Inactive</mat-option>
+    </mat-select>
+  </mat-form-field>
+</form>
