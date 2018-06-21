@@ -41,21 +41,9 @@
       <ng-container matColumnDef="roles">
         <mat-header-cell *matHeaderCellDef>Role(s)</mat-header-cell>
         <mat-cell *matCellDef="let person">
-          <mat-chip-list *ngIf="person.roles.length > 0">
-            <mat-chip>{{ ProjectRole.forUI(person.roles[0]) }}</mat-chip>
-            <ng-container *ngIf="person.roles.length > 1">
-              <mat-chip [matMenuTriggerFor]="peopleMenu" class="people-overflow-chip">
-                +{{ person.roles.length - 1 }}
-                <mat-icon>arrow_drop_down</mat-icon>
-              </mat-chip>
-              <mat-menu #peopleMenu="matMenu">
-                <button mat-menu-item *ngFor="let role of person.roles.slice(1); trackBy: ProjectRole.trackValueBy">
-                  {{ ProjectRole.forUI(role) }}
-                </button>
-              </mat-menu>
-            </ng-container>
-          </mat-chip-list>
-          <span *ngIf="person.roles.length === 0" class="none">None</span>
+          <app-collapsed-chip-list [list]="person.roles">
+            <ng-template let-role>{{ ProjectRole.forUI(role) }}</ng-template>
+          </app-collapsed-chip-list>
         </mat-cell>
       </ng-container>
 

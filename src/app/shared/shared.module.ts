@@ -10,6 +10,7 @@ import { AutocompleteOrganizationComponent } from './components/autocomplete/aut
 import { AutocompleteUserComponent } from './components/autocomplete/autocomplete-user.component';
 import { AutocompleteComponent } from './components/autocomplete/autocomplete.component';
 import { AvatarLetterComponent } from './components/avatar-letter/avatar-letter.component';
+import { CollapsedChipListComponent } from './components/collapsed-chip-list/collapsed-chip-list.component';
 import { SearchComponent } from './components/search/search.component';
 import { SpeedDialItemComponent } from './components/speed-dial-item/speed-dial-item.component';
 import { SpeedDialComponent } from './components/speed-dial/speed-dial.component';
@@ -32,6 +33,7 @@ import { LanguageInfoPipe } from './pipes/language-info.pipe';
     AutocompleteUserComponent,
     AutocompleteComponent,
     AvatarLetterComponent,
+    CollapsedChipListComponent,
     CommonModule,
     FormsModule,
     LanguageInfoPipe,
@@ -49,6 +51,7 @@ import { LanguageInfoPipe } from './pipes/language-info.pipe';
     AutocompleteComponent,
     AutofocusDirective,
     AvatarLetterComponent,
+    CollapsedChipListComponent,
     LanguageInfoPipe,
     SearchComponent,
     SpeedDialComponent,

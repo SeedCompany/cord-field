@@ -72,10 +72,6 @@ mat-header-row {
   @include mat-typography-level-to-styles($config, body-2);
 }
 
-.language-none {
-  color: mat-foreground($theme, disabled);
-}
-
 .status-circle {
   border-radius: 4px;
   height: 7px;
@@ -91,18 +87,5 @@ mat-header-row {
   }
   &.status-in_development {
     background: orange;
-  }
-}
-
-.language-overflow-chip {
-  background-color: white;
-  border: 1px solid mat-background($theme, unselected-chip);
-  cursor: pointer !important;
-
-  // adjust drop down arrow to fit better within chip
-  .mat-icon {
-    height: 18px;
-    width: 18px;
-    margin-top: -7px;
   }
 }

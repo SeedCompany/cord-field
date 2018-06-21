@@ -90,17 +90,3 @@ mat-header-row {
     background: red;
   }
 }
-
-.people-overflow-chip {
-  background-color: white;
-  border: 1px solid mat-background($theme, unselected-chip);
-  cursor: pointer !important;
-
-  // adjust drop down arrow to fit better within chip
-  .mat-icon {
-    height: 18px;
-    width: 18px;
-    margin-top: -7px;
-  }
-}
-
