@@ -19,7 +19,7 @@ services:
     image: 103805181946.dkr.ecr.us-west-2.amazonaws.com/client/cord-api-plo:latest
     ports: [ "8001" ]
     environment:
-      MONGO_DB_CONN: mongodb://"cord-sqa:Zh6ZApeVteMqC%406A%26cIs"@mongo-a.dev.olivetech.internal,mongo-b.dev.olivetech.internal,mongo-c.dev.olivetech.internal/cord-sqa?replicaSet="dev"
+      MONGO_DB_CONN: mongodb://"cord-sqa:Zh6ZApeVteMqC%406A%26cIs"@mongo-a.dev.olivetech.internal,mongo-b.dev.olivetech.internal,mongo-c.dev.olivetech.internal/cord-sqa?replicaSet=dev
       NODE_ENV: sqa
       CREATE_FAKE_USERS: "true"
       SERVICE_8001_NAME: client-tsco-cord-plo-sqa
@@ -32,7 +32,7 @@ services:
     image: 103805181946.dkr.ecr.us-west-2.amazonaws.com/client/tsco-ilb-profile:latest
     ports: [ "8001" ]
     environment:
-      MONGO_DB_CONN: mongodb://"cord-sqa-profile:Zh6ZApeVteMqC%406A%26cIs"@mongo-a.dev.olivetech.internal,mongo-b.dev.olivetech.internal,mongo-c.dev.olivetech.internal/cord-sqa-profile?replicaSet="dev"
+      MONGO_DB_CONN: mongodb://"cord-sqa-profile:Zh6ZApeVteMqC%406A%26cIs"@mongo-a.dev.olivetech.internal,mongo-b.dev.olivetech.internal,mongo-c.dev.olivetech.internal/cord-sqa-profile?replicaSet=dev
       NODE_ENV: cord-sqa
       ECHO_ENABLED: "true"
       BOOTSTRAP: "qa"
