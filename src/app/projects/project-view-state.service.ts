@@ -228,19 +228,9 @@ export class ProjectViewStateService {
       }
     }
     // If item is in remove list, remove it
-    if (key in this.modified && 'remove' in this.modified[key] && this.modified[key].remove.some(finder)) {
-      const excluder = excludeBy(this.config[key].accessor)(newValue);
-      const newList = [...this.modified[key].remove.filter(excluder)];
-      if (newList.length === 0) {
-        delete this.modified[key].remove;
-      } else {
-        this.modified[key].remove = newList;
-      }
-    }
+    this.removeItemFromSubList('remove', key, newValue, finder);
 
-    if (key in this.modified && Object.keys(this.modified[key]).length === 0) {
-      delete this.modified[key];
-    }
+    this.removeChangeListIfEmpty(key);
   }
 
   private removeList(key: keyof Project, newValue: any, originalValue: any[] | null): void {
@@ -254,19 +244,9 @@ export class ProjectViewStateService {
       }
     }
     // If item is in add list, remove it
-    if (key in this.modified && 'add' in this.modified[key] && this.modified[key].add.some(finder)) {
-      const excluder = excludeBy(this.config[key].accessor)(newValue);
-      const newList = [...this.modified[key].add.filter(excluder)];
-      if (newList.length === 0) {
-        delete this.modified[key].add;
-      } else {
-        this.modified[key].add = newList;
-      }
-    }
+    this.removeItemFromSubList('add', key, newValue, finder);
 
-    if (key in this.modified && Object.keys(this.modified[key]).length === 0) {
-      delete this.modified[key];
-    }
+    this.removeChangeListIfEmpty(key);
   }
 
   private updateListItem(key: keyof Project, newValue: any, originalList: any[] | null): void {
@@ -277,12 +257,7 @@ export class ProjectViewStateService {
       this.modified[key].add[index] = newValue;
       return;
     }
-    // If item is not update list, add it
-    if (!(key in this.modified && 'update' in this.modified[key] && this.modified[key].update.some(finder))) {
-      const newChangeList = [...(this.modified[key] ? (this.modified[key].update || []) : []), newValue];
-      this.modified[key] = {...this.modified[key] || {}, update: newChangeList};
-      return;
-    }
+
     // Get original value or fix dev mistake
     const originalValue = originalList ? originalList.find(finder) : null;
     if (!originalValue) {
@@ -290,23 +265,52 @@ export class ProjectViewStateService {
       this.addList(key, newValue, originalList);
       return;
     }
-    // If update is still different than original replace item in update list.
+
+    // If item is in remove list, remove it
+    this.removeItemFromSubList('remove', key, newValue, finder);
+
+    // If update is different than original...
     if (!isEqual(newValue, originalValue)) {
-      const index = this.modified[key].update.findIndex(finder);
-      this.modified[key].update[index] = newValue;
+      // And the item is not update list, add it
+      if (!(key in this.modified && 'update' in this.modified[key] && this.modified[key].update.some(finder))) {
+        const newChangeList = [...(this.modified[key] ? (this.modified[key].update || []) : []), newValue];
+        this.modified[key] = {...(this.modified[key] || {}), update: newChangeList};
+      } else { // And item is in the update list, replace item in update list
+        const index = this.modified[key].update.findIndex(finder);
+        this.modified[key]!.update[index] = newValue;
+      }
+
       return;
     }
 
-    // Remove from update list
-    const excluder = excludeBy(this.config[key].accessor)(newValue);
-    const newList = [...this.modified[key].update.filter(excluder)];
-    if (newList.length === 0) {
-      delete this.modified[key].update;
-    } else {
-      this.modified[key].update = newList;
+    // New value matches original, remove from update list
+    this.removeItemFromSubList('update', key, newValue, finder);
+
+    this.removeChangeListIfEmpty(key);
+  }
+
+  /**
+   * If item is in add/remove/update list, remove it
+   */
+  private removeItemFromSubList(changeListKey: keyof ChangeList<any>, key: keyof Project, newValue: any, finder: (val: any) => boolean) {
+    if (!(key in this.modified)
+      || !(changeListKey in this.modified[key])
+      || !this.modified[key][changeListKey].some(finder)
+    ) {
+      return;
     }
 
-    if (Object.keys(this.modified[key]).length === 0) {
+    const excluder = excludeBy(this.config[key].accessor)(newValue);
+    const newList = [...this.modified[key][changeListKey].filter(excluder)];
+    if (newList.length === 0) {
+      delete this.modified[key]![changeListKey];
+    } else {
+      this.modified[key]![changeListKey] = newList;
+    }
+  }
+
+  private removeChangeListIfEmpty(key: keyof Project) {
+    if (key in this.modified && Object.keys(this.modified[key]!).length === 0) {
       delete this.modified[key];
     }
   }

@@ -454,6 +454,204 @@ describe('ProjectViewStateService', () => {
         });
       });
 
+      it('update value that is already new = update added item', () => {
+        initializeProject({
+          languages: []
+        });
+
+        viewState.change({
+          languages: {
+            add: Language.fromJson({id: '1'})
+          }
+        });
+        viewState.change({
+          languages: {
+            update: Language.fromJson({id: '1', name: 'good'})
+          }
+        });
+
+        expect(dirty).toBeTruthy();
+        expectModified({
+          languages: {
+            add: [
+              Language.fromJson({id: '1', name: 'good'})
+            ]
+          }
+        });
+      });
+
+      it('update value that is not in list = add new item', () => {
+        initializeProject({
+          languages: []
+        });
+
+        viewState.change({
+          languages: {
+            update: Language.fromJson({id: '1'})
+          }
+        });
+
+        expect(dirty).toBeTruthy();
+        expectModified({
+          languages: {
+            add: [
+              Language.fromJson({id: '1'})
+            ]
+          }
+        });
+      });
+
+      it('update value = dirty', () => {
+        initializeProject({
+          languages: [
+            Language.fromJson({id: '1', name: 'bad'})
+          ]
+        });
+
+        viewState.change({
+          languages: {
+            update: Language.fromJson({id: '1', name: 'good'})
+          }
+        });
+        viewState.change({
+          languages: {
+            update: Language.fromJson({id: '1', name: 'best'})
+          }
+        });
+
+        expect(dirty).toBeTruthy();
+        expectModified({
+          languages: {
+            update: [
+              Language.fromJson({id: '1', name: 'best'})
+            ]
+          }
+        });
+      });
+
+      it('update value already in list with no changes = clean', () => {
+        initializeProject({
+          languages: [
+            Language.fromJson({id: '1', name: 'good'})
+          ]
+        });
+
+        viewState.change({
+          languages: {
+            update: Language.fromJson({id: '1', name: 'good'})
+          }
+        });
+
+        expect(dirty).toBeFalsy();
+        expectModified({});
+      });
+
+      it('update value, revert with 2x update = clean', () => {
+        initializeProject({
+          languages: [
+            Language.fromJson({id: '1', name: 'bad'})
+          ]
+        });
+
+        viewState.change({
+          languages: {
+            update: Language.fromJson({id: '1', name: 'good'})
+          }
+        });
+        viewState.change({
+          languages: {
+            update: Language.fromJson({id: '1', name: 'bad'})
+          }
+        });
+
+        expect(dirty).toBeFalsy();
+        expectModified({});
+      });
+
+      it('update value, revert with 2x update, but still other updates = dirty', () => {
+        initializeProject({
+          languages: [
+            Language.fromJson({id: '1', name: 'bad'}),
+            Language.fromJson({id: '2', name: 'bad'})
+          ]
+        });
+
+        viewState.change({
+          languages: {
+            update: Language.fromJson({id: '1', name: 'good'})
+          }
+        });
+        viewState.change({
+          languages: {
+            update: Language.fromJson({id: '2', name: 'good'})
+          }
+        });
+        viewState.change({
+          languages: {
+            update: Language.fromJson({id: '1', name: 'bad'})
+          }
+        });
+
+        expect(dirty).toBeTruthy();
+        expectModified({
+          languages: {
+            update: [
+              Language.fromJson({id: '2', name: 'good'})
+            ]
+          }
+        });
+      });
+
+      it('remove, update = dirty', () => {
+        initializeProject({
+          languages: [
+            Language.fromJson({id: '1', name: 'bad'})
+          ]
+        });
+
+        viewState.change({
+          languages: {
+            remove: Language.fromJson({id: '1'})
+          }
+        });
+        viewState.change({
+          languages: {
+            update: Language.fromJson({id: '1', name: 'good'})
+          }
+        });
+
+        expect(dirty).toBeTruthy();
+        expectModified({
+          languages: {
+            update: [
+              Language.fromJson({id: '1', name: 'good'})
+            ]
+          }
+        });
+      });
+
+      it('remove, update, revert = clean', () => {
+        initializeProject({
+          languages: [
+            Language.fromJson({id: '1', name: 'bad'})
+          ]
+        });
+
+        viewState.change({
+          languages: {
+            remove: Language.fromJson({id: '1'})
+          }
+        });
+        viewState.change({
+          languages: {
+            update: Language.fromJson({id: '1', name: 'bad'})
+          }
+        });
+
+        expect(dirty).toBeFalsy();
+        expectModified({});
+      });
+
       it('discard changes', async () => {
         initializeProject({
           languages: [
