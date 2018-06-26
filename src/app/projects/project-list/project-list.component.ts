@@ -41,6 +41,7 @@ export class ProjectListComponent implements AfterViewInit {
   projectSource = new MatTableDataSource<Project>();
   totalCount = 0;
   filtersActive = false;
+  drawerActive = true;
 
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;

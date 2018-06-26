@@ -84,9 +84,14 @@
               (click)="onClearFilters()">
         <mat-icon>remove_circle</mat-icon>
       </button>
-      <button mat-icon-button
-              [color]="filtersActive ? 'accent' : 'primary'"
+      <button mat-icon-button color="primary"
+              *ngIf="drawerActive"
               (click)="filterDrawer.toggle()">
+        <mat-icon>close</mat-icon>
+      </button>
+      <button mat-icon-button *ngIf="!drawerActive"
+              color="primary"
+              (click)="filterDrawer.toggle();drawerActive = !drawerActive">
         <mat-icon>filter_list</mat-icon>
       </button>
     </mat-toolbar>
