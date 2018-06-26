@@ -1,33 +1,75 @@
-export class Location {
+import { maybeRedacted } from './util';
+
+class LocationPart {
   id: string;
-  country: string;
-  region: {
-    id: string;
-    name: string;
-  };
-  area: {
-    id: string;
-    name: string;
-  };
+  imageLargeFileName: string;
+  imageMediumFileName: string;
+  imageSmallFileName: string;
 
-  static fromJson(json: any): Location {
-    const location = new Location();
+  static fromJson(json: Partial<LocationPart>): LocationPart {
+    const {
+      id = '',
+      imageLargeFileName = '',
+      imageMediumFileName = '',
+      imageSmallFileName = ''
+    } = json;
 
-    location.id = json.id;
-    location.country = json.country || '';
-
-    const region = json.region || {};
-    location.region = {
-      id: region.id,
-      name: region.name
+    return {
+      id,
+      imageLargeFileName,
+      imageMediumFileName,
+      imageSmallFileName
     };
+  }
+}
 
-    const area = json.area || {};
-    location.area = {
-      id: area.id,
-      name: area.name
-    };
+export class Region extends LocationPart {
+  name: string | null;
+  directorId: string;
+
+  static fromJson(json: Partial<Region>): Region {
+    const region = Object.assign(new Region(), super.fromJson(json));
+    region.name = maybeRedacted(json.name);
+    region.directorId = json.directorId || '';
+
+    return region;
+  }
+}
+
+export class Area extends LocationPart {
+  name: string | null;
+  region: Region;
+
+  static fromJson(json: Partial<Area>): Area {
+    const area = Object.assign(new Area(), super.fromJson(json));
+    area.name = maybeRedacted(json.name);
+    area.region = Region.fromJson(json.region || {});
+
+    return area;
+  }
+}
+
+export class Location extends LocationPart {
+  country: string | null;
+  area: Area;
+  editable: boolean;
+
+  static fromJson(json: Partial<Location>): Location {
+    const location = Object.assign(new Location(), super.fromJson(json));
+
+    location.country = maybeRedacted(json.country);
+    location.area = Area.fromJson(json.area || {});
 
     return location;
+  }
+
+  get displayName() {
+    return [
+      this.country,
+      this.area.name,
+      this.area.region.name
+    ]
+      .filter(val => val != null)
+      .join(' | ');
   }
 }

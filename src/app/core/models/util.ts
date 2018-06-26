@@ -4,6 +4,10 @@ import { Observable } from 'rxjs/Observable';
 
 export const REDACTED = '🙈';
 
+export function maybeRedacted(value: string | null | undefined): string | null {
+  return (value === REDACTED || value === undefined) ? null : value;
+}
+
 export class TypedFormControl<T> extends FormControl {
   constructor(
     formState?: T,

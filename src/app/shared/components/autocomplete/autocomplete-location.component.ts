@@ -14,7 +14,7 @@ export class AutocompleteLocationComponent extends AutocompleteComponent<Locatio
   @Input() placeholder = 'Locations';
   @Input() requiredMessage = 'Please enter a location';
   @Input() serverErrorMessage = 'Failed to fetch locations';
-  @Input() displayItem = (loc: Location) => `${loc.country} | ${loc.area.name} | ${loc.region.name}`;
+  @Input() displayItem = (loc: Location) => loc.displayName;
   @Input() trackBy = (location: Location) => location.id;
   @Input() fetcher = (term: string) => this.locationService.search(term);
 
