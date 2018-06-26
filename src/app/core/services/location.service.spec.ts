@@ -1,76 +1,57 @@
 import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
-import { inject, TestBed } from '@angular/core/testing';
+import { TestBed } from '@angular/core/testing';
 import { environment } from '../../../environments/environment';
 import { CoreModule } from '../core.module';
 import { Location } from '../models/location';
-import { PloApiService } from './http/plo-api.service';
 import { LocationService } from './location.service';
 
 const testBaseUrl = environment.services['plo.cord.bible'];
+
 describe('LocationService', () => {
 
-  let httpMockService: HttpTestingController;
+  let httpMock: HttpTestingController;
   let locationService: LocationService;
+
   beforeEach(() => {
     TestBed.configureTestingModule({
       imports: [
         CoreModule,
         HttpClientTestingModule
-      ],
-      providers: [
-        LocationService,
-        PloApiService
       ]
     });
     locationService = TestBed.get(LocationService);
-    httpMockService = TestBed.get(HttpTestingController);
+    httpMock = TestBed.get(HttpTestingController);
   });
 
-  it('should be created', inject([LocationService], (service: LocationService) => {
-    expect(service).toBeTruthy();
-  }));
+  afterEach(() => {
+    httpMock.verify();
+  });
 
-  it('Get Location Details', (done: DoneFn) => {
+  it('Search', (done: DoneFn) => {
     const mockResponse: Location[] = [
-      {
-        'area': {
-          'id': '5ae06f3da9941545df22ccf8',
-          'name': 'Anglophone Africa'
-        },
-        'country': 'Nigeria',
-        'id': '5ae06f3da9941545df22cd03',
-        'region': {
-          'id': '5ae06f3da9941545df22ccf3',
-          'name': 'Africa'
+      Location.fromJson({
+        country: 'Nigeria',
+        area: {
+          name: 'Anglophone Africa',
+          region: {
+            name: 'Africa'
+          }
         }
-      },
-      {
-        'area': {
-          'id': '5ae06f3da9941545df22ccf7',
-          'name': 'any'
-        },
-        'country': 'Nigeria',
-        'id': '5ae06f3da9941545df22cd49',
-        'region': {
-          'id': '5ae06f3da9941545df22ccf6',
-          'name': 'Not Specified'
-        }
-      }
+      } as Partial<Location>)
     ];
     const term = 'Nigeria';
-    const locationUrl = `${testBaseUrl}/locations/suggestions?term=${term}`;
+
     locationService
       .search(term)
-      .then((data) => {
+      .then((data: Location[]) => {
+        expect(data[0].constructor.name).toEqual('Location');
         expect(data[0].country).toBe('Nigeria');
         done();
       })
       .catch(done.fail);
 
-    httpMockService
-      .expectOne(locationUrl)
+    httpMock
+      .expectOne(`${testBaseUrl}/locations/suggestions?term=${term}`)
       .flush(mockResponse);
-    httpMockService.verify();
-
   });
 });
