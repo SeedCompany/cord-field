@@ -62,4 +62,14 @@ export class Location extends LocationPart {
 
     return location;
   }
+
+  get displayName() {
+    return [
+      this.country,
+      this.area.name,
+      this.area.region.name
+    ]
+      .filter(val => val != null)
+      .join(' | ');
+  }
 }
