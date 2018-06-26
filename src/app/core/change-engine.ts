@@ -1,0 +1,318 @@
+import { DateTime } from 'luxon';
+import { BehaviorSubject } from 'rxjs/BehaviorSubject';
+import { Observable } from 'rxjs/Observable';
+import { clone } from './models/util';
+
+const isEqual = require('lodash.isequal');
+
+type Scalar = string | number | boolean;
+type Accessor = (val: any) => Scalar;
+type Comparator = (a: any, b: any) => boolean;
+
+/**
+ * Definition of how changes should be processed.
+ */
+export type ChangeConfig<Keys extends string = string> = {
+  [key in Keys]: {
+    accessor: Accessor,
+    toServer?: (val: any) => any,
+    key?: string, // The key the server is looking for
+    forceRefresh?: boolean
+  }
+};
+
+/**
+ * Given mappers for add/remove/update items return a function for config.toServer.
+ * This makes it easier to map the items differently for each change to their server values.
+ * By default, `mapUpdate` uses the same function as `mapAdd`.
+ *
+ * For example:
+ *   // When adding items give the server the full objects, but when removing only give the IDs.
+ *   mapChangeList(item => item, item => item.id);
+ */
+export function mapChangeList<T, A, R, C = A>(mapAdd: (item: T) => A, mapRemove: (item: T) => R, mapUpdate?: (item: T) => C) {
+  return (changes: ModifiedList<T>) => {
+    const result: {add?: A[], remove?: R[], update?: C[]} = {};
+
+    if ('add' in changes && changes.add) {
+      result.add = changes.add.map(mapAdd);
+    }
+    if ('remove' in changes && changes.remove) {
+      result.remove = changes.remove.map(mapRemove);
+    }
+    if ('update' in changes && changes.update) {
+      result.update = changes.update.map(mapUpdate || mapAdd as any as (item: T) => C);
+    }
+
+    return result;
+  };
+}
+
+export const returnSelf = (val: any) => val;
+export const returnId = (val: {id: string}) => val.id;
+// Ignores times
+export const accessDates = (date: DateTime) => date.startOf('day').valueOf();
+
+/**
+ * These are for the collective changes that will be processed on save().
+ */
+export type Modified<T = any> = {[key in keyof Partial<T>]: any | ModifiedList<any>};
+
+/**
+ * Changes that can be processed with the change() method.
+ */
+export type Changes<T = any> = {[key in keyof Partial<T>]: any | ChangeList<any>};
+
+/**
+ * The collective changes for a list field.
+ */
+type ModifiedList<T> = Record<keyof ChangeList<T>, T[]>;
+
+/**
+ * One of the changes can be for field that is a list, which will use this structure.
+ */
+interface ChangeList<T> {
+  add?: T;
+  remove?: T;
+  update?: T;
+}
+
+/**
+ * Compare objects by mapping them to comparable values with the given accessor.
+ */
+const compareBy = (accessor: Accessor): Comparator => {
+  return (a, b) => {
+    return accessor(a) === accessor(b);
+  };
+};
+
+/**
+ * Wrap comparator to check for nulls first
+ */
+const compareNullable = (compare: Comparator): Comparator => {
+  return (a, b) => {
+    // double equals here is intentional to account for undefined
+    if (a == null && b == null) {
+      return true;
+    }
+    if ((a != null && b == null) || (a == null && b != null)) {
+      return false;
+    }
+    return compare(a, b);
+  };
+};
+
+const findBy = (accessor: Accessor) => {
+  const comparator = compareBy(accessor);
+  return (value: any) => (current: any) => comparator(current, value);
+};
+const excludeBy = (accessor: Accessor) => {
+  const comparator = compareBy(accessor);
+  return (value: any) => (current: any) => !comparator(current, value);
+};
+
+const isChangeForList = (change: any): boolean => {
+  return change != null && typeof change === 'object' && ('add' in change || 'remove' in change || 'update' in change);
+};
+
+export class ChangeEngine {
+
+  private dirty = new BehaviorSubject<boolean>(false);
+  private modified: Modified = {};
+
+  constructor(private config: ChangeConfig) {}
+
+  get isDirty(): Observable<boolean> {
+    return this.dirty.asObservable().distinctUntilChanged();
+  }
+
+  get needsRefresh(): boolean {
+    for (const key of Object.keys(this.modified)) {
+      if (this.config[key].forceRefresh) {
+        return true;
+      }
+    }
+
+    return false;
+  }
+
+  getModifiedForServer() {
+    const modified: any = {};
+    for (const [key, change] of Object.entries(this.modified)) {
+      modified[this.config[key].key || key] = this.config[key].toServer ? this.config[key].toServer!(change) : change;
+    }
+
+    return modified;
+  }
+
+  getModified<T>(original: T): T {
+    const obj = clone(original) as {[key: string]: any};
+
+    for (const [key, change] of Object.entries(this.modified)) {
+      if (!isChangeForList(change)) {
+        obj[key] = change;
+        continue;
+      }
+      if ('remove' in change) {
+        const accessor = this.config[key].accessor;
+        const toRemove = (change.remove as any[]).map(accessor);
+        obj[key] = (obj[key] as any[]).filter(current => !toRemove.includes(accessor(current)));
+      }
+      if ('add' in change) {
+        obj[key] = (obj[key] as any[]).concat(change.add);
+      }
+      if ('update' in change) {
+        const comparator = compareBy(this.config[key].accessor);
+        for (const item of change.update) {
+          const index = (obj[key] as any[]).findIndex(current => comparator(current, item));
+          if (index !== -1) {
+            (obj[key] as any[])[index] = item;
+          }
+        }
+      }
+    }
+
+    return obj as T;
+  }
+
+  reset() {
+    this.modified = {};
+    this.dirty.next(false);
+  }
+
+  change(changes: Changes, original: {[key: string]: any}): void {
+    for (const [key, change] of Object.entries(changes)) {
+      if (!(key in this.config)) {
+        continue;
+      }
+
+      if (!isChangeForList(change)) {
+        this.changeSingle(key, change, original[key]);
+        continue;
+      }
+      if ('remove' in change) {
+        this.removeList(key, change.remove, original[key]);
+      }
+      if ('add' in change) {
+        this.addList(key, change.add, original[key]);
+      }
+      if ('update' in change) {
+        this.updateListItem(key, change.update, original[key]);
+      }
+    }
+
+    this.dirty.next(Object.keys(this.modified).length > 0);
+  }
+
+  private addList(key: string, newValue: any, originalValue: any[] | null): void {
+    const finder = findBy(this.config[key].accessor)(newValue);
+    // If item is not in add list...
+    if (!(key in this.modified && 'add' in this.modified[key] && this.modified[key].add.some(finder))) {
+      // And original list does not have item, add it
+      if (originalValue == null || !originalValue.some(finder)) {
+        const newList = [...(this.modified[key] ? (this.modified[key].add || []) : []), newValue];
+        this.modified[key] = {...this.modified[key] || {}, add: newList};
+      }
+    }
+    // If item is in remove list, remove it
+    this.removeItemFromSubList('remove', key, newValue, finder);
+
+    this.removeChangeListIfEmpty(key);
+  }
+
+  private removeList(key: string, newValue: any, originalValue: any[] | null): void {
+    const finder = findBy(this.config[key].accessor)(newValue);
+    // If item is not in remove list...
+    if (!(key in this.modified && 'remove' in this.modified[key] && this.modified[key].remove.some(finder))) {
+      // And original list has item, remove it
+      if (originalValue == null || originalValue.some(finder)) {
+        const newList = [...(this.modified[key] ? (this.modified[key].remove || []) : []), newValue];
+        this.modified = {...this.modified, [key]: {remove: newList}};
+      }
+    }
+    // If item is in add list, remove it
+    this.removeItemFromSubList('add', key, newValue, finder);
+
+    this.removeChangeListIfEmpty(key);
+  }
+
+  private updateListItem(key: string, newValue: any, originalList: any[] | null): void {
+    const finder = findBy(this.config[key].accessor)(newValue);
+    // If item is in add list...
+    if (key in this.modified && 'add' in this.modified[key] && this.modified[key].add.some(finder)) {
+      const index = this.modified[key].add.findIndex(finder);
+      this.modified[key].add[index] = newValue;
+      return;
+    }
+
+    // Get original value or fix dev mistake
+    const originalValue = originalList ? originalList.find(finder) : null;
+    if (!originalValue) {
+      // item isn't in original list, it should be added instead of changed. We should warn dev on this.
+      this.addList(key, newValue, originalList);
+      return;
+    }
+
+    // If item is in remove list, remove it
+    this.removeItemFromSubList('remove', key, newValue, finder);
+
+    // If update is different than original...
+    if (!isEqual(newValue, originalValue)) {
+      // And the item is not update list, add it
+      if (!(key in this.modified && 'update' in this.modified[key] && this.modified[key].update.some(finder))) {
+        const newChangeList = [...(this.modified[key] ? (this.modified[key].update || []) : []), newValue];
+        this.modified[key] = {...(this.modified[key] || {}), update: newChangeList};
+      } else { // And item is in the update list, replace item in update list
+        const index = this.modified[key].update.findIndex(finder);
+        this.modified[key]!.update[index] = newValue;
+      }
+
+      return;
+    }
+
+    // New value matches original, remove from update list
+    this.removeItemFromSubList('update', key, newValue, finder);
+
+    this.removeChangeListIfEmpty(key);
+  }
+
+  /**
+   * If item is in add/remove/update list, remove it
+   */
+  private removeItemFromSubList(changeListKey: keyof ChangeList<any>, key: string, newValue: any, finder: (val: any) => boolean) {
+    if (!(key in this.modified)
+      || !(changeListKey in this.modified[key])
+      || !this.modified[key][changeListKey].some(finder)
+    ) {
+      return;
+    }
+
+    const excluder = excludeBy(this.config[key].accessor)(newValue);
+    const newList = [...this.modified[key][changeListKey].filter(excluder)];
+    if (newList.length === 0) {
+      delete this.modified[key]![changeListKey];
+    } else {
+      this.modified[key]![changeListKey] = newList;
+    }
+  }
+
+  private removeChangeListIfEmpty(key: string) {
+    if (key in this.modified && Object.keys(this.modified[key]!).length === 0) {
+      delete this.modified[key];
+    }
+  }
+
+  private changeSingle(key: string, newValue: any, originalValue: any): void {
+    const comparator = compareNullable(compareBy(this.config[key].accessor));
+
+    if (key in this.modified && comparator(this.modified[key], newValue)) {
+      return;
+    }
+
+    if (!comparator(originalValue, newValue)) {
+      this.modified[key] = newValue;
+    } else {
+      delete this.modified[key];
+    }
+  }
+}
