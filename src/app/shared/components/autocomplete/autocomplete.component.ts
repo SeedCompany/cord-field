@@ -30,8 +30,9 @@ export class AutocompleteComponent<T> implements AfterViewInit, OnChanges {
   /** The current list state so those items can be filtered out from results */
   @Input() list: T[] = [];
 
-  @Input() set value(value: T) {
+  @Input() set value(value: T | null) {
     this.search.setValue(value);
+    this.validSelection = value != null;
   }
 
   @Input() displayItem: (item: T) => string;
