@@ -12,8 +12,8 @@ type Comparator = (a: any, b: any) => boolean;
 /**
  * Definition of how changes should be processed.
  */
-export type ChangeConfig<Keys extends string = string> = {
-  [key in Keys]: {
+export type ChangeConfig<T = any> = {
+  [key in keyof Partial<T>]: {
     accessor: Accessor,
     toServer?: (val: any) => any,
     key?: string, // The key the server is looking for
@@ -66,7 +66,7 @@ export type Changes<T = any> = {[key in keyof Partial<T>]: any | ChangeList<any>
 /**
  * The collective changes for a list field.
  */
-type ModifiedList<T> = Record<keyof ChangeList<T>, T[]>;
+type ModifiedList<T = any> = Record<keyof ChangeList<T>, T[]>;
 
 /**
  * One of the changes can be for field that is a list, which will use this structure.
@@ -115,19 +115,19 @@ const isChangeForList = (change: any): boolean => {
   return change != null && typeof change === 'object' && ('add' in change || 'remove' in change || 'update' in change);
 };
 
-export class ChangeEngine {
+export class ChangeEngine<T = any> {
 
   private dirty = new BehaviorSubject<boolean>(false);
-  private modified: Modified = {};
+  private modified = {} as Modified<T>;
 
-  constructor(private config: ChangeConfig) {}
+  constructor(private config: ChangeConfig<T>) {}
 
   get isDirty(): Observable<boolean> {
     return this.dirty.asObservable().distinctUntilChanged();
   }
 
   get needsRefresh(): boolean {
-    for (const key of Object.keys(this.modified)) {
+    for (const key of Object.keys(this.modified) as Array<keyof T>) {
       if (this.config[key].forceRefresh) {
         return true;
       }
@@ -136,19 +136,19 @@ export class ChangeEngine {
     return false;
   }
 
-  getModifiedForServer() {
+  getModifiedForServer<R>(): R {
     const modified: any = {};
-    for (const [key, change] of Object.entries(this.modified)) {
+    for (const [key, change] of Object.entries(this.modified) as Array<[keyof T, any]>) {
       modified[this.config[key].key || key] = this.config[key].toServer ? this.config[key].toServer!(change) : change;
     }
 
     return modified;
   }
 
-  getModified<T>(original: T): T {
+  getModified(original: T): T {
     const obj = clone(original) as {[key: string]: any};
 
-    for (const [key, change] of Object.entries(this.modified)) {
+    for (const [key, change] of Object.entries(this.modified) as Array<[keyof T, any]>) {
       if (!isChangeForList(change)) {
         obj[key] = change;
         continue;
@@ -176,12 +176,12 @@ export class ChangeEngine {
   }
 
   reset() {
-    this.modified = {};
+    this.modified = {} as Modified<T>;
     this.dirty.next(false);
   }
 
-  change(changes: Changes, original: {[key: string]: any}): void {
-    for (const [key, change] of Object.entries(changes)) {
+  change(changes: Changes<T>, original: {[key: string]: any}): void {
+    for (const [key, change] of Object.entries(changes) as Array<[keyof T, any]>) {
       if (!(key in this.config)) {
         continue;
       }
@@ -204,7 +204,7 @@ export class ChangeEngine {
     this.dirty.next(Object.keys(this.modified).length > 0);
   }
 
-  private addList(key: string, newValue: any, originalValue: any[] | null): void {
+  private addList<I>(key: keyof T, newValue: I, originalValue: I[] | null): void {
     const finder = findBy(this.config[key].accessor)(newValue);
     // If item is not in add list...
     if (!this.isItemInSubList('add', key, finder)) {
@@ -219,7 +219,7 @@ export class ChangeEngine {
     this.removeChangeListIfEmpty(key);
   }
 
-  private removeList(key: string, newValue: any, originalValue: any[] | null): void {
+  private removeList<I>(key: keyof T, newValue: I, originalValue: I[] | null): void {
     const finder = findBy(this.config[key].accessor)(newValue);
     // If item is not in remove list...
     if (!this.isItemInSubList('remove', key, finder)) {
@@ -234,7 +234,7 @@ export class ChangeEngine {
     this.removeChangeListIfEmpty(key);
   }
 
-  private updateListItem(key: string, newValue: any, originalList: any[] | null): void {
+  private updateListItem<I>(key: keyof T, newValue: I, originalList: I[] | null): void {
     const finder = findBy(this.config[key].accessor)(newValue);
     // If item is in add list...
     if (this.isItemInSubList('add', key, finder)) {
@@ -271,13 +271,13 @@ export class ChangeEngine {
     this.removeChangeListIfEmpty(key);
   }
 
-  private addItemToSubList(changeListKey: keyof ChangeList, key: string, newValue: any) {
+  private addItemToSubList<I>(changeListKey: keyof ChangeList<I>, key: keyof T, newValue: I) {
     const newList = [...(this.modified[key] ? (this.modified[key][changeListKey] || []) : []), newValue];
     // @ts-ignore
     this.modified[key] = {...this.modified[key] || {}, [changeListKey]: newList};
   }
 
-  private replaceItemInSubList(changeListKey: keyof ChangeList, key: string, newValue: any, finder: (val: any) => boolean) {
+  private replaceItemInSubList<I>(changeListKey: keyof ChangeList<I>, key: keyof T, newValue: I, finder: (val: I) => boolean) {
     const list = this.modified[key][changeListKey];
     const index = list.findIndex(finder);
     list[index] = newValue;
@@ -286,7 +286,7 @@ export class ChangeEngine {
   /**
    * If item is in add/remove/update list, remove it
    */
-  private removeItemFromSubList(changeListKey: keyof ChangeList, key: string, newValue: any, finder: (val: any) => boolean) {
+  private removeItemFromSubList<I>(changeListKey: keyof ChangeList<I>, key: keyof T, newValue: I, finder: (val: I) => boolean) {
     if (!this.isItemInSubList(changeListKey, key, finder)) {
       return;
     }
@@ -300,19 +300,19 @@ export class ChangeEngine {
     }
   }
 
-  private isItemInSubList(changeListKey: keyof ChangeList, key: string, finder: (val: any) => boolean): boolean {
+  private isItemInSubList<I>(changeListKey: keyof ChangeList<I>, key: keyof T, finder: (val: I) => boolean): boolean {
     return key in this.modified
       && changeListKey in this.modified[key]
       && this.modified[key][changeListKey].some(finder);
   }
 
-  private removeChangeListIfEmpty(key: string) {
+  private removeChangeListIfEmpty(key: keyof T) {
     if (key in this.modified && Object.keys(this.modified[key]).length === 0) {
       delete this.modified[key];
     }
   }
 
-  private changeSingle(key: string, newValue: any, originalValue: any): void {
+  private changeSingle<I>(key: keyof T, newValue: I, originalValue: I): void {
     const comparator = compareNullable(compareBy(this.config[key].accessor));
 
     if (key in this.modified && comparator(this.modified[key], newValue)) {

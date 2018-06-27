@@ -25,7 +25,7 @@ describe('ChangeEngine', () => {
         toServer: mapChangeList<Language, string, string>(returnId, returnId),
         forceRefresh: true
       }
-    } as ChangeConfig<keyof TestSubject>);
+    } as ChangeConfig<TestSubject>);
     engine.isDirty.subscribe(d => dirty = d);
   });
 
