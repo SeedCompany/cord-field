@@ -71,7 +71,7 @@ type ModifiedList<T> = Record<keyof ChangeList<T>, T[]>;
 /**
  * One of the changes can be for field that is a list, which will use this structure.
  */
-interface ChangeList<T> {
+interface ChangeList<T = any> {
   add?: T;
   remove?: T;
   update?: T;
@@ -207,11 +207,10 @@ export class ChangeEngine {
   private addList(key: string, newValue: any, originalValue: any[] | null): void {
     const finder = findBy(this.config[key].accessor)(newValue);
     // If item is not in add list...
-    if (!(key in this.modified && 'add' in this.modified[key] && this.modified[key].add.some(finder))) {
+    if (!this.isItemInSubList('add', key, finder)) {
       // And original list does not have item, add it
       if (originalValue == null || !originalValue.some(finder)) {
-        const newList = [...(this.modified[key] ? (this.modified[key].add || []) : []), newValue];
-        this.modified[key] = {...this.modified[key] || {}, add: newList};
+        this.addItemToSubList('add', key, newValue);
       }
     }
     // If item is in remove list, remove it
@@ -223,11 +222,10 @@ export class ChangeEngine {
   private removeList(key: string, newValue: any, originalValue: any[] | null): void {
     const finder = findBy(this.config[key].accessor)(newValue);
     // If item is not in remove list...
-    if (!(key in this.modified && 'remove' in this.modified[key] && this.modified[key].remove.some(finder))) {
+    if (!this.isItemInSubList('remove', key, finder)) {
       // And original list has item, remove it
       if (originalValue == null || originalValue.some(finder)) {
-        const newList = [...(this.modified[key] ? (this.modified[key].remove || []) : []), newValue];
-        this.modified = {...this.modified, [key]: {remove: newList}};
+        this.addItemToSubList('remove', key, newValue);
       }
     }
     // If item is in add list, remove it
@@ -239,9 +237,8 @@ export class ChangeEngine {
   private updateListItem(key: string, newValue: any, originalList: any[] | null): void {
     const finder = findBy(this.config[key].accessor)(newValue);
     // If item is in add list...
-    if (key in this.modified && 'add' in this.modified[key] && this.modified[key].add.some(finder)) {
-      const index = this.modified[key].add.findIndex(finder);
-      this.modified[key].add[index] = newValue;
+    if (this.isItemInSubList('add', key, finder)) {
+      this.replaceItemInSubList('add', key, newValue, finder);
       return;
     }
 
@@ -259,12 +256,10 @@ export class ChangeEngine {
     // If update is different than original...
     if (!isEqual(newValue, originalValue)) {
       // And the item is not update list, add it
-      if (!(key in this.modified && 'update' in this.modified[key] && this.modified[key].update.some(finder))) {
-        const newChangeList = [...(this.modified[key] ? (this.modified[key].update || []) : []), newValue];
-        this.modified[key] = {...(this.modified[key] || {}), update: newChangeList};
+      if (!this.isItemInSubList('update', key, finder)) {
+        this.addItemToSubList('update', key, newValue);
       } else { // And item is in the update list, replace item in update list
-        const index = this.modified[key].update.findIndex(finder);
-        this.modified[key]!.update[index] = newValue;
+        this.replaceItemInSubList('update', key, newValue, finder);
       }
 
       return;
@@ -276,28 +271,43 @@ export class ChangeEngine {
     this.removeChangeListIfEmpty(key);
   }
 
+  private addItemToSubList(changeListKey: keyof ChangeList, key: string, newValue: any) {
+    const newList = [...(this.modified[key] ? (this.modified[key][changeListKey] || []) : []), newValue];
+    // @ts-ignore
+    this.modified[key] = {...this.modified[key] || {}, [changeListKey]: newList};
+  }
+
+  private replaceItemInSubList(changeListKey: keyof ChangeList, key: string, newValue: any, finder: (val: any) => boolean) {
+    const list = this.modified[key][changeListKey];
+    const index = list.findIndex(finder);
+    list[index] = newValue;
+  }
+
   /**
    * If item is in add/remove/update list, remove it
    */
-  private removeItemFromSubList(changeListKey: keyof ChangeList<any>, key: string, newValue: any, finder: (val: any) => boolean) {
-    if (!(key in this.modified)
-      || !(changeListKey in this.modified[key])
-      || !this.modified[key][changeListKey].some(finder)
-    ) {
+  private removeItemFromSubList(changeListKey: keyof ChangeList, key: string, newValue: any, finder: (val: any) => boolean) {
+    if (!this.isItemInSubList(changeListKey, key, finder)) {
       return;
     }
 
     const excluder = excludeBy(this.config[key].accessor)(newValue);
     const newList = [...this.modified[key][changeListKey].filter(excluder)];
     if (newList.length === 0) {
-      delete this.modified[key]![changeListKey];
+      delete this.modified[key][changeListKey];
     } else {
       this.modified[key]![changeListKey] = newList;
     }
   }
 
+  private isItemInSubList(changeListKey: keyof ChangeList, key: string, finder: (val: any) => boolean): boolean {
+    return key in this.modified
+      && changeListKey in this.modified[key]
+      && this.modified[key][changeListKey].some(finder);
+  }
+
   private removeChangeListIfEmpty(key: string) {
-    if (key in this.modified && Object.keys(this.modified[key]!).length === 0) {
+    if (key in this.modified && Object.keys(this.modified[key]).length === 0) {
       delete this.modified[key];
     }
   }
