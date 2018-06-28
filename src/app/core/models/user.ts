@@ -1,6 +1,6 @@
 import { Organization } from './organization';
 import { ProjectRole } from './project-role';
-import { REDACTED } from './util';
+import { maybeRedacted } from './util';
 
 export interface IUserRequestAccess {
   email: string;
@@ -13,37 +13,35 @@ export interface IUserRequestAccess {
 export class User {
 
   id: string;
-  firstName: string | null;
-  lastName: string | null;
+  realFirstName: string | null;
+  realLastName: string | null;
   displayFirstName: string;
   displayLastName: string;
   email: string | null;
 
   static fromJson(json: any): User {
-    json = json || {};
-
     const obj = new User();
 
-    obj.id = json.id !== REDACTED ? json.id : null;
-    obj.firstName = json.firstName !== REDACTED ? json.firstName : null;
-    obj.displayFirstName = json.displayFirstName;
-    obj.lastName = json.lastName !== REDACTED ? json.lastName : null;
-    obj.displayLastName = json.displayLastName;
-    obj.email = json.email !== REDACTED ? json.email : null;
+    obj.id = json.id || '';
+    obj.realFirstName = maybeRedacted(json.firstName);
+    obj.displayFirstName = json.displayFirstName || '';
+    obj.realLastName = maybeRedacted(json.lastName);
+    obj.displayLastName = json.displayLastName || '';
+    obj.email = maybeRedacted(json.email);
 
     return obj;
   }
 
-  get publicFirstName(): string {
-    return this.firstName || this.displayFirstName;
+  get firstName(): string {
+    return this.realFirstName || this.displayFirstName;
   }
 
-  get publicLastName(): string {
-    return this.lastName || this.displayLastName;
+  get lastName(): string {
+    return this.realLastName || this.displayLastName;
   }
 
   get fullName(): string {
-    return `${this.publicFirstName} ${this.publicLastName}`.trim();
+    return `${this.firstName} ${this.lastName}`.trim();
   }
 }
 
@@ -53,14 +51,14 @@ export class UserListItem extends User {
   organization: Organization | null;
   isActive: boolean;
 
-  static fromJson(json: any): UserListItem {
+  static fromJson(json: Partial<UserListItem>): UserListItem {
     json = json || {};
-    const obj = Object.assign(new UserListItem(), User.fromJson(json));
+    const obj = Object.assign(new UserListItem(), super.fromJson(json));
 
     obj.projectCount = json.projectCount || 0;
-    obj.roles = json.roles;
+    obj.roles = json.roles || [];
     obj.organization = json.organization ? Organization.fromJson(json.organization) : null;
-    obj.isActive = json.isActive;
+    obj.isActive = json.isActive || false;
 
     return obj;
   }

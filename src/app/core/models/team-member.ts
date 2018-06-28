@@ -47,15 +47,15 @@ export class TeamMember {
   }
 
   get id() {
-    return this.user.id!;
+    return this.user.id;
   }
 
   get firstName() {
-    return this.user.publicFirstName;
+    return this.user.firstName;
   }
 
   get lastName() {
-    return this.user.publicLastName;
+    return this.user.lastName;
   }
 
   get removable() {
