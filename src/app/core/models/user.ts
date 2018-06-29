@@ -140,6 +140,22 @@ export class KnownLanguage {
 
     return kl;
   }
+
+  static forSaveAPI(kl: KnownLanguage): KnownLanguageForSaveAPI {
+    return {
+      languageId: kl.language.id,
+      proficiency: kl.proficiency
+    };
+  }
+
+  get id() {
+    return this.language.id;
+  }
+}
+
+export interface KnownLanguageForSaveAPI {
+  languageId: string;
+  proficiency: LanguageProficiency;
 }
 
 export enum LanguageProficiency {
@@ -156,6 +172,7 @@ export namespace LanguageProficiency {
 }
 
 export class Education {
+  id: string;
   degree: Degree;
   major: string;
   institution: string;
@@ -185,6 +202,7 @@ export namespace Degree {
 }
 
 export class Unavailability {
+  id: string;
   description: string;
   start: DateTime;
   end: DateTime;
@@ -192,6 +210,7 @@ export class Unavailability {
   static fromJson(json: Partial<Record<keyof Unavailability, any>>): Unavailability {
     const obj = new Unavailability();
 
+    obj.id = json.id;
     obj.description = json.description || '';
     obj.start = json.start ? DateTime.fromISO(json.start) : DateTime.invalid('Missing');
     obj.end = json.end ? DateTime.fromISO(json.end) : DateTime.invalid('Missing');
