@@ -1,0 +1,48 @@
+<mat-card class="profile">
+  <mat-card-content>
+    <div class="section">
+      <app-avatar [src]="imgSrc"></app-avatar>
+      <h2>{{user?.fullName}}</h2>
+    </div>
+    <div class="section">
+      <ul>
+        <li *ngFor="let role of user?.roles">
+          {{ ProjectRole.forUI(role?.role) }} - <a> {{ role?.locationIds.length }} Areas</a>
+        </li>
+      </ul>
+    </div>
+    <div class="section">
+      <h6>Organizations</h6>
+      <ul>
+        <li>
+          <a>org1</a>
+        </li>
+        <li>
+          <a>org2</a>
+        </li>
+      </ul>
+    </div>
+    <div class="section">
+      <h6>Email</h6>
+      <a>{{ user?.email }}</a>
+    </div>
+    <div class="section">
+      <h6>Phone</h6>
+      <span>{{ user?.phone }}</span>
+    </div>
+    <div class="section">
+      <h6>Time Zone</h6>
+      <span>INDIA</span>
+    </div>
+    <div class="section">
+      <h6>Status</h6>
+      <span>
+          <a> available </a>
+      </span>
+    </div>
+    <div class="section">
+      <button mat-raised-button color="accent">EDIT PROFILE</button>
+    </div>
+  </mat-card-content>
+</mat-card>
+

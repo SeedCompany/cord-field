@@ -1,0 +1,79 @@
+<mat-card class="about">
+  <mat-card-content>
+    <div class="section">
+      <h2>About</h2>
+    </div>
+    <div class="section">
+      <h6>Bio</h6>
+      <p>Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas.
+        Vestibulum tortor quam, feugiat vitae, ultricies eget, tempor sit amet,
+        ante. Donec eu libero sit amet quam egestas semper. Aenean ultricies mi vitae est.</p>
+      <p>Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas.
+        Vestibulum tortor quam, feugiat vitae, ultricies eget, tempor sit amet,
+        ante. Donec eu libero sit amet quam egestas semper. Aenean ultricies mi vitae est.</p>
+    </div>
+
+    <div class="section">
+      <h6>Education</h6>
+      <ul>
+        <li>
+          <strong>Bachelor's</strong>-NIT
+        </li>
+        <li>
+          <strong>Master's</strong>-MIT
+        </li>
+      </ul>
+    </div>
+    <div class="section">
+      <h6>Skills</h6>
+      <mat-chip-list>
+        <mat-chip class="primary">Programming</mat-chip>
+        <mat-chip class="primary">Football</mat-chip>
+        <mat-chip class="primary">Golf</mat-chip>
+        <mat-chip class="primary">Programming</mat-chip>
+        <mat-chip class="primary">Football</mat-chip>
+        <mat-chip class="primary">Golf</mat-chip>
+      </mat-chip-list>
+    </div>
+    <div class="section">
+      <h6>Custom Skills</h6>
+      <p>Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas.
+        Vestibulum tortor quam, feugiat vitae, ultricies eget, tempor sit amet,
+        ante. Donec eu libero sit amet quam egestas semper. Aenean ultricies mi vitae est.</p>
+    </div>
+    <div class="section">
+      <h6>Languages</h6>
+      <ul>
+        <li>
+          <a>English</a>-Fluent
+        </li>
+        <li>
+          <a>English</a>-Fluent
+        </li>
+        <li>
+          <a>English</a>-Fluent
+        </li>
+      </ul>
+    </div>
+    <div class="section">
+      <h2>Projects</h2>
+      <mat-list>
+        <mat-list-item class="row">
+          <app-avatar></app-avatar>
+          <div class="list-content">
+            <h6 class="title">{{ ProjectRole.forUI('fp') }}</h6>
+            <span> {{ 'Project Name' }} | {{ 'In Development' }}</span>
+          </div>
+        </mat-list-item>
+        <mat-list-item class="row">
+          <app-avatar></app-avatar>
+          <div class="list-content">
+            <h6 class="title">{{ ProjectRole.forUI('fp') }}</h6>
+            <span> {{ 'Project Name' }} | {{ 'Project Status' }}</span>
+          </div>
+        </mat-list-item>
+      </mat-list>
+      <button mat-button color="accent" routerLink="/projects">SEE ALL</button>
+    </div>
+  </mat-card-content>
+</mat-card>

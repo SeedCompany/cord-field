@@ -1,0 +1,43 @@
+@import "~styles/imports";
+
+.profile {
+  width: 400px;
+  height: 100%;
+}
+
+a {
+  color: $seed-green;
+  font-weight: 500;
+}
+
+.section {
+  display: flex;
+  flex-direction: column;
+  padding: 0px 0px 10px 50px;
+}
+
+.avatar {
+  height: 80px;
+  width: 80px;
+}
+
+button {
+  width: max-content;
+}
+
+h6 {
+  color: $seed-gray;
+  font-weight: 500;
+  font-size: 12px;
+  margin-bottom: 5px;
+}
+
+h2 {
+  font-weight: 400;
+}
+
+ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}

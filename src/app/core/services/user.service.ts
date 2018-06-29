@@ -77,4 +77,9 @@ export class UserService {
         && member.roles.includes(role));
     });
   }
+
+  async getUserProfile(id: string): Promise<UserProfile> {
+    const user = await this.plo.get<UserProfile>(`/users/${id}`).toPromise();
+    return UserProfile.fromJson(user);
+  }
 }
