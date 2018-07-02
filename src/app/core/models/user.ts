@@ -4,7 +4,7 @@ import { Language } from './language';
 import { Location } from './location';
 import { Organization } from './organization';
 import { ProjectRole } from './project-role';
-import { maybeRedacted } from './util';
+import { generateObjectId, maybeRedacted } from './util';
 
 export interface IUserRequestAccess {
   email: string;
@@ -172,13 +172,17 @@ export namespace LanguageProficiency {
 }
 
 export class Education {
-  id: string;
+  readonly id: string;
   degree: Degree;
   major: string;
   institution: string;
 
   static fromJson(json: Education): Education {
     return Object.assign(new Education(), json);
+  }
+
+  static create(): Education {
+    return Object.assign(new Education(), {id: generateObjectId()});
   }
 }
 
@@ -202,7 +206,7 @@ export namespace Degree {
 }
 
 export class Unavailability {
-  id: string;
+  readonly id: string;
   description: string;
   start: DateTime;
   end: DateTime;
@@ -210,11 +214,16 @@ export class Unavailability {
   static fromJson(json: Partial<Record<keyof Unavailability, any>>): Unavailability {
     const obj = new Unavailability();
 
+    // @ts-ignore readonly property
     obj.id = json.id;
     obj.description = json.description || '';
     obj.start = json.start ? DateTime.fromISO(json.start) : DateTime.invalid('Missing');
     obj.end = json.end ? DateTime.fromISO(json.end) : DateTime.invalid('Missing');
 
     return obj;
+  }
+
+  static create(): Unavailability {
+    return Object.assign(new Unavailability(), {id: generateObjectId()});
   }
 }

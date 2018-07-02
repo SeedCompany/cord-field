@@ -49,6 +49,15 @@ export function clone<T>(obj: T): T {
   return Object.assign(Object.create(Object.getPrototypeOf(obj)), obj);
 }
 
+export function generateObjectId(): string {
+  // tslint:disable:no-bitwise
+  const timestamp = (new Date().getTime() / 1000 | 0).toString(16);
+  return timestamp + 'xxxxxxxxxxxxxxxx'
+    .replace(/[x]/g, () => (Math.random() * 16 | 0).toString(16))
+    .toLowerCase();
+  // tslint:enable:no-bitwise
+}
+
 /**
  * A helper to filter objects by their key/values via a predicate function
  *
