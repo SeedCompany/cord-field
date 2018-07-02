@@ -1,7 +1,7 @@
 import { DateTime } from 'luxon';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { Observable } from 'rxjs/Observable';
-import { clone } from './models/util';
+import { clone, mapEntries } from './models/util';
 
 const isEqual = require('lodash.isequal');
 
@@ -13,13 +13,19 @@ type Comparator = (a: any, b: any) => boolean;
  * Definition of how changes should be processed.
  */
 export type ChangeConfig<T = any> = {
-  [key in keyof Partial<T>]: {
-    accessor: Accessor,
-    toServer?: (val: any) => any,
-    key?: string, // The key the server is looking for
-    forceRefresh?: boolean
-  }
+  [key in keyof Partial<T>]: Partial<FieldConfig>;
 };
+
+type ResolvedConfig<T = any> = {
+  [key in keyof Partial<T>]: FieldConfig;
+};
+
+interface FieldConfig {
+  accessor: Accessor;
+  toServer: (val: any) => any;
+  key: string; // The key the server is looking for
+  forceRefresh: boolean;
+}
 
 /**
  * Given mappers for add/remove/update items return a function for config.toServer.
@@ -117,10 +123,19 @@ const isChangeForList = (change: any): boolean => {
 
 export class ChangeEngine<T = any> {
 
-  private dirty = new BehaviorSubject<boolean>(false);
+  private readonly config: ResolvedConfig<T>;
+  private readonly dirty = new BehaviorSubject<boolean>(false);
   private modified = {} as Modified<T>;
 
-  constructor(private config: ChangeConfig<T>) {}
+  constructor(config: ChangeConfig<T>) {
+    this.config = mapEntries(config, (key, field) => ({
+      accessor: returnSelf,
+      key,
+      toServer: returnSelf,
+      forceRefresh: false,
+      ...field
+    }));
+  }
 
   get isDirty(): Observable<boolean> {
     return this.dirty.asObservable().distinctUntilChanged();
@@ -139,7 +154,7 @@ export class ChangeEngine<T = any> {
   getModifiedForServer<R>(): R {
     const modified: any = {};
     for (const [key, change] of Object.entries(this.modified) as Array<[keyof T, any]>) {
-      modified[this.config[key].key || key] = this.config[key].toServer ? this.config[key].toServer!(change) : change;
+      modified[this.config[key].key] = this.config[key].toServer(change);
     }
 
     return modified;
