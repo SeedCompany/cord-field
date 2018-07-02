@@ -2,6 +2,7 @@ import { HttpResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { SortDirection } from '@angular/material';
 import { Observable } from 'rxjs/Observable';
+import { Subject } from 'rxjs/Subject';
 import { ModifiedUser } from '../../people/user-view-state.service';
 import { SaveResult } from '../abstract-view-state';
 import { Project } from '../models/project';
@@ -13,6 +14,12 @@ import { PloApiService } from './http/plo-api.service';
 
 @Injectable()
 export class UserService {
+
+  private _userProfile = new Subject<UserProfile>();
+
+  get userProfile$(): Observable<UserProfile> {
+    return this._userProfile.asObservable();
+  }
 
   constructor(private plo: PloApiService) {
   }
@@ -80,6 +87,8 @@ export class UserService {
 
   async getUserProfile(id: string): Promise<UserProfile> {
     const user = await this.plo.get<UserProfile>(`/users/${id}`).toPromise();
-    return UserProfile.fromJson(user);
+    const userProfile = UserProfile.fromJson(user);
+    this._userProfile.next(userProfile);
+    return userProfile;
   }
 }

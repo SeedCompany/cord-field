@@ -1,0 +1,14 @@
+@import "~styles/imports";
+
+:host {
+  @extend %component-defaults;
+  display: flex;
+}
+
+.close {
+  float: right;
+}
+
+.location-title {
+  margin-left: 10px;
+}

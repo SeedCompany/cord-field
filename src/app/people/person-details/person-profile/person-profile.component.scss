@@ -8,12 +8,13 @@
 a {
   color: $seed-green;
   font-weight: 500;
+  cursor: pointer;
 }
 
-.section {
+mat-card-content {
   display: flex;
   flex-direction: column;
-  padding: 0px 0px 10px 50px;
+  margin-left: 50px;
 }
 
 .avatar {
@@ -21,15 +22,9 @@ a {
   width: 80px;
 }
 
-button {
-  width: max-content;
-}
-
-h6 {
-  color: $seed-gray;
+h4 {
+  color: $seed-text-gray;
   font-weight: 500;
-  font-size: 12px;
-  margin-bottom: 5px;
 }
 
 h2 {
@@ -40,4 +35,9 @@ ul {
   list-style: none;
   padding: 0;
   margin: 0;
+}
+
+button {
+  margin-top: 48px;
+  width: max-content;
 }

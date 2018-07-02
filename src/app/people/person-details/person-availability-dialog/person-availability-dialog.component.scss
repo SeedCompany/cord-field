@@ -1,0 +1,27 @@
+@import "~styles/imports";
+
+:host {
+  @extend %component-defaults;
+  display: flex;
+}
+
+.close {
+  float: right;
+}
+
+.gray-text {
+  color: $seed-text-gray;
+}
+
+mat-list-item {
+  div {
+    display: flex;
+    flex-direction: column;
+  }
+}
+
+h5 small span {
+  font-family: Roboto;
+}
+
+

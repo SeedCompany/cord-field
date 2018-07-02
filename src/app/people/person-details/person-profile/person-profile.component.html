@@ -1,48 +1,44 @@
 <mat-card class="profile">
   <mat-card-content>
-    <div class="section">
-      <app-avatar [src]="imgSrc"></app-avatar>
-      <h2>{{user?.fullName}}</h2>
+    <div>
+      <app-avatar></app-avatar>
+      <h2>{{ user.fullName }}</h2>
     </div>
-    <div class="section">
+    <div>
       <ul>
-        <li *ngFor="let role of user?.roles">
-          {{ ProjectRole.forUI(role?.role) }} - <a> {{ role?.locationIds.length }} Areas</a>
+        <li *ngFor="let role of user.roles; trackBy: trackValueBy">
+          {{ ProjectRole.forUI(role.role) }} -
+          <a (click)="showLocationsByRole(role)"> {{ role.locations.length }} Areas</a>
         </li>
       </ul>
     </div>
-    <div class="section">
-      <h6>Organizations</h6>
+    <div>
+      <h4>Organizations</h4>
       <ul>
-        <li>
-          <a>org1</a>
-        </li>
-        <li>
-          <a>org2</a>
+        <li *ngFor="let org of user.organizations; trackBy: trackValueBy">
+          <a (click)="showOrg(org)"> {{ org.name }} </a>
         </li>
       </ul>
     </div>
-    <div class="section">
-      <h6>Email</h6>
-      <a>{{ user?.email }}</a>
+    <div>
+      <h4>Email</h4>
+      <span>{{ user.email }}</span>
     </div>
-    <div class="section">
-      <h6>Phone</h6>
-      <span>{{ user?.phone }}</span>
+    <div>
+      <h4>Phone</h4>
+      <span>{{ user.phone }}</span>
     </div>
-    <div class="section">
-      <h6>Time Zone</h6>
-      <span>INDIA</span>
+    <div>
+      <h4>Time Zone</h4>
+      <span>{{ user.timeZone }}</span>
     </div>
-    <div class="section">
-      <h6>Status</h6>
+    <div>
+      <h4>Status</h4>
       <span>
-          <a> available </a>
+          <a (click)="showAvailability()">{{ user.available ? 'Available' : 'Unavailable' }}</a>
       </span>
     </div>
-    <div class="section">
-      <button mat-raised-button color="accent">EDIT PROFILE</button>
-    </div>
+    <button mat-raised-button color="accent" (click)="onEdit()" *ngIf="user.isSelf">EDIT PROFILE</button>
   </mat-card-content>
 </mat-card>
 

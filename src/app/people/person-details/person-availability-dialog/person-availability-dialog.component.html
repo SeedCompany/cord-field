@@ -1,0 +1,30 @@
+<div mat-dialog-title>
+  Availability
+  <button mat-icon-button (click)="onClose()" color="primary" class="close">
+    <mat-icon>close</mat-icon>
+  </button>
+</div>
+<div mat-dialog-content>
+  <h5>UPCOMING UNAVAILABLE DATES</h5>
+  <mat-list *ngIf="comingUnavailableDates.length > 0; else NoUpcomingUnavailableDates">
+    <mat-list-item *ngFor="let unavailability of comingUnavailableDates; trackBy: trackValueBy">
+      <div>
+        <small class="gray-text">{{ unavailability.description }}</small>
+        <span>{{ unavailability.start +'-'+ unavailability.end }}</span>
+      </div>
+    </mat-list-item>
+  </mat-list>
+  <ng-template #NoUpcomingUnavailableDates>
+    <span class="gray-text"> {{ data.fullName }} has no upcoming unavailable dates.</span>
+  </ng-template>
+  <h5>PAST UNAVAILABLE DATES</h5>
+  <mat-list *ngIf="pastUnavailableDates.length > 0; else NoPastUnavailableDates">
+    <mat-list-item *ngFor="let unavailability of pastUnavailableDates; trackBy: trackValueBy" class="list-item">
+      <small class="gray-text">{{ unavailability.description }}</small>
+      <span>{{ unavailability.start +'-'+ unavailability.end }}</span>
+    </mat-list-item>
+  </mat-list>
+  <ng-template #NoPastUnavailableDates>
+    <span class="gray-text"> {{ data.fullName }} has no past unavailable dates.</span>
+  </ng-template>
+</div>
