@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { DateTime } from 'luxon';
 import { Observable } from 'rxjs/Observable';
-import { AbstractViewState } from '../core/abstract-view-state';
+import { AbstractViewState, SaveResult } from '../core/abstract-view-state';
 import { accessDates, ChangeConfig, mapChangeList, returnId } from '../core/change-engine';
 import { Language } from '../core/models/language';
 import { Partnership, PartnershipForSaveAPI } from '../core/models/partnership';
@@ -72,8 +72,8 @@ export class ProjectViewStateService extends AbstractViewState<Project> {
       .subscribe(this.onLoad);
   }
 
-  protected async onSave(project: Project, changes: ModifiedProject): Promise<void> {
-    await this.projectService.save(project.id, changes);
+  protected onSave(project: Project, changes: ModifiedProject): Promise<SaveResult<Project>> {
+    return this.projectService.save(project.id, changes);
   }
 
   protected refresh(project: Project): void {

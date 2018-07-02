@@ -660,13 +660,18 @@ describe('ChangeEngine', () => {
       }
     });
 
-    expect(engine.getModified(subject)).toEqual({
+    // Assumed result from save API that contain IDs for new sub-objects.
+    const idsFromServer = {
+      languages: ['45']
+    };
+
+    expect(engine.getModified(subject, idsFromServer)).toEqual({
       mouStart: DateTime.local(2018, 1, 2),
       mouEnd: null,
       languages: [
         Language.fromJson({id: '1', name: 'good'}),
         Language.fromJson({id: '3'}),
-        Language.fromJson({id: '4'})
+        Language.fromJson({id: '45'})
       ]
     });
   });

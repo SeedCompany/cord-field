@@ -3,6 +3,7 @@ import { Injectable } from '@angular/core';
 import { SortDirection } from '@angular/material';
 import { Observable } from 'rxjs/Observable';
 import { ModifiedUser } from '../../people/user-view-state.service';
+import { SaveResult } from '../abstract-view-state';
 import { Project } from '../models/project';
 import { ProjectRole } from '../models/project-role';
 import { TeamMember } from '../models/team-member';
@@ -22,8 +23,8 @@ export class UserService {
       .map(UserProfile.fromJson);
   }
 
-  async save(id: string, changes: ModifiedUser): Promise<void> {
-    await this.plo.post(`/users/${id}/save`, changes).toPromise();
+  save(id: string, changes: ModifiedUser): Promise<SaveResult<UserProfile>> {
+    return this.plo.post<SaveResult<UserProfile>>(`/users/${id}/save`, changes).toPromise();
   }
 
   search(term: string): Promise<User[]> {

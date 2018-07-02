@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
-import { AbstractViewState } from '../core/abstract-view-state';
+import { AbstractViewState, SaveResult } from '../core/abstract-view-state';
 import { ChangeConfig, mapChangeList, returnId, returnSelf } from '../core/change-engine';
 import { Organization } from '../core/models/organization';
 import { ProjectRole } from '../core/models/project-role';
@@ -109,8 +109,8 @@ export class UserViewStateService extends AbstractViewState<UserProfile> {
       .subscribe(this.onLoad);
   }
 
-  protected async onSave(user: UserProfile, changes: any): Promise<void> {
-    await this.userService.save(user.id, changes);
+  protected onSave(user: UserProfile, changes: ModifiedUser): Promise<SaveResult<UserProfile>> {
+    return this.userService.save(user.id, changes);
   }
 
   protected refresh(user: UserProfile): void {

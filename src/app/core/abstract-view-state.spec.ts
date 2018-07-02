@@ -1,5 +1,5 @@
 import { Observable } from 'rxjs/Observable';
-import { AbstractViewState } from './abstract-view-state';
+import { AbstractViewState, SaveResult } from './abstract-view-state';
 import { returnSelf } from './change-engine';
 
 interface TestSubject {
@@ -42,12 +42,14 @@ class TestViewState extends AbstractViewState<TestSubject> {
       .subscribe(this.onLoad);
   }
 
-  public onSave(obj: TestSubject, changes: any): void {
+  async onSave(obj: TestSubject, changes: any): Promise<SaveResult<TestSubject>> {
     if (this.saveFails) {
       throw new Error('Failed');
     }
 
     this.saving = false;
+
+    return {};
   }
 
   public refresh(obj: TestSubject): void {}

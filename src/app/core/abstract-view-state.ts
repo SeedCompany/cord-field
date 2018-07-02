@@ -4,6 +4,8 @@ import { PartialObserver } from 'rxjs/src/Observer';
 import { Subject } from 'rxjs/Subject';
 import { ChangeConfig, ChangeEngine, Changes } from './change-engine';
 
+export type SaveResult<T> = {[key in keyof Partial<T>]: string[]};
+
 export abstract class AbstractViewState<T> {
 
   private readonly changeEngine: ChangeEngine<T>;
@@ -20,8 +22,9 @@ export abstract class AbstractViewState<T> {
    * Called when saving the model's changes.
    * @param {T} subject The current subject (no changes applied)
    * @param changes The changes to give to the server (based on config)
+   * @return lists of new IDs mapped to their keys
    */
-  protected abstract onSave(subject: T, changes: any): Promise<void> | void;
+  protected abstract onSave(subject: T, changes: any): Promise<SaveResult<T>>;
 
   /**
    * Called when the model needs to be refreshed from the server.
@@ -51,14 +54,16 @@ export abstract class AbstractViewState<T> {
 
   async save(): Promise<void> {
     this.submitting.next(true);
+
+    let result;
     try {
       const modified = this.changeEngine.getModifiedForServer();
-      await this.onSave(this._subject.value, modified);
+      result = await this.onSave(this._subject.value, modified);
     } finally {
       this.submitting.next(false);
     }
 
-    const next = this.changeEngine.getModified(this._subject.value);
+    const next = this.changeEngine.getModified(this._subject.value, result);
     const needsRefresh = this.changeEngine.needsRefresh;
 
     this.onNewSubject(next);

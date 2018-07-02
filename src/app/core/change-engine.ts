@@ -1,6 +1,7 @@
 import { DateTime } from 'luxon';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { Observable } from 'rxjs/Observable';
+import { SaveResult } from './abstract-view-state';
 import { clone, mapEntries } from './models/util';
 
 const isEqual = require('lodash.isequal');
@@ -160,7 +161,7 @@ export class ChangeEngine<T = any> {
     return modified;
   }
 
-  getModified(original: T): T {
+  getModified(original: T, newIds?: SaveResult<T>): T {
     const obj = clone(original) as {[key: string]: any};
 
     for (const [key, change] of Object.entries(this.modified) as Array<[keyof T, any]>) {
@@ -174,6 +175,12 @@ export class ChangeEngine<T = any> {
         obj[key] = (obj[key] as any[]).filter(current => !toRemove.includes(accessor(current)));
       }
       if ('add' in change) {
+        if (newIds && key in newIds) {
+          for (let i = 0; i < change.add.length; i++) {
+            change.add[i].id = newIds[key][i];
+          }
+        }
+
         obj[key] = (obj[key] as any[]).concat(change.add);
       }
       if ('update' in change) {

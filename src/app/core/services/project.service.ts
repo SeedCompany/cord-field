@@ -5,6 +5,7 @@ import { DateTime } from 'luxon';
 import { Observable } from 'rxjs/Observable';
 import { ProjectCreationResult } from '../../projects/project-create-dialog/project-create-dialog.component';
 import { ModifiedProject } from '../../projects/project-view-state.service';
+import { SaveResult } from '../abstract-view-state';
 import {
   Project,
   ProjectFilter,
@@ -109,7 +110,7 @@ export class ProjectService {
     return obj.id;
   }
 
-  async save(id: string, modified: ModifiedProject): Promise<void> {
-    await this.ploApi.put(`/projects/${id}/save`, modified).toPromise();
+  save(id: string, modified: ModifiedProject): Promise<SaveResult<Project>> {
+    return this.ploApi.put<SaveResult<Project>>(`/projects/${id}/save`, modified).toPromise();
   }
 }
