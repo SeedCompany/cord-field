@@ -20,4 +20,5 @@
 
 .none {
   color: mat-foreground($theme, disabled);
+  margin-left: 3px; // Match spacing for chip lists (defined in our global styles)
 }
