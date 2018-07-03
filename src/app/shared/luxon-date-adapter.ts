@@ -84,7 +84,7 @@ export class LuxonDateAdapter extends DateAdapter<DateTime> {
 
   createDate(year: number, month: number, date: number): DateTime {
     month += 1; // Luxon utc uses 1-12 for dates, but datepicker passes in 0-11.
-    return DateTime.utc(year, month, date);
+    return DateTime.local(year, month, date);
   }
 
   today(): DateTime {
