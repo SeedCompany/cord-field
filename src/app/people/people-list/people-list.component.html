@@ -19,14 +19,14 @@
         </mat-cell>
       </ng-container>
 
-      <ng-container matColumnDef="firstName">
+      <ng-container matColumnDef="displayFirstName">
         <mat-header-cell *matHeaderCellDef mat-sort-header>First Name</mat-header-cell>
         <mat-cell *matCellDef="let person" class="name">
           {{ person.displayFirstName }}
         </mat-cell>
       </ng-container>
 
-      <ng-container matColumnDef="lastName">
+      <ng-container matColumnDef="displayLastName">
         <mat-header-cell *matHeaderCellDef mat-sort-header>Last Name</mat-header-cell>
         <mat-cell *matCellDef="let person" class="name">{{ person.displayLastName }}
         </mat-cell>
