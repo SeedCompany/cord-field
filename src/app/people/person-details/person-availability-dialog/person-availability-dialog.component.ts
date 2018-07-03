@@ -21,10 +21,20 @@ export class PersonAvailabilityDialogComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.pastUnavailableDates = this.data.unavailabilities.filter(unavailability => this.pastDate(unavailability));
+    this.data.unavailabilities.forEach(unavailability => {
+      if (this.isPastDate(unavailability)) {
+        this.pastUnavailableDates.push(unavailability);
+      } else {
+        this.comingUnavailableDates.push(unavailability);
+      }
+    });
   }
 
-  pastDate(unavailability: Unavailability): boolean {
-    return true;
+  private isPastDate(unavailability: Unavailability): boolean {
+    const currentDate = new Date();
+    currentDate.setHours(0, 0, 0, 0);
+    const unavailabilityDate = unavailability.end.toJSDate();
+    unavailabilityDate.setHours(0, 0, 0, 0);
+    return currentDate.getTime() > unavailabilityDate.getTime();
   }
 }
