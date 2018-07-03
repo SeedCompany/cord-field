@@ -2,10 +2,12 @@ import { HttpResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { SortDirection } from '@angular/material';
 import { Observable } from 'rxjs/Observable';
+import { ModifiedUser } from '../../people/user-view-state.service';
+import { SaveResult } from '../abstract-view-state';
 import { Project } from '../models/project';
 import { ProjectRole } from '../models/project-role';
 import { TeamMember } from '../models/team-member';
-import { User, UserListItem, UsersWithTotal } from '../models/user';
+import { User, UserListItem, UserProfile, UsersWithTotal } from '../models/user';
 import { HttpParams } from './http/abstract-http-client';
 import { PloApiService } from './http/plo-api.service';
 
@@ -13,6 +15,16 @@ import { PloApiService } from './http/plo-api.service';
 export class UserService {
 
   constructor(private plo: PloApiService) {
+  }
+
+  getUser(id: string): Observable<UserProfile> {
+    return this.plo
+      .get(`/users/${id}`)
+      .map(UserProfile.fromJson);
+  }
+
+  save(id: string, changes: ModifiedUser): Promise<SaveResult<UserProfile>> {
+    return this.plo.post<SaveResult<UserProfile>>(`/users/${id}/save`, changes).toPromise();
   }
 
   search(term: string): Promise<User[]> {

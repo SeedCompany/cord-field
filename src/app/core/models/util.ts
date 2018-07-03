@@ -49,6 +49,15 @@ export function clone<T>(obj: T): T {
   return Object.assign(Object.create(Object.getPrototypeOf(obj)), obj);
 }
 
+export function generateObjectId(): string {
+  // tslint:disable:no-bitwise
+  const timestamp = (new Date().getTime() / 1000 | 0).toString(16);
+  return timestamp + 'xxxxxxxxxxxxxxxx'
+    .replace(/[x]/g, () => (Math.random() * 16 | 0).toString(16))
+    .toLowerCase();
+  // tslint:enable:no-bitwise
+}
+
 /**
  * A helper to filter objects by their key/values via a predicate function
  *
@@ -64,6 +73,24 @@ export function filterEntries<T>(obj: T, predicate: (key: keyof T, value: T[keyo
   }
 
   return filtered;
+}
+
+// Shortcut for a mapping of keys of object {T} to values {V}
+export type ObjMap<T, V> = {[key in keyof T]: V};
+
+/**
+ * A helper to map object values by their key/values via a mapper function
+ *
+ * mapEntries(obj, (key, value) => value + 1)
+ */
+export function mapEntries<T extends ObjMap<T, V>, V, U>(obj: T, mapper: (key: keyof T, value: V) => U): ObjMap<T, U> {
+  const mapped = {} as ObjMap<T, U>;
+
+  for (const [key, value] of Object.entries(obj) as Array<[keyof T, V]>) {
+    mapped[key] = mapper(key, value);
+  }
+
+  return mapped;
 }
 
 /**
