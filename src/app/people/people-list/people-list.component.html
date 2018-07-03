@@ -55,10 +55,12 @@
         </mat-cell>
       </ng-container>
 
-      <ng-container matColumnDef="organization">
-        <mat-header-cell *matHeaderCellDef mat-sort-header>Organization</mat-header-cell>
-        <mat-cell *matCellDef="let person" [class.none]="!person.organization">
-          {{ person.organization?.name || 'None' }}
+      <ng-container matColumnDef="organizations">
+        <mat-header-cell *matHeaderCellDef>Organization(s)</mat-header-cell>
+        <mat-cell *matCellDef="let person">
+          <app-collapsed-chip-list [list]="person.organizations">
+            <ng-template let-org>{{ org.name }}</ng-template>
+          </app-collapsed-chip-list>
         </mat-cell>
       </ng-container>
 

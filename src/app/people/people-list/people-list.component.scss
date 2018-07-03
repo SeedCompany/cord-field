@@ -72,10 +72,6 @@ mat-header-row {
   flex: 2;
 }
 
-.none {
-  color: mat-foreground($theme, disabled);
-}
-
 .status-circle {
   border-radius: 4px;
   height: 7px;
