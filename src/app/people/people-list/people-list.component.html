@@ -12,68 +12,60 @@
       <span class="spacer"></span>
     </mat-toolbar>
     <mat-table [dataSource]="peopleSource" matSort>
-    <ng-container matColumnDef="avatar">
-      <mat-header-cell *matHeaderCellDef></mat-header-cell>
-      <mat-cell *matCellDef="let person">
-        <app-avatar-letter color="accent">{{ person.displayFirstName.charAt(0) + person.displayLastName.charAt(0) }}</app-avatar-letter>
-      </mat-cell>
-    </ng-container>
+      <ng-container matColumnDef="avatar">
+        <mat-header-cell *matHeaderCellDef></mat-header-cell>
+        <mat-cell *matCellDef="let person">
+          <app-avatar-letter color="accent">{{ person.displayFirstName.charAt(0) + person.displayLastName.charAt(0) }}</app-avatar-letter>
+        </mat-cell>
+      </ng-container>
 
-    <ng-container matColumnDef="firstName">
-      <mat-header-cell *matHeaderCellDef mat-sort-header>First Name</mat-header-cell>
-      <mat-cell *matCellDef="let person" class="name">
-        {{ person.displayFirstName }}
-      </mat-cell>
-    </ng-container>
+      <ng-container matColumnDef="displayFirstName">
+        <mat-header-cell *matHeaderCellDef mat-sort-header>First Name</mat-header-cell>
+        <mat-cell *matCellDef="let person" class="name">
+          {{ person.displayFirstName }}
+        </mat-cell>
+      </ng-container>
 
-    <ng-container matColumnDef="lastName">
-      <mat-header-cell *matHeaderCellDef mat-sort-header>Last Name</mat-header-cell>
-      <mat-cell *matCellDef="let person" class="name">{{ person.displayLastName }}
-      </mat-cell>
-    </ng-container>
+      <ng-container matColumnDef="displayLastName">
+        <mat-header-cell *matHeaderCellDef mat-sort-header>Last Name</mat-header-cell>
+        <mat-cell *matCellDef="let person" class="name">{{ person.displayLastName }}
+        </mat-cell>
+      </ng-container>
+
       <ng-container matColumnDef="projectCount">
-        <mat-header-cell *matHeaderCellDef mat-sort-header>Total Projects</mat-header-cell>
+        <mat-header-cell *matHeaderCellDef>Total Projects</mat-header-cell>
         <mat-cell *matCellDef="let person">{{ person.projectCount }}
         </mat-cell>
       </ng-container>
 
-    <ng-container matColumnDef="roles">
-      <mat-header-cell *matHeaderCellDef>Role(s)</mat-header-cell>
-      <mat-cell *matCellDef="let person">
-        <mat-chip-list *ngIf="person.roles.length > 0">
-          <mat-chip>{{ ProjectRole.forUI(person.roles[0]) }} </mat-chip>
-          <ng-container *ngIf="person.roles.length > 1">
-            <mat-chip [matMenuTriggerFor]="peopleMenu" class="people-overflow-chip">
-              +{{ person.roles.length - 1 }}
-              <mat-icon>arrow_drop_down</mat-icon>
-            </mat-chip>
-            <mat-menu #peopleMenu="matMenu">
-              <button mat-menu-item *ngFor="let role of person.roles.slice(1); trackBy: ProjectRole.trackValueBy">
-                {{ ProjectRole.forUI(role) }}
-              </button>
-            </mat-menu>
-          </ng-container>
-        </mat-chip-list>
-        <span *ngIf="person.roles.length === 0" class="none">None</span>
-      </mat-cell>
-    </ng-container>
+      <ng-container matColumnDef="roles">
+        <mat-header-cell *matHeaderCellDef>Role(s)</mat-header-cell>
+        <mat-cell *matCellDef="let person">
+          <app-collapsed-chip-list [list]="person.roles">
+            <ng-template let-role>{{ ProjectRole.forUI(role) }}</ng-template>
+          </app-collapsed-chip-list>
+        </mat-cell>
+      </ng-container>
 
-      <ng-container matColumnDef="status">
+      <ng-container matColumnDef="isActive">
         <mat-header-cell *matHeaderCellDef mat-sort-header>Status</mat-header-cell>
         <mat-cell *matCellDef="let person">
           <span class="status-circle" [ngClass]="'status-' + (person.isActive ? 'active' : 'inactive')"></span>
           <span>{{ person.isActive ? 'Active' : 'Inactive' }}</span>
         </mat-cell>
       </ng-container>
-      <ng-container matColumnDef="organization">
-        <mat-header-cell *matHeaderCellDef mat-sort-header>Organization</mat-header-cell>
-        <mat-cell *matCellDef="let person" [class.none]="!person.organization">
-          {{ person.organization?.name || 'None' }}
+
+      <ng-container matColumnDef="organizations">
+        <mat-header-cell *matHeaderCellDef>Organization(s)</mat-header-cell>
+        <mat-cell *matCellDef="let person">
+          <app-collapsed-chip-list [list]="person.organizations">
+            <ng-template let-org>{{ org.name }}</ng-template>
+          </app-collapsed-chip-list>
         </mat-cell>
       </ng-container>
 
-    <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
-    <mat-row *matRowDef="let person; columns: displayedColumns;"></mat-row>
+      <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+      <mat-row *matRowDef="let person; columns: displayedColumns;"></mat-row>
     </mat-table>
     <mat-paginator [pageSizeOptions]="pageSizeOptions"
                    [length]="totalCount">

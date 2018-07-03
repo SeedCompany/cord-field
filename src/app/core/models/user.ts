@@ -52,7 +52,7 @@ export class User {
 export class UserListItem extends User {
   projectCount: number;
   roles: ProjectRole[];
-  organization: Organization | null;
+  organizations: Organization[];
   isActive: boolean;
 
   static fromJson(json: Partial<UserListItem>): UserListItem {
@@ -61,7 +61,7 @@ export class UserListItem extends User {
 
     obj.projectCount = json.projectCount || 0;
     obj.roles = json.roles || [];
-    obj.organization = json.organization ? Organization.fromJson(json.organization) : null;
+    obj.organizations = (json.organizations || []).map(Organization.fromJson);
     obj.isActive = json.isActive || false;
 
     return obj;
