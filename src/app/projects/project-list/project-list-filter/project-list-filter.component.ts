@@ -12,6 +12,7 @@ import {
   ProjectStatus,
   ProjectType
 } from '../../../core/models/project';
+import { User } from '../../../core/models/user';
 
 @Component({
   selector: 'app-project-list-filter',
@@ -28,6 +29,7 @@ export class ProjectListFilterComponent implements OnInit {
   form = this.formBuilder.group({
     languages: [[]],
     location: [[]],
+    team: [[]],
     status: [null],
     stage: [null],
     type: [null],
@@ -50,6 +52,10 @@ export class ProjectListFilterComponent implements OnInit {
 
   get locations(): AbstractControl {
     return this.form.get('location')!;
+  }
+
+  get users(): AbstractControl {
+    return this.form.get('team')!;
   }
 
   get dateRange(): AbstractControl {
@@ -110,10 +116,19 @@ export class ProjectListFilterComponent implements OnInit {
     this.locations.setValue((this.locations.value as Location[]).filter(loc => loc.id !== location.id));
   }
 
+  onUserSelected(user: User): void {
+    this.users.setValue([...this.users.value, user]);
+  }
+
+  onUserRemoved(user: User): void {
+    this.users.setValue((this.users.value as User[]).filter(u => u.id !== user.id));
+  }
+
   reset() {
     this.form.reset({
       languages: [],
-      location: []
+      location: [],
+      team: []
     });
   }
 }

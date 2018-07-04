@@ -4,6 +4,7 @@ import { Language } from './language';
 import { Location } from './location';
 import { Partnership } from './partnership';
 import { TeamMember } from './team-member';
+import { User } from './user';
 
 export enum ProjectType {
   Translation = 'translation',
@@ -160,6 +161,7 @@ export interface ProjectFilter {
   stage?: ProjectStage[];
   languages?: Language[];
   location?: Location[];
+  team?: User[];
   sensitivity?: ProjectSensitivity[];
   dateRange?: string;
   startDate?: DateTime;
