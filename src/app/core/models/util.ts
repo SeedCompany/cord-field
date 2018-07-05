@@ -93,6 +93,22 @@ export function mapEntries<T extends ObjMap<T, V>, V, U>(obj: T, mapper: (key: k
   return mapped;
 }
 
+export function sortBy<T>(iteratee: (item: T) => any, order: 'asc' | 'desc' = 'asc') {
+  return (a: T, b: T) => {
+    const sortA = iteratee(a);
+    const sortB = iteratee(b);
+
+    if (sortA < sortB) {
+      return order === 'asc' ? -1 : 1;
+    }
+    if (sortA > sortB) {
+      return order === 'asc' ? 1 : -1;
+    }
+
+    return 0;
+  };
+}
+
 /**
  * An RXJs pipeable operator that filters form values to only ones that are valid.
  */

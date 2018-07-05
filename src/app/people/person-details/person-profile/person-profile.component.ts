@@ -43,11 +43,7 @@ export class PersonProfileComponent implements OnInit, OnDestroy {
   }
 
   showAvailability(): void {
-    this.dialog.open(PersonAvailabilityDialogComponent, {
-      width: '400px',
-      autoFocus: false,
-      data: this.user
-    });
+    PersonAvailabilityDialogComponent.open(this.dialog, this.user);
   }
 
   showOrg(org: Organization): void {

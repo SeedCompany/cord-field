@@ -1,40 +1,40 @@
-import { Component, Inject, OnInit } from '@angular/core';
-import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material';
+import { Component, Inject } from '@angular/core';
+import { MAT_DIALOG_DATA, MatDialog } from '@angular/material';
+import { DateTime } from 'luxon';
 import { Unavailability, UserProfile } from '../../../core/models/user';
+import { sortBy } from '../../../core/models/util';
 
 @Component({
   selector: 'app-person-availability-dialog',
   templateUrl: './person-availability-dialog.component.html',
   styleUrls: ['./person-availability-dialog.component.scss']
 })
-export class PersonAvailabilityDialogComponent implements OnInit {
-  comingUnavailableDates: Unavailability[] = [];
-  pastUnavailableDates: Unavailability[] = [];
+export class PersonAvailabilityDialogComponent {
+  readonly format = DateTime.DATE_FULL;
 
-  constructor(private dialogRef: MatDialogRef<PersonAvailabilityDialogComponent>,
-              @Inject(MAT_DIALOG_DATA) private data: UserProfile) {
+  futureUnavailabilities: Unavailability[];
+  pastUnavailabilities: Unavailability[];
 
-  }
-
-  onClose(): void {
-    this.dialogRef.close();
-  }
-
-  ngOnInit() {
-    this.data.unavailabilities.forEach(unavailability => {
-      if (this.isPastDate(unavailability)) {
-        this.pastUnavailableDates.push(unavailability);
-      } else {
-        this.comingUnavailableDates.push(unavailability);
-      }
+  static open(dialog: MatDialog, user: UserProfile) {
+    return dialog.open(this, {
+      width: '40vw',
+      minWidth: '400px',
+      autoFocus: false,
+      data: user
     });
   }
 
-  private isPastDate(unavailability: Unavailability): boolean {
-    const currentDate = new Date();
-    currentDate.setHours(0, 0, 0, 0);
-    const unavailabilityDate = unavailability.end.toJSDate();
-    unavailabilityDate.setHours(0, 0, 0, 0);
-    return currentDate.getTime() > unavailabilityDate.getTime();
+  constructor(@Inject(MAT_DIALOG_DATA) private user: UserProfile) {
+    const today = DateTime.utc();
+    this.futureUnavailabilities = this.user.unavailabilities
+      .filter(u => u.range.isAfter(today))
+      .sort(sortBy(u => u.start));
+    this.pastUnavailabilities = this.user.unavailabilities
+      .filter(u => u.range.isBefore(today))
+      .sort(sortBy(u => u.start, 'desc'));
+  }
+
+  trackUnavailability(index: number, unavailability: Unavailability): string {
+    return unavailability.id;
   }
 }

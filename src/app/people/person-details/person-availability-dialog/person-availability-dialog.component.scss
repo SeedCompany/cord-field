@@ -2,26 +2,25 @@
 
 :host {
   @extend %component-defaults;
+}
+
+.mat-dialog-title {
+  // move button to right
   display: flex;
-}
+  justify-content: space-between;
 
-.close {
-  float: right;
-}
-
-.gray-text {
-  color: $seed-text-gray;
-}
-
-mat-list-item {
-  div {
-    display: flex;
-    flex-direction: column;
+  // fit button within title better - align with text and not increase size
+  button {
+    margin: -5px;
+    color: mat-foreground($theme, icon);
   }
 }
 
-h5 small span {
-  font-family: Roboto;
+// Display description above date range
+mat-list-item ::ng-deep.mat-list-text {
+  flex-direction: column-reverse !important;
 }
 
-
+.none {
+  color: mat-foreground($theme, disabled);
+}

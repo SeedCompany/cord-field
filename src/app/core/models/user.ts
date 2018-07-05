@@ -1,4 +1,4 @@
-import { DateTime } from 'luxon';
+import { DateTime, Interval } from 'luxon';
 import { buildEnum } from './enum';
 import { Language } from './language';
 import { Location } from './location';
@@ -208,8 +208,15 @@ export namespace Degree {
 export class Unavailability {
   readonly id: string;
   description: string;
-  start: DateTime;
-  end: DateTime;
+  range: Interval;
+
+  get start() {
+    return this.range.start;
+  }
+
+  get end() {
+    return this.range.end;
+  }
 
   static fromJson(json: Partial<Record<keyof Unavailability, any>>): Unavailability {
     const obj = new Unavailability();
@@ -217,8 +224,9 @@ export class Unavailability {
     // @ts-ignore readonly property
     obj.id = json.id;
     obj.description = json.description || '';
-    obj.start = json.start ? DateTime.fromISO(json.start) : DateTime.invalid('Missing');
-    obj.end = json.end ? DateTime.fromISO(json.end) : DateTime.invalid('Missing');
+    obj.range = json.start && json.end
+      ? Interval.fromDateTimes(DateTime.fromISO(json.start), DateTime.fromISO(json.end))
+      : Interval.invalid('Missing start or end');
 
     return obj;
   }

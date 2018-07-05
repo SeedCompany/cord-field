@@ -1,30 +1,20 @@
 <div mat-dialog-title>
-  Availability
-  <button mat-icon-button (click)="onClose()" color="primary" class="close">
+  <span>Availability</span>
+  <button mat-icon-button mat-dialog-close>
     <mat-icon>close</mat-icon>
   </button>
 </div>
-<div mat-dialog-content>
-  <h5>UPCOMING UNAVAILABLE DATES</h5>
-  <mat-list *ngIf="comingUnavailableDates.length > 0; else NoUpcomingUnavailableDates">
-    <mat-list-item *ngFor="let unavailability of comingUnavailableDates; trackBy: trackValueBy">
-      <div>
-        <small class="gray-text">{{ unavailability.description }}</small>
-        <span>{{ unavailability.start +'-'+ unavailability.end }}</span>
-      </div>
+<mat-list mat-dialog-content>
+  <ng-template #displayDates let-type="type" let-list="list">
+    <h3 mat-subheader>{{ type.toUpperCase() }} UNAVAILABLE DATES</h3>
+    <mat-list-item *ngFor="let unavailability of list; trackBy: trackUnavailability">
+      <h4 mat-line>{{ unavailability.start.toLocaleString(format) }} - {{ unavailability.end.toLocaleString(format) }}</h4>
+      <p mat-line>{{ unavailability.description }}</p>
     </mat-list-item>
-  </mat-list>
-  <ng-template #NoUpcomingUnavailableDates>
-    <span class="gray-text"> {{ data.fullName }} has no upcoming unavailable dates.</span>
-  </ng-template>
-  <h5>PAST UNAVAILABLE DATES</h5>
-  <mat-list *ngIf="pastUnavailableDates.length > 0; else NoPastUnavailableDates">
-    <mat-list-item *ngFor="let unavailability of pastUnavailableDates; trackBy: trackValueBy" class="list-item">
-      <small class="gray-text">{{ unavailability.description }}</small>
-      <span>{{ unavailability.start +'-'+ unavailability.end }}</span>
+    <mat-list-item *ngIf="list.length == 0" class="none">
+      {{ user.isSelf ? 'You have' : user.fullName + ' has' }} no {{ type }} unavailable dates.
     </mat-list-item>
-  </mat-list>
-  <ng-template #NoPastUnavailableDates>
-    <span class="gray-text"> {{ data.fullName }} has no past unavailable dates.</span>
   </ng-template>
-</div>
+  <ng-container *ngTemplateOutlet="displayDates; context: {type: 'upcoming', list: futureUnavailabilities}"></ng-container>
+  <ng-container *ngTemplateOutlet="displayDates; context: {type: 'past', list: pastUnavailabilities}"></ng-container>
+</mat-list>
