@@ -84,10 +84,9 @@
               (click)="onClearFilters()">
         <mat-icon>remove_circle</mat-icon>
       </button>
-      <button mat-icon-button
-              [color]="filtersActive ? 'accent' : 'primary'"
+      <button mat-icon-button color="primary"
               (click)="filterDrawer.toggle()">
-        <mat-icon>filter_list</mat-icon>
+        <mat-icon>close</mat-icon>
       </button>
     </mat-toolbar>
     <app-project-list-filter></app-project-list-filter>
