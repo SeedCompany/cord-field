@@ -1,4 +1,4 @@
-import { REDACTED } from './util';
+import { maybeRedacted, REDACTED } from './util';
 
 export class Language {
 
@@ -16,14 +16,14 @@ export class Language {
     const language = new Language();
 
     language.id = json.id;
-    language.name = json.name && json.name !== REDACTED ? json.name : null;
+    language.name = maybeRedacted(json.name);
     language.displayName = json.displayName;
     language.beginFiscalYear = json.beginFiscalYear;
-    language.ethnologueCode = json.ethnologueCode || null;
-    language.ethnologueName = json.ethnologueName || null;
-    language.ethnologuePopulation = json.ethnologuePopulation || null;
+    language.ethnologueCode = maybeRedacted(json.ethnologueCode);
+    language.ethnologueName = maybeRedacted(json.ethnologueName);
+    language.ethnologuePopulation = json.ethnologuePopulation && json.ethnologuePopulation !== REDACTED ? json.ethnologuePopulation : null;
     language.organizationPopulation = json.organizationPopulation || null;
-    language.rodNumber = json.rodNumber || null;
+    language.rodNumber = json.rodNumber && json.rodNumber !== REDACTED ? json.rodNumber : null;
 
     return language;
   }
