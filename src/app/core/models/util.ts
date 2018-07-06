@@ -58,6 +58,10 @@ export function generateObjectId(): string {
   // tslint:enable:no-bitwise
 }
 
+export function firstLettersOfWords(words: string): string {
+  return (words.match(/\b(\w)/g) || []).join('');
+}
+
 /**
  * A helper to filter objects by their key/values via a predicate function
  *

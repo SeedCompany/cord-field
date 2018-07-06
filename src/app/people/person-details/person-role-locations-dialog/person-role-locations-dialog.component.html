@@ -1,0 +1,13 @@
+<div mat-dialog-title>
+  {{ ProjectRole.forUI(role) }} Locations ({{ locations.length }})
+  <button mat-icon-button mat-dialog-close>
+    <mat-icon>close</mat-icon>
+  </button>
+</div>
+
+<mat-list mat-dialog-content>
+  <mat-list-item *ngFor="let location of locations; trackBy: trackLocation">
+    <app-avatar-letter mat-list-avatar color="accent">{{ location.avatarLetters }}</app-avatar-letter>
+    <span mat-line>{{ location.displayName }}</span>
+  </mat-list-item>
+</mat-list>

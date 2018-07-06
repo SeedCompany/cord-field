@@ -6,7 +6,7 @@ import { ProjectRole } from '../../../core/models/project-role';
 import { UserProfile, UserRole } from '../../../core/models/user';
 import { UserService } from '../../../core/services/user.service';
 import { PersonAvailabilityDialogComponent } from '../person-availability-dialog/person-availability-dialog.component';
-import { PersonLocationsByRoleDialogComponent } from '../person-locations-by-role-dialog/person-locations-by-role-dialog.component';
+import { PersonRoleLocationsDialogComponent } from '../person-role-locations-dialog/person-role-locations-dialog.component';
 
 @Component({
   selector: 'app-person-profile',
@@ -31,11 +31,7 @@ export class PersonProfileComponent implements OnInit, OnDestroy {
   }
 
   showLocationsByRole(userRole: UserRole): void {
-    this.dialog.open(PersonLocationsByRoleDialogComponent, {
-      width: '400px',
-      autoFocus: false,
-      data: userRole
-    });
+    PersonRoleLocationsDialogComponent.open(this.dialog, userRole);
   }
 
   onEdit(): void {
