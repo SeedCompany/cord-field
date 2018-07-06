@@ -1,4 +1,4 @@
-import { maybeRedacted, REDACTED } from './util';
+import { maybeRedacted } from './util';
 
 export class Language {
 
@@ -21,9 +21,9 @@ export class Language {
     language.beginFiscalYear = json.beginFiscalYear;
     language.ethnologueCode = maybeRedacted(json.ethnologueCode);
     language.ethnologueName = maybeRedacted(json.ethnologueName);
-    language.ethnologuePopulation = json.ethnologuePopulation && json.ethnologuePopulation !== REDACTED ? json.ethnologuePopulation : null;
+    language.ethnologuePopulation = maybeRedacted<number>(json.ethnologuePopulation);
     language.organizationPopulation = json.organizationPopulation || null;
-    language.rodNumber = json.rodNumber && json.rodNumber !== REDACTED ? json.rodNumber : null;
+    language.rodNumber = maybeRedacted<number>(json.rodNumber);
 
     return language;
   }
