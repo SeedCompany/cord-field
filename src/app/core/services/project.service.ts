@@ -3,9 +3,9 @@ import { Injectable } from '@angular/core';
 import { SortDirection } from '@angular/material';
 import { DateTime } from 'luxon';
 import { Observable } from 'rxjs/Observable';
-import { ProjectCreationResult } from '../../projects/project-create-dialog/project-create-dialog.component';
 import { ModifiedProject } from '../../projects/project-view-state.service';
 import { SaveResult } from '../abstract-view-state';
+import { ProjectCreationResult } from '../create-dialogs/project-create-dialog/project-create-dialog.component';
 import {
   Project,
   ProjectFilter,

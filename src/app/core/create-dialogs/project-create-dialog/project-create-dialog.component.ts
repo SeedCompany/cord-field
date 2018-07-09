@@ -3,8 +3,8 @@ import { Component, OnInit } from '@angular/core';
 import { AbstractControl, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatDialogRef, MatSnackBar, MatSnackBarRef, SimpleSnackBar } from '@angular/material';
 import { Router } from '@angular/router';
-import { ProjectType } from '../../core/models/project';
-import { ProjectService } from '../../core/services/project.service';
+import { ProjectType } from '../../models/project';
+import { ProjectService } from '../../services/project.service';
 
 export interface ProjectCreationResult {
   name: string;

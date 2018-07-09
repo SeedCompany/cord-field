@@ -9,6 +9,12 @@
     <a mat-button color="primary" routerLink="/languages" routerLinkActive="active">Languages</a>
     <a mat-button color="primary" routerLink="/people" routerLinkActive="active">People</a>
     <a mat-button color="primary" routerLink="/organizations" routerLinkActive="active">Organizations</a>
+    <button mat-icon-button color="accent" [matMenuTriggerFor]="addMenu">
+      <mat-icon>add_circle</mat-icon>
+    </button>
+    <mat-menu #addMenu="matMenu">
+      <button mat-menu-item (click)="onCreateProject()">Create Project</button>
+    </mat-menu>
 
     <span class="nav-spacer"></span>
 

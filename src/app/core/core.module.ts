@@ -1,6 +1,7 @@
 import { ModuleWithProviders, NgModule, Optional, SkipSelf } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { SharedModule } from '../shared/shared.module';
+import { ProjectCreateDialogComponent } from './create-dialogs/project-create-dialog/project-create-dialog.component';
 import { HeaderComponent } from './header/header.component';
 import { NotFoundPageComponent } from './not-found-page/not-found-page.component';
 import { AlreadyLoggedInGuard, AuthenticationGuard } from './route-guards/authentication-guard';
@@ -26,7 +27,8 @@ import { UserService } from './services/user.service';
   ],
   declarations: [
     HeaderComponent,
-    NotFoundPageComponent
+    NotFoundPageComponent,
+    ProjectCreateDialogComponent
   ],
   providers: [
     AlreadyLoggedInGuard,
@@ -45,6 +47,9 @@ import { UserService } from './services/user.service';
     ProjectService,
     SessionStorageService,
     UserService
+  ],
+  entryComponents: [
+    ProjectCreateDialogComponent
   ]
 })
 export class CoreModule {
