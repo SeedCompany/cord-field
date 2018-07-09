@@ -1,33 +1,30 @@
 @import "~styles/imports";
 
-a {
-  color: $seed-green;
-  font-weight: 500;
-  cursor: pointer;
+:host {
+  @extend %component-defaults;
 }
 
-mat-card-content {
-  display: flex;
-  flex-direction: column;
-  margin-left: 50px;
+.mat-caption {
+  color: mat-foreground($theme, secondary-text);
+  margin: 16px 0 0;
 }
 
-h4 {
-  color: $seed-text-gray;
-  font-weight: 500;
+.edu-separator {
+  color: mat-foreground($theme, disabled);
 }
 
-h2 {
-  font-weight: 400;
+p {
+  margin: 8px 0 0 16px;
+
+  & + & {
+    margin-bottom: 8px;
+  }
 }
 
-ul {
-  list-style: none;
-  padding: 0;
-  margin: 0;
+mat-chip-list {
+  margin: 8px 0 0 16px;
 }
 
-mat-card {
-  height: 100%;
-  width: 100%;
+button {
+  align-self: flex-start;
 }

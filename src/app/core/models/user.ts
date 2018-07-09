@@ -84,6 +84,7 @@ export class UserProfile extends User {
   phone: string | null;
   timeZone: string; // TODO what's easiest on FE?
   unavailabilities: Unavailability[];
+  picture: string | null;
 
   // about tab
   bio: string;
@@ -94,6 +95,8 @@ export class UserProfile extends User {
 
   // Authorization
   isSelf: boolean;
+
+  canEdit = true; // TODO with auth
 
   static fromJson(json: Partial<UserProfile>): UserProfile {
     const user = Object.assign(new UserProfile(), super.fromJson(json));
@@ -114,7 +117,12 @@ export class UserProfile extends User {
   }
 
   get available(): boolean {
-    return false; // TODO
+    if (this.unavailabilities.length === 0) {
+      return true;
+    }
+
+    const today = DateTime.utc();
+    return this.unavailabilities.some(u => !u.range.contains(today));
   }
 }
 
@@ -202,9 +210,9 @@ export namespace Degree {
   export const {entries, forUI, values, trackEntryBy, trackValueBy} = buildEnum(Degree, {
     [Degree.Primary]: 'Primary',
     [Degree.Secondary]: 'Secondary',
-    [Degree.Associates]: 'Associates',
-    [Degree.Bachelors]: 'Bachelors',
-    [Degree.Masters]: 'Masters',
+    [Degree.Associates]: 'Associate\'s',
+    [Degree.Bachelors]: 'Bachelor\'s',
+    [Degree.Masters]: 'Master\'s',
     [Degree.Doctorate]: 'Doctorate'
   });
 }

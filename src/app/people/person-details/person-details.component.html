@@ -1,4 +1,8 @@
-<div class="main-content">
-  <app-person-profile [user]="user" *ngIf="user"></app-person-profile>
+<mat-card class="sidebar">
+  <app-person-basic-info [user]="user" *ngIf="user"></app-person-basic-info>
+</mat-card>
+<mat-divider [vertical]="true"></mat-divider>
+<mat-card class="details">
   <app-person-about [user]="user" *ngIf="user"></app-person-about>
-</div>
+  <!-- app-person-projects -->
+</mat-card>

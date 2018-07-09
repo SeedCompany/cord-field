@@ -1,50 +1,52 @@
-<mat-card>
-  <mat-card-content>
-    <h2>About</h2>
-    <ng-template
-      *ngIf="user.bio || user.education.length > 0 || user.skills.length > 0 || user.customSkills.length > 0 ;
-       else NoUserAbout">
+<h1 class="mat-headline" *ngIf="hasData || user.canEdit">About</h1>
 
-      <div *ngIf="user.bio">
-        <h4>Bio</h4>
-        <p>{{ user.bio }}</p>
-      </div>
+<ng-container *ngIf="user.bio">
+  <h3 class="mat-caption">Bio</h3>
+  <p class="mat-body-1">{{ user.bio }}</p>
+</ng-container>
 
-      <div *ngIf="user.education.length > 0">
-        <h4>Education</h4>
-        <ul>
-          <li *ngFor="let edu of user.education; trackBy: trackValueBy">
-            <p><strong>{{ Degree.forUI(edu.degree) }}'s</strong>&nbsp;-&nbsp;{{ edu.institution }}</p>
-          </li>
-        </ul>
-      </div>
+<ng-container *ngIf="user.education.length > 0">
+  <h3 class="mat-caption">Education</h3>
+  <mat-list>
+    <mat-list-item *ngFor="let edu of user.education; trackBy: trackById">
+      <span mat-line>
+        {{ Degree.forUI(edu.degree) }}
+        <span class="edu-separator">-</span>
+        {{ edu.major }}
+      </span>
+      <span mat-line>{{ edu.institution }}</span>
+    </mat-list-item>
+  </mat-list>
+</ng-container>
 
-      <div *ngIf="user.skills.length > 0">
-        <h4>Skills</h4>
-        <mat-chip-list>
-          <mat-chip class="primary" *ngFor="let skill of user.skills; trackBy: trackValueBy">
-            {{ skill }}
-          </mat-chip>
-        </mat-chip-list>
-      </div>
+<ng-template #skills let-label="label" let-list="list">
+  <ng-container *ngIf="list.length > 0">
+    <h3 class="mat-caption">{{ label }}</h3>
+    <mat-chip-list>
+      <mat-chip *ngFor="let skill of list; trackBy: trackByValue">
+        {{ skill }}
+      </mat-chip>
+    </mat-chip-list>
+  </ng-container>
+</ng-template>
+<ng-container *ngTemplateOutlet="skills; context: {type: 'Skills', list: user.skills}"></ng-container>
+<ng-container *ngTemplateOutlet="skills; context: {type: 'Custom Skills', list: user.customSkills}"></ng-container>
 
-      <div *ngIf="user.customSkills.length > 0">
-        <h4>Custom Skills</h4>
-        <p>{{ customSkills }}</p>
-      </div>
+<ng-container *ngIf="user.knownLanguages.length > 0">
+  <h3 class="mat-caption">Languages</h3>
+  <mat-nav-list>
+    <a mat-list-item
+       *ngFor="let kl of user.knownLanguages; trackBy: trackById"
+       routerLink="/languages/{{ kl.language.id }}"
+    >
+      <span mat-line>{{ kl.language.displayName }}</span>
+      <span mat-line>{{ LanguageProficiency.forUI(kl.proficiency) }}</span>
+    </a>
+  </mat-nav-list>
+</ng-container>
 
-      <div>
-        <h4>Languages</h4>
-        <ul>
-          <li *ngFor="let language of user.knownLanguages; trackBy: trackValueBy">
-            <p><a>{{ language.language }}</a>&nbsp;-&nbsp;{{ LanguageProficiency.forUI(language.proficiency) }}</p>
-          </li>
-        </ul>
-      </div>
-
-    </ng-template>
-    <ng-template #NoUserAbout>
-      <a> Tell us more about {{ user.fullName }}</a>
-    </ng-template>
-  </mat-card-content>
-</mat-card>
+<button mat-button color="accent"
+        *ngIf="!hasData && user.canEdit"
+>
+  Tell us more about {{ user.isSelf ? 'yourself' : user.fullName }}
+</button>

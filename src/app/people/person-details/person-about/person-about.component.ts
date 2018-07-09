@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnChanges, SimpleChanges } from '@angular/core';
 import { ProjectRole } from '../../../core/models/project-role';
 import { Degree, LanguageProficiency, UserProfile } from '../../../core/models/user';
 
@@ -7,7 +7,7 @@ import { Degree, LanguageProficiency, UserProfile } from '../../../core/models/u
   templateUrl: './person-about.component.html',
   styleUrls: ['./person-about.component.scss']
 })
-export class PersonAboutComponent implements OnInit {
+export class PersonAboutComponent implements OnChanges {
 
   readonly Degree = Degree;
   readonly LanguageProficiency = LanguageProficiency;
@@ -15,14 +15,24 @@ export class PersonAboutComponent implements OnInit {
 
   @Input() user: UserProfile;
 
-  customSkills: string;
+  private hasData: boolean;
 
-  ngOnInit() {
-    this.customSkills = this.user.customSkills.length > 0 ? this.user.customSkills.join(',') : '';
-    this.user.bio = 'Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry\'s ' +
-      'standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a ' +
-      'type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remainin' +
-      'g essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsu' +
-      'm passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.';
+  ngOnChanges(changes: SimpleChanges): void {
+    const user: UserProfile = changes.user.currentValue;
+
+    this.hasData = user.bio.length > 0
+      || user.education.length > 0
+      || user.skills.length > 0
+      || user.customSkills.length > 0
+      || user.knownLanguages.length > 0
+    ;
+  }
+
+  trackById(index: number, value: {id: string}): string {
+    return value.id;
+  }
+
+  trackByValue(index: number, value: string): string {
+    return value;
   }
 }
