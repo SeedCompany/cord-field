@@ -46,18 +46,54 @@ body {
   }
 }
 
-// Provide room for clickable chips shadows
-.mat-chip:not(.mat-basic-chip) {
-  margin: 0 3px 6px !important;
-  & + & {
-    margin-left: 5px !important;
-  }
+// region Chips
 
-  // Keep chips centered vertically and text aligned inside of tables
-  .mat-cell & {
-    margin-top: 6px !important;
+// Ensure chip list doesn't get outlined when disabled chips are clicked
+.mat-chip-list {
+  outline: 0;
+}
+
+// Spread chips out evenly:
+// Library defaults margin on left, but this looks weird when flex wraps to second row - since the first chip on the
+// second row isn't aligned with the first chip on the first row.
+// We move it to the right instead, and remove it on the list item. However, this does leave a trailing margin when
+// there are multiple rows, but it is hard to notice that.
+// We also add margin to the bottom so there is space between rows. This extra margin from last row is removed in the wrapper.
+.mat-chip-list {
+  .mat-chip:not(.mat-basic-chip) {
+    &, & + .mat-chip:not(.mat-basic-chip) {
+      margin: 0 $mat-chips-space-between $mat-chips-space-between 0;
+    }
+    &:last-of-type {
+      margin-right: 0;
+    }
+  }
+  .mat-chip-list-wrapper {
+    // Does room need to be saved for chip shadow?
+    margin-bottom: -$mat-chips-space-between;
   }
 }
+
+// Fix chips inside of a table cell (we assume only one row is wanted)
+.mat-cell .mat-chip-list {
+  .mat-chip:not(.mat-basic-chip) {
+    // Left, right, and bottom margin are given here to provide room for the shadow because table cells hide overflow
+    // Top margin is to keep chip centered in table cell
+    &, & + .mat-chip:not(.mat-basic-chip) {
+      margin: 6px 3px;
+    }
+    // Sibling chips get an extra margin to keep 8px margin between chips
+    & + .mat-chip:not(.mat-basic-chip) {
+      margin-left: $mat-chips-space-between - 3px;
+    }
+  }
+  // Remove offset from default list. We are also assuming only one row inside of tables
+  .mat-chip-list-wrapper {
+    margin-bottom: 0;
+  }
+}
+
+// endregion
 
 // Change tab active text color to stand out more (matches focus)
 .mat-tab-link.mat-tab-label-active {
