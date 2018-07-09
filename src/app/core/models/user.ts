@@ -4,7 +4,7 @@ import { Language } from './language';
 import { Location } from './location';
 import { Organization } from './organization';
 import { ProjectRole } from './project-role';
-import { generateObjectId, maybeRedacted } from './util';
+import { firstLettersOfWords, generateObjectId, maybeRedacted } from './util';
 
 export interface IUserRequestAccess {
   email: string;
@@ -46,6 +46,10 @@ export class User {
 
   get fullName(): string {
     return `${this.firstName} ${this.lastName}`.trim();
+  }
+
+  get avatarLetters() {
+    return firstLettersOfWords(this.fullName);
   }
 }
 

@@ -8,7 +8,7 @@
       <ng-container matColumnDef="avatar">
         <mat-header-cell *matHeaderCellDef></mat-header-cell>
         <mat-cell *matCellDef="let person">
-          <app-avatar-letter color="accent">{{ person.displayFirstName.charAt(0) + person.displayLastName.charAt(0) }}
+          <app-avatar-letter color="accent">{{ person.avatarLetters }}
           </app-avatar-letter>
         </mat-cell>
       </ng-container>

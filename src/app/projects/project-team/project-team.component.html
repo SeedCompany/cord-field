@@ -13,7 +13,7 @@
   <ng-container matColumnDef="avatar">
     <mat-header-cell *matHeaderCellDef></mat-header-cell>
     <mat-cell *matCellDef="let member">
-      <app-avatar-letter color="accent">{{ member.firstName.charAt(0) + member.lastName.charAt(0) }}</app-avatar-letter>
+      <app-avatar-letter color="accent">{{ member.avatarLetters }}</app-avatar-letter>
     </mat-cell>
   </ng-container>
 
