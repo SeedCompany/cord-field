@@ -48,7 +48,14 @@ export class AuthenticationStorageService {
       return null;
     }
 
-    tokens = tokens.map(AuthenticationToken.fromJson);
+    try {
+      tokens = tokens.map(AuthenticationToken.fromJson);
+    } catch (e) {
+      this.log.warn('Error unserializing authentications tokens from store');
+      await this.clearTokens();
+      return null;
+    }
+
     this.tokens = tokens;
 
     return tokens;
