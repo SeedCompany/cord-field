@@ -1,4 +1,4 @@
 <div class="main-content">
-  <app-person-profile></app-person-profile>
-  <app-person-about></app-person-about>
+  <app-person-profile [user]="user" *ngIf="user"></app-person-profile>
+  <app-person-about [user]="user" *ngIf="user"></app-person-about>
 </div>

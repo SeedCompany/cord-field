@@ -1,28 +1,39 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { Subscription } from 'rxjs/Subscription';
-import { UserService } from '../../core/services/user.service';
+import { Subject } from 'rxjs/Subject';
+import { UserProfile } from '../../core/models/user';
+import { UserViewStateService } from '../user-view-state.service';
 
 @Component({
   selector: 'app-person-details',
   templateUrl: './person-details.component.html',
-  styleUrls: ['./person-details.component.scss']
+  styleUrls: ['./person-details.component.scss'],
+  providers: [
+    UserViewStateService
+  ]
 })
 export class PersonDetailsComponent implements OnInit, OnDestroy {
-  idSub: Subscription = Subscription.EMPTY;
+  private unsubscribe = new Subject<void>();
+
+  user: UserProfile;
 
   constructor(private route: ActivatedRoute,
-              private userService: UserService) {
+              private userViewState: UserViewStateService) {
   }
 
   async ngOnInit() {
-    this.idSub = this.route.params.subscribe(params => {
-      this.userService.getUserProfile(params.id);
-    });
+    this.route.params
+      .takeUntil(this.unsubscribe)
+      .subscribe(params => {
+        this.userViewState.next(params.id);
+      });
+    this.userViewState.user
+      .takeUntil(this.unsubscribe)
+      .subscribe(u => this.user = u);
   }
 
   ngOnDestroy() {
-    this.idSub.unsubscribe();
+    this.unsubscribe.next();
+    this.unsubscribe.complete();
   }
-
 }

@@ -100,7 +100,7 @@ export class UserViewStateService extends AbstractViewState<UserProfile> {
     super(config, UserProfile.fromJson({}));
   }
 
-  get profile(): Observable<UserProfile> {
+  get user(): Observable<UserProfile> {
     return this.subject;
   }
 

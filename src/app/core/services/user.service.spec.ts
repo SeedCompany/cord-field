@@ -87,8 +87,8 @@ describe('UserService', () => {
     const userId = 'iBFFFGvBVlIpvsKVanrbIYVBaPwkDnhjjb0.n_cPm_zyG_7D7WWLDT7ozQ.zfUnrX9tXoPtWtDc9PLhUw';
     const user = {id: userId};
     userService
-      .getUserProfile(userId)
-      .then((userProfile: UserProfile) => {
+      .getUser(userId)
+      .subscribe((userProfile: UserProfile) => {
         expect(userProfile.id).toBeDefined();
         expect(Array.isArray(userProfile.roles)).toBeTruthy();
         done();
