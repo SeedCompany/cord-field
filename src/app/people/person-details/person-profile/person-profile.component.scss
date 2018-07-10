@@ -18,8 +18,7 @@ mat-card-content {
 }
 
 .avatar {
-  height: 80px;
-  width: 80px;
+  @include avatar(150px);
 }
 
 h4 {

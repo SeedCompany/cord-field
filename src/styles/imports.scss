@@ -9,6 +9,15 @@
   flex-direction: column;
 }
 
+@mixin avatar($size: 0) {
+  border-radius: 50%;
+  flex-shrink: 0;
+  @if ($size > 0) {
+    width: $size;
+    height: $size;
+  }
+}
+
 @function mat-foreground($theme, $item) {
   $foreground-items: (// Just for easy IDE help - "Quick Definition"
     base:              black,
