@@ -1,13 +1,10 @@
 import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
 import { inject, TestBed } from '@angular/core/testing';
-import { environment } from '../../../environments/environment';
 import { CoreModule } from '../core.module';
 import { AuthenticationService } from './authentication.service';
 
 let httpMockService: HttpTestingController;
 let authService: AuthenticationService;
-
-const testBaseUrl = environment.services['profile.illuminations.bible'];
 
 const testUser = {
   email: 'gowtham@olivetech.net',

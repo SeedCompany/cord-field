@@ -14,7 +14,6 @@ export const environment = {
   },
   services: {
     'domain': 'field',
-    'profile.illuminations.bible': 'https://cord-profile-sqa.ci.olivetech.com/api',
     'plo.cord.bible': 'https://cord-plo-sqa.ci.olivetech.com/api'
   }
 };

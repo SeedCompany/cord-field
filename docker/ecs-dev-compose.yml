@@ -27,14 +27,3 @@ services:
       DUMP_CONFIG: "true"
       DOMO: "true"
     mem_limit: 512000000
-
-  profile-service:
-    image: 103805181946.dkr.ecr.us-west-2.amazonaws.com/client/tsco-ilb-profile:latest
-    ports: [ "8001" ]
-    environment:
-      MONGO_DB_CONN: mongodb://cord-dev-profile:J0c%24o8%40%26Y3IW5c9nu%5Ed%40@mongo-a.dev.olivetech.internal,mongo-b.dev.olivetech.internal,mongo-c.dev.olivetech.internal/cord-dev-profile?replicaSet=dev
-      NODE_ENV: cord-dev
-      ECHO_ENABLED: "true"
-      BOOTSTRAP: "qa"
-      SERVICE_8001_NAME: client-tsco-cord-profile-dev
-    mem_limit: 256000000
