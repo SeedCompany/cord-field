@@ -10,7 +10,6 @@ services:
       - ../testResults:/opt/build/testResults
     links: # services must be linked to or they will not start during testing
       - cord-api-plo
-      - profile-service
 
   cord-api-plo:
     image: 103805181946.dkr.ecr.us-west-2.amazonaws.com/client/cord-api-plo:latest
@@ -31,25 +30,6 @@ services:
       TRACE_REQ: "true"
       DUMP_CONFIG: "true"
       DEBUG: "sapi:*,plo:*"
-    networks:
-      - cord-net
-
-  profile-service:
-    image: 103805181946.dkr.ecr.us-west-2.amazonaws.com/client/tsco-ilb-profile:latest
-    links:
-      - mongo-profile
-    environment:
-      MONGO_DB_ADDRESS: mongo-profile
-      MONGO_DB_PORT: 27017
-      NODE_ENV: docker
-      ECHO_ENABLED: "true"
-      BOOTSTRAP: "qa"
-      TRACE_REQ: "true"
-    networks:
-      - cord-net
-
-  mongo-profile:
-    image: mongo:4.0
     networks:
       - cord-net
 
