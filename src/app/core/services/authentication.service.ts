@@ -7,7 +7,7 @@ import { Subject } from 'rxjs/Subject';
 import { AuthenticationToken } from '../models/authentication-token';
 import { IUserRequestAccess, User } from '../models/user';
 import { AuthenticationStorageService } from './authentication-storage.service';
-import { ProfileApiService } from './http/profile-api.service';
+import { PloApiService } from './http/plo-api.service';
 import { SessionStorageService } from './storage.service';
 
 const DOMAIN = 'field';
@@ -54,7 +54,7 @@ export class AuthenticationService {
       : null;
   }
 
-  constructor(private api: ProfileApiService,
+  constructor(private api: PloApiService,
               private authStorage: AuthenticationStorageService,
               private sessionStorage: SessionStorageService) {
   }
@@ -89,11 +89,11 @@ export class AuthenticationService {
 
   private getErrorMessage(response: HttpErrorResponse): string {
     switch (response.error.error) {
-      case 'INVALID_PASSWORD':
+      case 'invalid_password':
         return 'Your password is too simple or is a known, commonly used password.' +
           'Strong passwords are generally longer; incorporate a mixture of letters, numbers & special characters;' +
           '& avoid common words. Please enter a new password.';
-      case 'INVALID_ORGANIZATION':
+      case 'invalid_organization':
         return 'Your account request cannot be completed because the organization you provided is not valid.' +
           ' Please try again or contact Field Support Services for assistance.';
       case 'login_failed':
@@ -101,10 +101,10 @@ export class AuthenticationService {
       case 'email_validation_required':
         return 'Sorry, our system does not have any account with the credentials you provided. If you already created an account, ' +
           'please verify it by clicking on the link provided in the email you should have received.';
-      case 'ACCOUNT_NOT_APPROVED':
+      case 'account_not_approved':
         return 'Your account is not approved yet. Please try again or contact Field Support Services for assistance.';
-      case 'SERVER_ERROR':
-        return 'SERVER_ERROR';
+      case 'server_error':
+        return 'server_error';
       case 'bad_request':
         return 'Oh noooooooo! Something went terribly wrong, Please try again later. ' +
           'If the problem continues, please contact Cord Field Support Services.';

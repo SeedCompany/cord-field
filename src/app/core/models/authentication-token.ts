@@ -31,8 +31,8 @@ export class AuthenticationToken {
     const user = User.fromJson({
       id: json.id,
       email: json.email,
-      displayFirstName: json.firstName,
-      displayLastName: json.lastName
+      displayFirstName: json.dfn,
+      displayLastName: json.dln
     });
 
     return new AuthenticationToken(

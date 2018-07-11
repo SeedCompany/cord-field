@@ -6,7 +6,7 @@ import { environment } from '../../../../environments/environment';
 import { CoreModule } from '../../core.module';
 import { AuthenticationStorageService } from '../authentication-storage.service';
 import { BaseApiService } from './base-api';
-import { SERVICE_AUDIENCE } from './profile-api.service';
+import { SERVICE_AUDIENCE } from './plo-api.service';
 
 describe('BaseApiService', () => {
   let request: HttpTestingController;
@@ -45,7 +45,7 @@ describe('BaseApiService', () => {
       .subscribe(done, done.fail);
 
     request
-      .expectOne(`${environment.services['profile.illuminations.bible']}/test`)
+      .expectOne(`${environment.services[SERVICE_AUDIENCE]}/test`)
       .flush({});
   });
 });
