@@ -12,8 +12,8 @@ export async function saveTestCredentials(storageService: AuthenticationStorageS
      * will cause your tests to fail. If the private key is updated, resign these tokens at jwt.io with the
      * test private key (never use a production key on a third-party site), and paste the new values back here.
      */
-    'token': {
-      'plo.cord.bible': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImpwQG9saXZldGVjaC5jb20iLCJkb21haW4iOiJmaWVsZCIsImZpcnN0TmFtZSI6IkouUC4iLCJsYXN0TmFtZSI6IlBvdmVkYSIsImlkIjoiNWFlNzkwNzhlNGE2YjMwMDAxYzNlMTM2IiwiaXNzU2lnIjoiZDU3NTJhM2JjODlmNjk1NTYyZjk3MzA0MDgwZGMzOGYxNTc1MTI2NGUzNWI1YWJmYzZkNjExNjI5MjNhYzNiMSIsImlhdCI6MTUyNTIyNDU2MCwiZXhwIjo0NjgwOTAwNjYwLCJhdWQiOiJwbG8uY29yZC5iaWJsZSIsImlzcyI6InByb2ZpbGUuaWxsdW1pbmF0aW9ucy5iaWJsZSIsImp0aSI6IjkwYzY1MzY3LWMzNzEtNDRlMS04OWU0LWJlY2EwNTEzODI0YSJ9.WfJCRsn_A50pNpAz-_pYaha4Xor498JWDtI04kTiU7E'
+    token: {
+      'plo.cord.bible': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImNhcnNvbl9mdWxsQHRzY28ub3JnIiwiZG9tYWluIjoiZmllbGQiLCJkZm4iOiJDYXJzb24iLCJkbG4iOiJGdWxsIiwiaWQiOiI1YjQ1YWFmMDAwMDAwMDAwMDAwMDAwMDAiLCJpYXQiOjE1MjUyMjQ1NjAsImV4cCI6NDY4MDkwMDY2MCwiYXVkIjoicGxvLmNvcmQuYmlibGUiLCJpc3MiOiJwbG8uY29yZC5iaWJsZSIsImp0aSI6IjkwYzY1MzY3LWMzNzEtNDRlMS04OWU0LWJlY2EwNTEzODI0YSJ9.1ICvzmt0ylH-uc-589txB-nY7Xoy2vjWzhYtFIfFmRM'
     }
   });
   // tslint:enable:max-line-length
