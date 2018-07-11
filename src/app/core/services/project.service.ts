@@ -24,6 +24,7 @@ export interface ProjectFilterAPI {
   stage?: ProjectStage[];
   languages?: string[];
   locationId?: string[];
+  team?: string[];
   sensitivity?: ProjectSensitivity[];
   createdAt?: {gte?: DateTime, lte?: DateTime};
   updatedAt?: {gte?: DateTime, lte?: DateTime};
@@ -79,6 +80,7 @@ export class ProjectService {
 
     const languages = rest.languages ? rest.languages.map(l => l.id) : undefined;
     const locationId = rest.location ? rest.location.map(l => l.id) : undefined;
+    const team = rest.team ? rest.team.map(member => member.id) : undefined;
 
     const date = dateRange && (startDate || endDate)
       ? {[dateRange]: {
@@ -87,7 +89,7 @@ export class ProjectService {
         }}
       : undefined;
 
-    return {...rest, languages, locationId, ...date} as ProjectFilterAPI;
+    return {...rest, languages, locationId, team, ...date} as ProjectFilterAPI;
   }
 
   isProjectNameTaken(name: string): Promise<boolean> {

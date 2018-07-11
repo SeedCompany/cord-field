@@ -15,6 +15,15 @@
   >
   </app-autocomplete-location>
 
+  <app-autocomplete-user
+    [chips]="true"
+    [list]="users.value"
+    placeholder="Team Members"
+    (optionSelected)="onUserSelected($event)"
+    (removed)="onUserRemoved($event)"
+  >
+  </app-autocomplete-user>
+
   <mat-form-field color="accent">
     <mat-select formControlName="status" placeholder="Status" multiple>
       <mat-option *ngFor="let status of ProjectStatus.entries(); trackBy: ProjectStatus.trackEntryBy"
