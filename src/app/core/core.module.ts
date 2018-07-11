@@ -11,7 +11,6 @@ import { GoogleAnalyticsService } from './services/google-analytics.service';
 import { AuthInterceptor } from './services/http/auth-interceptor';
 import { ErrorInterceptor } from './services/http/error-interceptor';
 import { PloApiService } from './services/http/plo-api.service';
-import { ProfileApiService } from './services/http/profile-api.service';
 import { LanguageService } from './services/language.service';
 import { LocationService } from './services/location.service';
 import { LoggerService } from './services/logger.service';
@@ -44,7 +43,6 @@ import { UserService } from './services/user.service';
     OrganizationService,
     PloApiService,
     ProjectService,
-    ProfileApiService,
     SessionStorageService,
     UserService
   ]
