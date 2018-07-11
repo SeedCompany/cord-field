@@ -13,7 +13,7 @@ export async function saveTestCredentials(storageService: AuthenticationStorageS
      * test private key (never use a production key on a third-party site), and paste the new values back here.
      */
     token: {
-      'plo.cord.bible': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImNhcnNvbl9mdWxsQHRzY28ub3JnIiwiZG9tYWluIjoiZmllbGQiLCJkZm4iOiJDYXJzb24iLCJkbG4iOiJGdWxsIiwiaWQiOiI1YjQ1YWFmMDAwMDAwMDAwMDAwMDAwMDAiLCJpYXQiOjE1MjUyMjQ1NjAsImV4cCI6NDY4MDkwMDY2MCwiYXVkIjoicGxvLmNvcmQuYmlibGUiLCJpc3MiOiJwbG8uY29yZC5iaWJsZSIsImp0aSI6IjkwYzY1MzY3LWMzNzEtNDRlMS04OWU0LWJlY2EwNTEzODI0YSJ9.1ICvzmt0ylH-uc-589txB-nY7Xoy2vjWzhYtFIfFmRM'
+      'plo.cord.bible': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImNhcnNvbl9mdWxsQHRzY28ub3JnIiwiZG9tYWluIjoiZmllbGQiLCJkZm4iOiJDYXJzb24iLCJkbG4iOiJGdWxsIiwiaWQiOiI1YjQ1YWFmMDAwMDAwMDAwMDAwMDAwMDAiLCJpc3NTaWciOiJkNTc1MmEzYmM4OWY2OTU1NjJmOTczMDQwODBkYzM4ZjE1NzUxMjY0ZTM1YjVhYmZjNmQ2MTE2MjkyM2FjM2IxIiwiaWF0IjoxNTI1MjI0NTYwLCJleHAiOjQ2ODA5MDA2NjAsImF1ZCI6InBsby5jb3JkLmJpYmxlIiwiaXNzIjoicGxvLmNvcmQuYmlibGUiLCJqdGkiOiI5MGM2NTM2Ny1jMzcxLTQ0ZTEtODllNC1iZWNhMDUxMzgyNGEifQ.dFLJaDkyaUO_ABp7_rBzTBMxJHKLzNNVoAGPCOGjUz0'
     }
   });
   // tslint:enable:max-line-length
