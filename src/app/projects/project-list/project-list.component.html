@@ -1,14 +1,7 @@
-<mat-toolbar class="header">
-  <span class="spacer"></span>
-  <button mat-fab class="add-button">
-    <mat-icon aria-label="create new project">add</mat-icon>
-  </button>
-</mat-toolbar>
-
 <mat-drawer-container autosize>
 
   <mat-drawer-content>
-    <mat-toolbar class="toolbar">
+    <mat-toolbar>
       <button mat-button class="project-menu-button" color="primary" [matMenuTriggerFor]="projectMenu">
         {{ listSelector.value.label }}
         <mat-icon>arrow_drop_down</mat-icon>
@@ -76,7 +69,7 @@
   </mat-drawer-content>
 
   <mat-drawer mode="side" position="end" #filterDrawer>
-    <mat-toolbar class="toolbar">
+    <mat-toolbar>
       Filter
       <div class="spacer"></div>
       <button mat-icon-button color="primary"
