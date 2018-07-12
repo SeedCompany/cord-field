@@ -1,7 +1,8 @@
 import { Component, OnInit } from '@angular/core';
-import { MatIconRegistry } from '@angular/material';
+import { MatDialog, MatIconRegistry } from '@angular/material';
 import { DomSanitizer } from '@angular/platform-browser';
 import { Router } from '@angular/router';
+import { ProjectCreateDialogComponent } from '../create-dialogs/project-create-dialog/project-create-dialog.component';
 import { User } from '../models/user';
 import { AuthenticationService } from '../services/authentication.service';
 
@@ -15,6 +16,7 @@ export class HeaderComponent implements OnInit {
 
   constructor(private auth: AuthenticationService,
               private router: Router,
+              private dialog: MatDialog,
               iconRegistry: MatIconRegistry, sanitizer: DomSanitizer) {
     iconRegistry.addSvgIcon('cord', sanitizer.bypassSecurityTrustResourceUrl('assets/images/cord-icon.svg'));
   }
@@ -26,5 +28,11 @@ export class HeaderComponent implements OnInit {
 
   async ngOnInit() {
     this.currentUser = await this.auth.getCurrentUser();
+  }
+
+  onCreateProject(): void {
+    this.dialog.open(ProjectCreateDialogComponent, {
+      width: '400px'
+    });
   }
 }

@@ -1,7 +1,6 @@
 import { NgModule } from '@angular/core';
 import { SharedModule } from '../shared/shared.module';
 import { ProjectBudgetComponent } from './project-budget/project-budget.component';
-import { ProjectCreateDialogComponent } from './project-create-dialog/project-create-dialog.component';
 import { ProjectEngagementDetailsComponent } from './project-engagement-details/project-engagement-details.component';
 import { ProjectFilesComponent } from './project-files/project-files.component';
 import { ProjectFormsComponent } from './project-forms/project-forms.component';
@@ -28,7 +27,6 @@ import { ProjectsRoutingModule } from './projects-routing.module';
   declarations: [
     ProjectBudgetComponent,
     ProjectComponent,
-    ProjectCreateDialogComponent,
     ProjectEngagementDetailsComponent,
     ProjectFilesComponent,
     ProjectFormsComponent,
@@ -47,7 +45,6 @@ import { ProjectsRoutingModule } from './projects-routing.module';
     ProjectLocationTimeframeComponent
   ],
   entryComponents: [
-    ProjectCreateDialogComponent,
     ProjectTeamMemberAddComponent,
     ProjectTeamMemberRoleDialogComponent
   ]

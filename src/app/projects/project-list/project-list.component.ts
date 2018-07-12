@@ -1,11 +1,10 @@
 import { animate, state, style, transition, trigger } from '@angular/animations';
 import { AfterViewInit, Component, ViewChild } from '@angular/core';
-import { MatDialog, MatPaginator, MatSort, MatTableDataSource, PageEvent, Sort } from '@angular/material';
+import { MatPaginator, MatSort, MatTableDataSource, PageEvent, Sort } from '@angular/material';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { Observable } from 'rxjs/Observable';
 import { Project, ProjectFilter, ProjectStatus, ProjectsWithCount, ProjectType } from '../../core/models/project';
 import { ProjectService } from '../../core/services/project.service';
-import { ProjectCreateDialogComponent } from '../project-create-dialog/project-create-dialog.component';
 import { ProjectListFilterComponent } from './project-list-filter/project-list-filter.component';
 
 interface ListOption {
@@ -46,8 +45,7 @@ export class ProjectListComponent implements AfterViewInit {
   @ViewChild(MatSort) sort: MatSort;
   @ViewChild(ProjectListFilterComponent) filtersComponent: ProjectListFilterComponent;
 
-  constructor(private dialog: MatDialog,
-              private projectService: ProjectService) {
+  constructor(private projectService: ProjectService) {
     this.listSelector = new BehaviorSubject(this.listSelectorOptions[0]);
   }
 
@@ -83,12 +81,6 @@ export class ProjectListComponent implements AfterViewInit {
 
   onClearFilters() {
     this.filtersComponent.reset();
-  }
-
-  openDialog(): void {
-    this.dialog.open(ProjectCreateDialogComponent, {
-      width: '400px'
-    });
   }
 
   trackByValue(index: number, value: any) {

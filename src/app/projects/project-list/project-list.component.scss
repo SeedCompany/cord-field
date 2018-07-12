@@ -6,17 +6,6 @@
   flex: 1;
 }
 
-.header {
-  @include mat-elevation(4);
-  z-index: 2;
-}
-
-.add-button {
-  // The top of fab button starts half way down the height of the parent element
-  // 49% aligns better than 50% as long as the element's height is < 150px which should mostly be the case for toolbars.
-  top: 49%;
-}
-
 mat-drawer-container {
   flex: 1;
 }
@@ -36,10 +25,8 @@ mat-drawer-content {
   overflow-x: hidden; // Hide filter button pushed off to the right
 }
 
-.toolbar {
+mat-toolbar {
   background: mat-background($theme, card);
-  padding-top: ($mat-fab-height / 2);
-  min-height: $mat-toolbar-height + $mat-fab-height / 2;
 
   .project-menu-button {
     padding-right: 8px;

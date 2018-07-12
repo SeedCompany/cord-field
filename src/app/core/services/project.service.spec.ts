@@ -1,8 +1,8 @@
 import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
 import { inject, TestBed } from '@angular/core/testing';
 import { environment } from '../../../environments/environment';
-import { ProjectCreationResult } from '../../projects/project-create-dialog/project-create-dialog.component';
 import { CoreModule } from '../core.module';
+import { ProjectCreationResult } from '../create-dialogs/project-create-dialog/project-create-dialog.component';
 import { Project, ProjectStatus, ProjectType } from '../models/project';
 import { ProjectService } from './project.service';
 
