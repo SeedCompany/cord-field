@@ -58,6 +58,10 @@ export function generateObjectId(): string {
   // tslint:enable:no-bitwise
 }
 
+export function firstLettersOfWords(words: string): string {
+  return (words.match(/\b(\w)/g) || []).join('');
+}
+
 /**
  * A helper to filter objects by their key/values via a predicate function
  *
@@ -91,6 +95,22 @@ export function mapEntries<T extends ObjMap<T, V>, V, U>(obj: T, mapper: (key: k
   }
 
   return mapped;
+}
+
+export function sortBy<T>(iteratee: (item: T) => any, order: 'asc' | 'desc' = 'asc') {
+  return (a: T, b: T) => {
+    const sortA = iteratee(a);
+    const sortB = iteratee(b);
+
+    if (sortA < sortB) {
+      return order === 'asc' ? -1 : 1;
+    }
+    if (sortA > sortB) {
+      return order === 'asc' ? 1 : -1;
+    }
+
+    return 0;
+  };
 }
 
 /**

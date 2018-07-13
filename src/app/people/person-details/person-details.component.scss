@@ -1,0 +1,22 @@
+@import "~styles/imports";
+
+:host {
+  flex: 1;
+
+  @extend %component-defaults;
+  flex-direction: row;
+}
+
+mat-card {
+  @include mat-elevation(0);
+  overflow-y: scroll;
+  padding: $mat-card-padding * 2;
+}
+
+.sidebar {
+  flex: 1;
+}
+
+.details {
+  flex: 3;
+}

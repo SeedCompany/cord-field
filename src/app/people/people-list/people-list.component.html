@@ -8,7 +8,8 @@
       <ng-container matColumnDef="avatar">
         <mat-header-cell *matHeaderCellDef></mat-header-cell>
         <mat-cell *matCellDef="let person">
-          <app-avatar-letter color="accent">{{ person.displayFirstName.charAt(0) + person.displayLastName.charAt(0) }}</app-avatar-letter>
+          <app-avatar-letter color="accent">{{ person.avatarLetters }}
+          </app-avatar-letter>
         </mat-cell>
       </ng-container>
 
@@ -24,7 +25,6 @@
         <mat-cell *matCellDef="let person" class="name">{{ person.displayLastName }}
         </mat-cell>
       </ng-container>
-
       <ng-container matColumnDef="projectCount">
         <mat-header-cell *matHeaderCellDef>Total Projects</mat-header-cell>
         <mat-cell *matCellDef="let person">{{ person.projectCount }}
@@ -35,8 +35,12 @@
         <mat-header-cell *matHeaderCellDef>Role(s)</mat-header-cell>
         <mat-cell *matCellDef="let person">
           <app-collapsed-chip-list [list]="person.roles">
-            <ng-template let-role>{{ ProjectRole.forUI(role) }}</ng-template>
+            <ng-template let-role>
+                  {{ ProjectRole.forUI(role) }}
+
+            </ng-template>
           </app-collapsed-chip-list>
+
         </mat-cell>
       </ng-container>
 
@@ -58,7 +62,9 @@
       </ng-container>
 
       <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
-      <mat-row *matRowDef="let person; columns: displayedColumns;"></mat-row>
+      <mat-row class="row-hover"
+               [routerLink]="'/people/' + person.id"
+               *matRowDef="let person; columns: displayedColumns;"></mat-row>
     </mat-table>
     <mat-paginator [pageSizeOptions]="pageSizeOptions"
                    [length]="totalCount">

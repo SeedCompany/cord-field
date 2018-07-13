@@ -1,2 +1,7 @@
+// Constants that the library uses, but are compiled away so we can't import them.
+// At least with by using this it is only one place to update if there are changes.
+$mat-button-horizontal-padding: 16px;
+$mat-card-padding: 24px;
+$mat-chips-space-between: 8px;
 $mat-fab-height: 56px;
 $mat-toolbar-height: 64px;

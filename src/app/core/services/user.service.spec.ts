@@ -5,7 +5,7 @@ import { CoreModule } from '../core.module';
 import { Location } from '../models/location';
 import { Project } from '../models/project';
 import { ProjectRole } from '../models/project-role';
-import { User, UserListItem, UsersWithTotal } from '../models/user';
+import { User, UserProfile, UsersWithTotal } from '../models/user';
 import { UserService } from './user.service';
 
 const testBaseUrl = environment.services['plo.cord.bible'];
@@ -81,6 +81,22 @@ describe('UserService', () => {
     httpMock
       .expectOne({url: `${testBaseUrl}/users?skip=0&limit=10`, method: 'GET'})
       .flush([]);
+  });
+
+  it('get user by id', (done: DoneFn) => {
+    const userId = 'iBFFFGvBVlIpvsKVanrbIYVBaPwkDnhjjb0.n_cPm_zyG_7D7WWLDT7ozQ.zfUnrX9tXoPtWtDc9PLhUw';
+    const user = {id: userId};
+    userService
+      .getUser(userId)
+      .subscribe((userProfile: UserProfile) => {
+        expect(userProfile.id).toBeDefined();
+        expect(Array.isArray(userProfile.roles)).toBeTruthy();
+        done();
+      }, done.fail);
+
+    httpMock
+      .expectOne({url: `${testBaseUrl}/users/${userId}`, method: 'GET'})
+      .flush(UserProfile.fromJson(user));
   });
 
 });

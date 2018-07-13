@@ -1,4 +1,4 @@
-import { maybeRedacted } from './util';
+import { firstLettersOfWords, maybeRedacted } from './util';
 
 class LocationPart {
   id: string;
@@ -63,13 +63,22 @@ export class Location extends LocationPart {
     return location;
   }
 
+  get avatarLetters() {
+    const name = this.nameParts().find(n => !!n);
+    return name ? firstLettersOfWords(name) : null;
+  }
+
   get displayName() {
+    return this.nameParts()
+      .filter(val => val != null)
+      .join(' | ');
+  }
+
+  private nameParts(): Array<string | null> {
     return [
       this.country,
       this.area.name,
       this.area.region.name
-    ]
-      .filter(val => val != null)
-      .join(' | ');
+    ];
   }
 }

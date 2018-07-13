@@ -1,0 +1,17 @@
+@import "~styles/imports";
+
+:host {
+  @extend %component-defaults;
+}
+
+.mat-dialog-title {
+  // move button to right
+  display: flex;
+  justify-content: space-between;
+
+  // fit button within title better - align with text and not increase size
+  button {
+    margin: -5px;
+    color: mat-foreground($theme, icon);
+  }
+}

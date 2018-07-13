@@ -1,10 +1,10 @@
-import { DateTime } from 'luxon';
+import { DateTime, Interval } from 'luxon';
 import { buildEnum } from './enum';
 import { Language } from './language';
 import { Location } from './location';
 import { Organization } from './organization';
 import { ProjectRole } from './project-role';
-import { generateObjectId, maybeRedacted } from './util';
+import { firstLettersOfWords, generateObjectId, maybeRedacted } from './util';
 
 export interface IUserRequestAccess {
   email: string;
@@ -47,6 +47,10 @@ export class User {
   get fullName(): string {
     return `${this.firstName} ${this.lastName}`.trim();
   }
+
+  get avatarLetters() {
+    return firstLettersOfWords(this.fullName);
+  }
 }
 
 export class UserListItem extends User {
@@ -80,6 +84,7 @@ export class UserProfile extends User {
   phone: string | null;
   timeZone: string; // TODO what's easiest on FE?
   unavailabilities: Unavailability[];
+  picture: string | null;
 
   // about tab
   bio: string;
@@ -90,6 +95,8 @@ export class UserProfile extends User {
 
   // Authorization
   isSelf: boolean;
+
+  canEdit = true; // TODO with auth
 
   static fromJson(json: Partial<UserProfile>): UserProfile {
     const user = Object.assign(new UserProfile(), super.fromJson(json));
@@ -110,7 +117,12 @@ export class UserProfile extends User {
   }
 
   get available(): boolean {
-    return false; // TODO
+    if (this.unavailabilities.length === 0) {
+      return true;
+    }
+
+    const today = DateTime.utc();
+    return this.unavailabilities.some(u => !u.range.contains(today));
   }
 }
 
@@ -198,9 +210,9 @@ export namespace Degree {
   export const {entries, forUI, values, trackEntryBy, trackValueBy} = buildEnum(Degree, {
     [Degree.Primary]: 'Primary',
     [Degree.Secondary]: 'Secondary',
-    [Degree.Associates]: 'Associates',
-    [Degree.Bachelors]: 'Bachelors',
-    [Degree.Masters]: 'Masters',
+    [Degree.Associates]: 'Associate\'s',
+    [Degree.Bachelors]: 'Bachelor\'s',
+    [Degree.Masters]: 'Master\'s',
     [Degree.Doctorate]: 'Doctorate'
   });
 }
@@ -208,8 +220,15 @@ export namespace Degree {
 export class Unavailability {
   readonly id: string;
   description: string;
-  start: DateTime;
-  end: DateTime;
+  range: Interval;
+
+  get start() {
+    return this.range.start;
+  }
+
+  get end() {
+    return this.range.end;
+  }
 
   static fromJson(json: Partial<Record<keyof Unavailability, any>>): Unavailability {
     const obj = new Unavailability();
@@ -217,8 +236,9 @@ export class Unavailability {
     // @ts-ignore readonly property
     obj.id = json.id;
     obj.description = json.description || '';
-    obj.start = json.start ? DateTime.fromISO(json.start) : DateTime.invalid('Missing');
-    obj.end = json.end ? DateTime.fromISO(json.end) : DateTime.invalid('Missing');
+    obj.range = json.start && json.end
+      ? Interval.fromDateTimes(DateTime.fromISO(json.start), DateTime.fromISO(json.end))
+      : Interval.invalid('Missing start or end');
 
     return obj;
   }

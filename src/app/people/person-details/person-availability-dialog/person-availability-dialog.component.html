@@ -1,0 +1,20 @@
+<div mat-dialog-title>
+  <span>Availability</span>
+  <button mat-icon-button mat-dialog-close>
+    <mat-icon>close</mat-icon>
+  </button>
+</div>
+<mat-list mat-dialog-content>
+  <ng-template #displayDates let-type="type" let-list="list">
+    <h3 mat-subheader>{{ type.toUpperCase() }} UNAVAILABLE DATES</h3>
+    <mat-list-item *ngFor="let unavailability of list; trackBy: trackUnavailability">
+      <h4 mat-line>{{ unavailability.start.toLocaleString(format) }} - {{ unavailability.end.toLocaleString(format) }}</h4>
+      <p mat-line>{{ unavailability.description }}</p>
+    </mat-list-item>
+    <mat-list-item *ngIf="list.length == 0" class="none">
+      {{ user.isSelf ? 'You have' : user.fullName + ' has' }} no {{ type }} unavailable dates.
+    </mat-list-item>
+  </ng-template>
+  <ng-container *ngTemplateOutlet="displayDates; context: {type: 'upcoming', list: futureUnavailabilities}"></ng-container>
+  <ng-container *ngTemplateOutlet="displayDates; context: {type: 'past', list: pastUnavailabilities}"></ng-container>
+</mat-list>

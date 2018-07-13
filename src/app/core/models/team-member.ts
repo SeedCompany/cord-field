@@ -58,6 +58,10 @@ export class TeamMember {
     return this.user.lastName;
   }
 
+  get avatarLetters() {
+    return this.user.avatarLetters;
+  }
+
   get removable() {
     return this.roles.some(role => ProjectRole.implicit.includes(role));
   }
