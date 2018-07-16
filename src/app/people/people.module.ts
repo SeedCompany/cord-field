@@ -7,6 +7,7 @@ import { PersonAvailabilityDialogComponent } from './person-details/person-avail
 import { PersonBasicInfoComponent } from './person-details/person-basic-info/person-basic-info.component';
 import { PersonDetailsComponent } from './person-details/person-details.component';
 import { PersonRoleLocationsDialogComponent } from './person-details/person-role-locations-dialog/person-role-locations-dialog.component';
+import { PersonComponent } from './person/person.component';
 
 @NgModule({
   imports: [
@@ -18,6 +19,7 @@ import { PersonRoleLocationsDialogComponent } from './person-details/person-role
     PersonAboutComponent,
     PersonAvailabilityDialogComponent,
     PersonBasicInfoComponent,
+    PersonComponent,
     PersonDetailsComponent,
     PersonRoleLocationsDialogComponent
   ],
