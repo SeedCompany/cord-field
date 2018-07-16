@@ -1,10 +1,10 @@
-import { animate, state, style, transition, trigger } from '@angular/animations';
 import { HttpErrorResponse } from '@angular/common/http';
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { MatSnackBar, MatSnackBarRef, SimpleSnackBar } from '@angular/material';
 import { ActivatedRoute, NavigationEnd, Router, UrlSegment } from '@angular/router';
 import { Subscription } from 'rxjs/Subscription';
 import { Project } from '../../core/models/project';
+import { popInOut } from '../../shared/animations';
 import { ProjectViewStateService } from '../project-view-state.service';
 
 interface TabConfig {
@@ -17,18 +17,7 @@ interface TabConfig {
   selector: 'app-project',
   templateUrl: './project.component.html',
   styleUrls: ['./project.component.scss'],
-  animations: [
-    trigger('popInOut', [
-      state('in', style({transform: 'scale(1)', opacity: '1'})),
-      transition(':enter', [
-        style({transform: 'scale(0)', opacity: '0'}),
-        animate('300ms ease-in-out')
-      ]),
-      transition(':leave', [
-        animate('300ms ease-in-out', style({transform: 'scale(0)', opacity: '0'}))
-      ])
-    ])
-  ],
+  animations: [popInOut],
   providers: [
     ProjectViewStateService
   ]
