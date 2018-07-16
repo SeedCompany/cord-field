@@ -5,7 +5,7 @@
 <nav mat-tab-nav-bar color="accent">
   <a mat-tab-link
      *ngFor="let tab of tabs; trackBy: trackTabsBy"
-     [routerLink]="'/projects/' + id + tab.path"
+     [routerLink]="tab.path"
      routerLinkActive
      #rla="routerLinkActive"
      [active]="rla.isActive"
