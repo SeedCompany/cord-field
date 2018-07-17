@@ -58,8 +58,8 @@ export function generateObjectId(): string {
   // tslint:enable:no-bitwise
 }
 
-export function firstLettersOfWords(words: string): string {
-  return (words.match(/\b(\w)/g) || []).join('');
+export function firstLettersOfWords(words: string, limit = 3): string {
+  return (words.match(/\b(\w)/g) || []).join('').substr(0, limit);
 }
 
 /**
