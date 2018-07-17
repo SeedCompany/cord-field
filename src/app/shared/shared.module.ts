@@ -15,6 +15,7 @@ import { SearchComponent } from './components/search/search.component';
 import { SpeedDialItemComponent } from './components/speed-dial-item/speed-dial-item.component';
 import { SpeedDialComponent } from './components/speed-dial/speed-dial.component';
 import { AutofocusDirective } from './directives/autofocus.directive';
+import { NotImplementedDirective } from './directives/not-implemented.directive';
 import { LuxonDateAdapter, MAT_LUXON_DATE_FORMATS } from './luxon-date-adapter';
 import { LanguageInfoPipe } from './pipes/language-info.pipe';
 
@@ -39,6 +40,7 @@ import { LanguageInfoPipe } from './pipes/language-info.pipe';
     FormsModule,
     LanguageInfoPipe,
     MaterialModule,
+    NotImplementedDirective,
     ReactiveFormsModule,
     SearchComponent,
     SpeedDialComponent,
@@ -54,6 +56,7 @@ import { LanguageInfoPipe } from './pipes/language-info.pipe';
     AvatarLetterComponent,
     CollapsedChipListComponent,
     LanguageInfoPipe,
+    NotImplementedDirective,
     SearchComponent,
     SpeedDialComponent,
     SpeedDialItemComponent
