@@ -1,0 +1,32 @@
+<mat-toolbar>
+  <a mat-button routerLink="..">{{ user.fullName }}</a>
+  <mat-icon>chevron_right</mat-icon>
+  <span>Edit Profile</span>
+</mat-toolbar>
+
+<nav mat-tab-nav-bar color="accent">
+  <a mat-tab-link
+     *ngFor="let tab of tabs; trackBy: trackTabsBy"
+     [routerLink]="tab.path"
+     routerLinkActive
+     #rla="routerLinkActive"
+     [active]="rla.isActive"
+  >{{ tab.label }}</a>
+  <app-speed-dial
+    *ngIf="dirty"
+    align="below"
+    icon="save"
+    [disabled]="submitting"
+    [progress]="submitting"
+    [@popInOut]
+  >
+    <app-speed-dial-item tooltip="Discard" color="warn" (click)="onDiscard()">
+      <mat-icon>delete</mat-icon>
+    </app-speed-dial-item>
+    <app-speed-dial-item tooltip="Save" color="accent" (click)="onSave()">
+      <mat-icon>save</mat-icon>
+    </app-speed-dial-item>
+  </app-speed-dial>
+</nav>
+
+<router-outlet></router-outlet>

@@ -1,0 +1,6 @@
+@import "~styles/imports";
+
+:host {
+  flex: 1;
+  @extend %component-defaults;
+}

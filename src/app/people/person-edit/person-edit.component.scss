@@ -1,0 +1,38 @@
+@import "~styles/imports";
+
+:host {
+  @extend %component-defaults;
+}
+
+mat-toolbar {
+  z-index: 10; // above header to hide its elevation
+  padding-left: 3.2em;
+
+  // Font same as toolbar
+  a {
+    font: inherit;
+  }
+
+  // space the breadcrumbs evenly and reduce button padding since there's extra padding with the chevron icons
+  > a, span {
+    padding-left: $mat-button-horizontal-padding / 2;
+    padding-right: $mat-button-horizontal-padding / 2;
+  }
+
+  mat-icon {
+    color: mat-foreground($theme, icon);
+  }
+}
+
+.mat-tab-nav-bar {
+  background-color: mat-background($theme, app-bar);
+  overflow: initial;
+  @include mat-elevation(4);
+}
+
+app-speed-dial {
+  position: absolute;
+  bottom: -($mat-fab-height / 2);
+  right: 24px; // matches tab padding
+  z-index: 1;
+}
