@@ -1,9 +1,9 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { FormArray, FormBuilder } from '@angular/forms';
-import { Subject } from 'rxjs/Subject';
 import { ISubscription } from 'rxjs/Subscription';
 import { Organization } from '../../core/models/organization';
 import { Partnership, PartnershipAgreementStatus, PartnershipType } from '../../core/models/partnership';
+import { SubscriptionComponent } from '../../shared/components/subscription.component';
 import { ProjectViewStateService } from '../project-view-state.service';
 
 @Component({
@@ -11,7 +11,7 @@ import { ProjectViewStateService } from '../project-view-state.service';
   templateUrl: './project-partnerships.component.html',
   styleUrls: ['./project-partnerships.component.scss']
 })
-export class ProjectPartnershipsComponent implements OnInit, OnDestroy {
+export class ProjectPartnershipsComponent extends SubscriptionComponent implements OnInit {
 
   readonly PartnershipType = PartnershipType;
   readonly PartnershipAgreementStatus = PartnershipAgreementStatus;
@@ -21,7 +21,6 @@ export class ProjectPartnershipsComponent implements OnInit, OnDestroy {
   });
   adding = false;
   private opened: number | null;
-  private ngUnsubscribe = new Subject<void>();
   private subscriptions: {[id: string]: ISubscription} = {};
 
   get partnerships(): FormArray {
@@ -30,18 +29,16 @@ export class ProjectPartnershipsComponent implements OnInit, OnDestroy {
 
   constructor(private fb: FormBuilder,
               private projectViewState: ProjectViewStateService) {
+    super();
   }
 
   ngOnInit(): void {
-    this.projectViewState.project.subscribe(project => {
-      this.form.setControl('partnerships', this.fb.array([])); // reset form array
-      project.partnerships.forEach(p => this.addPartnership(p));
-    });
-  }
-
-  ngOnDestroy(): void {
-    this.ngUnsubscribe.next();
-    this.ngUnsubscribe.complete();
+    this.projectViewState.project
+      .takeUntil(this.unsubscribe)
+      .subscribe(project => {
+        this.form.setControl('partnerships', this.fb.array([])); // reset form array
+        project.partnerships.forEach(p => this.addPartnership(p));
+      });
   }
 
   trackById(index: number, object: { id: string }): string {
@@ -96,7 +93,7 @@ export class ProjectPartnershipsComponent implements OnInit, OnDestroy {
 
     // listen for changes to update view state
     this.subscriptions[partnership.id] = fg.valueChanges
-      .takeUntil(this.ngUnsubscribe)
+      .takeUntil(this.unsubscribe)
       .map(Partnership.fromJson)
       .subscribe(p => this.projectViewState.change({partnerships: {update: p}}));
 

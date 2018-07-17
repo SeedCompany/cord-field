@@ -5,6 +5,7 @@ import { Project } from '../../core/models/project';
 import { ProjectRole } from '../../core/models/project-role';
 import { TeamMember } from '../../core/models/team-member';
 import { UserService } from '../../core/services/user.service';
+import { SubscriptionComponent } from '../../shared/components/subscription.component';
 import { ProjectViewStateService } from '../project-view-state.service';
 
 @Component({
@@ -12,7 +13,7 @@ import { ProjectViewStateService } from '../project-view-state.service';
   templateUrl: './project-team-member-role-dialog.component.html',
   styleUrls: ['./project-team-member-role-dialog.component.scss']
 })
-export class ProjectTeamMemberRoleDialogComponent {
+export class ProjectTeamMemberRoleDialogComponent extends SubscriptionComponent {
 
   readonly ProjectRole = ProjectRole;
 
@@ -29,13 +30,16 @@ export class ProjectTeamMemberRoleDialogComponent {
               private userService: UserService,
               private snackBar: MatSnackBar,
               @Inject(MAT_DIALOG_DATA) data: DialogData) {
+    super();
     this.project = data.project;
     this.projectViewState = data.projectViewState;
     this.teamMember = data.teamMember;
 
     this.roles.reset(this.teamMember.roles);
 
-    this.projectViewState.isSubmitting.subscribe(s => this.submitting = s);
+    this.projectViewState.isSubmitting
+      .takeUntil(this.unsubscribe)
+      .subscribe(s => this.submitting = s);
 
     this.loadRoles();
   }

@@ -53,16 +53,24 @@ export class ProjectComponent extends SubscriptionComponent implements OnInit {
     this.route.params.subscribe(params => {
       this.projectViewState.onNewId(params.id);
     });
-    this.projectViewState.loadError.subscribe(err => {
-      const message = (err instanceof HttpErrorResponse && err.status === 404)
-        ? 'Could not find project'
-        : 'Failed to fetch project details';
-      this.snackBar.open(message, undefined, {duration: 5000});
-      this.router.navigate(['..'], {replaceUrl: true, relativeTo: this.route});
-    });
-    this.projectViewState.project.subscribe(project => this.project = project);
-    this.projectViewState.isDirty.subscribe(dirty => this.dirty = dirty);
-    this.projectViewState.isSubmitting.subscribe(submitting => this.submitting = submitting);
+    this.projectViewState.loadError
+      .takeUntil(this.unsubscribe)
+      .subscribe(err => {
+        const message = (err instanceof HttpErrorResponse && err.status === 404)
+          ? 'Could not find project'
+          : 'Failed to fetch project details';
+        this.snackBar.open(message, undefined, {duration: 5000});
+        this.router.navigate(['..'], {replaceUrl: true, relativeTo: this.route});
+      });
+    this.projectViewState.project
+      .takeUntil(this.unsubscribe)
+      .subscribe(project => this.project = project);
+    this.projectViewState.isDirty
+      .takeUntil(this.unsubscribe)
+      .subscribe(dirty => this.dirty = dirty);
+    this.projectViewState.isSubmitting
+      .takeUntil(this.unsubscribe)
+      .subscribe(submitting => this.submitting = submitting);
 
     this.router.events
       .takeUntil(this.unsubscribe)

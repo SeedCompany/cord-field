@@ -4,6 +4,7 @@ import { AbstractControl } from '@angular/forms/src/model';
 import { DateTime } from 'luxon';
 import { CustomValidators } from '../../core/models/custom-validators';
 import { onlyValidValues } from '../../core/models/util';
+import { SubscriptionComponent } from '../../shared/components/subscription.component';
 import { ProjectViewStateService } from '../project-view-state.service';
 
 @Component({
@@ -11,12 +12,13 @@ import { ProjectViewStateService } from '../project-view-state.service';
   templateUrl: './project-location-timeframe.component.html',
   styleUrls: ['./project-location-timeframe.component.scss']
 })
-export class ProjectLocationTimeframeComponent implements OnInit {
+export class ProjectLocationTimeframeComponent extends SubscriptionComponent implements OnInit {
   form: FormGroup;
   minDate: DateTime;
 
   constructor(private formBuilder: FormBuilder,
               private projectViewState: ProjectViewStateService) {
+    super();
   }
 
   ngOnInit() {
@@ -28,23 +30,28 @@ export class ProjectLocationTimeframeComponent implements OnInit {
       validator: CustomValidators.dateRange('mouStart', 'mouEnd', false)
     });
 
-    this.projectViewState.project.subscribe(project => {
-      this.form.reset({
-        location: project.location,
-        mouStart: project.mouStart,
-        mouEnd: project.mouEnd
+    this.projectViewState.project
+      .takeUntil(this.unsubscribe)
+      .subscribe(project => {
+        this.form.reset({
+          location: project.location,
+          mouStart: project.mouStart,
+          mouEnd: project.mouEnd
+        });
       });
-    });
 
     this.form.valueChanges
+      .takeUntil(this.unsubscribe)
       .pipe(onlyValidValues(this.form))
       .subscribe(changes => {
         this.projectViewState.change(changes);
       });
 
-    this.startDate.valueChanges.subscribe(value => {
-      this.minDate = value;
-    });
+    this.startDate.valueChanges
+      .takeUntil(this.unsubscribe)
+      .subscribe(value => {
+        this.minDate = value;
+      });
   }
 
   get location(): AbstractControl {

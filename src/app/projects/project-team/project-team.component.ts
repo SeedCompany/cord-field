@@ -3,6 +3,7 @@ import { MatDialog, MatPaginator, MatSnackBar, MatSort, MatTableDataSource } fro
 import { Project } from '../../core/models/project';
 import { ProjectRole } from '../../core/models/project-role';
 import { TeamMember } from '../../core/models/team-member';
+import { SubscriptionComponent } from '../../shared/components/subscription.component';
 import { ProjectTeamMemberRoleDialogComponent } from '../project-team-member-role-dialog/project-team-member-role-dialog.component';
 import { ProjectViewStateService } from '../project-view-state.service';
 import { ProjectTeamMemberAddComponent } from './project-team-member-add/project-team-member-add.component';
@@ -12,7 +13,7 @@ import { ProjectTeamMemberAddComponent } from './project-team-member-add/project
   templateUrl: './project-team.component.html',
   styleUrls: ['./project-team.component.scss']
 })
-export class ProjectTeamComponent implements OnInit, AfterViewInit {
+export class ProjectTeamComponent extends SubscriptionComponent implements OnInit, AfterViewInit {
 
   readonly displayedColumns = ['avatar', 'firstName', 'lastName', 'dateAdded', 'roles'];
   readonly pageSizeOptions = [10, 25, 50];
@@ -26,13 +27,16 @@ export class ProjectTeamComponent implements OnInit, AfterViewInit {
   constructor(private projectViewState: ProjectViewStateService,
               private snackBar: MatSnackBar,
               private dialog: MatDialog) {
+    super();
   }
 
   ngOnInit(): void {
-    this.projectViewState.project.subscribe(project => {
-      this.project = project;
-      this.dataSource.data = project.team;
-    });
+    this.projectViewState.project
+      .takeUntil(this.unsubscribe)
+      .subscribe(project => {
+        this.project = project;
+        this.dataSource.data = project.team;
+      });
   }
 
   ngAfterViewInit(): void {
