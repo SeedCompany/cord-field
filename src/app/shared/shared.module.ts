@@ -32,6 +32,7 @@ import { LanguageInfoPipe } from './pipes/language-info.pipe';
     AutocompleteOrganizationComponent,
     AutocompleteUserComponent,
     AutocompleteComponent,
+    AutofocusDirective,
     AvatarLetterComponent,
     CollapsedChipListComponent,
     CommonModule,
