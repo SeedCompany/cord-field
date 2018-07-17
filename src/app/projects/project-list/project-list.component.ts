@@ -35,8 +35,10 @@ export class ProjectListComponent implements AfterViewInit {
     {label: 'All Projects', value: false}
   ];
 
-  readonly displayedColumns = ['name', 'updatedAt', 'languages', 'type', 'status'];
+  readonly displayedColumns: Array<keyof Project> = ['name', 'updatedAt', 'languages', 'type', 'status'];
   readonly pageSizeOptions = [10, 25, 50];
+  readonly apiFields: Array<keyof Project> = ['id', ...this.displayedColumns];
+
   projectSource = new MatTableDataSource<Project>();
   totalCount = 0;
   filtersActive = false;
@@ -70,6 +72,7 @@ export class ProjectListComponent implements AfterViewInit {
           page.pageIndex * page.pageSize,
           page.pageSize,
           filters,
+          this.apiFields,
           listSelector.value
         );
       })

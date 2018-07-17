@@ -47,6 +47,7 @@ export class ProjectService {
               skip = 0,
               limit = 10,
               filter?: ProjectFilter,
+              fields?: Array<keyof Project>,
               isMine?: boolean): Observable<ProjectsWithCount> {
 
     const params: HttpParams = {
@@ -62,6 +63,9 @@ export class ProjectService {
     if (filter) {
       const filterAPI = this.buildFilter(filter);
       params.filter = JSON.stringify(filterAPI);
+    }
+    if (fields) {
+      params.fields = fields;
     }
 
     return this
