@@ -1,0 +1,34 @@
+@import "~styles/imports";
+
+.mat-form-field {
+  display: block;
+}
+
+// Flip direction so tab index prioritizes the forward action
+.mat-dialog-actions {
+  display: flex;
+  flex-direction: row-reverse;
+}
+
+// Flip margin for spacing between buttons since we flipped the direction
+.mat-dialog-actions .mat-button + .mat-button {
+  margin-left: 0;
+  margin-right: 8px;
+}
+
+// Center spinner within button
+mat-progress-spinner {
+  margin: 0 auto;
+}
+
+.name-container {
+  display: flex;
+}
+
+mat-form-field {
+  & + & {
+    margin-left: 5px;
+  }
+}
+
+

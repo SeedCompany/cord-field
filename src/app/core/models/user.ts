@@ -252,3 +252,10 @@ export class Unavailability {
     return Object.assign(new Unavailability(), {id: generateObjectId()});
   }
 }
+
+export interface ICreateProfileAPI {
+  email: string;
+  firstName: string;
+  lastName: string;
+  roles: UserRole[];
+}

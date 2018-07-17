@@ -7,7 +7,7 @@ import { SaveResult } from '../abstract-view-state';
 import { Project } from '../models/project';
 import { ProjectRole } from '../models/project-role';
 import { TeamMember } from '../models/team-member';
-import { User, UserFilter, UserListItem, UserProfile, UsersWithTotal } from '../models/user';
+import { ICreateProfileAPI, User, UserFilter, UserListItem, UserProfile, UsersWithTotal } from '../models/user';
 import { HttpParams } from './http/abstract-http-client';
 import { PloApiService } from './http/plo-api.service';
 
@@ -84,5 +84,10 @@ export class UserService {
         (teamMember ? member.id !== teamMember.id : true)
         && member.roles.includes(role));
     });
+  }
+
+  async createProfile(user: ICreateProfileAPI): Promise<{id: String}> {
+    const id = 'iBFFFGvBVlIpvsKVanrbIYVBaPwkDnhjjb0.n_cPm_zyG_7D7WWLDT7ozQ.zfUnrX9tXoPtWtDc9PLhUw';
+    return {id};
   }
 }
