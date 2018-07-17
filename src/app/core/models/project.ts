@@ -133,7 +133,9 @@ export class Project {
     const project = new Project();
 
     project.id = json.id;
-    project.name = json.name || '';
+    project.name = (json.name || '')
+      // Remove legacy IDs from project names, this should be removed before launch.
+      .replace(/ \(\d+\)$/, '');
     project.type = json.type || ProjectType.Translation;
     project.status = json.status || ProjectStatus.Active;
     project.location = json.location ? Location.fromJson(json.location) : null;

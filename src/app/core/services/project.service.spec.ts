@@ -34,7 +34,7 @@ describe('ProjectService', () => {
     const mockResponse = {
       id: '5acbba0c70db6a1781ece783',
       status: ProjectStatus.Active,
-      name: 'Elhomwe Bible (395)',
+      name: 'Elhomwe Bible',
       updatedAt: '2018-03-26T05:27:49.000Z',
       type: ProjectType.Translation,
       team: []
@@ -47,7 +47,7 @@ describe('ProjectService', () => {
         expect(project.id).toBeDefined();
         expect(project.id).toBe('5acbba0c70db6a1781ece783');
         expect(project.name).toBeDefined();
-        expect(project.name).toBe('Elhomwe Bible (395)');
+        expect(project.name).toBe('Elhomwe Bible');
         expect(project.status).toBeDefined();
         expect(project.status).toBe(ProjectStatus.Active);
         expect(project.type).toBeDefined();
@@ -73,7 +73,7 @@ describe('ProjectService', () => {
     const mockResponse = [{
       id: '5acbba0c70db6a1781ece783',
       status: ProjectStatus.Active,
-      name: 'Elhomwe Bible (395)',
+      name: 'Elhomwe Bible',
       updatedAt: '2018-03-26T05:27:49.000Z',
       type: ProjectType.Translation
     }];
@@ -88,7 +88,7 @@ describe('ProjectService', () => {
         expect(projects[0].id).toBeDefined();
         expect(projects[0].id).toBe('5acbba0c70db6a1781ece783');
         expect(projects[0].name).toBeDefined();
-        expect(projects[0].name).toBe('Elhomwe Bible (395)');
+        expect(projects[0].name).toBe('Elhomwe Bible');
         expect(projects[0].status).toBeDefined();
         expect(projects[0].status).toBe(ProjectStatus.Active);
         expect(projects[0].type).toBeDefined();
@@ -108,9 +108,9 @@ describe('ProjectService', () => {
 
   it('check existing project name availability', (done: DoneFn) => {
     const mockResponse = {status: false};
-    const isProjectNameUrl = `${testBaseUrl}/projects/exists?name=Elhomwe Bible (395)`;
+    const isProjectNameUrl = `${testBaseUrl}/projects/exists?name=Elhomwe Bible`;
     projectService
-      .isProjectNameTaken('Elhomwe Bible (395)')
+      .isProjectNameTaken('Elhomwe Bible')
       .then((response) => {
         expect(response).toBe(false);
         done();
