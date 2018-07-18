@@ -15,7 +15,7 @@ export class PersonAboutComponent implements OnChanges {
 
   @Input() user: UserProfile;
 
-  private hasData: boolean;
+  hasData: boolean;
 
   ngOnChanges(changes: SimpleChanges): void {
     const user: UserProfile = changes.user.currentValue;

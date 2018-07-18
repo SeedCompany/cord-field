@@ -12,8 +12,8 @@ import { UserRole } from '../../../core/models/user';
 export class PersonRoleLocationsDialogComponent {
   readonly ProjectRole = ProjectRole;
 
-  private role: ProjectRole;
-  private locations: Location[];
+  role: ProjectRole;
+  locations: Location[];
 
   static open(dialog: MatDialog, userRole: UserRole) {
     return dialog.open(this, {
