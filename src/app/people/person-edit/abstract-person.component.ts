@@ -4,7 +4,7 @@ import { SubscriptionComponent } from '../../shared/components/subscription.comp
 import { UserViewStateService } from '../user-view-state.service';
 
 export abstract class AbstractPersonComponent extends SubscriptionComponent implements OnInit {
-  protected user: UserProfile;
+  user: UserProfile;
 
   constructor(protected userViewState: UserViewStateService) {
     super();
