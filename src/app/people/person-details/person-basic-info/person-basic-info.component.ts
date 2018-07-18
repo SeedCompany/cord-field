@@ -17,7 +17,7 @@ export class PersonBasicInfoComponent implements OnChanges {
 
   @Input() user: UserProfile;
 
-  private available: boolean;
+  available: boolean;
 
   constructor(private dialog: MatDialog) {
   }
