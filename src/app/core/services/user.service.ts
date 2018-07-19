@@ -35,8 +35,7 @@ export class UserService {
   }
 
   getUsers(
-    // tslint:disable-next-line:no-unnecessary-initializer
-    sort: keyof UserListItem | undefined = undefined,
+    sort?: keyof UserListItem,
     order: SortDirection = 'desc',
     skip = 0,
     limit = 10,
