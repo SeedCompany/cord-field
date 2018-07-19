@@ -38,7 +38,7 @@
       <ng-container matColumnDef="languages">
         <mat-header-cell *matHeaderCellDef>Languages</mat-header-cell>
         <mat-cell *matCellDef="let project">
-          <app-collapsed-chip-list [list]="project.languages">
+          <app-collapsed-chip-list [list]="project.languages" (chipClicked)="onLanguageClick($event)">
             <ng-template let-language>{{ language.nameOrDisplayName }}</ng-template>
           </app-collapsed-chip-list>
         </mat-cell>
