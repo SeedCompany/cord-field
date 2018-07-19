@@ -59,7 +59,8 @@ export function generateObjectId(): string {
 }
 
 export function firstLettersOfWords(words: string, limit = 3): string {
-  return (words.match(/\b(\w)/g) || []).join('').substr(0, limit);
+  // https://regex101.com/r/63P0Hw
+  return (words.match(/\b([\p{Lu}\p{N}])/gu) || []).join('').substr(0, limit);
 }
 
 /**
