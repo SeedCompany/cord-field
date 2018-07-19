@@ -66,6 +66,10 @@ export class ProjectTeamMemberAddComponent {
   }
 
   async onSubmit() {
+    if (this.user.invalid || this.roles.invalid) {
+      return;
+    }
+
     const member = TeamMember.new(this.user.value!, this.roles.value);
     this.projectViewState.change({team: {add: member}});
 
