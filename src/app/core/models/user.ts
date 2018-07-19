@@ -77,6 +77,11 @@ export interface UsersWithTotal {
   total: number;
 }
 
+export interface UserFilter {
+  organizations?: Organization[];
+  isActive?: boolean;
+}
+
 export class UserProfile extends User {
   // basic info tab
   roles: UserRole[];

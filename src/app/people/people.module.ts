@@ -1,5 +1,6 @@
 import { NgModule } from '@angular/core';
 import { SharedModule } from '../shared/shared.module';
+import { PeopleListFilterComponent } from './people-list/people-list-filter/people-list-filter.component';
 import { PeopleListComponent } from './people-list/people-list.component';
 import { PeopleRoutingModule } from './people-routing.module';
 import { PersonAboutComponent } from './person-details/person-about/person-about.component';
@@ -20,6 +21,7 @@ import { PersonComponent } from './person/person.component';
     PeopleRoutingModule
   ],
   declarations: [
+    PeopleListFilterComponent,
     PeopleListComponent,
     PersonAboutComponent,
     PersonAvailabilityDialogComponent,
