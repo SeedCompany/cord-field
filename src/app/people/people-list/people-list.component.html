@@ -40,15 +40,6 @@
         </mat-cell>
       </ng-container>
 
-      <ng-container matColumnDef="roles">
-        <mat-header-cell *matHeaderCellDef>Role(s)</mat-header-cell>
-        <mat-cell *matCellDef="let person">
-          <app-collapsed-chip-list [list]="person.roles">
-            <ng-template let-role>{{ ProjectRole.forUI(role) }}</ng-template>
-          </app-collapsed-chip-list>
-        </mat-cell>
-      </ng-container>
-
       <ng-container matColumnDef="isActive">
         <mat-header-cell *matHeaderCellDef mat-sort-header>Status</mat-header-cell>
         <mat-cell *matCellDef="let person">

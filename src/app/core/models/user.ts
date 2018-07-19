@@ -79,7 +79,6 @@ export interface UsersWithTotal {
 
 export interface UserFilter {
   organizations?: Organization[];
-  roles?: ProjectRole[];
   isActive?: boolean;
 }
 

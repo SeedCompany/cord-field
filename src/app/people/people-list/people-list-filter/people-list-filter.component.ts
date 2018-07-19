@@ -13,11 +13,8 @@ import { TypedFormControl } from '../../../core/models/util';
 })
 export class PeopleListFilterComponent {
 
-  readonly ProjectRole = ProjectRole;
-
   form = this.formBuilder.group({
     organizations: [[]],
-    roles: [[]],
     isActive: []
   });
 
@@ -63,8 +60,7 @@ export class PeopleListFilterComponent {
 
   reset() {
     this.form.reset({
-      organizations: [],
-      roles: []
+      organizations: []
     });
   }
 }

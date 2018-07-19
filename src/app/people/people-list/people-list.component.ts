@@ -23,7 +23,7 @@ export class PeopleListComponent implements AfterViewInit {
 
   readonly ProjectRole = ProjectRole;
 
-  readonly displayedColumns = ['avatar', 'displayFirstName', 'displayLastName', 'organizations', 'roles', 'projectCount', 'isActive'];
+  readonly displayedColumns = ['avatar', 'displayFirstName', 'displayLastName', 'organizations', 'projectCount', 'isActive'];
   readonly pageSizeOptions = [10, 25, 50];
   peopleSource = new MatTableDataSource<UserListItem>();
   totalCount = 0;

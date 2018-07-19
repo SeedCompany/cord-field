@@ -54,7 +54,6 @@ export class UserService {
     if (filters && Object.keys(filters).length > 0) {
       const filtersAPI = {
         organizationIds: filters.organizations ? filters.organizations.map(org => org.id) : undefined,
-        roles: filters.roles ? filters.roles : undefined,
         isActive: 'isActive' in filters ? filters.isActive : undefined
       };
       params.filter = JSON.stringify(filtersAPI);
