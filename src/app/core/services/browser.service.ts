@@ -1,4 +1,5 @@
-import { Injectable } from '@angular/core';
+import { Injectable, Optional } from '@angular/core';
+import { NavigationEnd, Router } from '@angular/router';
 import * as localforage from 'localforage';
 
 // Temp fix until auth can be done on SSR as well
@@ -18,7 +19,19 @@ localforage.defineDriver({
 @Injectable()
 export class BrowserService {
 
-  constructor() {
+  private _firstNavigationFinished = false;
+
+  constructor(@Optional() router?: Router) {
+    if (router) {
+      router.events
+        .filter(e => e instanceof NavigationEnd)
+        .first()
+        .subscribe(() => this._firstNavigationFinished = true);
+    }
+  }
+
+  get firstNavigationFinished(): boolean {
+    return this._firstNavigationFinished;
   }
 
   get hasSessionStorage(): boolean {

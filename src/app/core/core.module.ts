@@ -5,6 +5,7 @@ import { ProjectCreateDialogComponent } from './create-dialogs/project-create-di
 import { HeaderComponent } from './header/header.component';
 import { NotFoundPageComponent } from './not-found-page/not-found-page.component';
 import { AlreadyLoggedInGuard, AuthenticationGuard } from './route-guards/authentication-guard';
+import { NotImplementedGuard } from './route-guards/not-implemented.guard';
 import { AuthenticationStorageService } from './services/authentication-storage.service';
 import { AuthenticationService } from './services/authentication.service';
 import { BrowserService } from './services/browser.service';
@@ -42,6 +43,7 @@ import { UserService } from './services/user.service';
     LocalStorageService,
     LocationService,
     LoggerService,
+    NotImplementedGuard,
     OrganizationService,
     PloApiService,
     ProjectService,
