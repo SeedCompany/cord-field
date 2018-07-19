@@ -1,5 +1,7 @@
 <mat-chip-list *ngIf="list.length > 0">
-  <mat-chip *ngFor="let item of list.slice(0, show); trackBy: trackByFn">
+  <mat-chip *ngFor="let item of list.slice(0, show); trackBy: trackByFn"
+            (click)="chipClicked.next(item)"
+  >
     <ng-container *ngTemplateOutlet="displayWith; context: {$implicit: item}"></ng-container>
   </mat-chip>
   <ng-container *ngIf="list.length > 1">
@@ -8,7 +10,9 @@
       <mat-icon>arrow_drop_down</mat-icon>
     </mat-chip>
     <mat-menu #collapseMenu="matMenu">
-      <button mat-menu-item *ngFor="let item of list.slice(show); trackBy: trackByFn">
+      <button mat-menu-item *ngFor="let item of list.slice(show); trackBy: trackByFn"
+              (click)="chipClicked.next(item)"
+      >
         <ng-container *ngTemplateOutlet="displayWith; context: {$implicit: item}"></ng-container>
       </button>
     </mat-menu>
