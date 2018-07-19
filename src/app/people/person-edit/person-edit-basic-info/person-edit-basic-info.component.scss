@@ -3,3 +3,45 @@
 :host {
   @extend %component-defaults;
 }
+
+mat-card {
+  padding-left: 3em;
+}
+
+mat-card-content, .container {
+  display: flex;
+  flex-direction: column;
+}
+
+.name-container {
+  display: flex;
+
+  mat-form-field {
+    flex: 1;
+    margin-right: 24px;
+
+    &:last-child {
+      margin-right: 0;
+    }
+  }
+}
+
+mat-card-content {
+  max-width: 45em;
+
+  button {
+    width: fit-content;
+  }
+
+}
+
+mat-card-actions {
+  max-width: 40em;
+  button {
+    float: right;
+  }
+}
+
+mat-progress-spinner {
+  margin: 0 auto;
+}

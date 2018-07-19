@@ -1,3 +1,101 @@
-<p>
-  person-edit-basic-info works!
-</p>
+<mat-card>
+  <mat-card-title>General</mat-card-title>
+  <mat-card-content [formGroup]="form" (keyup.enter)="form.valid ? update() : null">
+
+    <div class="name-container">
+      <mat-form-field color="accent">
+        <input matInput
+               maxlength="140"
+               formControlName="firstName"
+               placeholder="First Name">
+        <mat-error>Please enter valid first name</mat-error>
+      </mat-form-field>
+      <mat-form-field color="accent">
+        <input matInput
+               maxlength="140"
+               formControlName="lastName"
+               placeholder="Last Name">
+        <mat-error>Please enter valid last name</mat-error>
+      </mat-form-field>
+    </div>
+
+    <ng-container *ngIf="user.canEdit">
+      <div formArrayName="roles" class="container"
+           *ngFor="let role of userRoles.controls; index as i; trackBy : trackByIndex">
+        <mat-form-field color="accent" [formGroupName]="i">
+          <mat-select placeholder="Role" formControlName="role">
+            <mat-option *ngFor="let availableRole of getAvailableRoles(i); trackBy: trackByValue"
+                        [value]="availableRole">
+              {{ ProjectRole.forUI(availableRole) }}
+            </mat-option>
+          </mat-select>
+          <mat-error>Please select one or more roles</mat-error>
+        </mat-form-field>
+        <app-autocomplete-location
+          [chips]="true"
+          [list]="getLocations(i).value"
+          (optionSelected)="onLocationSelected(i,$event)"
+          (removed)="onLocationRemoved(i,$event)"
+        >
+        </app-autocomplete-location>
+      </div>
+    </ng-container>
+
+
+    <div class="container">
+      <button mat-button color="primary" (click)="addRole()" *ngIf="user.canEdit">
+        <mat-icon>add</mat-icon>
+        Add Role
+      </button>
+      <app-autocomplete-organization
+        [chips]="true"
+        [list]="organizations.value"
+        (optionSelected)="onOrgSelected($event)"
+        (removed)="onOrgRemoved($event)"
+      >
+      </app-autocomplete-organization>
+    </div>
+
+    <h3 mat-card-title>Contact</h3>
+
+    <div class="container">
+      <mat-form-field color="accent">
+        <input matInput
+               type="text"
+               maxlength="140"
+               formControlName="email"
+               placeholder="Email">
+        <mat-error>Please enter a valid email</mat-error>
+      </mat-form-field>
+      <mat-form-field color="accent">
+        <input matInput
+               type="text"
+               pattern="[0-9]*"
+               minlength="10"
+               maxlength="10"
+               formControlName="phone"
+               placeholder="Phone">
+        <mat-error>
+          Please enter a valid phone number
+        </mat-error>
+      </mat-form-field>
+    </div>
+
+  </mat-card-content>
+  <mat-card-actions>
+    <button mat-raised-button
+            color="accent"
+            (click)="update()"
+            [disabled]="!form.valid || submitting"
+    >
+      <ng-container *ngIf="!submitting">UPDATE</ng-container>
+      <mat-progress-spinner
+        *ngIf="submitting"
+        color="accent"
+        mode="indeterminate"
+        strokeWidth="3"
+        [diameter]="24"
+      ></mat-progress-spinner>
+    </button>
+  </mat-card-actions>
+</mat-card>
