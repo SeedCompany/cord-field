@@ -1,7 +1,7 @@
 import { DateTime } from 'luxon';
+import { clone } from '../util';
 import { ProjectRole } from './project-role';
 import { User } from './user';
-import { clone } from './util';
 
 export interface TeamMemberForSaveAPI {
   userId: string;

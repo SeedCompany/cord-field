@@ -4,7 +4,7 @@ import { Observable } from 'rxjs/Observable';
 import { Organization } from '../../../core/models/organization';
 import { ProjectRole } from '../../../core/models/project-role';
 import { UserFilter } from '../../../core/models/user';
-import { TypedFormControl } from '../../../core/models/util';
+import { TypedFormControl } from '../../../core/util';
 
 @Component({
   selector: 'app-people-list-filter',

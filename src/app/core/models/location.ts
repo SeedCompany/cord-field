@@ -1,4 +1,4 @@
-import { firstLettersOfWords, maybeRedacted } from './util';
+import { firstLettersOfWords, maybeRedacted } from '../util';
 
 class LocationPart {
   id: string;

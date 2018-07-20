@@ -2,7 +2,7 @@ import { Component, Inject } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialog } from '@angular/material';
 import { DateTime } from 'luxon';
 import { Unavailability, UserProfile } from '../../../core/models/user';
-import { sortBy } from '../../../core/models/util';
+import { sortBy } from '../../../core/util';
 
 @Component({
   selector: 'app-person-availability-dialog',

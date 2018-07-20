@@ -5,8 +5,8 @@ import { Project } from '../../../core/models/project';
 import { ProjectRole } from '../../../core/models/project-role';
 import { TeamMember } from '../../../core/models/team-member';
 import { User } from '../../../core/models/user';
-import { TypedFormControl } from '../../../core/models/util';
 import { UserService } from '../../../core/services/user.service';
+import { TypedFormControl } from '../../../core/util';
 import { SubscriptionComponent } from '../../../shared/components/subscription.component';
 import { ProjectViewStateService } from '../../project-view-state.service';
 

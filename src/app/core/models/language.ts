@@ -1,4 +1,4 @@
-import { firstLettersOfWords, maybeRedacted } from './util';
+import { firstLettersOfWords, maybeRedacted } from '../util';
 
 export class Language {
 
