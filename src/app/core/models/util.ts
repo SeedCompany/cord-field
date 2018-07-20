@@ -2,6 +2,8 @@ import { AsyncValidatorFn, FormControl, FormGroup, ValidatorFn } from '@angular/
 import { AbstractControlOptions } from '@angular/forms/src/model';
 import { Observable } from 'rxjs/Observable';
 
+export { firstLettersOfWords } from '../util/firstLettersOfWords';
+
 export const REDACTED = '🙈';
 
 export function maybeRedacted<T = string>(value: T | null | undefined): T | null {
@@ -56,11 +58,6 @@ export function generateObjectId(): string {
     .replace(/[x]/g, () => (Math.random() * 16 | 0).toString(16))
     .toLowerCase();
   // tslint:enable:no-bitwise
-}
-
-export function firstLettersOfWords(words: string, limit = 3): string {
-  // https://regex101.com/r/63P0Hw
-  return (words.match(/\b([\p{Lu}\p{N}])/gu) || []).join('').substr(0, limit);
 }
 
 /**
