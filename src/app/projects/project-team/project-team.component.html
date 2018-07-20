@@ -39,7 +39,7 @@
     <mat-header-cell *matHeaderCellDef>Role(s)</mat-header-cell>
     <mat-cell *matCellDef="let member">
       <span [class.none]="member.roles.length === 0">{{ showRoles(member.roles) || 'None' }}</span>
-      <button mat-icon-button mat-button [matMenuTriggerFor]="context">
+      <button mat-icon-button mat-button [matMenuTriggerFor]="context" (click)="$event.stopPropagation()">
         <mat-icon>more_vert</mat-icon>
       </button>
       <mat-menu #context="matMenu">
@@ -59,7 +59,9 @@
   </ng-container>
 
   <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
-  <mat-row *matRowDef="let member; columns: displayedColumns;"></mat-row>
+  <mat-row class="row-hover"
+           [routerLink]="'/people/' + member.id"
+           *matRowDef="let member; columns: displayedColumns;"></mat-row>
 
 </mat-table>
 <mat-paginator [pageSizeOptions]="pageSizeOptions"
