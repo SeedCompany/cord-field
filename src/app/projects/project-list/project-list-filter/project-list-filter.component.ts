@@ -2,7 +2,6 @@ import { Component, OnInit, Output } from '@angular/core';
 import { AbstractControl, FormBuilder } from '@angular/forms';
 import { DateTime } from 'luxon';
 import { Observable } from 'rxjs/Observable';
-import { CustomValidators } from '../../../core/models/custom-validators';
 import { Language } from '../../../core/models/language';
 import { Location } from '../../../core/models/location';
 import {
@@ -13,6 +12,7 @@ import {
   ProjectType
 } from '../../../core/models/project';
 import { User } from '../../../core/models/user';
+import * as CustomValidators from '../../../core/validators';
 
 @Component({
   selector: 'app-project-list-filter',

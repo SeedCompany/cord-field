@@ -2,8 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { AbstractControl } from '@angular/forms/src/model';
 import { DateTime } from 'luxon';
-import { CustomValidators } from '../../core/models/custom-validators';
 import { onlyValidValues } from '../../core/util';
+import * as CustomValidators from '../../core/validators';
 import { SubscriptionComponent } from '../../shared/components/subscription.component';
 import { ProjectViewStateService } from '../project-view-state.service';
 
