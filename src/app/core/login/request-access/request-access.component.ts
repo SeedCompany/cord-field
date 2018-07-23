@@ -3,6 +3,7 @@ import { Component } from '@angular/core';
 import { AbstractControl, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatSnackBar, MatSnackBarRef, SimpleSnackBar } from '@angular/material';
 import { Router } from '@angular/router';
+import { TitleAware } from '../../decorators';
 import { IUserRequestAccess } from '../../models/user';
 import { AuthenticationService, isInvalidPasswordError } from '../../services/authentication.service';
 import * as CustomValidators from '../../validators';
@@ -12,6 +13,7 @@ import * as CustomValidators from '../../validators';
   templateUrl: './request-access.component.html',
   styleUrls: ['./request-access.component.scss']
 })
+@TitleAware('Request Access')
 export class RequestAccessComponent {
 
   hidePassword = true;

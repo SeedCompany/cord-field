@@ -3,6 +3,7 @@ import { AfterViewInit, Component, ViewChild } from '@angular/core';
 import { MatPaginator, MatSort, MatTableDataSource, PageEvent, Sort } from '@angular/material';
 import { Router } from '@angular/router';
 import { Observable } from 'rxjs/Observable';
+import { TitleAware } from '../../core/decorators';
 import { Organization } from '../../core/models/organization';
 import { ProjectRole } from '../../core/models/project-role';
 import { UserFilter, UserListItem, UsersWithTotal } from '../../core/models/user';
@@ -21,6 +22,7 @@ import { PeopleListFilterComponent } from './people-list-filter/people-list-filt
     ])
   ]
 })
+@TitleAware('People')
 export class PeopleListComponent implements AfterViewInit {
 
   readonly ProjectRole = ProjectRole;

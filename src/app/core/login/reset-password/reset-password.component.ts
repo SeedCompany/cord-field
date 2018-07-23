@@ -4,6 +4,7 @@ import { AbstractControl, FormBuilder, FormGroup, Validators } from '@angular/fo
 import { MatIconRegistry, MatSnackBar } from '@angular/material';
 import { DomSanitizer } from '@angular/platform-browser';
 import { ActivatedRoute, Router } from '@angular/router';
+import { TitleAware } from '../../decorators';
 import { AuthenticationService, isInvalidPasswordError } from '../../services/authentication.service';
 import * as CustomValidators from '../../validators';
 
@@ -12,6 +13,7 @@ import * as CustomValidators from '../../validators';
   templateUrl: './reset-password.component.html',
   styleUrls: ['./reset-password.component.scss']
 })
+@TitleAware('Reset Password')
 export class ResetPasswordComponent implements OnInit {
 
   token: string | null;

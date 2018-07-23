@@ -1,5 +1,6 @@
 import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
 import { MatDialog, MatPaginator, MatSnackBar, MatSort, MatTableDataSource } from '@angular/material';
+import { TitleAware } from '../../core/decorators';
 import { Project } from '../../core/models/project';
 import { ProjectRole } from '../../core/models/project-role';
 import { TeamMember } from '../../core/models/team-member';
@@ -13,6 +14,7 @@ import { ProjectTeamMemberAddComponent } from './project-team-member-add/project
   templateUrl: './project-team.component.html',
   styleUrls: ['./project-team.component.scss']
 })
+@TitleAware('Team')
 export class ProjectTeamComponent extends SubscriptionComponent implements OnInit, AfterViewInit {
 
   readonly displayedColumns = ['avatar', 'firstName', 'lastName', 'dateAdded', 'roles'];

@@ -4,6 +4,7 @@ import { DomSanitizer } from '@angular/platform-browser';
 import { Router } from '@angular/router';
 import { PersonCreateDialogComponent } from '../create-dialogs/person-create-dialog/person-create-dialog.component';
 import { ProjectCreateDialogComponent } from '../create-dialogs/project-create-dialog/project-create-dialog.component';
+import { TitleAware } from '../decorators';
 import { User } from '../models/user';
 import { AuthenticationService } from '../services/authentication.service';
 
@@ -12,6 +13,7 @@ import { AuthenticationService } from '../services/authentication.service';
   templateUrl: './header.component.html',
   styleUrls: ['./header.component.scss']
 })
+@TitleAware()
 export class HeaderComponent implements OnInit {
   currentUser: User | null;
 

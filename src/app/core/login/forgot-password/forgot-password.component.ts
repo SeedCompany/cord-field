@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { MatIconRegistry } from '@angular/material';
 import { DomSanitizer } from '@angular/platform-browser';
+import { TitleAware } from '../../decorators';
 import { AuthenticationService } from '../../services/authentication.service';
 import * as CustomValidators from '../../validators';
 
@@ -10,6 +11,7 @@ import * as CustomValidators from '../../validators';
   templateUrl: './forgot-password.component.html',
   styleUrls: ['./forgot-password.component.scss']
 })
+@TitleAware('Forgot Password')
 export class ForgotPasswordComponent {
 
   reset = false;

@@ -2,6 +2,7 @@ import { HttpErrorResponse } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
 import { MatSnackBar, MatSnackBarRef, SimpleSnackBar } from '@angular/material';
 import { ActivatedRoute, NavigationEnd, Router, UrlSegment } from '@angular/router';
+import { TitleAware, TitleProp } from '../../core/decorators';
 import { Project } from '../../core/models/project';
 import { popInOut } from '../../shared/animations';
 import { SubscriptionComponent } from '../../shared/components/subscription.component';
@@ -22,7 +23,8 @@ interface TabConfig {
     ProjectViewStateService
   ]
 })
-export class ProjectComponent extends SubscriptionComponent implements OnInit {
+@TitleAware()
+export class ProjectComponent extends SubscriptionComponent implements OnInit, TitleProp {
 
   readonly tabs: TabConfig[] = [
     {path: 'overview', label: 'Overview', saveFab: true},
@@ -83,6 +85,11 @@ export class ProjectComponent extends SubscriptionComponent implements OnInit {
 
   get showSaveFab() {
     return this.dirty && this.shouldCurrentTabShowSaveFab;
+  }
+
+  get title() {
+    return this.projectViewState.project
+      .map(project => project.name);
   }
 
   trackTabsBy(index: number, tab: TabConfig) {
