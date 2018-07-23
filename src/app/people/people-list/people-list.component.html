@@ -51,7 +51,7 @@
       <ng-container matColumnDef="organizations">
         <mat-header-cell *matHeaderCellDef>Organization(s)</mat-header-cell>
         <mat-cell *matCellDef="let person">
-          <app-collapsed-chip-list [list]="person.organizations">
+          <app-collapsed-chip-list [list]="person.organizations" (chipClicked)="onOrgClick($event)">
             <ng-template let-org>{{ org.name }}</ng-template>
           </app-collapsed-chip-list>
         </mat-cell>

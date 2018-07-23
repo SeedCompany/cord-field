@@ -1,10 +1,10 @@
 import { DateTime, Interval } from 'luxon';
+import { firstLettersOfWords, generateObjectId, maybeRedacted } from '../util';
 import { buildEnum } from './enum';
 import { Language } from './language';
 import { Location } from './location';
 import { Organization } from './organization';
 import { ProjectRole } from './project-role';
-import { firstLettersOfWords, generateObjectId, maybeRedacted } from './util';
 
 export interface IUserRequestAccess {
   email: string;

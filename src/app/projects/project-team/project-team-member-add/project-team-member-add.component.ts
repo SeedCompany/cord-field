@@ -5,8 +5,9 @@ import { Project } from '../../../core/models/project';
 import { ProjectRole } from '../../../core/models/project-role';
 import { TeamMember } from '../../../core/models/team-member';
 import { User } from '../../../core/models/user';
-import { TypedFormControl } from '../../../core/models/util';
 import { UserService } from '../../../core/services/user.service';
+import { TypedFormControl } from '../../../core/util';
+import { SubscriptionComponent } from '../../../shared/components/subscription.component';
 import { ProjectViewStateService } from '../../project-view-state.service';
 
 @Component({
@@ -14,7 +15,7 @@ import { ProjectViewStateService } from '../../project-view-state.service';
   templateUrl: './project-team-member-add.component.html',
   styleUrls: ['./project-team-member-add.component.scss']
 })
-export class ProjectTeamMemberAddComponent {
+export class ProjectTeamMemberAddComponent extends SubscriptionComponent {
 
   readonly ProjectRole = ProjectRole;
 
@@ -32,9 +33,12 @@ export class ProjectTeamMemberAddComponent {
               private snackBar: MatSnackBar,
               private userService: UserService,
               @Inject(MAT_DIALOG_DATA) data: { project: Project, projectViewState: ProjectViewStateService }) {
+    super();
     this.projectViewState = data.projectViewState;
     this.project = data.project;
-    this.projectViewState.isSubmitting.subscribe(s => this.submitting = s);
+    this.projectViewState.isSubmitting
+      .takeUntil(this.unsubscribe)
+      .subscribe(s => this.submitting = s);
   }
 
   get currentUsers() {

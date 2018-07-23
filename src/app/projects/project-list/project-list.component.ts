@@ -1,8 +1,10 @@
 import { animate, state, style, transition, trigger } from '@angular/animations';
 import { AfterViewInit, Component, ViewChild } from '@angular/core';
 import { MatPaginator, MatSort, MatTableDataSource, PageEvent, Sort } from '@angular/material';
+import { Router } from '@angular/router';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { Observable } from 'rxjs/Observable';
+import { Language } from '../../core/models/language';
 import { Project, ProjectFilter, ProjectStatus, ProjectsWithCount, ProjectType } from '../../core/models/project';
 import { ProjectService } from '../../core/services/project.service';
 import { ProjectListFilterComponent } from './project-list-filter/project-list-filter.component';
@@ -47,7 +49,10 @@ export class ProjectListComponent implements AfterViewInit {
   @ViewChild(MatSort) sort: MatSort;
   @ViewChild(ProjectListFilterComponent) filtersComponent: ProjectListFilterComponent;
 
-  constructor(private projectService: ProjectService) {
+  constructor(
+    private projectService: ProjectService,
+    private router: Router
+  ) {
     this.listSelector = new BehaviorSubject(this.listSelectorOptions[0]);
   }
 
@@ -80,6 +85,10 @@ export class ProjectListComponent implements AfterViewInit {
         this.totalCount = data.count;
         this.projectSource.data = data.projects;
       });
+  }
+
+  onLanguageClick(language: Language) {
+    this.router.navigate(['/languages', language.id]);
   }
 
   onClearFilters() {

@@ -3,9 +3,9 @@ import { AbstractControl, FormBuilder, FormGroup, Validators } from '@angular/fo
 import { MatIconRegistry } from '@angular/material';
 import { DomSanitizer } from '@angular/platform-browser';
 import { Router } from '@angular/router';
-import { CustomValidators } from '../../models/custom-validators';
 import { AuthenticationService } from '../../services/authentication.service';
 import { LoggerService } from '../../services/logger.service';
+import * as CustomValidators from '../../validators';
 
 @Component({
   selector: 'app-login',

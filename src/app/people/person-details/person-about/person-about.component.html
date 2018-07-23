@@ -11,7 +11,7 @@
     <mat-list-item *ngFor="let edu of user.education; trackBy: trackById">
       <span mat-line>
         {{ Degree.forUI(edu.degree) }}
-        <span class="edu-separator">-</span>
+        <span class="edu-separator">|</span>
         {{ edu.major }}
       </span>
       <span mat-line>{{ edu.institution }}</span>
@@ -29,8 +29,8 @@
     </mat-chip-list>
   </ng-container>
 </ng-template>
-<ng-container *ngTemplateOutlet="skills; context: {type: 'Skills', list: user.skills}"></ng-container>
-<ng-container *ngTemplateOutlet="skills; context: {type: 'Custom Skills', list: user.customSkills}"></ng-container>
+<ng-container *ngTemplateOutlet="skills; context: {label: 'Skills', list: user.skills}"></ng-container>
+<ng-container *ngTemplateOutlet="skills; context: {label: 'Custom Skills', list: user.customSkills}"></ng-container>
 
 <ng-container *ngIf="user.knownLanguages.length > 0">
   <h3 class="mat-caption">Languages</h3>

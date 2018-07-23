@@ -1,4 +1,4 @@
-import { Component, ContentChild, Input, TemplateRef } from '@angular/core';
+import { Component, ContentChild, EventEmitter, Input, Output, TemplateRef } from '@angular/core';
 
 @Component({
   selector: 'app-collapsed-chip-list',
@@ -11,6 +11,9 @@ export class CollapsedChipListComponent<T> {
   @Input() list: T[];
   /** The number of items to show before collapsing */
   @Input() show = 1;
+
+  // Not to be confused with chip selection events
+  @Output() chipClicked = new EventEmitter<T>();
 
   /**
    * The function to track the items by.

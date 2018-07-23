@@ -1,7 +1,9 @@
 import { animate, state, style, transition, trigger } from '@angular/animations';
 import { AfterViewInit, Component, ViewChild } from '@angular/core';
 import { MatDialog, MatPaginator, MatSort, MatTableDataSource, PageEvent, Sort } from '@angular/material';
+import { Router } from '@angular/router';
 import { Observable } from 'rxjs/Observable';
+import { Organization } from '../../core/models/organization';
 import { ProjectRole } from '../../core/models/project-role';
 import { UserFilter, UserListItem, UsersWithTotal } from '../../core/models/user';
 import { UserService } from '../../core/services/user.service';
@@ -34,7 +36,8 @@ export class PeopleListComponent implements AfterViewInit {
   @ViewChild(PeopleListFilterComponent) filtersComponent: PeopleListFilterComponent;
 
   constructor(private dialog: MatDialog,
-              private userService: UserService) { }
+              private userService: UserService,
+              private router: Router) {}
 
   ngAfterViewInit() {
     Observable
@@ -69,5 +72,9 @@ export class PeopleListComponent implements AfterViewInit {
 
   onClearFilters() {
     this.filtersComponent.reset();
+  }
+
+  onOrgClick(org: Organization) {
+    this.router.navigate(['/organizations', org.id]);
   }
 }

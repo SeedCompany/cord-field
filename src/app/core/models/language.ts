@@ -1,4 +1,4 @@
-import { maybeRedacted } from './util';
+import { firstLettersOfWords, maybeRedacted } from '../util';
 
 export class Language {
 
@@ -34,5 +34,9 @@ export class Language {
 
   get population(): number | null {
     return this.organizationPopulation || this.ethnologuePopulation;
+  }
+
+  get avatarLetters() {
+    return firstLettersOfWords(this.nameOrDisplayName);
   }
 }

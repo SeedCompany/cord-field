@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Language } from '../../core/models/language';
+import { SubscriptionComponent } from '../../shared/components/subscription.component';
 import { ProjectViewStateService } from '../project-view-state.service';
 
 @Component({
@@ -7,18 +8,21 @@ import { ProjectViewStateService } from '../project-view-state.service';
   templateUrl: './project-languages.component.html',
   styleUrls: ['./project-languages.component.scss']
 })
-export class ProjectLanguagesComponent implements OnInit {
+export class ProjectLanguagesComponent extends SubscriptionComponent implements OnInit {
 
   languages: Language[] = [];
   addingLanguage = false;
 
   constructor(private projectViewState: ProjectViewStateService) {
+    super();
   }
 
   ngOnInit() {
-    this.projectViewState.project.subscribe(project => {
-      this.languages = project.languages;
-    });
+    this.projectViewState.project
+      .takeUntil(this.unsubscribe)
+      .subscribe(project => {
+        this.languages = project.languages;
+      });
   }
 
   onSelect(language: Language) {

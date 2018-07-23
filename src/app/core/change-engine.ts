@@ -2,7 +2,7 @@ import { DateTime } from 'luxon';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { Observable } from 'rxjs/Observable';
 import { SaveResult } from './abstract-view-state';
-import { clone, mapEntries } from './models/util';
+import { clone, mapEntries } from './util';
 
 const isEqual = require('lodash.isequal');
 
