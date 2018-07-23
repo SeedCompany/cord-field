@@ -3,3 +3,38 @@
 :host {
   @extend %component-defaults;
 }
+
+mat-card-content {
+  display: flex;
+  flex-direction: column;
+  padding-left: 3em;
+  max-width: 39em;
+}
+
+.fields-container {
+  display: flex;
+
+  mat-form-field {
+    flex: 1;
+    margin-right: 24px;
+    &:last-child {
+      margin-right: 0;
+    }
+  }
+}
+
+.container {
+  display: flex;
+  flex-direction: column;
+  mat-form-field {
+    flex: 1;
+  }
+  .mat-icon {
+    align-content: right;
+    margin-left: 20em;
+  }
+}
+
+button {
+  width: fit-content;
+}
