@@ -1,5 +1,6 @@
 import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
 import { inject, TestBed } from '@angular/core/testing';
+import { environment } from '../../../environments/environment';
 import { CoreModule } from '../core.module';
 import { AuthenticationService } from './authentication.service';
 
@@ -11,6 +12,8 @@ const testUser = {
   password: 'test',
   domain: 'field'
 };
+
+const testBaseUrl = environment.services['plo.cord.bible'];
 
 describe('AuthenticationService', () => {
   beforeEach(() => {
@@ -83,6 +86,22 @@ describe('AuthenticationService', () => {
           done();
         })
         .catch(done.fail);
+    });
+  });
+
+  describe('change password', () => {
+    it('change password of a user', (done: DoneFn) => {
+      const user = testUser;
+      authService
+        .changePassword(user.email, user.password, 'test')
+        .then(() => {
+          done();
+        })
+        .catch(done.fail);
+
+      httpMockService
+        .expectOne({url: `${testBaseUrl}/auth/native/change-password`, method: 'PUT'})
+        .flush([{}]);
     });
   });
 });

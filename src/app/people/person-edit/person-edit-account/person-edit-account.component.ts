@@ -1,4 +1,6 @@
 import { Component } from '@angular/core';
+import { AbstractControl, FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { AuthenticationService } from '../../../core/services/authentication.service';
 import { UserViewStateService } from '../../user-view-state.service';
 import { AbstractPersonComponent } from '../abstract-person.component';
 
@@ -8,7 +10,51 @@ import { AbstractPersonComponent } from '../abstract-person.component';
   styleUrls: ['./person-edit-account.component.scss']
 })
 export class PersonEditAccountComponent extends AbstractPersonComponent {
-  constructor(userViewState: UserViewStateService) {
+
+  expanded = false;
+  hideCurrentPassword = true;
+  hideNewPassword = true;
+  hideConfirmPassword = true;
+  submitting = false;
+  serverError: string;
+
+  form: FormGroup = this.fb.group({
+    currentPassword: ['', Validators.required],
+    newPassword: ['', Validators.required],
+    confirmPassword: ['', [Validators.required, this.passwordMisatch]]
+  });
+
+  constructor(private authService: AuthenticationService,
+              private fb: FormBuilder,
+              userViewState: UserViewStateService) {
     super(userViewState);
+  }
+
+  async onPasswordChange() {
+    this.submitting = true;
+    this.form.disable();
+    this.serverError = '';
+    try {
+      if (!this.user.email) {
+        throw new Error(`${this.user.fullName}'s email address not found`);
+      }
+      const {currentPassword, newPassword} = this.form.value;
+      await this.authService.changePassword(this.user.email, currentPassword, newPassword);
+    } catch (err) {
+      this.serverError = err.message;
+      return;
+    } finally {
+      this.submitting = false;
+      this.form.reset({});
+      this.form.enable();
+    }
+  }
+
+  get confirmPassword(): AbstractControl {
+    return this.form.get('confirmPassword')!;
+  }
+
+  passwordMisatch(control: AbstractControl) {
+    return control.value && control.root.get('newPassword')!.value !== control.value ? {invalidPassword: true} : null;
   }
 }

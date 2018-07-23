@@ -111,6 +111,8 @@ export class AuthenticationService {
       case 'invalid_token':
         return 'Weird, your token is invalid. If you copied the link emailed to you, make sure you got it exactly as it was' +
           ' sent. Please contact Cord Field Support Services.';
+      case 'unauthorized':
+        return 'Please input valid password.';
     }
 
     return 'Unknown error';
@@ -127,6 +129,18 @@ export class AuthenticationService {
   async resetPassword(confirmationToken: string, newPassword: string): Promise<void> {
     try {
       await this.api.put(`/auth/native/reset-password/${confirmationToken}`, {password: newPassword, domain: DOMAIN}).toPromise();
+    } catch (e) {
+      throw new Error(this.getErrorMessage(e));
+    }
+  }
+
+  async changePassword(email: string, currentPassword: string, newPassword: string): Promise<void> {
+    try {
+      await this.api.put('/auth/native/change-password', {
+        email,
+        currentPassword,
+        newPassword
+      }).toPromise();
     } catch (e) {
       throw new Error(this.getErrorMessage(e));
     }

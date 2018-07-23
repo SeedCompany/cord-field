@@ -1,3 +1,79 @@
-<p>
-  person-edit-account works!
-</p>
+<mat-card>
+  <mat-card-content class [formGroup]="form"
+                    (keyup.enter)="form.valid ? onPasswordChange() : null">
+    <span mat-card-title>Password</span>
+    <div>
+      <button mat-button (click)="expanded = !expanded">
+        <mat-icon *ngIf="!expanded">chevron_right</mat-icon>
+        <mat-icon *ngIf="expanded">expand_more</mat-icon>
+        <span>Change Password</span>
+      </button>
+    </div>
+    <div class="container" *ngIf="expanded">
+      <mat-form-field color="accent">
+        <input
+          matInput
+          placeholder="Current Password"
+          formControlName="currentPassword"
+          [type]="hideCurrentPassword ? 'password' : 'text'">
+        <mat-icon matSuffix
+                  color="primary"
+                  (click)="hideCurrentPassword = !hideCurrentPassword"
+        >
+          {{ hideCurrentPassword ? 'visibility' : 'visibility_off' }}
+        </mat-icon>
+        <mat-error>Please enter your current password</mat-error>
+      </mat-form-field>
+      <mat-form-field color="accent">
+        <input
+          matInput
+          placeholder="New Password"
+          formControlName="newPassword"
+          [type]="hideNewPassword ? 'password' : 'text'">
+        <mat-icon matSuffix
+                  color="primary"
+                  (click)="hideNewPassword = !hideNewPassword"
+        >
+          {{ hideNewPassword ? 'visibility' : 'visibility_off' }}
+        </mat-icon>
+        <mat-error>Please enter your new password</mat-error>
+      </mat-form-field>
+
+      <mat-form-field color="accent">
+        <input
+          matInput
+          placeholder="Confirm New Password"
+          formControlName="confirmPassword"
+          [type]="hideConfirmPassword ? 'password' : 'text'">
+        <mat-icon matSuffix
+                  color="primary"
+                  (click)="hideConfirmPassword = !hideConfirmPassword"
+        >
+          {{ hideConfirmPassword ? 'visibility' : 'visibility_off' }}
+        </mat-icon>
+        <mat-error *ngIf="confirmPassword.hasError('required')">Please re-enter your new password</mat-error>
+        <mat-error *ngIf="confirmPassword.hasError('invalidPassword')">Must match your new password</mat-error>
+      </mat-form-field>
+      <mat-error *ngIf="serverError"> {{ serverError }}</mat-error>
+    </div>
+  </mat-card-content>
+  <mat-card-actions>
+
+
+    <button mat-raised-button
+            color="accent"
+            (click)="onPasswordChange()"
+            [disabled]="!form.valid || submitting"
+    >
+      <ng-container *ngIf="!submitting">UPDATE</ng-container>
+      <mat-progress-spinner
+        *ngIf="submitting"
+        color="accent"
+        mode="indeterminate"
+        strokeWidth="3"
+        [diameter]="24"
+      ></mat-progress-spinner>
+    </button>
+
+  </mat-card-actions>
+</mat-card>

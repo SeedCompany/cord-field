@@ -1,5 +1,30 @@
 @import "~styles/imports";
 
 :host {
+  flex: 1;
   @extend %component-defaults;
 }
+
+.container {
+  display: flex;
+  flex-direction: column;
+  padding-left: 3em;
+}
+
+mat-card-content {
+  padding-left: 3em;
+  max-width: 39em;
+}
+
+mat-progress-spinner {
+  margin: 0 auto;
+}
+
+mat-card-actions {
+  max-width: 35em;
+  button {
+    float: right;
+  }
+}
+
+
