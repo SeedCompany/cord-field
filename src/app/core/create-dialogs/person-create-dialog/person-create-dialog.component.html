@@ -1,70 +1,53 @@
-<h1 mat-dialog-title>New Person Profile</h1>
-<form mat-dialog-content [formGroup]="form" (keyup.enter)="form.valid ? onCreate() : null">
+<h1 mat-dialog-title>New Person</h1>
+<form mat-dialog-content [formGroup]="form">
   <div class="name-container">
     <mat-form-field color="accent">
-      <input type="text" matInput
+      <input matInput
              placeholder="First Name"
              formControlName="firstName"
       />
-      <mat-error *ngIf="firstName.errors?.required">Please enter your first name</mat-error>
-      <mat-error *ngIf="firstName.errors?.minlength">Name must be at least 2 characters long</mat-error>
+      <mat-error *ngIf="firstName.errors?.required">Please enter their first name</mat-error>
+      <mat-error *ngIf="firstName.errors?.minlength">First name must be at least 2 characters</mat-error>
     </mat-form-field>
     <mat-form-field color="accent">
-      <input type="text" matInput
+      <input matInput
              placeholder="Last Name"
              formControlName="lastName"
       />
-      <mat-error *ngIf="lastName.errors?.required">Please enter your last name</mat-error>
-      <mat-error *ngIf="lastName.errors?.minlength">Name must be at least 2 characters long</mat-error>
+      <mat-error *ngIf="lastName.errors?.required">Please enter their last name</mat-error>
+      <mat-error *ngIf="lastName.errors?.minlength">Last name must be at least 2 characters</mat-error>
     </mat-form-field>
   </div>
   <mat-form-field color="accent">
-    <input type="text" matInput
+    <input type="email" matInput
            placeholder="Email"
            formControlName="email"
     />
-    <mat-error *ngIf="email.errors?.required">Please enter email</mat-error>
-    <mat-error>Please enter a valid email</mat-error>
+    <mat-error *ngIf="email.errors?.required">Please enter their email address</mat-error>
+    <mat-error>Please enter a valid email address</mat-error>
   </mat-form-field>
 
+  <app-user-roles-form
+    [disabled]="form.disabled"
+    (formReady)="form.addControl('userRoles', $event)"
+  ></app-user-roles-form>
 
-  <div formArrayName="roles"
-       *ngFor="let role of userRoles.controls; index as i; trackBy: trackByIndex">
-    <mat-form-field color="accent" [formGroupName]="i">
-      <mat-select placeholder="Role" formControlName="role">
-        <mat-option *ngFor="let availableRole of getAvailableRoles(i); trackBy: trackByValue"
-                    [value]="availableRole">
-          {{ ProjectRole.forUI(availableRole) }}
-        </mat-option>
-      </mat-select>
-      <mat-error>Please select one or more roles</mat-error>
-    </mat-form-field>
-    <app-autocomplete-location
-      [chips]="true"
-      [list]="getLocations(i).value"
-      (optionSelected)="onLocationSelected(i,$event)"
-      (removed)="onLocationRemoved(i,$event)"
-    >
-    </app-autocomplete-location>
-  </div>
-
-
-  <button type="button" mat-button color="accent" (click)="addRole()">Add Role</button>
+  <mat-slide-toggle color="accent" formControlName="sendInvite">Email them an invite?</mat-slide-toggle>
 </form>
 <div mat-dialog-actions>
   <button mat-button
           color="accent"
-          [disabled]="!form.valid || submitting"
+          [disabled]="form.invalid || form.disabled"
           (click)="onCreate()">
-    <ng-container *ngIf="!submitting">CREATE PROFILE</ng-container>
+    <ng-container *ngIf="form.enabled">CREATE</ng-container>
     <mat-progress-spinner
-      *ngIf="submitting"
+      *ngIf="form.disabled"
       color="accent"
       mode="indeterminate"
       strokeWidth="3"
       [diameter]="32"
     ></mat-progress-spinner>
   </button>
-  <button mat-button [disabled]="submitting" color="accent" mat-dialog-close>CANCEL</button>
+  <button mat-button color="accent" [disabled]="form.disabled" mat-dialog-close>CANCEL</button>
 
 </div>

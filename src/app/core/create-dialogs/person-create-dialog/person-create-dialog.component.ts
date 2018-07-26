@@ -1,12 +1,10 @@
-import { Component, OnInit } from '@angular/core';
-import { AbstractControl, FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { MatDialogRef, MatSnackBar, MatSnackBarRef, SimpleSnackBar } from '@angular/material';
+import { Component, HostListener, OnInit, ViewChild } from '@angular/core';
+import { AbstractControl, FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { MatDialog, MatDialogRef, MatSnackBar } from '@angular/material';
 import { Router } from '@angular/router';
-import { CustomValidators } from '../../models/custom-validators';
-import { Location } from '../../models/location';
-import { ProjectRole } from '../../models/project-role';
-import { UserRole } from '../../models/user';
+import { UserRolesFormComponent } from '../../../shared/components/user-roles-form/user-roles-form.component';
 import { UserService } from '../../services/user.service';
+import * as CustomValidators from '../../validators';
 
 @Component({
   selector: 'app-person-create-dialog',
@@ -16,43 +14,32 @@ import { UserService } from '../../services/user.service';
 export class PersonCreateDialogComponent implements OnInit {
 
   form: FormGroup;
-  submitting = false;
-  userRoles: FormArray;
-  availableRoles: ProjectRole[] = [];
 
-  private snackBarRef?: MatSnackBarRef<SimpleSnackBar>;
-  private allRoles: ProjectRole[] = [
-    ProjectRole.Consultant,
-    ProjectRole.RegionalDirector,
-    ProjectRole.AreaDirector,
-    ProjectRole.Writer,
-    ProjectRole.ConsultantManager,
-    ProjectRole.LeadFinancialAnalyst,
-    ProjectRole.FieldCoordinator
-  ];
-  readonly ProjectRole = ProjectRole;
+  @ViewChild(UserRolesFormComponent) userRoles: UserRolesFormComponent;
 
+  static open(dialog: MatDialog) {
+    return dialog.open(PersonCreateDialogComponent, {
+      width: '500px',
+      disableClose: true
+    });
+  }
 
-  constructor(public dialogRef: MatDialogRef<PersonCreateDialogComponent>,
+  constructor(private dialogRef: MatDialogRef<PersonCreateDialogComponent>,
               private formBuilder: FormBuilder,
               private router: Router,
               private snackBar: MatSnackBar,
               private userService: UserService) {
   }
 
-  ngOnInit() {
-    this.userRoles = this.formBuilder.array([]);
+  async ngOnInit() {
     this.form = this.formBuilder.group({
       firstName: ['', [Validators.required, Validators.minLength(2)]],
       lastName: ['', [Validators.required, Validators.minLength(2)]],
       email: ['', CustomValidators.email],
-      roles: this.userRoles
+      sendInvite: [false]
     });
-    this.roles.valueChanges.subscribe((userRoles: UserRole[]) => {
-      this.availableRoles = this.allRoles
-        .filter(role => !userRoles.find(userRole => userRole.role === role))
-        .sort();
-    });
+
+    this.dialogRef.backdropClick().subscribe(() => this.onEscKey());
   }
 
   get firstName(): AbstractControl {
@@ -67,62 +54,31 @@ export class PersonCreateDialogComponent implements OnInit {
     return this.form.get('email')!;
   }
 
-  getLocations(index: number): AbstractControl {
-    return this.userRoles.at(index).get('locations')!;
-  }
-
-  get roles(): AbstractControl {
-    return this.form.get('roles')!;
-  }
-
-  addRole(): void {
-    this.userRoles.push(this.createRole());
-  }
-
-  getAvailableRoles(i: number): ProjectRole[] {
-    const projectRoles = [...this.availableRoles];
-    if (this.roles.value[i].role) {
-      projectRoles.push(this.roles.value[i].role);
+  @HostListener('keyup.enter') onEnterKey() {
+    if (this.form.valid && !this.userRoles.isPanelOpen) {
+      this.onCreate();
     }
-    return projectRoles.sort();
   }
 
-  private createRole(): FormGroup {
-    return this.formBuilder.group({
-      role: [],
-      locations: [[]]
-    });
-  }
-
-  onLocationSelected(index: number, location: Location): void {
-    this.getLocations(index).setValue([...this.getLocations(index).value, location]);
-  }
-
-  onLocationRemoved(index: number, location: Location): void {
-    this.getLocations(index).setValue((this.getLocations(index).value as Location[]).filter(loc => loc.id !== location.id));
-  }
-
-  async onCreate() {
-    this.submitting = true;
-    this.form.disable();
-    try {
-      this.form.value.roles = this.form.value.roles.filter((profile: UserRole) => !!profile.role);
-      const user = await this.userService.createProfile(this.form.value);
-    } catch (e) {
-      this.showSnackBar('Failed to create user profile');
-    } finally {
-      this.submitting = false;
+  @HostListener('keyup.esc') onEscKey() {
+    if (!this.userRoles.isPanelOpen) {
       this.dialogRef.close();
     }
   }
 
-  private showSnackBar(message: string) {
-    this.snackBarRef = this.snackBar.open(message, undefined, {
-      duration: 3000
-    });
-  }
-
-  trackByIndex(index: number): number {
-    return index;
+  async onCreate() {
+    this.form.disable();
+    try {
+      const user = await this.userService.create(this.form.value);
+      this.router.navigate(['/users', user.id]);
+      this.dialogRef.close();
+      if (this.form.value.sendInvite) {
+        this.snackBar.open('Invitation sent', undefined, {duration: 5000});
+      }
+    } catch (e) {
+      this.snackBar.open('Failed to create person', undefined, {duration: 3000});
+    } finally {
+      this.form.enable();
+    }
   }
 }

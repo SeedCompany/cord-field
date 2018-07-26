@@ -14,6 +14,7 @@ import { CollapsedChipListComponent } from './components/collapsed-chip-list/col
 import { SearchComponent } from './components/search/search.component';
 import { SpeedDialItemComponent } from './components/speed-dial-item/speed-dial-item.component';
 import { SpeedDialComponent } from './components/speed-dial/speed-dial.component';
+import { UserRolesFormComponent } from './components/user-roles-form/user-roles-form.component';
 import { AutofocusDirective } from './directives/autofocus.directive';
 import { NotImplementedDirective } from './directives/not-implemented.directive';
 import { LuxonDateAdapter, MAT_LUXON_DATE_FORMATS } from './luxon-date-adapter';
@@ -44,7 +45,8 @@ import { LanguageInfoPipe } from './pipes/language-info.pipe';
     ReactiveFormsModule,
     SearchComponent,
     SpeedDialComponent,
-    SpeedDialItemComponent
+    SpeedDialItemComponent,
+    UserRolesFormComponent
   ],
   declarations: [
     AutocompleteLanguageComponent,
@@ -59,7 +61,8 @@ import { LanguageInfoPipe } from './pipes/language-info.pipe';
     NotImplementedDirective,
     SearchComponent,
     SpeedDialComponent,
-    SpeedDialItemComponent
+    SpeedDialItemComponent,
+    UserRolesFormComponent
   ],
   providers: [
     DecimalPipe,

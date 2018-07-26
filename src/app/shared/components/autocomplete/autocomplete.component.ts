@@ -68,6 +68,14 @@ export class AutocompleteComponent<T> implements AfterViewInit, OnChanges {
     this.trackBy = ((item: { id: string }) => item.id) as any;
   }
 
+  get panelOpen() {
+    return this.autocomplete.panelOpen;
+  }
+
+  focus() {
+    this.searchInput.nativeElement.focus();
+  }
+
   ngOnChanges(changes: SimpleChanges): void {
     if (changes.autoFocus && changes.autoFocus.currentValue) {
       window.setTimeout(() => {

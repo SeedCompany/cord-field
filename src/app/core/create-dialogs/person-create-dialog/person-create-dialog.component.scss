@@ -1,7 +1,23 @@
 @import "~styles/imports";
 
+:host {
+  @extend %component-defaults;
+}
+
+.name-container {
+  display: flex;
+}
+
 .mat-form-field {
+  flex: 1;
   display: block;
+  & + & {
+    margin-left: 16px;
+  }
+}
+
+mat-slide-toggle {
+  margin: 12px 0;
 }
 
 // Flip direction so tab index prioritizes the forward action
@@ -20,15 +36,3 @@
 mat-progress-spinner {
   margin: 0 auto;
 }
-
-.name-container {
-  display: flex;
-}
-
-mat-form-field {
-  & + & {
-    margin-left: 5px;
-  }
-}
-
-

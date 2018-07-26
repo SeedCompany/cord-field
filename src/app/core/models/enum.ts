@@ -14,7 +14,7 @@ export interface GoodEnum<T> {
   trackValueBy(index: number, value: T): T;
 }
 
-export function buildEnum<T>(object: T, valueToUiMapping: {[key: string]: string}): GoodEnum<T> {
+export function buildEnum<T>(object: Object, valueToUiMapping: {[key: string]: string}): GoodEnum<T> {
   return {
     values: enumValues(object),
     entries: enumEntries(valueToUiMapping),
@@ -24,7 +24,7 @@ export function buildEnum<T>(object: T, valueToUiMapping: {[key: string]: string
   };
 }
 
-function enumValues<T>(object: T): () => T[] {
+function enumValues<T>(object: Object): () => T[] {
   const values = Object.values(object).filter(i => typeof i === 'string');
   return () => values;
 }
@@ -43,7 +43,7 @@ function enumTrackEntryBy() {
   return (index: number, entry: EnumListEntry<any>) => entry.value;
 }
 
-function enumForUI<T>(object: T) {
+function enumForUI<T>(object: Object) {
   return (value: T): string | null => {
     const match = (object as any as GoodEnum<T>).entries().find(val => val.value === value);
     return match ? match.ui : null;

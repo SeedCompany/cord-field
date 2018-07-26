@@ -7,7 +7,8 @@ import { SaveResult } from '../abstract-view-state';
 import { Project } from '../models/project';
 import { ProjectRole } from '../models/project-role';
 import { TeamMember } from '../models/team-member';
-import { ICreateProfileAPI, User, UserFilter, UserListItem, UserProfile, UsersWithTotal } from '../models/user';
+import { NewUser, User, UserFilter, UserListItem, UserProfile, UsersWithTotal } from '../models/user';
+import { generateObjectId } from '../util';
 import { HttpParams } from './http/abstract-http-client';
 import { PloApiService } from './http/plo-api.service';
 
@@ -86,8 +87,13 @@ export class UserService {
     });
   }
 
-  async createProfile(user: ICreateProfileAPI): Promise<{id: String}> {
-    const id = 'iBFFFGvBVlIpvsKVanrbIYVBaPwkDnhjjb0.n_cPm_zyG_7D7WWLDT7ozQ.zfUnrX9tXoPtWtDc9PLhUw';
-    return {id};
+  getAssignableRolesForUser(user: User): Promise<ProjectRole[]> {
+    return Observable.of(ProjectRole.values()).delay(2000).toPromise();
+  }
+
+  create(newUser: NewUser): Promise<User> {
+    const id = generateObjectId();
+    const user = User.fromJson({...newUser, id});
+    return Observable.of(user).delay(2000).toPromise();
   }
 }

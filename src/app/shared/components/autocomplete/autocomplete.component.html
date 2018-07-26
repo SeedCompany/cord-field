@@ -17,6 +17,7 @@
         #searchInput
       />
       <mat-autocomplete #auto="matAutocomplete"
+                        autoActiveFirstOption
                         [displayWith]="displayWith"
                         (optionSelected)="onSelect($event)">
         <mat-option *ngFor="let result of searchResults; trackBy: trackByFn" [value]="result">

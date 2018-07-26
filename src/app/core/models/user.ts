@@ -14,6 +14,14 @@ export interface IUserRequestAccess {
   password: string;
 }
 
+export interface NewUser {
+  firstName: string;
+  lastName: string;
+  email: string;
+  roles: UserRole[];
+  sendInvite: boolean;
+}
+
 export class User {
 
   id: string;
@@ -251,11 +259,4 @@ export class Unavailability {
   static create(): Unavailability {
     return Object.assign(new Unavailability(), {id: generateObjectId()});
   }
-}
-
-export interface ICreateProfileAPI {
-  email: string;
-  firstName: string;
-  lastName: string;
-  roles: UserRole[];
 }
