@@ -24,7 +24,8 @@
            formControlName="email"
     />
     <mat-error *ngIf="email.errors?.required">Please enter their email address</mat-error>
-    <mat-error>Please enter a valid email address</mat-error>
+    <mat-error *ngIf="email.errors?.invalidEmail">Please enter a valid email address</mat-error>
+    <mat-error *ngIf="email.errors?.inUse">This email address is already in use</mat-error>
   </mat-form-field>
 
   <app-user-roles-form

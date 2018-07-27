@@ -1,3 +1,4 @@
+import { HttpErrorResponse } from '@angular/common/http';
 import { Component, HostListener, OnInit, ViewChild } from '@angular/core';
 import { AbstractControl, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatDialog, MatDialogRef, MatSnackBar } from '@angular/material';
@@ -76,9 +77,13 @@ export class PersonCreateDialogComponent implements OnInit {
         this.snackBar.open('Invitation sent', undefined, {duration: 5000});
       }
     } catch (e) {
-      this.snackBar.open('Failed to create person', undefined, {duration: 3000});
-    } finally {
       this.form.enable();
+
+      if (e instanceof HttpErrorResponse && e.status === 409) {
+        this.email.setErrors({inUse: true});
+      } else {
+        this.snackBar.open('Failed to create person', undefined, {duration: 3000});
+      }
     }
   }
 }
