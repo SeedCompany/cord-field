@@ -1,0 +1,13 @@
+@import "~styles/imports";
+
+:host {
+  @extend %component-defaults;
+}
+
+button {
+  align-self: flex-start;
+}
+
+mat-option.remove {
+  font-style: italic;
+}

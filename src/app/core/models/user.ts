@@ -14,6 +14,14 @@ export interface IUserRequestAccess {
   password: string;
 }
 
+export interface NewUser {
+  firstName: string;
+  lastName: string;
+  email: string;
+  roles: UserRole[];
+  sendInvite: boolean;
+}
+
 export class User {
 
   id: string;

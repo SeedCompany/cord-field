@@ -1,6 +1,6 @@
 import { animate, state, style, transition, trigger } from '@angular/animations';
 import { AfterViewInit, Component, ViewChild } from '@angular/core';
-import { MatDialog, MatPaginator, MatSort, MatTableDataSource, PageEvent, Sort } from '@angular/material';
+import { MatPaginator, MatSort, MatTableDataSource, PageEvent, Sort } from '@angular/material';
 import { Router } from '@angular/router';
 import { Observable } from 'rxjs/Observable';
 import { Organization } from '../../core/models/organization';
@@ -35,8 +35,7 @@ export class PeopleListComponent implements AfterViewInit {
   @ViewChild(MatSort) sort: MatSort;
   @ViewChild(PeopleListFilterComponent) filtersComponent: PeopleListFilterComponent;
 
-  constructor(private dialog: MatDialog,
-              private userService: UserService,
+  constructor(private userService: UserService,
               private router: Router) {}
 
   ngAfterViewInit() {

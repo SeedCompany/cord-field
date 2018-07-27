@@ -7,7 +7,8 @@ import { SaveResult } from '../abstract-view-state';
 import { Project } from '../models/project';
 import { ProjectRole } from '../models/project-role';
 import { TeamMember } from '../models/team-member';
-import { User, UserFilter, UserListItem, UserProfile, UsersWithTotal } from '../models/user';
+import { NewUser, User, UserFilter, UserListItem, UserProfile, UsersWithTotal } from '../models/user';
+import { generateObjectId } from '../util';
 import { HttpParams } from './http/abstract-http-client';
 import { PloApiService } from './http/plo-api.service';
 
@@ -84,5 +85,15 @@ export class UserService {
         (teamMember ? member.id !== teamMember.id : true)
         && member.roles.includes(role));
     });
+  }
+
+  getAssignableRolesForUser(user: User): Promise<ProjectRole[]> {
+    return Observable.of(ProjectRole.values()).delay(2000).toPromise();
+  }
+
+  create(newUser: NewUser): Promise<string> {
+    return this.plo.post<{id: string}>('/users/invite', newUser)
+      .map(result => result.id)
+      .toPromise();
   }
 }

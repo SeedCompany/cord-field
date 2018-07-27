@@ -14,7 +14,7 @@ export enum ProjectRole {
 }
 
 export namespace ProjectRole {
-  export const {entries, forUI, values, trackEntryBy, trackValueBy} = buildEnum(ProjectRole, {
+  export const {entries, forUI, values, trackEntryBy, trackValueBy} = buildEnum<ProjectRole>(ProjectRole, {
     [ProjectRole.Consultant]: 'Consultant',
     [ProjectRole.ConsultantManager]: 'Consultant Manager',
     [ProjectRole.Controller]: 'Controller',
@@ -39,5 +39,16 @@ export namespace ProjectRole {
     ProjectRole.FinancialAnalyst,
     ProjectRole.LeadFinancialAnalyst,
     ProjectRole.ConsultantManager
+  ];
+
+  export const needsLocations = [
+    ProjectRole.Consultant,
+    ProjectRole.ConsultantManager,
+    ProjectRole.Controller,
+    ProjectRole.FieldCoordinator,
+    ProjectRole.FieldPartner,
+    ProjectRole.FinancialAnalyst,
+    ProjectRole.LeadFinancialAnalyst,
+    ProjectRole.Writer
   ];
 }

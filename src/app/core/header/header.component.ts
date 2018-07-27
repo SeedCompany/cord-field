@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { MatDialog, MatIconRegistry } from '@angular/material';
 import { DomSanitizer } from '@angular/platform-browser';
 import { Router } from '@angular/router';
+import { PersonCreateDialogComponent } from '../create-dialogs/person-create-dialog/person-create-dialog.component';
 import { ProjectCreateDialogComponent } from '../create-dialogs/project-create-dialog/project-create-dialog.component';
 import { User } from '../models/user';
 import { AuthenticationService } from '../services/authentication.service';
@@ -34,5 +35,9 @@ export class HeaderComponent implements OnInit {
     this.dialog.open(ProjectCreateDialogComponent, {
       width: '400px'
     });
+  }
+
+  onCreatePerson(): void {
+    PersonCreateDialogComponent.open(this.dialog);
   }
 }

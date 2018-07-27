@@ -1,5 +1,5 @@
 <ng-container *ngIf="chips">
-  <mat-form-field color="accent" [class.mat-form-field-invalid]="search.invalid">
+  <mat-form-field color="accent" [class.mat-form-field-invalid]="required && list.length == 0 && search.touched">
     <mat-chip-list #chipList>
       <mat-chip color="accent"
                 *ngFor="let item of list; trackBy: trackByFn"
@@ -17,6 +17,7 @@
         #searchInput
       />
       <mat-autocomplete #auto="matAutocomplete"
+                        autoActiveFirstOption
                         [displayWith]="displayWith"
                         (optionSelected)="onSelect($event)">
         <mat-option *ngFor="let result of searchResults; trackBy: trackByFn" [value]="result">
@@ -28,7 +29,8 @@
       <mat-icon>close</mat-icon>
     </button>
     <mat-hint *ngIf="search.pending">{{ pendingMessage }}</mat-hint>
-    <mat-hint class="mat-error" *ngIf="search.errors?.noMatches">{{ noMatchesMessage }}</mat-hint>
+    <mat-hint class="mat-error" *ngIf="!search.pending && search.touched && search.errors?.noMatches">{{ noMatchesMessage }}</mat-hint>
+    <mat-hint class="mat-error" *ngIf="!search.pending && search.touched && !search.errors?.noMatches && required && list.length == 0">{{ requiredMessage }}</mat-hint>
   </mat-form-field>
 </ng-container>
 
