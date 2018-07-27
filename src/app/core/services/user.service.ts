@@ -91,9 +91,9 @@ export class UserService {
     return Observable.of(ProjectRole.values()).delay(2000).toPromise();
   }
 
-  create(newUser: NewUser): Promise<User> {
-    const id = generateObjectId();
-    const user = User.fromJson({...newUser, id});
-    return Observable.of(user).delay(2000).toPromise();
+  create(newUser: NewUser): Promise<string> {
+    return this.plo.post<{id: string}>('/users/invite', newUser)
+      .map(result => result.id)
+      .toPromise();
   }
 }
