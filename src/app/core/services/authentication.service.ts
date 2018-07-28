@@ -7,6 +7,7 @@ import { Subject } from 'rxjs/Subject';
 import { AuthenticationToken } from '../models/authentication-token';
 import { IUserRequestAccess, User } from '../models/user';
 import { AuthenticationStorageService } from './authentication-storage.service';
+import { IGNORE_AUTH_ERRORS } from './http/auth-interceptor';
 import { PloApiService } from './http/plo-api.service';
 import { SessionStorageService } from './storage.service';
 
@@ -70,7 +71,9 @@ export class AuthenticationService {
   async login(email: string, password: string, rememberLogin: boolean): Promise<AuthenticationToken[]> {
     let json = {};
     try {
-      json = await this.api.post('/auth/native/login', {domain: DOMAIN, email, password}).toPromise();
+      json = await this.api.post('/auth/native/login', {domain: DOMAIN, email, password}, {
+        headers: {[IGNORE_AUTH_ERRORS]: 'true'}
+      }).toPromise();
     } catch (err) {
       throw new Error(this.getErrorMessage(err));
     }
@@ -136,10 +139,8 @@ export class AuthenticationService {
 
   async changePassword(email: string, currentPassword: string, newPassword: string): Promise<void> {
     try {
-      await this.api.put('/auth/native/change-password', {
-        email,
-        currentPassword,
-        newPassword
+      await this.api.put('/auth/native/change-password', {email, currentPassword, newPassword}, {
+        headers: {[IGNORE_AUTH_ERRORS]: 'true'}
       }).toPromise();
     } catch (e) {
       throw new Error(this.getErrorMessage(e));

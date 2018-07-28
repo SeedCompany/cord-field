@@ -24,14 +24,6 @@ export class AppComponent extends SubscriptionComponent implements OnInit {
   ngOnInit(): void {
     this.authInterceptor.authError
       .takeUntil(this.unsubscribe)
-      .filter(() => {
-        const urls = ['/login'];
-        const [, , id] = this.router.url.split('/');
-        if (id) {
-          urls.push(`/people/${id}/edit/account`);
-        }
-        return !urls.includes(this.router.url);
-      })
       .subscribe(async () => {
         this.dialogs.closeAll();
         await this.auth.logout();
