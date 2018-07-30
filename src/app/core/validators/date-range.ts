@@ -1,6 +1,6 @@
-import { AbstractControl, ValidatorFn } from '@angular/forms';
+import { ValidatorFn } from '@angular/forms';
 import { DateTime } from 'luxon';
-import { TypedFormControl } from '../util';
+import { validatePair } from './helpers';
 
 function assertNullableDateTime(value: any): void {
   if (value && !(value instanceof DateTime)) {
@@ -15,44 +15,6 @@ export function isValidDateRange(start: DateTime, end: DateTime, allowSameDay: b
 }
 
 export function dateRange(startFieldName: string, endFieldName: string, allowSameDay = true): ValidatorFn {
-  return (control: AbstractControl) => {
-    const start = control.get(startFieldName) as TypedFormControl<DateTime | null> | null;
-    const end = control.get(endFieldName) as TypedFormControl<DateTime | null> | null;
-
-    if (!start) {
-      throw new Error(`Form does not have control named: "${startFieldName}".`);
-    }
-    if (!end) {
-      throw new Error(`Form does not have control named: "${endFieldName}".`);
-    }
-
-    assertNullableDateTime(start.value);
-    assertNullableDateTime(end.value);
-
-    if (!start.value || !end.value || isValidDateRange(start.value, end.value, allowSameDay)) {
-      // Remove invalidRange error if it was previously set. Reasons below.
-      if (start.hasError('invalidRange')) {
-        const {invalidRange: startInvalidRange = null, ...startErrors} = start.errors!;
-        start.setErrors(Object.keys(startErrors).length > 0 ? startErrors : null);
-      }
-      if (end.hasError('invalidRange')) {
-        const {invalidRange: endInvalidRange = null, ...endErrors} = end.errors!;
-        start.setErrors(Object.keys(endErrors).length > 0 ? endErrors : null);
-      }
-
-      return null;
-    }
-
-    // Set the errors on fields (not just the form)
-    // This marks the field as invalid, so view states can know to not evaluate it
-    // And to style the field as invalid (red label and line)
-    start.setErrors({...start.errors, invalidRange: true});
-    end.setErrors({...end.errors, invalidRange: true});
-
-    // Mark both fields as touched so errors show up for both fields
-    start.markAsTouched();
-    end.markAsTouched();
-
-    return {invalidRange: true};
-  };
+  const validator = (start: DateTime, end: DateTime) => isValidDateRange(start, end, allowSameDay);
+  return validatePair(startFieldName, endFieldName, 'invalidRange', validator, assertNullableDateTime);
 }
