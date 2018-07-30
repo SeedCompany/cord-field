@@ -5,6 +5,7 @@ import { DomSanitizer } from '@angular/platform-browser';
 import { ActivatedRoute, Router } from '@angular/router';
 import { AuthenticationService } from '../../services/authentication.service';
 import { LoggerService } from '../../services/logger.service';
+import * as CustomValidators from '../../validators';
 
 @Component({
   selector: 'app-reset-password',
@@ -24,7 +25,9 @@ export class ResetPasswordComponent implements OnInit {
 
   form: FormGroup = this.fb.group({
     password: ['', Validators.required],
-    confirmPassword: ['', Validators.required, this.validatePasswords.bind(this)]
+    confirmPassword: ['', Validators.required]
+  }, {
+    validator: CustomValidators.passwordMatch()
   });
 
   constructor(private auth: AuthenticationService,
@@ -42,10 +45,6 @@ export class ResetPasswordComponent implements OnInit {
     if (this.token.length === 0) {
       this.router.navigate(['/login']);
     }
-  }
-
-  async validatePasswords(): Promise<null | {}> {
-    return this.password.value === this.confirmPassword.value ? null : {mismatchedPassword: true};
   }
 
   get password(): AbstractControl {

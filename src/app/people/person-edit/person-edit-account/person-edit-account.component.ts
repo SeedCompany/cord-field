@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { AbstractControl, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { AuthenticationService } from '../../../core/services/authentication.service';
+import * as CustomValidators from '../../../core/validators';
 import { UserViewStateService } from '../../user-view-state.service';
 import { AbstractPersonComponent } from '../abstract-person.component';
 
@@ -21,7 +22,9 @@ export class PersonEditAccountComponent extends AbstractPersonComponent {
   form: FormGroup = this.fb.group({
     currentPassword: ['', Validators.required],
     newPassword: ['', Validators.required],
-    confirmPassword: ['', [Validators.required, this.passwordMisatch]]
+    confirmPassword: ['', [Validators.required]]
+  }, {
+    validator: CustomValidators.passwordMatch('newPassword')
   });
 
   constructor(private authService: AuthenticationService,
@@ -50,11 +53,11 @@ export class PersonEditAccountComponent extends AbstractPersonComponent {
     }
   }
 
-  get confirmPassword(): AbstractControl {
-    return this.form.get('confirmPassword')!;
+  get newPassword(): AbstractControl {
+    return this.form.get('newPassword')!;
   }
 
-  passwordMisatch(control: AbstractControl) {
-    return control.value && control.root.get('newPassword')!.value !== control.value ? {invalidPassword: true} : null;
+  get confirmPassword(): AbstractControl {
+    return this.form.get('confirmPassword')!;
   }
 }
