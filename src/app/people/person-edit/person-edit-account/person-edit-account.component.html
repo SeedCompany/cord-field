@@ -1,14 +1,11 @@
-<mat-card *ngIf="user?.isSelf && user?.email">
-  <mat-card-content class [formGroup]="form"
+<mat-card *ngIf="user?.isSelf && user?.email" class="mat-elevation-z0">
+  <mat-card-title>Password</mat-card-title>
+  <mat-card-content [formGroup]="form"
                     (keyup.enter)="form.valid ? onPasswordChange() : null">
-    <span mat-card-title>Password</span>
-    <div>
-      <button mat-button (click)="expanded = !expanded">
-        <mat-icon *ngIf="!expanded">chevron_right</mat-icon>
-        <mat-icon *ngIf="expanded">expand_more</mat-icon>
-        <span>Change Password</span>
-      </button>
-    </div>
+    <button mat-button (click)="expanded = !expanded" class="expand-button">
+      <mat-icon>{{ expanded ? 'expand_more' : 'chevron_right' }}</mat-icon>
+      Change Password
+    </button>
     <div class="container" *ngIf="expanded">
       <mat-form-field color="accent">
         <input
@@ -68,24 +65,21 @@
         <mat-error *ngIf="confirmPassword.errors?.required">Please re-enter your new password</mat-error>
         <mat-error *ngIf="confirmPassword.errors?.passwordMismatched">Passwords should match</mat-error>
       </mat-form-field>
+
+      <button mat-raised-button
+              color="accent"
+              (click)="onPasswordChange()"
+              [disabled]="form.invalid || form.disabled"
+      >
+        <ng-container *ngIf="form.enabled">UPDATE</ng-container>
+        <mat-progress-spinner
+          *ngIf="form.disabled"
+          color="accent"
+          mode="indeterminate"
+          strokeWidth="3"
+          [diameter]="24"
+        ></mat-progress-spinner>
+      </button>
     </div>
   </mat-card-content>
-  <mat-card-actions>
-
-    <button mat-raised-button
-            color="accent"
-            (click)="onPasswordChange()"
-            [disabled]="form.invalid || form.disabled"
-    >
-      <ng-container *ngIf="form.enabled">UPDATE</ng-container>
-      <mat-progress-spinner
-        *ngIf="form.disabled"
-        color="accent"
-        mode="indeterminate"
-        strokeWidth="3"
-        [diameter]="24"
-      ></mat-progress-spinner>
-    </button>
-
-  </mat-card-actions>
 </mat-card>
