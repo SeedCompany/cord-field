@@ -9,6 +9,7 @@ import { PersonBasicInfoComponent } from './person-details/person-basic-info/per
 import { PersonDetailsComponent } from './person-details/person-details.component';
 import { PersonRoleLocationsDialogComponent } from './person-details/person-role-locations-dialog/person-role-locations-dialog.component';
 import { PersonEditAboutComponent } from './person-edit/person-edit-about/person-edit-about.component';
+import { PersonChangePasswordComponent } from './person-edit/person-edit-account/person-change-password/person-change-password.component';
 import { PersonEditAccountComponent } from './person-edit/person-edit-account/person-edit-account.component';
 import { PersonEditAdminComponent } from './person-edit/person-edit-admin/person-edit-admin.component';
 import { PersonEditBasicInfoComponent } from './person-edit/person-edit-basic-info/person-edit-basic-info.component';
@@ -26,6 +27,7 @@ import { PersonComponent } from './person/person.component';
     PersonAboutComponent,
     PersonAvailabilityDialogComponent,
     PersonBasicInfoComponent,
+    PersonChangePasswordComponent,
     PersonComponent,
     PersonDetailsComponent,
     PersonEditComponent,
