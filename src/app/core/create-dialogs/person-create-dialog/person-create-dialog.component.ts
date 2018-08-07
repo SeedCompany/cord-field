@@ -71,7 +71,7 @@ export class PersonCreateDialogComponent implements OnInit {
     this.form.disable();
     try {
       const userId = await this.userService.create(this.form.value);
-      this.router.navigate(['/users', userId]);
+      this.router.navigate(['/people', userId]);
       this.dialogRef.close();
       if (this.form.value.sendInvite) {
         this.snackBar.open('Invitation sent', undefined, {duration: 5000});
