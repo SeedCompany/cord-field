@@ -1,4 +1,4 @@
-<mat-card>
+<mat-card *ngIf="user?.isSelf && user?.email">
   <mat-card-content class [formGroup]="form"
                     (keyup.enter)="form.valid ? onPasswordChange() : null">
     <span mat-card-title>Password</span>
