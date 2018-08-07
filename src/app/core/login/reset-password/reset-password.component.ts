@@ -1,10 +1,10 @@
+import { HttpErrorResponse } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
 import { AbstractControl, FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { MatIconRegistry } from '@angular/material';
+import { MatIconRegistry, MatSnackBar } from '@angular/material';
 import { DomSanitizer } from '@angular/platform-browser';
 import { ActivatedRoute, Router } from '@angular/router';
-import { AuthenticationService } from '../../services/authentication.service';
-import { LoggerService } from '../../services/logger.service';
+import { AuthenticationService, isInvalidPasswordError } from '../../services/authentication.service';
 import * as CustomValidators from '../../validators';
 
 @Component({
@@ -14,14 +14,8 @@ import * as CustomValidators from '../../validators';
 })
 export class ResetPasswordComponent implements OnInit {
 
-  token: string;
+  token: string | null;
   hidePassword = true;
-  submitting = false;
-  reset = {
-    isSubmitted: false,
-    status: false,
-    msg: ''
-  };
 
   form: FormGroup = this.fb.group({
     password: ['', Validators.required],
@@ -32,19 +26,16 @@ export class ResetPasswordComponent implements OnInit {
 
   constructor(private auth: AuthenticationService,
               private fb: FormBuilder,
-              private logService: LoggerService,
               private route: ActivatedRoute,
               private router: Router,
+              private snackBar: MatSnackBar,
               iconRegistry: MatIconRegistry,
               sanitizer: DomSanitizer) {
     iconRegistry.addSvgIcon('cord', sanitizer.bypassSecurityTrustResourceUrl('assets/images/cord-icon.svg'));
   }
 
   ngOnInit() {
-    this.token = this.route.snapshot.queryParams.token || '';
-    if (this.token.length === 0) {
-      this.router.navigate(['/login']);
-    }
+    this.token = this.route.snapshot.queryParams.token;
   }
 
   get password(): AbstractControl {
@@ -56,16 +47,23 @@ export class ResetPasswordComponent implements OnInit {
   }
 
   async onResetPassword(): Promise<void> {
-    this.reset.isSubmitted = true;
     try {
-      await this.auth.resetPassword(this.token, this.password.value);
-      this.reset.status = true;
+      await this.auth.resetPassword(this.token!, this.password.value);
     } catch (e) {
-      this.reset.status = false;
-      this.reset.msg = e.message;
-    } finally {
-      this.submitting = false;
-    }
-  }
+      if (!(e instanceof HttpErrorResponse) || e.status >= 500) {
+        this.snackBar.open('Failed to reset password', undefined, {duration: 300});
+      } else if (e.error.error === 'invalid_token') {
+        this.token = null;
+      } else if (isInvalidPasswordError(e.error)) {
+        this.password.setErrors({invalid: e.error.feedback});
+      } else {
+        this.form.setErrors({unknown: true});
+      }
 
+      return;
+    }
+
+    this.snackBar.open('Successfully reset your password', undefined, {duration: 300});
+    this.router.navigateByUrl('/login');
+  }
 }

@@ -16,6 +16,10 @@ mat-card-content {
   max-width: 39em;
 }
 
+.new-password {
+  @include form-field-extra-subscript-lines(2);
+}
+
 mat-card-actions {
   max-width: 35em;
   button {

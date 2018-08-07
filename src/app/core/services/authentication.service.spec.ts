@@ -4,7 +4,7 @@ import { environment } from '../../../environments/environment';
 import { CoreModule } from '../core.module';
 import { AuthenticationService } from './authentication.service';
 
-let httpMockService: HttpTestingController;
+let httpMock: HttpTestingController;
 let authService: AuthenticationService;
 
 const testUser = {
@@ -24,8 +24,12 @@ describe('AuthenticationService', () => {
       ]
     });
 
-    httpMockService = TestBed.get(HttpTestingController);
+    httpMock = TestBed.get(HttpTestingController);
     authService = TestBed.get(AuthenticationService);
+  });
+
+  afterEach(() => {
+    httpMock.verify();
   });
 
   it('should be created', inject([AuthenticationService], (service: AuthenticationService) => {
@@ -34,43 +38,34 @@ describe('AuthenticationService', () => {
 
   describe('login', () => {
 
-    it('login$ observable triggers when successfully logged in', () => {
-      const user = testUser;
-
+    it('login$ observable triggers when successfully logged in', (done: DoneFn) => {
       let loggedIn: boolean;
-      let order = '';
+      authService.login$.first().subscribe(() => {
+        loggedIn = true;
+      });
 
       authService
-        .login$
-        .subscribe({
-          next(tokens) {
-            loggedIn = true;
-            order += '2';
-          },
-          error: fail
-        });
-
-      order += '1';
-      authService
-        .login(user.email, user.password, false)
-        .then(tokens => {
+        .login(testUser.email, testUser.password, false)
+        .then(() => {
           expect(loggedIn).toBeTruthy('login$ should have been called upon login');
-          expect(order).toBe('12', 'something is wrong with this test if this occurs out of order');
-          expect(tokens.length).toBe(1);
-        })
-        .catch(error => error.fail);
+          done();
+        }, done.fail);
+
+      httpMock
+        .expectOne({url: `${testBaseUrl}/auth/native/login`, method: 'POST'})
+        .flush(null);
     });
   });
 
   describe('logout', () => {
-    it('logout$ observable triggered when loggout out', (done: DoneFn) => {
+    it('logout$ observable triggered on logout', (done: DoneFn) => {
       let loggedOut: boolean;
       let order = '';
 
       authService
         .logout$
         .subscribe({
-          next(tokens) {
+          next: () => {
             loggedOut = true;
             order += '2';
           },
@@ -89,19 +84,15 @@ describe('AuthenticationService', () => {
     });
   });
 
-  describe('change password', () => {
-    it('change password of a user', (done: DoneFn) => {
-      const user = testUser;
-      authService
-        .changePassword(user.email, user.password, 'test')
-        .then(() => {
-          done();
-        })
-        .catch(done.fail);
+  it('change password of a user', (done: DoneFn) => {
+    const user = testUser;
+    authService
+      .changePassword(user.email, user.password, 'test')
+      .then(done)
+      .catch(done.fail);
 
-      httpMockService
-        .expectOne({url: `${testBaseUrl}/auth/native/change-password`, method: 'PUT'})
-        .flush([{}]);
-    });
+    httpMock
+      .expectOne({url: `${testBaseUrl}/auth/native/change-password`, method: 'PUT'})
+      .flush([{}]);
   });
 });

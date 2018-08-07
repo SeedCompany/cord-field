@@ -12,8 +12,7 @@ import * as CustomValidators from '../../validators';
 })
 export class ForgotPasswordComponent {
 
-  reset: boolean;
-  submitting = false;
+  reset = false;
 
   form: FormGroup = this.fb.group({
     email: ['', CustomValidators.email]
@@ -27,10 +26,12 @@ export class ForgotPasswordComponent {
   }
 
   async onResetPassword(): Promise<void> {
-    this.submitting = true;
-    await this.auth.forgotPassword(this.form.get('email')!.value);
-    this.submitting = false;
+    this.form.disable();
+    try {
+      await this.auth.forgotPassword(this.form.get('email')!.value);
+    } finally {
+      this.form.enable();
+    }
     this.reset = true;
   }
-
 }

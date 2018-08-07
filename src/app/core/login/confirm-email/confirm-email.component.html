@@ -3,22 +3,29 @@
       <span class="icon">
         <mat-icon svgIcon="cord"></mat-icon>
       </span>
-    <span>Verifying Email</span>
+    <span>{{ submitting ? 'Verifying Email' : 'Verify Email' }}</span>
   </mat-card-title>
   <mat-card-content>
-    <p *ngIf="isValidToken; else tokenFailed">
-      Thank you for verifying your email. If your account is approved, you can now login.
-    </p>
-    <ng-template #tokenFailed>
-      Weird, your token is invalid. If you copied the link emailed to you, make sure you got it exactly as it was
-      sent. Please contact Cord Field Support Services.
+    <mat-progress-spinner
+      *ngIf="submitting; else result"
+      color="accent"
+      mode="indeterminate"
+      strokeWidth="4"
+      [diameter]="40"
+    ></mat-progress-spinner>
+    <ng-template #result>
+      <p *ngIf="success">
+        Thank you for verifying your email. If your account is approved, you can now login.
+      </p>
+      <p *ngIf="clientError">
+        Could not confirm your email address. If you copied the link emailed to you, make sure you copied it exactly as it was sent.
+      </p>
+      <p *ngIf="serverError">
+        Something went terribly wrong. Please try again later.
+      </p>
     </ng-template>
-    <p *ngIf="serverError">
-      Oh noooooooo! Something went terribly wrong, Please try again later. If the problem continues, please contact Cord
-      Field Support Services.
-    </p>
   </mat-card-content>
   <mat-card-actions>
-    <button *ngIf="isValidToken" mat-button color="accent" (click)="onLogin()">Login</button>
+    <button *ngIf="success" mat-button color="accent" routerLink="/login">Login</button>
   </mat-card-actions>
 </mat-card>

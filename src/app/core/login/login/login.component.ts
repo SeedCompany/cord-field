@@ -1,11 +1,12 @@
+import { HttpErrorResponse } from '@angular/common/http';
 import { Component } from '@angular/core';
 import { AbstractControl, FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { MatIconRegistry } from '@angular/material';
+import { MatIconRegistry, MatSnackBar } from '@angular/material';
 import { DomSanitizer } from '@angular/platform-browser';
 import { Router } from '@angular/router';
 import { AuthenticationService } from '../../services/authentication.service';
-import { LoggerService } from '../../services/logger.service';
 import * as CustomValidators from '../../validators';
+import { validatePair } from '../../validators/helpers';
 
 @Component({
   selector: 'app-login',
@@ -15,34 +16,50 @@ import * as CustomValidators from '../../validators';
 export class LoginComponent {
 
   hidePassword = true;
-  serverError: string;
-  submitting = false;
+
+  private loginFailed = false;
 
   form: FormGroup = this.fb.group({
     email: ['', CustomValidators.email],
     password: ['', Validators.required]
+  }, {
+    // Mark email/password fields invalid on login failure, but remove on change.
+    validator: validatePair('email', 'password', 'invalid', () => {
+      if (this.loginFailed) {
+        this.loginFailed = false;
+        return false;
+      }
+
+      return true;
+    })
   });
 
   constructor(private fb: FormBuilder,
               private auth: AuthenticationService,
               private router: Router,
-              private logService: LoggerService,
+              private snackBar: MatSnackBar,
               iconRegistry: MatIconRegistry,
               sanitizer: DomSanitizer) {
     iconRegistry.addSvgIcon('cord', sanitizer.bypassSecurityTrustResourceUrl('assets/images/cord-icon.svg'));
   }
 
   async onLogin() {
-    this.submitting = true;
     this.form.disable();
     try {
       await this.auth.login(this.email.value, this.password.value, true);
     } catch (err) {
-      this.serverError = err.message;
-      return;
-    } finally {
-      this.submitting = false;
       this.form.enable();
+
+      if (!(err instanceof HttpErrorResponse) || err.status >= 500) {
+        this.snackBar.open('Failed to communicate with server', undefined, {duration: 3000});
+      } else if (err.error.error === 'login_failed') {
+        this.loginFailed = true;
+      } else if (err.error.error === 'email_validation_required') {
+        this.form.setErrors({emailValidationRequired: true});
+      } else if (err.error.error === 'account_not_approved') {
+        this.form.setErrors({accountNotApproved: true});
+      }
+      return;
     }
 
     this.router.navigateByUrl(await this.auth.popNextUrl() || '/', {replaceUrl: true});
@@ -55,5 +72,4 @@ export class LoginComponent {
   get password(): AbstractControl {
     return this.form.get('password')!;
   }
-
 }

@@ -1,6 +1,8 @@
+import { HttpErrorResponse } from '@angular/common/http';
 import { Component } from '@angular/core';
-import { AbstractControl, FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { AuthenticationService } from '../../../core/services/authentication.service';
+import { AbstractControl, FormBuilder, Validators } from '@angular/forms';
+import { MatSnackBar } from '@angular/material';
+import { AuthenticationService, isInvalidPasswordError } from '../../../core/services/authentication.service';
 import * as CustomValidators from '../../../core/validators';
 import { UserViewStateService } from '../../user-view-state.service';
 import { AbstractPersonComponent } from '../abstract-person.component';
@@ -16,10 +18,8 @@ export class PersonEditAccountComponent extends AbstractPersonComponent {
   hideCurrentPassword = true;
   hideNewPassword = true;
   hideConfirmPassword = true;
-  submitting = false;
-  serverError: string;
 
-  form: FormGroup = this.fb.group({
+  form = this.fb.group({
     currentPassword: ['', Validators.required],
     newPassword: ['', Validators.required],
     confirmPassword: ['', [Validators.required]]
@@ -29,28 +29,40 @@ export class PersonEditAccountComponent extends AbstractPersonComponent {
 
   constructor(private authService: AuthenticationService,
               private fb: FormBuilder,
+              private snackBar: MatSnackBar,
               userViewState: UserViewStateService) {
     super(userViewState);
   }
 
   async onPasswordChange() {
-    this.submitting = true;
+    if (!this.user.email) {
+      throw new Error('User email address not provided');
+    }
+
     this.form.disable();
-    this.serverError = '';
     try {
-      if (!this.user.email) {
-        throw new Error(`${this.user.fullName}'s email address not found`);
-      }
       const {currentPassword, newPassword} = this.form.value;
       await this.authService.changePassword(this.user.email, currentPassword, newPassword);
-    } catch (err) {
-      this.serverError = err.message;
-      return;
-    } finally {
-      this.submitting = false;
-      this.form.reset({});
       this.form.enable();
+      this.form.reset();
+    } catch (res) {
+      this.form.enable();
+
+      if (!(res instanceof HttpErrorResponse) || res.status >= 500) {
+        this.snackBar.open('Failed to change password', undefined, {duration: 3000});
+        return;
+      }
+
+      if (res.error.error === 'unauthorized') {
+        this.currentPassword.setErrors({invalid: true});
+      } else if (isInvalidPasswordError(res.error)) {
+        this.newPassword.setErrors({invalid: res.error.feedback});
+      }
     }
+  }
+
+  get currentPassword(): AbstractControl {
+    return this.form.get('currentPassword')!;
   }
 
   get newPassword(): AbstractControl {

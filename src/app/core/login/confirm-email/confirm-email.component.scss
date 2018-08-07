@@ -24,7 +24,11 @@ mat-card-title {
   margin-right: .5em;
 }
 
+mat-progress-spinner {
+  margin: 0 auto;
+}
+
 mat-card-actions {
   display: flex;
-  justify-content: space-evenly;
+  flex-direction: row-reverse;
 }

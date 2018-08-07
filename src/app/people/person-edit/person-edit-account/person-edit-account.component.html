@@ -22,9 +22,10 @@
         >
           {{ hideCurrentPassword ? 'visibility' : 'visibility_off' }}
         </mat-icon>
-        <mat-error>Please enter your current password</mat-error>
+        <mat-error *ngIf="currentPassword.errors?.required">Please enter your current password</mat-error>
+        <mat-error *ngIf="currentPassword.errors?.invalid">This is not your current password</mat-error>
       </mat-form-field>
-      <mat-form-field color="accent">
+      <mat-form-field color="accent" class="new-password">
         <input
           matInput
           placeholder="New Password"
@@ -36,8 +37,20 @@
         >
           {{ hideNewPassword ? 'visibility' : 'visibility_off' }}
         </mat-icon>
+        <mat-hint>
+          <div class="line">Use a few words, avoid common phrases</div>
+          <div class="line">No need for symbols, digits, or uppercase letters</div>
+        </mat-hint>
         <mat-error *ngIf="newPassword.errors?.required">Please enter your new password</mat-error>
         <mat-error *ngIf="newPassword.errors?.passwordMismatched">Passwords should match</mat-error>
+        <mat-error *ngIf="newPassword.errors?.invalid">
+          <div class="line">
+            {{ newPassword.errors.invalid.warning || 'Use a stronger password' }}
+          </div>
+          <div class="line" *ngIf="password.errors.invalid.suggestions as suggestions">
+            {{ suggestions.reverse()[0] }}
+          </div>
+        </mat-error>
       </mat-form-field>
 
       <mat-form-field color="accent">
@@ -55,20 +68,18 @@
         <mat-error *ngIf="confirmPassword.errors?.required">Please re-enter your new password</mat-error>
         <mat-error *ngIf="confirmPassword.errors?.passwordMismatched">Passwords should match</mat-error>
       </mat-form-field>
-      <mat-error *ngIf="serverError"> {{ serverError }}</mat-error>
     </div>
   </mat-card-content>
   <mat-card-actions>
 
-
     <button mat-raised-button
             color="accent"
             (click)="onPasswordChange()"
-            [disabled]="!form.valid || submitting"
+            [disabled]="form.invalid || form.disabled"
     >
-      <ng-container *ngIf="!submitting">UPDATE</ng-container>
+      <ng-container *ngIf="form.enabled">UPDATE</ng-container>
       <mat-progress-spinner
-        *ngIf="submitting"
+        *ngIf="form.disabled"
         color="accent"
         mode="indeterminate"
         strokeWidth="3"

@@ -1,9 +1,10 @@
+import { HttpErrorResponse } from '@angular/common/http';
 import { Component } from '@angular/core';
 import { AbstractControl, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatSnackBar, MatSnackBarRef, SimpleSnackBar } from '@angular/material';
 import { Router } from '@angular/router';
 import { IUserRequestAccess } from '../../models/user';
-import { AuthenticationService } from '../../services/authentication.service';
+import { AuthenticationService, isInvalidPasswordError } from '../../services/authentication.service';
 import * as CustomValidators from '../../validators';
 
 @Component({
@@ -15,7 +16,6 @@ export class RequestAccessComponent {
 
   hidePassword = true;
   serverError: string | null;
-  submitting = false;
 
   private snackBarRef?: MatSnackBarRef<SimpleSnackBar>;
 
@@ -37,23 +37,27 @@ export class RequestAccessComponent {
   }
 
   async onRequestAccess() {
-    this.submitting = true;
     this.form.disable();
     const {confirmPassword, ...user} = this.form.value as IUserRequestAccess & { confirmPassword: string };
 
     try {
       await this.authService.requestAccess(user);
     } catch (e) {
-      if (e.message === 'SERVER_ERROR') {
-        this.showSnackBar('Sorry, failed to create your account, Please try again or contact Field Support Services for assistance.');
-      } else {
-        this.serverError = e.message;
-      }
-      return;
-    } finally {
-      this.submitting = false;
       this.form.enable();
+
+      if (!(e instanceof HttpErrorResponse) || e.status >= 500) {
+        this.showSnackBar('Failed to request access');
+      } else if (e.error.error === 'invalid_email') {
+        this.email.setErrors({invalidEmail: true});
+      } else if (isInvalidPasswordError(e.error)) {
+        this.password.setErrors({invalid: e.error.feedback});
+      } else {
+        this.form.setErrors({unknown: true});
+      }
+
+      return;
     }
+    this.form.enable();
 
     if (this.snackBarRef) {
       this.snackBarRef.dismiss();
