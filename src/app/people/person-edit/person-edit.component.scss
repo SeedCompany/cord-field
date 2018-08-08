@@ -1,6 +1,7 @@
 @import "~styles/imports";
 
 :host {
+  flex: 1;
   @extend %component-defaults;
 }
 
@@ -28,6 +29,7 @@ mat-toolbar {
   background-color: mat-background($theme, app-bar);
   overflow: initial;
   @include mat-elevation(4);
+  z-index: 1;
 }
 
 app-speed-dial {

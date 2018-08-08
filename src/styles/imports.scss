@@ -18,6 +18,39 @@
   }
 }
 
+/**
+ * Mixin to apply spacing for hints/errors that are multiple lines.
+ * Copied from material's _form-field-theme.scss file. Changes denoted with comment.
+ */
+@mixin form-field-extra-subscript-lines($lines: 1) {
+  ::ng-deep {
+    $line-height: mat-line-height($config, input);
+    $subscript-font-scale: 0.75;
+    $line-spacing: ($line-height - 1) / 2;
+    $subscript-margin-top: (0.5em / $subscript-font-scale - ($line-spacing * 2));
+    // Change: Multiply number of lines here
+    $wrapper-padding-bottom: ($subscript-margin-top + $line-height) * $subscript-font-scale * $lines;
+
+    .mat-form-field-underline {
+      bottom: $wrapper-padding-bottom;
+    }
+    .mat-form-field-wrapper {
+      padding-bottom: $wrapper-padding-bottom;
+    }
+    .mat-form-field-subscript-wrapper {
+      top: calc(100% - #{$wrapper-padding-bottom / $subscript-font-scale});
+
+      // Change: Add `line` class to apply spacing.
+      // First line already has spacing from default styles.
+      .mat-hint, .mat-error {
+        .line:not(:first-of-type) {
+          margin-top: $subscript-margin-top;
+        }
+      }
+    }
+  }
+}
+
 @function mat-foreground($theme, $item) {
   $foreground-items: (// Just for easy IDE help - "Quick Definition"
     base:              black,

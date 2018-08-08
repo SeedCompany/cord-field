@@ -24,7 +24,6 @@ export class AppComponent extends SubscriptionComponent implements OnInit {
   ngOnInit(): void {
     this.authInterceptor.authError
       .takeUntil(this.unsubscribe)
-      .filter(() => this.router.url !== '/login') // Ignore login errors
       .subscribe(async () => {
         this.dialogs.closeAll();
         await this.auth.logout();

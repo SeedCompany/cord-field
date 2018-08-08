@@ -14,7 +14,7 @@
           placeholder="Email"
           formControlName="email"
         >
-        <mat-error>Please enter a valid email</mat-error>
+        <mat-error *ngIf="email.errors?.required">Please enter a valid email</mat-error>
       </mat-form-field>
       <mat-form-field color="accent">
         <input
@@ -28,20 +28,27 @@
         >
           {{ hidePassword ? 'visibility' : 'visibility_off' }}
         </mat-icon>
-        <mat-error>Please enter your password</mat-error>
+        <mat-error *ngIf="password.errors?.required">Please enter your password</mat-error>
       </mat-form-field>
-      <mat-error *ngIf="serverError"> {{ serverError }}</mat-error>
+      <mat-error *ngIf="form.errors?.invalid">Invalid email or password</mat-error>
+      <mat-error *ngIf="form.errors?.emailValidationRequired">
+        Sorry, our system does not have any account with the credentials you provided. If you already created an account,
+        please verify it by clicking on the link provided in the email you should have received.
+      </mat-error>
+      <mat-error *ngIf="form.errors?.accountNotApproved">
+        Your account is not approved yet. Please try again or contact Field Support Services for assistance.
+      </mat-error>
     </mat-card-content>
 
     <mat-card-actions>
       <button mat-raised-button
               color="accent"
               (click)="onLogin()"
-              [disabled]="!form.valid || submitting"
+              [disabled]="form.invalid || form.disabled"
       >
-        <ng-container *ngIf="!submitting">SIGN IN</ng-container>
+        <ng-container *ngIf="form.enabled">SIGN IN</ng-container>
         <mat-progress-spinner
-          *ngIf="submitting"
+          *ngIf="form.disabled"
           color="accent"
           mode="indeterminate"
           strokeWidth="3"

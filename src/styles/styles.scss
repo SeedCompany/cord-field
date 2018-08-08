@@ -118,3 +118,10 @@ body {
 .mat-menu-item[disabled] .mat-icon {
   color: mat-foreground($theme, disabled);
 }
+
+// Center progress spinner inside buttons
+.mat-button, .mat-flat-button, .mat-raised-button {
+  mat-progress-spinner {
+    margin: 6px auto;
+  }
+}

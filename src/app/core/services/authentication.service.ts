@@ -1,4 +1,3 @@
-import { HttpErrorResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import 'rxjs/add/observable/of';
 import 'rxjs/add/operator/map';
@@ -7,10 +6,23 @@ import { Subject } from 'rxjs/Subject';
 import { AuthenticationToken } from '../models/authentication-token';
 import { IUserRequestAccess, User } from '../models/user';
 import { AuthenticationStorageService } from './authentication-storage.service';
+import { IGNORE_AUTH_ERRORS } from './http/auth-interceptor';
 import { PloApiService } from './http/plo-api.service';
 import { SessionStorageService } from './storage.service';
 
 const DOMAIN = 'field';
+
+interface InvalidPasswordResponse {
+  code: 400;
+  error: 'invalid_password';
+  feedback: {
+    warning: string; // Can be empty string
+    suggestions: string[]; // Can be empty list
+  };
+}
+export function isInvalidPasswordError(error: any): error is InvalidPasswordResponse {
+  return error.error === 'invalid_password';
+}
 
 @Injectable()
 export class AuthenticationService {
@@ -59,27 +71,34 @@ export class AuthenticationService {
               private sessionStorage: SessionStorageService) {
   }
 
+  /**
+   * Throws:
+   * - invalid_email
+   * - invalid_password
+   */
   async requestAccess(newUser: IUserRequestAccess) {
-    try {
-      await this.api.post('/users/request-account', {...newUser, domain: DOMAIN}).toPromise();
-    } catch (err) {
-      throw new Error(this.getErrorMessage(err));
-    }
+    await this.api.post('/users/request-account', {...newUser, domain: DOMAIN}).toPromise();
   }
 
-  async login(email: string, password: string, rememberLogin: boolean): Promise<AuthenticationToken[]> {
-    let json = {};
-    try {
-      json = await this.api.post('/auth/native/login', {domain: DOMAIN, email, password}).toPromise();
-    } catch (err) {
-      throw new Error(this.getErrorMessage(err));
-    }
+  /**
+   * Throws:
+   * - login_failed
+   * - email_validation_required
+   * - internal_server_error
+   * - account_not_approved
+   * - reset_password_required?
+   * - invalid_password - insecure new password
+   */
+  async login(email: string, password: string, rememberLogin: boolean): Promise<void> {
+    const tokens = await this.api
+      .post('/auth/native/login', {domain: DOMAIN, email, password}, {
+        headers: {[IGNORE_AUTH_ERRORS]: 'true'}
+      })
+      .map(AuthenticationToken.fromTokenMap)
+      .toPromise();
 
-    const tokens = AuthenticationToken.fromTokenMap(json);
     await this.authStorage.saveTokens(tokens, rememberLogin);
     this._login.next(tokens);
-
-    return tokens;
   }
 
   async logout(): Promise<void> {
@@ -87,36 +106,12 @@ export class AuthenticationService {
     this._logout.next();
   }
 
-  private getErrorMessage(response: HttpErrorResponse): string {
-    switch (response.error.error) {
-      case 'invalid_password':
-        return 'Your password is too simple or is a known, commonly used password.' +
-          'Strong passwords are generally longer; incorporate a mixture of letters, numbers & special characters;' +
-          '& avoid common words. Please enter a new password.';
-      case 'invalid_organization':
-        return 'Your account request cannot be completed because the organization you provided is not valid.' +
-          ' Please try again or contact Field Support Services for assistance.';
-      case 'login_failed':
-        return 'Email or password is incorrect';
-      case 'email_validation_required':
-        return 'Sorry, our system does not have any account with the credentials you provided. If you already created an account, ' +
-          'please verify it by clicking on the link provided in the email you should have received.';
-      case 'account_not_approved':
-        return 'Your account is not approved yet. Please try again or contact Field Support Services for assistance.';
-      case 'server_error':
-        return 'server_error';
-      case 'bad_request':
-        return 'Oh noooooooo! Something went terribly wrong, Please try again later. ' +
-          'If the problem continues, please contact Cord Field Support Services.';
-      case 'invalid_token':
-        return 'Weird, your token is invalid. If you copied the link emailed to you, make sure you got it exactly as it was' +
-          ' sent. Please contact Cord Field Support Services.';
-    }
-
-    return 'Unknown error';
-  }
-
-  async confirmEmail(confirmationToken: string): Promise<Object | HttpErrorResponse> {
+  /**
+   * Throws:
+   * - invalid_token
+   * - internal_server_error
+   */
+  async confirmEmail(confirmationToken: string): Promise<Object> {
     return this.api.get(`/auth/native/confirm/${confirmationToken}`).toPromise();
   }
 
@@ -124,11 +119,23 @@ export class AuthenticationService {
     await this.api.put('/auth/native/forgot-password', {email: email, domain: DOMAIN}).toPromise();
   }
 
+  /**
+   * Throws:
+   * - invalid_token
+   * - invalid_password
+   * - internal_server_error
+   */
   async resetPassword(confirmationToken: string, newPassword: string): Promise<void> {
-    try {
-      await this.api.put(`/auth/native/reset-password/${confirmationToken}`, {password: newPassword, domain: DOMAIN}).toPromise();
-    } catch (e) {
-      throw new Error(this.getErrorMessage(e));
-    }
+    await this.api.put(`/auth/native/reset-password/${confirmationToken}`, {password: newPassword, domain: DOMAIN}).toPromise();
+  }
+
+  /**
+   * Throws:
+   * - unauthorized - when user not found or password doesn't match
+   */
+  async changePassword(email: string, currentPassword: string, newPassword: string): Promise<void> {
+    await this.api.put('/auth/native/change-password', {email, currentPassword, newPassword}, {
+      headers: {[IGNORE_AUTH_ERRORS]: 'true'}
+    }).toPromise();
   }
 }

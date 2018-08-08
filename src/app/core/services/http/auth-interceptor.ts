@@ -3,7 +3,6 @@ import {
   HttpErrorResponse,
   HttpEvent,
   HttpHandler,
-  HttpHeaders,
   HttpInterceptor,
   HttpRequest
 } from '@angular/common/http';
@@ -11,7 +10,10 @@ import { ExistingProvider, Injectable } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 import { Subject } from 'rxjs/Subject';
 import { environment } from '../../../../environments/environment';
+import { AuthenticationToken } from '../../models/authentication-token';
 import { AuthenticationStorageService } from '../authentication-storage.service';
+
+export const IGNORE_AUTH_ERRORS = 'X-Skip-Auth-Interceptor';
 
 @Injectable()
 export class AuthInterceptor implements HttpInterceptor {
@@ -33,40 +35,39 @@ export class AuthInterceptor implements HttpInterceptor {
 
   intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
     const service = this.serviceLookup.find((s) => req.url.startsWith(s.baseUrl));
+    const authToken$ = service
+      ? Observable.fromPromise(this.authStorage.getAuthenticationToken(service.id))
+      : Observable.of(null);
 
-    if (!service) {
-      return next.handle(req);
-    }
+    return authToken$
+      .map((authToken: AuthenticationToken | null) => {
+        let headers = req.headers;
 
-    return Observable
-      .fromPromise(this.authStorage.getAuthenticationToken(service.id))
-      .map((authToken) => {
-
-        const headers: any = {...(req.headers || {})};
-
-        if (authToken) {
-          headers.Authorization = headers.Authorization || `Bearer ${(authToken as any).jwtToken}`;
-        }
-        headers['Content-Type'] = headers['Content-Type'] || 'application/json';
-
-        // any header set to 'undefined'  cause a "Cannot read property 'length' of undefined" error, which is hard
-        // to debug, so spend a few cycles making sure that none of the keys have a value of undefined.
-        for (const key of Object.keys(headers)) {
-          if (headers[key] == null) {
-            delete headers[key];
-          }
+        if (authToken && !headers.has('Authorization')) {
+          headers = headers.set('Authorization', `Bearer ${authToken.jwtToken}`);
         }
 
-        return req.clone({
-          headers: new HttpHeaders(headers)
-        });
+        if (!headers.has('Content-Type')) {
+          headers = headers.set('Content-Type', 'application/json');
+        }
+
+        let ignoreAuthErrors = false;
+        if (headers.has(IGNORE_AUTH_ERRORS)) {
+          ignoreAuthErrors = true;
+          headers = headers.delete(IGNORE_AUTH_ERRORS);
+        }
+
+        const request = req.headers === headers ? req : req.clone({headers});
+        return {request, ignoreAuthErrors};
       })
-      .switchMap(newReq => next.handle(newReq))
-      .catch(e => {
-        if (e instanceof HttpErrorResponse && e.status === 401) {
-          this._authError.next();
-        }
-        return Observable.throw(e);
+      .switchMap(({request, ignoreAuthErrors}) => {
+        return next.handle(request)
+          .catch(e => {
+            if (e instanceof HttpErrorResponse && e.status === 401 && !ignoreAuthErrors) {
+              this._authError.next();
+            }
+            return Observable.throw(e);
+          });
       });
   }
 }

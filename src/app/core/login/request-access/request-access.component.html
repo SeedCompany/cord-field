@@ -23,7 +23,8 @@
         placeholder="Email"
         formControlName="email"
       >
-      <mat-error>Please enter a valid email</mat-error>
+      <mat-error *ngIf="email.errors?.required">Please enter your email address</mat-error>
+      <mat-error *ngIf="email.errors?.invalidEmail">Please enter a valid email address</mat-error>
     </mat-form-field>
     <mat-form-field color="accent">
       <input
@@ -33,7 +34,7 @@
       >
       <mat-error>Please enter an organization</mat-error>
     </mat-form-field>
-    <mat-form-field color="accent">
+    <mat-form-field color="accent" class="new-password">
       <input
         matInput
         placeholder="Password"
@@ -46,8 +47,20 @@
       >
         {{ hidePassword ? 'visibility' : 'visibility_off' }}
       </mat-icon>
-      <mat-error *ngIf="password.errors?.required">Please enter a valid password</mat-error>
-      <mat-error *ngIf="password.errors?.passwordMismatch">Passwords should match</mat-error>
+      <mat-hint>
+        <div class="line">Use a few words, avoid common phrases</div>
+        <div class="line">No need for symbols, digits, or uppercase letters</div>
+      </mat-hint>
+      <mat-error *ngIf="password.errors?.required">Please enter your password</mat-error>
+      <mat-error *ngIf="password.errors?.passwordMismatched">Passwords should match</mat-error>
+      <mat-error *ngIf="password.errors?.invalid">
+        <div class="line">
+          {{ password.errors.invalid.warning || 'Use a stronger password' }}
+        </div>
+        <div class="line" *ngIf="password.errors.invalid.suggestions as suggestions">
+          {{ suggestions.reverse()[0] }}
+        </div>
+      </mat-error>
     </mat-form-field>
     <mat-form-field color="accent">
       <input
@@ -62,8 +75,8 @@
       >
         {{ hidePassword ? 'visibility' : 'visibility_off' }}
       </mat-icon>
-      <mat-error *ngIf="confirmPassword.errors?.required">Please enter a valid password</mat-error>
-      <mat-error *ngIf="confirmPassword.errors?.passwordMismatch">Passwords should match</mat-error>
+      <mat-error *ngIf="confirmPassword.errors?.required">Please re-enter your password</mat-error>
+      <mat-error *ngIf="confirmPassword.errors?.passwordMismatched">Passwords should match</mat-error>
     </mat-form-field>
     <mat-error *ngIf="serverError">{{ serverError }}</mat-error>
   </mat-card-content>
@@ -72,11 +85,11 @@
             color="accent"
             [style.order]="1"
             (click)="onRequestAccess();"
-            [disabled]="!form.valid || submitting"
+            [disabled]="form.invalid || form.disabled"
     >
-      <ng-container *ngIf="!submitting">REQUEST ACCESS</ng-container>
+      <ng-container *ngIf="form.enabled">REQUEST ACCESS</ng-container>
       <mat-progress-spinner
-        *ngIf="submitting"
+        *ngIf="form.disabled"
         color="accent"
         mode="indeterminate"
         strokeWidth="3"

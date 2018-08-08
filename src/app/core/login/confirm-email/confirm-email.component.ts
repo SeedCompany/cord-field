@@ -1,9 +1,9 @@
+import { HttpErrorResponse } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
 import { MatIconRegistry } from '@angular/material';
 import { DomSanitizer } from '@angular/platform-browser';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute } from '@angular/router';
 import { AuthenticationService } from '../../services/authentication.service';
-import { LoggerService } from '../../services/logger.service';
 
 @Component({
   selector: 'app-confirm-email',
@@ -13,43 +13,35 @@ import { LoggerService } from '../../services/logger.service';
 export class ConfirmEmailComponent implements OnInit {
 
   token: string;
-  isValidToken: boolean;
-  serverError: boolean;
+  submitting = true;
+  clientError = false;
+  serverError = false;
 
   constructor(private auth: AuthenticationService,
               private route: ActivatedRoute,
-              private router: Router,
-              private logService: LoggerService,
               iconRegistry: MatIconRegistry,
               sanitizer: DomSanitizer) {
     iconRegistry.addSvgIcon('cord', sanitizer.bypassSecurityTrustResourceUrl('assets/images/cord-icon.svg'));
   }
 
-  async ngOnInit() {
-    try {
-      this.token = this.route.snapshot.queryParams.token ? this.route.snapshot.queryParams.token : 'invalid';
-      await this.verifyConfirmationToken();
-    } catch (e) {
-      this.logService.error(e.message, 'error at grabbing confirm email token from url');
-    }
+  ngOnInit() {
+    this.token = this.route.snapshot.queryParams.token;
+    this.verifyConfirmationToken();
   }
 
   async verifyConfirmationToken() {
     try {
       await this.auth.confirmEmail(this.token);
-      this.isValidToken = true;
     } catch (e) {
-      if (e.error === 'invalid_token') {
-        this.isValidToken = false;
-      } else if (e.error === 'internal_server_error') {
-        this.serverError = true;
-      }
-
+      !(e instanceof HttpErrorResponse) || e.status >= 500
+        ? this.serverError = true
+        : this.clientError = true;
+    } finally {
+      this.submitting = false;
     }
   }
 
-  onLogin() {
-    this.router.navigate(['/login']);
+  get success() {
+    return !this.submitting && !this.clientError && !this.serverError;
   }
-
 }

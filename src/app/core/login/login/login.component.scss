@@ -8,7 +8,7 @@
 }
 
 mat-card {
-  min-width: 400px;
+  width: 400px;
   display: flex;
   flex-direction: column;
 }
@@ -39,13 +39,4 @@ mat-card-actions {
 
 .footer {
   margin-top: 8px;
-}
-
-mat-error {
-  width: 400px;
-}
-
-// Center spinner within button
-mat-progress-spinner {
-  margin: 0 auto;
 }

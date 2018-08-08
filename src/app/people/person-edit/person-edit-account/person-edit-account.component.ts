@@ -8,6 +8,7 @@ import { AbstractPersonComponent } from '../abstract-person.component';
   styleUrls: ['./person-edit-account.component.scss']
 })
 export class PersonEditAccountComponent extends AbstractPersonComponent {
+
   constructor(userViewState: UserViewStateService) {
     super(userViewState);
   }
