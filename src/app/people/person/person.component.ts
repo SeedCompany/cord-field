@@ -2,6 +2,7 @@ import { HttpErrorResponse } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
 import { MatSnackBar } from '@angular/material';
 import { ActivatedRoute, Router } from '@angular/router';
+import { TitleAware, TitleProp } from '../../core/decorators';
 import { SubscriptionComponent } from '../../shared/components/subscription.component';
 import { UserViewStateService } from '../user-view-state.service';
 
@@ -11,7 +12,8 @@ import { UserViewStateService } from '../user-view-state.service';
   styleUrls: ['./person.component.scss'],
   providers: [UserViewStateService]
 })
-export class PersonComponent extends SubscriptionComponent implements OnInit {
+@TitleAware()
+export class PersonComponent extends SubscriptionComponent implements OnInit, TitleProp {
   constructor(
     private userViewState: UserViewStateService,
     private route: ActivatedRoute,
@@ -35,5 +37,9 @@ export class PersonComponent extends SubscriptionComponent implements OnInit {
         this.snackBar.open(message, undefined, {duration: 5000});
         this.router.navigate(['..'], {replaceUrl: true, relativeTo: this.route});
       });
+  }
+
+  get title() {
+    return this.userViewState.user.map(user => user.fullName);
   }
 }

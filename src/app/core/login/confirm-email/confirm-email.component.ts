@@ -3,6 +3,7 @@ import { Component, OnInit } from '@angular/core';
 import { MatIconRegistry } from '@angular/material';
 import { DomSanitizer } from '@angular/platform-browser';
 import { ActivatedRoute } from '@angular/router';
+import { TitleAware } from '../../decorators';
 import { AuthenticationService } from '../../services/authentication.service';
 
 @Component({
@@ -10,6 +11,7 @@ import { AuthenticationService } from '../../services/authentication.service';
   templateUrl: './confirm-email.component.html',
   styleUrls: ['./confirm-email.component.scss']
 })
+@TitleAware('Confirm Email')
 export class ConfirmEmailComponent implements OnInit {
 
   token: string;

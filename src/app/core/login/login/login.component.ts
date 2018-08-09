@@ -4,6 +4,7 @@ import { AbstractControl, FormBuilder, FormGroup, Validators } from '@angular/fo
 import { MatIconRegistry, MatSnackBar } from '@angular/material';
 import { DomSanitizer } from '@angular/platform-browser';
 import { Router } from '@angular/router';
+import { TitleAware } from '../../decorators';
 import { AuthenticationService } from '../../services/authentication.service';
 import * as CustomValidators from '../../validators';
 import { validatePair } from '../../validators/helpers';
@@ -13,6 +14,7 @@ import { validatePair } from '../../validators/helpers';
   templateUrl: './login.component.html',
   styleUrls: ['./login.component.scss']
 })
+@TitleAware('Login')
 export class LoginComponent {
 
   hidePassword = true;

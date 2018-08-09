@@ -4,6 +4,7 @@ import { MatPaginator, MatSort, MatTableDataSource, PageEvent, Sort } from '@ang
 import { Router } from '@angular/router';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { Observable } from 'rxjs/Observable';
+import { TitleAware } from '../../core/decorators';
 import { Language } from '../../core/models/language';
 import { Project, ProjectFilter, ProjectStatus, ProjectsWithCount, ProjectType } from '../../core/models/project';
 import { ProjectService } from '../../core/services/project.service';
@@ -26,6 +27,7 @@ interface ListOption {
     ])
   ]
 })
+@TitleAware('Projects')
 export class ProjectListComponent implements AfterViewInit {
 
   readonly ProjectType = ProjectType;

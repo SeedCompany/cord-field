@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { MatSnackBar, MatSnackBarRef, SimpleSnackBar } from '@angular/material';
+import { TitleAware } from '../../core/decorators';
 import { popInOut } from '../../shared/animations';
 import { UserViewStateService } from '../user-view-state.service';
 import { AbstractPersonComponent } from './abstract-person.component';
@@ -15,6 +16,7 @@ interface TabConfig {
   styleUrls: ['./person-edit.component.scss'],
   animations: [popInOut]
 })
+@TitleAware()
 export class PersonEditComponent extends AbstractPersonComponent implements OnInit {
 
   readonly tabs: TabConfig[] = [
