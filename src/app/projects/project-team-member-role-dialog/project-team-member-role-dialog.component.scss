@@ -1,7 +1,7 @@
 @import "~styles/imports";
 
-.mat-form-field {
-  display: block;
+:host {
+  @extend %component-defaults;
 }
 
 .mat-dialog-actions {
@@ -17,4 +17,9 @@
 .loading {
   margin-top: 16px;
   margin-bottom: 16px;
+  align-self: center;
+}
+
+mat-error {
+  @include mat-typography-level-to-styles($config, subheading-1);
 }
