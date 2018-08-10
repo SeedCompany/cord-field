@@ -9,7 +9,7 @@
   [diameter]="48"
 ></mat-progress-spinner>
 
-<mat-form-field color="accent" *ngIf="!loading&&assignableRoles.length>0">
+<mat-form-field color="accent" *ngIf="!loading && assignableRoles.length > 0">
   <mat-select multiple placeholder="Roles" [formControl]="roles">
     <mat-option *ngFor="let role of assignableRoles; trackBy: ProjectRole.trackValueBy"
                 [disabled]="ProjectRole.implicit.includes(role)"
@@ -19,7 +19,7 @@
   </mat-select>
   <mat-error>Please select one or more roles</mat-error>
 </mat-form-field>
-<mat-error *ngIf="!loading&&assignableRoles.length===0">No roles can be changed</mat-error>
+<mat-error *ngIf="!loading && assignableRoles.length === 0">No roles can be changed</mat-error>
 <mat-dialog-actions>
   <button mat-button color="accent"
           [disabled]="submitting || roles.invalid || roles.pristine"
