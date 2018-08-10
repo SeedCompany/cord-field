@@ -18,3 +18,7 @@
   margin-top: 16px;
   margin-bottom: 16px;
 }
+
+mat-error {
+  @include mat-typography-level-to-styles($config, subheading-1);
+}
