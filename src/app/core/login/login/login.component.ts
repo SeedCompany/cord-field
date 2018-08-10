@@ -1,9 +1,9 @@
 import { HttpErrorResponse } from '@angular/common/http';
-import { Component } from '@angular/core';
+import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { AbstractControl, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatIconRegistry, MatSnackBar } from '@angular/material';
 import { DomSanitizer } from '@angular/platform-browser';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { TitleAware } from '../../decorators';
 import { AuthenticationService } from '../../services/authentication.service';
 import * as CustomValidators from '../../validators';
@@ -15,29 +15,40 @@ import { validatePair } from '../../validators/helpers';
   styleUrls: ['./login.component.scss']
 })
 @TitleAware('Login')
-export class LoginComponent {
+export class LoginComponent implements OnInit {
+
+  @ViewChild('newPwd') newPwd: ElementRef;
 
   hidePassword = true;
-
+  hideNewPassword = true;
+  hideConfirmPassword = true;
+  pwdReset = false;
   private loginFailed = false;
 
+
   form: FormGroup = this.fb.group({
-    email: ['', CustomValidators.email],
-    password: ['', Validators.required]
+    email: ['', [Validators.required, CustomValidators.email]],
+    password: ['', Validators.required],
+    newPassword: [''],
+    confirmPassword: ['']
   }, {
     // Mark email/password fields invalid on login failure, but remove on change.
-    validator: validatePair('email', 'password', 'invalid', () => {
-      if (this.loginFailed) {
-        this.loginFailed = false;
-        return false;
-      }
+    validator: [
+      validatePair('email', 'password', 'invalid', () => {
+        if (this.loginFailed) {
+          this.loginFailed = false;
+          return false;
+        }
 
-      return true;
-    })
+        return true;
+      }),
+      CustomValidators.passwordMatch('newPassword')
+    ]
   });
 
   constructor(private fb: FormBuilder,
               private auth: AuthenticationService,
+              private activatedRoute: ActivatedRoute,
               private router: Router,
               private snackBar: MatSnackBar,
               iconRegistry: MatIconRegistry,
@@ -45,10 +56,21 @@ export class LoginComponent {
     iconRegistry.addSvgIcon('cord', sanitizer.bypassSecurityTrustResourceUrl('assets/images/cord-icon.svg'));
   }
 
+  ngOnInit(): void {
+    this.activatedRoute.queryParams.subscribe(params => {
+      this.pwdReset = params['pwr'] === 'true';
+    });
+    if (this.pwdReset) {
+      this.newPassword.setValidators([Validators.required]);
+      this.confirmPassword.setValidators([Validators.required]);
+    }
+  }
+
   async onLogin() {
     this.form.disable();
     try {
-      await this.auth.login(this.email.value, this.password.value, true);
+      await this.auth.login(this.email.value, this.password.value, true,
+        this.pwdReset ? this.newPassword.value : undefined);
     } catch (err) {
       this.form.enable();
 
@@ -60,6 +82,10 @@ export class LoginComponent {
         this.form.setErrors({emailValidationRequired: true});
       } else if (err.error.error === 'account_not_approved') {
         this.form.setErrors({accountNotApproved: true});
+      } else if (err.error.error === 'reset_password_required') {
+        this.pwdReset = true;
+        this.newPwd.nativeElement.focus();
+        this.form.setErrors({resetPassword: true});
       }
       return;
     }
@@ -73,5 +99,13 @@ export class LoginComponent {
 
   get password(): AbstractControl {
     return this.form.get('password')!;
+  }
+
+  get newPassword(): AbstractControl {
+    return this.form.get('newPassword')!;
+  }
+
+  get confirmPassword(): AbstractControl {
+    return this.form.get('confirmPassword')!;
   }
 }

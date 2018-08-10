@@ -18,6 +18,7 @@ interface InvalidPasswordResponse {
     suggestions: string[]; // Can be empty list
   };
 }
+
 export function isInvalidPasswordError(error: any): error is InvalidPasswordResponse {
   return error.error === 'invalid_password';
 }
@@ -89,9 +90,9 @@ export class AuthenticationService {
    * - reset_password_required?
    * - invalid_password - insecure new password
    */
-  async login(email: string, password: string, rememberLogin: boolean): Promise<void> {
+  async login(email: string, password: string, rememberLogin: boolean, newPassword?: string): Promise<void> {
     const tokens = await this.api
-      .post('/auth/native/login', {domain: DOMAIN, email, password}, {
+      .post('/auth/native/login', {domain: DOMAIN, email, password, newPassword}, {
         headers: {[IGNORE_AUTH_ERRORS]: 'true'}
       })
       .pipe(map(AuthenticationToken.fromTokenMap))
