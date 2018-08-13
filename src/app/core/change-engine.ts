@@ -1,10 +1,9 @@
+import { isEqual } from 'lodash-es';
 import { DateTime } from 'luxon';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { Observable } from 'rxjs/Observable';
 import { SaveResult } from './abstract-view-state';
 import { clone, mapEntries } from './util';
-
-const isEqual = require('lodash.isequal');
 
 type Scalar = string | number | boolean;
 type Accessor = (val: any) => Scalar;
