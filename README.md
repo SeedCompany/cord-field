@@ -95,12 +95,13 @@ In the console of a browser, you can type `ilbDebug` to get the current configur
 Several new team members have had issues with getting set up with access to docker so that docker can pull the server images from the development server.  The following steps are specifically for __MacOS__ set up.  
 1) Make sure docker is installed.
 1) Make sure AWS CLI is installed.  version 1.14+.  If you have homebrew installed `brew install awscli`. This might prompt you to `xcode-select --install` for xcode command line tools to be installed.
-1) Clone the repository from [github](https://github.com/awslabs/amazon-ecr-credential-helper).
+1) Clone the repository from [github](https://github.com/awslabs/amazon-ecr-credential-helper).  The repo is https://github.com/awslabs/amazon-ecr-credential-helper.
 1) In the cloned repo, `make docker TARGET_GOOS=darwin`. 
-1) Verify this last step by running `./bin/docker-credential-ecr-login`.  You should have a Usage help message.  
-1) Either add the path to the resulting ` bin` directory to your path or move the resulting binary `docker-credential-ecr-login` to a directory in your path.  `echo $PATH` for a list of places you can put it. 
+1) Verify this last step by running `./bin/local/docker-credential-ecr-login`.  You should have a Usage help message.  
+1) Either add the path to the resulting ` bin` directory to your path or move the resulting binary `docker-credential-ecr-login` to a directory in your path.  `echo $PATH` for a list of places you can put it.
+example: `sudo cp ./bin/local/docker-credential-ecr-login /usr/local/bin` 
 1) Verify the last step with `which docker-credential-ecr-login`
-1) edit `~/.docker/config.json` to 
+1) edit `~/.docker/config.json` to be
 ```json
 {
 	"credsStore": "ecr-login"
