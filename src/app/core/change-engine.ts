@@ -128,9 +128,9 @@ export class ChangeEngine<T = any> {
   private modified = {} as Modified<T>;
 
   constructor(config: ChangeConfig<T>) {
-    this.config = mapEntries(config, (key, field) => ({
+    this.config = mapEntries(config, (key: keyof T, field: Partial<FieldConfig>) => ({
       accessor: returnSelf,
-      key,
+      key: key as string,
       toServer: returnSelf,
       forceRefresh: false,
       ...field
@@ -161,7 +161,7 @@ export class ChangeEngine<T = any> {
   }
 
   getModified(original: T, newIds?: SaveResult<T>): T {
-    const obj = clone(original) as {[key: string]: any};
+    const obj = clone(original);
 
     for (const [key, change] of Object.entries(this.modified) as Array<[keyof T, any]>) {
       if (!isChangeForList(change)) {
@@ -171,7 +171,7 @@ export class ChangeEngine<T = any> {
       if ('remove' in change) {
         const accessor = this.config[key].accessor;
         const toRemove = (change.remove as any[]).map(accessor);
-        obj[key] = (obj[key] as any[]).filter(current => !toRemove.includes(accessor(current)));
+        obj[key] = (obj[key] as any as any[]).filter(current => !toRemove.includes(accessor(current))) as any;
       }
       if ('add' in change) {
         if (newIds && key in newIds) {
@@ -180,14 +180,14 @@ export class ChangeEngine<T = any> {
           }
         }
 
-        obj[key] = (obj[key] as any[]).concat(change.add);
+        obj[key] = (obj[key] as any as any[]).concat(change.add) as any;
       }
       if ('update' in change) {
         const comparator = compareBy(this.config[key].accessor);
         for (const item of change.update) {
-          const index = (obj[key] as any[]).findIndex(current => comparator(current, item));
+          const index = (obj[key] as any as any[]).findIndex(current => comparator(current, item));
           if (index !== -1) {
-            (obj[key] as any[])[index] = item;
+            (obj[key] as any as any[])[index] = item;
           }
         }
       }
@@ -201,7 +201,7 @@ export class ChangeEngine<T = any> {
     this.dirty.next(false);
   }
 
-  change(changes: Changes<T>, original: {[key: string]: any}): void {
+  change(changes: Changes<T>, original: T): void {
     for (const [key, change] of Object.entries(changes) as Array<[keyof T, any]>) {
       if (!(key in this.config)) {
         continue;
@@ -212,13 +212,13 @@ export class ChangeEngine<T = any> {
         continue;
       }
       if ('remove' in change) {
-        this.removeList(key, change.remove, original[key]);
+        this.removeList(key, change.remove, original[key] as any);
       }
       if ('add' in change) {
-        this.addList(key, change.add, original[key]);
+        this.addList(key, change.add, original[key] as any);
       }
       if ('update' in change) {
-        this.updateListItem(key, change.update, original[key]);
+        this.updateListItem(key, change.update, original[key] as any);
       }
     }
 

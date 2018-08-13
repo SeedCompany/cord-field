@@ -20,7 +20,7 @@ export function filterEntries<T>(obj: T, predicate: (key: keyof T, value: T[keyo
 }
 
 // Shortcut for a mapping of keys of object {T} to values {V}
-export type ObjMap<T, V> = {[key in keyof T]: V};
+export type ObjMap<T, V> = {[key in keyof Partial<T>]: V};
 
 /**
  * A helper to map object values by their key/values via a mapper function
