@@ -32,7 +32,10 @@ app-search {
 .mat-column-avatar {
   flex: none;
   width: 40px; // so header column is aligned (same as avatar width)
-  margin-right: 24px; // same as left for table
+
+  // Add spacing to right and change left padding to left margin so it doesn't interfere with defined width.
+  margin: 0 $mat-row-horizontal-padding;
+  padding: 0;
 }
 
 .name {
