@@ -17,7 +17,9 @@ localforage.defineDriver({
   iterate: async <T, U>() => (null as any as U)
 });
 
-@Injectable()
+@Injectable({
+  providedIn: 'root'
+})
 export class BrowserService {
 
   private _firstNavigationFinished = false;

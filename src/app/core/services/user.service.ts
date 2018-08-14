@@ -12,7 +12,9 @@ import { NewUser, User, UserFilter, UserListItem, UserProfile, UsersWithTotal } 
 import { HttpParams } from './http/abstract-http-client';
 import { PloApiService } from './http/plo-api.service';
 
-@Injectable()
+@Injectable({
+  providedIn: 'root'
+})
 export class UserService {
 
   constructor(private plo: PloApiService) {

@@ -11,7 +11,9 @@ export const AUTH_STORAGE_KEY = 'auth';
 /**
  * Stores and retrieves AuthenticationTokens from Session or Local Storage
  */
-@Injectable()
+@Injectable({
+  providedIn: 'root'
+})
 export class AuthenticationStorageService {
 
   private tokens: AuthenticationToken[] | null;

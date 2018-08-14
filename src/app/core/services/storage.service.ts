@@ -324,7 +324,9 @@ export abstract class BaseStorageService<TStore extends any> {
  * Stores items for offline using the best available method in the browser via the localForage library.
  * Values can be any valid type supported by localForage.
  */
-@Injectable()
+@Injectable({
+  providedIn: 'root'
+})
 export class LocalStorageService extends BaseStorageService<LocalForage> {
 
   private storageEngine: StorageEngineType;
@@ -362,7 +364,9 @@ export class LocalStorageService extends BaseStorageService<LocalForage> {
 /**
  * Stores items in session. Use getJson and setJson to store non-string values.
  */
-@Injectable()
+@Injectable({
+  providedIn: 'root'
+})
 export class SessionStorageService extends BaseStorageService<Storage> {
   get dbName(): string {
     return 'app_db';

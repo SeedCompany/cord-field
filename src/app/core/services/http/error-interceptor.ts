@@ -10,7 +10,9 @@ import { Injectable, Provider } from '@angular/core';
 import { Observable, throwError as observableThrow } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 
-@Injectable()
+@Injectable({
+  providedIn: 'root'
+})
 export class ErrorInterceptor implements HttpInterceptor {
   static inject(): Provider {
     return {provide: HTTP_INTERCEPTORS, useClass: ErrorInterceptor, multi: true};

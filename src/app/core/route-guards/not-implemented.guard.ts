@@ -4,7 +4,9 @@ import { ActivatedRouteSnapshot, CanActivate, Route, Router, RouterStateSnapshot
 import { showNotImplemented } from '../../shared/directives/not-implemented.directive';
 import { BrowserService } from '../services/browser.service';
 
-@Injectable()
+@Injectable({
+  providedIn: 'root'
+})
 export class NotImplementedGuard implements CanActivate {
 
   constructor(

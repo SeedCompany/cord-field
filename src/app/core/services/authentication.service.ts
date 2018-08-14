@@ -22,7 +22,9 @@ export function isInvalidPasswordError(error: any): error is InvalidPasswordResp
   return error.error === 'invalid_password';
 }
 
-@Injectable()
+@Injectable({
+  providedIn: 'root'
+})
 export class AuthenticationService {
 
   private _login = new Subject<AuthenticationToken[]>();

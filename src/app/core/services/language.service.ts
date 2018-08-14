@@ -3,7 +3,9 @@ import { map } from 'rxjs/operators';
 import { Language } from '../models/language';
 import { PloApiService } from './http/plo-api.service';
 
-@Injectable()
+@Injectable({
+  providedIn: 'root'
+})
 export class LanguageService {
 
   constructor(private ploApi: PloApiService) {

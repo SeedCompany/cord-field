@@ -8,7 +8,9 @@ import { AuthenticationStorageService } from '../authentication-storage.service'
 
 export const IGNORE_AUTH_ERRORS = 'X-Skip-Auth-Interceptor';
 
-@Injectable()
+@Injectable({
+  providedIn: 'root'
+})
 export class AuthInterceptor implements HttpInterceptor {
 
   private serviceLookup: Array<{ id: string, baseUrl: string }> = [];

@@ -31,7 +31,9 @@ export interface ProjectFilterAPI {
   updatedAt?: {gte?: DateTime, lte?: DateTime};
 }
 
-@Injectable()
+@Injectable({
+  providedIn: 'root'
+})
 export class ProjectService {
 
   constructor(private ploApi: PloApiService) {
