@@ -49,8 +49,6 @@
     "luxon": "^1.2.1",
     "rxjs": "^6.1.0",
     "ts-loader": "^4.4.2",
-    "webpack": "^4.7.0",
-    "webpack-cli": "^3.1.0",
     "xregexp": "^4.2.0",
     "zone.js": "^0.8.26"
   },
