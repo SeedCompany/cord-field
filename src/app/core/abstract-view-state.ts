@@ -1,7 +1,4 @@
-import { BehaviorSubject } from 'rxjs/BehaviorSubject';
-import { Observable } from 'rxjs/Observable';
-import { PartialObserver } from 'rxjs/src/Observer';
-import { Subject } from 'rxjs/Subject';
+import { BehaviorSubject, Observable, PartialObserver, Subject } from 'rxjs';
 import { ChangeConfig, ChangeEngine, Changes } from './change-engine';
 
 export type SaveResult<T> = {[key in keyof Partial<T>]: string[]};

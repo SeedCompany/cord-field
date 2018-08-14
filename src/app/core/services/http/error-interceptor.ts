@@ -7,7 +7,8 @@ import {
   HttpRequest
 } from '@angular/common/http';
 import { Injectable, Provider } from '@angular/core';
-import { Observable } from 'rxjs/Observable';
+import { Observable, throwError as observableThrow } from 'rxjs';
+import { catchError } from 'rxjs/operators';
 
 @Injectable()
 export class ErrorInterceptor implements HttpInterceptor {
@@ -18,13 +19,13 @@ export class ErrorInterceptor implements HttpInterceptor {
   intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
     return next
       .handle(req)
-      .catch(e => {
+      .pipe(catchError(e => {
         if (e instanceof HttpErrorResponse && e.status === 500 && e.error.error === 'SERVER_ERROR') {
           // tslint:disable-next-line:no-console
           console.error(JSON.parse(e.error.trace).stack);
         }
 
-        return Observable.throw(e);
-      });
+        return observableThrow(e);
+      }));
   }
 }

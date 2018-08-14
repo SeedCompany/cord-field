@@ -1,8 +1,6 @@
 import { Injectable } from '@angular/core';
-import 'rxjs/add/observable/of';
-import 'rxjs/add/operator/map';
-import { Observable } from 'rxjs/Observable';
-import { Subject } from 'rxjs/Subject';
+import { Observable, Subject } from 'rxjs';
+import { map } from 'rxjs/operators';
 import { AuthenticationToken } from '../models/authentication-token';
 import { IUserRequestAccess, User } from '../models/user';
 import { AuthenticationStorageService } from './authentication-storage.service';
@@ -94,7 +92,7 @@ export class AuthenticationService {
       .post('/auth/native/login', {domain: DOMAIN, email, password}, {
         headers: {[IGNORE_AUTH_ERRORS]: 'true'}
       })
-      .map(AuthenticationToken.fromTokenMap)
+      .pipe(map(AuthenticationToken.fromTokenMap))
       .toPromise();
 
     await this.authStorage.saveTokens(tokens, rememberLogin);

@@ -1,4 +1,5 @@
-import { Observable } from 'rxjs/Observable';
+import { of as observableOf, throwError as observableThrow } from 'rxjs';
+import { first } from 'rxjs/operators';
 import { AbstractViewState, SaveResult } from './abstract-view-state';
 import { returnSelf } from './change-engine';
 
@@ -31,14 +32,12 @@ class TestViewState extends AbstractViewState<TestSubject> {
   }
 
   next(subject: TestSubject) {
-    Observable
-      .of(subject)
+    observableOf(subject)
       .subscribe(this.onLoad);
   }
 
   loadWithError() {
-    Observable
-      .throw(new Error('Loading failed'))
+    observableThrow(new Error('Loading failed'))
       .subscribe(this.onLoad);
   }
 
@@ -64,14 +63,14 @@ describe('AbstractViewState', () => {
 
   describe('Loading', () => {
     it('has initial value', async () => {
-      const subject = await viewState.subject.first().toPromise();
+      const subject = await viewState.subject.pipe(first()).toPromise();
       await expect(subject.foo).toEqual('initial');
     });
 
     it('sets subject', async () => {
       viewState.next({foo: 'next', bar: 'next'});
 
-      const subject = await viewState.subject.first().toPromise();
+      const subject = await viewState.subject.pipe(first()).toPromise();
       await expect(subject.foo).toEqual('next');
     });
 
@@ -152,7 +151,7 @@ describe('AbstractViewState', () => {
       }
       expect(error).toBeTruthy("save() should've thrown error");
 
-      expect(await viewState.isSubmitting.first().toPromise()).toBeFalsy('Submitting should be reset to false even on error');
+      expect(await viewState.isSubmitting.pipe(first()).toPromise()).toBeFalsy('Submitting should be reset to false even on error');
     });
 
     it('next subject', async () => {

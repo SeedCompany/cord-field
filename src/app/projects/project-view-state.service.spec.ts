@@ -2,7 +2,8 @@ import { HttpClientModule } from '@angular/common/http';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { TestBed } from '@angular/core/testing';
 import { DateTime } from 'luxon';
-import { Observable } from 'rxjs/Observable';
+import { of as observableOf } from 'rxjs';
+import { first } from 'rxjs/operators';
 import { CoreModule } from '../core/core.module';
 import { Language } from '../core/models/language';
 import { Location } from '../core/models/location';
@@ -34,17 +35,17 @@ describe('ProjectViewStateService', () => {
 
     viewState = TestBed.get(ProjectViewStateService);
     projectService = TestBed.get(ProjectService);
-    spyOn(projectService, 'getProject').and.returnValue(Observable.of(project));
+    spyOn(projectService, 'getProject').and.returnValue(observableOf(project));
   });
 
   it('initial project should be empty project', async () => {
-    const p: Project = await viewState.project.first().toPromise();
+    const p: Project = await viewState.project.pipe(first()).toPromise();
     expect(p instanceof Project).toBeTruthy();
   });
 
   it('Given new project ID -> fetch project', async () => {
     viewState.onNewId('id');
-    const p: Project = await viewState.project.first().toPromise();
+    const p: Project = await viewState.project.pipe(first()).toPromise();
     expect(p instanceof Project).toBeTruthy();
     expect(p.id).toBe('id');
   });

@@ -1,14 +1,14 @@
 import { HttpResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { SortDirection } from '@angular/material';
-import { Observable } from 'rxjs/Observable';
+import { Observable, of as observableOf } from 'rxjs';
+import { delay, map } from 'rxjs/operators';
 import { ModifiedUser } from '../../people/user-view-state.service';
 import { SaveResult } from '../abstract-view-state';
 import { Project } from '../models/project';
 import { ProjectRole } from '../models/project-role';
 import { TeamMember } from '../models/team-member';
 import { NewUser, User, UserFilter, UserListItem, UserProfile, UsersWithTotal } from '../models/user';
-import { generateObjectId } from '../util';
 import { HttpParams } from './http/abstract-http-client';
 import { PloApiService } from './http/plo-api.service';
 
@@ -21,7 +21,7 @@ export class UserService {
   getUser(id: string): Observable<UserProfile> {
     return this.plo
       .get(`/users/${id}`)
-      .map(UserProfile.fromJson);
+      .pipe(map(UserProfile.fromJson));
   }
 
   save(id: string, changes: ModifiedUser): Promise<SaveResult<UserProfile>> {
@@ -31,7 +31,7 @@ export class UserService {
   search(term: string): Promise<User[]> {
     return this.plo
       .get<User[]>('/users/suggestions', {params: {term}})
-      .map(users => users.map(User.fromJson))
+      .pipe(map(users => users.map(User.fromJson)))
       .toPromise();
   }
 
@@ -62,12 +62,12 @@ export class UserService {
     return this
       .plo
       .get<UserListItem[]>('/users', {params, observe: 'response'})
-      .map((response: HttpResponse<UserListItem[]>) => {
+      .pipe(map((response: HttpResponse<UserListItem[]>) => {
         return {
           users: response.body!.map(UserListItem.fromJson),
           total: Number(response.headers.get('x-sc-total-count')) || 0
         };
-      });
+      }));
   }
 
   async getAssignableRoles(userId: string, project: Project, teamMember?: TeamMember): Promise<ProjectRole[]> {
@@ -88,12 +88,12 @@ export class UserService {
   }
 
   getAssignableRolesForUser(user: User): Promise<ProjectRole[]> {
-    return Observable.of(ProjectRole.values()).delay(2000).toPromise();
+    return observableOf(ProjectRole.values()).pipe(delay(2000)).toPromise();
   }
 
   create(newUser: NewUser): Promise<string> {
-    return this.plo.post<{id: string}>('/users/invite', newUser)
-      .map(result => result.id)
+    return this.plo.post<{ id: string }>('/users/invite', newUser)
+      .pipe(map(result => result.id))
       .toPromise();
   }
 }

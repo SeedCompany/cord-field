@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import { map } from 'rxjs/operators';
 import { Language } from '../models/language';
 import { PloApiService } from './http/plo-api.service';
 
@@ -11,7 +12,7 @@ export class LanguageService {
   search(term: string): Promise<Language[]> {
     return this.ploApi
       .get<Language[]>('/languages/suggestions', {params: {term}})
-      .map(languages => languages.map(Language.fromJson))
+      .pipe(map(languages => languages.map(Language.fromJson)))
       .toPromise();
   }
 }

@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { MatSnackBar, MatSnackBarRef, SimpleSnackBar } from '@angular/material';
+import { takeUntil } from 'rxjs/operators';
 import { TitleAware } from '../../core/decorators';
 import { popInOut } from '../../shared/animations';
 import { UserViewStateService } from '../user-view-state.service';
@@ -41,10 +42,10 @@ export class PersonEditComponent extends AbstractPersonComponent implements OnIn
   ngOnInit(): void {
     super.ngOnInit();
     this.userViewState.isSubmitting
-      .takeUntil(this.unsubscribe)
+      .pipe(takeUntil(this.unsubscribe))
       .subscribe(s => this.submitting = s);
     this.userViewState.isDirty
-      .takeUntil(this.unsubscribe)
+      .pipe(takeUntil(this.unsubscribe))
       .subscribe(d => this.dirty = d);
   }
 

@@ -2,6 +2,7 @@ import { HttpErrorResponse } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
 import { MatSnackBar, MatSnackBarRef, SimpleSnackBar } from '@angular/material';
 import { ActivatedRoute, NavigationEnd, Router, UrlSegment } from '@angular/router';
+import { filter, map, startWith, switchMap, takeUntil } from 'rxjs/operators';
 import { TitleAware, TitleProp } from '../../core/decorators';
 import { Project } from '../../core/models/project';
 import { popInOut } from '../../shared/animations';
@@ -56,7 +57,7 @@ export class ProjectComponent extends SubscriptionComponent implements OnInit, T
       this.projectViewState.onNewId(params.id);
     });
     this.projectViewState.loadError
-      .takeUntil(this.unsubscribe)
+      .pipe(takeUntil(this.unsubscribe))
       .subscribe(err => {
         const message = (err instanceof HttpErrorResponse && err.status === 404)
           ? 'Could not find project'
@@ -65,21 +66,23 @@ export class ProjectComponent extends SubscriptionComponent implements OnInit, T
         this.router.navigate(['..'], {replaceUrl: true, relativeTo: this.route});
       });
     this.projectViewState.project
-      .takeUntil(this.unsubscribe)
+      .pipe(takeUntil(this.unsubscribe))
       .subscribe(project => this.project = project);
     this.projectViewState.isDirty
-      .takeUntil(this.unsubscribe)
+      .pipe(takeUntil(this.unsubscribe))
       .subscribe(dirty => this.dirty = dirty);
     this.projectViewState.isSubmitting
-      .takeUntil(this.unsubscribe)
+      .pipe(takeUntil(this.unsubscribe))
       .subscribe(submitting => this.submitting = submitting);
 
     this.router.events
-      .takeUntil(this.unsubscribe)
-      .filter(event => event instanceof NavigationEnd)
-      .startWith({}) // for first load
-      .switchMap(() => this.route.firstChild ? this.route.firstChild.snapshot.url : [])
-      .map((segment: UrlSegment) => this.tabs.find((tab) => tab.path === segment.path)!)
+      .pipe(
+        takeUntil(this.unsubscribe),
+        filter(event => event instanceof NavigationEnd),
+        startWith({}), // for first load
+        switchMap(() => this.route.firstChild ? this.route.firstChild.snapshot.url : []),
+        map((segment: UrlSegment) => this.tabs.find((tab) => tab.path === segment.path)!)
+      )
       .subscribe(tab => this.shouldCurrentTabShowSaveFab = !!tab.saveFab);
   }
 
@@ -89,7 +92,7 @@ export class ProjectComponent extends SubscriptionComponent implements OnInit, T
 
   get title() {
     return this.projectViewState.project
-      .map(project => project.name);
+      .pipe(map(project => project.name));
   }
 
   trackTabsBy(index: number, tab: TabConfig) {

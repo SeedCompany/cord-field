@@ -1,5 +1,5 @@
-import { BehaviorSubject } from 'rxjs/BehaviorSubject';
-import { Observable } from 'rxjs/Observable';
+import { BehaviorSubject, combineLatest, EMPTY, Observable, of as observableOf } from 'rxjs';
+import { map } from 'rxjs/operators';
 
 type Title = string | string[] | Observable<string> | Observable<string[]>;
 
@@ -62,12 +62,11 @@ export function TitleAware(title?: Title): ClassDecorator {
     Object.defineProperty(target.prototype, 'title', {
       get: function (this: any) {
         const result = orig ? orig.get!.apply(this) : title;
-        const title$ = (result instanceof Observable ? result : Observable.of(result))
-          .map(t => Array.isArray(t) ? t : [t]);
+        const title$ = (result instanceof Observable ? result : observableOf(result))
+          .pipe(map(t => Array.isArray(t) ? t : [t]));
 
-        return Observable
-          .combineLatest(getTitle$.call(this) as Observable<string[]>, title$)
-          .map(([list, titles]) => list.concat(titles));
+        return combineLatest(getTitle$.call(this) as Observable<string[]>, title$)
+          .pipe(map(([list, titles]) => list.concat(titles)));
       }
     });
 
@@ -94,10 +93,10 @@ export function TitleAware(title?: Title): ClassDecorator {
 }
 
 export function observeComponentTitle(component: Partial<TitleProp>): Observable<string[]> {
-  let title$: Observable<string | string[]> = Observable.empty();
+  let title$: Observable<string | string[]> = EMPTY;
   if (component.title) {
-    title$ = component.title instanceof Observable ? component.title : Observable.of(component.title);
+    title$ = component.title instanceof Observable ? component.title : observableOf(component.title);
   }
 
-  return title$.map(title => Array.isArray(title) ? title : [title]);
+  return title$.pipe(map(title => Array.isArray(title) ? title : [title]));
 }

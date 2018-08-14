@@ -6,7 +6,7 @@ import {
   HttpResponse
 } from '@angular/common/http';
 import { HttpObserve } from '@angular/common/http/src/client';
-import { Observable } from 'rxjs/Observable';
+import { Observable } from 'rxjs';
 
 type HttpHeaders = HttpHeadersObject | { [header: string]: string | string[] };
 export type HttpParams = HttpParamsObject | { [param: string]: string | string[] };

@@ -2,7 +2,8 @@ import { HttpResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { SortDirection } from '@angular/material';
 import { DateTime } from 'luxon';
-import { Observable } from 'rxjs/Observable';
+import { Observable } from 'rxjs';
+import { map } from 'rxjs/operators';
 import { ModifiedProject } from '../../projects/project-view-state.service';
 import { SaveResult } from '../abstract-view-state';
 import { ProjectCreationResult } from '../create-dialogs/project-create-dialog/project-create-dialog.component';
@@ -39,7 +40,7 @@ export class ProjectService {
   getProject(id: string): Observable<Project> {
     return this.ploApi
       .get(`/projects/${id}`)
-      .map(Project.fromJson);
+      .pipe(map(Project.fromJson));
   }
 
   getProjects(sort: keyof Project = 'updatedAt',
@@ -71,12 +72,12 @@ export class ProjectService {
     return this
       .ploApi
       .get<Project[]>('/projects', {params, observe: 'response'})
-      .map((response: HttpResponse<Project[]>) => {
+      .pipe(map((response: HttpResponse<Project[]>) => {
         return {
           projects: Project.fromJsonArray(response.body),
           count: Number(response.headers.get('x-sc-total-count')) || 0
         };
-      });
+      }));
   }
 
   private buildFilter(filter: ProjectFilter): ProjectFilterAPI {

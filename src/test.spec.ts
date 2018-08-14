@@ -1,6 +1,5 @@
 import { AuthenticationToken } from './app/core/models/authentication-token';
 import { AuthenticationStorageService } from './app/core/services/authentication-storage.service';
-import './app/rxjs-imports';
 
 export async function saveTestCredentials(storageService: AuthenticationStorageService, remember = false): Promise<void> {
 

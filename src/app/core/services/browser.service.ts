@@ -1,6 +1,7 @@
 import { Injectable, Optional } from '@angular/core';
 import { NavigationEnd, Router } from '@angular/router';
 import * as localforage from 'localforage';
+import { filter, first } from 'rxjs/operators';
 
 // Temp fix until auth can be done on SSR as well
 localforage.defineDriver({
@@ -24,8 +25,10 @@ export class BrowserService {
   constructor(@Optional() router?: Router) {
     if (router) {
       router.events
-        .filter(e => e instanceof NavigationEnd)
-        .first()
+        .pipe(
+          filter(e => e instanceof NavigationEnd),
+          first()
+        )
         .subscribe(() => this._firstNavigationFinished = true);
     }
   }

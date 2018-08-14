@@ -1,6 +1,7 @@
 import { Component, Inject } from '@angular/core';
 import { FormControl, Validators } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialogRef, MatSnackBar } from '@angular/material';
+import { takeUntil } from 'rxjs/operators';
 import { Project } from '../../core/models/project';
 import { ProjectRole } from '../../core/models/project-role';
 import { TeamMember } from '../../core/models/team-member';
@@ -38,7 +39,7 @@ export class ProjectTeamMemberRoleDialogComponent extends SubscriptionComponent 
     this.roles.reset(this.teamMember.roles);
 
     this.projectViewState.isSubmitting
-      .takeUntil(this.unsubscribe)
+      .pipe(takeUntil(this.unsubscribe))
       .subscribe(s => this.submitting = s);
 
     this.loadRoles();

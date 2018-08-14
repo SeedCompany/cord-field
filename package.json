@@ -48,7 +48,6 @@
     "lodash-es": "^4.17.10",
     "luxon": "^1.2.1",
     "rxjs": "^6.1.0",
-    "rxjs-compat": "^6.0.0-rc.0",
     "ts-loader": "^4.4.2",
     "webpack": "^4.7.0",
     "webpack-cli": "^3.1.0",

@@ -1,6 +1,7 @@
 import { Component, Inject, ViewChild } from '@angular/core';
 import { Validators } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialogRef, MatSnackBar, MatStepper } from '@angular/material';
+import { takeUntil } from 'rxjs/operators';
 import { Project } from '../../../core/models/project';
 import { ProjectRole } from '../../../core/models/project-role';
 import { TeamMember } from '../../../core/models/team-member';
@@ -37,7 +38,7 @@ export class ProjectTeamMemberAddComponent extends SubscriptionComponent {
     this.projectViewState = data.projectViewState;
     this.project = data.project;
     this.projectViewState.isSubmitting
-      .takeUntil(this.unsubscribe)
+      .pipe(takeUntil(this.unsubscribe))
       .subscribe(s => this.submitting = s);
   }
 

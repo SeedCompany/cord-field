@@ -1,7 +1,7 @@
 import { isEqual } from 'lodash-es';
 import { DateTime } from 'luxon';
-import { BehaviorSubject } from 'rxjs/BehaviorSubject';
-import { Observable } from 'rxjs/Observable';
+import { BehaviorSubject, Observable } from 'rxjs';
+import { distinctUntilChanged } from 'rxjs/operators';
 import { SaveResult } from './abstract-view-state';
 import { clone, mapEntries } from './util';
 
@@ -138,7 +138,7 @@ export class ChangeEngine<T = any> {
   }
 
   get isDirty(): Observable<boolean> {
-    return this.dirty.asObservable().distinctUntilChanged();
+    return this.dirty.asObservable().pipe(distinctUntilChanged());
   }
 
   get needsRefresh(): boolean {
