@@ -32,8 +32,8 @@ export class LoginComponent implements OnInit {
     newPassword: [''],
     confirmPassword: ['']
   }, {
-    // Mark email/password fields invalid on login failure, but remove on change.
     validator: [
+      // Mark email/password fields invalid on login failure, but remove on change.
       validatePair('email', 'password', 'invalid', () => {
         if (this.loginFailed) {
           this.loginFailed = false;
@@ -76,6 +76,7 @@ export class LoginComponent implements OnInit {
         this.snackBar.open('Failed to communicate with server', undefined, {duration: 3000});
       } else if (err.error.error === 'login_failed') {
         this.loginFailed = true;
+        this.form.updateValueAndValidity();
       } else if (err.error.error === 'email_validation_required') {
         this.form.setErrors({emailValidationRequired: true});
       } else if (err.error.error === 'account_not_approved') {
