@@ -5,7 +5,7 @@ import { MatIconRegistry, MatSnackBar } from '@angular/material';
 import { DomSanitizer } from '@angular/platform-browser';
 import { ActivatedRoute, Router } from '@angular/router';
 import { TitleAware } from '../../decorators';
-import { AuthenticationService } from '../../services/authentication.service';
+import { AuthenticationService, isInvalidPasswordError } from '../../services/authentication.service';
 import * as CustomValidators from '../../validators';
 import { validatePair } from '../../validators/helpers';
 
@@ -84,6 +84,8 @@ export class LoginComponent implements OnInit {
         this.passwordResetRequired();
         this.newPwd.nativeElement.focus();
         this.form.setErrors({resetPassword: true});
+      } else if (isInvalidPasswordError(err.error)) {
+        this.newPassword.setErrors({invalid: err.error.feedback});
       }
       return;
     }
