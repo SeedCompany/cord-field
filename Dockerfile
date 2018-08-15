@@ -25,10 +25,9 @@ RUN set -e; \
   # Build angular client bundles
   yarn ng build --prod --configuration $NG_BUILD_TARGET --progress=false; \
   # Build angular server bundles
-  yarn ng build --prod --configuration $NG_BUILD_TARGET \
-  yarn ng run cord-field:server --configuration $NG_BUILD_TARGET \
+  yarn ng run cord-field:server --configuration $NG_BUILD_TARGET --progress=false; \
   # Build web server
-  yarn webpack --config webpack.server.config.js --colors;
+  yarn build:server;
 
 COPY docker/docker-entrypoint.sh /usr/local/bin/
 RUN chmod +x /usr/local/bin/docker-entrypoint.sh
