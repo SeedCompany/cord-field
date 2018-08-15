@@ -8,15 +8,12 @@ import { UserService } from '@app/core/services/user.service';
 import * as CustomValidators from '@app/core/validators';
 import { UserRolesFormComponent } from '@app/shared/components/user-roles-form/user-roles-form.component';
 
-import * as RESOURCE from './person-create-dialog.resources.json';
-
 @Component({
   selector: 'app-person-create-dialog',
   templateUrl: './person-create-dialog.component.html',
   styleUrls: ['./person-create-dialog.component.scss']
 })
 export class PersonCreateDialogComponent implements OnInit {
-  res: object = RESOURCE;
   form: FormGroup;
   submitting = false;
 
