@@ -58,12 +58,10 @@ export class LoginComponent implements OnInit {
 
   ngOnInit(): void {
     this.activatedRoute.queryParams.subscribe(params => {
-      this.pwdReset = params['pwr'] === 'true';
+      if (params.pwr === 'true') {
+        this.passwordResetRequired();
+      }
     });
-    if (this.pwdReset) {
-      this.newPassword.setValidators([Validators.required]);
-      this.confirmPassword.setValidators([Validators.required]);
-    }
   }
 
   async onLogin() {
@@ -83,7 +81,7 @@ export class LoginComponent implements OnInit {
       } else if (err.error.error === 'account_not_approved') {
         this.form.setErrors({accountNotApproved: true});
       } else if (err.error.error === 'reset_password_required') {
-        this.pwdReset = true;
+        this.passwordResetRequired();
         this.newPwd.nativeElement.focus();
         this.form.setErrors({resetPassword: true});
       }
@@ -107,5 +105,11 @@ export class LoginComponent implements OnInit {
 
   get confirmPassword(): AbstractControl {
     return this.form.get('confirmPassword')!;
+  }
+
+  private passwordResetRequired() {
+    this.pwdReset = true;
+    this.newPassword.setValidators([Validators.required]);
+    this.confirmPassword.setValidators([Validators.required]);
   }
 }
