@@ -30,4 +30,4 @@ RUN chmod +x /usr/local/bin/docker-entrypoint-tests.sh
 VOLUME [/opt/build/testResults]
 
 ENTRYPOINT ["docker-entrypoint-tests.sh"]
-CMD yarn lint && yarn ng test -c bamboo
+CMD yarn lint && yarn ng build -c verify && yarn ng test -c bamboo
