@@ -33,6 +33,10 @@
                 }
               ]
             },
+            "verify": {
+              "aot": true,
+              "progress": false
+            },
             "dev": {
               "fileReplacements": [
                 {
