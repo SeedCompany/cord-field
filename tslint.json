@@ -20,11 +20,6 @@
     },
     "eofline": true,
     "forin": true,
-    "import-blacklist": [
-      true,
-      "rxjs",
-      "rxjs/Rx"
-    ],
     "import-spacing": true,
     "indent": [
       true,
@@ -174,10 +169,6 @@
     "no-output-on-prefix": true,
     "no-output-rename": true,
     "no-unused-css": true,
-    "pipe-naming": [
-      true,
-      "camelCase"
-    ],
     "templates-no-negated-async": true,
     "trackBy-function": true,
     "use-host-property-decorator": true,

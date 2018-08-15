@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs/Observable';
-import { Subject } from 'rxjs/Subject';
+import { from as observableFrom, Observable, of as observableOf, Subject } from 'rxjs';
+import { mergeMap } from 'rxjs/operators';
 import { BrowserService } from './browser.service';
 
 export type StorageEngineType = 'asyncStorage' | 'localStorageWrapper' | 'session' | 'webSQLStorage';
@@ -128,13 +128,12 @@ export abstract class BaseStorageService<TStore extends any> {
   abstract getStorageEngineType(): Promise<StorageEngineType>;
 
   getCachedObservable<T>(key: string, observable: Observable<T>, cacheTTL = 0, gc = false): Observable<T> {
-    return Observable
-      .fromPromise(this.getItem(key))
-      .flatMap((val: any) => {
+    return observableFrom(this.getItem(key))
+      .pipe(mergeMap((val: any) => {
         return (val !== null)
-          ? Observable.of(val)
-          : observable.flatMap((obsVal: any) => this.setItem(key, obsVal, cacheTTL, gc));
-      });
+          ? observableOf(val)
+          : observable.pipe(mergeMap((obsVal: any) => this.setItem(key, obsVal, cacheTTL, gc)));
+      }));
   }
 
   /**
@@ -325,7 +324,9 @@ export abstract class BaseStorageService<TStore extends any> {
  * Stores items for offline using the best available method in the browser via the localForage library.
  * Values can be any valid type supported by localForage.
  */
-@Injectable()
+@Injectable({
+  providedIn: 'root'
+})
 export class LocalStorageService extends BaseStorageService<LocalForage> {
 
   private storageEngine: StorageEngineType;
@@ -363,7 +364,9 @@ export class LocalStorageService extends BaseStorageService<LocalForage> {
 /**
  * Stores items in session. Use getJson and setJson to store non-string values.
  */
-@Injectable()
+@Injectable({
+  providedIn: 'root'
+})
 export class SessionStorageService extends BaseStorageService<Storage> {
   get dbName(): string {
     return 'app_db';

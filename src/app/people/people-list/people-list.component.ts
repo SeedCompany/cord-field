@@ -2,7 +2,8 @@ import { animate, state, style, transition, trigger } from '@angular/animations'
 import { AfterViewInit, Component, ViewChild } from '@angular/core';
 import { MatPaginator, MatSort, MatTableDataSource, PageEvent, Sort } from '@angular/material';
 import { Router } from '@angular/router';
-import { Observable } from 'rxjs/Observable';
+import { combineLatest, of as observableOf } from 'rxjs';
+import { startWith, switchMap, tap } from 'rxjs/operators';
 import { TitleAware } from '../../core/decorators';
 import { Organization } from '../../core/models/organization';
 import { ProjectRole } from '../../core/models/project-role';
@@ -41,16 +42,17 @@ export class PeopleListComponent implements AfterViewInit {
               private router: Router) {}
 
   ngAfterViewInit() {
-    Observable
-      .combineLatest(
-        this.sort.sortChange
-          .do(() => this.paginator.pageIndex = 0)
-          .startWith({active: '', direction: 'desc'} as Sort),
-        this.paginator.page
-          .startWith({pageIndex: 0, pageSize: 10, length: 0} as PageEvent),
-        this.filtersComponent.filters
-      )
-      .switchMap(([sort, page, filters]: [Sort, PageEvent, UserFilter]) => {
+    combineLatest(
+      this.sort.sortChange
+        .pipe(
+          tap(() => this.paginator.pageIndex = 0),
+          startWith({active: '', direction: 'desc'} as Sort)
+        ),
+      this.paginator.page
+        .pipe(startWith({pageIndex: 0, pageSize: 10, length: 0} as PageEvent)),
+      this.filtersComponent.filters
+    )
+      .pipe(switchMap(([sort, page, filters]: [Sort, PageEvent, UserFilter]) => {
         const users = this.userService.getUsers(
           sort.active as keyof UserListItem,
           sort.direction,
@@ -59,11 +61,11 @@ export class PeopleListComponent implements AfterViewInit {
           filters
         );
 
-        return Observable.combineLatest(
+        return combineLatest(
           users,
-          Observable.of(filters)
+          observableOf(filters)
         );
-      })
+      }))
       .subscribe(([data, filters]: [UsersWithTotal, UserFilter]) => {
         this.totalCount = data.total;
         this.peopleSource.data = data.users;

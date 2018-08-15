@@ -2,8 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material';
 import { Title } from '@angular/platform-browser';
 import { Router } from '@angular/router';
-import { BehaviorSubject } from 'rxjs/BehaviorSubject';
-import { Subscription } from 'rxjs/Subscription';
+import { BehaviorSubject, Subscription } from 'rxjs';
+import { map, takeUntil } from 'rxjs/operators';
 import { observeComponentTitle, TitleProp } from './core/decorators';
 import { AuthenticationService } from './core/services/authentication.service';
 import { AuthInterceptor } from './core/services/http/auth-interceptor';
@@ -31,7 +31,7 @@ export class AppComponent extends SubscriptionComponent implements OnInit {
 
   ngOnInit(): void {
     this.authInterceptor.authError
-      .takeUntil(this.unsubscribe)
+      .pipe(takeUntil(this.unsubscribe))
       .subscribe(async () => {
         this.dialogs.closeAll();
         await this.auth.logout();
@@ -40,18 +40,20 @@ export class AppComponent extends SubscriptionComponent implements OnInit {
       });
 
     this.title$
-      .takeUntil(this.unsubscribe)
-      .map(titles => titles
-        .filter(t => t)
-        .concat(['Cord Field'])
-        .join(' - ')
+      .pipe(
+        takeUntil(this.unsubscribe),
+        map(titles => titles
+          .filter(t => t)
+          .concat(['Cord Field'])
+          .join(' - ')
+        )
       )
       .subscribe(str => this.titleService.setTitle(str));
   }
 
   onRouterActivate(component: Partial<TitleProp>) {
     this.titleSub = observeComponentTitle(component)
-      .takeUntil(this.unsubscribe)
+      .pipe(takeUntil(this.unsubscribe))
       .subscribe(titles => this.title$.next(titles));
   }
 

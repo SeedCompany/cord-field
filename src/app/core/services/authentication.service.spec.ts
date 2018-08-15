@@ -1,5 +1,6 @@
 import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
 import { inject, TestBed } from '@angular/core/testing';
+import { first } from 'rxjs/operators';
 import { environment } from '../../../environments/environment';
 import { CoreModule } from '../core.module';
 import { AuthenticationService } from './authentication.service';
@@ -40,7 +41,7 @@ describe('AuthenticationService', () => {
 
     it('login$ observable triggers when successfully logged in', (done: DoneFn) => {
       let loggedIn: boolean;
-      authService.login$.first().subscribe(() => {
+      authService.login$.pipe(first()).subscribe(() => {
         loggedIn = true;
       });
 

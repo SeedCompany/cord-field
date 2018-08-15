@@ -5,7 +5,9 @@ import { BaseApiService } from './base-api';
 
 export const SERVICE_AUDIENCE = 'plo.cord.bible';
 
-@Injectable()
+@Injectable({
+  providedIn: 'root'
+})
 export class PloApiService extends BaseApiService {
 
   constructor(authStorage: AuthenticationStorageService, httpClient: HttpClient) {

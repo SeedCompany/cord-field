@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { DateTime } from 'luxon';
-import { Observable } from 'rxjs/Observable';
+import { Observable } from 'rxjs';
 import { AbstractViewState, SaveResult } from '../core/abstract-view-state';
 import { accessDates, ChangeConfig, mapChangeList, returnId } from '../core/change-engine';
 import { Language } from '../core/models/language';

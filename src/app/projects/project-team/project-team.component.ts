@@ -1,5 +1,6 @@
 import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
 import { MatDialog, MatPaginator, MatSnackBar, MatSort, MatTableDataSource } from '@angular/material';
+import { takeUntil } from 'rxjs/operators';
 import { TitleAware } from '../../core/decorators';
 import { Project } from '../../core/models/project';
 import { ProjectRole } from '../../core/models/project-role';
@@ -34,7 +35,7 @@ export class ProjectTeamComponent extends SubscriptionComponent implements OnIni
 
   ngOnInit(): void {
     this.projectViewState.project
-      .takeUntil(this.unsubscribe)
+      .pipe(takeUntil(this.unsubscribe))
       .subscribe(project => {
         this.project = project;
         this.dataSource.data = project.team;

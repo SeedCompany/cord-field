@@ -1,6 +1,7 @@
 import { Component, EventEmitter, Input, OnInit, Output, QueryList, ViewChildren } from '@angular/core';
 import { AbstractControl, FormArray, FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatSelect } from '@angular/material';
+import { filter, first, takeUntil } from 'rxjs/operators';
 import { Location } from '../../../core/models/location';
 import { ProjectRole } from '../../../core/models/project-role';
 import { UserRole } from '../../../core/models/user';
@@ -50,7 +51,7 @@ export class UserRolesFormComponent extends SubscriptionComponent implements OnI
     this.loadingRoles = false;
 
     this.userRolesCtl.valueChanges
-      .takeUntil(this.unsubscribe)
+      .pipe(takeUntil(this.unsubscribe))
       .subscribe((userRoles: UserRole[]) => {
         this.availableRoles = this.authorizedRoles
           .filter(role => !userRoles.find(userRole => userRole.role === role))
@@ -77,11 +78,16 @@ export class UserRolesFormComponent extends SubscriptionComponent implements OnI
       locationCtl.setValidators(locationRequired ? Validators.required : null);
       locationCtl.reset([]);
     });
-    roleCtl.valueChanges.filter(val => !val).first().subscribe(() => {
-      valChanges.unsubscribe();
-      const index = this.userRolesCtl.controls.indexOf(userRoleCtl);
-      this.userRolesCtl.removeAt(index);
-    });
+    roleCtl.valueChanges
+      .pipe(
+        filter(val => !val),
+        first()
+      )
+      .subscribe(() => {
+        valChanges.unsubscribe();
+        const index = this.userRolesCtl.controls.indexOf(userRoleCtl);
+        this.userRolesCtl.removeAt(index);
+      });
 
     this.userRolesCtl.push(userRoleCtl);
     this.adding = true;
@@ -91,21 +97,26 @@ export class UserRolesFormComponent extends SubscriptionComponent implements OnI
       const select = this.roleFields.last;
 
       // When closed for the first time:
-      select.openedChange.filter(i => !i).first().subscribe(() => {
-        this.adding = false;
+      select.openedChange
+        .pipe(
+          filter(i => !i),
+          first()
+        )
+        .subscribe(() => {
+          this.adding = false;
 
-        // If a value is not selected, then remove the control and reset the adding flag
-        if (!select.value) {
-          this.userRolesCtl.removeAt(this.roleFields.length - 1);
-          return;
-        }
+          // If a value is not selected, then remove the control and reset the adding flag
+          if (!select.value) {
+            this.userRolesCtl.removeAt(this.roleFields.length - 1);
+            return;
+          }
 
-        // Else role is valid, if it needs locations focus that
-        if (ProjectRole.needsLocations.includes(select.value)) {
-          this.locationFields.last.focus();
-          return;
-        }
-      });
+          // Else role is valid, if it needs locations focus that
+          if (ProjectRole.needsLocations.includes(select.value)) {
+            this.locationFields.last.focus();
+            return;
+          }
+        });
 
       // Open and focus newly created role select field
       select.open();

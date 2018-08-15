@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { takeUntil } from 'rxjs/operators';
 import { Language } from '../../core/models/language';
 import { SubscriptionComponent } from '../../shared/components/subscription.component';
 import { ProjectViewStateService } from '../project-view-state.service';
@@ -19,7 +20,7 @@ export class ProjectLanguagesComponent extends SubscriptionComponent implements 
 
   ngOnInit() {
     this.projectViewState.project
-      .takeUntil(this.unsubscribe)
+      .pipe(takeUntil(this.unsubscribe))
       .subscribe(project => {
         this.languages = project.languages;
       });

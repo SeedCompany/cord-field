@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormArray, FormBuilder } from '@angular/forms';
-import { ISubscription } from 'rxjs/Subscription';
+import { Unsubscribable } from 'rxjs';
+import { map, takeUntil } from 'rxjs/operators';
 import { Organization } from '../../core/models/organization';
 import { Partnership, PartnershipAgreementStatus, PartnershipType } from '../../core/models/partnership';
 import { SubscriptionComponent } from '../../shared/components/subscription.component';
@@ -21,7 +22,7 @@ export class ProjectPartnershipsComponent extends SubscriptionComponent implemen
   });
   adding = false;
   private opened: number | null;
-  private subscriptions: {[id: string]: ISubscription} = {};
+  private subscriptions: {[id: string]: Unsubscribable} = {};
 
   get partnerships(): FormArray {
     return this.form.get('partnerships') as FormArray;
@@ -34,7 +35,7 @@ export class ProjectPartnershipsComponent extends SubscriptionComponent implemen
 
   ngOnInit(): void {
     this.projectViewState.project
-      .takeUntil(this.unsubscribe)
+      .pipe(takeUntil(this.unsubscribe))
       .subscribe(project => {
         this.form.setControl('partnerships', this.fb.array([])); // reset form array
         project.partnerships.forEach(p => this.addPartnership(p));
@@ -93,8 +94,10 @@ export class ProjectPartnershipsComponent extends SubscriptionComponent implemen
 
     // listen for changes to update view state
     this.subscriptions[partnership.id] = fg.valueChanges
-      .takeUntil(this.unsubscribe)
-      .map(Partnership.fromJson)
+      .pipe(
+        takeUntil(this.unsubscribe),
+        map(Partnership.fromJson)
+      )
       .subscribe(p => this.projectViewState.change({partnerships: {update: p}}));
 
     this.partnerships.push(fg);

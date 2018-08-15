@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs/Observable';
+import { Observable } from 'rxjs';
 import { AbstractViewState, SaveResult } from '../core/abstract-view-state';
 import { ChangeConfig, mapChangeList, returnId, returnSelf } from '../core/change-engine';
 import { Organization } from '../core/models/organization';

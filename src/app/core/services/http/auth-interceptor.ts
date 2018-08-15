@@ -1,21 +1,16 @@
-import {
-  HTTP_INTERCEPTORS,
-  HttpErrorResponse,
-  HttpEvent,
-  HttpHandler,
-  HttpInterceptor,
-  HttpRequest
-} from '@angular/common/http';
+import { HTTP_INTERCEPTORS, HttpErrorResponse, HttpEvent, HttpHandler, HttpInterceptor, HttpRequest } from '@angular/common/http';
 import { ExistingProvider, Injectable } from '@angular/core';
-import { Observable } from 'rxjs/Observable';
-import { Subject } from 'rxjs/Subject';
+import { from as observableFrom, Observable, of as observableOf, Subject, throwError as observableThrow } from 'rxjs';
+import { catchError, map, switchMap } from 'rxjs/operators';
 import { environment } from '../../../../environments/environment';
 import { AuthenticationToken } from '../../models/authentication-token';
 import { AuthenticationStorageService } from '../authentication-storage.service';
 
 export const IGNORE_AUTH_ERRORS = 'X-Skip-Auth-Interceptor';
 
-@Injectable()
+@Injectable({
+  providedIn: 'root'
+})
 export class AuthInterceptor implements HttpInterceptor {
 
   private serviceLookup: Array<{ id: string, baseUrl: string }> = [];
@@ -36,11 +31,11 @@ export class AuthInterceptor implements HttpInterceptor {
   intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
     const service = this.serviceLookup.find((s) => req.url.startsWith(s.baseUrl));
     const authToken$ = service
-      ? Observable.fromPromise(this.authStorage.getAuthenticationToken(service.id))
-      : Observable.of(null);
+      ? observableFrom(this.authStorage.getAuthenticationToken(service.id))
+      : observableOf(null);
 
-    return authToken$
-      .map((authToken: AuthenticationToken | null) => {
+    return authToken$.pipe(
+      map((authToken: AuthenticationToken | null) => {
         let headers = req.headers;
 
         if (authToken && !headers.has('Authorization')) {
@@ -59,15 +54,16 @@ export class AuthInterceptor implements HttpInterceptor {
 
         const request = req.headers === headers ? req : req.clone({headers});
         return {request, ignoreAuthErrors};
-      })
-      .switchMap(({request, ignoreAuthErrors}) => {
+      }),
+      switchMap(({request, ignoreAuthErrors}) => {
         return next.handle(request)
-          .catch(e => {
+          .pipe(catchError(e => {
             if (e instanceof HttpErrorResponse && e.status === 401 && !ignoreAuthErrors) {
               this._authError.next();
             }
-            return Observable.throw(e);
-          });
-      });
+            return observableThrow(e);
+          }));
+      })
+    );
   }
 }

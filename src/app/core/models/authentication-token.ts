@@ -1,6 +1,15 @@
 import { DateTime } from 'luxon';
-import { decode as decodeBase64url } from 'urlsafe-base64';
 import { User } from './user';
+
+function base64Decode(encoded: string): string {
+  // Add removed '=' at end
+  encoded += Array(5 - encoded.length % 4).join('=');
+  encoded = encoded
+    .replace(/\-/g, '+') // Convert '-' to '+'
+    .replace(/\_/g, '/'); // Convert '_' to '/'
+
+  return atob(encoded);
+}
 
 export class AuthenticationToken {
   static fromJson(json: AuthenticationToken): AuthenticationToken {
@@ -25,7 +34,7 @@ export class AuthenticationToken {
       throw new Error(`Invalid JWT token, should have 3 parts, but had ${jsonParts.length}`);
     }
 
-    const decoded = decodeBase64url(jsonParts[1]).toString();
+    const decoded = base64Decode(jsonParts[1]);
     const json = JSON.parse(decoded);
 
     const user = User.fromJson({

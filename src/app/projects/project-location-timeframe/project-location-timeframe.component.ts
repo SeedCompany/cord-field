@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { AbstractControl } from '@angular/forms/src/model';
 import { DateTime } from 'luxon';
+import { takeUntil } from 'rxjs/operators';
 import { onlyValidValues } from '../../core/util';
 import * as CustomValidators from '../../core/validators';
 import { SubscriptionComponent } from '../../shared/components/subscription.component';
@@ -31,7 +32,7 @@ export class ProjectLocationTimeframeComponent extends SubscriptionComponent imp
     });
 
     this.projectViewState.project
-      .takeUntil(this.unsubscribe)
+      .pipe(takeUntil(this.unsubscribe))
       .subscribe(project => {
         this.form.reset({
           location: project.location,
@@ -41,14 +42,14 @@ export class ProjectLocationTimeframeComponent extends SubscriptionComponent imp
       });
 
     this.form.valueChanges
-      .takeUntil(this.unsubscribe)
+      .pipe(takeUntil(this.unsubscribe))
       .pipe(onlyValidValues(this.form))
       .subscribe(changes => {
         this.projectViewState.change(changes);
       });
 
     this.startDate.valueChanges
-      .takeUntil(this.unsubscribe)
+      .pipe(takeUntil(this.unsubscribe))
       .subscribe(value => {
         this.minDate = value;
       });

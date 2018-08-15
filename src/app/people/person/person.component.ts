@@ -2,6 +2,7 @@ import { HttpErrorResponse } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
 import { MatSnackBar } from '@angular/material';
 import { ActivatedRoute, Router } from '@angular/router';
+import { map, takeUntil } from 'rxjs/operators';
 import { TitleAware, TitleProp } from '../../core/decorators';
 import { SubscriptionComponent } from '../../shared/components/subscription.component';
 import { UserViewStateService } from '../user-view-state.service';
@@ -29,7 +30,7 @@ export class PersonComponent extends SubscriptionComponent implements OnInit, Ti
     });
 
     this.userViewState.loadError
-      .takeUntil(this.unsubscribe)
+      .pipe(takeUntil(this.unsubscribe))
       .subscribe(err => {
         const message = (err instanceof HttpErrorResponse && err.status === 404)
           ? 'Could not find person'
@@ -40,6 +41,7 @@ export class PersonComponent extends SubscriptionComponent implements OnInit, Ti
   }
 
   get title() {
-    return this.userViewState.user.map(user => user.fullName);
+    return this.userViewState.user
+      .pipe(map(user => user.fullName));
   }
 }

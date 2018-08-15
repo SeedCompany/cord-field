@@ -1,7 +1,8 @@
 import { Component, OnInit, Output } from '@angular/core';
 import { AbstractControl, FormBuilder } from '@angular/forms';
 import { DateTime } from 'luxon';
-import { Observable } from 'rxjs/Observable';
+import { Observable } from 'rxjs';
+import { map } from 'rxjs/operators';
 import { Language } from '../../../core/models/language';
 import { Location } from '../../../core/models/location';
 import {
@@ -72,7 +73,7 @@ export class ProjectListFilterComponent implements OnInit {
 
   @Output() get filters(): Observable<ProjectFilter> {
     return this.form.valueChanges
-      .map(filters => {
+      .pipe(map(filters => {
         const result: any = {};
         for (const [key, value] of Object.entries(filters)) {
           if (!value) {
@@ -88,7 +89,7 @@ export class ProjectListFilterComponent implements OnInit {
         }
 
         return result;
-      });
+      }));
   }
 
   ngOnInit() {

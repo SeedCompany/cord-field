@@ -1,5 +1,5 @@
 import { TestBed } from '@angular/core/testing';
-import { Observable } from 'rxjs/Observable';
+import { forkJoin, of as observableOf } from 'rxjs';
 import { CoreModule } from '../core.module';
 import {
   BaseStorageService,
@@ -32,20 +32,18 @@ describe('StorageService', () => {
     store.session = TestBed.get(SessionStorageService);
     stores = Object.keys(store);
 
-    Observable
-      .forkJoin([
-        store.local.clear(),
-        store.session.clear()
-      ])
+    forkJoin([
+      store.local.clear(),
+      store.session.clear()
+    ])
       .subscribe(done, done.fail);
   });
 
   afterEach((done: DoneFn) => {
-    Observable
-      .forkJoin([
-        store.local.clear(),
-        store.session.clear()
-      ])
+    forkJoin([
+      store.local.clear(),
+      store.session.clear()
+    ])
       .subscribe(done, done.fail);
   });
 
@@ -356,7 +354,7 @@ describe('StorageService', () => {
       it('calls observable if not yet cached', async (done: DoneFn) => {
         try {
           for (const type of stores) {
-            const obs = Observable.of('observable called');
+            const obs = observableOf('observable called');
             await store[type].getCachedObservable('test', obs).toPromise();
             expect(await store[type].getItem('test')).toBe('observable called', type);
           }
@@ -369,8 +367,7 @@ describe('StorageService', () => {
       it('returns cached value instead of observable', async (done: DoneFn) => {
         try {
           for (const type of stores) {
-
-            const obs = Observable.of('observable called');
+            const obs = observableOf('observable called');
             await store[type].setItem('test', 'cached value');
             expect(await store[type].getCachedObservable('test', obs).toPromise()).toBe('cached value', type);
           }
@@ -383,7 +380,7 @@ describe('StorageService', () => {
       it('returns observable value after cache expiration', async (done: DoneFn) => {
         try {
           for (const type of stores) {
-            const obs = Observable.of('observable called');
+            const obs = observableOf('observable called');
 
             await store[type].setItem('test', 'cached value', 1);
             expect(await store[type].getCachedObservable('test', obs).toPromise()).toBe('cached value', type);

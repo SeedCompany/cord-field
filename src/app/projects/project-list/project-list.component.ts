@@ -2,8 +2,8 @@ import { animate, state, style, transition, trigger } from '@angular/animations'
 import { AfterViewInit, Component, ViewChild } from '@angular/core';
 import { MatPaginator, MatSort, MatTableDataSource, PageEvent, Sort } from '@angular/material';
 import { Router } from '@angular/router';
-import { BehaviorSubject } from 'rxjs/BehaviorSubject';
-import { Observable } from 'rxjs/Observable';
+import { BehaviorSubject, combineLatest } from 'rxjs';
+import { startWith, switchMap, tap } from 'rxjs/operators';
 import { TitleAware } from '../../core/decorators';
 import { Language } from '../../core/models/language';
 import { Project, ProjectFilter, ProjectStatus, ProjectsWithCount, ProjectType } from '../../core/models/project';
@@ -59,18 +59,19 @@ export class ProjectListComponent implements AfterViewInit {
   }
 
   ngAfterViewInit() {
-    Observable
-      .combineLatest(
-        this.sort.sortChange
-          .do(() => this.paginator.pageIndex = 0)
-          .startWith({active: 'updated', direction: 'desc'} as Sort),
-        this.paginator.page
-          .startWith({pageIndex: 0, pageSize: 10, length: 0} as PageEvent),
-        this.filtersComponent.filters
-          .startWith({}),
-        this.listSelector
-      )
-      .switchMap(([sort, page, filters, listSelector]: [Sort, PageEvent, ProjectFilter, ListOption]) => {
+    combineLatest(
+      this.sort.sortChange
+        .pipe(
+          tap(() => this.paginator.pageIndex = 0),
+          startWith({active: 'updated', direction: 'desc'} as Sort)
+        ),
+      this.paginator.page
+        .pipe(startWith({pageIndex: 0, pageSize: 10, length: 0} as PageEvent)),
+      this.filtersComponent.filters
+        .pipe(startWith({})),
+      this.listSelector
+    )
+      .pipe(switchMap(([sort, page, filters, listSelector]: [Sort, PageEvent, ProjectFilter, ListOption]) => {
         this.filtersActive = Object.keys(filters).length > 0;
 
         return this.projectService.getProjects(
@@ -82,7 +83,7 @@ export class ProjectListComponent implements AfterViewInit {
           this.apiFields,
           listSelector.value
         );
-      })
+      }))
       .subscribe((data: ProjectsWithCount) => {
         this.totalCount = data.count;
         this.projectSource.data = data.projects;

@@ -30,4 +30,4 @@ RUN chmod +x /usr/local/bin/docker-entrypoint-tests.sh
 VOLUME [/opt/build/testResults]
 
 ENTRYPOINT ["docker-entrypoint-tests.sh"]
-CMD yarn lint && yarn ng test --watch=false --browsers=docker --config karma.bamboo.conf.js --sourcemap --progress=false
+CMD yarn lint && yarn ng test -c bamboo

@@ -13,6 +13,8 @@ import {
 import { AbstractControl, FormControl, Validators } from '@angular/forms';
 import { MatAutocompleteTrigger, MatSnackBar, MatSnackBarRef, SimpleSnackBar } from '@angular/material';
 import { MatAutocompleteSelectedEvent } from '@angular/material/autocomplete/typings/autocomplete';
+import { from as observableFrom } from 'rxjs';
+import { catchError, debounceTime, filter, switchMap, tap } from 'rxjs/operators';
 
 /**
  * This component tries to abstract the similar logic of a few different use cases:
@@ -92,24 +94,24 @@ export class AutocompleteComponent<T> implements AfterViewInit, OnChanges {
   ngAfterViewInit(): void {
     this.search
       .valueChanges
-      .filter(val => typeof val === 'string')
-      .filter(term => term.length > 1)
-      .debounceTime(300)
-      .do(() => {
-        this.searchResults.length = 0;
-        this.search.markAsPending();
-        if (this.keepInput && this.validSelection) {
-          this.validSelection = false;
-          this.sendClear = true;
-        }
-      })
-      .switchMap(async (term: string) => {
-        try {
-          return await this.fetcher(term);
-        } catch (e) {
-          return e; // returning error to prevent observable from completing
-        }
-      })
+      .pipe(
+        filter(val => typeof val === 'string'),
+        filter(term => term.length > 1),
+        debounceTime(300),
+        tap(() => {
+          this.searchResults.length = 0;
+          this.search.markAsPending();
+          if (this.keepInput && this.validSelection) {
+            this.validSelection = false;
+            this.sendClear = true;
+          }
+        }),
+        switchMap(term => {
+          return observableFrom(this.fetcher(term))
+          // returning error to prevent observable from completing
+            .pipe(catchError<T[], HttpErrorResponse>(err => err));
+        })
+      )
       .subscribe((items: T[] | HttpErrorResponse) => {
         if (this.snackBarRef) {
           this.snackBarRef.dismiss();

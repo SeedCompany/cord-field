@@ -11,7 +11,9 @@ export enum LogLevel {
   error
 }
 
-@Injectable()
+@Injectable({
+  providedIn: 'root'
+})
 export class LoggerService {
 
   logLevel: LogLevel = LogLevel.info;

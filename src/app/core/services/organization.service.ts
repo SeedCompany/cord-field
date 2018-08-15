@@ -2,7 +2,9 @@ import { Injectable } from '@angular/core';
 import { Organization } from '../models/organization';
 import { PloApiService } from './http/plo-api.service';
 
-@Injectable()
+@Injectable({
+  providedIn: 'root'
+})
 export class OrganizationService {
 
   constructor(private plo: PloApiService) {

@@ -10,15 +10,15 @@ const routes: Routes = [
     component: HeaderComponent,
     children: [
       {path: '', redirectTo: 'projects', pathMatch: 'full'},
-      {path: 'languages', loadChildren: 'app/languages/languages.module#LanguagesModule'},
-      {path: 'organizations', loadChildren: 'app/organizations/organizations.module#OrganizationsModule'},
-      {path: 'people', loadChildren: 'app/people/people.module#PeopleModule'},
-      {path: 'projects', loadChildren: 'app/projects/projects.module#ProjectsModule'},
-      {path: 'tasks', loadChildren: 'app/tasks/tasks.module#TasksModule'}
+      {path: 'languages', loadChildren: './languages/languages.module#LanguagesModule'},
+      {path: 'organizations', loadChildren: './organizations/organizations.module#OrganizationsModule'},
+      {path: 'people', loadChildren: './people/people.module#PeopleModule'},
+      {path: 'projects', loadChildren: './projects/projects.module#ProjectsModule'},
+      {path: 'tasks', loadChildren: './tasks/tasks.module#TasksModule'}
     ],
     canActivate: [AuthenticationGuard]
   },
-  {path: 'login', loadChildren: 'app/core/login/login.module#LoginModule'},
+  {path: 'login', loadChildren: './core/login/login.module#LoginModule'},
   {path: 'confirm-email', redirectTo: 'login/confirm-email'},
   {path: 'forgot-password', redirectTo: 'login/reset-password'},
   {path: '**', component: NotFoundPageComponent}
