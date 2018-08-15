@@ -2,7 +2,7 @@ import { HttpErrorResponse } from '@angular/common/http';
 import { Component, Input } from '@angular/core';
 import { AbstractControl, FormBuilder, Validators } from '@angular/forms';
 import { MatSnackBar } from '@angular/material';
-import { User } from '../../../../core/models/user';
+import { UserProfile } from '../../../../core/models/user';
 import { AuthenticationService, isInvalidPasswordError } from '../../../../core/services/authentication.service';
 import * as CustomValidators from '../../../../core/validators';
 
@@ -13,7 +13,7 @@ import * as CustomValidators from '../../../../core/validators';
 })
 export class PersonChangePasswordComponent {
 
-  @Input() user: User;
+  @Input() user: UserProfile;
 
   expanded = false;
   hideCurrentPassword = true;
