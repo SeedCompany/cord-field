@@ -4,38 +4,25 @@
 module.exports = function (config) {
   config.set({
     basePath: '',
-    frameworks: ['jasmine', '@angular/cli'],
+    frameworks: ['jasmine', '@angular-devkit/build-angular'],
     plugins: [
       require('karma-jasmine'),
       require('karma-chrome-launcher'),
       require('karma-jasmine-html-reporter'),
       require('karma-coverage-istanbul-reporter'),
-      require('@angular/cli/plugins/karma'),
+      require('@angular-devkit/build-angular/plugins/karma'),
       require('karma-junit-reporter'),
       require('karma-mocha-reporter')
     ],
     client: {
       clearContext: false // leave Jasmine Spec Runner output visible in browser
     },
-    files: [
-      {pattern: './src/test.ts', watched: false}
-    ],
-    preprocessors: {
-      './src/test.ts': ['@angular/cli']
-    },
-    mime: {
-      'text/x-typescript': ['ts', 'tsx']
-    },
     coverageIstanbulReporter: {
+      dir: require('path').join(__dirname, 'coverage'),
       reports: ['html', 'lcovonly'],
       fixWebpackSourcePaths: true
     },
-    angularCli: {
-      environment: 'bamboo'
-    },
-    reporters: config.angularCli && config.angularCli.codeCoverage
-      ? ['mocha', 'coverage-istanbul']
-      : ['mocha', 'kjhtml', 'junit'],
+    reporters: ['mocha', 'kjhtml', 'junit'],
     junitReporter: {
       outputDir: 'testResults/'
     },
@@ -47,21 +34,19 @@ module.exports = function (config) {
     port: 9876,
     colors: false,
     logLevel: config.LOG_INFO,
-    autoWatch: true,
-    browsers: ['Chrome'],
+    autoWatch: false,
+    browsers: ['docker'],
     customLaunchers: {
+      // https://github.com/karma-runner/karma-chrome-launcher/issues/125#issuecomment-312668593
       docker: {
-        base: 'Chrome',
+        base: 'ChromeHeadless',
         flags: [
-          '--no-sandbox',
-          // See https://chromium.googlesource.com/chromium/src/+/lkgr/headless/README.md
-          '--headless',
-          '--disable-gpu',
-          // Without a remote debugging port, Google Chrome exits immediately.
-          '--remote-debugging-port=9222'
+          '--no-sandbox', // required to run without privileges in docker
+          '--user-data-dir=/tmp/chrome-test-profile',
+          '--disable-web-security'
         ]
       }
     },
-    singleRun: false
+    singleRun: true
   });
 };

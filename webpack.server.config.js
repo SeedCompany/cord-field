@@ -2,13 +2,14 @@ const path = require('path');
 const webpack = require('webpack');
 
 module.exports = {
+  mode: 'none',
   entry: {
     server: './server.ts',
   },
   resolve: {extensions: ['.js', '.ts']},
   target: 'node',
   // Include node_modules and other 3rd party libraries
-  externals: [/(node_modules|main\..*\.js)/],
+  externals: [/node_modules/],
   output: {
     path: path.join(__dirname, 'dist'),
     filename: '[name].js',

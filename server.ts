@@ -18,7 +18,7 @@ const PORT = process.env.PORT || 4000;
 const DIST_FOLDER = join(process.cwd(), 'dist');
 
 // Leave this as require() since this file is built dynamically with webpack
-const {AppServerModuleNgFactory, LAZY_MODULE_MAP} = require('./dist/server/main.bundle');
+const {AppServerModuleNgFactory, LAZY_MODULE_MAP} = require('./dist/server/main');
 
 app.engine('html', ngExpressEngine({
   bootstrap: AppServerModuleNgFactory,

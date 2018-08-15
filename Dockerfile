@@ -23,9 +23,10 @@ ARG GIT_HASH
 RUN set -e; \
   echo ${GIT_HASH:-"unknown"} > src/git.txt; \
   # Build angular client bundles
-  yarn ng build --prod --environment $NG_BUILD_TARGET --progress=false; \
+  yarn ng build --prod --configuration $NG_BUILD_TARGET --progress=false; \
   # Build angular server bundles
-  yarn ng build --app 1 --prod --environment $NG_BUILD_TARGET --progress=false --output-hashing=false; \
+  yarn ng build --prod --configuration $NG_BUILD_TARGET \
+  yarn ng run cord-field:server --configuration $NG_BUILD_TARGET \
   # Build web server
   yarn webpack --config webpack.server.config.js --colors;
 
