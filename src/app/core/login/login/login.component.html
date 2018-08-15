@@ -30,13 +30,65 @@
         </mat-icon>
         <mat-error *ngIf="password.errors?.required">Please enter your password</mat-error>
       </mat-form-field>
+
+      <ng-container *ngIf="pwdReset">
+        <mat-form-field color="accent" class="new-password">
+          <input
+            matInput
+            placeholder="New Password"
+            formControlName="newPassword"
+            [type]="hideNewPassword ? 'password' : 'text'"
+            #newPwd>
+          <mat-icon matSuffix
+                    color="primary"
+                    (click)="hideNewPassword = !hideNewPassword"
+          >
+            {{ hideNewPassword ? 'visibility' : 'visibility_off' }}
+          </mat-icon>
+          <mat-hint>
+            <div class="line">Use a few words, avoid common phrases</div>
+            <div class="line">No need for symbols, digits, or uppercase letters</div>
+          </mat-hint>
+          <mat-error *ngIf="newPassword.errors?.required">Please enter your new password</mat-error>
+          <mat-error *ngIf="newPassword.errors?.passwordMismatched">Passwords should match</mat-error>
+          <mat-error *ngIf="newPassword.errors?.invalid">
+            <div class="line">
+              {{ newPassword.errors.invalid.warning || 'Use a stronger password' }}
+            </div>
+            <div class="line" *ngIf="newPassword.errors.invalid.suggestions as suggestions">
+              {{ suggestions.reverse()[0] }}
+            </div>
+          </mat-error>
+        </mat-form-field>
+
+        <mat-form-field color="accent">
+          <input
+            matInput
+            placeholder="Confirm New Password"
+            formControlName="confirmPassword"
+            [type]="hideConfirmPassword ? 'password' : 'text'">
+          <mat-icon matSuffix
+                    color="primary"
+                    (click)="hideConfirmPassword = !hideConfirmPassword"
+          >
+            {{ hideConfirmPassword ? 'visibility' : 'visibility_off' }}
+          </mat-icon>
+          <mat-error *ngIf="confirmPassword.errors?.required">Please re-enter your new password</mat-error>
+          <mat-error *ngIf="confirmPassword.errors?.passwordMismatched">Passwords should match</mat-error>
+        </mat-form-field>
+      </ng-container>
+
       <mat-error *ngIf="form.errors?.invalid">Invalid email or password</mat-error>
       <mat-error *ngIf="form.errors?.emailValidationRequired">
-        Sorry, our system does not have any account with the credentials you provided. If you already created an account,
+        Sorry, our system does not have any account with the credentials you provided. If you already created an
+        account,
         please verify it by clicking on the link provided in the email you should have received.
       </mat-error>
       <mat-error *ngIf="form.errors?.accountNotApproved">
         Your account is not approved yet. Please try again or contact Field Support Services for assistance.
+      </mat-error>
+      <mat-error *ngIf="form.errors?.resetPassword">
+        Your password needs to be changed.
       </mat-error>
     </mat-card-content>
 
