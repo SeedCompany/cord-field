@@ -5,7 +5,7 @@
   "scripts": {
     "build": "yarn build:client && yarn build:ssr && yarn build:server",
     "build:client": "ng build --prod",
-    "build:ssr": "ng build --prod && ng run cord-field:server",
+    "build:ssr": "ng run cord-field:server",
     "build:server": "ts-node src/build-server",
     "coverage": "scripts/with-local-services.sh ng test --code-coverage --single-run; (open coverage/index.html || true)",
     "docker:build": "docker build --build-arg NG_BUILD_TARGET=local -t cord-field:latest .",
