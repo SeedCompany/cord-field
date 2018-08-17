@@ -1,6 +1,7 @@
 import { Component, EventEmitter, Input, OnInit, Output, QueryList, ViewChildren } from '@angular/core';
 import { AbstractControl, FormArray, FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatSelect } from '@angular/material';
+import { merge } from 'rxjs';
 import { filter, first, takeUntil } from 'rxjs/operators';
 import { Location } from '../../../core/models/location';
 import { ProjectRole } from '../../../core/models/project-role';
@@ -97,11 +98,11 @@ export class UserRolesFormComponent extends SubscriptionComponent implements OnI
       const select = this.roleFields.last;
 
       // When closed for the first time:
-      select.openedChange
-        .pipe(
-          filter(i => !i),
-          first()
-        )
+      merge(
+        select.openedChange.pipe(filter(i => !i)),
+        select.selectionChange
+      )
+        .pipe(first())
         .subscribe(() => {
           this.adding = false;
 
