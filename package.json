@@ -12,7 +12,7 @@
     "docker:build:tests": "scripts/docker:build:tests.sh",
     "docker:verify": "scripts/docker:verify.sh",
     "e2e": "ng e2e",
-    "lint": "tsc -p src/tsconfig.app.json --noEmit --pretty && tsc -p src/tsconfig.spec.json --noEmit --pretty && tsc -p e2e/tsconfig.e2e.json --noEmit --pretty && ng lint cord-field && ng lint cord-field-e2e",
+    "lint": "scripts/lint.sh",
     "serve:ssr": "node dist/server",
     "start": "scripts/with-local-services.sh ng serve -c local",
     "start:manual": "ng serve -c local",

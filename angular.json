@@ -141,7 +141,7 @@
         "lint": {
           "builder": "@angular-devkit/build-angular:tslint",
           "options": {
-            "format": "stylish",
+            "format": "codeFrame",
             "tsConfig": [
               "src/tsconfig.app.json",
               "src/tsconfig.spec.json"
@@ -223,7 +223,7 @@
         "lint": {
           "builder": "@angular-devkit/build-angular:tslint",
           "options": {
-            "format": "stylish",
+            "format": "codeFrame",
             "tsConfig": [
               "e2e/tsconfig.e2e.json"
             ],
