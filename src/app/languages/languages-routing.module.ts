@@ -1,9 +1,11 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-import { notImplementedRoute } from '../core/route-guards/not-implemented.guard';
+import { NotImplementedGuard } from '@app/core/route-guards/not-implemented.guard';
+import { LanguageListComponent } from './language-list/language-list.component';
 
 const routes: Routes = [
-  notImplementedRoute('Language views have not been implemented yet')
+  {path: '', component: LanguageListComponent, pathMatch: 'full'},
+  {path: ':id', canActivate: [NotImplementedGuard], data: {message: 'Language details view has not been implemented yet'}}
 ];
 
 @NgModule({

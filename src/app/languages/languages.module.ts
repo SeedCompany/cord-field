@@ -1,5 +1,6 @@
 import { NgModule } from '@angular/core';
 import { SharedModule } from '../shared/shared.module';
+import { LanguageListComponent } from './language-list/language-list.component';
 import { LanguagesRoutingModule } from './languages-routing.module';
 
 @NgModule({
@@ -7,7 +8,9 @@ import { LanguagesRoutingModule } from './languages-routing.module';
     SharedModule,
     LanguagesRoutingModule
   ],
-  declarations: []
+  declarations: [
+    LanguageListComponent
+  ]
 })
 export class LanguagesModule {
 }
