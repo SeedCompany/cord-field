@@ -55,9 +55,9 @@
       <mat-error *ngIf="password.errors?.passwordMismatched">Passwords should match</mat-error>
       <mat-error *ngIf="password.errors?.invalid">
         <div class="line">
-          {{ password.errors.invalid.warning || 'Use a stronger password' }}
+          {{ password.errors?.invalid.warning || 'Use a stronger password' }}
         </div>
-        <div class="line" *ngIf="password.errors.invalid.suggestions as suggestions">
+        <div class="line" *ngIf="password.errors?.invalid.suggestions as suggestions">
           {{ suggestions.reverse()[0] }}
         </div>
       </mat-error>

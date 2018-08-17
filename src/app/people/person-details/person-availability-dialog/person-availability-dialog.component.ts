@@ -24,7 +24,7 @@ export class PersonAvailabilityDialogComponent {
     });
   }
 
-  constructor(@Inject(MAT_DIALOG_DATA) private user: UserProfile) {
+  constructor(@Inject(MAT_DIALOG_DATA) public user: UserProfile) {
     const today = DateTime.utc();
     this.futureUnavailabilities = this.user.unavailabilities
       .filter(u => u.range.isAfter(today))
