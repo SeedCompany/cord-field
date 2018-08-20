@@ -67,9 +67,7 @@ const config: ChangeConfig<UserProfile> = {
   displayFirstName: {},
   displayLastName: {},
   email: {},
-  roles: {
-    accessor: (role: UserRole) => role.role
-  },
+  roles: {},
   organizations: {
     accessor: returnId,
     toServer: mapChangeList<Organization, string, string>(returnId, returnId)
