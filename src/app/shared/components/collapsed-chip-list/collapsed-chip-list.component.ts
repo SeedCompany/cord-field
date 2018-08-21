@@ -30,7 +30,7 @@ export class CollapsedChipListComponent<T> {
   // tslint:disable-next-line:member-ordering this doesn't come from an input so it's "more private"
   @ContentChild(TemplateRef) displayWith: TemplateRef<any>;
 
-  private trackByFn = (index: number, item: T) => {
+  trackByFn = (index: number, item: T) => {
     return this.trackBy(item);
   };
 }
