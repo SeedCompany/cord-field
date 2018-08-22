@@ -43,7 +43,7 @@
           form="ngForm"
           color="accent"
           [disabled]="!form.valid">
-    CREATE
+    <ng-container *ngIf="!submitting">CREATE</ng-container>
     <mat-progress-spinner *ngIf="submitting"
                           color="accent"
                           mode="indeterminate"
