@@ -2,8 +2,9 @@ import { Component } from '@angular/core';
 import { AbstractControl, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Changes } from '@app/core/change-engine';
 import { TitleAware } from '@app/core/decorators';
-import { UserProfile } from '@app/core/models/user';
+import { UserProfile, UserRole } from '@app/core/models/user';
 import { onlyValidValues } from '@app/core/util';
+import * as CustomValidators from '@app/core/validators';
 import { takeUntil } from 'rxjs/operators';
 
 import { UserViewStateService } from '../../user-view-state.service';
@@ -37,6 +38,14 @@ export class PersonEditBasicInfoComponent extends AbstractPersonComponent {
     return this.form.get('lastName')!;
   }
 
+  get displayFirstName(): AbstractControl {
+    return this.form.get('displayFirstName')!;
+  }
+
+  get displayLastName(): AbstractControl {
+    return this.form.get('displayLastName')!;
+  }
+
   get email(): AbstractControl {
     return this.form.get('email')!;
   }
@@ -46,18 +55,24 @@ export class PersonEditBasicInfoComponent extends AbstractPersonComponent {
   }
 
   initRolesCtrl(event: AbstractControl): void {
-    event.valueChanges.subscribe((changes: Changes) => {
-      this.viewStateSvc.change({
-        roles: changes
+    event.setValue(this.user.roles);
+
+    event.valueChanges
+      .pipe(takeUntil(this.unsubscribe))
+      .subscribe((changes: Changes) => {
+        this.viewStateSvc.change({
+          roles: changes
+        });
       });
-    });
   }
 
   private initForm(): void {
     this.form = this.formBuilder.group({
       firstName: ['', [Validators.required, Validators.minLength(2)]],
       lastName: ['', [Validators.required, Validators.minLength(2)]],
-      email: ['', [Validators.required, Validators.email!]],
+      displayFirstName: ['', [Validators.required, Validators.minLength(2)]],
+      displayLastName: ['', [Validators.required, Validators.minLength(2)]],
+      email: ['', [Validators.required, CustomValidators.email]],
       phone: ['', Validators.required]
     });
 
@@ -69,8 +84,10 @@ export class PersonEditBasicInfoComponent extends AbstractPersonComponent {
       .pipe(onlyValidValues(this.form))
       .subscribe((changes) => {
         this.viewStateSvc.change({
-          displayFirstName: changes.firstName,
-          displayLastName: changes.lastName,
+          realFirstName: changes.firstName,
+          realLastName: changes.lastName,
+          displayFirstName: changes.displayFirstName,
+          displayLastName: changes.displayLastName,
           phone: changes.phone,
           email: changes.email
         });
@@ -85,6 +102,8 @@ export class PersonEditBasicInfoComponent extends AbstractPersonComponent {
 
         this.firstName.setValue(user.displayFirstName || user.firstName);
         this.lastName.setValue(user.displayLastName || user.lastName);
+        this.displayFirstName.setValue(user.displayFirstName);
+        this.displayLastName.setValue(user.displayLastName);
         this.phone.setValue(user.phone);
         this.email.setValue(user.email);
       });

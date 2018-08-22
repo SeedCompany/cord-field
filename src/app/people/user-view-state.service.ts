@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
+
 import { AbstractViewState, SaveResult } from '../core/abstract-view-state';
 import { ChangeConfig, mapChangeList, returnId, returnSelf } from '../core/change-engine';
 import { Organization } from '../core/models/organization';
@@ -10,7 +11,8 @@ import {
   KnownLanguageForSaveAPI,
   Unavailability,
   UserProfile,
-  UserRole
+  UserRole,
+  UserRoleForSaveAPI
 } from '../core/models/user';
 import { UserService } from '../core/services/user.service';
 
@@ -67,7 +69,10 @@ const config: ChangeConfig<UserProfile> = {
   displayFirstName: {},
   displayLastName: {},
   email: {},
-  roles: {},
+  roles: {
+    accessor: (role) => role.role,
+    toServer: mapChangeList<UserRole, UserRoleForSaveAPI, string>(UserRole.forSaveAPI, returnSelf)
+  },
   organizations: {
     accessor: returnId,
     toServer: mapChangeList<Organization, string, string>(returnId, returnId)

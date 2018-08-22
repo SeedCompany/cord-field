@@ -1,7 +1,6 @@
 <mat-card>
   <mat-card-title>General</mat-card-title>
-  <mat-card-content [formGroup]="form"
-                    (keyup.enter)="form.valid ? update() : null">
+  <mat-card-content [formGroup]="form">
 
     <div class="name-container">
       <mat-form-field color="accent">
@@ -16,6 +15,23 @@
                maxlength="140"
                formControlName="lastName"
                placeholder="Last Name">
+        <mat-error>Please enter valid last name</mat-error>
+      </mat-form-field>
+    </div>
+
+    <div class="name-container">
+      <mat-form-field color="accent">
+        <input matInput
+               maxlength="140"
+               formControlName="displayFirstName"
+               placeholder="Display First Name">
+        <mat-error>Please enter valid first name</mat-error>
+      </mat-form-field>
+      <mat-form-field color="accent">
+        <input matInput
+               maxlength="140"
+               formControlName="displayLastName"
+               placeholder="Display Last Name">
         <mat-error>Please enter valid last name</mat-error>
       </mat-form-field>
     </div>
@@ -49,17 +65,4 @@
     </div>
 
   </mat-card-content>
-  <mat-card-actions>
-    <button mat-raised-button
-            color="accent"
-            (click)="update()"
-            [disabled]="!form.valid || submitting">
-      <ng-container *ngIf="!submitting">UPDATE</ng-container>
-      <mat-progress-spinner *ngIf="submitting"
-                            color="accent"
-                            mode="indeterminate"
-                            strokeWidth="3"
-                            [diameter]="24"></mat-progress-spinner>
-    </button>
-  </mat-card-actions>
 </mat-card>
