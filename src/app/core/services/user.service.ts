@@ -27,7 +27,7 @@ export class UserService {
   }
 
   save(id: string, changes: ModifiedUser): Promise<SaveResult<UserProfile>> {
-    return this.plo.post<SaveResult<UserProfile>>(`/users/${id}/save`, changes).toPromise();
+    return this.plo.put<SaveResult<UserProfile>>(`/users/${id}/save`, changes).toPromise();
   }
 
   search(term: string): Promise<User[]> {
