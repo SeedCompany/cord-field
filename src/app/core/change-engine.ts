@@ -1,4 +1,4 @@
-import { isEqual } from 'lodash-es';
+import { differenceBy, isEqual } from 'lodash-es';
 import { DateTime } from 'luxon';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { distinctUntilChanged } from 'rxjs/operators';
@@ -90,6 +90,12 @@ const compareBy = (accessor: Accessor): Comparator => {
   return (a, b) => {
     return accessor(a) === accessor(b);
   };
+};
+
+const compareListsBy = (accessor: Accessor): Comparator => {
+  return (a, b) =>
+    differenceBy(a, b, accessor).length === 0 &&
+    differenceBy(b, a, accessor).length === 0;
 };
 
 /**
@@ -334,7 +340,8 @@ export class ChangeEngine<T = any> {
   }
 
   private changeSingle<I>(key: keyof T, newValue: I, originalValue: I): void {
-    const comparator = compareNullable(compareBy(this.config[key].accessor));
+    const accessor = this.config[key].accessor;
+    const comparator = compareNullable((Array.isArray(newValue) ? compareListsBy : compareBy)(accessor));
 
     if (key in this.modified && comparator(this.modified[key], newValue)) {
       return;
