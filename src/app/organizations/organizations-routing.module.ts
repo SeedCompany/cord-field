@@ -3,7 +3,7 @@ import { RouterModule, Routes } from '@angular/router';
 import { notImplementedRoute } from '../core/route-guards/not-implemented.guard';
 
 const routes: Routes = [
-  notImplementedRoute('Organization views have not been implemented yet')
+  notImplementedRoute('**', 'Organization views have not been implemented yet')
 ];
 
 @NgModule({

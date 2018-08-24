@@ -1,3 +1,5 @@
+import { Location } from '@app/core/models/location';
+import { DateTime } from 'luxon';
 import { firstLettersOfWords, maybeRedacted } from '../util';
 
 export class Language {
@@ -39,4 +41,39 @@ export class Language {
   get avatarLetters() {
     return firstLettersOfWords(this.nameOrDisplayName);
   }
+}
+
+export class LanguageListItem {
+  name: string | null;
+  displayName: string;
+  location: Location;
+  ethnologueCode: string | null;
+  currentProjects: number;
+  updatedAt: DateTime;
+
+  static fromJson(json: any): LanguageListItem {
+    const language = new LanguageListItem();
+
+    language.name = maybeRedacted(json.name);
+    language.displayName = json.displayName;
+    language.ethnologueCode = maybeRedacted(json.ethnologueCode);
+    language.location = Location.fromJson(json.location);
+    language.currentProjects = json.currentProjects || 0;
+
+    return language;
+  }
+
+  static fromJsonArray(languages: any): LanguageListItem[] {
+    languages = languages || [];
+    return languages.map(LanguageListItem.fromJson);
+  }
+
+  get nameOrDisplayName(): string {
+    return this.name || this.displayName;
+  }
+}
+
+export interface LanguagesWithTotal {
+  languages: LanguageListItem[];
+  total: number;
 }

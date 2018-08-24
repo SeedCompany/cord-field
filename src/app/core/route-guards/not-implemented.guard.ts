@@ -28,10 +28,10 @@ export class NotImplementedGuard implements CanActivate {
   }
 }
 
-export function notImplementedRoute(message?: string): Route {
+export function notImplementedRoute(path: string, message?: string): Route {
   // We have to return a new object for each route to keep the router happy
   return {
-    path: '**',
+    path,
     canActivate: [NotImplementedGuard],
     data: {message}
   };

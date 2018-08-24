@@ -1,0 +1,60 @@
+<mat-drawer-container autosize>
+
+  <mat-drawer-content>
+    <mat-toolbar>
+      <h3 class="mat-title">Languages</h3>
+      <span class="spacer"></span>
+      <button mat-icon-button
+              [color]="filtersActive ? 'accent' : 'primary'"
+              [@slideRight]="filterDrawer.opened ? 'hidden' : 'shown'"
+              (click)="filterDrawer.toggle()">
+        <mat-icon>filter_list</mat-icon>
+      </button>
+    </mat-toolbar>
+
+    <mat-table [dataSource]="languageSource" matSort>
+      <ng-container matColumnDef="name">
+        <mat-header-cell *matHeaderCellDef mat-sort-header>Language Name</mat-header-cell>
+        <mat-cell *matCellDef="let language"> {{ language.nameOrDisplayName }}</mat-cell>
+      </ng-container>
+
+      <ng-container matColumnDef="location">
+        <mat-header-cell *matHeaderCellDef mat-sort-header>Location</mat-header-cell>
+        <mat-cell *matCellDef="let language"> {{ language.location.displayName }}</mat-cell>
+      </ng-container>
+      <ng-container matColumnDef="ethnologueCode">
+        <mat-header-cell *matHeaderCellDef mat-sort-header>Ethnologue Code</mat-header-cell>
+        <mat-cell *matCellDef="let language"> {{ language.ethnologueCode }}</mat-cell>
+      </ng-container>
+
+      <ng-container matColumnDef="currentProjects">
+        <mat-header-cell *matHeaderCellDef mat-sort-header>Current Projects</mat-header-cell>
+        <mat-cell *matCellDef="let language"> {{ language.currentProjects }}</mat-cell>
+      </ng-container>
+      <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+      <mat-row class="row-hover"
+               [routerLink]="'/languages/' + language.id"
+               *matRowDef="let language; columns: displayedColumns;">
+      </mat-row>
+    </mat-table>
+    <mat-paginator [pageSizeOptions]="pageSizeOptions"
+                   [length]="totalCount">
+    </mat-paginator>
+  </mat-drawer-content>
+
+  <mat-drawer mode="side" position="end" #filterDrawer>
+    <mat-toolbar>
+      Filter
+      <div class="spacer"></div>
+      <button mat-icon-button color="primary"
+              *ngIf="filtersActive">
+        <mat-icon>remove_circle</mat-icon>
+      </button>
+      <button mat-icon-button color="primary"
+              (click)="filterDrawer.toggle()">
+        <mat-icon>close</mat-icon>
+      </button>
+    </mat-toolbar>
+  </mat-drawer>
+
+</mat-drawer-container>
