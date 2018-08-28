@@ -4,7 +4,6 @@ import { SortDirection } from '@angular/material';
 import { Observable, of as observableOf } from 'rxjs';
 import { delay, map } from 'rxjs/operators';
 import { ModifiedUser } from '../../people/user-view-state.service';
-import { SaveResult } from '../abstract-view-state';
 import { Project } from '../models/project';
 import { ProjectRole } from '../models/project-role';
 import { TeamMember } from '../models/team-member';
@@ -26,8 +25,8 @@ export class UserService {
       .pipe(map(UserProfile.fromJson));
   }
 
-  save(id: string, changes: ModifiedUser): Promise<SaveResult<UserProfile>> {
-    return this.plo.put<SaveResult<UserProfile>>(`/users/${id}/save`, changes).toPromise();
+  save(id: string, changes: ModifiedUser): Promise<UserProfile> {
+    return this.plo.put<UserProfile>(`/users/${id}/save`, changes).toPromise();
   }
 
   search(term: string): Promise<User[]> {

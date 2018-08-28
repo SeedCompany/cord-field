@@ -3,6 +3,7 @@ export * from './firstLettersOfWords';
 export * from './forms';
 export * from './redaction';
 export * from './rxjs-operators';
+export * from './types';
 
 export function generateObjectId(): string {
   // tslint:disable:no-bitwise
