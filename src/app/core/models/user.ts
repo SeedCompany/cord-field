@@ -182,14 +182,16 @@ export interface KnownLanguageForSaveAPI {
 }
 
 export enum LanguageProficiency {
-  Beginner = 'b',
-  Conversational = 'c',
-  Fluent = 'f'
+  Beginner = 'beginner',
+  Conversational = 'conversational',
+  Skilled = 'skilled',
+  Fluent = 'fluent'
 }
 export namespace LanguageProficiency {
   export const {entries, forUI, values, trackEntryBy, trackValueBy} = buildEnum(LanguageProficiency, {
     [LanguageProficiency.Beginner]: 'Beginner',
     [LanguageProficiency.Conversational]: 'Conversational',
+    [LanguageProficiency.Skilled]: 'Skilled',
     [LanguageProficiency.Fluent]: 'Fluent'
   });
 }
@@ -210,12 +212,12 @@ export class Education {
 }
 
 export enum Degree {
-  Primary = 'p',
-  Secondary = 's',
-  Associates = 'a',
-  Bachelors = 'b',
-  Masters = 'm',
-  Doctorate = 'd'
+  Primary = 'primary',
+  Secondary = 'secondary',
+  Associates = 'associates',
+  Bachelors = 'bachelors',
+  Masters = 'masters',
+  Doctorate = 'doctorate'
 }
 export namespace Degree {
   export const {entries, forUI, values, trackEntryBy, trackValueBy} = buildEnum(Degree, {
