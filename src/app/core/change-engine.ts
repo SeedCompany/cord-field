@@ -207,6 +207,20 @@ export class ChangeEngine<T = any> {
     this.dirty.next(false);
   }
 
+  revert(field: keyof T, item?: any): void {
+    if (item) {
+      const finder = findBy(this.config[field].accessor)(item);
+      this.removeItemFromSubList('add', field, item, finder);
+      this.removeItemFromSubList('remove', field, item, finder);
+      this.removeItemFromSubList('update', field, item, finder);
+      this.removeChangeListIfEmpty(field);
+    } else {
+      delete this.modified[field];
+    }
+
+    this.dirty.next(Object.keys(this.modified).length > 0);
+  }
+
   change(changes: Changes<T>, original: T): void {
     for (const [key, change] of Object.entries(changes) as Array<[keyof T, any]>) {
       if (!(key in this.config)) {

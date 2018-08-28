@@ -49,6 +49,10 @@ export abstract class AbstractViewState<T> {
     this.changeEngine.change(changes, this._subject.value);
   }
 
+  revert(field: keyof T, item?: any): void {
+    this.changeEngine.revert(field, item);
+  }
+
   async save(): Promise<void> {
     this.submitting.next(true);
 
