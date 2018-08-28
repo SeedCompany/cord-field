@@ -22,7 +22,7 @@ export class ErrorInterceptor implements HttpInterceptor {
     return next
       .handle(req)
       .pipe(catchError(e => {
-        if (e instanceof HttpErrorResponse && e.status === 500 && e.error.error === 'SERVER_ERROR') {
+        if (e instanceof HttpErrorResponse && e.status === 500 && e.error.trace) {
           // tslint:disable-next-line:no-console
           console.error(JSON.parse(e.error.trace).stack);
         }
