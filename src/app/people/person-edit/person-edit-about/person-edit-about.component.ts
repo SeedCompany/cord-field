@@ -1,6 +1,5 @@
 import { Component, OnInit } from '@angular/core';
 import { AbstractControl, FormArray, FormBuilder, FormGroup } from '@angular/forms';
-import { MatChipInputEvent } from '@angular/material';
 import { TitleAware } from '../../../core/decorators';
 import { Language } from '../../../core/models/language';
 import { Degree, Education, KnownLanguage, LanguageProficiency, UserProfile } from '../../../core/models/user';
@@ -28,7 +27,6 @@ export class PersonEditAboutComponent extends AbstractPersonComponent implements
     knownLanguages: this.language
   });
 
-  customSkills: string[] = [];
   skillsList = [
     'Translation Expert',
     'Skills Number One',
@@ -54,7 +52,6 @@ export class PersonEditAboutComponent extends AbstractPersonComponent implements
     this.bio.setValue(this.user.bio);
     this.user.education.map((edu) => this.onCreateDegree(edu));
     this.skills.setValue(this.user.skills);
-    this.user.customSkills.map((skill) => this.customSkills.push(skill));
     for (let index = 0; index < this.user.knownLanguages.length; index++) {
       this.onCreateLanguage(this.user.knownLanguages[index], index);
     }
@@ -131,26 +128,5 @@ export class PersonEditAboutComponent extends AbstractPersonComponent implements
 
   trackByValue(index: number, value: any) {
     return value;
-  }
-
-
-  addCustomSkill(event: MatChipInputEvent): void {
-    const input = event.input;
-    const value = event.value.trim();
-
-    if ((value || '')) {
-      this.customSkills.push(value);
-    }
-
-    if (input) {
-      input.value = '';
-    }
-  }
-
-  removeCustomSkill(skill: any): void {
-    const index = this.customSkills.indexOf(skill);
-    if (index >= 0) {
-      this.customSkills.splice(index, 1);
-    }
   }
 }

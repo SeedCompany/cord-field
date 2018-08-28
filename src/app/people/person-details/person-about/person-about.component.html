@@ -19,18 +19,14 @@
   </mat-list>
 </ng-container>
 
-<ng-template #skills let-label="label" let-list="list">
-  <ng-container *ngIf="list.length > 0">
-    <h3 class="mat-caption">{{ label }}</h3>
-    <mat-chip-list>
-      <mat-chip *ngFor="let skill of list; trackBy: trackByValue">
-        {{ skill }}
-      </mat-chip>
-    </mat-chip-list>
-  </ng-container>
-</ng-template>
-<ng-container *ngTemplateOutlet="skills; context: {label: 'Skills', list: user.skills}"></ng-container>
-<ng-container *ngTemplateOutlet="skills; context: {label: 'Custom Skills', list: user.customSkills}"></ng-container>
+<ng-container *ngIf="user.skills.length > 0">
+  <h3 class="mat-caption">Skills</h3>
+  <mat-chip-list>
+    <mat-chip *ngFor="let skill of user.skills; trackBy: trackByValue">
+      {{ skill }}
+    </mat-chip>
+  </mat-chip-list>
+</ng-container>
 
 <ng-container *ngIf="user.knownLanguages.length > 0">
   <h3 class="mat-caption">Languages</h3>

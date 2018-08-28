@@ -42,14 +42,7 @@ export interface ModifiedUser {
     update?: Education[];
     remove?: string[];
   };
-  skills?: {
-    add?: string[];
-    remove?: string[];
-  };
-  customSkills?: {
-    add?: string[];
-    remove?: string[];
-  };
+  skills?: string[];
   knownLanguages?: {
     add?: KnownLanguageForSaveAPI[];
     update?: KnownLanguageForSaveAPI[];
@@ -86,7 +79,6 @@ const config: ChangeConfig<UserProfile> = {
     toServer: mapChangeList<Education, string, string>(returnSelf, returnId)
   },
   skills: {},
-  customSkills: {},
   knownLanguages: {
     accessor: returnId,
     toServer: mapChangeList<KnownLanguage, KnownLanguageForSaveAPI, string>(KnownLanguage.forSaveAPI, returnId)

@@ -23,7 +23,6 @@ export class PersonAboutComponent implements OnChanges {
     this.hasData = user.bio.length > 0
       || user.education.length > 0
       || user.skills.length > 0
-      || user.customSkills.length > 0
       || user.knownLanguages.length > 0
     ;
   }

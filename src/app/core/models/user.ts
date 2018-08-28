@@ -102,8 +102,7 @@ export class UserProfile extends User {
   // about tab
   bio: string;
   education: Education[];
-  skills: string[]; // predefined chip list
-  customSkills: string[]; // free form chip list
+  skills: string[];
   knownLanguages: KnownLanguage[];
 
   // Authorization
@@ -122,7 +121,6 @@ export class UserProfile extends User {
     user.bio = json.bio || '';
     user.education = (json.education || []).map(Education.fromJson);
     user.skills = json.skills || [];
-    user.customSkills = json.customSkills || [];
     user.knownLanguages = (json.knownLanguages || []).map(KnownLanguage.fromJson);
     user.isSelf = json.isSelf || false;
 

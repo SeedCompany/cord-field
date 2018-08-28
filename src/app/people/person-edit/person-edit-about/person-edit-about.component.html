@@ -42,19 +42,7 @@
         </mat-option>
       </mat-select>
     </mat-form-field>
-    <mat-form-field color="accent">
-      <mat-chip-list #chipList>
-        <mat-chip *ngFor="let skill of customSkills ; trackBy: trackByValue(skill)" [selectable]="true"
-                  [removable]="true"
-                  (remove)="removeCustomSkill(skill)">{{ skill }}
-          <mat-icon matChipRemove>cancel</mat-icon>
-        </mat-chip>
-        <input placeholder="Add Custom Skills"
-               [matChipInputFor]="chipList"
-               [matChipInputAddOnBlur]="true"
-               (matChipInputTokenEnd)="addCustomSkill($event)"/>
-      </mat-chip-list>
-    </mat-form-field>
+
     <div formArrayName="knownLanguages"
          *ngFor="let item of form.get('knownLanguages').controls; trackBy:trackByValue(item) ; let i = index;">
       <div [formGroupName]="i" class="container">
