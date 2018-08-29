@@ -62,6 +62,7 @@ export class PersonEditAboutComponent extends SubscriptionComponent implements O
     this.removeEducation = edu.remove;
 
     const createKnownLanguageControl = (knownLanguage?: Partial<KnownLanguage>) => {
+      const isNew = !knownLanguage;
       knownLanguage = knownLanguage || {
         id: generateObjectId(),
         language: undefined,
@@ -70,6 +71,7 @@ export class PersonEditAboutComponent extends SubscriptionComponent implements O
 
       return this.formBuilder.group({
         id: [knownLanguage.id],
+        isNew: [isNew],
         language: [knownLanguage.language, Validators.required],
         proficiency: [knownLanguage.proficiency, Validators.required]
       });

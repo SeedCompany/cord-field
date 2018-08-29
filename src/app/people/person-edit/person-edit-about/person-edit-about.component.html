@@ -59,6 +59,7 @@
       <div [formGroupName]="i" class="flex-row">
         <div class="flex-grow flex-row">
           <app-autocomplete-language
+            *ngIf="item.get('isNew').value"
             class="flex-grow"
             placeholder="Language"
             [required]="true"
@@ -66,6 +67,12 @@
             (optionSelected)="item.get('language').setValue($event)"
           >
           </app-autocomplete-language>
+          <mat-form-field *ngIf="!item.get('isNew').value">
+            <input matInput
+                   disabled
+                   [value]="item.get('language').value"
+            />
+          </mat-form-field>
           <mat-form-field color="accent">
             <mat-select placeholder="Proficiency" formControlName="proficiency">
               <mat-option
