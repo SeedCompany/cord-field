@@ -1,0 +1,9 @@
+<form [formGroup]="form">
+  <app-autocomplete-location
+    [chips]="true"
+    [list]="locations.value"
+    (optionSelected)="onLocationSelected($event)"
+    (removed)="onLocationRemoved($event)"
+  >
+  </app-autocomplete-location>
+</form>

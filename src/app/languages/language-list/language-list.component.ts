@@ -4,6 +4,7 @@ import { MatPaginator, MatSort, MatTableDataSource, PageEvent, Sort } from '@ang
 import { TitleAware } from '@app/core/decorators';
 import { LanguageListItem } from '@app/core/models/language';
 import { LanguageService } from '@app/core/services/language.service';
+import { LanguageListFilterComponent } from '@app/languages/language-list/language-list-filter/language-list-filter.component';
 import { combineLatest } from 'rxjs';
 import { startWith, switchMap, tap } from 'rxjs/operators';
 
@@ -22,7 +23,7 @@ import { startWith, switchMap, tap } from 'rxjs/operators';
 @TitleAware('Languages')
 export class LanguageListComponent implements AfterViewInit {
 
-  readonly displayedColumns: Array<keyof LanguageListItem> = ['name', 'location', 'ethnologueCode', 'currentProjects'];
+  readonly displayedColumns: Array<keyof LanguageListItem> = ['name', 'locations', 'ethnologueCode', 'activeProjects'];
   readonly pageSizeOptions = [10, 25, 50];
 
   languageSource = new MatTableDataSource<LanguageListItem>();
@@ -31,6 +32,7 @@ export class LanguageListComponent implements AfterViewInit {
 
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
+  @ViewChild(LanguageListFilterComponent) filtersComponent: LanguageListFilterComponent;
 
   constructor(private languageService: LanguageService) {
   }
@@ -44,20 +46,29 @@ export class LanguageListComponent implements AfterViewInit {
           startWith({active: 'updated', direction: 'desc'} as Sort)
         ),
       this.paginator.page
-        .pipe(startWith({pageIndex: 0, pageSize: 10, length: 0} as PageEvent))
+        .pipe(startWith({pageIndex: 0, pageSize: 10, length: 0} as PageEvent)),
+      this.filtersComponent.filters
+        .pipe(startWith({}))
     )
-      .pipe(switchMap(([sort, page]) => {
+      .pipe(switchMap(([sort, page, filters]) => {
+        this.filtersActive = Object.keys(filters).length > 0;
+
 
         return this.languageService.getLanguages(
           sort.active as keyof LanguageListItem,
           sort.direction,
           page.pageIndex * page.pageSize,
-          page.pageSize
+          page.pageSize,
+          filters
         );
       }))
       .subscribe((data) => {
         this.languageSource.data = data.languages;
         this.totalCount = data.total;
       });
+  }
+
+  onClearFilters() {
+    this.filtersComponent.reset();
   }
 }

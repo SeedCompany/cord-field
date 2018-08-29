@@ -48,7 +48,7 @@ mat-header-row {
   background: mat-background($theme, card);
 }
 
-.mat-column-name {
+.name {
   color: mat-color($accent);
   @include mat-typography-level-to-styles($config, body-2);
 }
