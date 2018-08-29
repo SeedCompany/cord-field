@@ -1,75 +1,88 @@
-<mat-card>
+<mat-card class="mat-elevation-z0">
   <mat-card-title>Person Details</mat-card-title>
   <mat-card-content [formGroup]="form">
     <mat-form-field color="accent">
-      <input type="text" matInput
-             placeholder="Bio"
-             formControlName="bio"/>
+      <textarea matInput
+                placeholder="Bio"
+                formControlName="bio"
+                [style.height]="'70px'"
+      ></textarea>
     </mat-form-field>
+
+    <h3 class="mat-subheading-2">Education</h3>
     <div formArrayName="education"
-         *ngFor="let item of form.get('education').controls; trackBy:trackByValue(item) ; let i = index;">
-      <div [formGroupName]="i" class="container">
-        <button mat-icon-button (click)="onRemoveDegree(i)">
-          <mat-icon>delete</mat-icon>
-        </button>
-        <div class="fields-container">
-        <mat-form-field color="accent">
-          <mat-select placeholder="Degree" formControlName="degree">
-            <mat-option *ngFor="let role of Degree.entries() ; trackBy: Degree.trackEntryBy"
-                        [value]="role.value">
-              {{ role.ui }}
-            </mat-option>
-          </mat-select>
-        </mat-form-field>
+         *ngFor="let item of education.controls; trackBy: trackEducationControlBy; let i = index;">
+      <div [formGroupName]="i" class="flex-row center-items">
+        <div class="flex-grow flex-column">
+          <div class="flex-row">
+            <mat-form-field color="accent">
+              <mat-select placeholder="Degree" formControlName="degree">
+                <mat-option *ngFor="let role of Degree.entries(); trackBy: Degree.trackEntryBy"
+                            [value]="role.value">
+                  {{ role.ui }}
+                </mat-option>
+              </mat-select>
+              <mat-error *ngIf="item.get('degree').errors?.required">Please select the degree</mat-error>
+            </mat-form-field>
+            <mat-form-field color="accent" class="flex-grow">
+              <input type="text" matInput placeholder="Major" formControlName="major">
+              <mat-error *ngIf="item.get('major').errors?.required">Please enter the major</mat-error>
+            </mat-form-field>
+          </div>
           <mat-form-field color="accent">
-          <input type="text" matInput placeholder="Major" formControlName="major">
-        </mat-form-field>
+            <input type="text" matInput placeholder="Institution" formControlName="institution">
+            <mat-error *ngIf="item.get('institution').errors?.required">Please enter the institution</mat-error>
+          </mat-form-field>
         </div>
-        <mat-form-field color="accent">
-          <input type="text" matInput placeholder="Institution" formControlName="institution">
-        </mat-form-field>
+        <button mat-icon-button (click)="removeEducation(i)">
+          <mat-icon color="warn">delete</mat-icon>
+        </button>
       </div>
     </div>
-    <button type="button" mat-button color="primary" (click)="onCreateDegree()">
+    <button type="button" mat-button color="accent" (click)="addEducation()">
       <mat-icon>add</mat-icon>
       Add Education
     </button>
+
     <mat-form-field color="accent">
       <mat-select placeholder="Skills" formControlName="skills" [multiple]="true">
-        <mat-option *ngFor="let skill of skillsList ; trackBy: trackByValue(skill)"
+        <mat-option *ngFor="let skill of skillsList; trackBy: trackSkillBy"
                     [value]="skill">
           {{ skill }}
         </mat-option>
       </mat-select>
     </mat-form-field>
 
+    <h3 class="mat-subheading-2">Known Languages</h3>
     <div formArrayName="knownLanguages"
-         *ngFor="let item of form.get('knownLanguages').controls; trackBy:trackByValue(item) ; let i = index;">
-      <div [formGroupName]="i" class="container">
-        <button mat-icon-button (click)="onRemoveLanguage(i)">
-          <mat-icon>delete</mat-icon>
-        </button>
-        <div class="fields-container">
+         *ngFor="let item of knownLanguages.controls; trackBy: trackKnownLanguageControlBy; let i = index;">
+      <div [formGroupName]="i" class="flex-row">
+        <div class="flex-grow flex-row">
           <app-autocomplete-language
-            [chips]="true"
-            [list]="getLanguages(i).value"
-            (optionSelected)="onLanguageSelected(i,$event)"
-            (removed)="onLanguageRemoved(i,$event)"
+            class="flex-grow"
+            placeholder="Language"
+            [required]="true"
+            [value]="item.get('language').value"
+            (optionSelected)="item.get('language').setValue($event)"
           >
           </app-autocomplete-language>
           <mat-form-field color="accent">
-          <mat-select placeholder="Proficiency" formControlName="proficiency">
-            <mat-option
-              *ngFor="let role of LanguageProficiency.entries(); trackBy:LanguageProficiency.trackValueBy(role)"
-              [value]="role.value">
-              {{ LanguageProficiency.forUI(role.value) }}
-            </mat-option>
-          </mat-select>
-        </mat-form-field>
+            <mat-select placeholder="Proficiency" formControlName="proficiency">
+              <mat-option
+                *ngFor="let proficiency of LanguageProficiency.entries(); trackBy: LanguageProficiency.trackEntryBy"
+                [value]="proficiency.value">
+                {{ proficiency.ui }}
+              </mat-option>
+            </mat-select>
+            <mat-error *ngIf="item.get('proficiency').errors?.required">Please select a proficiency</mat-error>
+          </mat-form-field>
         </div>
+        <button mat-icon-button (click)="removeKnownLanguage(i)">
+          <mat-icon color="warn">delete</mat-icon>
+        </button>
       </div>
     </div>
-    <button type="button" mat-button color="primary" (click)="onCreateLanguage()">
+    <button type="button" mat-button color="accent" (click)="addKnownLanguage()">
       <mat-icon>add</mat-icon>
       Add Language
     </button>

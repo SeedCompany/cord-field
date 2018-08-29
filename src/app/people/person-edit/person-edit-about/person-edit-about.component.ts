@@ -1,10 +1,11 @@
 import { Component, OnInit } from '@angular/core';
-import { AbstractControl, FormArray, FormBuilder, FormGroup } from '@angular/forms';
-import { TitleAware } from '../../../core/decorators';
-import { Language } from '../../../core/models/language';
-import { Degree, Education, KnownLanguage, LanguageProficiency, UserProfile } from '../../../core/models/user';
-import { UserViewStateService } from '../../user-view-state.service';
-import { AbstractPersonComponent } from '../abstract-person.component';
+import { AbstractControl, FormArray, FormBuilder, Validators } from '@angular/forms';
+import { TitleAware } from '@app/core/decorators';
+import { Degree, Education, KnownLanguage, LanguageProficiency } from '@app/core/models/user';
+import { generateObjectId, onlyValidValues, TypedFormControl } from '@app/core/util';
+import { UserViewStateService } from '@app/people/user-view-state.service';
+import { SubscriptionComponent } from '@app/shared/components/subscription.component';
+import { takeUntil } from 'rxjs/operators';
 
 @Component({
   selector: 'app-person-edit-about',
@@ -12,121 +13,115 @@ import { AbstractPersonComponent } from '../abstract-person.component';
   styleUrls: ['./person-edit-about.component.scss']
 })
 @TitleAware('Edit About')
-
-export class PersonEditAboutComponent extends AbstractPersonComponent implements OnInit {
-
-  language: FormArray = this.formBuilder.array([]);
-  education: FormArray = this.formBuilder.array([]);
-
-  user: UserProfile;
-
-  form = this.formBuilder.group({
-    bio: [''],
-    education: this.education,
-    skills: [''],
-    knownLanguages: this.language
-  });
-
-  skillsList = [
-    'Translation Expert',
-    'Skills Number One',
-    'Numchuku Skills',
-    'Computer Hacking',
-    'Bow Hunting',
-    'Fossball',
-    'Powerpoint',
-    'Great Skills'
-  ];
+export class PersonEditAboutComponent extends SubscriptionComponent implements OnInit {
 
   readonly LanguageProficiency = LanguageProficiency;
   readonly Degree = Degree;
+  readonly skillsList = [
+    'Audio to Audio Translation',
+    'Guest Scholar (Exegetical, Linguistic, Bible)',
+    'Linguistic Consultant',
+    'Manager - Translation Consultant',
+    'Story Checker',
+    'Translation CIT',
+    'Translation Consultant'
+  ];
 
-  constructor(userViewState: UserViewStateService, private formBuilder: FormBuilder) {
-    super(userViewState);
-    this.userViewState.user.subscribe((data) => {
-      this.user = data;
-    });
+  form = this.formBuilder.group({
+    bio: [''],
+    education: this.formBuilder.array([]),
+    skills: [[]],
+    knownLanguages: this.formBuilder.array([])
+  });
+
+  addEducation: (education?: Education) => void;
+  removeEducation: (index: number) => void;
+  addKnownLanguage: (kl?: KnownLanguage) => void;
+  removeKnownLanguage: (index: number) => void;
+
+  constructor(private userViewState: UserViewStateService,
+              private formBuilder: FormBuilder) {
+    super();
   }
 
   ngOnInit() {
-    this.bio.setValue(this.user.bio);
-    this.user.education.map((edu) => this.onCreateDegree(edu));
-    this.skills.setValue(this.user.skills);
-    for (let index = 0; index < this.user.knownLanguages.length; index++) {
-      this.onCreateLanguage(this.user.knownLanguages[index], index);
-    }
-    this.form.valueChanges.subscribe(changes => {
-      this.userViewState.change(changes);
-    });
-  }
-  get bio(): AbstractControl {
-    return this.form.get('bio')!;
-  }
+    const createEduControl = (education?: Education) => {
+      education = education || Education.create();
 
-  get skills(): AbstractControl {
-    return this.form.get('skills')!;
-  }
+      return this.formBuilder.group({
+        id: [education.id],
+        degree: [education.degree, Validators.required],
+        major: [education.major, [Validators.required, Validators.minLength(1)]],
+        institution: [education.institution, [Validators.required, Validators.minLength(1)]]
+      });
+    };
 
-  get knownLanguages(): AbstractControl {
-    return this.form.get('knownLanguages')!;
-  }
+    const edu = this.userViewState.createFormArray('education', createEduControl, this.unsubscribe);
+    this.form.setControl('education', edu.control);
+    this.addEducation = edu.add;
+    this.removeEducation = edu.remove;
 
-  getLanguages(index: number): AbstractControl {
-    return this.language.at(index).get('language')!;
-  }
+    const createKnownLanguageControl = (knownLanguage?: Partial<KnownLanguage>) => {
+      knownLanguage = knownLanguage || {
+        id: generateObjectId(),
+        language: undefined,
+        proficiency: undefined
+      };
 
-  onLanguageSelected(index: number, language: Language): void {
-    this.getLanguages(index).setValue([...this.getLanguages(index).value, language]);
-  }
+      return this.formBuilder.group({
+        id: [knownLanguage.id],
+        language: [knownLanguage.language, Validators.required],
+        proficiency: [knownLanguage.proficiency, Validators.required]
+      });
+    };
 
-  onLanguageRemoved(index: number, language: Language): void {
-    this.getLanguages(index).setValue((this.getLanguages(index).value as Language[]).filter(lang => lang.id !== language.id));
-  }
+    const kl = this.userViewState.createFormArray('knownLanguages', createKnownLanguageControl, this.unsubscribe);
+    this.form.setControl('knownLanguages', kl.control);
+    this.addKnownLanguage = kl.add;
+    this.removeKnownLanguage = kl.remove;
 
-  onCreateDegree(degree: Education): void {
-    if (!degree) {
-      degree = Education.fromJson({} as Education);
-    }
-    this.education = this.form.get('education') as FormArray;
-    this.education.push(this.addDegree(degree));
-  }
+    this.userViewState.user
+      .pipe(takeUntil(this.unsubscribe))
+      .subscribe(user => {
+        this.bio.reset(user.bio, {emitEvent: false});
+        this.skills.reset(user.skills, {emitEvent: false});
+      });
 
-  onRemoveDegree(index: number): void {
-    this.education.removeAt(index);
-  }
-
-  addDegree(education: Education): FormGroup {
-    return this.formBuilder.group({
-      degree: [education.degree],
-      major: [education.major],
-      institution: [education.institution]
-    });
+    this.form.valueChanges
+      .pipe(
+        takeUntil(this.unsubscribe),
+        onlyValidValues(this.form)
+      )
+      .subscribe(({bio, skills}) => {
+        this.userViewState.change({bio, skills});
+      });
   }
 
-  onCreateLanguage(knownLanguage: KnownLanguage, index?: number): void {
-    if (!knownLanguage) {
-      knownLanguage = KnownLanguage.fromJson({} as KnownLanguage);
-    }
-    this.language = this.form.get('knownLanguages') as FormArray;
-    this.language.push(this.addLanguage(knownLanguage));
-    if (index) {
-      this.onLanguageSelected(index, knownLanguage.language);
-    }
+  get bio(): TypedFormControl<string> {
+    return this.form.get('bio') as TypedFormControl<string>;
   }
 
-  addLanguage(language: KnownLanguage): FormGroup {
-    return this.formBuilder.group({
-      language: [[]],
-      proficiency: [language.proficiency]
-    });
+  get skills(): TypedFormControl<string[]> {
+    return this.form.get('skills') as TypedFormControl<string[]>;
   }
 
-  onRemoveLanguage(index: number): void {
-    this.language.removeAt(index);
+  get education(): FormArray {
+    return this.form.get('education') as FormArray;
   }
 
+  get knownLanguages(): FormArray {
+    return this.form.get('knownLanguages') as FormArray;
+  }
 
-  trackByValue(index: number, value: any) {
-    return value;
+  trackEducationControlBy(index: number, control: AbstractControl) {
+    return control.get('id')!.value;
+  }
+
+  trackKnownLanguageControlBy(index: number, control: AbstractControl) {
+    return control.get('id')!.value;
+  }
+
+  trackSkillBy(index: number, skill: string): string {
+    return skill;
   }
 }
