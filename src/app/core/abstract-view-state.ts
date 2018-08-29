@@ -1,4 +1,6 @@
-import { BehaviorSubject, Observable, PartialObserver, Subject } from 'rxjs';
+import { AbstractControl, FormArray } from '@angular/forms';
+import { BehaviorSubject, Observable, PartialObserver, Subject, Unsubscribable } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
 import { ChangeConfig, ChangeEngine, Changes } from './change-engine';
 
 export type SaveResult<T> = {[key in keyof Partial<T>]: string[]};
@@ -76,6 +78,91 @@ export abstract class AbstractViewState<T> {
 
   discard(): void {
     this.onNewSubject(this._subject.value);
+  }
+
+  /**
+   * Create a form array for the given field. This syncs user input and subject changes to the form array
+   * and gives back the control and functions to add & remove items from the array.
+   */
+  createFormArray(field: keyof T, createControl: (item?: any) => AbstractControl, unsubscribe: Observable<void>) {
+    const form = new FormArray([]);
+
+    // Subscriptions to individual item changes
+    const subs: Unsubscribable[] = [];
+
+    const add = (item?: any): void => {
+      const control = createControl(item);
+
+      const changesSub = control.valueChanges
+        .pipe(takeUntil(unsubscribe))
+        .subscribe(() => {
+          if (control.valid) {
+            this.change({[field]: {update: control.value}} as any);
+          } else {
+            this.revert(field, control.value);
+          }
+        });
+
+      form.push(control);
+      subs.push(changesSub);
+    };
+
+    const remove = (index: number, updateState = true): void => {
+      const fg = form.at(index);
+      form.removeAt(index);
+      if (subs[index]) {
+        subs[index].unsubscribe();
+      }
+      if (updateState) {
+        this.change({[field]: {remove: fg.value}} as any);
+      }
+    };
+
+    this.subject
+      .pipe(takeUntil(unsubscribe))
+      .subscribe(subject => {
+        this.setupFormArrayItems(form, field, subject[field] as any, add, remove);
+      });
+
+    return {
+      control: form,
+      add,
+      remove
+    };
+  }
+
+  /**
+   * This removes existing controls that don't have a model item anymore and adds new controls for new model items.
+   */
+  private setupFormArrayItems(
+    form: FormArray,
+    field: keyof T,
+    value: any[],
+    onAdd: (value: any) => void,
+    onRemove: (index: number, updateState?: boolean) => void
+  ): void {
+    const accessor = this.changeEngine.config[field].accessor;
+
+    const newIds = value.map(accessor);
+    const currentIds = [];
+
+    // Remove old items in reverse order because FormArray re-indexes on removal
+    // which would screw up both our for-loop and the index to remove.
+    for (let i = form.length - 1; i >= 0; i--) {
+      const id = accessor(form.at(i).value);
+      if (newIds.includes(id)) {
+        currentIds.push(id);
+        continue;
+      }
+      onRemove(i, false);
+    }
+
+    for (const edu of value) {
+      if (currentIds.includes(accessor(edu))) {
+        continue;
+      }
+      onAdd(edu);
+    }
   }
 
   /**

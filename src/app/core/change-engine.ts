@@ -129,7 +129,7 @@ const isChangeForList = (change: any): boolean => {
 
 export class ChangeEngine<T = any> {
 
-  private readonly config: ResolvedConfig<T>;
+  public readonly config: ResolvedConfig<T>;
   private readonly dirty = new BehaviorSubject<boolean>(false);
   private modified = {} as Modified<T>;
 
