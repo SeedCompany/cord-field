@@ -100,8 +100,8 @@ export class PersonEditBasicInfoComponent extends AbstractPersonComponent {
       .subscribe((user) => {
         this.user = user;
 
-        this.firstName.setValue(user.displayFirstName || user.firstName);
-        this.lastName.setValue(user.displayLastName || user.lastName);
+        this.firstName.setValue(user.realFirstName);
+        this.lastName.setValue(user.realLastName);
         this.displayFirstName.setValue(user.displayFirstName);
         this.displayLastName.setValue(user.displayLastName);
         this.phone.setValue(user.phone);
