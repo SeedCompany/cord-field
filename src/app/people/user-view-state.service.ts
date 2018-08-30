@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { RecordOfType } from '@app/core/util';
 import { differenceBy } from 'lodash';
 import { Observable } from 'rxjs';
+
 import { AbstractViewState, SaveResult } from '../core/abstract-view-state';
 import { ChangeConfig, mapChangeList, returnId, returnSelf } from '../core/change-engine';
 import { Organization } from '../core/models/organization';
@@ -12,7 +13,8 @@ import {
   KnownLanguageForSaveAPI,
   Unavailability,
   UserProfile,
-  UserRole
+  UserRole,
+  UserRoleForSaveAPI
 } from '../core/models/user';
 import { UserService } from '../core/services/user.service';
 
@@ -63,7 +65,8 @@ const config: ChangeConfig<UserProfile> = {
   displayLastName: {},
   email: {},
   roles: {
-    accessor: (role: UserRole) => role.role
+    accessor: (role) => role.role,
+    toServer: mapChangeList<UserRole, UserRoleForSaveAPI, string>(UserRole.forSaveAPI, returnSelf)
   },
   organizations: {
     accessor: returnId,

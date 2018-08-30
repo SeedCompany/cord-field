@@ -2,4 +2,42 @@
 
 :host {
   @extend %component-defaults;
+  flex: 1;
+}
+
+mat-card {
+  flex: 1;
+  padding-left: 3em;
+  overflow-y: scroll;
+}
+
+mat-card-content, .container {
+  display: flex;
+  flex-direction: column;
+}
+
+.name-container {
+  display: flex;
+
+  mat-form-field {
+    flex: 1;
+    margin-right: 24px;
+
+    &:last-child {
+      margin-right: 0;
+    }
+  }
+}
+
+mat-card-content {
+  max-width: 45em;
+
+  button {
+    width: fit-content;
+  }
+
+}
+
+app-user-roles-form {
+  margin-bottom: 1.25em;
 }

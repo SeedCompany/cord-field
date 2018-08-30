@@ -149,6 +149,18 @@ export class UserRole {
 
     return role;
   }
+
+  static forSaveAPI(kl: UserRole): UserRoleForSaveAPI {
+    return {
+      locationIds: kl.locations.map((location) => location.id),
+      role: kl.role
+    };
+  }
+}
+
+export interface UserRoleForSaveAPI {
+  role: string;
+  locationIds: string[];
 }
 
 export class KnownLanguage {
