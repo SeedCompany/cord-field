@@ -1,4 +1,6 @@
 import { Injectable } from '@angular/core';
+import { RecordOfType } from '@app/core/util';
+import { differenceBy } from 'lodash';
 import { Observable } from 'rxjs';
 import { AbstractViewState, SaveResult } from '../core/abstract-view-state';
 import { ChangeConfig, mapChangeList, returnId, returnSelf } from '../core/change-engine';
@@ -42,14 +44,7 @@ export interface ModifiedUser {
     update?: Education[];
     remove?: string[];
   };
-  skills?: {
-    add?: string[];
-    remove?: string[];
-  };
-  customSkills?: {
-    add?: string[];
-    remove?: string[];
-  };
+  skills?: string[];
   knownLanguages?: {
     add?: KnownLanguageForSaveAPI[];
     update?: KnownLanguageForSaveAPI[];
@@ -86,12 +81,14 @@ const config: ChangeConfig<UserProfile> = {
     toServer: mapChangeList<Education, string, string>(returnSelf, returnId)
   },
   skills: {},
-  customSkills: {},
   knownLanguages: {
     accessor: returnId,
     toServer: mapChangeList<KnownLanguage, KnownLanguageForSaveAPI, string>(KnownLanguage.forSaveAPI, returnId)
   }
 };
+
+// Sub type of User that only has properties that are lists of objects with IDs
+type UserOnlyObjectLists = RecordOfType<UserProfile, Array<{id: string}>>;
 
 @Injectable()
 export class UserViewStateService extends AbstractViewState<UserProfile> {
@@ -109,8 +106,22 @@ export class UserViewStateService extends AbstractViewState<UserProfile> {
       .subscribe(this.onLoad);
   }
 
-  protected onSave(user: UserProfile, changes: ModifiedUser): Promise<SaveResult<UserProfile>> {
-    return this.userService.save(user.id, changes);
+  protected async onSave(user: UserProfile, changes: ModifiedUser): Promise<SaveResult<UserProfile>> {
+    const newUser = await this.userService.save(user.id, changes);
+
+    return this.calculateSaveResult(user, newUser);
+  }
+
+  private calculateSaveResult(origUser: UserOnlyObjectLists, newUser: UserOnlyObjectLists): SaveResult<UserProfile> {
+    const newIds: SaveResult<UserProfile> = {};
+
+    const keys: Array<keyof UserOnlyObjectLists> = ['education', 'knownLanguages'];
+    for (const key of keys) {
+      const accessor = config[key]!.accessor as (item: any) => string;
+      newIds[key] = differenceBy(newUser[key], origUser[key], accessor).map(accessor);
+    }
+
+    return newIds;
   }
 
   protected refresh(user: UserProfile): void {

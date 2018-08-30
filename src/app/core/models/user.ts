@@ -102,8 +102,7 @@ export class UserProfile extends User {
   // about tab
   bio: string;
   education: Education[];
-  skills: string[]; // predefined chip list
-  customSkills: string[]; // free form chip list
+  skills: string[];
   knownLanguages: KnownLanguage[];
 
   // Authorization
@@ -122,7 +121,6 @@ export class UserProfile extends User {
     user.bio = json.bio || '';
     user.education = (json.education || []).map(Education.fromJson);
     user.skills = json.skills || [];
-    user.customSkills = json.customSkills || [];
     user.knownLanguages = (json.knownLanguages || []).map(KnownLanguage.fromJson);
     user.isSelf = json.isSelf || false;
 
@@ -184,14 +182,16 @@ export interface KnownLanguageForSaveAPI {
 }
 
 export enum LanguageProficiency {
-  Beginner = 'b',
-  Conversational = 'c',
-  Fluent = 'f'
+  Beginner = 'beginner',
+  Conversational = 'conversational',
+  Skilled = 'skilled',
+  Fluent = 'fluent'
 }
 export namespace LanguageProficiency {
   export const {entries, forUI, values, trackEntryBy, trackValueBy} = buildEnum(LanguageProficiency, {
     [LanguageProficiency.Beginner]: 'Beginner',
     [LanguageProficiency.Conversational]: 'Conversational',
+    [LanguageProficiency.Skilled]: 'Skilled',
     [LanguageProficiency.Fluent]: 'Fluent'
   });
 }
@@ -212,12 +212,12 @@ export class Education {
 }
 
 export enum Degree {
-  Primary = 'p',
-  Secondary = 's',
-  Associates = 'a',
-  Bachelors = 'b',
-  Masters = 'm',
-  Doctorate = 'd'
+  Primary = 'primary',
+  Secondary = 'secondary',
+  Associates = 'associates',
+  Bachelors = 'bachelors',
+  Masters = 'masters',
+  Doctorate = 'doctorate'
 }
 export namespace Degree {
   export const {entries, forUI, values, trackEntryBy, trackValueBy} = buildEnum(Degree, {

@@ -1,4 +1,4 @@
-import { isEqual } from 'lodash-es';
+import { differenceBy, isEqual } from 'lodash-es';
 import { DateTime } from 'luxon';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { distinctUntilChanged } from 'rxjs/operators';
@@ -92,6 +92,12 @@ const compareBy = (accessor: Accessor): Comparator => {
   };
 };
 
+const compareListsBy = (accessor: Accessor): Comparator => {
+  return (a, b) =>
+    differenceBy(a, b, accessor).length === 0 &&
+    differenceBy(b, a, accessor).length === 0;
+};
+
 /**
  * Wrap comparator to check for nulls first
  */
@@ -123,7 +129,7 @@ const isChangeForList = (change: any): boolean => {
 
 export class ChangeEngine<T = any> {
 
-  private readonly config: ResolvedConfig<T>;
+  public readonly config: ResolvedConfig<T>;
   private readonly dirty = new BehaviorSubject<boolean>(false);
   private modified = {} as Modified<T>;
 
@@ -199,6 +205,20 @@ export class ChangeEngine<T = any> {
   reset() {
     this.modified = {} as Modified<T>;
     this.dirty.next(false);
+  }
+
+  revert(field: keyof T, item?: any): void {
+    if (item) {
+      const finder = findBy(this.config[field].accessor)(item);
+      this.removeItemFromSubList('add', field, item, finder);
+      this.removeItemFromSubList('remove', field, item, finder);
+      this.removeItemFromSubList('update', field, item, finder);
+      this.removeChangeListIfEmpty(field);
+    } else {
+      delete this.modified[field];
+    }
+
+    this.dirty.next(Object.keys(this.modified).length > 0);
   }
 
   change(changes: Changes<T>, original: T): void {
@@ -334,7 +354,8 @@ export class ChangeEngine<T = any> {
   }
 
   private changeSingle<I>(key: keyof T, newValue: I, originalValue: I): void {
-    const comparator = compareNullable(compareBy(this.config[key].accessor));
+    const accessor = this.config[key].accessor;
+    const comparator = compareNullable((Array.isArray(newValue) ? compareListsBy : compareBy)(accessor));
 
     if (key in this.modified && comparator(this.modified[key], newValue)) {
       return;
