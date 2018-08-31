@@ -16,6 +16,7 @@ import { ProjectViewStateService } from '../project-view-state.service';
 export class ProjectLocationTimeframeComponent extends SubscriptionComponent implements OnInit {
   form: FormGroup;
   minDate: DateTime;
+  today: DateTime = DateTime.utc();
 
   constructor(private formBuilder: FormBuilder,
               private projectViewState: ProjectViewStateService) {
@@ -26,7 +27,8 @@ export class ProjectLocationTimeframeComponent extends SubscriptionComponent imp
     this.form = this.formBuilder.group({
       location: ['', Validators.required],
       mouStart: ['', Validators.required],
-      mouEnd: ['', Validators.required]
+      mouEnd: ['', Validators.required],
+      estimatedSubmission: ['']
     }, {
       validator: CustomValidators.dateRange('mouStart', 'mouEnd', false)
     });
@@ -37,7 +39,8 @@ export class ProjectLocationTimeframeComponent extends SubscriptionComponent imp
         this.form.reset({
           location: project.location,
           mouStart: project.mouStart,
-          mouEnd: project.mouEnd
+          mouEnd: project.mouEnd,
+          estimatedSubmission: project.estimatedSubmission
         });
       });
 
@@ -65,5 +68,9 @@ export class ProjectLocationTimeframeComponent extends SubscriptionComponent imp
 
   get endDate(): AbstractControl {
     return this.form.get('mouEnd')!;
+  }
+
+  get estimatedSubmissionDate(): AbstractControl {
+    return this.form.get('estimatedSubmission')!;
   }
 }
