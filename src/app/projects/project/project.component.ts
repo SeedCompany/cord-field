@@ -2,11 +2,11 @@ import { HttpErrorResponse } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
 import { MatSnackBar, MatSnackBarRef, SimpleSnackBar } from '@angular/material';
 import { ActivatedRoute, NavigationEnd, Router, UrlSegment } from '@angular/router';
+import { TitleAware, TitleProp } from '@app/core/decorators';
+import { Project } from '@app/core/models/project';
+import { popInOut } from '@app/shared/animations';
+import { SubscriptionComponent } from '@app/shared/components/subscription.component';
 import { filter, map, startWith, switchMap, takeUntil } from 'rxjs/operators';
-import { TitleAware, TitleProp } from '../../core/decorators';
-import { Project } from '../../core/models/project';
-import { popInOut } from '../../shared/animations';
-import { SubscriptionComponent } from '../../shared/components/subscription.component';
 import { ProjectViewStateService } from '../project-view-state.service';
 
 interface TabConfig {
@@ -59,10 +59,11 @@ export class ProjectComponent extends SubscriptionComponent implements OnInit, T
     this.projectViewState.loadError
       .pipe(takeUntil(this.unsubscribe))
       .subscribe(err => {
-        const message = (err instanceof HttpErrorResponse && err.status === 404)
-          ? 'Could not find project'
-          : 'Failed to fetch project details';
-        this.snackBar.open(message, undefined, {duration: 5000});
+        if (err instanceof HttpErrorResponse && (err.status === 404 || err.status === 400)) {
+          this.router.navigate(['**'], {skipLocationChange: true});
+          return;
+        }
+        this.snackBar.open('Failed to fetch project details', undefined, {duration: 5000});
         this.router.navigate(['..'], {replaceUrl: true, relativeTo: this.route});
       });
     this.projectViewState.project
