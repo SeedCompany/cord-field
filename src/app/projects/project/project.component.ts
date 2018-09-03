@@ -2,11 +2,11 @@ import { HttpErrorResponse } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
 import { MatSnackBar, MatSnackBarRef, SimpleSnackBar } from '@angular/material';
 import { ActivatedRoute, NavigationEnd, Router, UrlSegment } from '@angular/router';
+import { TitleAware, TitleProp } from '@app/core/decorators';
 import { Project } from '@app/core/models/project';
+import { popInOut } from '@app/shared/animations';
+import { SubscriptionComponent } from '@app/shared/components/subscription.component';
 import { filter, map, startWith, switchMap, takeUntil } from 'rxjs/operators';
-import { TitleAware, TitleProp } from '../../core/decorators';
-import { popInOut } from '../../shared/animations';
-import { SubscriptionComponent } from '../../shared/components/subscription.component';
 import { ProjectViewStateService } from '../project-view-state.service';
 
 interface TabConfig {
