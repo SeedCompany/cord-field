@@ -12,6 +12,7 @@ import { ProjectService } from '../core/services/project.service';
 export interface ModifiedProject {
   mouStart?: DateTime;
   mouEnd?: DateTime;
+  estimatedSubmission?: DateTime;
   locationId?: string;
   languages?: {
     add?: string[];
@@ -34,6 +35,9 @@ const config: ChangeConfig<Project> = {
     accessor: accessDates
   },
   mouEnd: {
+    accessor: accessDates
+  },
+  estimatedSubmission: {
     accessor: accessDates
   },
   location: {

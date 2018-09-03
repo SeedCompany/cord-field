@@ -127,6 +127,7 @@ export class Project {
   sensitivity: ProjectSensitivity;
   team: TeamMember[];
   updatedAt: DateTime;
+  estimatedSubmission: DateTime | null;
 
   static fromJson(json: any): Project {
     json = json || {};
@@ -146,6 +147,7 @@ export class Project {
     project.sensitivity = json.sensitivity || 1;
     project.team = (json.team || []).map(TeamMember.fromJson);
     project.updatedAt = json.updatedAt ? DateTime.fromISO(json.updatedAt) : DateTime.fromMillis(0);
+    project.estimatedSubmission = json.estimatedSubmission ? DateTime.fromISO(json.estimatedSubmission) : null;
 
     return project;
   }
