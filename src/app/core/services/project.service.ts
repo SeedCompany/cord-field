@@ -28,8 +28,8 @@ export interface ProjectFilterAPI {
   locationId?: string[];
   team?: string[];
   sensitivity?: ProjectSensitivity[];
-  createdAt?: {gte?: DateTime, lte?: DateTime};
-  updatedAt?: {gte?: DateTime, lte?: DateTime};
+  createdAt?: { gte?: DateTime, lte?: DateTime };
+  updatedAt?: { gte?: DateTime, lte?: DateTime };
 }
 
 @Injectable({
@@ -83,23 +83,6 @@ export class ProjectService {
       }));
   }
 
-  private buildFilter(filter: ProjectFilter): ProjectFilterAPI {
-    const {dateRange, startDate, endDate, ...rest} = filter;
-
-    const languages = rest.languages ? rest.languages.map(l => l.id) : undefined;
-    const locationId = rest.location ? rest.location.map(l => l.id) : undefined;
-    const team = rest.team ? rest.team.map(member => member.id) : undefined;
-
-    const date = dateRange && (startDate || endDate)
-      ? {[dateRange]: {
-          gte: startDate,
-          lte: endDate
-        }}
-      : undefined;
-
-    return {...rest, languages, locationId, team, ...date} as ProjectFilterAPI;
-  }
-
   isProjectNameTaken(name: string): Promise<boolean> {
     return this
       .ploApi
@@ -116,11 +99,30 @@ export class ProjectService {
   }
 
   async createProject(project: ProjectCreationResult): Promise<string> {
-    const obj = await this.ploApi.post<{id: string}>('/projects', project).toPromise();
+    const obj = await this.ploApi.post<{ id: string }>('/projects', project).toPromise();
     return obj.id;
   }
 
   save(id: string, modified: ModifiedProject): Promise<SaveResult<Project>> {
     return this.ploApi.put<SaveResult<Project>>(`/projects/${id}/save`, modified).toPromise();
+  }
+
+  private buildFilter(filter: ProjectFilter): ProjectFilterAPI {
+    const {dateRange, startDate, endDate, ...rest} = filter;
+
+    const languages = rest.languages ? rest.languages.map(l => l.id) : undefined;
+    const locationId = rest.location ? rest.location.map(l => l.id) : undefined;
+    const team = rest.team ? rest.team.map(member => member.id) : undefined;
+
+    const date = dateRange && (startDate || endDate)
+      ? {
+        [dateRange]: {
+          gte: startDate,
+          lte: endDate
+        }
+      }
+      : undefined;
+
+    return {...rest, languages, locationId, team, ...date} as ProjectFilterAPI;
   }
 }

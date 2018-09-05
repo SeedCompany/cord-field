@@ -39,8 +39,10 @@ export class PersonEditAboutComponent extends SubscriptionComponent implements O
   addKnownLanguage: (kl?: KnownLanguage) => void;
   removeKnownLanguage: (index: number) => void;
 
-  constructor(private userViewState: UserViewStateService,
-    private formBuilder: FormBuilder) {
+  constructor(
+    private userViewState: UserViewStateService,
+    private formBuilder: FormBuilder
+  ) {
     super();
   }
 

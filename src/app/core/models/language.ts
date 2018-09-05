@@ -1,5 +1,6 @@
 import { Location } from '@app/core/models/location';
 import { DateTime } from 'luxon';
+
 import { firstLettersOfWords, maybeRedacted } from '../util';
 
 export class Language {
