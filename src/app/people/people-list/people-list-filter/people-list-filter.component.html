@@ -1,13 +1,13 @@
 <form [formGroup]="form">
-  <app-autocomplete-organization
-    [chips]="true"
-    [list]="organizations.value"
-    (optionSelected)="onOrganizationSelected($event)"
-    (removed)="onOrganizationRemoved($event)"
-  ></app-autocomplete-organization>
+  <app-autocomplete-organization [chips]="true"
+                                 [dedupe]="true"
+                                 formControlName="organizations"
+                                 (removed)="onOrganizationRemoved($event)">
+  </app-autocomplete-organization>
 
   <mat-form-field color="accent">
-    <mat-select placeholder="Status" formControlName="isActive">
+    <mat-select placeholder="Status"
+                formControlName="isActive">
       <mat-option>Any</mat-option>
       <mat-option [value]="true">Active</mat-option>
       <mat-option [value]="false">Inactive</mat-option>

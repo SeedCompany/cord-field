@@ -1,14 +1,15 @@
 import { Component, Inject, ViewChild } from '@angular/core';
 import { Validators } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialogRef, MatSnackBar, MatStepper } from '@angular/material';
+import { Project } from '@app/core/models/project';
+import { ProjectRole } from '@app/core/models/project-role';
+import { TeamMember } from '@app/core/models/team-member';
+import { User } from '@app/core/models/user';
+import { UserService } from '@app/core/services/user.service';
+import { TypedFormControl } from '@app/core/util';
+import { SubscriptionComponent } from '@app/shared/components/subscription.component';
 import { takeUntil } from 'rxjs/operators';
-import { Project } from '../../../core/models/project';
-import { ProjectRole } from '../../../core/models/project-role';
-import { TeamMember } from '../../../core/models/team-member';
-import { User } from '../../../core/models/user';
-import { UserService } from '../../../core/services/user.service';
-import { TypedFormControl } from '../../../core/util';
-import { SubscriptionComponent } from '../../../shared/components/subscription.component';
+
 import { ProjectViewStateService } from '../../project-view-state.service';
 
 @Component({

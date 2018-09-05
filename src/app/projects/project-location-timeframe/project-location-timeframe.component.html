@@ -2,36 +2,52 @@
   <mat-card-title>Location and Timeframe</mat-card-title>
   <mat-card-content [formGroup]="form">
     <div class="container">
-      <app-autocomplete-location
-        placeholder="Location"
-        [clearButton]="false"
-        [keepInput]="true"
-        [required]="true"
-        [value]="location.value"
-        (optionSelected)="location.setValue($event)">
+      <app-autocomplete-location placeholder="Location"
+                                 [clearButton]="true"
+                                 [keepInput]="true"
+                                 [required]="true"
+                                 formControlName="location">
       </app-autocomplete-location>
+
       <mat-form-field color="accent">
-        <input matInput [matDatepicker]="estimatedDatepicker" placeholder="Estimated Submission Date"
-               formControlName="estimatedSubmission" [min]="today" [max]="startDate.value">
-        <mat-datepicker-toggle matSuffix [for]="estimatedDatepicker"></mat-datepicker-toggle>
+        <input matInput
+               [matDatepicker]="estimatedDatepicker"
+               placeholder="Estimated Submission Date"
+               formControlName="estimatedSubmission"
+               [min]="today"
+               [max]="startDate.value">
+        <mat-datepicker-toggle matSuffix
+                               [for]="estimatedDatepicker"></mat-datepicker-toggle>
         <mat-datepicker #estimatedDatepicker></mat-datepicker>
-        <mat-error *ngIf="estimatedSubmissionDate.errors?.matDatepickerParse">Please provide a valid date</mat-error>
+        <mat-error *ngIf="estimatedSubmissionDate.errors?.matDatepickerParse">Please provide a valid
+          date
+        </mat-error>
         <mat-error *ngIf="estimatedSubmissionDate.errors?.matDatepickerMin">Must be equal or after today</mat-error>
-        <mat-error *ngIf="estimatedSubmissionDate.errors?.matDatepickerMax">Must be before or equal to start date
+        <mat-error *ngIf="estimatedSubmissionDate.errors?.matDatepickerMax">Must be before or equal to
+          start date
         </mat-error>
       </mat-form-field>
     </div>
     <div class="date-container">
       <mat-form-field color="accent">
-        <input matInput [matDatepicker]="startDatepicker" placeholder="Start Date" formControlName="mouStart">
-        <mat-datepicker-toggle matSuffix [for]="startDatepicker"></mat-datepicker-toggle>
+        <input matInput
+               [matDatepicker]="startDatepicker"
+               placeholder="Start Date"
+               formControlName="mouStart">
+        <mat-datepicker-toggle matSuffix
+                               [for]="startDatepicker"></mat-datepicker-toggle>
         <mat-datepicker #startDatepicker></mat-datepicker>
         <mat-error *ngIf="startDate.errors?.matDatepickerParse">Please provide a valid date</mat-error>
         <mat-error *ngIf="startDate.errors?.invalidRange">Must be before end date</mat-error>
       </mat-form-field>
       <mat-form-field color="accent">
-        <input matInput [min]="minDate" [matDatepicker]="endDatepicker" placeholder="End Date" formControlName="mouEnd">
-        <mat-datepicker-toggle matSuffix [for]="endDatepicker"></mat-datepicker-toggle>
+        <input matInput
+               [min]="minDate"
+               [matDatepicker]="endDatepicker"
+               placeholder="End Date"
+               formControlName="mouEnd">
+        <mat-datepicker-toggle matSuffix
+                               [for]="endDatepicker"></mat-datepicker-toggle>
         <mat-datepicker #endDatepicker></mat-datepicker>
         <mat-error *ngIf="endDate.errors?.matDatepickerParse">Please provide a valid date</mat-error>
         <mat-error *ngIf="endDate.errors?.invalidRange">Must be after start date</mat-error>

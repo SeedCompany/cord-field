@@ -1,13 +1,18 @@
 import { Component, Input } from '@angular/core';
 import { MatSnackBar } from '@angular/material';
-import { User } from '../../../core/models/user';
-import { UserService } from '../../../core/services/user.service';
+import { ValueAccessorProvider } from '@app/core/classes/abstract-value-accessor.class';
+import { User } from '@app/core/models/user';
+import { UserService } from '@app/core/services/user.service';
+
 import { AutocompleteComponent } from './autocomplete.component';
 
 @Component({
   selector: 'app-autocomplete-user',
   templateUrl: './autocomplete.component.html',
-  styleUrls: ['./autocomplete.component.scss']
+  styleUrls: ['./autocomplete.component.scss'],
+  providers: [
+    ValueAccessorProvider(AutocompleteUserComponent)
+  ]
 })
 export class AutocompleteUserComponent extends AutocompleteComponent<User> {
 
@@ -15,10 +20,13 @@ export class AutocompleteUserComponent extends AutocompleteComponent<User> {
   @Input() requiredMessage = 'Please specify a user';
   @Input() serverErrorMessage = 'Failed to fetch users';
   @Input() displayItem = (user: User) => user.fullName;
-  @Input() trackBy = (user: User) => user.id;
+  @Input() trackBy = (user: User) => user.fullName;
   @Input() fetcher = (term: string) => this.userService.search(term);
 
-  constructor(private userService: UserService, snackBar: MatSnackBar) {
+  constructor(
+    private userService: UserService,
+    snackBar: MatSnackBar
+  ) {
     super(snackBar);
   }
 }

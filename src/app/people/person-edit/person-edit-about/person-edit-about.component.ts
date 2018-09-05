@@ -39,8 +39,10 @@ export class PersonEditAboutComponent extends SubscriptionComponent implements O
   addKnownLanguage: (kl?: KnownLanguage) => void;
   removeKnownLanguage: (index: number) => void;
 
-  constructor(private userViewState: UserViewStateService,
-              private formBuilder: FormBuilder) {
+  constructor(
+    private userViewState: UserViewStateService,
+    private formBuilder: FormBuilder
+  ) {
     super();
   }
 
@@ -85,8 +87,8 @@ export class PersonEditAboutComponent extends SubscriptionComponent implements O
     this.userViewState.user
       .pipe(takeUntil(this.unsubscribe))
       .subscribe(user => {
-        this.bio.reset(user.bio, {emitEvent: false});
-        this.skills.reset(user.skills, {emitEvent: false});
+        this.bio.reset(user.bio, { emitEvent: false });
+        this.skills.reset(user.skills, { emitEvent: false });
       });
 
     this.form.valueChanges
@@ -94,8 +96,8 @@ export class PersonEditAboutComponent extends SubscriptionComponent implements O
         takeUntil(this.unsubscribe),
         onlyValidValues(this.form)
       )
-      .subscribe(({bio, skills}) => {
-        this.userViewState.change({bio, skills});
+      .subscribe(({ bio, skills }) => {
+        this.userViewState.change({ bio, skills });
       });
   }
 

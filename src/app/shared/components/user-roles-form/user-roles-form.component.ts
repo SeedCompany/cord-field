@@ -1,13 +1,14 @@
 import { Component, EventEmitter, Input, OnInit, Output, QueryList, ViewChildren } from '@angular/core';
 import { AbstractControl, FormArray, FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatSelect } from '@angular/material';
+import { Location } from '@app/core/models/location';
+import { ProjectRole } from '@app/core/models/project-role';
+import { UserRole } from '@app/core/models/user';
+import { AuthenticationService } from '@app/core/services/authentication.service';
+import { UserService } from '@app/core/services/user.service';
 import { merge } from 'rxjs';
 import { filter, first, takeUntil } from 'rxjs/operators';
-import { Location } from '../../../core/models/location';
-import { ProjectRole } from '../../../core/models/project-role';
-import { UserRole } from '../../../core/models/user';
-import { AuthenticationService } from '../../../core/services/authentication.service';
-import { UserService } from '../../../core/services/user.service';
+
 import { AutocompleteLocationComponent } from '../autocomplete/autocomplete-location.component';
 import { SubscriptionComponent } from '../subscription.component';
 

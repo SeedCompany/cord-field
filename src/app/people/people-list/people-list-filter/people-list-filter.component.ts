@@ -1,11 +1,11 @@
 import { Component, Output } from '@angular/core';
 import { FormBuilder } from '@angular/forms';
+import { Organization } from '@app/core/models/organization';
+import { ProjectRole } from '@app/core/models/project-role';
+import { UserFilter } from '@app/core/models/user';
+import { TypedFormControl } from '@app/core/util';
 import { Observable } from 'rxjs';
 import { map, startWith } from 'rxjs/operators';
-import { Organization } from '../../../core/models/organization';
-import { ProjectRole } from '../../../core/models/project-role';
-import { UserFilter } from '../../../core/models/user';
-import { TypedFormControl } from '../../../core/util';
 
 @Component({
   selector: 'app-people-list-filter',
@@ -33,7 +33,7 @@ export class PeopleListFilterComponent {
     return this.form.valueChanges
       .pipe(
         startWith(this.form.value),
-        map(filters => {
+        map((filters) => {
           const result: any = {};
           for (const [key, value] of Object.entries(filters)) {
             if (value == null) {
@@ -53,12 +53,8 @@ export class PeopleListFilterComponent {
       );
   }
 
-  onOrganizationSelected(org: Organization): void {
-    this.organizations.setValue([...this.organizations.value, org]);
-  }
-
   onOrganizationRemoved(organization: Organization): void {
-    this.organizations.setValue(this.organizations.value.filter(org => org.id !== organization.id));
+    this.organizations.setValue(this.organizations.value.filter((org) => org.id !== organization.id));
   }
 
   reset() {

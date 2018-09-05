@@ -6,30 +6,35 @@
 
     <mat-list>
       <mat-list-item *ngFor="let language of languages; trackBy: trackLanguageById">
-        <app-avatar-letter color="primary" mat-list-avatar>{{ language.avatarLetters }}</app-avatar-letter>
+        <app-avatar-letter color="primary"
+                           mat-list-avatar>{{ language.avatarLetters }}</app-avatar-letter>
         <div mat-line>{{ language.nameOrDisplayName }}</div>
         <div mat-line>{{ language | languageInfo }}</div>
-        <button mat-icon-button (click)="onDelete(language)" color="primary">
+        <button mat-icon-button
+                (click)="onDelete(language)"
+                color="primary">
           <mat-icon>close</mat-icon>
         </button>
         <mat-divider [inset]="true"></mat-divider>
       </mat-list-item>
     </mat-list>
 
-    <app-autocomplete-language
-      *ngIf="addingLanguage"
-      placeholder="Search Languages"
-      [autoFocus]="true"
-      [clearButton]="true"
-      [list]="languages"
-      (optionSelected)="onSelect($event)"
-      (cancel)="onCancel()"
-    ></app-autocomplete-language>
+    <app-autocomplete-language *ngIf="addingLanguage"
+                               placeholder="Search Languages"
+                               [autoFocus]="true"
+                               [clearButton]="true"
+                               [dedupe]="true"
+                               [dedupeOptions]="languages"
+                               (optionSelected)="onSelect($event)"
+                               (cancel)="onCancel()">
+    </app-autocomplete-language>
 
   </mat-card-content>
 
   <mat-card-actions *ngIf="!addingLanguage">
-    <button mat-button color="accent" (click)="addingLanguage = true">ADD LANGUAGE</button>
+    <button mat-button
+            color="accent"
+            (click)="addingLanguage = true">ADD LANGUAGE</button>
   </mat-card-actions>
 
 </mat-card>

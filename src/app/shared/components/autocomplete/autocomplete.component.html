@@ -1,60 +1,66 @@
 <ng-container *ngIf="chips">
-  <mat-form-field color="accent" [class.mat-form-field-invalid]="required && list.length == 0 && search.touched">
+  <mat-form-field color="accent"
+                  [class.mat-form-field-invalid]="required && isEmpty() && searchCtrl.touched">
     <mat-chip-list #chipList>
       <mat-chip color="accent"
-                *ngFor="let item of list; trackBy: trackByFn"
-                (removed)="removed.next(item)"
-      >
+                *ngFor="let item of value; trackBy: trackByFn"
+                (removed)="removed.next(item)">
         {{ displayItem(item) }}
         <mat-icon matChipRemove>cancel</mat-icon>
       </mat-chip>
-      <input
-        [placeholder]="placeholder"
-        [formControl]="search"
-        [matAutocomplete]="auto"
-        [matChipInputFor]="chipList"
-        (keyup.esc)="clearThenClose()"
-        #searchInput
-      />
+      <input [placeholder]="placeholder"
+             [formControl]="searchCtrl"
+             [matAutocomplete]="auto"
+             [matChipInputFor]="chipList"
+             (keyup.esc)="clearThenClose()"
+             #searchInput>
       <mat-autocomplete #auto="matAutocomplete"
                         autoActiveFirstOption
                         [displayWith]="displayWith"
                         (optionSelected)="onSelect($event)">
-        <mat-option *ngFor="let result of searchResults; trackBy: trackByFn" [value]="result">
-          {{ displayItem(result) }}
+        <mat-option *ngFor="let option of filteredOptions; trackBy: trackByFn"
+                    [value]="option">
+          {{ displayItem(option) }}
         </mat-option>
       </mat-autocomplete>
     </mat-chip-list>
-    <button *ngIf="clearButton" mat-icon-button matSuffix (click)="clearThenClose()">
+    <button *ngIf="clearButton"
+            mat-icon-button
+            matSuffix
+            (click)="clearThenClose()">
       <mat-icon>close</mat-icon>
     </button>
-    <mat-hint *ngIf="search.pending">{{ pendingMessage }}</mat-hint>
-    <mat-hint class="mat-error" *ngIf="!search.pending && search.touched && search.errors?.noMatches">{{ noMatchesMessage }}</mat-hint>
-    <mat-hint class="mat-error" *ngIf="!search.pending && search.touched && !search.errors?.noMatches && required && list.length == 0">{{ requiredMessage }}</mat-hint>
+    <mat-hint *ngIf="searchCtrl.pending">{{ pendingMessage }}</mat-hint>
+    <mat-hint class="mat-error"
+              *ngIf="!searchCtrl.pending && searchCtrl.touched && searchCtrl.errors?.noMatches">{{ noMatchesMessage }}</mat-hint>
+    <mat-hint class="mat-error"
+              *ngIf="!searchCtrl.pending && searchCtrl.touched && !searchCtrl.errors?.noMatches && required && isEmpty()">{{ requiredMessage }}</mat-hint>
   </mat-form-field>
 </ng-container>
 
 <ng-container *ngIf="!chips">
   <mat-form-field color="accent">
-    <input
-      matInput
-      [placeholder]="placeholder"
-      [matAutocomplete]="singleAuto"
-      [formControl]="search"
-      (keyup.esc)="clearThenClose()"
-      #searchInput
-    />
-    <button *ngIf="clearButton" mat-icon-button matSuffix (click)="clearThenClose()">
+    <input matInput
+           [placeholder]="placeholder"
+           [matAutocomplete]="auto"
+           [formControl]="searchCtrl"
+           (keyup.esc)="clearThenClose()"
+           #searchInput>
+    <button *ngIf="clearButton"
+            mat-icon-button
+            matSuffix
+            (click)="clearThenClose()">
       <mat-icon>close</mat-icon>
     </button>
-    <mat-hint *ngIf="search.pending">{{ pendingMessage }}</mat-hint>
-    <mat-error *ngIf="search.errors?.noMatches">{{ noMatchesMessage }}</mat-error>
-    <mat-error *ngIf="search.errors?.required">{{ requiredMessage }}</mat-error>
-    <mat-autocomplete #singleAuto="matAutocomplete"
+    <mat-hint *ngIf="searchCtrl.pending">{{ pendingMessage }}</mat-hint>
+    <mat-error *ngIf="searchCtrl.errors?.noMatches">{{ noMatchesMessage }}</mat-error>
+    <mat-error *ngIf="searchCtrl.errors?.required">{{ requiredMessage }}</mat-error>
+    <mat-autocomplete #auto="matAutocomplete"
                       [displayWith]="displayWith"
                       (optionSelected)="onSelect($event)">
-      <mat-option *ngFor="let result of searchResults; trackBy: trackByFn" [value]="result">
-        {{ displayItem(result) }}
+      <mat-option *ngFor="let option of filteredOptions; trackBy: trackByFn"
+                  [value]="option">
+        {{ displayItem(option) }}
       </mat-option>
     </mat-autocomplete>
   </mat-form-field>

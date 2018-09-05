@@ -1,7 +1,8 @@
 import { Component, OnInit } from '@angular/core';
+import { Language } from '@app/core/models/language';
+import { SubscriptionComponent } from '@app/shared/components/subscription.component';
 import { takeUntil } from 'rxjs/operators';
-import { Language } from '../../core/models/language';
-import { SubscriptionComponent } from '../../shared/components/subscription.component';
+
 import { ProjectViewStateService } from '../project-view-state.service';
 
 @Component({
@@ -28,7 +29,6 @@ export class ProjectLanguagesComponent extends SubscriptionComponent implements 
 
   onSelect(language: Language) {
     this.projectViewState.change({languages: {add: language}});
-    this.languages = [...this.languages, language];
     this.addingLanguage = false;
   }
 

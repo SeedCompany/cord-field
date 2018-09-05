@@ -1,13 +1,18 @@
 import { Component, Input } from '@angular/core';
 import { MatSnackBar } from '@angular/material';
-import { Organization } from '../../../core/models/organization';
-import { OrganizationService } from '../../../core/services/organization.service';
+import { ValueAccessorProvider } from '@app/core/classes/abstract-value-accessor.class';
+import { Organization } from '@app/core/models/organization';
+import { OrganizationService } from '@app/core/services/organization.service';
+
 import { AutocompleteComponent } from './autocomplete.component';
 
 @Component({
   selector: 'app-autocomplete-organization',
   templateUrl: './autocomplete.component.html',
-  styleUrls: ['./autocomplete.component.scss']
+  styleUrls: ['./autocomplete.component.scss'],
+  providers: [
+    ValueAccessorProvider(AutocompleteOrganizationComponent)
+  ]
 })
 export class AutocompleteOrganizationComponent extends AutocompleteComponent<Organization> {
 
@@ -15,10 +20,13 @@ export class AutocompleteOrganizationComponent extends AutocompleteComponent<Org
   @Input() requiredMessage = 'Please enter an organization';
   @Input() serverErrorMessage = 'Failed to fetch organizations';
   @Input() displayItem = (org: Organization) => org.name;
-  @Input() trackBy = (org: Organization) => org.id;
+  @Input() trackBy = (org: Organization) => org.name;
   @Input() fetcher = (term: string) => this.organizationService.search(term);
 
-  constructor(private organizationService: OrganizationService, snackBar: MatSnackBar) {
+  constructor(
+    private organizationService: OrganizationService,
+    snackBar: MatSnackBar
+  ) {
     super(snackBar);
   }
 }

@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormArray, FormBuilder } from '@angular/forms';
 import { Unsubscribable } from 'rxjs';
 import { map, takeUntil } from 'rxjs/operators';
+
 import { Organization } from '../../core/models/organization';
 import { Partnership, PartnershipAgreementStatus, PartnershipType } from '../../core/models/partnership';
 import { SubscriptionComponent } from '../../shared/components/subscription.component';
@@ -42,8 +43,8 @@ export class ProjectPartnershipsComponent extends SubscriptionComponent implemen
       });
   }
 
-  trackById(index: number, object: { id: string }): string {
-    return object.id;
+  trackById(index: number, item: Partnership): string {
+    return item.name;
   }
 
   isCardOpened(index: number): boolean {
