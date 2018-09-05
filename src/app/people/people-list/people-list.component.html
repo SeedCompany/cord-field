@@ -13,7 +13,8 @@
       </button>
     </mat-toolbar>
 
-    <mat-table [dataSource]="peopleSource" matSort>
+    <mat-table [dataSource]="peopleSource"
+               matSort>
       <ng-container matColumnDef="avatar">
         <mat-header-cell *matHeaderCellDef></mat-header-cell>
         <mat-cell *matCellDef="let person">
@@ -22,15 +23,19 @@
       </ng-container>
 
       <ng-container matColumnDef="displayFirstName">
-        <mat-header-cell *matHeaderCellDef mat-sort-header>First Name</mat-header-cell>
-        <mat-cell *matCellDef="let person" class="name">
+        <mat-header-cell *matHeaderCellDef
+                         mat-sort-header>First Name</mat-header-cell>
+        <mat-cell *matCellDef="let person"
+                  class="name">
           {{ person.displayFirstName }}
         </mat-cell>
       </ng-container>
 
       <ng-container matColumnDef="displayLastName">
-        <mat-header-cell *matHeaderCellDef mat-sort-header>Last Name</mat-header-cell>
-        <mat-cell *matCellDef="let person" class="name">{{ person.displayLastName }}
+        <mat-header-cell *matHeaderCellDef
+                         mat-sort-header>Last Name</mat-header-cell>
+        <mat-cell *matCellDef="let person"
+                  class="name">{{ person.displayLastName }}
         </mat-cell>
       </ng-container>
 
@@ -41,9 +46,11 @@
       </ng-container>
 
       <ng-container matColumnDef="isActive">
-        <mat-header-cell *matHeaderCellDef mat-sort-header>Status</mat-header-cell>
+        <mat-header-cell *matHeaderCellDef
+                         mat-sort-header>Status</mat-header-cell>
         <mat-cell *matCellDef="let person">
-          <span class="status-circle" [ngClass]="'status-' + (person.isActive ? 'active' : 'inactive')"></span>
+          <span class="status-circle"
+                [ngClass]="'status-' + (person.isActive ? 'active' : 'inactive')"></span>
           <span>{{ person.isActive ? 'Active' : 'Inactive' }}</span>
         </mat-cell>
       </ng-container>
@@ -51,7 +58,8 @@
       <ng-container matColumnDef="organizations">
         <mat-header-cell *matHeaderCellDef>Organization(s)</mat-header-cell>
         <mat-cell *matCellDef="let person">
-          <app-collapsed-chip-list [list]="person.organizations" (chipClicked)="onOrgClick($event)">
+          <app-collapsed-chip-list [list]="person.organizations"
+                                   (chipClicked)="onOrgClick($event)">
             <ng-template let-org>{{ org.name }}</ng-template>
           </app-collapsed-chip-list>
         </mat-cell>
@@ -67,11 +75,14 @@
     </mat-paginator>
   </mat-drawer-content>
 
-  <mat-drawer mode="side" position="end" #filterDrawer>
+  <mat-drawer mode="side"
+              position="end"
+              #filterDrawer>
     <mat-toolbar class="toolbar">
       Filter
       <div class="spacer"></div>
-      <button mat-icon-button color="primary"
+      <button mat-icon-button
+              color="primary"
               *ngIf="filtersActive"
               (click)="onClearFilters()">
         <mat-icon>remove_circle</mat-icon>

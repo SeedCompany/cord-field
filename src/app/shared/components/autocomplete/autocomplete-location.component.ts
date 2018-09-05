@@ -1,13 +1,18 @@
 import { Component, Input } from '@angular/core';
 import { MatSnackBar } from '@angular/material';
-import { Location } from '../../../core/models/location';
-import { LocationService } from '../../../core/services/location.service';
+import { ValueAccessorProvider } from '@app/core/classes/abstract-value-accessor.class';
+import { Location } from '@app/core/models/location';
+import { LocationService } from '@app/core/services/location.service';
+
 import { AutocompleteComponent } from './autocomplete.component';
 
 @Component({
   selector: 'app-autocomplete-location',
   templateUrl: './autocomplete.component.html',
-  styleUrls: ['./autocomplete.component.scss']
+  styleUrls: ['./autocomplete.component.scss'],
+  providers: [
+    ValueAccessorProvider(AutocompleteLocationComponent)
+  ]
 })
 export class AutocompleteLocationComponent extends AutocompleteComponent<Location> {
 
@@ -15,10 +20,13 @@ export class AutocompleteLocationComponent extends AutocompleteComponent<Locatio
   @Input() requiredMessage = 'Please enter a location';
   @Input() serverErrorMessage = 'Failed to fetch locations';
   @Input() displayItem = (loc: Location) => loc.displayName;
-  @Input() trackBy = (location: Location) => location.id;
+  @Input() trackBy = (loc: Location) => loc.displayName;
   @Input() fetcher = (term: string) => this.locationService.search(term);
 
-  constructor(private locationService: LocationService, snackBar: MatSnackBar) {
+  constructor(
+    private locationService: LocationService,
+    snackBar: MatSnackBar
+  ) {
     super(snackBar);
   }
 }

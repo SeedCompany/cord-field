@@ -6,6 +6,7 @@ import {
   EventEmitter,
   Input,
   OnChanges,
+  OnInit,
   Output,
   SimpleChanges,
   ViewChild
@@ -13,6 +14,7 @@ import {
 import { AbstractControl, FormControl, Validators } from '@angular/forms';
 import { MatAutocompleteTrigger, MatSnackBar, MatSnackBarRef, SimpleSnackBar } from '@angular/material';
 import { MatAutocompleteSelectedEvent } from '@angular/material/autocomplete/typings/autocomplete';
+import { AbstractValueAccessor, ValueAccessorProvider } from '@app/core/classes/abstract-value-accessor.class';
 import { from as observableFrom } from 'rxjs';
 import { catchError, debounceTime, filter, switchMap, tap } from 'rxjs/operators';
 
@@ -25,17 +27,15 @@ import { catchError, debounceTime, filter, switchMap, tap } from 'rxjs/operators
 @Component({
   selector: 'app-autocomplete',
   templateUrl: './autocomplete.component.html',
-  styleUrls: ['./autocomplete.component.scss']
+  styleUrls: ['./autocomplete.component.scss'],
+  providers: [
+    ValueAccessorProvider(AutocompleteComponent)
+  ]
 })
-export class AutocompleteComponent<T> implements AfterViewInit, OnChanges {
+export class AutocompleteComponent<T> extends AbstractValueAccessor<T> implements AfterViewInit, OnChanges, OnInit {
 
   /** The current list state so those items can be filtered out from results */
   @Input() list: T[] = [];
-
-  @Input() set value(value: T | null) {
-    this.search.setValue(value);
-    this.validSelection = value != null;
-  }
 
   @Input() displayItem: (item: T) => string;
   @Input() fetcher: (term: string) => Promise<T[]>;
@@ -43,6 +43,8 @@ export class AutocompleteComponent<T> implements AfterViewInit, OnChanges {
 
   /** Display list input as chip list */
   @Input() chips = false;
+  @Input() dedupe = false;
+  @Input() dedupeOptions: T[] = [];
   @Input() autoFocus = false;
   @Input() clearButton = false;
   @Input() keepInput = false;
@@ -57,8 +59,8 @@ export class AutocompleteComponent<T> implements AfterViewInit, OnChanges {
   @Output() cancel = new EventEmitter<void>();
   @Output() removed = new EventEmitter<T>();
 
-  search: AbstractControl = new FormControl();
-  searchResults: T[] = [];
+  searchCtrl: AbstractControl = new FormControl();
+  filteredOptions: T[] = [];
   @ViewChild('searchInput') searchInput: ElementRef;
   @ViewChild(MatAutocompleteTrigger) autocomplete: MatAutocompleteTrigger;
 
@@ -67,7 +69,15 @@ export class AutocompleteComponent<T> implements AfterViewInit, OnChanges {
   private sendClear: boolean;
 
   constructor(private snackBar: MatSnackBar) {
+    super();
+
     this.trackBy = ((item: { id: string }) => item.id) as any;
+  }
+
+  ngOnInit(): void {
+    this.valueChange.subscribe((value) => {
+      this.searchCtrl.setValue(value);
+    });
   }
 
   get panelOpen() {
@@ -87,53 +97,63 @@ export class AutocompleteComponent<T> implements AfterViewInit, OnChanges {
       }, 0);
     }
     if (changes.required) {
-      this.search.setValidators(changes.required.currentValue ? Validators.required : null);
+      this.searchCtrl.setValidators(changes.required.currentValue ? Validators.required : null);
     }
   }
 
   ngAfterViewInit(): void {
-    this.search
+    this.searchCtrl
       .valueChanges
       .pipe(
-        filter(val => typeof val === 'string'),
-        filter(term => term.length > 1),
+        filter((term) => typeof term === 'string'),
         debounceTime(300),
         tap(() => {
-          this.searchResults.length = 0;
-          this.search.markAsPending();
+          this.filteredOptions.length = 0;
+          this.searchCtrl.markAsPending();
+
           if (this.keepInput && this.validSelection) {
             this.validSelection = false;
             this.sendClear = true;
           }
         }),
-        switchMap(term => {
+        switchMap((term) => {
           return observableFrom(this.fetcher(term))
-          // returning error to prevent observable from completing
-            .pipe(catchError<T[], HttpErrorResponse>(err => err));
+            // returning error to prevent observable from completing
+            .pipe(catchError<T[], HttpErrorResponse>((err) => err));
         })
       )
-      .subscribe((items: T[] | HttpErrorResponse) => {
+      .subscribe((payload: T[] | HttpErrorResponse) => {
+
         if (this.snackBarRef) {
           this.snackBarRef.dismiss();
         }
-        if (items instanceof HttpErrorResponse) {
+
+        if (payload instanceof HttpErrorResponse) {
           this.snackBarRef = this.snackBar.open(this.serverErrorMessage, undefined, {
             duration: 3000
           });
+
           return;
         }
-        if (this.search.hasError('required')) {
+
+        if (this.searchCtrl.hasError('required')) {
           return;
         }
 
         // Be sure first error shows immediately instead of waiting for field to blur
-        this.search.markAsTouched();
+        this.searchCtrl.markAsTouched();
 
-        const currentIds = this.list.map(this.trackBy);
-        const filtered = items.filter(item => !currentIds.includes(this.trackBy(item)));
+        if (this.chips && this.dedupe) {
+            this.filteredOptions = payload.filter((item) => !(this.value as T[]).map(this.trackBy).includes(this.trackBy(item)));
+        } else if (this.dedupeOptions.length && this.dedupe) {
+          const dedupeItems = this.dedupeOptions.map(this.trackBy);
 
-        this.searchResults = filtered;
-        this.search.setErrors(filtered.length === 0 ? {noMatches: true} : null);
+          this.filteredOptions = payload.filter((item) => !dedupeItems.includes(this.trackBy(item)));
+        } else {
+          this.filteredOptions = payload;
+        }
+
+        this.searchCtrl.setErrors(this.filteredOptions.length === 0 ? { noMatches: true } : null);
       });
 
     this.autocomplete.panelClosingActions.subscribe(() => {
@@ -156,6 +176,13 @@ export class AutocompleteComponent<T> implements AfterViewInit, OnChanges {
     const value: T = event.option.value;
 
     this.optionSelected.next(value);
+
+    if (this.chips) {
+      this.writeValue([...(this.value) as T[], value]);
+    } else {
+      this.writeValue(value);
+    }
+
     if (this.keepInput) {
       this.validSelection = true;
       this.sendClear = false;
@@ -165,13 +192,16 @@ export class AutocompleteComponent<T> implements AfterViewInit, OnChanges {
   }
 
   onCancel(clear = true, close = true): void {
+
     if (clear) {
-      this.search.setValue(null);
+      this.searchCtrl.setValue(null);
+
       if (this.chips && this.searchInput) {
         this.searchInput.nativeElement.value = null;
       }
     }
-    this.searchResults.length = 0;
+
+    this.filteredOptions.length = 0;
 
     if (this.keepInput && this.sendClear) {
       this.sendClear = false;
@@ -184,10 +214,19 @@ export class AutocompleteComponent<T> implements AfterViewInit, OnChanges {
   }
 
   clearThenClose() {
-    if (this.search.value) {
+
+    if (this.searchCtrl.value) {
       this.onCancel(true, false);
     } else {
       this.onCancel();
+    }
+  }
+
+  isEmpty(): boolean {
+    if (this.value instanceof Array) {
+      return !this.value.length;
+    } else {
+      return !this.value;
     }
   }
 }

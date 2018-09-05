@@ -1,8 +1,11 @@
 <ng-container *ngFor="let userRole of userRolesCtl.controls; trackBy: trackUserRoleControl">
   <mat-form-field color="accent">
-    <mat-select placeholder="Role" [formControl]="userRole.get('role')">
-      <mat-option *ngIf="userRole.get('role').value" class="remove">Remove Role</mat-option>
-      <mat-option *ngIf="userRole.get('role').value" [value]="userRole.get('role').value">
+    <mat-select placeholder="Role"
+                [formControl]="userRole.get('role')">
+      <mat-option *ngIf="userRole.get('role').value"
+                  class="remove">Remove Role</mat-option>
+      <mat-option *ngIf="userRole.get('role').value"
+                  [value]="userRole.get('role').value">
         {{ ProjectRole.forUI(userRole.get('role').value) }}
       </mat-option>
       <mat-option *ngFor="let availableRole of availableRoles; trackBy: ProjectRole.trackValueBy"
@@ -11,15 +14,13 @@
       </mat-option>
     </mat-select>
   </mat-form-field>
-  <app-autocomplete-location
-    *ngIf="ProjectRole.needsLocations.includes(userRole.get('role').value)"
-    [chips]="true"
-    [required]="true"
-    requiredMessage="Please select one or more locations"
-    [list]="userRole.get('locations').value"
-    (optionSelected)="onLocationSelected(userRole, $event)"
-    (removed)="onLocationRemoved(userRole, $event)"
-  >
+  <app-autocomplete-location *ngIf="ProjectRole.needsLocations.includes(userRole.get('role').value)"
+                             [chips]="true"
+                             [dedupe]="true"
+                             [required]="true"
+                             requiredMessage="Please select one or more locations"
+                             [formControl]="userRole.get('locations')"
+                             (removed)="onLocationRemoved(userRole, $event)">
   </app-autocomplete-location>
 </ng-container>
 
@@ -27,5 +28,4 @@
         mat-button
         color="accent"
         [disabled]="adding || disabled"
-        (click)="add()"
->{{ loadingRoles ? 'LOADING ROLES...' : 'ADD ROLE' }}</button>
+        (click)="add()">{{ loadingRoles ? 'LOADING ROLES...' : 'ADD ROLE' }}</button>

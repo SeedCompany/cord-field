@@ -1,31 +1,30 @@
 <form [formGroup]="form">
-  <app-autocomplete-language
-    [chips]="true"
-    [list]="languages.value"
-    (optionSelected)="onLanguageSelected($event)"
-    (removed)="onLanguageRemoved($event)"
-  >
+  <app-autocomplete-language formControlName="languages"
+                             [chips]="true"
+                             [dedupe]="true"
+                             [dedupeOptions]="languages.value"
+                             (removed)="onLanguageRemoved($event)">
   </app-autocomplete-language>
 
-  <app-autocomplete-location
-    [chips]="true"
-    [list]="locations.value"
-    (optionSelected)="onLocationSelected($event)"
-    (removed)="onLocationRemoved($event)"
-  >
+  <app-autocomplete-location formControlName="location"
+                             [chips]="true"
+                             [dedupe]="true"
+                             [dedupeOptions]="locations.value"
+                             (removed)="onLocationRemoved($event)">
   </app-autocomplete-location>
 
-  <app-autocomplete-user
-    [chips]="true"
-    [list]="users.value"
-    placeholder="Team Members"
-    (optionSelected)="onUserSelected($event)"
-    (removed)="onUserRemoved($event)"
-  >
+  <app-autocomplete-user formControlName="team"
+                         [chips]="true"
+                         [dedupe]="true"
+                         [dedupeOptions]="users.value"
+                         placeholder="Team Members"
+                         (removed)="onUserRemoved($event)">
   </app-autocomplete-user>
 
   <mat-form-field color="accent">
-    <mat-select formControlName="status" placeholder="Status" multiple>
+    <mat-select formControlName="status"
+                placeholder="Status"
+                multiple>
       <mat-option *ngFor="let status of ProjectStatus.entries(); trackBy: ProjectStatus.trackEntryBy"
                   [value]="status.value">
         {{ status.ui }}
@@ -34,12 +33,14 @@
   </mat-form-field>
 
   <mat-form-field color="accent">
-    <mat-select formControlName="stage" placeholder="Stage" multiple>
+    <mat-select formControlName="stage"
+                placeholder="Stage"
+                multiple>
       <mat-optgroup *ngFor="let status of ProjectStatus.entries(); trackBy: ProjectStatus.trackEntryBy"
                     [label]="status.ui">
-        <mat-option
-          *ngFor="let stage of ProjectStage.forStatus(status.value); trackBy: ProjectStage.trackValueBy"
-          [value]="stage">
+        <mat-option *ngFor="let stage of ProjectStage.forStatus(status.value); trackBy: ProjectStage.trackValueBy"
+
+                    [value]="stage">
           {{ ProjectStage.forUI(stage) }}
         </mat-option>
       </mat-optgroup>
@@ -47,11 +48,11 @@
   </mat-form-field>
 
   <mat-form-field color="accent">
-    <mat-select placeholder="Type" formControlName="type">
+    <mat-select placeholder="Type"
+                formControlName="type">
       <mat-option>Any</mat-option>
-      <mat-option
-        *ngFor="let projectType of ProjectType.entries(); trackBy: ProjectType.trackEntryBy"
-        [value]="projectType.value">
+      <mat-option *ngFor="let projectType of ProjectType.entries(); trackBy: ProjectType.trackEntryBy"
+                  [value]="projectType.value">
         {{ projectType.ui }}
       </mat-option>
     </mat-select>
@@ -61,42 +62,48 @@
     <mat-select multiple
                 placeholder="Sensitivity"
                 formControlName="sensitivity">
-      <mat-option
-        *ngFor="let entry of ProjectSensitivity.entries(); trackBy: ProjectSensitivity.trackEntryBy"
-        [value]="entry.value">
+      <mat-option *ngFor="let entry of ProjectSensitivity.entries(); trackBy: ProjectSensitivity.trackEntryBy"
+
+                  [value]="entry.value">
         {{ entry.ui }}
       </mat-option>
     </mat-select>
   </mat-form-field>
 
   <mat-form-field color="accent">
-    <mat-select placeholder="Date Range" formControlName="dateRange">
+    <mat-select placeholder="Date Range"
+                formControlName="dateRange">
       <mat-option>None</mat-option>
       <mat-option value="createdAt">Created At</mat-option>
       <mat-option value="updatedAt">Modified At</mat-option>
     </mat-select>
   </mat-form-field>
 
-  <mat-form-field color="accent" *ngIf="dateRange.value">
+  <mat-form-field color="accent"
+                  *ngIf="dateRange.value">
     <input matInput
            [max]="maxDate"
            [matDatepicker]="startDatepicker"
            placeholder="Start Date"
            formControlName="startDate">
-    <mat-datepicker-toggle matSuffix [for]="startDatepicker"></mat-datepicker-toggle>
+    <mat-datepicker-toggle matSuffix
+                           [for]="startDatepicker"></mat-datepicker-toggle>
     <mat-datepicker #startDatepicker></mat-datepicker>
     <mat-error *ngIf="startDate.errors?.matDatepickerParse">Please provide a valid date</mat-error>
     <mat-error *ngIf="startDate.errors?.matDatepickerMax">Please pick a date in the past</mat-error>
-    <mat-error *ngIf="startDate.errors?.invalidRange && !startDate.errors?.matDatepickerMax">Must be before end date</mat-error>
+    <mat-error *ngIf="startDate.errors?.invalidRange && !startDate.errors?.matDatepickerMax">Must be
+      before end date</mat-error>
   </mat-form-field>
 
-  <mat-form-field color="accent" *ngIf="dateRange.value">
+  <mat-form-field color="accent"
+                  *ngIf="dateRange.value">
     <input matInput
            [min]="minDate"
            [matDatepicker]="endDatepicker"
            placeholder="End Date"
            formControlName="endDate">
-    <mat-datepicker-toggle matSuffix [for]="endDatepicker"></mat-datepicker-toggle>
+    <mat-datepicker-toggle matSuffix
+                           [for]="endDatepicker"></mat-datepicker-toggle>
     <mat-datepicker #endDatepicker></mat-datepicker>
     <mat-error *ngIf="endDate.errors?.matDatepickerParse">Please provide a valid date</mat-error>
     <mat-error *ngIf="endDate.errors?.invalidRange">Must be after start date</mat-error>

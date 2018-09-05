@@ -1,19 +1,13 @@
 import { Component, OnInit, Output } from '@angular/core';
-import { AbstractControl, FormBuilder } from '@angular/forms';
+import { AbstractControl, FormBuilder, FormGroup } from '@angular/forms';
+import { Language } from '@app/core/models/language';
+import { Location } from '@app/core/models/location';
+import { ProjectFilter, ProjectSensitivity, ProjectStage, ProjectStatus, ProjectType } from '@app/core/models/project';
+import { User } from '@app/core/models/user';
+import * as CustomValidators from '@app/core/validators';
 import { DateTime } from 'luxon';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
-import { Language } from '../../../core/models/language';
-import { Location } from '../../../core/models/location';
-import {
-  ProjectFilter,
-  ProjectSensitivity,
-  ProjectStage,
-  ProjectStatus,
-  ProjectType
-} from '../../../core/models/project';
-import { User } from '../../../core/models/user';
-import * as CustomValidators from '../../../core/validators';
 
 @Component({
   selector: 'app-project-list-filter',
@@ -21,30 +15,26 @@ import * as CustomValidators from '../../../core/validators';
   styleUrls: ['./project-list-filter.component.scss']
 })
 export class ProjectListFilterComponent implements OnInit {
+  form: FormGroup;
+  minDate: DateTime;
+  maxDate = DateTime.local();
 
   readonly ProjectStage = ProjectStage;
   readonly ProjectStatus = ProjectStatus;
   readonly ProjectType = ProjectType;
   readonly ProjectSensitivity = ProjectSensitivity;
 
-  form = this.formBuilder.group({
-    languages: [[]],
-    location: [[]],
-    team: [[]],
-    status: [null],
-    stage: [null],
-    type: [null],
-    sensitivity: [null],
-    dateRange: [null],
-    startDate: [null],
-    endDate: [null]
-  }, {
-    validator: CustomValidators.dateRange('startDate', 'endDate')
-  });
-  minDate: DateTime;
-  maxDate = DateTime.local();
-
   constructor(private formBuilder: FormBuilder) {
+    this._initForm();
+  }
+
+  ngOnInit(): void {
+    this.startDate.valueChanges.subscribe((date) => {
+      this.minDate = date;
+      if (this.endDate.value && this.endDate.value < date) {
+        this.endDate.setValue(date);
+      }
+    });
   }
 
   get languages(): AbstractControl {
@@ -73,13 +63,17 @@ export class ProjectListFilterComponent implements OnInit {
 
   @Output() get filters(): Observable<ProjectFilter> {
     return this.form.valueChanges
-      .pipe(map(filters => {
+      .pipe(map((filters) => {
         const result: any = {};
+
         for (const [key, value] of Object.entries(filters)) {
+
           if (!value) {
             continue;
           }
+
           if (Array.isArray(value)) {
+
             if (value.length === 0) {
               continue;
             }
@@ -92,37 +86,16 @@ export class ProjectListFilterComponent implements OnInit {
       }));
   }
 
-  ngOnInit() {
-    this.startDate.valueChanges.subscribe(date => {
-      this.minDate = date;
-      if (this.endDate.value && this.endDate.value < date) {
-        this.endDate.setValue(date);
-      }
-    });
-  }
-
-  onLanguageSelected(language: Language): void {
-    this.languages.setValue([...this.languages.value, language]);
-  }
-
   onLanguageRemoved(language: Language): void {
-    this.languages.setValue((this.languages.value as Language[]).filter(lang => lang.id !== language.id));
-  }
-
-  onLocationSelected(location: Location): void {
-    this.locations.setValue([...this.locations.value, location]);
+    this.languages.setValue((this.languages.value as Language[]).filter((lang) => lang.id !== language.id));
   }
 
   onLocationRemoved(location: Location): void {
-    this.locations.setValue((this.locations.value as Location[]).filter(loc => loc.id !== location.id));
-  }
-
-  onUserSelected(user: User): void {
-    this.users.setValue([...this.users.value, user]);
+    this.locations.setValue((this.locations.value as Location[]).filter((loc) => loc.id !== location.id));
   }
 
   onUserRemoved(user: User): void {
-    this.users.setValue((this.users.value as User[]).filter(u => u.id !== user.id));
+    this.users.setValue((this.users.value as User[]).filter((u) => u.id !== user.id));
   }
 
   reset() {
@@ -131,5 +104,22 @@ export class ProjectListFilterComponent implements OnInit {
       location: [],
       team: []
     });
+  }
+
+  private _initForm(): void {
+    this.form = this.formBuilder.group({
+      languages: [[]],
+      location: [[]],
+      team: [[]],
+      status: [null],
+      stage: [null],
+      type: [null],
+      sensitivity: [null],
+      dateRange: [null],
+      startDate: [null],
+      endDate: [null]
+    }, {
+        validator: CustomValidators.dateRange('startDate', 'endDate')
+      });
   }
 }
