@@ -25,6 +25,7 @@ services:
       MIGRATE: "true"
       DUMP_CONFIG: "true"
       CREATE_FAKE_USERS: "true"
+      CREATE_TEST_FILES: "true"
       DOMO: "false"
       DEV_API: "true"
     mem_limit: 256000000
