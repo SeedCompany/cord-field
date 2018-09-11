@@ -1,12 +1,12 @@
 import { AfterViewInit, Component, ViewChild } from '@angular/core';
 import { MatPaginator, MatSort, MatTableDataSource, PageEvent, Sort } from '@angular/material';
 import { ActivatedRoute, Router } from '@angular/router';
-import { combineLatest } from 'rxjs';
-import { startWith, switchMap, tap } from 'rxjs/operators';
-import { TitleAware } from '../../core/decorators';
-import { FileList, FileNode, FileNodeType } from '../../core/models/file-node';
+import { TitleAware } from '@app/core/decorators';
+import { FileList, FileNode, FileNodeType } from '@app/core/models/file-node';
 
 import { ProjectFilesService } from '@app/core/services/project-files.service';
+import { combineLatest } from 'rxjs';
+import { startWith, switchMap, takeUntil, tap } from 'rxjs/operators';
 import { ProjectTabComponent } from '../abstract-project-tab';
 import { ProjectViewStateService } from '../project-view-state.service';
 
@@ -37,31 +37,34 @@ export class ProjectFilesComponent extends ProjectTabComponent implements AfterV
 
   ngAfterViewInit(): void {
 
-    combineLatest(
-      this.sort.sortChange
-        .pipe(
-          tap(() => this.paginator.pageIndex = 0),
-          startWith({active: 'createdAt', direction: 'desc'} as Sort)
-        ),
-      this.paginator.page
-        .pipe(startWith({pageIndex: 0, pageSize: 10, length: 0} as PageEvent)),
-      this.activatedRoute.queryParams
-    )
-      .pipe(switchMap(([sort, page, params]) => {
+    this.projectViewState.project
+      .pipe(takeUntil(this.unsubscribe))
+      .subscribe(() => {
+        combineLatest(
+          this.sort.sortChange
+            .pipe(
+              tap(() => this.paginator.pageIndex = 0),
+              startWith({ active: 'createdAt', direction: 'desc' } as Sort)
+            ),
+          this.paginator.page
+            .pipe(startWith({ pageIndex: 0, pageSize: 10, length: 0 } as PageEvent)),
+          this.activatedRoute.queryParams
+        )
+          .pipe(switchMap(([sort, page, params]) => {
+            return this.fileService.getFiles(
+              this.project.id,
+              params.parentId,
+              sort.active as keyof FileNode,
+              sort.direction,
+              page.pageIndex * page.pageSize,
+              page.pageSize
+            );
 
-        return this.fileService.getFiles(
-          this.project.id,
-          params.parentId,
-          sort.active as keyof FileNode,
-          sort.direction,
-          page.pageIndex * page.pageSize,
-          page.pageSize
-        );
-
-      }))
-      .subscribe((data: FileList) => {
-        this.fileSource.data = data.files;
-        this.totalCount = data.total;
+          }))
+          .subscribe((data: FileList) => {
+            this.fileSource.data = data.files;
+            this.totalCount = data.total;
+          });
       });
   }
 
@@ -77,7 +80,7 @@ export class ProjectFilesComponent extends ProjectTabComponent implements AfterV
   async validateNavigation(file: FileNode): Promise<void> {
     if (file.type === FileNodeType.Directory) {
       await this.router.navigate([`/projects/${this.project.id}/files`], {
-        queryParams: {parentId: file.id}
+        queryParams: { parentId: file.id }
       });
     }
   }
