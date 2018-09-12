@@ -54,12 +54,12 @@
 
 <ng-container *ngIf="user.email">
   <h3 class="mat-caption">Email</h3>
-  <p>{{ user.email }}</p>
+  <p redactable>{{ user.email }}</p>
 </ng-container>
 
 <ng-container *ngIf="user.phone">
   <h3 class="mat-caption">Phone</h3>
-  <p>{{ user.phone }}</p>
+  <p redactable>{{ user.phone }}</p>
 </ng-container>
 
 <ng-container *ngIf="user.timeZone">

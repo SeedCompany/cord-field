@@ -1,5 +1,5 @@
 import { DateTime, Interval } from 'luxon';
-import { firstLettersOfWords, generateObjectId, maybeRedacted } from '../util';
+import { firstLettersOfWords, generateObjectId } from '../util';
 import { buildEnum } from './enum';
 import { Language } from './language';
 import { Location } from './location';
@@ -35,11 +35,11 @@ export class User {
     const obj = new User();
 
     obj.id = json.id || '';
-    obj.realFirstName = maybeRedacted(json.firstName);
+    obj.realFirstName = json.firstName;
     obj.displayFirstName = json.displayFirstName || '';
-    obj.realLastName = maybeRedacted(json.lastName);
+    obj.realLastName = json.lastName;
     obj.displayLastName = json.displayLastName || '';
-    obj.email = maybeRedacted(json.email);
+    obj.email = json.email;
 
     return obj;
   }
@@ -53,7 +53,7 @@ export class User {
   }
 
   get fullName(): string {
-    return `${this.firstName} ${this.lastName}`.trim();
+    return `${this.displayFirstName} ${this.displayLastName}`.trim();
   }
 
   get avatarLetters() {
