@@ -1,9 +1,10 @@
 import { Component, Input, OnChanges, SimpleChanges } from '@angular/core';
 import { MatDialog } from '@angular/material';
+import { Organization } from '@app/core/models/organization';
+import { ProjectRole } from '@app/core/models/project-role';
+import { UserProfile, UserRole } from '@app/core/models/user';
+import { isRedacted } from '@app/core/util';
 import { DateTime } from 'luxon';
-import { Organization } from '../../../core/models/organization';
-import { ProjectRole } from '../../../core/models/project-role';
-import { UserProfile, UserRole } from '../../../core/models/user';
 import { PersonAvailabilityDialogComponent } from '../person-availability-dialog/person-availability-dialog.component';
 import { PersonRoleLocationsDialogComponent } from '../person-role-locations-dialog/person-role-locations-dialog.component';
 
@@ -22,13 +23,13 @@ export class PersonBasicInfoComponent implements OnChanges {
   constructor(private dialog: MatDialog) {
   }
 
+  get localTime() {
+    return DateTime.local().setZone(this.user.timeZone).toLocaleString(DateTime.TIME_SIMPLE);
+  }
+
   ngOnChanges(changes: SimpleChanges): void {
     const user: UserProfile = changes.user.currentValue;
     this.available = user.available; // Store in component property to prevent unnecessary calculations
-  }
-
-  get localTime() {
-    return DateTime.local().setZone(this.user.timeZone).toLocaleString(DateTime.TIME_SIMPLE);
   }
 
   trackUserRole(index: number, userRole: UserRole): string {
@@ -45,5 +46,9 @@ export class PersonBasicInfoComponent implements OnChanges {
 
   showAvailability(): void {
     PersonAvailabilityDialogComponent.open(this.dialog, this.user);
+  }
+
+  isRedacted(value: string | null): boolean {
+    return isRedacted(value) || !value;
   }
 }

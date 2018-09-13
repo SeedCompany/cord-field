@@ -1,5 +1,5 @@
 import { DateTime, Interval } from 'luxon';
-import { firstLettersOfWords, generateObjectId } from '../util';
+import { firstLettersOfWords, generateObjectId, isRedacted } from '../util';
 import { buildEnum } from './enum';
 import { Language } from './language';
 import { Location } from './location';
@@ -31,6 +31,22 @@ export class User {
   displayLastName: string;
   email: string | null;
 
+  get firstName(): string | null {
+    return this.isRealNameValid(this.realFirstName) ? this.realFirstName : this.displayFirstName;
+  }
+
+  get lastName(): string | null {
+    return this.isRealNameValid(this.realLastName) ? this.realLastName : this.displayLastName;
+  }
+
+  get fullName(): string {
+    return `${this.firstName} ${this.lastName}`.trim();
+  }
+
+  get avatarLetters() {
+    return firstLettersOfWords(this.fullName);
+  }
+
   static fromJson(json: any): User {
     const obj = new User();
 
@@ -44,20 +60,8 @@ export class User {
     return obj;
   }
 
-  get firstName(): string {
-    return this.realFirstName || this.displayFirstName;
-  }
-
-  get lastName(): string {
-    return this.realLastName || this.displayLastName;
-  }
-
-  get fullName(): string {
-    return `${this.displayFirstName} ${this.displayLastName}`.trim();
-  }
-
-  get avatarLetters() {
-    return firstLettersOfWords(this.fullName);
+  isRealNameValid(value: string | null): boolean {
+    return !!(!isRedacted(value) && value);
   }
 }
 
@@ -110,6 +114,15 @@ export class UserProfile extends User {
 
   canEdit = true; // TODO with auth
 
+  get available(): boolean {
+    if (this.unavailabilities.length === 0) {
+      return true;
+    }
+
+    const today = DateTime.utc();
+    return this.unavailabilities.some(u => !u.range.contains(today));
+  }
+
   static fromJson(json: Partial<UserProfile>): UserProfile {
     const user = Object.assign(new UserProfile(), super.fromJson(json));
 
@@ -125,15 +138,6 @@ export class UserProfile extends User {
     user.isSelf = json.isSelf || false;
 
     return user;
-  }
-
-  get available(): boolean {
-    if (this.unavailabilities.length === 0) {
-      return true;
-    }
-
-    const today = DateTime.utc();
-    return this.unavailabilities.some(u => !u.range.contains(today));
   }
 }
 
@@ -167,6 +171,10 @@ export class KnownLanguage {
   language: Language;
   proficiency: LanguageProficiency;
 
+  get id() {
+    return this.language.id;
+  }
+
   static fromJson(json: Partial<KnownLanguage>): KnownLanguage {
     const kl = new KnownLanguage();
 
@@ -182,10 +190,6 @@ export class KnownLanguage {
       proficiency: kl.proficiency
     };
   }
-
-  get id() {
-    return this.language.id;
-  }
 }
 
 export interface KnownLanguageForSaveAPI {
@@ -199,8 +203,9 @@ export enum LanguageProficiency {
   Skilled = 'skilled',
   Fluent = 'fluent'
 }
+
 export namespace LanguageProficiency {
-  export const {entries, forUI, values, trackEntryBy, trackValueBy} = buildEnum(LanguageProficiency, {
+  export const { entries, forUI, values, trackEntryBy, trackValueBy } = buildEnum(LanguageProficiency, {
     [LanguageProficiency.Beginner]: 'Beginner',
     [LanguageProficiency.Conversational]: 'Conversational',
     [LanguageProficiency.Skilled]: 'Skilled',
@@ -219,7 +224,7 @@ export class Education {
   }
 
   static create(): Education {
-    return Object.assign(new Education(), {id: generateObjectId()});
+    return Object.assign(new Education(), { id: generateObjectId() });
   }
 }
 
@@ -231,8 +236,9 @@ export enum Degree {
   Masters = 'masters',
   Doctorate = 'doctorate'
 }
+
 export namespace Degree {
-  export const {entries, forUI, values, trackEntryBy, trackValueBy} = buildEnum(Degree, {
+  export const { entries, forUI, values, trackEntryBy, trackValueBy } = buildEnum(Degree, {
     [Degree.Primary]: 'Primary',
     [Degree.Secondary]: 'Secondary',
     [Degree.Associates]: 'Associate\'s',
@@ -269,6 +275,6 @@ export class Unavailability {
   }
 
   static create(): Unavailability {
-    return Object.assign(new Unavailability(), {id: generateObjectId()});
+    return Object.assign(new Unavailability(), { id: generateObjectId() });
   }
 }

@@ -3,11 +3,11 @@
 <h1 class="mat-display-1">{{ user.fullName }}</h1>
 
 <h3 class="mat-caption"
-    *ngIf="user.roles.length > 0 || user.canEdit"
+    *ngIf="user.roles.length || user.canEdit"
 >
   Roles
 </h3>
-<mat-nav-list *ngIf="user.roles.length > 0">
+<mat-nav-list *ngIf="user.roles.length">
   <mat-list-item
     *ngFor="let role of user.roles; trackBy: trackUserRole"
     (click)="showRoleLocations(role)"
@@ -25,11 +25,11 @@
 </button>
 
 <h3 class="mat-caption"
-    *ngIf="user.organizations.length > 0 || user.canEdit"
+    *ngIf="user.organizations.length || user.canEdit"
 >
   Organizations
 </h3>
-<mat-nav-list *ngIf="user.organizations.length > 0">
+<mat-nav-list *ngIf="user.organizations.length">
   <a mat-list-item
      *ngFor="let org of user.organizations; trackBy: trackOrganization"
      routerLink="/organizations/{{ org.id }}"
@@ -52,12 +52,12 @@
   {{ available ? 'AVAILABLE' : 'UNAVAILABLE' }}
 </button>
 
-<ng-container *ngIf="user.email">
+<ng-container *ngIf="!isRedacted(user.email)">
   <h3 class="mat-caption">Email</h3>
   <p redactable>{{ user.email }}</p>
 </ng-container>
 
-<ng-container *ngIf="user.phone">
+<ng-container *ngIf="!isRedacted(user.phone)">
   <h3 class="mat-caption">Phone</h3>
   <p redactable>{{ user.phone }}</p>
 </ng-container>
