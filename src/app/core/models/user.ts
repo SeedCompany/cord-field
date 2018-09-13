@@ -61,7 +61,7 @@ export class User {
   }
 
   isRealNameValid(value: string | null): boolean {
-    return !!(!isRedacted(value) && value);
+    return !isRedacted(value) && !!value;
   }
 }
 
