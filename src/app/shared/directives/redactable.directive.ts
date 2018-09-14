@@ -19,6 +19,7 @@ export class RedactableDirective implements AfterViewChecked {
 
     if (elem.nodeName === 'INPUT' && isRedacted(elem.value)) {
       this.renderer.setProperty(elem, 'value', this.mask);
+      this.renderer.setAttribute(elem, 'disabled', 'disabled');
     } else if (isRedacted(elem.textContent)) {
       this.renderer.setProperty(elem, 'textContent', this.mask);
     }
