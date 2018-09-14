@@ -18,6 +18,7 @@ import { SpeedDialComponent } from './components/speed-dial/speed-dial.component
 import { UserRolesFormComponent } from './components/user-roles-form/user-roles-form.component';
 import { AutofocusDirective } from './directives/autofocus.directive';
 import { NotImplementedDirective } from './directives/not-implemented.directive';
+import { RedactableDirective } from './directives/redactable.directive';
 import { LuxonDateAdapter, MAT_LUXON_DATE_FORMATS } from './luxon-date-adapter';
 import { LanguageInfoPipe } from './pipes/language-info.pipe';
 
@@ -47,7 +48,8 @@ import { LanguageInfoPipe } from './pipes/language-info.pipe';
     SearchComponent,
     SpeedDialComponent,
     SpeedDialItemComponent,
-    UserRolesFormComponent
+    UserRolesFormComponent,
+    RedactableDirective
   ],
   declarations: [
     AutocompleteLanguageComponent,
@@ -63,13 +65,14 @@ import { LanguageInfoPipe } from './pipes/language-info.pipe';
     SearchComponent,
     SpeedDialComponent,
     SpeedDialItemComponent,
-    UserRolesFormComponent
+    UserRolesFormComponent,
+    RedactableDirective
   ],
   providers: [
     DecimalPipe,
-    {provide: LOCALE_ID, useValue: 'en-US'},
-    {provide: MAT_DATE_FORMATS, useValue: MAT_LUXON_DATE_FORMATS},
-    {provide: DateAdapter, useClass: LuxonDateAdapter}
+    { provide: LOCALE_ID, useValue: 'en-US' },
+    { provide: MAT_DATE_FORMATS, useValue: MAT_LUXON_DATE_FORMATS },
+    { provide: DateAdapter, useClass: LuxonDateAdapter }
   ]
 })
 export class SharedModule {

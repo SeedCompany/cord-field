@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 import { AbstractControl, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Changes } from '@app/core/change-engine';
 import { TitleAware } from '@app/core/decorators';
-import { UserProfile, UserRole } from '@app/core/models/user';
+import { UserProfile } from '@app/core/models/user';
 import { onlyValidValues } from '@app/core/util';
 import * as CustomValidators from '@app/core/validators';
 import { takeUntil } from 'rxjs/operators';
@@ -27,7 +27,7 @@ export class PersonEditBasicInfoComponent extends AbstractPersonComponent {
     super(viewStateSvc);
 
     this.initForm();
-    this.initViewStateEvents();
+    this.initViewState();
   }
 
   get firstName(): AbstractControl {
@@ -94,18 +94,18 @@ export class PersonEditBasicInfoComponent extends AbstractPersonComponent {
       });
   }
 
-  private initViewStateEvents(): void {
+  private initViewState(): void {
     this.viewStateSvc.user
       .pipe(takeUntil(this.unsubscribe))
       .subscribe((user) => {
         this.user = user;
 
-        this.firstName.setValue(user.realFirstName);
-        this.lastName.setValue(user.realLastName);
-        this.displayFirstName.setValue(user.displayFirstName);
-        this.displayLastName.setValue(user.displayLastName);
-        this.phone.setValue(user.phone);
-        this.email.setValue(user.email);
+        this.firstName.setValue(user.realFirstName, { emitEvent: false });
+        this.lastName.setValue(user.realLastName, { emitEvent: false });
+        this.displayFirstName.setValue(user.displayFirstName, { emitEvent: false });
+        this.displayLastName.setValue(user.displayLastName, { emitEvent: false });
+        this.phone.setValue(user.phone, { emitEvent: false });
+        this.email.setValue(user.email, { emitEvent: false });
       });
   }
 }
