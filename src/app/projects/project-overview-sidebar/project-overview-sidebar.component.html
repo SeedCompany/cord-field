@@ -1,13 +1,9 @@
-<div class="picture" [style.background]="'url(' + pictureUrl+ ')'">
-  <span class="flex-grow"></span>
-  <div class="location mat-title">{{ displayLocation }}</div>
-  <div class="sensitivity mat-subheading-1">{{ sensitivityLevel }}</div>
+<div class="picture" *ngIf="project">
+  <div class="location mat-title" *ngIf="project.location">{{ project.location.displayName }}</div>
+  <div class="sensitivity mat-subheading-1">{{ ProjectSensitivity.forUI(project.sensitivity) }} Sensitivity</div>
 </div>
-<div class="stage mat-typography">
-  <div>{{ stageName }}</div>
-  <mat-progress-bar color="accent" [value]="stageProgress"></mat-progress-bar>
-  <div>Next Step: {{ nextStage }}</div>
-</div>
+<mat-divider></mat-divider>
+<app-project-status [status]="project?.status"></app-project-status>
 <mat-divider></mat-divider>
 <mat-nav-list>
   <a *ngFor="let link of links; trackBy: trackLinkBy"

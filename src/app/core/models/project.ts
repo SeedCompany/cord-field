@@ -1,117 +1,16 @@
 import { DateTime } from 'luxon';
-import { buildEnum } from './enum';
 import { Language } from './language';
 import { Location } from './location';
 import { Partnership } from './partnership';
+import { ProjectSensitivity } from './project/sensitivity';
+import { ProjectStatus } from './project/status';
+import { ProjectType } from './project/type';
 import { TeamMember } from './team-member';
 import { User } from './user';
 
-export enum ProjectType {
-  Translation = 'translation',
-  Internship = 'internship'
-}
-export namespace ProjectType {
-  export const {entries, forUI, values, trackEntryBy, trackValueBy} = buildEnum(ProjectType, {
-    [ProjectType.Translation]: 'Translation',
-    [ProjectType.Internship]: 'Internship'
-  });
-}
-
-export enum ProjectStatus {
-  Active = 'active',
-  Inactive = 'inactive',
-  InDevelopment = 'in_development'
-}
-export namespace ProjectStatus {
-  export const {entries, forUI, values, trackEntryBy, trackValueBy} = buildEnum(ProjectStatus, {
-    [ProjectStatus.Active]: 'Active',
-    [ProjectStatus.Inactive]: 'Inactive',
-    [ProjectStatus.InDevelopment]: 'In Development'
-  });
-}
-
-export enum ProjectStage {
-  InProgress = 'in_progress',
-  PendingSuspension = 'pending_suspension',
-  PendingTermination = 'pending_termination',
-  PendingCompletion = 'pending_completion',
-  CompletedActive = 'completed_active',
-  Suspended = 'suspended',
-  Terminated = 'terminated',
-  CompletedInactive = 'completed_inactive',
-  ConceptDevelopment = 'concept_development',
-  ConceptApproval = 'concept_approval',
-  PlanDevelopment = 'plan_development',
-  ConsultantReview = 'consultant_review',
-  BudgetDevelopment = 'budget_development',
-  FinancialAnalystEndorsement = 'financial_analyst_endorsement',
-  ProposalCompletion = 'proposal_completion',
-  ProjectApproval = 'project_approval',
-  FinanceConfirmation = 'finance_confirmation'
-}
-export namespace ProjectStage {
-  export const {entries, forUI, values, trackEntryBy, trackValueBy} = buildEnum(ProjectStage, {
-    [ProjectStage.InProgress]: 'In Progress',
-    [ProjectStage.PendingSuspension]: 'Pending Suspension',
-    [ProjectStage.PendingTermination]: 'Pending Termination',
-    [ProjectStage.PendingCompletion]: 'Pending Completion',
-    [ProjectStage.CompletedActive]: 'Completed Active',
-    [ProjectStage.Suspended]: 'Suspended',
-    [ProjectStage.Terminated]: 'Terminated',
-    [ProjectStage.CompletedInactive]: 'Completed Inactive',
-    [ProjectStage.ConceptDevelopment]: 'Concept Development',
-    [ProjectStage.ConceptApproval]: 'Concept Approval',
-    [ProjectStage.PlanDevelopment]: 'Plan Development',
-    [ProjectStage.ConsultantReview]: 'Consultant Review',
-    [ProjectStage.BudgetDevelopment]: 'Budget Development',
-    [ProjectStage.FinancialAnalystEndorsement]: 'Financial Analyst Endorsement',
-    [ProjectStage.ProposalCompletion]: 'Proposal Completion',
-    [ProjectStage.ProjectApproval]: 'Project Approval',
-    [ProjectStage.FinanceConfirmation]: 'Finance Confirmation'
-  });
-
-  export function forStatus(status: ProjectStatus): ProjectStage[] {
-    const mapping = {
-      [ProjectStatus.Active]: [
-        ProjectStage.InProgress,
-        ProjectStage.PendingSuspension,
-        ProjectStage.PendingTermination,
-        ProjectStage.PendingCompletion,
-        ProjectStage.CompletedActive
-      ],
-      [ProjectStatus.Inactive]: [
-        ProjectStage.Suspended,
-        ProjectStage.Terminated,
-        ProjectStage.CompletedInactive
-      ],
-      [ProjectStatus.InDevelopment]: [
-        ProjectStage.ConceptDevelopment,
-        ProjectStage.ConceptApproval,
-        ProjectStage.PlanDevelopment,
-        ProjectStage.ConsultantReview,
-        ProjectStage.BudgetDevelopment,
-        ProjectStage.FinancialAnalystEndorsement,
-        ProjectStage.ProposalCompletion,
-        ProjectStage.ProjectApproval,
-        ProjectStage.FinanceConfirmation
-      ]
-    };
-    return mapping[status];
-  }
-}
-
-export enum ProjectSensitivity {
-  Low = 1,
-  Medium = 2,
-  High = 3
-}
-export namespace ProjectSensitivity {
-  export const {entries, forUI, values, trackEntryBy, trackValueBy} = buildEnum(ProjectSensitivity, {
-    [ProjectSensitivity.Low]: 'Low',
-    [ProjectSensitivity.Medium]: 'Medium',
-    [ProjectSensitivity.High]: 'High'
-  });
-}
+export * from './project/status';
+export * from './project/type';
+export * from './project/sensitivity';
 
 export class Project {
 
@@ -162,7 +61,6 @@ export class Project {
 export interface ProjectFilter {
   type?: ProjectType;
   status?: ProjectStatus[];
-  stage?: ProjectStage[];
   languages?: Language[];
   location?: Location[];
   team?: User[];

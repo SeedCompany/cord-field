@@ -33,21 +33,6 @@
   </mat-form-field>
 
   <mat-form-field color="accent">
-    <mat-select formControlName="stage"
-                placeholder="Stage"
-                multiple>
-      <mat-optgroup *ngFor="let status of ProjectStatus.entries(); trackBy: ProjectStatus.trackEntryBy"
-                    [label]="status.ui">
-        <mat-option *ngFor="let stage of ProjectStage.forStatus(status.value); trackBy: ProjectStage.trackValueBy"
-
-                    [value]="stage">
-          {{ ProjectStage.forUI(stage) }}
-        </mat-option>
-      </mat-optgroup>
-    </mat-select>
-  </mat-form-field>
-
-  <mat-form-field color="accent">
     <mat-select placeholder="Type"
                 formControlName="type">
       <mat-option>Any</mat-option>

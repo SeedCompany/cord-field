@@ -13,6 +13,7 @@ import { ProjectOverviewSidebarComponent } from './project-overview-sidebar/proj
 import { ProjectOverviewComponent } from './project-overview/project-overview.component';
 import { ProjectPartnershipsComponent } from './project-partnerships/project-partnerships.component';
 import { ProjectPlanComponent } from './project-plan/project-plan.component';
+import { ProjectStatusComponent } from './project-status/project-status.component';
 import {
   ProjectTeamMemberRoleDialogComponent
 } from './project-team-member-role-dialog/project-team-member-role-dialog.component';
@@ -47,7 +48,8 @@ import { ProjectsRoutingModule } from './projects-routing.module';
     ProjectTeamMemberRoleDialogComponent,
     ProjectUpdatesComponent,
     ProjectLanguagesComponent,
-    ProjectLocationTimeframeComponent
+    ProjectLocationTimeframeComponent,
+    ProjectStatusComponent
   ],
   entryComponents: [
     ProjectTeamMemberAddComponent,

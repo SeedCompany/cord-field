@@ -8,9 +8,7 @@
 .picture {
   display: flex;
   flex-direction: column;
-  height: 150px;
-  padding: 24px;
-  color: white; //TODO Doesn't match theme since the image is (can be?) a dark background
+  padding: 16px;
 }
 
 .flex-grow {
