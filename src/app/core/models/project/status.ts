@@ -2,15 +2,23 @@ import { buildEnum } from '@app/core/models/enum';
 
 export enum ProjectStatus {
   Active = 'active',
-  Inactive = 'inactive',
-  InDevelopment = 'in_development'
+  InDevelopment = 'in_development',
+  PendingApproval = 'pending_approval',
+  Rejected = 'rejected',
+  Suspended = 'suspended',
+  Terminated = 'terminated',
+  Completed = 'completed'
 }
 
 export namespace ProjectStatus {
   export const { entries, forUI, values, trackEntryBy, trackValueBy } = buildEnum(ProjectStatus, {
     [ProjectStatus.Active]: 'Active',
-    [ProjectStatus.Inactive]: 'Inactive',
-    [ProjectStatus.InDevelopment]: 'In Development'
+    [ProjectStatus.InDevelopment]: 'In Development',
+    [ProjectStatus.PendingApproval]: 'Pending Approval',
+    [ProjectStatus.Rejected]: 'Rejected',
+    [ProjectStatus.Suspended]: 'Suspended',
+    [ProjectStatus.Terminated]: 'Terminated',
+    [ProjectStatus.Completed]: 'Completed'
   });
 }
 
@@ -63,11 +71,6 @@ export namespace ProjectStage {
         ProjectStage.PendingTermination,
         ProjectStage.PendingCompletion,
         ProjectStage.CompletedActive
-      ],
-      [ProjectStatus.Inactive]: [
-        ProjectStage.Suspended,
-        ProjectStage.Terminated,
-        ProjectStage.CompletedInactive
       ],
       [ProjectStatus.InDevelopment]: [
         ProjectStage.ConceptDevelopment,
