@@ -1,5 +1,5 @@
 import { Component, Input } from '@angular/core';
-import { Project } from '../../core/models/project';
+import { Project, ProjectSensitivity } from '@app/core/models/project';
 
 interface LinkConfig {
   path: string;
@@ -13,17 +13,14 @@ interface LinkConfig {
 })
 export class ProjectOverviewSidebarComponent {
 
+  readonly ProjectSensitivity = ProjectSensitivity;
+
   @Input() project: Project | null;
 
   readonly links: LinkConfig[] = [
     {path: '', label: 'Engagement Details'},
     {path: '/forms', label: 'Project Forms'}
   ];
-
-  // These should be replaced with values from Project model once it has them
-  pictureUrl = '//via.placeholder.com/300x150/2b2b2b';
-  displayLocation = 'Display Location';
-  sensitivityLevel = 'Level 1';
 
   trackLinkBy(index: number, link: LinkConfig) {
     return link.label;
