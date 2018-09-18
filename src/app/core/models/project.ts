@@ -3,7 +3,7 @@ import { Language } from './language';
 import { Location } from './location';
 import { Partnership } from './partnership';
 import { ProjectSensitivity } from './project/sensitivity';
-import { ProjectStage, ProjectStatus } from './project/status';
+import { ProjectStatus } from './project/status';
 import { ProjectType } from './project/type';
 import { TeamMember } from './team-member';
 import { User } from './user';
@@ -61,7 +61,6 @@ export class Project {
 export interface ProjectFilter {
   type?: ProjectType;
   status?: ProjectStatus[];
-  stage?: ProjectStage[];
   languages?: Language[];
   location?: Location[];
   team?: User[];

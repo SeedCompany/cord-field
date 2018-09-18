@@ -12,7 +12,6 @@ import {
   Project,
   ProjectFilter,
   ProjectSensitivity,
-  ProjectStage,
   ProjectStatus,
   ProjectsWithCount,
   ProjectType
@@ -23,7 +22,6 @@ import { PloApiService } from './http/plo-api.service';
 export interface ProjectFilterAPI {
   type?: ProjectType;
   status?: ProjectStatus[];
-  stage?: ProjectStage[];
   languages?: string[];
   locationId?: string[];
   team?: string[];

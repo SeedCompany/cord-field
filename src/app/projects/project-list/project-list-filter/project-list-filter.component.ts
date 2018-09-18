@@ -2,7 +2,7 @@ import { Component, OnInit, Output } from '@angular/core';
 import { AbstractControl, FormBuilder, FormGroup } from '@angular/forms';
 import { Language } from '@app/core/models/language';
 import { Location } from '@app/core/models/location';
-import { ProjectFilter, ProjectSensitivity, ProjectStage, ProjectStatus, ProjectType } from '@app/core/models/project';
+import { ProjectFilter, ProjectSensitivity, ProjectStatus, ProjectType } from '@app/core/models/project';
 import { User } from '@app/core/models/user';
 import * as CustomValidators from '@app/core/validators';
 import { DateTime } from 'luxon';
@@ -19,7 +19,6 @@ export class ProjectListFilterComponent implements OnInit {
   minDate: DateTime;
   maxDate = DateTime.local();
 
-  readonly ProjectStage = ProjectStage;
   readonly ProjectStatus = ProjectStatus;
   readonly ProjectType = ProjectType;
   readonly ProjectSensitivity = ProjectSensitivity;
@@ -112,7 +111,6 @@ export class ProjectListFilterComponent implements OnInit {
       location: [[]],
       team: [[]],
       status: [null],
-      stage: [null],
       type: [null],
       sensitivity: [null],
       dateRange: [null],
