@@ -13,7 +13,7 @@ interface LinkConfig {
 })
 export class ProjectOverviewSidebarComponent {
 
-  @Input() project: Project;
+  @Input() project: Project | null;
 
   readonly links: LinkConfig[] = [
     {path: '', label: 'Engagement Details'},
@@ -24,9 +24,6 @@ export class ProjectOverviewSidebarComponent {
   pictureUrl = '//via.placeholder.com/300x150/2b2b2b';
   displayLocation = 'Display Location';
   sensitivityLevel = 'Level 1';
-  stageName = 'Concept Development';
-  nextStage = 'Concept Approval';
-  stageProgress = 10;
 
   trackLinkBy(index: number, link: LinkConfig) {
     return link.label;

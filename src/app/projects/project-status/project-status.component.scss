@@ -1,0 +1,11 @@
+@import "~src/styles/imports";
+
+:host {
+  @extend %component-defaults;
+  padding: 16px;
+}
+
+mat-form-field {
+  // Remove hint/error spacing so field looks evenly spaced all around
+  margin-bottom: -20px;
+}

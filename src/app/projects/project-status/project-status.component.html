@@ -1,0 +1,11 @@
+<mat-form-field color="accent">
+  <mat-select placeholder="Status"
+              [formControl]="control"
+  >
+    <mat-option [value]="control.value" [disabled]="true">{{ ProjectStatus.forUI(control.value) }}</mat-option>
+    <mat-option *ngFor="let status of getOptions(); trackBy: trackOptionBy"
+                [value]="status[1]">
+      {{ status[0] }}
+    </mat-option>
+  </mat-select>
+</mat-form-field>

@@ -5,7 +5,7 @@ import { AbstractViewState, SaveResult } from '../core/abstract-view-state';
 import { accessDates, ChangeConfig, mapChangeList, returnId } from '../core/change-engine';
 import { Language } from '../core/models/language';
 import { Partnership, PartnershipForSaveAPI } from '../core/models/partnership';
-import { Project } from '../core/models/project';
+import { Project, ProjectStatus } from '../core/models/project';
 import { TeamMember, TeamMemberForSaveAPI } from '../core/models/team-member';
 import { ProjectService } from '../core/services/project.service';
 
@@ -13,6 +13,7 @@ export interface ModifiedProject {
   mouStart?: DateTime;
   mouEnd?: DateTime;
   estimatedSubmission?: DateTime;
+  status?: ProjectStatus;
   locationId?: string;
   languages?: {
     add?: string[];
@@ -40,6 +41,7 @@ const config: ChangeConfig<Project> = {
   estimatedSubmission: {
     accessor: accessDates
   },
+  status: {},
   location: {
     accessor: returnId,
     toServer: returnId,
