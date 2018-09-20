@@ -46,32 +46,20 @@ export class Language {
 
 export class LanguageListItem {
   id: string;
-  name: string | null;
   displayName: string;
   locations: Location[];
   ethnologueCode: string | null;
   activeProjects: number;
-  updatedAt: DateTime;
 
   static fromJson(json: any): LanguageListItem {
     const language = new LanguageListItem();
     language.id = json.id;
-    language.name = maybeRedacted(json.name);
     language.displayName = json.displayName;
     language.ethnologueCode = maybeRedacted(json.ethnologueCode);
     language.locations = (json.locations || []).map(Location.fromJson);
     language.activeProjects = json.activeProjects || 0;
 
     return language;
-  }
-
-  static fromJsonArray(languages: any): LanguageListItem[] {
-    languages = languages || [];
-    return languages.map(LanguageListItem.fromJson);
-  }
-
-  get nameOrDisplayName(): string {
-    return this.name || this.displayName;
   }
 }
 

@@ -54,7 +54,7 @@ describe('LanguageService', () => {
 
   it('should get language list', (done: DoneFn) => {
 
-    const sort = 'updatedAt';
+    const sort = 'displayName';
     const skip = 0;
     const limit = 10;
     const order = 'desc';
@@ -70,12 +70,11 @@ describe('LanguageService', () => {
     }];
 
     languageService
-      .getLanguages('updatedAt', 'desc', 0, 10)
+      .getLanguages(sort, order, skip, limit)
       .toPromise()
-      .then((languagesWithCount) => {
-        const languages = languagesWithCount.languages;
+      .then(({languages, total}) => {
         const locations = languages[0].locations;
-        expect(languagesWithCount.total).toBe(0);
+        expect(total).toBe(0);
         expect(languages.length).not.toBe(0);
         expect(languages[0].id).toBeDefined();
         expect(languages[0].id).toBe('5acbba0c70db6a1781ece783');

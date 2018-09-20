@@ -12,10 +12,13 @@
       </button>
     </mat-toolbar>
 
-    <mat-table [dataSource]="languageSource" matSort>
-      <ng-container matColumnDef="name">
-        <mat-header-cell *matHeaderCellDef mat-sort-header>Language Name</mat-header-cell>
-        <mat-cell *matCellDef="let language" class="name"> {{ language.nameOrDisplayName }}</mat-cell>
+    <mat-table [dataSource]="languageSource"
+               matSort
+               matSortActive="displayName"
+               matSortDirection="asc">
+      <ng-container matColumnDef="displayName">
+        <mat-header-cell *matHeaderCellDef mat-sort-header>Name</mat-header-cell>
+        <mat-cell *matCellDef="let language" class="name"> {{ language.displayName }}</mat-cell>
       </ng-container>
 
       <ng-container matColumnDef="locations">
@@ -31,7 +34,7 @@
         <mat-cell *matCellDef="let language"> {{ language.ethnologueCode }}</mat-cell>
       </ng-container>
 
-      <ng-container matColumnDef="currentProjects">
+      <ng-container matColumnDef="activeProjects">
         <mat-header-cell *matHeaderCellDef mat-sort-header>Active Projects</mat-header-cell>
         <mat-cell *matCellDef="let language"> {{ language.activeProjects }}</mat-cell>
       </ng-container>

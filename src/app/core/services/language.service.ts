@@ -26,23 +26,20 @@ export class LanguageService {
       .toPromise();
   }
 
-  getLanguages(sort: keyof LanguageListItem = 'updatedAt',
-               order: SortDirection = 'desc',
-               skip = 0,
-               limit = 10,
-               filter?: LanguageListFilter,
-               fields?: Array<keyof LanguageListItem>,
-               isMine?: boolean): Observable<LanguagesWithTotal> {
+  getLanguages(
+    sort: keyof LanguageListItem = 'displayName',
+    order: SortDirection = 'desc',
+    skip = 0,
+    limit = 10,
+    filter?: LanguageListFilter,
+    fields?: Array<keyof LanguageListItem>
+  ): Observable<LanguagesWithTotal> {
     const params: HttpParams = {
       sort,
       skip: skip.toString(),
       limit: limit.toString(),
       order
     };
-
-    if (isMine) {
-      params.userId = 'me';
-    }
 
     if (filter) {
       const filterAPI = this.buildFilter(filter);
@@ -58,7 +55,7 @@ export class LanguageService {
       .get<LanguageListItem[]>('/languages', {params, observe: 'response'})
       .pipe(map((response: HttpResponse<LanguageListItem[]>) => {
         return {
-          languages: LanguageListItem.fromJsonArray(response.body),
+          languages: (response.body || []).map(LanguageListItem.fromJson),
           total: Number(response.headers.get('x-sc-total-count')) || 0
         };
       }));
@@ -68,6 +65,6 @@ export class LanguageService {
 
     const locationId = filter.location ? filter.location.map(l => l.id) : undefined;
 
-    return {locationId} as LanguageFilterAPI;
+    return {locationId};
   }
 }
