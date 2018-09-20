@@ -3,7 +3,7 @@ import { FormBuilder } from '@angular/forms';
 import { Organization } from '@app/core/models/organization';
 import { ProjectRole } from '@app/core/models/project-role';
 import { UserFilter } from '@app/core/models/user';
-import { TypedFormControl } from '@app/core/util';
+import { filterEntries, hasValue, TypedFormControl } from '@app/core/util';
 import { Observable } from 'rxjs';
 import { map, startWith } from 'rxjs/operators';
 
@@ -33,23 +33,9 @@ export class PeopleListFilterComponent {
     return this.form.valueChanges
       .pipe(
         startWith(this.form.value),
-        map((filters) => {
-          const result: any = {};
-          for (const [key, value] of Object.entries(filters)) {
-            if (value == null) {
-              continue;
-            }
-            if (Array.isArray(value)) {
-              if (value.length === 0) {
-                continue;
-              }
-            }
-
-            result[key] = value;
-          }
-
-          return result;
-        })
+        map(filters =>
+          filterEntries(filters, (key, value) => hasValue(value))
+        )
       );
   }
 

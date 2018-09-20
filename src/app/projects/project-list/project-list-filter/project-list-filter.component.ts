@@ -4,10 +4,11 @@ import { Language } from '@app/core/models/language';
 import { Location } from '@app/core/models/location';
 import { ProjectFilter, ProjectSensitivity, ProjectStatus, ProjectType } from '@app/core/models/project';
 import { User } from '@app/core/models/user';
+import { filterEntries, hasValue } from '@app/core/util';
 import * as CustomValidators from '@app/core/validators';
 import { DateTime } from 'luxon';
 import { Observable } from 'rxjs';
-import { map } from 'rxjs/operators';
+import { map, startWith } from 'rxjs/operators';
 
 @Component({
   selector: 'app-project-list-filter',
@@ -62,27 +63,12 @@ export class ProjectListFilterComponent implements OnInit {
 
   @Output() get filters(): Observable<ProjectFilter> {
     return this.form.valueChanges
-      .pipe(map((filters) => {
-        const result: any = {};
-
-        for (const [key, value] of Object.entries(filters)) {
-
-          if (!value) {
-            continue;
-          }
-
-          if (Array.isArray(value)) {
-
-            if (value.length === 0) {
-              continue;
-            }
-          }
-
-          result[key] = value;
-        }
-
-        return result;
-      }));
+      .pipe(
+        startWith(this.form.value),
+        map(filters =>
+          filterEntries(filters, (key, value) => hasValue(value))
+        )
+      );
   }
 
   onLanguageRemoved(language: Language): void {
