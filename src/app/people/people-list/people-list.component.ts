@@ -2,6 +2,7 @@ import { animate, state, style, transition, trigger } from '@angular/animations'
 import { AfterViewInit, Component, ViewChild } from '@angular/core';
 import { MatPaginator, MatSort, MatTableDataSource, PageEvent, Sort } from '@angular/material';
 import { Router } from '@angular/router';
+import { TypedMatSort } from '@app/core/util';
 import { combineLatest, of as observableOf } from 'rxjs';
 import { startWith, switchMap, tap } from 'rxjs/operators';
 import { TitleAware } from '../../core/decorators';
@@ -28,14 +29,21 @@ export class PeopleListComponent implements AfterViewInit {
 
   readonly ProjectRole = ProjectRole;
 
-  readonly displayedColumns = ['avatar', 'displayFirstName', 'displayLastName', 'organizations', 'projectCount', 'isActive'];
+  readonly displayedColumns: Array<keyof UserListItem> = [
+    'avatarLetters',
+    'displayFirstName',
+    'displayLastName',
+    'organizations',
+    'projectCount',
+    'isActive'
+  ];
   readonly pageSizeOptions = [10, 25, 50];
   peopleSource = new MatTableDataSource<UserListItem>();
   totalCount = 0;
   filtersActive = false;
 
   @ViewChild(MatPaginator) paginator: MatPaginator;
-  @ViewChild(MatSort) sort: MatSort;
+  @ViewChild(MatSort) sort: TypedMatSort<keyof UserListItem>;
   @ViewChild(PeopleListFilterComponent) filtersComponent: PeopleListFilterComponent;
 
   constructor(private userService: UserService,
@@ -46,15 +54,15 @@ export class PeopleListComponent implements AfterViewInit {
       this.sort.sortChange
         .pipe(
           tap(() => this.paginator.pageIndex = 0),
-          startWith({active: '', direction: 'desc'} as Sort)
+          startWith({active: this.sort.active, direction: this.sort.direction})
         ),
       this.paginator.page
         .pipe(startWith({pageIndex: 0, pageSize: 10, length: 0} as PageEvent)),
       this.filtersComponent.filters
     )
-      .pipe(switchMap(([sort, page, filters]: [Sort, PageEvent, UserFilter]) => {
+      .pipe(switchMap(([sort, page, filters]) => {
         const users = this.userService.getUsers(
-          sort.active as keyof UserListItem,
+          sort.active,
           sort.direction,
           page.pageIndex * page.pageSize,
           page.pageSize,
@@ -66,9 +74,9 @@ export class PeopleListComponent implements AfterViewInit {
           observableOf(filters)
         );
       }))
-      .subscribe(([data, filters]: [UsersWithTotal, UserFilter]) => {
-        this.totalCount = data.total;
-        this.peopleSource.data = data.users;
+      .subscribe(([{users, total}, filters]) => {
+        this.peopleSource.data = users;
+        this.totalCount = total;
         this.filtersActive = Object.keys(filters).length > 0;
       });
   }

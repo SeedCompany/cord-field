@@ -15,7 +15,7 @@
 
     <mat-table [dataSource]="peopleSource"
                matSort>
-      <ng-container matColumnDef="avatar">
+      <ng-container matColumnDef="avatarLetters">
         <mat-header-cell *matHeaderCellDef></mat-header-cell>
         <mat-cell *matCellDef="let person">
           <app-avatar-letter color="accent">{{ person.avatarLetters }}</app-avatar-letter>

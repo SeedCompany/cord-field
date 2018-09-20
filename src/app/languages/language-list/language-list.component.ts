@@ -1,10 +1,12 @@
 import { animate, state, style, transition, trigger } from '@angular/animations';
 import { AfterViewInit, Component, ViewChild } from '@angular/core';
-import { MatPaginator, MatSort, MatTableDataSource, PageEvent, Sort } from '@angular/material';
+import { MatPaginator, MatSort, MatTableDataSource, PageEvent } from '@angular/material';
 import { TitleAware } from '@app/core/decorators';
 import { LanguageListItem } from '@app/core/models/language';
 import { LanguageService } from '@app/core/services/language.service';
-import { combineLatest } from 'rxjs';
+import { TypedMatSort } from '@app/core/util';
+import { LanguageListFilterComponent } from '@app/languages/language-list/language-list-filter/language-list-filter.component';
+import { combineLatest, of as observableOf } from 'rxjs';
 import { startWith, switchMap, tap } from 'rxjs/operators';
 
 @Component({
@@ -22,7 +24,7 @@ import { startWith, switchMap, tap } from 'rxjs/operators';
 @TitleAware('Languages')
 export class LanguageListComponent implements AfterViewInit {
 
-  readonly displayedColumns: Array<keyof LanguageListItem> = ['name', 'location', 'ethnologueCode', 'currentProjects'];
+  readonly displayedColumns: Array<keyof LanguageListItem> = ['displayName', 'locations', 'ethnologueCode', 'activeProjects'];
   readonly pageSizeOptions = [10, 25, 50];
 
   languageSource = new MatTableDataSource<LanguageListItem>();
@@ -30,34 +32,45 @@ export class LanguageListComponent implements AfterViewInit {
   filtersActive = false;
 
   @ViewChild(MatPaginator) paginator: MatPaginator;
-  @ViewChild(MatSort) sort: MatSort;
+  @ViewChild(MatSort) sort: TypedMatSort<keyof LanguageListItem>;
+  @ViewChild(LanguageListFilterComponent) filtersComponent: LanguageListFilterComponent;
 
   constructor(private languageService: LanguageService) {
   }
 
   ngAfterViewInit() {
-
     combineLatest(
       this.sort.sortChange
         .pipe(
           tap(() => this.paginator.pageIndex = 0),
-          startWith({active: 'updated', direction: 'desc'} as Sort)
+          startWith({active: this.sort.active, direction: this.sort.direction})
         ),
       this.paginator.page
-        .pipe(startWith({pageIndex: 0, pageSize: 10, length: 0} as PageEvent))
+        .pipe(startWith({pageIndex: 0, pageSize: 10, length: 0} as PageEvent)),
+      this.filtersComponent.filters
     )
-      .pipe(switchMap(([sort, page]) => {
-
-        return this.languageService.getLanguages(
-          sort.active as keyof LanguageListItem,
+      .pipe(switchMap(([sort, page, filters]) => {
+        const languages = this.languageService.getLanguages(
+          sort.active,
           sort.direction,
           page.pageIndex * page.pageSize,
-          page.pageSize
+          page.pageSize,
+          filters
+        );
+
+        return combineLatest(
+          languages,
+          observableOf(filters)
         );
       }))
-      .subscribe((data) => {
-        this.languageSource.data = data.languages;
-        this.totalCount = data.total;
+      .subscribe(([{languages, total}, filters]) => {
+        this.languageSource.data = languages;
+        this.totalCount = total;
+        this.filtersActive = Object.keys(filters).length > 0;
       });
+  }
+
+  onClearFilters() {
+    this.filtersComponent.reset();
   }
 }

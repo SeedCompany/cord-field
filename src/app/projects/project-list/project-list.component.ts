@@ -2,11 +2,12 @@ import { animate, state, style, transition, trigger } from '@angular/animations'
 import { AfterViewInit, Component, ViewChild } from '@angular/core';
 import { MatPaginator, MatSort, MatTableDataSource, PageEvent, Sort } from '@angular/material';
 import { Router } from '@angular/router';
-import { BehaviorSubject, combineLatest } from 'rxjs';
+import { TypedMatSort } from '@app/core/util';
+import { BehaviorSubject, combineLatest, of as observableOf } from 'rxjs';
 import { startWith, switchMap, tap } from 'rxjs/operators';
 import { TitleAware } from '../../core/decorators';
 import { Language } from '../../core/models/language';
-import { Project, ProjectFilter, ProjectStatus, ProjectsWithCount, ProjectType } from '../../core/models/project';
+import { Project, ProjectStatus, ProjectType } from '../../core/models/project';
 import { ProjectService } from '../../core/services/project.service';
 import { ProjectListFilterComponent } from './project-list-filter/project-list-filter.component';
 
@@ -48,7 +49,7 @@ export class ProjectListComponent implements AfterViewInit {
   filtersActive = false;
 
   @ViewChild(MatPaginator) paginator: MatPaginator;
-  @ViewChild(MatSort) sort: MatSort;
+  @ViewChild(MatSort) sort: TypedMatSort<keyof Project>;
   @ViewChild(ProjectListFilterComponent) filtersComponent: ProjectListFilterComponent;
 
   constructor(
@@ -63,19 +64,16 @@ export class ProjectListComponent implements AfterViewInit {
       this.sort.sortChange
         .pipe(
           tap(() => this.paginator.pageIndex = 0),
-          startWith({active: 'updated', direction: 'desc'} as Sort)
+          startWith({active: this.sort.active, direction: this.sort.direction})
         ),
       this.paginator.page
         .pipe(startWith({pageIndex: 0, pageSize: 10, length: 0} as PageEvent)),
-      this.filtersComponent.filters
-        .pipe(startWith({})),
+      this.filtersComponent.filters,
       this.listSelector
     )
-      .pipe(switchMap(([sort, page, filters, listSelector]: [Sort, PageEvent, ProjectFilter, ListOption]) => {
-        this.filtersActive = Object.keys(filters).length > 0;
-
-        return this.projectService.getProjects(
-          sort.active as keyof Project,
+      .pipe(switchMap(([sort, page, filters, listSelector]) => {
+        const projects = this.projectService.getProjects(
+          sort.active,
           sort.direction,
           page.pageIndex * page.pageSize,
           page.pageSize,
@@ -83,10 +81,16 @@ export class ProjectListComponent implements AfterViewInit {
           this.apiFields,
           listSelector.value
         );
+
+        return combineLatest(
+          projects,
+          observableOf(filters)
+        );
       }))
-      .subscribe((data: ProjectsWithCount) => {
-        this.totalCount = data.count;
-        this.projectSource.data = data.projects;
+      .subscribe(([{ projects, count }, filters]) => {
+        this.projectSource.data = projects;
+        this.totalCount = count;
+        this.filtersActive = Object.keys(filters).length > 0;
       });
   }
 

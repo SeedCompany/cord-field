@@ -178,7 +178,7 @@ export class AutocompleteComponent<T> extends AbstractValueAccessor<T> implement
     this.optionSelected.next(value);
 
     if (this.chips) {
-      this.writeValue([...(this.value) as T[], value]);
+      this.writeValue([...this.value as T[] || [], value]);
     } else {
       this.writeValue(value);
     }

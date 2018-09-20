@@ -24,7 +24,10 @@
       </button>
     </mat-toolbar>
 
-    <mat-table [dataSource]="projectSource" matSort>
+    <mat-table [dataSource]="projectSource"
+               matSort
+               matSortActive="updatedAt"
+               matSortDirection="desc">
       <ng-container matColumnDef="name">
         <mat-header-cell *matHeaderCellDef mat-sort-header>Project Title</mat-header-cell>
         <mat-cell *matCellDef="let project" class="title"> {{ project.name }}</mat-cell>

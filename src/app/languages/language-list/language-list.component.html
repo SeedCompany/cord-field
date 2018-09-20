@@ -12,24 +12,31 @@
       </button>
     </mat-toolbar>
 
-    <mat-table [dataSource]="languageSource" matSort>
-      <ng-container matColumnDef="name">
-        <mat-header-cell *matHeaderCellDef mat-sort-header>Language Name</mat-header-cell>
-        <mat-cell *matCellDef="let language"> {{ language.nameOrDisplayName }}</mat-cell>
+    <mat-table [dataSource]="languageSource"
+               matSort
+               matSortActive="displayName"
+               matSortDirection="asc">
+      <ng-container matColumnDef="displayName">
+        <mat-header-cell *matHeaderCellDef mat-sort-header>Name</mat-header-cell>
+        <mat-cell *matCellDef="let language" class="name"> {{ language.displayName }}</mat-cell>
       </ng-container>
 
-      <ng-container matColumnDef="location">
+      <ng-container matColumnDef="locations">
         <mat-header-cell *matHeaderCellDef mat-sort-header>Location</mat-header-cell>
-        <mat-cell *matCellDef="let language"> {{ language.location.displayName }}</mat-cell>
+        <mat-cell *matCellDef="let language">
+          <app-collapsed-chip-list [list]="language.locations">
+            <ng-template let-location>{{ location.displayName }}</ng-template>
+          </app-collapsed-chip-list>
+        </mat-cell>
       </ng-container>
       <ng-container matColumnDef="ethnologueCode">
         <mat-header-cell *matHeaderCellDef mat-sort-header>Ethnologue Code</mat-header-cell>
         <mat-cell *matCellDef="let language"> {{ language.ethnologueCode }}</mat-cell>
       </ng-container>
 
-      <ng-container matColumnDef="currentProjects">
-        <mat-header-cell *matHeaderCellDef mat-sort-header>Current Projects</mat-header-cell>
-        <mat-cell *matCellDef="let language"> {{ language.currentProjects }}</mat-cell>
+      <ng-container matColumnDef="activeProjects">
+        <mat-header-cell *matHeaderCellDef mat-sort-header>Active Projects</mat-header-cell>
+        <mat-cell *matCellDef="let language"> {{ language.activeProjects }}</mat-cell>
       </ng-container>
       <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
       <mat-row class="row-hover"
@@ -47,7 +54,8 @@
       Filter
       <div class="spacer"></div>
       <button mat-icon-button color="primary"
-              *ngIf="filtersActive">
+              *ngIf="filtersActive"
+              (click)="onClearFilters()">
         <mat-icon>remove_circle</mat-icon>
       </button>
       <button mat-icon-button color="primary"
@@ -55,6 +63,7 @@
         <mat-icon>close</mat-icon>
       </button>
     </mat-toolbar>
+    <app-language-list-filter></app-language-list-filter>
   </mat-drawer>
 
 </mat-drawer-container>

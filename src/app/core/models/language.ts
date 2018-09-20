@@ -45,36 +45,29 @@ export class Language {
 }
 
 export class LanguageListItem {
-  name: string | null;
+  id: string;
   displayName: string;
-  location: Location;
+  locations: Location[];
   ethnologueCode: string | null;
-  currentProjects: number;
-  updatedAt: DateTime;
+  activeProjects: number;
 
   static fromJson(json: any): LanguageListItem {
     const language = new LanguageListItem();
-
-    language.name = maybeRedacted(json.name);
+    language.id = json.id;
     language.displayName = json.displayName;
     language.ethnologueCode = maybeRedacted(json.ethnologueCode);
-    language.location = Location.fromJson(json.location);
-    language.currentProjects = json.currentProjects || 0;
+    language.locations = (json.locations || []).map(Location.fromJson);
+    language.activeProjects = json.activeProjects || 0;
 
     return language;
-  }
-
-  static fromJsonArray(languages: any): LanguageListItem[] {
-    languages = languages || [];
-    return languages.map(LanguageListItem.fromJson);
-  }
-
-  get nameOrDisplayName(): string {
-    return this.name || this.displayName;
   }
 }
 
 export interface LanguagesWithTotal {
   languages: LanguageListItem[];
   total: number;
+}
+
+export interface LanguageListFilter {
+  location?: Location[];
 }
