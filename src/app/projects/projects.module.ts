@@ -16,14 +16,14 @@ import { ProjectLocationTimeframeComponent } from './project-location-timeframe/
 import { ProjectOverviewSidebarComponent } from './project-overview-sidebar/project-overview-sidebar.component';
 import { ProjectOverviewComponent } from './project-overview/project-overview.component';
 import { ProjectPartnershipsComponent } from './project-partnerships/project-partnerships.component';
+import {
+  ProjectPlanLanguageEngagementComponent
+} from './project-plan/project-plan-language-engagement/project-plan-language-engagement.component';
+import { ProjectPlanSidebarComponent } from './project-plan/project-plan-sidebar/project-plan-sidebar.component';
 import { ProjectPlanComponent } from './project-plan/project-plan.component';
 import { ProjectStatusComponent } from './project-status/project-status.component';
-import {
-  ProjectTeamMemberRoleDialogComponent
-} from './project-team-member-role-dialog/project-team-member-role-dialog.component';
-import {
-  ProjectTeamMemberAddComponent
-} from './project-team/project-team-member-add/project-team-member-add.component';
+import { ProjectTeamMemberRoleDialogComponent } from './project-team-member-role-dialog/project-team-member-role-dialog.component';
+import { ProjectTeamMemberAddComponent } from './project-team/project-team-member-add/project-team-member-add.component';
 import { ProjectTeamComponent } from './project-team/project-team.component';
 import { ProjectUpdatesComponent } from './project-updates/project-updates.component';
 import { ProjectComponent } from './project/project.component';
@@ -57,7 +57,10 @@ import { ProjectsRoutingModule } from './projects-routing.module';
     ProjectUpdatesComponent,
     ProjectLanguagesComponent,
     ProjectLocationTimeframeComponent,
-    ProjectStatusComponent
+    ProjectStatusComponent,
+    ProjectLocationTimeframeComponent,
+    ProjectPlanSidebarComponent,
+    ProjectPlanLanguageEngagementComponent
   ],
   entryComponents: [
     CreateDirectoryDialogComponent,

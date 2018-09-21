@@ -1,3 +1,4 @@
+import { Engagement } from '@app/core/models/engagement';
 import { DateTime } from 'luxon';
 import { Language } from './language';
 import { Location } from './location';
@@ -27,6 +28,7 @@ export class Project {
   team: TeamMember[];
   updatedAt: DateTime;
   estimatedSubmission: DateTime | null;
+  engagements: Engagement[];
 
   static fromJson(json: any): Project {
     json = json || {};
@@ -34,7 +36,7 @@ export class Project {
 
     project.id = json.id;
     project.name = (json.name || '')
-      // Remove legacy IDs from project names, this should be removed before launch.
+    // Remove legacy IDs from project names, this should be removed before launch.
       .replace(/ \(\d+\)$/, '');
     project.type = json.type || ProjectType.Translation;
     project.status = json.status || ProjectStatus.Active;
@@ -47,6 +49,7 @@ export class Project {
     project.team = (json.team || []).map(TeamMember.fromJson);
     project.updatedAt = json.updatedAt ? DateTime.fromISO(json.updatedAt) : DateTime.fromMillis(0);
     project.estimatedSubmission = json.estimatedSubmission ? DateTime.fromISO(json.estimatedSubmission) : null;
+    project.engagements = Engagement.fromJsonArray(json.engagements);
 
     return project;
   }

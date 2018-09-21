@@ -1,0 +1,13 @@
+@import "~src/styles/imports";
+
+:host {
+  @extend %component-defaults;
+}
+
+mat-toolbar {
+  background: mat-background($theme, background);
+}
+
+a.active {
+  color: mat-color($accent);
+}

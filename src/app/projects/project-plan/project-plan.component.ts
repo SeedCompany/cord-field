@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { TitleAware } from '../../core/decorators';
+import { TitleAware } from '@app/core/decorators';
 import { ProjectTabComponent } from '../abstract-project-tab';
 import { ProjectViewStateService } from '../project-view-state.service';
 

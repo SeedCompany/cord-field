@@ -1,0 +1,10 @@
+<mat-toolbar>
+  Language Engagements
+</mat-toolbar>
+<mat-nav-list>
+  <a *ngFor="let engagement of project.engagements; trackBy: trackById" mat-list-item
+     routerLink="."
+     routerLinkActive="active"
+     [queryParams]="{ engagementId: engagement.id}"
+  >{{ engagement.languageName }}</a>
+</mat-nav-list>
