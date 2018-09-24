@@ -9,7 +9,16 @@ import { map } from 'rxjs/operators';
 import { ModifiedProject } from '../../projects/project-view-state.service';
 import { SaveResult } from '../abstract-view-state';
 import { ProjectCreationResult } from '../create-dialogs/project-create-dialog/project-create-dialog.component';
-import { Project, ProjectFilter, ProjectSensitivity, ProjectStatus, ProjectsWithCount, ProjectType } from '../models/project';
+import {
+  ExtensionStatus,
+  Project,
+  ProjectExtension,
+  ProjectFilter,
+  ProjectSensitivity,
+  ProjectStatus,
+  ProjectsWithCount,
+  ProjectType
+} from '../models/project';
 import { HttpParams } from './http/abstract-http-client';
 import { PloApiService } from './http/plo-api.service';
 
@@ -152,5 +161,22 @@ export class ProjectService {
     }
 
     return [];
+  }
+
+  async saveExtension(projectId: string, extension: ProjectExtension) {
+    if (extension.id === 'new') {
+      return this.ploApi
+        .post<ProjectExtension>(`/projects/${projectId}/extensions`, {
+          ...extension,
+          status: ExtensionStatus.Draft
+        })
+        .pipe(map(ProjectExtension.fromJson))
+        .toPromise();
+    } else {
+      return this.ploApi
+        .put<{extensions: ProjectExtension[]}>(`/projects/${projectId}/extensions/${extension.id}`, extension)
+        .pipe(map(res => res.extensions.find(ext => ext.id === extension.id)!))
+        .toPromise();
+    }
   }
 }

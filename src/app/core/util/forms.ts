@@ -1,5 +1,6 @@
 import { AsyncValidatorFn, FormControl, ValidatorFn } from '@angular/forms';
 import { AbstractControlOptions } from '@angular/forms/src/model';
+import { Observable } from 'rxjs';
 
 export class TypedFormControl<T> extends FormControl {
   constructor(
@@ -11,6 +12,7 @@ export class TypedFormControl<T> extends FormControl {
   }
 
   readonly value: T;
+  readonly valueChanges: Observable<T>;
 
   setValue(value: T, options?: {
     onlySelf?: boolean;

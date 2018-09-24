@@ -1,0 +1,24 @@
+<div class="sidebar">
+  <mat-nav-list *ngIf="project">
+    <a *ngFor="let ext of project.extensions; trackBy: trackExtensionBy"
+       mat-list-item
+       [routerLink]="ext.id"
+       routerLinkActive="active"
+       [routerLinkActiveOptions]="{exact: true}"
+    >
+      <p matLine>{{ ext.summary }}</p>
+      <p matLine>{{ ExtensionStatus.forUI(ext.status) }}</p>
+    </a>
+    <mat-divider *ngIf="project.extensions.length > 0"></mat-divider>
+    <a mat-list-item
+       routerLink="new"
+       routerLinkActive="active"
+    >
+      <mat-icon color="accent">add_circle</mat-icon>
+      New Extension
+    </a>
+  </mat-nav-list>
+</div>
+<div class="main">
+  <router-outlet></router-outlet>
+</div>

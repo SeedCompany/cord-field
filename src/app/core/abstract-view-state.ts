@@ -1,5 +1,5 @@
 import { AbstractControl, FormArray } from '@angular/forms';
-import { BehaviorSubject, combineLatest, Observable, PartialObserver, Subject, Unsubscribable } from 'rxjs';
+import { BehaviorSubject, combineLatest, NextObserver, Observable, Subject, Unsubscribable } from 'rxjs';
 import { distinctUntilChanged, map, shareReplay, startWith, takeUntil } from 'rxjs/operators';
 import { LazyGetter } from 'typescript-lazy-get-decorator';
 import { ChangeConfig, ChangeEngine, Changes } from './change-engine';
@@ -190,7 +190,7 @@ export abstract class AbstractViewState<T> {
    * so we don't enforce what is needed to load the model.
    * It could just be an ID or maybe more - up to subclass.
    */
-  protected get onLoad(): PartialObserver<T> {
+  protected get onLoad(): NextObserver<T> {
     return {
       next: this.onNewSubject.bind(this),
       error: err => this._loadError.next(err)

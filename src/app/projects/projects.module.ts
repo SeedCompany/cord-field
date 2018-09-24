@@ -4,6 +4,8 @@ import { SharedModule } from '../shared/shared.module';
 import { ProjectBudgetComponent } from './project-budget/project-budget.component';
 import { ProjectEngagementComponent } from './project-engagements/project-engagement/project-engagement.component';
 import { ProjectEngagementsComponent } from './project-engagements/project-engagements.component';
+import { ProjectExtensionComponent } from './project-extensions/project-extension/project-extension.component';
+import { ProjectExtensionsComponent } from './project-extensions/project-extensions.component';
 import { CreateDirectoryDialogComponent } from './project-files/create-directory-dialog/create-directory-dialog.component';
 import { FileBreadcrumbsComponent } from './project-files/file-breadcrumbs/file-breadcrumbs.component';
 import { FileRenameDialogComponent } from './project-files/file-rename-dialog/file-rename-dialog.component';
@@ -37,6 +39,8 @@ import { ProjectsRoutingModule } from './projects-routing.module';
     OverwriteFileWarningComponent,
     ProjectBudgetComponent,
     ProjectComponent,
+    ProjectExtensionComponent,
+    ProjectExtensionsComponent,
     ProjectFilesComponent,
     ProjectFormsComponent,
     ProjectListComponent,

@@ -1,5 +1,7 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
+import { ProjectExtensionComponent } from '@app/projects/project-extensions/project-extension/project-extension.component';
+import { ProjectExtensionsComponent } from '@app/projects/project-extensions/project-extensions.component';
 import { ProjectBudgetComponent } from './project-budget/project-budget.component';
 import { ProjectEngagementComponent } from './project-engagements/project-engagement/project-engagement.component';
 import { ProjectEngagementsComponent } from './project-engagements/project-engagements.component';
@@ -30,6 +32,13 @@ const routes: Routes = [
       {path: 'budget', component: ProjectBudgetComponent},
       {path: 'files', component: ProjectFilesComponent},
       {path: 'team', component: ProjectTeamComponent},
+      {
+        path: 'extensions',
+        component: ProjectExtensionsComponent,
+        children: [
+          { path: ':id', component: ProjectExtensionComponent }
+        ]
+      },
       {path: 'updates', component: ProjectUpdatesComponent}
     ]
   }
