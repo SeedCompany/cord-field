@@ -54,6 +54,10 @@
               <mat-icon>border_color</mat-icon>
               <span>Rename</span>
             </button>
+            <button mat-menu-item (click)="onDownload(file)" *ngIf="supportsDownloads && file.isFile()">
+              <mat-icon>cloud_download</mat-icon>
+              <span>Download</span>
+            </button>
             <button mat-menu-item (click)="onDelete(file)">
               <mat-icon>delete</mat-icon>
               <span>Delete</span>

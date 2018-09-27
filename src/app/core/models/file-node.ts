@@ -31,6 +31,7 @@ export class File extends BaseNode {
   type: FileNodeType.File;
   modifiedAt: DateTime | null;
   size: number;
+  versions: FileVersion[];
 }
 
 export class Directory extends BaseNode {
@@ -65,6 +66,7 @@ export function fromJson(json: any): FileNode {
     node = new File();
     node.modifiedAt = json.modifiedAt ? DateTime.fromISO(json.modifiedAt) : null;
     node.size = json.size || 0;
+    node.versions = (json.versions || []).map((version: any) => ({...version, createdAt: DateTime.fromISO(version.createdAt)}));
   } else {
     throw new Error('Unknown File Type');
   }
@@ -83,6 +85,12 @@ export function fromJson(json: any): FileNode {
 export interface ParentRef {
   id: string;
   name: string;
+}
+
+export interface FileVersion {
+  id: string;
+  eTag: string;
+  createdAt: DateTime;
 }
 
 export enum FileNodeType {
