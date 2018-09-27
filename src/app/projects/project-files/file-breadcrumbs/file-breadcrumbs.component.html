@@ -1,0 +1,20 @@
+<button mat-button
+        class="breadcrumb-button"
+        routerLink=".">
+  Files
+</button>
+<ng-container *ngFor="let parent of directory?.parents; trackBy: trackParentRef">
+  <mat-icon color="primary">chevron_right</mat-icon>
+  <button mat-button
+          class="breadcrumb-button"
+          routerLink="."
+          [queryParams]="{parent: parent.id}">
+    {{ parent.name }}
+  </button>
+</ng-container>
+<ng-container *ngIf="directory?.id">
+  <mat-icon color="primary">chevron_right</mat-icon>
+  <button mat-button class="breadcrumb-button">
+    {{ directory?.name }}
+  </button>
+</ng-container>

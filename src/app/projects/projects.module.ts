@@ -3,6 +3,7 @@ import { NgModule } from '@angular/core';
 import { SharedModule } from '../shared/shared.module';
 import { ProjectBudgetComponent } from './project-budget/project-budget.component';
 import { ProjectEngagementDetailsComponent } from './project-engagement-details/project-engagement-details.component';
+import { FileBreadcrumbsComponent } from './project-files/file-breadcrumbs/file-breadcrumbs.component';
 import { ProjectFilesComponent } from './project-files/project-files.component';
 import { ProjectFormsComponent } from './project-forms/project-forms.component';
 import { ProjectLanguagesComponent } from './project-languages/project-languages.component';
@@ -31,6 +32,7 @@ import { ProjectsRoutingModule } from './projects-routing.module';
     ProjectsRoutingModule
   ],
   declarations: [
+    FileBreadcrumbsComponent,
     ProjectBudgetComponent,
     ProjectComponent,
     ProjectEngagementDetailsComponent,

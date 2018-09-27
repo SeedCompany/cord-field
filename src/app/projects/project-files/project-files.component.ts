@@ -2,10 +2,11 @@ import { AfterViewInit, Component, ViewChild } from '@angular/core';
 import { MatPaginator, MatSort, MatTableDataSource } from '@angular/material';
 import { ActivatedRoute, Router } from '@angular/router';
 import { TitleAware } from '@app/core/decorators';
-import { FileKeys, FileNode, FileNodeType } from '@app/core/models/file-node';
+import { Directory, FileKeys, FileNode, FileNodeType } from '@app/core/models/file-node';
 import { ProjectFilesService } from '@app/core/services/project-files.service';
+import { filterRequired } from '@app/core/util';
 import { SubscriptionComponent } from '@app/shared/components/subscription.component';
-import { combineLatest } from 'rxjs';
+import { BehaviorSubject, combineLatest, Observable } from 'rxjs';
 import { filter, switchMap, takeUntil } from 'rxjs/operators';
 import { ProjectViewStateService } from '../project-view-state.service';
 
@@ -21,6 +22,7 @@ export class ProjectFilesComponent extends SubscriptionComponent implements Afte
   readonly pageSizeOptions = [10, 25, 50];
   readonly FileNodeType = FileNodeType;
 
+  directory$ = new BehaviorSubject<Directory | null>(null);
   dataSource = new MatTableDataSource<FileNode>();
   totalCount = 0;
 
@@ -32,6 +34,14 @@ export class ProjectFilesComponent extends SubscriptionComponent implements Afte
               private projectViewState: ProjectViewStateService,
               private router: Router) {
     super();
+  }
+
+  get directory(): Observable<Directory> {
+    return this.directory$
+      .pipe(
+        takeUntil(this.unsubscribe),
+        filterRequired()
+      );
   }
 
   ngAfterViewInit(): void {
@@ -50,10 +60,12 @@ export class ProjectFilesComponent extends SubscriptionComponent implements Afte
         switchMap(([params, project]) =>
           this.fileService.getDirectory(project.id, params.parent))
       )
-      .subscribe(directory => {
-        this.dataSource.data = directory.children;
-        this.totalCount = directory.children.length;
-      });
+      .subscribe(this.directory$);
+
+    this.directory.subscribe(directory => {
+      this.dataSource.data = directory.children;
+      this.totalCount = directory.children.length;
+    });
   }
 
   formatFileSize(bytes: number): string {

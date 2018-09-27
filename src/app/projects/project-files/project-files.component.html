@@ -2,7 +2,7 @@
 
   <mat-drawer-content>
     <mat-toolbar>
-      <h3 class="mat-title">Files</h3>
+      <app-file-breadcrumbs [directory]="directory$.value"></app-file-breadcrumbs>
 
       <span class="spacer"></span>
       <button mat-icon-button class="mat-primary">
