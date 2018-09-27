@@ -1,10 +1,11 @@
 import { AfterViewInit, Component, ViewChild } from '@angular/core';
-import { MatPaginator, MatSort, MatTableDataSource } from '@angular/material';
+import { MatDialog, MatPaginator, MatSort, MatTableDataSource } from '@angular/material';
 import { ActivatedRoute, Router } from '@angular/router';
 import { TitleAware } from '@app/core/decorators';
 import { Directory, FileKeys, FileNode, FileNodeType } from '@app/core/models/file-node';
 import { ProjectFilesService } from '@app/core/services/project-files.service';
 import { filterRequired } from '@app/core/util';
+import { CreateDirectoryDialogComponent } from '@app/projects/project-files/create-directory-dialog/create-directory-dialog.component';
 import { SubscriptionComponent } from '@app/shared/components/subscription.component';
 import { BehaviorSubject, combineLatest, Observable } from 'rxjs';
 import { filter, map, startWith, switchMap, takeUntil } from 'rxjs/operators';
@@ -32,7 +33,8 @@ export class ProjectFilesComponent extends SubscriptionComponent implements Afte
   constructor(private activatedRoute: ActivatedRoute,
               private fileService: ProjectFilesService,
               private projectViewState: ProjectViewStateService,
-              private router: Router) {
+              private router: Router,
+              private dialog: MatDialog) {
     super();
   }
 
@@ -92,5 +94,23 @@ export class ProjectFilesComponent extends SubscriptionComponent implements Afte
       queryParams: { parent: node.id },
       relativeTo: this.activatedRoute
     });
+  }
+
+  onCreateDir() {
+    const directory = this.directory$.value;
+    if (!directory) {
+      return;
+    }
+
+    CreateDirectoryDialogComponent
+      .open(this.dialog, directory)
+      .afterClosed()
+      .pipe(takeUntil(this.unsubscribe))
+      .subscribe(dir => {
+        if (!dir) {
+          return;
+        }
+        this.directory$.next(directory.withChild(dir));
+      });
   }
 }

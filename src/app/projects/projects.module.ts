@@ -3,6 +3,7 @@ import { NgModule } from '@angular/core';
 import { SharedModule } from '../shared/shared.module';
 import { ProjectBudgetComponent } from './project-budget/project-budget.component';
 import { ProjectEngagementDetailsComponent } from './project-engagement-details/project-engagement-details.component';
+import { CreateDirectoryDialogComponent } from './project-files/create-directory-dialog/create-directory-dialog.component';
 import { FileBreadcrumbsComponent } from './project-files/file-breadcrumbs/file-breadcrumbs.component';
 import { ProjectFilesComponent } from './project-files/project-files.component';
 import { ProjectFormsComponent } from './project-forms/project-forms.component';
@@ -32,6 +33,7 @@ import { ProjectsRoutingModule } from './projects-routing.module';
     ProjectsRoutingModule
   ],
   declarations: [
+    CreateDirectoryDialogComponent,
     FileBreadcrumbsComponent,
     ProjectBudgetComponent,
     ProjectComponent,
@@ -54,6 +56,7 @@ import { ProjectsRoutingModule } from './projects-routing.module';
     ProjectStatusComponent
   ],
   entryComponents: [
+    CreateDirectoryDialogComponent,
     ProjectTeamMemberAddComponent,
     ProjectTeamMemberRoleDialogComponent
   ]

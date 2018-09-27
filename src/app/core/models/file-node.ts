@@ -1,3 +1,4 @@
+import { clone } from '@app/core/util';
 import { DateTime } from 'luxon';
 import { buildEnum } from './enum';
 import { User } from './user';
@@ -35,6 +36,24 @@ export class File extends BaseNode {
 export class Directory extends BaseNode {
   type: FileNodeType.Directory;
   children: FileNode[];
+
+  /**
+   * Return new directory with child node removed.
+   */
+  withoutChild(child: FileNode) {
+    const newDir = clone(this);
+    newDir.children = [...this.children.filter(n => n.id !== child.id)];
+    return newDir;
+  }
+
+  /**
+   * Return new directory with child added or replaced.
+   */
+  withChild(child: FileNode) {
+    const newDir = this.withoutChild(child);
+    newDir.children.push(child);
+    return newDir;
+  }
 }
 
 export function fromJson(json: any): FileNode {
