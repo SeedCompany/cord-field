@@ -1,13 +1,12 @@
 import { AfterViewInit, Component, ViewChild } from '@angular/core';
-import { MatPaginator, MatSort, MatTableDataSource, PageEvent, Sort } from '@angular/material';
+import { MatPaginator, MatSort, MatTableDataSource } from '@angular/material';
 import { ActivatedRoute, Router } from '@angular/router';
 import { TitleAware } from '@app/core/decorators';
-import { FileList, FileNode, FileNodeType } from '@app/core/models/file-node';
-
+import { FileKeys, FileNode, FileNodeType } from '@app/core/models/file-node';
 import { ProjectFilesService } from '@app/core/services/project-files.service';
+import { SubscriptionComponent } from '@app/shared/components/subscription.component';
 import { combineLatest } from 'rxjs';
-import { startWith, switchMap, takeUntil, tap } from 'rxjs/operators';
-import { ProjectTabComponent } from '../abstract-project-tab';
+import { filter, switchMap, takeUntil } from 'rxjs/operators';
 import { ProjectViewStateService } from '../project-view-state.service';
 
 @Component({
@@ -16,55 +15,44 @@ import { ProjectViewStateService } from '../project-view-state.service';
   styleUrls: ['./project-files.component.scss']
 })
 @TitleAware('Files')
-export class ProjectFilesComponent extends ProjectTabComponent implements AfterViewInit {
+export class ProjectFilesComponent extends SubscriptionComponent implements AfterViewInit {
 
-  readonly displayedColumns = ['name', 'createdAt', 'owner', 'type', 'size'];
+  readonly displayedColumns: FileKeys[] = ['name', 'createdAt', 'owner', 'type', 'size'];
   readonly pageSizeOptions = [10, 25, 50];
   readonly FileNodeType = FileNodeType;
 
+  dataSource = new MatTableDataSource<FileNode>();
   totalCount = 0;
-  fileSource = new MatTableDataSource<FileNode>();
 
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
 
   constructor(private activatedRoute: ActivatedRoute,
               private fileService: ProjectFilesService,
-              projectViewState: ProjectViewStateService,
+              private projectViewState: ProjectViewStateService,
               private router: Router) {
-    super(projectViewState);
+    super();
   }
 
   ngAfterViewInit(): void {
+    this.dataSource.sort = this.sort;
+    this.dataSource.paginator = this.paginator;
 
-    this.projectViewState.project
-      .pipe(takeUntil(this.unsubscribe))
-      .subscribe(() => {
-        combineLatest(
-          this.sort.sortChange
-            .pipe(
-              tap(() => this.paginator.pageIndex = 0),
-              startWith({ active: 'createdAt', direction: 'desc' } as Sort)
-            ),
-          this.paginator.page
-            .pipe(startWith({ pageIndex: 0, pageSize: 10, length: 0 } as PageEvent)),
-          this.activatedRoute.queryParams
+    combineLatest(
+      this.activatedRoute.queryParams,
+      this.projectViewState.project
+        .pipe(
+          filter(project => Boolean(project.id))
         )
-          .pipe(switchMap(([sort, page, params]) => {
-            return this.fileService.getFiles(
-              this.project.id,
-              params.parentId,
-              sort.active as keyof FileNode,
-              sort.direction,
-              page.pageIndex * page.pageSize,
-              page.pageSize
-            );
-
-          }))
-          .subscribe((data: FileList) => {
-            this.fileSource.data = data.files;
-            this.totalCount = data.total;
-          });
+    )
+      .pipe(
+        takeUntil(this.unsubscribe),
+        switchMap(([params, project]) =>
+          this.fileService.getDirectory(project.id, params.parent))
+      )
+      .subscribe(directory => {
+        this.dataSource.data = directory.children;
+        this.totalCount = directory.children.length;
       });
   }
 
@@ -77,11 +65,13 @@ export class ProjectFilesComponent extends ProjectTabComponent implements AfterV
     return `${Math.round(bytes / Math.pow(1024, sizeIndex))} ${sizes[sizeIndex]}`;
   }
 
-  async validateNavigation(file: FileNode): Promise<void> {
-    if (file.type === FileNodeType.Directory) {
-      await this.router.navigate([`/projects/${this.project.id}/files`], {
-        queryParams: { parentId: file.id }
-      });
+  onNodeClick(node: FileNode): void {
+    if (node.isFile()) {
+      return;
     }
+    this.router.navigate(['.'], {
+      queryParams: { parent: node.id },
+      relativeTo: this.activatedRoute
+    });
   }
 }

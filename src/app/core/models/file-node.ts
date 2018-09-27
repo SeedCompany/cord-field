@@ -2,45 +2,73 @@ import { DateTime } from 'luxon';
 import { buildEnum } from './enum';
 import { User } from './user';
 
-export class FileNode {
+export type FileNode = File | Directory;
+
+// Type is split so WebStorm still autocompletes the key values
+// It autocompletes the exclusion as well, but tsc catches that.
+type Keys = keyof File | keyof Directory;
+export type FileKeys = Exclude<Keys, 'isFile' | 'isDir'>;
+
+class BaseNode {
   id: string;
+  projectId: string;
   type: FileNodeType;
   name: string;
-  createdAt: DateTime;
-  modifiedAt: DateTime | null;
+  createdAt: DateTime | null;
   owner: User;
-  size: number | null;
+  parents: ParentRef[];
 
-  static fromJson(json: any): FileNode {
-    json = json || {};
+  isFile(): this is File {
+    return this.type === FileNodeType.File;
+  }
+  isDir(): this is Directory {
+    return this.type === FileNodeType.Directory;
+  }
+}
 
-    const file = new FileNode();
+export class File extends BaseNode {
+  type: FileNodeType.File;
+  modifiedAt: DateTime | null;
+  size: number;
+}
 
-    file.id = json.id;
-    file.createdAt = DateTime.fromISO(json.createdAt);
-    file.modifiedAt = json.modifiedAt ? DateTime.fromISO(json.modifiedAt) : null;
-    file.name = json.name;
-    file.type = json.type;
-    file.owner = User.fromJson(json.owner);
-    file.size = file.type === FileNodeType.Directory ? null : json.size || 0;
+export class Directory extends BaseNode {
+  type: FileNodeType.Directory;
+  children: FileNode[];
+}
 
-    return file;
+export function fromJson(json: any): FileNode {
+  let node;
+  if (json.type === FileNodeType.Directory) {
+    node = new Directory();
+    node.children = ((json.children || []) as FileNode[]).map(child => fromJson({...child, projectId: json.projectId}));
+  } else if (json.type === FileNodeType.File) {
+    node = new File();
+    node.modifiedAt = json.modifiedAt ? DateTime.fromISO(json.modifiedAt) : null;
+    node.size = json.size || 0;
+  } else {
+    throw new Error('Unknown File Type');
   }
 
-  static fromJsonArray(files: any): FileNode[] {
-    files = files || [];
-    return files.map(FileNode.fromJson);
-  }
+  node.id = json.id;
+  node.projectId = json.projectId;
+  node.createdAt = json.createdAt ? DateTime.fromISO(json.createdAt) : null;
+  node.name = json.name;
+  node.type = json.type;
+  node.owner = User.fromJson(json.owner || {});
+  node.parents = json.parents;
+
+  return node;
+}
+
+export interface ParentRef {
+  id: string;
+  name: string;
 }
 
 export enum FileNodeType {
-  Directory = 'd',
-  File = 'f'
-}
-
-export interface FileList {
-  files: FileNode[];
-  total: number;
+  Directory = 'dir',
+  File = 'file'
 }
 
 export namespace FileNodeType {
@@ -49,4 +77,3 @@ export namespace FileNodeType {
     [FileNodeType.File]: 'File'
   });
 }
-

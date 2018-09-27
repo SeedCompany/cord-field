@@ -13,16 +13,20 @@
       </button>
     </mat-toolbar>
 
-    <mat-table [dataSource]="fileSource" matSort>
-
+    <mat-table [dataSource]="dataSource"
+               matSort
+               matSortActive="createdAt"
+               matSortDirection="desc"
+               [matSortDisableClear]="true"
+    >
       <ng-container matColumnDef="name">
         <mat-header-cell *matHeaderCellDef mat-sort-header>Name</mat-header-cell>
-        <mat-cell *matCellDef="let file;" class="name"> {{ file.name }}</mat-cell>
+        <mat-cell *matCellDef="let file;" class="name">{{ file.name }}</mat-cell>
       </ng-container>
 
       <ng-container matColumnDef="createdAt">
-        <mat-header-cell *matHeaderCellDef mat-sort-header>Uploaded</mat-header-cell>
-        <mat-cell *matCellDef="let file;"> {{ file.createdAt.toLocaleString() }}</mat-cell>
+        <mat-header-cell *matHeaderCellDef mat-sort-header>Created</mat-header-cell>
+        <mat-cell *matCellDef="let file;">{{ file.createdAt?.toLocaleString() }}</mat-cell>
       </ng-container>
 
       <ng-container matColumnDef="owner">
@@ -38,13 +42,14 @@
       <ng-container matColumnDef="size">
         <mat-header-cell *matHeaderCellDef mat-sort-header>File Size</mat-header-cell>
         <mat-cell *matCellDef="let file;">
-          <span>{{ file.size ? formatFileSize(file.size) : '' }}</span>
+          <span>{{ file.isFile() ? formatFileSize(file.size) : '' }}</span>
 
-          <button mat-icon-button mat-button [matMenuTriggerFor]="fileMenu" [matMenuTriggerFor]="context"
+          <button mat-icon-button
+                  [matMenuTriggerFor]="context"
                   (click)="$event.stopPropagation()">
             <mat-icon>more_vert</mat-icon>
           </button>
-          <mat-menu #fileMenu="matMenu">
+          <mat-menu #context="matMenu">
             <button mat-menu-item>
               <mat-icon>border_color</mat-icon>
               <span>Rename</span>
@@ -54,9 +59,9 @@
       </ng-container>
 
       <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
-      <mat-row [class.row-hover]="file.type == FileNodeType.Directory"
+      <mat-row [class.row-hover]="file.isDir()"
                *matRowDef="let file; columns: displayedColumns;"
-               (click)="validateNavigation(file)">
+               (click)="onNodeClick(file)">
       </mat-row>
     </mat-table>
     <mat-paginator [pageSizeOptions]="pageSizeOptions"
