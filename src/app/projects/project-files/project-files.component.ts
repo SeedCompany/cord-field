@@ -7,7 +7,7 @@ import { ProjectFilesService } from '@app/core/services/project-files.service';
 import { filterRequired } from '@app/core/util';
 import { SubscriptionComponent } from '@app/shared/components/subscription.component';
 import { BehaviorSubject, combineLatest, Observable } from 'rxjs';
-import { filter, switchMap, takeUntil } from 'rxjs/operators';
+import { filter, map, startWith, switchMap, takeUntil } from 'rxjs/operators';
 import { ProjectViewStateService } from '../project-view-state.service';
 
 @Component({
@@ -15,7 +15,7 @@ import { ProjectViewStateService } from '../project-view-state.service';
   templateUrl: './project-files.component.html',
   styleUrls: ['./project-files.component.scss']
 })
-@TitleAware('Files')
+@TitleAware()
 export class ProjectFilesComponent extends SubscriptionComponent implements AfterViewInit {
 
   readonly displayedColumns: FileKeys[] = ['name', 'createdAt', 'owner', 'type', 'size'];
@@ -42,6 +42,13 @@ export class ProjectFilesComponent extends SubscriptionComponent implements Afte
         takeUntil(this.unsubscribe),
         filterRequired()
       );
+  }
+
+  get title() {
+    return this.directory.pipe(
+      startWith({ name: null }),
+      map(dir => [dir.name, 'Files'])
+    );
   }
 
   ngAfterViewInit(): void {
