@@ -113,4 +113,12 @@ export class ProjectFilesComponent extends SubscriptionComponent implements Afte
         this.directory$.next(directory.withChild(dir));
       });
   }
+
+  async onDelete(node: FileNode) {
+    await this.fileService.delete(node);
+    const directory = this.directory$.value;
+    if (directory) {
+      this.directory$.next(directory.withoutChild(node));
+    }
+  }
 }

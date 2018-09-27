@@ -3,7 +3,7 @@ import { AuthenticationService } from '@app/core/services/authentication.service
 import { DateTime } from 'luxon';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
-import { Directory, FileNodeType, fromJson } from '../models/file-node';
+import { Directory, FileNode, FileNodeType, fromJson } from '../models/file-node';
 import { PloApiService } from './http/plo-api.service';
 
 @Injectable({
@@ -41,5 +41,9 @@ export class ProjectFilesService {
       createdAt: DateTime.local().toISO(),
       owner
     }) as Directory;
+  }
+
+  async delete(node: FileNode): Promise<void> {
+    await this.ploApi.delete(`/projects/${node.projectId}/files/${node.id}`).toPromise();
   }
 }
