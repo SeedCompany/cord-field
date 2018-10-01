@@ -1,6 +1,6 @@
 import { animate, state, style, transition, trigger } from '@angular/animations';
 import { AfterViewInit, Component, ViewChild } from '@angular/core';
-import { MatPaginator, MatSort, MatTableDataSource, PageEvent, Sort } from '@angular/material';
+import { MatPaginator, MatSort, MatTableDataSource, PageEvent } from '@angular/material';
 import { Router } from '@angular/router';
 import { TypedMatSort } from '@app/core/util';
 import { BehaviorSubject, combineLatest, of as observableOf } from 'rxjs';
@@ -87,7 +87,7 @@ export class ProjectListComponent implements AfterViewInit {
           observableOf(filters)
         );
       }))
-      .subscribe(([{ projects, count }, filters]) => {
+      .subscribe(([{projects, count}, filters]) => {
         this.projectSource.data = projects;
         this.totalCount = count;
         this.filtersActive = Object.keys(filters).length > 0;
