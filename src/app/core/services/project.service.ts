@@ -5,17 +5,11 @@ import { DateTime } from 'luxon';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 
+import { AuthenticationService } from '@app/core/services/authentication.service';
 import { ModifiedProject } from '../../projects/project-view-state.service';
 import { SaveResult } from '../abstract-view-state';
 import { ProjectCreationResult } from '../create-dialogs/project-create-dialog/project-create-dialog.component';
-import {
-  Project,
-  ProjectFilter,
-  ProjectSensitivity,
-  ProjectStatus,
-  ProjectsWithCount,
-  ProjectType
-} from '../models/project';
+import { Project, ProjectFilter, ProjectSensitivity, ProjectStatus, ProjectsWithCount, ProjectType } from '../models/project';
 import { HttpParams } from './http/abstract-http-client';
 import { PloApiService } from './http/plo-api.service';
 
@@ -26,8 +20,8 @@ export interface ProjectFilterAPI {
   locationId?: string[];
   team?: string[];
   sensitivity?: ProjectSensitivity[];
-  createdAt?: { gte?: DateTime, lte?: DateTime };
-  updatedAt?: { gte?: DateTime, lte?: DateTime };
+  createdAt?: {gte?: DateTime, lte?: DateTime};
+  updatedAt?: {gte?: DateTime, lte?: DateTime};
 }
 
 @Injectable({
@@ -35,7 +29,8 @@ export interface ProjectFilterAPI {
 })
 export class ProjectService {
 
-  constructor(private ploApi: PloApiService) {
+  constructor(private authService: AuthenticationService,
+              private ploApi: PloApiService) {
   }
 
   getProject(id: string): Observable<Project> {
@@ -44,13 +39,13 @@ export class ProjectService {
       .pipe(map(Project.fromJson));
   }
 
-  getProjects(sort: keyof Project = 'updatedAt',
-              order: SortDirection = 'desc',
-              skip = 0,
-              limit = 10,
-              filter?: ProjectFilter,
-              fields?: Array<keyof Project>,
-              isMine?: boolean): Observable<ProjectsWithCount> {
+  async getProjects(sort: keyof Project = 'updatedAt',
+                    order: SortDirection = 'desc',
+                    skip = 0,
+                    limit = 10,
+                    filter?: ProjectFilter,
+                    fields?: Array<keyof Project>,
+                    isMine?: boolean): Promise<ProjectsWithCount> {
 
     const params: HttpParams = {
       sort,
@@ -60,7 +55,8 @@ export class ProjectService {
     };
 
     if (isMine) {
-      params.userId = 'me';
+      const user = await this.authService.getCurrentUser();
+      params.userId = user!.id;
     }
     if (filter) {
       const filterAPI = this.buildFilter(filter);
@@ -78,7 +74,7 @@ export class ProjectService {
           projects: Project.fromJsonArray(response.body),
           count: Number(response.headers.get('x-sc-total-count')) || 0
         };
-      }));
+      })).toPromise();
   }
 
   isProjectNameTaken(name: string): Promise<boolean> {
@@ -97,7 +93,7 @@ export class ProjectService {
   }
 
   async createProject(project: ProjectCreationResult): Promise<string> {
-    const obj = await this.ploApi.post<{ id: string }>('/projects', project).toPromise();
+    const obj = await this.ploApi.post<{id: string}>('/projects', project).toPromise();
     return obj.id;
   }
 

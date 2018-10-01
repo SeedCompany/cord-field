@@ -80,7 +80,6 @@ describe('ProjectService', () => {
 
     projectService
       .getProjects('updatedAt', 'desc', 0, 10)
-      .toPromise()
       .then((projectsWithCount) => {
         const projects = projectsWithCount.projects;
         expect(projectsWithCount.count).toBe(0);
