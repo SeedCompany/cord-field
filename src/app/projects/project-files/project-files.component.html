@@ -5,9 +5,12 @@
       <app-file-breadcrumbs [directory]="directory$.value"></app-file-breadcrumbs>
 
       <span class="spacer"></span>
-      <button mat-icon-button class="mat-primary">
+
+      <input type="file" style="display: none" #fileInput (change)="onUpload($event)">
+      <button mat-icon-button class="mat-primary" (click)="fileInput.click()">
         <mat-icon>file_upload</mat-icon>
       </button>
+
       <button mat-icon-button class="mat-primary" (click)="onCreateDir()">
         <mat-icon>create_new_folder</mat-icon>
       </button>

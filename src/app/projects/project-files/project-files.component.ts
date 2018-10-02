@@ -99,6 +99,34 @@ export class ProjectFilesComponent extends SubscriptionComponent implements Afte
     });
   }
 
+  async onUpload(event: Event) {
+    const directory = this.directory$.value;
+    if (!directory) {
+      return;
+    }
+
+    const input = event.target as HTMLInputElement;
+    if (!input.files || input.files.length === 0) {
+      return;
+    }
+    const uploadFile = input.files[0];
+    input.value = ''; // Clear input so it can be used again
+
+    const ref = this.snackBar.open(`Uploading ${uploadFile.name}`);
+    const notify = (message: string) => {
+      ref.dismiss();
+      this.snackBar.open(`${message} ${uploadFile.name}`, undefined, {duration: 3000});
+    };
+
+    try {
+      const file = await this.fileService.upload(uploadFile, directory);
+      this.directory$.next(directory.withChild(file));
+      notify('Uploaded');
+    } catch (e) {
+      notify('Failed to upload');
+    }
+  }
+
   onCreateDir() {
     const directory = this.directory$.value;
     if (!directory) {
