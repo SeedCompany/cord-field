@@ -1,6 +1,9 @@
-<div class="picture" *ngIf="project">
-  <div class="location mat-title" *ngIf="project.location">{{ project.location.displayName }}</div>
-  <div class="sensitivity mat-subheading-1">{{ ProjectSensitivity.forUI(project.sensitivity) }} Sensitivity</div>
+<div class="picture"
+     *ngIf="project">
+  <div class="location mat-title"
+       *ngIf="project?.location">{{ project?.location?.displayName }}
+  </div>
+  <div class="sensitivity mat-subheading-1">{{ ProjectSensitivity.forUI(project?.sensitivity) }} Sensitivity</div>
 </div>
 <mat-divider></mat-divider>
 <app-project-status [status]="project?.status"></app-project-status>
@@ -10,6 +13,6 @@
      mat-list-item
      [routerLink]="'.' + link.path"
      routerLinkActive="active"
-     [routerLinkActiveOptions]="{exact: true}"
-  >{{ link.label }}</a>
+     [routerLinkActiveOptions]="{exact: true}">{{ link.label }}
+  </a>
 </mat-nav-list>

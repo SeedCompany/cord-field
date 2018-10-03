@@ -26,6 +26,7 @@ const routes: Routes = [
           {path: 'forms', component: ProjectFormsComponent}
         ]
       },
+      {path: 'forms', component: ProjectFormsComponent},
       {path: 'plan', component: ProjectPlanComponent},
       {path: 'budget', component: ProjectBudgetComponent},
       {path: 'files', component: ProjectFilesComponent},

@@ -2,4 +2,27 @@
 
 :host {
   @extend %component-defaults;
+  background: mat-background($theme, background);
+
+  margin: 24px;
+}
+
+mat-card {
+  margin-bottom: 24px;
+}
+
+mat-card-content {
+  display: flex;
+  flex-direction: column;
+}
+
+.flex-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  // Add horizontal spacing between form fields
+  > * + mat-form-field {
+    margin-left: 12px;
+  }
 }
