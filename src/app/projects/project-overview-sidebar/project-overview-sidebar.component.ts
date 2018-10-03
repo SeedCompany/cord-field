@@ -15,7 +15,6 @@ export class ProjectOverviewSidebarComponent {
   @Input() project: Project | null;
 
   readonly ProjectSensitivity = ProjectSensitivity;
-  readonly links: LinkConfig[] = [];
 
   trackLinkBy(index: number, link: LinkConfig) {
     return link.label;

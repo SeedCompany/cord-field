@@ -8,11 +8,3 @@
 <mat-divider></mat-divider>
 <app-project-status [status]="project?.status"></app-project-status>
 <mat-divider></mat-divider>
-<mat-nav-list>
-  <a *ngFor="let link of links; trackBy: trackLinkBy"
-     mat-list-item
-     [routerLink]="'.' + link.path"
-     routerLinkActive="active"
-     [routerLinkActiveOptions]="{exact: true}">{{ link.label }}
-  </a>
-</mat-nav-list>
