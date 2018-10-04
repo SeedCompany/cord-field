@@ -2,8 +2,10 @@ import { DateTime } from 'luxon';
 import { User } from './user';
 
 function base64Decode(encoded: string): string {
-  // Add removed '=' at end
-  encoded += Array(5 - encoded.length % 4).join('=');
+  // Re-add the removed 0-2 '=' chars at end
+  const remainder = encoded.length % 4;
+  encoded += remainder === 2 ? '==' : remainder === 3 ? '=' : '';
+
   encoded = encoded
     .replace(/\-/g, '+') // Convert '-' to '+'
     .replace(/\_/g, '/'); // Convert '_' to '/'
