@@ -12,15 +12,9 @@ interface LinkConfig {
   styleUrls: ['./project-overview-sidebar.component.scss']
 })
 export class ProjectOverviewSidebarComponent {
-
-  readonly ProjectSensitivity = ProjectSensitivity;
-
   @Input() project: Project | null;
 
-  readonly links: LinkConfig[] = [
-    {path: '', label: 'Engagement Details'},
-    {path: '/forms', label: 'Project Forms'}
-  ];
+  readonly ProjectSensitivity = ProjectSensitivity;
 
   trackLinkBy(index: number, link: LinkConfig) {
     return link.label;

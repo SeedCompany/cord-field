@@ -22,10 +22,10 @@ const routes: Routes = [
         path: 'overview',
         component: ProjectOverviewComponent,
         children: [
-          {path: '', component: ProjectEngagementDetailsComponent, pathMatch: 'full'},
-          {path: 'forms', component: ProjectFormsComponent}
+          {path: '', component: ProjectEngagementDetailsComponent, pathMatch: 'full'}
         ]
       },
+      {path: 'forms', component: ProjectFormsComponent},
       {path: 'plan', component: ProjectPlanComponent},
       {path: 'budget', component: ProjectBudgetComponent},
       {path: 'files', component: ProjectFilesComponent},

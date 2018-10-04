@@ -29,6 +29,7 @@ export class ProjectComponent extends SubscriptionComponent implements OnInit, T
 
   readonly tabs: TabConfig[] = [
     {path: 'overview', label: 'Overview', saveFab: true},
+    {path: 'forms', label: 'Forms', saveFab: true},
     {path: 'plan', label: 'Plan', saveFab: true},
     {path: 'budget', label: 'Budget', saveFab: true},
     {path: 'files', label: 'Files'},
