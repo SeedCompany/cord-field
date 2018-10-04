@@ -69,10 +69,13 @@ mat-header-row {
   &.status-active {
     background: green;
   }
-  &.status-inactive {
+  &.status-rejected, &.status-suspended, &.status-terminated {
     background: red;
   }
-  &.status-in_development {
+  &.status-in_development, &.status-pending_approval {
     background: orange;
+  }
+  &.status-completed {
+    background: gray;
   }
 }
