@@ -2,4 +2,44 @@
 
 :host {
   @extend %component-defaults;
+  background: mat-background($theme, background);
+
+  padding: 24px;
+  overflow-y: scroll;
+}
+
+mat-card {
+  margin-bottom: 24px;
+}
+
+mat-card-content {
+  display: flex;
+  flex-direction: column;
+}
+
+.mou-budget {
+  &__title {
+    margin: 0;
+  }
+
+  &__total {
+    margin-top: -8px;
+    margin-bottom: 16px;
+    font-size: 18px;
+  }
+
+  &__amount {
+    top: -4px;
+  }
+}
+
+.flex-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  // Add horizontal spacing between form fields
+  > * + mat-form-field {
+    margin-left: 12px;
+  }
 }

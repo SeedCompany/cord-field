@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import { ProjectBudget } from '@app/core/models/budget';
 import { Engagement } from '@app/core/models/engagement';
 import { clone } from '@app/core/util';
 import { DateTime } from 'luxon';
@@ -32,6 +33,11 @@ export interface ModifiedProject {
     update?: TeamMemberForSaveAPI[];
     remove?: string[];
   };
+  budget?: {
+    add?: string[];
+    update?: string[];
+    remove?: string[];
+  };
 }
 
 const config: ChangeConfig<Project> = {
@@ -62,6 +68,10 @@ const config: ChangeConfig<Project> = {
   team: {
     accessor: returnId,
     toServer: mapChangeList<TeamMember, TeamMemberForSaveAPI, string>(TeamMember.forSaveAPI, returnId)
+  },
+  budget: {
+    accessor: returnId,
+    toServer: mapChangeList<ProjectBudget, string, string>(returnId, returnId)
   }
 };
 

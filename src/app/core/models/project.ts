@@ -1,3 +1,4 @@
+import { ProjectBudget } from '@app/core/models/budget';
 import { Engagement } from '@app/core/models/engagement';
 import { DateTime } from 'luxon';
 import { Language } from './language';
@@ -26,6 +27,7 @@ export class Project {
   partnerships: Partnership[];
   sensitivity: ProjectSensitivity;
   team: TeamMember[];
+  budget: ProjectBudget[];
   updatedAt: DateTime;
   estimatedSubmission: DateTime | null;
   engagements: Engagement[];
