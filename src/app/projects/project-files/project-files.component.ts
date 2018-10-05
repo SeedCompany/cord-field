@@ -8,6 +8,7 @@ import { ProjectFilesService } from '@app/core/services/project-files.service';
 import { filterRequired } from '@app/core/util';
 import { CreateDirectoryDialogComponent } from '@app/projects/project-files/create-directory-dialog/create-directory-dialog.component';
 import { FileRenameDialogComponent } from '@app/projects/project-files/file-rename-dialog/file-rename-dialog.component';
+import { OverwriteFileWarningComponent } from '@app/projects/project-files/overwrite-file-warning/overwrite-file-warning.component';
 import { SubscriptionComponent } from '@app/shared/components/subscription.component';
 import { BehaviorSubject, combineLatest, Observable } from 'rxjs';
 import { filter, map, startWith, switchMap, takeUntil } from 'rxjs/operators';
@@ -100,7 +101,7 @@ export class ProjectFilesComponent extends SubscriptionComponent implements Afte
     });
   }
 
-  async onUpload(event: Event) {
+  onUpload(event: Event) {
     const directory = this.directory$.value;
     if (!directory) {
       return;
@@ -113,14 +114,32 @@ export class ProjectFilesComponent extends SubscriptionComponent implements Afte
     const uploadFile = input.files[0];
     input.value = ''; // Clear input so it can be used again
 
-    const ref = this.snackBar.open(`Uploading ${uploadFile.name}`);
+    if (!directory.children.some(node => node.name === uploadFile.name)) {
+      this.uploadFile(uploadFile, directory);
+      return;
+    }
+
+    OverwriteFileWarningComponent
+      .open(this.dialog, directory, uploadFile)
+      .afterClosed()
+      .pipe(takeUntil(this.unsubscribe))
+      .subscribe(name => {
+        if (!name) {
+          return;
+        }
+        this.uploadFile(uploadFile, directory, name);
+      });
+  }
+
+  private async uploadFile(uploadFile: File, directory: Directory, name = uploadFile.name) {
+    const ref = this.snackBar.open(`Uploading ${name}`);
     const notify = (message: string) => {
       ref.dismiss();
-      this.snackBar.open(`${message} ${uploadFile.name}`, undefined, {duration: 3000});
+      this.snackBar.open(`${message} ${name}`, undefined, {duration: 3000});
     };
 
     try {
-      const file = await this.fileService.upload(uploadFile, directory);
+      const file = await this.fileService.upload(uploadFile, name, directory);
       this.directory$.next(directory.withChild(file));
       notify('Uploaded');
     } catch (e) {

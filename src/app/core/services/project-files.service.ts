@@ -61,16 +61,16 @@ export class ProjectFilesService {
     }) as Directory;
   }
 
-  async upload(uploadFile: File, parent: Directory): Promise<CordFile> {
-    const { file: tempFile, preSignedUrl, fileVersionId } = await this.createNode(uploadFile, parent).toPromise();
+  async upload(uploadFile: File, name: string, parent: Directory): Promise<CordFile> {
+    const { file: tempFile, preSignedUrl, fileVersionId } = await this.createNode(uploadFile, name, parent).toPromise();
     await this.uploadToS3(preSignedUrl, uploadFile);
     return this.updateFileVersion(tempFile, fileVersionId).toPromise();
   }
 
-  private createNode(uploadFile: File, parent: Directory) {
+  private createNode(uploadFile: File, name: string, parent: Directory) {
     return this.ploApi
       .post<CordFile & { preSignedUrl: string, fileVersionId: string }>(`/projects/${parent.projectId}/files`, {
-        name: uploadFile.name,
+        name,
         parentId: parent.id,
         mimeType: uploadFile.type,
         type: FileNodeType.File
