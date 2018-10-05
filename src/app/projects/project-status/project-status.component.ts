@@ -18,7 +18,6 @@ export class ProjectStatusComponent extends SubscriptionComponent implements OnI
   readonly ProjectStatus = ProjectStatus;
 
   statusCtrl: TypedFormControl<ProjectStatus> = new FormControl(status);
-  currentStatus: ProjectStatus;
 
   constructor(private viewStateService: ProjectViewStateService,
               private projectService: ProjectService) {
@@ -31,10 +30,6 @@ export class ProjectStatusComponent extends SubscriptionComponent implements OnI
       .subscribe(status => {
         this.viewStateService.change({ status });
       });
-
-    this.viewStateService.project.subscribe(project => {
-      this.currentStatus = project.status;
-    });
   }
 
   ngOnChanges(changes: SimpleChanges): void {
@@ -44,7 +39,7 @@ export class ProjectStatusComponent extends SubscriptionComponent implements OnI
   }
 
   getStatuses(): Array<[string, ProjectStatus]> {
-    return this.projectService.getAvailableStatuses(this.currentStatus);
+    return this.projectService.getAvailableStatuses(this.status);
   }
 
   trackByStatus(index: number, item: [string, ProjectStatus]): ProjectStatus {
