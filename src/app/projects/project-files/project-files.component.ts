@@ -7,6 +7,7 @@ import { SUPPORTS_DOWNLOADS } from '@app/core/services/downloader.service';
 import { ProjectFilesService } from '@app/core/services/project-files.service';
 import { filterRequired } from '@app/core/util';
 import { CreateDirectoryDialogComponent } from '@app/projects/project-files/create-directory-dialog/create-directory-dialog.component';
+import { FileRenameDialogComponent } from '@app/projects/project-files/file-rename-dialog/file-rename-dialog.component';
 import { SubscriptionComponent } from '@app/shared/components/subscription.component';
 import { BehaviorSubject, combineLatest, Observable } from 'rxjs';
 import { filter, map, startWith, switchMap, takeUntil } from 'rxjs/operators';
@@ -142,6 +143,24 @@ export class ProjectFilesComponent extends SubscriptionComponent implements Afte
           return;
         }
         this.directory$.next(directory.withChild(dir));
+      });
+  }
+
+  async onRename(node: FileNode) {
+    const directory = this.directory$.value;
+    if (!directory) {
+      return;
+    }
+
+    FileRenameDialogComponent
+      .open(this.dialog, directory, node)
+      .afterClosed()
+      .pipe(takeUntil(this.unsubscribe))
+      .subscribe(newNode => {
+        if (!newNode) {
+          return;
+        }
+        this.directory$.next(directory.withChild(newNode));
       });
   }
 

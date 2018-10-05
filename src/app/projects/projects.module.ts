@@ -5,6 +5,7 @@ import { ProjectBudgetComponent } from './project-budget/project-budget.componen
 import { ProjectEngagementDetailsComponent } from './project-engagement-details/project-engagement-details.component';
 import { CreateDirectoryDialogComponent } from './project-files/create-directory-dialog/create-directory-dialog.component';
 import { FileBreadcrumbsComponent } from './project-files/file-breadcrumbs/file-breadcrumbs.component';
+import { FileRenameDialogComponent } from './project-files/file-rename-dialog/file-rename-dialog.component';
 import { ProjectFilesComponent } from './project-files/project-files.component';
 import { ProjectFormsComponent } from './project-forms/project-forms.component';
 import { ProjectLanguagesComponent } from './project-languages/project-languages.component';
@@ -35,6 +36,7 @@ import { ProjectsRoutingModule } from './projects-routing.module';
   declarations: [
     CreateDirectoryDialogComponent,
     FileBreadcrumbsComponent,
+    FileRenameDialogComponent,
     ProjectBudgetComponent,
     ProjectComponent,
     ProjectEngagementDetailsComponent,
@@ -57,6 +59,7 @@ import { ProjectsRoutingModule } from './projects-routing.module';
   ],
   entryComponents: [
     CreateDirectoryDialogComponent,
+    FileRenameDialogComponent,
     ProjectTeamMemberAddComponent,
     ProjectTeamMemberRoleDialogComponent
   ]

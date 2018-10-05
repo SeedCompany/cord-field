@@ -2,6 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { AuthenticationService } from '@app/core/services/authentication.service';
 import { DownloaderService } from '@app/core/services/downloader.service';
+import { clone } from '@app/core/util';
 import { DateTime } from 'luxon';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
@@ -26,6 +27,19 @@ export class ProjectFilesService {
       .ploApi
       .get<Directory>(`/projects/${projectId}/files${dirId ? `/${dirId}` : ''}`)
       .pipe(map(node => fromJson({ ...node, projectId: projectId }) as Directory));
+  }
+
+  async rename<T extends FileNode>(newName: string, node: T, parent: Directory): Promise<T> {
+    await this.ploApi
+      .put(`/projects/${node.projectId}/files/${node.id}`, {
+        parentId: parent.id,
+        name: newName
+      })
+      .toPromise();
+
+    const cloned = clone(node);
+    cloned.name = newName;
+    return cloned;
   }
 
   async createDirectory(parent: Directory, name: string): Promise<Directory> {

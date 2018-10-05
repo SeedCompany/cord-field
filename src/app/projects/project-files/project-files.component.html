@@ -53,7 +53,7 @@
             <mat-icon>more_vert</mat-icon>
           </button>
           <mat-menu #context="matMenu">
-            <button mat-menu-item>
+            <button mat-menu-item (click)="onRename(file)">
               <mat-icon>border_color</mat-icon>
               <span>Rename</span>
             </button>
