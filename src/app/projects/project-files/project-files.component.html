@@ -37,9 +37,9 @@
         <mat-cell *matCellDef="let file;">{{ file.owner.fullName }}</mat-cell>
       </ng-container>
 
-      <ng-container matColumnDef="type">
+      <ng-container matColumnDef="category">
         <mat-header-cell *matHeaderCellDef mat-sort-header>Type</mat-header-cell>
-        <mat-cell *matCellDef="let file;">{{ FileNodeType.forUI(file.type) }}</mat-cell>
+        <mat-cell *matCellDef="let file;">{{ FileNodeCategory.forUI(file.category) }}</mat-cell>
       </ng-container>
 
       <ng-container matColumnDef="size">

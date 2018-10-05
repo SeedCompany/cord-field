@@ -14,6 +14,7 @@ class BaseNode {
   id: string;
   projectId: string;
   type: FileNodeType;
+  category: FileNodeCategory;
   name: string;
   createdAt: DateTime | null;
   owner: User;
@@ -76,6 +77,7 @@ export function fromJson(json: any): FileNode {
   node.createdAt = json.createdAt ? DateTime.fromISO(json.createdAt) : null;
   node.name = json.name;
   node.type = json.type;
+  node.category = json.category;
   node.owner = User.fromJson(json.owner || {});
   node.parents = json.parents;
 
@@ -102,5 +104,27 @@ export namespace FileNodeType {
   export const {entries, forUI, values, trackEntryBy, trackValueBy} = buildEnum<FileNodeType>(FileNodeType, {
     [FileNodeType.Directory]: 'Directory',
     [FileNodeType.File]: 'File'
+  });
+}
+
+export enum FileNodeCategory {
+  Audio = 'audio',
+  Directory = 'directory',
+  Document = 'doc',
+  Image = 'image',
+  Other = 'other',
+  Spreadsheet = 'spreadsheet',
+  Video = 'video'
+}
+
+export namespace FileNodeCategory {
+  export const {entries, forUI, values, trackEntryBy, trackValueBy} = buildEnum<FileNodeCategory>(FileNodeCategory, {
+    [FileNodeCategory.Audio]: 'Audio',
+    [FileNodeCategory.Directory]: 'Directory',
+    [FileNodeCategory.Document]: 'Document',
+    [FileNodeCategory.Image]: 'Image',
+    [FileNodeCategory.Other]: 'Other',
+    [FileNodeCategory.Spreadsheet]: 'Spreadsheet',
+    [FileNodeCategory.Video]: 'Video'
   });
 }

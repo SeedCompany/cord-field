@@ -2,7 +2,7 @@ import { AfterViewInit, Component, ViewChild } from '@angular/core';
 import { MatDialog, MatPaginator, MatSnackBar, MatSort, MatTableDataSource } from '@angular/material';
 import { ActivatedRoute, Router } from '@angular/router';
 import { TitleAware } from '@app/core/decorators';
-import { Directory, FileKeys, FileNode, FileNodeType } from '@app/core/models/file-node';
+import { Directory, FileKeys, FileNode, FileNodeCategory } from '@app/core/models/file-node';
 import { SUPPORTS_DOWNLOADS } from '@app/core/services/downloader.service';
 import { ProjectFilesService } from '@app/core/services/project-files.service';
 import { filterRequired } from '@app/core/util';
@@ -22,9 +22,9 @@ import { ProjectViewStateService } from '../project-view-state.service';
 @TitleAware()
 export class ProjectFilesComponent extends SubscriptionComponent implements AfterViewInit {
 
-  readonly displayedColumns: FileKeys[] = ['name', 'createdAt', 'owner', 'type', 'size'];
+  readonly displayedColumns: FileKeys[] = ['name', 'createdAt', 'owner', 'category', 'size'];
   readonly pageSizeOptions = [10, 25, 50];
-  readonly FileNodeType = FileNodeType;
+  readonly FileNodeCategory = FileNodeCategory;
   readonly supportsDownloads = SUPPORTS_DOWNLOADS;
 
   directory$ = new BehaviorSubject<Directory | null>(null);
