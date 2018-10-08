@@ -119,4 +119,38 @@ export class ProjectService {
 
     return {...rest, languages, locationId, team, ...date} as ProjectFilterAPI;
   }
+
+  getAvailableStatuses(status: ProjectStatus): Array<[string, ProjectStatus]> {
+
+    if (status === ProjectStatus.InDevelopment) {
+      return [
+        ['Submit for Approval', ProjectStatus.PendingApproval]
+      ];
+    }
+
+    if (status === ProjectStatus.PendingApproval) {
+      return [
+        ['Send Back for Corrections', ProjectStatus.InDevelopment],
+        ['Reject Project', ProjectStatus.Rejected],
+        ['Approve Project', ProjectStatus.Active]
+      ];
+    }
+
+    if (status === ProjectStatus.Active) {
+      return [
+        ['Suspend Project', ProjectStatus.Suspended],
+        ['Terminate Project', ProjectStatus.Terminated],
+        ['Complete Project', ProjectStatus.Completed]
+      ];
+    }
+
+    if (status === ProjectStatus.Suspended) {
+      return [
+        ['Reactivate Project', ProjectStatus.Active],
+        ['Terminate Project', ProjectStatus.Terminated]
+      ];
+    }
+
+    return [];
+  }
 }
