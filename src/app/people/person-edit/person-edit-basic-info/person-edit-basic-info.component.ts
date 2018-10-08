@@ -73,7 +73,7 @@ export class PersonEditBasicInfoComponent extends AbstractPersonComponent {
       displayFirstName: ['', [Validators.required, Validators.minLength(2)]],
       displayLastName: ['', [Validators.required, Validators.minLength(2)]],
       email: ['', [Validators.required, CustomValidators.email]],
-      phone: ['', Validators.required]
+      phone: ['']
     });
 
     this.initFormEvents();
