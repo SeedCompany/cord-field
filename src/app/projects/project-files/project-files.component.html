@@ -45,7 +45,7 @@
       <ng-container matColumnDef="size">
         <mat-header-cell *matHeaderCellDef mat-sort-header>File Size</mat-header-cell>
         <mat-cell *matCellDef="let file;">
-          <span>{{ file.isFile() ? formatFileSize(file.size) : '' }}</span>
+          <span>{{ file.isFile() ? (file.size | fileSize) : '' }}</span>
 
           <button mat-icon-button
                   [matMenuTriggerFor]="context"
