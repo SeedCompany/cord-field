@@ -3,9 +3,10 @@ import { Injectable } from '@angular/core';
 
 // iOS Safari & IE don't
 export const SUPPORTS_DOWNLOADS = (() => {
-  if (!document) {
+  if (typeof document === 'undefined') {
     return false;
   }
+
   const anchor = document.createElement('a');
   return 'download' in anchor;
 })();
