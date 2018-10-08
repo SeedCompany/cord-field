@@ -1,3 +1,83 @@
-<p>
-  Files for project {{ project.name }}
-</p>
+<mat-drawer-container autosize>
+
+  <mat-drawer-content>
+    <mat-toolbar>
+      <app-file-breadcrumbs [directory]="directory$.value"></app-file-breadcrumbs>
+
+      <span class="spacer"></span>
+
+      <input type="file" style="display: none" #fileInput (change)="onUpload($event)">
+      <button mat-icon-button class="mat-primary" (click)="fileInput.click()">
+        <mat-icon>file_upload</mat-icon>
+      </button>
+
+      <button mat-icon-button class="mat-primary" (click)="onCreateDir()">
+        <mat-icon>create_new_folder</mat-icon>
+      </button>
+    </mat-toolbar>
+
+    <mat-table [dataSource]="dataSource"
+               matSort
+               matSortActive="createdAt"
+               matSortDirection="desc"
+               [matSortDisableClear]="true"
+    >
+      <ng-container matColumnDef="name">
+        <mat-header-cell *matHeaderCellDef mat-sort-header>Name</mat-header-cell>
+        <mat-cell *matCellDef="let file;" class="name">{{ file.name }}</mat-cell>
+      </ng-container>
+
+      <ng-container matColumnDef="createdAt">
+        <mat-header-cell *matHeaderCellDef mat-sort-header>Created</mat-header-cell>
+        <mat-cell *matCellDef="let file;">{{ file.createdAt?.toLocaleString() }}</mat-cell>
+      </ng-container>
+
+      <ng-container matColumnDef="owner">
+        <mat-header-cell *matHeaderCellDef mat-sort-header>Uploaded By</mat-header-cell>
+        <mat-cell *matCellDef="let file;">{{ file.owner.fullName }}</mat-cell>
+      </ng-container>
+
+      <ng-container matColumnDef="category">
+        <mat-header-cell *matHeaderCellDef mat-sort-header>Type</mat-header-cell>
+        <mat-cell *matCellDef="let file;">{{ FileNodeCategory.forUI(file.category) }}</mat-cell>
+      </ng-container>
+
+      <ng-container matColumnDef="size">
+        <mat-header-cell *matHeaderCellDef mat-sort-header>File Size</mat-header-cell>
+        <mat-cell *matCellDef="let file;">
+          <span>{{ file.isFile() ? (file.size | fileSize) : '' }}</span>
+
+          <button mat-icon-button
+                  [matMenuTriggerFor]="context"
+                  (click)="$event.stopPropagation()">
+            <mat-icon>more_vert</mat-icon>
+          </button>
+          <mat-menu #context="matMenu">
+            <button mat-menu-item (click)="onRename(file)">
+              <mat-icon>border_color</mat-icon>
+              <span>Rename</span>
+            </button>
+            <button mat-menu-item (click)="onDownload(file)" *ngIf="supportsDownloads && file.isFile()">
+              <mat-icon>cloud_download</mat-icon>
+              <span>Download</span>
+            </button>
+            <button mat-menu-item (click)="onDelete(file)">
+              <mat-icon>delete</mat-icon>
+              <span>Delete</span>
+            </button>
+          </mat-menu>
+        </mat-cell>
+      </ng-container>
+
+      <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+      <mat-row [class.row-hover]="file.isDir()"
+               *matRowDef="let file; columns: displayedColumns;"
+               (click)="onNodeClick(file)">
+      </mat-row>
+    </mat-table>
+    <mat-paginator [pageSizeOptions]="pageSizeOptions"
+                   [length]="totalCount">
+    </mat-paginator>
+  </mat-drawer-content>
+
+</mat-drawer-container>

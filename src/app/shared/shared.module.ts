@@ -20,6 +20,7 @@ import { AutofocusDirective } from './directives/autofocus.directive';
 import { NotImplementedDirective } from './directives/not-implemented.directive';
 import { RedactableDirective } from './directives/redactable.directive';
 import { LuxonDateAdapter, MAT_LUXON_DATE_FORMATS } from './luxon-date-adapter';
+import { FileSizePipe } from './pipes/file-size.pipe';
 import { LanguageInfoPipe } from './pipes/language-info.pipe';
 
 @NgModule({
@@ -40,6 +41,7 @@ import { LanguageInfoPipe } from './pipes/language-info.pipe';
     AvatarLetterComponent,
     CollapsedChipListComponent,
     CommonModule,
+    FileSizePipe,
     FormsModule,
     LanguageInfoPipe,
     MaterialModule,
@@ -60,6 +62,7 @@ import { LanguageInfoPipe } from './pipes/language-info.pipe';
     AutofocusDirective,
     AvatarLetterComponent,
     CollapsedChipListComponent,
+    FileSizePipe,
     LanguageInfoPipe,
     NotImplementedDirective,
     SearchComponent,

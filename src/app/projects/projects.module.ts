@@ -3,6 +3,10 @@ import { NgModule } from '@angular/core';
 import { SharedModule } from '../shared/shared.module';
 import { ProjectBudgetComponent } from './project-budget/project-budget.component';
 import { ProjectEngagementDetailsComponent } from './project-engagement-details/project-engagement-details.component';
+import { CreateDirectoryDialogComponent } from './project-files/create-directory-dialog/create-directory-dialog.component';
+import { FileBreadcrumbsComponent } from './project-files/file-breadcrumbs/file-breadcrumbs.component';
+import { FileRenameDialogComponent } from './project-files/file-rename-dialog/file-rename-dialog.component';
+import { OverwriteFileWarningComponent } from './project-files/overwrite-file-warning/overwrite-file-warning.component';
 import { ProjectFilesComponent } from './project-files/project-files.component';
 import { ProjectFormsComponent } from './project-forms/project-forms.component';
 import { ProjectLanguagesComponent } from './project-languages/project-languages.component';
@@ -31,6 +35,10 @@ import { ProjectsRoutingModule } from './projects-routing.module';
     ProjectsRoutingModule
   ],
   declarations: [
+    CreateDirectoryDialogComponent,
+    FileBreadcrumbsComponent,
+    FileRenameDialogComponent,
+    OverwriteFileWarningComponent,
     ProjectBudgetComponent,
     ProjectComponent,
     ProjectEngagementDetailsComponent,
@@ -52,6 +60,9 @@ import { ProjectsRoutingModule } from './projects-routing.module';
     ProjectStatusComponent
   ],
   entryComponents: [
+    CreateDirectoryDialogComponent,
+    FileRenameDialogComponent,
+    OverwriteFileWarningComponent,
     ProjectTeamMemberAddComponent,
     ProjectTeamMemberRoleDialogComponent
   ]

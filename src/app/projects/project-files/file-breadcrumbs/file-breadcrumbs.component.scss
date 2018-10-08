@@ -1,0 +1,12 @@
+@import "~src/styles/imports";
+
+:host {
+  display: flex;
+  align-items: center;
+}
+
+.breadcrumb-button {
+  @include mat-typography-level-to-styles($config, title);
+  min-width: initial;
+  padding: 0 8px;
+}
