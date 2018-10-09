@@ -49,6 +49,7 @@
     "luxon": "^1.2.1",
     "rxjs": "^6.1.0",
     "ts-loader": "^4.4.2",
+    "typescript-lazy-get-decorator": "^1.2.2",
     "xregexp": "^4.2.0",
     "zone.js": "^0.8.26"
   },
