@@ -69,30 +69,25 @@
       </mat-form-field>
     </div>
 
-    <div class="unavailability-container">
-      <h3 mat-card-title>Availability</h3>
-      <div class="unavailability-container">
-        <mat-nav-list>
-          <a mat-list-item *ngFor="let unavailability of userProfile?.unavailabilities; trackBy: trackByUnavailabilityId"
-             (click)="editAvailability(unavailability)">
-            <p mat-line>{{ unavailability.description }}</p>
-            <h4 mat-line>{{ unavailability.start.toLocaleString(format) }} - {{ unavailability.end.toLocaleString(format) }}</h4>
-          </a>
-          <mat-list-item *ngIf="userProfile && !userProfile.unavailabilities.length"
-                         class="none">
-            {{ userProfile.isSelf ? 'You have' : userProfile.fullName + ' has' }} no unavailable dates.
-          </mat-list-item>
-        </mat-nav-list>
-      </div>
-
-      <button type="button"
-              mat-button
-              color="accent"
-              (click)="addAvailability()">
-        <mat-icon>add</mat-icon>
-        Add Unavailable Dates
-      </button>
-    </div>
+    <h3 mat-card-title>Availability</h3>
+    <mat-nav-list>
+      <a mat-list-item *ngFor="let unavailability of userProfile?.unavailabilities; trackBy: trackByUnavailabilityId"
+         (click)="editAvailability(unavailability)">
+        <p mat-line>{{ unavailability.description }}</p>
+        <h4 mat-line>{{ unavailability.start.toLocaleString(format) }} - {{ unavailability.end.toLocaleString(format) }}</h4>
+      </a>
+      <mat-list-item *ngIf="userProfile && !userProfile.unavailabilities.length"
+                     class="none">
+        {{ userProfile.isSelf ? 'You have' : userProfile.fullName + ' has' }} no unavailable dates.
+      </mat-list-item>
+    </mat-nav-list>
+    <button type="button"
+            mat-button
+            color="accent"
+            (click)="addAvailability()">
+      <mat-icon>add</mat-icon>
+      Add Unavailability
+    </button>
 
   </mat-card-content>
 </mat-card>
