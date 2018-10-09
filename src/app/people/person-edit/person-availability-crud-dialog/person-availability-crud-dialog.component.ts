@@ -1,4 +1,4 @@
-import { Component, Inject, OnInit, Optional } from '@angular/core';
+import { Component, Inject, OnInit } from '@angular/core';
 import { AbstractControl, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialog, MatDialogRef } from '@angular/material';
 import { Unavailability } from '@app/core/models/user';
@@ -7,7 +7,7 @@ import { UserViewStateService } from '@app/people/user-view-state.service';
 import { SubscriptionComponent } from '@app/shared/components/subscription.component';
 import { DateTime } from 'luxon';
 
-export interface DialogData {
+interface DialogData {
   viewStateService: UserViewStateService;
   unavailability: Unavailability;
 }
@@ -22,7 +22,7 @@ export class PersonAvailabilityCrudDialogComponent extends SubscriptionComponent
   minDate: DateTime;
 
   constructor(
-    @Optional() @Inject(MAT_DIALOG_DATA) public dialogData: DialogData,
+    @Inject(MAT_DIALOG_DATA) public dialogData: DialogData,
     private dialogRef: MatDialogRef<PersonAvailabilityCrudDialogComponent>,
     private formBuilder: FormBuilder
   ) {

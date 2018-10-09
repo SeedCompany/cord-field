@@ -3,18 +3,16 @@
       id="ngForm"
       [formGroup]="form"
       (ngSubmit)="onAdd()">
-  <div class="container">
-    <mat-form-field color="accent">
-      <input matInput
-             maxlength="140"
-             formControlName="description"
-             placeholder="Brief Description"
-             autocomplete="off">
-      <mat-hint align="end">{{ description.value.length }}/140</mat-hint>
-      <mat-error *ngIf="description.errors?.required">Please enter a description</mat-error>
-      <mat-error *ngIf="description.errors?.minlength">Name must be at least 2 characters long</mat-error>
-    </mat-form-field>
-  </div>
+  <mat-form-field color="accent">
+    <input matInput
+           maxlength="140"
+           formControlName="description"
+           placeholder="Brief Description"
+           autocomplete="off">
+    <mat-hint align="end">{{ description.value.length }}/140</mat-hint>
+    <mat-error *ngIf="description.errors?.required">Please enter a description</mat-error>
+    <mat-error *ngIf="description.errors?.minlength">Name must be at least 2 characters long</mat-error>
+  </mat-form-field>
 
   <div class="date-container">
     <mat-form-field color="accent">
