@@ -113,7 +113,7 @@ export class PersonEditBasicInfoComponent extends SubscriptionComponent {
   }
 
   private initViewState(): void {
-    this.viewStateService.user
+    this.viewStateService.userWithChanges
       .pipe(takeUntil(this.unsubscribe))
       .subscribe(userProfile => {
         this.userProfile = userProfile;

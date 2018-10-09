@@ -104,6 +104,10 @@ export class UserViewStateService extends AbstractViewState<UserProfile> {
     return this.subject;
   }
 
+  get userWithChanges(): Observable<UserProfile> {
+    return this.subjectWithChanges;
+  }
+
   next(id: string): void {
     this.userService.getUser(id)
       .subscribe(this.onLoad);
