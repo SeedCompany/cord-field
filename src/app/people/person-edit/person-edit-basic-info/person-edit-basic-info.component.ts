@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { AbstractControl, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatDialog } from '@angular/material';
 import { Changes } from '@app/core/change-engine';
@@ -21,10 +21,11 @@ import { UserViewStateService } from '../../user-view-state.service';
   styleUrls: ['./person-edit-basic-info.component.scss']
 })
 @TitleAware('Edit Basic Info')
-export class PersonEditBasicInfoComponent extends SubscriptionComponent {
-  userProfile: UserProfile;
-  form: FormGroup;
+export class PersonEditBasicInfoComponent extends SubscriptionComponent implements OnInit {
   readonly format = DateTime.DATE_FULL;
+
+  userProfile?: UserProfile;
+  form: FormGroup;
 
   constructor(
     private formBuilder: FormBuilder,
@@ -34,6 +35,10 @@ export class PersonEditBasicInfoComponent extends SubscriptionComponent {
     super();
 
     this.initForm();
+  }
+
+  ngOnInit(): void {
+    this.initFormEvents();
     this.initViewState();
   }
 
@@ -62,6 +67,10 @@ export class PersonEditBasicInfoComponent extends SubscriptionComponent {
   }
 
   initRolesCtrl(event: AbstractControl): void {
+    if (!this.userProfile) {
+      return;
+    }
+
     event.setValue(this.userProfile.roles);
 
     event.valueChanges
@@ -97,13 +106,14 @@ export class PersonEditBasicInfoComponent extends SubscriptionComponent {
       email: ['', [Validators.required, CustomValidators.email]],
       phone: ['']
     });
-
-    this.initFormEvents();
   }
 
   private initFormEvents(): void {
     this.form.valueChanges
-      .pipe(onlyValidValues(this.form))
+      .pipe(
+        takeUntil(this.unsubscribe),
+        onlyValidValues(this.form)
+      )
       .subscribe((changes) => {
         this.viewStateService.change({
           realFirstName: changes.firstName,
