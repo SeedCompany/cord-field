@@ -73,10 +73,14 @@ export class PersonEditBasicInfoComponent extends SubscriptionComponent {
       });
   }
 
-  addAvailability(unavailability?: Unavailability): void {
+  addAvailability(): void {
+    this.editAvailability(Unavailability.create());
+  }
+
+  editAvailability(unavailability: Unavailability): void {
     PersonAvailabilityCrudDialogComponent.open(this.dialog, {
       viewStateService: this.viewStateService,
-      unavailability: unavailability
+      unavailability
     });
   }
 

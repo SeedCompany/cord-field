@@ -275,6 +275,10 @@ export class Unavailability {
   }
 
   static create(): Unavailability {
-    return Object.assign(new Unavailability(), { id: generateObjectId() });
+    return Object.assign(new Unavailability(), {
+      id: generateObjectId(),
+      description: '',
+      range: Interval.invalid('Not set')
+    });
   }
 }

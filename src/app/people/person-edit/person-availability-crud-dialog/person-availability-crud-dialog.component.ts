@@ -9,7 +9,7 @@ import { DateTime } from 'luxon';
 
 export interface DialogData {
   viewStateService: UserViewStateService;
-  unavailability?: Unavailability;
+  unavailability: Unavailability;
 }
 
 @Component({
@@ -90,11 +90,12 @@ export class PersonAvailabilityCrudDialogComponent extends SubscriptionComponent
   }
 
   private initForm(): void {
+    const unavailability = this.dialogData.unavailability;
     this.form = this.formBuilder.group({
-      id: [this.dialogData.unavailability ? this.dialogData.unavailability.id : ''],
-      description: [this.dialogData.unavailability ? this.dialogData.unavailability.description : '', Validators.required],
-      startDate: [this.dialogData.unavailability ? this.dialogData.unavailability.start : '', Validators.required],
-      endDate: [this.dialogData.unavailability ? this.dialogData.unavailability.end : '', Validators.required]
+      id: [unavailability.id],
+      description: [unavailability.description, Validators.required],
+      startDate: [unavailability.start, Validators.required],
+      endDate: [unavailability.end, Validators.required]
     }, {
       validator: CustomValidators.dateRange('startDate', 'endDate')
     });

@@ -74,7 +74,7 @@
       <div class="unavailability-container">
         <mat-nav-list>
           <a mat-list-item *ngFor="let unavailability of userProfile.unavailabilities; trackBy: trackByUnavailabilityId"
-             (click)="addAvailability(unavailability)">
+             (click)="editAvailability(unavailability)">
             <p mat-line>{{ unavailability.description }}</p>
             <h4 mat-line>{{ unavailability.start.toLocaleString(format) }} - {{ unavailability.end.toLocaleString(format) }}</h4>
           </a>
