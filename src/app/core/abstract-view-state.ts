@@ -9,12 +9,14 @@ export abstract class AbstractViewState<T> {
 
   private readonly changeEngine: ChangeEngine<T>;
   private readonly _subject: BehaviorSubject<T>;
+  private readonly _subjectWithChanges: BehaviorSubject<T>;
   private readonly submitting = new BehaviorSubject<boolean>(false);
   private readonly _loadError = new Subject<Error>();
 
   protected constructor(config: ChangeConfig<T>, initial: T) {
     this.changeEngine = new ChangeEngine(config);
     this._subject = new BehaviorSubject<T>(initial);
+    this._subjectWithChanges = new BehaviorSubject<T>(initial);
   }
 
   /**
@@ -35,6 +37,10 @@ export abstract class AbstractViewState<T> {
     return this._subject.asObservable();
   }
 
+  get subjectWithChanges(): Observable<T> {
+    return this._subjectWithChanges.asObservable();
+  }
+
   get isDirty(): Observable<boolean> {
     return this.changeEngine.isDirty;
   }
@@ -49,6 +55,8 @@ export abstract class AbstractViewState<T> {
 
   change(changes: Changes<T>): void {
     this.changeEngine.change(changes, this._subject.value);
+    const next = this.changeEngine.getModified(this._subject.value);
+    this._subjectWithChanges.next(next);
   }
 
   revert(field: keyof T, item?: any): void {

@@ -1,0 +1,43 @@
+@import "~src/styles/imports";
+
+:host {
+  @extend %component-defaults;
+}
+
+.date-container {
+  display: flex;
+}
+
+.mat-form-field {
+  flex: 1;
+  display: block;
+  & + & {
+    margin-left: 16px;
+  }
+}
+
+mat-slide-toggle {
+  margin: 12px 0;
+}
+
+.mat-dialog-actions {
+  display: flex;
+  flex-direction: row-reverse;
+
+  .mat-button + .mat-button {
+    margin-left: 0;
+    margin-right: 8px;
+  }
+
+  &--left {
+    display: inherit;
+    flex-direction: inherit;
+    margin-right: auto;
+  }
+
+  &--right {
+    display: inherit;
+    flex-direction: inherit;
+    margin-left: auto;
+  }
+}
