@@ -28,16 +28,8 @@ mat-slide-toggle {
     margin-left: 0;
     margin-right: 8px;
   }
+}
 
-  &--left {
-    display: inherit;
-    flex-direction: inherit;
-    margin-right: auto;
-  }
-
-  &--right {
-    display: inherit;
-    flex-direction: inherit;
-    margin-left: auto;
-  }
+.spacer {
+  flex: 1;
 }

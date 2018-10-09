@@ -45,27 +45,25 @@
 </form>
 
 <div mat-dialog-actions>
-  <div class="mat-dialog-actions--right">
-    <button mat-button
-            type="submit"
-            form="ngForm"
-            color="accent"
-            [disabled]="!form.valid">
-      <ng-container>ADD</ng-container>
-    </button>
+  <button mat-button
+          type="submit"
+          form="ngForm"
+          color="accent"
+          [disabled]="!form.valid">
+    <ng-container>ADD</ng-container>
+  </button>
 
-    <button mat-button
-            color="accent"
-            mat-dialog-close>
-      CANCEL
-    </button>
-  </div>
+  <button mat-button
+          color="accent"
+          mat-dialog-close>
+    CANCEL
+  </button>
 
-  <div class="mat-dialog-actions--left">
-    <button mat-button
-            color="warn"
-            (click)="onDelete()">
-      <ng-container>DELETE</ng-container>
-    </button>
-  </div>
+  <div class="spacer"></div>
+
+  <button mat-button
+          color="warn"
+          (click)="onDelete()">
+    <ng-container>DELETE</ng-container>
+  </button>
 </div>
