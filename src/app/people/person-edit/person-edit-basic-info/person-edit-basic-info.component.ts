@@ -1,7 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { AbstractControl, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatDialog } from '@angular/material';
-import { Changes } from '@app/core/change-engine';
 import { TitleAware } from '@app/core/decorators';
 import { Unavailability, UserProfile } from '@app/core/models/user';
 import { onlyValidValues } from '@app/core/util';
@@ -53,6 +52,10 @@ export class PersonEditBasicInfoComponent extends SubscriptionComponent implemen
     return this.form.get('displayLastName')!;
   }
 
+  get roles(): AbstractControl {
+    return this.form.get('roles')!;
+  }
+
   get email(): AbstractControl {
     return this.form.get('email')!;
   }
@@ -66,20 +69,9 @@ export class PersonEditBasicInfoComponent extends SubscriptionComponent implemen
     this.initViewState();
   }
 
-  initRolesCtrl(event: AbstractControl): void {
-    if (!this.userProfile) {
-      return;
-    }
-
-    event.setValue(this.userProfile.roles);
-
-    event.valueChanges
-      .pipe(takeUntil(this.unsubscribe))
-      .subscribe((changes: Changes) => {
-        this.viewStateService.change({
-          roles: changes,
-        });
-      });
+  initRolesCtrl(control: AbstractControl): void {
+    control.reset(this.roles.value);
+    this.form.setControl('roles', control);
   }
 
   addAvailability(): void {
@@ -103,6 +95,7 @@ export class PersonEditBasicInfoComponent extends SubscriptionComponent implemen
       lastName: ['', [Validators.required, Validators.minLength(2)]],
       displayFirstName: ['', [Validators.required, Validators.minLength(2)]],
       displayLastName: ['', [Validators.required, Validators.minLength(2)]],
+      roles: [[]],
       email: ['', [Validators.required, CustomValidators.email]],
       phone: ['', [CustomValidators.phone]],
     });
@@ -120,6 +113,7 @@ export class PersonEditBasicInfoComponent extends SubscriptionComponent implemen
           realLastName: changes.lastName,
           displayFirstName: changes.displayFirstName,
           displayLastName: changes.displayLastName,
+          roles: changes.roles,
           phone: changes.phone,
           email: changes.email,
         });
@@ -134,6 +128,7 @@ export class PersonEditBasicInfoComponent extends SubscriptionComponent implemen
         this.lastName.patchValue(userProfile.realLastName, { emitEvent: false });
         this.displayFirstName.patchValue(userProfile.displayFirstName, { emitEvent: false });
         this.displayLastName.patchValue(userProfile.displayLastName, { emitEvent: false });
+        this.roles.patchValue(userProfile.roles, { emitEvent: false });
         this.phone.patchValue(userProfile.phone, { emitEvent: false });
         this.email.patchValue(userProfile.email, { emitEvent: false });
       });
