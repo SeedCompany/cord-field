@@ -123,10 +123,10 @@ export class UserProfile extends User {
     return this.unavailabilities.some(u => !u.range.contains(today));
   }
 
-  static fromJson(json: Partial<UserProfile>): UserProfile {
+  static fromJson(json: Partial<UserProfile & {userRoles: UserRole[]}>): UserProfile {
     const user = Object.assign(new UserProfile(), super.fromJson(json));
 
-    user.roles = (json.roles || []).map(UserRole.fromJson);
+    user.roles = (json.roles || json.userRoles || []).map(UserRole.fromJson);
     user.organizations = (json.organizations || []).map(Organization.fromJson);
     user.phone = json.phone || null;
     user.timeZone = json.timeZone || '';
