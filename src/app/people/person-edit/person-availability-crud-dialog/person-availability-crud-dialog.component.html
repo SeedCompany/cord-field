@@ -23,7 +23,7 @@
       <mat-datepicker-toggle matSuffix
                              [for]="startDatepicker"></mat-datepicker-toggle>
       <mat-datepicker #startDatepicker></mat-datepicker>
-      <mat-error *ngIf="startDate.errors?.matDatepickerParse">Please provide a valid date</mat-error>
+      <mat-error *ngIf="startDate.errors?.required || startDate.errors?.matDatepickerParse">Please provide a valid date</mat-error>
       <mat-error *ngIf="startDate.errors?.matDatepickerMax">Please pick a date in the past</mat-error>
       <mat-error *ngIf="startDate.errors?.invalidRange && !startDate.errors?.matDatepickerMax">Must be before end date</mat-error>
     </mat-form-field>
@@ -36,7 +36,7 @@
       <mat-datepicker-toggle matSuffix
                              [for]="endDatepicker"></mat-datepicker-toggle>
       <mat-datepicker #endDatepicker></mat-datepicker>
-      <mat-error *ngIf="endDate.errors?.matDatepickerParse">Please provide a valid date</mat-error>
+      <mat-error *ngIf="endDate.errors?.required || endDate.errors?.matDatepickerParse">Please provide a valid date</mat-error>
       <mat-error *ngIf="endDate.errors?.invalidRange">Must be after start date</mat-error>
     </mat-form-field>
   </div>
