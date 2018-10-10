@@ -65,6 +65,10 @@ export class LoginComponent implements OnInit {
   }
 
   async onLogin() {
+    if (this.form.invalid) {
+      return;
+    }
+
     this.form.disable();
     try {
       await this.auth.login(this.email.value, this.password.value, true,

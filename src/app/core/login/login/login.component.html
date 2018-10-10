@@ -13,6 +13,7 @@
           matInput
           placeholder="Email"
           formControlName="email"
+          autofocus
         >
         <mat-error *ngIf="email.errors?.required">Please enter a valid email</mat-error>
       </mat-form-field>
@@ -96,7 +97,7 @@
       <button mat-raised-button
               color="accent"
               (click)="onLogin()"
-              [disabled]="form.invalid || form.disabled"
+              [disabled]="form.touched && (form.invalid || form.disabled)"
       >
         <ng-container *ngIf="form.enabled">SIGN IN</ng-container>
         <mat-progress-spinner
