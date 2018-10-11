@@ -40,11 +40,11 @@ export class PersonAvailabilityCrudDialogComponent extends SubscriptionComponent
   }
 
   get startDate(): AbstractControl {
-    return this.form.get('startDate')!;
+    return this.form.get('start')!;
   }
 
   get endDate(): AbstractControl {
-    return this.form.get('endDate')!;
+    return this.form.get('end')!;
   }
 
   static open(dialog: MatDialog, dialogData: DialogData) {
@@ -69,12 +69,7 @@ export class PersonAvailabilityCrudDialogComponent extends SubscriptionComponent
   onAdd(): void {
     this.dialogData.viewStateService.change({
       unavailabilities: {
-        update: {
-          id: this.id.value,
-          description: this.description.value,
-          start: this.startDate.value,
-          end: this.endDate.value
-        }
+        update: Unavailability.fromForm(this.form.value)
       }
     });
 
@@ -94,10 +89,10 @@ export class PersonAvailabilityCrudDialogComponent extends SubscriptionComponent
     this.form = this.formBuilder.group({
       id: [unavailability.id],
       description: [unavailability.description, Validators.required],
-      startDate: [unavailability.start, Validators.required],
-      endDate: [unavailability.end, Validators.required]
+      start: [unavailability.start, Validators.required],
+      end: [unavailability.end, Validators.required]
     }, {
-      validator: CustomValidators.dateRange('startDate', 'endDate')
+      validator: CustomValidators.dateRange('start', 'end')
     });
   }
 }
