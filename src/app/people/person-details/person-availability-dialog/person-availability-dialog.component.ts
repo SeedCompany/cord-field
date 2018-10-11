@@ -12,6 +12,7 @@ import { sortBy } from '../../../core/util';
 export class PersonAvailabilityDialogComponent {
   readonly format = DateTime.DATE_FULL;
 
+  currentUnavailabilities: Unavailability[];
   futureUnavailabilities: Unavailability[];
   pastUnavailabilities: Unavailability[];
 
@@ -26,6 +27,9 @@ export class PersonAvailabilityDialogComponent {
 
   constructor(@Inject(MAT_DIALOG_DATA) public user: UserProfile) {
     const today = DateTime.utc();
+    this.currentUnavailabilities = this.user.unavailabilities
+      .filter(u => u.range.contains(today))
+      .sort(sortBy(u => u.start));
     this.futureUnavailabilities = this.user.unavailabilities
       .filter(u => u.range.isAfter(today))
       .sort(sortBy(u => u.start));
