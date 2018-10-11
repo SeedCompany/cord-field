@@ -1,5 +1,5 @@
 import { DateTime, Interval } from 'luxon';
-import { firstLettersOfWords, generateObjectId, isRedacted } from '../util';
+import { firstLettersOfWords, generateObjectId, isRedacted, Omit } from '../util';
 import { buildEnum } from './enum';
 import { Language } from './language';
 import { Location } from './location';
@@ -275,6 +275,29 @@ export class Unavailability {
   }
 
   static create(): Unavailability {
-    return Object.assign(new Unavailability(), { id: generateObjectId() });
+    return Object.assign(new Unavailability(), {
+      id: generateObjectId(),
+      description: '',
+      range: Interval.invalid('Not set')
+    });
+  }
+
+  static fromForm({ id, description, start, end }: RawUnavailability) {
+    return Object.assign(new Unavailability(), {
+      id,
+      description,
+      range: Interval.fromDateTimes(start, end)
+    });
+  }
+
+  static forSaveAPI({ id, description, start, end }: Unavailability): RawUnavailability {
+    return {
+      id,
+      description,
+      start,
+      end
+    };
   }
 }
+
+export type RawUnavailability = Omit<Unavailability, 'range'>;

@@ -11,6 +11,7 @@ import {
   Education,
   KnownLanguage,
   KnownLanguageForSaveAPI,
+  RawUnavailability,
   Unavailability,
   UserProfile,
   UserRole,
@@ -36,8 +37,8 @@ export interface ModifiedUser {
   phone?: string;
   timeZone?: string;
   unavailabilities?: {
-    add?: Unavailability[];
-    update?: Unavailability[];
+    add?: RawUnavailability[];
+    update?: RawUnavailability[];
     remove?: string[];
   };
   bio?: string;
@@ -76,7 +77,7 @@ const config: ChangeConfig<UserProfile> = {
   timeZone: {},
   unavailabilities: {
     accessor: returnId,
-    toServer: mapChangeList<Unavailability, string, string>(returnSelf, returnId)
+    toServer: mapChangeList<Unavailability, RawUnavailability, string>(Unavailability.forSaveAPI, returnId)
   },
   bio: {},
   education: {
@@ -104,6 +105,10 @@ export class UserViewStateService extends AbstractViewState<UserProfile> {
     return this.subject;
   }
 
+  get userWithChanges(): Observable<UserProfile> {
+    return this.subjectWithChanges;
+  }
+
   next(id: string): void {
     this.userService.getUser(id)
       .subscribe(this.onLoad);
@@ -118,7 +123,7 @@ export class UserViewStateService extends AbstractViewState<UserProfile> {
   private calculateSaveResult(origUser: UserOnlyObjectLists, newUser: UserOnlyObjectLists): SaveResult<UserProfile> {
     const newIds: SaveResult<UserProfile> = {};
 
-    const keys: Array<keyof UserOnlyObjectLists> = ['education', 'knownLanguages'];
+    const keys: Array<keyof UserOnlyObjectLists> = ['education', 'knownLanguages', 'unavailabilities'];
     for (const key of keys) {
       const accessor = config[key]!.accessor as (item: any) => string;
       newIds[key] = differenceBy(newUser[key], origUser[key], accessor).map(accessor);

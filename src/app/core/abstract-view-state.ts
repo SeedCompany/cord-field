@@ -1,6 +1,7 @@
 import { AbstractControl, FormArray } from '@angular/forms';
-import { BehaviorSubject, Observable, PartialObserver, Subject, Unsubscribable } from 'rxjs';
-import { takeUntil } from 'rxjs/operators';
+import { BehaviorSubject, combineLatest, Observable, PartialObserver, Subject, Unsubscribable } from 'rxjs';
+import { distinctUntilChanged, map, shareReplay, startWith, takeUntil } from 'rxjs/operators';
+import { LazyGetter } from 'typescript-lazy-get-decorator';
 import { ChangeConfig, ChangeEngine, Changes } from './change-engine';
 
 export type SaveResult<T> = {[key in keyof Partial<T>]: string[]};
@@ -11,6 +12,8 @@ export abstract class AbstractViewState<T> {
   private readonly _subject: BehaviorSubject<T>;
   private readonly submitting = new BehaviorSubject<boolean>(false);
   private readonly _loadError = new Subject<Error>();
+  /** Subject to track when changes have been made to recalculate subjectWithChanges */
+  private readonly changes = new Subject<void>();
 
   protected constructor(config: ChangeConfig<T>, initial: T) {
     this.changeEngine = new ChangeEngine(config);
@@ -35,6 +38,19 @@ export abstract class AbstractViewState<T> {
     return this._subject.asObservable();
   }
 
+  @LazyGetter() // Calculate pipe once, when requested
+  get subjectWithChanges(): Observable<T> {
+    return combineLatest(
+      this.subject,
+      this.changes.pipe(startWith(null)) // Fire off when changes are made, but don't wait for it
+    )
+      .pipe(
+        map(([val]) => this.changeEngine.getModified(val)),
+        distinctUntilChanged(),
+        shareReplay(1) // Share latest value to new subscribers just like a BehaviorSubject would
+      );
+  }
+
   get isDirty(): Observable<boolean> {
     return this.changeEngine.isDirty;
   }
@@ -49,10 +65,12 @@ export abstract class AbstractViewState<T> {
 
   change(changes: Changes<T>): void {
     this.changeEngine.change(changes, this._subject.value);
+    this.changes.next();
   }
 
   revert(field: keyof T, item?: any): void {
     this.changeEngine.revert(field, item);
+    this.changes.next();
   }
 
   async save(): Promise<void> {

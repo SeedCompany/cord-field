@@ -1,0 +1,67 @@
+<h1 mat-dialog-title>Add Unavailable Dates</h1>
+<form mat-dialog-content
+      id="ngForm"
+      [formGroup]="form"
+      (ngSubmit)="onSubmit()">
+  <mat-form-field color="accent">
+    <input matInput
+           maxlength="140"
+           formControlName="description"
+           placeholder="Brief Description"
+           autocomplete="off">
+    <mat-hint align="end">{{ description.value.length }}/140</mat-hint>
+    <mat-error *ngIf="description.errors?.required">Please enter a description</mat-error>
+    <mat-error *ngIf="description.errors?.minlength">Name must be at least 2 characters long</mat-error>
+  </mat-form-field>
+
+  <div class="date-container">
+    <mat-form-field color="accent">
+      <input matInput
+             [matDatepicker]="startDatepicker"
+             placeholder="Start Date"
+             formControlName="start">
+      <mat-datepicker-toggle matSuffix
+                             [for]="startDatepicker"></mat-datepicker-toggle>
+      <mat-datepicker #startDatepicker></mat-datepicker>
+      <mat-error *ngIf="startDate.errors?.required || startDate.errors?.matDatepickerParse">Please provide a valid date</mat-error>
+      <mat-error *ngIf="startDate.errors?.matDatepickerMax">Please pick a date in the past</mat-error>
+      <mat-error *ngIf="startDate.errors?.invalidRange && !startDate.errors?.matDatepickerMax">Must be before end date</mat-error>
+    </mat-form-field>
+    <mat-form-field color="accent">
+      <input matInput
+             [min]="minDate"
+             [matDatepicker]="endDatepicker"
+             placeholder="End Date"
+             formControlName="end">
+      <mat-datepicker-toggle matSuffix
+                             [for]="endDatepicker"></mat-datepicker-toggle>
+      <mat-datepicker #endDatepicker></mat-datepicker>
+      <mat-error *ngIf="endDate.errors?.required || endDate.errors?.matDatepickerParse">Please provide a valid date</mat-error>
+      <mat-error *ngIf="endDate.errors?.invalidRange">Must be after start date</mat-error>
+    </mat-form-field>
+  </div>
+</form>
+
+<div mat-dialog-actions>
+  <button mat-button
+          type="submit"
+          form="ngForm"
+          color="accent"
+          [disabled]="!form.valid">
+    {{ isNew ? 'ADD' : 'UPDATE' }}
+  </button>
+
+  <button mat-button
+          color="accent"
+          mat-dialog-close>
+    CANCEL
+  </button>
+
+  <div class="spacer"></div>
+
+  <button mat-button
+          color="warn"
+          (click)="onDelete()">
+    <ng-container>DELETE</ng-container>
+  </button>
+</div>

@@ -1,14 +1,19 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { AbstractControl, FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { MatDialog } from '@angular/material';
 import { Changes } from '@app/core/change-engine';
 import { TitleAware } from '@app/core/decorators';
-import { UserProfile } from '@app/core/models/user';
+import { Unavailability, UserProfile } from '@app/core/models/user';
 import { onlyValidValues } from '@app/core/util';
 import * as CustomValidators from '@app/core/validators';
+import {
+  PersonAvailabilityCrudDialogComponent
+} from '@app/people/person-edit/person-availability-crud-dialog/person-availability-crud-dialog.component';
+import { SubscriptionComponent } from '@app/shared/components/subscription.component';
+import { DateTime } from 'luxon';
 import { takeUntil } from 'rxjs/operators';
 
 import { UserViewStateService } from '../../user-view-state.service';
-import { AbstractPersonComponent } from '../abstract-person.component';
 
 @Component({
   selector: 'app-person-edit-basic-info',
@@ -16,17 +21,24 @@ import { AbstractPersonComponent } from '../abstract-person.component';
   styleUrls: ['./person-edit-basic-info.component.scss']
 })
 @TitleAware('Edit Basic Info')
-export class PersonEditBasicInfoComponent extends AbstractPersonComponent {
-  user: UserProfile;
+export class PersonEditBasicInfoComponent extends SubscriptionComponent implements OnInit {
+  readonly format = DateTime.DATE_FULL;
+
+  userProfile?: UserProfile;
   form: FormGroup;
 
   constructor(
     private formBuilder: FormBuilder,
-    private viewStateSvc: UserViewStateService
+    private viewStateService: UserViewStateService,
+    public dialog: MatDialog
   ) {
-    super(viewStateSvc);
+    super();
 
     this.initForm();
+  }
+
+  ngOnInit(): void {
+    this.initFormEvents();
     this.initViewState();
   }
 
@@ -55,15 +67,34 @@ export class PersonEditBasicInfoComponent extends AbstractPersonComponent {
   }
 
   initRolesCtrl(event: AbstractControl): void {
-    event.setValue(this.user.roles);
+    if (!this.userProfile) {
+      return;
+    }
+
+    event.setValue(this.userProfile.roles);
 
     event.valueChanges
       .pipe(takeUntil(this.unsubscribe))
       .subscribe((changes: Changes) => {
-        this.viewStateSvc.change({
+        this.viewStateService.change({
           roles: changes
         });
       });
+  }
+
+  addAvailability(): void {
+    this.editAvailability();
+  }
+
+  editAvailability(unavailability?: Unavailability): void {
+    PersonAvailabilityCrudDialogComponent.open(this.dialog, {
+      viewStateService: this.viewStateService,
+      unavailability
+    });
+  }
+
+  trackByUnavailabilityId(index: number, item: Unavailability) {
+    return item.id;
   }
 
   private initForm(): void {
@@ -75,15 +106,16 @@ export class PersonEditBasicInfoComponent extends AbstractPersonComponent {
       email: ['', [Validators.required, CustomValidators.email]],
       phone: ['']
     });
-
-    this.initFormEvents();
   }
 
   private initFormEvents(): void {
     this.form.valueChanges
-      .pipe(onlyValidValues(this.form))
+      .pipe(
+        takeUntil(this.unsubscribe),
+        onlyValidValues(this.form)
+      )
       .subscribe((changes) => {
-        this.viewStateSvc.change({
+        this.viewStateService.change({
           realFirstName: changes.firstName,
           realLastName: changes.lastName,
           displayFirstName: changes.displayFirstName,
@@ -95,17 +127,17 @@ export class PersonEditBasicInfoComponent extends AbstractPersonComponent {
   }
 
   private initViewState(): void {
-    this.viewStateSvc.user
+    this.viewStateService.userWithChanges
       .pipe(takeUntil(this.unsubscribe))
-      .subscribe((user) => {
-        this.user = user;
+      .subscribe(userProfile => {
+        this.userProfile = userProfile;
 
-        this.firstName.setValue(user.realFirstName, { emitEvent: false });
-        this.lastName.setValue(user.realLastName, { emitEvent: false });
-        this.displayFirstName.setValue(user.displayFirstName, { emitEvent: false });
-        this.displayLastName.setValue(user.displayLastName, { emitEvent: false });
-        this.phone.setValue(user.phone, { emitEvent: false });
-        this.email.setValue(user.email, { emitEvent: false });
+        this.firstName.patchValue(userProfile.realFirstName, { emitEvent: false });
+        this.lastName.patchValue(userProfile.realLastName, { emitEvent: false });
+        this.displayFirstName.patchValue(userProfile.displayFirstName, { emitEvent: false });
+        this.displayLastName.patchValue(userProfile.displayLastName, { emitEvent: false });
+        this.phone.patchValue(userProfile.phone, { emitEvent: false });
+        this.email.patchValue(userProfile.email, { emitEvent: false });
       });
   }
 }

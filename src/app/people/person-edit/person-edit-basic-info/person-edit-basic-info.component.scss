@@ -41,3 +41,8 @@ mat-card-content {
 app-user-roles-form {
   margin-bottom: 1.25em;
 }
+
+.none {
+  color: mat-foreground($theme, disabled);
+  user-select: none;
+}
