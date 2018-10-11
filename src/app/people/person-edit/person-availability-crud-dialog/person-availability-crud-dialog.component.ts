@@ -9,7 +9,7 @@ import { DateTime } from 'luxon';
 
 interface DialogData {
   viewStateService: UserViewStateService;
-  unavailability: Unavailability;
+  unavailability?: Unavailability;
 }
 
 @Component({
@@ -18,21 +18,22 @@ interface DialogData {
   styleUrls: ['./person-availability-crud-dialog.component.scss']
 })
 export class PersonAvailabilityCrudDialogComponent extends SubscriptionComponent implements OnInit {
-  form: FormGroup;
+  readonly form: FormGroup;
+  readonly isNew: boolean;
+  private readonly viewStateService: UserViewStateService;
   minDate: DateTime;
 
   constructor(
-    @Inject(MAT_DIALOG_DATA) public dialogData: DialogData,
+    @Inject(MAT_DIALOG_DATA) dialogData: DialogData,
     private dialogRef: MatDialogRef<PersonAvailabilityCrudDialogComponent>,
     private formBuilder: FormBuilder
   ) {
     super();
+    const { unavailability, viewStateService } = dialogData;
+    this.viewStateService = viewStateService;
 
-    this.initForm();
-  }
-
-  get id(): AbstractControl {
-    return this.form.get('id')!;
+    this.isNew = !unavailability;
+    this.form = this.createForm(unavailability || Unavailability.create());
   }
 
   get description(): AbstractControl {
@@ -66,10 +67,10 @@ export class PersonAvailabilityCrudDialogComponent extends SubscriptionComponent
     });
   }
 
-  onAdd(): void {
-    this.dialogData.viewStateService.change({
+  onSubmit(remove = false): void {
+    this.viewStateService.change({
       unavailabilities: {
-        update: Unavailability.fromForm(this.form.value)
+        [remove ? 'remove' : 'update']: Unavailability.fromForm(this.form.value)
       }
     });
 
@@ -77,16 +78,11 @@ export class PersonAvailabilityCrudDialogComponent extends SubscriptionComponent
   }
 
   onDelete(): void {
-    this.dialogData.viewStateService.change(
-      { unavailabilities: { remove: this.dialogData.unavailability } }
-    );
-
-    this.dialogRef.close();
+    this.onSubmit(true);
   }
 
-  private initForm(): void {
-    const unavailability = this.dialogData.unavailability;
-    this.form = this.formBuilder.group({
+  private createForm(unavailability: Unavailability): FormGroup {
+    return this.formBuilder.group({
       id: [unavailability.id],
       description: [unavailability.description, Validators.required],
       start: [unavailability.start, Validators.required],

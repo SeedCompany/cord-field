@@ -2,7 +2,7 @@
 <form mat-dialog-content
       id="ngForm"
       [formGroup]="form"
-      (ngSubmit)="onAdd()">
+      (ngSubmit)="onSubmit()">
   <mat-form-field color="accent">
     <input matInput
            maxlength="140"
@@ -48,7 +48,7 @@
           form="ngForm"
           color="accent"
           [disabled]="!form.valid">
-    <ng-container>ADD</ng-container>
+    {{ isNew ? 'ADD' : 'UPDATE' }}
   </button>
 
   <button mat-button
