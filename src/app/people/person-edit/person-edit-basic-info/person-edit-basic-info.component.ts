@@ -114,7 +114,7 @@ export class PersonEditBasicInfoComponent extends SubscriptionComponent implemen
         takeUntil(this.unsubscribe),
         onlyValidValues(this.form)
       )
-      .subscribe((changes) => {
+      .subscribe(changes => {
         this.viewStateService.change({
           realFirstName: changes.firstName,
           realLastName: changes.lastName,
@@ -127,17 +127,21 @@ export class PersonEditBasicInfoComponent extends SubscriptionComponent implemen
   }
 
   private initViewState(): void {
-    this.viewStateService.userWithChanges
+    this.viewStateService.user
       .pipe(takeUntil(this.unsubscribe))
       .subscribe(userProfile => {
-        this.userProfile = userProfile;
-
         this.firstName.patchValue(userProfile.realFirstName, { emitEvent: false });
         this.lastName.patchValue(userProfile.realLastName, { emitEvent: false });
         this.displayFirstName.patchValue(userProfile.displayFirstName, { emitEvent: false });
         this.displayLastName.patchValue(userProfile.displayLastName, { emitEvent: false });
         this.phone.patchValue(userProfile.phone, { emitEvent: false });
         this.email.patchValue(userProfile.email, { emitEvent: false });
+      });
+
+    this.viewStateService.userWithChanges
+      .pipe(takeUntil(this.unsubscribe))
+      .subscribe(userProfile => {
+        this.userProfile = userProfile;
       });
   }
 }
