@@ -15,20 +15,16 @@ export class ProjectLanguagesComponent extends SubscriptionComponent implements 
   languages: Language[] = [];
   addingLanguage = false;
 
-  constructor(private projectViewState: ProjectViewStateService) {
+  constructor(private viewStateService: ProjectViewStateService) {
     super();
   }
 
   ngOnInit() {
-    this.projectViewState.project
-      .pipe(takeUntil(this.unsubscribe))
-      .subscribe(project => {
-        this.languages = project.languages;
-      });
+    this.initViewState();
   }
 
   onSelect(language: Language) {
-    this.projectViewState.change({languages: {add: language}});
+    this.viewStateService.change({ languages: { add: language } });
     this.addingLanguage = false;
   }
 
@@ -37,11 +33,19 @@ export class ProjectLanguagesComponent extends SubscriptionComponent implements 
   }
 
   onDelete(language: Language) {
-    this.projectViewState.change({languages: {remove: language}});
+    this.viewStateService.change({ languages: { remove: language } });
     this.languages = this.languages.filter(current => current.id !== language.id);
   }
 
   trackLanguageById(index: number, language: Language) {
     return language.id;
+  }
+
+  private initViewState(): void {
+    this.viewStateService.projectWithChanges
+      .pipe(takeUntil(this.unsubscribe))
+      .subscribe(project => {
+        this.languages = project.languages;
+      });
   }
 }

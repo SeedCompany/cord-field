@@ -73,6 +73,10 @@ export class ProjectViewStateService extends AbstractViewState<Project> {
     return this.subject;
   }
 
+  get projectWithChanges(): Observable<Project> {
+    return this.subjectWithChanges;
+  }
+
   onNewId(id: string): void {
     this.projectService.getProject(id)
       .subscribe(this.onLoad);
