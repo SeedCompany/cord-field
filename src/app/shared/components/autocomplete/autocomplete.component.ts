@@ -32,7 +32,7 @@ import { catchError, debounceTime, filter, switchMap, tap } from 'rxjs/operators
     ValueAccessorProvider(AutocompleteComponent)
   ]
 })
-export class AutocompleteComponent<T> extends AbstractValueAccessor<T> implements AfterViewInit, OnChanges, OnInit {
+export class AutocompleteComponent<T> extends AbstractValueAccessor<T | T[]> implements AfterViewInit, OnChanges, OnInit {
 
   /** The current list state so those items can be filtered out from results */
   @Input() list: T[] = [];
