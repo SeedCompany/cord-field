@@ -6,10 +6,9 @@ import { ProjectRole } from '@app/core/models/project-role';
 import { UserRole } from '@app/core/models/user';
 import { AuthenticationService } from '@app/core/services/authentication.service';
 import { UserService } from '@app/core/services/user.service';
-import { merge } from 'rxjs';
-import { filter, first, takeUntil } from 'rxjs/operators';
-
-import { AutocompleteLocationComponent } from '../autocomplete/autocomplete-location.component';
+import { AutocompleteLocationComponent } from '@app/shared/components/autocomplete/autocomplete-location.component';
+import { from as observableFrom, merge, of as observableOf } from 'rxjs';
+import { filter, first, switchMap, takeUntil } from 'rxjs/operators';
 import { SubscriptionComponent } from '../subscription.component';
 
 @Component({
@@ -47,10 +46,16 @@ export class UserRolesFormComponent extends SubscriptionComponent implements OnI
     return this.locationFields.some(autocomplete => autocomplete.panelOpen);
   }
 
-  async ngOnInit(): Promise<void> {
-    const user = await this.authService.getCurrentUser();
-    this.authorizedRoles = user ? await this.userService.getAssignableRolesForUser(user) : [];
-    this.loadingRoles = false;
+  ngOnInit(): void {
+    observableFrom(this.authService.getCurrentUser())
+      .pipe(
+        switchMap(user => user ? this.userService.getAssignableRolesForUser(user) : observableOf([])),
+        takeUntil(this.unsubscribe)
+      )
+      .subscribe(roles => {
+        this.authorizedRoles = roles;
+        this.loadingRoles = false;
+      });
 
     this.userRolesCtl.valueChanges
       .pipe(takeUntil(this.unsubscribe))
