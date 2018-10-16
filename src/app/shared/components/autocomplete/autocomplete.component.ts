@@ -181,9 +181,9 @@ export class AutocompleteComponent<T> extends AbstractValueAccessor<T | T[]> imp
     this.optionSelected.next(value);
 
     if (this.chips) {
-      this.writeValue([...this.value as T[] || [], value]);
+      this.value = [...this.value as T[] || [], value];
     } else {
-      this.writeValue(value);
+      this.value = value;
     }
 
     if (this.keepInput) {

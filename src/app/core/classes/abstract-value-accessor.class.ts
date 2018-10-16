@@ -16,6 +16,9 @@ export abstract class AbstractValueAccessor<T> implements ControlValueAccessor {
 
   private _innerValue: T;
 
+  /**
+   * Call to change value and notify form of value change
+   */
   set value(value: T) {
     if (this._innerValue !== value) {
       this._innerValue = value;
@@ -31,7 +34,10 @@ export abstract class AbstractValueAccessor<T> implements ControlValueAccessor {
   onTouched = () => { };
 
   writeValue(value: T) {
-    this.value = value;
+    if (this._innerValue !== value) {
+      this._innerValue = value;
+      this.valueChange.next(value);
+    }
   }
 
   registerOnChange(fn: (_: T) => {}): void {
