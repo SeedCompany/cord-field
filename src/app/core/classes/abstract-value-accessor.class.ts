@@ -23,6 +23,7 @@ export abstract class AbstractValueAccessor<T> implements ControlValueAccessor {
     if (this._innerValue !== value) {
       this._innerValue = value;
       this.onChange(value);
+      this.onTouched();
       this.valueChange.next(value);
     }
   }
