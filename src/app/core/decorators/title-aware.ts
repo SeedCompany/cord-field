@@ -45,7 +45,15 @@ export function TitleAware(title?: Title): ClassDecorator {
     const orig = Object.getOwnPropertyDescriptor(target.prototype, 'title');
     if (orig && title) {
       throw new Error(
-        `${target.name} has both a title property/getter and a title passed to @TitleAware(). One or the other should be picked.`,
+        `${target.name} has both a title getter and a title passed to @TitleAware(). One or the other should be picked.`,
+      );
+    }
+    // Ensure that the title property isn't attempted to be dynamically changed via assignment
+    if (orig && !orig.get) {
+      throw new Error(
+        `${target.name} has a title property that's not a getter.
+        If it's a static value it should be passed to @TitleAware().
+        If it's a dynamic value it should be defined as a getter.`,
       );
     }
 
