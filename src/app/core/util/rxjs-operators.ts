@@ -1,7 +1,14 @@
 import { FormGroup } from '@angular/forms';
-import { Observable } from 'rxjs';
+import { EMPTY, from, Observable, of } from 'rxjs';
+import { isInteropObservable } from 'rxjs/internal/util/isInteropObservable';
 import { filter, map } from 'rxjs/operators';
 import { filterEntries } from './array-object-helpers';
+
+export type MaybeObservable<T> = Observable<T> | T;
+
+export const maybeObservable = <T>(obs?: MaybeObservable<T>): Observable<T> =>
+  obs == null ? EMPTY :
+    isInteropObservable(obs) ? from(obs) : of(obs);
 
 /**
  * An RXJs pipeable operator that filters form values to only ones that are valid.
