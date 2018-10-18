@@ -47,7 +47,7 @@ export class LuxonDateAdapter extends DateAdapter<DateTime> {
   }
 
   getDayOfWeek(date: DateTime): number {
-    return date.weekday;
+    return date.weekday - 1;
   }
 
   getMonthNames(style: 'long' | 'short' | 'narrow'): string[] {
@@ -71,7 +71,7 @@ export class LuxonDateAdapter extends DateAdapter<DateTime> {
   }
 
   getFirstDayOfWeek(): number {
-    return 0; // Assume Sunday.
+    return - 1;
   }
 
   getNumDaysInMonth(date: DateTime): number {
@@ -165,3 +165,5 @@ export class LuxonDateAdapter extends DateAdapter<DateTime> {
     return super.deserialize(value);
   }
 }
+
+
