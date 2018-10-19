@@ -1,11 +1,11 @@
 import { HttpResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { SortDirection } from '@angular/material';
+
+import { AuthenticationService } from '@app/core/services/authentication.service';
 import { DateTime } from 'luxon';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
-
-import { AuthenticationService } from '@app/core/services/authentication.service';
 import { ModifiedProject } from '../../projects/project-view-state.service';
 import { SaveResult } from '../abstract-view-state';
 import { ProjectCreationResult } from '../create-dialogs/project-create-dialog/project-create-dialog.component';
@@ -56,7 +56,7 @@ export class ProjectService {
 
     if (isMine) {
       const user = await this.authService.getCurrentUser();
-      params.userId = user!.id;
+      params.onlyMine = user!.id;
     }
     if (filter) {
       const filterAPI = this.buildFilter(filter);
