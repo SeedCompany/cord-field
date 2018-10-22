@@ -37,11 +37,6 @@ export class PersonEditBasicInfoComponent extends SubscriptionComponent implemen
     this.initForm();
   }
 
-  ngOnInit(): void {
-    this.initFormEvents();
-    this.initViewState();
-  }
-
   get firstName(): AbstractControl {
     return this.form.get('firstName')!;
   }
@@ -64,6 +59,11 @@ export class PersonEditBasicInfoComponent extends SubscriptionComponent implemen
 
   get phone(): AbstractControl {
     return this.form.get('phone')!;
+  }
+
+  ngOnInit(): void {
+    this.initFormEvents();
+    this.initViewState();
   }
 
   initRolesCtrl(event: AbstractControl): void {
@@ -104,7 +104,7 @@ export class PersonEditBasicInfoComponent extends SubscriptionComponent implemen
       displayFirstName: ['', [Validators.required, Validators.minLength(2)]],
       displayLastName: ['', [Validators.required, Validators.minLength(2)]],
       email: ['', [Validators.required, CustomValidators.email]],
-      phone: ['']
+      phone: ['', [CustomValidators.phone]]
     });
   }
 
