@@ -70,11 +70,11 @@ export class PersonEditAboutComponent extends SubscriptionComponent implements O
         language: undefined,
         proficiency: undefined
       };
-
+      const languageName = knownLanguage.language ? knownLanguage.language.nameOrDisplayName : undefined;
       return this.formBuilder.group({
         id: [knownLanguage.id],
         isNew: [isNew],
-        language: [knownLanguage.language, Validators.required],
+        language: [languageName, Validators.required],
         proficiency: [knownLanguage.proficiency, Validators.required]
       });
     };
