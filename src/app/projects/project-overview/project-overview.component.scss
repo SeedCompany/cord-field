@@ -17,4 +17,12 @@ app-project-overview-sidebar {
   background: mat-background($theme, background);
   padding: 24px;
   overflow-y: scroll;
+
+  > * {
+    margin-bottom: 24px;
+
+    &:last-child {
+      margin-bottom: 0;
+    }
+  }
 }

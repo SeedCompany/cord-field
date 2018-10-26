@@ -18,13 +18,7 @@ const routes: Routes = [
     component: ProjectComponent,
     children: [
       {path: '', redirectTo: 'overview', pathMatch: 'full'},
-      {
-        path: 'overview',
-        component: ProjectOverviewComponent,
-        children: [
-          {path: '', component: ProjectEngagementDetailsComponent, pathMatch: 'full'}
-        ]
-      },
+      {path: 'overview', component: ProjectOverviewComponent},
       {path: 'forms', component: ProjectFormsComponent},
       {path: 'plan', component: ProjectPlanComponent},
       {path: 'budget', component: ProjectBudgetComponent},
