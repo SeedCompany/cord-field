@@ -2,7 +2,8 @@ import { NgModule } from '@angular/core';
 
 import { SharedModule } from '../shared/shared.module';
 import { ProjectBudgetComponent } from './project-budget/project-budget.component';
-import { ProjectEngagementDetailsComponent } from './project-engagement-details/project-engagement-details.component';
+import { ProjectEngagementComponent } from './project-engagements/project-engagement/project-engagement.component';
+import { ProjectEngagementsComponent } from './project-engagements/project-engagements.component';
 import { CreateDirectoryDialogComponent } from './project-files/create-directory-dialog/create-directory-dialog.component';
 import { FileBreadcrumbsComponent } from './project-files/file-breadcrumbs/file-breadcrumbs.component';
 import { FileRenameDialogComponent } from './project-files/file-rename-dialog/file-rename-dialog.component';
@@ -16,11 +17,6 @@ import { ProjectLocationTimeframeComponent } from './project-location-timeframe/
 import { ProjectOverviewSidebarComponent } from './project-overview-sidebar/project-overview-sidebar.component';
 import { ProjectOverviewComponent } from './project-overview/project-overview.component';
 import { ProjectPartnershipsComponent } from './project-partnerships/project-partnerships.component';
-import {
-  ProjectPlanLanguageEngagementComponent
-} from './project-plan/project-plan-language-engagement/project-plan-language-engagement.component';
-import { ProjectPlanSidebarComponent } from './project-plan/project-plan-sidebar/project-plan-sidebar.component';
-import { ProjectPlanComponent } from './project-plan/project-plan.component';
 import { ProjectStatusComponent } from './project-status/project-status.component';
 import { ProjectTeamMemberRoleDialogComponent } from './project-team-member-role-dialog/project-team-member-role-dialog.component';
 import { ProjectTeamMemberAddComponent } from './project-team/project-team-member-add/project-team-member-add.component';
@@ -41,7 +37,6 @@ import { ProjectsRoutingModule } from './projects-routing.module';
     OverwriteFileWarningComponent,
     ProjectBudgetComponent,
     ProjectComponent,
-    ProjectEngagementDetailsComponent,
     ProjectFilesComponent,
     ProjectFormsComponent,
     ProjectListComponent,
@@ -50,7 +45,8 @@ import { ProjectsRoutingModule } from './projects-routing.module';
     ProjectOverviewComponent,
     ProjectOverviewSidebarComponent,
     ProjectPartnershipsComponent,
-    ProjectPlanComponent,
+    ProjectEngagementsComponent,
+    ProjectEngagementComponent,
     ProjectTeamComponent,
     ProjectTeamMemberAddComponent,
     ProjectTeamMemberRoleDialogComponent,
@@ -58,9 +54,7 @@ import { ProjectsRoutingModule } from './projects-routing.module';
     ProjectLanguagesComponent,
     ProjectLocationTimeframeComponent,
     ProjectStatusComponent,
-    ProjectLocationTimeframeComponent,
-    ProjectPlanSidebarComponent,
-    ProjectPlanLanguageEngagementComponent
+    ProjectLocationTimeframeComponent
   ],
   entryComponents: [
     CreateDirectoryDialogComponent,

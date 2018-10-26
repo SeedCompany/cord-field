@@ -14,10 +14,13 @@ export class EngagementService {
   getEngagement(id: string): Promise<Engagement> {
     return this.ploApi
       .get<Engagement>(`/engagements/${id}`)
-      .pipe(map(Engagement.fromJson)).toPromise();
+      .pipe(map(Engagement.fromJson))
+      .toPromise();
   }
 
   async save(engagementId: string, data: ModifiedEngagement): Promise<void> {
-    await this.ploApi.put<Engagement>(`/engagements/${engagementId}/save`, data).toPromise();
+    await this.ploApi
+      .put<Engagement>(`/engagements/${engagementId}/save`, data)
+      .toPromise();
   }
 }

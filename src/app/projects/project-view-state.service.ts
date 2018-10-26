@@ -1,6 +1,9 @@
 import { Injectable } from '@angular/core';
+import { Engagement } from '@app/core/models/engagement';
+import { clone } from '@app/core/util';
 import { DateTime } from 'luxon';
 import { Observable } from 'rxjs';
+import { first, map } from 'rxjs/operators';
 import { AbstractViewState, SaveResult } from '../core/abstract-view-state';
 import { accessDates, ChangeConfig, mapChangeList, returnId } from '../core/change-engine';
 import { Language } from '../core/models/language';
@@ -79,6 +82,26 @@ export class ProjectViewStateService extends AbstractViewState<Project> {
 
   onNewId(id: string): void {
     this.projectService.getProject(id)
+      .subscribe(this.onLoad);
+  }
+
+  updateEngagement(engagement: Engagement): void {
+    this.project
+      .pipe(
+        first(),
+        map(project => {
+          const next = clone(project);
+          next.engagements = [...next.engagements];
+
+          const index = project.engagements.findIndex(e => e.id === engagement.id);
+          if (index === -1) {
+            throw new Error('Could not find engagement in project');
+          }
+          next.engagements[index] = engagement;
+
+          return next;
+        })
+      )
       .subscribe(this.onLoad);
   }
 

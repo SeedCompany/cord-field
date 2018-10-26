@@ -49,7 +49,7 @@ export class Project {
     project.team = (json.team || []).map(TeamMember.fromJson);
     project.updatedAt = json.updatedAt ? DateTime.fromISO(json.updatedAt) : DateTime.fromMillis(0);
     project.estimatedSubmission = json.estimatedSubmission ? DateTime.fromISO(json.estimatedSubmission) : null;
-    project.engagements = Engagement.fromJsonArray(json.engagements);
+    project.engagements = (json.engagements || []).map(Engagement.fromJson);
 
     return project;
   }

@@ -1,7 +1,7 @@
 import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
-import { inject, TestBed } from '@angular/core/testing';
+import { TestBed } from '@angular/core/testing';
 import { CoreModule } from '@app/core/core.module';
-import { Engagement, ModifiedEngagement, ProjectMedium, ProjectProduct } from '@app/core/models/engagement';
+import { Engagement, ModifiedEngagement, ProjectApproach, ProjectMedium, ProjectProduct } from '@app/core/models/engagement';
 import { environment } from '../../../environments/environment';
 import { EngagementService } from './engagement.service';
 
@@ -22,19 +22,22 @@ describe('EngagementService', () => {
     engagementService = TestBed.get(EngagementService);
   });
 
-  it('should be created', inject([EngagementService], (service: EngagementService) => {
-    expect(service).toBeTruthy();
-  }));
+  afterEach(() => {
+    httpMock.verify();
+  });
+
   it('should get a project by id', (done: DoneFn) => {
     const id = 'iBFFFGvBVlIpvsKVanrbIYVBaPwkDnhjjb0.n_cPm_zyG_7D7WWLDT7ozQ.zfUnrX9tXoPtWtDc9PLhUw';
     const url = `${testBaseUrl}/engagements/${id}`;
     const mockResponse = {
       id,
+      language: {
+        id: 'languageId'
+      },
       products: [ProjectProduct.FullBible],
       mediums: [ProjectMedium.EBook],
       updatedAt: '2018-03-26T05:27:49.000Z',
-      isLukePartnership: false,
-      isFirstScripture: false
+      tags: []
     };
 
     engagementService.getEngagement(id)
@@ -43,32 +46,32 @@ describe('EngagementService', () => {
         expect(engagement.products).toBeDefined();
         expect(Array.isArray(engagement.products)).toBe(true);
         expect(Array.isArray(engagement.mediums)).toBe(true);
-        expect(engagement.isLukePartnership).toBe(false);
-        expect(engagement.isFirstScripture).toBe(false);
+        done();
       })
-      .then(done)
       .catch(done.fail);
 
     httpMock
       .expectOne(url)
       .flush(mockResponse);
-    httpMock.verify();
   });
+
   it('should save engagement data', (done: DoneFn) => {
     const id = 'iBFFFGvBVlIpvsKVanrbIYVBaPwkDnhjjb0.n_cPm_zyG_7D7WWLDT7ozQ.zfUnrX9tXoPtWtDc9PLhUw';
-    const url = `${testBaseUrl}/engagements/${id}/save`;
-    const mockData: ModifiedEngagement = {
+    const modified: ModifiedEngagement = {
       products: [ProjectProduct.FullBible],
-      mediums: [ProjectMedium.EBook]
+      mediums: [ProjectMedium.EBook],
+      approaches: [ProjectApproach.OralStorying],
+      tags: ['luke_partnership'],
+      isDedicationPlanned: false,
+      dedicationDate: null
     };
 
-    engagementService.save(id, mockData)
+    engagementService.save(id, modified)
       .then(done)
       .catch(done.fail);
 
     httpMock
-      .expectOne(url)
+      .expectOne(`${testBaseUrl}/engagements/${id}/save`)
       .flush({});
-    httpMock.verify();
   });
 });

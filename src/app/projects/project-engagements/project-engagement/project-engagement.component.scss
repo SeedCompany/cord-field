@@ -1,0 +1,32 @@
+@import "~src/styles/imports";
+
+:host {
+  @extend %component-defaults;
+  flex: 1;
+}
+
+app-speed-dial {
+  position: absolute;
+  top: -($mat-fab-height / 2);
+  right: 24px; // matches tab padding
+  z-index: 2;
+}
+
+mat-card {
+  margin: 24px;
+}
+
+mat-card-content {
+  display: flex;
+  flex-direction: column;
+}
+
+// Don't show pointer passed clickable text/box
+mat-checkbox {
+  align-self: flex-start;
+}
+
+.dedication {
+  display: flex;
+  margin-left: 28px;
+}
