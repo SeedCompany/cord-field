@@ -77,8 +77,11 @@ export function TitleAware(title?: Title): ClassDecorator {
     target.prototype.ngAfterViewInit = function () {
       const outlet: RouterOutlet | undefined = this.__routerOutlet;
       if (outlet) {
-        activateSub = outlet.activateEvents
-          .pipe(startWith(outlet.component))
+        let activate$: Observable<Partial<TitleProp>> = outlet.activateEvents;
+        if (outlet.isActivated) {
+          activate$ = activate$.pipe(startWith(outlet.component));
+        }
+        activateSub = activate$
           .subscribe((component: Partial<TitleProp>) => {
             if (childTitleSub) { // Just in case?
               childTitleSub.unsubscribe();
