@@ -33,7 +33,7 @@ export interface ModifiedProject {
     update?: TeamMemberForSaveAPI[];
     remove?: string[];
   };
-  budget?: {
+  budgets?: {
     add?: string[];
     update?: string[];
     remove?: string[];
@@ -69,7 +69,7 @@ const config: ChangeConfig<Project> = {
     accessor: returnId,
     toServer: mapChangeList<TeamMember, TeamMemberForSaveAPI, string>(TeamMember.forSaveAPI, returnId)
   },
-  budget: {
+  budgets: {
     accessor: returnId,
     toServer: mapChangeList<ProjectBudget, string, string>(returnId, returnId)
   }

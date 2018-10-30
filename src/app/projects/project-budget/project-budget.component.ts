@@ -1,8 +1,9 @@
 import { Component, OnInit } from '@angular/core';
-import { FormArray, FormBuilder, FormGroup } from '@angular/forms';
+import { AbstractControl, FormArray, FormBuilder, FormGroup } from '@angular/forms';
 import { TitleAware } from '@app/core/decorators';
 import { ProjectBudget } from '@app/core/models/budget';
-import { ProjectTabComponent } from '../abstract-project-tab';
+import { SubscriptionComponent } from '@app/shared/components/subscription.component';
+import { takeUntil } from 'rxjs/operators';
 import { ProjectViewStateService } from '../project-view-state.service';
 
 @Component({
@@ -11,47 +12,49 @@ import { ProjectViewStateService } from '../project-view-state.service';
   styleUrls: ['./project-budget.component.scss']
 })
 @TitleAware('Budget')
-export class ProjectBudgetComponent extends ProjectTabComponent implements OnInit {
+export class ProjectBudgetComponent extends SubscriptionComponent implements OnInit {
   form: FormGroup;
 
   constructor(
     private formBuilder: FormBuilder,
-    projectViewState: ProjectViewStateService
+    private viewStateService: ProjectViewStateService
   ) {
-    super(projectViewState);
+    super();
+  }
 
-    this._initForm();
-    this._initViewState();
+  ngOnInit(): void {
+    this.initForm();
+
+    this.viewStateService.project
+      .pipe(takeUntil(this.unsubscribe))
+      .subscribe(project => {
+        this.createBudgetForm(project.budgets);
+      });
   }
 
   get budgets(): FormArray {
     return this.form.get('budgets') as FormArray;
   }
 
-  ngOnInit(): void {
-    const createBudgetCtrl = (projectBudget?: ProjectBudget) => {
-      const budget = projectBudget || ProjectBudget.create();
+  trackBudgetById(index: number, control: AbstractControl) {
+    return control.get('id')!.value;
+  }
 
-      return this.formBuilder.group({
-        id: [budget.id],
-        partnerName: [budget.partnerName],
-        fiscalYear: [budget.fiscalYear],
-        amount: [budget.amount]
+  private createBudgetForm(budgets: ProjectBudget[]) {
+    if (budgets.length) {
+      budgets[0].details.forEach((detail) => {
+        this.budgets.push(this.formBuilder.group({
+          id: detail.organizationId,
+          fiscalYear: detail.fiscalYear,
+          amount: detail.amount
+        }));
       });
-    };
-
-    const budgetCtrl = this.projectViewState.createFormArray('team', createBudgetCtrl, this.unsubscribe);
-    this.form.setControl('budgets', budgetCtrl.control);
+    }
   }
 
-  private _initForm(): void {
+  private initForm(): void {
     this.form = this.formBuilder.group({
-      budgets: [[]]
+      budgets: this.formBuilder.array([])
     });
-  }
-
-  private _initViewState(): void {
-
-
   }
 }

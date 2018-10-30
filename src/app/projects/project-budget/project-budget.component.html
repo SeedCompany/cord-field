@@ -22,15 +22,15 @@
 
     <form [formGroup]="form">
       <div formArrayName="budgets"
-           *ngFor="let budget of budgets.controls; let i = index;">
+           *ngFor="let budget of budgets.controls; let i = index; trackBy: trackBudgetById;">
         <div [formGroupName]="i"
              class="flex-row">
 
           <!-- Budget Name Column -->
-          <span class="mat-subheading-1">Seed Company</span>
+          <span class="mat-subheading-1">{{ budget.get('id')?.value }}</span>
 
           <!-- Budget Fiscal Year Column -->
-          <span class="mat-subheading-1">FY2003</span>
+          <span class="mat-subheading-1">{{ 'FY' + budget.get('fiscalYear')?.value }}</span>
 
           <!-- Budget Budget Amount Column -->
           <mat-form-field color="accent"
