@@ -1,0 +1,12 @@
+<div class="sidebar">
+  <mat-nav-list *ngIf="project">
+    <a *ngFor="let engagement of project.engagements; trackBy: trackById"
+       mat-list-item
+       routerLink="./{{ engagement.id }}"
+       routerLinkActive="active"
+    >{{ engagement.language.displayName }}</a>
+  </mat-nav-list>
+</div>
+<div class="main">
+  <router-outlet></router-outlet>
+</div>
