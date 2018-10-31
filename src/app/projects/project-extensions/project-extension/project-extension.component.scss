@@ -1,0 +1,22 @@
+@import "~src/styles/imports";
+
+:host {
+  @extend %component-defaults;
+  flex: 1;
+}
+
+app-speed-dial {
+  position: absolute;
+  top: -($mat-fab-height / 2);
+  right: 24px; // matches tab padding
+  z-index: 2;
+}
+
+mat-card:not(:last-child) {
+  margin-bottom: 8px * 3;
+}
+
+mat-card-content {
+  display: flex;
+  flex-direction: column;
+}

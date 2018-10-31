@@ -1,5 +1,6 @@
 import { ProjectBudget } from '@app/core/models/budget';
 import { Engagement } from '@app/core/models/engagement';
+import { ProjectExtension } from '@app/core/models/project/extension';
 import { DateTime } from 'luxon';
 import { Language } from './language';
 import { Location } from './location';
@@ -10,6 +11,7 @@ import { ProjectType } from './project/type';
 import { TeamMember } from './team-member';
 import { User } from './user';
 
+export * from './project/extension';
 export * from './project/status';
 export * from './project/type';
 export * from './project/sensitivity';
@@ -31,6 +33,7 @@ export class Project {
   updatedAt: DateTime;
   estimatedSubmission: DateTime | null;
   engagements: Engagement[];
+  extensions: ProjectExtension[];
 
   static fromJson(json: any): Project {
     json = json || {};
@@ -53,6 +56,7 @@ export class Project {
     project.estimatedSubmission = json.estimatedSubmission ? DateTime.fromISO(json.estimatedSubmission) : null;
     project.engagements = (json.engagements || []).map(Engagement.fromJson);
     project.budgets = (json.budgets || []).map((b: any) => ProjectBudget.fromJson(project, b));
+    project.extensions = (json.extensions || []).map(ProjectExtension.fromJson);
 
     return project;
   }

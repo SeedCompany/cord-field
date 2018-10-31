@@ -9,7 +9,7 @@ import { AbstractViewState, SaveResult } from '../core/abstract-view-state';
 import { accessDates, ChangeConfig, mapChangeList, returnId } from '../core/change-engine';
 import { Language } from '../core/models/language';
 import { Partnership, PartnershipForSaveAPI } from '../core/models/partnership';
-import { Project, ProjectStatus } from '../core/models/project';
+import { Project, ProjectExtension, ProjectStatus } from '../core/models/project';
 import { TeamMember, TeamMemberForSaveAPI } from '../core/models/team-member';
 import { ProjectService } from '../core/services/project.service';
 
@@ -106,6 +106,23 @@ export class ProjectViewStateService extends AbstractViewState<Project> {
   onNewId(id: string): void {
     this.projectService.getProject(id)
       .subscribe(this.onLoad);
+  }
+
+  async saveExtension(extension: ProjectExtension): Promise<void> {
+    const project = await this.project.pipe(first()).toPromise();
+
+    const result = await this.projectService.saveExtension(project.id, extension);
+    const next = clone(project);
+    next.extensions = [...next.extensions];
+
+    const index = project.extensions.findIndex(e => e.id === result.id);
+    if (index !== -1) {
+      next.extensions[index] = result;
+    } else {
+      next.extensions.push(result);
+    }
+
+    this.onLoad.next(next);
   }
 
   updateEngagement(engagement: Engagement): void {

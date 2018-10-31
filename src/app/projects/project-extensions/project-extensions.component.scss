@@ -1,0 +1,30 @@
+@import "~src/styles/imports";
+
+:host {
+  @extend %component-defaults;
+  flex: 1;
+  flex-direction: row;
+  position: relative; // for speed dial
+}
+
+.sidebar {
+  width: 300px;
+  @include mat-elevation(2);
+  background: mat-background($theme, card);
+  z-index: 1;
+  overflow-y: scroll;
+
+  .mat-icon {
+    margin-right: 8px;
+  }
+}
+
+.main {
+  flex: 1;
+  padding: 24px;
+  overflow-y: scroll;
+}
+
+a.active {
+  color: mat-color($accent);
+}
