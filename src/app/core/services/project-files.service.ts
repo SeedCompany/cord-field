@@ -46,7 +46,7 @@ export class ProjectFilesService {
     const dir = await this.ploApi
       .post(`/projects/${parent.projectId}/files`, {
         projectId: parent.projectId,
-        parent: parent.id,
+        parentId: parent.id,
         name,
         type: FileNodeType.Directory
       })
