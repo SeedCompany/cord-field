@@ -1,11 +1,14 @@
 import { Component, OnInit } from '@angular/core';
-import { AbstractControl, FormArray, FormBuilder, FormGroup } from '@angular/forms';
+import { AbstractControl, FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { TitleAware } from '@app/core/decorators';
-import { ProjectBudget } from '@app/core/models/budget';
+import { BudgetStatus, ProjectBudget, ProjectBudgetDetails } from '@app/core/models/budget';
+import { filterRequired } from '@app/core/util';
 import { SubscriptionComponent } from '@app/shared/components/subscription.component';
-import { takeUntil } from 'rxjs/operators';
+import { Observable } from 'rxjs';
+import { map, startWith, takeUntil } from 'rxjs/operators';
 import { ProjectViewStateService } from '../project-view-state.service';
 
+/* tslint:disable:trackBy-function */
 @Component({
   selector: 'app-project-budget',
   templateUrl: './project-budget.component.html',
@@ -14,6 +17,7 @@ import { ProjectViewStateService } from '../project-view-state.service';
 @TitleAware('Budget')
 export class ProjectBudgetComponent extends SubscriptionComponent implements OnInit {
   form: FormGroup;
+  total: Observable<number>;
 
   constructor(
     private formBuilder: FormBuilder,
@@ -25,36 +29,63 @@ export class ProjectBudgetComponent extends SubscriptionComponent implements OnI
   ngOnInit(): void {
     this.initForm();
 
-    this.viewStateService.project
+    this.viewStateService
+      .project
+      .pipe(
+        map(project => project.budgets.find(budget => budget.status === BudgetStatus.Active)),
+        filterRequired()
+      )
+      .subscribe(budget => this.createBudgetForm(budget));
+
+    this.form.valueChanges
       .pipe(takeUntil(this.unsubscribe))
-      .subscribe(project => {
-        this.createBudgetForm(project.budgets);
+      .subscribe(val => {
+        this.viewStateService.change({
+          budgets: [val]
+        });
       });
+
+    this.total = (this.budgets.valueChanges as Observable<ProjectBudgetDetails[]>)
+      .pipe(
+        startWith(this.budgets.value as ProjectBudgetDetails[]),
+        map(val => val.reduce((total, item) => total + Number(item.amount || 0), 0))
+      );
   }
 
   get budgets(): FormArray {
-    return this.form.get('budgets') as FormArray;
+    return this.form.get('budgetDetails') as FormArray;
   }
 
   trackBudgetById(index: number, control: AbstractControl) {
-    return control.get('id')!.value;
+    return control.get('organization')!.value.id;
   }
 
-  private createBudgetForm(budgets: ProjectBudget[]) {
-    if (budgets.length) {
-      budgets[0].details.forEach((detail) => {
-        this.budgets.push(this.formBuilder.group({
-          id: detail.organizationId,
-          fiscalYear: detail.fiscalYear,
-          amount: detail.amount
-        }));
-      });
+  private createBudgetForm(budget: ProjectBudget) {
+    this.form.reset({
+      id: budget.id,
+      status: budget.status
+    }, {
+      emitEvent: false
+    });
+
+    const budgets = this.budgets;
+    while (budgets.length !== 0) {
+      budgets.removeAt(0);
+    }
+    for (const detail of budget.budgetDetails) {
+      budgets.push(this.formBuilder.group({
+        organization: detail.organization,
+        fiscalYear: detail.fiscalYear,
+        amount: [detail.amount, [Validators.required, Validators.min(0)]]
+      }));
     }
   }
 
   private initForm(): void {
     this.form = this.formBuilder.group({
-      budgets: this.formBuilder.array([])
+      id: [''],
+      status: [''],
+      budgetDetails: this.formBuilder.array([])
     });
   }
 }

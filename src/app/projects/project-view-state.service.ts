@@ -33,19 +33,17 @@ export interface ModifiedProject {
     update?: TeamMemberForSaveAPI[];
     remove?: string[];
   };
-  budgets?: {
-    add?: string[];
-    update?: string[];
-    remove?: string[];
-  };
+  budgets?: ProjectBudget[];
 }
 
 const config: ChangeConfig<Project> = {
   mouStart: {
-    accessor: accessDates
+    accessor: accessDates,
+    forceRefresh: true
   },
   mouEnd: {
-    accessor: accessDates
+    accessor: accessDates,
+    forceRefresh: true
   },
   estimatedSubmission: {
     accessor: accessDates
@@ -63,15 +61,30 @@ const config: ChangeConfig<Project> = {
   },
   partnerships: {
     accessor: returnId,
-    toServer: mapChangeList<Partnership, PartnershipForSaveAPI, string>(Partnership.forSaveAPI, returnId)
+    toServer: mapChangeList<Partnership, PartnershipForSaveAPI, string>(Partnership.forSaveAPI, returnId),
+    forceRefresh: true
   },
   team: {
     accessor: returnId,
     toServer: mapChangeList<TeamMember, TeamMemberForSaveAPI, string>(TeamMember.forSaveAPI, returnId)
   },
   budgets: {
-    accessor: returnId,
-    toServer: mapChangeList<ProjectBudget, string, string>(returnId, returnId)
+    // Identify project budget as a scalar value
+    accessor: (budget: ProjectBudget) => ([
+      budget.id,
+      budget.status,
+      budget.budgetDetails.map(item => Number(item.amount || 0)).join(',')
+    ].join(',')),
+    // Map organization back to organizationId
+    toServer: (budgets: ProjectBudget[]) => budgets.map(budget => ({
+      id: budget.id,
+      status: budget.status,
+      budgetDetails: budget.budgetDetails.map(detail => ({
+        organizationId: detail.organization.id,
+        fiscalYear: detail.fiscalYear,
+        amount: detail.amount
+      }))
+    }))
   }
 };
 

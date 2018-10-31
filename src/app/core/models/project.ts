@@ -52,7 +52,7 @@ export class Project {
     project.updatedAt = json.updatedAt ? DateTime.fromISO(json.updatedAt) : DateTime.fromMillis(0);
     project.estimatedSubmission = json.estimatedSubmission ? DateTime.fromISO(json.estimatedSubmission) : null;
     project.engagements = (json.engagements || []).map(Engagement.fromJson);
-    project.budgets = (json.budgets || []).map(ProjectBudget.fromJson);
+    project.budgets = (json.budgets || []).map((b: any) => ProjectBudget.fromJson(project, b));
 
     return project;
   }
