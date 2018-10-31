@@ -143,15 +143,18 @@ export class AutocompleteComponent<T> extends AbstractValueAccessor<T> implement
         // Be sure first error shows immediately instead of waiting for field to blur
         this.searchCtrl.markAsTouched();
 
-        if (this.chips && this.dedupe) {
-            this.filteredOptions = payload.filter((item) => !(this.value as T[]).map(this.trackBy).includes(this.trackBy(item)));
-        } else if (this.dedupeOptions.length && this.dedupe) {
-          const dedupeItems = this.dedupeOptions.map(this.trackBy);
-
-          this.filteredOptions = payload.filter((item) => !dedupeItems.includes(this.trackBy(item)));
-        } else {
-          this.filteredOptions = payload;
+        // Remove currently selected values
+        if (this.chips) {
+          payload = payload.filter((item) => !(this.value as T[]).map(this.trackBy).includes(this.trackBy(item)));
         }
+
+        // Remove dedupe options
+        if (this.dedupeOptions.length) {
+          const dedupeItems = this.dedupeOptions.map(this.trackBy);
+          payload = payload.filter((item) => !dedupeItems.includes(this.trackBy(item)));
+        }
+
+        this.filteredOptions = payload;
 
         this.searchCtrl.setErrors(this.filteredOptions.length === 0 ? { noMatches: true } : null);
       });
