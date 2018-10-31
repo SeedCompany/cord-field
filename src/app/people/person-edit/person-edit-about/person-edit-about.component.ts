@@ -46,6 +46,22 @@ export class PersonEditAboutComponent extends SubscriptionComponent implements O
     super();
   }
 
+  get bio(): TypedFormControl<string> {
+    return this.form.get('bio') as TypedFormControl<string>;
+  }
+
+  get skills(): TypedFormControl<string[]> {
+    return this.form.get('skills') as TypedFormControl<string[]>;
+  }
+
+  get education(): FormArray {
+    return this.form.get('education') as FormArray;
+  }
+
+  get knownLanguages(): FormArray {
+    return this.form.get('knownLanguages') as FormArray;
+  }
+
   ngOnInit() {
     const createEduControl = (education?: Education) => {
       education = education || Education.create();
@@ -99,22 +115,6 @@ export class PersonEditAboutComponent extends SubscriptionComponent implements O
       .subscribe(({ bio, skills }) => {
         this.userViewState.change({ bio, skills });
       });
-  }
-
-  get bio(): TypedFormControl<string> {
-    return this.form.get('bio') as TypedFormControl<string>;
-  }
-
-  get skills(): TypedFormControl<string[]> {
-    return this.form.get('skills') as TypedFormControl<string[]>;
-  }
-
-  get education(): FormArray {
-    return this.form.get('education') as FormArray;
-  }
-
-  get knownLanguages(): FormArray {
-    return this.form.get('knownLanguages') as FormArray;
   }
 
   trackEducationControlBy(index: number, control: AbstractControl) {

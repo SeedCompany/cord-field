@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import { ProjectBudget } from '@app/core/models/budget';
 import { Engagement } from '@app/core/models/engagement';
 import { clone } from '@app/core/util';
 import { DateTime } from 'luxon';
@@ -32,14 +33,17 @@ export interface ModifiedProject {
     update?: TeamMemberForSaveAPI[];
     remove?: string[];
   };
+  budgets?: ProjectBudget[];
 }
 
 const config: ChangeConfig<Project> = {
   mouStart: {
-    accessor: accessDates
+    accessor: accessDates,
+    forceRefresh: true
   },
   mouEnd: {
-    accessor: accessDates
+    accessor: accessDates,
+    forceRefresh: true
   },
   estimatedSubmission: {
     accessor: accessDates
@@ -57,11 +61,30 @@ const config: ChangeConfig<Project> = {
   },
   partnerships: {
     accessor: returnId,
-    toServer: mapChangeList<Partnership, PartnershipForSaveAPI, string>(Partnership.forSaveAPI, returnId)
+    toServer: mapChangeList<Partnership, PartnershipForSaveAPI, string>(Partnership.forSaveAPI, returnId),
+    forceRefresh: true
   },
   team: {
     accessor: returnId,
     toServer: mapChangeList<TeamMember, TeamMemberForSaveAPI, string>(TeamMember.forSaveAPI, returnId)
+  },
+  budgets: {
+    // Identify project budget as a scalar value
+    accessor: (budget: ProjectBudget) => ([
+      budget.id,
+      budget.status,
+      budget.budgetDetails.map(item => Number(item.amount || 0)).join(',')
+    ].join(',')),
+    // Map organization back to organizationId
+    toServer: (budgets: ProjectBudget[]) => budgets.map(budget => ({
+      id: budget.id,
+      status: budget.status,
+      budgetDetails: budget.budgetDetails.map(detail => ({
+        organizationId: detail.organization.id,
+        fiscalYear: detail.fiscalYear,
+        amount: detail.amount
+      }))
+    }))
   }
 };
 

@@ -1,3 +1,4 @@
+import { ProjectBudget } from '@app/core/models/budget';
 import { Engagement } from '@app/core/models/engagement';
 import { DateTime } from 'luxon';
 import { Language } from './language';
@@ -26,6 +27,7 @@ export class Project {
   partnerships: Partnership[];
   sensitivity: ProjectSensitivity;
   team: TeamMember[];
+  budgets: ProjectBudget[];
   updatedAt: DateTime;
   estimatedSubmission: DateTime | null;
   engagements: Engagement[];
@@ -50,6 +52,7 @@ export class Project {
     project.updatedAt = json.updatedAt ? DateTime.fromISO(json.updatedAt) : DateTime.fromMillis(0);
     project.estimatedSubmission = json.estimatedSubmission ? DateTime.fromISO(json.estimatedSubmission) : null;
     project.engagements = (json.engagements || []).map(Engagement.fromJson);
+    project.budgets = (json.budgets || []).map((b: any) => ProjectBudget.fromJson(project, b));
 
     return project;
   }
