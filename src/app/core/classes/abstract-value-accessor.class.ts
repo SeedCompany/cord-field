@@ -12,29 +12,36 @@ export function ValueAccessorProvider(type: any) {
 }
 
 export abstract class AbstractValueAccessor<T> implements ControlValueAccessor {
-  valueChange: Subject<T | T[]> = new Subject<T | T[]>();
+  valueChange: Subject<T> = new Subject<T>();
 
-  private _innerValue: T | T[];
+  private _innerValue: T;
 
-  set value(value: T | T[]) {
+  /**
+   * Call to change value and notify form of value change
+   */
+  set value(value: T) {
     if (this._innerValue !== value) {
       this._innerValue = value;
       this.onChange(value);
+      this.onTouched();
       this.valueChange.next(value);
     }
   }
-  get value(): T | T[] {
+  get value(): T {
     return this._innerValue;
   }
 
-  onChange = (_: T | T[]) => { };
+  onChange = (_: T) => { };
   onTouched = () => { };
 
-  writeValue(value: T | T[]) {
-    this.value = value;
+  writeValue(value: T) {
+    if (this._innerValue !== value) {
+      this._innerValue = value;
+      this.valueChange.next(value);
+    }
   }
 
-  registerOnChange(fn: (_: T | T[]) => {}): void {
+  registerOnChange(fn: (_: T) => {}): void {
     this.onChange = fn;
   }
 
