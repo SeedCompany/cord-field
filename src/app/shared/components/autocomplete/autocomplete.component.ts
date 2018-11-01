@@ -107,9 +107,11 @@ export class AutocompleteComponent<T> extends AbstractValueAccessor<T> implement
       .pipe(
         filter((term) => typeof term === 'string'),
         debounceTime(300),
-        tap(() => {
+        tap((term) => {
           this.filteredOptions.length = 0;
-          this.searchCtrl.markAsPending();
+          if (term.length) {
+            this.searchCtrl.markAsPending();
+          }
 
           if (this.keepInput && this.validSelection) {
             this.validSelection = false;
