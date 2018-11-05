@@ -11,6 +11,7 @@ export function phone(control: AbstractControl): ValidationErrors | null {
     }
   } catch (error) {
     // Not a phone number, non-existent country, etc.
+    return { invalidPhone: true };
   }
 
   return null;
