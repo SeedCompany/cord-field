@@ -53,7 +53,7 @@ export class AutocompleteComponent<T> extends AbstractValueAccessor<T | T[]> imp
   @Input() requiredMessage = 'Please enter a value';
   @Input() serverErrorMessage = 'Failed to fetch results';
   @Input() pendingMessage = 'Searching...';
-  @Input() noMatchesMessage = 'No matches found';
+  @Input() noMatchesMessage = 'No matches found Or Duplicate results found';
 
   @Output() optionSelected = new EventEmitter<T | null>();
   @Output() cancel = new EventEmitter<void>();
