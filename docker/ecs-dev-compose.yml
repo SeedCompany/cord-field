@@ -26,5 +26,4 @@ services:
       SERVICE_8001_NAME: client-tsco-cord-plo-dev
       MIGRATE: "true"
       DUMP_CONFIG: "true"
-      DOMO: "true"
     mem_limit: 512000000
