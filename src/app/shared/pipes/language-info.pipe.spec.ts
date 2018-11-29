@@ -10,7 +10,7 @@ describe('LanguageInfoPipe', () => {
     const language = Language.fromJson({
       ethnologueCode: 'code',
       rodNumber: 5000,
-      organizationPopulation: 5000
+      organizationPopulation: 5000,
     });
     const expected = 'Ethnologue: code | ROD: 5000 | Population: 5,000';
 

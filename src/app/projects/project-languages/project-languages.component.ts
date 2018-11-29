@@ -8,7 +8,7 @@ import { ProjectViewStateService } from '../project-view-state.service';
 @Component({
   selector: 'app-project-languages',
   templateUrl: './project-languages.component.html',
-  styleUrls: ['./project-languages.component.scss']
+  styleUrls: ['./project-languages.component.scss'],
 })
 export class ProjectLanguagesComponent extends SubscriptionComponent implements OnInit {
 

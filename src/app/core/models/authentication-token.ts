@@ -23,7 +23,7 @@ export class AuthenticationToken {
       json.issuer,
       json.jwtId,
       json.jwtToken,
-      json.key
+      json.key,
     );
   }
 
@@ -43,7 +43,7 @@ export class AuthenticationToken {
       id: json.id,
       email: json.email,
       displayFirstName: json.dfn,
-      displayLastName: json.dln
+      displayLastName: json.dln,
     });
 
     return new AuthenticationToken(
@@ -54,7 +54,7 @@ export class AuthenticationToken {
       json.iss,
       json.jti,
       jwt,
-      key
+      key,
     );
   }
 
@@ -87,6 +87,6 @@ export class AuthenticationToken {
     readonly issuer: string,
     readonly jwtId: string,
     readonly jwtToken: string,
-    readonly key: string
+    readonly key: string,
   ) {}
 }

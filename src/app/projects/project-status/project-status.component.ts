@@ -10,7 +10,7 @@ import { takeUntil } from 'rxjs/operators';
 @Component({
   selector: 'app-project-status',
   templateUrl: './project-status.component.html',
-  styleUrls: ['./project-status.component.scss']
+  styleUrls: ['./project-status.component.scss'],
 })
 export class ProjectStatusComponent extends SubscriptionComponent implements OnInit, OnChanges {
   @Input() status: ProjectStatus;

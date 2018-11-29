@@ -11,8 +11,8 @@ import { AutocompleteComponent } from './autocomplete.component';
   templateUrl: './autocomplete.component.html',
   styleUrls: ['./autocomplete.component.scss'],
   providers: [
-    ValueAccessorProvider(AutocompleteOrganizationComponent)
-  ]
+    ValueAccessorProvider(AutocompleteOrganizationComponent),
+  ],
 })
 export class AutocompleteOrganizationComponent extends AutocompleteComponent<Organization> {
 
@@ -25,7 +25,7 @@ export class AutocompleteOrganizationComponent extends AutocompleteComponent<Org
 
   constructor(
     private organizationService: OrganizationService,
-    snackBar: MatSnackBar
+    snackBar: MatSnackBar,
   ) {
     super(snackBar);
   }

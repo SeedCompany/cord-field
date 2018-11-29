@@ -6,7 +6,7 @@ import { ProjectViewStateService } from '../project-view-state.service';
 @Component({
   selector: 'app-project-updates',
   templateUrl: './project-updates.component.html',
-  styleUrls: ['./project-updates.component.scss']
+  styleUrls: ['./project-updates.component.scss'],
 })
 @TitleAware('Updates')
 export class ProjectUpdatesComponent extends ProjectTabComponent {

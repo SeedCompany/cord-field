@@ -16,8 +16,8 @@ describe('ProjectFilesService', () => {
     TestBed.configureTestingModule({
       imports: [
         CoreModule,
-        HttpClientTestingModule
-      ]
+        HttpClientTestingModule,
+      ],
     });
     httpMock = TestBed.get(HttpTestingController);
     projectFilesService = TestBed.get(ProjectFilesService);
@@ -41,9 +41,9 @@ describe('ProjectFilesService', () => {
         owner: {
           displayFirstName: 'firstName',
           displayLastName: 'lastName',
-          id: 'iBFFFGvBVlIpvsKVanrbIYVBaPwkDnhjjb0.n_cPm_zyG_7D7WWLDT7ozQ.zfUnrX9tXoPtWtDc9PLhUw'
-        }
-      }]
+          id: 'iBFFFGvBVlIpvsKVanrbIYVBaPwkDnhjjb0.n_cPm_zyG_7D7WWLDT7ozQ.zfUnrX9tXoPtWtDc9PLhUw',
+        },
+      }],
     };
 
     projectFilesService

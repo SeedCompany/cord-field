@@ -7,7 +7,7 @@ import { ProjectFilesService } from '@app/core/services/project-files.service';
 @Component({
   selector: 'app-overwrite-file-warning',
   templateUrl: './overwrite-file-warning.component.html',
-  styleUrls: ['./overwrite-file-warning.component.scss']
+  styleUrls: ['./overwrite-file-warning.component.scss'],
 })
 export class OverwriteFileWarningComponent {
 
@@ -20,7 +20,7 @@ export class OverwriteFileWarningComponent {
     return dialog.open(this, {
       minWidth: '400px',
       autoFocus: true,
-      data: { parent, file }
+      data: { parent, file },
     });
   }
 
@@ -28,7 +28,7 @@ export class OverwriteFileWarningComponent {
     private dialogRef: MatDialogRef<OverwriteFileWarningComponent, string>,
     @Inject(MAT_DIALOG_DATA) { parent, file }: { parent: Directory, file: File },
     private fileService: ProjectFilesService,
-    private fb: FormBuilder
+    private fb: FormBuilder,
   ) {
     this.file = file;
     this.isOverwritingFile = parent.children.find(node => node.name === file.name)!.type === FileNodeType.File;
@@ -44,7 +44,7 @@ export class OverwriteFileWarningComponent {
     };
 
     this.form = this.fb.group({
-      name: [file.name, [Validators.required, uniqueNameValidator]]
+      name: [file.name, [Validators.required, uniqueNameValidator]],
     });
   }
 

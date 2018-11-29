@@ -11,7 +11,7 @@ import * as CustomValidators from '../../validators';
 @Component({
   selector: 'app-request-access',
   templateUrl: './request-access.component.html',
-  styleUrls: ['./request-access.component.scss']
+  styleUrls: ['./request-access.component.scss'],
 })
 @TitleAware('Request Access')
 export class RequestAccessComponent {
@@ -27,9 +27,9 @@ export class RequestAccessComponent {
     email: ['', CustomValidators.email],
     organization: ['', Validators.required],
     password: ['', Validators.required],
-    confirmPassword: ['', Validators.required]
+    confirmPassword: ['', Validators.required],
   }, {
-    validator: CustomValidators.passwordMatch()
+    validator: CustomValidators.passwordMatch(),
   });
 
   constructor(private fb: FormBuilder,
@@ -84,7 +84,7 @@ export class RequestAccessComponent {
 
   private showSnackBar(message: string) {
     this.snackBarRef = this.snackBar.open(message, undefined, {
-      duration: 300
+      duration: 300,
     });
   }
 }

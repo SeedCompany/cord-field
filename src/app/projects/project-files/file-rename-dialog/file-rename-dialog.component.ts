@@ -7,7 +7,7 @@ import { ProjectFilesService } from '@app/core/services/project-files.service';
 @Component({
   selector: 'app-file-rename-dialog',
   templateUrl: './file-rename-dialog.component.html',
-  styleUrls: ['./file-rename-dialog.component.scss']
+  styleUrls: ['./file-rename-dialog.component.scss'],
 })
 export class FileRenameDialogComponent {
 
@@ -22,7 +22,7 @@ export class FileRenameDialogComponent {
     return dialog.open(this, {
       minWidth: '400px',
       autoFocus: true,
-      data: { parent, node }
+      data: { parent, node },
     });
   }
 
@@ -31,7 +31,7 @@ export class FileRenameDialogComponent {
     @Inject(MAT_DIALOG_DATA) {parent, node}: {parent: Directory, node: FileNode},
     private fileService: ProjectFilesService,
     private fb: FormBuilder,
-    private snackBar: MatSnackBar
+    private snackBar: MatSnackBar,
   ) {
     this.node = node;
     this.parent = parent;
@@ -46,7 +46,7 @@ export class FileRenameDialogComponent {
     };
 
     this.form = this.fb.group({
-      name: [node.name, [Validators.required, uniqueDifferentNameValidator]]
+      name: [node.name, [Validators.required, uniqueDifferentNameValidator]],
     });
   }
 
@@ -89,7 +89,7 @@ export class FileRenameDialogComponent {
 
   private showSnackBar(message: string) {
     this.snackBarRef = this.snackBar.open(message, undefined, {
-      duration: 3000
+      duration: 3000,
     });
   }
 }

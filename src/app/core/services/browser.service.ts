@@ -14,11 +14,11 @@ localforage.defineDriver({
   setItem: async <T>(key: string, value: T) => value,
   removeItem: async () => {},
   length: async () => 0,
-  iterate: async <T, U>() => (null as any as U)
+  iterate: async <T, U>() => (null as any as U),
 });
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class BrowserService {
 
@@ -29,7 +29,7 @@ export class BrowserService {
       router.events
         .pipe(
           filter(e => e instanceof NavigationEnd),
-          first()
+          first(),
         )
         .subscribe(() => this._firstNavigationFinished = true);
     }

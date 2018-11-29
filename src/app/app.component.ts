@@ -12,7 +12,7 @@ import { SubscriptionComponent } from './shared/components/subscription.componen
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
-  styleUrls: ['./app.component.scss']
+  styleUrls: ['./app.component.scss'],
 })
 export class AppComponent extends SubscriptionComponent implements OnInit {
 
@@ -24,7 +24,7 @@ export class AppComponent extends SubscriptionComponent implements OnInit {
     private auth: AuthenticationService,
     private router: Router,
     private dialogs: MatDialog,
-    private titleService: Title
+    private titleService: Title,
   ) {
     super();
   }
@@ -45,8 +45,8 @@ export class AppComponent extends SubscriptionComponent implements OnInit {
         map(titles => titles
           .filter(t => t)
           .concat(['Cord Field'])
-          .join(' - ')
-        )
+          .join(' - '),
+        ),
       )
       .subscribe(str => this.titleService.setTitle(str));
   }

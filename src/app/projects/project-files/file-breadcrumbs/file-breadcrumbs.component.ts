@@ -4,7 +4,7 @@ import { Directory, ParentRef } from '@app/core/models/file-node';
 @Component({
   selector: 'app-file-breadcrumbs',
   templateUrl: './file-breadcrumbs.component.html',
-  styleUrls: ['./file-breadcrumbs.component.scss']
+  styleUrls: ['./file-breadcrumbs.component.scss'],
 })
 export class FileBreadcrumbsComponent {
   @Input() directory: Directory | null;

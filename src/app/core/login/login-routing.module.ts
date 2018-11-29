@@ -12,12 +12,12 @@ const routes: Routes = [
   {path: 'request-access', component: RequestAccessComponent},
   {path: 'confirm-email', component: ConfirmEmailComponent},
   {path: 'forgot-password', component: ForgotPasswordComponent},
-  {path: 'reset-password', component: ResetPasswordComponent}
+  {path: 'reset-password', component: ResetPasswordComponent},
 ];
 
 @NgModule({
   imports: [RouterModule.forChild(routes)],
-  exports: [RouterModule]
+  exports: [RouterModule],
 })
 export class LoginRoutingModule {
 }

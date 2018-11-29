@@ -14,23 +14,23 @@ const routes: Routes = [
       {path: 'organizations', loadChildren: './organizations/organizations.module#OrganizationsModule'},
       {path: 'people', loadChildren: './people/people.module#PeopleModule'},
       {path: 'projects', loadChildren: './projects/projects.module#ProjectsModule'},
-      {path: 'tasks', loadChildren: './tasks/tasks.module#TasksModule'}
+      {path: 'tasks', loadChildren: './tasks/tasks.module#TasksModule'},
     ],
-    canActivate: [AuthenticationGuard]
+    canActivate: [AuthenticationGuard],
   },
   {path: 'login', loadChildren: './core/login/login.module#LoginModule'},
   {path: 'confirm-email', redirectTo: 'login/confirm-email'},
   {path: 'forgot-password', redirectTo: 'login/reset-password'},
-  {path: '**', component: NotFoundPageComponent}
+  {path: '**', component: NotFoundPageComponent},
 ];
 
 @NgModule({
   imports: [
-    RouterModule.forRoot(routes)
+    RouterModule.forRoot(routes),
   ],
   exports: [
-    RouterModule
-  ]
+    RouterModule,
+  ],
 })
 export class AppRoutingModule {
 }

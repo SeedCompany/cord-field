@@ -16,7 +16,7 @@ export interface ProjectCreationResult {
 @Component({
   selector: 'app-project-create-dialog',
   templateUrl: './project-create-dialog.component.html',
-  styleUrls: ['./project-create-dialog.component.scss']
+  styleUrls: ['./project-create-dialog.component.scss'],
 })
 export class ProjectCreateDialogComponent implements OnInit {
 
@@ -35,7 +35,7 @@ export class ProjectCreateDialogComponent implements OnInit {
   ngOnInit() {
     this.form = this.formBuilder.group({
       type: ['', Validators.required],
-      name: ['', [Validators.required, Validators.minLength(2)]]
+      name: ['', [Validators.required, Validators.minLength(2)]],
     });
     this.name
       .valueChanges
@@ -49,7 +49,7 @@ export class ProjectCreateDialogComponent implements OnInit {
         switchMap(name => {
           return observableFrom(this.projectService.isProjectNameTaken(name))
             .pipe(catchError<boolean, HttpErrorResponse>(err => err));
-        })
+        }),
       )
       .subscribe((taken: boolean | HttpErrorResponse) => {
         if (this.name.hasError('required')) {
@@ -106,7 +106,7 @@ export class ProjectCreateDialogComponent implements OnInit {
 
   private showSnackBar(message: string) {
     this.snackBarRef = this.snackBar.open(message, undefined, {
-      duration: 3000
+      duration: 3000,
     });
   }
 }

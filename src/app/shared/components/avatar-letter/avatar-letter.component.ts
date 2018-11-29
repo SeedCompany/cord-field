@@ -3,7 +3,7 @@ import { Component, HostBinding, Input } from '@angular/core';
 @Component({
   selector: 'app-avatar-letter',
   templateUrl: './avatar-letter.component.html',
-  styleUrls: ['./avatar-letter.component.scss']
+  styleUrls: ['./avatar-letter.component.scss'],
 })
 export class AvatarLetterComponent {
   @Input() color: 'primary' | 'accent';

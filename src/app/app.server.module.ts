@@ -9,12 +9,12 @@ import { AppModule } from './app.module';
     AppModule,
     ServerModule,
     ModuleMapLoaderModule,
-    ServerTransferStateModule
+    ServerTransferStateModule,
   ],
   providers: [
     // Add universal-only providers here
   ],
-  bootstrap: [AppComponent]
+  bootstrap: [AppComponent],
 })
 export class AppServerModule {
 }

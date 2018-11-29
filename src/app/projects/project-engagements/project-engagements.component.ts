@@ -9,7 +9,7 @@ import { ProjectViewStateService } from '../project-view-state.service';
 @Component({
   selector: 'app-project-plan',
   templateUrl: './project-engagements.component.html',
-  styleUrls: ['./project-engagements.component.scss']
+  styleUrls: ['./project-engagements.component.scss'],
 })
 @TitleAware('Engagements')
 export class ProjectEngagementsComponent extends ProjectTabComponent implements OnInit {
@@ -17,7 +17,7 @@ export class ProjectEngagementsComponent extends ProjectTabComponent implements 
   constructor(
     private router: Router,
     private route: ActivatedRoute,
-    projectViewState: ProjectViewStateService
+    projectViewState: ProjectViewStateService,
   ) {
     super(projectViewState);
   }
@@ -40,15 +40,15 @@ export class ProjectEngagementsComponent extends ProjectTabComponent implements 
         }
 
         return true;
-        }
+        },
       ))
       .subscribe(project => {
         this.router.navigate(
           [project.engagements[0].id],
           {
             replaceUrl: true,
-            relativeTo: this.route
-          }
+            relativeTo: this.route,
+          },
         );
     });
   }

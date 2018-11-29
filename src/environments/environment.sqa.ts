@@ -9,11 +9,11 @@ export const environment = {
     level: 'debug',
     apiCalls: '*',
     noBody: [
-      '/api/auth/native/login'
-    ]
+      '/api/auth/native/login',
+    ],
   },
   services: {
     'domain': 'field',
-    'plo.cord.bible': 'https://cord-plo-sqa.ci.olivetech.com/api'
-  }
+    'plo.cord.bible': 'https://cord-plo-sqa.ci.olivetech.com/api',
+  },
 };

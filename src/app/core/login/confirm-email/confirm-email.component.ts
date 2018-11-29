@@ -9,7 +9,7 @@ import { AuthenticationService } from '../../services/authentication.service';
 @Component({
   selector: 'app-confirm-email',
   templateUrl: './confirm-email.component.html',
-  styleUrls: ['./confirm-email.component.scss']
+  styleUrls: ['./confirm-email.component.scss'],
 })
 @TitleAware('Confirm Email')
 export class ConfirmEmailComponent implements OnInit {

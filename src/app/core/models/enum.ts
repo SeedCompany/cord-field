@@ -18,7 +18,7 @@ export function buildEnum<T>(object: Object, valueToUiMapping: {[key: string]: s
     entries: enumEntries(valueToUiMapping),
     forUI: enumForUI(object),
     trackEntryBy: enumTrackEntryBy(),
-    trackValueBy: (index: number, value: T) => value
+    trackValueBy: (index: number, value: T) => value,
   };
 }
 

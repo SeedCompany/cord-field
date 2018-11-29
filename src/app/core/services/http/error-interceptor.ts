@@ -4,14 +4,14 @@ import {
   HttpEvent,
   HttpHandler,
   HttpInterceptor,
-  HttpRequest
+  HttpRequest,
 } from '@angular/common/http';
 import { Injectable, Provider } from '@angular/core';
 import { Observable, throwError as observableThrow } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class ErrorInterceptor implements HttpInterceptor {
   static inject(): Provider {

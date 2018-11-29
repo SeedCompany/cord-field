@@ -11,14 +11,14 @@ class LocationPart {
       id = '',
       imageLargeFileName = '',
       imageMediumFileName = '',
-      imageSmallFileName = ''
+      imageSmallFileName = '',
     } = json;
 
     return {
       id,
       imageLargeFileName,
       imageMediumFileName,
-      imageSmallFileName
+      imageSmallFileName,
     };
   }
 }
@@ -78,7 +78,7 @@ export class Location extends LocationPart {
     return [
       this.country,
       this.area.name,
-      this.area.region.name
+      this.area.region.name,
     ];
   }
 }

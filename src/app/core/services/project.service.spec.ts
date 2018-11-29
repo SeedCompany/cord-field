@@ -17,8 +17,8 @@ describe('ProjectService', () => {
     TestBed.configureTestingModule({
       imports: [
         CoreModule,
-        HttpClientTestingModule
-      ]
+        HttpClientTestingModule,
+      ],
     });
     httpMock = TestBed.get(HttpTestingController);
     projectService = TestBed.get(ProjectService);
@@ -37,7 +37,7 @@ describe('ProjectService', () => {
       name: 'Elhomwe Bible',
       updatedAt: '2018-03-26T05:27:49.000Z',
       type: ProjectType.Translation,
-      team: []
+      team: [],
     };
 
     projectService
@@ -75,7 +75,7 @@ describe('ProjectService', () => {
       status: ProjectStatus.Active,
       name: 'Elhomwe Bible',
       updatedAt: '2018-03-26T05:27:49.000Z',
-      type: ProjectType.Translation
+      type: ProjectType.Translation,
     }];
 
     projectService
@@ -126,10 +126,10 @@ describe('ProjectService', () => {
   it('create project', (done: DoneFn) => {
     const project: ProjectCreationResult = {
       name: 'newProject',
-      type: ProjectType.Internship
+      type: ProjectType.Internship,
     };
     const mockResponse = {
-      id: '5ace5faee23fc6685b6e40c6'
+      id: '5ace5faee23fc6685b6e40c6',
     };
     const projectUrl = `${testBaseUrl}/projects`;
     projectService

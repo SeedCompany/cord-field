@@ -17,14 +17,14 @@ describe('ChangeEngine', () => {
     engine = new ChangeEngine({
       mouStart: {
         accessor: accessDates,
-        key: 'startDate'
+        key: 'startDate',
       },
       mouEnd: {accessor: accessDates},
       languages: {
         accessor: returnId,
         toServer: mapChangeList<Language, string, string>(returnId, returnId),
-        forceRefresh: true
-      }
+        forceRefresh: true,
+      },
     } as ChangeConfig<TestSubject>);
     engine.isDirty.subscribe(d => dirty = d);
   });
@@ -34,7 +34,7 @@ describe('ChangeEngine', () => {
       mouStart: null,
       mouEnd: null,
       languages: null,
-      ...initial
+      ...initial,
     };
   }
 
@@ -52,7 +52,7 @@ describe('ChangeEngine', () => {
       initializeSubject();
 
       change({
-        updatedAt: DateTime.local(2018, 1, 2) // changed
+        updatedAt: DateTime.local(2018, 1, 2), // changed
       });
       expect(dirty).toBeFalsy();
       expectModified({});
@@ -61,11 +61,11 @@ describe('ChangeEngine', () => {
     describe('Single Item', () => {
       it('original value = clean', async () => {
         initializeSubject({
-          mouStart: DateTime.local(2018, 1, 1)
+          mouStart: DateTime.local(2018, 1, 1),
         });
 
         change({
-          mouStart: DateTime.local(2018, 1, 1)
+          mouStart: DateTime.local(2018, 1, 1),
         });
         expect(dirty).toBeFalsy();
         expectModified({});
@@ -74,79 +74,79 @@ describe('ChangeEngine', () => {
       it('original value -> different value = dirty', async () => {
         initializeSubject({
           mouStart: DateTime.local(2018, 1, 1),
-          mouEnd: DateTime.local(2018, 3, 3)
+          mouEnd: DateTime.local(2018, 3, 3),
         });
 
         change({
           mouStart: DateTime.local(2018, 1, 2), // changed
-          mouEnd: DateTime.local(2018, 3, 3) // original
+          mouEnd: DateTime.local(2018, 3, 3), // original
         });
         expect(dirty).toBeTruthy();
         expectModified({
-          mouStart: DateTime.local(2018, 1, 2)
+          mouStart: DateTime.local(2018, 1, 2),
         });
       });
       it('original NULL value -> different value = dirty', () => {
         initializeSubject({
-          mouStart: null
+          mouStart: null,
         });
 
         change({
-          mouStart: DateTime.local(2018, 1, 2) // changed
+          mouStart: DateTime.local(2018, 1, 2), // changed
         });
         expect(dirty).toBeTruthy();
         expectModified({
-          mouStart: DateTime.local(2018, 1, 2)
+          mouStart: DateTime.local(2018, 1, 2),
         });
       });
       it('original value -> different NULL value = dirty', () => {
         initializeSubject({
-          mouStart: DateTime.local(2018, 1, 1)
+          mouStart: DateTime.local(2018, 1, 1),
         });
 
         change({
-          mouStart: null
+          mouStart: null,
         });
         expect(dirty).toBeTruthy();
         expectModified({
-          mouStart: null
+          mouStart: null,
         });
       });
 
       it('different values add to modified object', async () => {
         initializeSubject({
           mouStart: DateTime.local(2018, 1, 1),
-          mouEnd: DateTime.local(2018, 3, 3)
+          mouEnd: DateTime.local(2018, 3, 3),
         });
 
         change({
           mouStart: DateTime.local(2018, 1, 2), // changed
-          mouEnd: DateTime.local(2018, 3, 3) // original
+          mouEnd: DateTime.local(2018, 3, 3), // original
         });
 
         change({
           mouStart: DateTime.local(2018, 1, 2), // not changed
-          mouEnd: DateTime.local(2018, 3, 4) // changed
+          mouEnd: DateTime.local(2018, 3, 4), // changed
         });
         expect(dirty).toBeTruthy();
         // only test that asserts multiple values here
         expectModified({
           mouStart: DateTime.local(2018, 1, 2),
-          mouEnd: DateTime.local(2018, 3, 4)
+          mouEnd: DateTime.local(2018, 3, 4),
         });
       });
 
       it('different value -> revert to original value = clean', () => {
         initializeSubject({
           mouStart: DateTime.local(2018, 1, 1),
-          mouEnd: DateTime.local(2018, 3, 3)
+          mouEnd: DateTime.local(2018, 3, 3),
         });
 
         change({
-          mouStart: DateTime.local(2018, 1, 2) // changed
+          mouStart: DateTime.local(2018, 1, 2), // changed
         });
         change({
-          mouStart: DateTime.local(2018, 1, 1) // changed & original
+          mouStart: DateTime.local(2018, 1, 1), // changed & original
         });
         expect(dirty).toBeFalsy();
         expectModified({});
@@ -154,14 +154,14 @@ describe('ChangeEngine', () => {
 
       it('different value -> original NULL value = clean', () => {
         initializeSubject({
-          mouStart: null
+          mouStart: null,
         });
 
         change({
-          mouStart: DateTime.local(2018, 1, 2) // changed
+          mouStart: DateTime.local(2018, 1, 2), // changed
         });
         change({
-          mouStart: null // changed & original
+          mouStart: null, // changed & original
         });
 
         expect(dirty).toBeFalsy();
@@ -171,20 +171,20 @@ describe('ChangeEngine', () => {
       it('two different values -> revert one value = dirty', () => {
         initializeSubject({
           mouStart: DateTime.local(2018, 1, 1),
-          mouEnd: DateTime.local(2018, 3, 3)
+          mouEnd: DateTime.local(2018, 3, 3),
         });
 
         change({
           mouStart: DateTime.local(2018, 1, 2), // changed
-          mouEnd: DateTime.local(2018, 3, 4) // changed
+          mouEnd: DateTime.local(2018, 3, 4), // changed
         });
         change({
           mouStart: DateTime.local(2018, 1, 1), // changed & original
-          mouEnd: DateTime.local(2018, 3, 4) // not changed
+          mouEnd: DateTime.local(2018, 3, 4), // not changed
         });
         expect(dirty).toBeTruthy();
         expectModified({
-          mouEnd: DateTime.local(2018, 3, 4)
+          mouEnd: DateTime.local(2018, 3, 4),
         });
       });
     });
@@ -193,14 +193,14 @@ describe('ChangeEngine', () => {
       it('add existing value = clean', () => {
         initializeSubject({
           languages: [
-            Language.fromJson({id: '1'})
-          ]
+            Language.fromJson({id: '1'}),
+          ],
         });
 
         change({
           languages: {
-            add: Language.fromJson({id: '1'})
-          }
+            add: Language.fromJson({id: '1'}),
+          },
         });
         expect(dirty).toBeFalsy();
         expectModified({});
@@ -208,59 +208,59 @@ describe('ChangeEngine', () => {
 
       it('add new value = dirty', () => {
         initializeSubject({
-          languages: []
+          languages: [],
         });
 
         change({
           languages: {
-            add: Language.fromJson({id: '1'})
-          }
+            add: Language.fromJson({id: '1'}),
+          },
         });
         expect(dirty).toBeTruthy();
         expectModified({
           languages: {
             add: [
-              Language.fromJson({id: '1'})
-            ]
-          }
+              Language.fromJson({id: '1'}),
+            ],
+          },
         });
       });
 
       it('add new value (original NULL) = dirty', () => {
         initializeSubject({
-          languages: null
+          languages: null,
         });
 
         change({
           languages: {
-            add: Language.fromJson({id: '1'})
-          }
+            add: Language.fromJson({id: '1'}),
+          },
         });
         expect(dirty).toBeTruthy();
         expectModified({
           languages: {
             add: [
-              Language.fromJson({id: '1'})
-            ]
-          }
+              Language.fromJson({id: '1'}),
+            ],
+          },
         });
       });
 
       it('add new value twice = dirty', () => {
         initializeSubject({
-          languages: []
+          languages: [],
         });
 
         change({
           languages: {
-            add: Language.fromJson({id: '1'})
-          }
+            add: Language.fromJson({id: '1'}),
+          },
         });
 
         change({
           languages: {
-            add: Language.fromJson({id: '2'})
-          }
+            add: Language.fromJson({id: '2'}),
+          },
         });
         expect(dirty).toBeTruthy();
         // only test that asserts multiple values here
@@ -268,26 +268,26 @@ describe('ChangeEngine', () => {
           languages: {
             add: [
               Language.fromJson({id: '1'}),
-              Language.fromJson({id: '2'})
-            ]
-          }
+              Language.fromJson({id: '2'}),
+            ],
+          },
         });
       });
 
       it('remove added value = clean', () => {
         initializeSubject({
-          languages: []
+          languages: [],
         });
 
         change({
           languages: {
-            add: Language.fromJson({id: '1'})
-          }
+            add: Language.fromJson({id: '1'}),
+          },
         });
         change({
           languages: {
-            remove: Language.fromJson({id: '1'})
-          }
+            remove: Language.fromJson({id: '1'}),
+          },
         });
         expect(dirty).toBeFalsy();
         expectModified({});
@@ -295,72 +295,72 @@ describe('ChangeEngine', () => {
 
       it('remove added value, but still other additions = dirty', () => {
         initializeSubject({
-          languages: []
+          languages: [],
         });
         change({
           languages: {
-            add: Language.fromJson({id: '1'})
-          }
+            add: Language.fromJson({id: '1'}),
+          },
         });
         change({
           languages: {
-            add: Language.fromJson({id: '2'})
-          }
+            add: Language.fromJson({id: '2'}),
+          },
         });
 
         change({
           languages: {
-            remove: Language.fromJson({id: '1'})
-          }
+            remove: Language.fromJson({id: '1'}),
+          },
         });
         expect(dirty).toBeTruthy();
         expectModified({
           languages: {
             add: [
-              Language.fromJson({id: '2'})
-            ]
-          }
+              Language.fromJson({id: '2'}),
+            ],
+          },
         });
       });
 
       it('remove existing value = dirty', () => {
         initializeSubject({
           languages: [
-            Language.fromJson({id: '1'})
-          ]
+            Language.fromJson({id: '1'}),
+          ],
         });
 
         change({
           languages: {
-            remove: Language.fromJson({id: '1'})
-          }
+            remove: Language.fromJson({id: '1'}),
+          },
         });
         expect(dirty).toBeTruthy();
         expectModified({
           languages: {
             remove: [
-              Language.fromJson({id: '1'})
-            ]
-          }
+              Language.fromJson({id: '1'}),
+            ],
+          },
         });
       });
 
       it('add removed value = clean', () => {
         initializeSubject({
           languages: [
-            Language.fromJson({id: '1'})
-          ]
+            Language.fromJson({id: '1'}),
+          ],
         });
 
         change({
           languages: {
-            remove: Language.fromJson({id: '1'})
-          }
+            remove: Language.fromJson({id: '1'}),
+          },
         });
         change({
           languages: {
-            add: Language.fromJson({id: '1'})
-          }
+            add: Language.fromJson({id: '1'}),
+          },
         });
         expect(dirty).toBeFalsy();
         expectModified({});
@@ -370,121 +370,121 @@ describe('ChangeEngine', () => {
         initializeSubject({
           languages: [
             Language.fromJson({id: '1'}),
-            Language.fromJson({id: '2'})
-          ]
+            Language.fromJson({id: '2'}),
+          ],
         });
         change({
           languages: {
-            remove: Language.fromJson({id: '1'})
-          }
+            remove: Language.fromJson({id: '1'}),
+          },
         });
         change({
           languages: {
-            remove: Language.fromJson({id: '2'})
-          }
+            remove: Language.fromJson({id: '2'}),
+          },
         });
 
         change({
           languages: {
-            add: Language.fromJson({id: '1'})
-          }
+            add: Language.fromJson({id: '1'}),
+          },
         });
         expect(dirty).toBeTruthy();
         expectModified({
           languages: {
             remove: [
-              Language.fromJson({id: '2'})
-            ]
-          }
+              Language.fromJson({id: '2'}),
+            ],
+          },
         });
       });
 
       it('update value that is already new = update added item', () => {
         initializeSubject({
-          languages: []
+          languages: [],
         });
 
         change({
           languages: {
-            add: Language.fromJson({id: '1'})
-          }
+            add: Language.fromJson({id: '1'}),
+          },
         });
         change({
           languages: {
-            update: Language.fromJson({id: '1', name: 'good'})
-          }
+            update: Language.fromJson({id: '1', name: 'good'}),
+          },
         });
 
         expect(dirty).toBeTruthy();
         expectModified({
           languages: {
             add: [
-              Language.fromJson({id: '1', name: 'good'})
-            ]
-          }
+              Language.fromJson({id: '1', name: 'good'}),
+            ],
+          },
         });
       });
 
       it('update value that is not in list = add new item', () => {
         initializeSubject({
-          languages: []
+          languages: [],
         });
 
         change({
           languages: {
-            update: Language.fromJson({id: '1'})
-          }
+            update: Language.fromJson({id: '1'}),
+          },
         });
 
         expect(dirty).toBeTruthy();
         expectModified({
           languages: {
             add: [
-              Language.fromJson({id: '1'})
-            ]
-          }
+              Language.fromJson({id: '1'}),
+            ],
+          },
         });
       });
 
       it('update value = dirty', () => {
         initializeSubject({
           languages: [
-            Language.fromJson({id: '1', name: 'bad'})
-          ]
+            Language.fromJson({id: '1', name: 'bad'}),
+          ],
         });
 
         change({
           languages: {
-            update: Language.fromJson({id: '1', name: 'good'})
-          }
+            update: Language.fromJson({id: '1', name: 'good'}),
+          },
         });
         change({
           languages: {
-            update: Language.fromJson({id: '1', name: 'best'})
-          }
+            update: Language.fromJson({id: '1', name: 'best'}),
+          },
         });
 
         expect(dirty).toBeTruthy();
         expectModified({
           languages: {
             update: [
-              Language.fromJson({id: '1', name: 'best'})
-            ]
-          }
+              Language.fromJson({id: '1', name: 'best'}),
+            ],
+          },
         });
       });
 
       it('update value already in list with no changes = clean', () => {
         initializeSubject({
           languages: [
-            Language.fromJson({id: '1', name: 'good'})
-          ]
+            Language.fromJson({id: '1', name: 'good'}),
+          ],
         });
 
         change({
           languages: {
-            update: Language.fromJson({id: '1', name: 'good'})
-          }
+            update: Language.fromJson({id: '1', name: 'good'}),
+          },
         });
 
         expect(dirty).toBeFalsy();
@@ -494,19 +494,19 @@ describe('ChangeEngine', () => {
       it('update value, revert with 2x update = clean', () => {
         initializeSubject({
           languages: [
-            Language.fromJson({id: '1', name: 'bad'})
-          ]
+            Language.fromJson({id: '1', name: 'bad'}),
+          ],
         });
 
         change({
           languages: {
-            update: Language.fromJson({id: '1', name: 'good'})
-          }
+            update: Language.fromJson({id: '1', name: 'good'}),
+          },
         });
         change({
           languages: {
-            update: Language.fromJson({id: '1', name: 'bad'})
-          }
+            update: Language.fromJson({id: '1', name: 'bad'}),
+          },
         });
 
         expect(dirty).toBeFalsy();
@@ -517,80 +517,80 @@ describe('ChangeEngine', () => {
         initializeSubject({
           languages: [
             Language.fromJson({id: '1', name: 'bad'}),
-            Language.fromJson({id: '2', name: 'bad'})
-          ]
+            Language.fromJson({id: '2', name: 'bad'}),
+          ],
         });
 
         change({
           languages: {
-            update: Language.fromJson({id: '1', name: 'good'})
-          }
+            update: Language.fromJson({id: '1', name: 'good'}),
+          },
         });
         change({
           languages: {
-            update: Language.fromJson({id: '2', name: 'good'})
-          }
+            update: Language.fromJson({id: '2', name: 'good'}),
+          },
         });
         change({
           languages: {
-            update: Language.fromJson({id: '1', name: 'bad'})
-          }
+            update: Language.fromJson({id: '1', name: 'bad'}),
+          },
         });
 
         expect(dirty).toBeTruthy();
         expectModified({
           languages: {
             update: [
-              Language.fromJson({id: '2', name: 'good'})
-            ]
-          }
+              Language.fromJson({id: '2', name: 'good'}),
+            ],
+          },
         });
       });
 
       it('remove, update = dirty', () => {
         initializeSubject({
           languages: [
-            Language.fromJson({id: '1', name: 'bad'})
-          ]
+            Language.fromJson({id: '1', name: 'bad'}),
+          ],
         });
 
         change({
           languages: {
-            remove: Language.fromJson({id: '1'})
-          }
+            remove: Language.fromJson({id: '1'}),
+          },
         });
         change({
           languages: {
-            update: Language.fromJson({id: '1', name: 'good'})
-          }
+            update: Language.fromJson({id: '1', name: 'good'}),
+          },
         });
 
         expect(dirty).toBeTruthy();
         expectModified({
           languages: {
             update: [
-              Language.fromJson({id: '1', name: 'good'})
-            ]
-          }
+              Language.fromJson({id: '1', name: 'good'}),
+            ],
+          },
         });
       });
 
       it('remove, update, revert = clean', () => {
         initializeSubject({
           languages: [
-            Language.fromJson({id: '1', name: 'bad'})
-          ]
+            Language.fromJson({id: '1', name: 'bad'}),
+          ],
         });
 
         change({
           languages: {
-            remove: Language.fromJson({id: '1'})
-          }
+            remove: Language.fromJson({id: '1'}),
+          },
         });
         change({
           languages: {
-            update: Language.fromJson({id: '1', name: 'bad'})
-          }
+            update: Language.fromJson({id: '1', name: 'bad'}),
+          },
         });
 
         expect(dirty).toBeFalsy();
@@ -602,11 +602,11 @@ describe('ChangeEngine', () => {
   it('reset()', () => {
     initializeSubject({
       mouStart: DateTime.local(2018, 1, 1),
-      mouEnd: DateTime.local(2018, 3, 3)
+      mouEnd: DateTime.local(2018, 3, 3),
     });
     change({
       mouStart: DateTime.local(2018, 1, 2), // changed
-      mouEnd: DateTime.local(2018, 3, 4) // changed
+      mouEnd: DateTime.local(2018, 3, 4), // changed
     });
 
     engine.reset();
@@ -619,8 +619,8 @@ describe('ChangeEngine', () => {
     initializeSubject({
       languages: [
         Language.fromJson({id: '1'}),
-        Language.fromJson({id: '2', name: 'bad'})
-      ]
+        Language.fromJson({id: '2', name: 'bad'}),
+      ],
     });
     change({
       mouStart: DateTime.local(2018, 1, 2), // changed
@@ -628,8 +628,8 @@ describe('ChangeEngine', () => {
       languages: {
         remove: Language.fromJson({id: '1'}),
         update: Language.fromJson({id: '2', name: 'good'}),
-        add: Language.fromJson({id: '3'})
-      }
+        add: Language.fromJson({id: '3'}),
+      },
     });
 
     expect(engine.getModifiedForServer()).toEqual({
@@ -638,8 +638,8 @@ describe('ChangeEngine', () => {
       languages: {
         remove: ['1'],
         update: ['2'],
-        add: ['3']
-      }
+        add: ['3'],
+      },
     });
   });
 
@@ -648,21 +648,21 @@ describe('ChangeEngine', () => {
       languages: [
         Language.fromJson({id: '1', name: 'bad'}),
         Language.fromJson({id: '2'}),
-        Language.fromJson({id: '3'})
-      ]
+        Language.fromJson({id: '3'}),
+      ],
     });
     change({
       mouStart: DateTime.local(2018, 1, 2),
       languages: {
         add: Language.fromJson({id: '4'}),
         remove: Language.fromJson({id: '2'}),
-        update: Language.fromJson({id: '1', name: 'good'})
-      }
+        update: Language.fromJson({id: '1', name: 'good'}),
+      },
     });
 
     // Assumed result from save API that contain IDs for new sub-objects.
     const idsFromServer = {
-      languages: ['45']
+      languages: ['45'],
     };
 
     expect(engine.getModified(subject, idsFromServer)).toEqual({
@@ -671,8 +671,8 @@ describe('ChangeEngine', () => {
       languages: [
         Language.fromJson({id: '1', name: 'good'}),
         Language.fromJson({id: '3'}),
-        Language.fromJson({id: '45'})
-      ]
+        Language.fromJson({id: '45'}),
+      ],
     });
   });
 
@@ -680,14 +680,14 @@ describe('ChangeEngine', () => {
     initializeSubject();
 
     change({
-      mouStart: DateTime.local(2018, 1, 2)
+      mouStart: DateTime.local(2018, 1, 2),
     });
     expect(engine.needsRefresh).toBeFalsy();
 
     change({
       languages: {
-        add: Language.fromJson({id: '4'})
-      }
+        add: Language.fromJson({id: '4'}),
+      },
     });
     expect(engine.needsRefresh).toBeTruthy();
   });

@@ -11,7 +11,7 @@ import { PersonRoleLocationsDialogComponent } from '../person-role-locations-dia
 @Component({
   selector: 'app-person-basic-info',
   templateUrl: './person-basic-info.component.html',
-  styleUrls: ['./person-basic-info.component.scss']
+  styleUrls: ['./person-basic-info.component.scss'],
 })
 export class PersonBasicInfoComponent implements OnChanges {
   readonly ProjectRole = ProjectRole;

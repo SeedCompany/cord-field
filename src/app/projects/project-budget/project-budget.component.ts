@@ -12,7 +12,7 @@ import { ProjectViewStateService } from '../project-view-state.service';
 @Component({
   selector: 'app-project-budget',
   templateUrl: './project-budget.component.html',
-  styleUrls: ['./project-budget.component.scss']
+  styleUrls: ['./project-budget.component.scss'],
 })
 @TitleAware('Budget')
 export class ProjectBudgetComponent extends SubscriptionComponent implements OnInit {
@@ -21,7 +21,7 @@ export class ProjectBudgetComponent extends SubscriptionComponent implements OnI
 
   constructor(
     private formBuilder: FormBuilder,
-    private viewStateService: ProjectViewStateService
+    private viewStateService: ProjectViewStateService,
   ) {
     super();
   }
@@ -33,7 +33,7 @@ export class ProjectBudgetComponent extends SubscriptionComponent implements OnI
       .project
       .pipe(
         map(project => project.budgets.find(budget => budget.status === BudgetStatus.Active)),
-        filterRequired()
+        filterRequired(),
       )
       .subscribe(budget => this.createBudgetForm(budget));
 
@@ -41,14 +41,14 @@ export class ProjectBudgetComponent extends SubscriptionComponent implements OnI
       .pipe(takeUntil(this.unsubscribe))
       .subscribe(val => {
         this.viewStateService.change({
-          budgets: [val]
+          budgets: [val],
         });
       });
 
     this.total = (this.budgets.valueChanges as Observable<ProjectBudgetDetails[]>)
       .pipe(
         startWith(this.budgets.value as ProjectBudgetDetails[]),
-        map(val => val.reduce((total, item) => total + Number(item.amount || 0), 0))
+        map(val => val.reduce((total, item) => total + Number(item.amount || 0), 0)),
       );
   }
 
@@ -63,9 +63,9 @@ export class ProjectBudgetComponent extends SubscriptionComponent implements OnI
   private createBudgetForm(budget: ProjectBudget) {
     this.form.reset({
       id: budget.id,
-      status: budget.status
+      status: budget.status,
     }, {
-      emitEvent: false
+      emitEvent: false,
     });
 
     const budgets = this.budgets;
@@ -76,7 +76,7 @@ export class ProjectBudgetComponent extends SubscriptionComponent implements OnI
       budgets.push(this.formBuilder.group({
         organization: detail.organization,
         fiscalYear: detail.fiscalYear,
-        amount: [detail.amount, [Validators.required, Validators.min(0)]]
+        amount: [detail.amount, [Validators.required, Validators.min(0)]],
       }));
     }
   }
@@ -85,7 +85,7 @@ export class ProjectBudgetComponent extends SubscriptionComponent implements OnI
     this.form = this.formBuilder.group({
       id: [''],
       status: [''],
-      budgetDetails: this.formBuilder.array([])
+      budgetDetails: this.formBuilder.array([]),
     });
   }
 }

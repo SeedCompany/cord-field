@@ -11,7 +11,7 @@ import { UserRolesFormComponent } from '@app/shared/components/user-roles-form/u
 @Component({
   selector: 'app-person-create-dialog',
   templateUrl: './person-create-dialog.component.html',
-  styleUrls: ['./person-create-dialog.component.scss']
+  styleUrls: ['./person-create-dialog.component.scss'],
 })
 export class PersonCreateDialogComponent implements OnInit {
   form: FormGroup;
@@ -22,7 +22,7 @@ export class PersonCreateDialogComponent implements OnInit {
   static open(dialog: MatDialog): MatDialogRef<PersonCreateDialogComponent, any> {
     return dialog.open(PersonCreateDialogComponent, {
       width: '500px',
-      disableClose: true
+      disableClose: true,
     });
   }
 
@@ -49,7 +49,7 @@ export class PersonCreateDialogComponent implements OnInit {
       firstName: ['', [Validators.required, Validators.minLength(2)]],
       lastName: ['', [Validators.required, Validators.minLength(2)]],
       email: ['', CustomValidators.email],
-      sendInvite: [false]
+      sendInvite: [false],
     });
   }
 

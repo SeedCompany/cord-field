@@ -27,7 +27,7 @@ interface EngagementForm {
   selector: 'app-project-engagement',
   templateUrl: './project-engagement.component.html',
   styleUrls: ['./project-engagement.component.scss'],
-  animations: [popInOut]
+  animations: [popInOut],
 })
 @TitleAware()
 export class ProjectEngagementComponent extends SubscriptionComponent implements OnInit, TitleProp {
@@ -46,7 +46,7 @@ export class ProjectEngagementComponent extends SubscriptionComponent implements
     isLukePartnership: [false],
     isFirstScripture: [false],
     isDedicationPlanned: [false],
-    dedicationDate: [null]
+    dedicationDate: [null],
   });
 
   constructor(private route: ActivatedRoute,
@@ -65,7 +65,7 @@ export class ProjectEngagementComponent extends SubscriptionComponent implements
   get title() {
     return this.engagement$.pipe(
       map(e => e.language.displayName),
-      startWith('')
+      startWith(''),
     );
   }
 
@@ -82,7 +82,7 @@ export class ProjectEngagementComponent extends SubscriptionComponent implements
     const id$ = this.route.params.pipe(map(({ id }) => id));
     combineLatest(project$, id$)
       .pipe(
-        map(([project, id]) => project.engagements.find(e => e.id === id))
+        map(([project, id]) => project.engagements.find(e => e.id === id)),
       )
       .subscribe(this._engagement);
 
@@ -95,7 +95,7 @@ export class ProjectEngagementComponent extends SubscriptionComponent implements
         isLukePartnership: engagement.tags.some(tag => tag === 'luke_partnership'),
         isFirstScripture: engagement.tags.some(tag => tag === 'first_scripture'),
         isDedicationPlanned,
-        dedicationDate
+        dedicationDate,
       };
 
       this.form.reset(value);

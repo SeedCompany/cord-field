@@ -3,7 +3,7 @@ import { AuthenticationToken } from '../models/authentication-token';
 import { LoggerService } from './logger.service';
 import {
   LocalStorageService,
-  SessionStorageService
+  SessionStorageService,
 } from './storage.service';
 
 export const AUTH_STORAGE_KEY = 'auth';
@@ -12,7 +12,7 @@ export const AUTH_STORAGE_KEY = 'auth';
  * Stores and retrieves AuthenticationTokens from Session or Local Storage
  */
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class AuthenticationStorageService {
 

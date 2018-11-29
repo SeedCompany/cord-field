@@ -7,7 +7,7 @@ import { UserRole } from '../../../core/models/user';
 @Component({
   selector: 'app-person-locations-by-role-dialog',
   templateUrl: './person-role-locations-dialog.component.html',
-  styleUrls: ['./person-role-locations-dialog.component.scss']
+  styleUrls: ['./person-role-locations-dialog.component.scss'],
 })
 export class PersonRoleLocationsDialogComponent {
   readonly ProjectRole = ProjectRole;
@@ -20,7 +20,7 @@ export class PersonRoleLocationsDialogComponent {
       width: '40vw',
       minWidth: '400px',
       autoFocus: false,
-      data: userRole
+      data: userRole,
     });
   }
 

@@ -13,7 +13,7 @@ import { ProjectTeamMemberAddComponent } from './project-team-member-add/project
 @Component({
   selector: 'app-project-team',
   templateUrl: './project-team.component.html',
-  styleUrls: ['./project-team.component.scss']
+  styleUrls: ['./project-team.component.scss'],
 })
 @TitleAware('Team')
 export class ProjectTeamComponent extends SubscriptionComponent implements OnInit, AfterViewInit {
@@ -49,7 +49,7 @@ export class ProjectTeamComponent extends SubscriptionComponent implements OnIni
       const fields = [
         data.firstName,
         data.lastName,
-        this.showRoles(data.roles)
+        this.showRoles(data.roles),
       ];
 
       return fields.join(' ').toLowerCase().includes(term.trim().toLowerCase());
@@ -72,7 +72,7 @@ export class ProjectTeamComponent extends SubscriptionComponent implements OnIni
   onAssign() {
     if (!this.project.location) {
       this.snackBar.open('Set the project location to assign users', undefined, {
-        duration: 3000
+        duration: 3000,
       });
       return;
     }
@@ -81,8 +81,8 @@ export class ProjectTeamComponent extends SubscriptionComponent implements OnIni
       width: '400px',
       data: {
         project: this.project,
-        projectViewState: this.projectViewState
-      }
+        projectViewState: this.projectViewState,
+      },
     });
   }
 
@@ -92,8 +92,8 @@ export class ProjectTeamComponent extends SubscriptionComponent implements OnIni
       data: {
         teamMember,
         project: this.project,
-        projectViewState: this.projectViewState
-      }
+        projectViewState: this.projectViewState,
+      },
     });
   }
 }

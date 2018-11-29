@@ -24,16 +24,16 @@ const routes: Routes = [
           {path: 'basic', component: PersonEditBasicInfoComponent},
           {path: 'about', component: PersonEditAboutComponent},
           {path: 'account', component: PersonEditAccountComponent},
-          {path: 'admin', component: PersonEditAdminComponent}
-        ]
-      }
-    ]
-  }
+          {path: 'admin', component: PersonEditAdminComponent},
+        ],
+      },
+    ],
+  },
 ];
 
 @NgModule({
   imports: [RouterModule.forChild(routes)],
-  exports: [RouterModule]
+  exports: [RouterModule],
 })
 export class PeopleRoutingModule {
 }

@@ -3,7 +3,7 @@ import { Organization } from '../models/organization';
 import { PloApiService } from './http/plo-api.service';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class OrganizationService {
 

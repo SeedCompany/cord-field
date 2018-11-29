@@ -16,8 +16,8 @@ describe('LocationService', () => {
     TestBed.configureTestingModule({
       imports: [
         CoreModule,
-        HttpClientTestingModule
-      ]
+        HttpClientTestingModule,
+      ],
     });
     locationService = TestBed.get(LocationService);
     httpMock = TestBed.get(HttpTestingController);
@@ -34,10 +34,10 @@ describe('LocationService', () => {
         area: {
           name: 'Anglophone Africa',
           region: {
-            name: 'Africa'
-          }
-        }
-      } as Partial<Location>)
+            name: 'Africa',
+          },
+        },
+      } as Partial<Location>),
     ];
     const term = 'Nigeria';
 

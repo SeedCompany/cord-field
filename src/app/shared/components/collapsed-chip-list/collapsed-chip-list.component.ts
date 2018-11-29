@@ -3,7 +3,7 @@ import { Component, ContentChild, EventEmitter, Input, Output, TemplateRef } fro
 @Component({
   selector: 'app-collapsed-chip-list',
   templateUrl: './collapsed-chip-list.component.html',
-  styleUrls: ['./collapsed-chip-list.component.scss']
+  styleUrls: ['./collapsed-chip-list.component.scss'],
 })
 export class CollapsedChipListComponent<T> {
 

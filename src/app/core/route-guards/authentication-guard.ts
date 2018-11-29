@@ -3,7 +3,7 @@ import { ActivatedRouteSnapshot, CanActivate, Router, RouterStateSnapshot } from
 import { AuthenticationService } from '../services/authentication.service';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class AuthenticationGuard implements CanActivate {
 
@@ -22,7 +22,7 @@ export class AuthenticationGuard implements CanActivate {
 }
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class AlreadyLoggedInGuard implements CanActivate {
 

@@ -6,7 +6,7 @@ export class TypedFormControl<T> extends FormControl {
   constructor(
     formState?: T,
     validatorOrOpts?: ValidatorFn | ValidatorFn[] | AbstractControlOptions | null,
-    asyncValidator?: AsyncValidatorFn | AsyncValidatorFn[] | null
+    asyncValidator?: AsyncValidatorFn | AsyncValidatorFn[] | null,
   ) {
     super(formState, validatorOrOpts);
   }

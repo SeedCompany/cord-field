@@ -11,7 +11,7 @@ import { UserViewStateService } from '../user-view-state.service';
   selector: 'app-person',
   templateUrl: './person.component.html',
   styleUrls: ['./person.component.scss'],
-  providers: [UserViewStateService]
+  providers: [UserViewStateService],
 })
 @TitleAware()
 export class PersonComponent extends SubscriptionComponent implements OnInit, TitleProp {
@@ -19,7 +19,7 @@ export class PersonComponent extends SubscriptionComponent implements OnInit, Ti
     private userViewState: UserViewStateService,
     private route: ActivatedRoute,
     private router: Router,
-    private snackBar: MatSnackBar
+    private snackBar: MatSnackBar,
   ) {
     super();
   }

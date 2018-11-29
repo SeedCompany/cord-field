@@ -10,15 +10,15 @@ import { ResetPasswordComponent } from './reset-password/reset-password.componen
 @NgModule({
   imports: [
     SharedModule,
-    LoginRoutingModule
+    LoginRoutingModule,
   ],
   declarations: [
     ConfirmEmailComponent,
     ForgotPasswordComponent,
     LoginComponent,
     RequestAccessComponent,
-    ResetPasswordComponent
-  ]
+    ResetPasswordComponent,
+  ],
 })
 export class LoginModule {
 }

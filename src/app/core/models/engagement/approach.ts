@@ -4,7 +4,7 @@ export enum ProjectApproach {
   OralStorying = 'os',
   OralTranslation = 'ot',
   Written = 'wt',
-  SignLanguage = 'sl'
+  SignLanguage = 'sl',
 }
 
 export namespace ProjectApproach {
@@ -12,6 +12,6 @@ export namespace ProjectApproach {
     [ProjectApproach.OralStorying]: 'Oral Storying',
     [ProjectApproach.OralTranslation]: 'Oral Translation',
     [ProjectApproach.Written]: 'Written',
-    [ProjectApproach.SignLanguage]: 'Sign Language'
+    [ProjectApproach.SignLanguage]: 'Sign Language',
   });
 }

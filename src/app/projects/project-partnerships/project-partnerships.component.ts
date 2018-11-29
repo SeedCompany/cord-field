@@ -11,7 +11,7 @@ import { ProjectViewStateService } from '../project-view-state.service';
 @Component({
   selector: 'app-project-partnerships',
   templateUrl: './project-partnerships.component.html',
-  styleUrls: ['./project-partnerships.component.scss']
+  styleUrls: ['./project-partnerships.component.scss'],
 })
 export class ProjectPartnershipsComponent extends SubscriptionComponent implements OnInit {
 
@@ -19,7 +19,7 @@ export class ProjectPartnershipsComponent extends SubscriptionComponent implemen
   readonly PartnershipAgreementStatus = PartnershipAgreementStatus;
 
   form = this.fb.group({
-    partnerships: this.fb.array([])
+    partnerships: this.fb.array([]),
   });
   adding = false;
   private opened: number | null;
@@ -88,7 +88,7 @@ export class ProjectPartnershipsComponent extends SubscriptionComponent implemen
       organization: '',
       types: '',
       agreementStatus: '',
-      mouStatus: ''
+      mouStatus: '',
     } as {[key in keyof Partnership]: any});
     // set the values
     fg.reset(partnership);
@@ -97,7 +97,7 @@ export class ProjectPartnershipsComponent extends SubscriptionComponent implemen
     this.subscriptions[partnership.id] = fg.valueChanges
       .pipe(
         takeUntil(this.unsubscribe),
-        map(Partnership.fromJson)
+        map(Partnership.fromJson),
       )
       .subscribe(p => this.projectViewState.change({partnerships: {update: p}}));
 

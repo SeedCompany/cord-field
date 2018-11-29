@@ -4,7 +4,7 @@ import { PloApiService } from '@app/core/services/http/plo-api.service';
 import { map } from 'rxjs/operators';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class EngagementService {
 

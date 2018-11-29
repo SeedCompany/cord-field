@@ -97,13 +97,13 @@ export interface FileVersion {
 
 export enum FileNodeType {
   Directory = 'dir',
-  File = 'file'
+  File = 'file',
 }
 
 export namespace FileNodeType {
   export const {entries, forUI, values, trackEntryBy, trackValueBy} = buildEnum<FileNodeType>(FileNodeType, {
     [FileNodeType.Directory]: 'Directory',
-    [FileNodeType.File]: 'File'
+    [FileNodeType.File]: 'File',
   });
 }
 
@@ -114,7 +114,7 @@ export enum FileNodeCategory {
   Image = 'image',
   Other = 'other',
   Spreadsheet = 'spreadsheet',
-  Video = 'video'
+  Video = 'video',
 }
 
 export namespace FileNodeCategory {
@@ -125,6 +125,6 @@ export namespace FileNodeCategory {
     [FileNodeCategory.Image]: 'Image',
     [FileNodeCategory.Other]: 'Other',
     [FileNodeCategory.Spreadsheet]: 'Spreadsheet',
-    [FileNodeCategory.Video]: 'Video'
+    [FileNodeCategory.Video]: 'Video',
   });
 }

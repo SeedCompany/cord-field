@@ -16,11 +16,11 @@ describe('LanguageService', () => {
     TestBed.configureTestingModule({
       imports: [
         CoreModule,
-        HttpClientTestingModule
+        HttpClientTestingModule,
       ],
       providers: [
-        LanguageService
-      ]
+        LanguageService,
+      ],
     });
     languageService = TestBed.get(LanguageService);
     httpMock = TestBed.get(HttpTestingController);
@@ -34,8 +34,8 @@ describe('LanguageService', () => {
     const mockResponse: Language[] = [
       Language.fromJson({
         id: '5aeb29907e8ca80001db91a8',
-        name: 'Aari'
-      })
+        name: 'Aari',
+      }),
     ];
     const term = 'aa';
     const locationUrl = `${testBaseUrl}/languages/suggestions?term=${term}`;
@@ -65,8 +65,8 @@ describe('LanguageService', () => {
       ethnologueCode: 'tan',
       locations: [
         {id: '5b858a4ca77d2381ea22d7bb', country: 'Philippines'},
-        {id: '5b858a4ca77d232e3622d7ae', country: 'India'}
-      ]
+        {id: '5b858a4ca77d232e3622d7ae', country: 'India'},
+      ],
     }];
 
     languageService

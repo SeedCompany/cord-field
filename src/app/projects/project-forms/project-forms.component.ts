@@ -5,7 +5,7 @@ import { ProjectViewStateService } from '@app/projects/project-view-state.servic
 @Component({
   selector: 'app-project-forms',
   templateUrl: './project-forms.component.html',
-  styleUrls: ['./project-forms.component.scss']
+  styleUrls: ['./project-forms.component.scss'],
 })
 export class ProjectFormsComponent extends ProjectTabComponent {
   constructor(private viewStateService: ProjectViewStateService) {

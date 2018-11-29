@@ -12,7 +12,7 @@ export const SUPPORTS_DOWNLOADS = (() => {
 })();
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class DownloaderService {
 

@@ -5,14 +5,14 @@ import { showNotImplemented } from '../../shared/directives/not-implemented.dire
 import { BrowserService } from '../services/browser.service';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class NotImplementedGuard implements CanActivate {
 
   constructor(
     private snackBar: MatSnackBar,
     private router: Router,
-    private browserService: BrowserService
+    private browserService: BrowserService,
   ) {
   }
 
@@ -33,6 +33,6 @@ export function notImplementedRoute(path: string, message?: string): Route {
   return {
     path,
     canActivate: [NotImplementedGuard],
-    data: {message}
+    data: {message},
   };
 }

@@ -15,12 +15,12 @@ xdescribe('AuthInterceptor', () => {
     TestBed.configureTestingModule({
       imports: [
         CoreModule,
-        HttpClientModule
+        HttpClientModule,
       ],
       providers: [
         HttpClient,
-        AuthInterceptor.inject()
-      ]
+        AuthInterceptor.inject(),
+      ],
     });
 
     authStorageService = TestBed.get(AuthenticationStorageService);

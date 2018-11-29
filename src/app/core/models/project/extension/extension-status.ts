@@ -5,7 +5,7 @@ export enum ExtensionStatus {
   Review = 'review',
   ApprovalPending = 'approvalPending',
   Approved = 'approved',
-  Rejected = 'rejected'
+  Rejected = 'rejected',
 }
 
 export namespace ExtensionStatus {
@@ -14,6 +14,6 @@ export namespace ExtensionStatus {
     [ExtensionStatus.Review]: 'Review',
     [ExtensionStatus.ApprovalPending]: 'Approval Pending',
     [ExtensionStatus.Approved]: 'Approved',
-    [ExtensionStatus.Rejected]: 'Rejected'
+    [ExtensionStatus.Rejected]: 'Rejected',
   });
 }

@@ -39,41 +39,41 @@ export interface ModifiedProject {
 const config: ChangeConfig<Project> = {
   mouStart: {
     accessor: accessDates,
-    forceRefresh: true
+    forceRefresh: true,
   },
   mouEnd: {
     accessor: accessDates,
-    forceRefresh: true
+    forceRefresh: true,
   },
   estimatedSubmission: {
-    accessor: accessDates
+    accessor: accessDates,
   },
   status: {},
   location: {
     accessor: returnId,
     toServer: returnId,
     key: 'locationId',
-    forceRefresh: true
+    forceRefresh: true,
   },
   languages: {
     accessor: returnId,
-    toServer: mapChangeList<Language, string, string>(returnId, returnId)
+    toServer: mapChangeList<Language, string, string>(returnId, returnId),
   },
   partnerships: {
     accessor: returnId,
     toServer: mapChangeList<Partnership, PartnershipForSaveAPI, string>(Partnership.forSaveAPI, returnId),
-    forceRefresh: true
+    forceRefresh: true,
   },
   team: {
     accessor: returnId,
-    toServer: mapChangeList<TeamMember, TeamMemberForSaveAPI, string>(TeamMember.forSaveAPI, returnId)
+    toServer: mapChangeList<TeamMember, TeamMemberForSaveAPI, string>(TeamMember.forSaveAPI, returnId),
   },
   budgets: {
     // Identify project budget as a scalar value
     accessor: (budget: ProjectBudget) => ([
       budget.id,
       budget.status,
-      budget.budgetDetails.map(item => Number(item.amount || 0)).join(',')
+      budget.budgetDetails.map(item => Number(item.amount || 0)).join(','),
     ].join(',')),
     // Map organization back to organizationId
     toServer: (budgets: ProjectBudget[]) => budgets.map(budget => ({
@@ -82,10 +82,10 @@ const config: ChangeConfig<Project> = {
       budgetDetails: budget.budgetDetails.map(detail => ({
         organizationId: detail.organization.id,
         fiscalYear: detail.fiscalYear,
-        amount: detail.amount
-      }))
-    }))
-  }
+        amount: detail.amount,
+      })),
+    })),
+  },
 };
 
 @Injectable()
@@ -140,7 +140,7 @@ export class ProjectViewStateService extends AbstractViewState<Project> {
           next.engagements[index] = engagement;
 
           return next;
-        })
+        }),
       )
       .subscribe(this.onLoad);
   }

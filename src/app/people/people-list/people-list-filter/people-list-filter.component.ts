@@ -10,13 +10,13 @@ import { map, startWith } from 'rxjs/operators';
 @Component({
   selector: 'app-people-list-filter',
   templateUrl: './people-list-filter.component.html',
-  styleUrls: ['./people-list-filter.component.scss']
+  styleUrls: ['./people-list-filter.component.scss'],
 })
 export class PeopleListFilterComponent {
 
   form = this.formBuilder.group({
     organizations: [[]],
-    isActive: []
+    isActive: [],
   });
 
   constructor(private formBuilder: FormBuilder) { }
@@ -34,8 +34,8 @@ export class PeopleListFilterComponent {
       .pipe(
         startWith(this.form.value),
         map(filters =>
-          filterEntries(filters, (key, value) => hasValue(value))
-        )
+          filterEntries(filters, (key, value) => hasValue(value)),
+        ),
       );
   }
 
@@ -45,7 +45,7 @@ export class PeopleListFilterComponent {
 
   reset() {
     this.form.reset({
-      organizations: []
+      organizations: [],
     });
   }
 }

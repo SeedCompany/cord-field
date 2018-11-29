@@ -3,7 +3,7 @@ import { Pipe, PipeTransform } from '@angular/core';
 const sizes = ['Bytes', 'KB', 'MB', 'GB', 'TB', 'PB'];
 
 @Pipe({
-  name: 'fileSize'
+  name: 'fileSize',
 })
 export class FileSizePipe implements PipeTransform {
   transform(bytes: number, args?: any): string {

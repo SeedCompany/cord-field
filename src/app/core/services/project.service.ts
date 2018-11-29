@@ -17,7 +17,7 @@ import {
   ProjectSensitivity,
   ProjectStatus,
   ProjectsWithCount,
-  ProjectType
+  ProjectType,
 } from '../models/project';
 import { HttpParams } from './http/abstract-http-client';
 import { PloApiService } from './http/plo-api.service';
@@ -34,7 +34,7 @@ export interface ProjectFilterAPI {
 }
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class ProjectService {
 
@@ -60,7 +60,7 @@ export class ProjectService {
       sort,
       skip: skip.toString(),
       limit: limit.toString(),
-      order
+      order,
     };
 
     if (isMine) {
@@ -81,7 +81,7 @@ export class ProjectService {
       .pipe(map((response: HttpResponse<Project[]>) => {
         return {
           projects: Project.fromJsonArray(response.body),
-          count: Number(response.headers.get('x-sc-total-count')) || 0
+          count: Number(response.headers.get('x-sc-total-count')) || 0,
         };
       })).toPromise();
   }
@@ -121,8 +121,8 @@ export class ProjectService {
       ? {
         [dateRange]: {
           gte: startDate,
-          lte: endDate
-        }
+          lte: endDate,
+        },
       }
       : undefined;
 
@@ -133,7 +133,7 @@ export class ProjectService {
 
     if (status === ProjectStatus.InDevelopment) {
       return [
-        ['Submit for Approval', ProjectStatus.PendingApproval]
+        ['Submit for Approval', ProjectStatus.PendingApproval],
       ];
     }
 
@@ -141,7 +141,7 @@ export class ProjectService {
       return [
         ['Send Back for Corrections', ProjectStatus.InDevelopment],
         ['Reject Project', ProjectStatus.Rejected],
-        ['Approve Project', ProjectStatus.Active]
+        ['Approve Project', ProjectStatus.Active],
       ];
     }
 
@@ -149,14 +149,14 @@ export class ProjectService {
       return [
         ['Suspend Project', ProjectStatus.Suspended],
         ['Terminate Project', ProjectStatus.Terminated],
-        ['Complete Project', ProjectStatus.Completed]
+        ['Complete Project', ProjectStatus.Completed],
       ];
     }
 
     if (status === ProjectStatus.Suspended) {
       return [
         ['Reactivate Project', ProjectStatus.Active],
-        ['Terminate Project', ProjectStatus.Terminated]
+        ['Terminate Project', ProjectStatus.Terminated],
       ];
     }
 
@@ -168,7 +168,7 @@ export class ProjectService {
       return this.ploApi
         .post<ProjectExtension>(`/projects/${projectId}/extensions`, {
           ...extension,
-          status: ExtensionStatus.Draft
+          status: ExtensionStatus.Draft,
         })
         .pipe(map(ProjectExtension.fromJson))
         .toPromise();

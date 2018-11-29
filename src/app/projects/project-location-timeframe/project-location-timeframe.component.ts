@@ -12,7 +12,7 @@ import { ProjectViewStateService } from '../project-view-state.service';
 @Component({
   selector: 'app-project-location-timeframe',
   templateUrl: './project-location-timeframe.component.html',
-  styleUrls: ['./project-location-timeframe.component.scss']
+  styleUrls: ['./project-location-timeframe.component.scss'],
 })
 export class ProjectLocationTimeframeComponent extends SubscriptionComponent {
   form: FormGroup;
@@ -21,7 +21,7 @@ export class ProjectLocationTimeframeComponent extends SubscriptionComponent {
 
   constructor(
     private formBuilder: FormBuilder,
-    private projectViewState: ProjectViewStateService
+    private projectViewState: ProjectViewStateService,
   ) {
     super();
 
@@ -49,9 +49,9 @@ export class ProjectLocationTimeframeComponent extends SubscriptionComponent {
       location: ['', Validators.required],
       mouStart: ['', Validators.required],
       mouEnd: ['', Validators.required],
-      estimatedSubmission: ['']
+      estimatedSubmission: [''],
     }, {
-      validator: CustomValidators.dateRange('mouStart', 'mouEnd', false)
+      validator: CustomValidators.dateRange('mouStart', 'mouEnd', false),
     });
 
     this.projectViewState.project
@@ -61,7 +61,7 @@ export class ProjectLocationTimeframeComponent extends SubscriptionComponent {
           location: state.location,
           mouStart: state.mouStart,
           mouEnd: state.mouEnd,
-          estimatedSubmission: state.estimatedSubmission
+          estimatedSubmission: state.estimatedSubmission,
         });
       });
 

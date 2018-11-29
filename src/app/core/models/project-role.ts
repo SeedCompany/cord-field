@@ -10,7 +10,7 @@ export enum ProjectRole {
   FinancialAnalyst = 'fa',
   LeadFinancialAnalyst = 'lfa',
   RegionalDirector = 'rd',
-  Writer = 'w'
+  Writer = 'w',
 }
 
 export namespace ProjectRole {
@@ -24,12 +24,12 @@ export namespace ProjectRole {
     [ProjectRole.LeadFinancialAnalyst]: 'Lead Financial Analyst',
     [ProjectRole.Writer]: 'Writer',
     [ProjectRole.AreaDirector]: 'Area Director',
-    [ProjectRole.RegionalDirector]: 'Regional Director'
+    [ProjectRole.RegionalDirector]: 'Regional Director',
   });
 
   export const implicit = [
     ProjectRole.AreaDirector,
-    ProjectRole.RegionalDirector
+    ProjectRole.RegionalDirector,
   ];
 
   export const unique = [
@@ -38,7 +38,7 @@ export namespace ProjectRole {
     ProjectRole.FieldCoordinator,
     ProjectRole.FinancialAnalyst,
     ProjectRole.LeadFinancialAnalyst,
-    ProjectRole.ConsultantManager
+    ProjectRole.ConsultantManager,
   ];
 
   export const needsLocations = [
@@ -49,6 +49,6 @@ export namespace ProjectRole {
     ProjectRole.FieldPartner,
     ProjectRole.FinancialAnalyst,
     ProjectRole.LeadFinancialAnalyst,
-    ProjectRole.Writer
+    ProjectRole.Writer,
   ];
 }

@@ -9,7 +9,7 @@ import * as CustomValidators from '../../validators';
 @Component({
   selector: 'app-forgot-password',
   templateUrl: './forgot-password.component.html',
-  styleUrls: ['./forgot-password.component.scss']
+  styleUrls: ['./forgot-password.component.scss'],
 })
 @TitleAware('Forgot Password')
 export class ForgotPasswordComponent {
@@ -17,7 +17,7 @@ export class ForgotPasswordComponent {
   reset = false;
 
   form: FormGroup = this.fb.group({
-    email: ['', CustomValidators.email]
+    email: ['', CustomValidators.email],
   });
 
   constructor(private auth: AuthenticationService,

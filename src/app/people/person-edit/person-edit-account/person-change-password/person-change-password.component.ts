@@ -9,7 +9,7 @@ import * as CustomValidators from '../../../../core/validators';
 @Component({
   selector: 'app-person-change-password',
   templateUrl: './person-change-password.component.html',
-  styleUrls: ['./person-change-password.component.scss']
+  styleUrls: ['./person-change-password.component.scss'],
 })
 export class PersonChangePasswordComponent {
 
@@ -23,9 +23,9 @@ export class PersonChangePasswordComponent {
   form = this.fb.group({
     currentPassword: ['', Validators.required],
     newPassword: ['', Validators.required],
-    confirmPassword: ['', [Validators.required]]
+    confirmPassword: ['', [Validators.required]],
   }, {
-    validator: CustomValidators.passwordMatch('newPassword')
+    validator: CustomValidators.passwordMatch('newPassword'),
   });
 
   constructor(private authService: AuthenticationService,

@@ -8,11 +8,11 @@ export enum LogLevel {
   debug = 0,
   info,
   warn,
-  error
+  error,
 }
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class LoggerService {
 
@@ -23,7 +23,7 @@ export class LoggerService {
       this.ga = {
         error() {
           // noop}
-        }
+        },
       } as any;
     }
 

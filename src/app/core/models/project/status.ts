@@ -7,7 +7,7 @@ export enum ProjectStatus {
   Rejected = 'rejected',
   Suspended = 'suspended',
   Terminated = 'terminated',
-  Completed = 'completed'
+  Completed = 'completed',
 }
 
 export namespace ProjectStatus {
@@ -18,7 +18,7 @@ export namespace ProjectStatus {
     [ProjectStatus.Rejected]: 'Rejected',
     [ProjectStatus.Suspended]: 'Suspended',
     [ProjectStatus.Terminated]: 'Terminated',
-    [ProjectStatus.Completed]: 'Completed'
+    [ProjectStatus.Completed]: 'Completed',
   });
 }
 
@@ -39,7 +39,7 @@ export enum ProjectStage {
   FinancialAnalystEndorsement = 'financial_analyst_endorsement',
   ProposalCompletion = 'proposal_completion',
   ProjectApproval = 'project_approval',
-  FinanceConfirmation = 'finance_confirmation'
+  FinanceConfirmation = 'finance_confirmation',
 }
 
 export namespace ProjectStage {
@@ -60,7 +60,7 @@ export namespace ProjectStage {
     [ProjectStage.FinancialAnalystEndorsement]: 'Financial Analyst Endorsement',
     [ProjectStage.ProposalCompletion]: 'Proposal Completion',
     [ProjectStage.ProjectApproval]: 'Project Approval',
-    [ProjectStage.FinanceConfirmation]: 'Finance Confirmation'
+    [ProjectStage.FinanceConfirmation]: 'Finance Confirmation',
   });
 
   export function forStatus(status: ProjectStatus): ProjectStage[] {
@@ -70,7 +70,7 @@ export namespace ProjectStage {
         ProjectStage.PendingSuspension,
         ProjectStage.PendingTermination,
         ProjectStage.PendingCompletion,
-        ProjectStage.CompletedActive
+        ProjectStage.CompletedActive,
       ],
       [ProjectStatus.InDevelopment]: [
         ProjectStage.ConceptDevelopment,
@@ -81,8 +81,8 @@ export namespace ProjectStage {
         ProjectStage.FinancialAnalystEndorsement,
         ProjectStage.ProposalCompletion,
         ProjectStage.ProjectApproval,
-        ProjectStage.FinanceConfirmation
-      ]
+        ProjectStage.FinanceConfirmation,
+      ],
     };
     return mapping[status];
   }

@@ -9,13 +9,13 @@ import { Component, EventEmitter, Input, Output } from '@angular/core';
     trigger('slideInOut', [
       transition(':enter', [
         style({width: 0}),
-        animate('200ms ease-in')
+        animate('200ms ease-in'),
       ]),
       transition(':leave', [
-        animate('200ms ease-out', style({width: 0}))
-      ])
-    ])
-  ]
+        animate('200ms ease-out', style({width: 0})),
+      ]),
+    ]),
+  ],
 })
 export class SearchComponent {
   /** Whether to send empty strings through search event when the input is cleared. */

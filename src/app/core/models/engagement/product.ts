@@ -11,7 +11,7 @@ export enum ProjectProduct {
   NewTestamentFull = 'ntfull',
   NewTestamentPortions = 'ntportions',
   OldTestamentFull = 'otfull',
-  OldTestamentPortions = 'otportions'
+  OldTestamentPortions = 'otportions',
 }
 
 export namespace ProjectProduct {
@@ -26,6 +26,6 @@ export namespace ProjectProduct {
     [ProjectProduct.NewTestamentFull]: 'New Testament Full',
     [ProjectProduct.NewTestamentPortions]: 'New Testament Portions',
     [ProjectProduct.OldTestamentFull]: 'Old Testament - Full',
-    [ProjectProduct.OldTestamentPortions]: 'Old Testament - Portions'
+    [ProjectProduct.OldTestamentPortions]: 'Old Testament - Portions',
   });
 }

@@ -66,7 +66,7 @@ export enum PartnershipType {
   Funding = 'f',
   Impact = 'i',
   Technical = 't',
-  Resource = 'r'
+  Resource = 'r',
 }
 export namespace PartnershipType {
   export const {entries, forUI, values, trackEntryBy, trackValueBy} = buildEnum(PartnershipType, {
@@ -74,19 +74,19 @@ export namespace PartnershipType {
     [PartnershipType.Funding]: 'Funding',
     [PartnershipType.Impact]: 'Impact',
     [PartnershipType.Technical]: 'Technical',
-    [PartnershipType.Resource]: 'Resource'
+    [PartnershipType.Resource]: 'Resource',
   });
 }
 
 export enum PartnershipAgreementStatus {
   NotAttached = 'na',
   AwaitingSignature = 'as',
-  Signed = 's'
+  Signed = 's',
 }
 export namespace PartnershipAgreementStatus {
   export const {entries, forUI, values, trackEntryBy, trackValueBy} = buildEnum(PartnershipAgreementStatus, {
     [PartnershipAgreementStatus.NotAttached]: 'Not Attached',
     [PartnershipAgreementStatus.AwaitingSignature]: 'Awaiting Signature',
-    [PartnershipAgreementStatus.Signed]: 'Signed'
+    [PartnershipAgreementStatus.Signed]: 'Signed',
   });
 }

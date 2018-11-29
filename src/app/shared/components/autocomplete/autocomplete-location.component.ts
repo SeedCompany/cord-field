@@ -11,8 +11,8 @@ import { AutocompleteComponent } from './autocomplete.component';
   templateUrl: './autocomplete.component.html',
   styleUrls: ['./autocomplete.component.scss'],
   providers: [
-    ValueAccessorProvider(AutocompleteLocationComponent)
-  ]
+    ValueAccessorProvider(AutocompleteLocationComponent),
+  ],
 })
 export class AutocompleteLocationComponent extends AutocompleteComponent<Location> {
 
@@ -25,7 +25,7 @@ export class AutocompleteLocationComponent extends AutocompleteComponent<Locatio
 
   constructor(
     private locationService: LocationService,
-    snackBar: MatSnackBar
+    snackBar: MatSnackBar,
   ) {
     super(snackBar);
   }

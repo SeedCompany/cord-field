@@ -16,11 +16,11 @@ describe('OrganizationService', () => {
     TestBed.configureTestingModule({
       imports: [
         CoreModule,
-        HttpClientTestingModule
+        HttpClientTestingModule,
       ],
       providers: [
-        OrganizationService
-      ]
+        OrganizationService,
+      ],
     });
     organizationService = TestBed.get(OrganizationService);
     httpMock = TestBed.get(HttpTestingController);
@@ -43,7 +43,7 @@ describe('OrganizationService', () => {
       .expectOne(`${testBaseUrl}/organizations/suggestions?term=zer`)
       .flush([
         {id: '5ae06f3da9941545df22cd03', name: 'Buzzer'},
-        {id: '5ae06f3da9941545df22cd49', name: 'Buzz'}
+        {id: '5ae06f3da9941545df22cd49', name: 'Buzz'},
       ] as Organization[]);
   });
 });

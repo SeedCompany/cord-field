@@ -4,14 +4,14 @@ import { isRedacted } from '@app/core/util';
 const DEFAULT_MASK = '********';
 
 @Directive({
-  selector: '[redactable]'
+  selector: '[redactable]',
 })
 export class RedactableDirective implements AfterViewChecked {
   @Input() mask: string = DEFAULT_MASK;
 
   constructor(
     private elementRef: ElementRef,
-    private renderer: Renderer2
+    private renderer: Renderer2,
   ) {}
 
   ngAfterViewChecked(): void {

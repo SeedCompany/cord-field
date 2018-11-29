@@ -30,7 +30,7 @@ import { ProjectsRoutingModule } from './projects-routing.module';
 @NgModule({
   imports: [
     SharedModule,
-    ProjectsRoutingModule
+    ProjectsRoutingModule,
   ],
   declarations: [
     CreateDirectoryDialogComponent,
@@ -58,15 +58,15 @@ import { ProjectsRoutingModule } from './projects-routing.module';
     ProjectLanguagesComponent,
     ProjectLocationTimeframeComponent,
     ProjectStatusComponent,
-    ProjectLocationTimeframeComponent
+    ProjectLocationTimeframeComponent,
   ],
   entryComponents: [
     CreateDirectoryDialogComponent,
     FileRenameDialogComponent,
     OverwriteFileWarningComponent,
     ProjectTeamMemberAddComponent,
-    ProjectTeamMemberRoleDialogComponent
-  ]
+    ProjectTeamMemberRoleDialogComponent,
+  ],
 })
 export class ProjectsModule {
 }

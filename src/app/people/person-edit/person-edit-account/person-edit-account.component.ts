@@ -6,7 +6,7 @@ import { AbstractPersonComponent } from '../abstract-person.component';
 @Component({
   selector: 'app-person-edit-account',
   templateUrl: './person-edit-account.component.html',
-  styleUrls: ['./person-edit-account.component.scss']
+  styleUrls: ['./person-edit-account.component.scss'],
 })
 @TitleAware('Edit Account')
 export class PersonEditAccountComponent extends AbstractPersonComponent {

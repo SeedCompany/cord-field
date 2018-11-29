@@ -9,7 +9,7 @@ interface LinkConfig {
 @Component({
   selector: 'app-project-overview-sidebar',
   templateUrl: './project-overview-sidebar.component.html',
-  styleUrls: ['./project-overview-sidebar.component.scss']
+  styleUrls: ['./project-overview-sidebar.component.scss'],
 })
 export class ProjectOverviewSidebarComponent {
   @Input() project: Project | null;

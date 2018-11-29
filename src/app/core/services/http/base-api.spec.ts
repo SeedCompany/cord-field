@@ -24,11 +24,11 @@ describe('BaseApiService', () => {
       .configureTestingModule({
         imports: [
           CoreModule,
-          HttpClientTestingModule
+          HttpClientTestingModule,
         ],
         providers: [
-          MockApiService
-        ]
+          MockApiService,
+        ],
       });
 
     api = TestBed.get(MockApiService);

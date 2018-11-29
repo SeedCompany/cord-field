@@ -9,11 +9,11 @@ export const environment = {
     level: 'debug',
     apiCalls: '*',
     noBody: [
-      '/api/auth/native/login'
-    ]
+      '/api/auth/native/login',
+    ],
   },
   services: {
     'domain': 'field',
-    'plo.cord.bible': 'http://127.0.0.1:8002/api'
-  }
+    'plo.cord.bible': 'http://127.0.0.1:8002/api',
+  },
 };

@@ -7,12 +7,12 @@ import { LanguagesRoutingModule } from './languages-routing.module';
 @NgModule({
   imports: [
     SharedModule,
-    LanguagesRoutingModule
+    LanguagesRoutingModule,
   ],
   declarations: [
     LanguageListComponent,
-    LanguageListFilterComponent
-  ]
+    LanguageListFilterComponent,
+  ],
 })
 export class LanguagesModule {
 }
