@@ -1,6 +1,8 @@
 import { forwardRef } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
+import { SubscriptionComponent } from '@app/shared/components/subscription.component';
 import { Subject } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
 
 export function ValueAccessorProvider(type: any) {
   return {
@@ -11,9 +13,9 @@ export function ValueAccessorProvider(type: any) {
   };
 }
 
-export abstract class AbstractValueAccessor<T> implements ControlValueAccessor {
-  valueChange: Subject<T> = new Subject<T>();
-
+export abstract class AbstractValueAccessor<T> extends SubscriptionComponent implements ControlValueAccessor {
+  private _valueChange: Subject<T> = new Subject<T>();
+  readonly valueChange = this._valueChange.asObservable().pipe(takeUntil(this.unsubscribe));
   private _innerValue: T;
 
   /**
@@ -24,7 +26,7 @@ export abstract class AbstractValueAccessor<T> implements ControlValueAccessor {
       this._innerValue = value;
       this.onChange(value);
       this.onTouched();
-      this.valueChange.next(value);
+      this._valueChange.next(value);
     }
   }
   get value(): T {
@@ -37,7 +39,7 @@ export abstract class AbstractValueAccessor<T> implements ControlValueAccessor {
   writeValue(value: T) {
     if (this._innerValue !== value) {
       this._innerValue = value;
-      this.valueChange.next(value);
+      this._valueChange.next(value);
     }
   }
 
