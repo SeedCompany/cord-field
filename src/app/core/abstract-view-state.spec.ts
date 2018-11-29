@@ -17,17 +17,17 @@ class TestViewState extends AbstractViewState<TestSubject> {
     super(
       {
         foo: {
-          accessor: returnSelf
+          accessor: returnSelf,
         },
         bar: {
           accessor: returnSelf,
-          forceRefresh: true // "bar has side effects when saving"
-        }
+          forceRefresh: true, // "bar has side effects when saving"
+        },
       },
       {
         foo: 'initial',
-        bar: 'initial'
-      }
+        bar: 'initial',
+      },
     );
   }
 
@@ -92,7 +92,7 @@ describe('AbstractViewState', () => {
       expect(dirty).toBeFalsy('dirty should be false initially');
 
       viewState.change({
-        foo: 'changed'
+        foo: 'changed',
       });
       expect(dirty).toBeTruthy();
     });
@@ -102,7 +102,7 @@ describe('AbstractViewState', () => {
       viewState.isDirty.subscribe(d => dirty = d);
 
       viewState.change({
-        foo: 'changed'
+        foo: 'changed',
       });
       viewState.discard();
 
@@ -113,7 +113,7 @@ describe('AbstractViewState', () => {
   describe('Saving', () => {
     beforeEach(() => {
       viewState.change({
-        foo: 'changed'
+        foo: 'changed',
       });
     });
 
@@ -158,7 +158,7 @@ describe('AbstractViewState', () => {
       let subject: TestSubject;
       viewState.subject.subscribe(s => subject = s);
       viewState.change({
-        foo: 'changed'
+        foo: 'changed',
       });
 
       await viewState.save();
@@ -171,7 +171,7 @@ describe('AbstractViewState', () => {
       viewState.isDirty.subscribe(d => dirty = d);
 
       viewState.change({
-        foo: 'changed'
+        foo: 'changed',
       });
       await viewState.save();
 
@@ -182,7 +182,7 @@ describe('AbstractViewState', () => {
   describe('Force Refresh', () => {
     it('Should call refresh() when change with forceRefresh is saved', async () => {
       viewState.change({
-        bar: 'changed'
+        bar: 'changed',
       });
 
       spyOn(viewState, 'refresh');

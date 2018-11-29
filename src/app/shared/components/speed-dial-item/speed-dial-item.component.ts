@@ -4,7 +4,7 @@ import { SpeedDialComponent } from '../speed-dial/speed-dial.component';
 @Component({
   selector: 'app-speed-dial-item',
   templateUrl: './speed-dial-item.component.html',
-  styleUrls: ['./speed-dial-item.component.scss']
+  styleUrls: ['./speed-dial-item.component.scss'],
 })
 export class SpeedDialItemComponent {
   @Input() color: 'primary' | 'accent' | 'warn' = 'accent';

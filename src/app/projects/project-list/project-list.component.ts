@@ -24,9 +24,9 @@ interface ListOption {
     trigger('slideRight', [
       state('shown', style({transform: 'translateX(0)'})),
       state('hidden', style({transform: 'translateX(200%)'})),
-      transition('shown <=> hidden', animate('200ms ease-out'))
-    ])
-  ]
+      transition('shown <=> hidden', animate('200ms ease-out')),
+    ]),
+  ],
 })
 @TitleAware('Projects')
 export class ProjectListComponent implements AfterViewInit {
@@ -37,7 +37,7 @@ export class ProjectListComponent implements AfterViewInit {
   listSelector: BehaviorSubject<ListOption>;
   listSelectorOptions: ListOption[] = [
     {label: 'My Projects', value: true},
-    {label: 'All Projects', value: false}
+    {label: 'All Projects', value: false},
   ];
 
   readonly displayedColumns: Array<keyof Project> = ['name', 'updatedAt', 'languages', 'type', 'status'];
@@ -54,7 +54,7 @@ export class ProjectListComponent implements AfterViewInit {
 
   constructor(
     private projectService: ProjectService,
-    private router: Router
+    private router: Router,
   ) {
     this.listSelector = new BehaviorSubject(this.listSelectorOptions[0]);
   }
@@ -64,12 +64,12 @@ export class ProjectListComponent implements AfterViewInit {
       this.sort.sortChange
         .pipe(
           tap(() => this.paginator.pageIndex = 0),
-          startWith({active: this.sort.active, direction: this.sort.direction})
+          startWith({active: this.sort.active, direction: this.sort.direction}),
         ),
       this.paginator.page
         .pipe(startWith({pageIndex: 0, pageSize: 10, length: 0} as PageEvent)),
       this.filtersComponent.filters,
-      this.listSelector
+      this.listSelector,
     )
       .pipe(switchMap(([sort, page, filters, listSelector]) => {
         const projects = this.projectService.getProjects(
@@ -79,12 +79,12 @@ export class ProjectListComponent implements AfterViewInit {
           page.pageSize,
           filters,
           this.apiFields,
-          listSelector.value
+          listSelector.value,
         );
 
         return combineLatest(
           projects,
-          observableOf(filters)
+          observableOf(filters),
         );
       }))
       .subscribe(([{projects, count}, filters]) => {

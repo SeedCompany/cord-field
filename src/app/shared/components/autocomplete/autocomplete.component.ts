@@ -9,7 +9,7 @@ import {
   OnInit,
   Output,
   SimpleChanges,
-  ViewChild
+  ViewChild,
 } from '@angular/core';
 import { AbstractControl, FormControl, Validators } from '@angular/forms';
 import { MatAutocompleteTrigger, MatSnackBar, MatSnackBarRef, SimpleSnackBar } from '@angular/material';
@@ -29,8 +29,8 @@ import { catchError, debounceTime, filter, switchMap, tap } from 'rxjs/operators
   templateUrl: './autocomplete.component.html',
   styleUrls: ['./autocomplete.component.scss'],
   providers: [
-    ValueAccessorProvider(AutocompleteComponent)
-  ]
+    ValueAccessorProvider(AutocompleteComponent),
+  ],
 })
 export class AutocompleteComponent<T> extends AbstractValueAccessor<T | T[]> implements AfterViewInit, OnChanges, OnInit {
 
@@ -122,7 +122,7 @@ export class AutocompleteComponent<T> extends AbstractValueAccessor<T | T[]> imp
           return observableFrom(this.fetcher(term))
             // returning error to prevent observable from completing
             .pipe(catchError<T[], HttpErrorResponse>((err) => err));
-        })
+        }),
       )
       .subscribe((payload: T[] | HttpErrorResponse) => {
 
@@ -132,7 +132,7 @@ export class AutocompleteComponent<T> extends AbstractValueAccessor<T | T[]> imp
 
         if (payload instanceof HttpErrorResponse) {
           this.snackBarRef = this.snackBar.open(this.serverErrorMessage, undefined, {
-            duration: 3000
+            duration: 3000,
           });
 
           return;

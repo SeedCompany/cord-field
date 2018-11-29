@@ -7,7 +7,7 @@ import { ProjectFilesService } from '@app/core/services/project-files.service';
 @Component({
   selector: 'app-create-directory-dialog',
   templateUrl: './create-directory-dialog.component.html',
-  styleUrls: ['./create-directory-dialog.component.scss']
+  styleUrls: ['./create-directory-dialog.component.scss'],
 })
 export class CreateDirectoryDialogComponent {
 
@@ -18,7 +18,7 @@ export class CreateDirectoryDialogComponent {
     return dialog.open(this, {
       minWidth: '400px',
       autoFocus: true,
-      data: parent
+      data: parent,
     });
   }
 
@@ -27,7 +27,7 @@ export class CreateDirectoryDialogComponent {
     @Inject(MAT_DIALOG_DATA) private parent: Directory,
     private fileService: ProjectFilesService,
     private fb: FormBuilder,
-    private snackBar: MatSnackBar
+    private snackBar: MatSnackBar,
   ) {
     const uniqueNameValidator: ValidatorFn = control => {
       const exists = parent.children.some(child => child.name === control.value);
@@ -39,7 +39,7 @@ export class CreateDirectoryDialogComponent {
     };
 
     this.form = this.fb.group({
-      name: ['', [Validators.required, uniqueNameValidator]]
+      name: ['', [Validators.required, uniqueNameValidator]],
     });
   }
 
@@ -74,7 +74,7 @@ export class CreateDirectoryDialogComponent {
 
   private showSnackBar(message: string) {
     this.snackBarRef = this.snackBar.open(message, undefined, {
-      duration: 3000
+      duration: 3000,
     });
   }
 }

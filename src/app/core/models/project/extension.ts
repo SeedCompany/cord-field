@@ -37,7 +37,7 @@ export class ProjectExtension {
       languages: [],
       summary: '',
       additionalComment: '',
-      ...data
+      ...data,
     };
   }
 }

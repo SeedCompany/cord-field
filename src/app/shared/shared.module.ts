@@ -29,7 +29,7 @@ import { LanguageInfoPipe } from './pipes/language-info.pipe';
     FormsModule,
     MaterialModule,
     ReactiveFormsModule,
-    SatPopoverModule
+    SatPopoverModule,
   ],
   exports: [
     AutocompleteLanguageComponent,
@@ -51,7 +51,7 @@ import { LanguageInfoPipe } from './pipes/language-info.pipe';
     SpeedDialComponent,
     SpeedDialItemComponent,
     UserRolesFormComponent,
-    RedactableDirective
+    RedactableDirective,
   ],
   declarations: [
     AutocompleteLanguageComponent,
@@ -69,14 +69,14 @@ import { LanguageInfoPipe } from './pipes/language-info.pipe';
     SpeedDialComponent,
     SpeedDialItemComponent,
     UserRolesFormComponent,
-    RedactableDirective
+    RedactableDirective,
   ],
   providers: [
     DecimalPipe,
     { provide: LOCALE_ID, useValue: 'en-US' },
     { provide: MAT_DATE_FORMATS, useValue: MAT_LUXON_DATE_FORMATS },
-    { provide: DateAdapter, useClass: LuxonDateAdapter }
-  ]
+    { provide: DateAdapter, useClass: LuxonDateAdapter },
+  ],
 })
 export class SharedModule {
 }

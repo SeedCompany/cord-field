@@ -139,7 +139,7 @@ export class ChangeEngine<T = any> {
       key: key as string,
       toServer: returnSelf,
       forceRefresh: false,
-      ...field
+      ...field,
     }));
   }
 

@@ -6,7 +6,7 @@ export enum ProjectMedium {
   EBook = 'ebook',
   Print = 'print',
   Web = 'web',
-  Video = 'video'
+  Video = 'video',
 }
 
 export namespace ProjectMedium {
@@ -16,6 +16,6 @@ export namespace ProjectMedium {
     [ProjectMedium.EBook]: 'E-Book',
     [ProjectMedium.Print]: 'Print',
     [ProjectMedium.Web]: 'Web',
-    [ProjectMedium.Video]: 'Video'
+    [ProjectMedium.Video]: 'Video',
   });
 }

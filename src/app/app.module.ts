@@ -16,8 +16,8 @@ import { CoreModule } from './core/core.module';
     TransferHttpCacheModule,
     HttpClientModule,
     CoreModule.forRoot(),
-    AppRoutingModule
-  ]
+    AppRoutingModule,
+  ],
 })
 export class AppModule {
 }

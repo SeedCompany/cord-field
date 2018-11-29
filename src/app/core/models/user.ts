@@ -157,7 +157,7 @@ export class UserRole {
   static forSaveAPI(kl: UserRole): UserRoleForSaveAPI {
     return {
       locationIds: kl.locations.map((location) => location.id),
-      role: kl.role
+      role: kl.role,
     };
   }
 }
@@ -187,7 +187,7 @@ export class KnownLanguage {
   static forSaveAPI(kl: KnownLanguage): KnownLanguageForSaveAPI {
     return {
       languageId: kl.language.id,
-      proficiency: kl.proficiency
+      proficiency: kl.proficiency,
     };
   }
 }
@@ -201,7 +201,7 @@ export enum LanguageProficiency {
   Beginner = 'beginner',
   Conversational = 'conversational',
   Skilled = 'skilled',
-  Fluent = 'fluent'
+  Fluent = 'fluent',
 }
 
 export namespace LanguageProficiency {
@@ -209,7 +209,7 @@ export namespace LanguageProficiency {
     [LanguageProficiency.Beginner]: 'Beginner',
     [LanguageProficiency.Conversational]: 'Conversational',
     [LanguageProficiency.Skilled]: 'Skilled',
-    [LanguageProficiency.Fluent]: 'Fluent'
+    [LanguageProficiency.Fluent]: 'Fluent',
   });
 }
 
@@ -234,7 +234,7 @@ export enum Degree {
   Associates = 'associates',
   Bachelors = 'bachelors',
   Masters = 'masters',
-  Doctorate = 'doctorate'
+  Doctorate = 'doctorate',
 }
 
 export namespace Degree {
@@ -244,7 +244,7 @@ export namespace Degree {
     [Degree.Associates]: 'Associate\'s',
     [Degree.Bachelors]: 'Bachelor\'s',
     [Degree.Masters]: 'Master\'s',
-    [Degree.Doctorate]: 'Doctorate'
+    [Degree.Doctorate]: 'Doctorate',
   });
 }
 
@@ -278,7 +278,7 @@ export class Unavailability {
     return Object.assign(new Unavailability(), {
       id: generateObjectId(),
       description: '',
-      range: Interval.invalid('Not set')
+      range: Interval.invalid('Not set'),
     });
   }
 
@@ -286,7 +286,7 @@ export class Unavailability {
     return Object.assign(new Unavailability(), {
       id,
       description,
-      range: Interval.fromDateTimes(start, end)
+      range: Interval.fromDateTimes(start, end),
     });
   }
 
@@ -295,7 +295,7 @@ export class Unavailability {
       id,
       description,
       start,
-      end
+      end,
     };
   }
 }

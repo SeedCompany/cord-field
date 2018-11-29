@@ -15,7 +15,7 @@ import { ProjectViewStateService } from '../../project-view-state.service';
 @Component({
   selector: 'app-project-team-member-add',
   templateUrl: './project-team-member-add.component.html',
-  styleUrls: ['./project-team-member-add.component.scss']
+  styleUrls: ['./project-team-member-add.component.scss'],
 })
 export class ProjectTeamMemberAddComponent extends SubscriptionComponent {
 
@@ -64,7 +64,7 @@ export class ProjectTeamMemberAddComponent extends SubscriptionComponent {
       this.availableRoles = await this.userService.getAssignableRoles(user!.id, this.project);
     } catch (e) {
       this.snackBar.open('Failed to fetch project roles', undefined, {
-        duration: 3000
+        duration: 3000,
       });
     } finally {
       this.user.reset(user);
@@ -83,7 +83,7 @@ export class ProjectTeamMemberAddComponent extends SubscriptionComponent {
       await this.projectViewState.save();
     } catch (e) {
       this.snackBar.open('Failed to add team member', undefined, {
-        duration: 3000
+        duration: 3000,
       });
       return;
     }

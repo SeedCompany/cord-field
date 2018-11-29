@@ -7,7 +7,7 @@ import { Unavailability, UserProfile } from '@app/core/models/user';
 import { onlyValidValues } from '@app/core/util';
 import * as CustomValidators from '@app/core/validators';
 import {
-  PersonAvailabilityCrudDialogComponent
+  PersonAvailabilityCrudDialogComponent,
 } from '@app/people/person-edit/person-availability-crud-dialog/person-availability-crud-dialog.component';
 import { SubscriptionComponent } from '@app/shared/components/subscription.component';
 import { DateTime } from 'luxon';
@@ -18,7 +18,7 @@ import { UserViewStateService } from '../../user-view-state.service';
 @Component({
   selector: 'app-person-edit-basic-info',
   templateUrl: './person-edit-basic-info.component.html',
-  styleUrls: ['./person-edit-basic-info.component.scss']
+  styleUrls: ['./person-edit-basic-info.component.scss'],
 })
 @TitleAware('Edit Basic Info')
 export class PersonEditBasicInfoComponent extends SubscriptionComponent implements OnInit {
@@ -30,7 +30,7 @@ export class PersonEditBasicInfoComponent extends SubscriptionComponent implemen
   constructor(
     private formBuilder: FormBuilder,
     private viewStateService: UserViewStateService,
-    public dialog: MatDialog
+    public dialog: MatDialog,
   ) {
     super();
 
@@ -77,7 +77,7 @@ export class PersonEditBasicInfoComponent extends SubscriptionComponent implemen
       .pipe(takeUntil(this.unsubscribe))
       .subscribe((changes: Changes) => {
         this.viewStateService.change({
-          roles: changes
+          roles: changes,
         });
       });
   }
@@ -89,7 +89,7 @@ export class PersonEditBasicInfoComponent extends SubscriptionComponent implemen
   editAvailability(unavailability?: Unavailability): void {
     PersonAvailabilityCrudDialogComponent.open(this.dialog, {
       viewStateService: this.viewStateService,
-      unavailability
+      unavailability,
     });
   }
 
@@ -104,7 +104,7 @@ export class PersonEditBasicInfoComponent extends SubscriptionComponent implemen
       displayFirstName: ['', [Validators.required, Validators.minLength(2)]],
       displayLastName: ['', [Validators.required, Validators.minLength(2)]],
       email: ['', [Validators.required, CustomValidators.email]],
-      phone: ['', [CustomValidators.phone]]
+      phone: ['', [CustomValidators.phone]],
     });
   }
 
@@ -112,7 +112,7 @@ export class PersonEditBasicInfoComponent extends SubscriptionComponent implemen
     this.form.valueChanges
       .pipe(
         takeUntil(this.unsubscribe),
-        onlyValidValues(this.form)
+        onlyValidValues(this.form),
       )
       .subscribe(changes => {
         this.viewStateService.change({
@@ -121,7 +121,7 @@ export class PersonEditBasicInfoComponent extends SubscriptionComponent implemen
           displayFirstName: changes.displayFirstName,
           displayLastName: changes.displayLastName,
           phone: changes.phone,
-          email: changes.email
+          email: changes.email,
         });
       });
   }

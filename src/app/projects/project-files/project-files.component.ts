@@ -17,7 +17,7 @@ import { ProjectViewStateService } from '../project-view-state.service';
 @Component({
   selector: 'app-project-files',
   templateUrl: './project-files.component.html',
-  styleUrls: ['./project-files.component.scss']
+  styleUrls: ['./project-files.component.scss'],
 })
 @TitleAware()
 export class ProjectFilesComponent extends SubscriptionComponent implements AfterViewInit {
@@ -47,14 +47,14 @@ export class ProjectFilesComponent extends SubscriptionComponent implements Afte
     return this.directory$
       .pipe(
         takeUntil(this.unsubscribe),
-        filterRequired()
+        filterRequired(),
       );
   }
 
   get title() {
     return this.directory.pipe(
       startWith({ name: null }),
-      map(dir => [dir.name, 'Files'])
+      map(dir => [dir.name, 'Files']),
     );
   }
 
@@ -66,13 +66,13 @@ export class ProjectFilesComponent extends SubscriptionComponent implements Afte
       this.activatedRoute.queryParams,
       this.projectViewState.project
         .pipe(
-          filter(project => Boolean(project.id))
-        )
+          filter(project => Boolean(project.id)),
+        ),
     )
       .pipe(
         takeUntil(this.unsubscribe),
         switchMap(([params, project]) =>
-          this.fileService.getDirectory(project.id, params.parent))
+          this.fileService.getDirectory(project.id, params.parent)),
       )
       .subscribe(this.directory$);
 
@@ -88,7 +88,7 @@ export class ProjectFilesComponent extends SubscriptionComponent implements Afte
     }
     this.router.navigate(['.'], {
       queryParams: { parent: node.id },
-      relativeTo: this.activatedRoute
+      relativeTo: this.activatedRoute,
     });
   }
 

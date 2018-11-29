@@ -4,7 +4,7 @@ import { Location } from '../models/location';
 import { PloApiService } from './http/plo-api.service';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class LocationService {
 

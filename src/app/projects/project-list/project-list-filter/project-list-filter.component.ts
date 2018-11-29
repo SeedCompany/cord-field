@@ -13,7 +13,7 @@ import { map, startWith } from 'rxjs/operators';
 @Component({
   selector: 'app-project-list-filter',
   templateUrl: './project-list-filter.component.html',
-  styleUrls: ['./project-list-filter.component.scss']
+  styleUrls: ['./project-list-filter.component.scss'],
 })
 export class ProjectListFilterComponent implements OnInit {
   form: FormGroup;
@@ -66,8 +66,8 @@ export class ProjectListFilterComponent implements OnInit {
       .pipe(
         startWith(this.form.value),
         map(filters =>
-          filterEntries(filters, (key, value) => hasValue(value))
-        )
+          filterEntries(filters, (key, value) => hasValue(value)),
+        ),
       );
   }
 
@@ -87,7 +87,7 @@ export class ProjectListFilterComponent implements OnInit {
     this.form.reset({
       languages: [],
       location: [],
-      team: []
+      team: [],
     });
   }
 
@@ -101,9 +101,9 @@ export class ProjectListFilterComponent implements OnInit {
       sensitivity: [null],
       dateRange: [null],
       startDate: [null],
-      endDate: [null]
+      endDate: [null],
     }, {
-        validator: CustomValidators.dateRange('startDate', 'endDate')
+        validator: CustomValidators.dateRange('startDate', 'endDate'),
       });
   }
 }

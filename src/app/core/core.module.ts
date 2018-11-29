@@ -12,18 +12,18 @@ import { ErrorInterceptor } from './services/http/error-interceptor';
 @NgModule({
   imports: [
     SharedModule,
-    RouterModule
+    RouterModule,
   ],
   declarations: [
     HeaderComponent,
     NotFoundPageComponent,
     PersonCreateDialogComponent,
-    ProjectCreateDialogComponent
+    ProjectCreateDialogComponent,
   ],
   entryComponents: [
     PersonCreateDialogComponent,
-    ProjectCreateDialogComponent
-  ]
+    ProjectCreateDialogComponent,
+  ],
 })
 export class CoreModule {
   constructor(@Optional() @SkipSelf() private parentModule: CoreModule) {
@@ -37,8 +37,8 @@ export class CoreModule {
       ngModule: CoreModule,
       providers: [
         AuthInterceptor.inject(),
-        ErrorInterceptor.inject()
-      ]
+        ErrorInterceptor.inject(),
+      ],
     };
   }
 }

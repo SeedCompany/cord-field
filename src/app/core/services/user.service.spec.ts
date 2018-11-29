@@ -18,8 +18,8 @@ describe('UserService', () => {
     TestBed.configureTestingModule({
       imports: [
         CoreModule,
-        HttpClientTestingModule
-      ]
+        HttpClientTestingModule,
+      ],
     });
     userService = TestBed.get(UserService);
     httpMock = TestBed.get(HttpTestingController);
@@ -42,7 +42,7 @@ describe('UserService', () => {
       .expectOne(`${testBaseUrl}/users/suggestions?term=zer`)
       .flush([
         {id: '5ae06f3da9941545df22cd03', firstName: 'Buzzer'},
-        {id: '5ae06f3da9941545df22cd49', firstName: 'Buzz'}
+        {id: '5ae06f3da9941545df22cd49', firstName: 'Buzz'},
       ] as User[]);
   });
 
@@ -51,8 +51,8 @@ describe('UserService', () => {
     const locationId = 'k_foauq3eN9u2jY1MVqRFX4wWqQtUO8d48.0bC1uibdlYfT1Y2YdAoJlg.nLDmQf8HiSX-WLeysgBK2w';
     const project = Project.fromJson({
       location: Location.fromJson({
-        id: locationId
-      })
+        id: locationId,
+      }),
     });
     userService
       .getAssignableRoles(userId, project)

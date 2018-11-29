@@ -15,7 +15,7 @@ interface TabConfig {
   selector: 'app-person-edit',
   templateUrl: './person-edit.component.html',
   styleUrls: ['./person-edit.component.scss'],
-  animations: [popInOut]
+  animations: [popInOut],
 })
 @TitleAware()
 export class PersonEditComponent extends AbstractPersonComponent implements OnInit {
@@ -24,7 +24,7 @@ export class PersonEditComponent extends AbstractPersonComponent implements OnIn
     {path: 'basic', label: 'Basic Info'},
     {path: 'about', label: 'About'},
     {path: 'account', label: 'Account'},
-    {path: 'admin', label: 'Admin'}
+    {path: 'admin', label: 'Admin'},
   ];
 
   submitting: boolean;
@@ -34,7 +34,7 @@ export class PersonEditComponent extends AbstractPersonComponent implements OnIn
 
   constructor(
     userViewState: UserViewStateService,
-    private snackBar: MatSnackBar
+    private snackBar: MatSnackBar,
   ) {
     super(userViewState);
   }
@@ -58,7 +58,7 @@ export class PersonEditComponent extends AbstractPersonComponent implements OnIn
       await this.userViewState.save();
     } catch (e) {
       this.snackBarRef = this.snackBar.open('Failed to save person', undefined, {
-        duration: 3000
+        duration: 3000,
       });
       return;
     }

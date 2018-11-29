@@ -9,7 +9,7 @@ import { AuthenticationStorageService } from '../authentication-storage.service'
 export const IGNORE_AUTH_ERRORS = 'X-Skip-Auth-Interceptor';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class AuthInterceptor implements HttpInterceptor {
 
@@ -63,7 +63,7 @@ export class AuthInterceptor implements HttpInterceptor {
             }
             return observableThrow(e);
           }));
-      })
+      }),
     );
   }
 }

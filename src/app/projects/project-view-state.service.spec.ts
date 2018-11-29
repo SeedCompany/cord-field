@@ -26,11 +26,11 @@ describe('ProjectViewStateService', () => {
       imports: [
         CoreModule,
         HttpClientModule,
-        HttpClientTestingModule
+        HttpClientTestingModule,
       ],
       providers: [
-        ProjectViewStateService
-      ]
+        ProjectViewStateService,
+      ],
     });
 
     viewState = TestBed.get(ProjectViewStateService);
@@ -56,8 +56,8 @@ describe('ProjectViewStateService', () => {
     const partnershipToRemove = Partnership.fromJson({
       organization: {
         id: 'old org id',
-        name: 'old org'
-      }
+        name: 'old org',
+      },
     });
     project.partnerships = [partnershipToRemove];
 
@@ -73,19 +73,19 @@ describe('ProjectViewStateService', () => {
       location: Location.fromJson({id: 'location id'}),
       languages: {
         add: Language.fromJson({id: 'language id'}),
-        remove: languageToRemove
+        remove: languageToRemove,
       },
       partnerships: {
         add: Partnership.fromOrganization({
           id: 'org id',
-          name: 'org'
+          name: 'org',
         }),
-        remove: partnershipToRemove
+        remove: partnershipToRemove,
       },
       team: {
         add: TeamMember.new(User.fromJson({id: 'user id'}), [ProjectRole.Writer]),
-        remove: teamMemberToRemove
-      }
+        remove: teamMemberToRemove,
+      },
     });
     const serverChanges = {
       mouStart: DateTime.local(2018, 1, 1),
@@ -93,7 +93,7 @@ describe('ProjectViewStateService', () => {
       locationId: 'location id',
       languages: {
         add: ['language id'],
-        remove: ['old id']
+        remove: ['old id'],
       },
       partnerships: {
         add: [
@@ -103,24 +103,24 @@ describe('ProjectViewStateService', () => {
             mouEnd: null,
             agreementStatus: PartnershipAgreementStatus.NotAttached,
             mouStatus: PartnershipAgreementStatus.NotAttached,
-            types: []
-          }
+            types: [],
+          },
         ],
         remove: [
-          'old org id'
-        ]
+          'old org id',
+        ],
       },
       team: {
         add: [
           {
             userId: 'user id',
-            roles: [ProjectRole.Writer]
-          }
+            roles: [ProjectRole.Writer],
+          },
         ],
         remove: [
-          'old user id'
-        ]
-      }
+          'old user id',
+        ],
+      },
     } as ModifiedProject;
     const actualServerChanges = (viewState as any).changeEngine.getModifiedForServer();
 

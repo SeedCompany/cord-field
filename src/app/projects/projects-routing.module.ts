@@ -26,8 +26,8 @@ const routes: Routes = [
         path: 'engagements',
         component: ProjectEngagementsComponent,
         children: [
-          { path: ':id', component: ProjectEngagementComponent }
-        ]
+          { path: ':id', component: ProjectEngagementComponent },
+        ],
       },
       {path: 'budget', component: ProjectBudgetComponent},
       {path: 'files', component: ProjectFilesComponent},
@@ -36,17 +36,17 @@ const routes: Routes = [
         path: 'extensions',
         component: ProjectExtensionsComponent,
         children: [
-          { path: ':id', component: ProjectExtensionComponent }
-        ]
+          { path: ':id', component: ProjectExtensionComponent },
+        ],
       },
-      {path: 'updates', component: ProjectUpdatesComponent}
-    ]
-  }
+      {path: 'updates', component: ProjectUpdatesComponent},
+    ],
+  },
 ];
 
 @NgModule({
   imports: [RouterModule.forChild(routes)],
-  exports: [RouterModule]
+  exports: [RouterModule],
 })
 export class ProjectsRoutingModule {
 }

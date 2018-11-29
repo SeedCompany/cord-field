@@ -4,15 +4,15 @@ import { DateTime, Info } from 'luxon';
 
 export const MAT_LUXON_DATE_FORMATS: MatDateFormats = {
   parse: {
-    dateInput: 'L/d/yyyy'
+    dateInput: 'L/d/yyyy',
   },
 
   display: {
     dateInput: 'L/d/yyyy',
     monthYearLabel: 'LLL yyyy',
     dateA11yLabel: 'LL',
-    monthYearA11yLabel: 'LLL yyyy'
-  }
+    monthYearA11yLabel: 'LLL yyyy',
+  },
 };
 
 /** Creates an array and fills it with values.

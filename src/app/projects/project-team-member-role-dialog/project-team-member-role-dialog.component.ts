@@ -12,7 +12,7 @@ import { ProjectViewStateService } from '../project-view-state.service';
 @Component({
   selector: 'app-project-team-member-role-dialog',
   templateUrl: './project-team-member-role-dialog.component.html',
-  styleUrls: ['./project-team-member-role-dialog.component.scss']
+  styleUrls: ['./project-team-member-role-dialog.component.scss'],
 })
 export class ProjectTeamMemberRoleDialogComponent extends SubscriptionComponent {
 
@@ -52,7 +52,7 @@ export class ProjectTeamMemberRoleDialogComponent extends SubscriptionComponent 
       this.loading = false;
     } catch (e) {
       this.snackBar.open(`Failed to fetch team member's available roles`, undefined, {
-        duration: 3000
+        duration: 3000,
       });
       this.dialogRef.close();
     }
@@ -66,7 +66,7 @@ export class ProjectTeamMemberRoleDialogComponent extends SubscriptionComponent 
       await this.projectViewState.save();
     } catch (e) {
       this.snackBar.open(`Failed to change team member's roles`, undefined, {
-        duration: 3000
+        duration: 3000,
       });
       return;
     }

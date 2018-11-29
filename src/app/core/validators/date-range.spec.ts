@@ -11,26 +11,26 @@ describe('DateRange Validator', () => {
     start = new FormControl();
     end = new FormControl();
     form = new FormGroup({start, end}, {
-      validators: dateRange('start', 'end')
+      validators: dateRange('start', 'end'),
     });
   });
 
   const setValidRange = () =>
     form.setValue({
       start: DateTime.fromISO('2018-09-29T19:00:00.000'),
-      end: DateTime.fromISO('2018-09-29T00:00:00.000')
+      end: DateTime.fromISO('2018-09-29T00:00:00.000'),
     });
 
   const setInvalidRange = () =>
     form.setValue({
       start: DateTime.fromISO('2018-07-03'),
-      end: DateTime.fromISO('2018-07-02')
+      end: DateTime.fromISO('2018-07-02'),
     });
 
   const setSameDay = () =>
     form.setValue({
       start: DateTime.fromISO('2018-07-03'),
-      end: DateTime.fromISO('2018-07-03')
+      end: DateTime.fromISO('2018-07-03'),
     });
 
   it('Unknown field names throws error', () => {

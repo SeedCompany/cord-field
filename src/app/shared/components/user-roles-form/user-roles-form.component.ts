@@ -15,7 +15,7 @@ import { SubscriptionComponent } from '../subscription.component';
 @Component({
   selector: 'app-user-roles-form',
   templateUrl: './user-roles-form.component.html',
-  styleUrls: ['./user-roles-form.component.scss']
+  styleUrls: ['./user-roles-form.component.scss'],
 })
 export class UserRolesFormComponent extends SubscriptionComponent implements OnInit {
 
@@ -35,7 +35,7 @@ export class UserRolesFormComponent extends SubscriptionComponent implements OnI
 
   constructor(
     private authService: AuthenticationService,
-    private userService: UserService
+    private userService: UserService,
   ) {
     super();
   }
@@ -72,7 +72,7 @@ export class UserRolesFormComponent extends SubscriptionComponent implements OnI
     const locationCtl = new FormControl([]);
     const userRoleCtl = new FormGroup({
       role: roleCtl,
-      locations: locationCtl
+      locations: locationCtl,
     });
 
     const valChanges = roleCtl.valueChanges.subscribe((role: ProjectRole) => {
@@ -83,7 +83,7 @@ export class UserRolesFormComponent extends SubscriptionComponent implements OnI
     roleCtl.valueChanges
       .pipe(
         filter(val => !val),
-        first()
+        first(),
       )
       .subscribe(() => {
         valChanges.unsubscribe();
@@ -101,7 +101,7 @@ export class UserRolesFormComponent extends SubscriptionComponent implements OnI
       // When closed for the first time:
       merge(
         select.openedChange.pipe(filter(i => !i)),
-        select.selectionChange
+        select.selectionChange,
       )
         .pipe(first())
         .subscribe(() => {

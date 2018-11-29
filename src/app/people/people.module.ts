@@ -1,6 +1,6 @@
 import { NgModule } from '@angular/core';
 import {
-  PersonAvailabilityDialogComponent
+  PersonAvailabilityDialogComponent,
 } from '@app/people/person-details/person-availability-dialog/person-availability-dialog.component';
 import { SharedModule } from '../shared/shared.module';
 import { PeopleListFilterComponent } from './people-list/people-list-filter/people-list-filter.component';
@@ -11,7 +11,7 @@ import { PersonBasicInfoComponent } from './person-details/person-basic-info/per
 import { PersonDetailsComponent } from './person-details/person-details.component';
 import { PersonRoleLocationsDialogComponent } from './person-details/person-role-locations-dialog/person-role-locations-dialog.component';
 import {
-  PersonAvailabilityCrudDialogComponent
+  PersonAvailabilityCrudDialogComponent,
 } from './person-edit/person-availability-crud-dialog/person-availability-crud-dialog.component';
 import { PersonEditAboutComponent } from './person-edit/person-edit-about/person-edit-about.component';
 import { PersonChangePasswordComponent } from './person-edit/person-edit-account/person-change-password/person-change-password.component';
@@ -24,7 +24,7 @@ import { PersonComponent } from './person/person.component';
 @NgModule({
   imports: [
     SharedModule,
-    PeopleRoutingModule
+    PeopleRoutingModule,
   ],
   declarations: [
     PeopleListFilterComponent,
@@ -41,17 +41,17 @@ import { PersonComponent } from './person/person.component';
     PersonEditAdminComponent,
     PersonEditBasicInfoComponent,
     PersonRoleLocationsDialogComponent,
-    PersonAvailabilityCrudDialogComponent
+    PersonAvailabilityCrudDialogComponent,
   ],
   entryComponents: [
     PersonAvailabilityDialogComponent,
     PersonRoleLocationsDialogComponent,
-    PersonAvailabilityCrudDialogComponent
+    PersonAvailabilityCrudDialogComponent,
   ],
   exports: [
     PersonAvailabilityDialogComponent,
-    PersonAvailabilityCrudDialogComponent
-  ]
+    PersonAvailabilityCrudDialogComponent,
+  ],
 })
 export class PeopleModule {
 }

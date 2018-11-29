@@ -9,12 +9,12 @@ import { map, startWith } from 'rxjs/operators';
 @Component({
   selector: 'app-language-list-filter',
   templateUrl: './language-list-filter.component.html',
-  styleUrls: ['./language-list-filter.component.scss']
+  styleUrls: ['./language-list-filter.component.scss'],
 })
 export class LanguageListFilterComponent {
 
   form = this.formBuilder.group({
-    location: [[]]
+    location: [[]],
   });
 
   constructor(private formBuilder: FormBuilder) {
@@ -29,8 +29,8 @@ export class LanguageListFilterComponent {
       .pipe(
         startWith(this.form.value),
         map(filters =>
-          filterEntries(filters, (key, value) => hasValue(value))
-        )
+          filterEntries(filters, (key, value) => hasValue(value)),
+        ),
       );
   }
 
@@ -44,7 +44,7 @@ export class LanguageListFilterComponent {
 
   reset() {
     this.form.reset({
-      location: []
+      location: [],
     });
   }
 }

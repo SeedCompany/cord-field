@@ -9,12 +9,12 @@ describe('PloApiService', () => {
     TestBed.configureTestingModule({
       imports: [
         CoreModule,
-        HttpClientTestingModule
+        HttpClientTestingModule,
       ],
       providers: [
         PloApiService,
-        HttpClient
-      ]
+        HttpClient,
+      ],
     });
   });
 

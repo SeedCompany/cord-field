@@ -4,7 +4,7 @@ import { CoreModule } from '../core.module';
 import {
   BaseStorageService,
   LocalStorageService,
-  SessionStorageService
+  SessionStorageService,
 } from './storage.service';
 
 describe('StorageService', () => {
@@ -20,8 +20,8 @@ describe('StorageService', () => {
     TestBed
       .configureTestingModule({
         imports: [
-          CoreModule
-        ]
+          CoreModule,
+        ],
       });
 
     store = {} as {
@@ -34,7 +34,7 @@ describe('StorageService', () => {
 
     forkJoin([
       store.local.clear(),
-      store.session.clear()
+      store.session.clear(),
     ])
       .subscribe(done, done.fail);
   });
@@ -42,7 +42,7 @@ describe('StorageService', () => {
   afterEach((done: DoneFn) => {
     forkJoin([
       store.local.clear(),
-      store.session.clear()
+      store.session.clear(),
     ])
       .subscribe(done, done.fail);
   });

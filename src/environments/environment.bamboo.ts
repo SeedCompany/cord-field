@@ -4,12 +4,12 @@ export const environment = {
     level: 'debug',
     apiCalls: '*',
     noBody: [
-      '/api/auth/native/login'
-    ]
+      '/api/auth/native/login',
+    ],
   },
   services: {
     'domain': 'field',
-    'plo.cord.bible': 'http://cord-api-plo:8001/api'
+    'plo.cord.bible': 'http://cord-api-plo:8001/api',
   },
-  trace: 'bamboo environment'
+  trace: 'bamboo environment',
 };

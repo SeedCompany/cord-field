@@ -5,7 +5,7 @@ import { LoggerService } from './logger.service';
 describe('LoggerService', () => {
   beforeEach(() => {
     TestBed.configureTestingModule({
-      providers: [LoggerService, GoogleAnalyticsService]
+      providers: [LoggerService, GoogleAnalyticsService],
     });
   });
 

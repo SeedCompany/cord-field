@@ -44,7 +44,7 @@ export function TitleAware(title?: Title): ClassDecorator {
     const orig = Object.getOwnPropertyDescriptor(target.prototype, 'title');
     if (orig && title) {
       throw new Error(
-        `${target.name} has both a title property/getter and a title passed to @TitleAware(). One or the other should be picked.`
+        `${target.name} has both a title property/getter and a title passed to @TitleAware(). One or the other should be picked.`,
       );
     }
 
@@ -59,7 +59,7 @@ export function TitleAware(title?: Title): ClassDecorator {
 
         return combineLatest(childTitles, title$)
           .pipe(map(([list, titles]) => list.concat(titles)));
-      }
+      },
     });
 
     // Add RouterOutlet as a view child

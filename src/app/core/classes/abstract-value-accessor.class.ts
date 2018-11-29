@@ -7,7 +7,7 @@ export function ValueAccessorProvider(type: any) {
     provide: NG_VALUE_ACCESSOR,
     // tslint:disable-next-line:no-forward-ref
     useExisting: forwardRef(() => type),
-    multi: true
+    multi: true,
   };
 }
 

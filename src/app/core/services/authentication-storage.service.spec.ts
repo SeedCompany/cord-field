@@ -15,8 +15,8 @@ describe('AuthenticationStorageService', () => {
     TestBed.configureTestingModule({
       imports: [
         CoreModule,
-        HttpClientTestingModule
-      ]
+        HttpClientTestingModule,
+      ],
     });
     authStoreService = TestBed.get(AuthenticationStorageService);
     localStore = TestBed.get(LocalStorageService);

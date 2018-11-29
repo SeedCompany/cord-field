@@ -18,7 +18,7 @@ import { map, takeUntil } from 'rxjs/operators';
   selector: 'app-project-extension',
   templateUrl: './project-extension.component.html',
   styleUrls: ['./project-extension.component.scss'],
-  animations: [popInOut]
+  animations: [popInOut],
 })
 export class ProjectExtensionComponent extends SubscriptionComponent implements OnInit {
 
@@ -33,7 +33,7 @@ export class ProjectExtensionComponent extends SubscriptionComponent implements 
     types: [[], Validators.required],
     additionalComment: [''],
     endDate: [null],
-    languages: [[]]
+    languages: [[]],
   });
 
   constructor(private route: ActivatedRoute,
@@ -67,7 +67,7 @@ export class ProjectExtensionComponent extends SubscriptionComponent implements 
       .pipe(
         map(([project, id]) => id === 'new'
           ? ProjectExtension.create()
-          : project.extensions.find(e => e.id === id))
+          : project.extensions.find(e => e.id === id)),
       )
       .subscribe(this._extension);
     project$.subscribe(p => this.project = p);
@@ -122,7 +122,7 @@ export class ProjectExtensionComponent extends SubscriptionComponent implements 
       types: extension.types,
       additionalComment: extension.additionalComment,
       endDate: extension.endDate,
-      languages: extension.languages
+      languages: extension.languages,
     });
   }
 }

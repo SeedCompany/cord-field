@@ -11,7 +11,7 @@ let authService: AuthenticationService;
 const testUser = {
   email: 'gowtham@olivetech.net',
   password: 'test',
-  domain: 'field'
+  domain: 'field',
 };
 
 const testBaseUrl = environment.services['plo.cord.bible'];
@@ -21,8 +21,8 @@ describe('AuthenticationService', () => {
     TestBed.configureTestingModule({
       imports: [
         CoreModule,
-        HttpClientTestingModule
-      ]
+        HttpClientTestingModule,
+      ],
     });
 
     httpMock = TestBed.get(HttpTestingController);
@@ -70,7 +70,7 @@ describe('AuthenticationService', () => {
             loggedOut = true;
             order += '2';
           },
-          error: fail
+          error: fail,
         });
 
       order += '1';

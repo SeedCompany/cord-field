@@ -11,7 +11,7 @@ import * as CustomValidators from '../../validators';
 @Component({
   selector: 'app-reset-password',
   templateUrl: './reset-password.component.html',
-  styleUrls: ['./reset-password.component.scss']
+  styleUrls: ['./reset-password.component.scss'],
 })
 @TitleAware('Reset Password')
 export class ResetPasswordComponent implements OnInit {
@@ -21,9 +21,9 @@ export class ResetPasswordComponent implements OnInit {
 
   form: FormGroup = this.fb.group({
     password: ['', Validators.required],
-    confirmPassword: ['', Validators.required]
+    confirmPassword: ['', Validators.required],
   }, {
-    validator: CustomValidators.passwordMatch()
+    validator: CustomValidators.passwordMatch(),
   });
 
   constructor(private auth: AuthenticationService,

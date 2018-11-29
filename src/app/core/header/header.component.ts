@@ -11,7 +11,7 @@ import { AuthenticationService } from '../services/authentication.service';
 @Component({
   selector: 'app-header',
   templateUrl: './header.component.html',
-  styleUrls: ['./header.component.scss']
+  styleUrls: ['./header.component.scss'],
 })
 @TitleAware()
 export class HeaderComponent implements OnInit {
@@ -35,7 +35,7 @@ export class HeaderComponent implements OnInit {
 
   onCreateProject(): void {
     this.dialog.open(ProjectCreateDialogComponent, {
-      width: '400px'
+      width: '400px',
     });
   }
 

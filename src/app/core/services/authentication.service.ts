@@ -24,7 +24,7 @@ export function isInvalidPasswordError(error: any): error is InvalidPasswordResp
 }
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class AuthenticationService {
 
@@ -93,7 +93,7 @@ export class AuthenticationService {
   async login(email: string, password: string, rememberLogin: boolean, newPassword?: string): Promise<void> {
     const tokens = await this.api
       .post('/auth/native/login', {domain: DOMAIN, email, password, newPassword}, {
-        headers: {[IGNORE_AUTH_ERRORS]: 'true'}
+        headers: {[IGNORE_AUTH_ERRORS]: 'true'},
       })
       .pipe(map(AuthenticationToken.fromTokenMap))
       .toPromise();
@@ -136,7 +136,7 @@ export class AuthenticationService {
    */
   async changePassword(email: string, currentPassword: string, newPassword: string): Promise<void> {
     await this.api.put('/auth/native/change-password', {email, currentPassword, newPassword}, {
-      headers: {[IGNORE_AUTH_ERRORS]: 'true'}
+      headers: {[IGNORE_AUTH_ERRORS]: 'true'},
     }).toPromise();
   }
 }

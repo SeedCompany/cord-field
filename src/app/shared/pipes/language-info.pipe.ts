@@ -3,7 +3,7 @@ import { Pipe, PipeTransform } from '@angular/core';
 import { Language } from '../../core/models/language';
 
 @Pipe({
-  name: 'languageInfo'
+  name: 'languageInfo',
 })
 export class LanguageInfoPipe implements PipeTransform {
 

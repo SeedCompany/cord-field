@@ -42,12 +42,12 @@ export abstract class AbstractViewState<T> {
   get subjectWithChanges(): Observable<T> {
     return combineLatest(
       this.subject,
-      this.changes.pipe(startWith(null)) // Fire off when changes are made, but don't wait for it
+      this.changes.pipe(startWith(null)), // Fire off when changes are made, but don't wait for it
     )
       .pipe(
         map(([val]) => this.changeEngine.getModified(val)),
         distinctUntilChanged(),
-        shareReplay(1) // Share latest value to new subscribers just like a BehaviorSubject would
+        shareReplay(1), // Share latest value to new subscribers just like a BehaviorSubject would
       );
   }
 
@@ -145,7 +145,7 @@ export abstract class AbstractViewState<T> {
     return {
       control: form,
       add,
-      remove
+      remove,
     };
   }
 
@@ -157,7 +157,7 @@ export abstract class AbstractViewState<T> {
     field: keyof T,
     value: any[],
     onAdd: (value: any) => void,
-    onRemove: (index: number, updateState?: boolean) => void
+    onRemove: (index: number, updateState?: boolean) => void,
   ): void {
     const accessor = this.changeEngine.config[field].accessor;
 
@@ -193,7 +193,7 @@ export abstract class AbstractViewState<T> {
   protected get onLoad(): NextObserver<T> {
     return {
       next: this.onNewSubject.bind(this),
-      error: err => this._loadError.next(err)
+      error: err => this._loadError.next(err),
     };
   }
 

@@ -3,12 +3,12 @@ import { RouterModule, Routes } from '@angular/router';
 import { notImplementedRoute } from '../core/route-guards/not-implemented.guard';
 
 const routes: Routes = [
-  notImplementedRoute('**', 'Task views have not been implemented yet')
+  notImplementedRoute('**', 'Task views have not been implemented yet'),
 ];
 
 @NgModule({
   imports: [RouterModule.forChild(routes)],
-  exports: [RouterModule]
+  exports: [RouterModule],
 })
 export class TasksRoutingModule {
 }

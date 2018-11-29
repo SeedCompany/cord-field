@@ -10,7 +10,7 @@ const uppercasePattern = XRegExp(
   '(?:^|\\b|\\s)' +
   // Capture uppercase unicode letter or number
   '([\\p{Lu}\\p{N}])',
-  'g'
+  'g',
 );
 
 // https://regex101.com/r/t2xf5O (make sure you are viewing the latest version)
@@ -21,7 +21,7 @@ const lowercasePattern = XRegExp(
   `(?:^|'|\\(|-|\\s)` +
   // Capture lower case unicode letter or number
   '([\\p{Ll}\\p{N}])',
-  'g'
+  'g',
 );
 
 function matchAll(str: string, pattern: RegExp, captureGroup = 1): string[] {

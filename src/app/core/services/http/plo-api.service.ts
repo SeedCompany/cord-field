@@ -6,7 +6,7 @@ import { BaseApiService } from './base-api';
 export const SERVICE_AUDIENCE = 'plo.cord.bible';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class PloApiService extends BaseApiService {
 

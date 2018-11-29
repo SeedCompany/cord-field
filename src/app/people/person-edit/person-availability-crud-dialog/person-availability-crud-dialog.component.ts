@@ -15,7 +15,7 @@ interface DialogData {
 @Component({
   selector: 'person-availability-crud-dialog',
   templateUrl: './person-availability-crud-dialog.component.html',
-  styleUrls: ['./person-availability-crud-dialog.component.scss']
+  styleUrls: ['./person-availability-crud-dialog.component.scss'],
 })
 export class PersonAvailabilityCrudDialogComponent extends SubscriptionComponent implements OnInit {
   readonly form: FormGroup;
@@ -26,7 +26,7 @@ export class PersonAvailabilityCrudDialogComponent extends SubscriptionComponent
   constructor(
     @Inject(MAT_DIALOG_DATA) dialogData: DialogData,
     private dialogRef: MatDialogRef<PersonAvailabilityCrudDialogComponent>,
-    private formBuilder: FormBuilder
+    private formBuilder: FormBuilder,
   ) {
     super();
     const { unavailability, viewStateService } = dialogData;
@@ -53,7 +53,7 @@ export class PersonAvailabilityCrudDialogComponent extends SubscriptionComponent
       width: '40vw',
       minWidth: '500px',
       autoFocus: true,
-      data: dialogData
+      data: dialogData,
     });
   }
 
@@ -70,8 +70,8 @@ export class PersonAvailabilityCrudDialogComponent extends SubscriptionComponent
   onSubmit(remove = false): void {
     this.viewStateService.change({
       unavailabilities: {
-        [remove ? 'remove' : 'update']: Unavailability.fromForm(this.form.value)
-      }
+        [remove ? 'remove' : 'update']: Unavailability.fromForm(this.form.value),
+      },
     });
 
     this.dialogRef.close();
@@ -86,9 +86,9 @@ export class PersonAvailabilityCrudDialogComponent extends SubscriptionComponent
       id: [unavailability.id],
       description: [unavailability.description, Validators.required],
       start: [unavailability.start, Validators.required],
-      end: [unavailability.end, Validators.required]
+      end: [unavailability.end, Validators.required],
     }, {
-      validator: CustomValidators.dateRange('start', 'end')
+      validator: CustomValidators.dateRange('start', 'end'),
     });
   }
 }

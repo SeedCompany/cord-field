@@ -5,12 +5,12 @@ import { LanguageListComponent } from './language-list/language-list.component';
 
 const routes: Routes = [
   {path: '', component: LanguageListComponent, pathMatch: 'full'},
-  notImplementedRoute(':id', 'Language details view has not been implemented yet')
+  notImplementedRoute(':id', 'Language details view has not been implemented yet'),
 ];
 
 @NgModule({
   imports: [RouterModule.forChild(routes)],
-  exports: [RouterModule]
+  exports: [RouterModule],
 })
 export class LanguagesRoutingModule {
 }

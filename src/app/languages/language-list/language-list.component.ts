@@ -17,9 +17,9 @@ import { startWith, switchMap, tap } from 'rxjs/operators';
     trigger('slideRight', [
       state('shown', style({transform: 'translateX(0)'})),
       state('hidden', style({transform: 'translateX(200%)'})),
-      transition('shown <=> hidden', animate('200ms ease-out'))
-    ])
-  ]
+      transition('shown <=> hidden', animate('200ms ease-out')),
+    ]),
+  ],
 })
 @TitleAware('Languages')
 export class LanguageListComponent implements AfterViewInit {
@@ -43,11 +43,11 @@ export class LanguageListComponent implements AfterViewInit {
       this.sort.sortChange
         .pipe(
           tap(() => this.paginator.pageIndex = 0),
-          startWith({active: this.sort.active, direction: this.sort.direction})
+          startWith({active: this.sort.active, direction: this.sort.direction}),
         ),
       this.paginator.page
         .pipe(startWith({pageIndex: 0, pageSize: 10, length: 0} as PageEvent)),
-      this.filtersComponent.filters
+      this.filtersComponent.filters,
     )
       .pipe(switchMap(([sort, page, filters]) => {
         const languages = this.languageService.getLanguages(
@@ -55,12 +55,12 @@ export class LanguageListComponent implements AfterViewInit {
           sort.direction,
           page.pageIndex * page.pageSize,
           page.pageSize,
-          filters
+          filters,
         );
 
         return combineLatest(
           languages,
-          observableOf(filters)
+          observableOf(filters),
         );
       }))
       .subscribe(([{languages, total}, filters]) => {

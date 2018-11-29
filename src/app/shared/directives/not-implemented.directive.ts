@@ -6,7 +6,7 @@ export function showNotImplemented(snackBar: MatSnackBar, message?: string) {
 }
 
 @Directive({
-  selector: 'a[appNotImplemented], button[appNotImplemented]'
+  selector: 'a[appNotImplemented], button[appNotImplemented]',
 })
 export class NotImplementedDirective {
 

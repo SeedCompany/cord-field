@@ -10,7 +10,7 @@ import { takeUntil } from 'rxjs/operators';
 @Component({
   selector: 'app-person-edit-about',
   templateUrl: './person-edit-about.component.html',
-  styleUrls: ['./person-edit-about.component.scss']
+  styleUrls: ['./person-edit-about.component.scss'],
 })
 @TitleAware('Edit About')
 export class PersonEditAboutComponent extends SubscriptionComponent implements OnInit {
@@ -24,14 +24,14 @@ export class PersonEditAboutComponent extends SubscriptionComponent implements O
     'Manager - Translation Consultant',
     'Story Checker',
     'Translation CIT',
-    'Translation Consultant'
+    'Translation Consultant',
   ];
 
   form = this.formBuilder.group({
     bio: [''],
     education: this.formBuilder.array([]),
     skills: [[]],
-    knownLanguages: this.formBuilder.array([])
+    knownLanguages: this.formBuilder.array([]),
   });
 
   addEducation: (education?: Education) => void;
@@ -41,7 +41,7 @@ export class PersonEditAboutComponent extends SubscriptionComponent implements O
 
   constructor(
     private userViewState: UserViewStateService,
-    private formBuilder: FormBuilder
+    private formBuilder: FormBuilder,
   ) {
     super();
   }
@@ -70,7 +70,7 @@ export class PersonEditAboutComponent extends SubscriptionComponent implements O
         id: [education.id],
         degree: [education.degree, Validators.required],
         major: [education.major, [Validators.required, Validators.minLength(1)]],
-        institution: [education.institution, [Validators.required, Validators.minLength(1)]]
+        institution: [education.institution, [Validators.required, Validators.minLength(1)]],
       });
     };
 
@@ -84,14 +84,14 @@ export class PersonEditAboutComponent extends SubscriptionComponent implements O
       knownLanguage = knownLanguage || {
         id: generateObjectId(),
         language: undefined,
-        proficiency: undefined
+        proficiency: undefined,
       };
       const languageName = knownLanguage.language ? knownLanguage.language.nameOrDisplayName : undefined;
       return this.formBuilder.group({
         id: [knownLanguage.id],
         isNew: [isNew],
         language: [languageName, Validators.required],
-        proficiency: [knownLanguage.proficiency, Validators.required]
+        proficiency: [knownLanguage.proficiency, Validators.required],
       });
     };
 
@@ -110,7 +110,7 @@ export class PersonEditAboutComponent extends SubscriptionComponent implements O
     this.form.valueChanges
       .pipe(
         takeUntil(this.unsubscribe),
-        onlyValidValues(this.form)
+        onlyValidValues(this.form),
       )
       .subscribe(({ bio, skills }) => {
         this.userViewState.change({ bio, skills });

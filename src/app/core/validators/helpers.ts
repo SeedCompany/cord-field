@@ -12,7 +12,7 @@ export function validatePair<FieldValue = string>(
   fieldBName: string,
   errorKey: string,
   validator: (a: FieldValue, b: FieldValue) => boolean,
-  assertFieldValue?: (value: any) => void
+  assertFieldValue?: (value: any) => void,
 ): ValidatorFn {
   return (control: AbstractControl) => {
     const a = getOrThrow<FieldValue>(control, fieldAName);

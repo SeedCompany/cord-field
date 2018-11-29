@@ -15,8 +15,8 @@ describe('EngagementService', () => {
     TestBed.configureTestingModule({
       imports: [
         CoreModule,
-        HttpClientTestingModule
-      ]
+        HttpClientTestingModule,
+      ],
     });
     httpMock = TestBed.get(HttpTestingController);
     engagementService = TestBed.get(EngagementService);
@@ -32,12 +32,12 @@ describe('EngagementService', () => {
     const mockResponse = {
       id,
       language: {
-        id: 'languageId'
+        id: 'languageId',
       },
       products: [ProjectProduct.FullBible],
       mediums: [ProjectMedium.EBook],
       updatedAt: '2018-03-26T05:27:49.000Z',
-      tags: []
+      tags: [],
     };
 
     engagementService.getEngagement(id)
@@ -63,7 +63,7 @@ describe('EngagementService', () => {
       approaches: [ProjectApproach.OralStorying],
       tags: ['luke_partnership'],
       isDedicationPlanned: false,
-      dedicationDate: null
+      dedicationDate: null,
     };
 
     engagementService.save(id, modified)

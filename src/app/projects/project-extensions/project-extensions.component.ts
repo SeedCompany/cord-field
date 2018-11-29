@@ -7,7 +7,7 @@ import { ProjectViewStateService } from '@app/projects/project-view-state.servic
 @Component({
   selector: 'app-project-extensions',
   templateUrl: './project-extensions.component.html',
-  styleUrls: ['./project-extensions.component.scss']
+  styleUrls: ['./project-extensions.component.scss'],
 })
 @TitleAware('Extensions')
 export class ProjectExtensionsComponent extends ProjectTabComponent {

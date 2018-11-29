@@ -23,7 +23,7 @@ describe('firstLettersOfWords', () => {
     ['guina-ang kalinga', 'gak'],
     [`fa d'ambu nt`, 'fdan'],
     ['aramaic m-south ot', 'amso'],
-    ['ḛramaic 2 ḛouth', 'ḛ2ḛ']
+    ['ḛramaic 2 ḛouth', 'ḛ2ḛ'],
   ];
   for (const [words, letters] of cases) {
     it(`${words} -> ${letters}`, () => {

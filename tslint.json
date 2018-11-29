@@ -101,8 +101,9 @@
     "trailing-comma": [
       true,
       {
-        "multiline": "never",
-        "singleline": "never"
+        "multiline": "always",
+        "singleline": "never",
+        "esSpecCompliant": true
       }
     ],
     "triple-equals": [

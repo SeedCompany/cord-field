@@ -5,7 +5,7 @@ import { Degree, LanguageProficiency, UserProfile } from '../../../core/models/u
 @Component({
   selector: 'app-person-about',
   templateUrl: './person-about.component.html',
-  styleUrls: ['./person-about.component.scss']
+  styleUrls: ['./person-about.component.scss'],
 })
 export class PersonAboutComponent implements OnChanges {
 

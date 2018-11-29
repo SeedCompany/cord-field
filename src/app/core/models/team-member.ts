@@ -42,7 +42,7 @@ export class TeamMember {
   static forSaveAPI(member: TeamMember): TeamMemberForSaveAPI {
     return {
       userId: member.id,
-      roles: member.roles
+      roles: member.roles,
     };
   }
 

@@ -12,7 +12,7 @@ export interface LanguageFilterAPI {
 }
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class LanguageService {
 
@@ -32,13 +32,13 @@ export class LanguageService {
     skip = 0,
     limit = 10,
     filter?: LanguageListFilter,
-    fields?: Array<keyof LanguageListItem>
+    fields?: Array<keyof LanguageListItem>,
   ): Observable<LanguagesWithTotal> {
     const params: HttpParams = {
       sort,
       skip: skip.toString(),
       limit: limit.toString(),
-      order
+      order,
     };
 
     if (filter) {
@@ -56,7 +56,7 @@ export class LanguageService {
       .pipe(map((response: HttpResponse<LanguageListItem[]>) => {
         return {
           languages: (response.body || []).map(LanguageListItem.fromJson),
-          total: Number(response.headers.get('x-sc-total-count')) || 0
+          total: Number(response.headers.get('x-sc-total-count')) || 0,
         };
       }));
   }

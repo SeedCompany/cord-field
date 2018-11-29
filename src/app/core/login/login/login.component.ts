@@ -12,7 +12,7 @@ import { validatePair } from '../../validators/helpers';
 @Component({
   selector: 'app-login',
   templateUrl: './login.component.html',
-  styleUrls: ['./login.component.scss']
+  styleUrls: ['./login.component.scss'],
 })
 @TitleAware('Login')
 export class LoginComponent implements OnInit {
@@ -30,7 +30,7 @@ export class LoginComponent implements OnInit {
     email: ['', [Validators.required, CustomValidators.email]],
     password: ['', Validators.required],
     newPassword: [''],
-    confirmPassword: ['']
+    confirmPassword: [''],
   }, {
     validator: [
       // Mark email/password fields invalid on login failure, but remove on change.
@@ -42,8 +42,8 @@ export class LoginComponent implements OnInit {
 
         return true;
       }),
-      CustomValidators.passwordMatch('newPassword')
-    ]
+      CustomValidators.passwordMatch('newPassword'),
+    ],
   });
 
   constructor(private fb: FormBuilder,

@@ -7,7 +7,7 @@ import { sortBy } from '../../../core/util';
 @Component({
   selector: 'app-person-availability-dialog',
   templateUrl: './person-availability-dialog.component.html',
-  styleUrls: ['./person-availability-dialog.component.scss']
+  styleUrls: ['./person-availability-dialog.component.scss'],
 })
 export class PersonAvailabilityDialogComponent {
   readonly format = DateTime.DATE_FULL;
@@ -21,7 +21,7 @@ export class PersonAvailabilityDialogComponent {
       width: '40vw',
       minWidth: '400px',
       autoFocus: false,
-      data: user
+      data: user,
     });
   }
 

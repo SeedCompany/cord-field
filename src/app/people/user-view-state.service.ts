@@ -15,7 +15,7 @@ import {
   Unavailability,
   UserProfile,
   UserRole,
-  UserRoleForSaveAPI
+  UserRoleForSaveAPI,
 } from '../core/models/user';
 import { UserService } from '../core/services/user.service';
 
@@ -57,38 +57,38 @@ export interface ModifiedUser {
 
 const config: ChangeConfig<UserProfile> = {
   realFirstName: {
-    key: 'firstName'
+    key: 'firstName',
   },
   realLastName: {
-    key: 'lastName'
+    key: 'lastName',
   },
   displayFirstName: {},
   displayLastName: {},
   email: {},
   roles: {
     accessor: (role) => role.role,
-    toServer: mapChangeList<UserRole, UserRoleForSaveAPI, string>(UserRole.forSaveAPI, returnSelf)
+    toServer: mapChangeList<UserRole, UserRoleForSaveAPI, string>(UserRole.forSaveAPI, returnSelf),
   },
   organizations: {
     accessor: returnId,
-    toServer: mapChangeList<Organization, string, string>(returnId, returnId)
+    toServer: mapChangeList<Organization, string, string>(returnId, returnId),
   },
   phone: {},
   timeZone: {},
   unavailabilities: {
     accessor: returnId,
-    toServer: mapChangeList<Unavailability, RawUnavailability, string>(Unavailability.forSaveAPI, returnId)
+    toServer: mapChangeList<Unavailability, RawUnavailability, string>(Unavailability.forSaveAPI, returnId),
   },
   bio: {},
   education: {
     accessor: returnId,
-    toServer: mapChangeList<Education, string, string>(returnSelf, returnId)
+    toServer: mapChangeList<Education, string, string>(returnSelf, returnId),
   },
   skills: {},
   knownLanguages: {
     accessor: returnId,
-    toServer: mapChangeList<KnownLanguage, KnownLanguageForSaveAPI, string>(KnownLanguage.forSaveAPI, returnId)
-  }
+    toServer: mapChangeList<KnownLanguage, KnownLanguageForSaveAPI, string>(KnownLanguage.forSaveAPI, returnId),
+  },
 };
 
 // Sub type of User that only has properties that are lists of objects with IDs

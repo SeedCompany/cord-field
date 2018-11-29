@@ -183,7 +183,7 @@ export abstract class BaseStorageService<TStore extends any> {
 
     await Promise.all([
       this.store.removeItem(this.getKey(key)),
-      this.store.removeItem(this.getCacheKey(key))
+      this.store.removeItem(this.getCacheKey(key)),
     ]);
 
     if (key in this.subjects) {
@@ -225,7 +225,7 @@ export abstract class BaseStorageService<TStore extends any> {
 
     await Promise.all([
       this.store.setItem(this.getKey(key), value),
-      this.store.setItem(this.getCacheKey(key), cacheTTL)
+      this.store.setItem(this.getCacheKey(key), cacheTTL),
     ]);
 
     this.subjects[key].next(value);
@@ -325,7 +325,7 @@ export abstract class BaseStorageService<TStore extends any> {
  * Values can be any valid type supported by localForage.
  */
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class LocalStorageService extends BaseStorageService<LocalForage> {
 
@@ -348,7 +348,7 @@ export class LocalStorageService extends BaseStorageService<LocalForage> {
     this.store
       .config({
         name: this.dbName,
-        storeName: this.collectionName
+        storeName: this.collectionName,
       });
   }
 
@@ -365,7 +365,7 @@ export class LocalStorageService extends BaseStorageService<LocalForage> {
  * Stores items in session. Use getJson and setJson to store non-string values.
  */
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class SessionStorageService extends BaseStorageService<Storage> {
   get dbName(): string {

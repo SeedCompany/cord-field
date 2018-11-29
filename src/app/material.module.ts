@@ -25,7 +25,7 @@ import {
   MatTableModule,
   MatTabsModule,
   MatToolbarModule,
-  MatTooltipModule
+  MatTooltipModule,
 } from '@angular/material';
 
 const components = [
@@ -54,12 +54,12 @@ const components = [
   MatTableModule,
   MatTabsModule,
   MatToolbarModule,
-  MatTooltipModule
+  MatTooltipModule,
 ];
 
 @NgModule({
   imports: components,
-  exports: components
+  exports: components,
 })
 export class MaterialModule {
 }

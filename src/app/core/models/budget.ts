@@ -21,7 +21,7 @@ export class ProjectBudget {
     budget.status = json.status;
     budget.budgetDetails = (json.budgetDetails || []).map((detail: any) => ({
       ...detail,
-      organization: project.partnerships.find(p => p.id === detail.organizationId)!.organization
+      organization: project.partnerships.find(p => p.id === detail.organizationId)!.organization,
     }));
 
     return budget;
@@ -31,7 +31,7 @@ export class ProjectBudget {
     return Object.assign(new ProjectBudget(), {
       id: generateObjectId(),
       status: BudgetStatus.Pending,
-      budgetDetails: []
+      budgetDetails: [],
     });
   }
 }
@@ -40,7 +40,7 @@ export enum BudgetStatus {
   Pending = 'pending',
   Active = 'approvedactive',
   Superceded = 'approvedsuperceded',
-  Rejected = 'rejected'
+  Rejected = 'rejected',
 }
 
 export namespace BudgetStatus {
@@ -48,6 +48,6 @@ export namespace BudgetStatus {
     [BudgetStatus.Pending]: 'Pending',
     [BudgetStatus.Active]: 'Active',
     [BudgetStatus.Superceded]: 'Superceded',
-    [BudgetStatus.Rejected]: 'Rejected'
+    [BudgetStatus.Rejected]: 'Rejected',
   });
 }

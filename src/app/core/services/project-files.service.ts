@@ -10,7 +10,7 @@ import { Directory, File as CordFile, FileNode, FileNodeType, FileVersion, fromJ
 import { PloApiService } from './http/plo-api.service';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class ProjectFilesService {
 
@@ -18,7 +18,7 @@ export class ProjectFilesService {
     private ploApi: PloApiService,
     private downloader: DownloaderService,
     private http: HttpClient,
-    private authService: AuthenticationService
+    private authService: AuthenticationService,
   ) {
   }
 
@@ -33,7 +33,7 @@ export class ProjectFilesService {
     await this.ploApi
       .put(`/projects/${node.projectId}/files/${node.id}`, {
         parentId: parent.id,
-        name: newName
+        name: newName,
       })
       .toPromise();
 
@@ -48,7 +48,7 @@ export class ProjectFilesService {
         projectId: parent.projectId,
         parentId: parent.id,
         name,
-        type: FileNodeType.Directory
+        type: FileNodeType.Directory,
       })
       .toPromise();
 
@@ -57,7 +57,7 @@ export class ProjectFilesService {
       ...dir,
       projectId: parent.projectId,
       createdAt: DateTime.local().toISO(),
-      owner
+      owner,
     }) as Directory;
   }
 
@@ -73,12 +73,12 @@ export class ProjectFilesService {
         name,
         parentId: parent.id,
         mimeType: uploadFile.type,
-        type: FileNodeType.File
+        type: FileNodeType.File,
       })
       .pipe(map(({ preSignedUrl, fileVersionId, ...file }) => ({
         file: fromJson({...file, projectId: parent.projectId}) as CordFile,
         preSignedUrl,
-        fileVersionId
+        fileVersionId,
       })));
   }
 
@@ -86,9 +86,9 @@ export class ProjectFilesService {
     await this.http
       .put(preSignedUrl, uploadFile, {
         headers: {
-          'Content-Type': uploadFile.type
+          'Content-Type': uploadFile.type,
         },
-        observe: 'response'
+        observe: 'response',
       })
       .toPromise();
   }
@@ -100,7 +100,7 @@ export class ProjectFilesService {
     return this.ploApi
       .put<CordFile>(`/projects/${temp.projectId}/files`, {
         fileId: temp.id,
-        fileVersionId: versionId
+        fileVersionId: versionId,
       })
       .pipe(map(file => fromJson({...file, projectId: temp.projectId}) as CordFile));
   }
@@ -114,8 +114,8 @@ export class ProjectFilesService {
     const result = await this.ploApi
       .get<{url: string}>(`/projects/${file.projectId}/files/download/${file.id}`, {
         params: {
-          fileVersionId: version ? version.id : file.versions[0].id
-        }
+          fileVersionId: version ? version.id : file.versions[0].id,
+        },
       })
       .toPromise();
 

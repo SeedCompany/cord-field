@@ -21,8 +21,8 @@ interface TabConfig {
   styleUrls: ['./project.component.scss'],
   animations: [popInOut],
   providers: [
-    ProjectViewStateService
-  ]
+    ProjectViewStateService,
+  ],
 })
 @TitleAware()
 export class ProjectComponent extends SubscriptionComponent implements OnInit, TitleProp {
@@ -35,7 +35,7 @@ export class ProjectComponent extends SubscriptionComponent implements OnInit, T
     {path: 'files', label: 'Files'},
     {path: 'team', label: 'Team'},
     {path: 'extensions', label: 'Extensions'},
-    {path: 'updates', label: 'Updates'}
+    {path: 'updates', label: 'Updates'},
   ];
 
   project: Project;
@@ -49,7 +49,7 @@ export class ProjectComponent extends SubscriptionComponent implements OnInit, T
     private projectViewState: ProjectViewStateService,
     private route: ActivatedRoute,
     private router: Router,
-    private snackBar: MatSnackBar
+    private snackBar: MatSnackBar,
   ) {
     super();
   }
@@ -84,7 +84,7 @@ export class ProjectComponent extends SubscriptionComponent implements OnInit, T
         filter(event => event instanceof NavigationEnd),
         startWith({}), // for first load
         switchMap(() => this.route.firstChild ? this.route.firstChild.snapshot.url : []),
-        map((segment: UrlSegment) => this.tabs.find((tab) => tab.path === segment.path)!)
+        map((segment: UrlSegment) => this.tabs.find((tab) => tab.path === segment.path)!),
       )
       .subscribe(tab => this.shouldCurrentTabShowSaveFab = !!tab.saveFab);
   }
@@ -107,7 +107,7 @@ export class ProjectComponent extends SubscriptionComponent implements OnInit, T
       await this.projectViewState.save();
     } catch (e) {
       this.snackBarRef = this.snackBar.open('Failed to save project', undefined, {
-        duration: 3000
+        duration: 3000,
       });
       return;
     }
