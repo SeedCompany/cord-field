@@ -15,7 +15,11 @@ export function ValueAccessorProvider(type: any) {
 
 export abstract class AbstractValueAccessor<T> extends SubscriptionComponent implements ControlValueAccessor {
   private _valueChange: Subject<T> = new Subject<T>();
-  readonly valueChange = this._valueChange.asObservable().pipe(takeUntil(this.unsubscribe));
+  /**
+   * An observable of external value changes.
+   * Use this to update internal representation of new value.
+   */
+  readonly externalChanges = this._valueChange.asObservable().pipe(takeUntil(this.unsubscribe));
   private _innerValue: T;
 
   /**
@@ -26,16 +30,24 @@ export abstract class AbstractValueAccessor<T> extends SubscriptionComponent imp
       this._innerValue = value;
       this.onChange(value);
       this.onTouched();
-      this._valueChange.next(value);
     }
   }
   get value(): T {
     return this._innerValue;
   }
 
+  /**
+   * Call `value` setter instead.
+   * @internal
+   */
   onChange = (_: T) => { };
   onTouched = () => { };
 
+  /**
+   * Externally update the control with a new value.
+   * Should not be called from concrete class.
+   * @internal
+   */
   writeValue(value: T) {
     if (this._innerValue !== value) {
       this._innerValue = value;
@@ -43,10 +55,18 @@ export abstract class AbstractValueAccessor<T> extends SubscriptionComponent imp
     }
   }
 
+  /**
+   * Should not be called from concrete class.
+   * @internal
+   */
   registerOnChange(fn: (_: T) => {}): void {
     this.onChange = fn;
   }
 
+  /**
+   * Should not be called from concrete class.
+   * @internal
+   */
   registerOnTouched(fn: () => {}): void {
     this.onTouched = fn;
   }
