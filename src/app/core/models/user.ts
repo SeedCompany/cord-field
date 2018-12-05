@@ -18,7 +18,7 @@ export interface NewUser {
   firstName: string;
   lastName: string;
   email: string;
-  roles: UserRole[];
+  userRoles: UserRole[];
   sendInvite: boolean;
 }
 
@@ -154,10 +154,10 @@ export class UserRole {
     return role;
   }
 
-  static forSaveAPI(kl: UserRole): UserRoleForSaveAPI {
+  static forSaveAPI(ur: UserRole): UserRoleForSaveAPI {
     return {
-      locationIds: kl.locations.map((location) => location.id),
-      role: kl.role,
+      locationIds: ur.locations.map((location) => location.id),
+      role: ur.role,
     };
   }
 }

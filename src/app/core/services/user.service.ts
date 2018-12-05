@@ -7,7 +7,7 @@ import { ModifiedUser } from '../../people/user-view-state.service';
 import { Project } from '../models/project';
 import { ProjectRole } from '../models/project-role';
 import { TeamMember } from '../models/team-member';
-import { NewUser, User, UserFilter, UserListItem, UserProfile, UsersWithTotal } from '../models/user';
+import { NewUser, User, UserFilter, UserListItem, UserProfile, UserRole, UsersWithTotal } from '../models/user';
 import { HttpParams } from './http/abstract-http-client';
 import { PloApiService } from './http/plo-api.service';
 
@@ -92,8 +92,11 @@ export class UserService {
     return observableOf(ProjectRole.values()).pipe(delay(2000)).toPromise();
   }
 
-  create(newUser: NewUser): Promise<string> {
-    return this.plo.post<{ id: string }>('/users/invite', newUser)
+  create({ userRoles, ...body }: NewUser): Promise<string> {
+    return this.plo.post<{ id: string }>('/users/invite', {
+      ...body,
+      userRoles: userRoles.map(UserRole.forSaveAPI),
+    })
       .pipe(map(result => result.id))
       .toPromise();
   }
