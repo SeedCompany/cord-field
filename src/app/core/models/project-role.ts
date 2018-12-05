@@ -8,8 +8,10 @@ export enum ProjectRole {
   FieldCoordinator = 'fc',
   FieldPartner = 'fp',
   FinancialAnalyst = 'fa',
+  Intern = 'i',
   LeadFinancialAnalyst = 'lfa',
   RegionalDirector = 'rd',
+  Translator = 't',
   Writer = 'w',
 }
 
@@ -21,7 +23,9 @@ export namespace ProjectRole {
     [ProjectRole.FieldCoordinator]: 'Field Coordinator',
     [ProjectRole.FieldPartner]: 'Field Partner',
     [ProjectRole.FinancialAnalyst]: 'Financial Analyst',
+    [ProjectRole.Intern]: 'Intern',
     [ProjectRole.LeadFinancialAnalyst]: 'Lead Financial Analyst',
+    [ProjectRole.Translator]: 'Translator',
     [ProjectRole.Writer]: 'Writer',
     [ProjectRole.AreaDirector]: 'Area Director',
     [ProjectRole.RegionalDirector]: 'Regional Director',
@@ -48,7 +52,9 @@ export namespace ProjectRole {
     ProjectRole.FieldCoordinator,
     ProjectRole.FieldPartner,
     ProjectRole.FinancialAnalyst,
+    ProjectRole.Intern,
     ProjectRole.LeadFinancialAnalyst,
+    ProjectRole.Translator,
     ProjectRole.Writer,
   ];
 }
