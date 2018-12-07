@@ -1,6 +1,7 @@
 import { ProjectBudget } from '@app/core/models/budget';
 import { Engagement } from '@app/core/models/engagement';
 import { ProjectExtension } from '@app/core/models/project/extension';
+import { maybeRedacted } from '@app/core/util';
 import { DateTime } from 'luxon';
 import { Language } from './language';
 import { Location } from './location';
@@ -54,7 +55,7 @@ export class Project {
     project.team = (json.team || []).map(TeamMember.fromJson);
     project.updatedAt = json.updatedAt ? DateTime.fromISO(json.updatedAt) : DateTime.fromMillis(0);
     project.estimatedSubmission = json.estimatedSubmission ? DateTime.fromISO(json.estimatedSubmission) : null;
-    project.engagements = (json.engagements || []).map(Engagement.fromJson);
+    project.engagements = (maybeRedacted(json.engagements) || []).map(Engagement.fromJson);
     project.budgets = (json.budgets || []).map((b: any) => ProjectBudget.fromJson(project, b));
     project.extensions = (json.extensions || []).map(ProjectExtension.fromJson);
 
