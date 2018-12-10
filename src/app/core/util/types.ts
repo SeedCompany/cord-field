@@ -61,3 +61,5 @@ export type ExtractKeys<T, Condition> = {
 export type Omit<T, K extends keyof any> = Pick<T, Exclude<keyof T, K>>;
 
 export type OneOrMore<T> = T | T[];
+
+export type ArrayItem<T> = T extends Array<infer S> ? S : T;
