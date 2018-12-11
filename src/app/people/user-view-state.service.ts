@@ -67,7 +67,8 @@ const config: ChangeConfig<UserProfile> = {
   email: {},
   roles: {
     accessor: (role) => role.role,
-    toServer: mapChangeList<UserRole, UserRoleForSaveAPI, string>(UserRole.forSaveAPI, returnSelf),
+    key: 'userRoles',
+    toServer: mapChangeList<UserRole, UserRoleForSaveAPI, string>(UserRole.forSaveAPI, ur => ur.role),
   },
   organizations: {
     accessor: returnId,

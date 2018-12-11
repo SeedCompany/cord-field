@@ -49,6 +49,7 @@ export class PersonCreateDialogComponent implements OnInit {
       firstName: ['', [Validators.required, Validators.minLength(2)]],
       lastName: ['', [Validators.required, Validators.minLength(2)]],
       email: ['', CustomValidators.email],
+      userRoles: [[]],
       sendInvite: [false],
     });
   }

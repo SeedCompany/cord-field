@@ -6,13 +6,12 @@ import { Unavailability, UserProfile } from '@app/core/models/user';
 import { onlyValidValues } from '@app/core/util';
 import * as CustomValidators from '@app/core/validators';
 import {
-  PersonAvailabilityCrudDialogComponent,
+PersonAvailabilityCrudDialogComponent,
 } from '@app/people/person-edit/person-availability-crud-dialog/person-availability-crud-dialog.component';
+import { UserViewStateService } from '@app/people/user-view-state.service';
 import { SubscriptionComponent } from '@app/shared/components/subscription.component';
 import { DateTime } from 'luxon';
 import { takeUntil } from 'rxjs/operators';
-
-import { UserViewStateService } from '../../user-view-state.service';
 
 @Component({
   selector: 'app-person-edit-basic-info',
@@ -69,11 +68,6 @@ export class PersonEditBasicInfoComponent extends SubscriptionComponent implemen
     this.initViewState();
   }
 
-  initRolesCtrl(control: AbstractControl): void {
-    control.reset(this.roles.value);
-    this.form.setControl('roles', control);
-  }
-
   addAvailability(): void {
     this.editAvailability();
   }
@@ -113,7 +107,6 @@ export class PersonEditBasicInfoComponent extends SubscriptionComponent implemen
           realLastName: changes.lastName,
           displayFirstName: changes.displayFirstName,
           displayLastName: changes.displayLastName,
-          roles: changes.roles,
           phone: changes.phone,
           email: changes.email,
         });

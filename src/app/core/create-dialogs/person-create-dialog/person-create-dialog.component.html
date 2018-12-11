@@ -30,8 +30,7 @@
     <mat-error *ngIf="email.errors?.inUse">This email address is already in use</mat-error>
   </mat-form-field>
 
-  <app-user-roles-form [disabled]="form.disabled"
-                       (formReady)="form.addControl('userRoles', $event)"></app-user-roles-form>
+  <app-user-roles-form formControlName="userRoles"></app-user-roles-form>
 
   <mat-slide-toggle color="accent"
                     formControlName="sendInvite">Email them an invite?</mat-slide-toggle>

@@ -39,8 +39,7 @@
     </div>
 
     <h3 mat-card-title>Roles</h3>
-    <app-user-roles-form [disabled]="form.disabled"
-                         (formReady)="initRolesCtrl($event)"></app-user-roles-form>
+    <app-user-roles-form formControlName="roles"></app-user-roles-form>
 
     <h3 mat-card-title>Contact</h3>
 
