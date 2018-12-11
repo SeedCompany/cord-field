@@ -2,11 +2,11 @@
   <mat-form-field color="accent">
     <mat-select placeholder="Role"
                 [formControl]="userRole.get('role')">
-      <mat-option *ngIf="userRole.get('role').value"
+      <mat-option *ngIf="userRole.get('role')?.value"
                   class="remove">Remove Role</mat-option>
-      <mat-option *ngIf="userRole.get('role').value"
-                  [value]="userRole.get('role').value">
-        {{ ProjectRole.forUI(userRole.get('role').value) }}
+      <mat-option *ngIf="userRole.get('role')?.value"
+                  [value]="userRole.get('role')?.value">
+        {{ ProjectRole.forUI(userRole.get('role')?.value) }}
       </mat-option>
       <mat-option *ngFor="let availableRole of availableRoles; trackBy: ProjectRole.trackValueBy"
                   [value]="availableRole">
@@ -14,7 +14,7 @@
       </mat-option>
     </mat-select>
   </mat-form-field>
-  <app-autocomplete-location *ngIf="ProjectRole.needsLocations.includes(userRole.get('role').value)"
+  <app-autocomplete-location *ngIf="ProjectRole.needsLocations.includes(userRole.get('role')?.value)"
                              [chips]="true"
                              [dedupe]="true"
                              [required]="true"
