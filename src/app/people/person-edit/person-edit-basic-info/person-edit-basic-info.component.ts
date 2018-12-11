@@ -51,10 +51,6 @@ export class PersonEditBasicInfoComponent extends SubscriptionComponent implemen
     return this.form.get('displayLastName')!;
   }
 
-  get roles(): AbstractControl {
-    return this.form.get('roles')!;
-  }
-
   get email(): AbstractControl {
     return this.form.get('email')!;
   }
@@ -89,7 +85,6 @@ export class PersonEditBasicInfoComponent extends SubscriptionComponent implemen
       lastName: ['', [Validators.required, Validators.minLength(2)]],
       displayFirstName: ['', [Validators.required, Validators.minLength(2)]],
       displayLastName: ['', [Validators.required, Validators.minLength(2)]],
-      roles: [[]],
       email: ['', [Validators.required, CustomValidators.email]],
       phone: ['', [CustomValidators.phone]],
     });
@@ -127,7 +122,6 @@ export class PersonEditBasicInfoComponent extends SubscriptionComponent implemen
         this.lastName.patchValue(userProfile.realLastName, { emitEvent: false });
         this.displayFirstName.patchValue(userProfile.displayFirstName, { emitEvent: false });
         this.displayLastName.patchValue(userProfile.displayLastName, { emitEvent: false });
-        this.roles.patchValue(userProfile.roles, { emitEvent: false });
         this.phone.patchValue(userProfile.phone, { emitEvent: false });
         this.email.patchValue(userProfile.email, { emitEvent: false });
       });
