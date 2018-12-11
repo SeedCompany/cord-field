@@ -42,8 +42,12 @@ export class TypedFormControl<T> extends FormControl {
 
 export function enableControl(control: AbstractControl, enable: boolean) {
   if (enable) {
-    control.enable();
+    if (control.disabled) {
+      control.enable();
+    }
   } else {
-    control.disable();
+    if (control.enabled) {
+      control.disable();
+    }
   }
 }
