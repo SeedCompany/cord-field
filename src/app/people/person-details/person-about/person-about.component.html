@@ -42,6 +42,7 @@
 </ng-container>
 
 <button mat-button color="accent"
+        routerLink="edit/about"
         *ngIf="!hasData && user.canEdit"
 >
   Tell us more about {{ user.isSelf ? 'yourself' : user.fullName }}
