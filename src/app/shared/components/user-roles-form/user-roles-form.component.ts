@@ -149,6 +149,15 @@ export class UserRolesFormComponent extends AbstractValueAccessor<UserRole[]> im
             },
           });
         });
+      userRoleCtl.statusChanges
+        .pipe(
+          takeUntil(remove), // Take until control is removed
+          takeUntil(this.unsubscribe), // or component is destroyed
+          filter(status => status === 'INVALID'),
+        )
+        .subscribe(() => {
+          this.viewState!.revert('roles', { role: roleCtl.value });
+        });
     }
 
     return userRoleCtl;
