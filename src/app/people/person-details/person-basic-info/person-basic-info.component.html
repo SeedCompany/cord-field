@@ -25,7 +25,7 @@
 </button>
 
 <h3 class="mat-caption"
-    *ngIf="user.organizations.length || user.canEdit"
+    *ngIf="user.organizations.length"
 >
   Organizations
 </h3>
@@ -37,11 +37,6 @@
     <p mat-line>{{ org.name }}</p>
   </a>
 </mat-nav-list>
-<button mat-button color="accent"
-        *ngIf="user.organizations.length == 0 && user.canEdit"
->
-  ADD
-</button>
 
 <h3 class="mat-caption">Status</h3>
 <button mat-button color="accent"
