@@ -7,7 +7,7 @@ import { ProjectRole } from '@app/core/models/project-role';
 import { UserRole } from '@app/core/models/user';
 import { AuthenticationService } from '@app/core/services/authentication.service';
 import { UserService } from '@app/core/services/user.service';
-import { filterRequired } from '@app/core/util';
+import { enableControl, filterRequired } from '@app/core/util';
 import { UserViewStateService } from '@app/people/user-view-state.service';
 import { AutocompleteLocationComponent } from '@app/shared/components/autocomplete/autocomplete-location.component';
 import { combineLatest, from as observableFrom, merge, Observable, of as observableOf } from 'rxjs';
@@ -229,6 +229,7 @@ export class UserRolesFormComponent extends AbstractValueAccessor<UserRole[]> im
 
   setDisabledState(isDisabled: boolean): void {
     this.disabled = isDisabled;
+    enableControl(this.userRolesCtl, !isDisabled);
   }
 
   trackUserRoleControl(index: number, control: FormGroup) {

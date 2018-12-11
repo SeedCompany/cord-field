@@ -3,7 +3,7 @@ import { AbstractControl, FormBuilder, FormGroup, Validators } from '@angular/fo
 import { MatDialog } from '@angular/material';
 import { TitleAware } from '@app/core/decorators';
 import { Unavailability, UserProfile } from '@app/core/models/user';
-import { onlyValidValues } from '@app/core/util';
+import { enableControl, onlyValidValues } from '@app/core/util';
 import * as CustomValidators from '@app/core/validators';
 import {
 PersonAvailabilityCrudDialogComponent,
@@ -114,6 +114,12 @@ export class PersonEditBasicInfoComponent extends SubscriptionComponent implemen
   }
 
   private initViewState(): void {
+    this.viewStateService.isSubmitting
+      .pipe(takeUntil(this.unsubscribe))
+      .subscribe(submitting => {
+        enableControl(this.form, !submitting);
+      });
+
     this.viewStateService.user
       .pipe(takeUntil(this.unsubscribe))
       .subscribe(userProfile => {
