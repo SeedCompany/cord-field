@@ -19,6 +19,7 @@
   </mat-list-item>
 </mat-nav-list>
 <button mat-button color="accent"
+        routerLink="edit/admin"
         *ngIf="user.roles.length == 0 && user.canEdit"
 >
   ADD
