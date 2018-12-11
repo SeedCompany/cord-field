@@ -128,6 +128,7 @@ export class UserRolesFormComponent extends AbstractValueAccessor<UserRole[]> im
           startWith(role),
           filterRequired(), // not a removal
           pairwise(),
+          filter(([oldRole, newRole]) => oldRole !== newRole), // Seems to happen during initialization
         )
         .subscribe(([oldRole, newRole]) => {
           this.viewState!.change({
