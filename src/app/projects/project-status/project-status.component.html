@@ -4,7 +4,7 @@
     <mat-option [value]="statusCtrl.value"
                 [disabled]="true">{{ ProjectStatus.forUI(statusCtrl.value) }}
     </mat-option>
-    <mat-option *ngFor="let status of getStatuses(); trackBy: trackByStatus"
+    <mat-option *ngFor="let status of availableStatuses; trackBy: trackByStatus"
                 [value]="status[1]">
       {{ status[0] }}
     </mat-option>
