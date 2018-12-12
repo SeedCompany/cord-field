@@ -1,9 +1,10 @@
 import { ViewChild } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
-import { BehaviorSubject, combineLatest, EMPTY, Observable, of as observableOf, Unsubscribable } from 'rxjs';
+import { maybeArray, MaybeObservable, maybeObservable } from '@app/core/util';
+import { BehaviorSubject, combineLatest, Observable, Unsubscribable } from 'rxjs';
 import { map, startWith } from 'rxjs/operators';
 
-type Title = string | string[] | Observable<string> | Observable<string[]>;
+type Title = MaybeObservable<string | string[]>;
 
 export interface TitleProp {
   title: Title;
@@ -44,7 +45,15 @@ export function TitleAware(title?: Title): ClassDecorator {
     const orig = Object.getOwnPropertyDescriptor(target.prototype, 'title');
     if (orig && title) {
       throw new Error(
-        `${target.name} has both a title property/getter and a title passed to @TitleAware(). One or the other should be picked.`,
+        `${target.name} has both a title getter and a title passed to @TitleAware(). One or the other should be picked.`,
+      );
+    }
+    // Ensure that the title property isn't attempted to be dynamically changed via assignment
+    if (orig && !orig.get) {
+      throw new Error(
+        `${target.name} has a title property that's not a getter.
+        If it's a static value it should be passed to @TitleAware().
+        If it's a dynamic value it should be defined as a getter.`,
       );
     }
 
@@ -54,8 +63,7 @@ export function TitleAware(title?: Title): ClassDecorator {
     Object.defineProperty(target.prototype, 'title', {
       get: function (this: any) {
         const result: Title = orig ? orig.get!.apply(this) : title;
-        const title$ = (result instanceof Observable ? result : observableOf(result))
-          .pipe(map(t => Array.isArray(t) ? t : [t]));
+        const title$ = observeTitle(result);
 
         return combineLatest(childTitles, title$)
           .pipe(map(([list, titles]) => list.concat(titles)));
@@ -121,11 +129,8 @@ export function TitleAware(title?: Title): ClassDecorator {
   };
 }
 
-export function observeComponentTitle(component: Partial<TitleProp>): Observable<string[]> {
-  let title$: Observable<string | string[]> = EMPTY;
-  if (component.title) {
-    title$ = component.title instanceof Observable ? component.title : observableOf(component.title);
-  }
+export const observeComponentTitle = (component: Partial<TitleProp>): Observable<string[]> => observeTitle(component.title);
 
-  return title$.pipe(map(title => Array.isArray(title) ? title : [title]));
-}
+const observeTitle = (title?: Title): Observable<string[]> =>
+  maybeObservable(title)
+    .pipe(map(maybeArray));

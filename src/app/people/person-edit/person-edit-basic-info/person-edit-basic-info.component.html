@@ -1,90 +1,92 @@
 <mat-card>
-  <mat-card-title>General</mat-card-title>
   <mat-card-content [formGroup]="form">
 
-    <div class="name-container">
-      <mat-form-field color="accent">
-        <input matInput
-               redactable
-               maxlength="140"
-               formControlName="firstName"
-               placeholder="First Name">
-        <mat-error>Please enter valid first name</mat-error>
-      </mat-form-field>
-      <mat-form-field color="accent">
-        <input matInput
-               redactable
-               maxlength="140"
-               formControlName="lastName"
-               placeholder="Last Name">
-        <mat-error>Please enter valid last name</mat-error>
-      </mat-form-field>
-    </div>
+    <section>
+      <h3 mat-card-title>General</h3>
+      <div class="name-container">
+        <mat-form-field color="accent">
+          <input matInput
+                 redactable
+                 maxlength="140"
+                 formControlName="firstName"
+                 placeholder="First Name">
+          <mat-error>Please enter valid first name</mat-error>
+        </mat-form-field>
+        <mat-form-field color="accent">
+          <input matInput
+                 redactable
+                 maxlength="140"
+                 formControlName="lastName"
+                 placeholder="Last Name">
+          <mat-error>Please enter valid last name</mat-error>
+        </mat-form-field>
+      </div>
 
-    <div class="name-container">
-      <mat-form-field color="accent">
-        <input matInput
-               maxlength="140"
-               formControlName="displayFirstName"
-               placeholder="Display First Name">
-        <mat-error>Please enter valid first name</mat-error>
-      </mat-form-field>
-      <mat-form-field color="accent">
-        <input matInput
-               maxlength="140"
-               formControlName="displayLastName"
-               placeholder="Display Last Name">
-        <mat-error>Please enter valid last name</mat-error>
-      </mat-form-field>
-    </div>
+      <div class="name-container">
+        <mat-form-field color="accent">
+          <input matInput
+                 maxlength="140"
+                 formControlName="displayFirstName"
+                 placeholder="Display First Name">
+          <mat-error>Please enter valid first name</mat-error>
+        </mat-form-field>
+        <mat-form-field color="accent">
+          <input matInput
+                 maxlength="140"
+                 formControlName="displayLastName"
+                 placeholder="Display Last Name">
+          <mat-error>Please enter valid last name</mat-error>
+        </mat-form-field>
+      </div>
+    </section>
 
-    <h3 mat-card-title>Roles</h3>
-    <app-user-roles-form [disabled]="form.disabled"
-                         (formReady)="initRolesCtrl($event)"></app-user-roles-form>
+    <section>
+      <h3 mat-card-title>Contact</h3>
 
-    <h3 mat-card-title>Contact</h3>
+      <div class="container">
+        <mat-form-field color="accent">
+          <input matInput
+                 redactable
+                 type="text"
+                 maxlength="140"
+                 formControlName="email"
+                 placeholder="Email">
+          <mat-error>Please enter a valid email</mat-error>
+        </mat-form-field>
+        <mat-form-field color="accent">
+          <input matInput
+                 redactable
+                 type="text"
+                 formControlName="phone"
+                 placeholder="Phone">
+          <mat-error>
+            Please enter a valid phone number
+          </mat-error>
+        </mat-form-field>
+      </div>
+    </section>
 
-    <div class="container">
-      <mat-form-field color="accent">
-        <input matInput
-               redactable
-               type="text"
-               maxlength="140"
-               formControlName="email"
-               placeholder="Email">
-        <mat-error>Please enter a valid email</mat-error>
-      </mat-form-field>
-      <mat-form-field color="accent">
-        <input matInput
-               redactable
-               type="text"
-               formControlName="phone"
-               placeholder="Phone">
-        <mat-error>
-          Please enter a valid phone number
-        </mat-error>
-      </mat-form-field>
-    </div>
-
-    <h3 mat-card-title>Availability</h3>
-    <mat-nav-list>
-      <a mat-list-item *ngFor="let unavailability of userProfile?.unavailabilities; trackBy: trackByUnavailabilityId"
-         (click)="editAvailability(unavailability)">
-        <p mat-line>{{ unavailability.description }}</p>
-        <h4 mat-line>{{ unavailability.start.toLocaleString(format) }} - {{ unavailability.end.toLocaleString(format) }}</h4>
-      </a>
-      <mat-list-item *ngIf="userProfile && !userProfile.unavailabilities.length"
-                     class="none">
-        {{ userProfile.isSelf ? 'You have' : userProfile.fullName + ' has' }} no unavailable dates.
-      </mat-list-item>
-    </mat-nav-list>
-    <button type="button"
-            mat-button
-            color="accent"
-            (click)="addAvailability()">
-      <mat-icon>add</mat-icon>
-      Add Unavailability
-    </button>
+    <section>
+      <h3 mat-card-title>Availability</h3>
+      <mat-nav-list>
+        <a mat-list-item *ngFor="let unavailability of userProfile?.unavailabilities; trackBy: trackByUnavailabilityId"
+           (click)="editAvailability(unavailability)">
+          <p mat-line>{{ unavailability.description }}</p>
+          <h4 mat-line>{{ unavailability.start.toLocaleString(format) }} - {{ unavailability.end.toLocaleString(format) }}</h4>
+        </a>
+        <mat-list-item *ngIf="userProfile && !userProfile.unavailabilities.length"
+                       class="none">
+          {{ userProfile.isSelf ? 'You have' : userProfile.fullName + ' has' }} no unavailable dates.
+        </mat-list-item>
+      </mat-nav-list>
+      <button type="button"
+              mat-button
+              color="accent"
+              (click)="addAvailability()">
+        <mat-icon>add</mat-icon>
+        Add Unavailability
+      </button>
+    </section>
 
   </mat-card-content>
 </mat-card>

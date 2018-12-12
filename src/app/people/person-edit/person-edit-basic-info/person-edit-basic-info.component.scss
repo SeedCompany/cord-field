@@ -11,9 +11,17 @@ mat-card {
   overflow-y: scroll;
 }
 
+mat-card-content {
+  max-width: 45em;
+}
+
 mat-card-content, .container {
   display: flex;
   flex-direction: column;
+}
+
+section:not(:first-child) {
+  margin-top: 1.25em;
 }
 
 .name-container {
@@ -21,25 +29,15 @@ mat-card-content, .container {
 
   mat-form-field {
     flex: 1;
-    margin-right: 24px;
 
-    &:last-child {
-      margin-right: 0;
+    &:not(:first-child) {
+      margin-left: 24px;
     }
   }
 }
 
-mat-card-content {
-  max-width: 45em;
-
-  button {
-    width: fit-content;
-  }
-
-}
-
-app-user-roles-form {
-  margin-bottom: 1.25em;
+button {
+  width: fit-content;
 }
 
 .none {

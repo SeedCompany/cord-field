@@ -1,6 +1,7 @@
 import { buildEnum } from './enum';
 
 export enum ProjectRole {
+  Admin = 'adm',
   AreaDirector = 'ad',
   Consultant = 'c',
   ConsultantManager = 'cm',
@@ -17,6 +18,7 @@ export enum ProjectRole {
 
 export namespace ProjectRole {
   export const {entries, forUI, values, trackEntryBy, trackValueBy} = buildEnum<ProjectRole>(ProjectRole, {
+    [ProjectRole.Admin]: 'Admin',
     [ProjectRole.Consultant]: 'Consultant',
     [ProjectRole.ConsultantManager]: 'Consultant Manager',
     [ProjectRole.Controller]: 'Controller',

@@ -1,4 +1,5 @@
 import { AbstractControl, FormArray } from '@angular/forms';
+import { ArrayItem } from '@app/core/util';
 import { BehaviorSubject, combineLatest, NextObserver, Observable, Subject, Unsubscribable } from 'rxjs';
 import { distinctUntilChanged, map, shareReplay, startWith, takeUntil } from 'rxjs/operators';
 import { LazyGetter } from 'typescript-lazy-get-decorator';
@@ -102,7 +103,11 @@ export abstract class AbstractViewState<T> {
    * Create a form array for the given field. This syncs user input and subject changes to the form array
    * and gives back the control and functions to add & remove items from the array.
    */
-  createFormArray(field: keyof T, createControl: (item?: any) => AbstractControl, unsubscribe: Observable<void>) {
+  createFormArray<Key extends keyof T, Value extends ArrayItem<T[Key]>>(
+    field: Key,
+    createControl: (item?: Value) => AbstractControl,
+    unsubscribe: Observable<void>,
+  ) {
     const form = new FormArray([]);
 
     // Subscriptions to individual item changes

@@ -1,19 +1,21 @@
 import { OnInit } from '@angular/core';
+import { UserProfile } from '@app/core/models/user';
+import { SubscriptionComponent } from '@app/shared/components/subscription.component';
+import { Observable } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
-import { UserProfile } from '../../core/models/user';
-import { SubscriptionComponent } from '../../shared/components/subscription.component';
 import { UserViewStateService } from '../user-view-state.service';
 
 export abstract class AbstractPersonComponent extends SubscriptionComponent implements OnInit {
+  public user$: Observable<UserProfile>;
   user: UserProfile;
 
-  constructor(protected userViewState: UserViewStateService) {
+  protected constructor(protected userViewState: UserViewStateService) {
     super();
   }
 
   ngOnInit(): void {
-    this.userViewState.user
-      .pipe(takeUntil(this.unsubscribe))
-      .subscribe(u => this.user = u);
+    this.user$ = this.userViewState.user
+      .pipe(takeUntil(this.unsubscribe));
+    this.user$.subscribe(u => this.user = u);
   }
 }

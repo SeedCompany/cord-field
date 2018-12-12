@@ -1,19 +1,17 @@
 import { Component, OnInit } from '@angular/core';
 import { AbstractControl, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatDialog } from '@angular/material';
-import { Changes } from '@app/core/change-engine';
 import { TitleAware } from '@app/core/decorators';
 import { Unavailability, UserProfile } from '@app/core/models/user';
-import { onlyValidValues } from '@app/core/util';
+import { enableControl, onlyValidValues } from '@app/core/util';
 import * as CustomValidators from '@app/core/validators';
 import {
-  PersonAvailabilityCrudDialogComponent,
+PersonAvailabilityCrudDialogComponent,
 } from '@app/people/person-edit/person-availability-crud-dialog/person-availability-crud-dialog.component';
+import { UserViewStateService } from '@app/people/user-view-state.service';
 import { SubscriptionComponent } from '@app/shared/components/subscription.component';
 import { DateTime } from 'luxon';
 import { takeUntil } from 'rxjs/operators';
-
-import { UserViewStateService } from '../../user-view-state.service';
 
 @Component({
   selector: 'app-person-edit-basic-info',
@@ -66,22 +64,6 @@ export class PersonEditBasicInfoComponent extends SubscriptionComponent implemen
     this.initViewState();
   }
 
-  initRolesCtrl(event: AbstractControl): void {
-    if (!this.userProfile) {
-      return;
-    }
-
-    event.setValue(this.userProfile.roles);
-
-    event.valueChanges
-      .pipe(takeUntil(this.unsubscribe))
-      .subscribe((changes: Changes) => {
-        this.viewStateService.change({
-          roles: changes,
-        });
-      });
-  }
-
   addAvailability(): void {
     this.editAvailability();
   }
@@ -127,6 +109,12 @@ export class PersonEditBasicInfoComponent extends SubscriptionComponent implemen
   }
 
   private initViewState(): void {
+    this.viewStateService.isSubmitting
+      .pipe(takeUntil(this.unsubscribe))
+      .subscribe(submitting => {
+        enableControl(this.form, !submitting);
+      });
+
     this.viewStateService.user
       .pipe(takeUntil(this.unsubscribe))
       .subscribe(userProfile => {

@@ -75,7 +75,7 @@ export class AutocompleteComponent<T> extends AbstractValueAccessor<T | T[]> imp
   }
 
   ngOnInit(): void {
-    this.valueChange.subscribe((value) => {
+    this.externalChanges.subscribe((value) => {
       this.searchCtrl.setValue(value);
     });
   }

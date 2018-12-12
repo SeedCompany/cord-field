@@ -1,4 +1,4 @@
-import { AsyncValidatorFn, FormControl, ValidatorFn } from '@angular/forms';
+import { AbstractControl, AsyncValidatorFn, FormControl, ValidatorFn } from '@angular/forms';
 import { AbstractControlOptions } from '@angular/forms/src/model';
 import { Observable } from 'rxjs';
 
@@ -37,5 +37,17 @@ export class TypedFormControl<T> extends FormControl {
     emitEvent?: boolean;
   }): void {
     super.reset(formState, options);
+  }
+}
+
+export function enableControl(control: AbstractControl, enable: boolean) {
+  if (enable) {
+    if (control.disabled) {
+      control.enable();
+    }
+  } else {
+    if (control.enabled) {
+      control.disable();
+    }
   }
 }

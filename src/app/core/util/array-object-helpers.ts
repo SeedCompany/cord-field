@@ -1,3 +1,5 @@
+import { OneOrMore } from '@app/core/util/types';
+
 export function clone<T>(obj: T): T {
   return Object.assign(Object.create(Object.getPrototypeOf(obj)), obj);
 }
@@ -36,6 +38,9 @@ export function mapEntries<T extends ObjMap<T, V>, V, U>(obj: T, mapper: (key: k
 
   return mapped;
 }
+
+export const maybeArray = <T>(items: OneOrMore<T>): T[] =>
+  Array.isArray(items) ? items : [items];
 
 export function sortBy<T>(iteratee: (item: T) => any, order: 'asc' | 'desc' = 'asc') {
   return (a: T, b: T) => {
