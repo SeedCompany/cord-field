@@ -1,0 +1,18 @@
+@import "~src/styles/imports";
+
+:host {
+  @extend %component-defaults;
+}
+
+.revert {
+  font-style: italic;
+}
+
+::ng-deep .mat-select-disabled .mat-select-value {
+  color: mat-foreground($theme, text);
+}
+
+.mat-form-field {
+  // Remove hint/error spacing so field looks evenly spaced all around
+  margin-bottom: -20px;
+}

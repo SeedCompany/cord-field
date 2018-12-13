@@ -1,11 +1,13 @@
 import { Component, OnInit } from '@angular/core';
 import { FormControl } from '@angular/forms';
+import { Project } from '@app/core/models/project';
 import { ProjectStatus } from '@app/core/models/project/status';
 import { ProjectService } from '@app/core/services/project.service';
 import { TypedFormControl } from '@app/core/util';
 import { ProjectViewStateService } from '@app/projects/project-view-state.service';
+import { StatusOptions } from '@app/shared/components/status-select-workflow/status-select-workflow.component';
 import { SubscriptionComponent } from '@app/shared/components/subscription.component';
-import { takeUntil } from 'rxjs/operators';
+import { filter, takeUntil } from 'rxjs/operators';
 
 @Component({
   selector: 'app-project-status',
@@ -15,8 +17,8 @@ import { takeUntil } from 'rxjs/operators';
 export class ProjectStatusComponent extends SubscriptionComponent implements OnInit {
   readonly ProjectStatus = ProjectStatus;
 
-  statusCtrl: TypedFormControl<ProjectStatus> = new FormControl(status);
-  availableStatuses: Array<[string, ProjectStatus]> = [];
+  statusCtrl: TypedFormControl<ProjectStatus> = new FormControl();
+  project: Project;
 
   constructor(private viewState: ProjectViewStateService,
               private projectService: ProjectService) {
@@ -25,10 +27,13 @@ export class ProjectStatusComponent extends SubscriptionComponent implements OnI
 
   ngOnInit(): void {
     this.viewState.project
-      .pipe(takeUntil(this.unsubscribe))
+      .pipe(
+        takeUntil(this.unsubscribe),
+        filter(p => Boolean(p.id)),
+      )
       .subscribe(p => {
+        this.project = p;
         this.statusCtrl.reset(p.status, { emitEvent: false });
-        this.availableStatuses = this.projectService.getAvailableStatuses(p);
       });
 
     this.statusCtrl.valueChanges
@@ -38,7 +43,7 @@ export class ProjectStatusComponent extends SubscriptionComponent implements OnI
       });
   }
 
-  trackByStatus(index: number, item: [string, ProjectStatus]): ProjectStatus {
-    return item[1];
+  findAvailableStatuses = (value: ProjectStatus): StatusOptions<ProjectStatus> => {
+    return this.projectService.getAvailableStatuses(this.project);
   }
 }

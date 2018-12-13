@@ -15,6 +15,7 @@ import { CollapsedChipListComponent } from './components/collapsed-chip-list/col
 import { SearchComponent } from './components/search/search.component';
 import { SpeedDialItemComponent } from './components/speed-dial-item/speed-dial-item.component';
 import { SpeedDialComponent } from './components/speed-dial/speed-dial.component';
+import { StatusSelectWorkflowComponent } from './components/status-select-workflow/status-select-workflow.component';
 import { UserRolesFormComponent } from './components/user-roles-form/user-roles-form.component';
 import { AutofocusDirective } from './directives/autofocus.directive';
 import { NotImplementedDirective } from './directives/not-implemented.directive';
@@ -50,6 +51,7 @@ import { LanguageInfoPipe } from './pipes/language-info.pipe';
     SearchComponent,
     SpeedDialComponent,
     SpeedDialItemComponent,
+    StatusSelectWorkflowComponent,
     UserRolesFormComponent,
     RedactableDirective,
   ],
@@ -68,6 +70,7 @@ import { LanguageInfoPipe } from './pipes/language-info.pipe';
     SearchComponent,
     SpeedDialComponent,
     SpeedDialItemComponent,
+    StatusSelectWorkflowComponent,
     UserRolesFormComponent,
     RedactableDirective,
   ],
