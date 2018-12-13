@@ -3,17 +3,27 @@ import { AbstractControl, FormBuilder, Validators } from '@angular/forms';
 import { MatSnackBar } from '@angular/material';
 import { ActivatedRoute, Router } from '@angular/router';
 import { TitleAware, TitleProp } from '@app/core/decorators';
-import { Engagement, ModifiedEngagement, ProjectApproach, ProjectMedium, ProjectProduct } from '@app/core/models/engagement';
+import {
+  Engagement,
+  EngagementStatus,
+  ModifiedEngagement,
+  ProjectApproach,
+  ProjectMedium,
+  ProjectProduct,
+} from '@app/core/models/engagement';
 import { EngagementService } from '@app/core/services/engagement.service';
-import { filterRequired } from '@app/core/util';
+import { ProjectService } from '@app/core/services/project.service';
+import { enableControl, filterRequired, log } from '@app/core/util';
 import { ProjectViewStateService } from '@app/projects/project-view-state.service';
 import { popInOut } from '@app/shared/animations';
+import { StatusOptions } from '@app/shared/components/status-select-workflow/status-select-workflow.component';
 import { SubscriptionComponent } from '@app/shared/components/subscription.component';
 import { DateTime } from 'luxon';
 import { BehaviorSubject, combineLatest, Observable } from 'rxjs';
 import { map, startWith, takeUntil } from 'rxjs/operators';
 
 interface EngagementForm {
+  status: EngagementStatus;
   products: ProjectProduct[];
   mediums: ProjectMedium[];
   approaches: ProjectApproach[];
@@ -32,6 +42,7 @@ interface EngagementForm {
 @TitleAware()
 export class ProjectEngagementComponent extends SubscriptionComponent implements OnInit, TitleProp {
 
+  readonly EngagementStatus = EngagementStatus;
   readonly ProjectApproach = ProjectApproach;
   readonly ProjectProduct = ProjectProduct;
   readonly ProjectMedium = ProjectMedium;
@@ -40,6 +51,7 @@ export class ProjectEngagementComponent extends SubscriptionComponent implements
   readonly engagement$: Observable<Engagement> = this._engagement.pipe(filterRequired());
 
   form = this.formBuilder.group({
+    status: [],
     products: [[], Validators.required],
     mediums: [[], Validators.required],
     approaches: [[]],
@@ -53,6 +65,7 @@ export class ProjectEngagementComponent extends SubscriptionComponent implements
               private engagementService: EngagementService,
               private formBuilder: FormBuilder,
               private projectViewState: ProjectViewStateService,
+              private projectService: ProjectService,
               private router: Router,
               private snackBar: MatSnackBar) {
     super();
@@ -87,8 +100,9 @@ export class ProjectEngagementComponent extends SubscriptionComponent implements
       .subscribe(this._engagement);
 
     this.engagement$.subscribe(engagement => {
-      const {approaches, mediums, products, isDedicationPlanned, dedicationDate} = engagement;
+      const {status, approaches, mediums, products, isDedicationPlanned, dedicationDate} = engagement;
       const value: EngagementForm = {
+        status,
         approaches,
         mediums,
         products,
@@ -104,13 +118,13 @@ export class ProjectEngagementComponent extends SubscriptionComponent implements
     this.isDedicationPlanned.valueChanges
       .pipe(takeUntil(this.unsubscribe))
       .subscribe(value => {
-        if (value) {
-          this.dedicationDate.enable();
-        } else {
-          this.dedicationDate.disable();
-        }
+        enableControl(this.dedicationDate, value);
       });
   }
+
+  findAvailableStatuses = (status: EngagementStatus): StatusOptions<EngagementStatus> => {
+    return this.engagement ? this.projectService.getAvailableEngagementStatuses(this.engagement) : [];
+  };
 
   async onSave(): Promise<void> {
     const engagement = this.engagement;

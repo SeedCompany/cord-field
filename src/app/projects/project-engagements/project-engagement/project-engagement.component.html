@@ -1,4 +1,16 @@
 <form *ngIf="engagement" [formGroup]="form">
+
+  <mat-card>
+    <mat-card-title>Status</mat-card-title>
+    <app-status-select-workflow
+      [placeholder]="null"
+      [enum]="EngagementStatus"
+      [findAvailableStatuses]="findAvailableStatuses"
+      [original]="engagement?.status"
+      formControlName="status"
+    ></app-status-select-workflow>
+  </mat-card>
+
   <mat-card>
     <mat-card-title>PnP</mat-card-title>
     <mat-card-actions>
