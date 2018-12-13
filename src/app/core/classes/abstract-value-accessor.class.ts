@@ -49,10 +49,8 @@ export abstract class AbstractValueAccessor<T> extends SubscriptionComponent imp
    * @internal
    */
   writeValue(value: T) {
-    if (this._innerValue !== value) {
-      this._innerValue = value;
-      this._valueChange.next(value);
-    }
+    this._innerValue = value;
+    this._valueChange.next(value);
   }
 
   /**
