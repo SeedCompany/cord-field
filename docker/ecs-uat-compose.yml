@@ -21,8 +21,9 @@ services:
     environment:
       MONGO_DB_CONN: mongodb://cord-uat:wa0xMQPl1VKrsBcoR2a4@mongo-a.dev.olivetech.internal,mongo-b.dev.olivetech.internal,mongo-c.dev.olivetech.internal/cord-uat?replicaSet=dev
       NODE_ENV: uat
-      CREATE_FAKE_USERS: "true"
-      CREATE_TEST_FILES: "true"
+      CREATE_DEVELOPER_USERS: "true"
+      CREATE_CORD_TEAM_USERS: "true"
+      CREATE_TEST_USERS: "true"
       SERVICE_8001_NAME: client-tsco-cord-plo-uat
       MIGRATE: "true"
       DUMP_CONFIG: "true"
