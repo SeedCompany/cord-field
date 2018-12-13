@@ -12,8 +12,20 @@ app-speed-dial {
   z-index: 2;
 }
 
+form {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+
+  // 24px spacing around cards
+  margin: 12px;
+  mat-card {
+    margin: 12px;
+  }
+}
+
 mat-card {
-  margin: 24px;
+  min-width: 200px;
 }
 
 mat-card-content {
