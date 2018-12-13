@@ -129,8 +129,12 @@ export class ProjectService {
     return {...rest, languages, locationId, team, ...date} as ProjectFilterAPI;
   }
 
-  getAvailableStatuses(status: ProjectStatus): Array<[string, ProjectStatus]> {
+  getAvailableStatuses(project: Project): Array<[string, ProjectStatus]> {
+    return this.getAvailableStatusesInner(project.status)
+      .filter(([text, status]) => !status || project.possibleStatuses.includes(status));
+  }
 
+  private getAvailableStatusesInner(status: ProjectStatus): Array<[string, ProjectStatus]> {
     if (status === ProjectStatus.InDevelopment) {
       return [
         ['Submit for Approval', ProjectStatus.PendingApproval],

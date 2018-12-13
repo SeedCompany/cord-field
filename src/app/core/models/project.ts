@@ -23,6 +23,7 @@ export class Project {
   name: string;
   type: ProjectType;
   status: ProjectStatus;
+  possibleStatuses: ProjectStatus[];
   location: Location | null;
   mouStart: DateTime | null;
   mouEnd: DateTime | null;
@@ -46,6 +47,7 @@ export class Project {
       .replace(/ \(\d+\)$/, '');
     project.type = json.type || ProjectType.Translation;
     project.status = json.status || ProjectStatus.Active;
+    project.possibleStatuses = json.possibleStatuses || [];
     project.location = json.location ? Location.fromJson(json.location) : null;
     project.mouStart = json.mouStart ? DateTime.fromISO(json.mouStart) : null;
     project.mouEnd = json.mouEnd ? DateTime.fromISO(json.mouEnd) : null;
