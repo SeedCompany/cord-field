@@ -4,11 +4,14 @@ import { DateTime } from 'luxon';
 import { ProjectApproach } from './engagement/approach';
 import { ProjectMedium } from './engagement/medium';
 import { ProjectProduct } from './engagement/product';
+import { EngagementStatus } from './engagement/status';
 
-export { ProjectApproach, ProjectMedium, ProjectProduct };
+export { EngagementStatus, ProjectApproach, ProjectMedium, ProjectProduct };
 
 export class Engagement {
   id: string;
+  status: EngagementStatus;
+  possibleStatuses: EngagementStatus[];
   language: Language;
   products: ProjectProduct[];
   mediums: ProjectMedium[];
@@ -24,6 +27,8 @@ export class Engagement {
     const engagement = new Engagement();
 
     engagement.id = json.id;
+    engagement.status = json.status || EngagementStatus.InDevelopment;
+    engagement.possibleStatuses = json.possibleStatuses || [];
     engagement.language = Language.fromJson(json.language);
     engagement.products = json.products || [];
     engagement.mediums = json.mediums || [];
@@ -38,6 +43,7 @@ export class Engagement {
 
   withChanges(modified: ModifiedEngagement): Engagement {
     const engagement = clone(this);
+    engagement.status = modified.status;
     engagement.products = modified.products;
     engagement.mediums = modified.mediums;
     engagement.approaches = modified.approaches;
@@ -50,6 +56,7 @@ export class Engagement {
 }
 
 export interface ModifiedEngagement {
+  status: EngagementStatus;
   products: ProjectProduct[];
   mediums: ProjectMedium[];
   approaches: ProjectApproach[];

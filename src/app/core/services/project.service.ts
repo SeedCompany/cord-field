@@ -1,6 +1,7 @@
 import { HttpResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { SortDirection } from '@angular/material';
+import { Engagement, EngagementStatus } from '@app/core/models/engagement';
 
 import { AuthenticationService } from '@app/core/services/authentication.service';
 import { DateTime } from 'luxon';
@@ -165,6 +166,34 @@ export class ProjectService {
     }
 
     return [];
+  }
+
+  getAvailableEngagementStatuses(engagement: Engagement): Array<[string, EngagementStatus]> {
+    return this.getAvailableEngagementStatusesInner(engagement.status)
+      .filter(([text, status]) => !status || engagement.possibleStatuses.includes(status));
+  }
+
+  private getAvailableEngagementStatusesInner(status: EngagementStatus): Array<[string, EngagementStatus]> {
+    switch (status) {
+      case EngagementStatus.Active:
+        return [
+          ['Suspend', EngagementStatus.Suspended],
+          ['Terminate', EngagementStatus.Terminated],
+          ['Complete', EngagementStatus.Completed],
+          ['Convert', EngagementStatus.Converted],
+        ];
+      case EngagementStatus.InDevelopment:
+        return [
+          ['Approve', EngagementStatus.Active],
+        ];
+      case EngagementStatus.Suspended:
+        return [
+          ['Reactivate', EngagementStatus.Active],
+          ['Terminate', EngagementStatus.Terminated],
+        ];
+      default:
+        return [];
+    }
   }
 
   async saveExtension(projectId: string, extension: ProjectExtension) {

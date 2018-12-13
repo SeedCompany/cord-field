@@ -1,7 +1,14 @@
 import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
 import { TestBed } from '@angular/core/testing';
 import { CoreModule } from '@app/core/core.module';
-import { Engagement, ModifiedEngagement, ProjectApproach, ProjectMedium, ProjectProduct } from '@app/core/models/engagement';
+import {
+  Engagement,
+  EngagementStatus,
+  ModifiedEngagement,
+  ProjectApproach,
+  ProjectMedium,
+  ProjectProduct,
+} from '@app/core/models/engagement';
 import { environment } from '../../../environments/environment';
 import { EngagementService } from './engagement.service';
 
@@ -58,6 +65,7 @@ describe('EngagementService', () => {
   it('should save engagement data', (done: DoneFn) => {
     const id = 'iBFFFGvBVlIpvsKVanrbIYVBaPwkDnhjjb0.n_cPm_zyG_7D7WWLDT7ozQ.zfUnrX9tXoPtWtDc9PLhUw';
     const modified: ModifiedEngagement = {
+      status: EngagementStatus.Active,
       products: [ProjectProduct.FullBible],
       mediums: [ProjectMedium.EBook],
       approaches: [ProjectApproach.OralStorying],

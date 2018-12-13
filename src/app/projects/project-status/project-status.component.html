@@ -1,12 +1,6 @@
-<mat-form-field color="accent">
-  <mat-select placeholder="Status"
-              [formControl]="statusCtrl">
-    <mat-option [value]="statusCtrl.value"
-                [disabled]="true">{{ ProjectStatus.forUI(statusCtrl.value) }}
-    </mat-option>
-    <mat-option *ngFor="let status of availableStatuses; trackBy: trackByStatus"
-                [value]="status[1]">
-      {{ status[0] }}
-    </mat-option>
-  </mat-select>
-</mat-form-field>
+<app-status-select-workflow
+  [enum]="ProjectStatus"
+  [findAvailableStatuses]="findAvailableStatuses"
+  [original]="project?.status"
+  [formControl]="statusCtrl"
+></app-status-select-workflow>

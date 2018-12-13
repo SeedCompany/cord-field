@@ -48,7 +48,9 @@ const config: ChangeConfig<Project> = {
   estimatedSubmission: {
     accessor: accessDates,
   },
-  status: {},
+  status: {
+    forceRefresh: true, // Status changes engagement statuses
+  },
   location: {
     accessor: returnId,
     toServer: returnId,
@@ -58,6 +60,7 @@ const config: ChangeConfig<Project> = {
   languages: {
     accessor: returnId,
     toServer: mapChangeList<Language, string, string>(returnId, returnId),
+    forceRefresh: true, // Languages changes engagements
   },
   partnerships: {
     accessor: returnId,
