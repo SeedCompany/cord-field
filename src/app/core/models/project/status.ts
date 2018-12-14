@@ -40,4 +40,51 @@ export namespace ProjectStatus {
     [ProjectStatus.Terminated]: 'Terminated',
     [ProjectStatus.Completed]: 'Completed',
   });
+
+  export function getColor(status: ProjectStatus) {
+    if (ProjectStatus.Grouping.Active.includes(status)) {
+      return 'active';
+    }
+    if (ProjectStatus.Grouping.InDevelopment.includes(status)) {
+      return 'dev';
+    }
+    if (ProjectStatus.Grouping.Pending.includes(status)) {
+      return 'pending';
+    }
+    if (ProjectStatus.Grouping.Stopped.includes(status)) {
+      return 'stopped';
+    }
+    if (ProjectStatus.Grouping.Finished.includes(status)) {
+      return 'finished';
+    }
+  }
+  export namespace Grouping {
+    export const InDevelopment = [
+      ProjectStatus.EarlyConversations,
+      ProjectStatus.PrepForConsultantEndorsement,
+      ProjectStatus.PrepForFinancialEndorsement,
+      ProjectStatus.FinalizingProposal,
+    ];
+    export const Pending = [
+      ProjectStatus.PendingConceptApproval,
+      ProjectStatus.PendingConsultantEndorsement,
+      ProjectStatus.PendingFinancialEndorsement,
+      ProjectStatus.PendingAreaDirectorApproval,
+      ProjectStatus.PendingRegionalDirectorApproval,
+      ProjectStatus.PendingFinancialEndorsement,
+      ProjectStatus.OnHoldFinanceConfirmation,
+    ];
+    export const Active = [
+      ProjectStatus.Active,
+    ];
+    export const Stopped = [
+      ProjectStatus.Suspended,
+      ProjectStatus.Rejected,
+      ProjectStatus.Terminated,
+    ];
+    export const Finished = [
+      ProjectStatus.DidNotDevelop,
+      ProjectStatus.Completed,
+    ];
+  }
 }
