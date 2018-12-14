@@ -136,36 +136,81 @@ export class ProjectService {
   }
 
   private getAvailableStatusesInner(status: ProjectStatus): Array<[string, ProjectStatus]> {
-    if (status === ProjectStatus.InDevelopment) {
-      return [
-        ['Submit for Approval', ProjectStatus.PendingApproval],
-      ];
+    switch (status) {
+      case ProjectStatus.EarlyConversations: // FC
+        return [
+          ['Submit for Concept Approval', ProjectStatus.PendingConceptApproval],
+          [`Won't do`, ProjectStatus.DidNotDevelop],
+        ];
+      case ProjectStatus.PendingConceptApproval: // AD
+        return [
+          ['Approve Concept', ProjectStatus.PrepForConsultantEndorsement],
+          ['Send Back for Corrections', ProjectStatus.EarlyConversations],
+          ['Reject', ProjectStatus.Rejected],
+        ];
+      case ProjectStatus.PrepForConsultantEndorsement: // FC
+        return [
+          ['Submit for Consultant Endorsement', ProjectStatus.PendingConsultantEndorsement],
+          ['End Development', ProjectStatus.DidNotDevelop],
+        ];
+      case ProjectStatus.PendingConsultantEndorsement: // Consultant
+        return [
+          ['Endorse Plan', ProjectStatus.PrepForFinancialEndorsement],
+          ['Do Not Endorse Plan', ProjectStatus.PrepForFinancialEndorsement],
+          ['End Development', ProjectStatus.DidNotDevelop],
+        ];
+      case ProjectStatus.PrepForFinancialEndorsement: // FC
+        return [
+          ['Submit for Financial Endorsement', ProjectStatus.PendingFinancialEndorsement],
+          ['End Development', ProjectStatus.DidNotDevelop],
+        ];
+      case ProjectStatus.PendingFinancialEndorsement: // FA
+        return [
+          ['Strongly Endorse', ProjectStatus.FinalizingProposal],
+          ['Endorse with Hesitation', ProjectStatus.FinalizingProposal],
+        ];
+      case ProjectStatus.FinalizingProposal: // FC
+        return [
+          ['Submit for Area Director Approval', ProjectStatus.PendingAreaDirectorApproval],
+          ['End Development', ProjectStatus.DidNotDevelop],
+        ];
+      case ProjectStatus.PendingAreaDirectorApproval: // AD
+        return [
+          ['Approve for Regional Director Approval', ProjectStatus.PendingRegionalDirectorApproval],
+          ['Send Back for Corrections', ProjectStatus.FinalizingProposal],
+          ['Reject', ProjectStatus.Rejected],
+        ];
+      case ProjectStatus.PendingRegionalDirectorApproval: // RD
+        return [
+          ['Approve for Finance Confirmation', ProjectStatus.PendingFinanceConfirmation],
+          ['Send Back for Corrections', ProjectStatus.EarlyConversations],
+          ['Reject', ProjectStatus.Rejected],
+        ];
+      case ProjectStatus.PendingFinanceConfirmation: // Controller
+        return [
+          ['Confirm Project', ProjectStatus.Active],
+          ['Hold Project', ProjectStatus.OnHoldFinanceConfirmation],
+          ['Reject', ProjectStatus.Rejected],
+        ];
+      case ProjectStatus.OnHoldFinanceConfirmation: // FA
+        return [
+          ['Confirm Project', ProjectStatus.Active],
+          ['Reject', ProjectStatus.Rejected],
+        ];
+      case ProjectStatus.Active:
+        return [
+          ['Suspend Project', ProjectStatus.Suspended],
+          ['Terminate Project', ProjectStatus.Terminated],
+          ['Complete Project', ProjectStatus.Completed],
+        ];
+      case ProjectStatus.Suspended:
+        return [
+          ['Reactivate Project', ProjectStatus.Active],
+          ['Terminate Project', ProjectStatus.Terminated],
+        ];
+      default:
+        return [];
     }
-
-    if (status === ProjectStatus.PendingApproval) {
-      return [
-        ['Send Back for Corrections', ProjectStatus.InDevelopment],
-        ['Reject Project', ProjectStatus.Rejected],
-        ['Approve Project', ProjectStatus.Active],
-      ];
-    }
-
-    if (status === ProjectStatus.Active) {
-      return [
-        ['Suspend Project', ProjectStatus.Suspended],
-        ['Terminate Project', ProjectStatus.Terminated],
-        ['Complete Project', ProjectStatus.Completed],
-      ];
-    }
-
-    if (status === ProjectStatus.Suspended) {
-      return [
-        ['Reactivate Project', ProjectStatus.Active],
-        ['Terminate Project', ProjectStatus.Terminated],
-      ];
-    }
-
-    return [];
   }
 
   getAvailableEngagementStatuses(engagement: Engagement): Array<[string, EngagementStatus]> {
