@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { AbstractControl, FormBuilder, Validators } from '@angular/forms';
+import { AbstractControl, FormBuilder } from '@angular/forms';
 import { MatSnackBar } from '@angular/material';
 import { ActivatedRoute, Router } from '@angular/router';
 import { TitleAware, TitleProp } from '@app/core/decorators';
@@ -13,7 +13,7 @@ import {
 } from '@app/core/models/engagement';
 import { EngagementService } from '@app/core/services/engagement.service';
 import { ProjectService } from '@app/core/services/project.service';
-import { enableControl, filterRequired, log } from '@app/core/util';
+import { enableControl, filterRequired } from '@app/core/util';
 import { ProjectViewStateService } from '@app/projects/project-view-state.service';
 import { popInOut } from '@app/shared/animations';
 import { StatusOptions } from '@app/shared/components/status-select-workflow/status-select-workflow.component';
@@ -52,8 +52,8 @@ export class ProjectEngagementComponent extends SubscriptionComponent implements
 
   form = this.formBuilder.group({
     status: [],
-    products: [[], Validators.required],
-    mediums: [[], Validators.required],
+    products: [[]],
+    mediums: [[]],
     approaches: [[]],
     isLukePartnership: [false],
     isFirstScripture: [false],
