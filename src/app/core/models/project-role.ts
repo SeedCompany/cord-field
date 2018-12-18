@@ -48,6 +48,8 @@ export namespace ProjectRole {
   ];
 
   export const needsLocations = [
+    ProjectRole.AreaDirector,
+    ProjectRole.RegionalDirector,
     ProjectRole.Consultant,
     ProjectRole.ConsultantManager,
     ProjectRole.Controller,
