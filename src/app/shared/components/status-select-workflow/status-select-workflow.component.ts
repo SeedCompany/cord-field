@@ -1,9 +1,9 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, Input, NgZone, OnInit } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { AbstractValueAccessor, ValueAccessorProvider } from '@app/core/classes/abstract-value-accessor.class';
 import { GoodEnum } from '@app/core/models/enum';
 import { enableControl, TypedFormControl } from '@app/core/util';
-import { takeUntil } from 'rxjs/operators';
+import { first, mapTo, switchMap, takeUntil } from 'rxjs/operators';
 
 export type StatusOptions<T> = Array<[string, T]>;
 
@@ -22,15 +22,33 @@ export class StatusSelectWorkflowComponent<T extends GoodEnum<T>> extends Abstra
   @Input() findAvailableStatuses: (value: T) => StatusOptions<T>;
   @Input() original: T;
 
-  statusCtrl: TypedFormControl<T> = new FormControl(status);
+  statusCtrl: TypedFormControl<T> = new FormControl();
   availableStatuses: StatusOptions<T> = [];
+
+  constructor(private zone: NgZone, private changeDetector: ChangeDetectorRef) {
+    super();
+  }
 
   ngOnInit(): void {
     this.externalChanges.subscribe(value => {
-      this.statusCtrl.reset(value, { emitEvent: false });
       this.availableStatuses = value ? this.findAvailableStatuses(value) : [];
       enableControl(this.statusCtrl, this.availableStatuses.length > 0);
     });
+
+    // Wait for select options to be rendered before setting value.
+    // Select component uses currently rendered options to "select" the value when setting.
+    // If there are no options rendered then changing value does nothing.
+    // What a PITA this was to figure out. This is exactly why declarative APIs (React) are better.
+    this.externalChanges
+      .pipe(
+        // on change, wait for stable zone aka rendering complete.
+        switchMap((status) => this.zone.onStable.pipe(first(), mapTo(status))),
+      )
+      .subscribe((status) => {
+        // Now that changes have settled, change value, and detect changes to re-render
+        this.statusCtrl.reset(status, { emitEvent: false });
+        this.changeDetector.detectChanges();
+      });
 
     this.statusCtrl.valueChanges
       .pipe(takeUntil(this.unsubscribe))
