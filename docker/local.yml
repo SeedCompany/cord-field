@@ -9,7 +9,7 @@ services:
   cord-api-plo:
     image: 103805181946.dkr.ecr.us-west-2.amazonaws.com/client/cord-api-plo:latest
     ports:
-        - 8002:8001
+        - 8001
     links:
       - mongo1
       - mongo2
