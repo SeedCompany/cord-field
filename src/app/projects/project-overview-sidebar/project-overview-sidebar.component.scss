@@ -1,0 +1,32 @@
+@import "~src/styles/imports";
+
+:host {
+  @extend %component-defaults;
+  background: mat-background($theme, card);
+}
+
+.picture {
+  display: flex;
+  flex-direction: column;
+  padding: 16px;
+}
+
+.flex-grow {
+  flex: 1;
+}
+
+.location, .sensitivity {
+  margin: 0;
+}
+
+.stage {
+  padding: 16px;
+}
+
+mat-progress-bar {
+  margin: 8px 0;
+}
+
+a.active {
+  color: mat-color($accent);
+}

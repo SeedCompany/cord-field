@@ -1,0 +1,23 @@
+<mat-progress-spinner
+  [class.is-active]="progress"
+  [diameter]="68"
+  mode="indeterminate"
+  color="accent"
+></mat-progress-spinner>
+<!-- Fab -->
+<button mat-fab
+        [disabled]="disabled"
+        [@preventInitialAnimation]
+        [satPopoverAnchorFor]="dial"
+        (click)="dial.toggle()">
+  <mat-icon [@spinInOut]="'in'" *ngIf="dial.isOpen()">{{ closeIcon }}</mat-icon>
+  <mat-icon [@spinInOut]="'in'" *ngIf="!dial.isOpen()">{{ icon }}</mat-icon>
+</button>
+<!-- Actions -->
+<sat-popover #dial verticalAlign="{{ align }}">
+  <div class="dial"
+       [class.actions-above]="align == 'above'"
+       [class.actions-below]="align == 'below'">
+    <ng-content select="app-speed-dial-item"></ng-content>
+  </div>
+</sat-popover>

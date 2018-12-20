@@ -1,0 +1,87 @@
+
+<form *ngIf="extension" [formGroup]="form">
+  <mat-card>
+    <mat-card-title>Summary</mat-card-title>
+    <mat-card-content>
+      <mat-form-field color="accent">
+        <input
+          matInput
+          formControlName="summary"
+          placeholder="Summary"
+        />
+        <mat-error>Please summarize the reason for the extension</mat-error>
+      </mat-form-field>
+
+      <mat-form-field color="accent">
+        <mat-select multiple placeholder="Type(s)" formControlName="types">
+          <mat-option
+            *ngFor="let type of ExtensionType.entries(); trackBy: ExtensionType.trackEntryBy"
+            [value]="type.value">
+            {{ type.ui }}
+          </mat-option>
+        </mat-select>
+        <mat-error>Please select one or more types</mat-error>
+      </mat-form-field>
+
+      <mat-form-field color="accent">
+        <textarea
+          matInput
+          [rows]="3"
+          formControlName="additionalComment"
+          placeholder="Additional Comments"
+        ></textarea>
+      </mat-form-field>
+
+    </mat-card-content>
+  </mat-card>
+
+  <mat-card *ngIf="types.value.includes(ExtensionType.Time)">
+    <mat-card-title>Time</mat-card-title>
+    <mat-card-content>
+      <mat-form-field color="accent">
+        <input matInput
+               formControlName="endDate"
+               [matDatepicker]="datepicker"
+               placeholder="End Date">
+        <mat-datepicker-toggle matSuffix [for]="datepicker"></mat-datepicker-toggle>
+        <mat-datepicker #datepicker></mat-datepicker>
+        <mat-error *ngIf="endDate.errors?.matDatepickerParse">Invalid Date</mat-error>
+        <mat-error *ngIf="endDate.errors?.required">Please select a new end date</mat-error>
+      </mat-form-field>
+    </mat-card-content>
+  </mat-card>
+
+  <mat-card *ngIf="types.value.includes(ExtensionType.Language)">
+    <mat-card-title>Languages</mat-card-title>
+    <mat-card-content>
+      <app-autocomplete-language
+        formControlName="languages"
+        placeholder="Languages"
+        [chips]="true"
+        [dedupe]="true"
+        [dedupeOptions]="project?.languages || []"
+        (removed)="onRemoveLanguage($event)"
+      ></app-autocomplete-language>
+    </mat-card-content>
+  </mat-card>
+
+  <mat-card *ngIf="types.value.includes(ExtensionType.Budget)">
+    <mat-card-title>Budget</mat-card-title>
+  </mat-card>
+</form>
+
+<app-speed-dial
+  *ngIf="form.disabled || (form.dirty && form.valid)"
+  align="below"
+  icon="save"
+  [disabled]="form.disabled"
+  [progress]="form.disabled"
+  [@popInOut]
+>
+  <app-speed-dial-item tooltip="Discard" color="warn" (click)="onReset()">
+    <mat-icon>delete</mat-icon>
+  </app-speed-dial-item>
+  <app-speed-dial-item tooltip="Save" color="accent" (click)="onSave()">
+    <mat-icon>save</mat-icon>
+  </app-speed-dial-item>
+</app-speed-dial>

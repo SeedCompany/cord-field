@@ -1,0 +1,21 @@
+<button mat-icon-button (click)="onToggle()">
+  <mat-icon class="mat-primary">search</mat-icon>
+</button>
+<mat-form-field *ngIf="focused" [@slideInOut] floatLabel="never" color="accent">
+  <input matInput type="text"
+         placeholder="Search"
+         autofocus
+         [(ngModel)]="value"
+         (keydown.esc)="onClose()"
+         (change)="onChange()"
+         (blur)="onBlur()"
+  />
+  <button mat-icon-button
+          matSuffix
+          aria-label="Clear"
+          [class.hidden]="!value"
+          (click)="onClear()"
+  >
+    <mat-icon>close</mat-icon>
+  </button>
+</mat-form-field>

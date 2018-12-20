@@ -1,0 +1,30 @@
+# Developer Note:
+# These files are for the CI/CD system. The passwords used here are for testing purposes only and should only
+# be used on systems that are not publicly accessible (i.e., behind an ACL of some sort). Each of these
+# `ecs-*-compose.yml` files represents one of the deployment environments for the Bamboo CI/CD system.
+
+version: '2'
+
+services:
+  cord-field:
+    image: 103805181946.dkr.ecr.us-west-2.amazonaws.com/client/cord-field:${BAMBOO_BRANCH_TAG}
+    ports: [ "80" ]
+    env_file: .env
+    environment:
+      NG_BUILD_TARGET: sqa
+      SERVICE_80_NAME: client-tsco-cord-field-sqa
+    mem_limit: 256000000
+
+  cord-api-plo:
+    image: 103805181946.dkr.ecr.us-west-2.amazonaws.com/client/cord-api-plo:latest
+    ports: [ "8001" ]
+    environment:
+      MONGO_DB_CONN: mongodb://cord-sqa:Zh6ZApeVteMqC%406A%26cIs@mongo-a.dev.olivetech.internal,mongo-b.dev.olivetech.internal,mongo-c.dev.olivetech.internal/cord-sqa?replicaSet=dev
+      NODE_ENV: sqa
+      CREATE_DEVELOPER_USERS: "true"
+      CREATE_CORD_TEAM_USERS: "true"
+      CREATE_TEST_USERS: "true"
+      SERVICE_8001_NAME: client-tsco-cord-plo-sqa
+      MIGRATE: "true"
+      DUMP_CONFIG: "true"
+    mem_limit: 512000000

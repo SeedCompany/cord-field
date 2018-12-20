@@ -1,0 +1,83 @@
+// Put global styles in this file.
+// Note: Don't reference this file in component style files. Use `imports` instead.
+
+@import "imports";
+
+@include mat-core($config);
+@include angular-material-theme($theme);
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  -webkit-font-smoothing: antialiased;
+  -ms-overflow-style: none;
+  overflow: auto;
+}
+
+body {
+  margin: 0;
+  display: flex;
+  height: 100vh;
+  background-color: mat-background($theme, background);
+}
+
+// Text color for sorted headers on tables should match the sorting arrow (be darker)
+.mat-sort-header-sorted {
+  color: mat-foreground($theme, text);
+}
+
+.mat-row {
+  // Hide row borders by default.
+  .mat-table & { // extra selection here to override base styles without using !important
+    border-bottom-style: none;
+  }
+
+  // In case rows are clickable don't show outline
+  &:focus {
+    outline: 0;
+  }
+
+  &.row-hover:hover {
+    // TODO CF2-200 Define via theme variable. It isn't defined by material library.
+    background-color: map-get($mat-grey, 200);
+    cursor: pointer;
+  }
+}
+
+// Add a bit more space to first chip inside table so its shadow doesn't get cut off
+.mat-cell .mat-chip-list .mat-standard-chip:first-of-type {
+  margin-left: $mat-chips-chip-margin + 2px;
+}
+
+// Change tab active text color to stand out more (matches focus)
+.mat-tab-link.mat-tab-label-active {
+  opacity: 1;
+}
+
+// Use secondary text color for secondary text on lists
+// MD doesn't explicitly specify this but all of their images show it
+.mat-list, .mat-nav-list, .mat-selection-list {
+  .mat-list-item .mat-line:nth-child(n+2) {
+    color: mat-foreground($theme, secondary-text);
+  }
+}
+
+// Keep input suffixes at the same height as the text input for chip lists
+.mat-form-field.mat-form-field-type-mat-chip-list .mat-input-suffix {
+  align-self: flex-end;
+  margin-bottom: 6px;
+}
+
+// Fix icons in disabled menu items to also be disabled color (matches MD spec).
+.mat-menu-item[disabled] .mat-icon {
+  color: mat-foreground($theme, disabled);
+}
+
+// Center progress spinner inside buttons
+.mat-button, .mat-flat-button, .mat-raised-button {
+  mat-progress-spinner {
+    margin: 6px auto;
+  }
+}

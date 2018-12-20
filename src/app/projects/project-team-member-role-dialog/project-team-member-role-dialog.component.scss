@@ -1,0 +1,25 @@
+@import "~src/styles/imports";
+
+:host {
+  @extend %component-defaults;
+}
+
+.mat-dialog-actions {
+  display: flex;
+  flex-direction: row-reverse;
+}
+
+.mat-dialog-actions .mat-button + .mat-button {
+  margin-left: 0;
+  margin-right: 8px;
+}
+
+.loading {
+  margin-top: 16px;
+  margin-bottom: 16px;
+  align-self: center;
+}
+
+mat-error {
+  @include mat-typography-level-to-styles($config, subheading-1);
+}

@@ -1,0 +1,46 @@
+@import "~src/styles/imports";
+
+:host {
+  @extend %component-defaults;
+  flex: 1;
+}
+
+mat-card {
+  flex: 1;
+  padding-left: 3em;
+  overflow-y: scroll;
+}
+
+mat-card-content {
+  max-width: 45em;
+}
+
+mat-card-content, .container {
+  display: flex;
+  flex-direction: column;
+}
+
+section:not(:first-child) {
+  margin-top: 1.25em;
+}
+
+.name-container {
+  display: flex;
+
+  mat-form-field {
+    flex: 1;
+
+    &:not(:first-child) {
+      margin-left: 24px;
+    }
+  }
+}
+
+button {
+  width: fit-content;
+}
+
+.none {
+  color: mat-foreground($theme, disabled);
+  user-select: none;
+}

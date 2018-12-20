@@ -1,0 +1,92 @@
+// Include this file in components to get access to variables, mixins, etc.
+// Note: Don't define global styles here.
+
+@import "theme";
+@import "variables";
+
+%component-defaults {
+  display: flex;
+  flex-direction: column;
+}
+
+@mixin avatar($size: 0) {
+  border-radius: 50%;
+  flex-shrink: 0;
+  @if ($size > 0) {
+    width: $size;
+    height: $size;
+  }
+}
+
+/**
+ * Mixin to apply spacing for hints/errors that are multiple lines.
+ * Copied from material's _form-field-theme.scss file. Changes denoted with comment.
+ */
+@mixin form-field-extra-subscript-lines($lines: 1) {
+  ::ng-deep {
+    $line-height: mat-line-height($config, input);
+    $subscript-font-scale: 0.75;
+    $line-spacing: ($line-height - 1) / 2;
+    $subscript-margin-top: (0.5em / $subscript-font-scale - ($line-spacing * 2));
+    // Change: Multiply number of lines here
+    $wrapper-padding-bottom: ($subscript-margin-top + $line-height) * $subscript-font-scale * $lines;
+
+    .mat-form-field-underline {
+      bottom: $wrapper-padding-bottom;
+    }
+    .mat-form-field-wrapper {
+      padding-bottom: $wrapper-padding-bottom;
+    }
+    .mat-form-field-subscript-wrapper {
+      top: calc(100% - #{$wrapper-padding-bottom / $subscript-font-scale});
+
+      // Change: Add `line` class to apply spacing.
+      // First line already has spacing from default styles.
+      .mat-hint, .mat-error {
+        .line:not(:first-of-type) {
+          margin-top: $subscript-margin-top;
+        }
+      }
+    }
+  }
+}
+
+@function mat-foreground($theme, $item) {
+  $foreground-items: (// Just for easy IDE help - "Quick Definition"
+    base:              black,
+    divider:           $dark-dividers,
+    dividers:          $dark-dividers,
+    disabled:          $dark-disabled-text,
+    disabled-button:   rgba(black, 0.26),
+    disabled-text:     $dark-disabled-text,
+    hint-text:         $dark-disabled-text,
+    secondary-text:    $dark-secondary-text,
+    icon:              rgba(black, 0.54),
+    icons:             rgba(black, 0.54),
+    text:              rgba(black, 0.87),
+    slider-min:        rgba(black, 0.87),
+    slider-off:        rgba(black, 0.26),
+    slider-off-active: rgba(black, 0.38),
+  );
+  @return map-get(map-get($theme, foreground), $item);
+}
+
+@function mat-background($theme, $item) {
+  $background-items: (// Just for easy IDE help - "Quick Definition"
+    status-bar: map_get($mat-grey, 300),
+    app-bar: map_get($mat-grey, 100),
+    background: map_get($mat-grey, 50),
+    hover: rgba(black, 0.04),
+    card: white,
+    dialog: white,
+    disabled-button: rgba(black, 0.12),
+    raised-button: white,
+    focused-button: $dark-focused,
+    selected-button: map_get($mat-grey, 300),
+    selected-disabled-button: map_get($mat-grey, 400),
+    disabled-button-toggle: map_get($mat-grey, 200),
+    unselected-chip: map_get($mat-grey, 300),
+    disabled-list-option: map_get($mat-grey, 200),
+  );
+  @return map-get(map-get($theme, background), $item);
+}

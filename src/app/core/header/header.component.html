@@ -1,0 +1,39 @@
+<mat-toolbar>
+  <mat-toolbar-row class="mat-typography nav-toolbar">
+    <span class="toolbar-icon">
+      <mat-icon svgIcon="cord"></mat-icon>
+    </span>
+
+    <a mat-button color="primary" routerLink="/projects" routerLinkActive="active">Projects</a>
+    <a mat-button color="primary" routerLink="/tasks" routerLinkActive="active">Tasks</a>
+    <a mat-button color="primary" routerLink="/languages" routerLinkActive="active">Languages</a>
+    <a mat-button color="primary" routerLink="/people" routerLinkActive="active">People</a>
+    <a mat-button color="primary" routerLink="/organizations" routerLinkActive="active">Organizations</a>
+    <button mat-icon-button color="accent" [matMenuTriggerFor]="addMenu">
+      <mat-icon>add_circle</mat-icon>
+    </button>
+    <mat-menu #addMenu="matMenu">
+      <button mat-menu-item (click)="onCreateProject()">New Project</button>
+      <button mat-menu-item (click)="onCreatePerson()">New Person</button>
+    </mat-menu>
+
+    <span class="nav-spacer"></span>
+
+    <app-search></app-search>
+    <button mat-icon-button color="primary">
+      <mat-icon>notifications</mat-icon>
+    </button>
+
+    <button mat-button class="profile-menu-button" color="primary" [matMenuTriggerFor]="profileMenu">
+      {{ currentUser?.fullName }}
+      <mat-icon class="profile-menu-arrow-down">arrow_drop_down</mat-icon>
+    </button>
+    <mat-menu #profileMenu="matMenu">
+      <a routerLink="/people/{{ currentUser?.id }}" mat-menu-item>Profile</a>
+      <button mat-menu-item>Settings</button>
+      <button mat-menu-item (click)="logout()">Logout</button>
+    </mat-menu>
+
+  </mat-toolbar-row>
+</mat-toolbar>
+<router-outlet></router-outlet>

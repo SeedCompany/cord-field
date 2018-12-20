@@ -1,0 +1,46 @@
+@import "~src/styles/imports";
+
+:host {
+  @extend %component-defaults;
+  flex: 1;
+  justify-content: center;
+  align-items: center;
+}
+
+mat-card {
+  width: 400px;
+  display: flex;
+  flex-direction: column;
+}
+
+mat-card-title {
+  display: flex;
+}
+
+.icon {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  margin-right: .5em;
+}
+
+mat-card-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+mat-card-actions {
+  display: flex;
+  margin-bottom: 0 !important;
+  margin-left: 0;
+}
+
+.footer {
+  margin-top: 8px;
+}
+
+.new-password {
+  @include form-field-extra-subscript-lines(2);
+}

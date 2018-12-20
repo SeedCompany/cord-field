@@ -1,0 +1,53 @@
+@import "~src/styles/imports";
+
+:host {
+  flex: 1;
+  @extend %component-defaults;
+  background: mat-background($theme, card);
+
+  padding-left: 44px;
+  overflow-y: scroll;
+}
+
+mat-card-content {
+  display: flex;
+  flex-direction: column;
+  max-width: 35em;
+}
+
+.flex-row {
+  display: flex;
+
+  // Add horizontal spacing between form fields
+  > * + mat-form-field {
+    margin-left: 12px;
+  }
+}
+
+.flex-column {
+  display: flex;
+  flex-direction: column;
+}
+
+.center-items {
+  align-items: center;
+}
+
+.flex-grow {
+  flex: 1;
+}
+
+.mat-icon-button {
+  margin-left: 4px;
+}
+
+.mat-button {
+  align-self: flex-start;
+  margin-bottom: 16px;
+
+  // Better align icons within button
+  mat-icon {
+    margin-top: -3px;
+    margin-left: -5px;
+  }
+}

@@ -1,0 +1,109 @@
+<mat-card class="partners">
+  <mat-card-title>Partners</mat-card-title>
+  <mat-card-content [formGroup]="form">
+    <mat-accordion displayMode="flat"
+                   formArrayName="partnerships">
+
+      <mat-expansion-panel *ngFor="let partnership of partnerships.controls; trackBy: trackById; let index=index"
+                           [formGroupName]="index"
+                           [expanded]="isCardOpened(index)"
+                           (opened)="onCardOpen(index)"
+                           (closed)="onCardClose(index)"
+                           [class.mat-elevation-z0]="true">
+        <mat-expansion-panel-header collapsedHeight="72px"
+                                    expandedHeight="72px">
+          <mat-panel-title>
+            <app-avatar-letter color="primary">{{ partnership.value.organization?.name.charAt(0) }}</app-avatar-letter>
+            <div class="title">
+              <span class="name">{{ partnership.value.organization?.name }}</span>
+              <small *ngIf="!isCardOpened(index)">{{ partnership.value.types?.map(PartnershipType.forUI).join(',
+                ') }}</small>
+            </div>
+          </mat-panel-title>
+          <mat-panel-description *ngIf="!isCardOpened(index)">
+            <div>
+              <div>MOU — {{ PartnershipAgreementStatus.forUI(partnership.value.mouStatus) }}</div>
+              <div>Partner Agreement — {{ PartnershipAgreementStatus.forUI(partnership.value.agreementStatus) }}
+              </div>
+            </div>
+          </mat-panel-description>
+        </mat-expansion-panel-header>
+
+        <ng-template matExpansionPanelContent>
+          <mat-form-field color="accent"
+                          class="types">
+            <mat-select multiple
+                        placeholder="Types"
+                        formControlName="types">
+              <mat-option *ngFor="let type of PartnershipType.entries(); trackBy: PartnershipType.trackEntryBy"
+                          [value]="type.value">
+                {{ type.ui }}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+
+          <div class="mat-body-2">MOU</div>
+          <button mat-button
+                  color="accent">
+            UPLOAD
+            <mat-icon>file_upload</mat-icon>
+          </button>
+
+          <mat-form-field color="accent"
+                          class="upload-status">
+            <mat-select placeholder="Status"
+                        formControlName="mouStatus">
+              <mat-option *ngFor="let status of PartnershipAgreementStatus.entries(); trackBy: PartnershipAgreementStatus.trackEntryBy"
+
+                          [value]="status.value">
+                {{ status.ui }}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+
+          <div class="mat-body-2">Partner Agreement</div>
+          <button mat-button
+                  color="accent">
+            UPLOAD
+            <mat-icon>file_upload</mat-icon>
+          </button>
+
+          <mat-form-field color="accent"
+                          class="upload-status">
+            <mat-select placeholder="Status"
+                        formControlName="agreementStatus">
+              <mat-option *ngFor="let status of PartnershipAgreementStatus.entries(); trackBy: PartnershipAgreementStatus.trackEntryBy"
+
+                          [value]="status.value">
+                {{ status.ui }}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+
+          <div class="actions">
+            <button mat-button
+                    color="warn"
+                    (click)="onDelete(index)">REMOVE</button>
+          </div>
+        </ng-template>
+      </mat-expansion-panel>
+    </mat-accordion>
+
+    <app-autocomplete-organization *ngIf="adding"
+                                   placeholder="Search Organizations"
+                                   [autoFocus]="true"
+                                   [clearButton]="true"
+                                   (optionSelected)="onSelect($event)"
+                                   (cancel)="adding = false">
+    </app-autocomplete-organization>
+
+  </mat-card-content>
+
+  <mat-card-actions *ngIf="!adding">
+    <button mat-button
+            color="accent"
+            (click)="adding = true">
+      ADD PARTNER
+    </button>
+  </mat-card-actions>
+</mat-card>

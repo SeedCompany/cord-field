@@ -1,0 +1,68 @@
+@import "~@angular/material/theming";
+
+// Seed Co Color Palette v2 (12.20.17)
+$seed-green: #64b145;
+$seed-gray: #838385;
+$seed-text-gray: #626366;
+$seed-secondary: (
+  light-green: #c2ff00,
+  teal: #29826f,
+  dark-blue: #0023a2,
+  light-blue: #45b5f0,
+  amber: #fabd19,
+  red: #d83c26,
+  deep-red: #e81700,
+);
+
+// Underbelly Green Palette (Sketch Jan 2018)
+$underbelly-green: (
+  100: #cbebb7,
+  200: #a3db7f,
+  300: #6fbf3d,
+  500: #409e04,
+  600: #358701,
+  700: #235c00,
+  contrast: (
+    100: $dark-primary-text,
+    200: $dark-primary-text,
+    300: $dark-primary-text,
+    500: $light-primary-text,
+    600: $light-primary-text,
+    700: $light-primary-text,
+  ),
+);
+$underbelly-green-palette: mat-palette($underbelly-green);
+
+// 200, 500 needed for slide toggle switch
+$seed-green-palette: (
+  default: $seed-green,
+  lighter: #96e474,
+  darker: #318114,
+  default-contrast: $dark-primary-text,
+  lighter-contrast: $dark-primary-text,
+  darker-contrast: $light-primary-text,
+
+  500: $seed-green,
+  200: $seed-green,
+  '500-contrast': $dark-primary-text,
+  '200-contrast': $dark-primary-text,
+);
+$seed-gray-palette: (
+  default: $seed-gray,
+  lighter: #b2b2b5,
+  darker: #565658,
+  default-contrast: $dark-primary-text,
+  lighter-contrast: $dark-primary-text,
+  darker-contrast: $light-primary-text,
+
+  500: $seed-gray,
+  200: $seed-gray,
+  '500-contrast': $dark-primary-text,
+  '200-contrast': $dark-primary-text,
+);
+
+$primary: $seed-gray-palette;
+$accent: $underbelly-green-palette;
+$theme: mat-light-theme($primary, $accent);
+
+$config: mat-typography-config();

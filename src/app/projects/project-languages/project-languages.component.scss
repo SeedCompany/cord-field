@@ -1,0 +1,22 @@
+@import "~src/styles/imports";
+
+:host {
+  @extend %component-defaults;
+}
+
+mat-list {
+  padding: 0; // title already provides spacing
+  margin: 0 -24px 0 -16px; // offset card padding
+}
+
+mat-card-content {
+  display: flex;
+  flex-direction: column;
+}
+
+app-autocomplete-language {
+  // Keep same spacing between list and autocomplete input
+  margin-top: 16px;
+  // Keep margin bottom same as add button
+  margin-bottom: - (8px + 1px) !important; // default action offset + something else
+}

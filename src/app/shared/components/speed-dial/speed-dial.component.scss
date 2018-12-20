@@ -1,0 +1,38 @@
+@import "~src/styles/imports";
+
+mat-progress-spinner {
+  position: absolute;
+  top: -6px;
+  left: -6px;
+  opacity: 0;
+  transition: opacity 250ms linear;
+  &.is-active {
+    opacity: 1;
+  }
+}
+
+// Change colors to be solid and darker so they standout
+button[disabled] {
+  color: mat-foreground($theme, slider-off-active) !important;
+  background-color: mat-background($theme, selected-disabled-button) !important;
+}
+
+// Position the icon in the center so multiple
+// ones will overlap
+.mat-fab .mat-icon {
+  position: absolute;
+  top: 16px;
+  left: 16px;
+}
+
+.dial {
+  display: flex;
+  flex-direction: column-reverse; // Tab direction moves away from anchor
+
+  &.actions-above {
+    margin-bottom: 8px;
+  }
+  &.actions-below {
+    margin-top: 8px;
+  }
+}

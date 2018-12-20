@@ -1,0 +1,26 @@
+@import "~src/styles/imports";
+
+:host {
+  @extend %component-defaults;
+}
+
+.mat-dialog-title {
+  // move button to right
+  display: flex;
+  justify-content: space-between;
+
+  // fit button within title better - align with text and not increase size
+  button {
+    margin: -5px;
+    color: mat-foreground($theme, icon);
+  }
+}
+
+// Display description above date range
+mat-list-item ::ng-deep.mat-list-text {
+  flex-direction: column-reverse !important;
+}
+
+.none {
+  color: mat-foreground($theme, disabled);
+}

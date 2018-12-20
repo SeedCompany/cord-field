@@ -1,0 +1,62 @@
+@import "~src/styles/imports";
+
+:host {
+  @extend %component-defaults;
+  flex: 1;
+}
+
+mat-toolbar {
+  background: mat-background($theme, card);
+}
+
+.spacer {
+  flex: auto;
+}
+
+mat-table {
+  flex: 1;
+  overflow-y: scroll;
+}
+
+mat-header-row {
+  position: sticky;
+  top: 0;
+  background: mat-background($theme, card);
+  z-index: 1;
+}
+
+app-search {
+  @include mat-typography-level-to-styles($config, body-1);
+}
+
+.mat-column-avatar {
+  flex: none;
+  width: 40px; // so header column is aligned (same as avatar width)
+
+  // Add spacing to right and change left padding to left margin so it doesn't interfere with defined width.
+  margin: 0 $mat-row-horizontal-padding;
+  padding: 0;
+}
+
+.name {
+  color: mat-color($accent);
+  @include mat-typography-level-to-styles($config, body-2);
+}
+
+.mat-column-roles {
+  flex: 3;
+
+  .none {
+    color: mat-foreground($theme, disabled);
+  }
+
+  // Move context button to the right
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  // Exclude menu from flexing, it's opened in an overlay outside of the cell so this doesn't keep the menu from showing
+  mat-menu {
+    display: none;
+  }
+}

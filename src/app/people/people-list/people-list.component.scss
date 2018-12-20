@@ -1,0 +1,79 @@
+@import "~src/styles/imports";
+
+:host {
+  @extend %component-defaults;
+  @include mat-elevation(2);
+  flex: 1;
+}
+
+mat-toolbar {
+  background: mat-background($theme, card);
+}
+
+.spacer {
+  flex: auto;
+}
+
+mat-drawer-container {
+  flex: 1;
+}
+
+mat-drawer {
+  @include mat-elevation(4);
+  width: 25%;
+  max-width: 400px;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+mat-drawer-content {
+  display: flex;
+  flex-direction: column;
+  overflow-x: hidden; // Hide filter button pushed off to the right
+}
+
+
+mat-table {
+  flex: 1;
+  overflow-y: scroll;
+}
+
+mat-header-row {
+  position: sticky;
+  top: 0;
+  background: mat-background($theme, card);
+}
+
+.mat-column-avatarLetters {
+  flex: none;
+  width: 40px; // so header column is aligned (same as avatar width)
+
+  // Add spacing to right and change left padding to left margin so it doesn't interfere with defined width.
+  margin: 0 $mat-row-horizontal-padding;
+  padding: 0;
+}
+
+.name {
+  color: mat-color($accent);
+  @include mat-typography-level-to-styles($config, body-2);
+}
+
+.mat-column-roles, .mat-column-organization {
+  flex: 2;
+}
+
+.status-circle {
+  border-radius: 4px;
+  height: 7px;
+  width: 7px;
+  display: inline-block;
+  margin-right: 5px;
+
+  &.status-active {
+    background: green;
+  }
+  &.status-inactive {
+    background: red;
+  }
+}

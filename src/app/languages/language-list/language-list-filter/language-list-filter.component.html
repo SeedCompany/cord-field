@@ -1,0 +1,8 @@
+<form [formGroup]="form">
+  <app-autocomplete-location formControlName="location"
+                             [chips]="true"
+                             [dedupe]="true"
+                             [dedupeOptions]="locations.value"
+                             (removed)="onLocationRemoved($event)">
+  </app-autocomplete-location>
+</form>

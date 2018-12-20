@@ -1,0 +1,48 @@
+<mat-card>
+  <mat-card-title>Universal Budget Template</mat-card-title>
+  <mat-card-content>
+
+  </mat-card-content>
+
+  <mat-card-actions>
+    <button mat-button
+            color="accent">
+      UPLOAD
+    </button>
+  </mat-card-actions>
+</mat-card>
+
+<mat-card>
+  <mat-card-title>MOU Budget</mat-card-title>
+  <mat-card-content class="mou-budget">
+    <span class="mou-budget__total">Total: {{ total | async | currency:'USD':'symbol' }} </span>
+
+    <h3 class="mat-subheading-2">Budget Records</h3>
+
+    <form [formGroup]="form">
+      <div formArrayName="budgetDetails"
+           *ngFor="let budget of budgets.controls; let i = index">
+        <div [formGroupName]="i" class="flex-row">
+
+          <!-- Budget Name Column -->
+          <span class="mat-subheading-1">
+            {{ budget.get('organization')?.value?.name }}
+          </span>
+
+          <!-- Budget Fiscal Year Column -->
+          <span class="mat-subheading-1">{{ 'FY' + budget.get('fiscalYear')?.value }}</span>
+
+          <!-- Budget Budget Amount Column -->
+          <mat-form-field color="accent" class="mou-budget__amount">
+            <span matPrefix>$</span>
+            <input matInput
+                   type="number"
+                   [min]="0"
+                   autocomplete="off"
+                   formControlName="amount">
+          </mat-form-field>
+        </div>
+      </div>
+    </form>
+  </mat-card-content>
+</mat-card>

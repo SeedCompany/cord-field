@@ -1,0 +1,100 @@
+<form *ngIf="engagement" [formGroup]="form">
+
+  <div class="column">
+    <mat-card>
+      <mat-card-title>Status</mat-card-title>
+      <app-status-select-workflow
+        [placeholder]="null"
+        [enum]="EngagementStatus"
+        [findAvailableStatuses]="findAvailableStatuses"
+        [original]="engagement?.status"
+        formControlName="status"
+      ></app-status-select-workflow>
+    </mat-card>
+
+    <mat-card>
+      <mat-card-title>PnP</mat-card-title>
+      <mat-card-actions>
+        <button mat-button color="accent">
+          <mat-icon>file_upload</mat-icon>
+          Upload
+        </button>
+      </mat-card-actions>
+    </mat-card>
+  </div>
+
+  <mat-card>
+    <mat-card-title>Engagement Details</mat-card-title>
+    <mat-card-content>
+      <mat-form-field color="accent">
+        <mat-select multiple placeholder="Products" formControlName="products">
+          <mat-option
+            *ngFor="let product of ProjectProduct.entries(); trackBy: ProjectProduct.trackEntryBy"
+            [value]="product.value">
+            {{ product.ui }}
+          </mat-option>
+        </mat-select>
+        <mat-error>Please select one or more products</mat-error>
+      </mat-form-field>
+
+      <mat-form-field color="accent">
+        <mat-select multiple placeholder="Mediums" formControlName="mediums">
+          <mat-option *ngFor="let medium of ProjectMedium.entries(); trackBy: ProjectMedium.trackEntryBy"
+                      [value]="medium.value">
+            {{ medium.ui }}
+          </mat-option>
+        </mat-select>
+        <mat-error>Please select one or more mediums</mat-error>
+      </mat-form-field>
+
+      <mat-form-field color="accent">
+        <mat-select multiple placeholder="Approaches" formControlName="approaches">
+          <mat-option
+            *ngFor="let approach of ProjectApproach.entries(); trackBy: ProjectApproach.trackEntryBy"
+            [value]="approach.value">
+            {{ approach.ui }}
+          </mat-option>
+        </mat-select>
+        <mat-error>Please select one or more mediums</mat-error>
+      </mat-form-field>
+
+      <mat-checkbox formControlName="isLukePartnership">
+        Is this a Luke Partnership?
+      </mat-checkbox>
+
+      <mat-checkbox formControlName="isFirstScripture">
+        Does this provide First Scripture for this people group?
+      </mat-checkbox>
+
+      <mat-checkbox formControlName="isDedicationPlanned">
+        Is a dedication planned for this project? If so when?
+      </mat-checkbox>
+
+      <mat-form-field color="accent" class="dedication">
+        <input matInput
+               formControlName="dedicationDate"
+               [matDatepicker]="datepicker"
+               placeholder="Dedication Date">
+        <mat-datepicker-toggle matSuffix [for]="datepicker"></mat-datepicker-toggle>
+        <mat-datepicker #datepicker></mat-datepicker>
+        <mat-error *ngIf="dedicationDate.errors?.matDatepickerParse">Invalid Date</mat-error>
+      </mat-form-field>
+    </mat-card-content>
+  </mat-card>
+</form>
+
+<app-speed-dial
+  *ngIf="form.disabled || (form.dirty && form.valid)"
+  align="below"
+  icon="save"
+  [disabled]="form.disabled"
+  [progress]="form.disabled"
+  [@popInOut]
+>
+  <app-speed-dial-item tooltip="Discard" color="warn" (click)="onReset()">
+    <mat-icon>delete</mat-icon>
+  </app-speed-dial-item>
+  <app-speed-dial-item tooltip="Save" color="accent" (click)="onSave()">
+    <mat-icon>save</mat-icon>
+  </app-speed-dial-item>
+</app-speed-dial>

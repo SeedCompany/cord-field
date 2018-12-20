@@ -1,0 +1,118 @@
+<div><!-- Needed to align footer on left side of the card, but everything centered in middle of screen -->
+  <mat-card>
+    <mat-card-title>
+      <span class="icon">
+        <mat-icon svgIcon="cord"></mat-icon>
+      </span>
+      <span>Sign In</span>
+    </mat-card-title>
+
+    <mat-card-content [formGroup]="form" (keyup.enter)="form.valid ? onLogin() : null">
+      <mat-form-field color="accent">
+        <input
+          matInput
+          placeholder="Email"
+          formControlName="email"
+          autofocus
+        >
+        <mat-error *ngIf="email.errors?.required">Please enter a valid email</mat-error>
+      </mat-form-field>
+      <mat-form-field color="accent">
+        <input
+          matInput
+          placeholder="Password"
+          formControlName="password"
+          [type]="hidePassword ? 'password' : 'text'">
+        <mat-icon matSuffix
+                  color="primary"
+                  (click)="hidePassword = !hidePassword"
+        >
+          {{ hidePassword ? 'visibility' : 'visibility_off' }}
+        </mat-icon>
+        <mat-error *ngIf="password.errors?.required">Please enter your password</mat-error>
+      </mat-form-field>
+
+      <ng-container *ngIf="pwdReset">
+        <mat-form-field color="accent" class="new-password">
+          <input
+            matInput
+            placeholder="New Password"
+            formControlName="newPassword"
+            [type]="hideNewPassword ? 'password' : 'text'"
+            #newPwd>
+          <mat-icon matSuffix
+                    color="primary"
+                    (click)="hideNewPassword = !hideNewPassword"
+          >
+            {{ hideNewPassword ? 'visibility' : 'visibility_off' }}
+          </mat-icon>
+          <mat-hint>
+            <div class="line">Use a few words, avoid common phrases</div>
+            <div class="line">No need for symbols, digits, or uppercase letters</div>
+          </mat-hint>
+          <mat-error *ngIf="newPassword.errors?.required">Please enter your new password</mat-error>
+          <mat-error *ngIf="newPassword.errors?.passwordMismatched">Passwords should match</mat-error>
+          <mat-error *ngIf="newPassword.errors?.invalid">
+            <div class="line">
+              {{ newPassword.errors?.invalid.warning || 'Use a stronger password' }}
+            </div>
+            <div class="line" *ngIf="newPassword.errors?.invalid.suggestions as suggestions">
+              {{ suggestions.reverse()[0] }}
+            </div>
+          </mat-error>
+        </mat-form-field>
+
+        <mat-form-field color="accent">
+          <input
+            matInput
+            placeholder="Confirm New Password"
+            formControlName="confirmPassword"
+            [type]="hideConfirmPassword ? 'password' : 'text'">
+          <mat-icon matSuffix
+                    color="primary"
+                    (click)="hideConfirmPassword = !hideConfirmPassword"
+          >
+            {{ hideConfirmPassword ? 'visibility' : 'visibility_off' }}
+          </mat-icon>
+          <mat-error *ngIf="confirmPassword.errors?.required">Please re-enter your new password</mat-error>
+          <mat-error *ngIf="confirmPassword.errors?.passwordMismatched">Passwords should match</mat-error>
+        </mat-form-field>
+      </ng-container>
+
+      <mat-error *ngIf="form.errors?.invalid">Invalid email or password</mat-error>
+      <mat-error *ngIf="form.errors?.emailValidationRequired">
+        Sorry, our system does not have any account with the credentials you provided. If you already created an
+        account,
+        please verify it by clicking on the link provided in the email you should have received.
+      </mat-error>
+      <mat-error *ngIf="form.errors?.accountNotApproved">
+        Your account is not approved yet. Please try again or contact Field Support Services for assistance.
+      </mat-error>
+      <mat-error *ngIf="form.errors?.resetPassword">
+        Your password needs to be changed.
+      </mat-error>
+    </mat-card-content>
+
+    <mat-card-actions>
+      <button mat-raised-button
+              color="accent"
+              (click)="onLogin()"
+              [disabled]="form.touched && (form.invalid || form.disabled)"
+      >
+        <ng-container *ngIf="form.enabled">SIGN IN</ng-container>
+        <mat-progress-spinner
+          *ngIf="form.disabled"
+          color="accent"
+          mode="indeterminate"
+          strokeWidth="3"
+          [diameter]="24"
+        ></mat-progress-spinner>
+      </button>
+      <button mat-button color="accent" routerLink="/login/forgot-password">FORGOT PASSWORD?</button>
+    </mat-card-actions>
+  </mat-card>
+  <div class="mat-typography footer">
+    Don't have an account?
+    <button mat-button color="accent" routerLink="/login/request-access">REQUEST ACCESS</button>
+  </div>
+</div>

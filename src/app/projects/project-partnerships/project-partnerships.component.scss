@@ -1,0 +1,60 @@
+@import "~src/styles/imports";
+
+:host {
+  @extend %component-defaults;
+}
+
+.header {
+  display: flex;
+}
+
+mat-card {
+  padding-left: 0;
+  padding-right: 0;
+}
+mat-card-title, mat-card-actions {
+  padding-left: 24px;
+  padding-right: 24px;
+}
+mat-expansion-panel {
+  border-bottom: 1px solid mat-foreground($theme, divider);
+}
+
+mat-panel-title, mat-panel-description {
+  align-items: center;
+  word-wrap: break-word;
+  max-width: 350px;
+}
+
+.title {
+  display: flex;
+  flex-direction: column;
+  padding-left: 16px;
+  .name {
+    font-size: 16px; // match list
+  }
+  small {
+    @include mat-typography-level-to-styles($config, body-1);
+    color: mat-foreground($theme, secondary-text);
+  }
+}
+
+.types {
+  width: 100%;
+}
+
+.upload-status {
+  margin-left: 32px;
+}
+
+mat-card-content {
+  display: flex;
+  flex-direction: column;
+}
+app-autocomplete-organization {
+  padding: 0 24px;
+  // Keep same spacing between accordion and autocomplete input
+  margin-top: 16px;
+  // Keep margin bottom same as add button
+  margin-bottom: - (8px + 1px) !important; // default action offset + something else
+}

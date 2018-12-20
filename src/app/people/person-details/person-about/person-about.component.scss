@@ -1,0 +1,31 @@
+@import "~src/styles/imports";
+
+:host {
+  @extend %component-defaults;
+}
+
+.mat-caption {
+  color: mat-foreground($theme, secondary-text);
+  margin: 16px 0 0;
+}
+
+.edu-separator {
+  color: mat-foreground($theme, disabled);
+  margin: 0 4px;
+}
+
+p {
+  margin: 8px 0 0 16px;
+
+  & + & {
+    margin-bottom: 8px;
+  }
+}
+
+mat-chip-list {
+  margin: 8px 0 0 16px;
+}
+
+button {
+  align-self: flex-start;
+}

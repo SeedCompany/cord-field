@@ -1,0 +1,24 @@
+@import "~src/styles/imports";
+
+:host {
+  @extend %component-defaults;
+  flex: 1;
+}
+
+.collapse-chip {
+  background-color: white;
+  border: 1px solid mat-background($theme, unselected-chip);
+  cursor: pointer !important;
+
+  // adjust drop down arrow to fit better within chip
+  .mat-icon {
+    height: 18px;
+    width: 18px;
+    margin-top: -7px;
+  }
+}
+
+.none {
+  color: mat-foreground($theme, disabled);
+  margin-left: 3px; // Match spacing for chip lists (defined in our global styles)
+}

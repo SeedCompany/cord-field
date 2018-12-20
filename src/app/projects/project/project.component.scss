@@ -1,0 +1,25 @@
+@import "~src/styles/imports";
+
+:host {
+  @extend %component-defaults;
+  flex: 1;
+}
+
+mat-toolbar {
+  padding-left: 3.6em;
+  z-index: 10;
+}
+
+.mat-tab-nav-bar {
+  background-color: mat-background($theme, app-bar);
+  overflow: initial;
+  @include mat-elevation(4);
+  z-index: 2;
+}
+
+app-speed-dial {
+  position: absolute;
+  bottom: -($mat-fab-height / 2);
+  right: 24px; // matches tab padding
+  z-index: 1;
+}

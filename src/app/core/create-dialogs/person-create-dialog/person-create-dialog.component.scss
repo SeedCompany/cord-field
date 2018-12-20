@@ -1,0 +1,33 @@
+@import "~src/styles/imports";
+
+:host {
+  @extend %component-defaults;
+}
+
+.name-container {
+  display: flex;
+}
+
+.mat-form-field {
+  flex: 1;
+  display: block;
+  & + & {
+    margin-left: 16px;
+  }
+}
+
+mat-slide-toggle {
+  margin: 12px 0;
+}
+
+// Flip direction so tab index prioritizes the forward action
+.mat-dialog-actions {
+  display: flex;
+  flex-direction: row-reverse;
+}
+
+// Flip margin for spacing between buttons since we flipped the direction
+.mat-dialog-actions .mat-button + .mat-button {
+  margin-left: 0;
+  margin-right: 8px;
+}

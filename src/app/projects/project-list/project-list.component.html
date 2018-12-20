@@ -1,0 +1,91 @@
+<mat-drawer-container autosize>
+
+  <mat-drawer-content>
+    <mat-toolbar>
+      <button mat-button class="project-menu-button" color="primary" [matMenuTriggerFor]="projectMenu">
+        {{ listSelector.value.label }}
+        <mat-icon>arrow_drop_down</mat-icon>
+      </button>
+      <mat-menu #projectMenu="matMenu">
+        <button mat-menu-item
+                (click)="listSelector.next(selector)"
+                *ngFor="let selector of listSelectorOptions; trackBy: trackByValue">
+          {{ selector.label }}
+        </button>
+      </mat-menu>
+
+      <span class="spacer"></span>
+
+      <button mat-icon-button
+              [color]="filtersActive ? 'accent' : 'primary'"
+              [@slideRight]="filterDrawer.opened ? 'hidden' : 'shown'"
+              (click)="filterDrawer.toggle()">
+        <mat-icon>filter_list</mat-icon>
+      </button>
+    </mat-toolbar>
+
+    <mat-table [dataSource]="projectSource"
+               matSort
+               matSortActive="updatedAt"
+               matSortDirection="desc">
+      <ng-container matColumnDef="name">
+        <mat-header-cell *matHeaderCellDef mat-sort-header>Project Title</mat-header-cell>
+        <mat-cell *matCellDef="let project" class="title"> {{ project.name }}</mat-cell>
+      </ng-container>
+
+      <ng-container matColumnDef="updatedAt">
+        <mat-header-cell *matHeaderCellDef mat-sort-header> Last Modified</mat-header-cell>
+        <mat-cell *matCellDef="let project"> {{ project.updatedAt.toLocaleString() }}</mat-cell>
+      </ng-container>
+
+      <ng-container matColumnDef="languages">
+        <mat-header-cell *matHeaderCellDef>Languages</mat-header-cell>
+        <mat-cell *matCellDef="let project">
+          <app-collapsed-chip-list [list]="project.languages" (chipClicked)="onLanguageClick($event)">
+            <ng-template let-language>{{ language.nameOrDisplayName }}</ng-template>
+          </app-collapsed-chip-list>
+        </mat-cell>
+      </ng-container>
+
+      <ng-container matColumnDef="type">
+        <mat-header-cell *matHeaderCellDef mat-sort-header>Type</mat-header-cell>
+        <mat-cell *matCellDef="let project">{{ ProjectType.forUI(project.type) }}</mat-cell>
+      </ng-container>
+
+      <ng-container matColumnDef="status">
+        <mat-header-cell *matHeaderCellDef mat-sort-header>Status</mat-header-cell>
+        <mat-cell *matCellDef="let project">
+          <span class="status-circle" [ngClass]="project ? ProjectStatus.getColor(project.status) : null"></span>
+          <span>{{ ProjectStatus.forUI(project.status) }}</span>
+        </mat-cell>
+      </ng-container>
+
+      <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+      <mat-row class="row-hover"
+               [routerLink]="'/projects/' + project.id"
+               *matRowDef="let project; columns: displayedColumns;">
+      </mat-row>
+    </mat-table>
+    <mat-paginator [pageSizeOptions]="pageSizeOptions"
+                   [length]="totalCount">
+    </mat-paginator>
+  </mat-drawer-content>
+
+  <mat-drawer mode="side" position="end" #filterDrawer>
+    <mat-toolbar>
+      Filter
+      <div class="spacer"></div>
+      <button mat-icon-button color="primary"
+              *ngIf="filtersActive"
+              (click)="onClearFilters()">
+        <mat-icon>remove_circle</mat-icon>
+      </button>
+      <button mat-icon-button color="primary"
+              (click)="filterDrawer.toggle()">
+        <mat-icon>close</mat-icon>
+      </button>
+    </mat-toolbar>
+    <app-project-list-filter></app-project-list-filter>
+  </mat-drawer>
+
+</mat-drawer-container>

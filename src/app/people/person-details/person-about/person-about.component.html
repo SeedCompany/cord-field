@@ -1,0 +1,49 @@
+<h1 class="mat-headline" *ngIf="hasData || user.canEdit">About</h1>
+
+<ng-container *ngIf="user.bio">
+  <h3 class="mat-caption">Bio</h3>
+  <p class="mat-body-1">{{ user.bio }}</p>
+</ng-container>
+
+<ng-container *ngIf="user.education.length > 0">
+  <h3 class="mat-caption">Education</h3>
+  <mat-list>
+    <mat-list-item *ngFor="let edu of user.education; trackBy: trackById">
+      <span mat-line>
+        {{ Degree.forUI(edu.degree) }}
+        <span class="edu-separator">|</span>
+        {{ edu.major }}
+      </span>
+      <span mat-line>{{ edu.institution }}</span>
+    </mat-list-item>
+  </mat-list>
+</ng-container>
+
+<ng-container *ngIf="user.skills.length > 0">
+  <h3 class="mat-caption">Skills</h3>
+  <mat-chip-list>
+    <mat-chip *ngFor="let skill of user.skills; trackBy: trackByValue">
+      {{ skill }}
+    </mat-chip>
+  </mat-chip-list>
+</ng-container>
+
+<ng-container *ngIf="user.knownLanguages.length > 0">
+  <h3 class="mat-caption">Languages</h3>
+  <mat-nav-list>
+    <a mat-list-item
+       *ngFor="let kl of user.knownLanguages; trackBy: trackById"
+       routerLink="/languages/{{ kl.language.id }}"
+    >
+      <span mat-line>{{ kl.language.displayName }}</span>
+      <span mat-line>{{ LanguageProficiency.forUI(kl.proficiency) }}</span>
+    </a>
+  </mat-nav-list>
+</ng-container>
+
+<button mat-button color="accent"
+        routerLink="edit/about"
+        *ngIf="!hasData && user.canEdit"
+>
+  Tell us more about {{ user.isSelf ? 'yourself' : user.fullName }}
+</button>

@@ -1,0 +1,12 @@
+@import "~src/styles/imports";
+
+:host {
+  flex: 1;
+  @extend %component-defaults;
+  background: mat-background($theme, card);
+}
+
+app-person-change-password {
+  max-width: 35em;
+  padding-left: 44px;
+}

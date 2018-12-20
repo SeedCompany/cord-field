@@ -1,0 +1,38 @@
+<h1 mat-dialog-title>Heads up!</h1>
+<form mat-dialog-content [formGroup]="form" (keyup.enter)="form.valid ? onUpload() : null" class="mat-typography">
+  <ng-container *ngIf="isOverwritingFile && !isRenaming">
+    <p><span class="mat-body-2">{{ file.name }}</span> already exists</p>
+    <p>Do you want to update it or pick a new name?</p>
+  </ng-container>
+  <ng-container *ngIf="!isOverwritingFile">
+    <p><span class="mat-body-2">{{ file.name }}</span> already exists</p>
+    <p>Please pick a new name</p>
+  </ng-container>
+  <ng-container *ngIf="isRenaming">
+    <mat-form-field color="accent">
+      <input matInput
+             maxlength="140"
+             formControlName="name"
+             placeholder="Name"
+             autocomplete="off"
+             autofocus
+      >
+      <mat-hint align="end">{{ name.value.length }}/140</mat-hint>
+      <mat-error *ngIf="name.errors?.required">Please enter a name</mat-error>
+      <mat-error *ngIf="name.errors?.exists">A file or directory with this name already exists</mat-error>
+    </mat-form-field>
+  </ng-container>
+</form>
+<div mat-dialog-actions>
+  <ng-container *ngIf="isRenaming">
+    <button mat-button color="accent" [disabled]="form.invalid" (click)="onUpload()">UPLOAD</button>
+  </ng-container>
+  <ng-container *ngIf="!isRenaming">
+    <button mat-button color="accent" (click)="onRename()">RENAME</button>
+  </ng-container>
+  <ng-container *ngIf="isOverwritingFile && !isRenaming">
+    <button mat-button color="accent" (click)="onUpdate()">UPDATE</button>
+  </ng-container>
+  <div class="spacer"></div>
+  <button mat-button color="accent" matDialogClose>CANCEL</button>
+</div>

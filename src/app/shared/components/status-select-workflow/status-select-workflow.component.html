@@ -1,0 +1,15 @@
+<mat-form-field color="accent">
+  <mat-select [placeholder]="placeholder"
+              [formControl]="statusCtrl"
+  >
+    <mat-option [value]="original"
+                [disabled]="statusCtrl.value === original"
+                [class.revert]="statusCtrl.value !== original">{{ forUI(original) }}
+    </mat-option>
+    <mat-divider></mat-divider>
+    <mat-option *ngFor="let status of availableStatuses; trackBy: trackByStatus"
+                [value]="status[1]">
+      {{ status[0] }}
+    </mat-option>
+  </mat-select>
+</mat-form-field>

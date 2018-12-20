@@ -1,0 +1,24 @@
+@import "~src/styles/imports";
+
+:host {
+  @extend %component-defaults;
+  flex: 1;
+  flex-direction: row;
+  position: relative; // for engagement speed dial
+}
+
+.sidebar {
+  width: 300px;
+  @include mat-elevation(3);
+  z-index: 1;
+  background: mat-background($theme, card);
+
+  .active {
+    color: mat-color($accent);
+  }
+}
+
+.main {
+  flex: 1;
+  overflow-y: scroll;
+}

@@ -1,0 +1,31 @@
+@import "~src/styles/imports";
+
+:host {
+  @extend %component-defaults;
+}
+
+.date-container {
+  display: flex;
+}
+
+.mat-form-field {
+  flex: 1;
+  display: block;
+  & + & {
+    margin-left: 16px;
+  }
+}
+
+.mat-dialog-actions {
+  display: flex;
+  flex-direction: row-reverse;
+
+  .mat-button + .mat-button {
+    margin-left: 0;
+    margin-right: 8px;
+  }
+}
+
+.spacer {
+  flex: 1;
+}

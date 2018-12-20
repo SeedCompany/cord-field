@@ -1,0 +1,41 @@
+@import "~src/styles/imports";
+
+:host {
+  @extend %component-defaults;
+}
+
+.avatar {
+  @include avatar(150px);
+  margin-bottom: 16px;
+}
+
+.mat-display-1 {
+  margin-bottom: 32px; // half normal
+}
+
+h3 {
+  color: mat-foreground($theme, secondary-text);
+
+  // Move margin to top
+  margin-bottom: 0;
+  margin-top: 16px;
+  &:first-of-type {
+    margin-top: 0;
+  }
+}
+
+p {
+  // align text with button text, remove vertical margins
+  margin: 0 0 0 $mat-button-horizontal-padding;
+  // align tooltip centered over text
+  align-self: start;
+}
+
+button {
+  align-self: start;
+
+  &.edit {
+    display: block;
+    margin-top: 32px;
+  }
+}
