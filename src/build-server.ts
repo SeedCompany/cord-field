@@ -5,6 +5,10 @@ import * as webpack from 'webpack';
 const options = require('../webpack.server.config.js');
 webpack(options, (err, stats) => {
   if (err || stats.hasErrors()) {
+    // tslint:disable-next-line:no-console
+    console.log(stats.toString({
+      colors: true,
+    }));
     process.exit(1);
   }
 });
