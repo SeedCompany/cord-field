@@ -43,6 +43,7 @@ export class StatusSelectWorkflowComponent<T extends GoodEnum<T>> extends Abstra
       .pipe(
         // on change, wait for stable zone aka rendering complete.
         switchMap((status) => this.zone.onStable.pipe(first(), mapTo(status))),
+        takeUntil(this.unsubscribe), // If destroying, don't try to update & detect changes
       )
       .subscribe((status) => {
         // Now that changes have settled, change value, and detect changes to re-render
