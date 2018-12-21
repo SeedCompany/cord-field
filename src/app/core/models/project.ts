@@ -25,6 +25,7 @@ export class Project {
   status: ProjectStatus;
   possibleStatuses: ProjectStatus[];
   location: Location | null;
+  publicLocation: Location | null;
   mouStart: DateTime | null;
   mouEnd: DateTime | null;
   languages: Language[];
@@ -49,6 +50,7 @@ export class Project {
     project.status = json.status || ProjectStatus.Active;
     project.possibleStatuses = json.possibleStatuses || [];
     project.location = json.location ? Location.fromJson(json.location) : null;
+    project.publicLocation = json.publicLocation ? Location.fromJson(json.publicLocation) : null;
     project.mouStart = json.mouStart ? DateTime.fromISO(json.mouStart) : null;
     project.mouEnd = json.mouEnd ? DateTime.fromISO(json.mouEnd) : null;
     project.languages = (json.languages || []).map(Language.fromJson);
