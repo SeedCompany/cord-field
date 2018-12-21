@@ -38,15 +38,15 @@ export class ProjectBudget {
 
 export enum BudgetStatus {
   Pending = 'pending',
-  Active = 'approvedactive',
-  Superceded = 'approvedsuperceded',
+  Current = 'current',
+  Superceded = 'superceded',
   Rejected = 'rejected',
 }
 
 export namespace BudgetStatus {
   export const {entries, forUI, values, trackEntryBy, trackValueBy} = buildEnum(BudgetStatus, {
     [BudgetStatus.Pending]: 'Pending',
-    [BudgetStatus.Active]: 'Active',
+    [BudgetStatus.Current]: 'Current',
     [BudgetStatus.Superceded]: 'Superceded',
     [BudgetStatus.Rejected]: 'Rejected',
   });
