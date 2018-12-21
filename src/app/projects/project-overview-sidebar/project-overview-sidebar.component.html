@@ -1,7 +1,7 @@
 <div class="picture"
      *ngIf="project">
   <div class="location mat-title"
-       *ngIf="project?.location">{{ project?.location?.displayName }}
+       *ngIf="project?.location">{{ project?.publicLocation?.displayName }}
   </div>
   <div class="sensitivity mat-subheading-1">{{ ProjectSensitivity.forUI(project?.sensitivity) }} Sensitivity</div>
 </div>
