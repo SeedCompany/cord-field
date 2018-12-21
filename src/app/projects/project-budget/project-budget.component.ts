@@ -32,7 +32,7 @@ export class ProjectBudgetComponent extends SubscriptionComponent implements OnI
     this.viewStateService
       .project
       .pipe(
-        map(project => project.budgets.find(budget => budget.status === BudgetStatus.Active)),
+        map(project => project.budgets.find(budget => budget.status === BudgetStatus.Current)),
         filterRequired(),
       )
       .subscribe(budget => this.createBudgetForm(budget));
