@@ -19,7 +19,7 @@ services:
     image: 103805181946.dkr.ecr.us-west-2.amazonaws.com/client/cord-api-plo:latest
     ports: [ "8001" ]
     environment:
-      MONGO_DB_CONN: mongodb://cordprod:Wb3k1gpSocmM8pg@mongo01.tsco.org:27017,mongo02.tsco.org:27017,mongo03.tsco.org:27017/cordmigrationtest?authSource=admin&ssl=true&replicaSet=cfAppRS_Prod
+      MONGO_DB_CONN: mongodb://cord-sqa:Zh6ZApeVteMqC%406A%26cIs@mongo-a.dev.olivetech.internal,mongo-b.dev.olivetech.internal,mongo-c.dev.olivetech.internal/cord-sqa?replicaSet=dev
       NODE_ENV: sqa
       CREATE_DEVELOPER_USERS: "true"
       CREATE_CORD_TEAM_USERS: "true"
