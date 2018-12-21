@@ -1,5 +1,6 @@
 import { NgModule } from '@angular/core';
-import { RouterModule, Routes } from '@angular/router';
+import { Route, RouterModule, Routes } from '@angular/router';
+import { DirtyGuard } from '@app/core/route-guards/dirty.guard';
 import { ProjectExtensionComponent } from '@app/projects/project-extensions/project-extension/project-extension.component';
 import { ProjectExtensionsComponent } from '@app/projects/project-extensions/project-extensions.component';
 import { ProjectBudgetComponent } from './project-budget/project-budget.component';
@@ -13,15 +14,20 @@ import { ProjectTeamComponent } from './project-team/project-team.component';
 import { ProjectUpdatesComponent } from './project-updates/project-updates.component';
 import { ProjectComponent } from './project/project.component';
 
+const usesViewState = {
+  data: {acceptDirty: true},
+  canDeactivate: [DirtyGuard],
+} as Partial<Route>;
+
 const routes: Routes = [
   {path: '', component: ProjectListComponent, pathMatch: 'full'},
   {
     path: ':id',
     component: ProjectComponent,
     children: [
-      {path: '', redirectTo: 'overview', pathMatch: 'full'},
-      {path: 'overview', component: ProjectOverviewComponent},
-      {path: 'forms', component: ProjectFormsComponent},
+      {path: '', redirectTo: 'overview', pathMatch: 'full', ...usesViewState},
+      {path: 'overview', component: ProjectOverviewComponent, ...usesViewState},
+      {path: 'forms', component: ProjectFormsComponent, ...usesViewState},
       {
         path: 'engagements',
         component: ProjectEngagementsComponent,
@@ -29,7 +35,7 @@ const routes: Routes = [
           { path: ':id', component: ProjectEngagementComponent },
         ],
       },
-      {path: 'budget', component: ProjectBudgetComponent},
+      {path: 'budget', component: ProjectBudgetComponent, ...usesViewState},
       {path: 'files', component: ProjectFilesComponent},
       {path: 'team', component: ProjectTeamComponent},
       {
@@ -41,6 +47,8 @@ const routes: Routes = [
       },
       {path: 'updates', component: ProjectUpdatesComponent},
     ],
+    canDeactivate: [DirtyGuard],
+    canActivateChild: [DirtyGuard],
   },
 ];
 

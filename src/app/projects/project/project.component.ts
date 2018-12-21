@@ -1,18 +1,19 @@
 import { HttpErrorResponse } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
 import { MatSnackBar, MatSnackBarRef, SimpleSnackBar } from '@angular/material';
-import { ActivatedRoute, NavigationEnd, Router, UrlSegment } from '@angular/router';
+import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
 import { TitleAware, TitleProp } from '@app/core/decorators';
 import { Project } from '@app/core/models/project';
+import { IsDirty } from '@app/core/route-guards/dirty.guard';
 import { popInOut } from '@app/shared/animations';
 import { SubscriptionComponent } from '@app/shared/components/subscription.component';
+import { of as observableOf } from 'rxjs';
 import { filter, map, startWith, switchMap, takeUntil } from 'rxjs/operators';
 import { ProjectViewStateService } from '../project-view-state.service';
 
 interface TabConfig {
   path: string;
   label: string;
-  saveFab?: boolean;
 }
 
 @Component({
@@ -28,10 +29,10 @@ interface TabConfig {
 export class ProjectComponent extends SubscriptionComponent implements OnInit, TitleProp {
 
   readonly tabs: TabConfig[] = [
-    {path: 'overview', label: 'Overview', saveFab: true},
-    {path: 'forms', label: 'Forms', saveFab: true},
+    {path: 'overview', label: 'Overview'},
+    {path: 'forms', label: 'Forms'},
     {path: 'engagements', label: 'Engagements'},
-    {path: 'budget', label: 'Budget', saveFab: true},
+    {path: 'budget', label: 'Budget'},
     {path: 'files', label: 'Files'},
     {path: 'team', label: 'Team'},
     {path: 'extensions', label: 'Extensions'},
@@ -83,10 +84,10 @@ export class ProjectComponent extends SubscriptionComponent implements OnInit, T
         takeUntil(this.unsubscribe),
         filter(event => event instanceof NavigationEnd),
         startWith({}), // for first load
-        switchMap(() => this.route.firstChild ? this.route.firstChild.snapshot.url : []),
-        map((segment: UrlSegment) => this.tabs.find((tab) => tab.path === segment.path)!),
+        switchMap(() => this.route.firstChild ? this.route.firstChild.data : observableOf({})),
+        map(data => Boolean(data.acceptDirty)),
       )
-      .subscribe(tab => this.shouldCurrentTabShowSaveFab = !!tab.saveFab);
+      .subscribe(showFab => this.shouldCurrentTabShowSaveFab = showFab);
   }
 
   get showSaveFab() {
