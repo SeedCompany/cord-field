@@ -1,0 +1,11 @@
+<h1 mat-dialog-title>Heads Up!</h1>
+<mat-dialog-content>
+  <div class="mat-body-2">You have unsaved changes.</div>
+  <div class="mat-body">Do you want to save or discard them or stay here and continue editing?</div>
+</mat-dialog-content>
+<mat-dialog-actions>
+  <button mat-button color="accent" [mat-dialog-close]="true">SAVE</button>
+  <button mat-button color="warn" [mat-dialog-close]="false">DISCARD</button>
+  <div class="spacer"></div>
+  <button mat-button mat-dialog-close>STAY</button>
+</mat-dialog-actions>
