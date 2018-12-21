@@ -3,7 +3,7 @@ import { AbstractControl, FormArray, FormBuilder, FormGroup, Validators } from '
 import { TitleAware } from '@app/core/decorators';
 import { BudgetStatus, ProjectBudget, ProjectBudgetDetails } from '@app/core/models/budget';
 import { filterRequired } from '@app/core/util';
-import { SubscriptionComponent } from '@app/shared/components/subscription.component';
+import { ProjectTabComponent } from '@app/projects/abstract-project-tab';
 import { Observable } from 'rxjs';
 import { map, startWith, takeUntil } from 'rxjs/operators';
 import { ProjectViewStateService } from '../project-view-state.service';
@@ -15,7 +15,7 @@ import { ProjectViewStateService } from '../project-view-state.service';
   styleUrls: ['./project-budget.component.scss'],
 })
 @TitleAware('Budget')
-export class ProjectBudgetComponent extends SubscriptionComponent implements OnInit {
+export class ProjectBudgetComponent extends ProjectTabComponent implements OnInit {
   form: FormGroup;
   total: Observable<number>;
 
@@ -23,14 +23,14 @@ export class ProjectBudgetComponent extends SubscriptionComponent implements OnI
     private formBuilder: FormBuilder,
     private viewStateService: ProjectViewStateService,
   ) {
-    super();
+    super(viewStateService);
   }
 
   ngOnInit(): void {
+    super.ngOnInit();
     this.initForm();
 
-    this.viewStateService
-      .project
+    this.project$
       .pipe(
         map(project => project.budgets.find(budget => budget.status === BudgetStatus.Current)),
         filterRequired(),
