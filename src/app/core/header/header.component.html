@@ -30,7 +30,7 @@
     </button>
     <mat-menu #profileMenu="matMenu">
       <a routerLink="/people/{{ currentUser?.id }}" mat-menu-item>Profile</a>
-      <button mat-menu-item>Settings</button>
+      <a routerLink="/people/{{ currentUser?.id }}/edit/account" mat-menu-item>Account</a>
       <button mat-menu-item (click)="logout()">Logout</button>
     </mat-menu>
 
