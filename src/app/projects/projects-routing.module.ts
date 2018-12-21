@@ -32,7 +32,7 @@ const routes: Routes = [
         path: 'engagements',
         component: ProjectEngagementsComponent,
         children: [
-          { path: ':id', component: ProjectEngagementComponent },
+          { path: ':id', component: ProjectEngagementComponent, canDeactivate: [DirtyGuard]},
         ],
       },
       {path: 'budget', component: ProjectBudgetComponent, ...usesViewState},

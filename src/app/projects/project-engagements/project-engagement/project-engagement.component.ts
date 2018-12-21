@@ -11,6 +11,7 @@ import {
   ProjectMedium,
   ProjectProduct,
 } from '@app/core/models/engagement';
+import { IsDirty } from '@app/core/route-guards/dirty.guard';
 import { EngagementService } from '@app/core/services/engagement.service';
 import { ProjectService } from '@app/core/services/project.service';
 import { enableControl, filterRequired } from '@app/core/util';
@@ -40,7 +41,7 @@ interface EngagementForm {
   animations: [popInOut],
 })
 @TitleAware()
-export class ProjectEngagementComponent extends SubscriptionComponent implements OnInit, TitleProp {
+export class ProjectEngagementComponent extends SubscriptionComponent implements OnInit, TitleProp, IsDirty {
 
   readonly EngagementStatus = EngagementStatus;
   readonly ProjectApproach = ProjectApproach;
@@ -80,6 +81,10 @@ export class ProjectEngagementComponent extends SubscriptionComponent implements
       map(e => e.language.displayName),
       startWith(''),
     );
+  }
+
+  get isDirty() {
+    return this.form.dirty;
   }
 
   get isDedicationPlanned(): AbstractControl {
@@ -153,7 +158,7 @@ export class ProjectEngagementComponent extends SubscriptionComponent implements
     this.projectViewState.updateEngagement(engagement.withChanges(value));
   }
 
-  onReset() {
+  onDiscard() {
     this.form.reset({});
   }
 }
