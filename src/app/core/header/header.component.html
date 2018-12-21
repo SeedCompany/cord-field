@@ -5,10 +5,10 @@
     </span>
 
     <a mat-button color="primary" routerLink="/projects" routerLinkActive="active">Projects</a>
-    <a mat-button color="primary" routerLink="/tasks" routerLinkActive="active">Tasks</a>
+    <!--<a mat-button color="primary" routerLink="/tasks" routerLinkActive="active">Tasks</a>-->
     <a mat-button color="primary" routerLink="/languages" routerLinkActive="active">Languages</a>
     <a mat-button color="primary" routerLink="/people" routerLinkActive="active">People</a>
-    <a mat-button color="primary" routerLink="/organizations" routerLinkActive="active">Organizations</a>
+    <!--<a mat-button color="primary" routerLink="/organizations" routerLinkActive="active">Organizations</a>-->
     <button mat-icon-button color="accent" [matMenuTriggerFor]="addMenu">
       <mat-icon>add_circle</mat-icon>
     </button>
@@ -19,10 +19,10 @@
 
     <span class="nav-spacer"></span>
 
-    <app-search></app-search>
-    <button mat-icon-button color="primary">
-      <mat-icon>notifications</mat-icon>
-    </button>
+    <!--<app-search></app-search>-->
+    <!--<button mat-icon-button color="primary">-->
+      <!--<mat-icon>notifications</mat-icon>-->
+    <!--</button>-->
 
     <button mat-button class="profile-menu-button" color="primary" [matMenuTriggerFor]="profileMenu">
       {{ currentUser?.fullName }}
