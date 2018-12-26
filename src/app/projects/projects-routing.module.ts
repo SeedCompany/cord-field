@@ -1,5 +1,5 @@
 import { NgModule } from '@angular/core';
-import { Route, RouterModule, Routes } from '@angular/router';
+import { RouterModule, Routes } from '@angular/router';
 import { DirtyGuard } from '@app/core/route-guards/dirty.guard';
 import { ProjectExtensionComponent } from '@app/projects/project-extensions/project-extension/project-extension.component';
 import { ProjectExtensionsComponent } from '@app/projects/project-extensions/project-extensions.component';
@@ -14,20 +14,15 @@ import { ProjectTeamComponent } from './project-team/project-team.component';
 import { ProjectUpdatesComponent } from './project-updates/project-updates.component';
 import { ProjectComponent } from './project/project.component';
 
-const usesViewState = {
-  data: {acceptDirty: true},
-  canDeactivate: [DirtyGuard],
-} as Partial<Route>;
-
 const routes: Routes = [
   {path: '', component: ProjectListComponent, pathMatch: 'full'},
   {
     path: ':id',
     component: ProjectComponent,
     children: [
-      {path: '', redirectTo: 'overview', pathMatch: 'full', ...usesViewState},
-      {path: 'overview', component: ProjectOverviewComponent, ...usesViewState},
-      {path: 'forms', component: ProjectFormsComponent, ...usesViewState},
+      {path: '', redirectTo: 'overview', pathMatch: 'full'},
+      {path: 'overview', component: ProjectOverviewComponent, data: { acceptDirty: true }, canDeactivate: [DirtyGuard]},
+      {path: 'forms', component: ProjectFormsComponent, data: { acceptDirty: true }, canDeactivate: [DirtyGuard]},
       {
         path: 'engagements',
         component: ProjectEngagementsComponent,
@@ -35,7 +30,7 @@ const routes: Routes = [
           { path: ':id', component: ProjectEngagementComponent, canDeactivate: [DirtyGuard]},
         ],
       },
-      {path: 'budget', component: ProjectBudgetComponent, ...usesViewState},
+      {path: 'budget', component: ProjectBudgetComponent, data: { acceptDirty: true }, canDeactivate: [DirtyGuard]},
       {path: 'files', component: ProjectFilesComponent},
       {path: 'team', component: ProjectTeamComponent},
       {
