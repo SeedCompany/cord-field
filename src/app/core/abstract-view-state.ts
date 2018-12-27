@@ -39,6 +39,13 @@ export abstract class AbstractViewState<T> {
     return this._subject.asObservable();
   }
 
+  get subjectWithPreExistingChanges(): Observable<T> {
+    return this.subject
+      .pipe(
+        map((val) => this.changeEngine.getModified(val)),
+      );
+  }
+
   @LazyGetter() // Calculate pipe once, when requested
   get subjectWithChanges(): Observable<T> {
     return combineLatest(
@@ -141,7 +148,7 @@ export abstract class AbstractViewState<T> {
       }
     };
 
-    this.subject
+    this.subjectWithPreExistingChanges
       .pipe(takeUntil(unsubscribe))
       .subscribe(subject => {
         this.setupFormArrayItems(form, field, subject[field] as any, add, remove);

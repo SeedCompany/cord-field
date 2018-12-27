@@ -117,7 +117,7 @@ export class PersonEditBasicInfoComponent extends AbstractPersonComponent implem
         enableControl(this.form, !submitting);
       });
 
-    this.userViewState.user
+    this.userViewState.subjectWithPreExistingChanges
       .pipe(takeUntil(this.unsubscribe))
       .subscribe(userProfile => {
         this.firstName.patchValue(userProfile.realFirstName, { emitEvent: false });

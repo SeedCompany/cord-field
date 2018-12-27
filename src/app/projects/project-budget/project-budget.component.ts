@@ -28,12 +28,18 @@ export class ProjectBudgetComponent extends ProjectTabComponent implements OnIni
 
   ngOnInit(): void {
     super.ngOnInit();
-    this.initForm();
 
-    this.project$
+    this.form = this.formBuilder.group({
+      id: [''],
+      status: [''],
+      budgetDetails: this.formBuilder.array([]),
+    });
+
+    this.viewStateService.subjectWithPreExistingChanges
       .pipe(
         map(project => project.budgets.find(budget => budget.status === BudgetStatus.Active)),
         filterRequired(),
+        takeUntil(this.unsubscribe),
       )
       .subscribe(budget => this.createBudgetForm(budget));
 
@@ -79,13 +85,5 @@ export class ProjectBudgetComponent extends ProjectTabComponent implements OnIni
         amount: [detail.amount, [Validators.required, Validators.min(0)]],
       }));
     }
-  }
-
-  private initForm(): void {
-    this.form = this.formBuilder.group({
-      id: [''],
-      status: [''],
-      budgetDetails: this.formBuilder.array([]),
-    });
   }
 }

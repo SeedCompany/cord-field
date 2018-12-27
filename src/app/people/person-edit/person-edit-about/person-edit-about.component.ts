@@ -102,7 +102,7 @@ export class PersonEditAboutComponent extends AbstractPersonComponent implements
     this.addKnownLanguage = kl.add;
     this.removeKnownLanguage = kl.remove;
 
-    this.userViewState.user
+    this.userViewState.subjectWithPreExistingChanges
       .pipe(takeUntil(this.unsubscribe))
       .subscribe(user => {
         this.bio.reset(user.bio, { emitEvent: false });
