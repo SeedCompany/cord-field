@@ -27,6 +27,10 @@ mat-toolbar {
   }
 }
 
-mat-toolbar input {
+mat-form-field {
+  min-width: 400px;
+}
+
+input {
   font-weight: mat-font-weight($config, title);
 }
