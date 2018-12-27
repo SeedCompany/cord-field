@@ -180,7 +180,9 @@ export abstract class AbstractViewState<T> {
     // which would screw up both our for-loop and the index to remove.
     for (let i = form.length - 1; i >= 0; i--) {
       const id = accessor(form.at(i).value);
-      if (newIds.includes(id)) {
+      const idx = newIds.indexOf(id);
+      if (idx >= 0) {
+        form.at(i).reset(value[idx]); // Update value
         currentIds.push(id);
         continue;
       }
