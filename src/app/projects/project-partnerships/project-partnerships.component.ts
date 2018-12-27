@@ -35,7 +35,7 @@ export class ProjectPartnershipsComponent extends SubscriptionComponent implemen
   }
 
   ngOnInit(): void {
-    this.projectViewState.project
+    this.projectViewState.subjectWithPreExistingChanges
       .pipe(takeUntil(this.unsubscribe))
       .subscribe(project => {
         this.form.setControl('partnerships', this.fb.array([])); // reset form array
