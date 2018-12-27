@@ -1,0 +1,32 @@
+@import "~src/styles/imports";
+
+:host {
+  z-index: 10;
+}
+
+mat-toolbar {
+  padding-left: 3.6em;
+}
+
+.name {
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  margin-bottom: 8px; // align text with editing position
+
+  button {
+    margin-left: 8px;
+  }
+  mat-icon {
+    visibility: hidden;
+  }
+  &:hover, button:focus {
+    mat-icon {
+      visibility: visible;
+    }
+  }
+}
+
+mat-toolbar input {
+  font-weight: mat-font-weight($config, title);
+}

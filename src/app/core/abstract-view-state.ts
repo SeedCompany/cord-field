@@ -182,7 +182,7 @@ export abstract class AbstractViewState<T> {
       const id = accessor(form.at(i).value);
       const idx = newIds.indexOf(id);
       if (idx >= 0) {
-        form.at(i).reset(value[idx]); // Update value
+        form.at(i).reset(value[idx], { emitEvent: false }); // Update value
         currentIds.push(id);
         continue;
       }
