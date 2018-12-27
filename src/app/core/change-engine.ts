@@ -190,12 +190,14 @@ export class ChangeEngine<T = any> {
       }
       if ('update' in change) {
         const comparator = compareBy(this.config[key].accessor);
+        const list = [...(obj[key] as any as any[])]; // clone list so change doesn't affect original
         for (const item of change.update) {
-          const index = (obj[key] as any as any[]).findIndex(current => comparator(current, item));
+          const index = list.findIndex(current => comparator(current, item));
           if (index !== -1) {
-            (obj[key] as any as any[])[index] = item;
+            list[index] = item;
           }
         }
+        obj[key] = list as any;
       }
     }
 
