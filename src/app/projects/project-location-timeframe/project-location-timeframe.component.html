@@ -12,7 +12,7 @@
       <mat-form-field color="accent">
         <input matInput
                [matDatepicker]="estimatedDatepicker"
-               placeholder="Estimated Submission Date"
+               placeholder="Estimated Submission to Area Director"
                formControlName="estimatedSubmission"
                [min]="today"
                [max]="startDate.value">
@@ -32,7 +32,7 @@
       <mat-form-field color="accent">
         <input matInput
                [matDatepicker]="startDatepicker"
-               placeholder="Start Date"
+               placeholder="MOU Start Date"
                formControlName="mouStart">
         <mat-datepicker-toggle matSuffix
                                [for]="startDatepicker"></mat-datepicker-toggle>
@@ -44,7 +44,7 @@
         <input matInput
                [min]="minDate"
                [matDatepicker]="endDatepicker"
-               placeholder="End Date"
+               placeholder="MOU End Date"
                formControlName="mouEnd">
         <mat-datepicker-toggle matSuffix
                                [for]="endDatepicker"></mat-datepicker-toggle>
