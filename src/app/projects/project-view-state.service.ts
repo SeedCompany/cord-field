@@ -37,6 +37,7 @@ export interface ModifiedProject {
 }
 
 const config: ChangeConfig<Project> = {
+  name: {},
   mouStart: {
     accessor: accessDates,
     forceRefresh: true,
