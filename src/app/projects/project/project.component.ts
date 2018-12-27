@@ -35,8 +35,8 @@ export class ProjectComponent extends SubscriptionComponent implements OnInit, T
     {path: 'budget', label: 'Budget'},
     {path: 'files', label: 'Files'},
     {path: 'team', label: 'Team'},
-    {path: 'extensions', label: 'Extensions'},
-    {path: 'updates', label: 'Updates'},
+    // {path: 'extensions', label: 'Extensions'},
+    // {path: 'updates', label: 'Updates'},
   ];
 
   project: Project;
