@@ -1,7 +1,5 @@
 import { Component, OnInit } from '@angular/core';
 import { FormArray, FormBuilder } from '@angular/forms';
-import { Unsubscribable } from 'rxjs';
-import { map, takeUntil } from 'rxjs/operators';
 
 import { Organization } from '../../core/models/organization';
 import { Partnership, PartnershipAgreementStatus, PartnershipType } from '../../core/models/partnership';
@@ -23,7 +21,6 @@ export class ProjectPartnershipsComponent extends SubscriptionComponent implemen
   });
   adding = false;
   private opened: number | null;
-  private subscriptions: {[id: string]: Unsubscribable} = {};
 
   get partnerships(): FormArray {
     return this.form.get('partnerships') as FormArray;
@@ -35,12 +32,22 @@ export class ProjectPartnershipsComponent extends SubscriptionComponent implemen
   }
 
   ngOnInit(): void {
-    this.projectViewState.subjectWithPreExistingChanges
-      .pipe(takeUntil(this.unsubscribe))
-      .subscribe(project => {
-        this.form.setControl('partnerships', this.fb.array([])); // reset form array
-        project.partnerships.forEach(p => this.addPartnership(p));
+    const createPartnershipControl = (partnership?: Partnership) => {
+      if (!partnership) {
+        throw new Error('Partnership expected');
+      }
+      return this.fb.group({
+        id: [partnership.id],
+        organization: [partnership.organization],
+        types: [partnership.types],
+        agreementStatus: [partnership.agreementStatus],
+        mouStatus: [partnership.mouStatus],
       });
+    };
+    const result = this.projectViewState.createFormArray('partnerships', createPartnershipControl, this.unsubscribe);
+    this.form.setControl('partnerships', result.control);
+    this.addPartnership = result.add;
+    this.removePartnership = result.remove;
   }
 
   trackById(index: number, item: Partnership): string {
@@ -74,33 +81,15 @@ export class ProjectPartnershipsComponent extends SubscriptionComponent implemen
   }
 
   onDelete(index: number): void {
-    const partnership = this.partnerships.at(index).value as Partnership; // Partnership-ish (matches form configuration)
-    this.projectViewState.change({partnerships: {remove: partnership}});
-    this.subscriptions[partnership.id].unsubscribe();
-    this.partnerships.removeAt(index);
+    this.removePartnership(index);
     this.opened = null;
   }
 
+  // Stubbed - real method assigned in ngOnInit
   private addPartnership(partnership: Partnership): void {
-    // Configure the fields
-    const fg = this.fb.group({
-      id: '',
-      organization: '',
-      types: '',
-      agreementStatus: '',
-      mouStatus: '',
-    } as {[key in keyof Partnership]: any});
-    // set the values
-    fg.reset(partnership);
+  }
 
-    // listen for changes to update view state
-    this.subscriptions[partnership.id] = fg.valueChanges
-      .pipe(
-        takeUntil(this.unsubscribe),
-        map(Partnership.fromJson),
-      )
-      .subscribe(p => this.projectViewState.change({partnerships: {update: p}}));
-
-    this.partnerships.push(fg);
+  // Stubbed - real method assigned in ngOnInit
+  private removePartnership(index: number): void {
   }
 }
