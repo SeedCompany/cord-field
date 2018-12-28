@@ -1,14 +1,9 @@
 import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
 import { TestBed } from '@angular/core/testing';
 import { CoreModule } from '@app/core/core.module';
-import {
-  Engagement,
-  EngagementStatus,
-  ModifiedEngagement,
-  ProjectApproach,
-  ProjectMedium,
-  ProjectProduct,
-} from '@app/core/models/engagement';
+import { BibleBook } from '@app/core/models/bible-book';
+import { Engagement, EngagementStatus, ModifiedEngagement } from '@app/core/models/engagement';
+import { Product, ProductMedium, ProductMethodology, ProductPurpose, ProductType } from '@app/core/models/product';
 import { environment } from '../../../environments/environment';
 import { EngagementService } from './engagement.service';
 
@@ -41,8 +36,17 @@ describe('EngagementService', () => {
       language: {
         id: 'languageId',
       },
-      products: [ProjectProduct.FullBible],
-      mediums: [ProjectMedium.EBook],
+      products: [
+        {
+          id: '1234',
+          approach: 'written',
+          methodology: ProductMethodology.Paratext,
+          type: ProductType.Gospel,
+          books: [BibleBook.Luke],
+          purposes: [ProductPurpose.Evangelism],
+          mediums: [ProductMedium.Print],
+        },
+      ],
       updatedAt: '2018-03-26T05:27:49.000Z',
       tags: [],
     };
@@ -52,7 +56,6 @@ describe('EngagementService', () => {
         expect(engagement.id).toBeDefined();
         expect(engagement.products).toBeDefined();
         expect(Array.isArray(engagement.products)).toBe(true);
-        expect(Array.isArray(engagement.mediums)).toBe(true);
         done();
       })
       .catch(done.fail);
@@ -66,9 +69,17 @@ describe('EngagementService', () => {
     const id = 'iBFFFGvBVlIpvsKVanrbIYVBaPwkDnhjjb0.n_cPm_zyG_7D7WWLDT7ozQ.zfUnrX9tXoPtWtDc9PLhUw';
     const modified: ModifiedEngagement = {
       status: EngagementStatus.Active,
-      products: [ProjectProduct.FullBible],
-      mediums: [ProjectMedium.EBook],
-      approaches: [ProjectApproach.OralStorying],
+      products: [
+        Product.from({
+          id: '1234',
+          approach: 'written',
+          methodology: ProductMethodology.Paratext,
+          type: ProductType.Gospel,
+          books: [BibleBook.Luke],
+          purposes: [ProductPurpose.Evangelism],
+          mediums: [ProductMedium.Print],
+        }),
+      ],
       tags: ['luke_partnership'],
       isDedicationPlanned: false,
       dedicationDate: null,
