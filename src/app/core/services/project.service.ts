@@ -208,6 +208,29 @@ export class ProjectService {
           ['Reactivate Project', ProjectStatus.Active],
           ['Terminate Project', ProjectStatus.Terminated],
         ];
+      case ProjectStatus.Completed:
+      case ProjectStatus.DidNotDevelop:
+      case ProjectStatus.Rejected:
+      case ProjectStatus.Terminated:
+        return [
+          ['Submit for Concept Approval', ProjectStatus.PendingConceptApproval],
+          [`Won't do`, ProjectStatus.DidNotDevelop],
+          ['Approve for Finance Confirmation', ProjectStatus.PendingFinanceConfirmation],
+          ['Submit for Area Director Approval', ProjectStatus.PendingAreaDirectorApproval],
+          ['Approve for Regional Director Approval', ProjectStatus.PendingRegionalDirectorApproval],
+          ['Strongly Endorse', ProjectStatus.FinalizingProposal],
+          ['Endorse with Hesitation', ProjectStatus.FinalizingProposal],
+          ['Endorse Plan', ProjectStatus.PrepForFinancialEndorsement],
+          ['Do Not Endorse Plan', ProjectStatus.PrepForFinancialEndorsement],
+          ['Send Back for Corrections', ProjectStatus.EarlyConversations],
+          ['Reactivate Project', ProjectStatus.Active],
+          ['Terminate Project', ProjectStatus.Terminated],
+          ['Suspend Project', ProjectStatus.Suspended],
+          ['End Development', ProjectStatus.DidNotDevelop],
+          ['Complete Project', ProjectStatus.Completed],
+          ['Confirm Project', ProjectStatus.Active],
+          ['Reject', ProjectStatus.Rejected],
+        ];
       default:
         return [];
     }
