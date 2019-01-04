@@ -9,6 +9,6 @@ export const environment = {
   },
   services: {
     'domain': 'field',
-    'plo.cord.bible': 'https://api-beta.cordfield.com/api',
+    'plo.cord.bible': 'https://beta-api.cordfield.com/api',
   },
 };
