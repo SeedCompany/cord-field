@@ -1,14 +1,15 @@
 import { FormGroup } from '@angular/forms';
 import { EMPTY, from, Observable, of } from 'rxjs';
 import { isInteropObservable } from 'rxjs/internal/util/isInteropObservable';
+import { isPromise } from 'rxjs/internal/util/isPromise';
 import { filter, map, tap } from 'rxjs/operators';
 import { filterEntries } from './array-object-helpers';
 
-export type MaybeObservable<T> = Observable<T> | T;
+export type MaybeObservable<T> = Observable<T> | Promise<T> | T;
 
-export const maybeObservable = <T>(obs?: MaybeObservable<T>): Observable<T> =>
-  obs == null ? EMPTY :
-    isInteropObservable(obs) ? from(obs) : of(obs);
+export const maybeObservable = <T>(obs?: MaybeObservable<T>, defaultVal: Observable<T> = EMPTY): Observable<T> =>
+  obs == null ? defaultVal :
+    isInteropObservable(obs) || isPromise(obs) ? from(obs) : of(obs);
 
 /**
  * An RXJs pipeable operator that filters form values to only ones that are valid.

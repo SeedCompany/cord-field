@@ -5,11 +5,6 @@
   flex: 1;
 }
 
-mat-toolbar {
-  padding-left: 3.6em;
-  z-index: 10;
-}
-
 .mat-tab-nav-bar {
   background-color: mat-background($theme, app-bar);
   overflow: initial;

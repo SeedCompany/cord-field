@@ -24,6 +24,7 @@ import { ProjectTeamMemberRoleDialogComponent } from './project-team-member-role
 import { ProjectTeamMemberAddComponent } from './project-team/project-team-member-add/project-team-member-add.component';
 import { ProjectTeamComponent } from './project-team/project-team.component';
 import { ProjectUpdatesComponent } from './project-updates/project-updates.component';
+import { ProjectNameComponent } from './project/project-name/project-name.component';
 import { ProjectComponent } from './project/project.component';
 import { ProjectsRoutingModule } from './projects-routing.module';
 
@@ -46,6 +47,7 @@ import { ProjectsRoutingModule } from './projects-routing.module';
     ProjectListComponent,
     ProjectListFilterComponent,
     ProjectLocationTimeframeComponent,
+    ProjectNameComponent,
     ProjectOverviewComponent,
     ProjectOverviewSidebarComponent,
     ProjectPartnershipsComponent,

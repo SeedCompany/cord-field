@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { AbstractControl } from '@angular/forms/src/model';
 import { onlyValidValues } from '@app/core/util';
@@ -14,7 +14,7 @@ import { ProjectViewStateService } from '../project-view-state.service';
   templateUrl: './project-location-timeframe.component.html',
   styleUrls: ['./project-location-timeframe.component.scss'],
 })
-export class ProjectLocationTimeframeComponent extends SubscriptionComponent {
+export class ProjectLocationTimeframeComponent extends SubscriptionComponent implements OnInit {
   form: FormGroup;
   minDate: DateTime;
   today: DateTime = DateTime.utc();
@@ -24,8 +24,6 @@ export class ProjectLocationTimeframeComponent extends SubscriptionComponent {
     private projectViewState: ProjectViewStateService,
   ) {
     super();
-
-    this._initForm();
   }
 
   get location(): AbstractControl {
@@ -44,7 +42,7 @@ export class ProjectLocationTimeframeComponent extends SubscriptionComponent {
     return this.form.get('estimatedSubmission')!;
   }
 
-  private _initForm(): void {
+  ngOnInit(): void {
     this.form = this.formBuilder.group({
       location: ['', Validators.required],
       mouStart: ['', Validators.required],
@@ -54,7 +52,7 @@ export class ProjectLocationTimeframeComponent extends SubscriptionComponent {
       validator: CustomValidators.dateRange('mouStart', 'mouEnd', false),
     });
 
-    this.projectViewState.project
+    this.projectViewState.subjectWithPreExistingChanges
       .pipe(takeUntil(this.unsubscribe))
       .subscribe((state) => {
         this.form.reset({
@@ -65,10 +63,6 @@ export class ProjectLocationTimeframeComponent extends SubscriptionComponent {
         });
       });
 
-    this._initFormEvents();
-  }
-
-  private _initFormEvents(): void {
     this.form.valueChanges
       .pipe(takeUntil(this.unsubscribe))
       .pipe(onlyValidValues(this.form))

@@ -5,6 +5,7 @@ import { PersonCreateDialogComponent } from './create-dialogs/person-create-dial
 import { ProjectCreateDialogComponent } from './create-dialogs/project-create-dialog/project-create-dialog.component';
 import { HeaderComponent } from './header/header.component';
 import { NotFoundPageComponent } from './not-found-page/not-found-page.component';
+import { SavePromptDialogComponent } from './save-prompt-dialog/save-prompt-dialog.component';
 import { AuthInterceptor } from './services/http/auth-interceptor';
 import { ErrorInterceptor } from './services/http/error-interceptor';
 
@@ -19,10 +20,12 @@ import { ErrorInterceptor } from './services/http/error-interceptor';
     NotFoundPageComponent,
     PersonCreateDialogComponent,
     ProjectCreateDialogComponent,
+    SavePromptDialogComponent,
   ],
   entryComponents: [
     PersonCreateDialogComponent,
     ProjectCreateDialogComponent,
+    SavePromptDialogComponent,
   ],
 })
 export class CoreModule {

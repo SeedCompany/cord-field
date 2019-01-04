@@ -3,7 +3,7 @@ import { FormControl } from '@angular/forms';
 import { AbstractValueAccessor, ValueAccessorProvider } from '@app/core/classes/abstract-value-accessor.class';
 import { GoodEnum } from '@app/core/models/enum';
 import { enableControl, TypedFormControl } from '@app/core/util';
-import { first, mapTo, switchMap, takeUntil } from 'rxjs/operators';
+import { filter, first, mapTo, switchMap, takeUntil } from 'rxjs/operators';
 
 export type StatusOptions<T> = Array<[string, T]>;
 
@@ -43,6 +43,7 @@ export class StatusSelectWorkflowComponent<T extends GoodEnum<T>> extends Abstra
       .pipe(
         // on change, wait for stable zone aka rendering complete.
         switchMap((status) => this.zone.onStable.pipe(first(), mapTo(status))),
+        takeUntil(this.unsubscribe), // If destroying, don't try to update & detect changes
       )
       .subscribe((status) => {
         // Now that changes have settled, change value, and detect changes to re-render
@@ -51,10 +52,24 @@ export class StatusSelectWorkflowComponent<T extends GoodEnum<T>> extends Abstra
       });
 
     this.statusCtrl.valueChanges
-      .pipe(takeUntil(this.unsubscribe))
+      .pipe(
+        // Filter out "changes" that aren't actually changing the value.
+        // This is caused by writeValue() changing the value.
+        filter(value => value !== this.value),
+        takeUntil(this.unsubscribe),
+      )
       .subscribe(status => {
         this.value = status;
       });
+  }
+
+  writeValue(value: T) {
+    // Change statusCtrl value before rendering takes place. This prevents statusCtrl from emitting
+    // a value change of the previous, now incorrect, value after writeValue() is called.
+    // The valueChange is still emitted, but now it is the new, correct value.
+    this.statusCtrl.reset(value, { emitEvent: false });
+
+    super.writeValue(value);
   }
 
   forUI(value: T): string {

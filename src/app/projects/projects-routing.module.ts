@@ -1,5 +1,6 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
+import { DirtyGuard } from '@app/core/route-guards/dirty.guard';
 import { ProjectExtensionComponent } from '@app/projects/project-extensions/project-extension/project-extension.component';
 import { ProjectExtensionsComponent } from '@app/projects/project-extensions/project-extensions.component';
 import { ProjectBudgetComponent } from './project-budget/project-budget.component';
@@ -20,16 +21,16 @@ const routes: Routes = [
     component: ProjectComponent,
     children: [
       {path: '', redirectTo: 'overview', pathMatch: 'full'},
-      {path: 'overview', component: ProjectOverviewComponent},
-      {path: 'forms', component: ProjectFormsComponent},
+      {path: 'overview', component: ProjectOverviewComponent, data: { acceptDirty: true }, canDeactivate: [DirtyGuard]},
+      {path: 'forms', component: ProjectFormsComponent, data: { acceptDirty: true }, canDeactivate: [DirtyGuard]},
       {
         path: 'engagements',
         component: ProjectEngagementsComponent,
         children: [
-          { path: ':id', component: ProjectEngagementComponent },
+          { path: ':id', component: ProjectEngagementComponent, canDeactivate: [DirtyGuard]},
         ],
       },
-      {path: 'budget', component: ProjectBudgetComponent},
+      {path: 'budget', component: ProjectBudgetComponent, data: { acceptDirty: true }, canDeactivate: [DirtyGuard]},
       {path: 'files', component: ProjectFilesComponent},
       {path: 'team', component: ProjectTeamComponent},
       {
@@ -41,6 +42,8 @@ const routes: Routes = [
       },
       {path: 'updates', component: ProjectUpdatesComponent},
     ],
+    canDeactivate: [DirtyGuard],
+    canActivateChild: [DirtyGuard],
   },
 ];
 

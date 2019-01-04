@@ -1,7 +1,7 @@
 import { ViewChild } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 import { maybeArray, MaybeObservable, maybeObservable } from '@app/core/util';
-import { BehaviorSubject, combineLatest, Observable, Unsubscribable } from 'rxjs';
+import { BehaviorSubject, combineLatest, Observable, of, Unsubscribable } from 'rxjs';
 import { map, startWith } from 'rxjs/operators';
 
 type Title = MaybeObservable<string | string[]>;
@@ -132,5 +132,5 @@ export function TitleAware(title?: Title): ClassDecorator {
 export const observeComponentTitle = (component: Partial<TitleProp>): Observable<string[]> => observeTitle(component.title);
 
 const observeTitle = (title?: Title): Observable<string[]> =>
-  maybeObservable(title)
+  maybeObservable(title, of([]))
     .pipe(map(maybeArray));

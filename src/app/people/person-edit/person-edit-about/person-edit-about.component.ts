@@ -3,8 +3,8 @@ import { AbstractControl, FormArray, FormBuilder, Validators } from '@angular/fo
 import { TitleAware } from '@app/core/decorators';
 import { Degree, Education, KnownLanguage, LanguageProficiency } from '@app/core/models/user';
 import { generateObjectId, onlyValidValues, TypedFormControl } from '@app/core/util';
+import { AbstractPersonComponent } from '@app/people/person-edit/abstract-person.component';
 import { UserViewStateService } from '@app/people/user-view-state.service';
-import { SubscriptionComponent } from '@app/shared/components/subscription.component';
 import { takeUntil } from 'rxjs/operators';
 
 @Component({
@@ -13,7 +13,7 @@ import { takeUntil } from 'rxjs/operators';
   styleUrls: ['./person-edit-about.component.scss'],
 })
 @TitleAware('Edit About')
-export class PersonEditAboutComponent extends SubscriptionComponent implements OnInit {
+export class PersonEditAboutComponent extends AbstractPersonComponent implements OnInit {
 
   readonly LanguageProficiency = LanguageProficiency;
   readonly Degree = Degree;
@@ -40,10 +40,10 @@ export class PersonEditAboutComponent extends SubscriptionComponent implements O
   removeKnownLanguage: (index: number) => void;
 
   constructor(
-    private userViewState: UserViewStateService,
+    userViewState: UserViewStateService,
     private formBuilder: FormBuilder,
   ) {
-    super();
+    super(userViewState);
   }
 
   get bio(): TypedFormControl<string> {
@@ -63,6 +63,8 @@ export class PersonEditAboutComponent extends SubscriptionComponent implements O
   }
 
   ngOnInit() {
+    super.ngOnInit();
+
     const createEduControl = (education?: Education) => {
       education = education || Education.create();
 
@@ -100,7 +102,7 @@ export class PersonEditAboutComponent extends SubscriptionComponent implements O
     this.addKnownLanguage = kl.add;
     this.removeKnownLanguage = kl.remove;
 
-    this.userViewState.user
+    this.userViewState.subjectWithPreExistingChanges
       .pipe(takeUntil(this.unsubscribe))
       .subscribe(user => {
         this.bio.reset(user.bio, { emitEvent: false });

@@ -5,11 +5,11 @@ import { TitleAware } from '@app/core/decorators';
 import { Unavailability, UserProfile } from '@app/core/models/user';
 import { enableControl, onlyValidValues } from '@app/core/util';
 import * as CustomValidators from '@app/core/validators';
+import { AbstractPersonComponent } from '@app/people/person-edit/abstract-person.component';
 import {
 PersonAvailabilityCrudDialogComponent,
 } from '@app/people/person-edit/person-availability-crud-dialog/person-availability-crud-dialog.component';
 import { UserViewStateService } from '@app/people/user-view-state.service';
-import { SubscriptionComponent } from '@app/shared/components/subscription.component';
 import { DateTime } from 'luxon';
 import { takeUntil } from 'rxjs/operators';
 
@@ -19,7 +19,7 @@ import { takeUntil } from 'rxjs/operators';
   styleUrls: ['./person-edit-basic-info.component.scss'],
 })
 @TitleAware('Edit Basic Info')
-export class PersonEditBasicInfoComponent extends SubscriptionComponent implements OnInit {
+export class PersonEditBasicInfoComponent extends AbstractPersonComponent implements OnInit {
   readonly format = DateTime.DATE_FULL;
 
   userProfile?: UserProfile;
@@ -27,10 +27,10 @@ export class PersonEditBasicInfoComponent extends SubscriptionComponent implemen
 
   constructor(
     private formBuilder: FormBuilder,
-    private viewStateService: UserViewStateService,
+    userViewState: UserViewStateService,
     public dialog: MatDialog,
   ) {
-    super();
+    super(userViewState);
 
     this.initForm();
   }
@@ -60,6 +60,8 @@ export class PersonEditBasicInfoComponent extends SubscriptionComponent implemen
   }
 
   ngOnInit(): void {
+    super.ngOnInit();
+
     this.initFormEvents();
     this.initViewState();
   }
@@ -70,7 +72,7 @@ export class PersonEditBasicInfoComponent extends SubscriptionComponent implemen
 
   editAvailability(unavailability?: Unavailability): void {
     PersonAvailabilityCrudDialogComponent.open(this.dialog, {
-      viewStateService: this.viewStateService,
+      viewStateService: this.userViewState,
       unavailability,
     });
   }
@@ -97,7 +99,7 @@ export class PersonEditBasicInfoComponent extends SubscriptionComponent implemen
         onlyValidValues(this.form),
       )
       .subscribe(changes => {
-        this.viewStateService.change({
+        this.userViewState.change({
           realFirstName: changes.firstName,
           realLastName: changes.lastName,
           displayFirstName: changes.displayFirstName,
@@ -109,13 +111,13 @@ export class PersonEditBasicInfoComponent extends SubscriptionComponent implemen
   }
 
   private initViewState(): void {
-    this.viewStateService.isSubmitting
+    this.userViewState.isSubmitting
       .pipe(takeUntil(this.unsubscribe))
       .subscribe(submitting => {
         enableControl(this.form, !submitting);
       });
 
-    this.viewStateService.user
+    this.userViewState.subjectWithPreExistingChanges
       .pipe(takeUntil(this.unsubscribe))
       .subscribe(userProfile => {
         this.firstName.patchValue(userProfile.realFirstName, { emitEvent: false });
@@ -126,7 +128,7 @@ export class PersonEditBasicInfoComponent extends SubscriptionComponent implemen
         this.email.patchValue(userProfile.email, { emitEvent: false });
       });
 
-    this.viewStateService.userWithChanges
+    this.userViewState.userWithChanges
       .pipe(takeUntil(this.unsubscribe))
       .subscribe(userProfile => {
         this.userProfile = userProfile;

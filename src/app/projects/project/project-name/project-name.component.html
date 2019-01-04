@@ -1,0 +1,17 @@
+<mat-toolbar>
+  <div *ngIf="!editingTitle; else editTitle" class="name" (click)="edit($event)">
+    {{ name.value }}
+    <button mat-icon-button color="primary" (click)="edit($event)">
+      <mat-icon>edit</mat-icon>
+    </button>
+  </div>
+  <ng-template #editTitle>
+    <mat-form-field color="accent">
+      <input matInput
+             [formControl]="name"
+             [autofocus]="true"
+             (blur)="done()">
+      <mat-error>Required</mat-error>
+    </mat-form-field>
+  </ng-template>
+</mat-toolbar>

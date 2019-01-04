@@ -3,7 +3,7 @@ import { AbstractControl, FormArray, FormBuilder, FormGroup, Validators } from '
 import { TitleAware } from '@app/core/decorators';
 import { BudgetStatus, ProjectBudget, ProjectBudgetDetails } from '@app/core/models/budget';
 import { filterRequired } from '@app/core/util';
-import { SubscriptionComponent } from '@app/shared/components/subscription.component';
+import { ProjectTabComponent } from '@app/projects/abstract-project-tab';
 import { Observable } from 'rxjs';
 import { map, startWith, takeUntil } from 'rxjs/operators';
 import { ProjectViewStateService } from '../project-view-state.service';
@@ -15,7 +15,7 @@ import { ProjectViewStateService } from '../project-view-state.service';
   styleUrls: ['./project-budget.component.scss'],
 })
 @TitleAware('Budget')
-export class ProjectBudgetComponent extends SubscriptionComponent implements OnInit {
+export class ProjectBudgetComponent extends ProjectTabComponent implements OnInit {
   form: FormGroup;
   total: Observable<number>;
 
@@ -23,17 +23,23 @@ export class ProjectBudgetComponent extends SubscriptionComponent implements OnI
     private formBuilder: FormBuilder,
     private viewStateService: ProjectViewStateService,
   ) {
-    super();
+    super(viewStateService);
   }
 
   ngOnInit(): void {
-    this.initForm();
+    super.ngOnInit();
 
-    this.viewStateService
-      .project
+    this.form = this.formBuilder.group({
+      id: [''],
+      status: [''],
+      budgetDetails: this.formBuilder.array([]),
+    });
+
+    this.viewStateService.subjectWithPreExistingChanges
       .pipe(
-        map(project => project.budgets.find(budget => budget.status === BudgetStatus.Active)),
+        map(project => project.budgets.find(budget => budget.status === BudgetStatus.Current)),
         filterRequired(),
+        takeUntil(this.unsubscribe),
       )
       .subscribe(budget => this.createBudgetForm(budget));
 
@@ -79,13 +85,5 @@ export class ProjectBudgetComponent extends SubscriptionComponent implements OnI
         amount: [detail.amount, [Validators.required, Validators.min(0)]],
       }));
     }
-  }
-
-  private initForm(): void {
-    this.form = this.formBuilder.group({
-      id: [''],
-      status: [''],
-      budgetDetails: this.formBuilder.array([]),
-    });
   }
 }
