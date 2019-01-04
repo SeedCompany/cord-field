@@ -26,46 +26,6 @@
   <mat-card>
     <mat-card-title>Engagement Details</mat-card-title>
     <mat-card-content>
-      <mat-form-field color="accent">
-        <mat-select multiple placeholder="Products" formControlName="products">
-          <mat-option
-            *ngFor="let product of ProjectProduct.entries(); trackBy: ProjectProduct.trackEntryBy"
-            [value]="product.value">
-            {{ product.ui }}
-          </mat-option>
-        </mat-select>
-        <mat-error>Please select one or more products</mat-error>
-      </mat-form-field>
-
-      <mat-form-field color="accent">
-        <mat-select multiple placeholder="Mediums" formControlName="mediums">
-          <mat-option *ngFor="let medium of ProjectMedium.entries(); trackBy: ProjectMedium.trackEntryBy"
-                      [value]="medium.value">
-            {{ medium.ui }}
-          </mat-option>
-        </mat-select>
-        <mat-error>Please select one or more mediums</mat-error>
-      </mat-form-field>
-
-      <mat-form-field color="accent">
-        <mat-select multiple placeholder="Approaches" formControlName="approaches">
-          <mat-option
-            *ngFor="let approach of ProjectApproach.entries(); trackBy: ProjectApproach.trackEntryBy"
-            [value]="approach.value">
-            {{ approach.ui }}
-          </mat-option>
-        </mat-select>
-        <mat-error>Please select one or more mediums</mat-error>
-      </mat-form-field>
-
-      <mat-checkbox formControlName="isLukePartnership">
-        Is this a Luke Partnership?
-      </mat-checkbox>
-
-      <mat-checkbox formControlName="isFirstScripture">
-        Does this provide First Scripture for this people group?
-      </mat-checkbox>
-
       <mat-checkbox formControlName="isDedicationPlanned">
         Is a dedication planned for this project? If so when?
       </mat-checkbox>
@@ -80,6 +40,119 @@
         <mat-error *ngIf="dedicationDate.errors?.matDatepickerParse">Invalid Date</mat-error>
       </mat-form-field>
     </mat-card-content>
+  </mat-card>
+
+  <mat-card class="products">
+    <mat-card-title>Products</mat-card-title>
+    <mat-card-content>
+
+      <div class="options">
+        <mat-checkbox formControlName="isLukePartnership">
+          Is this a Luke Partnership?
+        </mat-checkbox>
+
+        <mat-checkbox formControlName="isFirstScripture">
+          Does this provide First Scripture for this people group?
+        </mat-checkbox>
+      </div>
+
+      <mat-accordion displayMode="flat" formArrayName="products">
+        <mat-expansion-panel
+          *ngFor="let product of products.controls; let index=index"
+          [formGroupName]="index"
+          [expanded]="isProductOpened(index)"
+          (opened)="onProductOpen(index)"
+          (closed)="onProductClose(index)"
+          [class.mat-elevation-z0]="true"
+        >
+          <mat-expansion-panel-header expandedHeight="48px">
+            <mat-panel-title>
+              <div class="title" [class.mat-error]="product.invalid">
+                {{ ProductType.displaySummary(product.value.books || [], product.value.type) || 'Draft' }}
+              </div>
+            </mat-panel-title>
+            <mat-panel-description *ngIf="!isProductOpened(index)">
+              <div>{{ ProductMethodology.forUI(product.value.methodology) }}</div>
+            </mat-panel-description>
+          </mat-expansion-panel-header>
+          <ng-template matExpansionPanelContent>
+
+            <mat-form-field color="accent">
+              <mat-select placeholder="Type" formControlName="type" autofocus>
+                <mat-option *ngFor="let type of ProductType.entries(); trackBy: ProductType.trackEntryBy"
+                            [value]="type.value">
+                  {{ type.ui }}
+                </mat-option>
+              </mat-select>
+              <mat-error>Please select a type</mat-error>
+            </mat-form-field>
+
+            <mat-form-field color="accent">
+              <mat-select multiple placeholder="Books" formControlName="books">
+                <mat-optgroup label="Old Testament">
+                  <mat-option *ngFor="let book of BibleBook.OldTestament"
+                              [value]="book">
+                    {{ BibleBook.forUI(book) }}
+                  </mat-option>
+                </mat-optgroup>
+                <mat-optgroup label="New Testament">
+                  <mat-option *ngFor="let book of BibleBook.NewTestament"
+                              [value]="book">
+                    {{ BibleBook.forUI(book) }}
+                  </mat-option>
+                </mat-optgroup>
+              </mat-select>
+            </mat-form-field>
+
+            <mat-form-field color="accent">
+              <mat-select multiple placeholder="Mediums" formControlName="mediums">
+                <mat-option *ngFor="let medium of ProductMedium.entries(); trackBy: ProductMedium.trackEntryBy"
+                            [value]="medium.value">
+                  {{ medium.ui }}
+                </mat-option>
+              </mat-select>
+              <mat-error>Please select one or more mediums</mat-error>
+            </mat-form-field>
+
+            <mat-form-field color="accent">
+              <mat-select multiple placeholder="Purposes" formControlName="purposes">
+                <mat-option
+                  *ngFor="let purpose of ProductPurpose.entries(); trackBy: ProductPurpose.trackEntryBy"
+                  [value]="purpose.value">
+                  {{ purpose.ui }}
+                </mat-option>
+              </mat-select>
+              <mat-error>Please select one or more purposes</mat-error>
+            </mat-form-field>
+
+            <mat-form-field color="accent">
+              <mat-select placeholder="Methodology" formControlName="methodology">
+                <mat-optgroup
+                  *ngFor="let entry of ProductMethodology.groupEntries"
+                  [label]="entry[0]"
+                >
+                  <mat-option
+                    *ngFor="let methodology of entry[1]; trackBy: ProductMethodology.trackValueBy"
+                    [value]="methodology">
+                    {{ ProductMethodology.forUI(methodology) }}
+                  </mat-option>
+                </mat-optgroup>
+              </mat-select>
+              <mat-error>Please select a methodology</mat-error>
+            </mat-form-field>
+
+            <button mat-button color="warn" class="delete" (click)="deleteProduct(index)">
+              DELETE
+            </button>
+
+          </ng-template>
+        </mat-expansion-panel>
+      </mat-accordion>
+
+    </mat-card-content>
+    <mat-card-actions>
+      <button mat-button color="accent" (click)="addProduct()">ADD PRODUCT</button>
+    </mat-card-actions>
   </mat-card>
 </form>
 

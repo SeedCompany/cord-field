@@ -30,9 +30,7 @@ function enumValues<T>(object: Object): () => T[] {
 function enumEntries<T>(mapping: { [key: string]: string }): () => EnumList<T> {
   const entries: EnumList<T> = [];
   for (const [value, ui] of Object.entries(mapping) as any as Array<[T, string]>) {
-    const asNum = parseInt(value as any as string, 10);
-    const val = asNum >= 0 ? asNum as any as T : value;
-    entries.push({value: val, ui});
+    entries.push({value, ui});
   }
 
   return () => entries;

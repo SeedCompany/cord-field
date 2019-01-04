@@ -11,7 +11,7 @@ import { ProjectViewStateService } from '../project-view-state.service';
   templateUrl: './project-engagements.component.html',
   styleUrls: ['./project-engagements.component.scss'],
 })
-@TitleAware('Engagements')
+@TitleAware('Plan')
 export class ProjectEngagementsComponent extends ProjectTabComponent implements OnInit {
 
   constructor(
