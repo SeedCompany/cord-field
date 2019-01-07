@@ -4,27 +4,24 @@ import { MatSnackBar } from '@angular/material';
 import { ActivatedRoute, Router } from '@angular/router';
 import { TitleAware, TitleProp } from '@app/core/decorators';
 import { BibleBook } from '@app/core/models/bible-book';
-import { Engagement, EngagementStatus, ModifiedEngagement } from '@app/core/models/engagement';
+import { EditableEngagement, Engagement, EngagementStatus } from '@app/core/models/engagement';
 import { Product, ProductMedium, ProductMethodology, ProductPurpose, ProductType } from '@app/core/models/product';
+import { Project, ProjectType } from '@app/core/models/project';
 import { IsDirty } from '@app/core/route-guards/dirty.guard';
 import { EngagementService } from '@app/core/services/engagement.service';
 import { ProjectService } from '@app/core/services/project.service';
-import { enableControl, filterRequired, generateObjectId } from '@app/core/util';
+import { enableControl, filterRequired, generateObjectId, Omit } from '@app/core/util';
 import { ProjectViewStateService } from '@app/projects/project-view-state.service';
 import { popInOut } from '@app/shared/animations';
 import { StatusOptions } from '@app/shared/components/status-select-workflow/status-select-workflow.component';
 import { SubscriptionComponent } from '@app/shared/components/subscription.component';
-import { DateTime } from 'luxon';
-import { BehaviorSubject, combineLatest, Observable, Unsubscribable } from 'rxjs';
+import { BehaviorSubject, combineLatest, merge, Observable, Unsubscribable } from 'rxjs';
 import { filter, map, startWith, takeUntil } from 'rxjs/operators';
 
-interface EngagementForm {
-  status: EngagementStatus;
-  products: Product[];
+interface EngagementForm extends Omit<EditableEngagement, 'tags'> {
   isLukePartnership: boolean;
   isFirstScripture: boolean;
-  isDedicationPlanned: boolean;
-  dedicationDate: DateTime | null;
+  isCeremonyPlanned: boolean;
 }
 
 @Component({
@@ -43,6 +40,7 @@ export class ProjectEngagementComponent extends SubscriptionComponent implements
   readonly ProductMedium = ProductMedium;
   readonly ProductMethodology = ProductMethodology;
 
+  project: Project;
   private readonly _engagement = new BehaviorSubject<Engagement | undefined>(undefined);
   readonly engagement$: Observable<Engagement> = this._engagement.pipe(filterRequired());
 
@@ -51,8 +49,12 @@ export class ProjectEngagementComponent extends SubscriptionComponent implements
     products: this.formBuilder.array([]),
     isLukePartnership: [false],
     isFirstScripture: [false],
-    isDedicationPlanned: [false],
-    dedicationDate: [null],
+    completeDate: [null],
+    disbursementCompleteDate: [null],
+    communicationsCompleteDate: [null],
+    isCeremonyPlanned: [false],
+    ceremonyEstimatedDate: [null],
+    ceremonyActualDate: [null],
   });
 
   private productOpened: number | null;
@@ -83,20 +85,42 @@ export class ProjectEngagementComponent extends SubscriptionComponent implements
     return this.form.dirty;
   }
 
+  get ceremonyName() {
+    return this.project.type === ProjectType.Translation ? 'dedication' : 'certification';
+  }
+
   get products(): FormArray {
     return this.form.get('products') as FormArray;
   }
 
-  get isDedicationPlanned(): AbstractControl {
-    return this.form.get('isDedicationPlanned')!;
+  get completeDate(): AbstractControl {
+    return this.form.get('completeDate')!;
   }
 
-  get dedicationDate(): AbstractControl {
-    return this.form.get('dedicationDate')!;
+  get disbursementCompleteDate(): AbstractControl {
+    return this.form.get('disbursementCompleteDate')!;
+  }
+
+  get communicationsCompleteDate(): AbstractControl {
+    return this.form.get('communicationsCompleteDate')!;
+  }
+
+  get isCeremonyPlanned(): AbstractControl {
+    return this.form.get('isCeremonyPlanned')!;
+  }
+
+  get ceremonyEstimatedDate(): AbstractControl {
+    return this.form.get('ceremonyEstimatedDate')!;
+  }
+
+  get ceremonyActualDate(): AbstractControl {
+    return this.form.get('ceremonyActualDate')!;
   }
 
   ngOnInit(): void {
     const project$ = this.projectViewState.project.pipe(takeUntil(this.unsubscribe));
+    project$.subscribe(p => this.project = p);
+
     const id$ = this.route.params.pipe(map(({ id }) => id));
     combineLatest(project$, id$)
       .pipe(
@@ -105,23 +129,25 @@ export class ProjectEngagementComponent extends SubscriptionComponent implements
       .subscribe(this._engagement);
 
     this.engagement$.subscribe(engagement => {
-      const { status, products, isDedicationPlanned, dedicationDate } = engagement;
+      const { id, language, possibleStatuses, updatedAt, tags, initialEndDate, currentEndDate, ...editable } = engagement;
       const value: EngagementForm = {
-        status,
-        products,
-        isLukePartnership: engagement.tags.some(tag => tag === 'luke_partnership'),
-        isFirstScripture: engagement.tags.some(tag => tag === 'first_scripture'),
-        isDedicationPlanned,
-        dedicationDate,
+        ...editable,
+        isLukePartnership: engagement.hasTag('luke_partnership'),
+        isFirstScripture: engagement.hasTag('first_scripture'),
+        isCeremonyPlanned: engagement.hasTag('ceremony_planned'),
       };
 
       this.form.reset(value, { emitEvent: false });
     });
 
-    this.isDedicationPlanned.valueChanges
+    merge(
+      this.engagement$.pipe(map(e => e.hasTag('ceremony_planned'))),
+      this.isCeremonyPlanned.valueChanges,
+    )
       .pipe(takeUntil(this.unsubscribe))
-      .subscribe(value => {
-        enableControl(this.dedicationDate, value);
+      .subscribe(planned => {
+        enableControl(this.ceremonyEstimatedDate, planned);
+        enableControl(this.ceremonyActualDate, planned);
       });
   }
 
@@ -135,13 +161,21 @@ export class ProjectEngagementComponent extends SubscriptionComponent implements
       return;
     }
 
-    const {isLukePartnership, isFirstScripture, ...other} = this.form.value as EngagementForm;
-    const value: ModifiedEngagement = {...other, tags: []};
+    const {
+      isLukePartnership,
+      isFirstScripture,
+      isCeremonyPlanned,
+      ...other
+    } = this.form.value as EngagementForm;
+    const value: EditableEngagement = {...other, tags: []};
     if (isLukePartnership) {
       value.tags.push('luke_partnership');
     }
     if (isFirstScripture) {
       value.tags.push('first_scripture');
+    }
+    if (isCeremonyPlanned) {
+      value.tags.push('ceremony_planned');
     }
 
     this.form.disable();

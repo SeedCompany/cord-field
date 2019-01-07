@@ -1,4 +1,5 @@
 export * from './array-object-helpers';
+export * from './dates';
 export * from './firstLettersOfWords';
 export * from './forms';
 export * from './material-types';
