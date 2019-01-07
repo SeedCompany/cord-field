@@ -40,8 +40,8 @@ export class Engagement extends EditableEngagement {
     engagement.language = Language.fromJson(json.language);
     engagement.products = json.products || [];
     engagement.tags = json.tags || [];
-    engagement.initialEndDate = maybeDate(json.initialEndDate) || DateTime.local();
-    engagement.currentEndDate = maybeDate(json.currentEndDate) || DateTime.local();
+    engagement.initialEndDate = maybeDate(json.initialEndDate);
+    engagement.currentEndDate = maybeDate(json.currentEndDate);
     engagement.completeDate = maybeDate(json.completeDate);
     engagement.disbursementCompleteDate = maybeDate(json.disbursementCompleteDate);
     engagement.communicationsCompleteDate = maybeDate(json.communicationsCompleteDate);
