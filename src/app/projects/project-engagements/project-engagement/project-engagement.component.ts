@@ -13,7 +13,7 @@ import { ProjectService } from '@app/core/services/project.service';
 import { enableControl, filterRequired, generateObjectId, Omit } from '@app/core/util';
 import { ProjectViewStateService } from '@app/projects/project-view-state.service';
 import { popInOut } from '@app/shared/animations';
-import { StatusOptions } from '@app/shared/components/status-select-workflow/status-select-workflow.component';
+import { emptyOptions, StatusOptions } from '@app/shared/components/status-select-workflow/status-select-workflow.component';
 import { SubscriptionComponent } from '@app/shared/components/subscription.component';
 import { BehaviorSubject, combineLatest, merge, Observable, Unsubscribable } from 'rxjs';
 import { filter, map, startWith, takeUntil } from 'rxjs/operators';
@@ -152,7 +152,7 @@ export class ProjectEngagementComponent extends SubscriptionComponent implements
   }
 
   findAvailableStatuses = (status: EngagementStatus): StatusOptions<EngagementStatus> => {
-    return this.engagement ? this.projectService.getAvailableEngagementStatuses(this.engagement) : [];
+    return this.engagement ? this.projectService.getAvailableEngagementStatuses(this.engagement) : emptyOptions;
   };
 
   async onSave(): Promise<void> {

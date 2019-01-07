@@ -21,7 +21,7 @@ export enum ProjectStatus {
 }
 
 export namespace ProjectStatus {
-  export const { entries, forUI, values, trackEntryBy, trackValueBy } = buildEnum(ProjectStatus, {
+  export const { entries, forUI, values, length, trackEntryBy, trackValueBy } = buildEnum(ProjectStatus, {
     [ProjectStatus.EarlyConversations]: 'Early Conversations',
     [ProjectStatus.PendingConceptApproval]: 'Pending Concept Approval',
     [ProjectStatus.PrepForConsultantEndorsement]: 'Prep for Consultant Endorsement',

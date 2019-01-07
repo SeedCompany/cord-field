@@ -1,11 +1,18 @@
 import { ChangeDetectorRef, Component, Input, NgZone, OnInit } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { AbstractValueAccessor, ValueAccessorProvider } from '@app/core/classes/abstract-value-accessor.class';
-import { GoodEnum } from '@app/core/models/enum';
+import { EnumList, EnumListEntry, GoodEnum } from '@app/core/models/enum';
 import { enableControl, TypedFormControl } from '@app/core/util';
 import { filter, first, mapTo, switchMap, takeUntil } from 'rxjs/operators';
 
-export type StatusOptions<T> = Array<[string, T]>;
+export interface StatusOptions<T> {
+  transitions: EnumList<T>;
+  overrides: EnumList<T>;
+}
+export const emptyOptions: StatusOptions<any> = {
+  transitions: [],
+  overrides: [],
+};
 
 @Component({
   selector: 'app-status-select-workflow',
@@ -23,7 +30,7 @@ export class StatusSelectWorkflowComponent<T extends GoodEnum<T>> extends Abstra
   @Input() original: T;
 
   statusCtrl: TypedFormControl<T> = new FormControl();
-  availableStatuses: StatusOptions<T> = [];
+  availableStatuses: StatusOptions<T> = emptyOptions;
 
   constructor(private zone: NgZone, private changeDetector: ChangeDetectorRef) {
     super();
@@ -31,8 +38,9 @@ export class StatusSelectWorkflowComponent<T extends GoodEnum<T>> extends Abstra
 
   ngOnInit(): void {
     this.externalChanges.subscribe(value => {
-      this.availableStatuses = value ? this.findAvailableStatuses(value) : [];
-      enableControl(this.statusCtrl, this.availableStatuses.length > 0);
+      this.availableStatuses = value ? this.findAvailableStatuses(value) : emptyOptions;
+      const { transitions, overrides } = this.availableStatuses;
+      enableControl(this.statusCtrl, transitions.length > 0 || overrides.length > 0);
     });
 
     // Wait for select options to be rendered before setting value.
@@ -76,7 +84,7 @@ export class StatusSelectWorkflowComponent<T extends GoodEnum<T>> extends Abstra
     return value ? (this.enum.forUI(value) || '') : 'Loading...';
   }
 
-  trackByStatus(index: number, item: [string, T]): T {
-    return item[1];
+  trackByStatus(index: number, item: EnumListEntry<T>): T {
+    return item.value;
   }
 }

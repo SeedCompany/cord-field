@@ -2,8 +2,10 @@ import { HttpResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { SortDirection } from '@angular/material';
 import { Engagement, EngagementStatus } from '@app/core/models/engagement';
+import { EnumList } from '@app/core/models/enum';
 
 import { AuthenticationService } from '@app/core/services/authentication.service';
+import { StatusOptions } from '@app/shared/components/status-select-workflow/status-select-workflow.component';
 import { DateTime } from 'luxon';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
@@ -130,9 +132,16 @@ export class ProjectService {
     return {...rest, languages, locationId, team, ...date} as ProjectFilterAPI;
   }
 
-  getAvailableStatuses(project: Project): Array<[string, ProjectStatus]> {
-    return this.getAvailableStatusesInner(project.status)
-      .filter(([text, status]) => !status || project.possibleStatuses.includes(status));
+  getAvailableStatuses(project: Project): StatusOptions<ProjectStatus> {
+    const transitions = this.getAvailableStatusesInner(project.status)
+      .filter(([text, status]) => !status || project.possibleStatuses.includes(status))
+      .map(([ui, value]) => ({ ui, value }));
+    const bypassWorkflow = project.possibleStatuses.length === ProjectStatus.length;
+    const overrides = bypassWorkflow
+      ? (ProjectStatus.entries() as EnumList<ProjectStatus>)
+        .filter(entry => entry.value !== project.status)
+      : [];
+    return { transitions, overrides };
   }
 
   private getAvailableStatusesInner(status: ProjectStatus): Array<[string, ProjectStatus]> {
@@ -208,37 +217,21 @@ export class ProjectService {
           ['Reactivate Project', ProjectStatus.Active],
           ['Terminate Project', ProjectStatus.Terminated],
         ];
-      case ProjectStatus.Completed:
-      case ProjectStatus.DidNotDevelop:
-      case ProjectStatus.Rejected:
-      case ProjectStatus.Terminated:
-        return [
-          ['Submit for Concept Approval', ProjectStatus.PendingConceptApproval],
-          [`Won't do`, ProjectStatus.DidNotDevelop],
-          ['Approve for Finance Confirmation', ProjectStatus.PendingFinanceConfirmation],
-          ['Submit for Area Director Approval', ProjectStatus.PendingAreaDirectorApproval],
-          ['Approve for Regional Director Approval', ProjectStatus.PendingRegionalDirectorApproval],
-          ['Strongly Endorse', ProjectStatus.FinalizingProposal],
-          ['Endorse with Hesitation', ProjectStatus.FinalizingProposal],
-          ['Endorse Plan', ProjectStatus.PrepForFinancialEndorsement],
-          ['Do Not Endorse Plan', ProjectStatus.PrepForFinancialEndorsement],
-          ['Send Back for Corrections', ProjectStatus.EarlyConversations],
-          ['Reactivate Project', ProjectStatus.Active],
-          ['Terminate Project', ProjectStatus.Terminated],
-          ['Suspend Project', ProjectStatus.Suspended],
-          ['End Development', ProjectStatus.DidNotDevelop],
-          ['Complete Project', ProjectStatus.Completed],
-          ['Confirm Project', ProjectStatus.Active],
-          ['Reject', ProjectStatus.Rejected],
-        ];
       default:
         return [];
     }
   }
 
-  getAvailableEngagementStatuses(engagement: Engagement): Array<[string, EngagementStatus]> {
-    return this.getAvailableEngagementStatusesInner(engagement.status)
-      .filter(([text, status]) => !status || engagement.possibleStatuses.includes(status));
+  getAvailableEngagementStatuses(engagement: Engagement): StatusOptions<EngagementStatus> {
+    const transitions = this.getAvailableEngagementStatusesInner(engagement.status)
+      .filter(([text, status]) => !status || engagement.possibleStatuses.includes(status))
+      .map(([ui, value]) => ({ ui, value }));
+    const bypassWorkflow = engagement.possibleStatuses.length === EngagementStatus.length;
+    const overrides = bypassWorkflow
+      ? (EngagementStatus.entries() as EnumList<EngagementStatus>)
+        .filter(entry => entry.value !== engagement.status)
+      : [];
+    return { transitions, overrides };
   }
 
   private getAvailableEngagementStatusesInner(status: EngagementStatus): Array<[string, EngagementStatus]> {

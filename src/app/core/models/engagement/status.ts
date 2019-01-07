@@ -15,7 +15,7 @@ export enum EngagementStatus {
 }
 
 export namespace EngagementStatus {
-  export const {entries, forUI, values, trackEntryBy, trackValueBy} = buildEnum(EngagementStatus, {
+  export const {entries, forUI, values, length, trackEntryBy, trackValueBy} = buildEnum(EngagementStatus, {
     [EngagementStatus.Active]: 'Active',
     [EngagementStatus.Completed]: 'Completed',
     [EngagementStatus.Converted]: 'Converted',
