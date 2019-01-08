@@ -3,19 +3,19 @@ import { buildEnum } from '@app/core/models/enum';
 
 export enum ProductType {
   // Special Types
-  BibleStories = 'bibstories',
-  JesusFilm = 'jesusfilm',
+  BibleStories = 'bible_stories',
+  JesusFilm = 'jesus_film',
   Songs = 'songs',
-  LiteracyMaterials = 'litmaterials',
+  LiteracyMaterials = 'literacy_materials',
 
   // Normal Types (can be assumed from books)
-  OldTestamentPortions = 'otportions',
-  OldTestamentFull = 'otfull',
-  Gospel = 'gospel',
-  NewTestamentPortions = 'ntportions',
-  NewTestamentFull = 'ntfull',
-  BibleFull = 'fullbible',
-  IndividualBooks = 'individualbooks',
+  OldTestamentPortions = 'ot_portions',
+  OldTestamentFull = 'ot_full',
+  Gospel = 'a_gospel',
+  NewTestamentPortions = 'nt_portions',
+  NewTestamentFull = 'nt_full',
+  BibleFull = 'full_bible',
+  IndividualBooks = 'individual_books',
   Genesis = 'genesis',
 }
 

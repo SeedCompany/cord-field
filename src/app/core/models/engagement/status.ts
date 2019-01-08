@@ -8,6 +8,10 @@ export enum EngagementStatus {
   Rejected = 'rejected',
   Suspended = 'suspended',
   Terminated = 'terminated',
+  Unapproved = 'unapproved',
+  NotRenewed = 'not_renewed',
+  AwaitingDedication = 'awaiting_dedication',
+  Transferred = 'transferred',
 }
 
 export namespace EngagementStatus {
@@ -19,5 +23,9 @@ export namespace EngagementStatus {
     [EngagementStatus.Rejected]: 'Rejected',
     [EngagementStatus.Suspended]: 'Suspended',
     [EngagementStatus.Terminated]: 'Terminated',
+    [EngagementStatus.Unapproved]: 'Unapproved',
+    [EngagementStatus.NotRenewed]: 'Not Renewed',
+    [EngagementStatus.AwaitingDedication]: 'Awaiting Dedication',
+    [EngagementStatus.Transferred]: 'Transferred',
   });
 }
