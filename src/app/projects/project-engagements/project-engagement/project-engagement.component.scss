@@ -24,9 +24,12 @@ form {
   }
 }
 
-.column {
+.row {
   display: flex;
-  flex-direction: column;
+  flex-wrap: wrap;
+  &:last-of-type {
+    align-items: start;
+  }
 }
 
 mat-card {
@@ -41,11 +44,6 @@ mat-card-content {
 // Don't show pointer passed clickable text/box
 mat-checkbox {
   align-self: flex-start;
-}
-
-.dedication {
-  display: flex;
-  margin-left: 28px;
 }
 
 mat-card.products {
@@ -74,5 +72,25 @@ mat-card.products {
   .delete {
     margin-top: 16px;
     align-self: flex-end;
+  }
+}
+
+mat-card.dates {
+  ::ng-deep .mat-list {
+    padding-top: 0;
+
+    .mat-list-item {
+      height: 48px; // dense list without the font size changes
+    }
+    .mat-list-item-content {
+      padding: 0;
+    }
+    .mat-list-text {
+      flex-direction: column-reverse;
+    }
+  }
+
+  .ceremony {
+    margin-left: 28px;
   }
 }
