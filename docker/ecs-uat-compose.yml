@@ -13,6 +13,7 @@ services:
     environment:
       NG_BUILD_TARGET: uat
       SERVICE_80_NAME: client-tsco-cord-field-uat
+      DEBUG: sapi:*
     mem_limit: 256000000
 
   cord-api-plo:
