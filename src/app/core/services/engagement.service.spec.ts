@@ -74,7 +74,7 @@ describe('EngagementService', () => {
           id: '1234',
           approach: 'written',
           methodology: ProductMethodology.Paratext,
-          type: ProductType.Gospel,
+          name: ProductType.Gospel,
           books: [BibleBook.Luke],
           purposes: [ProductPurpose.ChurchLife],
           mediums: [ProductMedium.Print],

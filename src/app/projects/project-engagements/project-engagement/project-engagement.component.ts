@@ -199,7 +199,7 @@ export class ProjectEngagementComponent extends SubscriptionComponent implements
 
     // Link type and books controls, because values are related
     const booksCtl = fg.get('books')!;
-    const typeCtl = fg.get('type')!;
+    const typeCtl = fg.get('name')!;
     let booksChangingFromType = false;
     const sub = booksCtl.valueChanges
       .pipe(
@@ -262,7 +262,7 @@ export class ProjectEngagementComponent extends SubscriptionComponent implements
   private createProductControl(product?: Product) {
     return this.formBuilder.group({
       id: product ? product.id : generateObjectId(),
-      type: [product ? product.type : null, Validators.required],
+      name: [product ? product.name : null, Validators.required],
       books: product ? product.books : [],
       mediums: [product ? product.mediums : [], Validators.required],
       purposes: [product ? product.purposes : [], Validators.required],
