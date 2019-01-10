@@ -20,6 +20,7 @@ services:
     image: 103805181946.dkr.ecr.us-west-2.amazonaws.com/client/cord-api-plo:latest
     ports: [ "8001" ]
     environment:
+      DEBUG: plo:*,sapi:*
       MONGO_DB_CONN: mongodb://cord-sqa:Zh6ZApeVteMqC%406A%26cIs@mongo-a.dev.olivetech.internal,mongo-b.dev.olivetech.internal,mongo-c.dev.olivetech.internal/cord-sqa?replicaSet=dev
       NODE_ENV: sqa
       CREATE_DEVELOPER_USERS: "true"
