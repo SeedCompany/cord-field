@@ -54,10 +54,12 @@ export abstract class AbstractViewState<T> implements OnDestroy {
     return this._subject.asObservable();
   }
 
+  @LazyGetter()
   get subjectWithPreExistingChanges(): Observable<T> {
     return this.subject
       .pipe(
         map((val) => this.changeEngine.getModified(val)),
+        shareReplay(1),
       );
   }
 
