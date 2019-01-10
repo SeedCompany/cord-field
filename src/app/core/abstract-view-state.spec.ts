@@ -52,6 +52,10 @@ class TestViewState extends AbstractViewState<TestSubject> {
   }
 
   public refresh(obj: TestSubject): void {}
+
+  protected identify(subject: TestSubject): string {
+    return 'subject-' + subject.bar;
+  }
 }
 
 describe('AbstractViewState', () => {
@@ -97,14 +101,14 @@ describe('AbstractViewState', () => {
       expect(dirty).toBeTruthy();
     });
 
-    it('discard', () => {
+    it('discard', async () => {
       let dirty = false;
       viewState.isDirty.subscribe(d => dirty = d);
 
       viewState.change({
         foo: 'changed',
       });
-      viewState.discard();
+      await viewState.discard();
 
       expect(dirty).toBeFalsy();
     });

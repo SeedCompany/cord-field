@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import { SessionStorageService } from '@app/core/services/storage.service';
 import { RecordOfType } from '@app/core/util';
 import { differenceBy } from 'lodash';
 import { Observable } from 'rxjs';
@@ -69,6 +70,7 @@ const config: ChangeConfig<UserProfile> = {
     accessor: (role) => role.role,
     key: 'userRoles',
     toServer: mapChangeList<UserRole, UserRoleForSaveAPI, string>(UserRole.forSaveAPI, ur => ur.role),
+    restore: mapChangeList(UserRole.restore, UserRole.restore),
   },
   organizations: {
     accessor: returnId,
@@ -79,6 +81,8 @@ const config: ChangeConfig<UserProfile> = {
   unavailabilities: {
     accessor: returnId,
     toServer: mapChangeList<Unavailability, RawUnavailability, string>(Unavailability.forSaveAPI, returnId),
+    store: mapChangeList(Unavailability.store, Unavailability.store),
+    restore: mapChangeList(Unavailability.restore, Unavailability.restore),
   },
   bio: {},
   education: {
@@ -89,6 +93,7 @@ const config: ChangeConfig<UserProfile> = {
   knownLanguages: {
     accessor: returnId,
     toServer: mapChangeList<KnownLanguage, KnownLanguageForSaveAPI, string>(KnownLanguage.forSaveAPI, returnId),
+    restore: mapChangeList(KnownLanguage.fromJson, KnownLanguage.fromJson),
   },
 };
 
@@ -98,8 +103,11 @@ type UserOnlyObjectLists = RecordOfType<UserProfile, Array<{id: string}>>;
 @Injectable()
 export class UserViewStateService extends AbstractViewState<UserProfile> {
 
-  constructor(private userService: UserService) {
-    super(config, UserProfile.fromJson({}));
+  constructor(
+    storage: SessionStorageService,
+    private userService: UserService,
+  ) {
+    super(config, UserProfile.fromJson({}), storage);
   }
 
   get user(): Observable<UserProfile> {
@@ -135,5 +143,9 @@ export class UserViewStateService extends AbstractViewState<UserProfile> {
 
   protected refresh(user: UserProfile): void {
     this.next(user.id);
+  }
+
+  protected identify(user: UserProfile): string {
+    return `user-${user.id}`;
   }
 }

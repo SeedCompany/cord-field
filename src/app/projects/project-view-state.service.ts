@@ -1,13 +1,15 @@
 import { Injectable } from '@angular/core';
 import { ProjectBudget } from '@app/core/models/budget';
 import { Engagement } from '@app/core/models/engagement';
+import { SessionStorageService } from '@app/core/services/storage.service';
 import { clone } from '@app/core/util';
 import { DateTime } from 'luxon';
 import { Observable } from 'rxjs';
 import { first, map } from 'rxjs/operators';
 import { AbstractViewState, SaveResult } from '../core/abstract-view-state';
-import { accessDates, ChangeConfig, mapChangeList, returnId } from '../core/change-engine';
+import { ChangeConfig, dateConfig, mapChangeList, returnId, returnSelf } from '../core/change-engine';
 import { Language } from '../core/models/language';
+import { Location } from '../core/models/location';
 import { Partnership, PartnershipForSaveAPI } from '../core/models/partnership';
 import { Project, ProjectExtension, ProjectStatus } from '../core/models/project';
 import { TeamMember, TeamMemberForSaveAPI } from '../core/models/team-member';
@@ -39,15 +41,15 @@ export interface ModifiedProject {
 const config: ChangeConfig<Project> = {
   name: {},
   mouStart: {
-    accessor: accessDates,
+    ...dateConfig,
     forceRefresh: true,
   },
   mouEnd: {
-    accessor: accessDates,
+    ...dateConfig,
     forceRefresh: true,
   },
   estimatedSubmission: {
-    accessor: accessDates,
+    ...dateConfig,
   },
   status: {
     forceRefresh: true, // Status changes engagement statuses
@@ -57,20 +59,27 @@ const config: ChangeConfig<Project> = {
     toServer: returnId,
     key: 'locationId',
     forceRefresh: true,
+    restore: Location.fromJson,
   },
   languages: {
     accessor: returnId,
     toServer: mapChangeList<Language, string, string>(returnId, returnId),
     forceRefresh: true, // Languages changes engagements
+    store: mapChangeList(returnSelf, returnSelf),
+    restore: mapChangeList(Language.fromJson, Language.fromJson),
   },
   partnerships: {
     accessor: returnId,
     toServer: mapChangeList<Partnership, PartnershipForSaveAPI, string>(Partnership.forSaveAPI, returnId),
     forceRefresh: true,
+    store: mapChangeList(Partnership.store, Partnership.store),
+    restore: mapChangeList(Partnership.fromJson, Partnership.fromJson),
   },
   team: {
     accessor: returnId,
     toServer: mapChangeList<TeamMember, TeamMemberForSaveAPI, string>(TeamMember.forSaveAPI, returnId),
+    store: mapChangeList(TeamMember.store, TeamMember.store),
+    restore: mapChangeList(TeamMember.fromJson, TeamMember.fromJson),
   },
   budgets: {
     // Identify project budget as a scalar value
@@ -95,8 +104,11 @@ const config: ChangeConfig<Project> = {
 @Injectable()
 export class ProjectViewStateService extends AbstractViewState<Project> {
 
-  constructor(private projectService: ProjectService) {
-    super(config, Project.fromJson({}));
+  constructor(
+    storage: SessionStorageService,
+    private projectService: ProjectService,
+  ) {
+    super(config, Project.fromJson({}), storage);
   }
 
   get project(): Observable<Project> {
@@ -155,5 +167,9 @@ export class ProjectViewStateService extends AbstractViewState<Project> {
 
   protected refresh(project: Project): void {
     this.onNewId(project.id);
+  }
+
+  protected identify(project: Project): string {
+    return `project-${project.id}`;
   }
 }
