@@ -31,6 +31,17 @@ export class User {
   displayLastName: string;
   email: string | null;
 
+  static store(user: User) {
+    return {
+      id: user.id,
+      firstName: user.realFirstName,
+      displayFirstName: user.displayFirstName,
+      lastName: user.realLastName,
+      displayLastName: user.displayLastName,
+      email: user.email,
+    };
+  }
+
   get firstName(): string | null {
     return this.isRealNameValid(this.realFirstName) ? this.realFirstName : this.displayFirstName;
   }
@@ -158,6 +169,13 @@ export class UserRole {
     return {
       locationIds: ur.locations.map((location) => location.id),
       role: ur.role,
+    };
+  }
+
+  static restore(ur: UserRole): UserRole {
+    return {
+      role: ur.role,
+      locations: ur.locations.map(Location.fromJson),
     };
   }
 }
@@ -298,6 +316,20 @@ export class Unavailability {
       end,
     };
   }
+
+  static store(un: Unavailability): StoredUnavailability {
+    return {
+      ...un,
+      range: un.range.toISO(),
+    };
+  }
+  static restore(stored: StoredUnavailability): Unavailability {
+    return Object.assign(new Unavailability(), {
+      ...stored,
+      range: Interval.fromISO(stored.range),
+    });
+  }
 }
 
 export type RawUnavailability = Omit<Unavailability, 'range'>;
+type StoredUnavailability = RawUnavailability & {range: string};

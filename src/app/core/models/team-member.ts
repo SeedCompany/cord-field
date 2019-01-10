@@ -46,6 +46,14 @@ export class TeamMember {
     };
   }
 
+  static store(tm: TeamMember) {
+    return {
+      ...tm,
+      user: User.store(tm.user),
+      dateAdded: tm.dateAdded ? tm.dateAdded.toISO() : null,
+    };
+  }
+
   get id() {
     return this.user.id;
   }

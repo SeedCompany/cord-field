@@ -68,6 +68,6 @@ export class PersonEditComponent extends AbstractPersonComponent implements OnIn
   }
 
   onDiscard() {
-    this.userViewState.discard();
+    return this.userViewState.discard();
   }
 }

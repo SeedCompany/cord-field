@@ -2,7 +2,7 @@ import { HttpResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { SortDirection } from '@angular/material';
 import { Observable, of as observableOf } from 'rxjs';
-import { delay, map } from 'rxjs/operators';
+import { delay, map, tap } from 'rxjs/operators';
 import { ModifiedUser } from '../../people/user-view-state.service';
 import { Project } from '../models/project';
 import { ProjectRole } from '../models/project-role';
@@ -22,7 +22,10 @@ export class UserService {
   getUser(id: string): Observable<UserProfile> {
     return this.plo
       .get(`/users/${id}`)
-      .pipe(map(UserProfile.fromJson));
+      .pipe(
+        map(UserProfile.fromJson),
+        tap(user => user.id = id), // keep same encrypted ID for identifying previous local changes
+      );
   }
 
   save(id: string, changes: ModifiedUser): Promise<UserProfile> {

@@ -1,4 +1,6 @@
+import { OnDestroy } from '@angular/core';
 import { AbstractControl, FormArray } from '@angular/forms';
+import { BaseStorageService } from '@app/core/services/storage.service';
 import { ArrayItem } from '@app/core/util';
 import { BehaviorSubject, combineLatest, NextObserver, Observable, Subject, Unsubscribable } from 'rxjs';
 import { distinctUntilChanged, map, shareReplay, startWith, takeUntil } from 'rxjs/operators';
@@ -7,7 +9,7 @@ import { ChangeConfig, ChangeEngine, Changes } from './change-engine';
 
 export type SaveResult<T> = {[key in keyof Partial<T>]: string[]};
 
-export abstract class AbstractViewState<T> {
+export abstract class AbstractViewState<T> implements OnDestroy {
 
   private readonly changeEngine: ChangeEngine<T>;
   private readonly _subject: BehaviorSubject<T>;
@@ -16,9 +18,17 @@ export abstract class AbstractViewState<T> {
   /** Subject to track when changes have been made to recalculate subjectWithChanges */
   private readonly changes = new Subject<void>();
 
-  protected constructor(config: ChangeConfig<T>, initial: T) {
+  protected constructor(
+    config: ChangeConfig<T>,
+    initial: T,
+    private storage: BaseStorageService<any> | null = null,
+  ) {
     this.changeEngine = new ChangeEngine(config);
     this._subject = new BehaviorSubject<T>(initial);
+
+    if (window) {
+      window.addEventListener('beforeunload', this.beforeUnload);
+    }
   }
 
   /**
@@ -34,6 +44,11 @@ export abstract class AbstractViewState<T> {
    * The method should call this.onLoad at some point.
    */
   protected abstract refresh(subject: T): void;
+
+  /**
+   * Identify the given subject to use as a cache key.
+   */
+  protected abstract identify(subject: T): string;
 
   get subject(): Observable<T> {
     return this._subject.asObservable();
@@ -95,6 +110,7 @@ export abstract class AbstractViewState<T> {
     const next = this.changeEngine.getModified(this._subject.value, result);
     const needsRefresh = this.changeEngine.needsRefresh;
 
+    await this.clearModifications();
     this.onNewSubject(next);
 
     if (needsRefresh) {
@@ -102,8 +118,16 @@ export abstract class AbstractViewState<T> {
     }
   }
 
-  discard(): void {
+  async discard(): Promise<void> {
+    await this.clearModifications();
     this.onNewSubject(this._subject.value);
+  }
+
+  ngOnDestroy(): void {
+    if (window) {
+      window.removeEventListener('beforeunload', this.beforeUnload);
+    }
+    this.storeModifications();
   }
 
   /**
@@ -206,13 +230,36 @@ export abstract class AbstractViewState<T> {
    */
   protected get onLoad(): NextObserver<T> {
     return {
-      next: this.onNewSubject.bind(this),
+      next: subject => this.onNewSubject(subject, true),
       error: err => this._loadError.next(err),
     };
   }
 
-  private onNewSubject(subject: T): void {
+  private onNewSubject(subject: T, restoreCache = false): void {
     this.changeEngine.reset();
-    this._subject.next(subject);
+    if (restoreCache && this.storage) {
+      this.changeEngine.restoreModifications(this.storage, this.identify(subject))
+        .then(() => {
+          this._subject.next(subject);
+        });
+    } else {
+      this._subject.next(subject);
+    }
+  }
+
+  private beforeUnload = (event: BeforeUnloadEvent) => {
+    this.storeModifications();
+  };
+
+  private async clearModifications() {
+    if (this.storage) {
+      await this.changeEngine.clearModifications(this.storage, this.identify(this._subject.value));
+    }
+  }
+
+  private async storeModifications() {
+    if (this.storage) {
+      await this.changeEngine.storeModifications(this.storage, this.identify(this._subject.value));
+    }
   }
 }
