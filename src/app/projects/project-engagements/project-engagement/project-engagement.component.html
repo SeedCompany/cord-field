@@ -60,7 +60,7 @@
             <ng-template matExpansionPanelContent>
 
               <mat-form-field color="accent">
-                <mat-select placeholder="Type" formControlName="type" autofocus>
+                <mat-select placeholder="Type" formControlName="name" autofocus>
                   <mat-option *ngFor="let type of ProductType.entries(); trackBy: ProductType.trackEntryBy"
                               [value]="type.value">
                     {{ type.ui }}
