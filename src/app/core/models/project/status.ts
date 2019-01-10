@@ -7,7 +7,7 @@ export enum ProjectStatus {
   PendingConsultantEndorsement = 'pending_consultant_endorsement',
   PrepForFinancialEndorsement = 'dev_for_financial_endorsement',
   PendingFinancialEndorsement = 'pending_financial_analyst_endorsement',
-  FinalizingProposal = 'finalizingProposal',
+  FinalizingProposal = 'finalizing_proposal',
   PendingAreaDirectorApproval = 'pending_ad_approval',
   PendingRegionalDirectorApproval = 'pending_rd_approval',
   PendingFinanceConfirmation = 'pending_finance_confirmation',

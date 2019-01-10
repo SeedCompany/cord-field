@@ -4,7 +4,7 @@ export enum EngagementStatus {
   Active = 'active',
   Completed = 'completed',
   Converted = 'converted',
-  InDevelopment = 'indevelopment',
+  InDevelopment = 'in_development',
   Rejected = 'rejected',
   Suspended = 'suspended',
   Terminated = 'terminated',
