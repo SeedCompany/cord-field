@@ -112,6 +112,6 @@ export class ProjectComponent extends SubscriptionComponent implements OnInit, T
   }
 
   onDiscard() {
-    this.projectViewState.discard();
+    return this.projectViewState.discard();
   }
 }

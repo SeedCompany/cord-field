@@ -29,8 +29,11 @@ function enumValues<T>(object: Object): () => T[] {
 
 function enumEntries<T>(mapping: { [key: string]: string }): () => EnumList<T> {
   const entries: EnumList<T> = [];
-  for (const [value, ui] of Object.entries(mapping) as any as Array<[T, string]>) {
-    entries.push({value, ui});
+  for (const [valueAsStr, ui] of Object.entries(mapping)) {
+    // Object.entries() converts all keys (identified as value here) to strings even if they were numbers before
+    // Check if the value is numeric and convert it back to a number so it matches identity checks.
+    const value = (isNumeric(valueAsStr) ? parseNumber(valueAsStr) : valueAsStr) as any as T;
+    entries.push({ value, ui });
   }
 
   return () => entries;
@@ -46,3 +49,6 @@ function enumForUI<T>(object: Object) {
     return match ? match.ui : null;
   };
 }
+
+const isNumeric = (value: string) => !isNaN(parseFloat(value)) && isFinite(value as any);
+const parseNumber = (value: string) => value.includes('.') ? parseFloat(value) : parseInt(value, 10);

@@ -28,6 +28,6 @@ export abstract class ProjectTabComponent extends SubscriptionComponent implemen
     return this.projectViewState.save();
   }
   onDiscard() {
-    this.projectViewState.discard();
+    return this.projectViewState.discard();
   }
 }

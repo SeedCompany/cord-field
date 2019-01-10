@@ -1,3 +1,4 @@
+import { BaseStorageService } from '@app/core/services/storage.service';
 import { differenceBy, isEqual } from 'lodash-es';
 import { DateTime } from 'luxon';
 import { BehaviorSubject, Observable } from 'rxjs';
@@ -25,6 +26,8 @@ interface FieldConfig {
   toServer: (val: any) => any;
   key: string; // The key the server is looking for
   forceRefresh: boolean;
+  store: (val: any) => any;
+  restore: (val: any) => any;
 }
 
 /**
@@ -58,6 +61,14 @@ export const returnSelf = (val: any) => val;
 export const returnId = (val: {id: string}) => val.id;
 // Ignores times
 export const accessDates = (date: DateTime) => date.startOf('day').valueOf();
+
+export const storeDate = (date: DateTime) => date.toISO();
+export const restoreDate = (date: string) => DateTime.fromISO(date);
+export const dateConfig: Partial<FieldConfig> = {
+  accessor: accessDates,
+  store: storeDate,
+  restore: restoreDate,
+};
 
 /**
  * These are for the collective changes that will be processed on save().
@@ -139,6 +150,8 @@ export class ChangeEngine<T = any> {
       key: key as string,
       toServer: returnSelf,
       forceRefresh: false,
+      store: returnSelf,
+      restore: returnSelf,
       ...field,
     }));
   }
@@ -207,6 +220,28 @@ export class ChangeEngine<T = any> {
   reset() {
     this.modified = {} as Modified<T>;
     this.dirty.next(false);
+  }
+
+  async restoreModifications(storage: BaseStorageService<any>, storageKey: string) {
+    const serialized = await storage.getItem<Modified<T>>('changes-' + storageKey);
+    if (!serialized) {
+      return;
+    }
+
+    this.modified = mapEntries(serialized, (key, value) => this.config[key].restore(value));
+    this.dirty.next(Object.keys(this.modified).length > 0);
+  }
+
+  async storeModifications(storage: BaseStorageService<any>, storageKey: string) {
+    if (!this.dirty.value) {
+      return;
+    }
+    const serialized = mapEntries(this.modified, (key, value) => this.config[key].store(value));
+    await storage.setItem('changes-' + storageKey, serialized);
+  }
+
+  async clearModifications(storage: BaseStorageService<any>, storageKey: string) {
+    await storage.removeItem('changes-' + storageKey);
   }
 
   revert(field: keyof T, item?: any): void {

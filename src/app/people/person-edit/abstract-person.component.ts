@@ -27,6 +27,6 @@ export abstract class AbstractPersonComponent extends SubscriptionComponent impl
     return this.userViewState.save();
   }
   onDiscard() {
-    this.userViewState.discard();
+    return this.userViewState.discard();
   }
 }

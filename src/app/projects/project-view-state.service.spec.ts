@@ -3,7 +3,7 @@ import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { TestBed } from '@angular/core/testing';
 import { DateTime } from 'luxon';
 import { of as observableOf } from 'rxjs';
-import { first } from 'rxjs/operators';
+import { first, skip } from 'rxjs/operators';
 import { CoreModule } from '../core/core.module';
 import { Language } from '../core/models/language';
 import { Location } from '../core/models/location';
@@ -45,13 +45,16 @@ describe('ProjectViewStateService', () => {
 
   it('Given new project ID -> fetch project', async () => {
     viewState.onNewId('id');
-    const p: Project = await viewState.project.pipe(first()).toPromise();
+    const p: Project = await viewState.project.pipe(skip(1), first()).toPromise();
     expect(p instanceof Project).toBeTruthy();
     expect(p.id).toBe('id');
   });
 
   it('Save', async () => {
     viewState.onNewId('id');
+
+    // wait for load to finish
+    await viewState.project.pipe(skip(1), first()).toPromise();
 
     const partnershipToRemove = Partnership.fromJson({
       organization: {

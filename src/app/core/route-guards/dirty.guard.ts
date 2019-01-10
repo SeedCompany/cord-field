@@ -122,7 +122,8 @@ export class DirtyGuard<T extends IsDirty> implements CanDeactivate<T>, CanActiv
 
     return clean$.pipe(
       mergeMap(clean => {
-        if (clean) {
+        // If clean or redirecting to login page to authorize allow route change & don't show prompt
+        if (clean || nextState.url === '/login') {
           return of(true);
         }
 

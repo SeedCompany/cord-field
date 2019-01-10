@@ -41,6 +41,14 @@ export class Partnership {
     return partnership;
   }
 
+  static store(partnership: Partnership) {
+    return {
+      ...partnership,
+      mouStart: partnership.mouStart ? partnership.mouStart.toISO() : null,
+      mouEnd: partnership.mouEnd ? partnership.mouEnd.toISO() : null,
+    };
+  }
+
   static fromOrganization(org: Organization): Partnership {
     const partnership = new Partnership();
 
