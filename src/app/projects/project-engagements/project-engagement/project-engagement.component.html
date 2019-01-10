@@ -1,6 +1,6 @@
 <form *ngIf="engagement" [formGroup]="form">
 
-  <div class="column">
+  <div class="row">
     <mat-card>
       <mat-card-title>Status</mat-card-title>
       <app-status-select-workflow
@@ -15,7 +15,7 @@
     <mat-card>
       <mat-card-title>PnP</mat-card-title>
       <mat-card-actions>
-        <button mat-button color="accent">
+        <button mat-button color="accent" routerLink="../../files">
           <mat-icon>file_upload</mat-icon>
           Upload
         </button>
@@ -23,137 +23,191 @@
     </mat-card>
   </div>
 
-  <mat-card>
-    <mat-card-title>Engagement Details</mat-card-title>
-    <mat-card-content>
-      <mat-checkbox formControlName="isDedicationPlanned">
-        Is a dedication planned for this project? If so when?
-      </mat-checkbox>
+  <div class="row">
+    <mat-card class="products">
+      <mat-card-title>Products</mat-card-title>
+      <mat-card-content>
 
-      <mat-form-field color="accent" class="dedication">
-        <input matInput
-               formControlName="dedicationDate"
-               [matDatepicker]="datepicker"
-               placeholder="Dedication Date">
-        <mat-datepicker-toggle matSuffix [for]="datepicker"></mat-datepicker-toggle>
-        <mat-datepicker #datepicker></mat-datepicker>
-        <mat-error *ngIf="dedicationDate.errors?.matDatepickerParse">Invalid Date</mat-error>
-      </mat-form-field>
-    </mat-card-content>
-  </mat-card>
+        <div class="options">
+          <mat-checkbox formControlName="isLukePartnership">
+            Is this a Luke Partnership?
+          </mat-checkbox>
 
-  <mat-card class="products">
-    <mat-card-title>Products</mat-card-title>
-    <mat-card-content>
+          <mat-checkbox formControlName="isFirstScripture">
+            Does this provide First Scripture for this people group?
+          </mat-checkbox>
+        </div>
 
-      <div class="options">
-        <mat-checkbox formControlName="isLukePartnership">
-          Is this a Luke Partnership?
-        </mat-checkbox>
+        <mat-accordion displayMode="flat" formArrayName="products">
+          <mat-expansion-panel
+            *ngFor="let product of products.controls; let index=index"
+            [formGroupName]="index"
+            [expanded]="isProductOpened(index)"
+            (opened)="onProductOpen(index)"
+            (closed)="onProductClose(index)"
+            [class.mat-elevation-z0]="true"
+          >
+            <mat-expansion-panel-header expandedHeight="48px">
+              <mat-panel-title>
+                <div class="title" [class.mat-error]="product.invalid">
+                  {{ ProductType.displaySummary(product.value.books || [], product.value.type) || 'Draft' }}
+                </div>
+              </mat-panel-title>
+              <mat-panel-description *ngIf="!isProductOpened(index)">
+                <div>{{ ProductMethodology.forUI(product.value.methodology) }}</div>
+              </mat-panel-description>
+            </mat-expansion-panel-header>
+            <ng-template matExpansionPanelContent>
 
-        <mat-checkbox formControlName="isFirstScripture">
-          Does this provide First Scripture for this people group?
-        </mat-checkbox>
-      </div>
-
-      <mat-accordion displayMode="flat" formArrayName="products">
-        <mat-expansion-panel
-          *ngFor="let product of products.controls; let index=index"
-          [formGroupName]="index"
-          [expanded]="isProductOpened(index)"
-          (opened)="onProductOpen(index)"
-          (closed)="onProductClose(index)"
-          [class.mat-elevation-z0]="true"
-        >
-          <mat-expansion-panel-header expandedHeight="48px">
-            <mat-panel-title>
-              <div class="title" [class.mat-error]="product.invalid">
-                {{ ProductType.displaySummary(product.value.books || [], product.value.type) || 'Draft' }}
-              </div>
-            </mat-panel-title>
-            <mat-panel-description *ngIf="!isProductOpened(index)">
-              <div>{{ ProductMethodology.forUI(product.value.methodology) }}</div>
-            </mat-panel-description>
-          </mat-expansion-panel-header>
-          <ng-template matExpansionPanelContent>
-
-            <mat-form-field color="accent">
-              <mat-select placeholder="Type" formControlName="type" autofocus>
-                <mat-option *ngFor="let type of ProductType.entries(); trackBy: ProductType.trackEntryBy"
-                            [value]="type.value">
-                  {{ type.ui }}
-                </mat-option>
-              </mat-select>
-              <mat-error>Please select a type</mat-error>
-            </mat-form-field>
-
-            <mat-form-field color="accent">
-              <mat-select multiple placeholder="Books" formControlName="books">
-                <mat-optgroup label="Old Testament">
-                  <mat-option *ngFor="let book of BibleBook.OldTestament"
-                              [value]="book">
-                    {{ BibleBook.forUI(book) }}
+              <mat-form-field color="accent">
+                <mat-select placeholder="Type" formControlName="name" autofocus>
+                  <mat-option *ngFor="let type of ProductType.entries(); trackBy: ProductType.trackEntryBy"
+                              [value]="type.value">
+                    {{ type.ui }}
                   </mat-option>
-                </mat-optgroup>
-                <mat-optgroup label="New Testament">
-                  <mat-option *ngFor="let book of BibleBook.NewTestament"
-                              [value]="book">
-                    {{ BibleBook.forUI(book) }}
+                </mat-select>
+                <mat-error>Please select a type</mat-error>
+              </mat-form-field>
+
+              <mat-form-field color="accent">
+                <mat-select multiple placeholder="Books" formControlName="books">
+                  <mat-optgroup label="Old Testament">
+                    <mat-option *ngFor="let book of BibleBook.OldTestament"
+                                [value]="book">
+                      {{ BibleBook.forUI(book) }}
+                    </mat-option>
+                  </mat-optgroup>
+                  <mat-optgroup label="New Testament">
+                    <mat-option *ngFor="let book of BibleBook.NewTestament"
+                                [value]="book">
+                      {{ BibleBook.forUI(book) }}
+                    </mat-option>
+                  </mat-optgroup>
+                </mat-select>
+              </mat-form-field>
+
+              <mat-form-field color="accent">
+                <mat-select multiple placeholder="Mediums" formControlName="mediums">
+                  <mat-option *ngFor="let medium of ProductMedium.entries(); trackBy: ProductMedium.trackEntryBy"
+                              [value]="medium.value">
+                    {{ medium.ui }}
                   </mat-option>
-                </mat-optgroup>
-              </mat-select>
-            </mat-form-field>
+                </mat-select>
+                <mat-error>Please select one or more mediums</mat-error>
+              </mat-form-field>
 
-            <mat-form-field color="accent">
-              <mat-select multiple placeholder="Mediums" formControlName="mediums">
-                <mat-option *ngFor="let medium of ProductMedium.entries(); trackBy: ProductMedium.trackEntryBy"
-                            [value]="medium.value">
-                  {{ medium.ui }}
-                </mat-option>
-              </mat-select>
-              <mat-error>Please select one or more mediums</mat-error>
-            </mat-form-field>
-
-            <mat-form-field color="accent">
-              <mat-select multiple placeholder="Purposes" formControlName="purposes">
-                <mat-option
-                  *ngFor="let purpose of ProductPurpose.entries(); trackBy: ProductPurpose.trackEntryBy"
-                  [value]="purpose.value">
-                  {{ purpose.ui }}
-                </mat-option>
-              </mat-select>
-              <mat-error>Please select one or more purposes</mat-error>
-            </mat-form-field>
-
-            <mat-form-field color="accent">
-              <mat-select placeholder="Methodology" formControlName="methodology">
-                <mat-optgroup
-                  *ngFor="let entry of ProductMethodology.groupEntries"
-                  [label]="entry[0]"
-                >
+              <mat-form-field color="accent">
+                <mat-select multiple placeholder="Purposes" formControlName="purposes">
                   <mat-option
-                    *ngFor="let methodology of entry[1]; trackBy: ProductMethodology.trackValueBy"
-                    [value]="methodology">
-                    {{ ProductMethodology.forUI(methodology) }}
+                    *ngFor="let purpose of ProductPurpose.entries(); trackBy: ProductPurpose.trackEntryBy"
+                    [value]="purpose.value">
+                    {{ purpose.ui }}
                   </mat-option>
-                </mat-optgroup>
-              </mat-select>
-              <mat-error>Please select a methodology</mat-error>
-            </mat-form-field>
+                </mat-select>
+                <mat-error>Please select one or more purposes</mat-error>
+              </mat-form-field>
 
-            <button mat-button color="warn" class="delete" (click)="deleteProduct(index)">
-              DELETE
-            </button>
+              <mat-form-field color="accent">
+                <mat-select placeholder="Methodology" formControlName="methodology">
+                  <mat-optgroup
+                    *ngFor="let entry of ProductMethodology.groupEntries"
+                    [label]="entry[0]"
+                  >
+                    <mat-option
+                      *ngFor="let methodology of entry[1]; trackBy: ProductMethodology.trackValueBy"
+                      [value]="methodology">
+                      {{ ProductMethodology.forUI(methodology) }}
+                    </mat-option>
+                  </mat-optgroup>
+                </mat-select>
+                <mat-error>Please select a methodology</mat-error>
+              </mat-form-field>
 
-          </ng-template>
-        </mat-expansion-panel>
-      </mat-accordion>
+              <button mat-button color="warn" class="delete" (click)="deleteProduct(index)">
+                DELETE
+              </button>
 
-    </mat-card-content>
-    <mat-card-actions>
-      <button mat-button color="accent" (click)="addProduct()">ADD PRODUCT</button>
-    </mat-card-actions>
-  </mat-card>
+            </ng-template>
+          </mat-expansion-panel>
+        </mat-accordion>
+
+      </mat-card-content>
+      <mat-card-actions>
+        <button mat-button color="accent" (click)="addProduct()">ADD PRODUCT</button>
+      </mat-card-actions>
+    </mat-card>
+
+    <mat-card class="dates">
+      <mat-card-title>Dates</mat-card-title>
+      <mat-card-content>
+        <mat-list>
+          <mat-list-item *ngIf="engagement?.initialEndDate as date">
+            <h4 mat-line>{{ date?.toLocaleString() }}</h4>
+            <p mat-line>Initial Estimated End Date</p>
+          </mat-list-item>
+          <mat-list-item *ngIf="engagement?.currentEndDate as date">
+            <h4 mat-line>{{ date?.toLocaleString() }}</h4>
+            <p mat-line>Current Estimated End Date</p>
+          </mat-list-item>
+        </mat-list>
+
+        <mat-form-field color="accent">
+          <input matInput
+                 formControlName="completeDate"
+                 [matDatepicker]="completeDatePicker"
+                 placeholder="{{ project.type | titlecase }} Complete Date">
+          <mat-datepicker-toggle matSuffix [for]="completeDatePicker"></mat-datepicker-toggle>
+          <mat-datepicker #completeDatePicker></mat-datepicker>
+          <mat-error *ngIf="completeDate.errors?.matDatepickerParse">Invalid Date</mat-error>
+        </mat-form-field>
+
+        <mat-form-field color="accent">
+          <input matInput
+                 formControlName="disbursementCompleteDate"
+                 [matDatepicker]="disbursementCompleteDatePicker"
+                 placeholder="Disbursement Complete Date">
+          <mat-datepicker-toggle matSuffix [for]="disbursementCompleteDatePicker"></mat-datepicker-toggle>
+          <mat-datepicker #disbursementCompleteDatePicker></mat-datepicker>
+          <mat-error *ngIf="disbursementCompleteDate.errors?.matDatepickerParse">Invalid Date</mat-error>
+        </mat-form-field>
+
+        <mat-form-field color="accent">
+          <input matInput
+                 formControlName="communicationsCompleteDate"
+                 [matDatepicker]="communicationsCompleteDatePicker"
+                 placeholder="Communications Complete Date">
+          <mat-datepicker-toggle matSuffix [for]="communicationsCompleteDatePicker"></mat-datepicker-toggle>
+          <mat-datepicker #communicationsCompleteDatePicker></mat-datepicker>
+          <mat-error *ngIf="communicationsCompleteDate.errors?.matDatepickerParse">Invalid Date</mat-error>
+        </mat-form-field>
+
+        <mat-checkbox formControlName="isCeremonyPlanned">
+          Is a {{ ceremonyName }} planned?
+        </mat-checkbox>
+
+        <mat-form-field color="accent" class="ceremony">
+          <input matInput
+                 formControlName="ceremonyEstimatedDate"
+                 [matDatepicker]="ceremonyEstimatedDatePicker"
+                 placeholder="Estimated {{ ceremonyName | titlecase }} Date">
+          <mat-datepicker-toggle matSuffix [for]="ceremonyEstimatedDatePicker"></mat-datepicker-toggle>
+          <mat-datepicker #ceremonyEstimatedDatePicker></mat-datepicker>
+          <mat-error *ngIf="ceremonyEstimatedDate.errors?.matDatepickerParse">Invalid Date</mat-error>
+        </mat-form-field>
+
+        <mat-form-field color="accent" class="ceremony">
+          <input matInput
+                 formControlName="ceremonyActualDate"
+                 [matDatepicker]="ceremonyActualDatePicker"
+                 placeholder="Actual {{ ceremonyName | titlecase }} Date">
+          <mat-datepicker-toggle matSuffix [for]="ceremonyActualDatePicker"></mat-datepicker-toggle>
+          <mat-datepicker #ceremonyActualDatePicker></mat-datepicker>
+          <mat-error *ngIf="ceremonyActualDate.errors?.matDatepickerParse">Invalid Date</mat-error>
+        </mat-form-field>
+      </mat-card-content>
+    </mat-card>
+  </div>
+
 </form>
 
 <app-speed-dial

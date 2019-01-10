@@ -1,5 +1,6 @@
 import { ModuleWithProviders, NgModule, Optional, SkipSelf } from '@angular/core';
 import { RouterModule } from '@angular/router';
+import { FreshdeskComponent } from '@app/core/freshdesk/freshdesk.component';
 import { SharedModule } from '../shared/shared.module';
 import { PersonCreateDialogComponent } from './create-dialogs/person-create-dialog/person-create-dialog.component';
 import { ProjectCreateDialogComponent } from './create-dialogs/project-create-dialog/project-create-dialog.component';
@@ -16,6 +17,7 @@ import { ErrorInterceptor } from './services/http/error-interceptor';
     RouterModule,
   ],
   declarations: [
+    FreshdeskComponent,
     HeaderComponent,
     NotFoundPageComponent,
     PersonCreateDialogComponent,

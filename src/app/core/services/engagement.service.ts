@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Engagement, ModifiedEngagement } from '@app/core/models/engagement';
+import { EditableEngagement, Engagement } from '@app/core/models/engagement';
 import { PloApiService } from '@app/core/services/http/plo-api.service';
 import { map } from 'rxjs/operators';
 
@@ -18,7 +18,7 @@ export class EngagementService {
       .toPromise();
   }
 
-  async save(engagementId: string, data: ModifiedEngagement): Promise<void> {
+  async save(engagementId: string, data: EditableEngagement): Promise<void> {
     await this.ploApi
       .put<Engagement>(`/engagements/${engagementId}/save`, data)
       .toPromise();

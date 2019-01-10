@@ -13,12 +13,14 @@ services:
     environment:
       NG_BUILD_TARGET: uat
       SERVICE_80_NAME: client-tsco-cord-field-uat
+      DEBUG: sapi:*
     mem_limit: 256000000
 
   cord-api-plo:
     image: 103805181946.dkr.ecr.us-west-2.amazonaws.com/client/cord-api-plo:latest
     ports: [ "8001" ]
     environment:
+      DEBUG: plo:*,sapi:*
       MONGO_DB_CONN: mongodb://cord-uat:wa0xMQPl1VKrsBcoR2a4@mongo-a.dev.olivetech.internal,mongo-b.dev.olivetech.internal,mongo-c.dev.olivetech.internal/cord-uat?replicaSet=dev
       NODE_ENV: uat
       CREATE_DEVELOPER_USERS: "true"

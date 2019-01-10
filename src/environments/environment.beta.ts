@@ -12,3 +12,4 @@ export const environment = {
     'plo.cord.bible': 'https://beta-api.cordfield.com/api',
   },
 };
+

@@ -1,20 +1,32 @@
 import { Language } from '@app/core/models/language';
 import { Product } from '@app/core/models/product';
-import { clone } from '@app/core/util';
+import { clone, maybeDate } from '@app/core/util';
 import { DateTime } from 'luxon';
 import { EngagementStatus } from './engagement/status';
 
 export { EngagementStatus };
 
-export class Engagement {
-  id: string;
+/**
+ * Editable properties of Engagement.
+ * No functions in this class.
+ */
+export class EditableEngagement {
   status: EngagementStatus;
-  possibleStatuses: EngagementStatus[];
-  language: Language;
   products: Product[];
   tags: string[];
-  isDedicationPlanned: boolean;
-  dedicationDate: DateTime | null;
+  completeDate: DateTime | null;
+  disbursementCompleteDate: DateTime | null;
+  communicationsCompleteDate: DateTime | null;
+  ceremonyEstimatedDate: DateTime | null;
+  ceremonyActualDate: DateTime | null;
+}
+
+export class Engagement extends EditableEngagement {
+  id: string;
+  possibleStatuses: EngagementStatus[];
+  language: Language;
+  initialEndDate: DateTime | null;
+  currentEndDate: DateTime | null;
   updatedAt: DateTime | null;
 
   static fromJson(json: any): Engagement {
@@ -28,22 +40,23 @@ export class Engagement {
     engagement.language = Language.fromJson(json.language);
     engagement.products = json.products || [];
     engagement.tags = json.tags || [];
-    engagement.isDedicationPlanned = json.isDedicationPlanned || false;
-    engagement.dedicationDate = json.dedicationDate ? DateTime.fromISO(json.dedicationDate) : null;
-    engagement.updatedAt = json.updatedAt ? DateTime.fromISO(json.updatedAt) : null;
+    engagement.initialEndDate = maybeDate(json.initialEndDate);
+    engagement.currentEndDate = maybeDate(json.currentEndDate);
+    engagement.completeDate = maybeDate(json.completeDate);
+    engagement.disbursementCompleteDate = maybeDate(json.disbursementCompleteDate);
+    engagement.communicationsCompleteDate = maybeDate(json.communicationsCompleteDate);
+    engagement.ceremonyEstimatedDate = maybeDate(json.ceremonyEstimatedDate);
+    engagement.ceremonyActualDate = maybeDate(json.ceremonyActualDate);
+    engagement.updatedAt = maybeDate(json.updatedAt);
 
     return engagement;
   }
 
-  withChanges(modified: ModifiedEngagement): Engagement {
+  hasTag(name: string): boolean {
+    return this.tags.some(tag => tag === name);
+  }
+
+  withChanges(modified: EditableEngagement): Engagement {
     return Object.assign(clone(this), modified);
   }
-}
-
-export interface ModifiedEngagement {
-  status: EngagementStatus;
-  products: Product[];
-  tags: string[];
-  isDedicationPlanned: boolean;
-  dedicationDate: DateTime | null;
 }

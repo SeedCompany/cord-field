@@ -2,7 +2,7 @@ import { HttpClientTestingModule, HttpTestingController } from '@angular/common/
 import { TestBed } from '@angular/core/testing';
 import { CoreModule } from '@app/core/core.module';
 import { BibleBook } from '@app/core/models/bible-book';
-import { Engagement, EngagementStatus, ModifiedEngagement } from '@app/core/models/engagement';
+import { EditableEngagement, Engagement, EngagementStatus } from '@app/core/models/engagement';
 import { Product, ProductMedium, ProductMethodology, ProductPurpose, ProductType } from '@app/core/models/product';
 import { environment } from '../../../environments/environment';
 import { EngagementService } from './engagement.service';
@@ -43,7 +43,7 @@ describe('EngagementService', () => {
           methodology: ProductMethodology.Paratext,
           type: ProductType.Gospel,
           books: [BibleBook.Luke],
-          purposes: [ProductPurpose.Evangelism],
+          purposes: [ProductPurpose.ChurchLife],
           mediums: [ProductMedium.Print],
         },
       ],
@@ -67,22 +67,25 @@ describe('EngagementService', () => {
 
   it('should save engagement data', (done: DoneFn) => {
     const id = 'iBFFFGvBVlIpvsKVanrbIYVBaPwkDnhjjb0.n_cPm_zyG_7D7WWLDT7ozQ.zfUnrX9tXoPtWtDc9PLhUw';
-    const modified: ModifiedEngagement = {
+    const modified: EditableEngagement = {
       status: EngagementStatus.Active,
       products: [
         Product.from({
           id: '1234',
           approach: 'written',
           methodology: ProductMethodology.Paratext,
-          type: ProductType.Gospel,
+          name: ProductType.Gospel,
           books: [BibleBook.Luke],
-          purposes: [ProductPurpose.Evangelism],
+          purposes: [ProductPurpose.ChurchLife],
           mediums: [ProductMedium.Print],
         }),
       ],
       tags: ['luke_partnership'],
-      isDedicationPlanned: false,
-      dedicationDate: null,
+      completeDate: null,
+      disbursementCompleteDate: null,
+      communicationsCompleteDate: null,
+      ceremonyEstimatedDate: null,
+      ceremonyActualDate: null,
     };
 
     engagementService.save(id, modified)

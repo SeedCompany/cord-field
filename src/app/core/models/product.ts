@@ -9,7 +9,7 @@ export { ProductApproach, ProductMedium, ProductMethodology, ProductPurpose, Pro
 
 export class Product {
   id: string;
-  type: ProductType;
+  name: ProductType;
   books: BibleBook[];
   mediums: ProductMedium[];
   purposes: ProductPurpose[];
