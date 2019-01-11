@@ -22,6 +22,7 @@ export class Project {
   id: string;
   name: string;
   type: ProjectType;
+  deptId: string | null;
   status: ProjectStatus;
   possibleStatuses: ProjectStatus[];
   location: Location | null;
@@ -47,6 +48,7 @@ export class Project {
     // Remove legacy IDs from project names, this should be removed before launch.
       .replace(/ \(\d+\)$/, '');
     project.type = json.type || ProjectType.Translation;
+    project.deptId = json.deptId;
     project.status = json.status || ProjectStatus.Active;
     project.possibleStatuses = json.possibleStatuses || [];
     project.location = json.location ? Location.fromJson(json.location) : null;
