@@ -3,12 +3,12 @@
   <mat-drawer-content>
     <mat-toolbar>
       <button mat-button class="project-menu-button" color="primary" [matMenuTriggerFor]="projectMenu">
-        {{ listSelector.value.label }}
+        {{ listSelection.label }}
         <mat-icon>arrow_drop_down</mat-icon>
       </button>
       <mat-menu #projectMenu="matMenu">
         <button mat-menu-item
-                (click)="listSelector.next(selector)"
+                (click)="listChanges.next(selector)"
                 *ngFor="let selector of listSelectorOptions; trackBy: trackByValue">
           {{ selector.label }}
         </button>
@@ -26,8 +26,7 @@
 
     <mat-table [dataSource]="projectSource"
                matSort
-               matSortActive="updatedAt"
-               matSortDirection="desc">
+               matSortDisableClear>
       <ng-container matColumnDef="name">
         <mat-header-cell *matHeaderCellDef mat-sort-header>Project Title</mat-header-cell>
         <mat-cell *matCellDef="let project" class="title"> {{ project.name }}</mat-cell>

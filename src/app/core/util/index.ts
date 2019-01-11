@@ -29,3 +29,16 @@ export function hasValue(value: any /* unknown - once Angular catches up */): bo
 
   return Boolean(value);
 }
+
+export function parseBoolean(val: string | boolean, unknown = true): boolean {
+  if (typeof val === 'boolean') {
+    return val;
+  }
+  if (val === 'true') {
+    return true;
+  }
+  if (val === 'false') {
+    return false;
+  }
+  return unknown;
+}
