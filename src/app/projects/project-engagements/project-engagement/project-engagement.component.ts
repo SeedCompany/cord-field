@@ -10,7 +10,7 @@ import { Project, ProjectType } from '@app/core/models/project';
 import { IsDirty } from '@app/core/route-guards/dirty.guard';
 import { EngagementService } from '@app/core/services/engagement.service';
 import { ProjectService } from '@app/core/services/project.service';
-import { enableControl, filterRequired, generateObjectId, Omit } from '@app/core/util';
+import { enableControl, filterRequired, generateObjectId, Omit, twoWaySync } from '@app/core/util';
 import { ProjectViewStateService } from '@app/projects/project-view-state.service';
 import { popInOut } from '@app/shared/animations';
 import { emptyOptions, StatusOptions } from '@app/shared/components/status-select-workflow/status-select-workflow.component';
@@ -200,18 +200,10 @@ export class ProjectEngagementComponent extends SubscriptionComponent implements
     // Link type and books controls, because values are related
     const booksCtl = fg.get('books')!;
     const typeCtl = fg.get('name')!;
-    let booksChangingFromType = false;
+    const [booksChangingFromType, rejectChangesFromType] = twoWaySync();
     const sub = booksCtl.valueChanges
       .pipe(
-        // Avoid infinite loop.
-        // If books is changing because type change, then don't try to change type.
-        filter(() => {
-          if (booksChangingFromType) {
-            booksChangingFromType = false;
-            return false;
-          }
-          return true;
-        }),
+        rejectChangesFromType,
         filter(() => !ProductType.SpecialTypes.includes(typeCtl.value)),
         map(ProductType.fromBooks),
         takeUntil(this.unsubscribe),
@@ -224,9 +216,9 @@ export class ProjectEngagementComponent extends SubscriptionComponent implements
         map(ProductType.booksFromType),
         filter(books => books !== null),
         takeUntil(this.unsubscribe),
+        booksChangingFromType,
       )
       .subscribe(books => {
-        booksChangingFromType = true;
         booksCtl.setValue(books);
       });
     sub.add(sub2);

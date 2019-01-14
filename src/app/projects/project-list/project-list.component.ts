@@ -2,10 +2,10 @@ import { animate, state, style, transition, trigger } from '@angular/animations'
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { MatPaginator, MatSort, MatTableDataSource, PageEvent, SortDirection } from '@angular/material';
 import { ActivatedRoute, Router } from '@angular/router';
-import { filterEntries, parseBoolean, TypedMatSort } from '@app/core/util';
+import { filterEntries, parseBoolean, twoWaySync, TypedMatSort } from '@app/core/util';
 import { SubscriptionComponent } from '@app/shared/components/subscription.component';
 import { combineLatest, Observable, of as observableOf, Subject } from 'rxjs';
-import { distinctUntilChanged, filter, map, skip, startWith, switchMap, takeUntil, tap } from 'rxjs/operators';
+import { distinctUntilChanged, map, skip, startWith, switchMap, takeUntil, tap } from 'rxjs/operators';
 import { TitleAware, TitleProp } from '../../core/decorators';
 import { Language } from '../../core/models/language';
 import { Project, ProjectStatus, ProjectType } from '../../core/models/project';
@@ -78,9 +78,6 @@ export class ProjectListComponent extends SubscriptionComponent implements OnIni
   @ViewChild(MatSort) sort: TypedMatSort<keyof Project>;
   @ViewChild(ProjectListFilterComponent) filtersComponent: ProjectListFilterComponent;
 
-  /** Flag to prevent infinite loop with two way sync of options and query params */
-  private changingParams = false;
-
   constructor(
     private projectService: ProjectService,
     private router: Router,
@@ -92,17 +89,12 @@ export class ProjectListComponent extends SubscriptionComponent implements OnIni
   ngOnInit(): void {
     const queryParams$ = this.route.queryParams as Observable<RawQueryParams>;
 
+    const [changingQueryParams, rejectProgrammaticQueryParamChanges] = twoWaySync();
+
     // Change options when query params change
     queryParams$
       .pipe(
-        filter(() => {
-          if (this.changingParams) {
-            // ignoring param changes because we caused them - prevents infinite loop
-            this.changingParams = false;
-            return false;
-          }
-          return true;
-        }),
+        rejectProgrammaticQueryParamChanges,
         map(parseParams),
         takeUntil(this.unsubscribe),
       )
@@ -155,9 +147,9 @@ export class ProjectListComponent extends SubscriptionComponent implements OnIni
           return filterEntries(params, (key, value) => value != null);
         }),
         takeUntil(this.unsubscribe),
+        changingQueryParams,
       )
       .subscribe(queryParams => {
-        this.changingParams = true;
         this.router.navigate(['.'], {
           queryParams,
           relativeTo: this.route,
