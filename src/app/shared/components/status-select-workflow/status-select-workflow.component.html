@@ -6,10 +6,18 @@
                 [disabled]="statusCtrl.value === original"
                 [class.revert]="statusCtrl.value !== original">{{ forUI(original) }}
     </mat-option>
-    <mat-divider></mat-divider>
-    <mat-option *ngFor="let status of availableStatuses; trackBy: trackByStatus"
-                [value]="status[1]">
-      {{ status[0] }}
+    <mat-divider *ngIf="availableStatuses.transitions.length > 0"></mat-divider>
+    <mat-option *ngFor="let status of availableStatuses.transitions; trackBy: trackByStatus"
+                [value]="status.value">
+      {{ status.ui }}
     </mat-option>
+    <ng-container *ngIf="availableStatuses.overrides.length > 0">
+      <mat-optgroup label="Override Status">
+        <mat-option *ngFor="let status of availableStatuses.overrides; trackBy: trackByStatus"
+                    [value]="status.value">
+          {{ status.ui }}
+        </mat-option>
+      </mat-optgroup>
+    </ng-container>
   </mat-select>
 </mat-form-field>

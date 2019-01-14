@@ -7,6 +7,7 @@ import { TypedFormControl } from '@app/core/util';
 import { ProjectViewStateService } from '@app/projects/project-view-state.service';
 import { StatusOptions } from '@app/shared/components/status-select-workflow/status-select-workflow.component';
 import { SubscriptionComponent } from '@app/shared/components/subscription.component';
+import { combineLatest } from 'rxjs';
 import { filter, takeUntil } from 'rxjs/operators';
 
 @Component({
@@ -26,14 +27,17 @@ export class ProjectStatusComponent extends SubscriptionComponent implements OnI
   }
 
   ngOnInit(): void {
-    this.viewState.project
+    combineLatest(
+      this.viewState.project,
+      this.viewState.subjectWithPreExistingChanges,
+    )
       .pipe(
+        filter(([p]) => Boolean(p.id)),
         takeUntil(this.unsubscribe),
-        filter(p => Boolean(p.id)),
       )
-      .subscribe(p => {
-        this.project = p;
-        this.statusCtrl.reset(p.status, { emitEvent: false });
+      .subscribe(([original, current]) => {
+        this.project = original;
+        this.statusCtrl.reset(current.status, { emitEvent: false });
       });
 
     this.statusCtrl.valueChanges
