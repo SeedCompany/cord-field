@@ -6,6 +6,10 @@
   flex: 1;
 }
 
+mat-progress-bar {
+  z-index: 10; // above header shadow
+}
+
 mat-drawer-container {
   flex: 1;
 }

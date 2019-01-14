@@ -72,6 +72,7 @@ export class ProjectListComponent extends SubscriptionComponent implements OnIni
   projectSource = new MatTableDataSource<Project>();
   totalCount = 0;
   filtersActive = false;
+  isLoading = true;
 
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: TypedMatSort<keyof Project>;
@@ -182,6 +183,7 @@ export class ProjectListComponent extends SubscriptionComponent implements OnIni
             all = false,
           } = params;
 
+          this.isLoading = true;
           const projects = this.projectService.getProjects(
             sort,
             dir,
@@ -203,6 +205,7 @@ export class ProjectListComponent extends SubscriptionComponent implements OnIni
         this.projectSource.data = projects;
         this.totalCount = count;
         this.filtersActive = Object.keys(filters).length > 0;
+        this.isLoading = false;
       });
 
     // Hook up list clicks
