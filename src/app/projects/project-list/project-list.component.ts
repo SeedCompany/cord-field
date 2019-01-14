@@ -150,7 +150,7 @@ export class ProjectListComponent extends SubscriptionComponent implements OnIni
             dir: sort.direction !== this.defaultSort.direction ? sort.direction : undefined,
             page: page.pageIndex > 0 ? (page.pageIndex + 1) : undefined,
             size: page.pageSize !== this.defaultPageSize ? page.pageSize : undefined,
-            all: !listSelection.value ? true : undefined,
+            all: !listSelection.value ? true : this.route.snapshot.queryParamMap.has('all') ? false : undefined,
           };
           return filterEntries(params, (key, value) => value != null);
         }),
@@ -206,6 +206,16 @@ export class ProjectListComponent extends SubscriptionComponent implements OnIni
         this.totalCount = count;
         this.filtersActive = Object.keys(filters).length > 0;
         this.isLoading = false;
+
+        // If my projects are empty and user hasn't manually specified my projects list, then show all projects instead.
+        if (count === 0 && !this.route.snapshot.queryParamMap.has('all')) {
+          this.router.navigate(['.'], {
+            queryParams: { all: true },
+            relativeTo: this.route,
+            queryParamsHandling: 'merge',
+            replaceUrl: true,
+          });
+        }
       });
 
     // Hook up list clicks
