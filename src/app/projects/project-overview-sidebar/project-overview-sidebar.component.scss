@@ -15,8 +15,12 @@
   flex: 1;
 }
 
-.location, .sensitivity {
+.location {
   margin: 0;
+}
+
+.sensitivity, .dept-id {
+  margin: 8px 0 0;
 }
 
 .stage {
