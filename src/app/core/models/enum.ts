@@ -5,6 +5,7 @@ export interface EnumListEntry<T> {
 }
 
 export interface GoodEnum<T> {
+  length: number;
   values(): T[];
   entries(): EnumList<T>;
   forUI(value: any): string | null;
@@ -19,12 +20,12 @@ export function buildEnum<T>(object: Object, valueToUiMapping: {[key: string]: s
     forUI: enumForUI(object),
     trackEntryBy: enumTrackEntryBy(),
     trackValueBy: (index: number, value: T) => value,
+    length: Object.keys(valueToUiMapping).length,
   };
 }
 
 function enumValues<T>(object: Object): () => T[] {
-  const values = Object.values(object).filter(i => typeof i === 'string');
-  return () => values;
+  return () => (object as any as GoodEnum<T>).entries().map(i => i.value);
 }
 
 function enumEntries<T>(mapping: { [key: string]: string }): () => EnumList<T> {
