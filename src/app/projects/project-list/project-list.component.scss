@@ -52,6 +52,7 @@ mat-header-row {
   position: sticky;
   top: 0;
   background: mat-background($theme, card);
+  z-index: 1;
 }
 
 .title {
