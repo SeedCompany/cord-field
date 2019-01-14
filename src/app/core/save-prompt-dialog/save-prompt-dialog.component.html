@@ -7,5 +7,5 @@
   <button mat-button color="accent" [mat-dialog-close]="true">SAVE</button>
   <button mat-button color="warn" [mat-dialog-close]="false">DISCARD</button>
   <div class="spacer"></div>
-  <button mat-button mat-dialog-close>STAY</button>
+  <button mat-button [mat-dialog-close]="null">STAY</button>
 </mat-dialog-actions>
