@@ -1,52 +1,40 @@
-import { animate, state, style, transition, trigger } from '@angular/animations';
-import { Component, OnInit, ViewChild } from '@angular/core';
-import { MatPaginator, MatSort, MatTableDataSource, SortDirection } from '@angular/material';
+import { Component, OnInit } from '@angular/core';
+import { MatPaginator, SortDirection } from '@angular/material';
 import { ActivatedRoute, Router } from '@angular/router';
-import { filterEntries, parseBoolean, twoWaySync, TypedMatSort } from '@app/core/util';
+import { Language } from '@app/core/models/language';
+import { Project, ProjectFilter, ProjectStatus, ProjectType } from '@app/core/models/project';
+import { ProjectService } from '@app/core/services/project.service';
+import { parseBoolean, TypedMatSort, TypedSort } from '@app/core/util';
 import { observePagerAndSorter } from '@app/core/util/list-views';
 import { SubscriptionComponent } from '@app/shared/components/subscription.component';
-import { combineLatest, Observable, of as observableOf, Subject } from 'rxjs';
-import { distinctUntilChanged, map, shareReplay, startWith, switchMap, takeUntil } from 'rxjs/operators';
+import {
+  defaultParamsFromChanges,
+  defaultParseParams,
+  PSChanges,
+  QueryParams,
+  RawQueryParams,
+} from '@app/shared/components/table-view/table-view.component';
+import { Observable, Subject } from 'rxjs';
+import { distinctUntilChanged, map, startWith, takeUntil } from 'rxjs/operators';
 import { TitleAware, TitleProp } from '../../core/decorators';
-import { Language } from '../../core/models/language';
-import { Project, ProjectFilter, ProjectStatus, ProjectType } from '../../core/models/project';
-import { ProjectService } from '../../core/services/project.service';
-import { ProjectListFilterComponent } from './project-list-filter/project-list-filter.component';
 
 interface ListOption {
   label: string;
   value: boolean;
 }
 
-interface QueryParams {
-  sort?: keyof Project;
-  dir?: SortDirection;
-  page?: number; // 1-indexed to make more sense for users
-  size?: number;
-  all?: boolean;
+interface ProjectQueryParams extends QueryParams<keyof Project> {
+  all: boolean;
 }
 
-type RawQueryParams = Partial<Record<keyof QueryParams, string>>;
-
-const parseParams = (raw: RawQueryParams): QueryParams => ({
-  sort: raw.sort as keyof Project,
-  dir: raw.dir as SortDirection,
-  page: raw.page ? Number(raw.page) : undefined,
-  size: raw.size ? Number(raw.size) : undefined,
-  all: raw.all != null ? parseBoolean(raw.all) : undefined,
-});
+interface ProjectViewOptions extends PSChanges<keyof Project, ProjectFilter> {
+  list: ListOption;
+}
 
 @Component({
   selector: 'app-project-list',
   templateUrl: './project-list.component.html',
   styleUrls: ['./project-list.component.scss'],
-  animations: [
-    trigger('slideRight', [
-      state('shown', style({transform: 'translateX(0)'})),
-      state('hidden', style({transform: 'translateX(200%)'})),
-      transition('shown <=> hidden', animate('200ms ease-out')),
-    ]),
-  ],
 })
 @TitleAware()
 export class ProjectListComponent extends SubscriptionComponent implements OnInit, TitleProp {
@@ -54,30 +42,20 @@ export class ProjectListComponent extends SubscriptionComponent implements OnIni
   readonly ProjectType = ProjectType;
   readonly ProjectStatus = ProjectStatus;
 
-  listSelectorOptions: ListOption[] = [
+  readonly displayedColumns: Array<keyof Project> = ['name', 'updatedAt', 'languages', 'type', 'status'];
+  readonly defaultSort: TypedSort<keyof Project> = {
+    active: 'updatedAt',
+    direction: 'desc',
+  };
+  readonly defaultPageSize = 10;
+  readonly apiFields: Array<keyof Project> = ['id', ...this.displayedColumns];
+
+  readonly listSelectorOptions: ListOption[] = [
     {label: 'My Projects', value: true},
     {label: 'All Projects', value: false},
   ];
+  readonly listChanges = new Subject<ListOption>();
   listSelection = this.listSelectorOptions[0];
-  listChanges = new Subject<ListOption>();
-
-  readonly displayedColumns: Array<keyof Project> = ['name', 'updatedAt', 'languages', 'type', 'status'];
-  readonly defaultSort = {
-    active: 'updatedAt' as keyof Project,
-    direction: 'desc' as SortDirection,
-  };
-  readonly defaultPageSize = 10;
-  readonly pageSizeOptions = [10, 25, 50];
-  readonly apiFields: Array<keyof Project> = ['id', ...this.displayedColumns];
-
-  projectSource = new MatTableDataSource<Project>();
-  totalCount = 0;
-  filtersActive = false;
-  isLoading = true;
-
-  @ViewChild(MatPaginator) paginator: MatPaginator;
-  @ViewChild(MatSort) sort: TypedMatSort<keyof Project>;
-  @ViewChild(ProjectListFilterComponent) filtersComponent: ProjectListFilterComponent;
 
   constructor(
     private projectService: ProjectService,
@@ -87,126 +65,93 @@ export class ProjectListComponent extends SubscriptionComponent implements OnIni
     super();
   }
 
-  ngOnInit(): void {
-    const queryParams$ = this.route.queryParams as Observable<RawQueryParams>;
+  /**
+   * Set list selection from query params
+   */
+  queryParamChanges(params: ProjectQueryParams) {
+    if (params.all) {
+      this.listSelection = this.listSelectorOptions[1];
+      // Emit change to keep distinctUntilChanged happy in stream below
+      this.listChanges.next(this.listSelection);
+    }
+  }
 
-    const [changingQueryParams, rejectProgrammaticQueryParamChanges] = twoWaySync();
+  /**
+   * If my projects are empty and user hasn't manually specified my projects list,
+   * then show all projects instead.
+   */
+  dataFetched(total: number) {
+    if (total > 0 || this.route.snapshot.queryParamMap.has('all')) {
+      return;
+    }
+    this.router.navigate(['.'], {
+      queryParams: { all: true },
+      relativeTo: this.route,
+      queryParamsHandling: 'merge',
+      replaceUrl: true,
+    });
+  }
 
-    // Change options when query params change
-    queryParams$
-      .pipe(
-        rejectProgrammaticQueryParamChanges,
-        map(parseParams),
-        takeUntil(this.unsubscribe),
-      )
-      .subscribe(params => {
-        this.sort.active = params.sort || this.defaultSort.active;
-        this.sort.direction = (params.dir || this.defaultSort.direction) as SortDirection;
+  /**
+   * Fetch data for params and filters.
+   */
+  fetchProjects = async (params: ProjectQueryParams, filters: ProjectFilter) => {
+    const { sort, dir, page, size, all } = params;
 
-        if (params.page && params.page > 1) {
-          this.paginator.pageIndex = params.page - 1;
-        }
-        if (params.size) {
-          this.paginator.pageSize = params.size;
-        }
+    const { projects, count } = await this.projectService.getProjects(
+      sort,
+      dir,
+      (page - 1) * size,
+      size,
+      filters,
+      this.apiFields,
+      !all,
+    );
+    return { data: projects, total: count };
+  };
 
-        if (params.all) {
-          this.listSelection = this.listSelectorOptions[1];
-          // Emit change to keep distinctUntilChanged happy in stream below
-          this.listChanges.next(this.listSelection);
-        }
-      });
-
-    // Share filter stream so it can be used for pagination reset which goes to url and with fetching data stream
-    const filters$ = this.filtersComponent.filters.pipe(shareReplay(1));
-
-    // Change query params when options change
+  /**
+   * Add all vs my list to changes to watch for.
+   */
+  observeChanges = (
+    sorter: TypedMatSort<keyof Project>,
+    paginator: MatPaginator,
+    filters$: Observable<ProjectFilter>,
+  ): Observable<ProjectViewOptions> => {
     const list$ = this.listChanges.pipe(
       startWith(this.listSelection), // Start with current value
       distinctUntilChanged(), // Don't emit if no change
     );
-    observePagerAndSorter<[ListOption, ProjectFilter], keyof Project>(
-      this.paginator,
-      this.sort,
+    return observePagerAndSorter<[ListOption, ProjectFilter], keyof Project>(
+      paginator,
+      sorter,
       [list$, filters$],
       [this.listSelection, {}],
     )
       .pipe(
         map(({ sort, page, rest: [list, filters] }) => ({ sort, page, list, filters })),
-        map(({ sort, page, list }): QueryParams => {
-          const params = {
-            sort: sort.active !== this.defaultSort.active ? sort.active : undefined,
-            dir: sort.direction !== this.defaultSort.direction ? sort.direction : undefined,
-            page: page.pageIndex > 0 ? (page.pageIndex + 1) : undefined,
-            size: page.pageSize !== this.defaultPageSize ? page.pageSize : undefined,
-            all: !list.value ? true : this.route.snapshot.queryParamMap.has('all') ? false : undefined,
-          };
-          return filterEntries(params, (key, value) => value != null);
-        }),
-        takeUntil(this.unsubscribe),
-        changingQueryParams,
-      )
-      .subscribe(queryParams => {
-        this.router.navigate(['.'], {
-          queryParams,
-          relativeTo: this.route,
-          // We want to keep state in case user wants to jump back to this state,
-          // but we don't want to flood the history with interactions on this view.
-          // That would make it hard for the user to return to the previous view.
-          replaceUrl: true,
-        });
-      });
+      );
+  };
 
-    // Fetch data from query params & filters
-    combineLatest(
-      queryParams$.pipe(map(parseParams)),
-      filters$,
-    )
-      .pipe(
-        switchMap(([params, filters]) => {
-          const {
-            sort = this.sort.active,
-            dir = this.sort.direction,
-            page = 1,
-            size = 10,
-            all = false,
-          } = params;
+  /**
+   * Add `all` to parsing logic
+   */
+  parseParams = (raw: RawQueryParams<ProjectQueryParams>): ProjectQueryParams => ({
+    ...defaultParseParams<keyof Project>(this.defaultPageSize)(raw),
+    all: raw.all != null ? parseBoolean(raw.all) : false,
+  });
 
-          this.isLoading = true;
-          const projects = this.projectService.getProjects(
-            sort,
-            dir,
-            (page - 1) * size,
-            size,
-            filters,
-            this.apiFields,
-            !all,
-          );
+  /**
+   * Add `all` to parsing logic
+   */
+  paramsFromChanges = (changes: ProjectViewOptions): Partial<ProjectQueryParams> => {
+    return {
+      ...defaultParamsFromChanges<keyof Project, ProjectFilter>(this.defaultSort, this.defaultPageSize)(changes),
+      all: !changes.list.value ? true : this.route.snapshot.queryParamMap.has('all') ? false : undefined,
+    };
+  };
 
-          return combineLatest(
-            projects,
-            observableOf(filters),
-          );
-        }),
-        takeUntil(this.unsubscribe),
-      )
-      .subscribe(([{ projects, count }, filters]) => {
-        this.projectSource.data = projects;
-        this.totalCount = count;
-        this.filtersActive = Object.keys(filters).length > 0;
-        this.isLoading = false;
-
-        // If my projects are empty and user hasn't manually specified my projects list, then show all projects instead.
-        if (count === 0 && !this.route.snapshot.queryParamMap.has('all')) {
-          this.router.navigate(['.'], {
-            queryParams: { all: true },
-            relativeTo: this.route,
-            queryParamsHandling: 'merge',
-            replaceUrl: true,
-          });
-        }
-      });
-
+  ngOnInit(): void {
     // Hook up list clicks
     this.listChanges
       .pipe(
@@ -227,10 +172,6 @@ export class ProjectListComponent extends SubscriptionComponent implements OnIni
 
   onLanguageClick(language: Language) {
     this.router.navigate(['/languages', language.id]);
-  }
-
-  onClearFilters() {
-    this.filtersComponent.reset();
   }
 
   trackByValue(index: number, value: any) {
