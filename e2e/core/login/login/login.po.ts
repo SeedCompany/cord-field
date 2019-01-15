@@ -14,10 +14,6 @@ export class Login {
     return element(by.partialButtonText('FORGOT EMAIL/PASSWORD?'));
   }
 
-  getRequestAccessButton() {
-    return element(by.partialButtonText('REQUEST ACCESS'));
-  }
-
   getFormInputControl(formControlName: string) {
     return element(byFormControlName(formControlName));
   }

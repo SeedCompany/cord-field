@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { Observable, Subject } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { AuthenticationToken } from '../models/authentication-token';
-import { IUserRequestAccess, User } from '../models/user';
+import { User } from '../models/user';
 import { AuthenticationStorageService } from './authentication-storage.service';
 import { IGNORE_AUTH_ERRORS } from './http/auth-interceptor';
 import { PloApiService } from './http/plo-api.service';
@@ -70,15 +70,6 @@ export class AuthenticationService {
   constructor(private api: PloApiService,
               private authStorage: AuthenticationStorageService,
               private sessionStorage: SessionStorageService) {
-  }
-
-  /**
-   * Throws:
-   * - invalid_email
-   * - invalid_password
-   */
-  async requestAccess(newUser: IUserRequestAccess) {
-    await this.api.post('/users/request-account', {...newUser, domain: DOMAIN}).toPromise();
   }
 
   /**

@@ -4,12 +4,10 @@ import { AlreadyLoggedInGuard } from '../route-guards/authentication-guard';
 import { ConfirmEmailComponent } from './confirm-email/confirm-email.component';
 import { ForgotPasswordComponent } from './forgot-password/forgot-password.component';
 import { LoginComponent } from './login/login.component';
-import { RequestAccessComponent } from './request-access/request-access.component';
 import { ResetPasswordComponent } from './reset-password/reset-password.component';
 
 const routes: Routes = [
   {path: '', component: LoginComponent, pathMatch: 'full', canActivate: [AlreadyLoggedInGuard]},
-  {path: 'request-access', component: RequestAccessComponent},
   {path: 'confirm-email', component: ConfirmEmailComponent},
   {path: 'forgot-password', component: ForgotPasswordComponent},
   {path: 'reset-password', component: ResetPasswordComponent},
