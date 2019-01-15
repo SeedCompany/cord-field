@@ -91,6 +91,7 @@ export class AuthenticationService {
    * - invalid_password - insecure new password
    */
   async login(email: string, password: string, rememberLogin: boolean, newPassword?: string): Promise<void> {
+    email = email.toLowerCase();
     const tokens = await this.api
       .post('/auth/native/login', {domain: DOMAIN, email, password, newPassword}, {
         headers: {[IGNORE_AUTH_ERRORS]: 'true'},
@@ -117,7 +118,8 @@ export class AuthenticationService {
   }
 
   async forgotPassword(email: string): Promise<void> {
-    await this.api.put('/auth/native/forgot-password', {email: email, domain: DOMAIN}).toPromise();
+    email = email.toLowerCase();
+    await this.api.put('/auth/native/forgot-password', {email, domain: DOMAIN}).toPromise();
   }
 
   /**
@@ -135,6 +137,7 @@ export class AuthenticationService {
    * - unauthorized - when user not found or password doesn't match
    */
   async changePassword(email: string, currentPassword: string, newPassword: string): Promise<void> {
+    email = email.toLowerCase();
     await this.api.put('/auth/native/change-password', {email, currentPassword, newPassword}, {
       headers: {[IGNORE_AUTH_ERRORS]: 'true'},
     }).toPromise();
