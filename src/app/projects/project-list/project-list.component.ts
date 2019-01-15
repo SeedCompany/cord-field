@@ -1,14 +1,15 @@
 import { animate, state, style, transition, trigger } from '@angular/animations';
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { MatPaginator, MatSort, MatTableDataSource, PageEvent, SortDirection } from '@angular/material';
+import { MatPaginator, MatSort, MatTableDataSource, SortDirection } from '@angular/material';
 import { ActivatedRoute, Router } from '@angular/router';
 import { filterEntries, parseBoolean, twoWaySync, TypedMatSort } from '@app/core/util';
+import { observePagerAndSorter } from '@app/core/util/list-views';
 import { SubscriptionComponent } from '@app/shared/components/subscription.component';
 import { combineLatest, Observable, of as observableOf, Subject } from 'rxjs';
-import { distinctUntilChanged, map, skip, startWith, switchMap, takeUntil, tap } from 'rxjs/operators';
+import { distinctUntilChanged, map, shareReplay, startWith, switchMap, takeUntil } from 'rxjs/operators';
 import { TitleAware, TitleProp } from '../../core/decorators';
 import { Language } from '../../core/models/language';
-import { Project, ProjectStatus, ProjectType } from '../../core/models/project';
+import { Project, ProjectFilter, ProjectStatus, ProjectType } from '../../core/models/project';
 import { ProjectService } from '../../core/services/project.service';
 import { ProjectListFilterComponent } from './project-list-filter/project-list-filter.component';
 
@@ -116,33 +117,29 @@ export class ProjectListComponent extends SubscriptionComponent implements OnIni
         }
       });
 
+    // Share filter stream so it can be used for pagination reset which goes to url and with fetching data stream
+    const filters$ = this.filtersComponent.filters.pipe(shareReplay(1));
+
     // Change query params when options change
-    combineLatest(
-      this.sort.sortChange
-        .pipe(
-          tap(() => this.paginator.pageIndex = 0),
-          startWith({active: this.sort.active, direction: this.sort.direction}),
-        ),
-      this.paginator.page
-        .pipe(startWith({
-          pageIndex: this.paginator.pageIndex,
-          pageSize: this.paginator.pageSize,
-          length: this.paginator.length,
-        } as PageEvent)),
-      this.listChanges.pipe(
-        startWith(this.listSelection), // Start with current value
-        distinctUntilChanged(), // Don't emit if no change
-      ),
+    const list$ = this.listChanges.pipe(
+      startWith(this.listSelection), // Start with current value
+      distinctUntilChanged(), // Don't emit if no change
+    );
+    observePagerAndSorter<[ListOption, ProjectFilter], keyof Project>(
+      this.paginator,
+      this.sort,
+      [list$, filters$],
+      [this.listSelection, {}],
     )
       .pipe(
-        skip(1), // We don't need to navigate for initial data since there will be no changes.
-        map(([sort, page, listSelection]): QueryParams => {
+        map(({ sort, page, rest: [list, filters] }) => ({ sort, page, list, filters })),
+        map(({ sort, page, list }): QueryParams => {
           const params = {
             sort: sort.active !== this.defaultSort.active ? sort.active : undefined,
             dir: sort.direction !== this.defaultSort.direction ? sort.direction : undefined,
             page: page.pageIndex > 0 ? (page.pageIndex + 1) : undefined,
             size: page.pageSize !== this.defaultPageSize ? page.pageSize : undefined,
-            all: !listSelection.value ? true : this.route.snapshot.queryParamMap.has('all') ? false : undefined,
+            all: !list.value ? true : this.route.snapshot.queryParamMap.has('all') ? false : undefined,
           };
           return filterEntries(params, (key, value) => value != null);
         }),
@@ -163,7 +160,7 @@ export class ProjectListComponent extends SubscriptionComponent implements OnIni
     // Fetch data from query params & filters
     combineLatest(
       queryParams$.pipe(map(parseParams)),
-      this.filtersComponent.filters,
+      filters$,
     )
       .pipe(
         switchMap(([params, filters]) => {
