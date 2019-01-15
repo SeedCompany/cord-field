@@ -31,6 +31,14 @@
     <mat-menu #profileMenu="matMenu">
       <a routerLink="/people/{{ currentUser?.id }}" mat-menu-item>Profile</a>
       <a routerLink="/people/{{ currentUser?.id }}/edit/account" mat-menu-item>Account</a>
+      <a mat-menu-item
+         class="external"
+         href="https://seedcompany.freshdesk.com/support/solutions/43000359111"
+         target="_blank"
+      >
+        <span>Guide</span>
+        <mat-icon>launch</mat-icon>
+      </a>
       <button mat-menu-item (click)="logout()">Logout</button>
     </mat-menu>
 

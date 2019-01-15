@@ -37,3 +37,8 @@ mat-toolbar {
 a.active {
   color: mat-color($accent);
 }
+
+// Flip margin from right to left
+.external mat-icon {
+  margin: 0 0 0 16px;
+}
