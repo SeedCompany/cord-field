@@ -14,10 +14,10 @@ import {
 } from '@angular/material';
 import { ActivatedRoute, Router } from '@angular/router';
 import { filterEntries, twoWaySync, TypedMatSort, TypedSort } from '@app/core/util';
-import { observePagerAndSorter } from '@app/core/util/list-views';
+import { ListApi, observePagerAndSorter } from '@app/core/util/list-views';
 import { SubscriptionComponent } from '@app/shared/components/subscription.component';
 import { TableFilterDirective, TableViewFilters } from '@app/shared/components/table-view/table-filter.directive';
-import { combineLatest, from, merge, Observable, ObservableInput, of, Subject } from 'rxjs';
+import { combineLatest, from, merge, Observable, of, Subject } from 'rxjs';
 import { catchError, first, map, shareReplay, startWith, switchMap, takeUntil, tap } from 'rxjs/operators';
 
 export interface QueryParams<TKeys> {
@@ -35,14 +35,13 @@ export interface PSChanges<TKeys extends string, Filters> {
   filters: Filters;
 }
 
-export type FetchDataResult<T> = ObservableInput<{ data: T[], total: number }>;
-
-export const defaultParseParams = <TKeys extends string>(defaultPageSize: number) => (raw: RawQueryParams): QueryParams<TKeys> => ({
-  sort: raw.sort as TKeys,
-  dir: raw.dir as SortDirection,
-  page: raw.page ? Number(raw.page) : 1,
-  size: raw.size ? Number(raw.size) : defaultPageSize,
-});
+export const defaultParseParams = <TKeys extends string>(defaultSort: TypedSort<TKeys>, defaultPageSize: number) =>
+  (raw: RawQueryParams): QueryParams<TKeys> => ({
+    sort: raw.sort ? raw.sort as TKeys : defaultSort.active,
+    dir: raw.dir ? raw.dir as SortDirection : defaultSort.direction,
+    page: raw.page ? Number(raw.page) : 1,
+    size: raw.size ? Number(raw.size) : defaultPageSize,
+  });
 
 export const defaultParamsFromChanges = <TKeys extends string, Filters>(defaultSort: TypedSort<TKeys>, defaultPageSize: number) =>
   ({ sort, page }: PSChanges<TKeys, Filters>): Partial<QueryParams<TKeys>> => {
@@ -75,7 +74,7 @@ export class TableViewComponent<T,
   @Input() defaultSort: TypedSort<TKeys>;
   @Input() defaultPageSize = 10;
   @Input() pageSizeOptions = [10, 25, 50];
-  @Input() fetchData: (params: Params, filters: Filters) => FetchDataResult<T>;
+  @Input() fetchData: ListApi<T, TKeys, Filters, Params & { filters: Filters }>;
   @Input() observeChanges = (sorter: TypedMatSort<TKeys>, paginator: MatPaginator, filters$: Observable<Filters>): Observable<Changes> => {
     return observePagerAndSorter<[Filters], TKeys>(
       paginator,
@@ -87,7 +86,8 @@ export class TableViewComponent<T,
         map(({ sort, page, rest: [filters] }) => ({ sort, page, filters }) as any),
       );
   };
-  @Input() parseParams: (raw: RawQueryParams) => Params = (raw) => defaultParseParams(this.defaultPageSize)(raw) as Params;
+  @Input() parseParams: (raw: RawQueryParams) => Params = (raw) =>
+    defaultParseParams(this.defaultSort, this.defaultPageSize)(raw) as Params;
   @Input() paramsFromChanges: (changes: Changes) => Partial<Params> = (changes) => {
     return defaultParamsFromChanges(this.defaultSort, this.defaultPageSize)(changes) as Params;
   };
@@ -176,7 +176,8 @@ export class TableViewComponent<T,
       .pipe(
         tap(() => this.isLoading = true),
         switchMap(([params, filters]) =>
-          from(this.fetchData(params, filters))
+          // tslint:disable-next-line:prefer-object-spread
+          from(this.fetchData(Object.assign(params, { filters })))
             .pipe(
               catchError((error) => of({ data: [], total: 0, error })),
               map(result => ({ error: null, ...result, filters })),
