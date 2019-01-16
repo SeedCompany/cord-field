@@ -111,6 +111,7 @@ export class TableViewComponent<T,
   totalCount = 0;
   filtersActive = false;
   isLoading = true;
+  refresh = new Subject<void>();
 
   @ContentChild(MatTable) table: MatTable<T>;
   @ContentChild(MatSort) sort: TypedMatSort<TKeys>;
@@ -120,7 +121,6 @@ export class TableViewComponent<T,
   @ViewChild('openDrawerButton') openDrawerButton: MatButton;
   @ViewChild('closeDrawerButton') closeDrawerButton: MatButton;
 
-  private refresh = new Subject<void>();
   private errorRef: MatSnackBarRef<SimpleSnackBar> | null;
 
   constructor(

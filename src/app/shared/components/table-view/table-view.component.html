@@ -13,6 +13,12 @@
 
       <div [@slideRight]="filterDrawer.opened ? 'hidden' : 'shown'">
         <button mat-icon-button
+                color="primary"
+                (click)="refresh.next()"
+        >
+          <mat-icon>refresh</mat-icon>
+        </button>
+        <button mat-icon-button
                 #openDrawerButton
                 [@addPadding]="filterDrawer.opened ? 'hidden' : 'shown'"
                 [color]="filtersActive ? 'accent' : 'primary'"
