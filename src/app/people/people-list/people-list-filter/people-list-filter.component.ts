@@ -4,6 +4,7 @@ import { Organization } from '@app/core/models/organization';
 import { ProjectRole } from '@app/core/models/project-role';
 import { UserFilter } from '@app/core/models/user';
 import { filterEntries, hasValue, TypedFormControl } from '@app/core/util';
+import { TableViewFilters } from '@app/shared/components/table-view/table-filter.directive';
 import { Observable } from 'rxjs';
 import { map, startWith } from 'rxjs/operators';
 
@@ -12,7 +13,7 @@ import { map, startWith } from 'rxjs/operators';
   templateUrl: './people-list-filter.component.html',
   styleUrls: ['./people-list-filter.component.scss'],
 })
-export class PeopleListFilterComponent {
+export class PeopleListFilterComponent implements TableViewFilters<UserFilter> {
 
   form = this.formBuilder.group({
     organizations: [[]],

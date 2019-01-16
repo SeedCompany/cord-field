@@ -1,0 +1,47 @@
+<mat-progress-bar
+  mode="indeterminate"
+  color="accent"
+  [style.visibility]="isLoading ? 'visible' : 'hidden'"
+></mat-progress-bar>
+<mat-drawer-container autosize>
+
+  <mat-drawer-content>
+    <mat-toolbar>
+      <ng-content select="toolbar"></ng-content>
+
+      <span class="spacer"></span>
+
+      <button mat-icon-button
+              [color]="filtersActive ? 'accent' : 'primary'"
+              [@slideRight]="filterDrawer.opened ? 'hidden' : 'shown'"
+              (click)="filterDrawer.toggle()">
+        <mat-icon>filter_list</mat-icon>
+      </button>
+    </mat-toolbar>
+
+    <ng-content select="mat-table"></ng-content>
+
+    <mat-paginator [pageSizeOptions]="pageSizeOptions"
+                   [length]="totalCount">
+    </mat-paginator>
+  </mat-drawer-content>
+
+  <mat-drawer mode="side" position="end" #filterDrawer>
+    <mat-toolbar>
+      Filter
+      <div class="spacer"></div>
+      <button mat-icon-button color="primary"
+              *ngIf="filtersActive"
+              (click)="onClearFilters()">
+        <mat-icon>remove_circle</mat-icon>
+      </button>
+      <button mat-icon-button color="primary"
+              (click)="filterDrawer.toggle()">
+        <mat-icon>close</mat-icon>
+      </button>
+    </mat-toolbar>
+
+    <ng-content select="[tableFilter]"></ng-content>
+  </mat-drawer>
+
+</mat-drawer-container>
