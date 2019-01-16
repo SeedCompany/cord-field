@@ -11,12 +11,17 @@
 
       <span class="spacer"></span>
 
-      <button mat-icon-button
-              [color]="filtersActive ? 'accent' : 'primary'"
-              [@slideRight]="filterDrawer.opened ? 'hidden' : 'shown'"
-              (click)="filterDrawer.toggle()">
-        <mat-icon>filter_list</mat-icon>
-      </button>
+      <div [@slideRight]="filterDrawer.opened ? 'hidden' : 'shown'">
+        <button mat-icon-button
+                #openDrawerButton
+                [@addPadding]="filterDrawer.opened ? 'hidden' : 'shown'"
+                [color]="filtersActive ? 'accent' : 'primary'"
+                [attr.tabindex]="filterDrawer.opened ? -1 : null"
+                (click)="filterDrawer.toggle()"
+        >
+          <mat-icon>filter_list</mat-icon>
+        </button>
+      </div>
     </mat-toolbar>
 
     <ng-content select="mat-table"></ng-content>
@@ -36,6 +41,7 @@
         <mat-icon>remove_circle</mat-icon>
       </button>
       <button mat-icon-button color="primary"
+              #closeDrawerButton
               (click)="filterDrawer.toggle()">
         <mat-icon>close</mat-icon>
       </button>

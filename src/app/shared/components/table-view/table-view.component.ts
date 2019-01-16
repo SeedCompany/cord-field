@@ -1,7 +1,9 @@
 /* tslint:disable:member-ordering */
-import { animate, state, style, transition, trigger } from '@angular/animations';
-import { AfterContentInit, Component, ContentChild, EventEmitter, Input, Output, ViewChild } from '@angular/core';
+import { animate, animateChild, group, query, state, style, transition, trigger } from '@angular/animations';
+import { AfterContentInit, AfterViewInit, Component, ContentChild, EventEmitter, Input, Output, ViewChild } from '@angular/core';
 import {
+  MatButton,
+  MatDrawer,
   MatPaginator,
   MatSnackBar,
   MatSnackBarRef,
@@ -60,8 +62,18 @@ export const defaultParamsFromChanges = <TKeys extends string, Filters>(defaultS
   animations: [
     trigger('slideRight', [
       state('shown', style({ transform: 'translateX(0)' })),
-      state('hidden', style({ transform: 'translateX(200%)' })),
-      transition('shown <=> hidden', animate('200ms ease-out')),
+      state('hidden', style({ transform: 'translateX(56px)' })), // 56px = 40px icon width + 16px toolbar padding
+      transition('shown <=> hidden', [
+        group([
+          query('@addPadding', animateChild()),
+          animate('400ms cubic-bezier(0.25, 0.8, 0.25, 1)'),
+        ]),
+      ]),
+    ]),
+    trigger('addPadding', [
+      state('shown', style({ marginLeft: 0 })),
+      state('hidden', style({ marginLeft: '16px' })), // 16px toolbar padding
+      transition('shown <=> hidden', animate('400ms cubic-bezier(0.25, 0.8, 0.25, 1)')),
     ]),
   ],
 })
@@ -69,7 +81,7 @@ export class TableViewComponent<T,
   TKeys extends string,
   Filters,
   Changes extends PSChanges<TKeys, Filters>,
-  Params extends QueryParams<TKeys>> extends SubscriptionComponent implements AfterContentInit {
+  Params extends QueryParams<TKeys>> extends SubscriptionComponent implements AfterContentInit, AfterViewInit {
 
   @Input() defaultSort: TypedSort<TKeys>;
   @Input() defaultPageSize = 10;
@@ -104,6 +116,9 @@ export class TableViewComponent<T,
   @ContentChild(MatSort) sort: TypedMatSort<TKeys>;
   @ContentChild(TableFilterDirective) filtersComponent: TableViewFilters<Filters>;
   @ViewChild(MatPaginator) paginator: MatPaginator;
+  @ViewChild('filterDrawer') filterDrawer: MatDrawer;
+  @ViewChild('openDrawerButton') openDrawerButton: MatButton;
+  @ViewChild('closeDrawerButton') closeDrawerButton: MatButton;
 
   private refresh = new Subject<void>();
   private errorRef: MatSnackBarRef<SimpleSnackBar> | null;
@@ -203,6 +218,15 @@ export class TableViewComponent<T,
           this.errorRef!.dismiss();
           this.errorRef = null;
         });
+      });
+  }
+
+  ngAfterViewInit(): void {
+    this.filterDrawer.openedChange
+      .pipe(takeUntil(this.unsubscribe))
+      .subscribe(opened => {
+        const button = opened ? this.closeDrawerButton : this.openDrawerButton;
+        button.focus();
       });
   }
 
