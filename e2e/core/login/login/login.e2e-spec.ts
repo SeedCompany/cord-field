@@ -30,13 +30,6 @@ describe('cord-field Login screen', () => {
     await button.click();
   });
 
-  it('find and click the REQUEST ACCESS button', async () => {
-    const button = loginPage.getRequestAccessButton();
-    expect(button.getText()).toEqual(('REQUEST ACCESS'));
-    await button.isEnabled();
-    await button.click();
-  });
-
   it('enter email and password and click sign in', async () => {
     loginPage.getFormInputControl('email').sendKeys('rick_maclean@tsco.org');
     loginPage.getFormInputControl('password').sendKeys('test');
