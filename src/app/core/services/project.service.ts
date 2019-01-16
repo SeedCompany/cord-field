@@ -17,12 +17,10 @@ import {
   ProjectFilter,
   ProjectSensitivity,
   ProjectStatus,
-  ProjectType,
 } from '../models/project';
 import { PloApiService } from './http/plo-api.service';
 
 export interface ProjectFilterAPI {
-  type?: ProjectType;
   status?: ProjectStatus[];
   languages?: string[];
   locationId?: string[];
