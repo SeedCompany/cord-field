@@ -20,6 +20,7 @@
         </button>
         <button mat-icon-button
                 #openDrawerButton
+                *ngIf="hasFilters"
                 [@addPadding]="filterDrawer.opened ? 'hidden' : 'shown'"
                 [color]="filtersActive ? 'accent' : 'primary'"
                 [attr.tabindex]="filterDrawer.opened ? -1 : null"

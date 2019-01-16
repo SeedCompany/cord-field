@@ -115,7 +115,7 @@ export class TableViewComponent<T,
 
   @ContentChild(MatTable) table: MatTable<T>;
   @ContentChild(MatSort) sort: TypedMatSort<TKeys>;
-  @ContentChild(TableFilterDirective) filtersComponent: TableViewFilters<Filters>;
+  @ContentChild(TableFilterDirective) filtersComponent: TableViewFilters<Filters> | undefined;
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild('filterDrawer') filterDrawer: MatDrawer;
   @ViewChild('openDrawerButton') openDrawerButton: MatButton;
@@ -129,6 +129,10 @@ export class TableViewComponent<T,
     private snackBar: MatSnackBar,
   ) {
     super();
+  }
+
+  get hasFilters() {
+    return Boolean(this.filtersComponent);
   }
 
   ngAfterContentInit(): void {
@@ -160,7 +164,9 @@ export class TableViewComponent<T,
       });
 
     // Share filter stream so it can be used for pagination reset which goes to url and with fetching data stream
-    const filters$ = this.filtersComponent.filters.pipe(shareReplay(1));
+    const filters$ = this.hasFilters
+      ? this.filtersComponent!.filters.pipe(shareReplay(1))
+      : of({} as Filters);
 
     this.observeChanges(this.sort, this.paginator, filters$)
       .pipe(
@@ -231,6 +237,8 @@ export class TableViewComponent<T,
   }
 
   onClearFilters() {
-    this.filtersComponent.reset();
+    if (this.filtersComponent) {
+      this.filtersComponent.reset();
+    }
   }
 }
