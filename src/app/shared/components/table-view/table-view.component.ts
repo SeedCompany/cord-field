@@ -1,14 +1,24 @@
 /* tslint:disable:member-ordering */
 import { animate, state, style, transition, trigger } from '@angular/animations';
 import { AfterContentInit, Component, ContentChild, EventEmitter, Input, Output, ViewChild } from '@angular/core';
-import { MatPaginator, MatSort, MatTable, MatTableDataSource, PageEvent, SortDirection } from '@angular/material';
+import {
+  MatPaginator,
+  MatSnackBar,
+  MatSnackBarRef,
+  MatSort,
+  MatTable,
+  MatTableDataSource,
+  PageEvent,
+  SimpleSnackBar,
+  SortDirection,
+} from '@angular/material';
 import { ActivatedRoute, Router } from '@angular/router';
 import { filterEntries, twoWaySync, TypedMatSort, TypedSort } from '@app/core/util';
 import { observePagerAndSorter } from '@app/core/util/list-views';
 import { SubscriptionComponent } from '@app/shared/components/subscription.component';
 import { TableFilterDirective, TableViewFilters } from '@app/shared/components/table-view/table-filter.directive';
-import { combineLatest, from, Observable, ObservableInput } from 'rxjs';
-import { map, shareReplay, switchMap, takeUntil, tap } from 'rxjs/operators';
+import { combineLatest, from, merge, Observable, ObservableInput, of, Subject } from 'rxjs';
+import { catchError, first, map, shareReplay, startWith, switchMap, takeUntil, tap } from 'rxjs/operators';
 
 export interface QueryParams<TKeys> {
   sort: TKeys;
@@ -95,9 +105,13 @@ export class TableViewComponent<T,
   @ContentChild(TableFilterDirective) filtersComponent: TableViewFilters<Filters>;
   @ViewChild(MatPaginator) paginator: MatPaginator;
 
+  private refresh = new Subject<void>();
+  private errorRef: MatSnackBarRef<SimpleSnackBar> | null;
+
   constructor(
     private router: Router,
     private route: ActivatedRoute,
+    private snackBar: MatSnackBar,
   ) {
     super();
   }
@@ -157,22 +171,37 @@ export class TableViewComponent<T,
     combineLatest(
       queryParams$.pipe(map(raw => this.parseParams(raw))),
       filters$,
+      this.refresh.pipe(startWith(null)),
     )
       .pipe(
         tap(() => this.isLoading = true),
         switchMap(([params, filters]) =>
           from(this.fetchData(params, filters))
             .pipe(
-              map(result => ({ ...result, filters })),
+              catchError((error) => of({ data: [], total: 0, error })),
+              map(result => ({ error: null, ...result, filters })),
             )),
         takeUntil(this.unsubscribe),
       )
-      .subscribe(({ data, total, filters }) => {
+      .subscribe(({ error, data, total, filters }) => {
         this.dataSource.data = data;
         this.totalCount = total;
         this.filtersActive = Object.keys(filters).length > 0;
         this.isLoading = false;
-        this.dataFetched.emit({ data, total, filters });
+        if (!error) {
+          this.dataFetched.emit({ data, total, filters });
+          return;
+        }
+
+        // Open snackbar message
+        this.errorRef = this.snackBar.open('Failed to fetch list from server', 'TRY AGAIN');
+        // Trigger refresh on action
+        this.errorRef.onAction().pipe(takeUntil(this.unsubscribe)).subscribe(() => this.refresh.next());
+        // Dismiss the error on first refresh or component destroy
+        merge(this.refresh, this.unsubscribe).pipe(first()).subscribe(() => {
+          this.errorRef!.dismiss();
+          this.errorRef = null;
+        });
       });
   }
 
