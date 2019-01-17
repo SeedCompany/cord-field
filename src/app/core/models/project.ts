@@ -67,12 +67,6 @@ export class Project {
 
     return project;
   }
-
-  static fromJsonArray(projects: any): Project[] {
-    projects = projects || [];
-    return projects.map(Project.fromJson);
-  }
-
 }
 
 export interface ProjectFilter {
@@ -85,9 +79,4 @@ export interface ProjectFilter {
   dateRange?: string;
   startDate?: DateTime;
   endDate?: DateTime;
-}
-
-export interface ProjectsWithCount {
-  projects: Project[];
-  count: number;
 }

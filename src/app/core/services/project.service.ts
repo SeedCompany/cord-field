@@ -1,14 +1,12 @@
-import { HttpResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { SortDirection } from '@angular/material';
 import { Engagement, EngagementStatus } from '@app/core/models/engagement';
 import { EnumList } from '@app/core/models/enum';
-
 import { AuthenticationService } from '@app/core/services/authentication.service';
+import { ApiOptions as ListApiOptions, listOptionsToHttpParams, makeListRequest } from '@app/core/util/list-views';
 import { StatusOptions } from '@app/shared/components/status-select-workflow/status-select-workflow.component';
 import { DateTime } from 'luxon';
-import { Observable } from 'rxjs';
-import { map } from 'rxjs/operators';
+import { from, Observable, of } from 'rxjs';
+import { map, mapTo, switchMap, tap } from 'rxjs/operators';
 import { ModifiedProject } from '../../projects/project-view-state.service';
 import { SaveResult } from '../abstract-view-state';
 import { ProjectCreationResult } from '../create-dialogs/project-create-dialog/project-create-dialog.component';
@@ -19,10 +17,8 @@ import {
   ProjectFilter,
   ProjectSensitivity,
   ProjectStatus,
-  ProjectsWithCount,
   ProjectType,
 } from '../models/project';
-import { HttpParams } from './http/abstract-http-client';
 import { PloApiService } from './http/plo-api.service';
 
 export interface ProjectFilterAPI {
@@ -51,43 +47,22 @@ export class ProjectService {
       .pipe(map(Project.fromJson));
   }
 
-  async getProjects(sort: keyof Project = 'updatedAt',
-                    order: SortDirection = 'desc',
-                    skip = 0,
-                    limit = 10,
-                    filter?: ProjectFilter,
-                    fields?: Array<keyof Project>,
-                    isMine?: boolean): Promise<ProjectsWithCount> {
-
-    const params: HttpParams = {
-      sort,
-      skip: skip.toString(),
-      limit: limit.toString(),
-      order,
-    };
-
-    if (isMine) {
-      const user = await this.authService.getCurrentUser();
-      params.onlyMine = user!.id;
-    }
-    if (filter) {
-      const filterAPI = this.buildFilter(filter);
-      params.filter = JSON.stringify(filterAPI);
-    }
-    if (fields) {
-      params.fields = fields;
-    }
-
-    return this
-      .ploApi
-      .get<Project[]>('/projects', {params, observe: 'response'})
-      .pipe(map((response: HttpResponse<Project[]>) => {
-        return {
-          projects: Project.fromJsonArray(response.body),
-          count: Number(response.headers.get('x-sc-total-count')) || 0,
-        };
-      })).toPromise();
-  }
+  getProjects = (options: ListApiOptions<keyof Project, ProjectFilter> & { all: boolean }) =>
+    of(options)
+      .pipe(
+        map(listOptionsToHttpParams(this.buildFilter.bind(this))),
+        switchMap(params => {
+          if (options.all) {
+            return of(params);
+          }
+          return from(this.authService.getCurrentUser())
+            .pipe(
+              tap(user => params.onlyMine = user!.id),
+              mapTo(params),
+            );
+        }),
+        switchMap(makeListRequest(this.ploApi, '/projects', Project.fromJson)),
+      );
 
   isProjectNameTaken(name: string): Promise<boolean> {
     return this

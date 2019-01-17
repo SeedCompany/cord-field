@@ -7,6 +7,9 @@ export * from './redaction';
 export * from './rxjs-operators';
 export * from './types';
 
+export const ifValue = <T, R, Default = undefined>(value: T | null | undefined, doWith: (val: T) => R, defaultVal?: Default): R | Default =>
+  hasValue(value) ? doWith(value) : (defaultVal as Default);
+
 export function generateObjectId(): string {
   // tslint:disable:no-bitwise
   const timestamp = (new Date().getTime() / 1000 | 0).toString(16);
@@ -19,6 +22,7 @@ export function generateObjectId(): string {
 /**
  * Booleans, non empty arrays and strings return true.
  */
+export function hasValue<T>(value: T | null | undefined): value is T;
 export function hasValue(value: any /* unknown - once Angular catches up */): boolean {
   if (typeof value === 'boolean') {
     return true;

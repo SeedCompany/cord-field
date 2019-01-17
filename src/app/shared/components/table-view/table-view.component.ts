@@ -1,7 +1,9 @@
 /* tslint:disable:member-ordering */
-import { animate, state, style, transition, trigger } from '@angular/animations';
-import { AfterContentInit, Component, ContentChild, EventEmitter, Input, Output, ViewChild } from '@angular/core';
+import { animate, animateChild, group, query, state, style, transition, trigger } from '@angular/animations';
+import { AfterContentInit, AfterViewInit, Component, ContentChild, EventEmitter, Input, Output, ViewChild } from '@angular/core';
 import {
+  MatButton,
+  MatDrawer,
   MatPaginator,
   MatSnackBar,
   MatSnackBarRef,
@@ -14,10 +16,10 @@ import {
 } from '@angular/material';
 import { ActivatedRoute, Router } from '@angular/router';
 import { filterEntries, twoWaySync, TypedMatSort, TypedSort } from '@app/core/util';
-import { observePagerAndSorter } from '@app/core/util/list-views';
+import { ListApi, observePagerAndSorter } from '@app/core/util/list-views';
 import { SubscriptionComponent } from '@app/shared/components/subscription.component';
 import { TableFilterDirective, TableViewFilters } from '@app/shared/components/table-view/table-filter.directive';
-import { combineLatest, from, merge, Observable, ObservableInput, of, Subject } from 'rxjs';
+import { combineLatest, from, merge, Observable, of, Subject } from 'rxjs';
 import { catchError, first, map, shareReplay, startWith, switchMap, takeUntil, tap } from 'rxjs/operators';
 
 export interface QueryParams<TKeys> {
@@ -35,14 +37,13 @@ export interface PSChanges<TKeys extends string, Filters> {
   filters: Filters;
 }
 
-export type FetchDataResult<T> = ObservableInput<{ data: T[], total: number }>;
-
-export const defaultParseParams = <TKeys extends string>(defaultPageSize: number) => (raw: RawQueryParams): QueryParams<TKeys> => ({
-  sort: raw.sort as TKeys,
-  dir: raw.dir as SortDirection,
-  page: raw.page ? Number(raw.page) : 1,
-  size: raw.size ? Number(raw.size) : defaultPageSize,
-});
+export const defaultParseParams = <TKeys extends string>(defaultSort: TypedSort<TKeys>, defaultPageSize: number) =>
+  (raw: RawQueryParams): QueryParams<TKeys> => ({
+    sort: raw.sort ? raw.sort as TKeys : defaultSort.active,
+    dir: raw.dir ? raw.dir as SortDirection : defaultSort.direction,
+    page: raw.page ? Number(raw.page) : 1,
+    size: raw.size ? Number(raw.size) : defaultPageSize,
+  });
 
 export const defaultParamsFromChanges = <TKeys extends string, Filters>(defaultSort: TypedSort<TKeys>, defaultPageSize: number) =>
   ({ sort, page }: PSChanges<TKeys, Filters>): Partial<QueryParams<TKeys>> => {
@@ -61,8 +62,18 @@ export const defaultParamsFromChanges = <TKeys extends string, Filters>(defaultS
   animations: [
     trigger('slideRight', [
       state('shown', style({ transform: 'translateX(0)' })),
-      state('hidden', style({ transform: 'translateX(200%)' })),
-      transition('shown <=> hidden', animate('200ms ease-out')),
+      state('hidden', style({ transform: 'translateX(56px)' })), // 56px = 40px icon width + 16px toolbar padding
+      transition('shown <=> hidden', [
+        group([
+          query('@addPadding', animateChild()),
+          animate('400ms cubic-bezier(0.25, 0.8, 0.25, 1)'),
+        ]),
+      ]),
+    ]),
+    trigger('addPadding', [
+      state('shown', style({ marginLeft: 0 })),
+      state('hidden', style({ marginLeft: '16px' })), // 16px toolbar padding
+      transition('shown <=> hidden', animate('400ms cubic-bezier(0.25, 0.8, 0.25, 1)')),
     ]),
   ],
 })
@@ -70,12 +81,12 @@ export class TableViewComponent<T,
   TKeys extends string,
   Filters,
   Changes extends PSChanges<TKeys, Filters>,
-  Params extends QueryParams<TKeys>> extends SubscriptionComponent implements AfterContentInit {
+  Params extends QueryParams<TKeys>> extends SubscriptionComponent implements AfterContentInit, AfterViewInit {
 
   @Input() defaultSort: TypedSort<TKeys>;
   @Input() defaultPageSize = 10;
   @Input() pageSizeOptions = [10, 25, 50];
-  @Input() fetchData: (params: Params, filters: Filters) => FetchDataResult<T>;
+  @Input() fetchData: ListApi<T, TKeys, Filters, Params & { filters: Filters }>;
   @Input() observeChanges = (sorter: TypedMatSort<TKeys>, paginator: MatPaginator, filters$: Observable<Filters>): Observable<Changes> => {
     return observePagerAndSorter<[Filters], TKeys>(
       paginator,
@@ -87,7 +98,8 @@ export class TableViewComponent<T,
         map(({ sort, page, rest: [filters] }) => ({ sort, page, filters }) as any),
       );
   };
-  @Input() parseParams: (raw: RawQueryParams) => Params = (raw) => defaultParseParams(this.defaultPageSize)(raw) as Params;
+  @Input() parseParams: (raw: RawQueryParams) => Params = (raw) =>
+    defaultParseParams(this.defaultSort, this.defaultPageSize)(raw) as Params;
   @Input() paramsFromChanges: (changes: Changes) => Partial<Params> = (changes) => {
     return defaultParamsFromChanges(this.defaultSort, this.defaultPageSize)(changes) as Params;
   };
@@ -99,13 +111,16 @@ export class TableViewComponent<T,
   totalCount = 0;
   filtersActive = false;
   isLoading = true;
+  refresh = new Subject<void>();
 
   @ContentChild(MatTable) table: MatTable<T>;
   @ContentChild(MatSort) sort: TypedMatSort<TKeys>;
-  @ContentChild(TableFilterDirective) filtersComponent: TableViewFilters<Filters>;
+  @ContentChild(TableFilterDirective) filtersComponent: TableViewFilters<Filters> | undefined;
   @ViewChild(MatPaginator) paginator: MatPaginator;
+  @ViewChild('filterDrawer') filterDrawer: MatDrawer;
+  @ViewChild('openDrawerButton') openDrawerButton: MatButton;
+  @ViewChild('closeDrawerButton') closeDrawerButton: MatButton;
 
-  private refresh = new Subject<void>();
   private errorRef: MatSnackBarRef<SimpleSnackBar> | null;
 
   constructor(
@@ -114,6 +129,10 @@ export class TableViewComponent<T,
     private snackBar: MatSnackBar,
   ) {
     super();
+  }
+
+  get hasFilters() {
+    return Boolean(this.filtersComponent);
   }
 
   ngAfterContentInit(): void {
@@ -145,7 +164,9 @@ export class TableViewComponent<T,
       });
 
     // Share filter stream so it can be used for pagination reset which goes to url and with fetching data stream
-    const filters$ = this.filtersComponent.filters.pipe(shareReplay(1));
+    const filters$ = this.hasFilters
+      ? this.filtersComponent!.filters.pipe(shareReplay(1))
+      : of({} as Filters);
 
     this.observeChanges(this.sort, this.paginator, filters$)
       .pipe(
@@ -176,7 +197,8 @@ export class TableViewComponent<T,
       .pipe(
         tap(() => this.isLoading = true),
         switchMap(([params, filters]) =>
-          from(this.fetchData(params, filters))
+          // tslint:disable-next-line:prefer-object-spread
+          from(this.fetchData(Object.assign(params, { filters })))
             .pipe(
               catchError((error) => of({ data: [], total: 0, error })),
               map(result => ({ error: null, ...result, filters })),
@@ -205,7 +227,18 @@ export class TableViewComponent<T,
       });
   }
 
+  ngAfterViewInit(): void {
+    this.filterDrawer.openedChange
+      .pipe(takeUntil(this.unsubscribe))
+      .subscribe(opened => {
+        const button = opened ? this.closeDrawerButton : this.openDrawerButton;
+        button.focus();
+      });
+  }
+
   onClearFilters() {
-    this.filtersComponent.reset();
+    if (this.filtersComponent) {
+      this.filtersComponent.reset();
+    }
   }
 }

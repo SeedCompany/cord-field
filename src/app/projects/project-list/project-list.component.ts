@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { MatPaginator, SortDirection } from '@angular/material';
+import { MatPaginator } from '@angular/material';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Language } from '@app/core/models/language';
 import { Project, ProjectFilter, ProjectStatus, ProjectType } from '@app/core/models/project';
@@ -48,7 +48,6 @@ export class ProjectListComponent extends SubscriptionComponent implements OnIni
     direction: 'desc',
   };
   readonly defaultPageSize = 10;
-  readonly apiFields: Array<keyof Project> = ['id', ...this.displayedColumns];
 
   readonly listSelectorOptions: ListOption[] = [
     {label: 'My Projects', value: true},
@@ -64,6 +63,8 @@ export class ProjectListComponent extends SubscriptionComponent implements OnIni
   ) {
     super();
   }
+
+  fetchProjects = this.projectService.getProjects;
 
   /**
    * Set list selection from query params
@@ -93,24 +94,6 @@ export class ProjectListComponent extends SubscriptionComponent implements OnIni
   }
 
   /**
-   * Fetch data for params and filters.
-   */
-  fetchProjects = async (params: ProjectQueryParams, filters: ProjectFilter) => {
-    const { sort, dir, page, size, all } = params;
-
-    const { projects, count } = await this.projectService.getProjects(
-      sort,
-      dir,
-      (page - 1) * size,
-      size,
-      filters,
-      this.apiFields,
-      !all,
-    );
-    return { data: projects, total: count };
-  };
-
-  /**
    * Add all vs my list to changes to watch for.
    */
   observeChanges = (
@@ -137,7 +120,7 @@ export class ProjectListComponent extends SubscriptionComponent implements OnIni
    * Add `all` to parsing logic
    */
   parseParams = (raw: RawQueryParams<ProjectQueryParams>): ProjectQueryParams => ({
-    ...defaultParseParams<keyof Project>(this.defaultPageSize)(raw),
+    ...defaultParseParams<keyof Project>(this.defaultSort, this.defaultPageSize)(raw),
     all: raw.all != null ? parseBoolean(raw.all) : false,
   });
 

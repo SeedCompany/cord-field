@@ -87,11 +87,6 @@ export class UserListItem extends User {
   }
 }
 
-export interface UsersWithTotal {
-  users: UserListItem[];
-  total: number;
-}
-
 export interface UserFilter {
   organizations?: Organization[];
   isActive?: boolean;

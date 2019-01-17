@@ -63,11 +63,6 @@ export class LanguageListItem {
   }
 }
 
-export interface LanguagesWithTotal {
-  languages: LanguageListItem[];
-  total: number;
-}
-
 export interface LanguageListFilter {
   location?: Location[];
 }
