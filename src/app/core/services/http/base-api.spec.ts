@@ -1,7 +1,8 @@
 import { HttpClient } from '@angular/common/http';
-import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
+import { HttpTestingController } from '@angular/common/http/testing';
 import { Injectable } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
+import { CoreTestModule } from '@app/core/core-test.module';
 import { environment } from '../../../../environments/environment';
 import { CoreModule } from '../../core.module';
 import { AuthenticationStorageService } from '../authentication-storage.service';
@@ -24,7 +25,7 @@ describe('BaseApiService', () => {
       .configureTestingModule({
         imports: [
           CoreModule,
-          HttpClientTestingModule,
+          CoreTestModule,
         ],
         providers: [
           MockApiService,

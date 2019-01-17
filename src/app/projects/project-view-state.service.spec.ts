@@ -1,6 +1,6 @@
 import { HttpClientModule } from '@angular/common/http';
-import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { TestBed } from '@angular/core/testing';
+import { CoreTestModule } from '@app/core/core-test.module';
 import { DateTime } from 'luxon';
 import { of as observableOf } from 'rxjs';
 import { first, skip } from 'rxjs/operators';
@@ -26,7 +26,7 @@ describe('ProjectViewStateService', () => {
       imports: [
         CoreModule,
         HttpClientModule,
-        HttpClientTestingModule,
+        CoreTestModule,
       ],
       providers: [
         ProjectViewStateService,
