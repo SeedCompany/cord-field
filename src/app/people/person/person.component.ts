@@ -32,9 +32,17 @@ export class PersonComponent extends SubscriptionComponent implements OnInit, Ti
     this.userViewState.loadError
       .pipe(takeUntil(this.unsubscribe))
       .subscribe(err => {
-        const message = (err instanceof HttpErrorResponse && err.status === 404)
-          ? 'Could not find person'
-          : 'Failed to fetch person details';
+        let message: string;
+        if (err instanceof HttpErrorResponse) {
+          message = (err.status === 404 || err.status === 400)
+            ? 'Could not find person'
+            : 'Failed to fetch person details';
+        } else {
+          message = 'Failed to parse person details';
+          // http errors are already logged, but parse errors are not
+          // tslint:disable-next-line:no-console
+          console.error(err);
+        }
         this.snackBar.open(message, undefined, {duration: 5000});
         this.router.navigate(['..'], {replaceUrl: true, relativeTo: this.route});
       });
