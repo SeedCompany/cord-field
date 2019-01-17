@@ -266,9 +266,9 @@ export class ProjectEngagementComponent extends SubscriptionComponent implements
       id: product ? product.id : generateObjectId(),
       name: [product ? product.name : null, Validators.required],
       books: product ? product.books : [],
-      mediums: [product ? product.mediums : [], Validators.required],
-      purposes: [product ? product.purposes : [], Validators.required],
-      methodology: [product ? product.methodology : null, Validators.required],
+      mediums: [product ? product.mediums : []],
+      purposes: [product ? product.purposes : []],
+      methodology: [product ? product.methodology : null],
       approach: product ? product.approach : null,
     });
   }
