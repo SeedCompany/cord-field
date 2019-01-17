@@ -16,4 +16,5 @@ export const environment = {
     'domain': 'field',
     'plo.cord.bible': 'https://cord-plo-uat.ci.olivetech.com/api',
   },
+  googleAnalytics: 'UA-108415468-9',
 };

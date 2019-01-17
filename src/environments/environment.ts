@@ -16,4 +16,5 @@ export const environment = {
     'domain': 'field',
     'plo.cord.bible': 'http://127.0.0.1:8001/api',
   },
+  googleAnalytics: 'UA-108415468-9',
 };

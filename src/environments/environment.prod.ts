@@ -11,4 +11,5 @@ export const environment = {
     'domain': 'field',
     'plo.cord.bible': 'https://api.cordfield.com/api',
   },
+  googleAnalytics: 'UA-108415468-9',
 };

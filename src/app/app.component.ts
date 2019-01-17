@@ -2,8 +2,10 @@ import { Component, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material';
 import { Title } from '@angular/platform-browser';
 import { Router } from '@angular/router';
-import { BehaviorSubject, Subscription } from 'rxjs';
+import { Angulartics2GoogleAnalytics } from 'angulartics2/ga';
+import { BehaviorSubject, noop, Subscription } from 'rxjs';
 import { map, takeUntil } from 'rxjs/operators';
+import { environment } from '../environments/environment';
 import { observeComponentTitle, TitleProp } from './core/decorators';
 import { AuthenticationService } from './core/services/authentication.service';
 import { AuthInterceptor } from './core/services/http/auth-interceptor';
@@ -25,8 +27,15 @@ export class AppComponent extends SubscriptionComponent implements OnInit {
     private router: Router,
     private dialogs: MatDialog,
     private titleService: Title,
+    private analytics: Angulartics2GoogleAnalytics,
   ) {
     super();
+
+    if (environment.googleAnalytics) {
+      const cookieDomain = window.location && window.location.hostname === 'localhost' ? 'none' : 'auto';
+      ((window as any).ga || noop)('create', environment.googleAnalytics, cookieDomain);
+      analytics.startTracking();
+    }
   }
 
   ngOnInit(): void {
