@@ -50,7 +50,7 @@
             <mat-expansion-panel-header expandedHeight="48px">
               <mat-panel-title>
                 <div class="title" [class.mat-error]="product.invalid">
-                  {{ ProductType.displaySummary(product.value.books || [], product.value.type) || 'Draft' }}
+                  {{ ProductType.displaySummary(product.value.books || [], product.value.name) || 'Draft' }}
                 </div>
               </mat-panel-title>
               <mat-panel-description *ngIf="!isProductOpened(index)">
