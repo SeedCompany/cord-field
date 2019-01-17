@@ -1,7 +1,7 @@
 import { HttpErrorResponse } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
 import { AbstractControl, FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { MatDialogRef, MatSnackBar, MatSnackBarRef, SimpleSnackBar } from '@angular/material';
+import { MatDialog, MatDialogRef, MatSnackBar, MatSnackBarRef, SimpleSnackBar } from '@angular/material';
 import { Router } from '@angular/router';
 import { from as observableFrom } from 'rxjs';
 import { catchError, debounceTime, distinctUntilChanged, filter, map, switchMap, tap } from 'rxjs/operators';
@@ -24,6 +24,12 @@ export class ProjectCreateDialogComponent implements OnInit {
   form: FormGroup;
   submitting = false;
   private snackBarRef?: MatSnackBarRef<SimpleSnackBar>;
+
+  static open(dialog: MatDialog): MatDialogRef<ProjectCreateDialogComponent, any> {
+    return dialog.open(ProjectCreateDialogComponent, {
+      width: '400px',
+    });
+  }
 
   constructor(public dialogRef: MatDialogRef<ProjectCreateDialogComponent>,
               private formBuilder: FormBuilder,

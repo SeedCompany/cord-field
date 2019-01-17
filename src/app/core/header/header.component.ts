@@ -34,9 +34,7 @@ export class HeaderComponent implements OnInit {
   }
 
   onCreateProject(): void {
-    this.dialog.open(ProjectCreateDialogComponent, {
-      width: '400px',
-    });
+    ProjectCreateDialogComponent.open(this.dialog);
   }
 
   onCreatePerson(): void {
