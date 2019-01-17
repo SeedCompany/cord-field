@@ -80,7 +80,7 @@ export class ProjectService {
   }
 
   async createProject(project: ProjectCreationResult): Promise<string> {
-    const obj = await this.ploApi.post<{id: string}>('/projects', project).toPromise();
+    const obj = await this.ploApi.post<{id: string}>('/projects', { ...project, type: 'translation' }).toPromise();
     return obj.id;
   }
 

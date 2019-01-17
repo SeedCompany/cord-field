@@ -1,6 +1,5 @@
 import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
 import { inject, TestBed } from '@angular/core/testing';
-import { LanguageListItem } from '@app/core/models/language';
 import { environment } from '../../../environments/environment';
 import { CoreModule } from '../core.module';
 import { ProjectCreationResult } from '../create-dialogs/project-create-dialog/project-create-dialog.component';
@@ -127,7 +126,6 @@ describe('ProjectService', () => {
   it('create project', (done: DoneFn) => {
     const project: ProjectCreationResult = {
       name: 'newProject',
-      type: ProjectType.Internship,
     };
     const mockResponse = {
       id: '5ace5faee23fc6685b6e40c6',

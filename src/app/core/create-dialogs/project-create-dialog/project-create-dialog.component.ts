@@ -5,12 +5,10 @@ import { MatDialog, MatDialogRef, MatSnackBar, MatSnackBarRef, SimpleSnackBar } 
 import { Router } from '@angular/router';
 import { from as observableFrom } from 'rxjs';
 import { catchError, debounceTime, distinctUntilChanged, filter, map, switchMap, tap } from 'rxjs/operators';
-import { ProjectType } from '../../models/project';
 import { ProjectService } from '../../services/project.service';
 
 export interface ProjectCreationResult {
   name: string;
-  type: ProjectType;
 }
 
 @Component({
@@ -20,7 +18,6 @@ export interface ProjectCreationResult {
 })
 export class ProjectCreateDialogComponent implements OnInit {
 
-  readonly ProjectType = ProjectType;
   form: FormGroup;
   submitting = false;
   private snackBarRef?: MatSnackBarRef<SimpleSnackBar>;
@@ -40,7 +37,6 @@ export class ProjectCreateDialogComponent implements OnInit {
 
   ngOnInit() {
     this.form = this.formBuilder.group({
-      type: ['', Validators.required],
       name: ['', [Validators.required, Validators.minLength(2)]],
     });
     this.name
@@ -72,10 +68,6 @@ export class ProjectCreateDialogComponent implements OnInit {
 
         this.name.setErrors(taken ? {duplicate: true} : null);
       });
-  }
-
-  get type(): AbstractControl {
-    return this.form.get('type')!;
   }
 
   get name(): AbstractControl {
