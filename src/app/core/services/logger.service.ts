@@ -1,6 +1,6 @@
-import { Injectable } from '@angular/core';
+import { Injectable, Optional } from '@angular/core';
+import { Angulartics2 } from 'angulartics2';
 import { environment } from '../../../environments/environment';
-import { GoogleAnalyticsService } from './google-analytics.service';
 
 const endpointRegex = new RegExp(`^[^#]*?://.*?(/.*)$`);
 
@@ -18,15 +18,7 @@ export class LoggerService {
 
   logLevel: LogLevel = LogLevel.info;
 
-  constructor(private ga?: GoogleAnalyticsService) {
-    if (!this.ga) {
-      this.ga = {
-        error() {
-          // noop}
-        },
-      } as any;
-    }
-
+  constructor(@Optional() private analytics?: Angulartics2) {
     const logLevel = (environment.debug || {} as any).level;
     this.logLevel = (LogLevel as any)[logLevel || 'warn'];
 
@@ -166,7 +158,13 @@ export class LoggerService {
 
     // tslint:disable-next-line:no-console
     console.log(message, ...parts);
-    this.ga!.error(message);
+    if (!this.analytics) {
+      return;
+    }
+    this.analytics.exceptionTrack.next({
+      description: message,
+      fatal: false,
+    });
   }
 
   private logApiCall(method: string, path: string, source: any, body: any) {
