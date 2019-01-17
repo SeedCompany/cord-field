@@ -21,7 +21,7 @@ export class Project {
 
   id: string;
   name: string;
-  type: ProjectType;
+  type = ProjectType.Translation; // Hard code for now since we reference it still
   deptId: string | null;
   status: ProjectStatus;
   possibleStatuses: ProjectStatus[];
@@ -47,7 +47,6 @@ export class Project {
     project.name = (json.name || '')
     // Remove legacy IDs from project names, this should be removed before launch.
       .replace(/ \(\d+\)$/, '');
-    project.type = json.type || ProjectType.Translation;
     project.deptId = json.deptId;
     project.status = json.status || ProjectStatus.Active;
     project.possibleStatuses = json.possibleStatuses || [];
@@ -70,7 +69,6 @@ export class Project {
 }
 
 export interface ProjectFilter {
-  type?: ProjectType;
   status?: ProjectStatus[];
   languages?: Language[];
   location?: Location[];

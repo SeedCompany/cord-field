@@ -41,11 +41,6 @@
       </mat-cell>
     </ng-container>
 
-    <ng-container matColumnDef="type">
-      <mat-header-cell *matHeaderCellDef mat-sort-header>Type</mat-header-cell>
-      <mat-cell *matCellDef="let project">{{ ProjectType.forUI(project.type) }}</mat-cell>
-    </ng-container>
-
     <ng-container matColumnDef="status">
       <mat-header-cell *matHeaderCellDef mat-sort-header>Status</mat-header-cell>
       <mat-cell *matCellDef="let project">

@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { MatPaginator } from '@angular/material';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Language } from '@app/core/models/language';
-import { Project, ProjectFilter, ProjectStatus, ProjectType } from '@app/core/models/project';
+import { Project, ProjectFilter, ProjectStatus } from '@app/core/models/project';
 import { ProjectService } from '@app/core/services/project.service';
 import { parseBoolean, TypedMatSort, TypedSort } from '@app/core/util';
 import { observePagerAndSorter } from '@app/core/util/list-views';
@@ -39,10 +39,9 @@ interface ProjectViewOptions extends PSChanges<keyof Project, ProjectFilter> {
 @TitleAware()
 export class ProjectListComponent extends SubscriptionComponent implements OnInit, TitleProp {
 
-  readonly ProjectType = ProjectType;
   readonly ProjectStatus = ProjectStatus;
 
-  readonly displayedColumns: Array<keyof Project> = ['name', 'updatedAt', 'languages', 'type', 'status'];
+  readonly displayedColumns: Array<keyof Project> = ['name', 'updatedAt', 'languages', 'status'];
   readonly defaultSort: TypedSort<keyof Project> = {
     active: 'updatedAt',
     direction: 'desc',

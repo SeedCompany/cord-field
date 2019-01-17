@@ -1,10 +1,9 @@
 import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
 import { inject, TestBed } from '@angular/core/testing';
-import { LanguageListItem } from '@app/core/models/language';
 import { environment } from '../../../environments/environment';
 import { CoreModule } from '../core.module';
 import { ProjectCreationResult } from '../create-dialogs/project-create-dialog/project-create-dialog.component';
-import { Project, ProjectStatus, ProjectType } from '../models/project';
+import { Project, ProjectStatus } from '../models/project';
 import { ProjectService } from './project.service';
 
 const testBaseUrl = environment.services['plo.cord.bible'];
@@ -37,7 +36,6 @@ describe('ProjectService', () => {
       status: ProjectStatus.Active,
       name: 'Elhomwe Bible',
       updatedAt: '2018-03-26T05:27:49.000Z',
-      type: ProjectType.Translation,
       team: [],
     };
 
@@ -51,8 +49,6 @@ describe('ProjectService', () => {
         expect(project.name).toBe('Elhomwe Bible');
         expect(project.status).toBeDefined();
         expect(project.status).toBe(ProjectStatus.Active);
-        expect(project.type).toBeDefined();
-        expect(project.type).toBe(ProjectType.Translation);
         expect(project.languages).toBeDefined();
       })
       .then(done)
@@ -76,7 +72,6 @@ describe('ProjectService', () => {
       status: ProjectStatus.Active,
       name: 'Elhomwe Bible',
       updatedAt: '2018-03-26T05:27:49.000Z',
-      type: ProjectType.Translation,
     }];
 
     projectService
@@ -91,8 +86,6 @@ describe('ProjectService', () => {
         expect(projects[0].name).toBe('Elhomwe Bible');
         expect(projects[0].status).toBeDefined();
         expect(projects[0].status).toBe(ProjectStatus.Active);
-        expect(projects[0].type).toBeDefined();
-        expect(projects[0].type).toBe(ProjectType.Translation);
         expect(projects[0].languages).toBeDefined();
         expect(Array.isArray(projects[0].languages)).toBe(true);
       })
@@ -127,7 +120,6 @@ describe('ProjectService', () => {
   it('create project', (done: DoneFn) => {
     const project: ProjectCreationResult = {
       name: 'newProject',
-      type: ProjectType.Internship,
     };
     const mockResponse = {
       id: '5ace5faee23fc6685b6e40c6',

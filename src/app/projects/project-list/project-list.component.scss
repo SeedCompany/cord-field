@@ -11,6 +11,10 @@
   font-size: mat-font-size($config, title);
 }
 
+.mat-column-name, .mat-column-languages, .mat-column-status {
+  flex: 2;
+}
+
 .status-circle {
   border-radius: 4px;
   height: 7px;
