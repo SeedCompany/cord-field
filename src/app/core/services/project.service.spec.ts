@@ -1,5 +1,6 @@
 import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
 import { inject, TestBed } from '@angular/core/testing';
+import { LanguageListItem } from '@app/core/models/language';
 import { environment } from '../../../environments/environment';
 import { CoreModule } from '../core.module';
 import { ProjectCreationResult } from '../create-dialogs/project-create-dialog/project-create-dialog.component';
@@ -66,10 +67,10 @@ describe('ProjectService', () => {
   it('should get project list', (done: DoneFn) => {
 
     const sort = 'updatedAt';
-    const skip = 0;
+    const skip = 20;
     const limit = 10;
     const order = 'desc';
-    const projectListUrl = `${testBaseUrl}/projects?sort=${sort}&skip=${skip}&limit=${limit}&order=${order}`;
+    const projectListUrl = `${testBaseUrl}/projects?sort=${sort}&order=${order}&limit=${limit}&skip=${skip}`;
     const mockResponse = [{
       id: '5acbba0c70db6a1781ece783',
       status: ProjectStatus.Active,
@@ -79,10 +80,10 @@ describe('ProjectService', () => {
     }];
 
     projectService
-      .getProjects('updatedAt', 'desc', 0, 10)
-      .then((projectsWithCount) => {
-        const projects = projectsWithCount.projects;
-        expect(projectsWithCount.count).toBe(0);
+      .getProjects({ all: true, sort: 'updatedAt', dir: 'desc', page: 3, size: limit, filters: {} })
+      .toPromise()
+      .then(({ data: projects, total }: { data: Project[], total: number }) => {
+        expect(total).toBe(0);
         expect(projects.length).not.toBe(0);
         expect(projects[0].id).toBeDefined();
         expect(projects[0].id).toBe('5acbba0c70db6a1781ece783');

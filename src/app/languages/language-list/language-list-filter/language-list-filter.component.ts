@@ -3,6 +3,7 @@ import { FormBuilder } from '@angular/forms';
 import { LanguageListFilter } from '@app/core/models/language';
 import { Location } from '@app/core/models/location';
 import { filterEntries, hasValue, TypedFormControl } from '@app/core/util';
+import { TableViewFilters } from '@app/shared/components/table-view/table-filter.directive';
 import { Observable } from 'rxjs';
 import { map, startWith } from 'rxjs/operators';
 
@@ -11,7 +12,7 @@ import { map, startWith } from 'rxjs/operators';
   templateUrl: './language-list-filter.component.html',
   styleUrls: ['./language-list-filter.component.scss'],
 })
-export class LanguageListFilterComponent {
+export class LanguageListFilterComponent implements TableViewFilters<LanguageListFilter> {
 
   form = this.formBuilder.group({
     location: [[]],

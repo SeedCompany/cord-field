@@ -1,14 +1,13 @@
-import { HttpResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { SortDirection } from '@angular/material';
+import { ifValue } from '@app/core/util';
+import { listApi } from '@app/core/util/list-views';
 import { Observable, of as observableOf } from 'rxjs';
 import { delay, map, tap } from 'rxjs/operators';
 import { ModifiedUser } from '../../people/user-view-state.service';
 import { Project } from '../models/project';
 import { ProjectRole } from '../models/project-role';
 import { TeamMember } from '../models/team-member';
-import { NewUser, User, UserFilter, UserListItem, UserProfile, UserRole, UsersWithTotal } from '../models/user';
-import { HttpParams } from './http/abstract-http-client';
+import { NewUser, User, UserFilter, UserListItem, UserProfile, UserRole } from '../models/user';
 import { PloApiService } from './http/plo-api.service';
 
 @Injectable({
@@ -39,40 +38,16 @@ export class UserService {
       .toPromise();
   }
 
-  getUsers(
-    sort?: keyof UserListItem,
-    order: SortDirection = 'desc',
-    skip = 0,
-    limit = 10,
-    filters: UserFilter = {},
-  ): Observable<UsersWithTotal> {
-    const params: HttpParams = {
-      skip: skip.toString(),
-      limit: limit.toString(),
-    };
-    if (sort) {
-      params.sort = sort;
-      params.order = order;
-    }
-
-    if (filters && Object.keys(filters).length > 0) {
-      const filtersAPI = {
-        organizationIds: filters.organizations ? filters.organizations.map(org => org.id) : undefined,
-        isActive: 'isActive' in filters ? filters.isActive : undefined,
-      };
-      params.filter = JSON.stringify(filtersAPI);
-    }
-
-    return this
-      .plo
-      .get<UserListItem[]>('/users', {params, observe: 'response'})
-      .pipe(map((response: HttpResponse<UserListItem[]>) => {
-        return {
-          users: response.body!.map(UserListItem.fromJson),
-          total: Number(response.headers.get('x-sc-total-count')) || 0,
-        };
-      }));
-  }
+  // tslint:disable-next-line:member-ordering
+  getUsers = listApi(
+    this.plo,
+    '/users',
+    UserListItem.fromJson,
+    (filter: UserFilter) => ({
+      organizationIds: ifValue(filter.organizations, orgs => orgs.map(org => org.id)),
+      isActive: ifValue(filter.isActive, active => active),
+    }),
+  );
 
   async getAssignableRoles(userId: string, project: Project, teamMember?: TeamMember): Promise<ProjectRole[]> {
     const roles = await this.plo

@@ -1,11 +1,12 @@
 import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
 import { TestBed } from '@angular/core/testing';
+import { LanguageListItem } from '@app/core/models/language';
 import { environment } from '../../../environments/environment';
 import { CoreModule } from '../core.module';
 import { Location } from '../models/location';
 import { Project } from '../models/project';
 import { ProjectRole } from '../models/project-role';
-import { User, UserProfile, UsersWithTotal } from '../models/user';
+import { User, UserListItem, UserProfile } from '../models/user';
 import { UserService } from './user.service';
 
 const testBaseUrl = environment.services['plo.cord.bible'];
@@ -71,15 +72,15 @@ describe('UserService', () => {
 
   it('get users', (done: DoneFn) => {
     userService
-      .getUsers()
-      .subscribe((data: UsersWithTotal) => {
-        expect(data.total).toBeDefined();
-        expect(Array.isArray(data.users)).toBeTruthy();
+      .getUsers({ sort: 'name', dir: 'asc', page: 3, size: 10, filters: {} })
+      .subscribe(({ data: users, total }: { data: UserListItem[], total: number }) => {
+        expect(total).toBeDefined();
+        expect(Array.isArray(users)).toBeTruthy();
         done();
       }, done.fail);
 
     httpMock
-      .expectOne({url: `${testBaseUrl}/users?skip=0&limit=10`, method: 'GET'})
+      .expectOne({url: `${testBaseUrl}/users?sort=name&order=asc&limit=10&skip=20`, method: 'GET'})
       .flush([]);
   });
 

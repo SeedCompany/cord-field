@@ -6,6 +6,7 @@ import { ProjectFilter, ProjectSensitivity, ProjectStatus, ProjectType } from '@
 import { User } from '@app/core/models/user';
 import { filterEntries, hasValue } from '@app/core/util';
 import * as CustomValidators from '@app/core/validators';
+import { TableViewFilters } from '@app/shared/components/table-view/table-filter.directive';
 import { DateTime } from 'luxon';
 import { Observable } from 'rxjs';
 import { map, startWith } from 'rxjs/operators';
@@ -15,7 +16,7 @@ import { map, startWith } from 'rxjs/operators';
   templateUrl: './project-list-filter.component.html',
   styleUrls: ['./project-list-filter.component.scss'],
 })
-export class ProjectListFilterComponent implements OnInit {
+export class ProjectListFilterComponent implements TableViewFilters<ProjectFilter>, OnInit {
   form: FormGroup;
   minDate: DateTime;
   maxDate = DateTime.local();

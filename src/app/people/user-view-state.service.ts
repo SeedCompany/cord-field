@@ -65,7 +65,9 @@ const config: ChangeConfig<UserProfile> = {
   },
   displayFirstName: {},
   displayLastName: {},
-  email: {},
+  email: {
+    toServer: email => email.toLowerCase(),
+  },
   roles: {
     accessor: (role) => role.role,
     key: 'userRoles',

@@ -6,14 +6,6 @@ import { Location } from './location';
 import { Organization } from './organization';
 import { ProjectRole } from './project-role';
 
-export interface IUserRequestAccess {
-  email: string;
-  firstName: string;
-  lastName: string;
-  organization: string;
-  password: string;
-}
-
 export interface NewUser {
   firstName: string;
   lastName: string;
@@ -93,11 +85,6 @@ export class UserListItem extends User {
 
     return obj;
   }
-}
-
-export interface UsersWithTotal {
-  users: UserListItem[];
-  total: number;
 }
 
 export interface UserFilter {

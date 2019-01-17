@@ -1,99 +1,65 @@
-<mat-drawer-container autosize>
-  <mat-drawer-content>
-    <mat-toolbar>
-      <h3 class="mat-title">People</h3>
+<app-table-view
+  [fetchData]="fetchPeople"
+  [defaultSort]="defaultSort"
+>
+  <h3 class="mat-title" ngProjectAs="toolbar">People</h3>
 
-      <span class="spacer"></span>
+  <mat-table matSort matSortDisableClear>
+    <ng-container matColumnDef="avatarLetters">
+      <mat-header-cell *matHeaderCellDef></mat-header-cell>
+      <mat-cell *matCellDef="let person">
+        <app-avatar-letter color="accent">{{ person.avatarLetters }}</app-avatar-letter>
+      </mat-cell>
+    </ng-container>
 
-      <button mat-icon-button
-              [color]="filtersActive ? 'accent' : 'primary'"
-              [@slideRight]="filterDrawer.opened ? 'hidden' : 'shown'"
-              (click)="filterDrawer.toggle()">
-        <mat-icon>filter_list</mat-icon>
-      </button>
-    </mat-toolbar>
+    <ng-container matColumnDef="displayFirstName">
+      <mat-header-cell *matHeaderCellDef
+                       mat-sort-header>First Name</mat-header-cell>
+      <mat-cell *matCellDef="let person"
+                class="name">
+        {{ person.displayFirstName }}
+      </mat-cell>
+    </ng-container>
 
-    <mat-table [dataSource]="peopleSource"
-               matSort>
-      <ng-container matColumnDef="avatarLetters">
-        <mat-header-cell *matHeaderCellDef></mat-header-cell>
-        <mat-cell *matCellDef="let person">
-          <app-avatar-letter color="accent">{{ person.avatarLetters }}</app-avatar-letter>
-        </mat-cell>
-      </ng-container>
+    <ng-container matColumnDef="displayLastName">
+      <mat-header-cell *matHeaderCellDef
+                       mat-sort-header>Last Name</mat-header-cell>
+      <mat-cell *matCellDef="let person"
+                class="name">{{ person.displayLastName }}
+      </mat-cell>
+    </ng-container>
 
-      <ng-container matColumnDef="displayFirstName">
-        <mat-header-cell *matHeaderCellDef
-                         mat-sort-header>First Name</mat-header-cell>
-        <mat-cell *matCellDef="let person"
-                  class="name">
-          {{ person.displayFirstName }}
-        </mat-cell>
-      </ng-container>
+    <ng-container matColumnDef="projectCount">
+      <mat-header-cell *matHeaderCellDef>Total Projects</mat-header-cell>
+      <mat-cell *matCellDef="let person">{{ person.projectCount }}
+      </mat-cell>
+    </ng-container>
 
-      <ng-container matColumnDef="displayLastName">
-        <mat-header-cell *matHeaderCellDef
-                         mat-sort-header>Last Name</mat-header-cell>
-        <mat-cell *matCellDef="let person"
-                  class="name">{{ person.displayLastName }}
-        </mat-cell>
-      </ng-container>
+    <ng-container matColumnDef="isActive">
+      <mat-header-cell *matHeaderCellDef
+                       mat-sort-header>Status</mat-header-cell>
+      <mat-cell *matCellDef="let person">
+        <span class="status-circle"
+              [ngClass]="'status-' + (person.isActive ? 'active' : 'inactive')"></span>
+        <span>{{ person.isActive ? 'Active' : 'Inactive' }}</span>
+      </mat-cell>
+    </ng-container>
 
-      <ng-container matColumnDef="projectCount">
-        <mat-header-cell *matHeaderCellDef>Total Projects</mat-header-cell>
-        <mat-cell *matCellDef="let person">{{ person.projectCount }}
-        </mat-cell>
-      </ng-container>
+    <ng-container matColumnDef="organizations">
+      <mat-header-cell *matHeaderCellDef>Organization(s)</mat-header-cell>
+      <mat-cell *matCellDef="let person">
+        <app-collapsed-chip-list [list]="person.organizations"
+                                 (chipClicked)="onOrgClick($event)">
+          <ng-template let-org>{{ org.name }}</ng-template>
+        </app-collapsed-chip-list>
+      </mat-cell>
+    </ng-container>
 
-      <ng-container matColumnDef="isActive">
-        <mat-header-cell *matHeaderCellDef
-                         mat-sort-header>Status</mat-header-cell>
-        <mat-cell *matCellDef="let person">
-          <span class="status-circle"
-                [ngClass]="'status-' + (person.isActive ? 'active' : 'inactive')"></span>
-          <span>{{ person.isActive ? 'Active' : 'Inactive' }}</span>
-        </mat-cell>
-      </ng-container>
+    <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+    <mat-row class="row-hover"
+             [routerLink]="'/people/' + person.id"
+             *matRowDef="let person; columns: displayedColumns;"></mat-row>
+  </mat-table>
 
-      <ng-container matColumnDef="organizations">
-        <mat-header-cell *matHeaderCellDef>Organization(s)</mat-header-cell>
-        <mat-cell *matCellDef="let person">
-          <app-collapsed-chip-list [list]="person.organizations"
-                                   (chipClicked)="onOrgClick($event)">
-            <ng-template let-org>{{ org.name }}</ng-template>
-          </app-collapsed-chip-list>
-        </mat-cell>
-      </ng-container>
-
-      <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
-      <mat-row class="row-hover"
-               [routerLink]="'/people/' + person.id"
-               *matRowDef="let person; columns: displayedColumns;"></mat-row>
-    </mat-table>
-    <mat-paginator [pageSizeOptions]="pageSizeOptions"
-                   [length]="totalCount">
-    </mat-paginator>
-  </mat-drawer-content>
-
-  <mat-drawer mode="side"
-              position="end"
-              #filterDrawer>
-    <mat-toolbar class="toolbar">
-      Filter
-      <div class="spacer"></div>
-      <button mat-icon-button
-              color="primary"
-              *ngIf="filtersActive"
-              (click)="onClearFilters()">
-        <mat-icon>remove_circle</mat-icon>
-      </button>
-      <button mat-icon-button
-              [color]="filtersActive ? 'accent' : 'primary'"
-              (click)="filterDrawer.toggle()">
-        <mat-icon>filter_list</mat-icon>
-      </button>
-    </mat-toolbar>
-    <app-people-list-filter></app-people-list-filter>
-  </mat-drawer>
-
-</mat-drawer-container>
+  <app-people-list-filter tableFilter></app-people-list-filter>
+</app-table-view>

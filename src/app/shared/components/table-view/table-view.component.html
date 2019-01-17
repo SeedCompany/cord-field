@@ -1,0 +1,60 @@
+<mat-progress-bar
+  mode="indeterminate"
+  color="accent"
+  [style.visibility]="isLoading ? 'visible' : 'hidden'"
+></mat-progress-bar>
+<mat-drawer-container autosize>
+
+  <mat-drawer-content>
+    <mat-toolbar>
+      <ng-content select="toolbar"></ng-content>
+
+      <span class="spacer"></span>
+
+      <div [@slideRight]="filterDrawer.opened ? 'hidden' : 'shown'">
+        <button mat-icon-button
+                color="primary"
+                (click)="refresh.next()"
+        >
+          <mat-icon>refresh</mat-icon>
+        </button>
+        <button mat-icon-button
+                #openDrawerButton
+                *ngIf="hasFilters"
+                [@addPadding]="filterDrawer.opened ? 'hidden' : 'shown'"
+                [color]="filtersActive ? 'accent' : 'primary'"
+                [attr.tabindex]="filterDrawer.opened ? -1 : null"
+                (click)="filterDrawer.toggle()"
+        >
+          <mat-icon>filter_list</mat-icon>
+        </button>
+      </div>
+    </mat-toolbar>
+
+    <ng-content select="mat-table"></ng-content>
+
+    <mat-paginator [pageSizeOptions]="pageSizeOptions"
+                   [length]="totalCount">
+    </mat-paginator>
+  </mat-drawer-content>
+
+  <mat-drawer mode="side" position="end" #filterDrawer>
+    <mat-toolbar>
+      Filter
+      <div class="spacer"></div>
+      <button mat-icon-button color="primary"
+              *ngIf="filtersActive"
+              (click)="onClearFilters()">
+        <mat-icon>remove_circle</mat-icon>
+      </button>
+      <button mat-icon-button color="primary"
+              #closeDrawerButton
+              (click)="filterDrawer.toggle()">
+        <mat-icon>close</mat-icon>
+      </button>
+    </mat-toolbar>
+
+    <ng-content select="[tableFilter]"></ng-content>
+  </mat-drawer>
+
+</mat-drawer-container>

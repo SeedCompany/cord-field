@@ -2,7 +2,7 @@ import { HttpClientTestingModule, HttpTestingController } from '@angular/common/
 import { TestBed } from '@angular/core/testing';
 import { environment } from '../../../environments/environment';
 import { CoreModule } from '../core.module';
-import { Language } from '../models/language';
+import { Language, LanguageListItem } from '../models/language';
 import { LanguageService } from './language.service';
 
 const testBaseUrl = environment.services['plo.cord.bible'];
@@ -55,10 +55,10 @@ describe('LanguageService', () => {
   it('should get language list', (done: DoneFn) => {
 
     const sort = 'displayName';
-    const skip = 0;
+    const skip = 20;
     const limit = 10;
     const order = 'desc';
-    const languageListUrl = `${testBaseUrl}/languages?sort=${sort}&skip=${skip}&limit=${limit}&order=${order}`;
+    const languageListUrl = `${testBaseUrl}/languages?sort=${sort}&order=${order}&limit=${limit}&skip=${skip}`;
     const mockResponse = [{
       id: '5acbba0c70db6a1781ece783',
       displayName: 'Tandroy',
@@ -70,9 +70,9 @@ describe('LanguageService', () => {
     }];
 
     languageService
-      .getLanguages(sort, order, skip, limit)
+      .getLanguages({ sort, dir: order, page: 3, size: limit, filters: {} })
       .toPromise()
-      .then(({languages, total}) => {
+      .then(({ data: languages, total }: { data: LanguageListItem[], total: number }) => {
         const locations = languages[0].locations;
         expect(total).toBe(0);
         expect(languages.length).not.toBe(0);
@@ -92,7 +92,5 @@ describe('LanguageService', () => {
     httpMock
       .expectOne(languageListUrl)
       .flush(mockResponse);
-    httpMock.verify();
-
   });
 });
