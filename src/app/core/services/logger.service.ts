@@ -2,8 +2,6 @@ import { Injectable, Optional } from '@angular/core';
 import { Angulartics2 } from 'angulartics2';
 import { environment } from '../../../environments/environment';
 
-const endpointRegex = new RegExp(`^[^#]*?://.*?(/.*)$`);
-
 export enum LogLevel {
   debug = 0,
   info,
@@ -57,70 +55,6 @@ export class LoggerService {
     }
   }
 
-  /**
-   * Used to debug API calls as the application is running. This can be used anywhere, but it's integrated into
-   * `api.service.ts`. To enable logging, set your environment to:
-   * {
-   *  debug: {
-   *    apiCalls: '*'    // this will log ALL api calls
-   *  }
-   * }
-   *
-   * To log specific api calls:
-   * {
-   *  debug: {
-   *    apiCalls: ['/echo'],
-   *  }
-   * }
-   *
-   * To suppress certain bodies on responses (because they're too noisy):
-   * {
-   *  debug: {
-   *    apiCalls: '*',
-   *    noBody: ['/some/really/noisy/path']
-   *  }
-   * }
-   *
-   * You can also use `noBody: '*'` to suppress all bodies from being displayed in the response debug log
-   *
-   * debugApiCall strips the query string, so your apiCalls should only be the actual endpoint. For example,
-   * '/echo' if you want to debugApiCalls to '/echo?value=hi&status=277'
-   *
-   * @param path
-   * @param source should be set to the class of the service making the API call. For example, with
-   * AuthenticationService, your constructor should be:
-   *    constructor(..., private api:ProfileService, ...) {
-   *      api.source = this;
-   *    }
-   *
-   * Otherwise, you'll end up with the source being: 'source not set'.
-   *
-   * @param {string} path url being called
-   * @param source the object, class, function (etc), that's making the call
-   * @param body the body being sent
-   * @param {string} method GET | POST | PUT, etc.
-   */
-  debugApiCall(method: string, path: string, source: any, body: any) {
-    if (this.logLevel > LogLevel.debug) {
-      return;
-    }
-    this.logApiCall(method, path, source, body);
-  }
-
-  /**
-   * See [[LogService.debugApiCall]]
-   * @param {string} method
-   * @param {string} path
-   * @param source
-   * @param body
-   */
-  infoApiCall(method: string, path: string, source: any, body: any) {
-    if (this.logLevel > LogLevel.info) {
-      return;
-    }
-    this.logApiCall(method, path, source, body);
-  }
-
   info(msg: string, ...parts: any[]) {
     if (this.logLevel > LogLevel.info) {
       return;
@@ -165,44 +99,5 @@ export class LoggerService {
       description: message,
       fatal: false,
     });
-  }
-
-  private logApiCall(method: string, path: string, source: any, body: any) {
-    const apiCalls = (environment.debug || {} as any).apiCalls;
-    const noBody: string | string[] | null = (environment.debug || {} as any).noBody;
-
-    if (!apiCalls) {
-      return;
-    }
-
-    const matches = (typeof path === 'string') ? endpointRegex.exec(path) : null;
-    const rawEndpoint = ((matches || []).length > 1) ? matches![1] : '';
-    const endPoint = rawEndpoint.split('?')[0];
-
-    if (apiCalls !== '*' && !(Array.isArray(apiCalls) && apiCalls.indexOf(endPoint) > -1)) {
-      return;
-    }
-
-    source = (source || {} as any).name
-      || ((source || {} as any).constructor || {} as any).name
-      || source;
-
-    method = method.toUpperCase();
-
-    let json = '{suppressed by debug config}';
-
-    if (!noBody || (
-      (typeof noBody === 'string' && noBody !== '*') &&
-      (Array.isArray(noBody) && (noBody as string[]).indexOf(endPoint) === -1)
-    )) {
-      try {
-        json = body ? JSON.stringify(body, null, 2) : body;
-      } catch (err) {
-        json = `non-json-response: ${body}`;
-      }
-    }
-
-    // tslint:disable-next-line:no-console
-    console.log(`[debug-api-${method}] source: ${source}, ${path}, body: ${json}`);
   }
 }

@@ -7,10 +7,6 @@ export const environment = {
   production: false,
   debug: {
     level: 'debug',
-    apiCalls: '*',
-    noBody: [
-      '/api/auth/native/login',
-    ],
   },
   services: {
     'domain': 'field',
