@@ -59,11 +59,18 @@ export class ProjectComponent extends SubscriptionComponent implements OnInit, T
     this.projectViewState.loadError
       .pipe(takeUntil(this.unsubscribe))
       .subscribe(err => {
-        if (err instanceof HttpErrorResponse && (err.status === 404 || err.status === 400)) {
-          this.router.navigate(['**'], {skipLocationChange: true});
-          return;
+        let message: string;
+        if (err instanceof HttpErrorResponse) {
+          message = (err.status === 404 || err.status === 400)
+            ? 'Could not find project'
+            : 'Failed to fetch project details';
+        } else {
+          message = 'Failed to parse project details';
+          // http errors are already logged, but parse errors are not
+          // tslint:disable-next-line:no-console
+          console.error(err);
         }
-        this.snackBar.open('Failed to fetch project details', undefined, {duration: 5000});
+        this.snackBar.open(message, undefined, {duration: 5000});
         this.router.navigate(['..'], {replaceUrl: true, relativeTo: this.route});
       });
     this.projectViewState.isDirty
