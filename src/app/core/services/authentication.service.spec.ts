@@ -1,5 +1,6 @@
-import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
+import { HttpTestingController } from '@angular/common/http/testing';
 import { inject, TestBed } from '@angular/core/testing';
+import { CoreTestModule } from '@app/core/core-test.module';
 import { first } from 'rxjs/operators';
 import { environment } from '../../../environments/environment';
 import { CoreModule } from '../core.module';
@@ -21,7 +22,7 @@ describe('AuthenticationService', () => {
     TestBed.configureTestingModule({
       imports: [
         CoreModule,
-        HttpClientTestingModule,
+        CoreTestModule,
       ],
     });
 

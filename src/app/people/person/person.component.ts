@@ -2,6 +2,7 @@ import { HttpErrorResponse } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
 import { MatSnackBar } from '@angular/material';
 import { ActivatedRoute, Router } from '@angular/router';
+import { LoggerService } from '@app/core/services/logger.service';
 import { map, takeUntil } from 'rxjs/operators';
 import { TitleAware, TitleProp } from '../../core/decorators';
 import { SubscriptionComponent } from '../../shared/components/subscription.component';
@@ -20,6 +21,7 @@ export class PersonComponent extends SubscriptionComponent implements OnInit, Ti
     private route: ActivatedRoute,
     private router: Router,
     private snackBar: MatSnackBar,
+    private logger: LoggerService,
   ) {
     super();
   }
@@ -32,9 +34,16 @@ export class PersonComponent extends SubscriptionComponent implements OnInit, Ti
     this.userViewState.loadError
       .pipe(takeUntil(this.unsubscribe))
       .subscribe(err => {
-        const message = (err instanceof HttpErrorResponse && err.status === 404)
-          ? 'Could not find person'
-          : 'Failed to fetch person details';
+        let message: string;
+        if (err instanceof HttpErrorResponse) {
+          message = (err.status === 404 || err.status === 400)
+            ? 'Could not find person'
+            : 'Failed to fetch person details';
+        } else {
+          message = 'Failed to parse person details';
+          // http errors are already logged, but parse errors are not
+          this.logger.error(err);
+        }
         this.snackBar.open(message, undefined, {duration: 5000});
         this.router.navigate(['..'], {replaceUrl: true, relativeTo: this.route});
       });

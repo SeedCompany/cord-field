@@ -1,5 +1,6 @@
-import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
+import { HttpTestingController } from '@angular/common/http/testing';
 import { TestBed } from '@angular/core/testing';
+import { CoreTestModule } from '@app/core/core-test.module';
 import { CoreModule } from '@app/core/core.module';
 import { BibleBook } from '@app/core/models/bible-book';
 import { EditableEngagement, Engagement, EngagementStatus } from '@app/core/models/engagement';
@@ -17,7 +18,7 @@ describe('EngagementService', () => {
     TestBed.configureTestingModule({
       imports: [
         CoreModule,
-        HttpClientTestingModule,
+        CoreTestModule,
       ],
     });
     httpMock = TestBed.get(HttpTestingController);

@@ -2,7 +2,7 @@ import { Component, OnInit, Output } from '@angular/core';
 import { AbstractControl, FormBuilder, FormGroup } from '@angular/forms';
 import { Language } from '@app/core/models/language';
 import { Location } from '@app/core/models/location';
-import { ProjectFilter, ProjectSensitivity, ProjectStatus, ProjectType } from '@app/core/models/project';
+import { ProjectFilter, ProjectSensitivity, ProjectStatus } from '@app/core/models/project';
 import { User } from '@app/core/models/user';
 import { filterEntries, hasValue } from '@app/core/util';
 import * as CustomValidators from '@app/core/validators';
@@ -22,7 +22,6 @@ export class ProjectListFilterComponent implements TableViewFilters<ProjectFilte
   maxDate = DateTime.local();
 
   readonly ProjectStatus = ProjectStatus;
-  readonly ProjectType = ProjectType;
   readonly ProjectSensitivity = ProjectSensitivity;
 
   constructor(private formBuilder: FormBuilder) {
@@ -98,7 +97,6 @@ export class ProjectListFilterComponent implements TableViewFilters<ProjectFilte
       location: [[]],
       team: [[]],
       status: [null],
-      type: [null],
       sensitivity: [null],
       dateRange: [null],
       startDate: [null],

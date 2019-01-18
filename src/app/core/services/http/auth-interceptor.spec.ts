@@ -1,5 +1,6 @@
 import { HttpClient, HttpClientModule } from '@angular/common/http';
 import { TestBed } from '@angular/core/testing';
+import { CoreTestModule } from '@app/core/core-test.module';
 import { removeTestCredentials, saveTestCredentials } from '../../../../test.spec';
 import { CoreModule } from '../../core.module';
 import { AuthenticationStorageService } from '../authentication-storage.service';
@@ -15,6 +16,7 @@ xdescribe('AuthInterceptor', () => {
     TestBed.configureTestingModule({
       imports: [
         CoreModule,
+        CoreTestModule,
         HttpClientModule,
       ],
       providers: [

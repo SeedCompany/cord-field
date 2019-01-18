@@ -129,15 +129,25 @@ export class ProjectEngagementComponent extends SubscriptionComponent implements
       .subscribe(this._engagement);
 
     this.engagement$.subscribe(engagement => {
-      const { id, language, possibleStatuses, updatedAt, tags, initialEndDate, currentEndDate, ...editable } = engagement;
-      const value: EngagementForm = {
+      const { id, language, possibleStatuses, updatedAt, tags, initialEndDate, currentEndDate, products, ...editable } = engagement;
+      const value: Omit<EngagementForm, 'products'> = {
         ...editable,
         isLukePartnership: engagement.hasTag('luke_partnership'),
         isFirstScripture: engagement.hasTag('first_scripture'),
         isCeremonyPlanned: engagement.hasTag('ceremony_planned'),
       };
-
       this.form.reset(value, { emitEvent: false });
+
+      // Remove old items in reverse order because FormArray re-indexes on removal
+      // which would screw up both our for-loop and the index to remove.
+      for (let i = this.products.length - 1; i >= 0; i--) {
+        this.deleteProduct(i);
+      }
+      for (const product of products) {
+        this.addProduct(product);
+      }
+      // No products open by default
+      this.productOpened = null;
     });
 
     merge(
@@ -194,8 +204,8 @@ export class ProjectEngagementComponent extends SubscriptionComponent implements
     this.form.reset({});
   }
 
-  addProduct() {
-    const fg = this.createProductControl();
+  addProduct(product?: Product) {
+    const fg = this.createProductControl(product);
 
     // Link type and books controls, because values are related
     const booksCtl = fg.get('books')!;
@@ -256,9 +266,9 @@ export class ProjectEngagementComponent extends SubscriptionComponent implements
       id: product ? product.id : generateObjectId(),
       name: [product ? product.name : null, Validators.required],
       books: product ? product.books : [],
-      mediums: [product ? product.mediums : [], Validators.required],
-      purposes: [product ? product.purposes : [], Validators.required],
-      methodology: [product ? product.methodology : null, Validators.required],
+      mediums: [product ? product.mediums : []],
+      purposes: [product ? product.purposes : []],
+      methodology: [product ? product.methodology : null],
       approach: product ? product.approach : null,
     });
   }

@@ -1,16 +1,14 @@
 import { HttpErrorResponse } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
 import { AbstractControl, FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { MatDialogRef, MatSnackBar, MatSnackBarRef, SimpleSnackBar } from '@angular/material';
+import { MatDialog, MatDialogRef, MatSnackBar, MatSnackBarRef, SimpleSnackBar } from '@angular/material';
 import { Router } from '@angular/router';
 import { from as observableFrom } from 'rxjs';
 import { catchError, debounceTime, distinctUntilChanged, filter, map, switchMap, tap } from 'rxjs/operators';
-import { ProjectType } from '../../models/project';
 import { ProjectService } from '../../services/project.service';
 
 export interface ProjectCreationResult {
   name: string;
-  type: ProjectType;
 }
 
 @Component({
@@ -20,10 +18,15 @@ export interface ProjectCreationResult {
 })
 export class ProjectCreateDialogComponent implements OnInit {
 
-  readonly ProjectType = ProjectType;
   form: FormGroup;
   submitting = false;
   private snackBarRef?: MatSnackBarRef<SimpleSnackBar>;
+
+  static open(dialog: MatDialog): MatDialogRef<ProjectCreateDialogComponent, any> {
+    return dialog.open(ProjectCreateDialogComponent, {
+      width: '400px',
+    });
+  }
 
   constructor(public dialogRef: MatDialogRef<ProjectCreateDialogComponent>,
               private formBuilder: FormBuilder,
@@ -34,7 +37,6 @@ export class ProjectCreateDialogComponent implements OnInit {
 
   ngOnInit() {
     this.form = this.formBuilder.group({
-      type: ['', Validators.required],
       name: ['', [Validators.required, Validators.minLength(2)]],
     });
     this.name
@@ -66,10 +68,6 @@ export class ProjectCreateDialogComponent implements OnInit {
 
         this.name.setErrors(taken ? {duplicate: true} : null);
       });
-  }
-
-  get type(): AbstractControl {
-    return this.form.get('type')!;
   }
 
   get name(): AbstractControl {

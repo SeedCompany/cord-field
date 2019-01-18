@@ -1,17 +1,6 @@
 <h1 mat-dialog-title>New Project</h1>
 <form mat-dialog-content [formGroup]="form" (keyup.enter)="form.valid ? onCreate() : null">
   <mat-form-field color="accent">
-    <mat-select formControlName="type"
-                placeholder="Type">
-      <mat-option *ngFor="let type of ProjectType.entries(); trackBy: ProjectType.trackEntryBy"
-                  [value]="type.value">
-        {{ type.ui }}
-      </mat-option>
-    </mat-select>
-    <mat-error *ngIf="type.invalid">Please select a type</mat-error>
-  </mat-form-field>
-
-  <mat-form-field color="accent">
     <input matInput
            maxlength="140"
            formControlName="name"

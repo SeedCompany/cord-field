@@ -33,17 +33,6 @@
   </mat-form-field>
 
   <mat-form-field color="accent">
-    <mat-select placeholder="Type"
-                formControlName="type">
-      <mat-option>Any</mat-option>
-      <mat-option *ngFor="let projectType of ProjectType.entries(); trackBy: ProjectType.trackEntryBy"
-                  [value]="projectType.value">
-        {{ projectType.ui }}
-      </mat-option>
-    </mat-select>
-  </mat-form-field>
-
-  <mat-form-field color="accent">
     <mat-select multiple
                 placeholder="Sensitivity"
                 formControlName="sensitivity">

@@ -12,8 +12,6 @@ export abstract class BaseApiService extends AbstractHttpClient {
     return this._baseUrl;
   }
 
-  debugApiCallLogger: (path: string, source: any, body: any, method: string) => void;
-
   constructor(private authStorage: AuthenticationStorageService,
               private serviceName: string,
               httpClient: HttpClient) {
@@ -31,10 +29,6 @@ export abstract class BaseApiService extends AbstractHttpClient {
 
   request(method: string, url: string, options?: IRequestOptionsWithBody): Observable<any> {
     const path = this.url(url);
-
-    if (this.debugApiCallLogger) {
-      this.debugApiCallLogger(method, path, this.constructor, options ? options.body : null);
-    }
 
     return super.request(method, path, options as any);
   }

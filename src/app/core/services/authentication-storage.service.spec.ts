@@ -1,5 +1,5 @@
-import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { inject, TestBed } from '@angular/core/testing';
+import { CoreTestModule } from '@app/core/core-test.module';
 import { saveTestCredentials } from '../../../test.spec';
 import { CoreModule } from '../core.module';
 import { AuthenticationToken } from '../models/authentication-token';
@@ -15,7 +15,7 @@ describe('AuthenticationStorageService', () => {
     TestBed.configureTestingModule({
       imports: [
         CoreModule,
-        HttpClientTestingModule,
+        CoreTestModule,
       ],
     });
     authStoreService = TestBed.get(AuthenticationStorageService);
