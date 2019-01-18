@@ -68,7 +68,7 @@ describe('LanguageService', () => {
     }];
 
     languageService
-      .getLanguages({ sort, dir: order, page: 3, size: limit, filters: {} })
+      .getLanguages({ sort, dir: order, page: 3, size: limit, filters: {}, search: '' })
       .toPromise()
       .then(({ data: languages, total }: { data: LanguageListItem[], total: number }) => {
         const locations = languages[0].locations;

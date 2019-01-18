@@ -17,9 +17,10 @@ import {
 import { ActivatedRoute, Router } from '@angular/router';
 import { filterEntries, twoWaySync, TypedMatSort, TypedSort } from '@app/core/util';
 import { ListApi, observePagerAndSorter } from '@app/core/util/list-views';
+import { SearchComponent } from '@app/shared/components/search/search.component';
 import { SubscriptionComponent } from '@app/shared/components/subscription.component';
 import { TableFilterDirective, TableViewFilters } from '@app/shared/components/table-view/table-filter.directive';
-import { combineLatest, from, merge, Observable, of, Subject } from 'rxjs';
+import { BehaviorSubject, combineLatest, from, merge, Observable, of, Subject } from 'rxjs';
 import { catchError, first, map, shareReplay, startWith, switchMap, takeUntil, tap } from 'rxjs/operators';
 
 export interface QueryParams<TKeys> {
@@ -27,6 +28,7 @@ export interface QueryParams<TKeys> {
   dir: SortDirection;
   page: number; // 1-indexed to make more sense for users
   size: number;
+  search: string;
 }
 
 export type RawQueryParams<Params extends QueryParams<any> = QueryParams<any>> = Partial<Record<keyof Params, string>>;
@@ -35,6 +37,7 @@ export interface PSChanges<TKeys extends string, Filters> {
   sort: TypedSort<TKeys>;
   page: PageEvent;
   filters: Filters;
+  search: string;
 }
 
 export const defaultParseParams = <TKeys extends string>(defaultSort: TypedSort<TKeys>, defaultPageSize: number) =>
@@ -43,15 +46,17 @@ export const defaultParseParams = <TKeys extends string>(defaultSort: TypedSort<
     dir: raw.dir ? raw.dir as SortDirection : defaultSort.direction,
     page: raw.page ? Number(raw.page) : 1,
     size: raw.size ? Number(raw.size) : defaultPageSize,
+    search: raw.search || '',
   });
 
 export const defaultParamsFromChanges = <TKeys extends string, Filters>(defaultSort: TypedSort<TKeys>, defaultPageSize: number) =>
-  ({ sort, page }: PSChanges<TKeys, Filters>): Partial<QueryParams<TKeys>> => {
+  ({ sort, page, search }: PSChanges<TKeys, Filters>): Partial<QueryParams<TKeys>> => {
     return {
       sort: sort.active !== defaultSort.active ? sort.active : undefined,
       dir: sort.direction !== defaultSort.direction ? sort.direction : undefined,
       page: page.pageIndex > 0 ? (page.pageIndex + 1) : undefined,
       size: page.pageSize !== defaultPageSize ? page.pageSize : undefined,
+      search: search || undefined,
     };
   };
 
@@ -86,16 +91,23 @@ export class TableViewComponent<T,
   @Input() defaultSort: TypedSort<TKeys>;
   @Input() defaultPageSize = 10;
   @Input() pageSizeOptions = [10, 25, 50];
+  @Input() search = false;
   @Input() fetchData: ListApi<T, TKeys, Filters, Params & { filters: Filters }>;
-  @Input() observeChanges = (sorter: TypedMatSort<TKeys>, paginator: MatPaginator, filters$: Observable<Filters>): Observable<Changes> => {
-    return observePagerAndSorter<[Filters], TKeys>(
+  @Input() otherChanges = {};
+  @Input() observeChanges = (
+    sorter: TypedMatSort<TKeys>,
+    paginator: MatPaginator,
+    filters$: Observable<Filters>,
+    search$: Observable<string>,
+  ): Observable<Changes> => {
+    return observePagerAndSorter<[string, Filters], TKeys>(
       paginator,
       sorter,
-      [filters$],
-      [{} as Filters],
+      [search$, filters$],
+      ['', {} as Filters],
     )
       .pipe(
-        map(({ sort, page, rest: [filters] }) => ({ sort, page, filters }) as any),
+        map(({ sort, page, rest: [search, filters] }) => ({ sort, page, search, filters }) as any),
       );
   };
   @Input() parseParams: (raw: RawQueryParams) => Params = (raw) =>
@@ -112,11 +124,22 @@ export class TableViewComponent<T,
   filtersActive = false;
   isLoading = true;
   refresh = new Subject<void>();
+  search$ = new BehaviorSubject('');
 
   @ContentChild(MatTable) table: MatTable<T>;
   @ContentChild(MatSort) sort: TypedMatSort<TKeys>;
   @ContentChild(TableFilterDirective) filtersComponent: TableViewFilters<Filters> | undefined;
   @ViewChild(MatPaginator) paginator: MatPaginator;
+  // Since the search component is conditionally shown based on the `search` input, we don't get the component
+  // until AfterViewInit. So I'm using a BehaviorSubject to bridge the changes and stream setup in AfterContentInit
+  @ViewChild(SearchComponent) set searchInput(input: SearchComponent | null) {
+    if (!input) {
+      return;
+    }
+    input.search
+      .pipe(takeUntil(this.unsubscribe))
+      .subscribe(this.search$);
+  }
   @ViewChild('filterDrawer') filterDrawer: MatDrawer;
   @ViewChild('openDrawerButton') openDrawerButton: MatButton;
   @ViewChild('closeDrawerButton') closeDrawerButton: MatButton;
@@ -160,6 +183,10 @@ export class TableViewComponent<T,
           this.paginator.pageSize = params.size;
         }
 
+        if (this.search && params.search) {
+          this.search$.next(params.search);
+        }
+
         this.queryParamChanges.emit(params);
       });
 
@@ -168,7 +195,7 @@ export class TableViewComponent<T,
       ? this.filtersComponent!.filters.pipe(shareReplay(1))
       : of({} as Filters);
 
-    this.observeChanges(this.sort, this.paginator, filters$)
+    this.observeChanges(this.sort, this.paginator, filters$, this.search$)
       .pipe(
         map((changes): Partial<Params> => {
           const params = this.paramsFromChanges(changes);
@@ -190,7 +217,10 @@ export class TableViewComponent<T,
 
     // Fetch data from query params & filters
     combineLatest(
-      queryParams$.pipe(map(raw => this.parseParams(raw))),
+      queryParams$.pipe(
+        map(raw => this.search ? raw : { ...raw, search: '' }), // Don't send search if it's not enabled.
+        map(raw => this.parseParams(raw)),
+      ),
       filters$,
       this.refresh.pipe(startWith(null)),
     )

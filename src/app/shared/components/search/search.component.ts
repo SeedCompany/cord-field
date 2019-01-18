@@ -27,7 +27,13 @@ export class SearchComponent {
 
   @Output() search = new EventEmitter<string>();
 
-  value = '';
+  @Input()
+  get value() { return this._value; }
+  set value(value: string) {
+    this._value = value;
+    this.focused = Boolean(value);
+  }
+  private _value = '';
   focused = false;
 
   onToggle() {

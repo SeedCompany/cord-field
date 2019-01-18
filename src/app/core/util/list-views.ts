@@ -39,6 +39,9 @@ export const listOptionsToHttpParams = <Keys extends string, Filters>(buildFilte
     if (options.filters && Object.keys(options.filters).length > 0) {
       params.filter = JSON.stringify(buildFilters(options.filters));
     }
+    if (options.search) {
+      params.search = options.search;
+    }
 
     return params;
   };

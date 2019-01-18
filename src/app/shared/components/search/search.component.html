@@ -1,5 +1,7 @@
-<button mat-icon-button (click)="onToggle()">
-  <mat-icon class="mat-primary">search</mat-icon>
+<button mat-icon-button
+        color="primary"
+        (click)="onToggle()">
+  <mat-icon>search</mat-icon>
 </button>
 <mat-form-field *ngIf="focused" [@slideInOut] floatLabel="never" color="accent">
   <input matInput type="text"

@@ -76,7 +76,7 @@ describe('ProjectService', () => {
     }];
 
     projectService
-      .getProjects({ all: true, sort: 'updatedAt', dir: 'desc', page: 3, size: limit, filters: {} })
+      .getProjects({ all: true, sort: 'updatedAt', dir: 'desc', page: 3, size: limit, filters: {}, search: '' })
       .toPromise()
       .then(({ data: projects, total }: { data: Project[], total: number }) => {
         expect(total).toBe(0);
