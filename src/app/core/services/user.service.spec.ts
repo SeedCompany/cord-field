@@ -72,7 +72,7 @@ describe('UserService', () => {
 
   it('get users', (done: DoneFn) => {
     userService
-      .getUsers({ sort: 'name', dir: 'asc', page: 3, size: 10, filters: {} })
+      .getUsers({ sort: 'name', dir: 'asc', page: 3, size: 10, filters: {}, search: '' })
       .subscribe(({ data: users, total }: { data: UserListItem[], total: number }) => {
         expect(total).toBeDefined();
         expect(Array.isArray(users)).toBeTruthy();

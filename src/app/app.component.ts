@@ -31,7 +31,7 @@ export class AppComponent extends SubscriptionComponent implements OnInit {
   ) {
     super();
 
-    if (environment.googleAnalytics) {
+    if (environment.googleAnalytics && window) {
       const cookieDomain = window.location && window.location.hostname === 'localhost' ? 'none' : 'auto';
       ((window as any).ga || noop)('create', environment.googleAnalytics, cookieDomain);
       analytics.startTracking();

@@ -55,3 +55,8 @@ mat-toolbar {
 .spacer {
   flex: auto;
 }
+
+.right-toolbar {
+  display: flex;
+  align-items: center;
+}

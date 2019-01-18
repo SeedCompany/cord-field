@@ -99,19 +99,20 @@ export class ProjectListComponent extends SubscriptionComponent implements OnIni
     sorter: TypedMatSort<keyof Project>,
     paginator: MatPaginator,
     filters$: Observable<ProjectFilter>,
+    search$: Observable<string>,
   ): Observable<ProjectViewOptions> => {
     const list$ = this.listChanges.pipe(
       startWith(this.listSelection), // Start with current value
       distinctUntilChanged(), // Don't emit if no change
     );
-    return observePagerAndSorter<[ListOption, ProjectFilter], keyof Project>(
+    return observePagerAndSorter<[ListOption, string, ProjectFilter], keyof Project>(
       paginator,
       sorter,
-      [list$, filters$],
-      [this.listSelection, {}],
+      [list$, search$, filters$],
+      [this.listSelection, '', {}],
     )
       .pipe(
-        map(({ sort, page, rest: [list, filters] }) => ({ sort, page, list, filters })),
+        map(({ sort, page, rest: [list, search, filters] }) => ({ sort, page, search, list, filters })),
       );
   };
 
