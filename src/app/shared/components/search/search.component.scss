@@ -2,8 +2,9 @@
 
 :host {
   @extend %component-defaults;
-  flex-direction: row;
+  flex-direction: row-reverse;
   align-items: center;
+  font-size: 14px;
 }
 
 .hidden {
