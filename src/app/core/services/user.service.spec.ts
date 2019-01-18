@@ -1,6 +1,6 @@
-import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
+import { HttpTestingController } from '@angular/common/http/testing';
 import { TestBed } from '@angular/core/testing';
-import { LanguageListItem } from '@app/core/models/language';
+import { CoreTestModule } from '@app/core/core-test.module';
 import { environment } from '../../../environments/environment';
 import { CoreModule } from '../core.module';
 import { Location } from '../models/location';
@@ -19,7 +19,7 @@ describe('UserService', () => {
     TestBed.configureTestingModule({
       imports: [
         CoreModule,
-        HttpClientTestingModule,
+        CoreTestModule,
       ],
     });
     userService = TestBed.get(UserService);

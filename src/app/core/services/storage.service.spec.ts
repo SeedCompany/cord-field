@@ -1,4 +1,5 @@
 import { TestBed } from '@angular/core/testing';
+import { CoreTestModule } from '@app/core/core-test.module';
 import { forkJoin, of as observableOf } from 'rxjs';
 import { CoreModule } from '../core.module';
 import {
@@ -21,6 +22,7 @@ describe('StorageService', () => {
       .configureTestingModule({
         imports: [
           CoreModule,
+          CoreTestModule,
         ],
       });
 

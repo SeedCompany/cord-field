@@ -1,5 +1,6 @@
-import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
+import { HttpTestingController } from '@angular/common/http/testing';
 import { inject, TestBed } from '@angular/core/testing';
+import { CoreTestModule } from '@app/core/core-test.module';
 import { environment } from '../../../environments/environment';
 import { CoreModule } from '../core.module';
 import { ProjectCreationResult } from '../create-dialogs/project-create-dialog/project-create-dialog.component';
@@ -17,7 +18,7 @@ describe('ProjectService', () => {
     TestBed.configureTestingModule({
       imports: [
         CoreModule,
-        HttpClientTestingModule,
+        CoreTestModule,
       ],
     });
     httpMock = TestBed.get(HttpTestingController);

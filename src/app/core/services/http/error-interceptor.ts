@@ -7,6 +7,7 @@ import {
   HttpRequest,
 } from '@angular/common/http';
 import { Injectable, Provider } from '@angular/core';
+import { LoggerService } from '@app/core/services/logger.service';
 import { Observable, throwError as observableThrow } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 
@@ -18,13 +19,17 @@ export class ErrorInterceptor implements HttpInterceptor {
     return {provide: HTTP_INTERCEPTORS, useClass: ErrorInterceptor, multi: true};
   }
 
+  constructor(
+    private logger: LoggerService,
+  ) {
+  }
+
   intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
     return next
       .handle(req)
       .pipe(catchError(e => {
         if (e instanceof HttpErrorResponse && e.status === 500 && e.error.trace) {
-          // tslint:disable-next-line:no-console
-          console.error(JSON.parse(e.error.trace).stack);
+          this.logger.error(JSON.parse(e.error.trace).stack);
         }
 
         return observableThrow(e);
