@@ -1,5 +1,6 @@
 import { animate, style, transition, trigger } from '@angular/animations';
 import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { DateTime } from 'luxon';
 
 @Component({
   selector: 'app-search',
@@ -35,8 +36,17 @@ export class SearchComponent {
   }
   private _value = '';
   focused = false;
+  private lastBlur = DateTime.fromMillis(0);
 
   onToggle() {
+    // Clicking the toggle button fires the input blur event first. Since blurring can also toggle
+    // showing the input if the value is empty this would re-show the input immediately.
+    // Prevent this by only doing toggle if the last blur time was more than half a second.
+    const diff = DateTime.local().diff(this.lastBlur);
+    if (diff.as('seconds') < 0.5) {
+      return;
+    }
+
     if (this.focused) {
       this.onClose();
     } else {
@@ -45,6 +55,7 @@ export class SearchComponent {
   }
 
   onBlur() {
+    this.lastBlur = DateTime.local();
     if (this.autoClose && !this.value) {
       this.onClose();
     }
