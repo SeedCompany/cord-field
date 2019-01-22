@@ -111,6 +111,7 @@ export class UserProfile extends User {
   isSelf: boolean;
 
   canEdit = true; // TODO with auth
+  canEditRoles: boolean;
 
   get available(): boolean {
     if (this.unavailabilities.length === 0) {
@@ -134,6 +135,7 @@ export class UserProfile extends User {
     user.skills = json.skills || [];
     user.knownLanguages = (json.knownLanguages || []).map(KnownLanguage.fromJson);
     user.isSelf = json.isSelf || false;
+    user.canEditRoles = json.canEditRoles || false;
 
     return user;
   }
