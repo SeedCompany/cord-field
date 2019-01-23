@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { MatSnackBar, MatSnackBarRef, SimpleSnackBar } from '@angular/material';
-import { takeUntil } from 'rxjs/operators';
+import { Observable } from 'rxjs';
+import { map, takeUntil } from 'rxjs/operators';
 import { TitleAware } from '../../core/decorators';
 import { popInOut } from '../../shared/animations';
 import { UserViewStateService } from '../user-view-state.service';
@@ -20,12 +21,13 @@ interface TabConfig {
 @TitleAware()
 export class PersonEditComponent extends AbstractPersonComponent implements OnInit {
 
-  readonly tabs: TabConfig[] = [
+  readonly allTabs: TabConfig[] = [
     {path: 'basic', label: 'Basic Info'},
     {path: 'about', label: 'About'},
     {path: 'account', label: 'Account'},
     {path: 'admin', label: 'Admin'},
   ];
+  tabs: Observable<TabConfig[]>;
 
   submitting: boolean;
   dirty: boolean;
@@ -47,6 +49,14 @@ export class PersonEditComponent extends AbstractPersonComponent implements OnIn
     this.userViewState.isDirty
       .pipe(takeUntil(this.unsubscribe))
       .subscribe(dirty => this.dirty = dirty);
+    this.tabs = this.user$.pipe(
+      map(user => {
+        if (user.canEditRoles) {
+          return this.allTabs;
+        }
+        return this.allTabs.filter(tab => tab.path !== 'admin');
+      }),
+    );
   }
 
   trackTabsBy(index: number, tab: TabConfig) {
