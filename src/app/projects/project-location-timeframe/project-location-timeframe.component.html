@@ -15,7 +15,7 @@
                placeholder="Estimated Submission to Area Director"
                formControlName="estimatedSubmission"
                [min]="today"
-               [max]="startDate.value">
+        />
         <mat-datepicker-toggle matSuffix
                                [for]="estimatedDatepicker"></mat-datepicker-toggle>
         <mat-datepicker #estimatedDatepicker></mat-datepicker>
@@ -23,9 +23,6 @@
           date
         </mat-error>
         <mat-error *ngIf="estimatedSubmissionDate.errors?.matDatepickerMin">Must be equal or after today</mat-error>
-        <mat-error *ngIf="estimatedSubmissionDate.errors?.matDatepickerMax">Must be before or equal to
-          start date
-        </mat-error>
       </mat-form-field>
     </div>
     <div class="date-container">
