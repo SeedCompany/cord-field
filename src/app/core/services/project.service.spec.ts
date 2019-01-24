@@ -101,10 +101,9 @@ describe('ProjectService', () => {
   });
 
   it('check existing project name availability', (done: DoneFn) => {
-    const mockResponse = {status: false};
-    const isProjectNameUrl = `${testBaseUrl}/projects/exists?name=Elhomwe Bible`;
     projectService
       .isProjectNameTaken('Elhomwe Bible')
+      .toPromise()
       .then((response) => {
         expect(response).toBe(false);
         done();
@@ -112,8 +111,8 @@ describe('ProjectService', () => {
       .catch(done.fail);
 
     httpMock
-      .expectOne(isProjectNameUrl)
-      .flush(mockResponse);
+      .expectOne(`${testBaseUrl}/projects/exists?name=Elhomwe%20Bible`)
+      .flush({ status: false });
     httpMock.verify();
 
   });

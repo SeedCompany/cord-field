@@ -57,7 +57,9 @@ export class Project {
     project.languages = (json.languages || []).map(Language.fromJson);
     project.partnerships = (json.partnerships || []).map(Partnership.fromJson);
     project.sensitivity = json.sensitivity || 1;
-    project.team = (json.team || []).map(TeamMember.fromJson);
+    project.team = (json.team || [])
+      .filter((tm: any) => tm.user) // ignore team members that don't have user hydrated
+      .map(TeamMember.fromJson);
     project.updatedAt = json.updatedAt ? DateTime.fromISO(json.updatedAt) : DateTime.fromMillis(0);
     project.estimatedSubmission = json.estimatedSubmission ? DateTime.fromISO(json.estimatedSubmission) : null;
     project.engagements = (maybeRedacted(json.engagements) || []).map(Engagement.fromJson);

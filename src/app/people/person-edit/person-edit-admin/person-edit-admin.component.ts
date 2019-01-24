@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { AbstractControl, FormBuilder } from '@angular/forms';
-import { MatDialog } from '@angular/material';
+import { ActivatedRoute, Router } from '@angular/router';
 import { TitleAware } from '@app/core/decorators';
 import { enableControl } from '@app/core/util';
 import { takeUntil } from 'rxjs/operators';
@@ -21,7 +21,8 @@ export class PersonEditAdminComponent extends AbstractPersonComponent implements
   constructor(
     private formBuilder: FormBuilder,
     private viewStateService: UserViewStateService,
-    public dialog: MatDialog,
+    private router: Router,
+    private route: ActivatedRoute,
     userViewState: UserViewStateService,
   ) {
     super(userViewState);
@@ -41,6 +42,14 @@ export class PersonEditAdminComponent extends AbstractPersonComponent implements
       });
 
     this.user$.subscribe(user => {
+      if (!user.canEditRoles) {
+        this.router.navigate(['..'], {
+          replaceUrl: true,
+          relativeTo: this.route,
+        });
+        return;
+      }
+
       this.roles.patchValue(user.roles, { emitEvent: false });
     });
   }

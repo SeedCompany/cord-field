@@ -6,7 +6,7 @@ import { ApiOptions as ListApiOptions, listOptionsToHttpParams, makeListRequest 
 import { StatusOptions } from '@app/shared/components/status-select-workflow/status-select-workflow.component';
 import { DateTime } from 'luxon';
 import { from, Observable, of } from 'rxjs';
-import { map, mapTo, switchMap, tap } from 'rxjs/operators';
+import { catchError, map, mapTo, switchMap, tap } from 'rxjs/operators';
 import { ModifiedProject } from '../../projects/project-view-state.service';
 import { SaveResult } from '../abstract-view-state';
 import { ProjectCreationResult } from '../create-dialogs/project-create-dialog/project-create-dialog.component';
@@ -62,19 +62,20 @@ export class ProjectService {
         switchMap(makeListRequest(this.ploApi, '/projects', Project.fromJson)),
       );
 
-  isProjectNameTaken(name: string): Promise<boolean> {
+  isProjectNameTaken(name: string): Observable<boolean> {
     return this
       .ploApi
-      .get(`/projects/exists?name=${name}`)
-      .toPromise()
-      .then(() => false)
-      .catch(err => {
-        if (err.status === 409) {
-          return true;
-        }
+      .get(`/projects/exists`, { params: { name }})
+      .pipe(
+        mapTo(false),
+        catchError(err => {
+          if (err.status === 409) {
+            return of(true);
+          }
 
-        throw err;
-      });
+          throw err;
+        }),
+      );
   }
 
   async createProject(project: ProjectCreationResult): Promise<string> {

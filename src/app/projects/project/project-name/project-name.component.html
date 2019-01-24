@@ -8,10 +8,16 @@
   <ng-template #editTitle>
     <mat-form-field color="accent">
       <input matInput
+             maxlength="140"
+             autocomplete="off"
              [formControl]="name"
              [autofocus]="true"
              (blur)="done()">
-      <mat-error>Required</mat-error>
+      <mat-hint align="start" *ngIf="name.pending">Checking availability...</mat-hint>
+      <mat-hint align="end">{{ name.value.length }}/140</mat-hint>
+      <mat-error *ngIf="name.errors?.required">Please enter a name</mat-error>
+      <mat-error *ngIf="name.errors?.duplicate">A project with this name already exists</mat-error>
+      <mat-error *ngIf="name.errors?.minlength">Name must be at least 2 characters long</mat-error>
     </mat-form-field>
   </ng-template>
 </mat-toolbar>
