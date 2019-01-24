@@ -3,7 +3,6 @@ import { Component, OnInit } from '@angular/core';
 import { AbstractControl, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatDialog, MatDialogRef, MatSnackBar, MatSnackBarRef, SimpleSnackBar } from '@angular/material';
 import { Router } from '@angular/router';
-import { from as observableFrom } from 'rxjs';
 import { catchError, debounceTime, distinctUntilChanged, filter, map, switchMap, tap } from 'rxjs/operators';
 import { ProjectService } from '../../services/project.service';
 
@@ -48,10 +47,9 @@ export class ProjectCreateDialogComponent implements OnInit {
         distinctUntilChanged(),
         filter(() => !this.name.hasError('required')), // Don't continue if user has already cleared the text
         tap(() => this.name.markAsPending()),
-        switchMap(name => {
-          return observableFrom(this.projectService.isProjectNameTaken(name))
-            .pipe(catchError<boolean, HttpErrorResponse>(err => err));
-        }),
+        switchMap(name =>
+          this.projectService.isProjectNameTaken(name)
+            .pipe(catchError<boolean, HttpErrorResponse>(err => err))),
       )
       .subscribe((taken: boolean | HttpErrorResponse) => {
         if (this.name.hasError('required')) {
