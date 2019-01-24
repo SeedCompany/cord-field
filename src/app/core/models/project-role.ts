@@ -3,6 +3,7 @@ import { buildEnum } from './enum';
 export enum ProjectRole {
   Admin = 'adm',
   AreaDirector = 'ad',
+  BibleTranslationLiaison = 'btl',
   Consultant = 'c',
   ConsultantManager = 'cm',
   Controller = 'con',
@@ -12,8 +13,11 @@ export enum ProjectRole {
   FieldPartner = 'fp',
   FinancialAnalyst = 'fa',
   Intern = 'i',
+  Liaison = 'l',
   LeadFinancialAnalyst = 'lfa',
+  Mentor = 'm',
   OfficeOfThePresident = 'ootp',
+  RegionalCommunicationsCoordinator = 'rcc',
   RegionalDirector = 'rd',
   Translator = 't',
   Writer = 'w',
@@ -22,6 +26,7 @@ export enum ProjectRole {
 export namespace ProjectRole {
   export const {entries, forUI, values, trackEntryBy, trackValueBy} = buildEnum<ProjectRole>(ProjectRole, {
     [ProjectRole.Admin]: 'Admin',
+    [ProjectRole.BibleTranslationLiaison]: 'Bible Translation Liaison',
     [ProjectRole.Consultant]: 'Consultant',
     [ProjectRole.ConsultantManager]: 'Consultant Manager',
     [ProjectRole.Controller]: 'Controller',
@@ -31,11 +36,14 @@ export namespace ProjectRole {
     [ProjectRole.FieldPartner]: 'Field Partner',
     [ProjectRole.FinancialAnalyst]: 'Financial Analyst',
     [ProjectRole.Intern]: 'Intern',
+    [ProjectRole.Liaison]: 'Liaison',
     [ProjectRole.LeadFinancialAnalyst]: 'Lead Financial Analyst',
+    [ProjectRole.Mentor]: 'Mentor',
     [ProjectRole.OfficeOfThePresident]: 'Office of the President',
     [ProjectRole.Translator]: 'Translator',
     [ProjectRole.Writer]: 'Writer',
     [ProjectRole.AreaDirector]: 'Area Director',
+    [ProjectRole.RegionalCommunicationsCoordinator]: 'Regional Communication Coordinator',
     [ProjectRole.RegionalDirector]: 'Regional Director',
   });
 
