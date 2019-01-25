@@ -2,7 +2,7 @@ import { OnDestroy } from '@angular/core';
 import { AbstractControl, FormArray } from '@angular/forms';
 import { BaseStorageService } from '@app/core/services/storage.service';
 import { ArrayItem } from '@app/core/util';
-import { BehaviorSubject, combineLatest, NextObserver, Observable, Subject, Unsubscribable } from 'rxjs';
+import { BehaviorSubject, combineLatest, merge, NextObserver, Observable, Subject } from 'rxjs';
 import { distinctUntilChanged, map, shareReplay, startWith, takeUntil } from 'rxjs/operators';
 import { LazyGetter } from 'typescript-lazy-get-decorator';
 import { ChangeConfig, ChangeEngine, Changes } from './change-engine';
@@ -138,19 +138,22 @@ export abstract class AbstractViewState<T> implements OnDestroy {
    */
   createFormArray<Key extends keyof T, Value extends ArrayItem<T[Key]>>(
     field: Key,
-    createControl: (item?: Value) => AbstractControl,
+    createControl: (item: Value | undefined, remove: Observable<any>) => AbstractControl,
     unsubscribe: Observable<void>,
   ) {
     const form = new FormArray([]);
 
-    // Subscriptions to individual item changes
-    const subs: Unsubscribable[] = [];
+    // Subjects called on individual item removal
+    const subs: Array<Subject<void>> = [];
 
     const add = (item?: any): void => {
-      const control = createControl(item);
+      const removalSubject = new Subject<void>();
+      const removeOrDestroy = merge(unsubscribe, removalSubject);
 
-      const changesSub = control.valueChanges
-        .pipe(takeUntil(unsubscribe))
+      const control = createControl(item, removeOrDestroy);
+
+      control.valueChanges
+        .pipe(takeUntil(removeOrDestroy))
         .subscribe(() => {
           if (control.valid) {
             this.change({[field]: {update: control.value}} as any);
@@ -160,14 +163,15 @@ export abstract class AbstractViewState<T> implements OnDestroy {
         });
 
       form.push(control);
-      subs.push(changesSub);
+      subs.push(removalSubject);
     };
 
     const remove = (index: number, updateState = true): void => {
       const fg = form.at(index);
       form.removeAt(index);
       if (subs[index]) {
-        subs[index].unsubscribe();
+        subs[index].next();
+        subs[index].complete();
         subs.splice(index, 1);
       }
       if (updateState) {
