@@ -168,6 +168,7 @@ export abstract class AbstractViewState<T> implements OnDestroy {
       form.removeAt(index);
       if (subs[index]) {
         subs[index].unsubscribe();
+        subs.splice(index, 1);
       }
       if (updateState) {
         this.change({[field]: {remove: fg.value}} as any);
