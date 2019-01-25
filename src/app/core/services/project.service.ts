@@ -123,12 +123,12 @@ export class ProjectService {
       case ProjectStatus.EarlyConversations: // FC
         return [
           ['Submit for Concept Approval', ProjectStatus.PendingConceptApproval],
-          [`Won't do`, ProjectStatus.DidNotDevelop],
+          [`End Development`, ProjectStatus.DidNotDevelop],
         ];
       case ProjectStatus.PendingConceptApproval: // AD
         return [
           ['Approve Concept', ProjectStatus.PrepForConsultantEndorsement],
-          ['Send Back for Corrections', ProjectStatus.EarlyConversations],
+          ['Send Back for Corrections to Concept Approval', ProjectStatus.EarlyConversations],
           ['Reject', ProjectStatus.Rejected],
         ];
       case ProjectStatus.PrepForConsultantEndorsement: // FC
@@ -140,7 +140,6 @@ export class ProjectService {
         return [
           ['Endorse Plan', ProjectStatus.PrepForFinancialEndorsement],
           ['Do Not Endorse Plan', ProjectStatus.PrepForFinancialEndorsement],
-          ['End Development', ProjectStatus.DidNotDevelop],
         ];
       case ProjectStatus.PrepForFinancialEndorsement: // FC
         return [
@@ -159,12 +158,20 @@ export class ProjectService {
         ];
       case ProjectStatus.PendingAreaDirectorApproval: // AD
         return [
+          ['Approve for Finance Confirmation', ProjectStatus.PendingFinanceConfirmation],
           ['Approve for Regional Director Approval', ProjectStatus.PendingRegionalDirectorApproval],
           ['Send Back for Corrections', ProjectStatus.FinalizingProposal],
+          ['Send Back for Corrections to Concept Approval', ProjectStatus.EarlyConversations],
+          ['Send Back for Corrections to Consultant Endorsement', ProjectStatus.PendingConsultantEndorsement],
+          ['Send Back for Corrections to Financial Endorsement', ProjectStatus.PendingFinancialEndorsement],
           ['Reject', ProjectStatus.Rejected],
         ];
       case ProjectStatus.PendingRegionalDirectorApproval: // RD
         return [
+          ['Send Back for Corrections to Concept Approval', ProjectStatus.EarlyConversations],
+          ['Send Back for Corrections to Consultant Endorsement', ProjectStatus.PendingConsultantEndorsement],
+          ['Send Back for Corrections to Financial Endorsement', ProjectStatus.PendingFinancialEndorsement],
+          ['Send Back for Corrections to Area Director Approval', ProjectStatus.PendingAreaDirectorApproval],
           ['Approve for Finance Confirmation', ProjectStatus.PendingFinanceConfirmation],
           ['Send Back for Corrections', ProjectStatus.EarlyConversations],
           ['Reject', ProjectStatus.Rejected],
