@@ -162,7 +162,7 @@ export class ProjectEngagementComponent extends SubscriptionComponent implements
   }
 
   findAvailableStatuses = (status: EngagementStatus): StatusOptions<EngagementStatus> => {
-    return this.engagement ? this.projectService.getAvailableEngagementStatuses(this.engagement) : emptyOptions;
+    return this.engagement ? this.engagementService.getAvailableStatuses(this.engagement) : emptyOptions;
   };
 
   async onSave(): Promise<void> {
