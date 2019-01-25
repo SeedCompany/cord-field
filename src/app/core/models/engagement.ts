@@ -56,7 +56,11 @@ export class Engagement extends EditableEngagement {
     return this.tags.some(tag => tag === name);
   }
 
-  withChanges(modified: EditableEngagement): Engagement {
+  withChanges(modified: Partial<EditableEngagement>): Engagement {
     return Object.assign(clone(this), modified);
   }
 }
+
+export const EmptyEngagement = Engagement.fromJson({
+  language: {},
+});

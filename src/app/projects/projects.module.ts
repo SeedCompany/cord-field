@@ -2,6 +2,7 @@ import { NgModule } from '@angular/core';
 
 import { SharedModule } from '../shared/shared.module';
 import { ProjectBudgetComponent } from './project-budget/project-budget.component';
+import { EngagementProductsComponent } from './project-engagements/project-engagement/engagement-product/engagement-products.component';
 import { ProjectEngagementComponent } from './project-engagements/project-engagement/project-engagement.component';
 import { ProjectEngagementsComponent } from './project-engagements/project-engagements.component';
 import { ProjectExtensionComponent } from './project-extensions/project-extension/project-extension.component';
@@ -35,6 +36,7 @@ import { ProjectsRoutingModule } from './projects-routing.module';
   ],
   declarations: [
     CreateDirectoryDialogComponent,
+    EngagementProductsComponent,
     FileBreadcrumbsComponent,
     FileRenameDialogComponent,
     OverwriteFileWarningComponent,
