@@ -1,16 +1,18 @@
 import { Component, OnInit } from '@angular/core';
-import { AbstractControl, FormBuilder } from '@angular/forms';
+import { AbstractControl, FormGroup } from '@angular/forms';
 import { MatSnackBar } from '@angular/material';
 import { ActivatedRoute } from '@angular/router';
 import { TitleAware, TitleProp } from '@app/core/decorators';
 import { EditableEngagement, Engagement, EngagementStatus } from '@app/core/models/engagement';
 import { IsDirty } from '@app/core/route-guards/dirty.guard';
 import { EngagementService } from '@app/core/services/engagement.service';
-import { enableControl, Omit } from '@app/core/util';
+import { enableControl, ExtractKeys, Omit } from '@app/core/util';
+import { FormGroupItemOptions } from '@app/core/view-state-form-builder';
 import { EngagementViewStateService } from '@app/projects/engagement-view-state.service';
 import { popInOut } from '@app/shared/animations';
 import { emptyOptions, StatusOptions } from '@app/shared/components/status-select-workflow/status-select-workflow.component';
 import { SubscriptionComponent } from '@app/shared/components/subscription.component';
+import { uniq } from 'lodash-es';
 import { BehaviorSubject, merge, Observable } from 'rxjs';
 import { filter, map, startWith, takeUntil } from 'rxjs/operators';
 
@@ -19,6 +21,8 @@ interface EngagementForm extends Omit<EditableEngagement, 'tags' | 'products'> {
   isFirstScripture: boolean;
   isCeremonyPlanned: boolean;
 }
+
+type TagControl = FormGroupItemOptions<EngagementForm, Engagement, ExtractKeys<EngagementForm, boolean>, boolean>;
 
 @Component({
   selector: 'app-project-engagement',
@@ -37,23 +41,12 @@ export class ProjectEngagementComponent extends SubscriptionComponent implements
     filter((e): e is Engagement => Boolean(e) && Boolean(e!.id)),
   );
 
-  form = this.formBuilder.group({
-    status: [],
-    isLukePartnership: [false],
-    isFirstScripture: [false],
-    completeDate: [null],
-    disbursementCompleteDate: [null],
-    communicationsCompleteDate: [null],
-    isCeremonyPlanned: [false],
-    ceremonyEstimatedDate: [null],
-    ceremonyActualDate: [null],
-  });
+  form: FormGroup;
   isSubmitting = false;
 
   constructor(private route: ActivatedRoute,
               private viewState: EngagementViewStateService,
               private engagementService: EngagementService,
-              private formBuilder: FormBuilder,
               private snackBar: MatSnackBar) {
     super();
   }
@@ -107,46 +100,35 @@ export class ProjectEngagementComponent extends SubscriptionComponent implements
       )
       .subscribe(this._engagement);
 
-    this.engagement$
-      .pipe(
-        takeUntil(this.unsubscribe),
-      )
-      .subscribe(engagement => {
-        const { id, language, possibleStatuses, updatedAt, tags, initialEndDate, currentEndDate, products, ...editable } = engagement;
-        const value: EngagementForm = {
-          ...editable,
-          isLukePartnership: engagement.hasTag('luke_partnership'),
-          isFirstScripture: engagement.hasTag('first_scripture'),
-          isCeremonyPlanned: engagement.hasTag('ceremony_planned'),
-        };
-        this.form.reset(value, { emitEvent: false });
-      });
+    // This is hacky and only works because this is the only place tags are being modified.
+    // Upside is it is generic so more tag controls can be added easily.
+    let allTags: string[] = [];
+    const tagControl = (tagName: string): TagControl => ({
+      field: 'tags',
+      initialValue: false,
+      modelToForm: (tags: string[]): boolean => {
+        allTags = tags;
+        return tags.includes(tagName);
+      },
+      formToModel: (checked: boolean): string[] => {
+        allTags = checked
+          ? uniq([...allTags, tagName])
+          : allTags.filter(tag => tag !== tagName);
+        return allTags;
+      },
+    });
 
-    this.form.valueChanges
-      .pipe(
-        map((formVal: EngagementForm) => {
-          const {
-            isLukePartnership,
-            isFirstScripture,
-            isCeremonyPlanned,
-            ...other
-          } = formVal;
-          const value: Omit<EditableEngagement, 'products'> = { ...other, tags: [] };
-          if (isLukePartnership) {
-            value.tags.push('luke_partnership');
-          }
-          if (isFirstScripture) {
-            value.tags.push('first_scripture');
-          }
-          if (isCeremonyPlanned) {
-            value.tags.push('ceremony_planned');
-          }
-
-          return value;
-        }),
-        takeUntil(this.unsubscribe),
-      )
-      .subscribe(changes => this.viewState.change(changes));
+    this.form = this.viewState.fb.group<EngagementForm>(this.unsubscribe, {
+      status: {},
+      isLukePartnership: tagControl('luke_partnership'),
+      isFirstScripture: tagControl('first_scripture'),
+      completeDate: {},
+      disbursementCompleteDate: {},
+      communicationsCompleteDate: {},
+      isCeremonyPlanned: tagControl('ceremony_planned'),
+      ceremonyEstimatedDate: {},
+      ceremonyActualDate: {},
+    });
 
     merge(
       this.engagement$.pipe(map(e => e.hasTag('ceremony_planned'))),

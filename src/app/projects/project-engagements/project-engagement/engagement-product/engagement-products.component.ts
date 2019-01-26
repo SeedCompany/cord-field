@@ -35,7 +35,11 @@ export class EngagementProductsComponent extends SubscriptionComponent implement
   }
 
   ngOnInit() {
-    const { control, add, remove } = this.viewState.createFormArray('products', this.createControl, this.unsubscribe);
+    const { control, add, remove } = this.viewState.fb.array({
+      field: 'products',
+      createControl: this.createControl,
+      unsubscribe: this.unsubscribe,
+    });
     this.products = control;
 
     this.addProduct = product => {
