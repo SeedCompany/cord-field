@@ -3,7 +3,7 @@ import { AbstractControl, FormGroup } from '@angular/forms';
 import { MatSnackBar } from '@angular/material';
 import { ActivatedRoute } from '@angular/router';
 import { TitleAware, TitleProp } from '@app/core/decorators';
-import { EditableEngagement, Engagement, EngagementStatus } from '@app/core/models/engagement';
+import { EditableEngagement, Engagement, EngagementStatus, EngagementTag } from '@app/core/models/engagement';
 import { IsDirty } from '@app/core/route-guards/dirty.guard';
 import { EngagementService } from '@app/core/services/engagement.service';
 import { enableControl, ExtractKeys, Omit } from '@app/core/util';
@@ -102,15 +102,15 @@ export class ProjectEngagementComponent extends SubscriptionComponent implements
 
     // This is hacky and only works because this is the only place tags are being modified.
     // Upside is it is generic so more tag controls can be added easily.
-    let allTags: string[] = [];
-    const tagControl = (tagName: string): TagControl => ({
+    let allTags: EngagementTag[] = [];
+    const tagControl = (tagName: EngagementTag): TagControl => ({
       field: 'tags',
       initialValue: false,
-      modelToForm: (tags: string[]): boolean => {
+      modelToForm: (tags: EngagementTag[]): boolean => {
         allTags = tags;
         return tags.includes(tagName);
       },
-      formToModel: (checked: boolean): string[] => {
+      formToModel: (checked: boolean): EngagementTag[] => {
         allTags = checked
           ? uniq([...allTags, tagName])
           : allTags.filter(tag => tag !== tagName);
@@ -120,18 +120,18 @@ export class ProjectEngagementComponent extends SubscriptionComponent implements
 
     this.form = this.viewState.fb.group<EngagementForm>(this.unsubscribe, {
       status: {},
-      isLukePartnership: tagControl('luke_partnership'),
-      isFirstScripture: tagControl('first_scripture'),
+      isLukePartnership: tagControl(EngagementTag.LukePartnership),
+      isFirstScripture: tagControl(EngagementTag.FirstScripture),
       completeDate: {},
       disbursementCompleteDate: {},
       communicationsCompleteDate: {},
-      isCeremonyPlanned: tagControl('ceremony_planned'),
+      isCeremonyPlanned: tagControl(EngagementTag.CeremonyPlanned),
       ceremonyEstimatedDate: {},
       ceremonyActualDate: {},
     });
 
     merge(
-      this.engagement$.pipe(map(e => e.hasTag('ceremony_planned'))),
+      this.engagement$.pipe(map(e => e.hasTag(EngagementTag.CeremonyPlanned))),
       this.isCeremonyPlanned.valueChanges,
     )
       .pipe(takeUntil(this.unsubscribe))
