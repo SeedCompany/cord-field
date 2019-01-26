@@ -110,7 +110,7 @@ export class ProjectEngagementComponent extends SubscriptionComponent implements
         allTags = tags;
         return tags.includes(tagName);
       },
-      formToModel: (checked: boolean): EngagementTag[] => {
+      formToChange: (checked: boolean): EngagementTag[] => {
         allTags = checked
           ? uniq([...allTags, tagName])
           : allTags.filter(tag => tag !== tagName);

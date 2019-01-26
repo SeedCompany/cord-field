@@ -30,7 +30,7 @@ export interface FormControlOptions<T, Field extends keyof T, FormValue = any> {
   validators?: ValidatorFn[];
   initialValue?: FormValue;
   modelToForm?: (modelVal: T[Field]) => FormValue;
-  formToModel?: (formVal: FormValue) => T[Field];
+  formToChange?: (formVal: FormValue) => any;
 }
 
 export interface FormArrayOptions<T, Key extends keyof T, Value extends ArrayItem<T[Key]>> {
@@ -58,13 +58,13 @@ export class ViewStateFormBuilder<T> {
     validators = [],
     initialValue = null,
     modelToForm = identity,
-    formToModel = identity,
+    formToChange = identity,
   }: FormControlOptions<T, Field, ViewValue>): TypedFormControl<T[Field]> {
     const control = new FormControl(initialValue, validators);
 
     control.valueChanges
       .pipe(
-        map(formToModel),
+        map(formToChange),
         takeUntil(unsubscribe),
       )
       .subscribe(value => {
