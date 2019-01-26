@@ -15,7 +15,9 @@ const config: ChangeConfig<EditableEngagement> = {
     accessor: returnId,
     toServer: modifiedListMerger(returnId),
   },
-  tags: {},
+  tags: {
+    toServer: modifiedListMerger(),
+  },
   completeDate: dateConfig,
   disbursementCompleteDate: dateConfig,
   communicationsCompleteDate: dateConfig,

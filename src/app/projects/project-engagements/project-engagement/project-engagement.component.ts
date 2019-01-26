@@ -12,7 +12,6 @@ import { EngagementViewStateService } from '@app/projects/engagement-view-state.
 import { popInOut } from '@app/shared/animations';
 import { emptyOptions, StatusOptions } from '@app/shared/components/status-select-workflow/status-select-workflow.component';
 import { SubscriptionComponent } from '@app/shared/components/subscription.component';
-import { uniq } from 'lodash-es';
 import { BehaviorSubject, merge, Observable } from 'rxjs';
 import { filter, map, startWith, takeUntil } from 'rxjs/operators';
 
@@ -22,6 +21,12 @@ interface EngagementForm extends Omit<EditableEngagement, 'tags' | 'products'> {
   isCeremonyPlanned: boolean;
 }
 
+const tagControl = (tagName: EngagementTag): TagControl => ({
+  field: 'tags',
+  initialValue: false,
+  modelToForm: (tags: EngagementTag[]) => tags.includes(tagName),
+  formToChange: (checked: boolean) => ({ [checked ? 'add' : 'remove']: tagName }),
+});
 type TagControl = FormGroupItemOptions<EngagementForm, Engagement, ExtractKeys<EngagementForm, boolean>, boolean>;
 
 @Component({
@@ -99,24 +104,6 @@ export class ProjectEngagementComponent extends SubscriptionComponent implements
         takeUntil(this.unsubscribe),
       )
       .subscribe(this._engagement);
-
-    // This is hacky and only works because this is the only place tags are being modified.
-    // Upside is it is generic so more tag controls can be added easily.
-    let allTags: EngagementTag[] = [];
-    const tagControl = (tagName: EngagementTag): TagControl => ({
-      field: 'tags',
-      initialValue: false,
-      modelToForm: (tags: EngagementTag[]): boolean => {
-        allTags = tags;
-        return tags.includes(tagName);
-      },
-      formToChange: (checked: boolean): EngagementTag[] => {
-        allTags = checked
-          ? uniq([...allTags, tagName])
-          : allTags.filter(tag => tag !== tagName);
-        return allTags;
-      },
-    });
 
     this.form = this.viewState.fb.group<EngagementForm>(this.unsubscribe, {
       status: {},
