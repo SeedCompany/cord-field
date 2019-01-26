@@ -2,6 +2,7 @@ import { OnDestroy } from '@angular/core';
 import { AbstractControl, FormArray } from '@angular/forms';
 import { BaseStorageService } from '@app/core/services/storage.service';
 import { ArrayItem } from '@app/core/util';
+import { SubscriptionComponent } from '@app/shared/components/subscription.component';
 import { BehaviorSubject, combineLatest, merge, NextObserver, Observable, Subject } from 'rxjs';
 import { distinctUntilChanged, map, shareReplay, startWith, takeUntil } from 'rxjs/operators';
 import { LazyGetter } from 'typescript-lazy-get-decorator';
@@ -9,7 +10,7 @@ import { ChangeConfig, ChangeEngine, Changes } from './change-engine';
 
 export type SaveResult<T> = {[key in keyof Partial<T>]: string[]};
 
-export abstract class AbstractViewState<T> implements OnDestroy {
+export abstract class AbstractViewState<T> extends SubscriptionComponent implements OnDestroy {
 
   private readonly changeEngine: ChangeEngine<T>;
   private readonly _subject: BehaviorSubject<T>;
@@ -23,6 +24,8 @@ export abstract class AbstractViewState<T> implements OnDestroy {
     initial: T,
     private storage: BaseStorageService<any> | null = null,
   ) {
+    super();
+
     this.changeEngine = new ChangeEngine(config);
     this._subject = new BehaviorSubject<T>(initial);
 
@@ -126,6 +129,8 @@ export abstract class AbstractViewState<T> implements OnDestroy {
   }
 
   ngOnDestroy(): void {
+    super.ngOnDestroy();
+
     if (window) {
       window.removeEventListener('beforeunload', this.beforeUnload);
     }
