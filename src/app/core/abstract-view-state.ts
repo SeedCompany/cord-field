@@ -1,10 +1,11 @@
 import { OnDestroy } from '@angular/core';
-import { AbstractControl, FormArray } from '@angular/forms';
+import { AbstractControl } from '@angular/forms';
 import { BaseStorageService } from '@app/core/services/storage.service';
 import { ArrayItem } from '@app/core/util';
+import { ViewStateFormBuilder } from '@app/core/view-state-form-builder';
 import { SubscriptionComponent } from '@app/shared/components/subscription.component';
-import { BehaviorSubject, combineLatest, merge, NextObserver, Observable, Subject } from 'rxjs';
-import { distinctUntilChanged, map, shareReplay, startWith, takeUntil } from 'rxjs/operators';
+import { BehaviorSubject, combineLatest, NextObserver, Observable, Subject } from 'rxjs';
+import { distinctUntilChanged, map, shareReplay, startWith } from 'rxjs/operators';
 import { LazyGetter } from 'typescript-lazy-get-decorator';
 import { ChangeConfig, ChangeEngine, Changes } from './change-engine';
 
@@ -52,6 +53,11 @@ export abstract class AbstractViewState<T> extends SubscriptionComponent impleme
    * Identify the given subject to use as a cache key.
    */
   protected abstract identify(subject: T): string;
+
+  @LazyGetter()
+  get fb(): ViewStateFormBuilder<T> {
+    return new ViewStateFormBuilder(this, this.changeEngine);
+  }
 
   get subject(): Observable<T> {
     return this._subject.asObservable();
@@ -138,99 +144,14 @@ export abstract class AbstractViewState<T> extends SubscriptionComponent impleme
   }
 
   /**
-   * Create a form array for the given field. This syncs user input and subject changes to the form array
-   * and gives back the control and functions to add & remove items from the array.
+   * @deprecated Use `this.fb.array()` instead
    */
   createFormArray<Key extends keyof T, Value extends ArrayItem<T[Key]>>(
     field: Key,
     createControl: (item: Value | undefined, remove: Observable<any>) => AbstractControl,
     unsubscribe: Observable<void>,
   ) {
-    const form = new FormArray([]);
-
-    // Subjects called on individual item removal
-    const subs: Array<Subject<void>> = [];
-
-    const add = (item?: any): void => {
-      const removalSubject = new Subject<void>();
-      const removeOrDestroy = merge(unsubscribe, removalSubject);
-
-      const control = createControl(item, removeOrDestroy);
-
-      control.valueChanges
-        .pipe(takeUntil(removeOrDestroy))
-        .subscribe(() => {
-          if (control.valid) {
-            this.change({[field]: {update: control.value}} as any);
-          } else {
-            this.revert(field, control.value);
-          }
-        });
-
-      form.push(control);
-      subs.push(removalSubject);
-    };
-
-    const remove = (index: number, updateState = true): void => {
-      const fg = form.at(index);
-      form.removeAt(index);
-      if (subs[index]) {
-        subs[index].next();
-        subs[index].complete();
-        subs.splice(index, 1);
-      }
-      if (updateState) {
-        this.change({[field]: {remove: fg.value}} as any);
-      }
-    };
-
-    this.subjectWithPreExistingChanges
-      .pipe(takeUntil(unsubscribe))
-      .subscribe(subject => {
-        this.setupFormArrayItems(form, field, subject[field] as any, add, remove);
-      });
-
-    return {
-      control: form,
-      add,
-      remove,
-    };
-  }
-
-  /**
-   * This removes existing controls that don't have a model item anymore and adds new controls for new model items.
-   */
-  private setupFormArrayItems(
-    form: FormArray,
-    field: keyof T,
-    value: any[],
-    onAdd: (value: any) => void,
-    onRemove: (index: number, updateState?: boolean) => void,
-  ): void {
-    const accessor = this.changeEngine.config[field].accessor;
-
-    const newIds = value.map(accessor);
-    const currentIds = [];
-
-    // Remove old items in reverse order because FormArray re-indexes on removal
-    // which would screw up both our for-loop and the index to remove.
-    for (let i = form.length - 1; i >= 0; i--) {
-      const id = accessor(form.at(i).value);
-      const idx = newIds.indexOf(id);
-      if (idx >= 0) {
-        form.at(i).reset(value[idx], { emitEvent: false }); // Update value
-        currentIds.push(id);
-        continue;
-      }
-      onRemove(i, false);
-    }
-
-    for (const edu of value) {
-      if (currentIds.includes(accessor(edu))) {
-        continue;
-      }
-      onAdd(edu);
-    }
+    return this.fb.array({ field, createControl, unsubscribe });
   }
 
   /**
