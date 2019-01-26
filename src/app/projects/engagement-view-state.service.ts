@@ -7,17 +7,13 @@ import { filterRequired } from '@app/core/util';
 import { ProjectViewStateService } from '@app/projects/project-view-state.service';
 import { first, map, takeUntil } from 'rxjs/operators';
 import { AbstractViewState, SaveResult } from '../core/abstract-view-state';
-import { ChangeConfig, dateConfig, returnId } from '../core/change-engine';
+import { ChangeConfig, dateConfig, modifiedListMerger, returnId } from '../core/change-engine';
 
 const config: ChangeConfig<EditableEngagement> = {
   status: {},
   products: {
     accessor: returnId,
-    // Join modified list to the new complete list (obv excluding the removed items)
-    toServer: (changes) => [
-      ...(changes.update || []),
-      ...(changes.add || []),
-    ],
+    toServer: modifiedListMerger(returnId),
   },
   tags: {},
   completeDate: dateConfig,

@@ -112,7 +112,7 @@ export abstract class AbstractViewState<T> extends SubscriptionComponent impleme
 
     let result;
     try {
-      const modified = this.changeEngine.getModifiedForServer();
+      const modified = this.changeEngine.getModifiedForServer(this._subject.value);
       result = await this.onSave(this._subject.value, modified);
     } finally {
       this.submitting.next(false);

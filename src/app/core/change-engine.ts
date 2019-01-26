@@ -23,7 +23,7 @@ type ResolvedConfig<T = any> = {
 
 interface FieldConfig {
   accessor: Accessor;
-  toServer: (val: any) => any;
+  toServer: (val: any, original: any) => any;
   key: string; // The key the server is looking for
   forceRefresh: boolean;
   store: (val: any) => any;
@@ -138,6 +138,35 @@ const isChangeForList = (change: any): boolean => {
   return change != null && typeof change === 'object' && ('add' in change || 'remove' in change || 'update' in change);
 };
 
+/**
+ * With an accessor, merge the list modifications (sum of changes) to the original list and return the new list.
+ */
+export const modifiedListMerger = <T>(accessor: Accessor = returnSelf) => (change: ModifiedList<T>, original: T[]) => {
+  // clone list so changes don't affect original
+  let list = original.slice();
+
+  if ('remove' in change) {
+    const toRemove = change.remove.map(accessor);
+    list = list.filter(current => !toRemove.includes(accessor(current)));
+  }
+
+  if ('add' in change) {
+    list = list.concat(change.add);
+  }
+
+  if ('update' in change) {
+    const comparator = compareBy(accessor);
+    for (const item of change.update) {
+      const index = list.findIndex(current => comparator(current, item));
+      if (index !== -1) {
+        list[index] = item;
+      }
+    }
+  }
+
+  return list;
+};
+
 export class ChangeEngine<T = any> {
 
   public readonly config: ResolvedConfig<T>;
@@ -170,10 +199,10 @@ export class ChangeEngine<T = any> {
     return false;
   }
 
-  getModifiedForServer<R>(): R {
+  getModifiedForServer<R>(original: T): R {
     const modified: any = {};
     for (const [key, change] of Object.entries(this.modified) as Array<[keyof T, any]>) {
-      modified[this.config[key].key] = this.config[key].toServer(change);
+      modified[this.config[key].key] = this.config[key].toServer(change, original[key]);
     }
 
     return modified;
@@ -187,31 +216,14 @@ export class ChangeEngine<T = any> {
         obj[key] = change;
         continue;
       }
-      if ('remove' in change) {
-        const accessor = this.config[key].accessor;
-        const toRemove = (change.remove as any[]).map(accessor);
-        obj[key] = (obj[key] as any as any[]).filter(current => !toRemove.includes(accessor(current))) as any;
-      }
-      if ('add' in change) {
-        if (newIds && key in newIds) {
-          for (let i = 0; i < change.add.length; i++) {
-            change.add[i].id = newIds[key][i];
-          }
-        }
 
-        obj[key] = (obj[key] as any as any[]).concat(change.add) as any;
-      }
-      if ('update' in change) {
-        const comparator = compareBy(this.config[key].accessor);
-        const list = [...(obj[key] as any as any[])]; // clone list so change doesn't affect original
-        for (const item of change.update) {
-          const index = list.findIndex(current => comparator(current, item));
-          if (index !== -1) {
-            list[index] = item;
-          }
+      if ('add' in change && newIds && key in newIds) {
+        for (let i = 0; i < change.add.length; i++) {
+          change.add[i].id = newIds[key][i];
         }
-        obj[key] = list as any;
       }
+
+      obj[key] = modifiedListMerger(this.config[key].accessor)(change, obj[key] as any) as any;
     }
 
     return obj as T;
