@@ -1,9 +1,10 @@
 import { AbstractControl, FormArray, FormControl, FormGroup, ValidatorFn } from '@angular/forms';
 import { AbstractViewState } from '@app/core/abstract-view-state';
 import { ChangeEngine } from '@app/core/change-engine';
-import { ArrayItem, mapEntries, Omit, TypedFormControl } from '@app/core/util';
+import { ArrayItem, enableControl, mapEntries, Omit, TypedFormControl } from '@app/core/util';
+import { getValue } from '@app/core/util/forms';
 import { identity, merge, Observable, Subject } from 'rxjs';
-import { map, takeUntil } from 'rxjs/operators';
+import { filter, map, takeUntil, withLatestFrom } from 'rxjs/operators';
 
 export type FormGroupOptions<Form, T, Field extends keyof T> = {
   [FormKey in Partial<keyof Form>]: FormGroupItemOptions<Form, T, FormKey, Form[FormKey]>
@@ -64,6 +65,11 @@ export class ViewStateFormBuilder<T> {
 
     control.valueChanges
       .pipe(
+        // If saving and form disabled because of it, then don't clear value
+        withLatestFrom(this.viewState.isSubmitting),
+        filter(([value, submitting]) => !(submitting && control.disabled)),
+        map(([value]) => value),
+
         map(formToChange),
         takeUntil(unsubscribe),
       )
@@ -83,6 +89,14 @@ export class ViewStateFormBuilder<T> {
       )
       .subscribe(viewValue => {
         control.reset(viewValue, { emitEvent: false });
+      });
+
+    this.viewState.isSubmitting
+      .pipe(
+        takeUntil(unsubscribe),
+      )
+      .subscribe(submitting => {
+        enableControl(control, !submitting);
       });
 
     return control;
@@ -109,12 +123,22 @@ export class ViewStateFormBuilder<T> {
       const control = createControl(item, removeOrDestroy);
 
       control.valueChanges
-        .pipe(takeUntil(removeOrDestroy))
-        .subscribe(() => {
+        .pipe(
+          // Attempt to filter out changes while submitting or disabled
+          withLatestFrom(this.viewState.isSubmitting),
+          filter(([value, submitting]) => !submitting),
+          filter(() => control.enabled),
+
+          // Map to raw value which doesn't attempt to mask real value when disabled
+          map(() => getValue(control)),
+
+          takeUntil(removeOrDestroy),
+        )
+        .subscribe((value) => {
           if (control.valid) {
-            this.viewState.change({ [field]: { update: control.value } } as any);
+            this.viewState.change({ [field]: { update: value } } as any);
           } else {
-            this.viewState.revert(field, control.value);
+            this.viewState.revert(field, value);
           }
         });
 
@@ -134,6 +158,14 @@ export class ViewStateFormBuilder<T> {
         this.viewState.change({ [field]: { remove: fg.value } } as any);
       }
     };
+
+    this.viewState.isSubmitting
+      .pipe(
+        takeUntil(unsubscribe),
+      )
+      .subscribe(submitting => {
+        enableControl(form, !submitting);
+      });
 
     this.viewState.subjectWithPreExistingChanges
       .pipe(takeUntil(unsubscribe))
@@ -166,7 +198,7 @@ export class ViewStateFormBuilder<T> {
     // Remove old items in reverse order because FormArray re-indexes on removal
     // which would screw up both our for-loop and the index to remove.
     for (let i = form.length - 1; i >= 0; i--) {
-      const id = accessor(form.at(i).value);
+      const id = accessor(getValue(form.at(i)));
       const idx = newIds.indexOf(id);
       if (idx >= 0) {
         form.at(i).reset(value[idx], { emitEvent: false }); // Update value

@@ -137,14 +137,11 @@ export class ProjectEngagementComponent extends SubscriptionComponent implements
   };
 
   async onSave(): Promise<void> {
-    this.form.disable();
     try {
       await this.viewState.save();
     } catch (err) {
       this.snackBar.open('Failed to save engagement', undefined, { duration: 3000 });
       return;
-    } finally {
-      this.form.enable();
     }
   }
 
