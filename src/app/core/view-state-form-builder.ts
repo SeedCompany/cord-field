@@ -1,9 +1,37 @@
-import { AbstractControl, FormArray } from '@angular/forms';
+import { AbstractControl, FormArray, FormControl, FormGroup, ValidatorFn } from '@angular/forms';
 import { AbstractViewState } from '@app/core/abstract-view-state';
 import { ChangeEngine } from '@app/core/change-engine';
-import { ArrayItem } from '@app/core/util';
-import { merge, Observable, Subject } from 'rxjs';
-import { takeUntil } from 'rxjs/operators';
+import { ArrayItem, mapEntries, Omit, TypedFormControl } from '@app/core/util';
+import { identity, merge, Observable, Subject } from 'rxjs';
+import { map, takeUntil } from 'rxjs/operators';
+
+export type FormGroupOptions<Form, T, Field extends keyof T> = {
+  [FormKey in Partial<keyof Form>]: FormGroupItemOptions<Form, T, FormKey, Form[FormKey]>
+};
+
+export type FormGroupItemOptions<Form, T, FormKey, FormValue> =
+  (
+    // We want the field value to be based on the `field` value. In order to do this,
+    // we say it can be one of the FormControlOptions specific to each key in T
+    {
+      [TKey in keyof T]: Omit<FormControlOptions<T, TKey, FormValue>, 'unsubscribe'>
+    }[keyof T]
+  ) | (
+    // The above is for when the `field` property is specified. We also want it to be
+    // optional if the key matches a property in T.
+    FormKey extends keyof T
+      ? Omit<FormControlOptions<T, FormKey, FormValue>, 'field' | 'unsubscribe'>
+      : never
+  );
+
+export interface FormControlOptions<T, Field extends keyof T, FormValue = any> {
+  field: Field;
+  unsubscribe: Observable<any>;
+  validators?: ValidatorFn[];
+  initialValue?: FormValue;
+  modelToForm?: (modelVal: T[Field]) => FormValue;
+  formToModel?: (formVal: FormValue) => T[Field];
+}
 
 export interface FormArrayOptions<T, Key extends keyof T, Value extends ArrayItem<T[Key]>> {
   field: Key;
@@ -17,6 +45,47 @@ export class ViewStateFormBuilder<T> {
     private viewState: AbstractViewState<T>,
     private changeEngine: ChangeEngine<T>,
   ) {
+  }
+
+  group<Form>(unsubscribe: Observable<any>, controls: FormGroupOptions<Form, T, keyof T>) {
+    // `field` type as `any` isn't terrible as it is validated in interface
+    return new FormGroup(mapEntries(controls, (field: any, c) => this.control({ field, unsubscribe, ...c })));
+  }
+
+  control<Field extends keyof T, ViewValue>({
+    field,
+    unsubscribe,
+    validators = [],
+    initialValue = null,
+    modelToForm = identity,
+    formToModel = identity,
+  }: FormControlOptions<T, Field, ViewValue>): TypedFormControl<T[Field]> {
+    const control = new FormControl(initialValue, validators);
+
+    control.valueChanges
+      .pipe(
+        map(formToModel),
+        takeUntil(unsubscribe),
+      )
+      .subscribe(value => {
+        if (control.valid) {
+          this.viewState.change({ [field]: value } as any);
+        } else {
+          this.viewState.revert(field);
+        }
+      });
+
+    this.viewState.subjectWithPreExistingChanges
+      .pipe(
+        map(subject => subject[field]),
+        map(modelToForm),
+        takeUntil(unsubscribe),
+      )
+      .subscribe(viewValue => {
+        control.reset(viewValue, { emitEvent: false });
+      });
+
+    return control;
   }
 
   /**
