@@ -34,6 +34,10 @@ export class EngagementProductsComponent extends SubscriptionComponent implement
     super();
   }
 
+  get isSubmitting() {
+    return this.viewState.isSubmitting;
+  }
+
   ngOnInit() {
     const { control, add, remove } = this.viewState.fb.array({
       field: 'products',

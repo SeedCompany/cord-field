@@ -42,7 +42,13 @@
 
       </mat-card-content>
       <mat-card-actions>
-        <button mat-button color="accent" (click)="products.addProduct()">ADD PRODUCT</button>
+        <button mat-button
+                color="accent"
+                [disabled]="isSubmitting"
+                (click)="products.addProduct()"
+        >
+          ADD PRODUCT
+        </button>
       </mat-card-actions>
     </mat-card>
 

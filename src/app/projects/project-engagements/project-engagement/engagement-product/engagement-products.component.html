@@ -83,7 +83,12 @@
         <mat-error>Please select a methodology</mat-error>
       </mat-form-field>
 
-      <button mat-button color="warn" class="delete" (click)="deleteProduct(index)">
+      <button mat-button
+              color="warn"
+              class="delete"
+              [disabled]="isSubmitting | async"
+              (click)="deleteProduct(index)"
+      >
         DELETE
       </button>
 
