@@ -1,7 +1,5 @@
 import { OnDestroy } from '@angular/core';
-import { AbstractControl } from '@angular/forms';
 import { BaseStorageService } from '@app/core/services/storage.service';
-import { ArrayItem } from '@app/core/util';
 import { ViewStateFormBuilder } from '@app/core/view-state-form-builder';
 import { SubscriptionComponent } from '@app/shared/components/subscription.component';
 import { BehaviorSubject, combineLatest, NextObserver, Observable, Subject } from 'rxjs';
@@ -141,17 +139,6 @@ export abstract class AbstractViewState<T> extends SubscriptionComponent impleme
       window.removeEventListener('beforeunload', this.beforeUnload);
     }
     this.storeModifications();
-  }
-
-  /**
-   * @deprecated Use `this.fb.array()` instead
-   */
-  createFormArray<Key extends keyof T, Value extends ArrayItem<T[Key]>>(
-    field: Key,
-    createControl: (item: Value | undefined, remove: Observable<any>) => AbstractControl,
-    unsubscribe: Observable<void>,
-  ) {
-    return this.fb.array({ field, createControl, unsubscribe });
   }
 
   /**

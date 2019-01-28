@@ -44,7 +44,11 @@ export class ProjectPartnershipsComponent extends SubscriptionComponent implemen
         mouStatus: [partnership.mouStatus],
       });
     };
-    const result = this.projectViewState.createFormArray('partnerships', createPartnershipControl, this.unsubscribe);
+    const result = this.projectViewState.fb.array({
+      field: 'partnerships',
+      createControl: createPartnershipControl,
+      unsubscribe: this.unsubscribe,
+    });
     this.form.setControl('partnerships', result.control);
     this.addPartnership = result.add;
     this.removePartnership = result.remove;
