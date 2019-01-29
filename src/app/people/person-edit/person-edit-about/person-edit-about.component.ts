@@ -76,7 +76,11 @@ export class PersonEditAboutComponent extends AbstractPersonComponent implements
       });
     };
 
-    const edu = this.userViewState.createFormArray('education', createEduControl, this.unsubscribe);
+    const edu = this.userViewState.fb.array({
+      field: 'education',
+      createControl: createEduControl,
+      unsubscribe: this.unsubscribe,
+    });
     this.form.setControl('education', edu.control);
     this.addEducation = edu.add;
     this.removeEducation = edu.remove;
@@ -97,7 +101,11 @@ export class PersonEditAboutComponent extends AbstractPersonComponent implements
       });
     };
 
-    const kl = this.userViewState.createFormArray('knownLanguages', createKnownLanguageControl, this.unsubscribe);
+    const kl = this.userViewState.fb.array({
+      field: 'knownLanguages',
+      createControl: createKnownLanguageControl,
+      unsubscribe: this.unsubscribe,
+    });
     this.form.setControl('knownLanguages', kl.control);
     this.addKnownLanguage = kl.add;
     this.removeKnownLanguage = kl.remove;
