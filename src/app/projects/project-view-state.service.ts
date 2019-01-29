@@ -82,22 +82,8 @@ const config: ChangeConfig<Project> = {
     restore: mapChangeList(TeamMember.fromJson, TeamMember.fromJson),
   },
   budgets: {
-    // Identify project budget as a scalar value
-    accessor: (budget: ProjectBudget) => ([
-      budget.id,
-      budget.status,
-      budget.budgetDetails.map(item => Number(item.amount || 0)).join(','),
-    ].join(',')),
-    // Map organization back to organizationId
-    toServer: (budgets: ProjectBudget[]) => budgets.map(budget => ({
-      id: budget.id,
-      status: budget.status,
-      budgetDetails: budget.budgetDetails.map(detail => ({
-        organizationId: detail.organization.id,
-        fiscalYear: detail.fiscalYear,
-        amount: detail.amount,
-      })),
-    })),
+    accessor: ProjectBudget.identify,
+    toServer: ProjectBudget.forSaveAPI,
   },
 };
 

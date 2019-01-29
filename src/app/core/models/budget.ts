@@ -27,6 +27,25 @@ export class ProjectBudget {
     return budget;
   }
 
+  static forSaveAPI(budgets: ProjectBudget[]) {
+    return budgets.map(({ budgetDetails, ...budget }) => ({
+      budgetDetails: budgetDetails.map(({ organization, ...details }) => ({
+        organizationId: organization.id,
+        ...details,
+      })),
+      ...budget,
+    }));
+  }
+
+  /** Identify project budget as a scalar value */
+  static identify(budget: ProjectBudget): string {
+    return [
+      budget.id,
+      budget.status,
+      budget.budgetDetails.map(item => Number(item.amount || 0)).join(','),
+    ].join(',');
+  }
+
   static create(): ProjectBudget {
     return Object.assign(new ProjectBudget(), {
       id: generateObjectId(),
