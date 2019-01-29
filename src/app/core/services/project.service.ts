@@ -1,5 +1,4 @@
 import { Injectable } from '@angular/core';
-import { Engagement, EngagementStatus } from '@app/core/models/engagement';
 import { EnumList } from '@app/core/models/enum';
 import { AuthenticationService } from '@app/core/services/authentication.service';
 import { ApiOptions as ListApiOptions, listOptionsToHttpParams, makeListRequest } from '@app/core/util/list-views';
@@ -190,41 +189,6 @@ export class ProjectService {
         return [
           ['Reactivate Project', ProjectStatus.Active],
           ['Terminate Project', ProjectStatus.Terminated],
-        ];
-      default:
-        return [];
-    }
-  }
-
-  getAvailableEngagementStatuses(engagement: Engagement): StatusOptions<EngagementStatus> {
-    const transitions = this.getAvailableEngagementStatusesInner(engagement.status)
-      .filter(([text, status]) => !status || engagement.possibleStatuses.includes(status))
-      .map(([ui, value]) => ({ ui, value }));
-    const bypassWorkflow = engagement.possibleStatuses.length === EngagementStatus.length;
-    const overrides = bypassWorkflow
-      ? (EngagementStatus.entries() as EnumList<EngagementStatus>)
-        .filter(entry => entry.value !== engagement.status)
-      : [];
-    return { transitions, overrides };
-  }
-
-  private getAvailableEngagementStatusesInner(status: EngagementStatus): Array<[string, EngagementStatus]> {
-    switch (status) {
-      case EngagementStatus.Active:
-        return [
-          ['Suspend', EngagementStatus.Suspended],
-          ['Terminate', EngagementStatus.Terminated],
-          ['Complete', EngagementStatus.Completed],
-          ['Convert', EngagementStatus.Converted],
-        ];
-      case EngagementStatus.InDevelopment:
-        return [
-          ['Approve', EngagementStatus.Active],
-        ];
-      case EngagementStatus.Suspended:
-        return [
-          ['Reactivate', EngagementStatus.Active],
-          ['Terminate', EngagementStatus.Terminated],
         ];
       default:
         return [];

@@ -1,0 +1,97 @@
+<mat-accordion displayMode="flat">
+  <mat-expansion-panel
+    *ngFor="let product of products.controls; let index=index"
+    [formGroup]="product"
+    [expanded]="isOpened(index)"
+    (opened)="onOpen(index)"
+    (closed)="onClose(index)"
+    [class.mat-elevation-z0]="true"
+  >
+    <mat-expansion-panel-header expandedHeight="48px">
+      <mat-panel-title>
+        <div class="title" [class.mat-error]="product.invalid">
+          {{ ProductType.displaySummary(product.value.books || [], product.value.name) || 'Draft' }}
+        </div>
+      </mat-panel-title>
+      <mat-panel-description *ngIf="!isOpened(index)">
+        <div>{{ ProductMethodology.forUI(product.value.methodology) }}</div>
+      </mat-panel-description>
+    </mat-expansion-panel-header>
+    <ng-template matExpansionPanelContent>
+
+      <mat-form-field color="accent">
+        <mat-select placeholder="Type" formControlName="name" autofocus>
+          <mat-option *ngFor="let type of ProductType.entries(); trackBy: ProductType.trackEntryBy"
+                      [value]="type.value">
+            {{ type.ui }}
+          </mat-option>
+        </mat-select>
+        <mat-error>Please select a type</mat-error>
+      </mat-form-field>
+
+      <mat-form-field color="accent">
+        <mat-select multiple placeholder="Books" formControlName="books">
+          <mat-optgroup label="Old Testament">
+            <mat-option *ngFor="let book of BibleBook.OldTestament"
+                        [value]="book">
+              {{ BibleBook.forUI(book) }}
+            </mat-option>
+          </mat-optgroup>
+          <mat-optgroup label="New Testament">
+            <mat-option *ngFor="let book of BibleBook.NewTestament"
+                        [value]="book">
+              {{ BibleBook.forUI(book) }}
+            </mat-option>
+          </mat-optgroup>
+        </mat-select>
+      </mat-form-field>
+
+      <mat-form-field color="accent">
+        <mat-select multiple placeholder="Mediums" formControlName="mediums">
+          <mat-option *ngFor="let medium of ProductMedium.entries(); trackBy: ProductMedium.trackEntryBy"
+                      [value]="medium.value">
+            {{ medium.ui }}
+          </mat-option>
+        </mat-select>
+        <mat-error>Please select one or more mediums</mat-error>
+      </mat-form-field>
+
+      <mat-form-field color="accent">
+        <mat-select multiple placeholder="Purposes" formControlName="purposes">
+          <mat-option
+            *ngFor="let purpose of ProductPurpose.entries(); trackBy: ProductPurpose.trackEntryBy"
+            [value]="purpose.value">
+            {{ purpose.ui }}
+          </mat-option>
+        </mat-select>
+        <mat-error>Please select one or more purposes</mat-error>
+      </mat-form-field>
+
+      <mat-form-field color="accent">
+        <mat-select placeholder="Methodology" formControlName="methodology">
+          <mat-optgroup
+            *ngFor="let entry of ProductMethodology.groupEntries"
+            [label]="entry[0]"
+          >
+            <mat-option
+              *ngFor="let methodology of entry[1]; trackBy: ProductMethodology.trackValueBy"
+              [value]="methodology">
+              {{ ProductMethodology.forUI(methodology) }}
+            </mat-option>
+          </mat-optgroup>
+        </mat-select>
+        <mat-error>Please select a methodology</mat-error>
+      </mat-form-field>
+
+      <button mat-button
+              color="warn"
+              class="delete"
+              [disabled]="isSubmitting | async"
+              (click)="deleteProduct(index)"
+      >
+        DELETE
+      </button>
+
+    </ng-template>
+  </mat-expansion-panel>
+</mat-accordion>

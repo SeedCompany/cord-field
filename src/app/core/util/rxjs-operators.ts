@@ -25,13 +25,9 @@ function required<T>(val: T | null | undefined): val is T {
   return val != null;
 }
 
-export const log = <T>(prefix?: string) => (source: Observable<T>): Observable<T> => source.pipe(tap(value => {
-  const args: any[] = [value];
-  if (prefix) {
-    args.unshift(prefix);
-  }
+export const log = <T>(...params: any[]) => (source: Observable<T>): Observable<T> => source.pipe(tap(value => {
   // tslint:disable-next-line:no-console
-  console.log(...args);
+  console.log(...params, value);
 }));
 
 /**
@@ -57,3 +53,6 @@ export const twoWaySync = () => {
   }));
   return [setChanging, rejectChanges];
 };
+
+export const skipEmptyViewState = <T extends {id: string}>() => (source: Observable<T | null>): Observable<T> =>
+  source.pipe(filter((sbj): sbj is T => Boolean(sbj) && Boolean(sbj!.id)));

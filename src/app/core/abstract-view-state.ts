@@ -1,15 +1,15 @@
 import { OnDestroy } from '@angular/core';
-import { AbstractControl, FormArray } from '@angular/forms';
 import { BaseStorageService } from '@app/core/services/storage.service';
-import { ArrayItem } from '@app/core/util';
-import { BehaviorSubject, combineLatest, NextObserver, Observable, Subject, Unsubscribable } from 'rxjs';
-import { distinctUntilChanged, map, shareReplay, startWith, takeUntil } from 'rxjs/operators';
+import { ViewStateFormBuilder } from '@app/core/view-state-form-builder';
+import { SubscriptionComponent } from '@app/shared/components/subscription.component';
+import { BehaviorSubject, combineLatest, NextObserver, Observable, Subject } from 'rxjs';
+import { distinctUntilChanged, map, shareReplay, startWith } from 'rxjs/operators';
 import { LazyGetter } from 'typescript-lazy-get-decorator';
 import { ChangeConfig, ChangeEngine, Changes } from './change-engine';
 
 export type SaveResult<T> = {[key in keyof Partial<T>]: string[]};
 
-export abstract class AbstractViewState<T> implements OnDestroy {
+export abstract class AbstractViewState<T extends { id: string }> extends SubscriptionComponent implements OnDestroy {
 
   private readonly changeEngine: ChangeEngine<T>;
   private readonly _subject: BehaviorSubject<T>;
@@ -23,6 +23,8 @@ export abstract class AbstractViewState<T> implements OnDestroy {
     initial: T,
     private storage: BaseStorageService<any> | null = null,
   ) {
+    super();
+
     this.changeEngine = new ChangeEngine(config);
     this._subject = new BehaviorSubject<T>(initial);
 
@@ -49,6 +51,11 @@ export abstract class AbstractViewState<T> implements OnDestroy {
    * Identify the given subject to use as a cache key.
    */
   protected abstract identify(subject: T): string;
+
+  @LazyGetter()
+  get fb(): ViewStateFormBuilder<T> {
+    return new ViewStateFormBuilder(this, this.changeEngine);
+  }
 
   get subject(): Observable<T> {
     return this._subject.asObservable();
@@ -103,7 +110,7 @@ export abstract class AbstractViewState<T> implements OnDestroy {
 
     let result;
     try {
-      const modified = this.changeEngine.getModifiedForServer();
+      const modified = this.changeEngine.getModifiedForServer(this._subject.value);
       result = await this.onSave(this._subject.value, modified);
     } finally {
       this.submitting.next(false);
@@ -126,101 +133,12 @@ export abstract class AbstractViewState<T> implements OnDestroy {
   }
 
   ngOnDestroy(): void {
+    super.ngOnDestroy();
+
     if (window) {
       window.removeEventListener('beforeunload', this.beforeUnload);
     }
     this.storeModifications();
-  }
-
-  /**
-   * Create a form array for the given field. This syncs user input and subject changes to the form array
-   * and gives back the control and functions to add & remove items from the array.
-   */
-  createFormArray<Key extends keyof T, Value extends ArrayItem<T[Key]>>(
-    field: Key,
-    createControl: (item?: Value) => AbstractControl,
-    unsubscribe: Observable<void>,
-  ) {
-    const form = new FormArray([]);
-
-    // Subscriptions to individual item changes
-    const subs: Unsubscribable[] = [];
-
-    const add = (item?: any): void => {
-      const control = createControl(item);
-
-      const changesSub = control.valueChanges
-        .pipe(takeUntil(unsubscribe))
-        .subscribe(() => {
-          if (control.valid) {
-            this.change({[field]: {update: control.value}} as any);
-          } else {
-            this.revert(field, control.value);
-          }
-        });
-
-      form.push(control);
-      subs.push(changesSub);
-    };
-
-    const remove = (index: number, updateState = true): void => {
-      const fg = form.at(index);
-      form.removeAt(index);
-      if (subs[index]) {
-        subs[index].unsubscribe();
-      }
-      if (updateState) {
-        this.change({[field]: {remove: fg.value}} as any);
-      }
-    };
-
-    this.subjectWithPreExistingChanges
-      .pipe(takeUntil(unsubscribe))
-      .subscribe(subject => {
-        this.setupFormArrayItems(form, field, subject[field] as any, add, remove);
-      });
-
-    return {
-      control: form,
-      add,
-      remove,
-    };
-  }
-
-  /**
-   * This removes existing controls that don't have a model item anymore and adds new controls for new model items.
-   */
-  private setupFormArrayItems(
-    form: FormArray,
-    field: keyof T,
-    value: any[],
-    onAdd: (value: any) => void,
-    onRemove: (index: number, updateState?: boolean) => void,
-  ): void {
-    const accessor = this.changeEngine.config[field].accessor;
-
-    const newIds = value.map(accessor);
-    const currentIds = [];
-
-    // Remove old items in reverse order because FormArray re-indexes on removal
-    // which would screw up both our for-loop and the index to remove.
-    for (let i = form.length - 1; i >= 0; i--) {
-      const id = accessor(form.at(i).value);
-      const idx = newIds.indexOf(id);
-      if (idx >= 0) {
-        form.at(i).reset(value[idx], { emitEvent: false }); // Update value
-        currentIds.push(id);
-        continue;
-      }
-      onRemove(i, false);
-    }
-
-    for (const edu of value) {
-      if (currentIds.includes(accessor(edu))) {
-        continue;
-      }
-      onAdd(edu);
-    }
   }
 
   /**

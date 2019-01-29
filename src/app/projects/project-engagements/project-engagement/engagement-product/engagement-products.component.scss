@@ -1,0 +1,27 @@
+@import "~src/styles/imports";
+
+:host {
+  @extend %component-defaults;
+}
+
+mat-accordion {
+  margin: 0 -24px;
+  // Size panel the same width with or without expansion panel items.
+  // Which prevents flex from moving the entire panel on adding first product.
+  // This is a quick and dirty hard code. :(
+  min-width: 412px;
+  border-top: 1px solid mat-foreground($theme, divider);
+}
+mat-expansion-panel {
+  border-bottom: 1px solid mat-foreground($theme, divider);
+
+  ::ng-deep .mat-expansion-panel-body {
+    display: flex;
+    flex-direction: column;
+  }
+}
+
+.delete {
+  margin-top: 16px;
+  align-self: flex-end;
+}

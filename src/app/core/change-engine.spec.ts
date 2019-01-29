@@ -632,7 +632,7 @@ describe('ChangeEngine', () => {
       },
     });
 
-    expect(engine.getModifiedForServer()).toEqual({
+    expect(engine.getModifiedForServer(subject)).toEqual({
       startDate: DateTime.local(2018, 1, 2),
       mouEnd: DateTime.local(2018, 3, 4),
       languages: {

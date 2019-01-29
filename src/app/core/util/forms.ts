@@ -1,4 +1,4 @@
-import { AbstractControl, AsyncValidatorFn, FormControl, ValidatorFn } from '@angular/forms';
+import { AbstractControl, AsyncValidatorFn, FormArray, FormControl, FormGroup, ValidatorFn } from '@angular/forms';
 import { AbstractControlOptions } from '@angular/forms/src/model';
 import { Observable } from 'rxjs';
 
@@ -50,4 +50,13 @@ export function enableControl(control: AbstractControl, enable: boolean) {
       control.disable();
     }
   }
+}
+
+/**
+ * Get the value of the form control regardless of enabled/disabled state.
+ */
+export function getValue<T>(control: TypedFormControl<T>): T;
+export function getValue(control: AbstractControl): any;
+export function getValue(control: AbstractControl): any {
+  return (control instanceof FormGroup || control instanceof FormArray) ? control.getRawValue() : control.value;
 }

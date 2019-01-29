@@ -3,8 +3,9 @@ import { Product } from '@app/core/models/product';
 import { clone, maybeDate } from '@app/core/util';
 import { DateTime } from 'luxon';
 import { EngagementStatus } from './engagement/status';
+import { EngagementTag } from './engagement/tag';
 
-export { EngagementStatus };
+export { EngagementStatus, EngagementTag };
 
 /**
  * Editable properties of Engagement.
@@ -13,7 +14,7 @@ export { EngagementStatus };
 export class EditableEngagement {
   status: EngagementStatus;
   products: Product[];
-  tags: string[];
+  tags: EngagementTag[];
   completeDate: DateTime | null;
   disbursementCompleteDate: DateTime | null;
   communicationsCompleteDate: DateTime | null;
@@ -56,7 +57,11 @@ export class Engagement extends EditableEngagement {
     return this.tags.some(tag => tag === name);
   }
 
-  withChanges(modified: EditableEngagement): Engagement {
+  withChanges(modified: Partial<EditableEngagement>): Engagement {
     return Object.assign(clone(this), modified);
   }
 }
+
+export const EmptyEngagement = Engagement.fromJson({
+  language: {},
+});

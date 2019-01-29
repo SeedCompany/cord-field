@@ -3,7 +3,7 @@ import { TestBed } from '@angular/core/testing';
 import { CoreTestModule } from '@app/core/core-test.module';
 import { CoreModule } from '@app/core/core.module';
 import { BibleBook } from '@app/core/models/bible-book';
-import { EditableEngagement, Engagement, EngagementStatus } from '@app/core/models/engagement';
+import { EditableEngagement, Engagement, EngagementStatus, EngagementTag } from '@app/core/models/engagement';
 import { Product, ProductMedium, ProductMethodology, ProductPurpose, ProductType } from '@app/core/models/product';
 import { environment } from '../../../environments/environment';
 import { EngagementService } from './engagement.service';
@@ -81,7 +81,7 @@ describe('EngagementService', () => {
           mediums: [ProductMedium.Print],
         }),
       ],
-      tags: ['luke_partnership'],
+      tags: [EngagementTag.LukePartnership],
       completeDate: null,
       disbursementCompleteDate: null,
       communicationsCompleteDate: null,

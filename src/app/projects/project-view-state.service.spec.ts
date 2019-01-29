@@ -125,7 +125,7 @@ describe('ProjectViewStateService', () => {
         ],
       },
     } as ModifiedProject;
-    const actualServerChanges = (viewState as any).changeEngine.getModifiedForServer();
+    const actualServerChanges = (viewState as any).changeEngine.getModifiedForServer(project);
 
     spyOn(projectService, 'save').and.stub();
     await viewState.save();
