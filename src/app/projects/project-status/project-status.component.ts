@@ -1,5 +1,4 @@
 import { Component, OnInit } from '@angular/core';
-import { FormControl } from '@angular/forms';
 import { Project } from '@app/core/models/project';
 import { ProjectStatus } from '@app/core/models/project/status';
 import { ProjectService } from '@app/core/services/project.service';
@@ -7,8 +6,7 @@ import { TypedFormControl } from '@app/core/util';
 import { ProjectViewStateService } from '@app/projects/project-view-state.service';
 import { StatusOptions } from '@app/shared/components/status-select-workflow/status-select-workflow.component';
 import { SubscriptionComponent } from '@app/shared/components/subscription.component';
-import { combineLatest } from 'rxjs';
-import { filter, takeUntil } from 'rxjs/operators';
+import { takeUntil } from 'rxjs/operators';
 
 @Component({
   selector: 'app-project-status',
@@ -18,7 +16,7 @@ import { filter, takeUntil } from 'rxjs/operators';
 export class ProjectStatusComponent extends SubscriptionComponent implements OnInit {
   readonly ProjectStatus = ProjectStatus;
 
-  statusCtrl: TypedFormControl<ProjectStatus> = new FormControl();
+  statusCtrl: TypedFormControl<ProjectStatus>;
   project: Project;
 
   constructor(private viewState: ProjectViewStateService,
@@ -27,23 +25,17 @@ export class ProjectStatusComponent extends SubscriptionComponent implements OnI
   }
 
   ngOnInit(): void {
-    combineLatest(
-      this.viewState.project,
-      this.viewState.subjectWithPreExistingChanges,
-    )
+    this.statusCtrl = this.viewState.fb.control({
+      field: 'status',
+      unsubscribe: this.unsubscribe,
+    });
+
+    this.viewState.project
       .pipe(
-        filter(([p]) => Boolean(p.id)),
         takeUntil(this.unsubscribe),
       )
-      .subscribe(([original, current]) => {
-        this.project = original;
-        this.statusCtrl.reset(current.status, { emitEvent: false });
-      });
-
-    this.statusCtrl.valueChanges
-      .pipe(takeUntil(this.unsubscribe))
-      .subscribe(status => {
-        this.viewState.change({ status });
+      .subscribe(project => {
+        this.project = project;
       });
   }
 
