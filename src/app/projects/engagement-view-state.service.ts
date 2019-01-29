@@ -3,7 +3,7 @@ import { EditableEngagement, EmptyEngagement, Engagement } from '@app/core/model
 import { Project } from '@app/core/models/project';
 import { EngagementService } from '@app/core/services/engagement.service';
 import { SessionStorageService } from '@app/core/services/storage.service';
-import { filterRequired } from '@app/core/util';
+import { filterRequired, skipEmptyViewState } from '@app/core/util';
 import { ProjectViewStateService } from '@app/projects/project-view-state.service';
 import { first, map, takeUntil } from 'rxjs/operators';
 import { AbstractViewState, SaveResult } from '../core/abstract-view-state';
@@ -45,6 +45,7 @@ export class EngagementViewStateService extends AbstractViewState<Engagement> {
   onNewId = (id: string) => {
     this.projectViewState.project
       .pipe(
+        skipEmptyViewState(),
         first(),
         map(project => project.engagements.find(e => e.id === id)),
         filterRequired(),

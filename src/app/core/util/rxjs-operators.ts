@@ -53,3 +53,6 @@ export const twoWaySync = () => {
   }));
   return [setChanging, rejectChanges];
 };
+
+export const skipEmptyViewState = <T extends {id: string}>() => (source: Observable<T | null>): Observable<T> =>
+  source.pipe(filter((sbj): sbj is T => Boolean(sbj) && Boolean(sbj!.id)));

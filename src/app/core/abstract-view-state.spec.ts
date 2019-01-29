@@ -4,6 +4,7 @@ import { AbstractViewState, SaveResult } from './abstract-view-state';
 import { returnSelf } from './change-engine';
 
 interface TestSubject {
+  id: string;
   foo: string;
   bar: string;
 }
@@ -25,6 +26,7 @@ class TestViewState extends AbstractViewState<TestSubject> {
         },
       },
       {
+        id: '',
         foo: 'initial',
         bar: 'initial',
       },
@@ -72,7 +74,7 @@ describe('AbstractViewState', () => {
     });
 
     it('sets subject', async () => {
-      viewState.next({foo: 'next', bar: 'next'});
+      viewState.next({id: '123', foo: 'next', bar: 'next'});
 
       const subject = await viewState.subject.pipe(first()).toPromise();
       await expect(subject.foo).toEqual('next');
@@ -167,7 +169,7 @@ describe('AbstractViewState', () => {
 
       await viewState.save();
 
-      expect(subject!).toEqual({foo: 'changed', bar: 'initial'});
+      expect(subject!).toEqual({id: '', foo: 'changed', bar: 'initial'});
     });
 
     it('clears current changes', async () => {

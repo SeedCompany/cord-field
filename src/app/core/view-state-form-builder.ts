@@ -1,10 +1,11 @@
 import { AbstractControl, FormArray, FormControl, FormGroup, ValidatorFn } from '@angular/forms';
 import { AbstractViewState } from '@app/core/abstract-view-state';
 import { ChangeEngine } from '@app/core/change-engine';
-import { ArrayItem, enableControl, mapEntries, Omit, TypedFormControl } from '@app/core/util';
+import { ArrayItem, mapEntries, Omit, skipEmptyViewState, TypedFormControl } from '@app/core/util';
 import { getValue } from '@app/core/util/forms';
+import { isEqual } from 'lodash-es';
 import { identity, merge, Observable, Subject } from 'rxjs';
-import { filter, map, takeUntil, withLatestFrom } from 'rxjs/operators';
+import { distinctUntilChanged, map, skip, startWith, takeUntil } from 'rxjs/operators';
 
 export type FormGroupOptions<Form, T, Field extends keyof T> = {
   [FormKey in Partial<keyof Form>]: FormGroupItemOptions<Form, T, FormKey, Form[FormKey]>
@@ -40,7 +41,7 @@ export interface FormArrayOptions<T, Key extends keyof T, Value extends ArrayIte
   createControl: (item: Value | undefined, remove: Observable<any>) => AbstractControl;
 }
 
-export class ViewStateFormBuilder<T> {
+export class ViewStateFormBuilder<T extends { id: string }> {
 
   constructor(
     private viewState: AbstractViewState<T>,
@@ -63,12 +64,14 @@ export class ViewStateFormBuilder<T> {
   }: FormControlOptions<T, Field, ViewValue>): TypedFormControl<T[Field]> {
     const control = new FormControl(initialValue, validators);
 
+    // Currently change engine reverts are leaked here (still result in no changes).
+    // Because we use the distinctUntilChanged operator, which needs to stay in sync with current value.
+    // The DUC operator allows us to skip all non-changes, like when disabling, enabling, and saving.
+    // Reverting is definitely the edge case here, and it is only for the fields being reverted.
     control.valueChanges
       .pipe(
-        // If saving and form disabled because of it, then don't clear value
-        withLatestFrom(this.viewState.isSubmitting),
-        filter(([value, submitting]) => !(submitting && control.disabled)),
-        map(([value]) => value),
+        distinctUntilChanged(), // Initialize operator with initial subject value
+        skip(1), // But skip initial subject value since it's not a change
 
         map(formToChange),
         takeUntil(unsubscribe),
@@ -83,12 +86,13 @@ export class ViewStateFormBuilder<T> {
 
     this.viewState.subjectWithPreExistingChanges
       .pipe(
+        skipEmptyViewState(),
         map(subject => subject[field]),
         map(modelToForm),
         takeUntil(unsubscribe),
       )
       .subscribe(viewValue => {
-        control.reset(viewValue, { emitEvent: false });
+        control.reset(viewValue);
       });
 
     this.viewState.isSubmitting
@@ -96,7 +100,7 @@ export class ViewStateFormBuilder<T> {
         takeUntil(unsubscribe),
       )
       .subscribe(submitting => {
-        enableControl(control, !submitting);
+        control[submitting ? 'disable' : 'enable']({ emitEvent: false });
       });
 
     return control;
@@ -124,13 +128,14 @@ export class ViewStateFormBuilder<T> {
 
       control.valueChanges
         .pipe(
-          // Attempt to filter out changes while submitting or disabled
-          withLatestFrom(this.viewState.isSubmitting),
-          filter(([value, submitting]) => !submitting),
-          filter(() => control.enabled),
-
           // Map to raw value which doesn't attempt to mask real value when disabled
           map(() => getValue(control)),
+
+          // Disable/Enable causes unwanted events that don't actually have a change.
+          // Filter these out with a deep equality check.
+          startWith(getValue(control)), // Initialize distinctUntilChanged
+          distinctUntilChanged(isEqual),
+          skip(1), // Ignore startWith value
 
           takeUntil(removeOrDestroy),
         )
@@ -164,7 +169,7 @@ export class ViewStateFormBuilder<T> {
         takeUntil(unsubscribe),
       )
       .subscribe(submitting => {
-        enableControl(form, !submitting);
+        form[submitting ? 'disable' : 'enable']({ emitEvent: false });
       });
 
     this.viewState.subjectWithPreExistingChanges

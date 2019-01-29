@@ -6,7 +6,7 @@ import { TitleAware, TitleProp } from '@app/core/decorators';
 import { EditableEngagement, Engagement, EngagementStatus, EngagementTag } from '@app/core/models/engagement';
 import { IsDirty } from '@app/core/route-guards/dirty.guard';
 import { EngagementService } from '@app/core/services/engagement.service';
-import { enableControl, ExtractKeys, Omit } from '@app/core/util';
+import { ExtractKeys, Omit } from '@app/core/util';
 import { FormGroupItemOptions } from '@app/core/view-state-form-builder';
 import { EngagementViewStateService } from '@app/projects/engagement-view-state.service';
 import { popInOut } from '@app/shared/animations';
@@ -123,8 +123,14 @@ export class ProjectEngagementComponent extends SubscriptionComponent implements
     )
       .pipe(takeUntil(this.unsubscribe))
       .subscribe(planned => {
-        enableControl(this.ceremonyEstimatedDate, planned);
-        enableControl(this.ceremonyActualDate, planned);
+        for (const control of [this.ceremonyEstimatedDate, this.ceremonyActualDate]) {
+          if (planned) {
+            control.enable({ emitEvent: false });
+          } else {
+            control.reset();
+            control.disable({ emitEvent: false });
+          }
+        }
       });
 
     this.viewState.isSubmitting

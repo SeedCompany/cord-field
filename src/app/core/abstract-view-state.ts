@@ -9,7 +9,7 @@ import { ChangeConfig, ChangeEngine, Changes } from './change-engine';
 
 export type SaveResult<T> = {[key in keyof Partial<T>]: string[]};
 
-export abstract class AbstractViewState<T> extends SubscriptionComponent implements OnDestroy {
+export abstract class AbstractViewState<T extends { id: string }> extends SubscriptionComponent implements OnDestroy {
 
   private readonly changeEngine: ChangeEngine<T>;
   private readonly _subject: BehaviorSubject<T>;
