@@ -1,4 +1,6 @@
 import { Injectable } from '@angular/core';
+import { ifValue, Mutable } from '@app/core/util';
+import { identity } from 'rxjs';
 import { AuthenticationToken, JwtTokenMap } from '../models/authentication-token';
 import { User } from '../models/user';
 import { AuthenticationStorageService } from './authentication-storage.service';
@@ -25,6 +27,8 @@ export function isInvalidPasswordError(error: any): error is InvalidPasswordResp
   providedIn: 'root',
 })
 export class AuthenticationService {
+
+  readonly canCreateUser: boolean = true;
 
   async popNextUrl(): Promise<string | null> {
     const url = await this.sessionStorage.getItem<string>('nextUrl');
@@ -72,6 +76,7 @@ export class AuthenticationService {
     email = email.toLowerCase();
     interface Result {
       token?: JwtTokenMap;
+      canCreateUser?: boolean;
     }
     const res = await this.api
       .post<Result>('/auth/native/login', {domain: DOMAIN, email, password, newPassword}, {
@@ -81,6 +86,7 @@ export class AuthenticationService {
 
     const tokens = AuthenticationToken.fromTokenMap(res.token);
     await this.authStorage.saveTokens(tokens, rememberLogin);
+    (this as Mutable<AuthenticationService>).canCreateUser = ifValue(res.canCreateUser, identity, true);
   }
 
   async logout(): Promise<void> {

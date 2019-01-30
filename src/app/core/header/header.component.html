@@ -14,7 +14,7 @@
     </button>
     <mat-menu #addMenu="matMenu">
       <button mat-menu-item (click)="onCreateProject()">New Project</button>
-      <button mat-menu-item (click)="onCreatePerson()">New Person</button>
+      <button mat-menu-item *ngIf="canCreateUser" (click)="onCreatePerson()">New Person</button>
     </mat-menu>
 
     <span class="nav-spacer"></span>
