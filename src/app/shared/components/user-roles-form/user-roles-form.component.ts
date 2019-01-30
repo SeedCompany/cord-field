@@ -222,6 +222,26 @@ export class UserRolesFormComponent extends AbstractValueAccessor<UserRole[]> im
     });
   }
 
+  /**
+   * Control already has the new location, but this.value does not.
+   * This method fixes that. It probably should done differently but this is a quick fix.
+   */
+  onLocationAdded(userRoleControl: AbstractControl, location: Location | null) {
+    if (!location) {
+      return;
+    }
+    const role = userRoleControl.get('role')!.value as string;
+    const control = userRoleControl.get('locations')!;
+    const newList = [...control.value as Location[], location];
+    this.value = this.value.map(userRole => {
+      if (userRole.role !== role) {
+        return userRole;
+      }
+      userRole.locations = newList;
+      return userRole;
+    });
+  }
+
   onLocationRemoved(userRoleControl: AbstractControl, location: Location): void {
     const role = userRoleControl.get('role')!.value as string;
     const control = userRoleControl.get('locations')!;
