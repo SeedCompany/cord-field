@@ -2,7 +2,7 @@ import { HttpResponse } from '@angular/common/http';
 import { MatPaginator, PageEvent } from '@angular/material';
 import { HttpParams } from '@app/core/services/http/abstract-http-client';
 import { PloApiService } from '@app/core/services/http/plo-api.service';
-import { TypedMatSort } from '@app/core/util/material-types';
+import { TypedMatSort, TypedSort } from '@app/core/util/material-types';
 import { QueryParams } from '@app/shared/components/table-view/table-view.component';
 import { combineLatest, Observable, ObservableInput } from 'rxjs';
 import { map, skip, startWith, tap } from 'rxjs/operators';
@@ -57,16 +57,18 @@ export const makeListRequest = <T, BodyItem = T>(plo: PloApiService, url: string
       );
   };
 
+type ItemsToObservableInput<T> = { [K in keyof T]: ObservableInput<T[K]> };
+
 /**
  * Observes pager and sorter changes and other changes passed in as well.
  * Handles pager non-sense and sends back.
  */
-export function observePagerAndSorter<OtherChanges, K extends string>(
+export function observePagerAndSorter<OtherChanges extends any[], K extends string>(
   paginator: MatPaginator,
   sorter: TypedMatSort<K>,
-  otherChangeStreams: Array<ObservableInput<any>>,
+  otherChangeStreams: ItemsToObservableInput<OtherChanges>,
   otherChangeStartingValue: OtherChanges,
-): Observable<{ sort: TypedMatSort<K>, page: PageEvent, rest: OtherChanges }> {
+): Observable<{ sort: TypedSort<K>, page: PageEvent, rest: OtherChanges }> {
   const initialSort = { active: sorter.active, direction: sorter.direction };
 
   // Combine stream of option changes that require a pagination reset, and trigger that on change
@@ -84,7 +86,7 @@ export function observePagerAndSorter<OtherChanges, K extends string>(
       // On list, sort, or filter changes reset the current page
       tap(() => paginator.pageIndex = 0),
       // Map to object so it's easier to remember
-      map(([sort, ...rest]) => ({ sort, rest })),
+      map(([sort, ...rest]) => ({ sort, rest: rest as OtherChanges })),
     );
 
   // Combine partial option changes with pagination changes
