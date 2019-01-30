@@ -14,6 +14,7 @@ const routes: Routes = [
       {path: 'organizations', loadChildren: './organizations/organizations.module#OrganizationsModule'},
       {path: 'people', loadChildren: './people/people.module#PeopleModule'},
       {path: 'projects', loadChildren: './projects/projects.module#ProjectsModule'},
+      {path: 'internships', loadChildren: './internships/internships.module#InternshipsModule'},
       {path: 'tasks', loadChildren: './tasks/tasks.module#TasksModule'},
     ],
     canActivate: [AuthenticationGuard],
