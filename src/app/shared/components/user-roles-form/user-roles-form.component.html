@@ -20,6 +20,7 @@
                              [required]="true"
                              requiredMessage="Please select one or more locations"
                              [formControl]="userRole.get('locations')"
+                             (optionSelected)="onLocationAdded(userRole, $event)"
                              (removed)="onLocationRemoved(userRole, $event)">
   </app-autocomplete-location>
 </ng-container>
