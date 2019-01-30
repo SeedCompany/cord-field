@@ -80,7 +80,8 @@
                                      [keepInput]="true"
                                      formControlName="language">
           </app-autocomplete-language>
-          <mat-form-field *ngIf="!item.get('isNew').value">
+          <mat-form-field *ngIf="!item.get('isNew').value"
+                          class="flex-grow">
             <input matInput
                    disabled
                    [value]="item.get('language').value" />
