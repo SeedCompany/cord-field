@@ -28,17 +28,6 @@ export function isInvalidPasswordError(error: any): error is InvalidPasswordResp
 })
 export class AuthenticationService {
 
-  private _login = new Subject<AuthenticationToken[]>();
-  private _logout = new Subject<void>();
-
-  get login$(): Observable<AuthenticationToken[]> {
-    return this._login.asObservable();
-  }
-
-  get logout$(): Observable<void> {
-    return this._logout.asObservable();
-  }
-
   async popNextUrl(): Promise<string | null> {
     const url = await this.sessionStorage.getItem<string>('nextUrl');
     if (url) {
@@ -91,12 +80,10 @@ export class AuthenticationService {
       .toPromise();
 
     await this.authStorage.saveTokens(tokens, rememberLogin);
-    this._login.next(tokens);
   }
 
   async logout(): Promise<void> {
     await this.authStorage.clearTokens();
-    this._logout.next();
   }
 
   /**
