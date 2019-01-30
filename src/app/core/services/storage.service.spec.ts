@@ -187,11 +187,20 @@ describe('StorageService', () => {
         await store[type].setItem('val1', 1);
         await store[type].setItem('val2', 2);
 
-        expect(await store[type].key(0)).toBe(store[type]['getKey']('val1'));
-        expect(await store[type].key(1)).toBe(store[type]['getCacheKey']('val1'));
-        expect(await store[type].key(2)).toBe(store[type]['getKey']('val2'));
-        expect(await store[type].key(3)).toBe(store[type]['getCacheKey']('val2'));
-
+        expect([
+          await store[type].key(0),
+          await store[type].key(1),
+        ].sort()).toEqual([
+          store[type]['getKey']('val1'),
+          store[type]['getCacheKey']('val1'),
+        ].sort());
+        expect([
+          await store[type].key(2),
+          await store[type].key(3),
+        ].sort()).toEqual([
+          store[type]['getKey']('val2'),
+          store[type]['getCacheKey']('val2'),
+        ].sort());
       }
       done();
     } catch (err) {
@@ -254,10 +263,13 @@ describe('StorageService', () => {
       try {
         for (const type of stores) {
           await store[type].setItem('test', 'test value');
-          const valueKey = store[type]['getKey']('test');
-          const cacheKey = store[type]['getCacheKey']('test');
-          expect(await store[type].key(0)).toBe(valueKey, type);
-          expect(await store[type].key(1)).toBe(cacheKey, type);
+          expect([
+            await store[type].key(0),
+            await store[type].key(1),
+          ].sort()).toEqual([
+            store[type]['getKey']('test'),
+            store[type]['getCacheKey']('test'),
+          ].sort());
         }
 
         done();
