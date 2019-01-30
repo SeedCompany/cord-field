@@ -26,14 +26,19 @@ export type FormGroupItemOptions<Form, T, FormKey, FormValue> =
       : never
   );
 
-export interface FormControlOptions<T, Field extends keyof T, FormValue = any> {
-  field: Field;
-  unsubscribe: Observable<any>;
-  validators?: ValidatorFn[];
-  initialValue?: FormValue;
-  modelToForm?: (modelVal: T[Field]) => FormValue;
-  formToChange?: (formVal: FormValue) => any;
-}
+export type FormControlOptions<T, Field extends keyof T, FormValue = any> =
+  {
+    field: Field;
+    unsubscribe: Observable<any>;
+    validators?: ValidatorFn[];
+    initialValue?: FormValue;
+    formToChange?: (formVal: FormValue) => any;
+  } & (
+  // modelToForm is required if model value is not the same as form value
+  T[Field] extends FormValue
+    ? { modelToForm?: (modelVal: T[Field]) => FormValue }
+    : { modelToForm: (modelVal: T[Field]) => FormValue }
+  );
 
 export interface FormArrayOptions<T, Key extends keyof T, Value extends ArrayItem<T[Key]>> {
   field: Key;
@@ -51,15 +56,17 @@ export class ViewStateFormBuilder<T extends { id: string }> {
 
   group<Form>(unsubscribe: Observable<any>, controls: FormGroupOptions<Form, T, keyof T>) {
     // `field` type as `any` isn't terrible as it is validated in interface
-    return new FormGroup(mapEntries(controls, (field: any, c) => this.control({ field, unsubscribe, ...c })));
+    return new FormGroup(mapEntries(controls, (field: any, c: any) => this.control({ field, unsubscribe, ...c })));
   }
 
   control<Field extends keyof T, ViewValue>({
     field,
     unsubscribe,
     validators = [],
-    initialValue = null,
-    modelToForm = identity,
+    initialValue,
+    // Type safety is verified in FormControlOptions.
+    // It is only optional if model value and form value are the same, thus identity function.
+    modelToForm = identity as unknown as (val: T[Field]) => ViewValue,
     formToChange = identity,
   }: FormControlOptions<T, Field, ViewValue>): TypedFormControl<T[Field]> {
     const control = new FormControl(initialValue, validators);
