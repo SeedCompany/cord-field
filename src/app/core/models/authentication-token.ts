@@ -13,6 +13,9 @@ function base64Decode(encoded: string): string {
   return atob(encoded);
 }
 
+export type AuthAudiences = 'plo.cord.bible';
+export type JwtTokenMap = Record<AuthAudiences, string>;
+
 export class AuthenticationToken {
   static fromJson(json: AuthenticationToken): AuthenticationToken {
     return new AuthenticationToken(
@@ -58,19 +61,8 @@ export class AuthenticationToken {
     );
   }
 
-  /**
-   * A token map is returned from the authentication authority:
-   * {
-   *    token: {
-   *      "audience-id-1":"jwt_token-1",
-   *      "audience-id-2":"jwt_token-2"
-   *    }
-   * }
-   */
-  static fromTokenMap(tokenMap: any): AuthenticationToken[] {
-    const tokens = (tokenMap || {token: {}}).token;
-
-    return Object.entries(tokens)
+  static fromTokenMap(tokenMap: Partial<JwtTokenMap> | undefined): AuthenticationToken[] {
+    return Object.entries(tokenMap || {})
       .map(([key, value]) => AuthenticationToken.fromJwt(key, value));
   }
 

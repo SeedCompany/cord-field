@@ -1,7 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Observable, Subject } from 'rxjs';
-import { map } from 'rxjs/operators';
-import { AuthenticationToken } from '../models/authentication-token';
+import { AuthenticationToken, JwtTokenMap } from '../models/authentication-token';
 import { User } from '../models/user';
 import { AuthenticationStorageService } from './authentication-storage.service';
 import { IGNORE_AUTH_ERRORS } from './http/auth-interceptor';
@@ -72,13 +70,16 @@ export class AuthenticationService {
    */
   async login(email: string, password: string, rememberLogin: boolean, newPassword?: string): Promise<void> {
     email = email.toLowerCase();
-    const tokens = await this.api
-      .post('/auth/native/login', {domain: DOMAIN, email, password, newPassword}, {
+    interface Result {
+      token?: JwtTokenMap;
+    }
+    const res = await this.api
+      .post<Result>('/auth/native/login', {domain: DOMAIN, email, password, newPassword}, {
         headers: {[IGNORE_AUTH_ERRORS]: 'true'},
       })
-      .pipe(map(AuthenticationToken.fromTokenMap))
       .toPromise();
 
+    const tokens = AuthenticationToken.fromTokenMap(res.token);
     await this.authStorage.saveTokens(tokens, rememberLogin);
   }
 
