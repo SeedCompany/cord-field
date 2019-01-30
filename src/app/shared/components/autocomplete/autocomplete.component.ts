@@ -16,6 +16,7 @@ import { MatAutocompleteTrigger, MatSnackBar, MatSnackBarRef, SimpleSnackBar } f
 import { MatAutocompleteSelectedEvent } from '@angular/material/autocomplete/typings/autocomplete';
 import { AbstractValueAccessor, ValueAccessorProvider } from '@app/core/classes/abstract-value-accessor.class';
 import { from as observableFrom } from 'rxjs';
+import { of } from 'rxjs/internal/observable/of';
 import { catchError, debounceTime, filter, switchMap, tap } from 'rxjs/operators';
 
 /**
@@ -121,7 +122,7 @@ export class AutocompleteComponent<T> extends AbstractValueAccessor<T | T[]> imp
         switchMap((term) => {
           return observableFrom(this.fetcher(term))
             // returning error to prevent observable from completing
-            .pipe(catchError<T[], HttpErrorResponse>((err) => err));
+            .pipe(catchError(err => of(err)));
         }),
       )
       .subscribe((payload: T[] | HttpErrorResponse) => {

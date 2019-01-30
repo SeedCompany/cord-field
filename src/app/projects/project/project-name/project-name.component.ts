@@ -5,7 +5,7 @@ import { ErrorStateMatcher, MatSnackBar, MatSnackBarRef, ShowOnDirtyErrorStateMa
 import { ProjectService } from '@app/core/services/project.service';
 import { ProjectViewStateService } from '@app/projects/project-view-state.service';
 import { SubscriptionComponent } from '@app/shared/components/subscription.component';
-import { combineLatest } from 'rxjs';
+import { combineLatest, of } from 'rxjs';
 import { catchError, debounceTime, filter, map, switchMap, takeUntil, tap } from 'rxjs/operators';
 
 @Component({
@@ -72,7 +72,7 @@ export class ProjectNameComponent extends SubscriptionComponent implements OnIni
         tap(() => this.name.markAsPending()),
         switchMap(name =>
           this.projectService.isProjectNameTaken(name)
-            .pipe(catchError<boolean, HttpErrorResponse>(err => err))),
+            .pipe(catchError(err => of(err)))),
         takeUntil(this.unsubscribe),
       )
       .subscribe((taken: boolean | HttpErrorResponse) => {

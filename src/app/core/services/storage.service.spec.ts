@@ -71,7 +71,8 @@ describe('StorageService', () => {
       try {
         for (const type of stores) {
           await store[type].setItem('test', 'test value');
-          expect(await store[type].getItem('test')).toBe('test value');
+          const result = await store[type].getItem('test');
+          expect(result).toBe('test value');
         }
 
         done();
@@ -111,7 +112,8 @@ describe('StorageService', () => {
       try {
         for (const type of stores) {
           await store[type].setItem('test', [1, 2, 3, 4, 5]);
-          expect(await store[type].getItem('test')).toEqual([1, 2, 3, 4, 5]);
+          const result = await store[type].getItem('test');
+          expect(result).toEqual([1, 2, 3, 4, 5]);
         }
         done();
       } catch (err) {
@@ -138,7 +140,8 @@ describe('StorageService', () => {
         for (const type of stores) {
 
           await store[type].setItem('test', 'test value');
-          expect(await store[type].getItem('test')).toBe('test value');
+          const result = await store[type].getItem('test');
+          expect(result).toBe('test value');
 
           let updatedValue = '';
           const o = store[type]
@@ -164,7 +167,8 @@ describe('StorageService', () => {
             .subscribe((update) => updatedValue = update);
 
           await store[type].setItem('test', 'test value');
-          expect(await store[type].getItem('test')).toBe('test value');
+          const result = await store[type].getItem('test');
+          expect(result).toBe('test value');
 
           await store[type].setItem('test', 'test value updated');
           expect(updatedValue).toBe('test value updated');
@@ -183,11 +187,20 @@ describe('StorageService', () => {
         await store[type].setItem('val1', 1);
         await store[type].setItem('val2', 2);
 
-        expect(await store[type].key(0)).toBe(store[type]['getKey']('val1'));
-        expect(await store[type].key(1)).toBe(store[type]['getCacheKey']('val1'));
-        expect(await store[type].key(2)).toBe(store[type]['getKey']('val2'));
-        expect(await store[type].key(3)).toBe(store[type]['getCacheKey']('val2'));
-
+        expect([
+          await store[type].key(0),
+          await store[type].key(1),
+        ].sort()).toEqual([
+          store[type]['getKey']('val1'),
+          store[type]['getCacheKey']('val1'),
+        ].sort());
+        expect([
+          await store[type].key(2),
+          await store[type].key(3),
+        ].sort()).toEqual([
+          store[type]['getKey']('val2'),
+          store[type]['getCacheKey']('val2'),
+        ].sort());
       }
       done();
     } catch (err) {
@@ -217,7 +230,8 @@ describe('StorageService', () => {
     try {
       for (const type of stores) {
         await store[type].setItem('test', 'test value');
-        expect(await store[type].getItem('test')).toBe('test value');
+        const result = await store[type].getItem('test');
+        expect(result).toBe('test value');
 
         await store[type].removeItem('test');
         expect(await store[type].getItem('test')).toBe(null);
@@ -235,7 +249,8 @@ describe('StorageService', () => {
       try {
         for (const type of stores) {
           expect(await store[type].setItem('test', 'test value')).toBe('test value');
-          expect(await store[type].getItem('test')).toBe('test value');
+          const result = await store[type].getItem('test');
+          expect(result).toBe('test value');
         }
 
         done();
@@ -248,10 +263,13 @@ describe('StorageService', () => {
       try {
         for (const type of stores) {
           await store[type].setItem('test', 'test value');
-          const valueKey = store[type]['getKey']('test');
-          const cacheKey = store[type]['getCacheKey']('test');
-          expect(await store[type].key(0)).toBe(valueKey, type);
-          expect(await store[type].key(1)).toBe(cacheKey, type);
+          expect([
+            await store[type].key(0),
+            await store[type].key(1),
+          ].sort()).toEqual([
+            store[type]['getKey']('test'),
+            store[type]['getCacheKey']('test'),
+          ].sort());
         }
 
         done();
@@ -269,7 +287,8 @@ describe('StorageService', () => {
 
         for (const type of stores) {
           await store[type].setItem('test', 'should be expired (null)', 1);
-          expect(await store[type].getItem('test')).toBe('should be expired (null)', type);
+          const result = await store[type].getItem('test');
+          expect(result).toBe('should be expired (null)', type);
 
           await new Promise((resolve) => setTimeout(resolve, 1010));
           expect(await store[type].getItem('test')).toBe(null, type);
@@ -287,7 +306,8 @@ describe('StorageService', () => {
 
         for (const type of stores) {
           await store[type].setItem('test', 'should be expired (null)', 1);
-          expect(await store[type].getItem('test')).toBe('should be expired (null)', type);
+          const result = await store[type].getItem('test');
+          expect(result).toBe('should be expired (null)', type);
 
           await new Promise((resolve) => setTimeout(resolve, 1010));
           expect(await store[type].getItem('test')).toBe(null, type);
@@ -304,7 +324,8 @@ describe('StorageService', () => {
       try {
         for (const type of stores) {
           await store[type].setItem('test', 'some value', 1);
-          expect(await store[type].getItem('test')).toBe('some value');
+          const result = await store[type].getItem('test');
+          expect(result).toBe('some value', type);
 
           await new Promise((resolve) => setTimeout(resolve, 1010));
           await store[type].clearExpiredCache();
@@ -321,7 +342,8 @@ describe('StorageService', () => {
       try {
         for (const type of stores) {
           await store[type].setItem('test', 'a value', 1, true);
-          expect(await store[type].getItem('test')).toBe('a value', type);
+          const result = await store[type].getItem('test');
+          expect(result).toBe('a value', type);
           expect(await store[type].length()).toBe(2, type);
 
           await new Promise((resolve) => setTimeout(resolve, 1010));
@@ -338,7 +360,8 @@ describe('StorageService', () => {
       try {
         for (const type of stores) {
           await store[type].setItem('test', 'a value', 1, false);
-          expect(await store[type].getItem('test')).toBe('a value', type);
+          const result = await store[type].getItem('test');
+          expect(result).toBe('a value', type);
           expect(await store[type].length()).toBe(2, type);
 
           await new Promise((resolve) => setTimeout(resolve, 1010));
@@ -358,7 +381,8 @@ describe('StorageService', () => {
           for (const type of stores) {
             const obs = observableOf('observable called');
             await store[type].getCachedObservable('test', obs).toPromise();
-            expect(await store[type].getItem('test')).toBe('observable called', type);
+            const result = await store[type].getItem('test');
+            expect(result).toBe('observable called', type);
           }
           done();
         } catch (err) {
