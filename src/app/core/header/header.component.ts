@@ -33,6 +33,10 @@ export class HeaderComponent implements OnInit {
     this.currentUser = await this.auth.getCurrentUser();
   }
 
+  get canCreateUser() {
+    return this.auth.canCreateUser;
+  }
+
   onCreateProject(): void {
     ProjectCreateDialogComponent.open(this.dialog);
   }

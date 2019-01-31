@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
-import { Observable, Subject } from 'rxjs';
-import { map } from 'rxjs/operators';
-import { AuthenticationToken } from '../models/authentication-token';
+import { ifValue, Mutable } from '@app/core/util';
+import { identity } from 'rxjs';
+import { AuthenticationToken, JwtTokenMap } from '../models/authentication-token';
 import { User } from '../models/user';
 import { AuthenticationStorageService } from './authentication-storage.service';
 import { IGNORE_AUTH_ERRORS } from './http/auth-interceptor';
@@ -28,16 +28,7 @@ export function isInvalidPasswordError(error: any): error is InvalidPasswordResp
 })
 export class AuthenticationService {
 
-  private _login = new Subject<AuthenticationToken[]>();
-  private _logout = new Subject<void>();
-
-  get login$(): Observable<AuthenticationToken[]> {
-    return this._login.asObservable();
-  }
-
-  get logout$(): Observable<void> {
-    return this._logout.asObservable();
-  }
+  readonly canCreateUser: boolean = true;
 
   async popNextUrl(): Promise<string | null> {
     const url = await this.sessionStorage.getItem<string>('nextUrl');
@@ -83,20 +74,23 @@ export class AuthenticationService {
    */
   async login(email: string, password: string, rememberLogin: boolean, newPassword?: string): Promise<void> {
     email = email.toLowerCase();
-    const tokens = await this.api
-      .post('/auth/native/login', {domain: DOMAIN, email, password, newPassword}, {
+    interface Result {
+      token?: JwtTokenMap;
+      canCreateUser?: boolean;
+    }
+    const res = await this.api
+      .post<Result>('/auth/native/login', {domain: DOMAIN, email, password, newPassword}, {
         headers: {[IGNORE_AUTH_ERRORS]: 'true'},
       })
-      .pipe(map(AuthenticationToken.fromTokenMap))
       .toPromise();
 
+    const tokens = AuthenticationToken.fromTokenMap(res.token);
     await this.authStorage.saveTokens(tokens, rememberLogin);
-    this._login.next(tokens);
+    (this as Mutable<AuthenticationService>).canCreateUser = ifValue(res.canCreateUser, identity, true);
   }
 
   async logout(): Promise<void> {
     await this.authStorage.clearTokens();
-    this._logout.next();
   }
 
   /**

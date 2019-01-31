@@ -321,4 +321,4 @@ export class Unavailability {
 }
 
 export type RawUnavailability = Omit<Unavailability, 'range'>;
-type StoredUnavailability = RawUnavailability & {range: string};
+type StoredUnavailability = Omit<RawUnavailability, 'start' | 'end'> & {range: string};

@@ -47,6 +47,6 @@ export const hmrBootstrap = (module: any, bootstrap: () => Promise<NgModuleRef<a
       }
     }
 
-    origLog.apply(window.console, arguments);
+    origLog.apply(window.console, arguments as any);
   };
 };
