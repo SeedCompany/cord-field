@@ -57,3 +57,17 @@ export function sortBy<T>(iteratee: (item: T) => any, order: 'asc' | 'desc' = 'a
     return 0;
   };
 }
+
+/**
+ * Takes the object and returns a list of keys and a list of values.
+ * The order of both lists correlate and can be re-associated with their respective indexes.
+ */
+export function splitKeyValues<T>(object: T): [Array<keyof T>, Array<T[keyof T]>] {
+  const keys: Array<keyof T> = [];
+  const values = [];
+  for (const [key, value] of Object.entries(object)) {
+    keys.push(key as keyof T);
+    values.push(value);
+  }
+  return [keys, values];
+}

@@ -1,11 +1,9 @@
 import { Component, OnInit } from '@angular/core';
-import { MatPaginator } from '@angular/material';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Language } from '@app/core/models/language';
 import { Project, ProjectFilter, ProjectStatus } from '@app/core/models/project';
 import { ProjectService } from '@app/core/services/project.service';
-import { parseBoolean, TypedMatSort, TypedSort } from '@app/core/util';
-import { observePagerAndSorter } from '@app/core/util/list-views';
+import { ObservablesWithInitialMapping, parseBoolean, TypedSort } from '@app/core/util';
 import { SubscriptionComponent } from '@app/shared/components/subscription.component';
 import {
   defaultParamsFromChanges,
@@ -14,7 +12,7 @@ import {
   QueryParams,
   RawQueryParams,
 } from '@app/shared/components/table-view/table-view.component';
-import { Observable, Subject } from 'rxjs';
+import { Subject } from 'rxjs';
 import { distinctUntilChanged, map, startWith, takeUntil } from 'rxjs/operators';
 import { TitleAware, TitleProp } from '../../core/decorators';
 
@@ -64,6 +62,15 @@ export class ProjectListComponent extends SubscriptionComponent implements OnIni
   }
 
   fetchProjects = this.projectService.getProjects;
+  extraInputs: ObservablesWithInitialMapping<{list: ListOption}> = {
+    list: {
+      stream: this.listChanges.pipe(
+        startWith(this.listSelection), // Start with current value
+        distinctUntilChanged(), // Don't emit if no change
+      ),
+      initial: this.listSelection,
+    },
+  };
 
   /**
    * Set list selection from query params
@@ -91,30 +98,6 @@ export class ProjectListComponent extends SubscriptionComponent implements OnIni
       replaceUrl: true,
     });
   }
-
-  /**
-   * Add all vs my list to changes to watch for.
-   */
-  observeChanges = (
-    sorter: TypedMatSort<keyof Project>,
-    paginator: MatPaginator,
-    filters$: Observable<ProjectFilter>,
-    search$: Observable<string>,
-  ): Observable<ProjectViewOptions> => {
-    const list$ = this.listChanges.pipe(
-      startWith(this.listSelection), // Start with current value
-      distinctUntilChanged(), // Don't emit if no change
-    );
-    return observePagerAndSorter<[ListOption, string, ProjectFilter], keyof Project>(
-      paginator,
-      sorter,
-      [list$, search$, filters$],
-      [this.listSelection, '', {}],
-    )
-      .pipe(
-        map(({ sort, page, rest: [list, search, filters] }) => ({ sort, page, search, list, filters })),
-      );
-  };
 
   /**
    * Add `all` to parsing logic

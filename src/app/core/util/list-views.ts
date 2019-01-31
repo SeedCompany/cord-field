@@ -3,8 +3,10 @@ import { MatPaginator, PageEvent } from '@angular/material';
 import { HttpParams } from '@app/core/services/http/abstract-http-client';
 import { PloApiService } from '@app/core/services/http/plo-api.service';
 import { TypedMatSort, TypedSort } from '@app/core/util/material-types';
+import { combineLatestPreInitialized, ObservablesWithInitialMapping, ObservableWithInitial } from '@app/core/util/rxjs-operators';
 import { QueryParams } from '@app/shared/components/table-view/table-view.component';
-import { combineLatest, Observable, ObservableInput } from 'rxjs';
+import { mapValues } from 'lodash-es';
+import { combineLatest, Observable } from 'rxjs';
 import { map, skip, startWith, tap } from 'rxjs/operators';
 
 export type ListApi<T, Keys, Filters, Options extends ApiOptions<Keys, Filters>> =
@@ -57,43 +59,33 @@ export const makeListRequest = <T, BodyItem = T>(plo: PloApiService, url: string
       );
   };
 
-type ItemsToObservableInput<T> = { [K in keyof T]: ObservableInput<T[K]> };
-
 /**
  * Observes pager and sorter changes and other changes passed in as well.
  * Handles pager non-sense and sends back.
  */
-export function observePagerAndSorter<OtherChanges extends any[], K extends string>(
+export function observePagerAndSorter<OtherChanges, K extends string>(
   paginator: MatPaginator,
   sorter: TypedMatSort<K>,
-  otherChangeStreams: ItemsToObservableInput<OtherChanges>,
-  otherChangeStartingValue: OtherChanges,
-): Observable<{ sort: TypedSort<K>, page: PageEvent, rest: OtherChanges }> {
-  const initialSort = { active: sorter.active, direction: sorter.direction };
+  otherChanges: ObservablesWithInitialMapping<OtherChanges>,
+): Observable<OtherChanges & { sort: TypedSort<K>, page: PageEvent }> {
+  const initialSort: TypedSort<K> = { active: sorter.active, direction: sorter.direction };
 
   // Combine stream of option changes that require a pagination reset, and trigger that on change
-  const optionChangesMinusPagination = combineLatest(
-    sorter.sortChange
-      .pipe(
-        startWith(initialSort),
-      ),
-    ...otherChangeStreams,
-  )
+  const optionChangesMinusPagination = (combineLatestPreInitialized({
+    ...otherChanges,
+    sort: { stream: sorter.sortChange, initial: initialSort },
+  }) as Observable<{ sort: TypedSort<K> } & OtherChanges>)
     .pipe(
-      // We don't need to navigate for initial data since there will be no changes.
-      // It's important to skip this first event, else the page will be reset on initial load
-      skip(1),
       // On list, sort, or filter changes reset the current page
       tap(() => paginator.pageIndex = 0),
-      // Map to object so it's easier to remember
-      map(([sort, ...rest]) => ({ sort, rest: rest as OtherChanges })),
     );
 
   // Combine partial option changes with pagination changes
+  const otherInitial = mapValues(otherChanges, (i: ObservableWithInitial<any>) => i.initial) as OtherChanges;
   return mergePaginator(
     optionChangesMinusPagination
       .pipe(
-        startWith({ sort: initialSort, rest: otherChangeStartingValue }),
+        startWith({ ...otherInitial, sort: initialSort }),
       ),
     paginator,
   );
@@ -123,8 +115,7 @@ function mergePaginator<T>(options: Observable<T>, paginator: MatPaginator): Obs
           pageSize: paginator.pageSize,
           length: paginator.length,
         };
-        // tslint:disable-next-line:prefer-object-spread no it doesn't work with generics on TS below 3.2
-        return Object.assign(opts, { page });
+        return { ...opts, page };
       }),
     );
 }
