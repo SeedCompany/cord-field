@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { MatSnackBar, MatSnackBarRef, SimpleSnackBar } from '@angular/material';
 import { Observable } from 'rxjs';
-import { map, takeUntil } from 'rxjs/operators';
+import { map } from 'rxjs/operators';
 import { TitleAware } from '../../core/decorators';
 import { UserViewStateService } from '../user-view-state.service';
 import { AbstractPersonComponent } from './abstract-person.component';
@@ -27,8 +27,8 @@ export class PersonEditComponent extends AbstractPersonComponent implements OnIn
   ];
   tabs: Observable<TabConfig[]>;
 
-  submitting: boolean;
-  dirty: boolean;
+  submitting = this.userViewState.isSubmitting;
+  dirty = this.userViewState.isDirty;
 
   private snackBarRef: MatSnackBarRef<SimpleSnackBar> | null;
 
@@ -41,12 +41,6 @@ export class PersonEditComponent extends AbstractPersonComponent implements OnIn
 
   ngOnInit(): void {
     super.ngOnInit();
-    this.userViewState.isSubmitting
-      .pipe(takeUntil(this.unsubscribe))
-      .subscribe(s => this.submitting = s);
-    this.userViewState.isDirty
-      .pipe(takeUntil(this.unsubscribe))
-      .subscribe(dirty => this.dirty = dirty);
     this.tabs = this.user$.pipe(
       map(user => {
         if (user.canEditRoles) {

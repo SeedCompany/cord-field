@@ -37,7 +37,7 @@ export class ProjectComponent extends SubscriptionComponent implements OnInit, T
   ];
 
   dirty = false;
-  submitting = false;
+  submitting = this.projectViewState.isSubmitting;
   private shouldCurrentTabShowSaveFab: boolean;
 
   private snackBarRef: MatSnackBarRef<SimpleSnackBar> | null;
@@ -75,9 +75,6 @@ export class ProjectComponent extends SubscriptionComponent implements OnInit, T
     this.projectViewState.isDirty
       .pipe(takeUntil(this.unsubscribe))
       .subscribe(dirty => this.dirty = dirty);
-    this.projectViewState.isSubmitting
-      .pipe(takeUntil(this.unsubscribe))
-      .subscribe(submitting => this.submitting = submitting);
 
     this.router.events
       .pipe(

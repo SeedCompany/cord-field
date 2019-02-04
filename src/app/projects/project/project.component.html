@@ -8,20 +8,12 @@
      #rla="routerLinkActive"
      [active]="rla.isActive"
   >{{ tab.label }}</a>
-  <app-speed-dial
-    [show]="showSaveFab"
-    align="below"
-    icon="save"
-    [disabled]="submitting"
-    [progress]="submitting"
-  >
-    <app-speed-dial-item tooltip="Discard" color="warn" (click)="onDiscard()">
-      <mat-icon>delete</mat-icon>
-    </app-speed-dial-item>
-    <app-speed-dial-item tooltip="Save" color="accent" (click)="onSave()">
-      <mat-icon>save</mat-icon>
-    </app-speed-dial-item>
-  </app-speed-dial>
+  <app-save-discard-dial
+    [dirty]="showSaveFab"
+    [submitting]="submitting | async"
+    (save)="onSave()"
+    (discard)="onDiscard()"
+  ></app-save-discard-dial>
 </nav>
 
 <router-outlet></router-outlet>

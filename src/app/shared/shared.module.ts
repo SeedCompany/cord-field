@@ -12,6 +12,7 @@ import { AutocompleteUserComponent } from './components/autocomplete/autocomplet
 import { AutocompleteComponent } from './components/autocomplete/autocomplete.component';
 import { AvatarLetterComponent } from './components/avatar-letter/avatar-letter.component';
 import { CollapsedChipListComponent } from './components/collapsed-chip-list/collapsed-chip-list.component';
+import { SaveDiscardDialComponent } from './components/save-discard-dial/save-discard-dial.component';
 import { SearchComponent } from './components/search/search.component';
 import { SpeedDialItemComponent } from './components/speed-dial-item/speed-dial-item.component';
 import { SpeedDialComponent } from './components/speed-dial/speed-dial.component';
@@ -50,6 +51,7 @@ import { LanguageInfoPipe } from './pipes/language-info.pipe';
     MaterialModule,
     NotImplementedDirective,
     ReactiveFormsModule,
+    SaveDiscardDialComponent,
     SearchComponent,
     SpeedDialComponent,
     SpeedDialItemComponent,
@@ -71,6 +73,7 @@ import { LanguageInfoPipe } from './pipes/language-info.pipe';
     FileSizePipe,
     LanguageInfoPipe,
     NotImplementedDirective,
+    SaveDiscardDialComponent,
     SearchComponent,
     SpeedDialComponent,
     SpeedDialItemComponent,
