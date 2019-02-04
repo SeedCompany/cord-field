@@ -7,11 +7,15 @@
 <!-- Fab -->
 <button mat-fab
         [disabled]="disabled"
-        [@preventInitialAnimation]
+        [@fab]="fabAnimationState"
         [satPopoverAnchorFor]="dial"
         (click)="dial.toggle()">
-  <mat-icon [@spinInOut]="'in'" *ngIf="dial.isOpen()">{{ closeIcon }}</mat-icon>
-  <mat-icon [@spinInOut]="'in'" *ngIf="!dial.isOpen()">{{ icon }}</mat-icon>
+  <mat-icon
+    [@fabIcon]="iconAnimationState"
+    (@fabIcon.done)="onIconAnimationDone($event)"
+  >
+    {{ currentIcon }}
+  </mat-icon>
 </button>
 <!-- Actions -->
 <sat-popover #dial verticalAlign="{{ align }}">

@@ -9,7 +9,6 @@ import { EngagementService } from '@app/core/services/engagement.service';
 import { ExtractKeys, Omit } from '@app/core/util';
 import { FormGroupItemOptions } from '@app/core/view-state-form-builder';
 import { EngagementViewStateService } from '@app/projects/engagement-view-state.service';
-import { popInOut } from '@app/shared/animations';
 import { emptyOptions, StatusOptions } from '@app/shared/components/status-select-workflow/status-select-workflow.component';
 import { SubscriptionComponent } from '@app/shared/components/subscription.component';
 import { BehaviorSubject, merge, Observable } from 'rxjs';
@@ -33,7 +32,6 @@ type TagControl = FormGroupItemOptions<EngagementForm, Engagement, ExtractKeys<E
   selector: 'app-project-engagement',
   templateUrl: './project-engagement.component.html',
   styleUrls: ['./project-engagement.component.scss'],
-  animations: [popInOut],
   providers: [EngagementViewStateService],
 })
 @TitleAware()

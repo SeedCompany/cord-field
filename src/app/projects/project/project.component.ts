@@ -4,7 +4,6 @@ import { MatSnackBar, MatSnackBarRef, SimpleSnackBar } from '@angular/material';
 import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
 import { TitleAware, TitleProp } from '@app/core/decorators';
 import { LoggerService } from '@app/core/services/logger.service';
-import { popInOut } from '@app/shared/animations';
 import { SubscriptionComponent } from '@app/shared/components/subscription.component';
 import { of as observableOf } from 'rxjs';
 import { filter, map, startWith, switchMap, takeUntil } from 'rxjs/operators';
@@ -19,7 +18,6 @@ interface TabConfig {
   selector: 'app-project',
   templateUrl: './project.component.html',
   styleUrls: ['./project.component.scss'],
-  animations: [popInOut],
   providers: [
     ProjectViewStateService,
   ],

@@ -3,7 +3,6 @@ import { MatSnackBar, MatSnackBarRef, SimpleSnackBar } from '@angular/material';
 import { Observable } from 'rxjs';
 import { map, takeUntil } from 'rxjs/operators';
 import { TitleAware } from '../../core/decorators';
-import { popInOut } from '../../shared/animations';
 import { UserViewStateService } from '../user-view-state.service';
 import { AbstractPersonComponent } from './abstract-person.component';
 
@@ -16,7 +15,6 @@ interface TabConfig {
   selector: 'app-person-edit',
   templateUrl: './person-edit.component.html',
   styleUrls: ['./person-edit.component.scss'],
-  animations: [popInOut],
 })
 @TitleAware()
 export class PersonEditComponent extends AbstractPersonComponent implements OnInit {

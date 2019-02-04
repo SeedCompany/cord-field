@@ -71,12 +71,11 @@
 </form>
 
 <app-speed-dial
-  *ngIf="form.disabled || (form.dirty && form.valid)"
+  [show]="form.disabled || (form.dirty && form.valid)"
   align="below"
   icon="save"
   [disabled]="form.disabled"
   [progress]="form.disabled"
-  [@popInOut]
 >
   <app-speed-dial-item tooltip="Discard" color="warn" (click)="onReset()">
     <mat-icon>delete</mat-icon>

@@ -13,12 +13,11 @@
      [active]="rla.isActive"
   >{{ tab.label }}</a>
   <app-speed-dial
-    *ngIf="dirty"
+    [show]="dirty"
     align="below"
     icon="save"
     [disabled]="submitting"
     [progress]="submitting"
-    [@popInOut]
   >
     <app-speed-dial-item tooltip="Discard" color="warn" (click)="onDiscard()">
       <mat-icon>delete</mat-icon>

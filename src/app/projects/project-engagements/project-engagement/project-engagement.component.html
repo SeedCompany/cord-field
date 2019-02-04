@@ -126,12 +126,11 @@
 </form>
 
 <app-speed-dial
-  *ngIf="isDirty | async"
+  [show]="isDirty | async"
   align="below"
   icon="save"
   [disabled]="isSubmitting"
   [progress]="isSubmitting"
-  [@popInOut]
 >
   <app-speed-dial-item tooltip="Discard" color="warn" (click)="onDiscard()">
     <mat-icon>delete</mat-icon>
