@@ -5,10 +5,10 @@
   [disabled]="submitting"
   [progress]="submitting"
 >
-  <app-speed-dial-item tooltip="Discard" color="warn" (click)="discard.emit()">
-    <mat-icon>delete</mat-icon>
-  </app-speed-dial-item>
   <app-speed-dial-item tooltip="Save" color="accent" (click)="save.emit()">
     <mat-icon>save</mat-icon>
+  </app-speed-dial-item>
+  <app-speed-dial-item tooltip="Discard" color="warn" (click)="discard.emit()">
+    <mat-icon>delete</mat-icon>
   </app-speed-dial-item>
 </app-speed-dial>
