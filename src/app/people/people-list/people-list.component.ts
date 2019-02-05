@@ -3,7 +3,6 @@ import { Router } from '@angular/router';
 import { TypedSort } from '@app/core/util';
 import { TitleAware } from '../../core/decorators';
 import { Organization } from '../../core/models/organization';
-import { ProjectRole } from '../../core/models/project-role';
 import { UserListItem } from '../../core/models/user';
 import { UserService } from '../../core/services/user.service';
 
@@ -14,8 +13,6 @@ import { UserService } from '../../core/services/user.service';
 })
 @TitleAware('People')
 export class PeopleListComponent {
-
-  readonly ProjectRole = ProjectRole;
 
   readonly displayedColumns: Array<keyof UserListItem> = [
     'avatarLetters',

@@ -15,9 +15,9 @@
       <mat-select placeholder="Roles"
                   [multiple]="true"
                   [formControl]="roles">
-        <mat-option *ngFor="let role of availableRoles; trackBy: ProjectRole.trackValueBy"
+        <mat-option *ngFor="let role of availableRoles; trackBy: Role.trackValueBy"
                     [value]="role">
-          {{ ProjectRole.forUI(role) }}
+          {{ Role.forUI(role) }}
         </mat-option>
       </mat-select>
       <mat-error>Please select one or more roles</mat-error>

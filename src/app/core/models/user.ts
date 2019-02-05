@@ -4,7 +4,7 @@ import { buildEnum } from './enum';
 import { Language } from './language';
 import { Location } from './location';
 import { Organization } from './organization';
-import { ProjectRole } from './project-role';
+import { Role } from './role';
 
 export interface NewUser {
   firstName: string;
@@ -66,7 +66,7 @@ export class User {
 
 export class UserListItem extends User {
   projectCount: number;
-  roles: ProjectRole[];
+  roles: Role[];
   organizations: Organization[];
   isActive: boolean;
 
@@ -138,7 +138,7 @@ export class UserProfile extends User {
 }
 
 export class UserRole {
-  role: ProjectRole;
+  role: Role;
   locations: Location[];
 
   static fromJson(json: Partial<UserRole>): UserRole {

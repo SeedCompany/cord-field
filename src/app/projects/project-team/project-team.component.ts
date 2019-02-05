@@ -3,7 +3,7 @@ import { MatDialog, MatPaginator, MatSnackBar, MatSort, MatTableDataSource } fro
 import { takeUntil } from 'rxjs/operators';
 import { TitleAware } from '../../core/decorators';
 import { Project } from '../../core/models/project';
-import { ProjectRole } from '../../core/models/project-role';
+import { Role } from '../../core/models/role';
 import { TeamMember } from '../../core/models/team-member';
 import { SubscriptionComponent } from '../../shared/components/subscription.component';
 import { ProjectTeamMemberRoleDialogComponent } from '../project-team-member-role-dialog/project-team-member-role-dialog.component';
@@ -56,8 +56,8 @@ export class ProjectTeamComponent extends SubscriptionComponent implements OnIni
     };
   }
 
-  showRoles(roles: ProjectRole[]): string {
-    return roles.map(role => ProjectRole.forUI(role)).join(', ');
+  showRoles(roles: Role[]): string {
+    return roles.map(role => Role.forUI(role)).join(', ');
   }
 
   onSearch(term: string) {

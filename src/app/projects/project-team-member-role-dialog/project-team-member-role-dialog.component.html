@@ -11,10 +11,10 @@
 
 <mat-form-field color="accent" *ngIf="!loading && assignableRoles.length > 0">
   <mat-select multiple placeholder="Roles" [formControl]="roles">
-    <mat-option *ngFor="let role of assignableRoles; trackBy: ProjectRole.trackValueBy"
-                [disabled]="ProjectRole.implicit.includes(role)"
+    <mat-option *ngFor="let role of assignableRoles; trackBy: Role.trackValueBy"
+                [disabled]="Role.implicit.includes(role)"
                 [value]="role">
-      {{ ProjectRole.forUI(role) }}
+      {{ Role.forUI(role) }}
     </mat-option>
   </mat-select>
   <mat-error>Please select one or more roles</mat-error>

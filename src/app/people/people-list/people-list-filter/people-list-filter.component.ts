@@ -1,7 +1,7 @@
 import { Component, Output } from '@angular/core';
 import { FormBuilder } from '@angular/forms';
 import { Organization } from '@app/core/models/organization';
-import { ProjectRole } from '@app/core/models/project-role';
+import { Role } from '@app/core/models/role';
 import { UserFilter } from '@app/core/models/user';
 import { filterValues, hasValue, TypedFormControl } from '@app/core/util';
 import { TableViewFilters } from '@app/shared/components/table-view/table-filter.directive';
@@ -22,8 +22,8 @@ export class PeopleListFilterComponent implements TableViewFilters<UserFilter> {
 
   constructor(private formBuilder: FormBuilder) { }
 
-  get roles(): TypedFormControl<ProjectRole[]> {
-    return this.form.get('roles') as TypedFormControl<ProjectRole[]>;
+  get roles(): TypedFormControl<Role[]> {
+    return this.form.get('roles') as TypedFormControl<Role[]>;
   }
 
   get organizations(): TypedFormControl<Organization[]> {

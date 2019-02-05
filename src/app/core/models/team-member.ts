@@ -1,16 +1,16 @@
 import { DateTime } from 'luxon';
 import { clone } from '../util';
-import { ProjectRole } from './project-role';
+import { Role } from './role';
 import { User } from './user';
 
 export interface TeamMemberForSaveAPI {
   userId: string;
-  roles: ProjectRole[];
+  roles: Role[];
 }
 
 export class TeamMember {
   user: User;
-  roles: ProjectRole[];
+  roles: Role[];
   description: string;
   editable: boolean;
   dateAdded: DateTime | null; // Nullable until CF2-512 is resolved
@@ -28,7 +28,7 @@ export class TeamMember {
     return teamMember;
   }
 
-  static new(user: User, roles: ProjectRole[]): TeamMember {
+  static new(user: User, roles: Role[]): TeamMember {
     const member = new TeamMember();
     member.user = user;
     member.roles = roles;
@@ -71,10 +71,10 @@ export class TeamMember {
   }
 
   get removable() {
-    return this.roles.some(role => ProjectRole.implicit.includes(role));
+    return this.roles.some(role => Role.implicit.includes(role));
   }
 
-  withRoles(roles: ProjectRole[]): TeamMember {
+  withRoles(roles: Role[]): TeamMember {
     const cloned = clone(this);
     cloned.roles = roles;
 
