@@ -1,20 +1,23 @@
 import { Injectable } from '@angular/core';
-import { EditableEngagement, Engagement, EngagementStatus } from '@app/core/models/engagement';
-import { EnumList } from '@app/core/models/enum';
+import {
+  EditableProjectEngagement as EditableEngagement,
+  ProjectEngagement as Engagement,
+  ProjectEngagementStatus as EngagementStatus,
+} from '@app/core/models/project';
 import { PloApiService } from '@app/core/services/http/plo-api.service';
 import { StatusOptions } from '@app/shared/components/status-select-workflow/status-select-workflow.component';
 
 @Injectable({
   providedIn: 'root',
 })
-export class EngagementService {
+export class ProjectEngagementService {
 
   constructor(private ploApi: PloApiService) {
   }
 
   async save(engagementId: string, data: EditableEngagement): Promise<void> {
     await this.ploApi
-      .put<Engagement>(`/engagements/${engagementId}/save`, data)
+      .put(`/engagements/${engagementId}/save`, data)
       .toPromise();
   }
 
@@ -24,7 +27,7 @@ export class EngagementService {
       .map(([ui, value]) => ({ ui, value }));
     const bypassWorkflow = engagement.possibleStatuses.length === EngagementStatus.length;
     const overrides = bypassWorkflow
-      ? (EngagementStatus.entries() as EnumList<EngagementStatus>)
+      ? EngagementStatus.entries()
         .filter(entry => entry.value !== engagement.status)
       : [];
     return { transitions, overrides };

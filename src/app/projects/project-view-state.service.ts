@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Budget } from '@app/core/models/budget';
-import { Engagement } from '@app/core/models/engagement';
+import { ProjectEngagement as Engagement } from '@app/core/models/project';
 import { SessionStorageService } from '@app/core/services/storage.service';
 import { clone } from '@app/core/util';
 import { DateTime } from 'luxon';

@@ -1,5 +1,4 @@
 import { Injectable } from '@angular/core';
-import { EnumList } from '@app/core/models/enum';
 import { Sensitivity } from '@app/core/models/sensitivity';
 import { AuthenticationService } from '@app/core/services/authentication.service';
 import { buildDateFilter, DateFilterAPI, toIds } from '@app/core/util/list-filters';
@@ -91,7 +90,7 @@ export class ProjectService {
       .map(([ui, value]) => ({ ui, value }));
     const bypassWorkflow = project.possibleStatuses.length === ProjectStatus.length;
     const overrides = bypassWorkflow
-      ? (ProjectStatus.entries() as EnumList<ProjectStatus>)
+      ? ProjectStatus.entries()
         .filter(entry => entry.value !== project.status)
       : [];
     return { transitions, overrides };
