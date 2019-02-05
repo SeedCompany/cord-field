@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { ProjectBudget } from '@app/core/models/budget';
+import { Budget } from '@app/core/models/budget';
 import { Engagement } from '@app/core/models/engagement';
 import { SessionStorageService } from '@app/core/services/storage.service';
 import { clone } from '@app/core/util';
@@ -35,7 +35,7 @@ export interface ModifiedProject {
     update?: TeamMemberForSaveAPI[];
     remove?: string[];
   };
-  budgets?: ProjectBudget[];
+  budgets?: Budget[];
 }
 
 const config: ChangeConfig<Project> = {
@@ -82,8 +82,8 @@ const config: ChangeConfig<Project> = {
     restore: mapChangeList(TeamMember.fromJson, TeamMember.fromJson),
   },
   budgets: {
-    accessor: ProjectBudget.identify,
-    toServer: ProjectBudget.forSaveAPI,
+    accessor: Budget.identify,
+    toServer: Budget.forSaveAPI,
   },
 };
 

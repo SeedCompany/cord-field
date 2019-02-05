@@ -3,19 +3,19 @@ import { Organization } from '@app/core/models/organization';
 import { Project } from '@app/core/models/project';
 import { generateObjectId } from '@app/core/util';
 
-export interface ProjectBudgetDetails {
+export interface BudgetDetails {
   organization: Organization;
   fiscalYear: number;
   amount: number;
 }
 
-export class ProjectBudget {
+export class Budget {
   id: string;
   status: BudgetStatus;
-  budgetDetails: ProjectBudgetDetails[];
+  budgetDetails: BudgetDetails[];
 
-  static fromJson(project: Project, json: any): ProjectBudget {
-    const budget = new ProjectBudget();
+  static fromJson(project: Project, json: any): Budget {
+    const budget = new Budget();
 
     budget.id = json.id;
     budget.status = json.status;
@@ -27,7 +27,7 @@ export class ProjectBudget {
     return budget;
   }
 
-  static forSaveAPI(budgets: ProjectBudget[]) {
+  static forSaveAPI(budgets: Budget[]) {
     return budgets.map(({ budgetDetails, ...budget }) => ({
       budgetDetails: budgetDetails.map(({ organization, ...details }) => ({
         organizationId: organization.id,
@@ -38,7 +38,7 @@ export class ProjectBudget {
   }
 
   /** Identify project budget as a scalar value */
-  static identify(budget: ProjectBudget): string {
+  static identify(budget: Budget): string {
     return [
       budget.id,
       budget.status,
@@ -46,8 +46,8 @@ export class ProjectBudget {
     ].join(',');
   }
 
-  static create(): ProjectBudget {
-    return Object.assign(new ProjectBudget(), {
+  static create(): Budget {
+    return Object.assign(new Budget(), {
       id: generateObjectId(),
       status: BudgetStatus.Pending,
       budgetDetails: [],
