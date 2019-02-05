@@ -1,5 +1,6 @@
 import { Component, Input } from '@angular/core';
-import { Project, ProjectSensitivity } from '@app/core/models/project';
+import { Project } from '@app/core/models/project';
+import { Sensitivity } from '@app/core/models/sensitivity';
 
 @Component({
   selector: 'app-project-overview-sidebar',
@@ -9,5 +10,5 @@ import { Project, ProjectSensitivity } from '@app/core/models/project';
 export class ProjectOverviewSidebarComponent {
   @Input() project: Project | null;
 
-  readonly ProjectSensitivity = ProjectSensitivity;
+  readonly Sensitivity = Sensitivity;
 }

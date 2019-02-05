@@ -1,13 +1,13 @@
 import { ProjectBudget } from '@app/core/models/budget';
 import { Engagement } from '@app/core/models/engagement';
 import { ProjectExtension } from '@app/core/models/project/extension';
+import { Sensitivity } from '@app/core/models/sensitivity';
 import { maybeRedacted } from '@app/core/util';
 import { DateFilter } from '@app/core/util/list-filters';
 import { DateTime } from 'luxon';
 import { Language } from './language';
 import { Location } from './location';
 import { Partnership } from './partnership';
-import { ProjectSensitivity } from './project/sensitivity';
 import { ProjectStatus } from './project/status';
 import { ProjectType } from './project/type';
 import { TeamMember } from './team-member';
@@ -16,7 +16,6 @@ import { User } from './user';
 export * from './project/extension';
 export * from './project/status';
 export * from './project/type';
-export * from './project/sensitivity';
 
 export class Project {
 
@@ -32,7 +31,7 @@ export class Project {
   mouEnd: DateTime | null;
   languages: Language[];
   partnerships: Partnership[];
-  sensitivity: ProjectSensitivity;
+  sensitivity: Sensitivity;
   team: TeamMember[];
   budgets: ProjectBudget[];
   updatedAt: DateTime;
@@ -57,7 +56,7 @@ export class Project {
     project.mouEnd = json.mouEnd ? DateTime.fromISO(json.mouEnd) : null;
     project.languages = (json.languages || []).map(Language.fromJson);
     project.partnerships = (json.partnerships || []).map(Partnership.fromJson);
-    project.sensitivity = json.sensitivity || 1;
+    project.sensitivity = json.sensitivity || Sensitivity.Low;
     project.team = (json.team || [])
       .filter((tm: any) => tm.user) // ignore team members that don't have user hydrated
       .map(TeamMember.fromJson);
@@ -76,5 +75,5 @@ export interface ProjectFilter extends DateFilter {
   languages?: Language[];
   location?: Location[];
   team?: User[];
-  sensitivity?: ProjectSensitivity[];
+  sensitivity?: Sensitivity[];
 }

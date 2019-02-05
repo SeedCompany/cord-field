@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { EnumList } from '@app/core/models/enum';
+import { Sensitivity } from '@app/core/models/sensitivity';
 import { AuthenticationService } from '@app/core/services/authentication.service';
 import { buildDateFilter, DateFilterAPI, toIds } from '@app/core/util/list-filters';
 import { ApiOptions as ListApiOptions, listOptionsToHttpParams, makeListRequest } from '@app/core/util/list-views';
@@ -9,14 +10,7 @@ import { catchError, map, mapTo, switchMap, tap } from 'rxjs/operators';
 import { ModifiedProject } from '../../projects/project-view-state.service';
 import { SaveResult } from '../abstract-view-state';
 import { ProjectCreationResult } from '../create-dialogs/project-create-dialog/project-create-dialog.component';
-import {
-  ExtensionStatus,
-  Project,
-  ProjectExtension,
-  ProjectFilter,
-  ProjectSensitivity,
-  ProjectStatus,
-} from '../models/project';
+import { ExtensionStatus, Project, ProjectExtension, ProjectFilter, ProjectStatus } from '../models/project';
 import { PloApiService } from './http/plo-api.service';
 
 export interface ProjectFilterAPI extends DateFilterAPI {
@@ -24,7 +18,7 @@ export interface ProjectFilterAPI extends DateFilterAPI {
   languages?: string[];
   locationId?: string[];
   team?: string[];
-  sensitivity?: ProjectSensitivity[];
+  sensitivity?: Sensitivity[];
 }
 
 @Injectable({
