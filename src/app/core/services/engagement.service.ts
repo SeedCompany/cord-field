@@ -3,7 +3,6 @@ import { EditableEngagement, Engagement, EngagementStatus } from '@app/core/mode
 import { EnumList } from '@app/core/models/enum';
 import { PloApiService } from '@app/core/services/http/plo-api.service';
 import { StatusOptions } from '@app/shared/components/status-select-workflow/status-select-workflow.component';
-import { map } from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root',
@@ -11,13 +10,6 @@ import { map } from 'rxjs/operators';
 export class EngagementService {
 
   constructor(private ploApi: PloApiService) {
-  }
-
-  getEngagement(id: string): Promise<Engagement> {
-    return this.ploApi
-      .get<Engagement>(`/engagements/${id}`)
-      .pipe(map(Engagement.fromJson))
-      .toPromise();
   }
 
   async save(engagementId: string, data: EditableEngagement): Promise<void> {
