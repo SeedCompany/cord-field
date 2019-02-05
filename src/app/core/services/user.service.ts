@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { ifValue } from '@app/core/util';
+import { toIds } from '@app/core/util/list-filters';
 import { listApi } from '@app/core/util/list-views';
 import { Observable, of as observableOf } from 'rxjs';
 import { delay, map, tap } from 'rxjs/operators';
@@ -43,9 +43,9 @@ export class UserService {
     this.plo,
     '/users',
     UserListItem.fromJson,
-    (filter: UserFilter) => ({
-      organizationIds: ifValue(filter.organizations, orgs => orgs.map(org => org.id)),
-      isActive: ifValue(filter.isActive, active => active),
+    ({ isActive, organizations }: UserFilter) => ({
+      isActive,
+      organizationIds: toIds(organizations),
     }),
   );
 

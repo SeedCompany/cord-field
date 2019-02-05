@@ -1,9 +1,9 @@
 import { Injectable } from '@angular/core';
 import { EnumList } from '@app/core/models/enum';
 import { AuthenticationService } from '@app/core/services/authentication.service';
+import { buildDateFilter, DateFilterAPI, toIds } from '@app/core/util/list-filters';
 import { ApiOptions as ListApiOptions, listOptionsToHttpParams, makeListRequest } from '@app/core/util/list-views';
 import { StatusOptions } from '@app/shared/components/status-select-workflow/status-select-workflow.component';
-import { DateTime } from 'luxon';
 import { from, Observable, of } from 'rxjs';
 import { catchError, map, mapTo, switchMap, tap } from 'rxjs/operators';
 import { ModifiedProject } from '../../projects/project-view-state.service';
@@ -19,14 +19,12 @@ import {
 } from '../models/project';
 import { PloApiService } from './http/plo-api.service';
 
-export interface ProjectFilterAPI {
+export interface ProjectFilterAPI extends DateFilterAPI {
   status?: ProjectStatus[];
   languages?: string[];
   locationId?: string[];
   team?: string[];
   sensitivity?: ProjectSensitivity[];
-  createdAt?: {gte?: DateTime, lte?: DateTime};
-  updatedAt?: {gte?: DateTime, lte?: DateTime};
 }
 
 @Injectable({
@@ -47,7 +45,7 @@ export class ProjectService {
   getProjects = (options: ListApiOptions<keyof Project, ProjectFilter> & { all: boolean }) =>
     of(options)
       .pipe(
-        map(listOptionsToHttpParams(this.buildFilter.bind(this))),
+        map(listOptionsToHttpParams(this.buildFilter)),
         switchMap(params => {
           if (options.all) {
             return of(params);
@@ -86,24 +84,12 @@ export class ProjectService {
     return this.ploApi.put<SaveResult<Project>>(`/projects/${id}/save`, modified).toPromise();
   }
 
-  private buildFilter(filter: ProjectFilter): ProjectFilterAPI {
-    const {dateRange, startDate, endDate, ...rest} = filter;
-
-    const languages = rest.languages ? rest.languages.map(l => l.id) : undefined;
-    const locationId = rest.location ? rest.location.map(l => l.id) : undefined;
-    const team = rest.team ? rest.team.map(member => member.id) : undefined;
-
-    const date = dateRange && (startDate || endDate)
-      ? {
-        [dateRange]: {
-          gte: startDate,
-          lte: endDate,
-        },
-      }
-      : undefined;
-
-    return {...rest, languages, locationId, team, ...date} as ProjectFilterAPI;
-  }
+  private buildFilter = ({ languages, location, team, ...filters }: ProjectFilter): ProjectFilterAPI => ({
+    languages: toIds(languages),
+    locationId: toIds(location),
+    team: toIds(team),
+    ...buildDateFilter(filters),
+  });
 
   getAvailableStatuses(project: Project): StatusOptions<ProjectStatus> {
     const transitions = this.getAvailableStatusesInner(project.status)

@@ -2,6 +2,7 @@ import { ProjectBudget } from '@app/core/models/budget';
 import { Engagement } from '@app/core/models/engagement';
 import { ProjectExtension } from '@app/core/models/project/extension';
 import { maybeRedacted } from '@app/core/util';
+import { DateFilter } from '@app/core/util/list-filters';
 import { DateTime } from 'luxon';
 import { Language } from './language';
 import { Location } from './location';
@@ -70,13 +71,10 @@ export class Project {
   }
 }
 
-export interface ProjectFilter {
+export interface ProjectFilter extends DateFilter {
   status?: ProjectStatus[];
   languages?: Language[];
   location?: Location[];
   team?: User[];
   sensitivity?: ProjectSensitivity[];
-  dateRange?: string;
-  startDate?: DateTime;
-  endDate?: DateTime;
 }
