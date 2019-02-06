@@ -1,5 +1,5 @@
 import { DateTime, Interval } from 'luxon';
-import { firstLettersOfWords, generateObjectId, isRedacted, Omit } from '../util';
+import { firstLettersOfWords, generateObjectId, maybeRedacted, Omit } from '../util';
 import { buildEnum } from './enum';
 import { Language } from './language';
 import { Location } from './location';
@@ -34,12 +34,12 @@ export class User {
     };
   }
 
-  get firstName(): string | null {
-    return this.isRealNameValid(this.realFirstName) ? this.realFirstName : this.displayFirstName;
+  get firstName(): string {
+    return maybeRedacted(this.realFirstName) || this.displayFirstName;
   }
 
-  get lastName(): string | null {
-    return this.isRealNameValid(this.realLastName) ? this.realLastName : this.displayLastName;
+  get lastName(): string {
+    return maybeRedacted(this.realLastName) || this.displayLastName;
   }
 
   get fullName(): string {
@@ -61,10 +61,6 @@ export class User {
     obj.email = json.email;
 
     return obj;
-  }
-
-  isRealNameValid(value: string | null): boolean {
-    return !isRedacted(value) && !!value;
   }
 }
 
