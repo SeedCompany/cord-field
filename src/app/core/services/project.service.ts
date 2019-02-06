@@ -89,7 +89,7 @@ export class ProjectService {
     ...buildDateFilter(filters),
   });
 
-  getAvailableStatuses(project: Project): StatusOptions<ProjectStatus> {
+  getAvailableStatuses(project: { status: ProjectStatus, possibleStatuses: ProjectStatus[] }): StatusOptions<ProjectStatus> {
     const transitions = this.getAvailableStatusesInner(project.status)
       .filter(([text, status]) => !status || project.possibleStatuses.includes(status))
       .map(([ui, value]) => ({ ui, value }));
