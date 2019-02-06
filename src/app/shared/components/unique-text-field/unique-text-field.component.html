@@ -1,0 +1,10 @@
+<mat-form-field color="accent">
+  <input matInput
+         [formControl]="text"
+         [placeholder]="placeholder"
+         maxlength="{{ maxLength }}"
+         autocomplete="off">
+  <mat-hint align="start" *ngIf="text.pending">{{ pending }}</mat-hint>
+  <mat-hint align="end">{{ text.value ? text.value.length : 0 }}/{{ maxLength }}</mat-hint>
+  <mat-error *ngIf="text.errors">{{ displayError() }}</mat-error>
+</mat-form-field>

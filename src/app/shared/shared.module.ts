@@ -20,6 +20,7 @@ import { SpeedDialComponent } from './components/speed-dial/speed-dial.component
 import { StatusSelectWorkflowComponent } from './components/status-select-workflow/status-select-workflow.component';
 import { TableFilterDirective } from './components/table-view/table-filter.directive';
 import { TableViewComponent } from './components/table-view/table-view.component';
+import { UniqueTextFieldComponent } from './components/unique-text-field/unique-text-field.component';
 import { UserRolesFormComponent } from './components/user-roles-form/user-roles-form.component';
 import { AutofocusDirective } from './directives/autofocus.directive';
 import { NotImplementedDirective } from './directives/not-implemented.directive';
@@ -61,6 +62,7 @@ import { LanguageInfoPipe } from './pipes/language-info.pipe';
     StatusSelectWorkflowComponent,
     TableFilterDirective,
     TableViewComponent,
+    UniqueTextFieldComponent,
     UserRolesFormComponent,
   ],
   declarations: [
@@ -84,6 +86,7 @@ import { LanguageInfoPipe } from './pipes/language-info.pipe';
     StatusSelectWorkflowComponent,
     TableFilterDirective,
     TableViewComponent,
+    UniqueTextFieldComponent,
     UserRolesFormComponent,
   ],
   providers: [
