@@ -1,19 +1,15 @@
-import { forwardRef } from '@angular/core';
-import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
-import { SubscriptionComponent } from '@app/shared/components/subscription.component';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
+import { SimpleValueAccessor } from './simple-value-accessor';
 
-export function ValueAccessorProvider(type: any) {
-  return {
-    provide: NG_VALUE_ACCESSOR,
-    // tslint:disable-next-line:no-forward-ref
-    useExisting: forwardRef(() => type),
-    multi: true,
-  };
-}
+export { ValueAccessorProvider } from './simple-value-accessor';
 
-export abstract class AbstractValueAccessor<T> extends SubscriptionComponent implements ControlValueAccessor {
+/**
+ * Provides value property and externalChanges observable.
+ * External changes are written to value property and notify the externalChanges stream.
+ * Internal changes should be written to value property, which automatically notifies external.
+ */
+export abstract class AbstractValueAccessor<T> extends SimpleValueAccessor<T> {
   private _valueChange: Subject<T> = new Subject<T>();
   /**
    * An observable of external value changes.
@@ -41,7 +37,6 @@ export abstract class AbstractValueAccessor<T> extends SubscriptionComponent imp
    * @internal
    */
   onChange = (_: T) => { };
-  onTouched = () => { };
 
   /**
    * Externally update the control with a new value.
@@ -51,21 +46,5 @@ export abstract class AbstractValueAccessor<T> extends SubscriptionComponent imp
   writeValue(value: T) {
     this._innerValue = value;
     this._valueChange.next(value);
-  }
-
-  /**
-   * Should not be called from concrete class.
-   * @internal
-   */
-  registerOnChange(fn: (_: T) => {}): void {
-    this.onChange = fn;
-  }
-
-  /**
-   * Should not be called from concrete class.
-   * @internal
-   */
-  registerOnTouched(fn: () => {}): void {
-    this.onTouched = fn;
   }
 }
