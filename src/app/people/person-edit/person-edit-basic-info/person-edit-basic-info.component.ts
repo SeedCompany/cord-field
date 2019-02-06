@@ -3,7 +3,6 @@ import { AbstractControl, FormBuilder, FormGroup, Validators } from '@angular/fo
 import { MatDialog } from '@angular/material';
 import { TitleAware } from '@app/core/decorators';
 import { Unavailability, UserProfile } from '@app/core/models/user';
-import { enableControl, onlyValidValues } from '@app/core/util';
 import * as CustomValidators from '@app/core/validators';
 import { AbstractPersonComponent } from '@app/people/person-edit/abstract-person.component';
 import {
@@ -12,6 +11,15 @@ PersonAvailabilityCrudDialogComponent,
 import { UserViewStateService } from '@app/people/user-view-state.service';
 import { DateTime } from 'luxon';
 import { takeUntil } from 'rxjs/operators';
+
+interface Form {
+  firstName: string;
+  lastName: string;
+  displayFirstName: string;
+  displayLastName: string;
+  email: string;
+  phone: string;
+}
 
 @Component({
   selector: 'app-person-edit-basic-info',
@@ -31,8 +39,6 @@ export class PersonEditBasicInfoComponent extends AbstractPersonComponent implem
     public dialog: MatDialog,
   ) {
     super(userViewState);
-
-    this.initForm();
   }
 
   get firstName(): AbstractControl {
@@ -62,8 +68,39 @@ export class PersonEditBasicInfoComponent extends AbstractPersonComponent implem
   ngOnInit(): void {
     super.ngOnInit();
 
-    this.initFormEvents();
-    this.initViewState();
+    const toString = (name: string | null) => name || '';
+    this.form = this.userViewState.fb.group<Form>(this.unsubscribe, {
+      firstName: {
+        field: 'realFirstName',
+        validators: [Validators.required, Validators.minLength(2)],
+        modelToForm: toString,
+      },
+      lastName: {
+        field: 'realLastName',
+        validators: [Validators.required, Validators.minLength(2)],
+        modelToForm: toString,
+      },
+      displayFirstName: {
+        validators: [Validators.required, Validators.minLength(2)],
+      },
+      displayLastName: {
+        validators: [Validators.required, Validators.minLength(2)],
+      },
+      email: {
+        validators: [Validators.required, CustomValidators.email],
+        modelToForm: toString,
+      },
+      phone: {
+        validators: [CustomValidators.phone],
+        modelToForm: toString,
+      },
+    });
+
+    this.userViewState.userWithChanges
+      .pipe(takeUntil(this.unsubscribe))
+      .subscribe(userProfile => {
+        this.userProfile = userProfile;
+      });
   }
 
   addAvailability(): void {
@@ -79,59 +116,5 @@ export class PersonEditBasicInfoComponent extends AbstractPersonComponent implem
 
   trackByUnavailabilityId(index: number, item: Unavailability) {
     return item.id;
-  }
-
-  private initForm(): void {
-    this.form = this.formBuilder.group({
-      firstName: ['', [Validators.required, Validators.minLength(2)]],
-      lastName: ['', [Validators.required, Validators.minLength(2)]],
-      displayFirstName: ['', [Validators.required, Validators.minLength(2)]],
-      displayLastName: ['', [Validators.required, Validators.minLength(2)]],
-      email: ['', [Validators.required, CustomValidators.email]],
-      phone: ['', [CustomValidators.phone]],
-    });
-  }
-
-  private initFormEvents(): void {
-    this.form.valueChanges
-      .pipe(
-        takeUntil(this.unsubscribe),
-        onlyValidValues(this.form),
-      )
-      .subscribe(changes => {
-        this.userViewState.change({
-          realFirstName: changes.firstName,
-          realLastName: changes.lastName,
-          displayFirstName: changes.displayFirstName,
-          displayLastName: changes.displayLastName,
-          phone: changes.phone,
-          email: changes.email,
-        });
-      });
-  }
-
-  private initViewState(): void {
-    this.userViewState.isSubmitting
-      .pipe(takeUntil(this.unsubscribe))
-      .subscribe(submitting => {
-        enableControl(this.form, !submitting);
-      });
-
-    this.userViewState.subjectWithPreExistingChanges
-      .pipe(takeUntil(this.unsubscribe))
-      .subscribe(userProfile => {
-        this.firstName.patchValue(userProfile.realFirstName, { emitEvent: false });
-        this.lastName.patchValue(userProfile.realLastName, { emitEvent: false });
-        this.displayFirstName.patchValue(userProfile.displayFirstName, { emitEvent: false });
-        this.displayLastName.patchValue(userProfile.displayLastName, { emitEvent: false });
-        this.phone.patchValue(userProfile.phone, { emitEvent: false });
-        this.email.patchValue(userProfile.email, { emitEvent: false });
-      });
-
-    this.userViewState.userWithChanges
-      .pipe(takeUntil(this.unsubscribe))
-      .subscribe(userProfile => {
-        this.userProfile = userProfile;
-      });
   }
 }
