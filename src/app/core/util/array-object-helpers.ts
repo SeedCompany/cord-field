@@ -21,6 +21,23 @@ export function filterEntries<T>(obj: T, predicate: (key: keyof T, value: T[keyo
   return filtered;
 }
 
+/**
+ * A helper to filter objects by their values via a predicate function
+ *
+ *   filterValues(obj, (value) => value.keep == true);
+ */
+export function filterValues<T>(obj: T, predicate: (value: T[keyof T]) => boolean): T {
+  const filtered: any = {};
+
+  for (const [key, value] of Object.entries(obj) as [keyof T, any]) {
+    if (predicate(value)) {
+      filtered[key] = value;
+    }
+  }
+
+  return filtered;
+}
+
 // Shortcut for a mapping of keys of object {T} to values {V}
 export type ObjMap<T, V> = {[key in keyof Partial<T>]: V};
 

@@ -4,7 +4,7 @@ import { Language } from '@app/core/models/language';
 import { Location } from '@app/core/models/location';
 import { ProjectFilter, ProjectSensitivity, ProjectStatus } from '@app/core/models/project';
 import { User } from '@app/core/models/user';
-import { filterEntries, hasValue } from '@app/core/util';
+import { filterValues, hasValue } from '@app/core/util';
 import * as CustomValidators from '@app/core/validators';
 import { TableViewFilters } from '@app/shared/components/table-view/table-filter.directive';
 import { DateTime } from 'luxon';
@@ -65,9 +65,7 @@ export class ProjectListFilterComponent implements TableViewFilters<ProjectFilte
     return this.form.valueChanges
       .pipe(
         startWith(this.form.value),
-        map(filters =>
-          filterEntries(filters, (key, value) => hasValue(value)),
-        ),
+        map(filters => filterValues(filters, hasValue)),
       );
   }
 
