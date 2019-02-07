@@ -4,7 +4,6 @@ import { MatSnackBar, MatSnackBarRef, SimpleSnackBar } from '@angular/material';
 import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
 import { TitleAware, TitleProp } from '@app/core/decorators';
 import { LoggerService } from '@app/core/services/logger.service';
-import { popInOut } from '@app/shared/animations';
 import { SubscriptionComponent } from '@app/shared/components/subscription.component';
 import { of as observableOf } from 'rxjs';
 import { filter, map, startWith, switchMap, takeUntil } from 'rxjs/operators';
@@ -19,7 +18,6 @@ interface TabConfig {
   selector: 'app-project',
   templateUrl: './project.component.html',
   styleUrls: ['./project.component.scss'],
-  animations: [popInOut],
   providers: [
     ProjectViewStateService,
   ],
@@ -39,7 +37,7 @@ export class ProjectComponent extends SubscriptionComponent implements OnInit, T
   ];
 
   dirty = false;
-  submitting = false;
+  submitting = this.projectViewState.isSubmitting;
   private shouldCurrentTabShowSaveFab: boolean;
 
   private snackBarRef: MatSnackBarRef<SimpleSnackBar> | null;
@@ -77,9 +75,6 @@ export class ProjectComponent extends SubscriptionComponent implements OnInit, T
     this.projectViewState.isDirty
       .pipe(takeUntil(this.unsubscribe))
       .subscribe(dirty => this.dirty = dirty);
-    this.projectViewState.isSubmitting
-      .pipe(takeUntil(this.unsubscribe))
-      .subscribe(submitting => this.submitting = submitting);
 
     this.router.events
       .pipe(

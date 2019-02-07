@@ -1,5 +1,4 @@
 import { Component, Input, OnChanges, SimpleChanges } from '@angular/core';
-import { ProjectRole } from '../../../core/models/project-role';
 import { Degree, LanguageProficiency, UserProfile } from '../../../core/models/user';
 
 @Component({
@@ -11,7 +10,6 @@ export class PersonAboutComponent implements OnChanges {
 
   readonly Degree = Degree;
   readonly LanguageProficiency = LanguageProficiency;
-  readonly ProjectRole = ProjectRole;
 
   @Input() user: UserProfile;
 

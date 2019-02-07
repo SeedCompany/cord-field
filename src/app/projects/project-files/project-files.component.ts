@@ -2,7 +2,7 @@ import { AfterViewInit, Component, ViewChild } from '@angular/core';
 import { MatDialog, MatPaginator, MatSnackBar, MatSort, MatTableDataSource } from '@angular/material';
 import { ActivatedRoute, Router } from '@angular/router';
 import { TitleAware } from '@app/core/decorators';
-import { Directory, FileKeys, FileNode, FileNodeCategory } from '@app/core/models/file-node';
+import { Directory, FileKeys, FileNode, FileNodeCategory } from '@app/core/models/files';
 import { SUPPORTS_DOWNLOADS } from '@app/core/services/downloader.service';
 import { ProjectFilesService } from '@app/core/services/project-files.service';
 import { filterRequired } from '@app/core/util';

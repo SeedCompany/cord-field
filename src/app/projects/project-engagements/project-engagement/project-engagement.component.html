@@ -125,18 +125,9 @@
 
 </form>
 
-<app-speed-dial
-  *ngIf="isDirty | async"
-  align="below"
-  icon="save"
-  [disabled]="isSubmitting"
-  [progress]="isSubmitting"
-  [@popInOut]
->
-  <app-speed-dial-item tooltip="Discard" color="warn" (click)="onDiscard()">
-    <mat-icon>delete</mat-icon>
-  </app-speed-dial-item>
-  <app-speed-dial-item tooltip="Save" color="accent" (click)="onSave()">
-    <mat-icon>save</mat-icon>
-  </app-speed-dial-item>
-</app-speed-dial>
+<app-save-discard-dial
+  [dirty]="isDirty | async"
+  [submitting]="isSubmitting"
+  (save)="onSave()"
+  (discard)="onDiscard()"
+></app-save-discard-dial>

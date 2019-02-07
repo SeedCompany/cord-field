@@ -21,6 +21,23 @@ export function filterEntries<T>(obj: T, predicate: (key: keyof T, value: T[keyo
   return filtered;
 }
 
+/**
+ * A helper to filter objects by their values via a predicate function
+ *
+ *   filterValues(obj, (value) => value.keep == true);
+ */
+export function filterValues<T>(obj: T, predicate: (value: T[keyof T]) => boolean): T {
+  const filtered: any = {};
+
+  for (const [key, value] of Object.entries(obj) as [keyof T, any]) {
+    if (predicate(value)) {
+      filtered[key] = value;
+    }
+  }
+
+  return filtered;
+}
+
 // Shortcut for a mapping of keys of object {T} to values {V}
 export type ObjMap<T, V> = {[key in keyof Partial<T>]: V};
 
@@ -56,4 +73,18 @@ export function sortBy<T>(iteratee: (item: T) => any, order: 'asc' | 'desc' = 'a
 
     return 0;
   };
+}
+
+/**
+ * Takes the object and returns a list of keys and a list of values.
+ * The order of both lists correlate and can be re-associated with their respective indexes.
+ */
+export function splitKeyValues<T>(object: T): [Array<keyof T>, Array<T[keyof T]>] {
+  const keys: Array<keyof T> = [];
+  const values = [];
+  for (const [key, value] of Object.entries(object)) {
+    keys.push(key as keyof T);
+    values.push(value);
+  }
+  return [keys, values];
 }

@@ -1,7 +1,7 @@
 import { Component, Inject } from '@angular/core';
 import { AbstractControl, FormBuilder, FormGroup, ValidatorFn, Validators } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialog, MatDialogRef, MatSnackBar, MatSnackBarRef, SimpleSnackBar } from '@angular/material';
-import { Directory } from '@app/core/models/file-node';
+import { Directory } from '@app/core/models/files';
 import { ProjectFilesService } from '@app/core/services/project-files.service';
 
 @Component({

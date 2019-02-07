@@ -1,11 +1,11 @@
 import { Injectable } from '@angular/core';
-import { ifValue } from '@app/core/util';
+import { toIds } from '@app/core/util/list-filters';
 import { listApi } from '@app/core/util/list-views';
 import { Observable, of as observableOf } from 'rxjs';
 import { delay, map, tap } from 'rxjs/operators';
 import { ModifiedUser } from '../../people/user-view-state.service';
 import { Project } from '../models/project';
-import { ProjectRole } from '../models/project-role';
+import { Role } from '../models/role';
 import { TeamMember } from '../models/team-member';
 import { NewUser, User, UserFilter, UserListItem, UserProfile, UserRole } from '../models/user';
 import { PloApiService } from './http/plo-api.service';
@@ -43,20 +43,20 @@ export class UserService {
     this.plo,
     '/users',
     UserListItem.fromJson,
-    (filter: UserFilter) => ({
-      organizationIds: ifValue(filter.organizations, orgs => orgs.map(org => org.id)),
-      isActive: ifValue(filter.isActive, active => active),
+    ({ isActive, organizations }: UserFilter) => ({
+      isActive,
+      organizationIds: toIds(organizations),
     }),
   );
 
-  async getAssignableRoles(userId: string, project: Project, teamMember?: TeamMember): Promise<ProjectRole[]> {
+  async getAssignableRoles(userId: string, project: Project, teamMember?: TeamMember): Promise<Role[]> {
     const roles = await this.plo
-      .get<ProjectRole[]>(`/users/${userId}/assignable-roles/${project.location!.id}`)
+      .get<Role[]>(`/users/${userId}/assignable-roles/${project.location!.id}`)
       .toPromise();
 
     // Exclude unique roles that are already assigned
     return roles.filter(role => {
-      if (!ProjectRole.unique.includes(role)) {
+      if (!Role.unique.includes(role)) {
         return true;
       }
       return !project.team.find(member =>
@@ -66,8 +66,8 @@ export class UserService {
     });
   }
 
-  getAssignableRolesForUser(user: User): Promise<ProjectRole[]> {
-    return observableOf(ProjectRole.values()).pipe(delay(2000)).toPromise();
+  getAssignableRolesForUser(user: User): Promise<Role[]> {
+    return observableOf(Role.values()).pipe(delay(2000)).toPromise();
   }
 
   create({ userRoles, ...body }: NewUser): Promise<string> {

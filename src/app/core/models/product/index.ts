@@ -1,9 +1,9 @@
 import { BibleBook } from '@app/core/models/bible-book';
-import { ProductApproach } from './product/approach';
-import { ProductMedium } from './product/medium';
-import { ProductMethodology } from './product/methodology';
-import { ProductPurpose } from './product/purpose';
-import { ProductType } from './product/type';
+import { ProductApproach } from './approach';
+import { ProductMedium } from './medium';
+import { ProductMethodology } from './methodology';
+import { ProductPurpose } from './purpose';
+import { ProductType } from './type';
 
 export { ProductApproach, ProductMedium, ProductMethodology, ProductPurpose, ProductType };
 

@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
-import { ProjectBudget } from '@app/core/models/budget';
-import { Engagement } from '@app/core/models/engagement';
+import { Budget } from '@app/core/models/budget';
+import { ProjectEngagement as Engagement } from '@app/core/models/project';
 import { SessionStorageService } from '@app/core/services/storage.service';
 import { clone } from '@app/core/util';
 import { DateTime } from 'luxon';
@@ -35,7 +35,7 @@ export interface ModifiedProject {
     update?: TeamMemberForSaveAPI[];
     remove?: string[];
   };
-  budgets?: ProjectBudget[];
+  budgets?: Budget[];
 }
 
 const config: ChangeConfig<Project> = {
@@ -82,22 +82,8 @@ const config: ChangeConfig<Project> = {
     restore: mapChangeList(TeamMember.fromJson, TeamMember.fromJson),
   },
   budgets: {
-    // Identify project budget as a scalar value
-    accessor: (budget: ProjectBudget) => ([
-      budget.id,
-      budget.status,
-      budget.budgetDetails.map(item => Number(item.amount || 0)).join(','),
-    ].join(',')),
-    // Map organization back to organizationId
-    toServer: (budgets: ProjectBudget[]) => budgets.map(budget => ({
-      id: budget.id,
-      status: budget.status,
-      budgetDetails: budget.budgetDetails.map(detail => ({
-        organizationId: detail.organization.id,
-        fiscalYear: detail.fiscalYear,
-        amount: detail.amount,
-      })),
-    })),
+    accessor: Budget.identify,
+    toServer: Budget.forSaveAPI,
   },
 };
 

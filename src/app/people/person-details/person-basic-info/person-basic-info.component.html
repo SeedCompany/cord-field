@@ -9,13 +9,13 @@
 </h3>
 <mat-nav-list *ngIf="user.roles.length">
   <mat-list-item
-    *ngFor="let role of user.roles; trackBy: trackUserRole"
-    (click)="showRoleLocations(role)"
+    *ngFor="let ur of user.roles; trackBy: trackUserRole"
+    (click)="showRoleLocations(ur)"
     matTooltip="Show areas"
     matTooltipPosition="after"
   >
-    <span mat-line>{{ ProjectRole.forUI(role.role) }}</span>
-    <span mat-line>{{ role.locations.length }} Locations</span>
+    <span mat-line>{{ Role.forUI(ur.role) }}</span>
+    <span mat-line>{{ ur.locations.length }} Locations</span>
   </mat-list-item>
 </mat-nav-list>
 <button mat-button color="accent"

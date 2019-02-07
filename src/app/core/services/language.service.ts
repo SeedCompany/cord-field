@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { ifValue } from '@app/core/util';
+import { toIds } from '@app/core/util/list-filters';
 import { listApi } from '@app/core/util/list-views';
 import { map } from 'rxjs/operators';
 import { Language, LanguageListFilter, LanguageListItem } from '../models/language';
@@ -25,8 +25,8 @@ export class LanguageService {
     this.ploApi,
     '/languages',
     LanguageListItem.fromJson,
-    (filter: LanguageListFilter) => ({
-      locationId: ifValue(filter.location, locs => locs.map(l => l.id)),
+    ({ location }: LanguageListFilter) => ({
+      locationId: toIds(location),
     }),
   );
 }

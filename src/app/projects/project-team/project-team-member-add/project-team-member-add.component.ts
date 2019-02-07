@@ -2,7 +2,7 @@ import { Component, Inject, ViewChild } from '@angular/core';
 import { Validators } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialogRef, MatSnackBar, MatStepper } from '@angular/material';
 import { Project } from '@app/core/models/project';
-import { ProjectRole } from '@app/core/models/project-role';
+import { Role } from '@app/core/models/role';
 import { TeamMember } from '@app/core/models/team-member';
 import { User } from '@app/core/models/user';
 import { UserService } from '@app/core/services/user.service';
@@ -19,7 +19,7 @@ import { ProjectViewStateService } from '../../project-view-state.service';
 })
 export class ProjectTeamMemberAddComponent extends SubscriptionComponent {
 
-  readonly ProjectRole = ProjectRole;
+  readonly Role = Role;
 
   @ViewChild(MatStepper) stepper: MatStepper;
 
@@ -27,8 +27,8 @@ export class ProjectTeamMemberAddComponent extends SubscriptionComponent {
   readonly project: Project;
 
   user = new TypedFormControl<User | null>(null, Validators.required);
-  roles = new TypedFormControl<ProjectRole[]>([], Validators.required);
-  availableRoles: ProjectRole[] = [];
+  roles = new TypedFormControl<Role[]>([], Validators.required);
+  availableRoles: Role[] = [];
   submitting = false;
 
   constructor(private dialogRef: MatDialogRef<ProjectTeamMemberAddComponent>,

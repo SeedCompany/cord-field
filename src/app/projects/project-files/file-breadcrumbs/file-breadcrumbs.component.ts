@@ -1,5 +1,5 @@
 import { Component, Input } from '@angular/core';
-import { Directory, ParentRef } from '@app/core/models/file-node';
+import { Directory, ParentRef } from '@app/core/models/files';
 
 @Component({
   selector: 'app-file-breadcrumbs',

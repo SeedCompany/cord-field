@@ -21,70 +21,71 @@ export enum ProjectStatus {
 }
 
 export namespace ProjectStatus {
-  export const { entries, forUI, values, length, trackEntryBy, trackValueBy } = buildEnum(ProjectStatus, {
-    [ProjectStatus.EarlyConversations]: 'Early Conversations',
-    [ProjectStatus.PendingConceptApproval]: 'Pending Concept Approval',
-    [ProjectStatus.PrepForConsultantEndorsement]: 'Prep for Consultant Endorsement',
-    [ProjectStatus.PendingConsultantEndorsement]: 'Pending Consultant Endorsement',
-    [ProjectStatus.PrepForFinancialEndorsement]: 'Prep for Financial Endorsement',
-    [ProjectStatus.PendingFinancialEndorsement]: 'Pending Financial Endorsement',
-    [ProjectStatus.FinalizingProposal]: 'Finalizing Proposal',
-    [ProjectStatus.PendingAreaDirectorApproval]: 'Pending Area Director Approval',
-    [ProjectStatus.PendingRegionalDirectorApproval]: 'Pending Regional Director Approval',
-    [ProjectStatus.PendingFinanceConfirmation]: 'Pending Finance Confirmation',
-    [ProjectStatus.OnHoldFinanceConfirmation]: 'On Hold for Finance Confirmation',
-    [ProjectStatus.DidNotDevelop]: 'Did Not Develop',
-    [ProjectStatus.Active]: 'Active',
-    [ProjectStatus.Rejected]: 'Rejected',
-    [ProjectStatus.Suspended]: 'Suspended',
-    [ProjectStatus.Terminated]: 'Terminated',
-    [ProjectStatus.Completed]: 'Completed',
+  const Enum = ProjectStatus;
+  export const { entries, forUI, values, length, trackEntryBy, trackValueBy } = buildEnum<ProjectStatus>(Enum, {
+    [Enum.EarlyConversations]: 'Early Conversations',
+    [Enum.PendingConceptApproval]: 'Pending Concept Approval',
+    [Enum.PrepForConsultantEndorsement]: 'Prep for Consultant Endorsement',
+    [Enum.PendingConsultantEndorsement]: 'Pending Consultant Endorsement',
+    [Enum.PrepForFinancialEndorsement]: 'Prep for Financial Endorsement',
+    [Enum.PendingFinancialEndorsement]: 'Pending Financial Endorsement',
+    [Enum.FinalizingProposal]: 'Finalizing Proposal',
+    [Enum.PendingAreaDirectorApproval]: 'Pending Area Director Approval',
+    [Enum.PendingRegionalDirectorApproval]: 'Pending Regional Director Approval',
+    [Enum.PendingFinanceConfirmation]: 'Pending Finance Confirmation',
+    [Enum.OnHoldFinanceConfirmation]: 'On Hold for Finance Confirmation',
+    [Enum.DidNotDevelop]: 'Did Not Develop',
+    [Enum.Active]: 'Active',
+    [Enum.Rejected]: 'Rejected',
+    [Enum.Suspended]: 'Suspended',
+    [Enum.Terminated]: 'Terminated',
+    [Enum.Completed]: 'Completed',
   });
 
   export function getColor(status: ProjectStatus) {
-    if (ProjectStatus.Grouping.Active.includes(status)) {
+    if (Enum.Grouping.Active.includes(status)) {
       return 'active';
     }
-    if (ProjectStatus.Grouping.InDevelopment.includes(status)) {
+    if (Enum.Grouping.InDevelopment.includes(status)) {
       return 'dev';
     }
-    if (ProjectStatus.Grouping.Pending.includes(status)) {
+    if (Enum.Grouping.Pending.includes(status)) {
       return 'pending';
     }
-    if (ProjectStatus.Grouping.Stopped.includes(status)) {
+    if (Enum.Grouping.Stopped.includes(status)) {
       return 'stopped';
     }
-    if (ProjectStatus.Grouping.Finished.includes(status)) {
+    if (Enum.Grouping.Finished.includes(status)) {
       return 'finished';
     }
   }
   export namespace Grouping {
     export const InDevelopment = [
-      ProjectStatus.EarlyConversations,
-      ProjectStatus.PrepForConsultantEndorsement,
-      ProjectStatus.PrepForFinancialEndorsement,
-      ProjectStatus.FinalizingProposal,
+      Enum.EarlyConversations,
+      Enum.PrepForConsultantEndorsement,
+      Enum.PrepForFinancialEndorsement,
+      Enum.FinalizingProposal,
     ];
     export const Pending = [
-      ProjectStatus.PendingConceptApproval,
-      ProjectStatus.PendingConsultantEndorsement,
-      ProjectStatus.PendingFinancialEndorsement,
-      ProjectStatus.PendingAreaDirectorApproval,
-      ProjectStatus.PendingRegionalDirectorApproval,
-      ProjectStatus.PendingFinancialEndorsement,
-      ProjectStatus.OnHoldFinanceConfirmation,
+      Enum.PendingConceptApproval,
+      Enum.PendingConsultantEndorsement,
+      Enum.PendingFinancialEndorsement,
+      Enum.PendingAreaDirectorApproval,
+      Enum.PendingRegionalDirectorApproval,
+      Enum.PendingFinancialEndorsement,
+      Enum.OnHoldFinanceConfirmation,
     ];
     export const Active = [
-      ProjectStatus.Active,
+      Enum.Active,
     ];
     export const Stopped = [
-      ProjectStatus.Suspended,
-      ProjectStatus.Rejected,
-      ProjectStatus.Terminated,
+      Enum.Suspended,
+      Enum.Rejected,
+      Enum.Terminated,
     ];
     export const Finished = [
-      ProjectStatus.DidNotDevelop,
-      ProjectStatus.Completed,
+      Enum.DidNotDevelop,
+      Enum.Completed,
     ];
   }
 }

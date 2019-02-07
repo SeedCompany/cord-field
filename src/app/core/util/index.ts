@@ -20,11 +20,11 @@ export function generateObjectId(): string {
 }
 
 /**
- * Booleans, non empty arrays and strings return true.
+ * Booleans, numbers, non-empty arrays, and non-empty strings return true.
  */
 export function hasValue<T>(value: T | null | undefined): value is T;
-export function hasValue(value: any /* unknown - once Angular catches up */): boolean {
-  if (typeof value === 'boolean') {
+export function hasValue(value: unknown): boolean {
+  if (typeof value === 'boolean' || typeof value === 'number') {
     return true;
   }
   if (Array.isArray(value)) {

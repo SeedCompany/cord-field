@@ -15,7 +15,7 @@ import {
   SortDirection,
 } from '@angular/material';
 import { ActivatedRoute, Router } from '@angular/router';
-import { filterEntries, twoWaySync, TypedMatSort, TypedSort } from '@app/core/util';
+import { filterEntries, ObservablesWithInitialMapping, Omit, twoWaySync, TypedMatSort, TypedSort } from '@app/core/util';
 import { ListApi, observePagerAndSorter } from '@app/core/util/list-views';
 import { SearchComponent } from '@app/shared/components/search/search.component';
 import { SubscriptionComponent } from '@app/shared/components/subscription.component';
@@ -93,23 +93,8 @@ export class TableViewComponent<T,
   @Input() pageSizeOptions = [10, 25, 50];
   @Input() search = false;
   @Input() fetchData: ListApi<T, TKeys, Filters, Params & { filters: Filters }>;
-  @Input() otherChanges = {};
-  @Input() observeChanges = (
-    sorter: TypedMatSort<TKeys>,
-    paginator: MatPaginator,
-    filters$: Observable<Filters>,
-    search$: Observable<string>,
-  ): Observable<Changes> => {
-    return observePagerAndSorter<[string, Filters], TKeys>(
-      paginator,
-      sorter,
-      [search$, filters$],
-      ['', {} as Filters],
-    )
-      .pipe(
-        map(({ sort, page, rest: [search, filters] }) => ({ sort, page, search, filters }) as any),
-      );
-  };
+  /** Other inputs that should be hooked into query params changes & data fetching */
+  @Input() extraInputs: ObservablesWithInitialMapping<Omit<Changes, keyof PSChanges<any, any>>>;
   @Input() parseParams: (raw: RawQueryParams) => Params = (raw) =>
     defaultParseParams(this.defaultSort, this.defaultPageSize)(raw) as Params;
   @Input() paramsFromChanges: (changes: Changes) => Partial<Params> = (changes) => {
@@ -195,7 +180,15 @@ export class TableViewComponent<T,
       ? this.filtersComponent!.filters.pipe(shareReplay(1))
       : of({} as Filters);
 
-    this.observeChanges(this.sort, this.paginator, filters$, this.search$)
+    (observePagerAndSorter(
+      this.paginator,
+      this.sort,
+      {
+        search: { stream: this.search$, initial: '' },
+        filters: { stream: filters$, initial: {} as Filters },
+        ...(this.extraInputs || {}),
+      },
+    ) as Observable<Changes>)
       .pipe(
         map((changes): Partial<Params> => {
           const params = this.paramsFromChanges(changes);

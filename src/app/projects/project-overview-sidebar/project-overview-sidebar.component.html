@@ -3,7 +3,7 @@
   <div class="location mat-title"
        *ngIf="project?.location">{{ project?.publicLocation?.displayName }}
   </div>
-  <div class="sensitivity mat-subheading-1">{{ ProjectSensitivity.forUI(project?.sensitivity) }} Sensitivity</div>
+  <div class="sensitivity mat-subheading-1">{{ Sensitivity.forUI(project?.sensitivity) }} Sensitivity</div>
   <div class="dept-id mat-subheading-1" *ngIf="project?.deptId">
     Department ID: {{ project?.deptId }}
   </div>

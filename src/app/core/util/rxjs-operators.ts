@@ -1,9 +1,11 @@
 import { FormGroup } from '@angular/forms';
-import { EMPTY, from, Observable, of } from 'rxjs';
+import { zipObject } from 'lodash-es';
+import { combineLatest, EMPTY, from, Observable, ObservableInput, of } from 'rxjs';
+import { startWith } from 'rxjs/internal/operators/startWith';
 import { isInteropObservable } from 'rxjs/internal/util/isInteropObservable';
 import { isPromise } from 'rxjs/internal/util/isPromise';
-import { filter, map, tap } from 'rxjs/operators';
-import { filterEntries } from './array-object-helpers';
+import { filter, map, skip, tap } from 'rxjs/operators';
+import { filterEntries, mapEntries, splitKeyValues } from './array-object-helpers';
 
 export type MaybeObservable<T> = Observable<T> | Promise<T> | T;
 
@@ -56,3 +58,34 @@ export const twoWaySync = () => {
 
 export const skipEmptyViewState = <T extends {id: string}>() => (source: Observable<T | null>): Observable<T> =>
   source.pipe(filter((sbj): sbj is T => Boolean(sbj) && Boolean(sbj!.id)));
+
+export type ItemsToObservableInput<T> = { [K in keyof T]: ObservableInput<T[K]> };
+
+/**
+ * Just like combineLatest, except input/output is a mapping/dictionary instead of a list.
+ */
+export function combineLatestObjects<T>(streams: ItemsToObservableInput<T>): Observable<T> {
+  const [keys, list] = splitKeyValues(streams);
+  return combineLatest(...list)
+    .pipe(
+      map(values => zipObject(keys, values) as T),
+    );
+}
+
+
+export type ObservablesWithInitialMapping<T> = {
+  [K in keyof T]: ObservableWithInitial<T[K]>;
+};
+export interface ObservableWithInitial<T> {
+  stream: ObservableInput<T>;
+  initial: T;
+}
+export function combineLatestPreInitialized<T>(dict: ObservablesWithInitialMapping<T>): Observable<T> {
+  const streams = mapEntries(dict, (k, item: any) =>
+    from(item.stream).pipe(startWith(item.initial))) as {[K in keyof T]: Observable<T[K]>};
+  return combineLatestObjects(streams)
+    .pipe(
+      // Skip starting value needed to get combine latest initialized
+      skip(1),
+    );
+}

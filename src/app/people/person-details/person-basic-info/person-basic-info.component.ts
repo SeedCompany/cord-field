@@ -1,7 +1,7 @@
 import { Component, Input, OnChanges, SimpleChanges } from '@angular/core';
 import { MatDialog } from '@angular/material';
 import { Organization } from '@app/core/models/organization';
-import { ProjectRole } from '@app/core/models/project-role';
+import { Role } from '@app/core/models/role';
 import { UserProfile, UserRole } from '@app/core/models/user';
 import { isRedacted } from '@app/core/util';
 import { DateTime } from 'luxon';
@@ -14,7 +14,7 @@ import { PersonRoleLocationsDialogComponent } from '../person-role-locations-dia
   styleUrls: ['./person-basic-info.component.scss'],
 })
 export class PersonBasicInfoComponent implements OnChanges {
-  readonly ProjectRole = ProjectRole;
+  readonly Role = Role;
 
   @Input() user: UserProfile;
 

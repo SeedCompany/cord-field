@@ -7,7 +7,7 @@ import { Observable } from 'rxjs';
 import { AbstractViewState, SaveResult } from '../core/abstract-view-state';
 import { ChangeConfig, mapChangeList, returnId, returnSelf } from '../core/change-engine';
 import { Organization } from '../core/models/organization';
-import { ProjectRole } from '../core/models/project-role';
+import { Role } from '../core/models/role';
 import {
   Education,
   KnownLanguage,
@@ -29,7 +29,7 @@ export interface ModifiedUser {
   roles?: {
     add?: UserRole[];
     update?: UserRole[];
-    remove?: ProjectRole[];
+    remove?: Role[];
   };
   organizations: {
     add?: string[];

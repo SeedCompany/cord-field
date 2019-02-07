@@ -3,7 +3,7 @@ import { FormControl, Validators } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialogRef, MatSnackBar } from '@angular/material';
 import { takeUntil } from 'rxjs/operators';
 import { Project } from '../../core/models/project';
-import { ProjectRole } from '../../core/models/project-role';
+import { Role } from '../../core/models/role';
 import { TeamMember } from '../../core/models/team-member';
 import { UserService } from '../../core/services/user.service';
 import { SubscriptionComponent } from '../../shared/components/subscription.component';
@@ -16,12 +16,12 @@ import { ProjectViewStateService } from '../project-view-state.service';
 })
 export class ProjectTeamMemberRoleDialogComponent extends SubscriptionComponent {
 
-  readonly ProjectRole = ProjectRole;
+  readonly Role = Role;
 
   readonly project: Project;
   readonly projectViewState: ProjectViewStateService;
   readonly teamMember: TeamMember;
-  assignableRoles: ProjectRole[];
+  assignableRoles: Role[];
 
   roles = new FormControl([], Validators.required);
   loading = true;

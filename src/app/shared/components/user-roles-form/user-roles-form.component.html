@@ -6,15 +6,15 @@
                   class="remove">Remove Role</mat-option>
       <mat-option *ngIf="userRole.get('role')?.value"
                   [value]="userRole.get('role')?.value">
-        {{ ProjectRole.forUI(userRole.get('role')?.value) }}
+        {{ Role.forUI(userRole.get('role')?.value) }}
       </mat-option>
-      <mat-option *ngFor="let availableRole of availableRoles; trackBy: ProjectRole.trackValueBy"
+      <mat-option *ngFor="let availableRole of availableRoles; trackBy: Role.trackValueBy"
                   [value]="availableRole">
-        {{ ProjectRole.forUI(availableRole) }}
+        {{ Role.forUI(availableRole) }}
       </mat-option>
     </mat-select>
   </mat-form-field>
-  <app-autocomplete-location *ngIf="ProjectRole.needsLocations.includes(userRole.get('role')?.value)"
+  <app-autocomplete-location *ngIf="Role.needsLocations.includes(userRole.get('role')?.value)"
                              [chips]="true"
                              [dedupe]="true"
                              [required]="true"

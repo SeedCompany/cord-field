@@ -2,19 +2,19 @@ import { Language } from '@app/core/models/language';
 import { Product } from '@app/core/models/product';
 import { clone, maybeDate } from '@app/core/util';
 import { DateTime } from 'luxon';
-import { EngagementStatus } from './engagement/status';
-import { EngagementTag } from './engagement/tag';
+import { ProjectEngagementStatus } from './status';
+import { ProjectEngagementTag } from './tag';
 
-export { EngagementStatus, EngagementTag };
+export { ProjectEngagementStatus, ProjectEngagementTag };
 
 /**
- * Editable properties of Engagement.
+ * Editable properties of ProjectEngagement.
  * No functions in this class.
  */
-export class EditableEngagement {
-  status: EngagementStatus;
+export class EditableProjectEngagement {
+  status: ProjectEngagementStatus;
   products: Product[];
-  tags: EngagementTag[];
+  tags: ProjectEngagementTag[];
   completeDate: DateTime | null;
   disbursementCompleteDate: DateTime | null;
   communicationsCompleteDate: DateTime | null;
@@ -22,21 +22,21 @@ export class EditableEngagement {
   ceremonyActualDate: DateTime | null;
 }
 
-export class Engagement extends EditableEngagement {
+export class ProjectEngagement extends EditableProjectEngagement {
   id: string;
-  possibleStatuses: EngagementStatus[];
+  possibleStatuses: ProjectEngagementStatus[];
   language: Language;
   initialEndDate: DateTime | null;
   currentEndDate: DateTime | null;
   updatedAt: DateTime | null;
 
-  static fromJson(json: any): Engagement {
+  static fromJson(json: any): ProjectEngagement {
     json = json || {};
 
-    const engagement = new Engagement();
+    const engagement = new ProjectEngagement();
 
     engagement.id = json.id;
-    engagement.status = json.status || EngagementStatus.InDevelopment;
+    engagement.status = json.status || ProjectEngagementStatus.InDevelopment;
     engagement.possibleStatuses = json.possibleStatuses || [];
     engagement.language = Language.fromJson(json.language);
     engagement.products = json.products || [];
@@ -57,11 +57,11 @@ export class Engagement extends EditableEngagement {
     return this.tags.some(tag => tag === name);
   }
 
-  withChanges(modified: Partial<EditableEngagement>): Engagement {
+  withChanges(modified: Partial<EditableProjectEngagement>): ProjectEngagement {
     return Object.assign(clone(this), modified);
   }
 }
 
-export const EmptyEngagement = Engagement.fromJson({
+export const EmptyProjectEngagement = ProjectEngagement.fromJson({
   language: {},
 });
