@@ -2,6 +2,7 @@ import { CommonModule, DecimalPipe } from '@angular/common';
 import { LOCALE_ID, NgModule } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { DateAdapter, MAT_DATE_FORMATS } from '@angular/material';
+import { DisplayOrEditFieldComponent } from '@app/shared/components/display-or-edit-field/display-or-edit-field.component';
 import { SatPopoverModule } from '@ncstate/sat-popover';
 
 import { MaterialModule } from '../material.module';
@@ -48,6 +49,7 @@ import { LanguageInfoPipe } from './pipes/language-info.pipe';
     ButtonTextOrProgressComponent,
     CollapsedChipListComponent,
     CommonModule,
+    DisplayOrEditFieldComponent,
     FileSizePipe,
     FormsModule,
     LanguageInfoPipe,
@@ -75,6 +77,7 @@ import { LanguageInfoPipe } from './pipes/language-info.pipe';
     AvatarLetterComponent,
     ButtonTextOrProgressComponent,
     CollapsedChipListComponent,
+    DisplayOrEditFieldComponent,
     FileSizePipe,
     LanguageInfoPipe,
     NotImplementedDirective,

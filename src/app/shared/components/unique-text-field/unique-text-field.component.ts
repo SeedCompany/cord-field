@@ -1,11 +1,11 @@
 import { HttpErrorResponse } from '@angular/common/http';
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, EventEmitter, Input, NgZone, OnInit, Output, ViewChild } from '@angular/core';
 import { FormControl, ValidatorFn, Validators } from '@angular/forms';
-import { ErrorStateMatcher, MatSnackBar, ShowOnDirtyErrorStateMatcher } from '@angular/material';
+import { ErrorStateMatcher, MatInput, MatSnackBar, ShowOnDirtyErrorStateMatcher } from '@angular/material';
 import { SimpleValueAccessor, ValueAccessorProvider } from '@app/core/classes/simple-value-accessor';
 import { maybeObservable, MaybeObservable, TypedFormControl } from '@app/core/util';
 import { of } from 'rxjs';
-import { catchError, debounceTime, filter, map, switchMap, takeUntil, tap } from 'rxjs/operators';
+import { catchError, debounceTime, filter, first, map, switchMap, takeUntil, tap } from 'rxjs/operators';
 
 @Component({
   selector: 'app-unique-text-field',
@@ -22,7 +22,8 @@ export class UniqueTextFieldComponent extends SimpleValueAccessor<string> implem
   @Input() original = '';
   @Input() placeholder = '';
   @Input() maxLength = 140;
-  @Input() pending = 'Checking availability...';
+  @Input() pendingMessage = 'Checking availability...';
+  @Input() autofocus = false;
 
   @Input() set validators(validators: ValidatorFn[]) {
     if (validators) {
@@ -40,6 +41,11 @@ export class UniqueTextFieldComponent extends SimpleValueAccessor<string> implem
     minlength: 'At least 2 characters long',
   };
 
+  @Output() focused = new EventEmitter<boolean>();
+  @Output() pending = new EventEmitter<boolean>();
+
+  @ViewChild(MatInput) input: MatInput;
+
   readonly text: TypedFormControl<string> = new FormControl('', [
     Validators.required,
     Validators.minLength(2),
@@ -47,6 +53,7 @@ export class UniqueTextFieldComponent extends SimpleValueAccessor<string> implem
 
   constructor(
     private snackBar: MatSnackBar,
+    private zone: NgZone,
   ) {
     super();
 
@@ -62,12 +69,25 @@ export class UniqueTextFieldComponent extends SimpleValueAccessor<string> implem
     });
   }
 
+  focus() {
+    this.zone.onStable
+      .pipe(
+        first(),
+        takeUntil(this.unsubscribe),
+      )
+      .subscribe(() => {
+        this.input.focus();
+      });
+  }
+
   ngOnInit() {
     this.text
       .valueChanges
       .pipe(
         map(text => text.trim()),
         filter(text => {
+          this.pending.emit(false);
+
           // If invalid send empty value to represent invalid and don't continue
           if (this.text.invalid) {
             this.onChange('');
@@ -84,7 +104,10 @@ export class UniqueTextFieldComponent extends SimpleValueAccessor<string> implem
           this.onChange('');
           return true;
         }),
-        tap(() => this.text.markAsPending()),
+        tap(() => {
+          this.text.markAsPending();
+          this.pending.emit(true);
+        }),
         debounceTime(500),
         switchMap(text =>
           maybeObservable(this.isTaken(text))
@@ -93,6 +116,8 @@ export class UniqueTextFieldComponent extends SimpleValueAccessor<string> implem
         takeUntil(this.unsubscribe),
       )
       .subscribe(taken => {
+        this.pending.emit(false);
+
         if (taken instanceof HttpErrorResponse) {
           this.snackBar.open('Failed to check availability', undefined, { duration: 3000 });
           return;
