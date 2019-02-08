@@ -42,12 +42,9 @@
           form="ngForm"
           color="accent"
           [disabled]="!form.valid">
-    <ng-container *ngIf="!submitting">CREATE</ng-container>
-    <mat-progress-spinner *ngIf="submitting"
-                          color="accent"
-                          mode="indeterminate"
-                          strokeWidth="3"
-                          [diameter]="32"></mat-progress-spinner>
+    <app-button-text-or-progress [showProgress]="submitting">
+      CREATE
+    </app-button-text-or-progress>
   </button>
 
   <button mat-button

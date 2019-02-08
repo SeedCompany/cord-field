@@ -32,11 +32,8 @@
           color="accent"
           [disabled]="user.invalid || pending || (stepper.selectedIndex == 1 && roles.invalid)"
           (click)="stepper.selectedIndex == 0 ? stepper.next() : onSubmit()">
-    <ng-container *ngIf="!pending">{{ stepper.selectedIndex == 0 ? 'NEXT' : 'ASSIGN' }}</ng-container>
-    <mat-progress-spinner *ngIf="pending"
-                          color="accent"
-                          mode="indeterminate"
-                          strokeWidth="3"
-                          [diameter]="32"></mat-progress-spinner>
+    <app-button-text-or-progress [showProgress]="pending">
+      {{ stepper.selectedIndex == 0 ? 'NEXT' : 'ASSIGN' }}
+    </app-button-text-or-progress>
   </button>
 </mat-dialog-actions>
