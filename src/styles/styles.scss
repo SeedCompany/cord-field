@@ -74,3 +74,40 @@ body {
 .mat-menu-item[disabled] .mat-icon {
   color: mat-foreground($theme, disabled);
 }
+
+// Align buttons on right side of dialog per MD spec
+// AND prioritize the forward action for keyboard navigation (tab index)
+.mat-dialog-container .mat-dialog-actions {
+  flex-direction: row-reverse;
+}
+
+// Space dialog actions per MD spec
+$spacing-around-actions: 8px;
+$vertical-spacing-between-buttons: 12px;
+$horizontal-spacing-between-buttons: 8px;
+.mat-dialog-container .mat-dialog-actions {
+  // Apply half the "between spacing" to each button so when
+  // two buttons are side by side they have the appropriate spacing
+  .mat-button,
+    // Below selectors are only needed to override Material's styles
+    // Not using !important allows components to override this style if needed
+  .mat-button + .mat-button,
+  .mat-raised-button + .mat-button,
+  .mat-button + .mat-raised-button,
+  .mat-raised-button + .mat-raised-button {
+    margin: ($vertical-spacing-between-buttons / 2) ($horizontal-spacing-between-buttons / 2);
+  }
+
+  // Remove the "between spacing" on outer sides of buttons (applied above)
+  // Remove dialog padding
+  // Add spacing around actions
+  margin:
+    (-$vertical-spacing-between-buttons / 2   /* top padding N/A */ + $spacing-around-actions)
+    (-$horizontal-spacing-between-buttons / 2 - $mat-dialog-padding + $spacing-around-actions)
+    (-$vertical-spacing-between-buttons / 2   - $mat-dialog-padding + $spacing-around-actions)
+  ;
+
+  // Applied all appropriate spacing with margin above so remove these spacings
+  padding: 0;
+  min-height: initial;
+}

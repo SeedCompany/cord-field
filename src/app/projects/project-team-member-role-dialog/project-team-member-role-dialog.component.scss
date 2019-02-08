@@ -4,16 +4,6 @@
   @extend %component-defaults;
 }
 
-.mat-dialog-actions {
-  display: flex;
-  flex-direction: row-reverse;
-}
-
-.mat-dialog-actions .mat-button + .mat-button {
-  margin-left: 0;
-  margin-right: 8px;
-}
-
 .loading {
   margin-top: 16px;
   margin-bottom: 16px;
