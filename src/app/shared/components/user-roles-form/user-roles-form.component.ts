@@ -42,13 +42,6 @@ export class UserRolesFormComponent extends AbstractValueAccessor<UserRole[]> im
     super();
   }
 
-  get isPanelOpen() {
-    if (this.roleFields.some(select => select.panelOpen)) {
-      return true;
-    }
-    return this.locationFields.some(autocomplete => autocomplete.panelOpen);
-  }
-
   ngOnInit(): void {
     const authorizedRoles$ = observableFrom(this.authService.getCurrentUser())
       .pipe(

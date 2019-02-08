@@ -1,41 +1,24 @@
 import { HttpErrorResponse } from '@angular/common/http';
-import { Component, HostListener, OnInit, ViewChild } from '@angular/core';
+import { Component } from '@angular/core';
 import { AbstractControl, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatDialog, MatDialogRef, MatSnackBar } from '@angular/material';
 import { Router } from '@angular/router';
-
 import { UserService } from '@app/core/services/user.service';
 import * as CustomValidators from '@app/core/validators';
-import { UserRolesFormComponent } from '@app/shared/components/user-roles-form/user-roles-form.component';
 
 @Component({
   selector: 'app-person-create-dialog',
   templateUrl: './person-create-dialog.component.html',
   styleUrls: ['./person-create-dialog.component.scss'],
 })
-export class PersonCreateDialogComponent implements OnInit {
+export class PersonCreateDialogComponent {
   form: FormGroup;
   submitting = false;
-
-  @ViewChild(UserRolesFormComponent) userRoles: UserRolesFormComponent;
 
   static open(dialog: MatDialog): MatDialogRef<PersonCreateDialogComponent, any> {
     return dialog.open(PersonCreateDialogComponent, {
       width: '500px',
-      disableClose: true,
     });
-  }
-
-  @HostListener('keyup.enter') onEnterKey(): any {
-    if (this.form.valid && !this.userRoles.isPanelOpen) {
-      this.onSubmit();
-    }
-  }
-
-  @HostListener('keyup.esc') onEscKey(): any {
-    if (!this.userRoles.isPanelOpen) {
-      this.dialogRef.close();
-    }
   }
 
   constructor(
@@ -52,10 +35,6 @@ export class PersonCreateDialogComponent implements OnInit {
       userRoles: [[]],
       sendInvite: [false],
     });
-  }
-
-  ngOnInit(): void {
-    this.dialogRef.backdropClick().subscribe(() => this.onEscKey());
   }
 
   get firstName(): AbstractControl {
