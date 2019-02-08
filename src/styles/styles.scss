@@ -111,3 +111,8 @@ $horizontal-spacing-between-buttons: 8px;
   padding: 0;
   min-height: initial;
 }
+
+// Text/Basic Buttons should only have 8px horizontal padding per MD spec
+.mat-button {
+  padding: 0 8px !important;
+}
