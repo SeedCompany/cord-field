@@ -1,8 +1,10 @@
-<h1 mat-dialog-title>Rename {{ FileNodeType.forUI(node.type) }}</h1>
-<form mat-dialog-content
-      id="fileRename"
-      [formGroup]="form"
-      (ngSubmit)="onSubmit()">
+<app-dialog-form
+  [formGroup]="form"
+  [handleSubmit]="onSubmit"
+  title="Rename {{ FileNodeType.forUI(node.type) }}"
+  submitText="RENAME"
+  failureText="Failed to rename {{ FileNodeType.forUI(node.type)?.toLowerCase() }}"
+>
   <mat-form-field color="accent">
     <input matInput
            maxlength="140"
@@ -13,21 +15,4 @@
     <mat-error *ngIf="name.errors?.required">Please enter a name</mat-error>
     <mat-error *ngIf="name.errors?.exists">A file or directory with this name already exists</mat-error>
   </mat-form-field>
-</form>
-<div mat-dialog-actions>
-  <button mat-button
-          color="accent"
-          type="submit"
-          form="fileRename"
-          [disabled]="form.invalid || form.disabled">
-    <app-button-text-or-progress [showProgress]="form.disabled">
-      RENAME
-    </app-button-text-or-progress>
-  </button>
-  <button mat-button
-          color="accent"
-          [disabled]="form.disabled"
-          matDialogClose>
-    CANCEL
-  </button>
-</div>
+</app-dialog-form>

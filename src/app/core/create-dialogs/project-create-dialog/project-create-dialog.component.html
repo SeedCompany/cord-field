@@ -1,19 +1,13 @@
-<h1 mat-dialog-title>New Project</h1>
-<form mat-dialog-content [formGroup]="form" (keyup.enter)="form.valid ? onCreate() : null">
+<app-dialog-form
+  [formGroup]="form"
+  [handleSubmit]="onCreate"
+  title="New Project"
+  submitText="CREATE"
+  failureText="Failed to create project"
+>
   <app-unique-text-field
     formControlName="name"
     [isTaken]="isNameTaken"
     placeholder="Name"
   ></app-unique-text-field>
-</form>
-<div mat-dialog-actions>
-  <button mat-button
-          color="accent"
-          [disabled]="!form.valid || submitting"
-          (click)="onCreate()">
-    <app-button-text-or-progress [showProgress]="submitting">
-      CREATE
-    </app-button-text-or-progress>
-  </button>
-  <button mat-button [disabled]="submitting" color="accent" (click)="onClose()">CANCEL</button>
-</div>
+</app-dialog-form>

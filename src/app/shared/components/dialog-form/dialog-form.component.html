@@ -1,0 +1,33 @@
+<h1 mat-dialog-title>{{ title }}</h1>
+
+<form
+  mat-dialog-content
+  id="form-dialog"
+  (ngSubmit)="submit()"
+>
+  <ng-content></ng-content>
+</form>
+
+<div mat-dialog-actions>
+  <button
+    mat-button
+    color="accent"
+    type="submit"
+    form="form-dialog"
+    [disabled]="form.invalid || form.disabled"
+  >
+    <app-button-text-or-progress [showProgress]="form.disabled">
+      {{ submitText }}
+    </app-button-text-or-progress>
+  </button>
+  <button
+    mat-button
+    [disabled]="form.disabled"
+    color="accent"
+    mat-dialog-close
+  >
+    CANCEL
+  </button>
+  <div class="spacer"></div>
+  <ng-content select="leftAction"></ng-content>
+</div>

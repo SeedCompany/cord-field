@@ -70,12 +70,11 @@ export class UserService {
     return observableOf(Role.values()).pipe(delay(2000)).toPromise();
   }
 
-  create({ userRoles, ...body }: NewUser): Promise<string> {
+  create({ userRoles, ...body }: NewUser): Observable<string> {
     return this.plo.post<{ id: string }>('/users/invite', {
       ...body,
       userRoles: userRoles.map(UserRole.forSaveAPI),
     })
-      .pipe(map(result => result.id))
-      .toPromise();
+      .pipe(map(result => result.id));
   }
 }

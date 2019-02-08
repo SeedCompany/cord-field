@@ -14,6 +14,7 @@ import { AutocompleteComponent } from './components/autocomplete/autocomplete.co
 import { AvatarLetterComponent } from './components/avatar-letter/avatar-letter.component';
 import { ButtonTextOrProgressComponent } from './components/button-text-or-progress/button-text-or-progress.component';
 import { CollapsedChipListComponent } from './components/collapsed-chip-list/collapsed-chip-list.component';
+import { DialogFormComponent } from './components/dialog-form/dialog-form.component';
 import { SaveDiscardDialComponent } from './components/save-discard-dial/save-discard-dial.component';
 import { SearchComponent } from './components/search/search.component';
 import { SpeedDialItemComponent } from './components/speed-dial-item/speed-dial-item.component';
@@ -49,6 +50,7 @@ import { LanguageInfoPipe } from './pipes/language-info.pipe';
     ButtonTextOrProgressComponent,
     CollapsedChipListComponent,
     CommonModule,
+    DialogFormComponent,
     DisplayOrEditFieldComponent,
     FileSizePipe,
     FormsModule,
@@ -77,6 +79,7 @@ import { LanguageInfoPipe } from './pipes/language-info.pipe';
     AvatarLetterComponent,
     ButtonTextOrProgressComponent,
     CollapsedChipListComponent,
+    DialogFormComponent,
     DisplayOrEditFieldComponent,
     FileSizePipe,
     LanguageInfoPipe,

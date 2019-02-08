@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
-import { MatDialog, MatDialogRef, MatSnackBar, MatSnackBarRef, SimpleSnackBar } from '@angular/material';
+import { MatDialog, MatDialogRef } from '@angular/material';
 import { Router } from '@angular/router';
 import { ProjectService } from '../../services/project.service';
 
@@ -18,8 +18,6 @@ export class ProjectCreateDialogComponent {
   form = this.formBuilder.group({
     name: ['', Validators.required],
   });
-  submitting = false;
-  private snackBarRef?: MatSnackBarRef<SimpleSnackBar>;
 
   static open(dialog: MatDialog): MatDialogRef<ProjectCreateDialogComponent, any> {
     return dialog.open(ProjectCreateDialogComponent, {
@@ -27,46 +25,17 @@ export class ProjectCreateDialogComponent {
     });
   }
 
-  constructor(public dialogRef: MatDialogRef<ProjectCreateDialogComponent>,
-              private formBuilder: FormBuilder,
-              private projectService: ProjectService,
-              private router: Router,
-              private snackBar: MatSnackBar) {
+  constructor(
+    private formBuilder: FormBuilder,
+    private projectService: ProjectService,
+    private router: Router,
+  ) {
   }
 
   isNameTaken = (name: string) => this.projectService.isProjectNameTaken(name);
 
-  async onCreate() {
-    let projectId;
-    this.submitting = true;
-    this.form.disable();
-    this.dialogRef.disableClose = true;
-    try {
-      projectId = await this.projectService.createProject(this.form.value);
-    } catch (e) {
-      this.showSnackBar('Failed to create project');
-      return;
-    } finally {
-      this.submitting = false;
-      this.form.enable();
-      this.dialogRef.disableClose = false;
-    }
-
-    if (this.snackBarRef) {
-      this.snackBarRef.dismiss();
-    }
-
-    this.dialogRef.close();
+  onCreate = async (value: ProjectCreationResult) => {
+    const projectId = await this.projectService.createProject(value);
     this.router.navigate(['/projects', projectId]);
-  }
-
-  onClose() {
-    this.dialogRef.close();
-  }
-
-  private showSnackBar(message: string) {
-    this.snackBarRef = this.snackBar.open(message, undefined, {
-      duration: 3000,
-    });
   }
 }
