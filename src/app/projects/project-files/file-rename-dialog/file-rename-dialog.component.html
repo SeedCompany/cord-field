@@ -20,14 +20,9 @@
           type="submit"
           form="fileRename"
           [disabled]="form.invalid || form.disabled">
-    <ng-container *ngIf="form.enabled">RENAME</ng-container>
-    <mat-progress-spinner
-      *ngIf="form.disabled"
-      color="accent"
-      mode="indeterminate"
-      strokeWidth="3"
-      [diameter]="32"
-    ></mat-progress-spinner>
+    <app-button-text-or-progress [showProgress]="form.disabled">
+      RENAME
+    </app-button-text-or-progress>
   </button>
   <button mat-button
           color="accent"

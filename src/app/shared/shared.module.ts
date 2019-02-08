@@ -11,6 +11,7 @@ import { AutocompleteOrganizationComponent } from './components/autocomplete/aut
 import { AutocompleteUserComponent } from './components/autocomplete/autocomplete-user.component';
 import { AutocompleteComponent } from './components/autocomplete/autocomplete.component';
 import { AvatarLetterComponent } from './components/avatar-letter/avatar-letter.component';
+import { ButtonTextOrProgressComponent } from './components/button-text-or-progress/button-text-or-progress.component';
 import { CollapsedChipListComponent } from './components/collapsed-chip-list/collapsed-chip-list.component';
 import { SaveDiscardDialComponent } from './components/save-discard-dial/save-discard-dial.component';
 import { SearchComponent } from './components/search/search.component';
@@ -43,6 +44,7 @@ import { LanguageInfoPipe } from './pipes/language-info.pipe';
     AutocompleteComponent,
     AutofocusDirective,
     AvatarLetterComponent,
+    ButtonTextOrProgressComponent,
     CollapsedChipListComponent,
     CommonModule,
     FileSizePipe,
@@ -51,6 +53,7 @@ import { LanguageInfoPipe } from './pipes/language-info.pipe';
     MaterialModule,
     NotImplementedDirective,
     ReactiveFormsModule,
+    RedactableDirective,
     SaveDiscardDialComponent,
     SearchComponent,
     SpeedDialComponent,
@@ -59,7 +62,6 @@ import { LanguageInfoPipe } from './pipes/language-info.pipe';
     TableFilterDirective,
     TableViewComponent,
     UserRolesFormComponent,
-    RedactableDirective,
   ],
   declarations: [
     AutocompleteLanguageComponent,
@@ -69,10 +71,12 @@ import { LanguageInfoPipe } from './pipes/language-info.pipe';
     AutocompleteComponent,
     AutofocusDirective,
     AvatarLetterComponent,
+    ButtonTextOrProgressComponent,
     CollapsedChipListComponent,
     FileSizePipe,
     LanguageInfoPipe,
     NotImplementedDirective,
+    RedactableDirective,
     SaveDiscardDialComponent,
     SearchComponent,
     SpeedDialComponent,
@@ -81,7 +85,6 @@ import { LanguageInfoPipe } from './pipes/language-info.pipe';
     TableFilterDirective,
     TableViewComponent,
     UserRolesFormComponent,
-    RedactableDirective,
   ],
   providers: [
     DecimalPipe,
