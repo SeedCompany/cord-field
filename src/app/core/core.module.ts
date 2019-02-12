@@ -2,6 +2,7 @@ import { ModuleWithProviders, NgModule, Optional, SkipSelf } from '@angular/core
 import { RouterModule } from '@angular/router';
 import { FreshdeskComponent } from '@app/core/freshdesk/freshdesk.component';
 import { SharedModule } from '../shared/shared.module';
+import { InternshipCreateDialogComponent } from './create-dialogs/internship-create-dialog/internship-create-dialog.component';
 import { PersonCreateDialogComponent } from './create-dialogs/person-create-dialog/person-create-dialog.component';
 import { ProjectCreateDialogComponent } from './create-dialogs/project-create-dialog/project-create-dialog.component';
 import { HeaderComponent } from './header/header.component';
@@ -19,12 +20,14 @@ import { ErrorInterceptor } from './services/http/error-interceptor';
   declarations: [
     FreshdeskComponent,
     HeaderComponent,
+    InternshipCreateDialogComponent,
     NotFoundPageComponent,
     PersonCreateDialogComponent,
     ProjectCreateDialogComponent,
     SavePromptDialogComponent,
   ],
   entryComponents: [
+    InternshipCreateDialogComponent,
     PersonCreateDialogComponent,
     ProjectCreateDialogComponent,
     SavePromptDialogComponent,
