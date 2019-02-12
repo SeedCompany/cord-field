@@ -31,7 +31,7 @@ const tagControl = (tagName: EngagementTag): TagControl => ({
   modelToForm: (tags: EngagementTag[]) => tags.includes(tagName),
   formToChange: (checked: boolean) => ({ [checked ? 'add' : 'remove']: tagName }),
 });
-type TagControl = FormGroupItemOptions<EngagementForm, Engagement, ExtractKeys<EngagementForm, boolean>, boolean>;
+type TagControl = FormGroupItemOptions<Engagement, ExtractKeys<EngagementForm, boolean>, boolean>;
 
 @Component({
   selector: 'app-project-engagement',

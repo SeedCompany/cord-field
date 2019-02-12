@@ -8,10 +8,10 @@ import { identity, merge, Observable, Subject } from 'rxjs';
 import { distinctUntilChanged, map, skip, startWith, takeUntil } from 'rxjs/operators';
 
 export type FormGroupOptions<Form, Model> = {
-  [FormKey in Partial<keyof Form>]: FormGroupItemOptions<Form, Model, FormKey, Form[FormKey]>
+  [FormKey in Partial<keyof Form>]: FormGroupItemOptions<Model, FormKey, Form[FormKey]>
 };
 
-export type FormGroupItemOptions<Form, Model, FormKey, FormValue> =
+export type FormGroupItemOptions<Model, FormKey, FormValue> =
   (
     // We want the form value to be based on the `field` value. In order to do this,
     // we say it can be one of the FormControlOptions specific to each key in Model
