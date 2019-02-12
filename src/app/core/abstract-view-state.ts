@@ -1,5 +1,6 @@
 import { OnDestroy } from '@angular/core';
 import { BaseStorageService } from '@app/core/services/storage.service';
+import { ArrayItem } from '@app/core/util';
 import { ViewStateFormBuilder } from '@app/core/view-state-form-builder';
 import { SubscriptionComponent } from '@app/shared/components/subscription.component';
 import { BehaviorSubject, combineLatest, NextObserver, Observable, Subject } from 'rxjs';
@@ -100,7 +101,7 @@ export abstract class AbstractViewState<T extends { id: string }> extends Subscr
     this.changes.next();
   }
 
-  revert(field: keyof T, item?: any): void {
+  revert<K extends keyof T>(field: K, item?: ArrayItem<T[K]>): void {
     this.changeEngine.revert(field, item);
     this.changes.next();
   }

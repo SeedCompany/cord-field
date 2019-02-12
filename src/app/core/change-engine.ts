@@ -4,7 +4,7 @@ import { DateTime } from 'luxon';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { distinctUntilChanged } from 'rxjs/operators';
 import { SaveResult } from './abstract-view-state';
-import { clone, mapEntries } from './util';
+import { ArrayItem, clone, ExtractKeys, mapEntries, OmitWithType } from './util';
 
 type Scalar = string | number | boolean;
 type Accessor = (val: any) => Scalar;
@@ -13,22 +13,24 @@ type Comparator = (a: any, b: any) => boolean;
 /**
  * Definition of how changes should be processed.
  */
-export type ChangeConfig<T = any> = {
-  [key in keyof Partial<T>]: Partial<FieldConfig>;
+export type ChangeConfig<Model = any> = {
+  [Field in keyof Partial<Model>]: FieldConfig<Model[Field]>;
 };
 
-type ResolvedConfig<T = any> = {
-  [key in keyof Partial<T>]: FieldConfig;
-};
-
-interface FieldConfig {
-  accessor: Accessor;
-  toServer: (val: any, original: any) => any;
-  key: string; // The key the server is looking for
-  forceRefresh: boolean;
-  store: (val: any) => any;
-  restore: (val: any) => any;
+export interface FieldConfig<T = unknown, ServerVal = unknown, Stored = any> {
+  accessor?: Accessor;
+  toServer?: (val: ModifiedItem<T>, original: T) => ServerVal;
+  key?: string; // The key the server is looking for
+  forceRefresh?: boolean;
+  store?: (val: ModifiedItem<T>) => Stored;
+  restore?: (val: Stored) => ModifiedItem<T>;
 }
+
+type ResolvedConfig<Model = any> = {
+  [Field in keyof Partial<Model>]: ResolvedFieldConfig<Model[Field]>;
+};
+
+type ResolvedFieldConfig<T = unknown, ServerVal = unknown, Stored = any> = Required<FieldConfig<T, ServerVal, Stored>>;
 
 /**
  * Given mappers for add/remove/update items return a function for config.toServer.
@@ -40,7 +42,7 @@ interface FieldConfig {
  *   mapChangeList(item => item, item => item.id);
  */
 export function mapChangeList<T, A, R, C = A>(mapAdd: (item: T) => A, mapRemove: (item: T) => R, mapUpdate?: (item: T) => C) {
-  return (changes: ModifiedList<T>) => {
+  return (changes: ModifiedList<T>): ModifiedList<A, R, C> => {
     const result: {add?: A[], remove?: R[], update?: C[]} = {};
 
     if ('add' in changes && changes.add) {
@@ -62,9 +64,9 @@ export const returnId = (val: {id: string}) => val.id;
 // Ignores times
 export const accessDates = (date: DateTime) => date.startOf('day').valueOf();
 
-export const storeDate = (date: DateTime) => date.toISO();
-export const restoreDate = (date: string) => DateTime.fromISO(date);
-export const dateConfig: Partial<FieldConfig> = {
+export const storeDate = (date: DateTime | null) => date ? date.toISO() : null;
+export const restoreDate = (date: string | null) => date ? DateTime.fromISO(date) : null;
+export const dateConfig: Partial<FieldConfig<DateTime | null>> = {
   accessor: accessDates,
   store: storeDate,
   restore: restoreDate,
@@ -73,26 +75,35 @@ export const dateConfig: Partial<FieldConfig> = {
 /**
  * These are for the collective changes that will be processed on save().
  */
-export type Modified<T = any> = {[key in keyof Partial<T>]: any | ModifiedList<any>};
+export type ModifiedModel<T = any> = { [K in keyof Partial<T>]: ModifiedItem<T[K]> };
+
+export type ModifiedItem<T> = T extends Array<infer U> ? ModifiedList<U> : T;
 
 /**
  * Changes that can be processed with the change() method.
  */
-export type Changes<T = any> = {[key in keyof Partial<T>]: any | ChangeList<any>};
+export type Changes<T = any> = { [K in keyof Partial<T>]: ChangeItem<T[K]> };
+
+export type ChangeItem<T> = T extends Array<infer U> ? ChangeList<U> : T;
 
 /**
  * The collective changes for a list field.
  */
-type ModifiedList<T = any> = Record<keyof ChangeList<T>, T[]>;
+export interface ModifiedList<A = any, R = A, U = A> {
+  add?: A[];
+  remove?: R[];
+  update?: U[];
+}
 
 /**
  * One of the changes can be for field that is a list, which will use this structure.
  */
-interface ChangeList<T = any> {
-  add?: T;
-  remove?: T;
-  update?: T;
+export interface ChangeList<A = any, R = A, U = A> {
+  add?: A;
+  remove?: R;
+  update?: U;
 }
+type ChangeListKey = keyof ChangeList<any>;
 
 /**
  * Compare objects by mapping them to comparable values with the given accessor.
@@ -134,7 +145,9 @@ const excludeBy = (accessor: Accessor) => {
   return (value: any) => (current: any) => !comparator(current, value);
 };
 
-const isChangeForList = (change: any): boolean => {
+export type ListKey<T> = ExtractKeys<T, any[]>;
+export type SingleKey<T> = keyof OmitWithType<T, any[]>;
+const isChangeForList = <T>(change: any, key: keyof T): key is ListKey<T> => {
   return change != null && typeof change === 'object' && ('add' in change || 'remove' in change || 'update' in change);
 };
 
@@ -146,17 +159,17 @@ export const modifiedListMerger = <T>(accessor: Accessor = returnSelf) => (chang
   let list = original.slice();
 
   if ('remove' in change) {
-    const toRemove = change.remove.map(accessor);
+    const toRemove = change.remove!.map(accessor);
     list = list.filter(current => !toRemove.includes(accessor(current)));
   }
 
   if ('add' in change) {
-    list = list.concat(change.add);
+    list = list.concat(change.add!);
   }
 
   if ('update' in change) {
     const comparator = compareBy(accessor);
-    for (const item of change.update) {
+    for (const item of change.update!) {
       const index = list.findIndex(current => comparator(current, item));
       if (index !== -1) {
         list[index] = item;
@@ -171,10 +184,10 @@ export class ChangeEngine<T = any> {
 
   public readonly config: ResolvedConfig<T>;
   private readonly dirty = new BehaviorSubject<boolean>(false);
-  private modified = {} as Modified<T>;
+  private modified = {} as ModifiedModel<T>;
 
   constructor(config: ChangeConfig<T>) {
-    this.config = mapEntries(config, (key: keyof T, field: Partial<FieldConfig>) => ({
+    this.config = mapEntries(config, (key: keyof T, field: FieldConfig<any>) => ({
       accessor: returnSelf,
       key: key as string,
       toServer: returnSelf,
@@ -212,7 +225,7 @@ export class ChangeEngine<T = any> {
     const obj = clone(original);
 
     for (const [key, change] of Object.entries(this.modified) as Array<[keyof T, any]>) {
-      if (!isChangeForList(change)) {
+      if (!isChangeForList(change, key)) {
         obj[key] = change;
         continue;
       }
@@ -230,17 +243,17 @@ export class ChangeEngine<T = any> {
   }
 
   reset() {
-    this.modified = {} as Modified<T>;
+    this.modified = {} as ModifiedModel<T>;
     this.dirty.next(false);
   }
 
   async restoreModifications(storage: BaseStorageService<any>, storageKey: string) {
-    const serialized = await storage.getItem<Modified<T>>('changes-' + storageKey);
+    const serialized = await storage.getItem<Record<keyof T, any>>('changes-' + storageKey);
     if (!serialized) {
       return;
     }
 
-    this.modified = mapEntries(serialized, (key, value) => this.config[key].restore(value));
+    this.modified = mapEntries(serialized, (key, value) => this.config[key].restore(value)) as ModifiedModel<T>;
     this.dirty.next(Object.keys(this.modified).length > 0);
   }
 
@@ -248,7 +261,7 @@ export class ChangeEngine<T = any> {
     if (!this.dirty.value) {
       return;
     }
-    const serialized = mapEntries(this.modified, (key, value) => this.config[key].store(value));
+    const serialized = mapEntries(this.modified, (key: keyof T, value: ModifiedItem<T[keyof T]>) => this.config[key].store(value));
     await storage.setItem('changes-' + storageKey, serialized);
   }
 
@@ -256,13 +269,15 @@ export class ChangeEngine<T = any> {
     await storage.removeItem('changes-' + storageKey);
   }
 
-  revert(field: keyof T, item?: any): void {
+  revert<K extends keyof T>(field: K, item?: ArrayItem<T[K]>): void {
     if (item) {
+      const listField = field as unknown as ListKey<T>;
+      const listItem = item as unknown as ArrayItem<T[ListKey<T>]>;
       const finder = findBy(this.config[field].accessor)(item);
-      this.removeItemFromSubList('add', field, item, finder);
-      this.removeItemFromSubList('remove', field, item, finder);
-      this.removeItemFromSubList('update', field, item, finder);
-      this.removeChangeListIfEmpty(field);
+      this.removeItemFromSubList('add', listField, listItem, finder);
+      this.removeItemFromSubList('remove', listField, listItem, finder);
+      this.removeItemFromSubList('update', listField, listItem, finder);
+      this.removeChangeListIfEmpty(listField);
     } else {
       delete this.modified[field];
     }
@@ -276,25 +291,29 @@ export class ChangeEngine<T = any> {
         continue;
       }
 
-      if (!isChangeForList(change)) {
-        this.changeSingle(key, change, original[key]);
-        continue;
-      }
-      if ('remove' in change) {
-        this.removeList(key, change.remove, original[key] as any);
-      }
-      if ('add' in change) {
-        this.addList(key, change.add, original[key] as any);
-      }
-      if ('update' in change) {
-        this.updateListItem(key, change.update, original[key] as any);
+      if (isChangeForList(change, key)) {
+        this.changeList(key, change, original[key] as any);
+      } else {
+        this.changeSingle(key as SingleKey<T>, change, original[key] as any);
       }
     }
 
     this.dirty.next(Object.keys(this.modified).length > 0);
   }
 
-  private addList<I>(key: keyof T, newValue: I, originalValue: I[] | null): void {
+  private changeList<K extends ListKey<T>>(key: K, change: ChangeItem<any[]>, originalValue: any[]): void {
+    if ('remove' in change) {
+      this.removeList(key, change.remove, originalValue);
+    }
+    if ('add' in change) {
+      this.addList(key, change.add!, originalValue);
+    }
+    if ('update' in change) {
+      this.updateListItem(key, change.update!, originalValue);
+    }
+  }
+
+  private addList<K extends ListKey<T>, I extends ArrayItem<T[K]>>(key: K, newValue: I, originalValue: I[] | null): void {
     const finder = findBy(this.config[key].accessor)(newValue);
     // If item is not in add list...
     if (!this.isItemInSubList('add', key, finder)) {
@@ -309,7 +328,7 @@ export class ChangeEngine<T = any> {
     this.removeChangeListIfEmpty(key);
   }
 
-  private removeList<I>(key: keyof T, newValue: I, originalValue: I[] | null): void {
+  private removeList<K extends ListKey<T>, I extends ArrayItem<T[K]>>(key: K, newValue: I, originalValue: I[] | null): void {
     const finder = findBy(this.config[key].accessor)(newValue);
     // If item is not in remove list...
     if (!this.isItemInSubList('remove', key, finder)) {
@@ -324,7 +343,7 @@ export class ChangeEngine<T = any> {
     this.removeChangeListIfEmpty(key);
   }
 
-  private updateListItem<I>(key: keyof T, newValue: I, originalList: I[] | null): void {
+  private updateListItem<K extends ListKey<T>, I extends ArrayItem<T[K]>>(key: K, newValue: I, originalList: I[] | null): void {
     const finder = findBy(this.config[key].accessor)(newValue);
     // If item is in add list...
     if (this.isItemInSubList('add', key, finder)) {
@@ -361,14 +380,19 @@ export class ChangeEngine<T = any> {
     this.removeChangeListIfEmpty(key);
   }
 
-  private addItemToSubList<I>(changeListKey: keyof ChangeList<I>, key: keyof T, newValue: I) {
-    const newList = [...(this.modified[key] ? (this.modified[key][changeListKey] || []) : []), newValue];
-    // @ts-ignore
-    this.modified[key] = {...this.modified[key] || {}, [changeListKey]: newList};
+  private addItemToSubList<K extends ListKey<T>, I extends ArrayItem<T[K]>>(changeListKey: ChangeListKey, key: ListKey<T>, newValue: I) {
+    const oldList = this.modified[key] ? ((this.modified[key] as ModifiedList<I>)[changeListKey] || []) : [];
+    const newList = [...oldList, newValue];
+    this.modified[key] = {...this.modified[key] || {}, [changeListKey]: newList} as ModifiedItem<T[K]>;
   }
 
-  private replaceItemInSubList<I>(changeListKey: keyof ChangeList<I>, key: keyof T, newValue: I, finder: (val: I) => boolean) {
-    const list = this.modified[key][changeListKey];
+  private replaceItemInSubList<K extends ListKey<T>, I extends ArrayItem<T[K]>>(
+    changeListKey: ChangeListKey,
+    key: K,
+    newValue: I,
+    finder: (val: I) => boolean,
+  ) {
+    const list = (this.modified[key] as ModifiedList<I>)[changeListKey]!;
     const index = list.findIndex(finder);
     list[index] = newValue;
   }
@@ -376,33 +400,42 @@ export class ChangeEngine<T = any> {
   /**
    * If item is in add/remove/update list, remove it
    */
-  private removeItemFromSubList<I>(changeListKey: keyof ChangeList<I>, key: keyof T, newValue: I, finder: (val: I) => boolean) {
+  private removeItemFromSubList<K extends ListKey<T>, I extends ArrayItem<T[K]>>(
+    changeListKey: ChangeListKey,
+    key: K,
+    newValue: I,
+    finder: (val: I) => boolean,
+    ) {
     if (!this.isItemInSubList(changeListKey, key, finder)) {
       return;
     }
 
     const excluder = excludeBy(this.config[key].accessor)(newValue);
-    const newList = [...this.modified[key][changeListKey].filter(excluder)];
+    const newList = [...(this.modified[key] as ModifiedList<I>)[changeListKey]!.filter(excluder)];
     if (newList.length === 0) {
-      delete this.modified[key][changeListKey];
+      delete (this.modified[key] as ModifiedList<I>)[changeListKey];
     } else {
-      this.modified[key]![changeListKey] = newList;
+      (this.modified[key] as ModifiedList<I>)[changeListKey] = newList;
     }
   }
 
-  private isItemInSubList<I>(changeListKey: keyof ChangeList<I>, key: keyof T, finder: (val: I) => boolean): boolean {
+  private isItemInSubList<K extends ListKey<T>, I extends ArrayItem<T[K]>>(
+    changeListKey: ChangeListKey,
+    key: K,
+    finder: (val: I) => boolean,
+  ): boolean {
     return key in this.modified
       && changeListKey in this.modified[key]
-      && this.modified[key][changeListKey].some(finder);
+      && (this.modified[key] as ModifiedList<I>)[changeListKey]!.some(finder);
   }
 
-  private removeChangeListIfEmpty(key: keyof T) {
+  private removeChangeListIfEmpty<K extends ListKey<T>>(key: K) {
     if (key in this.modified && Object.keys(this.modified[key]).length === 0) {
       delete this.modified[key];
     }
   }
 
-  private changeSingle<I>(key: keyof T, newValue: I, originalValue: I): void {
+  private changeSingle<K extends SingleKey<T>>(key: K, newValue: ModifiedItem<T[K]>, originalValue: T[K]): void {
     const accessor = this.config[key].accessor;
     const comparator = compareNullable((Array.isArray(newValue) ? compareListsBy : compareBy)(accessor));
 
