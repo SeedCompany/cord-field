@@ -29,7 +29,7 @@ export class StatusSelectWorkflowComponent<T extends GoodEnum<T>> extends Abstra
   @Input() findAvailableStatuses: (value: T) => StatusOptions<T>;
   @Input() original: T;
 
-  statusCtrl: TypedFormControl<T> = new FormControl();
+  statusCtrl = new FormControl() as TypedFormControl<T>;
   availableStatuses: StatusOptions<T> = emptyOptions;
 
   constructor(private zone: NgZone, private changeDetector: ChangeDetectorRef) {

@@ -1,7 +1,7 @@
 import { AbstractControl, FormArray, FormControl, FormGroup, ValidatorFn } from '@angular/forms';
 import { AbstractViewState } from '@app/core/abstract-view-state';
 import { ChangeEngine } from '@app/core/change-engine';
-import { ArrayItem, mapEntries, Omit, skipEmptyViewState, TypedFormControl } from '@app/core/util';
+import { ArrayItem, mapEntries, Omit, skipEmptyViewState, TypedFormControl, TypedFormGroup } from '@app/core/util';
 import { getValue } from '@app/core/util/forms';
 import { isEqual } from 'lodash-es';
 import { identity, merge, Observable, Subject } from 'rxjs';
@@ -54,22 +54,22 @@ export class ViewStateFormBuilder<Model extends { id: string }> {
   ) {
   }
 
-  group<Form>(unsubscribe: Observable<any>, controls: FormGroupOptions<Form, Model>) {
+  group<Form>(unsubscribe: Observable<any>, controls: FormGroupOptions<Form, Model>): TypedFormGroup<Form> {
     // `field` type as `any` isn't terrible as it is validated in interface
-    return new FormGroup(mapEntries(controls, (field: any, c: any) => this.control({ field, unsubscribe, ...c })));
+    return new FormGroup(mapEntries(controls, (field: any, c: any) => this.control({ field, unsubscribe, ...c }))) as any;
   }
 
-  control<Field extends keyof Model, ViewValue>({
+  control<Field extends keyof Model, FormValue>({
     field,
     unsubscribe,
     validators = [],
     initialValue,
     // Type safety is verified in FormControlOptions.
     // It is only optional if model value and form value are the same, thus identity function.
-    modelToForm = identity as unknown as (val: Model[Field]) => ViewValue,
+    modelToForm = identity as unknown as (val: Model[Field]) => FormValue,
     formToChange = identity,
-  }: FormControlOptions<Model, Field, ViewValue>): TypedFormControl<Model[Field]> {
-    const control = new FormControl(initialValue, validators);
+  }: FormControlOptions<Model, Field, FormValue>): TypedFormControl<FormValue> {
+    const control = new FormControl(initialValue, validators) as TypedFormControl<FormValue>;
 
     // Currently change engine reverts are leaked here (still result in no changes).
     // Because we use the distinctUntilChanged operator, which needs to stay in sync with current value.
