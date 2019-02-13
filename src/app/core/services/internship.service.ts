@@ -1,10 +1,14 @@
 import { Injectable } from '@angular/core';
+import { ModifiedBudgets } from '@app/core/models/budget';
 import { Internship, InternshipFilter, InternshipStatus } from '@app/core/models/internship';
+import { ModifiedPartnerships } from '@app/core/models/partnership';
 import { Sensitivity } from '@app/core/models/sensitivity';
+import { ModifiedTeamMembers } from '@app/core/models/team-member';
 import { ProjectService } from '@app/core/services/project.service';
 import { buildDateFilter, DateFilterAPI, toIds } from '@app/core/util/list-filters';
 import { ApiOptions as ListApiOptions, listOptionsToHttpParams, makeListRequest } from '@app/core/util/list-views';
 import { StatusOptions } from '@app/shared/components/status-select-workflow/status-select-workflow.component';
+import { DateTime } from 'luxon';
 import { Observable, of } from 'rxjs';
 import { catchError, map, mapTo } from 'rxjs/operators';
 import { SaveResult } from '../abstract-view-state';
@@ -15,6 +19,17 @@ export interface InternshipListFilterAPI extends DateFilterAPI {
   locationId?: string[];
   team?: string[];
   sensitivity?: Sensitivity[];
+}
+
+export interface ModifiedInternship {
+  mouStart?: DateTime;
+  mouEnd?: DateTime;
+  estimatedSubmission?: DateTime;
+  status?: InternshipStatus;
+  locationId?: string;
+  partnerships?: ModifiedPartnerships;
+  team?: ModifiedTeamMembers;
+  budgets?: ModifiedBudgets;
 }
 
 @Injectable({
@@ -65,7 +80,7 @@ export class InternshipService {
     return obj.id;
   }
 
-  save(id: string, modified: unknown): Promise<SaveResult<Internship>> {
+  save(id: string, modified: ModifiedInternship): Promise<SaveResult<Internship>> {
     return this.api.put<SaveResult<Internship>>(`/internships/${id}/save`, modified).toPromise();
   }
 
