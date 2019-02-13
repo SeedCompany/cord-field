@@ -30,7 +30,7 @@ const config: ChangeConfig<EditableEngagement> = {
 };
 
 @Injectable()
-export class EngagementViewStateService extends AbstractViewState<Engagement> {
+export class EngagementViewStateService extends AbstractViewState<Engagement, Partial<EditableEngagement>> {
 
   private project: Project;
 

@@ -181,7 +181,7 @@ export const modifiedListMerger = <T>(accessor: Accessor = returnSelf) => (chang
   return list;
 };
 
-export class ChangeEngine<T = any> {
+export class ChangeEngine<T = any, ModifiedForServer = any> {
 
   public readonly config: ResolvedConfig<T>;
   private readonly dirty = new BehaviorSubject<boolean>(false);
@@ -213,7 +213,7 @@ export class ChangeEngine<T = any> {
     return false;
   }
 
-  getModifiedForServer<R>(original: T): R {
+  getModifiedForServer(original: T): ModifiedForServer {
     const modified: any = {};
     for (const [key, change] of Object.entries(this.modified) as Array<[keyof T, any]>) {
       modified[this.config[key].key] = this.config[key].toServer(change, original[key]);

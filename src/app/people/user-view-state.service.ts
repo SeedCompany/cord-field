@@ -103,7 +103,7 @@ const config: ChangeConfig<UserProfile> = {
 type UserOnlyObjectLists = RecordOfType<UserProfile, Array<{id: string}>>;
 
 @Injectable()
-export class UserViewStateService extends AbstractViewState<UserProfile> {
+export class UserViewStateService extends AbstractViewState<UserProfile, ModifiedUser> {
 
   constructor(
     storage: SessionStorageService,

@@ -88,7 +88,7 @@ const config: ChangeConfig<Project> = {
 };
 
 @Injectable()
-export class ProjectViewStateService extends AbstractViewState<Project> {
+export class ProjectViewStateService extends AbstractViewState<Project, ModifiedProject> {
 
   constructor(
     storage: SessionStorageService,

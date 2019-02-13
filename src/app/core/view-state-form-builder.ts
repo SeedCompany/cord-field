@@ -49,7 +49,7 @@ export interface FormArrayOptions<Model, Key extends keyof Model, Value extends 
 export class ViewStateFormBuilder<Model extends { id: string }> {
 
   constructor(
-    private viewState: AbstractViewState<Model>,
+    private viewState: AbstractViewState<Model, unknown>,
     private changeEngine: ChangeEngine<Model>,
   ) {
   }
