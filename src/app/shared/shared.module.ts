@@ -2,6 +2,7 @@ import { CommonModule, DecimalPipe } from '@angular/common';
 import { LOCALE_ID, NgModule } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { DateAdapter, MAT_DATE_FORMATS } from '@angular/material';
+import { DisplayOrEditFieldComponent } from '@app/shared/components/display-or-edit-field/display-or-edit-field.component';
 import { SatPopoverModule } from '@ncstate/sat-popover';
 
 import { MaterialModule } from '../material.module';
@@ -13,6 +14,7 @@ import { AutocompleteComponent } from './components/autocomplete/autocomplete.co
 import { AvatarLetterComponent } from './components/avatar-letter/avatar-letter.component';
 import { ButtonTextOrProgressComponent } from './components/button-text-or-progress/button-text-or-progress.component';
 import { CollapsedChipListComponent } from './components/collapsed-chip-list/collapsed-chip-list.component';
+import { DialogFormComponent } from './components/dialog-form/dialog-form.component';
 import { SaveDiscardDialComponent } from './components/save-discard-dial/save-discard-dial.component';
 import { SearchComponent } from './components/search/search.component';
 import { SpeedDialItemComponent } from './components/speed-dial-item/speed-dial-item.component';
@@ -20,6 +22,7 @@ import { SpeedDialComponent } from './components/speed-dial/speed-dial.component
 import { StatusSelectWorkflowComponent } from './components/status-select-workflow/status-select-workflow.component';
 import { TableFilterDirective } from './components/table-view/table-filter.directive';
 import { TableViewComponent } from './components/table-view/table-view.component';
+import { UniqueTextFieldComponent } from './components/unique-text-field/unique-text-field.component';
 import { UserRolesFormComponent } from './components/user-roles-form/user-roles-form.component';
 import { AutofocusDirective } from './directives/autofocus.directive';
 import { NotImplementedDirective } from './directives/not-implemented.directive';
@@ -47,6 +50,8 @@ import { LanguageInfoPipe } from './pipes/language-info.pipe';
     ButtonTextOrProgressComponent,
     CollapsedChipListComponent,
     CommonModule,
+    DialogFormComponent,
+    DisplayOrEditFieldComponent,
     FileSizePipe,
     FormsModule,
     LanguageInfoPipe,
@@ -61,6 +66,7 @@ import { LanguageInfoPipe } from './pipes/language-info.pipe';
     StatusSelectWorkflowComponent,
     TableFilterDirective,
     TableViewComponent,
+    UniqueTextFieldComponent,
     UserRolesFormComponent,
   ],
   declarations: [
@@ -73,6 +79,8 @@ import { LanguageInfoPipe } from './pipes/language-info.pipe';
     AvatarLetterComponent,
     ButtonTextOrProgressComponent,
     CollapsedChipListComponent,
+    DialogFormComponent,
+    DisplayOrEditFieldComponent,
     FileSizePipe,
     LanguageInfoPipe,
     NotImplementedDirective,
@@ -84,6 +92,7 @@ import { LanguageInfoPipe } from './pipes/language-info.pipe';
     StatusSelectWorkflowComponent,
     TableFilterDirective,
     TableViewComponent,
+    UniqueTextFieldComponent,
     UserRolesFormComponent,
   ],
   providers: [

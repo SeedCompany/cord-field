@@ -1,0 +1,20 @@
+<div *ngIf="!editing" class="display" (click)="edit($event)">
+  {{ text.value }}
+  <button mat-icon-button color="primary" (click)="edit($event)">
+    <mat-icon>edit</mat-icon>
+  </button>
+</div>
+<app-unique-text-field
+  [style.display]="editing ? undefined : 'none'"
+  [formControl]="text"
+  [isTaken]="isTaken"
+  [original]="original"
+  [placeholder]="placeholder"
+  [maxLength]="maxLength"
+  [autofocus]="autofocus"
+  [pendingMessage]="pendingMessage"
+  [validators]="validators"
+  [errorMessages]="errorMessages"
+  (focused)="onFocusChange($event)"
+  (pending)="onPendingChange($event)"
+></app-unique-text-field>

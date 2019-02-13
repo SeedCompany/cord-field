@@ -1,9 +1,10 @@
-<h1 mat-dialog-title>New Person</h1>
-<form mat-dialog-content
-      id="ngForm"
-      [formGroup]="form"
-      (ngSubmit)="onSubmit()">
-
+<app-dialog-form
+  [formGroup]="form"
+  [handleSubmit]="onSubmit"
+  title="New Person"
+  submitText="CREATE"
+  failureText="Failed to create person"
+>
   <div class="name-container">
     <mat-form-field color="accent">
       <input matInput
@@ -34,22 +35,4 @@
 
   <mat-slide-toggle color="accent"
                     formControlName="sendInvite">Email them an invite?</mat-slide-toggle>
-</form>
-
-<div mat-dialog-actions>
-  <button mat-button
-          type="submit"
-          form="ngForm"
-          color="accent"
-          [disabled]="!form.valid">
-    <app-button-text-or-progress [showProgress]="submitting">
-      CREATE
-    </app-button-text-or-progress>
-  </button>
-
-  <button mat-button
-          color="accent"
-          mat-dialog-close>
-    CANCEL
-  </button>
-</div>
+</app-dialog-form>

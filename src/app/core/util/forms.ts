@@ -1,5 +1,6 @@
 import { AbstractControl, AsyncValidatorFn, FormArray, FormControl, FormGroup, ValidatorFn } from '@angular/forms';
 import { AbstractControlOptions } from '@angular/forms/src/model';
+import { mapValues } from 'lodash-es';
 import { Observable } from 'rxjs';
 
 export class TypedFormControl<T> extends FormControl {
@@ -40,15 +41,32 @@ export class TypedFormControl<T> extends FormControl {
   }
 }
 
+/**
+ * Enable/Disable a form control.
+ * Don't emit value/status changes.
+ * Re-apply errors after enabling. This allows server to apply errors while submitting & form disabled.
+ */
 export function enableControl(control: AbstractControl, enable: boolean) {
-  if (enable) {
-    if (control.disabled) {
-      control.enable();
-    }
+  if (!enable) {
+    control.disable({ emitEvent: false });
+    return;
+  }
+  const doIt = () => control.enable({ emitEvent: false });
+
+  const controlErrors = control.errors;
+  if (control instanceof FormGroup) {
+    const childErrors = mapValues(control.controls, child => child.errors);
+    doIt();
+    mapValues(childErrors, (errors, key) => errors && control.get(key)!.setErrors(errors));
+  } else if (control instanceof FormArray) {
+    const childErrors = control.controls.map(child => child.errors);
+    doIt();
+    childErrors.map((errors, key) => errors && control.at(key).setErrors(errors));
   } else {
-    if (control.enabled) {
-      control.disable();
-    }
+    doIt();
+  }
+  if (controlErrors) {
+    control.setErrors(controlErrors);
   }
 }
 
