@@ -1,14 +1,42 @@
 import { Injectable } from '@angular/core';
+import { ModifiedOrganizations } from '@app/core/models/organization';
 import { toIds } from '@app/core/util/list-filters';
 import { listApi } from '@app/core/util/list-views';
 import { Observable, of as observableOf } from 'rxjs';
 import { delay, map, tap } from 'rxjs/operators';
-import { ModifiedUser } from '../../people/user-view-state.service';
 import { Project } from '../models/project';
 import { Role } from '../models/role';
 import { TeamMember } from '../models/team-member';
-import { NewUser, User, UserFilter, UserListItem, UserProfile, UserRole } from '../models/user';
+import {
+  ModifiedEducationList,
+  ModifiedKnownLanguages,
+  ModifiedUnavailabilities,
+  ModifiedUserRoles,
+  NewUser,
+  User,
+  UserFilter,
+  UserListItem,
+  UserProfile,
+  UserRole,
+} from '../models/user';
 import { PloApiService } from './http/plo-api.service';
+
+export interface ModifiedUser {
+  firstName?: string;
+  lastName?: string;
+  displayFirstName?: string;
+  displayLastName?: string;
+  email?: string;
+  userRoles?: ModifiedUserRoles;
+  organizations?: ModifiedOrganizations;
+  phone?: string;
+  timeZone?: string;
+  unavailabilities?: ModifiedUnavailabilities;
+  bio?: string;
+  education?: ModifiedEducationList;
+  skills?: string[];
+  knownLanguages?: ModifiedKnownLanguages;
+}
 
 @Injectable({
   providedIn: 'root',

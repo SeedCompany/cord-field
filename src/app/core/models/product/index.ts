@@ -1,3 +1,4 @@
+import { FieldConfig, modifiedListMerger, returnId } from '@app/core/change-engine';
 import { BibleBook } from '@app/core/models/bible-book';
 import { ProductApproach } from './approach';
 import { ProductMedium } from './medium';
@@ -19,4 +20,9 @@ export class Product {
   static from(product: Product) {
     return Object.assign(new Product(), product);
   }
+
+  static fieldConfigList = (): FieldConfig<Product[], Product[]> => ({
+    accessor: returnId,
+    toServer: modifiedListMerger(returnId),
+  });
 }

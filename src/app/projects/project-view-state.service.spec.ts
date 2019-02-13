@@ -12,8 +12,8 @@ import { Project } from '../core/models/project';
 import { Role } from '../core/models/role';
 import { TeamMember } from '../core/models/team-member';
 import { User } from '../core/models/user';
-import { ProjectService } from '../core/services/project.service';
-import { ModifiedProject, ProjectViewStateService } from './project-view-state.service';
+import { ModifiedProject, ProjectService } from '../core/services/project.service';
+import { ProjectViewStateService } from './project-view-state.service';
 
 describe('ProjectViewStateService', () => {
   let viewState: ProjectViewStateService;

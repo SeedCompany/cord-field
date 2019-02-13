@@ -1,3 +1,5 @@
+import { FieldConfig, mapChangeList, ModifiedList, returnId } from '@app/core/change-engine';
+
 export class Organization {
   id: string;
   name: string;
@@ -10,4 +12,11 @@ export class Organization {
 
     return org;
   }
+
+  static fieldConfigList = (): FieldConfig<Organization[], ModifiedOrganizations> => ({
+    accessor: returnId,
+    toServer: mapChangeList(returnId, returnId),
+  });
 }
+
+export type ModifiedOrganizations = ModifiedList<string, string, never>;
