@@ -7,7 +7,7 @@ import { DateTime } from 'luxon';
 import { Observable } from 'rxjs';
 import { first, map } from 'rxjs/operators';
 import { AbstractViewState, SaveResult } from '../core/abstract-view-state';
-import { ChangeConfig, dateConfig, mapChangeList, returnId, returnSelf } from '../core/change-engine';
+import { ChangeConfig, dateConfig, mapChangeList, returnId, returnIdOrNull, returnSelf } from '../core/change-engine';
 import { Language } from '../core/models/language';
 import { Location } from '../core/models/location';
 import { Partnership, PartnershipForSaveAPI } from '../core/models/partnership';
@@ -56,7 +56,7 @@ const config: ChangeConfig<Project> = {
   },
   location: {
     accessor: returnId,
-    toServer: returnId,
+    toServer: returnIdOrNull,
     key: 'locationId',
     forceRefresh: true,
     restore: Location.fromJson,
@@ -82,8 +82,8 @@ const config: ChangeConfig<Project> = {
     restore: mapChangeList(TeamMember.fromJson, TeamMember.fromJson),
   },
   budgets: {
-    accessor: Budget.identify,
-    toServer: Budget.forSaveAPI,
+    accessor: returnId,
+    toServer: (changes) => changes.update ? changes.update.map(Budget.forSaveAPI) : undefined,
   },
 };
 

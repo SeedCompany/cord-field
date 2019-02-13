@@ -61,6 +61,7 @@ export function mapChangeList<T, A, R, C = A>(mapAdd: (item: T) => A, mapRemove:
 
 export const returnSelf = (val: any) => val;
 export const returnId = (val: {id: string}) => val.id;
+export const returnIdOrNull = (val: {id: string} | null) => val ? val.id : null;
 // Ignores times
 export const accessDates = (date: DateTime) => date.startOf('day').valueOf();
 
