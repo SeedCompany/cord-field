@@ -10,7 +10,7 @@ export const environment = {
   },
   services: {
     'domain': 'field',
-    'plo.cord.bible': 'https://cord-plo-dev.ci.olivetech.com/api',
+    'plo.cord.bible': 'https://dev-api.cordfield.com/api',
   },
   googleAnalytics: 'UA-108415468-9',
 };
