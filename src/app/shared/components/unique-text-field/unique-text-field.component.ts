@@ -46,10 +46,10 @@ export class UniqueTextFieldComponent extends SimpleValueAccessor<string> implem
 
   @ViewChild(MatInput) input: MatInput;
 
-  readonly text: TypedFormControl<string> = new FormControl('', [
+  readonly text = new FormControl('', [
     Validators.required,
     Validators.minLength(2),
-  ]);
+  ]) as TypedFormControl<string>;
 
   constructor(
     private snackBar: MatSnackBar,
