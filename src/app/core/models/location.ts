@@ -1,5 +1,5 @@
 import { FieldConfig, returnId, returnIdOrNull } from '@app/core/change-engine';
-import { firstLettersOfWords, maybeRedacted } from '../util';
+import { firstLettersOfWords, maybeRedacted, RecursivePartial } from '../util';
 
 class LocationPart {
   id: string;
@@ -41,7 +41,7 @@ export class Area extends LocationPart {
   name: string | null;
   region: Region;
 
-  static fromJson(json: Partial<Area>): Area {
+  static fromJson(json: RecursivePartial<Area>): Area {
     const area = Object.assign(new Area(), super.fromJson(json));
     area.name = maybeRedacted(json.name);
     area.region = Region.fromJson(json.region || {});
@@ -55,7 +55,7 @@ export class Location extends LocationPart {
   area: Area;
   editable: boolean;
 
-  static fromJson(json: Partial<Location>): Location {
+  static fromJson(json: RecursivePartial<Location>): Location {
     const location = Object.assign(new Location(), super.fromJson(json));
 
     location.country = maybeRedacted(json.country);

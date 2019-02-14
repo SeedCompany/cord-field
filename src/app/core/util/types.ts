@@ -70,3 +70,10 @@ export type ArrayItem<T> = T extends Array<infer S> ? S : T;
 export type Mutable<T> = {
   -readonly [K in keyof T]: T[K]
 };
+
+export type RecursivePartial<T> = {
+  [P in keyof T]?:
+    T[P] extends Array<infer U> ? Array<RecursivePartial<U>> :
+    T[P] extends object ? RecursivePartial<T[P]> :
+    T[P];
+};
