@@ -3,40 +3,16 @@ import { Budget } from '@app/core/models/budget';
 import { ProjectEngagement as Engagement } from '@app/core/models/project';
 import { SessionStorageService } from '@app/core/services/storage.service';
 import { clone } from '@app/core/util';
-import { DateTime } from 'luxon';
 import { Observable } from 'rxjs';
 import { first, map } from 'rxjs/operators';
 import { AbstractViewState, SaveResult } from '../core/abstract-view-state';
-import { ChangeConfig, dateConfig, mapChangeList, returnId, returnSelf } from '../core/change-engine';
+import { ChangeConfig, dateConfig } from '../core/change-engine';
 import { Language } from '../core/models/language';
 import { Location } from '../core/models/location';
-import { Partnership, PartnershipForSaveAPI } from '../core/models/partnership';
-import { Project, ProjectExtension, ProjectStatus } from '../core/models/project';
-import { TeamMember, TeamMemberForSaveAPI } from '../core/models/team-member';
-import { ProjectService } from '../core/services/project.service';
-
-export interface ModifiedProject {
-  mouStart?: DateTime;
-  mouEnd?: DateTime;
-  estimatedSubmission?: DateTime;
-  status?: ProjectStatus;
-  locationId?: string;
-  languages?: {
-    add?: string[];
-    remove?: string[];
-  };
-  partnerships?: {
-    add?: PartnershipForSaveAPI[];
-    update?: PartnershipForSaveAPI[];
-    remove?: string[];
-  };
-  team?: {
-    add?: TeamMemberForSaveAPI[];
-    update?: TeamMemberForSaveAPI[];
-    remove?: string[];
-  };
-  budgets?: Budget[];
-}
+import { Partnership } from '../core/models/partnership';
+import { Project, ProjectExtension } from '../core/models/project';
+import { TeamMember } from '../core/models/team-member';
+import { ModifiedProject, ProjectService } from '../core/services/project.service';
 
 const config: ChangeConfig<Project> = {
   name: {},
@@ -55,40 +31,23 @@ const config: ChangeConfig<Project> = {
     forceRefresh: true, // Status changes engagement statuses
   },
   location: {
-    accessor: returnId,
-    toServer: returnId,
-    key: 'locationId',
+    ...Location.fieldConfig(),
     forceRefresh: true,
-    restore: Location.fromJson,
   },
   languages: {
-    accessor: returnId,
-    toServer: mapChangeList<Language, string, string>(returnId, returnId),
+    ...Language.fieldConfigList(),
     forceRefresh: true, // Languages changes engagements
-    store: mapChangeList(returnSelf, returnSelf),
-    restore: mapChangeList(Language.fromJson, Language.fromJson),
   },
   partnerships: {
-    accessor: returnId,
-    toServer: mapChangeList<Partnership, PartnershipForSaveAPI, string>(Partnership.forSaveAPI, returnId),
+    ...Partnership.fieldConfigList(),
     forceRefresh: true,
-    store: mapChangeList(Partnership.store, Partnership.store),
-    restore: mapChangeList(Partnership.fromJson, Partnership.fromJson),
   },
-  team: {
-    accessor: returnId,
-    toServer: mapChangeList<TeamMember, TeamMemberForSaveAPI, string>(TeamMember.forSaveAPI, returnId),
-    store: mapChangeList(TeamMember.store, TeamMember.store),
-    restore: mapChangeList(TeamMember.fromJson, TeamMember.fromJson),
-  },
-  budgets: {
-    accessor: Budget.identify,
-    toServer: Budget.forSaveAPI,
-  },
+  team: TeamMember.fieldConfigList(),
+  budgets: Budget.fieldConfigList(),
 };
 
 @Injectable()
-export class ProjectViewStateService extends AbstractViewState<Project> {
+export class ProjectViewStateService extends AbstractViewState<Project, ModifiedProject> {
 
   constructor(
     storage: SessionStorageService,

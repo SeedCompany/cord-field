@@ -1,9 +1,12 @@
+import { FieldConfig, mapChangeList, ModifiedList, returnId } from '@app/core/change-engine';
 import { DateTime } from 'luxon';
 import { clone } from '../util';
 import { Role } from './role';
 import { User } from './user';
 
-export interface TeamMemberForSaveAPI {
+export type ModifiedTeamMembers = ModifiedList<TeamMemberForSaveAPI, string>;
+
+interface TeamMemberForSaveAPI {
   userId: string;
   roles: Role[];
 }
@@ -45,6 +48,13 @@ export class TeamMember {
       roles: member.roles,
     };
   }
+
+  static fieldConfigList = (): FieldConfig<TeamMember[], ModifiedTeamMembers> => ({
+    accessor: returnId,
+    toServer: mapChangeList(TeamMember.forSaveAPI, returnId),
+    store: mapChangeList(TeamMember.store, TeamMember.store),
+    restore: mapChangeList(TeamMember.fromJson, TeamMember.fromJson),
+  });
 
   static store(tm: TeamMember) {
     return {

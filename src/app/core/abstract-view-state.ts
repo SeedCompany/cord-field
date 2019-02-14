@@ -1,5 +1,6 @@
 import { OnDestroy } from '@angular/core';
 import { BaseStorageService } from '@app/core/services/storage.service';
+import { ArrayItem } from '@app/core/util';
 import { ViewStateFormBuilder } from '@app/core/view-state-form-builder';
 import { SubscriptionComponent } from '@app/shared/components/subscription.component';
 import { BehaviorSubject, combineLatest, NextObserver, Observable, Subject } from 'rxjs';
@@ -9,7 +10,7 @@ import { ChangeConfig, ChangeEngine, Changes } from './change-engine';
 
 export type SaveResult<T> = {[key in keyof Partial<T>]: string[]};
 
-export abstract class AbstractViewState<T extends { id: string }> extends SubscriptionComponent implements OnDestroy {
+export abstract class AbstractViewState<T extends { id: string }, ModifiedForServer> extends SubscriptionComponent implements OnDestroy {
 
   private readonly changeEngine: ChangeEngine<T>;
   private readonly _subject: BehaviorSubject<T>;
@@ -39,7 +40,7 @@ export abstract class AbstractViewState<T extends { id: string }> extends Subscr
    * @param changes The changes to give to the server (based on config)
    * @return lists of new IDs mapped to their keys
    */
-  protected abstract onSave(subject: T, changes: any): Promise<SaveResult<T>>;
+  protected abstract onSave(subject: T, changes: ModifiedForServer): Promise<SaveResult<T>>;
 
   /**
    * Called when the model needs to be refreshed from the server.
@@ -100,7 +101,7 @@ export abstract class AbstractViewState<T extends { id: string }> extends Subscr
     this.changes.next();
   }
 
-  revert(field: keyof T, item?: any): void {
+  revert<K extends keyof T>(field: K, item?: ArrayItem<T[K]>): void {
     this.changeEngine.revert(field, item);
     this.changes.next();
   }

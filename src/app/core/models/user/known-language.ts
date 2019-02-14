@@ -1,3 +1,4 @@
+import { FieldConfig, mapChangeList, ModifiedList, returnId } from '@app/core/change-engine';
 import { Language } from '@app/core/models/language';
 import { LanguageProficiency } from './language-proficiency';
 
@@ -18,6 +19,12 @@ export class KnownLanguage {
     return kl;
   }
 
+  static fieldConfigList = (): FieldConfig<KnownLanguage[], ModifiedKnownLanguages> => ({
+    accessor: returnId,
+    toServer: mapChangeList(KnownLanguage.forSaveAPI, returnId),
+    restore: mapChangeList(KnownLanguage.fromJson, KnownLanguage.fromJson),
+  });
+
   static forSaveAPI(kl: KnownLanguage): KnownLanguageForSaveAPI {
     return {
       languageId: kl.language.id,
@@ -26,7 +33,9 @@ export class KnownLanguage {
   }
 }
 
-export interface KnownLanguageForSaveAPI {
+export type ModifiedKnownLanguages = ModifiedList<KnownLanguageForSaveAPI, string>;
+
+interface KnownLanguageForSaveAPI {
   languageId: string;
   proficiency: LanguageProficiency;
 }

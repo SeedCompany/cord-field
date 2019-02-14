@@ -1,12 +1,16 @@
 import { Injectable } from '@angular/core';
+import { ModifiedBudgets } from '@app/core/models/budget';
+import { ModifiedLanguages } from '@app/core/models/language';
+import { ModifiedPartnerships } from '@app/core/models/partnership';
 import { Sensitivity } from '@app/core/models/sensitivity';
+import { ModifiedTeamMembers } from '@app/core/models/team-member';
 import { AuthenticationService } from '@app/core/services/authentication.service';
 import { buildDateFilter, DateFilterAPI, toIds } from '@app/core/util/list-filters';
 import { ApiOptions as ListApiOptions, listOptionsToHttpParams, makeListRequest } from '@app/core/util/list-views';
 import { StatusOptions } from '@app/shared/components/status-select-workflow/status-select-workflow.component';
+import { DateTime } from 'luxon';
 import { from, Observable, of } from 'rxjs';
 import { catchError, map, mapTo, switchMap, tap } from 'rxjs/operators';
-import { ModifiedProject } from '../../projects/project-view-state.service';
 import { SaveResult } from '../abstract-view-state';
 import { ProjectCreationResult } from '../create-dialogs/project-create-dialog/project-create-dialog.component';
 import { ExtensionStatus, Project, ProjectExtension, ProjectFilter, ProjectStatus } from '../models/project';
@@ -18,6 +22,18 @@ export interface ProjectFilterAPI extends DateFilterAPI {
   locationId?: string[];
   team?: string[];
   sensitivity?: Sensitivity[];
+}
+
+export interface ModifiedProject {
+  mouStart?: DateTime;
+  mouEnd?: DateTime;
+  estimatedSubmission?: DateTime;
+  status?: ProjectStatus;
+  locationId?: string;
+  languages?: ModifiedLanguages;
+  partnerships?: ModifiedPartnerships;
+  team?: ModifiedTeamMembers;
+  budgets?: ModifiedBudgets;
 }
 
 @Injectable({

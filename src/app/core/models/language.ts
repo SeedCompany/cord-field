@@ -1,6 +1,5 @@
+import { FieldConfig, mapChangeList, ModifiedList, returnId, returnSelf } from '@app/core/change-engine';
 import { Location } from '@app/core/models/location';
-import { DateTime } from 'luxon';
-
 import { firstLettersOfWords, maybeRedacted } from '../util';
 
 export class Language {
@@ -30,6 +29,13 @@ export class Language {
 
     return language;
   }
+
+  static fieldConfigList = (): FieldConfig<Language[], ModifiedLanguages> => ({
+    accessor: returnId,
+    toServer: mapChangeList(returnId, returnId),
+    store: mapChangeList(returnSelf, returnSelf),
+    restore: mapChangeList(Language.fromJson, Language.fromJson),
+  });
 
   get nameOrDisplayName(): string {
     return this.name || this.displayName;
@@ -66,3 +72,5 @@ export class LanguageListItem {
 export interface LanguageListFilter {
   location?: Location[];
 }
+
+export type ModifiedLanguages = ModifiedList<string, string, never>;

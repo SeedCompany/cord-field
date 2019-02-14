@@ -1,3 +1,4 @@
+import { FieldConfig, mapChangeList, ModifiedList } from '@app/core/change-engine';
 import { Location } from '@app/core/models/location';
 import { Role } from '@app/core/models/role';
 
@@ -14,6 +15,13 @@ export class UserRole {
     return role;
   }
 
+  static fieldConfigList = (): FieldConfig<UserRole[], ModifiedUserRoles> => ({
+    accessor: (role) => role.role,
+    key: 'userRoles',
+    toServer: mapChangeList(UserRole.forSaveAPI, ur => ur.role),
+    restore: mapChangeList(UserRole.restore, UserRole.restore),
+  });
+
   static forSaveAPI(ur: UserRole): UserRoleForSaveAPI {
     return {
       locationIds: ur.locations.map((location) => location.id),
@@ -29,7 +37,9 @@ export class UserRole {
   }
 }
 
-export interface UserRoleForSaveAPI {
-  role: string;
+export type ModifiedUserRoles = ModifiedList<UserRoleForSaveAPI, Role>;
+
+interface UserRoleForSaveAPI {
+  role: Role;
   locationIds: string[];
 }

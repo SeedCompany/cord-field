@@ -47,7 +47,7 @@ export class ProjectBudgetComponent extends ProjectTabComponent implements OnIni
       .pipe(takeUntil(this.unsubscribe))
       .subscribe(val => {
         this.viewStateService.change({
-          budgets: [val],
+          budgets: { update: val },
         });
       });
 

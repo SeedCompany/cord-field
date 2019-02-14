@@ -1,13 +1,18 @@
+import { FieldConfig, returnId } from '@app/core/change-engine';
 import { buildEnum } from '@app/core/models/enum';
 import { Organization } from '@app/core/models/organization';
 import { Project } from '@app/core/models/project';
-import { generateObjectId } from '@app/core/util';
+import { generateObjectId, Omit } from '@app/core/util';
 
 export interface BudgetDetails {
   organization: Organization;
   fiscalYear: number;
   amount: number;
 }
+
+export type ModifiedBudgets = ServerBudget[];
+type ServerBudget = Omit<Budget, 'budgetDetails'> & { budgetDetails: ServerBudgetDetails[] };
+type ServerBudgetDetails = Omit<BudgetDetails, 'organization'> & { organizationId: string };
 
 export class Budget {
   id: string;
@@ -27,24 +32,18 @@ export class Budget {
     return budget;
   }
 
-  static forSaveAPI(budgets: Budget[]) {
-    return budgets.map(({ budgetDetails, ...budget }) => ({
-      budgetDetails: budgetDetails.map(({ organization, ...details }) => ({
-        organizationId: organization.id,
-        ...details,
-      })),
-      ...budget,
-    }));
-  }
+  static fieldConfigList = (): FieldConfig<Budget[], ModifiedBudgets> => ({
+    accessor: returnId,
+    toServer: (changes) => changes.update ? changes.update.map(Budget.forSaveAPI) : [],
+  });
 
-  /** Identify project budget as a scalar value */
-  static identify(budget: Budget): string {
-    return [
-      budget.id,
-      budget.status,
-      budget.budgetDetails.map(item => Number(item.amount || 0)).join(','),
-    ].join(',');
-  }
+  static forSaveAPI = ({ budgetDetails, ...budget }: Budget): ServerBudget => ({
+    budgetDetails: budgetDetails.map(({ organization, ...details }) => ({
+      organizationId: organization.id,
+      ...details,
+    })),
+    ...budget,
+  });
 
   static create(): Budget {
     return Object.assign(new Budget(), {

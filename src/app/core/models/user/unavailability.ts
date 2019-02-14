@@ -1,3 +1,4 @@
+import { FieldConfig, mapChangeList, ModifiedList, returnId } from '@app/core/change-engine';
 import { generateObjectId, Omit } from '@app/core/util';
 import { DateTime, Interval } from 'luxon';
 
@@ -43,6 +44,13 @@ export class Unavailability {
     });
   }
 
+  static fieldConfigList = (): FieldConfig<Unavailability[], ModifiedUnavailabilities, ModifiedList<StoredUnavailability>> => ({
+    accessor: returnId,
+    toServer: mapChangeList(Unavailability.forSaveAPI, returnId),
+    store: mapChangeList(Unavailability.store, Unavailability.store),
+    restore: mapChangeList(Unavailability.restore, Unavailability.restore),
+  });
+
   static forSaveAPI({ id, description, start, end }: Unavailability): RawUnavailability {
     return {
       id,
@@ -67,4 +75,5 @@ export class Unavailability {
 }
 
 export type RawUnavailability = Omit<Unavailability, 'range'>;
+export type ModifiedUnavailabilities = ModifiedList<RawUnavailability, string>;
 type StoredUnavailability = Omit<RawUnavailability, 'start' | 'end'> & {range: string};

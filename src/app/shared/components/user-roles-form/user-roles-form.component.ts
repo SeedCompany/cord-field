@@ -90,7 +90,7 @@ export class UserRolesFormComponent extends AbstractValueAccessor<UserRole[]> im
       );
     remove.subscribe(roleToRemove => {
       if (this.viewState) {
-        this.viewState.change({ roles: { remove: { role: roleToRemove } } });
+        this.viewState.change({ roles: { remove: { role: roleToRemove, locations: [] } } });
       }
       this.value = this.value.filter(r => r.role !== roleToRemove);
       const index = this.userRolesCtl.controls.findIndex(control => control.value.role === roleToRemove);
@@ -126,7 +126,7 @@ export class UserRolesFormComponent extends AbstractValueAccessor<UserRole[]> im
         .subscribe(([oldRole, newRole]) => {
           this.viewState!.change({
             roles: {
-              remove: { role: oldRole },
+              remove: { role: oldRole, locations: [] },
               add: { role: newRole, locations: Role.needsLocations.includes(newRole) ? locationCtl.value : [] },
             },
           });
@@ -150,7 +150,7 @@ export class UserRolesFormComponent extends AbstractValueAccessor<UserRole[]> im
           filter(status => status === 'INVALID'),
         )
         .subscribe(() => {
-          this.viewState!.revert('roles', { role: roleCtl.value });
+          this.viewState!.revert('roles', { role: roleCtl.value, locations: [] });
         });
     }
 
