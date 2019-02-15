@@ -3,6 +3,7 @@ import { buildEnum } from './enum';
 export enum Role {
   Admin = 'adm',
   AreaDirector = 'ad',
+  AssociateFieldCoordinator = 'afc',
   BibleTranslationLiaison = 'btl',
   Consultant = 'c',
   ConsultantManager = 'cm',
@@ -28,6 +29,7 @@ export namespace Role {
   const Enum = Role;
   export const {entries, forUI, values, trackEntryBy, trackValueBy} = buildEnum<Role>(Enum, {
     [Enum.Admin]: 'Admin',
+    [Enum.AssociateFieldCoordinator]: 'Associate Field Coordinator',
     [Enum.BibleTranslationLiaison]: 'Bible Translation Liaison',
     [Enum.Consultant]: 'Consultant',
     [Enum.ConsultantManager]: 'Consultant Manager',
@@ -66,6 +68,7 @@ export namespace Role {
 
   export const needsLocations = [
     Enum.AreaDirector,
+    Enum.AssociateFieldCoordinator,
     Enum.RegionalDirector,
     Enum.Consultant,
     Enum.ConsultantManager,
