@@ -5,7 +5,7 @@
 }
 
 mat-accordion {
-  margin: 0 -$mat-card-padding;
+  margin: 0 (-$mat-card-padding);
   // Size panel the same width with or without expansion panel items.
   // Which prevents flex from moving the entire panel on adding first product.
   // This is a quick and dirty hard code. :(

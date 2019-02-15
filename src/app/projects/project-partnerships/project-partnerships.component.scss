@@ -13,8 +13,8 @@ mat-card {
   padding-right: 0;
 }
 mat-card-title, mat-card-actions {
-  padding-left: 24px;
-  padding-right: 24px;
+  padding-left: $mat-card-padding;
+  padding-right: $mat-card-padding;
 }
 mat-expansion-panel {
   border-bottom: 1px solid mat-foreground($theme, divider);
@@ -52,7 +52,7 @@ mat-card-content {
   flex-direction: column;
 }
 app-autocomplete-organization {
-  padding: 0 24px;
+  padding: 0 $mat-card-padding;
   // Keep same spacing between accordion and autocomplete input
   margin-top: 16px;
   // Keep margin bottom same as add button
