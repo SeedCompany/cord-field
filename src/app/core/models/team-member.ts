@@ -68,6 +68,10 @@ export class TeamMember {
     return this.user.id;
   }
 
+  get fullName() {
+    return this.user.fullName;
+  }
+
   get firstName() {
     return this.user.firstName;
   }

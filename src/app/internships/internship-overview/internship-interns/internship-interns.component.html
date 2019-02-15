@@ -1,0 +1,41 @@
+<mat-card>
+
+  <mat-card-title>Interns</mat-card-title>
+
+  <mat-card-content>
+
+    <mat-list>
+      <mat-list-item *ngFor="let intern of interns; trackBy: trackById">
+        <app-avatar-letter color="primary"
+                           mat-list-avatar>{{ intern.avatarLetters }}</app-avatar-letter>
+        <div mat-line>{{ intern.fullName }}</div>
+        <div mat-line>{{ intern.dateAdded?.toLocaleString() }}</div>
+        <button mat-icon-button
+                (click)="onDelete(intern)"
+                color="primary">
+          <mat-icon>close</mat-icon>
+        </button>
+        <mat-divider [inset]="true"></mat-divider>
+      </mat-list-item>
+    </mat-list>
+
+    <app-autocomplete-user
+      *ngIf="adding"
+      placeholder="Search Users"
+      [autoFocus]="true"
+      [clearButton]="true"
+      [dedupe]="true"
+      [dedupeOptions]="interns"
+      (optionSelected)="onSelect($event)"
+      (cancel)="onCancel()"
+    ></app-autocomplete-user>
+
+  </mat-card-content>
+
+  <mat-card-actions *ngIf="!adding">
+    <button mat-button
+            color="accent"
+            (click)="onAdd()">ADD INTERN</button>
+  </mat-card-actions>
+
+</mat-card>
