@@ -1,17 +1,18 @@
 import { Component, OnInit } from '@angular/core';
 import { FormArray, FormBuilder } from '@angular/forms';
-
-import { Organization } from '../../core/models/organization';
-import { Partnership, PartnershipAgreementStatus, PartnershipType } from '../../core/models/partnership';
-import { SubscriptionComponent } from '../../shared/components/subscription.component';
-import { ProjectViewStateService } from '../project-view-state.service';
+import { AbstractViewState } from '@app/core/abstract-view-state';
+import { Internship } from '@app/core/models/internship';
+import { Organization } from '@app/core/models/organization';
+import { Partnership, PartnershipAgreementStatus, PartnershipType } from '@app/core/models/partnership';
+import { Project } from '@app/core/models/project';
+import { SubscriptionComponent } from '@app/shared/components/subscription.component';
 
 @Component({
-  selector: 'app-project-partnerships',
-  templateUrl: './project-partnerships.component.html',
-  styleUrls: ['./project-partnerships.component.scss'],
+  selector: 'app-partnerships',
+  templateUrl: './partnerships.component.html',
+  styleUrls: ['./partnerships.component.scss'],
 })
-export class ProjectPartnershipsComponent extends SubscriptionComponent implements OnInit {
+export class PartnershipsComponent extends SubscriptionComponent implements OnInit {
 
   readonly PartnershipType = PartnershipType;
   readonly PartnershipAgreementStatus = PartnershipAgreementStatus;
@@ -26,8 +27,10 @@ export class ProjectPartnershipsComponent extends SubscriptionComponent implemen
     return this.form.get('partnerships') as FormArray;
   }
 
-  constructor(private fb: FormBuilder,
-              private projectViewState: ProjectViewStateService) {
+  constructor(
+    private fb: FormBuilder,
+    private viewState: AbstractViewState<Project | Internship, unknown>,
+  ) {
     super();
   }
 
@@ -44,7 +47,7 @@ export class ProjectPartnershipsComponent extends SubscriptionComponent implemen
         mouStatus: [partnership.mouStatus],
       });
     };
-    const result = this.projectViewState.fb.array({
+    const result = this.viewState.fb.array({
       field: 'partnerships',
       createControl: createPartnershipControl,
       unsubscribe: this.unsubscribe,
@@ -77,7 +80,7 @@ export class ProjectPartnershipsComponent extends SubscriptionComponent implemen
   onSelect(org: Organization): void {
     const partnership = Partnership.fromOrganization(org);
 
-    this.projectViewState.change({partnerships: {add: partnership}});
+    this.viewState.change({ partnerships: { add: partnership } });
     this.addPartnership(partnership);
 
     this.opened = this.partnerships.length - 1;

@@ -18,7 +18,6 @@ import { ProjectListFilterComponent } from './project-list/project-list-filter/p
 import { ProjectListComponent } from './project-list/project-list.component';
 import { ProjectOverviewSidebarComponent } from './project-overview-sidebar/project-overview-sidebar.component';
 import { ProjectOverviewComponent } from './project-overview/project-overview.component';
-import { ProjectPartnershipsComponent } from './project-partnerships/project-partnerships.component';
 import { ProjectStatusComponent } from './project-status/project-status.component';
 import { ProjectTeamMemberRoleDialogComponent } from './project-team-member-role-dialog/project-team-member-role-dialog.component';
 import { ProjectTeamMemberAddComponent } from './project-team/project-team-member-add/project-team-member-add.component';
@@ -51,7 +50,6 @@ import { ProjectsRoutingModule } from './projects-routing.module';
     ProjectNameComponent,
     ProjectOverviewComponent,
     ProjectOverviewSidebarComponent,
-    ProjectPartnershipsComponent,
     ProjectEngagementsComponent,
     ProjectEngagementComponent,
     ProjectTeamComponent,
