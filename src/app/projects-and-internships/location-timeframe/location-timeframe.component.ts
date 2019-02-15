@@ -1,13 +1,15 @@
 import { Component, OnInit } from '@angular/core';
 import { Validators } from '@angular/forms';
 import { AbstractControl } from '@angular/forms/src/model';
+import { AbstractViewState } from '@app/core/abstract-view-state';
+import { Internship } from '@app/core/models/internship';
 import { Location } from '@app/core/models/location';
+import { Project } from '@app/core/models/project';
 import { TypedFormGroup } from '@app/core/util';
 import * as CustomValidators from '@app/core/validators';
 import { SubscriptionComponent } from '@app/shared/components/subscription.component';
 import { DateTime } from 'luxon';
 import { takeUntil } from 'rxjs/operators';
-import { ProjectViewStateService } from '../project-view-state.service';
 
 interface Form {
   location: Location | null;
@@ -17,17 +19,17 @@ interface Form {
 }
 
 @Component({
-  selector: 'app-project-location-timeframe',
-  templateUrl: './project-location-timeframe.component.html',
-  styleUrls: ['./project-location-timeframe.component.scss'],
+  selector: 'app-location-timeframe',
+  templateUrl: './location-timeframe.component.html',
+  styleUrls: ['./location-timeframe.component.scss'],
 })
-export class ProjectLocationTimeframeComponent extends SubscriptionComponent implements OnInit {
+export class LocationTimeframeComponent extends SubscriptionComponent implements OnInit {
   form: TypedFormGroup<Form>;
   minDate: DateTime;
   today: DateTime = DateTime.utc();
 
   constructor(
-    private projectViewState: ProjectViewStateService,
+    private projectViewState: AbstractViewState<Project | Internship, unknown>,
   ) {
     super();
   }

@@ -1,5 +1,5 @@
 import { NgModule } from '@angular/core';
-
+import { ProjectsAndInternshipsModule } from '@app/projects-and-internships/projects-and-internships.module';
 import { SharedModule } from '../shared/shared.module';
 import { ProjectBudgetComponent } from './project-budget/project-budget.component';
 import { EngagementProductsComponent } from './project-engagements/project-engagement/engagement-product/engagement-products.component';
@@ -16,7 +16,6 @@ import { ProjectFormsComponent } from './project-forms/project-forms.component';
 import { ProjectLanguagesComponent } from './project-languages/project-languages.component';
 import { ProjectListFilterComponent } from './project-list/project-list-filter/project-list-filter.component';
 import { ProjectListComponent } from './project-list/project-list.component';
-import { ProjectLocationTimeframeComponent } from './project-location-timeframe/project-location-timeframe.component';
 import { ProjectOverviewSidebarComponent } from './project-overview-sidebar/project-overview-sidebar.component';
 import { ProjectOverviewComponent } from './project-overview/project-overview.component';
 import { ProjectPartnershipsComponent } from './project-partnerships/project-partnerships.component';
@@ -32,6 +31,7 @@ import { ProjectsRoutingModule } from './projects-routing.module';
 @NgModule({
   imports: [
     SharedModule,
+    ProjectsAndInternshipsModule,
     ProjectsRoutingModule,
   ],
   declarations: [
@@ -48,7 +48,6 @@ import { ProjectsRoutingModule } from './projects-routing.module';
     ProjectFormsComponent,
     ProjectListComponent,
     ProjectListFilterComponent,
-    ProjectLocationTimeframeComponent,
     ProjectNameComponent,
     ProjectOverviewComponent,
     ProjectOverviewSidebarComponent,
@@ -60,9 +59,7 @@ import { ProjectsRoutingModule } from './projects-routing.module';
     ProjectTeamMemberRoleDialogComponent,
     ProjectUpdatesComponent,
     ProjectLanguagesComponent,
-    ProjectLocationTimeframeComponent,
     ProjectStatusComponent,
-    ProjectLocationTimeframeComponent,
   ],
   entryComponents: [
     CreateDirectoryDialogComponent,

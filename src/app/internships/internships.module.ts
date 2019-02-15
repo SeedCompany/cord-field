@@ -1,4 +1,5 @@
 import { NgModule } from '@angular/core';
+import { ProjectsAndInternshipsModule } from '@app/projects-and-internships/projects-and-internships.module';
 import { SharedModule } from '@app/shared/shared.module';
 import {
   InternshipOverviewSidebarComponent,
@@ -11,6 +12,7 @@ import { InternshipsRoutingModule } from './internships-routing.module';
 @NgModule({
   imports: [
     SharedModule,
+    ProjectsAndInternshipsModule,
     InternshipsRoutingModule,
   ],
   declarations: [

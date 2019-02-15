@@ -2,6 +2,7 @@ import { HttpErrorResponse } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
 import { MatSnackBar, MatSnackBarRef, SimpleSnackBar } from '@angular/material';
 import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
+import { AbstractViewState } from '@app/core/abstract-view-state';
 import { TitleAware, TitleProp } from '@app/core/decorators';
 import { LoggerService } from '@app/core/services/logger.service';
 import { InternshipViewStateService } from '@app/internships/internship-view-state.service';
@@ -19,6 +20,7 @@ interface TabConfig {
   styleUrls: ['./internship.component.scss'],
   providers: [
     InternshipViewStateService,
+    { provide: AbstractViewState, useExisting: InternshipViewStateService },
   ],
 })
 @TitleAware()
