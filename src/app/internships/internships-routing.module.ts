@@ -2,6 +2,9 @@ import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { DirtyGuard } from '@app/core/route-guards/dirty.guard';
 import { NotImplementedGuard, notImplementedRoute } from '@app/core/route-guards/not-implemented.guard';
+import {
+  ProposalAndFcRecommendationComponent,
+} from '@app/projects-and-internships/proposal-and-fc-recommendation/proposal-and-fc-recommendation.component';
 import { InternshipOverviewComponent } from './internship-overview/internship-overview.component';
 import { InternshipComponent } from './internship/internship.component';
 
@@ -13,7 +16,7 @@ const routes: Routes = [
     children: [
       { path: '', redirectTo: 'overview', pathMatch: 'full' },
       { path: 'overview', component: InternshipOverviewComponent, data: { acceptDirty: true }, canDeactivate: [DirtyGuard] },
-      { path: 'forms', data: { acceptDirty: true }, canDeactivate: [DirtyGuard], canActivate: [NotImplementedGuard] },
+      { path: 'forms', component: ProposalAndFcRecommendationComponent, data: { acceptDirty: true }, canDeactivate: [DirtyGuard] },
       {
         path: 'engagements',
         children: [

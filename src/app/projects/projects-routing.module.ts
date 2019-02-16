@@ -1,13 +1,15 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { DirtyGuard } from '@app/core/route-guards/dirty.guard';
+import {
+  ProposalAndFcRecommendationComponent,
+} from '@app/projects-and-internships/proposal-and-fc-recommendation/proposal-and-fc-recommendation.component';
 import { ProjectExtensionComponent } from '@app/projects/project-extensions/project-extension/project-extension.component';
 import { ProjectExtensionsComponent } from '@app/projects/project-extensions/project-extensions.component';
 import { ProjectBudgetComponent } from './project-budget/project-budget.component';
 import { ProjectEngagementComponent } from './project-engagements/project-engagement/project-engagement.component';
 import { ProjectEngagementsComponent } from './project-engagements/project-engagements.component';
 import { ProjectFilesComponent } from './project-files/project-files.component';
-import { ProjectFormsComponent } from './project-forms/project-forms.component';
 import { ProjectListComponent } from './project-list/project-list.component';
 import { ProjectOverviewComponent } from './project-overview/project-overview.component';
 import { ProjectTeamComponent } from './project-team/project-team.component';
@@ -22,7 +24,7 @@ const routes: Routes = [
     children: [
       {path: '', redirectTo: 'overview', pathMatch: 'full'},
       {path: 'overview', component: ProjectOverviewComponent, data: { acceptDirty: true }, canDeactivate: [DirtyGuard]},
-      {path: 'forms', component: ProjectFormsComponent, data: { acceptDirty: true }, canDeactivate: [DirtyGuard]},
+      {path: 'forms', component: ProposalAndFcRecommendationComponent, data: { acceptDirty: true }, canDeactivate: [DirtyGuard]},
       {
         path: 'engagements',
         component: ProjectEngagementsComponent,

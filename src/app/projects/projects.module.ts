@@ -12,7 +12,6 @@ import { FileBreadcrumbsComponent } from './project-files/file-breadcrumbs/file-
 import { FileRenameDialogComponent } from './project-files/file-rename-dialog/file-rename-dialog.component';
 import { OverwriteFileWarningComponent } from './project-files/overwrite-file-warning/overwrite-file-warning.component';
 import { ProjectFilesComponent } from './project-files/project-files.component';
-import { ProjectFormsComponent } from './project-forms/project-forms.component';
 import { ProjectLanguagesComponent } from './project-languages/project-languages.component';
 import { ProjectListFilterComponent } from './project-list/project-list-filter/project-list-filter.component';
 import { ProjectListComponent } from './project-list/project-list.component';
@@ -44,7 +43,6 @@ import { ProjectsRoutingModule } from './projects-routing.module';
     ProjectExtensionComponent,
     ProjectExtensionsComponent,
     ProjectFilesComponent,
-    ProjectFormsComponent,
     ProjectListComponent,
     ProjectListFilterComponent,
     ProjectNameComponent,
