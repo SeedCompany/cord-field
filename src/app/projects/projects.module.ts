@@ -1,7 +1,6 @@
 import { NgModule } from '@angular/core';
 import { ProjectsAndInternshipsModule } from '@app/projects-and-internships/projects-and-internships.module';
 import { SharedModule } from '../shared/shared.module';
-import { ProjectBudgetComponent } from './project-budget/project-budget.component';
 import { EngagementProductsComponent } from './project-engagements/project-engagement/engagement-product/engagement-products.component';
 import { ProjectEngagementComponent } from './project-engagements/project-engagement/project-engagement.component';
 import { ProjectEngagementsComponent } from './project-engagements/project-engagements.component';
@@ -38,7 +37,6 @@ import { ProjectsRoutingModule } from './projects-routing.module';
     FileBreadcrumbsComponent,
     FileRenameDialogComponent,
     OverwriteFileWarningComponent,
-    ProjectBudgetComponent,
     ProjectComponent,
     ProjectExtensionComponent,
     ProjectExtensionsComponent,

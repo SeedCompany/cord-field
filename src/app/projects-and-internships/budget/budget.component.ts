@@ -1,41 +1,41 @@
 import { Component, OnInit } from '@angular/core';
 import { AbstractControl, FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { AbstractViewState } from '@app/core/abstract-view-state';
 import { TitleAware } from '@app/core/decorators';
 import { Budget, BudgetDetails, BudgetStatus } from '@app/core/models/budget';
+import { Internship } from '@app/core/models/internship';
+import { Project } from '@app/core/models/project';
+import { IsDirty } from '@app/core/route-guards/dirty.guard';
 import { filterRequired } from '@app/core/util';
-import { ProjectTabComponent } from '@app/projects/abstract-project-tab';
+import { SubscriptionComponent } from '@app/shared/components/subscription.component';
 import { Observable } from 'rxjs';
 import { map, startWith, takeUntil } from 'rxjs/operators';
-import { ProjectViewStateService } from '../project-view-state.service';
 
 /* tslint:disable:trackBy-function */
 @Component({
-  selector: 'app-project-budget',
-  templateUrl: './project-budget.component.html',
-  styleUrls: ['./project-budget.component.scss'],
+  templateUrl: './budget.component.html',
+  styleUrls: ['./budget.component.scss'],
 })
 @TitleAware('Budget')
-export class ProjectBudgetComponent extends ProjectTabComponent implements OnInit {
+export class BudgetComponent extends SubscriptionComponent implements OnInit, IsDirty {
   form: FormGroup;
   total: Observable<number>;
 
   constructor(
     private formBuilder: FormBuilder,
-    private viewStateService: ProjectViewStateService,
+    private viewState: AbstractViewState<Project | Internship, unknown>,
   ) {
-    super(viewStateService);
+    super();
   }
 
   ngOnInit(): void {
-    super.ngOnInit();
-
     this.form = this.formBuilder.group({
       id: [''],
       status: [''],
       budgetDetails: this.formBuilder.array([]),
     });
 
-    this.viewStateService.subjectWithPreExistingChanges
+    this.viewState.subjectWithPreExistingChanges
       .pipe(
         map(project => project.budgets.find(budget => budget.status === BudgetStatus.Current)),
         filterRequired(),
@@ -46,7 +46,7 @@ export class ProjectBudgetComponent extends ProjectTabComponent implements OnIni
     this.form.valueChanges
       .pipe(takeUntil(this.unsubscribe))
       .subscribe(val => {
-        this.viewStateService.change({
+        this.viewState.change({
           budgets: { update: val },
         });
       });
@@ -64,6 +64,18 @@ export class ProjectBudgetComponent extends ProjectTabComponent implements OnIni
 
   trackBudgetById(index: number, control: AbstractControl) {
     return control.get('organization')!.value.id;
+  }
+
+  get isDirty() {
+    return this.viewState.isDirty;
+  }
+
+  onSave() {
+    return this.viewState.save();
+  }
+
+  onDiscard() {
+    return this.viewState.discard();
   }
 
   private createBudgetForm(budget: Budget) {
