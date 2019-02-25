@@ -70,18 +70,9 @@
   </mat-card>
 </form>
 
-<app-speed-dial
-  *ngIf="form.disabled || (form.dirty && form.valid)"
-  align="below"
-  icon="save"
-  [disabled]="form.disabled"
-  [progress]="form.disabled"
-  [@popInOut]
->
-  <app-speed-dial-item tooltip="Discard" color="warn" (click)="onReset()">
-    <mat-icon>delete</mat-icon>
-  </app-speed-dial-item>
-  <app-speed-dial-item tooltip="Save" color="accent" (click)="onSave()">
-    <mat-icon>save</mat-icon>
-  </app-speed-dial-item>
-</app-speed-dial>
+<app-save-discard-dial
+  [dirty]="form.disabled || (form.dirty && form.valid)"
+  [submitting]="form.disabled"
+  (save)="onSave()"
+  (discard)="onReset()"
+></app-save-discard-dial>

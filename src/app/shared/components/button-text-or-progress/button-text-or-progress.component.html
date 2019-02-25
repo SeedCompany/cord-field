@@ -1,0 +1,11 @@
+<span [style.visibility]="showProgress ? 'hidden' : null">
+  <ng-content></ng-content>
+</span>
+<span class="spinner-container" *ngIf="showProgress">
+  <mat-progress-spinner
+    color="accent"
+    mode="indeterminate"
+    strokeWidth="3"
+    [diameter]="24"
+  ></mat-progress-spinner>
+</span>

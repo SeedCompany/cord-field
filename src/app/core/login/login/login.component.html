@@ -99,14 +99,9 @@
               (click)="onLogin()"
               [disabled]="form.touched && (form.invalid || form.disabled)"
       >
-        <ng-container *ngIf="form.enabled">SIGN IN</ng-container>
-        <mat-progress-spinner
-          *ngIf="form.disabled"
-          color="accent"
-          mode="indeterminate"
-          strokeWidth="3"
-          [diameter]="24"
-        ></mat-progress-spinner>
+        <app-button-text-or-progress [showProgress]="form.disabled">
+          SIGN IN
+        </app-button-text-or-progress>
       </button>
       <button mat-button color="accent" routerLink="/login/forgot-password">FORGOT PASSWORD?</button>
     </mat-card-actions>

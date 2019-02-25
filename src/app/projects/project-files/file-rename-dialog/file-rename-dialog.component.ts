@@ -1,7 +1,7 @@
 import { Component, Inject } from '@angular/core';
 import { AbstractControl, FormBuilder, FormGroup, ValidatorFn, Validators } from '@angular/forms';
-import { MAT_DIALOG_DATA, MatDialog, MatDialogRef, MatSnackBar, MatSnackBarRef, SimpleSnackBar } from '@angular/material';
-import { Directory, FileNode, FileNodeType } from '@app/core/models/file-node';
+import { MAT_DIALOG_DATA, MatDialog, MatDialogRef } from '@angular/material';
+import { Directory, FileNode, FileNodeType } from '@app/core/models/files';
 import { ProjectFilesService } from '@app/core/services/project-files.service';
 
 @Component({
@@ -16,7 +16,6 @@ export class FileRenameDialogComponent {
   readonly form: FormGroup;
   readonly node: FileNode;
   private readonly parent: Directory;
-  private snackBarRef?: MatSnackBarRef<SimpleSnackBar>;
 
   static open(dialog: MatDialog, parent: Directory, node: FileNode): MatDialogRef<FileRenameDialogComponent, FileNode> {
     return dialog.open(this, {
@@ -31,7 +30,6 @@ export class FileRenameDialogComponent {
     @Inject(MAT_DIALOG_DATA) {parent, node}: {parent: Directory, node: FileNode},
     private fileService: ProjectFilesService,
     private fb: FormBuilder,
-    private snackBar: MatSnackBar,
   ) {
     this.node = node;
     this.parent = parent;
@@ -54,42 +52,14 @@ export class FileRenameDialogComponent {
     return this.form.get('name')!;
   }
 
-  async onSubmit() {
-    if (this.form.invalid) {
-      return;
-    }
+  onSubmit = ({ name }: { name: string }) => {
+    const newName = name.trim();
 
-    const newName = this.name.value.trim();
-
-    // If no change, just close dialog
+    // If no change, do nothing
     if (this.node.name === newName) {
-      this.dialogRef.close();
       return;
     }
 
-    let newNode;
-    this.form.disable();
-    this.dialogRef.disableClose = true;
-    try {
-      newNode = await this.fileService.rename(newName, this.node, this.parent);
-    } catch (e) {
-      this.showSnackBar('Failed to rename ' + FileNodeType.forUI(this.node.type)!.toLowerCase());
-      return;
-    } finally {
-      this.form.enable();
-      this.dialogRef.disableClose = false;
-    }
-
-    if (this.snackBarRef) {
-      this.snackBarRef.dismiss();
-    }
-
-    this.dialogRef.close(newNode);
-  }
-
-  private showSnackBar(message: string) {
-    this.snackBarRef = this.snackBar.open(message, undefined, {
-      duration: 3000,
-    });
+    return this.fileService.rename(newName, this.node, this.parent);
   }
 }

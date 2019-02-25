@@ -1,5 +1,4 @@
 import { Component, Input } from '@angular/core';
-import { SpeedDialComponent } from '../speed-dial/speed-dial.component';
 
 @Component({
   selector: 'app-speed-dial-item',
@@ -9,11 +8,4 @@ import { SpeedDialComponent } from '../speed-dial/speed-dial.component';
 export class SpeedDialItemComponent {
   @Input() color: 'primary' | 'accent' | 'warn' = 'accent';
   @Input() tooltip: string;
-
-  constructor(private parent: SpeedDialComponent) {
-  }
-
-  onClick() {
-    this.parent.close();
-  }
 }

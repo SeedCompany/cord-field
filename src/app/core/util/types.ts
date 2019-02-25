@@ -18,6 +18,8 @@
  */
 export type PickWithType<T, Condition> = Pick<T, ExtractKeys<T, Condition>>;
 
+export type OmitWithType<T, Condition> = Omit<T, ExtractKeys<T, Condition>>;
+
 /**
  * Given T, return a record with only the properties that match the given condition and their values as the condition.
  *

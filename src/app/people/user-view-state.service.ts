@@ -5,56 +5,10 @@ import { differenceBy } from 'lodash';
 import { Observable } from 'rxjs';
 
 import { AbstractViewState, SaveResult } from '../core/abstract-view-state';
-import { ChangeConfig, mapChangeList, returnId, returnSelf } from '../core/change-engine';
+import { ChangeConfig } from '../core/change-engine';
 import { Organization } from '../core/models/organization';
-import { ProjectRole } from '../core/models/project-role';
-import {
-  Education,
-  KnownLanguage,
-  KnownLanguageForSaveAPI,
-  RawUnavailability,
-  Unavailability,
-  UserProfile,
-  UserRole,
-  UserRoleForSaveAPI,
-} from '../core/models/user';
-import { UserService } from '../core/services/user.service';
-
-export interface ModifiedUser {
-  firstName?: string;
-  lastName?: string;
-  displayFirstName?: string;
-  displayLastName?: string;
-  email?: string;
-  roles?: {
-    add?: UserRole[];
-    update?: UserRole[];
-    remove?: ProjectRole[];
-  };
-  organizations: {
-    add?: string[];
-    remove?: string[];
-  };
-  phone?: string;
-  timeZone?: string;
-  unavailabilities?: {
-    add?: RawUnavailability[];
-    update?: RawUnavailability[];
-    remove?: string[];
-  };
-  bio?: string;
-  education?: {
-    add?: Education[];
-    update?: Education[];
-    remove?: string[];
-  };
-  skills?: string[];
-  knownLanguages?: {
-    add?: KnownLanguageForSaveAPI[];
-    update?: KnownLanguageForSaveAPI[];
-    remove?: string[];
-  };
-}
+import { Education, KnownLanguage, Unavailability, UserProfile, UserRole } from '../core/models/user';
+import { ModifiedUser, UserService } from '../core/services/user.service';
 
 const config: ChangeConfig<UserProfile> = {
   realFirstName: {
@@ -66,44 +20,24 @@ const config: ChangeConfig<UserProfile> = {
   displayFirstName: {},
   displayLastName: {},
   email: {
-    toServer: email => email.toLowerCase(),
+    toServer: email => email ? email.toLowerCase() : undefined,
   },
-  roles: {
-    accessor: (role) => role.role,
-    key: 'userRoles',
-    toServer: mapChangeList<UserRole, UserRoleForSaveAPI, string>(UserRole.forSaveAPI, ur => ur.role),
-    restore: mapChangeList(UserRole.restore, UserRole.restore),
-  },
-  organizations: {
-    accessor: returnId,
-    toServer: mapChangeList<Organization, string, string>(returnId, returnId),
-  },
+  roles: UserRole.fieldConfigList(),
+  organizations: Organization.fieldConfigList(),
   phone: {},
   timeZone: {},
-  unavailabilities: {
-    accessor: returnId,
-    toServer: mapChangeList<Unavailability, RawUnavailability, string>(Unavailability.forSaveAPI, returnId),
-    store: mapChangeList(Unavailability.store, Unavailability.store),
-    restore: mapChangeList(Unavailability.restore, Unavailability.restore),
-  },
+  unavailabilities: Unavailability.fieldConfigList(),
   bio: {},
-  education: {
-    accessor: returnId,
-    toServer: mapChangeList<Education, string, string>(returnSelf, returnId),
-  },
+  education: Education.fieldConfigList(),
   skills: {},
-  knownLanguages: {
-    accessor: returnId,
-    toServer: mapChangeList<KnownLanguage, KnownLanguageForSaveAPI, string>(KnownLanguage.forSaveAPI, returnId),
-    restore: mapChangeList(KnownLanguage.fromJson, KnownLanguage.fromJson),
-  },
+  knownLanguages: KnownLanguage.fieldConfigList(),
 };
 
 // Sub type of User that only has properties that are lists of objects with IDs
 type UserOnlyObjectLists = RecordOfType<UserProfile, Array<{id: string}>>;
 
 @Injectable()
-export class UserViewStateService extends AbstractViewState<UserProfile> {
+export class UserViewStateService extends AbstractViewState<UserProfile, ModifiedUser> {
 
   constructor(
     storage: SessionStorageService,

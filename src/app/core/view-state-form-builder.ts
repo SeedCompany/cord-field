@@ -1,32 +1,32 @@
 import { AbstractControl, FormArray, FormControl, FormGroup, ValidatorFn } from '@angular/forms';
 import { AbstractViewState } from '@app/core/abstract-view-state';
 import { ChangeEngine } from '@app/core/change-engine';
-import { ArrayItem, mapEntries, Omit, skipEmptyViewState, TypedFormControl } from '@app/core/util';
+import { ArrayItem, mapEntries, Omit, skipEmptyViewState, TypedFormControl, TypedFormGroup } from '@app/core/util';
 import { getValue } from '@app/core/util/forms';
 import { isEqual } from 'lodash-es';
 import { identity, merge, Observable, Subject } from 'rxjs';
 import { distinctUntilChanged, map, skip, startWith, takeUntil } from 'rxjs/operators';
 
-export type FormGroupOptions<Form, T, Field extends keyof T> = {
-  [FormKey in Partial<keyof Form>]: FormGroupItemOptions<Form, T, FormKey, Form[FormKey]>
+export type FormGroupOptions<Form, Model> = {
+  [FormKey in Partial<keyof Form>]: FormGroupItemOptions<Model, FormKey, Form[FormKey]>
 };
 
-export type FormGroupItemOptions<Form, T, FormKey, FormValue> =
+export type FormGroupItemOptions<Model, FormKey, FormValue> =
   (
-    // We want the field value to be based on the `field` value. In order to do this,
-    // we say it can be one of the FormControlOptions specific to each key in T
+    // We want the form value to be based on the `field` value. In order to do this,
+    // we say it can be one of the FormControlOptions specific to each key in Model
     {
-      [TKey in keyof T]: Omit<FormControlOptions<T, TKey, FormValue>, 'unsubscribe'>
-    }[keyof T]
+      [Field in keyof Model]: Omit<FormControlOptions<Model, Field, FormValue>, 'unsubscribe'>
+    }[keyof Model]
   ) | (
     // The above is for when the `field` property is specified. We also want it to be
-    // optional if the key matches a property in T.
-    FormKey extends keyof T
-      ? Omit<FormControlOptions<T, FormKey, FormValue>, 'field' | 'unsubscribe'>
+    // optional if the key matches a property in Model.
+    FormKey extends keyof Model
+      ? Omit<FormControlOptions<Model, FormKey, FormValue>, 'field' | 'unsubscribe'>
       : never
   );
 
-export type FormControlOptions<T, Field extends keyof T, FormValue = any> =
+export type FormControlOptions<Model, Field extends keyof Model, FormValue = any> =
   {
     field: Field;
     unsubscribe: Observable<any>;
@@ -34,42 +34,42 @@ export type FormControlOptions<T, Field extends keyof T, FormValue = any> =
     initialValue?: FormValue;
     formToChange?: (formVal: FormValue) => any;
   } & (
-  // modelToForm is required if model value is not the same as form value
-  T[Field] extends FormValue
-    ? { modelToForm?: (modelVal: T[Field]) => FormValue }
-    : { modelToForm: (modelVal: T[Field]) => FormValue }
+    // modelToForm is required if model value is not the same as form value
+    Model[Field] extends FormValue
+      ? { modelToForm?: (modelVal: Model[Field]) => FormValue }
+      : { modelToForm: (modelVal: Model[Field]) => FormValue }
   );
 
-export interface FormArrayOptions<T, Key extends keyof T, Value extends ArrayItem<T[Key]>> {
+export interface FormArrayOptions<Model, Key extends keyof Model, Value extends ArrayItem<Model[Key]>> {
   field: Key;
   unsubscribe: Observable<void>;
   createControl: (item: Value | undefined, remove: Observable<any>) => AbstractControl;
 }
 
-export class ViewStateFormBuilder<T extends { id: string }> {
+export class ViewStateFormBuilder<Model extends { id: string }> {
 
   constructor(
-    private viewState: AbstractViewState<T>,
-    private changeEngine: ChangeEngine<T>,
+    private viewState: AbstractViewState<Model, unknown>,
+    private changeEngine: ChangeEngine<Model>,
   ) {
   }
 
-  group<Form>(unsubscribe: Observable<any>, controls: FormGroupOptions<Form, T, keyof T>) {
+  group<Form>(unsubscribe: Observable<any>, controls: FormGroupOptions<Form, Model>): TypedFormGroup<Form> {
     // `field` type as `any` isn't terrible as it is validated in interface
-    return new FormGroup(mapEntries(controls, (field: any, c: any) => this.control({ field, unsubscribe, ...c })));
+    return new FormGroup(mapEntries(controls, (field: any, c: any) => this.control({ field, unsubscribe, ...c }))) as any;
   }
 
-  control<Field extends keyof T, ViewValue>({
+  control<Field extends keyof Model, FormValue>({
     field,
     unsubscribe,
     validators = [],
     initialValue,
     // Type safety is verified in FormControlOptions.
     // It is only optional if model value and form value are the same, thus identity function.
-    modelToForm = identity as unknown as (val: T[Field]) => ViewValue,
+    modelToForm = identity as unknown as (val: Model[Field]) => FormValue,
     formToChange = identity,
-  }: FormControlOptions<T, Field, ViewValue>): TypedFormControl<T[Field]> {
-    const control = new FormControl(initialValue, validators);
+  }: FormControlOptions<Model, Field, FormValue>): TypedFormControl<FormValue> {
+    const control = new FormControl(initialValue, validators) as TypedFormControl<FormValue>;
 
     // Currently change engine reverts are leaked here (still result in no changes).
     // Because we use the distinctUntilChanged operator, which needs to stay in sync with current value.
@@ -117,11 +117,11 @@ export class ViewStateFormBuilder<T extends { id: string }> {
    * Create a form array for the given field. This syncs user input and subject changes to the form array
    * and gives back the control and functions to add & remove items from the array.
    */
-  array<Key extends keyof T, Value extends ArrayItem<T[Key]>>({
+  array<Key extends keyof Model, Value extends ArrayItem<Model[Key]>>({
     field,
     unsubscribe,
     createControl,
-  }: FormArrayOptions<T, Key, Value>) {
+  }: FormArrayOptions<Model, Key, Value>) {
     const form = new FormArray([]);
 
     // Subjects called on individual item removal
@@ -197,7 +197,7 @@ export class ViewStateFormBuilder<T extends { id: string }> {
    */
   private setupArrayItems(
     form: FormArray,
-    field: keyof T,
+    field: keyof Model,
     value: any[],
     onAdd: (value: any) => void,
     onRemove: (index: number, updateState?: boolean) => void,

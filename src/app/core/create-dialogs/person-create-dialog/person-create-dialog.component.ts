@@ -1,45 +1,29 @@
 import { HttpErrorResponse } from '@angular/common/http';
-import { Component, HostListener, OnInit, ViewChild } from '@angular/core';
+import { Component } from '@angular/core';
 import { AbstractControl, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatDialog, MatDialogRef, MatSnackBar } from '@angular/material';
 import { Router } from '@angular/router';
-
+import { NewUser } from '@app/core/models/user';
 import { UserService } from '@app/core/services/user.service';
 import * as CustomValidators from '@app/core/validators';
-import { UserRolesFormComponent } from '@app/shared/components/user-roles-form/user-roles-form.component';
+import { EMPTY } from 'rxjs';
+import { catchError, map } from 'rxjs/operators';
 
 @Component({
   selector: 'app-person-create-dialog',
   templateUrl: './person-create-dialog.component.html',
   styleUrls: ['./person-create-dialog.component.scss'],
 })
-export class PersonCreateDialogComponent implements OnInit {
+export class PersonCreateDialogComponent {
   form: FormGroup;
-  submitting = false;
-
-  @ViewChild(UserRolesFormComponent) userRoles: UserRolesFormComponent;
 
   static open(dialog: MatDialog): MatDialogRef<PersonCreateDialogComponent, any> {
     return dialog.open(PersonCreateDialogComponent, {
       width: '500px',
-      disableClose: true,
     });
   }
 
-  @HostListener('keyup.enter') onEnterKey(): any {
-    if (this.form.valid && !this.userRoles.isPanelOpen) {
-      this.onSubmit();
-    }
-  }
-
-  @HostListener('keyup.esc') onEscKey(): any {
-    if (!this.userRoles.isPanelOpen) {
-      this.dialogRef.close();
-    }
-  }
-
   constructor(
-    private dialogRef: MatDialogRef<PersonCreateDialogComponent>,
     private formBuilder: FormBuilder,
     private router: Router,
     private snackBar: MatSnackBar,
@@ -54,10 +38,6 @@ export class PersonCreateDialogComponent implements OnInit {
     });
   }
 
-  ngOnInit(): void {
-    this.dialogRef.backdropClick().subscribe(() => this.onEscKey());
-  }
-
   get firstName(): AbstractControl {
     return this.form.get('firstName')!;
   }
@@ -70,28 +50,20 @@ export class PersonCreateDialogComponent implements OnInit {
     return this.form.get('email')!;
   }
 
-  async onSubmit(): Promise<void> {
-    try {
-      if (this.form.valid) {
-        this.submitting = true;
-
-        const userId = await this.userService.create(this.form.value);
-
+  onSubmit = (value: NewUser) => this.userService.create(value)
+    .pipe(
+      map(userId => {
         this.router.navigate(['/people', userId]);
-        this.dialogRef.close();
-
-        if (this.form.value.sendInvite) {
+        if (value.sendInvite) {
           this.snackBar.open('Invitation sent', undefined, { duration: 5000 });
         }
-      }
-    } catch (e) {
-      this.submitting = false;
-
-      if (e instanceof HttpErrorResponse && e.status === 409) {
-        this.email.setErrors({ inUse: true });
-      } else {
-        this.snackBar.open('Failed to create person', undefined, { duration: 3000 });
-      }
-    }
-  }
+      }),
+      catchError(e => {
+        if (e instanceof HttpErrorResponse && e.status === 409) {
+          this.email.setErrors({ inUse: true });
+          return EMPTY;
+        }
+        throw e;
+      }),
+    )
 }

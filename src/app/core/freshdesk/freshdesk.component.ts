@@ -67,6 +67,7 @@ export class FreshdeskComponent extends SubscriptionComponent implements OnInit,
           submitTitle: 'Request Help',
           submitThanks: 'Thanks for sending in your request! A Support Team member will reach out to follow up shortly.',
           'helpdesk_ticket[requester]': user ? user.email : '', // Autofill requester
+          'helpdesk_ticket[name]': user ? user.fullName : '', // Autofill name
           'helpdesk_ticket[custom_field][cf_category_915575]': 'Cord Field', // Autofill category
         };
         widget.init('', {

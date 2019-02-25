@@ -1,23 +1,24 @@
 import { Injectable } from '@angular/core';
-import { EditableEngagement, EmptyEngagement, Engagement } from '@app/core/models/engagement';
-import { Project } from '@app/core/models/project';
-import { EngagementService } from '@app/core/services/engagement.service';
+import { Product } from '@app/core/models/product';
+import {
+  EditableProjectEngagement as EditableEngagement,
+  EmptyProjectEngagement as EmptyEngagement,
+  Project,
+  ProjectEngagement as Engagement,
+  ProjectEngagementTag,
+} from '@app/core/models/project';
+import { ProjectEngagementService as EngagementService } from '@app/core/services/project-engagement.service';
 import { SessionStorageService } from '@app/core/services/storage.service';
 import { filterRequired, skipEmptyViewState } from '@app/core/util';
 import { ProjectViewStateService } from '@app/projects/project-view-state.service';
 import { first, map, takeUntil } from 'rxjs/operators';
 import { AbstractViewState, SaveResult } from '../core/abstract-view-state';
-import { ChangeConfig, dateConfig, modifiedListMerger, returnId } from '../core/change-engine';
+import { ChangeConfig, dateConfig } from '../core/change-engine';
 
 const config: ChangeConfig<EditableEngagement> = {
   status: {},
-  products: {
-    accessor: returnId,
-    toServer: modifiedListMerger(returnId),
-  },
-  tags: {
-    toServer: modifiedListMerger(),
-  },
+  products: Product.fieldConfigList(),
+  tags: ProjectEngagementTag.fieldConfigList,
   completeDate: dateConfig,
   disbursementCompleteDate: dateConfig,
   communicationsCompleteDate: dateConfig,
@@ -26,7 +27,7 @@ const config: ChangeConfig<EditableEngagement> = {
 };
 
 @Injectable()
-export class EngagementViewStateService extends AbstractViewState<Engagement> {
+export class EngagementViewStateService extends AbstractViewState<Engagement, Partial<EditableEngagement>> {
 
   private project: Project;
 

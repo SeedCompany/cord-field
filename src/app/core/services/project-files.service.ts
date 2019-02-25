@@ -1,12 +1,12 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { Directory, File as CordFile, FileNode, FileNodeType, FileVersion, fromJson } from '@app/core/models/files';
 import { AuthenticationService } from '@app/core/services/authentication.service';
 import { DownloaderService } from '@app/core/services/downloader.service';
 import { clone } from '@app/core/util';
 import { DateTime } from 'luxon';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
-import { Directory, File as CordFile, FileNode, FileNodeType, FileVersion, fromJson } from '../models/file-node';
 import { PloApiService } from './http/plo-api.service';
 
 @Injectable({
@@ -26,7 +26,7 @@ export class ProjectFilesService {
     return this
       .ploApi
       .get<Directory>(`/projects/${projectId}/files${dirId ? `/${dirId}` : ''}`)
-      .pipe(map(node => fromJson({ ...node, projectId: projectId }) as Directory));
+      .pipe(map(node => fromJson({ ...node, projectId: projectId })));
   }
 
   async rename<T extends FileNode>(newName: string, node: T, parent: Directory): Promise<T> {
@@ -44,7 +44,7 @@ export class ProjectFilesService {
 
   async createDirectory(parent: Directory, name: string): Promise<Directory> {
     const dir = await this.ploApi
-      .post(`/projects/${parent.projectId}/files`, {
+      .post<Directory>(`/projects/${parent.projectId}/files`, {
         projectId: parent.projectId,
         parentId: parent.id,
         name,
@@ -58,7 +58,7 @@ export class ProjectFilesService {
       projectId: parent.projectId,
       createdAt: DateTime.local().toISO(),
       owner,
-    }) as Directory;
+    });
   }
 
   async upload(uploadFile: File, name: string, parent: Directory): Promise<CordFile> {
@@ -76,7 +76,7 @@ export class ProjectFilesService {
         type: FileNodeType.File,
       })
       .pipe(map(({ preSignedUrl, fileVersionId, ...file }) => ({
-        file: fromJson({...file, projectId: parent.projectId}) as CordFile,
+        file: fromJson({ ...file, projectId: parent.projectId }),
         preSignedUrl,
         fileVersionId,
       })));
@@ -102,7 +102,7 @@ export class ProjectFilesService {
         fileId: temp.id,
         fileVersionId: versionId,
       })
-      .pipe(map(file => fromJson({...file, projectId: temp.projectId}) as CordFile));
+      .pipe(map(file => fromJson({ ...file, projectId: temp.projectId })));
   }
 
   async download(file: CordFile, version?: FileVersion) {

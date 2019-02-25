@@ -8,29 +8,10 @@ mat-toolbar {
   padding-left: 3.6em;
 }
 
-.name {
-  display: flex;
-  align-items: center;
-  cursor: pointer;
-  margin-bottom: 8px; // align text with editing position
-
-  button {
-    margin-left: 8px;
-  }
-  mat-icon {
-    visibility: hidden;
-  }
-  &:hover, button:focus {
-    mat-icon {
-      visibility: visible;
-    }
-  }
-}
-
-mat-form-field {
+app-display-or-edit-field {
   min-width: 400px;
-}
 
-input {
-  font-weight: mat-font-weight($config, title);
+  ::ng-deep input {
+    font-weight: mat-font-weight($config, title);
+  }
 }

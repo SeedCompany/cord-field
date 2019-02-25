@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { AbstractControl, FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { TitleAware } from '@app/core/decorators';
-import { BudgetStatus, ProjectBudget, ProjectBudgetDetails } from '@app/core/models/budget';
+import { Budget, BudgetDetails, BudgetStatus } from '@app/core/models/budget';
 import { filterRequired } from '@app/core/util';
 import { ProjectTabComponent } from '@app/projects/abstract-project-tab';
 import { Observable } from 'rxjs';
@@ -47,13 +47,13 @@ export class ProjectBudgetComponent extends ProjectTabComponent implements OnIni
       .pipe(takeUntil(this.unsubscribe))
       .subscribe(val => {
         this.viewStateService.change({
-          budgets: [val],
+          budgets: { update: val },
         });
       });
 
-    this.total = (this.budgets.valueChanges as Observable<ProjectBudgetDetails[]>)
+    this.total = (this.budgets.valueChanges as Observable<BudgetDetails[]>)
       .pipe(
-        startWith(this.budgets.value as ProjectBudgetDetails[]),
+        startWith(this.budgets.value as BudgetDetails[]),
         map(val => val.reduce((total, item) => total + Number(item.amount || 0), 0)),
       );
   }
@@ -66,7 +66,7 @@ export class ProjectBudgetComponent extends ProjectTabComponent implements OnIni
     return control.get('organization')!.value.id;
   }
 
-  private createBudgetForm(budget: ProjectBudget) {
+  private createBudgetForm(budget: Budget) {
     this.form.reset({
       id: budget.id,
       status: budget.status,

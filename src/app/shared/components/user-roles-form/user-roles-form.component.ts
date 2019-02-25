@@ -3,7 +3,7 @@ import { AbstractControl, FormArray, FormControl, FormGroup, Validators } from '
 import { MatSelect } from '@angular/material';
 import { AbstractValueAccessor, ValueAccessorProvider } from '@app/core/classes/abstract-value-accessor.class';
 import { Location } from '@app/core/models/location';
-import { ProjectRole } from '@app/core/models/project-role';
+import { Role } from '@app/core/models/role';
 import { UserRole } from '@app/core/models/user';
 import { AuthenticationService } from '@app/core/services/authentication.service';
 import { UserService } from '@app/core/services/user.service';
@@ -23,10 +23,10 @@ import { delay, filter, first, map, mapTo, mergeMap, pairwise, startWith, switch
 })
 export class UserRolesFormComponent extends AbstractValueAccessor<UserRole[]> implements OnInit, OnDestroy {
 
-  readonly ProjectRole = ProjectRole;
+  readonly Role = Role;
 
   userRolesCtl = new FormArray([]);
-  availableRoles: ProjectRole[] = [];
+  availableRoles: Role[] = [];
   adding = false;
   loadingRoles = true;
   disabled = false;
@@ -40,13 +40,6 @@ export class UserRolesFormComponent extends AbstractValueAccessor<UserRole[]> im
     @Inject(UserViewStateService) @Optional() private viewState: UserViewStateService | null,
   ) {
     super();
-  }
-
-  get isPanelOpen() {
-    if (this.roleFields.some(select => select.panelOpen)) {
-      return true;
-    }
-    return this.locationFields.some(autocomplete => autocomplete.panelOpen);
   }
 
   ngOnInit(): void {
@@ -78,7 +71,7 @@ export class UserRolesFormComponent extends AbstractValueAccessor<UserRole[]> im
       });
   }
 
-  createControl({ role, locations }: { role: ProjectRole | null, locations: Location[] }) {
+  createControl({ role, locations }: { role: Role | null, locations: Location[] }) {
     const roleCtl = new FormControl(role, Validators.required);
     const locationCtl = new FormControl(locations);
     const userRoleCtl = new FormGroup({
@@ -97,7 +90,7 @@ export class UserRolesFormComponent extends AbstractValueAccessor<UserRole[]> im
       );
     remove.subscribe(roleToRemove => {
       if (this.viewState) {
-        this.viewState.change({ roles: { remove: { role: roleToRemove } } });
+        this.viewState.change({ roles: { remove: { role: roleToRemove, locations: [] } } });
       }
       this.value = this.value.filter(r => r.role !== roleToRemove);
       const index = this.userRolesCtl.controls.findIndex(control => control.value.role === roleToRemove);
@@ -111,8 +104,8 @@ export class UserRolesFormComponent extends AbstractValueAccessor<UserRole[]> im
         takeUntil(remove), // Take until control is removed
         takeUntil(this.unsubscribe), // or component is destroyed
       )
-      .subscribe((newRole: ProjectRole) => {
-        if (ProjectRole.needsLocations.includes(newRole)) {
+      .subscribe((newRole: Role) => {
+        if (Role.needsLocations.includes(newRole)) {
           locationCtl.setValidators(Validators.required);
         } else {
           locationCtl.setValidators(null);
@@ -133,8 +126,8 @@ export class UserRolesFormComponent extends AbstractValueAccessor<UserRole[]> im
         .subscribe(([oldRole, newRole]) => {
           this.viewState!.change({
             roles: {
-              remove: { role: oldRole },
-              add: { role: newRole, locations: ProjectRole.needsLocations.includes(newRole) ? locationCtl.value : [] },
+              remove: { role: oldRole, locations: [] },
+              add: { role: newRole, locations: Role.needsLocations.includes(newRole) ? locationCtl.value : [] },
             },
           });
         });
@@ -157,7 +150,7 @@ export class UserRolesFormComponent extends AbstractValueAccessor<UserRole[]> im
           filter(status => status === 'INVALID'),
         )
         .subscribe(() => {
-          this.viewState!.revert('roles', { role: roleCtl.value });
+          this.viewState!.revert('roles', { role: roleCtl.value, locations: [] });
         });
     }
 
@@ -214,7 +207,7 @@ export class UserRolesFormComponent extends AbstractValueAccessor<UserRole[]> im
       this.value = [...this.value, { role: select.value, locations: [] }];
 
       // If the role needs locations focus that
-      if (ProjectRole.needsLocations.includes(select.value)) {
+      if (Role.needsLocations.includes(select.value)) {
         lastChildAfterRender(this.locationFields)
           .pipe(first())
           .subscribe(field => field.focus());

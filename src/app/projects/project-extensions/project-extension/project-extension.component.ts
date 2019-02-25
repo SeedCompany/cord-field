@@ -8,17 +8,15 @@ import { ExtensionType, ProjectExtension } from '@app/core/models/project/extens
 import { ProjectService } from '@app/core/services/project.service';
 import { filterRequired, TypedFormControl } from '@app/core/util';
 import { ProjectViewStateService } from '@app/projects/project-view-state.service';
-import { popInOut } from '@app/shared/animations';
 import { SubscriptionComponent } from '@app/shared/components/subscription.component';
 import { DateTime } from 'luxon';
-import { BehaviorSubject, combineLatest, EMPTY, Observable } from 'rxjs';
+import { BehaviorSubject, combineLatest, Observable } from 'rxjs';
 import { map, takeUntil } from 'rxjs/operators';
 
 @Component({
   selector: 'app-project-extension',
   templateUrl: './project-extension.component.html',
   styleUrls: ['./project-extension.component.scss'],
-  animations: [popInOut],
 })
 export class ProjectExtensionComponent extends SubscriptionComponent implements OnInit {
 

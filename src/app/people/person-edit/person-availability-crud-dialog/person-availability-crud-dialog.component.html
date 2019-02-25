@@ -1,8 +1,9 @@
-<h1 mat-dialog-title>Add Unavailable Dates</h1>
-<form mat-dialog-content
-      id="ngForm"
-      [formGroup]="form"
-      (ngSubmit)="onSubmit()">
+<app-dialog-form #dialogForm
+  [formGroup]="form"
+  [handleSubmit]="onSubmit"
+  title="{{ isNew ? 'Add' : 'Update' }} Unavailability"
+  [submitText]="isNew ? 'ADD' : 'UPDATE'"
+>
   <mat-form-field color="accent">
     <input matInput
            maxlength="140"
@@ -40,28 +41,10 @@
       <mat-error *ngIf="endDate.errors?.invalidRange">Must be after start date</mat-error>
     </mat-form-field>
   </div>
-</form>
 
-<div mat-dialog-actions>
-  <button mat-button
-          type="submit"
-          form="ngForm"
-          color="accent"
-          [disabled]="!form.valid">
-    {{ isNew ? 'ADD' : 'UPDATE' }}
-  </button>
-
-  <button mat-button
-          color="accent"
-          mat-dialog-close>
-    CANCEL
-  </button>
-
-  <div class="spacer"></div>
-
-  <button mat-button
-          color="warn"
-          (click)="onDelete()">
-    <ng-container>DELETE</ng-container>
-  </button>
-</div>
+  <ng-container *ngIf="!isNew" ngProjectAs="leftAction">
+    <button mat-button color="warn" (click)="dialogForm.submit('delete')">
+      REMOVE
+    </button>
+  </ng-container>
+</app-dialog-form>

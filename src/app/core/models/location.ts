@@ -1,3 +1,4 @@
+import { FieldConfig, returnId, returnIdOrNull } from '@app/core/change-engine';
 import { firstLettersOfWords, maybeRedacted } from '../util';
 
 class LocationPart {
@@ -62,6 +63,13 @@ export class Location extends LocationPart {
 
     return location;
   }
+
+  static fieldConfig = (): FieldConfig<Location | null> => ({
+    accessor: returnId,
+    toServer: returnIdOrNull,
+    key: 'locationId',
+    restore: Location.fromJson,
+  });
 
   get avatarLetters() {
     const name = this.nameParts().find(n => !!n);

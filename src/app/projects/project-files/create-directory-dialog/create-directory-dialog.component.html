@@ -1,8 +1,10 @@
-<h1 mat-dialog-title>Create Directory</h1>
-<form mat-dialog-content
-      id="directoryCreate"
-      [formGroup]="form"
-      (ngSubmit)="onSubmit()">
+<app-dialog-form
+  [formGroup]="form"
+  [handleSubmit]="onSubmit"
+  title="Create Directory"
+  submitText="CREATE"
+  failureText="Failed to create directory"
+>
   <mat-form-field color="accent">
     <input matInput
            maxlength="140"
@@ -13,26 +15,4 @@
     <mat-error *ngIf="name.errors?.required">Please enter a name</mat-error>
     <mat-error *ngIf="name.errors?.exists">A directory with this name already exists</mat-error>
   </mat-form-field>
-</form>
-<div mat-dialog-actions>
-  <button mat-button
-          color="accent"
-          type="submit"
-          form="directoryCreate"
-          [disabled]="form.invalid || form.disabled">
-    <ng-container *ngIf="form.enabled">CREATE</ng-container>
-    <mat-progress-spinner
-      *ngIf="form.disabled"
-      color="accent"
-      mode="indeterminate"
-      strokeWidth="3"
-      [diameter]="32"
-    ></mat-progress-spinner>
-  </button>
-  <button mat-button
-          color="accent"
-          [disabled]="form.disabled"
-          matDialogClose>
-    CANCEL
-  </button>
-</div>
+</app-dialog-form>

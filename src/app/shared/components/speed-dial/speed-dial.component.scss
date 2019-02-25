@@ -27,7 +27,7 @@ button[disabled] {
 
 .dial {
   display: flex;
-  flex-direction: column-reverse; // Tab direction moves away from anchor
+  flex-direction: column;
 
   &.actions-above {
     margin-bottom: 8px;

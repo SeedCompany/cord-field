@@ -1,7 +1,7 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { AbstractControl, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialog, MatDialogRef } from '@angular/material';
-import { Unavailability } from '@app/core/models/user';
+import { RawUnavailability, Unavailability } from '@app/core/models/user';
 import * as CustomValidators from '@app/core/validators';
 import { UserViewStateService } from '@app/people/user-view-state.service';
 import { SubscriptionComponent } from '@app/shared/components/subscription.component';
@@ -24,12 +24,11 @@ export class PersonAvailabilityCrudDialogComponent extends SubscriptionComponent
   minDate: DateTime;
 
   constructor(
-    @Inject(MAT_DIALOG_DATA) dialogData: DialogData,
+    @Inject(MAT_DIALOG_DATA) { unavailability, viewStateService }: DialogData,
     private dialogRef: MatDialogRef<PersonAvailabilityCrudDialogComponent>,
     private formBuilder: FormBuilder,
   ) {
     super();
-    const { unavailability, viewStateService } = dialogData;
     this.viewStateService = viewStateService;
 
     this.isNew = !unavailability;
@@ -48,12 +47,11 @@ export class PersonAvailabilityCrudDialogComponent extends SubscriptionComponent
     return this.form.get('end')!;
   }
 
-  static open(dialog: MatDialog, dialogData: DialogData) {
+  static open(dialog: MatDialog, data: DialogData) {
     return dialog.open(this, {
       width: '40vw',
       minWidth: '500px',
-      autoFocus: true,
-      data: dialogData,
+      data,
     });
   }
 
@@ -67,19 +65,13 @@ export class PersonAvailabilityCrudDialogComponent extends SubscriptionComponent
     });
   }
 
-  onSubmit(remove = false): void {
+  onSubmit = (unavailability: RawUnavailability, action: string) => {
     this.viewStateService.change({
       unavailabilities: {
-        [remove ? 'remove' : 'update']: Unavailability.fromForm(this.form.value),
+        [action === 'delete' ? 'remove' : 'update']: Unavailability.fromForm(unavailability),
       },
     });
-
-    this.dialogRef.close();
-  }
-
-  onDelete(): void {
-    this.onSubmit(true);
-  }
+  };
 
   private createForm(unavailability: Unavailability): FormGroup {
     return this.formBuilder.group({

@@ -1,7 +1,10 @@
+import { User } from '@app/core/models/user';
 import { clone } from '@app/core/util';
 import { DateTime } from 'luxon';
-import { buildEnum } from './enum';
-import { User } from './user';
+import { FileNodeCategory } from './category';
+import { FileNodeType } from './type';
+
+export { FileNodeCategory, FileNodeType };
 
 export type FileNode = File | Directory;
 
@@ -23,6 +26,7 @@ class BaseNode {
   isFile(): this is File {
     return this.type === FileNodeType.File;
   }
+
   isDir(): this is Directory {
     return this.type === FileNodeType.Directory;
   }
@@ -58,6 +62,9 @@ export class Directory extends BaseNode {
   }
 }
 
+export function fromJson<T extends { type: FileNodeType.Directory }>(json: T): Directory;
+export function fromJson<T extends { type: FileNodeType.File }>(json: T): File;
+export function fromJson<T extends { type: FileNodeType }>(json: T): FileNode;
 export function fromJson(json: any): FileNode {
   let node;
   if (json.type === FileNodeType.Directory) {
@@ -67,7 +74,7 @@ export function fromJson(json: any): FileNode {
     node = new File();
     node.modifiedAt = json.modifiedAt ? DateTime.fromISO(json.modifiedAt) : null;
     node.size = json.size || 0;
-    node.versions = (json.versions || []).map((version: any) => ({...version, createdAt: DateTime.fromISO(version.createdAt)}));
+    node.versions = (json.versions || []).map((version: any) => ({ ...version, createdAt: DateTime.fromISO(version.createdAt) }));
   } else {
     throw new Error('Unknown File Type');
   }
@@ -93,38 +100,4 @@ export interface FileVersion {
   id: string;
   eTag: string;
   createdAt: DateTime;
-}
-
-export enum FileNodeType {
-  Directory = 'dir',
-  File = 'file',
-}
-
-export namespace FileNodeType {
-  export const {entries, forUI, values, trackEntryBy, trackValueBy} = buildEnum<FileNodeType>(FileNodeType, {
-    [FileNodeType.Directory]: 'Directory',
-    [FileNodeType.File]: 'File',
-  });
-}
-
-export enum FileNodeCategory {
-  Audio = 'audio',
-  Directory = 'directory',
-  Document = 'doc',
-  Image = 'image',
-  Other = 'other',
-  Spreadsheet = 'spreadsheet',
-  Video = 'video',
-}
-
-export namespace FileNodeCategory {
-  export const {entries, forUI, values, trackEntryBy, trackValueBy} = buildEnum<FileNodeCategory>(FileNodeCategory, {
-    [FileNodeCategory.Audio]: 'Audio',
-    [FileNodeCategory.Directory]: 'Directory',
-    [FileNodeCategory.Document]: 'Document',
-    [FileNodeCategory.Image]: 'Image',
-    [FileNodeCategory.Other]: 'Other',
-    [FileNodeCategory.Spreadsheet]: 'Spreadsheet',
-    [FileNodeCategory.Video]: 'Video',
-  });
 }

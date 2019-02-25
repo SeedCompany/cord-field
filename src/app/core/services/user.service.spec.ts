@@ -5,7 +5,7 @@ import { environment } from '../../../environments/environment';
 import { CoreModule } from '../core.module';
 import { Location } from '../models/location';
 import { Project } from '../models/project';
-import { ProjectRole } from '../models/project-role';
+import { Role } from '../models/role';
 import { User, UserListItem, UserProfile } from '../models/user';
 import { UserService } from './user.service';
 
@@ -57,7 +57,7 @@ describe('UserService', () => {
     });
     userService
       .getAssignableRoles(userId, project)
-      .then((data: ProjectRole[]) => {
+      .then((data: Role[]) => {
         expect(Array.isArray(data)).toBe(true);
         expect(data.length).toBeGreaterThan(0);
         expect(data[0]).toBe('ad');

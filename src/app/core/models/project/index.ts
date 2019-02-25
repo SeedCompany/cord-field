@@ -1,27 +1,25 @@
-import { ProjectBudget } from '@app/core/models/budget';
-import { Engagement } from '@app/core/models/engagement';
-import { ProjectExtension } from '@app/core/models/project/extension';
+import { Budget } from '@app/core/models/budget';
+import { Language } from '@app/core/models/language';
+import { Location } from '@app/core/models/location';
+import { Partnership } from '@app/core/models/partnership';
+import { Sensitivity } from '@app/core/models/sensitivity';
+import { TeamMember } from '@app/core/models/team-member';
+import { User } from '@app/core/models/user';
 import { maybeRedacted } from '@app/core/util';
+import { DateFilter } from '@app/core/util/list-filters';
 import { DateTime } from 'luxon';
-import { Language } from './language';
-import { Location } from './location';
-import { Partnership } from './partnership';
-import { ProjectSensitivity } from './project/sensitivity';
-import { ProjectStatus } from './project/status';
-import { ProjectType } from './project/type';
-import { TeamMember } from './team-member';
-import { User } from './user';
+import { ProjectEngagement } from './engagement';
+import { ProjectExtension } from './extension';
+import { ProjectStatus } from './status';
 
-export * from './project/extension';
-export * from './project/status';
-export * from './project/type';
-export * from './project/sensitivity';
+export * from './engagement';
+export * from './extension';
+export * from './status';
 
 export class Project {
 
   id: string;
   name: string;
-  type = ProjectType.Translation; // Hard code for now since we reference it still
   deptId: string | null;
   status: ProjectStatus;
   possibleStatuses: ProjectStatus[];
@@ -31,12 +29,12 @@ export class Project {
   mouEnd: DateTime | null;
   languages: Language[];
   partnerships: Partnership[];
-  sensitivity: ProjectSensitivity;
+  sensitivity: Sensitivity;
   team: TeamMember[];
-  budgets: ProjectBudget[];
+  budgets: Budget[];
   updatedAt: DateTime;
   estimatedSubmission: DateTime | null;
-  engagements: Engagement[];
+  engagements: ProjectEngagement[];
   extensions: ProjectExtension[];
 
   static fromJson(json: any): Project {
@@ -56,27 +54,24 @@ export class Project {
     project.mouEnd = json.mouEnd ? DateTime.fromISO(json.mouEnd) : null;
     project.languages = (json.languages || []).map(Language.fromJson);
     project.partnerships = (json.partnerships || []).map(Partnership.fromJson);
-    project.sensitivity = json.sensitivity || 1;
+    project.sensitivity = json.sensitivity || Sensitivity.Low;
     project.team = (json.team || [])
       .filter((tm: any) => tm.user) // ignore team members that don't have user hydrated
       .map(TeamMember.fromJson);
     project.updatedAt = json.updatedAt ? DateTime.fromISO(json.updatedAt) : DateTime.fromMillis(0);
     project.estimatedSubmission = json.estimatedSubmission ? DateTime.fromISO(json.estimatedSubmission) : null;
-    project.engagements = (maybeRedacted(json.engagements) || []).map(Engagement.fromJson);
-    project.budgets = (json.budgets || []).map((b: any) => ProjectBudget.fromJson(project, b));
+    project.engagements = (maybeRedacted(json.engagements) || []).map(ProjectEngagement.fromJson);
+    project.budgets = (json.budgets || []).map((b: any) => Budget.fromJson(project, b));
     project.extensions = (json.extensions || []).map(ProjectExtension.fromJson);
 
     return project;
   }
 }
 
-export interface ProjectFilter {
+export interface ProjectFilter extends DateFilter {
   status?: ProjectStatus[];
   languages?: Language[];
   location?: Location[];
   team?: User[];
-  sensitivity?: ProjectSensitivity[];
-  dateRange?: string;
-  startDate?: DateTime;
-  endDate?: DateTime;
+  sensitivity?: Sensitivity[];
 }

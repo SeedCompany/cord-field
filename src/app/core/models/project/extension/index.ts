@@ -1,7 +1,7 @@
 import { Language } from '@app/core/models/language';
 import { DateTime } from 'luxon';
-import { ExtensionStatus } from './extension/extension-status';
-import { ExtensionType } from './extension/extension-type';
+import { ExtensionStatus } from './status';
+import { ExtensionType } from './type';
 
 export { ExtensionStatus, ExtensionType };
 

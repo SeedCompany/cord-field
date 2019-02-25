@@ -1,32 +1,13 @@
-<h1 mat-dialog-title>New Project</h1>
-<form mat-dialog-content [formGroup]="form" (keyup.enter)="form.valid ? onCreate() : null">
-  <mat-form-field color="accent">
-    <input matInput
-           maxlength="140"
-           formControlName="name"
-           placeholder="Name"
-           autocomplete="off">
-    <mat-hint align="start" *ngIf="name.pending">Checking availability...</mat-hint>
-    <mat-hint align="end">{{ name.value.length }}/140</mat-hint>
-    <mat-error *ngIf="name.errors?.required">Please enter a name</mat-error>
-    <mat-error *ngIf="name.errors?.duplicate">A project with this name already exists</mat-error>
-    <mat-error *ngIf="name.errors?.minlength">Name must be at least 2 characters long</mat-error>
-  </mat-form-field>
-</form>
-<div mat-dialog-actions>
-  <button mat-button
-          color="accent"
-          [disabled]="!form.valid || submitting"
-          (click)="onCreate()">
-    <ng-container *ngIf="!submitting">CREATE</ng-container>
-    <mat-progress-spinner
-      *ngIf="submitting"
-      color="accent"
-      mode="indeterminate"
-      strokeWidth="3"
-      [diameter]="32"
-    ></mat-progress-spinner>
-  </button>
-  <button mat-button [disabled]="submitting" color="accent" (click)="onClose()">CANCEL</button>
-
-</div>
+<app-dialog-form
+  [formGroup]="form"
+  [handleSubmit]="onCreate"
+  title="New Project"
+  submitText="CREATE"
+  failureText="Failed to create project"
+>
+  <app-unique-text-field
+    formControlName="name"
+    [isTaken]="isNameTaken"
+    placeholder="Name"
+  ></app-unique-text-field>
+</app-dialog-form>

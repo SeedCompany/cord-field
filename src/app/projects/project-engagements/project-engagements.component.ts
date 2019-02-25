@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { TitleAware } from '@app/core/decorators';
-import { Engagement } from '@app/core/models/engagement';
+import { ProjectEngagement as Engagement } from '@app/core/models/project';
 import { filter } from 'rxjs/operators';
 import { ProjectTabComponent } from '../abstract-project-tab';
 import { ProjectViewStateService } from '../project-view-state.service';

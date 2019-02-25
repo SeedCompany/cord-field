@@ -1,9 +1,9 @@
 import { HttpTestingController } from '@angular/common/http/testing';
 import { inject, TestBed } from '@angular/core/testing';
 import { CoreTestModule } from '@app/core/core-test.module';
+import { Directory, FileNodeType } from '@app/core/models/files';
 import { environment } from '../../../environments/environment';
 import { CoreModule } from '../core.module';
-import { Directory, FileNodeType } from '../models/file-node';
 import { ProjectFilesService } from './project-files.service';
 
 const testBaseUrl = environment.services['plo.cord.bible'];

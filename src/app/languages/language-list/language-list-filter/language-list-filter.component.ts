@@ -2,7 +2,7 @@ import { Component, Output } from '@angular/core';
 import { FormBuilder } from '@angular/forms';
 import { LanguageListFilter } from '@app/core/models/language';
 import { Location } from '@app/core/models/location';
-import { filterEntries, hasValue, TypedFormControl } from '@app/core/util';
+import { filterValues, hasValue, TypedFormControl } from '@app/core/util';
 import { TableViewFilters } from '@app/shared/components/table-view/table-filter.directive';
 import { Observable } from 'rxjs';
 import { map, startWith } from 'rxjs/operators';
@@ -29,9 +29,7 @@ export class LanguageListFilterComponent implements TableViewFilters<LanguageLis
     return this.form.valueChanges
       .pipe(
         startWith(this.form.value),
-        map(filters =>
-          filterEntries(filters, (key, value) => hasValue(value)),
-        ),
+        map(filters => filterValues(filters, hasValue)),
       );
   }
 

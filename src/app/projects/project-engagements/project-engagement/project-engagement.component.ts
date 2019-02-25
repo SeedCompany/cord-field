@@ -3,13 +3,17 @@ import { AbstractControl, FormGroup } from '@angular/forms';
 import { MatSnackBar } from '@angular/material';
 import { ActivatedRoute } from '@angular/router';
 import { TitleAware, TitleProp } from '@app/core/decorators';
-import { EditableEngagement, Engagement, EngagementStatus, EngagementTag } from '@app/core/models/engagement';
+import {
+  EditableProjectEngagement as EditableEngagement,
+  ProjectEngagement as Engagement,
+  ProjectEngagementStatus as EngagementStatus,
+  ProjectEngagementTag as EngagementTag,
+} from '@app/core/models/project';
 import { IsDirty } from '@app/core/route-guards/dirty.guard';
-import { EngagementService } from '@app/core/services/engagement.service';
+import { ProjectEngagementService as EngagementService } from '@app/core/services/project-engagement.service';
 import { ExtractKeys, Omit } from '@app/core/util';
 import { FormGroupItemOptions } from '@app/core/view-state-form-builder';
 import { EngagementViewStateService } from '@app/projects/engagement-view-state.service';
-import { popInOut } from '@app/shared/animations';
 import { emptyOptions, StatusOptions } from '@app/shared/components/status-select-workflow/status-select-workflow.component';
 import { SubscriptionComponent } from '@app/shared/components/subscription.component';
 import { BehaviorSubject, merge, Observable } from 'rxjs';
@@ -27,13 +31,12 @@ const tagControl = (tagName: EngagementTag): TagControl => ({
   modelToForm: (tags: EngagementTag[]) => tags.includes(tagName),
   formToChange: (checked: boolean) => ({ [checked ? 'add' : 'remove']: tagName }),
 });
-type TagControl = FormGroupItemOptions<EngagementForm, Engagement, ExtractKeys<EngagementForm, boolean>, boolean>;
+type TagControl = FormGroupItemOptions<Engagement, ExtractKeys<EngagementForm, boolean>, boolean>;
 
 @Component({
   selector: 'app-project-engagement',
   templateUrl: './project-engagement.component.html',
   styleUrls: ['./project-engagement.component.scss'],
-  animations: [popInOut],
   providers: [EngagementViewStateService],
 })
 @TitleAware()

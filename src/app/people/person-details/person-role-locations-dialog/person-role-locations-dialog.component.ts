@@ -1,7 +1,7 @@
 import { Component, Inject } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialog } from '@angular/material';
 import { Location } from '../../../core/models/location';
-import { ProjectRole } from '../../../core/models/project-role';
+import { Role } from '../../../core/models/role';
 import { UserRole } from '../../../core/models/user';
 
 @Component({
@@ -10,9 +10,9 @@ import { UserRole } from '../../../core/models/user';
   styleUrls: ['./person-role-locations-dialog.component.scss'],
 })
 export class PersonRoleLocationsDialogComponent {
-  readonly ProjectRole = ProjectRole;
+  readonly Role = Role;
 
-  role: ProjectRole;
+  role: Role;
   locations: Location[];
 
   static open(dialog: MatDialog, userRole: UserRole) {

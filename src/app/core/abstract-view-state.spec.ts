@@ -9,7 +9,7 @@ interface TestSubject {
   bar: string;
 }
 
-class TestViewState extends AbstractViewState<TestSubject> {
+class TestViewState extends AbstractViewState<TestSubject, TestSubject> {
 
   saving = false;
   saveFails = false;

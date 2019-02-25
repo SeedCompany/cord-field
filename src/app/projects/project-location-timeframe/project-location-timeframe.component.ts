@@ -1,13 +1,20 @@
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { Validators } from '@angular/forms';
 import { AbstractControl } from '@angular/forms/src/model';
-import { onlyValidValues } from '@app/core/util';
+import { Location } from '@app/core/models/location';
+import { TypedFormGroup } from '@app/core/util';
 import * as CustomValidators from '@app/core/validators';
 import { SubscriptionComponent } from '@app/shared/components/subscription.component';
 import { DateTime } from 'luxon';
 import { takeUntil } from 'rxjs/operators';
-
 import { ProjectViewStateService } from '../project-view-state.service';
+
+interface Form {
+  location: Location | null;
+  mouStart: DateTime | null;
+  mouEnd: DateTime | null;
+  estimatedSubmission: DateTime | null;
+}
 
 @Component({
   selector: 'app-project-location-timeframe',
@@ -15,12 +22,11 @@ import { ProjectViewStateService } from '../project-view-state.service';
   styleUrls: ['./project-location-timeframe.component.scss'],
 })
 export class ProjectLocationTimeframeComponent extends SubscriptionComponent implements OnInit {
-  form: FormGroup;
+  form: TypedFormGroup<Form>;
   minDate: DateTime;
   today: DateTime = DateTime.utc();
 
   constructor(
-    private formBuilder: FormBuilder,
     private projectViewState: ProjectViewStateService,
   ) {
     super();
@@ -43,32 +49,15 @@ export class ProjectLocationTimeframeComponent extends SubscriptionComponent imp
   }
 
   ngOnInit(): void {
-    this.form = this.formBuilder.group({
-      location: ['', Validators.required],
-      mouStart: ['', Validators.required],
-      mouEnd: ['', Validators.required],
-      estimatedSubmission: [''],
-    }, {
-      validator: CustomValidators.dateRange('mouStart', 'mouEnd', false),
+    this.form = this.projectViewState.fb.group<Form>(this.unsubscribe, {
+      location: { validators: [Validators.required] },
+      mouStart: { validators: [Validators.required] },
+      mouEnd: { validators: [Validators.required] },
+      estimatedSubmission: {},
     });
-
-    this.projectViewState.subjectWithPreExistingChanges
-      .pipe(takeUntil(this.unsubscribe))
-      .subscribe((state) => {
-        this.form.reset({
-          location: state.location,
-          mouStart: state.mouStart,
-          mouEnd: state.mouEnd,
-          estimatedSubmission: state.estimatedSubmission,
-        });
-      });
-
-    this.form.valueChanges
-      .pipe(takeUntil(this.unsubscribe))
-      .pipe(onlyValidValues(this.form))
-      .subscribe((value) => {
-        this.projectViewState.change(value);
-      });
+    this.form.setValidators([
+      CustomValidators.dateRange('mouStart', 'mouEnd', false),
+    ]);
 
     this.startDate.valueChanges
       .pipe(takeUntil(this.unsubscribe))

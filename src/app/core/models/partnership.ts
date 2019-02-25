@@ -1,8 +1,11 @@
+import { FieldConfig, mapChangeList, ModifiedList, returnId } from '@app/core/change-engine';
 import { DateTime } from 'luxon';
 import { buildEnum } from './enum';
 import { Organization } from './organization';
 
-export interface PartnershipForSaveAPI {
+export type ModifiedPartnerships = ModifiedList<PartnershipForSaveAPI, string>;
+
+interface PartnershipForSaveAPI {
   agreementStatus: PartnershipAgreementStatus;
   mouStatus: PartnershipAgreementStatus;
   mouStart: DateTime | null;
@@ -40,6 +43,13 @@ export class Partnership {
 
     return partnership;
   }
+
+  static fieldConfigList = (): FieldConfig<Partnership[], ModifiedPartnerships> => ({
+    accessor: returnId,
+    toServer: mapChangeList(Partnership.forSaveAPI, returnId),
+    store: mapChangeList(Partnership.store, Partnership.store),
+    restore: mapChangeList(Partnership.fromJson, Partnership.fromJson),
+  });
 
   static store(partnership: Partnership) {
     return {
