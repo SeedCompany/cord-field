@@ -114,7 +114,7 @@ export class FilesService {
 
   private async getDownloadUrl(file: File, version?: FileVersion): Promise<string> {
     const result = await this.ploApi
-      .get<{url: string}>(`/files/download/${file.id}`, {
+      .get<{ url: string }>(`/files/${file.id}/download`, {
         params: {
           fileVersionId: version ? version.id : file.versions[0].id,
         },
