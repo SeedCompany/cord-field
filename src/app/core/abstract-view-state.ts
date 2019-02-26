@@ -97,12 +97,20 @@ export abstract class AbstractViewState<T extends { id: string }, ModifiedForSer
   }
 
   change(changes: Changes<T>): void {
-    this.changeEngine.change(changes, this._subject.value);
+    try {
+      this.changeEngine.change(changes, this._subject.value);
+    } catch (e) {
+      this.throwMisconfigured(e);
+    }
     this.changes.next();
   }
 
   revert<K extends keyof T>(field: K, item?: ArrayItem<T[K]>): void {
-    this.changeEngine.revert(field, item);
+    try {
+      this.changeEngine.revert(field, item);
+    } catch (e) {
+      this.throwMisconfigured(e);
+    }
     this.changes.next();
   }
 
@@ -182,5 +190,9 @@ export abstract class AbstractViewState<T extends { id: string }, ModifiedForSer
     if (this.storage) {
       await this.changeEngine.storeModifications(this.storage, this.identify(this._subject.value));
     }
+  }
+
+  private throwMisconfigured(e: Error): never {
+    throw new Error(`${this.constructor.name} is not configured for field "${(e as Error).message}"`);
   }
 }

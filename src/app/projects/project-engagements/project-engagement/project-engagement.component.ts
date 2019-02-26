@@ -11,7 +11,7 @@ import {
 } from '@app/core/models/project';
 import { IsDirty } from '@app/core/route-guards/dirty.guard';
 import { ProjectEngagementService as EngagementService } from '@app/core/services/project-engagement.service';
-import { ExtractKeys, Omit } from '@app/core/util';
+import { ExtractKeys, Omit, TypedFormGroup } from '@app/core/util';
 import { FormGroupItemOptions } from '@app/core/view-state-form-builder';
 import { EngagementViewStateService } from '@app/projects/engagement-view-state.service';
 import { emptyOptions, StatusOptions } from '@app/shared/components/status-select-workflow/status-select-workflow.component';
@@ -49,7 +49,7 @@ export class ProjectEngagementComponent extends SubscriptionComponent implements
     filter((e): e is Engagement => Boolean(e) && Boolean(e!.id)),
   );
 
-  form: FormGroup;
+  form: TypedFormGroup<EngagementForm>;
   isSubmitting = false;
 
   constructor(private route: ActivatedRoute,

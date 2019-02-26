@@ -271,6 +271,7 @@ export class ChangeEngine<T = any, ModifiedForServer = any> {
   }
 
   revert<K extends keyof T>(field: K, item?: ArrayItem<T[K]>): void {
+    this.ensureFieldConfigured(field);
     if (item) {
       const listField = field as unknown as ListKey<T>;
       const listItem = item as unknown as ArrayItem<T[ListKey<T>]>;
@@ -288,9 +289,7 @@ export class ChangeEngine<T = any, ModifiedForServer = any> {
 
   change(changes: Changes<T>, original: T): void {
     for (const [key, change] of Object.entries(changes) as Array<[keyof T, any]>) {
-      if (!(key in this.config)) {
-        continue;
-      }
+      this.ensureFieldConfigured(key);
 
       if (isChangeForList(change, key)) {
         this.changeList(key, change, original[key] as any);
@@ -448,6 +447,12 @@ export class ChangeEngine<T = any, ModifiedForServer = any> {
       this.modified[key] = newValue;
     } else {
       delete this.modified[key];
+    }
+  }
+
+  private ensureFieldConfigured(key: keyof T) {
+    if (!(key in this.config)) {
+      throw new Error(key.toString());
     }
   }
 }
