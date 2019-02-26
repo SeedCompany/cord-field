@@ -2,7 +2,7 @@ import { Component, Inject } from '@angular/core';
 import { AbstractControl, FormBuilder, FormGroup, ValidatorFn, Validators } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialog, MatDialogRef } from '@angular/material';
 import { Directory, FileNodeType, UploadFile } from '@app/core/models/files';
-import { ProjectFilesService } from '@app/core/services/project-files.service';
+import { FilesService } from '@app/core/services/files.service';
 
 @Component({
   selector: 'app-overwrite-file-warning',
@@ -27,7 +27,7 @@ export class OverwriteFileWarningComponent {
   constructor(
     private dialogRef: MatDialogRef<OverwriteFileWarningComponent, string>,
     @Inject(MAT_DIALOG_DATA) { parent, file }: { parent: Directory, file: UploadFile },
-    private fileService: ProjectFilesService,
+    private fileService: FilesService,
     private fb: FormBuilder,
   ) {
     this.file = file;

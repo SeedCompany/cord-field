@@ -12,7 +12,7 @@ import { PloApiService } from './http/plo-api.service';
 @Injectable({
   providedIn: 'root',
 })
-export class ProjectFilesService {
+export class FilesService {
 
   constructor(
     private ploApi: PloApiService,

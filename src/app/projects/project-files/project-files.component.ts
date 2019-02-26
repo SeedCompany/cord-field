@@ -4,7 +4,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { TitleAware } from '@app/core/decorators';
 import { Directory, FileKeys, FileNode, FileNodeCategory, UploadFile } from '@app/core/models/files';
 import { SUPPORTS_DOWNLOADS } from '@app/core/services/downloader.service';
-import { ProjectFilesService } from '@app/core/services/project-files.service';
+import { FilesService } from '@app/core/services/files.service';
 import { filterRequired } from '@app/core/util';
 import { CreateDirectoryDialogComponent } from '@app/projects/project-files/create-directory-dialog/create-directory-dialog.component';
 import { FileRenameDialogComponent } from '@app/projects/project-files/file-rename-dialog/file-rename-dialog.component';
@@ -35,7 +35,7 @@ export class ProjectFilesComponent extends SubscriptionComponent implements Afte
   @ViewChild(MatSort) sort: MatSort;
 
   constructor(private activatedRoute: ActivatedRoute,
-              private fileService: ProjectFilesService,
+              private fileService: FilesService,
               private projectViewState: ProjectViewStateService,
               private router: Router,
               private dialog: MatDialog,
