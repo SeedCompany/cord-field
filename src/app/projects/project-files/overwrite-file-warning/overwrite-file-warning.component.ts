@@ -1,7 +1,7 @@
 import { Component, Inject } from '@angular/core';
 import { AbstractControl, FormBuilder, FormGroup, ValidatorFn, Validators } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialog, MatDialogRef } from '@angular/material';
-import { Directory, FileNodeType } from '@app/core/models/files';
+import { Directory, FileNodeType, UploadFile } from '@app/core/models/files';
 import { ProjectFilesService } from '@app/core/services/project-files.service';
 
 @Component({
@@ -13,10 +13,10 @@ export class OverwriteFileWarningComponent {
 
   readonly form: FormGroup;
   isRenaming = false;
-  readonly file: File;
+  readonly file: UploadFile;
   readonly isOverwritingFile: boolean;
 
-  static open(dialog: MatDialog, parent: Directory, file: File): MatDialogRef<OverwriteFileWarningComponent, string> {
+  static open(dialog: MatDialog, parent: Directory, file: UploadFile): MatDialogRef<OverwriteFileWarningComponent, string> {
     return dialog.open(this, {
       minWidth: '400px',
       autoFocus: true,
@@ -26,7 +26,7 @@ export class OverwriteFileWarningComponent {
 
   constructor(
     private dialogRef: MatDialogRef<OverwriteFileWarningComponent, string>,
-    @Inject(MAT_DIALOG_DATA) { parent, file }: { parent: Directory, file: File },
+    @Inject(MAT_DIALOG_DATA) { parent, file }: { parent: Directory, file: UploadFile },
     private fileService: ProjectFilesService,
     private fb: FormBuilder,
   ) {

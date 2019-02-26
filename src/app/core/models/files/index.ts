@@ -3,8 +3,9 @@ import { clone } from '@app/core/util';
 import { DateTime } from 'luxon';
 import { FileNodeCategory } from './category';
 import { FileNodeType } from './type';
+import { UploadFile } from './upload-file';
 
-export { FileNodeCategory, FileNodeType };
+export { FileNodeCategory, FileNodeType, UploadFile };
 
 export type FileNode = File | Directory;
 
