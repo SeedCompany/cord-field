@@ -4,7 +4,7 @@ import { toIds } from '@app/core/util/list-filters';
 import { listApi } from '@app/core/util/list-views';
 import { Observable, of as observableOf } from 'rxjs';
 import { delay, map, tap } from 'rxjs/operators';
-import { Project } from '../models/project';
+import { Location } from '../models/location';
 import { Role } from '../models/role';
 import { TeamMember } from '../models/team-member';
 import {
@@ -77,9 +77,13 @@ export class UserService {
     }),
   );
 
-  async getAssignableRoles(userId: string, project: Project, teamMember?: TeamMember): Promise<Role[]> {
+  async getAssignableRoles(
+    userId: string,
+    subject: { location: Location | null, team: TeamMember[] },
+    teamMember?: TeamMember,
+  ): Promise<Role[]> {
     const roles = await this.plo
-      .get<Role[]>(`/users/${userId}/assignable-roles/${project.location!.id}`)
+      .get<Role[]>(`/users/${userId}/assignable-roles/${subject.location!.id}`)
       .toPromise();
 
     // Exclude unique roles that are already assigned
@@ -87,7 +91,7 @@ export class UserService {
       if (!Role.unique.includes(role)) {
         return true;
       }
-      return !project.team.find(member =>
+      return !subject.team.find(member =>
         // Don't filter out unique roles for the team member given
         (teamMember ? member.id !== teamMember.id : true)
         && member.roles.includes(role));

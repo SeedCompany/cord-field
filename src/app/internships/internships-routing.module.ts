@@ -6,6 +6,7 @@ import { BudgetComponent } from '@app/projects-and-internships/budget/budget.com
 import {
   ProposalAndFcRecommendationComponent,
 } from '@app/projects-and-internships/proposal-and-fc-recommendation/proposal-and-fc-recommendation.component';
+import { TeamComponent } from '@app/projects-and-internships/team/team.component';
 import { InternshipOverviewComponent } from './internship-overview/internship-overview.component';
 import { InternshipComponent } from './internship/internship.component';
 
@@ -27,7 +28,7 @@ const routes: Routes = [
       },
       { path: 'budget', component: BudgetComponent, data: { acceptDirty: true }, canDeactivate: [DirtyGuard] },
       notImplementedRoute('files'),
-      notImplementedRoute('team'),
+      { path: 'team', component: TeamComponent },
     ],
     canDeactivate: [DirtyGuard],
     canActivateChild: [DirtyGuard],

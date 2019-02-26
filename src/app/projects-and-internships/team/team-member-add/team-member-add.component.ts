@@ -1,6 +1,8 @@
 import { Component, Inject, ViewChild } from '@angular/core';
 import { Validators } from '@angular/forms';
-import { MAT_DIALOG_DATA, MatDialogRef, MatSnackBar, MatStepper } from '@angular/material';
+import { MAT_DIALOG_DATA, MatDialog, MatDialogRef, MatSnackBar, MatStepper } from '@angular/material';
+import { AbstractViewState } from '@app/core/abstract-view-state';
+import { Internship } from '@app/core/models/internship';
 import { Project } from '@app/core/models/project';
 import { Role } from '@app/core/models/role';
 import { TeamMember } from '@app/core/models/team-member';
@@ -10,41 +12,48 @@ import { TypedFormControl } from '@app/core/util';
 import { SubscriptionComponent } from '@app/shared/components/subscription.component';
 import { takeUntil } from 'rxjs/operators';
 
-import { ProjectViewStateService } from '../../project-view-state.service';
+type Subject = Project | Internship;
+type ViewState = AbstractViewState<Subject, unknown>;
 
 @Component({
-  selector: 'app-project-team-member-add',
-  templateUrl: './project-team-member-add.component.html',
-  styleUrls: ['./project-team-member-add.component.scss'],
+  templateUrl: './team-member-add.component.html',
+  styleUrls: ['./team-member-add.component.scss'],
 })
-export class ProjectTeamMemberAddComponent extends SubscriptionComponent {
+export class TeamMemberAddComponent extends SubscriptionComponent {
 
   readonly Role = Role;
 
   @ViewChild(MatStepper) stepper: MatStepper;
 
-  readonly projectViewState: ProjectViewStateService;
-  readonly project: Project;
+  readonly viewState: ViewState;
+  readonly subject: Subject;
 
   user = new TypedFormControl<User | null>(null, Validators.required);
   roles = new TypedFormControl<Role[]>([], Validators.required);
   availableRoles: Role[] = [];
   submitting = false;
 
-  constructor(private dialogRef: MatDialogRef<ProjectTeamMemberAddComponent>,
+  static open(dialog: MatDialog, subject: Subject, viewState: ViewState): MatDialogRef<TeamMemberAddComponent> {
+    return dialog.open(TeamMemberAddComponent, {
+      width: '400px',
+      data: { subject, viewState },
+    });
+  }
+
+  constructor(private dialogRef: MatDialogRef<TeamMemberAddComponent>,
               private snackBar: MatSnackBar,
               private userService: UserService,
-              @Inject(MAT_DIALOG_DATA) data: { project: Project, projectViewState: ProjectViewStateService }) {
+              @Inject(MAT_DIALOG_DATA) data: { subject: Subject, viewState: ViewState }) {
     super();
-    this.projectViewState = data.projectViewState;
-    this.project = data.project;
-    this.projectViewState.isSubmitting
+    this.viewState = data.viewState;
+    this.subject = data.subject;
+    this.viewState.isSubmitting
       .pipe(takeUntil(this.unsubscribe))
       .subscribe(s => this.submitting = s);
   }
 
   get currentUsers() {
-    return this.project.team.map(member => member.user);
+    return this.subject.team.map(member => member.user);
   }
 
   get pending() {
@@ -61,9 +70,9 @@ export class ProjectTeamMemberAddComponent extends SubscriptionComponent {
     this.user.setValue(null);
     this.user.markAsPending();
     try {
-      this.availableRoles = await this.userService.getAssignableRoles(user!.id, this.project);
+      this.availableRoles = await this.userService.getAssignableRoles(user!.id, this.subject);
     } catch (e) {
-      this.snackBar.open('Failed to fetch project roles', undefined, {
+      this.snackBar.open('Failed to fetch assignable roles', undefined, {
         duration: 3000,
       });
     } finally {
@@ -77,10 +86,10 @@ export class ProjectTeamMemberAddComponent extends SubscriptionComponent {
     }
 
     const member = TeamMember.new(this.user.value!, this.roles.value);
-    this.projectViewState.change({team: {add: member}});
+    this.viewState.change({team: {add: member}});
 
     try {
-      await this.projectViewState.save();
+      await this.viewState.save();
     } catch (e) {
       this.snackBar.open('Failed to add team member', undefined, {
         duration: 3000,

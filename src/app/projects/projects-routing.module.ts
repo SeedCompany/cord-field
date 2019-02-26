@@ -5,6 +5,7 @@ import { BudgetComponent } from '@app/projects-and-internships/budget/budget.com
 import {
   ProposalAndFcRecommendationComponent,
 } from '@app/projects-and-internships/proposal-and-fc-recommendation/proposal-and-fc-recommendation.component';
+import { TeamComponent } from '@app/projects-and-internships/team/team.component';
 import { ProjectExtensionComponent } from '@app/projects/project-extensions/project-extension/project-extension.component';
 import { ProjectExtensionsComponent } from '@app/projects/project-extensions/project-extensions.component';
 import { ProjectEngagementComponent } from './project-engagements/project-engagement/project-engagement.component';
@@ -12,7 +13,6 @@ import { ProjectEngagementsComponent } from './project-engagements/project-engag
 import { ProjectFilesComponent } from './project-files/project-files.component';
 import { ProjectListComponent } from './project-list/project-list.component';
 import { ProjectOverviewComponent } from './project-overview/project-overview.component';
-import { ProjectTeamComponent } from './project-team/project-team.component';
 import { ProjectUpdatesComponent } from './project-updates/project-updates.component';
 import { ProjectComponent } from './project/project.component';
 
@@ -34,7 +34,7 @@ const routes: Routes = [
       },
       {path: 'budget', component: BudgetComponent, data: { acceptDirty: true }, canDeactivate: [DirtyGuard]},
       {path: 'files', component: ProjectFilesComponent},
-      {path: 'team', component: ProjectTeamComponent},
+      {path: 'team', component: TeamComponent},
       {
         path: 'extensions',
         component: ProjectExtensionsComponent,
