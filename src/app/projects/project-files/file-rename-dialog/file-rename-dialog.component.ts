@@ -60,6 +60,6 @@ export class FileRenameDialogComponent {
       return;
     }
 
-    return this.fileService.rename(newName, this.node, this.parent);
+    return this.fileService.rename(newName, this.node);
   }
 }

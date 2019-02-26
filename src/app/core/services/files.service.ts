@@ -6,7 +6,7 @@ import { DownloaderService } from '@app/core/services/downloader.service';
 import { clone } from '@app/core/util';
 import { DateTime } from 'luxon';
 import { Observable } from 'rxjs';
-import { map } from 'rxjs/operators';
+import { map, mapTo } from 'rxjs/operators';
 import { PloApiService } from './http/plo-api.service';
 
 @Injectable({
@@ -29,17 +29,21 @@ export class FilesService {
       .pipe(map(node => fromJson(node)));
   }
 
-  async rename<T extends FileNode>(newName: string, node: T, parent: Directory): Promise<T> {
+  async rename<T extends FileNode>(name: string, node: T): Promise<T> {
     await this.ploApi
-      .put(`/files/${node.id}`, {
-        parentId: parent.id,
-        name: newName,
-      })
+      .put(`/files/${node.id}`, { name })
       .toPromise();
 
-    const cloned = clone(node);
-    cloned.name = newName;
-    return cloned;
+    return Object.assign(clone(node), { name });
+  }
+
+  move(node: FileNode, newParent: Directory): Observable<Directory> {
+    return this.ploApi
+      .put(`/files/${node.id}`, { parentId: newParent.id })
+      .pipe(
+        mapTo(newParent.withChild(node)),
+        // TODO remove node from old parent
+      );
   }
 
   async createDirectory(parent: Directory, name: string): Promise<Directory> {
