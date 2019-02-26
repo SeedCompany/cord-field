@@ -22,16 +22,16 @@ export class FilesService {
   ) {
   }
 
-  getDirectory(projectId: string, dirId?: string): Observable<Directory> {
+  getDirectory(dirId: string): Observable<Directory> {
     return this
       .ploApi
-      .get<Directory>(`/projects/${projectId}/files${dirId ? `/${dirId}` : ''}`)
-      .pipe(map(node => fromJson({ ...node, projectId: projectId })));
+      .get<Directory>(`/files/${dirId}`)
+      .pipe(map(node => fromJson(node)));
   }
 
   async rename<T extends FileNode>(newName: string, node: T, parent: Directory): Promise<T> {
     await this.ploApi
-      .put(`/projects/${node.projectId}/files/${node.id}`, {
+      .put(`/files/${node.id}`, {
         parentId: parent.id,
         name: newName,
       })
@@ -44,8 +44,7 @@ export class FilesService {
 
   async createDirectory(parent: Directory, name: string): Promise<Directory> {
     const dir = await this.ploApi
-      .post<Directory>(`/projects/${parent.projectId}/files`, {
-        projectId: parent.projectId,
+      .post<Directory>(`/files`, {
         parentId: parent.id,
         name,
         type: FileNodeType.Directory,
@@ -55,7 +54,6 @@ export class FilesService {
     const owner = await this.authService.getCurrentUser()!;
     return fromJson({
       ...dir,
-      projectId: parent.projectId,
       createdAt: DateTime.local().toISO(),
       owner,
     });
@@ -69,14 +67,14 @@ export class FilesService {
 
   private createNode(uploadFile: UploadFile, name: string, parent: Directory) {
     return this.ploApi
-      .post<File & { preSignedUrl: string, fileVersionId: string }>(`/projects/${parent.projectId}/files`, {
+      .post<File & { preSignedUrl: string, fileVersionId: string }>(`/files`, {
         name,
         parentId: parent.id,
         mimeType: uploadFile.type,
         type: FileNodeType.File,
       })
       .pipe(map(({ preSignedUrl, fileVersionId, ...file }) => ({
-        file: fromJson({ ...file, projectId: parent.projectId }),
+        file: fromJson(file),
         preSignedUrl,
         fileVersionId,
       })));
@@ -98,11 +96,11 @@ export class FilesService {
    */
   private updateFileVersion(temp: File, versionId: string): Observable<File> {
     return this.ploApi
-      .put<File>(`/projects/${temp.projectId}/files`, {
+      .put<File>(`/files`, {
         fileId: temp.id,
         fileVersionId: versionId,
       })
-      .pipe(map(file => fromJson({ ...file, projectId: temp.projectId })));
+      .pipe(map(file => fromJson(file)));
   }
 
   async download(file: File, version?: FileVersion) {
@@ -112,7 +110,7 @@ export class FilesService {
 
   private async getDownloadUrl(file: File, version?: FileVersion): Promise<string> {
     const result = await this.ploApi
-      .get<{url: string}>(`/projects/${file.projectId}/files/download/${file.id}`, {
+      .get<{url: string}>(`/files/download/${file.id}`, {
         params: {
           fileVersionId: version ? version.id : file.versions[0].id,
         },
@@ -123,6 +121,6 @@ export class FilesService {
   }
 
   async delete(node: FileNode): Promise<void> {
-    await this.ploApi.delete(`/projects/${node.projectId}/files/${node.id}`).toPromise();
+    await this.ploApi.delete(`/files/${node.id}`).toPromise();
   }
 }

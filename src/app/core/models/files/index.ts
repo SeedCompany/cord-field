@@ -16,7 +16,6 @@ export type FileKeys = Exclude<Keys, 'isFile' | 'isDir'>;
 
 class BaseNode {
   id: string;
-  projectId: string;
   type: FileNodeType;
   category: FileNodeCategory;
   name: string;
@@ -70,7 +69,7 @@ export function fromJson(json: any): FileNode {
   let node;
   if (json.type === FileNodeType.Directory) {
     node = new Directory();
-    node.children = ((json.children || []) as FileNode[]).map(child => fromJson({...child, projectId: json.projectId}));
+    node.children = ((json.children || []) as FileNode[]).map(child => fromJson(child));
   } else if (json.type === FileNodeType.File) {
     node = new File();
     node.modifiedAt = json.modifiedAt ? DateTime.fromISO(json.modifiedAt) : null;
@@ -81,7 +80,6 @@ export function fromJson(json: any): FileNode {
   }
 
   node.id = json.id;
-  node.projectId = json.projectId;
   node.createdAt = json.createdAt ? DateTime.fromISO(json.createdAt) : null;
   node.name = json.name;
   node.type = json.type;

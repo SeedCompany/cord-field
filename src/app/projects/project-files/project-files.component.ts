@@ -5,13 +5,13 @@ import { TitleAware } from '@app/core/decorators';
 import { Directory, FileKeys, FileNode, FileNodeCategory, UploadFile } from '@app/core/models/files';
 import { SUPPORTS_DOWNLOADS } from '@app/core/services/downloader.service';
 import { FilesService } from '@app/core/services/files.service';
-import { filterRequired } from '@app/core/util';
+import { filterRequired, skipEmptyViewState } from '@app/core/util';
 import { CreateDirectoryDialogComponent } from '@app/projects/project-files/create-directory-dialog/create-directory-dialog.component';
 import { FileRenameDialogComponent } from '@app/projects/project-files/file-rename-dialog/file-rename-dialog.component';
 import { OverwriteFileWarningComponent } from '@app/projects/project-files/overwrite-file-warning/overwrite-file-warning.component';
 import { SubscriptionComponent } from '@app/shared/components/subscription.component';
 import { BehaviorSubject, combineLatest, Observable } from 'rxjs';
-import { filter, map, startWith, switchMap, takeUntil } from 'rxjs/operators';
+import { map, startWith, switchMap, takeUntil } from 'rxjs/operators';
 import { ProjectViewStateService } from '../project-view-state.service';
 
 @Component({
@@ -64,15 +64,12 @@ export class ProjectFilesComponent extends SubscriptionComponent implements Afte
 
     combineLatest(
       this.activatedRoute.queryParams,
-      this.projectViewState.project
-        .pipe(
-          filter(project => Boolean(project.id)),
-        ),
+      this.projectViewState.project.pipe(skipEmptyViewState()),
     )
       .pipe(
+        map(([params, project]) => params.parent || project.id),
+        switchMap(id => this.fileService.getDirectory(id)),
         takeUntil(this.unsubscribe),
-        switchMap(([params, project]) =>
-          this.fileService.getDirectory(project.id, params.parent)),
       )
       .subscribe(this.directory$);
 
