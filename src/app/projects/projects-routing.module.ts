@@ -2,6 +2,7 @@ import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { DirtyGuard } from '@app/core/route-guards/dirty.guard';
 import { BudgetComponent } from '@app/projects-and-internships/budget/budget.component';
+import { FilesComponent } from '@app/projects-and-internships/files/files.component';
 import {
   ProposalAndFcRecommendationComponent,
 } from '@app/projects-and-internships/proposal-and-fc-recommendation/proposal-and-fc-recommendation.component';
@@ -10,7 +11,6 @@ import { ProjectExtensionComponent } from '@app/projects/project-extensions/proj
 import { ProjectExtensionsComponent } from '@app/projects/project-extensions/project-extensions.component';
 import { ProjectEngagementComponent } from './project-engagements/project-engagement/project-engagement.component';
 import { ProjectEngagementsComponent } from './project-engagements/project-engagements.component';
-import { ProjectFilesComponent } from './project-files/project-files.component';
 import { ProjectListComponent } from './project-list/project-list.component';
 import { ProjectOverviewComponent } from './project-overview/project-overview.component';
 import { ProjectUpdatesComponent } from './project-updates/project-updates.component';
@@ -33,7 +33,7 @@ const routes: Routes = [
         ],
       },
       {path: 'budget', component: BudgetComponent, data: { acceptDirty: true }, canDeactivate: [DirtyGuard]},
-      {path: 'files', component: ProjectFilesComponent},
+      {path: 'files', component: FilesComponent},
       {path: 'team', component: TeamComponent},
       {
         path: 'extensions',

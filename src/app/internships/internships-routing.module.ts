@@ -1,8 +1,9 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { DirtyGuard } from '@app/core/route-guards/dirty.guard';
-import { NotImplementedGuard, notImplementedRoute } from '@app/core/route-guards/not-implemented.guard';
+import { NotImplementedGuard } from '@app/core/route-guards/not-implemented.guard';
 import { BudgetComponent } from '@app/projects-and-internships/budget/budget.component';
+import { FilesComponent } from '@app/projects-and-internships/files/files.component';
 import {
   ProposalAndFcRecommendationComponent,
 } from '@app/projects-and-internships/proposal-and-fc-recommendation/proposal-and-fc-recommendation.component';
@@ -27,7 +28,7 @@ const routes: Routes = [
         canActivate: [NotImplementedGuard],
       },
       { path: 'budget', component: BudgetComponent, data: { acceptDirty: true }, canDeactivate: [DirtyGuard] },
-      notImplementedRoute('files'),
+      { path: 'files', component: FilesComponent },
       { path: 'team', component: TeamComponent },
     ],
     canDeactivate: [DirtyGuard],

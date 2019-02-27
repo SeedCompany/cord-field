@@ -6,11 +6,6 @@ import { ProjectEngagementComponent } from './project-engagements/project-engage
 import { ProjectEngagementsComponent } from './project-engagements/project-engagements.component';
 import { ProjectExtensionComponent } from './project-extensions/project-extension/project-extension.component';
 import { ProjectExtensionsComponent } from './project-extensions/project-extensions.component';
-import { CreateDirectoryDialogComponent } from './project-files/create-directory-dialog/create-directory-dialog.component';
-import { FileBreadcrumbsComponent } from './project-files/file-breadcrumbs/file-breadcrumbs.component';
-import { FileRenameDialogComponent } from './project-files/file-rename-dialog/file-rename-dialog.component';
-import { OverwriteFileWarningComponent } from './project-files/overwrite-file-warning/overwrite-file-warning.component';
-import { ProjectFilesComponent } from './project-files/project-files.component';
 import { ProjectLanguagesComponent } from './project-languages/project-languages.component';
 import { ProjectListFilterComponent } from './project-list/project-list-filter/project-list-filter.component';
 import { ProjectListComponent } from './project-list/project-list.component';
@@ -29,15 +24,10 @@ import { ProjectsRoutingModule } from './projects-routing.module';
     ProjectsRoutingModule,
   ],
   declarations: [
-    CreateDirectoryDialogComponent,
     EngagementProductsComponent,
-    FileBreadcrumbsComponent,
-    FileRenameDialogComponent,
-    OverwriteFileWarningComponent,
     ProjectComponent,
     ProjectExtensionComponent,
     ProjectExtensionsComponent,
-    ProjectFilesComponent,
     ProjectListComponent,
     ProjectListFilterComponent,
     ProjectNameComponent,
@@ -50,9 +40,6 @@ import { ProjectsRoutingModule } from './projects-routing.module';
     ProjectStatusComponent,
   ],
   entryComponents: [
-    CreateDirectoryDialogComponent,
-    FileRenameDialogComponent,
-    OverwriteFileWarningComponent,
   ],
 })
 export class ProjectsModule {

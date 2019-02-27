@@ -2,26 +2,27 @@ import { HttpErrorResponse } from '@angular/common/http';
 import { AfterViewInit, Component, ViewChild } from '@angular/core';
 import { MatDialog, MatPaginator, MatSnackBar, MatSort, MatTableDataSource } from '@angular/material';
 import { ActivatedRoute, Router } from '@angular/router';
+import { AbstractViewState } from '@app/core/abstract-view-state';
 import { TitleAware } from '@app/core/decorators';
 import { Directory, FileKeys, FileNode, FileNodeCategory, UploadFile } from '@app/core/models/files';
+import { Internship } from '@app/core/models/internship';
+import { Project } from '@app/core/models/project';
 import { SUPPORTS_DOWNLOADS } from '@app/core/services/downloader.service';
 import { FilesService } from '@app/core/services/files.service';
 import { filterRequired, skipEmptyViewState } from '@app/core/util';
-import { CreateDirectoryDialogComponent } from '@app/projects/project-files/create-directory-dialog/create-directory-dialog.component';
-import { FileRenameDialogComponent } from '@app/projects/project-files/file-rename-dialog/file-rename-dialog.component';
-import { OverwriteFileWarningComponent } from '@app/projects/project-files/overwrite-file-warning/overwrite-file-warning.component';
 import { SubscriptionComponent } from '@app/shared/components/subscription.component';
 import { BehaviorSubject, combineLatest, EMPTY, Observable } from 'rxjs';
 import { catchError, map, startWith, switchMap, takeUntil } from 'rxjs/operators';
-import { ProjectViewStateService } from '../project-view-state.service';
+import { CreateDirectoryDialogComponent } from './create-directory-dialog/create-directory-dialog.component';
+import { FileRenameDialogComponent } from './file-rename-dialog/file-rename-dialog.component';
+import { OverwriteFileWarningComponent } from './overwrite-file-warning/overwrite-file-warning.component';
 
 @Component({
-  selector: 'app-project-files',
-  templateUrl: './project-files.component.html',
-  styleUrls: ['./project-files.component.scss'],
+  templateUrl: './files.component.html',
+  styleUrls: ['./files.component.scss'],
 })
 @TitleAware()
-export class ProjectFilesComponent extends SubscriptionComponent implements AfterViewInit {
+export class FilesComponent extends SubscriptionComponent implements AfterViewInit {
 
   readonly displayedColumns: FileKeys[] = ['name', 'createdAt', 'owner', 'category', 'size'];
   readonly pageSizeOptions = [10, 25, 50];
@@ -37,7 +38,7 @@ export class ProjectFilesComponent extends SubscriptionComponent implements Afte
 
   constructor(private activatedRoute: ActivatedRoute,
               private fileService: FilesService,
-              private projectViewState: ProjectViewStateService,
+              private viewState: AbstractViewState<Project | Internship, unknown>,
               private router: Router,
               private dialog: MatDialog,
               private snackBar: MatSnackBar) {
@@ -65,18 +66,18 @@ export class ProjectFilesComponent extends SubscriptionComponent implements Afte
 
     combineLatest(
       this.activatedRoute.queryParams,
-      this.projectViewState.project.pipe(skipEmptyViewState()),
+      this.viewState.subject.pipe(skipEmptyViewState()),
     )
       .pipe(
-        switchMap(([params, project]) =>
-          this.fileService.getDirectory(params.parent || project.id)
+        switchMap(([params, subject]) =>
+          this.fileService.getDirectory(params.parent || subject.id)
             .pipe(
               catchError(err => {
                 if (err instanceof HttpErrorResponse && err.status === 404) {
                   this.snackBar.open('Could not find folder', undefined, { duration: 3000 });
 
                   // If invalid parameter given, go to root
-                  if (params.parent && params.parent !== project.id) {
+                  if (params.parent && params.parent !== subject.id) {
                    this.router.navigate(['.'], {
                      relativeTo: this.activatedRoute,
                    });
