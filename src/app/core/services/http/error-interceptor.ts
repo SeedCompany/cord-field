@@ -7,8 +7,9 @@ import {
   HttpRequest,
 } from '@angular/common/http';
 import { Injectable, Provider } from '@angular/core';
+import { MatSnackBar } from '@angular/material';
 import { LoggerService } from '@app/core/services/logger.service';
-import { Observable, throwError as observableThrow } from 'rxjs';
+import { EMPTY, Observable, throwError as observableThrow } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 
 @Injectable({
@@ -21,6 +22,7 @@ export class ErrorInterceptor implements HttpInterceptor {
 
   constructor(
     private logger: LoggerService,
+    private snackBar: MatSnackBar,
   ) {
   }
 
@@ -28,8 +30,13 @@ export class ErrorInterceptor implements HttpInterceptor {
     return next
       .handle(req)
       .pipe(catchError(e => {
-        if (e instanceof HttpErrorResponse && e.status === 500 && e.error.trace) {
-          this.logger.error(JSON.parse(e.error.trace).stack);
+        if (e instanceof HttpErrorResponse) {
+          if (e.status === 500 && e.error.trace) {
+            this.logger.error(JSON.parse(e.error.trace).stack);
+          } else if (e.status === 0) {
+            this.snackBar.open('Unable to communicate with server', undefined, { duration: 3000 });
+            return EMPTY;
+          }
         }
 
         return observableThrow(e);
