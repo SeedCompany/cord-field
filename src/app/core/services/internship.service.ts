@@ -1,6 +1,11 @@
 import { Injectable } from '@angular/core';
 import { ModifiedBudgets } from '@app/core/models/budget';
-import { Internship, InternshipFilter, InternshipStatus } from '@app/core/models/internship';
+import {
+  Internship,
+  InternshipFilter,
+  InternshipListItem,
+  InternshipStatus,
+} from '@app/core/models/internship';
 import { ModifiedPartnerships } from '@app/core/models/partnership';
 import { Sensitivity } from '@app/core/models/sensitivity';
 import { ModifiedTeamMembers } from '@app/core/models/team-member';
@@ -49,8 +54,8 @@ export class InternshipService {
       .pipe(map(Internship.fromJson));
   }
 
-  list = ({ all, ...opts }: ListApiOptions<keyof Internship, InternshipFilter> & { all: boolean }) =>
-    makeListRequest(this.api, '/internships', Internship.fromJson)({
+  list = ({ all, ...opts }: ListApiOptions<keyof InternshipListItem, InternshipFilter> & { all: boolean }) =>
+    makeListRequest(this.api, '/internships', InternshipListItem.fromJson)({
       ...listOptionsToHttpParams(({ location, team, ...filters }: InternshipFilter): InternshipListFilterAPI => ({
         locationId: toIds(location),
         team: toIds(team),

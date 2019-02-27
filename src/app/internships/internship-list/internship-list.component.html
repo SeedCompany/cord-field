@@ -1,0 +1,61 @@
+<app-table-view
+  [fetchData]="fetchData"
+  [parseParams]="parseParams"
+  [paramsFromChanges]="paramsFromChanges"
+  [extraInputs]="extraInputs"
+  [defaultSort]="defaultSort"
+  [search]="true"
+  (dataFetched)="dataFetched($event.total)"
+  (queryParamChanges)="queryParamChanges($event)"
+>
+  <ng-container ngProjectAs="toolbar">
+    <button mat-button class="list-menu-button" color="primary" [matMenuTriggerFor]="listMenu">
+      {{ listSelection.label }}
+      <mat-icon>arrow_drop_down</mat-icon>
+    </button>
+    <mat-menu #listMenu="matMenu">
+      <button mat-menu-item
+              (click)="listChanges.next(selector)"
+              *ngFor="let selector of listSelectorOptions; trackBy: trackByValue">
+        {{ selector.label }}
+      </button>
+    </mat-menu>
+  </ng-container>
+
+  <mat-table matSort matSortDisableClear>
+    <ng-container matColumnDef="name">
+      <mat-header-cell *matHeaderCellDef mat-sort-header>Name</mat-header-cell>
+      <mat-cell *matCellDef="let internship">{{ internship.name }}</mat-cell>
+    </ng-container>
+
+    <ng-container matColumnDef="updatedAt">
+      <mat-header-cell *matHeaderCellDef mat-sort-header> Last Modified</mat-header-cell>
+      <mat-cell *matCellDef="let internship">{{ internship.updatedAt.toLocaleString() }}</mat-cell>
+    </ng-container>
+
+    <ng-container matColumnDef="interns">
+      <mat-header-cell *matHeaderCellDef>Interns</mat-header-cell>
+      <mat-cell *matCellDef="let internship">
+        <app-collapsed-chip-list [list]="internship.interns" (chipClicked)="onInternClick($event)">
+          <ng-template let-user>{{ user.fullName }}</ng-template>
+        </app-collapsed-chip-list>
+      </mat-cell>
+    </ng-container>
+
+    <ng-container matColumnDef="status">
+      <mat-header-cell *matHeaderCellDef mat-sort-header>Status</mat-header-cell>
+      <mat-cell *matCellDef="let internship">
+        <span class="status-circle" [ngClass]="internship ? InternshipStatus.getColor(internship.status) : null"></span>
+        <span>{{ InternshipStatus.forUI(internship.status) }}</span>
+      </mat-cell>
+    </ng-container>
+
+    <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+    <mat-row class="row-hover"
+             [routerLink]="'/internships/' + internship.id"
+             *matRowDef="let internship; columns: displayedColumns;">
+    </mat-row>
+  </mat-table>
+
+  <app-internship-list-filter tableFilter></app-internship-list-filter>
+</app-table-view>

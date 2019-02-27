@@ -1,6 +1,8 @@
 import { NgModule } from '@angular/core';
 import { ProjectsAndInternshipsModule } from '@app/projects-and-internships/projects-and-internships.module';
 import { SharedModule } from '@app/shared/shared.module';
+import { InternshipListFilterComponent } from './internship-list/internship-list-filter/internship-list-filter.component';
+import { InternshipListComponent } from './internship-list/internship-list.component';
 import { InternshipInternsComponent } from './internship-overview/internship-interns/internship-interns.component';
 import {
   InternshipOverviewSidebarComponent,
@@ -20,6 +22,8 @@ import { InternshipsRoutingModule } from './internships-routing.module';
     InternshipComponent,
     InternshipInternsComponent,
     InternshipNameComponent,
+    InternshipListComponent,
+    InternshipListFilterComponent,
     InternshipOverviewComponent,
     InternshipOverviewSidebarComponent,
   ],

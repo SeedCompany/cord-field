@@ -8,11 +8,12 @@ import {
   ProposalAndFcRecommendationComponent,
 } from '@app/projects-and-internships/proposal-and-fc-recommendation/proposal-and-fc-recommendation.component';
 import { TeamComponent } from '@app/projects-and-internships/team/team.component';
+import { InternshipListComponent } from './internship-list/internship-list.component';
 import { InternshipOverviewComponent } from './internship-overview/internship-overview.component';
 import { InternshipComponent } from './internship/internship.component';
 
 const routes: Routes = [
-  { path: '', pathMatch: 'full', canActivate: [NotImplementedGuard] },
+  { path: '', component: InternshipListComponent, pathMatch: 'full' },
   {
     path: ':id',
     component: InternshipComponent,

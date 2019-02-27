@@ -11,6 +11,7 @@ import { InternshipEngagement } from './engagement';
 import { InternshipStatus } from './status';
 
 export * from './engagement';
+export * from './list-item';
 export * from './status';
 
 export class EditableInternship {
