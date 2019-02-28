@@ -1,6 +1,7 @@
 import { Location } from '@app/core/models/location';
+import { ProductMethodology } from '@app/core/models/product';
 import { User } from '@app/core/models/user';
-import { clone, maybeDate } from '@app/core/util';
+import { clone, ifValue, maybeDate } from '@app/core/util';
 import { DateTime } from 'luxon';
 import { InternshipEngagementPosition } from './position';
 import { InternshipEngagementStatus } from './status';
@@ -13,10 +14,11 @@ export { InternshipEngagementPosition, InternshipEngagementStatus, InternshipEng
  * No functions in this class.
  */
 export class EditableInternshipEngagement {
-  countryOfOrigin: Location;
-  mentor: User;
-  position: InternshipEngagementPosition;
   status: InternshipEngagementStatus;
+  countryOfOrigin: Location | null;
+  mentor: User | null;
+  position: InternshipEngagementPosition;
+  methodologies: ProductMethodology[];
   tags: InternshipEngagementTag[];
   completeDate: DateTime | null;
   disbursementCompleteDate: DateTime | null;
@@ -39,12 +41,13 @@ export class InternshipEngagement extends EditableInternshipEngagement {
     const engagement = new InternshipEngagement();
 
     engagement.id = json.id;
-    engagement.intern  = User.fromJson(json.intern);
+    engagement.intern = User.fromJson(json.intern);
     engagement.status = json.status || InternshipEngagementStatus.InDevelopment;
     engagement.possibleStatuses = json.possibleStatuses || [];
-    engagement.countryOfOrigin = Location.fromJson(json.countryOfOrigin);
-    engagement.mentor = User.fromJson(json.mentor);
+    engagement.countryOfOrigin = ifValue(json.countryOfOrigin, Location.fromJson, null);
+    engagement.mentor = ifValue(json.mentor, User.fromJson, null);
     engagement.position = json.position;
+    engagement.methodologies = json.methodologies || [];
     engagement.tags = json.tags || [];
     engagement.initialEndDate = maybeDate(json.initialEndDate);
     engagement.currentEndDate = maybeDate(json.currentEndDate);

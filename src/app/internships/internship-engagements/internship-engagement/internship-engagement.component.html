@@ -1,0 +1,156 @@
+<form *ngIf="engagement" [formGroup]="$any(form)">
+
+  <div class="row">
+    <mat-card>
+      <mat-card-title>Status</mat-card-title>
+      <app-status-select-workflow
+        [placeholder]="null"
+        [enum]="EngagementStatus"
+        [findAvailableStatuses]="findAvailableStatuses"
+        [original]="engagement?.status"
+        formControlName="status"
+      ></app-status-select-workflow>
+    </mat-card>
+
+    <mat-card>
+      <mat-card-title>Growth Plan</mat-card-title>
+      <mat-card-actions>
+        <button mat-button color="accent" routerLink="../../files">
+          <mat-icon>file_upload</mat-icon>
+          Upload
+        </button>
+      </mat-card-actions>
+    </mat-card>
+  </div>
+
+  <div class="row">
+    <mat-card class="description">
+      <mat-card-title>Description</mat-card-title>
+      <mat-card-content>
+
+        <app-autocomplete-location
+          formControlName="countryOfOrigin"
+          placeholder="Country of Origin"
+          [keepInput]="true"
+        ></app-autocomplete-location>
+
+        <app-autocomplete-user
+          formControlName="mentor"
+          placeholder="Mentor"
+          [keepInput]="true"
+        ></app-autocomplete-user>
+
+        <mat-form-field color="accent">
+          <mat-select placeholder="Position" formControlName="position">
+            <mat-optgroup
+              *ngFor="let entry of Position.groupEntries"
+              [label]="entry[0]"
+            >
+              <mat-option
+                *ngFor="let methodology of entry[1]; trackBy: Position.trackValueBy"
+                [value]="methodology">
+                {{ Position.forUI(methodology) }}
+              </mat-option>
+            </mat-optgroup>
+          </mat-select>
+          <mat-error>Please select a position</mat-error>
+        </mat-form-field>
+
+        <mat-form-field color="accent">
+          <mat-select multiple placeholder="Methodologies" formControlName="methodologies">
+            <mat-optgroup
+              *ngFor="let entry of Methodology.groupEntries"
+              [label]="entry[0]"
+            >
+              <mat-option
+                *ngFor="let methodology of entry[1]; trackBy: Methodology.trackValueBy"
+                [value]="methodology">
+                {{ Methodology.forUI(methodology) }}
+              </mat-option>
+            </mat-optgroup>
+          </mat-select>
+          <mat-error>Please one or more methodologies</mat-error>
+        </mat-form-field>
+
+      </mat-card-content>
+    </mat-card>
+
+    <mat-card class="dates">
+      <mat-card-title>Dates</mat-card-title>
+      <mat-card-content>
+        <mat-list>
+          <mat-list-item *ngIf="engagement?.initialEndDate as date">
+            <h4 mat-line>{{ date?.toLocaleString() }}</h4>
+            <p mat-line>Initial Estimated End Date</p>
+          </mat-list-item>
+          <mat-list-item *ngIf="engagement?.currentEndDate as date">
+            <h4 mat-line>{{ date?.toLocaleString() }}</h4>
+            <p mat-line>Current Estimated End Date</p>
+          </mat-list-item>
+        </mat-list>
+
+        <mat-form-field color="accent">
+          <input matInput
+                 formControlName="completeDate"
+                 [matDatepicker]="completeDatePicker"
+                 placeholder="Translation Complete Date">
+          <mat-datepicker-toggle matSuffix [for]="completeDatePicker"></mat-datepicker-toggle>
+          <mat-datepicker #completeDatePicker></mat-datepicker>
+          <mat-error *ngIf="completeDate.errors?.matDatepickerParse">Invalid Date</mat-error>
+        </mat-form-field>
+
+        <mat-form-field color="accent">
+          <input matInput
+                 formControlName="disbursementCompleteDate"
+                 [matDatepicker]="disbursementCompleteDatePicker"
+                 placeholder="Disbursement Complete Date">
+          <mat-datepicker-toggle matSuffix [for]="disbursementCompleteDatePicker"></mat-datepicker-toggle>
+          <mat-datepicker #disbursementCompleteDatePicker></mat-datepicker>
+          <mat-error *ngIf="disbursementCompleteDate.errors?.matDatepickerParse">Invalid Date</mat-error>
+        </mat-form-field>
+
+        <mat-form-field color="accent">
+          <input matInput
+                 formControlName="communicationsCompleteDate"
+                 [matDatepicker]="communicationsCompleteDatePicker"
+                 placeholder="Communications Complete Date">
+          <mat-datepicker-toggle matSuffix [for]="communicationsCompleteDatePicker"></mat-datepicker-toggle>
+          <mat-datepicker #communicationsCompleteDatePicker></mat-datepicker>
+          <mat-error *ngIf="communicationsCompleteDate.errors?.matDatepickerParse">Invalid Date</mat-error>
+        </mat-form-field>
+
+        <mat-checkbox formControlName="isCeremonyPlanned">
+          Is a dedication planned?
+        </mat-checkbox>
+
+        <mat-form-field color="accent" class="ceremony">
+          <input matInput
+                 formControlName="ceremonyEstimatedDate"
+                 [matDatepicker]="ceremonyEstimatedDatePicker"
+                 placeholder="Estimated Dedication Date">
+          <mat-datepicker-toggle matSuffix [for]="ceremonyEstimatedDatePicker"></mat-datepicker-toggle>
+          <mat-datepicker #ceremonyEstimatedDatePicker></mat-datepicker>
+          <mat-error *ngIf="ceremonyEstimatedDate.errors?.matDatepickerParse">Invalid Date</mat-error>
+        </mat-form-field>
+
+        <mat-form-field color="accent" class="ceremony">
+          <input matInput
+                 formControlName="ceremonyActualDate"
+                 [matDatepicker]="ceremonyActualDatePicker"
+                 placeholder="Actual Dedication Date">
+          <mat-datepicker-toggle matSuffix [for]="ceremonyActualDatePicker"></mat-datepicker-toggle>
+          <mat-datepicker #ceremonyActualDatePicker></mat-datepicker>
+          <mat-error *ngIf="ceremonyActualDate.errors?.matDatepickerParse">Invalid Date</mat-error>
+        </mat-form-field>
+      </mat-card-content>
+    </mat-card>
+  </div>
+
+</form>
+
+<app-save-discard-dial
+  [dirty]="isDirty | async"
+  [submitting]="isSubmitting"
+  (save)="onSave()"
+  (discard)="onDiscard()"
+></app-save-discard-dial>

@@ -1,8 +1,10 @@
 import { Injectable } from '@angular/core';
 import { Budget } from '@app/core/models/budget';
-import { EditableInternship, Internship } from '@app/core/models/internship';
+import { EditableInternship, Internship, InternshipEngagement as Engagement } from '@app/core/models/internship';
 import { InternshipService, ModifiedInternship } from '@app/core/services/internship.service';
 import { SessionStorageService } from '@app/core/services/storage.service';
+import { clone } from '@app/core/util';
+import { first, map } from 'rxjs/operators';
 import { AbstractViewState, SaveResult } from '../core/abstract-view-state';
 import { ChangeConfig, dateConfig } from '../core/change-engine';
 import { Location } from '../core/models/location';
@@ -50,6 +52,26 @@ export class InternshipViewStateService extends AbstractViewState<Internship, Mo
 
   onNewId(id: string): void {
     this.internships.get(id)
+      .subscribe(this.onLoad);
+  }
+
+  updateEngagement(engagement: Engagement): void {
+    this.subject
+      .pipe(
+        first(),
+        map(internship => {
+          const next = clone(internship);
+          next.engagements = [...next.engagements];
+
+          const index = internship.engagements.findIndex(e => e.id === engagement.id);
+          if (index === -1) {
+            throw new Error('Could not find engagement in internship');
+          }
+          next.engagements[index] = engagement;
+
+          return next;
+        }),
+      )
       .subscribe(this.onLoad);
   }
 

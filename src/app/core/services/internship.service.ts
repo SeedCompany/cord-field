@@ -1,7 +1,10 @@
 import { Injectable } from '@angular/core';
 import { ModifiedBudgets } from '@app/core/models/budget';
 import {
+  EditableInternshipEngagement,
   Internship,
+  InternshipEngagement,
+  InternshipEngagementStatus,
   InternshipFilter,
   InternshipListItem,
   InternshipStatus,
@@ -9,6 +12,7 @@ import {
 import { ModifiedPartnerships } from '@app/core/models/partnership';
 import { Sensitivity } from '@app/core/models/sensitivity';
 import { ModifiedTeamMembers } from '@app/core/models/team-member';
+import { ProjectEngagementService } from '@app/core/services/project-engagement.service';
 import { ProjectService } from '@app/core/services/project.service';
 import { buildDateFilter, DateFilterAPI, toIds } from '@app/core/util/list-filters';
 import { ApiOptions as ListApiOptions, listOptionsToHttpParams, makeListRequest } from '@app/core/util/list-views';
@@ -45,6 +49,7 @@ export class InternshipService {
   constructor(
     private api: PloApiService,
     private projects: ProjectService,
+    private projectEngagements: ProjectEngagementService,
   ) {
   }
 
@@ -91,5 +96,13 @@ export class InternshipService {
 
   getAvailableStatuses(internship: Internship): StatusOptions<InternshipStatus> {
     return this.projects.getAvailableStatuses(internship);
+  }
+
+  saveEngagement(id: string, data: Partial<EditableInternshipEngagement>) {
+    return this.api.put(`/internships/engagements/${id}/save`, data).toPromise();
+  }
+
+  getEngagementAvailableStatuses(engagement: InternshipEngagement): StatusOptions<InternshipEngagementStatus> {
+    return this.projectEngagements.getAvailableStatuses(engagement);
   }
 }

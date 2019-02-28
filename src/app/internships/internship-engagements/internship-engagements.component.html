@@ -1,0 +1,12 @@
+<div class="sidebar">
+  <mat-nav-list *ngIf="(internship$ | async) as internship">
+    <a *ngFor="let engagement of internship.engagements; trackBy: trackById"
+       mat-list-item
+       routerLink="./{{ engagement.id }}"
+       routerLinkActive="active"
+    >{{ engagement.intern.fullName }}</a>
+  </mat-nav-list>
+</div>
+<div class="main">
+  <router-outlet></router-outlet>
+</div>

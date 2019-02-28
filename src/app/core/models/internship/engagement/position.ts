@@ -45,4 +45,32 @@ export namespace InternshipEngagementPosition {
     [Enum.TranslationFacilitator]: 'Translation Facilitator',
     [Enum.Translator]: 'Translator',
   });
+
+  export const Groups = {
+    'Translation Capacity Program': [
+      Enum.ExegeticalFacilitator,
+      Enum.TranslationConsultantInTraining,
+    ],
+    'Partnership Capacity Program': [
+      Enum.AdministrativeSupportSpecialist,
+      Enum.BusinessSupportSpecialist,
+      Enum.CommunicationSpecialistInternal,
+      Enum.CommunicationSpecialistMarketing,
+      Enum.LanguageProgramManager,
+      Enum.LanguageProgramManagerOrFieldOperations,
+      Enum.LanguageSoftwareSupportSpecialist,
+      Enum.LeadershipDevelopment,
+      Enum.LiteracySpecialist,
+      Enum.LukePartnershipFacilitatorOrSpecialist,
+      Enum.MobilizerOrPartnershipSupportSpecialist,
+      Enum.OralFacilitatorOrSpecialist,
+      Enum.PersonnelOrHrSpecialist,
+      Enum.ScriptureUseSpecialist,
+      Enum.TechnicalSupportSpecialist,
+      Enum.TranslationFacilitator,
+      Enum.Translator,
+    ],
+  };
+
+  export const groupEntries = Object.entries(Groups);
 }
