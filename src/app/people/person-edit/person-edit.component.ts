@@ -43,10 +43,15 @@ export class PersonEditComponent extends AbstractPersonComponent implements OnIn
     super.ngOnInit();
     this.tabs = this.user$.pipe(
       map(user => {
-        if (user.canEditRoles) {
-          return this.allTabs;
+        let tabs = this.allTabs.slice();
+        if (!user.canEditRoles) {
+          tabs = tabs.filter(tab => tab.path !== 'admin');
         }
-        return this.allTabs.filter(tab => tab.path !== 'admin');
+        if (!user.isSelf) {
+          tabs = tabs.filter(tab => tab.path !== 'account');
+        }
+
+        return tabs;
       }),
     );
   }
