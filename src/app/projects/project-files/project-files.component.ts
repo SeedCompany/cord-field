@@ -1,3 +1,4 @@
+import { HttpErrorResponse } from '@angular/common/http';
 import { AfterViewInit, Component, ViewChild } from '@angular/core';
 import { MatDialog, MatPaginator, MatSnackBar, MatSort, MatTableDataSource } from '@angular/material';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -10,8 +11,8 @@ import { CreateDirectoryDialogComponent } from '@app/projects/project-files/crea
 import { FileRenameDialogComponent } from '@app/projects/project-files/file-rename-dialog/file-rename-dialog.component';
 import { OverwriteFileWarningComponent } from '@app/projects/project-files/overwrite-file-warning/overwrite-file-warning.component';
 import { SubscriptionComponent } from '@app/shared/components/subscription.component';
-import { BehaviorSubject, combineLatest, Observable } from 'rxjs';
-import { map, startWith, switchMap, takeUntil } from 'rxjs/operators';
+import { BehaviorSubject, combineLatest, EMPTY, Observable } from 'rxjs';
+import { catchError, map, startWith, switchMap, takeUntil } from 'rxjs/operators';
 import { ProjectViewStateService } from '../project-view-state.service';
 
 @Component({
@@ -67,8 +68,26 @@ export class ProjectFilesComponent extends SubscriptionComponent implements Afte
       this.projectViewState.project.pipe(skipEmptyViewState()),
     )
       .pipe(
-        map(([params, project]) => params.parent || project.id),
-        switchMap(id => this.fileService.getDirectory(id)),
+        switchMap(([params, project]) =>
+          this.fileService.getDirectory(params.parent || project.id)
+            .pipe(
+              catchError(err => {
+                if (err instanceof HttpErrorResponse && err.status === 404) {
+                  this.snackBar.open('Could not find folder', undefined, { duration: 3000 });
+
+                  // If invalid parameter given, go to root
+                  if (params.parent && params.parent !== project.id) {
+                   this.router.navigate(['.'], {
+                     relativeTo: this.activatedRoute,
+                   });
+                 }
+                } else {
+                  this.snackBar.open('Failed to fetch folder', undefined, { duration: 3000 });
+                }
+                return EMPTY;
+              }),
+            ),
+        ),
         takeUntil(this.unsubscribe),
       )
       .subscribe(this.directory$);
