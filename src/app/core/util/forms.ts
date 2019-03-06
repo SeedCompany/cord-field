@@ -1,5 +1,6 @@
 import { AbstractControl, AsyncValidatorFn, FormArray, FormControl, FormGroup, ValidatorFn } from '@angular/forms';
 import { AbstractControlOptions } from '@angular/forms/src/model';
+import { Omit } from '@app/core/util/types';
 import { mapValues } from 'lodash-es';
 import { Observable } from 'rxjs';
 
@@ -45,7 +46,7 @@ export class TypedFormControl<T> extends FormControl {
   }
 }
 
-export interface TypedFormGroup<T> extends AbstractControl {
+export interface TypedFormGroup<T> extends Omit<AbstractControl, 'get'> {
   readonly controls: { [K in keyof T]: TypedFormControl<T[K]> };
   readonly valueChanges: Observable<T>;
   readonly value: T;
@@ -64,7 +65,6 @@ export interface TypedFormGroup<T> extends AbstractControl {
   contains(controlName: string): boolean;
 
   get<K extends keyof T>(name: K): TypedFormControl<T[K]>;
-  get(path: Array<string | number> | string): AbstractControl | null;
 
   setValue(value: T, options?: {
     onlySelf?: boolean;

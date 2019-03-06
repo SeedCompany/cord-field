@@ -4,13 +4,12 @@ import { ModifiedLanguages } from '@app/core/models/language';
 import { ModifiedPartnerships } from '@app/core/models/partnership';
 import { Sensitivity } from '@app/core/models/sensitivity';
 import { ModifiedTeamMembers } from '@app/core/models/team-member';
-import { AuthenticationService } from '@app/core/services/authentication.service';
 import { buildDateFilter, DateFilterAPI, toIds } from '@app/core/util/list-filters';
 import { ApiOptions as ListApiOptions, listOptionsToHttpParams, makeListRequest } from '@app/core/util/list-views';
 import { StatusOptions } from '@app/shared/components/status-select-workflow/status-select-workflow.component';
 import { DateTime } from 'luxon';
-import { from, Observable, of } from 'rxjs';
-import { catchError, map, mapTo, switchMap, tap } from 'rxjs/operators';
+import { Observable, of } from 'rxjs';
+import { catchError, map, mapTo } from 'rxjs/operators';
 import { SaveResult } from '../abstract-view-state';
 import { ProjectCreationResult } from '../create-dialogs/project-create-dialog/project-create-dialog.component';
 import { ExtensionStatus, Project, ProjectExtension, ProjectFilter, ProjectStatus } from '../models/project';
@@ -41,8 +40,9 @@ export interface ModifiedProject {
 })
 export class ProjectService {
 
-  constructor(private authService: AuthenticationService,
-              private ploApi: PloApiService) {
+  constructor(
+    private ploApi: PloApiService,
+  ) {
   }
 
   getProject(id: string): Observable<Project> {
@@ -51,22 +51,11 @@ export class ProjectService {
       .pipe(map(Project.fromJson));
   }
 
-  getProjects = (options: ListApiOptions<keyof Project, ProjectFilter> & { all: boolean }) =>
-    of(options)
-      .pipe(
-        map(listOptionsToHttpParams(this.buildFilter)),
-        switchMap(params => {
-          if (options.all) {
-            return of(params);
-          }
-          return from(this.authService.getCurrentUser())
-            .pipe(
-              tap(user => params.onlyMine = user!.id),
-              mapTo(params),
-            );
-        }),
-        switchMap(makeListRequest(this.ploApi, '/projects', Project.fromJson)),
-      );
+  getProjects = ({ all, ...opts }: ListApiOptions<keyof Project, ProjectFilter> & { all: boolean }) =>
+    makeListRequest(this.ploApi, '/projects', Project.fromJson)({
+      ...listOptionsToHttpParams(this.buildFilter)(opts),
+      ...(all ? {} : { onlyMine: 'true' }),
+    });
 
   isProjectNameTaken(name: string): Observable<boolean> {
     return this

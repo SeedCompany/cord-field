@@ -1,8 +1,9 @@
 import { Component, OnInit } from '@angular/core';
-import { AbstractControl, FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { AbstractControl, FormBuilder, Validators } from '@angular/forms';
 import { MatDialog } from '@angular/material';
 import { TitleAware } from '@app/core/decorators';
 import { Unavailability, UserProfile } from '@app/core/models/user';
+import { TypedFormGroup } from '@app/core/util';
 import * as CustomValidators from '@app/core/validators';
 import { AbstractPersonComponent } from '@app/people/person-edit/abstract-person.component';
 import {
@@ -31,7 +32,7 @@ export class PersonEditBasicInfoComponent extends AbstractPersonComponent implem
   readonly format = DateTime.DATE_FULL;
 
   userProfile?: UserProfile;
-  form: FormGroup;
+  form: TypedFormGroup<Form>;
 
   constructor(
     private formBuilder: FormBuilder,
