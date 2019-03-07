@@ -130,6 +130,16 @@ export class ProjectFilesComponent extends SubscriptionComponent implements Afte
     };
 
     try {
+      // Workaround as .msg type is not detectable.
+      const mimeType = name.split('.')[1];
+      const msEmailTypes = ['msg', 'eml', 'mbox'];
+
+      if (msEmailTypes.includes(mimeType)) {
+        Object.defineProperty(uploadFile, 'type', {
+          value: 'application/vnd.ms-outlook',
+          writable: true,
+        });
+      }
       const file = await this.fileService.upload(uploadFile, name, directory);
       this.directory$.next(directory.withChild(file));
       notify('Uploaded');
