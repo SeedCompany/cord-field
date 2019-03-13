@@ -85,7 +85,7 @@ export function fromJson(json: any): FileNode {
   node.type = json.type;
   node.category = json.category;
   node.owner = User.fromJson(json.owner || {});
-  node.parents = json.parents;
+  node.parents = json.parents || [];
 
   return node;
 }
@@ -93,6 +93,7 @@ export function fromJson(json: any): FileNode {
 export interface ParentRef {
   id: string;
   name: string;
+  parentId: string | null;
 }
 
 export interface FileVersion {
