@@ -2,8 +2,10 @@ import { Injectable } from '@angular/core';
 import { ModifiedBudgets } from '@app/core/models/budget';
 import { ModifiedLanguages } from '@app/core/models/language';
 import { ModifiedPartnerships } from '@app/core/models/partnership';
+import { Role } from '@app/core/models/role';
 import { Sensitivity } from '@app/core/models/sensitivity';
 import { ModifiedTeamMembers } from '@app/core/models/team-member';
+import { UserService } from '@app/core/services/user.service';
 import { buildDateFilter, DateFilterAPI, toIds } from '@app/core/util/list-filters';
 import { ApiOptions as ListApiOptions, listOptionsToHttpParams, makeListRequest } from '@app/core/util/list-views';
 import { StatusOptions } from '@app/shared/components/status-select-workflow/status-select-workflow.component';
@@ -40,9 +42,8 @@ export interface ModifiedProject {
 })
 export class ProjectService {
 
-  constructor(
-    private ploApi: PloApiService,
-  ) {
+  constructor(private ploApi: PloApiService,
+              private userService: UserService) {
   }
 
   getProject(id: string): Observable<Project> {
@@ -60,7 +61,7 @@ export class ProjectService {
   isProjectNameTaken(name: string): Observable<boolean> {
     return this
       .ploApi
-      .get(`/projects/exists`, { params: { name }})
+      .get(`/projects/exists`, { params: { name } })
       .pipe(
         mapTo(false),
         catchError(err => {
@@ -74,7 +75,7 @@ export class ProjectService {
   }
 
   async createProject(project: ProjectCreationResult): Promise<string> {
-    const obj = await this.ploApi.post<{id: string}>('/projects', { ...project, type: 'translation' }).toPromise();
+    const obj = await this.ploApi.post<{ id: string }>('/projects', { ...project, type: 'translation' }).toPromise();
     return obj.id;
   }
 
@@ -94,10 +95,14 @@ export class ProjectService {
       .filter(([text, status]) => !status || project.possibleStatuses.includes(status))
       .map(([ui, value]) => ({ ui, value }));
     const bypassWorkflow = project.possibleStatuses.length === ProjectStatus.length;
-    const overrides = bypassWorkflow
+
+    const overrides = (this.userService.hasRole(Role.Admin))
       ? ProjectStatus.entries()
-        .filter(entry => entry.value !== project.status)
-      : [];
+      : bypassWorkflow
+        ? ProjectStatus.entries()
+          .filter(entry => entry.value !== project.status)
+        : [];
+
     return { transitions, overrides };
   }
 
@@ -197,7 +202,7 @@ export class ProjectService {
         .toPromise();
     } else {
       return this.ploApi
-        .put<{extensions: ProjectExtension[]}>(`/projects/${projectId}/extensions/${extension.id}`, extension)
+        .put<{ extensions: ProjectExtension[] }>(`/projects/${projectId}/extensions/${extension.id}`, extension)
         .pipe(map(res => res.extensions.find(ext => ext.id === extension.id)!))
         .toPromise();
     }

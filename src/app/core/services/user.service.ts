@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { ModifiedOrganizations } from '@app/core/models/organization';
+import { AuthenticationService } from '@app/core/services/authentication.service';
 import { toIds } from '@app/core/util/list-filters';
 import { listApi } from '@app/core/util/list-views';
 import { Observable, of as observableOf } from 'rxjs';
@@ -43,7 +44,8 @@ export interface ModifiedUser {
 })
 export class UserService {
 
-  constructor(private plo: PloApiService) {
+  constructor(private plo: PloApiService,
+              private auth: AuthenticationService) {
   }
 
   getUser(id: string): Observable<UserProfile> {
@@ -55,13 +57,20 @@ export class UserService {
       );
   }
 
+  async hasRole(role: Role): Promise<boolean> {
+
+    const user = await this.auth.getCurrentUser();
+    const userProfile = await this.getUser(user!.id).toPromise();
+    return userProfile.roles.some(userRole => userRole.role === role);
+  }
+
   save(id: string, changes: ModifiedUser): Promise<UserProfile> {
     return this.plo.put<UserProfile>(`/users/${id}/save`, changes).toPromise();
   }
 
   search(term: string): Promise<User[]> {
     return this.plo
-      .get<User[]>('/users/suggestions', {params: {term}})
+      .get<User[]>('/users/suggestions', { params: { term } })
       .pipe(map(users => users.map(User.fromJson)))
       .toPromise();
   }
