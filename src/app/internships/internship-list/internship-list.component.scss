@@ -1,0 +1,41 @@
+@import "~src/styles/imports";
+
+:host {
+  @extend %component-defaults;
+  flex: 1;
+}
+
+.list-menu-button {
+  padding-right: 8px;
+  color: mat-foreground($theme, text);
+  font-size: mat-font-size($config, title);
+}
+
+.mat-column-name, .mat-column-interns, .mat-column-status {
+  flex: 2;
+}
+
+.status-circle {
+  border-radius: 4px;
+  height: 7px;
+  width: 7px;
+  display: inline-block;
+  margin-right: 5px;
+
+  &.active {
+    // Not using theme or palette here because we actually want the color green regardless of theme.
+    background: $seed-green;
+  }
+  &.dev {
+    background: deepskyblue;
+  }
+  &.pending {
+    background: orange;
+  }
+  &.stopped {
+    background: red;
+  }
+  &.finished {
+    background: gray;
+  }
+}

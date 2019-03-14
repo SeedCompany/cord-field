@@ -2,6 +2,7 @@ import { HttpErrorResponse } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
 import { MatSnackBar, MatSnackBarRef, SimpleSnackBar } from '@angular/material';
 import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
+import { AbstractViewState } from '@app/core/abstract-view-state';
 import { TitleAware, TitleProp } from '@app/core/decorators';
 import { LoggerService } from '@app/core/services/logger.service';
 import { SubscriptionComponent } from '@app/shared/components/subscription.component';
@@ -20,6 +21,7 @@ interface TabConfig {
   styleUrls: ['./project.component.scss'],
   providers: [
     ProjectViewStateService,
+    { provide: AbstractViewState, useExisting: ProjectViewStateService },
   ],
 })
 @TitleAware()

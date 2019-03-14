@@ -1,0 +1,19 @@
+<app-internship-name></app-internship-name>
+
+<nav mat-tab-nav-bar color="accent">
+  <a mat-tab-link
+     *ngFor="let tab of tabs; trackBy: trackTabsBy"
+     [routerLink]="tab.path"
+     routerLinkActive
+     #rla="routerLinkActive"
+     [active]="rla.isActive"
+  >{{ tab.label }}</a>
+  <app-save-discard-dial
+    [dirty]="showSaveFab"
+    [submitting]="submitting | async"
+    (save)="onSave()"
+    (discard)="onDiscard()"
+  ></app-save-discard-dial>
+</nav>
+
+<router-outlet></router-outlet>

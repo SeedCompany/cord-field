@@ -1,0 +1,13 @@
+<app-dialog-form
+  [formGroup]="form"
+  [handleSubmit]="onCreate"
+  title="New Internship"
+  submitText="CREATE"
+  failureText="Failed to create internship"
+>
+  <app-unique-text-field
+    formControlName="name"
+    [isTaken]="isNameTaken"
+    placeholder="Name"
+  ></app-unique-text-field>
+</app-dialog-form>

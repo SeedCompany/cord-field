@@ -1,5 +1,6 @@
 import { FieldConfig, returnId } from '@app/core/change-engine';
 import { buildEnum } from '@app/core/models/enum';
+import { Internship } from '@app/core/models/internship';
 import { Organization } from '@app/core/models/organization';
 import { Project } from '@app/core/models/project';
 import { generateObjectId, Omit } from '@app/core/util';
@@ -19,7 +20,7 @@ export class Budget {
   status: BudgetStatus;
   budgetDetails: BudgetDetails[];
 
-  static fromJson(project: Project, json: any): Budget {
+  static fromJson(project: Project | Internship, json: any): Budget {
     const budget = new Budget();
 
     budget.id = json.id;

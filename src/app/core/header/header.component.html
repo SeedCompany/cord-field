@@ -5,6 +5,7 @@
     </span>
 
     <a mat-button color="primary" routerLink="/projects" routerLinkActive="active">Projects</a>
+    <a mat-button color="primary" routerLink="/internships" routerLinkActive="active">Internships</a>
     <!--<a mat-button color="primary" routerLink="/tasks" routerLinkActive="active">Tasks</a>-->
     <a mat-button color="primary" routerLink="/languages" routerLinkActive="active">Languages</a>
     <a mat-button color="primary" routerLink="/people" routerLinkActive="active">People</a>
@@ -14,6 +15,7 @@
     </button>
     <mat-menu #addMenu="matMenu">
       <button mat-menu-item (click)="onCreateProject()">New Project</button>
+      <button mat-menu-item (click)="onCreateInternship()">New Internship</button>
       <button mat-menu-item *ngIf="canCreateUser" (click)="onCreatePerson()">New Person</button>
     </mat-menu>
 

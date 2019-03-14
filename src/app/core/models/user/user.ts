@@ -1,3 +1,4 @@
+import { FieldConfig, returnId, returnIdOrNull } from '@app/core/change-engine';
 import { firstLettersOfWords, maybeRedacted } from '@app/core/util';
 
 export class User {
@@ -48,4 +49,9 @@ export class User {
 
     return obj;
   }
+
+  static fieldConfig = (): FieldConfig<User | null, string | null> => ({
+    accessor: returnId,
+    toServer: returnIdOrNull,
+  });
 }

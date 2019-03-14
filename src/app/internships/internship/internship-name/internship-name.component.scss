@@ -1,0 +1,17 @@
+@import "~src/styles/imports";
+
+:host {
+  z-index: 10;
+}
+
+mat-toolbar {
+  padding-left: 3.6em;
+}
+
+app-display-or-edit-field {
+  min-width: 400px;
+
+  ::ng-deep input {
+    font-weight: mat-font-weight($config, title);
+  }
+}
