@@ -2,11 +2,11 @@ import { Component, OnInit } from '@angular/core';
 import { Project } from '@app/core/models/project';
 import { ProjectStatus } from '@app/core/models/project/status';
 import { ProjectService } from '@app/core/services/project.service';
-import { TypedFormControl } from '@app/core/util';
+import { skipEmptyViewState, TypedFormControl } from '@app/core/util';
 import { ProjectViewStateService } from '@app/projects/project-view-state.service';
-import { StatusOptions } from '@app/shared/components/status-select-workflow/status-select-workflow.component';
 import { SubscriptionComponent } from '@app/shared/components/subscription.component';
-import { takeUntil } from 'rxjs/operators';
+import { Observable } from 'rxjs';
+import { map, takeUntil } from 'rxjs/operators';
 
 @Component({
   selector: 'app-project-status',
@@ -17,6 +17,7 @@ export class ProjectStatusComponent extends SubscriptionComponent implements OnI
   readonly ProjectStatus = ProjectStatus;
 
   statusCtrl: TypedFormControl<ProjectStatus>;
+  project$: Observable<Project>;
   project: Project;
 
   constructor(private viewState: ProjectViewStateService,
@@ -30,7 +31,8 @@ export class ProjectStatusComponent extends SubscriptionComponent implements OnI
       unsubscribe: this.unsubscribe,
     });
 
-    this.viewState.project
+    this.project$ = this.viewState.project.pipe(skipEmptyViewState());
+    this.project$
       .pipe(
         takeUntil(this.unsubscribe),
       )
@@ -39,7 +41,7 @@ export class ProjectStatusComponent extends SubscriptionComponent implements OnI
       });
   }
 
-  findAvailableStatuses = (value: ProjectStatus): StatusOptions<ProjectStatus> => {
-    return this.projectService.getAvailableStatuses(this.project);
-  }
+  findAvailableStatuses = () => this.project$.pipe(
+    map(project => this.projectService.getAvailableStatuses(project)),
+  );
 }

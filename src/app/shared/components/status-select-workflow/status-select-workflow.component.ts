@@ -2,7 +2,8 @@ import { ChangeDetectorRef, Component, Input, NgZone, OnInit } from '@angular/co
 import { FormControl } from '@angular/forms';
 import { AbstractValueAccessor, ValueAccessorProvider } from '@app/core/classes/abstract-value-accessor.class';
 import { EnumList, EnumListEntry, GoodEnum } from '@app/core/models/enum';
-import { enableControl, TypedFormControl } from '@app/core/util';
+import { enableControl, MaybeObservable, maybeObservable, TypedFormControl } from '@app/core/util';
+import { combineLatest, of } from 'rxjs';
 import { filter, first, mapTo, switchMap, takeUntil } from 'rxjs/operators';
 
 export interface StatusOptions<T> {
@@ -26,7 +27,7 @@ export class StatusSelectWorkflowComponent<T extends GoodEnum<T>> extends Abstra
 
   @Input() placeholder = 'Status';
   @Input() enum: T;
-  @Input() findAvailableStatuses: (value: T) => StatusOptions<T>;
+  @Input() findAvailableStatuses: (value: T) => MaybeObservable<StatusOptions<T>>;
   @Input() original: T;
 
   statusCtrl = new FormControl() as TypedFormControl<T>;
@@ -37,25 +38,24 @@ export class StatusSelectWorkflowComponent<T extends GoodEnum<T>> extends Abstra
   }
 
   ngOnInit(): void {
-    this.externalChanges.subscribe(value => {
-      this.availableStatuses = value ? this.findAvailableStatuses(value) : emptyOptions;
-      const { transitions, overrides } = this.availableStatuses;
-      enableControl(this.statusCtrl, transitions.length > 0 || overrides.length > 0);
-    });
-
-    // Wait for select options to be rendered before setting value.
-    // Select component uses currently rendered options to "select" the value when setting.
-    // If there are no options rendered then changing value does nothing.
-    // What a PITA this was to figure out. This is exactly why declarative APIs (React) are better.
     this.externalChanges
       .pipe(
-        // on change, wait for stable zone aka rendering complete.
-        switchMap((status) => this.zone.onStable.pipe(first(), mapTo(status))),
+        switchMap((status) =>
+          combineLatest(
+            // Wait for select options to be rendered before setting value.
+            // Select component uses currently rendered options to "select" the value when setting.
+            // If there are no options rendered then changing value does nothing.
+            this.zone.onStable.pipe(first(), mapTo(status)),
+            // Also get available status for given status
+            status ? maybeObservable(this.findAvailableStatuses(status)).pipe(first()) : of(emptyOptions),
+          )),
         takeUntil(this.unsubscribe), // If destroying, don't try to update & detect changes
       )
-      .subscribe((status) => {
+      .subscribe(([status, availableStatuses]) => {
         // Now that changes have settled, change value, and detect changes to re-render
+        const { transitions, overrides } = this.availableStatuses = availableStatuses;
         this.statusCtrl.reset(status, { emitEvent: false });
+        enableControl(this.statusCtrl, transitions.length > 0 || overrides.length > 0);
         this.changeDetector.detectChanges();
       });
 
