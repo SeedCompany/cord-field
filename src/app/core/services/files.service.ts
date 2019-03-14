@@ -100,10 +100,7 @@ export class FilesService {
    */
   private updateFileVersion(temp: File, versionId: string): Observable<File> {
     return this.ploApi
-      .put<File>(`/files`, {
-        fileId: temp.id,
-        fileVersionId: versionId,
-      })
+      .put<File>(`/files/${temp.id}/version/${versionId}`, {})
       .pipe(map(file => fromJson(file)));
   }
 
