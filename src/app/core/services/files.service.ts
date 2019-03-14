@@ -113,7 +113,7 @@ export class FilesService {
     const result = await this.ploApi
       .get<{ url: string }>(`/files/${file.id}/download`, {
         params: {
-          fileVersionId: version ? version.id : file.versions[0].id,
+          fileVersionId: version ? version.id : file.versions[file.versions.length - 1].id,
         },
       })
       .toPromise();
