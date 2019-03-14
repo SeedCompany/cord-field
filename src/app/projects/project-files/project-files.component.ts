@@ -195,7 +195,13 @@ export class ProjectFilesComponent extends SubscriptionComponent implements Afte
       return;
     }
     const ref = this.snackBar.open(`Downloading ${node.name}`);
-    await this.fileService.download(node);
+    try {
+      await this.fileService.download(node);
+    } catch (e) {
+      ref.dismiss();
+      this.snackBar.open(`Failed to download ${node.name}`, undefined, { duration: 3000 });
+      return;
+    }
     ref.dismiss();
   }
 
