@@ -2,7 +2,7 @@ import { Component, Inject } from '@angular/core';
 import { AbstractControl, FormBuilder, FormGroup, ValidatorFn, Validators } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialog, MatDialogRef } from '@angular/material';
 import { Directory } from '@app/core/models/files';
-import { ProjectFilesService } from '@app/core/services/project-files.service';
+import { FilesService } from '@app/core/services/files.service';
 
 @Component({
   selector: 'app-create-directory-dialog',
@@ -23,7 +23,7 @@ export class CreateDirectoryDialogComponent {
   constructor(
     private dialogRef: MatDialogRef<CreateDirectoryDialogComponent, Directory>,
     @Inject(MAT_DIALOG_DATA) private parent: Directory,
-    private fileService: ProjectFilesService,
+    private fileService: FilesService,
     private fb: FormBuilder,
   ) {
     const uniqueNameValidator: ValidatorFn = control => {

@@ -1,18 +1,18 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Directory, File as CordFile, FileNode, FileNodeType, FileVersion, fromJson } from '@app/core/models/files';
+import { Directory, File, FileNode, FileNodeType, FileVersion, fromJson, UploadFile } from '@app/core/models/files';
 import { AuthenticationService } from '@app/core/services/authentication.service';
 import { DownloaderService } from '@app/core/services/downloader.service';
 import { clone } from '@app/core/util';
 import { DateTime } from 'luxon';
 import { Observable } from 'rxjs';
-import { map } from 'rxjs/operators';
+import { map, mapTo } from 'rxjs/operators';
 import { PloApiService } from './http/plo-api.service';
 
 @Injectable({
   providedIn: 'root',
 })
-export class ProjectFilesService {
+export class FilesService {
 
   constructor(
     private ploApi: PloApiService,
@@ -22,30 +22,33 @@ export class ProjectFilesService {
   ) {
   }
 
-  getDirectory(projectId: string, dirId?: string): Observable<Directory> {
+  getDirectory(dirId: string): Observable<Directory> {
     return this
       .ploApi
-      .get<Directory>(`/projects/${projectId}/files${dirId ? `/${dirId}` : ''}`)
-      .pipe(map(node => fromJson({ ...node, projectId: projectId })));
+      .get<Directory>(`/files/${dirId}`)
+      .pipe(map(node => fromJson(node)));
   }
 
-  async rename<T extends FileNode>(newName: string, node: T, parent: Directory): Promise<T> {
+  async rename<T extends FileNode>(name: string, node: T): Promise<T> {
     await this.ploApi
-      .put(`/projects/${node.projectId}/files/${node.id}`, {
-        parentId: parent.id,
-        name: newName,
-      })
+      .put(`/files/${node.id}`, { name })
       .toPromise();
 
-    const cloned = clone(node);
-    cloned.name = newName;
-    return cloned;
+    return Object.assign(clone(node), { name });
+  }
+
+  move(node: FileNode, newParent: Directory): Observable<Directory> {
+    return this.ploApi
+      .put(`/files/${node.id}`, { parentId: newParent.id })
+      .pipe(
+        mapTo(newParent.withChild(node)),
+        // TODO remove node from old parent
+      );
   }
 
   async createDirectory(parent: Directory, name: string): Promise<Directory> {
     const dir = await this.ploApi
-      .post<Directory>(`/projects/${parent.projectId}/files`, {
-        projectId: parent.projectId,
+      .post<Directory>(`/files`, {
         parentId: parent.id,
         name,
         type: FileNodeType.Directory,
@@ -55,34 +58,33 @@ export class ProjectFilesService {
     const owner = await this.authService.getCurrentUser()!;
     return fromJson({
       ...dir,
-      projectId: parent.projectId,
       createdAt: DateTime.local().toISO(),
       owner,
     });
   }
 
-  async upload(uploadFile: File, name: string, parent: Directory): Promise<CordFile> {
+  async upload(uploadFile: UploadFile, name: string, parent: Directory): Promise<File> {
     const { file: tempFile, preSignedUrl, fileVersionId } = await this.createNode(uploadFile, name, parent).toPromise();
     await this.uploadToS3(preSignedUrl, uploadFile);
     return this.updateFileVersion(tempFile, fileVersionId).toPromise();
   }
 
-  private createNode(uploadFile: File, name: string, parent: Directory) {
+  private createNode(uploadFile: UploadFile, name: string, parent: Directory) {
     return this.ploApi
-      .post<CordFile & { preSignedUrl: string, fileVersionId: string }>(`/projects/${parent.projectId}/files`, {
+      .post<File & { preSignedUrl: string, fileVersionId: string }>(`/files`, {
         name,
         parentId: parent.id,
         mimeType: uploadFile.type,
         type: FileNodeType.File,
       })
       .pipe(map(({ preSignedUrl, fileVersionId, ...file }) => ({
-        file: fromJson({ ...file, projectId: parent.projectId }),
+        file: fromJson(file),
         preSignedUrl,
         fileVersionId,
       })));
   }
 
-  private async uploadToS3(preSignedUrl: string, uploadFile: File): Promise<void> {
+  private async uploadToS3(preSignedUrl: string, uploadFile: UploadFile): Promise<void> {
     await this.http
       .put(preSignedUrl, uploadFile, {
         headers: {
@@ -96,25 +98,22 @@ export class ProjectFilesService {
   /**
    * Tell PLO to fetch new file info from S3
    */
-  private updateFileVersion(temp: CordFile, versionId: string): Observable<CordFile> {
+  private updateFileVersion(temp: File, versionId: string): Observable<File> {
     return this.ploApi
-      .put<CordFile>(`/projects/${temp.projectId}/files`, {
-        fileId: temp.id,
-        fileVersionId: versionId,
-      })
-      .pipe(map(file => fromJson({ ...file, projectId: temp.projectId })));
+      .put<File>(`/files/${temp.id}/version/${versionId}`, {})
+      .pipe(map(file => fromJson(file)));
   }
 
-  async download(file: CordFile, version?: FileVersion) {
+  async download(file: File, version?: FileVersion) {
     const url = await this.getDownloadUrl(file, version);
     await this.downloader.downloadUrl(url, file.name);
   }
 
-  private async getDownloadUrl(file: CordFile, version?: FileVersion): Promise<string> {
+  private async getDownloadUrl(file: File, version?: FileVersion): Promise<string> {
     const result = await this.ploApi
-      .get<{url: string}>(`/projects/${file.projectId}/files/download/${file.id}`, {
+      .get<{ url: string }>(`/files/${file.id}/download`, {
         params: {
-          fileVersionId: version ? version.id : file.versions[0].id,
+          fileVersionId: version ? version.id : file.versions[file.versions.length - 1].id,
         },
       })
       .toPromise();
@@ -123,6 +122,6 @@ export class ProjectFilesService {
   }
 
   async delete(node: FileNode): Promise<void> {
-    await this.ploApi.delete(`/projects/${node.projectId}/files/${node.id}`).toPromise();
+    await this.ploApi.delete(`/files/${node.id}`).toPromise();
   }
 }

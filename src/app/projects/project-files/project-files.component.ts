@@ -1,17 +1,18 @@
+import { HttpErrorResponse } from '@angular/common/http';
 import { AfterViewInit, Component, ViewChild } from '@angular/core';
 import { MatDialog, MatPaginator, MatSnackBar, MatSort, MatTableDataSource } from '@angular/material';
 import { ActivatedRoute, Router } from '@angular/router';
 import { TitleAware } from '@app/core/decorators';
-import { Directory, FileKeys, FileNode, FileNodeCategory } from '@app/core/models/files';
+import { Directory, FileKeys, FileNode, FileNodeCategory, UploadFile } from '@app/core/models/files';
 import { SUPPORTS_DOWNLOADS } from '@app/core/services/downloader.service';
-import { ProjectFilesService } from '@app/core/services/project-files.service';
-import { filterRequired } from '@app/core/util';
+import { FilesService } from '@app/core/services/files.service';
+import { filterRequired, skipEmptyViewState } from '@app/core/util';
 import { CreateDirectoryDialogComponent } from '@app/projects/project-files/create-directory-dialog/create-directory-dialog.component';
 import { FileRenameDialogComponent } from '@app/projects/project-files/file-rename-dialog/file-rename-dialog.component';
 import { OverwriteFileWarningComponent } from '@app/projects/project-files/overwrite-file-warning/overwrite-file-warning.component';
 import { SubscriptionComponent } from '@app/shared/components/subscription.component';
-import { BehaviorSubject, combineLatest, Observable } from 'rxjs';
-import { filter, map, startWith, switchMap, takeUntil } from 'rxjs/operators';
+import { BehaviorSubject, combineLatest, EMPTY, Observable } from 'rxjs';
+import { catchError, map, startWith, switchMap, takeUntil } from 'rxjs/operators';
 import { ProjectViewStateService } from '../project-view-state.service';
 
 @Component({
@@ -35,7 +36,7 @@ export class ProjectFilesComponent extends SubscriptionComponent implements Afte
   @ViewChild(MatSort) sort: MatSort;
 
   constructor(private activatedRoute: ActivatedRoute,
-              private fileService: ProjectFilesService,
+              private fileService: FilesService,
               private projectViewState: ProjectViewStateService,
               private router: Router,
               private dialog: MatDialog,
@@ -64,15 +65,30 @@ export class ProjectFilesComponent extends SubscriptionComponent implements Afte
 
     combineLatest(
       this.activatedRoute.queryParams,
-      this.projectViewState.project
-        .pipe(
-          filter(project => Boolean(project.id)),
-        ),
+      this.projectViewState.project.pipe(skipEmptyViewState()),
     )
       .pipe(
-        takeUntil(this.unsubscribe),
         switchMap(([params, project]) =>
-          this.fileService.getDirectory(project.id, params.parent)),
+          this.fileService.getDirectory(params.parent || project.id)
+            .pipe(
+              catchError(err => {
+                if (err instanceof HttpErrorResponse && err.status === 404) {
+                  this.snackBar.open('Could not find folder', undefined, { duration: 3000 });
+
+                  // If invalid parameter given, go to root
+                  if (params.parent && params.parent !== project.id) {
+                   this.router.navigate(['.'], {
+                     relativeTo: this.activatedRoute,
+                   });
+                 }
+                } else {
+                  this.snackBar.open('Failed to fetch folder', undefined, { duration: 3000 });
+                }
+                return EMPTY;
+              }),
+            ),
+        ),
+        takeUntil(this.unsubscribe),
       )
       .subscribe(this.directory$);
 
@@ -122,7 +138,7 @@ export class ProjectFilesComponent extends SubscriptionComponent implements Afte
       });
   }
 
-  private async uploadFile(uploadFile: File, directory: Directory, name = uploadFile.name) {
+  private async uploadFile(uploadFile: UploadFile, directory: Directory, name = uploadFile.name) {
     const ref = this.snackBar.open(`Uploading ${name}`);
     const notify = (message: string) => {
       ref.dismiss();
@@ -179,7 +195,13 @@ export class ProjectFilesComponent extends SubscriptionComponent implements Afte
       return;
     }
     const ref = this.snackBar.open(`Downloading ${node.name}`);
-    await this.fileService.download(node);
+    try {
+      await this.fileService.download(node);
+    } catch (e) {
+      ref.dismiss();
+      this.snackBar.open(`Failed to download ${node.name}`, undefined, { duration: 3000 });
+      return;
+    }
     ref.dismiss();
   }
 

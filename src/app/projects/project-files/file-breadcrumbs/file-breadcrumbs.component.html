@@ -4,15 +4,17 @@
   Files
 </button>
 <ng-container *ngFor="let parent of directory?.parents; trackBy: trackParentRef">
-  <mat-icon color="primary">chevron_right</mat-icon>
-  <button mat-button
-          class="breadcrumb-button"
-          routerLink="."
-          [queryParams]="{parent: parent.id}">
-    {{ parent.name }}
-  </button>
+  <ng-container *ngIf="parent.parentId">
+    <mat-icon color="primary">chevron_right</mat-icon>
+    <button mat-button
+            class="breadcrumb-button"
+            routerLink="."
+            [queryParams]="{parent: parent.id}">
+      {{ parent.name }}
+    </button>
+  </ng-container>
 </ng-container>
-<ng-container *ngIf="directory?.id">
+<ng-container *ngIf="directory?.parents.length > 0">
   <mat-icon color="primary">chevron_right</mat-icon>
   <button mat-button class="breadcrumb-button">
     {{ directory?.name }}

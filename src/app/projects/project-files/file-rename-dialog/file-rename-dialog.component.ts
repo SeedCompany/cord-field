@@ -2,7 +2,7 @@ import { Component, Inject } from '@angular/core';
 import { AbstractControl, FormBuilder, FormGroup, ValidatorFn, Validators } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialog, MatDialogRef } from '@angular/material';
 import { Directory, FileNode, FileNodeType } from '@app/core/models/files';
-import { ProjectFilesService } from '@app/core/services/project-files.service';
+import { FilesService } from '@app/core/services/files.service';
 
 @Component({
   selector: 'app-file-rename-dialog',
@@ -28,7 +28,7 @@ export class FileRenameDialogComponent {
   constructor(
     private dialogRef: MatDialogRef<FileRenameDialogComponent, FileNode>,
     @Inject(MAT_DIALOG_DATA) {parent, node}: {parent: Directory, node: FileNode},
-    private fileService: ProjectFilesService,
+    private fileService: FilesService,
     private fb: FormBuilder,
   ) {
     this.node = node;
@@ -60,6 +60,6 @@ export class FileRenameDialogComponent {
       return;
     }
 
-    return this.fileService.rename(newName, this.node, this.parent);
+    return this.fileService.rename(newName, this.node);
   }
 }
