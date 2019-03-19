@@ -36,7 +36,10 @@ const config: ChangeConfig<EditableInternship> = {
     ...Partnership.fieldConfigList(),
     forceRefresh: true,
   },
-  team: TeamMember.fieldConfigList(),
+  team: {
+    ...TeamMember.fieldConfigList(),
+    forceRefresh: true, // Team (interns) changes engagement
+  },
   budgets: Budget.fieldConfigList(),
 };
 
