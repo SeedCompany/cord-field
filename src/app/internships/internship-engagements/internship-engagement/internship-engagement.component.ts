@@ -16,7 +16,6 @@ import { InternshipService } from '@app/core/services/internship.service';
 import { ExtractKeys, Omit, skipEmptyViewState, TypedFormGroup } from '@app/core/util';
 import { FormGroupItemOptions } from '@app/core/view-state-form-builder';
 import { EngagementViewStateService } from '@app/internships/engagement-view-state.service';
-import { emptyOptions, StatusOptions } from '@app/shared/components/status-select-workflow/status-select-workflow.component';
 import { SubscriptionComponent } from '@app/shared/components/subscription.component';
 import { BehaviorSubject, merge, Observable } from 'rxjs';
 import { map, startWith, takeUntil } from 'rxjs/operators';
@@ -142,9 +141,9 @@ export class InternshipEngagementComponent extends SubscriptionComponent impleme
       .subscribe(s => this.isSubmitting = s);
   }
 
-  findAvailableStatuses = (status: EngagementStatus): StatusOptions<EngagementStatus> => {
-    return this.engagement ? this.internships.getEngagementAvailableStatuses(this.engagement) : emptyOptions;
-  };
+  findAvailableStatuses = () => this.engagement$.pipe(
+    map(engagement => this.internships.getEngagementAvailableStatuses(engagement)),
+  );
 
   async onSave(): Promise<void> {
     try {
