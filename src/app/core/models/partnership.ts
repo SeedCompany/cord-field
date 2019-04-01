@@ -80,7 +80,8 @@ export class Partnership {
 }
 
 export enum PartnershipType {
-  Managing = 'm',
+  ManagingFieldEngaged = 'mfe',
+  ManagingFunded = 'mf',
   Funding = 'f',
   Impact = 'i',
   Technical = 't',
@@ -88,7 +89,8 @@ export enum PartnershipType {
 }
 export namespace PartnershipType {
   export const {entries, forUI, values, trackEntryBy, trackValueBy} = buildEnum(PartnershipType, {
-    [PartnershipType.Managing]: 'Managing',
+    [PartnershipType.ManagingFieldEngaged]: 'Managing - Field Engaged',
+    [PartnershipType.ManagingFunded]: 'Managing - Funded',
     [PartnershipType.Funding]: 'Funding',
     [PartnershipType.Impact]: 'Impact',
     [PartnershipType.Technical]: 'Technical',
