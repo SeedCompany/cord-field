@@ -3,8 +3,8 @@ import { buildEnum } from '@app/core/models/enum';
 export enum InternshipStatus {
   EarlyConversations = 'early_conversations',
   PendingConceptApproval = 'pending_concept_approval',
-  PrepForConsultantEndorsement = 'dev_for_consultant_review',
-  PendingConsultantEndorsement = 'pending_consultant_endorsement',
+  PrepForMentorEndorsement = 'dev_for_mentor_review',
+  PendingMentorEndorsement = 'pending_mentor_endorsement',
   PrepForFinancialEndorsement = 'dev_for_financial_endorsement',
   PendingFinancialEndorsement = 'pending_financial_analyst_endorsement',
   FinalizingProposal = 'finalizing_proposal',
@@ -25,8 +25,8 @@ export namespace InternshipStatus {
   export const { entries, forUI, values, length, trackEntryBy, trackValueBy } = buildEnum<InternshipStatus>(Enum, {
     [Enum.EarlyConversations]: 'Early Conversations',
     [Enum.PendingConceptApproval]: 'Pending Concept Approval',
-    [Enum.PrepForConsultantEndorsement]: 'Prep for Consultant Endorsement',
-    [Enum.PendingConsultantEndorsement]: 'Pending Consultant Endorsement',
+    [Enum.PrepForMentorEndorsement]: 'Prep for Mentor Endorsement',
+    [Enum.PendingMentorEndorsement]: 'Pending Mentor Endorsement',
     [Enum.PrepForFinancialEndorsement]: 'Prep for Financial Endorsement',
     [Enum.PendingFinancialEndorsement]: 'Pending Financial Endorsement',
     [Enum.FinalizingProposal]: 'Finalizing Proposal',
@@ -62,13 +62,13 @@ export namespace InternshipStatus {
   export namespace Grouping {
     export const InDevelopment = [
       Enum.EarlyConversations,
-      Enum.PrepForConsultantEndorsement,
+      Enum.PrepForMentorEndorsement,
       Enum.PrepForFinancialEndorsement,
       Enum.FinalizingProposal,
     ];
     export const Pending = [
       Enum.PendingConceptApproval,
-      Enum.PendingConsultantEndorsement,
+      Enum.PendingMentorEndorsement,
       Enum.PendingFinancialEndorsement,
       Enum.PendingAreaDirectorApproval,
       Enum.PendingRegionalDirectorApproval,
