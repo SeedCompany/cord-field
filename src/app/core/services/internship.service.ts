@@ -13,7 +13,6 @@ import { ModifiedPartnerships } from '@app/core/models/partnership';
 import { Sensitivity } from '@app/core/models/sensitivity';
 import { ModifiedTeamMembers } from '@app/core/models/team-member';
 import { ProjectEngagementService } from '@app/core/services/project-engagement.service';
-import { ProjectService } from '@app/core/services/project.service';
 import { buildDateFilter, DateFilterAPI, toIds } from '@app/core/util/list-filters';
 import { ApiOptions as ListApiOptions, listOptionsToHttpParams, makeListRequest } from '@app/core/util/list-views';
 import { StatusOptions } from '@app/shared/components/status-select-workflow/status-select-workflow.component';
@@ -48,7 +47,6 @@ export class InternshipService {
 
   constructor(
     private api: PloApiService,
-    private projects: ProjectService,
     private projectEngagements: ProjectEngagementService,
   ) {
   }
@@ -95,7 +93,76 @@ export class InternshipService {
   }
 
   getAvailableStatuses(internship: Internship): StatusOptions<InternshipStatus> {
-    return this.projects.getAvailableStatuses(internship);
+    const transitions = this.getAvailableStatusesInner(internship.status)
+      .filter(([text, status]) => !status || internship.possibleStatuses.includes(status))
+      .map(([ui, value]) => ({ ui, value }));
+    const bypassWorkflow = internship.possibleStatuses.length === InternshipStatus.length;
+    const overrides = bypassWorkflow
+      ? InternshipStatus.entries()
+        .filter(entry => entry.value !== internship.status)
+      : [];
+    return { transitions, overrides };
+  }
+
+  private getAvailableStatusesInner(status: InternshipStatus): Array<[string, InternshipStatus]> {
+    switch (status) {
+      case InternshipStatus.EarlyConversations: // FC
+        return [
+          ['Submit for Concept Approval', InternshipStatus.PendingConceptApproval],
+          [`End Development`, InternshipStatus.DidNotDevelop],
+        ];
+      case InternshipStatus.PendingConceptApproval: // AD
+        return [
+          ['Approve Concept', InternshipStatus.PrepForConsultantEndorsement],
+          ['Send Back for Corrections to Concept Approval', InternshipStatus.EarlyConversations],
+          ['Reject', InternshipStatus.Rejected],
+        ];
+      case InternshipStatus.PrepForConsultantEndorsement: // FC
+        return [
+          ['Submit for Consultant Endorsement', InternshipStatus.PendingConsultantEndorsement],
+          ['End Development', InternshipStatus.DidNotDevelop],
+        ];
+      case InternshipStatus.PendingConsultantEndorsement: // Consultant
+        return [
+          ['Endorse Plan', InternshipStatus.PrepForFinancialEndorsement],
+          ['Do Not Endorse Plan', InternshipStatus.PrepForFinancialEndorsement],
+        ];
+      case InternshipStatus.PrepForFinancialEndorsement: // FC
+        return [
+          ['Submit for Financial Endorsement', InternshipStatus.PendingFinancialEndorsement],
+          ['End Development', InternshipStatus.DidNotDevelop],
+        ];
+      case InternshipStatus.PendingFinancialEndorsement: // FA
+        return [
+          ['Strongly Endorse', InternshipStatus.FinalizingProposal],
+          ['Endorse with Hesitation', InternshipStatus.FinalizingProposal],
+        ];
+      case InternshipStatus.FinalizingProposal: // FC
+        return [
+          ['Submit for Area Director Approval', InternshipStatus.PendingAreaDirectorApproval],
+          ['End Development', InternshipStatus.Active],
+          ['Hold Project', InternshipStatus.OnHoldFinanceConfirmation],
+          ['Reject', InternshipStatus.Rejected],
+        ];
+      case InternshipStatus.OnHoldFinanceConfirmation: // FA
+        return [
+          ['Confirm Project', InternshipStatus.Active],
+          ['Reject', InternshipStatus.Rejected],
+        ];
+      case InternshipStatus.Active:
+        return [
+          ['Suspend Project', InternshipStatus.Suspended],
+          ['Terminate Project', InternshipStatus.Terminated],
+          ['Complete Project', InternshipStatus.Completed],
+        ];
+      case InternshipStatus.Suspended:
+        return [
+          ['Reactivate Project', InternshipStatus.Active],
+          ['Terminate Project', InternshipStatus.Terminated],
+        ];
+      default:
+        return [];
+    }
   }
 
   saveEngagement(id: string, data: Partial<EditableInternshipEngagement>) {
