@@ -21,7 +21,15 @@ const routes: Routes = [
     children: [
       { path: '', redirectTo: 'overview', pathMatch: 'full' },
       { path: 'overview', component: InternshipOverviewComponent, data: { acceptDirty: true }, canDeactivate: [DirtyGuard] },
-      { path: 'forms', component: ProposalAndFcRecommendationComponent, data: { acceptDirty: true }, canDeactivate: [DirtyGuard] },
+      {
+        path: 'forms',
+        component: ProposalAndFcRecommendationComponent,
+        data: {
+          acceptDirty: true,
+          isInternship: true,
+        },
+        canDeactivate: [DirtyGuard],
+      },
       {
         path: 'engagements',
         component: InternshipEngagementsComponent,

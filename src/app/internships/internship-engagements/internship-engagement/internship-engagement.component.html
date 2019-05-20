@@ -93,7 +93,7 @@
           <input matInput
                  formControlName="completeDate"
                  [matDatepicker]="completeDatePicker"
-                 placeholder="Translation Complete Date">
+                 placeholder="Growth Plan Complete Date">
           <mat-datepicker-toggle matSuffix [for]="completeDatePicker"></mat-datepicker-toggle>
           <mat-datepicker #completeDatePicker></mat-datepicker>
           <mat-error *ngIf="completeDate.errors?.matDatepickerParse">Invalid Date</mat-error>
@@ -120,14 +120,14 @@
         </mat-form-field>
 
         <mat-checkbox formControlName="isCeremonyPlanned">
-          Is a dedication planned?
+          Is a certification planned?
         </mat-checkbox>
 
         <mat-form-field color="accent" class="ceremony">
           <input matInput
                  formControlName="ceremonyEstimatedDate"
                  [matDatepicker]="ceremonyEstimatedDatePicker"
-                 placeholder="Estimated Dedication Date">
+                 placeholder="Estimated Certification Date">
           <mat-datepicker-toggle matSuffix [for]="ceremonyEstimatedDatePicker"></mat-datepicker-toggle>
           <mat-datepicker #ceremonyEstimatedDatePicker></mat-datepicker>
           <mat-error *ngIf="ceremonyEstimatedDate.errors?.matDatepickerParse">Invalid Date</mat-error>
@@ -137,7 +137,7 @@
           <input matInput
                  formControlName="ceremonyActualDate"
                  [matDatepicker]="ceremonyActualDatePicker"
-                 placeholder="Actual Dedication Date">
+                 placeholder="Actual Certification Date">
           <mat-datepicker-toggle matSuffix [for]="ceremonyActualDatePicker"></mat-datepicker-toggle>
           <mat-datepicker #ceremonyActualDatePicker></mat-datepicker>
           <mat-error *ngIf="ceremonyActualDate.errors?.matDatepickerParse">Invalid Date</mat-error>
