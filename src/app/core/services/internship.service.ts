@@ -119,7 +119,7 @@ export class InternshipService {
         ];
       case InternshipStatus.PrepForMentorEndorsement: // FC
         return [
-          ['Submit for Consultant Endorsement', InternshipStatus.PendingMentorEndorsement],
+          ['Submit for Mentor Endorsement', InternshipStatus.PendingMentorEndorsement],
           ['End Development', InternshipStatus.DidNotDevelop],
         ];
       case InternshipStatus.PendingMentorEndorsement: // Mentor
