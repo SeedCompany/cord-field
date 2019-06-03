@@ -81,6 +81,13 @@ export class TeamComponent extends SubscriptionComponent implements OnInit, Afte
   }
 
   onChangeRoles(teamMember: TeamMember) {
+    if (!this.subject.location) {
+      this.snackBar.open('Set the project/internship location to change roles', undefined, {
+        duration: 3000,
+      });
+      return;
+    }
+
     TeamMemberRoleDialogComponent.open(this.dialog, teamMember, this.subject, this.viewState);
   }
 }
