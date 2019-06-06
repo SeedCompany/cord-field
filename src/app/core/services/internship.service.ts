@@ -113,16 +113,16 @@ export class InternshipService {
         ];
       case InternshipStatus.PendingConceptApproval: // AD
         return [
-          ['Approve Concept', InternshipStatus.PrepForMentorEndorsement],
+          ['Approve Concept', InternshipStatus.PrepForGrowthPlanEndorsement],
           ['Send Back for Corrections to Concept Approval', InternshipStatus.EarlyConversations],
           ['Reject', InternshipStatus.Rejected],
         ];
-      case InternshipStatus.PrepForMentorEndorsement: // FC
+      case InternshipStatus.PrepForGrowthPlanEndorsement: // FC
         return [
-          ['Submit for Mentor Endorsement', InternshipStatus.PendingMentorEndorsement],
+          ['Submit for Growth Plan Endorsement', InternshipStatus.PendingGrowthPlanEndorsement],
           ['End Development', InternshipStatus.DidNotDevelop],
         ];
-      case InternshipStatus.PendingMentorEndorsement: // Mentor
+      case InternshipStatus.PendingGrowthPlanEndorsement: // Mentor
         return [
           ['Endorse Plan', InternshipStatus.PrepForFinancialEndorsement],
           ['Do Not Endorse Plan', InternshipStatus.PrepForFinancialEndorsement],
