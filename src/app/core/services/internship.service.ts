@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { ModifiedBudgets } from '@app/core/models/budget';
 import {
-  EditableInternshipEngagement,
+  EditableInternshipEngagementForSaveAPI,
   Internship,
   InternshipEngagement,
   InternshipEngagementStatus,
@@ -178,7 +178,7 @@ export class InternshipService {
     }
   }
 
-  saveEngagement(id: string, data: Partial<EditableInternshipEngagement>) {
+  saveEngagement(id: string, data: Partial<EditableInternshipEngagementForSaveAPI>) {
     return this.api.put(`/internships/engagements/${id}/save`, data).toPromise();
   }
 

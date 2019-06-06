@@ -14,7 +14,7 @@ export class ProjectEngagementService {
   constructor(private ploApi: PloApiService) {
   }
 
-  async save(engagementId: string, data: EditableEngagement): Promise<void> {
+  async save(engagementId: string, data: Partial<EditableEngagement>): Promise<void> {
     await this.ploApi
       .put(`/engagements/${engagementId}/save`, data)
       .toPromise();

@@ -1,7 +1,7 @@
 import { Location } from '@app/core/models/location';
 import { ProductMethodology } from '@app/core/models/product';
 import { User } from '@app/core/models/user';
-import { clone, ifValue, maybeDate } from '@app/core/util';
+import { clone, ifValue, maybeDate, Omit } from '@app/core/util';
 import { DateTime } from 'luxon';
 import { InternshipEngagementPosition } from './position';
 import { InternshipEngagementStatus } from './status';
@@ -26,6 +26,11 @@ export class EditableInternshipEngagement {
   ceremonyEstimatedDate: DateTime | null;
   ceremonyActualDate: DateTime | null;
 }
+
+export type EditableInternshipEngagementForSaveAPI = Omit<EditableInternshipEngagement, 'countryOfOrigin' | 'mentor'> & {
+  mentorId: string;
+  countryOfOriginId: string;
+};
 
 export class InternshipEngagement extends EditableInternshipEngagement {
   id: string;
