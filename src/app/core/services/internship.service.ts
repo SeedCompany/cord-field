@@ -10,6 +10,7 @@ import {
   InternshipStatus,
 } from '@app/core/models/internship';
 import { ModifiedPartnerships } from '@app/core/models/partnership';
+import { ProjectStatus } from '@app/core/models/project';
 import { Sensitivity } from '@app/core/models/sensitivity';
 import { ModifiedTeamMembers } from '@app/core/models/team-member';
 import { ProjectEngagementService } from '@app/core/services/project-engagement.service';
@@ -136,6 +137,18 @@ export class InternshipService {
         return [
           ['Strongly Endorse', InternshipStatus.FinalizingProposal],
           ['Endorse with Hesitation', InternshipStatus.FinalizingProposal],
+        ];
+      case InternshipStatus.PendingAreaDirectorApproval: // AD
+        return [
+          ['Endorse with Hesitation', InternshipStatus.FinalizingProposal],
+          ['Pending Regional Director Approval', InternshipStatus.PendingRegionalDirectorApproval],
+          ['Reject', InternshipStatus.Rejected],
+        ];
+      case InternshipStatus.PendingRegionalDirectorApproval: // RD
+        return [
+          ['Endorse with Hesitation', InternshipStatus.FinalizingProposal],
+          ['Pending Regional Director Approval', InternshipStatus.PendingFinanceConfirmation],
+          ['Reject', InternshipStatus.Rejected],
         ];
       case InternshipStatus.FinalizingProposal: // FC
         return [
