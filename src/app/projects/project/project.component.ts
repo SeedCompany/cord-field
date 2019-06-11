@@ -106,7 +106,7 @@ export class ProjectComponent extends SubscriptionComponent implements OnInit, T
     try {
       await this.projectViewState.save();
     } catch (e) {
-      const msg = e.status === 403 ? 'Changes requested are forbidden' : 'Failed to save project';
+      const msg = e.status === 403 ? 'You do not have permission to make these changes' : 'Failed to save project';
       this.snackBarRef = this.snackBar.open(msg, undefined, {
         duration: 3000,
       });

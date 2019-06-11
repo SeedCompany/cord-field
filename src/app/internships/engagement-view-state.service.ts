@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import {
   EditableInternshipEngagement as EditableEngagement,
+  EditableInternshipEngagementForSaveAPI as EditableEngagementForSaveAPI,
   EmptyInternshipEngagement as EmptyEngagement,
   Internship,
   InternshipEngagement as Engagement,
@@ -64,10 +65,9 @@ export class EngagementViewStateService extends AbstractViewState<Engagement, Pa
       .subscribe(this.onLoad);
   };
 
-  protected async onSave(original: Engagement, changes: Partial<EditableEngagement>): Promise<SaveResult<Engagement>> {
-    await this.internships.saveEngagement(original.id, changes);
-    const engagement = original.withChanges(changes);
-    this.internshipViewState.updateEngagement(engagement);
+  protected async onSave(next: Engagement, changes: Partial<EditableEngagementForSaveAPI>): Promise<SaveResult<Engagement>> {
+    await this.internships.saveEngagement(next.id, changes);
+    this.internshipViewState.updateEngagement(next);
     return {};
   }
 
