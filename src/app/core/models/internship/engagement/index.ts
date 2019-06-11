@@ -65,10 +65,6 @@ export class InternshipEngagement extends EditableInternshipEngagement {
 
     return engagement;
   }
-
-  withChanges(modified: Partial<EditableInternshipEngagement>): InternshipEngagement {
-    return Object.assign(clone(this), modified);
-  }
 }
 
 export const EmptyInternshipEngagement = InternshipEngagement.fromJson({
