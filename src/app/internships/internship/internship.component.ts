@@ -103,7 +103,8 @@ export class InternshipComponent extends SubscriptionComponent implements OnInit
     try {
       await this.viewState.save();
     } catch (e) {
-      this.snackBarRef = this.snackBar.open('Failed to save internship', undefined, {
+      const msg = e.status === 403 ? 'Changes requested are forbidden' : 'Failed to save internship';
+      this.snackBarRef = this.snackBar.open(msg, undefined, {
         duration: 3000,
       });
       return;
