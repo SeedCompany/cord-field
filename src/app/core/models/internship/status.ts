@@ -3,9 +3,9 @@ import { buildEnum } from '@app/core/models/enum';
 export enum InternshipStatus {
   EarlyConversations = 'early_conversations',
   PendingConceptApproval = 'pending_concept_approval',
-  PrepForGrowthPlanEndorsement = 'dev_for_growth_plan_endorsement',
+  PrepForGrowthPlanEndorsement = 'prep_for_growth_plan_endorsement',
   PendingGrowthPlanEndorsement = 'pending_growth_plan_endorsement',
-  PrepForFinancialEndorsement = 'dev_for_financial_endorsement',
+  PrepForFinancialEndorsement = 'prep_for_financial_endorsement',
   PendingFinancialEndorsement = 'pending_financial_analyst_endorsement',
   FinalizingProposal = 'finalizing_proposal',
   PendingAreaDirectorApproval = 'pending_ad_approval',
