@@ -144,18 +144,12 @@ export class ProjectService {
           ['Approve for Finance Confirmation', ProjectStatus.PendingFinanceConfirmation],
           ['Approve for Regional Director Approval', ProjectStatus.PendingRegionalDirectorApproval],
           ['Send Back for Corrections', ProjectStatus.FinalizingProposal],
-          ['Send Back for Corrections to Concept Approval', ProjectStatus.EarlyConversations],
-          ['Send Back for Corrections to Consultant Endorsement', ProjectStatus.PendingConsultantEndorsement],
-          ['Send Back for Corrections to Financial Endorsement', ProjectStatus.PendingFinancialEndorsement],
           ['Reject', ProjectStatus.Rejected],
         ];
       case ProjectStatus.PendingRegionalDirectorApproval: // RD
         return [
-          ['Send Back for Corrections to Concept Approval', ProjectStatus.EarlyConversations],
-          ['Send Back for Corrections to Consultant Endorsement', ProjectStatus.PendingConsultantEndorsement],
-          ['Send Back for Corrections to Financial Endorsement', ProjectStatus.PendingFinancialEndorsement],
-          ['Send Back for Corrections to Area Director Approval', ProjectStatus.PendingAreaDirectorApproval],
           ['Approve for Finance Confirmation', ProjectStatus.PendingFinanceConfirmation],
+          ['Send Back for Corrections to Area Director Approval', ProjectStatus.PendingAreaDirectorApproval],
           ['Send Back for Corrections', ProjectStatus.EarlyConversations],
           ['Reject', ProjectStatus.Rejected],
         ];
