@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { AbstractControl, FormGroup } from '@angular/forms';
+import { AbstractControl } from '@angular/forms';
 import { MatSnackBar } from '@angular/material';
 import { ActivatedRoute } from '@angular/router';
 import { TitleAware, TitleProp } from '@app/core/decorators';
@@ -14,7 +14,6 @@ import { ProjectEngagementService as EngagementService } from '@app/core/service
 import { ExtractKeys, Omit, TypedFormGroup } from '@app/core/util';
 import { FormGroupItemOptions } from '@app/core/view-state-form-builder';
 import { EngagementViewStateService } from '@app/projects/engagement-view-state.service';
-import { emptyOptions, StatusOptions } from '@app/shared/components/status-select-workflow/status-select-workflow.component';
 import { SubscriptionComponent } from '@app/shared/components/subscription.component';
 import { BehaviorSubject, merge, Observable } from 'rxjs';
 import { filter, map, startWith, takeUntil } from 'rxjs/operators';
@@ -141,9 +140,9 @@ export class ProjectEngagementComponent extends SubscriptionComponent implements
       .subscribe(s => this.isSubmitting = s);
   }
 
-  findAvailableStatuses = (status: EngagementStatus): StatusOptions<EngagementStatus> => {
-    return this.engagement ? this.engagementService.getAvailableStatuses(this.engagement) : emptyOptions;
-  };
+  findAvailableStatuses = () => this.engagement$.pipe(
+    map(engagement => this.engagementService.getAvailableStatuses(engagement)),
+  );
 
   async onSave(): Promise<void> {
     try {

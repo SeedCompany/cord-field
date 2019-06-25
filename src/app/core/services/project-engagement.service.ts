@@ -1,7 +1,6 @@
 import { Injectable } from '@angular/core';
 import {
   EditableProjectEngagement as EditableEngagement,
-  ProjectEngagement as Engagement,
   ProjectEngagementStatus as EngagementStatus,
 } from '@app/core/models/project';
 import { PloApiService } from '@app/core/services/http/plo-api.service';
@@ -15,13 +14,13 @@ export class ProjectEngagementService {
   constructor(private ploApi: PloApiService) {
   }
 
-  async save(engagementId: string, data: EditableEngagement): Promise<void> {
+  async save(engagementId: string, data: Partial<EditableEngagement>): Promise<void> {
     await this.ploApi
       .put(`/engagements/${engagementId}/save`, data)
       .toPromise();
   }
 
-  getAvailableStatuses(engagement: Engagement): StatusOptions<EngagementStatus> {
+  getAvailableStatuses(engagement: { status: EngagementStatus, possibleStatuses: EngagementStatus[] }): StatusOptions<EngagementStatus> {
     const transitions = this.getAvailableStatusesInner(engagement.status)
       .filter(([text, status]) => !status || engagement.possibleStatuses.includes(status))
       .map(([ui, value]) => ({ ui, value }));

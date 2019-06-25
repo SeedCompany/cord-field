@@ -1,0 +1,29 @@
+<ng-container *ngIf="internship?.location || internship?.deptId">
+  <div class="info">
+    <div *ngIf="internship?.location" class="location mat-title">
+      {{ internship?.publicLocation?.displayName }}
+    </div>
+    <div *ngIf="internship?.deptId" class="dept-id mat-subheading-1">
+      Department ID: {{ internship?.deptId }}
+    </div>
+  </div>
+  <mat-divider></mat-divider>
+</ng-container>
+
+<div [formGroup]="$any(form)" class="info">
+  <mat-form-field color="accent">
+    <mat-select placeholder="Sensitivity" formControlName="sensitivity">
+      <mat-option *ngFor="let sens of Sensitivity.entries(); trackBy: Sensitivity.trackEntryBy"
+                  [value]="sens.value">
+        {{ sens.ui }}
+      </mat-option>
+    </mat-select>
+  </mat-form-field>
+  <app-status-select-workflow
+    [enum]="InternshipStatus"
+    [findAvailableStatuses]="findAvailableStatuses"
+    [original]="internship?.status"
+    formControlName="status"
+  ></app-status-select-workflow>
+</div>
+<mat-divider></mat-divider>

@@ -1,0 +1,71 @@
+@import "~src/styles/imports";
+
+:host {
+  @extend %component-defaults;
+  flex: 1;
+}
+
+app-save-discard-dial {
+  position: absolute;
+  top: -($mat-fab-height / 2);
+  right: 24px; // matches tab padding
+  z-index: 2;
+}
+
+form {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+
+  // 24px spacing around cards
+  margin: 12px;
+  mat-card {
+    margin: 12px;
+  }
+}
+
+.row {
+  display: flex;
+  flex-wrap: wrap;
+  &:last-of-type {
+    align-items: start;
+  }
+}
+
+mat-card {
+  min-width: 200px;
+}
+
+mat-card-content {
+  display: flex;
+  flex-direction: column;
+}
+
+// Don't show pointer passed clickable text/box
+mat-checkbox {
+  align-self: flex-start;
+}
+
+mat-card.description {
+  min-width: 400px;
+}
+
+mat-card.dates {
+  ::ng-deep .mat-list {
+    padding-top: 0;
+
+    .mat-list-item {
+      height: 48px; // dense list without the font size changes
+    }
+    .mat-list-item-content {
+      padding: 0;
+    }
+    .mat-list-text {
+      flex-direction: column-reverse;
+    }
+  }
+
+  .ceremony {
+    margin-left: 28px;
+  }
+}

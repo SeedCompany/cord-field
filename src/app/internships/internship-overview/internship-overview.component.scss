@@ -1,0 +1,27 @@
+@import "~src/styles/imports";
+
+:host {
+  @extend %component-defaults;
+  flex: 1;
+  flex-direction: row;
+}
+
+app-internship-overview-sidebar {
+  width: 300px;
+  @include mat-elevation(2);
+  z-index: 1;
+}
+
+.main {
+  flex: 1;
+  padding: 24px;
+  overflow-y: scroll;
+
+  > * {
+    margin-bottom: 24px;
+
+    &:last-child {
+      margin-bottom: 0;
+    }
+  }
+}

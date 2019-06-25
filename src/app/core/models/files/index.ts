@@ -3,8 +3,9 @@ import { clone } from '@app/core/util';
 import { DateTime } from 'luxon';
 import { FileNodeCategory } from './category';
 import { FileNodeType } from './type';
+import { UploadFile } from './upload-file';
 
-export { FileNodeCategory, FileNodeType };
+export { FileNodeCategory, FileNodeType, UploadFile };
 
 export type FileNode = File | Directory;
 
@@ -15,7 +16,6 @@ export type FileKeys = Exclude<Keys, 'isFile' | 'isDir'>;
 
 class BaseNode {
   id: string;
-  projectId: string;
   type: FileNodeType;
   category: FileNodeCategory;
   name: string;
@@ -69,7 +69,7 @@ export function fromJson(json: any): FileNode {
   let node;
   if (json.type === FileNodeType.Directory) {
     node = new Directory();
-    node.children = ((json.children || []) as FileNode[]).map(child => fromJson({...child, projectId: json.projectId}));
+    node.children = ((json.children || []) as FileNode[]).map(child => fromJson(child));
   } else if (json.type === FileNodeType.File) {
     node = new File();
     node.modifiedAt = json.modifiedAt ? DateTime.fromISO(json.modifiedAt) : null;
@@ -80,13 +80,12 @@ export function fromJson(json: any): FileNode {
   }
 
   node.id = json.id;
-  node.projectId = json.projectId;
   node.createdAt = json.createdAt ? DateTime.fromISO(json.createdAt) : null;
   node.name = json.name;
   node.type = json.type;
   node.category = json.category;
   node.owner = User.fromJson(json.owner || {});
-  node.parents = json.parents;
+  node.parents = json.parents || [];
 
   return node;
 }
@@ -94,6 +93,7 @@ export function fromJson(json: any): FileNode {
 export interface ParentRef {
   id: string;
   name: string;
+  parentId: string | null;
 }
 
 export interface FileVersion {

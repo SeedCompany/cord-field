@@ -4,7 +4,7 @@ import { ArrayItem } from '@app/core/util';
 import { ViewStateFormBuilder } from '@app/core/view-state-form-builder';
 import { SubscriptionComponent } from '@app/shared/components/subscription.component';
 import { BehaviorSubject, combineLatest, NextObserver, Observable, Subject } from 'rxjs';
-import { distinctUntilChanged, map, shareReplay, startWith } from 'rxjs/operators';
+import { distinctUntilChanged, first, map, shareReplay, startWith } from 'rxjs/operators';
 import { LazyGetter } from 'typescript-lazy-get-decorator';
 import { ChangeConfig, ChangeEngine, Changes } from './change-engine';
 
@@ -36,11 +36,12 @@ export abstract class AbstractViewState<T extends { id: string }, ModifiedForSer
 
   /**
    * Called when saving the model's changes.
-   * @param {T} subject The current subject (no changes applied)
+   * @param {T} next The subject with current changes applied.
+   *                 Note: This won't have the correct IDs from the server for new list items.
    * @param changes The changes to give to the server (based on config)
    * @return lists of new IDs mapped to their keys
    */
-  protected abstract onSave(subject: T, changes: ModifiedForServer): Promise<SaveResult<T>>;
+  protected abstract onSave(next: T, changes: ModifiedForServer): Promise<SaveResult<T>>;
 
   /**
    * Called when the model needs to be refreshed from the server.
@@ -117,14 +118,17 @@ export abstract class AbstractViewState<T extends { id: string }, ModifiedForSer
   async save(): Promise<void> {
     this.submitting.next(true);
 
+    // Use pre-calculated value from observable. I think this is faster than CE.getModified
+    const modified = await this.subjectWithPreExistingChanges.pipe(first()).toPromise();
     let result;
     try {
-      const modified = this.changeEngine.getModifiedForServer(this._subject.value);
-      result = await this.onSave(this._subject.value, modified);
+      const serverChanges = this.changeEngine.getModifiedForServer(this._subject.value);
+      result = await this.onSave(modified, serverChanges);
     } finally {
       this.submitting.next(false);
     }
 
+    // Compute next subject with save results from server. This also ensures immutability with new object.
     const next = this.changeEngine.getModified(this._subject.value, result);
     const needsRefresh = this.changeEngine.needsRefresh;
 

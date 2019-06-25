@@ -1,0 +1,22 @@
+@import "~src/styles/imports";
+
+:host {
+  @extend %component-defaults;
+}
+
+mat-list {
+  padding: 0; // title already provides spacing
+  margin: 0 (-$mat-card-padding);
+}
+
+mat-card-content {
+  display: flex;
+  flex-direction: column;
+}
+
+// Sacrifice whitespace to keep card height the same.
+// Probably need to come up with a better design.
+app-autocomplete-user {
+  margin-top: 16px;
+  margin-bottom: -12px !important;
+}

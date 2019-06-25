@@ -1,0 +1,27 @@
+<mat-card>
+  <mat-card-title>{{ (isInternship$ | async) ? 'Intern Application' : 'Project Proposal' }}</mat-card-title>
+  <mat-card-content></mat-card-content>
+
+  <mat-card-actions>
+    <button mat-button
+            color="accent"
+            routerLink="../files"
+    >
+      UPLOAD
+    </button>
+  </mat-card-actions>
+</mat-card>
+
+<mat-card>
+  <mat-card-title>Field Coordinator Recommendation</mat-card-title>
+  <mat-card-content></mat-card-content>
+
+  <mat-card-actions>
+    <button mat-button
+            color="accent"
+            routerLink="../files"
+    >
+      UPLOAD
+    </button>
+  </mat-card-actions>
+</mat-card>

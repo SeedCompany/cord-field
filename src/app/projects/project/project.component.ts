@@ -2,6 +2,7 @@ import { HttpErrorResponse } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
 import { MatSnackBar, MatSnackBarRef, SimpleSnackBar } from '@angular/material';
 import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
+import { AbstractViewState } from '@app/core/abstract-view-state';
 import { TitleAware, TitleProp } from '@app/core/decorators';
 import { LoggerService } from '@app/core/services/logger.service';
 import { SubscriptionComponent } from '@app/shared/components/subscription.component';
@@ -20,6 +21,7 @@ interface TabConfig {
   styleUrls: ['./project.component.scss'],
   providers: [
     ProjectViewStateService,
+    { provide: AbstractViewState, useExisting: ProjectViewStateService },
   ],
 })
 @TitleAware()
@@ -104,7 +106,8 @@ export class ProjectComponent extends SubscriptionComponent implements OnInit, T
     try {
       await this.projectViewState.save();
     } catch (e) {
-      this.snackBarRef = this.snackBar.open('Failed to save project', undefined, {
+      const msg = e.status === 403 ? 'You do not have permission to make these changes' : 'Failed to save project';
+      this.snackBarRef = this.snackBar.open(msg, undefined, {
         duration: 3000,
       });
       return;

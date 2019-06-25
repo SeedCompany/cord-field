@@ -56,10 +56,6 @@ export class ProjectEngagement extends EditableProjectEngagement {
   hasTag(name: string): boolean {
     return this.tags.some(tag => tag === name);
   }
-
-  withChanges(modified: Partial<EditableProjectEngagement>): ProjectEngagement {
-    return Object.assign(clone(this), modified);
-  }
 }
 
 export const EmptyProjectEngagement = ProjectEngagement.fromJson({

@@ -1,0 +1,39 @@
+<h1 mat-dialog-title>Assign User</h1>
+<mat-horizontal-stepper [linear]="true"
+                        (keyup.enter)="stepper.selectedIndex == 0 ? stepper.next() : onSubmit()">
+  <mat-step [stepControl]="user">
+    <ng-template matStepLabel>Select User</ng-template>
+    <app-autocomplete-user [keepInput]="true"
+                           [required]="true"
+                           [list]="currentUsers"
+                           (optionSelected)="onUserSelected($event)"></app-autocomplete-user>
+  </mat-step>
+  <mat-step [stepControl]="roles">
+    <ng-template matStepLabel>Select Role(s)</ng-template>
+    <mat-form-field color="accent"
+                    *ngIf="availableRoles.length > 0; else noRoles">
+      <mat-select placeholder="Roles"
+                  [multiple]="true"
+                  [formControl]="roles">
+        <mat-option *ngFor="let role of availableRoles; trackBy: Role.trackValueBy"
+                    [value]="role">
+          {{ Role.forUI(role) }}
+        </mat-option>
+      </mat-select>
+      <mat-error>Please select one or more roles</mat-error>
+    </mat-form-field>
+    <ng-template #noRoles>
+      {{ user.value?.fullName }} cannot be assigned to any roles here.
+    </ng-template>
+  </mat-step>
+</mat-horizontal-stepper>
+<mat-dialog-actions>
+  <button mat-button
+          color="accent"
+          [disabled]="user.invalid || pending || (stepper.selectedIndex == 1 && roles.invalid)"
+          (click)="stepper.selectedIndex == 0 ? stepper.next() : onSubmit()">
+    <app-button-text-or-progress [showProgress]="pending">
+      {{ stepper.selectedIndex == 0 ? 'NEXT' : 'ASSIGN' }}
+    </app-button-text-or-progress>
+  </button>
+</mat-dialog-actions>

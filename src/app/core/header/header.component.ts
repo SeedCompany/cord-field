@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { MatDialog, MatIconRegistry } from '@angular/material';
 import { DomSanitizer } from '@angular/platform-browser';
 import { Router } from '@angular/router';
+import { InternshipCreateDialogComponent } from '@app/core/create-dialogs/internship-create-dialog/internship-create-dialog.component';
 import { PersonCreateDialogComponent } from '../create-dialogs/person-create-dialog/person-create-dialog.component';
 import { ProjectCreateDialogComponent } from '../create-dialogs/project-create-dialog/project-create-dialog.component';
 import { TitleAware } from '../decorators';
@@ -39,6 +40,10 @@ export class HeaderComponent implements OnInit {
 
   onCreateProject(): void {
     ProjectCreateDialogComponent.open(this.dialog);
+  }
+
+  onCreateInternship() {
+    InternshipCreateDialogComponent.open(this.dialog);
   }
 
   onCreatePerson(): void {

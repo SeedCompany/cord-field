@@ -54,10 +54,9 @@ export class EngagementViewStateService extends AbstractViewState<Engagement, Pa
       .subscribe(this.onLoad);
   };
 
-  protected async onSave(original: Engagement, changes: Partial<EditableEngagement>): Promise<SaveResult<Engagement>> {
-    const engagement = original.withChanges(changes);
-    await this.engagementService.save(original.id, engagement);
-    this.projectViewState.updateEngagement(engagement);
+  protected async onSave(next: Engagement, changes: Partial<EditableEngagement>): Promise<SaveResult<Engagement>> {
+    await this.engagementService.save(next.id, changes);
+    this.projectViewState.updateEngagement(next);
     return {};
   }
 
