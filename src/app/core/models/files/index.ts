@@ -74,7 +74,9 @@ export function fromJson(json: any): FileNode {
     node = new File();
     node.modifiedAt = json.modifiedAt ? DateTime.fromISO(json.modifiedAt) : null;
     node.size = json.size || 0;
-    node.versions = (json.versions || []).map((version: any) => ({ ...version, createdAt: DateTime.fromISO(version.createdAt) }));
+    node.versions = (json.versions || [])
+      .filter((v: any) => v)
+      .map((version: any) => ({ ...version, createdAt: DateTime.fromISO(version.createdAt) }));
   } else {
     throw new Error('Unknown File Type');
   }
