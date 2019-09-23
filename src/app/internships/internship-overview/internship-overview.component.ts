@@ -12,7 +12,7 @@ import { Observable } from 'rxjs';
 @TitleAware('')
 export class InternshipOverviewComponent {
 
-  internship: Observable<Internship> = this.viewState.subject.pipe(skipEmptyViewState());
+  internship: Observable<Internship> = this.viewState.subject;
 
   constructor(
     private viewState: InternshipViewStateService,

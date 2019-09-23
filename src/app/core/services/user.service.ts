@@ -71,7 +71,7 @@ export class UserService {
     this.plo,
     '/users',
     UserListItem.fromJson,
-    ({ isActive, organizations }: UserFilter) => ({
+    ({isActive, organizations}: UserFilter) => ({
       isActive,
       organizationIds: toIds(organizations),
     }),
@@ -102,7 +102,11 @@ export class UserService {
     return observableOf(Role.values()).pipe(delay(2000)).toPromise();
   }
 
-  create({ userRoles, ...body }: NewUser): Observable<string> {
+  async isAdmin(user: User) {
+    return (await this.getUser(user.id).toPromise()).roles.some((role) => role.role === Role.Admin);
+  }
+
+  create({userRoles, ...body}: NewUser): Observable<string> {
     return this.plo.post<{ id: string }>('/users/invite', {
       ...body,
       userRoles: userRoles.map(UserRole.forSaveAPI),

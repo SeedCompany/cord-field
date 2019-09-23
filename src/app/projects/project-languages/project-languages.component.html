@@ -34,7 +34,9 @@
   <mat-card-actions *ngIf="!addingLanguage">
     <button mat-button
             color="accent"
-            (click)="addingLanguage = true">ADD LANGUAGE</button>
+            (click)="addingLanguage = true"
+            [disabled]="!canAdd">ADD LANGUAGE
+    </button>
   </mat-card-actions>
 
 </mat-card>

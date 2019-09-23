@@ -71,7 +71,7 @@ export class UserRolesFormComponent extends AbstractValueAccessor<UserRole[]> im
       });
   }
 
-  createControl({ role, locations }: { role: Role | null, locations: Location[] }) {
+  createControl({role, locations}: { role: Role | null, locations: Location[] }) {
     const roleCtl = new FormControl(role, Validators.required);
     const locationCtl = new FormControl(locations);
     const userRoleCtl = new FormGroup({
@@ -90,7 +90,7 @@ export class UserRolesFormComponent extends AbstractValueAccessor<UserRole[]> im
       );
     remove.subscribe(roleToRemove => {
       if (this.viewState) {
-        this.viewState.change({ roles: { remove: { role: roleToRemove, locations: [] } } });
+        this.viewState.change({roles: {remove: {role: roleToRemove, locations: []}}});
       }
       this.value = this.value.filter(r => r.role !== roleToRemove);
       const index = this.userRolesCtl.controls.findIndex(control => control.value.role === roleToRemove);
@@ -126,8 +126,8 @@ export class UserRolesFormComponent extends AbstractValueAccessor<UserRole[]> im
         .subscribe(([oldRole, newRole]) => {
           this.viewState!.change({
             roles: {
-              remove: { role: oldRole, locations: [] },
-              add: { role: newRole, locations: Role.needsLocations.includes(newRole) ? locationCtl.value : [] },
+              remove: {role: oldRole, locations: []},
+              add: {role: newRole, locations: Role.needsLocations.includes(newRole) ? locationCtl.value : []},
             },
           });
         });
@@ -139,7 +139,7 @@ export class UserRolesFormComponent extends AbstractValueAccessor<UserRole[]> im
         .subscribe(newLocations => {
           this.viewState!.change({
             roles: {
-              update: { role: roleCtl.value, locations: newLocations },
+              update: {role: roleCtl.value, locations: newLocations},
             },
           });
         });
@@ -150,7 +150,7 @@ export class UserRolesFormComponent extends AbstractValueAccessor<UserRole[]> im
           filter(status => status === 'INVALID'),
         )
         .subscribe(() => {
-          this.viewState!.revert('roles', { role: roleCtl.value, locations: [] });
+          this.viewState!.revert('roles', {role: roleCtl.value, locations: []});
         });
     }
 
@@ -162,7 +162,7 @@ export class UserRolesFormComponent extends AbstractValueAccessor<UserRole[]> im
       return;
     }
 
-    const userRoleCtl = this.createControl({ role: null, locations: [] });
+    const userRoleCtl = this.createControl({role: null, locations: []});
     this.userRolesCtl.push(userRoleCtl);
     this.adding = true;
 
@@ -204,7 +204,7 @@ export class UserRolesFormComponent extends AbstractValueAccessor<UserRole[]> im
       }
 
       // Else role is valid, add to model
-      this.value = [...this.value, { role: select.value, locations: [] }];
+      this.value = [...this.value, {role: select.value, locations: []}];
 
       // If the role needs locations focus that
       if (Role.needsLocations.includes(select.value)) {

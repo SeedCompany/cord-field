@@ -35,7 +35,9 @@
   <mat-card-actions *ngIf="!adding">
     <button mat-button
             color="accent"
-            (click)="onAdd()">ADD INTERN</button>
+            (click)="onAdd()"
+            [disabled]="!canAdd">ADD INTERN
+    </button>
   </mat-card-actions>
 
 </mat-card>
