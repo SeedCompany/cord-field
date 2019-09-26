@@ -1,5 +1,4 @@
 import { DateTime } from 'luxon';
+import { ifValueFn } from './index';
 
-export function maybeDate(serverDate: string | null | undefined): DateTime | null {
-  return serverDate ? DateTime.fromISO(serverDate) : null;
-}
+export const maybeDate = ifValueFn(DateTime.fromISO, null);

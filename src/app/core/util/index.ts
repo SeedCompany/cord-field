@@ -1,3 +1,5 @@
+import { Nullable } from './types';
+
 export * from './array-object-helpers';
 export * from './dates';
 export * from './firstLettersOfWords';
@@ -7,8 +9,11 @@ export * from './redaction';
 export * from './rxjs-operators';
 export * from './types';
 
-export const ifValue = <T, R, Default = undefined>(value: T | null | undefined, doWith: (val: T) => R, defaultVal?: Default): R | Default =>
-  hasValue(value) ? doWith(value) : (defaultVal as Default);
+export const ifValue = <T, R, Default = undefined>(value: Nullable<T>, doWith: (val: T) => R, defaultVal?: Default): R | Default =>
+  ifValueFn(doWith, defaultVal)(value);
+
+export const ifValueFn = <T, R, Default = undefined>(doWith: (val: T) => R, defaultVal?: Default) =>
+  (value: Nullable<T>): R | Default => hasValue(value) ? doWith(value) : (defaultVal as Default);
 
 export function generateObjectId(): string {
   // tslint:disable:no-bitwise

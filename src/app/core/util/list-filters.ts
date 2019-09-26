@@ -1,9 +1,7 @@
-import { ifValue, Omit } from '@app/core/util/index';
+import { ifValueFn, Omit } from '@app/core/util/index';
 import { DateTime } from 'luxon';
 
-export const toIds = (list: Array<{ id: string }> | undefined): string[] | undefined =>
-  ifValue(list, items => items.map(item => item.id));
-
+export const toIds = ifValueFn((items: Array<{ id: string }>) => items.map(item => item.id));
 
 export interface DateFilter {
   dateRange?: 'createdAt' | 'updatedAt';
