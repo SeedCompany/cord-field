@@ -1,5 +1,5 @@
 import { DateTime } from 'luxon';
-import { ifValueFn } from './index';
+import { ifValueFn } from './if-value';
 
 export const serverDate = (isoStr: string) => DateTime.fromISO(isoStr.substr(0, 10));
 export const serverDateTime = DateTime.fromISO;
