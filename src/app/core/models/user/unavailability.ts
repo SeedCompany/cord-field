@@ -1,6 +1,6 @@
 import { FieldConfig, mapChangeList, ModifiedList, returnId } from '@app/core/change-engine';
-import { generateObjectId, Omit } from '@app/core/util';
-import { DateTime, Interval } from 'luxon';
+import { generateObjectId, maybeServerDate, Mutable, Omit } from '@app/core/util';
+import { Interval } from 'luxon';
 
 export class Unavailability {
   readonly id: string;
@@ -18,11 +18,12 @@ export class Unavailability {
   static fromJson(json: Partial<Record<keyof Unavailability, any>>): Unavailability {
     const obj = new Unavailability();
 
-    // @ts-ignore readonly property
-    obj.id = json.id;
+    (obj as Mutable<Unavailability>).id = json.id;
     obj.description = json.description || '';
-    obj.range = json.start && json.end
-      ? Interval.fromDateTimes(DateTime.fromISO(json.start), DateTime.fromISO(json.end))
+    const start = maybeServerDate(json.start);
+    const end = maybeServerDate(json.end);
+    obj.range = start && end
+      ? Interval.fromDateTimes(start, end)
       : Interval.invalid('Missing start or end');
 
     return obj;
