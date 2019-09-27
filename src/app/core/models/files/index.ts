@@ -1,5 +1,5 @@
 import { User } from '@app/core/models/user';
-import { clone } from '@app/core/util';
+import { clone, maybeServerDateTime, serverDateTime } from '@app/core/util';
 import { DateTime } from 'luxon';
 import { FileNodeCategory } from './category';
 import { FileNodeType } from './type';
@@ -72,17 +72,17 @@ export function fromJson(json: any): FileNode {
     node.children = ((json.children || []) as FileNode[]).map(child => fromJson(child));
   } else if (json.type === FileNodeType.File) {
     node = new File();
-    node.modifiedAt = json.modifiedAt ? DateTime.fromISO(json.modifiedAt) : null;
+    node.modifiedAt = maybeServerDateTime(json.modifiedAt);
     node.size = json.size || 0;
     node.versions = (json.versions || [])
       .filter((v: any) => v)
-      .map((version: any) => ({ ...version, createdAt: DateTime.fromISO(version.createdAt) }));
+      .map((version: any) => ({ ...version, createdAt: serverDateTime(version.createdAt) }));
   } else {
     throw new Error('Unknown File Type');
   }
 
   node.id = json.id;
-  node.createdAt = json.createdAt ? DateTime.fromISO(json.createdAt) : null;
+  node.createdAt = maybeServerDateTime(json.createdAt);
   node.name = json.name;
   node.type = json.type;
   node.category = json.category;

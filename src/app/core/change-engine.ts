@@ -69,6 +69,7 @@ export const storeDate = (date: DateTime | null) => date ? date.toISO() : null;
 export const restoreDate = (date: string | null) => date ? DateTime.fromISO(date) : null;
 export const dateConfig: Partial<FieldConfig<DateTime | null>> = {
   accessor: accessDates,
+  toServer: dt => dt ? dt.toISODate() : null,
   store: storeDate,
   restore: restoreDate,
 };

@@ -1,4 +1,5 @@
 import { Language } from '@app/core/models/language';
+import { maybeServerDate } from '@app/core/util';
 import { DateTime } from 'luxon';
 import { ExtensionStatus } from './status';
 import { ExtensionType } from './type';
@@ -20,7 +21,7 @@ export class ProjectExtension {
     ext.id = json.id;
     ext.status = json.status;
     ext.types = json.types;
-    ext.endDate = json.endDate ? DateTime.fromISO(json.endDate) : null;
+    ext.endDate = maybeServerDate(json.endDate);
     ext.languages = (json.languages || []).map(Language.fromJson);
     ext.summary = json.summary;
     ext.additionalComment = json.additionalComment;
