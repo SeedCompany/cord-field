@@ -1,6 +1,6 @@
 import { FieldConfig, mapChangeList, ModifiedList, returnId } from '@app/core/change-engine';
 import { DateTime } from 'luxon';
-import { clone } from '../util';
+import { clone, maybeServerDateTime } from '../util';
 import { Role } from './role';
 import { User } from './user';
 
@@ -26,7 +26,7 @@ export class TeamMember {
     teamMember.roles = json.roles;
     teamMember.description = json.description || '';
     teamMember.editable = json.editable || false;
-    teamMember.dateAdded = json.dateAdded ? DateTime.fromISO(json.dateAdded) : null;
+    teamMember.dateAdded = maybeServerDateTime(json.dateAdded);
 
     return teamMember;
   }

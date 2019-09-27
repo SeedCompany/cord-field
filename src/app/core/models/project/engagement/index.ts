@@ -1,6 +1,6 @@
 import { Language } from '@app/core/models/language';
 import { Product } from '@app/core/models/product';
-import { clone, maybeDate } from '@app/core/util';
+import { maybeServerDate } from '@app/core/util';
 import { DateTime } from 'luxon';
 import { ProjectEngagementStatus } from './status';
 import { ProjectEngagementTag } from './tag';
@@ -41,14 +41,14 @@ export class ProjectEngagement extends EditableProjectEngagement {
     engagement.language = Language.fromJson(json.language);
     engagement.products = json.products || [];
     engagement.tags = json.tags || [];
-    engagement.initialEndDate = maybeDate(json.initialEndDate);
-    engagement.currentEndDate = maybeDate(json.currentEndDate);
-    engagement.completeDate = maybeDate(json.completeDate);
-    engagement.disbursementCompleteDate = maybeDate(json.disbursementCompleteDate);
-    engagement.communicationsCompleteDate = maybeDate(json.communicationsCompleteDate);
-    engagement.ceremonyEstimatedDate = maybeDate(json.ceremonyEstimatedDate);
-    engagement.ceremonyActualDate = maybeDate(json.ceremonyActualDate);
-    engagement.updatedAt = maybeDate(json.updatedAt);
+    engagement.initialEndDate = maybeServerDate(json.initialEndDate);
+    engagement.currentEndDate = maybeServerDate(json.currentEndDate);
+    engagement.completeDate = maybeServerDate(json.completeDate);
+    engagement.disbursementCompleteDate = maybeServerDate(json.disbursementCompleteDate);
+    engagement.communicationsCompleteDate = maybeServerDate(json.communicationsCompleteDate);
+    engagement.ceremonyEstimatedDate = maybeServerDate(json.ceremonyEstimatedDate);
+    engagement.ceremonyActualDate = maybeServerDate(json.ceremonyActualDate);
+    engagement.updatedAt = maybeServerDate(json.updatedAt);
 
     return engagement;
   }

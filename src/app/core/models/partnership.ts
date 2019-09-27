@@ -1,4 +1,5 @@
 import { FieldConfig, mapChangeList, ModifiedList, returnId } from '@app/core/change-engine';
+import { maybeServerDate } from '@app/core/util';
 import { DateTime } from 'luxon';
 import { buildEnum } from './enum';
 import { Organization } from './organization';
@@ -37,8 +38,8 @@ export class Partnership {
     partnership.organization = Organization.fromJson(json.organization || {});
     partnership.agreementStatus = json.agreementStatus || PartnershipAgreementStatus.NotAttached;
     partnership.mouStatus = json.mouStatus || PartnershipAgreementStatus.NotAttached;
-    partnership.mouStart = json.mouStart ? DateTime.fromISO(json.mouStart) : null;
-    partnership.mouEnd = json.mouEnd ? DateTime.fromISO(json.mouEnd) : null;
+    partnership.mouStart = maybeServerDate(json.mouStart);
+    partnership.mouEnd = maybeServerDate(json.mouEnd);
     partnership.types = json.types || [];
 
     return partnership;

@@ -1,7 +1,7 @@
 import { Location } from '@app/core/models/location';
 import { ProductMethodology } from '@app/core/models/product';
 import { User } from '@app/core/models/user';
-import { clone, ifValue, maybeDate, Omit } from '@app/core/util';
+import { ifValue, maybeServerDate, maybeServerDateTime, Omit } from '@app/core/util';
 import { DateTime } from 'luxon';
 import { InternshipEngagementPosition } from './position';
 import { InternshipEngagementStatus } from './status';
@@ -54,14 +54,14 @@ export class InternshipEngagement extends EditableInternshipEngagement {
     engagement.position = json.position;
     engagement.methodologies = json.methodologies || [];
     engagement.tags = json.tags || [];
-    engagement.initialEndDate = maybeDate(json.initialEndDate);
-    engagement.currentEndDate = maybeDate(json.currentEndDate);
-    engagement.completeDate = maybeDate(json.completeDate);
-    engagement.disbursementCompleteDate = maybeDate(json.disbursementCompleteDate);
-    engagement.communicationsCompleteDate = maybeDate(json.communicationsCompleteDate);
-    engagement.ceremonyEstimatedDate = maybeDate(json.ceremonyEstimatedDate);
-    engagement.ceremonyActualDate = maybeDate(json.ceremonyActualDate);
-    engagement.updatedAt = maybeDate(json.updatedAt);
+    engagement.initialEndDate = maybeServerDate(json.initialEndDate);
+    engagement.currentEndDate = maybeServerDate(json.currentEndDate);
+    engagement.completeDate = maybeServerDate(json.completeDate);
+    engagement.disbursementCompleteDate = maybeServerDate(json.disbursementCompleteDate);
+    engagement.communicationsCompleteDate = maybeServerDate(json.communicationsCompleteDate);
+    engagement.ceremonyEstimatedDate = maybeServerDate(json.ceremonyEstimatedDate);
+    engagement.ceremonyActualDate = maybeServerDate(json.ceremonyActualDate);
+    engagement.updatedAt = maybeServerDateTime(json.updatedAt);
 
     return engagement;
   }
