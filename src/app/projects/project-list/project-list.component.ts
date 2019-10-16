@@ -92,7 +92,7 @@ export class ProjectListComponent extends SubscriptionComponent implements OnIni
       return;
     }
     this.router.navigate(['.'], {
-      queryParams: { all: true },
+      queryParams: { all: false },
       relativeTo: this.route,
       queryParamsHandling: 'merge',
       replaceUrl: true,
