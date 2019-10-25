@@ -16,7 +16,7 @@ export class InternshipListItem {
       name: json.name,
       updatedAt: maybeServerDateTime(json.updatedAt) || DateTime.fromMillis(0),
       status: json.status,
-      interns: (json.iterns || []).map(User.fromJson),
+      interns: (json.interns || []).map(User.fromJson),
     });
   }
 }
