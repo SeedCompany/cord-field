@@ -139,21 +139,21 @@ export class InternshipService {
         ];
       case InternshipStatus.FinalizingProposal: // FC
         return [
-          ['Submit for Area Director Approval', InternshipStatus.PendingAreaDirectorApproval],
+          ['Submit for Regional Director Approval', InternshipStatus.PendingRegionalDirectorApproval],
           ['End Development', InternshipStatus.Active],
-          ['Reject', InternshipStatus.Rejected],
-        ];
-      case InternshipStatus.PendingAreaDirectorApproval: // AD
-        return [
-          ['Approve for Finance Confirmation', InternshipStatus.PendingFinanceConfirmation],
-          ['Approve for Regional Director Approval', InternshipStatus.PendingRegionalDirectorApproval],
-          ['Send Back for Corrections', InternshipStatus.FinalizingProposal],
           ['Reject', InternshipStatus.Rejected],
         ];
       case InternshipStatus.PendingRegionalDirectorApproval: // RD
         return [
           ['Approve for Finance Confirmation', InternshipStatus.PendingFinanceConfirmation],
-          ['Send Back for Corrections to Area Director Approval', InternshipStatus.PendingAreaDirectorApproval],
+          ['Approve for Field Operations Director Approval', InternshipStatus.PendingFieldOperationsDirectorApproval],
+          ['Send Back for Corrections', InternshipStatus.FinalizingProposal],
+          ['Reject', InternshipStatus.Rejected],
+        ];
+      case InternshipStatus.PendingFieldOperationsDirectorApproval: // FOD
+        return [
+          ['Approve for Finance Confirmation', InternshipStatus.PendingFinanceConfirmation],
+          ['Send Back for Corrections to Regional Director Approval', InternshipStatus.PendingRegionalDirectorApproval],
           ['Send Back for Corrections', InternshipStatus.EarlyConversations],
           ['Reject', InternshipStatus.Rejected],
         ];
