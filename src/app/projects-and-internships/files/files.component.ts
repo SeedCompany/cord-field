@@ -10,6 +10,7 @@ import { Project } from '@app/core/models/project';
 import { SUPPORTS_DOWNLOADS } from '@app/core/services/downloader.service';
 import { FilesService } from '@app/core/services/files.service';
 import { filterRequired, skipEmptyViewState } from '@app/core/util';
+import { DeleteFileWarningComponent } from '@app/projects-and-internships/files/delete-file-warning/delete-file-warning.component';
 import { SubscriptionComponent } from '@app/shared/components/subscription.component';
 import { BehaviorSubject, combineLatest, EMPTY, Observable } from 'rxjs';
 import { catchError, map, startWith, switchMap, takeUntil } from 'rxjs/operators';
@@ -207,10 +208,19 @@ export class FilesComponent extends SubscriptionComponent implements AfterViewIn
   }
 
   async onDelete(node: FileNode) {
-    await this.fileService.delete(node);
-    const directory = this.directory$.value;
-    if (directory) {
-      this.directory$.next(directory.withoutChild(node));
-    }
+    DeleteFileWarningComponent
+      .open(this.dialog, node)
+      .afterClosed()
+      .pipe(takeUntil(this.unsubscribe))
+      .subscribe(async val => {
+        if (!val) {
+          return;
+        }
+        await this.fileService.delete(node);
+        const directory = this.directory$.value;
+        if (directory) {
+          this.directory$.next(directory.withoutChild(node));
+        }
+      });
   }
 }

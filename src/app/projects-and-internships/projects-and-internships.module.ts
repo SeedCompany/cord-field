@@ -1,5 +1,6 @@
 import { NgModule } from '@angular/core';
 import { RouterModule } from '@angular/router';
+import { DeleteFileWarningComponent } from '@app/projects-and-internships/files/delete-file-warning/delete-file-warning.component';
 import { SharedModule } from '@app/shared/shared.module';
 import { BudgetComponent } from './budget/budget.component';
 import { CreateDirectoryDialogComponent } from './files/create-directory-dialog/create-directory-dialog.component';
@@ -17,6 +18,7 @@ import { TeamComponent } from './team/team.component';
 const components = [
   BudgetComponent,
   CreateDirectoryDialogComponent,
+  DeleteFileWarningComponent,
   FileBreadcrumbsComponent,
   FileRenameDialogComponent,
   FilesComponent,
@@ -38,6 +40,7 @@ const components = [
   exports: components,
   entryComponents: [
     CreateDirectoryDialogComponent,
+    DeleteFileWarningComponent,
     FileRenameDialogComponent,
     OverwriteFileWarningComponent,
     TeamMemberAddComponent,
