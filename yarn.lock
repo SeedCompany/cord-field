@@ -6341,7 +6341,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"clsx@npm:^1.0.2, clsx@npm:^1.0.4":
+"clsx@npm:^1.0.2, clsx@npm:^1.0.4, clsx@npm:^1.1.0":
   version: 1.1.0
   resolution: "clsx@npm:1.1.0"
   checksum: 2/aebac019d24b4f40d28490fa31abdb7791d50242d928f27faa3aef44150f410600eb3c64ab6af01c66c3a022313d1c578a3e57c26bd6040bc15d30699824456c
@@ -6731,6 +6731,7 @@ __metadata:
     "@types/react-dom": ^16.9.0
     babel-plugin-import: ^1.13.0
     babel-plugin-mui-make-styles: ^0.1.1
+    clsx: ^1.1.0
     constate: ^2.0.0
     customize-cra: ^0.9.1
     eslint: ^6.8.0
