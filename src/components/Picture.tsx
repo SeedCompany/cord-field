@@ -32,6 +32,14 @@ export type ImageSourceSet = string | ImageSource[];
 export type ImageSource = string | [string, string | number];
 
 export interface LayoutProps {
+  /**
+   * Image's aspect ratio
+   *
+   * Used to correctly allocate layout height before image is loaded.
+   * This isn't the image's actual size, which most of the time is dynamic
+   * anyways. It's the natural width divided by the natural height.
+   */
+  aspectRatio?: number;
   /** Whether the image should stretch to the full width of its parent */
   fullWidth?: boolean;
 }
@@ -42,6 +50,13 @@ export type PictureProps = Merge<
 >;
 
 const useStyles = makeStyles(() => ({
+  aspectRatio: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    width: '100%',
+    height: '100%',
+  },
   fullWidth: {
     width: '100%',
   },
@@ -59,6 +74,7 @@ export const Picture = ({
   source,
   sizes: sizesProp,
   // Layout Props
+  aspectRatio,
   fullWidth,
   // HTML Image Props
   ...rest
@@ -67,17 +83,31 @@ export const Picture = ({
   const sizes = sizesProp ? many(sizesProp).join(', ') : undefined;
   const srcSet = formatSrcSet(source);
 
-  return (
+  const img = (
     <img
       alt=""
       {...rest}
       srcSet={srcSet}
       sizes={sizes}
       className={clsx({
+        [classes.aspectRatio]: aspectRatio,
         [classes.fullWidth]: fullWidth,
         [rest.className ?? '']: rest.className,
       })}
     />
+  );
+
+  return aspectRatio ? (
+    <div
+      style={{
+        position: 'relative',
+        paddingBottom: `${(1 / aspectRatio) * 100}%`,
+      }}
+    >
+      {img}
+    </div>
+  ) : (
+    img
   );
 };
 
