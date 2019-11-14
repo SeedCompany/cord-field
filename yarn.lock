@@ -6744,6 +6744,7 @@ __metadata:
     react: ^16.13.1
     react-app-rewired: ^2.1.5
     react-dom: ^16.13.1
+    react-intersection-observer: ^8.25.1
     react-router: ^6.0.0-alpha.3
     react-router-dom: ^6.0.0-alpha.3
     react-scripts: ^3.4.1
@@ -16140,6 +16141,17 @@ __metadata:
   languageName: node
   linkType: hard
 
+"react-intersection-observer@npm:^8.25.1":
+  version: 8.26.1
+  resolution: "react-intersection-observer@npm:8.26.1"
+  dependencies:
+    tiny-invariant: ^1.1.0
+  peerDependencies:
+    react: ^15.0.0 || ^16.0.0 || ^17.0.0
+  checksum: 2/03a266c54d875d4c5e013473f8a8c60f0b32a2b2f9256171646bb4725477bf98b28bfbbc0f47babcd6c7441e734fff8219a590e8aad34d227753a23cf2c02290
+  languageName: node
+  linkType: hard
+
 "react-is@npm:^16.12.0, react-is@npm:^16.7.0, react-is@npm:^16.8.0, react-is@npm:^16.8.1, react-is@npm:^16.8.4":
   version: 16.13.1
   resolution: "react-is@npm:16.13.1"
@@ -18473,6 +18485,13 @@ __metadata:
   version: 2.1.0
   resolution: "tiny-emitter@npm:2.1.0"
   checksum: 2/0055509c72e5fe35d6ab66fa6339342e0f29129e77ed2086e475fdf80be43a8651f2517be76513b46a042c8356396f4da5a35e2e23457252176808d5a892036a
+  languageName: node
+  linkType: hard
+
+"tiny-invariant@npm:^1.1.0":
+  version: 1.1.0
+  resolution: "tiny-invariant@npm:1.1.0"
+  checksum: 2/64318fbd77c451cfff23b57b9f3aef56594d9cea051a87dc538c9b371f97e8d474eaa2a7cbd60b8aa23f852393152495e8651b197607465fdf9c8ff134043b1b
   languageName: node
   linkType: hard
 

@@ -1,8 +1,10 @@
 import { makeStyles } from '@material-ui/core';
 import clsx from 'clsx';
 import { toFinite } from 'lodash';
-import React from 'react';
+import React, { useState } from 'react';
+import { IntersectionOptions, useInView } from 'react-intersection-observer';
 import { Merge } from 'type-fest';
+import { useIsBot } from '../hooks';
 import { many } from '../util';
 
 export interface SourceProps {
@@ -44,9 +46,29 @@ export interface LayoutProps {
   fullWidth?: boolean;
 }
 
+export interface LazyProps {
+  /**
+   * Whether to load the image lazily (while in / just before in view).
+   * - `native` or `true` just uses the native lazy loading functionality, no JS.
+   *    If native is not supported we fallback to `observe`.
+   *    This should generally be the option specified.
+   *    @see https://web.dev/native-lazy-loading/
+   * - `observe` uses `IntersectionObserver` to determine when image is first
+   *    in view / close to in view. This can be useful when images are hidden
+   *    out of view, but still positioned in the viewport. i.e. carousels
+   */
+  lazy?: 'native' | 'observe' | true;
+  /**
+   * Options for `IntersectionObserver` when using `lazy=observe`.
+   * These should probably also be specified for `lazy=native`
+   * because it still falls back to observe when native is not supported.
+   */
+  lazyOptions?: IntersectionOptions;
+}
+
 export type PictureProps = Merge<
   Omit<JSX.IntrinsicElements['img'], 'src' | 'srcSet'>,
-  SourceProps & LayoutProps
+  SourceProps & LayoutProps & LazyProps
 >;
 
 const useStyles = makeStyles(() => ({
@@ -76,14 +98,35 @@ export const Picture = ({
   // Layout Props
   aspectRatio,
   fullWidth,
+  // Lazy Props
+  lazy: lazyProp,
+  lazyOptions,
   // HTML Image Props
+  className: classNameProp,
+  style: styleProp,
   ...rest
 }: PictureProps) => {
   const classes = useStyles();
   const sizes = sizesProp ? many(sizesProp).join(', ') : undefined;
   const srcSet = formatSrcSet(source);
 
-  const img = (
+  const isBot = useIsBot();
+  const [supportsNativeLazyLoading] = useState(
+    () => 'loading' in HTMLImageElement.prototype
+  );
+  const lazyNative =
+    (lazyProp === true || lazyProp === 'native') && supportsNativeLazyLoading;
+  const lazyObserve =
+    lazyProp === 'observe' || (lazyProp && !supportsNativeLazyLoading);
+  const [ref, inView] = useInView({
+    rootMargin: '200px 0px',
+    ...lazyOptions,
+    triggerOnce: true,
+  });
+  const hideImg = lazyObserve && !inView && !isBot;
+  const needsWrapper = aspectRatio || hideImg;
+
+  const img = hideImg ? null : (
     <img
       alt=""
       {...rest}
@@ -92,16 +135,21 @@ export const Picture = ({
       className={clsx({
         [classes.aspectRatio]: aspectRatio,
         [classes.fullWidth]: fullWidth,
-        [rest.className ?? '']: rest.className,
+        [classNameProp ?? '']: !needsWrapper && classNameProp,
       })}
+      style={!needsWrapper && styleProp ? styleProp : undefined}
+      {...(lazyNative ? { loading: 'lazy' } : {})}
     />
   );
 
-  return aspectRatio ? (
+  return needsWrapper ? (
     <div
+      ref={lazyObserve && !inView ? ref : undefined}
+      className={classNameProp}
       style={{
         position: 'relative',
-        paddingBottom: `${(1 / aspectRatio) * 100}%`,
+        paddingBottom: aspectRatio ? `${(1 / aspectRatio) * 100}%` : undefined,
+        ...styleProp,
       }}
     >
       {img}
