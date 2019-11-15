@@ -1,8 +1,9 @@
 import { makeStyles } from '@material-ui/core';
 import clsx from 'clsx';
 import { toFinite } from 'lodash';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { IntersectionOptions, useInView } from 'react-intersection-observer';
+import { useMountedState } from 'react-use';
 import { Merge } from 'type-fest';
 import { useIsBot } from '../hooks';
 import { many } from '../util';
@@ -66,9 +67,38 @@ export interface LazyProps {
   lazyOptions?: IntersectionOptions;
 }
 
+export interface PlaceholderProps {
+  /** Placeholder image url to show until the source loads */
+  placeholder?: string;
+  /** Filters to use while showing placeholder */
+  placeholderStyles?: PlaceholderStyles;
+  /** Filters to use when an image fails to load */
+  errorStyles?: PlaceholderStyles;
+
+  /** Time in millisecond to transition the effects */
+  transitionTime?: number;
+  /** Timing function to use for the effects */
+  timingFunction?: string;
+}
+
+export interface PlaceholderStyles {
+  /** Initial value for the blur filter */
+  blur?: number;
+  /** Initial value for the grayscale filter */
+  grayscale?: number;
+  /** Initial value for the opacity filter */
+  opacity?: number;
+  /**
+   * Custom filter - using this ignores blur, grayscale, opacity.
+   * The filter CSS property to applies graphical effects.
+   * @see https://developer.mozilla.org/en-US/docs/Web/CSS/filter
+   **/
+  filter?: string;
+}
+
 export type PictureProps = Merge<
   Omit<JSX.IntrinsicElements['img'], 'src' | 'srcSet'>,
-  SourceProps & LayoutProps & LazyProps
+  SourceProps & LayoutProps & LazyProps & PlaceholderProps
 >;
 
 const useStyles = makeStyles(() => ({
@@ -101,6 +131,12 @@ export const Picture = ({
   // Lazy Props
   lazy: lazyProp,
   lazyOptions,
+  // Placeholder Props
+  placeholder,
+  placeholderStyles = {},
+  errorStyles = {},
+  transitionTime = undefined,
+  timingFunction = 'ease',
   // HTML Image Props
   className: classNameProp,
   style: styleProp,
@@ -123,22 +159,99 @@ export const Picture = ({
     ...lazyOptions,
     triggerOnce: true,
   });
-  const hideImg = lazyObserve && !inView && !isBot;
+  const hideImg = !placeholder && lazyObserve && !inView && !isBot;
   const needsWrapper = aspectRatio || hideImg;
+
+  const isMounted = useMountedState();
+  // We use the DOM callbacks to determine state as this is closest to what
+  // the UI shows. Calling loadImage here still requires the image to load again
+  // on DOM if "Disable cache" in DevTools is used. This makes it hard to
+  // determine what it will actually look like outside of dev.
+  const [urlLoaded, setLoaded] = useState<string | undefined>();
+  const [urlErrored, setErrored] = useState<string | undefined>();
+
+  useEffect(() => {
+    if (urlLoaded === srcSet) {
+      // console.log('source has been loaded');
+    } else if (urlLoaded === placeholder) {
+      // console.log('placeholder has been loaded');
+    } else if (urlLoaded) {
+      // console.log('resetting loaded url');
+      setLoaded(undefined);
+      setErrored(undefined);
+    }
+  }, [placeholder, sizes, srcSet, urlLoaded]);
+
+  // Show placeholder if...
+  const renderPlaceholder =
+    // it's given and
+    placeholder &&
+    // has not errored out and
+    urlErrored !== placeholder &&
+    // this is not a bot and
+    !isBot &&
+    // it is loading, or src has errored, or lazy and out of view
+    (!urlLoaded || urlErrored === srcSet || (lazyObserve && !inView));
+
+  const filter =
+    urlLoaded === srcSet || lazyNative || isBot
+      ? undefined // done, remove filters
+      : urlErrored === srcSet
+      ? formatStyles({
+          blur: 10,
+          grayscale: 1,
+          opacity: 1,
+          ...errorStyles,
+        })
+      : formatStyles({
+          blur: 10,
+          grayscale: 0,
+          opacity: placeholder ? 1 : 0,
+          ...placeholderStyles,
+        });
+
+  const transTime =
+    transitionTime !== undefined ? transitionTime : placeholder ? 750 : 250;
+  const styles = {
+    filter,
+    transition: `filter ${transTime}ms ${timingFunction}`,
+  };
 
   const img = hideImg ? null : (
     <img
       alt=""
       {...rest}
-      srcSet={srcSet}
-      sizes={sizes}
+      ref={lazyObserve && !inView ? ref : undefined}
+      srcSet={renderPlaceholder ? placeholder : srcSet}
+      sizes={renderPlaceholder ? undefined : sizes}
       className={clsx({
         [classes.aspectRatio]: aspectRatio,
         [classes.fullWidth]: fullWidth,
         [classNameProp ?? '']: !needsWrapper && classNameProp,
       })}
-      style={!needsWrapper && styleProp ? styleProp : undefined}
+      style={!needsWrapper ? { ...styles, ...styleProp } : styles}
       {...(lazyNative ? { loading: 'lazy' } : {})}
+      onLoad={(e) => {
+        if (!isMounted()) {
+          return;
+        }
+        setLoaded(e.currentTarget.srcset);
+        if (rest.onLoad) {
+          rest.onLoad(e);
+        }
+      }}
+      onError={(e) => {
+        const url = e.currentTarget.srcset;
+        // eslint-disable-next-line no-console
+        console.error('Image failed to load\n', url);
+        if (!isMounted()) {
+          return;
+        }
+        setErrored(url);
+        if (rest.onError) {
+          rest.onError(e);
+        }
+      }}
     />
   );
 
@@ -171,3 +284,16 @@ const formatSrcSet = (source: ImageSourceSet) =>
       return sizeStr ? `${url} ${sizeStr}` : url;
     })
     .join(', ');
+
+const formatStyles = ({
+  filter,
+  blur,
+  grayscale,
+  opacity,
+}: PlaceholderStyles) =>
+  filter ||
+  [
+    blur ? `blur(${blur}px)` : '',
+    grayscale ? `grayscale(${grayscale})` : '',
+    opacity !== 1 ? `opacity(${opacity})` : '',
+  ].join(' ');
