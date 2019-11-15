@@ -50,7 +50,9 @@ export interface LayoutProps {
 export interface LazyProps {
   /**
    * Whether to load the image lazily (while in / just before in view).
-   * - `native` or `true` just uses the native lazy loading functionality, no JS.
+   *
+   * Optionally specify the lazy loading implementation:
+   * - `native` just uses the native lazy loading functionality, no JS.
    *    If native is not supported we fallback to `observe`.
    *    This should generally be the option specified.
    *    @see https://web.dev/native-lazy-loading/
@@ -58,7 +60,7 @@ export interface LazyProps {
    *    in view / close to in view. This can be useful when images are hidden
    *    out of view, but still positioned in the viewport. i.e. carousels
    */
-  lazy?: 'native' | 'observe' | true;
+  lazy?: boolean | 'native' | 'observe';
   /**
    * Options for `IntersectionObserver` when using `lazy=observe`.
    * These should probably also be specified for `lazy=native`
@@ -150,10 +152,11 @@ export const Picture = ({
   const [supportsNativeLazyLoading] = useState(
     () => 'loading' in HTMLImageElement.prototype
   );
-  const lazyNative =
-    (lazyProp === true || lazyProp === 'native') && supportsNativeLazyLoading;
+  const lazyNative = lazyProp === 'native' && supportsNativeLazyLoading;
   const lazyObserve =
-    lazyProp === 'observe' || (lazyProp && !supportsNativeLazyLoading);
+    lazyProp === true ||
+    lazyProp === 'observe' ||
+    (lazyProp && !supportsNativeLazyLoading);
   const [ref, inView] = useInView({
     rootMargin: '200px 0px',
     ...lazyOptions,
