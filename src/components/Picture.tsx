@@ -35,14 +35,10 @@ export type ImageSourceSet = string | ImageSource[];
 export type ImageSource = string | [string, string | number];
 
 export interface LayoutProps {
-  /**
-   * Image's aspect ratio
-   *
-   * Used to correctly allocate layout height before image is loaded.
-   * This isn't the image's actual size, which most of the time is dynamic
-   * anyways. It's the natural width divided by the natural height.
-   */
-  aspectRatio?: number;
+  /** The image's natural width */
+  width?: number;
+  /** The image's natural height */
+  height?: number;
   /** Whether the image should stretch to the full width of its parent */
   fullWidth?: boolean;
 }
@@ -128,7 +124,8 @@ export const Picture = ({
   source,
   sizes: sizesProp,
   // Layout Props
-  aspectRatio,
+  width,
+  height,
   fullWidth,
   // Lazy Props
   lazy: lazyProp,
@@ -147,6 +144,7 @@ export const Picture = ({
   const classes = useStyles();
   const sizes = sizesProp ? many(sizesProp).join(', ') : undefined;
   const srcSet = formatSrcSet(source);
+  const aspectRatio = width && height ? width / height : 0;
 
   const isBot = useIsBot();
   const [supportsNativeLazyLoading] = useState(
@@ -227,6 +225,8 @@ export const Picture = ({
       ref={lazyObserve && !inView ? ref : undefined}
       srcSet={renderPlaceholder ? placeholder : srcSet}
       sizes={renderPlaceholder ? undefined : sizes}
+      width={width}
+      height={height}
       className={clsx({
         [classes.aspectRatio]: aspectRatio,
         [classes.fullWidth]: fullWidth,
