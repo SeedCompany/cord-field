@@ -1,7 +1,7 @@
 import { makeStyles } from '@material-ui/core';
 import clsx from 'clsx';
 import { toFinite } from 'lodash';
-import React, { useEffect, useState } from 'react';
+import React, { memo, useEffect, useState } from 'react';
 import { IntersectionOptions, useInView } from 'react-intersection-observer';
 import { useMountedState } from 'react-use';
 import { Merge } from 'type-fest';
@@ -95,7 +95,7 @@ export interface PlaceholderStyles {
 }
 
 export type PictureProps = Merge<
-  Omit<JSX.IntrinsicElements['img'], 'src' | 'srcSet'>,
+  Omit<JSX.IntrinsicElements['img'], 'ref' | 'src' | 'srcSet'>,
   SourceProps & LayoutProps & LazyProps & PlaceholderProps
 >;
 
@@ -119,7 +119,7 @@ const useStyles = makeStyles(() => ({
  * Auto imports will not work with `Image` because editor thinks
  * you are referencing the global class.
  */
-export const Picture = ({
+const PictureImpl = ({
   // Source Props
   source,
   sizes: sizesProp,
@@ -274,6 +274,8 @@ export const Picture = ({
     img
   );
 };
+PictureImpl.displayName = 'Picture';
+export const Picture = memo(PictureImpl);
 
 const formatSrcSet = (source: ImageSourceSet) =>
   many(source)
