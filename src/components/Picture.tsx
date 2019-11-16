@@ -2,7 +2,7 @@ import { makeStyles } from '@material-ui/core';
 import clsx from 'clsx';
 import { toFinite } from 'lodash';
 import React, { memo, useEffect, useState } from 'react';
-import { IntersectionOptions, useInView } from 'react-intersection-observer';
+import { useInView } from 'react-intersection-observer';
 import { useMountedState } from 'react-use';
 import { Merge } from 'type-fest';
 import { useIsBot } from '../hooks';
@@ -65,11 +65,12 @@ export interface LazyProps {
    */
   lazy?: boolean | 'native' | 'observe';
   /**
-   * Options for `IntersectionObserver` when using `lazy=observe`.
-   * These should probably also be specified for `lazy=native`
-   * because it still falls back to observe when native is not supported.
+   * Margin around the image in which to trigger loading.
+   *
+   * Can have values similar to the CSS margin property,
+   * e.g. "10px 20px 30px 40px" (top, right, bottom, left).
    */
-  lazyOptions?: IntersectionOptions;
+  lazyMargin?: string;
 }
 
 export interface PlaceholderProps {
@@ -142,7 +143,7 @@ const PictureImpl = ({
   size = 'auto',
   // Lazy Props
   lazy: lazyProp,
-  lazyOptions,
+  lazyMargin,
   // Placeholder Props
   placeholder,
   placeholderStyles = {},
@@ -169,8 +170,7 @@ const PictureImpl = ({
     lazyProp === 'observe' ||
     (lazyProp && !supportsNativeLazyLoading);
   const [ref, inView] = useInView({
-    rootMargin: '200px 0px',
-    ...lazyOptions,
+    rootMargin: lazyMargin || '200px 0px',
     triggerOnce: true,
   });
   const hideImg = !placeholder && lazyObserve && !inView && !isBot;
