@@ -102,9 +102,16 @@ export interface PlaceholderStyles {
   filter?: string;
 }
 
+export interface EffectsProps {
+  /**
+   * Darken the image by a percentage (0-100)
+   */
+  darken?: number;
+}
+
 export type PictureProps = Merge<
   Omit<JSX.IntrinsicElements['img'], 'ref' | 'src' | 'srcSet'>,
-  SourceProps & LayoutProps & LazyProps & PlaceholderProps
+  SourceProps & LayoutProps & LazyProps & PlaceholderProps & EffectsProps
 >;
 
 const useStyles = makeStyles(() => ({
@@ -123,6 +130,17 @@ const useStyles = makeStyles(() => ({
     left: 0,
     width: '100%',
     height: '100%',
+  },
+  darkener: {
+    background: 'black',
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    opacity: 0,
+    overflow: 'hidden',
+    pointerEvents: 'none',
   },
 }));
 
@@ -150,6 +168,8 @@ const PictureImpl = ({
   errorStyles = {},
   transitionTime = undefined,
   timingFunction = 'ease',
+  // Effects Props
+  darken,
   // HTML Image Props
   className: classNameProp,
   style: styleProp,
@@ -174,7 +194,7 @@ const PictureImpl = ({
     triggerOnce: true,
   });
   const hideImg = !placeholder && lazyObserve && !inView && !isBot;
-  const needsHolder = aspectRatio || hideImg;
+  const needsHolder = aspectRatio || hideImg || darken;
 
   const isMounted = useMountedState();
   // We use the DOM callbacks to determine state as this is closest to what
@@ -281,6 +301,16 @@ const PictureImpl = ({
       }}
     >
       {img}
+      {darken && (
+        <div
+          className={classes.darkener}
+          style={{
+            ...styles,
+            opacity: darken / 100,
+          }}
+          aria-hidden="true"
+        />
+      )}
     </div>
   ) : (
     img
