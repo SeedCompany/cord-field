@@ -39,8 +39,15 @@ export interface LayoutProps {
   width?: number;
   /** The image's natural height */
   height?: number;
-  /** Whether the image should stretch to the full width of its parent */
-  fullWidth?: boolean;
+  /**
+   * How does the image size itself in regards to its parent?
+   * - auto     - image will grow proportionally as large as it can (default)
+   * - contain  - image will not go beyond its natural size
+   *              and will center itself within its parent
+   * - cover    - image WILL go beyond its natural size to completely cover the
+   *              parent. This could result in parts of the image being hidden.
+   */
+  size?: 'auto' | 'contain' | 'cover';
 }
 
 export interface LazyProps {
@@ -100,15 +107,21 @@ export type PictureProps = Merge<
 >;
 
 const useStyles = makeStyles(() => ({
+  contain: {
+    margin: 'auto',
+  },
+  holder: {
+    position: 'relative',
+  },
+  img: {
+    maxWidth: '100%',
+  },
   aspectRatio: {
     position: 'absolute',
     top: 0,
     left: 0,
     width: '100%',
     height: '100%',
-  },
-  fullWidth: {
-    width: '100%',
   },
 }));
 
@@ -126,7 +139,7 @@ const PictureImpl = ({
   // Layout Props
   width,
   height,
-  fullWidth,
+  size = 'auto',
   // Lazy Props
   lazy: lazyProp,
   lazyOptions,
@@ -161,7 +174,7 @@ const PictureImpl = ({
     triggerOnce: true,
   });
   const hideImg = !placeholder && lazyObserve && !inView && !isBot;
-  const needsWrapper = aspectRatio || hideImg;
+  const needsHolder = aspectRatio || hideImg;
 
   const isMounted = useMountedState();
   // We use the DOM callbacks to determine state as this is closest to what
@@ -228,11 +241,11 @@ const PictureImpl = ({
       width={width}
       height={height}
       className={clsx({
+        [classes.img]: true,
         [classes.aspectRatio]: aspectRatio,
-        [classes.fullWidth]: fullWidth,
-        [classNameProp ?? '']: !needsWrapper && classNameProp,
+        [classNameProp ?? '']: !needsHolder && classNameProp,
       })}
-      style={!needsWrapper ? { ...styles, ...styleProp } : styles}
+      style={!needsHolder ? { ...styles, ...styleProp } : styles}
       {...(lazyNative ? { loading: 'lazy' } : {})}
       onLoad={(e) => {
         if (!isMounted()) {
@@ -258,12 +271,11 @@ const PictureImpl = ({
     />
   );
 
-  return needsWrapper ? (
+  const held = needsHolder ? (
     <div
       ref={lazyObserve && !inView ? ref : undefined}
-      className={classNameProp}
+      className={clsx(classes.holder, classNameProp)}
       style={{
-        position: 'relative',
         paddingBottom: aspectRatio ? `${(1 / aspectRatio) * 100}%` : undefined,
         ...styleProp,
       }}
@@ -273,6 +285,23 @@ const PictureImpl = ({
   ) : (
     img
   );
+
+  if (size === 'contain') {
+    return (
+      <div
+        className={classes.contain}
+        style={{ maxWidth: width, maxHeight: height }}
+      >
+        {held}
+      </div>
+    );
+  }
+
+  if (size === 'cover') {
+    throw new Error('<Picture size="cover"> is not yet implemented');
+  }
+
+  return held;
 };
 PictureImpl.displayName = 'Picture';
 export const Picture = memo(PictureImpl);
