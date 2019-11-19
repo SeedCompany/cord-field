@@ -7,6 +7,7 @@ import { useMountedState } from 'react-use';
 import { Merge } from 'type-fest';
 import { useIsBot } from '../hooks';
 import { many } from '../util';
+import { usePictureSizes } from './PictureSizes';
 
 export interface SourceProps {
   /**
@@ -176,7 +177,8 @@ const PictureImpl = ({
   ...rest
 }: PictureProps) => {
   const classes = useStyles();
-  const sizes = sizesProp ? many(sizesProp).join(', ') : undefined;
+  const sizesContext = usePictureSizes();
+  const sizes = sizesProp ? many(sizesProp).join(', ') : sizesContext;
   const srcSet = formatSrcSet(source);
   const aspectRatio = width && height ? width / height : 0;
 
