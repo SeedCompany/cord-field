@@ -49,6 +49,12 @@ export interface LayoutProps {
    *              parent. This could result in parts of the image being hidden.
    */
   size?: 'auto' | 'contain' | 'cover';
+  /**
+   * Image is to be used as a background
+   * This will absolutely position the element to fill the parent.
+   * Note: This requires the parent element to be styled `position: relative`
+   */
+  background?: boolean;
 }
 
 export interface LazyProps {
@@ -122,6 +128,15 @@ const useStyles = makeStyles(() => ({
   holder: {
     position: 'relative',
   },
+  background: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    overflow: 'hidden',
+    pointerEvents: 'none',
+  },
   img: {
     maxWidth: '100%',
   },
@@ -134,14 +149,7 @@ const useStyles = makeStyles(() => ({
   },
   darkener: {
     background: 'black',
-    position: 'absolute',
-    top: 0,
-    left: 0,
-    right: 0,
-    bottom: 0,
     opacity: 0,
-    overflow: 'hidden',
-    pointerEvents: 'none',
   },
 }));
 
@@ -160,6 +168,7 @@ const PictureImpl = ({
   width,
   height,
   size = 'auto',
+  background,
   // Lazy Props
   lazy: lazyProp,
   lazyMargin,
@@ -305,7 +314,7 @@ const PictureImpl = ({
       {img}
       {darken && (
         <div
-          className={classes.darkener}
+          className={clsx(classes.background, classes.darkener)}
           style={{
             ...styles,
             opacity: darken / 100,
@@ -318,10 +327,17 @@ const PictureImpl = ({
     img
   );
 
+  if (size === 'auto' && background) {
+    return <div className={classes.background}>{held}</div>;
+  }
+
   if (size === 'contain') {
     return (
       <div
-        className={classes.contain}
+        className={clsx({
+          [classes.contain]: true,
+          [classes.background]: background,
+        })}
         style={{ maxWidth: width, maxHeight: height }}
       >
         {held}
