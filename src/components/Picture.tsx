@@ -268,7 +268,7 @@ const PictureImpl = ({
       {...rest}
       ref={lazyObserve && !inView ? ref : undefined}
       srcSet={renderPlaceholder ? placeholder : srcSet}
-      sizes={renderPlaceholder ? undefined : sizes}
+      sizes={sizes}
       width={width}
       height={height}
       className={clsx({
