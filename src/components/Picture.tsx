@@ -41,14 +41,14 @@ export interface LayoutProps {
   /** The image's natural height */
   height?: number;
   /**
-   * How does the image size itself in regards to its parent?
+   * How does the image fit itself in regards to its parent?
    * - auto     - image will grow proportionally as large as it can (default)
    * - contain  - image will not go beyond its natural size
    *              and will center itself within its parent
    * - cover    - image WILL go beyond its natural size to completely cover the
    *              parent. This could result in parts of the image being hidden.
    */
-  size?: 'auto' | 'contain' | 'cover';
+  fit?: 'auto' | 'contain' | 'cover';
   /**
    * Image is to be used as a background
    * This will absolutely position the element to fill the parent.
@@ -167,7 +167,7 @@ const PictureImpl = ({
   // Layout Props
   width,
   height,
-  size = 'auto',
+  fit = 'auto',
   background,
   // Lazy Props
   lazy: lazyProp,
@@ -327,11 +327,11 @@ const PictureImpl = ({
     img
   );
 
-  if (size === 'auto' && background) {
+  if (fit === 'auto' && background) {
     return <div className={classes.background}>{held}</div>;
   }
 
-  if (size === 'contain') {
+  if (fit === 'contain') {
     return (
       <div
         className={clsx({
@@ -345,8 +345,8 @@ const PictureImpl = ({
     );
   }
 
-  if (size === 'cover') {
-    throw new Error('<Picture size="cover"> is not yet implemented');
+  if (fit === 'cover') {
+    throw new Error('<Picture fit="cover"> is not yet implemented');
   }
 
   return held;
