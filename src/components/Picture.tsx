@@ -42,11 +42,13 @@ export interface LayoutProps {
   height?: number;
   /**
    * How does the image fit itself in regards to its parent?
-   * - auto     - image will grow proportionally as large as it can (default)
-   * - contain  - image will not go beyond its natural size
-   *              and will center itself within its parent
-   * - cover    - image WILL go beyond its natural size to completely cover the
-   *              parent. This could result in parts of the image being hidden.
+   * - `auto`     - image will grow proportionally as large as it can
+   * - `contain`  - image will not go beyond its natural size
+   *                and will center itself within its parent
+   * - `cover`    - image WILL go beyond its natural size to completely cover the
+   *                parent. This could result in parts of the image being hidden.
+   *
+   * If `background` is true, then the default will be `cover`, else `auto`.
    */
   fit?: 'auto' | 'contain' | 'cover';
   /**
@@ -125,6 +127,12 @@ const useStyles = makeStyles(() => ({
   contain: {
     margin: 'auto',
   },
+  coverHolder: {
+    height: '100%',
+  },
+  coverImg: {
+    objectFit: 'cover',
+  },
   holder: {
     position: 'relative',
   },
@@ -167,7 +175,7 @@ const PictureImpl = ({
   // Layout Props
   width,
   height,
-  fit = 'auto',
+  fit: fitProp,
   background,
   // Lazy Props
   lazy: lazyProp,
@@ -190,6 +198,9 @@ const PictureImpl = ({
   const sizes = sizesProp ? many(sizesProp).join(', ') : sizesContext;
   const srcSet = formatSrcSet(source);
   const aspectRatio = width && height ? width / height : 0;
+  const fit = fitProp ? fitProp : background ? 'cover' : 'auto';
+  const fitCover = fit === 'cover';
+  const fitContain = fit === 'contain';
 
   const isBot = useIsBot();
   const [supportsNativeLazyLoading] = useState(
@@ -274,6 +285,7 @@ const PictureImpl = ({
       className={clsx({
         [classes.img]: true,
         [classes.aspectRatio]: aspectRatio,
+        [classes.coverImg]: fitCover,
         [classNameProp ?? '']: !needsHolder && classNameProp,
       })}
       style={!needsHolder ? { ...styles, ...styleProp } : styles}
@@ -305,7 +317,11 @@ const PictureImpl = ({
   const held = needsHolder ? (
     <div
       ref={lazyObserve && !inView ? ref : undefined}
-      className={clsx(classes.holder, classNameProp)}
+      className={clsx({
+        [classes.holder]: true,
+        [classes.coverHolder]: fitCover,
+        [classNameProp ?? '']: classNameProp,
+      })}
       style={{
         paddingBottom: aspectRatio ? `${(1 / aspectRatio) * 100}%` : undefined,
         ...styleProp,
@@ -327,26 +343,18 @@ const PictureImpl = ({
     img
   );
 
-  if (fit === 'auto' && background) {
-    return <div className={classes.background}>{held}</div>;
-  }
-
-  if (fit === 'contain') {
+  if (background || fitContain) {
     return (
       <div
         className={clsx({
-          [classes.contain]: true,
           [classes.background]: background,
+          [classes.contain]: fitContain,
         })}
-        style={{ maxWidth: width, maxHeight: height }}
+        style={fitContain ? { maxWidth: width, maxHeight: height } : undefined}
       >
         {held}
       </div>
     );
-  }
-
-  if (fit === 'cover') {
-    throw new Error('<Picture fit="cover"> is not yet implemented');
   }
 
   return held;
