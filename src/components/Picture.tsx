@@ -42,15 +42,15 @@ export interface LayoutProps {
   height?: number;
   /**
    * How does the image fit itself in regards to its parent?
-   * - `auto`     - image will grow proportionally as large as it can
+   * - `scale`    - image will grow proportionally as large as it can
    * - `contain`  - image will not go beyond its natural size
    *                and will center itself within its parent
    * - `cover`    - image WILL go beyond its natural size to completely cover the
    *                parent. This could result in parts of the image being hidden.
    *
-   * If `background` is true, then the default will be `cover`, else `auto`.
+   * If `background` is true, then the default will be `cover`, else `scale`.
    */
-  fit?: 'auto' | 'contain' | 'cover';
+  fit?: 'scale' | 'contain' | 'cover';
   /**
    * Image is to be used as a background
    * This will absolutely position the element to fill the parent.
@@ -198,7 +198,7 @@ const PictureImpl = ({
   const sizes = sizesProp ? many(sizesProp).join(', ') : sizesContext;
   const srcSet = formatSrcSet(source);
   const aspectRatio = width && height ? width / height : 0;
-  const fit = fitProp ? fitProp : background ? 'cover' : 'auto';
+  const fit = fitProp ? fitProp : background ? 'cover' : 'scale';
   const fitCover = fit === 'cover';
   const fitContain = fit === 'contain';
 
