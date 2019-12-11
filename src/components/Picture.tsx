@@ -124,6 +124,9 @@ export type PictureProps = Merge<
 >;
 
 const useStyles = makeStyles(() => ({
+  root: {
+    borderRadius: 0,
+  },
   contain: {
     margin: 'auto',
   },
@@ -147,6 +150,7 @@ const useStyles = makeStyles(() => ({
   },
   img: {
     maxWidth: '100%',
+    borderRadius: 'inherit',
   },
   aspectRatio: {
     position: 'absolute',
@@ -286,6 +290,7 @@ const PictureImpl = ({
         [classes.img]: true,
         [classes.aspectRatio]: aspectRatio,
         [classes.coverImg]: fitCover,
+        [classes.root]: !needsHolder,
         [classNameProp ?? '']: !needsHolder && classNameProp,
       })}
       style={!needsHolder ? { ...styles, ...styleProp } : styles}
@@ -320,6 +325,7 @@ const PictureImpl = ({
       className={clsx({
         [classes.holder]: true,
         [classes.coverHolder]: fitCover,
+        [classes.root]: true,
         [classNameProp ?? '']: classNameProp,
       })}
       style={{
