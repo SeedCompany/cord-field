@@ -11,6 +11,7 @@ export enum InternshipEngagementPosition {
   LanguageProgramManagerOrFieldOperations = 'language_program_manager_field_operations',
   LanguageSoftwareSupportSpecialist = 'language_software_support_specialist',
   LeadershipDevelopment = 'leadership_development',
+  LinguisticConsultant = 'linguistic_consultant',
   LiteracySpecialist = 'literacy_specialist',
   LukePartnershipFacilitatorOrSpecialist = 'luke_partnership_facilitator_specialist',
   MobilizerOrPartnershipSupportSpecialist = 'mobilizer_partnership_support_specialist',
@@ -35,6 +36,7 @@ export namespace InternshipEngagementPosition {
     [Enum.LanguageProgramManagerOrFieldOperations]: 'Language Program Manager/Field Operations',
     [Enum.LanguageSoftwareSupportSpecialist]: 'Language Software Support Specialist',
     [Enum.LeadershipDevelopment]: 'Leadership Development',
+    [Enum.LinguisticConsultant]: 'Linguistic Consultant',
     [Enum.LiteracySpecialist]: 'Literacy Specialist',
     [Enum.LukePartnershipFacilitatorOrSpecialist]: 'Luke Partnership Facilitator/Specialist',
     [Enum.MobilizerOrPartnershipSupportSpecialist]: 'Mobilizer/Partnership Support Specialist',
@@ -49,6 +51,7 @@ export namespace InternshipEngagementPosition {
   export const Groups = {
     'Translation Capacity Program': [
       Enum.ExegeticalFacilitator,
+      Enum.LinguisticConsultant,
       Enum.TranslationConsultantInTraining,
     ],
     'Partnership Capacity Program': [
