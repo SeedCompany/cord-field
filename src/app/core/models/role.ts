@@ -2,7 +2,7 @@ import { buildEnum } from './enum';
 
 export enum Role {
   Admin = 'adm',
-  AreaDirector = 'ad',
+  RegionalDirector = 'ad',
   AssociateFieldCoordinator = 'afc',
   BibleTranslationLiaison = 'btl',
   Consultant = 'c',
@@ -20,7 +20,7 @@ export enum Role {
   Mentor = 'm',
   OfficeOfThePresident = 'ootp',
   RegionalCommunicationsCoordinator = 'rcc',
-  RegionalDirector = 'rd',
+  FieldOperationsDirector = 'rd',
   Translator = 't',
   Writer = 'w',
 }
@@ -29,7 +29,7 @@ export namespace Role {
   const Enum = Role;
   export const {entries, forUI, values, trackEntryBy, trackValueBy} = buildEnum<Role>(Enum, {
     [Enum.Admin]: 'Admin',
-    [Enum.AssociateFieldCoordinator]: 'Associate Field Coordinator',
+    [Enum.AssociateFieldCoordinator]: 'Supporting Field Project Manager',
     [Enum.BibleTranslationLiaison]: 'Bible Translation Liaison',
     [Enum.Consultant]: 'Consultant',
     [Enum.ConsultantManager]: 'Consultant Manager',
@@ -37,7 +37,7 @@ export namespace Role {
     [Enum.Development]: 'Development',
     [Enum.ExecutiveDevelopmentRepresentative]: 'Executive Development Representative',
     [Enum.ExecutiveLeadership]: 'Executive Leadership',
-    [Enum.FieldCoordinator]: 'Field Coordinator',
+    [Enum.FieldCoordinator]: 'Field Project Manager',
     [Enum.FieldPartner]: 'Field Partner',
     [Enum.FinancialAnalyst]: 'Financial Analyst',
     [Enum.Intern]: 'Intern',
@@ -47,19 +47,19 @@ export namespace Role {
     [Enum.OfficeOfThePresident]: 'Office of the President',
     [Enum.Translator]: 'Translator',
     [Enum.Writer]: 'Writer',
-    [Enum.AreaDirector]: 'Area Director',
-    [Enum.RegionalCommunicationsCoordinator]: 'Regional Communication Coordinator',
     [Enum.RegionalDirector]: 'Regional Director',
+    [Enum.RegionalCommunicationsCoordinator]: 'Regional Communication Coordinator',
+    [Enum.FieldOperationsDirector]: 'Field Operations Director',
   });
 
   export const implicit = [
-    Enum.AreaDirector,
     Enum.RegionalDirector,
+    Enum.FieldOperationsDirector,
   ];
 
   export const unique = [
-    Enum.AreaDirector,
     Enum.RegionalDirector,
+    Enum.FieldOperationsDirector,
     Enum.FieldCoordinator,
     Enum.FinancialAnalyst,
     Enum.LeadFinancialAnalyst,
@@ -67,9 +67,9 @@ export namespace Role {
   ];
 
   export const needsLocations = [
-    Enum.AreaDirector,
-    Enum.AssociateFieldCoordinator,
     Enum.RegionalDirector,
+    Enum.AssociateFieldCoordinator,
+    Enum.FieldOperationsDirector,
     Enum.Consultant,
     Enum.ConsultantManager,
     Enum.Controller,
