@@ -136,20 +136,20 @@ export class ProjectService {
         ];
       case ProjectStatus.FinalizingProposal: // FC
         return [
-          ['Submit for Area Director Approval', ProjectStatus.PendingAreaDirectorApproval],
+          ['Submit for Regional Director Approval', ProjectStatus.PendingRegionalDirectorApproval],
           ['End Development', ProjectStatus.DidNotDevelop],
-        ];
-      case ProjectStatus.PendingAreaDirectorApproval: // AD
-        return [
-          ['Approve for Finance Confirmation', ProjectStatus.PendingFinanceConfirmation],
-          ['Approve for Regional Director Approval', ProjectStatus.PendingRegionalDirectorApproval],
-          ['Send Back for Corrections', ProjectStatus.FinalizingProposal],
-          ['Reject', ProjectStatus.Rejected],
         ];
       case ProjectStatus.PendingRegionalDirectorApproval: // RD
         return [
           ['Approve for Finance Confirmation', ProjectStatus.PendingFinanceConfirmation],
-          ['Send Back for Corrections to Area Director Approval', ProjectStatus.PendingAreaDirectorApproval],
+          ['Approve for Field Operations Director Approval', ProjectStatus.PendingFieldOperationsDirectorApproval],
+          ['Send Back for Corrections', ProjectStatus.FinalizingProposal],
+          ['Reject', ProjectStatus.Rejected],
+        ];
+      case ProjectStatus.PendingFieldOperationsDirectorApproval: // FOD
+        return [
+          ['Approve for Finance Confirmation', ProjectStatus.PendingFinanceConfirmation],
+          ['Send Back for Corrections to Regional Director Approval', ProjectStatus.PendingRegionalDirectorApproval],
           ['Send Back for Corrections', ProjectStatus.EarlyConversations],
           ['Reject', ProjectStatus.Rejected],
         ];
