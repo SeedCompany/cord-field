@@ -6,7 +6,7 @@
 <mat-form-field *ngIf="focused" [@slideInOut] floatLabel="never" color="accent">
   <input matInput type="text"
          placeholder="Search"
-         autofocus
+         [autofocus]="true"
          [(ngModel)]="value"
          (keydown.esc)="onClose()"
          (change)="onChange()"
