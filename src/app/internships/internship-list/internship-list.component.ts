@@ -13,7 +13,7 @@ import {
   QueryParams,
   RawQueryParams,
 } from '@app/shared/components/table-view/table-view.component';
-import { Subject } from 'rxjs';
+import { BehaviorSubject } from 'rxjs';
 import { distinctUntilChanged, map, startWith, takeUntil } from 'rxjs/operators';
 import { TitleAware, TitleProp } from '../../core/decorators';
 
@@ -52,8 +52,8 @@ export class InternshipListComponent extends SubscriptionComponent implements On
     { label: 'My Internships', value: true },
     { label: 'All Internships', value: false },
   ];
-  readonly listChanges = new Subject<ListOption>();
   listSelection = this.listSelectorOptions[0];
+  readonly listChanges = new BehaviorSubject<ListOption>(this.listSelection);
 
   constructor(
     private internships: InternshipService,
@@ -80,7 +80,7 @@ export class InternshipListComponent extends SubscriptionComponent implements On
   queryParamChanges(params: InternshipQueryParams) {
     if (params.all) {
       this.listSelection = this.listSelectorOptions[1];
-      // Emit change to keep distinctUntilChanged happy in stream below
+      // Emit change to keep distinctUntilChanged happy in extraInputs above
       this.listChanges.next(this.listSelection);
     }
   }
