@@ -49,6 +49,7 @@
     "localforage": "^1.6.0",
     "lodash-es": "^4.17.10",
     "luxon": "^1.2.1",
+    "node-sass": "^4.13.1",
     "rxjs": "^6.4.0",
     "ts-loader": "^5.3.3",
     "typescript-lazy-get-decorator": "^1.2.2",
