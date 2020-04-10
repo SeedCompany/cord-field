@@ -16,6 +16,7 @@
     "@material-ui/core": "^4.9.9",
     "@material-ui/icons": "^4.9.1",
     "@material-ui/lab": "^4.0.0-alpha.48",
+    "constate": "^2.0.0",
     "lodash": "^4.17.15",
     "react": "^16.13.1",
     "react-app-rewired": "^2.1.5",

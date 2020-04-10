@@ -1,6 +1,7 @@
 import { CssBaseline, ThemeProvider } from '@material-ui/core';
 import React, { cloneElement, FC, ReactElement } from 'react';
 import { BrowserRouter } from 'react-router-dom';
+import { TitleProvider } from './components/title';
 import { createTheme } from './theme';
 
 const theme = createTheme();
@@ -12,6 +13,7 @@ const theme = createTheme();
 const providers = [
   <ThemeProvider theme={theme} children={<></>} />,
   <BrowserRouter />,
+  <TitleProvider title="CORD Field" />,
 ];
 
 export const App = () => (
