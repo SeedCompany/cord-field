@@ -1,5 +1,6 @@
 import { CssBaseline, ThemeProvider } from '@material-ui/core';
 import React, { cloneElement, FC, ReactElement } from 'react';
+import { BrowserRouter } from 'react-router-dom';
 import { createTheme } from './theme';
 
 const theme = createTheme();
@@ -10,7 +11,7 @@ const theme = createTheme();
  */
 const providers = [
   <ThemeProvider theme={theme} children={<></>} />,
-  // more
+  <BrowserRouter />,
 ];
 
 export const App = () => (
