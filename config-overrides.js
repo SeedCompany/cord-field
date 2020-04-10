@@ -1,4 +1,7 @@
 /* eslint-disable @typescript-eslint/no-var-requires */
-const { override } = require('customize-cra');
+const { addBundleVisualizer, override } = require('customize-cra');
 
-module.exports = override();
+module.exports = override(
+  addBundleVisualizer({}, true)
+  // more
+);
