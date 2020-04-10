@@ -3503,6 +3503,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@types/validator@npm:^13.0.0":
+  version: 13.0.0
+  resolution: "@types/validator@npm:13.0.0"
+  checksum: 2/22cd062bf92c81939c7610f94252a1997b0ed4d67f5f39c36db0d28dfb17d554077b8c7abe70cf91bb38bc69d2ec0110e4ccd7cc3a98e177ddcf5bbe2c654426
+  languageName: node
+  linkType: hard
+
 "@types/webpack-env@npm:^1.15.0":
   version: 1.15.1
   resolution: "@types/webpack-env@npm:1.15.1"
@@ -6750,12 +6757,14 @@ __metadata:
     "@types/node": ^12.0.0
     "@types/react": ^16.9.0
     "@types/react-dom": ^16.9.0
+    "@types/validator": ^13.0.0
     babel-plugin-import: ^1.13.0
     babel-plugin-mui-make-styles: ^0.1.1
     clsx: ^1.1.0
     constate: ^2.0.0
     customize-cra: ^0.9.1
     eslint: ^6.8.0
+    final-form: ^4.19.1
     graphql: ^15.0.0
     husky: ^4.2.5
     lint-staged: ^10.1.3
@@ -6765,13 +6774,17 @@ __metadata:
     react: ^16.13.1
     react-app-rewired: ^2.1.5
     react-dom: ^16.13.1
+    react-final-form: ^6.4.0
     react-intersection-observer: ^8.25.1
     react-router: ^6.0.0-alpha.3
     react-router-dom: ^6.0.0-alpha.3
     react-scripts: ^3.4.1
     react-use: ^14.1.1
+    ts-essentials: ^6.0.4
     ts-node: ^8.8.2
+    type-fest: ^0.13.1
     typescript: ^3.8.3
+    validator: ^13.0.0
     webpack: 4.42.0
     webpack-bundle-analyzer: ^3.6.1
   languageName: unknown
@@ -9144,6 +9157,15 @@ __metadata:
   dependencies:
     to-regex-range: ^5.0.1
   checksum: 2/efca43d59b487ad4bc0b2b1cb9e51617c75a7b0159db51fa190c75c3d634ea5fad1ff4750d7c14346add4cd065e3c46e8f99af333edf2b4ec2a424f87e491a85
+  languageName: node
+  linkType: hard
+
+"final-form@npm:^4.19.1":
+  version: 4.19.1
+  resolution: "final-form@npm:4.19.1"
+  dependencies:
+    "@babel/runtime": ^7.8.3
+  checksum: 2/a99755c40d9bb470de5d68c58ffd2348858ec4e05a2f57fe1908f24e0f6bb84c8bdf2909f2447eed84c00af38badb6207c125ed77e7e6a5f9923cbeed729d2b5
   languageName: node
   linkType: hard
 
@@ -16185,6 +16207,19 @@ __metadata:
   languageName: node
   linkType: hard
 
+"react-final-form@npm:^6.4.0":
+  version: 6.4.0
+  resolution: "react-final-form@npm:6.4.0"
+  dependencies:
+    "@babel/runtime": ^7.9.2
+    ts-essentials: ^6.0.3
+  peerDependencies:
+    final-form: ^4.19.0
+    react: ^16.8.0
+  checksum: 2/729281c85411609412050179bea7f40e8902a5f5b9015816d864b5fcb73ad94250856aacd5b82dcba3b31bbf0ae090a58bcac8e99fa283952d0957997623f9a4
+  languageName: node
+  linkType: hard
+
 "react-focus-lock@npm:^2.1.0":
   version: 2.2.1
   resolution: "react-focus-lock@npm:2.2.1"
@@ -18831,6 +18866,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"ts-essentials@npm:^6.0.3, ts-essentials@npm:^6.0.4":
+  version: 6.0.4
+  resolution: "ts-essentials@npm:6.0.4"
+  peerDependencies:
+    typescript: ">=3.7.0"
+  checksum: 2/8ae43078154a9688b181152521c891ea8d653e154894d2d23a798451a3d49e7fc708c0cb8b63664b46fde314b14ea8c3870f2b8b3178700486605f099a49f8bf
+  languageName: node
+  linkType: hard
+
 "ts-invariant@npm:^0.4.0, ts-invariant@npm:^0.4.4":
   version: 0.4.4
   resolution: "ts-invariant@npm:0.4.4"
@@ -18933,6 +18977,13 @@ __metadata:
   version: 0.11.0
   resolution: "type-fest@npm:0.11.0"
   checksum: 2/02e5cadf13590a5724cacf8d9133320efd173f6fb1b695fcb29e56551a315bf0f07ca988a780a1999b7b55bb3eaaa7f37223615207236d393af17bba6749dc95
+  languageName: node
+  linkType: hard
+
+"type-fest@npm:^0.13.1":
+  version: 0.13.1
+  resolution: "type-fest@npm:0.13.1"
+  checksum: 2/11acce4f34c75a838914bdc4a0133d2dd0864e313897471974880df82624159521bae691a6100ff99f93be2d0f8871ecdab18573d2c67e61905cf2f5cbfa52a6
   languageName: node
   linkType: hard
 
@@ -19307,6 +19358,13 @@ __metadata:
     spdx-correct: ^3.0.0
     spdx-expression-parse: ^3.0.0
   checksum: 2/940899bd4eacfa012ceecb10a5814ba0e8103da5243aa74d0d62f1f8a405efcd23e034fb7193e2d05b392870c53aabcb1f66439b062075cdcb28bc5d562a8ff6
+  languageName: node
+  linkType: hard
+
+"validator@npm:^13.0.0":
+  version: 13.0.0
+  resolution: "validator@npm:13.0.0"
+  checksum: 2/c537ecd87c245aad5466a3821c9f87909d6ddd695daddc37691863a79b481a7efc0f3d3e88d0bf001d8d9c64fb4151c4e7a92fe060899c86d8ad9c334dceac2d
   languageName: node
   linkType: hard
 
