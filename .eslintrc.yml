@@ -3,3 +3,14 @@ plugins:
   - '@seedcompany'
 extends:
   - plugin:@seedcompany/react
+rules:
+  no-restricted-imports:
+    - error
+    - paths:
+        # As noted in https://github.com/mui-org/material-ui/releases/tag/v4.5.1
+        - name: '@material-ui/styles'
+          message: Use '@material-ui/core' instead
+      patterns:
+        # Enforce single import. Leave code splitting to webpack.
+        - '@material-ui/core/*'
+        - lodash/*
