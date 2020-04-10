@@ -30,6 +30,7 @@ package-lock.json
 
 # misc
 *.log
+*.local
 
 # System Files
 .DS_Store
