@@ -4213,11 +4213,13 @@ __metadata:
     "@types/node": ^12.0.0
     "@types/react": ^16.9.0
     "@types/react-dom": ^16.9.0
+    customize-cra: ^0.9.1
     eslint: ^6.8.0
     husky: ^4.2.5
     lint-staged: ^10.1.3
     prettier: ^2.0.4
     react: ^16.13.1
+    react-app-rewired: ^2.1.5
     react-dom: ^16.13.1
     react-scripts: 3.4.1
     ts-node: ^8.8.2
@@ -4670,6 +4672,15 @@ __metadata:
   version: 2.6.10
   resolution: "csstype@npm:2.6.10"
   checksum: 2/b48260010e9bdc28ab80554375c14e2aec3f7fd46806a9206c0a15f99a0b559049bc4d75f91676183b76baf03708d10c1308b94be89870958797eced54cfe661
+  languageName: node
+  linkType: hard
+
+"customize-cra@npm:^0.9.1":
+  version: 0.9.1
+  resolution: "customize-cra@npm:0.9.1"
+  dependencies:
+    lodash.flow: ^3.5.0
+  checksum: 2/7e4a20466d5d6694da2d8b878cb46d6a78d7ee854e0d5531d1c42f26eed521b31dcbe6a1a8ba304c858c51ed330d219b74bad85a73b67f11f77470ddf6cab8ba
   languageName: node
   linkType: hard
 
@@ -8942,6 +8953,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"lodash.flow@npm:^3.5.0":
+  version: 3.5.0
+  resolution: "lodash.flow@npm:3.5.0"
+  checksum: 2/52204602c6ec53e78497387751bf2cf432a9db7b0982e62b01b489be847b68efde8f7efed6fbeaeaeb66d7c7bd171d389c32d548908eafc00958bba8d462e55a
+  languageName: node
+  linkType: hard
+
 "lodash.memoize@npm:^4.1.2":
   version: 4.1.2
   resolution: "lodash.memoize@npm:4.1.2"
@@ -11867,6 +11885,19 @@ __metadata:
     regenerator-runtime: ^0.13.3
     whatwg-fetch: ^3.0.0
   checksum: 2/94d24bf1d69a0cbb26d8adbb14ba600b29c7c5adc06c9f9c8337d0f8ee7358ee2c443d806f8ca96fdf002d7f37c1a5fae6a796f63164df44a4fc3996aeb2d71f
+  languageName: node
+  linkType: hard
+
+"react-app-rewired@npm:^2.1.5":
+  version: 2.1.5
+  resolution: "react-app-rewired@npm:2.1.5"
+  dependencies:
+    semver: ^5.6.0
+  peerDependencies:
+    react-scripts: ">=2.1.3"
+  bin:
+    react-app-rewired: ./bin/index.js
+  checksum: 2/860d59bf874f097fed89b29e364873e19bb34d7dc003bd339412d351b299f2b0abffcbf80a06e520395593ce498cad3cf4c046be34e894380eb82b55a9854de7
   languageName: node
   linkType: hard
 
