@@ -4348,6 +4348,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"constate@npm:^2.0.0":
+  version: 2.0.0
+  resolution: "constate@npm:2.0.0"
+  peerDependencies:
+    react: ^16.8.0
+  checksum: 2/f508ff6705fa393434af3495f86812ad23afc186f88c140600cd4ddea02dc98cb12278b939748297475bed78bda9553d39eaaef282b82e1883c3141204f4b016
+  languageName: node
+  linkType: hard
+
 "contains-path@npm:^0.1.0":
   version: 0.1.0
   resolution: "contains-path@npm:0.1.0"
@@ -4443,6 +4452,7 @@ __metadata:
     "@types/react-dom": ^16.9.0
     babel-plugin-import: ^1.13.0
     babel-plugin-mui-make-styles: ^0.1.1
+    constate: ^2.0.0
     customize-cra: ^0.9.1
     eslint: ^6.8.0
     husky: ^4.2.5
