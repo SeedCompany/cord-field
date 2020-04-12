@@ -35,3 +35,6 @@ package-lock.json
 # System Files
 .DS_Store
 Thumbs.db
+
+# Generated files
+graphql.schema.json
