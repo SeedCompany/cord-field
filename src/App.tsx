@@ -2,10 +2,10 @@ import { ApolloProvider } from '@apollo/client';
 import { CssBaseline, ThemeProvider } from '@material-ui/core';
 import React, { cloneElement, FC, ReactElement } from 'react';
 import { BrowserRouter } from 'react-router-dom';
+import { apolloClient } from './api';
 import { TitleProvider } from './components/title';
 import { Root } from './scenes/Root';
 import { createTheme } from './theme';
-import { apolloClient } from './util/apolloClient';
 
 const theme = createTheme();
 

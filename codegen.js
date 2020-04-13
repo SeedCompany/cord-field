@@ -16,8 +16,9 @@ module.exports = {
     afterOneFileWrite: ['eslint --fix'],
   },
   generates: {
-    './src/generated/graphql.tsx': {
+    './src/api/graphql.generated.tsx': {
       plugins: [
+        // Until hooks & common can be merged into one import
         { add: '/* eslint-disable import/no-duplicates */' },
         'typescript',
         'typescript-operations',

@@ -1,9 +1,6 @@
 import React from 'react';
+import { useGetTestUserQuery, useUpdateTestUserMutation } from '../../api';
 import { useTitle } from '../../components/title';
-import {
-  useGetTestUserQuery,
-  useUpdateTestUserMutation,
-} from '../../generated/graphql';
 
 export const DevTest = () => {
   useTitle('Developer Test Scene');
