@@ -16,3 +16,10 @@ rules:
         # Enforce single import. Leave code splitting to webpack.
         - '@material-ui/core/*'
         - lodash/*
+
+overrides:
+  # Allow default export on storybook files
+  - files:
+      - ./**/*.stories.tsx
+    rules:
+      import/no-default-export: off
