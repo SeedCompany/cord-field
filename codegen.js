@@ -1,15 +1,5 @@
-require('dotenv').config({
-  path: `.env`,
-});
-
 module.exports = {
-  schema: [
-    {
-      [`${process.env.REACT_APP_API_BASE_URL}/graphql`]: {
-        headers: {},
-      },
-    },
-  ],
+  schema: 'schema.graphql',
   documents: ['./src/**/*.graphql'],
   overwrite: true,
   hooks: {

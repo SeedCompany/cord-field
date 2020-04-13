@@ -37,4 +37,4 @@ package-lock.json
 Thumbs.db
 
 # Generated files
-graphql.schema.json
+/schema.graphql
