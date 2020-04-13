@@ -1,3 +1,5 @@
 "**/*.{ts,tsx}":
   - eslint --ext .ts,.tsx --fix --max-warnings 0
   - git add
+"**/*.graphql":
+  - prettier --write

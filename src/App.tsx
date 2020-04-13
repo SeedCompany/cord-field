@@ -1,7 +1,10 @@
+import { ApolloProvider } from '@apollo/client';
 import { CssBaseline, ThemeProvider } from '@material-ui/core';
 import React, { cloneElement, FC, ReactElement } from 'react';
 import { BrowserRouter } from 'react-router-dom';
+import { apolloClient } from './api';
 import { TitleProvider } from './components/title';
+import { Root } from './scenes/Root';
 import { createTheme } from './theme';
 
 const theme = createTheme();
@@ -11,6 +14,7 @@ const theme = createTheme();
  * This prevents git diff churning
  */
 const providers = [
+  <ApolloProvider client={apolloClient} children={<></>} />,
   <ThemeProvider theme={theme} children={<></>} />,
   <BrowserRouter />,
   <TitleProvider title="CORD Field" />,
@@ -19,7 +23,7 @@ const providers = [
 export const App = () => (
   <Nest elements={providers}>
     <CssBaseline />
-    <div>hello world</div>
+    <Root />
   </Nest>
 );
 

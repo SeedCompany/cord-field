@@ -1,0 +1,9 @@
+fragment UpdateTestUserFragment on User {
+  id
+  realFirstName {
+    value
+  }
+  displayFirstName {
+    value
+  }
+}
