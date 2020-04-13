@@ -9,7 +9,9 @@
     "type-check": "tsc -p .",
     "analyze": "yarn build --analyze",
     "gql-gen": "graphql-codegen",
-    "gql-gen-watch": "yarn gql-gen --watch"
+    "gql-gen-watch": "yarn gql-gen --watch",
+    "storybook": "start-storybook -p 9009 -s public",
+    "build-storybook": "build-storybook -s public"
   },
   "engines": {
     "node": ">=12"
@@ -38,6 +40,11 @@
     "@graphql-codegen/typescript-operations": "^1.13.2",
     "@graphql-codegen/typescript-react-apollo": "^1.13.2",
     "@seedcompany/eslint-plugin": "~0.0.2",
+    "@storybook/addon-actions": "^5.3.18",
+    "@storybook/addon-links": "^5.3.18",
+    "@storybook/addons": "^5.3.18",
+    "@storybook/preset-create-react-app": "^2.1.1",
+    "@storybook/react": "^5.3.18",
     "@testing-library/dom": "^7.2.1",
     "@testing-library/jest-dom": "^5.5.0",
     "@testing-library/react": "^9.3.2",
@@ -48,6 +55,7 @@
     "@types/node": "^12.0.0",
     "@types/react": "^16.9.0",
     "@types/react-dom": "^16.9.0",
+    "babel-loader": "^8.1.0",
     "babel-plugin-import": "^1.13.0",
     "babel-plugin-mui-make-styles": "^0.1.1",
     "customize-cra": "^0.9.1",
