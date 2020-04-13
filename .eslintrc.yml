@@ -4,6 +4,8 @@ plugins:
 extends:
   - plugin:@seedcompany/react
 rules:
+  # Makes refactoring harder
+  import/no-default-export: warn
   no-restricted-imports:
     - error
     - paths:
