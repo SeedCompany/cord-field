@@ -8,7 +8,7 @@
     "lint": "eslint --ext .ts,.tsx --fix --max-warnings 0 .",
     "type-check": "tsc -p .",
     "analyze": "yarn build --analyze",
-    "gql-gen": "graphql-codegen --config codegen.js",
+    "gql-gen": "graphql-codegen",
     "gql-gen-watch": "yarn gql-gen --watch"
   },
   "engines": {
