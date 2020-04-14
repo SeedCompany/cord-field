@@ -51,7 +51,7 @@ export class InternshipEngagement extends EditableInternshipEngagement {
     engagement.possibleStatuses = json.possibleStatuses || [];
     engagement.countryOfOrigin = ifValue(json.countryOfOrigin, Location.fromJson, null);
     engagement.mentor = ifValue(json.mentor, User.fromJson, null);
-    engagement.position = json.position;
+    engagement.position = InternshipEngagementPosition.parse(json.position);
     engagement.methodologies = json.methodologies || [];
     engagement.tags = json.tags || [];
     engagement.initialEndDate = maybeServerDate(json.initialEndDate);
