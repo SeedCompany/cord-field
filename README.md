@@ -14,5 +14,4 @@
 
 - Run the following two commands:
   - `yarn start`
-  - [OPTIONAL] - only required when writing graphql queries and mutations: `yarn gql-gen-watch`
   - [OPTIONAL] - to view storybook: `yarn storybook`
