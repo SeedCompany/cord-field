@@ -521,6 +521,18 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@babel/plugin-proposal-export-namespace-from@npm:^7.8.3":
+  version: 7.8.3
+  resolution: "@babel/plugin-proposal-export-namespace-from@npm:7.8.3"
+  dependencies:
+    "@babel/helper-plugin-utils": ^7.8.3
+    "@babel/plugin-syntax-export-namespace-from": ^7.8.3
+  peerDependencies:
+    "@babel/core": ^7.0.0-0
+  checksum: 2/f66fb8e59ca7ac66ad884a425685fc1f7a729b67badb72571b58f0bdb34c595d2b9acd6e8c4140e3d629a031cbef3bd44bb2816dc5cf86409df760879312d388
+  languageName: node
+  linkType: hard
+
 "@babel/plugin-proposal-json-strings@npm:^7.8.3":
   version: 7.8.3
   resolution: "@babel/plugin-proposal-json-strings@npm:7.8.3"
@@ -647,6 +659,17 @@ __metadata:
   peerDependencies:
     "@babel/core": ^7.0.0-0
   checksum: 2/134a6f37feac0e6d55f8188232e11798ccf699b02d50a4daf9c040f52a22ee32923a6a979443ecc865f4014937ffe67ac11b81aa5668b6792238c647314f41c9
+  languageName: node
+  linkType: hard
+
+"@babel/plugin-syntax-export-namespace-from@npm:^7.8.3":
+  version: 7.8.3
+  resolution: "@babel/plugin-syntax-export-namespace-from@npm:7.8.3"
+  dependencies:
+    "@babel/helper-plugin-utils": ^7.8.3
+  peerDependencies:
+    "@babel/core": ^7.0.0-0
+  checksum: 2/832e007319bc5040818012d51eb91c3ad4c38a1ea696e9a9805df4d601d8c4f061032cb61494946e7bdaa5db0422a6bb6f39577cd0e5c8323b6bb2c364406dcb
   languageName: node
   linkType: hard
 
@@ -6732,6 +6755,7 @@ __metadata:
     "@apollo/client": ^3.0.0-beta.43
     "@apollo/react-components": 4.0.0-beta.1
     "@babel/core": ^7.9.0
+    "@babel/plugin-proposal-export-namespace-from": ^7.8.3
     "@graphql-codegen/add": ^1.13.2
     "@graphql-codegen/cli": ^1.13.2
     "@graphql-codegen/introspection": ^1.13.2
