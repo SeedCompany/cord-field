@@ -40,7 +40,7 @@
     "@graphql-codegen/typescript": "^1.13.2",
     "@graphql-codegen/typescript-operations": "^1.13.2",
     "@graphql-codegen/typescript-react-apollo": "^1.13.2",
-    "@seedcompany/eslint-plugin": "~0.0.2",
+    "@seedcompany/eslint-plugin": "~0.0.4",
     "@storybook/addon-actions": "^5.3.18",
     "@storybook/addon-links": "^5.3.18",
     "@storybook/addons": "^5.3.18",

@@ -2517,9 +2517,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@seedcompany/eslint-plugin@npm:~0.0.2":
-  version: 0.0.2
-  resolution: "@seedcompany/eslint-plugin@npm:0.0.2"
+"@seedcompany/eslint-plugin@npm:~0.0.4":
+  version: 0.0.4
+  resolution: "@seedcompany/eslint-plugin@npm:0.0.4"
   dependencies:
     "@typescript-eslint/eslint-plugin": ^2.27.0
     "@typescript-eslint/experimental-utils": ^2.27.0
@@ -2535,7 +2535,7 @@ __metadata:
   peerDependencies:
     eslint: ^6.8.0
     prettier: ^2.0.0
-  checksum: 2/56d691f34f29b773e358992135a89b65aba4ca897b4b235d7a4d92d18d511140e4812f1afa27091c7ec0cedccc93464614d35a2cbcbc6b4bdf2a0223477fc089
+  checksum: 2/90fe404aa645381e0f0b3ccf7fa9276dc8acde3f5323212122ae91f55b66f7486cc9fefe61a42976b711bee5d120c8ad10d171e85cee89e875c171e22e979b02
   languageName: node
   linkType: hard
 
@@ -6713,7 +6713,7 @@ __metadata:
     "@material-ui/core": ^4.9.9
     "@material-ui/icons": ^4.9.1
     "@material-ui/lab": ^4.0.0-alpha.48
-    "@seedcompany/eslint-plugin": ~0.0.2
+    "@seedcompany/eslint-plugin": ~0.0.4
     "@storybook/addon-actions": ^5.3.18
     "@storybook/addon-links": ^5.3.18
     "@storybook/addons": ^5.3.18
