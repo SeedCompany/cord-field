@@ -4,11 +4,7 @@
     "module": "esnext",
     "moduleResolution": "node",
     "target": "esnext",
-    "lib": [
-      "esnext",
-      "dom",
-      "dom.iterable"
-    ],
+    "lib": ["esnext", "dom", "dom.iterable"],
     "noEmit": true,
     "jsx": "preserve",
     "allowJs": true,
@@ -24,12 +20,6 @@
       "*": ["./typings/*"]
     }
   },
-  "include": [
-    "src",
-    "**/*"
-  ],
-  "exclude": [
-    "build",
-    "node_modules"
-  ]
+  "include": ["src", "**/*"],
+  "exclude": ["build", "node_modules"]
 }

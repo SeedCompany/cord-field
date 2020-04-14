@@ -1,6 +1,6 @@
 import { ApolloProvider } from '@apollo/client';
 import { CssBaseline, ThemeProvider } from '@material-ui/core';
-import React, { cloneElement, FC, ReactElement } from 'react';
+import React, { cloneElement, FC, ReactElement, ReactNode } from 'react';
 import { BrowserRouter } from 'react-router-dom';
 import { apolloClient } from './api';
 import { TitleProvider } from './components/title';
@@ -24,6 +24,14 @@ export const App = () => (
   <Nest elements={providers}>
     <CssBaseline />
     <Root />
+  </Nest>
+);
+
+// Helper component, for wrapping the app's providers around stories and tests
+export const MockApp: FC<{ children: ReactNode }> = ({ children }) => (
+  <Nest elements={providers}>
+    <CssBaseline />
+    {children}
   </Nest>
 );
 

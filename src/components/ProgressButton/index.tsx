@@ -9,7 +9,7 @@ import {
 } from '@material-ui/core';
 import { FC } from 'react';
 import * as React from 'react';
-import { ErrorButton } from './ErrorButton';
+import { ErrorButton } from '../ErrorButton';
 
 const useStyles = makeStyles({
   // This is to center spinner within button, while maintaining consistent button width.
