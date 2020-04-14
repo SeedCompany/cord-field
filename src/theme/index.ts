@@ -5,6 +5,7 @@ import createBreakpoints from '@material-ui/core/styles/createBreakpoints';
 import createPalette from '@material-ui/core/styles/createPalette';
 // eslint-disable-next-line no-restricted-imports
 import createSpacing from '@material-ui/core/styles/createSpacing';
+import { typography } from './typography';
 
 const palette = createPalette({
   primary: {
@@ -30,6 +31,7 @@ export const createTheme = () =>
     breakpoints,
     palette,
     spacing,
+    typography,
   });
 
 // Augment Material UI's theme (if/when needed)
