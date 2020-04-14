@@ -7,7 +7,6 @@ export enum InternshipEngagementPosition {
   Communication = 'communication_specialist_internal',
   LanguageProgramManager = 'language_program_manager',
   LeadershipDevelopment = 'leadership_development',
-  LinguisticConsultant = 'linguistic_consultant',
   Literacy = 'literacy_specialist',
   Mobilization = 'mobilizer_partnership_support_specialist',
   OralFacilitator = 'oral_facilitator_specialist',
@@ -27,7 +26,6 @@ export namespace InternshipEngagementPosition {
     [Enum.Communication]: 'Communication',
     [Enum.LanguageProgramManager]: 'Language Program Manager',
     [Enum.LeadershipDevelopment]: 'Leadership Development',
-    [Enum.LinguisticConsultant]: 'Linguistic Consultant',
     [Enum.Literacy]: 'Literacy',
     [Enum.Mobilization]: 'Mobilization',
     [Enum.OralFacilitator]: 'Oral Facilitator',
@@ -52,7 +50,6 @@ export namespace InternshipEngagementPosition {
     'Quality Assurance': [
       Enum.ConsultantInTraining,
       Enum.ExegeticalFacilitator,
-      Enum.LinguisticConsultant, // TODO What about this?
     ],
     'Capacity Building - Leadership': [
       Enum.LeadershipDevelopment,
