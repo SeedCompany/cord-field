@@ -5,15 +5,20 @@ import createBreakpoints from '@material-ui/core/styles/createBreakpoints';
 import createPalette from '@material-ui/core/styles/createPalette';
 // eslint-disable-next-line no-restricted-imports
 import createSpacing from '@material-ui/core/styles/createSpacing';
+// eslint-disable-next-line no-restricted-imports
+import { Shape } from '@material-ui/core/styles/shape';
 import { typography } from './typography';
 
 const palette = createPalette({
   primary: {
-    main: '#64b145',
+    main: '#467f3b',
     contrastText: '#ffffff',
   },
   secondary: {
-    main: '#9dcdd0',
+    main: '#ff5a5f',
+  },
+  error: {
+    main: '#e87967',
   },
 });
 
@@ -26,12 +31,51 @@ const breakpoints = createBreakpoints({});
 
 const spacing = createSpacing(8); // default
 
+const shape: Shape = {
+  borderRadius: 6,
+};
+
 export const createTheme = () =>
   createMuiTheme({
     breakpoints,
     palette,
     spacing,
+    shape,
     typography,
+    props: {
+      MuiCard: {
+        elevation: 8,
+      },
+      MuiTextField: {
+        variant: 'filled',
+        fullWidth: true,
+        margin: 'dense',
+      },
+      MuiInputLabel: {
+        shrink: true,
+      },
+    },
+    overrides: {
+      MuiButton: {
+        root: {
+          textTransform: 'none',
+        },
+        containedSizeLarge: {
+          fontSize: '1rem',
+          fontWeight: 400,
+          padding: '16px 40px',
+        },
+      },
+      MuiFormLabel: {
+        root: {
+          textTransform: 'uppercase',
+          fontWeight: 500,
+        },
+        asterisk: {
+          display: 'none',
+        },
+      },
+    },
   });
 
 // Augment Material UI's theme (if/when needed)

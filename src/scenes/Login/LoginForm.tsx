@@ -23,8 +23,8 @@ export const LoginForm = (props: FormProps<FormValues>) => {
         <form onSubmit={handleSubmit}>
           <Card className={classes.card}>
             <CardContent>
-              <EmailField fullWidth />
-              <PasswordField fullWidth />
+              <EmailField />
+              <PasswordField />
             </CardContent>
             <CardActions>
               <SubmitButton />
