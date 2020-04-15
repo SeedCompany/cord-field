@@ -1,6 +1,6 @@
 import { action } from '@storybook/addon-actions';
 import React from 'react';
-import { ProgressButton } from '.';
+import { ProgressButton } from './ProgressButton';
 
 export default { title: 'Buttons.ProgressButton' };
 

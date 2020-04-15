@@ -1,5 +1,5 @@
 import React from 'react';
-import { LoginMutationResult, useLoginMutation } from '../../api';
+import { useLoginMutation } from '../../api';
 import { LoginForm } from './LoginForm';
 
 export const Login = () => {
@@ -9,10 +9,12 @@ export const Login = () => {
     <LoginForm
       onSubmit={async (data) => {
         try {
-          const res: LoginMutationResult['data'] = await login({
+          const res = await login({
             variables: {
-              email: data.email,
-              password: data.password,
+              input: {
+                email: data.email,
+                password: data.password,
+              },
             },
           });
 

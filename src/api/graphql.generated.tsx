@@ -3401,8 +3401,7 @@ export type UpdateTestUserMutation = { __typename?: 'Mutation' } & {
 };
 
 export interface LoginMutationVariables {
-  email: Scalars['String'];
-  password: Scalars['String'];
+  input: LoginInput;
 }
 
 export type LoginMutation = { __typename?: 'Mutation' } & {
@@ -3552,8 +3551,8 @@ export type UpdateTestUserMutationOptions = ApolloReactCommon.BaseMutationOption
   UpdateTestUserMutationVariables
 >;
 export const LoginDocument = gql`
-  mutation Login($email: String!, $password: String!) {
-    login(input: { email: $email, password: $password }) {
+  mutation Login($input: LoginInput!) {
+    login(input: $input) {
       success
       user {
         id
@@ -3585,8 +3584,7 @@ export type LoginMutationFn = ApolloReactCommon.MutationFunction<
  * @example
  * const [loginMutation, { data, loading, error }] = useLoginMutation({
  *   variables: {
- *      email: // value for 'email'
- *      password: // value for 'password'
+ *      input: // value for 'input'
  *   },
  * });
  */

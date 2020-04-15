@@ -1,6 +1,6 @@
 import { action } from '@storybook/addon-actions';
 import React from 'react';
-import { ErrorButton } from '.';
+import { ErrorButton } from './ErrorButton';
 
 export default { title: 'Buttons.ErrorButton' };
 

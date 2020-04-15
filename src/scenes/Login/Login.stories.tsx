@@ -1,12 +1,7 @@
 import { action } from '@storybook/addon-actions';
 import React from 'react';
-import { MockApp } from '../../App';
-import { LoginForm } from './LoginForm';
+import { LoginForm as Form } from './LoginForm';
 
 export default { title: 'Scenes.Login' };
 
-export const _LoginForm = () => (
-  <MockApp>
-    <LoginForm onSubmit={action('onSubmit')} />
-  </MockApp>
-);
+export const LoginForm = () => <Form onSubmit={action('onSubmit')} />;

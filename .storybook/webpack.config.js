@@ -1,12 +1,4 @@
 module.exports = ({ config }) => {
-  config.resolve.modules = config.resolve.modules.filter((m) => m !== '.');
-  config.module.rules = config.module.rules.filter((rule) => {
-    return !(
-      rule.use &&
-      rule.use[0].loader &&
-      rule.use[0].loader.includes('eslint-loader')
-    );
-  });
   config.module.rules.push({
     test: /\.(ts|tsx)$/,
     use: [
@@ -19,6 +11,5 @@ module.exports = ({ config }) => {
       require.resolve('react-docgen-typescript-loader'),
     ],
   });
-  config.resolve.extensions.push('.ts', '.tsx');
   return config;
 };
