@@ -5,9 +5,9 @@ import React, { memo, useEffect, useState } from 'react';
 import { useInView } from 'react-intersection-observer';
 import { useMountedState } from 'react-use';
 import { Merge } from 'type-fest';
-import { useIsBot } from '../hooks';
-import { many } from '../util';
-import { usePictureSizes } from './PictureSizes';
+import { useIsBot } from '../../hooks';
+import { many } from '../../util';
+import { usePictureSizes } from '../PictureSizes';
 
 export interface SourceProps {
   /**

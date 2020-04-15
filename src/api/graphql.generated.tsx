@@ -1,12 +1,9 @@
 /* eslint-disable import/no-duplicates */
 import * as ApolloReactCommon from '@apollo/client';
 import * as ApolloReactHooks from '@apollo/client';
-import * as ApolloReactComponents from '@apollo/react-components';
 import gql from 'graphql-tag';
-import * as React from 'react';
 
 export type Maybe<T> = T | null;
-export type Omit<T, K extends keyof T> = Pick<T, Exclude<keyof T, K>>;
 
 /** All built-in and custom scalars, mapped to their actual values */
 export interface Scalars {
@@ -22,6 +19,29 @@ export interface Scalars {
   Date: string;
   /** An ISO-8601 date time string */
   DateTime: string;
+}
+
+export interface AddPropertyToSecurityGroup {
+  sgId: Scalars['ID'];
+  property: Scalars['String'];
+}
+
+export interface AddPropertyToSecurityGroupInput {
+  request: AddPropertyToSecurityGroup;
+}
+
+export interface AddState {
+  workflowId: Scalars['ID'];
+  stateName: Scalars['String'];
+}
+
+export interface AddStateInput {
+  state: AddState;
+}
+
+export interface AddStateOutput {
+  __typename?: 'AddStateOutput';
+  state: State;
 }
 
 export interface AdminInputDto {
@@ -233,6 +253,15 @@ export interface CeremonyListOutput {
 }
 
 export type CeremonyType = 'Dedication' | 'Certification';
+
+export interface ChangeCurrentState {
+  newStateId: Scalars['ID'];
+  workflowId: Scalars['ID'];
+}
+
+export interface ChangeCurrentStateInput {
+  state: ChangeCurrentState;
+}
 
 export type Country = Resource &
   Place & {
@@ -560,6 +589,21 @@ export interface CreateUserOutput {
   user: User;
 }
 
+export interface CreateWorkflow {
+  baseNodeId: Scalars['ID'];
+  startingStateName: Scalars['String'];
+  stateIdentifier: Scalars['String'];
+}
+
+export interface CreateWorkflowInput {
+  workflow: CreateWorkflow;
+}
+
+export interface CreateWorkflowOutput {
+  __typename?: 'CreateWorkflowOutput';
+  workflow: Workflow;
+}
+
 export interface CreateZone {
   name: Scalars['String'];
   /** A user ID that will be the director of the zone */
@@ -573,6 +617,11 @@ export interface CreateZoneInput {
 export interface CreateZoneOutput {
   __typename?: 'CreateZoneOutput';
   zone: Zone;
+}
+
+export interface CurrentState {
+  __typename?: 'CurrentState';
+  id: Scalars['ID'];
 }
 
 /** A filter range designed for date fields */
@@ -738,6 +787,11 @@ export type EngagementStatus =
   | 'AwaitingDedication'
   | 'Transferred';
 
+export interface FieldObject {
+  __typename?: 'FieldObject';
+  value: Scalars['String'];
+}
+
 export type File = FileNode &
   Resource & {
     __typename?: 'File';
@@ -851,6 +905,15 @@ export type FileVersion = Resource & {
   createdBy: User;
   size: Scalars['Int'];
 };
+
+export interface GroupState {
+  stateId: Scalars['ID'];
+  securityGroupId: Scalars['ID'];
+}
+
+export interface GroupStateInput {
+  groupState: GroupState;
+}
 
 export type InternshipEngagement = Engagement &
   Resource & {
@@ -1116,6 +1179,8 @@ export interface Mutation {
   createSecurityGroup: CreateSecurityGroupOutput;
   /** Attach a user to a security group (without admin privileges) */
   attachUserToSecurityGroup: Scalars['Boolean'];
+  /** Add a property to a security group */
+  addPropertyToSecurityGroup: Scalars['Boolean'];
   /** Remove a permission from a security group */
   removePermissionFromSecurityGroup: Scalars['Boolean'];
   /** Remove a user from a security group */
@@ -1219,6 +1284,34 @@ export interface Mutation {
   renameFileNode: FileOrDirectory;
   /** Move a file or directory */
   moveFileNode: File;
+  /** Create an Workflow */
+  createWorkflow: CreateWorkflowOutput;
+  /** Delete an Workflow */
+  deleteWorkflow: Scalars['Boolean'];
+  /** Add a State to a Workflow */
+  addState: AddStateOutput;
+  /** Update a State */
+  updateState: AddStateOutput;
+  /** Delete an State from Workflow */
+  deleteState: Scalars['Boolean'];
+  /** Attach securitygroup to state */
+  attachSecurityGroup: Scalars['Boolean'];
+  /** Remove security group from state */
+  removeSecurityGroup: Scalars['Boolean'];
+  /** Attach notification group to state */
+  attachNotificationGroup: Scalars['Boolean'];
+  /** Remove notification group to state */
+  removeNotificationGroup: Scalars['Boolean'];
+  /** Change current statee in workflow */
+  changeCurrentState: Scalars['Boolean'];
+  /** Add possible state to a state */
+  addPossibleState: Scalars['Boolean'];
+  /** Remove possible state to a state */
+  removePossibleState: Scalars['Boolean'];
+  /** Add a required field to a state */
+  addRequiredField: Scalars['Boolean'];
+  /** Remove a required field from state */
+  removeRequiredField: Scalars['Boolean'];
 }
 
 export interface MutationCreateOrganizationArgs {
@@ -1279,6 +1372,10 @@ export interface MutationCreateSecurityGroupArgs {
 
 export interface MutationAttachUserToSecurityGroupArgs {
   input: AttachUserToSecurityGroupInput;
+}
+
+export interface MutationAddPropertyToSecurityGroupArgs {
+  input: AddPropertyToSecurityGroupInput;
 }
 
 export interface MutationRemovePermissionFromSecurityGroupArgs {
@@ -1477,6 +1574,62 @@ export interface MutationMoveFileNodeArgs {
   input: MoveFileInput;
 }
 
+export interface MutationCreateWorkflowArgs {
+  input: CreateWorkflowInput;
+}
+
+export interface MutationDeleteWorkflowArgs {
+  id: Scalars['ID'];
+}
+
+export interface MutationAddStateArgs {
+  input: AddStateInput;
+}
+
+export interface MutationUpdateStateArgs {
+  input: UpdateStateInput;
+}
+
+export interface MutationDeleteStateArgs {
+  id: Scalars['ID'];
+}
+
+export interface MutationAttachSecurityGroupArgs {
+  input: GroupStateInput;
+}
+
+export interface MutationRemoveSecurityGroupArgs {
+  input: GroupStateInput;
+}
+
+export interface MutationAttachNotificationGroupArgs {
+  input: GroupStateInput;
+}
+
+export interface MutationRemoveNotificationGroupArgs {
+  input: GroupStateInput;
+}
+
+export interface MutationChangeCurrentStateArgs {
+  input: ChangeCurrentStateInput;
+}
+
+export interface MutationAddPossibleStateArgs {
+  input: PossibleStateInput;
+}
+
+export interface MutationRemovePossibleStateArgs {
+  input: PossibleStateInput;
+}
+
+export interface MutationAddRequiredFieldArgs {
+  input: RequiredFieldInput;
+}
+
+export interface MutationRemoveRequiredFieldArgs {
+  input: RequiredFieldInput;
+}
+
 /** A sort order either ascending or descending */
 export type Order = 'ASC' | 'DESC';
 
@@ -1587,6 +1740,15 @@ export interface Permission {
 
 export interface Place {
   name: SecuredString;
+}
+
+export interface PossibleState {
+  fromStateId: Scalars['ID'];
+  toStateId: Scalars['ID'];
+}
+
+export interface PossibleStateInput {
+  state: PossibleState;
 }
 
 export type Product = Resource & {
@@ -1915,6 +2077,12 @@ export interface Query {
   directory: Directory;
   file: File;
   fileNode: FileOrDirectory;
+  /** Look up all states on workflow */
+  states: StateListOutput;
+  /** Look up all next possible states on workflow */
+  nextStates: StateListOutput;
+  /** List required fields in state */
+  listRequiredFields: RequiredFieldListOutput;
 }
 
 export interface QueryOrganizationArgs {
@@ -2057,6 +2225,18 @@ export interface QueryFileNodeArgs {
   id: Scalars['ID'];
 }
 
+export interface QueryStatesArgs {
+  id: Scalars['ID'];
+}
+
+export interface QueryNextStatesArgs {
+  id: Scalars['ID'];
+}
+
+export interface QueryListRequiredFieldsArgs {
+  id: Scalars['ID'];
+}
+
 /** Entities that are readable */
 export interface Readable {
   /** Whether the current user can read this object */
@@ -2104,6 +2284,20 @@ export interface RequestUploadOutput {
   id: Scalars['ID'];
   /** A pre-signed url to upload the file to */
   url: Scalars['String'];
+}
+
+export interface RequiredField {
+  stateId: Scalars['ID'];
+  propertyName: Scalars['String'];
+}
+
+export interface RequiredFieldInput {
+  field: RequiredField;
+}
+
+export interface RequiredFieldListOutput {
+  __typename?: 'RequiredFieldListOutput';
+  items: FieldObject[];
 }
 
 export interface ResetPasswordInput {
@@ -2673,6 +2867,17 @@ export interface SecurityGroup {
 
 export type Sensitivity = 'Low' | 'Medium' | 'High';
 
+export interface State {
+  __typename?: 'State';
+  id: Scalars['ID'];
+  value: Scalars['String'];
+}
+
+export interface StateListOutput {
+  __typename?: 'StateListOutput';
+  items: State[];
+}
+
 export type TranslationProject = Project &
   Resource & {
     __typename?: 'TranslationProject';
@@ -3004,6 +3209,16 @@ export interface UpdateSecurityGroupNameOutput {
   name: Scalars['String'];
 }
 
+export interface UpdateState {
+  stateId: Scalars['ID'];
+  workflowId: Scalars['ID'];
+  stateName: Scalars['String'];
+}
+
+export interface UpdateStateInput {
+  state: UpdateState;
+}
+
 export interface UpdateUnavailability {
   id: Scalars['ID'];
   description?: Maybe<Scalars['String']>;
@@ -3122,6 +3337,13 @@ export interface UserListOutput {
   hasMore: Scalars['Boolean'];
 }
 
+export interface Workflow {
+  __typename?: 'Workflow';
+  id: Scalars['ID'];
+  stateIdentifier: Scalars['String'];
+  startingState: State;
+}
+
 export type Zone = Resource &
   Place & {
     __typename?: 'Zone';
@@ -3178,6 +3400,27 @@ export type UpdateTestUserMutation = { __typename?: 'Mutation' } & {
   };
 };
 
+export interface LoginMutationVariables {
+  input: LoginInput;
+}
+
+export type LoginMutation = { __typename?: 'Mutation' } & {
+  login: { __typename?: 'LoginOutput' } & Pick<LoginOutput, 'success'> & {
+      user?: Maybe<
+        { __typename?: 'User' } & Pick<User, 'id'> & {
+            realFirstName: { __typename?: 'SecuredString' } & Pick<
+              SecuredString,
+              'value'
+            >;
+            realLastName: { __typename?: 'SecuredString' } & Pick<
+              SecuredString,
+              'value'
+            >;
+          }
+      >;
+    };
+};
+
 export const UpdateTestUserFragmentFragmentDoc = gql`
   fragment UpdateTestUserFragment on User {
     id
@@ -3201,24 +3444,6 @@ export const GetTestUserDocument = gql`
   }
   ${UpdateTestUserFragmentFragmentDoc}
 `;
-export type GetTestUserComponentProps = Omit<
-  ApolloReactComponents.QueryComponentOptions<
-    GetTestUserQuery,
-    GetTestUserQueryVariables
-  >,
-  'query'
-> &
-  (
-    | { variables: GetTestUserQueryVariables; skip?: boolean }
-    | { skip: boolean }
-  );
-
-export const GetTestUserComponent = (props: GetTestUserComponentProps) => (
-  <ApolloReactComponents.Query<GetTestUserQuery, GetTestUserQueryVariables>
-    query={GetTestUserDocument}
-    {...props}
-  />
-);
 
 /**
  * __useGetTestUserQuery__
@@ -3285,25 +3510,6 @@ export type UpdateTestUserMutationFn = ApolloReactCommon.MutationFunction<
   UpdateTestUserMutation,
   UpdateTestUserMutationVariables
 >;
-export type UpdateTestUserComponentProps = Omit<
-  ApolloReactComponents.MutationComponentOptions<
-    UpdateTestUserMutation,
-    UpdateTestUserMutationVariables
-  >,
-  'mutation'
->;
-
-export const UpdateTestUserComponent = (
-  props: UpdateTestUserComponentProps
-) => (
-  <ApolloReactComponents.Mutation<
-    UpdateTestUserMutation,
-    UpdateTestUserMutationVariables
-  >
-    mutation={UpdateTestUserDocument}
-    {...props}
-  />
-);
 
 /**
  * __useUpdateTestUserMutation__
@@ -3343,4 +3549,61 @@ export type UpdateTestUserMutationResult = ApolloReactCommon.MutationResult<
 export type UpdateTestUserMutationOptions = ApolloReactCommon.BaseMutationOptions<
   UpdateTestUserMutation,
   UpdateTestUserMutationVariables
+>;
+export const LoginDocument = gql`
+  mutation Login($input: LoginInput!) {
+    login(input: $input) {
+      success
+      user {
+        id
+        realFirstName {
+          value
+        }
+        realLastName {
+          value
+        }
+      }
+    }
+  }
+`;
+export type LoginMutationFn = ApolloReactCommon.MutationFunction<
+  LoginMutation,
+  LoginMutationVariables
+>;
+
+/**
+ * __useLoginMutation__
+ *
+ * To run a mutation, you first call `useLoginMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useLoginMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [loginMutation, { data, loading, error }] = useLoginMutation({
+ *   variables: {
+ *      input: // value for 'input'
+ *   },
+ * });
+ */
+export function useLoginMutation(
+  baseOptions?: ApolloReactHooks.MutationHookOptions<
+    LoginMutation,
+    LoginMutationVariables
+  >
+) {
+  return ApolloReactHooks.useMutation<LoginMutation, LoginMutationVariables>(
+    LoginDocument,
+    baseOptions
+  );
+}
+export type LoginMutationHookResult = ReturnType<typeof useLoginMutation>;
+export type LoginMutationResult = ApolloReactCommon.MutationResult<
+  LoginMutation
+>;
+export type LoginMutationOptions = ApolloReactCommon.BaseMutationOptions<
+  LoginMutation,
+  LoginMutationVariables
 >;
