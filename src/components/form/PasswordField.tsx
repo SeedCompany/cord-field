@@ -50,6 +50,7 @@ export const PasswordIconToggle = ({ show, onClick, ...rest }: ToggleProps) => (
   <IconButton
     aria-label="Toggle password visibility"
     {...rest}
+    edge="end"
     onClick={onClick}
   >
     {show ? <VisibilityOff /> : <Visibility />}
