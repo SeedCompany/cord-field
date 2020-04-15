@@ -33,7 +33,9 @@ export const SubmitButton: FC<SubmitButtonProps> = ({
     : false;
   return (
     <ProgressButton
-      color="primary"
+      color="secondary"
+      size="large"
+      fullWidth
       variant="contained"
       {...rest}
       onClick={(e) => {

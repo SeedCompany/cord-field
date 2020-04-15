@@ -12,9 +12,14 @@ rules:
         # As noted in https://github.com/mui-org/material-ui/releases/tag/v4.5.1
         - name: '@material-ui/styles'
           message: Use '@material-ui/core' instead
+            # As noted in https://github.com/mui-org/material-ui/releases/tag/v4.5.1
+        - name: '@material-ui/core'
+          importNames: [Icon]
+          message: Use specific SVG Icons from '@material-ui/icons' instead
       patterns:
         # Enforce single import. Leave code splitting to webpack.
         - '@material-ui/core/*'
+        - '@material-ui/icons/*'
         - lodash/*
 
 overrides:

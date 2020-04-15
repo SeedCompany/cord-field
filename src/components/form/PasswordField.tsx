@@ -1,9 +1,5 @@
-import {
-  Icon,
-  IconButton,
-  IconButtonProps,
-  InputAdornment,
-} from '@material-ui/core';
+import { IconButton, IconButtonProps, InputAdornment } from '@material-ui/core';
+import { Visibility, VisibilityOff } from '@material-ui/icons';
 import React, { ComponentType, FC, useState } from 'react';
 import { Except } from 'type-fest';
 import { TextField, TextFieldProps } from './TextField';
@@ -54,8 +50,9 @@ export const PasswordIconToggle = ({ show, onClick, ...rest }: ToggleProps) => (
   <IconButton
     aria-label="Toggle password visibility"
     {...rest}
+    edge="end"
     onClick={onClick}
   >
-    <Icon>{show ? 'visibility_off' : 'visibility'}</Icon>
+    {show ? <VisibilityOff /> : <Visibility />}
   </IconButton>
 );
