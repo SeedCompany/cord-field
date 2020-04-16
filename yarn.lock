@@ -6948,6 +6948,7 @@ __metadata:
     react-router-dom: ^6.0.0-alpha.3
     react-scripts: ^3.4.1
     react-use: ^14.1.1
+    storybook-dark-mode: ^0.4.1
     ts-essentials: ^6.0.4
     ts-node: ^8.8.2
     type-fest: ^0.13.1
@@ -9088,7 +9089,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"fast-deep-equal@npm:^3.1.1":
+"fast-deep-equal@npm:^3.0.0, fast-deep-equal@npm:^3.1.1":
   version: 3.1.1
   resolution: "fast-deep-equal@npm:3.1.1"
   checksum: 2/38fe57c5ea7dbb42cf84f5d94166358b930beb49345619205ff16c4a0c896f8679a444f0fbd0f352a633f2ea800673173e2a150d81d3d85933d714d24498c688
@@ -18393,6 +18394,22 @@ __metadata:
   version: 2.11.0
   resolution: "store2@npm:2.11.0"
   checksum: 2/3faf4d3ede0d164d56e5a91dffe9231dcffa37905fb34a8f7917b8f7f0c061278bcb993f5fff865fc2f46ef79a89c092e3a68f0d6fb72977e60f72a4ec35fc6b
+  languageName: node
+  linkType: hard
+
+"storybook-dark-mode@npm:^0.4.1":
+  version: 0.4.1
+  resolution: "storybook-dark-mode@npm:0.4.1"
+  dependencies:
+    fast-deep-equal: ^3.0.0
+    memoizerific: ^1.11.3
+  peerDependencies:
+    "@storybook/addons": ">= 5.x"
+    "@storybook/api": ">= 5.x"
+    "@storybook/components": ">= 5.x"
+    "@storybook/core-events": ">= 5.x"
+    "@storybook/theming": ">= 5.x"
+  checksum: 2/3402bbd20d66c87ae4c7b6e88545eb3d899a934e20995e8b7fd5d3090a90ba1c482db4aac402caff649a6daeb00b1d18b8ac211808313ecd2a9de55c95be78ea
   languageName: node
   linkType: hard
 
