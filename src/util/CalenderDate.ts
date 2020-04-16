@@ -30,15 +30,27 @@ export class CalendarDate extends DateTime {
     if (dt instanceof CalendarDate) {
       return dt;
     }
-    return Object.assign(new CalendarDate(), dt.startOf('day'));
+    const inst = dt.startOf('day') as any;
+    return new CalendarDate({
+      ts: inst.ts,
+      zone: inst.zone,
+      c: inst.c,
+      o: inst.o,
+      loc: inst.loc,
+      invalid: inst.invalid,
+    });
   }
 
-  protected constructor() {
+  protected constructor(args: any = {}) {
     // DateTime constructor isn't defined, because it's private
     // but it does require an object
     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-ignore
-    super({});
+    super(args);
+  }
+
+  [Symbol.for('inspect')]() {
+    return this.toLocaleString(DateTime.DATE_SHORT);
   }
 
   toISO(_options?: ToISOTimeOptions): string {

@@ -2,15 +2,26 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import { App } from './App';
 
+const setup: Array<Promise<any>> = [];
+
 if (process.env.NODE_ENV !== 'production') {
-  /* eslint-disable @typescript-eslint/no-floating-promises */
-  // Add lodash to dev console
-  import('lodash').then((_) => ((window as any)._ = _));
-  // Add luxon to dev console
-  import('luxon').then((l) => Object.assign(window as any, l));
-  import('./util/CalenderDate').then((m) => Object.assign(window as any, m));
-  /* eslint-enable @typescript-eslint/no-floating-promises */
+  const devSetUp = async () => {
+    // Add lodash, temporal objs to dev console
+    Object.assign(
+      window,
+      await import('lodash').then((_) => ({ _ })),
+      await import('luxon'),
+      await import('./util/CalenderDate')
+    );
+    // Do hacking to show dates easier
+    await import('./util/hacky-inspect-dates');
+  };
+  setup.push(devSetUp());
 }
 
 const root = document.getElementById('root');
-ReactDOM.render(<App />, root);
+
+// eslint-disable-next-line @typescript-eslint/no-floating-promises
+Promise.all(setup).then(() => {
+  ReactDOM.render(<App />, root);
+});
