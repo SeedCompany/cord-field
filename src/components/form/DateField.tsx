@@ -8,6 +8,7 @@ import { DateTime } from 'luxon';
 import React, { ComponentProps, useMemo } from 'react';
 import { Except } from 'type-fest';
 import { validators } from '.';
+import { CalendarDate } from '../../util';
 import { FieldConfig, useField } from './useField';
 import { getHelperText, showError } from './util';
 import { Validator } from './validators';
@@ -50,7 +51,7 @@ export const DateField = ({
   const initialValue = useMemo(
     () =>
       typeof initialValueProp === 'string'
-        ? DateTime.fromISO(initialValueProp)
+        ? CalendarDate.fromISO(initialValueProp)
         : initialValueProp,
     [initialValueProp]
   );
@@ -73,6 +74,7 @@ export const DateField = ({
       autoOk
       {...rest}
       {...input}
+      onChange={(d) => input.onChange(d ? CalendarDate.fromDateTime(d) : d)}
       name={name}
       helperText={getHelperText(meta, helperText)}
       error={showError(meta)}

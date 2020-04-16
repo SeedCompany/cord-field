@@ -27,10 +27,10 @@ export class CalendarDate extends DateTime {
   }
 
   static fromDateTime(dt: DateTime): CalendarDate {
-    return Object.assign(
-      new CalendarDate(),
-      dt instanceof CalendarDate ? dt : dt.startOf('day')
-    );
+    if (dt instanceof CalendarDate) {
+      return dt;
+    }
+    return Object.assign(new CalendarDate(), dt.startOf('day'));
   }
 
   protected constructor() {
