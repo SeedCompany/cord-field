@@ -11,9 +11,5 @@ if (process.env.NODE_ENV !== 'production') {
   import('luxon').then((l) => Object.assign(window as any, l));
 }
 
-ReactDOM.render(
-  <React.StrictMode>
-    <App />
-  </React.StrictMode>,
-  document.getElementById('root')
-);
+const root = document.getElementById('root');
+ReactDOM.render(<App />, root);
