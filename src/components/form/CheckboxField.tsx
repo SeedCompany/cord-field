@@ -9,6 +9,7 @@ import {
 } from '@material-ui/core';
 import React, { FC, ReactNode } from 'react';
 import { FieldConfig, useField } from './useField';
+import { getHelperText, showError } from './util';
 
 export type CheckboxFieldProps = FieldConfig<boolean> & {
   name: string;
@@ -21,7 +22,7 @@ export const CheckboxField: FC<CheckboxFieldProps> = ({
   name,
   label,
   labelPlacement,
-  helperText: nonErrorHelperText,
+  helperText,
   defaultValue = false,
   disabled,
   fullWidth,
@@ -30,13 +31,10 @@ export const CheckboxField: FC<CheckboxFieldProps> = ({
   ...props
 }) => {
   const { input, meta, rest } = useField(name, { defaultValue, ...props });
-  const helperText = meta.showError
-    ? meta.error || meta.submitError
-    : nonErrorHelperText;
   return (
     <FormControl
       required={props.required}
-      error={meta.showError}
+      error={showError(meta)}
       disabled={disabled || meta.submitting}
       fullWidth={fullWidth}
       margin={margin}
@@ -57,7 +55,7 @@ export const CheckboxField: FC<CheckboxFieldProps> = ({
           />
         }
       />
-      <FormHelperText>{helperText || ' '}</FormHelperText>
+      <FormHelperText>{getHelperText(meta, helperText)}</FormHelperText>
     </FormControl>
   );
 };

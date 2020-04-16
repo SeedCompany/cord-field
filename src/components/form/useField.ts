@@ -1,11 +1,8 @@
 import { compact } from 'lodash';
-import {
-  UseFieldConfig,
-  useField as useFinalForm,
-  useFormState,
-} from 'react-final-form';
+import { UseFieldConfig, useField as useFinalForm } from 'react-final-form';
 import { many, Many } from '../../util';
 import { validators } from './index';
+import { useIsSubmitting } from './util';
 import { Validator } from './validators';
 
 export type FieldConfig<Value> = Omit<UseFieldConfig<Value>, 'validate'> & {
@@ -50,11 +47,11 @@ export const useField = <Value, T extends HTMLElement = HTMLElement>(
     validate,
     ...restConfig,
   });
-  const { submitting } = useFormState({ subscription: { submitting: true } });
+  const submitting = useIsSubmitting();
 
-  const showError =
-    ((meta.submitError && !meta.dirtySinceLastSubmit) || meta.error) &&
-    meta.touched;
-
-  return { input, meta: { ...meta, submitting, showError }, rest };
+  return {
+    input,
+    meta: { ...meta, submitting },
+    rest,
+  };
 };
