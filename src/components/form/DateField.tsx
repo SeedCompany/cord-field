@@ -72,6 +72,7 @@ export const DateField = ({
       // since there's no zero padding
       inputFormat="MM/dd/yyyy"
       autoOk
+      autoComplete="off"
       {...rest}
       {...input}
       onChange={(d) => input.onChange(d ? CalendarDate.fromDateTime(d) : d)}
