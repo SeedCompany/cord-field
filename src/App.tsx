@@ -1,7 +1,7 @@
 import { ApolloProvider } from '@apollo/client';
+import LuxonUtils from '@date-io/luxon';
 import { CssBaseline, ThemeProvider } from '@material-ui/core';
 import { LocalizationProvider } from '@material-ui/pickers';
-import LuxonUtils from '@material-ui/pickers/adapter/luxon';
 import React, { cloneElement, FC, ReactElement } from 'react';
 import { BrowserRouter } from 'react-router-dom';
 import { apolloClient } from './api';

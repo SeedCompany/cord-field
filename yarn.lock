@@ -1638,7 +1638,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@date-io/luxon@npm:^2.1.0":
+"@date-io/luxon@npm:^2.1.0, @date-io/luxon@npm:^2.6.0":
   version: 2.6.0
   resolution: "@date-io/luxon@npm:2.6.0"
   dependencies:
@@ -6894,6 +6894,7 @@ __metadata:
     "@apollo/react-components": 4.0.0-beta.1
     "@babel/core": ^7.9.0
     "@babel/plugin-proposal-export-namespace-from": ^7.8.3
+    "@date-io/luxon": ^2.6.0
     "@graphql-codegen/add": ^1.13.2
     "@graphql-codegen/cli": ^1.13.2
     "@graphql-codegen/introspection": ^1.13.2
