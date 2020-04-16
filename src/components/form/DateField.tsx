@@ -3,7 +3,6 @@ import {
   useUtils,
   validate as validateDate,
 } from '@material-ui/pickers';
-import { datePickerDefaultProps } from '@material-ui/pickers/constants/prop-types';
 import { DateTime } from 'luxon';
 import React, { ComponentProps, useMemo } from 'react';
 import { Except } from 'type-fest';
@@ -13,12 +12,11 @@ import { FieldConfig, useField } from './useField';
 import { getHelperText, showError } from './util';
 import { Validator } from './validators';
 
+type DatePickerProps = ComponentProps<typeof DatePicker>;
+
 export interface DateFieldProps
   extends Except<FieldConfig<DateTime | null>, 'initialValue' | 'validate'>,
-    Except<
-      ComponentProps<typeof DatePicker>,
-      'defaultValue' | 'value' | 'onChange' | 'name'
-    > {
+    Except<DatePickerProps, 'defaultValue' | 'value' | 'onChange' | 'name'> {
   name: string;
   initialValue?: string | DateTime | null;
 }
@@ -34,8 +32,6 @@ export const DateField = ({
   const validator: Validator<DateTime | null> = (val) => {
     const allProps = {
       ...datePickerDefaultProps,
-      minDateMessage: 'Date should not be before minimum date',
-      maxDateMessage: 'Date should not be after maximum date',
       ...props,
     };
     const error = validateDate(val, utils, allProps);
@@ -83,6 +79,14 @@ export const DateField = ({
       {children}
     </DatePicker>
   );
+};
+
+const datePickerDefaultProps: Partial<DatePickerProps> = {
+  minDate: new Date('1900-01-01'),
+  maxDate: new Date('2100-01-01'),
+  invalidDateMessage: 'Invalid Date Format',
+  minDateMessage: 'Date should not be before minimum date',
+  maxDateMessage: 'Date should not be after maximum date',
 };
 
 const isDateEqual = (a: any, b: any) => {
