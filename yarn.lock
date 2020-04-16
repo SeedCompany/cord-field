@@ -1660,7 +1660,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@emotion/cache@npm:^10.0.27":
+"@emotion/cache@npm:^10.0.27, @emotion/cache@npm:^10.0.9":
   version: 10.0.29
   resolution: "@emotion/cache@npm:10.0.29"
   dependencies:
@@ -1672,7 +1672,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@emotion/core@npm:^10.0.20":
+"@emotion/core@npm:^10.0.20, @emotion/core@npm:^10.0.9":
   version: 10.0.28
   resolution: "@emotion/core@npm:10.0.28"
   dependencies:
@@ -1688,7 +1688,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@emotion/css@npm:^10.0.27":
+"@emotion/css@npm:^10.0.27, @emotion/css@npm:^10.0.9":
   version: 10.0.27
   resolution: "@emotion/css@npm:10.0.27"
   dependencies:
@@ -2217,6 +2217,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@icons/material@npm:^0.2.4":
+  version: 0.2.4
+  resolution: "@icons/material@npm:0.2.4"
+  peerDependencies:
+    react: "*"
+  checksum: 2/10b1841bfb7f1b6735d8ebe32a18bbbff96221bd42afa9ce7acd87c09d467d5c6468ad2e220dd739dd2e49c4aed09d62cbf06942890265002e0f769afeb1f5ad
+  languageName: node
+  linkType: hard
+
 "@jest/console@npm:^24.7.1, @jest/console@npm:^24.9.0":
   version: 24.9.0
   resolution: "@jest/console@npm:24.9.0"
@@ -2703,6 +2712,34 @@ __metadata:
   peerDependencies:
     react: "*"
   checksum: 2/7e6d44ad0ccbf8019b57ec92b281201ee550008550627292b2b58e7e3941fbb71fd2c6f6935d510fce36979031ad8fc1ccbe26f2fed54f69e27e6b5f390ab9f9
+  languageName: node
+  linkType: hard
+
+"@storybook/addon-knobs@npm:^5.3.18":
+  version: 5.3.18
+  resolution: "@storybook/addon-knobs@npm:5.3.18"
+  dependencies:
+    "@storybook/addons": 5.3.18
+    "@storybook/api": 5.3.18
+    "@storybook/client-api": 5.3.18
+    "@storybook/components": 5.3.18
+    "@storybook/core-events": 5.3.18
+    "@storybook/theming": 5.3.18
+    "@types/react-color": ^3.0.1
+    copy-to-clipboard: ^3.0.8
+    core-js: ^3.0.1
+    escape-html: ^1.0.3
+    fast-deep-equal: ^2.0.1
+    global: ^4.3.2
+    lodash: ^4.17.15
+    prop-types: ^15.7.2
+    qs: ^6.6.0
+    react-color: ^2.17.0
+    react-lifecycles-compat: ^3.0.4
+    react-select: ^3.0.8
+  peerDependencies:
+    react: "*"
+  checksum: 2/e64d2b64e59066b46371ad0ed2178f871bf72ba25f6ea3f7f7a4406883611db4a964d910b28b0084d49988d16f690916a423d3284924a2759df517091f721949
   languageName: node
   linkType: hard
 
@@ -3531,6 +3568,15 @@ __metadata:
     "@types/history": "*"
     "@types/react": "*"
   checksum: 2/cd441c07d3af55c53113519af2cf5cbee4a67eabcee6b575edc92bd35068718555c91a3040d1754ad62f636e5a761a8f3d3ea991f2f99d860aad68fc61f59a05
+  languageName: node
+  linkType: hard
+
+"@types/react-color@npm:^3.0.1":
+  version: 3.0.1
+  resolution: "@types/react-color@npm:3.0.1"
+  dependencies:
+    "@types/react": "*"
+  checksum: 2/c270b2db79a1bd78273b7b19184ba6a009002b4ce5d2a8d65da21113a3d22adbcb730c56befb22c52c4aceffcf83cff86bc4030fa3a3c6c9f733b5341722a861
   languageName: node
   linkType: hard
 
@@ -6908,6 +6954,7 @@ __metadata:
     "@seedcompany/eslint-plugin": ~0.0.4
     "@storybook/addon-actions": ^5.3.18
     "@storybook/addon-info": ^5.3.18
+    "@storybook/addon-knobs": ^5.3.18
     "@storybook/addon-links": ^5.3.18
     "@storybook/addons": ^5.3.18
     "@storybook/preset-create-react-app": ^2.1.1
@@ -8449,7 +8496,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"escape-html@npm:~1.0.3":
+"escape-html@npm:^1.0.3, escape-html@npm:~1.0.3":
   version: 1.0.3
   resolution: "escape-html@npm:1.0.3"
   checksum: 2/900a7f2b80b9f89c85b7a303d1b7a4d354b93e328871414f165f13c5c209a80eab787e3a63429e596877def69fe4dcb3d1b55af655207a901a9ec99f7f148743
@@ -12987,7 +13034,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"lodash@npm:4.17.15, lodash@npm:>=3.5 <5, lodash@npm:^4.17.11, lodash@npm:^4.17.12, lodash@npm:^4.17.13, lodash@npm:^4.17.14, lodash@npm:^4.17.15, lodash@npm:^4.17.4, lodash@npm:^4.17.5":
+"lodash@npm:4.17.15, lodash@npm:>=3.5 <5, lodash@npm:^4.0.1, lodash@npm:^4.17.11, lodash@npm:^4.17.12, lodash@npm:^4.17.13, lodash@npm:^4.17.14, lodash@npm:^4.17.15, lodash@npm:^4.17.4, lodash@npm:^4.17.5":
   version: 4.17.15
   resolution: "lodash@npm:4.17.15"
   checksum: 2/aec3fbb7570aa67bda500b8299b1b1821d60646bede87f76a74dfcc7666ab3445267d734ec71424d70809d52ad67a1356fab5ab694a3faa1908d68e9d48f00f5
@@ -13201,6 +13248,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"material-colors@npm:^1.2.1":
+  version: 1.2.6
+  resolution: "material-colors@npm:1.2.6"
+  checksum: 2/15883150a32abdb79638175b320712621a2962200ca3c09dfa0d5e3b614c081a0d459058ae367714f133801b8d9779f4137ddda4f2fbcaf8038a4624ab32c037
+  languageName: node
+  linkType: hard
+
 "md5.js@npm:^1.3.4":
   version: 1.3.5
   resolution: "md5.js@npm:1.3.5"
@@ -13241,6 +13295,13 @@ __metadata:
     mimic-fn: ^2.0.0
     p-is-promise: ^2.0.0
   checksum: 2/3af1ac31ef775c5b23bbc0e078d22324c083822fb6ee1a183595359fc23ef638cf90e8c1e044e5f17c871c6e50dc11db11f1aee112d85dc936e3aa2093acd038
+  languageName: node
+  linkType: hard
+
+"memoize-one@npm:^5.0.0":
+  version: 5.1.1
+  resolution: "memoize-one@npm:5.1.1"
+  checksum: 2/e7c4a9cceca71334bf09c38818c375a280dc6e8ec03a92701c16199763269ce756b7b0b370f4b464c071045349fb7b3e4a3cc7460a3f46a277f394d8634a6eb5
   languageName: node
   linkType: hard
 
@@ -16043,7 +16104,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"prop-types@npm:^15.6.0, prop-types@npm:^15.6.1, prop-types@npm:^15.6.2, prop-types@npm:^15.7.2":
+"prop-types@npm:^15.5.10, prop-types@npm:^15.5.8, prop-types@npm:^15.6.0, prop-types@npm:^15.6.1, prop-types@npm:^15.6.2, prop-types@npm:^15.7.2":
   version: 15.7.2
   resolution: "prop-types@npm:15.7.2"
   dependencies:
@@ -16341,6 +16402,20 @@ __metadata:
   languageName: node
   linkType: hard
 
+"react-color@npm:^2.17.0":
+  version: 2.18.0
+  resolution: "react-color@npm:2.18.0"
+  dependencies:
+    "@icons/material": ^0.2.4
+    lodash: ^4.17.11
+    material-colors: ^1.2.1
+    prop-types: ^15.5.10
+    reactcss: ^1.2.0
+    tinycolor2: ^1.4.1
+  checksum: 2/b0cc66661ebb7ed9d2f3e1c7e17751de99e2cf27557dd589a61bf01889e4007f90e9ebd297ca93946b1132689decdbc0571962731505eca72838eb364cf82f0a
+  languageName: node
+  linkType: hard
+
 "react-dev-utils@npm:^10.2.1":
   version: 10.2.1
   resolution: "react-dev-utils@npm:10.2.1"
@@ -16551,6 +16626,17 @@ __metadata:
   languageName: node
   linkType: hard
 
+"react-input-autosize@npm:^2.2.2":
+  version: 2.2.2
+  resolution: "react-input-autosize@npm:2.2.2"
+  dependencies:
+    prop-types: ^15.5.8
+  peerDependencies:
+    react: ^0.14.9 || ^15.3.0 || ^16.0.0-rc || ^16.0
+  checksum: 2/ad5f5c3016fb183261dcbc32a93bdd1a7095856ba676496f885a6b76d7a4474258196f9c3a8c4f122febfc3b9c679c0a4f51115454431d8343744d4f227e5191
+  languageName: node
+  linkType: hard
+
 "react-inspector@npm:^4.0.0":
   version: 4.0.1
   resolution: "react-inspector@npm:4.0.1"
@@ -16716,6 +16802,25 @@ __metadata:
   languageName: node
   linkType: hard
 
+"react-select@npm:^3.0.8":
+  version: 3.1.0
+  resolution: "react-select@npm:3.1.0"
+  dependencies:
+    "@babel/runtime": ^7.4.4
+    "@emotion/cache": ^10.0.9
+    "@emotion/core": ^10.0.9
+    "@emotion/css": ^10.0.9
+    memoize-one: ^5.0.0
+    prop-types: ^15.6.0
+    react-input-autosize: ^2.2.2
+    react-transition-group: ^4.3.0
+  peerDependencies:
+    react: ^16.8.0
+    react-dom: ^16.8.0
+  checksum: 2/95881de591b4b11f434ac0310d9e1f84e0794e6e485d8e131003e298ded230852799962a267e5513b3bdf598e6a9869a38cfcc946bfb5fe649eb5cf41b0c0731
+  languageName: node
+  linkType: hard
+
 "react-sizeme@npm:^2.6.7":
   version: 2.6.12
   resolution: "react-sizeme@npm:2.6.12"
@@ -16805,6 +16910,15 @@ __metadata:
     object-assign: ^4.1.1
     prop-types: ^15.6.2
   checksum: 2/13dcc9ba8a7521ecc3d7e69998dbc5703ae9515308d06a94a474ad34b42f1fc109372265e924a8c9b11d20fa1828407c290b8f61617c36734c4ca907ae7e5f45
+  languageName: node
+  linkType: hard
+
+"reactcss@npm:^1.2.0":
+  version: 1.2.3
+  resolution: "reactcss@npm:1.2.3"
+  dependencies:
+    lodash: ^4.0.1
+  checksum: 2/90fcf85d800293e2875a6e2d146765ec6e6958b2fa99542ee06a17f2dd7154e5eb116ca551718f684ea04be7841775e3d633e5ceeb3da82f990367bd4c28d3ad
   languageName: node
   linkType: hard
 
@@ -19052,6 +19166,13 @@ __metadata:
   version: 1.0.3
   resolution: "tiny-warning@npm:1.0.3"
   checksum: 2/6cf9f66cb765b893976b8cd1c1310338861f30fb04d02ef2c8e0a748cbc2ed5acd8bb1954b78c15f640ad4116def67134d7d705f2a0c9bf27e6e2eb3e92bff29
+  languageName: node
+  linkType: hard
+
+"tinycolor2@npm:^1.4.1":
+  version: 1.4.1
+  resolution: "tinycolor2@npm:1.4.1"
+  checksum: 2/7667d9b10cdf40b5af4b4d8c71d75fcf9ab1d89ad569b2d2213926929ac6666d2722320a5fe16d16d11ff77fca8aeb5974ef290161422b54700407e32113824a
   languageName: node
   linkType: hard
 
