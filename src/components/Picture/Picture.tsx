@@ -124,9 +124,7 @@ export type PictureProps = Merge<
 >;
 
 const useStyles = makeStyles(() => ({
-  root: {
-    borderRadius: 0,
-  },
+  root: {},
   contain: {
     margin: 'auto',
   },
@@ -152,6 +150,8 @@ const useStyles = makeStyles(() => ({
   },
   img: {
     maxWidth: '100%',
+  },
+  borderRadius: {
     borderRadius: 'inherit',
   },
   aspectRatio: {
@@ -290,6 +290,7 @@ const PictureImpl = ({
       height={height}
       className={clsx({
         [classes.img]: true,
+        [classes.borderRadius]: true,
         [classes.aspectRatio]: aspectRatio,
         [classes.coverImg]: fitCover,
         [classes.root]: !needsHolder,
@@ -327,19 +328,24 @@ const PictureImpl = ({
       ref={lazyObserve && !inView ? ref : undefined}
       className={clsx({
         [classes.holder]: true,
+        [classes.borderRadius]: true,
         [classes.coverHolder]: fitCover,
-        [classes.root]: true,
+        [classes.root]: !background && !fitContain,
         [classNameProp ?? '']: classNameProp,
       })}
       style={{
         paddingBottom: aspectRatio ? `${(1 / aspectRatio) * 100}%` : undefined,
-        ...styleProp,
+        ...(!background && !fitContain ? styleProp : {}),
       }}
     >
       {img}
       {darken && (
         <div
-          className={clsx(classes.background, classes.darkener)}
+          className={clsx(
+            classes.background,
+            classes.darkener,
+            classes.borderRadius
+          )}
           style={{
             ...styles,
             opacity: darken / 100,
@@ -356,10 +362,16 @@ const PictureImpl = ({
     return (
       <div
         className={clsx({
+          [classes.root]: true,
+          [classes.borderRadius]: true,
           [classes.background]: background,
           [classes.contain]: fitContain,
         })}
-        style={fitContain ? { maxWidth: width, maxHeight: height } : undefined}
+        style={
+          fitContain
+            ? { maxWidth: width, maxHeight: height, ...styleProp }
+            : styleProp
+        }
       >
         {held}
       </div>
