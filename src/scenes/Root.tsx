@@ -4,6 +4,7 @@ import { Route, Routes } from 'react-router-dom';
 import { Authentication } from './Authentication';
 import { DevTest } from './DevTest';
 import { Home } from './Home';
+import { Organizations } from './Organizations';
 
 const useStyles = makeStyles(() => ({
   // Use @global basically never
@@ -23,6 +24,7 @@ export const Root = () => {
       <Route path="/" element={<Home />} />
       <Route path="/login/*" element={<Authentication />} />
       <Route path="/devtest" element={<DevTest />} />
+      <Route path="/organizations/*" element={<Organizations />} />
     </Routes>
   );
 };
