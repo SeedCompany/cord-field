@@ -23,3 +23,14 @@ export const listOrPlaceholders = <T>(
   placeholderCount: number
 ): ReadonlyArray<T | undefined> =>
   list ?? fill(times(placeholderCount), undefined);
+export const listToMap = <T, K extends string | number = string, V = T>(
+  list: T[],
+  iteratee: (item: T) => [K, V]
+): Record<K, V> => {
+  const initial: Partial<Record<K, V>> = {};
+  return list.reduce((obj, item) => {
+    const [key, value] = iteratee(item);
+    obj[key] = value;
+    return obj;
+  }, initial) as Record<K, V>;
+};
