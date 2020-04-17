@@ -1,5 +1,5 @@
 import { CssBaseline, ThemeProvider } from '@material-ui/core';
-import { addDecorator } from '@storybook/react';
+import { addDecorator, addParameters } from '@storybook/react';
 import { withInfo } from '@storybook/addon-info';
 import React, { createElement } from 'react';
 import { createTheme } from '../src/theme';
@@ -13,3 +13,9 @@ addDecorator(story => createElement(
   createElement(CssBaseline),
   story()
 ));
+
+addParameters({
+  options: {
+    showRoots: true,
+  },
+});

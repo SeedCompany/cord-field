@@ -2,7 +2,7 @@ import { action } from '@storybook/addon-actions';
 import React from 'react';
 import { ProgressButton } from './ProgressButton';
 
-export default { title: 'Buttons.ProgressButton' };
+export default { title: 'Components/Buttons/ProgressButton' };
 
 export const Base = () => (
   <ProgressButton
