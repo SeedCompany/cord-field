@@ -339,7 +339,7 @@ const PictureImpl = ({
       }}
     >
       {img}
-      {darken && (
+      {darken ? (
         <div
           className={clsx(
             classes.background,
@@ -352,7 +352,7 @@ const PictureImpl = ({
           }}
           aria-hidden="true"
         />
-      )}
+      ) : null}
     </div>
   ) : (
     img
