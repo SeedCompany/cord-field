@@ -1,48 +1,24 @@
 import { action } from '@storybook/addon-actions';
+import { boolean, select, text } from '@storybook/addon-knobs';
 import React from 'react';
-import { ProgressButton } from './ProgressButton';
+import { ProgressButton as PB } from './ProgressButton';
 
-export default { title: 'Buttons.ProgressButton' };
+export default { title: 'Components/Buttons' };
 
-export const Base = () => (
-  <ProgressButton
-    color="primary"
-    variant="contained"
-    onClick={action('button click')}
+export const ProgressButton = () => (
+  <PB
+    color={select(
+      'Color',
+      ['inherit', 'primary', 'secondary', 'default', 'error'],
+      'primary'
+    )}
+    variant={select('Variant', ['contained', 'text', 'outlined'], 'contained')}
+    size={select('Size', ['small', 'medium', 'large'], 'medium')}
+    disabled={boolean('Disabled', false)}
+    progress={boolean('In progress', false)}
+    fullWidth={boolean('Full Width', false)}
+    onClick={action('click')}
   >
-    Hello, I'm a Progress Button
-  </ProgressButton>
-);
-
-export const DifferentVariant = () => (
-  <ProgressButton
-    color="primary"
-    variant="outlined"
-    onClick={action('button click')}
-    type="submit"
-  >
-    Hello, I'm a Progress Button
-  </ProgressButton>
-);
-
-export const Disabled = () => (
-  <ProgressButton
-    color="primary"
-    variant="outlined"
-    onClick={action('button click')}
-    disabled
-  >
-    Hello, I'm a Progress Button
-  </ProgressButton>
-);
-
-export const ProgressIndicator = () => (
-  <ProgressButton
-    color="primary"
-    variant="outlined"
-    onClick={action('button click')}
-    progress
-  >
-    Hello, I'm a Progress Button
-  </ProgressButton>
+    {text('Label', `Click Me!`)}
+  </PB>
 );
