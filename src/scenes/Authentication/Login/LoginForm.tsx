@@ -4,7 +4,9 @@ import React from 'react';
 import { Form, FormProps } from 'react-final-form';
 import { LoginInput } from '../../../api';
 import {
+  blurOnSubmit,
   EmailField,
+  focusLastActiveFieldOnSubmitError,
   PasswordField,
   SubmitButton,
   SubmitError,
@@ -29,14 +31,14 @@ export const LoginForm = ({ className, ...props }: LoginFormProps) => (
           }
         : undefined;
     }}
-    decorators={[clearSubmitErrorsOnChange]}
+    decorators={decorators}
     mutators={{ clearSubmitErrors }}
   >
     {({ handleSubmit }) => (
       <Card component="form" onSubmit={handleSubmit} className={className}>
         <CardContent>
           <SubmitError />
-          <EmailField placeholder="Enter Email Address" />
+          <EmailField autoFocus placeholder="Enter Email Address" />
           <PasswordField placeholder="Enter Password" />
           <SubmitButton />
         </CardContent>
@@ -64,3 +66,11 @@ const clearSubmitErrors: Mutator<LoginInput> = (args, state) => {
     submitErrors: undefined,
   };
 };
+
+// decorators get re-created if array identity changes
+// so make constant outside of render function
+const decorators = [
+  clearSubmitErrorsOnChange,
+  blurOnSubmit,
+  focusLastActiveFieldOnSubmitError,
+];
