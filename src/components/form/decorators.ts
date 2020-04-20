@@ -1,6 +1,37 @@
 import { FormApi, Unsubscribe } from 'final-form';
 
 /**
+ * Focuses the first field to have a submit error.
+ * Be sure to use blurOnSubmit decorator with this one.
+ */
+export function focusFirstFieldWithSubmitError<T>(
+  form: FormApi<T>
+): Unsubscribe {
+  let wasSubmitting = false;
+  return form.subscribe(
+    ({ submitting, submitFailed, submitErrors }) => {
+      if (wasSubmitting && !submitting && submitFailed) {
+        wasSubmitting = false;
+        for (const field of form.getRegisteredFields()) {
+          if (submitErrors?.[field]) {
+            form.focus(field);
+            break;
+          }
+        }
+      }
+      if (submitting) {
+        wasSubmitting = true;
+      }
+    },
+    {
+      submitting: true,
+      submitFailed: true,
+      submitErrors: true,
+    }
+  );
+}
+
+/**
  * Focuses the last active field after a submit error.
  * Be sure to use blurOnSubmit decorator with this one.
  */
