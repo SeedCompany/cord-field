@@ -1,6 +1,7 @@
 import { makeStyles } from '@material-ui/core';
 import React from 'react';
 import { useRoutes } from 'react-router-dom';
+import { ForgotPassword } from './ForgotPassword/ForgotPassword';
 import { Login } from './Login/Login';
 
 const useStyles = makeStyles(() => ({
@@ -21,6 +22,10 @@ export const Authentication = () => {
 
   const matched = useRoutes([
     { path: '/', element: <Login className={classes.card} /> },
+    {
+      path: '/forgotpassword',
+      element: <ForgotPassword className={classes.card} />,
+    },
   ]);
 
   // Render not found in isolation
