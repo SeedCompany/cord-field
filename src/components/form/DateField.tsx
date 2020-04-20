@@ -9,7 +9,7 @@ import { Except } from 'type-fest';
 import { validators } from '.';
 import { CalendarDate } from '../../util';
 import { FieldConfig, useField } from './useField';
-import { getHelperText, showError } from './util';
+import { getHelperText, showError, useFocusOnEnabled } from './util';
 import { Validator } from './validators';
 
 type DatePickerProps = ComponentProps<typeof DatePicker>;
@@ -24,6 +24,7 @@ export interface DateFieldProps
 export const DateField = ({
   name,
   helperText,
+  disabled: disabledProp,
   children,
   initialValue: initialValueProp,
   ...props
@@ -58,11 +59,13 @@ export const DateField = ({
     initialValue,
     validate: [validator, props.required ? validators.required : null],
   });
+  const disabled = disabledProp ?? meta.submitting;
+  const ref = useFocusOnEnabled(meta, disabled);
 
   return (
     <DatePicker
       views={['year', 'month', 'date']}
-      disabled={meta.submitting}
+      disabled={disabled}
       clearable={!props.required}
       // default luxon value does not work with masked inputs
       // since there's no zero padding
@@ -71,6 +74,7 @@ export const DateField = ({
       autoComplete="off"
       {...rest}
       {...input}
+      inputRef={ref}
       onChange={(d) => input.onChange(d ? CalendarDate.fromDateTime(d) : d)}
       name={name}
       helperText={getHelperText(meta, helperText)}
