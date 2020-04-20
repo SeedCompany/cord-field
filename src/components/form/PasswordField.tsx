@@ -52,6 +52,7 @@ export const PasswordIconToggle = ({ show, onClick, ...rest }: ToggleProps) => (
     {...rest}
     edge="end"
     onClick={onClick}
+    onMouseDown={(e) => e.preventDefault()}
   >
     {show ? <VisibilityOff /> : <Visibility />}
   </IconButton>
