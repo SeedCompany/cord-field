@@ -547,9 +547,10 @@ export interface CreateSessionOutput {
   __typename?: 'CreateSessionOutput';
   /**
    * Use this token in future requests in the Authorization header.
-   * Authorization: Bearer {token}
+   * Authorization: Bearer {token}.
+   * This token is only returned when the `browser` argument is not set to `true`.
    */
-  token: Scalars['String'];
+  token?: Maybe<Scalars['String']>;
 }
 
 export interface CreateUnavailability {
@@ -1400,6 +1401,10 @@ export interface MutationDeleteSecurityGroupArgs {
 
 export interface MutationUpdateSecurityGroupNameArgs {
   input: UpdateSecurityGroupNameInput;
+}
+
+export interface MutationCreateSessionArgs {
+  browser?: Maybe<Scalars['Boolean']>;
 }
 
 export interface MutationLoginArgs {
