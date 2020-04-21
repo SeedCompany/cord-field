@@ -8,17 +8,17 @@ import { useFormState } from 'react-final-form';
  * if it is a string.
  */
 export const SubmitError = ({ children, ...rest }: TypographyProps) => {
-  const { submitErrors } = useFormState({
+  const { submitError } = useFormState({
     subscription: {
-      submitErrors: true,
+      submitError: true,
     },
   });
-  if (!children && (!submitErrors || typeof submitErrors !== 'string')) {
+  if (!children && !submitError) {
     return null;
   }
   return (
     <Typography color="error" {...rest}>
-      {children || submitErrors}
+      {children || submitError}
     </Typography>
   );
 };
