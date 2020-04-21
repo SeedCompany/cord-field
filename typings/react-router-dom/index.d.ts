@@ -78,7 +78,7 @@ export function useHref<S = unknown>(to: LocationDescriptor<S>): Href;
 
 export function useLocation<S = unknown>(): Location<S>;
 
-export function useMatch(to: Location): boolean;
+export function useMatch<S = unknown>(to: LocationDescriptor<S>): boolean;
 
 export interface NavigateOptions<S = unknown> {
   replace?: boolean;
