@@ -9,9 +9,9 @@
   Example:
 
   ```shell
-  ln -s ../cord-api-v3/schema.gql schema.graphql
+  ln -s ../cord-api-v3/schema.graphql
   ```
 
-- Run the following two commands:
-  - `yarn start`
-  - [OPTIONAL] - to view storybook: `yarn storybook`
+To run the web server (for development) run: `yarn start`
+
+To view storybook run: `yarn storybook`
