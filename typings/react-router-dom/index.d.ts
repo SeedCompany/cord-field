@@ -85,9 +85,11 @@ export interface NavigateOptions<S = unknown> {
   state?: S;
 }
 
-export function useNavigate<S = unknown>():
-  | ((delta: number) => void)
-  | ((to: LocationDescriptor, options?: NavigateOptions<S>) => void);
+interface NavigateFn<S = unknown> {
+  (delta: number): void;
+  (to: LocationDescriptor<unknown>, options?: NavigateOptions<S>): void;
+}
+export function useNavigate<S = unknown>(): NavigateFn<S>;
 
 export function useOutlet(): ReactElement;
 
