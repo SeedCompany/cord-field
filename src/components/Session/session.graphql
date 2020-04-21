@@ -1,0 +1,29 @@
+query Session {
+  session(browser: true) {
+    user {
+      ...LoggedInUser
+    }
+  }
+}
+
+fragment LoggedInUser on User {
+  id
+  email {
+    value
+  }
+  timezone {
+    value
+  }
+  realFirstName {
+    value
+  }
+  realLastName {
+    value
+  }
+  displayFirstName {
+    value
+  }
+  displayLastName {
+    value
+  }
+}

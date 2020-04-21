@@ -1,4 +1,4 @@
-/* eslint-disable import/no-duplicates */
+/* eslint-disable import/no-duplicates, @typescript-eslint/no-empty-interface */
 import * as ApolloReactCommon from '@apollo/client';
 import * as ApolloReactHooks from '@apollo/client';
 import gql from 'graphql-tag';
@@ -541,16 +541,6 @@ export interface CreateSecurityGroupOutput {
   __typename?: 'CreateSecurityGroupOutput';
   success: Scalars['Boolean'];
   id?: Maybe<Scalars['ID']>;
-}
-
-export interface CreateSessionOutput {
-  __typename?: 'CreateSessionOutput';
-  /**
-   * Use this token in future requests in the Authorization header.
-   * Authorization: Bearer {token}.
-   * This token is only returned when the `browser` argument is not set to `true`.
-   */
-  token?: Maybe<Scalars['String']>;
 }
 
 export interface CreateUnavailability {
@@ -1194,8 +1184,6 @@ export interface Mutation {
   deleteSecurityGroup: Scalars['Boolean'];
   /** Update a security group's name */
   updateSecurityGroupName: UpdateSecurityGroupNameOutput;
-  /** Create a session */
-  createSession: CreateSessionOutput;
   /** Login a user */
   login: LoginOutput;
   /** Logout a user */
@@ -1401,10 +1389,6 @@ export interface MutationDeleteSecurityGroupArgs {
 
 export interface MutationUpdateSecurityGroupNameArgs {
   input: UpdateSecurityGroupNameInput;
-}
-
-export interface MutationCreateSessionArgs {
-  browser?: Maybe<Scalars['Boolean']>;
 }
 
 export interface MutationLoginArgs {
@@ -2033,12 +2017,16 @@ export interface Query {
   users: UserListOutput;
   /** Check out whether a provided email exists or not in User Table */
   checkEmail: Scalars['Boolean'];
+  /** Check Consistency across User Nodes */
+  consistencyUserCheck: Scalars['Boolean'];
   /** List security groups that user is a member of */
   securityGroupsUserIsMemberOf: ListSecurityGroupOutput;
   /** List security groups that user is an admin of */
   securityGroupsUserIsAdminOf: ListSecurityGroupOutput;
   /** List permissions that belong to a security group */
   permissionsInSecurityGroup: ListPermissionOutput;
+  /** Create or retrieve an existing session */
+  session: SessionOutput;
   /** Look up a partnership by ID */
   partnership: Partnership;
   /** Look up partnerships */
@@ -2136,6 +2124,10 @@ export interface QuerySecurityGroupsUserIsAdminOfArgs {
 
 export interface QueryPermissionsInSecurityGroupArgs {
   input: ListPermissionInput;
+}
+
+export interface QuerySessionArgs {
+  browser?: Maybe<Scalars['Boolean']>;
 }
 
 export interface QueryPartnershipArgs {
@@ -2872,6 +2864,18 @@ export interface SecurityGroup {
 
 export type Sensitivity = 'Low' | 'Medium' | 'High';
 
+export interface SessionOutput {
+  __typename?: 'SessionOutput';
+  /**
+   * Use this token in future requests in the Authorization header.
+   * Authorization: Bearer {token}.
+   * This token is only returned when the `browser` argument is not set to `true`.
+   */
+  token?: Maybe<Scalars['String']>;
+  /** Only returned if there is a logged-in user tied to the current session. */
+  user?: Maybe<User>;
+}
+
 export interface State {
   __typename?: 'State';
   id: Scalars['ID'];
@@ -3358,25 +3362,46 @@ export type Zone = Resource &
     director: SecuredUser;
   };
 
+export interface SessionQueryVariables {}
+
+export type SessionQuery = { __typename?: 'Query' } & {
+  session: { __typename?: 'SessionOutput' } & {
+    user?: Maybe<{ __typename?: 'User' } & LoggedInUserFragment>;
+  };
+};
+
+export type LoggedInUserFragment = { __typename?: 'User' } & Pick<
+  User,
+  'id'
+> & {
+    email: { __typename?: 'SecuredString' } & Pick<SecuredString, 'value'>;
+    timezone: { __typename?: 'SecuredString' } & Pick<SecuredString, 'value'>;
+    realFirstName: { __typename?: 'SecuredString' } & Pick<
+      SecuredString,
+      'value'
+    >;
+    realLastName: { __typename?: 'SecuredString' } & Pick<
+      SecuredString,
+      'value'
+    >;
+    displayFirstName: { __typename?: 'SecuredString' } & Pick<
+      SecuredString,
+      'value'
+    >;
+    displayLastName: { __typename?: 'SecuredString' } & Pick<
+      SecuredString,
+      'value'
+    >;
+  };
+
 export interface LoginMutationVariables {
   input: LoginInput;
 }
 
 export type LoginMutation = { __typename?: 'Mutation' } & {
-  login: { __typename?: 'LoginOutput' } & Pick<LoginOutput, 'success'> & {
-      user?: Maybe<
-        { __typename?: 'User' } & Pick<User, 'id'> & {
-            realFirstName: { __typename?: 'SecuredString' } & Pick<
-              SecuredString,
-              'value'
-            >;
-            realLastName: { __typename?: 'SecuredString' } & Pick<
-              SecuredString,
-              'value'
-            >;
-          }
-      >;
-    };
+  login: { __typename?: 'LoginOutput' } & {
+    user?: Maybe<{ __typename?: 'User' } & LoggedInUserFragment>;
+  };
 };
 
 export type UpdateTestUserFragmentFragment = { __typename?: 'User' } & Pick<
@@ -3426,6 +3451,29 @@ export type UpdateTestUserMutation = { __typename?: 'Mutation' } & {
   };
 };
 
+export const LoggedInUserFragmentDoc = gql`
+  fragment LoggedInUser on User {
+    id
+    email {
+      value
+    }
+    timezone {
+      value
+    }
+    realFirstName {
+      value
+    }
+    realLastName {
+      value
+    }
+    displayFirstName {
+      value
+    }
+    displayLastName {
+      value
+    }
+  }
+`;
 export const UpdateTestUserFragmentFragmentDoc = gql`
   fragment UpdateTestUserFragment on User {
     id
@@ -3437,21 +3485,69 @@ export const UpdateTestUserFragmentFragmentDoc = gql`
     }
   }
 `;
-export const LoginDocument = gql`
-  mutation Login($input: LoginInput!) {
-    login(input: $input) {
-      success
+export const SessionDocument = gql`
+  query Session {
+    session(browser: true) {
       user {
-        id
-        realFirstName {
-          value
-        }
-        realLastName {
-          value
-        }
+        ...LoggedInUser
       }
     }
   }
+  ${LoggedInUserFragmentDoc}
+`;
+
+/**
+ * __useSessionQuery__
+ *
+ * To run a query within a React component, call `useSessionQuery` and pass it any options that fit your needs.
+ * When your component renders, `useSessionQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useSessionQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useSessionQuery(
+  baseOptions?: ApolloReactHooks.QueryHookOptions<
+    SessionQuery,
+    SessionQueryVariables
+  >
+) {
+  return ApolloReactHooks.useQuery<SessionQuery, SessionQueryVariables>(
+    SessionDocument,
+    baseOptions
+  );
+}
+export function useSessionLazyQuery(
+  baseOptions?: ApolloReactHooks.LazyQueryHookOptions<
+    SessionQuery,
+    SessionQueryVariables
+  >
+) {
+  return ApolloReactHooks.useLazyQuery<SessionQuery, SessionQueryVariables>(
+    SessionDocument,
+    baseOptions
+  );
+}
+export type SessionQueryHookResult = ReturnType<typeof useSessionQuery>;
+export type SessionLazyQueryHookResult = ReturnType<typeof useSessionLazyQuery>;
+export type SessionQueryResult = ApolloReactCommon.QueryResult<
+  SessionQuery,
+  SessionQueryVariables
+>;
+export const LoginDocument = gql`
+  mutation Login($input: LoginInput!) {
+    login(input: $input) {
+      user {
+        ...LoggedInUser
+      }
+    }
+  }
+  ${LoggedInUserFragmentDoc}
 `;
 export type LoginMutationFn = ApolloReactCommon.MutationFunction<
   LoginMutation,

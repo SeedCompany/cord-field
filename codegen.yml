@@ -8,8 +8,8 @@ hooks:
 generates:
   ./src/api/graphql.generated.tsx:
     plugins:
-      # Until hooks & common can be merged into one import
-      - { add: /* eslint-disable import/no-duplicates */ }
+      # import/no-duplicates is here until hooks & common can be merged into one import
+      - add: /* eslint-disable import/no-duplicates, @typescript-eslint/no-empty-interface */
       - typescript
       - typescript-operations
       - typescript-react-apollo
