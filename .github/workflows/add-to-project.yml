@@ -21,7 +21,7 @@ jobs:
           project: ${{ env.PROJECT }}
           column_name: Project Backlog
       - name: Assign new pull requests to in progress
-        if: github.event == 'issue'
+        if: github.event == 'pull_request'
         uses: srggrs/assign-one-project-github-action@1.2.0
         with:
           project: ${{ env.PROJECT }}
