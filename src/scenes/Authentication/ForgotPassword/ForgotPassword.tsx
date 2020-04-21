@@ -14,12 +14,12 @@ export const ForgotPassword = (props: Except<Props, 'onSubmit'>) => {
         variables: { email: input.email },
       });
       if (res?.forgotPassword) {
-        alert('Email for forgot password has been sent.');
+        alert('Recovery email sent.');
       } else {
-        alert('Error');
+        alert('Email not found');
       }
     } catch (e) {
-      alert('Email not found');
+      alert('Could not make correct query');
       console.log(e);
     }
   };

@@ -4,6 +4,7 @@ import { CssBaseline, ThemeProvider } from '@material-ui/core';
 import { LocalizationProvider } from '@material-ui/pickers';
 import React, { cloneElement, FC, ReactElement } from 'react';
 import { BrowserRouter } from 'react-router-dom';
+import { QueryParamProvider } from 'use-query-params';
 import { apolloClient } from './api';
 import { SessionProvider } from './components/Session';
 import { TitleProvider } from './components/title';
@@ -17,6 +18,7 @@ const theme = createTheme();
  * This prevents git diff churning
  */
 const providers = [
+  <QueryParamProvider children={<></>}></QueryParamProvider>,
   <ApolloProvider client={apolloClient} children={<></>} />,
   <ThemeProvider theme={theme} children={<></>} />,
   <LocalizationProvider dateAdapter={LuxonUtils} children={<></>} />,

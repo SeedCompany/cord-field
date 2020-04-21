@@ -3,6 +3,7 @@ import React from 'react';
 import { useRoutes } from 'react-router-dom';
 import { ForgotPassword } from './ForgotPassword/ForgotPassword';
 import { Login } from './Login/Login';
+import { ResetPassword } from './ResetPassword';
 
 const useStyles = makeStyles(() => ({
   root: {
@@ -25,6 +26,10 @@ export const Authentication = () => {
     {
       path: '/forgotpassword',
       element: <ForgotPassword className={classes.card} />,
+    },
+    {
+      path: '/resetpassword',
+      element: <ResetPassword className={classes.card} />,
     },
   ]);
 

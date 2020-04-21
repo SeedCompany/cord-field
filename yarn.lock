@@ -7000,6 +7000,7 @@ __metadata:
     ts-node: ^8.8.2
     type-fest: ^0.13.1
     typescript: ^3.8.3
+    use-query-params: ^1.1.1
     validator: ^13.0.0
     webpack: 4.42.0
     webpack-bundle-analyzer: ^3.6.1
@@ -17863,6 +17864,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"serialize-query-params@npm:^1.1.0":
+  version: 1.1.0
+  resolution: "serialize-query-params@npm:1.1.0"
+  peerDependencies:
+    query-string: ^5.1.1 || ^6
+  checksum: 2/e645c7aad53b2102c35a4c75185d34d9d39eaff315bfaea1c82e83e5fbba0bcafa6c431a9c592cab9ec2ac1e95e2d5eb89ff7a6184ea21ac422dc09a1bf6e945
+  languageName: node
+  linkType: hard
+
 "serve-favicon@npm:^2.5.0":
   version: 2.5.0
   resolution: "serve-favicon@npm:2.5.0"
@@ -19682,6 +19692,18 @@ __metadata:
   peerDependencies:
     react: ^16.8.0
   checksum: 2/599afe1019e97dd6aab50cd6b52c99fe6daf870f2787114a6a490a15e5d1fe4bf3a8a1a0514ff166e6c3c4e3f01aea8b698424fc18090d1f627f5e4b8f55858a
+  languageName: node
+  linkType: hard
+
+"use-query-params@npm:^1.1.1":
+  version: 1.1.1
+  resolution: "use-query-params@npm:1.1.1"
+  dependencies:
+    serialize-query-params: ^1.1.0
+  peerDependencies:
+    react: ">=16.8.0"
+    react-dom: ">=16.8.0"
+  checksum: 2/bb8bd97cdec6e66ee96ff99bd77fbe41a10c41669d5ad9ddc309534a42aa8faeed06972dd87a194b64dc69a1a608f0097dbcb8362f81ca9a86634e8039eac9fb
   languageName: node
   linkType: hard
 
