@@ -2,6 +2,7 @@ import {
   TextField as MuiTextField,
   TextFieldProps as MuiTextFieldProps,
 } from '@material-ui/core';
+import { useEffect } from 'react';
 import * as React from 'react';
 import { Except } from 'type-fest';
 import { useFieldName } from './FieldGroup';
@@ -28,6 +29,15 @@ export function TextField<FieldValue = string>({
   const { input, meta, rest } = useField(name, props);
   const disabled = disabledProp ?? meta.submitting;
   const ref = useFocusOnEnabled(meta, disabled);
+
+  // Call focus explicitly to fix inconsistent state when page loads
+  // browser does the autofocus but the field doesn't look active
+  useEffect(() => {
+    if (props.autoFocus) {
+      ref.current?.focus();
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   return (
     <MuiTextField

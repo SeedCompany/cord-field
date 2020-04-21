@@ -61,6 +61,9 @@ const render = (TheApp: ComponentType) => {
   });
 };
 
+// Blur auto-focused elements on app start as MUI doesn't boot state correctly
+(document.activeElement as any)?.blur();
+
 render(App);
 
 if (module.hot) {
