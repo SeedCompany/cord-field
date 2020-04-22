@@ -5,6 +5,7 @@ import { LocalizationProvider } from '@material-ui/pickers';
 import React, { cloneElement, FC, ReactElement } from 'react';
 import { BrowserRouter } from 'react-router-dom';
 import { apolloClient } from './api';
+import { SessionProvider } from './components/Session';
 import { TitleProvider } from './components/title';
 import { Root } from './scenes/Root';
 import { createTheme } from './theme';
@@ -19,6 +20,7 @@ const providers = [
   <ApolloProvider client={apolloClient} children={<></>} />,
   <ThemeProvider theme={theme} children={<></>} />,
   <LocalizationProvider dateAdapter={LuxonUtils} children={<></>} />,
+  <SessionProvider />,
   <BrowserRouter />,
   <TitleProvider title="CORD Field" />,
 ];

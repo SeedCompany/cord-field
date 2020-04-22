@@ -1,28 +1,36 @@
 import { ApolloError } from '@apollo/client';
 import { FORM_ERROR } from 'final-form';
-import React from 'react';
+import React, { useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { Except } from 'type-fest';
 import { useLoginMutation } from '../../../api';
+import { useSession } from '../../../components/Session';
 import { LoginForm, LoginFormProps as Props } from './LoginForm';
 
 export const Login = (props: Except<Props, 'onSubmit'>) => {
   const [login] = useLoginMutation();
+  const navigate = useNavigate();
+  const [session, sessionLoading, setUserSession] = useSession();
+
+  useEffect(() => {
+    if (!sessionLoading && session) {
+      navigate('/');
+    }
+  }, [navigate, session, sessionLoading]);
 
   const submit: Props['onSubmit'] = async (input) => {
     const invalidCreds = {
       [FORM_ERROR]: `Something wasn't right. Try again, or reset password.`,
     };
     try {
-      const res = await login({
+      const { data } = await login({
         variables: { input },
       });
 
-      // TODO: post-login authentication (session storage, etc)
-      if (res?.login.success) {
-        alert(`Welcome ${res.login.user?.realFirstName.value}`);
-      } else {
-        return invalidCreds;
-      }
+      // TODO: Navigate to a returnTo place if it exists.
+      navigate('/');
+
+      setUserSession(data.login.user);
     } catch (e) {
       if (
         e instanceof ApolloError &&

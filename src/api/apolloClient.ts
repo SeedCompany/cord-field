@@ -6,5 +6,6 @@ export const apolloClient = new ApolloClient({
   cache: new InMemoryCache(),
   link: new HttpLink({
     uri: `${serverHost}/graphql`,
+    credentials: 'include',
   }),
 });
