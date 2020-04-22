@@ -19,6 +19,7 @@ const palette = createPalette({
   },
   error: {
     main: '#e87967',
+    contrastText: '#ffffff',
   },
 });
 
