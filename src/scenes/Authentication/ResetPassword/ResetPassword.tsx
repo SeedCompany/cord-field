@@ -12,17 +12,21 @@ import { ResetPasswordSuccess } from './ResetPasswordSuccess';
 
 export const ResetPassword = (props: Except<Props, 'onSubmit'>) => {
   const [resetPassword] = useResetPasswordMutation();
-  const { token: resetPasswordToken } = useParams();
+  const { token } = useParams<{ token: string }>();
   const [success, setSuccess] = useState(false);
 
-  const submit: Props['onSubmit'] = async (input) => {
+  const submit: Props['onSubmit'] = async ({ password }) => {
     const invalidCondition = {
       [FORM_ERROR]: `Token expired. Try again.`,
     };
     try {
-      input.token = resetPasswordToken as string;
       await resetPassword({
-        variables: { input },
+        variables: {
+          input: {
+            token,
+            password,
+          },
+        },
       });
       alert('Successfully reset password');
       setSuccess(true);

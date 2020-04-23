@@ -19,7 +19,7 @@ export const ForgotPassword = (props: Except<Props, 'onSubmit'>) => {
     };
     try {
       await forgotPassword({
-        variables: { email: input.email },
+        variables: input,
       });
       alert(`Recovery email "${input.email}" has been sent.`);
       setSuccess(true);

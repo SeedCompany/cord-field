@@ -1,7 +1,6 @@
 import { Card, CardContent } from '@material-ui/core';
 import React from 'react';
 import { Form, FormProps } from 'react-final-form';
-import { ResetPasswordInput } from '../../../api';
 import {
   PasswordField,
   SubmitButton,
@@ -9,7 +8,7 @@ import {
 } from '../../../components/form';
 
 export type ResetPasswordFormProps = Pick<
-  FormProps<ResetPasswordInput>,
+  FormProps<{ password: string }>,
   'onSubmit' | 'initialValues'
 > & { className?: string };
 
