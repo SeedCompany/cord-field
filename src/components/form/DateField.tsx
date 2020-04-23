@@ -6,7 +6,7 @@ import {
 import { DateTime } from 'luxon';
 import React, { ComponentProps, useMemo } from 'react';
 import { Except } from 'type-fest';
-import { validators } from '.';
+import { useFieldName, validators } from '.';
 import { CalendarDate } from '../../util';
 import { FieldConfig, useField } from './useField';
 import { getHelperText, showError, useFocusOnEnabled } from './util';
@@ -22,7 +22,7 @@ export interface DateFieldProps
 }
 
 export const DateField = ({
-  name,
+  name: nameProp,
   helperText,
   disabled: disabledProp,
   children,
@@ -53,6 +53,7 @@ export const DateField = ({
     [initialValueProp]
   );
 
+  const name = useFieldName(nameProp);
   const { input, meta, rest } = useField<DateTime | null>(name, {
     isEqual: isDateEqual,
     ...props,

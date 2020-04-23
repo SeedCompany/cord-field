@@ -8,6 +8,7 @@ import {
   FormHelperText,
 } from '@material-ui/core';
 import React, { FC, ReactNode } from 'react';
+import { useFieldName } from './FieldGroup';
 import { FieldConfig, useField } from './useField';
 import { getHelperText, showError, useFocusOnEnabled } from './util';
 
@@ -19,7 +20,7 @@ export type CheckboxFieldProps = FieldConfig<boolean> & {
   Pick<FormControlProps, 'fullWidth' | 'margin' | 'variant'>;
 
 export const CheckboxField: FC<CheckboxFieldProps> = ({
-  name,
+  name: nameProp,
   label,
   labelPlacement,
   helperText,
@@ -30,6 +31,7 @@ export const CheckboxField: FC<CheckboxFieldProps> = ({
   variant,
   ...props
 }) => {
+  const name = useFieldName(nameProp);
   const { input, meta, rest } = useField(name, { defaultValue, ...props });
   const disabled = disabledProp ?? meta.submitting;
   const ref = useFocusOnEnabled<HTMLInputElement>(meta, disabled);
