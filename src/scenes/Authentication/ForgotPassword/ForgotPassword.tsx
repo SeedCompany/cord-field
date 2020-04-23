@@ -15,15 +15,12 @@ export const ForgotPassword = (props: Except<Props, 'onSubmit'>) => {
       [FORM_ERROR]: `Something wasn't right, or email not found, or email not sent. Try again.`,
     };
     try {
-      const res = await forgotPassword({
+      await forgotPassword({
         variables: { email: input.email },
       });
+      // TO DO useSearchQuery hook and redirect to success component when success
 
-      if (res?.data.forgotPassword) {
-        alert(`Recovery email "${input.email}" has been sent.`);
-      } else {
-        return invalidCondition;
-      }
+      alert(`Recovery email "${input.email}" has been sent.`);
     } catch (e) {
       if (
         e instanceof ApolloError &&
@@ -31,8 +28,6 @@ export const ForgotPassword = (props: Except<Props, 'onSubmit'>) => {
       ) {
         return invalidCondition;
       }
-      alert('Forgot password failed. Please contact support.');
-      console.log(e);
     }
   };
 

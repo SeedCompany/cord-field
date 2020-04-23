@@ -1,14 +1,11 @@
 import { Card, CardContent } from '@material-ui/core';
-import { Decorator, Mutator } from 'final-form';
 import React from 'react';
 import { Form, FormProps } from 'react-final-form';
 import { ResetPasswordInput } from '../../../api';
 import {
-  blurOnSubmit,
-  focusLastActiveFieldOnSubmitError,
+  PasswordField,
   SubmitButton,
   SubmitError,
-  TextField,
 } from '../../../components/form';
 
 export type ResetPasswordFormProps = Pick<
@@ -20,24 +17,12 @@ export const ResetPasswordForm = ({
   className,
   ...props
 }: ResetPasswordFormProps) => (
-  <Form
-    {...props}
-    onSubmit={async (...args) => {
-      const res = await props.onSubmit(...args);
-      return res
-        ? {
-            ...res,
-          }
-        : undefined;
-    }}
-    decorators={decorators}
-    mutators={{ clearSubmitErrors }}
-  >
+  <Form {...props}>
     {({ handleSubmit }) => (
       <Card component="form" onSubmit={handleSubmit} className={className}>
         <CardContent>
           <SubmitError />
-          <TextField
+          <PasswordField
             name="password"
             placeholder="Enter New Password"
             required
@@ -48,27 +33,3 @@ export const ResetPasswordForm = ({
     )}
   </Form>
 );
-
-const clearSubmitErrorsOnChange: Decorator<ResetPasswordInput> = (form) =>
-  form.subscribe(
-    ({ dirtySinceLastSubmit }) => {
-      if (dirtySinceLastSubmit) {
-        form.mutators.clearSubmitErrors();
-      }
-    },
-    { dirtySinceLastSubmit: true }
-  );
-
-const clearSubmitErrors: Mutator<ResetPasswordInput> = (args, state) => {
-  state.formState = {
-    ...state.formState,
-    submitError: undefined,
-    submitErrors: undefined,
-  };
-};
-
-const decorators = [
-  clearSubmitErrorsOnChange,
-  blurOnSubmit,
-  focusLastActiveFieldOnSubmitError,
-];

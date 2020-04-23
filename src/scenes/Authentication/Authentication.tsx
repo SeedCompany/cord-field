@@ -24,11 +24,11 @@ export const Authentication = () => {
   const matched = useRoutes([
     { path: '/', element: <Login className={classes.card} /> },
     {
-      path: '/forgotpassword',
+      path: '/forgot-password',
       element: <ForgotPassword className={classes.card} />,
     },
     {
-      path: '/resetpassword',
+      path: '/reset-password/:token',
       element: <ResetPassword className={classes.card} />,
     },
   ]);

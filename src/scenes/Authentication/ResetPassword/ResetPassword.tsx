@@ -1,8 +1,8 @@
 import { ApolloError } from '@apollo/client';
 import { FORM_ERROR } from 'final-form';
 import React from 'react';
+import { useParams } from 'react-router-dom';
 import { Except } from 'type-fest';
-import { StringParam, useQueryParam } from 'use-query-params';
 import { useResetPasswordMutation } from '../../../api';
 import {
   ResetPasswordFormProps as Props,
@@ -10,8 +10,8 @@ import {
 } from './ResetPasswordForm';
 
 export const ResetPassword = (props: Except<Props, 'onSubmit'>) => {
-  const [resetPasswordToken] = useQueryParam('token', StringParam);
   const [resetPassword] = useResetPasswordMutation();
+  const { token: resetPasswordToken } = useParams();
 
   const submit: Props['onSubmit'] = async (input) => {
     const invalidCondition = {
@@ -19,13 +19,10 @@ export const ResetPassword = (props: Except<Props, 'onSubmit'>) => {
     };
     try {
       input.token = resetPasswordToken as string;
-      const res = await resetPassword({
+      await resetPassword({
         variables: { input },
       });
-
-      if (res?.data.resetPassword) {
-        alert('Successfully reset password');
-      }
+      alert('Successfully reset password');
     } catch (e) {
       if (
         e instanceof ApolloError &&
@@ -33,8 +30,6 @@ export const ResetPassword = (props: Except<Props, 'onSubmit'>) => {
       ) {
         return invalidCondition;
       }
-      alert('Reset password failed. Please contact support.');
-      console.log(e);
     }
   };
 

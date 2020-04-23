@@ -40,7 +40,6 @@
     "react-scripts": "^3.4.1",
     "react-use": "^14.1.1",
     "ts-essentials": "^6.0.4",
-    "use-query-params": "^1.1.1",
     "validator": "^13.0.0"
   },
   "devDependencies": {
