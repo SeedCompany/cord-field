@@ -12,6 +12,7 @@
   @include mat-elevation(3);
   z-index: 1;
   background: mat-background($theme, card);
+  padding-bottom: 60px;
 
   .active {
     color: mat-color($accent);
