@@ -1,7 +1,7 @@
 import { makeStyles } from '@material-ui/core';
 import React from 'react';
 import { useRoutes } from 'react-router-dom';
-import { ForgotPassword } from './ForgotPassword/ForgotPassword';
+import { ForgotPassword } from './ForgotPassword';
 import { Login } from './Login/Login';
 import { ResetPassword } from './ResetPassword';
 

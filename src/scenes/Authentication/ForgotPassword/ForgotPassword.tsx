@@ -1,15 +1,18 @@
 import { ApolloError } from '@apollo/client';
 import { FORM_ERROR } from 'final-form';
-import React from 'react';
+import React, { useState } from 'react';
 import { Except } from 'type-fest';
 import { useForgotPasswordMutation } from '../../../api';
 import {
   ForgotPasswordForm,
   ForgotPasswordFormProps as Props,
 } from './ForgotPasswordForm';
+import { ForgotPasswordSuccess } from './ForgotPasswordSuccess';
 
 export const ForgotPassword = (props: Except<Props, 'onSubmit'>) => {
   const [forgotPassword] = useForgotPasswordMutation();
+  const [success, setSuccess] = useState(false);
+
   const submit: Props['onSubmit'] = async (input) => {
     const invalidCondition = {
       [FORM_ERROR]: `Something wasn't right, or email not found, or email not sent. Try again.`,
@@ -18,9 +21,8 @@ export const ForgotPassword = (props: Except<Props, 'onSubmit'>) => {
       await forgotPassword({
         variables: { email: input.email },
       });
-      // TO DO useSearchQuery hook and redirect to success component when success
-
       alert(`Recovery email "${input.email}" has been sent.`);
+      setSuccess(true);
     } catch (e) {
       if (
         e instanceof ApolloError &&
@@ -31,5 +33,9 @@ export const ForgotPassword = (props: Except<Props, 'onSubmit'>) => {
     }
   };
 
-  return <ForgotPasswordForm {...props} onSubmit={submit} />;
+  return success ? (
+    <ForgotPasswordSuccess />
+  ) : (
+    <ForgotPasswordForm {...props} onSubmit={submit} />
+  );
 };
