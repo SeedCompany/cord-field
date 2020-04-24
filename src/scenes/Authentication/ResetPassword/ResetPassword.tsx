@@ -1,9 +1,7 @@
-import { ApolloError } from '@apollo/client';
-import { FORM_ERROR } from 'final-form';
 import React, { useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { Except } from 'type-fest';
-import { useResetPasswordMutation } from '../../../api';
+import { handleFormError, useResetPasswordMutation } from '../../../api';
 import {
   ResetPasswordFormProps as Props,
   ResetPasswordForm,
@@ -16,9 +14,6 @@ export const ResetPassword = (props: Except<Props, 'onSubmit'>) => {
   const [success, setSuccess] = useState(false);
 
   const submit: Props['onSubmit'] = async ({ password }) => {
-    const invalidCondition = {
-      [FORM_ERROR]: `Token expired. Try again.`,
-    };
     try {
       await resetPassword({
         variables: {
@@ -28,15 +23,12 @@ export const ResetPassword = (props: Except<Props, 'onSubmit'>) => {
           },
         },
       });
-      alert('Successfully reset password');
       setSuccess(true);
     } catch (e) {
-      if (
-        e instanceof ApolloError &&
-        e.graphQLErrors?.[0]?.extensions?.exception.code !== null
-      ) {
-        return invalidCondition;
-      }
+      return await handleFormError(e, {
+        TokenExpired: `Password reset request has expired. Try forgot password again.`,
+        Default: `Something went wrong. Try forgot password again.`,
+      });
     }
   };
 

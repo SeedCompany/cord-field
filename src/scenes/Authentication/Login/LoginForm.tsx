@@ -18,22 +18,7 @@ export type LoginFormProps = Pick<
 > & { className?: string };
 
 export const LoginForm = ({ className, ...props }: LoginFormProps) => (
-  <Form
-    {...props}
-    onSubmit={async (...args) => {
-      const res = await props.onSubmit(...args);
-      return res
-        ? {
-            ...res,
-            // Add errors to fields so they show invalid
-            email: ' ',
-            password: ' ',
-          }
-        : undefined;
-    }}
-    decorators={decorators}
-    mutators={{ clearSubmitErrors }}
-  >
+  <Form {...props} decorators={decorators} mutators={{ clearSubmitErrors }}>
     {({ handleSubmit }) => (
       <Card component="form" onSubmit={handleSubmit} className={className}>
         <CardContent>
