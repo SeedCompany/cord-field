@@ -2,6 +2,7 @@ import { ApolloProvider } from '@apollo/client';
 import LuxonUtils from '@date-io/luxon';
 import { CssBaseline, ThemeProvider } from '@material-ui/core';
 import { LocalizationProvider } from '@material-ui/pickers';
+import { SnackbarProvider } from 'notistack';
 import React, { cloneElement, FC, ReactElement } from 'react';
 import { BrowserRouter } from 'react-router-dom';
 import { apolloClient } from './api';
@@ -17,6 +18,7 @@ const theme = createTheme();
  * This prevents git diff churning
  */
 const providers = [
+  <SnackbarProvider children={<></>} />,
   <ApolloProvider client={apolloClient} children={<></>} />,
   <ThemeProvider theme={theme} children={<></>} />,
   <LocalizationProvider dateAdapter={LuxonUtils} children={<></>} />,
