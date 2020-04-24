@@ -1121,9 +1121,8 @@ export interface LoginInput {
 
 export interface LoginOutput {
   __typename?: 'LoginOutput';
-  success: Scalars['Boolean'];
-  /** Only returned if login was successful */
-  user?: Maybe<User>;
+  /** The logged-in user */
+  user: User;
 }
 
 export interface MoveFileInput {
@@ -1192,20 +1191,6 @@ export interface Mutation {
   forgotPassword: Scalars['Boolean'];
   /** Reset Password */
   resetPassword: Scalars['Boolean'];
-  /** Create a Partnership entry */
-  createPartnership: CreatePartnershipOutput;
-  /** Update a Partnership */
-  updatePartnership: UpdatePartnershipOutput;
-  /** Delete a Partnership */
-  deletePartnership: Scalars['Boolean'];
-  /** Update a ceremony */
-  updateCeremony: UpdateCeremonyOutput;
-  /** Create a language */
-  createLanguage: CreateLanguageOutput;
-  /** Update a language */
-  updateLanguage: UpdateLanguageOutput;
-  /** Delete a language */
-  deleteLanguage: Scalars['Boolean'];
   /** Create a zone */
   createZone: CreateZoneOutput;
   /** Create a region */
@@ -1220,6 +1205,20 @@ export interface Mutation {
   updateCountry: UpdateCountryOutput;
   /** Delete a location */
   deleteLocation: Scalars['Boolean'];
+  /** Create a Partnership entry */
+  createPartnership: CreatePartnershipOutput;
+  /** Update a Partnership */
+  updatePartnership: UpdatePartnershipOutput;
+  /** Delete a Partnership */
+  deletePartnership: Scalars['Boolean'];
+  /** Update a ceremony */
+  updateCeremony: UpdateCeremonyOutput;
+  /** Create a language */
+  createLanguage: CreateLanguageOutput;
+  /** Update a language */
+  updateLanguage: UpdateLanguageOutput;
+  /** Delete a language */
+  deleteLanguage: Scalars['Boolean'];
   /** Create a product entry */
   createProduct: CreateProductOutput;
   /** Update a product entry */
@@ -1403,34 +1402,6 @@ export interface MutationResetPasswordArgs {
   input: ResetPasswordInput;
 }
 
-export interface MutationCreatePartnershipArgs {
-  input: CreatePartnershipInput;
-}
-
-export interface MutationUpdatePartnershipArgs {
-  input: UpdatePartnershipInput;
-}
-
-export interface MutationDeletePartnershipArgs {
-  id: Scalars['ID'];
-}
-
-export interface MutationUpdateCeremonyArgs {
-  input: UpdateCeremonyInput;
-}
-
-export interface MutationCreateLanguageArgs {
-  input: CreateLanguageInput;
-}
-
-export interface MutationUpdateLanguageArgs {
-  input: UpdateLanguageInput;
-}
-
-export interface MutationDeleteLanguageArgs {
-  id: Scalars['ID'];
-}
-
 export interface MutationCreateZoneArgs {
   input: CreateZoneInput;
 }
@@ -1456,6 +1427,34 @@ export interface MutationUpdateCountryArgs {
 }
 
 export interface MutationDeleteLocationArgs {
+  id: Scalars['ID'];
+}
+
+export interface MutationCreatePartnershipArgs {
+  input: CreatePartnershipInput;
+}
+
+export interface MutationUpdatePartnershipArgs {
+  input: UpdatePartnershipInput;
+}
+
+export interface MutationDeletePartnershipArgs {
+  id: Scalars['ID'];
+}
+
+export interface MutationUpdateCeremonyArgs {
+  input: UpdateCeremonyInput;
+}
+
+export interface MutationCreateLanguageArgs {
+  input: CreateLanguageInput;
+}
+
+export interface MutationUpdateLanguageArgs {
+  input: UpdateLanguageInput;
+}
+
+export interface MutationDeleteLanguageArgs {
   id: Scalars['ID'];
 }
 
@@ -2003,6 +2002,8 @@ export interface Query {
   organizations: OrganizationListOutput;
   /** Check all organization nodes for consistency */
   checkOrganizations: Scalars['Boolean'];
+  /** Check Consistency in Organization Nodes */
+  checkOrganizationConsistency: Scalars['Boolean'];
   /** Look up an education by its ID */
   education: Education;
   /** Look up educations by user id */
@@ -2018,7 +2019,7 @@ export interface Query {
   /** Check out whether a provided email exists or not in User Table */
   checkEmail: Scalars['Boolean'];
   /** Check Consistency across User Nodes */
-  consistencyUserCheck: Scalars['Boolean'];
+  checkUserConsistency: Scalars['Boolean'];
   /** List security groups that user is a member of */
   securityGroupsUserIsMemberOf: ListSecurityGroupOutput;
   /** List security groups that user is an admin of */
@@ -2027,6 +2028,10 @@ export interface Query {
   permissionsInSecurityGroup: ListPermissionOutput;
   /** Create or retrieve an existing session */
   session: SessionOutput;
+  /** Read one Location by id */
+  location: Location;
+  /** Look up locations */
+  locations: LocationListOutput;
   /** Look up a partnership by ID */
   partnership: Partnership;
   /** Look up partnerships */
@@ -2039,10 +2044,8 @@ export interface Query {
   language: Language;
   /** Look up languages */
   languages: LanguageListOutput;
-  /** Read one Location by id */
-  location: Location;
-  /** Look up locations */
-  locations: LocationListOutput;
+  /** Check language node consistency */
+  checkLanguageConsistency: Scalars['Boolean'];
   /** Read a product by id */
   product: Product;
   /** Look up products */
@@ -2055,6 +2058,8 @@ export interface Query {
   project: Project;
   /** Look up projects */
   projects: ProjectListOutput;
+  /** Check Consistency in Project Nodes */
+  checkProjectConsistency: Scalars['Boolean'];
   /** Look up a budget by its ID */
   budget: Budget;
   /** Look up budgets by projectId */
@@ -2063,6 +2068,8 @@ export interface Query {
   budgetRecord: BudgetRecord;
   /** Look up budget Records by budgetId */
   budgetRecords: BudgetRecordListOutput;
+  /** Check Consistency in Budget Nodes */
+  checkBudgetConsistency: Scalars['Boolean'];
   /** Lookup an engagement by ID */
   engagement: Engagement;
   /** Look up engagements */
@@ -2130,6 +2137,14 @@ export interface QuerySessionArgs {
   browser?: Maybe<Scalars['Boolean']>;
 }
 
+export interface QueryLocationArgs {
+  id: Scalars['ID'];
+}
+
+export interface QueryLocationsArgs {
+  input?: Maybe<LocationListInput>;
+}
+
 export interface QueryPartnershipArgs {
   id: Scalars['ID'];
 }
@@ -2152,14 +2167,6 @@ export interface QueryLanguageArgs {
 
 export interface QueryLanguagesArgs {
   input?: Maybe<LanguageListInput>;
-}
-
-export interface QueryLocationArgs {
-  id: Scalars['ID'];
-}
-
-export interface QueryLocationsArgs {
-  input?: Maybe<LocationListInput>;
 }
 
 export interface QueryProductArgs {
@@ -3362,15 +3369,6 @@ export type Zone = Resource &
     director: SecuredUser;
   };
 
-export interface ForgotPasswordMutationVariables {
-  email: Scalars['String'];
-}
-
-export type ForgotPasswordMutation = { __typename?: 'Mutation' } & Pick<
-  Mutation,
-  'forgotPassword'
->;
-
 export interface SessionQueryVariables {}
 
 export type SessionQuery = { __typename?: 'Query' } & {
@@ -3403,13 +3401,22 @@ export type LoggedInUserFragment = { __typename?: 'User' } & Pick<
     >;
   };
 
+export interface ForgotPasswordMutationVariables {
+  email: Scalars['String'];
+}
+
+export type ForgotPasswordMutation = { __typename?: 'Mutation' } & Pick<
+  Mutation,
+  'forgotPassword'
+>;
+
 export interface LoginMutationVariables {
   input: LoginInput;
 }
 
 export type LoginMutation = { __typename?: 'Mutation' } & {
   login: { __typename?: 'LoginOutput' } & {
-    user?: Maybe<{ __typename?: 'User' } & LoggedInUserFragment>;
+    user: { __typename?: 'User' } & LoggedInUserFragment;
   };
 };
 
@@ -3503,54 +3510,6 @@ export const UpdateTestUserFragmentFragmentDoc = gql`
     }
   }
 `;
-export const ForgotPasswordDocument = gql`
-  mutation ForgotPassword($email: String!) {
-    forgotPassword(email: $email)
-  }
-`;
-export type ForgotPasswordMutationFn = ApolloReactCommon.MutationFunction<
-  ForgotPasswordMutation,
-  ForgotPasswordMutationVariables
->;
-
-/**
- * __useForgotPasswordMutation__
- *
- * To run a mutation, you first call `useForgotPasswordMutation` within a React component and pass it any options that fit your needs.
- * When your component renders, `useForgotPasswordMutation` returns a tuple that includes:
- * - A mutate function that you can call at any time to execute the mutation
- * - An object with fields that represent the current status of the mutation's execution
- *
- * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
- *
- * @example
- * const [forgotPasswordMutation, { data, loading, error }] = useForgotPasswordMutation({
- *   variables: {
- *      email: // value for 'email'
- *   },
- * });
- */
-export function useForgotPasswordMutation(
-  baseOptions?: ApolloReactHooks.MutationHookOptions<
-    ForgotPasswordMutation,
-    ForgotPasswordMutationVariables
-  >
-) {
-  return ApolloReactHooks.useMutation<
-    ForgotPasswordMutation,
-    ForgotPasswordMutationVariables
-  >(ForgotPasswordDocument, baseOptions);
-}
-export type ForgotPasswordMutationHookResult = ReturnType<
-  typeof useForgotPasswordMutation
->;
-export type ForgotPasswordMutationResult = ApolloReactCommon.MutationResult<
-  ForgotPasswordMutation
->;
-export type ForgotPasswordMutationOptions = ApolloReactCommon.BaseMutationOptions<
-  ForgotPasswordMutation,
-  ForgotPasswordMutationVariables
->;
 export const SessionDocument = gql`
   query Session {
     session(browser: true) {
@@ -3604,6 +3563,54 @@ export type SessionLazyQueryHookResult = ReturnType<typeof useSessionLazyQuery>;
 export type SessionQueryResult = ApolloReactCommon.QueryResult<
   SessionQuery,
   SessionQueryVariables
+>;
+export const ForgotPasswordDocument = gql`
+  mutation ForgotPassword($email: String!) {
+    forgotPassword(email: $email)
+  }
+`;
+export type ForgotPasswordMutationFn = ApolloReactCommon.MutationFunction<
+  ForgotPasswordMutation,
+  ForgotPasswordMutationVariables
+>;
+
+/**
+ * __useForgotPasswordMutation__
+ *
+ * To run a mutation, you first call `useForgotPasswordMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useForgotPasswordMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [forgotPasswordMutation, { data, loading, error }] = useForgotPasswordMutation({
+ *   variables: {
+ *      email: // value for 'email'
+ *   },
+ * });
+ */
+export function useForgotPasswordMutation(
+  baseOptions?: ApolloReactHooks.MutationHookOptions<
+    ForgotPasswordMutation,
+    ForgotPasswordMutationVariables
+  >
+) {
+  return ApolloReactHooks.useMutation<
+    ForgotPasswordMutation,
+    ForgotPasswordMutationVariables
+  >(ForgotPasswordDocument, baseOptions);
+}
+export type ForgotPasswordMutationHookResult = ReturnType<
+  typeof useForgotPasswordMutation
+>;
+export type ForgotPasswordMutationResult = ApolloReactCommon.MutationResult<
+  ForgotPasswordMutation
+>;
+export type ForgotPasswordMutationOptions = ApolloReactCommon.BaseMutationOptions<
+  ForgotPasswordMutation,
+  ForgotPasswordMutationVariables
 >;
 export const LoginDocument = gql`
   mutation Login($input: LoginInput!) {
