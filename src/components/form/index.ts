@@ -2,6 +2,7 @@ export * from './CheckboxField';
 export * from './decorators';
 export * from './DateField';
 export * from './EmailField';
+export * from './FieldGroup';
 export * from './PasswordField';
 export * from './SubmitButton';
 export * from './SubmitError';
