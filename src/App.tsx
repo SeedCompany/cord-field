@@ -1,11 +1,10 @@
-import { ApolloProvider } from '@apollo/client';
 import LuxonUtils from '@date-io/luxon';
 import { CssBaseline, ThemeProvider } from '@material-ui/core';
 import { LocalizationProvider } from '@material-ui/pickers';
 import { SnackbarProvider } from 'notistack';
 import React, { cloneElement, FC, ReactElement } from 'react';
 import { BrowserRouter } from 'react-router-dom';
-import { apolloClient } from './api';
+import { ApolloProvider } from './api';
 import { SessionProvider } from './components/Session';
 import { TitleProvider } from './components/title';
 import { Root } from './scenes/Root';
@@ -16,15 +15,16 @@ const theme = createTheme();
 /**
  * Register all providers here in a flat list
  * This prevents git diff churning
+ * Order still matters (the first is the outer most component)
  */
 const providers = [
-  <SnackbarProvider children={<></>} />,
-  <ApolloProvider client={apolloClient} children={<></>} />,
-  <ThemeProvider theme={theme} children={<></>} />,
-  <LocalizationProvider dateAdapter={LuxonUtils} children={<></>} />,
-  <SessionProvider />,
   <BrowserRouter />,
   <TitleProvider title="CORD Field" />,
+  <ThemeProvider theme={theme} children={<></>} />,
+  <LocalizationProvider dateAdapter={LuxonUtils} children={<></>} />,
+  <SnackbarProvider children={<></>} />,
+  <ApolloProvider />,
+  <SessionProvider />,
 ];
 
 export const App = () => (
