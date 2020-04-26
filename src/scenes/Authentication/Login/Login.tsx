@@ -1,6 +1,7 @@
 import { useMutation } from '@apollo/client';
 import { FORM_ERROR } from 'final-form';
 import React, { useEffect, useState } from 'react';
+import { Helmet } from 'react-helmet-async';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { Except } from 'type-fest';
 import { handleFormError } from '../../../api';
@@ -48,7 +49,12 @@ export const Login = (props: Except<Props, 'onSubmit'>) => {
     }
   };
 
-  return <LoginForm {...props} onSubmit={submit} />;
+  return (
+    <>
+      <Helmet title="Login" />
+      <LoginForm {...props} onSubmit={submit} />
+    </>
+  );
 };
 Login.fetchData = async () => {
   return {

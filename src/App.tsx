@@ -5,7 +5,6 @@ import * as React from 'react';
 import { ApolloProvider } from './api';
 import { Nest } from './components/Nest';
 import { SnackbarProvider } from './components/Snackbar';
-import { TitleProvider } from './components/title';
 import { UploadManagerProvider, UploadProvider } from './components/Upload';
 import { Root } from './scenes/Root';
 import { createTheme } from './theme';
@@ -19,7 +18,6 @@ const theme = createTheme();
  * Order still matters (the first is the outer most component)
  */
 export const appProviders = [
-  <TitleProvider title="CORD Field" />,
   <ThemeProvider theme={theme} children={<></>} />,
   <CssBaseline />,
   <LocalizationProvider dateAdapter={LuxonUtils} children={<></>} />,
