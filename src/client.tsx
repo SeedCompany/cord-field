@@ -5,6 +5,7 @@ import { HelmetProvider } from 'react-helmet-async';
 import { BrowserRouter } from 'react-router-dom';
 import { App } from './App';
 import { Nest } from './components/Nest';
+import { ServerDataProvider } from './components/ServerData';
 
 const setup: Array<Promise<any>> = [];
 const isBrowser = typeof window !== 'undefined';
@@ -37,11 +38,12 @@ if (isBrowser) {
 }
 
 const root = document.getElementById('root');
+const serverData = (window as any).__SERVER_DATA__;
 
 const clientOnlyProviders = [
+  <ServerDataProvider value={serverData} />,
   <BrowserRouter />,
   <HelmetProvider children={<></>} />,
-  // more
 ];
 
 const render = (TheApp: ComponentType) => {

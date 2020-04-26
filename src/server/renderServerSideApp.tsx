@@ -8,10 +8,14 @@ import { FilledContext, HelmetProvider } from 'react-helmet-async';
 import { StaticRouter } from 'react-router-dom/server';
 import { App } from '../App';
 import { Nest } from '../components/Nest';
+import { ServerData, ServerDataProvider } from '../components/ServerData';
 import { UserAgentContext } from '../hooks';
+import { fetchDataForRender } from './fetchDataForRender';
 import { indexHtml } from './indexHtml';
 
 export const renderServerSideApp = async (req: Request, res: Response) => {
+  const data = await fetchDataForRender(ServerApp, req);
+
   const context: { url?: string; statusCode?: number } = {};
   const helmetContext: Partial<FilledContext> = {};
 
@@ -23,7 +27,7 @@ export const renderServerSideApp = async (req: Request, res: Response) => {
   const markup = ReactDOMServer.renderToString(
     sheets.collect(
       extractor.collectChunks(
-        <ServerApp req={req} helmetContext={helmetContext} />
+        <ServerApp req={req} data={data} helmetContext={helmetContext} />
       )
     )
   );
@@ -35,6 +39,7 @@ export const renderServerSideApp = async (req: Request, res: Response) => {
   }
 
   const fullMarkup = indexHtml({
+    serverData: data,
     markup,
     helmet,
     extractor,
@@ -44,15 +49,18 @@ export const renderServerSideApp = async (req: Request, res: Response) => {
 };
 
 const ServerApp = ({
+  data,
   req,
   helmetContext,
 }: {
+  data: ServerData;
   req: Request;
   helmetContext?: Partial<FilledContext>;
 }) => (
   <Nest
     elements={[
       <HelmetProvider context={helmetContext || {}} children={<></>} />,
+      <ServerDataProvider value={data} />,
       <StaticRouter location={req.url} />,
       <UserAgentContext.Provider value={req.headers['user-agent']} />,
     ]}

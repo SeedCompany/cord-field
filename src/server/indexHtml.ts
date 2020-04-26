@@ -2,14 +2,17 @@ import { ChunkExtractor } from '@loadable/server';
 import ServerStyleSheets from '@material-ui/styles/ServerStyleSheets';
 import { pickBy } from 'lodash';
 import { HelmetData } from 'react-helmet-async';
+import { ServerData } from '../components/ServerData';
 
 export const indexHtml = ({
   helmet,
+  serverData,
   markup,
   extractor,
   sheets,
 }: {
   helmet: HelmetData;
+  serverData: ServerData;
   markup: string;
   extractor: ChunkExtractor;
   sheets: ServerStyleSheets;
@@ -30,6 +33,7 @@ export const indexHtml = ({
   <div id="root">${markup}</div>
   <script>
     window.env = ${JSON.stringify(clientEnv)};
+    window.__SERVER_DATA__ = ${JSON.stringify(serverData)};
   </script>
   ${extractor.getScriptTags()}
 </body>

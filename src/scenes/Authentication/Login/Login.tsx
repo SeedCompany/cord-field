@@ -50,3 +50,8 @@ export const Login = (props: Except<Props, 'onSubmit'>) => {
 
   return <LoginForm {...props} onSubmit={submit} />;
 };
+Login.fetchData = async () => {
+  return {
+    random: Math.random(),
+  };
+};
