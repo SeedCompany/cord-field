@@ -4,7 +4,7 @@
 __metadata:
   version: 4
 
-"@apollo/client@npm:^3.0.0-beta.24, @apollo/client@npm:^3.0.0-beta.43":
+"@apollo/client@npm:^3.0.0-beta.23, @apollo/client@npm:^3.0.0-beta.24, @apollo/client@npm:^3.0.0-beta.43":
   version: 3.0.0-james.33.0
   resolution: "@apollo/client@npm:3.0.0-james.33.0"
   dependencies:
@@ -38,6 +38,16 @@ __metadata:
   peerDependencies:
     graphql: ^14.0.2 || ^15.0.0-rc.2
   checksum: 2/0ec4081890b86e55f6073a1a5feb057c420708bf6226d645ccb51523d538b0580f4c2300a91630ed058aa2e13dca1ca2e7ad77cc7e4a7b45849ba7d69d299bad
+  languageName: node
+  linkType: hard
+
+"@apollo/link-error@npm:^2.0.0-beta.3":
+  version: 2.0.0-beta.3
+  resolution: "@apollo/link-error@npm:2.0.0-beta.3"
+  dependencies:
+    "@apollo/client": ^3.0.0-beta.23
+    tslib: ^1.9.3
+  checksum: 2/76cb02747926dfbf7836aef0a80d4bdca9ff283c7f00d0f5d950436b3237f359b417eb7fa62e1447df2960d4ae0c85539a8cf6afacf0f6b90df674c5c2e2aa80
   languageName: node
   linkType: hard
 
@@ -6937,6 +6947,7 @@ __metadata:
   resolution: "cord-field@workspace:."
   dependencies:
     "@apollo/client": ^3.0.0-beta.43
+    "@apollo/link-error": ^2.0.0-beta.3
     "@apollo/react-components": 4.0.0-beta.1
     "@babel/core": ^7.9.0
     "@babel/plugin-proposal-export-namespace-from": ^7.8.3
