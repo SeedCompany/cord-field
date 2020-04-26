@@ -1,9 +1,12 @@
-# builder =============================
-FROM node:12-alpine as builder
+# base ================================
+FROM node:12-alpine as node
 
 WORKDIR /app
 
 ENV NODE_ENV=production
+
+# builder =============================
+FROM node as builder
 
 # Install dependencies (in separate docker layer from app code)
 COPY .yarn .yarn
@@ -13,28 +16,12 @@ RUN yarn install --immutable
 
 COPY . .
 
-ARG API_BASE_URL
-ENV REACT_APP_API_BASE_URL=$API_BASE_URL
-RUN echo "REACT_APP_API_BASE_URL=$REACT_APP_API_BASE_URL"
-ENV SKIP_PREFLIGHT_CHECK=true
 RUN yarn build
 
 # run =================================
-FROM nginx
+FROM node as run
 
-RUN printf '\n\
-server {\n\
-  listen 80;\n\
-  listen [::]:80 default ipv6only=on;\n\
-  root /usr/share/nginx/html;\n\
-  index index.html;\n\
-  server_name _;\n\
-  location / {\n\
-    try_files $uri /index.html;\n\
-  }\n\
-}\n\
-' > /etc/nginx/conf.d/default.conf
-
-COPY --from=builder /app/build /usr/share/nginx/html
+COPY --from=builder /app/build .
 
 EXPOSE 80
+CMD ["yarn", "node", "server.js"]
