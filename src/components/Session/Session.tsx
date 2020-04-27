@@ -10,7 +10,7 @@ export type SessionUser = LoggedInUserFragment;
 
 function Session() {
   const { loading, data, client } = useSessionQuery();
-  const setSession = (user: LoggedInUserFragment) =>
+  const setSession = (user: SessionUser | null) =>
     client.writeQuery<SessionQuery>({
       query: SessionDocument,
       data: {

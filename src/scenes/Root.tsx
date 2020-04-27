@@ -19,12 +19,13 @@ const useStyles = makeStyles(() => ({
 
 export const Root = () => {
   useStyles();
-  return (
+  const routes = (
     <Routes>
       <Route path="/" element={<Home />} />
-      <Route path="/login/*" element={<Authentication />} />
       <Route path="/devtest" element={<DevTest />} />
       <Route path="/organizations/*" element={<Organizations />} />
     </Routes>
   );
+
+  return <Authentication>{routes}</Authentication>;
 };

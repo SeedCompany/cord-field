@@ -1,9 +1,7 @@
 import { useSnackbar } from 'notistack';
-import React, { useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import React from 'react';
 import { Except } from 'type-fest';
 import { handleFormError, useCreateOrganizationMutation } from '../../../api';
-import { useSession } from '../../../components/Session';
 import {
   CreateOrganizationForm,
   CreateOrganizationFormProps as Props,
@@ -12,14 +10,6 @@ import {
 export const CreateOrganization = (props: Except<Props, 'onSubmit'>) => {
   const [createOrg] = useCreateOrganizationMutation();
   const { enqueueSnackbar } = useSnackbar();
-  const navigate = useNavigate();
-  const [session, sessionLoading] = useSession();
-
-  useEffect(() => {
-    if (!sessionLoading && !session) {
-      navigate('/login');
-    }
-  }, [navigate, session, sessionLoading]);
 
   const submit: Props['onSubmit'] = async (input) => {
     try {

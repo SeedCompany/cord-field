@@ -4,8 +4,6 @@ plugins:
 extends:
   - plugin:@seedcompany/react
 rules:
-  # Makes refactoring harder
-  import/no-default-export: warn
   no-restricted-imports:
     - error
     - paths:
@@ -25,10 +23,3 @@ rules:
         - '@material-ui/core/*'
         - '@material-ui/icons/*'
         - lodash/*
-
-overrides:
-  # Allow default export on storybook files
-  - files:
-      - ./**/*.stories.tsx
-    rules:
-      import/no-default-export: off

@@ -3,7 +3,7 @@ import React from 'react';
 import { App } from './App';
 
 test('renders HOME', () => {
-  const { getByText } = render(<App />);
-  const linkElement = getByText(/Welcome/i);
-  expect(linkElement).toBeInTheDocument();
+  const { getByRole } = render(<App />);
+  const spinner = getByRole('progressbar');
+  expect(spinner).toBeInTheDocument();
 });

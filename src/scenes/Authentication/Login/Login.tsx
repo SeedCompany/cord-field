@@ -1,6 +1,6 @@
 import { FORM_ERROR } from 'final-form';
-import React, { useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import React, { useEffect, useState } from 'react';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 import { Except } from 'type-fest';
 import { handleFormError, useLoginMutation } from '../../../api';
 import { useSession } from '../../../components/Session';
@@ -9,24 +9,26 @@ import { LoginForm, LoginFormProps as Props } from './LoginForm';
 export const Login = (props: Except<Props, 'onSubmit'>) => {
   const [login] = useLoginMutation();
   const navigate = useNavigate();
+  const query = useSearchParams();
   const [session, sessionLoading, setUserSession] = useSession();
+  const [success, setSuccess] = useState(false);
 
+  // Redirect to homepage if already logged in (and not from successful login)
   useEffect(() => {
-    if (!sessionLoading && session) {
-      navigate('/');
+    if (!sessionLoading && session && !success) {
+      navigate('/', { replace: true });
     }
-  }, [navigate, session, sessionLoading]);
+  }, [navigate, session, sessionLoading, success]);
 
   const submit: Props['onSubmit'] = async (input) => {
     try {
       const { data } = await login({
         variables: { input },
       });
-
-      // TODO: Navigate to a returnTo place if it exists.
-      navigate('/');
-
+      setSuccess(true);
       setUserSession(data.login.user);
+      const returnTo = decodeURIComponent(query.get('returnTo') ?? '/');
+      navigate(returnTo, { replace: true });
     } catch (e) {
       return await handleFormError(e, {
         Default: {
