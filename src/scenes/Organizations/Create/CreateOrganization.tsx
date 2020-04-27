@@ -1,6 +1,3 @@
-import { IconButton } from '@material-ui/core';
-import { Close } from '@material-ui/icons';
-import { FORM_ERROR } from 'final-form';
 import { useSnackbar } from 'notistack';
 import React, { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
@@ -14,7 +11,7 @@ import {
 
 export const CreateOrganization = (props: Except<Props, 'onSubmit'>) => {
   const [createOrg] = useCreateOrganizationMutation();
-  const { enqueueSnackbar, closeSnackbar } = useSnackbar();
+  const { enqueueSnackbar } = useSnackbar();
   const navigate = useNavigate();
   const [session, sessionLoading] = useSession();
 
@@ -33,19 +30,11 @@ export const CreateOrganization = (props: Except<Props, 'onSubmit'>) => {
         `Successfully created org with name: ${input.organization.name}`,
         {
           variant: 'success',
-          action: (key: string) => (
-            <IconButton color="inherit" onClick={() => closeSnackbar(key)}>
-              <Close />
-            </IconButton>
-          ),
         }
       );
+      // should be navigated to new org created.
     } catch (e) {
-      return await handleFormError(e, {
-        Default: {
-          [FORM_ERROR]: `Something wasn't right. Try again.`,
-        },
-      });
+      return await handleFormError(e);
     }
   };
 

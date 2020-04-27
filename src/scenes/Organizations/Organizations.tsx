@@ -21,13 +21,13 @@ export const Organizations = () => {
 
   const matched = useRoutes([
     {
-      path: '/createOrg',
+      path: '/create',
       element: <CreateOrganization className={classes.card} />,
     },
   ]);
 
   if (!matched) {
-    return <div>Organization Not Found</div>;
+    return <div>Not Found</div>;
   }
 
   return <div className={classes.root}>{matched}</div>;

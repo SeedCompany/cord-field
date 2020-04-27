@@ -20,6 +20,7 @@ export const CreateOrganizationForm = ({
           <SubmitError />
           <TextField
             name="organization.name"
+            label="Name"
             placeholder="Enter organization name"
           />
           <SubmitButton />
