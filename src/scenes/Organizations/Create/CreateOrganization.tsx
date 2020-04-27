@@ -1,6 +1,12 @@
-import React from 'react';
+import { IconButton } from '@material-ui/core';
+import { Close } from '@material-ui/icons';
+import { FORM_ERROR } from 'final-form';
+import { useSnackbar } from 'notistack';
+import React, { useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { Except } from 'type-fest';
-import { useCreateOrganizationMutation } from '../../../api';
+import { handleFormError, useCreateOrganizationMutation } from '../../../api';
+import { useSession } from '../../../components/Session';
 import {
   CreateOrganizationForm,
   CreateOrganizationFormProps as Props,
@@ -8,22 +14,38 @@ import {
 
 export const CreateOrganization = (props: Except<Props, 'onSubmit'>) => {
   const [createOrg] = useCreateOrganizationMutation();
+  const { enqueueSnackbar, closeSnackbar } = useSnackbar();
+  const navigate = useNavigate();
+  const [session, sessionLoading] = useSession();
+
+  useEffect(() => {
+    if (!sessionLoading && !session) {
+      navigate('/login');
+    }
+  }, [navigate, session, sessionLoading]);
 
   const submit: Props['onSubmit'] = async (input) => {
     try {
-      const res = await createOrg({
+      await createOrg({
         variables: { input },
       });
-
-      // TODO: post-login authentication (session storage, etc)
-      if (res?.login.success) {
-        alert(`Welcome ${res.login.user?.realFirstName.value}`);
-      } else {
-        alert('Login failed. Please check your email or password.');
-      }
+      enqueueSnackbar(
+        `Successfully created org with name: ${input.organization.name}`,
+        {
+          variant: 'success',
+          action: (key: string) => (
+            <IconButton color="inherit" onClick={() => closeSnackbar(key)}>
+              <Close />
+            </IconButton>
+          ),
+        }
+      );
     } catch (e) {
-      alert('Login failed. Please contact support.');
-      console.log(e);
+      return await handleFormError(e, {
+        Default: {
+          [FORM_ERROR]: `Something wasn't right. Try again.`,
+        },
+      });
     }
   };
 

@@ -2,7 +2,7 @@ import { Card, CardContent } from '@material-ui/core';
 import React from 'react';
 import { Form, FormProps } from 'react-final-form';
 import { CreateOrganizationInput } from '../../../api';
-import { SubmitButton, TextField } from '../../../components/form';
+import { SubmitButton, SubmitError, TextField } from '../../../components/form';
 
 export type CreateOrganizationFormProps = Pick<
   FormProps<CreateOrganizationInput>,
@@ -17,8 +17,9 @@ export const CreateOrganizationForm = ({
     {({ handleSubmit }) => (
       <Card component="form" onSubmit={handleSubmit} className={className}>
         <CardContent>
+          <SubmitError />
           <TextField
-            name="Organization Name"
+            name="organization.name"
             placeholder="Enter organization name"
           />
           <SubmitButton />

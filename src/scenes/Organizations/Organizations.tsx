@@ -1,7 +1,7 @@
 import { makeStyles } from '@material-ui/core';
 import React from 'react';
 import { useRoutes } from 'react-router-dom';
-import { CreateOrganization } from './Create/CreateOrganization';
+import { CreateOrganization } from './Create';
 
 const useStyles = makeStyles(() => ({
   root: {
@@ -26,11 +26,9 @@ export const Organizations = () => {
     },
   ]);
 
-  // Render not found in isolation
   if (!matched) {
-    return <div>Not Found</div>;
+    return <div>Organization Not Found</div>;
   }
 
-  // Wrap selected route with page layout
   return <div className={classes.root}>{matched}</div>;
 };
