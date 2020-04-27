@@ -41,7 +41,11 @@ export const Authentication: FC = ({ children }) => {
 
   useEffect(() => {
     if (!session && !sessionLoading && !matched) {
-      navigate('/login', { replace: true });
+      const current = location.pathname + location.search + location.hash;
+      const returnTo =
+        current !== '/' ? encodeURIComponent(current) : undefined;
+      const search = returnTo ? `?returnTo=${returnTo}` : undefined;
+      navigate({ pathname: '/login', search }, { replace: true });
     }
   }, [session, sessionLoading, navigate, matched, location]);
 
