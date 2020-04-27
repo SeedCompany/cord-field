@@ -3,6 +3,7 @@ import React from 'react';
 import { useRoutes } from 'react-router-dom';
 import { ForgotPassword } from './ForgotPassword';
 import { Login } from './Login/Login';
+import { Logout } from './Logout';
 import { ResetPassword } from './ResetPassword';
 
 const useStyles = makeStyles(() => ({
@@ -23,6 +24,7 @@ export const Authentication = () => {
 
   const matched = useRoutes([
     { path: '/', element: <Login className={classes.card} /> },
+    { path: '/logout', element: <Logout /> },
     {
       path: '/forgot-password',
       element: <ForgotPassword className={classes.card} />,
