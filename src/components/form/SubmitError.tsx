@@ -13,12 +13,9 @@ export const SubmitError = ({ children, ...rest }: TypographyProps) => {
       submitError: true,
     },
   });
-  if (!children && !submitError) {
-    return null;
-  }
   return (
     <Typography color="error" {...rest}>
-      {children || submitError}
+      {children || submitError || <br />}
     </Typography>
   );
 };
