@@ -9,23 +9,24 @@ import { ForgotPasswordSuccess } from './ForgotPasswordSuccess';
 
 export const ForgotPassword = (props: Except<Props, 'onSubmit'>) => {
   const [forgotPassword] = useForgotPasswordMutation();
-  const [success, setSuccess] = useState(false);
+  const [email, setEmail] = useState<string | null>(null);
 
   const submit: Props['onSubmit'] = async (input) => {
     try {
       await forgotPassword({
         variables: input,
       });
-      setSuccess(true);
+      setEmail(input.email);
     } catch (e) {
       return await handleFormError(e, {
-        Default: `Something went wrong. Try again.`, // Shouldn't ever be hit
+        // Shouldn't ever be hit
+        Default: `Something wasn't right. Try again or contact Support.`,
       });
     }
   };
 
-  return success ? (
-    <ForgotPasswordSuccess />
+  return email ? (
+    <ForgotPasswordSuccess email={email} className={props.className} />
   ) : (
     <ForgotPasswordForm {...props} onSubmit={submit} />
   );

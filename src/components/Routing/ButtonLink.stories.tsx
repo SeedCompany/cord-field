@@ -1,11 +1,9 @@
 import { select, text } from '@storybook/addon-knobs';
-import React, { ReactElement } from 'react';
-import { MemoryRouter } from 'react-router-dom';
+import React from 'react';
 import { ButtonLink, ButtonLinkProps } from './ButtonLink';
 
 export default {
   title: 'Components/Routing/ButtonLink',
-  decorators: [(fn: () => ReactElement) => <MemoryRouter>{fn()}</MemoryRouter>],
 };
 
 export const Internal = () => <Story to="/">Homepage</Story>;

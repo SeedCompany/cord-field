@@ -1,11 +1,9 @@
 import { select, text } from '@storybook/addon-knobs';
-import React, { ReactElement } from 'react';
-import { MemoryRouter } from 'react-router-dom';
+import React from 'react';
 import { Link, LinkProps } from './Link';
 
 export default {
   title: 'Components/Routing/Link',
-  decorators: [(fn: () => ReactElement) => <MemoryRouter>{fn()}</MemoryRouter>],
 };
 
 export const Internal = () => <LinkStory to="/">Homepage</LinkStory>;

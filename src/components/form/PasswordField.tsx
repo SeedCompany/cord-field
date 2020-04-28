@@ -23,6 +23,7 @@ export const PasswordField: FC<PasswordFieldProps> = ({
     <TextField
       name={name}
       label="Password"
+      placeholder="Enter Password"
       required={true}
       {...rest}
       type={visible ? 'text' : 'password'}
