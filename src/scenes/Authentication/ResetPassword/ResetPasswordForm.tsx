@@ -1,7 +1,10 @@
 import { makeStyles, Typography } from '@material-ui/core';
+import { Decorator, Mutator } from 'final-form';
 import React from 'react';
 import { Form, FormProps } from 'react-final-form';
 import {
+  blurOnSubmit,
+  focusFirstFieldWithSubmitError,
   PasswordField,
   SubmitButton,
   SubmitError,
@@ -24,8 +27,13 @@ const useStyles = makeStyles(({ spacing }) => ({
   },
 }));
 
+interface Fields {
+  password: string;
+  confirm: string;
+}
+
 export type ResetPasswordFormProps = Pick<
-  FormProps<{ password: string }>,
+  FormProps<Fields>,
   'onSubmit' | 'initialValues'
 > & { className?: string };
 
@@ -41,7 +49,12 @@ export const ResetPasswordForm = ({
         Password Reset
       </Typography>
       <Typography align="center">Choose a password for you account.</Typography>
-      <Form {...props}>
+      <Form<Fields>
+        {...props}
+        validate={passwordMatching}
+        decorators={decorators}
+        mutators={{ markConfirmTouched }}
+      >
         {({ handleSubmit }) => (
           <form onSubmit={handleSubmit}>
             <SubmitError className={classes.formError} />
@@ -49,6 +62,11 @@ export const ResetPasswordForm = ({
               label="New Password"
               placeholder="Create New Password"
               autoFocus
+            />
+            <PasswordField
+              name="confirm"
+              label="Re-Type Password"
+              placeholder="Re-Enter New Password"
             />
             <SubmitButton className={classes.submit}>
               Save Password
@@ -62,3 +80,32 @@ export const ResetPasswordForm = ({
     </div>
   );
 };
+
+const passwordMatching = ({ password, confirm }: Fields) => {
+  return password && confirm && password !== confirm
+    ? {
+        password: 'Passwords must match',
+        confirm: 'Passwords must match',
+      }
+    : undefined;
+};
+
+const showMatchingErrorsImmediately: Decorator<Fields> = (form) =>
+  form.subscribe(
+    ({ active, values }) => {
+      if (active === 'confirm' && values.confirm) {
+        form.mutators.markConfirmTouched();
+      }
+    },
+    { active: true, values: true }
+  );
+
+const markConfirmTouched: Mutator<Fields> = (args, state) => {
+  state.fields.confirm.touched = true;
+};
+
+const decorators = [
+  showMatchingErrorsImmediately,
+  blurOnSubmit,
+  focusFirstFieldWithSubmitError,
+];
