@@ -135,6 +135,8 @@ const useStyles = makeStyles(() => ({
   },
   coverImg: {
     objectFit: 'cover',
+    width: '100%',
+    height: '100%',
   },
   holder: {
     position: 'relative',

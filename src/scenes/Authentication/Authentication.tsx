@@ -1,7 +1,9 @@
 import { CircularProgress, makeStyles } from '@material-ui/core';
 import React, { FC, useEffect } from 'react';
 import { useLocation, useNavigate, useRoutes } from 'react-router-dom';
+import { Picture } from '../../components/Picture';
 import { useSession } from '../../components/Session';
+import backgroundImg from './background.png';
 import { ForgotPassword } from './ForgotPassword';
 import { Login } from './Login/Login';
 import { Logout } from './Logout';
@@ -49,20 +51,17 @@ export const Authentication: FC = ({ children }) => {
     }
   }, [session, sessionLoading, navigate, matched, location]);
 
-  // render anonymous auth scene
-  if (matched) {
-    return <div className={classes.root}>{matched}</div>;
+  // render anonymous auth scene, or spinner while waiting
+  // for session or redirect to login when not logged in
+  if (matched || !session) {
+    return (
+      <div className={classes.root}>
+        <Picture background source={backgroundImg} />
+        {matched ?? <CircularProgress />}
+      </div>
+    );
   }
 
   // logged in, show app
-  if (session) {
-    return <>{children}</>;
-  }
-
-  // not logged in, show spinner while waiting for session & redirect to login
-  return (
-    <div className={classes.root}>
-      <CircularProgress />
-    </div>
-  );
+  return <>{children}</>;
 };
