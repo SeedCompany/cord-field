@@ -1,0 +1,15 @@
+# Versioned but ignore
+.*
+!.babelrc
+codegen.yml
+
+# Yarn / NPM
+!.yarnrc.yml
+!.yarn/releases
+!.yarn/plugins
+node_modules
+
+# Local
+build
+coverage
+schema.graphql
