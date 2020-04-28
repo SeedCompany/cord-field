@@ -14,7 +14,7 @@ const useStyles = makeStyles(() => ({
     flex: 1,
     display: 'flex',
     flexDirection: 'column',
-    justifyContent: 'space-around',
+    justifyContent: 'space-evenly',
     alignItems: 'center',
   },
   card: {

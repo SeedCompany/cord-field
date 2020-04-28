@@ -14,6 +14,7 @@ export const EmailField: FC<EmailFieldProps> = ({
   <TextField
     name={name}
     label="Email"
+    placeholder="Enter Email Address"
     validate={[required ? validators.required : null, validators.email]}
     required={required}
     {...rest}

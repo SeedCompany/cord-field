@@ -14,7 +14,7 @@ export const SubmitError = ({ children, ...rest }: TypographyProps) => {
     },
   });
   return (
-    <Typography color="error" {...rest}>
+    <Typography color="error" variant="body2" align="center" {...rest}>
       {children || submitError || <br />}
     </Typography>
   );
