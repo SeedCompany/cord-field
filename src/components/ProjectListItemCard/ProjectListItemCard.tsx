@@ -14,11 +14,11 @@ import { ProjectStatus, Sensitivity } from '../../api';
 
 const useStyles = makeStyles({
   card: {
-    maxWidth: '700px',
+    maxWidth: '573px',
   },
   media: {
-    minHeight: '220px',
-    width: '220px',
+    minHeight: '169px',
+    width: '176px',
   },
   cardBody: {
     display: 'flex',
@@ -26,7 +26,7 @@ const useStyles = makeStyles({
   cardContent: {
     display: 'flex',
     flex: '1 1 auto',
-    padding: '20px',
+    padding: '18px 23px',
   },
   sensitivityLabel: {
     display: 'flex',
@@ -36,7 +36,7 @@ const useStyles = makeStyles({
     display: 'flex',
     flexDirection: 'column',
     '& > *:not(:last-child)': {
-      marginBottom: '10px',
+      marginBottom: '8px',
     },
   },
   rightContent: {
@@ -56,7 +56,7 @@ const useStyles = makeStyles({
     marginTop: 'auto',
   },
   esadDateLabel: {
-    marginTop: '20px',
+    marginTop: '24px',
   },
 });
 
@@ -76,7 +76,7 @@ export const ProjectListItemCard: FC<ProjectListItemCardProps> = ({
   name,
   countryName,
   region,
-  // TODO not sure if sensitivity chip color should be changed based on sensitivity
+  // TODO will wait for sensitivty component so it can be dropped into this one
   sensitivity,
   status,
   numberOfLanguageEngagements,
@@ -106,11 +106,11 @@ export const ProjectListItemCard: FC<ProjectListItemCardProps> = ({
         />
         <CardContent className={cardContent}>
           <div className={leftContent}>
-            <Typography variant="h3">{name}</Typography>
-            <Typography color="primary">
+            <Typography variant="h4">{name}</Typography>
+            <Typography color="primary" variant="body2">
               <Box
                 component="span"
-                m={2}
+                m={1}
                 display="inline"
                 color="text.secondary"
               >
@@ -123,7 +123,7 @@ export const ProjectListItemCard: FC<ProjectListItemCardProps> = ({
                 className={sensitivityIcon}
                 color="disabled"
               />
-              <Typography>Sensitivity</Typography>
+              <Typography variant="body2">Sensitivity</Typography>
             </Box>
             <Chip
               className={sensitivityChip}
@@ -131,7 +131,7 @@ export const ProjectListItemCard: FC<ProjectListItemCardProps> = ({
               label={sensitivity}
               color="secondary"
             />
-            <Typography className={statusLabel}>
+            <Typography className={statusLabel} variant="body2">
               Status:
               <Box
                 component="span"
@@ -145,10 +145,18 @@ export const ProjectListItemCard: FC<ProjectListItemCardProps> = ({
           </div>
           <div className={rightContent}>
             <Typography variant="h1">{numberOfLanguageEngagements}</Typography>
-            <Typography color="primary">Languages</Typography>
-            <Typography color="primary">Engagements</Typography>
-            <Typography color="primary" className={esadDateLabel}>
-              <Box component="span" m={2} display="inline" color="text.primary">
+            <Typography variant="body2" color="primary">
+              Languages
+            </Typography>
+            <Typography variant="body2" color="primary">
+              Engagements
+            </Typography>
+            <Typography
+              variant="body2"
+              color="primary"
+              className={esadDateLabel}
+            >
+              <Box component="span" m={1} display="inline" color="text.primary">
                 ESAD:
               </Box>
               {esadDate}
