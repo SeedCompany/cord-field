@@ -13,7 +13,7 @@ export const DateField = () => (
     <Form onSubmit={action('onSubmit')}>
       {() => (
         <DF
-          name="name"
+          name="DateField"
           disabled={boolean('Disabled', false)}
           fullWidth={boolean('Full Width', false)}
           variant={select(
