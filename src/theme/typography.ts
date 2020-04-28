@@ -1,12 +1,12 @@
 import { ThemeOptions } from '@material-ui/core';
 import { pickBy } from 'lodash';
 
-export const typography: ThemeOptions['typography'] = (_palette) => ({
+export const typography: ThemeOptions['typography'] = (palette) => ({
   fontFamily: 'sofia-pro, sans-serif',
 
   allVariants: {
     fontWeight: 500,
-    color: '#484848',
+    color: palette.text.primary,
   },
 
   // Header 1
