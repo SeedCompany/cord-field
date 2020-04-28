@@ -12,7 +12,7 @@ import { FC } from 'react';
 import * as React from 'react';
 import { ProjectStatus, Sensitivity } from '../../api';
 
-const useStyles = makeStyles({
+const useStyles = makeStyles(({ spacing }) => ({
   card: {
     maxWidth: '573px',
   },
@@ -26,7 +26,7 @@ const useStyles = makeStyles({
   cardContent: {
     display: 'flex',
     flex: '1 1 auto',
-    padding: '18px 23px',
+    padding: spacing(2, 3),
   },
   sensitivityLabel: {
     display: 'flex',
@@ -36,7 +36,7 @@ const useStyles = makeStyles({
     display: 'flex',
     flexDirection: 'column',
     '& > *:not(:last-child)': {
-      marginBottom: '8px',
+      marginBottom: spacing(1),
     },
   },
   rightContent: {
@@ -47,7 +47,7 @@ const useStyles = makeStyles({
     justifyContent: 'flex-end',
   },
   sensitivityIcon: {
-    margin: '0 5px',
+    margin: spacing(0, 1),
   },
   sensitivityChip: {
     width: '75px',
@@ -56,11 +56,12 @@ const useStyles = makeStyles({
     marginTop: 'auto',
   },
   esadDateLabel: {
-    marginTop: '24px',
+    marginTop: spacing(3),
   },
-});
+}));
 
 export interface ProjectListItemCardProps {
+  id: string;
   projectImagePath: string;
   name: string;
   countryName: string;
@@ -72,6 +73,7 @@ export interface ProjectListItemCardProps {
 }
 
 export const ProjectListItemCard: FC<ProjectListItemCardProps> = ({
+  id,
   projectImagePath,
   name,
   countryName,
@@ -114,7 +116,7 @@ export const ProjectListItemCard: FC<ProjectListItemCardProps> = ({
                 display="inline"
                 color="text.secondary"
               >
-                18397
+                {id}
               </Box>
               {countryName}, {region}
             </Typography>
@@ -145,10 +147,9 @@ export const ProjectListItemCard: FC<ProjectListItemCardProps> = ({
           </div>
           <div className={rightContent}>
             <Typography variant="h1">{numberOfLanguageEngagements}</Typography>
-            <Typography variant="body2" color="primary">
+            <Typography variant="body2" color="primary" align="right">
               Languages
-            </Typography>
-            <Typography variant="body2" color="primary">
+              <br />
               Engagements
             </Typography>
             <Typography

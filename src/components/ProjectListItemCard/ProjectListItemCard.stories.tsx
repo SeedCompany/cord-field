@@ -5,7 +5,7 @@ import { ProjectListItemCard } from './ProjectListItemCard';
 
 export default { title: 'Components/ProjectListItemCard' };
 
-const statusOptions: string[] & ProjectStatus[] = [
+const statusOptions: ProjectStatus[] = [
   'InDevelopment',
   'Pending',
   'Active',
@@ -15,6 +15,7 @@ const statusOptions: string[] & ProjectStatus[] = [
 
 export const ProjectListItemCardStory = () => (
   <ProjectListItemCard
+    id={text('id', '18937')}
     projectImagePath={text('projectImagePath', '/images/favicon-32x32.png')}
     name={text('name', 'Labore People Group')}
     countryName={text('countryName', 'Mandoria')}
