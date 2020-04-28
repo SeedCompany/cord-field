@@ -10,12 +10,7 @@ export const CheckboxField = () => (
   <Form onSubmit={action('onSubmit')}>
     {() => (
       <CB
-        variant={select(
-          'Variant',
-          ['standard', 'outlined', 'filled'],
-          'standard'
-        )}
-        name={text('Name', 'CheckboxField')}
+        name="checkbox"
         label={text('Label', 'CheckboxField')}
         labelPlacement={select(
           'LabelPlacement',
@@ -24,7 +19,6 @@ export const CheckboxField = () => (
         )}
         defaultValue={boolean('DefaultValue', false)}
         disabled={boolean('Disabled', false)}
-        fullWidth={boolean('Full Width', false)}
         color={select('Color', ['primary', 'secondary', 'default'], 'primary')}
         onClick={action('click')}
       />
