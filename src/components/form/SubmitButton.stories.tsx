@@ -4,25 +4,21 @@ import React from 'react';
 import { Form } from 'react-final-form';
 import { SubmitButton as SB } from './SubmitButton';
 
-export default { title: 'Components/SubmitButton' };
+export default { title: 'Components/Forms/SubmitButton' };
 
 export const SubmitButton = () => (
   <Form onSubmit={action('onSubmit')}>
     {({ handleSubmit }) => (
       <form onSubmit={handleSubmit}>
         <SB
-          spinner={boolean('Full Width', false)}
-          size={select('Size', ['small', 'medium', 'large'], 'medium')}
-          variant={select(
-            'Variant',
-            ['contained', 'text', 'outlined'],
-            'contained'
-          )}
-          fullWidth={boolean('Full Width', false)}
+          name="submit"
+          spinner={boolean('Progress', true)}
+          size={select('Size', ['small', 'medium', 'large'], 'large')}
+          fullWidth={boolean('Full Width', true)}
           color={select(
             'Color',
             ['inherit', 'primary', 'secondary', 'default', 'error'],
-            'primary'
+            'secondary'
           )}
           onClick={action('click')}
         >

@@ -4,26 +4,26 @@ import React from 'react';
 import { Form } from 'react-final-form';
 import { CheckboxField as CB } from './CheckboxField';
 
-export default { title: 'Components/CheckboxField' };
+export default { title: 'Components/Forms/Fields/Checkbox' };
 
-export const CheckboxField = () => (
+export const Checkbox = () => (
   <Form onSubmit={action('onSubmit')}>
     {({ handleSubmit }) => (
       <form onSubmit={handleSubmit}>
         <CB
           name="checkbox"
-          label={text('Label', 'CheckboxField')}
+          label={text('Label', 'Checkbox')}
           labelPlacement={select(
-            'LabelPlacement',
+            'Label Placement',
             ['start', 'end', 'top', 'bottom'],
             'end'
           )}
-          defaultValue={boolean('DefaultValue', false)}
+          defaultValue={boolean('DefaultValue', true)}
           disabled={boolean('Disabled', false)}
           color={select(
             'Color',
             ['primary', 'secondary', 'default'],
-            'primary'
+            'secondary'
           )}
           onClick={action('click')}
         />
