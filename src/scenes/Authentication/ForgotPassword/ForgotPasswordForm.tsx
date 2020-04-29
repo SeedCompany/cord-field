@@ -1,7 +1,6 @@
 import { makeStyles, Typography } from '@material-ui/core';
 import React from 'react';
 import { Form, FormProps } from 'react-final-form';
-import { UserEmailInput } from '../../../api';
 import {
   EmailField,
   SubmitButton,
@@ -26,7 +25,7 @@ const useStyles = makeStyles(({ spacing }) => ({
 }));
 
 export type ForgotPasswordFormProps = Pick<
-  FormProps<UserEmailInput>,
+  FormProps<{ email: string }>,
   'onSubmit' | 'initialValues'
 > & { className?: string };
 
