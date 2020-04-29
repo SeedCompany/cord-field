@@ -8,6 +8,7 @@ import backgroundImg from './background.png';
 import { ForgotPassword } from './ForgotPassword';
 import { Login } from './Login/Login';
 import { Logout } from './Logout';
+import { Register } from './Register/Register';
 import { ResetPassword } from './ResetPassword';
 
 const useStyles = makeStyles(({ palette }) => ({
@@ -33,6 +34,7 @@ export const Authentication: FC = ({ children }) => {
   const [session, sessionLoading] = useSession();
 
   const matched = useRoutes([
+    { path: '/register', element: <Register className={classes.card} /> },
     { path: '/login', element: <Login className={classes.card} /> },
     { path: '/logout', element: <Logout /> },
     {

@@ -62,6 +62,11 @@ export interface AttachUserToSecurityGroupInput {
   request: AttachUserToSecurityGroup;
 }
 
+export interface BaseNodeConsistencyInput {
+  /** The BaseNode type */
+  baseNode: Scalars['String'];
+}
+
 export type BibleBook =
   | 'Genesis'
   | 'Exodus'
@@ -2016,7 +2021,7 @@ export interface Query {
   user: User;
   /** Look up users */
   users: UserListOutput;
-  /** Check out whether a provided email exists or not in User Table */
+  /** Checks whether a provided email already exists */
   checkEmail: Scalars['Boolean'];
   /** Check Consistency across User Nodes */
   checkUserConsistency: Scalars['Boolean'];
@@ -2079,6 +2084,8 @@ export interface Query {
   directory: Directory;
   file: File;
   fileNode: FileOrDirectory;
+  /** Check Consistency in File Nodes */
+  checkFileConsistency: Scalars['Boolean'];
   /** Look up all states on workflow */
   states: StateListOutput;
   /** Look up all next possible states on workflow */
@@ -2229,6 +2236,10 @@ export interface QueryFileArgs {
 
 export interface QueryFileNodeArgs {
   id: Scalars['ID'];
+}
+
+export interface QueryCheckFileConsistencyArgs {
+  input: BaseNodeConsistencyInput;
 }
 
 export interface QueryStatesArgs {
@@ -3318,10 +3329,6 @@ export interface UserEducationArgs {
   input?: Maybe<EducationListInput>;
 }
 
-export interface UserEmailInput {
-  email: Scalars['String'];
-}
-
 export interface UserFilters {
   /** Only users matching this first name */
   displayFirstName?: Maybe<Scalars['String']>;
@@ -3428,6 +3435,16 @@ export type LogoutMutation = { __typename?: 'Mutation' } & Pick<
   Mutation,
   'logout'
 >;
+
+export interface RegisterMutationVariables {
+  input: CreateUserInput;
+}
+
+export type RegisterMutation = { __typename?: 'Mutation' } & {
+  createUser: { __typename?: 'CreateUserOutput' } & {
+    user: { __typename?: 'User' } & LoggedInUserFragment;
+  };
+};
 
 export interface ResetPasswordMutationVariables {
   input: ResetPasswordInput;
@@ -3734,6 +3751,57 @@ export type LogoutMutationResult = ApolloReactCommon.MutationResult<
 export type LogoutMutationOptions = ApolloReactCommon.BaseMutationOptions<
   LogoutMutation,
   LogoutMutationVariables
+>;
+export const RegisterDocument = gql`
+  mutation Register($input: CreateUserInput!) {
+    createUser(input: $input) {
+      user {
+        ...LoggedInUser
+      }
+    }
+  }
+  ${LoggedInUserFragmentDoc}
+`;
+export type RegisterMutationFn = ApolloReactCommon.MutationFunction<
+  RegisterMutation,
+  RegisterMutationVariables
+>;
+
+/**
+ * __useRegisterMutation__
+ *
+ * To run a mutation, you first call `useRegisterMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useRegisterMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [registerMutation, { data, loading, error }] = useRegisterMutation({
+ *   variables: {
+ *      input: // value for 'input'
+ *   },
+ * });
+ */
+export function useRegisterMutation(
+  baseOptions?: ApolloReactHooks.MutationHookOptions<
+    RegisterMutation,
+    RegisterMutationVariables
+  >
+) {
+  return ApolloReactHooks.useMutation<
+    RegisterMutation,
+    RegisterMutationVariables
+  >(RegisterDocument, baseOptions);
+}
+export type RegisterMutationHookResult = ReturnType<typeof useRegisterMutation>;
+export type RegisterMutationResult = ApolloReactCommon.MutationResult<
+  RegisterMutation
+>;
+export type RegisterMutationOptions = ApolloReactCommon.BaseMutationOptions<
+  RegisterMutation,
+  RegisterMutationVariables
 >;
 export const ResetPasswordDocument = gql`
   mutation ResetPassword($input: ResetPasswordInput!) {
