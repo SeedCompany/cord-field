@@ -1,5 +1,6 @@
-# Hide .yarn from GitHub's language detection
-/.yarn/** linguist-vendored
+# Hide yarn from GitHub's language detection & suppress in diffs
+/.yarn/** linguist-generated
+yarn.lock linguist-generated
 
 # Represent TS generated files as generated
 *.generated.tsx linguist-generated
