@@ -8,6 +8,10 @@ export default { title: 'Components/FieldGroup' };
 
 export const FieldGroup = () => (
   <Form onSubmit={action('onSubmit')}>
-    {() => <FG prefix="Prefix" children={text('Children', 'FieldGroup')} />}
+    {({ handleSubmit }) => (
+      <form onSubmit={handleSubmit}>
+        <FG prefix="Prefix" children={text('Children', 'FieldGroup')} />
+      </form>
+    )}
   </Form>
 );

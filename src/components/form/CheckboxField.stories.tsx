@@ -8,20 +8,26 @@ export default { title: 'Components/CheckboxField' };
 
 export const CheckboxField = () => (
   <Form onSubmit={action('onSubmit')}>
-    {() => (
-      <CB
-        name="checkbox"
-        label={text('Label', 'CheckboxField')}
-        labelPlacement={select(
-          'LabelPlacement',
-          ['start', 'end', 'top', 'bottom'],
-          'end'
-        )}
-        defaultValue={boolean('DefaultValue', false)}
-        disabled={boolean('Disabled', false)}
-        color={select('Color', ['primary', 'secondary', 'default'], 'primary')}
-        onClick={action('click')}
-      />
+    {({ handleSubmit }) => (
+      <form onSubmit={handleSubmit}>
+        <CB
+          name="checkbox"
+          label={text('Label', 'CheckboxField')}
+          labelPlacement={select(
+            'LabelPlacement',
+            ['start', 'end', 'top', 'bottom'],
+            'end'
+          )}
+          defaultValue={boolean('DefaultValue', false)}
+          disabled={boolean('Disabled', false)}
+          color={select(
+            'Color',
+            ['primary', 'secondary', 'default'],
+            'primary'
+          )}
+          onClick={action('click')}
+        />
+      </form>
     )}
   </Form>
 );

@@ -8,20 +8,21 @@ export default { title: 'Components/PasswordField' };
 
 export const PasswordField = () => (
   <Form onSubmit={action('onSubmit')}>
-    {(props) => (
-      <PF
-        {...props}
-        label={text('Label', 'Password')}
-        variant={select(
-          'Variant',
-          ['standard', 'outlined', 'filled'],
-          'filled'
-        )}
-        required={boolean('Required', true)}
-        disabled={boolean('Disabled', false)}
-        fullWidth={boolean('Full Width', true)}
-        onClick={action('click')}
-      />
+    {({ handleSubmit }) => (
+      <form onSubmit={handleSubmit}>
+        <PF
+          label={text('Label', 'Password')}
+          variant={select(
+            'Variant',
+            ['standard', 'outlined', 'filled'],
+            'filled'
+          )}
+          required={boolean('Required', true)}
+          disabled={boolean('Disabled', false)}
+          fullWidth={boolean('Full Width', true)}
+          onClick={action('click')}
+        />
+      </form>
     )}
   </Form>
 );

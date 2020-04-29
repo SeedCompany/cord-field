@@ -8,19 +8,21 @@ export default { title: 'Components/EmailField' };
 
 export const EmailField = () => (
   <Form onSubmit={action('onSubmit')}>
-    {() => (
-      <EF
-        label={text('Label', 'Email')}
-        required={boolean('Required', true)}
-        fullWidth={boolean('Full Width', true)}
-        disabled={boolean('Disabled', false)}
-        variant={select(
-          'Variant',
-          ['standard', 'outlined', 'filled'],
-          'filled'
-        )}
-        onClick={action('click')}
-      />
+    {({ handleSubmit }) => (
+      <form onSubmit={handleSubmit}>
+        <EF
+          label={text('Label', 'Email')}
+          required={boolean('Required', true)}
+          fullWidth={boolean('Full Width', true)}
+          disabled={boolean('Disabled', false)}
+          variant={select(
+            'Variant',
+            ['standard', 'outlined', 'filled'],
+            'filled'
+          )}
+          onClick={action('click')}
+        />
+      </form>
     )}
   </Form>
 );

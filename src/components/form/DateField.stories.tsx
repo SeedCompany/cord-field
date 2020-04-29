@@ -11,21 +11,23 @@ export default { title: 'Components/DateField' };
 export const DateField = () => (
   <LocalizationProvider dateAdapter={LuxonUtils}>
     <Form onSubmit={action('onSubmit')}>
-      {() => (
-        <DF
-          name="DateField"
-          disabled={boolean('Disabled', false)}
-          fullWidth={boolean('Full Width', false)}
-          variant={select(
-            'Variant',
-            ['standard', 'outlined', 'filled'],
-            'standard'
-          )}
-          helperText={text('HelperText', 'DatePicker')}
-          initialValue={new Date().toISOString().slice(0, 10)}
-          onClick={action('click')}
-          onYearChange={action('changeYear')}
-        />
+      {({ handleSubmit }) => (
+        <form onSubmit={handleSubmit}>
+          <DF
+            name="DateField"
+            disabled={boolean('Disabled', false)}
+            fullWidth={boolean('Full Width', false)}
+            variant={select(
+              'Variant',
+              ['standard', 'outlined', 'filled'],
+              'standard'
+            )}
+            helperText={text('HelperText', 'DatePicker')}
+            initialValue={new Date().toISOString().slice(0, 10)}
+            onClick={action('click')}
+            onYearChange={action('changeYear')}
+          />
+        </form>
       )}
     </Form>
   </LocalizationProvider>
