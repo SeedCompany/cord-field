@@ -3,14 +3,13 @@ import {
   Card,
   CardContent,
   CardMedia,
-  Chip,
   makeStyles,
   Typography,
 } from '@material-ui/core';
-import { VerifiedUserOutlined } from '@material-ui/icons';
 import { FC } from 'react';
 import * as React from 'react';
-import { ProjectStatus, Sensitivity } from '../../api';
+import { ProjectStatus, Sensitivity as SensitivityType } from '../../api';
+import { Sensitivity } from '../Sensitivity';
 
 const useStyles = makeStyles(({ spacing }) => ({
   card: {
@@ -46,12 +45,6 @@ const useStyles = makeStyles(({ spacing }) => ({
     alignItems: 'flex-end',
     justifyContent: 'flex-end',
   },
-  sensitivityIcon: {
-    margin: spacing(0, 1),
-  },
-  sensitivityChip: {
-    width: '75px',
-  },
   statusLabel: {
     marginTop: 'auto',
   },
@@ -66,7 +59,7 @@ export interface ProjectListItemCardProps {
   name: string;
   countryName: string;
   region: string;
-  sensitivity: Sensitivity;
+  sensitivity: SensitivityType;
   status: ProjectStatus;
   numberOfLanguageEngagements: number;
   esadDate: string;
@@ -78,7 +71,6 @@ export const ProjectListItemCard: FC<ProjectListItemCardProps> = ({
   name,
   countryName,
   region,
-  // TODO will wait for sensitivty component so it can be dropped into this one
   sensitivity,
   status,
   numberOfLanguageEngagements,
@@ -89,11 +81,8 @@ export const ProjectListItemCard: FC<ProjectListItemCardProps> = ({
     card,
     cardBody,
     cardContent,
-    sensitivityLabel,
-    sensitivityChip,
     leftContent,
     rightContent,
-    sensitivityIcon,
     statusLabel,
     esadDateLabel,
   } = useStyles();
@@ -120,19 +109,7 @@ export const ProjectListItemCard: FC<ProjectListItemCardProps> = ({
               </Box>
               {countryName}, {region}
             </Typography>
-            <Box className={sensitivityLabel}>
-              <VerifiedUserOutlined
-                className={sensitivityIcon}
-                color="disabled"
-              />
-              <Typography variant="body2">Sensitivity</Typography>
-            </Box>
-            <Chip
-              className={sensitivityChip}
-              size="small"
-              label={sensitivity}
-              color="secondary"
-            />
+            <Sensitivity value={sensitivity} />
             <Typography className={statusLabel} variant="body2">
               Status:
               <Box
