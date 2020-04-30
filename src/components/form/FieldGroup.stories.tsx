@@ -4,7 +4,7 @@ import React from 'react';
 import { Form } from 'react-final-form';
 import { FieldGroup as FG } from './FieldGroup';
 
-export default { title: 'Components/Forms/FieldGroup' };
+export default { title: 'Components/Forms' };
 
 export const FieldGroup = () => (
   <Form onSubmit={action('onSubmit')}>

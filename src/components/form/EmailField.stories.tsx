@@ -4,7 +4,7 @@ import React from 'react';
 import { Form } from 'react-final-form';
 import { EmailField as EF } from './EmailField';
 
-export default { title: 'Components/Forms/Fields/Email' };
+export default { title: 'Components/Forms/Fields' };
 
 export const Email = () => (
   <Form onSubmit={action('onSubmit')}>

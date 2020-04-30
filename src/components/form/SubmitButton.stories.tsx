@@ -4,7 +4,7 @@ import React from 'react';
 import { Form } from 'react-final-form';
 import { SubmitButton as SB } from './SubmitButton';
 
-export default { title: 'Components/Forms/SubmitButton' };
+export default { title: 'Components/Forms' };
 
 export const SubmitButton = () => (
   <Form onSubmit={action('onSubmit')}>

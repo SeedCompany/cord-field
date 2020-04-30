@@ -7,7 +7,7 @@ import { Form } from 'react-final-form';
 import { CalendarDate } from '../../util';
 import { DateField as DF } from './DateField';
 
-export default { title: 'Components/Forms/Fields/Date' };
+export default { title: 'Components/Forms/Fields' };
 
 export const Date = () => (
   <LocalizationProvider dateAdapter={LuxonUtils}>

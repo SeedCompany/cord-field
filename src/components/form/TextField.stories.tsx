@@ -4,7 +4,7 @@ import React from 'react';
 import { Form } from 'react-final-form';
 import { TextField as TF } from './TextField';
 
-export default { title: 'Components/Forms/Fields/Text' };
+export default { title: 'Components/Forms/Fields' };
 
 export const Text = () => (
   <Form onSubmit={action('onSubmit')}>

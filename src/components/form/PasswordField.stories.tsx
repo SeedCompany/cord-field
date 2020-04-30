@@ -4,7 +4,7 @@ import React from 'react';
 import { Form } from 'react-final-form';
 import { PasswordField as PF } from './PasswordField';
 
-export default { title: 'Components/Forms/Fields/Password' };
+export default { title: 'Components/Forms/Fields' };
 
 export const Password = () => (
   <Form onSubmit={action('onSubmit')}>

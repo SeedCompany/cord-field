@@ -4,7 +4,7 @@ import React from 'react';
 import { Form } from 'react-final-form';
 import { CheckboxField as CB } from './CheckboxField';
 
-export default { title: 'Components/Forms/Fields/Checkbox' };
+export default { title: 'Components/Forms/Fields' };
 
 export const Checkbox = () => (
   <Form onSubmit={action('onSubmit')}>
