@@ -14,7 +14,7 @@ const useStyles = makeStyles(({ palette, spacing }) => ({
   icon: {
     fontSize: 16,
     color: palette.text.secondary,
-    marginRight: spacing(1),
+    marginRight: 2,
   },
   chip: {
     borderRadius: 4,
