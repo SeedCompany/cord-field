@@ -12,8 +12,7 @@ const useStyles = makeStyles(({ palette, spacing }) => ({
     marginBottom: spacing(),
   },
   icon: {
-    height: spacing(2),
-    width: spacing(2),
+    fontSize: 16,
     color: palette.text.secondary,
     marginRight: spacing(1),
   },
