@@ -66,6 +66,7 @@ const props: ComponentsProps = {
   },
   MuiInputLabel: {
     shrink: true,
+    required: false, // no asterisk
   },
 };
 
@@ -91,10 +92,6 @@ const overrides = ({ palette }: { palette: Palette }): Overrides => {
         '&$focused': {
           color: primaryColorForText,
         },
-      },
-      // replace with MuiInputLabel.required=false after updating to v4.9.12
-      asterisk: {
-        display: 'none',
       },
     },
     MuiFilledInput: {
