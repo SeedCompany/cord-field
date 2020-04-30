@@ -47,7 +47,7 @@ export const SubmitButton: FC<SubmitButtonProps> = ({
     : false;
   return (
     <ProgressButton
-      color="secondary"
+      color="error"
       size="large"
       fullWidth
       variant="contained"
