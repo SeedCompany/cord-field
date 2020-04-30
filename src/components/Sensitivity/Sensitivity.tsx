@@ -21,13 +21,13 @@ const useStyles = makeStyles(({ palette, spacing }) => ({
     borderRadius: 4,
     color: 'white',
   },
-  chipLow: {
+  Low: {
     backgroundColor: colors.grey[400],
   },
-  chipMedium: {
+  Medium: {
     backgroundColor: palette.warning.main,
   },
-  chipHigh: {
+  High: {
     backgroundColor: palette.error.main,
   },
 }));
@@ -39,20 +39,17 @@ export interface SensitivityProps {
 export const Sensitivity: FC<SensitivityProps> = ({ value }) => {
   const classes = useStyles();
 
-  const chipClass = clsx({
-    [classes.chip]: true,
-    [classes.chipHigh]: value === 'High',
-    [classes.chipMedium]: value === 'Medium',
-    [classes.chipLow]: value === 'Low',
-  });
-
   return (
     <div>
       <div className={classes.iconWrapper}>
         <VerifiedUserOutlined className={classes.icon} />
         <Typography variant="body2">Sensitivity</Typography>
       </div>
-      <Chip className={chipClass} size="small" label={value} />
+      <Chip
+        className={clsx(classes.chip, classes[value])}
+        size="small"
+        label={value}
+      />
     </div>
   );
 };
