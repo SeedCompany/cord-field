@@ -1,11 +1,11 @@
 import LuxonUtils from '@date-io/luxon';
 import { CssBaseline, ThemeProvider } from '@material-ui/core';
 import { LocalizationProvider } from '@material-ui/pickers';
-import { SnackbarProvider } from 'notistack';
 import React, { cloneElement, FC, ReactElement } from 'react';
 import { BrowserRouter } from 'react-router-dom';
 import { ApolloProvider } from './api';
 import { SessionProvider } from './components/Session';
+import { SnackbarProvider } from './components/Snackbar';
 import { TitleProvider } from './components/title';
 import { Root } from './scenes/Root';
 import { createTheme } from './theme';
@@ -22,7 +22,7 @@ const providers = [
   <TitleProvider title="CORD Field" />,
   <ThemeProvider theme={theme} children={<></>} />,
   <LocalizationProvider dateAdapter={LuxonUtils} children={<></>} />,
-  <SnackbarProvider children={<></>} />,
+  <SnackbarProvider />,
   <ApolloProvider />,
   <SessionProvider />,
 ];
