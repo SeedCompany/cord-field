@@ -2416,15 +2416,16 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@material-ui/core@npm:^4.9.9":
-  version: 4.9.10
-  resolution: "@material-ui/core@npm:4.9.10"
+"@material-ui/core@npm:^4.9.12":
+  version: 4.9.12
+  resolution: "@material-ui/core@npm:4.9.12"
   dependencies:
     "@babel/runtime": ^7.4.4
+    "@material-ui/react-transition-group": ^4.3.0
     "@material-ui/styles": ^4.9.10
     "@material-ui/system": ^4.9.10
     "@material-ui/types": ^5.0.1
-    "@material-ui/utils": ^4.9.6
+    "@material-ui/utils": ^4.9.12
     "@types/react-transition-group": ^4.2.0
     clsx: ^1.0.4
     hoist-non-react-statics: ^3.3.2
@@ -2439,7 +2440,7 @@ __metadata:
   peerDependenciesMeta:
     "@types/react":
       optional: true
-  checksum: 2/d161c83634c508c165815a40f94f8e9fccb68bc585aa6d5066961040c23f4f2257b201ce94f85fb5bc4503343d75527c8c08d0adda0a7ada726f17e480cd09d1
+  checksum: 2/fd339e1984ffd97e1f90f393818d4315b29daf2bc212de5e111e2796462b731173423f951e7fec3e0e4405282c54fa9d1d8d27bacb76def751e65a2d66941094
   languageName: node
   linkType: hard
 
@@ -2460,9 +2461,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@material-ui/lab@npm:^4.0.0-alpha.48":
-  version: 4.0.0-alpha.49
-  resolution: "@material-ui/lab@npm:4.0.0-alpha.49"
+"@material-ui/lab@npm:^4.0.0-alpha.51":
+  version: 4.0.0-alpha.51
+  resolution: "@material-ui/lab@npm:4.0.0-alpha.51"
   dependencies:
     "@babel/runtime": ^7.4.4
     "@material-ui/utils": ^4.9.6
@@ -2470,14 +2471,14 @@ __metadata:
     prop-types: ^15.7.2
     react-is: ^16.8.0
   peerDependencies:
-    "@material-ui/core": ^4.9.9
+    "@material-ui/core": ^4.9.10
     "@types/react": ^16.8.6
     react: ^16.8.0
     react-dom: ^16.8.0
   peerDependenciesMeta:
     "@types/react":
       optional: true
-  checksum: 2/f61086811e7066c8b2a8ba506a5d5b24e0cb58cf9c184265c142e5b83f7e5dff49100b953b6e8a6252cc6f7e45823cd34aa7203d385008c53cb86b8d775c547f
+  checksum: 2/57cf893fb8262be661a8e70963dd40d2c42831f6b6f355d5f3840bc4e7036f4ef7290a6fb7970081127d390c2f628a12f8a45717013a492840c36436c2101de9
   languageName: node
   linkType: hard
 
@@ -2503,6 +2504,21 @@ __metadata:
     "@types/react":
       optional: true
   checksum: 2/81bd645682d8361609bee40efef85bb4388be03b4a39b73c3686b3996c45dd54c665872ffde750fc10c1d4177407144c2ecffce5eeabfc92852b961d11cc50de
+  languageName: node
+  linkType: hard
+
+"@material-ui/react-transition-group@npm:^4.3.0":
+  version: 4.3.0
+  resolution: "@material-ui/react-transition-group@npm:4.3.0"
+  dependencies:
+    "@babel/runtime": ^7.5.5
+    dom-helpers: ^5.0.1
+    loose-envify: ^1.4.0
+    prop-types: ^15.6.2
+  peerDependencies:
+    react: ">=16.6.0"
+    react-dom: ">=16.6.0"
+  checksum: 2/55a7b8d787d7194ac39a249333509ac6c011909bb3f17c15102b1f8b60c4d7c43782f6625861e6c35f8c9348d74a1144009272c0a0f65bced2bca20a625450d1
   languageName: node
   linkType: hard
 
@@ -2564,6 +2580,20 @@ __metadata:
     "@types/react":
       optional: true
   checksum: 2/40eb61d1f16398716ddb21b1c0d190a2c61b9b62b452031506032543f250d9ee85cdaba6fa28ba55cf8eff59ddbdf5bf083c2483a2ba79afd098a1bf870e1dd3
+  languageName: node
+  linkType: hard
+
+"@material-ui/utils@npm:^4.9.12":
+  version: 4.9.12
+  resolution: "@material-ui/utils@npm:4.9.12"
+  dependencies:
+    "@babel/runtime": ^7.4.4
+    prop-types: ^15.7.2
+    react-is: ^16.8.0
+  peerDependencies:
+    react: ^16.8.0
+    react-dom: ^16.8.0
+  checksum: 2/5674fdb1a72644baab5288ec171e935286f56a1fa691229ad12d19e8aae304c52ae8c2f5286f28eec47fc8740dc9d709cde590228284c88fb76237ed62986881
   languageName: node
   linkType: hard
 
@@ -6958,9 +6988,9 @@ __metadata:
     "@graphql-codegen/typescript": ^1.13.2
     "@graphql-codegen/typescript-operations": ^1.13.2
     "@graphql-codegen/typescript-react-apollo": ^1.13.2
-    "@material-ui/core": ^4.9.9
+    "@material-ui/core": ^4.9.12
     "@material-ui/icons": ^4.9.1
-    "@material-ui/lab": ^4.0.0-alpha.48
+    "@material-ui/lab": ^4.0.0-alpha.51
     "@material-ui/pickers": next
     "@seedcompany/eslint-plugin": ~0.0.6
     "@storybook/addon-actions": ^5.3.18
