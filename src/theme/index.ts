@@ -12,7 +12,7 @@ import { Shape } from '@material-ui/core/styles/shape';
 import { typography } from './typography';
 
 const createPalette = (options: PaletteOptions) => {
-  const dark = options.type === 'dark';
+  const light = options.type !== 'dark';
   const mainGreen = '#467f3b';
   const palette = createMuiPalette({
     primary: {
@@ -22,19 +22,22 @@ const createPalette = (options: PaletteOptions) => {
       light: lighten(mainGreen, 0.4),
     },
     secondary: {
-      main: '#ff5a5f',
+      main: '#3c444e',
     },
     error: {
-      main: dark ? '#ff5a5f' : '#e87967',
+      main: '#ff5a5f',
       contrastText: '#ffffff',
     },
+    warning: {
+      main: '#f2994a',
+    },
     text: {
-      primary: dark ? '#f3f4f6' : '#484848',
-      secondary: dark ? '#8f928b' : 'rgba(0, 0, 0, 0.54)',
+      primary: light ? '#3c444e' : '#f3f4f6',
+      secondary: '#8f928b',
     },
     ...options,
   });
-  palette.dark = dark;
+  palette.dark = !light;
 
   return palette;
 };
