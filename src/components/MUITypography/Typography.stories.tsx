@@ -1,42 +1,35 @@
-import { createMuiTheme, ThemeProvider, Typography } from '@material-ui/core';
+import { Typography } from '@material-ui/core';
 import { select, text } from '@storybook/addon-knobs';
 import React from 'react';
-import { ProgressButton } from '../ProgressButton';
 
 export default { title: 'Components/Typography' };
 
-const theme = createMuiTheme({
-  typography: {
-    fontFamily: 'Arial',
-    button: {
-      fontSize: 10,
-    },
-  },
-});
-
 export const Story = () => (
-  <ThemeProvider theme={theme}>
-    <Typography
-      variant={select(
-        'Variant',
-        ['body1', 'caption', 'h1', 'h5', 'subtitle1'],
-        'body1'
-      )}
-      color={select(
-        'Color',
-        ['primary', 'secondary', 'error', 'textPrimary'],
-        'secondary'
-      )}
-      align={select(
-        'Align',
-        ['left', 'right', 'center', 'justify', 'inherit'],
-        'left'
-      )}
-    >
-      {text('Children', 'Children')}
-    </Typography>
-    <ProgressButton color="secondary" variant="contained">
-      ProgressButton
-    </ProgressButton>
-  </ThemeProvider>
+  <Typography
+    variant={select(
+      'Variant',
+      ['body1', 'body2', 'h1', 'h2', 'h3', 'h4', 'caption'],
+      'body1'
+    )}
+    color={select(
+      'Color',
+      [
+        'inherit',
+        'initial',
+        'primary',
+        'secondary',
+        'textPrimary',
+        'textSecondary',
+        'error',
+      ],
+      'initial'
+    )}
+    align={select(
+      'Align',
+      ['left', 'right', 'center', 'justify', 'inherit'],
+      'left'
+    )}
+  >
+    {text('Children', 'Children')}
+  </Typography>
 );

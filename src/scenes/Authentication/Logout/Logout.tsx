@@ -11,14 +11,10 @@ export const Logout = () => {
   const [, , setCurrentUser] = useSession();
 
   useEffect(() => {
-    logout()
-      .then(() => {
-        setCurrentUser(null);
-        navigate('/login', { replace: true });
-      })
-      .catch((e) => {
-        console.log(e);
-      });
+    logout().then(() => {
+      setCurrentUser(null);
+      navigate('/login', { replace: true });
+    });
   }, [logout, setCurrentUser, navigate]);
 
   return <CircularProgress />;
