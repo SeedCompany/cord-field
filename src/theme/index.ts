@@ -94,6 +94,14 @@ const overrides = ({ palette }: { palette: Palette }): Overrides => {
         },
       },
     },
+    MuiFormControlLabel: {
+      label: {
+        // Disallow user selection on labels as they are often clicked to change
+        // boolean states. An accidental double click selects the label which
+        // isn't what the user is trying to do.
+        userSelect: 'none',
+      },
+    },
     MuiFilledInput: {
       input: {
         '&:-webkit-autofill': {

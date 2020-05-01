@@ -1,28 +1,30 @@
-import { action } from '@storybook/addon-actions';
 import { boolean, select, text } from '@storybook/addon-knobs';
 import React from 'react';
 import { Form } from 'react-final-form';
+import { sleep } from '../../util';
 import { SubmitButton as SB } from './SubmitButton';
 
 export default { title: 'Components/Forms' };
 
 export const SubmitButton = () => (
-  <Form onSubmit={action('onSubmit')}>
+  <Form onSubmit={() => sleep(2000)}>
     {({ handleSubmit }) => (
       <form onSubmit={handleSubmit}>
         <SB
-          name="submit"
-          spinner={boolean('Progress', true)}
           size={select('Size', ['small', 'medium', 'large'], 'large')}
           fullWidth={boolean('Full Width', true)}
           color={select(
             'Color',
             ['inherit', 'primary', 'secondary', 'default', 'error'],
-            'secondary'
+            'error'
           )}
-          onClick={action('click')}
+          variant={select(
+            'Variant',
+            ['contained', 'outlined', 'text'],
+            'contained'
+          )}
         >
-          {text('Label', 'SubmitButton')}
+          {text('Label', 'Submit')}
         </SB>
       </form>
     )}
