@@ -51,7 +51,6 @@ export const CheckboxField: FC<CheckboxFieldProps> = ({
         labelPlacement={labelPlacement}
         control={
           <Checkbox
-            color="primary"
             {...rest}
             inputRef={ref}
             checked={input.value}
