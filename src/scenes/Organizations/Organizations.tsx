@@ -1,7 +1,6 @@
 import { makeStyles } from '@material-ui/core';
 import React from 'react';
 import { useRoutes } from 'react-router-dom';
-import { CreateOrganization } from './Create';
 
 const useStyles = makeStyles(() => ({
   root: {
@@ -21,8 +20,8 @@ export const Organizations = () => {
 
   const matched = useRoutes([
     {
-      path: '/create',
-      element: <CreateOrganization className={classes.card} />,
+      path: '/',
+      element: <div>TODO = Here should be filled with org routes.</div>,
     },
   ]);
 
