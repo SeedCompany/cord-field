@@ -6,15 +6,16 @@ import {
   makeStyles,
   Menu,
   MenuItem,
+  Typography,
 } from '@material-ui/core';
 import { Add, FolderOpen, Language, People } from '@material-ui/icons';
 import { FC, useState } from 'react';
 import * as React from 'react';
-import { Picture } from '../Picture';
-import { InternshipsSvg } from './InternshipsSvg';
+import { CordIcon, InternshipsIcon } from '../../../components/Icons';
 import { SidebarListLink } from './SidebarListLink';
+import { SwooshIcon } from './SwooshIcon';
 
-const useStyles = makeStyles(({ spacing }) => ({
+const useStyles = makeStyles(({ spacing, palette }) => ({
   listContent: {
     padding: spacing(4, 2),
   },
@@ -24,15 +25,13 @@ const useStyles = makeStyles(({ spacing }) => ({
     height: '100%',
     padding: 0,
   },
-  internshipIcon: {
-    marginLeft: spacing(0.5),
-  },
   createListItem: {
     justifyContent: 'center',
     marginBottom: spacing(3),
   },
   createButton: {
     width: '184px',
+    backgroundColor: '#ff5a5f',
   },
   menuHeaderListItem: {
     padding: 0,
@@ -43,10 +42,25 @@ const useStyles = makeStyles(({ spacing }) => ({
     marginLeft: spacing(2),
   },
   menuText: {
-    color: '#8f928b',
+    color: palette.text.secondary,
   },
   links: {
     padding: spacing(0, 2),
+  },
+  floating: {
+    position: 'absolute',
+    top: spacing(3),
+    left: spacing(4),
+  },
+  cordIcon: {
+    height: '45px',
+    width: '38px',
+    color: palette.primary.contrastText,
+    marginBottom: spacing(2),
+  },
+  copyright: {
+    color: '#fbfbfb',
+    fontWeight: 300,
   },
 }));
 
@@ -58,6 +72,9 @@ export const Sidebar: FC = () => {
     createButton,
     menuHeaderText,
     menuHeaderListItem,
+    floating,
+    cordIcon,
+    copyright,
   } = useStyles();
   const [anchorEl, setAnchorEl] = useState(null);
 
@@ -69,7 +86,13 @@ export const Sidebar: FC = () => {
 
   return (
     <List className={list} component="nav" aria-label="sidebar">
-      <Picture source="images/sidebar-icon.svg" />
+      <SwooshIcon />
+      <div className={floating}>
+        <CordIcon className={cordIcon} />
+        <Typography className={copyright} display="block" variant="caption">
+          © Cord Field 2020
+        </Typography>
+      </div>
       <div className={listContent}>
         <ListItem className={createListItem}>
           <Button
@@ -121,12 +144,12 @@ export const Sidebar: FC = () => {
         <SidebarListLink
           to="/Internships"
           linkName="Internships"
-          icon={<InternshipsSvg />}
+          icon={<InternshipsIcon />}
         />
         <SidebarListLink to="/People" linkName="People" icon={<People />} />
         <SidebarListLink
           to="/Organizations"
-          linkName="Organzations"
+          linkName="Organizations"
           icon={<People />}
         />
       </div>

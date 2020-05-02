@@ -1,7 +1,7 @@
 import { ListItemIcon, ListItemText, makeStyles } from '@material-ui/core';
 import { FC, ReactElement } from 'react';
 import * as React from 'react';
-import { ListItemLink } from '../Routing';
+import { ListItemLink } from '../../../components/Routing/ListItemLink';
 
 const LIST_LINK_COLOR = '#8f928b';
 const LIST_LINK_BACKGROUND_COLOR = '#252d35';
