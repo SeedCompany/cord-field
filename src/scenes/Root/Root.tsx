@@ -6,6 +6,7 @@ import { DevTest } from '../DevTest';
 import { Home } from '../Home';
 import { Organizations } from '../Organizations';
 import { Projects } from '../Projects';
+import { Header } from './Header';
 import { Sidebar } from './Sidebar';
 
 const useStyles = makeStyles(() => ({
@@ -32,6 +33,7 @@ export const Root = () => {
   return (
     <Authentication>
       <Sidebar />
+      <Header />
       {routes}
     </Authentication>
   );
