@@ -1,8 +1,8 @@
-import { Typography, TypographyVariant } from '@material-ui/core';
+import { Typography as TP, TypographyVariant } from '@material-ui/core';
 import { boolean, select } from '@storybook/addon-knobs';
 import React from 'react';
 
-export default { title: 'Components/Typography' };
+export default { title: 'Components' };
 
 const VariantOptions: TypographyVariant[] = [
   'h1',
@@ -25,11 +25,11 @@ const VariantValues: string[] = [
   'Lorem ipsum dolor sit amet, consectetur adipisicing elit. Quos blanditiis tenetur.',
 ];
 
-export const Story = () => (
+export const Typography = () => (
   <div>
     {VariantOptions.map((name, index) => {
       return (
-        <Typography
+        <TP
           key={index}
           variant={name}
           color={select(
@@ -59,7 +59,7 @@ export const Story = () => (
             : index < 10
             ? name + '- ' + VariantValues[1]
             : name + ' TEXT'}
-        </Typography>
+        </TP>
       );
     })}
   </div>
