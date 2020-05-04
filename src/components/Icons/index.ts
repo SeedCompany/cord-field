@@ -1,2 +1,2 @@
 export * from './CordIcon';
-export * from './InternshipsIcon';
+export * from './PlantIcon';

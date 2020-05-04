@@ -1,6 +1,6 @@
 import React from 'react';
-import { Sidebar } from './Sidebar';
+import { Sidebar as SidebarComponent } from './Sidebar';
 
-export default { title: 'Components/Sidebar' };
+export default { title: 'Scenes/Root' };
 
-export const SidebarStory = () => <Sidebar />;
+export const Sidebar = () => <SidebarComponent />;

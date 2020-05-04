@@ -1,25 +1,27 @@
 import { makeStyles, SvgIcon, SvgIconProps } from '@material-ui/core';
+import clsx from 'clsx';
 import * as React from 'react';
 import { FC } from 'react';
 
 const useStyles = makeStyles(() => ({
   root: {
-    width: '248px',
-    height: '136px',
+    width: '100%',
+    height: 'initial',
   },
 }));
 
-export const SwooshIcon: FC<SvgIconProps> = ({
+export const SwooshBackground: FC<SvgIconProps> = ({
   classes: classesProp,
   ...rest
 }) => {
   const classes = useStyles();
   return (
     <SvgIcon
-      classes={{ root: classes.root, ...classesProp }}
+      classes={{
+        root: clsx(classes.root, classesProp?.root),
+        ...classesProp,
+      }}
       viewBox="0 0 248 136"
-      fill="none"
-      xmlns="http://www.w3.org/2000/svg"
       {...rest}
     >
       <path

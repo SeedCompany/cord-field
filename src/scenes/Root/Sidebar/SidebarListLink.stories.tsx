@@ -3,7 +3,7 @@ import { text } from '@storybook/addon-knobs';
 import React from 'react';
 import { SidebarListLink } from './SidebarListLink';
 
-export default { title: 'Components/Sidebar' };
+export default { title: 'Components/Root' };
 
 export const SidebarListLinkStory = () => (
   <SidebarListLink

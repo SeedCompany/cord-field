@@ -1,22 +1,23 @@
 import {
-  Button,
   List,
-  ListItem,
-  ListItemText,
+  ListSubheader,
   makeStyles,
   Menu,
   MenuItem,
+  ThemeProvider,
   Typography,
 } from '@material-ui/core';
 import { Add, FolderOpen, Language, People } from '@material-ui/icons';
 import { FC, useState } from 'react';
 import * as React from 'react';
-import { CordIcon, InternshipsIcon } from '../../../components/Icons';
+import { ErrorButton } from '../../../components/ErrorButton';
+import { CordIcon, PlantIcon } from '../../../components/Icons';
+import { createTheme } from '../../../theme';
 import { SidebarListLink } from './SidebarListLink';
-import { SwooshIcon } from './SwooshIcon';
+import { SwooshBackground } from './SwooshBackground';
 
 const useStyles = makeStyles(({ spacing, palette }) => ({
-  listContent: {
+  sidebarContent: {
     padding: spacing(4, 2),
   },
   list: {
@@ -25,24 +26,12 @@ const useStyles = makeStyles(({ spacing, palette }) => ({
     height: '100%',
     padding: 0,
   },
-  createListItem: {
-    justifyContent: 'center',
-    marginBottom: spacing(3),
-  },
-  createButton: {
-    width: '184px',
-    backgroundColor: '#ff5a5f',
-  },
-  menuHeaderListItem: {
-    padding: 0,
+  createNewItem: {
+    height: '40px',
     marginBottom: spacing(1),
   },
-  menuHeaderText: {
-    color: '#d1dadf',
-    marginLeft: spacing(2),
-  },
   menuText: {
-    color: palette.text.secondary,
+    // color: palette.text.secondary,
   },
   links: {
     padding: spacing(0, 2),
@@ -53,25 +42,23 @@ const useStyles = makeStyles(({ spacing, palette }) => ({
     left: spacing(4),
   },
   cordIcon: {
-    height: '45px',
-    width: '38px',
+    fontSize: '40px',
     color: palette.primary.contrastText,
     marginBottom: spacing(2),
   },
   copyright: {
-    color: '#fbfbfb',
+    // color: '#fbfbfb',
     fontWeight: 300,
   },
 }));
 
+const sidebarTheme = createTheme({ dark: true });
+
 export const Sidebar: FC = () => {
   const {
     list,
-    listContent,
-    createListItem,
-    createButton,
-    menuHeaderText,
-    menuHeaderListItem,
+    sidebarContent,
+    createNewItem,
     floating,
     cordIcon,
     copyright,
@@ -85,27 +72,27 @@ export const Sidebar: FC = () => {
   const handleClose = () => setAnchorEl(null);
 
   return (
-    <List className={list} component="nav" aria-label="sidebar">
-      <SwooshIcon />
-      <div className={floating}>
-        <CordIcon className={cordIcon} />
-        <Typography className={copyright} display="block" variant="caption">
-          © Cord Field 2020
-        </Typography>
-      </div>
-      <div className={listContent}>
-        <ListItem className={createListItem}>
-          <Button
-            className={createButton}
+    <ThemeProvider theme={sidebarTheme}>
+      <List className={list} component="nav" aria-label="sidebar">
+        <SwooshBackground />
+        <div className={floating}>
+          <CordIcon className={cordIcon} />
+          <Typography className={copyright} display="block" variant="caption">
+            © Cord Field 2020
+          </Typography>
+        </div>
+        <div className={sidebarContent}>
+          <ErrorButton
+            className={createNewItem}
+            fullWidth
             aria-controls="create-menu"
             aria-haspopup="true"
             variant="contained"
-            color="secondary"
             startIcon={<Add />}
             onClick={handleClick}
           >
             Create New Item
-          </Button>
+          </ErrorButton>
           <Menu
             id="create-menu"
             open={anchorEl !== null}
@@ -118,41 +105,36 @@ export const Sidebar: FC = () => {
               SOMETHING GOES IN MENU
             </MenuItem>
           </Menu>
-        </ListItem>
 
-        <ListItem className={menuHeaderListItem}>
-          <ListItemText
-            primaryTypographyProps={{
-              variant: 'body2',
-              className: menuHeaderText,
-            }}
+          <List
+            component="nav"
+            aria-label="sidebar"
+            subheader={<ListSubheader component="div">MENU</ListSubheader>}
           >
-            MENU
-          </ListItemText>
-        </ListItem>
-
-        <SidebarListLink
-          to="/Projects"
-          linkName="Projects"
-          icon={<FolderOpen />}
-        />
-        <SidebarListLink
-          to="/Languages"
-          linkName="Languages"
-          icon={<Language />}
-        />
-        <SidebarListLink
-          to="/Internships"
-          linkName="Internships"
-          icon={<InternshipsIcon />}
-        />
-        <SidebarListLink to="/People" linkName="People" icon={<People />} />
-        <SidebarListLink
-          to="/Organizations"
-          linkName="Organizations"
-          icon={<People />}
-        />
-      </div>
-    </List>
+            <SidebarListLink
+              to="/projects"
+              linkName="Projects"
+              icon={<FolderOpen />}
+            />
+            <SidebarListLink
+              to="/languages"
+              linkName="Languages"
+              icon={<Language />}
+            />
+            <SidebarListLink
+              to="/internships"
+              linkName="Internships"
+              icon={<PlantIcon />}
+            />
+            <SidebarListLink to="/People" linkName="People" icon={<People />} />
+            <SidebarListLink
+              to="/organizations"
+              linkName="Organizations"
+              icon={<People />}
+            />
+          </List>
+        </div>
+      </List>
+    </ThemeProvider>
   );
 };

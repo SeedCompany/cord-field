@@ -3,29 +3,29 @@ import { FC, ReactElement } from 'react';
 import * as React from 'react';
 import { ListItemLink } from '../../../components/Routing/ListItemLink';
 
-const LIST_LINK_COLOR = '#8f928b';
-const LIST_LINK_BACKGROUND_COLOR = '#252d35';
+// const LIST_LINK_COLOR = '#8f928b';
+// const LIST_LINK_BACKGROUND_COLOR = '#252d35';
 
 const useStyles = makeStyles(() => ({
   listItem: {
     borderRadius: '14px',
-    // TODO I don't like doing the styles this way but having difficulty overriding
-    '&.Mui-selected': {
-      backgroundColor: `${LIST_LINK_BACKGROUND_COLOR} !important`,
-    },
-    '&.Mui-selected .MuiTypography-root': {
-      color: 'white',
-    },
-    '&.Mui-selected svg': {
-      color: 'white',
-    },
+    //   // TODO I don't like doing the styles this way but having difficulty overriding
+    //   '&.Mui-selected': {
+    //     backgroundColor: `${LIST_LINK_BACKGROUND_COLOR} !important`,
+    //   },
+    //   '&.Mui-selected .MuiTypography-root': {
+    //     color: 'white',
+    //   },
+    //   '&.Mui-selected svg': {
+    //     color: 'white',
+    //   },
   },
-  itemText: {
-    color: LIST_LINK_COLOR,
-  },
-  listIcon: {
-    color: LIST_LINK_COLOR,
-  },
+  // itemText: {
+  //   color: LIST_LINK_COLOR,
+  // },
+  // listIcon: {
+  //   color: LIST_LINK_COLOR,
+  // },
 }));
 
 export interface SidebarListLinkProps {
@@ -39,14 +39,16 @@ export const SidebarListLink: FC<SidebarListLinkProps> = ({
   linkName,
   icon,
 }) => {
-  const { listItem, itemText, listIcon } = useStyles();
+  const {
+    listItem,
+    // itemText,
+    // listIcon
+  } = useStyles();
 
   return (
     <ListItemLink className={listItem} to={to} external={false}>
-      <ListItemIcon className={listIcon}>{icon}</ListItemIcon>
-      <ListItemText primaryTypographyProps={{ className: itemText }}>
-        {linkName}
-      </ListItemText>
+      <ListItemIcon>{icon}</ListItemIcon>
+      <ListItemText>{linkName}</ListItemText>
     </ListItemLink>
   );
 };
