@@ -1,51 +1,66 @@
 import { Typography, TypographyVariant } from '@material-ui/core';
-import { boolean, select, text } from '@storybook/addon-knobs';
+import { boolean, select } from '@storybook/addon-knobs';
 import React from 'react';
 
 export default { title: 'Components/Typography' };
 
 const VariantOptions: TypographyVariant[] = [
-  'body1',
-  'body2',
   'h1',
   'h2',
   'h3',
   'h4',
   'h5',
   'h6',
-  'caption',
+  'body1',
+  'body2',
   'subtitle1',
   'subtitle2',
+  'caption',
+  'button',
+  'overline',
+];
+
+const VariantValues: string[] = [
+  'Heading.',
+  'Lorem ipsum dolor sit amet, consectetur adipisicing elit. Quos blanditiis tenetur.',
 ];
 
 export const Story = () => (
   <div>
-    <Typography
-      variant={select('Variant', VariantOptions, 'body1')}
-      color={select(
-        'Color',
-        [
-          'inherit',
-          'initial',
-          'primary',
-          'secondary',
-          'textPrimary',
-          'textSecondary',
-          'error',
-        ],
-        'initial'
-      )}
-      align={select(
-        'Align',
-        ['left', 'right', 'center', 'justify', 'inherit'],
-        'left'
-      )}
-      display={select('Display', ['initial', 'inline', 'block'], 'initial')}
-      gutterBottom={boolean('gutterBottom', true)}
-      noWrap={boolean('Wrap', true)}
-    >
-      {text('Children', 'Children')}
-    </Typography>
-    <Typography variant="h1">h1. Heading</Typography>
+    {VariantOptions.map((name, index) => {
+      return (
+        <Typography
+          key={index}
+          variant={name}
+          color={select(
+            'Color',
+            [
+              'inherit',
+              'initial',
+              'primary',
+              'secondary',
+              'textPrimary',
+              'textSecondary',
+              'error',
+            ],
+            'initial'
+          )}
+          align={select(
+            'Align',
+            ['left', 'right', 'center', 'justify', 'inherit'],
+            'left'
+          )}
+          display={select('Display', ['initial', 'inline', 'block'], 'block')}
+          gutterBottom={boolean('gutterBottom', true)}
+          paragraph={boolean('paragraph', false)}
+        >
+          {index < 6
+            ? name + '- ' + VariantValues[0]
+            : index < 10
+            ? name + '- ' + VariantValues[1]
+            : name + ' TEXT'}
+        </Typography>
+      );
+    })}
   </div>
 );
