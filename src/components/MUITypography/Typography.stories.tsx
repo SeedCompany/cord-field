@@ -1,29 +1,27 @@
-import { Typography } from '@material-ui/core';
+import { Typography, TypographyVariant } from '@material-ui/core';
 import { boolean, select, text } from '@storybook/addon-knobs';
 import React from 'react';
 
 export default { title: 'Components/Typography' };
 
+const VariantOptions: TypographyVariant[] = [
+  'body1',
+  'body2',
+  'h1',
+  'h2',
+  'h3',
+  'h4',
+  'h5',
+  'h6',
+  'caption',
+  'subtitle1',
+  'subtitle2',
+];
+
 export const Story = () => (
   <div>
     <Typography
-      variant={select(
-        'Variant',
-        [
-          'body1',
-          'body2',
-          'h1',
-          'h2',
-          'h3',
-          'h4',
-          'h5',
-          'h6',
-          'caption',
-          'subtitle1',
-          'subtitle2',
-        ],
-        'body1'
-      )}
+      variant={select('Variant', VariantOptions, 'body1')}
       color={select(
         'Color',
         [
@@ -45,7 +43,6 @@ export const Story = () => (
       display={select('Display', ['initial', 'inline', 'block'], 'initial')}
       gutterBottom={boolean('gutterBottom', true)}
       noWrap={boolean('Wrap', true)}
-      component="h2"
     >
       {text('Children', 'Children')}
     </Typography>
