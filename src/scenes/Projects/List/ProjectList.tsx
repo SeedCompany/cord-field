@@ -5,15 +5,16 @@ import { Project } from '../../../api';
 import { FilterButtonDialog } from '../../../components/Filter';
 import { useNumberFormatter } from '../../../components/Formatters';
 import { ContentContainer } from '../../../components/Layout';
-import { ListContainer } from '../../../components/Layout/ListContainer';
 import { ProjectListItemCard } from '../../../components/ProjectListItemCard';
+import { ProjectListItemFragment } from '../../../components/ProjectListItemCard/ProjectListItem.generated';
 import { SortButtonDialog, useSort } from '../../../components/Sort';
+import { VirtualList } from '../../../components/VirtualList';
 import { listOrPlaceholders } from '../../../util';
 import {
   ProjectFilterOptions,
   useProjectFilters,
 } from './ProjectFilterOptions';
-import { useProjectListQuery } from './projects.generated';
+import { useProjectListQuery } from './ProjectList.generated';
 import { ProjectSortOptions } from './ProjectSortOptions';
 
 const useStyles = makeStyles(({ spacing }) => ({
@@ -29,13 +30,14 @@ export const ProjectList: FC = () => {
   const formatNumber = useNumberFormatter();
   const sort = useSort<Project>();
   const [filters, setFilters] = useProjectFilters();
+  const input = {
+    ...sort.value,
+    filter: filters,
+  };
 
-  const { data } = useProjectListQuery({
+  const { data, fetchMore } = useProjectListQuery({
     variables: {
-      input: {
-        ...sort.value,
-        filter: filters,
-      },
+      input,
     },
   });
   const classes = useStyles();
@@ -64,15 +66,41 @@ export const ProjectList: FC = () => {
           <Skeleton width="12ch" />
         )}
       </Typography>
-      <ListContainer>
-        {listOrPlaceholders(data?.projects.items, 5).map((item, index) => (
-          <ProjectListItemCard
+      <VirtualList<ProjectListItemFragment | undefined>
+        ItemComponent={({ item, style, index }) => (
+          <div
             key={item?.id ?? index}
-            project={item}
+            style={{
+              ...style,
+            }}
             className={classes.projectItem}
-          />
-        ))}
-      </ListContainer>
-    </ContentContainer>
+          >
+            <ProjectListItemCard key={item?.id ?? index} project={item}
+            className={classes.projectItem} />
+          </div>
+        )}
+        itemHeight={224}
+        total={data?.projects.total || 5}
+        list={
+          listOrPlaceholders(data?.projects.items, 5) as Array<
+            ProjectListItemFragment | undefined
+          >
+        }
+        isRowLoaded={({ index }) => !!data?.projects.items[index]}
+        loadMoreRows={async ({ startIndex, stopIndex }) => {
+          console.log('ProjectList::loadMoreRows', startIndex, stopIndex);
+          if (data?.projects.items.length) {
+            await fetchMore({
+              variables: {
+                input: {
+                  ...input,
+                  offset: data?.projects.items.length,
+                },
+              },
+            });
+          }
+        }}
+      />
+    </div>
   );
 };

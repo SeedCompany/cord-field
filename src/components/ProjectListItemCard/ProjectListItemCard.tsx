@@ -24,6 +24,7 @@ const useStyles = makeStyles(({ breakpoints, spacing }) => {
     root: {
       width: '100%',
       maxWidth: cardWidth,
+      height: 224,
     },
     card: {
       display: 'flex',
