@@ -6,7 +6,7 @@ export const typography: ThemeOptions['typography'] = (palette) => {
     light: 300, // default
     regular: 400, // default
     medium: 500, // default
-    bold: 700, // default
+    bold: 600,
   };
   return {
     fontFamily: 'sofia-pro, sans-serif',
