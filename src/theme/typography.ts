@@ -1,5 +1,5 @@
-import { ThemeOptions } from '@material-ui/core';
 import { pickBy } from 'lodash';
+import { ThemeOptions } from './createTheme';
 
 export const typography: ThemeOptions['typography'] = (palette) => ({
   fontFamily: 'sofia-pro, sans-serif',
