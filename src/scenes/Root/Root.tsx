@@ -5,6 +5,7 @@ import { Authentication } from '../Authentication';
 import { DevTest } from '../DevTest';
 import { Home } from '../Home';
 import { Organizations } from '../Organizations';
+import { Sidebar } from './Sidebar';
 
 const useStyles = makeStyles(() => ({
   // Use @global basically never
@@ -12,7 +13,6 @@ const useStyles = makeStyles(() => ({
     '#root': {
       minHeight: '100vh',
       display: 'flex',
-      flexDirection: 'column',
     },
   },
 }));
@@ -27,5 +27,10 @@ export const Root = () => {
     </Routes>
   );
 
-  return <Authentication>{routes}</Authentication>;
+  return (
+    <Authentication>
+      <Sidebar />
+      {routes}
+    </Authentication>
+  );
 };
