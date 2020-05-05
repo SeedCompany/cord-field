@@ -1,7 +1,7 @@
 import { number, select, text } from '@storybook/addon-knobs';
 import React from 'react';
 import { ProjectStatus } from '../../api';
-import { ProjectListItemCard } from './ProjectListItemCard';
+import { ProjectListItemCard as ProjectListItemCardComponent } from './ProjectListItemCard';
 
 export default { title: 'Components/ProjectListItemCard' };
 
@@ -13,8 +13,8 @@ const statusOptions: ProjectStatus[] = [
   'Finished',
 ];
 
-export const ProjectListItemCardStory = () => (
-  <ProjectListItemCard
+export const ProjectListItemCard = () => (
+  <ProjectListItemCardComponent
     id={text('id', '18937')}
     projectImagePath={text('projectImagePath', '/images/favicon-32x32.png')}
     name={text('name', 'Labore People Group')}
