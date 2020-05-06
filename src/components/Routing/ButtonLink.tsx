@@ -7,8 +7,7 @@ export type ButtonLinkProps = InternalProps | ExternalProps;
 
 type BaseProps = Omit<ButtonProps<'a'>, 'component' | 'href'>;
 
-interface InternalProps
-  extends Merge<BaseProps, Omit<LinkProps, 'as' | 'href'>> {
+interface InternalProps extends Merge<BaseProps, LinkProps> {
   external?: false;
 }
 

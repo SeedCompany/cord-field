@@ -8,8 +8,7 @@ export type CardActionAreaLinkProps = InternalProps | ExternalProps;
 
 type BaseProps = Omit<CardActionAreaProps<'a'>, 'component' | 'href'>;
 
-interface InternalProps
-  extends Merge<BaseProps, Omit<LinkProps, 'as' | 'href'>> {
+interface InternalProps extends Merge<BaseProps, LinkProps> {
   external?: false;
 }
 
