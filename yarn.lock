@@ -4,14 +4,14 @@
 __metadata:
   version: 4
 
-"@apollo/client@npm:^3.0.0-beta.23, @apollo/client@npm:^3.0.0-beta.24, @apollo/client@npm:^3.0.0-beta.43":
-  version: 3.0.0-james.33.0
-  resolution: "@apollo/client@npm:3.0.0-james.33.0"
+"@apollo/client@npm:3.0.0-beta.45":
+  version: 3.0.0-beta.45
+  resolution: "@apollo/client@npm:3.0.0-beta.45"
   dependencies:
     "@types/zen-observable": ^0.8.0
     "@wry/equality": ^0.1.9
     fast-json-stable-stringify: ^2.0.0
-    graphql-tag: ^2.10.1
+    graphql-tag: ^2.10.2
     optimism: ^0.11.5
     symbol-observable: ^1.2.0
     ts-invariant: ^0.4.4
@@ -23,7 +23,7 @@ __metadata:
   peerDependenciesMeta:
     react:
       optional: true
-  checksum: 2/7bc3cab7575e1daab8bae3301b6f2cb0915afad6281482e2c11012acd8db05b984834526cd04577b58d0181e9b3682eaef3e9d9aae50808e547faa0ef35e0c7d
+  checksum: 2/eb6e650893be612e08d0749204375f57b64418be5722571602d337976ce3854ab715b477ee0ad6f597779c68487e4a0a28928eb73f4dde824034b2365a6cafcc
   languageName: node
   linkType: hard
 
@@ -10155,7 +10155,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"graphql-tag@npm:2.10.3, graphql-tag@npm:^2.10.1":
+"graphql-tag@npm:2.10.3, graphql-tag@npm:^2.10.1, graphql-tag@npm:^2.10.2":
   version: 2.10.3
   resolution: "graphql-tag@npm:2.10.3"
   peerDependencies:

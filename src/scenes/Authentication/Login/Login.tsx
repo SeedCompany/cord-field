@@ -26,7 +26,7 @@ export const Login = (props: Except<Props, 'onSubmit'>) => {
         variables: { input },
       });
       setSuccess(true);
-      setUserSession(data.login.user);
+      setUserSession(data!.login.user);
       const returnTo = decodeURIComponent(query.get('returnTo') ?? '/');
       navigate(returnTo, { replace: true });
     } catch (e) {

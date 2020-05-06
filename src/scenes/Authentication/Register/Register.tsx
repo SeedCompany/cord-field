@@ -36,7 +36,7 @@ export const Register = (props: Except<Props, 'onSubmit'>) => {
         },
       });
       setSuccess(true);
-      setUserSession(data.createUser.user);
+      setUserSession(data!.createUser.user);
       const returnTo = decodeURIComponent(query.get('returnTo') ?? '/');
       navigate(returnTo, { replace: true });
     } catch (e) {
