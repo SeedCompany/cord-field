@@ -13,9 +13,16 @@ export const appProps: ThemeOptions['props'] = (_theme) => ({
     shrink: true,
     required: false, // no asterisk
   },
+  MuiOutlinedInput: {
+    // because we always shrink label we always want notch applied
+    notched: true,
+  },
 });
 
-export const appOverrides: ThemeOptions['overrides'] = ({ palette }) => {
+export const appOverrides: ThemeOptions['overrides'] = ({
+  palette,
+  typography,
+}) => {
   const primaryColorForText = palette.dark
     ? palette.primary.light
     : palette.primary.main;
@@ -26,14 +33,14 @@ export const appOverrides: ThemeOptions['overrides'] = ({ palette }) => {
       },
       containedSizeLarge: {
         fontSize: '1rem',
-        fontWeight: 400,
+        fontWeight: typography.weight.regular,
         padding: '16px 40px',
       },
     },
     MuiFormLabel: {
       root: {
         textTransform: 'uppercase',
-        fontWeight: 500,
+        fontWeight: typography.weight.medium,
         '&$focused': {
           color: primaryColorForText,
         },

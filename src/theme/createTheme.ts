@@ -33,6 +33,9 @@ export const createTheme = ({
   });
   const theme = createMuiTheme(
     {
+      shape: {
+        borderRadius: 6,
+      },
       ...options,
       palette,
       typography,
