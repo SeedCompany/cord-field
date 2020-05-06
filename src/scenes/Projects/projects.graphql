@@ -1,0 +1,56 @@
+query Projects($input: ProjectListInput!) {
+  projects(input: $input) {
+    items {
+      ...ProjectListItem
+    }
+    hasMore
+    total
+  }
+}
+
+fragment ProjectListItem on Project {
+  id
+  createdAt
+  name {
+    value
+  }
+  type
+  sensitivity
+  deptId {
+    value
+  }
+  step {
+    value
+  }
+  status
+  location {
+    value {
+      id
+      name {
+        value
+      }
+      region {
+        value {
+          id
+          name {
+            value
+          }
+        }
+      }
+    }
+  }
+  estimatedSubmission {
+    value
+  }
+  modifiedAt
+  ... on InternshipProject {
+    engagements {
+      total
+    }
+  }
+  ... on TranslationProject {
+    engagements {
+      total
+    }
+  }
+}

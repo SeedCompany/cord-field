@@ -5,6 +5,7 @@ import { Authentication } from '../Authentication';
 import { DevTest } from '../DevTest';
 import { Home } from '../Home';
 import { Organizations } from '../Organizations';
+import { Projects } from '../Projects';
 import { Sidebar } from './Sidebar';
 
 const useStyles = makeStyles(() => ({
@@ -24,6 +25,7 @@ export const Root = () => {
       <Route path="/" element={<Home />} />
       <Route path="/devtest" element={<DevTest />} />
       <Route path="/organizations/*" element={<Organizations />} />
+      <Route path="/projects/*" element={<Projects />} />
     </Routes>
   );
 

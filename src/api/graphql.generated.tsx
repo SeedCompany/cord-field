@@ -3373,6 +3373,114 @@ export type CreateOrganizationMutation = { __typename?: 'Mutation' } & {
   };
 };
 
+export interface ProjectsQueryVariables {
+  input: ProjectListInput;
+}
+
+export type ProjectsQuery = { __typename?: 'Query' } & {
+  projects: { __typename?: 'ProjectListOutput' } & Pick<
+    ProjectListOutput,
+    'hasMore' | 'total'
+  > & {
+      items: Array<
+        | ({
+            __typename?: 'InternshipProject';
+          } & ProjectListItem_InternshipProject_Fragment)
+        | ({
+            __typename?: 'TranslationProject';
+          } & ProjectListItem_TranslationProject_Fragment)
+      >;
+    };
+};
+
+type ProjectListItem_InternshipProject_Fragment = {
+  __typename?: 'InternshipProject';
+} & Pick<
+  InternshipProject,
+  'id' | 'createdAt' | 'type' | 'sensitivity' | 'status' | 'modifiedAt'
+> & {
+    engagements: { __typename?: 'SecuredInternshipEngagementList' } & Pick<
+      SecuredInternshipEngagementList,
+      'total'
+    >;
+    name: { __typename?: 'SecuredString' } & Pick<SecuredString, 'value'>;
+    deptId: { __typename?: 'SecuredString' } & Pick<SecuredString, 'value'>;
+    step: { __typename?: 'SecuredProjectStep' } & Pick<
+      SecuredProjectStep,
+      'value'
+    >;
+    location: { __typename?: 'SecuredCountry' } & {
+      value?: Maybe<
+        { __typename?: 'Country' } & Pick<Country, 'id'> & {
+            name: { __typename?: 'SecuredString' } & Pick<
+              SecuredString,
+              'value'
+            >;
+            region: { __typename?: 'SecuredRegion' } & {
+              value?: Maybe<
+                { __typename?: 'Region' } & Pick<Region, 'id'> & {
+                    name: { __typename?: 'SecuredString' } & Pick<
+                      SecuredString,
+                      'value'
+                    >;
+                  }
+              >;
+            };
+          }
+      >;
+    };
+    estimatedSubmission: { __typename?: 'SecuredDate' } & Pick<
+      SecuredDate,
+      'value'
+    >;
+  };
+
+type ProjectListItem_TranslationProject_Fragment = {
+  __typename?: 'TranslationProject';
+} & Pick<
+  TranslationProject,
+  'id' | 'createdAt' | 'type' | 'sensitivity' | 'status' | 'modifiedAt'
+> & {
+    engagements: { __typename?: 'SecuredLanguageEngagementList' } & Pick<
+      SecuredLanguageEngagementList,
+      'total'
+    >;
+    name: { __typename?: 'SecuredString' } & Pick<SecuredString, 'value'>;
+    deptId: { __typename?: 'SecuredString' } & Pick<SecuredString, 'value'>;
+    step: { __typename?: 'SecuredProjectStep' } & Pick<
+      SecuredProjectStep,
+      'value'
+    >;
+    location: { __typename?: 'SecuredCountry' } & {
+      value?: Maybe<
+        { __typename?: 'Country' } & Pick<Country, 'id'> & {
+            name: { __typename?: 'SecuredString' } & Pick<
+              SecuredString,
+              'value'
+            >;
+            region: { __typename?: 'SecuredRegion' } & {
+              value?: Maybe<
+                { __typename?: 'Region' } & Pick<Region, 'id'> & {
+                    name: { __typename?: 'SecuredString' } & Pick<
+                      SecuredString,
+                      'value'
+                    >;
+                  }
+              >;
+            };
+          }
+      >;
+    };
+    estimatedSubmission: { __typename?: 'SecuredDate' } & Pick<
+      SecuredDate,
+      'value'
+    >;
+  };
+
+export type ProjectListItemFragment =
+  | ProjectListItem_InternshipProject_Fragment
+  | ProjectListItem_TranslationProject_Fragment;
+
 export const LoggedInUserFragmentDoc = gql`
   fragment LoggedInUser on User {
     id
@@ -3404,6 +3512,54 @@ export const UpdateTestUserFragmentFragmentDoc = gql`
     }
     displayFirstName {
       value
+    }
+  }
+`;
+export const ProjectListItemFragmentDoc = gql`
+  fragment ProjectListItem on Project {
+    id
+    createdAt
+    name {
+      value
+    }
+    type
+    sensitivity
+    deptId {
+      value
+    }
+    step {
+      value
+    }
+    status
+    location {
+      value {
+        id
+        name {
+          value
+        }
+        region {
+          value {
+            id
+            name {
+              value
+            }
+          }
+        }
+      }
+    }
+    estimatedSubmission {
+      value
+    }
+    modifiedAt
+    ... on InternshipProject {
+      engagements {
+        total
+      }
+    }
+    ... on TranslationProject {
+      engagements {
+        total
+      }
     }
   }
 `;
@@ -3879,4 +4035,63 @@ export type CreateOrganizationMutationResult = ApolloReactCommon.MutationResult<
 export type CreateOrganizationMutationOptions = ApolloReactCommon.BaseMutationOptions<
   CreateOrganizationMutation,
   CreateOrganizationMutationVariables
+>;
+export const ProjectsDocument = gql`
+  query Projects($input: ProjectListInput!) {
+    projects(input: $input) {
+      items {
+        ...ProjectListItem
+      }
+      hasMore
+      total
+    }
+  }
+  ${ProjectListItemFragmentDoc}
+`;
+
+/**
+ * __useProjectsQuery__
+ *
+ * To run a query within a React component, call `useProjectsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useProjectsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useProjectsQuery({
+ *   variables: {
+ *      input: // value for 'input'
+ *   },
+ * });
+ */
+export function useProjectsQuery(
+  baseOptions?: ApolloReactHooks.QueryHookOptions<
+    ProjectsQuery,
+    ProjectsQueryVariables
+  >
+) {
+  return ApolloReactHooks.useQuery<ProjectsQuery, ProjectsQueryVariables>(
+    ProjectsDocument,
+    baseOptions
+  );
+}
+export function useProjectsLazyQuery(
+  baseOptions?: ApolloReactHooks.LazyQueryHookOptions<
+    ProjectsQuery,
+    ProjectsQueryVariables
+  >
+) {
+  return ApolloReactHooks.useLazyQuery<ProjectsQuery, ProjectsQueryVariables>(
+    ProjectsDocument,
+    baseOptions
+  );
+}
+export type ProjectsQueryHookResult = ReturnType<typeof useProjectsQuery>;
+export type ProjectsLazyQueryHookResult = ReturnType<
+  typeof useProjectsLazyQuery
+>;
+export type ProjectsQueryResult = ApolloReactCommon.QueryResult<
+  ProjectsQuery,
+  ProjectsQueryVariables
 >;

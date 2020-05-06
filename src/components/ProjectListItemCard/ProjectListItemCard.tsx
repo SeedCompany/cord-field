@@ -8,12 +8,14 @@ import {
 } from '@material-ui/core';
 import { FC } from 'react';
 import * as React from 'react';
-import { ProjectStatus, Sensitivity as SensitivityType } from '../../api';
+import { Country, ProjectListItemFragment } from '../../api';
+import { displayLocation } from '../../api/location-helper';
 import { Sensitivity } from '../Sensitivity';
 
 const useStyles = makeStyles(({ spacing }) => ({
   card: {
     maxWidth: '573px',
+    marginTop: spacing(1),
   },
   media: {
     minHeight: '169px',
@@ -49,32 +51,17 @@ const useStyles = makeStyles(({ spacing }) => ({
     marginTop: 'auto',
   },
   esadDateLabel: {
-    marginTop: spacing(3),
+    marginTop: spacing(2),
+    '& span': {
+      color: '#3c444e',
+    },
   },
 }));
 
-export interface ProjectListItemCardProps {
-  id: string;
-  projectImagePath: string;
-  name: string;
-  countryName: string;
-  region: string;
-  sensitivity: SensitivityType;
-  status: ProjectStatus;
-  numberOfLanguageEngagements: number;
-  esadDate: string;
-}
+export type ProjectListItemCardProps = ProjectListItemFragment;
 
 export const ProjectListItemCard: FC<ProjectListItemCardProps> = ({
-  id,
-  projectImagePath,
-  name,
-  countryName,
-  region,
-  sensitivity,
-  status,
-  numberOfLanguageEngagements,
-  esadDate,
+  ...props
 }) => {
   const {
     media,
@@ -92,12 +79,12 @@ export const ProjectListItemCard: FC<ProjectListItemCardProps> = ({
       <div className={cardBody}>
         <CardMedia
           className={media}
-          image={projectImagePath}
+          image="/images/favicon-32x32.png" //Should be updated in next version.
           title="Project Image"
         />
         <CardContent className={cardContent}>
           <div className={leftContent}>
-            <Typography variant="h4">{name}</Typography>
+            <Typography variant="h4">{props.name?.value}</Typography>
             <Typography color="primary" variant="body2">
               <Box
                 component="span"
@@ -105,11 +92,11 @@ export const ProjectListItemCard: FC<ProjectListItemCardProps> = ({
                 display="inline"
                 color="text.secondary"
               >
-                {id}
+                {props.id}
               </Box>
-              {countryName}, {region}
+              {displayLocation(props.location.value as Country)}
             </Typography>
-            <Sensitivity value={sensitivity} />
+            <Sensitivity value={props.sensitivity} />
             <Typography className={statusLabel} variant="body2">
               Status:
               <Box
@@ -118,27 +105,29 @@ export const ProjectListItemCard: FC<ProjectListItemCardProps> = ({
                 display="inline"
                 color="text.secondary"
               >
-                {status}
+                {props.status}
               </Box>
             </Typography>
           </div>
           <div className={rightContent}>
-            <Typography variant="h1">{numberOfLanguageEngagements}</Typography>
+            <Typography variant="h1">{props.engagements.total}</Typography>
             <Typography variant="body2" color="primary" align="right">
-              Languages
+              {props.type === 'Internship' ? 'Internship' : 'Language'}
               <br />
               Engagements
             </Typography>
-            <Typography
-              variant="body2"
-              color="primary"
-              className={esadDateLabel}
-            >
-              <Box component="span" m={1} display="inline" color="text.primary">
-                ESAD:
-              </Box>
-              {esadDate}
-            </Typography>
+            {props.estimatedSubmission?.value ? (
+              <Typography
+                variant="body2"
+                color="primary"
+                className={esadDateLabel}
+              >
+                <span>ESAD:</span>
+                {props.estimatedSubmission?.value}
+              </Typography>
+            ) : (
+              ''
+            )}
           </div>
         </CardContent>
       </div>
