@@ -1,5 +1,6 @@
 import { Button } from '@material-ui/core';
-import React, { useState } from 'react';
+import React from 'react';
+import { useDialog } from '../../components/Dialog';
 import { useSession } from '../../components/Session';
 import { useTitle } from '../../components/title';
 import { CreateOrganization } from '../Organizations/Create';
@@ -7,20 +8,15 @@ import { CreateOrganization } from '../Organizations/Create';
 export const Home = () => {
   useTitle('Home');
   const [session] = useSession();
-  const [open, setOpen] = useState(false);
+  const [orgDialog, createOrg] = useDialog();
 
   return (
     <div>
       <div>Welcome, {session?.displayFirstName.value ?? 'Friend'}</div>
-      <Button onClick={() => setOpen(true)} color="primary" variant="contained">
-        CreateOrg
+      <Button onClick={createOrg} color="primary" variant="contained">
+        Create Organization
       </Button>
-      <CreateOrganization
-        open={open}
-        onClose={() => {
-          setOpen(false);
-        }}
-      />
+      <CreateOrganization {...orgDialog} />
     </div>
   );
 };

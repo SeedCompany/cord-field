@@ -1,16 +1,17 @@
+import { Button } from '@material-ui/core';
 import { action } from '@storybook/addon-actions';
-import { boolean } from '@storybook/addon-knobs';
 import React from 'react';
+import { useDialog } from '../../../components/Dialog';
 import { CreateOrganizationForm as Form } from './CreateOrganizationForm';
 
 export default { title: 'Scenes/Organizations' };
 
 export const CreateOrganizationForm = () => {
+  const [state, open] = useDialog();
   return (
-    <Form
-      onSubmit={action('onSubmit')}
-      open={boolean('Open', false)}
-      onClose={action('click')}
-    />
+    <>
+      <Button onClick={open}>Create Organization</Button>
+      <Form onSubmit={action('onSubmit')} {...state} />
+    </>
   );
 };
