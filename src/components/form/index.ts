@@ -4,6 +4,7 @@ export * from './DateField';
 export * from './EmailField';
 export * from './FieldGroup';
 export * from './PasswordField';
+export * from './RadioField';
 export * from './SubmitButton';
 export * from './SubmitError';
 export * from './TextField';
