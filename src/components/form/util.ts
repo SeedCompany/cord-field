@@ -29,7 +29,7 @@ export const getHelperText = (
 /**
  * Helper hook to focus element attached to ref
  */
-export const useFocus = <T extends HTMLElement = HTMLElement>(): [
+export const useFocus = <T extends { focus: () => void } = HTMLElement>(): [
   () => void,
   MutableRefObject<T | null>
 ] => {
@@ -46,7 +46,9 @@ export const useFocus = <T extends HTMLElement = HTMLElement>(): [
  * Focus field if it is enabled and is active.
  * When fields are disabled they lose focus so this fixes that.
  */
-export const useFocusOnEnabled = <T extends HTMLElement = HTMLElement>(
+export const useFocusOnEnabled = <
+  T extends { focus: () => void } = HTMLElement
+>(
   meta: FieldMetaState<unknown>,
   disabled: boolean
 ) => {
