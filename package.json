@@ -22,7 +22,7 @@
     "@apollo/link-error": "^2.0.0-beta.3",
     "@apollo/react-components": "4.0.0-beta.1",
     "@date-io/luxon": "^2.6.0",
-    "@material-ui/core": "^4.9.12",
+    "@material-ui/core": "^4.9.13",
     "@material-ui/icons": "^4.9.1",
     "@material-ui/lab": "^4.0.0-alpha.51",
     "@material-ui/pickers": "next",

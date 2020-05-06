@@ -2416,14 +2416,14 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@material-ui/core@npm:^4.9.12":
-  version: 4.9.12
-  resolution: "@material-ui/core@npm:4.9.12"
+"@material-ui/core@npm:^4.9.13":
+  version: 4.9.13
+  resolution: "@material-ui/core@npm:4.9.13"
   dependencies:
     "@babel/runtime": ^7.4.4
     "@material-ui/react-transition-group": ^4.3.0
-    "@material-ui/styles": ^4.9.10
-    "@material-ui/system": ^4.9.10
+    "@material-ui/styles": ^4.9.13
+    "@material-ui/system": ^4.9.13
     "@material-ui/types": ^5.0.1
     "@material-ui/utils": ^4.9.12
     "@types/react-transition-group": ^4.2.0
@@ -2440,7 +2440,7 @@ __metadata:
   peerDependenciesMeta:
     "@types/react":
       optional: true
-  checksum: 3/fd339e1984ffd97e1f90f393818d4315b29daf2bc212de5e111e2796462b731173423f951e7fec3e0e4405282c54fa9d1d8d27bacb76def751e65a2d66941094
+  checksum: 3/3e0a06f2fe74d46b3fa802712b4c068fbb2f066dfa67c7c53b6fe33ef4ca1955b725900f7649b685a4d17907cca43dcc08e6a5efcb3c0b7fa5f87d4f2d58e3a3
   languageName: node
   linkType: hard
 
@@ -2522,15 +2522,15 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@material-ui/styles@npm:^4.9.10":
-  version: 4.9.10
-  resolution: "@material-ui/styles@npm:4.9.10"
+"@material-ui/styles@npm:^4.9.13":
+  version: 4.9.13
+  resolution: "@material-ui/styles@npm:4.9.13"
   dependencies:
     "@babel/runtime": ^7.4.4
     "@emotion/hash": ^0.8.0
     "@material-ui/types": ^5.0.1
     "@material-ui/utils": ^4.9.6
-    clsx: ^1.0.2
+    clsx: ^1.0.4
     csstype: ^2.5.2
     hoist-non-react-statics: ^3.3.2
     jss: ^10.0.3
@@ -2549,13 +2549,13 @@ __metadata:
   peerDependenciesMeta:
     "@types/react":
       optional: true
-  checksum: 3/b9afec2104f8d1bc6198f01a27e850049779de8a5992af93b74cdb8c5740287059a44adb0a1193b6e27410fd7dafa92d9942a354288c4df0323fa63d7bc42677
+  checksum: 3/23cb49be5314886f90b856ca81d48aa13ba90c845f471b20dde1aa954c90b1d78a270736d44f282f3efa52cca00b79555c347d372a4f00fd443ba4593dffb9ec
   languageName: node
   linkType: hard
 
-"@material-ui/system@npm:^4.9.10":
-  version: 4.9.10
-  resolution: "@material-ui/system@npm:4.9.10"
+"@material-ui/system@npm:^4.9.13":
+  version: 4.9.13
+  resolution: "@material-ui/system@npm:4.9.13"
   dependencies:
     "@babel/runtime": ^7.4.4
     "@material-ui/utils": ^4.9.6
@@ -2567,7 +2567,7 @@ __metadata:
   peerDependenciesMeta:
     "@types/react":
       optional: true
-  checksum: 3/7885a6d47b94a2ed6db6be0e4714e9be929b07e2ca3a33aed0379836cadd42a0fd1e85529163283cc44d7df0ee565d9673e4e649aec07d7829e48075559dedcb
+  checksum: 3/9ce7a450980e7a0f36fbe90fb0d9a654c85d6201fd873d3967498e8a0bc66ad28afd82072f1e4cfc6c22ec804828e6466b5f9f86656c496e7a065a6f64f7a20e
   languageName: node
   linkType: hard
 
@@ -6988,7 +6988,7 @@ __metadata:
     "@graphql-codegen/typescript": ^1.13.2
     "@graphql-codegen/typescript-operations": ^1.13.2
     "@graphql-codegen/typescript-react-apollo": ^1.13.2
-    "@material-ui/core": ^4.9.12
+    "@material-ui/core": ^4.9.13
     "@material-ui/icons": ^4.9.1
     "@material-ui/lab": ^4.0.0-alpha.51
     "@material-ui/pickers": next
