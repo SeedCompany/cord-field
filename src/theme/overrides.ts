@@ -13,6 +13,10 @@ export const appProps: ThemeOptions['props'] = (_theme) => ({
     shrink: true,
     required: false, // no asterisk
   },
+  MuiOutlinedInput: {
+    // because we always shrink label we always want notch applied
+    notched: true,
+  },
 });
 
 export const appOverrides: ThemeOptions['overrides'] = ({
