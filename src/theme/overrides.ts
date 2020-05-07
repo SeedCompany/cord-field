@@ -9,9 +9,11 @@ export const appProps: ThemeOptions['props'] = (_theme) => ({
     fullWidth: true,
     margin: 'dense',
   },
+  MuiFormLabel: {
+    required: false, // no asterisk
+  },
   MuiInputLabel: {
     shrink: true,
-    required: false, // no asterisk
   },
   MuiOutlinedInput: {
     // because we always shrink label we always want notch applied
@@ -37,7 +39,7 @@ export const appOverrides: ThemeOptions['overrides'] = ({
         padding: '16px 40px',
       },
     },
-    MuiFormLabel: {
+    MuiInputLabel: {
       root: {
         textTransform: 'uppercase',
         fontWeight: typography.weight.medium,
