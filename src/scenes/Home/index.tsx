@@ -6,5 +6,9 @@ export const Home = () => {
   useTitle('Home');
   const [session] = useSession();
 
-  return <div>Welcome, {session?.displayFirstName.value ?? 'Friend'}</div>;
+  return (
+    <div>
+      <div>Welcome, {session?.displayFirstName.value ?? 'Friend'}</div>
+    </div>
+  );
 };

@@ -1,31 +1,30 @@
-import { Card, CardContent } from '@material-ui/core';
 import React from 'react';
-import { Form, FormProps } from 'react-final-form';
 import { CreateOrganizationInput } from '../../../api';
-import { SubmitButton, SubmitError, TextField } from '../../../components/form';
+import {
+  DialogForm,
+  DialogFormProps,
+} from '../../../components/Dialog/DialogForm';
+import { SubmitError, TextField } from '../../../components/form';
 
-export type CreateOrganizationFormProps = Pick<
-  FormProps<CreateOrganizationInput>,
-  'onSubmit' | 'initialValues'
-> & { className?: string };
+export type CreateOrganizationFormProps = DialogFormProps<
+  CreateOrganizationInput
+>;
 
-export const CreateOrganizationForm = ({
-  className,
-  ...props
-}: CreateOrganizationFormProps) => (
-  <Form {...props}>
-    {({ handleSubmit }) => (
-      <Card component="form" onSubmit={handleSubmit} className={className}>
-        <CardContent>
-          <SubmitError />
-          <TextField
-            name="organization.name"
-            label="Name"
-            placeholder="Enter organization name"
-          />
-          <SubmitButton />
-        </CardContent>
-      </Card>
-    )}
-  </Form>
+export const CreateOrganizationForm = (props: CreateOrganizationFormProps) => (
+  <DialogForm
+    DialogProps={{
+      fullWidth: true,
+      maxWidth: 'xs',
+    }}
+    {...props}
+    title="Create Organization"
+  >
+    <SubmitError />
+    <TextField
+      name="organization.name"
+      label="Name"
+      placeholder="Enter organization name"
+      autoFocus
+    />
+  </DialogForm>
 );

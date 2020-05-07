@@ -1,7 +1,8 @@
 import { useSnackbar } from 'notistack';
 import React from 'react';
 import { Except } from 'type-fest';
-import { handleFormError, useCreateOrganizationMutation } from '../../../api';
+import { useCreateOrganizationMutation } from '../../../api';
+import { ButtonLink } from '../../../components/Routing';
 import {
   CreateOrganizationForm,
   CreateOrganizationFormProps as Props,
@@ -10,22 +11,20 @@ import {
 export const CreateOrganization = (props: Except<Props, 'onSubmit'>) => {
   const [createOrg] = useCreateOrganizationMutation();
   const { enqueueSnackbar } = useSnackbar();
-
   const submit: Props['onSubmit'] = async (input) => {
-    try {
-      await createOrg({
-        variables: { input },
-      });
-      enqueueSnackbar(
-        `Successfully created org with name: ${input.organization.name}`,
-        {
-          variant: 'success',
-        }
-      );
-      // should be navigated to new org created.
-    } catch (e) {
-      return await handleFormError(e);
-    }
+    const res = await createOrg({
+      variables: { input },
+    });
+    const org = res.data!.createOrganization.organization;
+
+    enqueueSnackbar(`Created organization: ${org.name.value}`, {
+      variant: 'success',
+      action: () => (
+        <ButtonLink color="inherit" to={`/organizations/${org.id}`}>
+          View
+        </ButtonLink>
+      ),
+    });
   };
 
   return <CreateOrganizationForm {...props} onSubmit={submit} />;

@@ -2037,6 +2037,8 @@ export interface Query {
   location: Location;
   /** Look up locations */
   locations: LocationListOutput;
+  /** Check location consistency */
+  checkLocationConsistency: Scalars['Boolean'];
   /** Look up a partnership by ID */
   partnership: Partnership;
   /** Look up partnerships */
@@ -2047,6 +2049,8 @@ export interface Query {
   ceremony: Ceremony;
   /** Look up ceremonies */
   ceremonies: CeremonyListOutput;
+  /** Check Consistency in Ceremony Nodes */
+  checkCeremonyConsistency: Scalars['Boolean'];
   /** Look up a language by its ID */
   language: Language;
   /** Look up languages */

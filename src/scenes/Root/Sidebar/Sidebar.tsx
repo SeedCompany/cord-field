@@ -13,9 +13,11 @@ import {
 import { Add, FolderOpen, Language, People } from '@material-ui/icons';
 import { ComponentType, FC, useState } from 'react';
 import * as React from 'react';
+import { useDialog } from '../../../components/Dialog';
 import { ErrorButton } from '../../../components/ErrorButton';
 import { PlantIcon } from '../../../components/Icons';
 import { ListItemLink, ListItemLinkProps } from '../../../components/Routing';
+import { CreateOrganization } from '../../Organizations/Create';
 import { sidebarTheme } from './sidebar.theme';
 import { SidebarHeader } from './SidebarHeader';
 
@@ -36,11 +38,13 @@ export const Sidebar: FC = () => {
   const classes = useStyles();
   const [anchorEl, setAnchorEl] = useState(null);
 
-  const handleClick = (e: any) => {
-    setAnchorEl(e.currentTarget);
+  const openAddMenu = (e: any) => setAnchorEl(e.currentTarget);
+  const closeAddMenu = () => setAnchorEl(null);
+  const closeAnd = (fn: () => void) => () => {
+    closeAddMenu();
+    fn();
   };
-
-  const handleClose = () => setAnchorEl(null);
+  const [createOrgState, createOrg] = useDialog();
 
   const createMenu = (
     <Menu
@@ -48,12 +52,18 @@ export const Sidebar: FC = () => {
       open={anchorEl !== null}
       anchorEl={anchorEl}
       keepMounted
-      onClose={handleClose}
+      onClose={closeAddMenu}
+      getContentAnchorEl={null}
+      anchorOrigin={{
+        vertical: 'bottom',
+        horizontal: 'center',
+      }}
+      transformOrigin={{
+        vertical: 'top',
+        horizontal: 'center',
+      }}
     >
-      <MenuItem>
-        {/* Waiting on information for what goes in here */}
-        Project
-      </MenuItem>
+      <MenuItem onClick={closeAnd(createOrg)}>Organization</MenuItem>
     </Menu>
   );
 
@@ -71,7 +81,7 @@ export const Sidebar: FC = () => {
     </List>
   );
 
-  return (
+  const sidebar = (
     <ThemeProvider theme={sidebarTheme}>
       <Paper square className={classes.root}>
         <SidebarHeader />
@@ -83,7 +93,7 @@ export const Sidebar: FC = () => {
             aria-haspopup="true"
             variant="contained"
             startIcon={<Add />}
-            onClick={handleClick}
+            onClick={openAddMenu}
           >
             Create New Item
           </ErrorButton>
@@ -92,6 +102,13 @@ export const Sidebar: FC = () => {
         </div>
       </Paper>
     </ThemeProvider>
+  );
+
+  return (
+    <>
+      {sidebar}
+      <CreateOrganization {...createOrgState} />
+    </>
   );
 };
 
