@@ -3281,6 +3281,61 @@ export type DisplayPlaceFragment =
   | DisplayPlace_Region_Fragment
   | DisplayPlace_Zone_Fragment;
 
+export type LanguageEngagementListItemFragment = {
+  __typename?: 'LanguageEngagement';
+} & Pick<LanguageEngagement, 'id' | 'createdAt' | 'status' | 'modifiedAt'> & {
+    ceremony: { __typename?: 'SecuredCeremony' } & {
+      value?: Maybe<{ __typename?: 'Ceremony' } & Pick<Ceremony, 'type'>>;
+    };
+    completeDate: { __typename?: 'SecuredDate' } & Pick<SecuredDate, 'value'>;
+    disbursementCompleteDate: { __typename?: 'SecuredDate' } & Pick<
+      SecuredDate,
+      'value'
+    >;
+    communicationsCompleteDate: { __typename?: 'SecuredDate' } & Pick<
+      SecuredDate,
+      'value'
+    >;
+    startDate: { __typename?: 'SecuredDate' } & Pick<SecuredDate, 'value'>;
+    endDate: { __typename?: 'SecuredDate' } & Pick<SecuredDate, 'value'>;
+    initialEndDate: { __typename?: 'SecuredDate' } & Pick<SecuredDate, 'value'>;
+    lastSuspendedAt: { __typename?: 'SecuredDateTime' } & Pick<
+      SecuredDateTime,
+      'value'
+    >;
+    lastReactivatedAt: { __typename?: 'SecuredDateTime' } & Pick<
+      SecuredDateTime,
+      'value'
+    >;
+    statusModifiedAt: { __typename?: 'SecuredDateTime' } & Pick<
+      SecuredDateTime,
+      'value'
+    >;
+    language: { __typename?: 'SecuredLanguage' } & {
+      value?: Maybe<
+        { __typename?: 'Language' } & {
+          name: { __typename?: 'SecuredString' } & Pick<SecuredString, 'value'>;
+        }
+      >;
+    };
+    firstScripture: { __typename?: 'SecuredBoolean' } & Pick<
+      SecuredBoolean,
+      'value'
+    >;
+    lukePartnership: { __typename?: 'SecuredBoolean' } & Pick<
+      SecuredBoolean,
+      'value'
+    >;
+    sentPrintingDate: { __typename?: 'SecuredDate' } & Pick<
+      SecuredDate,
+      'value'
+    >;
+    products: { __typename?: 'SecuredProductList' } & Pick<
+      SecuredProductList,
+      'total'
+    > & { items: Array<{ __typename?: 'Product' } & Pick<Product, 'type'>> };
+  };
+
 type ProjectListItem_InternshipProject_Fragment = {
   __typename?: 'InternshipProject';
 } & Pick<
@@ -3540,6 +3595,70 @@ export const DisplayLocationFragmentDoc = gql`
   ${DisplayCountryFragmentDoc}
   ${DisplayRegionFragmentDoc}
   ${DisplayZoneFragmentDoc}
+`;
+export const LanguageEngagementListItemFragmentDoc = gql`
+  fragment LanguageEngagementListItem on LanguageEngagement {
+    id
+    createdAt
+    status
+    ceremony {
+      value {
+        type
+      }
+    }
+    completeDate {
+      value
+    }
+    disbursementCompleteDate {
+      value
+    }
+    communicationsCompleteDate {
+      value
+    }
+    startDate {
+      value
+    }
+    endDate {
+      value
+    }
+    initialEndDate {
+      value
+    }
+    lastSuspendedAt {
+      value
+    }
+    lastReactivatedAt {
+      value
+    }
+    statusModifiedAt {
+      value
+    }
+    modifiedAt
+    language {
+      value {
+        name {
+          value
+        }
+      }
+    }
+    firstScripture {
+      value
+    }
+    lukePartnership {
+      value
+    }
+    sentPrintingDate {
+      value
+    }
+    products {
+      total
+      items {
+        ... on Product {
+          type
+        }
+      }
+    }
+  }
 `;
 export const ProjectListItemFragmentDoc = gql`
   fragment ProjectListItem on Project {

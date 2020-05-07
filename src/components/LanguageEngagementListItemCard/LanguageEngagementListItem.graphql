@@ -1,0 +1,87 @@
+fragment LanguageEngagementListItem on LanguageEngagement {
+  id
+  createdAt
+  status
+  ceremony {
+    value {
+      type
+    }
+  }
+  completeDate {
+    value
+  }
+  disbursementCompleteDate {
+    value
+  }
+  communicationsCompleteDate {
+    value
+  }
+  startDate {
+    value
+  }
+  endDate {
+    value
+  }
+  initialEndDate {
+    value
+  }
+  lastSuspendedAt {
+    value
+  }
+  lastReactivatedAt {
+    value
+  }
+  statusModifiedAt {
+    value
+  }
+  modifiedAt
+  language {
+    value {
+      name {
+        value
+      }
+      # displayName {
+      #     value
+      # }
+      # beginFiscalYear {
+      #     value
+      # }
+      # ethnologueName {
+      #     value
+      # }
+      # ethnologuePopulation {
+      #     value
+      # }
+      # organizationPopulation {
+      #     value
+      # }
+      # rodNumber {
+      #     value
+      # }
+      # sensitivity
+      # avatarLetters
+    }
+  }
+  firstScripture {
+    value
+  }
+  lukePartnership {
+    value
+  }
+  sentPrintingDate {
+    value
+  }
+  products {
+    total
+    items {
+      ... on Product {
+        type
+        # books
+        # mediums
+        # purposes
+        # approach
+        # methodology
+      }
+    }
+  }
+}
