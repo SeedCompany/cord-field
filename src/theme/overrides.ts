@@ -59,7 +59,6 @@ export const appOverrides: ThemeOptions['overrides'] = ({
         '&:-webkit-autofill': {
           // subtler blue on dark mode
           WebkitBoxShadow: palette.dark ? `0 0 0 100px #2e3d46 inset` : null,
-          caretColor: palette.dark ? '#fff' : null, // fix cursor to match color
         },
       },
     },

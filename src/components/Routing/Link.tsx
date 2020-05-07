@@ -8,8 +8,7 @@ export type LinkProps = InternalProps | ExternalProps;
 
 type BaseProps = Omit<MUILinkProps, 'component' | 'href'>;
 
-interface InternalProps
-  extends Merge<BaseProps, Omit<RRLinkProps, 'as' | 'href'>> {
+interface InternalProps extends Merge<BaseProps, RRLinkProps> {
   external?: false;
 }
 

@@ -9,8 +9,7 @@ export type ListItemLinkProps = InternalProps | ExternalProps;
 
 type BaseProps = Omit<ListItemProps<'a'>, 'button' | 'component' | 'href'>;
 
-interface InternalProps
-  extends Merge<BaseProps, Omit<NavLinkProps, 'as' | 'href'>> {
+interface InternalProps extends Merge<BaseProps, NavLinkProps> {
   external?: false;
 }
 
@@ -30,7 +29,8 @@ interface ExternalProps extends BaseProps {
  */
 export const ListItemLink = forwardRef<HTMLAnchorElement, ListItemLinkProps>(
   ({ external, to, children, ...props }, ref) => {
-    const active = useMatch(to);
+    const path = typeof to === 'string' ? to : { path: to.pathname! };
+    const active = useMatch(path);
 
     if (external) {
       assert(typeof to === 'string');
@@ -44,7 +44,7 @@ export const ListItemLink = forwardRef<HTMLAnchorElement, ListItemLinkProps>(
     const { activeStyle, activeClassName } = props as InternalProps;
     return (
       <ListItem
-        selected={active}
+        selected={Boolean(active)}
         {...props}
         to={to}
         button

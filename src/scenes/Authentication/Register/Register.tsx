@@ -8,7 +8,7 @@ import { RegisterFormProps as Props, RegisterForm } from './RegisterForm';
 export const Register = (props: Except<Props, 'onSubmit'>) => {
   const [register] = useRegisterMutation();
   const navigate = useNavigate();
-  const query = useSearchParams();
+  const [query] = useSearchParams('') as [URLSearchParams];
   const [session, sessionLoading, setUserSession] = useSession();
   const [success, setSuccess] = useState(false);
 
@@ -36,7 +36,7 @@ export const Register = (props: Except<Props, 'onSubmit'>) => {
         },
       });
       setSuccess(true);
-      setUserSession(data.createUser.user);
+      setUserSession(data!.createUser.user);
       const returnTo = decodeURIComponent(query.get('returnTo') ?? '/');
       navigate(returnTo, { replace: true });
     } catch (e) {

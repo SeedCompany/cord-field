@@ -22,10 +22,10 @@
     "@apollo/link-error": "^2.0.0-beta.3",
     "@apollo/react-components": "4.0.0-beta.1",
     "@date-io/luxon": "^2.6.0",
-    "@material-ui/core": "^4.9.12",
+    "@material-ui/core": "^4.9.13",
     "@material-ui/icons": "^4.9.1",
     "@material-ui/lab": "^4.0.0-alpha.51",
-    "@material-ui/pickers": "next",
+    "@material-ui/pickers": "4.0.0-alpha.5",
     "clsx": "^1.1.0",
     "constate": "^2.0.0",
     "final-form": "^4.19.1",
@@ -37,8 +37,8 @@
     "react-dom": "^16.13.1",
     "react-final-form": "^6.4.0",
     "react-intersection-observer": "^8.25.1",
-    "react-router": "^6.0.0-alpha.3",
-    "react-router-dom": "^6.0.0-alpha.3",
+    "react-router": "^6.0.0-alpha.4",
+    "react-router-dom": "^6.0.0-alpha.4",
     "react-scripts": "^3.4.1",
     "react-use": "^14.1.1",
     "ts-essentials": "^6.0.4",
@@ -89,6 +89,9 @@
     "typescript": "^3.8.3",
     "webpack": "4.42.0",
     "webpack-bundle-analyzer": "^3.6.1"
+  },
+  "resolutions": {
+    "@apollo/client": "3.0.0-beta.45"
   },
   "browserslist": {
     "production": [

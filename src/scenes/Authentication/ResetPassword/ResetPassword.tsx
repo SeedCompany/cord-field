@@ -10,7 +10,7 @@ import { ResetPasswordSuccess } from './ResetPasswordSuccess';
 
 export const ResetPassword = (props: Except<Props, 'onSubmit'>) => {
   const [resetPassword] = useResetPasswordMutation();
-  const { token } = useParams<{ token: string }>();
+  const { token } = useParams() as { token: string };
   const [success, setSuccess] = useState(false);
 
   const submit: Props['onSubmit'] = async ({ password }) => {

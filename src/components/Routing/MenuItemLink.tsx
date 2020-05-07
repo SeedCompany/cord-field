@@ -8,8 +8,7 @@ export type MenuItemLinkProps = InternalProps | ExternalProps;
 
 type BaseProps = Omit<MenuItemProps<'a'>, 'button' | 'component' | 'href'>;
 
-interface InternalProps
-  extends Merge<BaseProps, Omit<LinkProps, 'as' | 'href'>> {
+interface InternalProps extends Merge<BaseProps, LinkProps> {
   external?: false;
 }
 
