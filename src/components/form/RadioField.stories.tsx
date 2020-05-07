@@ -30,6 +30,7 @@ export const Radio = () => {
           >
             {['red', 'blue', 'green'].map((color) => (
               <RadioOption
+                key={color}
                 label={startCase(color)}
                 value={color}
                 disabled={disabled}

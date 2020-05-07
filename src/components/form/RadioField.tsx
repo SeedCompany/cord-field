@@ -5,6 +5,7 @@ import {
   FormControlProps,
   FormHelperText,
   FormLabel,
+  makeStyles,
   Radio,
   RadioGroup,
 } from '@material-ui/core';
@@ -24,6 +25,12 @@ interface RadioOptionProps<T = string>
   extends Pick<FormControlLabelProps, 'label' | 'labelPlacement' | 'disabled'> {
   value: T;
 }
+
+const useStyles = makeStyles(({ typography }) => ({
+  fieldLabel: {
+    fontWeight: typography.weight.bold,
+  },
+}));
 
 export const RadioOption = <FieldValue extends any = string>({
   label,
@@ -59,15 +66,21 @@ export const RadioField = <FieldValue extends any = string>({
     required: true,
     ...props,
   });
+  const classes = useStyles();
   return (
     <FormControl
+      color="primary"
       {...rest}
       component="fieldset"
       error={showError(meta)}
       required
       disabled={props.disabled ?? meta.submitting}
     >
-      {label && <FormLabel component="legend">{label}</FormLabel>}
+      {label && (
+        <FormLabel component="legend" className={classes.fieldLabel}>
+          {label}
+        </FormLabel>
+      )}
       <RadioGroup {...input}>{children}</RadioGroup>
       <FormHelperText>{getHelperText(meta, helperText)}</FormHelperText>
     </FormControl>
