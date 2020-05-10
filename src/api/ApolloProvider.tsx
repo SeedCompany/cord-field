@@ -10,6 +10,7 @@ import { IconButton } from '@material-ui/core';
 import { Close } from '@material-ui/icons';
 import { ProviderContext as Snackbar, useSnackbar } from 'notistack';
 import React, { FC, useRef, useState } from 'react';
+import { possibleTypes } from './possibleTypes';
 
 const serverHost = process.env.REACT_APP_API_BASE_URL || '';
 
@@ -31,7 +32,9 @@ export const ApolloProvider: FC = ({ children }) => {
     );
 
     return new ApolloClient({
-      cache: new InMemoryCache(),
+      cache: new InMemoryCache({
+        possibleTypes,
+      }),
       link: concat(errorLink, httpLink),
     });
   });
