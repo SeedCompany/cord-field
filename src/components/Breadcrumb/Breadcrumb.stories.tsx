@@ -1,15 +1,18 @@
-import { Breadcrumbs } from '@material-ui/core';
+import { Breadcrumbs as BreadCrumbs } from '@material-ui/core';
 import React from 'react';
-import { Breadcrumb as BreadcrumbComponent } from './Breadcrumb';
+import { AddCurrentPath } from '../Routing/decorators.stories';
+import { Breadcrumb } from './Breadcrumb';
 
-export default { title: 'Components/Breadcrumb' };
+export default {
+  title: 'Components',
+  decorators: [AddCurrentPath],
+};
 
-export const Breadcrumb = () => (
-  <Breadcrumbs>
-    <BreadcrumbComponent to="/projects">Project</BreadcrumbComponent>
-    <BreadcrumbComponent to="/projects/1234">
-      Labore People Group
-    </BreadcrumbComponent>
-    <BreadcrumbComponent to="/">Current</BreadcrumbComponent>
-  </Breadcrumbs>
+export const Breadcrumbs = () => (
+  <BreadCrumbs>
+    <Breadcrumb to="/">Home</Breadcrumb>
+    <Breadcrumb to="/projects">Projects</Breadcrumb>
+    <Breadcrumb to="/projects/1234">Labore People Group</Breadcrumb>
+    <Breadcrumb to="/projects/1234/files">Files</Breadcrumb>
+  </BreadCrumbs>
 );

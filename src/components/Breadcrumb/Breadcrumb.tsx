@@ -1,5 +1,6 @@
 import { Typography } from '@material-ui/core';
 import { PathPieces } from 'history';
+import { isString } from 'lodash';
 import { FC } from 'react';
 import * as React from 'react';
 import { useMatch } from 'react-router-dom';
@@ -10,8 +11,7 @@ export interface BreadcrumbProps {
 }
 
 export const Breadcrumb: FC<BreadcrumbProps> = ({ to, children }) => {
-  const path = typeof to === 'string' ? to : { path: to.pathname! };
-  const active = useMatch(path);
+  const active = useMatch(isString(to) ? to : to.pathname!);
 
   if (active) {
     return <Typography variant="h4">{children}</Typography>;
