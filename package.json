@@ -2,7 +2,7 @@
   "name": "cord-field",
   "version": "3.0.0-alpha",
   "scripts": {
-    "start": "run-p start:*",
+    "start": "run-p \"start:*\"",
     "start:server": "react-app-rewired start",
     "start:gql-gen": "yarn gql-gen --watch",
     "build": "react-app-rewired build",
