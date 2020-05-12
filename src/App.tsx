@@ -1,9 +1,10 @@
 import LuxonUtils from '@date-io/luxon';
 import { CssBaseline, ThemeProvider } from '@material-ui/core';
 import { LocalizationProvider } from '@material-ui/pickers';
-import React, { cloneElement, FC, ReactElement } from 'react';
+import * as React from 'react';
 import { BrowserRouter } from 'react-router-dom';
 import { ApolloProvider } from './api';
+import { Nest } from './components/Nest';
 import { SessionProvider } from './components/Session';
 import { SnackbarProvider } from './components/Snackbar';
 import { TitleProvider } from './components/title';
@@ -33,9 +34,3 @@ export const App = () => (
     <Root />
   </Nest>
 );
-
-const Nest: FC<{ elements: ReactElement[] }> = ({ elements, children }) =>
-  elements.reduceRight(
-    (out, element) => cloneElement(element, {}, out),
-    <>{children}</>
-  );
