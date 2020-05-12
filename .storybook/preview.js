@@ -1,22 +1,20 @@
-import { CssBaseline, ThemeProvider } from '@material-ui/core';
 import { addDecorator, addParameters } from '@storybook/react';
 import { withInfo } from '@storybook/addon-info';
 import { HashRouter } from 'react-router-dom';
 import React, { createElement } from 'react';
-import { createTheme } from '../src/theme';
+import { appProviders } from '../src/App';
+import { Nest } from '../src/components/Nest';
 
 addDecorator(withInfo);
 
-const theme = createTheme();
+const storybookProviders = [
+  createElement(HashRouter),
+  ...appProviders,
+];
+
 addDecorator(story => createElement(
-  ThemeProvider,
-  { theme },
-  createElement(CssBaseline),
-  story()
-));
-addDecorator(story => createElement(
-  HashRouter,
-  {},
+  Nest,
+  { elements: storybookProviders },
   story()
 ));
 
