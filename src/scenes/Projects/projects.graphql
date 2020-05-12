@@ -7,39 +7,3 @@ query Projects($input: ProjectListInput!) {
     total
   }
 }
-
-fragment ProjectListItem on Project {
-  id
-  createdAt
-  name {
-    value
-  }
-  type
-  sensitivity
-  deptId {
-    value
-  }
-  step {
-    value
-  }
-  status
-  location {
-    value {
-      ...DisplayCountry
-    }
-  }
-  estimatedSubmission {
-    value
-  }
-  modifiedAt
-  #  ... on InternshipProject {
-  #    engagements {
-  #      total
-  #    }
-  #  }
-  #  ... on TranslationProject {
-  #    engagements {
-  #      total
-  #    }
-  #  }
-}

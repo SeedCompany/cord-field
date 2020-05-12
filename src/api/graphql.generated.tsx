@@ -3281,6 +3281,52 @@ export type DisplayPlaceFragment =
   | DisplayPlace_Region_Fragment
   | DisplayPlace_Zone_Fragment;
 
+type ProjectListItem_InternshipProject_Fragment = {
+  __typename?: 'InternshipProject';
+} & Pick<
+  InternshipProject,
+  'id' | 'createdAt' | 'type' | 'sensitivity' | 'status' | 'modifiedAt'
+> & {
+    name: { __typename?: 'SecuredString' } & Pick<SecuredString, 'value'>;
+    deptId: { __typename?: 'SecuredString' } & Pick<SecuredString, 'value'>;
+    step: { __typename?: 'SecuredProjectStep' } & Pick<
+      SecuredProjectStep,
+      'value'
+    >;
+    location: { __typename?: 'SecuredCountry' } & {
+      value?: Maybe<{ __typename?: 'Country' } & DisplayCountryFragment>;
+    };
+    estimatedSubmission: { __typename?: 'SecuredDate' } & Pick<
+      SecuredDate,
+      'value'
+    >;
+  };
+
+type ProjectListItem_TranslationProject_Fragment = {
+  __typename?: 'TranslationProject';
+} & Pick<
+  TranslationProject,
+  'id' | 'createdAt' | 'type' | 'sensitivity' | 'status' | 'modifiedAt'
+> & {
+    name: { __typename?: 'SecuredString' } & Pick<SecuredString, 'value'>;
+    deptId: { __typename?: 'SecuredString' } & Pick<SecuredString, 'value'>;
+    step: { __typename?: 'SecuredProjectStep' } & Pick<
+      SecuredProjectStep,
+      'value'
+    >;
+    location: { __typename?: 'SecuredCountry' } & {
+      value?: Maybe<{ __typename?: 'Country' } & DisplayCountryFragment>;
+    };
+    estimatedSubmission: { __typename?: 'SecuredDate' } & Pick<
+      SecuredDate,
+      'value'
+    >;
+  };
+
+export type ProjectListItemFragment =
+  | ProjectListItem_InternshipProject_Fragment
+  | ProjectListItem_TranslationProject_Fragment;
+
 export interface SessionQueryVariables {}
 
 export type SessionQuery = { __typename?: 'Query' } & {
@@ -3443,52 +3489,6 @@ export type ProjectsQuery = { __typename?: 'Query' } & {
     };
 };
 
-type ProjectListItem_InternshipProject_Fragment = {
-  __typename?: 'InternshipProject';
-} & Pick<
-  InternshipProject,
-  'id' | 'createdAt' | 'type' | 'sensitivity' | 'status' | 'modifiedAt'
-> & {
-    name: { __typename?: 'SecuredString' } & Pick<SecuredString, 'value'>;
-    deptId: { __typename?: 'SecuredString' } & Pick<SecuredString, 'value'>;
-    step: { __typename?: 'SecuredProjectStep' } & Pick<
-      SecuredProjectStep,
-      'value'
-    >;
-    location: { __typename?: 'SecuredCountry' } & {
-      value?: Maybe<{ __typename?: 'Country' } & DisplayCountryFragment>;
-    };
-    estimatedSubmission: { __typename?: 'SecuredDate' } & Pick<
-      SecuredDate,
-      'value'
-    >;
-  };
-
-type ProjectListItem_TranslationProject_Fragment = {
-  __typename?: 'TranslationProject';
-} & Pick<
-  TranslationProject,
-  'id' | 'createdAt' | 'type' | 'sensitivity' | 'status' | 'modifiedAt'
-> & {
-    name: { __typename?: 'SecuredString' } & Pick<SecuredString, 'value'>;
-    deptId: { __typename?: 'SecuredString' } & Pick<SecuredString, 'value'>;
-    step: { __typename?: 'SecuredProjectStep' } & Pick<
-      SecuredProjectStep,
-      'value'
-    >;
-    location: { __typename?: 'SecuredCountry' } & {
-      value?: Maybe<{ __typename?: 'Country' } & DisplayCountryFragment>;
-    };
-    estimatedSubmission: { __typename?: 'SecuredDate' } & Pick<
-      SecuredDate,
-      'value'
-    >;
-  };
-
-export type ProjectListItemFragment =
-  | ProjectListItem_InternshipProject_Fragment
-  | ProjectListItem_TranslationProject_Fragment;
-
 export const DisplayPlaceFragmentDoc = gql`
   fragment DisplayPlace on Place {
     name {
@@ -3541,6 +3541,34 @@ export const DisplayLocationFragmentDoc = gql`
   ${DisplayRegionFragmentDoc}
   ${DisplayZoneFragmentDoc}
 `;
+export const ProjectListItemFragmentDoc = gql`
+  fragment ProjectListItem on Project {
+    id
+    createdAt
+    name {
+      value
+    }
+    type
+    sensitivity
+    deptId {
+      value
+    }
+    step {
+      value
+    }
+    status
+    location {
+      value {
+        ...DisplayCountry
+      }
+    }
+    estimatedSubmission {
+      value
+    }
+    modifiedAt
+  }
+  ${DisplayCountryFragmentDoc}
+`;
 export const LoggedInUserFragmentDoc = gql`
   fragment LoggedInUser on User {
     id
@@ -3574,34 +3602,6 @@ export const UpdateTestUserFragmentFragmentDoc = gql`
       value
     }
   }
-`;
-export const ProjectListItemFragmentDoc = gql`
-  fragment ProjectListItem on Project {
-    id
-    createdAt
-    name {
-      value
-    }
-    type
-    sensitivity
-    deptId {
-      value
-    }
-    step {
-      value
-    }
-    status
-    location {
-      value {
-        ...DisplayCountry
-      }
-    }
-    estimatedSubmission {
-      value
-    }
-    modifiedAt
-  }
-  ${DisplayCountryFragmentDoc}
 `;
 export const SessionDocument = gql`
   query Session {
