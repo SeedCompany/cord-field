@@ -13,5 +13,6 @@ export const Projects = () => {
   if (!matched) {
     return <div>Not Found</div>;
   }
-  return <div>{matched}</div>;
+
+  return <>{matched}</>;
 };

@@ -12,7 +12,7 @@ const useStyles = makeStyles(() => ({
   // Use @global basically never
   '@global': {
     '#root': {
-      minHeight: '100vh',
+      height: '100vh',
       display: 'flex',
     },
   },
