@@ -23,7 +23,7 @@ const useStyles = makeStyles(({ palette }) => ({
   },
 }));
 
-type ErrorButtonProps = Except<ButtonProps, 'color'>;
+export type ErrorButtonProps = Except<ButtonProps, 'color'>;
 
 export const ErrorButton: FC<ErrorButtonProps> = ({
   classes: classesProp = {},
