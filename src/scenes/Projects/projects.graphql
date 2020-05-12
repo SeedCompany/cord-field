@@ -32,14 +32,14 @@ fragment ProjectListItem on Project {
     value
   }
   modifiedAt
-  ... on InternshipProject {
-    engagements {
-      total
-    }
-  }
-  ... on TranslationProject {
-    engagements {
-      total
-    }
-  }
+  #  ... on InternshipProject {
+  #    engagements {
+  #      total
+  #    }
+  #  }
+  #  ... on TranslationProject {
+  #    engagements {
+  #      total
+  #    }
+  #  }
 }

@@ -110,7 +110,7 @@ export const ProjectListItemCard: FC<ProjectListItemCardProps> = ({
             </Typography>
           </div>
           <div className={rightContent}>
-            <Typography variant="h1">{props.engagements.total}</Typography>
+            <Typography variant="h1">{0}</Typography>
             <Typography variant="body2" color="primary" align="right">
               {props.type === 'Internship' ? 'Internship' : 'Language'}
               <br />

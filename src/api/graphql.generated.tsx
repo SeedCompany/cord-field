@@ -3449,10 +3449,6 @@ type ProjectListItem_InternshipProject_Fragment = {
   InternshipProject,
   'id' | 'createdAt' | 'type' | 'sensitivity' | 'status' | 'modifiedAt'
 > & {
-    engagements: { __typename?: 'SecuredInternshipEngagementList' } & Pick<
-      SecuredInternshipEngagementList,
-      'total'
-    >;
     name: { __typename?: 'SecuredString' } & Pick<SecuredString, 'value'>;
     deptId: { __typename?: 'SecuredString' } & Pick<SecuredString, 'value'>;
     step: { __typename?: 'SecuredProjectStep' } & Pick<
@@ -3474,10 +3470,6 @@ type ProjectListItem_TranslationProject_Fragment = {
   TranslationProject,
   'id' | 'createdAt' | 'type' | 'sensitivity' | 'status' | 'modifiedAt'
 > & {
-    engagements: { __typename?: 'SecuredLanguageEngagementList' } & Pick<
-      SecuredLanguageEngagementList,
-      'total'
-    >;
     name: { __typename?: 'SecuredString' } & Pick<SecuredString, 'value'>;
     deptId: { __typename?: 'SecuredString' } & Pick<SecuredString, 'value'>;
     step: { __typename?: 'SecuredProjectStep' } & Pick<
@@ -3608,16 +3600,6 @@ export const ProjectListItemFragmentDoc = gql`
       value
     }
     modifiedAt
-    ... on InternshipProject {
-      engagements {
-        total
-      }
-    }
-    ... on TranslationProject {
-      engagements {
-        total
-      }
-    }
   }
   ${DisplayCountryFragmentDoc}
 `;

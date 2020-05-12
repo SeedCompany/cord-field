@@ -1,4 +1,4 @@
-import { number, select, text } from '@storybook/addon-knobs';
+import { select, text } from '@storybook/addon-knobs';
 import React from 'react';
 import { ProjectListItemCard as PIC } from './ProjectListItemCard';
 
@@ -46,6 +46,6 @@ export const ProjectListItemCard = () => (
         },
       },
     }}
-    engagements={{ total: number('Engagements', 123) }}
+    // engagements={{ total: number('Engagements', 123) }}
   />
 );
