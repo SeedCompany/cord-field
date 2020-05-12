@@ -1,4 +1,5 @@
 import { Card, makeStyles, SvgIconProps, Typography } from '@material-ui/core';
+import { To } from 'history';
 import { DateTime } from 'luxon';
 import { FC, ReactElement } from 'react';
 import * as React from 'react';
@@ -7,8 +8,8 @@ import { ButtonLink, CardActionAreaLink } from '../Routing';
 const useStyles = makeStyles(({ spacing, palette }) => ({
   topArea: {
     display: 'flex',
-    justifyContent: 'flex-start',
-    padding: spacing(3, 4, 3, 4),
+    justifyContent: 'space-evenly',
+    padding: spacing(3, 4),
     borderBottom: `0.5px solid ${palette.grey[300]}`,
   },
   rightContent: {
@@ -28,7 +29,7 @@ export interface FieldOverviewCardProps {
   value: string;
   icon: ReactElement<SvgIconProps>;
   updatedAt: DateTime;
-  to: string;
+  to: To;
   viewLabel: string;
 }
 
