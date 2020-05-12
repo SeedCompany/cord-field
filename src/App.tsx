@@ -14,23 +14,29 @@ import { createTheme } from './theme';
 const theme = createTheme();
 
 /**
- * Register all providers here in a flat list
+ * Register all app providers here in a flat list.
+ * These are used client-side, server-side, and in storybook.
  * This prevents git diff churning
  * Order still matters (the first is the outer most component)
  */
-const providers = [
-  <BrowserRouter />,
+export const appProviders = [
   <TitleProvider title="CORD Field" />,
   <ThemeProvider theme={theme} children={<></>} />,
+  <CssBaseline />,
   <LocalizationProvider dateAdapter={LuxonUtils} children={<></>} />,
   <SnackbarProvider />,
   <ApolloProvider />,
   <SessionProvider />,
 ];
 
+// Only providers that should run client-side. No storybook or server-side.
+const clientProviders = [
+  <BrowserRouter />, // router is unique per context
+  ...appProviders,
+];
+
 export const App = () => (
-  <Nest elements={providers}>
-    <CssBaseline />
+  <Nest elements={clientProviders}>
     <Root />
   </Nest>
 );
