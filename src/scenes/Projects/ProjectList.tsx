@@ -7,7 +7,7 @@ const useStyles = makeStyles(({ spacing }) => ({
   root: {
     flex: 1,
     overflowY: 'scroll',
-    padding: spacing(5),
+    padding: spacing(4),
   },
   options: {
     margin: spacing(3, 0),

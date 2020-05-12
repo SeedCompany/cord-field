@@ -6,6 +6,7 @@ import { DevTest } from '../DevTest';
 import { Home } from '../Home';
 import { Organizations } from '../Organizations';
 import { Projects } from '../Projects';
+import { Header } from './Header';
 import { Sidebar } from './Sidebar';
 
 const useStyles = makeStyles(() => ({
@@ -16,10 +17,15 @@ const useStyles = makeStyles(() => ({
       display: 'flex',
     },
   },
+  main: {
+    flex: 1,
+    display: 'flex',
+    flexDirection: 'column',
+  },
 }));
 
 export const Root = () => {
-  useStyles();
+  const classes = useStyles();
   const routes = (
     <Routes>
       <Route path="/" element={<Home />} />
@@ -32,7 +38,10 @@ export const Root = () => {
   return (
     <Authentication>
       <Sidebar />
-      {routes}
+      <div className={classes.main}>
+        <Header />
+        {routes}
+      </div>
     </Authentication>
   );
 };
