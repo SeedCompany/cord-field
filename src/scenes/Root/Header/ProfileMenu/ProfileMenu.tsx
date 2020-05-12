@@ -1,61 +1,51 @@
-import { makeStyles, Menu, MenuItem } from '@material-ui/core';
-import { FC } from 'react';
+import {
+  Divider,
+  makeStyles,
+  Menu,
+  MenuProps,
+  Typography,
+  useTheme,
+} from '@material-ui/core';
 import * as React from 'react';
-import { Link } from '../../../../components/Routing';
+import { MenuItemLink } from '../../../../components/Routing';
 
-const useStyles = makeStyles(({ typography }) => ({
+const useStyles = makeStyles(({ spacing }) => ({
   menu: {
-    width: '230px',
-    position: 'absolute',
-    top: '100px !important',
-    right: '100px !important',
-    left: 'auto !important',
+    minWidth: 200,
   },
   menuHeading: {
-    fontWeight: typography.fontWeightMedium,
-    padding: '8px 0',
-    fontSize: 16,
-  },
-  signOut: {
-    padding: '14px 0 6px 0',
-    borderTop: '1px solid #E5E5E5',
-    display: 'block',
-  },
-  paper: {
-    position: 'static',
-    padding: '16px',
+    padding: spacing(1, 2, 2, 2),
   },
 }));
 
-export interface ProfileMenuProps {
-  anchorEl: Element | null | undefined;
-  handleClose: (type: any) => void;
-}
+// Menu looks for disabled prop to skip over when choosing
+// which item to auto focus first.
+const skipAutoFocus: any = { disabled: true };
 
-export const ProfileMenu: FC<ProfileMenuProps> = ({
-  anchorEl,
-  handleClose,
-}) => {
+export const ProfileMenu = (props: Partial<MenuProps>) => {
   const classes = useStyles();
+  const { spacing } = useTheme();
 
   return (
     <Menu
-      className={classes.menu}
-      classes={{
-        paper: classes.paper,
-      }}
       id="profile-menu"
-      anchorEl={anchorEl}
       keepMounted
-      open={Boolean(anchorEl)}
-      onClose={() => handleClose(null)}
+      open={Boolean(props.anchorEl)}
+      getContentAnchorEl={null}
+      anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
+      transformOrigin={{ vertical: spacing(-2), horizontal: 'right' }}
+      classes={{ paper: classes.menu }}
+      {...props}
     >
-      <MenuItem className={classes.menuHeading} color="secondary">
+      <Typography
+        variant="h4"
+        className={classes.menuHeading}
+        {...skipAutoFocus}
+      >
         Profile Info
-      </MenuItem>
-      <Link className={classes.signOut} to="/logout">
-        Sign Out
-      </Link>
+      </Typography>
+      <Divider {...skipAutoFocus} />
+      <MenuItemLink to="/logout">Sign Out</MenuItemLink>
     </Menu>
   );
 };

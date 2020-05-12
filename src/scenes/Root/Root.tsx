@@ -17,10 +17,15 @@ const useStyles = makeStyles(() => ({
       display: 'flex',
     },
   },
+  main: {
+    flex: 1,
+    display: 'flex',
+    flexDirection: 'column',
+  },
 }));
 
 export const Root = () => {
-  useStyles();
+  const classes = useStyles();
   const routes = (
     <Routes>
       <Route path="/" element={<Home />} />
@@ -33,8 +38,10 @@ export const Root = () => {
   return (
     <Authentication>
       <Sidebar />
-      <Header />
-      {routes}
+      <div className={classes.main}>
+        <Header />
+        {routes}
+      </div>
     </Authentication>
   );
 };

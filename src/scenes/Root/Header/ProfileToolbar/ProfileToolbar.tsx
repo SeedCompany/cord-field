@@ -1,54 +1,47 @@
-import { Card, IconButton, makeStyles, Typography } from '@material-ui/core';
+import {
+  Card,
+  IconButton,
+  makeStyles,
+  MenuProps,
+  Typography,
+} from '@material-ui/core';
 import { AccountCircle, MoreVert, NotificationsNone } from '@material-ui/icons';
 import { FC, useState } from 'react';
 import * as React from 'react';
 import { useSession } from '../../../../components/Session';
 import { ProfileMenu } from '../ProfileMenu';
 
-const useStyles = makeStyles(({ palette, typography }) => ({
-  name: {
-    fontWeight: typography.fontWeightMedium,
-  },
-  menuWrap: {
-    position: 'relative',
-  },
-  infoWrap: {
+const useStyles = makeStyles(({ typography, spacing }) => ({
+  card: {
+    flexShrink: 0,
     display: 'flex',
     alignItems: 'center',
-    justifyContent: 'flex-end',
-    backgroundColor: 'white',
-    padding: '4px 16px',
-    borderRadius: '6px',
+    padding: spacing(1),
   },
-  icon: {
-    marginLeft: '12px',
-    cursor: 'pointer',
-    '&:last-child': {
-      marginLeft: '6px',
-    },
-  },
-  iconProfile: {
-    fill: palette.secondary.main,
+  name: {
+    fontWeight: typography.weight.medium,
+    margin: spacing(0, 1, 0, 2),
   },
 }));
 
 export const ProfileToolbar: FC = () => {
   const classes = useStyles();
   const [session] = useSession();
-  const [anchorEl, setAnchorEl] = useState(undefined);
-
-  const handleClick = (event: any) => {
-    setAnchorEl(event.currentTarget);
-  };
+  const [anchor, setAnchor] = useState<MenuProps['anchorEl']>();
 
   return (
-    <div className={classes.menuWrap}>
-      <Card className={classes.infoWrap}>
+    <>
+      <Card className={classes.card}>
         <Typography className={classes.name} color="primary">
-          Hi, {session?.realFirstName.value}
+          Hi, {session?.realFirstName?.value ?? 'Friend'}
         </Typography>
-        <IconButton onClick={handleClick}>
-          <AccountCircle className={classes.iconProfile} />
+        <IconButton
+          color="secondary"
+          aria-controls="profile-menu"
+          aria-haspopup="true"
+          onClick={(e) => setAnchor(e.currentTarget)}
+        >
+          <AccountCircle />
         </IconButton>
         <IconButton>
           <NotificationsNone />
@@ -57,9 +50,7 @@ export const ProfileToolbar: FC = () => {
           <MoreVert />
         </IconButton>
       </Card>
-      {anchorEl && (
-        <ProfileMenu anchorEl={anchorEl} handleClose={setAnchorEl} />
-      )}
-    </div>
+      <ProfileMenu anchorEl={anchor} onClose={() => setAnchor(null)} />
+    </>
   );
 };

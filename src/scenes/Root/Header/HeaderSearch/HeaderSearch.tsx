@@ -1,14 +1,12 @@
-import { InputAdornment, makeStyles, OutlinedInput } from '@material-ui/core';
+import { InputAdornment, makeStyles, TextField } from '@material-ui/core';
 import { Search } from '@material-ui/icons';
 import { FC } from 'react';
 import * as React from 'react';
 
-const useStyles = makeStyles(() => ({
+const useStyles = makeStyles(({ spacing }) => ({
   root: {
-    minWidth: '550px',
-  },
-  input: {
-    padding: '12px',
+    maxWidth: 500,
+    marginRight: spacing(3),
   },
 }));
 
@@ -16,18 +14,18 @@ export const HeaderSearch: FC = () => {
   const classes = useStyles();
 
   return (
-    <OutlinedInput
-      classes={{
-        root: classes.root,
-        input: classes.input,
-      }}
-      id="input-search"
+    <TextField
+      variant="outlined"
+      className={classes.root}
       placeholder="Projects, Languages, Regions, People"
-      startAdornment={
-        <InputAdornment position="start">
-          <Search />
-        </InputAdornment>
-      }
+      size="small"
+      InputProps={{
+        startAdornment: (
+          <InputAdornment position="start">
+            <Search />
+          </InputAdornment>
+        ),
+      }}
     />
   );
 };
