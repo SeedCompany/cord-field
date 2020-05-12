@@ -1,3 +1,4 @@
+import { Box } from '@material-ui/core';
 import React, { ReactElement } from 'react';
 import { useLocation } from 'react-router';
 
@@ -8,7 +9,9 @@ export const AddCurrentPath = (fn: () => ReactElement) => {
     return (
       <>
         {fn()}
-        <pre>Current path: {pathname}</pre>
+        <Box component="pre" mt={4}>
+          Current path: {pathname}
+        </Box>
       </>
     );
   };
