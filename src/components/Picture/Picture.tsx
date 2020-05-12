@@ -308,14 +308,15 @@ const PictureImpl = ({
       }}
       onError={(e) => {
         const url = e.currentTarget.srcset;
-        // eslint-disable-next-line no-console
-        console.error('Image failed to load\n', url);
         if (!isMounted()) {
           return;
         }
         setErrored(url);
         if (rest.onError) {
           rest.onError(e);
+        } else {
+          // eslint-disable-next-line no-console
+          console.error('Image failed to load\n', url);
         }
       }}
     />
