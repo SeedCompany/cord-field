@@ -28,12 +28,20 @@ export const ProjectListItemCard = () => (
     name={{ value: text('Id', 'project') }}
     location={{
       value: {
-        id: '123',
-        name: { value: 'US' },
+        __typename: 'Country',
+        name: { value: 'Texas' },
         region: {
           value: {
-            id: '123',
-            name: { value: 'Utah' },
+            name: {
+              value: 'United States',
+            },
+            zone: {
+              value: {
+                name: {
+                  value: 'Americas',
+                },
+              },
+            },
           },
         },
       },

@@ -3231,6 +3231,56 @@ export type Zone = Resource &
     director: SecuredUser;
   };
 
+type DisplayLocation_Country_Fragment = {
+  __typename?: 'Country';
+} & DisplayCountryFragment;
+
+type DisplayLocation_Region_Fragment = {
+  __typename?: 'Region';
+} & DisplayRegionFragment;
+
+type DisplayLocation_Zone_Fragment = {
+  __typename?: 'Zone';
+} & DisplayZoneFragment;
+
+export type DisplayLocationFragment =
+  | DisplayLocation_Country_Fragment
+  | DisplayLocation_Region_Fragment
+  | DisplayLocation_Zone_Fragment;
+
+export type DisplayCountryFragment = { __typename?: 'Country' } & {
+  region: { __typename?: 'SecuredRegion' } & {
+    value?: Maybe<{ __typename?: 'Region' } & DisplayRegionFragment>;
+  };
+} & DisplayPlace_Country_Fragment;
+
+export type DisplayRegionFragment = { __typename?: 'Region' } & {
+  zone: { __typename?: 'SecuredZone' } & {
+    value?: Maybe<{ __typename?: 'Zone' } & DisplayPlace_Zone_Fragment>;
+  };
+} & DisplayPlace_Region_Fragment;
+
+export type DisplayZoneFragment = {
+  __typename?: 'Zone';
+} & DisplayPlace_Zone_Fragment;
+
+type DisplayPlace_Country_Fragment = { __typename?: 'Country' } & {
+  name: { __typename?: 'SecuredString' } & Pick<SecuredString, 'value'>;
+};
+
+type DisplayPlace_Region_Fragment = { __typename?: 'Region' } & {
+  name: { __typename?: 'SecuredString' } & Pick<SecuredString, 'value'>;
+};
+
+type DisplayPlace_Zone_Fragment = { __typename?: 'Zone' } & {
+  name: { __typename?: 'SecuredString' } & Pick<SecuredString, 'value'>;
+};
+
+export type DisplayPlaceFragment =
+  | DisplayPlace_Country_Fragment
+  | DisplayPlace_Region_Fragment
+  | DisplayPlace_Zone_Fragment;
+
 export interface SessionQueryVariables {}
 
 export type SessionQuery = { __typename?: 'Query' } & {
@@ -3410,24 +3460,7 @@ type ProjectListItem_InternshipProject_Fragment = {
       'value'
     >;
     location: { __typename?: 'SecuredCountry' } & {
-      value?: Maybe<
-        { __typename?: 'Country' } & Pick<Country, 'id'> & {
-            name: { __typename?: 'SecuredString' } & Pick<
-              SecuredString,
-              'value'
-            >;
-            region: { __typename?: 'SecuredRegion' } & {
-              value?: Maybe<
-                { __typename?: 'Region' } & Pick<Region, 'id'> & {
-                    name: { __typename?: 'SecuredString' } & Pick<
-                      SecuredString,
-                      'value'
-                    >;
-                  }
-              >;
-            };
-          }
-      >;
+      value?: Maybe<{ __typename?: 'Country' } & DisplayCountryFragment>;
     };
     estimatedSubmission: { __typename?: 'SecuredDate' } & Pick<
       SecuredDate,
@@ -3452,24 +3485,7 @@ type ProjectListItem_TranslationProject_Fragment = {
       'value'
     >;
     location: { __typename?: 'SecuredCountry' } & {
-      value?: Maybe<
-        { __typename?: 'Country' } & Pick<Country, 'id'> & {
-            name: { __typename?: 'SecuredString' } & Pick<
-              SecuredString,
-              'value'
-            >;
-            region: { __typename?: 'SecuredRegion' } & {
-              value?: Maybe<
-                { __typename?: 'Region' } & Pick<Region, 'id'> & {
-                    name: { __typename?: 'SecuredString' } & Pick<
-                      SecuredString,
-                      'value'
-                    >;
-                  }
-              >;
-            };
-          }
-      >;
+      value?: Maybe<{ __typename?: 'Country' } & DisplayCountryFragment>;
     };
     estimatedSubmission: { __typename?: 'SecuredDate' } & Pick<
       SecuredDate,
@@ -3481,6 +3497,58 @@ export type ProjectListItemFragment =
   | ProjectListItem_InternshipProject_Fragment
   | ProjectListItem_TranslationProject_Fragment;
 
+export const DisplayPlaceFragmentDoc = gql`
+  fragment DisplayPlace on Place {
+    name {
+      value
+    }
+  }
+`;
+export const DisplayRegionFragmentDoc = gql`
+  fragment DisplayRegion on Region {
+    ...DisplayPlace
+    zone {
+      value {
+        ...DisplayPlace
+      }
+    }
+  }
+  ${DisplayPlaceFragmentDoc}
+`;
+export const DisplayCountryFragmentDoc = gql`
+  fragment DisplayCountry on Country {
+    ...DisplayPlace
+    region {
+      value {
+        ...DisplayRegion
+      }
+    }
+  }
+  ${DisplayPlaceFragmentDoc}
+  ${DisplayRegionFragmentDoc}
+`;
+export const DisplayZoneFragmentDoc = gql`
+  fragment DisplayZone on Zone {
+    ...DisplayPlace
+  }
+  ${DisplayPlaceFragmentDoc}
+`;
+export const DisplayLocationFragmentDoc = gql`
+  fragment DisplayLocation on Location {
+    ... on Country {
+      ...DisplayCountry
+    }
+    ... on Region {
+      ...DisplayRegion
+    }
+    ... on Zone {
+      ...DisplayZone
+    }
+  }
+  ${DisplayCountryFragmentDoc}
+  ${DisplayRegionFragmentDoc}
+  ${DisplayZoneFragmentDoc}
+`;
 export const LoggedInUserFragmentDoc = gql`
   fragment LoggedInUser on User {
     id
@@ -3533,18 +3601,7 @@ export const ProjectListItemFragmentDoc = gql`
     status
     location {
       value {
-        id
-        name {
-          value
-        }
-        region {
-          value {
-            id
-            name {
-              value
-            }
-          }
-        }
+        ...DisplayCountry
       }
     }
     estimatedSubmission {
@@ -3562,6 +3619,7 @@ export const ProjectListItemFragmentDoc = gql`
       }
     }
   }
+  ${DisplayCountryFragmentDoc}
 `;
 export const SessionDocument = gql`
   query Session {

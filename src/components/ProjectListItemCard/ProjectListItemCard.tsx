@@ -8,7 +8,7 @@ import {
 } from '@material-ui/core';
 import { FC } from 'react';
 import * as React from 'react';
-import { Country, ProjectListItemFragment } from '../../api';
+import { ProjectListItemFragment } from '../../api';
 import { displayLocation } from '../../api/location-helper';
 import { Sensitivity } from '../Sensitivity';
 
@@ -94,7 +94,7 @@ export const ProjectListItemCard: FC<ProjectListItemCardProps> = ({
               >
                 {props.id}
               </Box>
-              {displayLocation(props.location.value as Country)}
+              {displayLocation(props.location.value)}
             </Typography>
             <Sensitivity value={props.sensitivity} />
             <Typography className={statusLabel} variant="body2">

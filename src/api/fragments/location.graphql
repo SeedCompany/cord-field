@@ -1,0 +1,39 @@
+fragment DisplayLocation on Location {
+  ... on Country {
+    ...DisplayCountry
+  }
+  ... on Region {
+    ...DisplayRegion
+  }
+  ... on Zone {
+    ...DisplayZone
+  }
+}
+
+fragment DisplayCountry on Country {
+  ...DisplayPlace
+  region {
+    value {
+      ...DisplayRegion
+    }
+  }
+}
+
+fragment DisplayRegion on Region {
+  ...DisplayPlace
+  zone {
+    value {
+      ...DisplayPlace
+    }
+  }
+}
+
+fragment DisplayZone on Zone {
+  ...DisplayPlace
+}
+
+fragment DisplayPlace on Place {
+  name {
+    value
+  }
+}

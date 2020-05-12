@@ -25,18 +25,7 @@ fragment ProjectListItem on Project {
   status
   location {
     value {
-      id
-      name {
-        value
-      }
-      region {
-        value {
-          id
-          name {
-            value
-          }
-        }
-      }
+      ...DisplayCountry
     }
   }
   estimatedSubmission {
