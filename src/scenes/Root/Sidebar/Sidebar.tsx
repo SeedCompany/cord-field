@@ -13,8 +13,8 @@ import {
 import { Add, FolderOpen, Language, People } from '@material-ui/icons';
 import { ComponentType, FC, useState } from 'react';
 import * as React from 'react';
+import { CreateButton } from '../../../components/CreateButton';
 import { useDialog } from '../../../components/Dialog';
-import { ErrorButton } from '../../../components/ErrorButton';
 import { PlantIcon } from '../../../components/Icons';
 import { ListItemLink, ListItemLinkProps } from '../../../components/Routing';
 import { CreateOrganization } from '../../Organizations/Create';
@@ -86,17 +86,16 @@ export const Sidebar: FC = () => {
       <Paper square className={classes.root}>
         <SidebarHeader />
         <div className={classes.content}>
-          <ErrorButton
+          <CreateButton
             className={classes.createNewItem}
             fullWidth
             aria-controls="create-menu"
             aria-haspopup="true"
-            variant="contained"
             startIcon={<Add />}
             onClick={openAddMenu}
           >
             Create New Item
-          </ErrorButton>
+          </CreateButton>
           {createMenu}
           {navList}
         </div>
