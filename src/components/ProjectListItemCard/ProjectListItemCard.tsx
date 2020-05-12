@@ -1,147 +1,159 @@
 import {
-  Box,
   Card,
   CardContent,
-  CardMedia,
+  Grid,
   makeStyles,
   Typography,
+  TypographyProps,
 } from '@material-ui/core';
-import { FC } from 'react';
+import clsx from 'clsx';
+import { random } from 'lodash';
+import { FC, useState } from 'react';
 import * as React from 'react';
-import { ProjectStatus, Sensitivity as SensitivityType } from '../../api';
+import { ProjectListItemFragment } from '../../api';
+import { displayStatus } from '../../api/displayStatus';
+import { displayLocation } from '../../api/location-helper';
+import { Picture } from '../Picture';
+import { CardActionAreaLink } from '../Routing';
 import { Sensitivity } from '../Sensitivity';
 
-const useStyles = makeStyles(({ spacing }) => ({
-  card: {
-    maxWidth: '573px',
-  },
-  media: {
-    minHeight: '169px',
-    width: '176px',
-  },
-  cardBody: {
-    display: 'flex',
-  },
-  cardContent: {
-    display: 'flex',
-    flex: '1 1 auto',
-    padding: spacing(2, 3),
-  },
-  sensitivityLabel: {
-    display: 'flex',
-    alignItems: 'center',
-  },
-  leftContent: {
-    display: 'flex',
-    flexDirection: 'column',
-    '& > *:not(:last-child)': {
+const useStyles = makeStyles(({ breakpoints, spacing }) => {
+  const cardWidth = breakpoints.values.sm;
+  return {
+    root: {
+      width: '100%',
+      maxWidth: cardWidth,
+    },
+    card: {
+      display: 'flex',
+      alignItems: 'initial',
+    },
+    media: {
+      width: cardWidth / 3,
+      borderTopRightRadius: 0,
+      borderBottomRightRadius: 0,
+    },
+    cardContent: {
+      flex: 1,
+      padding: spacing(2, 3),
+      display: 'flex',
+      justifyContent: 'space-between',
+    },
+    leftContent: {
+      display: 'flex',
+      flexDirection: 'column',
+      justifyContent: 'space-between',
+    },
+    rightContent: {
+      marginLeft: spacing(2),
+      display: 'flex',
+      flexDirection: 'column',
+      justifyContent: 'space-between',
+    },
+    sensitivity: {
       marginBottom: spacing(1),
     },
-  },
-  rightContent: {
-    display: 'flex',
-    flexDirection: 'column',
-    flex: '1 1 auto',
-    alignItems: 'flex-end',
-    justifyContent: 'flex-end',
-  },
-  statusLabel: {
-    marginTop: 'auto',
-  },
-  esadDateLabel: {
-    marginTop: spacing(3),
-  },
-}));
+  };
+});
 
-export interface ProjectListItemCardProps {
-  id: string;
-  projectImagePath: string;
-  name: string;
-  countryName: string;
-  region: string;
-  sensitivity: SensitivityType;
-  status: ProjectStatus;
-  numberOfLanguageEngagements: number;
-  esadDate: string;
-}
+export type ProjectListItemCardProps = ProjectListItemFragment & {
+  className?: string;
+};
 
-export const ProjectListItemCard: FC<ProjectListItemCardProps> = ({
-  id,
-  projectImagePath,
-  name,
-  countryName,
-  region,
-  sensitivity,
-  status,
-  numberOfLanguageEngagements,
-  esadDate,
-}) => {
-  const {
-    media,
-    card,
-    cardBody,
-    cardContent,
-    leftContent,
-    rightContent,
-    statusLabel,
-    esadDateLabel,
-  } = useStyles();
+export const ProjectListItemCard: FC<ProjectListItemCardProps> = (props) => {
+  const classes = useStyles();
+  const genSrc = () => `https://picsum.photos/id/${random(1, 2000)}/300/200`;
+  const [pic, setPic] = useState(genSrc);
+  const nextPic = () => setPic(genSrc());
 
   return (
-    <Card className={card}>
-      <div className={cardBody}>
-        <CardMedia
-          className={media}
-          image={projectImagePath}
-          title="Project Image"
-        />
-        <CardContent className={cardContent}>
-          <div className={leftContent}>
-            <Typography variant="h4">{name}</Typography>
-            <Typography color="primary" variant="body2">
-              <Box
-                component="span"
-                m={1}
-                display="inline"
-                color="text.secondary"
-              >
-                {id}
-              </Box>
-              {countryName}, {region}
-            </Typography>
-            <Sensitivity value={sensitivity} />
-            <Typography className={statusLabel} variant="body2">
-              Status:
-              <Box
-                component="span"
-                m={1}
-                display="inline"
-                color="text.secondary"
-              >
-                {status}
-              </Box>
-            </Typography>
-          </div>
-          <div className={rightContent}>
-            <Typography variant="h1">{numberOfLanguageEngagements}</Typography>
-            <Typography variant="body2" color="primary" align="right">
-              Languages
-              <br />
-              Engagements
-            </Typography>
-            <Typography
-              variant="body2"
-              color="primary"
-              className={esadDateLabel}
-            >
-              <Box component="span" m={1} display="inline" color="text.primary">
-                ESAD:
-              </Box>
-              {esadDate}
-            </Typography>
+    <Card className={clsx(classes.root, props.className)}>
+      <CardActionAreaLink to={`/projects/${props.id}`} className={classes.card}>
+        <div className={classes.media}>
+          <Picture
+            source={pic}
+            fit="cover"
+            width={300}
+            height={200}
+            onError={nextPic}
+          />
+        </div>
+        <CardContent className={classes.cardContent}>
+          <Grid
+            container
+            direction="column"
+            justify="space-between"
+            spacing={1}
+          >
+            <Grid item>
+              <Typography variant="h4">{props.name?.value}</Typography>
+            </Grid>
+            <Grid item>
+              <Typography variant="body2" color="textSecondary">
+                {props.deptId.value ?? props.id}
+              </Typography>
+            </Grid>
+            <Grid item>
+              <Typography variant="body2" color="primary">
+                {displayLocation(props.location.value)}
+              </Typography>
+            </Grid>
+            <Grid item>
+              <Sensitivity
+                value={props.sensitivity}
+                className={classes.sensitivity}
+              />
+            </Grid>
+            <Grid item>
+              <KeyValProp label="Status" value={displayStatus(props.status)} />
+            </Grid>
+          </Grid>
+          <div className={classes.rightContent}>
+            <KeyValProp aria-hidden="true" />
+
+            <div>
+              <Typography variant="h1" align="right">
+                {0}
+              </Typography>
+              <Typography variant="body2" color="primary" align="right">
+                {props.type === 'Internship' ? 'Internship' : 'Language'}
+                <br />
+                Engagements
+              </Typography>
+            </div>
+
+            <KeyValProp
+              label="ESAD"
+              value={props.estimatedSubmission?.value}
+              ValueProps={{ color: 'primary' }}
+            />
           </div>
         </CardContent>
-      </div>
+      </CardActionAreaLink>
     </Card>
   );
 };
+
+const KeyValProp = ({
+  label,
+  LabelProps,
+  value,
+  ValueProps,
+  ...props
+}: {
+  label?: string;
+  LabelProps?: TypographyProps;
+  value?: string | null;
+  ValueProps?: TypographyProps;
+} & TypographyProps) => (
+  <Typography variant="body2" {...props}>
+    {label && value ? (
+      <Typography variant="inherit" {...LabelProps}>
+        {label}:&nbsp;
+      </Typography>
+    ) : null}
+    <Typography variant="inherit" color="textSecondary" {...ValueProps}>
+      {value}
+    </Typography>
+  </Typography>
+);

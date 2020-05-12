@@ -33,13 +33,14 @@ const useStyles = makeStyles(({ palette, spacing }) => ({
 
 export interface SensitivityProps {
   value: SensitivityType;
+  className?: string;
 }
 
-export const Sensitivity: FC<SensitivityProps> = ({ value }) => {
+export const Sensitivity: FC<SensitivityProps> = ({ value, className }) => {
   const classes = useStyles();
 
   return (
-    <div>
+    <div className={className}>
       <div className={classes.iconWrapper}>
         <VerifiedUserOutlined className={classes.icon} />
         <Typography variant="body2">Sensitivity</Typography>

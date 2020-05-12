@@ -38,6 +38,10 @@ export const appOverrides: ThemeOptions['overrides'] = ({
         fontWeight: typography.weight.regular,
         padding: '16px 40px',
       },
+      outlined: {
+        // This could be too aggressive
+        background: palette.background.paper,
+      },
     },
     MuiInputLabel: {
       root: {
