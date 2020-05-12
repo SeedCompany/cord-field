@@ -44,15 +44,6 @@ export interface AddStateOutput {
   state: State;
 }
 
-export interface AdminInputDto {
-  input: Scalars['String'];
-}
-
-export interface AdminOutputDto {
-  __typename?: 'AdminOutputDto';
-  success?: Maybe<Scalars['Boolean']>;
-}
-
 export interface AttachUserToSecurityGroup {
   sgId: Scalars['ID'];
   userId: Scalars['ID'];
@@ -303,13 +294,6 @@ export interface CreateBudgetRecordInput {
 export interface CreateBudgetRecordOutput {
   __typename?: 'CreateBudgetRecordOutput';
   budgetRecord: BudgetRecord;
-}
-
-export interface CreateCeremony {
-  type: CeremonyType;
-  planned?: Maybe<Scalars['Boolean']>;
-  estimatedDate?: Maybe<Scalars['Date']>;
-  actualDate?: Maybe<Scalars['Date']>;
 }
 
 export interface CreateCountry {
@@ -615,19 +599,6 @@ export interface CreateZoneOutput {
   zone: Zone;
 }
 
-export interface CurrentState {
-  __typename?: 'CurrentState';
-  id: Scalars['ID'];
-}
-
-/** A filter range designed for date fields */
-export interface DateFilter {
-  /** After or equal to this day */
-  after?: Maybe<Scalars['Date']>;
-  /** Before or equal to this day */
-  before?: Maybe<Scalars['Date']>;
-}
-
 /** A filter range designed for date time fields */
 export interface DateTimeFilter {
   /** After or equal to this time */
@@ -735,6 +706,11 @@ export interface Engagement {
   /** The last time the engagement status was modified */
   statusModifiedAt: SecuredDateTime;
   modifiedAt: Scalars['DateTime'];
+}
+
+export interface EngagementConsistencyInput {
+  /** engagement type */
+  baseNode: Scalars['String'];
 }
 
 export interface EngagementFilters {
@@ -975,6 +951,7 @@ export type InternshipProject = Project &
     mouEnd: SecuredDate;
     estimatedSubmission: SecuredDate;
     modifiedAt: Scalars['DateTime'];
+    avatarLetters?: Maybe<Scalars['String']>;
     engagements: SecuredInternshipEngagementList;
     /** The project members */
     team: SecuredProjectMemberList;
@@ -994,12 +971,13 @@ export type Language = Resource & {
   createdAt: Scalars['DateTime'];
   name: SecuredString;
   displayName: SecuredString;
-  beginFiscalYear: SecuredInt;
-  ethnologueName: SecuredString;
-  ethnologuePopulation: SecuredInt;
-  organizationPopulation: SecuredInt;
-  rodNumber: SecuredInt;
-  sensitivity: Sensitivity;
+  beginFiscalYear?: Maybe<SecuredInt>;
+  ethnologueName?: Maybe<SecuredString>;
+  ethnologuePopulation?: Maybe<SecuredInt>;
+  organizationPopulation?: Maybe<SecuredInt>;
+  rodNumber?: Maybe<SecuredInt>;
+  sensitivity?: Maybe<Sensitivity>;
+  avatarLetters?: Maybe<Scalars['String']>;
 };
 
 export type LanguageEngagement = Engagement &
@@ -1144,30 +1122,6 @@ export interface MoveFileInput {
 
 export interface Mutation {
   __typename?: 'Mutation';
-  /** Create an organization */
-  createOrganization: CreateOrganizationOutput;
-  /** Update an organization */
-  updateOrganization: UpdateOrganizationOutput;
-  /** Delete an organization */
-  deleteOrganization: Scalars['Boolean'];
-  /** Create an education entry */
-  createEducation: CreateEducationOutput;
-  /** Update an education */
-  updateEducation: UpdateEducationOutput;
-  /** Delete an education */
-  deleteEducation: Scalars['Boolean'];
-  /** Create an unavailability */
-  createUnavailability: CreateUnavailabilityOutput;
-  /** Update an unavailability */
-  updateUnavailability: UpdateUnavailabilityOutput;
-  /** Delete an unavailability */
-  deleteUnavailability: Scalars['Boolean'];
-  /** Create a user */
-  createUser: CreateUserOutput;
-  /** Update a user */
-  updateUser: UpdateUserOutput;
-  /** Delete a user */
-  deleteUser: Scalars['Boolean'];
   /** Create a new permission between a security group and a base node */
   createPermission: CreatePermissionOutput;
   /** Create a new security group */
@@ -1188,6 +1142,24 @@ export interface Mutation {
   deleteSecurityGroup: Scalars['Boolean'];
   /** Update a security group's name */
   updateSecurityGroupName: UpdateSecurityGroupNameOutput;
+  /** Create an organization */
+  createOrganization: CreateOrganizationOutput;
+  /** Update an organization */
+  updateOrganization: UpdateOrganizationOutput;
+  /** Delete an organization */
+  deleteOrganization: Scalars['Boolean'];
+  /** Create an education entry */
+  createEducation: CreateEducationOutput;
+  /** Update an education */
+  updateEducation: UpdateEducationOutput;
+  /** Delete an education */
+  deleteEducation: Scalars['Boolean'];
+  /** Create an unavailability */
+  createUnavailability: CreateUnavailabilityOutput;
+  /** Update an unavailability */
+  updateUnavailability: UpdateUnavailabilityOutput;
+  /** Delete an unavailability */
+  deleteUnavailability: Scalars['Boolean'];
   /** Login a user */
   login: LoginOutput;
   /** Logout a user */
@@ -1196,6 +1168,12 @@ export interface Mutation {
   forgotPassword: Scalars['Boolean'];
   /** Reset Password */
   resetPassword: Scalars['Boolean'];
+  /** Create a user */
+  createUser: CreateUserOutput;
+  /** Update a user */
+  updateUser: UpdateUserOutput;
+  /** Delete a user */
+  deleteUser: Scalars['Boolean'];
   /** Create a zone */
   createZone: CreateZoneOutput;
   /** Create a region */
@@ -1307,54 +1285,6 @@ export interface Mutation {
   removeRequiredField: Scalars['Boolean'];
 }
 
-export interface MutationCreateOrganizationArgs {
-  input: CreateOrganizationInput;
-}
-
-export interface MutationUpdateOrganizationArgs {
-  input: UpdateOrganizationInput;
-}
-
-export interface MutationDeleteOrganizationArgs {
-  id: Scalars['ID'];
-}
-
-export interface MutationCreateEducationArgs {
-  input: CreateEducationInput;
-}
-
-export interface MutationUpdateEducationArgs {
-  input: UpdateEducationInput;
-}
-
-export interface MutationDeleteEducationArgs {
-  id: Scalars['ID'];
-}
-
-export interface MutationCreateUnavailabilityArgs {
-  input: CreateUnavailabilityInput;
-}
-
-export interface MutationUpdateUnavailabilityArgs {
-  input: UpdateUnavailabilityInput;
-}
-
-export interface MutationDeleteUnavailabilityArgs {
-  id: Scalars['ID'];
-}
-
-export interface MutationCreateUserArgs {
-  input: CreateUserInput;
-}
-
-export interface MutationUpdateUserArgs {
-  input: UpdateUserInput;
-}
-
-export interface MutationDeleteUserArgs {
-  id: Scalars['ID'];
-}
-
 export interface MutationCreatePermissionArgs {
   input: CreatePermissionInput;
 }
@@ -1395,6 +1325,42 @@ export interface MutationUpdateSecurityGroupNameArgs {
   input: UpdateSecurityGroupNameInput;
 }
 
+export interface MutationCreateOrganizationArgs {
+  input: CreateOrganizationInput;
+}
+
+export interface MutationUpdateOrganizationArgs {
+  input: UpdateOrganizationInput;
+}
+
+export interface MutationDeleteOrganizationArgs {
+  id: Scalars['ID'];
+}
+
+export interface MutationCreateEducationArgs {
+  input: CreateEducationInput;
+}
+
+export interface MutationUpdateEducationArgs {
+  input: UpdateEducationInput;
+}
+
+export interface MutationDeleteEducationArgs {
+  id: Scalars['ID'];
+}
+
+export interface MutationCreateUnavailabilityArgs {
+  input: CreateUnavailabilityInput;
+}
+
+export interface MutationUpdateUnavailabilityArgs {
+  input: UpdateUnavailabilityInput;
+}
+
+export interface MutationDeleteUnavailabilityArgs {
+  id: Scalars['ID'];
+}
+
 export interface MutationLoginArgs {
   input: LoginInput;
 }
@@ -1405,6 +1371,18 @@ export interface MutationForgotPasswordArgs {
 
 export interface MutationResetPasswordArgs {
   input: ResetPasswordInput;
+}
+
+export interface MutationCreateUserArgs {
+  input: CreateUserInput;
+}
+
+export interface MutationUpdateUserArgs {
+  input: UpdateUserInput;
+}
+
+export interface MutationDeleteUserArgs {
+  id: Scalars['ID'];
 }
 
 export interface MutationCreateZoneArgs {
@@ -1631,6 +1609,7 @@ export type Organization = Resource & {
   id: Scalars['ID'];
   createdAt: Scalars['DateTime'];
   name: SecuredString;
+  avatarLetters?: Maybe<Scalars['String']>;
 };
 
 export interface OrganizationFilters {
@@ -2001,6 +1980,12 @@ export interface PromoteUserToAdminOfSecurityGroupInput {
 
 export interface Query {
   __typename?: 'Query';
+  /** List security groups that user is a member of */
+  securityGroupsUserIsMemberOf: ListSecurityGroupOutput;
+  /** List security groups that user is an admin of */
+  securityGroupsUserIsAdminOf: ListSecurityGroupOutput;
+  /** List permissions that belong to a security group */
+  permissionsInSecurityGroup: ListPermissionOutput;
   /** Look up an organization by its ID */
   organization: Organization;
   /** Look up organizations */
@@ -2013,10 +1998,16 @@ export interface Query {
   education: Education;
   /** Look up educations by user id */
   educations: EducationListOutput;
+  /** Check Consistency across Education Nodes */
+  checkEducationConsistency: Scalars['Boolean'];
   /** Look up a unavailability by its ID */
   unavailability: Unavailability;
   /** Look up unavailabilities by user id */
   unavailabilities: UnavailabilityListOutput;
+  /** Check Consistency across Unavailability Nodes */
+  checkUnavailabilityConsistency: Scalars['Boolean'];
+  /** Create or retrieve an existing session */
+  session: SessionOutput;
   /** Look up a user by its ID */
   user: User;
   /** Look up users */
@@ -2025,14 +2016,6 @@ export interface Query {
   checkEmail: Scalars['Boolean'];
   /** Check Consistency across User Nodes */
   checkUserConsistency: Scalars['Boolean'];
-  /** List security groups that user is a member of */
-  securityGroupsUserIsMemberOf: ListSecurityGroupOutput;
-  /** List security groups that user is an admin of */
-  securityGroupsUserIsAdminOf: ListSecurityGroupOutput;
-  /** List permissions that belong to a security group */
-  permissionsInSecurityGroup: ListPermissionOutput;
-  /** Create or retrieve an existing session */
-  session: SessionOutput;
   /** Read one Location by id */
   location: Location;
   /** Look up locations */
@@ -2085,6 +2068,8 @@ export interface Query {
   engagement: Engagement;
   /** Look up engagements */
   engagements: EngagementListOutput;
+  /** Check Consistency in Engagement Nodes */
+  checkEngagementConsistency: Scalars['Boolean'];
   directory: Directory;
   file: File;
   fileNode: FileOrDirectory;
@@ -2096,6 +2081,18 @@ export interface Query {
   nextStates: StateListOutput;
   /** List required fields in state */
   listRequiredFields: RequiredFieldListOutput;
+}
+
+export interface QuerySecurityGroupsUserIsMemberOfArgs {
+  input: ListSecurityGroupInput;
+}
+
+export interface QuerySecurityGroupsUserIsAdminOfArgs {
+  input: ListSecurityGroupInput;
+}
+
+export interface QueryPermissionsInSecurityGroupArgs {
+  input: ListPermissionInput;
 }
 
 export interface QueryOrganizationArgs {
@@ -2122,6 +2119,10 @@ export interface QueryUnavailabilitiesArgs {
   input?: Maybe<UnavailabilityListInput>;
 }
 
+export interface QuerySessionArgs {
+  browser?: Maybe<Scalars['Boolean']>;
+}
+
 export interface QueryUserArgs {
   id: Scalars['ID'];
 }
@@ -2132,22 +2133,6 @@ export interface QueryUsersArgs {
 
 export interface QueryCheckEmailArgs {
   email: Scalars['String'];
-}
-
-export interface QuerySecurityGroupsUserIsMemberOfArgs {
-  input: ListSecurityGroupInput;
-}
-
-export interface QuerySecurityGroupsUserIsAdminOfArgs {
-  input: ListSecurityGroupInput;
-}
-
-export interface QueryPermissionsInSecurityGroupArgs {
-  input: ListPermissionInput;
-}
-
-export interface QuerySessionArgs {
-  browser?: Maybe<Scalars['Boolean']>;
 }
 
 export interface QueryLocationArgs {
@@ -2228,6 +2213,10 @@ export interface QueryEngagementArgs {
 
 export interface QueryEngagementsArgs {
   input?: Maybe<EngagementListInput>;
+}
+
+export interface QueryCheckEngagementConsistencyArgs {
+  input: EngagementConsistencyInput;
 }
 
 export interface QueryDirectoryArgs {
@@ -2365,78 +2354,6 @@ export type SecuredBoolean = Readable &
     canRead: Scalars['Boolean'];
     canEdit: Scalars['Boolean'];
     value?: Maybe<Scalars['Boolean']>;
-  };
-
-/**
- * An object whose `items` is a list of budget records and additional authorization information.
- * The value is only given if `canRead` is `true` otherwise it is an empty list.
- * The `can*` properties are specific to the user making the request.
- */
-export type SecuredBudgetList = Readable & {
-  __typename?: 'SecuredBudgetList';
-  /** Whether the current user can read the list of items */
-  canRead: Scalars['Boolean'];
-  /**
-   * The page of budget.
-   * Note that this could include items that where also in sibling pages;
-   * you should de-duplicate these based on ID.
-   */
-  items: Budget[];
-  /** The total number of items across all pages */
-  total: Scalars['Int'];
-  /** Whether the next page exists */
-  hasMore: Scalars['Boolean'];
-  /** Whether the current user can create an budget in this list */
-  canCreate: Scalars['Boolean'];
-};
-
-/**
- * An object with a budget record `value` and additional authorization information.
- * The value is only given if `canRead` is `true` otherwise it is `null`.
- * These `can*` authorization properties are specific to the user making the request.
- */
-export type SecuredBudgetRecord = Readable &
-  Editable & {
-    __typename?: 'SecuredBudgetRecord';
-    canRead: Scalars['Boolean'];
-    canEdit: Scalars['Boolean'];
-    value?: Maybe<BudgetRecord>;
-  };
-
-/**
- * An object whose `items` is a list of budget records and additional authorization information.
- * The value is only given if `canRead` is `true` otherwise it is an empty list.
- * The `can*` properties are specific to the user making the request.
- */
-export type SecuredBudgetRecordList = Readable & {
-  __typename?: 'SecuredBudgetRecordList';
-  /** Whether the current user can read the list of items */
-  canRead: Scalars['Boolean'];
-  /**
-   * The page of budgetrecord.
-   * Note that this could include items that where also in sibling pages;
-   * you should de-duplicate these based on ID.
-   */
-  items: BudgetRecord[];
-  /** The total number of items across all pages */
-  total: Scalars['Int'];
-  /** Whether the next page exists */
-  hasMore: Scalars['Boolean'];
-  /** Whether the current user can create an budgetrecord in this list */
-  canCreate: Scalars['Boolean'];
-};
-
-/**
- * An object with a budget status `value` and additional authorization information.
- * The value is only given if `canRead` is `true` otherwise it is `null`.
- * These `can*` authorization properties are specific to the user making the request.
- */
-export type SecuredBudgetStatus = Readable &
-  Editable & {
-    __typename?: 'SecuredBudgetStatus';
-    canRead: Scalars['Boolean'];
-    canEdit: Scalars['Boolean'];
-    value?: Maybe<BudgetStatus>;
   };
 
 /**
@@ -2603,29 +2520,6 @@ export type SecuredLanguageEngagementList = Readable & {
 };
 
 /**
- * An object whose `items` is a list of languages and additional authorization information.
- * The value is only given if `canRead` is `true` otherwise it is an empty list.
- * The `can*` properties are specific to the user making the request.
- */
-export type SecuredLanguageList = Readable & {
-  __typename?: 'SecuredLanguageList';
-  /** Whether the current user can read the list of items */
-  canRead: Scalars['Boolean'];
-  /**
-   * The page of language.
-   * Note that this could include items that where also in sibling pages;
-   * you should de-duplicate these based on ID.
-   */
-  items: Language[];
-  /** The total number of items across all pages */
-  total: Scalars['Int'];
-  /** Whether the next page exists */
-  hasMore: Scalars['Boolean'];
-  /** Whether the current user can create an language in this list */
-  canCreate: Scalars['Boolean'];
-};
-
-/**
  * An object whose `value` is a list of methodologies and has additional authorization information.
  * The value is only given if `canRead` is `true` otherwise it is empty: `[]`.
  * These `can*` authorization properties are specific to the user making the request.
@@ -2675,29 +2569,6 @@ export type SecuredPartnershipAgreementStatus = Readable &
   };
 
 /**
- * An object whose `items` is a list of partnership objects and additional authorization information.
- * The value is only given if `canRead` is `true` otherwise it is an empty list.
- * The `can*` properties are specific to the user making the request.
- */
-export type SecuredPartnershipList = Readable & {
-  __typename?: 'SecuredPartnershipList';
-  /** Whether the current user can read the list of items */
-  canRead: Scalars['Boolean'];
-  /**
-   * The page of partnership.
-   * Note that this could include items that where also in sibling pages;
-   * you should de-duplicate these based on ID.
-   */
-  items: Partnership[];
-  /** The total number of items across all pages */
-  total: Scalars['Int'];
-  /** Whether the next page exists */
-  hasMore: Scalars['Boolean'];
-  /** Whether the current user can create an partnership in this list */
-  canCreate: Scalars['Boolean'];
-};
-
-/**
  * An object whose `value` is a list of partnership types and has additional authorization information.
  * The value is only given if `canRead` is `true` otherwise it is empty: `[]`.
  * These `can*` authorization properties are specific to the user making the request.
@@ -2730,29 +2601,6 @@ export type SecuredProductList = Readable & {
   /** Whether the next page exists */
   hasMore: Scalars['Boolean'];
   /** Whether the current user can create an product in this list */
-  canCreate: Scalars['Boolean'];
-};
-
-/**
- * An object whose `items` is a list of projects and additional authorization information.
- * The value is only given if `canRead` is `true` otherwise it is an empty list.
- * The `can*` properties are specific to the user making the request.
- */
-export type SecuredProjectList = Readable & {
-  __typename?: 'SecuredProjectList';
-  /** Whether the current user can read the list of items */
-  canRead: Scalars['Boolean'];
-  /**
-   * The page of project.
-   * Note that this could include items that where also in sibling pages;
-   * you should de-duplicate these based on ID.
-   */
-  items: Project[];
-  /** The total number of items across all pages */
-  total: Scalars['Int'];
-  /** Whether the next page exists */
-  hasMore: Scalars['Boolean'];
-  /** Whether the current user can create an project in this list */
   canCreate: Scalars['Boolean'];
 };
 
@@ -2928,6 +2776,7 @@ export type TranslationProject = Project &
     mouEnd: SecuredDate;
     estimatedSubmission: SecuredDate;
     modifiedAt: Scalars['DateTime'];
+    avatarLetters?: Maybe<Scalars['String']>;
     engagements: SecuredLanguageEngagementList;
     /** The project members */
     team: SecuredProjectMemberList;
