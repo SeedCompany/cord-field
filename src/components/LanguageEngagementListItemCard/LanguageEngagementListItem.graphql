@@ -1,0 +1,39 @@
+fragment LanguageEngagementListItem on LanguageEngagement {
+  id
+  status
+  language {
+    value {
+      name {
+        value
+      }
+      displayName {
+        value
+      }
+      ethnologuePopulation {
+        value
+      }
+      organizationPopulation {
+        value
+      }
+      rodNumber {
+        value
+      }
+      avatarLetters
+    }
+  }
+  products {
+    total
+    items {
+      type
+    }
+  }
+  endDate {
+    value
+  }
+  initialEndDate {
+    value
+  }
+  completeDate {
+    value
+  }
+}

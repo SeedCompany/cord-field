@@ -3281,6 +3281,41 @@ export type DisplayPlaceFragment =
   | DisplayPlace_Region_Fragment
   | DisplayPlace_Zone_Fragment;
 
+export type LanguageEngagementListItemFragment = {
+  __typename?: 'LanguageEngagement';
+} & Pick<LanguageEngagement, 'id' | 'status'> & {
+    language: { __typename?: 'SecuredLanguage' } & {
+      value?: Maybe<
+        { __typename?: 'Language' } & Pick<Language, 'avatarLetters'> & {
+            name: { __typename?: 'SecuredString' } & Pick<
+              SecuredString,
+              'value'
+            >;
+            displayName: { __typename?: 'SecuredString' } & Pick<
+              SecuredString,
+              'value'
+            >;
+            ethnologuePopulation?: Maybe<
+              { __typename?: 'SecuredInt' } & Pick<SecuredInt, 'value'>
+            >;
+            organizationPopulation?: Maybe<
+              { __typename?: 'SecuredInt' } & Pick<SecuredInt, 'value'>
+            >;
+            rodNumber?: Maybe<
+              { __typename?: 'SecuredInt' } & Pick<SecuredInt, 'value'>
+            >;
+          }
+      >;
+    };
+    products: { __typename?: 'SecuredProductList' } & Pick<
+      SecuredProductList,
+      'total'
+    > & { items: Array<{ __typename?: 'Product' } & Pick<Product, 'type'>> };
+    endDate: { __typename?: 'SecuredDate' } & Pick<SecuredDate, 'value'>;
+    initialEndDate: { __typename?: 'SecuredDate' } & Pick<SecuredDate, 'value'>;
+    completeDate: { __typename?: 'SecuredDate' } & Pick<SecuredDate, 'value'>;
+  };
+
 type ProjectListItem_InternshipProject_Fragment = {
   __typename?: 'InternshipProject';
 } & Pick<
@@ -3540,6 +3575,47 @@ export const DisplayLocationFragmentDoc = gql`
   ${DisplayCountryFragmentDoc}
   ${DisplayRegionFragmentDoc}
   ${DisplayZoneFragmentDoc}
+`;
+export const LanguageEngagementListItemFragmentDoc = gql`
+  fragment LanguageEngagementListItem on LanguageEngagement {
+    id
+    status
+    language {
+      value {
+        name {
+          value
+        }
+        displayName {
+          value
+        }
+        ethnologuePopulation {
+          value
+        }
+        organizationPopulation {
+          value
+        }
+        rodNumber {
+          value
+        }
+        avatarLetters
+      }
+    }
+    products {
+      total
+      items {
+        type
+      }
+    }
+    endDate {
+      value
+    }
+    initialEndDate {
+      value
+    }
+    completeDate {
+      value
+    }
+  }
 `;
 export const ProjectListItemFragmentDoc = gql`
   fragment ProjectListItem on Project {
