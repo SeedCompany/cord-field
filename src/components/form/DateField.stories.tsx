@@ -1,5 +1,3 @@
-import LuxonUtils from '@date-io/luxon';
-import { LocalizationProvider } from '@material-ui/pickers';
 import { action } from '@storybook/addon-actions';
 import { boolean, text } from '@storybook/addon-knobs';
 import React from 'react';
@@ -10,23 +8,21 @@ import { DateField as DF } from './DateField';
 export default { title: 'Components/Forms/Fields' };
 
 export const Date = () => (
-  <LocalizationProvider dateAdapter={LuxonUtils}>
-    <Form onSubmit={action('onSubmit')}>
-      {({ handleSubmit }) => (
-        <form onSubmit={handleSubmit}>
-          <DF
-            name="startDate"
-            label={text('Label', 'Start Date')}
-            placeholder={text('placeholder', 'Enter Start Date')}
-            disabled={boolean('Disabled', false)}
-            fullWidth={boolean('Full Width', true)}
-            helperText={text('HelperText', 'DatePicker')}
-            initialValue={CalendarDate.local().toString()}
-            onYearChange={action('changeYear')}
-            onClick={action('click')}
-          />
-        </form>
-      )}
-    </Form>
-  </LocalizationProvider>
+  <Form onSubmit={action('onSubmit')}>
+    {({ handleSubmit }) => (
+      <form onSubmit={handleSubmit}>
+        <DF
+          name="startDate"
+          label={text('Label', 'Start Date')}
+          placeholder={text('placeholder', 'Enter Start Date')}
+          disabled={boolean('Disabled', false)}
+          fullWidth={boolean('Full Width', true)}
+          helperText={text('HelperText', 'DatePicker')}
+          initialValue={CalendarDate.local().toString()}
+          onYearChange={action('changeYear')}
+          onClick={action('click')}
+        />
+      </form>
+    )}
+  </Form>
 );
