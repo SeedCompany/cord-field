@@ -1,28 +1,32 @@
+import { date, number, text } from '@storybook/addon-knobs';
 import React from 'react';
-import { LanguageEngagementListItemCard as LELIC } from './LanguageEngagementListItemCard';
+import { EngagementStatus } from '../../api';
+import { CalendarDate } from '../../util';
+import { LanguageEngagementListItemCard as Card } from './LanguageEngagementListItemCard';
 
 export default { title: 'Components' };
 
 export const LanguageEngagementListItemCard = () => (
-  <LELIC
+  <Card
     id="123123"
-    createdAt="12/20/20"
-    status="Active"
-    ceremony={{ value: { type: 'Certification' } }}
-    completeDate={{ value: '12/20/20' }}
-    disbursementCompleteDate={{ value: '12/20/20' }}
-    communicationsCompleteDate={{ value: '12/20/20' }}
-    startDate={{ value: '12/20/20' }}
-    endDate={{ value: '12/20/20' }}
-    initialEndDate={{ value: '12/20/20' }}
-    lastSuspendedAt={{ value: '12/20/20' }}
-    lastReactivatedAt={{ value: '12/20/20' }}
-    statusModifiedAt={{ value: '12/20/20' }}
-    modifiedAt="12/20/20"
-    language={{ value: { name: { value: 'asdfasd' } } }}
-    firstScripture={{ value: true }}
-    lukePartnership={{ value: true }}
-    sentPrintingDate={{ value: '12/20/20' }}
-    products={{ total: 0, items: [{ type: 'NewTestamentFull' }] }}
+    status={text('status', 'InDevelopment') as EngagementStatus}
+    endDate={{ value: CalendarDate.fromMillis(date('endDate')).toISO() }}
+    initialEndDate={{
+      value: CalendarDate.fromMillis(date('initialEndDate')).toISO(),
+    }}
+    completeDate={{
+      value: CalendarDate.fromMillis(date('completeDate')).toISO(),
+    }}
+    language={{
+      value: {
+        name: { value: text('name', 'English') },
+        rodNumber: { value: number('rodNumber', 1234) },
+        organizationPopulation: { value: number('population', 10000) },
+        ethnologuePopulation: { value: 0 },
+        avatarLetters: 'E',
+        displayName: {},
+      },
+    }}
+    products={{ total: 1, items: [{ type: 'NewTestamentFull' }] }}
   />
 );

@@ -1,23 +1,31 @@
 fragment LanguageEngagementListItem on LanguageEngagement {
   id
-  createdAt
   status
-  ceremony {
+  language {
     value {
-      type
+      name {
+        value
+      }
+      displayName {
+        value
+      }
+      ethnologuePopulation {
+        value
+      }
+      organizationPopulation {
+        value
+      }
+      rodNumber {
+        value
+      }
+      avatarLetters
     }
   }
-  completeDate {
-    value
-  }
-  disbursementCompleteDate {
-    value
-  }
-  communicationsCompleteDate {
-    value
-  }
-  startDate {
-    value
+  products {
+    total
+    items {
+      type
+    }
   }
   endDate {
     value
@@ -25,63 +33,7 @@ fragment LanguageEngagementListItem on LanguageEngagement {
   initialEndDate {
     value
   }
-  lastSuspendedAt {
+  completeDate {
     value
-  }
-  lastReactivatedAt {
-    value
-  }
-  statusModifiedAt {
-    value
-  }
-  modifiedAt
-  language {
-    value {
-      name {
-        value
-      }
-      # displayName {
-      #     value
-      # }
-      # beginFiscalYear {
-      #     value
-      # }
-      # ethnologueName {
-      #     value
-      # }
-      # ethnologuePopulation {
-      #     value
-      # }
-      # organizationPopulation {
-      #     value
-      # }
-      # rodNumber {
-      #     value
-      # }
-      # sensitivity
-      # avatarLetters
-    }
-  }
-  firstScripture {
-    value
-  }
-  lukePartnership {
-    value
-  }
-  sentPrintingDate {
-    value
-  }
-  products {
-    total
-    items {
-      ... on Product {
-        type
-        # books
-        # mediums
-        # purposes
-        # approach
-        # methodology
-      }
-    }
   }
 }

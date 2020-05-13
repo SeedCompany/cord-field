@@ -3283,57 +3283,37 @@ export type DisplayPlaceFragment =
 
 export type LanguageEngagementListItemFragment = {
   __typename?: 'LanguageEngagement';
-} & Pick<LanguageEngagement, 'id' | 'createdAt' | 'status' | 'modifiedAt'> & {
-    ceremony: { __typename?: 'SecuredCeremony' } & {
-      value?: Maybe<{ __typename?: 'Ceremony' } & Pick<Ceremony, 'type'>>;
-    };
-    completeDate: { __typename?: 'SecuredDate' } & Pick<SecuredDate, 'value'>;
-    disbursementCompleteDate: { __typename?: 'SecuredDate' } & Pick<
-      SecuredDate,
-      'value'
-    >;
-    communicationsCompleteDate: { __typename?: 'SecuredDate' } & Pick<
-      SecuredDate,
-      'value'
-    >;
-    startDate: { __typename?: 'SecuredDate' } & Pick<SecuredDate, 'value'>;
-    endDate: { __typename?: 'SecuredDate' } & Pick<SecuredDate, 'value'>;
-    initialEndDate: { __typename?: 'SecuredDate' } & Pick<SecuredDate, 'value'>;
-    lastSuspendedAt: { __typename?: 'SecuredDateTime' } & Pick<
-      SecuredDateTime,
-      'value'
-    >;
-    lastReactivatedAt: { __typename?: 'SecuredDateTime' } & Pick<
-      SecuredDateTime,
-      'value'
-    >;
-    statusModifiedAt: { __typename?: 'SecuredDateTime' } & Pick<
-      SecuredDateTime,
-      'value'
-    >;
+} & Pick<LanguageEngagement, 'id' | 'status'> & {
     language: { __typename?: 'SecuredLanguage' } & {
       value?: Maybe<
-        { __typename?: 'Language' } & {
-          name: { __typename?: 'SecuredString' } & Pick<SecuredString, 'value'>;
-        }
+        { __typename?: 'Language' } & Pick<Language, 'avatarLetters'> & {
+            name: { __typename?: 'SecuredString' } & Pick<
+              SecuredString,
+              'value'
+            >;
+            displayName: { __typename?: 'SecuredString' } & Pick<
+              SecuredString,
+              'value'
+            >;
+            ethnologuePopulation?: Maybe<
+              { __typename?: 'SecuredInt' } & Pick<SecuredInt, 'value'>
+            >;
+            organizationPopulation?: Maybe<
+              { __typename?: 'SecuredInt' } & Pick<SecuredInt, 'value'>
+            >;
+            rodNumber?: Maybe<
+              { __typename?: 'SecuredInt' } & Pick<SecuredInt, 'value'>
+            >;
+          }
       >;
     };
-    firstScripture: { __typename?: 'SecuredBoolean' } & Pick<
-      SecuredBoolean,
-      'value'
-    >;
-    lukePartnership: { __typename?: 'SecuredBoolean' } & Pick<
-      SecuredBoolean,
-      'value'
-    >;
-    sentPrintingDate: { __typename?: 'SecuredDate' } & Pick<
-      SecuredDate,
-      'value'
-    >;
     products: { __typename?: 'SecuredProductList' } & Pick<
       SecuredProductList,
       'total'
     > & { items: Array<{ __typename?: 'Product' } & Pick<Product, 'type'>> };
+    endDate: { __typename?: 'SecuredDate' } & Pick<SecuredDate, 'value'>;
+    initialEndDate: { __typename?: 'SecuredDate' } & Pick<SecuredDate, 'value'>;
+    completeDate: { __typename?: 'SecuredDate' } & Pick<SecuredDate, 'value'>;
   };
 
 type ProjectListItem_InternshipProject_Fragment = {
@@ -3599,24 +3579,32 @@ export const DisplayLocationFragmentDoc = gql`
 export const LanguageEngagementListItemFragmentDoc = gql`
   fragment LanguageEngagementListItem on LanguageEngagement {
     id
-    createdAt
     status
-    ceremony {
+    language {
       value {
-        type
+        name {
+          value
+        }
+        displayName {
+          value
+        }
+        ethnologuePopulation {
+          value
+        }
+        organizationPopulation {
+          value
+        }
+        rodNumber {
+          value
+        }
+        avatarLetters
       }
     }
-    completeDate {
-      value
-    }
-    disbursementCompleteDate {
-      value
-    }
-    communicationsCompleteDate {
-      value
-    }
-    startDate {
-      value
+    products {
+      total
+      items {
+        type
+      }
     }
     endDate {
       value
@@ -3624,39 +3612,8 @@ export const LanguageEngagementListItemFragmentDoc = gql`
     initialEndDate {
       value
     }
-    lastSuspendedAt {
+    completeDate {
       value
-    }
-    lastReactivatedAt {
-      value
-    }
-    statusModifiedAt {
-      value
-    }
-    modifiedAt
-    language {
-      value {
-        name {
-          value
-        }
-      }
-    }
-    firstScripture {
-      value
-    }
-    lukePartnership {
-      value
-    }
-    sentPrintingDate {
-      value
-    }
-    products {
-      total
-      items {
-        ... on Product {
-          type
-        }
-      }
     }
   }
 `;
