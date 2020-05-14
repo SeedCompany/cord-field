@@ -1904,6 +1904,18 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@graphql-codegen/fragment-matcher@npm:^1.13.5":
+  version: 1.13.5
+  resolution: "@graphql-codegen/fragment-matcher@npm:1.13.5"
+  dependencies:
+    "@graphql-codegen/plugin-helpers": 1.13.5
+    tslib: ~1.11.1
+  peerDependencies:
+    graphql: ^0.8.0 || ^0.9.0 || ^0.10.0 || ^0.11.0 || ^0.12.0 || ^0.13.0 || ^14.0.0 || ^15.0.0
+  checksum: 3/00ddcf5beae7ab1cd731e40b3f816fdc252b7827829e2e8644329a0a1296435fe556ed30d64a7dac5870732a232a4ecac0325d29d93a05f5741ad524bf2c7b34
+  languageName: node
+  linkType: hard
+
 "@graphql-codegen/introspection@npm:^1.13.2":
   version: 1.13.2
   resolution: "@graphql-codegen/introspection@npm:1.13.2"
@@ -1933,6 +1945,26 @@ __metadata:
   peerDependencies:
     graphql: ^0.8.0 || ^0.9.0 || ^0.10.0 || ^0.11.0 || ^0.12.0 || ^0.13.0 || ^14.0.0 || ^15.0.0
   checksum: 3/6e3847eb95a716f33e788c73d1f28f9b748ec4d7054bf5a75f5118979661c50ce2e5fd272d7713f53db50acdc428a18b97c156597eff3aba25fb37f0a6801a9d
+  languageName: node
+  linkType: hard
+
+"@graphql-codegen/plugin-helpers@npm:1.13.5":
+  version: 1.13.5
+  resolution: "@graphql-codegen/plugin-helpers@npm:1.13.5"
+  dependencies:
+    "@graphql-toolkit/common": ~0.10.4
+    camel-case: 4.1.1
+    common-tags: 1.8.0
+    constant-case: 3.0.3
+    import-from: 3.0.0
+    lower-case: 2.0.1
+    param-case: 3.0.3
+    pascal-case: 3.1.1
+    tslib: ~1.11.1
+    upper-case: 2.0.1
+  peerDependencies:
+    graphql: ^0.8.0 || ^0.9.0 || ^0.10.0 || ^0.11.0 || ^0.12.0 || ^0.13.0 || ^14.0.0 || ^15.0.0
+  checksum: 3/3e77cb6be07afcc2fe10c306f5c296afabd850db569bd0335c883aec22c813a5ce4a28a3dd8a5fb155a2adb3d1b33daa566de7fec7001e3ce9e8d77cdb0fe30f
   languageName: node
   linkType: hard
 
@@ -2037,6 +2069,20 @@ __metadata:
   peerDependencies:
     graphql: ^0.8.0 || ^0.9.0 || ^0.10.0 || ^0.11.0 || ^0.12.0 || ^0.13.0 || ^14.0.0 || ^15.0.0
   checksum: 3/9cd5a36162d0151e984e4b37d8d62881f77ec8a7935b8414c2dd240b4fc437faa4d3c54fca7326c58edb51829470198eceda7cc7b8a81c265a77bd161f97388e
+  languageName: node
+  linkType: hard
+
+"@graphql-toolkit/common@npm:~0.10.4":
+  version: 0.10.6
+  resolution: "@graphql-toolkit/common@npm:0.10.6"
+  dependencies:
+    aggregate-error: 3.0.1
+    camel-case: 4.1.1
+    graphql-tools: 5.0.0
+    lodash: 4.17.15
+  peerDependencies:
+    graphql: ^0.8.0 || ^0.9.0 || ^0.10.0 || ^0.11.0 || ^0.12.0 || ^0.13.0 || ^14.0.0 || ^15.0.0
+  checksum: 3/8c828d49d200fd2462f36bc7cb346d823b60ac8d6875971bda6a102d82c53e8a95d63dfe3bc5696f81db8302a22861150ca09491271c3836d07dab213055b658
   languageName: node
   linkType: hard
 
@@ -4712,7 +4758,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"apollo-link-http-common@npm:^0.2.15, apollo-link-http-common@npm:^0.2.16":
+"apollo-link-http-common@npm:^0.2.14, apollo-link-http-common@npm:^0.2.15, apollo-link-http-common@npm:^0.2.16":
   version: 0.2.16
   resolution: "apollo-link-http-common@npm:0.2.16"
   dependencies:
@@ -4738,7 +4784,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"apollo-link@npm:^1.2.13, apollo-link@npm:^1.2.14, apollo-link@npm:^1.2.3":
+"apollo-link@npm:^1.2.12, apollo-link@npm:^1.2.13, apollo-link@npm:^1.2.14, apollo-link@npm:^1.2.3":
   version: 1.2.14
   resolution: "apollo-link@npm:1.2.14"
   dependencies:
@@ -4777,6 +4823,18 @@ __metadata:
   peerDependencies:
     graphql: ^0.12.0 || ^0.13.0 || ^14.0.0 || ^15.0.0
   checksum: 3/56c0919d39bb8b67d66149ea793b151484f1f8c9e713cce631e4b6045a055f7f5b0fae16a1943a1d890f6838dceb9721f22144a348d2c1be95a0342c43269b85
+  languageName: node
+  linkType: hard
+
+"apollo-upload-client@npm:^13.0.0":
+  version: 13.0.0
+  resolution: "apollo-upload-client@npm:13.0.0"
+  dependencies:
+    "@babel/runtime": ^7.9.2
+    apollo-link: ^1.2.12
+    apollo-link-http-common: ^0.2.14
+    extract-files: ^8.0.0
+  checksum: 3/0db6a9aebe758876687ac11f919f63868ba30ca3d512e67420c00cdaaa63d240b3388a3e09f7e2fc2924ccf6fbc3feac9c63aa0f253db9371bd8efc540a6aabe
   languageName: node
   linkType: hard
 
@@ -6984,6 +7042,7 @@ __metadata:
     "@date-io/luxon": ^2.6.0
     "@graphql-codegen/add": ^1.13.2
     "@graphql-codegen/cli": ^1.13.2
+    "@graphql-codegen/fragment-matcher": ^1.13.5
     "@graphql-codegen/introspection": ^1.13.2
     "@graphql-codegen/typescript": ^1.13.2
     "@graphql-codegen/typescript-operations": ^1.13.2
@@ -9157,6 +9216,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"extract-files@npm:^8.0.0":
+  version: 8.1.0
+  resolution: "extract-files@npm:8.1.0"
+  checksum: 3/8d13a42a9a988cd286fe8fd4fee5516d3597cf5616c6a52b467738e5ec84e9ee93d9eba9c4f0bf373519a174b5d9229613814dcab0790a9b9fee9ea140232359
+  languageName: node
+  linkType: hard
+
 "extsprintf@npm:1.3.0, extsprintf@npm:^1.2.0":
   version: 1.3.0
   resolution: "extsprintf@npm:1.3.0"
@@ -10200,6 +10266,24 @@ fsevents@^1.2.7:
   peerDependencies:
     graphql: ^0.12.0 || ^0.13.0 || ^14.0.0 || ^15.0.0-rc
   checksum: 3/f48222ee0677ed67d2b418ed3dad5fe9d1a0f8d3fd122f9d986f6395b278d97c88dcef0e4f88cd2b9c1adb5904989d8524b73d3550b4c7319fa1dbcc9625393b
+  languageName: node
+  linkType: hard
+
+"graphql-tools@npm:5.0.0":
+  version: 5.0.0
+  resolution: "graphql-tools@npm:5.0.0"
+  dependencies:
+    apollo-link: ^1.2.14
+    apollo-upload-client: ^13.0.0
+    deprecated-decorator: ^0.1.6
+    form-data: ^3.0.0
+    iterall: ^1.3.0
+    node-fetch: ^2.6.0
+    tslib: ^1.11.1
+    uuid: ^7.0.3
+  peerDependencies:
+    graphql: ^0.12.0 || ^0.13.0 || ^14.0.0 || ^15.0.0
+  checksum: 3/6c51826578b07bffef4ef7a5404b60ab172b46c15128f8d6a0c9797413bac607ab7ad9cc0184c17014313e7073823dbfd30138e8b40fc226a574d3a9dd597cf1
   languageName: node
   linkType: hard
 
@@ -19875,7 +19959,7 @@ typescript@^3.8.3:
   languageName: node
   linkType: hard
 
-"uuid@npm:^7.0.2":
+"uuid@npm:^7.0.2, uuid@npm:^7.0.3":
   version: 7.0.3
   resolution: "uuid@npm:7.0.3"
   bin:
