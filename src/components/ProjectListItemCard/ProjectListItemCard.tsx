@@ -6,6 +6,7 @@ import {
   Typography,
   TypographyProps,
 } from '@material-ui/core';
+import { Skeleton } from '@material-ui/lab';
 import clsx from 'clsx';
 import { random } from 'lodash';
 import { FC, useState } from 'react';
@@ -56,27 +57,39 @@ const useStyles = makeStyles(({ breakpoints, spacing }) => {
   };
 });
 
-export type ProjectListItemCardProps = ProjectListItemFragment & {
+export interface ProjectListItemCardProps {
+  project?: ProjectListItemFragment;
   className?: string;
-};
+}
 
-export const ProjectListItemCard: FC<ProjectListItemCardProps> = (props) => {
+export const ProjectListItemCard: FC<ProjectListItemCardProps> = ({
+  project,
+  className,
+}) => {
   const classes = useStyles();
   const genSrc = () => `https://picsum.photos/id/${random(1, 2000)}/300/200`;
   const [pic, setPic] = useState(genSrc);
   const nextPic = () => setPic(genSrc());
+  const loading = !project;
 
   return (
-    <Card className={clsx(classes.root, props.className)}>
-      <CardActionAreaLink to={`/projects/${props.id}`} className={classes.card}>
+    <Card className={clsx(classes.root, className)}>
+      <CardActionAreaLink
+        to={`/projects/${project?.id}`}
+        className={classes.card}
+      >
         <div className={classes.media}>
-          <Picture
-            source={pic}
-            fit="cover"
-            width={300}
-            height={200}
-            onError={nextPic}
-          />
+          {loading ? (
+            <Skeleton variant="rect" height={200} />
+          ) : (
+            <Picture
+              source={pic}
+              fit="cover"
+              width={300}
+              height={200}
+              onError={nextPic}
+            />
+          )}
         </div>
         <CardContent className={classes.cardContent}>
           <Grid
@@ -86,47 +99,81 @@ export const ProjectListItemCard: FC<ProjectListItemCardProps> = (props) => {
             spacing={1}
           >
             <Grid item>
-              <Typography variant="h4">{props.name?.value}</Typography>
+              {loading ? (
+                <Skeleton variant="text" />
+              ) : (
+                <Typography variant="h4">{project?.name?.value}</Typography>
+              )}
             </Grid>
             <Grid item>
-              <Typography variant="body2" color="textSecondary">
-                {props.deptId.value ?? props.id}
-              </Typography>
+              {loading ? (
+                <Skeleton variant="text" />
+              ) : (
+                <Typography variant="body2" color="textSecondary">
+                  {project?.deptId.value ?? project?.id}
+                </Typography>
+              )}
             </Grid>
             <Grid item>
-              <Typography variant="body2" color="primary">
-                {displayLocation(props.location.value)}
-              </Typography>
+              {loading ? (
+                <Skeleton variant="text" />
+              ) : (
+                <Typography variant="body2" color="primary">
+                  {displayLocation(project?.location.value)}
+                </Typography>
+              )}
             </Grid>
             <Grid item>
-              <Sensitivity
-                value={props.sensitivity}
-                className={classes.sensitivity}
-              />
+              {loading ? (
+                <Skeleton variant="text" />
+              ) : (
+                <Sensitivity
+                  value={project!.sensitivity}
+                  className={classes.sensitivity}
+                />
+              )}
             </Grid>
             <Grid item>
-              <KeyValProp label="Status" value={displayStatus(props.status)} />
+              {loading ? (
+                <Skeleton variant="text" />
+              ) : (
+                <KeyValProp
+                  label="Status"
+                  value={displayStatus(project!.status)}
+                />
+              )}
             </Grid>
           </Grid>
           <div className={classes.rightContent}>
             <KeyValProp aria-hidden="true" />
 
             <div>
-              <Typography variant="h1" align="right">
-                {0}
-              </Typography>
-              <Typography variant="body2" color="primary" align="right">
-                {props.type === 'Internship' ? 'Internship' : 'Language'}
-                <br />
-                Engagements
-              </Typography>
+              {loading ? (
+                <Skeleton variant="text" />
+              ) : (
+                <Typography variant="h1" align="right">
+                  {0}
+                </Typography>
+              )}
+              {loading ? (
+                <Skeleton variant="text" />
+              ) : (
+                <Typography variant="body2" color="primary" align="right">
+                  {project?.type === 'Internship' ? 'Internship' : 'Language'}
+                  <br />
+                  Engagements
+                </Typography>
+              )}
             </div>
-
-            <KeyValProp
-              label="ESAD"
-              value={props.estimatedSubmission?.value}
-              ValueProps={{ color: 'primary' }}
-            />
+            {loading ? (
+              <Skeleton variant="text" />
+            ) : (
+              <KeyValProp
+                label="ESAD"
+                value={project?.estimatedSubmission?.value}
+                ValueProps={{ color: 'primary' }}
+              />
+            )}
           </div>
         </CardContent>
       </CardActionAreaLink>
