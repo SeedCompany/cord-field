@@ -1,11 +1,11 @@
 import { boolean, text } from '@storybook/addon-knobs';
 import React from 'react';
-import { PersonCard } from './PersonCard';
+import { PersonCard as PersonCardComponent } from './PersonCard';
 
-export default { title: 'Components/PersonCard' };
+export default { title: 'Components' };
 
-export const PersonCardStory = () => (
-  <PersonCard
+export const PersonCard = () => (
+  <PersonCardComponent
     name={text('name', 'Julius')}
     organization={text('organization', 'Seed Company')}
     role={text('role', 'Software Developer')}
