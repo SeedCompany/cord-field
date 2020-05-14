@@ -6,10 +6,13 @@ hooks:
   afterOneFileWrite:
     - eslint --fix
 generates:
-  ./src/api/possibleTypes.ts:
+  ./src/api/fragmentMatcher.generated.ts:
     plugins:
       - add: /* eslint-disable import/no-default-export */
       - fragment-matcher
+      - add:
+          placement: append
+          content: export const possibleTypes = result.possibleTypes;
     config:
       apolloClientVersion: 3
   ./src/api/graphql.generated.tsx:

@@ -88,3 +88,5 @@ const result: PossibleTypesResultData = {
 };
 
 export default result;
+
+export const possibleTypes = result.possibleTypes;
