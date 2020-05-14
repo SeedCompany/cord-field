@@ -4,7 +4,6 @@ import {
   Grid,
   makeStyles,
   Typography,
-  TypographyProps,
 } from '@material-ui/core';
 import { Skeleton } from '@material-ui/lab';
 import clsx from 'clsx';
@@ -12,6 +11,7 @@ import { FC } from 'react';
 import * as React from 'react';
 import { displayStatus } from '../../api/displayStatus';
 import { displayLocation } from '../../api/location-helper';
+import { DisplaySimpleProperty } from '../DisplaySimpleProperty';
 import { Picture, useRandomPicture } from '../Picture';
 import { CardActionAreaLink } from '../Routing';
 import { Sensitivity } from '../Sensitivity';
@@ -130,7 +130,7 @@ export const ProjectListItemCard: FC<ProjectListItemCardProps> = ({
               {!project ? (
                 <Skeleton variant="text" width="50%" />
               ) : (
-                <KeyValProp
+                <DisplaySimpleProperty
                   label="Status"
                   value={displayStatus(project.status)}
                 />
@@ -138,7 +138,7 @@ export const ProjectListItemCard: FC<ProjectListItemCardProps> = ({
             </Grid>
           </Grid>
           <div className={classes.rightContent}>
-            <KeyValProp aria-hidden="true" />
+            <DisplaySimpleProperty aria-hidden="true" />
 
             <div>
               <Typography variant="h1">
@@ -178,7 +178,7 @@ export const ProjectListItemCard: FC<ProjectListItemCardProps> = ({
             {!project ? (
               <Skeleton variant="text" />
             ) : (
-              <KeyValProp
+              <DisplaySimpleProperty
                 label="ESAD"
                 value={project.estimatedSubmission?.value}
                 ValueProps={{ color: 'primary' }}
@@ -190,33 +190,3 @@ export const ProjectListItemCard: FC<ProjectListItemCardProps> = ({
     </Card>
   );
 };
-
-const KeyValProp = ({
-  label,
-  LabelProps,
-  value,
-  ValueProps,
-  loading,
-  ...props
-}: {
-  label?: string;
-  LabelProps?: TypographyProps;
-  value?: string | null;
-  ValueProps?: TypographyProps;
-  loading?: boolean;
-} & TypographyProps) => (
-  <Typography variant="body2" {...props}>
-    {loading ? (
-      <Skeleton variant="text" />
-    ) : label && value ? (
-      <>
-        <Typography variant="inherit" {...LabelProps}>
-          {label}:&nbsp;
-        </Typography>
-        <Typography variant="inherit" color="textSecondary" {...ValueProps}>
-          {value}
-        </Typography>
-      </>
-    ) : null}
-  </Typography>
-);
