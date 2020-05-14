@@ -6,6 +6,12 @@ hooks:
   afterOneFileWrite:
     - eslint --fix
 generates:
+  ./src/api/possibleTypes.ts:
+    plugins:
+      - add: /* eslint-disable import/no-default-export */
+      - fragment-matcher
+    config:
+      apolloClientVersion: 3
   ./src/api/graphql.generated.tsx:
     plugins:
       # import/no-duplicates is here until hooks & common can be merged into one import
