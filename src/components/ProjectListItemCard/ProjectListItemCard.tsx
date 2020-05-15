@@ -80,6 +80,7 @@ export const ProjectListItemCard: FC<ProjectListItemCardProps> = ({
   return (
     <Card className={clsx(classes.root, className)}>
       <CardActionAreaLink
+        disabled={!project}
         to={`/projects/${project?.id}`}
         className={classes.card}
       >
