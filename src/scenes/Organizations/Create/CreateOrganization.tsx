@@ -1,8 +1,8 @@
 import { useSnackbar } from 'notistack';
 import React from 'react';
 import { Except } from 'type-fest';
-import { useCreateOrganizationMutation } from '../../../api';
 import { ButtonLink } from '../../../components/Routing';
+import { useCreateOrganizationMutation } from './CreateOrganization.generated';
 import {
   CreateOrganizationForm,
   CreateOrganizationFormProps as Props,

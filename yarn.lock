@@ -1822,6 +1822,18 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@graphql-codegen/add@npm:1.13.5":
+  version: 1.13.5
+  resolution: "@graphql-codegen/add@npm:1.13.5"
+  dependencies:
+    "@graphql-codegen/plugin-helpers": 1.13.5
+    tslib: ~1.11.1
+  peerDependencies:
+    graphql: ^0.8.0 || ^0.9.0 || ^0.10.0 || ^0.11.0 || ^0.12.0 || ^0.13.0 || ^14.0.0 || ^15.0.0
+  checksum: 3/966a93c454df2e3bd1b3327eade31368243c34be7222685853b670dcce43a1436a7756d9ce23ccefa6d48a02c287599e057511511d68861df1c84b36accd8fec
+  languageName: node
+  linkType: hard
+
 "@graphql-codegen/add@npm:^1.13.2":
   version: 1.13.2
   resolution: "@graphql-codegen/add@npm:1.13.2"
@@ -1925,6 +1937,21 @@ __metadata:
   peerDependencies:
     graphql: ^0.8.0 || ^0.9.0 || ^0.10.0 || ^0.11.0 || ^0.12.0 || ^0.13.0 || ^14.0.0 || ^15.0.0
   checksum: 3/cae61aa462a9ad0362f2e2d78b2ce6dd8c7574eb3803ffe0c2915770b9fd5f75bcaafa4015bee79d48d8394dbb8c24d0b0c5e2ea8921a3ee81995eec9163612c
+  languageName: node
+  linkType: hard
+
+"@graphql-codegen/near-operation-file-preset@npm:^1.13.5":
+  version: 1.13.5
+  resolution: "@graphql-codegen/near-operation-file-preset@npm:1.13.5"
+  dependencies:
+    "@graphql-codegen/add": 1.13.5
+    "@graphql-codegen/plugin-helpers": 1.13.5
+    "@graphql-codegen/visitor-plugin-common": 1.13.5
+    parse-filepath: 1.0.2
+    tslib: ~1.11.1
+  peerDependencies:
+    graphql: ^0.8.0 || ^0.9.0 || ^0.10.0 || ^0.11.0 || ^0.12.0 || ^0.13.0 || ^14.0.0 || ^15.0.0
+  checksum: 3/f794e10b66349c8b5e6ea23a13a25a817530b3e45e9fa6350dac3b0eca18eb515253318e70cdbef5c830fb7e4fbbc37e091183601109440a8d759bc0460269e8
   languageName: node
   linkType: hard
 
@@ -2032,6 +2059,25 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@graphql-codegen/visitor-plugin-common@npm:1.13.5":
+  version: 1.13.5
+  resolution: "@graphql-codegen/visitor-plugin-common@npm:1.13.5"
+  dependencies:
+    "@graphql-codegen/plugin-helpers": 1.13.5
+    "@graphql-toolkit/relay-operation-optimizer": ~0.10.4
+    array.prototype.flatmap: 1.2.3
+    auto-bind: ~4.0.0
+    dependency-graph: 0.9.0
+    graphql-tag: 2.10.3
+    parse-filepath: 1.0.2
+    pascal-case: 3.1.1
+    tslib: ~1.11.1
+  peerDependencies:
+    graphql: ^0.8.0 || ^0.9.0 || ^0.10.0 || ^0.11.0 || ^0.12.0 || ^0.13.0 || ^14.0.0 || ^15.0.0
+  checksum: 3/2286fcc27901ba6282ccf492b05e8f46fd523543c45937d5520a04b48e055fd4528481e90d1254bfe6c3a7159c46d69a6dfd64e7275c3a5a89facedc7ff0a517
+  languageName: node
+  linkType: hard
+
 "@graphql-toolkit/apollo-engine-loader@npm:~0.10.3":
   version: 0.10.3
   resolution: "@graphql-toolkit/apollo-engine-loader@npm:0.10.3"
@@ -2072,7 +2118,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@graphql-toolkit/common@npm:~0.10.4":
+"@graphql-toolkit/common@npm:0.10.6, @graphql-toolkit/common@npm:~0.10.4":
   version: 0.10.6
   resolution: "@graphql-toolkit/common@npm:0.10.6"
   dependencies:
@@ -2199,6 +2245,18 @@ __metadata:
   peerDependencies:
     graphql: ^0.8.0 || ^0.9.0 || ^0.10.0 || ^0.11.0 || ^0.12.0 || ^0.13.0 || ^14.0.0 || ^15.0.0
   checksum: 3/8e19138bbb764e6d40c84b90d92782e332f486089e9775a9b0d966b5fbdaf7619442c4a53a1d50d37c05e37078257def22b22f66ec0a82bd7e858b19eefe34c2
+  languageName: node
+  linkType: hard
+
+"@graphql-toolkit/relay-operation-optimizer@npm:~0.10.4":
+  version: 0.10.6
+  resolution: "@graphql-toolkit/relay-operation-optimizer@npm:0.10.6"
+  dependencies:
+    "@graphql-toolkit/common": 0.10.6
+    relay-compiler: 9.1.0
+  peerDependencies:
+    graphql: ^0.8.0 || ^0.9.0 || ^0.10.0 || ^0.11.0 || ^0.12.0 || ^0.13.0 || ^14.0.0 || ^15.0.0
+  checksum: 3/6d2f68dc1d3492d71e275e24c0682aaae25965124161139012985483d8b1aaaee0e471272759936d81b26bfd4499f4a31c47e3c99f287333478af225c0f36898
   languageName: node
   linkType: hard
 
@@ -7044,6 +7102,7 @@ __metadata:
     "@graphql-codegen/cli": ^1.13.2
     "@graphql-codegen/fragment-matcher": ^1.13.5
     "@graphql-codegen/introspection": ^1.13.2
+    "@graphql-codegen/near-operation-file-preset": ^1.13.5
     "@graphql-codegen/typescript": ^1.13.2
     "@graphql-codegen/typescript-operations": ^1.13.2
     "@graphql-codegen/typescript-react-apollo": ^1.13.2
@@ -11175,6 +11234,16 @@ fsevents@^1.2.7:
   languageName: node
   linkType: hard
 
+"is-absolute@npm:^1.0.0":
+  version: 1.0.0
+  resolution: "is-absolute@npm:1.0.0"
+  dependencies:
+    is-relative: ^1.0.0
+    is-windows: ^1.0.1
+  checksum: 3/4b8ebda658ee6d820cc9ef77c7228f5048e4824cd0092415d41d94ae9d59d8cf27cb1a322958161059be1887d7d8bc85ef10e1444ed763731b45229b74bb7ad1
+  languageName: node
+  linkType: hard
+
 "is-accessor-descriptor@npm:^0.1.6":
   version: 0.1.6
   resolution: "is-accessor-descriptor@npm:0.1.6"
@@ -11600,6 +11669,15 @@ fsevents@^1.2.7:
   languageName: node
   linkType: hard
 
+"is-relative@npm:^1.0.0":
+  version: 1.0.0
+  resolution: "is-relative@npm:1.0.0"
+  dependencies:
+    is-unc-path: ^1.0.0
+  checksum: 3/a93a7b57d8fa2090757eb2193a58fcf318cd2963787d25cd756842b75c1d78a814105245deec16303a0df3e9263dbb587d55545ad684d6035b3534016a2bc4b3
+  languageName: node
+  linkType: hard
+
 "is-resolvable@npm:^1.0.0":
   version: 1.1.0
   resolution: "is-resolvable@npm:1.1.0"
@@ -11667,6 +11745,15 @@ fsevents@^1.2.7:
   languageName: node
   linkType: hard
 
+"is-unc-path@npm:^1.0.0":
+  version: 1.0.0
+  resolution: "is-unc-path@npm:1.0.0"
+  dependencies:
+    unc-path-regex: ^0.1.2
+  checksum: 3/ee43c89aa0dcf0292e50b0994cdb02d8c14bebea54d87f447915374982a66ffdf6e24780c7306c23a454a083c5b05a87dc84c9432bb17bbeddb1a4c6e52575c0
+  languageName: node
+  linkType: hard
+
 "is-window@npm:^1.0.2":
   version: 1.0.2
   resolution: "is-window@npm:1.0.2"
@@ -11674,7 +11761,7 @@ fsevents@^1.2.7:
   languageName: node
   linkType: hard
 
-"is-windows@npm:^1.0.2":
+"is-windows@npm:^1.0.1, is-windows@npm:^1.0.2":
   version: 1.0.2
   resolution: "is-windows@npm:1.0.2"
   checksum: 3/dd1ed8339a28c68fb52f05931c832488dafc90063e53b97a69ead219a5584d7f3e6e564731c2f983962ff5403afeb05365d88ce9af34c8dae76a14911020d73a
@@ -13340,7 +13427,7 @@ fsevents@^1.2.7:
   languageName: node
   linkType: hard
 
-"map-cache@npm:^0.2.2":
+"map-cache@npm:^0.2.0, map-cache@npm:^0.2.2":
   version: 0.2.2
   resolution: "map-cache@npm:0.2.2"
   checksum: 3/3d205d20e0135a5b5f3e2b85e7bfa289cc2fc3c748fe802795e74c6fe157e5f2bed3b7c3a270b82fe36a02123880cb2e0dc525e1ae37ac7e673ce3e75a2e2c56
@@ -14852,6 +14939,17 @@ fsevents@^1.2.7:
   languageName: node
   linkType: hard
 
+"parse-filepath@npm:1.0.2":
+  version: 1.0.2
+  resolution: "parse-filepath@npm:1.0.2"
+  dependencies:
+    is-absolute: ^1.0.0
+    map-cache: ^0.2.0
+    path-root: ^0.1.1
+  checksum: 3/e9843598f4c90fb9a08563141efc99570031fd037fbcd414a0b92239b059a709a7298d1a9c6861fb6f7d651f558f36dedf795ebb333b850481b558e65f93d72e
+  languageName: node
+  linkType: hard
+
 "parse-json@npm:^2.2.0":
   version: 2.2.0
   resolution: "parse-json@npm:2.2.0"
@@ -14990,6 +15088,22 @@ fsevents@^1.2.7:
   version: 1.0.6
   resolution: "path-parse@npm:1.0.6"
   checksum: 3/2eee4b93fb3ae13600e3fca18390d9933bbbcf725a624f6b8df020d87515a74872ff6c58072190d6dc75a5584a683dc6ae5c385ad4e4f4efb6e66af040d56c67
+  languageName: node
+  linkType: hard
+
+"path-root-regex@npm:^0.1.0":
+  version: 0.1.2
+  resolution: "path-root-regex@npm:0.1.2"
+  checksum: 3/f301f42475743fd73ebc47019b0477f1006e427fd73f74a7b2dbca0e41c3cdab00d97d8fac45ba2f9f5f20741d4194e955a6326bac8d832f43fc765f474c9a7f
+  languageName: node
+  linkType: hard
+
+"path-root@npm:^0.1.1":
+  version: 0.1.1
+  resolution: "path-root@npm:0.1.1"
+  dependencies:
+    path-root-regex: ^0.1.0
+  checksum: 3/ccf11d9c9bf9b895f422099021fcff2c5d300f3b032ef5df414fb993cd6968c0c5bab5bdd89e505266f0f156f66bc242a357636d1cbcd8a2cada71e56291269f
   languageName: node
   linkType: hard
 
@@ -17380,6 +17494,34 @@ fsevents@^1.2.7:
   languageName: node
   linkType: hard
 
+"relay-compiler@npm:9.1.0":
+  version: 9.1.0
+  resolution: "relay-compiler@npm:9.1.0"
+  dependencies:
+    "@babel/core": ^7.0.0
+    "@babel/generator": ^7.5.0
+    "@babel/parser": ^7.0.0
+    "@babel/runtime": ^7.0.0
+    "@babel/traverse": ^7.0.0
+    "@babel/types": ^7.0.0
+    babel-preset-fbjs: ^3.3.0
+    chalk: ^2.4.1
+    fast-glob: ^2.2.2
+    fb-watchman: ^2.0.0
+    fbjs: ^1.0.0
+    immutable: ~3.7.6
+    nullthrows: ^1.1.1
+    relay-runtime: 9.1.0
+    signedsource: ^1.0.0
+    yargs: ^14.2.0
+  peerDependencies:
+    graphql: ^14.2.0
+  bin:
+    relay-compiler: bin/relay-compiler
+  checksum: 3/131b2ceec7979bda8520369b0e181a4a3f55c667c4f78358193f8d73a173f718e6fdfee6f46df271f7442eb578a96a2f720d388829340bc8459cc2775396b54a
+  languageName: node
+  linkType: hard
+
 "relay-runtime@npm:9.0.0":
   version: 9.0.0
   resolution: "relay-runtime@npm:9.0.0"
@@ -17387,6 +17529,16 @@ fsevents@^1.2.7:
     "@babel/runtime": ^7.0.0
     fbjs: ^1.0.0
   checksum: 3/acd2d4b91df8ffbe9243c5e0bbaa57bf3dfa5eb0286b8f823ae5732ca15384a98df9c9efb0b0dd7477175c7da64ce4fda1ff4e8e26c9a7e11c982846a95a8994
+  languageName: node
+  linkType: hard
+
+"relay-runtime@npm:9.1.0":
+  version: 9.1.0
+  resolution: "relay-runtime@npm:9.1.0"
+  dependencies:
+    "@babel/runtime": ^7.0.0
+    fbjs: ^1.0.0
+  checksum: 3/d69139683a9bb2cbd613f4a4f5f9b98e7cd28e1723d607db5e56cdb34521b151d5016ea0be956b28fd561603651c5a3f8ea0e77795e7523bfa48736a30a65116
   languageName: node
   linkType: hard
 
@@ -19677,6 +19829,13 @@ typescript@^3.8.3:
   version: 0.7.21
   resolution: "ua-parser-js@npm:0.7.21"
   checksum: 3/5bd2d949e2f0befebf1e7fabde12978ea619e604e1d43a4f165c51543caf9cea5f40512734f224435e248101beffcba1153d38cfb9dc88152f13bf79e9a106ee
+  languageName: node
+  linkType: hard
+
+"unc-path-regex@npm:^0.1.2":
+  version: 0.1.2
+  resolution: "unc-path-regex@npm:0.1.2"
+  checksum: 3/585e29357917a8b529e05db14a3f2e9486258a5826ca9c0eb4f9173c006968ceffba201766d2ff08d38a1e014b69c519294981b29e669a81ea357c0ffd6e326b
   languageName: node
   linkType: hard
 

@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Except } from 'type-fest';
-import { handleFormError, useForgotPasswordMutation } from '../../../api';
+import { handleFormError } from '../../../api';
+import { useForgotPasswordMutation } from './ForgotPassword.generated';
 import {
   ForgotPasswordForm,
   ForgotPasswordFormProps as Props,

@@ -2,7 +2,6 @@ import { makeStyles } from '@material-ui/core';
 import React from 'react';
 import { Route, Routes } from 'react-router-dom';
 import { Authentication } from '../Authentication';
-import { DevTest } from '../DevTest';
 import { Home } from '../Home';
 import { Organizations } from '../Organizations';
 import { Projects } from '../Projects';
@@ -29,7 +28,6 @@ export const Root = () => {
   const routes = (
     <Routes>
       <Route path="/" element={<Home />} />
-      <Route path="/devtest" element={<DevTest />} />
       <Route path="/organizations/*" element={<Organizations />} />
       <Route path="/projects/*" element={<Projects />} />
     </Routes>

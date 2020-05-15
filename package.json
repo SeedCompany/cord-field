@@ -51,6 +51,7 @@
     "@graphql-codegen/cli": "^1.13.2",
     "@graphql-codegen/fragment-matcher": "^1.13.5",
     "@graphql-codegen/introspection": "^1.13.2",
+    "@graphql-codegen/near-operation-file-preset": "^1.13.5",
     "@graphql-codegen/typescript": "^1.13.2",
     "@graphql-codegen/typescript-operations": "^1.13.2",
     "@graphql-codegen/typescript-react-apollo": "^1.13.2",

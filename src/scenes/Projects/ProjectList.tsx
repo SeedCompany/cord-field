@@ -1,8 +1,8 @@
 import { Button, Grid, makeStyles, Typography } from '@material-ui/core';
 import { times } from 'lodash';
 import React, { FC } from 'react';
-import { useProjectsQuery } from '../../api';
 import { ProjectListItemCard } from '../../components/ProjectListItemCard';
+import { useProjectsQuery } from './projects.generated';
 
 const useStyles = makeStyles(({ spacing }) => ({
   root: {
