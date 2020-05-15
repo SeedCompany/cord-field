@@ -1,0 +1,9 @@
+query Languages($input: LanguageListInput!) {
+  languages(input: $input) {
+    items {
+      ...LanguageListItem
+    }
+    hasMore
+    total
+  }
+}
