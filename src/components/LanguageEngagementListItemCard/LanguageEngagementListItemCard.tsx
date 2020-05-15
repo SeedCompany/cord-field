@@ -7,13 +7,12 @@ import {
   TypographyProps,
 } from '@material-ui/core';
 import clsx from 'clsx';
-import { random } from 'lodash';
-import { FC, useState } from 'react';
+import { FC } from 'react';
 import * as React from 'react';
 import { displayEngagementStatus } from '../../api/displayStatus';
 import { useDateFormatter, useNumberFormatter } from '../Formatters';
 import { PencilCircledIcon, ScriptIcon } from '../Icons';
-import { Picture } from '../Picture';
+import { Picture, useRandomPicture } from '../Picture';
 import { CardActionAreaLink } from '../Routing';
 import { LanguageEngagementListItemFragment } from './LanguageEngagementListItem.generated';
 
@@ -75,9 +74,7 @@ export const LanguageEngagementListItemCard: FC<LanguageEngagementListItemCardPr
   const numberFormatter = useNumberFormatter();
   const dateFormatter = useDateFormatter();
   const classes = useStyles();
-  const genSrc = () => `https://picsum.photos/id/${random(1, 2000)}/300/200`;
-  const [pic, setPic] = useState(genSrc);
-  const nextPic = () => setPic(genSrc());
+  const pic = useRandomPicture({ seed: props.id, width: 300, height: 200 });
 
   const language = props.language.value;
   const name = language?.name.value ?? language?.displayName?.value;
@@ -94,7 +91,7 @@ export const LanguageEngagementListItemCard: FC<LanguageEngagementListItemCardPr
         className={classes.card}
       >
         <div className={classes.media}>
-          <Picture source={pic} fit="cover" onError={nextPic} />
+          <Picture fit="cover" {...pic} />
         </div>
         <CardContent className={classes.cardContent}>
           <Grid

@@ -8,12 +8,11 @@ import {
 } from '@material-ui/core';
 import { Skeleton } from '@material-ui/lab';
 import clsx from 'clsx';
-import { random } from 'lodash';
-import { FC, useState } from 'react';
+import { FC } from 'react';
 import * as React from 'react';
 import { displayStatus } from '../../api/displayStatus';
 import { displayLocation } from '../../api/location-helper';
-import { Picture } from '../Picture';
+import { Picture, useRandomPicture } from '../Picture';
 import { CardActionAreaLink } from '../Routing';
 import { Sensitivity } from '../Sensitivity';
 import { ProjectListItemFragment } from './ProjectListItem.generated';
@@ -73,9 +72,7 @@ export const ProjectListItemCard: FC<ProjectListItemCardProps> = ({
   className,
 }) => {
   const classes = useStyles();
-  const genSrc = () => `https://picsum.photos/id/${random(1, 2000)}/300/200`;
-  const [pic, setPic] = useState(genSrc);
-  const nextPic = () => setPic(genSrc());
+  const pic = useRandomPicture({ seed: project?.id, width: 300, height: 200 });
 
   return (
     <Card className={clsx(classes.root, className)}>
@@ -88,13 +85,7 @@ export const ProjectListItemCard: FC<ProjectListItemCardProps> = ({
           {!project ? (
             <Skeleton variant="rect" height={200} />
           ) : (
-            <Picture
-              source={pic}
-              fit="cover"
-              width={300}
-              height={200}
-              onError={nextPic}
-            />
+            <Picture fit="cover" {...pic} />
           )}
         </div>
         <CardContent className={classes.cardContent}>
