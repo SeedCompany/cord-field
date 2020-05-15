@@ -6,6 +6,7 @@ import {
   Typography,
   TypographyProps,
 } from '@material-ui/core';
+import { Skeleton } from '@material-ui/lab';
 import clsx from 'clsx';
 import { random } from 'lodash';
 import { FC, useState } from 'react';
@@ -40,11 +41,14 @@ const useStyles = makeStyles(({ breakpoints, spacing }) => {
       justifyContent: 'space-between',
     },
     leftContent: {
+      flex: 2,
       display: 'flex',
       flexDirection: 'column',
       justifyContent: 'space-between',
     },
     rightContent: {
+      flex: 1,
+      textAlign: 'right',
       marginLeft: spacing(2),
       display: 'flex',
       flexDirection: 'column',
@@ -53,30 +57,45 @@ const useStyles = makeStyles(({ breakpoints, spacing }) => {
     sensitivity: {
       marginBottom: spacing(1),
     },
+    skeletonRight: {
+      marginLeft: 'auto',
+    },
   };
 });
 
-export type ProjectListItemCardProps = ProjectListItemFragment & {
+export interface ProjectListItemCardProps {
+  project?: ProjectListItemFragment;
   className?: string;
-};
+}
 
-export const ProjectListItemCard: FC<ProjectListItemCardProps> = (props) => {
+export const ProjectListItemCard: FC<ProjectListItemCardProps> = ({
+  project,
+  className,
+}) => {
   const classes = useStyles();
   const genSrc = () => `https://picsum.photos/id/${random(1, 2000)}/300/200`;
   const [pic, setPic] = useState(genSrc);
   const nextPic = () => setPic(genSrc());
 
   return (
-    <Card className={clsx(classes.root, props.className)}>
-      <CardActionAreaLink to={`/projects/${props.id}`} className={classes.card}>
+    <Card className={clsx(classes.root, className)}>
+      <CardActionAreaLink
+        disabled={!project}
+        to={`/projects/${project?.id}`}
+        className={classes.card}
+      >
         <div className={classes.media}>
-          <Picture
-            source={pic}
-            fit="cover"
-            width={300}
-            height={200}
-            onError={nextPic}
-          />
+          {!project ? (
+            <Skeleton variant="rect" height={200} />
+          ) : (
+            <Picture
+              source={pic}
+              fit="cover"
+              width={300}
+              height={200}
+              onError={nextPic}
+            />
+          )}
         </div>
         <CardContent className={classes.cardContent}>
           <Grid
@@ -84,49 +103,96 @@ export const ProjectListItemCard: FC<ProjectListItemCardProps> = (props) => {
             direction="column"
             justify="space-between"
             spacing={1}
+            className={classes.leftContent}
           >
             <Grid item>
-              <Typography variant="h4">{props.name?.value}</Typography>
+              <Typography variant="h4">
+                {!project ? <Skeleton variant="text" /> : project.name?.value}
+              </Typography>
             </Grid>
             <Grid item>
               <Typography variant="body2" color="textSecondary">
-                {props.deptId.value ?? props.id}
+                {!project ? (
+                  <Skeleton variant="text" width="30%" />
+                ) : (
+                  project.deptId.value ?? project.id
+                )}
               </Typography>
             </Grid>
             <Grid item>
               <Typography variant="body2" color="primary">
-                {displayLocation(props.location.value)}
+                {!project ? (
+                  <Skeleton variant="text" />
+                ) : (
+                  displayLocation(project.location.value)
+                )}
               </Typography>
             </Grid>
             <Grid item>
               <Sensitivity
-                value={props.sensitivity}
+                value={project?.sensitivity}
+                loading={!project}
                 className={classes.sensitivity}
               />
             </Grid>
             <Grid item>
-              <KeyValProp label="Status" value={displayStatus(props.status)} />
+              {!project ? (
+                <Skeleton variant="text" width="50%" />
+              ) : (
+                <KeyValProp
+                  label="Status"
+                  value={displayStatus(project.status)}
+                />
+              )}
             </Grid>
           </Grid>
           <div className={classes.rightContent}>
             <KeyValProp aria-hidden="true" />
 
             <div>
-              <Typography variant="h1" align="right">
-                {0}
+              <Typography variant="h1">
+                {!project ? (
+                  <Skeleton
+                    variant="text"
+                    width="1ch"
+                    className={classes.skeletonRight}
+                  />
+                ) : (
+                  0
+                )}
               </Typography>
-              <Typography variant="body2" color="primary" align="right">
-                {props.type === 'Internship' ? 'Internship' : 'Language'}
-                <br />
-                Engagements
+              <Typography variant="body2" color="primary">
+                {!project ? (
+                  <>
+                    <Skeleton
+                      variant="text"
+                      width="9ch"
+                      className={classes.skeletonRight}
+                    />
+                    <Skeleton
+                      variant="text"
+                      width="11ch"
+                      className={classes.skeletonRight}
+                    />
+                  </>
+                ) : (
+                  <>
+                    {project.type === 'Internship' ? 'Internship' : 'Language'}
+                    <br />
+                    Engagements
+                  </>
+                )}
               </Typography>
             </div>
-
-            <KeyValProp
-              label="ESAD"
-              value={props.estimatedSubmission?.value}
-              ValueProps={{ color: 'primary' }}
-            />
+            {!project ? (
+              <Skeleton variant="text" />
+            ) : (
+              <KeyValProp
+                label="ESAD"
+                value={project.estimatedSubmission?.value}
+                ValueProps={{ color: 'primary' }}
+              />
+            )}
           </div>
         </CardContent>
       </CardActionAreaLink>
@@ -139,21 +205,27 @@ const KeyValProp = ({
   LabelProps,
   value,
   ValueProps,
+  loading,
   ...props
 }: {
   label?: string;
   LabelProps?: TypographyProps;
   value?: string | null;
   ValueProps?: TypographyProps;
+  loading?: boolean;
 } & TypographyProps) => (
   <Typography variant="body2" {...props}>
-    {label && value ? (
-      <Typography variant="inherit" {...LabelProps}>
-        {label}:&nbsp;
-      </Typography>
+    {loading ? (
+      <Skeleton variant="text" />
+    ) : label && value ? (
+      <>
+        <Typography variant="inherit" {...LabelProps}>
+          {label}:&nbsp;
+        </Typography>
+        <Typography variant="inherit" color="textSecondary" {...ValueProps}>
+          {value}
+        </Typography>
+      </>
     ) : null}
-    <Typography variant="inherit" color="textSecondary" {...ValueProps}>
-      {value}
-    </Typography>
   </Typography>
 );

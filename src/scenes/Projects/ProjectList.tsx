@@ -1,4 +1,5 @@
 import { Button, Grid, makeStyles, Typography } from '@material-ui/core';
+import { times } from 'lodash';
 import React, { FC } from 'react';
 import { useProjectsQuery } from '../../api';
 import { ProjectListItemCard } from '../../components/ProjectListItemCard';
@@ -22,10 +23,6 @@ export const ProjectList: FC = () => {
   });
   const classes = useStyles();
 
-  if (loading) {
-    return <div className={classes.root}>Loading...</div>;
-  }
-
   return (
     <div className={classes.root}>
       <Typography variant="h2" paragraph>
@@ -43,11 +40,17 @@ export const ProjectList: FC = () => {
         {data?.projects.total} Projects
       </Typography>
       <Grid container direction="column" spacing={2}>
-        {data?.projects.items.map((item) => (
-          <Grid item key={item.id}>
-            <ProjectListItemCard {...item} />
-          </Grid>
-        ))}
+        {loading
+          ? times(5).map((index) => (
+              <Grid item key={index}>
+                <ProjectListItemCard />
+              </Grid>
+            ))
+          : data?.projects.items.map((item) => (
+              <Grid item key={item.id}>
+                <ProjectListItemCard project={item} />
+              </Grid>
+            ))}
       </Grid>
     </div>
   );
