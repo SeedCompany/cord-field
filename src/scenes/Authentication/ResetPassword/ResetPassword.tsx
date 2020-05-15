@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { Except } from 'type-fest';
-import { handleFormError, useResetPasswordMutation } from '../../../api';
+import { handleFormError } from '../../../api';
+import { useResetPasswordMutation } from './ResetPassword.generated';
 import {
   ResetPasswordFormProps as Props,
   ResetPasswordForm,

@@ -6,7 +6,7 @@ import {
   SessionDocument,
   SessionQuery,
   useSessionLazyQuery,
-} from '../../api';
+} from './session.generated';
 
 export type SessionUser = LoggedInUserFragment;
 

@@ -11,12 +11,12 @@ import clsx from 'clsx';
 import { random } from 'lodash';
 import { FC, useState } from 'react';
 import * as React from 'react';
-import { ProjectListItemFragment } from '../../api';
 import { displayStatus } from '../../api/displayStatus';
 import { displayLocation } from '../../api/location-helper';
 import { Picture } from '../Picture';
 import { CardActionAreaLink } from '../Routing';
 import { Sensitivity } from '../Sensitivity';
+import { ProjectListItemFragment } from './ProjectListItem.generated';
 
 const useStyles = makeStyles(({ breakpoints, spacing }) => {
   const cardWidth = breakpoints.values.sm;

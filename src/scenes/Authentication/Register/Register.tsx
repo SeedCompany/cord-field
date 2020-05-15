@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { Except } from 'type-fest';
-import { handleFormError, useRegisterMutation } from '../../../api';
+import { handleFormError } from '../../../api';
 import { useSession } from '../../../components/Session';
+import { useRegisterMutation } from './register.generated';
 import { RegisterFormProps as Props, RegisterForm } from './RegisterForm';
 
 export const Register = (props: Except<Props, 'onSubmit'>) => {

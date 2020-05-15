@@ -10,12 +10,12 @@ import clsx from 'clsx';
 import { random } from 'lodash';
 import { FC, useState } from 'react';
 import * as React from 'react';
-import { LanguageEngagementListItemFragment } from '../../api';
 import { displayEngagementStatus } from '../../api/displayStatus';
 import { useDateFormatter, useNumberFormatter } from '../Formatters';
 import { PencilCircledIcon, ScriptIcon } from '../Icons';
 import { Picture } from '../Picture';
 import { CardActionAreaLink } from '../Routing';
+import { LanguageEngagementListItemFragment } from './LanguageEngagementListItem.generated';
 
 const useStyles = makeStyles(({ spacing }) => {
   const cardWidth = 666;

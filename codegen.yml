@@ -3,8 +3,8 @@ documents:
   - ./src/**/*.graphql
 overwrite: true
 hooks:
-  afterOneFileWrite:
-    - eslint --fix
+  afterAllFileWrite:
+    - eslint --fix --ext .generated.ts
 generates:
   ./src/api/fragmentMatcher.generated.ts:
     plugins:
@@ -15,11 +15,24 @@ generates:
           content: export const possibleTypes = result.possibleTypes;
     config:
       apolloClientVersion: 3
-  ./src/api/graphql.generated.tsx:
+  ./src/api/schema.generated.ts:
+    plugins:
+      - typescript
+    config:
+      reactApolloVersion: 3
+      scalars:
+        Date: string
+        DateTime: string
+      skipTypename: false
+      enumsAsTypes: true
+  ./src/:
+    preset: near-operation-file
+    presetConfig:
+      extension: .generated.ts
+      baseTypesPath: api/schema.generated.ts
     plugins:
       # import/no-duplicates is here until hooks & common can be merged into one import
       - add: /* eslint-disable import/no-duplicates, @typescript-eslint/no-empty-interface */
-      - typescript
       - typescript-operations
       - typescript-react-apollo
     config:

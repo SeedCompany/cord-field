@@ -4,7 +4,7 @@ import {
   DisplayLocationFragment as DisplayLocation,
   DisplayRegionFragment as DisplayRegion,
   DisplayZoneFragment as DisplayZone,
-} from '.';
+} from './fragments/location.generated';
 
 export const displayLocation = (
   location: DisplayLocation | null | undefined
