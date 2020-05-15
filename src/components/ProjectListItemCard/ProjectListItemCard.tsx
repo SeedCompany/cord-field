@@ -41,11 +41,14 @@ const useStyles = makeStyles(({ breakpoints, spacing }) => {
       justifyContent: 'space-between',
     },
     leftContent: {
+      flex: 2,
       display: 'flex',
       flexDirection: 'column',
       justifyContent: 'space-between',
     },
     rightContent: {
+      flex: 1,
+      textAlign: 'right',
       marginLeft: spacing(2),
       display: 'flex',
       flexDirection: 'column',
@@ -53,6 +56,9 @@ const useStyles = makeStyles(({ breakpoints, spacing }) => {
     },
     sensitivity: {
       marginBottom: spacing(1),
+    },
+    skeletonRight: {
+      marginLeft: 'auto',
     },
   };
 });
@@ -96,45 +102,41 @@ export const ProjectListItemCard: FC<ProjectListItemCardProps> = ({
             direction="column"
             justify="space-between"
             spacing={1}
+            className={classes.leftContent}
           >
             <Grid item>
-              {!project ? (
-                <Skeleton variant="text" />
-              ) : (
-                <Typography variant="h4">{project.name?.value}</Typography>
-              )}
+              <Typography variant="h4">
+                {!project ? <Skeleton variant="text" /> : project.name?.value}
+              </Typography>
+            </Grid>
+            <Grid item>
+              <Typography variant="body2" color="textSecondary">
+                {!project ? (
+                  <Skeleton variant="text" width="30%" />
+                ) : (
+                  project.deptId.value ?? project.id
+                )}
+              </Typography>
+            </Grid>
+            <Grid item>
+              <Typography variant="body2" color="primary">
+                {!project ? (
+                  <Skeleton variant="text" />
+                ) : (
+                  displayLocation(project.location.value)
+                )}
+              </Typography>
+            </Grid>
+            <Grid item>
+              <Sensitivity
+                value={project?.sensitivity}
+                loading={!project}
+                className={classes.sensitivity}
+              />
             </Grid>
             <Grid item>
               {!project ? (
-                <Skeleton variant="text" />
-              ) : (
-                <Typography variant="body2" color="textSecondary">
-                  {project.deptId.value ?? project.id}
-                </Typography>
-              )}
-            </Grid>
-            <Grid item>
-              {!project ? (
-                <Skeleton variant="text" />
-              ) : (
-                <Typography variant="body2" color="primary">
-                  {displayLocation(project.location.value)}
-                </Typography>
-              )}
-            </Grid>
-            <Grid item>
-              {!project ? (
-                <Skeleton variant="text" />
-              ) : (
-                <Sensitivity
-                  value={project.sensitivity}
-                  className={classes.sensitivity}
-                />
-              )}
-            </Grid>
-            <Grid item>
-              {!project ? (
-                <Skeleton variant="text" />
+                <Skeleton variant="text" width="50%" />
               ) : (
                 <KeyValProp
                   label="Status"
@@ -147,22 +149,39 @@ export const ProjectListItemCard: FC<ProjectListItemCardProps> = ({
             <KeyValProp aria-hidden="true" />
 
             <div>
-              {!project ? (
-                <Skeleton variant="text" />
-              ) : (
-                <Typography variant="h1" align="right">
-                  {0}
-                </Typography>
-              )}
-              {!project ? (
-                <Skeleton variant="text" />
-              ) : (
-                <Typography variant="body2" color="primary" align="right">
-                  {project.type === 'Internship' ? 'Internship' : 'Language'}
-                  <br />
-                  Engagements
-                </Typography>
-              )}
+              <Typography variant="h1">
+                {!project ? (
+                  <Skeleton
+                    variant="text"
+                    width="1ch"
+                    className={classes.skeletonRight}
+                  />
+                ) : (
+                  0
+                )}
+              </Typography>
+              <Typography variant="body2" color="primary">
+                {!project ? (
+                  <>
+                    <Skeleton
+                      variant="text"
+                      width="9ch"
+                      className={classes.skeletonRight}
+                    />
+                    <Skeleton
+                      variant="text"
+                      width="11ch"
+                      className={classes.skeletonRight}
+                    />
+                  </>
+                ) : (
+                  <>
+                    {project.type === 'Internship' ? 'Internship' : 'Language'}
+                    <br />
+                    Engagements
+                  </>
+                )}
+              </Typography>
             </div>
             {!project ? (
               <Skeleton variant="text" />
@@ -185,21 +204,27 @@ const KeyValProp = ({
   LabelProps,
   value,
   ValueProps,
+  loading,
   ...props
 }: {
   label?: string;
   LabelProps?: TypographyProps;
   value?: string | null;
   ValueProps?: TypographyProps;
+  loading?: boolean;
 } & TypographyProps) => (
   <Typography variant="body2" {...props}>
-    {label && value ? (
-      <Typography variant="inherit" {...LabelProps}>
-        {label}:&nbsp;
-      </Typography>
+    {loading ? (
+      <Skeleton variant="text" />
+    ) : label && value ? (
+      <>
+        <Typography variant="inherit" {...LabelProps}>
+          {label}:&nbsp;
+        </Typography>
+        <Typography variant="inherit" color="textSecondary" {...ValueProps}>
+          {value}
+        </Typography>
+      </>
     ) : null}
-    <Typography variant="inherit" color="textSecondary" {...ValueProps}>
-      {value}
-    </Typography>
   </Typography>
 );
