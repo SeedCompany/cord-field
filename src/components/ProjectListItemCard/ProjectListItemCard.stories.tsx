@@ -2,7 +2,7 @@ import { Box } from '@material-ui/core';
 import { boolean, date, select, text } from '@storybook/addon-knobs';
 import { DateTime } from 'luxon';
 import React from 'react';
-import { ProjectListItemFragment } from '../../api';
+import { ProjectListItemFragment } from './ProjectListItem.generated';
 import { ProjectListItemCard as PIC } from './ProjectListItemCard';
 
 export default { title: 'Components' };
