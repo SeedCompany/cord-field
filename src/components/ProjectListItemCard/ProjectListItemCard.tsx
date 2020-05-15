@@ -70,7 +70,6 @@ export const ProjectListItemCard: FC<ProjectListItemCardProps> = ({
   const genSrc = () => `https://picsum.photos/id/${random(1, 2000)}/300/200`;
   const [pic, setPic] = useState(genSrc);
   const nextPic = () => setPic(genSrc());
-  const loading = !project;
 
   return (
     <Card className={clsx(classes.root, className)}>
@@ -79,7 +78,7 @@ export const ProjectListItemCard: FC<ProjectListItemCardProps> = ({
         className={classes.card}
       >
         <div className={classes.media}>
-          {loading ? (
+          {!project ? (
             <Skeleton variant="rect" height={200} />
           ) : (
             <Picture
@@ -99,47 +98,47 @@ export const ProjectListItemCard: FC<ProjectListItemCardProps> = ({
             spacing={1}
           >
             <Grid item>
-              {loading ? (
+              {!project ? (
                 <Skeleton variant="text" />
               ) : (
-                <Typography variant="h4">{project?.name?.value}</Typography>
+                <Typography variant="h4">{project.name?.value}</Typography>
               )}
             </Grid>
             <Grid item>
-              {loading ? (
+              {!project ? (
                 <Skeleton variant="text" />
               ) : (
                 <Typography variant="body2" color="textSecondary">
-                  {project?.deptId.value ?? project?.id}
+                  {project.deptId.value ?? project.id}
                 </Typography>
               )}
             </Grid>
             <Grid item>
-              {loading ? (
+              {!project ? (
                 <Skeleton variant="text" />
               ) : (
                 <Typography variant="body2" color="primary">
-                  {displayLocation(project?.location.value)}
+                  {displayLocation(project.location.value)}
                 </Typography>
               )}
             </Grid>
             <Grid item>
-              {loading ? (
+              {!project ? (
                 <Skeleton variant="text" />
               ) : (
                 <Sensitivity
-                  value={project!.sensitivity}
+                  value={project.sensitivity}
                   className={classes.sensitivity}
                 />
               )}
             </Grid>
             <Grid item>
-              {loading ? (
+              {!project ? (
                 <Skeleton variant="text" />
               ) : (
                 <KeyValProp
                   label="Status"
-                  value={displayStatus(project!.status)}
+                  value={displayStatus(project.status)}
                 />
               )}
             </Grid>
@@ -148,29 +147,29 @@ export const ProjectListItemCard: FC<ProjectListItemCardProps> = ({
             <KeyValProp aria-hidden="true" />
 
             <div>
-              {loading ? (
+              {!project ? (
                 <Skeleton variant="text" />
               ) : (
                 <Typography variant="h1" align="right">
                   {0}
                 </Typography>
               )}
-              {loading ? (
+              {!project ? (
                 <Skeleton variant="text" />
               ) : (
                 <Typography variant="body2" color="primary" align="right">
-                  {project?.type === 'Internship' ? 'Internship' : 'Language'}
+                  {project.type === 'Internship' ? 'Internship' : 'Language'}
                   <br />
                   Engagements
                 </Typography>
               )}
             </div>
-            {loading ? (
+            {!project ? (
               <Skeleton variant="text" />
             ) : (
               <KeyValProp
                 label="ESAD"
-                value={project?.estimatedSubmission?.value}
+                value={project.estimatedSubmission?.value}
                 ValueProps={{ color: 'primary' }}
               />
             )}
