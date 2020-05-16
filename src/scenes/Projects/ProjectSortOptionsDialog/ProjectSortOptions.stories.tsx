@@ -1,15 +1,16 @@
 import React, { useState } from 'react';
-import { ProjectSortOptions as ProjectSortOptionsComponent } from './ProjectSortOptions';
+import { Project } from '../../../api';
+import { SortButtonDialog, SortValue } from '../../../components/Sort';
+import { ProjectSortOptions } from './ProjectSortOptions';
 
-export default { title: 'Components/ProjectSortOptions' };
+export default { title: 'Scenes/Projects/List' };
 
-export const ProjectSortOptions = () => {
-  const [value, setValue] = useState<string | null>(null);
+export const SortOptions = () => {
+  const [value, setValue] = useState<Partial<SortValue<Project>>>({});
 
   return (
-    <ProjectSortOptionsComponent
-      value={value}
-      onChange={(e) => setValue(e.target.value)}
-    />
+    <SortButtonDialog value={value} onChange={setValue}>
+      <ProjectSortOptions />
+    </SortButtonDialog>
   );
 };

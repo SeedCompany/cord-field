@@ -1,99 +1,27 @@
-import {
-  Button,
-  Dialog,
-  DialogContent,
-  FormControl,
-  makeStyles,
-  RadioGroup,
-} from '@material-ui/core';
-import { ChangeEvent, FC, useState } from 'react';
+import { ComponentType } from 'react';
 import * as React from 'react';
-import { DialogTitle } from '../../../components/Dialog';
-import { ProjectSortOptionsFormControlLabel } from './ProjectSortOptionsFormControlLabel';
-import { ProjectSortOptionsFormLabel } from './ProjectSortOptionsFormLabel';
+import { Project } from '../../../api';
+import { SortOption, SortOptionProps } from '../../../components/Sort';
 
-const useStyles = makeStyles(({ palette, spacing }) => ({
-  button: {
-    backgroundColor: palette.common.white,
-  },
-  dialog: {
-    width: '431px',
-  },
-  dialogContent: {
-    paddingBottom: spacing(2),
-  },
-  closeButton: {
-    marginLeft: 'auto',
-  },
-}));
+// Alias component to define generic once
+const Option = SortOption as ComponentType<SortOptionProps<Project>>;
 
-export interface ProjectSortOptionsProps {
-  value: string | null;
-  onChange: (e: ChangeEvent<HTMLInputElement>) => void;
-}
-
-export const ProjectSortOptions: FC<ProjectSortOptionsProps> = ({
-  value,
-  onChange,
-}) => {
-  const classes = useStyles();
-  const [open, setOpen] = useState(true);
-
-  return (
-    <>
-      <Button
-        className={classes.button}
-        variant="outlined"
-        onClick={() => setOpen(true)}
-      >
-        Sort Options
-      </Button>
-      <Dialog
-        fullWidth
-        maxWidth="xs"
-        onClose={() => setOpen(false)}
-        open={open}
-      >
-        <DialogTitle onClose={() => setOpen(false)}>Sort Options</DialogTitle>
-        <DialogContent className={classes.dialogContent}>
-          <FormControl component="fieldset">
-            <RadioGroup
-              aria-label="sort-option"
-              name="sort-option"
-              value={value}
-              onChange={onChange}
-            >
-              <ProjectSortOptionsFormLabel label="Projects" />
-              <ProjectSortOptionsFormControlLabel
-                value="alphabeticalDesc"
-                label="A-Z"
-              />
-              <ProjectSortOptionsFormControlLabel
-                value="alphabeticalAsc"
-                label="Z-A"
-              />
-              <ProjectSortOptionsFormLabel label="Sensitivity" />
-              <ProjectSortOptionsFormControlLabel
-                value="sensitivityDesc"
-                label="High to Low"
-              />
-              <ProjectSortOptionsFormControlLabel
-                value="senstivityAsc"
-                label="Low to High"
-              />
-              <ProjectSortOptionsFormLabel label="Estimated Submission Date" />
-              <ProjectSortOptionsFormControlLabel
-                value="submissionDateDesc"
-                label="Closest Date to Furthest"
-              />
-              <ProjectSortOptionsFormControlLabel
-                value="submissionDateAsc"
-                label="Furthest Date to Closes"
-              />
-            </RadioGroup>
-          </FormControl>
-        </DialogContent>
-      </Dialog>
-    </>
-  );
-};
+export const ProjectSortOptions = () => (
+  <>
+    <Option default value="name" label="Projects" asc="A-Z" desc="Z-A" />
+    <Option
+      value="sensitivity"
+      label="Sensitivity"
+      asc="Low to High"
+      desc="High to Low"
+      defaultOrder="DESC"
+    />
+    <Option
+      value="estimatedSubmission"
+      label="Estimated Submission Date"
+      asc="Furthest Date to Closest"
+      desc="Closest Date to Furthest"
+      defaultOrder="DESC"
+    />
+  </>
+);
