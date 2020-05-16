@@ -66,7 +66,7 @@ export const FieldOverviewCard: FC<FieldOverviewCardProps> = ({
             {data ? title : <Skeleton width="80%" />}
           </Typography>
           <Typography color="initial" variant="h1">
-            {data?.value ?? <Skeleton width="100%" />}
+            {data?.value ?? <Skeleton />}
           </Typography>
         </div>
       </CardActionAreaLink>
@@ -91,7 +91,7 @@ export const FieldOverviewCard: FC<FieldOverviewCardProps> = ({
             {data ? (
               <> Updated {dateTimeFormatter(data.updatedAt)}</>
             ) : (
-              <Skeleton width="100%" />
+              <Skeleton />
             )}
           </Typography>
         </Grid>

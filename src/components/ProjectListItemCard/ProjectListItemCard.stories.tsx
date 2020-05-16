@@ -36,16 +36,16 @@ export const ProjectListItemCard = () => {
     location: {
       value: {
         __typename: 'Country',
-        name: { value: 'Texas' },
+        name: { value: text('location', 'Texas') },
         region: {
           value: {
             name: {
-              value: 'United States',
+              value: text('region', 'United States'),
             },
             zone: {
               value: {
                 name: {
-                  value: 'Americas',
+                  value: text('zone', 'Americas'),
                 },
               },
             },

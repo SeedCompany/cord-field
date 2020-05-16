@@ -73,6 +73,7 @@ export const ProjectListItemCard: FC<ProjectListItemCardProps> = ({
 }) => {
   const classes = useStyles();
   const pic = useRandomPicture({ seed: project?.id, width: 300, height: 200 });
+  const location = displayLocation(project?.location.value);
 
   return (
     <Card className={clsx(classes.root, className)}>
@@ -83,9 +84,9 @@ export const ProjectListItemCard: FC<ProjectListItemCardProps> = ({
       >
         <div className={classes.media}>
           {!project ? (
-            <Skeleton variant="rect" height={200} />
+            <Skeleton variant="rect" height="100%" />
           ) : (
-            <Picture fit="cover" {...pic} />
+            <Picture fit="cover" {...pic} style={{ paddingBottom: 0 }} />
           )}
         </div>
         <CardContent className={classes.cardContent}>
@@ -114,8 +115,10 @@ export const ProjectListItemCard: FC<ProjectListItemCardProps> = ({
               <Typography variant="body2" color="primary">
                 {!project ? (
                   <Skeleton variant="text" />
+                ) : location ? (
+                  location
                 ) : (
-                  displayLocation(project.location.value)
+                  <>&nbsp;</>
                 )}
               </Typography>
             </Grid>
