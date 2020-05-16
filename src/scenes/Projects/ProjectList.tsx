@@ -1,8 +1,11 @@
 import { Button, Grid, makeStyles, Typography } from '@material-ui/core';
 import { times } from 'lodash';
 import React, { FC } from 'react';
+import { Project } from '../../api';
 import { ProjectListItemCard } from '../../components/ProjectListItemCard';
+import { SortButtonDialog, useSort } from '../../components/Sort';
 import { useProjectsQuery } from './projects.generated';
+import { ProjectSortOptions } from './ProjectSortOptionsDialog';
 
 const useStyles = makeStyles(({ spacing }) => ({
   root: {
@@ -16,9 +19,13 @@ const useStyles = makeStyles(({ spacing }) => ({
 }));
 
 export const ProjectList: FC = () => {
+  const sort = useSort<Project>();
+
   const { loading, data } = useProjectsQuery({
     variables: {
-      input: {},
+      input: {
+        ...sort.value,
+      },
     },
   });
   const classes = useStyles();
@@ -30,7 +37,9 @@ export const ProjectList: FC = () => {
       </Typography>
       <Grid container spacing={1} className={classes.options}>
         <Grid item>
-          <Button variant="outlined">Sort Options</Button>
+          <SortButtonDialog {...sort}>
+            <ProjectSortOptions />
+          </SortButtonDialog>
         </Grid>
         <Grid item>
           <Button variant="outlined">Filter Options</Button>
