@@ -2,16 +2,13 @@ import {
   Button,
   Dialog,
   DialogContent,
-  DialogTitle,
   FormControl,
-  IconButton,
   makeStyles,
   RadioGroup,
-  Typography,
 } from '@material-ui/core';
-import { Cancel } from '@material-ui/icons';
 import { ChangeEvent, FC, useState } from 'react';
 import * as React from 'react';
+import { DialogTitle } from '../../../components/Dialog';
 import { ProjectSortOptionsFormControlLabel } from './ProjectSortOptionsFormControlLabel';
 import { ProjectSortOptionsFormLabel } from './ProjectSortOptionsFormLabel';
 
@@ -21,11 +18,6 @@ const useStyles = makeStyles(({ palette, spacing }) => ({
   },
   dialog: {
     width: '431px',
-  },
-  dialogTitle: {
-    display: 'flex',
-    alignItems: 'center',
-    border: '0.5px solid #d1dadf',
   },
   dialogContent: {
     paddingBottom: spacing(2),
@@ -62,17 +54,7 @@ export const ProjectSortOptions: FC<ProjectSortOptionsProps> = ({
         onClose={() => setOpen(false)}
         open={open}
       >
-        <DialogTitle className={classes.dialogTitle} disableTypography>
-          <Typography variant="h3">Sort Options</Typography>
-          <IconButton
-            size="small"
-            aria-label="close"
-            className={classes.closeButton}
-            onClick={() => setOpen(false)}
-          >
-            <Cancel />
-          </IconButton>
-        </DialogTitle>
+        <DialogTitle onClose={() => setOpen(false)}>Sort Options</DialogTitle>
         <DialogContent className={classes.dialogContent}>
           <FormControl component="fieldset">
             <RadioGroup
