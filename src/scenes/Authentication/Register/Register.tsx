@@ -9,7 +9,7 @@ import { RegisterFormProps as Props, RegisterForm } from './RegisterForm';
 export const Register = (props: Except<Props, 'onSubmit'>) => {
   const [register] = useRegisterMutation();
   const navigate = useNavigate();
-  const [query] = useSearchParams('') as [URLSearchParams];
+  const [query] = useSearchParams();
   const [session, sessionLoading, setUserSession] = useSession();
   const [success, setSuccess] = useState(false);
 

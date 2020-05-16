@@ -10,7 +10,7 @@ import { LoginForm, LoginFormProps as Props } from './LoginForm';
 export const Login = (props: Except<Props, 'onSubmit'>) => {
   const [login] = useLoginMutation();
   const navigate = useNavigate();
-  const [query] = useSearchParams('') as [URLSearchParams];
+  const [query] = useSearchParams();
   const [session, sessionLoading, setUserSession] = useSession();
   const [success, setSuccess] = useState(false);
 
