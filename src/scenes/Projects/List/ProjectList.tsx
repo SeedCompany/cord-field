@@ -1,11 +1,11 @@
 import { Button, Grid, makeStyles, Typography } from '@material-ui/core';
 import { times } from 'lodash';
 import React, { FC } from 'react';
-import { Project } from '../../api';
-import { ProjectListItemCard } from '../../components/ProjectListItemCard';
-import { SortButtonDialog, useSort } from '../../components/Sort';
+import { Project } from '../../../api';
+import { ProjectListItemCard } from '../../../components/ProjectListItemCard';
+import { SortButtonDialog, useSort } from '../../../components/Sort';
 import { useProjectsQuery } from './projects.generated';
-import { ProjectSortOptions } from './ProjectSortOptionsDialog';
+import { ProjectSortOptions } from './ProjectSortOptions';
 
 const useStyles = makeStyles(({ spacing }) => ({
   root: {
