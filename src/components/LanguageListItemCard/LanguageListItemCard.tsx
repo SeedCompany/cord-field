@@ -64,24 +64,20 @@ export const LanguageListItemCard: FC<LanguageListItemCardProps> = ({
                 language.name?.value ?? language.displayName?.value
               )}
             </Typography>
-            {!language ? (
-              <Skeleton width="25%" variant="text" />
-            ) : (
-              <DisplaySimpleProperty
-                LabelProps={{ color: 'textSecondary' }}
-                label="Ethnologue"
-                value={language.ethnologueName?.value}
-              />
-            )}
-            {!language ? (
-              <Skeleton width="25%" variant="text" />
-            ) : (
-              <DisplaySimpleProperty
-                LabelProps={{ color: 'textSecondary' }}
-                label="ROD"
-                value={language.rodNumber?.value}
-              />
-            )}
+            <DisplaySimpleProperty
+              LabelProps={{ color: 'textSecondary' }}
+              label="Ethnologue"
+              value={language?.ethnologueName?.value}
+              loading={!language}
+              loadingWidth="25%"
+            />
+            <DisplaySimpleProperty
+              LabelProps={{ color: 'textSecondary' }}
+              label="ROD"
+              value={language?.rodNumber?.value}
+              loading={!language}
+              loadingWidth="25%"
+            />
           </div>
           <div className={classes.rightContent}>
             {!language || population ? (
