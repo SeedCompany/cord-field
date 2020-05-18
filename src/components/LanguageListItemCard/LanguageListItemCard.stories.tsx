@@ -1,11 +1,11 @@
 import { number, text } from '@storybook/addon-knobs';
 import React from 'react';
 import { LanguageListItemFragment } from './LanguageListItem.generated';
-import { LanguageListItemCard as LanguageListItemCardComponent } from './LanguageListItemCard';
+import { LanguageListItemCard } from './LanguageListItemCard';
 
-export default { title: 'Components/LanguageListItemCard' };
+export default { title: 'Components/Language List Item Card' };
 
-export const LanguageListItemCard = () => {
+export const WithData = () => {
   const language: LanguageListItemFragment = {
     id: '123',
     name: {
@@ -28,9 +28,7 @@ export const LanguageListItemCard = () => {
     },
   };
 
-  return <LanguageListItemCardComponent language={language} />;
+  return <LanguageListItemCard language={language} />;
 };
 
-export const LanguageListItemCardNoData = () => {
-  return <LanguageListItemCardComponent />;
-};
+export const Loading = () => <LanguageListItemCard />;

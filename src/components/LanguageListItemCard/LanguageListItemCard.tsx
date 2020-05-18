@@ -4,6 +4,7 @@ import clsx from 'clsx';
 import { FC } from 'react';
 import * as React from 'react';
 import { DisplaySimpleProperty } from '../DisplaySimpleProperty';
+import { useNumberFormatter } from '../Formatters';
 import { CardActionAreaLink } from '../Routing';
 import { LanguageListItemFragment } from './LanguageListItem.generated';
 
@@ -11,16 +12,21 @@ const useStyles = makeStyles(({ spacing }) => {
   return {
     root: {
       width: '100%',
-      maxWidth: '400px',
+      maxWidth: 400,
     },
     cardContent: {
       display: 'flex',
       justifyContent: 'space-between',
     },
+    leftContent: {
+      flex: 1,
+    },
     rightContent: {
+      marginLeft: spacing(2),
       display: 'flex',
       flexDirection: 'column',
       justifyContent: 'flex-end',
+      textAlign: 'right',
     },
     name: {
       marginBottom: spacing(2),
@@ -38,6 +44,10 @@ export const LanguageListItemCard: FC<LanguageListItemCardProps> = ({
   language,
 }) => {
   const classes = useStyles();
+  const formatNumber = useNumberFormatter();
+  const population =
+    language?.organizationPopulation?.value ??
+    language?.ethnologuePopulation?.value;
 
   return (
     <Card className={clsx(classes.root, className)}>
@@ -46,16 +56,16 @@ export const LanguageListItemCard: FC<LanguageListItemCardProps> = ({
         to={`/languages/${language?.id}`}
       >
         <CardContent className={classes.cardContent}>
-          <div>
+          <div className={classes.leftContent}>
             <Typography variant="h4" className={classes.name}>
               {!language ? (
-                <Skeleton className={classes.name} width="9ch" variant="text" />
+                <Skeleton width="50%" variant="text" />
               ) : (
                 language.name?.value ?? language.displayName?.value
               )}
             </Typography>
             {!language ? (
-              <Skeleton width="9ch" variant="text" />
+              <Skeleton width="25%" variant="text" />
             ) : (
               <DisplaySimpleProperty
                 LabelProps={{ color: 'textSecondary' }}
@@ -64,7 +74,7 @@ export const LanguageListItemCard: FC<LanguageListItemCardProps> = ({
               />
             )}
             {!language ? (
-              <Skeleton width="9ch" variant="text" />
+              <Skeleton width="25%" variant="text" />
             ) : (
               <DisplaySimpleProperty
                 LabelProps={{ color: 'textSecondary' }}
@@ -74,17 +84,20 @@ export const LanguageListItemCard: FC<LanguageListItemCardProps> = ({
             )}
           </div>
           <div className={classes.rightContent}>
-            <Typography variant="body2" color="textSecondary">
-              Population
-            </Typography>
-            <Typography variant="h3">
-              {!language ? (
-                <Skeleton variant="text" />
-              ) : (
-                language.organizationPopulation?.value ??
-                language.ethnologuePopulation?.value
-              )}
-            </Typography>
+            {!language || population ? (
+              <>
+                <Typography variant="body2" color="textSecondary">
+                  Population
+                </Typography>
+                <Typography variant="h3">
+                  {!language ? (
+                    <Skeleton variant="text" />
+                  ) : (
+                    formatNumber(population!)
+                  )}
+                </Typography>
+              </>
+            ) : null}
           </div>
         </CardContent>
       </CardActionAreaLink>
