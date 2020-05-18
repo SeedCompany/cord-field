@@ -3,6 +3,7 @@ import React from 'react';
 import { Route, Routes } from 'react-router-dom';
 import { Authentication } from '../Authentication';
 import { Home } from '../Home';
+import { Languages } from '../Languages';
 import { Organizations } from '../Organizations';
 import { Projects } from '../Projects';
 import { Header } from './Header';
@@ -30,6 +31,7 @@ export const Root = () => {
       <Route path="/" element={<Home />} />
       <Route path="/organizations/*" element={<Organizations />} />
       <Route path="/projects/*" element={<Projects />} />
+      <Route path="/languages/*" element={<Languages />} />
     </Routes>
   );
 
