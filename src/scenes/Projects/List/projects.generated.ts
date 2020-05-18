@@ -2,12 +2,12 @@
 import * as ApolloReactCommon from '@apollo/client';
 import * as ApolloReactHooks from '@apollo/client';
 import gql from 'graphql-tag';
-import * as Types from '../../api/schema.generated';
+import * as Types from '../../../api/schema.generated';
 import {
   ProjectListItem_InternshipProject_Fragment,
   ProjectListItem_TranslationProject_Fragment,
-} from '../../components/ProjectListItemCard/ProjectListItem.generated';
-import { ProjectListItemFragmentDoc } from '../../components/ProjectListItemCard/ProjectListItem.generated';
+} from '../../../components/ProjectListItemCard/ProjectListItem.generated';
+import { ProjectListItemFragmentDoc } from '../../../components/ProjectListItemCard/ProjectListItem.generated';
 
 export interface ProjectsQueryVariables {
   input: Types.ProjectListInput;
