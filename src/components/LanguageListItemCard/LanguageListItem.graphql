@@ -1,0 +1,21 @@
+fragment LanguageListItem on Language {
+  id
+  name {
+    value
+  }
+  displayName {
+    value
+  }
+  ethnologueName {
+    value
+  }
+  rodNumber {
+    value
+  }
+  organizationPopulation {
+    value
+  }
+  ethnologuePopulation {
+    value
+  }
+}

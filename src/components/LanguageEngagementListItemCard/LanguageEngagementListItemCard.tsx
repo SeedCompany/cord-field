@@ -4,12 +4,12 @@ import {
   Grid,
   makeStyles,
   Typography,
-  TypographyProps,
 } from '@material-ui/core';
 import clsx from 'clsx';
 import { FC } from 'react';
 import * as React from 'react';
 import { displayEngagementStatus } from '../../api/displayStatus';
+import { DisplaySimpleProperty } from '../DisplaySimpleProperty';
 import { useDateFormatter, useNumberFormatter } from '../Formatters';
 import { PencilCircledIcon, ScriptIcon } from '../Icons';
 import { Picture, useRandomPicture } from '../Picture';
@@ -112,7 +112,7 @@ export const LanguageEngagementListItemCard: FC<LanguageEngagementListItemCardPr
               </Grid>
             ) : null}
             <Grid item>
-              <KeyValProp
+              <DisplaySimpleProperty
                 label="Status"
                 value={displayEngagementStatus(props.status)}
               />
@@ -150,7 +150,7 @@ export const LanguageEngagementListItemCard: FC<LanguageEngagementListItemCardPr
             </Grid>
           </Grid>
           <div className={classes.rightContent}>
-            <KeyValProp aria-hidden="true" />
+            <DisplaySimpleProperty aria-hidden="true" />
             {population ? (
               <div>
                 <Typography variant="h1">
@@ -162,7 +162,7 @@ export const LanguageEngagementListItemCard: FC<LanguageEngagementListItemCardPr
               </div>
             ) : null}
             {endDate ? (
-              <KeyValProp
+              <DisplaySimpleProperty
                 label={endDate.label}
                 value={dateFormatter(endDate.value)}
                 ValueProps={{ color: 'primary' }}
@@ -196,27 +196,3 @@ const getEndDate = (eng: LanguageEngagementListItemFragment) => {
     value: endDate,
   };
 };
-
-const KeyValProp = ({
-  label,
-  LabelProps,
-  value,
-  ValueProps,
-  ...props
-}: {
-  label?: string;
-  LabelProps?: TypographyProps;
-  value?: string | null;
-  ValueProps?: TypographyProps;
-} & TypographyProps) => (
-  <Typography variant="body2" {...props}>
-    {label && value ? (
-      <Typography variant="inherit" {...LabelProps}>
-        {label}:&nbsp;
-      </Typography>
-    ) : null}
-    <Typography variant="inherit" color="textSecondary" {...ValueProps}>
-      {value}
-    </Typography>
-  </Typography>
-);
