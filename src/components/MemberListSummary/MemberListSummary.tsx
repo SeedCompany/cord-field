@@ -1,9 +1,9 @@
 import { CardContent, Grid, makeStyles, Typography } from '@material-ui/core';
 import { AvatarGroup, Skeleton } from '@material-ui/lab';
 import { To } from 'history';
-import { times } from 'lodash';
 import { FC } from 'react';
 import * as React from 'react';
+import { listOrPlaceholders } from '../../util';
 import { Avatar } from '../Avatar';
 import { HugeIcon, HugeIconProps } from '../Icons';
 import { CardActionAreaLink } from '../Routing';
@@ -58,17 +58,6 @@ export const MemberListSummary: FC<MemberListSummaryProps> = ({
   const firstCoupleNamesString = membersToDisplay
     ?.map((member) => member.label)
     .join(', ');
-  const createEmptyAvatars = () =>
-    times(max).map((i) => <Avatar key={i} loading />);
-
-  const createAvatars = () =>
-    members?.map((member, index) =>
-      member.picture ? (
-        <Avatar key={index} alt={member.label} src={member.picture} />
-      ) : (
-        <Avatar key={index}>{member.avatarLetters}</Avatar>
-      )
-    );
 
   return (
     <CardActionAreaLink to={to} disabled={!members}>
@@ -93,7 +82,16 @@ export const MemberListSummary: FC<MemberListSummaryProps> = ({
         </Grid>
         <div className={classes.bottomContent}>
           <AvatarGroup max={max} className={classes.avatarGroup}>
-            {!members ? createEmptyAvatars() : createAvatars()}F
+            {listOrPlaceholders(members, max).map((member, i) => (
+              <Avatar
+                key={member?.label ?? i}
+                loading={!member}
+                alt={member?.label}
+                src={member?.picture}
+              >
+                {member?.avatarLetters}
+              </Avatar>
+            ))}
           </AvatarGroup>
           <Typography
             className={classes.memberNames}
