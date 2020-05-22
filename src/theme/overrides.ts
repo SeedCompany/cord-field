@@ -1,3 +1,4 @@
+import { AvatarGroupClassKey } from '@material-ui/lab';
 import { ThemeOptions } from './createTheme';
 
 export const appProps: ThemeOptions['props'] = (_theme) => ({
@@ -73,5 +74,20 @@ export const appOverrides: ThemeOptions['overrides'] = ({
         color: primaryColorForText,
       },
     },
+    // Fix positioning from upstream
+    // https://github.com/mui-org/material-ui/pull/21141
+    MuiAvatarGroup: {
+      avatar: {
+        '&:first-child': {
+          marginLeft: 0,
+        },
+      },
+    },
   };
 };
+
+declare module '@material-ui/core/styles/overrides' {
+  interface ComponentNameToClassKey {
+    MuiAvatarGroup: AvatarGroupClassKey;
+  }
+}
