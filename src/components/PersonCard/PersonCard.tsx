@@ -8,7 +8,7 @@ import {
 import clsx from 'clsx';
 import * as React from 'react';
 import { FC } from 'react';
-import { Picture } from '../Picture';
+import { Avatar } from '../Avatar';
 import { ButtonLink } from '../Routing';
 
 const useStyles = makeStyles(({ palette, spacing }) => ({
@@ -79,7 +79,12 @@ export const PersonCard: FC<PersonCardProps> = ({
   return (
     <Card className={classes.personCard}>
       <CardContent className={classes.cardContent}>
-        <Picture className={classes.personImage} source={imageSource} />
+        <Avatar
+          variant="circle"
+          alt={name}
+          src={imageSource}
+          className={classes.personImage}
+        />
         <Typography
           color="textPrimary"
           variant="body2"

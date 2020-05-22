@@ -3770,6 +3770,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@types/seedrandom@npm:^2.4.28":
+  version: 2.4.28
+  resolution: "@types/seedrandom@npm:2.4.28"
+  checksum: 3/4e56ed5ff9b6e2a73fc9804b7b388648347f73a7ea15512c4e3b59860831a4e791da0f35422b1b3326e5c1ffcafc48902fa9f3bf3fa4f0c242d7e5f1a0ec426e
+  languageName: node
+  linkType: hard
+
 "@types/source-list-map@npm:*":
   version: 0.1.2
   resolution: "@types/source-list-map@npm:0.1.2"
@@ -7129,6 +7136,7 @@ __metadata:
     "@types/node": ^12.0.0
     "@types/react": ^16.9.0
     "@types/react-dom": ^16.9.0
+    "@types/seedrandom": ^2.4.28
     "@types/validator": ^13.0.0
     babel-plugin-import: ^1.13.0
     babel-plugin-mui-make-styles: ^0.1.1
@@ -7155,6 +7163,7 @@ __metadata:
     react-router-dom: ^6.0.0-alpha.5
     react-scripts: ^3.4.1
     react-use: ^14.1.1
+    seedrandom: ^3.0.5
     storybook-dark-mode: ^0.4.1
     ts-essentials: ^6.0.4
     ts-node: ^8.8.2
@@ -18098,6 +18107,13 @@ resolve@1.15.0:
   version: 1.1.0
   resolution: "scuid@npm:1.1.0"
   checksum: 3/04c2383a8e9c88dbe27382ab46e580f6dcfe7b73080a57373597cca324f72ae31808e9f0f9b1c62f18be204ce1bfd55270125b4e88ae2b840bf3517b2f1b6b50
+  languageName: node
+  linkType: hard
+
+"seedrandom@npm:^3.0.5":
+  version: 3.0.5
+  resolution: "seedrandom@npm:3.0.5"
+  checksum: 3/8ca859bd79cc6a4367783f19d802ef4651f957da388f162f45c4e32c4d4df8cb55649b25b9d66cf73f905d920640b8da9ae04418feb40b41c9c7c767a1c49691
   languageName: node
   linkType: hard
 
