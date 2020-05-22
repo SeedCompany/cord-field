@@ -1,5 +1,4 @@
 import {
-  Avatar,
   Card,
   CardActions,
   CardContent,
@@ -9,6 +8,7 @@ import {
 import clsx from 'clsx';
 import * as React from 'react';
 import { FC } from 'react';
+import { Avatar } from '../Avatar';
 import { ButtonLink } from '../Routing';
 
 const useStyles = makeStyles(({ palette, spacing }) => ({

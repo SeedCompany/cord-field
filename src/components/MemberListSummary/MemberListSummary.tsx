@@ -1,15 +1,10 @@
-import {
-  Avatar,
-  CardContent,
-  Grid,
-  makeStyles,
-  Typography,
-} from '@material-ui/core';
+import { CardContent, Grid, makeStyles, Typography } from '@material-ui/core';
 import { AvatarGroup, Skeleton } from '@material-ui/lab';
 import { To } from 'history';
 import { times } from 'lodash';
 import { FC } from 'react';
 import * as React from 'react';
+import { Avatar } from '../Avatar';
 import { HugeIcon, HugeIconProps } from '../Icons';
 import { CardActionAreaLink } from '../Routing';
 
@@ -64,9 +59,7 @@ export const MemberListSummary: FC<MemberListSummaryProps> = ({
     ?.map((member) => member.label)
     .join(', ');
   const createEmptyAvatars = () =>
-    times(max).map((i) => (
-      <Skeleton key={i} variant="circle" width={36} height={36} />
-    ));
+    times(max).map((i) => <Avatar key={i} loading />);
 
   const createAvatars = () =>
     members?.map((member, index) =>
