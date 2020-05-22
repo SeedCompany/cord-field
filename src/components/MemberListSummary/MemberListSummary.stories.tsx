@@ -1,83 +1,59 @@
+import { Card } from '@material-ui/core';
 import { Group } from '@material-ui/icons';
 import { number, text } from '@storybook/addon-knobs';
 import React from 'react';
+import seedRandom from 'seedrandom';
 import {
-  MemberListSummary as MemberListSummaryComponent,
+  MemberListSummary,
+  MemberListSummaryProps,
   MemberSummaryItem,
 } from './MemberListSummary';
 
 export default { title: 'Components/Member List Summary' };
 
-const membersHardCoded: MemberSummaryItem[] = [
-  {
-    picture: 'images/favicon-32x32.png',
-    avatarLetters: 'J',
-    label: 'Jim',
-  },
-  {
-    avatarLetters: 'S',
-    label: 'Sarah',
-  },
-  {
-    picture: 'images/favicon-32x32.png',
-    avatarLetters: 'Ju',
-    label: 'Julius',
-  },
-  {
-    picture: 'images/favicon-32x32.png',
-    avatarLetters: 'K',
-    label: 'Kevin',
-  },
-  {
-    picture: 'images/favicon-32x32.png',
-    avatarLetters: 'R',
-    label: 'Rob',
-  },
-  {
-    picture: 'images/favicon-32x32.png',
-    avatarLetters: 'K',
-    label: 'Katie',
-  },
+const randomPersonPic = (name: string, gender: 'female' | 'male') => {
+  const id = Number(seedRandom(name).quick().toFixed(2)) * 100;
+  return `https://randomuser.me/api/portraits/${
+    gender === 'female' ? 'women' : 'men'
+  }/${id}.jpg`;
+};
+
+const people: Array<{ name: string; gender: 'female' | 'male' }> = [
+  { name: 'Jim', gender: 'male' },
+  { name: 'Sarah', gender: 'female' },
+  { name: 'Julius', gender: 'male' },
+  { name: 'Rachel', gender: 'female' },
+  { name: 'Rob', gender: 'male' },
+  { name: 'Katie', gender: 'female' },
 ];
+const members = people.map(
+  ({ name, gender }): MemberSummaryItem => ({
+    label: name,
+    avatarLetters: name[0],
+    picture: randomPersonPic(name, gender),
+  })
+);
 
-const MAX_MEMBERS_TO_DISPLAY = 4;
+const slider = (name: string) =>
+  number(name, 4, {
+    range: true,
+    min: 0,
+    max: people.length,
+  });
 
-const generateMemberListComponent = (members: MemberSummaryItem[]) => {
-  return (
-    <MemberListSummaryComponent
-      members={members}
-      max={number('max members to display', MAX_MEMBERS_TO_DISPLAY)}
+const Story = (props: Partial<MemberListSummaryProps>) => (
+  <Card style={{ maxWidth: 400 }}>
+    <MemberListSummary
+      members={members?.slice(0, slider('# of members'))}
+      max={slider('max listed')}
       to={text('to', '/someplace')}
       icon={Group}
       title={text('title', 'Team Members')}
+      {...props}
     />
-  );
-};
-
-export const LessThanMaxItems = () =>
-  generateMemberListComponent(
-    membersHardCoded.slice(0, MAX_MEMBERS_TO_DISPLAY - 1)
-  );
-
-export const EqualToMaxItems = () =>
-  generateMemberListComponent(
-    membersHardCoded.slice(0, MAX_MEMBERS_TO_DISPLAY)
-  );
-
-export const GreaterThanMaxItemsBy1 = () =>
-  generateMemberListComponent(
-    membersHardCoded.slice(0, MAX_MEMBERS_TO_DISPLAY + 1)
-  );
-
-export const GreaterThanMaxItemsBy2 = () =>
-  generateMemberListComponent(
-    membersHardCoded.slice(0, MAX_MEMBERS_TO_DISPLAY + 2)
-  );
-
-export const Loading = () => (
-  <MemberListSummaryComponent
-    title={text('title', 'Team Members')}
-    icon={Group}
-    to={text('to', '/someplace')}
-  />
+  </Card>
 );
+
+export const WithData = () => <Story />;
+
+export const Loading = () => <Story members={undefined} />;
