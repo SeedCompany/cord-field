@@ -1,6 +1,7 @@
 import { CardContent, Grid, makeStyles, Typography } from '@material-ui/core';
 import { AvatarGroup, Skeleton } from '@material-ui/lab';
 import { To } from 'history';
+import { compact } from 'lodash';
 import { FC } from 'react';
 import * as React from 'react';
 import { listOrPlaceholders } from '../../util';
@@ -53,11 +54,6 @@ export const MemberListSummary: FC<MemberListSummaryProps> = ({
   icon,
 }) => {
   const classes = useStyles();
-  const membersToDisplay = members?.slice(0, max);
-  const amountOfNonDisplayedMembers = Math.max((members?.length ?? 0) - max, 0);
-  const firstCoupleNamesString = membersToDisplay
-    ?.map((member) => member.label)
-    .join(', ');
 
   return (
     <CardActionAreaLink to={to} disabled={!members}>
@@ -104,13 +100,7 @@ export const MemberListSummary: FC<MemberListSummaryProps> = ({
                 <Skeleton variant="text" width="50%" />
               </>
             ) : (
-              <>
-                {firstCoupleNamesString}
-                {amountOfNonDisplayedMembers > 0 &&
-                  ` & ${amountOfNonDisplayedMembers} ${
-                    amountOfNonDisplayedMembers > 1 ? 'others' : 'other'
-                  }`}
-              </>
+              memberNames(members, max)
             )}
           </Typography>
         </div>
@@ -118,3 +108,16 @@ export const MemberListSummary: FC<MemberListSummaryProps> = ({
     </CardActionAreaLink>
   );
 };
+
+function memberNames(members: MemberSummaryItem[] | undefined, max: number) {
+  const membersToDisplay = members?.slice(0, max).map((member) => member.label);
+  const remainingCount = membersToDisplay
+    ? members!.length - membersToDisplay.length
+    : 0;
+  const names = membersToDisplay?.join(', ') ?? '';
+  const extra =
+    remainingCount > 0
+      ? `${remainingCount} other${remainingCount > 1 ? 's' : ''}`
+      : '';
+  return compact([names, extra]).join(' & ');
+}
