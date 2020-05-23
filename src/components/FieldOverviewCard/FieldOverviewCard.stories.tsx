@@ -1,8 +1,8 @@
 import { Box } from '@material-ui/core';
 import { AccountBalance } from '@material-ui/icons';
-import { boolean, date, text } from '@storybook/addon-knobs';
-import { DateTime } from 'luxon';
+import { boolean, text } from '@storybook/addon-knobs';
 import React from 'react';
+import { dateTime } from '../knobs.stories';
 import { AddCurrentPath } from '../Routing/decorators.stories';
 import { FieldOverviewCard as Card } from './FieldOverviewCard';
 
@@ -23,7 +23,7 @@ export const FieldOverviewCard = () => (
           : {
               to: text('to', '/foo'),
               value: text('value', '$45,978'),
-              updatedAt: DateTime.fromMillis(date('updatedAt')),
+              updatedAt: dateTime('updatedAt'),
             }
       }
     />

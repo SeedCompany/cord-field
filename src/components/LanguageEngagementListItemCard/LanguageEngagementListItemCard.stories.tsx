@@ -1,7 +1,7 @@
-import { date, number, text } from '@storybook/addon-knobs';
+import { number, text } from '@storybook/addon-knobs';
 import React from 'react';
 import { EngagementStatus } from '../../api';
-import { CalendarDate } from '../../util';
+import { date } from '../knobs.stories';
 import { LanguageEngagementListItemCard as Card } from './LanguageEngagementListItemCard';
 
 export default { title: 'Components' };
@@ -10,12 +10,12 @@ export const LanguageEngagementListItemCard = () => (
   <Card
     id="123123"
     status={text('status', 'InDevelopment') as EngagementStatus}
-    endDate={{ value: CalendarDate.fromMillis(date('endDate')) }}
+    endDate={{ value: date('endDate') }}
     initialEndDate={{
-      value: CalendarDate.fromMillis(date('initialEndDate')),
+      value: date('initialEndDate'),
     }}
     completeDate={{
-      value: CalendarDate.fromMillis(date('completeDate')),
+      value: date('completeDate'),
     }}
     language={{
       value: {
