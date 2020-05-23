@@ -23,11 +23,16 @@ generates:
   ./src/api/schema.generated.ts:
     plugins:
       - typescript
+      - add:
+          placement: prepend
+          content: |
+            import { DateTime } from 'luxon';
+            import { CalendarDate } from '../util';
     config:
       reactApolloVersion: 3
       scalars:
-        Date: string
-        DateTime: string
+        Date: CalendarDate
+        DateTime: DateTime
       skipTypename: false
       enumsAsTypes: true
   ./src/:

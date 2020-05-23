@@ -1,3 +1,6 @@
+import { DateTime } from 'luxon';
+import { CalendarDate } from '../util';
+
 export type Maybe<T> = T | null;
 /** All built-in and custom scalars, mapped to their actual values */
 export interface Scalars {
@@ -10,9 +13,9 @@ export interface Scalars {
    * An ISO-8601 date string.
    * Time should be ignored for this field.
    */
-  Date: string;
+  Date: CalendarDate;
   /** An ISO-8601 date time string */
-  DateTime: string;
+  DateTime: DateTime;
 }
 
 export interface AddPropertyToSecurityGroup {
