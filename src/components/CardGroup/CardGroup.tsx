@@ -1,35 +1,32 @@
-import { Card, Divider, makeStyles } from '@material-ui/core';
-import React, { FC, Fragment, ReactNode } from 'react';
+import { Card, CardProps, Divider, makeStyles } from '@material-ui/core';
+import clsx from 'clsx';
+import * as React from 'react';
+import { Children, Fragment } from 'react';
 
-interface CardContent {
-  children: ReactNode;
-}
-
-const useStyles = makeStyles(() => ({
+const useStyles = makeStyles(({ spacing }) => ({
   root: {
     display: 'flex',
-    justifyContent: 'space-between',
   },
   divider: {
-    margin: '10px 0',
+    margin: spacing(2, 0),
   },
 }));
 
-export const CardGroup: FC<CardContent> = ({ children }) => {
+export const CardGroup = ({ children, ...rest }: CardProps) => {
   const classes = useStyles();
 
   return (
-    <Card className={classes.root}>
-      {React.Children.map(children, (child, index) => (
+    <Card {...rest} className={clsx(classes.root, rest.className)}>
+      {Children.map(children, (child, index) => (
         <Fragment key={index}>
-          {child}
-          {index % 2 === 0 && (
+          {index > 0 && (
             <Divider
               className={classes.divider}
               orientation="vertical"
               flexItem
             />
           )}
+          {child}
         </Fragment>
       ))}
     </Card>
