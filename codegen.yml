@@ -15,6 +15,11 @@ generates:
           content: export const possibleTypes = result.possibleTypes;
     config:
       apolloClientVersion: 3
+  ./src/api/scalars/scalars.generated.ts:
+    plugins:
+      - ./src/api/scalars/scalars.codegen
+    config:
+      parserImport: ./scalars.parser
   ./src/api/schema.generated.ts:
     plugins:
       - typescript
