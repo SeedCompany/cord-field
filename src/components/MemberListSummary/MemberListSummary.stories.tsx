@@ -26,7 +26,7 @@ const people: Array<{ name: string; gender: 'female' | 'male' }> = [
   { name: 'Rob', gender: 'male' },
   { name: 'Katie', gender: 'female' },
 ];
-const members = people.map(
+export const members = people.map(
   ({ name, gender }): MemberSummaryItem => ({
     label: name,
     avatarLetters: name[0],
