@@ -10,7 +10,7 @@ export default { title: 'Components' };
 export const ProjectListItemCard = () => {
   const project: ProjectListItemFragment = {
     id: '123',
-    createdAt: '12/12/20',
+    createdAt: DateTime.fromMillis(date('createdAt')),
     type: select('Type', ['Translation', 'Internship'], 'Internship'),
     status: select(
       'status',
@@ -18,12 +18,10 @@ export const ProjectListItemCard = () => {
       'Active'
     ),
     sensitivity: select('sensitivity', ['High', 'Low', 'Medium'], 'High'),
-    modifiedAt: '12/12/20',
+    modifiedAt: DateTime.fromMillis(date('modifiedAt')),
     deptId: { value: text('deptId', '1234567') },
     estimatedSubmission: {
-      value: DateTime.fromMillis(date('estimatedSubmission')).toLocaleString(
-        DateTime.DATE_SHORT
-      ),
+      value: DateTime.fromMillis(date('estimatedSubmission')),
     },
     step: {
       value: select(

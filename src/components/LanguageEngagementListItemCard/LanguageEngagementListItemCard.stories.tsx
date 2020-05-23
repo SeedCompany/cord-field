@@ -10,12 +10,12 @@ export const LanguageEngagementListItemCard = () => (
   <Card
     id="123123"
     status={text('status', 'InDevelopment') as EngagementStatus}
-    endDate={{ value: CalendarDate.fromMillis(date('endDate')).toISO() }}
+    endDate={{ value: CalendarDate.fromMillis(date('endDate')) }}
     initialEndDate={{
-      value: CalendarDate.fromMillis(date('initialEndDate')).toISO(),
+      value: CalendarDate.fromMillis(date('initialEndDate')),
     }}
     completeDate={{
-      value: CalendarDate.fromMillis(date('completeDate')).toISO(),
+      value: CalendarDate.fromMillis(date('completeDate')),
     }}
     language={{
       value: {
