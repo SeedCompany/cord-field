@@ -17,11 +17,6 @@ const useStyles = makeStyles(() => ({
   },
 }));
 
-export const CustomClasses = () => {
-  const classes = useStyles();
-  return <HugeIcon icon={CordIcon} classes={{ icon: classes.cordIcon }} />;
-};
-
 export const CustomChildren = () => {
   const classes = useStyles();
   return (

@@ -4,7 +4,6 @@ import {
   AvatarProps as MuiAvatarProps,
 } from '@material-ui/core';
 import { Skeleton } from '@material-ui/lab';
-import clsx from 'clsx';
 import * as React from 'react';
 
 export interface AvatarProps extends MuiAvatarProps {
@@ -27,7 +26,10 @@ export const Avatar = ({ loading, ...props }: AvatarProps) => {
   return (
     <MuiAvatar
       {...(loading ? rest : props)}
-      className={clsx(loading ? classes.loading : null, rest.className)}
+      classes={{
+        ...props.classes,
+        colorDefault: loading ? classes.loading : props.classes?.colorDefault,
+      }}
     >
       {loading ? (
         <Skeleton variant="rect" className={classes.skeleton} />

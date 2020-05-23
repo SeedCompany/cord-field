@@ -1,46 +1,42 @@
-import {
-  createStyles,
-  SvgIconProps,
-  Theme,
-  WithStyles,
-  withStyles,
-} from '@material-ui/core';
-import clsx from 'clsx';
-import { cloneElement } from 'react';
+import { makeStyles, SvgIconProps } from '@material-ui/core';
+import { cloneElement, isValidElement, ReactElement } from 'react';
 import * as React from 'react';
+import { Avatar, AvatarProps } from '../Avatar';
 
-const styles = ({ palette }: Theme) =>
-  createStyles({
-    root: {
-      display: 'flex',
-      alignItems: 'center',
-      justifyContent: 'center',
-      width: 64,
-      height: 64,
-      borderRadius: 64,
-      backgroundColor: palette.grey[200],
-    },
-    icon: {
-      color: palette.info.main,
-    },
-  });
+const useStyles = makeStyles(({ palette }) => ({
+  root: {
+    width: 64,
+    height: 64,
+  },
+  colorDefault: {
+    color: palette.info.main,
+    backgroundColor: palette.grey[200],
+  },
+}));
 
-export interface HugeIconProps extends WithStyles<typeof styles> {
-  icon?: React.ComponentType<SvgIconProps>;
+export interface HugeIconProps extends AvatarProps {
+  icon?: React.ComponentType<SvgIconProps> | React.ReactElement<SvgIconProps>;
   children?: React.ReactElement<SvgIconProps>;
 }
 
-export const HugeIcon = withStyles(styles, {
-  classNamePrefix: 'HugeIcon',
-})(({ classes, icon: Icon, children }: HugeIconProps) => {
-  const renderedIcon = Icon ? (
-    <Icon fontSize="large" className={classes.icon} />
-  ) : children ? (
-    cloneElement(children, {
+export const HugeIcon = ({ icon: Icon, children, ...rest }: HugeIconProps) => {
+  const classes = useStyles();
+  const wrap = (el: ReactElement<SvgIconProps>) =>
+    cloneElement(el, {
       fontSize: 'large',
-      className: clsx(classes.icon, children.props.className),
-    })
-  ) : null;
+    });
+  const renderedIcon =
+    Icon && !isValidElement(Icon) ? (
+      <Icon fontSize="large" />
+    ) : Icon ? (
+      wrap(Icon)
+    ) : children ? (
+      wrap(children)
+    ) : null;
 
-  return <div className={classes.root}>{renderedIcon}</div>;
-});
+  return (
+    <Avatar {...rest} classes={{ ...classes, ...rest.classes }}>
+      {renderedIcon}
+    </Avatar>
+  );
+};
