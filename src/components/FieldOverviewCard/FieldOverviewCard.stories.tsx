@@ -1,11 +1,10 @@
 import { Box } from '@material-ui/core';
 import { AccountBalance } from '@material-ui/icons';
-import { date, text } from '@storybook/addon-knobs';
+import { boolean, date, text } from '@storybook/addon-knobs';
 import { DateTime } from 'luxon';
 import React from 'react';
-import { FieldOverviewCard as FieldOverviewCardComponent } from '.';
-import { HugeIcon } from '../Icons';
 import { AddCurrentPath } from '../Routing/decorators.stories';
+import { FieldOverviewCard as Card } from './FieldOverviewCard';
 
 export default {
   title: 'Components',
@@ -13,14 +12,20 @@ export default {
 };
 
 export const FieldOverviewCard = () => (
-  <Box display="flex">
-    <FieldOverviewCardComponent
+  <Box display="flex" width={400}>
+    <Card
       title={text('title', 'Project Budget')}
-      to={text('to', '/foo')}
-      value={text('value', '$45,978')}
-      icon={<HugeIcon icon={AccountBalance} />}
-      updatedAt={DateTime.fromMillis(date('updatedAt'))}
+      icon={AccountBalance}
       viewLabel={text('viewLabel', 'Budget History')}
+      data={
+        boolean('loading', false)
+          ? undefined
+          : {
+              to: text('to', '/foo'),
+              value: text('value', '$45,978'),
+              updatedAt: DateTime.fromMillis(date('updatedAt')),
+            }
+      }
     />
   </Box>
 );
