@@ -1995,6 +1995,26 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@graphql-codegen/plugin-helpers@npm:^1.13.2":
+  version: 1.14.0
+  resolution: "@graphql-codegen/plugin-helpers@npm:1.14.0"
+  dependencies:
+    "@graphql-toolkit/common": ~0.10.4
+    camel-case: 4.1.1
+    common-tags: 1.8.0
+    constant-case: 3.0.3
+    import-from: 3.0.0
+    lower-case: 2.0.1
+    param-case: 3.0.3
+    pascal-case: 3.1.1
+    tslib: ~2.0.0
+    upper-case: 2.0.1
+  peerDependencies:
+    graphql: ^0.8.0 || ^0.9.0 || ^0.10.0 || ^0.11.0 || ^0.12.0 || ^0.13.0 || ^14.0.0 || ^15.0.0
+  checksum: 3/2bed318a15e38b41b5a1bc163194dd96a92e5cb42cdd02073f0dd48873e79cb17b099c7c897ee811700c712bd1ea02af5dd13f231f913889e4338ef54363ce36
+  languageName: node
+  linkType: hard
+
 "@graphql-codegen/typescript-operations@npm:^1.13.2":
   version: 1.13.2
   resolution: "@graphql-codegen/typescript-operations@npm:1.13.2"
@@ -7110,6 +7130,7 @@ __metadata:
     "@graphql-codegen/fragment-matcher": ^1.13.5
     "@graphql-codegen/introspection": ^1.13.2
     "@graphql-codegen/near-operation-file-preset": ^1.13.5
+    "@graphql-codegen/plugin-helpers": ^1.13.2
     "@graphql-codegen/typescript": ^1.13.2
     "@graphql-codegen/typescript-operations": ^1.13.2
     "@graphql-codegen/typescript-react-apollo": ^1.13.2
@@ -19716,6 +19737,13 @@ resolve@1.15.0:
   version: 1.11.1
   resolution: "tslib@npm:1.11.1"
   checksum: 3/d40eba08de267b2d3c458ddbf51f9010a45b8e752d3bf8c0fed63e266afc9277c6a26e65e51223335b8753f9f106aeb600e704f2a6eae05729160671a97c52e7
+  languageName: node
+  linkType: hard
+
+"tslib@npm:~2.0.0":
+  version: 2.0.0
+  resolution: "tslib@npm:2.0.0"
+  checksum: 3/a7369a224f12e223fb42f2a720389601a24a1e1c96c55bf0d8d4b60c131e574c175ae23578b8d1bd3f4ec790c7e0a82b43733f022f866d48a23aeadd3910755d
   languageName: node
   linkType: hard
 

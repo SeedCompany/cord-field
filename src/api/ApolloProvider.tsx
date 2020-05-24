@@ -11,6 +11,7 @@ import { Close } from '@material-ui/icons';
 import { ProviderContext as Snackbar, useSnackbar } from 'notistack';
 import React, { FC, useRef, useState } from 'react';
 import { possibleTypes } from './fragmentMatcher.generated';
+import { typePolicies } from './scalars';
 
 const serverHost = process.env.REACT_APP_API_BASE_URL || '';
 
@@ -34,6 +35,7 @@ export const ApolloProvider: FC = ({ children }) => {
     return new ApolloClient({
       cache: new InMemoryCache({
         possibleTypes,
+        typePolicies,
       }),
       link: concat(errorLink, httpLink),
     });

@@ -1,7 +1,7 @@
 import { Box } from '@material-ui/core';
-import { boolean, date, select, text } from '@storybook/addon-knobs';
-import { DateTime } from 'luxon';
+import { boolean, select, text } from '@storybook/addon-knobs';
 import React from 'react';
+import { date, dateTime } from '../knobs.stories';
 import { ProjectListItemFragment } from './ProjectListItem.generated';
 import { ProjectListItemCard as PIC } from './ProjectListItemCard';
 
@@ -10,7 +10,7 @@ export default { title: 'Components' };
 export const ProjectListItemCard = () => {
   const project: ProjectListItemFragment = {
     id: '123',
-    createdAt: '12/12/20',
+    createdAt: dateTime('createdAt'),
     type: select('Type', ['Translation', 'Internship'], 'Internship'),
     status: select(
       'status',
@@ -18,12 +18,10 @@ export const ProjectListItemCard = () => {
       'Active'
     ),
     sensitivity: select('sensitivity', ['High', 'Low', 'Medium'], 'High'),
-    modifiedAt: '12/12/20',
+    modifiedAt: dateTime('modifiedAt'),
     deptId: { value: text('deptId', '1234567') },
     estimatedSubmission: {
-      value: DateTime.fromMillis(date('estimatedSubmission')).toLocaleString(
-        DateTime.DATE_SHORT
-      ),
+      value: date('estimatedSubmission'),
     },
     step: {
       value: select(

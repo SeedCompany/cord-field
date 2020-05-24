@@ -32,7 +32,7 @@ const useStyles = makeStyles(({ spacing, palette }) => ({
 
 interface FieldOverviewCardData {
   value: string;
-  updatedAt: DateTime | string;
+  updatedAt: DateTime;
   to: To;
 }
 
