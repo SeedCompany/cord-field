@@ -1,0 +1,5 @@
+fragment BudgetOverview on Budget {
+  id
+  createdAt
+  total
+}
