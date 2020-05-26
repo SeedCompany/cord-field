@@ -15,7 +15,6 @@ import { ComponentType, FC, useState } from 'react';
 import * as React from 'react';
 import { CreateButton } from '../../../components/CreateButton';
 import { useDialog } from '../../../components/Dialog';
-import { PlantIcon } from '../../../components/Icons';
 import { ListItemLink, ListItemLinkProps } from '../../../components/Routing';
 import { CreateOrganization } from '../../Organizations/Create';
 import { sidebarTheme } from './sidebar.theme';
@@ -75,7 +74,6 @@ export const Sidebar: FC = () => {
     >
       <NavItem to="/projects" label="Projects" icon={FolderOpen} />
       <NavItem to="/languages" label="Languages" icon={Language} />
-      <NavItem to="/internships" label="Internships" icon={PlantIcon} />
       <NavItem to="/users" label="People" icon={People} />
       <NavItem to="/organizations" label="Partners" icon={People} />
     </List>
