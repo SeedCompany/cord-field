@@ -12,6 +12,7 @@ import * as React from 'react';
 import { displayStatus } from '../../api/displayStatus';
 import { displayLocation } from '../../api/location-helper';
 import { DisplaySimpleProperty } from '../DisplaySimpleProperty';
+import { useDateFormatter } from '../Formatters';
 import { Picture, useRandomPicture } from '../Picture';
 import { CardActionAreaLink } from '../Routing';
 import { Sensitivity } from '../Sensitivity';
@@ -74,6 +75,7 @@ export const ProjectListItemCard: FC<ProjectListItemCardProps> = ({
   const classes = useStyles();
   const pic = useRandomPicture({ seed: project?.id, width: 300, height: 200 });
   const location = displayLocation(project?.location.value);
+  const formatDate = useDateFormatter();
 
   return (
     <Card className={clsx(classes.root, className)}>
@@ -183,7 +185,11 @@ export const ProjectListItemCard: FC<ProjectListItemCardProps> = ({
             ) : (
               <DisplaySimpleProperty
                 label="ESAD"
-                value={project.estimatedSubmission?.value}
+                value={
+                  project.estimatedSubmission?.value
+                    ? formatDate(project.estimatedSubmission?.value)
+                    : undefined
+                }
                 ValueProps={{ color: 'primary' }}
               />
             )}
