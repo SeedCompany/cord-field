@@ -20,7 +20,7 @@ export const HeaderSearch: FC = () => {
     <TextField
       variant="outlined"
       className={classes.root}
-      placeholder="Projects, Languages, Regions, People"
+      placeholder="Projects, Languages, Locations, People"
       size="small"
       InputProps={{
         className: classes.input,
