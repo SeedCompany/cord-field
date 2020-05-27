@@ -1,5 +1,7 @@
 import { compact, fill, times } from 'lodash';
 
+export type ArrayItem<T> = T extends Array<infer U> ? U : never;
+
 export type Many<T> = T | readonly T[];
 
 export const many = <T>(items: Many<T>): readonly T[] =>

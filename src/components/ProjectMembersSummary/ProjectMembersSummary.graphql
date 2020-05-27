@@ -1,0 +1,11 @@
+fragment ProjectMemberList on ProjectMemberListOutput {
+  items {
+    user {
+      value {
+        id
+        avatarLetters
+        firstName
+      }
+    }
+  }
+}
