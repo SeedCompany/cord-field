@@ -51,7 +51,8 @@ export type DialogFormProps<T, R = void> = Omit<Config<T>, 'onSubmit'> & {
       | 'escapeKeyDown'
       | 'cancel'
       | 'cleanSubmit'
-      | 'success'
+      | 'success',
+    form: FormApi<T>
   ) => void;
   onExited?: () => void;
   DialogProps?: Omit<DialogProps, 'open' | 'onClose' | 'onExited'>;
@@ -92,13 +93,13 @@ export function DialogForm<T, R = void>({
       {...FormProps}
       onSubmit={async (data, form) => {
         if (onlyDirtySubmit && !form.getState().dirty) {
-          onClose?.('cleanSubmit');
+          onClose?.('cleanSubmit', form);
           return null;
         }
         try {
           const res = await onSubmit(data, form);
           onSuccess?.(res);
-          onClose?.('success');
+          onClose?.('success', form);
           return null;
         } catch (e) {
           return await handleFormError(e, errorHandlers);
@@ -114,7 +115,7 @@ export function DialogForm<T, R = void>({
             open={open}
             onClose={(e, reason) => {
               reset();
-              onClose?.(reason);
+              onClose?.(reason, form);
             }}
             onExited={onExited}
             disableBackdropClick={
@@ -139,7 +140,7 @@ export function DialogForm<T, R = void>({
                   {...CloseProps}
                   onClick={() => {
                     reset();
-                    onClose?.('cancel');
+                    onClose?.('cancel', form);
                   }}
                 >
                   {closeLabel || 'Cancel'}

@@ -1,4 +1,5 @@
 export * from './CheckboxField';
+export * from './CheckboxesField';
 export * from './decorators';
 export * from './DateField';
 export * from './EmailField';
