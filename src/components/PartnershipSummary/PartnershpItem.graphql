@@ -1,0 +1,10 @@
+fragment PartnershipItem on Partnership {
+  id
+  organization {
+    id
+    name {
+      value
+    }
+    avatarLetters
+  }
+}
