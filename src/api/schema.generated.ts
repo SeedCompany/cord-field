@@ -50,11 +50,6 @@ export interface AttachUserToSecurityGroupInput {
   request: AttachUserToSecurityGroup;
 }
 
-export interface BaseNodeConsistencyInput {
-  /** The BaseNode type */
-  baseNode: Scalars['String'];
-}
-
 export type BibleBook =
   | 'Genesis'
   | 'Exodus'
@@ -262,6 +257,20 @@ export interface CreateCountryOutput {
   country: Country;
 }
 
+export interface CreateDefinedFileVersionInput {
+  /** The ID returned from the `requestFileUpload` mutation */
+  uploadId: Scalars['ID'];
+  /** An optional name. Defaults to file name. */
+  name: Scalars['String'];
+}
+
+export interface CreateDirectoryInput {
+  /** The ID for the parent directory */
+  parentId: Scalars['ID'];
+  /** The directory name */
+  name: Scalars['String'];
+}
+
 export interface CreateEducation {
   userId: Scalars['ID'];
   degree: Degree;
@@ -278,13 +287,27 @@ export interface CreateEducationOutput {
   education: Education;
 }
 
-export interface CreateFileInput {
-  /** The ID returned from the CreateUpload mutation */
+export interface CreateFileVersionInput {
+  /** The ID returned from the `requestFileUpload` mutation */
   uploadId: Scalars['ID'];
-  /** The directory to put this file in */
+  /** The directory ID if creating a new file or the file ID if creating a new version */
   parentId: Scalars['ID'];
   /** The file name */
   name: Scalars['String'];
+}
+
+export interface CreateFilm {
+  name: Scalars['String'];
+  ranges?: Maybe<CreateRange[]>;
+}
+
+export interface CreateFilmInput {
+  film: CreateFilm;
+}
+
+export interface CreateFilmOutput {
+  __typename?: 'CreateFilmOutput';
+  film: Film;
 }
 
 export interface CreateInternshipEngagement {
@@ -350,6 +373,20 @@ export interface CreateLanguageOutput {
   language: Language;
 }
 
+export interface CreateLiteracyMaterial {
+  name: Scalars['String'];
+  ranges?: Maybe<CreateRange[]>;
+}
+
+export interface CreateLiteracyMaterialInput {
+  literacyMaterial: CreateLiteracyMaterial;
+}
+
+export interface CreateLiteracyMaterialOutput {
+  __typename?: 'CreateLiteracyMaterialOutput';
+  literacyMaterial: LiteracyMaterial;
+}
+
 export interface CreateOrganization {
   name: Scalars['String'];
 }
@@ -367,6 +404,10 @@ export interface CreatePartnership {
   organizationId: Scalars['ID'];
   projectId: Scalars['ID'];
   agreementStatus?: Maybe<PartnershipAgreementStatus>;
+  /** The partner agreement */
+  agreement?: Maybe<CreateDefinedFileVersionInput>;
+  /** The MOU agreement */
+  mou?: Maybe<CreateDefinedFileVersionInput>;
   mouStatus?: Maybe<PartnershipAgreementStatus>;
   mouStart?: Maybe<Scalars['Date']>;
   mouEnd?: Maybe<Scalars['Date']>;
@@ -453,6 +494,11 @@ export interface CreateProjectOutput {
   project: Project;
 }
 
+export interface CreateRange {
+  start: Scalars['Float'];
+  end: Scalars['Float'];
+}
+
 export interface CreateRegion {
   name: Scalars['String'];
   /** The zone ID that the region will be associated with */
@@ -482,6 +528,20 @@ export interface CreateSecurityGroupOutput {
   __typename?: 'CreateSecurityGroupOutput';
   success: Scalars['Boolean'];
   id?: Maybe<Scalars['ID']>;
+}
+
+export interface CreateStory {
+  name: Scalars['String'];
+  ranges?: Maybe<CreateRange[]>;
+}
+
+export interface CreateStoryInput {
+  story: CreateStory;
+}
+
+export interface CreateStoryOutput {
+  __typename?: 'CreateStoryOutput';
+  story: Story;
 }
 
 export interface CreateUnavailability {
@@ -584,7 +644,7 @@ export type Directory = FileNode &
      * This can be used to populate a path-like UI,
      * without having to fetch each parent serially.
      */
-    parents: Directory[];
+    parents: FileNode[];
     /** The user who created this directory */
     createdBy: User;
     /** Return the file nodes of this directory */
@@ -733,19 +793,23 @@ export type File = FileNode &
      * This can be used to populate a path-like UI,
      * without having to fetch each parent serially.
      */
-    parents: Directory[];
+    parents: FileNode[];
     /** The user who uploaded the first version of this file */
     createdBy: User;
-    /** The user who uploaded the most recent version of this file */
-    modifiedBy: User;
-    modifiedAt: Scalars['DateTime'];
     mimeType: Scalars['String'];
     size: Scalars['Int'];
-    /** Return the file versions of this file */
-    versions: FileVersion[];
+    modifiedAt: Scalars['DateTime'];
+    /** The user who uploaded the most recent version of this file */
+    modifiedBy: User;
+    /** Return the versions of this file */
+    children: FileListOutput;
     /** A direct url to download the file */
     downloadUrl: Scalars['String'];
   };
+
+export interface FileChildrenArgs {
+  input?: Maybe<FileListInput>;
+}
 
 export interface FileFilters {
   /** Only file nodes matching this name */
@@ -775,7 +839,7 @@ export interface FileListOutput {
    * Note that this could include items that where also in sibling pages;
    * you should de-duplicate these based on ID.
    */
-  items: FileOrDirectory[];
+  items: FileNode[];
   /** The total number of items across all pages */
   total: Scalars['Int'];
   /** Whether the next page exists */
@@ -797,7 +861,7 @@ export interface FileNode {
    * This can be used to populate a path-like UI,
    * without having to fetch each parent serially.
    */
-  parents: Directory[];
+  parents: FileNode[];
   /** The user who created this node */
   createdBy: User;
 }
@@ -816,19 +880,71 @@ export type FileNodeCategory =
   | 'Spreadsheet'
   | 'Video';
 
-/** The type of node in the file tree. A file or directory */
-export type FileNodeType = 'Directory' | 'File';
+/** The type of node in the file tree. A file, directory or file version. */
+export type FileNodeType = 'Directory' | 'File' | 'FileVersion';
 
-export type FileOrDirectory = File | Directory;
+export type FileVersion = FileNode &
+  Resource & {
+    __typename?: 'FileVersion';
+    id: Scalars['ID'];
+    createdAt: Scalars['DateTime'];
+    type: FileNodeType;
+    category: FileNodeCategory;
+    /**
+     * The name of the node.
+     * This is user defined but does not necessarily need to be url safe.
+     */
+    name: Scalars['String'];
+    /**
+     * A list of the parents all the way up the tree.
+     * This can be used to populate a path-like UI,
+     * without having to fetch each parent serially.
+     */
+    parents: FileNode[];
+    /** The user who created this file version */
+    createdBy: User;
+    mimeType: Scalars['String'];
+    size: Scalars['Int'];
+  };
 
-export type FileVersion = Resource & {
-  __typename?: 'FileVersion';
+export type Film = Resource & {
+  __typename?: 'Film';
   id: Scalars['ID'];
   createdAt: Scalars['DateTime'];
-  /** The user who created this file version */
-  createdBy: User;
-  size: Scalars['Int'];
+  name: SecuredString;
+  ranges?: Maybe<SecuredRange>;
 };
+
+export interface FilmFilters {
+  /** Only Film matching this name */
+  name?: Maybe<Scalars['String']>;
+}
+
+export interface FilmListInput {
+  /** The number of items to return in a single page */
+  count?: Maybe<Scalars['Int']>;
+  /** 1-indexed page number for offset pagination. */
+  page?: Maybe<Scalars['Int']>;
+  /** The field in which to sort on */
+  sort?: Maybe<Scalars['String']>;
+  /** The order in which to sort the list */
+  order?: Maybe<Order>;
+  filter?: Maybe<FilmFilters>;
+}
+
+export interface FilmListOutput {
+  __typename?: 'FilmListOutput';
+  /**
+   * The page of film.
+   * Note that this could include items that where also in sibling pages;
+   * you should de-duplicate these based on ID.
+   */
+  items: Film[];
+  /** The total number of items across all pages */
+  total: Scalars['Int'];
+  /** Whether the next page exists */
+  hasMore: Scalars['Boolean'];
+}
 
 export interface GroupState {
   stateId: Scalars['ID'];
@@ -904,22 +1020,22 @@ export type InternshipProject = Project &
     estimatedSubmission: SecuredDate;
     modifiedAt: Scalars['DateTime'];
     avatarLetters?: Maybe<Scalars['String']>;
-    /** The project members */
-    team: SecuredProjectMemberList;
-    engagements: SecuredEngagementList;
     /** The project's current budget */
     budget: SecuredBudget;
-    partnerships: SecuredPartnershipList;
     /** The root filesystem directory of this project */
     rootDirectory: Directory;
+    engagements: SecuredEngagementList;
+    /** The project members */
+    team: SecuredProjectMemberList;
+    partnerships: SecuredPartnershipList;
   };
-
-export interface InternshipProjectTeamArgs {
-  input?: Maybe<ProjectMemberListInput>;
-}
 
 export interface InternshipProjectEngagementsArgs {
   input?: Maybe<EngagementListInput>;
+}
+
+export interface InternshipProjectTeamArgs {
+  input?: Maybe<ProjectMemberListInput>;
 }
 
 export interface InternshipProjectPartnershipsArgs {
@@ -1019,6 +1135,45 @@ export interface ListSecurityGroupInput {
 export interface ListSecurityGroupOutput {
   __typename?: 'ListSecurityGroupOutput';
   items: SecurityGroup[];
+}
+
+export type LiteracyMaterial = Resource & {
+  __typename?: 'LiteracyMaterial';
+  id: Scalars['ID'];
+  createdAt: Scalars['DateTime'];
+  name: SecuredString;
+  ranges?: Maybe<SecuredLiteracyMaterialRange>;
+};
+
+export interface LiteracyMaterialFilters {
+  /** Only literacy material matching this name */
+  name?: Maybe<Scalars['String']>;
+}
+
+export interface LiteracyMaterialListInput {
+  /** The number of items to return in a single page */
+  count?: Maybe<Scalars['Int']>;
+  /** 1-indexed page number for offset pagination. */
+  page?: Maybe<Scalars['Int']>;
+  /** The field in which to sort on */
+  sort?: Maybe<Scalars['String']>;
+  /** The order in which to sort the list */
+  order?: Maybe<Order>;
+  filter?: Maybe<LiteracyMaterialFilters>;
+}
+
+export interface LiteracyMaterialListOutput {
+  __typename?: 'LiteracyMaterialListOutput';
+  /**
+   * The page of literacymaterial.
+   * Note that this could include items that where also in sibling pages;
+   * you should de-duplicate these based on ID.
+   */
+  items: LiteracyMaterial[];
+  /** The total number of items across all pages */
+  total: Scalars['Int'];
+  /** Whether the next page exists */
+  hasMore: Scalars['Boolean'];
 }
 
 export type Location = Country | Region | Zone;
@@ -1149,6 +1304,23 @@ export interface Mutation {
   updateCountry: UpdateCountryOutput;
   /** Delete a location */
   deleteLocation: Scalars['Boolean'];
+  createDirectory: Directory;
+  /** Delete a file or directory */
+  deleteFileNode: Scalars['Boolean'];
+  /** Start the file upload process by requesting an upload */
+  requestFileUpload: RequestUploadOutput;
+  /**
+   * Create a new file version.
+   * This is always the second step after `requestFileUpload` mutation.
+   * If the given parent is a file, this will attach the new version to it.
+   * If the given parent is a directory, this will attach the new version to
+   * the existing file with the same name or create a new file if not found.
+   */
+  createFileVersion: File;
+  /** Rename a file or directory */
+  renameFileNode: FileNode;
+  /** Move a file or directory */
+  moveFileNode: FileNode;
   /** Create a Partnership entry */
   createPartnership: CreatePartnershipOutput;
   /** Update a Partnership */
@@ -1169,12 +1341,30 @@ export interface Mutation {
   updateLanguage: UpdateLanguageOutput;
   /** Delete a language */
   deleteLanguage: Scalars['Boolean'];
+  /** Create an film */
+  createFilm: CreateFilmOutput;
+  /** Update an film */
+  updateFilm: UpdateFilmOutput;
+  /** Delete an film */
+  deleteFilm: Scalars['Boolean'];
+  /** Create an literacy material */
+  createLiteracyMaterial: CreateLiteracyMaterialOutput;
+  /** Update an literacyMaterial */
+  updateLiteracyMaterial: UpdateLiteracyMaterialOutput;
+  /** Delete an literacyMaterial */
+  deleteLiteracyMaterial: Scalars['Boolean'];
   /** Create a product entry */
   createProduct: CreateProductOutput;
   /** Update a product entry */
   updateProduct: UpdateProductOutput;
   /** Delete a product entry */
   deleteProduct: Scalars['Boolean'];
+  /** Create an story */
+  createStory: CreateStoryOutput;
+  /** Update an story */
+  updateStory: UpdateStoryOutput;
+  /** Delete an story */
+  deleteStory: Scalars['Boolean'];
   /** Create a language engagement */
   createLanguageEngagement: CreateLanguageEngagementOutput;
   /** Create an internship engagement */
@@ -1185,19 +1375,6 @@ export interface Mutation {
   updateInternshipEngagement: UpdateInternshipEngagementOutput;
   /** Delete an engagement */
   deleteEngagement: Scalars['Boolean'];
-  createDirectory: Directory;
-  /** Delete a file or directory */
-  deleteFileNode: Scalars['Boolean'];
-  /** Start the file upload process by requesting an upload */
-  requestUpload: RequestUploadOutput;
-  /** Create a new file in the given directory after uploading it */
-  createFile: File;
-  /** Update an existing file (add a new version) after uploading it */
-  updateFile: File;
-  /** Rename a file or directory */
-  renameFileNode: FileOrDirectory;
-  /** Move a file or directory */
-  moveFileNode: File;
   /** Create a project member */
   createProjectMember: CreateProjectMemberOutput;
   /** Update a project member */
@@ -1370,6 +1547,26 @@ export interface MutationDeleteLocationArgs {
   id: Scalars['ID'];
 }
 
+export interface MutationCreateDirectoryArgs {
+  input: CreateDirectoryInput;
+}
+
+export interface MutationDeleteFileNodeArgs {
+  id: Scalars['ID'];
+}
+
+export interface MutationCreateFileVersionArgs {
+  input: CreateFileVersionInput;
+}
+
+export interface MutationRenameFileNodeArgs {
+  input: RenameFileInput;
+}
+
+export interface MutationMoveFileNodeArgs {
+  input: MoveFileInput;
+}
+
 export interface MutationCreatePartnershipArgs {
   input: CreatePartnershipInput;
 }
@@ -1410,6 +1607,30 @@ export interface MutationDeleteLanguageArgs {
   id: Scalars['ID'];
 }
 
+export interface MutationCreateFilmArgs {
+  input: CreateFilmInput;
+}
+
+export interface MutationUpdateFilmArgs {
+  input: UpdateFilmInput;
+}
+
+export interface MutationDeleteFilmArgs {
+  id: Scalars['ID'];
+}
+
+export interface MutationCreateLiteracyMaterialArgs {
+  input: CreateLiteracyMaterialInput;
+}
+
+export interface MutationUpdateLiteracyMaterialArgs {
+  input: UpdateLiteracyMaterialInput;
+}
+
+export interface MutationDeleteLiteracyMaterialArgs {
+  id: Scalars['ID'];
+}
+
 export interface MutationCreateProductArgs {
   input: CreateProductInput;
 }
@@ -1419,6 +1640,18 @@ export interface MutationUpdateProductArgs {
 }
 
 export interface MutationDeleteProductArgs {
+  id: Scalars['ID'];
+}
+
+export interface MutationCreateStoryArgs {
+  input: CreateStoryInput;
+}
+
+export interface MutationUpdateStoryArgs {
+  input: UpdateStoryInput;
+}
+
+export interface MutationDeleteStoryArgs {
   id: Scalars['ID'];
 }
 
@@ -1440,30 +1673,6 @@ export interface MutationUpdateInternshipEngagementArgs {
 
 export interface MutationDeleteEngagementArgs {
   id: Scalars['ID'];
-}
-
-export interface MutationCreateDirectoryArgs {
-  name: Scalars['String'];
-}
-
-export interface MutationDeleteFileNodeArgs {
-  id: Scalars['ID'];
-}
-
-export interface MutationCreateFileArgs {
-  input: CreateFileInput;
-}
-
-export interface MutationUpdateFileArgs {
-  input: UpdateFileInput;
-}
-
-export interface MutationRenameFileNodeArgs {
-  input: RenameFileInput;
-}
-
-export interface MutationMoveFileNodeArgs {
-  input: MoveFileInput;
 }
 
 export interface MutationCreateProjectMemberArgs {
@@ -1604,6 +1813,10 @@ export type Partnership = Resource & {
   mouEnd: SecuredDate;
   organization: Organization;
   types: SecuredPartnershipTypes;
+  /** The MOU agreement */
+  mou: SecuredFile;
+  /** The partner agreement */
+  agreement: SecuredFile;
 };
 
 export type PartnershipAgreementStatus =
@@ -1788,11 +2001,7 @@ export interface Project {
   estimatedSubmission: SecuredDate;
   modifiedAt: Scalars['DateTime'];
   avatarLetters?: Maybe<Scalars['String']>;
-  /** The project members */
-  team: SecuredProjectMemberList;
-  engagements: SecuredEngagementList;
   budget: SecuredBudget;
-  partnerships: SecuredPartnershipList;
   rootDirectory: Directory;
 }
 
@@ -1978,6 +2187,14 @@ export interface Query {
   locations: LocationListOutput;
   /** Check location consistency */
   checkLocationConsistency: Scalars['Boolean'];
+  directory: Directory;
+  file: File;
+  fileNode: FileNode;
+  /**
+   * Check Consistency in File Nodes
+   * @deprecated This should have never existed
+   */
+  checkFileConsistency: Scalars['Boolean'];
   /** Look up a partnership by ID */
   partnership: Partnership;
   /** Look up partnerships */
@@ -2002,21 +2219,28 @@ export interface Query {
   languages: LanguageListOutput;
   /** Check language node consistency */
   checkLanguageConsistency: Scalars['Boolean'];
+  /** Look up an film by its ID */
+  film: Film;
+  /** Look up films */
+  films: FilmListOutput;
+  /** Look up an literacyMaterial by its ID */
+  literacyMaterial: LiteracyMaterial;
+  /** Look up literacyMaterials */
+  literacyMaterials: LiteracyMaterialListOutput;
   /** Read a product by id */
   product: Product;
   /** Look up products */
   products: ProductListOutput;
+  /** Look up an story by its ID */
+  story: Story;
+  /** Look up storys */
+  storys: StoryListOutput;
   /** Lookup an engagement by ID */
   engagement: Engagement;
   /** Look up engagements */
   engagements: EngagementListOutput;
   /** Check Consistency in Engagement Nodes */
   checkEngagementConsistency: Scalars['Boolean'];
-  directory: Directory;
-  file: File;
-  fileNode: FileOrDirectory;
-  /** Check Consistency in File Nodes */
-  checkFileConsistency: Scalars['Boolean'];
   /** Look up a project member by ID */
   projectMember: ProjectMember;
   /** Look up project members */
@@ -2095,6 +2319,22 @@ export interface QueryLocationsArgs {
   input?: Maybe<LocationListInput>;
 }
 
+export interface QueryDirectoryArgs {
+  id: Scalars['ID'];
+}
+
+export interface QueryFileArgs {
+  id: Scalars['ID'];
+}
+
+export interface QueryFileNodeArgs {
+  id: Scalars['ID'];
+}
+
+export interface QueryCheckFileConsistencyArgs {
+  type: FileNodeType;
+}
+
 export interface QueryPartnershipArgs {
   id: Scalars['ID'];
 }
@@ -2127,12 +2367,36 @@ export interface QueryLanguagesArgs {
   input?: Maybe<LanguageListInput>;
 }
 
+export interface QueryFilmArgs {
+  id: Scalars['ID'];
+}
+
+export interface QueryFilmsArgs {
+  input?: Maybe<FilmListInput>;
+}
+
+export interface QueryLiteracyMaterialArgs {
+  id: Scalars['ID'];
+}
+
+export interface QueryLiteracyMaterialsArgs {
+  input?: Maybe<LiteracyMaterialListInput>;
+}
+
 export interface QueryProductArgs {
   id: Scalars['ID'];
 }
 
 export interface QueryProductsArgs {
   input?: Maybe<ProductListInput>;
+}
+
+export interface QueryStoryArgs {
+  id: Scalars['ID'];
+}
+
+export interface QueryStorysArgs {
+  input?: Maybe<StoryListInput>;
 }
 
 export interface QueryEngagementArgs {
@@ -2145,22 +2409,6 @@ export interface QueryEngagementsArgs {
 
 export interface QueryCheckEngagementConsistencyArgs {
   input: EngagementConsistencyInput;
-}
-
-export interface QueryDirectoryArgs {
-  id: Scalars['ID'];
-}
-
-export interface QueryFileArgs {
-  id: Scalars['ID'];
-}
-
-export interface QueryFileNodeArgs {
-  id: Scalars['ID'];
-}
-
-export interface QueryCheckFileConsistencyArgs {
-  input: BaseNodeConsistencyInput;
 }
 
 export interface QueryProjectMemberArgs {
@@ -2190,6 +2438,14 @@ export interface QueryNextStatesArgs {
 export interface QueryListRequiredFieldsArgs {
   id: Scalars['ID'];
 }
+
+export type Range = Resource & {
+  __typename?: 'Range';
+  id: Scalars['ID'];
+  createdAt: Scalars['DateTime'];
+  start: Scalars['Float'];
+  end: Scalars['Float'];
+};
 
 /** Entities that are readable */
 export interface Readable {
@@ -2227,7 +2483,7 @@ export interface RemoveUserFromSecurityGroupInput {
 }
 
 export interface RenameFileInput {
-  /** The file or directory's ID */
+  /** The file node's ID */
   id: Scalars['ID'];
   /** The new name */
   name: Scalars['String'];
@@ -2415,6 +2671,19 @@ export type SecuredEngagementList = Readable & {
 };
 
 /**
+ * An object with a file `value` and additional authorization information.
+ * The value is only given if `canRead` is `true` otherwise it is `null`.
+ * These `can*` authorization properties are specific to the user making the request.
+ */
+export type SecuredFile = Readable &
+  Editable & {
+    __typename?: 'SecuredFile';
+    canRead: Scalars['Boolean'];
+    canEdit: Scalars['Boolean'];
+    value?: Maybe<File>;
+  };
+
+/**
  * An object with an integer `value` and additional authorization information.
  * The value is only given if `canRead` is `true` otherwise it is `null`.
  * These `can*` authorization properties are specific to the user making the request.
@@ -2451,6 +2720,19 @@ export type SecuredLanguage = Readable &
     canRead: Scalars['Boolean'];
     canEdit: Scalars['Boolean'];
     value?: Maybe<Language>;
+  };
+
+/**
+ * An object whose `value` is a list of literacymaterials and has additional authorization information.
+ * The value is only given if `canRead` is `true` otherwise it is empty: `[]`.
+ * These `can*` authorization properties are specific to the user making the request.
+ */
+export type SecuredLiteracyMaterialRange = Readable &
+  Editable & {
+    __typename?: 'SecuredLiteracyMaterialRange';
+    canRead: Scalars['Boolean'];
+    canEdit: Scalars['Boolean'];
+    value: Range[];
   };
 
 /**
@@ -2611,6 +2893,19 @@ export type SecuredProjectStep = Readable &
   };
 
 /**
+ * An object whose `value` is a list of ranges and has additional authorization information.
+ * The value is only given if `canRead` is `true` otherwise it is empty: `[]`.
+ * These `can*` authorization properties are specific to the user making the request.
+ */
+export type SecuredRange = Readable &
+  Editable & {
+    __typename?: 'SecuredRange';
+    canRead: Scalars['Boolean'];
+    canEdit: Scalars['Boolean'];
+    value: Range[];
+  };
+
+/**
  * An object with a region `value` and additional authorization information.
  * The value is only given if `canRead` is `true` otherwise it is `null`.
  * These `can*` authorization properties are specific to the user making the request.
@@ -2634,6 +2929,19 @@ export type SecuredRoles = Readable &
     canRead: Scalars['Boolean'];
     canEdit: Scalars['Boolean'];
     value: Role[];
+  };
+
+/**
+ * An object whose `value` is a list of ranges and has additional authorization information.
+ * The value is only given if `canRead` is `true` otherwise it is empty: `[]`.
+ * These `can*` authorization properties are specific to the user making the request.
+ */
+export type SecuredStoryRange = Readable &
+  Editable & {
+    __typename?: 'SecuredStoryRange';
+    canRead: Scalars['Boolean'];
+    canEdit: Scalars['Boolean'];
+    value: Range[];
   };
 
 /**
@@ -2729,6 +3037,45 @@ export interface StateListOutput {
   items: State[];
 }
 
+export type Story = Resource & {
+  __typename?: 'Story';
+  id: Scalars['ID'];
+  createdAt: Scalars['DateTime'];
+  name: SecuredString;
+  ranges?: Maybe<SecuredStoryRange>;
+};
+
+export interface StoryFilters {
+  /** Only story matching this name */
+  name?: Maybe<Scalars['String']>;
+}
+
+export interface StoryListInput {
+  /** The number of items to return in a single page */
+  count?: Maybe<Scalars['Int']>;
+  /** 1-indexed page number for offset pagination. */
+  page?: Maybe<Scalars['Int']>;
+  /** The field in which to sort on */
+  sort?: Maybe<Scalars['String']>;
+  /** The order in which to sort the list */
+  order?: Maybe<Order>;
+  filter?: Maybe<StoryFilters>;
+}
+
+export interface StoryListOutput {
+  __typename?: 'StoryListOutput';
+  /**
+   * The page of story.
+   * Note that this could include items that where also in sibling pages;
+   * you should de-duplicate these based on ID.
+   */
+  items: Story[];
+  /** The total number of items across all pages */
+  total: Scalars['Int'];
+  /** Whether the next page exists */
+  hasMore: Scalars['Boolean'];
+}
+
 export type TranslationProject = Project &
   Resource & {
     __typename?: 'TranslationProject';
@@ -2747,22 +3094,22 @@ export type TranslationProject = Project &
     estimatedSubmission: SecuredDate;
     modifiedAt: Scalars['DateTime'];
     avatarLetters?: Maybe<Scalars['String']>;
-    /** The project members */
-    team: SecuredProjectMemberList;
-    engagements: SecuredEngagementList;
     /** The project's current budget */
     budget: SecuredBudget;
-    partnerships: SecuredPartnershipList;
     /** The root filesystem directory of this project */
     rootDirectory: Directory;
+    engagements: SecuredEngagementList;
+    /** The project members */
+    team: SecuredProjectMemberList;
+    partnerships: SecuredPartnershipList;
   };
-
-export interface TranslationProjectTeamArgs {
-  input?: Maybe<ProjectMemberListInput>;
-}
 
 export interface TranslationProjectEngagementsArgs {
   input?: Maybe<EngagementListInput>;
+}
+
+export interface TranslationProjectTeamArgs {
+  input?: Maybe<ProjectMemberListInput>;
 }
 
 export interface TranslationProjectPartnershipsArgs {
@@ -2884,11 +3231,19 @@ export interface UpdateEducationOutput {
   education: Education;
 }
 
-export interface UpdateFileInput {
-  /** The ID returned from the CreateUpload mutation */
-  uploadId: Scalars['ID'];
-  /** The file ID to attach this new version to */
-  parentId: Scalars['ID'];
+export interface UpdateFilm {
+  id: Scalars['ID'];
+  name?: Maybe<Scalars['String']>;
+  ranges?: Maybe<UpdateRange[]>;
+}
+
+export interface UpdateFilmInput {
+  film: UpdateFilm;
+}
+
+export interface UpdateFilmOutput {
+  __typename?: 'UpdateFilmOutput';
+  film: Film;
 }
 
 export interface UpdateInternshipEngagement {
@@ -2953,6 +3308,21 @@ export interface UpdateLanguageOutput {
   language: Language;
 }
 
+export interface UpdateLiteracyMaterial {
+  id: Scalars['ID'];
+  name?: Maybe<Scalars['String']>;
+  ranges?: Maybe<UpdateRange[]>;
+}
+
+export interface UpdateLiteracyMaterialInput {
+  literacyMaterial: UpdateLiteracyMaterial;
+}
+
+export interface UpdateLiteracyMaterialOutput {
+  __typename?: 'UpdateLiteracyMaterialOutput';
+  literacyMaterial: LiteracyMaterial;
+}
+
 export interface UpdateOrganization {
   id: Scalars['ID'];
   name?: Maybe<Scalars['String']>;
@@ -2970,6 +3340,10 @@ export interface UpdateOrganizationOutput {
 export interface UpdatePartnership {
   id: Scalars['ID'];
   agreementStatus?: Maybe<PartnershipAgreementStatus>;
+  /** The partner agreement */
+  agreement?: Maybe<CreateDefinedFileVersionInput>;
+  /** The MOU agreement */
+  mou?: Maybe<CreateDefinedFileVersionInput>;
   mouStatus?: Maybe<PartnershipAgreementStatus>;
   mouStart?: Maybe<Scalars['Date']>;
   mouEnd?: Maybe<Scalars['Date']>;
@@ -3036,6 +3410,12 @@ export interface UpdateProjectOutput {
   project: Project;
 }
 
+export interface UpdateRange {
+  id: Scalars['ID'];
+  start: Scalars['Float'];
+  end: Scalars['Float'];
+}
+
 export interface UpdateRegion {
   id: Scalars['ID'];
   name?: Maybe<Scalars['String']>;
@@ -3077,6 +3457,21 @@ export interface UpdateState {
 
 export interface UpdateStateInput {
   state: UpdateState;
+}
+
+export interface UpdateStory {
+  id: Scalars['ID'];
+  name?: Maybe<Scalars['String']>;
+  ranges?: Maybe<UpdateRange[]>;
+}
+
+export interface UpdateStoryInput {
+  story: UpdateStory;
+}
+
+export interface UpdateStoryOutput {
+  __typename?: 'UpdateStoryOutput';
+  story: Story;
 }
 
 export interface UpdateUnavailability {
@@ -3143,6 +3538,9 @@ export type User = Resource & {
   phone: SecuredString;
   timezone: SecuredString;
   bio: SecuredString;
+  fullName?: Maybe<Scalars['String']>;
+  firstName?: Maybe<Scalars['String']>;
+  avatarLetters?: Maybe<Scalars['String']>;
   unavailabilities: SecuredUnavailabilityList;
   organizations: SecuredOrganizationList;
   education: SecuredEducationList;

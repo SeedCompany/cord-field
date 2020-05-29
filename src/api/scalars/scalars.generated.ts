@@ -65,6 +65,13 @@ export const typePolicies: TypePolicies = {
       },
     },
   },
+  Film: {
+    fields: {
+      createdAt: {
+        read: Parsers.DateTime,
+      },
+    },
+  },
   InternshipEngagement: {
     fields: {
       createdAt: {
@@ -102,6 +109,13 @@ export const typePolicies: TypePolicies = {
       },
     },
   },
+  LiteracyMaterial: {
+    fields: {
+      createdAt: {
+        read: Parsers.DateTime,
+      },
+    },
+  },
   Organization: {
     fields: {
       createdAt: {
@@ -133,6 +147,13 @@ export const typePolicies: TypePolicies = {
       },
     },
   },
+  Range: {
+    fields: {
+      createdAt: {
+        read: Parsers.DateTime,
+      },
+    },
+  },
   Region: {
     fields: {
       createdAt: {
@@ -151,6 +172,13 @@ export const typePolicies: TypePolicies = {
     fields: {
       value: {
         read: optional(Parsers.DateTime),
+      },
+    },
+  },
+  Story: {
+    fields: {
+      createdAt: {
+        read: Parsers.DateTime,
       },
     },
   },
