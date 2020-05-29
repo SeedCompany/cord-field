@@ -9,9 +9,12 @@ import {
   MemberSummaryItem,
 } from './MemberListSummary';
 
-export default { title: 'Components/Member List Summary' };
+export default {
+  title: 'Components/Member List Summary',
+  excludeStories: ['members', 'randomPersonPic'],
+};
 
-const randomPersonPic = (name: string, gender: 'female' | 'male') => {
+export const randomPersonPic = (name: string, gender: 'female' | 'male') => {
   const id = Number(seedRandom(name).quick().toFixed(2)) * 100;
   return `https://randomuser.me/api/portraits/${
     gender === 'female' ? 'women' : 'men'
