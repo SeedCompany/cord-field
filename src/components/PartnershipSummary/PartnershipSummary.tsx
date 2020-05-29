@@ -1,8 +1,16 @@
-import { Group } from '@material-ui/icons';
+import { makeStyles } from '@material-ui/core';
 import * as React from 'react';
 import { FC } from 'react';
+import { PeopleJoinedIcon } from '../Icons';
 import { MemberListSummary, MemberSummaryItem } from '../MemberListSummary';
 import { PartnershipSummaryFragment } from './PartnershipSummary.generated';
+
+const useStyles = makeStyles(() => ({
+  icon: {
+    fontSize: 42,
+    marginTop: -8,
+  },
+}));
 
 export interface PartnershipSummaryProps {
   partnerships?: PartnershipSummaryFragment;
@@ -17,13 +25,14 @@ export const PartnershipSummary: FC<PartnershipSummaryProps> = ({
       avatarLetters: item.organization.avatarLetters ?? '',
     })
   );
+  const classes = useStyles();
 
   return (
     <MemberListSummary
       title="Partners"
       to="partnerships"
       members={members}
-      icon={Group}
+      icon={<PeopleJoinedIcon className={classes.icon} />}
     />
   );
 };
