@@ -21,15 +21,15 @@ const generatePartnership = (name: string): PartnershipItemFragment => ({
 export const PartnershipSummary = () => {
   const partnerships: PartnershipSummaryFragment = {
     items: [
-      generatePartnership('seed'),
-      generatePartnership('blerp'),
-      generatePartnership('grace'),
+      generatePartnership('Seed Company'),
+      generatePartnership('Wcyliffe'),
+      generatePartnership('DBS'),
     ],
   };
 
   return (
     <Card style={{ maxWidth: 400 }}>
-      <PS partnerships={boolean('Loading', true) ? undefined : partnerships} />
+      <PS partnerships={boolean('loading', false) ? undefined : partnerships} />
     </Card>
   );
 };
