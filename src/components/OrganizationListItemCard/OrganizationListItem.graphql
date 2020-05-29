@@ -1,0 +1,6 @@
+fragment OrganizationListItem on Organization {
+  id
+  name {
+    value
+  }
+}
