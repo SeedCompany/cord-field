@@ -1,1 +1,1 @@
-export * from './OrganizationItemCard';
+export * from './OrganizationListItemCard';

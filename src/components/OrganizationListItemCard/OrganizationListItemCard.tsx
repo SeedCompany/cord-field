@@ -7,8 +7,8 @@ import {
 } from '@material-ui/core';
 import { Skeleton } from '@material-ui/lab';
 import clsx from 'clsx';
+import { random } from 'lodash';
 import React, { FC } from 'react';
-import { Picture, useRandomPicture } from '../Picture';
 import { CardActionAreaLink } from '../Routing';
 import { OrganizationListItemFragment } from './OrganizationListItem.generated';
 
@@ -22,11 +22,6 @@ const useStyles = makeStyles(({ breakpoints, spacing }) => {
     card: {
       display: 'flex',
       alignItems: 'initial',
-    },
-    media: {
-      width: cardWidth / 3,
-      borderTopRightRadius: 0,
-      borderBottomRightRadius: 0,
     },
     cardContent: {
       flex: 1,
@@ -44,16 +39,14 @@ export interface OrganizationListItemCardProps {
   className?: string;
 }
 
+// min/max is based on production data
+const randomNameLength = () => random(3, 50);
+
 export const OrganizationListItemCard: FC<OrganizationListItemCardProps> = ({
   organization,
   className,
 }) => {
   const classes = useStyles();
-  const pic = useRandomPicture({
-    seed: organization?.id,
-    width: 300,
-    height: 200,
-  });
 
   return (
     <Card className={clsx(className, classes.root)}>
@@ -62,19 +55,12 @@ export const OrganizationListItemCard: FC<OrganizationListItemCardProps> = ({
         to={`/organizations/${organization?.id}`}
         className={classes.card}
       >
-        <div className={classes.media}>
-          {!organization ? (
-            <Skeleton variant="rect" height={200} />
-          ) : (
-            <Picture fit="cover" {...pic} />
-          )}
-        </div>
         <CardContent className={classes.cardContent}>
           <Grid container direction="column" spacing={1}>
             <Grid item>
               <Typography variant="h4">
                 {!organization ? (
-                  <Skeleton variant="text" />
+                  <Skeleton variant="text" width={`${randomNameLength()}ch`} />
                 ) : (
                   organization.name.value
                 )}

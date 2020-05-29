@@ -8,6 +8,6 @@ const Option = SortOption as ComponentType<SortOptionProps<Organization>>;
 
 export const OrganizationSortOptions = () => (
   <>
-    <Option default value="name" label="Organizations" asc="A-Z" desc="Z-A" />
+    <Option default value="name" label="Name" asc="A-Z" desc="Z-A" />
   </>
 );

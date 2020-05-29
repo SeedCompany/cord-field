@@ -1,15 +1,15 @@
 import { boolean, text } from '@storybook/addon-knobs';
 import * as React from 'react';
-import { OrganizationListItemCard as OLIC } from './OrganizationItemCard';
 import { OrganizationListItemFragment } from './OrganizationListItem.generated';
+import { OrganizationListItemCard as OLIC } from './OrganizationListItemCard';
 
-export default { title: 'components' };
+export default { title: 'Components' };
 
-export const OrganiztionListItemCard = () => {
+export const OrganizationListItemCard = () => {
   const organization: OrganizationListItemFragment = {
     id: '123456',
     name: {
-      value: text('OrganizationName', 'Seed Company'),
+      value: text('Name', 'Seed Company'),
     },
   };
   return (
