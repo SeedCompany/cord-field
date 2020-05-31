@@ -1,0 +1,26 @@
+fragment InternshipEngagementListItem on InternshipEngagement {
+  id
+  status
+  intern {
+    value {
+      fullName
+    }
+  }
+  countryOfOrigin {
+    value {
+      ...DisplayCountry
+    }
+  }
+  position {
+    value
+  }
+  endDate {
+    value
+  }
+  initialEndDate {
+    value
+  }
+  completeDate {
+    value
+  }
+}

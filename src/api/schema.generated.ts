@@ -570,6 +570,7 @@ export interface CreateUser {
   timezone?: Maybe<Scalars['String']>;
   bio?: Maybe<Scalars['String']>;
   password: Scalars['String'];
+  status?: Maybe<UserStatus>;
 }
 
 export interface CreateUserInput {
@@ -905,6 +906,8 @@ export type FileVersion = FileNode &
     createdBy: User;
     mimeType: Scalars['String'];
     size: Scalars['Int'];
+    /** A direct url to download the file version */
+    downloadUrl: Scalars['String'];
   };
 
 export type Film = Resource & {
@@ -2994,6 +2997,19 @@ export type SecuredUser = Readable &
   };
 
 /**
+ * An object with a user status `value` and additional authorization information.
+ * The value is only given if `canRead` is `true` otherwise it is `null`.
+ * These `can*` authorization properties are specific to the user making the request.
+ */
+export type SecuredUserStatus = Readable &
+  Editable & {
+    __typename?: 'SecuredUserStatus';
+    canRead: Scalars['Boolean'];
+    canEdit: Scalars['Boolean'];
+    value?: Maybe<UserStatus>;
+  };
+
+/**
  * An object with a zone `value` and additional authorization information.
  * The value is only given if `canRead` is `true` otherwise it is `null`.
  * These `can*` authorization properties are specific to the user making the request.
@@ -3499,6 +3515,7 @@ export interface UpdateUser {
   phone?: Maybe<Scalars['String']>;
   timezone?: Maybe<Scalars['String']>;
   bio?: Maybe<Scalars['String']>;
+  status?: Maybe<UserStatus>;
 }
 
 export interface UpdateUserInput {
@@ -3538,6 +3555,7 @@ export type User = Resource & {
   phone: SecuredString;
   timezone: SecuredString;
   bio: SecuredString;
+  status: SecuredUserStatus;
   fullName?: Maybe<Scalars['String']>;
   firstName?: Maybe<Scalars['String']>;
   avatarLetters?: Maybe<Scalars['String']>;
@@ -3590,6 +3608,8 @@ export interface UserListOutput {
   /** Whether the next page exists */
   hasMore: Scalars['Boolean'];
 }
+
+export type UserStatus = 'Active' | 'Disabled';
 
 export interface Workflow {
   __typename?: 'Workflow';

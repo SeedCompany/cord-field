@@ -32,6 +32,7 @@ const result: PossibleTypesResultData = {
       'SecuredStoryRange',
       'SecuredString',
       'SecuredUser',
+      'SecuredUserStatus',
       'SecuredZone',
     ],
     Engagement: ['InternshipEngagement', 'LanguageEngagement'],
@@ -70,6 +71,7 @@ const result: PossibleTypesResultData = {
       'SecuredString',
       'SecuredUnavailabilityList',
       'SecuredUser',
+      'SecuredUserStatus',
       'SecuredZone',
     ],
     Resource: [
