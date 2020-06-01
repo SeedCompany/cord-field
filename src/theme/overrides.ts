@@ -74,15 +74,6 @@ export const appOverrides: ThemeOptions['overrides'] = ({
         color: primaryColorForText,
       },
     },
-    // Fix positioning from upstream
-    // https://github.com/mui-org/material-ui/pull/21141
-    MuiAvatarGroup: {
-      avatar: {
-        '&:first-child': {
-          marginLeft: 0,
-        },
-      },
-    },
   };
 };
 
