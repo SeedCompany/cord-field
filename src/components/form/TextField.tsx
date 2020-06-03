@@ -34,6 +34,7 @@ export function TextField<FieldValue = string>({
       disabled={disabled}
       required={props.required}
       {...rest}
+      variant={rest.variant}
       name={name}
       inputRef={ref}
       InputProps={{ ...InputProps, ...input }}

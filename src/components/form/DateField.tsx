@@ -70,7 +70,7 @@ export const DateField = ({
   const defaultValue = useDate(defaultValueProp);
 
   const name = useFieldName(nameProp);
-  const { input, meta, rest } = useField<DateTime | null>(name, {
+  const { input, meta, rest } = useField<DateTime | null, typeof props>(name, {
     isEqual: isDateEqual,
     ...props,
     defaultValue,

@@ -20,7 +20,7 @@ export type RadioFieldProps<T = string> = FieldConfig<T> & {
   name: string;
   label?: string;
   helperText?: ReactNode;
-} & Omit<FormControlProps, 'required'> &
+} & Omit<FormControlProps<'fieldset'>, 'required' | 'component'> &
   Pick<FormControlLabelProps, 'labelPlacement'>;
 
 interface RadioOptionProps<T = string>

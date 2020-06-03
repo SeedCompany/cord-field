@@ -10,12 +10,15 @@ export type FieldConfig<Value> = Omit<UseFieldConfig<Value>, 'validate'> & {
   validate?: Many<Validator<Value> | null>;
 };
 
-export const useField = <Value, T extends HTMLElement = HTMLElement>(
+export const useField = <Value, P, T extends HTMLElement = HTMLElement>(
   name: string,
-  config?: FieldConfig<Value>
+  config: FieldConfig<Value> & P
 ) => {
-  const { validate: validateInput = null, required = false, ...restConfig } =
-    config || {};
+  const {
+    validate: validateInput = null,
+    required = false,
+    ...restConfig
+  } = config;
 
   // If validate is given and an array compose it to a single function
   // Else default to the required validator if required is true.

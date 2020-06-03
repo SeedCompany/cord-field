@@ -29,7 +29,7 @@ import { getHelperText, showError } from './util';
 type LabelPlacement = FormControlLabelProps['labelPlacement'];
 
 export type CheckboxesFieldProps = FieldConfig<string[]> &
-  Omit<FormControlProps, 'required'> &
+  Omit<FormControlProps<'fieldset'>, 'required' | 'component'> &
   Pick<FormGroupProps, 'row'> &
   Pick<FormControlLabelProps, 'labelPlacement'> & {
     name: string;
@@ -85,7 +85,7 @@ export const CheckboxesField = ({
   // FF handles checkboxes natively but we want one field instance, where FF's
   // has multiple. One field means name only has to be specified once and
   // validation can be done as a group (i.e. check 2+)
-  const { input, meta, rest } = useField<string[]>(name, {
+  const { input, meta, rest } = useField(name, {
     // Enforce defaultValue is an array, else an empty string will be used.
     defaultValue: defaultValue ?? defaultDefaultValue,
     ...props,
