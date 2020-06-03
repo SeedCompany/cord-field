@@ -16,6 +16,9 @@ const useStyles = makeStyles(({ spacing }) => ({
   options: {
     margin: spacing(3, 0),
   },
+  item: {
+    marginBottom: spacing(2),
+  },
 }));
 
 export const OrganizationList: FC = () => {
@@ -46,13 +49,13 @@ export const OrganizationList: FC = () => {
       <Typography variant="h3" paragraph>
         {data?.organizations.total} Partners
       </Typography>
-      <Grid container direction="column" spacing={2}>
-        {listOrPlaceholders(items, 15).map((item, index) => (
-          <Grid item key={item?.id ?? index}>
-            <OrganizationListItemCard organization={item} />
-          </Grid>
-        ))}
-      </Grid>
+      {listOrPlaceholders(items, 15).map((item, index) => (
+        <OrganizationListItemCard
+          key={item?.id ?? index}
+          organization={item}
+          className={classes.item}
+        />
+      ))}
     </div>
   );
 };
