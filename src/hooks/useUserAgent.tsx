@@ -8,6 +8,9 @@ export const UserAgentContext = createContext(
 // Use sparingly. Doing things based on User Agent is unreliable and not recommended.
 export const useUserAgent = () => {
   const ua = useContext(UserAgentContext);
+  if (!ua) {
+    throw new Error('User agent has not been defined');
+  }
   useDebugValue(ua);
   return ua;
 };
@@ -15,9 +18,6 @@ export const useUserAgent = () => {
 // Use sparingly. This is an imperfect check.
 export const useIsBot = () => {
   const agent = useUserAgent();
-  if (!agent) {
-    throw new Error('Cannot check if bot when user agent is not defined');
-  }
   const [isBot] = useState(
     () =>
       (typeof window !== 'undefined' && !('onscroll' in window)) ||
