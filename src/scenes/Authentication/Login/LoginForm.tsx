@@ -45,9 +45,10 @@ const useStyles = makeStyles(({ spacing }) => ({
   submit: {
     marginTop: spacing(1),
   },
-  forgotLink: {
-    display: 'block',
+  otherLinks: {
     marginTop: spacing(1),
+    display: 'flex',
+    justifyContent: 'space-between',
   },
   footer: {
     maxWidth: 500,
@@ -103,9 +104,10 @@ export const LoginForm = ({ className, ...props }: LoginFormProps) => {
             </form>
           )}
         </Form>
-        <Link to="/forgot-password" className={classes.forgotLink}>
-          Forgot Password?
-        </Link>
+        <div className={classes.otherLinks}>
+          <Link to="/forgot-password">Forgot Password?</Link>
+          <Link to="/register">Register</Link>
+        </div>
       </div>
       <Footer quote={quote} />
     </>
