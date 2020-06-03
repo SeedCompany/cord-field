@@ -32,7 +32,7 @@ const useStyles = makeStyles(({ spacing, palette }) => ({
 
 interface FieldOverviewCardData {
   value: string;
-  updatedAt: DateTime;
+  updatedAt?: DateTime;
   to: To;
 }
 
@@ -89,7 +89,9 @@ export const FieldOverviewCard: FC<FieldOverviewCardProps> = ({
         <Grid item xs={!data}>
           <Typography color="textSecondary" variant="body2">
             {data ? (
-              <> Updated {dateTimeFormatter(data.updatedAt)}</>
+              data.updatedAt ? (
+                <> Updated {dateTimeFormatter(data.updatedAt)}</>
+              ) : null
             ) : (
               <Skeleton />
             )}
