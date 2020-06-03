@@ -52,7 +52,7 @@ const useStyles = makeStyles(({ spacing }) => ({
   },
   footer: {
     maxWidth: 500,
-    margin: spacing(3, 0, 2),
+    marginTop: spacing(5),
     textAlign: 'center',
   },
   footerSpacer: {
@@ -78,9 +78,9 @@ export const LoginForm = ({ className, ...props }: LoginFormProps) => {
   const classes = useStyles();
   const [quote] = useState(() => sample(quotes)!);
   return (
-    <>
+    <div className={className}>
       <Footer quote={quote} className={classes.footerSpacer} />
-      <div className={className}>
+      <div>
         <div className={classes.header}>
           <CordIcon className={classes.icon} />
           <Typography variant="h4" gutterBottom={true}>
@@ -110,7 +110,7 @@ export const LoginForm = ({ className, ...props }: LoginFormProps) => {
         </div>
       </div>
       <Footer quote={quote} />
-    </>
+    </div>
   );
 };
 

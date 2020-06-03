@@ -11,17 +11,24 @@ import { Logout } from './Logout';
 import { Register } from './Register/Register';
 import { ResetPassword } from './ResetPassword';
 
-const useStyles = makeStyles(({ palette }) => ({
+const useStyles = makeStyles(({ palette, spacing }) => ({
+  '@global': {
+    body: {
+      // Here instead of `root` so overscroll doesn't have an abrupt white background.
+      backgroundColor: palette.background.default,
+    },
+  },
   root: {
     flex: 1,
     display: 'flex',
     flexDirection: 'column',
     justifyContent: 'space-evenly',
     alignItems: 'center',
-    backgroundColor: palette.background.default,
+    position: 'relative', // for background
   },
   card: {
     maxWidth: 400,
+    margin: spacing(4, 1),
   },
 }));
 

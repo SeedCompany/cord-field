@@ -13,9 +13,14 @@ const useStyles = makeStyles(() => ({
   // Use @global basically never
   '@global': {
     '#root': {
-      height: '100vh',
+      minHeight: '100vh',
       display: 'flex',
     },
+  },
+  app: {
+    flex: 1,
+    display: 'flex',
+    height: '100vh',
   },
   main: {
     flex: 1,
@@ -37,10 +42,12 @@ export const Root = () => {
 
   return (
     <Authentication>
-      <Sidebar />
-      <div className={classes.main}>
-        <Header />
-        {routes}
+      <div className={classes.app}>
+        <Sidebar />
+        <div className={classes.main}>
+          <Header />
+          {routes}
+        </div>
       </div>
     </Authentication>
   );
