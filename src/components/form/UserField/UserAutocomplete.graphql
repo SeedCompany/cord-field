@@ -1,0 +1,8 @@
+query UserAutocomplete($input: UserListInput!) {
+  users(input: $input) {
+    items {
+      id
+      fullName
+    }
+  }
+}
