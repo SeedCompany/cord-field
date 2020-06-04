@@ -1,0 +1,9 @@
+fragment ProjectMemberItem on ProjectMember {
+  user {
+    value {
+      id
+      avatarLetters
+      firstName
+    }
+  }
+}

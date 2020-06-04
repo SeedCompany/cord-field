@@ -1,0 +1,42 @@
+query ProjectOverview($input: ID!) {
+  project(id: $input) {
+    id
+    name {
+      value
+    }
+    location {
+      value {
+        ...DisplayLocation
+      }
+    }
+    mouStart {
+      value
+    }
+    mouEnd {
+      value
+    }
+    status
+    budget {
+      value {
+        ...BudgetOverview
+      }
+    }
+    team {
+      ...ProjectMemberList
+    }
+    partnerships {
+      ...PartnershipSummary
+    }
+    engagements {
+      total
+      items {
+        ... on LanguageEngagement {
+          ...LanguageEngagementListItem
+        }
+        ... on InternshipEngagement {
+          ...InternshipEngagementListItem
+        }
+      }
+    }
+  }
+}

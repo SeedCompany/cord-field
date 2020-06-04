@@ -1,11 +1,6 @@
-fragment ProjectMemberList on ProjectMemberListOutput {
+fragment ProjectMemberList on SecuredProjectMemberList {
+  total
   items {
-    user {
-      value {
-        id
-        avatarLetters
-        firstName
-      }
-    }
+    ...ProjectMemberItem
   }
 }

@@ -29,6 +29,7 @@ export const PartnershipSummary: FC<PartnershipSummaryProps> = ({
 
   return (
     <MemberListSummary
+      total={partnerships?.total}
       title="Partners"
       to="partnerships"
       members={members}
