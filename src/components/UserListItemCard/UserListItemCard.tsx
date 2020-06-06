@@ -5,11 +5,11 @@ import {
   makeStyles,
   Typography,
 } from '@material-ui/core';
-import clsx from 'clsx';
 import * as React from 'react';
 import { FC } from 'react';
 import { Avatar } from '../Avatar';
 import { ButtonLink } from '../Routing';
+import { UserListItemFragment } from './UserListItem.generated';
 
 const useStyles = makeStyles(({ palette, spacing }) => ({
   personCard: {
@@ -57,32 +57,31 @@ const useStyles = makeStyles(({ palette, spacing }) => ({
   },
 }));
 
-export interface PersonCardProps {
-  name: string;
-  organization: string;
-  role: string;
-  active: boolean;
-  personRoute: string;
-  imageSource: string;
+export interface UserListItemCardProps {
+  user?: UserListItemFragment;
+  className?: string;
 }
 
-export const PersonCard: FC<PersonCardProps> = ({
-  name,
-  organization,
-  role,
-  active,
-  personRoute,
-  imageSource,
-}) => {
+export const UserListItemCard: FC<UserListItemCardProps> = ({ user }) => {
   const classes = useStyles();
+
+  const { fullName, id } = user ?? { fullName: '', id: '' };
+
+  // TODO destructure from user when this data becomes queryable
+  const avatarLetters = 'images/favicon-32x32.png';
+  const organization = {
+    name: 'Seed Company',
+    role: 'Software Developer',
+  };
+  const { name: organizationName, role } = organization;
 
   return (
     <Card className={classes.personCard}>
       <CardContent className={classes.cardContent}>
         <Avatar
           variant="circle"
-          alt={name}
-          src={imageSource}
+          alt={fullName ?? ''}
+          src={avatarLetters}
           className={classes.personImage}
         />
         <Typography
@@ -90,14 +89,14 @@ export const PersonCard: FC<PersonCardProps> = ({
           variant="body2"
           className={classes.personName}
         >
-          {name}
+          {fullName}
         </Typography>
         <Typography
           color="primary"
           variant="caption"
           className={classes.organizationName}
         >
-          {organization}
+          {organizationName}
         </Typography>
         <Typography
           color="textSecondary"
@@ -106,18 +105,9 @@ export const PersonCard: FC<PersonCardProps> = ({
         >
           {role}
         </Typography>
-        <Typography color="textSecondary" variant="caption">
-          <span
-            className={clsx(classes.statusCircle, {
-              [classes.activeColor]: active,
-              [classes.notActiveColor]: !active,
-            })}
-          />
-          {active ? 'Active' : 'Inactive'}
-        </Typography>
       </CardContent>
       <CardActions className={classes.cardActions}>
-        <ButtonLink color="primary" to={personRoute}>
+        <ButtonLink color="primary" to={`/users/${id}`}>
           View Details
         </ButtonLink>
       </CardActions>
