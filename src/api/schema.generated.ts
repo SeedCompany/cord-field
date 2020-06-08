@@ -41,6 +41,16 @@ export interface AddStateOutput {
   state: State;
 }
 
+export interface AssignOrganizationToUser {
+  orgId: Scalars['ID'];
+  userId: Scalars['ID'];
+  primary?: Maybe<Scalars['Boolean']>;
+}
+
+export interface AssignOrganizationToUserInput {
+  request: AssignOrganizationToUser;
+}
+
 export interface AttachUserToSecurityGroup {
   sgId: Scalars['ID'];
   userId: Scalars['ID'];
@@ -1023,22 +1033,22 @@ export type InternshipProject = Project &
     estimatedSubmission: SecuredDate;
     modifiedAt: Scalars['DateTime'];
     avatarLetters?: Maybe<Scalars['String']>;
-    /** The project's current budget */
-    budget: SecuredBudget;
-    /** The root filesystem directory of this project */
-    rootDirectory: Directory;
-    engagements: SecuredEngagementList;
     /** The project members */
     team: SecuredProjectMemberList;
+    engagements: SecuredEngagementList;
+    /** The project's current budget */
+    budget: SecuredBudget;
     partnerships: SecuredPartnershipList;
+    /** The root filesystem directory of this project */
+    rootDirectory: Directory;
   };
-
-export interface InternshipProjectEngagementsArgs {
-  input?: Maybe<EngagementListInput>;
-}
 
 export interface InternshipProjectTeamArgs {
   input?: Maybe<ProjectMemberListInput>;
+}
+
+export interface InternshipProjectEngagementsArgs {
+  input?: Maybe<EngagementListInput>;
 }
 
 export interface InternshipProjectPartnershipsArgs {
@@ -1293,6 +1303,10 @@ export interface Mutation {
   updateUser: UpdateUserOutput;
   /** Delete a user */
   deleteUser: Scalars['Boolean'];
+  /** Assign organization OR primaryOrganization to user */
+  assignOrganizationToUser: Scalars['Boolean'];
+  /** Remove organization OR primaryOrganization from user */
+  removeOrganizationFromUser: Scalars['Boolean'];
   /** Create a zone */
   createZone: CreateZoneOutput;
   /** Create a region */
@@ -1520,6 +1534,14 @@ export interface MutationUpdateUserArgs {
 
 export interface MutationDeleteUserArgs {
   id: Scalars['ID'];
+}
+
+export interface MutationAssignOrganizationToUserArgs {
+  input: AssignOrganizationToUserInput;
+}
+
+export interface MutationRemoveOrganizationFromUserArgs {
+  input: RemoveOrganizationFromUserInput;
 }
 
 export interface MutationCreateZoneArgs {
@@ -2004,7 +2026,11 @@ export interface Project {
   estimatedSubmission: SecuredDate;
   modifiedAt: Scalars['DateTime'];
   avatarLetters?: Maybe<Scalars['String']>;
+  /** The project members */
+  team: SecuredProjectMemberList;
+  engagements: SecuredEngagementList;
   budget: SecuredBudget;
+  partnerships: SecuredPartnershipList;
   rootDirectory: Directory;
 }
 
@@ -2027,6 +2053,8 @@ export interface ProjectFilters {
   modifiedAt?: Maybe<DateTimeFilter>;
   /** User IDs ANY of which are team members */
   userIds?: Maybe<Array<Scalars['ID']>>;
+  /** only mine */
+  mine?: Maybe<Scalars['Boolean']>;
 }
 
 export interface ProjectListInput {
@@ -2465,6 +2493,15 @@ export type Region = Resource &
     zone: SecuredZone;
     director: SecuredUser;
   };
+
+export interface RemoveOrganizationFromUser {
+  orgId: Scalars['ID'];
+  userId: Scalars['ID'];
+}
+
+export interface RemoveOrganizationFromUserInput {
+  request: RemoveOrganizationFromUser;
+}
 
 export interface RemovePermissionFromSecurityGroup {
   id: Scalars['ID'];
@@ -3110,22 +3147,22 @@ export type TranslationProject = Project &
     estimatedSubmission: SecuredDate;
     modifiedAt: Scalars['DateTime'];
     avatarLetters?: Maybe<Scalars['String']>;
-    /** The project's current budget */
-    budget: SecuredBudget;
-    /** The root filesystem directory of this project */
-    rootDirectory: Directory;
-    engagements: SecuredEngagementList;
     /** The project members */
     team: SecuredProjectMemberList;
+    engagements: SecuredEngagementList;
+    /** The project's current budget */
+    budget: SecuredBudget;
     partnerships: SecuredPartnershipList;
+    /** The root filesystem directory of this project */
+    rootDirectory: Directory;
   };
-
-export interface TranslationProjectEngagementsArgs {
-  input?: Maybe<EngagementListInput>;
-}
 
 export interface TranslationProjectTeamArgs {
   input?: Maybe<ProjectMemberListInput>;
+}
+
+export interface TranslationProjectEngagementsArgs {
+  input?: Maybe<EngagementListInput>;
 }
 
 export interface TranslationProjectPartnershipsArgs {

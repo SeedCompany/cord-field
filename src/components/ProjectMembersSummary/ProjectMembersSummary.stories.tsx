@@ -29,6 +29,7 @@ const memberList: ProjectMemberListFragment = {
     generateUser('Richard', 'RG'),
     generateUser('Ray', 'RJ'),
   ],
+  total: 4,
 };
 
 const Story = (props: ProjectMembersSummaryProps) => (

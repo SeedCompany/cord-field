@@ -6,7 +6,7 @@ import { useCurrencyFormatter } from '../Formatters/useCurrencyFormatter';
 import { BudgetOverviewFragment } from './BudgetOverview.generated';
 
 export interface BudgetOverviewCardProps {
-  budget?: BudgetOverviewFragment;
+  budget?: BudgetOverviewFragment | null;
   className?: string;
 }
 

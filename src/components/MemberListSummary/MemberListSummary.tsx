@@ -42,6 +42,7 @@ export interface MemberSummaryItem {
 export interface MemberListSummaryProps extends Pick<HugeIconProps, 'icon'> {
   members?: MemberSummaryItem[];
   max?: number;
+  total?: number;
   title: string;
   to: To;
 }
@@ -49,6 +50,7 @@ export interface MemberListSummaryProps extends Pick<HugeIconProps, 'icon'> {
 export const MemberListSummary: FC<MemberListSummaryProps> = ({
   members,
   max = 4,
+  total,
   title,
   to,
   icon,
@@ -65,11 +67,7 @@ export const MemberListSummary: FC<MemberListSummaryProps> = ({
           <Grid item>
             <Typography>{title}</Typography>
             <Typography variant="h1">
-              {!members ? (
-                <Skeleton width="1ch" variant="text" />
-              ) : (
-                members.length
-              )}
+              {!members ? <Skeleton width="1ch" variant="text" /> : total}
             </Typography>
           </Grid>
           <Grid item className={classes.seeAll}>

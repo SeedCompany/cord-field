@@ -20,6 +20,7 @@ export const ProjectMembersSummary: FC<ProjectMembersSummaryProps> = ({
 
   return (
     <MemberListSummary
+      total={members?.total}
       title="Team Members"
       members={summarizedMembers}
       to="members"

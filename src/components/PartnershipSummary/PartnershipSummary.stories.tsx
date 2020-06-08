@@ -25,6 +25,7 @@ export const PartnershipSummary = () => {
       generatePartnership('Wcyliffe'),
       generatePartnership('DBS'),
     ],
+    total: 3,
   };
 
   return (
