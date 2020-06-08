@@ -6,6 +6,10 @@ import { appProviders } from '../src/App';
 import { Nest } from '../src/components/Nest';
 import { SessionProvider } from '../src/components/Session';
 
+// Do hacking to show dates easier
+import '../src/util/CalenderDate';
+import '../src/util/hacky-inspect-dates';
+
 addDecorator(withInfo);
 
 const storybookProviders = [
