@@ -3,16 +3,12 @@ import { times } from 'lodash';
 import React, { FC } from 'react';
 import { Language } from '../../../api';
 import { LanguageListItemCard } from '../../../components/LanguageListItemCard';
+import { ListContainer } from '../../../components/ListContainer';
 import { SortButtonDialog, useSort } from '../../../components/Sort';
 import { useLanguagesQuery } from './languages.generated';
 import { LanguageSortOptions } from './LanguageSortOptions';
 
 const useStyles = makeStyles(({ spacing }) => ({
-  root: {
-    flex: 1,
-    overflowY: 'scroll',
-    padding: spacing(4),
-  },
   options: {
     margin: spacing(3, 0),
   },
@@ -31,7 +27,7 @@ export const LanguageList: FC = () => {
   const classes = useStyles();
 
   return (
-    <div className={classes.root}>
+    <ListContainer>
       <Typography variant="h2" paragraph>
         Languages
       </Typography>
@@ -61,6 +57,6 @@ export const LanguageList: FC = () => {
               </Grid>
             ))}
       </Grid>
-    </div>
+    </ListContainer>
   );
 };

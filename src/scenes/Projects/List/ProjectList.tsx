@@ -2,6 +2,7 @@ import { Grid, makeStyles, Typography } from '@material-ui/core';
 import React, { FC } from 'react';
 import { Project } from '../../../api';
 import { FilterButtonDialog } from '../../../components/Filter';
+import { ListContainer } from '../../../components/ListContainer';
 import { ProjectListItemCard } from '../../../components/ProjectListItemCard';
 import { SortButtonDialog, useSort } from '../../../components/Sort';
 import { listOrPlaceholders } from '../../../util';
@@ -13,11 +14,6 @@ import { useProjectListQuery } from './projects.generated';
 import { ProjectSortOptions } from './ProjectSortOptions';
 
 const useStyles = makeStyles(({ spacing }) => ({
-  root: {
-    flex: 1,
-    overflowY: 'scroll',
-    padding: spacing(4),
-  },
   options: {
     margin: spacing(3, 0),
   },
@@ -41,7 +37,7 @@ export const ProjectList: FC = () => {
   const classes = useStyles();
 
   return (
-    <div className={classes.root}>
+    <ListContainer>
       <Typography variant="h2" paragraph>
         My Projects
       </Typography>
@@ -67,6 +63,6 @@ export const ProjectList: FC = () => {
           className={classes.projectItem}
         />
       ))}
-    </div>
+    </ListContainer>
   );
 };
