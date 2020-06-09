@@ -48,6 +48,13 @@ export const typePolicies: TypePolicies = {
       },
     },
   },
+  Favorite: {
+    fields: {
+      createdAt: {
+        read: Parsers.DateTime,
+      },
+    },
+  },
   File: {
     fields: {
       createdAt: {

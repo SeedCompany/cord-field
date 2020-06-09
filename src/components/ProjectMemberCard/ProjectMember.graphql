@@ -1,0 +1,20 @@
+fragment ProjectMember on ProjectMember {
+  id
+  createdAt
+  user {
+    value {
+      fullName
+      avatarLetters
+    }
+    #    TODO this isn't added on to api schema yet
+    #    primaryOrganization {
+    #      name {
+    #        value
+    #      }
+    #    }
+  }
+  roles {
+    value
+    canRead
+  }
+}

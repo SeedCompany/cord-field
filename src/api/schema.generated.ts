@@ -18,6 +18,14 @@ export interface Scalars {
   DateTime: DateTime;
 }
 
+export interface AddFavorite {
+  baseNodeId: Scalars['String'];
+}
+
+export interface AddFavoriteInput {
+  favorite: AddFavorite;
+}
+
 export interface AddPropertyToSecurityGroup {
   sgId: Scalars['ID'];
   property: Scalars['String'];
@@ -59,6 +67,16 @@ export interface AttachUserToSecurityGroup {
 export interface AttachUserToSecurityGroupInput {
   request: AttachUserToSecurityGroup;
 }
+
+export type BaseNode =
+  | 'Project'
+  | 'Language'
+  | 'Organization'
+  | 'Location'
+  | 'Film'
+  | 'Story'
+  | 'LiteracyMaterial'
+  | 'User';
 
 export type BibleBook =
   | 'Genesis'
@@ -782,6 +800,44 @@ export type EngagementStatus =
   | 'AwaitingDedication'
   | 'Transferred';
 
+export type Favorite = Resource & {
+  __typename?: 'Favorite';
+  id: Scalars['ID'];
+  createdAt: Scalars['DateTime'];
+  baseNodeId: Scalars['String'];
+};
+
+export interface FavoriteFilters {
+  /** Only items matching this node */
+  baseNode?: Maybe<BaseNode>;
+}
+
+export interface FavoriteListInput {
+  /** The number of items to return in a single page */
+  count?: Maybe<Scalars['Int']>;
+  /** 1-indexed page number for offset pagination. */
+  page?: Maybe<Scalars['Int']>;
+  /** The field in which to sort on */
+  sort?: Maybe<Scalars['String']>;
+  /** The order in which to sort the list */
+  order?: Maybe<Order>;
+  filter?: Maybe<FavoriteFilters>;
+}
+
+export interface FavoriteListOutput {
+  __typename?: 'FavoriteListOutput';
+  /**
+   * The page of favorite.
+   * Note that this could include items that where also in sibling pages;
+   * you should de-duplicate these based on ID.
+   */
+  items: Favorite[];
+  /** The total number of items across all pages */
+  total: Scalars['Int'];
+  /** Whether the next page exists */
+  hasMore: Scalars['Boolean'];
+}
+
 export interface FieldObject {
   __typename?: 'FieldObject';
   value: Scalars['String'];
@@ -1392,6 +1448,10 @@ export interface Mutation {
   updateInternshipEngagement: UpdateInternshipEngagementOutput;
   /** Delete an engagement */
   deleteEngagement: Scalars['Boolean'];
+  /** add an favorite */
+  addFavorite: Scalars['String'];
+  /** Delete an favorite */
+  removeFavorite: Scalars['Boolean'];
   /** Create a project member */
   createProjectMember: CreateProjectMemberOutput;
   /** Update a project member */
@@ -1700,6 +1760,14 @@ export interface MutationDeleteEngagementArgs {
   id: Scalars['ID'];
 }
 
+export interface MutationAddFavoriteArgs {
+  input: AddFavoriteInput;
+}
+
+export interface MutationRemoveFavoriteArgs {
+  id: Scalars['ID'];
+}
+
 export interface MutationCreateProjectMemberArgs {
   input: CreateProjectMemberInput;
 }
@@ -1799,7 +1867,7 @@ export interface OrganizationFilters {
   /** Only organizations matching this name */
   name?: Maybe<Scalars['String']>;
   /** User IDs ANY of which must belong to the organizations */
-  userIds?: Maybe<Array<Scalars['ID']>>;
+  userId?: Maybe<Array<Scalars['ID']>>;
 }
 
 export interface OrganizationListInput {
@@ -2272,6 +2340,8 @@ export interface Query {
   engagements: EngagementListOutput;
   /** Check Consistency in Engagement Nodes */
   checkEngagementConsistency: Scalars['Boolean'];
+  /** Look up favorites */
+  favorites: FavoriteListOutput;
   /** Look up a project member by ID */
   projectMember: ProjectMember;
   /** Look up project members */
@@ -2440,6 +2510,10 @@ export interface QueryEngagementsArgs {
 
 export interface QueryCheckEngagementConsistencyArgs {
   input: EngagementConsistencyInput;
+}
+
+export interface QueryFavoritesArgs {
+  input?: Maybe<FavoriteListInput>;
 }
 
 export interface QueryProjectMemberArgs {
