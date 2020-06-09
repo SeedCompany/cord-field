@@ -14,6 +14,7 @@ export const CreateProject = (props: Except<Props, 'onSubmit'>) => {
   const submit: Props['onSubmit'] = async (input) => {
     const res = await createProject({
       variables: { input },
+      refetchQueries: ['ProjectList'],
     });
     const project = res.data!.createProject.project;
 

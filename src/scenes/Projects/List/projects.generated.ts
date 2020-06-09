@@ -9,11 +9,11 @@ import {
 } from '../../../components/ProjectListItemCard/ProjectListItem.generated';
 import { ProjectListItemFragmentDoc } from '../../../components/ProjectListItemCard/ProjectListItem.generated';
 
-export interface ProjectsQueryVariables {
+export interface ProjectListQueryVariables {
   input: Types.ProjectListInput;
 }
 
-export type ProjectsQuery = { __typename?: 'Query' } & {
+export type ProjectListQuery = { __typename?: 'Query' } & {
   projects: { __typename?: 'ProjectListOutput' } & Pick<
     Types.ProjectListOutput,
     'hasMore' | 'total'
@@ -29,8 +29,8 @@ export type ProjectsQuery = { __typename?: 'Query' } & {
     };
 };
 
-export const ProjectsDocument = gql`
-  query Projects($input: ProjectListInput!) {
+export const ProjectListDocument = gql`
+  query ProjectList($input: ProjectListInput!) {
     projects(input: $input) {
       items {
         ...ProjectListItem
@@ -43,48 +43,48 @@ export const ProjectsDocument = gql`
 `;
 
 /**
- * __useProjectsQuery__
+ * __useProjectListQuery__
  *
- * To run a query within a React component, call `useProjectsQuery` and pass it any options that fit your needs.
- * When your component renders, `useProjectsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * To run a query within a React component, call `useProjectListQuery` and pass it any options that fit your needs.
+ * When your component renders, `useProjectListQuery` returns an object from Apollo Client that contains loading, error, and data properties
  * you can use to render your UI.
  *
  * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
  *
  * @example
- * const { data, loading, error } = useProjectsQuery({
+ * const { data, loading, error } = useProjectListQuery({
  *   variables: {
  *      input: // value for 'input'
  *   },
  * });
  */
-export function useProjectsQuery(
+export function useProjectListQuery(
   baseOptions?: ApolloReactHooks.QueryHookOptions<
-    ProjectsQuery,
-    ProjectsQueryVariables
+    ProjectListQuery,
+    ProjectListQueryVariables
   >
 ) {
-  return ApolloReactHooks.useQuery<ProjectsQuery, ProjectsQueryVariables>(
-    ProjectsDocument,
+  return ApolloReactHooks.useQuery<ProjectListQuery, ProjectListQueryVariables>(
+    ProjectListDocument,
     baseOptions
   );
 }
-export function useProjectsLazyQuery(
+export function useProjectListLazyQuery(
   baseOptions?: ApolloReactHooks.LazyQueryHookOptions<
-    ProjectsQuery,
-    ProjectsQueryVariables
+    ProjectListQuery,
+    ProjectListQueryVariables
   >
 ) {
-  return ApolloReactHooks.useLazyQuery<ProjectsQuery, ProjectsQueryVariables>(
-    ProjectsDocument,
-    baseOptions
-  );
+  return ApolloReactHooks.useLazyQuery<
+    ProjectListQuery,
+    ProjectListQueryVariables
+  >(ProjectListDocument, baseOptions);
 }
-export type ProjectsQueryHookResult = ReturnType<typeof useProjectsQuery>;
-export type ProjectsLazyQueryHookResult = ReturnType<
-  typeof useProjectsLazyQuery
+export type ProjectListQueryHookResult = ReturnType<typeof useProjectListQuery>;
+export type ProjectListLazyQueryHookResult = ReturnType<
+  typeof useProjectListLazyQuery
 >;
-export type ProjectsQueryResult = ApolloReactCommon.QueryResult<
-  ProjectsQuery,
-  ProjectsQueryVariables
+export type ProjectListQueryResult = ApolloReactCommon.QueryResult<
+  ProjectListQuery,
+  ProjectListQueryVariables
 >;

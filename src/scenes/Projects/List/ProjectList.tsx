@@ -4,7 +4,7 @@ import { Project } from '../../../api';
 import { ProjectListItemCard } from '../../../components/ProjectListItemCard';
 import { SortButtonDialog, useSort } from '../../../components/Sort';
 import { listOrPlaceholders } from '../../../util';
-import { useProjectsQuery } from './projects.generated';
+import { useProjectListQuery } from './projects.generated';
 import { ProjectSortOptions } from './ProjectSortOptions';
 
 const useStyles = makeStyles(({ spacing }) => ({
@@ -24,7 +24,7 @@ const useStyles = makeStyles(({ spacing }) => ({
 export const ProjectList: FC = () => {
   const sort = useSort<Project>();
 
-  const { data } = useProjectsQuery({
+  const { data } = useProjectListQuery({
     variables: {
       input: {
         ...sort.value,
