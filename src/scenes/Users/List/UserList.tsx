@@ -1,11 +1,12 @@
-import { Button, Grid, makeStyles, Typography } from '@material-ui/core';
+import { Grid, makeStyles, Typography } from '@material-ui/core';
 import React, { FC } from 'react';
 import { User } from '../../../api';
 import { ListContainer } from '../../../components/ListContainer';
-import { useSort } from '../../../components/Sort';
+import { SortButtonDialog, useSort } from '../../../components/Sort';
 import { UserListItemCard } from '../../../components/UserListItemCard';
 import { listOrPlaceholders } from '../../../util';
 import { useUsersQuery } from './users.generated';
+import { UserSortOptions } from './UserSortOptions';
 
 const useStyles = makeStyles(({ spacing }) => ({
   options: {
@@ -35,7 +36,9 @@ export const UserList: FC = () => {
       </Typography>
       <Grid container spacing={1} className={classes.options}>
         <Grid item>
-          <Button variant="outlined">Filter Options</Button>
+          <SortButtonDialog {...sort}>
+            <UserSortOptions />
+          </SortButtonDialog>
         </Grid>
       </Grid>
       <Typography variant="h3" paragraph>
