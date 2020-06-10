@@ -7,6 +7,7 @@ export const GQLOperations = {
     ProjectPartnerships: 'ProjectPartnerships',
     ProjectList: 'ProjectList',
     ProjectOverview: 'ProjectOverview',
+    User: 'User',
     Users: 'Users',
   },
   Mutation: {
@@ -45,5 +46,6 @@ export const GQLOperations = {
     UserListItem: 'UserListItem',
     orgDetails: 'orgDetails',
     EditPartnership: 'EditPartnership',
+    userDetails: 'userDetails',
   },
 };

@@ -1,0 +1,20 @@
+query User($input: ID!) {
+  user(id: $input) {
+    ...userDetails
+  }
+}
+
+fragment userDetails on User {
+  id
+  email {
+    value
+  }
+  fullName
+  realFirstName {
+    value
+  }
+  realLastName {
+    value
+  }
+  createdAt
+}

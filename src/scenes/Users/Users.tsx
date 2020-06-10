@@ -1,5 +1,6 @@
 import React from 'react';
 import { useRoutes } from 'react-router-dom';
+import { UserDetail } from './Detail';
 import { UserList } from './List';
 
 export const Users = () => {
@@ -7,6 +8,10 @@ export const Users = () => {
     {
       path: '/',
       element: <UserList />,
+    },
+    {
+      path: '/:userId',
+      element: <UserDetail />,
     },
   ]);
 
