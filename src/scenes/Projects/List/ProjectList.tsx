@@ -1,9 +1,14 @@
-import { Button, Grid, makeStyles, Typography } from '@material-ui/core';
+import { Grid, makeStyles, Typography } from '@material-ui/core';
 import React, { FC } from 'react';
 import { Project } from '../../../api';
+import { FilterButtonDialog, useFilter } from '../../../components/Filter';
 import { ProjectListItemCard } from '../../../components/ProjectListItemCard';
 import { SortButtonDialog, useSort } from '../../../components/Sort';
 import { listOrPlaceholders } from '../../../util';
+import {
+  ProjectFilterOptions,
+  ProjectFilterValues,
+} from './ProjectFilterOptions';
 import { useProjectListQuery } from './projects.generated';
 import { ProjectSortOptions } from './ProjectSortOptions';
 
@@ -23,6 +28,7 @@ const useStyles = makeStyles(({ spacing }) => ({
 
 export const ProjectList: FC = () => {
   const sort = useSort<Project>();
+  const filter = useFilter<ProjectFilterValues>();
 
   const { data } = useProjectListQuery({
     variables: {
@@ -45,7 +51,9 @@ export const ProjectList: FC = () => {
           </SortButtonDialog>
         </Grid>
         <Grid item>
-          <Button variant="outlined">Filter Options</Button>
+          <FilterButtonDialog {...filter}>
+            <ProjectFilterOptions />
+          </FilterButtonDialog>
         </Grid>
       </Grid>
       <Typography variant="h3" paragraph>
