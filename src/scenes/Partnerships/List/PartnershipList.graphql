@@ -1,0 +1,15 @@
+query ProjectPartnerships($input: ID!) {
+  project(id: $input) {
+    id
+    name {
+      value
+    }
+    partnerships {
+      canCreate
+      total
+      items {
+        ...PartnershipCard
+      }
+    }
+  }
+}

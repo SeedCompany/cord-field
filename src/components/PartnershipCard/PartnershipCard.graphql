@@ -1,0 +1,18 @@
+fragment PartnershipCard on Partnership {
+  id
+  createdAt
+  types {
+    value
+  }
+  agreementStatus {
+    value
+  }
+  mouStatus {
+    value
+  }
+  organization {
+    name {
+      value
+    }
+  }
+}
