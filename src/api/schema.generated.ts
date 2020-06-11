@@ -381,6 +381,7 @@ export interface CreateLanguageEngagement {
   languageId: Scalars['ID'];
   firstScripture?: Maybe<Scalars['Boolean']>;
   lukePartnership?: Maybe<Scalars['Boolean']>;
+  paraTextRegistryId?: Maybe<Scalars['String']>;
 }
 
 export interface CreateLanguageEngagementInput {
@@ -467,6 +468,27 @@ export interface CreatePermissionOutput {
   __typename?: 'CreatePermissionOutput';
   success: Scalars['Boolean'];
   id?: Maybe<Scalars['ID']>;
+}
+
+export interface CreatePerson {
+  email?: Maybe<Scalars['String']>;
+  realFirstName: Scalars['String'];
+  realLastName: Scalars['String'];
+  displayFirstName: Scalars['String'];
+  displayLastName: Scalars['String'];
+  phone?: Maybe<Scalars['String']>;
+  timezone?: Maybe<Scalars['String']>;
+  bio?: Maybe<Scalars['String']>;
+  status?: Maybe<UserStatus>;
+}
+
+export interface CreatePersonInput {
+  person: CreatePerson;
+}
+
+export interface CreatePersonOutput {
+  __typename?: 'CreatePersonOutput';
+  user: User;
 }
 
 export interface CreateProduct {
@@ -586,28 +608,6 @@ export interface CreateUnavailabilityInput {
 export interface CreateUnavailabilityOutput {
   __typename?: 'CreateUnavailabilityOutput';
   unavailability: Unavailability;
-}
-
-export interface CreateUser {
-  email: Scalars['String'];
-  realFirstName: Scalars['String'];
-  realLastName: Scalars['String'];
-  displayFirstName: Scalars['String'];
-  displayLastName: Scalars['String'];
-  phone?: Maybe<Scalars['String']>;
-  timezone?: Maybe<Scalars['String']>;
-  bio?: Maybe<Scalars['String']>;
-  password: Scalars['String'];
-  status?: Maybe<UserStatus>;
-}
-
-export interface CreateUserInput {
-  user: CreateUser;
-}
-
-export interface CreateUserOutput {
-  __typename?: 'CreateUserOutput';
-  user: User;
 }
 
 export interface CreateWorkflow {
@@ -1152,6 +1152,7 @@ export type LanguageEngagement = Engagement &
     lukePartnership: SecuredBoolean;
     /** Not used anymore, but exposing for legacy data. */
     sentPrintingDate: SecuredDate;
+    paraTextRegistryId: SecuredString;
     products: SecuredProductList;
   };
 
@@ -1309,6 +1310,24 @@ export interface MoveFileInput {
 
 export interface Mutation {
   __typename?: 'Mutation';
+  /** Create an organization */
+  createOrganization: CreateOrganizationOutput;
+  /** Update an organization */
+  updateOrganization: UpdateOrganizationOutput;
+  /** Delete an organization */
+  deleteOrganization: Scalars['Boolean'];
+  /** Create an education entry */
+  createEducation: CreateEducationOutput;
+  /** Update an education */
+  updateEducation: UpdateEducationOutput;
+  /** Delete an education */
+  deleteEducation: Scalars['Boolean'];
+  /** Create an unavailability */
+  createUnavailability: CreateUnavailabilityOutput;
+  /** Update an unavailability */
+  updateUnavailability: UpdateUnavailabilityOutput;
+  /** Delete an unavailability */
+  deleteUnavailability: Scalars['Boolean'];
   /** Create a new permission between a security group and a base node */
   createPermission: CreatePermissionOutput;
   /** Create a new security group */
@@ -1329,34 +1348,8 @@ export interface Mutation {
   deleteSecurityGroup: Scalars['Boolean'];
   /** Update a security group's name */
   updateSecurityGroupName: UpdateSecurityGroupNameOutput;
-  /** Create an organization */
-  createOrganization: CreateOrganizationOutput;
-  /** Update an organization */
-  updateOrganization: UpdateOrganizationOutput;
-  /** Delete an organization */
-  deleteOrganization: Scalars['Boolean'];
-  /** Create an education entry */
-  createEducation: CreateEducationOutput;
-  /** Update an education */
-  updateEducation: UpdateEducationOutput;
-  /** Delete an education */
-  deleteEducation: Scalars['Boolean'];
-  /** Create an unavailability */
-  createUnavailability: CreateUnavailabilityOutput;
-  /** Update an unavailability */
-  updateUnavailability: UpdateUnavailabilityOutput;
-  /** Delete an unavailability */
-  deleteUnavailability: Scalars['Boolean'];
-  /** Login a user */
-  login: LoginOutput;
-  /** Logout a user */
-  logout: Scalars['Boolean'];
-  /** Forgot password; send password reset email */
-  forgotPassword: Scalars['Boolean'];
-  /** Reset Password */
-  resetPassword: Scalars['Boolean'];
-  /** Create a user */
-  createUser: CreateUserOutput;
+  /** Create a person */
+  createPerson: CreatePersonOutput;
   /** Update a user */
   updateUser: UpdateUserOutput;
   /** Delete a user */
@@ -1365,6 +1358,16 @@ export interface Mutation {
   assignOrganizationToUser: Scalars['Boolean'];
   /** Remove organization OR primaryOrganization from user */
   removeOrganizationFromUser: Scalars['Boolean'];
+  /** Login a user */
+  login: LoginOutput;
+  /** Logout a user */
+  logout: Scalars['Boolean'];
+  /** Register a new user */
+  register: RegisterOutput;
+  /** Forgot password; send password reset email */
+  forgotPassword: Scalars['Boolean'];
+  /** Reset Password */
+  resetPassword: Scalars['Boolean'];
   /** Create a zone */
   createZone: CreateZoneOutput;
   /** Create a region */
@@ -1498,6 +1501,42 @@ export interface Mutation {
   removeRequiredField: Scalars['Boolean'];
 }
 
+export interface MutationCreateOrganizationArgs {
+  input: CreateOrganizationInput;
+}
+
+export interface MutationUpdateOrganizationArgs {
+  input: UpdateOrganizationInput;
+}
+
+export interface MutationDeleteOrganizationArgs {
+  id: Scalars['ID'];
+}
+
+export interface MutationCreateEducationArgs {
+  input: CreateEducationInput;
+}
+
+export interface MutationUpdateEducationArgs {
+  input: UpdateEducationInput;
+}
+
+export interface MutationDeleteEducationArgs {
+  id: Scalars['ID'];
+}
+
+export interface MutationCreateUnavailabilityArgs {
+  input: CreateUnavailabilityInput;
+}
+
+export interface MutationUpdateUnavailabilityArgs {
+  input: UpdateUnavailabilityInput;
+}
+
+export interface MutationDeleteUnavailabilityArgs {
+  id: Scalars['ID'];
+}
+
 export interface MutationCreatePermissionArgs {
   input: CreatePermissionInput;
 }
@@ -1538,56 +1577,8 @@ export interface MutationUpdateSecurityGroupNameArgs {
   input: UpdateSecurityGroupNameInput;
 }
 
-export interface MutationCreateOrganizationArgs {
-  input: CreateOrganizationInput;
-}
-
-export interface MutationUpdateOrganizationArgs {
-  input: UpdateOrganizationInput;
-}
-
-export interface MutationDeleteOrganizationArgs {
-  id: Scalars['ID'];
-}
-
-export interface MutationCreateEducationArgs {
-  input: CreateEducationInput;
-}
-
-export interface MutationUpdateEducationArgs {
-  input: UpdateEducationInput;
-}
-
-export interface MutationDeleteEducationArgs {
-  id: Scalars['ID'];
-}
-
-export interface MutationCreateUnavailabilityArgs {
-  input: CreateUnavailabilityInput;
-}
-
-export interface MutationUpdateUnavailabilityArgs {
-  input: UpdateUnavailabilityInput;
-}
-
-export interface MutationDeleteUnavailabilityArgs {
-  id: Scalars['ID'];
-}
-
-export interface MutationLoginArgs {
-  input: LoginInput;
-}
-
-export interface MutationForgotPasswordArgs {
-  email: Scalars['String'];
-}
-
-export interface MutationResetPasswordArgs {
-  input: ResetPasswordInput;
-}
-
-export interface MutationCreateUserArgs {
-  input: CreateUserInput;
+export interface MutationCreatePersonArgs {
+  input: CreatePersonInput;
 }
 
 export interface MutationUpdateUserArgs {
@@ -1604,6 +1595,22 @@ export interface MutationAssignOrganizationToUserArgs {
 
 export interface MutationRemoveOrganizationFromUserArgs {
   input: RemoveOrganizationFromUserInput;
+}
+
+export interface MutationLoginArgs {
+  input: LoginInput;
+}
+
+export interface MutationRegisterArgs {
+  input: RegisterInput;
+}
+
+export interface MutationForgotPasswordArgs {
+  email: Scalars['String'];
+}
+
+export interface MutationResetPasswordArgs {
+  input: ResetPasswordInput;
 }
 
 export interface MutationCreateZoneArgs {
@@ -2246,12 +2253,6 @@ export interface PromoteUserToAdminOfSecurityGroupInput {
 
 export interface Query {
   __typename?: 'Query';
-  /** List security groups that user is a member of */
-  securityGroupsUserIsMemberOf: ListSecurityGroupOutput;
-  /** List security groups that user is an admin of */
-  securityGroupsUserIsAdminOf: ListSecurityGroupOutput;
-  /** List permissions that belong to a security group */
-  permissionsInSecurityGroup: ListPermissionOutput;
   /** Look up an organization by its ID */
   organization: Organization;
   /** Look up organizations */
@@ -2272,8 +2273,12 @@ export interface Query {
   unavailabilities: UnavailabilityListOutput;
   /** Check Consistency across Unavailability Nodes */
   checkUnavailabilityConsistency: Scalars['Boolean'];
-  /** Create or retrieve an existing session */
-  session: SessionOutput;
+  /** List security groups that user is a member of */
+  securityGroupsUserIsMemberOf: ListSecurityGroupOutput;
+  /** List security groups that user is an admin of */
+  securityGroupsUserIsAdminOf: ListSecurityGroupOutput;
+  /** List permissions that belong to a security group */
+  permissionsInSecurityGroup: ListPermissionOutput;
   /** Look up a user by its ID */
   user: User;
   /** Look up users */
@@ -2282,6 +2287,8 @@ export interface Query {
   checkEmail: Scalars['Boolean'];
   /** Check Consistency across User Nodes */
   checkUserConsistency: Scalars['Boolean'];
+  /** Create or retrieve an existing session */
+  session: SessionOutput;
   /** Read one Location by id */
   location: Location;
   /** Look up locations */
@@ -2362,18 +2369,6 @@ export interface Query {
   listRequiredFields: RequiredFieldListOutput;
 }
 
-export interface QuerySecurityGroupsUserIsMemberOfArgs {
-  input: ListSecurityGroupInput;
-}
-
-export interface QuerySecurityGroupsUserIsAdminOfArgs {
-  input: ListSecurityGroupInput;
-}
-
-export interface QueryPermissionsInSecurityGroupArgs {
-  input: ListPermissionInput;
-}
-
 export interface QueryOrganizationArgs {
   id: Scalars['ID'];
 }
@@ -2398,8 +2393,16 @@ export interface QueryUnavailabilitiesArgs {
   input?: Maybe<UnavailabilityListInput>;
 }
 
-export interface QuerySessionArgs {
-  browser?: Maybe<Scalars['Boolean']>;
+export interface QuerySecurityGroupsUserIsMemberOfArgs {
+  input: ListSecurityGroupInput;
+}
+
+export interface QuerySecurityGroupsUserIsAdminOfArgs {
+  input: ListSecurityGroupInput;
+}
+
+export interface QueryPermissionsInSecurityGroupArgs {
+  input: ListPermissionInput;
 }
 
 export interface QueryUserArgs {
@@ -2412,6 +2415,10 @@ export interface QueryUsersArgs {
 
 export interface QueryCheckEmailArgs {
   email: Scalars['String'];
+}
+
+export interface QuerySessionArgs {
+  browser?: Maybe<Scalars['Boolean']>;
 }
 
 export interface QueryLocationArgs {
@@ -2569,6 +2576,24 @@ export type Region = Resource &
     zone: SecuredZone;
     director: SecuredUser;
   };
+
+export interface RegisterInput {
+  email: Scalars['String'];
+  realFirstName: Scalars['String'];
+  realLastName: Scalars['String'];
+  displayFirstName: Scalars['String'];
+  displayLastName: Scalars['String'];
+  phone?: Maybe<Scalars['String']>;
+  timezone?: Maybe<Scalars['String']>;
+  bio?: Maybe<Scalars['String']>;
+  status?: Maybe<UserStatus>;
+  password: Scalars['String'];
+}
+
+export interface RegisterOutput {
+  __typename?: 'RegisterOutput';
+  user: User;
+}
 
 export interface RemoveOrganizationFromUser {
   orgId: Scalars['ID'];
@@ -3417,6 +3442,7 @@ export interface UpdateLanguageEngagement {
   endDate?: Maybe<Scalars['Date']>;
   firstScripture?: Maybe<Scalars['Boolean']>;
   lukePartnership?: Maybe<Scalars['Boolean']>;
+  paraTextRegistryId?: Maybe<Scalars['String']>;
 }
 
 export interface UpdateLanguageEngagementInput {

@@ -7,18 +7,18 @@ import { LoggedInUserFragment } from '../../../components/Session/session.genera
 import { LoggedInUserFragmentDoc } from '../../../components/Session/session.generated';
 
 export interface RegisterMutationVariables {
-  input: Types.CreateUserInput;
+  input: Types.RegisterInput;
 }
 
 export type RegisterMutation = { __typename?: 'Mutation' } & {
-  createUser: { __typename?: 'CreateUserOutput' } & {
+  register: { __typename?: 'RegisterOutput' } & {
     user: { __typename?: 'User' } & LoggedInUserFragment;
   };
 };
 
 export const RegisterDocument = gql`
-  mutation Register($input: CreateUserInput!) {
-    createUser(input: $input) {
+  mutation Register($input: RegisterInput!) {
+    register(input: $input) {
       user {
         ...LoggedInUser
       }
