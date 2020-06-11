@@ -1,8 +1,8 @@
 import { Grid, makeStyles, Typography } from '@material-ui/core';
 import React, { FC } from 'react';
 import { Project } from '../../../api';
+import { ContentContainer } from '../../../components/ContentContainer';
 import { FilterButtonDialog } from '../../../components/Filter';
-import { ListContainer } from '../../../components/ListContainer';
 import { ProjectListItemCard } from '../../../components/ProjectListItemCard';
 import { SortButtonDialog, useSort } from '../../../components/Sort';
 import { listOrPlaceholders } from '../../../util';
@@ -37,7 +37,7 @@ export const ProjectList: FC = () => {
   const classes = useStyles();
 
   return (
-    <ListContainer>
+    <ContentContainer>
       <Typography variant="h2" paragraph>
         My Projects
       </Typography>
@@ -63,6 +63,6 @@ export const ProjectList: FC = () => {
           className={classes.projectItem}
         />
       ))}
-    </ListContainer>
+    </ContentContainer>
   );
 };

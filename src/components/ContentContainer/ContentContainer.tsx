@@ -10,7 +10,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export const ListContainer: FC = ({ children }) => {
+export const ContentContainer: FC = ({ children }) => {
   const classes = useStyles();
   return <div className={classes.root}>{children}</div>;
 };

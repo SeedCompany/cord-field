@@ -1,7 +1,7 @@
 import { Grid, makeStyles, Typography } from '@material-ui/core';
 import React, { FC } from 'react';
 import { Organization } from '../../../api';
-import { ListContainer } from '../../../components/ListContainer';
+import { ContentContainer } from '../../../components/ContentContainer';
 import { OrganizationListItemCard } from '../../../components/OrganizationListItemCard';
 import { SortButtonDialog, useSort } from '../../../components/Sort';
 import { listOrPlaceholders } from '../../../util';
@@ -31,7 +31,7 @@ export const OrganizationList: FC = () => {
   const classes = useStyles();
 
   return (
-    <ListContainer>
+    <ContentContainer>
       <Typography variant="h2" paragraph>
         Partners
       </Typography>
@@ -52,6 +52,6 @@ export const OrganizationList: FC = () => {
           className={classes.item}
         />
       ))}
-    </ListContainer>
+    </ContentContainer>
   );
 };

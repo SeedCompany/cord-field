@@ -2,7 +2,7 @@ import { Grid, makeStyles, Typography } from '@material-ui/core';
 import { Skeleton } from '@material-ui/lab';
 import React, { FC } from 'react';
 import { User } from '../../../api';
-import { ListContainer } from '../../../components/ListContainer';
+import { ContentContainer } from '../../../components/ContentContainer';
 import { SortButtonDialog, useSort } from '../../../components/Sort';
 import { UserListItemCard } from '../../../components/UserListItemCard';
 import { listOrPlaceholders } from '../../../util';
@@ -31,7 +31,7 @@ export const UserList: FC = () => {
   const classes = useStyles();
 
   return (
-    <ListContainer>
+    <ContentContainer>
       <Typography variant="h2" paragraph>
         People
       </Typography>
@@ -57,6 +57,6 @@ export const UserList: FC = () => {
           </Grid>
         ))}
       </Grid>
-    </ListContainer>
+    </ContentContainer>
   );
 };

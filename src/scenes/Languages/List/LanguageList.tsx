@@ -2,8 +2,8 @@ import { Button, Grid, makeStyles, Typography } from '@material-ui/core';
 import { times } from 'lodash';
 import React, { FC } from 'react';
 import { Language } from '../../../api';
+import { ContentContainer } from '../../../components/ContentContainer';
 import { LanguageListItemCard } from '../../../components/LanguageListItemCard';
-import { ListContainer } from '../../../components/ListContainer';
 import { SortButtonDialog, useSort } from '../../../components/Sort';
 import { useLanguagesQuery } from './languages.generated';
 import { LanguageSortOptions } from './LanguageSortOptions';
@@ -27,7 +27,7 @@ export const LanguageList: FC = () => {
   const classes = useStyles();
 
   return (
-    <ListContainer>
+    <ContentContainer>
       <Typography variant="h2" paragraph>
         Languages
       </Typography>
@@ -57,6 +57,6 @@ export const LanguageList: FC = () => {
               </Grid>
             ))}
       </Grid>
-    </ListContainer>
+    </ContentContainer>
   );
 };
