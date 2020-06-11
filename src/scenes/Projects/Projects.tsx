@@ -2,6 +2,7 @@ import React from 'react';
 import { useRoutes } from 'react-router-dom';
 import { Engagement } from '../Engagement';
 import { PartnershipList } from '../Partnerships/List';
+import { ProjectBudget } from './Budget';
 import { ProjectFilesList } from './Files';
 import { ProjectList } from './List';
 import { ProjectMembersList } from './Members/List';
@@ -36,6 +37,10 @@ export const Projects = () => {
     {
       path: ':projectId/partnerships',
       element: <PartnershipList />,
+    },
+    {
+      path: '/:projectId/budget',
+      element: <ProjectBudget />,
     },
   ]);
 
