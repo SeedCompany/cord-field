@@ -1,4 +1,5 @@
 import { Grid, makeStyles, Typography } from '@material-ui/core';
+import { Skeleton } from '@material-ui/lab';
 import React, { FC } from 'react';
 import { User } from '../../../api';
 import { ListContainer } from '../../../components/ListContainer';
@@ -20,7 +21,7 @@ const useStyles = makeStyles(({ spacing }) => ({
 export const UserList: FC = () => {
   const sort = useSort<User>();
 
-  const { data } = useUsersQuery({
+  const { data, loading } = useUsersQuery({
     variables: {
       input: {
         ...sort.value,
@@ -41,8 +42,13 @@ export const UserList: FC = () => {
           </SortButtonDialog>
         </Grid>
       </Grid>
+
       <Typography variant="h3" paragraph>
-        {data?.users.total} People
+        {loading ? (
+          <Skeleton variant="text" width="3ch" />
+        ) : (
+          <>{data?.users.total} People</>
+        )}
       </Typography>
       <Grid container spacing={3}>
         {listOrPlaceholders(data?.users.items, 5).map((item, index) => (

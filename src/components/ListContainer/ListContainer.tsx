@@ -1,12 +1,12 @@
 import { makeStyles } from '@material-ui/core';
 import React, { FC } from 'react';
 
-const useStyles = makeStyles(({ spacing }) => ({
+const useStyles = makeStyles((theme) => ({
   root: {
     flex: 1,
     overflowY: 'scroll',
-    padding: spacing(4),
-    maxWidth: '853px',
+    padding: theme.spacing(4),
+    maxWidth: theme.breakpoints.values.md,
   },
 }));
 

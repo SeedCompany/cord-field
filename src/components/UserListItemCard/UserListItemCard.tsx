@@ -38,7 +38,7 @@ const useStyles = makeStyles(({ palette, spacing }) => ({
     flexDirection: 'column',
     alignItems: 'center',
     padding: spacing(2),
-    borderTop: `1px solid ${palette.grey[300]}`,
+    borderTop: `1px solid ${palette.divider}`,
   },
   actionsButton: {
     lineHeight: '1.143',
