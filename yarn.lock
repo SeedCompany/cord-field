@@ -7180,6 +7180,7 @@ __metadata:
     react-router-dom: ^6.0.0-alpha.5
     react-scripts: ^3.4.1
     react-use: ^14.1.1
+    rifm: ^0.12.0
     seedrandom: ^3.0.5
     storybook-dark-mode: ^0.4.1
     ts-essentials: ^6.0.4
@@ -17922,6 +17923,15 @@ resolve@1.15.0:
   peerDependencies:
     react: ">=16.8"
   checksum: 3/7bcc9aea831655bd3292dd45949fbbd47957f9cba999ffff5013641e51007eb21fe6a97ed93e47a8aa1240ff5eb87276b92049b49ca4e3c06772b03f666805b6
+  languageName: node
+  linkType: hard
+
+"rifm@npm:^0.12.0":
+  version: 0.12.0
+  resolution: "rifm@npm:0.12.0"
+  peerDependencies:
+    react: ">=16.8"
+  checksum: 3/bca3419639425beb04e8f6376659f6084475768119fba5710021fe646e16807370465c8fc69f6c42d0a618c7c9541d41fb6a6eb48329cf7b1d0654d59bd86ec2
   languageName: node
   linkType: hard
 
