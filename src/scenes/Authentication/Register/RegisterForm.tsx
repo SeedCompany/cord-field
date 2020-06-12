@@ -86,7 +86,7 @@ export const RegisterForm = ({ className, ...props }: RegisterFormProps) => {
                 placeholder="Enter Last Name"
                 required
               />
-              <EmailField />
+              <EmailField caseSensitive />
               <PasswordField />
               <PasswordField
                 name="confirmPassword"
