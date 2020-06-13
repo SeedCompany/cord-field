@@ -1,9 +1,9 @@
 import { Breadcrumbs, makeStyles, Typography } from '@material-ui/core';
 import { Skeleton } from '@material-ui/lab';
 import { DateTime } from 'luxon';
-import React from 'react';
+import React, { useState } from 'react';
 import { useParams } from 'react-router-dom';
-// import { BudgetRecord } from '../../../api';
+// import { BudgetRecord, Budget } from '../../../api';
 import { Breadcrumb } from '../../../components/Breadcrumb';
 import { ContentContainer as Content } from '../../../components/ContentContainer';
 import { useCurrencyFormatter } from '../../../components/Formatters/useCurrencyFormatter';
@@ -13,10 +13,12 @@ import {
   /* useProjectBudgetQuery, */
 } from './ProjectBudget.generated';
 
-export const TEMP_BUDGET_QUERY_RETURN: Pick<
+type MockQueryReturn = Pick<
   ProjectBudgetQueryResult,
   'data' | 'loading' | 'error'
-> = {
+>;
+
+export const MOCK_QUERY_RETURN: MockQueryReturn = {
   loading: false,
   error: undefined,
   data: {
@@ -144,12 +146,15 @@ const useStyles = makeStyles(({ spacing }) => ({
 
 export const ProjectBudget = () => {
   const { projectId } = useParams();
+  const classes = useStyles();
+  const formatCurrency = useCurrencyFormatter();
+
   // const { data, loading, error } = useProjectBudgetQuery({
   //   variables: { id: projectId },
   // });
-  const classes = useStyles();
-  const formatCurrency = useCurrencyFormatter();
-  const { data, loading, error } = TEMP_BUDGET_QUERY_RETURN;
+  const [mock, setMock] = useState<MockQueryReturn>(MOCK_QUERY_RETURN);
+
+  const { data, loading, error } = mock;
 
   const projectName = data?.project?.name.value;
   const budget = data?.project?.budget.value;
@@ -158,12 +163,13 @@ export const ProjectBudget = () => {
   const budgetRecords = budget?.records ?? [];
 
   const rowData = budgetRecords.reduce((rows: RowData[], record) => {
-    const { amount, fiscalYear, organization } = record;
+    const { amount, fiscalYear, id, organization } = record;
     const { value: dollarAmount, canEdit } = amount;
     const { value: year } = fiscalYear;
     const orgName = organization?.value?.name.value;
 
     const row = {
+      id,
       organization: orgName ?? '',
       fiscalYear: year ?? '',
       amount: dollarAmount ?? '',
@@ -173,6 +179,11 @@ export const ProjectBudget = () => {
   }, []);
 
   const columns = [
+    {
+      title: 'ID',
+      field: 'id',
+      hidden: true,
+    },
     {
       title: 'Organization',
       field: 'organization',
@@ -197,14 +208,46 @@ export const ProjectBudget = () => {
     },
   ];
 
-  function handleRowUpdate(newData: RowData) {
-    return new Promise((resolve, reject) => {
-      console.log(newData);
-      resolve();
-      if (!newData) {
-        reject();
-      }
-    });
+  function handleRowUpdate(data: RowData) {
+    // We'll totally redo this when we have a working query + mutation
+    const records = mock.data?.project.budget.value?.records ?? [];
+    const index = records.findIndex((record) => record.id === data.id);
+    const updatedRecord =
+      index > -1
+        ? {
+            ...records[index],
+            amount: {
+              ...records[index].amount,
+              value: data.amount as number,
+            },
+          }
+        : undefined;
+    const updatedRecords = updatedRecord
+      ? records
+          .slice(0, index)
+          .concat(updatedRecord)
+          .concat(records.slice(index + 1))
+      : records;
+    return new Promise((resolve) =>
+      resolve(
+        setMock((mock) => ({
+          ...mock,
+          data: {
+            ...mock.data!,
+            project: {
+              ...mock.data!.project,
+              budget: {
+                ...mock.data!.project.budget,
+                value: {
+                  ...mock.data!.project.budget.value!,
+                  records: updatedRecords,
+                },
+              },
+            },
+          },
+        }))
+      )
+    );
   }
 
   return (
