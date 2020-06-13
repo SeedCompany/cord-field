@@ -16,6 +16,7 @@ import * as React from 'react';
 import { CreateButton } from '../../../components/CreateButton';
 import { useDialog } from '../../../components/Dialog';
 import { ListItemLink, ListItemLinkProps } from '../../../components/Routing';
+import { CreateLanguage } from '../../Languages/Create';
 import { CreateOrganization } from '../../Organizations/Create';
 import { CreateProject } from '../../Projects/Create';
 import { sidebarTheme } from './sidebar.theme';
@@ -46,6 +47,7 @@ export const Sidebar: FC = () => {
   };
   const [createOrgState, createOrg] = useDialog();
   const [createProjectState, createProject] = useDialog();
+  const [createLanguageState, createLanguage] = useDialog();
 
   const createMenu = (
     <Menu
@@ -66,6 +68,7 @@ export const Sidebar: FC = () => {
     >
       <MenuItem onClick={closeAnd(createOrg)}>Organization</MenuItem>
       <MenuItem onClick={closeAnd(createProject)}>Project</MenuItem>
+      <MenuItem onClick={closeAnd(createLanguage)}>Language</MenuItem>
     </Menu>
   );
 
@@ -109,6 +112,7 @@ export const Sidebar: FC = () => {
       {sidebar}
       <CreateOrganization {...createOrgState} />
       <CreateProject {...createProjectState} />
+      <CreateLanguage {...createLanguageState} />
     </>
   );
 };

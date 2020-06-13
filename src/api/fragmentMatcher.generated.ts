@@ -81,6 +81,7 @@ const result: PossibleTypesResultData = {
       'Country',
       'Directory',
       'Education',
+      'Favorite',
       'File',
       'FileVersion',
       'Film',
