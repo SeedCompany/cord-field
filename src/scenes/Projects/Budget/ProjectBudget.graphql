@@ -1,0 +1,49 @@
+query ProjectBudget($id: ID!) {
+  project(id: $id) {
+    id
+    name {
+      canEdit
+      canRead
+      value
+    }
+    deptId {
+      canEdit
+      canRead
+      value
+    }
+    budget {
+      canEdit
+      canRead
+      value {
+        ...BudgetOverview
+        records {
+          id
+          createdAt
+          amount {
+            canEdit
+            canRead
+            value
+          }
+          fiscalYear {
+            canEdit
+            canRead
+            value
+          }
+          organization {
+            canEdit
+            canRead
+            value {
+              id
+              createdAt
+              name {
+                canEdit
+                canRead
+                value
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
