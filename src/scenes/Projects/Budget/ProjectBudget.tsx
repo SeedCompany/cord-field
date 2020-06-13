@@ -7,7 +7,7 @@ import { useParams } from 'react-router-dom';
 import { Breadcrumb } from '../../../components/Breadcrumb';
 import { ContentContainer as Content } from '../../../components/ContentContainer';
 import { useCurrencyFormatter } from '../../../components/Formatters/useCurrencyFormatter';
-import { RecordsTable, RowData } from '../RecordsTable';
+import { RowData, Table } from '../../../components/Table';
 import {
   ProjectBudgetQueryResult,
   /* useProjectBudgetQuery, */
@@ -202,7 +202,7 @@ export const ProjectBudget = () => {
       editable: (_: unknown, rowData: RowData) => !!rowData.canEdit,
     },
     {
-      title: '',
+      title: 'Can Edit',
       field: 'canEdit',
       hidden: true,
     },
@@ -279,6 +279,7 @@ export const ProjectBudget = () => {
                 </Typography>
                 {total ? (
                   <Typography variant="body1" className={classes.total}>
+                    {/* This will get updated with a refetch after the mutation */}
                     Total: {formatCurrency(total)}
                   </Typography>
                 ) : null}
@@ -289,11 +290,12 @@ export const ProjectBudget = () => {
             {loading ? (
               <Skeleton variant="rect" width="100%" height={200} />
             ) : (
-              <RecordsTable
+              <Table
                 data={rowData}
                 columns={columns}
                 isEditable={canEditBudget}
                 onRowUpdate={handleRowUpdate}
+                title="Budget Records"
               />
             )}
           </section>
