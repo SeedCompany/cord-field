@@ -46,12 +46,14 @@ const useStyles = makeStyles(({ palette, spacing }) => ({
   },
 }));
 
-export interface UserListItemCardProps {
+export interface UserListItemCardPortraitProps {
   user?: UserListItemFragment;
   className?: string;
 }
 
-export const UserListItemCard: FC<UserListItemCardProps> = ({ user }) => {
+export const UserListItemCardPortrait: FC<UserListItemCardPortraitProps> = ({
+  user,
+}) => {
   const classes = useStyles();
 
   const { fullName, id } = user ?? { fullName: '', id: '' };

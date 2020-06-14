@@ -1,11 +1,11 @@
 import { text } from '@storybook/addon-knobs';
 import React from 'react';
-import { UserListItemCard as UserListItemCardComponent } from './UserListItemCard';
+import { UserListItemCardPortrait as UserCard } from './PortraitCard';
 
-export default { title: 'Components' };
+export default { title: 'Components/Portrait' };
 
-export const PersonCard = () => (
-  <UserListItemCardComponent
+export const PortraitCard = () => (
+  <UserCard
     user={{
       id: '123',
       fullName: text('name', 'Julius Rosenberg'),
