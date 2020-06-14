@@ -1,10 +1,4 @@
 fragment UserListItem on User {
   id
   fullName
-  displayFirstName {
-    value
-  }
-  displayLastName {
-    value
-  }
 }
