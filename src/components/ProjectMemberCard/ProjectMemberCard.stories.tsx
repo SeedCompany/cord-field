@@ -2,15 +2,15 @@ import { action } from '@storybook/addon-actions';
 import { boolean } from '@storybook/addon-knobs';
 import { DateTime } from 'luxon';
 import React from 'react';
-import { Role } from '../../api';
-import { ProjectMemberFragment } from './ProjectMember.generated';
+import { Role } from '../../api/schema.generated';
+import { ProjectMemberCardFragment } from './ProjectMember.generated';
 import { ProjectMemberCard as ProjectMemberCardComponent } from './ProjectMemberCard';
 
 export default { title: 'Components' };
 
 const roles: Role[] = ['Consultant', 'Development'];
 
-const projectMember: ProjectMemberFragment = {
+const projectMember: ProjectMemberCardFragment = {
   id: '0',
   createdAt: DateTime.local(),
   user: {
