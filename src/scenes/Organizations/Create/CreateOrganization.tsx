@@ -14,6 +14,7 @@ export const CreateOrganization = (props: Except<Props, 'onSubmit'>) => {
   const submit: Props['onSubmit'] = async (input) => {
     const res = await createOrg({
       variables: { input },
+      refetchQueries: ['Organizations'],
     });
     const org = res.data!.createOrganization.organization;
 
