@@ -8,11 +8,15 @@ import { Add } from '@material-ui/icons';
 import { Skeleton } from '@material-ui/lab';
 import React, { FC } from 'react';
 import { useParams } from 'react-router-dom';
-import { noop } from 'ts-essentials';
+import { Merge } from 'type-fest';
 import { Breadcrumb } from '../../../components/Breadcrumb';
+import { useDialog } from '../../../components/Dialog';
 import { Fab } from '../../../components/Fab';
 import { PartnershipCard } from '../../../components/PartnershipCard';
+import { PartnershipCardFragment } from '../../../components/PartnershipCard/PartnershipCard.generated';
 import { listOrPlaceholders } from '../../../util';
+import { EditPartnership } from '../Edit';
+import { EditPartnershipFragment } from '../Edit/EditPartnership.generated';
 import { useProjectPartnershipsQuery } from './PartnershipList.generated';
 
 const useStyles = makeStyles(({ spacing, breakpoints }) => ({
@@ -44,6 +48,10 @@ export const PartnershipList: FC = () => {
   const project = data?.project;
   const partnerships = project?.partnerships;
 
+  const [dialogState, openDialog, partnership] = useDialog<
+    Merge<PartnershipCardFragment, EditPartnershipFragment>
+  >();
+
   return (
     <div className={classes.root}>
       <Breadcrumbs>
@@ -70,10 +78,13 @@ export const PartnershipList: FC = () => {
         <PartnershipCard
           key={item?.id ?? index}
           partnership={item}
-          onEdit={noop}
+          onEdit={() => item && openDialog(item)}
           className={classes.item}
         />
       ))}
+      {partnership && (
+        <EditPartnership {...dialogState} partnership={partnership} />
+      )}
     </div>
   );
 };

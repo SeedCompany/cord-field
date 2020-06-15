@@ -1,6 +1,7 @@
 import { action } from '@storybook/addon-actions';
 import { select, text } from '@storybook/addon-knobs';
 import React from 'react';
+import { PartnershipStatuses } from '../../api';
 import { csv } from '../../util';
 import { dateTime } from '../knobs.stories';
 import { PartnershipCard } from './PartnershipCard';
@@ -19,18 +20,10 @@ export const WithData = () => {
       value: csv(text('Types', 'Managing, Funding')),
     },
     mouStatus: {
-      value: select(
-        'Mou Status',
-        ['NotAttached', 'AwaitingSignature', 'Signed'],
-        'NotAttached'
-      ),
+      value: select('Mou Status', PartnershipStatuses, 'NotAttached'),
     },
     agreementStatus: {
-      value: select(
-        'Mou Status',
-        ['NotAttached', 'AwaitingSignature', 'Signed'],
-        'NotAttached'
-      ),
+      value: select('Mou Status', PartnershipStatuses, 'NotAttached'),
     },
   };
 
