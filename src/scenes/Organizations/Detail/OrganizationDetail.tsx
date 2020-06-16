@@ -7,7 +7,9 @@ import {
 import React from 'react';
 import { useParams } from 'react-router-dom';
 import { Breadcrumb } from '../../../components/Breadcrumb';
+import { useDialog } from '../../../components/Dialog';
 import { PencilCircledIcon } from '../../../components/Icons';
+import { EditOrganization } from '../Edit';
 import { useOrganizationQuery } from './OrganizationDetail.generated';
 
 const useStyles = makeStyles(({ spacing }) => ({
@@ -48,6 +50,8 @@ export const OrganizationDetail = () => {
     },
   });
 
+  const [editOrgState, editOrg] = useDialog();
+
   return (
     <div className={classes.root}>
       {error ? (
@@ -71,12 +75,14 @@ export const OrganizationDetail = () => {
                 className={classes.iconSpacing}
                 color="primary"
                 aria-label="edit partner"
+                onClick={editOrg}
               >
                 <PencilCircledIcon />
               </IconButton>
               Edit
             </Typography>
           </header>
+          <EditOrganization {...editOrgState} orgId={orgId} />
         </>
       )}
     </div>
