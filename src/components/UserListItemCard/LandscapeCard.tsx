@@ -4,6 +4,7 @@ import * as React from 'react';
 import { FC } from 'react';
 import { Avatar } from '../Avatar';
 import { CardActionAreaLink } from '../Routing';
+import { UserListItemFragment } from './UserListItem.generated';
 
 const useStyles = makeStyles(({ palette, spacing, typography }) => ({
   root: {
@@ -24,118 +25,89 @@ const useStyles = makeStyles(({ palette, spacing, typography }) => ({
     height: '100%',
     padding: spacing(4),
   },
-  personImage: {
+  avatar: {
     width: '86px',
     height: '86px',
     marginBottom: spacing(1),
     marginRight: spacing(1),
   },
-  projectInfo: {
+  userInfo: {
     padding: `${spacing(2)}px ${spacing(3)}px`,
   },
-  projectName: {
-    fontSize: typography.h4.fontSize,
+  userName: {
+    marginBottom: spacing(1.5),
+  },
+  userOrg: {
+    fontSize: typography.h6.fontSize,
     marginBottom: spacing(1),
   },
-  projectLocation: {},
-  userProjects: {
-    alignSelf: 'center',
-    marginLeft: 'auto',
-    padding: `${spacing(4)}px ${spacing(2)}px`,
-    textAlign: 'right',
-  },
-  projectNumber: {
-    display: 'block',
-    fontWeight: 'bold',
-    marginBottom: '1px',
-  },
-  activeProjects: {
-    lineHeight: 1.07,
-    marginBottom: spacing(2),
+  userRole: {
+    fontSize: typography.body1.fontSize,
   },
 }));
 
 interface UserListItemCardLandscapeProps {
   className?: string;
-  user?: {
-    id: string;
-    avatarLetters: string;
-    project: {
-      name: string;
-      location: string;
-    };
-    activeProjects: number;
-  };
+  user?: UserListItemFragment;
 }
 
 export const UserListItemCardLandscape: FC<UserListItemCardLandscapeProps> = (
   props
 ) => {
-  const { user } = props;
+  const { className, user } = props;
   const classes = useStyles();
 
-  const {
-    id,
-    avatarLetters,
-    project: { name: projectName, location: projectLocation },
-    activeProjects,
-  } = user ?? {
-    id: '',
-    avatarLetters: '',
-    project: {
-      name: '',
-      location: '',
-    },
-    activeProjects: 0,
+  const { fullName, id } = user ?? { fullName: '', id: '' };
+
+  // TODO destructure from user when this data becomes queryable
+  const fullNameParts = fullName ? fullName.split(' ') : ['Unknown'];
+  const avatarLetters = fullNameParts.reduce(
+    (initials, part) => initials.concat(part.slice(0, 1).toUpperCase()),
+    ''
+  );
+  const organization = {
+    name: 'Seed Company',
+    role: 'Software Developer',
   };
+  const { name: organizationName, role } = organization;
 
   return (
-    <Card className={classes.root}>
+    <Card className={`${className} ${classes.root}`}>
       <CardActionAreaLink
         disabled={!user}
         to={user ? `/users/${id}` : ''}
         className={classes.cardActionArea}
       >
         <CardContent className={classes.cardHeader}>
-          <Avatar
-            loading={!user}
-            variant="circle"
-            className={classes.personImage}
-          >
+          <Avatar loading={!user} variant="circle" className={classes.avatar}>
             {avatarLetters}
           </Avatar>
         </CardContent>
-        <CardContent className={classes.projectInfo}>
+        <CardContent className={classes.userInfo}>
           <Typography
             color="textPrimary"
             variant="h3"
-            className={classes.projectName}
+            className={classes.userName}
           >
-            {!user ? <Skeleton variant="text" width="10ch" /> : projectName}
+            {!user ? <Skeleton variant="text" width="10ch" /> : fullName}
           </Typography>
           <Typography
             color="primary"
             variant="body2"
-            className={classes.projectLocation}
+            className={classes.userOrg}
           >
-            {!user ? <Skeleton variant="text" width="10ch" /> : projectLocation}
-          </Typography>
-        </CardContent>
-        <CardContent className={classes.userProjects}>
-          <Typography
-            variant="h1"
-            component="span"
-            className={classes.projectNumber}
-          >
-            {!user ? <Skeleton /> : activeProjects}
+            {!user ? (
+              <Skeleton variant="text" width="10ch" />
+            ) : (
+              organizationName
+            )}
           </Typography>
           <Typography
-            className={classes.activeProjects}
-            color="primary"
-            component="span"
-            variant="body2"
+            color="textSecondary"
+            variant="caption"
+            className={classes.userRole}
           >
-            {!user ? <Skeleton width="3ch" /> : <>Active Projects</>}
+            {!user ? <Skeleton variant="text" width="10ch" /> : role}
           </Typography>
         </CardContent>
       </CardActionAreaLink>
