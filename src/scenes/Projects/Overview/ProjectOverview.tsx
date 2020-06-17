@@ -125,7 +125,7 @@ export const ProjectOverview: FC = () => {
         <>
           <Breadcrumbs>
             <Breadcrumb to="/projects">Project</Breadcrumb>
-            <Breadcrumb to={`/projects${projectId}`}>
+            <Breadcrumb to={`/projects/${projectId}`}>
               {data?.project.name?.value}
             </Breadcrumb>
           </Breadcrumbs>
