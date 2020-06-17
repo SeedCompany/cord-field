@@ -1,8 +1,14 @@
 import { compact } from 'lodash';
+import { ReactNode } from 'react';
 import { UseFieldConfig, useField as useFinalForm } from 'react-final-form';
 import { many, Many } from '../../util';
-import { validators } from './index';
-import { useIsSubmitting } from './util';
+import { useFieldName, validators } from './index';
+import {
+  getHelperText,
+  showError,
+  useFocusOnEnabled,
+  useIsSubmitting,
+} from './util';
 import { Validator } from './validators';
 
 export type FieldConfig<Value> = Omit<UseFieldConfig<Value>, 'validate'> & {
@@ -56,5 +62,32 @@ export const useField = <Value, P, T extends HTMLElement = HTMLElement>(
     input,
     meta: { ...meta, submitting },
     rest,
+  };
+};
+
+export const useField2 = <Value>({
+  name: nameProp,
+  disabled: disabledProp,
+  helperText,
+  ...config
+}: FieldConfig<Value> & {
+  name: string;
+  disabled?: boolean;
+  helperText?: ReactNode;
+}) => {
+  const name = useFieldName(nameProp);
+  const { input, meta, rest } = useField<Value>(name, config);
+  const disabled = disabledProp ?? meta.submitting;
+  const inputRef = useFocusOnEnabled(meta, disabled);
+  return {
+    input,
+    meta,
+    rest: {
+      ...rest,
+      disabled,
+      inputRef,
+      helperText: getHelperText(meta, helperText),
+      error: showError(meta),
+    },
   };
 };
