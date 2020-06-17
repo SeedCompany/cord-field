@@ -29,3 +29,11 @@ export const required = (value: unknown) => (value ? undefined : 'Required');
 
 export const email = (value: string) =>
   !value || isEmail(value) ? undefined : 'Invalid email';
+
+export const min = (min: number, error?: string) => (
+  val: number | null | undefined
+) => (val != null && val < min ? error ?? 'Value is below minimum' : undefined);
+
+export const max = (max: number, error?: string) => (
+  val: number | null | undefined
+) => (val != null && val > max ? error ?? 'Value is above maximum' : undefined);
