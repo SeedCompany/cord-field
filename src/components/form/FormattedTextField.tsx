@@ -1,14 +1,15 @@
 import { TextField, TextFieldProps } from '@material-ui/core';
 import { identity } from 'lodash';
-import React from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { useRifm } from 'rifm';
 import { Except } from 'type-fest';
 import { useFieldName } from './FieldGroup';
 import { FieldConfig, useField } from './useField';
 import { getHelperText, showError, useFocusOnEnabled } from './util';
 
-export type FormattedTextFieldProps<FieldValue = string> = FieldConfig<
-  FieldValue
+export type FormattedTextFieldProps<FieldValue = string> = Except<
+  FieldConfig<FieldValue>,
+  'formatOnBlur' | 'multiple'
 > & {
   name: string;
   /**
@@ -43,6 +44,8 @@ export function FormattedTextField<FieldValue = string>({
   append,
   mask,
   accept,
+  format,
+  parse,
   name: nameProp,
   helperText,
   disabled: disabledProp,
@@ -55,9 +58,41 @@ export function FormattedTextField<FieldValue = string>({
   const disabled = disabledProp ?? meta.submitting;
   const ref = useFocusOnEnabled(meta, disabled);
 
+  const [managedVal, setManagedVal] = useState<{
+    raw: string;
+    parsed?: FieldValue;
+  }>({
+    raw: format ? format(input.value, name) : input.value,
+    parsed: input.value,
+  });
+  const updateManagedVal = useCallback(() => {
+    setManagedVal({
+      raw: format ? format(input.value, name) : input.value,
+      parsed: input.value,
+    });
+  }, [setManagedVal, format, name, input.value]);
+  useEffect(() => {
+    let newVal: any = input.value;
+    // FF converts undefined to "" to try to keep the input controlled
+    if (newVal === '' && managedVal.parsed === undefined) {
+      newVal = undefined;
+    }
+
+    if (newVal !== managedVal.parsed) {
+      updateManagedVal();
+    }
+  }, [updateManagedVal, input.value, managedVal.parsed]);
+
   const rifm = useRifm({
-    value: input.value as any,
-    onChange: input.onChange,
+    value: managedVal.raw,
+    onChange: (val) => {
+      const parsed = parse
+        ? parse(val, name)
+        : // assume FieldValue is string if no parser given
+          (val as any);
+      setManagedVal({ raw: val, parsed });
+      input.onChange(parsed);
+    },
     format: formatInput ?? identity,
     append,
     accept: accept ?? /./g,
@@ -72,6 +107,10 @@ export function FormattedTextField<FieldValue = string>({
       {...rest}
       {...input}
       {...rifm}
+      onBlur={(e) => {
+        updateManagedVal();
+        input.onBlur(e);
+      }}
       variant={variant}
       inputRef={ref}
       helperText={getHelperText(meta, helperText)}
