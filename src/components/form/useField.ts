@@ -65,18 +65,22 @@ export const useField = <Value, P, T extends HTMLElement = HTMLElement>(
   };
 };
 
-export const useField2 = <Value>({
+export const useField2 = <Value, P extends {}>({
   name: nameProp,
   disabled: disabledProp,
   helperText,
   ...config
-}: FieldConfig<Value> & {
-  name: string;
-  disabled?: boolean;
-  helperText?: ReactNode;
-}) => {
+}: FieldConfig<Value> &
+  P & {
+    name: string;
+    disabled?: boolean;
+    helperText?: ReactNode;
+  }) => {
   const name = useFieldName(nameProp);
-  const { input, meta, rest } = useField<Value>(name, config);
+  const { input, meta, rest } = useField<Value, P>(
+    name,
+    config as FieldConfig<Value> & P
+  );
   const disabled = disabledProp ?? meta.submitting;
   const inputRef = useFocusOnEnabled(meta, disabled);
   return {
