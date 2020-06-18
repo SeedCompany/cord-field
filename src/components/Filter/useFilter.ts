@@ -6,12 +6,12 @@ export const useFilter = <T>() => {
   const location = useLocation();
   const values = qs.parse(location.search, {
     ignoreQueryPrefix: true,
+    arrayFormat: 'comma',
   }) as Partial<T>;
 
   const onChange = (values: Partial<T>) => {
     const queryVals = qs.stringify(values, {
       addQueryPrefix: true,
-      arrayFormat: 'comma',
     });
 
     navigate(queryVals, {

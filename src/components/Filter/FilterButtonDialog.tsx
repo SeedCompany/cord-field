@@ -1,5 +1,4 @@
 import { Button } from '@material-ui/core';
-import { isEqual } from 'lodash';
 import { ReactNode } from 'react';
 import * as React from 'react';
 import { useDialog } from '../Dialog';
@@ -34,8 +33,8 @@ export function FilterButtonDialog<T>({
         closeLabel="Reset Filters"
         submitLabel="Apply Filters"
         initialValues={values}
-        onSubmit={(newValues) => {
-          if (!isEqual(values, newValues)) {
+        onSubmit={(newValues, form) => {
+          if (form.getState().dirty) {
             onChange(newValues);
           }
           state.onClose();
