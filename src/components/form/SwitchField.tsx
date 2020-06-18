@@ -32,7 +32,11 @@ export const SwitchField: FC<SwitchFieldProps> = ({
   ...props
 }) => {
   const name = useFieldName(nameProp);
-  const { input, meta, rest } = useField(name, { defaultValue, ...props });
+  const { input, meta, rest } = useField(name, {
+    defaultValue,
+    ...props,
+    type: 'checkbox',
+  });
   const disabled = disabledProp ?? meta.submitting;
   const ref = useFocusOnEnabled<HTMLInputElement>(meta, disabled);
 
@@ -53,7 +57,7 @@ export const SwitchField: FC<SwitchFieldProps> = ({
           <Switch
             {...rest}
             inputRef={ref}
-            checked={input.value}
+            checked={input.checked}
             value={name}
             onChange={(e) => input.onChange(e.target.checked)}
             required={props.required}
