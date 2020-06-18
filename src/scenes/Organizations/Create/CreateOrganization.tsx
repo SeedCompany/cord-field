@@ -1,6 +1,7 @@
 import { useSnackbar } from 'notistack';
 import React from 'react';
 import { Except } from 'type-fest';
+import { GQLOperations } from '../../../api';
 import { ButtonLink } from '../../../components/Routing';
 import { useCreateOrganizationMutation } from './CreateOrganization.generated';
 import {
@@ -14,7 +15,7 @@ export const CreateOrganization = (props: Except<Props, 'onSubmit'>) => {
   const submit: Props['onSubmit'] = async (input) => {
     const res = await createOrg({
       variables: { input },
-      refetchQueries: ['Organizations'],
+      refetchQueries: [GQLOperations.Query.Organizations],
     });
     const org = res.data!.createOrganization.organization;
 

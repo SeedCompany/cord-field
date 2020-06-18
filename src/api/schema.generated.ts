@@ -759,6 +759,8 @@ export interface EngagementFilters {
   type?: Maybe<Scalars['String']>;
   /** Only engagements matching this name */
   name?: Maybe<Scalars['String']>;
+  /** Only engagements matching this projectId */
+  projectId?: Maybe<Scalars['ID']>;
 }
 
 export interface EngagementListInput {

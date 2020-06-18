@@ -35,6 +35,11 @@ generates:
         DateTime: DateTime
       skipTypename: false
       enumsAsTypes: true
+  ./src/api/operations.generated.ts:
+    plugins:
+      - named-operations-object
+    config:
+      identifierName: GQLOperations
   ./src/:
     preset: near-operation-file
     presetConfig:
