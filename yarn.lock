@@ -1940,6 +1940,20 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@graphql-codegen/named-operations-object@npm:^1.15.4":
+  version: 1.15.4
+  resolution: "@graphql-codegen/named-operations-object@npm:1.15.4"
+  dependencies:
+    "@graphql-codegen/plugin-helpers": 1.15.4
+    change-case: 4.1.1
+    tslib: ~2.0.0
+  peerDependencies:
+    graphql: ^0.8.0 || ^0.9.0 || ^0.10.0 || ^0.11.0 || ^0.12.0 || ^0.13.0 || ^14.0.0 || ^15.0.0
+    graphql-tag: ^2.0.0
+  checksum: 3/5b27aebaea7db09a82b2cec64d6619dea08908383e2c0fb8111992a9a35a0abefa8a4be1a028ecf713249be8fcffa42f436db8bdb3ec4ba5f01c98df1be62585
+  languageName: node
+  linkType: hard
+
 "@graphql-codegen/near-operation-file-preset@npm:^1.13.5":
   version: 1.13.5
   resolution: "@graphql-codegen/near-operation-file-preset@npm:1.13.5"
@@ -1992,6 +2006,26 @@ __metadata:
   peerDependencies:
     graphql: ^0.8.0 || ^0.9.0 || ^0.10.0 || ^0.11.0 || ^0.12.0 || ^0.13.0 || ^14.0.0 || ^15.0.0
   checksum: 3/3e77cb6be07afcc2fe10c306f5c296afabd850db569bd0335c883aec22c813a5ce4a28a3dd8a5fb155a2adb3d1b33daa566de7fec7001e3ce9e8d77cdb0fe30f
+  languageName: node
+  linkType: hard
+
+"@graphql-codegen/plugin-helpers@npm:1.15.4":
+  version: 1.15.4
+  resolution: "@graphql-codegen/plugin-helpers@npm:1.15.4"
+  dependencies:
+    "@graphql-tools/utils": ^6.0.0
+    camel-case: 4.1.1
+    common-tags: 1.8.0
+    constant-case: 3.0.3
+    import-from: 3.0.0
+    lower-case: 2.0.1
+    param-case: 3.0.3
+    pascal-case: 3.1.1
+    tslib: ~2.0.0
+    upper-case: 2.0.1
+  peerDependencies:
+    graphql: ^0.8.0 || ^0.9.0 || ^0.10.0 || ^0.11.0 || ^0.12.0 || ^0.13.0 || ^14.0.0 || ^15.0.0
+  checksum: 3/37108d1c4dd6744f4f1c75a029c45d5805163a38070bf645a2a35e3431257bc511e27fec8006186247965ac03ea181c9de682804d907e9c7fff46a6591ce6175
   languageName: node
   linkType: hard
 
@@ -2306,6 +2340,18 @@ __metadata:
   peerDependencies:
     graphql: ^0.8.0 || ^0.9.0 || ^0.10.0 || ^0.11.0 || ^0.12.0 || ^0.13.0 || ^14.0.0 || ^15.0.0
   checksum: 3/9cf1a6e32776505d0e577187e110bbaf4c3c61ae3c0c68cc2f49183b088ebaf2345bc18b51a000602f1d29adc687098469b708135c2cf2f90cceee0d76c5949b
+  languageName: node
+  linkType: hard
+
+"@graphql-tools/utils@npm:^6.0.0":
+  version: 6.0.10
+  resolution: "@graphql-tools/utils@npm:6.0.10"
+  dependencies:
+    aggregate-error: 3.0.1
+    camel-case: 4.1.1
+  peerDependencies:
+    graphql: ^14.0.0 || ^15.0.0
+  checksum: 3/fd89977d6850009d7374408866b3f6bf129de4a63363b1cc2147bf751eec8f04d14bb6bfd5386c168afea9932eede9ed4f3bb1854e58197af3c3642176eb9ee8
   languageName: node
   linkType: hard
 
@@ -6428,6 +6474,17 @@ __metadata:
   languageName: node
   linkType: hard
 
+"capital-case@npm:^1.0.3":
+  version: 1.0.3
+  resolution: "capital-case@npm:1.0.3"
+  dependencies:
+    no-case: ^3.0.3
+    tslib: ^1.10.0
+    upper-case-first: ^2.0.1
+  checksum: 3/bf0f9bcf053c3166ab2ba3eebd6700779a779a3ff40ebc690718b13624222a44b45d20cc6457825a357e48adb01822b36b04e9e4cd980b85c346023d3d36f9c6
+  languageName: node
+  linkType: hard
+
 "capture-exit@npm:^2.0.0":
   version: 2.0.0
   resolution: "capture-exit@npm:2.0.0"
@@ -6492,6 +6549,26 @@ __metadata:
     ansi-styles: ^4.1.0
     supports-color: ^7.1.0
   checksum: 3/4018b0c812880da595d0d7b8159939527b72f58d3370e2fdc1a24d9abd460bab851695d7eca014082f110d5702d1221b05493fec430ccce375de907d50cc48c1
+  languageName: node
+  linkType: hard
+
+"change-case@npm:4.1.1":
+  version: 4.1.1
+  resolution: "change-case@npm:4.1.1"
+  dependencies:
+    camel-case: ^4.1.1
+    capital-case: ^1.0.3
+    constant-case: ^3.0.3
+    dot-case: ^3.0.3
+    header-case: ^2.0.3
+    no-case: ^3.0.3
+    param-case: ^3.0.3
+    pascal-case: ^3.1.1
+    path-case: ^3.0.3
+    sentence-case: ^3.0.3
+    snake-case: ^3.0.3
+    tslib: ^1.10.0
+  checksum: 3/245a474fdb8008773fc8b6b0946bff8e4d46e5e807d8f5e34f3c59e9c592b94c109c01fe1b12356757c580ba886a51eb51fd255c716131851d9799f9f0d18177
   languageName: node
   linkType: hard
 
@@ -6999,7 +7076,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"constant-case@npm:3.0.3":
+"constant-case@npm:3.0.3, constant-case@npm:^3.0.3":
   version: 3.0.3
   resolution: "constant-case@npm:3.0.3"
   dependencies:
@@ -7123,6 +7200,7 @@ __metadata:
     "@graphql-codegen/cli": ^1.13.2
     "@graphql-codegen/fragment-matcher": ^1.13.5
     "@graphql-codegen/introspection": ^1.13.2
+    "@graphql-codegen/named-operations-object": ^1.15.4
     "@graphql-codegen/near-operation-file-preset": ^1.13.5
     "@graphql-codegen/plugin-helpers": ^1.13.2
     "@graphql-codegen/typescript": ^1.13.2
@@ -10574,6 +10652,16 @@ fsevents@^1.2.7:
   bin:
     he: bin/he
   checksum: 3/212122003c20c8c17ac0c83a419b4c8e835411ff6ab9195d053ea6e4a0597cc005b5b8eabcbd57b0b0c0fe676f0049e09315845fff4e051198845491cbba260e
+  languageName: node
+  linkType: hard
+
+"header-case@npm:^2.0.3":
+  version: 2.0.3
+  resolution: "header-case@npm:2.0.3"
+  dependencies:
+    capital-case: ^1.0.3
+    tslib: ^1.10.0
+  checksum: 3/13440c681db83c41ad67ded7f094c23e14535a54697637585bf049c73fe44443d7561e35aa687b994f6fa737505c7a41256c39df84510dd58ac08c2eb0c1c95c
   languageName: node
   linkType: hard
 
@@ -15053,6 +15141,16 @@ fsevents@^1.2.7:
   languageName: node
   linkType: hard
 
+"path-case@npm:^3.0.3":
+  version: 3.0.3
+  resolution: "path-case@npm:3.0.3"
+  dependencies:
+    dot-case: ^3.0.3
+    tslib: ^1.10.0
+  checksum: 3/61b82d59d44896924738cf76a0055c1bab48f78aaf5f7b58d40bc365663f2b3ed0e7b0190b244bf3ffa829b49f30f62e54d4e32a38d92759bb2601b933ef9895
+  languageName: node
+  linkType: hard
+
 "path-dirname@npm:^1.0.0":
   version: 1.0.2
   resolution: "path-dirname@npm:1.0.2"
@@ -18267,6 +18365,17 @@ resolve@1.15.0:
   languageName: node
   linkType: hard
 
+"sentence-case@npm:^3.0.3":
+  version: 3.0.3
+  resolution: "sentence-case@npm:3.0.3"
+  dependencies:
+    no-case: ^3.0.3
+    tslib: ^1.10.0
+    upper-case-first: ^2.0.1
+  checksum: 3/cfa123198b9c5303b0c132bd8dd9c456513fa6798264e5f492e0a9cb9d08643dfc40ed7d678940e2162aa1795de9843962cffea082b7586ae650bd1b2be37a96
+  languageName: node
+  linkType: hard
+
 "serialize-javascript@npm:^2.1.2":
   version: 2.1.2
   resolution: "serialize-javascript@npm:2.1.2"
@@ -18579,6 +18688,16 @@ resolve@1.15.0:
     astral-regex: ^1.0.0
     is-fullwidth-code-point: ^2.0.0
   checksum: 3/7578393cac91c28f8cb5fa5df36b826ad62c9e66313d2547770db8401570fa8f4aa20cd84ef9244fa054d8e9cc6bfc02578784bb89b238d384b99f2728a35a6d
+  languageName: node
+  linkType: hard
+
+"snake-case@npm:^3.0.3":
+  version: 3.0.3
+  resolution: "snake-case@npm:3.0.3"
+  dependencies:
+    dot-case: ^3.0.3
+    tslib: ^1.10.0
+  checksum: 3/e14d63f5e7f22ef95f7a7a4d79919eb1b0b50f4351dfb2af415258e9159512a4f220c5358dd6125f243a9cbac9ccb7eddc6b47d5fe3bf58ff323cce6b03c0af5
   languageName: node
   linkType: hard
 
@@ -20044,6 +20163,15 @@ typescript@^3.8.3:
   version: 1.2.0
   resolution: "upath@npm:1.2.0"
   checksum: 3/ecb08ff3e7e3b152e03bceb7089e6f0077bf3494764397a301eb99a7a5cd4c593ea4d0b13a7714195ad8a3ddca9d7a5964037a1c0bc712e1ba7b67a79165a0be
+  languageName: node
+  linkType: hard
+
+"upper-case-first@npm:^2.0.1":
+  version: 2.0.1
+  resolution: "upper-case-first@npm:2.0.1"
+  dependencies:
+    tslib: ^1.10.0
+  checksum: 3/35bd4852c8fd1806aff568ccf494c357b4ee4b8fb69a4164a74fc65c4bb5c826de433b0863d0699a5609a735d1818b733ac72bbaaa2d3f5dfe15fc377366dfcd
   languageName: node
   linkType: hard
 
