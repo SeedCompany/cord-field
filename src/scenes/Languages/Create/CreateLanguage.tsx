@@ -1,6 +1,7 @@
 import { useSnackbar } from 'notistack';
 import React from 'react';
 import { Except } from 'type-fest';
+import { GQLOperations } from '../../../api';
 import { ButtonLink } from '../../../components/Routing';
 import {
   CreateLanguageForm,
@@ -31,7 +32,7 @@ export const CreateLanguage = (props: Except<Props, 'onSubmit'>) => {
 
     const res = await createLang({
       variables: { input: inputParsed },
-      refetchQueries: ['Languages'],
+      refetchQueries: [GQLOperations.Query.Languages],
     });
 
     const { language } = res.data!.createLanguage;
