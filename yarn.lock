@@ -3758,13 +3758,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/qs@npm:^6.9.3":
-  version: 6.9.3
-  resolution: "@types/qs@npm:6.9.3"
-  checksum: 3/4b6b5b759423dbd08581e6dc55d140651455f01a8587a03ac557799e605c190119f6f9446494665d7409889f08aaec7763223f7c26972de0d897a3238710ed71
-  languageName: node
-  linkType: hard
-
 "@types/reach__router@npm:^1.2.3":
   version: 1.3.4
   resolution: "@types/reach__router@npm:1.3.4"
@@ -7227,7 +7220,6 @@ __metadata:
     "@types/lodash": ^4.14.149
     "@types/luxon": ^1.22.0
     "@types/node": ^12.0.0
-    "@types/qs": ^6.9.3
     "@types/react": ^16.9.0
     "@types/react-dom": ^16.9.0
     "@types/seedrandom": ^2.4.28
@@ -7247,7 +7239,6 @@ __metadata:
     notistack: ^0.9.11
     npm-run-all: ^4.1.5
     prettier: ^2.0.4
-    qs: ^6.9.4
     react: ^16.13.1
     react-app-rewired: ^2.1.5
     react-docgen-typescript-loader: ^3.7.2
@@ -16641,13 +16632,6 @@ fsevents@^1.2.7:
   version: 6.9.3
   resolution: "qs@npm:6.9.3"
   checksum: 3/ac934049258cbebd4c6691c9c5c2676e90ed481b18178c030ef6acaa08e737d959028a4a75f460e414a5f24e1ef4a4aafb63d0b2fbc074d8597e2d17c2b9ec24
-  languageName: node
-  linkType: hard
-
-"qs@npm:^6.9.4":
-  version: 6.9.4
-  resolution: "qs@npm:6.9.4"
-  checksum: 3/beba62d1e1c66e9888cc08a488eb95771c252a92289a96bff4b767a49e4e7afe9487d7ee3269b856292d8281b855ac5eac927c2e77f845e407ee4fe54743fea7
   languageName: node
   linkType: hard
 

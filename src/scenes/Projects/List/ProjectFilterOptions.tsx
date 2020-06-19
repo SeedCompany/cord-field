@@ -4,12 +4,13 @@ import { ProjectStatus, Sensitivity } from '../../../api';
 import { displayStatus } from '../../../api/displayStatus';
 import { CheckboxesField, CheckboxOption } from '../../../components/form';
 import { SwitchField } from '../../../components/form/SwitchField';
+import { BooleanParam, EnumListParam, makeQueryHandler } from '../../../hooks';
 
-export interface ProjectFilterValues {
-  status: ProjectStatus[];
-  sensitivity: Sensitivity[];
-  clusters: boolean;
-}
+export const useProjectFilters = makeQueryHandler({
+  status: EnumListParam<ProjectStatus>(),
+  sensitivity: EnumListParam<Sensitivity>(),
+  clusters: BooleanParam(),
+});
 
 export const ProjectFilterOptions = () => {
   return (
