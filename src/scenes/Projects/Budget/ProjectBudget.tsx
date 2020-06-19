@@ -10,7 +10,7 @@ import { useCurrencyFormatter } from '../../../components/Formatters/useCurrency
 import { RowData, Table } from '../../../components/Table';
 import {
   ProjectBudgetQueryResult,
-  /* useProjectBudgetQuery, */
+  useProjectBudgetQuery,
 } from './ProjectBudget.generated';
 
 type MockQueryReturn = Pick<
@@ -149,9 +149,16 @@ export const ProjectBudget = () => {
   const classes = useStyles();
   const formatCurrency = useCurrencyFormatter();
 
-  // const { data, loading, error } = useProjectBudgetQuery({
-  //   variables: { id: projectId },
-  // });
+  const {
+    data: budgetData,
+    loading: budgetLoading,
+    error: budgetError,
+  } = useProjectBudgetQuery({
+    variables: { id: projectId },
+  });
+  console.log('budgetError', budgetError);
+  console.log('budgetLoading', budgetLoading);
+  console.log('budgetData', budgetData);
   const [mock, setMock] = useState<MockQueryReturn>(MOCK_QUERY_RETURN);
 
   const { data, loading, error } = mock;
