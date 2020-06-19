@@ -1,20 +1,41 @@
-import { omit, pick, pickBy } from 'lodash';
+import { compact, omit, pick, pickBy } from 'lodash';
 import { useCallback, useMemo } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import {
+  decodeDelimitedArray,
   DecodedValueMap,
   decodeQueryParams,
+  encodeDelimitedArray,
   encodeQueryParams,
+  QueryParamConfig,
   QueryParamConfigMap,
-} from 'serialize-query-params';
-
-export {
-  withDefault,
-  BooleanParam,
-  ArrayParam,
-  NumberParam,
   StringParam,
 } from 'serialize-query-params';
+
+export { withDefault, NumberParam, StringParam } from 'serialize-query-params';
+
+// This is a list param that encodes with commas.
+// It also doesn't empty list in the url.
+export const ListParam: QueryParamConfig<string[] | undefined> = {
+  encode: (val) => encodeDelimitedArray(val, ',') || undefined,
+  decode: (val) => compact(decodeDelimitedArray(val, ',')),
+};
+
+// This is a boolean param, but it doesn't put the default value in the url.
+export const BooleanParam = (
+  defaultVal = false
+): QueryParamConfig<boolean | undefined> => ({
+  encode: (val) => (val == null || val === defaultVal ? '' : val ? '1' : '0'),
+  decode: (val) => (val === '1' ? true : val === '0' ? false : undefined),
+});
+
+// This is just a list param, but is typed as T[]. Useful for string literals.
+export const EnumListParam = <T extends string>() =>
+  (ListParam as unknown) as QueryParamConfig<T[]>;
+
+// This is just a string param, but is typed as T. Useful for string literals.
+export const EnumParam = <T extends string>() =>
+  (StringParam as unknown) as QueryParamConfig<T>;
 
 interface QueryChangeOptions {
   // Whether to push a new history state or replace the existing one.
