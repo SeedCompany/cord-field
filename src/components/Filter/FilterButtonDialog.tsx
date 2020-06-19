@@ -39,9 +39,9 @@ export function FilterButtonDialog<T>({
           }
           state.onClose();
         }}
-        onClose={(reason, form) => {
+        onClose={(reason) => {
           if (reason === 'cancel') {
-            form.reset();
+            onChange({});
           }
           state.onClose();
         }}
