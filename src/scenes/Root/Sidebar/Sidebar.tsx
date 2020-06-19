@@ -66,7 +66,7 @@ export const Sidebar: FC = () => {
         horizontal: 'center',
       }}
     >
-      <MenuItem onClick={closeAnd(createOrg)}>Organization</MenuItem>
+      <MenuItem onClick={closeAnd(createOrg)}>Partner</MenuItem>
       <MenuItem onClick={closeAnd(createProject)}>Project</MenuItem>
       <MenuItem onClick={closeAnd(createLanguage)}>Language</MenuItem>
     </Menu>

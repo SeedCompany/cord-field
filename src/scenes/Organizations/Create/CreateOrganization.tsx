@@ -19,7 +19,7 @@ export const CreateOrganization = (props: Except<Props, 'onSubmit'>) => {
     });
     const org = res.data!.createOrganization.organization;
 
-    enqueueSnackbar(`Created organization: ${org.name.value}`, {
+    enqueueSnackbar(`Created partner: ${org.name.value}`, {
       variant: 'success',
       action: () => (
         <ButtonLink color="inherit" to={`/organizations/${org.id}`}>

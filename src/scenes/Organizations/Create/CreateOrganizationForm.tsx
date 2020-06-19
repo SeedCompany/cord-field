@@ -17,13 +17,13 @@ export const CreateOrganizationForm = (props: CreateOrganizationFormProps) => (
       maxWidth: 'xs',
     }}
     {...props}
-    title="Create Organization"
+    title="Create Partner"
   >
     <SubmitError />
     <TextField
       name="organization.name"
       label="Name"
-      placeholder="Enter organization name"
+      placeholder="Enter partner name"
       autoFocus
     />
   </DialogForm>

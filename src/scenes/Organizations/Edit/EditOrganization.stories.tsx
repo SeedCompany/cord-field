@@ -10,7 +10,7 @@ export const EditOrganizationForm = () => {
   const [state, open] = useDialog();
   return (
     <>
-      <Button onClick={open}>Edit Organization</Button>
+      <Button onClick={open}>Edit Partner</Button>
       <Form {...state} orgId={text('Org Id', '')} />
     </>
   );
