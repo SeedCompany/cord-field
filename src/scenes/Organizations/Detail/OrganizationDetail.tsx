@@ -1,12 +1,6 @@
-import {
-  Breadcrumbs,
-  IconButton,
-  makeStyles,
-  Typography,
-} from '@material-ui/core';
+import { IconButton, makeStyles, Typography } from '@material-ui/core';
 import React from 'react';
 import { useParams } from 'react-router-dom';
-import { Breadcrumb } from '../../../components/Breadcrumb';
 import { useDialog } from '../../../components/Dialog';
 import { PencilCircledIcon } from '../../../components/Icons';
 import { EditOrganization } from '../Edit';
@@ -58,9 +52,6 @@ export const OrganizationDetail = () => {
         <Typography variant="h4">Error fetching partner</Typography>
       ) : (
         <>
-          <Breadcrumbs>
-            <Breadcrumb to="/organizations">Partners</Breadcrumb>
-          </Breadcrumbs>
           <header className={classes.header}>
             <Typography variant="h2">
               {data?.organization.name.value}
