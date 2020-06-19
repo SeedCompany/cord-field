@@ -7260,6 +7260,7 @@ __metadata:
     react-use: ^14.1.1
     rifm: ^0.12.0
     seedrandom: ^3.0.5
+    serialize-query-params: ^1.2.1
     storybook-dark-mode: ^0.4.1
     ts-essentials: ^6.0.4
     ts-node: ^8.8.2
@@ -18380,6 +18381,15 @@ resolve@1.15.0:
   version: 2.1.2
   resolution: "serialize-javascript@npm:2.1.2"
   checksum: 3/9a4d4da6469e327332203438eed9a408e0618519d18aaba3790c88bf87712df4d577423d8fbd7122753800fa12afe19540cba111178ab0cf1f33c2b5771731bf
+  languageName: node
+  linkType: hard
+
+"serialize-query-params@npm:^1.2.1":
+  version: 1.2.1
+  resolution: "serialize-query-params@npm:1.2.1"
+  peerDependencies:
+    query-string: ^5.1.1 || ^6
+  checksum: 3/e1676085ca1f1e8cd54d2bb1ef72ccdb60856ede4a157e2483b6d0c7fae65c6addbf0fb902d4d85cbfc8b7b20ca9fd653f5fbb3b3ce8b25e98b2f19e200d1277
   languageName: node
   linkType: hard
 
