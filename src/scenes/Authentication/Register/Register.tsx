@@ -25,19 +25,17 @@ export const Register = (props: Except<Props, 'onSubmit'>) => {
       const { data } = await register({
         variables: {
           input: {
-            user: {
-              displayFirstName: input.firstName,
-              displayLastName: input.lastName,
-              realFirstName: input.firstName,
-              realLastName: input.lastName,
-              email: input.email,
-              password: input.password,
-            },
+            displayFirstName: input.firstName,
+            displayLastName: input.lastName,
+            realFirstName: input.firstName,
+            realLastName: input.lastName,
+            email: input.email,
+            password: input.password,
           },
         },
       });
       setSuccess(true);
-      setUserSession(data!.createUser.user);
+      setUserSession(data!.register.user);
       const returnTo = decodeURIComponent(query.get('returnTo') ?? '/');
       navigate(returnTo, { replace: true });
     } catch (e) {
