@@ -34,6 +34,7 @@ export const ProjectList: FC = () => {
     variables: {
       input: {
         ...sort.value,
+        filter: filters,
       },
     },
   });
