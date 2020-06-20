@@ -1,5 +1,4 @@
 import {
-  Breadcrumbs,
   Chip,
   fade,
   IconButton,
@@ -10,7 +9,6 @@ import { Add, Publish } from '@material-ui/icons';
 import { FC } from 'react';
 import * as React from 'react';
 import { useParams } from 'react-router-dom';
-import { Breadcrumb } from '../../../components/Breadcrumb';
 import { BudgetOverviewCard } from '../../../components/BudgetOverviewCard';
 import { CardGroup } from '../../../components/CardGroup';
 import { FilesOverviewCard } from '../../../components/FilesOverviewCard';
@@ -123,12 +121,6 @@ export const ProjectOverview: FC = () => {
         <Typography variant="h4">Error fetching Project</Typography>
       ) : (
         <>
-          <Breadcrumbs>
-            <Breadcrumb to="/projects">Projects</Breadcrumb>
-            <Breadcrumb to={`/projects/${projectId}`}>
-              {data?.project.name?.value}
-            </Breadcrumb>
-          </Breadcrumbs>
           <Typography variant="h2">{data?.project.name?.value}</Typography>
           <div className={classes.container}>
             <input

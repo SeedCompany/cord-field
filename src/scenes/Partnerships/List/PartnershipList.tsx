@@ -6,6 +6,7 @@ import {
   Typography,
 } from '@material-ui/core';
 import { Add } from '@material-ui/icons';
+import { Skeleton } from '@material-ui/lab';
 import React, { FC } from 'react';
 import { useParams } from 'react-router-dom';
 import { Breadcrumb } from '../../../components/Breadcrumb';
@@ -64,12 +65,12 @@ export const PartnershipList: FC = () => {
   return (
     <div className={classes.root}>
       <Breadcrumbs className={classes.breadcrumbs}>
-        <Breadcrumb to="/projects">Projects</Breadcrumb>
-        {data?.project.name?.value && (
-          <Breadcrumb to={`/projects/${projectId}`}>
-            {data?.project.name?.value}
-          </Breadcrumb>
-        )}
+        <Breadcrumb to={`/projects/${projectId}`}>
+          {data?.project.name?.value ?? <Skeleton width={200} />}
+        </Breadcrumb>
+        <Breadcrumb to={`/projects/${projectId}/partnerships`}>
+          Partnerships
+        </Breadcrumb>
       </Breadcrumbs>
       <div className={classes.headerContainer}>
         <Typography variant="h2" paragraph>
