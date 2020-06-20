@@ -1,6 +1,5 @@
 import {
   Breadcrumbs,
-  fade,
   IconButton,
   makeStyles,
   Typography,
@@ -14,40 +13,38 @@ import { PartnershipCard } from '../../../components/PartnershipCard';
 import { listOrPlaceholders } from '../../../util';
 import { useProjectPartnershipsQuery } from './PartnershipList.generated';
 
-const useStyles = makeStyles(({ spacing, palette }) => ({
+const useStyles = makeStyles(({ spacing, palette, breakpoints }) => ({
   root: {
     flex: 1,
     overflowY: 'scroll',
     padding: spacing(4),
-    marginBottom: spacing(2),
-  },
-
-  breadcrumbs: {
-    margin: spacing(3, 0),
+    maxWidth: breakpoints.values.sm,
   },
   headerContainer: {
     margin: spacing(3, 0),
-    width: 600,
     display: 'flex',
     justifyContent: 'space-between',
   },
-  item: {
-    marginBottom: spacing(2),
-  },
-  addButton: {
-    backgroundColor: palette.error.main,
-    color: palette.common.white,
-    '&:hover': {
-      backgroundColor: fade(palette.error.main, 0.5),
-    },
-  },
   addPartner: {
-    marginBottom: spacing(2),
     display: 'flex',
     alignItems: 'center',
     '& button': {
-      marginRight: spacing(1),
+      marginRight: spacing(2),
     },
+  },
+  addButton: {
+    backgroundColor: palette.error.main,
+    color: palette.error.contrastText,
+    '&:hover': {
+      backgroundColor: palette.error.dark,
+      // Reset on touch devices, it doesn't add specificity
+      '@media (hover: none)': {
+        backgroundColor: palette.error.main,
+      },
+    },
+  },
+  item: {
+    marginBottom: spacing(2),
   },
 }));
 
@@ -58,40 +55,35 @@ export const PartnershipList: FC = () => {
   const { data } = useProjectPartnershipsQuery({
     variables: { input: projectId },
   });
-
-  const items = data?.project.partnerships.items;
-  const canCreate = data?.project.partnerships.canCreate;
+  const project = data?.project;
+  const partnerships = project?.partnerships;
 
   return (
     <div className={classes.root}>
-      <Breadcrumbs className={classes.breadcrumbs}>
+      <Breadcrumbs>
         <Breadcrumb to={`/projects/${projectId}`}>
-          {data?.project.name?.value ?? <Skeleton width={200} />}
+          {project?.name?.value ?? <Skeleton width={200} />}
         </Breadcrumb>
         <Breadcrumb to={`/projects/${projectId}/partnerships`}>
           Partnerships
         </Breadcrumb>
       </Breadcrumbs>
       <div className={classes.headerContainer}>
-        <Typography variant="h2" paragraph>
-          Partners
-        </Typography>
-        {canCreate && (
+        <Typography variant="h2">Partnerships</Typography>
+        {partnerships?.canCreate && (
           <Typography color="primary" className={classes.addPartner}>
             <IconButton
               classes={{ root: classes.addButton }}
               aria-label="add button"
-              color="primary"
-              disableRipple
               size="small"
             >
-              <Add />
+              <Add fontSize="large" />
             </IconButton>
             Add Partnership
           </Typography>
         )}
       </div>
-      {listOrPlaceholders(items, 15).map((item, index) => (
+      {listOrPlaceholders(partnerships?.items, 5).map((item, index) => (
         <PartnershipCard
           key={item?.id ?? index}
           partnership={item}
