@@ -1,4 +1,6 @@
 import { IconButton, makeStyles, Typography } from '@material-ui/core';
+import { Skeleton } from '@material-ui/lab';
+import clsx from 'clsx';
 import React from 'react';
 import { useParams } from 'react-router-dom';
 import { useDialog } from '../../../components/Dialog';
@@ -6,31 +8,25 @@ import { PencilCircledIcon } from '../../../components/Icons';
 import { EditOrganization } from '../Edit';
 import { useOrganizationQuery } from './OrganizationDetail.generated';
 
-const useStyles = makeStyles(({ spacing }) => ({
+const useStyles = makeStyles(({ spacing, breakpoints }) => ({
   root: {
     flex: 1,
     overflowY: 'scroll',
     padding: spacing(4),
-    '& > *': {
-      marginBottom: spacing(3),
-    },
+    maxWidth: breakpoints.values.md,
   },
-  container: {
-    display: 'flex',
-    alignItems: 'center',
+  name: {
+    // align text with edit button better
+    // should probably fix another way
+    marginTop: 3,
+    marginRight: spacing(2),
+  },
+  nameLoading: {
+    flex: 1,
   },
   header: {
+    flex: 1,
     display: 'flex',
-    alignItems: 'flex-end',
-    '& > *': {
-      marginRight: spacing(2),
-    },
-  },
-  iconSpacing: {
-    marginRight: spacing(1),
-  },
-  iconButtonRoot: {
-    padding: 0,
   },
 }));
 
@@ -43,39 +39,36 @@ export const OrganizationDetail = () => {
       input: orgId,
     },
   });
+  const org = data?.organization;
 
   const [editOrgState, editOrg] = useDialog();
 
   return (
-    <div className={classes.root}>
+    <main className={classes.root}>
       {error ? (
         <Typography variant="h4">Error fetching partner</Typography>
       ) : (
         <>
-          <header className={classes.header}>
-            <Typography variant="h2">
-              {data?.organization.name.value}
-            </Typography>
+          <div className={classes.header}>
             <Typography
-              variant="body2"
-              color="primary"
-              className={classes.container}
+              variant="h2"
+              className={clsx(classes.name, org ? null : classes.nameLoading)}
             >
+              {org ? org.name.value : <Skeleton width="75%" />}
+            </Typography>
+            {org ? (
               <IconButton
-                classes={{ root: classes.iconButtonRoot }}
-                className={classes.iconSpacing}
                 color="primary"
                 aria-label="edit partner"
                 onClick={editOrg}
               >
                 <PencilCircledIcon />
               </IconButton>
-              Edit
-            </Typography>
-          </header>
+            ) : null}
+          </div>
           <EditOrganization {...editOrgState} orgId={orgId} />
         </>
       )}
-    </div>
+    </main>
   );
 };
