@@ -8,7 +8,7 @@ import {
 import clsx from 'clsx';
 import { FC } from 'react';
 import * as React from 'react';
-import { displayEngagementStatus } from '../../api/displayStatus';
+import { displayEngagementStatus } from '../../api';
 import { DisplaySimpleProperty } from '../DisplaySimpleProperty';
 import { useDateFormatter, useNumberFormatter } from '../Formatters';
 import { PencilCircledIcon, ScriptIcon } from '../Icons';

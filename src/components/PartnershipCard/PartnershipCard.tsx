@@ -11,7 +11,7 @@ import {
 import { Skeleton } from '@material-ui/lab';
 import clsx from 'clsx';
 import React, { FC } from 'react';
-import { displayPartnershipStatus } from '../../api/displayStatus';
+import { displayPartnershipStatus } from '../../api';
 import { DisplaySimpleProperty } from '../DisplaySimpleProperty';
 import { useDateFormatter } from '../Formatters';
 import { PartnershipCardFragment } from './PartnershipCard.generated';
