@@ -1,5 +1,6 @@
 import React from 'react';
 import { useRoutes } from 'react-router-dom';
+import { OrganizationDetail } from './Detail';
 import { OrganizationList } from './List';
 
 export const Organizations = () => {
@@ -7,6 +8,10 @@ export const Organizations = () => {
     {
       path: '/',
       element: <OrganizationList />,
+    },
+    {
+      path: '/:orgId',
+      element: <OrganizationDetail />,
     },
   ]);
 

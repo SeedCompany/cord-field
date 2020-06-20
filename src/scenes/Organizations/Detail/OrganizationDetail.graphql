@@ -1,0 +1,15 @@
+query Organization($input: ID!) {
+  organization(id: $input) {
+    ...orgDetails
+  }
+}
+
+fragment orgDetails on Organization {
+  id
+  createdAt
+  name {
+    value
+    canEdit
+  }
+  avatarLetters
+}

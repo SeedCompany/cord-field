@@ -10,7 +10,7 @@ export const CreateOrganizationForm = () => {
   const [state, open] = useDialog();
   return (
     <>
-      <Button onClick={open}>Create Organization</Button>
+      <Button onClick={open}>Create Partner</Button>
       <Form onSubmit={action('onSubmit')} {...state} />
     </>
   );
