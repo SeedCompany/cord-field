@@ -9,114 +9,90 @@ import {
   Typography,
 } from '@material-ui/core';
 import { Skeleton } from '@material-ui/lab';
-import clsx from 'clsx';
 import React, { FC } from 'react';
 import { displayPartnershipStatus } from '../../api';
 import { DisplaySimpleProperty } from '../DisplaySimpleProperty';
-import { useDateFormatter } from '../Formatters';
+import { useDateTimeFormatter } from '../Formatters';
 import { PartnershipCardFragment } from './PartnershipCard.generated';
 
-const useStyles = makeStyles(({ breakpoints, spacing }) => {
-  const cardWidth = breakpoints.values.sm;
-  return {
-    root: {
-      width: '100%',
-      maxWidth: cardWidth,
-    },
-    cardContent: {
-      padding: spacing(2, 3),
-      display: 'flex',
-      justifyContent: 'space-between',
-    },
-    centerItems: {
-      display: 'flex',
-      alignItems: 'center',
-      marginTop: spacing(2),
-    },
-    iconSpacing: {
-      marginRight: spacing(1),
-    },
-    leftContent: {
-      flex: 1,
-    },
-    cardActions: {
-      display: 'flex',
-      justifyContent: 'space-between',
-    },
-  };
-});
+const useStyles = makeStyles(({ spacing }) => ({
+  cardActions: {
+    display: 'flex',
+    justifyContent: 'space-between',
+    paddingRight: spacing(2),
+  },
+}));
 
 export interface PartnershipCardProps {
   partnership?: PartnershipCardFragment;
+  onEdit: () => void;
   className?: string;
 }
 
 export const PartnershipCard: FC<PartnershipCardProps> = ({
   partnership,
+  onEdit,
   className,
 }) => {
   const classes = useStyles();
-  const dateFormatter = useDateFormatter();
+  const formatDateTime = useDateTimeFormatter();
 
   return (
-    <Card className={clsx(className, classes.root)}>
-      <CardContent className={classes.cardContent}>
-        <Grid
-          container
-          direction="column"
-          spacing={1}
-          className={classes.leftContent}
-        >
+    <Card className={className}>
+      <CardContent>
+        <Grid container direction="column" spacing={1}>
           <Grid item>
             <Typography variant="h4">
-              {!partnership ? (
-                <Skeleton variant="text" width={'60%'} />
-              ) : (
+              {partnership ? (
                 partnership.organization.name.value
+              ) : (
+                <Skeleton width="75%" />
               )}
             </Typography>
           </Grid>
           <Grid item>
-            {!partnership ? (
-              <Skeleton variant="text" width={'40%'} />
-            ) : (
-              <Typography>{partnership.types.value.join(', ')}</Typography>
-            )}
+            <Typography>
+              {partnership ? (
+                partnership.types.value.join(', ')
+              ) : (
+                <Skeleton width="30%" />
+              )}
+            </Typography>
           </Grid>
 
-          {partnership?.agreementStatus.value && (
-            <Grid item>
-              <DisplaySimpleProperty
-                label="Agreement Status"
-                value={displayPartnershipStatus(
-                  partnership.agreementStatus.value
-                )}
-              />
-            </Grid>
-          )}
-          {partnership?.mouStatus.value && (
-            <Grid item>
-              <DisplaySimpleProperty
-                label="Mou Status"
-                value={displayPartnershipStatus(partnership.mouStatus.value)}
-              />
-            </Grid>
-          )}
+          <Grid item>
+            <DisplaySimpleProperty
+              label="Agreement Status"
+              value={displayPartnershipStatus(
+                partnership?.agreementStatus.value
+              )}
+              loading={!partnership}
+              loadingWidth="50%"
+            />
+          </Grid>
+          <Grid item>
+            <DisplaySimpleProperty
+              label="Mou Status"
+              value={displayPartnershipStatus(partnership?.mouStatus.value)}
+              loading={!partnership}
+              loadingWidth="40%"
+            />
+          </Grid>
         </Grid>
       </CardContent>
       <Divider />
-      {partnership && (
-        <CardActions className={classes.cardActions}>
-          <Button color="primary" disableRipple size="medium">
-            Edit
-          </Button>
-          <DisplaySimpleProperty
-            label="Created At"
-            value={dateFormatter(partnership.createdAt)}
-            ValueProps={{ color: 'textSecondary' }}
-          />
-        </CardActions>
-      )}
+      <CardActions className={classes.cardActions}>
+        <Button color="primary" disabled={!partnership} onClick={onEdit}>
+          Edit
+        </Button>
+        <DisplaySimpleProperty
+          label="Created At"
+          value={formatDateTime(partnership?.createdAt)}
+          ValueProps={{ color: 'textSecondary' }}
+          loading={!partnership}
+          loadingWidth={`${10 + 15}ch`}
+        />
+      </CardActions>
     </Card>
   );
 };

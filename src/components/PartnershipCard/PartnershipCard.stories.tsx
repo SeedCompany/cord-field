@@ -1,10 +1,12 @@
-import { object, select, text } from '@storybook/addon-knobs';
+import { action } from '@storybook/addon-actions';
+import { select, text } from '@storybook/addon-knobs';
 import React from 'react';
-import { date } from '../knobs.stories';
+import { csv } from '../../util';
+import { dateTime } from '../knobs.stories';
 import { PartnershipCard } from './PartnershipCard';
 import { PartnershipCardFragment } from './PartnershipCard.generated';
 
-export default { title: 'Components/Project Partnership List Item Card' };
+export default { title: 'Components/Partnership Card' };
 
 export const WithData = () => {
   const partnership: PartnershipCardFragment = {
@@ -12,9 +14,9 @@ export const WithData = () => {
     organization: {
       name: { value: text('Org name', 'In n Out') },
     },
-    createdAt: date('createdAt'),
+    createdAt: dateTime('createdAt'),
     types: {
-      value: object('Types', ['Managing']),
+      value: csv(text('Types', 'Managing, Funding')),
     },
     mouStatus: {
       value: select(
@@ -32,7 +34,7 @@ export const WithData = () => {
     },
   };
 
-  return <PartnershipCard partnership={partnership} />;
+  return <PartnershipCard partnership={partnership} onEdit={action('edit')} />;
 };
 
-export const Loading = () => <PartnershipCard />;
+export const Loading = () => <PartnershipCard onEdit={action('edit')} />;

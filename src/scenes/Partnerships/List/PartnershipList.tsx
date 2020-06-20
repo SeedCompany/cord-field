@@ -8,6 +8,7 @@ import { Add } from '@material-ui/icons';
 import { Skeleton } from '@material-ui/lab';
 import React, { FC } from 'react';
 import { useParams } from 'react-router-dom';
+import { noop } from 'ts-essentials';
 import { Breadcrumb } from '../../../components/Breadcrumb';
 import { PartnershipCard } from '../../../components/PartnershipCard';
 import { listOrPlaceholders } from '../../../util';
@@ -87,6 +88,7 @@ export const PartnershipList: FC = () => {
         <PartnershipCard
           key={item?.id ?? index}
           partnership={item}
+          onEdit={noop}
           className={classes.item}
         />
       ))}
