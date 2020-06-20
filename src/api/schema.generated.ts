@@ -673,7 +673,7 @@ export type Directory = FileNode &
      * This can be used to populate a path-like UI,
      * without having to fetch each parent serially.
      */
-    parents: FileNode[];
+    parents: Directory[];
     /** The user who created this directory */
     createdBy: User;
     /** Return the file nodes of this directory */
@@ -862,7 +862,7 @@ export type File = FileNode &
      * This can be used to populate a path-like UI,
      * without having to fetch each parent serially.
      */
-    parents: FileNode[];
+    parents: Directory[];
     /** The user who uploaded the first version of this file */
     createdBy: User;
     mimeType: Scalars['String'];
@@ -969,7 +969,7 @@ export type FileVersion = FileNode &
      * This can be used to populate a path-like UI,
      * without having to fetch each parent serially.
      */
-    parents: FileNode[];
+    parents: Directory[];
     /** The user who created this file version */
     createdBy: User;
     mimeType: Scalars['String'];

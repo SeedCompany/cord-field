@@ -13,6 +13,7 @@ import {
 import { Add, FolderOpen, Language, People } from '@material-ui/icons';
 import { ComponentType, FC, useState } from 'react';
 import * as React from 'react';
+import { useMatch } from 'react-router';
 import { CreateButton } from '../../../components/CreateButton';
 import { useDialog } from '../../../components/Dialog';
 import { ListItemLink, ListItemLinkProps } from '../../../components/Routing';
@@ -48,6 +49,10 @@ export const Sidebar: FC = () => {
   const [createOrgState, createOrg] = useDialog();
   const [createProjectState, createProject] = useDialog();
   const [createLanguageState, createLanguage] = useDialog();
+  const projectsActive = Boolean(useMatch('projects/*'));
+  const languagesActive = Boolean(useMatch('languages/*'));
+  const usersActive = Boolean(useMatch('users/*'));
+  const organizationsActive = Boolean(useMatch('organizations/*'));
 
   const createMenu = (
     <Menu
@@ -78,10 +83,30 @@ export const Sidebar: FC = () => {
       aria-label="sidebar"
       subheader={<ListSubheader component="div">MENU</ListSubheader>}
     >
-      <NavItem to="/projects" label="Projects" icon={FolderOpen} />
-      <NavItem to="/languages" label="Languages" icon={Language} />
-      <NavItem to="/users" label="People" icon={People} />
-      <NavItem to="/organizations" label="Partners" icon={People} />
+      <NavItem
+        selected={projectsActive}
+        to="/projects"
+        label="Projects"
+        icon={FolderOpen}
+      />
+      <NavItem
+        selected={languagesActive}
+        to="/languages"
+        label="Languages"
+        icon={Language}
+      />
+      <NavItem
+        selected={usersActive}
+        to="/users"
+        label="People"
+        icon={People}
+      />
+      <NavItem
+        selected={organizationsActive}
+        to="/organizations"
+        label="Partners"
+        icon={People}
+      />
     </List>
   );
 
@@ -124,6 +149,7 @@ const NavItem = ({
 }: ListItemLinkProps & {
   icon: ComponentType<SvgIconProps>;
   label: string;
+  selected: boolean;
 }) => (
   <ListItemLink {...props}>
     <ListItemIcon>
