@@ -1,48 +1,53 @@
-import React, { FC } from 'react';
+import React from 'react';
 import { Except } from 'type-fest';
-import { UpdateOrganization } from '../../../api';
-import { DialogState } from '../../../components/Dialog';
-import { DialogForm } from '../../../components/Dialog/DialogForm';
+import { UpdateOrganizationInput } from '../../../api';
+import {
+  DialogForm,
+  DialogFormProps,
+} from '../../../components/Dialog/DialogForm';
 import { SubmitError, TextField } from '../../../components/form';
+import { OrgDetailsFragment } from '../Detail/OrganizationDetail.generated';
 import { useUpdateOrganizationMutation } from './EditOrganization.generated';
 
-type EditOrganizationProps = DialogState & { orgId: string };
+export type EditOrganizationProps = Except<
+  DialogFormProps<UpdateOrganizationInput>,
+  'onSubmit' | 'initialValues'
+> & {
+  org: OrgDetailsFragment;
+};
 
-interface UpdateOrganizationFormInput {
-  organization: Except<UpdateOrganization, 'id'>;
-}
-
-export const EditOrganization: FC<EditOrganizationProps> = (props) => {
-  const { orgId, ...rest } = props;
+export const EditOrganization = ({ org, ...props }: EditOrganizationProps) => {
   const [updateOrg] = useUpdateOrganizationMutation();
-  const submit = (input: UpdateOrganizationFormInput) => {
-    const organizationInputWithId = {
-      organization: {
-        ...input.organization,
-        id: orgId,
-      },
-    };
-    updateOrg({
-      variables: { input: organizationInputWithId },
-    });
-  };
 
   return (
-    <DialogForm
+    <DialogForm<UpdateOrganizationInput>
       DialogProps={{
         fullWidth: true,
         maxWidth: 'xs',
       }}
-      {...rest}
       title="Edit Partner"
-      onSubmit={submit}
+      {...props}
+      onlyDirtySubmit
+      initialValues={{
+        organization: {
+          id: org.id,
+          name: org.name.value,
+        },
+      }}
+      onSubmit={(input) => {
+        updateOrg({
+          variables: { input },
+        });
+      }}
     >
       <SubmitError />
       <TextField
         name="organization.name"
         label="Name"
         placeholder="Enter new partner name"
+        disabled={!org.name.canEdit}
         autoFocus
+        required
       />
     </DialogForm>
   );

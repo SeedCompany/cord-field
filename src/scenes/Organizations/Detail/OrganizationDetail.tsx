@@ -66,7 +66,7 @@ export const OrganizationDetail = () => {
               </IconButton>
             ) : null}
           </div>
-          <EditOrganization {...editOrgState} orgId={orgId} />
+          {org ? <EditOrganization org={org} {...editOrgState} /> : null}
         </>
       )}
     </main>

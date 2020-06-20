@@ -1,11 +1,5 @@
 import { useCallback, useMemo, useState } from 'react';
 
-export interface DialogState {
-  open: boolean;
-  onClose: () => void;
-  onExited: () => void;
-}
-
 export function useDialog<T = undefined>() {
   const [isOpen, setOpen] = useState(false);
   const [item, setItem] = useState<T | undefined>(undefined);
@@ -13,7 +7,7 @@ export function useDialog<T = undefined>() {
     setItem(item);
     setOpen(true);
   }, []) as ShowFn<T>;
-  const state = useMemo<DialogState>(
+  const state = useMemo(
     () => ({
       open: isOpen,
       onClose: () => setOpen(false),
