@@ -7,7 +7,13 @@ import { Merge } from 'type-fest';
 
 export type ListItemLinkProps = InternalProps | ExternalProps;
 
-type BaseProps = Omit<ListItemProps<'a'>, 'button' | 'component' | 'href'>;
+type BaseProps = Omit<ListItemProps<'a'>, 'button' | 'component' | 'href'> & {
+  /**
+   * Whether the active styles should ONLY be applied for paths
+   * that exactly match the given one
+   */
+  exact?: boolean;
+};
 
 interface InternalProps extends Merge<BaseProps, NavLinkProps> {
   external?: false;
@@ -28,9 +34,9 @@ interface ExternalProps extends BaseProps {
  * by passing in `selected={false}`.
  */
 export const ListItemLink = forwardRef<HTMLAnchorElement, ListItemLinkProps>(
-  ({ external, to, children, ...props }, ref) => {
-    const path = typeof to === 'string' ? to : { path: to.pathname! };
-    const active = useMatch(path);
+  ({ external, to, children, exact = false, ...props }, ref) => {
+    const path = typeof to === 'string' ? to : to.pathname!;
+    const active = useMatch({ path, end: exact });
 
     if (external) {
       assert(typeof to === 'string');
