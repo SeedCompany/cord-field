@@ -1,4 +1,9 @@
-import { Breadcrumbs, makeStyles, Typography } from '@material-ui/core';
+import {
+  Breadcrumbs,
+  makeStyles,
+  Tooltip,
+  Typography,
+} from '@material-ui/core';
 import { Add } from '@material-ui/icons';
 import { Skeleton } from '@material-ui/lab';
 import React, { FC } from 'react';
@@ -20,14 +25,9 @@ const useStyles = makeStyles(({ spacing, breakpoints }) => ({
   headerContainer: {
     margin: spacing(3, 0),
     display: 'flex',
-    justifyContent: 'space-between',
   },
-  addPartner: {
-    display: 'flex',
-    alignItems: 'center',
-    '& button': {
-      marginRight: spacing(2),
-    },
+  title: {
+    marginRight: spacing(3),
   },
   item: {
     marginBottom: spacing(2),
@@ -55,14 +55,15 @@ export const PartnershipList: FC = () => {
         </Breadcrumb>
       </Breadcrumbs>
       <div className={classes.headerContainer}>
-        <Typography variant="h2">Partnerships</Typography>
+        <Typography variant="h2" className={classes.title}>
+          Partnerships
+        </Typography>
         {partnerships?.canCreate && (
-          <Typography color="primary" className={classes.addPartner}>
+          <Tooltip arrow title="Add Partnership">
             <Fab size="small" color="error" aria-label="add partnership">
               <Add />
             </Fab>
-            Add Partnership
-          </Typography>
+          </Tooltip>
         )}
       </div>
       {listOrPlaceholders(partnerships?.items, 5).map((item, index) => (
