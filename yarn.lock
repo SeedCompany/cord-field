@@ -5287,6 +5287,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"attr-accept@npm:^2.0.0":
+  version: 2.1.0
+  resolution: "attr-accept@npm:2.1.0"
+  checksum: 3/a31fdf3b37daed32e8f33a46e17b3a85b156900c9b7e564cf9202a4893bf475aeebda41421c0febce65bac02c528cbe603abc18592af907fc4a7b839a181a5e4
+  languageName: node
+  linkType: hard
+
 "auto-bind@npm:~4.0.0":
   version: 4.0.0
   resolution: "auto-bind@npm:4.0.0"
@@ -7243,6 +7250,7 @@ __metadata:
     react-app-rewired: ^2.1.5
     react-docgen-typescript-loader: ^3.7.2
     react-dom: ^16.13.1
+    react-dropzone: ^11.0.1
     react-final-form: ^6.4.0
     react-intersection-observer: ^8.25.1
     react-router: ^6.0.0-alpha.5
@@ -9606,6 +9614,15 @@ __metadata:
   peerDependencies:
     webpack: ^4.0.0
   checksum: 3/03535f889b56836dc462f20e138ba5ad46893cc079cfb970b3434aa4d4e959a1e52770fa62e87d657f4d7d3dd9207726a464dee19eb82ccdafdc2e5c6a80f92a
+  languageName: node
+  linkType: hard
+
+"file-selector@npm:^0.1.12":
+  version: 0.1.12
+  resolution: "file-selector@npm:0.1.12"
+  dependencies:
+    tslib: ^1.9.0
+  checksum: 3/b1a8287dabc8c239998ecb319c5b4eae156bdeb23130d3b5b6bed349f296d7798d0e5ef43e83dad3550aa2b1d1fd45ab7c5302fe8a9e26196676089de565f4ac
   languageName: node
   linkType: hard
 
@@ -16940,6 +16957,19 @@ fsevents@^1.2.7:
     classnames: ^2.2.5
     prop-types: ^15.6.0
   checksum: 3/83de1a28a68fc6adc63324cbbc43d5ab4e6dfff9e8d5145c9426e22125fed5176fc7a4c2583f8ac9ee82c636276114538e04d72f146e00cb1e9ac1833c9d3c6e
+  languageName: node
+  linkType: hard
+
+"react-dropzone@npm:^11.0.1":
+  version: 11.0.1
+  resolution: "react-dropzone@npm:11.0.1"
+  dependencies:
+    attr-accept: ^2.0.0
+    file-selector: ^0.1.12
+    prop-types: ^15.7.2
+  peerDependencies:
+    react: ">= 16.8"
+  checksum: 3/c5192e7367df18d77b8b4c219fd9e091d9d63e7a530ec9f983b42e32a738079f0f5f5082057a867ffd7031aa0a703638d7e873476cb6a27b96c0f330e4166523
   languageName: node
   linkType: hard
 
