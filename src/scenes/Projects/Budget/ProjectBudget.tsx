@@ -151,14 +151,12 @@ export const ProjectBudget = () => {
 
   const {
     data: budgetData,
-    loading: budgetLoading,
-    error: budgetError,
+    // loading: budgetLoading,
+    // error: budgetError,
   } = useProjectBudgetQuery({
     variables: { id: projectId },
   });
-  console.log('budgetError', budgetError);
-  console.log('budgetLoading', budgetLoading);
-  console.log('budgetData', budgetData);
+  console.log('records', budgetData?.project.budget.value?.records);
   const [mock, setMock] = useState<MockQueryReturn>(MOCK_QUERY_RETURN);
 
   const { data, loading, error } = mock;
