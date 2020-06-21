@@ -1,7 +1,6 @@
 import { Box } from '@material-ui/core';
 import * as React from 'react';
-import { ProjectStatus, Sensitivity } from '../../../api';
-import { displayStatus } from '../../../api/displayStatus';
+import { displayStatus, ProjectStatus, Sensitivity } from '../../../api';
 import { CheckboxesField, CheckboxOption } from '../../../components/form';
 import { SwitchField } from '../../../components/form/SwitchField';
 import { BooleanParam, EnumListParam, makeQueryHandler } from '../../../hooks';

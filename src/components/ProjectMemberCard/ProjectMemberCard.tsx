@@ -9,7 +9,7 @@ import {
 import { Skeleton } from '@material-ui/lab';
 import { FC } from 'react';
 import * as React from 'react';
-import { displayRoles } from '../../api/displayRole';
+import { displayRoles } from '../../api';
 import { Avatar } from '../Avatar';
 import { useDateTimeFormatter } from '../Formatters';
 import { ProjectMemberFragment } from './ProjectMember.generated';
@@ -49,7 +49,7 @@ export const ProjectMemberCard: FC<ProjectMemberCardProps> = ({
   const classes = useStyles();
   const dateTimeFormatter = useDateTimeFormatter();
 
-  const rolesString = displayRoles(projectMember?.roles);
+  const rolesString = displayRoles(projectMember?.roles.value ?? []);
   const createdAtString = dateTimeFormatter(projectMember?.createdAt);
 
   return (

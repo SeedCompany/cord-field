@@ -9,7 +9,7 @@ import clsx from 'clsx';
 import { startCase } from 'lodash';
 import { FC } from 'react';
 import * as React from 'react';
-import { displayEngagementStatus } from '../../api/displayStatus';
+import { displayEngagementStatus } from '../../api';
 import { DisplaySimpleProperty } from '../DisplaySimpleProperty';
 import { useDateFormatter } from '../Formatters';
 import { PencilCircledIcon } from '../Icons';

@@ -5,6 +5,7 @@ export const GQLOperations = {
     Organizations: 'Organizations',
     ProjectList: 'ProjectList',
     ProjectOverview: 'ProjectOverview',
+    ProjectPartnerships: 'ProjectPartnerships',
   },
   Mutation: {
     ForgotPassword: 'ForgotPassword',

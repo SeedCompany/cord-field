@@ -9,7 +9,7 @@ import { Skeleton } from '@material-ui/lab';
 import clsx from 'clsx';
 import { FC } from 'react';
 import * as React from 'react';
-import { displayStatus } from '../../api/displayStatus';
+import { displayStatus } from '../../api';
 import { displayLocation } from '../../api/location-helper';
 import { DisplaySimpleProperty } from '../DisplaySimpleProperty';
 import { useDateFormatter } from '../Formatters';

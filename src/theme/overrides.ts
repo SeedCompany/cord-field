@@ -43,6 +43,11 @@ export const appOverrides: ThemeOptions['overrides'] = ({
         background: palette.background.paper,
       },
     },
+    MuiFab: {
+      root: {
+        textTransform: 'none',
+      },
+    },
     MuiInputLabel: {
       root: {
         textTransform: 'uppercase',

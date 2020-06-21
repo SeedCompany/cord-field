@@ -1,8 +1,8 @@
 import { DateTime } from 'luxon';
-import { CalendarDate } from '../../util';
+import { CalendarDate, Nullable } from '../../util';
 
-export const useDateFormatter = () => (date: CalendarDate | null | undefined) =>
+export const useDateFormatter = () => (date: Nullable<CalendarDate>) =>
   date ? date.toLocaleString(DateTime.DATE_SHORT) : '';
 
-export const useDateTimeFormatter = () => (date: DateTime | null | undefined) =>
+export const useDateTimeFormatter = () => (date: Nullable<DateTime>) =>
   date ? date.toLocaleString(DateTime.DATETIME_SHORT) : '';

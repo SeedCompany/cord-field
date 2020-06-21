@@ -2,7 +2,7 @@ import { action } from '@storybook/addon-actions';
 import { boolean } from '@storybook/addon-knobs';
 import { DateTime } from 'luxon';
 import React from 'react';
-import { Role } from '../../api/schema.generated';
+import { Role } from '../../api';
 import { ProjectMemberFragment } from './ProjectMember.generated';
 import { ProjectMemberCard as ProjectMemberCardComponent } from './ProjectMemberCard';
 
