@@ -1,0 +1,18 @@
+mutation RequestFileUpload {
+  requestFileUpload {
+    id
+    url
+  }
+}
+
+mutation CreateFileVersion($input: CreateFileVersionInput!) {
+  createFileVersion(input: $input) {
+    category
+    downloadUrl
+    id
+    mimeType
+    name
+    size
+    type
+  }
+}
