@@ -11,6 +11,8 @@ export const GQLOperations = {
     Users: 'Users',
   },
   Mutation: {
+    RequestFileUpload: 'RequestFileUpload',
+    CreateFileVersion: 'CreateFileVersion',
     ForgotPassword: 'ForgotPassword',
     Login: 'Login',
     Logout: 'Logout',
