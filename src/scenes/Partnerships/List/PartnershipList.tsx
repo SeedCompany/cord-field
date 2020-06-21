@@ -1,20 +1,16 @@
-import {
-  Breadcrumbs,
-  IconButton,
-  makeStyles,
-  Typography,
-} from '@material-ui/core';
+import { Breadcrumbs, makeStyles, Typography } from '@material-ui/core';
 import { Add } from '@material-ui/icons';
 import { Skeleton } from '@material-ui/lab';
 import React, { FC } from 'react';
 import { useParams } from 'react-router-dom';
 import { noop } from 'ts-essentials';
 import { Breadcrumb } from '../../../components/Breadcrumb';
+import { Fab } from '../../../components/Fab';
 import { PartnershipCard } from '../../../components/PartnershipCard';
 import { listOrPlaceholders } from '../../../util';
 import { useProjectPartnershipsQuery } from './PartnershipList.generated';
 
-const useStyles = makeStyles(({ spacing, palette, breakpoints }) => ({
+const useStyles = makeStyles(({ spacing, breakpoints }) => ({
   root: {
     flex: 1,
     overflowY: 'scroll',
@@ -31,17 +27,6 @@ const useStyles = makeStyles(({ spacing, palette, breakpoints }) => ({
     alignItems: 'center',
     '& button': {
       marginRight: spacing(2),
-    },
-  },
-  addButton: {
-    backgroundColor: palette.error.main,
-    color: palette.error.contrastText,
-    '&:hover': {
-      backgroundColor: palette.error.dark,
-      // Reset on touch devices, it doesn't add specificity
-      '@media (hover: none)': {
-        backgroundColor: palette.error.main,
-      },
     },
   },
   item: {
@@ -73,13 +58,9 @@ export const PartnershipList: FC = () => {
         <Typography variant="h2">Partnerships</Typography>
         {partnerships?.canCreate && (
           <Typography color="primary" className={classes.addPartner}>
-            <IconButton
-              classes={{ root: classes.addButton }}
-              aria-label="add button"
-              size="small"
-            >
-              <Add fontSize="large" />
-            </IconButton>
+            <Fab size="small" color="error" aria-label="add partnership">
+              <Add />
+            </Fab>
             Add Partnership
           </Typography>
         )}
