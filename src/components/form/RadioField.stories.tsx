@@ -18,9 +18,13 @@ export const Radio = () => {
     'end'
   );
   const disabled = boolean('Disabled', false);
+  const initialValue = text('initialValue', '');
 
   return (
-    <Form onSubmit={action('onSubmit')}>
+    <Form
+      onSubmit={action('submit')}
+      initialValues={{ color: initialValue || undefined }}
+    >
       {({ handleSubmit }) => (
         <form onSubmit={handleSubmit}>
           <RadioField

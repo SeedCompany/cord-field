@@ -66,9 +66,12 @@ export const RadioField = <FieldValue extends any = string>({
 }: RadioFieldProps<FieldValue>) => {
   const name = useFieldName(nameProp);
   const { input, meta, rest } = useField(name, {
-    type: 'radio',
-    required: true,
     ...props,
+    required: true,
+    // FF expects each radio option to be its own field.
+    // However, we want them grouped up because it works better with MUI &
+    // you only have to specify field name, validators, etc. once.
+    // type: 'radio',
   });
   const disabled = props.disabled || meta.submitting;
   const classes = useStyles();
@@ -87,7 +90,14 @@ export const RadioField = <FieldValue extends any = string>({
         </FormLabel>
       )}
       <RadioContext.Provider value={{ disabled, labelPlacement }}>
-        <RadioGroup {...input}>{children}</RadioGroup>
+        <RadioGroup
+          {...input}
+          // Pass value instead of event to FF, so FF doesn't try to be smart
+          // with its radio logic since we/MUI is already handling it.
+          onChange={(e) => input.onChange(e.target.value)}
+        >
+          {children}
+        </RadioGroup>
       </RadioContext.Provider>
       <FormHelperText>{getHelperText(meta, helperText)}</FormHelperText>
     </FormControl>
