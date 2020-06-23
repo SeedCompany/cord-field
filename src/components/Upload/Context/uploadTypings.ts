@@ -1,42 +1,64 @@
 import * as actions from './uploadActions';
 
-const {
-  UPLOAD_ERROR,
-  PERCENT_COMPLETED_UPDATED,
-  UPLOAD_STATUS_UPDATED,
-} = actions;
-
-export interface SubmittedFile {
+export interface UploadFile {
+  completedAt?: Date;
   error?: Error;
   file: File;
-  id: number;
+  uploadId: number;
   percentCompleted: number;
   uploading: boolean;
 }
 
 export interface UploadState {
-  submittedFiles: SubmittedFile[];
+  files: UploadFile[];
 }
 
-export interface UploadErrorAction {
-  type: typeof UPLOAD_ERROR;
+interface FileAction {
   id: number;
-  error: Error;
 }
 
-export interface UploadPercentCompletedUpdateAction {
-  type: typeof PERCENT_COMPLETED_UPDATED;
-  id: number;
-  percentCompleted: number;
+export interface FileSubmittedAction {
+  type: typeof actions.FILE_SUBMITTED;
+  file: File;
 }
 
-export interface UploadStatusUpdatedAction {
-  type: typeof UPLOAD_STATUS_UPDATED;
+export interface RemoveCompletedUploadAction {
+  type: typeof actions.REMOVE_COMPLETED_UPLOAD;
   id: number;
-  uploading: boolean;
 }
+
+export interface FileUploadCompletedAction extends FileAction {
+  type: typeof actions.FILE_UPLOAD_COMPLETED;
+  completedAt: UploadFile['completedAt'];
+}
+
+export interface UploadErrorOccurredAction extends FileAction {
+  type: typeof actions.UPLOAD_ERROR_OCCURRED;
+  error: UploadFile['error'];
+}
+
+export interface UploadPercentCompletedUpdateAction extends FileAction {
+  type: typeof actions.PERCENT_COMPLETED_UPDATED;
+  percentCompleted: UploadFile['percentCompleted'];
+}
+
+export interface UploadStatusUpdatedAction extends FileAction {
+  type: typeof actions.UPLOAD_STATUS_UPDATED;
+  uploading: UploadFile['uploading'];
+}
+
+// export interface UploadFieldUpdateAction {
+//   type: keyof typeof actions;
+//   id: UploadFile['uploadId'];
+//   <K extends keyof Except<UploadFile, 'file' | 'uploadId'>>(
+//     arg: K
+//   ): UploadFile[K];
+// }
 
 export type UploadAction =
-  | UploadErrorAction
+  | FileSubmittedAction
+  | RemoveCompletedUploadAction
+  | FileUploadCompletedAction
+  | UploadErrorOccurredAction
   | UploadPercentCompletedUpdateAction
   | UploadStatusUpdatedAction;
