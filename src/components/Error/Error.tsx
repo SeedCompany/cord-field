@@ -1,8 +1,8 @@
 import { Button, makeStyles, Typography } from '@material-ui/core';
 import React, { FC } from 'react';
+import { useNavigate } from 'react-router';
 
 interface ErrorProps {
-  navigateBack: (event: React.MouseEvent<HTMLButtonElement>) => void;
   variant?: 'Error' | '404';
 }
 
@@ -26,8 +26,9 @@ const useStyles = makeStyles(({ spacing }) => ({
   },
 }));
 
-export const Error: FC<ErrorProps> = ({ navigateBack, variant = 'Error' }) => {
+export const Error: FC<ErrorProps> = ({ variant = 'Error' }) => {
   const classes = useStyles();
+  const navigate = useNavigate();
 
   const errorMessage =
     variant === 'Error' ? (
@@ -47,7 +48,7 @@ export const Error: FC<ErrorProps> = ({ navigateBack, variant = 'Error' }) => {
       <Typography>Oops, Sorry.</Typography>
       {errorMessage}
       <Button
-        onClick={navigateBack}
+        onClick={() => navigate(-1)}
         variant="contained"
         color="secondary"
         classes={{ root: classes.button }}
