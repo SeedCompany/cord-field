@@ -3,6 +3,7 @@ import React, { FC } from 'react';
 
 interface ErrorProps {
   navigateBack: (event: React.MouseEvent<HTMLButtonElement>) => void;
+  variant?: 'Error' | '404';
 }
 
 const useStyles = makeStyles(({ spacing }) => ({
@@ -10,9 +11,13 @@ const useStyles = makeStyles(({ spacing }) => ({
     display: 'flex',
     flexDirection: 'column',
     alignItems: 'flex-start',
-    '& h3': {
-      fontWeight: 'bold',
-    },
+  },
+  errorType: {
+    display: 'flex',
+  },
+  boldText: {
+    fontWeight: 'bold',
+    marginRight: spacing(1),
   },
   button: {
     height: spacing(4),
@@ -21,13 +26,26 @@ const useStyles = makeStyles(({ spacing }) => ({
   },
 }));
 
-export const Error: FC<ErrorProps> = ({ navigateBack }) => {
+export const Error: FC<ErrorProps> = ({ navigateBack, variant = 'Error' }) => {
   const classes = useStyles();
 
+  const errorMessage =
+    variant === 'Error' ? (
+      <Typography variant="h3" className={classes.boldText}>
+        ERROR
+      </Typography>
+    ) : (
+      <div className={classes.errorType}>
+        <Typography variant="h3" className={classes.boldText}>
+          404
+        </Typography>
+        <Typography variant="h3">PAGE NOT FOUND</Typography>
+      </div>
+    );
   return (
     <div className={classes.container}>
       <Typography>Oops, Sorry.</Typography>
-      <Typography variant="h3">ERROR</Typography>
+      {errorMessage}
       <Button
         onClick={navigateBack}
         variant="contained"
