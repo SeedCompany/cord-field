@@ -30,11 +30,14 @@ export type ProjectOverviewQuery = { __typename?: 'Query' } & {
             Types.SecuredString,
             'canRead' | 'canEdit' | 'value'
           >;
-          location: { __typename?: 'SecuredCountry' } & {
-            value?: Types.Maybe<
-              { __typename?: 'Country' } & DisplayLocation_Country_Fragment
-            >;
-          };
+          location: { __typename?: 'SecuredCountry' } & Pick<
+            Types.SecuredCountry,
+            'canRead' | 'canEdit'
+          > & {
+              value?: Types.Maybe<
+                { __typename?: 'Country' } & DisplayLocation_Country_Fragment
+              >;
+            };
           mouStart: { __typename?: 'SecuredDate' } & Pick<
             Types.SecuredDate,
             'canRead' | 'canEdit' | 'value'
@@ -79,11 +82,14 @@ export type ProjectOverviewQuery = { __typename?: 'Query' } & {
             Types.SecuredString,
             'canRead' | 'canEdit' | 'value'
           >;
-          location: { __typename?: 'SecuredCountry' } & {
-            value?: Types.Maybe<
-              { __typename?: 'Country' } & DisplayLocation_Country_Fragment
-            >;
-          };
+          location: { __typename?: 'SecuredCountry' } & Pick<
+            Types.SecuredCountry,
+            'canRead' | 'canEdit'
+          > & {
+              value?: Types.Maybe<
+                { __typename?: 'Country' } & DisplayLocation_Country_Fragment
+              >;
+            };
           mouStart: { __typename?: 'SecuredDate' } & Pick<
             Types.SecuredDate,
             'canRead' | 'canEdit' | 'value'
@@ -132,6 +138,8 @@ export const ProjectOverviewDocument = gql`
         value
       }
       location {
+        canRead
+        canEdit
         value {
           ...DisplayLocation
         }

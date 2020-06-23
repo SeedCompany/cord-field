@@ -1,18 +1,14 @@
-import {
-  Button,
-  Grid,
-  makeStyles,
-  Tooltip,
-  Typography,
-} from '@material-ui/core';
-import { Add, Publish } from '@material-ui/icons';
+import { Grid, makeStyles, Tooltip, Typography } from '@material-ui/core';
+import { Add, DateRange, Publish } from '@material-ui/icons';
 import { Skeleton } from '@material-ui/lab';
-import { FC, ReactNode } from 'react';
+import { FC } from 'react';
 import * as React from 'react';
 import { useParams } from 'react-router-dom';
 import { displayStatus, securedDateRange } from '../../../api';
+import { displayLocation } from '../../../api/location-helper';
 import { BudgetOverviewCard } from '../../../components/BudgetOverviewCard';
 import { CardGroup } from '../../../components/CardGroup';
+import { DataButton } from '../../../components/DataButton';
 import { Fab } from '../../../components/Fab';
 import { FilesOverviewCard } from '../../../components/FilesOverviewCard';
 import { useDateFormatter } from '../../../components/Formatters';
@@ -23,7 +19,7 @@ import { ProjectMembersSummary } from '../../../components/ProjectMembersSummary
 import { Redacted } from '../../../components/Redacted';
 import { useProjectOverviewQuery } from './ProjectOverview.generated';
 
-const useStyles = makeStyles(({ spacing, breakpoints }) => ({
+const useStyles = makeStyles(({ spacing, breakpoints, palette }) => ({
   root: {
     flex: 1,
     overflowY: 'scroll',
@@ -41,6 +37,9 @@ const useStyles = makeStyles(({ spacing, breakpoints }) => ({
   },
   budgetOverviewCard: {
     marginRight: spacing(3),
+  },
+  infoColor: {
+    color: palette.info.main,
   },
 }));
 
@@ -61,24 +60,9 @@ export const ProjectOverview: FC = () => {
       : 'Intern'
     : null;
 
-  const renderButtonData = (children: ReactNode) =>
-    !data ? (
-      <Grid item>
-        <Skeleton>
-          <Button variant="outlined">&nbsp;</Button>
-        </Skeleton>
-      </Grid>
-    ) : children ? (
-      <Grid item>
-        <Button variant="outlined">{children}</Button>
-      </Grid>
-    ) : null;
-
   const date = data
     ? securedDateRange(data.project.mouStart, data.project.mouEnd)
     : undefined;
-
-  const dateRange = formatDate.range(date?.value) || 'Start - End';
 
   return (
     <main className={classes.root}>
@@ -106,11 +90,30 @@ export const ProjectOverview: FC = () => {
           </Typography>
 
           <Grid container spacing={1} alignItems="center">
-            {renderButtonData(
-              data?.project.location.value?.name ?? 'Enter Location'
-            )}
-            {renderButtonData(dateRange)}
-            {renderButtonData(displayStatus(data?.project.status))}
+            <Grid item>
+              <DataButton
+                loading={!data}
+                secured={data?.project.location}
+                empty="Enter Location"
+                redacted="You do not have permission to view location"
+                children={displayLocation}
+              />
+            </Grid>
+            <Grid item>
+              <DataButton
+                loading={!data}
+                startIcon={<DateRange className={classes.infoColor} />}
+                secured={date}
+                redacted="You do not have permission to view start/end dates"
+                children={formatDate.range}
+                empty="Start - End"
+              />
+            </Grid>
+            <Grid item>
+              <DataButton loading={!data}>
+                {displayStatus(data?.project.status)}
+              </DataButton>
+            </Grid>
           </Grid>
 
           <Grid container spacing={1} alignItems="center">
