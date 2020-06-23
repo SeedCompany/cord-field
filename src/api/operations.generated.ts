@@ -23,6 +23,7 @@ export const GQLOperations = {
     DeletePartnership: 'DeletePartnership',
     CreateProject: 'CreateProject',
     CreatePerson: 'CreatePerson',
+    UpdateUser: 'UpdateUser',
   },
   Fragment: {
     DisplayLocation: 'DisplayLocation',

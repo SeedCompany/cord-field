@@ -12,9 +12,11 @@ fragment userDetails on User {
   fullName
   bio {
     value
+    canEdit
   }
   phone {
     value
+    canEdit
   }
   timezone {
     value {

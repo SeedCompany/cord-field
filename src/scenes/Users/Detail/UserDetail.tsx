@@ -6,12 +6,14 @@ import { DateTime } from 'luxon';
 import React, { useState } from 'react';
 import { useParams } from 'react-router';
 import { useInterval } from 'react-use';
+import { useDialog } from '../../../components/Dialog';
 import {
   DisplaySimpleProperty,
   DisplaySimplePropertyProps,
 } from '../../../components/DisplaySimpleProperty';
 import { Fab } from '../../../components/Fab';
 import { Redacted } from '../../../components/Redacted';
+import { EditUser } from '../Edit';
 import { useUserQuery } from './UserDetail.generated';
 
 const useStyles = makeStyles(({ spacing, breakpoints }) => ({
@@ -41,6 +43,8 @@ export const UserDetail = () => {
   const { data, error } = useUserQuery({
     variables: { userId },
   });
+
+  const [editUserState, editUser] = useDialog();
 
   const user = data?.user;
 
@@ -73,7 +77,7 @@ export const UserDetail = () => {
               )}
             </Typography>
             {canEditAnyFields ? (
-              <Fab color="primary" aria-label="edit person">
+              <Fab color="primary" aria-label="edit person" onClick={editUser}>
                 <Edit />
               </Fab>
             ) : null}
@@ -102,6 +106,7 @@ export const UserDetail = () => {
             value={user?.bio.value}
             loading={!user}
           />
+          {user ? <EditUser user={user} {...editUserState} /> : null}
         </>
       )}
     </main>

@@ -21,10 +21,13 @@ export type UserDetailsFragment = { __typename?: 'User' } & Pick<
       Types.SecuredString,
       'value'
     >;
-    bio: { __typename?: 'SecuredString' } & Pick<Types.SecuredString, 'value'>;
+    bio: { __typename?: 'SecuredString' } & Pick<
+      Types.SecuredString,
+      'value' | 'canEdit'
+    >;
     phone: { __typename?: 'SecuredString' } & Pick<
       Types.SecuredString,
-      'value'
+      'value' | 'canEdit'
     >;
     timezone: { __typename?: 'SecuredTimeZone' } & {
       value?: Types.Maybe<
@@ -42,9 +45,11 @@ export const UserDetailsFragmentDoc = gql`
     fullName
     bio {
       value
+      canEdit
     }
     phone {
       value
+      canEdit
     }
     timezone {
       value {
