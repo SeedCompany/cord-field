@@ -22,7 +22,7 @@ const useStyles = makeStyles(({ palette, spacing }) => ({
   },
 }));
 
-export const Upload = () => {
+export const Dropzone = () => {
   const classes = useStyles();
 
   const onDrop = useCallback((acceptedFiles) => {

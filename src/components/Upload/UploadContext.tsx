@@ -6,14 +6,14 @@ import React, {
   useEffect,
   useReducer,
 } from 'react';
-import { useRequestFileUploadMutation } from '../Upload.generated';
-import * as actions from './uploadActions';
-import { initialState } from './uploadInitialState';
-import { uploadReducer } from './uploadReducer';
-import * as Types from './uploadTypings';
+import * as actions from './Reducer/uploadActions';
+import { initialState } from './Reducer/uploadInitialState';
+import { uploadReducer } from './Reducer/uploadReducer';
+import * as Types from './Reducer/uploadTypings';
+import { useRequestFileUploadMutation } from './Upload.generated';
+import { UploadManager } from './UploadManager';
 
 interface UploadContextValue {
-  files: Types.UploadFile[];
   addFileToUploadQueue: (file: File) => void;
 }
 
@@ -22,15 +22,9 @@ export const UploadContext = createContext<UploadContextValue | undefined>(
 );
 UploadContext.displayName = 'UploadContext';
 
-export const UploadProvider: FC = ({ children }) => (
-  <UploadContext.Provider value={useUpload()}>
-    {children}
-  </UploadContext.Provider>
-);
-
-export const useUpload = () => {
-  const uploadContext = useContext(UploadContext);
-  const [{ files }, dispatch] = useReducer(uploadReducer, initialState);
+export const UploadProvider: FC = ({ children }) => {
+  const [state, dispatch] = useReducer(uploadReducer, initialState);
+  const { files } = state;
   const [requestFileUpload] = useRequestFileUploadMutation();
 
   const uploadFile = useCallback((file: Types.UploadFile, url: string) => {
@@ -88,7 +82,12 @@ export const useUpload = () => {
     dispatch({ type: actions.FILE_SUBMITTED, file });
   }
 
-  return uploadContext
-    ? { ...uploadContext, files, addFileToUploadQueue }
-    : undefined;
+  return (
+    <UploadContext.Provider value={{ addFileToUploadQueue }}>
+      {children}
+      <UploadManager state={state} />
+    </UploadContext.Provider>
+  );
 };
+
+export const useUpload = () => useContext(UploadContext);
