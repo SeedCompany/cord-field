@@ -37,11 +37,11 @@ export type ProjectOverviewQuery = { __typename?: 'Query' } & {
           };
           mouStart: { __typename?: 'SecuredDate' } & Pick<
             Types.SecuredDate,
-            'value'
+            'canRead' | 'canEdit' | 'value'
           >;
           mouEnd: { __typename?: 'SecuredDate' } & Pick<
             Types.SecuredDate,
-            'value'
+            'canRead' | 'canEdit' | 'value'
           >;
           budget: { __typename?: 'SecuredBudget' } & Pick<
             Types.SecuredBudget,
@@ -86,11 +86,11 @@ export type ProjectOverviewQuery = { __typename?: 'Query' } & {
           };
           mouStart: { __typename?: 'SecuredDate' } & Pick<
             Types.SecuredDate,
-            'value'
+            'canRead' | 'canEdit' | 'value'
           >;
           mouEnd: { __typename?: 'SecuredDate' } & Pick<
             Types.SecuredDate,
-            'value'
+            'canRead' | 'canEdit' | 'value'
           >;
           budget: { __typename?: 'SecuredBudget' } & Pick<
             Types.SecuredBudget,
@@ -135,9 +135,13 @@ export const ProjectOverviewDocument = gql`
         }
       }
       mouStart {
+        canRead
+        canEdit
         value
       }
       mouEnd {
+        canRead
+        canEdit
         value
       }
       status

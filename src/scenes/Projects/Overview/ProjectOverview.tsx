@@ -10,7 +10,7 @@ import { Skeleton } from '@material-ui/lab';
 import { FC, ReactNode } from 'react';
 import * as React from 'react';
 import { useParams } from 'react-router-dom';
-import { displayStatus } from '../../../api';
+import { displayStatus, securedDateRange } from '../../../api';
 import { BudgetOverviewCard } from '../../../components/BudgetOverviewCard';
 import { CardGroup } from '../../../components/CardGroup';
 import { Fab } from '../../../components/Fab';
@@ -73,12 +73,11 @@ export const ProjectOverview: FC = () => {
       </Grid>
     ) : null;
 
-  const dateRange =
-    data?.project.mouStart.value && data?.project.mouEnd.value
-      ? formatDate(data?.project.mouStart.value) +
-        ' - ' +
-        formatDate(data?.project.mouEnd.value)
-      : 'Start - End';
+  const date = data
+    ? securedDateRange(data.project.mouStart, data.project.mouEnd)
+    : undefined;
+
+  const dateRange = formatDate.range(date?.value) || 'Start - End';
 
   return (
     <main className={classes.root}>

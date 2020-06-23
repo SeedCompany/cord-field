@@ -10,9 +10,13 @@ query ProjectOverview($input: ID!) {
       }
     }
     mouStart {
+      canRead
+      canEdit
       value
     }
     mouEnd {
+      canRead
+      canEdit
       value
     }
     status
