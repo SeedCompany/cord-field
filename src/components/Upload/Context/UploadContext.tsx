@@ -1,5 +1,5 @@
 import React, { createContext, FC, useContext } from 'react';
-import { useRequestFileUploadMutation } from './Upload.generated';
+import { useRequestFileUploadMutation } from '../Upload.generated';
 
 type UploadStatus = 'idle' | 'adding' | 'added' | 'uploading' | 'completed';
 
@@ -15,12 +15,12 @@ export const UploadContext = createContext<UploadContextValue | undefined>(
 UploadContext.displayName = 'UploadContext';
 
 export const UploadProvider: FC = ({ children }) => (
-  <UploadContext.Provider value={useUploader()}>
+  <UploadContext.Provider value={useUpload()}>
     {children}
   </UploadContext.Provider>
 );
 
-export const useUploader = () => {
+export const useUpload = () => {
   const uploadContext = useContext(UploadContext);
   const [requestFileUpload] = useRequestFileUploadMutation();
 
