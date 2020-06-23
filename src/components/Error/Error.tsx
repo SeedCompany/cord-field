@@ -1,5 +1,9 @@
 import { Button, makeStyles, Typography } from '@material-ui/core';
-import React from 'react';
+import React, { FC } from 'react';
+
+interface ErrorProps {
+  navigateBack: (event: React.MouseEvent<HTMLButtonElement>) => void;
+}
 
 const useStyles = makeStyles(({ spacing }) => ({
   container: {
@@ -17,7 +21,7 @@ const useStyles = makeStyles(({ spacing }) => ({
   },
 }));
 
-export const Error = () => {
+export const Error: FC<ErrorProps> = ({ navigateBack }) => {
   const classes = useStyles();
 
   return (
@@ -25,6 +29,7 @@ export const Error = () => {
       <Typography>Oops, Sorry.</Typography>
       <Typography variant="h3">ERROR</Typography>
       <Button
+        onClick={navigateBack}
         variant="contained"
         color="secondary"
         classes={{ root: classes.button }}
