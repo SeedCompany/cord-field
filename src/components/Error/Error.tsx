@@ -1,9 +1,10 @@
+import { ApolloError } from '@apollo/client';
 import { Button, makeStyles, Typography } from '@material-ui/core';
 import React, { FC } from 'react';
 import { useNavigate } from 'react-router';
 
 interface ErrorProps {
-  variant?: 'Error' | '404';
+  error?: ApolloError;
 }
 
 const useStyles = makeStyles(({ spacing, typography }) => ({
@@ -24,15 +25,19 @@ const useStyles = makeStyles(({ spacing, typography }) => ({
   },
 }));
 
-export const Error: FC<ErrorProps> = ({ variant = 'Error' }) => {
+export const Error: FC<ErrorProps> = ({ error }) => {
   const classes = useStyles();
   const navigate = useNavigate();
+
+  const isNotFoundError = error?.graphQLErrors.some(
+    (error) => error.extensions?.code === 'NOT_FOUND'
+  );
 
   return (
     <div className={classes.container}>
       <Typography>Oops, Sorry.</Typography>
       <Typography variant="h3" className={classes.boldText}>
-        {error ? 'ERROR' : 'PAGE NOT FOUND'}
+        {isNotFoundError ? 'PAGE NOT FOUND' : 'ERROR'}
       </Typography>
       <Button
         onClick={() => navigate(-1)}
