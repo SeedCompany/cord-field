@@ -28,7 +28,7 @@ export type ProjectOverviewQuery = { __typename?: 'Query' } & {
       > & {
           name: { __typename?: 'SecuredString' } & Pick<
             Types.SecuredString,
-            'value'
+            'canRead' | 'canEdit' | 'value'
           >;
           location: { __typename?: 'SecuredCountry' } & {
             value?: Types.Maybe<
@@ -59,7 +59,7 @@ export type ProjectOverviewQuery = { __typename?: 'Query' } & {
           } & PartnershipSummaryFragment;
           engagements: { __typename?: 'SecuredEngagementList' } & Pick<
             Types.SecuredEngagementList,
-            'canCreate' | 'total'
+            'canRead' | 'canCreate' | 'total'
           > & {
               items: Array<
                 | ({
@@ -77,7 +77,7 @@ export type ProjectOverviewQuery = { __typename?: 'Query' } & {
       > & {
           name: { __typename?: 'SecuredString' } & Pick<
             Types.SecuredString,
-            'value'
+            'canRead' | 'canEdit' | 'value'
           >;
           location: { __typename?: 'SecuredCountry' } & {
             value?: Types.Maybe<
@@ -108,7 +108,7 @@ export type ProjectOverviewQuery = { __typename?: 'Query' } & {
           } & PartnershipSummaryFragment;
           engagements: { __typename?: 'SecuredEngagementList' } & Pick<
             Types.SecuredEngagementList,
-            'canCreate' | 'total'
+            'canRead' | 'canCreate' | 'total'
           > & {
               items: Array<
                 | ({
@@ -127,6 +127,8 @@ export const ProjectOverviewDocument = gql`
     project(id: $input) {
       id
       name {
+        canRead
+        canEdit
         value
       }
       location {
@@ -158,6 +160,7 @@ export const ProjectOverviewDocument = gql`
         ...PartnershipSummary
       }
       engagements {
+        canRead
         canCreate
         total
         items {

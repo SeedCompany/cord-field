@@ -2,6 +2,8 @@ query ProjectOverview($input: ID!) {
   project(id: $input) {
     id
     name {
+      canRead
+      canEdit
       value
     }
     location {
@@ -33,6 +35,7 @@ query ProjectOverview($input: ID!) {
       ...PartnershipSummary
     }
     engagements {
+      canRead
       canCreate
       total
       items {

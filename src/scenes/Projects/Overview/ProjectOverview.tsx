@@ -20,6 +20,7 @@ import { InternshipEngagementListItemCard } from '../../../components/Internship
 import { LanguageEngagementListItemCard } from '../../../components/LanguageEngagementListItemCard';
 import { PartnershipSummary } from '../../../components/PartnershipSummary';
 import { ProjectMembersSummary } from '../../../components/ProjectMembersSummary';
+import { Redacted } from '../../../components/Redacted';
 import { useProjectOverviewQuery } from './ProjectOverview.generated';
 
 const useStyles = makeStyles(({ spacing, breakpoints }) => ({
@@ -86,7 +87,18 @@ export const ProjectOverview: FC = () => {
       ) : (
         <div className={classes.main}>
           <Typography variant="h2">
-            {data ? data?.project.name?.value : <Skeleton width="50%" />}
+            {data ? (
+              data.project.name.canRead ? (
+                data.project.name.value
+              ) : (
+                <Redacted
+                  info="You do not have permission to view project's name"
+                  width="50%"
+                />
+              )
+            ) : (
+              <Skeleton width="50%" />
+            )}
           </Typography>
 
           <Typography variant="h4">
@@ -129,7 +141,14 @@ export const ProjectOverview: FC = () => {
             <Grid item>
               <Typography variant="h3">
                 {data ? (
-                  `${data.project.engagements.total} ${engagementTypeLabel} Engagements`
+                  !data.project.engagements.canRead ? (
+                    <Redacted
+                      info="You do not have permission to view engagements"
+                      width="50%"
+                    />
+                  ) : (
+                    `${data.project.engagements.total} ${engagementTypeLabel} Engagements`
+                  )
                 ) : (
                   <Skeleton width="40%" />
                 )}
