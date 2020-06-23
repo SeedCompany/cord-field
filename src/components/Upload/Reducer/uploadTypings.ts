@@ -4,6 +4,7 @@ export interface UploadFile {
   completedAt?: Date;
   error?: Error;
   file: File;
+  fileName?: string;
   uploadId: number;
   percentCompleted: number;
   uploading: boolean;
