@@ -17,6 +17,7 @@ query ProjectOverview($input: ID!) {
     }
     status
     budget {
+      canRead
       value {
         ...BudgetOverview
       }
@@ -28,6 +29,7 @@ query ProjectOverview($input: ID!) {
       ...PartnershipSummary
     }
     engagements {
+      canCreate
       total
       items {
         ... on LanguageEngagement {

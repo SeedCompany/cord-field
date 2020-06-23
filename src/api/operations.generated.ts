@@ -2,10 +2,11 @@ export const GQLOperations = {
   Query: {
     Session: 'Session',
     Languages: 'Languages',
+    Organization: 'Organization',
     Organizations: 'Organizations',
+    ProjectPartnerships: 'ProjectPartnerships',
     ProjectList: 'ProjectList',
     ProjectOverview: 'ProjectOverview',
-    ProjectPartnerships: 'ProjectPartnerships',
   },
   Mutation: {
     ForgotPassword: 'ForgotPassword',
@@ -15,6 +16,7 @@ export const GQLOperations = {
     ResetPassword: 'ResetPassword',
     createLanguage: 'createLanguage',
     createOrganization: 'createOrganization',
+    UpdateOrganization: 'UpdateOrganization',
     CreateProject: 'CreateProject',
   },
   Fragment: {
@@ -28,6 +30,7 @@ export const GQLOperations = {
     LanguageEngagementListItem: 'LanguageEngagementListItem',
     LanguageListItem: 'LanguageListItem',
     OrganizationListItem: 'OrganizationListItem',
+    PartnershipCard: 'PartnershipCard',
     PartnershipSummary: 'PartnershipSummary',
     PartnershipItem: 'PartnershipItem',
     ProjectListItem: 'ProjectListItem',
@@ -35,5 +38,6 @@ export const GQLOperations = {
     ProjectMemberItem: 'ProjectMemberItem',
     ProjectMemberList: 'ProjectMemberList',
     LoggedInUser: 'LoggedInUser',
+    orgDetails: 'orgDetails',
   },
 };

@@ -43,11 +43,14 @@ export type ProjectOverviewQuery = { __typename?: 'Query' } & {
             Types.SecuredDate,
             'value'
           >;
-          budget: { __typename?: 'SecuredBudget' } & {
-            value?: Types.Maybe<
-              { __typename?: 'Budget' } & BudgetOverviewFragment
-            >;
-          };
+          budget: { __typename?: 'SecuredBudget' } & Pick<
+            Types.SecuredBudget,
+            'canRead'
+          > & {
+              value?: Types.Maybe<
+                { __typename?: 'Budget' } & BudgetOverviewFragment
+              >;
+            };
           team: {
             __typename?: 'SecuredProjectMemberList';
           } & ProjectMemberListFragment;
@@ -56,7 +59,7 @@ export type ProjectOverviewQuery = { __typename?: 'Query' } & {
           } & PartnershipSummaryFragment;
           engagements: { __typename?: 'SecuredEngagementList' } & Pick<
             Types.SecuredEngagementList,
-            'total'
+            'canCreate' | 'total'
           > & {
               items: Array<
                 | ({
@@ -89,11 +92,14 @@ export type ProjectOverviewQuery = { __typename?: 'Query' } & {
             Types.SecuredDate,
             'value'
           >;
-          budget: { __typename?: 'SecuredBudget' } & {
-            value?: Types.Maybe<
-              { __typename?: 'Budget' } & BudgetOverviewFragment
-            >;
-          };
+          budget: { __typename?: 'SecuredBudget' } & Pick<
+            Types.SecuredBudget,
+            'canRead'
+          > & {
+              value?: Types.Maybe<
+                { __typename?: 'Budget' } & BudgetOverviewFragment
+              >;
+            };
           team: {
             __typename?: 'SecuredProjectMemberList';
           } & ProjectMemberListFragment;
@@ -102,7 +108,7 @@ export type ProjectOverviewQuery = { __typename?: 'Query' } & {
           } & PartnershipSummaryFragment;
           engagements: { __typename?: 'SecuredEngagementList' } & Pick<
             Types.SecuredEngagementList,
-            'total'
+            'canCreate' | 'total'
           > & {
               items: Array<
                 | ({
@@ -136,6 +142,7 @@ export const ProjectOverviewDocument = gql`
       }
       status
       budget {
+        canRead
         value {
           ...BudgetOverview
         }
@@ -147,6 +154,7 @@ export const ProjectOverviewDocument = gql`
         ...PartnershipSummary
       }
       engagements {
+        canCreate
         total
         items {
           ... on LanguageEngagement {

@@ -1,32 +1,35 @@
 import {
-  Chip,
-  fade,
-  IconButton,
+  Button,
+  Grid,
   makeStyles,
+  Tooltip,
   Typography,
 } from '@material-ui/core';
 import { Add, Publish } from '@material-ui/icons';
-import { FC } from 'react';
+import { Skeleton } from '@material-ui/lab';
+import { FC, ReactNode } from 'react';
 import * as React from 'react';
 import { useParams } from 'react-router-dom';
+import { displayStatus } from '../../../api';
 import { BudgetOverviewCard } from '../../../components/BudgetOverviewCard';
 import { CardGroup } from '../../../components/CardGroup';
+import { Fab } from '../../../components/Fab';
 import { FilesOverviewCard } from '../../../components/FilesOverviewCard';
 import { useDateFormatter } from '../../../components/Formatters';
 import { InternshipEngagementListItemCard } from '../../../components/InternshipEngagementListItemCard';
 import { LanguageEngagementListItemCard } from '../../../components/LanguageEngagementListItemCard';
 import { PartnershipSummary } from '../../../components/PartnershipSummary';
 import { ProjectMembersSummary } from '../../../components/ProjectMembersSummary';
-import {
-  ProjectOverviewQuery,
-  useProjectOverviewQuery,
-} from './ProjectOverview.generated';
+import { useProjectOverviewQuery } from './ProjectOverview.generated';
 
-const useStyles = makeStyles(({ spacing, palette }) => ({
+const useStyles = makeStyles(({ spacing, breakpoints }) => ({
   root: {
     flex: 1,
     overflowY: 'scroll',
     padding: spacing(4),
+  },
+  main: {
+    maxWidth: breakpoints.values.md,
     '& > *': {
       marginBottom: spacing(3),
     },
@@ -35,40 +38,15 @@ const useStyles = makeStyles(({ spacing, palette }) => ({
     display: 'flex',
     alignItems: 'center',
   },
-  uploadInput: {
-    display: 'none',
-  },
-  uploadButton: {
-    backgroundColor: palette.primary.main,
-    color: palette.common.white,
-    marginRight: spacing(1),
-    '&:hover': {
-      backgroundColor: fade(palette.primary.main, 0.5),
-    },
-  },
-  chips: {
-    '& > *': {
-      marginRight: spacing(2),
-    },
-  },
   budgetOverviewCard: {
     marginRight: spacing(3),
-  },
-  addButton: {
-    marginLeft: 'auto',
-    marginRight: spacing(1),
-    backgroundColor: palette.error.main,
-    color: palette.common.white,
-    '&:hover': {
-      backgroundColor: fade(palette.error.main, 0.5),
-    },
   },
 }));
 
 export const ProjectOverview: FC = () => {
   const classes = useStyles();
   const { projectId } = useParams();
-  const dateFormatter = useDateFormatter();
+  const formatDate = useDateFormatter();
 
   const { data, error } = useProjectOverviewQuery({
     variables: {
@@ -76,95 +54,111 @@ export const ProjectOverview: FC = () => {
     },
   });
 
-  const mouStartDateString =
-    data?.project.mouStart.value && dateFormatter(data.project.mouStart.value);
-  const mouEndDateString =
-    data?.project.mouEnd.value && dateFormatter(data.project.mouEnd.value);
+  const engagementTypeLabel = data?.project.__typename
+    ? data.project.__typename === 'TranslationProject'
+      ? 'Language'
+      : 'Intern'
+    : null;
 
-  const engagementSection = (data: ProjectOverviewQuery | undefined) => {
-    return (
-      <>
-        <div className={classes.container}>
-          <Typography variant="h3">
-            {data?.project?.engagements?.total} &nbsp;
-            {data?.project.__typename === 'TranslationProject' &&
-              'Language Engagements'}
-            {data?.project.__typename === 'InternshipProject' &&
-              'Internship Engagements'}
-          </Typography>
-          <IconButton
-            classes={{ root: classes.addButton }}
-            aria-label="add button"
-          >
-            <Add />
-          </IconButton>
-          <Typography variant="h4">
-            Add &nbsp;
-            {data?.project.__typename === 'TranslationProject' && 'Language'}
-            {data?.project.__typename === 'InternshipProject' && 'Internship'}
-          </Typography>
-        </div>
-        {data?.project?.engagements?.items?.map((engagement) => {
-          return engagement.__typename === 'LanguageEngagement' ? (
-            <LanguageEngagementListItemCard {...engagement} />
-          ) : engagement.__typename === 'InternshipEngagement' ? (
-            <InternshipEngagementListItemCard {...engagement} />
-          ) : null;
-        })}
-      </>
-    );
-  };
+  const renderButtonData = (children: ReactNode) =>
+    !data ? (
+      <Grid item>
+        <Skeleton>
+          <Button variant="outlined">&nbsp;</Button>
+        </Skeleton>
+      </Grid>
+    ) : children ? (
+      <Grid item>
+        <Button variant="outlined">{children}</Button>
+      </Grid>
+    ) : null;
+
+  const dateRange =
+    data?.project.mouStart.value && data?.project.mouEnd.value
+      ? formatDate(data?.project.mouStart.value) +
+        ' - ' +
+        formatDate(data?.project.mouEnd.value)
+      : 'Start - End';
 
   return (
-    <div className={classes.root}>
+    <main className={classes.root}>
       {error ? (
-        <Typography variant="h4">Error fetching Project</Typography>
+        <Typography variant="h4">Error fetching project</Typography>
       ) : (
-        <>
-          <Typography variant="h2">{data?.project.name?.value}</Typography>
-          <div className={classes.container}>
-            <input
-              accept="image/*"
-              className={classes.uploadInput}
-              id="icon-button-file"
-              type="file"
-            />
-            <label htmlFor="icon-button-file">
-              <IconButton
-                classes={{ root: classes.uploadButton }}
-                aria-label="upload picture"
-                component="span"
-              >
+        <div className={classes.main}>
+          <Typography variant="h2">
+            {data ? data?.project.name?.value : <Skeleton width="50%" />}
+          </Typography>
+
+          <Typography variant="h4">
+            {data ? 'Project Overview' : <Skeleton width="25%" />}
+          </Typography>
+
+          <Grid container spacing={1} alignItems="center">
+            {renderButtonData(
+              data?.project.location.value?.name ?? 'Enter Location'
+            )}
+            {renderButtonData(dateRange)}
+            {renderButtonData(displayStatus(data?.project.status))}
+          </Grid>
+
+          <Grid container spacing={1} alignItems="center">
+            <Grid item>
+              <Fab size="small" color="primary" aria-label="Upload Files">
                 <Publish />
-              </IconButton>
-            </label>
-            <Typography variant="h4">Upload Files</Typography>
-          </div>
-          {data && (
-            <div className={classes.chips}>
-              <Chip
-                variant="outlined"
-                label={data?.project.location.value?.name}
-              />
-              <Chip variant="outlined" label={mouStartDateString} />
-              <Chip variant="outlined" label={mouEndDateString} />
-            </div>
-          )}
+              </Fab>
+            </Grid>
+            <Grid item>
+              <Typography variant="h4">Upload Files</Typography>
+            </Grid>
+          </Grid>
+
           <div className={classes.container}>
             <BudgetOverviewCard
               className={classes.budgetOverviewCard}
               budget={data?.project.budget?.value}
             />
             {/* TODO When file api is finished need to update query and pass in file information */}
-            <FilesOverviewCard />
+            <FilesOverviewCard loading={!data} />
           </div>
           <CardGroup>
             <ProjectMembersSummary members={data?.project.team} />
             <PartnershipSummary partnerships={data?.project.partnerships} />
           </CardGroup>
-          {engagementSection(data)}
-        </>
+
+          <Grid container spacing={2} alignItems="center">
+            <Grid item>
+              <Typography variant="h3">
+                {data ? (
+                  `${data.project.engagements.total} ${engagementTypeLabel} Engagements`
+                ) : (
+                  <Skeleton width="40%" />
+                )}
+              </Typography>
+            </Grid>
+            <Grid item>
+              {data?.project.engagements.canCreate && (
+                <Tooltip arrow title={`Add ${engagementTypeLabel} Engagement`}>
+                  <Fab
+                    size="small"
+                    color="error"
+                    aria-label={`Add ${engagementTypeLabel} Engagement`}
+                  >
+                    <Add />
+                  </Fab>
+                </Tooltip>
+              )}
+            </Grid>
+          </Grid>
+          {data?.project?.engagements?.items?.map((engagement) =>
+            engagement.__typename === 'LanguageEngagement' ? (
+              <LanguageEngagementListItemCard {...engagement} />
+            ) : engagement.__typename === 'InternshipEngagement' ? (
+              <InternshipEngagementListItemCard {...engagement} />
+            ) : null
+          )}
+        </div>
       )}
-    </div>
+    </main>
   );
 };
