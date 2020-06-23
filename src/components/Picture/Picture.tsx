@@ -129,12 +129,20 @@ const useStyles = makeStyles(() => ({
     margin: 'auto',
   },
   coverHolder: {
+    width: '100%',
     height: '100%',
   },
   coverImg: {
     objectFit: 'cover',
     width: '100%',
     height: '100%',
+  },
+  scaleHolder: {
+    width: '100%',
+    height: '100%',
+  },
+  scaleImg: {
+    objectFit: 'scale-down',
   },
   holder: {
     position: 'relative',
@@ -207,6 +215,7 @@ const PictureImpl = ({
   const fit = fitProp ? fitProp : background ? 'cover' : 'scale';
   const fitCover = fit === 'cover';
   const fitContain = fit === 'contain';
+  const fitScale = fit === 'scale';
 
   const isBot = useIsBot();
   const [supportsNativeLazyLoading] = useState(
@@ -293,6 +302,7 @@ const PictureImpl = ({
         [classes.borderRadius]: true,
         [classes.aspectRatio]: aspectRatio,
         [classes.coverImg]: fitCover,
+        [classes.scaleImg]: fitScale,
         [classes.root]: !needsHolder,
         [classNameProp ?? '']: !needsHolder && classNameProp,
       })}
@@ -330,12 +340,15 @@ const PictureImpl = ({
         [classes.holder]: true,
         [classes.borderRadius]: true,
         [classes.coverHolder]: fitCover,
+        [classes.scaleHolder]: fitScale,
         [classes.root]: !background && !fitContain,
         [classNameProp ?? '']: classNameProp,
       })}
       style={{
         paddingBottom: aspectRatio ? `${(1 / aspectRatio) * 100}%` : undefined,
         ...(!background && !fitContain ? styleProp : {}),
+        // for when it's in a flex container (and fitContain is false), the width needs to be set on this div for the image to appear
+        // ...((fitCover || fitScale) && { width: '100%' }),
       }}
     >
       {img}
@@ -369,7 +382,13 @@ const PictureImpl = ({
         })}
         style={
           fitContain
-            ? { maxWidth: width, maxHeight: height, ...styleProp }
+            ? {
+                maxWidth: width,
+                // if it's just maxWidth, this div doesn't display - something about it being a descendent of a flex container
+                width: width,
+                maxHeight: height,
+                ...styleProp,
+              }
             : styleProp
         }
       >
