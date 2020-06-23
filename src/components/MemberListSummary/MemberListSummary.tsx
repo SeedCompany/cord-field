@@ -78,7 +78,7 @@ export const MemberListSummary: FC<MemberListSummaryProps> = ({
           <AvatarGroup max={max} className={classes.avatarGroup}>
             {listOrPlaceholders(members, max).map((member, i) => (
               <Avatar
-                key={member?.label ?? i}
+                key={member?.label || i}
                 loading={!member}
                 alt={member?.label}
                 src={member?.picture}
@@ -108,7 +108,9 @@ export const MemberListSummary: FC<MemberListSummaryProps> = ({
 };
 
 function memberNames(members: MemberSummaryItem[] | undefined, max: number) {
-  const membersToDisplay = members?.slice(0, max).map((member) => member.label);
+  const membersToDisplay = compact(
+    members?.map((member) => member.label)
+  ).slice(0, max);
   const remainingCount = membersToDisplay
     ? members!.length - membersToDisplay.length
     : 0;
