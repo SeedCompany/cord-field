@@ -104,7 +104,7 @@ export const ProjectOverview: FC = () => {
 
           <Grid container spacing={1} alignItems="center">
             <Grid item>
-              <Fab size="small" color="primary" aria-label="Upload Files">
+              <Fab color="primary" aria-label="Upload Files">
                 <Publish />
               </Fab>
             </Grid>
@@ -138,9 +138,8 @@ export const ProjectOverview: FC = () => {
             </Grid>
             <Grid item>
               {data?.project.engagements.canCreate && (
-                <Tooltip arrow title={`Add ${engagementTypeLabel} Engagement`}>
+                <Tooltip title={`Add ${engagementTypeLabel} Engagement`}>
                   <Fab
-                    size="small"
                     color="error"
                     aria-label={`Add ${engagementTypeLabel} Engagement`}
                   >

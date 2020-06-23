@@ -19,6 +19,12 @@ export const appProps: ThemeOptions['props'] = (_theme) => ({
     // because we always shrink label we always want notch applied
     notched: true,
   },
+  MuiTooltip: {
+    arrow: true,
+  },
+  MuiFab: {
+    size: 'small',
+  },
 });
 
 export const appOverrides: ThemeOptions['overrides'] = ({
