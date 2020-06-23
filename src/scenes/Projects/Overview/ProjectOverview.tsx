@@ -67,7 +67,7 @@ export const ProjectOverview: FC = () => {
   return (
     <main className={classes.root}>
       {error ? (
-        <Typography variant="h4">Error fetching project</Typography>
+        <Typography variant="h4">Error loading project</Typography>
       ) : (
         <div className={classes.main}>
           <Typography variant="h2">
@@ -118,12 +118,14 @@ export const ProjectOverview: FC = () => {
 
           <Grid container spacing={1} alignItems="center">
             <Grid item>
-              <Fab color="primary" aria-label="Upload Files">
+              <Fab loading={!data} color="primary" aria-label="Upload Files">
                 <Publish />
               </Fab>
             </Grid>
             <Grid item>
-              <Typography variant="h4">Upload Files</Typography>
+              <Typography variant="h4">
+                {data ? 'Upload Files' : <Skeleton width="12ch" />}
+              </Typography>
             </Grid>
           </Grid>
 
