@@ -13,9 +13,10 @@ export const uploadReducer = (
           return file.uploadId > id ? file.uploadId : id;
         }, 0) + 1;
       const newSubmittedFile = {
+        ...(action.callback ? { callback: action.callback } : null),
         file: action.file,
-        uploadId,
         percentCompleted: 0,
+        uploadId,
         uploading: false,
       };
       return {
@@ -38,10 +39,34 @@ export const uploadReducer = (
       return updateSimpleFileState(state, action, 'uploading');
     case actions.PERCENT_COMPLETED_UPDATED:
       return updateSimpleFileState(state, action, 'percentCompleted');
-    case actions.UPLOAD_ERROR_OCCURRED:
-      return updateSimpleFileState(state, action, 'error');
-    case actions.FILE_UPLOAD_COMPLETED:
-      return updateSimpleFileState(state, action, 'completedAt');
+    case actions.FILE_UPLOAD_ERROR_OCCURRED: {
+      const { files } = state;
+      const file = findFileById(action.id, files);
+      if (file) {
+        const updatedFile = {
+          ...file,
+          error: action.error,
+          uploading: false,
+        };
+        return replaceUpdatedFileInState(updatedFile, state);
+      } else {
+        return state;
+      }
+    }
+    case actions.FILE_UPLOAD_COMPLETED: {
+      const { files } = state;
+      const file = findFileById(action.id, files);
+      if (file) {
+        const updatedFile = {
+          ...file,
+          completedAt: action.completedAt,
+          uploading: false,
+        };
+        return replaceUpdatedFileInState(updatedFile, state);
+      } else {
+        return state;
+      }
+    }
     default: {
       return state;
     }
