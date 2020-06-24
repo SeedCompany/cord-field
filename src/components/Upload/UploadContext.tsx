@@ -14,7 +14,7 @@ import { useRequestFileUploadMutation } from './Upload.generated';
 import { UploadManager } from './UploadManager';
 
 interface UploadContextValue {
-  addFileToUploadQueue: (file: File) => void;
+  addFileToUploadQueue: (file: File, callback: (file: File) => void) => void;
 }
 
 export const UploadContext = createContext<UploadContextValue | undefined>(
@@ -27,14 +27,83 @@ export const UploadProvider: FC = ({ children }) => {
   const { files } = state;
   const [requestFileUpload] = useRequestFileUploadMutation();
 
-  const uploadFile = useCallback((file: Types.UploadFile, url: string) => {
-    const payload = new FormData();
-    payload.append('file', file.file);
-    const xhr = new XMLHttpRequest();
-    xhr.upload.onprogress = handleFileProgress.bind(null, file.uploadId);
-    xhr.open('PUT', url);
-    xhr.send(payload);
-  }, []);
+  const addFileToUploadQueue = useCallback(
+    (file, callback) =>
+      dispatch({
+        type: actions.FILE_SUBMITTED,
+        file,
+        ...(callback ? { callback } : null),
+      }),
+    []
+  );
+
+  const setUploadingStatus = useCallback(
+    (
+      id: Types.UploadFile['uploadId'],
+      uploading: Types.UploadFile['uploading']
+    ) => dispatch({ type: actions.UPLOAD_STATUS_UPDATED, id, uploading }),
+    []
+  );
+
+  const handleFileUploadSuccess = useCallback(
+    (response, id) => {
+      console.log(`UPLOAD RESPONSE -> ${JSON.stringify(response)}`);
+      dispatch({
+        type: actions.FILE_UPLOAD_COMPLETED,
+        id,
+        completedAt: new Date(),
+      });
+      setUploadingStatus(id, false);
+    },
+    [setUploadingStatus]
+  );
+
+  const handleFileUploadError = useCallback(
+    (statusText, id) => {
+      console.log(`UPLOAD ERROR -> ${JSON.stringify(statusText)}`);
+      dispatch({
+        type: actions.FILE_UPLOAD_ERROR_OCCURRED,
+        id,
+        error: new Error(statusText),
+      });
+      setUploadingStatus(id, false);
+    },
+    [setUploadingStatus]
+  );
+
+  const uploadFile = useCallback(
+    (file: Types.UploadFile, url: string) => {
+      const { uploadId } = file;
+      const payload = new FormData();
+      payload.append('file', file.file);
+      const xhr = new XMLHttpRequest();
+
+      xhr.onreadystatechange = function () {
+        if (xhr.readyState === XMLHttpRequest.DONE) {
+          const { status } = xhr;
+          const success = status === 0 || (status >= 200 && status < 400);
+          if (success) {
+            const { responseType } = xhr;
+            const response =
+              !responseType || responseType === 'text'
+                ? xhr.responseText
+                : responseType === 'document'
+                ? xhr.responseXML
+                : xhr.response;
+            handleFileUploadSuccess(response, uploadId);
+          } else {
+            handleFileUploadError(xhr.statusText, uploadId);
+          }
+        }
+      };
+
+      xhr.upload.onprogress = handleFileProgress.bind(null, uploadId);
+      xhr.open('PUT', url);
+      xhr.send(payload);
+      setUploadingStatus(uploadId, true);
+    },
+    [handleFileUploadSuccess, handleFileUploadError, setUploadingStatus]
+  );
 
   const handleFileAdded = useCallback(
     async (file: Types.UploadFile) => {
@@ -61,25 +130,12 @@ export const UploadProvider: FC = ({ children }) => {
   ) {
     const { loaded, total } = event;
     const percentCompleted = Math.floor((loaded / total) * 1000) / 10;
-    if (percentCompleted >= 100) {
-      console.log('Done');
-      dispatch({
-        type: actions.FILE_UPLOAD_COMPLETED,
-        id,
-        completedAt: new Date(),
-      });
-    } else {
-      console.log(`Percentage completed: ${percentCompleted}%`);
-      dispatch({
-        type: actions.PERCENT_COMPLETED_UPDATED,
-        id,
-        percentCompleted,
-      });
-    }
-  }
-
-  function addFileToUploadQueue(file: File /* TODO: pass in callback */) {
-    dispatch({ type: actions.FILE_SUBMITTED, file });
+    console.log(`Percentage completed: ${percentCompleted}%`);
+    dispatch({
+      type: actions.PERCENT_COMPLETED_UPDATED,
+      id,
+      percentCompleted,
+    });
   }
 
   return (
