@@ -17129,6 +17129,16 @@ fsevents@^1.2.7:
   languageName: node
   linkType: hard
 
+"react-draggable@npm:^4.4.3":
+  version: 4.4.3
+  resolution: "react-draggable@npm:4.4.3"
+  dependencies:
+    classnames: ^2.2.5
+    prop-types: ^15.6.0
+  checksum: 3/72f9e36019a76ea2e9ccf36e8d8c6d74e53d2ca52efcb102e8edb4bedf7c636a3fed4ffa17ea397df01603c6dd5c534190ab697f6e8378d04c4e546d04a6e612
+  languageName: node
+  linkType: hard
+
 "react-dropzone@npm:^11.0.1":
   version: 11.0.1
   resolution: "react-dropzone@npm:11.0.1"
