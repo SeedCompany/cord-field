@@ -1,12 +1,13 @@
 import * as actions from './uploadActions';
 
 export interface UploadFile {
+  callback?: (file: File) => void;
   completedAt?: Date;
   error?: Error;
   file: File;
   fileName?: string;
-  uploadId: number;
   percentCompleted: number;
+  uploadId: number;
   uploading: boolean;
 }
 
@@ -21,6 +22,7 @@ interface FileAction {
 export interface FileSubmittedAction {
   type: typeof actions.FILE_SUBMITTED;
   file: File;
+  callback?: (file: File) => void;
 }
 
 export interface RemoveCompletedUploadAction {
@@ -34,7 +36,7 @@ export interface FileUploadCompletedAction extends FileAction {
 }
 
 export interface UploadErrorOccurredAction extends FileAction {
-  type: typeof actions.UPLOAD_ERROR_OCCURRED;
+  type: typeof actions.FILE_UPLOAD_ERROR_OCCURRED;
   error: UploadFile['error'];
 }
 
