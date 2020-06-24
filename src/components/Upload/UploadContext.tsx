@@ -13,8 +13,15 @@ import * as Types from './Reducer/uploadTypings';
 import { useRequestFileUploadMutation } from './Upload.generated';
 import { UploadManager } from './UploadManager';
 
+interface FileInput {
+  file: File;
+  uploadId: string;
+  fileName: string;
+  callback: Types.UploadCallback;
+}
+
 interface UploadContextValue {
-  addFileToUploadQueue: (file: File, callback: (file: File) => void) => void;
+  addFileToUploadQueue: (input: FileInput) => void;
 }
 
 export const UploadContext = createContext<UploadContextValue | undefined>(
@@ -28,12 +35,20 @@ export const UploadProvider: FC = ({ children }) => {
   const [requestFileUpload] = useRequestFileUploadMutation();
 
   const addFileToUploadQueue = useCallback(
-    (file, callback) =>
+    ({ file, uploadId, fileName, callback }) => {
+      const newFile = {
+        ...(callback ? { callback } : null),
+        file,
+        fileName,
+        percentCompleted: 0,
+        uploadId,
+        uploading: false,
+      };
       dispatch({
         type: actions.FILE_SUBMITTED,
-        file,
-        ...(callback ? { callback } : null),
-      }),
+        file: newFile,
+      });
+    },
     []
   );
 
@@ -47,29 +62,31 @@ export const UploadProvider: FC = ({ children }) => {
 
   const handleFileUploadSuccess = useCallback(
     (response, id) => {
-      console.log(`UPLOAD RESPONSE -> ${JSON.stringify(response)}`);
-      dispatch({
-        type: actions.FILE_UPLOAD_COMPLETED,
-        id,
-        completedAt: new Date(),
-      });
-      setUploadingStatus(id, false);
+      console.info(`UPLOAD RESPONSE -> ${JSON.stringify(response)}`);
+
+      const uploadedFile = files.find((file) => file.uploadId === id);
+      if (uploadedFile?.callback) {
+        const { callback, uploadId, fileName } = uploadedFile;
+        callback(uploadId, fileName).then(() =>
+          dispatch({
+            type: actions.FILE_UPLOAD_COMPLETED,
+            id,
+            completedAt: new Date(),
+          })
+        );
+      }
     },
-    [setUploadingStatus]
+    [files]
   );
 
-  const handleFileUploadError = useCallback(
-    (statusText, id) => {
-      console.log(`UPLOAD ERROR -> ${JSON.stringify(statusText)}`);
-      dispatch({
-        type: actions.FILE_UPLOAD_ERROR_OCCURRED,
-        id,
-        error: new Error(statusText),
-      });
-      setUploadingStatus(id, false);
-    },
-    [setUploadingStatus]
-  );
+  const handleFileUploadError = useCallback((statusText, id) => {
+    console.error(`UPLOAD ERROR -> ${JSON.stringify(statusText)}`);
+    dispatch({
+      type: actions.FILE_UPLOAD_ERROR_OCCURRED,
+      id,
+      error: new Error(statusText),
+    });
+  }, []);
 
   const uploadFile = useCallback(
     (file: Types.UploadFile, url: string) => {

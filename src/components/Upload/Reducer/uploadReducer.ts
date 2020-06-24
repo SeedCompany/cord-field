@@ -7,21 +7,9 @@ export const uploadReducer = (
 ) => {
   switch (action.type) {
     case actions.FILE_SUBMITTED: {
-      const { files } = state;
-      const uploadId =
-        files.reduce((id, file) => {
-          return file.uploadId > id ? file.uploadId : id;
-        }, 0) + 1;
-      const newSubmittedFile = {
-        ...(action.callback ? { callback: action.callback } : null),
-        file: action.file,
-        percentCompleted: 0,
-        uploadId,
-        uploading: false,
-      };
       return {
         ...state,
-        files: files.concat(newSubmittedFile),
+        files: state.files.concat(action.file),
       };
     }
     case actions.REMOVE_COMPLETED_UPLOAD: {
@@ -93,7 +81,10 @@ function updateSimpleFileState(
   }
 }
 
-function findFileById(id: number, files: Types.UploadFile[]) {
+function findFileById(
+  id: Types.UploadFile['uploadId'],
+  files: Types.UploadFile[]
+) {
   return files.find((file) => file.uploadId === id);
 }
 

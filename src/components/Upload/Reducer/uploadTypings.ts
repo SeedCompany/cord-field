@@ -1,13 +1,18 @@
 import * as actions from './uploadActions';
 
+export type UploadCallback = (
+  uploadId: string,
+  fileName: string
+) => Promise<void>;
+
 export interface UploadFile {
-  callback?: (file: File) => void;
+  callback?: UploadCallback;
   completedAt?: Date;
   error?: Error;
   file: File;
-  fileName?: string;
+  fileName: string;
   percentCompleted: number;
-  uploadId: number;
+  uploadId: string;
   uploading: boolean;
 }
 
@@ -16,18 +21,17 @@ export interface UploadState {
 }
 
 interface FileAction {
-  id: number;
+  id: UploadFile['uploadId'];
 }
 
 export interface FileSubmittedAction {
   type: typeof actions.FILE_SUBMITTED;
-  file: File;
-  callback?: (file: File) => void;
+  file: UploadFile;
+  callback?: UploadCallback;
 }
 
-export interface RemoveCompletedUploadAction {
+export interface RemoveCompletedUploadAction extends FileAction {
   type: typeof actions.REMOVE_COMPLETED_UPLOAD;
-  id: number;
 }
 
 export interface FileUploadCompletedAction extends FileAction {
@@ -49,14 +53,6 @@ export interface UploadStatusUpdatedAction extends FileAction {
   type: typeof actions.UPLOAD_STATUS_UPDATED;
   uploading: UploadFile['uploading'];
 }
-
-// export interface UploadFieldUpdateAction {
-//   type: keyof typeof actions;
-//   id: UploadFile['uploadId'];
-//   <K extends keyof Except<UploadFile, 'file' | 'uploadId'>>(
-//     arg: K
-//   ): UploadFile[K];
-// }
 
 export type UploadAction =
   | FileSubmittedAction
