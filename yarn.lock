@@ -7250,6 +7250,7 @@ __metadata:
     react-app-rewired: ^2.1.5
     react-docgen-typescript-loader: ^3.7.2
     react-dom: ^16.13.1
+    react-draggable: ^4.4.3
     react-dropzone: ^11.0.1
     react-final-form: ^6.4.0
     react-intersection-observer: ^8.25.1
@@ -16957,6 +16958,16 @@ fsevents@^1.2.7:
     classnames: ^2.2.5
     prop-types: ^15.6.0
   checksum: 3/83de1a28a68fc6adc63324cbbc43d5ab4e6dfff9e8d5145c9426e22125fed5176fc7a4c2583f8ac9ee82c636276114538e04d72f146e00cb1e9ac1833c9d3c6e
+  languageName: node
+  linkType: hard
+
+"react-draggable@npm:^4.4.3":
+  version: 4.4.3
+  resolution: "react-draggable@npm:4.4.3"
+  dependencies:
+    classnames: ^2.2.5
+    prop-types: ^15.6.0
+  checksum: 3/72f9e36019a76ea2e9ccf36e8d8c6d74e53d2ca52efcb102e8edb4bedf7c636a3fed4ffa17ea397df01603c6dd5c534190ab697f6e8378d04c4e546d04a6e612
   languageName: node
   linkType: hard
 
