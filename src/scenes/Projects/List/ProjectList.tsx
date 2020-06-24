@@ -34,6 +34,7 @@ export const ProjectList: FC = () => {
   const input = {
     ...sort.value,
     filter: filters,
+    count: 3,
   };
 
   const { data, fetchMore } = useProjectListQuery({
@@ -83,15 +84,27 @@ export const ProjectList: FC = () => {
           >
         }
         isRowLoaded={({ index }) => !!data?.projects.items[index]}
-        loadMoreRows={async ({ startIndex, stopIndex }) => {
-          console.log('ProjectList::loadMoreRows', startIndex, stopIndex);
-          if (data?.projects.items.length) {
+        loadMoreRows={async ({ startIndex }) => {
+          if (data?.projects.hasMore) {
             await fetchMore({
               variables: {
                 input: {
                   ...input,
-                  offset: data?.projects.items.length,
+                  page: Math.floor(startIndex / 3 + 1),
                 },
+              },
+              updateQuery: (prev: any, { fetchMoreResult }: any) => {
+                if (!fetchMoreResult) return prev;
+                return {
+                  ...fetchMoreResult,
+                  projects: {
+                    ...fetchMoreResult.projects,
+                    items: [
+                      ...prev.projects.items,
+                      ...fetchMoreResult.projects.items,
+                    ],
+                  },
+                };
               },
             });
           }
