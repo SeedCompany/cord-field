@@ -15,13 +15,19 @@ import {
 import React, { FC } from 'react';
 import Draggable from 'react-draggable';
 import { UploadState } from './Reducer';
+import { UploadItem } from './UploadItem';
 
-const useStyles = makeStyles(({ spacing }) => ({
+const useStyles = makeStyles(({ breakpoints, spacing }) => ({
   root: {
     pointerEvents: 'none',
   },
   paper: {
+    margin: spacing(3),
     pointerEvents: 'auto',
+    position: 'absolute',
+    bottom: '0px',
+    left: '0px',
+    width: breakpoints.values.sm,
   },
   titleContainer: {
     display: 'flex',
@@ -29,10 +35,16 @@ const useStyles = makeStyles(({ spacing }) => ({
     alignItems: 'center',
     padding: spacing(1),
   },
+  title: {
+    paddingLeft: spacing(1),
+  },
   titleButtons: {
     marginLeft: 'auto',
   },
   titleButton: {},
+  contentContainer: {
+    padding: spacing(1),
+  },
 }));
 
 const PaperComponent: FC<PaperProps> = (props) => (
@@ -59,13 +71,25 @@ const DialogTitle: FC<DialogTitleProps> = (props) => {
       className={classes.titleContainer}
       disableTypography
     >
-      <Typography variant="body2">{children}</Typography>
+      <Typography variant="body1" component="h6" className={classes.title}>
+        {children}
+      </Typography>
       <div className={classes.titleButtons}>
-        <IconButton aria-label="minimize" onClick={onMinimize} size="small">
-          <MinimizeIcon />
+        <IconButton
+          aria-label="minimize"
+          className={classes.titleButton}
+          onClick={onMinimize}
+          size="small"
+        >
+          <MinimizeIcon fontSize="small" />
         </IconButton>
-        <IconButton aria-label="close" onClick={onClose} size="small">
-          <CloseIcon />
+        <IconButton
+          aria-label="close"
+          className={classes.titleButton}
+          onClick={onClose}
+          size="small"
+        >
+          <CloseIcon fontSize="small" />
         </IconButton>
       </div>
     </MuiDialogTitle>
@@ -100,7 +124,11 @@ export const UploadManager: FC<UploadManagerProps> = (props) => {
       >
         Upload Manager
       </DialogTitle>
-      <DialogContent>Uploads</DialogContent>
+      <DialogContent className={classes.contentContainer}>
+        <UploadItem />
+        <UploadItem />
+        <UploadItem />
+      </DialogContent>
     </Dialog>
   );
 };
