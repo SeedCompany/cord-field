@@ -12,7 +12,8 @@ export interface UploadFile {
   file: File;
   fileName: string;
   percentCompleted: number;
-  uploadId: string;
+  queueId: number;
+  uploadId?: string;
   uploading: boolean;
 }
 
@@ -21,13 +22,18 @@ export interface UploadState {
 }
 
 interface FileAction {
-  id: UploadFile['uploadId'];
+  queueId: UploadFile['queueId'];
 }
 
 export interface FileSubmittedAction {
   type: typeof actions.FILE_SUBMITTED;
-  file: UploadFile;
+  file: Omit<UploadFile, 'queueId'>;
   callback?: UploadCallback;
+}
+
+export interface FileUploadRequestSucceeded extends FileAction {
+  type: typeof actions.FILE_UPLOAD_REQUEST_SUCCEEDED;
+  uploadId: UploadFile['uploadId'];
 }
 
 export interface RemoveCompletedUploadAction extends FileAction {
@@ -56,6 +62,7 @@ export interface UploadStatusUpdatedAction extends FileAction {
 
 export type UploadAction =
   | FileSubmittedAction
+  | FileUploadRequestSucceeded
   | RemoveCompletedUploadAction
   | FileUploadCompletedAction
   | UploadErrorOccurredAction
