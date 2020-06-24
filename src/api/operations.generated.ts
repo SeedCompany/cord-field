@@ -9,6 +9,8 @@ export const GQLOperations = {
     ProjectOverview: 'ProjectOverview',
   },
   Mutation: {
+    UpdatePartnership: 'UpdatePartnership',
+    DeletePartnership: 'DeletePartnership',
     ForgotPassword: 'ForgotPassword',
     Login: 'Login',
     Logout: 'Logout',
@@ -26,6 +28,7 @@ export const GQLOperations = {
     DisplayZone: 'DisplayZone',
     DisplayPlace: 'DisplayPlace',
     BudgetOverview: 'BudgetOverview',
+    EditPartnership: 'EditPartnership',
     InternshipEngagementListItem: 'InternshipEngagementListItem',
     LanguageEngagementListItem: 'LanguageEngagementListItem',
     LanguageListItem: 'LanguageListItem',

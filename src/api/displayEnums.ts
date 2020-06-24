@@ -19,3 +19,9 @@ export const displayEngagementStatus = displayEnum<EngagementStatus>();
 export const displayRole = displayEnum<Role>();
 export const displayRoles = (roles: Role[]) =>
   roles.map(displayRole).join(', ');
+
+export const PartnershipStatuses: PartnershipAgreementStatus[] = [
+  'NotAttached',
+  'AwaitingSignature',
+  'Signed',
+];

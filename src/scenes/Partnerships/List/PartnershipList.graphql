@@ -9,6 +9,7 @@ query ProjectPartnerships($input: ID!) {
       total
       items {
         ...PartnershipCard
+        ...EditPartnership
       }
     }
   }

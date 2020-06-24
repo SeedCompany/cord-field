@@ -5,6 +5,8 @@ import gql from 'graphql-tag';
 import * as Types from '../../../api/schema.generated';
 import { PartnershipCardFragment } from '../../../components/PartnershipCard/PartnershipCard.generated';
 import { PartnershipCardFragmentDoc } from '../../../components/PartnershipCard/PartnershipCard.generated';
+import { EditPartnershipFragment } from '../Edit/EditPartnership.generated';
+import { EditPartnershipFragmentDoc } from '../Edit/EditPartnership.generated';
 
 export interface ProjectPartnershipsQueryVariables {
   input: Types.Scalars['ID'];
@@ -25,7 +27,8 @@ export type ProjectPartnershipsQuery = { __typename?: 'Query' } & {
             'canCreate' | 'total'
           > & {
               items: Array<
-                { __typename?: 'Partnership' } & PartnershipCardFragment
+                { __typename?: 'Partnership' } & PartnershipCardFragment &
+                  EditPartnershipFragment
               >;
             };
         })
@@ -42,7 +45,8 @@ export type ProjectPartnershipsQuery = { __typename?: 'Query' } & {
             'canCreate' | 'total'
           > & {
               items: Array<
-                { __typename?: 'Partnership' } & PartnershipCardFragment
+                { __typename?: 'Partnership' } & PartnershipCardFragment &
+                  EditPartnershipFragment
               >;
             };
         });
@@ -60,11 +64,13 @@ export const ProjectPartnershipsDocument = gql`
         total
         items {
           ...PartnershipCard
+          ...EditPartnership
         }
       }
     }
   }
   ${PartnershipCardFragmentDoc}
+  ${EditPartnershipFragmentDoc}
 `;
 
 /**
