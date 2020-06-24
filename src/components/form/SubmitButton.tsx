@@ -8,7 +8,25 @@ import { ProgressButton, ProgressButtonProps } from '../ProgressButton';
 export type SubmitButtonProps = {
   /** Whether to show progress while submitting */
   spinner?: boolean;
-} & Omit<ProgressButtonProps, 'type' | 'disabled' | 'progress'>;
+  /**
+   * Override the submit action
+   * This allows the form to have different submit actions.
+   * The action, if custom, will be in the submit data as `submitAction`.
+   */
+  action?: string;
+} & Omit<
+  ProgressButtonProps,
+  | 'type'
+  | 'disabled'
+  | 'progress'
+  // I really wanted to use `action` for submit action
+  // and I've yet to use the `Button.action` prop anywhere ever.
+  | 'action'
+>;
+
+export interface SubmitAction<T extends string = string> {
+  submitAction?: T;
+}
 
 /**
  * A Submit Button for a form. Handles when button should be disabled
@@ -17,6 +35,7 @@ export type SubmitButtonProps = {
 export const SubmitButton: FC<SubmitButtonProps> = ({
   children,
   spinner = true,
+  action,
   ...rest
 }) => {
   const form = useForm('SubmitButton');
@@ -27,6 +46,7 @@ export const SubmitButton: FC<SubmitButtonProps> = ({
     validating,
     submitErrors,
     dirtyFieldsSinceLastSubmit,
+    values,
   } = useFormState({
     subscription: {
       submitErrors: true,
@@ -35,6 +55,7 @@ export const SubmitButton: FC<SubmitButtonProps> = ({
       submitting: true,
       touched: true,
       validating: true,
+      values: true,
     },
   });
   // Ignore FORM_ERROR since it doesn't count as it doesn't go to a field.
@@ -58,6 +79,8 @@ export const SubmitButton: FC<SubmitButtonProps> = ({
           return;
         }
         e.preventDefault();
+        form.change('submitAction', action);
+
         return form.submit();
       }}
       type="submit"
@@ -73,7 +96,7 @@ export const SubmitButton: FC<SubmitButtonProps> = ({
             Object.keys(dirtyFieldsSinceLastSubmit)
           ).length > 0)
       }
-      progress={spinner && submitting}
+      progress={spinner && submitting && values.submitAction === action}
     >
       {React.Children.count(children) ? children : 'Submit'}
     </ProgressButton>
