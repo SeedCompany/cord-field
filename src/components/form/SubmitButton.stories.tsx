@@ -1,12 +1,14 @@
+import { Box } from '@material-ui/core';
 import { boolean, select, text } from '@storybook/addon-knobs';
+import { useSnackbar } from 'notistack';
 import React from 'react';
 import { Form } from 'react-final-form';
 import { sleep } from '../../util';
-import { SubmitButton as SB } from './SubmitButton';
+import { SubmitButton as SB, SubmitAction } from './SubmitButton';
 
-export default { title: 'Components/Forms' };
+export default { title: 'Components/Forms/Submit Button' };
 
-export const SubmitButton = () => (
+export const Styles = () => (
   <Form onSubmit={() => sleep(2000)}>
     {({ handleSubmit }) => (
       <form onSubmit={handleSubmit}>
@@ -30,3 +32,23 @@ export const SubmitButton = () => (
     )}
   </Form>
 );
+
+export const MultipleActions = () => {
+  const { enqueueSnackbar } = useSnackbar();
+  return (
+    <Form<SubmitAction<'custom'>>
+      onSubmit={async (data) => {
+        await sleep(1000);
+        enqueueSnackbar(`Submit Action: ${data.submitAction ?? 'default'}`);
+      }}
+    >
+      {({ handleSubmit }) => (
+        <form onSubmit={handleSubmit}>
+          <SB>Default Action</SB>
+          <Box mt={2} />
+          <SB action="custom">Custom Action</SB>
+        </form>
+      )}
+    </Form>
+  );
+};
