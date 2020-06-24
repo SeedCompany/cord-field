@@ -3,22 +3,10 @@ import { Close } from '@material-ui/icons';
 import { action } from '@storybook/addon-actions';
 import { boolean, select, text } from '@storybook/addon-knobs';
 import { OptionsObject, useSnackbar } from 'notistack';
-import { ReactElement } from 'react';
 import * as React from 'react';
-import { SnackbarProvider } from './SnackbarProvider';
 
 export default {
   title: 'Components/Snackbar',
-  decorators: [
-    (fn: () => ReactElement) => {
-      const Fn = () => <>{fn()}</>; // render fn with provider's context
-      return (
-        <SnackbarProvider>
-          <Fn />
-        </SnackbarProvider>
-      );
-    },
-  ],
 };
 
 export const Basic = () => {
