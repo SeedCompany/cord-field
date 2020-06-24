@@ -7,9 +7,9 @@ export const uploadReducer = (
 ) => {
   switch (action.type) {
     case actions.FILE_SUBMITTED: {
-      const { files } = state;
+      const { submittedFiles } = state;
       const queueId =
-        files.reduce((id, file) => {
+        submittedFiles.reduce((id, file) => {
           return file.queueId > id ? file.queueId : id;
         }, 0) + 1;
       const fileWithQueueId = {
@@ -18,23 +18,27 @@ export const uploadReducer = (
       };
       return {
         ...state,
-        files: files.concat(fileWithQueueId),
+        submittedFiles: submittedFiles.concat(fileWithQueueId),
       };
     }
+
     case actions.REMOVE_COMPLETED_UPLOAD: {
-      const { files } = state;
-      const index = files.findIndex((file) => file.queueId === action.queueId);
-      const updatedSubmittedFiles = files
+      const { submittedFiles } = state;
+      const index = submittedFiles.findIndex(
+        (file) => file.queueId === action.queueId
+      );
+      const updatedSubmittedFiles = submittedFiles
         .slice(0, index)
-        .concat(files.slice(index + 1));
+        .concat(submittedFiles.slice(index + 1));
       return {
         ...state,
         files: updatedSubmittedFiles,
       };
     }
+
     case actions.FILE_UPLOAD_ERROR_OCCURRED: {
-      const { files } = state;
-      const file = findFileById(action.queueId, files);
+      const { submittedFiles } = state;
+      const file = findFileById(action.queueId, submittedFiles);
       if (file) {
         const updatedFile = {
           ...file,
@@ -46,9 +50,10 @@ export const uploadReducer = (
         return state;
       }
     }
+
     case actions.FILE_UPLOAD_COMPLETED: {
-      const { files } = state;
-      const file = findFileById(action.queueId, files);
+      const { submittedFiles } = state;
+      const file = findFileById(action.queueId, submittedFiles);
       if (file) {
         const updatedFile = {
           ...file,
@@ -60,12 +65,16 @@ export const uploadReducer = (
         return state;
       }
     }
+
     case actions.FILE_UPLOAD_REQUEST_SUCCEEDED:
       return updateSimpleFileState(state, action, 'uploadId');
+
     case actions.UPLOAD_STATUS_UPDATED:
       return updateSimpleFileState(state, action, 'uploading');
+
     case actions.PERCENT_COMPLETED_UPDATED:
       return updateSimpleFileState(state, action, 'percentCompleted');
+
     default: {
       return state;
     }
@@ -80,7 +89,7 @@ function updateSimpleFileState(
   >,
   key: keyof Types.UploadFile
 ) {
-  const file = findFileById(action.queueId, state.files);
+  const file = findFileById(action.queueId, state.submittedFiles);
   if (file) {
     const updatedFile = {
       ...file,
@@ -94,26 +103,26 @@ function updateSimpleFileState(
 
 function findFileById(
   queueId: Types.UploadFile['queueId'],
-  files: Types.UploadFile[]
+  submittedFiles: Types.UploadFile[]
 ) {
-  return files.find((file) => file.queueId === queueId);
+  return submittedFiles.find((file) => file.queueId === queueId);
 }
 
 function replaceUpdatedFileInState(
   updatedFile: Types.UploadFile,
   state: Types.UploadState
 ) {
-  const { files } = state;
-  const fileIndex = files.findIndex(
+  const { submittedFiles } = state;
+  const fileIndex = submittedFiles.findIndex(
     (file) => file.uploadId === updatedFile.uploadId
   );
   if (fileIndex >= 0) {
     return {
       ...state,
-      files: files
+      submittedFiles: submittedFiles
         .slice(0, fileIndex)
         .concat(updatedFile)
-        .concat(files.slice(fileIndex + 1)),
+        .concat(submittedFiles.slice(fileIndex + 1)),
     };
   } else {
     return state;
