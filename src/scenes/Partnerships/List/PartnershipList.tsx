@@ -59,8 +59,8 @@ export const PartnershipList: FC = () => {
           Partnerships
         </Typography>
         {partnerships?.canCreate && (
-          <Tooltip arrow title="Add Partnership">
-            <Fab size="small" color="error" aria-label="add partnership">
+          <Tooltip title="Add Partnership">
+            <Fab color="error" aria-label="add partnership">
               <Add />
             </Fab>
           </Tooltip>

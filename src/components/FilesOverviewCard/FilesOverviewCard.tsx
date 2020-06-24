@@ -5,20 +5,26 @@ import { FieldOverviewCard } from '../FieldOverviewCard';
 
 export interface BudgetOverviewCardProps {
   className?: string;
+  loading?: boolean;
 }
 
 export const FilesOverviewCard: FC<BudgetOverviewCardProps> = ({
   className,
+  loading,
 }) => {
   return (
     <FieldOverviewCard
       className={className}
-      title=""
+      title="Files"
       viewLabel="View Files"
-      data={{
-        to: 'files',
-        value: 'Files',
-      }}
+      data={
+        loading
+          ? undefined
+          : {
+              to: 'files',
+              value: '∞',
+            }
+      }
       icon={LibraryBooksOutlined}
     />
   );

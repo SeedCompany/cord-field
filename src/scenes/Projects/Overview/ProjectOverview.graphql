@@ -2,21 +2,30 @@ query ProjectOverview($input: ID!) {
   project(id: $input) {
     id
     name {
+      canRead
+      canEdit
       value
     }
     location {
+      canRead
+      canEdit
       value {
         ...DisplayLocation
       }
     }
     mouStart {
+      canRead
+      canEdit
       value
     }
     mouEnd {
+      canRead
+      canEdit
       value
     }
     status
     budget {
+      canRead
       value {
         ...BudgetOverview
       }
@@ -28,6 +37,8 @@ query ProjectOverview($input: ID!) {
       ...PartnershipSummary
     }
     engagements {
+      canRead
+      canCreate
       total
       items {
         ... on LanguageEngagement {

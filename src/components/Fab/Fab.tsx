@@ -5,6 +5,7 @@ import {
 } from '@material-ui/core';
 // eslint-disable-next-line no-restricted-imports
 import { PaletteColor } from '@material-ui/core/styles/createPalette';
+import { Skeleton } from '@material-ui/lab';
 // eslint-disable-next-line no-restricted-imports
 import { CSSProperties } from '@material-ui/styles';
 import clsx from 'clsx';
@@ -30,14 +31,15 @@ const useStyles = makeStyles(({ palette }) => ({
 
 export type FabProps = Except<MUIFabProps, 'color'> & {
   color?: MUIFabProps['color'] | 'error';
+  loading?: boolean;
 };
 
 export const Fab = forwardRef<HTMLButtonElement, FabProps>(function Fab(
-  { color, ...props },
+  { color, loading, ...props },
   ref
 ) {
   const classes = useStyles();
-  return (
+  const fab = (
     <MUIFab
       ref={ref}
       {...props}
@@ -48,4 +50,5 @@ export const Fab = forwardRef<HTMLButtonElement, FabProps>(function Fab(
       )}
     />
   );
+  return loading ? <Skeleton variant="circle">{fab}</Skeleton> : fab;
 });

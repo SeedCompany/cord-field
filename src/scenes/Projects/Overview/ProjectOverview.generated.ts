@@ -28,26 +28,32 @@ export type ProjectOverviewQuery = { __typename?: 'Query' } & {
       > & {
           name: { __typename?: 'SecuredString' } & Pick<
             Types.SecuredString,
-            'value'
+            'canRead' | 'canEdit' | 'value'
           >;
-          location: { __typename?: 'SecuredCountry' } & {
-            value?: Types.Maybe<
-              { __typename?: 'Country' } & DisplayLocation_Country_Fragment
-            >;
-          };
+          location: { __typename?: 'SecuredCountry' } & Pick<
+            Types.SecuredCountry,
+            'canRead' | 'canEdit'
+          > & {
+              value?: Types.Maybe<
+                { __typename?: 'Country' } & DisplayLocation_Country_Fragment
+              >;
+            };
           mouStart: { __typename?: 'SecuredDate' } & Pick<
             Types.SecuredDate,
-            'value'
+            'canRead' | 'canEdit' | 'value'
           >;
           mouEnd: { __typename?: 'SecuredDate' } & Pick<
             Types.SecuredDate,
-            'value'
+            'canRead' | 'canEdit' | 'value'
           >;
-          budget: { __typename?: 'SecuredBudget' } & {
-            value?: Types.Maybe<
-              { __typename?: 'Budget' } & BudgetOverviewFragment
-            >;
-          };
+          budget: { __typename?: 'SecuredBudget' } & Pick<
+            Types.SecuredBudget,
+            'canRead'
+          > & {
+              value?: Types.Maybe<
+                { __typename?: 'Budget' } & BudgetOverviewFragment
+              >;
+            };
           team: {
             __typename?: 'SecuredProjectMemberList';
           } & ProjectMemberListFragment;
@@ -56,7 +62,7 @@ export type ProjectOverviewQuery = { __typename?: 'Query' } & {
           } & PartnershipSummaryFragment;
           engagements: { __typename?: 'SecuredEngagementList' } & Pick<
             Types.SecuredEngagementList,
-            'total'
+            'canRead' | 'canCreate' | 'total'
           > & {
               items: Array<
                 | ({
@@ -74,26 +80,32 @@ export type ProjectOverviewQuery = { __typename?: 'Query' } & {
       > & {
           name: { __typename?: 'SecuredString' } & Pick<
             Types.SecuredString,
-            'value'
+            'canRead' | 'canEdit' | 'value'
           >;
-          location: { __typename?: 'SecuredCountry' } & {
-            value?: Types.Maybe<
-              { __typename?: 'Country' } & DisplayLocation_Country_Fragment
-            >;
-          };
+          location: { __typename?: 'SecuredCountry' } & Pick<
+            Types.SecuredCountry,
+            'canRead' | 'canEdit'
+          > & {
+              value?: Types.Maybe<
+                { __typename?: 'Country' } & DisplayLocation_Country_Fragment
+              >;
+            };
           mouStart: { __typename?: 'SecuredDate' } & Pick<
             Types.SecuredDate,
-            'value'
+            'canRead' | 'canEdit' | 'value'
           >;
           mouEnd: { __typename?: 'SecuredDate' } & Pick<
             Types.SecuredDate,
-            'value'
+            'canRead' | 'canEdit' | 'value'
           >;
-          budget: { __typename?: 'SecuredBudget' } & {
-            value?: Types.Maybe<
-              { __typename?: 'Budget' } & BudgetOverviewFragment
-            >;
-          };
+          budget: { __typename?: 'SecuredBudget' } & Pick<
+            Types.SecuredBudget,
+            'canRead'
+          > & {
+              value?: Types.Maybe<
+                { __typename?: 'Budget' } & BudgetOverviewFragment
+              >;
+            };
           team: {
             __typename?: 'SecuredProjectMemberList';
           } & ProjectMemberListFragment;
@@ -102,7 +114,7 @@ export type ProjectOverviewQuery = { __typename?: 'Query' } & {
           } & PartnershipSummaryFragment;
           engagements: { __typename?: 'SecuredEngagementList' } & Pick<
             Types.SecuredEngagementList,
-            'total'
+            'canRead' | 'canCreate' | 'total'
           > & {
               items: Array<
                 | ({
@@ -121,21 +133,30 @@ export const ProjectOverviewDocument = gql`
     project(id: $input) {
       id
       name {
+        canRead
+        canEdit
         value
       }
       location {
+        canRead
+        canEdit
         value {
           ...DisplayLocation
         }
       }
       mouStart {
+        canRead
+        canEdit
         value
       }
       mouEnd {
+        canRead
+        canEdit
         value
       }
       status
       budget {
+        canRead
         value {
           ...BudgetOverview
         }
@@ -147,6 +168,8 @@ export const ProjectOverviewDocument = gql`
         ...PartnershipSummary
       }
       engagements {
+        canRead
+        canCreate
         total
         items {
           ... on LanguageEngagement {

@@ -1,32 +1,32 @@
-import {
-  Chip,
-  fade,
-  IconButton,
-  makeStyles,
-  Typography,
-} from '@material-ui/core';
-import { Add, Publish } from '@material-ui/icons';
+import { Grid, makeStyles, Tooltip, Typography } from '@material-ui/core';
+import { Add, DateRange, Publish } from '@material-ui/icons';
+import { Skeleton } from '@material-ui/lab';
 import { FC } from 'react';
 import * as React from 'react';
 import { useParams } from 'react-router-dom';
+import { displayStatus, securedDateRange } from '../../../api';
+import { displayLocation } from '../../../api/location-helper';
 import { BudgetOverviewCard } from '../../../components/BudgetOverviewCard';
 import { CardGroup } from '../../../components/CardGroup';
+import { DataButton } from '../../../components/DataButton';
+import { Fab } from '../../../components/Fab';
 import { FilesOverviewCard } from '../../../components/FilesOverviewCard';
 import { useDateFormatter } from '../../../components/Formatters';
 import { InternshipEngagementListItemCard } from '../../../components/InternshipEngagementListItemCard';
 import { LanguageEngagementListItemCard } from '../../../components/LanguageEngagementListItemCard';
 import { PartnershipSummary } from '../../../components/PartnershipSummary';
 import { ProjectMembersSummary } from '../../../components/ProjectMembersSummary';
-import {
-  ProjectOverviewQuery,
-  useProjectOverviewQuery,
-} from './ProjectOverview.generated';
+import { Redacted } from '../../../components/Redacted';
+import { useProjectOverviewQuery } from './ProjectOverview.generated';
 
-const useStyles = makeStyles(({ spacing, palette }) => ({
+const useStyles = makeStyles(({ spacing, breakpoints, palette }) => ({
   root: {
     flex: 1,
     overflowY: 'scroll',
     padding: spacing(4),
+  },
+  main: {
+    maxWidth: breakpoints.values.md,
     '& > *': {
       marginBottom: spacing(3),
     },
@@ -35,40 +35,18 @@ const useStyles = makeStyles(({ spacing, palette }) => ({
     display: 'flex',
     alignItems: 'center',
   },
-  uploadInput: {
-    display: 'none',
-  },
-  uploadButton: {
-    backgroundColor: palette.primary.main,
-    color: palette.common.white,
-    marginRight: spacing(1),
-    '&:hover': {
-      backgroundColor: fade(palette.primary.main, 0.5),
-    },
-  },
-  chips: {
-    '& > *': {
-      marginRight: spacing(2),
-    },
-  },
   budgetOverviewCard: {
     marginRight: spacing(3),
   },
-  addButton: {
-    marginLeft: 'auto',
-    marginRight: spacing(1),
-    backgroundColor: palette.error.main,
-    color: palette.common.white,
-    '&:hover': {
-      backgroundColor: fade(palette.error.main, 0.5),
-    },
+  infoColor: {
+    color: palette.info.main,
   },
 }));
 
 export const ProjectOverview: FC = () => {
   const classes = useStyles();
   const { projectId } = useParams();
-  const dateFormatter = useDateFormatter();
+  const formatDate = useDateFormatter();
 
   const { data, error } = useProjectOverviewQuery({
     variables: {
@@ -76,95 +54,133 @@ export const ProjectOverview: FC = () => {
     },
   });
 
-  const mouStartDateString =
-    data?.project.mouStart.value && dateFormatter(data.project.mouStart.value);
-  const mouEndDateString =
-    data?.project.mouEnd.value && dateFormatter(data.project.mouEnd.value);
+  const engagementTypeLabel = data?.project.__typename
+    ? data.project.__typename === 'TranslationProject'
+      ? 'Language'
+      : 'Intern'
+    : null;
 
-  const engagementSection = (data: ProjectOverviewQuery | undefined) => {
-    return (
-      <>
-        <div className={classes.container}>
-          <Typography variant="h3">
-            {data?.project?.engagements?.total} &nbsp;
-            {data?.project.__typename === 'TranslationProject' &&
-              'Language Engagements'}
-            {data?.project.__typename === 'InternshipProject' &&
-              'Internship Engagements'}
-          </Typography>
-          <IconButton
-            classes={{ root: classes.addButton }}
-            aria-label="add button"
-          >
-            <Add />
-          </IconButton>
-          <Typography variant="h4">
-            Add &nbsp;
-            {data?.project.__typename === 'TranslationProject' && 'Language'}
-            {data?.project.__typename === 'InternshipProject' && 'Internship'}
-          </Typography>
-        </div>
-        {data?.project?.engagements?.items?.map((engagement) => {
-          return engagement.__typename === 'LanguageEngagement' ? (
-            <LanguageEngagementListItemCard {...engagement} />
-          ) : engagement.__typename === 'InternshipEngagement' ? (
-            <InternshipEngagementListItemCard {...engagement} />
-          ) : null;
-        })}
-      </>
-    );
-  };
+  const date = data
+    ? securedDateRange(data.project.mouStart, data.project.mouEnd)
+    : undefined;
 
   return (
-    <div className={classes.root}>
+    <main className={classes.root}>
       {error ? (
-        <Typography variant="h4">Error fetching Project</Typography>
+        <Typography variant="h4">Error loading project</Typography>
       ) : (
-        <>
-          <Typography variant="h2">{data?.project.name?.value}</Typography>
-          <div className={classes.container}>
-            <input
-              accept="image/*"
-              className={classes.uploadInput}
-              id="icon-button-file"
-              type="file"
-            />
-            <label htmlFor="icon-button-file">
-              <IconButton
-                classes={{ root: classes.uploadButton }}
-                aria-label="upload picture"
-                component="span"
-              >
-                <Publish />
-              </IconButton>
-            </label>
-            <Typography variant="h4">Upload Files</Typography>
-          </div>
-          {data && (
-            <div className={classes.chips}>
-              <Chip
-                variant="outlined"
-                label={data?.project.location.value?.name}
+        <div className={classes.main}>
+          <Typography variant="h2">
+            {data ? (
+              data.project.name.canRead ? (
+                data.project.name.value
+              ) : (
+                <Redacted
+                  info="You do not have permission to view project's name"
+                  width="50%"
+                />
+              )
+            ) : (
+              <Skeleton width="50%" />
+            )}
+          </Typography>
+
+          <Typography variant="h4">
+            {data ? 'Project Overview' : <Skeleton width="25%" />}
+          </Typography>
+
+          <Grid container spacing={1} alignItems="center">
+            <Grid item>
+              <DataButton
+                loading={!data}
+                secured={data?.project.location}
+                empty="Enter Location"
+                redacted="You do not have permission to view location"
+                children={displayLocation}
               />
-              <Chip variant="outlined" label={mouStartDateString} />
-              <Chip variant="outlined" label={mouEndDateString} />
-            </div>
-          )}
+            </Grid>
+            <Grid item>
+              <DataButton
+                loading={!data}
+                startIcon={<DateRange className={classes.infoColor} />}
+                secured={date}
+                redacted="You do not have permission to view start/end dates"
+                children={formatDate.range}
+                empty="Start - End"
+              />
+            </Grid>
+            <Grid item>
+              <DataButton loading={!data}>
+                {displayStatus(data?.project.status)}
+              </DataButton>
+            </Grid>
+          </Grid>
+
+          <Grid container spacing={1} alignItems="center">
+            <Grid item>
+              <Fab loading={!data} color="primary" aria-label="Upload Files">
+                <Publish />
+              </Fab>
+            </Grid>
+            <Grid item>
+              <Typography variant="h4">
+                {data ? 'Upload Files' : <Skeleton width="12ch" />}
+              </Typography>
+            </Grid>
+          </Grid>
+
           <div className={classes.container}>
             <BudgetOverviewCard
               className={classes.budgetOverviewCard}
               budget={data?.project.budget?.value}
             />
             {/* TODO When file api is finished need to update query and pass in file information */}
-            <FilesOverviewCard />
+            <FilesOverviewCard loading={!data} />
           </div>
           <CardGroup>
             <ProjectMembersSummary members={data?.project.team} />
             <PartnershipSummary partnerships={data?.project.partnerships} />
           </CardGroup>
-          {engagementSection(data)}
-        </>
+
+          <Grid container spacing={2} alignItems="center">
+            <Grid item>
+              <Typography variant="h3">
+                {data ? (
+                  !data.project.engagements.canRead ? (
+                    <Redacted
+                      info="You do not have permission to view engagements"
+                      width="50%"
+                    />
+                  ) : (
+                    `${data.project.engagements.total} ${engagementTypeLabel} Engagements`
+                  )
+                ) : (
+                  <Skeleton width="40%" />
+                )}
+              </Typography>
+            </Grid>
+            <Grid item>
+              {data?.project.engagements.canCreate && (
+                <Tooltip title={`Add ${engagementTypeLabel} Engagement`}>
+                  <Fab
+                    color="error"
+                    aria-label={`Add ${engagementTypeLabel} Engagement`}
+                  >
+                    <Add />
+                  </Fab>
+                </Tooltip>
+              )}
+            </Grid>
+          </Grid>
+          {data?.project?.engagements?.items?.map((engagement) =>
+            engagement.__typename === 'LanguageEngagement' ? (
+              <LanguageEngagementListItemCard {...engagement} />
+            ) : engagement.__typename === 'InternshipEngagement' ? (
+              <InternshipEngagementListItemCard {...engagement} />
+            ) : null
+          )}
+        </div>
       )}
-    </div>
+    </main>
   );
 };
