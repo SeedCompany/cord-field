@@ -1,4 +1,4 @@
-import { Box, Button } from '@material-ui/core';
+import { Box } from '@material-ui/core';
 import React, { FC } from 'react';
 import { Except } from 'type-fest';
 import {
@@ -17,6 +17,8 @@ import {
   CheckboxOption,
   RadioField,
   RadioOption,
+  SubmitAction,
+  SubmitButton,
   SubmitError,
 } from '../../../components/form';
 import {
@@ -39,16 +41,6 @@ export const EditPartnership: FC<EditPartnershipProps> = ({
   const [updatePartnership] = useUpdatePartnershipMutation();
   const [deletePartnership] = useDeletePartnershipMutation();
 
-  const onDeleteClick = () => {
-    const { id } = partnership;
-    deletePartnership({
-      variables: { input: id },
-      refetchQueries: [GQLOperations.Query.ProjectPartnerships],
-    });
-    //TODO: correctly handle closing the dialog.  props.onClose has a TS errors
-    // props.onClose && props.onClose('cancel');
-  };
-
   const radioOptions = PartnershipStatuses.map((status) => (
     <RadioOption
       key={status}
@@ -58,20 +50,37 @@ export const EditPartnership: FC<EditPartnershipProps> = ({
   ));
 
   return (
-    <DialogForm<UpdatePartnershipInput>
+    <DialogForm<UpdatePartnershipInput & SubmitAction<'delete'>>
       DialogProps={{
         fullWidth: true,
         maxWidth: 'xs',
       }}
       {...props}
-      onSubmit={(input) => {
-        updatePartnership({
+      onSubmit={async (input) => {
+        const refetchQueries = [GQLOperations.Query.ProjectPartnerships];
+        if (input.submitAction === 'delete') {
+          await deletePartnership({
+            variables: { input: input.partnership.id },
+            refetchQueries,
+          });
+          return;
+        }
+        await updatePartnership({
           variables: { input },
-          refetchQueries: [GQLOperations.Query.ProjectPartnerships],
+          refetchQueries,
         });
       }}
       title={`Edit Partnership with ${partnership.organization.name.value}`}
-      leftAction={<Button onClick={onDeleteClick}>Delete</Button>}
+      leftAction={
+        <SubmitButton
+          action="delete"
+          color="error"
+          fullWidth={false}
+          variant="text"
+        >
+          Delete
+        </SubmitButton>
+      }
       initialValues={{
         partnership: {
           id: partnership.id,
