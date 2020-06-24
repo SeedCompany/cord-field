@@ -7,14 +7,23 @@ export const uploadReducer = (
 ) => {
   switch (action.type) {
     case actions.FILE_SUBMITTED: {
+      const { files } = state;
+      const queueId =
+        files.reduce((id, file) => {
+          return file.queueId > id ? file.queueId : id;
+        }, 0) + 1;
+      const fileWithQueueId = {
+        ...action.file,
+        queueId,
+      };
       return {
         ...state,
-        files: state.files.concat(action.file),
+        files: files.concat(fileWithQueueId),
       };
     }
     case actions.REMOVE_COMPLETED_UPLOAD: {
       const { files } = state;
-      const index = files.findIndex((file) => file.uploadId === action.id);
+      const index = files.findIndex((file) => file.queueId === action.queueId);
       const updatedSubmittedFiles = files
         .slice(0, index)
         .concat(files.slice(index + 1));
@@ -23,13 +32,9 @@ export const uploadReducer = (
         files: updatedSubmittedFiles,
       };
     }
-    case actions.UPLOAD_STATUS_UPDATED:
-      return updateSimpleFileState(state, action, 'uploading');
-    case actions.PERCENT_COMPLETED_UPDATED:
-      return updateSimpleFileState(state, action, 'percentCompleted');
     case actions.FILE_UPLOAD_ERROR_OCCURRED: {
       const { files } = state;
-      const file = findFileById(action.id, files);
+      const file = findFileById(action.queueId, files);
       if (file) {
         const updatedFile = {
           ...file,
@@ -43,7 +48,7 @@ export const uploadReducer = (
     }
     case actions.FILE_UPLOAD_COMPLETED: {
       const { files } = state;
-      const file = findFileById(action.id, files);
+      const file = findFileById(action.queueId, files);
       if (file) {
         const updatedFile = {
           ...file,
@@ -55,6 +60,12 @@ export const uploadReducer = (
         return state;
       }
     }
+    case actions.FILE_UPLOAD_REQUEST_SUCCEEDED:
+      return updateSimpleFileState(state, action, 'uploadId');
+    case actions.UPLOAD_STATUS_UPDATED:
+      return updateSimpleFileState(state, action, 'uploading');
+    case actions.PERCENT_COMPLETED_UPDATED:
+      return updateSimpleFileState(state, action, 'percentCompleted');
     default: {
       return state;
     }
@@ -69,7 +80,7 @@ function updateSimpleFileState(
   >,
   key: keyof Types.UploadFile
 ) {
-  const file = findFileById(action.id, state.files);
+  const file = findFileById(action.queueId, state.files);
   if (file) {
     const updatedFile = {
       ...file,
@@ -82,10 +93,10 @@ function updateSimpleFileState(
 }
 
 function findFileById(
-  id: Types.UploadFile['uploadId'],
+  queueId: Types.UploadFile['queueId'],
   files: Types.UploadFile[]
 ) {
-  return files.find((file) => file.uploadId === id);
+  return files.find((file) => file.queueId === queueId);
 }
 
 function replaceUpdatedFileInState(
