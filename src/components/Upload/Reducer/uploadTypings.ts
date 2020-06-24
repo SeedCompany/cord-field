@@ -18,7 +18,7 @@ export interface UploadFile {
 }
 
 export interface UploadState {
-  files: UploadFile[];
+  submittedFiles: UploadFile[];
 }
 
 interface FileAction {
