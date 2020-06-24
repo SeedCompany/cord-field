@@ -31,7 +31,7 @@ UploadContext.displayName = 'UploadContext';
 
 export const UploadProvider: FC = ({ children }) => {
   const [state, dispatch] = useReducer(uploadReducer, initialState);
-  const { files } = state;
+  const { submittedFiles } = state;
   const [requestFileUpload] = useRequestFileUploadMutation();
 
   const addFileToUploadQueue = useCallback(({ file, fileName, callback }) => {
@@ -60,7 +60,9 @@ export const UploadProvider: FC = ({ children }) => {
     (response, queueId) => {
       console.info(`UPLOAD RESPONSE -> ${JSON.stringify(response)}`);
 
-      const uploadedFile = files.find((file) => file.queueId === queueId);
+      const uploadedFile = submittedFiles.find(
+        (file) => file.queueId === queueId
+      );
       if (uploadedFile?.callback && uploadedFile?.uploadId) {
         const { callback, queueId, fileName, uploadId } = uploadedFile;
         callback(uploadId, fileName).then(() =>
@@ -72,7 +74,7 @@ export const UploadProvider: FC = ({ children }) => {
         );
       }
     },
-    [files]
+    [submittedFiles]
   );
 
   const handleFileUploadError = useCallback((statusText, queueId) => {
@@ -155,13 +157,13 @@ export const UploadProvider: FC = ({ children }) => {
 
   // Very simple for now. We immediately submit all files to be uploaded
   useEffect(() => {
-    const filesNotStarted = files.filter(
+    const filesNotStarted = submittedFiles.filter(
       (file) => !file.uploading && !file.completedAt
     );
     for (const file of filesNotStarted) {
       handleFileAdded(file);
     }
-  }, [files, handleFileAdded]);
+  }, [submittedFiles, handleFileAdded]);
 
   return (
     <UploadContext.Provider value={{ addFileToUploadQueue }}>
