@@ -1,4 +1,5 @@
 import {
+  Box,
   Dialog,
   DialogContent,
   IconButton,
@@ -109,6 +110,7 @@ export const UploadManager: FC<UploadManagerProps> = (props) => {
     state: { submittedFiles },
   } = props;
   console.log('submittedFiles', submittedFiles);
+  const areFilesUploading = submittedFiles.length > 0;
   const classes = useStyles();
   return (
     <Dialog
@@ -128,9 +130,26 @@ export const UploadManager: FC<UploadManagerProps> = (props) => {
         Upload Manager
       </DialogTitle>
       <DialogContent className={classes.contentContainer}>
-        <UploadItem />
-        <UploadItem />
-        <UploadItem />
+        {areFilesUploading ? (
+          <>
+            {submittedFiles.map((file) => (
+              <UploadItem key={file.queueId} file={file} />
+            ))}
+          </>
+        ) : (
+          <Box
+            borderTop={1}
+            borderColor="grey.400"
+            color="grey.500"
+            marginTop={-1}
+            p={2}
+            textAlign="center"
+          >
+            <Typography variant="h5" color="inherit" component="span">
+              All uploads completed
+            </Typography>
+          </Box>
+        )}
       </DialogContent>
     </Dialog>
   );

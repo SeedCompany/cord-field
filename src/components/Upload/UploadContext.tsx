@@ -7,6 +7,7 @@ import React, {
   useReducer,
   useState,
 } from 'react';
+import { sleep } from '../../util/sleep';
 import * as actions from './Reducer/uploadActions';
 import { initialState } from './Reducer/uploadInitialState';
 import { uploadReducer } from './Reducer/uploadReducer';
@@ -42,6 +43,13 @@ export const UploadProvider: FC = ({ children }) => {
   const { submittedFiles } = state;
   const [requestFileUpload] = useRequestFileUploadMutation();
 
+  useEffect(() => {
+    const areFilesUploading = submittedFiles.length > 0;
+    if (areFilesUploading && !isManagerOpen) {
+      setIsManagerOpen(true);
+    }
+  }, [submittedFiles, isManagerOpen, setIsManagerOpen]);
+
   const addFileToUploadQueue = useCallback(({ file, fileName, callback }) => {
     const newFile = {
       ...(callback ? { callback } : null),
@@ -73,13 +81,18 @@ export const UploadProvider: FC = ({ children }) => {
       );
       if (uploadedFile?.callback && uploadedFile?.uploadId) {
         const { callback, queueId, fileName, uploadId } = uploadedFile;
-        callback(uploadId, fileName).then(() =>
+        callback(uploadId, fileName).then(() => {
           dispatch({
             type: actions.FILE_UPLOAD_COMPLETED,
             queueId,
             completedAt: new Date(),
-          })
-        );
+          });
+          sleep(10000);
+          dispatch({
+            type: actions.REMOVE_COMPLETED_UPLOAD,
+            queueId,
+          });
+        });
       }
     },
     [submittedFiles]
@@ -163,7 +176,6 @@ export const UploadProvider: FC = ({ children }) => {
     [requestFileUpload, uploadFile]
   );
 
-  // Very simple for now. We immediately submit all files to be uploaded
   useEffect(() => {
     const filesNotStarted = submittedFiles.filter(
       (file) => !file.uploading && !file.completedAt
