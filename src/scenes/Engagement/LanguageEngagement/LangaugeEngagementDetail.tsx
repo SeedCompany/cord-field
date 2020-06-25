@@ -1,5 +1,6 @@
-import React from 'react';
+import React, { FC } from 'react';
+import { LanguageEngagementDetailFragment } from './LanguageEngagementDetail.generated';
 
-export const LanguageEngagementDetail = () => {
+export const LanguageEngagementDetail: FC<LanguageEngagementDetailFragment> = () => {
   return <div>Language Engagement Detail Scene</div>;
 };

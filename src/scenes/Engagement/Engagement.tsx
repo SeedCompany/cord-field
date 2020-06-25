@@ -8,20 +8,17 @@ import { LanguageEngagementDetail } from './LanguageEngagement';
 export const Engagement = () => {
   const { engagementId } = useParams();
 
-  const { data, loading, error } = useEngagementQuery({
+  const { data, loading } = useEngagementQuery({
     variables: {
       input: engagementId,
     },
   });
-  console.log('data: ', data);
+  const engagement = data?.engagement;
 
-  return loading ? (
-    <EngagementDetailLoading />
-  ) : error ? (
-    <span>ERROR</span>
-  ) : data!.engagement.__typename === 'LanguageEngagement' ? (
-    <LanguageEngagementDetail />
-  ) : (
-    <InternshipEngagementDetail />
-  );
+  if (loading) return <EngagementDetailLoading />;
+  if (engagement && engagement.__typename === 'LanguageEngagement')
+    return <LanguageEngagementDetail {...engagement} />;
+  if (engagement && engagement.__typename === 'InternshipEngagement')
+    return <InternshipEngagementDetail {...engagement} />;
+  return <span>Could Not Find Engagement</span>;
 };
