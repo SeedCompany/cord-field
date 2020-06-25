@@ -109,7 +109,6 @@ export const UploadManager: FC<UploadManagerProps> = (props) => {
     setIsOpen,
     state: { submittedFiles },
   } = props;
-  console.log('submittedFiles', submittedFiles);
   const areFilesUploading = submittedFiles.length > 0;
   const classes = useStyles();
   return (

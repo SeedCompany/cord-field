@@ -5,6 +5,12 @@ export type UploadCallback = (
   fileName: string
 ) => Promise<void>;
 
+export interface FileInput {
+  file: File;
+  fileName: string;
+  callback?: UploadCallback;
+}
+
 export interface UploadFile {
   callback?: UploadCallback;
   completedAt?: Date;
@@ -26,8 +32,8 @@ interface FileAction {
 }
 
 export interface FileSubmittedAction {
-  type: typeof actions.FILE_SUBMITTED;
-  file: Omit<UploadFile, 'queueId'>;
+  type: typeof actions.FILES_SUBMITTED;
+  files: FileInput[];
   callback?: UploadCallback;
 }
 
