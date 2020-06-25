@@ -30,7 +30,11 @@ export const Dropzone = () => {
   const onDrop = useCallback(
     (acceptedFiles) => {
       for (const file of acceptedFiles) {
-        addFileToUploadQueue(file);
+        addFileToUploadQueue({
+          file,
+          fileName: file.name,
+          callback: () => Promise.resolve(console.log('DONE')),
+        });
       }
     },
     [addFileToUploadQueue]
