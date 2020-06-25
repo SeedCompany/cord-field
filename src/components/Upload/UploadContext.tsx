@@ -15,21 +15,14 @@ import * as Types from './Reducer/uploadTypings';
 import { useRequestFileUploadMutation } from './Upload.generated';
 import { UploadManager } from './UploadManager';
 
-interface FileInput {
-  file: File;
-  uploadId: string;
-  fileName: string;
-  callback: Types.UploadCallback;
-}
-
 interface UploadContextValue {
-  addFileToUploadQueue: (input: FileInput) => void;
+  addFilesToUploadQueue: (files: Types.FileInput[]) => void;
   isManagerOpen: boolean;
   setIsManagerOpen: (isOpen: boolean) => void;
 }
 
 const initialContext = {
-  addFileToUploadQueue: () => null,
+  addFilesToUploadQueue: () => null,
   isManagerOpen: false,
   setIsManagerOpen: () => null,
 };
@@ -50,17 +43,11 @@ export const UploadProvider: FC = ({ children }) => {
     }
   }, [submittedFiles, isManagerOpen, setIsManagerOpen]);
 
-  const addFileToUploadQueue = useCallback(({ file, fileName, callback }) => {
-    const newFile = {
-      ...(callback ? { callback } : null),
-      file,
-      fileName,
-      percentCompleted: 0,
-      uploading: false,
-    };
+  const addFilesToUploadQueue = useCallback((files: Types.FileInput[]) => {
+    console.log('SETTING SUBMITTED FILES');
     dispatch({
-      type: actions.FILE_SUBMITTED,
-      file: newFile,
+      type: actions.FILES_SUBMITTED,
+      files,
     });
   }, []);
 
@@ -73,21 +60,20 @@ export const UploadProvider: FC = ({ children }) => {
   );
 
   const handleFileUploadSuccess = useCallback(
-    (response, queueId) => {
+    (response, file: Types.UploadFile) => {
       console.info(`UPLOAD RESPONSE -> ${JSON.stringify(response)}`);
 
-      const uploadedFile = submittedFiles.find(
-        (file) => file.queueId === queueId
-      );
-      if (uploadedFile?.callback && uploadedFile?.uploadId) {
-        const { callback, queueId, fileName, uploadId } = uploadedFile;
+      if (file?.callback && file?.uploadId) {
+        const { callback, queueId, fileName, uploadId } = file;
         callback(uploadId, fileName).then(() => {
+          console.log('SETTING UPLOAD COMPLETED');
           dispatch({
             type: actions.FILE_UPLOAD_COMPLETED,
             queueId,
             completedAt: new Date(),
           });
           sleep(10000);
+          console.log('REMOVING COMPLETED UPLOAD');
           dispatch({
             type: actions.REMOVE_COMPLETED_UPLOAD,
             queueId,
@@ -95,11 +81,12 @@ export const UploadProvider: FC = ({ children }) => {
         });
       }
     },
-    [submittedFiles]
+    []
   );
 
   const handleFileUploadError = useCallback((statusText, queueId) => {
     console.error(`UPLOAD ERROR -> ${JSON.stringify(statusText)}`);
+    console.log('SETTING UPLOAD ERROR');
     dispatch({
       type: actions.FILE_UPLOAD_ERROR_OCCURRED,
       queueId,
@@ -112,6 +99,7 @@ export const UploadProvider: FC = ({ children }) => {
       const { loaded, total } = event;
       const percentCompleted = Math.floor((loaded / total) * 1000) / 10;
       console.log(`Percentage completed: ${percentCompleted}%`);
+      console.log('SETTING PERCENT COMPLETED');
       dispatch({
         type: actions.PERCENT_COMPLETED_UPDATED,
         queueId,
@@ -131,6 +119,7 @@ export const UploadProvider: FC = ({ children }) => {
       xhr.onreadystatechange = function () {
         if (xhr.readyState === XMLHttpRequest.DONE) {
           const { status } = xhr;
+          console.log('status', status);
           const success = status === 0 || (status >= 200 && status < 400);
           if (success) {
             const { responseType } = xhr;
@@ -140,7 +129,7 @@ export const UploadProvider: FC = ({ children }) => {
                 : responseType === 'document'
                 ? xhr.responseXML
                 : xhr.response;
-            handleFileUploadSuccess(response, queueId);
+            handleFileUploadSuccess(response, file);
           } else {
             handleFileUploadError(xhr.statusText, queueId);
           }
@@ -150,14 +139,8 @@ export const UploadProvider: FC = ({ children }) => {
       xhr.upload.onprogress = handleFileProgress.bind(null, queueId);
       xhr.open('PUT', url);
       xhr.send(payload);
-      setUploadingStatus(queueId, true);
     },
-    [
-      handleFileUploadSuccess,
-      handleFileUploadError,
-      setUploadingStatus,
-      handleFileProgress,
-    ]
+    [handleFileUploadSuccess, handleFileUploadError, handleFileProgress]
   );
 
   const handleFileAdded = useCallback(
@@ -165,6 +148,7 @@ export const UploadProvider: FC = ({ children }) => {
       const { data } = await requestFileUpload();
       const { id, url } = data?.requestFileUpload ?? { id: '', url: '' };
       if (id && url) {
+        console.log('SETTING UPLOAD REQUEST SUCCEEDED');
         dispatch({
           type: actions.FILE_UPLOAD_REQUEST_SUCCEEDED,
           queueId: file.queueId,
@@ -181,13 +165,15 @@ export const UploadProvider: FC = ({ children }) => {
       (file) => !file.uploading && !file.completedAt
     );
     for (const file of filesNotStarted) {
+      console.log('SETTING UPLOAD STATUS');
+      setUploadingStatus(file.queueId, true);
       handleFileAdded(file);
     }
-  }, [submittedFiles, handleFileAdded]);
+  }, [submittedFiles, handleFileAdded, setUploadingStatus]);
 
   return (
     <UploadContext.Provider
-      value={{ addFileToUploadQueue, isManagerOpen, setIsManagerOpen }}
+      value={{ addFilesToUploadQueue, isManagerOpen, setIsManagerOpen }}
     >
       {children}
       <UploadManager

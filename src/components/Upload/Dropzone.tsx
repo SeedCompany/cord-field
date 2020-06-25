@@ -2,7 +2,7 @@ import { makeStyles, Paper, Typography } from '@material-ui/core';
 import clsx from 'clsx';
 import React, { useCallback } from 'react';
 import { useDropzone } from 'react-dropzone';
-import { useUpload } from '../../components/Upload';
+import { FileInput, useUpload } from '../../components/Upload';
 
 const useStyles = makeStyles(({ palette, spacing }) => ({
   container: {
@@ -25,19 +25,24 @@ const useStyles = makeStyles(({ palette, spacing }) => ({
 
 export const Dropzone = () => {
   const classes = useStyles();
-  const { addFileToUploadQueue } = useUpload();
+  const { addFilesToUploadQueue } = useUpload();
 
   const onDrop = useCallback(
     (acceptedFiles) => {
-      for (const file of acceptedFiles) {
-        addFileToUploadQueue({
-          file,
-          fileName: file.name,
-          callback: () => Promise.resolve(console.log('DONE')),
-        });
-      }
+      const fileInputs = acceptedFiles.reduce(
+        (inputs: FileInput[], file: File) => {
+          const input = {
+            file,
+            fileName: file.name,
+            callback: () => Promise.resolve(console.log('DONE')),
+          };
+          return inputs.concat(input);
+        },
+        []
+      );
+      addFilesToUploadQueue(fileInputs);
     },
-    [addFileToUploadQueue]
+    [addFilesToUploadQueue]
   );
 
   const { getRootProps, getInputProps, isDragActive } = useDropzone({ onDrop });
