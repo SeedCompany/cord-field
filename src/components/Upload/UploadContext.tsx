@@ -5,6 +5,7 @@ import React, {
   useContext,
   useEffect,
   useReducer,
+  useState,
 } from 'react';
 import * as actions from './Reducer/uploadActions';
 import { initialState } from './Reducer/uploadInitialState';
@@ -22,15 +23,22 @@ interface FileInput {
 
 interface UploadContextValue {
   addFileToUploadQueue: (input: FileInput) => void;
+  isManagerOpen: boolean;
+  setIsManagerOpen: (isOpen: boolean) => void;
 }
 
-export const UploadContext = createContext<UploadContextValue | undefined>(
-  undefined
-);
+const initialContext = {
+  addFileToUploadQueue: () => null,
+  isManagerOpen: false,
+  setIsManagerOpen: () => null,
+};
+
+export const UploadContext = createContext<UploadContextValue>(initialContext);
 UploadContext.displayName = 'UploadContext';
 
 export const UploadProvider: FC = ({ children }) => {
   const [state, dispatch] = useReducer(uploadReducer, initialState);
+  const [isManagerOpen, setIsManagerOpen] = useState(true);
   const { submittedFiles } = state;
   const [requestFileUpload] = useRequestFileUploadMutation();
 
@@ -166,9 +174,15 @@ export const UploadProvider: FC = ({ children }) => {
   }, [submittedFiles, handleFileAdded]);
 
   return (
-    <UploadContext.Provider value={{ addFileToUploadQueue }}>
+    <UploadContext.Provider
+      value={{ addFileToUploadQueue, isManagerOpen, setIsManagerOpen }}
+    >
       {children}
-      <UploadManager state={state} />
+      <UploadManager
+        isOpen={isManagerOpen}
+        setIsOpen={setIsManagerOpen}
+        state={state}
+      />
     </UploadContext.Provider>
   );
 };
