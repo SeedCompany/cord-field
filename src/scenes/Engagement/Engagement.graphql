@@ -10,3 +10,9 @@ query Engagement($input: ID!) {
     }
   }
 }
+
+query ProjectBreadcrumb($input: ID!) {
+  project(id: $input) {
+    ...ProjectBreadcrumb
+  }
+}

@@ -9,3 +9,10 @@ fragment LanguageEngagementDetail on LanguageEngagement {
     }
   }
 }
+
+fragment ProjectBreadcrumb on Project {
+  id
+  name {
+    value
+  }
+}
