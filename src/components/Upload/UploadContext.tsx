@@ -59,6 +59,17 @@ export const UploadProvider: FC = ({ children }) => {
     []
   );
 
+  const setUploadError = useCallback(
+    (
+      queueId: Types.UploadFile['queueId'],
+      error: Types.UploadFile['error']
+    ) => {
+      console.log('SETTING UPLOAD ERROR');
+      dispatch({ type: actions.FILE_UPLOAD_ERROR_OCCURRED, queueId, error });
+    },
+    []
+  );
+
   const handleFileUploadSuccess = useCallback(
     (response, file: Types.UploadFile) => {
       console.info(`UPLOAD RESPONSE -> ${JSON.stringify(response)}`);
@@ -84,15 +95,23 @@ export const UploadProvider: FC = ({ children }) => {
     []
   );
 
-  const handleFileUploadError = useCallback((statusText, queueId) => {
-    console.error(`UPLOAD ERROR -> ${JSON.stringify(statusText)}`);
-    console.log('SETTING UPLOAD ERROR');
-    dispatch({
-      type: actions.FILE_UPLOAD_ERROR_OCCURRED,
-      queueId,
-      error: new Error(statusText),
-    });
-  }, []);
+  // This should be rare, it's just there for completeness.
+  // It only runs if upload is complete but status isn't a "success" status.
+  const handleFileUploadCompleteError = useCallback(
+    (statusText, queueId) => {
+      console.error(`UPLOAD ERROR -> ${JSON.stringify(statusText)}`);
+      setUploadError(queueId, new Error(statusText));
+    },
+    [setUploadError]
+  );
+
+  // This is the error handler that will actually run on errors
+  const handleUploadError = useCallback(
+    (queueId: Types.UploadFile['queueId']) => {
+      setUploadError(queueId, new Error('Upload failed'));
+    },
+    [setUploadError]
+  );
 
   const handleFileProgress = useCallback(
     (queueId: Types.UploadFile['queueId'], event: ProgressEvent) => {
@@ -131,16 +150,22 @@ export const UploadProvider: FC = ({ children }) => {
                 : xhr.response;
             handleFileUploadSuccess(response, file);
           } else {
-            handleFileUploadError(xhr.statusText, queueId);
+            handleFileUploadCompleteError(xhr.statusText, queueId);
           }
         }
       };
 
       xhr.upload.onprogress = handleFileProgress.bind(null, queueId);
+      xhr.upload.onerror = () => handleUploadError(queueId);
       xhr.open('PUT', url);
       xhr.send(payload);
     },
-    [handleFileUploadSuccess, handleFileUploadError, handleFileProgress]
+    [
+      handleFileUploadSuccess,
+      handleFileUploadCompleteError,
+      handleFileProgress,
+      handleUploadError,
+    ]
   );
 
   const handleFileAdded = useCallback(
