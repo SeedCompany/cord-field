@@ -1,0 +1,12 @@
+query Engagement($input: ID!) {
+  engagement(id: $input) {
+    id
+    __typename
+    ... on LanguageEngagement {
+      ...LanguageEngagementDetail
+    }
+    ... on InternshipEngagement {
+      ...InternshipEngagementDetail
+    }
+  }
+}

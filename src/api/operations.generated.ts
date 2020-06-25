@@ -1,6 +1,7 @@
 export const GQLOperations = {
   Query: {
     Session: 'Session',
+    Engagement: 'Engagement',
     Language: 'Language',
     Languages: 'Languages',
     Organization: 'Organization',
@@ -49,6 +50,8 @@ export const GQLOperations = {
     ProjectMemberList: 'ProjectMemberList',
     LoggedInUser: 'LoggedInUser',
     UserListItem: 'UserListItem',
+    InternshipEngagementDetail: 'InternshipEngagementDetail',
+    LanguageEngagementDetail: 'LanguageEngagementDetail',
     LanguageDetail: 'LanguageDetail',
     LanguageForm: 'LanguageForm',
     ss: 'ss',

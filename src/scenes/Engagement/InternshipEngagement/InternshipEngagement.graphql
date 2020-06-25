@@ -1,0 +1,4 @@
+fragment InternshipEngagementDetail on InternshipEngagement {
+  id
+  createdAt
+}

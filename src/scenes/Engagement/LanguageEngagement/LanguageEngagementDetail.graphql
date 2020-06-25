@@ -1,0 +1,11 @@
+fragment LanguageEngagementDetail on LanguageEngagement {
+  id
+  createdAt
+  language {
+    value {
+      name {
+        value
+      }
+    }
+  }
+}
