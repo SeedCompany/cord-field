@@ -21,12 +21,12 @@ const useStyles = makeStyles(({ palette, spacing }) => ({
 }));
 
 interface UploadItemProps {
-  file?: UploadFile;
+  file: UploadFile;
 }
 
 export const UploadItem: FC<UploadItemProps> = (props) => {
   const { file } = props;
-  console.log('file', file);
+  const { error, fileName, percentCompleted } = file;
   const classes = useStyles();
   return (
     <Box
@@ -37,17 +37,27 @@ export const UploadItem: FC<UploadItemProps> = (props) => {
     >
       <Box mr={2}>
         <Typography variant="body2" className={classes.fileName}>
-          File name goes here and lots of other things go here too
+          {fileName}
         </Typography>
       </Box>
-      <Box flex={1} mr={2} className={classes.progressBarBox}>
-        <LinearProgress variant="determinate" value={50} />
-      </Box>
-      <Box>
-        <Typography variant="body2" color="textSecondary">{`${Math.round(
-          50
-        )}%`}</Typography>
-      </Box>
+      {!error ? (
+        <>
+          <Box flex={1} mr={2} className={classes.progressBarBox}>
+            <LinearProgress variant="determinate" value={percentCompleted} />
+          </Box>
+          <Box>
+            <Typography variant="body2" color="textSecondary">{`${Math.round(
+              percentCompleted
+            )}%`}</Typography>
+          </Box>
+        </>
+      ) : (
+        <Box flex={1}>
+          <Typography variant="body2" color="error">
+            {error.message}
+          </Typography>
+        </Box>
+      )}
     </Box>
   );
 };
