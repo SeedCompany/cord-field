@@ -6,19 +6,31 @@ export const uploadReducer = (
   action: Types.UploadAction
 ) => {
   switch (action.type) {
-    case actions.FILE_SUBMITTED: {
+    case actions.FILES_SUBMITTED: {
       const { submittedFiles } = state;
-      const queueId =
+      const nextQueueId =
         submittedFiles.reduce((id, file) => {
           return file.queueId > id ? file.queueId : id;
-        }, 0) + 1;
-      const fileWithQueueId = {
-        ...action.file,
-        queueId,
-      };
+        }, -1) + 1;
+      const newFiles = action.files.reduce(
+        (files: Types.UploadFile[], fileInput, index) => {
+          const { callback, file, fileName } = fileInput;
+          const queueId = nextQueueId + index;
+          const newFile = {
+            ...(callback ? { callback } : null),
+            file,
+            fileName,
+            percentCompleted: 0,
+            queueId,
+            uploading: false,
+          };
+          return files.concat(newFile);
+        },
+        []
+      );
       return {
         ...state,
-        submittedFiles: submittedFiles.concat(fileWithQueueId),
+        submittedFiles: submittedFiles.concat(newFiles),
       };
     }
 
@@ -114,16 +126,17 @@ function replaceUpdatedFileInState(
 ) {
   const { submittedFiles } = state;
   const fileIndex = submittedFiles.findIndex(
-    (file) => file.uploadId === updatedFile.uploadId
+    (file) => file.queueId === updatedFile.queueId
   );
   if (fileIndex >= 0) {
-    return {
+    const newState = {
       ...state,
       submittedFiles: submittedFiles
         .slice(0, fileIndex)
         .concat(updatedFile)
         .concat(submittedFiles.slice(fileIndex + 1)),
     };
+    return newState;
   } else {
     return state;
   }
