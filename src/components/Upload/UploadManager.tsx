@@ -17,7 +17,7 @@ import Draggable from 'react-draggable';
 import { UploadState } from './Reducer';
 import { UploadItem } from './UploadItem';
 
-const useStyles = makeStyles(({ breakpoints, spacing }) => ({
+const useStyles = makeStyles(({ spacing }) => ({
   root: {
     pointerEvents: 'none',
   },
@@ -26,8 +26,8 @@ const useStyles = makeStyles(({ breakpoints, spacing }) => ({
     pointerEvents: 'auto',
     position: 'absolute',
     bottom: '0px',
-    left: '0px',
-    width: breakpoints.values.sm,
+    right: '0px',
+    width: '480px',
   },
   titleContainer: {
     display: 'flex',
@@ -97,29 +97,32 @@ const DialogTitle: FC<DialogTitleProps> = (props) => {
 };
 
 interface UploadManagerProps {
+  isOpen: boolean;
+  setIsOpen: (isOpen: boolean) => void;
   state: UploadState;
 }
 
 export const UploadManager: FC<UploadManagerProps> = (props) => {
   const {
+    isOpen,
+    setIsOpen,
     state: { submittedFiles },
   } = props;
-  const classes = useStyles();
   console.log('submittedFiles', submittedFiles);
+  const classes = useStyles();
   return (
     <Dialog
       classes={{ root: classes.root, paper: classes.paper }}
       disableBackdropClick
       disableEscapeKeyDown
       hideBackdrop
-      open={true}
-      onClose={() => console.log('Close')}
+      open={isOpen}
       PaperComponent={PaperComponent}
       aria-labelledby="draggable-dialog-title"
     >
       <DialogTitle
         id="draggable-dialog-title"
-        onClose={() => console.log('Close')}
+        onClose={() => setIsOpen(false)}
         onMinimize={() => console.log('Minimize')}
       >
         Upload Manager

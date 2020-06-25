@@ -10,7 +10,7 @@ const useStyles = makeStyles(({ palette, spacing }) => ({
     },
   },
   fileName: {
-    maxWidth: '24ch',
+    maxWidth: '18ch',
     overflow: 'hidden',
     textOverflow: 'ellipsis',
     whiteSpace: 'nowrap',
