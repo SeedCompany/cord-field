@@ -147,7 +147,7 @@ export const UploadProvider: FC = ({ children }) => {
       xhr.onreadystatechange = function () {
         if (xhr.readyState === XMLHttpRequest.DONE) {
           const { status } = xhr;
-          const success = status === 0 || (status >= 200 && status < 400);
+          const success = status >= 200 && status < 400;
           if (success) {
             const { responseType } = xhr;
             const response =

@@ -55,7 +55,6 @@ export const uploadReducer = (
         const updatedFile = {
           ...file,
           error: action.error,
-          uploading: false,
         };
         return replaceUpdatedFileInState(updatedFile, state);
       } else {
