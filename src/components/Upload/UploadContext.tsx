@@ -8,6 +8,7 @@ import React, {
   useState,
 } from 'react';
 import { sleep } from '../../util/sleep';
+import { useSession } from '../Session';
 import * as actions from './Reducer/uploadActions';
 import { initialState } from './Reducer/uploadInitialState';
 import { uploadReducer } from './Reducer/uploadReducer';
@@ -24,6 +25,7 @@ interface UploadContextValue {
 const initialContext = {
   addFilesToUploadQueue: () => null,
   isManagerOpen: false,
+  removeUpload: () => null,
   setIsManagerOpen: () => null,
 };
 
@@ -31,10 +33,15 @@ export const UploadContext = createContext<UploadContextValue>(initialContext);
 UploadContext.displayName = 'UploadContext';
 
 export const UploadProvider: FC = ({ children }) => {
+  const [session] = useSession();
   const [state, dispatch] = useReducer(uploadReducer, initialState);
-  const [isManagerOpen, setIsManagerOpen] = useState(true);
+  const [isManagerOpen, setIsManagerOpen] = useState(false);
   const { submittedFiles } = state;
   const [requestFileUpload] = useRequestFileUploadMutation();
+
+  useEffect(() => {
+    setIsManagerOpen(!!session);
+  }, [session]);
 
   useEffect(() => {
     const areFilesUploading = submittedFiles.length > 0;
@@ -70,29 +77,31 @@ export const UploadProvider: FC = ({ children }) => {
     []
   );
 
+  const removeUpload = useCallback((queueId: Types.UploadFile['queueId']) => {
+    console.log('REMOVING UPLOAD FROM QUEUE');
+    dispatch({ type: actions.REMOVE_UPLOAD, queueId });
+  }, []);
+
   const handleFileUploadSuccess = useCallback(
     (response, file: Types.UploadFile) => {
       console.info(`UPLOAD RESPONSE -> ${JSON.stringify(response)}`);
 
       if (file?.callback && file?.uploadId) {
         const { callback, queueId, fileName, uploadId } = file;
-        callback(uploadId, fileName).then(() => {
+        callback(uploadId, fileName).then(async () => {
           console.log('SETTING UPLOAD COMPLETED');
           dispatch({
             type: actions.FILE_UPLOAD_COMPLETED,
             queueId,
             completedAt: new Date(),
           });
-          sleep(10000);
+          await sleep(10000);
           console.log('REMOVING COMPLETED UPLOAD');
-          dispatch({
-            type: actions.REMOVE_COMPLETED_UPLOAD,
-            queueId,
-          });
+          removeUpload(queueId);
         });
       }
     },
-    []
+    [removeUpload]
   );
 
   // This should be rare, it's just there for completeness.
@@ -138,7 +147,6 @@ export const UploadProvider: FC = ({ children }) => {
       xhr.onreadystatechange = function () {
         if (xhr.readyState === XMLHttpRequest.DONE) {
           const { status } = xhr;
-          console.log('status', status);
           const success = status === 0 || (status >= 200 && status < 400);
           if (success) {
             const { responseType } = xhr;
@@ -158,6 +166,8 @@ export const UploadProvider: FC = ({ children }) => {
       xhr.upload.onprogress = handleFileProgress.bind(null, queueId);
       xhr.upload.onerror = () => handleUploadError(queueId);
       xhr.open('PUT', url);
+      xhr.setRequestHeader('Access-Control-Allow-Headers', '*');
+      xhr.setRequestHeader('Content-Type', file.file.type);
       xhr.send(payload);
     },
     [
@@ -203,6 +213,7 @@ export const UploadProvider: FC = ({ children }) => {
       {children}
       <UploadManager
         isOpen={isManagerOpen}
+        removeUpload={removeUpload}
         setIsOpen={setIsManagerOpen}
         state={state}
       />
