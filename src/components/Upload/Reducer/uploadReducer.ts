@@ -13,7 +13,7 @@ export const uploadReducer = (
           return file.queueId > id ? file.queueId : id;
         }, -1) + 1;
       const newFiles = action.files.reduce(
-        (files: Types.UploadFile[], fileInput, index) => {
+        (files: Types.UploadFile[], fileInput, index: number) => {
           const { callback, file, fileName } = fileInput;
           const queueId = nextQueueId + index;
           const newFile = {
@@ -34,7 +34,7 @@ export const uploadReducer = (
       };
     }
 
-    case actions.REMOVE_COMPLETED_UPLOAD: {
+    case actions.REMOVE_UPLOAD: {
       const { submittedFiles } = state;
       const index = submittedFiles.findIndex(
         (file) => file.queueId === action.queueId
@@ -44,7 +44,7 @@ export const uploadReducer = (
         .concat(submittedFiles.slice(index + 1));
       return {
         ...state,
-        files: updatedSubmittedFiles,
+        submittedFiles: updatedSubmittedFiles,
       };
     }
 
