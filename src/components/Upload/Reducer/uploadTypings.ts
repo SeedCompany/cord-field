@@ -43,7 +43,7 @@ export interface FileUploadRequestSucceeded extends FileAction {
 }
 
 export interface RemoveCompletedUploadAction extends FileAction {
-  type: typeof actions.REMOVE_COMPLETED_UPLOAD;
+  type: typeof actions.REMOVE_UPLOAD;
 }
 
 export interface FileUploadCompletedAction extends FileAction {
