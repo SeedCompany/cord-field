@@ -13,7 +13,7 @@ import {
   Close as CloseIcon,
   Minimize as MinimizeIcon,
 } from '@material-ui/icons';
-import React, { FC } from 'react';
+import React, { FC, useEffect, useRef, useState } from 'react';
 import Draggable from 'react-draggable';
 import { UploadFile, UploadState } from './Reducer';
 import { UploadItem } from './UploadItem';
@@ -51,23 +51,40 @@ const useStyles = makeStyles(({ palette, spacing }) => ({
   },
 }));
 
-const PaperComponent: FC<PaperProps> = (props) => (
-  <Draggable
-    handle="#draggable-dialog-title"
-    cancel={'[class*="MuiDialogContent-root"]'}
-  >
-    <Paper {...props} />
-  </Draggable>
-);
+interface PaperComponentProps extends PaperProps {
+  setOwnHeight: (height: number) => void;
+}
+
+const PaperComponent: FC<PaperComponentProps> = ({
+  setOwnHeight,
+  ...props
+}) => {
+  const paperRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (paperRef.current) {
+      setOwnHeight(paperRef.current.offsetHeight);
+    }
+  }, [paperRef, setOwnHeight]);
+
+  return (
+    <Draggable
+      handle="#draggable-dialog-title"
+      cancel={'[class*="MuiDialogContent-root"]'}
+    >
+      <Paper ref={paperRef} {...props} />
+    </Draggable>
+  );
+};
 
 interface DialogTitleProps {
   id: string;
   onClose: () => void;
-  onMinimize: () => void;
+  onCollapseClick: () => void;
 }
 
 const DialogTitle: FC<DialogTitleProps> = (props) => {
-  const { children, id, onClose, onMinimize } = props;
+  const { children, id, onClose, onCollapseClick } = props;
   const classes = useStyles();
   return (
     <MuiDialogTitle
@@ -82,7 +99,7 @@ const DialogTitle: FC<DialogTitleProps> = (props) => {
         <IconButton
           aria-label="minimize"
           className={classes.titleButton}
-          onClick={onMinimize}
+          onClick={onCollapseClick}
           size="small"
         >
           <MinimizeIcon fontSize="small" />
@@ -114,6 +131,11 @@ export const UploadManager: FC<UploadManagerProps> = (props) => {
     setIsOpen,
     state: { submittedFiles },
   } = props;
+  const [isCollapsed, setIsCollapsed] = useState(false);
+  const [dialogHeight, setDialogHeight] = useState(0);
+  console.log('dialogHeight', dialogHeight);
+  console.log('isCollapsed', isCollapsed);
+
   const areFilesUploading = submittedFiles.length > 0;
   const classes = useStyles();
   return (
@@ -123,13 +145,15 @@ export const UploadManager: FC<UploadManagerProps> = (props) => {
       disableEscapeKeyDown
       hideBackdrop
       open={isOpen}
-      PaperComponent={PaperComponent}
+      PaperComponent={(props) => (
+        <PaperComponent setOwnHeight={setDialogHeight} {...props} />
+      )}
       aria-labelledby="draggable-dialog-title"
     >
       <DialogTitle
         id="draggable-dialog-title"
         onClose={() => setIsOpen(false)}
-        onMinimize={() => console.log('Minimize')}
+        onCollapseClick={() => setIsCollapsed((isCollapsed) => !isCollapsed)}
       >
         Upload Manager
       </DialogTitle>
