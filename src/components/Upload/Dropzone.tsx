@@ -4,24 +4,29 @@ import React, { useCallback } from 'react';
 import { useDropzone } from 'react-dropzone';
 import { FileInput, useUpload } from '../../components/Upload';
 
-const useStyles = makeStyles(({ palette, spacing }) => ({
-  container: {
-    padding: spacing(3),
-  },
-  dropzone: {
-    backgroundColor: palette.grey[300],
-    border: `2px dashed ${palette.divider}`,
-    padding: spacing(3),
-  },
-  active: {
+const useStyles = makeStyles(({ palette, spacing }) => {
+  const dropzoneHoverStyle = {
     backgroundColor: palette.grey[200],
     borderColor: palette.primary.main,
-  },
-  instructions: {
-    color: palette.text.secondary,
-    textAlign: 'center',
-  },
-}));
+  };
+  return {
+    container: {
+      padding: spacing(3),
+    },
+    dropzone: {
+      backgroundColor: palette.grey[300],
+      border: `2px dashed ${palette.divider}`,
+      cursor: 'pointer',
+      padding: spacing(3),
+      '&:hover': dropzoneHoverStyle,
+    },
+    active: dropzoneHoverStyle,
+    instructions: {
+      color: palette.text.secondary,
+      textAlign: 'center',
+    },
+  };
+});
 
 export const Dropzone = () => {
   const classes = useStyles();
