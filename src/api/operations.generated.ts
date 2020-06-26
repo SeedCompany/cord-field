@@ -1,6 +1,8 @@
 export const GQLOperations = {
   Query: {
     Session: 'Session',
+    OrganizationAutocomplete: 'OrganizationAutocomplete',
+    UserAutocomplete: 'UserAutocomplete',
     Languages: 'Languages',
     Organization: 'Organization',
     Organizations: 'Organizations',

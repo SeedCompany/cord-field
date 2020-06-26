@@ -12,9 +12,9 @@ import { InternshipEngagementListItemFragmentDoc } from '../../../components/Int
 import { LanguageEngagementListItemFragment } from '../../../components/LanguageEngagementListItemCard/LanguageEngagementListItem.generated';
 import { LanguageEngagementListItemFragmentDoc } from '../../../components/LanguageEngagementListItemCard/LanguageEngagementListItem.generated';
 import { PartnershipSummaryFragment } from '../../../components/PartnershipSummary/PartnershipSummary.generated';
-import { PartnershipSummaryFragmentDoc } from '../../../components/PartnershipSummary/PartnershipSummary.generated';
 import { ProjectMemberListFragment } from '../../../components/ProjectMembersSummary/ProjectMembersSummary.generated';
 import { ProjectMemberListFragmentDoc } from '../../../components/ProjectMembersSummary/ProjectMembersSummary.generated';
+import { PartnershipSummaryFragmentDoc } from '../../../components/PartnershipSummary/PartnershipSummary.generated';
 
 export interface ProjectOverviewQueryVariables {
   input: Types.Scalars['ID'];

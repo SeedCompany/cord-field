@@ -1,0 +1,10 @@
+query OrganizationAutocomplete($input: OrganizationListInput!) {
+  organizations(input: $input) {
+    items {
+      id
+      name {
+        value
+      }
+    }
+  }
+}
