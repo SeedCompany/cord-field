@@ -15,10 +15,10 @@ import {
 } from '@material-ui/icons';
 import React, { FC } from 'react';
 import Draggable from 'react-draggable';
-import { UploadState } from './Reducer';
+import { UploadFile, UploadState } from './Reducer';
 import { UploadItem } from './UploadItem';
 
-const useStyles = makeStyles(({ spacing }) => ({
+const useStyles = makeStyles(({ palette, spacing }) => ({
   root: {
     pointerEvents: 'none',
   },
@@ -45,6 +45,9 @@ const useStyles = makeStyles(({ spacing }) => ({
   titleButton: {},
   contentContainer: {
     padding: spacing(1),
+  },
+  noUploadsText: {
+    color: palette.grey[400],
   },
 }));
 
@@ -99,6 +102,7 @@ const DialogTitle: FC<DialogTitleProps> = (props) => {
 
 interface UploadManagerProps {
   isOpen: boolean;
+  removeUpload: (queueId: UploadFile['queueId']) => void;
   setIsOpen: (isOpen: boolean) => void;
   state: UploadState;
 }
@@ -106,6 +110,7 @@ interface UploadManagerProps {
 export const UploadManager: FC<UploadManagerProps> = (props) => {
   const {
     isOpen,
+    removeUpload,
     setIsOpen,
     state: { submittedFiles },
   } = props;
@@ -132,20 +137,21 @@ export const UploadManager: FC<UploadManagerProps> = (props) => {
         {areFilesUploading ? (
           <>
             {submittedFiles.map((file) => (
-              <UploadItem key={file.queueId} file={file} />
+              <UploadItem
+                key={file.queueId}
+                file={file}
+                onClear={() => removeUpload(file.queueId)}
+              />
             ))}
           </>
         ) : (
-          <Box
-            borderTop={1}
-            borderColor="grey.400"
-            color="grey.500"
-            marginTop={-1}
-            p={2}
-            textAlign="center"
-          >
-            <Typography variant="h5" color="inherit" component="span">
-              All uploads completed
+          <Box marginTop={-1} p={2} textAlign="center">
+            <Typography
+              variant="h5"
+              component="span"
+              className={classes.noUploadsText}
+            >
+              No uploads
             </Typography>
           </Box>
         )}
