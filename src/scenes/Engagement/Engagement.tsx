@@ -1,24 +1,39 @@
 import React from 'react';
 import { useParams } from 'react-router';
-import { useEngagementQuery } from './Engagement.generated';
+import {
+  useEngagementQuery,
+  useProjectBreadcrumbQuery,
+} from './Engagement.generated';
 import { EngagementDetailLoading } from './EngagementDetailLoading';
 import { InternshipEngagementDetail } from './InternshipEngagement';
 import { LanguageEngagementDetail } from './LanguageEngagement';
 
 export const Engagement = () => {
-  const { engagementId } = useParams();
+  const { engagementId, projectId } = useParams();
 
-  const { data, loading } = useEngagementQuery({
+  const { data: engagementData, loading } = useEngagementQuery({
     variables: {
       input: engagementId,
     },
   });
-  const engagement = data?.engagement;
+
+  const { data: projectData } = useProjectBreadcrumbQuery({
+    variables: {
+      input: projectId,
+    },
+  });
+
+  const engagement = engagementData?.engagement;
+  const project = projectData?.project;
 
   if (loading) return <EngagementDetailLoading />;
-  if (engagement && engagement.__typename === 'LanguageEngagement')
-    return <LanguageEngagementDetail {...engagement} />;
-  if (engagement && engagement.__typename === 'InternshipEngagement')
-    return <InternshipEngagementDetail {...engagement} />;
+  if (project && engagement && engagement.__typename === 'LanguageEngagement')
+    return (
+      <LanguageEngagementDetail engagement={engagement} project={project} />
+    );
+  if (project && engagement && engagement.__typename === 'InternshipEngagement')
+    return (
+      <InternshipEngagementDetail engagement={engagement} project={project} />
+    );
   return <span>Could Not Find Engagement</span>;
 };
