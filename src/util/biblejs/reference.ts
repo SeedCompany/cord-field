@@ -14,6 +14,8 @@ interface Range<T> {
 
 type RawScriptureRange = Range<Nullable<ScriptureReference>>;
 
+type ScriptureRange = Range<Required<ScriptureReference>>;
+
 // Internally, no strings are stored - only numbers.
 //
 // "id"s are UIDs, numbers are relative to parent unit; e.g.
@@ -76,6 +78,27 @@ export const parseScriptureRange = (
       verse: endVerse || startVerse,
     },
   };
+};
+
+export const validateScriptureRange = (
+  range: RawScriptureRange
+): ScriptureRange | null => {
+  Object.keys(range).map((part: string) => {
+    // part (p) being start or end
+    const p = (range as any)[part];
+    const bookName = p.book;
+    const bookId = bookIdFromName(p.book);
+    const chaptersInBook = books[bookId - 1].verses.length;
+    const versesInChapter = books[bookId - 1].verses[p.chapter - 1];
+    if (p.chapter > chaptersInBook) {
+      throw new Error(`${bookName} only has ${chaptersInBook} chapters`);
+    } else if (p.verse > versesInChapter) {
+      throw new Error(
+        `${bookName}: ${p.chapter} only has ${versesInChapter} verses`
+      );
+    }
+  });
+  return range as ScriptureRange;
 };
 
 // Like moment.js startOf - ref.startOf('chapter') sets the ref to the first

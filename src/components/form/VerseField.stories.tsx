@@ -3,14 +3,20 @@ import { boolean, text } from '@storybook/addon-knobs';
 import React from 'react';
 import { Form } from 'react-final-form';
 // import { FieldSpy } from './FieldSpy';
-import { parseScriptureRange } from '../../util/biblejs/reference';
+import {
+  parseScriptureRange,
+  validateScriptureRange,
+} from '../../util/biblejs/reference';
 import { VerseField } from './VerseField';
 
 export default { title: 'Components/Forms/Fields' };
 
 const submit = ({ verse }: any) => {
   const res = parseScriptureRange('Ruth', verse);
-  console.log(res);
+  if (!res) return;
+  const verified = validateScriptureRange(res);
+
+  console.log(verified);
 };
 
 export const Verse = () => (
