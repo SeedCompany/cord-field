@@ -10,6 +10,7 @@ import {
   FormLabel,
   makeStyles,
 } from '@material-ui/core';
+import { ToggleButton, ToggleButtonProps } from '@material-ui/lab';
 import { difference, isEmpty } from 'lodash';
 import React, {
   createContext,
@@ -39,6 +40,9 @@ export type CheckboxOptionProps = Pick<
   FormControlLabelProps,
   'label' | 'labelPlacement' | 'disabled'
 > &
+  MergeExclusive<{ value: string }, { default: true }>;
+
+export type ToggleButtonOptionProps = ToggleButtonProps &
   MergeExclusive<{ value: string }, { default: true }>;
 
 const useStyles = makeStyles(({ typography }) => ({
@@ -187,6 +191,47 @@ export const CheckboxOption = ({
         ctx?.onFocus();
       }}
     />
+  );
+};
+
+export const ToggleButtonOption = ({
+  label,
+  value: name,
+  default: isDefault,
+  disabled: disabledProp,
+  ...props
+}: CheckboxOptionProps) => {
+  const ctx = useContext(CheckboxContext);
+  if (!ctx) {
+    throw new Error(
+      'ToggleButtonOption must be used inside of a <CheckboxesField>'
+    );
+  }
+
+  const disabled = disabledProp ?? ctx.disabled;
+  const selected = Boolean(name ? ctx.value.has(name) : ctx.value.size === 0);
+  return (
+    <ToggleButton
+      {...props}
+      value={ctx.value}
+      selected={selected}
+      onChange={(_) => ctx.onChange(name, !selected)}
+      disabled={disabled}
+      onMouseDown={(e: MouseEvent<HTMLElement>) => {
+        if (disabled) {
+          return;
+        }
+        // Don't mess with focus if clicking on toggle button since it doesn't need help
+        // and preventDefault() will actually prevent blurring when wanted.
+        if (e.target && (e.target as HTMLElement).tagName === 'INPUT') {
+          return;
+        }
+        e.preventDefault();
+        ctx?.onFocus();
+      }}
+    >
+      {label}
+    </ToggleButton>
   );
 };
 
