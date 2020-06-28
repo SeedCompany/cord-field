@@ -8,7 +8,7 @@ import { Nest } from './components/Nest';
 import { SessionProvider } from './components/Session';
 import { SnackbarProvider } from './components/Snackbar';
 import { TitleProvider } from './components/title';
-import { UploadProvider } from './components/Upload';
+import { UploadManagerProvider, UploadProvider } from './components/Upload';
 import { Root } from './scenes/Root';
 import { createTheme } from './theme';
 
@@ -28,6 +28,7 @@ export const appProviders = [
   <SnackbarProvider />,
   <ApolloProvider />,
   <SessionProvider />,
+  <UploadManagerProvider />,
   <UploadProvider />,
 ];
 
