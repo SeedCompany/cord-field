@@ -1,5 +1,4 @@
 import {
-  Box,
   Dialog,
   DialogContent,
   IconButton,
@@ -13,22 +12,25 @@ import {
   Close as CloseIcon,
   Minimize as MinimizeIcon,
 } from '@material-ui/icons';
-import React, { FC, useEffect, useRef, useState } from 'react';
-import Draggable from 'react-draggable';
-import { UploadFile, UploadState } from './Reducer';
-import { UploadItem } from './UploadItem';
+import clsx from 'clsx';
+import React, { FC, memo, useLayoutEffect, useRef, useState } from 'react';
+import Draggable, { DraggableData, DraggableEvent } from 'react-draggable';
+import { useWindowSize } from 'react-use';
+import { useUploadManager } from './UploadContext';
+
+const PAPER_WIDTH = 480;
 
 const useStyles = makeStyles(({ palette, spacing }) => ({
   root: {
     pointerEvents: 'none',
   },
   paper: {
-    margin: spacing(3),
+    margin: 0,
     pointerEvents: 'auto',
     position: 'absolute',
-    bottom: '0px',
-    right: '0px',
-    width: '480px',
+    top: 0,
+    left: 0,
+    width: `${PAPER_WIDTH}px`,
   },
   titleContainer: {
     display: 'flex',
@@ -45,32 +47,45 @@ const useStyles = makeStyles(({ palette, spacing }) => ({
   titleButton: {},
   contentContainer: {
     padding: spacing(1),
+    '&.collapsed': {
+      display: 'none',
+    },
   },
   noUploadsText: {
     color: palette.grey[400],
   },
 }));
 
-interface PaperComponentProps extends PaperProps {
-  setOwnHeight: (height: number) => void;
-}
+const initialPosition = { x: 0, y: 0 };
 
-const PaperComponent: FC<PaperComponentProps> = ({
-  setOwnHeight,
-  ...props
-}) => {
+const PaperComponent: FC<PaperProps> = ({ ...props }) => {
+  const [defaultPosition, setDefaultPosition] = useState({ x: 0, y: 0 });
   const paperRef = useRef<HTMLDivElement>(null);
 
-  useEffect(() => {
+  const { width: windowWidth, height: windowHeight } = useWindowSize();
+
+  useLayoutEffect(() => {
     if (paperRef.current) {
-      setOwnHeight(paperRef.current.offsetHeight);
+      const x =
+        windowWidth - paperRef.current.offsetWidth - 24 + initialPosition.x;
+      const y =
+        windowHeight - paperRef.current.offsetHeight - 24 + initialPosition.y;
+      setDefaultPosition({ x, y });
     }
-  }, [paperRef, setOwnHeight]);
+  }, [paperRef, setDefaultPosition, windowHeight, windowWidth]);
+
+  function handleDragStop(_: DraggableEvent, data: DraggableData) {
+    const { x, y } = data;
+    initialPosition.x = initialPosition.x + x;
+    initialPosition.y = initialPosition.y + y;
+  }
 
   return (
     <Draggable
-      handle="#draggable-dialog-title"
       cancel={'[class*="MuiDialogContent-root"]'}
+      handle="#draggable-dialog-title"
+      positionOffset={defaultPosition}
+      onStop={handleDragStop}
     >
       <Paper ref={paperRef} {...props} />
     </Draggable>
@@ -117,26 +132,10 @@ const DialogTitle: FC<DialogTitleProps> = (props) => {
   );
 };
 
-interface UploadManagerProps {
-  isOpen: boolean;
-  removeUpload: (queueId: UploadFile['queueId']) => void;
-  setIsOpen: (isOpen: boolean) => void;
-  state: UploadState;
-}
-
-export const UploadManager: FC<UploadManagerProps> = (props) => {
-  const {
-    isOpen,
-    removeUpload,
-    setIsOpen,
-    state: { submittedFiles },
-  } = props;
+export const UploadManager: FC = memo((props) => {
+  const { children } = props;
+  const { isManagerOpen, setIsManagerOpen } = useUploadManager();
   const [isCollapsed, setIsCollapsed] = useState(false);
-  const [dialogHeight, setDialogHeight] = useState(0);
-  console.log('dialogHeight', dialogHeight);
-  console.log('isCollapsed', isCollapsed);
-
-  const areFilesUploading = submittedFiles.length > 0;
   const classes = useStyles();
   return (
     <Dialog
@@ -144,42 +143,22 @@ export const UploadManager: FC<UploadManagerProps> = (props) => {
       disableBackdropClick
       disableEscapeKeyDown
       hideBackdrop
-      open={isOpen}
-      PaperComponent={(props) => (
-        <PaperComponent setOwnHeight={setDialogHeight} {...props} />
-      )}
+      open={isManagerOpen}
+      PaperComponent={(props) => <PaperComponent {...props} />}
       aria-labelledby="draggable-dialog-title"
     >
       <DialogTitle
         id="draggable-dialog-title"
-        onClose={() => setIsOpen(false)}
+        onClose={() => setIsManagerOpen(false)}
         onCollapseClick={() => setIsCollapsed((isCollapsed) => !isCollapsed)}
       >
         Upload Manager
       </DialogTitle>
-      <DialogContent className={classes.contentContainer}>
-        {areFilesUploading ? (
-          <>
-            {submittedFiles.map((file) => (
-              <UploadItem
-                key={file.queueId}
-                file={file}
-                onClear={() => removeUpload(file.queueId)}
-              />
-            ))}
-          </>
-        ) : (
-          <Box marginTop={-1} p={2} textAlign="center">
-            <Typography
-              variant="h5"
-              component="span"
-              className={classes.noUploadsText}
-            >
-              No uploads
-            </Typography>
-          </Box>
-        )}
+      <DialogContent
+        className={clsx(classes.contentContainer, isCollapsed && 'collapsed')}
+      >
+        {children}
       </DialogContent>
     </Dialog>
   );
-};
+});

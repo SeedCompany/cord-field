@@ -14,7 +14,7 @@ import {
 import { FC, useState } from 'react';
 import * as React from 'react';
 import { useSession } from '../../../../components/Session';
-import { useUpload } from '../../../../components/Upload';
+import { useUploadManager } from '../../../../components/Upload';
 import { ProfileMenu } from '../ProfileMenu';
 
 const useStyles = makeStyles(({ typography, spacing }) => ({
@@ -33,7 +33,7 @@ const useStyles = makeStyles(({ typography, spacing }) => ({
 export const ProfileToolbar: FC = () => {
   const classes = useStyles();
   const [session] = useSession();
-  const { isManagerOpen, setIsManagerOpen } = useUpload();
+  const { isManagerOpen, setIsManagerOpen } = useUploadManager();
   const [anchor, setAnchor] = useState<MenuProps['anchorEl']>();
 
   return (
