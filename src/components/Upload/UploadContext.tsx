@@ -8,7 +8,6 @@ import React, {
   useState,
 } from 'react';
 import { sleep } from '../../util/sleep';
-import { useSession } from '../Session';
 import * as actions from './Reducer/uploadActions';
 import { initialState } from './Reducer/uploadInitialState';
 import { uploadReducer } from './Reducer/uploadReducer';
@@ -46,30 +45,22 @@ export const UploadManagerContext = createContext<UploadManagerContextValue>(
 UploadManagerContext.displayName = 'UploadManagerContext';
 
 export const UploadProvider: FC = ({ children }) => {
-  const [session] = useSession();
   const [state, dispatch] = useReducer(uploadReducer, initialState);
-  const { isManagerOpen, setIsManagerOpen } = useUploadManager();
+  const { setIsManagerOpen } = useUploadManager();
   const { submittedFiles } = state;
   const [requestFileUpload] = useRequestFileUploadMutation();
 
-  useEffect(() => {
-    setIsManagerOpen(!!session);
-  }, [session, setIsManagerOpen]);
-
-  useEffect(() => {
-    const areFilesUploading = submittedFiles.length > 0;
-    if (areFilesUploading && !isManagerOpen) {
+  const addFilesToUploadQueue = useCallback(
+    (files: Types.FileInput[]) => {
+      console.log('SETTING SUBMITTED FILES');
+      dispatch({
+        type: actions.FILES_SUBMITTED,
+        files,
+      });
       setIsManagerOpen(true);
-    }
-  }, [submittedFiles, isManagerOpen, setIsManagerOpen]);
-
-  const addFilesToUploadQueue = useCallback((files: Types.FileInput[]) => {
-    console.log('SETTING SUBMITTED FILES');
-    dispatch({
-      type: actions.FILES_SUBMITTED,
-      files,
-    });
-  }, []);
+    },
+    [setIsManagerOpen]
+  );
 
   const setUploadingStatus = useCallback(
     (
@@ -230,7 +221,7 @@ export const UploadProvider: FC = ({ children }) => {
 };
 
 export const UploadManagerProvider: FC = ({ children }) => {
-  const [isManagerOpen, setIsManagerOpen] = useState(false);
+  const [isManagerOpen, setIsManagerOpen] = useState(true);
   return (
     <UploadManagerContext.Provider value={{ isManagerOpen, setIsManagerOpen }}>
       {children}
