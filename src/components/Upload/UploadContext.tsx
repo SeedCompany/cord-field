@@ -14,34 +14,47 @@ import { initialState } from './Reducer/uploadInitialState';
 import { uploadReducer } from './Reducer/uploadReducer';
 import * as Types from './Reducer/uploadTypings';
 import { useRequestFileUploadMutation } from './Upload.generated';
+import { UploadItems } from './UploadItems';
 import { UploadManager } from './UploadManager';
 
 interface UploadContextValue {
   addFilesToUploadQueue: (files: Types.FileInput[]) => void;
+}
+
+const initialUploadContext = {
+  addFilesToUploadQueue: () => null,
+};
+
+export const UploadContext = createContext<UploadContextValue>(
+  initialUploadContext
+);
+UploadContext.displayName = 'UploadContext';
+
+interface UploadManagerContextValue {
   isManagerOpen: boolean;
   setIsManagerOpen: (isOpen: boolean) => void;
 }
 
-const initialContext = {
-  addFilesToUploadQueue: () => null,
+const initialUploadManagerContext = {
   isManagerOpen: false,
-  removeUpload: () => null,
   setIsManagerOpen: () => null,
 };
 
-export const UploadContext = createContext<UploadContextValue>(initialContext);
-UploadContext.displayName = 'UploadContext';
+export const UploadManagerContext = createContext<UploadManagerContextValue>(
+  initialUploadManagerContext
+);
+UploadManagerContext.displayName = 'UploadManagerContext';
 
 export const UploadProvider: FC = ({ children }) => {
   const [session] = useSession();
   const [state, dispatch] = useReducer(uploadReducer, initialState);
-  const [isManagerOpen, setIsManagerOpen] = useState(false);
+  const { isManagerOpen, setIsManagerOpen } = useUploadManager();
   const { submittedFiles } = state;
   const [requestFileUpload] = useRequestFileUploadMutation();
 
   useEffect(() => {
     setIsManagerOpen(!!session);
-  }, [session]);
+  }, [session, setIsManagerOpen]);
 
   useEffect(() => {
     const areFilesUploading = submittedFiles.length > 0;
@@ -207,18 +220,23 @@ export const UploadProvider: FC = ({ children }) => {
   }, [submittedFiles, handleFileAdded, setUploadingStatus]);
 
   return (
-    <UploadContext.Provider
-      value={{ addFilesToUploadQueue, isManagerOpen, setIsManagerOpen }}
-    >
+    <UploadContext.Provider value={{ addFilesToUploadQueue }}>
       {children}
-      <UploadManager
-        isOpen={isManagerOpen}
-        removeUpload={removeUpload}
-        setIsOpen={setIsManagerOpen}
-        state={state}
-      />
+      <UploadManager>
+        <UploadItems state={state} removeUpload={removeUpload} />
+      </UploadManager>
     </UploadContext.Provider>
   );
 };
 
+export const UploadManagerProvider: FC = ({ children }) => {
+  const [isManagerOpen, setIsManagerOpen] = useState(false);
+  return (
+    <UploadManagerContext.Provider value={{ isManagerOpen, setIsManagerOpen }}>
+      {children}
+    </UploadManagerContext.Provider>
+  );
+};
+
 export const useUpload = () => useContext(UploadContext);
+export const useUploadManager = () => useContext(UploadManagerContext);
