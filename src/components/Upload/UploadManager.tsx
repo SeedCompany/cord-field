@@ -10,6 +10,7 @@ import {
 } from '@material-ui/core';
 import {
   Close as CloseIcon,
+  Maximize as MaximizeIcon,
   Minimize as MinimizeIcon,
 } from '@material-ui/icons';
 import clsx from 'clsx';
@@ -110,13 +111,15 @@ const PaperComponent: FC<PaperProps> = ({ ...props }) => {
 
 interface DialogTitleProps {
   id: string;
+  isCollapsed: boolean;
   onClose: (event: React.MouseEvent<HTMLButtonElement>) => void;
   onCollapseClick: (event: React.MouseEvent<HTMLButtonElement>) => void;
 }
 
 const DialogTitle: FC<DialogTitleProps> = (props) => {
-  const { children, id, onClose, onCollapseClick } = props;
+  const { children, id, isCollapsed, onClose, onCollapseClick } = props;
   const classes = useStyles();
+  const IconComponent = isCollapsed ? MaximizeIcon : MinimizeIcon;
   return (
     <MuiDialogTitle
       id={id}
@@ -133,7 +136,7 @@ const DialogTitle: FC<DialogTitleProps> = (props) => {
           onClick={onCollapseClick}
           size="small"
         >
-          <MinimizeIcon fontSize="small" />
+          <IconComponent fontSize="small" />
         </IconButton>
         <IconButton
           aria-label="close"
@@ -177,6 +180,7 @@ export const UploadManager: FC = memo((props) => {
     >
       <DialogTitle
         id="draggable-dialog-title"
+        isCollapsed={isCollapsed}
         onClose={handleClose}
         onCollapseClick={handleCollapse}
       >
