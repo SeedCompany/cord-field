@@ -5,6 +5,8 @@ fragment LanguageEngagementDetail on LanguageEngagement {
     value {
       name {
         value
+        canRead
+        canEdit
       }
     }
   }
@@ -18,6 +20,24 @@ fragment LanguageEngagementDetail on LanguageEngagement {
     canRead
     canEdit
   }
+  completeDate {
+    value
+    canRead
+    canEdit
+  }
+  disbursementCompleteDate {
+    value
+    canRead
+    canEdit
+  }
+  communicationsCompleteDate {
+    value
+    canRead
+    canEdit
+  }
+  # TODO: add when fixed
+  # modifiedAt
+  # status
 }
 
 fragment ProjectBreadcrumb on Project {

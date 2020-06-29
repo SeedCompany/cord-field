@@ -10,7 +10,7 @@ export type LanguageEngagementDetailFragment = {
         { __typename?: 'Language' } & {
           name: { __typename?: 'SecuredString' } & Pick<
             Types.SecuredString,
-            'value'
+            'value' | 'canRead' | 'canEdit'
           >;
         }
       >;
@@ -20,6 +20,18 @@ export type LanguageEngagementDetailFragment = {
       'value' | 'canRead' | 'canEdit'
     >;
     endDate: { __typename?: 'SecuredDate' } & Pick<
+      Types.SecuredDate,
+      'value' | 'canRead' | 'canEdit'
+    >;
+    completeDate: { __typename?: 'SecuredDate' } & Pick<
+      Types.SecuredDate,
+      'value' | 'canRead' | 'canEdit'
+    >;
+    disbursementCompleteDate: { __typename?: 'SecuredDate' } & Pick<
+      Types.SecuredDate,
+      'value' | 'canRead' | 'canEdit'
+    >;
+    communicationsCompleteDate: { __typename?: 'SecuredDate' } & Pick<
       Types.SecuredDate,
       'value' | 'canRead' | 'canEdit'
     >;
@@ -49,6 +61,8 @@ export const LanguageEngagementDetailFragmentDoc = gql`
       value {
         name {
           value
+          canRead
+          canEdit
         }
       }
     }
@@ -58,6 +72,21 @@ export const LanguageEngagementDetailFragmentDoc = gql`
       canEdit
     }
     endDate {
+      value
+      canRead
+      canEdit
+    }
+    completeDate {
+      value
+      canRead
+      canEdit
+    }
+    disbursementCompleteDate {
+      value
+      canRead
+      canEdit
+    }
+    communicationsCompleteDate {
       value
       canRead
       canEdit
