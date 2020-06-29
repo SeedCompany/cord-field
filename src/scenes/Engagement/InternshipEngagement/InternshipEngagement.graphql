@@ -33,4 +33,11 @@ fragment InternshipEngagementDetail on InternshipEngagement {
     canRead
     canEdit
   }
+  countryOfOrigin {
+    canRead
+    canEdit
+    value {
+      ...DisplayLocation
+    }
+  }
 }

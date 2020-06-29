@@ -1,5 +1,8 @@
 /* eslint-disable import/no-duplicates, @typescript-eslint/no-empty-interface */
+
 import gql from 'graphql-tag';
+import { DisplayLocation_Country_Fragment } from '../../../api/fragments/location.generated';
+import { DisplayLocationFragmentDoc } from '../../../api/fragments/location.generated';
 import * as Types from '../../../api/schema.generated';
 
 export type InternshipEngagementDetailFragment = {
@@ -33,6 +36,14 @@ export type InternshipEngagementDetailFragment = {
       Types.SecuredDate,
       'value' | 'canRead' | 'canEdit'
     >;
+    countryOfOrigin: { __typename?: 'SecuredCountry' } & Pick<
+      Types.SecuredCountry,
+      'canRead' | 'canEdit'
+    > & {
+        value?: Types.Maybe<
+          { __typename?: 'Country' } & DisplayLocation_Country_Fragment
+        >;
+      };
   };
 
 export const InternshipEngagementDetailFragmentDoc = gql`
@@ -71,5 +82,13 @@ export const InternshipEngagementDetailFragmentDoc = gql`
       canRead
       canEdit
     }
+    countryOfOrigin {
+      canRead
+      canEdit
+      value {
+        ...DisplayLocation
+      }
+    }
   }
+  ${DisplayLocationFragmentDoc}
 `;
