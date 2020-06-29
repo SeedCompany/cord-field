@@ -1,4 +1,36 @@
 fragment InternshipEngagementDetail on InternshipEngagement {
   id
   createdAt
+  intern {
+    value {
+      fullName
+    }
+    canRead
+    canEdit
+  }
+  startDate {
+    value
+    canRead
+    canEdit
+  }
+  endDate {
+    value
+    canRead
+    canEdit
+  }
+  completeDate {
+    value
+    canRead
+    canEdit
+  }
+  disbursementCompleteDate {
+    value
+    canRead
+    canEdit
+  }
+  communicationsCompleteDate {
+    value
+    canRead
+    canEdit
+  }
 }
