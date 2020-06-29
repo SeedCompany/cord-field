@@ -13,7 +13,12 @@ import { Breadcrumb } from '../../../components/Breadcrumb';
 import { DataButton } from '../../../components/DataButton';
 import { FieldOverviewCard } from '../../../components/FieldOverviewCard';
 import { useDateFormatter } from '../../../components/Formatters';
-import { PencilCircledIcon } from '../../../components/Icons';
+import {
+  ChatBubbleIcon,
+  OptionsIcon,
+  PencilCircledIcon,
+  PlantIcon,
+} from '../../../components/Icons';
 import {
   LanguageEngagementDetailFragment,
   ProjectBreadcrumbFragment,
@@ -34,22 +39,6 @@ const useStyles = makeStyles(({ spacing, breakpoints, palette }) => ({
   infoColor: {
     color: palette.info.main,
   },
-  // main: {
-  //   maxWidth: breakpoints.values.md,
-  //   '& > *': {
-  //     marginBottom: spacing(3),
-  //   },
-  // },
-  // container: {
-  //   display: 'flex',
-  //   alignItems: 'center',
-  // },
-  // budgetOverviewCard: {
-  //   marginRight: spacing(3),
-  // },
-  // infoColor: {
-  //   color: palette.info.main,
-  // },
 }));
 
 interface LanguageEngagementDetailProps {
@@ -100,58 +89,42 @@ export const LanguageEngagementDetail: FC<LanguageEngagementDetailProps> = ({
           <Grid item xs={6}>
             <FieldOverviewCard
               title="Growth Plan Complete Date"
-              viewLabel="viewlabel"
-              // data={{
-              //   value: dateFormatter(
-              //     new CalendarDate('2020-08-26T10:35:20.646-07:00')
-              //   ),
-              //   updatedAt: dateFormatter('2020-08-26T10:35:20.646-07:00'),
-              //   to: '/home',
-              // }}
+              viewLabel="Edit Complete Date"
+              data={{
+                value: formatDate(engagement.completeDate.value),
+                // updatedAt: engagement.modifiedAt.value,
+                to: '/home',
+              }}
+              icon={PlantIcon}
             />
           </Grid>
           <Grid item xs={6}>
             <FieldOverviewCard
-              title="Growth Plan Complete Date"
-              viewLabel="viewlabel"
-              // data={{
-              //   value: dateFormatter(
-              //     new CalendarDate('2020-08-26T10:35:20.646-07:00')
-              //   ),
-              //   updatedAt: dateFormatter('2020-08-26T10:35:20.646-07:00'),
-              //   to: '/home',
-              // }}
+              title="Disbursement Complete Date"
+              viewLabel="Edit Complete Date"
+              data={{
+                value: formatDate(engagement.disbursementCompleteDate.value),
+                // updatedAt: engagement.modifiedAt.value,
+                to: '/home',
+              }}
+              icon={ChatBubbleIcon}
             />
           </Grid>
           <Grid item xs={6}>
             <FieldOverviewCard
-              title="Growth Plan Complete Date"
-              viewLabel="viewlabel"
-              // data={{
-              //   value: dateFormatter(
-              //     new CalendarDate('2020-08-26T10:35:20.646-07:00')
-              //   ),
-              //   updatedAt: dateFormatter('2020-08-26T10:35:20.646-07:00'),
-              //   to: '/home',
-              // }}
-            />
-          </Grid>
-          <Grid item xs={6}>
-            <FieldOverviewCard
-              title="Growth Plan Complete Date"
-              viewLabel="viewlabel"
-              // data={{
-              //   value: dateFormatter(
-              //     new CalendarDate('2020-08-26T10:35:20.646-07:00')
-              //   ),
-              //   updatedAt: dateFormatter('2020-08-26T10:35:20.646-07:00'),
-              //   to: '/home',
-              // }}
+              title="Communications Complete Date"
+              viewLabel="Edit Complete Date"
+              data={{
+                value: formatDate(engagement.communicationsCompleteDate.value),
+                // updatedAt: engagement.modifiedAt.value,
+                to: '/home',
+              }}
+              icon={OptionsIcon}
             />
           </Grid>
         </Grid>
         <Typography variant="h4">Products</Typography>
-        Products goes here
+        Product list goes here when ready
       </main>
     </div>
   );
