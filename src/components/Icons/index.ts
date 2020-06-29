@@ -5,3 +5,5 @@ export * from './ScriptIcon';
 export * from './ScriptIcon';
 export * from './PencilCircledIcon';
 export * from './PeopleJoinedIcon';
+export * from './ChatBubbleIcon';
+export * from './OptionsIcon';
