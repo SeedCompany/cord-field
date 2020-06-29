@@ -5,12 +5,15 @@ import {
   makeStyles,
   Typography,
 } from '@material-ui/core';
-import { DateRange } from '@material-ui/icons';
+import { DateRange, Publish } from '@material-ui/icons';
 import { Skeleton } from '@material-ui/lab';
 import React, { FC } from 'react';
-import { securedDateRange } from '../../../api';
+import { Merge } from 'type-fest';
+import { displayInternPosition, securedDateRange } from '../../../api';
+import { displayLocation } from '../../../api/location-helper';
 import { Breadcrumb } from '../../../components/Breadcrumb';
 import { DataButton } from '../../../components/DataButton';
+import { Fab } from '../../../components/Fab';
 import { FieldOverviewCard } from '../../../components/FieldOverviewCard';
 import { useDateFormatter } from '../../../components/Formatters';
 import {
@@ -19,12 +22,17 @@ import {
   PencilCircledIcon,
   PlantIcon,
 } from '../../../components/Icons';
+import { MethodologiesCard } from '../../../components/MethodologiesCard';
+import { MethodologyCardFragment } from '../../../components/MethodologiesCard/MethodologiesCard.generated';
 import { Redacted } from '../../../components/Redacted';
 import { ProjectBreadcrumbFragment } from '../LanguageEngagement/LanguageEngagementDetail.generated';
 import { InternshipEngagementDetailFragment } from './InternshipEngagement.generated';
 
 interface InternshipEngagementDetailProps {
-  engagement: InternshipEngagementDetailFragment;
+  engagement: Merge<
+    InternshipEngagementDetailFragment,
+    MethodologyCardFragment
+  >;
   project: ProjectBreadcrumbFragment;
 }
 
@@ -91,6 +99,27 @@ export const InternshipEngagementDetail: FC<InternshipEngagementDetailProps> = (
         <Grid container spacing={1} alignItems="center">
           <Grid item>
             <DataButton
+              size="small"
+              color="primary"
+              variant="contained"
+              secured={engagement.position}
+              redacted="You do not have permission to view intern position"
+            >
+              {displayInternPosition(engagement.position.value)}
+            </DataButton>
+          </Grid>
+        </Grid>
+        <Grid container spacing={1} alignItems="center">
+          <Grid item>
+            <DataButton
+              secured={engagement.countryOfOrigin}
+              empty="Enter Location"
+              redacted="You do not have permission to view location"
+              children={displayLocation}
+            />
+          </Grid>
+          <Grid item>
+            <DataButton
               startIcon={<DateRange className={classes.infoColor} />}
               secured={date}
               redacted="You do not have permission to view start/end dates"
@@ -102,6 +131,16 @@ export const InternshipEngagementDetail: FC<InternshipEngagementDetailProps> = (
            <Grid item>
             <DataButton>{displayStatus(engagement.status)}</DataButton>
           </Grid> */}
+        </Grid>
+        <Grid container spacing={1} alignItems="center">
+          <Grid item>
+            <Fab color="primary" aria-label="Upload Files">
+              <Publish />
+            </Fab>
+          </Grid>
+          <Grid item>
+            <Typography variant="h4">Upload Files</Typography>
+          </Grid>
         </Grid>
         <Grid container spacing={2} alignItems="center">
           <Grid item xs={6}>
@@ -138,6 +177,14 @@ export const InternshipEngagementDetail: FC<InternshipEngagementDetailProps> = (
                 to: '/home',
               }}
               icon={OptionsIcon}
+            />
+          </Grid>
+          <Grid item xs={6}>
+            <MethodologiesCard
+              onEdit={() => null}
+              methodologies={engagement.methodologies}
+              // TODO: add when modifiedAt is fixed
+              // updateTime={engagement.startDate.value}
             />
           </Grid>
         </Grid>
