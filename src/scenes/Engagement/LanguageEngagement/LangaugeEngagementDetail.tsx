@@ -63,6 +63,11 @@ export const LanguageEngagementDetail: FC<LanguageEngagementDetailProps> = ({
           <Breadcrumb to={`/projects/${project.id}`}>
             {project.name.value ?? <Skeleton width={200} />}
           </Breadcrumb>
+          <Breadcrumb
+            to={`/projects/${project.id}/engagements/${engagement.id}`}
+          >
+            {engagement.language.value?.name.value}
+          </Breadcrumb>
         </Breadcrumbs>
         <Typography variant="h2">
           {engagement.language.value?.name.value}
