@@ -5,17 +5,21 @@ import {
   makeStyles,
   Typography,
 } from '@material-ui/core';
+import { DateRange } from '@material-ui/icons';
 import { Skeleton } from '@material-ui/lab';
 import React, { FC } from 'react';
+import { securedDateRange } from '../../../api';
 import { Breadcrumb } from '../../../components/Breadcrumb';
+import { DataButton } from '../../../components/DataButton';
 import { FieldOverviewCard } from '../../../components/FieldOverviewCard';
+import { useDateFormatter } from '../../../components/Formatters';
 import { PencilCircledIcon } from '../../../components/Icons';
 import {
   LanguageEngagementDetailFragment,
   ProjectBreadcrumbFragment,
 } from './LanguageEngagementDetail.generated';
 
-const useStyles = makeStyles(({ spacing, breakpoints }) => ({
+const useStyles = makeStyles(({ spacing, breakpoints, palette }) => ({
   root: {
     flex: 1,
     overflowY: 'scroll',
@@ -26,6 +30,9 @@ const useStyles = makeStyles(({ spacing, breakpoints }) => ({
     '& > *': {
       marginBottom: spacing(3),
     },
+  },
+  infoColor: {
+    color: palette.info.main,
   },
   // main: {
   //   maxWidth: breakpoints.values.md,
@@ -52,8 +59,13 @@ interface LanguageEngagementDetailProps {
 
 export const LanguageEngagementDetail: FC<LanguageEngagementDetailProps> = ({
   project,
+  engagement,
 }) => {
   const classes = useStyles();
+
+  const date = securedDateRange(engagement.startDate, engagement.endDate);
+  const formatDate = useDateFormatter();
+
   return (
     <div className={classes.root}>
       <main className={classes.main}>
@@ -64,12 +76,26 @@ export const LanguageEngagementDetail: FC<LanguageEngagementDetailProps> = ({
           </Breadcrumb>
         </Breadcrumbs>
         <Typography variant="h2">
-          {/* TODO: when name query fixed show real name */}
-          Placeholder Name
+          {engagement.language.value?.name.value}
           <IconButton color="primary" aria-label="edit partner">
             <PencilCircledIcon />
           </IconButton>
         </Typography>
+        <Grid container spacing={1} alignItems="center">
+          <Grid item>
+            <DataButton
+              startIcon={<DateRange className={classes.infoColor} />}
+              secured={date}
+              redacted="You do not have permission to view start/end dates"
+              children={formatDate.range}
+              empty="Start - End"
+            />
+          </Grid>
+          {/* TODO: implement when status fixed
+           <Grid item>
+            <DataButton>{displayStatus(engagement.status)}</DataButton>
+          </Grid> */}
+        </Grid>
         <Grid container spacing={2} alignItems="center">
           <Grid item xs={6}>
             <FieldOverviewCard
