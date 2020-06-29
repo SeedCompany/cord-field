@@ -8,6 +8,11 @@ fragment InternshipEngagementDetail on InternshipEngagement {
     canRead
     canEdit
   }
+  position {
+    canRead
+    canEdit
+    value
+  }
   startDate {
     value
     canRead
