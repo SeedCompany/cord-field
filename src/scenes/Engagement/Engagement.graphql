@@ -7,6 +7,7 @@ query Engagement($input: ID!) {
     }
     ... on InternshipEngagement {
       ...InternshipEngagementDetail
+      ...MethodologyCard
     }
   }
 }

@@ -3,6 +3,8 @@ import * as ApolloReactCommon from '@apollo/client';
 import * as ApolloReactHooks from '@apollo/client';
 import gql from 'graphql-tag';
 import * as Types from '../../api/schema.generated';
+import { MethodologyCardFragment } from '../../components/MethodologiesCard/MethodologiesCard.generated';
+import { MethodologyCardFragmentDoc } from '../../components/MethodologiesCard/MethodologiesCard.generated';
 import { InternshipEngagementDetailFragment } from './InternshipEngagement/InternshipEngagement.generated';
 import { InternshipEngagementDetailFragmentDoc } from './InternshipEngagement/InternshipEngagement.generated';
 import {
@@ -25,7 +27,8 @@ export type EngagementQuery = { __typename?: 'Query' } & {
         Types.InternshipEngagement,
         'id'
       > &
-        InternshipEngagementDetailFragment)
+        InternshipEngagementDetailFragment &
+        MethodologyCardFragment)
     | ({ __typename: 'LanguageEngagement' } & Pick<
         Types.LanguageEngagement,
         'id'
@@ -57,11 +60,13 @@ export const EngagementDocument = gql`
       }
       ... on InternshipEngagement {
         ...InternshipEngagementDetail
+        ...MethodologyCard
       }
     }
   }
   ${LanguageEngagementDetailFragmentDoc}
   ${InternshipEngagementDetailFragmentDoc}
+  ${MethodologyCardFragmentDoc}
 `;
 
 /**

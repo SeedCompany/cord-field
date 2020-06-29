@@ -1,0 +1,7 @@
+fragment MethodologyCard on InternshipEngagement {
+  methodologies {
+    canRead
+    canEdit
+    value
+  }
+}
