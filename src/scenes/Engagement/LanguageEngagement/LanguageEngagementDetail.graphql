@@ -8,6 +8,16 @@ fragment LanguageEngagementDetail on LanguageEngagement {
       }
     }
   }
+  startDate {
+    value
+    canRead
+    canEdit
+  }
+  endDate {
+    value
+    canRead
+    canEdit
+  }
 }
 
 fragment ProjectBreadcrumb on Project {

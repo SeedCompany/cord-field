@@ -15,6 +15,14 @@ export type LanguageEngagementDetailFragment = {
         }
       >;
     };
+    startDate: { __typename?: 'SecuredDate' } & Pick<
+      Types.SecuredDate,
+      'value' | 'canRead' | 'canEdit'
+    >;
+    endDate: { __typename?: 'SecuredDate' } & Pick<
+      Types.SecuredDate,
+      'value' | 'canRead' | 'canEdit'
+    >;
   };
 
 export type ProjectBreadcrumb_InternshipProject_Fragment = {
@@ -43,6 +51,16 @@ export const LanguageEngagementDetailFragmentDoc = gql`
           value
         }
       }
+    }
+    startDate {
+      value
+      canRead
+      canEdit
+    }
+    endDate {
+      value
+      canRead
+      canEdit
     }
   }
 `;
