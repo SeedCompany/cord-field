@@ -19,6 +19,7 @@ import {
   PencilCircledIcon,
   PlantIcon,
 } from '../../../components/Icons';
+import { Redacted } from '../../../components/Redacted';
 import {
   LanguageEngagementDetailFragment,
   ProjectBreadcrumbFragment,
@@ -35,6 +36,9 @@ const useStyles = makeStyles(({ spacing, breakpoints, palette }) => ({
     '& > *': {
       marginBottom: spacing(3),
     },
+  },
+  header: {
+    display: 'flex',
   },
   infoColor: {
     color: palette.info.main,
@@ -69,11 +73,20 @@ export const LanguageEngagementDetail: FC<LanguageEngagementDetailProps> = ({
             {engagement.language.value?.name.value}
           </Breadcrumb>
         </Breadcrumbs>
-        <Typography variant="h2">
-          {engagement.language.value?.name.value}
-          <IconButton color="primary" aria-label="edit partner">
-            <PencilCircledIcon />
-          </IconButton>
+        <Typography variant="h2" className={classes.header}>
+          {engagement.language.value?.name.canRead ? (
+            engagement.language.value?.name.value
+          ) : (
+            <Redacted
+              info="You do not have permission to view language engagement's name"
+              width="50%"
+            />
+          )}
+          {engagement.language.value?.name.canEdit && (
+            <IconButton color="primary" aria-label="edit language engagement">
+              <PencilCircledIcon />
+            </IconButton>
+          )}
         </Typography>
         <Grid container spacing={1} alignItems="center">
           <Grid item>
