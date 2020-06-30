@@ -22,6 +22,7 @@ import {
   PencilCircledIcon,
   PlantIcon,
 } from '../../../components/Icons';
+import { MentorCard } from '../../../components/MentorCard';
 import { MethodologiesCard } from '../../../components/MethodologiesCard';
 import { MethodologyCardFragment } from '../../../components/MethodologiesCard/MethodologiesCard.generated';
 import { Redacted } from '../../../components/Redacted';
@@ -53,6 +54,9 @@ const useStyles = makeStyles(({ spacing, breakpoints, palette }) => ({
   },
   infoColor: {
     color: palette.info.main,
+  },
+  bottomCardsContainer: {
+    '& > *': { marginBottom: spacing(2) },
   },
 }));
 
@@ -188,8 +192,21 @@ export const InternshipEngagementDetail: FC<InternshipEngagementDetailProps> = (
             />
           </Grid>
         </Grid>
-        <Typography variant="h4">Products</Typography>
-        Product list goes here when ready
+        <Grid container spacing={1} alignItems="center">
+          <Grid item xs={6} className={classes.bottomCardsContainer}>
+            <Typography variant="h4">Certification</Typography>
+          </Grid>
+          <Grid item xs={6} className={classes.bottomCardsContainer}>
+            <Typography variant="h4">Mentor</Typography>
+            {engagement.mentor.value && (
+              <MentorCard
+                {...engagement.mentor.value}
+                // TODO: add image when ready in data
+                // imageSource="images/favicon-32x32.png"
+              />
+            )}
+          </Grid>
+        </Grid>
       </main>
     </div>
   );
