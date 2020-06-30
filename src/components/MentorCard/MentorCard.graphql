@@ -1,0 +1,10 @@
+fragment MentorCard on User {
+  fullName
+  organizations {
+    items {
+      name {
+        value
+      }
+    }
+  }
+}

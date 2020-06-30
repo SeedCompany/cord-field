@@ -1,9 +1,10 @@
 /* eslint-disable import/no-duplicates, @typescript-eslint/no-empty-interface */
-
 import gql from 'graphql-tag';
 import { DisplayLocation_Country_Fragment } from '../../../api/fragments/location.generated';
 import { DisplayLocationFragmentDoc } from '../../../api/fragments/location.generated';
 import * as Types from '../../../api/schema.generated';
+import { MentorCardFragment } from '../../../components/MentorCard/MentorCard.generated';
+import { MentorCardFragmentDoc } from '../../../components/MentorCard/MentorCard.generated';
 
 export type InternshipEngagementDetailFragment = {
   __typename?: 'InternshipEngagement';
@@ -48,6 +49,9 @@ export type InternshipEngagementDetailFragment = {
           { __typename?: 'Country' } & DisplayLocation_Country_Fragment
         >;
       };
+    mentor: { __typename?: 'SecuredUser' } & {
+      value?: Types.Maybe<{ __typename?: 'User' } & MentorCardFragment>;
+    };
   };
 
 export const InternshipEngagementDetailFragmentDoc = gql`
@@ -98,6 +102,12 @@ export const InternshipEngagementDetailFragmentDoc = gql`
         ...DisplayLocation
       }
     }
+    mentor {
+      value {
+        ...MentorCard
+      }
+    }
   }
   ${DisplayLocationFragmentDoc}
+  ${MentorCardFragmentDoc}
 `;

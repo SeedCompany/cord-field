@@ -40,6 +40,7 @@ export const GQLOperations = {
     InternshipEngagementListItem: 'InternshipEngagementListItem',
     LanguageEngagementListItem: 'LanguageEngagementListItem',
     LanguageListItem: 'LanguageListItem',
+    MentorCard: 'MentorCard',
     MethodologyCard: 'MethodologyCard',
     OrganizationListItem: 'OrganizationListItem',
     PartnershipCard: 'PartnershipCard',

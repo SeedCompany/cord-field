@@ -45,4 +45,9 @@ fragment InternshipEngagementDetail on InternshipEngagement {
       ...DisplayLocation
     }
   }
+  mentor {
+    value {
+      ...MentorCard
+    }
+  }
 }
