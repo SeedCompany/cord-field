@@ -13,13 +13,18 @@ import { MentorCardFragment } from './MentorCard.generated';
 
 const useStyles = makeStyles(({ palette, spacing }) => ({
   personCard: {
+    height: 282,
     maxWidth: '247px',
-    paddingTop: spacing(1),
+    display: 'flex',
+    flexDirection: 'column',
+    justifyContent: 'space-between',
   },
   cardContent: {
+    flex: 1,
     display: 'flex',
     flexDirection: 'column',
     alignItems: 'center',
+    justifyContent: 'center',
   },
   personName: {
     paddingBottom: spacing(0.5),
@@ -28,6 +33,7 @@ const useStyles = makeStyles(({ palette, spacing }) => ({
     width: '86px',
     height: '86px',
     paddingBottom: spacing(2),
+    marginBottom: spacing(2),
   },
   organizationName: {
     marginBottom: spacing(0.25),
@@ -37,7 +43,7 @@ const useStyles = makeStyles(({ palette, spacing }) => ({
     flexDirection: 'column',
     alignItems: 'center',
     padding: spacing(2),
-    border: `1px solid ${palette.grey[300]}`,
+    borderTop: `1px solid ${palette.grey[300]}`,
   },
 }));
 

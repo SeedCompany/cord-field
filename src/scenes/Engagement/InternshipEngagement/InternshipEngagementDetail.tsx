@@ -12,6 +12,7 @@ import { Merge } from 'type-fest';
 import { displayInternPosition, securedDateRange } from '../../../api';
 import { displayLocation } from '../../../api/location-helper';
 import { Breadcrumb } from '../../../components/Breadcrumb';
+import { CeremonyCard } from '../../../components/CeremonyCard';
 import { DataButton } from '../../../components/DataButton';
 import { Fab } from '../../../components/Fab';
 import { FieldOverviewCard } from '../../../components/FieldOverviewCard';
@@ -192,9 +193,17 @@ export const InternshipEngagementDetail: FC<InternshipEngagementDetailProps> = (
             />
           </Grid>
         </Grid>
-        <Grid container spacing={1} alignItems="center">
+        <Grid container spacing={2} alignItems="center">
           <Grid item xs={6} className={classes.bottomCardsContainer}>
             <Typography variant="h4">Certification</Typography>
+            {engagement.ceremony.value && (
+              <CeremonyCard
+                {...engagement.ceremony.value}
+                canRead={engagement.ceremony.canRead}
+                canEdit={engagement.ceremony.canEdit}
+                editCeremony={() => console.log('edit ceremony clicked')}
+              />
+            )}
           </Grid>
           <Grid item xs={6} className={classes.bottomCardsContainer}>
             <Typography variant="h4">Mentor</Typography>
