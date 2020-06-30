@@ -1,0 +1,9 @@
+fragment CeremonyCard on Ceremony {
+  id
+  estimatedDate {
+    value
+  }
+  actualDate {
+    value
+  }
+}

@@ -3,6 +3,8 @@ import gql from 'graphql-tag';
 import { DisplayLocation_Country_Fragment } from '../../../api/fragments/location.generated';
 import { DisplayLocationFragmentDoc } from '../../../api/fragments/location.generated';
 import * as Types from '../../../api/schema.generated';
+import { CeremonyCardFragment } from '../../../components/CeremonyCard/CeremonyCard.generated';
+import { CeremonyCardFragmentDoc } from '../../../components/CeremonyCard/CeremonyCard.generated';
 import { MentorCardFragment } from '../../../components/MentorCard/MentorCard.generated';
 import { MentorCardFragmentDoc } from '../../../components/MentorCard/MentorCard.generated';
 
@@ -52,6 +54,12 @@ export type InternshipEngagementDetailFragment = {
     mentor: { __typename?: 'SecuredUser' } & {
       value?: Types.Maybe<{ __typename?: 'User' } & MentorCardFragment>;
     };
+    ceremony: { __typename?: 'SecuredCeremony' } & Pick<
+      Types.SecuredCeremony,
+      'canRead' | 'canEdit'
+    > & {
+        value?: Types.Maybe<{ __typename?: 'Ceremony' } & CeremonyCardFragment>;
+      };
   };
 
 export const InternshipEngagementDetailFragmentDoc = gql`
@@ -107,7 +115,15 @@ export const InternshipEngagementDetailFragmentDoc = gql`
         ...MentorCard
       }
     }
+    ceremony {
+      canRead
+      canEdit
+      value {
+        ...CeremonyCard
+      }
+    }
   }
   ${DisplayLocationFragmentDoc}
   ${MentorCardFragmentDoc}
+  ${CeremonyCardFragmentDoc}
 `;

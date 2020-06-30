@@ -50,4 +50,11 @@ fragment InternshipEngagementDetail on InternshipEngagement {
       ...MentorCard
     }
   }
+  ceremony {
+    canRead
+    canEdit
+    value {
+      ...CeremonyCard
+    }
+  }
 }
