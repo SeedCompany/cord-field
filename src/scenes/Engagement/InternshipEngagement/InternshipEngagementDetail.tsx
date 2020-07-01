@@ -5,8 +5,7 @@ import {
   makeStyles,
   Typography,
 } from '@material-ui/core';
-import { DateRange, Publish } from '@material-ui/icons';
-import { Skeleton } from '@material-ui/lab';
+import { ChatOutlined, DateRange, Publish } from '@material-ui/icons';
 import React, { FC } from 'react';
 import { Merge } from 'type-fest';
 import { displayInternPosition, securedDateRange } from '../../../api';
@@ -18,7 +17,6 @@ import { Fab } from '../../../components/Fab';
 import { FieldOverviewCard } from '../../../components/FieldOverviewCard';
 import { useDateFormatter } from '../../../components/Formatters';
 import {
-  ChatBubbleIcon,
   OptionsIcon,
   PencilCircledIcon,
   PlantIcon,
@@ -74,16 +72,20 @@ export const InternshipEngagementDetail: FC<InternshipEngagementDetailProps> = (
     <div className={classes.root}>
       <main className={classes.main}>
         <Breadcrumbs>
-          <Breadcrumb to={`/projects`}>Projects</Breadcrumb>
           <Breadcrumb to={`/projects/${project.id}`}>
-            {project.name.value ?? <Skeleton width={200} />}
+            {project.name.value}
           </Breadcrumb>
-          {engagement.intern.canRead && (
+          {engagement.intern.canRead ? (
             <Breadcrumb
               to={`/projects/${project.id}/engagements/${engagement.id}`}
             >
               {engagement.intern.value?.fullName}
             </Breadcrumb>
+          ) : (
+            <Redacted
+              info="You do not have permission to view the intern name"
+              width={200}
+            />
           )}
         </Breadcrumbs>
         <Typography variant="h2" className={classes.header}>
@@ -91,7 +93,7 @@ export const InternshipEngagementDetail: FC<InternshipEngagementDetailProps> = (
             engagement.intern.value?.fullName
           ) : (
             <Redacted
-              info="You do not have permission to view the internship engagement name"
+              info="You do not have permission to view the intern name"
               width="50%"
             />
           )}
@@ -147,7 +149,7 @@ export const InternshipEngagementDetail: FC<InternshipEngagementDetailProps> = (
             <Typography variant="h4">Upload Files</Typography>
           </Grid>
         </Grid>
-        <Grid container spacing={2} alignItems="center">
+        <Grid container spacing={3} alignItems="center">
           <Grid item xs={6}>
             <FieldOverviewCard
               title="Growth Plan Complete Date"
@@ -158,6 +160,7 @@ export const InternshipEngagementDetail: FC<InternshipEngagementDetailProps> = (
                 to: '/home',
               }}
               icon={PlantIcon}
+              emptyValue="Not available"
             />
           </Grid>
           <Grid item xs={6}>
@@ -169,7 +172,8 @@ export const InternshipEngagementDetail: FC<InternshipEngagementDetailProps> = (
                 // updatedAt: engagement.modifiedAt.value,
                 to: '/home',
               }}
-              icon={ChatBubbleIcon}
+              icon={OptionsIcon}
+              emptyValue="Not available"
             />
           </Grid>
           <Grid item xs={6}>
@@ -181,7 +185,8 @@ export const InternshipEngagementDetail: FC<InternshipEngagementDetailProps> = (
                 // updatedAt: engagement.modifiedAt.value,
                 to: '/home',
               }}
-              icon={OptionsIcon}
+              icon={ChatOutlined}
+              emptyValue="Not available"
             />
           </Grid>
           <Grid item xs={6}>
@@ -193,7 +198,7 @@ export const InternshipEngagementDetail: FC<InternshipEngagementDetailProps> = (
             />
           </Grid>
         </Grid>
-        <Grid container spacing={2} alignItems="center">
+        <Grid container spacing={3} alignItems="center">
           <Grid item xs={6} className={classes.bottomCardsContainer}>
             <Typography variant="h4">Certification</Typography>
             {engagement.ceremony.value && (
