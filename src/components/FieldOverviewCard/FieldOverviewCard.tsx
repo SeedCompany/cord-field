@@ -22,6 +22,10 @@ const useStyles = makeStyles(({ spacing, palette }) => ({
   rightContent: {
     flex: 1,
     paddingLeft: spacing(4),
+    height: 80,
+  },
+  emptyValueText: {
+    marginTop: spacing(2),
   },
   bottomArea: {
     padding: spacing(1, 2, 1, 1),
@@ -31,7 +35,7 @@ const useStyles = makeStyles(({ spacing, palette }) => ({
 }));
 
 interface FieldOverviewCardData {
-  value: string;
+  value?: string;
   updatedAt?: DateTime;
   to: To;
 }
@@ -41,6 +45,7 @@ export interface FieldOverviewCardProps extends Pick<HugeIconProps, 'icon'> {
   viewLabel: string;
   data?: FieldOverviewCardData;
   className?: string;
+  emptyValue?: string;
 }
 
 export const FieldOverviewCard: FC<FieldOverviewCardProps> = ({
@@ -49,6 +54,7 @@ export const FieldOverviewCard: FC<FieldOverviewCardProps> = ({
   title,
   icon,
   data,
+  emptyValue,
 }) => {
   const classes = useStyles();
   const dateTimeFormatter = useDateTimeFormatter();
@@ -65,9 +71,21 @@ export const FieldOverviewCard: FC<FieldOverviewCardProps> = ({
           <Typography color="initial" variant="h4">
             {data ? title : <Skeleton width="80%" />}
           </Typography>
-          <Typography color="initial" variant="h1">
-            {data?.value ?? <Skeleton />}
-          </Typography>
+          {!data ? (
+            <Skeleton />
+          ) : data.value ? (
+            <Typography color="initial" variant="h1">
+              {data.value}
+            </Typography>
+          ) : (
+            <Typography
+              variant="body1"
+              color="textSecondary"
+              className={classes.emptyValueText}
+            >
+              {emptyValue}
+            </Typography>
+          )}
         </div>
       </CardActionAreaLink>
       <Grid
