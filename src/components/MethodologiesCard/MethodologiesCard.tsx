@@ -6,9 +6,14 @@ import {
   makeStyles,
   Typography,
 } from '@material-ui/core';
-import { Hearing, MenuBook, Translate, Visibility } from '@material-ui/icons';
+import {
+  Hearing,
+  MenuBook,
+  PlayCircleFilled,
+  Translate,
+} from '@material-ui/icons';
 import React, { FC } from 'react';
-import { methodologyGroups } from '../../api';
+import { displayMethodology, methodologyGroups } from '../../api';
 import { MethodologyCardFragment } from './MethodologiesCard.generated';
 
 const useStyles = makeStyles(({ spacing, palette }) => ({
@@ -19,13 +24,18 @@ const useStyles = makeStyles(({ spacing, palette }) => ({
     padding: spacing(3, 4),
     borderBottom: `0.5px solid ${palette.divider}`,
   },
+  methodologyChipContainer: {
+    //TODO: decide how to fix the display
+    '& > *': {
+      display: 'inline',
+    },
+  },
   groupChip: {
-    display: 'flex',
     alignItems: 'center',
     marginTop: spacing(2),
     marginRight: spacing(1),
     '& > *': {
-      marginRight: spacing(0.5),
+      marginRight: spacing(1),
     },
   },
   cardActions: {
@@ -46,37 +56,41 @@ export const MethodologiesCard: FC<PartnershipCardProps> = ({
   className,
 }) => {
   const classes = useStyles();
-  //   const formatDateTime = useDateTimeFormatter();
 
-  const methodologyListChips = value.map((methodologyVal) => {
-    const group = methodologyGroups[methodologyVal];
-    const groupIcon =
-      group === 'Written' ? (
-        <MenuBook color="inherit" />
-      ) : group === 'Oral Translation' ? (
-        <Translate color="inherit" />
-      ) : group === 'Oral Stories' ? (
-        <Hearing color="inherit" />
-      ) : group === 'Visual' ? (
-        <Visibility color="inherit" />
-      ) : null;
-    return (
-      <Typography
-        key={methodologyVal}
-        className={classes.groupChip}
-        color="textSecondary"
-      >
-        {groupIcon}
-        {methodologyVal}
-      </Typography>
-    );
-  });
+  const methodologyListChips = value
+    //TODO: decide how to show overflow
+    // .slice(0, 2)
+    .map((methodologyVal) => {
+      const group = methodologyGroups[methodologyVal];
+      const groupIcon =
+        group === 'Written' ? (
+          <MenuBook color="inherit" />
+        ) : group === 'Oral Translation' ? (
+          <Translate color="inherit" />
+        ) : group === 'Oral Stories' ? (
+          <Hearing color="inherit" />
+        ) : group === 'Visual' ? (
+          <PlayCircleFilled color="inherit" />
+        ) : null;
+      return (
+        <Typography
+          key={methodologyVal}
+          className={classes.groupChip}
+          color="textSecondary"
+        >
+          {groupIcon}
+          {displayMethodology(methodologyVal)}
+        </Typography>
+      );
+    });
 
   return (
     <Card className={className}>
       <CardContent className={classes.cardContent}>
         <Typography variant="h4">Methodologies</Typography>
-        {methodologyListChips}
+        <div className={classes.methodologyChipContainer}>
+          {methodologyListChips}
+        </div>
       </CardContent>
       <CardActions className={classes.cardActions}>
         <Button color="primary" disabled={!canEdit} onClick={onEdit}>

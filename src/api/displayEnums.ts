@@ -6,7 +6,10 @@ import {
   Role,
 } from '.';
 import { Nullable } from '../util';
-import { InternshipEngagementPosition } from './schema.generated';
+import {
+  InternshipEngagementPosition,
+  ProductMethodology,
+} from './schema.generated';
 
 // Helper to display enums in a generic way
 const displayEnum = <T extends string>() => (enumVal: Nullable<T>) =>
@@ -29,3 +32,5 @@ export const PartnershipStatuses: PartnershipAgreementStatus[] = [
   'AwaitingSignature',
   'Signed',
 ];
+
+export const displayMethodology = displayEnum<ProductMethodology>();
