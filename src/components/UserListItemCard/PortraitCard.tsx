@@ -6,43 +6,35 @@ import {
   Typography,
 } from '@material-ui/core';
 import { Skeleton } from '@material-ui/lab';
+import clsx from 'clsx';
 import * as React from 'react';
-import { FC } from 'react';
+import { square } from '../../util';
 import { Avatar } from '../Avatar';
 import { ButtonLink } from '../Routing';
 import { UserListItemFragment } from './UserListItem.generated';
 
-const useStyles = makeStyles(({ palette, spacing }) => ({
-  personCard: {
-    maxWidth: '247px',
+const useStyles = makeStyles(({ spacing, typography }) => ({
+  root: {
+    maxWidth: 247,
   },
   cardContent: {
     display: 'flex',
     flexDirection: 'column',
-    alignItems: 'center',
+    alignItems: 'stretch',
+    textAlign: 'center',
     padding: spacing(3),
+  },
+  personImage: {
+    alignSelf: 'center',
+    ...square(86),
+    fontSize: typography.h2.fontSize,
+    marginBottom: spacing(2),
   },
   personName: {
     marginBottom: spacing(3),
   },
-  personImage: {
-    width: '86px',
-    height: '86px',
-    marginBottom: spacing(2),
-  },
-  organizationName: {
-    marginBottom: spacing(0.25),
-  },
   cardActions: {
-    display: 'flex',
     flexDirection: 'column',
-    alignItems: 'center',
-    padding: spacing(2),
-    borderTop: `1px solid ${palette.divider}`,
-  },
-  actionsButton: {
-    lineHeight: '1.143',
-    padding: 0,
   },
 }));
 
@@ -51,60 +43,29 @@ export interface UserListItemCardPortraitProps {
   className?: string;
 }
 
-export const UserListItemCardPortrait: FC<UserListItemCardPortraitProps> = ({
+export const UserListItemCardPortrait = ({
   user,
-}) => {
+  className,
+}: UserListItemCardPortraitProps) => {
   const classes = useStyles();
 
-  const { fullName, id } = user ?? { fullName: '', id: '' };
-
-  // TODO destructure from user when this data becomes queryable
-  const fullNameParts = fullName ? fullName.split(' ') : ['Unknown'];
-  const avatarLetters = fullNameParts.reduce(
-    (initials, part) => initials.concat(part.slice(0, 1).toUpperCase()),
-    ''
-  );
-  const organization = {
-    name: 'Seed Company',
-    role: 'Software Developer',
-  };
-  const { name: organizationName, role } = organization;
+  const org = user?.organizations.items[0];
 
   return (
-    <Card className={classes.personCard}>
+    <Card className={clsx(classes.root, className)}>
       <CardContent className={classes.cardContent}>
-        <Avatar
-          loading={!user}
-          variant="circle"
-          className={classes.personImage}
-        >
-          {avatarLetters}
+        <Avatar loading={!user} className={classes.personImage}>
+          {user?.avatarLetters}
         </Avatar>
-        <Typography
-          color="textPrimary"
-          variant="body2"
-          className={classes.personName}
-        >
-          {!user ? <Skeleton variant="text" width="10ch" /> : fullName}
+        <Typography variant="h4" className={classes.personName}>
+          {!user ? <Skeleton width="100%" /> : user.fullName}
         </Typography>
-        <Typography
-          color="primary"
-          variant="caption"
-          className={classes.organizationName}
-        >
-          {!user ? <Skeleton variant="text" width="10ch" /> : organizationName}
-        </Typography>
-        <Typography color="textSecondary" variant="caption">
-          {!user ? <Skeleton variant="text" width="10ch" /> : role}
+        <Typography variant="body2" color="primary">
+          {!user ? <Skeleton width="100%" /> : org?.name.value}
         </Typography>
       </CardContent>
       <CardActions className={classes.cardActions}>
-        <ButtonLink
-          disabled={!user}
-          color="primary"
-          to={`/users/${id}`}
-          className={classes.actionsButton}
-        >
+        <ButtonLink disabled={!user} color="primary" to={`/users/${user?.id}`}>
           View Details
         </ButtonLink>
       </CardActions>

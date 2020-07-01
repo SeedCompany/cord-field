@@ -1,4 +1,13 @@
 fragment UserListItem on User {
   id
   fullName
+  avatarLetters
+  organizations(input: { count: 1 }) {
+    items {
+      id
+      name {
+        value
+      }
+    }
+  }
 }

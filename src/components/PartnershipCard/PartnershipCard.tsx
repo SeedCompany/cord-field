@@ -3,7 +3,6 @@ import {
   Card,
   CardActions,
   CardContent,
-  Divider,
   Grid,
   makeStyles,
   Typography,
@@ -80,7 +79,6 @@ export const PartnershipCard: FC<PartnershipCardProps> = ({
           </Grid>
         </Grid>
       </CardContent>
-      <Divider />
       <CardActions className={classes.cardActions}>
         <Button color="primary" disabled={!partnership} onClick={onEdit}>
           Edit

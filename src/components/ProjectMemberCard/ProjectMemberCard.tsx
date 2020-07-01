@@ -14,14 +14,13 @@ import { Avatar } from '../Avatar';
 import { useDateTimeFormatter } from '../Formatters';
 import { ProjectMemberFragment } from './ProjectMember.generated';
 
-const useStyles = makeStyles(({ palette, spacing }) => ({
+const useStyles = makeStyles(({ spacing }) => ({
   cardContent: {
     display: 'flex',
   },
   cardActions: {
     display: 'flex',
     justifyContent: 'space-between',
-    borderTop: `0.5px solid ${palette.divider}`,
     padding: spacing(1, 2, 1, 1),
   },
   avatar: {

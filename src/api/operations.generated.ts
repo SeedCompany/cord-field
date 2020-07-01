@@ -7,6 +7,7 @@ export const GQLOperations = {
     ProjectPartnerships: 'ProjectPartnerships',
     ProjectList: 'ProjectList',
     ProjectOverview: 'ProjectOverview',
+    Users: 'Users',
   },
   Mutation: {
     ForgotPassword: 'ForgotPassword',
@@ -40,6 +41,7 @@ export const GQLOperations = {
     ProjectMemberItem: 'ProjectMemberItem',
     ProjectMemberList: 'ProjectMemberList',
     LoggedInUser: 'LoggedInUser',
+    UserListItem: 'UserListItem',
     orgDetails: 'orgDetails',
     EditPartnership: 'EditPartnership',
   },
