@@ -54,6 +54,14 @@ export const appOverrides: ThemeOptions['overrides'] = ({
         textTransform: 'none',
       },
     },
+    MuiCardActions: {
+      root: {
+        // Add divider between card content & actions
+        // Implementation is following <Divider /> from MUI v5
+        // https://github.com/mui-org/material-ui/pull/18965
+        borderTop: `thin solid ${palette.divider}`,
+      },
+    },
     MuiInputLabel: {
       root: {
         textTransform: 'uppercase',

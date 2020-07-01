@@ -89,7 +89,7 @@ export const LanguageListItemCard: FC<LanguageListItemCardProps> = ({
                   {!language ? (
                     <Skeleton variant="text" />
                   ) : (
-                    formatNumber(population!)
+                    formatNumber(population)
                   )}
                 </Typography>
               </>

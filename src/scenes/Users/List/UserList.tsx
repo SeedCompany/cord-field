@@ -1,17 +1,14 @@
 import { Grid, makeStyles, Typography } from '@material-ui/core';
+import { Skeleton } from '@material-ui/lab';
 import React, { FC } from 'react';
-import { Project } from '../../../api';
+import { User } from '../../../api';
 import { ContentContainer } from '../../../components/ContentContainer';
-import { FilterButtonDialog } from '../../../components/Filter';
-import { ProjectListItemCard } from '../../../components/ProjectListItemCard';
+import { useNumberFormatter } from '../../../components/Formatters';
 import { SortButtonDialog, useSort } from '../../../components/Sort';
+import { UserListItemCardLandscape as UserCard } from '../../../components/UserListItemCard';
 import { listOrPlaceholders } from '../../../util';
-import {
-  ProjectFilterOptions,
-  useProjectFilters,
-} from './ProjectFilterOptions';
-import { useProjectListQuery } from './projects.generated';
-import { ProjectSortOptions } from './ProjectSortOptions';
+import { useUsersQuery } from './users.generated';
+import { UserSortOptions } from './UserSortOptions';
 
 const useStyles = makeStyles(({ spacing }) => ({
   options: {
@@ -22,44 +19,43 @@ const useStyles = makeStyles(({ spacing }) => ({
   },
 }));
 
-export const ProjectList: FC = () => {
-  const sort = useSort<Project>();
-  const [filters, setFilters] = useProjectFilters();
+export const UserList: FC = () => {
+  const sort = useSort<User>();
 
-  const { data } = useProjectListQuery({
+  const { data, loading } = useUsersQuery({
     variables: {
       input: {
         ...sort.value,
-        filter: filters,
       },
     },
   });
   const classes = useStyles();
+  const formatNumber = useNumberFormatter();
 
   return (
     <ContentContainer>
       <Typography variant="h2" paragraph>
-        My Projects
+        People
       </Typography>
       <Grid container spacing={1} className={classes.options}>
         <Grid item>
           <SortButtonDialog {...sort}>
-            <ProjectSortOptions />
+            <UserSortOptions />
           </SortButtonDialog>
         </Grid>
-        <Grid item>
-          <FilterButtonDialog values={filters} onChange={setFilters}>
-            <ProjectFilterOptions />
-          </FilterButtonDialog>
-        </Grid>
       </Grid>
+
       <Typography variant="h3" paragraph>
-        {data?.projects.total} Projects
+        {loading ? (
+          <Skeleton width="9ch" />
+        ) : (
+          <>{formatNumber(data?.users.total)} People</>
+        )}
       </Typography>
-      {listOrPlaceholders(data?.projects.items, 5).map((item, index) => (
-        <ProjectListItemCard
+      {listOrPlaceholders(data?.users.items, 10).map((item, index) => (
+        <UserCard
           key={item?.id ?? index}
-          project={item}
+          user={item}
           className={classes.projectItem}
         />
       ))}

@@ -1,6 +1,7 @@
 import { Grid, makeStyles, Typography } from '@material-ui/core';
 import React, { FC } from 'react';
 import { Organization } from '../../../api';
+import { ContentContainer } from '../../../components/ContentContainer';
 import { OrganizationListItemCard } from '../../../components/OrganizationListItemCard';
 import { SortButtonDialog, useSort } from '../../../components/Sort';
 import { listOrPlaceholders } from '../../../util';
@@ -8,11 +9,6 @@ import { useOrganizationsQuery } from './Organizations.generated';
 import { OrganizationSortOptions } from './OrganizationSortOptions';
 
 const useStyles = makeStyles(({ spacing }) => ({
-  root: {
-    flex: 1,
-    overflowY: 'scroll',
-    padding: spacing(4),
-  },
   options: {
     margin: spacing(3, 0),
   },
@@ -35,7 +31,7 @@ export const OrganizationList: FC = () => {
   const classes = useStyles();
 
   return (
-    <div className={classes.root}>
+    <ContentContainer>
       <Typography variant="h2" paragraph>
         Partners
       </Typography>
@@ -56,6 +52,6 @@ export const OrganizationList: FC = () => {
           className={classes.item}
         />
       ))}
-    </div>
+    </ContentContainer>
   );
 };
