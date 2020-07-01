@@ -3,6 +3,7 @@ import { Skeleton } from '@material-ui/lab';
 import React, { FC } from 'react';
 import { User } from '../../../api';
 import { ContentContainer } from '../../../components/ContentContainer';
+import { useNumberFormatter } from '../../../components/Formatters';
 import { SortButtonDialog, useSort } from '../../../components/Sort';
 import { UserListItemCardLandscape as UserCard } from '../../../components/UserListItemCard';
 import { listOrPlaceholders } from '../../../util';
@@ -29,6 +30,7 @@ export const UserList: FC = () => {
     },
   });
   const classes = useStyles();
+  const formatNumber = useNumberFormatter();
 
   return (
     <ContentContainer>
@@ -43,18 +45,14 @@ export const UserList: FC = () => {
         </Grid>
       </Grid>
 
-      <Grid container justify="space-between">
-        <Grid item>
-          <Typography variant="h3" paragraph>
-            {loading ? (
-              <Skeleton variant="text" width="3ch" />
-            ) : (
-              <>{data?.users.total} People</>
-            )}
-          </Typography>
-        </Grid>
-      </Grid>
-      {listOrPlaceholders(data?.users.items, 5).map((item, index) => (
+      <Typography variant="h3" paragraph>
+        {loading ? (
+          <Skeleton width="9ch" />
+        ) : (
+          <>{formatNumber(data?.users.total)} People</>
+        )}
+      </Typography>
+      {listOrPlaceholders(data?.users.items, 10).map((item, index) => (
         <UserCard
           key={item?.id ?? index}
           user={item}
