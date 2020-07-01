@@ -18,7 +18,7 @@ export const WithData = () => {
       value: text('ethnologue name', 'cnk'),
     },
     rodNumber: {
-      value: number('rod number', 5182),
+      value: text('rod number', '05182'),
     },
     organizationPopulation: {
       value: number('organization population', 20000),

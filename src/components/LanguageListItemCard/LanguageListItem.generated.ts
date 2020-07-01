@@ -11,17 +11,21 @@ export type LanguageListItemFragment = { __typename?: 'Language' } & Pick<
       Types.SecuredString,
       'value'
     >;
-    ethnologueName?: Types.Maybe<
-      { __typename?: 'SecuredString' } & Pick<Types.SecuredString, 'value'>
+    ethnologueName: { __typename?: 'SecuredString' } & Pick<
+      Types.SecuredString,
+      'value'
     >;
-    rodNumber?: Types.Maybe<
-      { __typename?: 'SecuredInt' } & Pick<Types.SecuredInt, 'value'>
+    rodNumber: { __typename?: 'SecuredString' } & Pick<
+      Types.SecuredString,
+      'value'
     >;
-    organizationPopulation?: Types.Maybe<
-      { __typename?: 'SecuredInt' } & Pick<Types.SecuredInt, 'value'>
+    organizationPopulation: { __typename?: 'SecuredInt' } & Pick<
+      Types.SecuredInt,
+      'value'
     >;
-    ethnologuePopulation?: Types.Maybe<
-      { __typename?: 'SecuredInt' } & Pick<Types.SecuredInt, 'value'>
+    ethnologuePopulation: { __typename?: 'SecuredInt' } & Pick<
+      Types.SecuredInt,
+      'value'
     >;
   };
 

@@ -102,6 +102,16 @@ const result: PossibleTypesResultData = {
       'User',
       'Zone',
     ],
+    SearchResult: [
+      'Organization',
+      'Country',
+      'Region',
+      'Zone',
+      'Language',
+      'TranslationProject',
+      'InternshipProject',
+      'User',
+    ],
   },
 };
 

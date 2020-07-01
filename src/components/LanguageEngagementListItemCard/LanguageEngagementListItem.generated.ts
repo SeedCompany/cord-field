@@ -16,14 +16,17 @@ export type LanguageEngagementListItemFragment = {
               Types.SecuredString,
               'value'
             >;
-            ethnologuePopulation?: Types.Maybe<
-              { __typename?: 'SecuredInt' } & Pick<Types.SecuredInt, 'value'>
+            ethnologuePopulation: { __typename?: 'SecuredInt' } & Pick<
+              Types.SecuredInt,
+              'value'
             >;
-            organizationPopulation?: Types.Maybe<
-              { __typename?: 'SecuredInt' } & Pick<Types.SecuredInt, 'value'>
+            organizationPopulation: { __typename?: 'SecuredInt' } & Pick<
+              Types.SecuredInt,
+              'value'
             >;
-            rodNumber?: Types.Maybe<
-              { __typename?: 'SecuredInt' } & Pick<Types.SecuredInt, 'value'>
+            rodNumber: { __typename?: 'SecuredString' } & Pick<
+              Types.SecuredString,
+              'value'
             >;
           }
       >;
