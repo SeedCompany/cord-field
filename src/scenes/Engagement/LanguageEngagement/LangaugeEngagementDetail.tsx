@@ -1,12 +1,12 @@
 import {
   Breadcrumbs,
+  Fab,
   Grid,
   IconButton,
   makeStyles,
   Typography,
 } from '@material-ui/core';
-import { DateRange } from '@material-ui/icons';
-import { Skeleton } from '@material-ui/lab';
+import { ChatOutlined, DateRange, Publish } from '@material-ui/icons';
 import React, { FC } from 'react';
 import { securedDateRange } from '../../../api';
 import { Breadcrumb } from '../../../components/Breadcrumb';
@@ -14,7 +14,6 @@ import { DataButton } from '../../../components/DataButton';
 import { FieldOverviewCard } from '../../../components/FieldOverviewCard';
 import { useDateFormatter } from '../../../components/Formatters';
 import {
-  ChatBubbleIcon,
   OptionsIcon,
   PencilCircledIcon,
   PlantIcon,
@@ -63,22 +62,28 @@ export const LanguageEngagementDetail: FC<LanguageEngagementDetailProps> = ({
     <div className={classes.root}>
       <main className={classes.main}>
         <Breadcrumbs>
-          <Breadcrumb to={`/projects`}>Projects</Breadcrumb>
           <Breadcrumb to={`/projects/${project.id}`}>
-            {project.name.value ?? <Skeleton width={200} />}
+            {project.name.value}
           </Breadcrumb>
-          <Breadcrumb
-            to={`/projects/${project.id}/engagements/${engagement.id}`}
-          >
-            {engagement.language.value?.name.value}
-          </Breadcrumb>
+          {engagement.language.value?.name.canRead ? (
+            <Breadcrumb
+              to={`/projects/${project.id}/engagements/${engagement.id}`}
+            >
+              {engagement.language.value?.name.value}
+            </Breadcrumb>
+          ) : (
+            <Redacted
+              info="You do not have permission to view the language name"
+              width={200}
+            />
+          )}
         </Breadcrumbs>
         <Typography variant="h2" className={classes.header}>
           {engagement.language.value?.name.canRead ? (
             engagement.language.value?.name.value
           ) : (
             <Redacted
-              info="You do not have permission to view language engagement's name"
+              info="You do not have permission to view then language name"
               width="50%"
             />
           )}
@@ -103,7 +108,17 @@ export const LanguageEngagementDetail: FC<LanguageEngagementDetailProps> = ({
             <DataButton>{displayStatus(engagement.status)}</DataButton>
           </Grid> */}
         </Grid>
-        <Grid container spacing={2} alignItems="center">
+        <Grid container spacing={1} alignItems="center">
+          <Grid item>
+            <Fab color="primary" aria-label="Upload PnP">
+              <Publish />
+            </Fab>
+          </Grid>
+          <Grid item>
+            <Typography variant="h4">Upload PnP</Typography>
+          </Grid>
+        </Grid>
+        <Grid container spacing={3} alignItems="center">
           <Grid item xs={6}>
             <FieldOverviewCard
               title="Growth Plan Complete Date"
@@ -114,6 +129,7 @@ export const LanguageEngagementDetail: FC<LanguageEngagementDetailProps> = ({
                 to: '/home',
               }}
               icon={PlantIcon}
+              emptyValue="not available"
             />
           </Grid>
           <Grid item xs={6}>
@@ -125,7 +141,8 @@ export const LanguageEngagementDetail: FC<LanguageEngagementDetailProps> = ({
                 // updatedAt: engagement.modifiedAt.value,
                 to: '/home',
               }}
-              icon={ChatBubbleIcon}
+              icon={OptionsIcon}
+              emptyValue="not available"
             />
           </Grid>
           <Grid item xs={6}>
@@ -137,7 +154,8 @@ export const LanguageEngagementDetail: FC<LanguageEngagementDetailProps> = ({
                 // updatedAt: engagement.modifiedAt.value,
                 to: '/home',
               }}
-              icon={OptionsIcon}
+              icon={ChatOutlined}
+              emptyValue="not available"
             />
           </Grid>
         </Grid>
