@@ -12,7 +12,9 @@ fragment LoggedInUser on User {
     value
   }
   timezone {
-    value
+    value {
+      name
+    }
   }
   realFirstName {
     value

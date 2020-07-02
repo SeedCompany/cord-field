@@ -21,10 +21,11 @@ export type LoggedInUserFragment = { __typename?: 'User' } & Pick<
       Types.SecuredString,
       'value'
     >;
-    timezone: { __typename?: 'SecuredString' } & Pick<
-      Types.SecuredString,
-      'value'
-    >;
+    timezone: { __typename?: 'SecuredTimeZone' } & {
+      value?: Types.Maybe<
+        { __typename?: 'TimeZone' } & Pick<Types.TimeZone, 'name'>
+      >;
+    };
     realFirstName: { __typename?: 'SecuredString' } & Pick<
       Types.SecuredString,
       'value'
@@ -50,7 +51,9 @@ export const LoggedInUserFragmentDoc = gql`
       value
     }
     timezone {
-      value
+      value {
+        name
+      }
     }
     realFirstName {
       value

@@ -1026,6 +1026,14 @@ export interface GroupStateInput {
   groupState: GroupState;
 }
 
+/** An IANA Country associated with timezones */
+export interface IanaCountry {
+  __typename?: 'IanaCountry';
+  code: Scalars['String'];
+  name: Scalars['String'];
+  zones: TimeZone[];
+}
+
 export type InternshipEngagement = Engagement &
   Resource & {
     __typename?: 'InternshipEngagement';
@@ -1927,8 +1935,6 @@ export type PartnershipAgreementStatus =
   | 'Signed';
 
 export interface PartnershipFilters {
-  /** Only partnerships matching this agreement status */
-  agreementStatus?: Maybe<PartnershipAgreementStatus>;
   /** Find all partnerships in a project */
   projectId?: Maybe<Scalars['ID']>;
 }
@@ -2279,6 +2285,10 @@ export interface Query {
   unavailabilities: UnavailabilityListOutput;
   /** Check Consistency across Unavailability Nodes */
   checkUnavailabilityConsistency: Scalars['Boolean'];
+  timezones: TimeZone[];
+  timezone?: Maybe<TimeZone>;
+  ianaCountries: IanaCountry[];
+  ianaCountry?: Maybe<IanaCountry>;
   /** Look up a user by its ID */
   user: User;
   /** Look up users */
@@ -2405,6 +2415,14 @@ export interface QueryUnavailabilityArgs {
 
 export interface QueryUnavailabilitiesArgs {
   input?: Maybe<UnavailabilityListInput>;
+}
+
+export interface QueryTimezoneArgs {
+  name: Scalars['String'];
+}
+
+export interface QueryIanaCountryArgs {
+  code: Scalars['String'];
 }
 
 export interface QueryUserArgs {
@@ -3144,6 +3162,19 @@ export type SecuredString = Readable &
   };
 
 /**
+ * An object with a timezone `value` and additional authorization information.
+ * The value is only given if `canRead` is `true` otherwise it is `null`.
+ * These `can*` authorization properties are specific to the user making the request.
+ */
+export type SecuredTimeZone = Readable &
+  Editable & {
+    __typename?: 'SecuredTimeZone';
+    canRead: Scalars['Boolean'];
+    canEdit: Scalars['Boolean'];
+    value?: Maybe<TimeZone>;
+  };
+
+/**
  * An object whose `items` is a list of unavailabilities and additional authorization information.
  * The value is only given if `canRead` is `true` otherwise it is an empty list.
  * The `can*` properties are specific to the user making the request.
@@ -3273,6 +3304,15 @@ export interface StoryListOutput {
   total: Scalars['Int'];
   /** Whether the next page exists */
   hasMore: Scalars['Boolean'];
+}
+
+/** An IANA Time Zone */
+export interface TimeZone {
+  __typename?: 'TimeZone';
+  name: Scalars['String'];
+  lat: Scalars['Float'];
+  long: Scalars['Float'];
+  countries: IanaCountry[];
 }
 
 export type TranslationProject = Project &
@@ -3737,12 +3777,12 @@ export type User = Resource & {
   displayFirstName: SecuredString;
   displayLastName: SecuredString;
   phone: SecuredString;
-  timezone: SecuredString;
   bio: SecuredString;
   status: SecuredUserStatus;
   fullName?: Maybe<Scalars['String']>;
   firstName?: Maybe<Scalars['String']>;
   avatarLetters?: Maybe<Scalars['String']>;
+  timezone: SecuredTimeZone;
   unavailabilities: SecuredUnavailabilityList;
   organizations: SecuredOrganizationList;
   education: SecuredEducationList;
