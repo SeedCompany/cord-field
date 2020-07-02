@@ -5,12 +5,16 @@ import {
   canEditAny,
   displayEngagementStatus,
   securedDateRange,
+  UpdateLanguageEngagementInput,
 } from '../../../api';
 import { BooleanProperty } from '../../../components/BooleanProperty';
 import { Breadcrumb } from '../../../components/Breadcrumb';
 import { DataButton } from '../../../components/DataButton';
 import { Fab } from '../../../components/Fab';
 import { FieldOverviewCard } from '../../../components/FieldOverviewCard';
+import { useDialog } from '../../../components/Dialog';
+import { DialogForm } from '../../../components/Dialog/DialogForm';
+import { DateField, SubmitError } from '../../../components/form';
 import {
   useDateFormatter,
   useDateTimeFormatter,
@@ -21,6 +25,8 @@ import { Redacted } from '../../../components/Redacted';
 import { Link } from '../../../components/Routing';
 import { CeremonyCard } from '../CeremonyCard';
 import { EngagementQuery } from '../Engagement.generated';
+import { LanguageEngagementDetailFragment } from './LanguageEngagementDetail.generated';
+import { useUpdateLanguageEngagementMutation } from './LanguageEngagementDetail.generated';
 
 const useStyles = makeStyles(({ spacing, breakpoints, palette }) => ({
   root: {
@@ -44,6 +50,10 @@ export const LanguageEngagementDetail: FC<EngagementQuery> = ({
   engagement,
 }) => {
   const classes = useStyles();
+
+  const [state, open] = useDialog();
+
+  const [upadteLanguage] = useUpdateLanguageEngagementMutation();
 
   const date = securedDateRange(engagement.startDate, engagement.endDate);
   const formatDate = useDateFormatter();
@@ -124,6 +134,7 @@ export const LanguageEngagementDetail: FC<EngagementQuery> = ({
               redacted="You do not have permission to view start/end dates"
               children={formatDate.range}
               empty="Start - End"
+              onClick={open}
             />
           </Grid>
           <Grid item>
@@ -182,6 +193,28 @@ export const LanguageEngagementDetail: FC<EngagementQuery> = ({
           </Grid>
         </Grid>
       </Grid>
+      <DialogForm<UpdateLanguageEngagementInput>
+        {...state}
+        title="Change Engagement Start and End Dates"
+        closeLabel="Close"
+        submitLabel="Change Dates"
+        initialValues={{
+          engagement: {
+            id: engagement.id,
+            startDate: engagement.startDate.value,
+            endDate: engagement.endDate.value,
+          },
+        }}
+        onSubmit={(input) => {
+          upadteLanguage({ variables: { input } });
+        }}
+      >
+        <SubmitError />
+        <Typography>Start Date</Typography>
+        <DateField name="engagement.startDate" />
+        <Typography>Start Date</Typography>
+        <DateField name="engagement.endDate" />
+      </DialogForm>
     </div>
   );
 };
