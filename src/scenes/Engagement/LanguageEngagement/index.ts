@@ -1,1 +1,1 @@
-export * from './LangaugeEngagementDetail';
+export * from './LanguageEngagementDetail';
