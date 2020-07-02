@@ -1,4 +1,5 @@
 import { Grid } from '@material-ui/core';
+import { Decorator } from 'final-form';
 import { useSnackbar } from 'notistack';
 import React from 'react';
 import { Except } from 'type-fest';
@@ -10,6 +11,7 @@ import {
 import {
   EmailField,
   FieldGroup,
+  matchFieldIfSame,
   SubmitError,
   TextField,
 } from '../../../components/form';
@@ -17,6 +19,11 @@ import { ButtonLink } from '../../../components/Routing';
 import { useCreatePersonMutation } from './CreateUser.generated';
 
 type CreateUserProps = Except<DialogFormProps<CreatePersonInput>, 'onSubmit'>;
+
+const decorators: Array<Decorator<CreatePersonInput>> = [
+  matchFieldIfSame('person.realFirstName', 'person.displayFirstName'),
+  matchFieldIfSame('person.realLastName', 'person.displayLastName'),
+];
 
 export const CreateUser = (props: CreateUserProps) => {
   const [createPerson] = useCreatePersonMutation();
@@ -45,6 +52,7 @@ export const CreateUser = (props: CreateUserProps) => {
           ),
         });
       }}
+      decorators={decorators}
     >
       <SubmitError />
       <FieldGroup prefix="person">
