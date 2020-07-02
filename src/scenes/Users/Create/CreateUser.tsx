@@ -63,7 +63,6 @@ export const CreateUser = (props: CreateUserProps) => {
               label="First Name"
               placeholder="Enter First Name"
               required
-              autoFocus
             />
           </Grid>
           <Grid item xs>
