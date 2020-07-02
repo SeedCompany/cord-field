@@ -1,102 +1,110 @@
+import { Grid } from '@material-ui/core';
 import { useSnackbar } from 'notistack';
 import React from 'react';
 import { Except } from 'type-fest';
-import { CreatePerson } from '../../../api';
+import { CreatePersonInput } from '../../../api';
 import {
   DialogForm,
   DialogFormProps,
 } from '../../../components/Dialog/DialogForm';
-import { EmailField, SubmitError, TextField } from '../../../components/form';
+import {
+  EmailField,
+  FieldGroup,
+  SubmitError,
+  TextField,
+} from '../../../components/form';
 import { ButtonLink } from '../../../components/Routing';
 import { useCreatePersonMutation } from './CreateUser.generated';
 
-type CreatePersonValues = Except<
-  CreatePerson,
-  'displayFirstName' | 'displayLastName' | 'realFirstName' | 'realLastName'
-> & { firstName: string; lastName: string };
+type CreateUserProps = Except<DialogFormProps<CreatePersonInput>, 'onSubmit'>;
 
-type CreateUserProps = Except<DialogFormProps<CreatePersonValues>, 'onSubmit'>;
-
-export const CreateUser: React.FC<CreateUserProps> = (props) => {
+export const CreateUser = (props: CreateUserProps) => {
   const [createPerson] = useCreatePersonMutation();
   const { enqueueSnackbar } = useSnackbar();
 
-  async function handleSubmit(values: CreatePersonValues) {
-    const { email, phone, timezone, bio } = values;
-    const input = {
-      person: {
-        displayFirstName: values.firstName,
-        displayLastName: values.lastName,
-        realFirstName: values.firstName,
-        realLastName: values.lastName,
-        email,
-        phone,
-        timezone,
-        bio,
-      },
-    };
-    const { data } = await createPerson({
-      variables: { input },
-    });
-    const user = data!.createPerson.user;
-    const {
-      realFirstName: { value: firstName },
-      realLastName: { value: lastName },
-    } = user;
-
-    enqueueSnackbar(`Created user: ${firstName} ${lastName}`, {
-      variant: 'success',
-      action: () => (
-        <ButtonLink color="inherit" to={`/users/${user.id}`}>
-          View
-        </ButtonLink>
-      ),
-    });
-  }
-
   return (
-    <DialogForm
+    <DialogForm<CreatePersonInput>
       DialogProps={{
         fullWidth: true,
-        maxWidth: 'xs',
+        maxWidth: 'sm',
       }}
-      {...props}
-      onSubmit={handleSubmit}
       title="Create Person"
+      {...props}
+      onSubmit={async (input) => {
+        const { data } = await createPerson({
+          variables: { input },
+        });
+        const user = data!.createPerson.user;
+
+        enqueueSnackbar(`Created person: ${user.fullName}`, {
+          variant: 'success',
+          action: () => (
+            <ButtonLink color="inherit" to={`/users/${user.id}`}>
+              View
+            </ButtonLink>
+          ),
+        });
+      }}
     >
       <SubmitError />
-      <TextField
-        name="firstName"
-        label="First Name"
-        placeholder="Enter First Name"
-        required
-        autoFocus
-      />
-      <TextField
-        name="lastName"
-        label="Last Name"
-        placeholder="Enter Last Name"
-        required
-      />
-      <EmailField required={false} />
-      <TextField
-        name="phone"
-        label="Phone"
-        placeholder="Enter Phone Number"
-        type="tel"
-      />
-      <TextField
-        name="timezone"
-        label="Timezone"
-        placeholder="Enter Timezone"
-      />
-      <TextField
-        name="bio"
-        label="Bio"
-        multiline
-        placeholder="Enter Bio"
-        rows={2}
-      />
+      <FieldGroup prefix="person">
+        <Grid container spacing={2}>
+          <Grid item xs>
+            <TextField
+              name="realFirstName"
+              label="First Name"
+              placeholder="Enter First Name"
+              required
+              autoFocus
+            />
+          </Grid>
+          <Grid item xs>
+            <TextField
+              name="realLastName"
+              label="Last Name"
+              placeholder="Enter Last Name"
+              required
+            />
+          </Grid>
+        </Grid>
+        <Grid container spacing={2}>
+          <Grid item xs>
+            <TextField
+              name="displayFirstName"
+              label="Public First Name"
+              placeholder="Enter Public First Name"
+              required
+            />
+          </Grid>
+          <Grid item xs>
+            <TextField
+              name="displayLastName"
+              label="Public Last Name"
+              placeholder="Enter Public Last Name"
+              required
+            />
+          </Grid>
+        </Grid>
+        <EmailField required={false} />
+        <TextField
+          name="phone"
+          label="Phone"
+          placeholder="Enter Phone Number"
+          type="tel"
+        />
+        <TextField
+          name="timezone"
+          label="Timezone"
+          placeholder="Enter Timezone"
+        />
+        <TextField
+          name="bio"
+          label="Biography"
+          multiline
+          placeholder="Enter Biography"
+          rows={3}
+        />
+      </FieldGroup>
     </DialogForm>
   );
 };

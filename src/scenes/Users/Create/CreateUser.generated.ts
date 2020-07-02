@@ -12,7 +12,8 @@ export interface CreatePersonMutationVariables {
 
 export type CreatePersonMutation = { __typename?: 'Mutation' } & {
   createPerson: { __typename?: 'CreatePersonOutput' } & {
-    user: { __typename?: 'User' } & LoggedInUserFragment;
+    user: { __typename?: 'User' } & Pick<Types.User, 'fullName'> &
+      LoggedInUserFragment;
   };
 };
 
@@ -20,6 +21,7 @@ export const CreatePersonDocument = gql`
   mutation CreatePerson($input: CreatePersonInput!) {
     createPerson(input: $input) {
       user {
+        fullName
         ...LoggedInUser
       }
     }
