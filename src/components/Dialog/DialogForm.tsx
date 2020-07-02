@@ -8,15 +8,18 @@ import {
   DialogTitle,
   makeStyles,
 } from '@material-ui/core';
-import { Config, FormApi } from 'final-form';
+import { FormApi } from 'final-form';
 import React, { ReactNode } from 'react';
-import { Form } from 'react-final-form';
+import { Form, FormProps, RenderableProps } from 'react-final-form';
 import { Promisable } from 'type-fest';
 import { ErrorHandlers, handleFormError } from '../../api';
 import { sleep } from '../../util';
 import { SubmitButton, SubmitButtonProps } from '../form';
 
-export type DialogFormProps<T, R = void> = Omit<Config<T>, 'onSubmit'> & {
+export type DialogFormProps<T, R = void> = Omit<
+  FormProps<T>,
+  'onSubmit' | keyof RenderableProps<any>
+> & {
   title?: ReactNode;
 
   leftAction?: ReactNode;
