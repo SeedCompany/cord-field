@@ -29,7 +29,8 @@ export const Engagement = () => {
   const engagement = engagementData?.engagement;
   const project = projectData?.project;
 
-  if (loading || projectBreadcrumbLoading) return <EngagementDetailLoading />;
+  if (loading || projectBreadcrumbLoading)
+    return <EngagementDetailLoading projectId={projectId} />;
   if (project && engagement && engagement.__typename === 'LanguageEngagement')
     return (
       <LanguageEngagementDetail engagement={engagement} project={project} />
