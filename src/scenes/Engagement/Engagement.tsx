@@ -17,7 +17,10 @@ export const Engagement = () => {
     },
   });
 
-  const { data: projectData } = useProjectBreadcrumbQuery({
+  const {
+    data: projectData,
+    loading: projectBreadcrumbLoading,
+  } = useProjectBreadcrumbQuery({
     variables: {
       input: projectId,
     },
@@ -26,7 +29,7 @@ export const Engagement = () => {
   const engagement = engagementData?.engagement;
   const project = projectData?.project;
 
-  if (loading) return <EngagementDetailLoading />;
+  if (loading || projectBreadcrumbLoading) return <EngagementDetailLoading />;
   if (project && engagement && engagement.__typename === 'LanguageEngagement')
     return (
       <LanguageEngagementDetail engagement={engagement} project={project} />
