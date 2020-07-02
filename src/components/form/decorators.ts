@@ -1,4 +1,7 @@
-import { FormApi, Unsubscribe } from 'final-form';
+import { Decorator, FormApi, getIn, Unsubscribe } from 'final-form';
+
+// Updated type to use generic
+const get = getIn as <T>(state: T, complexKey: string) => any;
 
 /**
  * Focuses the first field to have a submit error.
@@ -92,3 +95,38 @@ export function blurOnSubmit<T>(form: FormApi<T>): Unsubscribe {
     }
   );
 }
+
+/**
+ * Decorator to update dest field with source field value as long as dest field
+ * value continues to match source field. This allows dest to be in sync until
+ * it is changed by user.
+ */
+export const matchFieldIfSame = <T>(
+  source: string,
+  dest: string
+): Decorator<T> => (form) => {
+  let prevInitialValues: T;
+  let prevValues: T;
+  return form.subscribe(
+    ({ initialValues, values, active }) => {
+      if (!prevValues || prevInitialValues !== initialValues) {
+        prevValues = initialValues;
+      }
+      prevInitialValues = initialValues;
+      if (active === source) {
+        const prevSrc = get(prevValues, source);
+        const prevDest = get(prevValues, dest);
+        const newA = get(values, source);
+        if (prevSrc !== newA && prevDest === prevSrc) {
+          form.change(dest, newA);
+        }
+      }
+      prevValues = values;
+    },
+    {
+      values: true,
+      initialValues: true,
+      active: true,
+    }
+  );
+};
