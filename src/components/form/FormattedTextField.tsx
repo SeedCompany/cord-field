@@ -1,8 +1,9 @@
 import { TextField, TextFieldProps } from '@material-ui/core';
 import { identity } from 'lodash';
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { FC, forwardRef, useCallback, useEffect, useState } from 'react';
 import { useRifm } from 'rifm';
 import { Except } from 'type-fest';
+import { useMergeRefs } from '../../hooks';
 import { useFieldName } from './FieldGroup';
 import { FieldConfig, useField } from './useField';
 import { getHelperText, showError, useFocusOnEnabled } from './util';
@@ -38,83 +39,94 @@ export type FormattedTextFieldProps<FieldValue = string> = Except<
     'defaultValue' | 'error' | 'value' | 'name' | 'inputRef'
   >;
 
-export function FormattedTextField<FieldValue = string>({
-  formatInput,
-  replace,
-  append,
-  mask,
-  accept,
-  format,
-  parse,
-  name: nameProp,
-  helperText,
-  disabled: disabledProp,
-  children,
-  variant,
-  ...props
-}: FormattedTextFieldProps<FieldValue>) {
-  const name = useFieldName(nameProp);
-  const { input, meta, rest } = useField(name, props);
-  const disabled = disabledProp ?? meta.submitting;
-  const ref = useFocusOnEnabled(meta, disabled);
+export const FormattedTextField: FC<FormattedTextFieldProps> = forwardRef(
+  (
+    {
+      formatInput,
+      replace,
+      append,
+      mask,
+      accept,
+      format,
+      parse,
+      name: nameProp,
+      helperText,
+      disabled: disabledProp,
+      children,
+      variant,
+      ...props
+    },
+    forwardedRef
+  ) => {
+    const name = useFieldName(nameProp);
+    const { input, meta, rest } = useField(name, props);
+    const disabled = disabledProp ?? meta.submitting;
+    const localRef = useFocusOnEnabled(meta, disabled);
+    const multiRef = useMergeRefs(forwardedRef, localRef);
 
-  const [managedVal, setManagedVal] = useState<{
-    raw: string;
-    parsed?: FieldValue;
-  }>({
-    raw: format ? format(input.value, name) : input.value,
-    parsed: input.value,
-  });
-  const updateManagedVal = useCallback(() => {
-    setManagedVal({
+    const [managedVal, setManagedVal] = useState<{
+      raw: string;
+      parsed?: any;
+      // FieldValue;
+    }>({
       raw: format ? format(input.value, name) : input.value,
       parsed: input.value,
     });
-  }, [setManagedVal, format, name, input.value]);
-  useEffect(() => {
-    let newVal: any = input.value;
-    // FF converts undefined to "" to try to keep the input controlled
-    if (newVal === '' && managedVal.parsed === undefined) {
-      newVal = undefined;
-    }
+    const updateManagedVal = useCallback(() => {
+      setManagedVal({
+        raw: format ? format(input.value, name) : input.value,
+        parsed: input.value,
+      });
+    }, [setManagedVal, format, name, input.value]);
+    useEffect(() => {
+      let newVal: any = input.value;
+      // FF converts undefined to "" to try to keep the input controlled
+      if (newVal === '' && managedVal.parsed === undefined) {
+        newVal = undefined;
+      }
 
-    if (newVal !== managedVal.parsed) {
-      updateManagedVal();
-    }
-  }, [updateManagedVal, input.value, managedVal.parsed]);
-
-  const rifm = useRifm({
-    value: managedVal.raw,
-    onChange: (val) => {
-      const parsed = parse
-        ? parse(val, name)
-        : // assume FieldValue is string if no parser given
-          (val as any);
-      setManagedVal({ raw: val, parsed });
-      input.onChange(parsed);
-    },
-    format: formatInput ?? identity,
-    append,
-    accept: accept ?? /./g,
-    mask,
-    replace,
-  });
-
-  return (
-    <TextField
-      disabled={disabled}
-      required={props.required}
-      {...rest}
-      {...input}
-      {...rifm}
-      onBlur={(e) => {
+      if (newVal !== managedVal.parsed) {
         updateManagedVal();
-        input.onBlur(e);
-      }}
-      variant={variant}
-      inputRef={ref}
-      helperText={getHelperText(meta, helperText)}
-      error={showError(meta)}
-    />
-  );
-}
+      }
+    }, [updateManagedVal, input.value, managedVal.parsed]);
+
+    const rifm = useRifm({
+      value: managedVal.raw,
+      onChange: (val) => {
+        const parsed = parse
+          ? parse(val, name)
+          : // assume FieldValue is string if no parser given
+            (val as any);
+        setManagedVal({ raw: val, parsed });
+        input.onChange(parsed);
+      },
+      format: formatInput ?? identity,
+      append,
+      accept: accept ?? /./g,
+      mask,
+      replace,
+    });
+
+    return (
+      <TextField
+        disabled={disabled}
+        required={props.required}
+        {...rest}
+        {...input}
+        {...rifm}
+        onFocus={(e) => {
+          updateManagedVal();
+          input.onFocus(e);
+        }}
+        onBlur={(e) => {
+          updateManagedVal();
+          input.onBlur(e);
+        }}
+        variant={variant}
+        inputRef={multiRef}
+        helperText={getHelperText(meta, helperText)}
+        error={showError(meta)}
+      />
+    );
+  }
+);

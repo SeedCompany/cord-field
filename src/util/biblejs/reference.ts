@@ -21,8 +21,11 @@ export type ScriptureRange = Range<Required<ScriptureReference>>;
 export const parseScriptureRange = (
   bookName: string,
   reference: string
-): RawScriptureRange | null => {
+): RawScriptureRange | void => {
   // Lookup the book
+
+  if (!reference) return;
+
   const bookIndex = bookIndexFromName(bookName);
 
   const [start, end] = reference.split('-');
@@ -80,7 +83,11 @@ export const parseScriptureRange = (
 
 export const validateScriptureRange = (
   range: RawScriptureRange
-): ScriptureRange => {
+): ScriptureRange | void => {
+  const { start, end } = range;
+  if (!start || !end) return;
+
+  // each part
   Object.keys(range).map((part: string) => {
     // part (p) being start or end
     const p = (range as any)[part];
@@ -94,10 +101,16 @@ export const validateScriptureRange = (
       throw new Error(`${bookName} only has ${chaptersInBook} chapters`);
     } else if (p.verse > versesInChapter) {
       throw new Error(
-        `${bookName}: ${p.chapter} only has ${versesInChapter} verses`
+        `${bookName} ${p.chapter} only has ${versesInChapter} verses`
       );
     }
   });
+  // then as a whole
+  if (start.chapter > end.chapter) {
+    throw new Error(`The first chapter must come before the last chapter`);
+  } else if (start.verse > end.verse) {
+    throw new Error(`The first verse must come before the last verse`);
+  }
   return range as ScriptureRange;
 };
 

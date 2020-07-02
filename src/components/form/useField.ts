@@ -49,6 +49,9 @@ export const useField = <Value, T extends HTMLElement = HTMLElement>(
   });
   const submitting = useIsSubmitting();
 
+  // console.log(input, rest);
+  // console.log(config);
+
   return {
     input,
     meta: { ...meta, submitting },

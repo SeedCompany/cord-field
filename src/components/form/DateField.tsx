@@ -98,6 +98,9 @@ export const DateField = ({
       : helperTextProp,
     error
   );
+  console.log(input);
+  console.log(meta);
+  console.log(rest);
 
   return (
     <DatePicker
