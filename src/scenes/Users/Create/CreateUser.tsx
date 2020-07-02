@@ -3,7 +3,7 @@ import { Decorator } from 'final-form';
 import { useSnackbar } from 'notistack';
 import React from 'react';
 import { Except } from 'type-fest';
-import { CreatePersonInput } from '../../../api';
+import { CreatePersonInput, GQLOperations } from '../../../api';
 import {
   DialogForm,
   DialogFormProps,
@@ -40,6 +40,7 @@ export const CreateUser = (props: CreateUserProps) => {
       onSubmit={async (input) => {
         const { data } = await createPerson({
           variables: { input },
+          refetchQueries: [GQLOperations.Query.Users],
         });
         const user = data!.createPerson.user;
 
