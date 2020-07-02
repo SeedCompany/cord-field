@@ -1,4 +1,3 @@
-import { MenuItem } from '@material-ui/core';
 import { useSnackbar } from 'notistack';
 import React from 'react';
 import { Except } from 'type-fest';
@@ -9,7 +8,6 @@ import {
 } from '../../../components/Dialog/DialogForm';
 import { EmailField, SubmitError, TextField } from '../../../components/form';
 import { ButtonLink } from '../../../components/Routing';
-import { TIMEZONE_STRINGS as timezones } from '../../../util/timezones';
 import { useCreatePersonMutation } from './CreateUser.generated';
 
 type CreatePersonValues = Except<
@@ -90,18 +88,8 @@ export const CreateUser: React.FC<CreateUserProps> = (props) => {
       <TextField
         name="timezone"
         label="Timezone"
-        select
-        SelectProps={{ defaultValue: '' }}
-      >
-        {timezones.map((timezone) => {
-          const { label, value } = timezone;
-          return (
-            <MenuItem key={value} value={value}>
-              {label}
-            </MenuItem>
-          );
-        })}
-      </TextField>
+        placeholder="Enter Timezone"
+      />
       <TextField
         name="bio"
         label="Bio"
