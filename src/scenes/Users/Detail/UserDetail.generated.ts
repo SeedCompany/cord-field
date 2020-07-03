@@ -1,16 +1,17 @@
 /* eslint-disable import/no-duplicates, @typescript-eslint/no-empty-interface */
-
 import * as ApolloReactCommon from '@apollo/client';
 import * as ApolloReactHooks from '@apollo/client';
 import gql from 'graphql-tag';
 import * as Types from '../../../api/schema.generated';
+import { UserFormFragment } from '../UserForm/UserForm.generated';
+import { UserFormFragmentDoc } from '../UserForm/UserForm.generated';
 
 export interface UserQueryVariables {
   userId: Types.Scalars['ID'];
 }
 
 export type UserQuery = { __typename?: 'Query' } & {
-  user: { __typename?: 'User' } & UserDetailsFragment;
+  user: { __typename?: 'User' } & UserDetailsFragment & UserFormFragment;
 };
 
 export type UserDetailsFragment = { __typename?: 'User' } & Pick<
@@ -63,9 +64,11 @@ export const UserDocument = gql`
   query User($userId: ID!) {
     user(id: $userId) {
       ...userDetails
+      ...UserForm
     }
   }
   ${UserDetailsFragmentDoc}
+  ${UserFormFragmentDoc}
 `;
 
 /**

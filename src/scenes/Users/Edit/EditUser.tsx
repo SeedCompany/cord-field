@@ -1,67 +1,44 @@
 import React from 'react';
 import { Except } from 'type-fest';
 import { UpdateUserInput } from '../../../api';
-import {
-  DialogForm,
-  DialogFormProps,
-} from '../../../components/Dialog/DialogForm';
-import { SubmitError, TextField } from '../../../components/form';
-import { UserDetailsFragment } from '../Detail/UserDetail.generated';
+import { UserForm, UserFormProps } from '../UserForm';
 import { useUpdateUserMutation } from './EditUser.generated';
 
 export type EditUserProps = Except<
-  DialogFormProps<UpdateUserInput>,
-  'onSubmit' | 'initialValues'
-> & {
-  user: UserDetailsFragment;
-};
+  UserFormProps<UpdateUserInput>,
+  'prefix' | 'onSubmit' | 'initialValues'
+>;
 
-export const EditUser = ({ user, ...props }: EditUserProps) => {
+export const EditUser = (props: EditUserProps) => {
   const [updateUser] = useUpdateUserMutation();
+  const user = props.user;
 
   return (
-    <DialogForm<UpdateUserInput>
-      DialogProps={{
-        fullWidth: true,
-        maxWidth: 'xs',
-      }}
-      title="Edit User"
+    <UserForm<UpdateUserInput>
+      title="Edit Person"
       {...props}
-      onlyDirtySubmit
-      initialValues={{ user: { id: user.id } }}
+      prefix="user"
+      initialValues={
+        user
+          ? {
+              user: {
+                id: user.id,
+                realFirstName: user.realFirstName.value,
+                realLastName: user.realLastName.value,
+                displayFirstName: user.displayFirstName.value,
+                displayLastName: user.displayLastName.value,
+                phone: user.phone.value,
+                timezone: user.timezone.value?.name,
+                bio: user.bio.value,
+              },
+            }
+          : undefined
+      }
       onSubmit={(input) => {
         updateUser({
           variables: { input },
         });
       }}
-    >
-      <SubmitError />
-      <TextField
-        name="user.realFirstName"
-        label="First Name"
-        placeholder="New First Name"
-        disabled={!user.realFirstName.canEdit}
-        autoFocus
-      />
-      <TextField
-        name="user.realLastName"
-        label="Last Name"
-        placeholder="New Last Name"
-        disabled={!user.realLastName.canEdit}
-      />
-      <TextField
-        name="user.phone"
-        label="Phone"
-        placeholder="New Phone Number"
-        disabled={!user.phone.canEdit}
-      />
-      <TextField
-        name="user.bio"
-        label="Bio"
-        placeholder="User Bio"
-        disabled={!user.bio.canEdit}
-        multiline
-      />
-    </DialogForm>
+    />
   );
 };

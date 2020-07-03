@@ -48,5 +48,7 @@ export const GQLOperations = {
     orgDetails: 'orgDetails',
     EditPartnership: 'EditPartnership',
     userDetails: 'userDetails',
+    UserForm: 'UserForm',
+    ss: 'ss',
   },
 };
