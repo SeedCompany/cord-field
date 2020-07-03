@@ -6,6 +6,7 @@ import { DateTime } from 'luxon';
 import React, { useState } from 'react';
 import { useParams } from 'react-router';
 import { useInterval } from 'react-use';
+import { isSecured } from '../../../api';
 import { useDialog } from '../../../components/Dialog';
 import {
   DisplaySimpleProperty,
@@ -48,8 +49,11 @@ export const UserDetail = () => {
 
   const user = data?.user;
 
-  // TODO calculate if they can edit any fields
-  const canEditAnyFields = !!user;
+  const canEditAnyFields = !user
+    ? false
+    : Object.entries(user).some(([_, value]) =>
+        isSecured(value) ? value.canEdit : false
+      );
 
   return (
     <main className={classes.root}>
