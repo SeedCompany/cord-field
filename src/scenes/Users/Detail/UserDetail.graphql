@@ -1,5 +1,5 @@
-query User($input: ID!) {
-  user(id: $input) {
+query User($userId: ID!) {
+  user(id: $userId) {
     ...userDetails
   }
 }
@@ -10,11 +10,16 @@ fragment userDetails on User {
     value
   }
   fullName
-  realFirstName {
+  bio {
     value
   }
-  realLastName {
+  phone {
     value
+  }
+  timezone {
+    value {
+      name
+    }
   }
   createdAt
 }

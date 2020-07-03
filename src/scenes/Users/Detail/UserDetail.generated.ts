@@ -6,7 +6,7 @@ import gql from 'graphql-tag';
 import * as Types from '../../../api/schema.generated';
 
 export interface UserQueryVariables {
-  input: Types.Scalars['ID'];
+  userId: Types.Scalars['ID'];
 }
 
 export type UserQuery = { __typename?: 'Query' } & {
@@ -21,14 +21,16 @@ export type UserDetailsFragment = { __typename?: 'User' } & Pick<
       Types.SecuredString,
       'value'
     >;
-    realFirstName: { __typename?: 'SecuredString' } & Pick<
+    bio: { __typename?: 'SecuredString' } & Pick<Types.SecuredString, 'value'>;
+    phone: { __typename?: 'SecuredString' } & Pick<
       Types.SecuredString,
       'value'
     >;
-    realLastName: { __typename?: 'SecuredString' } & Pick<
-      Types.SecuredString,
-      'value'
-    >;
+    timezone: { __typename?: 'SecuredTimeZone' } & {
+      value?: Types.Maybe<
+        { __typename?: 'TimeZone' } & Pick<Types.TimeZone, 'name'>
+      >;
+    };
   };
 
 export const UserDetailsFragmentDoc = gql`
@@ -38,18 +40,23 @@ export const UserDetailsFragmentDoc = gql`
       value
     }
     fullName
-    realFirstName {
+    bio {
       value
     }
-    realLastName {
+    phone {
       value
+    }
+    timezone {
+      value {
+        name
+      }
     }
     createdAt
   }
 `;
 export const UserDocument = gql`
-  query User($input: ID!) {
-    user(id: $input) {
+  query User($userId: ID!) {
+    user(id: $userId) {
       ...userDetails
     }
   }
@@ -68,7 +75,7 @@ export const UserDocument = gql`
  * @example
  * const { data, loading, error } = useUserQuery({
  *   variables: {
- *      input: // value for 'input'
+ *      userId: // value for 'userId'
  *   },
  * });
  */

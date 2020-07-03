@@ -1,39 +1,37 @@
-import {
-  Breadcrumbs,
-  IconButton,
-  makeStyles,
-  Typography,
-} from '@material-ui/core';
+import { makeStyles, Typography } from '@material-ui/core';
+import { Edit } from '@material-ui/icons';
 import { Skeleton } from '@material-ui/lab';
 import clsx from 'clsx';
-import React from 'react';
+import { DateTime } from 'luxon';
+import React, { useState } from 'react';
 import { useParams } from 'react-router';
-import { Breadcrumb } from '../../../components/Breadcrumb';
-import { DisplaySimpleProperty } from '../../../components/DisplaySimpleProperty';
-import { useDateFormatter } from '../../../components/Formatters';
-import { PencilCircledIcon } from '../../../components/Icons';
+import { useInterval } from 'react-use';
+import {
+  DisplaySimpleProperty,
+  DisplaySimplePropertyProps,
+} from '../../../components/DisplaySimpleProperty';
+import { Fab } from '../../../components/Fab';
+import { Redacted } from '../../../components/Redacted';
 import { useUserQuery } from './UserDetail.generated';
 
-const useStyles = makeStyles(({ spacing }) => ({
+const useStyles = makeStyles(({ spacing, breakpoints }) => ({
   root: {
     overflowY: 'scroll',
     padding: spacing(4),
-    '& > *': {
+    '& > *:not(:last-child)': {
       marginBottom: spacing(3),
     },
+    maxWidth: breakpoints.values.md,
   },
   name: {
-    marginRight: spacing(2),
+    marginRight: spacing(4),
   },
   nameLoading: {
-    flex: 1,
+    width: '60%',
   },
   header: {
     flex: 1,
     display: 'flex',
-  },
-  bio: {
-    marginBottom: 0,
   },
 }));
 
@@ -41,58 +39,108 @@ export const UserDetail = () => {
   const classes = useStyles();
   const { userId } = useParams();
   const { data, error } = useUserQuery({
-    variables: {
-      input: userId,
-    },
+    variables: { userId },
   });
 
   const user = data?.user;
 
-  const formatDateTime = useDateFormatter();
+  // TODO calculate if they can edit any fields
+  const canEditAnyFields = !!user;
 
   return (
     <main className={classes.root}>
       {error ? (
-        <Typography variant="h4">Error fetching Project</Typography>
+        <Typography variant="h4">Error loading person</Typography>
       ) : (
         <>
-          <Breadcrumbs>
-            <Breadcrumb to="/users">Users</Breadcrumb>
-          </Breadcrumbs>
           <div className={classes.header}>
             <Typography
               variant="h2"
-              className={clsx(classes.name, user ? null : classes.nameLoading)}
+              className={clsx(
+                classes.name,
+                user?.fullName ? null : classes.nameLoading
+              )}
             >
-              {user ? user.fullName : <Skeleton width="75%" />}
+              {!user ? (
+                <Skeleton width="100%" />
+              ) : (
+                user.fullName ?? (
+                  <Redacted
+                    info="You don't have permission to view this person's name"
+                    width="100%"
+                  />
+                )
+              )}
             </Typography>
-            {user ? (
-              <IconButton
-                color="primary"
-                aria-label="edit user"
-                // onClick={editOrg}
-              >
-                <PencilCircledIcon />
-              </IconButton>
+            {canEditAnyFields ? (
+              <Fab color="primary" aria-label="edit person">
+                <Edit />
+              </Fab>
             ) : null}
           </div>
-          {user ? (
-            <>
-              <Typography>Email: {user.email.value}</Typography>
-              <Typography>Phone: {user.phone.value}</Typography>
-              <Typography variant="h4" className={classes.bio}>
-                Bio
-              </Typography>
-              <Typography>{user.bio.value}</Typography>
-              <DisplaySimpleProperty
-                label="Created At"
-                value={formatDateTime(user.createdAt)}
-                ValueProps={{ color: 'textSecondary' }}
-              />
-            </>
-          ) : null}
+          <DisplayProperty
+            label="Email"
+            value={user?.email.value}
+            loading={!user}
+          />
+          <DisplayProperty
+            label="Local Time"
+            value={
+              user?.timezone.value?.name ? (
+                <LocalTime timezone={user?.timezone.value?.name} />
+              ) : null
+            }
+            loading={!user}
+          />
+          <DisplayProperty
+            label="Phone"
+            value={user?.phone.value}
+            loading={!user}
+          />
+          <DisplayProperty
+            label="Biography"
+            value={user?.bio.value}
+            loading={!user}
+          />
         </>
       )}
     </main>
   );
 };
+
+const LocalTime = ({ timezone }: { timezone?: string }) => {
+  const now = useNow();
+  const formatted = now.toLocaleString({
+    timeZone: timezone,
+    ...DateTime.TIME_SIMPLE,
+    timeZoneName: 'short',
+  });
+  return <>{formatted}</>;
+};
+
+const useNow = (updateInterval = 1_000) => {
+  const [now, setNow] = useState(() => DateTime.local());
+  useInterval(() => {
+    setNow(DateTime.local());
+  }, updateInterval);
+  return now;
+};
+
+const DisplayProperty = (props: DisplaySimplePropertyProps) =>
+  !props.value && !props.loading ? null : (
+    <DisplaySimpleProperty
+      variant="body1"
+      loadingWidth="40%"
+      {...{ component: 'div' }}
+      {...props}
+      LabelProps={{
+        color: 'textSecondary',
+        variant: 'body2',
+        ...props.LabelProps,
+      }}
+      ValueProps={{
+        color: 'textPrimary',
+        ...props.ValueProps,
+      }}
+    />
+  );
