@@ -139,9 +139,20 @@ const DisplayProperty = (props: DisplaySimplePropertyProps) =>
   !props.value && !props.loading ? null : (
     <DisplaySimpleProperty
       variant="body1"
-      loadingWidth="40%"
       {...{ component: 'div' }}
       {...props}
+      loading={
+        props.loading ? (
+          <>
+            <Typography variant="body2">
+              <Skeleton width="10%" />
+            </Typography>
+            <Typography variant="body1">
+              <Skeleton width="40%" />
+            </Typography>
+          </>
+        ) : null
+      }
       LabelProps={{
         color: 'textSecondary',
         variant: 'body2',

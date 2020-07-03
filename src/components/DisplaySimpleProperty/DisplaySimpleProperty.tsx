@@ -8,7 +8,7 @@ export type DisplaySimplePropertyProps = TypographyProps & {
   LabelProps?: TypographyProps;
   value?: ReactNode;
   ValueProps?: TypographyProps;
-  loading?: boolean;
+  loading?: boolean | ReactNode;
   loadingWidth?: number | string;
 };
 
@@ -22,8 +22,10 @@ export const DisplaySimpleProperty = ({
   ...props
 }: DisplaySimplePropertyProps) => (
   <Typography variant="body2" {...props}>
-    {loading ? (
-      <Skeleton variant="text" width={loadingWidth} />
+    {loading === true ? (
+      <Skeleton width={loadingWidth} />
+    ) : loading ? (
+      loading
     ) : label && value ? (
       <>
         <Typography variant="inherit" {...LabelProps}>
