@@ -3,8 +3,8 @@ import * as ApolloReactCommon from '@apollo/client';
 import * as ApolloReactHooks from '@apollo/client';
 import gql from 'graphql-tag';
 import * as Types from '../../../api/schema.generated';
-import { LoggedInUserFragment } from '../../../components/Session/session.generated';
-import { LoggedInUserFragmentDoc } from '../../../components/Session/session.generated';
+import { UserDetailsFragment } from '../Detail/UserDetail.generated';
+import { UserDetailsFragmentDoc } from '../Detail/UserDetail.generated';
 
 export interface CreatePersonMutationVariables {
   input: Types.CreatePersonInput;
@@ -12,8 +12,8 @@ export interface CreatePersonMutationVariables {
 
 export type CreatePersonMutation = { __typename?: 'Mutation' } & {
   createPerson: { __typename?: 'CreatePersonOutput' } & {
-    user: { __typename?: 'User' } & Pick<Types.User, 'fullName'> &
-      LoggedInUserFragment;
+    user: { __typename?: 'User' } & Pick<Types.User, 'id' | 'fullName'> &
+      UserDetailsFragment;
   };
 };
 
@@ -21,12 +21,13 @@ export const CreatePersonDocument = gql`
   mutation CreatePerson($input: CreatePersonInput!) {
     createPerson(input: $input) {
       user {
+        id
         fullName
-        ...LoggedInUser
+        ...userDetails
       }
     }
   }
-  ${LoggedInUserFragmentDoc}
+  ${UserDetailsFragmentDoc}
 `;
 export type CreatePersonMutationFn = ApolloReactCommon.MutationFunction<
   CreatePersonMutation,

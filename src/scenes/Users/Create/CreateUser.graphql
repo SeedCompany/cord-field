@@ -1,9 +1,9 @@
 mutation CreatePerson($input: CreatePersonInput!) {
   createPerson(input: $input) {
     user {
-      # TODO use fragment used by detail view
+      id
       fullName
-      ...LoggedInUser
+      ...userDetails
     }
   }
 }

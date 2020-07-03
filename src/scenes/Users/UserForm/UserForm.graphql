@@ -1,0 +1,41 @@
+fragment UserForm on User {
+  id
+  realFirstName {
+    ...ss
+  }
+  realLastName {
+    ...ss
+  }
+  displayFirstName {
+    ...ss
+  }
+  displayLastName {
+    ...ss
+  }
+  email {
+    ...ss
+  }
+  timezone {
+    value {
+      name
+      countries {
+        code
+        name
+      }
+    }
+    canRead
+    canEdit
+  }
+  phone {
+    ...ss
+  }
+  bio {
+    ...ss
+  }
+}
+
+fragment ss on SecuredString {
+  value
+  canRead
+  canEdit
+}
