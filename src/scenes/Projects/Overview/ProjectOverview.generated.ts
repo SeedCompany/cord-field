@@ -32,7 +32,7 @@ export type ProjectOverviewQuery = { __typename?: 'Query' } & {
           >;
           location: { __typename?: 'SecuredCountry' } & Pick<
             Types.SecuredCountry,
-            'canRead' | 'canEdit'
+            'canEdit'
           > & {
               value?: Types.Maybe<
                 { __typename?: 'Country' } & DisplayLocation_Country_Fragment
@@ -84,7 +84,7 @@ export type ProjectOverviewQuery = { __typename?: 'Query' } & {
           >;
           location: { __typename?: 'SecuredCountry' } & Pick<
             Types.SecuredCountry,
-            'canRead' | 'canEdit'
+            'canEdit'
           > & {
               value?: Types.Maybe<
                 { __typename?: 'Country' } & DisplayLocation_Country_Fragment
@@ -138,7 +138,6 @@ export const ProjectOverviewDocument = gql`
         value
       }
       location {
-        canRead
         canEdit
         value {
           ...DisplayLocation

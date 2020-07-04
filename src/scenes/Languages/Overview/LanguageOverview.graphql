@@ -1,0 +1,41 @@
+query Language($input: ID!) {
+  language(id: $input) {
+    ...languageDetails
+  }
+}
+
+fragment languageDetails on Language {
+  id
+  createdAt
+  name {
+    value
+    canEdit
+  }
+  displayName {
+    value
+    canEdit
+  }
+  beginFiscalYear {
+    value
+    canEdit
+  }
+  ethnologueName {
+    value
+    canEdit
+  }
+  ethnologuePopulation {
+    value
+    canEdit
+  }
+  organizationPopulation {
+    value
+    canEdit
+  }
+  rodNumber {
+    value
+    canEdit
+  }
+  #    TODO add these in back later when API accepts these
+  #    sensitivity
+  #    avatarLetters
+}

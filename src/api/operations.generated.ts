@@ -2,6 +2,7 @@ export const GQLOperations = {
   Query: {
     Session: 'Session',
     Languages: 'Languages',
+    Language: 'Language',
     Organization: 'Organization',
     Organizations: 'Organizations',
     ProjectPartnerships: 'ProjectPartnerships',
@@ -17,6 +18,7 @@ export const GQLOperations = {
     Register: 'Register',
     ResetPassword: 'ResetPassword',
     createLanguage: 'createLanguage',
+    UpdateLanguage: 'UpdateLanguage',
     createOrganization: 'createOrganization',
     UpdateOrganization: 'UpdateOrganization',
     UpdatePartnership: 'UpdatePartnership',
@@ -45,6 +47,7 @@ export const GQLOperations = {
     ProjectMemberList: 'ProjectMemberList',
     LoggedInUser: 'LoggedInUser',
     UserListItem: 'UserListItem',
+    languageDetails: 'languageDetails',
     orgDetails: 'orgDetails',
     EditPartnership: 'EditPartnership',
     userDetails: 'userDetails',

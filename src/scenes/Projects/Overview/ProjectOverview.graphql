@@ -7,7 +7,6 @@ query ProjectOverview($input: ID!) {
       value
     }
     location {
-      canRead
       canEdit
       value {
         ...DisplayLocation
