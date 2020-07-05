@@ -142,10 +142,8 @@ export const UploadProvider: FC = ({ children }) => {
   );
 
   const uploadFile = useCallback(
-    (file: Types.UploadFile, url: string) => {
-      const { queueId } = file;
-      const payload = new FormData();
-      payload.append('file', file.file);
+    (uploadFile: Types.UploadFile, url: string) => {
+      const { queueId, file } = uploadFile;
       const xhr = new XMLHttpRequest();
 
       xhr.onreadystatechange = function () {
@@ -160,7 +158,7 @@ export const UploadProvider: FC = ({ children }) => {
                 : responseType === 'document'
                 ? xhr.responseXML
                 : xhr.response;
-            handleFileUploadSuccess(response, file);
+            handleFileUploadSuccess(response, uploadFile);
           } else {
             handleFileUploadCompleteError(xhr.statusText, queueId);
           }
@@ -171,8 +169,8 @@ export const UploadProvider: FC = ({ children }) => {
       xhr.upload.onerror = () => handleUploadError(queueId);
       xhr.open('PUT', url);
       xhr.setRequestHeader('Access-Control-Allow-Headers', '*');
-      xhr.setRequestHeader('Content-Type', file.file.type);
-      xhr.send(payload);
+      xhr.setRequestHeader('Content-Type', file.type);
+      xhr.send(file);
     },
     [
       handleFileUploadSuccess,
