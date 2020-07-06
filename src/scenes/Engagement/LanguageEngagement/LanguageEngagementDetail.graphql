@@ -35,9 +35,8 @@ fragment LanguageEngagementDetail on LanguageEngagement {
     canRead
     canEdit
   }
-  # TODO: add when fixed
-  # modifiedAt
-  # status
+  modifiedAt
+  status
 }
 
 fragment ProjectBreadcrumb on Project {

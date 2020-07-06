@@ -4,7 +4,10 @@ import * as Types from '../../../api/schema.generated';
 
 export type LanguageEngagementDetailFragment = {
   __typename?: 'LanguageEngagement';
-} & Pick<Types.LanguageEngagement, 'id' | 'createdAt'> & {
+} & Pick<
+  Types.LanguageEngagement,
+  'id' | 'createdAt' | 'modifiedAt' | 'status'
+> & {
     language: { __typename?: 'SecuredLanguage' } & {
       value?: Types.Maybe<
         { __typename?: 'Language' } & {
@@ -91,6 +94,8 @@ export const LanguageEngagementDetailFragmentDoc = gql`
       canRead
       canEdit
     }
+    modifiedAt
+    status
   }
 `;
 export const ProjectBreadcrumbFragmentDoc = gql`
