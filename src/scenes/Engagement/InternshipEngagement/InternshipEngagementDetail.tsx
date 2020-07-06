@@ -8,7 +8,11 @@ import {
 import { ChatOutlined, DateRange, Publish } from '@material-ui/icons';
 import React, { FC } from 'react';
 import { Merge } from 'type-fest';
-import { displayInternPosition, securedDateRange } from '../../../api';
+import {
+  displayEngagementStatus,
+  displayInternPosition,
+  securedDateRange,
+} from '../../../api';
 import { displayLocation } from '../../../api/location-helper';
 import { Breadcrumb } from '../../../components/Breadcrumb';
 import { CeremonyCard } from '../../../components/CeremonyCard';
@@ -134,10 +138,11 @@ export const InternshipEngagementDetail: FC<InternshipEngagementDetailProps> = (
               empty="Start - End"
             />
           </Grid>
-          {/* TODO: implement when status fixed
-           <Grid item>
-            <DataButton>{displayStatus(engagement.status)}</DataButton>
-          </Grid> */}
+          <Grid item>
+            <DataButton>
+              {displayEngagementStatus(engagement.status)}
+            </DataButton>
+          </Grid>
         </Grid>
         <Grid container spacing={1} alignItems="center">
           <Grid item>
@@ -156,7 +161,7 @@ export const InternshipEngagementDetail: FC<InternshipEngagementDetailProps> = (
               viewLabel="Edit Complete Date"
               data={{
                 value: formatDate(engagement.completeDate.value),
-                // updatedAt: engagement.modifiedAt.value,
+                updatedAt: engagement.modifiedAt,
                 to: '/home',
               }}
               icon={PlantIcon}
@@ -169,7 +174,7 @@ export const InternshipEngagementDetail: FC<InternshipEngagementDetailProps> = (
               viewLabel="Edit Complete Date"
               data={{
                 value: formatDate(engagement.disbursementCompleteDate.value),
-                // updatedAt: engagement.modifiedAt.value,
+                updatedAt: engagement.modifiedAt,
                 to: '/home',
               }}
               icon={OptionsIcon}
@@ -182,7 +187,7 @@ export const InternshipEngagementDetail: FC<InternshipEngagementDetailProps> = (
               viewLabel="Edit Complete Date"
               data={{
                 value: formatDate(engagement.communicationsCompleteDate.value),
-                // updatedAt: engagement.modifiedAt.value,
+                updatedAt: engagement.modifiedAt,
                 to: '/home',
               }}
               icon={ChatOutlined}
@@ -193,8 +198,7 @@ export const InternshipEngagementDetail: FC<InternshipEngagementDetailProps> = (
             <MethodologiesCard
               onEdit={() => null}
               methodologies={engagement.methodologies}
-              // TODO: add when modifiedAt is fixed
-              // updateTime={engagement.startDate.value}
+              updatedAt={engagement.modifiedAt}
             />
           </Grid>
         </Grid>
