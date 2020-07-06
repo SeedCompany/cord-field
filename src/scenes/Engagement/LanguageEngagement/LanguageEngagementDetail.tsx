@@ -47,7 +47,7 @@ export const LanguageEngagementDetail: FC<EngagementQuery> = ({
 }) => {
   const classes = useStyles();
 
-  const [state, open] = useDialog();
+  const [state, show, editValue] = useDialog<string>();
 
   const date = securedDateRange(engagement.startDate, engagement.endDate);
   const formatDate = useDateFormatter();
@@ -128,7 +128,7 @@ export const LanguageEngagementDetail: FC<EngagementQuery> = ({
               redacted="You do not have permission to view start/end dates"
               children={formatDate.range}
               empty="Start - End"
-              onClick={open}
+              onClick={() => show('startEndDate')}
             />
           </Grid>
           <Grid item>
@@ -155,8 +155,12 @@ export const LanguageEngagementDetail: FC<EngagementQuery> = ({
               title="Translation Complete Date"
               data={{
                 value: formatDate(engagement.completeDate.value),
+                updatedAt: engagement.modifiedAt,
               }}
               icon={PlantIcon}
+              emptyValue="not available"
+              onClick={() => show('completeDate')}
+              onButtonClick={() => show('completeDate')}
             />
           </Grid>
           <Grid item xs={6}>
@@ -164,8 +168,12 @@ export const LanguageEngagementDetail: FC<EngagementQuery> = ({
               title="Disbursement Complete Date"
               data={{
                 value: formatDate(engagement.disbursementCompleteDate.value),
+                updatedAt: engagement.modifiedAt,
               }}
               icon={OptionsIcon}
+              emptyValue="not available"
+              onClick={() => show('disbursementCompleteDate')}
+              onButtonClick={() => show('disbursementCompleteDate')}
             />
           </Grid>
           <Grid item xs={6}>
@@ -173,8 +181,12 @@ export const LanguageEngagementDetail: FC<EngagementQuery> = ({
               title="Communications Complete Date"
               data={{
                 value: formatDate(engagement.communicationsCompleteDate.value),
+                updatedAt: engagement.modifiedAt,
               }}
               icon={ChatOutlined}
+              emptyValue="not available"
+              onClick={() => show('communicationsCompleteDate')}
+              onButtonClick={() => show('communicationsCompleteDate')}
             />
           </Grid>
         </Grid>
@@ -187,7 +199,11 @@ export const LanguageEngagementDetail: FC<EngagementQuery> = ({
           </Grid>
         </Grid>
       </Grid>
-      <EditLanguageEngagementDialog {...state} engagement={engagement} />
+      <EditLanguageEngagementDialog
+        {...state}
+        engagement={engagement}
+        editValue={editValue}
+      />
     </div>
   );
 };

@@ -15,25 +15,62 @@ type EditLanguageEngagementDialogProps = Except<
   'onSubmit' | 'initialValues'
 > & {
   engagement: LanguageEngagementDetailFragment;
+  editValue?: string;
 };
 
 export const EditLanguageEngagementDialog: FC<EditLanguageEngagementDialogProps> = ({
   engagement,
+  editValue,
   ...props
 }) => {
   const [updateEngagement] = useUpdateLanguageEngagementMutation();
 
+  const title =
+    editValue === 'startEndDate'
+      ? 'Change Engagement Start and End Dates'
+      : editValue === 'completeDate'
+      ? 'Change Growth Plan Complete Date '
+      : editValue === 'disbursementCompleteDate'
+      ? 'Change Disbursement Complete Date '
+      : editValue === 'communicationsCompleteDate'
+      ? 'Change Communications Complete Date '
+      : null;
+
+  const fields =
+    editValue &&
+    (editValue === 'startEndDate' ? (
+      <>
+        <Typography>Start Date</Typography>
+        <DateField name="engagement.startDate" />
+        <Typography>Start Date</Typography>
+        <DateField name="engagement.endDate" />
+      </>
+    ) : [
+        'completeDate',
+        'disbursementCompleteDate',
+        'communicationsCompleteDate',
+      ].includes(editValue) ? (
+      <>
+        <Typography>Complete Date</Typography>
+        <DateField name={`engagement.${editValue}`} />
+      </>
+    ) : null);
+
   return (
     <DialogForm<UpdateLanguageEngagementInput>
-      title="Change Engagement Start and End Dates"
+      title={title}
       closeLabel="Close"
-      submitLabel="Change Dates"
+      submitLabel="Update Engagement"
       {...props}
       initialValues={{
         engagement: {
           id: engagement.id,
           startDate: engagement.startDate.value,
           endDate: engagement.endDate.value,
+          completeDate: engagement.completeDate.value,
+          disbursementCompleteDate: engagement.disbursementCompleteDate.value,
+          communicationsCompleteDate:
+            engagement.communicationsCompleteDate.value,
         },
       }}
       onSubmit={(input) => {
@@ -41,10 +78,7 @@ export const EditLanguageEngagementDialog: FC<EditLanguageEngagementDialogProps>
       }}
     >
       <SubmitError />
-      <Typography>Start Date</Typography>
-      <DateField name="engagement.startDate" />
-      <Typography>Start Date</Typography>
-      <DateField name="engagement.endDate" />
+      {fields}
     </DialogForm>
   );
 };
