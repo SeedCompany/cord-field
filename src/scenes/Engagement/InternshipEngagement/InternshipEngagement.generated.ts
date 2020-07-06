@@ -10,7 +10,10 @@ import { MentorCardFragmentDoc } from '../../../components/MentorCard/MentorCard
 
 export type InternshipEngagementDetailFragment = {
   __typename?: 'InternshipEngagement';
-} & Pick<Types.InternshipEngagement, 'id' | 'createdAt'> & {
+} & Pick<
+  Types.InternshipEngagement,
+  'id' | 'createdAt' | 'status' | 'modifiedAt'
+> & {
     intern: { __typename?: 'SecuredUser' } & Pick<
       Types.SecuredUser,
       'canRead' | 'canEdit'
@@ -66,6 +69,8 @@ export const InternshipEngagementDetailFragmentDoc = gql`
   fragment InternshipEngagementDetail on InternshipEngagement {
     id
     createdAt
+    status
+    modifiedAt
     intern {
       value {
         fullName
