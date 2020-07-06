@@ -8,7 +8,7 @@ import {
 } from '@material-ui/core';
 import { ChatOutlined, DateRange, Publish } from '@material-ui/icons';
 import React, { FC } from 'react';
-import { securedDateRange } from '../../../api';
+import { displayEngagementStatus, securedDateRange } from '../../../api';
 import { Breadcrumb } from '../../../components/Breadcrumb';
 import { DataButton } from '../../../components/DataButton';
 import { FieldOverviewCard } from '../../../components/FieldOverviewCard';
@@ -103,10 +103,11 @@ export const LanguageEngagementDetail: FC<LanguageEngagementDetailProps> = ({
               empty="Start - End"
             />
           </Grid>
-          {/* TODO: implement when status fixed
-           <Grid item>
-            <DataButton>{displayStatus(engagement.status)}</DataButton>
-          </Grid> */}
+          <Grid item>
+            <DataButton>
+              {displayEngagementStatus(engagement.status)}
+            </DataButton>
+          </Grid>
         </Grid>
         <Grid container spacing={1} alignItems="center">
           <Grid item>
@@ -125,7 +126,7 @@ export const LanguageEngagementDetail: FC<LanguageEngagementDetailProps> = ({
               viewLabel="Edit Complete Date"
               data={{
                 value: formatDate(engagement.completeDate.value),
-                // updatedAt: engagement.modifiedAt.value,
+                updatedAt: engagement.modifiedAt,
                 to: '/home',
               }}
               icon={PlantIcon}
@@ -138,7 +139,7 @@ export const LanguageEngagementDetail: FC<LanguageEngagementDetailProps> = ({
               viewLabel="Edit Complete Date"
               data={{
                 value: formatDate(engagement.disbursementCompleteDate.value),
-                // updatedAt: engagement.modifiedAt.value,
+                updatedAt: engagement.modifiedAt,
                 to: '/home',
               }}
               icon={OptionsIcon}
@@ -151,7 +152,7 @@ export const LanguageEngagementDetail: FC<LanguageEngagementDetailProps> = ({
               viewLabel="Edit Complete Date"
               data={{
                 value: formatDate(engagement.communicationsCompleteDate.value),
-                // updatedAt: engagement.modifiedAt.value,
+                updatedAt: engagement.modifiedAt,
                 to: '/home',
               }}
               icon={ChatOutlined}
