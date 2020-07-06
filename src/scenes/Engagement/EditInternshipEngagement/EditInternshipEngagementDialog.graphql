@@ -2,7 +2,6 @@ mutation UpdateInternshipEngagement($input: UpdateInternshipEngagementInput!) {
   updateInternshipEngagement(input: $input) {
     engagement {
       ...InternshipEngagementDetail
-      ...MethodologyCard
     }
   }
 }

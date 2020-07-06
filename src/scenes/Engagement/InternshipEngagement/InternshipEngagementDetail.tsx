@@ -197,7 +197,12 @@ export const InternshipEngagementDetail: FC<EngagementQuery> = ({
             />
           </Grid>
           <Grid item xs={6}>
-            <MethodologiesCard data={engagement.methodologies} />
+            <MethodologiesCard
+              onClick={() => show('methodologies')}
+              data={engagement.methodologies}
+              //TODO: implement
+              // updatedAt={engagement.modifiedAt}
+            />
           </Grid>
         </Grid>
         <Grid item container spacing={3}>

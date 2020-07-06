@@ -1,12 +1,21 @@
 import { Typography } from '@material-ui/core';
+import { startCase } from 'lodash';
 import React, { FC } from 'react';
 import { Except } from 'type-fest';
-import { UpdateInternshipEngagementInput } from '../../../api';
+import {
+  MethodologyToApproach,
+  UpdateInternshipEngagementInput,
+} from '../../../api';
 import {
   DialogForm,
   DialogFormProps,
 } from '../../../components/Dialog/DialogForm';
-import { DateField, SubmitError } from '../../../components/form';
+import {
+  CheckboxesField,
+  CheckboxOption,
+  DateField,
+  SubmitError,
+} from '../../../components/form';
 import { InternshipEngagementDetailFragment } from '../InternshipEngagement/InternshipEngagement.generated';
 import { useUpdateInternshipEngagementMutation } from './EditInternshipEngagementDialog.generated';
 
@@ -29,11 +38,13 @@ export const EditInternshipEngagementDialog: FC<EditInternshipEngagementDialogPr
     editValue === 'startEndDate'
       ? 'Change Engagement Start and End Dates'
       : editValue === 'completeDate'
-      ? 'Change Growth Plan Complete Date '
+      ? 'Change Growth Plan Complete Date'
       : editValue === 'disbursementCompleteDate'
-      ? 'Change Disbursement Complete Date '
+      ? 'Change Disbursement Complete Date'
       : editValue === 'communicationsCompleteDate'
-      ? 'Change Communications Complete Date '
+      ? 'Change Communications Complete Date'
+      : editValue === 'methodologies'
+      ? 'Change Methodologies'
       : null;
 
   const fields =
@@ -54,6 +65,19 @@ export const EditInternshipEngagementDialog: FC<EditInternshipEngagementDialogPr
         <Typography>Complete Date</Typography>
         <DateField name={`engagement.${editValue}`} />
       </>
+    ) : editValue === 'methodologies' ? (
+      <>
+        <Typography>Methodologies</Typography>
+        <CheckboxesField name="engagement.methodologies">
+          {Object.keys(MethodologyToApproach).map((group) => (
+            <CheckboxOption
+              key={group}
+              label={startCase(group)}
+              value={group}
+            />
+          ))}
+        </CheckboxesField>
+      </>
     ) : null);
 
   return (
@@ -71,6 +95,7 @@ export const EditInternshipEngagementDialog: FC<EditInternshipEngagementDialogPr
           disbursementCompleteDate: engagement.disbursementCompleteDate.value,
           communicationsCompleteDate:
             engagement.communicationsCompleteDate.value,
+          methodologies: engagement.methodologies.value,
         },
       }}
       onSubmit={(input) => {
