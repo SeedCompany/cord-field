@@ -130,6 +130,7 @@ export const InternshipEngagementDetail: FC<EngagementQuery> = ({
               empty="Enter Intern Position"
               redacted="You do not have permission to view intern position"
               children={displayInternPosition}
+              onClick={() => show('position')}
             />
           </Grid>
           <Grid item>

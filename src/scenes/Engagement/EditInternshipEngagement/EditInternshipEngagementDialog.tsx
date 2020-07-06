@@ -4,6 +4,8 @@ import React, { FC } from 'react';
 import { Except } from 'type-fest';
 import {
   MethodologyToApproach,
+  displayInternPosition,
+  InternshipEngagementPosition,
   UpdateInternshipEngagementInput,
 } from '../../../api';
 import {
@@ -14,6 +16,8 @@ import {
   CheckboxesField,
   CheckboxOption,
   DateField,
+  RadioField,
+  RadioOption,
   SubmitError,
 } from '../../../components/form';
 import { InternshipEngagementDetailFragment } from '../InternshipEngagement/InternshipEngagement.generated';
@@ -26,6 +30,28 @@ type EditInternshipEngagementDialogProps = Except<
   engagement: InternshipEngagementDetailFragment;
   editValue?: string;
 };
+
+const internshipEngagementPositions: InternshipEngagementPosition[] = [
+  'ExegeticalFacilitator',
+  'TranslationConsultantInTraining',
+  'AdministrativeSupportSpecialist',
+  'BusinessSupportSpecialist',
+  'CommunicationSpecialistInternal',
+  'CommunicationSpecialistMarketing',
+  'LanguageProgramManager',
+  'LanguageProgramManagerOrFieldOperations',
+  'LanguageSoftwareSupportSpecialist',
+  'LeadershipDevelopment',
+  'LiteracySpecialist',
+  'LukePartnershipFacilitatorOrSpecialist',
+  'MobilizerOrPartnershipSupportSpecialist',
+  'OralFacilitatorOrSpecialist',
+  'PersonnelOrHrSpecialist',
+  'ScriptureUseSpecialist',
+  'TechnicalSupportSpecialist',
+  'TranslationFacilitator',
+  'Translator',
+];
 
 export const EditInternshipEngagementDialog: FC<EditInternshipEngagementDialogProps> = ({
   engagement,
@@ -45,6 +71,8 @@ export const EditInternshipEngagementDialog: FC<EditInternshipEngagementDialogPr
       ? 'Change Communications Complete Date'
       : editValue === 'methodologies'
       ? 'Change Methodologies'
+      : editValue === 'position'
+      ? 'Change Intern Position'
       : null;
 
   const fields =
@@ -78,6 +106,18 @@ export const EditInternshipEngagementDialog: FC<EditInternshipEngagementDialogPr
           ))}
         </CheckboxesField>
       </>
+    ) : editValue === 'position' ? (
+      <>
+        <RadioField name="engagement.position" label="Position">
+          {internshipEngagementPositions.map((position) => (
+            <RadioOption
+              key={position}
+              label={displayInternPosition(position)}
+              value={position}
+            />
+          ))}
+        </RadioField>
+      </>
     ) : null);
 
   return (
@@ -96,6 +136,7 @@ export const EditInternshipEngagementDialog: FC<EditInternshipEngagementDialogPr
           communicationsCompleteDate:
             engagement.communicationsCompleteDate.value,
           methodologies: engagement.methodologies.value,
+          position: engagement.position.value,
         },
       }}
       onSubmit={(input) => {
