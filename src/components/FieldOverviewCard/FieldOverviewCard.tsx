@@ -1,4 +1,10 @@
-import { Card, Grid, makeStyles, Typography } from '@material-ui/core';
+import {
+  Card,
+  CardActions,
+  Grid,
+  makeStyles,
+  Typography,
+} from '@material-ui/core';
 import { Skeleton } from '@material-ui/lab';
 import clsx from 'clsx';
 import { To } from 'history';
@@ -17,7 +23,6 @@ const useStyles = makeStyles(({ spacing, palette }) => ({
     display: 'flex',
     justifyContent: 'space-evenly',
     padding: spacing(3, 4),
-    borderBottom: `0.5px solid ${palette.divider}`,
   },
   rightContent: {
     flex: 1,
@@ -27,7 +32,7 @@ const useStyles = makeStyles(({ spacing, palette }) => ({
     color: palette.action.disabled,
   },
   bottomArea: {
-    padding: spacing(1, 2, 1, 1),
+    paddingRight: spacing(1),
     alignItems: 'center',
     justifyContent: 'space-between',
   },
@@ -83,34 +88,36 @@ export const FieldOverviewCard: FC<FieldOverviewCardProps> = ({
           </Typography>
         </div>
       </CardActionAreaLink>
-      <Grid
-        container
-        spacing={!data ? 4 : 2}
-        wrap="nowrap"
-        className={classes.bottomArea}
-      >
-        <Grid item xs={!data}>
-          <ButtonLink
-            color="primary"
-            to={data?.to ?? ''}
-            disabled={!data}
-            fullWidth
-          >
-            {data ? viewLabel : <Skeleton width="100%" />}
-          </ButtonLink>
+      <CardActions>
+        <Grid
+          container
+          spacing={!data ? 4 : 2}
+          wrap="nowrap"
+          className={classes.bottomArea}
+        >
+          <Grid item xs={!data}>
+            <ButtonLink
+              color="primary"
+              to={data?.to ?? ''}
+              disabled={!data}
+              fullWidth
+            >
+              {data ? viewLabel : <Skeleton width="100%" />}
+            </ButtonLink>
+          </Grid>
+          <Grid item xs={!data}>
+            <Typography color="textSecondary" variant="body2">
+              {data ? (
+                data.updatedAt ? (
+                  <> Updated {dateTimeFormatter(data.updatedAt)}</>
+                ) : null
+              ) : (
+                <Skeleton />
+              )}
+            </Typography>
+          </Grid>
         </Grid>
-        <Grid item xs={!data}>
-          <Typography color="textSecondary" variant="body2">
-            {data ? (
-              data.updatedAt ? (
-                <> Updated {dateTimeFormatter(data.updatedAt)}</>
-              ) : null
-            ) : (
-              <Skeleton />
-            )}
-          </Typography>
-        </Grid>
-      </Grid>
+      </CardActions>
     </Card>
   );
 };
