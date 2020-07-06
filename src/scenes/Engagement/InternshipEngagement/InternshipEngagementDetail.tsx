@@ -10,6 +10,7 @@ import {
 import { displayLocation } from '../../../api/location-helper';
 import { Breadcrumb } from '../../../components/Breadcrumb';
 import { DataButton } from '../../../components/DataButton';
+import { useDialog } from '../../../components/Dialog';
 import { Fab } from '../../../components/Fab';
 import { FieldOverviewCard } from '../../../components/FieldOverviewCard';
 import {
@@ -22,6 +23,7 @@ import { ProjectBreadcrumb } from '../../../components/ProjectBreadcrumb';
 import { Redacted } from '../../../components/Redacted';
 import { Link } from '../../../components/Routing';
 import { CeremonyCard } from '../CeremonyCard';
+import { EditInternshipEngagementDialog } from '../EditInternshipEngagement/EditInternshipEngagementDialog';
 import { EngagementQuery } from '../Engagement.generated';
 import { MentorCard } from './MentorCard';
 
@@ -47,6 +49,7 @@ export const InternshipEngagementDetail: FC<EngagementQuery> = ({
   engagement,
 }) => {
   const classes = useStyles();
+  const [state, show, editValue] = useDialog<string>();
 
   const date = securedDateRange(engagement.startDate, engagement.endDate);
   const formatDate = useDateFormatter();
@@ -144,6 +147,7 @@ export const InternshipEngagementDetail: FC<EngagementQuery> = ({
               redacted="You do not have permission to view start/end dates"
               children={formatDate.range}
               empty="Start - End"
+              onClick={() => show('startEndDate')}
             />
           </Grid>
           <Grid item>
@@ -158,9 +162,12 @@ export const InternshipEngagementDetail: FC<EngagementQuery> = ({
               title="Growth Plan Complete Date"
               data={{
                 value: formatDate(engagement.completeDate.value),
+                updatedAt: engagement.modifiedAt,
               }}
               icon={PlantIcon}
-              emptyValue="None"
+              emptyValue="Not available"
+              onClick={() => show('completeDate')}
+              onButtonClick={() => show('completeDate')}
             />
           </Grid>
           <Grid item xs={6}>
@@ -168,9 +175,12 @@ export const InternshipEngagementDetail: FC<EngagementQuery> = ({
               title="Disbursement Complete Date"
               data={{
                 value: formatDate(engagement.disbursementCompleteDate.value),
+                updatedAt: engagement.modifiedAt,
               }}
               icon={OptionsIcon}
-              emptyValue="None"
+              emptyValue="Not available"
+              onClick={() => show('disbursementCompleteDate')}
+              onButtonClick={() => show('disbursementCompleteDate')}
             />
           </Grid>
           <Grid item xs={6}>
@@ -178,9 +188,12 @@ export const InternshipEngagementDetail: FC<EngagementQuery> = ({
               title="Communications Complete Date"
               data={{
                 value: formatDate(engagement.communicationsCompleteDate.value),
+                updatedAt: engagement.modifiedAt,
               }}
               icon={ChatOutlined}
-              emptyValue="None"
+              emptyValue="Not available"
+              onClick={() => show('communicationsCompleteDate')}
+              onButtonClick={() => show('communicationsCompleteDate')}
             />
           </Grid>
           <Grid item xs={6}>
@@ -204,6 +217,11 @@ export const InternshipEngagementDetail: FC<EngagementQuery> = ({
           />
         </Grid>
       </Grid>
+      <EditInternshipEngagementDialog
+        {...state}
+        engagement={engagement}
+        editValue={editValue}
+      />
     </div>
   );
 };
