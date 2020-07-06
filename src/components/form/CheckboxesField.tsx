@@ -217,18 +217,6 @@ export const ToggleButtonOption = ({
       selected={selected}
       onChange={(_) => ctx.onChange(name, !selected)}
       disabled={disabled}
-      onMouseDown={(e: MouseEvent<HTMLElement>) => {
-        if (disabled) {
-          return;
-        }
-        // Don't mess with focus if clicking on toggle button since it doesn't need help
-        // and preventDefault() will actually prevent blurring when wanted.
-        if (e.target && (e.target as HTMLElement).tagName === 'INPUT') {
-          return;
-        }
-        e.preventDefault();
-        ctx?.onFocus();
-      }}
     >
       {label}
     </ToggleButton>
