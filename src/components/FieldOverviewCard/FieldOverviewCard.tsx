@@ -1,5 +1,7 @@
 import {
+  Button,
   Card,
+  CardActionArea,
   CardActions,
   Grid,
   makeStyles,
@@ -41,7 +43,7 @@ const useStyles = makeStyles(({ spacing, palette }) => ({
 interface FieldOverviewCardData {
   value?: string;
   updatedAt?: DateTime;
-  to: To;
+  to?: To;
 }
 
 export interface FieldOverviewCardProps extends Pick<HugeIconProps, 'icon'> {
@@ -50,6 +52,8 @@ export interface FieldOverviewCardProps extends Pick<HugeIconProps, 'icon'> {
   data?: FieldOverviewCardData;
   className?: string;
   emptyValue?: string;
+  onClick?: () => void;
+  onButtonClick?: () => void;
 }
 
 const DEFAULT_EMPTY = <>&nbsp;</>;
@@ -61,16 +65,22 @@ export const FieldOverviewCard: FC<FieldOverviewCardProps> = ({
   icon,
   data,
   emptyValue = DEFAULT_EMPTY,
+  onClick,
+  onButtonClick,
 }) => {
   const classes = useStyles();
   const dateTimeFormatter = useDateTimeFormatter();
 
+  const ActionArea = data?.to ? CardActionAreaLink : CardActionArea;
+  const Btn = data?.to ? ButtonLink : Button;
+
   return (
     <Card className={clsx(classes.root, className)}>
-      <CardActionAreaLink
+      <ActionArea
         disabled={!data}
         to={data?.to ?? ''}
         className={classes.topArea}
+        onClick={onClick}
       >
         <HugeIcon icon={icon} loading={!data} />
         <div className={classes.rightContent}>
@@ -87,7 +97,7 @@ export const FieldOverviewCard: FC<FieldOverviewCardProps> = ({
             {data ? data.value || emptyValue : <Skeleton />}
           </Typography>
         </div>
-      </CardActionAreaLink>
+      </ActionArea>
       <CardActions>
         <Grid
           container
@@ -96,14 +106,15 @@ export const FieldOverviewCard: FC<FieldOverviewCardProps> = ({
           className={classes.bottomArea}
         >
           <Grid item xs={!data}>
-            <ButtonLink
+            <Btn
               color="primary"
               to={data?.to ?? ''}
               disabled={!data}
               fullWidth
+              onClick={onButtonClick}
             >
               {data ? viewLabel : <Skeleton width="100%" />}
-            </ButtonLink>
+            </Btn>
           </Grid>
           <Grid item xs={!data}>
             <Typography color="textSecondary" variant="body2">
