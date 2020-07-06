@@ -1,4 +1,4 @@
-import { lighten } from '@material-ui/core';
+import { fade, lighten } from '@material-ui/core';
 import { ThemeOptions } from './createTheme';
 
 export const appProps: ThemeOptions['props'] = (_theme) => ({
@@ -96,20 +96,26 @@ export const appOverrides: ThemeOptions['overrides'] = ({
     },
     MuiToggleButton: {
       root: {
-        borderRadius: 15,
+        borderRadius: 14,
+        color: palette.text.primary,
+        backgroundColor: palette.background.paper,
         margin: spacing(1),
-        // backgroundColor: palette.primary.main,
         '&$selected': {
           backgroundColor: '#2D9CDB',
-          color: palette.common.white,
-          marginLeft: `${spacing(1)}px !important`,
+          color: palette.getContrastText('#2D9CDB'),
           '&:hover': {
-            backgroundColor: lighten('#2D9CDB', 0.2),
+            backgroundColor: lighten('#2D9CDB', 0.15),
           },
-        },
-        '&$disabled': {
-          backgroundColor: palette.grey[300],
-          // color: palette.common.white,
+          '&$disabled': {
+            color: palette.getContrastText(fade('#2D9CDB', 0.4)),
+            backgroundColor: fade('#2D9CDB', 0.4),
+          },
+          // Remove spacing tweaks from MUI that assume the buttons are
+          // right next to each other without spacing
+          '& + &': {
+            borderLeft: null,
+            marginLeft: null,
+          },
         },
       },
     },

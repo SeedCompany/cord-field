@@ -11,6 +11,7 @@ import {
   makeStyles,
 } from '@material-ui/core';
 import { ToggleButton, ToggleButtonProps } from '@material-ui/lab';
+import clsx from 'clsx';
 import { difference, isEmpty } from 'lodash';
 import React, {
   createContext,
@@ -34,6 +35,7 @@ export type CheckboxesFieldProps = FieldConfig<string[]> &
     name: string;
     label?: ReactNode;
     helperText?: ReactNode;
+    FormGroupProps?: FormGroupProps;
   };
 
 export type CheckboxOptionProps = Pick<
@@ -45,9 +47,13 @@ export type CheckboxOptionProps = Pick<
 export type ToggleButtonOptionProps = ToggleButtonProps &
   MergeExclusive<{ value: string }, { default: true }>;
 
-const useStyles = makeStyles(({ typography }) => ({
+const useStyles = makeStyles(({ typography, spacing }) => ({
   fieldLabel: {
     fontWeight: typography.weight.bold,
+  },
+  toggleGroup: {
+    margin: spacing(-1),
+    padding: spacing(1, 0),
   },
 }));
 
@@ -63,6 +69,7 @@ export const CheckboxesField = ({
   row,
   labelPlacement = 'end',
   defaultValue: defaultValueProp,
+  FormGroupProps,
   ...props
 }: CheckboxesFieldProps) => {
   // Memoize defaultValue so array can be passed inline while still preventing
@@ -120,7 +127,7 @@ export const CheckboxesField = ({
           {label}
         </FormLabel>
       )}
-      <FormGroup row={row}>
+      <FormGroup {...FormGroupProps} row={row}>
         <CheckboxContext.Provider
           value={{
             value,
@@ -189,6 +196,24 @@ export const CheckboxOption = ({
         }
         e.preventDefault();
         ctx?.onFocus();
+      }}
+    />
+  );
+};
+
+export const ToggleButtonsField = (props: CheckboxesFieldProps) => {
+  const classes = useStyles();
+
+  return (
+    <CheckboxesField
+      row
+      {...props}
+      FormGroupProps={{
+        ...props.FormGroupProps,
+        classes: {
+          ...props.FormGroupProps?.classes,
+          root: clsx(classes.toggleGroup, props.FormGroupProps?.classes?.root),
+        },
       }}
     />
   );

@@ -9,6 +9,7 @@ import {
   CheckboxesField,
   CheckboxOption,
   ToggleButtonOption,
+  ToggleButtonsField,
 } from './CheckboxesField';
 import { FieldSpy } from './FieldSpy';
 
@@ -71,7 +72,7 @@ export const ToggleButtons = () => {
       {({ handleSubmit }) => (
         <>
           <Box component="form" onSubmit={handleSubmit} mb={4}>
-            <CheckboxesField
+            <ToggleButtonsField
               fullWidth={boolean('fullWidth', false)}
               row={boolean('row', true)}
               name="colors"
@@ -96,7 +97,7 @@ export const ToggleButtons = () => {
                 />
               ))}
               <ToggleButtonOption disabled value="teal" label="Teal" />
-            </CheckboxesField>
+            </ToggleButtonsField>
           </Box>
           <FieldSpy name="colors" />
         </>
