@@ -79,7 +79,7 @@ export const MentorCard: FC<MentorCardProps> = ({
           variant="caption"
           className={classes.organizationName}
         >
-          {organizations.items[0].name.value}
+          {organizations.items[0]?.name.value}
         </Typography>
       </CardContent>
       <CardActions className={classes.cardActions}>
