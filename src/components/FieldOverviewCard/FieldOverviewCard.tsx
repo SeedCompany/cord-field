@@ -22,10 +22,9 @@ const useStyles = makeStyles(({ spacing, palette }) => ({
   rightContent: {
     flex: 1,
     paddingLeft: spacing(4),
-    height: 80,
   },
-  emptyValueText: {
-    marginTop: spacing(2),
+  emptyValue: {
+    color: palette.action.disabled,
   },
   bottomArea: {
     padding: spacing(1, 2, 1, 1),
@@ -48,13 +47,15 @@ export interface FieldOverviewCardProps extends Pick<HugeIconProps, 'icon'> {
   emptyValue?: string;
 }
 
+const DEFAULT_EMPTY = <>&nbsp;</>;
+
 export const FieldOverviewCard: FC<FieldOverviewCardProps> = ({
   className,
   viewLabel,
   title,
   icon,
   data,
-  emptyValue,
+  emptyValue = DEFAULT_EMPTY,
 }) => {
   const classes = useStyles();
   const dateTimeFormatter = useDateTimeFormatter();
@@ -71,21 +72,15 @@ export const FieldOverviewCard: FC<FieldOverviewCardProps> = ({
           <Typography color="initial" variant="h4">
             {data ? title : <Skeleton width="80%" />}
           </Typography>
-          {!data ? (
-            <Skeleton />
-          ) : data.value ? (
-            <Typography color="initial" variant="h1">
-              {data.value}
-            </Typography>
-          ) : (
-            <Typography
-              variant="body1"
-              color="textSecondary"
-              className={classes.emptyValueText}
-            >
-              {emptyValue}
-            </Typography>
-          )}
+          <Typography
+            color="initial"
+            variant="h1"
+            className={clsx({
+              [classes.emptyValue]: data && !data.value,
+            })}
+          >
+            {data ? data.value || emptyValue : <Skeleton />}
+          </Typography>
         </div>
       </CardActionAreaLink>
       <Grid

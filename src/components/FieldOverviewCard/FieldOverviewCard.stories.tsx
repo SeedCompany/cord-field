@@ -26,7 +26,7 @@ export const FieldOverviewCard = () => (
               updatedAt: dateTime('updatedAt'),
             }
       }
-      emptyValue={text('Empty placeholder', 'Not available')}
+      emptyValue={text('Empty placeholder', 'N/A') || undefined}
     />
   </Box>
 );
