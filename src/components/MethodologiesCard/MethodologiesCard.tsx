@@ -12,8 +12,10 @@ import {
   PlayCircleFilled,
   Translate,
 } from '@material-ui/icons';
+import { DateTime } from 'luxon';
 import React, { FC } from 'react';
 import { displayMethodology, methodologyGroups } from '../../api';
+import { useDateTimeFormatter } from '../Formatters';
 import { MethodologyCardFragment } from './MethodologiesCard.generated';
 
 const useStyles = makeStyles(({ spacing, palette }) => ({
@@ -48,14 +50,18 @@ const useStyles = makeStyles(({ spacing, palette }) => ({
 export type PartnershipCardProps = {
   onEdit: () => void;
   className?: string;
+  updatedAt?: DateTime;
 } & MethodologyCardFragment;
 
 export const MethodologiesCard: FC<PartnershipCardProps> = ({
   methodologies: { canEdit, value },
   onEdit,
   className,
+  updatedAt,
 }) => {
   const classes = useStyles();
+
+  const dateTimeFormatter = useDateTimeFormatter();
 
   const methodologyListChips = value
     //TODO: decide how to show overflow
@@ -96,12 +102,9 @@ export const MethodologiesCard: FC<PartnershipCardProps> = ({
         <Button color="primary" disabled={!canEdit} onClick={onEdit}>
           Edit Methodologies
         </Button>
-        {/* TODO: add update time when modifiedAt is fixed
-        <DisplaySimpleProperty
-          label="updated"
-          value={formatdateTime(updateTime)}
-          ValueProps={{ color: 'textSecondary' }}
-        /> */}
+        <Typography color="textSecondary" variant="body2">
+          Updated {dateTimeFormatter(updatedAt)}
+        </Typography>
       </CardActions>
     </Card>
   );
