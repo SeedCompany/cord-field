@@ -83,7 +83,7 @@ export const MemberListSummary: FC<MemberListSummaryProps> = ({
                 alt={member?.label}
                 src={member?.picture}
               >
-                {member?.avatarLetters}
+                {member?.avatarLetters?.slice(0, 2)}
               </Avatar>
             ))}
           </AvatarGroup>
