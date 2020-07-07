@@ -28,8 +28,11 @@ import {
 import { MentorCard } from '../../../components/MentorCard';
 import { MethodologiesCard } from '../../../components/MethodologiesCard';
 import { MethodologyCardFragment } from '../../../components/MethodologiesCard/MethodologiesCard.generated';
+import {
+  ProjectBreadcrumb,
+  ProjectBreadcrumbFragment,
+} from '../../../components/ProjectBreadcrumb';
 import { Redacted } from '../../../components/Redacted';
-import { ProjectBreadcrumbFragment } from '../LanguageEngagement/LanguageEngagementDetail.generated';
 import { InternshipEngagementDetailFragment } from './InternshipEngagement.generated';
 
 interface InternshipEngagementDetailProps {
@@ -76,9 +79,7 @@ export const InternshipEngagementDetail: FC<InternshipEngagementDetailProps> = (
     <div className={classes.root}>
       <main className={classes.main}>
         <Breadcrumbs>
-          <Breadcrumb to={`/projects/${project.id}`}>
-            {project.name.value}
-          </Breadcrumb>
+          <ProjectBreadcrumb data={project} />
           {engagement.intern.canRead ? (
             <Breadcrumb
               to={`/projects/${project.id}/engagements/${engagement.id}`}

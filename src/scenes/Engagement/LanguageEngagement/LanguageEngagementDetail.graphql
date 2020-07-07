@@ -38,10 +38,3 @@ fragment LanguageEngagementDetail on LanguageEngagement {
   modifiedAt
   status
 }
-
-fragment ProjectBreadcrumb on Project {
-  id
-  name {
-    value
-  }
-}

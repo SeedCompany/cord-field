@@ -5,17 +5,15 @@ import gql from 'graphql-tag';
 import * as Types from '../../api/schema.generated';
 import { MethodologyCardFragment } from '../../components/MethodologiesCard/MethodologiesCard.generated';
 import { MethodologyCardFragmentDoc } from '../../components/MethodologiesCard/MethodologiesCard.generated';
-import { InternshipEngagementDetailFragment } from './InternshipEngagement/InternshipEngagement.generated';
-import { InternshipEngagementDetailFragmentDoc } from './InternshipEngagement/InternshipEngagement.generated';
 import {
-  LanguageEngagementDetailFragment,
   ProjectBreadcrumb_InternshipProject_Fragment,
   ProjectBreadcrumb_TranslationProject_Fragment,
-} from './LanguageEngagement/LanguageEngagementDetail.generated';
-import {
-  LanguageEngagementDetailFragmentDoc,
-  ProjectBreadcrumbFragmentDoc,
-} from './LanguageEngagement/LanguageEngagementDetail.generated';
+} from '../../components/ProjectBreadcrumb/ProjectBreadcrumb.generated';
+import { ProjectBreadcrumbFragmentDoc } from '../../components/ProjectBreadcrumb/ProjectBreadcrumb.generated';
+import { InternshipEngagementDetailFragmentDoc } from './InternshipEngagement/InternshipEngagement.generated';
+import { InternshipEngagementDetailFragment } from './InternshipEngagement/InternshipEngagement.generated';
+import { LanguageEngagementDetailFragmentDoc } from './LanguageEngagement/LanguageEngagementDetail.generated';
+import { LanguageEngagementDetailFragment } from './LanguageEngagement/LanguageEngagementDetail.generated';
 
 export interface EngagementQueryVariables {
   input: Types.Scalars['ID'];

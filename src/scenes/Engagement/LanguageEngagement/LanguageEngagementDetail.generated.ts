@@ -40,22 +40,6 @@ export type LanguageEngagementDetailFragment = {
     >;
   };
 
-export type ProjectBreadcrumb_InternshipProject_Fragment = {
-  __typename?: 'InternshipProject';
-} & Pick<Types.InternshipProject, 'id'> & {
-    name: { __typename?: 'SecuredString' } & Pick<Types.SecuredString, 'value'>;
-  };
-
-export type ProjectBreadcrumb_TranslationProject_Fragment = {
-  __typename?: 'TranslationProject';
-} & Pick<Types.TranslationProject, 'id'> & {
-    name: { __typename?: 'SecuredString' } & Pick<Types.SecuredString, 'value'>;
-  };
-
-export type ProjectBreadcrumbFragment =
-  | ProjectBreadcrumb_InternshipProject_Fragment
-  | ProjectBreadcrumb_TranslationProject_Fragment;
-
 export const LanguageEngagementDetailFragmentDoc = gql`
   fragment LanguageEngagementDetail on LanguageEngagement {
     id
@@ -96,13 +80,5 @@ export const LanguageEngagementDetailFragmentDoc = gql`
     }
     modifiedAt
     status
-  }
-`;
-export const ProjectBreadcrumbFragmentDoc = gql`
-  fragment ProjectBreadcrumb on Project {
-    id
-    name {
-      value
-    }
   }
 `;

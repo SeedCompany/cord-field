@@ -18,11 +18,12 @@ import {
   PencilCircledIcon,
   PlantIcon,
 } from '../../../components/Icons';
-import { Redacted } from '../../../components/Redacted';
 import {
-  LanguageEngagementDetailFragment,
+  ProjectBreadcrumb,
   ProjectBreadcrumbFragment,
-} from './LanguageEngagementDetail.generated';
+} from '../../../components/ProjectBreadcrumb';
+import { Redacted } from '../../../components/Redacted';
+import { LanguageEngagementDetailFragment } from './LanguageEngagementDetail.generated';
 
 const useStyles = makeStyles(({ spacing, breakpoints, palette }) => ({
   root: {
@@ -62,9 +63,7 @@ export const LanguageEngagementDetail: FC<LanguageEngagementDetailProps> = ({
     <div className={classes.root}>
       <main className={classes.main}>
         <Breadcrumbs>
-          <Breadcrumb to={`/projects/${project.id}`}>
-            {project.name.value}
-          </Breadcrumb>
+          <ProjectBreadcrumb data={project} />
           {engagement.language.value?.name.canRead ? (
             <Breadcrumb
               to={`/projects/${project.id}/engagements/${engagement.id}`}
