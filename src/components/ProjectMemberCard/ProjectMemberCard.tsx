@@ -37,7 +37,7 @@ export interface ProjectMemberCardProps {
   projectMember?: ProjectMemberCardFragment;
   // TODO this should use primary organization on User when api is finished
   primaryOrganizationName?: string;
-  onEdit: () => void;
+  onEdit?: () => void;
   className?: string;
 }
 

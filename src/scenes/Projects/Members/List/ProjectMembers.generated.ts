@@ -3,6 +3,11 @@ import * as ApolloReactCommon from '@apollo/client';
 import * as ApolloReactHooks from '@apollo/client';
 import gql from 'graphql-tag';
 import * as Types from '../../../../api/schema.generated';
+import {
+  ProjectBreadcrumb_InternshipProject_Fragment,
+  ProjectBreadcrumb_TranslationProject_Fragment,
+} from '../../../../components/ProjectBreadcrumb/ProjectBreadcrumb.generated';
+import { ProjectBreadcrumbFragmentDoc } from '../../../../components/ProjectBreadcrumb/ProjectBreadcrumb.generated';
 import { ProjectMemberCardFragment } from '../../../../components/ProjectMemberCard/ProjectMember.generated';
 import { ProjectMemberCardFragmentDoc } from '../../../../components/ProjectMemberCard/ProjectMember.generated';
 
@@ -13,49 +18,41 @@ export interface ProjectMembersQueryVariables {
 export type ProjectMembersQuery = { __typename?: 'Query' } & {
   project:
     | ({ __typename?: 'InternshipProject' } & {
-        name: { __typename?: 'SecuredString' } & Pick<
-          Types.SecuredString,
-          'value'
-        >;
         team: { __typename?: 'SecuredProjectMemberList' } & Pick<
           Types.SecuredProjectMemberList,
-          'canCreate'
+          'canRead' | 'canCreate'
         > & {
             items: Array<
               { __typename?: 'ProjectMember' } & ProjectMemberCardFragment
             >;
           };
-      })
+      } & ProjectBreadcrumb_InternshipProject_Fragment)
     | ({ __typename?: 'TranslationProject' } & {
-        name: { __typename?: 'SecuredString' } & Pick<
-          Types.SecuredString,
-          'value'
-        >;
         team: { __typename?: 'SecuredProjectMemberList' } & Pick<
           Types.SecuredProjectMemberList,
-          'canCreate'
+          'canRead' | 'canCreate'
         > & {
             items: Array<
               { __typename?: 'ProjectMember' } & ProjectMemberCardFragment
             >;
           };
-      });
+      } & ProjectBreadcrumb_TranslationProject_Fragment);
 };
 
 export const ProjectMembersDocument = gql`
   query ProjectMembers($input: ID!) {
     project(id: $input) {
-      name {
-        value
-      }
+      ...ProjectBreadcrumb
       team {
         items {
           ...ProjectMemberCard
         }
+        canRead
         canCreate
       }
     }
   }
+  ${ProjectBreadcrumbFragmentDoc}
   ${ProjectMemberCardFragmentDoc}
 `;
 
