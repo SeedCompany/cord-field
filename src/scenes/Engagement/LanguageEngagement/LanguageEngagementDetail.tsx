@@ -10,6 +10,7 @@ import { ChatOutlined, DateRange, Publish } from '@material-ui/icons';
 import React, { FC } from 'react';
 import { displayEngagementStatus, securedDateRange } from '../../../api';
 import { Breadcrumb } from '../../../components/Breadcrumb';
+import { CeremonyCard } from '../../../components/CeremonyCard';
 import { DataButton } from '../../../components/DataButton';
 import { FieldOverviewCard } from '../../../components/FieldOverviewCard';
 import { useDateFormatter } from '../../../components/Formatters';
@@ -157,6 +158,18 @@ export const LanguageEngagementDetail: FC<LanguageEngagementDetailProps> = ({
               icon={ChatOutlined}
               emptyValue="not available"
             />
+          </Grid>
+        </Grid>
+        <Grid container spacing={3} alignItems="center">
+          <Grid item xs={6}>
+            {engagement.ceremony.value && (
+              <CeremonyCard
+                {...engagement.ceremony.value}
+                canRead={engagement.ceremony.canRead}
+                canEdit={engagement.ceremony.canEdit}
+                editCeremony={() => console.log('edit ceremony clicked')}
+              />
+            )}
           </Grid>
         </Grid>
         <Typography variant="h4">Products</Typography>
