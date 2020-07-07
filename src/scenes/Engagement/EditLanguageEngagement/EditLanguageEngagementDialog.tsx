@@ -1,4 +1,5 @@
 import { Typography } from '@material-ui/core';
+import { pick } from 'lodash';
 import React, { FC } from 'react';
 import { Except } from 'type-fest';
 import { UpdateLanguageEngagementInput } from '../../../api';
@@ -56,23 +57,33 @@ export const EditLanguageEngagementDialog: FC<EditLanguageEngagementDialogProps>
       </>
     ) : null);
 
+  // Filter out relevant initial values so the other values don't get added to the mutation
+  const fullEngagementInitialValues = {
+    startDate: engagement.startDate.value,
+    endDate: engagement.endDate.value,
+    completeDate: engagement.completeDate.value,
+    disbursementCompleteDate: engagement.disbursementCompleteDate.value,
+    communicationsCompleteDate: engagement.communicationsCompleteDate.value,
+  };
+  const pickKeys =
+    editValue === 'startEndDate'
+      ? ['id', 'startDate', 'endDate']
+      : ['id', editValue || ''];
+
+  const filteredInitialValues = {
+    engagement: {
+      id: engagement.id,
+      ...pick(fullEngagementInitialValues, pickKeys),
+    },
+  };
+
   return (
     <DialogForm<UpdateLanguageEngagementInput>
       title={title}
       closeLabel="Close"
       submitLabel="Update Engagement"
       {...props}
-      initialValues={{
-        engagement: {
-          id: engagement.id,
-          startDate: engagement.startDate.value,
-          endDate: engagement.endDate.value,
-          completeDate: engagement.completeDate.value,
-          disbursementCompleteDate: engagement.disbursementCompleteDate.value,
-          communicationsCompleteDate:
-            engagement.communicationsCompleteDate.value,
-        },
-      }}
+      initialValues={filteredInitialValues}
       onSubmit={(input) => {
         updateEngagement({ variables: { input } });
       }}
