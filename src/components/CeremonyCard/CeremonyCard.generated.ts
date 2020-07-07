@@ -4,8 +4,12 @@ import * as Types from '../../api/schema.generated';
 
 export type CeremonyCardFragment = { __typename?: 'Ceremony' } & Pick<
   Types.Ceremony,
-  'id'
+  'id' | 'type'
 > & {
+    planned: { __typename?: 'SecuredBoolean' } & Pick<
+      Types.SecuredBoolean,
+      'canRead' | 'canEdit' | 'value'
+    >;
     estimatedDate: { __typename?: 'SecuredDate' } & Pick<
       Types.SecuredDate,
       'value'
@@ -19,6 +23,12 @@ export type CeremonyCardFragment = { __typename?: 'Ceremony' } & Pick<
 export const CeremonyCardFragmentDoc = gql`
   fragment CeremonyCard on Ceremony {
     id
+    type
+    planned {
+      canRead
+      canEdit
+      value
+    }
     estimatedDate {
       value
     }

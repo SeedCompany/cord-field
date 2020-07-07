@@ -1,5 +1,11 @@
 fragment CeremonyCard on Ceremony {
   id
+  type
+  planned {
+    canRead
+    canEdit
+    value
+  }
   estimatedDate {
     value
   }
