@@ -19,6 +19,7 @@ import {
   RadioField,
   RadioOption,
   SubmitError,
+  TextField,
 } from '../../../components/form';
 import { InternshipEngagementDetailFragment } from '../InternshipEngagement/InternshipEngagement.generated';
 import { useUpdateInternshipEngagementMutation } from './EditInternshipEngagementDialog.generated';
@@ -73,6 +74,10 @@ export const EditInternshipEngagementDialog: FC<EditInternshipEngagementDialogPr
       ? 'Change Methodologies'
       : editValue === 'position'
       ? 'Change Intern Position'
+      : editValue === 'countryOfOrigin'
+      ? 'Change Location'
+      : editValue === 'mentor'
+      ? 'Change Mentor'
       : null;
 
   const fields =
@@ -81,7 +86,7 @@ export const EditInternshipEngagementDialog: FC<EditInternshipEngagementDialogPr
       <>
         <Typography>Start Date</Typography>
         <DateField name="engagement.startDate" />
-        <Typography>Start Date</Typography>
+        <Typography>End Date</Typography>
         <DateField name="engagement.endDate" />
       </>
     ) : [
@@ -107,17 +112,20 @@ export const EditInternshipEngagementDialog: FC<EditInternshipEngagementDialogPr
         </CheckboxesField>
       </>
     ) : editValue === 'position' ? (
-      <>
-        <RadioField name="engagement.position" label="Position">
-          {internshipEngagementPositions.map((position) => (
-            <RadioOption
-              key={position}
-              label={displayInternPosition(position)}
-              value={position}
-            />
-          ))}
-        </RadioField>
-      </>
+      <RadioField name="engagement.position" label="Position">
+        {internshipEngagementPositions.map((position) => (
+          <RadioOption
+            key={position}
+            label={displayInternPosition(position)}
+            value={position}
+          />
+        ))}
+      </RadioField>
+    ) : editValue === 'countryOfOrigin' ? (
+      //TODO: replace with autocomplete when ready
+      <TextField name="engagement.countryOfOriginId" />
+    ) : editValue === 'mentor' ? (
+      <TextField name="engagement.mentorId" />
     ) : null);
 
   // Filter out relevant initial values so the other values don't get added to the mutation

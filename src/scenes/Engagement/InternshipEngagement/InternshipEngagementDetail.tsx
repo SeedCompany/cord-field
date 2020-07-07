@@ -139,6 +139,7 @@ export const InternshipEngagementDetail: FC<EngagementQuery> = ({
               empty="Enter Country of Origin"
               redacted="You do not have permission to view country of origin"
               children={displayLocation}
+              onClick={() => show('countryOfOrigin')}
             />
           </Grid>
           <Grid item>
@@ -220,6 +221,8 @@ export const InternshipEngagementDetail: FC<EngagementQuery> = ({
                 {node}
               </Grid>
             )}
+            //TODO: implement
+            // editMentor={() => show('mentor')}
           />
         </Grid>
       </Grid>
