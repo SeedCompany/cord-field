@@ -1,4 +1,4 @@
-fragment ProjectMember on ProjectMember {
+fragment ProjectMemberCard on ProjectMember {
   id
   createdAt
   user {

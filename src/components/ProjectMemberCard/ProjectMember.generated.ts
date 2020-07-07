@@ -2,7 +2,7 @@
 import gql from 'graphql-tag';
 import * as Types from '../../api/schema.generated';
 
-export type ProjectMemberFragment = { __typename?: 'ProjectMember' } & Pick<
+export type ProjectMemberCardFragment = { __typename?: 'ProjectMember' } & Pick<
   Types.ProjectMember,
   'id' | 'createdAt'
 > & {
@@ -17,8 +17,8 @@ export type ProjectMemberFragment = { __typename?: 'ProjectMember' } & Pick<
     >;
   };
 
-export const ProjectMemberFragmentDoc = gql`
-  fragment ProjectMember on ProjectMember {
+export const ProjectMemberCardFragmentDoc = gql`
+  fragment ProjectMemberCard on ProjectMember {
     id
     createdAt
     user {

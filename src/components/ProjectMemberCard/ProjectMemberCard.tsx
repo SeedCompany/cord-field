@@ -12,7 +12,7 @@ import * as React from 'react';
 import { displayRoles } from '../../api';
 import { Avatar } from '../Avatar';
 import { useDateTimeFormatter } from '../Formatters';
-import { ProjectMemberFragment } from './ProjectMember.generated';
+import { ProjectMemberCardFragment } from './ProjectMember.generated';
 
 const useStyles = makeStyles(({ spacing }) => ({
   cardContent: {
@@ -34,16 +34,18 @@ const useStyles = makeStyles(({ spacing }) => ({
 }));
 
 export interface ProjectMemberCardProps {
-  projectMember?: ProjectMemberFragment;
+  projectMember?: ProjectMemberCardFragment;
   // TODO this should use primary organization on User when api is finished
   primaryOrganizationName?: string;
-  onEdit: () => void;
+  onEdit?: () => void;
+  className?: string;
 }
 
 export const ProjectMemberCard: FC<ProjectMemberCardProps> = ({
   projectMember,
   primaryOrganizationName,
   onEdit,
+  className,
 }) => {
   const classes = useStyles();
   const dateTimeFormatter = useDateTimeFormatter();
@@ -52,7 +54,7 @@ export const ProjectMemberCard: FC<ProjectMemberCardProps> = ({
   const createdAtString = dateTimeFormatter(projectMember?.createdAt);
 
   return (
-    <Card>
+    <Card className={className}>
       <CardContent className={classes.cardContent}>
         <Avatar
           className={classes.avatar}

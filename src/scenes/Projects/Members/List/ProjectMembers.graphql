@@ -1,0 +1,12 @@
+query ProjectMembers($input: ID!) {
+  project(id: $input) {
+    ...ProjectBreadcrumb
+    team {
+      items {
+        ...ProjectMemberCard
+      }
+      canRead
+      canCreate
+    }
+  }
+}
