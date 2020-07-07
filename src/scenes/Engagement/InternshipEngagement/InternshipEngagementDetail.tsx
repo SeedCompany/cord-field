@@ -205,7 +205,6 @@ export const InternshipEngagementDetail: FC<InternshipEngagementDetailProps> = (
         </Grid>
         <Grid container spacing={3} alignItems="center">
           <Grid item xs={6} className={classes.bottomCardsContainer}>
-            <Typography variant="h4">Certification</Typography>
             {engagement.ceremony.value && (
               <CeremonyCard
                 {...engagement.ceremony.value}
