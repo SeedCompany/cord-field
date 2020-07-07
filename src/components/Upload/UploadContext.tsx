@@ -204,7 +204,7 @@ export const UploadProvider: FC = ({ children }) => {
 };
 
 export const UploadManagerProvider: FC = ({ children }) => {
-  const [isManagerOpen, setIsManagerOpen] = useState(true);
+  const [isManagerOpen, setIsManagerOpen] = useState(false);
   return (
     <UploadManagerContext.Provider value={{ isManagerOpen, setIsManagerOpen }}>
       {children}
