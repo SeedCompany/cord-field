@@ -84,7 +84,7 @@ export const UploadProvider: FC = ({ children }) => {
   }, []);
 
   const handleFileUploadSuccess = useCallback(
-    (response, file: Types.UploadFile) => {
+    (file: Types.UploadFile) => {
       if (file?.callback && file?.uploadId) {
         const { callback, queueId, fileName, uploadId } = file;
         callback(uploadId, fileName).then(async () => {
@@ -141,14 +141,7 @@ export const UploadProvider: FC = ({ children }) => {
           const { status } = xhr;
           const success = status >= 200 && status < 400;
           if (success) {
-            const { responseType } = xhr;
-            const response =
-              !responseType || responseType === 'text'
-                ? xhr.responseText
-                : responseType === 'document'
-                ? xhr.responseXML
-                : xhr.response;
-            handleFileUploadSuccess(response, uploadFile);
+            handleFileUploadSuccess(uploadFile);
           } else {
             handleFileUploadCompleteError(xhr.statusText, queueId);
           }
