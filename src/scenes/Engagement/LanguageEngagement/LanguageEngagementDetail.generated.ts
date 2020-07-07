@@ -1,6 +1,8 @@
 /* eslint-disable import/no-duplicates, @typescript-eslint/no-empty-interface */
 import gql from 'graphql-tag';
 import * as Types from '../../../api/schema.generated';
+import { CeremonyCardFragment } from '../../../components/CeremonyCard/CeremonyCard.generated';
+import { CeremonyCardFragmentDoc } from '../../../components/CeremonyCard/CeremonyCard.generated';
 
 export type LanguageEngagementDetailFragment = {
   __typename?: 'LanguageEngagement';
@@ -38,6 +40,12 @@ export type LanguageEngagementDetailFragment = {
       Types.SecuredDate,
       'value' | 'canRead' | 'canEdit'
     >;
+    ceremony: { __typename?: 'SecuredCeremony' } & Pick<
+      Types.SecuredCeremony,
+      'canRead' | 'canEdit'
+    > & {
+        value?: Types.Maybe<{ __typename?: 'Ceremony' } & CeremonyCardFragment>;
+      };
   };
 
 export const LanguageEngagementDetailFragmentDoc = gql`
@@ -80,5 +88,13 @@ export const LanguageEngagementDetailFragmentDoc = gql`
     }
     modifiedAt
     status
+    ceremony {
+      canRead
+      canEdit
+      value {
+        ...CeremonyCard
+      }
+    }
   }
+  ${CeremonyCardFragmentDoc}
 `;
