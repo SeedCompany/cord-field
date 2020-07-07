@@ -23,7 +23,7 @@ import { ProjectBreadcrumb } from '../../../components/ProjectBreadcrumb';
 import { Redacted } from '../../../components/Redacted';
 import { Link } from '../../../components/Routing';
 import { CeremonyCard } from '../CeremonyCard';
-import { EditInternshipEngagementDialog } from '../EditInternshipEngagement/EditInternshipEngagementDialog';
+import { EditEngagementDialog } from '../EditEngagement/EditEngagementDialog';
 import { EngagementQuery } from '../Engagement.generated';
 import { MentorCard } from './MentorCard';
 
@@ -226,7 +226,7 @@ export const InternshipEngagementDetail: FC<EngagementQuery> = ({
           />
         </Grid>
       </Grid>
-      <EditInternshipEngagementDialog
+      <EditEngagementDialog
         {...state}
         engagement={engagement}
         editValue={editValue}

@@ -21,7 +21,7 @@ import { ProjectBreadcrumb } from '../../../components/ProjectBreadcrumb';
 import { Redacted } from '../../../components/Redacted';
 import { Link } from '../../../components/Routing';
 import { CeremonyCard } from '../CeremonyCard';
-import { EditLanguageEngagementDialog } from '../EditLanguageEngagement/EditLanguageEngagementDialog';
+import { EditEngagementDialog } from '../EditEngagement/EditEngagementDialog';
 import { EngagementQuery } from '../Engagement.generated';
 
 const useStyles = makeStyles(({ spacing, breakpoints, palette }) => ({
@@ -199,7 +199,7 @@ export const LanguageEngagementDetail: FC<EngagementQuery> = ({
           </Grid>
         </Grid>
       </Grid>
-      <EditLanguageEngagementDialog
+      <EditEngagementDialog
         {...state}
         engagement={engagement}
         editValue={editValue}
