@@ -1,3 +1,4 @@
+import { DateTime } from 'luxon';
 import React, { useEffect, useState } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { Except } from 'type-fest';
@@ -31,6 +32,7 @@ export const Register = (props: Except<Props, 'onSubmit'>) => {
             realLastName: input.lastName,
             email: input.email,
             password: input.password,
+            timezone: DateTime.local().zone.name,
           },
         },
       });
