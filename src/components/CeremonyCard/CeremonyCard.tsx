@@ -4,6 +4,7 @@ import {
   CardActions,
   CardContent,
   makeStyles,
+  Switch,
   Typography,
 } from '@material-ui/core';
 import * as React from 'react';
@@ -12,6 +13,11 @@ import { useDateFormatter } from '../Formatters';
 import { CeremonyCardFragment } from './CeremonyCard.generated';
 
 const useStyles = makeStyles(({ palette, spacing }) => ({
+  header: {
+    display: 'flex',
+    alignItems: 'center',
+    marginBottom: spacing(1),
+  },
   certificationCard: {
     flex: 1,
   },
@@ -52,6 +58,8 @@ export const CeremonyCard: FC<CeremonyCardProps> = ({
   actualDate,
   canEdit,
   editCeremony,
+  type,
+  planned,
   //TODO: implement canRead functionality
   // canRead
 }) => {
@@ -59,29 +67,39 @@ export const CeremonyCard: FC<CeremonyCardProps> = ({
   const formatDate = useDateFormatter();
 
   return (
-    <Card className={classes.certificationCard}>
-      <CardContent className={classes.cardContent}>
-        <Typography color="textPrimary" variant="body2">
-          Certification Date
-        </Typography>
-        <div className={classes.actualDate}>
-          <Typography color="primary" variant="h2">
-            {formatDate(actualDate.value)}
+    <div>
+      <div className={classes.header}>
+        <Switch
+          checked={Boolean(planned.value)}
+          name="planned"
+          color="primary"
+        />
+        <Typography variant="h4">{`${type} Plan`}</Typography>
+      </div>
+      <Card className={classes.certificationCard}>
+        <CardContent className={classes.cardContent}>
+          <Typography color="textPrimary" variant="body2">
+            {`${type} Date`}
           </Typography>
-        </div>
+          <div className={classes.actualDate}>
+            <Typography color="primary" variant="h2">
+              {formatDate(actualDate.value)}
+            </Typography>
+          </div>
 
-        <Typography color="textPrimary" variant="body1">
-          Estimated Date
-        </Typography>
-        <Typography color="textPrimary" variant="body1">
-          {formatDate(estimatedDate.value)}
-        </Typography>
-      </CardContent>
-      <CardActions className={classes.cardActions}>
-        <Button color="primary" onClick={editCeremony} disabled={!canEdit}>
-          Edit dates
-        </Button>
-      </CardActions>
-    </Card>
+          <Typography color="textPrimary" variant="body1">
+            Estimated Date
+          </Typography>
+          <Typography color="textPrimary" variant="body1">
+            {formatDate(estimatedDate.value)}
+          </Typography>
+        </CardContent>
+        <CardActions className={classes.cardActions}>
+          <Button color="primary" onClick={editCeremony} disabled={!canEdit}>
+            Edit dates
+          </Button>
+        </CardActions>
+      </Card>
+    </div>
   );
 };
