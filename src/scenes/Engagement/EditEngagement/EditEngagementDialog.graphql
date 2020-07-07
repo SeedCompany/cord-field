@@ -5,3 +5,11 @@ mutation UpdateInternshipEngagement($input: UpdateInternshipEngagementInput!) {
     }
   }
 }
+
+mutation UpdateLanguageEngagement($input: UpdateLanguageEngagementInput!) {
+  updateLanguageEngagement(input: $input) {
+    engagement {
+      ...LanguageEngagementDetail
+    }
+  }
+}
