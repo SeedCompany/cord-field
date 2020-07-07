@@ -1,7 +1,0 @@
-mutation UpdateLanguageEngagement($input: UpdateLanguageEngagementInput!) {
-  updateLanguageEngagement(input: $input) {
-    engagement {
-      ...LanguageEngagementDetail
-    }
-  }
-}
