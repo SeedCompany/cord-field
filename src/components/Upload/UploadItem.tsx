@@ -25,6 +25,9 @@ const useStyles = makeStyles(({ palette, spacing }) => ({
   progressBarBox: {
     marginTop: spacing(2.5),
   },
+  percentage: {
+    minWidth: '2ch',
+  },
   statusText: {
     fontSize: '0.65rem',
   },
@@ -40,8 +43,16 @@ interface UploadItemProps {
 
 export const UploadItem: FC<UploadItemProps> = (props) => {
   const { file, onClear } = props;
-  const { error, fileName, percentCompleted } = file;
+  const { error, fileName, percentCompleted, uploadId } = file;
   const classes = useStyles();
+
+  const progressLabel = error
+    ? error.message
+    : !uploadId
+    ? 'Initializing'
+    : percentCompleted === 100
+    ? 'Completed'
+    : 'Uploading';
 
   return (
     <Box
@@ -65,14 +76,18 @@ export const UploadItem: FC<UploadItemProps> = (props) => {
           className={classes.statusText}
           color={error ? 'error' : undefined}
         >
-          {!error ? 'Uploading...' : error.message}
+          {progressLabel}
         </Typography>
       </Box>
       <Box>
         {!error ? (
-          <Typography variant="body2" color="textSecondary">{`${Math.round(
-            percentCompleted
-          )}%`}</Typography>
+          <Typography
+            variant="body2"
+            color="textSecondary"
+            className={classes.percentage}
+          >
+            {!uploadId ? null : `${Math.round(percentCompleted)}%`}
+          </Typography>
         ) : (
           <IconButton
             aria-label="clear"
