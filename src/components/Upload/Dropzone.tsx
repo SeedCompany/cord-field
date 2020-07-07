@@ -39,7 +39,7 @@ export const Dropzone = () => {
           const input = {
             file,
             fileName: file.name,
-            callback: () => Promise.resolve(console.log('DONE')),
+            callback: () => Promise.resolve(console.log('CALLBACK DONE')),
           };
           return inputs.concat(input);
         },

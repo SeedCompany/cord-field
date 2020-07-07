@@ -191,7 +191,11 @@ export const UploadProvider: FC = ({ children }) => {
           queueId: file.queueId,
           uploadId: id,
         });
-        uploadFile(file, url);
+        const updatedFile = {
+          ...file,
+          uploadId: id,
+        };
+        uploadFile(updatedFile, url);
       }
     },
     [requestFileUpload, uploadFile]
