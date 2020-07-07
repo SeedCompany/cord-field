@@ -1,0 +1,7 @@
+fragment ProjectBreadcrumb on Project {
+  id
+  name {
+    canRead
+    value
+  }
+}

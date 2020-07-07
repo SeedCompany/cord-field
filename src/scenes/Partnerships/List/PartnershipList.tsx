@@ -5,7 +5,6 @@ import {
   Typography,
 } from '@material-ui/core';
 import { Add } from '@material-ui/icons';
-import { Skeleton } from '@material-ui/lab';
 import React, { FC } from 'react';
 import { useParams } from 'react-router-dom';
 import { Merge } from 'type-fest';
@@ -14,6 +13,7 @@ import { useDialog } from '../../../components/Dialog';
 import { Fab } from '../../../components/Fab';
 import { PartnershipCard } from '../../../components/PartnershipCard';
 import { PartnershipCardFragment } from '../../../components/PartnershipCard/PartnershipCard.generated';
+import { ProjectBreadcrumb } from '../../../components/ProjectBreadcrumb';
 import { listOrPlaceholders } from '../../../util';
 import { EditPartnership } from '../Edit';
 import { EditPartnershipFragment } from '../Edit/EditPartnership.generated';
@@ -55,9 +55,7 @@ export const PartnershipList: FC = () => {
   return (
     <div className={classes.root}>
       <Breadcrumbs>
-        <Breadcrumb to={`/projects/${projectId}`}>
-          {project?.name?.value ?? <Skeleton width={200} />}
-        </Breadcrumb>
+        <ProjectBreadcrumb data={project} />
         <Breadcrumb to={`/projects/${projectId}/partnerships`}>
           Partnerships
         </Breadcrumb>

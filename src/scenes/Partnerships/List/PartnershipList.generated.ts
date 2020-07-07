@@ -5,6 +5,11 @@ import gql from 'graphql-tag';
 import * as Types from '../../../api/schema.generated';
 import { PartnershipCardFragment } from '../../../components/PartnershipCard/PartnershipCard.generated';
 import { PartnershipCardFragmentDoc } from '../../../components/PartnershipCard/PartnershipCard.generated';
+import {
+  ProjectBreadcrumb_InternshipProject_Fragment,
+  ProjectBreadcrumb_TranslationProject_Fragment,
+} from '../../../components/ProjectBreadcrumb/ProjectBreadcrumb.generated';
+import { ProjectBreadcrumbFragmentDoc } from '../../../components/ProjectBreadcrumb/ProjectBreadcrumb.generated';
 import { EditPartnershipFragment } from '../Edit/EditPartnership.generated';
 import { EditPartnershipFragmentDoc } from '../Edit/EditPartnership.generated';
 
@@ -14,51 +19,34 @@ export interface ProjectPartnershipsQueryVariables {
 
 export type ProjectPartnershipsQuery = { __typename?: 'Query' } & {
   project:
-    | ({ __typename?: 'InternshipProject' } & Pick<
-        Types.InternshipProject,
-        'id'
-      > & {
-          name: { __typename?: 'SecuredString' } & Pick<
-            Types.SecuredString,
-            'value'
-          >;
-          partnerships: { __typename?: 'SecuredPartnershipList' } & Pick<
-            Types.SecuredPartnershipList,
-            'canCreate' | 'total'
-          > & {
-              items: Array<
-                { __typename?: 'Partnership' } & PartnershipCardFragment &
-                  EditPartnershipFragment
-              >;
-            };
-        })
-    | ({ __typename?: 'TranslationProject' } & Pick<
-        Types.TranslationProject,
-        'id'
-      > & {
-          name: { __typename?: 'SecuredString' } & Pick<
-            Types.SecuredString,
-            'value'
-          >;
-          partnerships: { __typename?: 'SecuredPartnershipList' } & Pick<
-            Types.SecuredPartnershipList,
-            'canCreate' | 'total'
-          > & {
-              items: Array<
-                { __typename?: 'Partnership' } & PartnershipCardFragment &
-                  EditPartnershipFragment
-              >;
-            };
-        });
+    | ({ __typename?: 'InternshipProject' } & {
+        partnerships: { __typename?: 'SecuredPartnershipList' } & Pick<
+          Types.SecuredPartnershipList,
+          'canCreate' | 'total'
+        > & {
+            items: Array<
+              { __typename?: 'Partnership' } & PartnershipCardFragment &
+                EditPartnershipFragment
+            >;
+          };
+      } & ProjectBreadcrumb_InternshipProject_Fragment)
+    | ({ __typename?: 'TranslationProject' } & {
+        partnerships: { __typename?: 'SecuredPartnershipList' } & Pick<
+          Types.SecuredPartnershipList,
+          'canCreate' | 'total'
+        > & {
+            items: Array<
+              { __typename?: 'Partnership' } & PartnershipCardFragment &
+                EditPartnershipFragment
+            >;
+          };
+      } & ProjectBreadcrumb_TranslationProject_Fragment);
 };
 
 export const ProjectPartnershipsDocument = gql`
   query ProjectPartnerships($input: ID!) {
     project(id: $input) {
-      id
-      name {
-        value
-      }
+      ...ProjectBreadcrumb
       partnerships {
         canCreate
         total
@@ -69,6 +57,7 @@ export const ProjectPartnershipsDocument = gql`
       }
     }
   }
+  ${ProjectBreadcrumbFragmentDoc}
   ${PartnershipCardFragmentDoc}
   ${EditPartnershipFragmentDoc}
 `;

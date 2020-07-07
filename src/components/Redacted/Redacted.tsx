@@ -5,7 +5,7 @@ import { FC } from 'react';
 import * as React from 'react';
 import { Except } from 'type-fest';
 
-interface RedactedProps {
+export interface RedactedProps {
   info: TooltipProps['title'];
   width?: SkeletonProps['width'];
   TooltipProps?: Except<TooltipProps, 'title'>;
