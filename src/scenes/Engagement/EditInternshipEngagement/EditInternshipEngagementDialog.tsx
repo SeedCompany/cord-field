@@ -1,5 +1,5 @@
 import { Typography } from '@material-ui/core';
-import { startCase } from 'lodash';
+import { pick, startCase } from 'lodash';
 import React, { FC } from 'react';
 import { Except } from 'type-fest';
 import {
@@ -120,25 +120,35 @@ export const EditInternshipEngagementDialog: FC<EditInternshipEngagementDialogPr
       </>
     ) : null);
 
+  // Filter out relevant initial values so the other values don't get added to the mutation
+  const fullEngagementInitialValues = {
+    startDate: engagement.startDate.value,
+    endDate: engagement.endDate.value,
+    completeDate: engagement.completeDate.value,
+    disbursementCompleteDate: engagement.disbursementCompleteDate.value,
+    communicationsCompleteDate: engagement.communicationsCompleteDate.value,
+    methodologies: engagement.methodologies.value,
+    position: engagement.position.value,
+  };
+  const pickKeys =
+    editValue === 'startEndDate'
+      ? ['id', 'startDate', 'endDate']
+      : ['id', editValue || ''];
+
+  const filteredInitialValues = {
+    engagement: {
+      id: engagement.id,
+      ...pick(fullEngagementInitialValues, pickKeys),
+    },
+  };
+
   return (
     <DialogForm<UpdateInternshipEngagementInput>
       title={title}
       closeLabel="Close"
       submitLabel="Update Engagement"
       {...props}
-      initialValues={{
-        engagement: {
-          id: engagement.id,
-          startDate: engagement.startDate.value,
-          endDate: engagement.endDate.value,
-          completeDate: engagement.completeDate.value,
-          disbursementCompleteDate: engagement.disbursementCompleteDate.value,
-          communicationsCompleteDate:
-            engagement.communicationsCompleteDate.value,
-          methodologies: engagement.methodologies.value,
-          position: engagement.position.value,
-        },
-      }}
+      initialValues={filteredInitialValues}
       onSubmit={(input) => {
         updateEngagement({ variables: { input } });
       }}
