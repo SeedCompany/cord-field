@@ -39,6 +39,7 @@ export const GQLOperations = {
     PartnershipCard: 'PartnershipCard',
     PartnershipSummary: 'PartnershipSummary',
     PartnershipItem: 'PartnershipItem',
+    ProjectBreadcrumb: 'ProjectBreadcrumb',
     ProjectListItem: 'ProjectListItem',
     ProjectMember: 'ProjectMember',
     ProjectMemberItem: 'ProjectMemberItem',
