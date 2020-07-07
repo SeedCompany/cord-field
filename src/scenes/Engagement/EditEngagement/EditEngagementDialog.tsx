@@ -7,6 +7,7 @@ import {
   displayInternPosition,
   InternshipEngagementPosition,
   UpdateInternshipEngagementInput,
+  UpdateLanguageEngagementInput,
 } from '../../../api';
 import {
   DialogForm,
@@ -22,13 +23,21 @@ import {
   TextField,
 } from '../../../components/form';
 import { InternshipEngagementDetailFragment } from '../InternshipEngagement/InternshipEngagement.generated';
-import { useUpdateInternshipEngagementMutation } from './EditInternshipEngagementDialog.generated';
+import { LanguageEngagementDetailFragment } from '../LanguageEngagement/LanguageEngagementDetail.generated';
+import {
+  useUpdateInternshipEngagementMutation,
+  useUpdateLanguageEngagementMutation,
+} from './EditEngagementDialog.generated';
 
-type EditInternshipEngagementDialogProps = Except<
-  DialogFormProps<UpdateInternshipEngagementInput>,
+type EditEngagementDialogProps = Except<
+  DialogFormProps<
+    UpdateInternshipEngagementInput | UpdateInternshipEngagementInput
+  >,
   'onSubmit' | 'initialValues'
 > & {
-  engagement: InternshipEngagementDetailFragment;
+  engagement:
+    | InternshipEngagementDetailFragment
+    | LanguageEngagementDetailFragment;
   editValue?: string;
 };
 
@@ -54,12 +63,18 @@ const internshipEngagementPositions: InternshipEngagementPosition[] = [
   'Translator',
 ];
 
-export const EditInternshipEngagementDialog: FC<EditInternshipEngagementDialogProps> = ({
+export const EditEngagementDialog: FC<EditEngagementDialogProps> = ({
   engagement,
   editValue,
   ...props
 }) => {
-  const [updateEngagement] = useUpdateInternshipEngagementMutation();
+  const [updateInternshipEngagement] = useUpdateInternshipEngagementMutation();
+  const [updateLanguageEngagement] = useUpdateLanguageEngagementMutation();
+
+  const updateEngagement =
+    engagement.__typename === 'InternshipEngagement'
+      ? updateInternshipEngagement
+      : updateLanguageEngagement;
 
   const title =
     editValue === 'startEndDate'
@@ -129,15 +144,23 @@ export const EditInternshipEngagementDialog: FC<EditInternshipEngagementDialogPr
     ) : null);
 
   // Filter out relevant initial values so the other values don't get added to the mutation
-  const fullEngagementInitialValues = {
+  const sharedInitialValues = {
     startDate: engagement.startDate.value,
     endDate: engagement.endDate.value,
     completeDate: engagement.completeDate.value,
     disbursementCompleteDate: engagement.disbursementCompleteDate.value,
     communicationsCompleteDate: engagement.communicationsCompleteDate.value,
-    methodologies: engagement.methodologies.value,
-    position: engagement.position.value,
   };
+
+  const fullInitialValues =
+    engagement.__typename === 'InternshipEngagement'
+      ? {
+          ...sharedInitialValues,
+          methodologies: engagement.methodologies.value,
+          position: engagement.position.value,
+        }
+      : sharedInitialValues;
+
   const pickKeys =
     editValue === 'startEndDate'
       ? ['id', 'startDate', 'endDate']
@@ -146,12 +169,12 @@ export const EditInternshipEngagementDialog: FC<EditInternshipEngagementDialogPr
   const filteredInitialValues = {
     engagement: {
       id: engagement.id,
-      ...pick(fullEngagementInitialValues, pickKeys),
+      ...pick(fullInitialValues, pickKeys),
     },
   };
 
   return (
-    <DialogForm<UpdateInternshipEngagementInput>
+    <DialogForm<UpdateInternshipEngagementInput | UpdateLanguageEngagementInput>
       title={title}
       closeLabel="Close"
       submitLabel="Update Engagement"
