@@ -52,7 +52,6 @@ export const UploadProvider: FC = ({ children }) => {
 
   const addFilesToUploadQueue = useCallback(
     (files: Types.FileInput[]) => {
-      console.log('SETTING SUBMITTED FILES');
       dispatch({
         type: actions.FILES_SUBMITTED,
         files,
@@ -75,32 +74,26 @@ export const UploadProvider: FC = ({ children }) => {
       queueId: Types.UploadFile['queueId'],
       error: Types.UploadFile['error']
     ) => {
-      console.log('SETTING UPLOAD ERROR');
       dispatch({ type: actions.FILE_UPLOAD_ERROR_OCCURRED, queueId, error });
     },
     []
   );
 
   const removeUpload = useCallback((queueId: Types.UploadFile['queueId']) => {
-    console.log('REMOVING UPLOAD FROM QUEUE');
     dispatch({ type: actions.REMOVE_UPLOAD, queueId });
   }, []);
 
   const handleFileUploadSuccess = useCallback(
     (response, file: Types.UploadFile) => {
-      console.info(`UPLOAD RESPONSE -> ${JSON.stringify(response)}`);
-
       if (file?.callback && file?.uploadId) {
         const { callback, queueId, fileName, uploadId } = file;
         callback(uploadId, fileName).then(async () => {
-          console.log('SETTING UPLOAD COMPLETED');
           dispatch({
             type: actions.FILE_UPLOAD_COMPLETED,
             queueId,
             completedAt: new Date(),
           });
           await sleep(10000);
-          console.log('REMOVING COMPLETED UPLOAD');
           removeUpload(queueId);
         });
       }
@@ -112,7 +105,6 @@ export const UploadProvider: FC = ({ children }) => {
   // It only runs if upload is complete but status isn't a "success" status.
   const handleFileUploadCompleteError = useCallback(
     (statusText, queueId) => {
-      console.error(`UPLOAD ERROR -> ${JSON.stringify(statusText)}`);
       setUploadError(queueId, new Error(statusText));
     },
     [setUploadError]
@@ -130,8 +122,6 @@ export const UploadProvider: FC = ({ children }) => {
     (queueId: Types.UploadFile['queueId'], event: ProgressEvent) => {
       const { loaded, total } = event;
       const percentCompleted = Math.floor((loaded / total) * 1000) / 10;
-      console.log(`Percentage completed: ${percentCompleted}%`);
-      console.log('SETTING PERCENT COMPLETED');
       dispatch({
         type: actions.PERCENT_COMPLETED_UPDATED,
         queueId,
@@ -185,7 +175,6 @@ export const UploadProvider: FC = ({ children }) => {
       const { data } = await requestFileUpload();
       const { id, url } = data?.requestFileUpload ?? { id: '', url: '' };
       if (id && url) {
-        console.log('SETTING UPLOAD REQUEST SUCCEEDED');
         dispatch({
           type: actions.FILE_UPLOAD_REQUEST_SUCCEEDED,
           queueId: file.queueId,
@@ -206,7 +195,6 @@ export const UploadProvider: FC = ({ children }) => {
       (file) => !file.uploading && !file.completedAt
     );
     for (const file of filesNotStarted) {
-      console.log('SETTING UPLOAD STATUS');
       setUploadingStatus(file.queueId, true);
       handleFileAdded(file);
     }
