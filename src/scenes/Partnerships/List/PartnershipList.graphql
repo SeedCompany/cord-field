@@ -1,9 +1,6 @@
 query ProjectPartnerships($input: ID!) {
   project(id: $input) {
-    id
-    name {
-      value
-    }
+    ...ProjectBreadcrumb
     partnerships {
       canCreate
       total
