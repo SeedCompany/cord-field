@@ -19,6 +19,8 @@ const generateUser = (
       firstName,
       avatarLetters,
     },
+    canRead: true,
+    canEdit: true,
   },
 });
 
