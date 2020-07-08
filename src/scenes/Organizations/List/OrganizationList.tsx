@@ -17,6 +17,10 @@ const useStyles = makeStyles(({ spacing }) => ({
   item: {
     marginBottom: spacing(2),
   },
+  listContainer: {
+    overflow: 'auto',
+    padding: spacing(2),
+  },
 }));
 
 export const OrganizationList: FC = () => {
@@ -52,13 +56,15 @@ export const OrganizationList: FC = () => {
           <Skeleton width="10ch" />
         )}
       </Typography>
-      {listOrPlaceholders(items, 15).map((item, index) => (
-        <OrganizationListItemCard
-          key={item?.id ?? index}
-          organization={item}
-          className={classes.item}
-        />
-      ))}
+      <div className={classes.listContainer}>
+        {listOrPlaceholders(items, 15).map((item, index) => (
+          <OrganizationListItemCard
+            key={item?.id ?? index}
+            organization={item}
+            className={classes.item}
+          />
+        ))}
+      </div>
     </ContentContainer>
   );
 };

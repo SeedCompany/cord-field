@@ -17,6 +17,10 @@ const useStyles = makeStyles(({ spacing }) => ({
   projectItem: {
     marginBottom: spacing(2),
   },
+  listContainer: {
+    overflow: 'auto',
+    padding: spacing(2),
+  },
 }));
 
 export const UserList: FC = () => {
@@ -52,13 +56,15 @@ export const UserList: FC = () => {
           <>{formatNumber(data?.users.total)} People</>
         )}
       </Typography>
-      {listOrPlaceholders(data?.users.items, 10).map((item, index) => (
-        <UserCard
-          key={item?.id ?? index}
-          user={item}
-          className={classes.projectItem}
-        />
-      ))}
+      <div className={classes.listContainer}>
+        {listOrPlaceholders(data?.users.items, 10).map((item, index) => (
+          <UserCard
+            key={item?.id ?? index}
+            user={item}
+            className={classes.projectItem}
+          />
+        ))}
+      </div>
     </ContentContainer>
   );
 };

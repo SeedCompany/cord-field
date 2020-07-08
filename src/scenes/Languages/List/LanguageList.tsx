@@ -14,6 +14,13 @@ const useStyles = makeStyles(({ spacing }) => ({
   options: {
     margin: spacing(3, 0),
   },
+  listContainer: {
+    overflow: 'auto',
+    padding: spacing(2),
+  },
+  item: {
+    marginBottom: spacing(2),
+  },
 }));
 
 export const LanguageList: FC = () => {
@@ -51,19 +58,19 @@ export const LanguageList: FC = () => {
           <Skeleton width="14ch" />
         )}
       </Typography>
-      <Grid container direction="column" spacing={2}>
+      <div className={classes.listContainer}>
         {loading
           ? times(10).map((index) => (
-              <Grid item key={index}>
-                <LanguageListItemCard />
-              </Grid>
+              <LanguageListItemCard key={index} className={classes.item} />
             ))
           : data?.languages.items.map((item) => (
-              <Grid item key={item.id}>
-                <LanguageListItemCard language={item} />
-              </Grid>
+              <LanguageListItemCard
+                language={item}
+                key={item.id}
+                className={classes.item}
+              />
             ))}
-      </Grid>
+      </div>
     </ContentContainer>
   );
 };
