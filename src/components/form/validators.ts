@@ -37,3 +37,8 @@ export const min = (min: number, error?: string) => (
 export const max = (max: number, error?: string) => (
   val: number | null | undefined
 ) => (val != null && val > max ? error ?? 'Value is above maximum' : undefined);
+
+export const minLength = (min = 2) => (value: string) =>
+  !value || value.length >= min
+    ? undefined
+    : `Must be ${min} or more characters`;
