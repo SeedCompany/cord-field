@@ -1,11 +1,23 @@
 import { Breadcrumbs, makeStyles, Typography } from '@material-ui/core';
+import {
+  Description,
+  Folder,
+  GraphicEq,
+  Image,
+  InsertDriveFile,
+  TableChart,
+  VideoLibrary,
+} from '@material-ui/icons';
 import { Skeleton } from '@material-ui/lab';
-import { DateTime } from 'luxon';
 import React, { FC } from 'react';
 import { useParams } from 'react-router-dom';
 import { File, FileVersion } from '../../../api';
 import { Breadcrumb } from '../../../components/Breadcrumb';
 import { ContentContainer as Content } from '../../../components/ContentContainer';
+import {
+  useDateFormatter,
+  useFileSizeFormatter,
+} from '../../../components/Formatters';
 import { ProjectBreadcrumb } from '../../../components/ProjectBreadcrumb';
 import { RowData, Table } from '../../../components/Table';
 import { useProjectFilesQuery } from './ProjectFiles.generated';
@@ -21,11 +33,30 @@ const useStyles = makeStyles(({ spacing }) => ({
   tableWrapper: {
     marginTop: spacing(4),
   },
+  fileName: {
+    display: 'flex',
+    alignItems: 'center',
+  },
+  fileIcon: {
+    marginRight: spacing(0.5),
+  },
 }));
+
+const icons = {
+  Audio: GraphicEq,
+  Directory: Folder,
+  Document: Description,
+  Image: Image,
+  Other: InsertDriveFile,
+  Spreadsheet: TableChart,
+  Video: VideoLibrary,
+};
 
 export const ProjectFilesList: FC = () => {
   const classes = useStyles();
   const { projectId } = useParams();
+  const formatDate = useDateFormatter();
+  const formatFileSize = useFileSizeFormatter();
   const { data, loading, error } = useProjectFilesQuery({
     variables: {
       input: projectId,
@@ -40,8 +71,23 @@ export const ProjectFilesList: FC = () => {
       hidden: true,
     },
     {
+      title: 'Category',
+      field: 'category',
+      hidden: true,
+    },
+    {
       title: 'Name',
       field: 'name',
+      render: (rowData: RowData) => {
+        const { category, name } = rowData;
+        const Icon = icons[category as keyof typeof icons];
+        return (
+          <span className={classes.fileName}>
+            <Icon className={classes.fileIcon} />
+            {name}
+          </span>
+        );
+      },
     },
     {
       title: 'Created',
@@ -54,13 +100,17 @@ export const ProjectFilesList: FC = () => {
     {
       title: 'File Size',
       field: 'size',
+      render: (rowData: RowData) => {
+        const { category, size } = rowData;
+        return category === 'Directory' ? '–' : formatFileSize(Number(size));
+      },
     },
   ];
 
   const rowData =
     items?.reduce((rows: RowData[], item) => {
       const isDirectory = item.type === 'Directory';
-      const { id, name, createdAt, createdBy } = item;
+      const { id, name, category, createdAt, createdBy } = item;
       const {
         displayFirstName: { value: firstName },
         displayLastName: { value: lastName },
@@ -68,10 +118,11 @@ export const ProjectFilesList: FC = () => {
 
       const row = {
         id,
+        category,
         name,
-        createdAt: DateTime.fromISO(String(createdAt)).toLocaleString(),
+        createdAt: formatDate(createdAt),
         createdBy: `${firstName} ${lastName}`,
-        size: isDirectory ? '–' : (item as File | FileVersion).size,
+        size: isDirectory ? 0 : (item as File | FileVersion).size,
       };
       return rows.concat(row);
     }, []) ?? [];
@@ -94,7 +145,6 @@ export const ProjectFilesList: FC = () => {
             {loading ? (
               <>
                 <Skeleton variant="text" width="20%" />
-                <Skeleton variant="text" width="10%" />
               </>
             ) : (
               <Typography variant="h2" className={classes.title}>
