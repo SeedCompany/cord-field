@@ -3,18 +3,53 @@ query ProjectFiles($input: ID!) {
     ...ProjectBreadcrumb
     rootDirectory {
       id
-      name
       children {
         items {
           id
-          createdAt
+          name
           type
           category
-          name
-          createdBy {
-            fullName
+          ... on File {
+            id
+            name
+            downloadUrl
+            mimeType
+            category
+            size
+            type
+            createdAt
+            createdBy {
+              fullName
+              id
+            }
+          }
+          ... on Directory {
+            id
+            name
+            createdAt
+            type
+            category
+            createdBy {
+              fullName
+              id
+            }
+          }
+          ... on FileVersion {
+            id
+            name
+            downloadUrl
+            createdAt
+            category
+            mimeType
+            size
+            type
+            createdBy {
+              id
+              fullName
+            }
           }
         }
+        total
       }
     }
   }

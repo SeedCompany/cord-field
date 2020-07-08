@@ -18,77 +18,111 @@ export type ProjectFilesQuery = { __typename?: 'Query' } & {
     | ({ __typename?: 'InternshipProject' } & {
         rootDirectory: { __typename?: 'Directory' } & Pick<
           Types.Directory,
-          'id' | 'name'
+          'id'
         > & {
-            children: { __typename?: 'FileListOutput' } & {
-              items: Array<
-                | ({ __typename?: 'Directory' } & Pick<
-                    Types.Directory,
-                    'id' | 'createdAt' | 'type' | 'category' | 'name'
-                  > & {
-                      createdBy: { __typename?: 'User' } & Pick<
-                        Types.User,
-                        'fullName'
-                      >;
-                    })
-                | ({ __typename?: 'File' } & Pick<
-                    Types.File,
-                    'id' | 'createdAt' | 'type' | 'category' | 'name'
-                  > & {
-                      createdBy: { __typename?: 'User' } & Pick<
-                        Types.User,
-                        'fullName'
-                      >;
-                    })
-                | ({ __typename?: 'FileVersion' } & Pick<
-                    Types.FileVersion,
-                    'id' | 'createdAt' | 'type' | 'category' | 'name'
-                  > & {
-                      createdBy: { __typename?: 'User' } & Pick<
-                        Types.User,
-                        'fullName'
-                      >;
-                    })
-              >;
-            };
+            children: { __typename?: 'FileListOutput' } & Pick<
+              Types.FileListOutput,
+              'total'
+            > & {
+                items: Array<
+                  | ({ __typename?: 'Directory' } & Pick<
+                      Types.Directory,
+                      'id' | 'name' | 'createdAt' | 'type' | 'category'
+                    > & {
+                        createdBy: { __typename?: 'User' } & Pick<
+                          Types.User,
+                          'fullName' | 'id'
+                        >;
+                      })
+                  | ({ __typename?: 'File' } & Pick<
+                      Types.File,
+                      | 'id'
+                      | 'name'
+                      | 'downloadUrl'
+                      | 'mimeType'
+                      | 'category'
+                      | 'size'
+                      | 'type'
+                      | 'createdAt'
+                    > & {
+                        createdBy: { __typename?: 'User' } & Pick<
+                          Types.User,
+                          'fullName' | 'id'
+                        >;
+                      })
+                  | ({ __typename?: 'FileVersion' } & Pick<
+                      Types.FileVersion,
+                      | 'id'
+                      | 'name'
+                      | 'downloadUrl'
+                      | 'createdAt'
+                      | 'category'
+                      | 'mimeType'
+                      | 'size'
+                      | 'type'
+                    > & {
+                        createdBy: { __typename?: 'User' } & Pick<
+                          Types.User,
+                          'id' | 'fullName'
+                        >;
+                      })
+                >;
+              };
           };
       } & ProjectBreadcrumb_InternshipProject_Fragment)
     | ({ __typename?: 'TranslationProject' } & {
         rootDirectory: { __typename?: 'Directory' } & Pick<
           Types.Directory,
-          'id' | 'name'
+          'id'
         > & {
-            children: { __typename?: 'FileListOutput' } & {
-              items: Array<
-                | ({ __typename?: 'Directory' } & Pick<
-                    Types.Directory,
-                    'id' | 'createdAt' | 'type' | 'category' | 'name'
-                  > & {
-                      createdBy: { __typename?: 'User' } & Pick<
-                        Types.User,
-                        'fullName'
-                      >;
-                    })
-                | ({ __typename?: 'File' } & Pick<
-                    Types.File,
-                    'id' | 'createdAt' | 'type' | 'category' | 'name'
-                  > & {
-                      createdBy: { __typename?: 'User' } & Pick<
-                        Types.User,
-                        'fullName'
-                      >;
-                    })
-                | ({ __typename?: 'FileVersion' } & Pick<
-                    Types.FileVersion,
-                    'id' | 'createdAt' | 'type' | 'category' | 'name'
-                  > & {
-                      createdBy: { __typename?: 'User' } & Pick<
-                        Types.User,
-                        'fullName'
-                      >;
-                    })
-              >;
-            };
+            children: { __typename?: 'FileListOutput' } & Pick<
+              Types.FileListOutput,
+              'total'
+            > & {
+                items: Array<
+                  | ({ __typename?: 'Directory' } & Pick<
+                      Types.Directory,
+                      'id' | 'name' | 'createdAt' | 'type' | 'category'
+                    > & {
+                        createdBy: { __typename?: 'User' } & Pick<
+                          Types.User,
+                          'fullName' | 'id'
+                        >;
+                      })
+                  | ({ __typename?: 'File' } & Pick<
+                      Types.File,
+                      | 'id'
+                      | 'name'
+                      | 'downloadUrl'
+                      | 'mimeType'
+                      | 'category'
+                      | 'size'
+                      | 'type'
+                      | 'createdAt'
+                    > & {
+                        createdBy: { __typename?: 'User' } & Pick<
+                          Types.User,
+                          'fullName' | 'id'
+                        >;
+                      })
+                  | ({ __typename?: 'FileVersion' } & Pick<
+                      Types.FileVersion,
+                      | 'id'
+                      | 'name'
+                      | 'downloadUrl'
+                      | 'createdAt'
+                      | 'category'
+                      | 'mimeType'
+                      | 'size'
+                      | 'type'
+                    > & {
+                        createdBy: { __typename?: 'User' } & Pick<
+                          Types.User,
+                          'id' | 'fullName'
+                        >;
+                      })
+                >;
+              };
           };
       } & ProjectBreadcrumb_TranslationProject_Fragment);
 };
@@ -99,18 +133,53 @@ export const ProjectFilesDocument = gql`
       ...ProjectBreadcrumb
       rootDirectory {
         id
-        name
         children {
           items {
             id
-            createdAt
+            name
             type
             category
-            name
-            createdBy {
-              fullName
+            ... on File {
+              id
+              name
+              downloadUrl
+              mimeType
+              category
+              size
+              type
+              createdAt
+              createdBy {
+                fullName
+                id
+              }
+            }
+            ... on Directory {
+              id
+              name
+              createdAt
+              type
+              category
+              createdBy {
+                fullName
+                id
+              }
+            }
+            ... on FileVersion {
+              id
+              name
+              downloadUrl
+              createdAt
+              category
+              mimeType
+              size
+              type
+              createdBy {
+                id
+                fullName
+              }
             }
           }
+          total
         }
       }
     }
