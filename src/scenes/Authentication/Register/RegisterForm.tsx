@@ -38,8 +38,10 @@ const useStyles = makeStyles(({ spacing }) => ({
 }));
 
 interface RegisterInput {
-  firstName: string;
-  lastName: string;
+  realFirstName: string;
+  realLastName: string;
+  displayFirstName: string;
+  displayLastName: string;
   email: string;
   password: string;
   confirmPassword: string;
@@ -74,16 +76,28 @@ export const RegisterForm = ({ className, ...props }: RegisterFormProps) => {
             <form onSubmit={handleSubmit}>
               <SubmitError className={classes.formError} />
               <TextField
-                name="firstName"
+                name="realFirstName"
                 label="First Name"
                 placeholder="Enter First Name"
                 required
                 autoFocus
               />
               <TextField
-                name="lastName"
+                name="realLastName"
                 label="Last Name"
                 placeholder="Enter Last Name"
+                required
+              />
+              <TextField
+                name="displayFirstName"
+                label="Public First Name"
+                placeholder="Enter Public First Name"
+                required
+              />
+              <TextField
+                name="displayLastName"
+                label="Public Last Name"
+                placeholder="Enter Public Last Name"
                 required
               />
               <EmailField caseSensitive />
