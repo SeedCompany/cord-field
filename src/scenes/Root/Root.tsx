@@ -6,8 +6,8 @@ import { Home } from '../Home';
 import { Languages } from '../Languages';
 import { Organizations } from '../Organizations';
 import { Projects } from '../Projects';
-import { Users } from '../Users';
 import { Upload } from '../Upload/Upload';
+import { Users } from '../Users';
 import { Header } from './Header';
 import { Sidebar } from './Sidebar';
 
