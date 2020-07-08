@@ -110,6 +110,7 @@ export const ProjectFilesList: FC = () => {
   const rowData =
     items?.reduce((rows: RowData[], item) => {
       const isDirectory = item.type === 'Directory';
+      const isFileVersion = item.type === 'FileVersion';
       const { id, name, category, createdAt, createdBy } = item;
       const {
         displayFirstName: { value: firstName },
@@ -124,7 +125,7 @@ export const ProjectFilesList: FC = () => {
         createdBy: `${firstName} ${lastName}`,
         size: isDirectory ? 0 : (item as File | FileVersion).size,
       };
-      return rows.concat(row);
+      return isFileVersion ? rows : rows.concat(row);
     }, []) ?? [];
 
   return (
