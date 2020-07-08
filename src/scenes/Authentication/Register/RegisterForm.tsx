@@ -11,6 +11,7 @@ import {
   SubmitError,
   TextField,
 } from '../../../components/form';
+import { minLength } from '../../../components/form/validators';
 import { CordIcon } from '../../../components/Icons';
 import { Link } from '../../../components/Routing';
 
@@ -80,25 +81,28 @@ export const RegisterForm = ({ className, ...props }: RegisterFormProps) => {
                 label="First Name"
                 placeholder="Enter First Name"
                 required
-                autoFocus
+                validate={minLength(2)}
               />
               <TextField
                 name="realLastName"
                 label="Last Name"
                 placeholder="Enter Last Name"
                 required
+                validate={minLength(2)}
               />
               <TextField
                 name="displayFirstName"
                 label="Public First Name"
                 placeholder="Enter Public First Name"
                 required
+                validate={minLength(2)}
               />
               <TextField
                 name="displayLastName"
                 label="Public Last Name"
                 placeholder="Enter Public Last Name"
                 required
+                validate={minLength(2)}
               />
               <EmailField caseSensitive />
               <PasswordField />
