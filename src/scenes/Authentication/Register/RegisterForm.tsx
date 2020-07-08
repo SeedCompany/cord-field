@@ -2,6 +2,7 @@ import { makeStyles, Typography } from '@material-ui/core';
 import { Decorator, Mutator } from 'final-form';
 import React from 'react';
 import { Form, FormProps } from 'react-final-form';
+import { RegisterInput } from '../../../api';
 import {
   blurOnSubmit,
   EmailField,
@@ -38,18 +39,12 @@ const useStyles = makeStyles(({ spacing }) => ({
   },
 }));
 
-interface RegisterInput {
-  realFirstName: string;
-  realLastName: string;
-  displayFirstName: string;
-  displayLastName: string;
-  email: string;
-  password: string;
+interface RegisterInputFields extends RegisterInput {
   confirmPassword: string;
 }
 
 export type RegisterFormProps = Pick<
-  FormProps<RegisterInput>,
+  FormProps<RegisterInputFields>,
   'onSubmit' | 'initialValues'
 > & { className?: string };
 
@@ -127,7 +122,7 @@ const passwordMatching = ({
   password,
   confirmPassword,
   ..._otherVals
-}: RegisterInput) => {
+}: RegisterInputFields) => {
   return password && confirmPassword && password !== confirmPassword
     ? {
         password: 'Passwords must match',
@@ -136,7 +131,7 @@ const passwordMatching = ({
     : undefined;
 };
 
-const showMatchingErrorsImmediately: Decorator<RegisterInput> = (form) =>
+const showMatchingErrorsImmediately: Decorator<RegisterInputFields> = (form) =>
   form.subscribe(
     ({ active, values }) => {
       if (active === 'confirmPassword' && values.confirmPassword) {
@@ -146,7 +141,10 @@ const showMatchingErrorsImmediately: Decorator<RegisterInput> = (form) =>
     { active: true, values: true }
   );
 
-const markConfirmPasswordTouched: Mutator<RegisterInput> = (args, state) => {
+const markConfirmPasswordTouched: Mutator<RegisterInputFields> = (
+  args,
+  state
+) => {
   state.fields.confirmPassword.touched = true;
 };
 
