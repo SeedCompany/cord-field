@@ -1,0 +1,21 @@
+query ProjectFiles($input: ID!) {
+  project(id: $input) {
+    ...ProjectBreadcrumb
+    rootDirectory {
+      id
+      name
+      children {
+        items {
+          id
+          createdAt
+          type
+          category
+          name
+          createdBy {
+            fullName
+          }
+        }
+      }
+    }
+  }
+}
