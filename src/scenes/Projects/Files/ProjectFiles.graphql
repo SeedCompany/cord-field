@@ -19,7 +19,12 @@ query ProjectFiles($input: ID!) {
             type
             createdAt
             createdBy {
-              fullName
+              displayFirstName {
+                value
+              }
+              displayLastName {
+                value
+              }
               id
             }
           }
@@ -30,7 +35,12 @@ query ProjectFiles($input: ID!) {
             type
             category
             createdBy {
-              fullName
+              displayFirstName {
+                value
+              }
+              displayLastName {
+                value
+              }
               id
             }
           }
@@ -44,8 +54,13 @@ query ProjectFiles($input: ID!) {
             size
             type
             createdBy {
+              displayFirstName {
+                value
+              }
+              displayLastName {
+                value
+              }
               id
-              fullName
             }
           }
         }
