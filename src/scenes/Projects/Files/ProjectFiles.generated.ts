@@ -31,8 +31,15 @@ export type ProjectFilesQuery = { __typename?: 'Query' } & {
                     > & {
                         createdBy: { __typename?: 'User' } & Pick<
                           Types.User,
-                          'fullName' | 'id'
-                        >;
+                          'id'
+                        > & {
+                            displayFirstName: {
+                              __typename?: 'SecuredString';
+                            } & Pick<Types.SecuredString, 'value'>;
+                            displayLastName: {
+                              __typename?: 'SecuredString';
+                            } & Pick<Types.SecuredString, 'value'>;
+                          };
                       })
                   | ({ __typename?: 'File' } & Pick<
                       Types.File,
@@ -47,8 +54,15 @@ export type ProjectFilesQuery = { __typename?: 'Query' } & {
                     > & {
                         createdBy: { __typename?: 'User' } & Pick<
                           Types.User,
-                          'fullName' | 'id'
-                        >;
+                          'id'
+                        > & {
+                            displayFirstName: {
+                              __typename?: 'SecuredString';
+                            } & Pick<Types.SecuredString, 'value'>;
+                            displayLastName: {
+                              __typename?: 'SecuredString';
+                            } & Pick<Types.SecuredString, 'value'>;
+                          };
                       })
                   | ({ __typename?: 'FileVersion' } & Pick<
                       Types.FileVersion,
@@ -63,8 +77,15 @@ export type ProjectFilesQuery = { __typename?: 'Query' } & {
                     > & {
                         createdBy: { __typename?: 'User' } & Pick<
                           Types.User,
-                          'id' | 'fullName'
-                        >;
+                          'id'
+                        > & {
+                            displayFirstName: {
+                              __typename?: 'SecuredString';
+                            } & Pick<Types.SecuredString, 'value'>;
+                            displayLastName: {
+                              __typename?: 'SecuredString';
+                            } & Pick<Types.SecuredString, 'value'>;
+                          };
                       })
                 >;
               };
@@ -86,8 +107,15 @@ export type ProjectFilesQuery = { __typename?: 'Query' } & {
                     > & {
                         createdBy: { __typename?: 'User' } & Pick<
                           Types.User,
-                          'fullName' | 'id'
-                        >;
+                          'id'
+                        > & {
+                            displayFirstName: {
+                              __typename?: 'SecuredString';
+                            } & Pick<Types.SecuredString, 'value'>;
+                            displayLastName: {
+                              __typename?: 'SecuredString';
+                            } & Pick<Types.SecuredString, 'value'>;
+                          };
                       })
                   | ({ __typename?: 'File' } & Pick<
                       Types.File,
@@ -102,8 +130,15 @@ export type ProjectFilesQuery = { __typename?: 'Query' } & {
                     > & {
                         createdBy: { __typename?: 'User' } & Pick<
                           Types.User,
-                          'fullName' | 'id'
-                        >;
+                          'id'
+                        > & {
+                            displayFirstName: {
+                              __typename?: 'SecuredString';
+                            } & Pick<Types.SecuredString, 'value'>;
+                            displayLastName: {
+                              __typename?: 'SecuredString';
+                            } & Pick<Types.SecuredString, 'value'>;
+                          };
                       })
                   | ({ __typename?: 'FileVersion' } & Pick<
                       Types.FileVersion,
@@ -118,8 +153,15 @@ export type ProjectFilesQuery = { __typename?: 'Query' } & {
                     > & {
                         createdBy: { __typename?: 'User' } & Pick<
                           Types.User,
-                          'id' | 'fullName'
-                        >;
+                          'id'
+                        > & {
+                            displayFirstName: {
+                              __typename?: 'SecuredString';
+                            } & Pick<Types.SecuredString, 'value'>;
+                            displayLastName: {
+                              __typename?: 'SecuredString';
+                            } & Pick<Types.SecuredString, 'value'>;
+                          };
                       })
                 >;
               };
@@ -149,7 +191,12 @@ export const ProjectFilesDocument = gql`
               type
               createdAt
               createdBy {
-                fullName
+                displayFirstName {
+                  value
+                }
+                displayLastName {
+                  value
+                }
                 id
               }
             }
@@ -160,7 +207,12 @@ export const ProjectFilesDocument = gql`
               type
               category
               createdBy {
-                fullName
+                displayFirstName {
+                  value
+                }
+                displayLastName {
+                  value
+                }
                 id
               }
             }
@@ -174,8 +226,13 @@ export const ProjectFilesDocument = gql`
               size
               type
               createdBy {
+                displayFirstName {
+                  value
+                }
+                displayLastName {
+                  value
+                }
                 id
-                fullName
               }
             }
           }
