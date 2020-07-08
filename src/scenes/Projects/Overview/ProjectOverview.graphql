@@ -24,6 +24,7 @@ query ProjectOverview($input: ID!) {
       value
     }
     status
+    modifiedAt
     budget {
       canRead
       value {
