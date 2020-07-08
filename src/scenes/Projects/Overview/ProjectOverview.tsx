@@ -129,6 +129,21 @@ export const ProjectOverview: FC = () => {
               />
             </Grid>
             <Grid item>
+              <DataButton
+                loading={!data}
+                children={`Project Id: ${data?.project.id}`}
+              />
+            </Grid>
+            <Grid item>
+              <DataButton
+                loading={!data}
+                secured={data?.project.deptId}
+                redacted="You do not have permission to view department Id"
+                children={`Department Id: ${data?.project.deptId.value}`}
+                empty="Department Id Not Available"
+              />
+            </Grid>
+            <Grid item>
               <DataButton loading={!data}>
                 {displayStatus(data?.project.status)}
               </DataButton>
