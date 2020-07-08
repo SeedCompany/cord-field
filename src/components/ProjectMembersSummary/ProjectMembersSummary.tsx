@@ -15,6 +15,7 @@ export const ProjectMembersSummary: FC<ProjectMembersSummaryProps> = ({
     ({ user }): MemberSummaryItem => ({
       avatarLetters: user?.value?.avatarLetters ?? undefined,
       label: user?.value?.firstName ?? '',
+      id: user?.value?.id || '',
     })
   );
 
