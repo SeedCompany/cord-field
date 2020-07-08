@@ -37,6 +37,7 @@ export interface MemberSummaryItem {
   // will display these letters if picture url isn't given
   avatarLetters?: string;
   label: string;
+  id: string;
 }
 
 export interface MemberListSummaryProps extends Pick<HugeIconProps, 'icon'> {
@@ -78,7 +79,7 @@ export const MemberListSummary: FC<MemberListSummaryProps> = ({
           <AvatarGroup max={max} className={classes.avatarGroup}>
             {listOrPlaceholders(members, max).map((member, i) => (
               <Avatar
-                key={member?.label || i}
+                key={member?.id || i}
                 loading={!member}
                 alt={member?.label}
                 src={member?.picture}
