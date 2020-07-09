@@ -1,0 +1,6 @@
+mutation CreateProjectDirectory($input: CreateDirectoryInput!) {
+  createDirectory(input: $input) {
+    id
+    name
+  }
+}
