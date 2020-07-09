@@ -13,6 +13,8 @@ interface ErrorMap {
   NotFound: ClientError;
   TokenInvalid: ClientError;
   TokenExpired: ClientError;
+  Input: InputError;
+  Duplicate: DuplicateError;
 
   /**
    * This is a special one that allows a default handler for any
@@ -52,6 +54,12 @@ export interface ValidationError extends ClientError {
    */
   errors: Record<string, Record<string, string>>;
 }
+
+export interface InputError extends ClientError {
+  field?: string;
+}
+
+export type DuplicateError = Required<InputError>;
 
 /**
  * A mapping where the key is the error code from the server
@@ -112,6 +120,8 @@ export const renderValidationErrors = (e: ValidationError) =>
  */
 const defaultHandlers: ErrorHandlers = {
   Validation: renderValidationErrors,
+  Input: (e) => (e.field ? { [e.field]: e.message } : e.message),
+  Duplicate: (e) => ({ [e.field]: e.message }),
 
   // Assume server errors are handled separately
   // Return failure but no error message
