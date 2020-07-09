@@ -11,16 +11,18 @@ import { ButtonLink } from '../../../components/Routing';
 import { useCreateProjectDirectoryMutation } from './CreateProjectFile.generated';
 import { useProjectCurrentDirectory } from './useProjectCurrentDirectory';
 
-export type CreateDirectoryProps = DialogFormProps<CreateDirectoryInput>;
+export type CreateProjectDirectoryProps = DialogFormProps<CreateDirectoryInput>;
 
-export const CreateDirectory = (
-  props: Except<CreateDirectoryProps, 'onSubmit'>
+export const CreateProjectDirectory = (
+  props: Except<CreateProjectDirectoryProps, 'onSubmit'>
 ) => {
   const [createDirectory] = useCreateProjectDirectoryMutation();
   const { project, directoryId } = useProjectCurrentDirectory();
   const { enqueueSnackbar } = useSnackbar();
 
-  const onSubmit: CreateDirectoryProps['onSubmit'] = async (nameInput) => {
+  const onSubmit: CreateProjectDirectoryProps['onSubmit'] = async (
+    nameInput
+  ) => {
     const input = {
       ...nameInput,
       parentId: directoryId,
