@@ -10,7 +10,7 @@ import {
 } from '@material-ui/icons';
 import { Skeleton } from '@material-ui/lab';
 import React, { FC } from 'react';
-import { useParams } from 'react-router-dom';
+import { Link, useParams } from 'react-router-dom';
 import { File, FileVersion } from '../../../api';
 import { Breadcrumb } from '../../../components/Breadcrumb';
 import { ContentContainer as Content } from '../../../components/ContentContainer';
@@ -20,7 +20,10 @@ import {
 } from '../../../components/Formatters';
 import { ProjectBreadcrumb } from '../../../components/ProjectBreadcrumb';
 import { RowData, Table } from '../../../components/Table';
-import { useProjectFilesQuery } from './ProjectFiles.generated';
+import {
+  useProjectDirectoryQuery,
+  useProjectRootDirectoryQuery,
+} from './ProjectFiles.generated';
 
 const useStyles = makeStyles(({ spacing }) => ({
   headerContainer: {
@@ -32,6 +35,10 @@ const useStyles = makeStyles(({ spacing }) => ({
   },
   tableWrapper: {
     marginTop: spacing(4),
+  },
+  folderLink: {
+    color: 'inherit',
+    textDecoration: 'none',
   },
   fileName: {
     display: 'flex',
@@ -54,15 +61,26 @@ const icons = {
 
 export const ProjectFilesList: FC = () => {
   const classes = useStyles();
-  const { projectId } = useParams();
+  const { projectId, folderId } = useParams();
   const formatDate = useDateFormatter();
   const formatFileSize = useFileSizeFormatter();
-  const { data, loading, error } = useProjectFilesQuery({
+  const { data: projectRootData } = useProjectRootDirectoryQuery({
     variables: {
-      input: projectId,
+      id: projectId,
     },
   });
-  const items = data?.project.rootDirectory.children.items;
+
+  const directoryId =
+    folderId ?? projectRootData?.project.rootDirectory.id ?? '';
+
+  const { data: directoryData, loading, error } = useProjectDirectoryQuery({
+    variables: {
+      id: directoryId,
+    },
+    skip: !directoryId,
+  });
+
+  const items = directoryData?.directory.children.items;
 
   const columns = [
     {
@@ -79,13 +97,24 @@ export const ProjectFilesList: FC = () => {
       title: 'Name',
       field: 'name',
       render: (rowData: RowData) => {
-        const { category, name } = rowData;
+        const { category, id, name } = rowData;
         const Icon = icons[category as keyof typeof icons];
-        return (
+        const isDirectory = category === 'Directory';
+        const content = (
           <span className={classes.fileName}>
             <Icon className={classes.fileIcon} />
             {name}
           </span>
+        );
+        return isDirectory ? (
+          <Link
+            className={classes.folderLink}
+            to={`/projects/${projectId}/folders/${id}`}
+          >
+            {content}
+          </Link>
+        ) : (
+          content
         );
       },
     },
@@ -130,7 +159,7 @@ export const ProjectFilesList: FC = () => {
 
   return (
     <Content>
-      {error || !items ? (
+      {error || (!loading && !items) ? (
         <Typography variant="h4">Error fetching Project Files</Typography>
       ) : (
         <>
@@ -138,8 +167,8 @@ export const ProjectFilesList: FC = () => {
             <Skeleton variant="text" width="20%" />
           ) : (
             <Breadcrumbs>
-              <ProjectBreadcrumb data={data?.project} />
-              <Breadcrumb to=".">Files</Breadcrumb>
+              <ProjectBreadcrumb data={projectRootData?.project} />
+              <Breadcrumb to={`/projects/${projectId}/files`}>Files</Breadcrumb>
             </Breadcrumbs>
           )}
           <header className={classes.headerContainer}>

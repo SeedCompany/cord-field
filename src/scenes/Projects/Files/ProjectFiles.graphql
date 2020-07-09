@@ -1,70 +1,92 @@
-query ProjectFiles($input: ID!) {
-  project(id: $input) {
+query ProjectRootDirectory($id: ID!) {
+  project(id: $id) {
     ...ProjectBreadcrumb
     rootDirectory {
       id
-      children {
-        items {
+    }
+  }
+}
+
+query ProjectDirectory($id: ID!) {
+  directory(id: $id) {
+    category
+    id
+    name
+    type
+    createdAt
+    createdBy {
+      displayFirstName {
+        value
+      }
+      displayLastName {
+        value
+      }
+    }
+    children {
+      total
+      items {
+        category
+        createdAt
+        createdBy {
+          displayFirstName {
+            value
+          }
+          displayLastName {
+            value
+          }
+        }
+        id
+        name
+        type
+        ... on Directory {
+          name
+          category
+          createdAt
+          createdBy {
+            displayFirstName {
+              value
+            }
+            displayLastName {
+              value
+            }
+          }
+          type
           id
+        }
+        ... on File {
+          id
+          size
           name
           type
+          downloadUrl
           category
-          ... on File {
-            id
-            name
-            downloadUrl
-            mimeType
-            category
-            size
-            type
-            createdAt
-            createdBy {
-              displayFirstName {
-                value
-              }
-              displayLastName {
-                value
-              }
-              id
+          createdAt
+          createdBy {
+            displayFirstName {
+              value
             }
-          }
-          ... on Directory {
-            id
-            name
-            createdAt
-            type
-            category
-            createdBy {
-              displayFirstName {
-                value
-              }
-              displayLastName {
-                value
-              }
-              id
-            }
-          }
-          ... on FileVersion {
-            id
-            name
-            downloadUrl
-            createdAt
-            category
-            mimeType
-            size
-            type
-            createdBy {
-              displayFirstName {
-                value
-              }
-              displayLastName {
-                value
-              }
-              id
+            displayLastName {
+              value
             }
           }
         }
-        total
+        ... on FileVersion {
+          id
+          name
+          size
+          type
+          downloadUrl
+          category
+          createdAt
+          createdBy {
+            displayFirstName {
+              value
+            }
+            displayLastName {
+              value
+            }
+          }
+        }
       }
     }
   }
