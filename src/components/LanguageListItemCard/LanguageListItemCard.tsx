@@ -45,9 +45,7 @@ export const LanguageListItemCard: FC<LanguageListItemCardProps> = ({
 }) => {
   const classes = useStyles();
   const formatNumber = useNumberFormatter();
-  const population =
-    language?.organizationPopulation?.value ??
-    language?.ethnologuePopulation?.value;
+  const population = language?.population.value;
 
   return (
     <Card className={clsx(classes.root, className)}>
@@ -66,15 +64,15 @@ export const LanguageListItemCard: FC<LanguageListItemCardProps> = ({
             </Typography>
             <DisplaySimpleProperty
               LabelProps={{ color: 'textSecondary' }}
-              label="Ethnologue"
-              value={language?.ethnologueName?.value}
+              label="Ethnologue Code"
+              value={language?.ethnologue.code.value}
               loading={!language}
               loadingWidth="25%"
             />
             <DisplaySimpleProperty
               LabelProps={{ color: 'textSecondary' }}
-              label="ROD"
-              value={language?.rodNumber?.value}
+              label="Registry of Dialects Code"
+              value={language?.registryOfDialectsCode.value}
               loading={!language}
               loadingWidth="25%"
             />

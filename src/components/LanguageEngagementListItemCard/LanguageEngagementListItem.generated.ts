@@ -16,15 +16,11 @@ export type LanguageEngagementListItemFragment = {
               Types.SecuredString,
               'value'
             >;
-            ethnologuePopulation: { __typename?: 'SecuredInt' } & Pick<
+            population: { __typename?: 'SecuredInt' } & Pick<
               Types.SecuredInt,
               'value'
             >;
-            organizationPopulation: { __typename?: 'SecuredInt' } & Pick<
-              Types.SecuredInt,
-              'value'
-            >;
-            rodNumber: { __typename?: 'SecuredString' } & Pick<
+            registryOfDialectsCode: { __typename?: 'SecuredString' } & Pick<
               Types.SecuredString,
               'value'
             >;
@@ -60,13 +56,10 @@ export const LanguageEngagementListItemFragmentDoc = gql`
         displayName {
           value
         }
-        ethnologuePopulation {
+        population {
           value
         }
-        organizationPopulation {
-          value
-        }
-        rodNumber {
+        registryOfDialectsCode {
           value
         }
         avatarLetters

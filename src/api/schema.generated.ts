@@ -191,7 +191,7 @@ export type BudgetRecord = Resource & {
   id: Scalars['ID'];
   createdAt: Scalars['DateTime'];
   fiscalYear: SecuredInt;
-  amount: SecuredInt;
+  amount: SecuredFloat;
   organization: SecuredOrganization;
 };
 
@@ -315,6 +315,14 @@ export interface CreateEducationOutput {
   education: Education;
 }
 
+export interface CreateEthnologueLanguage {
+  id?: Maybe<Scalars['String']>;
+  code?: Maybe<Scalars['String']>;
+  provisionalCode?: Maybe<Scalars['String']>;
+  name?: Maybe<Scalars['String']>;
+  population?: Maybe<Scalars['Int']>;
+}
+
 export interface CreateFileVersionInput {
   /** The ID returned from the `requestFileUpload` mutation */
   uploadId: Scalars['ID'];
@@ -350,6 +358,7 @@ export interface CreateInternshipEngagement {
   countryOfOriginId?: Maybe<Scalars['ID']>;
   position?: Maybe<InternshipEngagementPosition>;
   methodologies?: Maybe<ProductMethodology[]>;
+  growthPlan?: Maybe<CreateDefinedFileVersionInput>;
 }
 
 export interface CreateInternshipEngagementInput {
@@ -364,11 +373,13 @@ export interface CreateInternshipEngagementOutput {
 export interface CreateLanguage {
   name: Scalars['String'];
   displayName: Scalars['String'];
-  beginFiscalYear?: Maybe<Scalars['Int']>;
-  ethnologueName?: Maybe<Scalars['String']>;
-  ethnologuePopulation?: Maybe<Scalars['Int']>;
-  organizationPopulation?: Maybe<Scalars['Int']>;
-  rodNumber?: Maybe<Scalars['String']>;
+  displayNamePronunciation?: Maybe<Scalars['String']>;
+  isDialect?: Maybe<Scalars['Boolean']>;
+  ethnologue?: Maybe<CreateEthnologueLanguage>;
+  populationOverride?: Maybe<Scalars['Int']>;
+  registryOfDialectsCode?: Maybe<Scalars['String']>;
+  leastOfThese?: Maybe<Scalars['Boolean']>;
+  leastOfTheseReason?: Maybe<Scalars['String']>;
 }
 
 export interface CreateLanguageEngagement {
@@ -382,6 +393,7 @@ export interface CreateLanguageEngagement {
   firstScripture?: Maybe<Scalars['Boolean']>;
   lukePartnership?: Maybe<Scalars['Boolean']>;
   paraTextRegistryId?: Maybe<Scalars['String']>;
+  pnp?: Maybe<CreateDefinedFileVersionInput>;
 }
 
 export interface CreateLanguageEngagementInput {
@@ -802,6 +814,20 @@ export type EngagementStatus =
   | 'AwaitingDedication'
   | 'Transferred';
 
+export interface EthnologueLanguage {
+  __typename?: 'EthnologueLanguage';
+  id: SecuredString;
+  /** ISO 639-3 code */
+  code: SecuredString;
+  /**
+   * Provisional Ethnologue Code.
+   * Used until official ethnologue code is created by SIL.
+   */
+  provisionalCode: SecuredString;
+  name: SecuredString;
+  population: SecuredInt;
+}
+
 export type Favorite = Resource & {
   __typename?: 'Favorite';
   id: Scalars['ID'];
@@ -1058,6 +1084,7 @@ export type InternshipEngagement = Engagement &
     mentor: SecuredUser;
     position: SecuredInternPosition;
     methodologies: SecuredMethodologies;
+    growthPlan: SecuredFile;
   };
 
 export type InternshipEngagementPosition =
@@ -1125,16 +1152,59 @@ export type Language = Resource & {
   __typename?: 'Language';
   id: Scalars['ID'];
   createdAt: Scalars['DateTime'];
+  /** The real language name */
   name: SecuredString;
+  /**
+   * The public name which will be used/shown when real name
+   * is unauthorized to be viewed/read.
+   * This should always be viewable.
+   */
   displayName: SecuredString;
-  beginFiscalYear: SecuredInt;
-  ethnologueName: SecuredString;
-  ethnologuePopulation: SecuredInt;
-  organizationPopulation: SecuredInt;
-  rodNumber: SecuredString;
+  /** The pronunciation of the display name */
+  displayNamePronunciation: SecuredString;
+  /** Whether this language is a dialect. */
+  isDialect: SecuredBoolean;
+  ethnologue: EthnologueLanguage;
+  /** An override for the ethnologue's population */
+  populationOverride: SecuredInt;
+  /**
+   * Registry of Dialects Code.
+   * 5 digit number including leading zeros.
+   * https://globalrecordings.net/en/rod
+   */
+  registryOfDialectsCode: SecuredString;
+  /** Whether this language has a Least Of These grant. */
+  leastOfThese: SecuredBoolean;
+  /** Reason why this language is apart of the Least of These program. */
+  leastOfTheseReason: SecuredString;
+  /** The earliest start date from its engagements */
+  sponsorDate: SecuredDate;
+  /**
+   * The language's sensitivity.
+   * It's based on its most sensitive location.
+   */
   sensitivity: Sensitivity;
   avatarLetters?: Maybe<Scalars['String']>;
+  /** The fiscal year of the sponsor date */
+  beginFiscalYear: SecuredInt;
+  /**
+   * The language's population.
+   * This is either the `populationOverride` if defined
+   * or the ethnologue population as a fallback.
+   */
+  population: SecuredInt;
+  locations: SecuredLocationList;
+  /** The list of projects the language is engagement in. */
+  projects: ProjectListOutput;
 };
+
+export interface LanguageLocationsArgs {
+  input?: Maybe<LocationListInput>;
+}
+
+export interface LanguageProjectsArgs {
+  input?: Maybe<ProjectListInput>;
+}
 
 export type LanguageEngagement = Engagement &
   Resource & {
@@ -1162,6 +1232,7 @@ export type LanguageEngagement = Engagement &
     sentPrintingDate: SecuredDate;
     paraTextRegistryId: SecuredString;
     products: SecuredProductList;
+    pnp: SecuredFile;
   };
 
 export interface LanguageEngagementProductsArgs {
@@ -1263,8 +1334,6 @@ export interface LocationFilters {
   name?: Maybe<Scalars['String']>;
   /** Filter to only these types of locations */
   types: Array<Scalars['String']>;
-  /** User IDs ANY of which must be directors of the locations */
-  userIds?: Maybe<Array<Scalars['ID']>>;
 }
 
 export interface LocationListInput {
@@ -1409,46 +1478,18 @@ export interface Mutation {
   moveFileNode: FileNode;
   /** Update a ceremony */
   updateCeremony: UpdateCeremonyOutput;
-  /** Create a language */
-  createLanguage: CreateLanguageOutput;
-  /** Update a language */
-  updateLanguage: UpdateLanguageOutput;
-  /** Delete a language */
-  deleteLanguage: Scalars['Boolean'];
   /** Create an film */
   createFilm: CreateFilmOutput;
   /** Update an film */
   updateFilm: UpdateFilmOutput;
   /** Delete an film */
   deleteFilm: Scalars['Boolean'];
-  /** Create an literacy material */
-  createLiteracyMaterial: CreateLiteracyMaterialOutput;
-  /** Update an literacyMaterial */
-  updateLiteracyMaterial: UpdateLiteracyMaterialOutput;
-  /** Delete an literacyMaterial */
-  deleteLiteracyMaterial: Scalars['Boolean'];
-  /** Create a product entry */
-  createProduct: CreateProductOutput;
-  /** Update a product entry */
-  updateProduct: UpdateProductOutput;
-  /** Delete a product entry */
-  deleteProduct: Scalars['Boolean'];
   /** Create an story */
   createStory: CreateStoryOutput;
   /** Update an story */
   updateStory: UpdateStoryOutput;
   /** Delete an story */
   deleteStory: Scalars['Boolean'];
-  /** Create a language engagement */
-  createLanguageEngagement: CreateLanguageEngagementOutput;
-  /** Create an internship engagement */
-  createInternshipEngagement: CreateInternshipEngagementOutput;
-  /** Update a language engagement */
-  updateLanguageEngagement: UpdateLanguageEngagementOutput;
-  /** Update an internship engagement */
-  updateInternshipEngagement: UpdateInternshipEngagementOutput;
-  /** Delete an engagement */
-  deleteEngagement: Scalars['Boolean'];
   /** Create a project member */
   createProjectMember: CreateProjectMemberOutput;
   /** Update a project member */
@@ -1461,16 +1502,48 @@ export interface Mutation {
   updatePartnership: UpdatePartnershipOutput;
   /** Delete a Partnership */
   deletePartnership: Scalars['Boolean'];
+  /** Create a language */
+  createLanguage: CreateLanguageOutput;
+  /** Update a language */
+  updateLanguage: UpdateLanguageOutput;
+  /** Delete a language */
+  deleteLanguage: Scalars['Boolean'];
+  /** Add a location to a language */
+  addLocationToLanguage: Language;
+  /** Remove a location from a language */
+  removeLocationFromLanguage: Language;
+  /** Create an literacy material */
+  createLiteracyMaterial: CreateLiteracyMaterialOutput;
+  /** Update an literacyMaterial */
+  updateLiteracyMaterial: UpdateLiteracyMaterialOutput;
+  /** Delete an literacyMaterial */
+  deleteLiteracyMaterial: Scalars['Boolean'];
+  /** Create a product entry */
+  createProduct: CreateProductOutput;
+  /** Update a product entry */
+  updateProduct: UpdateProductOutput;
+  /** Delete a product entry */
+  deleteProduct: Scalars['Boolean'];
+  /** Create a language engagement */
+  createLanguageEngagement: CreateLanguageEngagementOutput;
+  /** Create an internship engagement */
+  createInternshipEngagement: CreateInternshipEngagementOutput;
+  /** Update a language engagement */
+  updateLanguageEngagement: UpdateLanguageEngagementOutput;
+  /** Update an internship engagement */
+  updateInternshipEngagement: UpdateInternshipEngagementOutput;
+  /** Delete an engagement */
+  deleteEngagement: Scalars['Boolean'];
   /** Create a project */
   createProject: CreateProjectOutput;
   /** Update a project */
   updateProject: UpdateProjectOutput;
   /** Delete a project */
   deleteProject: Scalars['Boolean'];
-  /** Create an budget entry */
-  createBudget: CreateBudgetOutput;
   /** Update a budgetRecord */
   updateBudgetRecord: UpdateBudgetRecordOutput;
+  /** Create a budget */
+  createBudget: CreateBudgetOutput;
   /** Update a budget */
   updateBudget: UpdateBudgetOutput;
   /** Delete an budget */
@@ -1673,18 +1746,6 @@ export interface MutationUpdateCeremonyArgs {
   input: UpdateCeremonyInput;
 }
 
-export interface MutationCreateLanguageArgs {
-  input: CreateLanguageInput;
-}
-
-export interface MutationUpdateLanguageArgs {
-  input: UpdateLanguageInput;
-}
-
-export interface MutationDeleteLanguageArgs {
-  id: Scalars['ID'];
-}
-
 export interface MutationCreateFilmArgs {
   input: CreateFilmInput;
 }
@@ -1697,30 +1758,6 @@ export interface MutationDeleteFilmArgs {
   id: Scalars['ID'];
 }
 
-export interface MutationCreateLiteracyMaterialArgs {
-  input: CreateLiteracyMaterialInput;
-}
-
-export interface MutationUpdateLiteracyMaterialArgs {
-  input: UpdateLiteracyMaterialInput;
-}
-
-export interface MutationDeleteLiteracyMaterialArgs {
-  id: Scalars['ID'];
-}
-
-export interface MutationCreateProductArgs {
-  input: CreateProductInput;
-}
-
-export interface MutationUpdateProductArgs {
-  input: UpdateProductInput;
-}
-
-export interface MutationDeleteProductArgs {
-  id: Scalars['ID'];
-}
-
 export interface MutationCreateStoryArgs {
   input: CreateStoryInput;
 }
@@ -1730,26 +1767,6 @@ export interface MutationUpdateStoryArgs {
 }
 
 export interface MutationDeleteStoryArgs {
-  id: Scalars['ID'];
-}
-
-export interface MutationCreateLanguageEngagementArgs {
-  input: CreateLanguageEngagementInput;
-}
-
-export interface MutationCreateInternshipEngagementArgs {
-  input: CreateInternshipEngagementInput;
-}
-
-export interface MutationUpdateLanguageEngagementArgs {
-  input: UpdateLanguageEngagementInput;
-}
-
-export interface MutationUpdateInternshipEngagementArgs {
-  input: UpdateInternshipEngagementInput;
-}
-
-export interface MutationDeleteEngagementArgs {
   id: Scalars['ID'];
 }
 
@@ -1777,6 +1794,72 @@ export interface MutationDeletePartnershipArgs {
   id: Scalars['ID'];
 }
 
+export interface MutationCreateLanguageArgs {
+  input: CreateLanguageInput;
+}
+
+export interface MutationUpdateLanguageArgs {
+  input: UpdateLanguageInput;
+}
+
+export interface MutationDeleteLanguageArgs {
+  id: Scalars['ID'];
+}
+
+export interface MutationAddLocationToLanguageArgs {
+  locationId: Scalars['ID'];
+  languageId: Scalars['ID'];
+}
+
+export interface MutationRemoveLocationFromLanguageArgs {
+  locationId: Scalars['ID'];
+  languageId: Scalars['ID'];
+}
+
+export interface MutationCreateLiteracyMaterialArgs {
+  input: CreateLiteracyMaterialInput;
+}
+
+export interface MutationUpdateLiteracyMaterialArgs {
+  input: UpdateLiteracyMaterialInput;
+}
+
+export interface MutationDeleteLiteracyMaterialArgs {
+  id: Scalars['ID'];
+}
+
+export interface MutationCreateProductArgs {
+  input: CreateProductInput;
+}
+
+export interface MutationUpdateProductArgs {
+  input: UpdateProductInput;
+}
+
+export interface MutationDeleteProductArgs {
+  id: Scalars['ID'];
+}
+
+export interface MutationCreateLanguageEngagementArgs {
+  input: CreateLanguageEngagementInput;
+}
+
+export interface MutationCreateInternshipEngagementArgs {
+  input: CreateInternshipEngagementInput;
+}
+
+export interface MutationUpdateLanguageEngagementArgs {
+  input: UpdateLanguageEngagementInput;
+}
+
+export interface MutationUpdateInternshipEngagementArgs {
+  input: UpdateInternshipEngagementInput;
+}
+
+export interface MutationDeleteEngagementArgs {
+  id: Scalars['ID'];
+}
+
 export interface MutationCreateProjectArgs {
   input: CreateProjectInput;
 }
@@ -1789,12 +1872,12 @@ export interface MutationDeleteProjectArgs {
   id: Scalars['ID'];
 }
 
-export interface MutationCreateBudgetArgs {
-  input: CreateBudgetInput;
-}
-
 export interface MutationUpdateBudgetRecordArgs {
   input: UpdateBudgetRecordInput;
+}
+
+export interface MutationCreateBudgetArgs {
+  input: CreateBudgetInput;
 }
 
 export interface MutationUpdateBudgetArgs {
@@ -2134,8 +2217,6 @@ export interface ProjectFilters {
   createdAt?: Maybe<DateTimeFilter>;
   /** Only projects modified within this time range */
   modifiedAt?: Maybe<DateTimeFilter>;
-  /** User IDs ANY of which are team members */
-  userIds?: Maybe<Array<Scalars['ID']>>;
   /** only mine */
   mine?: Maybe<Scalars['Boolean']>;
 }
@@ -2319,34 +2400,14 @@ export interface Query {
   ceremonies: CeremonyListOutput;
   /** Check Consistency in Ceremony Nodes */
   checkCeremonyConsistency: Scalars['Boolean'];
-  /** Look up a language by its ID */
-  language: Language;
-  /** Look up languages */
-  languages: LanguageListOutput;
-  /** Check language node consistency */
-  checkLanguageConsistency: Scalars['Boolean'];
   /** Look up an film by its ID */
   film: Film;
   /** Look up films */
   films: FilmListOutput;
-  /** Look up an literacyMaterial by its ID */
-  literacyMaterial: LiteracyMaterial;
-  /** Look up literacyMaterials */
-  literacyMaterials: LiteracyMaterialListOutput;
-  /** Read a product by id */
-  product: Product;
-  /** Look up products */
-  products: ProductListOutput;
   /** Look up an story by its ID */
   story: Story;
   /** Look up storys */
   storys: StoryListOutput;
-  /** Lookup an engagement by ID */
-  engagement: Engagement;
-  /** Look up engagements */
-  engagements: EngagementListOutput;
-  /** Check Consistency in Engagement Nodes */
-  checkEngagementConsistency: Scalars['Boolean'];
   /** Look up a project member by ID */
   projectMember: ProjectMember;
   /** Look up project members */
@@ -2357,6 +2418,26 @@ export interface Query {
   partnerships: PartnershipListOutput;
   /** Check partnership node consistency */
   checkPartnershipConsistency: Scalars['Boolean'];
+  /** Look up a language by its ID */
+  language: Language;
+  /** Look up languages */
+  languages: LanguageListOutput;
+  /** Check language node consistency */
+  checkLanguageConsistency: Scalars['Boolean'];
+  /** Look up an literacyMaterial by its ID */
+  literacyMaterial: LiteracyMaterial;
+  /** Look up literacyMaterials */
+  literacyMaterials: LiteracyMaterialListOutput;
+  /** Read a product by id */
+  product: Product;
+  /** Look up products */
+  products: ProductListOutput;
+  /** Lookup an engagement by ID */
+  engagement: Engagement;
+  /** Look up engagements */
+  engagements: EngagementListOutput;
+  /** Check Consistency in Engagement Nodes */
+  checkEngagementConsistency: Scalars['Boolean'];
   /** Look up a project by its ID */
   project: Project;
   /** Look up projects */
@@ -2473,20 +2554,44 @@ export interface QueryCeremoniesArgs {
   input?: Maybe<CeremonyListInput>;
 }
 
-export interface QueryLanguageArgs {
-  id: Scalars['ID'];
-}
-
-export interface QueryLanguagesArgs {
-  input?: Maybe<LanguageListInput>;
-}
-
 export interface QueryFilmArgs {
   id: Scalars['ID'];
 }
 
 export interface QueryFilmsArgs {
   input?: Maybe<FilmListInput>;
+}
+
+export interface QueryStoryArgs {
+  id: Scalars['ID'];
+}
+
+export interface QueryStorysArgs {
+  input?: Maybe<StoryListInput>;
+}
+
+export interface QueryProjectMemberArgs {
+  id: Scalars['ID'];
+}
+
+export interface QueryProjectMembersArgs {
+  input?: Maybe<ProjectMemberListInput>;
+}
+
+export interface QueryPartnershipArgs {
+  id: Scalars['ID'];
+}
+
+export interface QueryPartnershipsArgs {
+  input?: Maybe<PartnershipListInput>;
+}
+
+export interface QueryLanguageArgs {
+  id: Scalars['ID'];
+}
+
+export interface QueryLanguagesArgs {
+  input?: Maybe<LanguageListInput>;
 }
 
 export interface QueryLiteracyMaterialArgs {
@@ -2505,14 +2610,6 @@ export interface QueryProductsArgs {
   input?: Maybe<ProductListInput>;
 }
 
-export interface QueryStoryArgs {
-  id: Scalars['ID'];
-}
-
-export interface QueryStorysArgs {
-  input?: Maybe<StoryListInput>;
-}
-
 export interface QueryEngagementArgs {
   id: Scalars['ID'];
 }
@@ -2523,22 +2620,6 @@ export interface QueryEngagementsArgs {
 
 export interface QueryCheckEngagementConsistencyArgs {
   input: EngagementConsistencyInput;
-}
-
-export interface QueryProjectMemberArgs {
-  id: Scalars['ID'];
-}
-
-export interface QueryProjectMembersArgs {
-  input?: Maybe<ProjectMemberListInput>;
-}
-
-export interface QueryPartnershipArgs {
-  id: Scalars['ID'];
-}
-
-export interface QueryPartnershipsArgs {
-  input?: Maybe<PartnershipListInput>;
 }
 
 export interface QueryProjectArgs {
@@ -2847,7 +2928,7 @@ export type SecuredEducationList = Readable & {
   total: Scalars['Int'];
   /** Whether the next page exists */
   hasMore: Scalars['Boolean'];
-  /** Whether the current user can create an education in this list */
+  /** Whether the current user can add items to this list via the appropriate mutation */
   canCreate: Scalars['Boolean'];
 };
 
@@ -2870,7 +2951,7 @@ export type SecuredEngagementList = Readable & {
   total: Scalars['Int'];
   /** Whether the next page exists */
   hasMore: Scalars['Boolean'];
-  /** Whether the current user can create an iengagement in this list */
+  /** Whether the current user can add items to this list via the appropriate mutation */
   canCreate: Scalars['Boolean'];
 };
 
@@ -2885,6 +2966,19 @@ export type SecuredFile = Readable &
     canRead: Scalars['Boolean'];
     canEdit: Scalars['Boolean'];
     value?: Maybe<File>;
+  };
+
+/**
+ * An object with a float `value` and additional authorization information.
+ * The value is only given if `canRead` is `true` otherwise it is `null`.
+ * These `can*` authorization properties are specific to the user making the request.
+ */
+export type SecuredFloat = Readable &
+  Editable & {
+    __typename?: 'SecuredFloat';
+    canRead: Scalars['Boolean'];
+    canEdit: Scalars['Boolean'];
+    value?: Maybe<Scalars['Float']>;
   };
 
 /**
@@ -2939,6 +3033,24 @@ export type SecuredLiteracyMaterialRange = Readable &
     value: Range[];
   };
 
+export type SecuredLocationList = Readable & {
+  __typename?: 'SecuredLocationList';
+  /** Whether the current user can read the list of items */
+  canRead: Scalars['Boolean'];
+  /**
+   * An object whose `items` is a list of locations and additional authorization information.
+   * The value is only given if `canRead` is `true` otherwise it is an empty list.
+   * The `can*` properties are specific to the user making the request.
+   */
+  items: Location[];
+  /** The total number of items across all pages */
+  total: Scalars['Int'];
+  /** Whether the next page exists */
+  hasMore: Scalars['Boolean'];
+  /** Whether the current user can add items to this list via the appropriate mutation */
+  canCreate: Scalars['Boolean'];
+};
+
 /**
  * An object whose `value` is a list of methodologies and has additional authorization information.
  * The value is only given if `canRead` is `true` otherwise it is empty: `[]`.
@@ -2984,7 +3096,7 @@ export type SecuredOrganizationList = Readable & {
   total: Scalars['Int'];
   /** Whether the next page exists */
   hasMore: Scalars['Boolean'];
-  /** Whether the current user can create an organization in this list */
+  /** Whether the current user can add items to this list via the appropriate mutation */
   canCreate: Scalars['Boolean'];
 };
 
@@ -3020,7 +3132,7 @@ export type SecuredPartnershipList = Readable & {
   total: Scalars['Int'];
   /** Whether the next page exists */
   hasMore: Scalars['Boolean'];
-  /** Whether the current user can create an partnership in this list */
+  /** Whether the current user can add items to this list via the appropriate mutation */
   canCreate: Scalars['Boolean'];
 };
 
@@ -3056,7 +3168,7 @@ export type SecuredProductList = Readable & {
   total: Scalars['Int'];
   /** Whether the next page exists */
   hasMore: Scalars['Boolean'];
-  /** Whether the current user can create an product in this list */
+  /** Whether the current user can add items to this list via the appropriate mutation */
   canCreate: Scalars['Boolean'];
 };
 
@@ -3079,7 +3191,7 @@ export type SecuredProjectMemberList = Readable & {
   total: Scalars['Int'];
   /** Whether the next page exists */
   hasMore: Scalars['Boolean'];
-  /** Whether the current user can create an projectmember in this list */
+  /** Whether the current user can add items to this list via the appropriate mutation */
   canCreate: Scalars['Boolean'];
 };
 
@@ -3193,7 +3305,7 @@ export type SecuredUnavailabilityList = Readable & {
   total: Scalars['Int'];
   /** Whether the next page exists */
   hasMore: Scalars['Boolean'];
-  /** Whether the current user can create an unavailability in this list */
+  /** Whether the current user can add items to this list via the appropriate mutation */
   canCreate: Scalars['Boolean'];
 };
 
@@ -3470,6 +3582,14 @@ export interface UpdateEducationOutput {
   education: Education;
 }
 
+export interface UpdateEthnologueLanguage {
+  id?: Maybe<Scalars['String']>;
+  code?: Maybe<Scalars['String']>;
+  provisionalCode?: Maybe<Scalars['String']>;
+  name?: Maybe<Scalars['String']>;
+  population?: Maybe<Scalars['Int']>;
+}
+
 export interface UpdateFilm {
   id: Scalars['ID'];
   name?: Maybe<Scalars['String']>;
@@ -3496,6 +3616,7 @@ export interface UpdateInternshipEngagement {
   countryOfOriginId?: Maybe<Scalars['ID']>;
   position?: Maybe<InternshipEngagementPosition>;
   methodologies?: Maybe<ProductMethodology[]>;
+  growthPlan?: Maybe<CreateDefinedFileVersionInput>;
 }
 
 export interface UpdateInternshipEngagementInput {
@@ -3511,11 +3632,13 @@ export interface UpdateLanguage {
   id: Scalars['ID'];
   name?: Maybe<Scalars['String']>;
   displayName?: Maybe<Scalars['String']>;
-  beginFiscalYear?: Maybe<Scalars['Int']>;
-  ethnologueName?: Maybe<Scalars['String']>;
-  ethnologuePopulation?: Maybe<Scalars['Int']>;
-  organizationPopulation?: Maybe<Scalars['Int']>;
-  rodNumber?: Maybe<Scalars['String']>;
+  displayNamePronunciation?: Maybe<Scalars['String']>;
+  isDialect?: Maybe<Scalars['Boolean']>;
+  ethnologue?: Maybe<UpdateEthnologueLanguage>;
+  populationOverride?: Maybe<Scalars['Int']>;
+  registryOfDialectsCode?: Maybe<Scalars['String']>;
+  leastOfThese?: Maybe<Scalars['Boolean']>;
+  leastOfTheseReason?: Maybe<Scalars['String']>;
 }
 
 export interface UpdateLanguageEngagement {
@@ -3528,6 +3651,7 @@ export interface UpdateLanguageEngagement {
   firstScripture?: Maybe<Scalars['Boolean']>;
   lukePartnership?: Maybe<Scalars['Boolean']>;
   paraTextRegistryId?: Maybe<Scalars['String']>;
+  pnp?: Maybe<CreateDefinedFileVersionInput>;
 }
 
 export interface UpdateLanguageEngagementInput {

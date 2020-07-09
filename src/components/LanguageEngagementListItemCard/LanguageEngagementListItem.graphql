@@ -9,13 +9,10 @@ fragment LanguageEngagementListItem on LanguageEngagement {
       displayName {
         value
       }
-      ethnologuePopulation {
+      population {
         value
       }
-      organizationPopulation {
-        value
-      }
-      rodNumber {
+      registryOfDialectsCode {
         value
       }
       avatarLetters

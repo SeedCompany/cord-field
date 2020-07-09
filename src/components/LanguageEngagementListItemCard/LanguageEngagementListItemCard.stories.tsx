@@ -20,9 +20,10 @@ export const LanguageEngagementListItemCard = () => (
     language={{
       value: {
         name: { value: text('name', 'English') },
-        rodNumber: { value: text('rodNumber', '01234') },
-        organizationPopulation: { value: number('population', 10000) },
-        ethnologuePopulation: { value: 0 },
+        registryOfDialectsCode: {
+          value: text('Registry Of Dialects Code', '01234'),
+        },
+        population: { value: number('population', 10000) },
         avatarLetters: 'E',
         displayName: {},
       },

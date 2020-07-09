@@ -6,16 +6,15 @@ fragment LanguageListItem on Language {
   displayName {
     value
   }
-  ethnologueName {
+  ethnologue {
+    code {
+      value
+    }
+  }
+  registryOfDialectsCode {
     value
   }
-  rodNumber {
-    value
-  }
-  organizationPopulation {
-    value
-  }
-  ethnologuePopulation {
+  population {
     value
   }
 }
