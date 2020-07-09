@@ -12,12 +12,13 @@ export const ProjectMembersSummary: FC<ProjectMembersSummaryProps> = ({
   members,
 }) => {
   const summarizedMembers = members?.items
-    .filter(({ user }) => user.canRead)
+    .filter(({ user }) => user.canRead && user.value)
+    .map(({ user }) => user.value!)
     .map(
-      ({ user }): MemberSummaryItem => ({
-        avatarLetters: user?.value?.avatarLetters ?? undefined,
-        label: user?.value?.firstName ?? '',
-        id: user?.value?.id || '',
+      (user): MemberSummaryItem => ({
+        avatarLetters: user.avatarLetters ?? undefined,
+        label: user.firstName ?? '',
+        id: user.id,
       })
     );
 
