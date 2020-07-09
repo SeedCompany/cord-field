@@ -72,6 +72,7 @@ export const ProjectFilesList: FC = () => {
 
   const rootDirectoryId = projectRootData?.project.rootDirectory.id;
   const directoryId = folderId ?? rootDirectoryId ?? '';
+  const isNotRootDirectory = directoryId !== rootDirectoryId;
 
   const { data: directoryData, loading, error } = useProjectDirectoryQuery({
     variables: {
@@ -80,11 +81,12 @@ export const ProjectFilesList: FC = () => {
     skip: !directoryId,
   });
 
+  const parents = directoryData?.directory.parents ?? [];
+  const breadcrumbsParents = parents.slice(0, -1);
+
   const directoryIsNotInProject =
-    directoryId !== rootDirectoryId &&
-    !directoryData?.directory.parents.some(
-      (parent) => parent.id === rootDirectoryId
-    );
+    isNotRootDirectory &&
+    !parents.some((parent) => parent.id === rootDirectoryId);
 
   const items = directoryIsNotInProject
     ? []
@@ -181,6 +183,21 @@ export const ProjectFilesList: FC = () => {
             <Breadcrumbs>
               <ProjectBreadcrumb data={projectRootData?.project} />
               <Breadcrumb to={`/projects/${projectId}/files`}>Files</Breadcrumb>
+              {breadcrumbsParents.map((parent) => (
+                <Breadcrumb
+                  key={parent.id}
+                  to={`/projects/${projectId}/folders/${parent.id}`}
+                >
+                  {parent.name}
+                </Breadcrumb>
+              ))}
+              {isNotRootDirectory && (
+                <Breadcrumb
+                  to={`/projects/${projectId}/folders/${directoryId}`}
+                >
+                  {directoryData?.directory.name}
+                </Breadcrumb>
+              )}
             </Breadcrumbs>
           )}
           <header className={classes.headerContainer}>
