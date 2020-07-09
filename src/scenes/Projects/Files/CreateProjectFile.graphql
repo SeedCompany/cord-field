@@ -4,3 +4,10 @@ mutation CreateProjectDirectory($input: CreateDirectoryInput!) {
     name
   }
 }
+
+mutation CreateProjectFileVersion($input: CreateFileVersionInput!) {
+  createFileVersion(input: $input) {
+    id
+    name
+  }
+}
