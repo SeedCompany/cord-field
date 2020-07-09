@@ -28,6 +28,7 @@ export const GQLOperations = {
     DeletePartnership: 'DeletePartnership',
     CreateProject: 'CreateProject',
     CreateProjectDirectory: 'CreateProjectDirectory',
+    CreateProjectFileVersion: 'CreateProjectFileVersion',
     CreatePerson: 'CreatePerson',
     UpdateUser: 'UpdateUser',
   },

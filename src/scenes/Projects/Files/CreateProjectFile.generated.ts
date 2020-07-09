@@ -16,6 +16,14 @@ export type CreateProjectDirectoryMutation = { __typename?: 'Mutation' } & {
   >;
 };
 
+export interface CreateProjectFileVersionMutationVariables {
+  input: Types.CreateFileVersionInput;
+}
+
+export type CreateProjectFileVersionMutation = { __typename?: 'Mutation' } & {
+  createFileVersion: { __typename?: 'File' } & Pick<Types.File, 'id' | 'name'>;
+};
+
 export const CreateProjectDirectoryDocument = gql`
   mutation CreateProjectDirectory($input: CreateDirectoryInput!) {
     createDirectory(input: $input) {
@@ -66,4 +74,55 @@ export type CreateProjectDirectoryMutationResult = ApolloReactCommon.MutationRes
 export type CreateProjectDirectoryMutationOptions = ApolloReactCommon.BaseMutationOptions<
   CreateProjectDirectoryMutation,
   CreateProjectDirectoryMutationVariables
+>;
+export const CreateProjectFileVersionDocument = gql`
+  mutation CreateProjectFileVersion($input: CreateFileVersionInput!) {
+    createFileVersion(input: $input) {
+      id
+      name
+    }
+  }
+`;
+export type CreateProjectFileVersionMutationFn = ApolloReactCommon.MutationFunction<
+  CreateProjectFileVersionMutation,
+  CreateProjectFileVersionMutationVariables
+>;
+
+/**
+ * __useCreateProjectFileVersionMutation__
+ *
+ * To run a mutation, you first call `useCreateProjectFileVersionMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useCreateProjectFileVersionMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [createProjectFileVersionMutation, { data, loading, error }] = useCreateProjectFileVersionMutation({
+ *   variables: {
+ *      input: // value for 'input'
+ *   },
+ * });
+ */
+export function useCreateProjectFileVersionMutation(
+  baseOptions?: ApolloReactHooks.MutationHookOptions<
+    CreateProjectFileVersionMutation,
+    CreateProjectFileVersionMutationVariables
+  >
+) {
+  return ApolloReactHooks.useMutation<
+    CreateProjectFileVersionMutation,
+    CreateProjectFileVersionMutationVariables
+  >(CreateProjectFileVersionDocument, baseOptions);
+}
+export type CreateProjectFileVersionMutationHookResult = ReturnType<
+  typeof useCreateProjectFileVersionMutation
+>;
+export type CreateProjectFileVersionMutationResult = ApolloReactCommon.MutationResult<
+  CreateProjectFileVersionMutation
+>;
+export type CreateProjectFileVersionMutationOptions = ApolloReactCommon.BaseMutationOptions<
+  CreateProjectFileVersionMutation,
+  CreateProjectFileVersionMutationVariables
 >;
