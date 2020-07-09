@@ -1,10 +1,18 @@
-import { Breadcrumbs, makeStyles, Typography } from '@material-ui/core';
 import {
+  Box,
+  Breadcrumbs,
+  IconButton,
+  makeStyles,
+  Typography,
+} from '@material-ui/core';
+import {
+  CreateNewFolder,
   Description,
   Folder,
   GraphicEq,
   Image,
   InsertDriveFile,
+  Publish,
   TableChart,
   VideoLibrary,
 } from '@material-ui/icons';
@@ -180,25 +188,49 @@ export const ProjectFilesList: FC = () => {
           {loading ? (
             <Skeleton variant="text" width="20%" />
           ) : (
-            <Breadcrumbs>
-              <ProjectBreadcrumb data={projectRootData?.project} />
-              <Breadcrumb to={`/projects/${projectId}/files`}>Files</Breadcrumb>
-              {breadcrumbsParents.map((parent) => (
-                <Breadcrumb
-                  key={parent.id}
-                  to={`/projects/${projectId}/folders/${parent.id}`}
-                >
-                  {parent.name}
+            <Box
+              display="flex"
+              justifyContent="space-between"
+              alignItems="center"
+            >
+              <Breadcrumbs>
+                <ProjectBreadcrumb data={projectRootData?.project} />
+                <Breadcrumb to={`/projects/${projectId}/files`}>
+                  Files
                 </Breadcrumb>
-              ))}
-              {isNotRootDirectory && (
-                <Breadcrumb
-                  to={`/projects/${projectId}/folders/${directoryId}`}
+                {breadcrumbsParents.map((parent) => (
+                  <Breadcrumb
+                    key={parent.id}
+                    to={`/projects/${projectId}/folders/${parent.id}`}
+                  >
+                    {parent.name}
+                  </Breadcrumb>
+                ))}
+                {isNotRootDirectory && (
+                  <Breadcrumb
+                    to={`/projects/${projectId}/folders/${directoryId}`}
+                  >
+                    {directoryData?.directory.name}
+                  </Breadcrumb>
+                )}
+              </Breadcrumbs>
+              <Box>
+                <IconButton
+                  color="inherit"
+                  onClick={() => console.log('Upload something')}
+                  size="small"
                 >
-                  {directoryData?.directory.name}
-                </Breadcrumb>
-              )}
-            </Breadcrumbs>
+                  <Publish />
+                </IconButton>
+                <IconButton
+                  color="inherit"
+                  onClick={() => console.log('Create folder')}
+                  size="small"
+                >
+                  <CreateNewFolder />
+                </IconButton>
+              </Box>
+            </Box>
           )}
           <header className={classes.headerContainer}>
             {loading ? (
