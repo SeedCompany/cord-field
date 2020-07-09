@@ -105,7 +105,7 @@ export const LanguageEngagementListItemCard: FC<LanguageEngagementListItemCardPr
             {registryOfDialectsCode ? (
               <Grid item>
                 <Typography variant="body2" color="textSecondary">
-                  ROD: {registryOfDialectsCode}
+                  Registry Of Dialects Code: {registryOfDialectsCode}
                 </Typography>
               </Grid>
             ) : null}

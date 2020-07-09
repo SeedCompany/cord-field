@@ -71,7 +71,7 @@ export const LanguageListItemCard: FC<LanguageListItemCardProps> = ({
             />
             <DisplaySimpleProperty
               LabelProps={{ color: 'textSecondary' }}
-              label="ROD"
+              label="Registry of Dialects Code"
               value={language?.registryOfDialectsCode.value}
               loading={!language}
               loadingWidth="25%"
