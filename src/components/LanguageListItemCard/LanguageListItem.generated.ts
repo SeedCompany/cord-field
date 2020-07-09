@@ -11,22 +11,17 @@ export type LanguageListItemFragment = { __typename?: 'Language' } & Pick<
       Types.SecuredString,
       'value'
     >;
-    ethnologueName: { __typename?: 'SecuredString' } & Pick<
+    ethnologue: { __typename?: 'EthnologueLanguage' } & {
+      code: { __typename?: 'SecuredString' } & Pick<
+        Types.SecuredString,
+        'value'
+      >;
+    };
+    registryOfDialectsCode: { __typename?: 'SecuredString' } & Pick<
       Types.SecuredString,
       'value'
     >;
-    rodNumber: { __typename?: 'SecuredString' } & Pick<
-      Types.SecuredString,
-      'value'
-    >;
-    organizationPopulation: { __typename?: 'SecuredInt' } & Pick<
-      Types.SecuredInt,
-      'value'
-    >;
-    ethnologuePopulation: { __typename?: 'SecuredInt' } & Pick<
-      Types.SecuredInt,
-      'value'
-    >;
+    population: { __typename?: 'SecuredInt' } & Pick<Types.SecuredInt, 'value'>;
   };
 
 export const LanguageListItemFragmentDoc = gql`
@@ -38,16 +33,15 @@ export const LanguageListItemFragmentDoc = gql`
     displayName {
       value
     }
-    ethnologueName {
+    ethnologue {
+      code {
+        value
+      }
+    }
+    registryOfDialectsCode {
       value
     }
-    rodNumber {
-      value
-    }
-    organizationPopulation {
-      value
-    }
-    ethnologuePopulation {
+    population {
       value
     }
   }

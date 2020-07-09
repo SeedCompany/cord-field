@@ -78,10 +78,8 @@ export const LanguageEngagementListItemCard: FC<LanguageEngagementListItemCardPr
 
   const language = props.language.value;
   const name = language?.name.value ?? language?.displayName?.value;
-  const population =
-    language?.organizationPopulation?.value ??
-    language?.ethnologuePopulation?.value;
-  const rodNumber = language?.rodNumber?.value;
+  const population = language?.population.value;
+  const registryOfDialectsCode = language?.registryOfDialectsCode.value;
   const endDate = getEndDate(props);
 
   return (
@@ -104,10 +102,10 @@ export const LanguageEngagementListItemCard: FC<LanguageEngagementListItemCardPr
             <Grid item>
               <Typography variant="h4">{name}</Typography>
             </Grid>
-            {rodNumber ? (
+            {registryOfDialectsCode ? (
               <Grid item>
                 <Typography variant="body2" color="textSecondary">
-                  ROD: {rodNumber}
+                  ROD: {registryOfDialectsCode}
                 </Typography>
               </Grid>
             ) : null}

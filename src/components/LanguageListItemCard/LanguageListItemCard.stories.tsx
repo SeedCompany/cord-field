@@ -14,17 +14,14 @@ export const WithData = () => {
     displayName: {
       value: text('display name', 'German'),
     },
-    ethnologueName: {
-      value: text('ethnologue name', 'cnk'),
+    ethnologue: {
+      code: { value: text('Ethnologue Code', 'cnk') },
     },
-    rodNumber: {
-      value: text('rod number', '05182'),
+    registryOfDialectsCode: {
+      value: text('Registry Of Dialects Code', '05182'),
     },
-    organizationPopulation: {
-      value: number('organization population', 20000),
-    },
-    ethnologuePopulation: {
-      value: number('ethnologue population', 10000),
+    population: {
+      value: number('Population', 10000),
     },
   };
 
