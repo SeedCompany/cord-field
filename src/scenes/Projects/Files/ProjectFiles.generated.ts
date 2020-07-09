@@ -112,6 +112,14 @@ export type ProjectDirectoryQuery = { __typename?: 'Query' } & {
                 })
           >;
         };
+      parents: Array<
+        | ({ __typename?: 'Directory' } & Pick<Types.Directory, 'id' | 'name'>)
+        | ({ __typename?: 'File' } & Pick<Types.File, 'id' | 'name'>)
+        | ({ __typename?: 'FileVersion' } & Pick<
+            Types.FileVersion,
+            'id' | 'name'
+          >)
+      >;
     };
 };
 
@@ -257,6 +265,10 @@ export const ProjectDirectoryDocument = gql`
             }
           }
         }
+      }
+      parents {
+        id
+        name
       }
     }
   }
