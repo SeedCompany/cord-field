@@ -21,6 +21,10 @@ export const Projects = () => {
       element: <ProjectFilesList />,
     },
     {
+      path: ':projectId/folders/:folderId',
+      element: <ProjectFilesList />,
+    },
+    {
       path: ':projectId/members',
       element: <ProjectMembersList />,
     },

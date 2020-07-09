@@ -9,235 +9,118 @@ import {
 } from '../../../components/ProjectBreadcrumb/ProjectBreadcrumb.generated';
 import { ProjectBreadcrumbFragmentDoc } from '../../../components/ProjectBreadcrumb/ProjectBreadcrumb.generated';
 
-export interface ProjectFilesQueryVariables {
-  input: Types.Scalars['ID'];
+export interface ProjectRootDirectoryQueryVariables {
+  id: Types.Scalars['ID'];
 }
 
-export type ProjectFilesQuery = { __typename?: 'Query' } & {
+export type ProjectRootDirectoryQuery = { __typename?: 'Query' } & {
   project:
     | ({ __typename?: 'InternshipProject' } & {
         rootDirectory: { __typename?: 'Directory' } & Pick<
           Types.Directory,
           'id'
-        > & {
-            children: { __typename?: 'FileListOutput' } & Pick<
-              Types.FileListOutput,
-              'total'
-            > & {
-                items: Array<
-                  | ({ __typename?: 'Directory' } & Pick<
-                      Types.Directory,
-                      'id' | 'name' | 'createdAt' | 'type' | 'category'
-                    > & {
-                        createdBy: { __typename?: 'User' } & Pick<
-                          Types.User,
-                          'id'
-                        > & {
-                            displayFirstName: {
-                              __typename?: 'SecuredString';
-                            } & Pick<Types.SecuredString, 'value'>;
-                            displayLastName: {
-                              __typename?: 'SecuredString';
-                            } & Pick<Types.SecuredString, 'value'>;
-                          };
-                      })
-                  | ({ __typename?: 'File' } & Pick<
-                      Types.File,
-                      | 'id'
-                      | 'name'
-                      | 'downloadUrl'
-                      | 'mimeType'
-                      | 'category'
-                      | 'size'
-                      | 'type'
-                      | 'createdAt'
-                    > & {
-                        createdBy: { __typename?: 'User' } & Pick<
-                          Types.User,
-                          'id'
-                        > & {
-                            displayFirstName: {
-                              __typename?: 'SecuredString';
-                            } & Pick<Types.SecuredString, 'value'>;
-                            displayLastName: {
-                              __typename?: 'SecuredString';
-                            } & Pick<Types.SecuredString, 'value'>;
-                          };
-                      })
-                  | ({ __typename?: 'FileVersion' } & Pick<
-                      Types.FileVersion,
-                      | 'id'
-                      | 'name'
-                      | 'downloadUrl'
-                      | 'createdAt'
-                      | 'category'
-                      | 'mimeType'
-                      | 'size'
-                      | 'type'
-                    > & {
-                        createdBy: { __typename?: 'User' } & Pick<
-                          Types.User,
-                          'id'
-                        > & {
-                            displayFirstName: {
-                              __typename?: 'SecuredString';
-                            } & Pick<Types.SecuredString, 'value'>;
-                            displayLastName: {
-                              __typename?: 'SecuredString';
-                            } & Pick<Types.SecuredString, 'value'>;
-                          };
-                      })
-                >;
-              };
-          };
+        >;
       } & ProjectBreadcrumb_InternshipProject_Fragment)
     | ({ __typename?: 'TranslationProject' } & {
         rootDirectory: { __typename?: 'Directory' } & Pick<
           Types.Directory,
           'id'
-        > & {
-            children: { __typename?: 'FileListOutput' } & Pick<
-              Types.FileListOutput,
-              'total'
-            > & {
-                items: Array<
-                  | ({ __typename?: 'Directory' } & Pick<
-                      Types.Directory,
-                      'id' | 'name' | 'createdAt' | 'type' | 'category'
-                    > & {
-                        createdBy: { __typename?: 'User' } & Pick<
-                          Types.User,
-                          'id'
-                        > & {
-                            displayFirstName: {
-                              __typename?: 'SecuredString';
-                            } & Pick<Types.SecuredString, 'value'>;
-                            displayLastName: {
-                              __typename?: 'SecuredString';
-                            } & Pick<Types.SecuredString, 'value'>;
-                          };
-                      })
-                  | ({ __typename?: 'File' } & Pick<
-                      Types.File,
-                      | 'id'
-                      | 'name'
-                      | 'downloadUrl'
-                      | 'mimeType'
-                      | 'category'
-                      | 'size'
-                      | 'type'
-                      | 'createdAt'
-                    > & {
-                        createdBy: { __typename?: 'User' } & Pick<
-                          Types.User,
-                          'id'
-                        > & {
-                            displayFirstName: {
-                              __typename?: 'SecuredString';
-                            } & Pick<Types.SecuredString, 'value'>;
-                            displayLastName: {
-                              __typename?: 'SecuredString';
-                            } & Pick<Types.SecuredString, 'value'>;
-                          };
-                      })
-                  | ({ __typename?: 'FileVersion' } & Pick<
-                      Types.FileVersion,
-                      | 'id'
-                      | 'name'
-                      | 'downloadUrl'
-                      | 'createdAt'
-                      | 'category'
-                      | 'mimeType'
-                      | 'size'
-                      | 'type'
-                    > & {
-                        createdBy: { __typename?: 'User' } & Pick<
-                          Types.User,
-                          'id'
-                        > & {
-                            displayFirstName: {
-                              __typename?: 'SecuredString';
-                            } & Pick<Types.SecuredString, 'value'>;
-                            displayLastName: {
-                              __typename?: 'SecuredString';
-                            } & Pick<Types.SecuredString, 'value'>;
-                          };
-                      })
-                >;
-              };
-          };
+        >;
       } & ProjectBreadcrumb_TranslationProject_Fragment);
 };
 
-export const ProjectFilesDocument = gql`
-  query ProjectFiles($input: ID!) {
-    project(id: $input) {
+export interface ProjectDirectoryQueryVariables {
+  id: Types.Scalars['ID'];
+}
+
+export type ProjectDirectoryQuery = { __typename?: 'Query' } & {
+  directory: { __typename?: 'Directory' } & Pick<
+    Types.Directory,
+    'category' | 'id' | 'name' | 'type' | 'createdAt'
+  > & {
+      createdBy: { __typename?: 'User' } & {
+        displayFirstName: { __typename?: 'SecuredString' } & Pick<
+          Types.SecuredString,
+          'value'
+        >;
+        displayLastName: { __typename?: 'SecuredString' } & Pick<
+          Types.SecuredString,
+          'value'
+        >;
+      };
+      children: { __typename?: 'FileListOutput' } & Pick<
+        Types.FileListOutput,
+        'total'
+      > & {
+          items: Array<
+            | ({ __typename?: 'Directory' } & Pick<
+                Types.Directory,
+                'name' | 'category' | 'createdAt' | 'type' | 'id'
+              > & {
+                  createdBy: { __typename?: 'User' } & {
+                    displayFirstName: { __typename?: 'SecuredString' } & Pick<
+                      Types.SecuredString,
+                      'value'
+                    >;
+                    displayLastName: { __typename?: 'SecuredString' } & Pick<
+                      Types.SecuredString,
+                      'value'
+                    >;
+                  };
+                })
+            | ({ __typename?: 'File' } & Pick<
+                Types.File,
+                | 'id'
+                | 'size'
+                | 'name'
+                | 'type'
+                | 'downloadUrl'
+                | 'category'
+                | 'createdAt'
+              > & {
+                  createdBy: { __typename?: 'User' } & {
+                    displayFirstName: { __typename?: 'SecuredString' } & Pick<
+                      Types.SecuredString,
+                      'value'
+                    >;
+                    displayLastName: { __typename?: 'SecuredString' } & Pick<
+                      Types.SecuredString,
+                      'value'
+                    >;
+                  };
+                })
+            | ({ __typename?: 'FileVersion' } & Pick<
+                Types.FileVersion,
+                | 'id'
+                | 'name'
+                | 'size'
+                | 'type'
+                | 'downloadUrl'
+                | 'category'
+                | 'createdAt'
+              > & {
+                  createdBy: { __typename?: 'User' } & {
+                    displayFirstName: { __typename?: 'SecuredString' } & Pick<
+                      Types.SecuredString,
+                      'value'
+                    >;
+                    displayLastName: { __typename?: 'SecuredString' } & Pick<
+                      Types.SecuredString,
+                      'value'
+                    >;
+                  };
+                })
+          >;
+        };
+    };
+};
+
+export const ProjectRootDirectoryDocument = gql`
+  query ProjectRootDirectory($id: ID!) {
+    project(id: $id) {
       ...ProjectBreadcrumb
       rootDirectory {
         id
-        children {
-          items {
-            id
-            name
-            type
-            category
-            ... on File {
-              id
-              name
-              downloadUrl
-              mimeType
-              category
-              size
-              type
-              createdAt
-              createdBy {
-                displayFirstName {
-                  value
-                }
-                displayLastName {
-                  value
-                }
-                id
-              }
-            }
-            ... on Directory {
-              id
-              name
-              createdAt
-              type
-              category
-              createdBy {
-                displayFirstName {
-                  value
-                }
-                displayLastName {
-                  value
-                }
-                id
-              }
-            }
-            ... on FileVersion {
-              id
-              name
-              downloadUrl
-              createdAt
-              category
-              mimeType
-              size
-              type
-              createdBy {
-                displayFirstName {
-                  value
-                }
-                displayLastName {
-                  value
-                }
-                id
-              }
-            }
-          }
-          total
-        }
       }
     }
   }
@@ -245,50 +128,185 @@ export const ProjectFilesDocument = gql`
 `;
 
 /**
- * __useProjectFilesQuery__
+ * __useProjectRootDirectoryQuery__
  *
- * To run a query within a React component, call `useProjectFilesQuery` and pass it any options that fit your needs.
- * When your component renders, `useProjectFilesQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * To run a query within a React component, call `useProjectRootDirectoryQuery` and pass it any options that fit your needs.
+ * When your component renders, `useProjectRootDirectoryQuery` returns an object from Apollo Client that contains loading, error, and data properties
  * you can use to render your UI.
  *
  * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
  *
  * @example
- * const { data, loading, error } = useProjectFilesQuery({
+ * const { data, loading, error } = useProjectRootDirectoryQuery({
  *   variables: {
- *      input: // value for 'input'
+ *      id: // value for 'id'
  *   },
  * });
  */
-export function useProjectFilesQuery(
+export function useProjectRootDirectoryQuery(
   baseOptions?: ApolloReactHooks.QueryHookOptions<
-    ProjectFilesQuery,
-    ProjectFilesQueryVariables
+    ProjectRootDirectoryQuery,
+    ProjectRootDirectoryQueryVariables
   >
 ) {
   return ApolloReactHooks.useQuery<
-    ProjectFilesQuery,
-    ProjectFilesQueryVariables
-  >(ProjectFilesDocument, baseOptions);
+    ProjectRootDirectoryQuery,
+    ProjectRootDirectoryQueryVariables
+  >(ProjectRootDirectoryDocument, baseOptions);
 }
-export function useProjectFilesLazyQuery(
+export function useProjectRootDirectoryLazyQuery(
   baseOptions?: ApolloReactHooks.LazyQueryHookOptions<
-    ProjectFilesQuery,
-    ProjectFilesQueryVariables
+    ProjectRootDirectoryQuery,
+    ProjectRootDirectoryQueryVariables
   >
 ) {
   return ApolloReactHooks.useLazyQuery<
-    ProjectFilesQuery,
-    ProjectFilesQueryVariables
-  >(ProjectFilesDocument, baseOptions);
+    ProjectRootDirectoryQuery,
+    ProjectRootDirectoryQueryVariables
+  >(ProjectRootDirectoryDocument, baseOptions);
 }
-export type ProjectFilesQueryHookResult = ReturnType<
-  typeof useProjectFilesQuery
+export type ProjectRootDirectoryQueryHookResult = ReturnType<
+  typeof useProjectRootDirectoryQuery
 >;
-export type ProjectFilesLazyQueryHookResult = ReturnType<
-  typeof useProjectFilesLazyQuery
+export type ProjectRootDirectoryLazyQueryHookResult = ReturnType<
+  typeof useProjectRootDirectoryLazyQuery
 >;
-export type ProjectFilesQueryResult = ApolloReactCommon.QueryResult<
-  ProjectFilesQuery,
-  ProjectFilesQueryVariables
+export type ProjectRootDirectoryQueryResult = ApolloReactCommon.QueryResult<
+  ProjectRootDirectoryQuery,
+  ProjectRootDirectoryQueryVariables
+>;
+export const ProjectDirectoryDocument = gql`
+  query ProjectDirectory($id: ID!) {
+    directory(id: $id) {
+      category
+      id
+      name
+      type
+      createdAt
+      createdBy {
+        displayFirstName {
+          value
+        }
+        displayLastName {
+          value
+        }
+      }
+      children {
+        total
+        items {
+          category
+          createdAt
+          createdBy {
+            displayFirstName {
+              value
+            }
+            displayLastName {
+              value
+            }
+          }
+          id
+          name
+          type
+          ... on Directory {
+            name
+            category
+            createdAt
+            createdBy {
+              displayFirstName {
+                value
+              }
+              displayLastName {
+                value
+              }
+            }
+            type
+            id
+          }
+          ... on File {
+            id
+            size
+            name
+            type
+            downloadUrl
+            category
+            createdAt
+            createdBy {
+              displayFirstName {
+                value
+              }
+              displayLastName {
+                value
+              }
+            }
+          }
+          ... on FileVersion {
+            id
+            name
+            size
+            type
+            downloadUrl
+            category
+            createdAt
+            createdBy {
+              displayFirstName {
+                value
+              }
+              displayLastName {
+                value
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+`;
+
+/**
+ * __useProjectDirectoryQuery__
+ *
+ * To run a query within a React component, call `useProjectDirectoryQuery` and pass it any options that fit your needs.
+ * When your component renders, `useProjectDirectoryQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useProjectDirectoryQuery({
+ *   variables: {
+ *      id: // value for 'id'
+ *   },
+ * });
+ */
+export function useProjectDirectoryQuery(
+  baseOptions?: ApolloReactHooks.QueryHookOptions<
+    ProjectDirectoryQuery,
+    ProjectDirectoryQueryVariables
+  >
+) {
+  return ApolloReactHooks.useQuery<
+    ProjectDirectoryQuery,
+    ProjectDirectoryQueryVariables
+  >(ProjectDirectoryDocument, baseOptions);
+}
+export function useProjectDirectoryLazyQuery(
+  baseOptions?: ApolloReactHooks.LazyQueryHookOptions<
+    ProjectDirectoryQuery,
+    ProjectDirectoryQueryVariables
+  >
+) {
+  return ApolloReactHooks.useLazyQuery<
+    ProjectDirectoryQuery,
+    ProjectDirectoryQueryVariables
+  >(ProjectDirectoryDocument, baseOptions);
+}
+export type ProjectDirectoryQueryHookResult = ReturnType<
+  typeof useProjectDirectoryQuery
+>;
+export type ProjectDirectoryLazyQueryHookResult = ReturnType<
+  typeof useProjectDirectoryLazyQuery
+>;
+export type ProjectDirectoryQueryResult = ApolloReactCommon.QueryResult<
+  ProjectDirectoryQuery,
+  ProjectDirectoryQueryVariables
 >;
