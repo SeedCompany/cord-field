@@ -1,18 +1,10 @@
+import { Box, Breadcrumbs, makeStyles, Typography } from '@material-ui/core';
 import {
-  Box,
-  Breadcrumbs,
-  IconButton,
-  makeStyles,
-  Typography,
-} from '@material-ui/core';
-import {
-  CreateNewFolder,
   Description,
   Folder,
   GraphicEq,
   Image,
   InsertDriveFile,
-  Publish,
   TableChart,
   VideoLibrary,
 } from '@material-ui/icons';
@@ -28,10 +20,9 @@ import {
 } from '../../../components/Formatters';
 import { ProjectBreadcrumb } from '../../../components/ProjectBreadcrumb';
 import { RowData, Table } from '../../../components/Table';
-import {
-  useProjectDirectoryQuery,
-  useProjectRootDirectoryQuery,
-} from './ProjectFiles.generated';
+import { FileCreateActions } from './FileCreateActions';
+import { useProjectDirectoryQuery } from './ProjectFiles.generated';
+import { useProjectCurrentDirectory } from './useProjectCurrentDirectory';
 
 const useStyles = makeStyles(({ spacing }) => ({
   headerContainer: {
@@ -69,36 +60,31 @@ const icons = {
 
 export const ProjectFilesList: FC = () => {
   const classes = useStyles();
-  const { projectId, folderId } = useParams();
+  const { projectId } = useParams();
   const formatDate = useDateFormatter();
   const formatFileSize = useFileSizeFormatter();
-  const { data: projectRootData } = useProjectRootDirectoryQuery({
-    variables: {
-      id: projectId,
-    },
-  });
-
-  const rootDirectoryId = projectRootData?.project.rootDirectory.id;
-  const directoryId = folderId ?? rootDirectoryId ?? '';
+  const {
+    project,
+    directoryId,
+    rootDirectoryId,
+  } = useProjectCurrentDirectory();
   const isNotRootDirectory = directoryId !== rootDirectoryId;
 
-  const { data: directoryData, loading, error } = useProjectDirectoryQuery({
+  const { data, loading, error } = useProjectDirectoryQuery({
     variables: {
       id: directoryId,
     },
     skip: !directoryId,
   });
 
-  const parents = directoryData?.directory.parents ?? [];
+  const parents = data?.directory.parents ?? [];
   const breadcrumbsParents = parents.slice(0, -1);
 
   const directoryIsNotInProject =
     isNotRootDirectory &&
     !parents.some((parent) => parent.id === rootDirectoryId);
 
-  const items = directoryIsNotInProject
-    ? []
-    : directoryData?.directory.children.items;
+  const items = directoryIsNotInProject ? [] : data?.directory.children.items;
 
   const columns = [
     {
@@ -194,7 +180,7 @@ export const ProjectFilesList: FC = () => {
               alignItems="center"
             >
               <Breadcrumbs>
-                <ProjectBreadcrumb data={projectRootData?.project} />
+                <ProjectBreadcrumb data={project} />
                 <Breadcrumb to={`/projects/${projectId}/files`}>
                   Files
                 </Breadcrumb>
@@ -210,26 +196,11 @@ export const ProjectFilesList: FC = () => {
                   <Breadcrumb
                     to={`/projects/${projectId}/folders/${directoryId}`}
                   >
-                    {directoryData?.directory.name}
+                    {data?.directory.name}
                   </Breadcrumb>
                 )}
               </Breadcrumbs>
-              <Box>
-                <IconButton
-                  color="inherit"
-                  onClick={() => console.log('Upload something')}
-                  size="small"
-                >
-                  <Publish />
-                </IconButton>
-                <IconButton
-                  color="inherit"
-                  onClick={() => console.log('Create folder')}
-                  size="small"
-                >
-                  <CreateNewFolder />
-                </IconButton>
-              </Box>
+              <FileCreateActions />
             </Box>
           )}
           <header className={classes.headerContainer}>
