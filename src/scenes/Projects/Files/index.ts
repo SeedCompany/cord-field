@@ -1,3 +1,3 @@
 export * from './ProjectFilesList';
 export * from './useProjectCurrentDirectory';
-export * from './CreateDirectory';
+export * from './CreateProjectDirectory';

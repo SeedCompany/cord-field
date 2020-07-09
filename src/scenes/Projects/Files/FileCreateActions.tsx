@@ -2,7 +2,7 @@ import { Box, IconButton } from '@material-ui/core';
 import { CreateNewFolder, Publish } from '@material-ui/icons';
 import React from 'react';
 import { useDialog } from '../../../components/Dialog';
-import { CreateDirectory } from './CreateDirectory';
+import { CreateProjectDirectory } from './CreateProjectDirectory';
 
 export const FileCreateActions = () => {
   const [createDirectoryState, createDirectory] = useDialog();
@@ -21,7 +21,7 @@ export const FileCreateActions = () => {
           <CreateNewFolder />
         </IconButton>
       </Box>
-      <CreateDirectory {...createDirectoryState} />
+      <CreateProjectDirectory {...createDirectoryState} />
     </>
   );
 };
