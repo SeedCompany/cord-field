@@ -70,8 +70,8 @@ export const ProjectFilesList: FC = () => {
     },
   });
 
-  const directoryId =
-    folderId ?? projectRootData?.project.rootDirectory.id ?? '';
+  const rootDirectoryId = projectRootData?.project.rootDirectory.id;
+  const directoryId = folderId ?? rootDirectoryId ?? '';
 
   const { data: directoryData, loading, error } = useProjectDirectoryQuery({
     variables: {
@@ -80,7 +80,15 @@ export const ProjectFilesList: FC = () => {
     skip: !directoryId,
   });
 
-  const items = directoryData?.directory.children.items;
+  const directoryIsNotInProject =
+    directoryId !== rootDirectoryId &&
+    !directoryData?.directory.parents.some(
+      (parent) => parent.id === rootDirectoryId
+    );
+
+  const items = directoryIsNotInProject
+    ? []
+    : directoryData?.directory.children.items;
 
   const columns = [
     {
@@ -161,6 +169,10 @@ export const ProjectFilesList: FC = () => {
     <Content>
       {error || (!loading && !items) ? (
         <Typography variant="h4">Error fetching Project Files</Typography>
+      ) : directoryIsNotInProject ? (
+        <Typography variant="h4">
+          This folder does not exist in this project
+        </Typography>
       ) : (
         <>
           {loading ? (

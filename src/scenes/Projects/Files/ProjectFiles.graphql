@@ -89,5 +89,9 @@ query ProjectDirectory($id: ID!) {
         }
       }
     }
+    parents {
+      id
+      name
+    }
   }
 }
