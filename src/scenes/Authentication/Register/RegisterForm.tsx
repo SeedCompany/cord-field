@@ -7,6 +7,7 @@ import {
   blurOnSubmit,
   EmailField,
   focusFirstFieldWithSubmitError,
+  matchFieldIfSame,
   PasswordField,
   SubmitButton,
   SubmitError,
@@ -151,6 +152,8 @@ const markConfirmPasswordTouched: Mutator<RegisterInputFields> = (
 // decorators get re-created if array identity changes
 // so make constant outside of render function
 const decorators = [
+  matchFieldIfSame('realFirstName', 'displayFirstName'),
+  matchFieldIfSame('realLastName', 'displayLastName'),
   showMatchingErrorsImmediately,
   blurOnSubmit,
   focusFirstFieldWithSubmitError,
