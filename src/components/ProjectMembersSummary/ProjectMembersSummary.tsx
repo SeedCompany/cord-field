@@ -11,12 +11,16 @@ export interface ProjectMembersSummaryProps {
 export const ProjectMembersSummary: FC<ProjectMembersSummaryProps> = ({
   members,
 }) => {
-  const summarizedMembers = members?.items.map(
-    ({ user }): MemberSummaryItem => ({
-      avatarLetters: user?.value?.avatarLetters ?? undefined,
-      label: user?.value?.firstName ?? '',
-    })
-  );
+  const summarizedMembers = members?.items
+    .filter(({ user }) => user.canRead && user.value)
+    .map(({ user }) => user.value!)
+    .map(
+      (user): MemberSummaryItem => ({
+        avatarLetters: user.avatarLetters ?? undefined,
+        label: user.firstName ?? '',
+        id: user.id,
+      })
+    );
 
   return (
     <MemberListSummary

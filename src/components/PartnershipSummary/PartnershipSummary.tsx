@@ -21,6 +21,7 @@ export const PartnershipSummary: FC<PartnershipSummaryProps> = ({
 }) => {
   const members = partnerships?.items.map(
     (item): MemberSummaryItem => ({
+      id: item.id,
       label: item.organization.name.value ?? '',
       avatarLetters: item.organization.avatarLetters ?? '',
     })

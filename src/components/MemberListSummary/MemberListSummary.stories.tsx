@@ -21,19 +21,20 @@ export const randomPersonPic = (name: string, gender: 'female' | 'male') => {
   }/${id}.jpg`;
 };
 
-const people: Array<{ name: string; gender: 'female' | 'male' }> = [
-  { name: 'Jim', gender: 'male' },
-  { name: 'Sarah', gender: 'female' },
-  { name: 'Julius', gender: 'male' },
-  { name: 'Rachel', gender: 'female' },
-  { name: 'Rob', gender: 'male' },
-  { name: 'Katie', gender: 'female' },
+const people: Array<{ name: string; gender: 'female' | 'male'; id: string }> = [
+  { name: 'Jim', gender: 'male', id: '1' },
+  { name: 'Sarah', gender: 'female', id: '2' },
+  { name: 'Julius', gender: 'male', id: '3' },
+  { name: 'Rachel', gender: 'female', id: '4' },
+  { name: 'Rob', gender: 'male', id: '5' },
+  { name: 'Katie', gender: 'female', id: '6' },
 ];
 export const members = people.map(
-  ({ name, gender }): MemberSummaryItem => ({
+  ({ name, gender, id }): MemberSummaryItem => ({
     label: name,
     avatarLetters: name[0],
     picture: randomPersonPic(name, gender),
+    id,
   })
 );
 

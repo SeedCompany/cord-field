@@ -1,5 +1,7 @@
 fragment ProjectMemberItem on ProjectMember {
   user {
+    canRead
+    canEdit
     value {
       id
       avatarLetters
