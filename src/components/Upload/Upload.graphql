@@ -16,3 +16,7 @@ mutation CreateFileVersion($input: CreateFileVersionInput!) {
     type
   }
 }
+
+mutation DeleteFileNode($id: ID!) {
+  deleteFileNode(id: $id)
+}
