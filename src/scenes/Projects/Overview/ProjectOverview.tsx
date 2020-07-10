@@ -102,7 +102,7 @@ export const ProjectOverview: FC = () => {
             </Typography>
 
             {data && (
-              <Typography color="textSecondary">
+              <Typography variant="body2" color="textSecondary">
                 Updated {formatDateTime(data.project.modifiedAt)}
               </Typography>
             )}
