@@ -12,8 +12,8 @@ export interface CreateProjectMutationVariables {
 export type CreateProjectMutation = { __typename?: 'Mutation' } & {
   createProject: { __typename?: 'CreateProjectOutput' } & {
     project:
-      | ({ __typename?: 'InternshipProject' } & Pick<
-          Types.InternshipProject,
+      | ({ __typename?: 'TranslationProject' } & Pick<
+          Types.TranslationProject,
           'id' | 'type' | 'createdAt'
         > & {
             name: { __typename?: 'SecuredString' } & Pick<
@@ -21,8 +21,8 @@ export type CreateProjectMutation = { __typename?: 'Mutation' } & {
               'value' | 'canRead' | 'canEdit'
             >;
           })
-      | ({ __typename?: 'TranslationProject' } & Pick<
-          Types.TranslationProject,
+      | ({ __typename?: 'InternshipProject' } & Pick<
+          Types.InternshipProject,
           'id' | 'type' | 'createdAt'
         > & {
             name: { __typename?: 'SecuredString' } & Pick<

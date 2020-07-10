@@ -35,7 +35,7 @@ export type DisplayZoneFragment = {
   __typename?: 'Zone';
 } & DisplayPlace_Zone_Fragment;
 
-export type DisplayPlace_Country_Fragment = { __typename?: 'Country' } & {
+export type DisplayPlace_Zone_Fragment = { __typename?: 'Zone' } & {
   name: { __typename?: 'SecuredString' } & Pick<Types.SecuredString, 'value'>;
 };
 
@@ -43,14 +43,14 @@ export type DisplayPlace_Region_Fragment = { __typename?: 'Region' } & {
   name: { __typename?: 'SecuredString' } & Pick<Types.SecuredString, 'value'>;
 };
 
-export type DisplayPlace_Zone_Fragment = { __typename?: 'Zone' } & {
+export type DisplayPlace_Country_Fragment = { __typename?: 'Country' } & {
   name: { __typename?: 'SecuredString' } & Pick<Types.SecuredString, 'value'>;
 };
 
 export type DisplayPlaceFragment =
-  | DisplayPlace_Country_Fragment
+  | DisplayPlace_Zone_Fragment
   | DisplayPlace_Region_Fragment
-  | DisplayPlace_Zone_Fragment;
+  | DisplayPlace_Country_Fragment;
 
 export const DisplayPlaceFragmentDoc = gql`
   fragment DisplayPlace on Place {

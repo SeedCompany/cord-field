@@ -6,35 +6,28 @@ const optional = <T, R>(parser: (val: T) => R) => (
 ): R | null => (val != null ? parser(val) : null);
 
 export const typePolicies: TypePolicies = {
-  Budget: {
+  SecuredDateTime: {
+    fields: {
+      value: {
+        read: optional(Parsers.DateTime),
+      },
+    },
+  },
+  SecuredDate: {
+    fields: {
+      value: {
+        read: optional(Parsers.Date),
+      },
+    },
+  },
+  Organization: {
     fields: {
       createdAt: {
         read: Parsers.DateTime,
       },
     },
   },
-  BudgetRecord: {
-    fields: {
-      createdAt: {
-        read: Parsers.DateTime,
-      },
-    },
-  },
-  Ceremony: {
-    fields: {
-      createdAt: {
-        read: Parsers.DateTime,
-      },
-    },
-  },
-  Country: {
-    fields: {
-      createdAt: {
-        read: Parsers.DateTime,
-      },
-    },
-  },
-  Directory: {
+  User: {
     fields: {
       createdAt: {
         read: Parsers.DateTime,
@@ -48,7 +41,41 @@ export const typePolicies: TypePolicies = {
       },
     },
   },
-  Favorite: {
+  Unavailability: {
+    fields: {
+      createdAt: {
+        read: Parsers.DateTime,
+      },
+      start: {
+        read: Parsers.DateTime,
+      },
+      end: {
+        read: Parsers.DateTime,
+      },
+    },
+  },
+  Zone: {
+    fields: {
+      createdAt: {
+        read: Parsers.DateTime,
+      },
+    },
+  },
+  Region: {
+    fields: {
+      createdAt: {
+        read: Parsers.DateTime,
+      },
+    },
+  },
+  Country: {
+    fields: {
+      createdAt: {
+        read: Parsers.DateTime,
+      },
+    },
+  },
+  FileVersion: {
     fields: {
       createdAt: {
         read: Parsers.DateTime,
@@ -65,21 +92,21 @@ export const typePolicies: TypePolicies = {
       },
     },
   },
-  FileVersion: {
+  Directory: {
     fields: {
       createdAt: {
         read: Parsers.DateTime,
       },
     },
   },
-  Film: {
+  Ceremony: {
     fields: {
       createdAt: {
         read: Parsers.DateTime,
       },
     },
   },
-  InternshipEngagement: {
+  TranslationProject: {
     fields: {
       createdAt: {
         read: Parsers.DateTime,
@@ -106,12 +133,16 @@ export const typePolicies: TypePolicies = {
       },
     },
   },
-  LanguageEngagement: {
+  Range: {
     fields: {
       createdAt: {
         read: Parsers.DateTime,
       },
-      modifiedAt: {
+    },
+  },
+  Film: {
+    fields: {
+      createdAt: {
         read: Parsers.DateTime,
       },
     },
@@ -123,23 +154,36 @@ export const typePolicies: TypePolicies = {
       },
     },
   },
-  Organization: {
-    fields: {
-      createdAt: {
-        read: Parsers.DateTime,
-      },
-    },
-  },
-  Partnership: {
-    fields: {
-      createdAt: {
-        read: Parsers.DateTime,
-      },
-    },
-  },
   Product: {
     fields: {
       createdAt: {
+        read: Parsers.DateTime,
+      },
+    },
+  },
+  Story: {
+    fields: {
+      createdAt: {
+        read: Parsers.DateTime,
+      },
+    },
+  },
+  LanguageEngagement: {
+    fields: {
+      createdAt: {
+        read: Parsers.DateTime,
+      },
+      modifiedAt: {
+        read: Parsers.DateTime,
+      },
+    },
+  },
+  InternshipEngagement: {
+    fields: {
+      createdAt: {
+        read: Parsers.DateTime,
+      },
+      modifiedAt: {
         read: Parsers.DateTime,
       },
     },
@@ -154,72 +198,28 @@ export const typePolicies: TypePolicies = {
       },
     },
   },
-  Range: {
+  BudgetRecord: {
     fields: {
       createdAt: {
         read: Parsers.DateTime,
       },
     },
   },
-  Region: {
+  Budget: {
     fields: {
       createdAt: {
         read: Parsers.DateTime,
       },
     },
   },
-  SecuredDate: {
-    fields: {
-      value: {
-        read: optional(Parsers.Date),
-      },
-    },
-  },
-  SecuredDateTime: {
-    fields: {
-      value: {
-        read: optional(Parsers.DateTime),
-      },
-    },
-  },
-  Story: {
+  Partnership: {
     fields: {
       createdAt: {
         read: Parsers.DateTime,
       },
     },
   },
-  TranslationProject: {
-    fields: {
-      createdAt: {
-        read: Parsers.DateTime,
-      },
-      modifiedAt: {
-        read: Parsers.DateTime,
-      },
-    },
-  },
-  Unavailability: {
-    fields: {
-      createdAt: {
-        read: Parsers.DateTime,
-      },
-      start: {
-        read: Parsers.DateTime,
-      },
-      end: {
-        read: Parsers.DateTime,
-      },
-    },
-  },
-  User: {
-    fields: {
-      createdAt: {
-        read: Parsers.DateTime,
-      },
-    },
-  },
-  Zone: {
+  Favorite: {
     fields: {
       createdAt: {
         read: Parsers.DateTime,

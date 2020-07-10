@@ -22,58 +22,6 @@ export interface ProjectOverviewQueryVariables {
 
 export type ProjectOverviewQuery = { __typename?: 'Query' } & {
   project:
-    | ({ __typename?: 'InternshipProject' } & Pick<
-        Types.InternshipProject,
-        'id' | 'status'
-      > & {
-          name: { __typename?: 'SecuredString' } & Pick<
-            Types.SecuredString,
-            'canRead' | 'canEdit' | 'value'
-          >;
-          location: { __typename?: 'SecuredCountry' } & Pick<
-            Types.SecuredCountry,
-            'canRead' | 'canEdit'
-          > & {
-              value?: Types.Maybe<
-                { __typename?: 'Country' } & DisplayLocation_Country_Fragment
-              >;
-            };
-          mouStart: { __typename?: 'SecuredDate' } & Pick<
-            Types.SecuredDate,
-            'canRead' | 'canEdit' | 'value'
-          >;
-          mouEnd: { __typename?: 'SecuredDate' } & Pick<
-            Types.SecuredDate,
-            'canRead' | 'canEdit' | 'value'
-          >;
-          budget: { __typename?: 'SecuredBudget' } & Pick<
-            Types.SecuredBudget,
-            'canRead'
-          > & {
-              value?: Types.Maybe<
-                { __typename?: 'Budget' } & BudgetOverviewFragment
-              >;
-            };
-          team: {
-            __typename?: 'SecuredProjectMemberList';
-          } & ProjectMemberListFragment;
-          partnerships: {
-            __typename?: 'SecuredPartnershipList';
-          } & PartnershipSummaryFragment;
-          engagements: { __typename?: 'SecuredEngagementList' } & Pick<
-            Types.SecuredEngagementList,
-            'canRead' | 'canCreate' | 'total'
-          > & {
-              items: Array<
-                | ({
-                    __typename?: 'InternshipEngagement';
-                  } & InternshipEngagementListItemFragment)
-                | ({
-                    __typename?: 'LanguageEngagement';
-                  } & LanguageEngagementListItemFragment)
-              >;
-            };
-        })
     | ({ __typename?: 'TranslationProject' } & Pick<
         Types.TranslationProject,
         'id' | 'status'
@@ -118,11 +66,63 @@ export type ProjectOverviewQuery = { __typename?: 'Query' } & {
           > & {
               items: Array<
                 | ({
+                    __typename?: 'LanguageEngagement';
+                  } & LanguageEngagementListItemFragment)
+                | ({
                     __typename?: 'InternshipEngagement';
                   } & InternshipEngagementListItemFragment)
+              >;
+            };
+        })
+    | ({ __typename?: 'InternshipProject' } & Pick<
+        Types.InternshipProject,
+        'id' | 'status'
+      > & {
+          name: { __typename?: 'SecuredString' } & Pick<
+            Types.SecuredString,
+            'canRead' | 'canEdit' | 'value'
+          >;
+          location: { __typename?: 'SecuredCountry' } & Pick<
+            Types.SecuredCountry,
+            'canRead' | 'canEdit'
+          > & {
+              value?: Types.Maybe<
+                { __typename?: 'Country' } & DisplayLocation_Country_Fragment
+              >;
+            };
+          mouStart: { __typename?: 'SecuredDate' } & Pick<
+            Types.SecuredDate,
+            'canRead' | 'canEdit' | 'value'
+          >;
+          mouEnd: { __typename?: 'SecuredDate' } & Pick<
+            Types.SecuredDate,
+            'canRead' | 'canEdit' | 'value'
+          >;
+          budget: { __typename?: 'SecuredBudget' } & Pick<
+            Types.SecuredBudget,
+            'canRead'
+          > & {
+              value?: Types.Maybe<
+                { __typename?: 'Budget' } & BudgetOverviewFragment
+              >;
+            };
+          team: {
+            __typename?: 'SecuredProjectMemberList';
+          } & ProjectMemberListFragment;
+          partnerships: {
+            __typename?: 'SecuredPartnershipList';
+          } & PartnershipSummaryFragment;
+          engagements: { __typename?: 'SecuredEngagementList' } & Pick<
+            Types.SecuredEngagementList,
+            'canRead' | 'canCreate' | 'total'
+          > & {
+              items: Array<
                 | ({
                     __typename?: 'LanguageEngagement';
                   } & LanguageEngagementListItemFragment)
+                | ({
+                    __typename?: 'InternshipEngagement';
+                  } & InternshipEngagementListItemFragment)
               >;
             };
         });

@@ -20,11 +20,11 @@ export type ProjectListQuery = { __typename?: 'Query' } & {
   > & {
       items: Array<
         | ({
-            __typename?: 'InternshipProject';
-          } & ProjectListItem_InternshipProject_Fragment)
-        | ({
             __typename?: 'TranslationProject';
           } & ProjectListItem_TranslationProject_Fragment)
+        | ({
+            __typename?: 'InternshipProject';
+          } & ProjectListItem_InternshipProject_Fragment)
       >;
     };
 };

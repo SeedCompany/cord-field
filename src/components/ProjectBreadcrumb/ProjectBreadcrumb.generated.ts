@@ -2,15 +2,6 @@
 import gql from 'graphql-tag';
 import * as Types from '../../api/schema.generated';
 
-export type ProjectBreadcrumb_InternshipProject_Fragment = {
-  __typename?: 'InternshipProject';
-} & Pick<Types.InternshipProject, 'id'> & {
-    name: { __typename?: 'SecuredString' } & Pick<
-      Types.SecuredString,
-      'canRead' | 'value'
-    >;
-  };
-
 export type ProjectBreadcrumb_TranslationProject_Fragment = {
   __typename?: 'TranslationProject';
 } & Pick<Types.TranslationProject, 'id'> & {
@@ -20,9 +11,18 @@ export type ProjectBreadcrumb_TranslationProject_Fragment = {
     >;
   };
 
+export type ProjectBreadcrumb_InternshipProject_Fragment = {
+  __typename?: 'InternshipProject';
+} & Pick<Types.InternshipProject, 'id'> & {
+    name: { __typename?: 'SecuredString' } & Pick<
+      Types.SecuredString,
+      'canRead' | 'value'
+    >;
+  };
+
 export type ProjectBreadcrumbFragment =
-  | ProjectBreadcrumb_InternshipProject_Fragment
-  | ProjectBreadcrumb_TranslationProject_Fragment;
+  | ProjectBreadcrumb_TranslationProject_Fragment
+  | ProjectBreadcrumb_InternshipProject_Fragment;
 
 export const ProjectBreadcrumbFragmentDoc = gql`
   fragment ProjectBreadcrumb on Project {

@@ -19,17 +19,6 @@ export interface ProjectPartnershipsQueryVariables {
 
 export type ProjectPartnershipsQuery = { __typename?: 'Query' } & {
   project:
-    | ({ __typename?: 'InternshipProject' } & {
-        partnerships: { __typename?: 'SecuredPartnershipList' } & Pick<
-          Types.SecuredPartnershipList,
-          'canCreate' | 'total'
-        > & {
-            items: Array<
-              { __typename?: 'Partnership' } & PartnershipCardFragment &
-                EditPartnershipFragment
-            >;
-          };
-      } & ProjectBreadcrumb_InternshipProject_Fragment)
     | ({ __typename?: 'TranslationProject' } & {
         partnerships: { __typename?: 'SecuredPartnershipList' } & Pick<
           Types.SecuredPartnershipList,
@@ -40,7 +29,18 @@ export type ProjectPartnershipsQuery = { __typename?: 'Query' } & {
                 EditPartnershipFragment
             >;
           };
-      } & ProjectBreadcrumb_TranslationProject_Fragment);
+      } & ProjectBreadcrumb_TranslationProject_Fragment)
+    | ({ __typename?: 'InternshipProject' } & {
+        partnerships: { __typename?: 'SecuredPartnershipList' } & Pick<
+          Types.SecuredPartnershipList,
+          'canCreate' | 'total'
+        > & {
+            items: Array<
+              { __typename?: 'Partnership' } & PartnershipCardFragment &
+                EditPartnershipFragment
+            >;
+          };
+      } & ProjectBreadcrumb_InternshipProject_Fragment);
 };
 
 export const ProjectPartnershipsDocument = gql`

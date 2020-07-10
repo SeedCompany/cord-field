@@ -17,16 +17,6 @@ export interface ProjectMembersQueryVariables {
 
 export type ProjectMembersQuery = { __typename?: 'Query' } & {
   project:
-    | ({ __typename?: 'InternshipProject' } & {
-        team: { __typename?: 'SecuredProjectMemberList' } & Pick<
-          Types.SecuredProjectMemberList,
-          'canRead' | 'canCreate'
-        > & {
-            items: Array<
-              { __typename?: 'ProjectMember' } & ProjectMemberCardFragment
-            >;
-          };
-      } & ProjectBreadcrumb_InternshipProject_Fragment)
     | ({ __typename?: 'TranslationProject' } & {
         team: { __typename?: 'SecuredProjectMemberList' } & Pick<
           Types.SecuredProjectMemberList,
@@ -36,7 +26,17 @@ export type ProjectMembersQuery = { __typename?: 'Query' } & {
               { __typename?: 'ProjectMember' } & ProjectMemberCardFragment
             >;
           };
-      } & ProjectBreadcrumb_TranslationProject_Fragment);
+      } & ProjectBreadcrumb_TranslationProject_Fragment)
+    | ({ __typename?: 'InternshipProject' } & {
+        team: { __typename?: 'SecuredProjectMemberList' } & Pick<
+          Types.SecuredProjectMemberList,
+          'canRead' | 'canCreate'
+        > & {
+            items: Array<
+              { __typename?: 'ProjectMember' } & ProjectMemberCardFragment
+            >;
+          };
+      } & ProjectBreadcrumb_InternshipProject_Fragment);
 };
 
 export const ProjectMembersDocument = gql`
