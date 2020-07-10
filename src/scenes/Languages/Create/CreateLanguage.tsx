@@ -3,11 +3,14 @@ import React from 'react';
 import { Except } from 'type-fest';
 import { CreateLanguageInput, GQLOperations } from '../../../api';
 import { ButtonLink } from '../../../components/Routing';
-import { LanguageForm } from '../LanguageForm';
-import { CreateLanguageFormProps as Props } from './CreateLangaugeForm';
+import { LanguageForm, LanguageFormProps } from '../LanguageForm';
 import { useCreateLanguageMutation } from './CreateLanguage.generated';
 
-export const CreateLanguage = (props: Except<Props, 'onSubmit'>) => {
+export type CreateUserProps = Except<
+  LanguageFormProps<CreateLanguageInput>,
+  'prefix' | 'onSubmit'
+>;
+export const CreateLanguage = (props: CreateUserProps) => {
   const [createLang] = useCreateLanguageMutation();
   const { enqueueSnackbar } = useSnackbar();
 
