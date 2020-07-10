@@ -15,6 +15,11 @@ import {
   TextField,
 } from '../../../components/form';
 import { NumberField } from '../../../components/form/NumberField';
+import {
+  charString,
+  minLength,
+  numberString,
+} from '../../../components/form/validators';
 import { LanguageFormFragment } from './LangugeForm.generated';
 
 export type LanguageFormProps<T> = DialogFormProps<T> & {
@@ -51,6 +56,7 @@ export const LanguageForm = <T extends any>({
                 label="Language Name"
                 placeholder="Enter Language Name"
                 required
+                validate={minLength(2)}
                 {...props}
               />
             )}
@@ -63,6 +69,7 @@ export const LanguageForm = <T extends any>({
                 label="Public Name"
                 placeholder="Enter Public Name"
                 required
+                validate={minLength(2)}
                 {...props}
               />
             )}
@@ -74,6 +81,7 @@ export const LanguageForm = <T extends any>({
           <TextField
             label="Registry Of Dialects Code"
             placeholder="Registry Of Dialects Code"
+            validate={[minLength(5), numberString]}
             {...props}
           />
         )}
@@ -83,6 +91,7 @@ export const LanguageForm = <T extends any>({
           <TextField
             label="Pronounciation"
             placeholder="Enter Pronounciation"
+            validate={minLength(2)}
             {...props}
           />
         )}
@@ -96,6 +105,7 @@ export const LanguageForm = <T extends any>({
                 <TextField
                   label="Ethnologue Name"
                   placeholder="Ethnologue Name"
+                  validate={minLength(2)}
                   {...props}
                 />
               )}
@@ -107,6 +117,7 @@ export const LanguageForm = <T extends any>({
                 <TextField
                   label="Ethnologue ID"
                   placeholder="Ethnologue ID"
+                  validate={minLength(2)}
                   {...props}
                 />
               )}
@@ -118,6 +129,7 @@ export const LanguageForm = <T extends any>({
                 <TextField
                   label="Ethnologue Code"
                   placeholder="Ethnologue Code"
+                  validate={[minLength(3), charString]}
                   {...props}
                 />
               )}
@@ -129,6 +141,7 @@ export const LanguageForm = <T extends any>({
                 <TextField
                   label="Provisional Code"
                   placeholder="Provisional Code"
+                  validate={minLength(3)}
                   {...props}
                 />
               )}
@@ -166,6 +179,7 @@ export const LanguageForm = <T extends any>({
             multiline
             placeholder="Enter Least of These Reason"
             inputProps={{ rowsMin: 2 }}
+            validate={minLength(2)}
             {...props}
           />
         )}
