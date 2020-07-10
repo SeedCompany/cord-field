@@ -47,10 +47,11 @@ export const GQLOperations = {
     ProjectMemberList: 'ProjectMemberList',
     LoggedInUser: 'LoggedInUser',
     UserListItem: 'UserListItem',
+    LanguageForm: 'LanguageForm',
+    ss: 'ss',
     orgDetails: 'orgDetails',
     EditPartnership: 'EditPartnership',
     userDetails: 'userDetails',
     UserForm: 'UserForm',
-    ss: 'ss',
   },
 };
