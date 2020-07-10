@@ -24,7 +24,7 @@ export type ProjectOverviewQuery = { __typename?: 'Query' } & {
   project:
     | ({ __typename?: 'TranslationProject' } & Pick<
         Types.TranslationProject,
-        'id' | 'status'
+        'id' | 'status' | 'modifiedAt'
       > & {
           name: { __typename?: 'SecuredString' } & Pick<
             Types.SecuredString,
@@ -76,7 +76,7 @@ export type ProjectOverviewQuery = { __typename?: 'Query' } & {
         })
     | ({ __typename?: 'InternshipProject' } & Pick<
         Types.InternshipProject,
-        'id' | 'status'
+        'id' | 'status' | 'modifiedAt'
       > & {
           name: { __typename?: 'SecuredString' } & Pick<
             Types.SecuredString,
@@ -155,6 +155,7 @@ export const ProjectOverviewDocument = gql`
         value
       }
       status
+      modifiedAt
       budget {
         canRead
         value {
