@@ -90,6 +90,9 @@ export const Table: FC<TableProps> = (props) => {
         header: {
           actions: '',
         },
+        body: {
+          emptyDataSourceMessage: '',
+        },
       }}
       options={{
         paging: false,
