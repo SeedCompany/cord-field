@@ -16,6 +16,7 @@ export const GQLOperations = {
   Mutation: {
     RequestFileUpload: 'RequestFileUpload',
     CreateFileVersion: 'CreateFileVersion',
+    DeleteFileNode: 'DeleteFileNode',
     ForgotPassword: 'ForgotPassword',
     Login: 'Login',
     Logout: 'Logout',

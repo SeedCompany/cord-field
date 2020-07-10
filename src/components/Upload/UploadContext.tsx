@@ -12,7 +12,10 @@ import * as actions from './Reducer/uploadActions';
 import { initialState } from './Reducer/uploadInitialState';
 import { uploadReducer } from './Reducer/uploadReducer';
 import * as Types from './Reducer/uploadTypings';
-import { useRequestFileUploadMutation } from './Upload.generated';
+import {
+  useDeleteFileNodeMutation,
+  useRequestFileUploadMutation,
+} from './Upload.generated';
 import { UploadItems } from './UploadItems';
 import { UploadManager } from './UploadManager';
 
@@ -48,6 +51,7 @@ export const UploadProvider: FC = ({ children }) => {
   const [state, dispatch] = useReducer(uploadReducer, initialState);
   const { setIsManagerOpen } = useUploadManager();
   const { submittedFiles } = state;
+  const [deleteFile] = useDeleteFileNodeMutation();
   const [requestFileUpload] = useRequestFileUploadMutation();
 
   const addFilesToUploadQueue = useCallback(
@@ -70,11 +74,12 @@ export const UploadProvider: FC = ({ children }) => {
   );
 
   const setUploadError = useCallback(
-    (
-      queueId: Types.UploadFile['queueId'],
-      error: Types.UploadFile['error']
-    ) => {
-      dispatch({ type: actions.FILE_UPLOAD_ERROR_OCCURRED, queueId, error });
+    (queueId: Types.UploadFile['queueId'], errorMessage: string) => {
+      dispatch({
+        type: actions.FILE_UPLOAD_ERROR_OCCURRED,
+        queueId,
+        error: new Error(errorMessage),
+      });
     },
     []
   );
@@ -84,10 +89,11 @@ export const UploadProvider: FC = ({ children }) => {
   }, []);
 
   const handleFileUploadSuccess = useCallback(
-    (file: Types.UploadFile) => {
+    async (file: Types.UploadFile) => {
       if (file?.callback && file?.uploadId) {
         const { callback, queueId, fileName, uploadId } = file;
-        callback(uploadId, fileName).then(async () => {
+        try {
+          await callback(uploadId, fileName);
           dispatch({
             type: actions.FILE_UPLOAD_COMPLETED,
             queueId,
@@ -95,17 +101,20 @@ export const UploadProvider: FC = ({ children }) => {
           });
           await sleep(10000);
           removeUpload(queueId);
-        });
+        } catch (error) {
+          setUploadError(file.queueId, 'Post-upload action failed');
+          deleteFile({ variables: { id: file.uploadId } });
+        }
       }
     },
-    [removeUpload]
+    [deleteFile, removeUpload, setUploadError]
   );
 
   // This should be rare, it's just there for completeness.
   // It only runs if upload is complete but status isn't a "success" status.
   const handleFileUploadCompleteError = useCallback(
     (statusText, queueId) => {
-      setUploadError(queueId, new Error(statusText));
+      setUploadError(queueId, statusText);
     },
     [setUploadError]
   );
@@ -113,7 +122,7 @@ export const UploadProvider: FC = ({ children }) => {
   // This is the error handler that will actually run on errors
   const handleUploadError = useCallback(
     (queueId: Types.UploadFile['queueId']) => {
-      setUploadError(queueId, new Error('Upload failed'));
+      setUploadError(queueId, 'Upload failed');
     },
     [setUploadError]
   );
