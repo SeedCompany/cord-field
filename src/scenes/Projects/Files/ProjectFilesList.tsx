@@ -23,6 +23,7 @@ import { ContentContainer as Content } from '../../../components/ContentContaine
 import { useDialog } from '../../../components/Dialog';
 import {
   FileActionsPopup as ActionsMenu,
+  DeleteFile,
   FileActionHandler,
   FileActionItem,
   RenameFile,
@@ -81,12 +82,15 @@ export const ProjectFilesList: FC = () => {
   const [renameFileState, renameFile, itemToRename] = useDialog<
     FileActionItem
   >();
+  const [deleteFileState, deleteFile, itemToDelete] = useDialog<
+    FileActionItem
+  >();
 
   const actions = {
     rename: (item: FileActionItem) => renameFile(item as any),
-    download: (item: FileActionItem) => console.log('Download File', item.id),
+    download: (item: FileActionItem) => console.log('Delete File', item.id),
     history: (item: FileActionItem) => console.log('File History', item.id),
-    delete: (item: FileActionItem) => console.log('Delete File', item.id),
+    delete: (item: FileActionItem) => deleteFile(item as any),
   };
 
   const handleFileActionClick: FileActionHandler = (item, action) => {
@@ -270,6 +274,7 @@ export const ProjectFilesList: FC = () => {
         </>
       )}
       <RenameFile item={itemToRename} {...renameFileState} />
+      <DeleteFile item={itemToDelete} {...deleteFileState} />
     </Content>
   );
 };
