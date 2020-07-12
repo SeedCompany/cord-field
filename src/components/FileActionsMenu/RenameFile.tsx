@@ -7,7 +7,7 @@ import { useRenameFileNodeMutation } from './FileActions.generated';
 import { FileActionItem } from './FileActionsMenu';
 
 export type RenameFileProps = DialogFormProps<RenameFileInput> & {
-  item: FileActionItem | null;
+  item: FileActionItem | undefined;
 };
 
 export const RenameFile = (props: Except<RenameFileProps, 'onSubmit'>) => {
