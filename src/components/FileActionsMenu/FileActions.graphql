@@ -4,3 +4,7 @@ mutation RenameFileNode($input: RenameFileInput!) {
     name
   }
 }
+
+mutation DeleteFileNode($id: ID!) {
+  deleteFileNode(id: $id)
+}
