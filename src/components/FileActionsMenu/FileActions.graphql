@@ -1,0 +1,6 @@
+mutation RenameFileNode($input: RenameFileInput!) {
+  renameFileNode(input: $input) {
+    id
+    name
+  }
+}
