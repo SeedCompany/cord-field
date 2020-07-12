@@ -29,6 +29,7 @@ const menuItems = [
   {
     text: 'Rename',
     icon: RenameIcon,
+    directory: true,
   },
   {
     text: 'Download',
@@ -41,38 +42,60 @@ const menuItems = [
   {
     text: 'Delete',
     icon: DeleteIcon,
+    directory: true,
   },
 ];
 
+export type FileActionItem = File | Directory;
+
+export type FileAction = 'rename' | 'download' | 'history' | 'delete';
+
+export type FileActionHandler = (
+  item: FileActionItem,
+  action: FileAction
+) => void;
+
 interface FileActionsPopupProps {
-  item: File | Directory;
+  item: FileActionItem;
+  onFileAction: FileActionHandler;
 }
 
 export const FileActionsPopup: FC<FileActionsPopupProps> = (props) => {
-  const { item } = props;
+  const { item, onFileAction } = props;
   const [anchor, setAnchor] = useState<MenuProps['anchorEl']>();
+
+  const openAddMenu = (e: any) => setAnchor(e.currentTarget);
+  const closeAddMenu = () => setAnchor(null);
 
   return (
     <>
-      <IconButton onClick={(e) => setAnchor(e.currentTarget)}>
+      <IconButton onClick={openAddMenu}>
         <MoreIcon />
       </IconButton>
       <FileActionsMenu
         anchorEl={anchor}
-        onClose={() => setAnchor(null)}
-        category={item.category === 'Directory' ? 'Directory' : 'File'}
+        onAction={onFileAction}
+        onClose={closeAddMenu}
+        item={item}
       />
     </>
   );
 };
 
 type FileActionsMenuProps = Partial<MenuProps> & {
-  category: 'Directory' | 'File';
+  item: FileActionItem;
+  onAction: FileActionHandler;
 };
 
 export const FileActionsMenu: FC<FileActionsMenuProps> = (props) => {
   const classes = useStyles();
   const { spacing } = useTheme();
+  const { item, onAction, ...rest } = props;
+
+  const handleActionClick = (action: FileAction) => {
+    props.onClose?.({}, 'backdropClick');
+    onAction(item, action);
+  };
 
   return (
     <Menu
@@ -82,12 +105,12 @@ export const FileActionsMenu: FC<FileActionsMenuProps> = (props) => {
       getContentAnchorEl={null}
       anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
       transformOrigin={{ vertical: spacing(-2), horizontal: 'right' }}
-      {...props}
+      {...rest}
     >
-      {menuItems.map((item) => {
-        const { text, icon: Icon } = item;
-        return (
-          <MenuItem key={text}>
+      {menuItems.map((menuItem) => {
+        const { text, icon: Icon, directory } = menuItem;
+        return item.category === 'Directory' && !directory ? null : (
+          <MenuItem key={text} onClick={handleActionClick.bind(null, 'rename')}>
             <ListItemIcon className={classes.listItemIcon}>
               <Icon fontSize="small" />
             </ListItemIcon>

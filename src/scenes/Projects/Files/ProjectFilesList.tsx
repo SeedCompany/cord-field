@@ -15,12 +15,18 @@ import {
   VideoLibrary as VideoLibraryIcon,
 } from '@material-ui/icons';
 import { Skeleton } from '@material-ui/lab';
-import React, { FC } from 'react';
+import React, { FC, useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import { File, FileVersion } from '../../../api';
 import { Breadcrumb } from '../../../components/Breadcrumb';
 import { ContentContainer as Content } from '../../../components/ContentContainer';
-import { FileActionsPopup as ActionsMenu } from '../../../components/FileActionsMenu';
+import { useDialog } from '../../../components/Dialog';
+import {
+  FileActionsPopup as ActionsMenu,
+  FileActionHandler,
+  FileActionItem,
+  RenameFile,
+} from '../../../components/FileActionsMenu';
 import {
   useDateFormatter,
   useFileSizeFormatter,
@@ -71,6 +77,23 @@ export const ProjectFilesList: FC = () => {
   const { projectId } = useParams();
   const formatDate = useDateFormatter();
   const formatFileSize = useFileSizeFormatter();
+
+  const [item, setItem] = useState<FileActionItem | null>(null);
+
+  const [renameFileState, renameFile] = useDialog();
+
+  const actions = {
+    rename: () => renameFile(),
+    download: () => console.log('Download File'),
+    history: () => console.log('File History'),
+    delete: () => console.log('Delete File'),
+  };
+
+  const handleFileActionClick: FileActionHandler = (item, action) => {
+    setItem(item);
+    actions[action]();
+  };
+
   const {
     project,
     directoryId,
@@ -149,7 +172,9 @@ export const ProjectFilesList: FC = () => {
     {
       title: '',
       field: 'item',
-      render: (rowData: RowData) => <ActionsMenu item={rowData.item} />,
+      render: (rowData: RowData) => (
+        <ActionsMenu item={rowData.item} onFileAction={handleFileActionClick} />
+      ),
       sorting: false,
       cellStyle: {
         padding: spacing(0.5),
@@ -245,6 +270,7 @@ export const ProjectFilesList: FC = () => {
           </section>
         </>
       )}
+      <RenameFile item={item} {...renameFileState} />
     </Content>
   );
 };
