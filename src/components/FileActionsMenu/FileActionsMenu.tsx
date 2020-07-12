@@ -23,32 +23,19 @@ const useStyles = makeStyles(({ spacing }) => ({
     marginRight: spacing(2),
     minWidth: 'unset',
   },
+  listItemText: {
+    textTransform: 'capitalize',
+  },
 }));
-
-const menuItems = [
-  {
-    text: 'Rename',
-    icon: RenameIcon,
-    directory: true,
-  },
-  {
-    text: 'Download',
-    icon: DownloadIcon,
-  },
-  {
-    text: 'History',
-    icon: HistoryIcon,
-  },
-  {
-    text: 'Delete',
-    icon: DeleteIcon,
-    directory: true,
-  },
-];
 
 export type FileActionItem = File | Directory;
 
-export type FileAction = 'rename' | 'download' | 'history' | 'delete';
+export enum FileAction {
+  Rename = 'rename',
+  Download = 'download',
+  History = 'history',
+  Delete = 'delete',
+}
 
 export type FileActionHandler = (
   item: FileActionItem,
@@ -59,6 +46,27 @@ interface FileActionsPopupProps {
   item: FileActionItem;
   onFileAction: FileActionHandler;
 }
+
+const menuItems = [
+  {
+    text: FileAction['Rename'],
+    icon: RenameIcon,
+    directory: true,
+  },
+  {
+    text: FileAction['Download'],
+    icon: DownloadIcon,
+  },
+  {
+    text: FileAction['History'],
+    icon: HistoryIcon,
+  },
+  {
+    text: FileAction['Delete'],
+    icon: DeleteIcon,
+    directory: true,
+  },
+];
 
 export const FileActionsPopup: FC<FileActionsPopupProps> = (props) => {
   const { item, onFileAction } = props;
@@ -92,8 +100,10 @@ export const FileActionsMenu: FC<FileActionsMenuProps> = (props) => {
   const { spacing } = useTheme();
   const { item, onAction, ...rest } = props;
 
+  const close = () => props.onClose?.({}, 'backdropClick');
+
   const handleActionClick = (action: FileAction) => {
-    props.onClose?.({}, 'backdropClick');
+    close();
     onAction(item, action);
   };
 
@@ -110,11 +120,11 @@ export const FileActionsMenu: FC<FileActionsMenuProps> = (props) => {
       {menuItems.map((menuItem) => {
         const { text, icon: Icon, directory } = menuItem;
         return item.category === 'Directory' && !directory ? null : (
-          <MenuItem key={text} onClick={handleActionClick.bind(null, 'rename')}>
+          <MenuItem key={text} onClick={handleActionClick.bind(null, text)}>
             <ListItemIcon className={classes.listItemIcon}>
               <Icon fontSize="small" />
             </ListItemIcon>
-            <ListItemText primary={text} />
+            <ListItemText className={classes.listItemText} primary={text} />
           </MenuItem>
         );
       })}

@@ -15,7 +15,7 @@ import {
   VideoLibrary as VideoLibraryIcon,
 } from '@material-ui/icons';
 import { Skeleton } from '@material-ui/lab';
-import React, { FC, useState } from 'react';
+import React, { FC } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import { File, FileVersion } from '../../../api';
 import { Breadcrumb } from '../../../components/Breadcrumb';
@@ -78,20 +78,19 @@ export const ProjectFilesList: FC = () => {
   const formatDate = useDateFormatter();
   const formatFileSize = useFileSizeFormatter();
 
-  const [item, setItem] = useState<FileActionItem | null>(null);
-
-  const [renameFileState, renameFile] = useDialog();
+  const [renameFileState, renameFile, itemToRename] = useDialog<
+    FileActionItem
+  >();
 
   const actions = {
-    rename: () => renameFile(),
-    download: () => console.log('Download File'),
-    history: () => console.log('File History'),
-    delete: () => console.log('Delete File'),
+    rename: (item: FileActionItem) => renameFile(item as any),
+    download: (item: FileActionItem) => console.log('Download File', item.id),
+    history: (item: FileActionItem) => console.log('File History', item.id),
+    delete: (item: FileActionItem) => console.log('Delete File', item.id),
   };
 
   const handleFileActionClick: FileActionHandler = (item, action) => {
-    setItem(item);
-    actions[action]();
+    actions[action](item);
   };
 
   const {
@@ -270,7 +269,7 @@ export const ProjectFilesList: FC = () => {
           </section>
         </>
       )}
-      <RenameFile item={item} {...renameFileState} />
+      <RenameFile item={itemToRename} {...renameFileState} />
     </Content>
   );
 };
