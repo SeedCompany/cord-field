@@ -4,7 +4,7 @@ import MaterialTable, { Column, Icons } from 'material-table';
 import React, { FC, forwardRef } from 'react';
 
 export interface RowData {
-  [key: string]: string | number | boolean;
+  [key: string]: any;
 }
 
 interface TableProps {
@@ -52,7 +52,13 @@ export const Table: FC<TableProps> = (props) => {
             paddingRight: 'calc(1em + 4px + 4px + 16px)',
           },
         }
-      : column
+      : {
+          ...column,
+          // This is required to fix a bug that causes column headers
+          // to be fixed-width even though the default layout for the
+          // table column width is 'auto'.
+          width: 'auto',
+        }
   );
 
   const icons: Icons = {
