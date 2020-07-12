@@ -15,7 +15,7 @@ export const RenameFile = (props: Except<RenameFileProps, 'onSubmit'>) => {
   const [renameFile] = useRenameFileNodeMutation();
 
   if (!item) return null;
-  const { id, name, category } = item;
+  const { id, name, type } = item;
 
   const onSubmit: RenameFileProps['onSubmit'] = async ({ name }) => {
     const input = {
@@ -36,14 +36,14 @@ export const RenameFile = (props: Except<RenameFileProps, 'onSubmit'>) => {
       }}
       {...props}
       onSubmit={onSubmit}
-      title={`Rename ${category}`}
+      title={`Rename ${type}`}
     >
       <SubmitError />
       <TextField
         defaultValue={name}
         name="name"
         label="Name"
-        placeholder={`Enter new ${category.toLowerCase()} name`}
+        placeholder={`Enter new ${type.toLowerCase()} name`}
         autoFocus
       />
     </DialogForm>
