@@ -1,12 +1,18 @@
-import { Box, Breadcrumbs, makeStyles, Typography } from '@material-ui/core';
 import {
-  Description,
-  Folder,
-  GraphicEq,
-  Image,
-  InsertDriveFile,
-  TableChart,
-  VideoLibrary,
+  Box,
+  Breadcrumbs,
+  makeStyles,
+  Typography,
+  useTheme,
+} from '@material-ui/core';
+import {
+  Description as DescriptionIcon,
+  Folder as FolderIcon,
+  GraphicEq as GraphicEqIcon,
+  Image as ImageIcon,
+  InsertDriveFile as InsertDriveFileIcon,
+  TableChart as TableChartIcon,
+  VideoLibrary as VideoLibraryIcon,
 } from '@material-ui/icons';
 import { Skeleton } from '@material-ui/lab';
 import React, { FC } from 'react';
@@ -14,6 +20,7 @@ import { Link, useParams } from 'react-router-dom';
 import { File, FileVersion } from '../../../api';
 import { Breadcrumb } from '../../../components/Breadcrumb';
 import { ContentContainer as Content } from '../../../components/ContentContainer';
+import { FileActionsPopup as ActionsMenu } from '../../../components/FileActionsMenu';
 import {
   useDateFormatter,
   useFileSizeFormatter,
@@ -49,17 +56,18 @@ const useStyles = makeStyles(({ spacing }) => ({
 }));
 
 const icons = {
-  Audio: GraphicEq,
-  Directory: Folder,
-  Document: Description,
-  Image: Image,
-  Other: InsertDriveFile,
-  Spreadsheet: TableChart,
-  Video: VideoLibrary,
+  Audio: GraphicEqIcon,
+  Directory: FolderIcon,
+  Document: DescriptionIcon,
+  Image: ImageIcon,
+  Other: InsertDriveFileIcon,
+  Spreadsheet: TableChartIcon,
+  Video: VideoLibraryIcon,
 };
 
 export const ProjectFilesList: FC = () => {
   const classes = useStyles();
+  const { spacing } = useTheme();
   const { projectId } = useParams();
   const formatDate = useDateFormatter();
   const formatFileSize = useFileSizeFormatter();
@@ -138,6 +146,19 @@ export const ProjectFilesList: FC = () => {
         return category === 'Directory' ? '–' : formatFileSize(Number(size));
       },
     },
+    {
+      title: '',
+      field: 'item',
+      render: (rowData: RowData) => <ActionsMenu item={rowData.item} />,
+      sorting: false,
+      cellStyle: {
+        padding: spacing(0.5),
+        width: spacing(6),
+      },
+      headerStyle: {
+        padding: spacing(0.5),
+      },
+    },
   ];
 
   const rowData =
@@ -157,6 +178,7 @@ export const ProjectFilesList: FC = () => {
         createdAt: formatDate(createdAt),
         createdBy: `${firstName} ${lastName}`,
         size: isDirectory ? 0 : (item as File | FileVersion).size,
+        item,
       };
       return isFileVersion ? rows : rows.concat(row);
     }, []) ?? [];
