@@ -9,11 +9,11 @@ import {
   useTheme,
 } from '@material-ui/core';
 import {
-  BorderColor as BorderColorIcon,
-  CloudDownload as CloudDownloadIcon,
   Delete as DeleteIcon,
+  CloudDownload as DownloadIcon,
   History as HistoryIcon,
   MoreVert as MoreIcon,
+  BorderColor as RenameIcon,
 } from '@material-ui/icons';
 import React, { FC, useState } from 'react';
 import { Directory, File } from '../../api';
@@ -28,11 +28,11 @@ const useStyles = makeStyles(({ spacing }) => ({
 const menuItems = [
   {
     text: 'Rename',
-    icon: BorderColorIcon,
+    icon: RenameIcon,
   },
   {
     text: 'Download',
-    icon: CloudDownloadIcon,
+    icon: DownloadIcon,
   },
   {
     text: 'History',
