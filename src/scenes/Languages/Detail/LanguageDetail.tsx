@@ -1,4 +1,4 @@
-import { makeStyles, Typography } from '@material-ui/core';
+import { Grid, makeStyles, Typography } from '@material-ui/core';
 import { Edit } from '@material-ui/icons';
 import { Skeleton } from '@material-ui/lab';
 import clsx from 'clsx';
@@ -11,6 +11,8 @@ import {
   DisplaySimplePropertyProps,
 } from '../../../components/DisplaySimpleProperty';
 import { Fab } from '../../../components/Fab';
+import { useDateTimeFormatter } from '../../../components/Formatters';
+import { ProjectListItemCard } from '../../../components/ProjectListItemCard';
 import { Redacted } from '../../../components/Redacted';
 import { EditLanguage } from '../Edit';
 import { useLanguageQuery } from './LanguageDetail.generated';
@@ -56,6 +58,8 @@ export const LanguageDetail = () => {
         isSecured(value) ? value.canEdit : false
       );
 
+  const dateTimeFormatter = useDateTimeFormatter();
+
   return (
     <main className={classes.root}>
       {error ? (
@@ -94,8 +98,23 @@ export const LanguageDetail = () => {
             ) : null}
           </div>
           <DisplayProperty
-            label="Population"
-            value={language?.population.value}
+            label="Created At"
+            value={dateTimeFormatter(language?.createdAt)}
+            loading={!language}
+          />
+          <DisplayProperty
+            label="Pronounciation"
+            value={language?.displayNamePronunciation.value}
+            loading={!language}
+          />
+          <DisplayProperty
+            label="Is Dialect"
+            value={Boolean(language?.isDialect.value).toString()}
+            loading={!language}
+          />
+          <DisplayProperty
+            label="Ethnologue Code"
+            value={language?.ethnologue.code.value}
             loading={!language}
           />
           <DisplayProperty
@@ -104,10 +123,35 @@ export const LanguageDetail = () => {
             loading={!language}
           />
           <DisplayProperty
-            label="Ethnologue Code"
-            value={language?.ethnologue.code.value}
+            label="Population"
+            value={language?.population.value}
             loading={!language}
           />
+          <DisplayProperty
+            label="Sponsor Date"
+            value={dateTimeFormatter(language?.sponsorDate.value)}
+            loading={!language}
+          />
+          <DisplayProperty
+            label="Sensitivity"
+            value={language?.sensitivity}
+            loading={!language}
+          />
+          <Grid container spacing={3}>
+            <Grid item xs={6}>
+              <Typography variant="h4">
+                Locations List goes here when ready
+              </Typography>
+            </Grid>
+            <Grid item xs={6}>
+              <Typography variant="h4">
+                Projects List goes here when ready
+              </Typography>
+              {language?.projects.items.map((project) => (
+                <ProjectListItemCard project={project} />
+              ))}
+            </Grid>
+          </Grid>
 
           {language ? (
             <EditLanguage language={language} {...editLanguageDialogState} />
