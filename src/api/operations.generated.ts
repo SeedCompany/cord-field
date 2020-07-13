@@ -19,6 +19,7 @@ export const GQLOperations = {
     Register: 'Register',
     ResetPassword: 'ResetPassword',
     createLanguage: 'createLanguage',
+    UpdateLanguage: 'UpdateLanguage',
     createOrganization: 'createOrganization',
     UpdateOrganization: 'UpdateOrganization',
     UpdatePartnership: 'UpdatePartnership',
