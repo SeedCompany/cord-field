@@ -34,8 +34,8 @@ export const EditUser = (props: EditUserProps) => {
             }
           : undefined
       }
-      onSubmit={(input) => {
-        updateUser({
+      onSubmit={async (input) => {
+        await updateUser({
           variables: { input },
         });
       }}
