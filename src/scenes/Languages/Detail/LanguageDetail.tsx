@@ -12,6 +12,7 @@ import {
 } from '../../../components/DisplaySimpleProperty';
 import { Fab } from '../../../components/Fab';
 import { Redacted } from '../../../components/Redacted';
+import { EditLanguage } from '../Edit';
 import { useLanguageQuery } from './LanguageDetail.generated';
 
 const useStyles = makeStyles(({ spacing, breakpoints }) => ({
@@ -42,7 +43,7 @@ export const LanguageDetail = () => {
     variables: { languageId },
   });
 
-  const [_editLanguageDialogState, openEditLanguageDialog] = useDialog();
+  const [editLanguageDialogState, openEditLanguageDialog] = useDialog();
 
   const language = data?.language;
 
@@ -108,7 +109,9 @@ export const LanguageDetail = () => {
             loading={!language}
           />
 
-          {/* {language ? <EditUser user={user} {...editUserState} /> : null} */}
+          {language ? (
+            <EditLanguage language={language} {...editLanguageDialogState} />
+          ) : null}
         </>
       )}
     </main>
