@@ -1,5 +1,6 @@
 export const GQLOperations = {
   Query: {
+    OrganizationAutocomplete: 'OrganizationAutocomplete',
     Session: 'Session',
     Engagement: 'Engagement',
     Language: 'Language',
