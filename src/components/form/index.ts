@@ -1,3 +1,4 @@
+export * from './AutocompleteField';
 export * from './CheckboxField';
 export * from './CheckboxesField';
 export * from './decorators';
