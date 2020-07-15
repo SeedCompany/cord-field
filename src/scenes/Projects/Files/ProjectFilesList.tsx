@@ -28,6 +28,7 @@ import {
   FileActionItem,
   RenameFile,
 } from '../../../components/FileActionsMenu';
+// import { FilePreview } from '../../../components/FilePreview';
 import {
   useDateFormatter,
   useFileSizeFormatter,
@@ -54,6 +55,7 @@ const useStyles = makeStyles(({ spacing }) => ({
     textDecoration: 'none',
   },
   fileName: {
+    cursor: 'pointer',
     display: 'flex',
     alignItems: 'center',
   },
@@ -85,6 +87,7 @@ export const ProjectFilesList: FC = () => {
   const [deleteFileState, deleteFile, itemToDelete] = useDialog<
     FileActionItem
   >();
+  // const [filePreviewState, previewFile, fileToPreview] = useDialog<File>();
 
   const actions = {
     rename: (item: FileActionItem) => renameFile(item as any),
@@ -135,11 +138,18 @@ export const ProjectFilesList: FC = () => {
       title: 'Name',
       field: 'name',
       render: (rowData: RowData) => {
-        const { category, id, name } = rowData;
+        const { category, id, name, item } = rowData;
         const Icon = icons[category as keyof typeof icons];
         const isDirectory = category === 'Directory';
         const content = (
-          <span className={classes.fileName}>
+          <span
+            className={classes.fileName}
+            onClick={
+              isDirectory
+                ? undefined
+                : () => console.log('Preview file', item.id)
+            }
+          >
             <Icon className={classes.fileIcon} />
             {name}
           </span>
@@ -275,6 +285,7 @@ export const ProjectFilesList: FC = () => {
       )}
       <RenameFile item={itemToRename} {...renameFileState} />
       <DeleteFile item={itemToDelete} {...deleteFileState} />
+      {/* <FilePreview file={fileToPreview} {...filePreviewState} /> */}
     </Content>
   );
 };
