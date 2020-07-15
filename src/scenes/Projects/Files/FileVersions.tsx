@@ -24,8 +24,8 @@ export const FileVersions: FC<FileVersionsProps> = (props) => {
     variables: { id },
     skip: !file,
   });
-  const total = data?.file.children.total;
   const versions = data?.file.children.items ?? [];
+  const total = data?.file.children.total;
 
   return !file || loading ? null : (
     <Dialog {...dialogProps} aria-labelledby="dialog-file-versions">
