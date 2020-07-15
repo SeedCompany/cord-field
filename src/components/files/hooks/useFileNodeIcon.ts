@@ -8,7 +8,7 @@ import {
   TableChart as TableChartIcon,
   VideoLibrary as VideoLibraryIcon,
 } from '@material-ui/icons';
-import { FileNode } from '../../api';
+import { FileNode } from '../../../api';
 
 const icons = {
   Audio: GraphicEqIcon,
