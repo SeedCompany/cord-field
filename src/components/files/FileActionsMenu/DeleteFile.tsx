@@ -1,13 +1,13 @@
 import { Typography } from '@material-ui/core';
 import React from 'react';
 import { Except } from 'type-fest';
-import { GQLOperations, RenameFileInput } from '../../../api';
+import { GQLOperations } from '../../../api';
 import { DialogForm, DialogFormProps } from '../../Dialog/DialogForm';
 import { SubmitError } from '../../form';
 import { useDeleteFileNodeMutation } from './FileActions.generated';
 import { FileActionItem } from './FileActionsMenu';
 
-export type DeleteFileProps = DialogFormProps<RenameFileInput> & {
+export type DeleteFileProps = DialogFormProps<{ id: string }> & {
   item: FileActionItem | undefined;
 };
 
