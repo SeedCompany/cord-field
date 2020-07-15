@@ -5,18 +5,6 @@ mutation RequestFileUpload {
   }
 }
 
-mutation CreateFileVersion($input: CreateFileVersionInput!) {
-  createFileVersion(input: $input) {
-    category
-    downloadUrl
-    id
-    mimeType
-    name
-    size
-    type
-  }
-}
-
 mutation DeleteFileNode($id: ID!) {
   deleteFileNode(id: $id)
 }

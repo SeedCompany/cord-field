@@ -42,10 +42,14 @@ const useStyles = makeStyles(({ palette, spacing }) => {
 export type DropzoneFieldProps<FieldValue = File[]> = FieldConfig<
   FieldValue
 > & {
+  multiple?: boolean;
   name: string;
 };
 
-export const DropzoneField: FC<DropzoneFieldProps> = ({ name: nameProp }) => {
+export const DropzoneField: FC<DropzoneFieldProps> = ({
+  multiple = true,
+  name: nameProp,
+}) => {
   const classes = useStyles();
 
   // Memoize defaultValue to prevent re-renders when not changing.
@@ -72,7 +76,10 @@ export const DropzoneField: FC<DropzoneFieldProps> = ({ name: nameProp }) => {
     [onChange, currentFiles]
   );
 
-  const { getRootProps, getInputProps, isDragActive } = useDropzone({ onDrop });
+  const { getRootProps, getInputProps, isDragActive } = useDropzone({
+    multiple,
+    onDrop,
+  });
 
   return (
     <>

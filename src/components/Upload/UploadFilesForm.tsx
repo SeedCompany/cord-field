@@ -6,13 +6,14 @@ import { UploadCallback, useUpload } from '../Upload';
 
 export type UploadFilesFormProps = DialogFormProps<{ files: File[] }> & {
   callback: UploadCallback;
+  multiple?: boolean;
   title?: string;
 };
 
 export const UploadFilesForm = (
   props: Except<UploadFilesFormProps, 'onSubmit'>
 ) => {
-  const { callback, title = 'Upload Files' } = props;
+  const { callback, multiple = true, title = 'Upload Files' } = props;
   const { addFilesToUploadQueue } = useUpload();
 
   const onSubmit: UploadFilesFormProps['onSubmit'] = ({ files }) => {
@@ -35,7 +36,7 @@ export const UploadFilesForm = (
       title={title}
     >
       <SubmitError />
-      <DropzoneField name="files" />
+      <DropzoneField multiple={multiple} name="files" />
     </DialogForm>
   );
 };
