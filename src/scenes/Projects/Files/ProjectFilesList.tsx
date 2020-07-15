@@ -15,6 +15,7 @@ import {
   VideoLibrary as VideoLibraryIcon,
 } from '@material-ui/icons';
 import { Skeleton } from '@material-ui/lab';
+import FileSaver from 'file-saver';
 import React, { FC } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import { File, FileVersion } from '../../../api';
@@ -27,7 +28,7 @@ import {
   FileActionHandler,
   FileActionItem,
   RenameFile,
-} from '../../../components/FileActionsMenu';
+} from '../../../components/files/FileActionsMenu';
 // import { FilePreview } from '../../../components/FilePreview';
 import {
   useDateFormatter,
@@ -91,7 +92,8 @@ export const ProjectFilesList: FC = () => {
 
   const actions = {
     rename: (item: FileActionItem) => renameFile(item as any),
-    download: (item: FileActionItem) => console.log('Delete File', item.id),
+    download: (item: FileActionItem) =>
+      FileSaver.saveAs((item as File).downloadUrl, item.name),
     history: (item: FileActionItem) => console.log('File History', item.id),
     delete: (item: FileActionItem) => deleteFile(item as any),
   };
@@ -122,6 +124,7 @@ export const ProjectFilesList: FC = () => {
     !parents.some((parent) => parent.id === rootDirectoryId);
 
   const items = directoryIsNotInProject ? [] : data?.directory.children.items;
+  console.log('items', items);
 
   const columns = [
     {

@@ -1,9 +1,9 @@
 import { Typography } from '@material-ui/core';
 import React from 'react';
 import { Except } from 'type-fest';
-import { GQLOperations, RenameFileInput } from '../../api';
-import { DialogForm, DialogFormProps } from '../Dialog/DialogForm';
-import { SubmitError } from '../form';
+import { GQLOperations, RenameFileInput } from '../../../api';
+import { DialogForm, DialogFormProps } from '../../Dialog/DialogForm';
+import { SubmitError } from '../../form';
 import { useDeleteFileNodeMutation } from './FileActions.generated';
 import { FileActionItem } from './FileActionsMenu';
 

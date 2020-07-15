@@ -1,7 +1,7 @@
 import { LibraryBooksOutlined } from '@material-ui/icons';
 import * as React from 'react';
 import { FC } from 'react';
-import { FieldOverviewCard } from '../FieldOverviewCard';
+import { FieldOverviewCard } from '../../FieldOverviewCard';
 
 export interface BudgetOverviewCardProps {
   className?: string;

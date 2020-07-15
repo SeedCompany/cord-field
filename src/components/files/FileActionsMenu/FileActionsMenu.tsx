@@ -16,7 +16,7 @@ import {
   BorderColor as RenameIcon,
 } from '@material-ui/icons';
 import React, { FC, useState } from 'react';
-import { Directory, File } from '../../api';
+import { Directory, File } from '../../../api';
 
 const useStyles = makeStyles(({ spacing }) => ({
   listItemIcon: {
