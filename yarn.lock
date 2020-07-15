@@ -3846,6 +3846,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@types/file-saver@npm:^2.0.1":
+  version: 2.0.1
+  resolution: "@types/file-saver@npm:2.0.1"
+  checksum: 3/24728c992a7ecf87cc74fdabd8f37d5f67b117759f0f96a0616a6b4b8788577b9563991dbcba800b1ae7493c7d6630a9ec5add8846db431c8e6ad1534951711b
+  languageName: node
+  linkType: hard
+
 "@types/glob@npm:^7.1.1":
   version: 7.1.1
   resolution: "@types/glob@npm:7.1.1"
@@ -9877,6 +9884,13 @@ __metadata:
   peerDependencies:
     webpack: ^4.0.0
   checksum: 3/03535f889b56836dc462f20e138ba5ad46893cc079cfb970b3434aa4d4e959a1e52770fa62e87d657f4d7d3dd9207726a464dee19eb82ccdafdc2e5c6a80f92a
+  languageName: node
+  linkType: hard
+
+"file-saver@npm:^2.0.2":
+  version: 2.0.2
+  resolution: "file-saver@npm:2.0.2"
+  checksum: 3/3b4e66bf4ec88740b4076792b74db91e534e27400babe43a5a0b533238551842e5e1bd108c350b3e2129de14be0d11759a3098ba0d4d19f7eaaf88976f6fd415
   languageName: node
   linkType: hard
 

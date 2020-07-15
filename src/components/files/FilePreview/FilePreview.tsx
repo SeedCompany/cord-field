@@ -7,7 +7,7 @@ import {
 } from '@material-ui/core';
 import React, { FC } from 'react';
 import FileViewer from 'react-file-viewer';
-import { File } from '../../api';
+import { File } from '../../../api';
 
 interface FilePreviewProps {
   file?: File;

@@ -3,7 +3,7 @@
 import * as ApolloReactCommon from '@apollo/client';
 import * as ApolloReactHooks from '@apollo/client';
 import gql from 'graphql-tag';
-import * as Types from '../../api/schema.generated';
+import * as Types from '../../../api/schema.generated';
 
 export interface RenameFileNodeMutationVariables {
   input: Types.RenameFileInput;
