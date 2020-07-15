@@ -4,7 +4,7 @@ import * as Types from '../../../api/schema.generated';
 
 export type FileVersionItem_Directory_Fragment = {
   __typename?: 'Directory';
-} & Pick<Types.Directory, 'id' | 'category' | 'createdAt' | 'name'> & {
+} & Pick<Types.Directory, 'id' | 'category' | 'createdAt' | 'name' | 'type'> & {
     createdBy: { __typename?: 'User' } & {
       displayFirstName: { __typename?: 'SecuredString' } & Pick<
         Types.SecuredString,
@@ -19,7 +19,7 @@ export type FileVersionItem_Directory_Fragment = {
 
 export type FileVersionItem_File_Fragment = { __typename?: 'File' } & Pick<
   Types.File,
-  'id' | 'category' | 'createdAt' | 'name'
+  'id' | 'category' | 'createdAt' | 'name' | 'type'
 > & {
     createdBy: { __typename?: 'User' } & {
       displayFirstName: { __typename?: 'SecuredString' } & Pick<
@@ -35,7 +35,10 @@ export type FileVersionItem_File_Fragment = { __typename?: 'File' } & Pick<
 
 export type FileVersionItem_FileVersion_Fragment = {
   __typename?: 'FileVersion';
-} & Pick<Types.FileVersion, 'id' | 'category' | 'createdAt' | 'name'> & {
+} & Pick<
+  Types.FileVersion,
+  'downloadUrl' | 'id' | 'category' | 'createdAt' | 'name' | 'type'
+> & {
     createdBy: { __typename?: 'User' } & {
       displayFirstName: { __typename?: 'SecuredString' } & Pick<
         Types.SecuredString,
@@ -67,5 +70,9 @@ export const FileVersionItemFragmentDoc = gql`
       }
     }
     name
+    ... on FileVersion {
+      downloadUrl
+    }
+    type
   }
 `;
