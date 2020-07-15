@@ -77,6 +77,7 @@ export type ProjectDirectoryQuery = { __typename?: 'Query' } & {
                 | 'downloadUrl'
                 | 'category'
                 | 'createdAt'
+                | 'mimeType'
               > & {
                   createdBy: { __typename?: 'User' } & {
                     displayFirstName: { __typename?: 'SecuredString' } & Pick<
@@ -246,6 +247,7 @@ export const ProjectDirectoryDocument = gql`
                 value
               }
             }
+            mimeType
           }
           ... on FileVersion {
             id

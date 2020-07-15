@@ -69,6 +69,7 @@ query ProjectDirectory($id: ID!) {
               value
             }
           }
+          mimeType
         }
         ... on FileVersion {
           id
