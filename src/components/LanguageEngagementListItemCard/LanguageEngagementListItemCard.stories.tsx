@@ -28,6 +28,6 @@ export const LanguageEngagementListItemCard = () => (
         displayName: {},
       },
     }}
-    products={{ total: 1, items: [{ type: 'NewTestamentFull' }] }}
+    products={{ total: 1, items: [{ id: '1234' }] }}
   />
 );

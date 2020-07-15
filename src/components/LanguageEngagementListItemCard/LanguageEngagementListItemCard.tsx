@@ -130,7 +130,7 @@ export const LanguageEngagementListItemCard: FC<LanguageEngagementListItemCardPr
                     >
                       {/* TODO Product naming & mapping to icons */}
                       <ScriptIcon className={classes.iconSpacing} />
-                      {product.type}
+                      {product.id}
                     </Typography>
                   ))}
                 </ul>

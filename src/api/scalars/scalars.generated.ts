@@ -133,7 +133,14 @@ export const typePolicies: TypePolicies = {
       },
     },
   },
-  Range: {
+  DirectScriptureProduct: {
+    fields: {
+      createdAt: {
+        read: Parsers.DateTime,
+      },
+    },
+  },
+  DerivativeScriptureProduct: {
     fields: {
       createdAt: {
         read: Parsers.DateTime,
@@ -148,13 +155,6 @@ export const typePolicies: TypePolicies = {
     },
   },
   LiteracyMaterial: {
-    fields: {
-      createdAt: {
-        read: Parsers.DateTime,
-      },
-    },
-  },
-  Product: {
     fields: {
       createdAt: {
         read: Parsers.DateTime,
@@ -220,6 +220,13 @@ export const typePolicies: TypePolicies = {
     },
   },
   Favorite: {
+    fields: {
+      createdAt: {
+        read: Parsers.DateTime,
+      },
+    },
+  },
+  Song: {
     fields: {
       createdAt: {
         read: Parsers.DateTime,
