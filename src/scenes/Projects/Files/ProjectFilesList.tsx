@@ -6,14 +6,12 @@ import {
   useTheme,
 } from '@material-ui/core';
 import { Skeleton } from '@material-ui/lab';
-import FileSaver from 'file-saver';
 import React, { FC } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import { File, FileVersion } from '../../../api';
 import { Breadcrumb } from '../../../components/Breadcrumb';
 import { ContentContainer as Content } from '../../../components/ContentContainer';
 import { useDialog } from '../../../components/Dialog';
-import { useFileNodeIcon } from '../../../components/files';
 import {
   FileActionsPopup as ActionsMenu,
   DeleteFile,
@@ -21,6 +19,10 @@ import {
   FileActionItem,
   RenameFile,
 } from '../../../components/files/FileActionsMenu';
+import {
+  useDownloadFile,
+  useFileNodeIcon,
+} from '../../../components/files/hooks';
 // import { FilePreview } from '../../../components/FilePreview';
 import {
   useDateFormatter,
@@ -31,6 +33,7 @@ import { RowData, Table } from '../../../components/Table';
 import { FileCreateActions } from './FileCreateActions';
 import { FileVersions } from './FileVersions';
 import { useProjectDirectoryQuery } from './ProjectFiles.generated';
+import { UploadProjectFileVersion } from './UploadProjectFileVersion';
 import { useProjectCurrentDirectory } from './useProjectCurrentDirectory';
 
 const useStyles = makeStyles(({ spacing }) => ({
@@ -64,12 +67,14 @@ export const ProjectFilesList: FC = () => {
   const { projectId } = useParams();
   const formatDate = useDateFormatter();
   const formatFileSize = useFileSizeFormatter();
+  const downloadFile = useDownloadFile();
   const fileIcon = useFileNodeIcon();
 
   const [renameFileState, renameFile, itemToRename] = useDialog<
     FileActionItem
   >();
-  const [fileVersionState, showVersions, fileToVersion] = useDialog<File>();
+  const [fileVersionState, showVersions, fileVersionToView] = useDialog<File>();
+  const [newVersionState, createNewVersion, fileToVersion] = useDialog<File>();
   const [deleteFileState, deleteFile, itemToDelete] = useDialog<
     FileActionItem
   >();
@@ -77,9 +82,9 @@ export const ProjectFilesList: FC = () => {
 
   const actions = {
     rename: (item: FileActionItem) => renameFile(item as any),
-    download: (item: FileActionItem) =>
-      FileSaver.saveAs((item as File).downloadUrl, item.name),
+    download: (item: FileActionItem) => downloadFile(item as File),
     history: (item: FileActionItem) => showVersions(item as File),
+    'new version': (item: FileActionItem) => createNewVersion(item as File),
     delete: (item: FileActionItem) => deleteFile(item as any),
   };
 
@@ -272,7 +277,8 @@ export const ProjectFilesList: FC = () => {
       )}
       <RenameFile item={itemToRename} {...renameFileState} />
       <DeleteFile item={itemToDelete} {...deleteFileState} />
-      <FileVersions file={fileToVersion} {...fileVersionState} />
+      <FileVersions file={fileVersionToView} {...fileVersionState} />
+      <UploadProjectFileVersion file={fileToVersion} {...newVersionState} />
       {/* <FilePreview file={fileToPreview} {...filePreviewState} /> */}
     </Content>
   );

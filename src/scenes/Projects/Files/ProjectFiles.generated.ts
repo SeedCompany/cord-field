@@ -133,15 +133,20 @@ export interface ProjectFileVersionsQueryVariables {
 
 export type ProjectFileVersionsQuery = { __typename?: 'Query' } & {
   file: { __typename?: 'File' } & Pick<Types.File, 'id'> & {
-      children: { __typename?: 'FileListOutput' } & {
-        items: Array<
-          | ({ __typename?: 'Directory' } & FileVersionItem_Directory_Fragment)
-          | ({ __typename?: 'File' } & FileVersionItem_File_Fragment)
-          | ({
-              __typename?: 'FileVersion';
-            } & FileVersionItem_FileVersion_Fragment)
-        >;
-      };
+      children: { __typename?: 'FileListOutput' } & Pick<
+        Types.FileListOutput,
+        'total'
+      > & {
+          items: Array<
+            | ({
+                __typename?: 'Directory';
+              } & FileVersionItem_Directory_Fragment)
+            | ({ __typename?: 'File' } & FileVersionItem_File_Fragment)
+            | ({
+                __typename?: 'FileVersion';
+              } & FileVersionItem_FileVersion_Fragment)
+          >;
+        };
     };
 };
 
@@ -311,6 +316,7 @@ export const ProjectFileVersionsDocument = gql`
         items {
           ...FileVersionItem
         }
+        total
       }
     }
   }

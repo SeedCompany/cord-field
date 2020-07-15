@@ -4,6 +4,7 @@ import {
   DialogActions,
   DialogContent,
   DialogTitle,
+  Divider,
   List,
 } from '@material-ui/core';
 import React, { FC } from 'react';
@@ -24,6 +25,7 @@ export const FileVersions: FC<FileVersionsProps> = (props) => {
     variables: { id },
     skip: !file,
   });
+  const total = data?.file.children.total;
   const versions = data?.file.children.items ?? [];
 
   return !file || loading ? null : (
@@ -31,8 +33,11 @@ export const FileVersions: FC<FileVersionsProps> = (props) => {
       <DialogTitle id="dialog-file-versions">File History</DialogTitle>
       <DialogContent>
         <List dense>
-          {versions.map((version) => (
-            <FileVersionItem key={version.id} version={version} />
+          {versions.map((version, index) => (
+            <>
+              <FileVersionItem key={version.id} version={version} />
+              {total && index !== total - 1 && <Divider />}
+            </>
           ))}
         </List>
       </DialogContent>

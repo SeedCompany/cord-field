@@ -9,6 +9,7 @@ import {
   useTheme,
 } from '@material-ui/core';
 import {
+  Add as AddIcon,
   Delete as DeleteIcon,
   CloudDownload as DownloadIcon,
   History as HistoryIcon,
@@ -34,6 +35,7 @@ export enum FileAction {
   Rename = 'rename',
   Download = 'download',
   History = 'history',
+  NewVersion = 'new version',
   Delete = 'delete',
 }
 
@@ -60,6 +62,10 @@ const menuItems = [
   {
     text: FileAction['History'],
     icon: HistoryIcon,
+  },
+  {
+    text: FileAction['NewVersion'],
+    icon: AddIcon,
   },
   {
     text: FileAction['Delete'],
