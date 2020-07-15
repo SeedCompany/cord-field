@@ -5,15 +5,6 @@ import {
   Typography,
   useTheme,
 } from '@material-ui/core';
-import {
-  Description as DescriptionIcon,
-  Folder as FolderIcon,
-  GraphicEq as GraphicEqIcon,
-  Image as ImageIcon,
-  InsertDriveFile as InsertDriveFileIcon,
-  TableChart as TableChartIcon,
-  VideoLibrary as VideoLibraryIcon,
-} from '@material-ui/icons';
 import { Skeleton } from '@material-ui/lab';
 import FileSaver from 'file-saver';
 import React, { FC } from 'react';
@@ -22,6 +13,7 @@ import { File, FileVersion } from '../../../api';
 import { Breadcrumb } from '../../../components/Breadcrumb';
 import { ContentContainer as Content } from '../../../components/ContentContainer';
 import { useDialog } from '../../../components/Dialog';
+import { useFileNodeIcon } from '../../../components/files';
 import {
   FileActionsPopup as ActionsMenu,
   DeleteFile,
@@ -37,6 +29,7 @@ import {
 import { ProjectBreadcrumb } from '../../../components/ProjectBreadcrumb';
 import { RowData, Table } from '../../../components/Table';
 import { FileCreateActions } from './FileCreateActions';
+import { FileVersions } from './FileVersions';
 import { useProjectDirectoryQuery } from './ProjectFiles.generated';
 import { useProjectCurrentDirectory } from './useProjectCurrentDirectory';
 
@@ -65,26 +58,18 @@ const useStyles = makeStyles(({ spacing }) => ({
   },
 }));
 
-const icons = {
-  Audio: GraphicEqIcon,
-  Directory: FolderIcon,
-  Document: DescriptionIcon,
-  Image: ImageIcon,
-  Other: InsertDriveFileIcon,
-  Spreadsheet: TableChartIcon,
-  Video: VideoLibraryIcon,
-};
-
 export const ProjectFilesList: FC = () => {
   const classes = useStyles();
   const { spacing } = useTheme();
   const { projectId } = useParams();
   const formatDate = useDateFormatter();
   const formatFileSize = useFileSizeFormatter();
+  const fileIcon = useFileNodeIcon();
 
   const [renameFileState, renameFile, itemToRename] = useDialog<
     FileActionItem
   >();
+  const [fileVersionState, showVersions, fileToVersion] = useDialog<File>();
   const [deleteFileState, deleteFile, itemToDelete] = useDialog<
     FileActionItem
   >();
@@ -94,7 +79,7 @@ export const ProjectFilesList: FC = () => {
     rename: (item: FileActionItem) => renameFile(item as any),
     download: (item: FileActionItem) =>
       FileSaver.saveAs((item as File).downloadUrl, item.name),
-    history: (item: FileActionItem) => console.log('File History', item.id),
+    history: (item: FileActionItem) => showVersions(item as File),
     delete: (item: FileActionItem) => deleteFile(item as any),
   };
 
@@ -124,7 +109,6 @@ export const ProjectFilesList: FC = () => {
     !parents.some((parent) => parent.id === rootDirectoryId);
 
   const items = directoryIsNotInProject ? [] : data?.directory.children.items;
-  console.log('items', items);
 
   const columns = [
     {
@@ -142,7 +126,7 @@ export const ProjectFilesList: FC = () => {
       field: 'name',
       render: (rowData: RowData) => {
         const { category, id, name, item } = rowData;
-        const Icon = icons[category as keyof typeof icons];
+        const Icon = fileIcon(category);
         const isDirectory = category === 'Directory';
         const content = (
           <span
@@ -288,6 +272,7 @@ export const ProjectFilesList: FC = () => {
       )}
       <RenameFile item={itemToRename} {...renameFileState} />
       <DeleteFile item={itemToDelete} {...deleteFileState} />
+      <FileVersions file={fileToVersion} {...fileVersionState} />
       {/* <FilePreview file={fileToPreview} {...filePreviewState} /> */}
     </Content>
   );

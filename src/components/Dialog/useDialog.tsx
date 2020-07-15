@@ -1,6 +1,16 @@
 import { useCallback, useMemo, useState } from 'react';
 
-export function useDialog<T = never>() {
+export interface DialogState {
+  open: boolean;
+  onClose: () => void;
+  onExited: () => void;
+}
+
+export function useDialog<T = never>(): readonly [
+  DialogState,
+  ShowFn<T>,
+  T | undefined
+] {
   const [isOpen, setOpen] = useState(false);
   const [item, setItem] = useState<T | undefined>(undefined);
   const show = useCallback((item: T) => {

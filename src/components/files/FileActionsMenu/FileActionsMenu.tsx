@@ -11,7 +11,7 @@ import {
 import {
   Delete as DeleteIcon,
   CloudDownload as DownloadIcon,
-  // History as HistoryIcon,
+  History as HistoryIcon,
   MoreVert as MoreIcon,
   BorderColor as RenameIcon,
 } from '@material-ui/icons';
@@ -57,10 +57,10 @@ const menuItems = [
     text: FileAction['Download'],
     icon: DownloadIcon,
   },
-  // {
-  //   text: FileAction['History'],
-  //   icon: HistoryIcon,
-  // },
+  {
+    text: FileAction['History'],
+    icon: HistoryIcon,
+  },
   {
     text: FileAction['Delete'],
     icon: DeleteIcon,

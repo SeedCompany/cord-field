@@ -1,0 +1,14 @@
+fragment FileVersionItem on FileNode {
+  id
+  category
+  createdAt
+  createdBy {
+    displayFirstName {
+      value
+    }
+    displayLastName {
+      value
+    }
+  }
+  name
+}
