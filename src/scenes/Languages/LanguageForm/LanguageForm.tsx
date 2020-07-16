@@ -70,7 +70,7 @@ export const LanguageForm = <T extends any>({
                       label="Name"
                       placeholder="Enter Name"
                       required
-                      validate={[required, minLength(2)]}
+                      validate={[required, minLength()]}
                       margin="none"
                       {...props}
                     />
@@ -84,7 +84,7 @@ export const LanguageForm = <T extends any>({
                       label="Public Name"
                       placeholder="Enter Public Name"
                       required
-                      validate={[required, minLength(2)]}
+                      validate={[required, minLength()]}
                       margin="none"
                       {...props}
                     />
@@ -151,7 +151,7 @@ export const LanguageForm = <T extends any>({
                       <TextField
                         label="Ethnologue Name"
                         placeholder="Enter Ethnologue Name"
-                        validate={minLength(2)}
+                        validate={minLength()}
                         margin="none"
                         {...props}
                       />
@@ -164,7 +164,7 @@ export const LanguageForm = <T extends any>({
                       <TextField
                         label="Ethnologue ID"
                         placeholder="Enter Ethnologue ID"
-                        validate={minLength(2)}
+                        validate={minLength()}
                         margin="none"
                         {...props}
                       />
