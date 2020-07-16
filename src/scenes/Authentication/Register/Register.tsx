@@ -21,17 +21,12 @@ export const Register = (props: Except<Props, 'onSubmit'>) => {
     }
   }, [navigate, session, sessionLoading, success]);
 
-  const submit: Props['onSubmit'] = async (input) => {
+  const submit: Props['onSubmit'] = async ({ confirmPassword, ...input }) => {
     try {
       const { data } = await register({
         variables: {
           input: {
-            displayFirstName: input.firstName,
-            displayLastName: input.lastName,
-            realFirstName: input.firstName,
-            realLastName: input.lastName,
-            email: input.email,
-            password: input.password,
+            ...input,
             timezone: DateTime.local().zone.name,
           },
         },

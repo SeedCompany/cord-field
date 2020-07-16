@@ -62,11 +62,13 @@ export const ResetPasswordForm = ({
               label="New Password"
               placeholder="Create New Password"
               autoFocus
+              autoComplete="new-password"
             />
             <PasswordField
               name="confirm"
               label="Re-Type Password"
               placeholder="Re-Enter New Password"
+              autoComplete="new-password"
             />
             <SubmitButton className={classes.submit}>
               Save Password

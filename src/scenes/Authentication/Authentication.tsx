@@ -1,4 +1,5 @@
 import { CircularProgress, makeStyles, ThemeProvider } from '@material-ui/core';
+import clsx from 'clsx';
 import React, { FC, useEffect } from 'react';
 import { useLocation, useNavigate, useRoutes } from 'react-router-dom';
 import { Picture } from '../../components/Picture';
@@ -11,7 +12,7 @@ import { Logout } from './Logout';
 import { Register } from './Register/Register';
 import { ResetPassword } from './ResetPassword';
 
-const useStyles = makeStyles(({ palette, spacing }) => ({
+const useStyles = makeStyles(({ breakpoints, palette, spacing }) => ({
   '@global': {
     body: {
       // Here instead of `root` so overscroll doesn't have an abrupt white background.
@@ -30,6 +31,11 @@ const useStyles = makeStyles(({ palette, spacing }) => ({
     maxWidth: 400,
     margin: spacing(4, 1),
   },
+  register: {
+    [breakpoints.up('md')]: {
+      maxWidth: 700,
+    },
+  },
 }));
 
 const authTheme = createTheme({ dark: true });
@@ -41,7 +47,10 @@ export const Authentication: FC = ({ children }) => {
   const [session, sessionLoading] = useSession();
 
   const matched = useRoutes([
-    { path: '/register', element: <Register className={classes.card} /> },
+    {
+      path: '/register',
+      element: <Register className={clsx(classes.card, classes.register)} />,
+    },
     { path: '/login', element: <Login className={classes.card} /> },
     { path: '/logout', element: <Logout /> },
     {

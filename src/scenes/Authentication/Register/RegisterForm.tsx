@@ -1,16 +1,19 @@
-import { makeStyles, Typography } from '@material-ui/core';
+import { Grid, makeStyles, Typography } from '@material-ui/core';
 import { Decorator, Mutator } from 'final-form';
 import React from 'react';
 import { Form, FormProps } from 'react-final-form';
+import { RegisterInput } from '../../../api';
 import {
   blurOnSubmit,
   EmailField,
   focusFirstFieldWithSubmitError,
+  matchFieldIfSame,
   PasswordField,
   SubmitButton,
   SubmitError,
   TextField,
 } from '../../../components/form';
+import { minLength, required } from '../../../components/form/validators';
 import { CordIcon } from '../../../components/Icons';
 import { Link } from '../../../components/Routing';
 
@@ -37,16 +40,12 @@ const useStyles = makeStyles(({ spacing }) => ({
   },
 }));
 
-interface RegisterInput {
-  firstName: string;
-  lastName: string;
-  email: string;
-  password: string;
+interface RegisterFields extends RegisterInput {
   confirmPassword: string;
 }
 
 export type RegisterFormProps = Pick<
-  FormProps<RegisterInput>,
+  FormProps<RegisterFields>,
   'onSubmit' | 'initialValues'
 > & { className?: string };
 
@@ -73,26 +72,71 @@ export const RegisterForm = ({ className, ...props }: RegisterFormProps) => {
           {({ handleSubmit }) => (
             <form onSubmit={handleSubmit}>
               <SubmitError className={classes.formError} />
-              <TextField
-                name="firstName"
-                label="First Name"
-                placeholder="Enter First Name"
-                required
-                autoFocus
-              />
-              <TextField
-                name="lastName"
-                label="Last Name"
-                placeholder="Enter Last Name"
-                required
-              />
-              <EmailField caseSensitive />
-              <PasswordField />
-              <PasswordField
-                name="confirmPassword"
-                label="Re-Type Password"
-                placeholder="Re-Enter Your Password"
-              />
+              <Grid container spacing={2}>
+                <Grid item xs={12} md={6}>
+                  <TextField
+                    name="realFirstName"
+                    label="First Name"
+                    placeholder="Enter First Name"
+                    required
+                    validate={[required, minLength()]}
+                    margin="none"
+                    autoComplete="given-name"
+                  />
+                </Grid>
+                <Grid item xs={12} md={6}>
+                  <TextField
+                    name="realLastName"
+                    label="Last Name"
+                    placeholder="Enter Last Name"
+                    required
+                    validate={[required, minLength()]}
+                    margin="none"
+                    autoComplete="family-name"
+                  />
+                </Grid>
+                <Grid item xs={12} md={6}>
+                  <TextField
+                    name="displayFirstName"
+                    label="Public First Name"
+                    placeholder="Enter Public First Name"
+                    required
+                    validate={[required, minLength()]}
+                    margin="none"
+                    autoComplete="given-name"
+                  />
+                </Grid>
+                <Grid item xs={12} md={6}>
+                  <TextField
+                    name="displayLastName"
+                    label="Public Last Name"
+                    placeholder="Enter Public Last Name"
+                    required
+                    validate={[required, minLength()]}
+                    margin="none"
+                    autoComplete="family-name"
+                  />
+                </Grid>
+                <Grid item xs={12}>
+                  <EmailField
+                    caseSensitive
+                    autoComplete="email"
+                    margin="none"
+                  />
+                </Grid>
+                <Grid item xs={12} md={6}>
+                  <PasswordField autoComplete="new-password" margin="none" />
+                </Grid>
+                <Grid item xs={12} md={6}>
+                  <PasswordField
+                    name="confirmPassword"
+                    label="Re-Type Password"
+                    placeholder="Re-Enter Your Password"
+                    autoComplete="new-password"
+                    margin="none"
+                  />
+                </Grid>
+              </Grid>
               <SubmitButton className={classes.submit}>Sign Up</SubmitButton>
             </form>
           )}
@@ -109,7 +153,7 @@ const passwordMatching = ({
   password,
   confirmPassword,
   ..._otherVals
-}: RegisterInput) => {
+}: RegisterFields) => {
   return password && confirmPassword && password !== confirmPassword
     ? {
         password: 'Passwords must match',
@@ -118,7 +162,7 @@ const passwordMatching = ({
     : undefined;
 };
 
-const showMatchingErrorsImmediately: Decorator<RegisterInput> = (form) =>
+const showMatchingErrorsImmediately: Decorator<RegisterFields> = (form) =>
   form.subscribe(
     ({ active, values }) => {
       if (active === 'confirmPassword' && values.confirmPassword) {
@@ -128,13 +172,15 @@ const showMatchingErrorsImmediately: Decorator<RegisterInput> = (form) =>
     { active: true, values: true }
   );
 
-const markConfirmPasswordTouched: Mutator<RegisterInput> = (args, state) => {
+const markConfirmPasswordTouched: Mutator<RegisterFields> = (args, state) => {
   state.fields.confirmPassword.touched = true;
 };
 
 // decorators get re-created if array identity changes
 // so make constant outside of render function
 const decorators = [
+  matchFieldIfSame('realFirstName', 'displayFirstName'),
+  matchFieldIfSame('realLastName', 'displayLastName'),
   showMatchingErrorsImmediately,
   blurOnSubmit,
   focusFirstFieldWithSubmitError,
