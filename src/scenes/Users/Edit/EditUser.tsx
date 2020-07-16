@@ -1,6 +1,6 @@
 import React from 'react';
 import { Except } from 'type-fest';
-import { UpdateUserInput } from '../../../api';
+import { Maybe, UpdateUserInput } from '../../../api';
 import { UserForm, UserFormProps } from '../UserForm';
 import { useUpdateUserMutation } from './EditUser.generated';
 
@@ -14,7 +14,7 @@ export const EditUser = (props: EditUserProps) => {
   const user = props.user;
 
   return (
-    <UserForm<UpdateUserInput>
+    <UserForm<UpdateUserInput & { user: { email?: Maybe<string> } }>
       title="Edit Person"
       {...props}
       prefix="user"
@@ -30,13 +30,18 @@ export const EditUser = (props: EditUserProps) => {
                 phone: user.phone.value,
                 timezone: user.timezone.value?.name,
                 bio: user.bio.value,
+                email: user.email?.value,
               },
             }
           : undefined
       }
-      onSubmit={async (input) => {
+      onSubmit={async ({ user: { email, ...user } }) => {
         await updateUser({
-          variables: { input },
+          variables: {
+            input: {
+              user,
+            },
+          },
         });
       }}
     />
