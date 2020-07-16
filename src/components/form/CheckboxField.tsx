@@ -17,7 +17,15 @@ export type CheckboxFieldProps = FieldConfig<boolean> & {
   helperText?: ReactNode;
 } & Omit<CheckboxProps, 'defaultValue' | 'value' | 'inputRef'> &
   Pick<FormControlLabelProps, 'label' | 'labelPlacement'> &
-  Pick<FormControlProps, 'fullWidth' | 'margin' | 'variant'>;
+  Pick<FormControlProps, 'fullWidth' | 'margin' | 'variant'> & {
+    /**
+     * Whether to render spacing even when there is no helper/error text.
+     * This is enabled by default on other fields, but here it doesn't make
+     * sense. Labels are usually more informative for this field and booleans
+     * rarely have server errors.
+     */
+    keepHelperTextSpacing?: boolean;
+  };
 
 export const CheckboxField: FC<CheckboxFieldProps> = ({
   name: nameProp,
@@ -29,6 +37,7 @@ export const CheckboxField: FC<CheckboxFieldProps> = ({
   fullWidth,
   margin,
   variant,
+  keepHelperTextSpacing,
   ...props
 }) => {
   const name = useFieldName(nameProp);
@@ -60,7 +69,9 @@ export const CheckboxField: FC<CheckboxFieldProps> = ({
           />
         }
       />
-      <FormHelperText>{getHelperText(meta, helperText)}</FormHelperText>
+      <FormHelperText>
+        {getHelperText(meta, helperText, undefined, keepHelperTextSpacing)}
+      </FormHelperText>
     </FormControl>
   );
 };
