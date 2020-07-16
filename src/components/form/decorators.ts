@@ -1,4 +1,5 @@
-import { FormApi, getIn, Unsubscribe } from 'final-form';
+import { FormApi, FormState, getIn, Unsubscribe } from 'final-form';
+import { noop } from 'ts-essentials';
 
 // Updated type to use generic
 const get = getIn as <T>(state: T, complexKey: string) => any;
@@ -10,28 +11,52 @@ const get = getIn as <T>(state: T, complexKey: string) => any;
 export function focusFirstFieldWithSubmitError<T>(
   form: FormApi<T>
 ): Unsubscribe {
-  let wasSubmitting = false;
-  return form.subscribe(
-    ({ submitting, submitFailed, submitErrors }) => {
-      if (wasSubmitting && !submitting && submitFailed) {
-        wasSubmitting = false;
-        for (const field of form.getRegisteredFields()) {
-          if (submitErrors?.[field]) {
-            form.focus(field);
-            break;
-          }
-        }
-      }
-      if (submitting) {
-        wasSubmitting = true;
-      }
+  const originalSubmit = form.submit;
+
+  let state: Partial<Pick<FormState<T>, 'errors' | 'submitErrors'>> = {};
+  const unsubscribe = form.subscribe(
+    (next) => {
+      state = next;
     },
     {
-      submitting: true,
-      submitFailed: true,
+      errors: true,
       submitErrors: true,
     }
   );
+
+  const afterSubmit = () => {
+    if (state.errors && Object.keys(state.errors).length) {
+      for (const field of form.getRegisteredFields()) {
+        const err = get(state.errors, field);
+        if (err) {
+          form.focus(field);
+          break;
+        }
+      }
+    } else if (state.submitErrors && Object.keys(state.submitErrors).length) {
+      for (const field of form.getRegisteredFields()) {
+        const err = get(state.submitErrors, field);
+        if (err) {
+          form.focus(field);
+          break;
+        }
+      }
+    }
+  };
+
+  form.submit = () => {
+    const result = originalSubmit.call(form);
+    if (result && typeof result.then === 'function') {
+      result.then(afterSubmit, noop);
+    } else {
+      afterSubmit();
+    }
+    return result;
+  };
+  return () => {
+    unsubscribe();
+    form.submit = originalSubmit;
+  };
 }
 
 /**
