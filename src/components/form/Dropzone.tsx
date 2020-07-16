@@ -61,9 +61,20 @@ export const DropzoneField: FC<DropzoneFieldProps> = ({
 
   const onDrop = useCallback(
     (acceptedFiles) => {
-      onChange(currentFiles.concat(acceptedFiles));
+      const updatedFiles =
+        // If no files are accepted, we want to leave the existing ones in place
+        acceptedFiles.length === 0
+          ? currentFiles
+          : // If we allow multiples, we want to add all new files
+          // to the existing ones. If not, we will overwrite.
+          // `react-dropzone` won't accept more than one file if
+          // `multiple` is false.
+          multiple
+          ? currentFiles.concat(acceptedFiles)
+          : acceptedFiles;
+      onChange(updatedFiles);
     },
-    [onChange, currentFiles]
+    [onChange, currentFiles, multiple]
   );
 
   const handleRemoveFileClick = useCallback(
