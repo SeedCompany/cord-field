@@ -31,7 +31,16 @@ export type LanguageEngagementListItemFragment = {
       Types.SecuredProductList,
       'total'
     > & {
-        items: Array<{ __typename?: 'Product' } & Pick<Types.Product, 'type'>>;
+        items: Array<
+          | ({ __typename?: 'DirectScriptureProduct' } & Pick<
+              Types.DirectScriptureProduct,
+              'id'
+            >)
+          | ({ __typename?: 'DerivativeScriptureProduct' } & Pick<
+              Types.DerivativeScriptureProduct,
+              'id'
+            >)
+        >;
       };
     endDate: { __typename?: 'SecuredDate' } & Pick<Types.SecuredDate, 'value'>;
     initialEndDate: { __typename?: 'SecuredDate' } & Pick<
@@ -68,7 +77,7 @@ export const LanguageEngagementListItemFragmentDoc = gql`
     products {
       total
       items {
-        type
+        id
       }
     }
     endDate {

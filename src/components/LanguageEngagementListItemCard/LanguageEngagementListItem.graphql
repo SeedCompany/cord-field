@@ -21,7 +21,7 @@ fragment LanguageEngagementListItem on LanguageEngagement {
   products {
     total
     items {
-      type
+      id
     }
   }
   endDate {

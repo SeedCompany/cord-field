@@ -191,11 +191,50 @@ export interface PartnershipFilters {
   projectId?: Maybe<Scalars['ID']>;
 }
 
+/** Something that is _producible_ via a Product */
+export interface Producible {
+  id: Scalars['ID'];
+  createdAt: Scalars['DateTime'];
+  scriptureReferences: SecuredScriptureRanges;
+}
+
+export interface Product {
+  id: Scalars['ID'];
+  createdAt: Scalars['DateTime'];
+  scriptureReferences: SecuredScriptureRanges;
+  mediums: SecuredProductMediums;
+  purposes: SecuredProductPurposes;
+  methodology: SecuredMethodology;
+  approach?: Maybe<ProductApproach>;
+  /** Provide what would be the "type" of product in the old schema. */
+  legacyType: ProductType;
+}
+
+/** This is a roll up of methodology, for easier querying */
+export type ProductApproach =
+  | 'Written'
+  | 'OralTranslation'
+  | 'OralStories'
+  | 'Visual';
+
+export type ProductType =
+  | 'BibleStories'
+  | 'JesusFilm'
+  | 'Songs'
+  | 'LiteracyMaterials'
+  | 'OldTestamentPortions'
+  | 'OldTestamentFull'
+  | 'Gospel'
+  | 'NewTestamentPortions'
+  | 'NewTestamentFull'
+  | 'FullBible'
+  | 'IndividualBooks'
+  | 'Genesis';
+
 export interface Engagement {
   id: Scalars['ID'];
   createdAt: Scalars['DateTime'];
   status: EngagementStatus;
-  ceremony: SecuredCeremony;
   /** Translation / Growth Plan complete date */
   completeDate: SecuredDate;
   disbursementCompleteDate: SecuredDate;
@@ -208,6 +247,7 @@ export interface Engagement {
   /** The last time the engagement status was modified */
   statusModifiedAt: SecuredDateTime;
   modifiedAt: Scalars['DateTime'];
+  ceremony: SecuredCeremony;
 }
 
 export type EngagementStatus =
@@ -1373,115 +1413,79 @@ export interface UpdateLanguageOutput {
   language: Language;
 }
 
-export type Range = Resource & {
-  __typename?: 'Range';
-  id: Scalars['ID'];
-  createdAt: Scalars['DateTime'];
-  start: Scalars['Float'];
-  end: Scalars['Float'];
-};
+/** A reference to a scripture verse */
+export interface ScriptureReference {
+  __typename?: 'ScriptureReference';
+  /** The code of the Bible book */
+  book: Scalars['String'];
+  /** The chapter number */
+  chapter: Scalars['Int'];
+  /** The verse number */
+  verse: Scalars['Int'];
+  bookName: Scalars['String'];
+  label: Scalars['String'];
+}
 
 /**
- * An object whose `value` is a list of ranges and has additional authorization information.
+ * A range of scripture.
+ * i.e. Matthew 1:1-2:10
+ */
+export interface ScriptureRange {
+  __typename?: 'ScriptureRange';
+  /** The starting verse */
+  start: ScriptureReference;
+  /** The ending verse */
+  end: ScriptureReference;
+}
+
+/**
+ * An object whose `value` is a list of scripture ranges and has additional authorization information.
  * The value is only given if `canRead` is `true` otherwise it is empty: `[]`.
  * These `can*` authorization properties are specific to the user making the request.
  */
-export type SecuredRange = Readable &
+export type SecuredScriptureRanges = Readable &
   Editable & {
-    __typename?: 'SecuredRange';
+    __typename?: 'SecuredScriptureRanges';
     canEdit: Scalars['Boolean'];
     canRead: Scalars['Boolean'];
-    value: Range[];
+    value: ScriptureRange[];
   };
 
-export type Film = Resource & {
-  __typename?: 'Film';
-  id: Scalars['ID'];
-  createdAt: Scalars['DateTime'];
-  name: SecuredString;
-  ranges?: Maybe<SecuredRange>;
-};
-
-export interface CreateFilmOutput {
-  __typename?: 'CreateFilmOutput';
-  film: Film;
-}
-
-export interface FilmListOutput {
-  __typename?: 'FilmListOutput';
-  /**
-   * The page of film.
-   * Note that this could include items that where also in sibling pages;
-   * you should de-duplicate these based on ID.
-   */
-  items: Film[];
-  /** The total number of items across all pages */
-  total: Scalars['Int'];
-  /** Whether the next page exists */
-  hasMore: Scalars['Boolean'];
-}
-
-export interface UpdateFilmOutput {
-  __typename?: 'UpdateFilmOutput';
-  film: Film;
-}
-
 /**
- * An object whose `value` is a list of literacymaterials and has additional authorization information.
+ * An object whose `value` is a list of product mediums and has additional authorization information.
  * The value is only given if `canRead` is `true` otherwise it is empty: `[]`.
  * These `can*` authorization properties are specific to the user making the request.
  */
-export type SecuredLiteracyMaterialRange = Readable &
+export type SecuredProductMediums = Readable &
   Editable & {
-    __typename?: 'SecuredLiteracyMaterialRange';
+    __typename?: 'SecuredProductMediums';
     canEdit: Scalars['Boolean'];
     canRead: Scalars['Boolean'];
-    value: Range[];
+    value: ProductMedium[];
   };
 
-export type LiteracyMaterial = Resource & {
-  __typename?: 'LiteracyMaterial';
-  id: Scalars['ID'];
-  createdAt: Scalars['DateTime'];
-  name: SecuredString;
-  ranges?: Maybe<SecuredLiteracyMaterialRange>;
-};
-
-export interface CreateLiteracyMaterialOutput {
-  __typename?: 'CreateLiteracyMaterialOutput';
-  literacyMaterial: LiteracyMaterial;
-}
-
-export interface LiteracyMaterialListOutput {
-  __typename?: 'LiteracyMaterialListOutput';
-  /**
-   * The page of literacymaterial.
-   * Note that this could include items that where also in sibling pages;
-   * you should de-duplicate these based on ID.
-   */
-  items: LiteracyMaterial[];
-  /** The total number of items across all pages */
-  total: Scalars['Int'];
-  /** Whether the next page exists */
-  hasMore: Scalars['Boolean'];
-}
-
-export interface UpdateLiteracyMaterialOutput {
-  __typename?: 'UpdateLiteracyMaterialOutput';
-  literacyMaterial: LiteracyMaterial;
-}
+/** How the product is delivered */
+export type ProductMedium =
+  | 'Print'
+  | 'Web'
+  | 'EBook'
+  | 'App'
+  | 'Audio'
+  | 'OralTranslation'
+  | 'Video'
+  | 'Other';
 
 /**
- * An object whose `value` is a list of methodologies and has additional authorization information.
- * The value is only given if `canRead` is `true` otherwise it is empty: `[]`.
+ * An object with a product methodology `value` and additional authorization information.
+ * The value is only given if `canRead` is `true` otherwise it is `null`.
  * These `can*` authorization properties are specific to the user making the request.
  */
-export type SecuredMethodologies = Readable &
+export type SecuredMethodology = Readable &
   Editable & {
-    __typename?: 'SecuredMethodologies';
+    __typename?: 'SecuredMethodology';
     canEdit: Scalars['Boolean'];
     canRead: Scalars['Boolean'];
-    value: ProductMethodology[];
+    value?: Maybe<ProductMethodology>;
   };
 
 /** How is this translation being done */
@@ -1498,110 +1502,31 @@ export type ProductMethodology =
   | 'SignLanguage'
   | 'OtherVisual';
 
-export type Product = Resource & {
-  __typename?: 'Product';
-  id: Scalars['ID'];
-  createdAt: Scalars['DateTime'];
-  type: ProductType;
-  books: BibleBook[];
-  mediums: ProductMedium[];
-  purposes: ProductPurpose[];
-  approach: ProductApproach;
-  methodology: ProductMethodology;
-};
+/**
+ * An object whose `value` is a list of methodologies and has additional authorization information.
+ * The value is only given if `canRead` is `true` otherwise it is empty: `[]`.
+ * These `can*` authorization properties are specific to the user making the request.
+ */
+export type SecuredMethodologies = Readable &
+  Editable & {
+    __typename?: 'SecuredMethodologies';
+    canEdit: Scalars['Boolean'];
+    canRead: Scalars['Boolean'];
+    value: ProductMethodology[];
+  };
 
-export type ProductType =
-  | 'BibleStories'
-  | 'JesusFilm'
-  | 'Songs'
-  | 'LiteracyMaterials'
-  | 'OldTestamentPortions'
-  | 'OldTestamentFull'
-  | 'Gospel'
-  | 'NewTestamentPortions'
-  | 'NewTestamentFull'
-  | 'FullBible'
-  | 'IndividualBooks'
-  | 'Genesis';
-
-export type BibleBook =
-  | 'Genesis'
-  | 'Exodus'
-  | 'Leviticus'
-  | 'Numbers'
-  | 'Deuteronomy'
-  | 'Joshua'
-  | 'Judges'
-  | 'Ruth'
-  | 'FirstSamuel'
-  | 'SecondSamuel'
-  | 'FirstKings'
-  | 'SecondKings'
-  | 'FirstChronicles'
-  | 'SecondChronicles'
-  | 'Ezra'
-  | 'Nehemiah'
-  | 'Esther'
-  | 'Job'
-  | 'Psalms'
-  | 'Proverbs'
-  | 'Ecclesiastes'
-  | 'SongOfSolomon'
-  | 'Isaiah'
-  | 'Jeremiah'
-  | 'Lamentations'
-  | 'Ezekiel'
-  | 'Daniel'
-  | 'Hosea'
-  | 'Joel'
-  | 'Amos'
-  | 'Obadiah'
-  | 'Jonah'
-  | 'Micah'
-  | 'Nahum'
-  | 'Habakkuk'
-  | 'Zephaniah'
-  | 'Haggai'
-  | 'Zechariah'
-  | 'Malachi'
-  | 'Matthew'
-  | 'Mark'
-  | 'Luke'
-  | 'John'
-  | 'Acts'
-  | 'Romans'
-  | 'FirstCorinthians'
-  | 'SecondCorinthians'
-  | 'Galatians'
-  | 'Ephesians'
-  | 'Philippians'
-  | 'Colossians'
-  | 'FirstThessalonians'
-  | 'SecondThessalonians'
-  | 'FirstTimothy'
-  | 'SecondTimothy'
-  | 'Titus'
-  | 'Philemon'
-  | 'Hebrews'
-  | 'James'
-  | 'FirstPeter'
-  | 'SecondPeter'
-  | 'FirstJohn'
-  | 'SecondJohn'
-  | 'ThirdJohn'
-  | 'Jude'
-  | 'Revelation';
-
-/** How the product is delivered */
-export type ProductMedium =
-  | 'Print'
-  | 'Web'
-  | 'EBook'
-  | 'App'
-  | 'Audio'
-  | 'OralTranslation'
-  | 'Video'
-  | 'Other';
+/**
+ * An object whose `value` is a list of product purposes and has additional authorization information.
+ * The value is only given if `canRead` is `true` otherwise it is empty: `[]`.
+ * These `can*` authorization properties are specific to the user making the request.
+ */
+export type SecuredProductPurposes = Readable &
+  Editable & {
+    __typename?: 'SecuredProductPurposes';
+    canEdit: Scalars['Boolean'];
+    canRead: Scalars['Boolean'];
+    value: ProductPurpose[];
+  };
 
 export type ProductPurpose =
   | 'EvangelismChurchPlanting'
@@ -1610,12 +1535,65 @@ export type ProductPurpose =
   | 'SocialIssues'
   | 'Discipleship';
 
-/** This is a roll up of methodology, for easier querying */
-export type ProductApproach =
-  | 'Written'
-  | 'OralTranslation'
-  | 'OralStories'
-  | 'Visual';
+/**
+ * An object with a producible `value` and additional authorization information.
+ * The value is only given if `canRead` is `true` otherwise it is `null`.
+ * These `can*` authorization properties are specific to the user making the request.
+ */
+export type SecuredProducible = Readable &
+  Editable & {
+    __typename?: 'SecuredProducible';
+    canEdit: Scalars['Boolean'];
+    canRead: Scalars['Boolean'];
+    value?: Maybe<Producible>;
+  };
+
+/** A product producing direct scripture only. */
+export type DirectScriptureProduct = Product &
+  Producible &
+  Resource & {
+    __typename?: 'DirectScriptureProduct';
+    id: Scalars['ID'];
+    createdAt: Scalars['DateTime'];
+    scriptureReferences: SecuredScriptureRanges;
+    mediums: SecuredProductMediums;
+    purposes: SecuredProductPurposes;
+    methodology: SecuredMethodology;
+    approach?: Maybe<ProductApproach>;
+    /** Provide what would be the "type" of product in the old schema. */
+    legacyType: ProductType;
+  };
+
+/**
+ * A product producing derivative of scripture.
+ * Only meaning that this has a relationship to a `Producible` object.
+ */
+export type DerivativeScriptureProduct = Product &
+  Producible &
+  Resource & {
+    __typename?: 'DerivativeScriptureProduct';
+    id: Scalars['ID'];
+    createdAt: Scalars['DateTime'];
+    scriptureReferences: SecuredScriptureRanges;
+    mediums: SecuredProductMediums;
+    purposes: SecuredProductPurposes;
+    methodology: SecuredMethodology;
+    approach?: Maybe<ProductApproach>;
+    /** Provide what would be the "type" of product in the old schema. */
+    legacyType: ProductType;
+    /**
+     * The object that this product is producing.
+     * i.e. A film named "Jesus Film".
+     */
+    produces: SecuredProducible;
+    /**
+     * The `Producible` defines a `scriptureReferences` list, and this is
+     * used by default in this product's `scriptureReferences` list.
+     * If this product _specifically_ needs to customize the references, then
+     * this property can be set (and read) to "override" the `producible`'s list.
+     */
+    scriptureReferencesOverride?: Maybe<SecuredScriptureRanges>;
+  };
 
 export interface CreateProductOutput {
   __typename?: 'CreateProductOutput';
@@ -1664,26 +1642,80 @@ export type SecuredProductList = Readable & {
   canCreate: Scalars['Boolean'];
 };
 
-/**
- * An object whose `value` is a list of ranges and has additional authorization information.
- * The value is only given if `canRead` is `true` otherwise it is empty: `[]`.
- * These `can*` authorization properties are specific to the user making the request.
- */
-export type SecuredStoryRange = Readable &
-  Editable & {
-    __typename?: 'SecuredStoryRange';
-    canEdit: Scalars['Boolean'];
-    canRead: Scalars['Boolean'];
-    value: Range[];
+export type Film = Producible &
+  Resource & {
+    __typename?: 'Film';
+    id: Scalars['ID'];
+    createdAt: Scalars['DateTime'];
+    scriptureReferences: SecuredScriptureRanges;
+    name: SecuredString;
   };
 
-export type Story = Resource & {
-  __typename?: 'Story';
-  id: Scalars['ID'];
-  createdAt: Scalars['DateTime'];
-  name: SecuredString;
-  ranges?: Maybe<SecuredStoryRange>;
-};
+export interface CreateFilmOutput {
+  __typename?: 'CreateFilmOutput';
+  film: Film;
+}
+
+export interface FilmListOutput {
+  __typename?: 'FilmListOutput';
+  /**
+   * The page of film.
+   * Note that this could include items that where also in sibling pages;
+   * you should de-duplicate these based on ID.
+   */
+  items: Film[];
+  /** The total number of items across all pages */
+  total: Scalars['Int'];
+  /** Whether the next page exists */
+  hasMore: Scalars['Boolean'];
+}
+
+export interface UpdateFilmOutput {
+  __typename?: 'UpdateFilmOutput';
+  film: Film;
+}
+
+export type LiteracyMaterial = Producible &
+  Resource & {
+    __typename?: 'LiteracyMaterial';
+    id: Scalars['ID'];
+    createdAt: Scalars['DateTime'];
+    scriptureReferences: SecuredScriptureRanges;
+    name: SecuredString;
+  };
+
+export interface CreateLiteracyMaterialOutput {
+  __typename?: 'CreateLiteracyMaterialOutput';
+  literacyMaterial: LiteracyMaterial;
+}
+
+export interface LiteracyMaterialListOutput {
+  __typename?: 'LiteracyMaterialListOutput';
+  /**
+   * The page of literacymaterial.
+   * Note that this could include items that where also in sibling pages;
+   * you should de-duplicate these based on ID.
+   */
+  items: LiteracyMaterial[];
+  /** The total number of items across all pages */
+  total: Scalars['Int'];
+  /** Whether the next page exists */
+  hasMore: Scalars['Boolean'];
+}
+
+export interface UpdateLiteracyMaterialOutput {
+  __typename?: 'UpdateLiteracyMaterialOutput';
+  literacyMaterial: LiteracyMaterial;
+}
+
+export type Story = Producible &
+  Resource & {
+    __typename?: 'Story';
+    id: Scalars['ID'];
+    createdAt: Scalars['DateTime'];
+    scriptureReferences: SecuredScriptureRanges;
+    name: SecuredString;
+  };
 
 export interface CreateStoryOutput {
   __typename?: 'CreateStoryOutput';
@@ -1749,7 +1781,6 @@ export type LanguageEngagement = Engagement &
     id: Scalars['ID'];
     createdAt: Scalars['DateTime'];
     status: EngagementStatus;
-    ceremony: SecuredCeremony;
     /** Translation / Growth Plan complete date */
     completeDate: SecuredDate;
     disbursementCompleteDate: SecuredDate;
@@ -1762,12 +1793,13 @@ export type LanguageEngagement = Engagement &
     /** The last time the engagement status was modified */
     statusModifiedAt: SecuredDateTime;
     modifiedAt: Scalars['DateTime'];
-    language: SecuredLanguage;
+    ceremony: SecuredCeremony;
     firstScripture: SecuredBoolean;
     lukePartnership: SecuredBoolean;
     /** Not used anymore, but exposing for legacy data. */
     sentPrintingDate: SecuredDate;
     paraTextRegistryId: SecuredString;
+    language: SecuredLanguage;
     products: SecuredProductList;
     pnp: SecuredFile;
   };
@@ -1789,8 +1821,6 @@ export interface ProductListInput {
 }
 
 export interface ProductFilters {
-  /** Only products matching this type */
-  type?: Maybe<ProductType>;
   /** Only products matching this approach */
   approach?: Maybe<ProductApproach>;
   /** Only products matching this methodology */
@@ -1803,7 +1833,6 @@ export type InternshipEngagement = Engagement &
     id: Scalars['ID'];
     createdAt: Scalars['DateTime'];
     status: EngagementStatus;
-    ceremony: SecuredCeremony;
     /** Translation / Growth Plan complete date */
     completeDate: SecuredDate;
     disbursementCompleteDate: SecuredDate;
@@ -1816,12 +1845,13 @@ export type InternshipEngagement = Engagement &
     /** The last time the engagement status was modified */
     statusModifiedAt: SecuredDateTime;
     modifiedAt: Scalars['DateTime'];
-    countryOfOrigin: SecuredCountry;
-    intern: SecuredUser;
-    mentor: SecuredUser;
+    ceremony: SecuredCeremony;
     position: SecuredInternPosition;
     methodologies: SecuredMethodologies;
     growthPlan: SecuredFile;
+    intern: SecuredUser;
+    mentor: SecuredUser;
+    countryOfOrigin: SecuredCountry;
   };
 
 export interface CreateLanguageEngagementOutput {
@@ -2056,6 +2086,8 @@ export type Partnership = Resource & {
   mouStatus: SecuredPartnershipAgreementStatus;
   mouStart: SecuredDate;
   mouEnd: SecuredDate;
+  mouStartOverride: SecuredDate;
+  mouEndOverride: SecuredDate;
   organization: Organization;
   types: SecuredPartnershipTypes;
   /** The MOU agreement */
@@ -2147,6 +2179,39 @@ export type SearchResult =
   | TranslationProject
   | InternshipProject
   | User;
+
+export type Song = Producible &
+  Resource & {
+    __typename?: 'Song';
+    id: Scalars['ID'];
+    createdAt: Scalars['DateTime'];
+    scriptureReferences: SecuredScriptureRanges;
+    name: SecuredString;
+  };
+
+export interface CreateSongOutput {
+  __typename?: 'CreateSongOutput';
+  song: Song;
+}
+
+export interface SongListOutput {
+  __typename?: 'SongListOutput';
+  /**
+   * The page of song.
+   * Note that this could include items that where also in sibling pages;
+   * you should de-duplicate these based on ID.
+   */
+  items: Song[];
+  /** The total number of items across all pages */
+  total: Scalars['Int'];
+  /** Whether the next page exists */
+  hasMore: Scalars['Boolean'];
+}
+
+export interface UpdateSongOutput {
+  __typename?: 'UpdateSongOutput';
+  song: Song;
+}
 
 export interface State {
   __typename?: 'State';
@@ -2254,22 +2319,22 @@ export interface Query {
   languages: LanguageListOutput;
   /** Check language node consistency */
   checkLanguageConsistency: Scalars['Boolean'];
-  /** Look up an film by its ID */
+  /** Look up a film by its ID */
   film: Film;
   /** Look up films */
   films: FilmListOutput;
-  /** Look up an literacyMaterial by its ID */
+  /** Look up a literacy material */
   literacyMaterial: LiteracyMaterial;
-  /** Look up literacyMaterials */
+  /** Look up literacy materials */
   literacyMaterials: LiteracyMaterialListOutput;
+  /** Look up a story by its ID */
+  story: Story;
+  /** Look up stories */
+  stories: StoryListOutput;
   /** Read a product by id */
   product: Product;
   /** Look up products */
   products: ProductListOutput;
-  /** Look up an story by its ID */
-  story: Story;
-  /** Look up storys */
-  storys: StoryListOutput;
   /** Lookup an engagement by ID */
   engagement: Engagement;
   /** Look up engagements */
@@ -2302,6 +2367,10 @@ export interface Query {
   favorites: FavoriteListOutput;
   /** Perform a search across resources */
   search: SearchOutput;
+  /** Look up a song by its ID */
+  song: Song;
+  /** Look up stories */
+  songs: SongListOutput;
   /** Look up all states on workflow */
   states: StateListOutput;
   /** Look up all next possible states on workflow */
@@ -2426,20 +2495,20 @@ export interface QueryLiteracyMaterialsArgs {
   input?: Maybe<LiteracyMaterialListInput>;
 }
 
+export interface QueryStoryArgs {
+  id: Scalars['ID'];
+}
+
+export interface QueryStoriesArgs {
+  input?: Maybe<StoryListInput>;
+}
+
 export interface QueryProductArgs {
   id: Scalars['ID'];
 }
 
 export interface QueryProductsArgs {
   input?: Maybe<ProductListInput>;
-}
-
-export interface QueryStoryArgs {
-  id: Scalars['ID'];
-}
-
-export interface QueryStorysArgs {
-  input?: Maybe<StoryListInput>;
 }
 
 export interface QueryEngagementArgs {
@@ -2492,6 +2561,14 @@ export interface QueryFavoritesArgs {
 
 export interface QuerySearchArgs {
   input?: Maybe<SearchInput>;
+}
+
+export interface QuerySongArgs {
+  id: Scalars['ID'];
+}
+
+export interface QuerySongsArgs {
+  input?: Maybe<SongListInput>;
 }
 
 export interface QueryStatesArgs {
@@ -2580,7 +2657,7 @@ export interface FilmListInput {
 }
 
 export interface FilmFilters {
-  /** Only Film matching this name */
+  /** Only films matching this name */
   name?: Maybe<Scalars['String']>;
 }
 
@@ -2614,7 +2691,7 @@ export interface StoryListInput {
 }
 
 export interface StoryFilters {
-  /** Only story matching this name */
+  /** Only stories matching this name */
   name?: Maybe<Scalars['String']>;
 }
 
@@ -2689,6 +2766,23 @@ export type SearchType =
   | 'User'
   | 'Project'
   | 'Location';
+
+export interface SongListInput {
+  /** The number of items to return in a single page */
+  count?: Maybe<Scalars['Int']>;
+  /** 1-indexed page number for offset pagination. */
+  page?: Maybe<Scalars['Int']>;
+  /** The field in which to sort on */
+  sort?: Maybe<Scalars['String']>;
+  /** The order in which to sort the list */
+  order?: Maybe<Order>;
+  filter?: Maybe<SongFilters>;
+}
+
+export interface SongFilters {
+  /** Only songs matching this name */
+  name?: Maybe<Scalars['String']>;
+}
 
 export interface Mutation {
   __typename?: 'Mutation';
@@ -2793,30 +2887,30 @@ export interface Mutation {
   addLocationToLanguage: Language;
   /** Remove a location from a language */
   removeLocationFromLanguage: Language;
-  /** Create an film */
+  /** Create a film */
   createFilm: CreateFilmOutput;
-  /** Update an film */
+  /** Update a film */
   updateFilm: UpdateFilmOutput;
-  /** Delete an film */
+  /** Delete a film */
   deleteFilm: Scalars['Boolean'];
-  /** Create an literacy material */
+  /** Create a literacy material */
   createLiteracyMaterial: CreateLiteracyMaterialOutput;
-  /** Update an literacyMaterial */
+  /** Update a literacy material */
   updateLiteracyMaterial: UpdateLiteracyMaterialOutput;
-  /** Delete an literacyMaterial */
+  /** Delete a literacy material */
   deleteLiteracyMaterial: Scalars['Boolean'];
+  /** Create a story */
+  createStory: CreateStoryOutput;
+  /** Update a story */
+  updateStory: UpdateStoryOutput;
+  /** Delete a story */
+  deleteStory: Scalars['Boolean'];
   /** Create a product entry */
   createProduct: CreateProductOutput;
   /** Update a product entry */
   updateProduct: UpdateProductOutput;
   /** Delete a product entry */
   deleteProduct: Scalars['Boolean'];
-  /** Create an story */
-  createStory: CreateStoryOutput;
-  /** Update an story */
-  updateStory: UpdateStoryOutput;
-  /** Delete an story */
-  deleteStory: Scalars['Boolean'];
   /** Create a language engagement */
   createLanguageEngagement: CreateLanguageEngagementOutput;
   /** Create an internship engagement */
@@ -2857,6 +2951,12 @@ export interface Mutation {
   addFavorite: Scalars['String'];
   /** Delete an favorite */
   removeFavorite: Scalars['Boolean'];
+  /** Create a song */
+  createSong: CreateSongOutput;
+  /** Update a song */
+  updateSong: UpdateSongOutput;
+  /** Delete a song */
+  deleteSong: Scalars['Boolean'];
   /** Create an Workflow */
   createWorkflow: CreateWorkflowOutput;
   /** Delete an Workflow */
@@ -3097,18 +3197,6 @@ export interface MutationDeleteLiteracyMaterialArgs {
   id: Scalars['ID'];
 }
 
-export interface MutationCreateProductArgs {
-  input: CreateProductInput;
-}
-
-export interface MutationUpdateProductArgs {
-  input: UpdateProductInput;
-}
-
-export interface MutationDeleteProductArgs {
-  id: Scalars['ID'];
-}
-
 export interface MutationCreateStoryArgs {
   input: CreateStoryInput;
 }
@@ -3118,6 +3206,18 @@ export interface MutationUpdateStoryArgs {
 }
 
 export interface MutationDeleteStoryArgs {
+  id: Scalars['ID'];
+}
+
+export interface MutationCreateProductArgs {
+  input: CreateProductInput;
+}
+
+export interface MutationUpdateProductArgs {
+  input: UpdateProductInput;
+}
+
+export interface MutationDeleteProductArgs {
   id: Scalars['ID'];
 }
 
@@ -3198,6 +3298,18 @@ export interface MutationAddFavoriteArgs {
 }
 
 export interface MutationRemoveFavoriteArgs {
+  id: Scalars['ID'];
+}
+
+export interface MutationCreateSongArgs {
+  input: CreateSongInput;
+}
+
+export interface MutationUpdateSongArgs {
+  input: UpdateSongInput;
+}
+
+export interface MutationDeleteSongArgs {
   id: Scalars['ID'];
 }
 
@@ -3650,12 +3762,24 @@ export interface CreateFilmInput {
 
 export interface CreateFilm {
   name: Scalars['String'];
-  ranges?: Maybe<CreateRange[]>;
+  scriptureReferences?: Maybe<ScriptureRangeInput[]>;
 }
 
-export interface CreateRange {
-  start: Scalars['Float'];
-  end: Scalars['Float'];
+export interface ScriptureRangeInput {
+  /** The starting verse */
+  start: ScriptureReferenceInput;
+  /** The ending verse */
+  end: ScriptureReferenceInput;
+}
+
+/** A reference to a scripture verse */
+export interface ScriptureReferenceInput {
+  /** The code of the Bible book */
+  book: Scalars['String'];
+  /** The chapter number */
+  chapter: Scalars['Int'];
+  /** The verse number */
+  verse: Scalars['Int'];
 }
 
 export interface UpdateFilmInput {
@@ -3665,13 +3789,7 @@ export interface UpdateFilmInput {
 export interface UpdateFilm {
   id: Scalars['ID'];
   name?: Maybe<Scalars['String']>;
-  ranges?: Maybe<UpdateRange[]>;
-}
-
-export interface UpdateRange {
-  id: Scalars['ID'];
-  start: Scalars['Float'];
-  end: Scalars['Float'];
+  scriptureReferences?: Maybe<ScriptureRangeInput[]>;
 }
 
 export interface CreateLiteracyMaterialInput {
@@ -3680,7 +3798,7 @@ export interface CreateLiteracyMaterialInput {
 
 export interface CreateLiteracyMaterial {
   name: Scalars['String'];
-  ranges?: Maybe<CreateRange[]>;
+  scriptureReferences?: Maybe<ScriptureRangeInput[]>;
 }
 
 export interface UpdateLiteracyMaterialInput {
@@ -3690,32 +3808,7 @@ export interface UpdateLiteracyMaterialInput {
 export interface UpdateLiteracyMaterial {
   id: Scalars['ID'];
   name?: Maybe<Scalars['String']>;
-  ranges?: Maybe<UpdateRange[]>;
-}
-
-export interface CreateProductInput {
-  product: CreateProduct;
-}
-
-export interface CreateProduct {
-  type: ProductType;
-  books: BibleBook[];
-  mediums: ProductMedium[];
-  purposes: ProductPurpose[];
-  methodology: ProductMethodology;
-}
-
-export interface UpdateProductInput {
-  product: UpdateProduct;
-}
-
-export interface UpdateProduct {
-  id: Scalars['ID'];
-  type?: Maybe<ProductType>;
-  books?: Maybe<BibleBook[]>;
-  mediums?: Maybe<ProductMedium[]>;
-  purposes?: Maybe<ProductPurpose[]>;
-  methodology?: Maybe<ProductMethodology>;
+  scriptureReferences?: Maybe<ScriptureRangeInput[]>;
 }
 
 export interface CreateStoryInput {
@@ -3724,7 +3817,7 @@ export interface CreateStoryInput {
 
 export interface CreateStory {
   name: Scalars['String'];
-  ranges?: Maybe<CreateRange[]>;
+  scriptureReferences?: Maybe<ScriptureRangeInput[]>;
 }
 
 export interface UpdateStoryInput {
@@ -3734,7 +3827,56 @@ export interface UpdateStoryInput {
 export interface UpdateStory {
   id: Scalars['ID'];
   name?: Maybe<Scalars['String']>;
-  ranges?: Maybe<UpdateRange[]>;
+  scriptureReferences?: Maybe<ScriptureRangeInput[]>;
+}
+
+export interface CreateProductInput {
+  product: CreateProduct;
+}
+
+export interface CreateProduct {
+  /** An ID of a `LanguageEngagement` to create this product for */
+  engagementId: Scalars['String'];
+  /**
+   * An ID of a `Producible` object, which will create a `DerivativeScriptureProduct`.
+   * If omitted a `DirectScriptureProduct` will be created instead.
+   */
+  produces?: Maybe<Scalars['ID']>;
+  mediums?: Maybe<ProductMedium[]>;
+  purposes?: Maybe<ProductPurpose[]>;
+  methodology?: Maybe<ProductMethodology>;
+}
+
+export interface UpdateProductInput {
+  product: UpdateProduct;
+}
+
+export interface UpdateProduct {
+  id: Scalars['ID'];
+  /**
+   * An ID of a `Producible` object to change.
+   *
+   * Note only `DerivativeScriptureProduct`s can use this field.
+   */
+  produces?: Maybe<Scalars['ID']>;
+  /**
+   * Change this list of `scriptureReferences` if provided.
+   *
+   * Note only `DirectScriptureProduct`s can use this field.
+   */
+  scriptureReferences?: Maybe<ScriptureRangeInput[]>;
+  /**
+   * The `Producible` defines a `scriptureReferences` list, and this is
+   * used by default in this product's `scriptureReferences` list.
+   * If this product _specifically_ needs to customize the references, then
+   * this property can be set (and read) to "override" the `producible`'s list.
+   *
+   * Note only `DerivativeScriptureProduct`s can use this field.
+   */
+  scriptureReferencesOverride?: Maybe<ScriptureRangeInput[]>;
+  mediums?: Maybe<ProductMedium[]>;
+  purposes?: Maybe<ProductPurpose[]>;
+  methodology?: Maybe<ProductMethodology>;
 }
 
 export interface CreateLanguageEngagementInput {
@@ -3850,8 +3992,8 @@ export interface CreatePartnership {
   /** The MOU agreement */
   mou?: Maybe<CreateDefinedFileVersionInput>;
   mouStatus?: Maybe<PartnershipAgreementStatus>;
-  mouStart?: Maybe<Scalars['Date']>;
-  mouEnd?: Maybe<Scalars['Date']>;
+  mouStartOverride?: Maybe<Scalars['Date']>;
+  mouEndOverride?: Maybe<Scalars['Date']>;
   types?: Maybe<PartnershipType[]>;
 }
 
@@ -3867,8 +4009,8 @@ export interface UpdatePartnership {
   /** The MOU agreement */
   mou?: Maybe<CreateDefinedFileVersionInput>;
   mouStatus?: Maybe<PartnershipAgreementStatus>;
-  mouStart?: Maybe<Scalars['Date']>;
-  mouEnd?: Maybe<Scalars['Date']>;
+  mouStartOverride?: Maybe<Scalars['Date']>;
+  mouEndOverride?: Maybe<Scalars['Date']>;
   types?: Maybe<PartnershipType[]>;
 }
 
@@ -3934,6 +4076,25 @@ export interface AddFavoriteInput {
 
 export interface AddFavorite {
   baseNodeId: Scalars['String'];
+}
+
+export interface CreateSongInput {
+  song: CreateSong;
+}
+
+export interface CreateSong {
+  name: Scalars['String'];
+  scriptureReferences?: Maybe<ScriptureRangeInput[]>;
+}
+
+export interface UpdateSongInput {
+  song: UpdateSong;
+}
+
+export interface UpdateSong {
+  id: Scalars['ID'];
+  name?: Maybe<Scalars['String']>;
+  scriptureReferences?: Maybe<ScriptureRangeInput[]>;
 }
 
 export interface CreateWorkflowInput {
