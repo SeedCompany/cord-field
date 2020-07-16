@@ -1,4 +1,4 @@
-import { Decorator, FormApi, getIn, Unsubscribe } from 'final-form';
+import { FormApi, getIn, Unsubscribe } from 'final-form';
 
 // Updated type to use generic
 const get = getIn as <T>(state: T, complexKey: string) => any;
@@ -101,10 +101,9 @@ export function blurOnSubmit<T>(form: FormApi<T>): Unsubscribe {
  * value continues to match source field. This allows dest to be in sync until
  * it is changed by user.
  */
-export const matchFieldIfSame = <T>(
-  source: string,
-  dest: string
-): Decorator<T> => (form) => {
+export const matchFieldIfSame = (source: string, dest: string) => <T>(
+  form: FormApi<T>
+): Unsubscribe => {
   let prevInitialValues: T;
   let prevValues: T;
   return form.subscribe(
