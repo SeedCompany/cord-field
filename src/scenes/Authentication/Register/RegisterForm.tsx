@@ -81,6 +81,7 @@ export const RegisterForm = ({ className, ...props }: RegisterFormProps) => {
                     required
                     validate={[required, minLength()]}
                     margin="none"
+                    autoComplete="given-name"
                   />
                 </Grid>
                 <Grid item xs={12} md={6}>
@@ -91,6 +92,7 @@ export const RegisterForm = ({ className, ...props }: RegisterFormProps) => {
                     required
                     validate={[required, minLength()]}
                     margin="none"
+                    autoComplete="family-name"
                   />
                 </Grid>
                 <Grid item xs={12} md={6}>
@@ -101,6 +103,7 @@ export const RegisterForm = ({ className, ...props }: RegisterFormProps) => {
                     required
                     validate={[required, minLength()]}
                     margin="none"
+                    autoComplete="given-name"
                   />
                 </Grid>
                 <Grid item xs={12} md={6}>
@@ -111,19 +114,25 @@ export const RegisterForm = ({ className, ...props }: RegisterFormProps) => {
                     required
                     validate={[required, minLength()]}
                     margin="none"
+                    autoComplete="family-name"
                   />
                 </Grid>
                 <Grid item xs={12}>
-                  <EmailField caseSensitive margin="none" />
+                  <EmailField
+                    caseSensitive
+                    autoComplete="email"
+                    margin="none"
+                  />
                 </Grid>
                 <Grid item xs={12} md={6}>
-                  <PasswordField margin="none" />
+                  <PasswordField autoComplete="new-password" margin="none" />
                 </Grid>
                 <Grid item xs={12} md={6}>
                   <PasswordField
                     name="confirmPassword"
                     label="Re-Type Password"
                     placeholder="Re-Enter Your Password"
+                    autoComplete="new-password"
                     margin="none"
                   />
                 </Grid>

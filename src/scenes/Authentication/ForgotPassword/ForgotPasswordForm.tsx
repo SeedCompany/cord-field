@@ -47,7 +47,7 @@ export const ForgotPasswordForm = ({
         {({ handleSubmit }) => (
           <form onSubmit={handleSubmit}>
             <SubmitError className={classes.formError} />
-            <EmailField autoFocus />
+            <EmailField autoFocus autoComplete="email" />
             <SubmitButton className={classes.submit}>
               Reset Password
             </SubmitButton>

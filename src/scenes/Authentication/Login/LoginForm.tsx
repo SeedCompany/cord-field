@@ -98,8 +98,8 @@ export const LoginForm = ({ className, ...props }: LoginFormProps) => {
           {({ handleSubmit }) => (
             <form onSubmit={handleSubmit}>
               <SubmitError className={classes.formError} />
-              <EmailField autoFocus />
-              <PasswordField />
+              <EmailField autoFocus autoComplete="email" />
+              <PasswordField autoComplete="current-password" />
               <SubmitButton className={classes.submit}>Sign In</SubmitButton>
             </form>
           )}
