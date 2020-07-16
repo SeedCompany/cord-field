@@ -1,3 +1,4 @@
+import { Box } from '@material-ui/core';
 import { select, text } from '@storybook/addon-knobs';
 import { DateTime } from 'luxon';
 import React from 'react';
@@ -34,5 +35,9 @@ export const FileVersionItem = () => {
     downloadUrl: '',
     type: 'FileVersion' as const,
   };
-  return <FVI version={version} />;
+  return (
+    <Box width="40%">
+      <FVI version={version} />
+    </Box>
+  );
 };
