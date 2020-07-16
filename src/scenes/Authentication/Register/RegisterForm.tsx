@@ -40,12 +40,12 @@ const useStyles = makeStyles(({ spacing }) => ({
   },
 }));
 
-interface RegisterInputFields extends RegisterInput {
+interface RegisterFields extends RegisterInput {
   confirmPassword: string;
 }
 
 export type RegisterFormProps = Pick<
-  FormProps<RegisterInputFields>,
+  FormProps<RegisterFields>,
   'onSubmit' | 'initialValues'
 > & { className?: string };
 
@@ -123,7 +123,7 @@ const passwordMatching = ({
   password,
   confirmPassword,
   ..._otherVals
-}: RegisterInputFields) => {
+}: RegisterFields) => {
   return password && confirmPassword && password !== confirmPassword
     ? {
         password: 'Passwords must match',
@@ -132,7 +132,7 @@ const passwordMatching = ({
     : undefined;
 };
 
-const showMatchingErrorsImmediately: Decorator<RegisterInputFields> = (form) =>
+const showMatchingErrorsImmediately: Decorator<RegisterFields> = (form) =>
   form.subscribe(
     ({ active, values }) => {
       if (active === 'confirmPassword' && values.confirmPassword) {
@@ -142,10 +142,7 @@ const showMatchingErrorsImmediately: Decorator<RegisterInputFields> = (form) =>
     { active: true, values: true }
   );
 
-const markConfirmPasswordTouched: Mutator<RegisterInputFields> = (
-  args,
-  state
-) => {
+const markConfirmPasswordTouched: Mutator<RegisterFields> = (args, state) => {
   state.fields.confirmPassword.touched = true;
 };
 
