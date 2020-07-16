@@ -1,5 +1,4 @@
 import { Grid } from '@material-ui/core';
-import { Decorator } from 'final-form';
 import { memoize } from 'lodash';
 import React from 'react';
 import {
@@ -39,7 +38,7 @@ export const UserForm = <T extends any>({
     }}
     onlyDirtySubmit
     {...rest}
-    decorators={decorators(prefix) as Array<Decorator<T>>}
+    decorators={decorators(prefix)}
   >
     <SubmitError />
     <FieldGroup prefix={prefix}>

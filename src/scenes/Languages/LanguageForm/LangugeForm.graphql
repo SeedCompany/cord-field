@@ -1,0 +1,58 @@
+fragment LanguageForm on Language {
+  id
+  name {
+    ...ss
+  }
+  displayName {
+    ...ss
+  }
+  displayNamePronunciation {
+    ...ss
+  }
+  isDialect {
+    value
+    canRead
+    canEdit
+  }
+  ethnologue {
+    id {
+      ...ss
+    }
+    name {
+      ...ss
+    }
+    code {
+      ...ss
+    }
+    provisionalCode {
+      ...ss
+    }
+    population {
+      value
+      canRead
+      canEdit
+    }
+  }
+  populationOverride {
+    value
+    canRead
+    canEdit
+  }
+  registryOfDialectsCode {
+    ...ss
+  }
+  leastOfThese {
+    value
+    canRead
+    canEdit
+  }
+  leastOfTheseReason {
+    ...ss
+  }
+}
+
+fragment ss on SecuredString {
+  value
+  canRead
+  canEdit
+}
