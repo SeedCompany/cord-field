@@ -70,7 +70,7 @@ export const CheckboxField: FC<CheckboxFieldProps> = ({
         }
       />
       <FormHelperText>
-        {getHelperText(meta, helperText, undefined, keepHelperTextSpacing)}
+        {getHelperText(meta, helperText, undefined, !keepHelperTextSpacing)}
       </FormHelperText>
     </FormControl>
   );
