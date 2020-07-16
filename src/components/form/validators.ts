@@ -42,9 +42,3 @@ export const minLength = (min = 2) => (value: string) =>
   !value || value.length >= min
     ? undefined
     : `Must be ${min} or more characters`;
-
-export const numberString = (val: string) =>
-  !val || /^\d+$/.test(val) ? undefined : 'Must only contain numbers';
-
-export const charString = (val: string) =>
-  !val || /^[a-zA-Z]+$/.test(val) ? undefined : 'Must only contain characters';

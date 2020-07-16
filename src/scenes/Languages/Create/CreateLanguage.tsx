@@ -6,11 +6,11 @@ import { ButtonLink } from '../../../components/Routing';
 import { LanguageForm, LanguageFormProps } from '../LanguageForm';
 import { useCreateLanguageMutation } from './CreateLanguage.generated';
 
-export type CreateUserProps = Except<
+export type CreateLanguageProps = Except<
   LanguageFormProps<CreateLanguageInput>,
-  'prefix' | 'onSubmit'
+  'onSubmit'
 >;
-export const CreateLanguage = (props: CreateUserProps) => {
+export const CreateLanguage = (props: CreateLanguageProps) => {
   const [createLang] = useCreateLanguageMutation();
   const { enqueueSnackbar } = useSnackbar();
 
@@ -18,7 +18,6 @@ export const CreateLanguage = (props: CreateUserProps) => {
     <LanguageForm<CreateLanguageInput>
       title="Create Language"
       {...props}
-      prefix="language"
       onSubmit={async (input) => {
         const res = await createLang({
           variables: { input },

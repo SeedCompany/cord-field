@@ -1,157 +1,236 @@
-import { Grid, Typography } from '@material-ui/core';
-import { memoize } from 'lodash';
+import { Grid, makeStyles, Typography } from '@material-ui/core';
 import React from 'react';
 import {
   DialogForm,
   DialogFormProps,
 } from '../../../components/Dialog/DialogForm';
 import {
+  blurOnSubmit,
   CheckboxField,
   FieldGroup,
+  focusFirstFieldWithSubmitError,
+  FormattedTextField,
+  FormattedTextFieldProps,
   matchFieldIfSame,
+  NumberField,
   SecuredField,
   SubmitError,
   TextField,
 } from '../../../components/form';
-import { NumberField } from '../../../components/form/NumberField';
-import {
-  charString,
-  minLength,
-  numberString,
-} from '../../../components/form/validators';
+import { minLength, required } from '../../../components/form/validators';
 import { LanguageFormFragment } from './LangugeForm.generated';
 
 export type LanguageFormProps<T> = DialogFormProps<T> & {
   /** The pre-existing language to edit */
   language?: LanguageFormFragment;
-  prefix: string;
 };
 
-const decorators = memoize((prefix: string) => [
-  matchFieldIfSame(`${prefix}.name`, `${prefix}.displayName`),
-]);
+const useStyles = makeStyles(() => ({
+  content: {
+    overflow: 'hidden', // prevent scroll bars from negative margins of Grid
+  },
+}));
+
+const decorators = [
+  focusFirstFieldWithSubmitError,
+  blurOnSubmit,
+  matchFieldIfSame(`language.name`, `language.displayName`),
+];
 
 export const LanguageForm = <T extends any>({
   language,
-  prefix,
   ...rest
-}: LanguageFormProps<T>) => (
-  <DialogForm<T>
-    DialogProps={{
-      fullWidth: true,
-      maxWidth: 'sm',
-    }}
-    onlyDirtySubmit
-    {...rest}
-    decorators={decorators(prefix)}
-  >
-    <SubmitError />
-    <FieldGroup prefix={prefix}>
-      <Grid container spacing={2}>
-        <Grid item xs>
-          <SecuredField obj={language} name="name">
-            {(props) => (
-              <TextField
-                label="Language Name"
-                placeholder="Enter Language Name"
-                required
-                validate={minLength(2)}
-                {...props}
-              />
-            )}
-          </SecuredField>
-        </Grid>
-        <Grid item xs>
-          <SecuredField obj={language} name="displayName">
-            {(props) => (
-              <TextField
-                label="Public Name"
-                placeholder="Enter Public Name"
-                required
-                validate={minLength(2)}
-                {...props}
-              />
-            )}
-          </SecuredField>
-        </Grid>
-      </Grid>
-      <SecuredField obj={language} name="registryOfDialectsCode">
-        {(props) => (
-          <TextField
-            label="Registry Of Dialects Code"
-            placeholder="Registry Of Dialects Code"
-            validate={[minLength(5), numberString]}
-            {...props}
-          />
-        )}
-      </SecuredField>
-      <SecuredField obj={language} name="displayNamePronunciation">
-        {(props) => (
-          <TextField
-            label="Pronounciation"
-            placeholder="Enter Pronounciation"
-            validate={minLength(2)}
-            {...props}
-          />
-        )}
-      </SecuredField>
-      <Typography>Ethnologue</Typography>
-      <FieldGroup prefix="ethnologue">
-        <Grid container spacing={2}>
-          <Grid item xs={6}>
-            <SecuredField obj={language?.ethnologue} name="name">
+}: LanguageFormProps<T>) => {
+  const classes = useStyles();
+
+  return (
+    <DialogForm<T>
+      DialogProps={{
+        fullWidth: true,
+        maxWidth: 'lg',
+      }}
+      onlyDirtySubmit
+      {...rest}
+      decorators={decorators}
+    >
+      <FieldGroup prefix="language">
+        <Grid container spacing={3} className={classes.content}>
+          <Grid item xs={12}>
+            <SubmitError align="left" />
+          </Grid>
+          <Grid item md={6}>
+            <Typography variant="h4" gutterBottom>
+              Info
+            </Typography>
+            <Grid container spacing={2}>
+              <Grid item xs={12} sm={6}>
+                <SecuredField obj={language} name="name">
+                  {(props) => (
+                    <TextField
+                      label="Name"
+                      placeholder="Enter Name"
+                      required
+                      validate={[required, minLength(2)]}
+                      margin="none"
+                      {...props}
+                    />
+                  )}
+                </SecuredField>
+              </Grid>
+              <Grid item xs={12} sm={6}>
+                <SecuredField obj={language} name="displayName">
+                  {(props) => (
+                    <TextField
+                      label="Public Name"
+                      placeholder="Enter Public Name"
+                      required
+                      validate={[required, minLength(2)]}
+                      margin="none"
+                      {...props}
+                    />
+                  )}
+                </SecuredField>
+              </Grid>
+              <Grid item xs={12}>
+                <SecuredField obj={language} name="displayNamePronunciation">
+                  {(props) => (
+                    <TextField
+                      label="Pronunciation"
+                      placeholder="Enter Pronunciation of Public Name"
+                      margin="none"
+                      {...props}
+                    />
+                  )}
+                </SecuredField>
+              </Grid>
+              <Grid item xs={12} sm={6}>
+                <SecuredField obj={language} name="registryOfDialectsCode">
+                  {(props) => (
+                    <FormattedTextField
+                      label="Registry Of Dialects Code"
+                      placeholder="#####"
+                      accept={/\d/g}
+                      formatInput={(value) =>
+                        (value.match(/[\d]+/g) || []).join('').substr(0, 5)
+                      }
+                      validate={(value) =>
+                        !value || value.length === 5
+                          ? undefined
+                          : `Must be 5 digits`
+                      }
+                      margin="none"
+                      {...props}
+                    />
+                  )}
+                </SecuredField>
+              </Grid>
+              <Grid item xs={12} sm={6}>
+                <SecuredField obj={language} name="populationOverride">
+                  {(props) => (
+                    <NumberField
+                      label="Population"
+                      placeholder="Enter Population"
+                      helperText="Leave blank to use population from Ethnologue"
+                      margin="none"
+                      {...props}
+                    />
+                  )}
+                </SecuredField>
+              </Grid>
+            </Grid>
+          </Grid>
+          <Grid item md={6}>
+            <Typography variant="h4" gutterBottom>
+              Ethnologue
+            </Typography>
+            <FieldGroup prefix="ethnologue">
+              <Grid container spacing={2}>
+                <Grid item xs={12} sm={6}>
+                  <SecuredField obj={language?.ethnologue} name="name">
+                    {(props) => (
+                      <TextField
+                        label="Ethnologue Name"
+                        placeholder="Enter Ethnologue Name"
+                        validate={minLength(2)}
+                        margin="none"
+                        {...props}
+                      />
+                    )}
+                  </SecuredField>
+                </Grid>
+                <Grid item xs={12} sm={6}>
+                  <SecuredField obj={language?.ethnologue} name="id">
+                    {(props) => (
+                      <TextField
+                        label="Ethnologue ID"
+                        placeholder="Enter Ethnologue ID"
+                        validate={minLength(2)}
+                        margin="none"
+                        {...props}
+                      />
+                    )}
+                  </SecuredField>
+                </Grid>
+                <Grid item xs={12} sm={6}>
+                  <SecuredField obj={language?.ethnologue} name="code">
+                    {(props) => (
+                      <EthnologueCodeField
+                        label="Ethnologue Code"
+                        placeholder="Enter Ethnologue Code"
+                        margin="none"
+                        {...props}
+                      />
+                    )}
+                  </SecuredField>
+                </Grid>
+                <Grid item xs={12} sm={6}>
+                  <SecuredField
+                    obj={language?.ethnologue}
+                    name="provisionalCode"
+                  >
+                    {(props) => (
+                      <EthnologueCodeField
+                        label="Provisional Code"
+                        placeholder="Enter Provisional Code"
+                        margin="none"
+                        {...props}
+                      />
+                    )}
+                  </SecuredField>
+                </Grid>
+                <Grid item xs={12} sm={6}>
+                  <SecuredField obj={language?.ethnologue} name="population">
+                    {(props) => (
+                      <NumberField
+                        label="Ethnologue Population"
+                        placeholder="Enter Ethnologue Population"
+                        margin="none"
+                        {...props}
+                      />
+                    )}
+                  </SecuredField>
+                </Grid>
+              </Grid>
+            </FieldGroup>
+          </Grid>
+          <Grid item>
+            <Typography variant="h4">Least of These</Typography>
+            <SecuredField obj={language} name="leastOfThese">
               {(props) => (
-                <TextField
-                  label="Ethnologue Name"
-                  placeholder="Ethnologue Name"
-                  validate={minLength(2)}
+                <CheckboxField
+                  label="Is this a Least of These partnership?"
                   {...props}
                 />
               )}
             </SecuredField>
-          </Grid>
-          <Grid item xs={6}>
-            <SecuredField obj={language?.ethnologue} name="id">
+            <SecuredField obj={language} name="leastOfTheseReason">
               {(props) => (
                 <TextField
-                  label="Ethnologue ID"
-                  placeholder="Ethnologue ID"
-                  validate={minLength(2)}
-                  {...props}
-                />
-              )}
-            </SecuredField>
-          </Grid>
-          <Grid item xs={6}>
-            <SecuredField obj={language?.ethnologue} name="code">
-              {(props) => (
-                <TextField
-                  label="Ethnologue Code"
-                  placeholder="Ethnologue Code"
-                  validate={[minLength(3), charString]}
-                  {...props}
-                />
-              )}
-            </SecuredField>
-          </Grid>
-          <Grid item xs={6}>
-            <SecuredField obj={language?.ethnologue} name="provisionalCode">
-              {(props) => (
-                <TextField
-                  label="Provisional Code"
-                  placeholder="Provisional Code"
-                  validate={minLength(3)}
-                  {...props}
-                />
-              )}
-            </SecuredField>
-          </Grid>
-          <Grid item xs={6}>
-            <SecuredField obj={language?.ethnologue} name="population">
-              {(props) => (
-                <NumberField
-                  label="Ethnologue Population"
-                  placeholder="Ethnologue Population"
+                  label="Reasoning"
+                  multiline
+                  placeholder="Enter Reasoning"
+                  helperText="Why is this language a Least of These partnership?"
+                  inputProps={{ rowsMin: 2 }}
                   {...props}
                 />
               )}
@@ -159,30 +238,23 @@ export const LanguageForm = <T extends any>({
           </Grid>
         </Grid>
       </FieldGroup>
-      <SecuredField obj={language} name="populationOverride">
-        {(props) => (
-          <NumberField
-            label="Custom Population"
-            placeholder="Enter Custom Population (if different from Ethnologue population)"
-            {...props}
-          />
-        )}
-      </SecuredField>
-      <SecuredField obj={language} name="leastOfThese">
-        {(props) => <CheckboxField label="Least of Population" {...props} />}
-      </SecuredField>
-      <SecuredField obj={language} name="leastOfTheseReason">
-        {(props) => (
-          <TextField
-            label="Least of These Reason"
-            multiline
-            placeholder="Enter Least of These Reason"
-            inputProps={{ rowsMin: 2 }}
-            validate={minLength(2)}
-            {...props}
-          />
-        )}
-      </SecuredField>
-    </FieldGroup>
-  </DialogForm>
-);
+    </DialogForm>
+  );
+};
+
+// A 3-character lower-cased alpha string
+const EthnologueCodeField = (props: FormattedTextFieldProps) => {
+  return (
+    <FormattedTextField
+      accept={/[a-zA-Z]/g}
+      formatInput={(value) =>
+        (value.match(/[a-zA-Z]+/g) || []).join('').substr(0, 3)
+      }
+      replace={(value) => value.toLowerCase()}
+      validate={(value) =>
+        !value || value.length === 3 ? undefined : `Must be 3 characters`
+      }
+      {...props}
+    />
+  );
+};
