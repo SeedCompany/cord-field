@@ -5,6 +5,8 @@ import gql from 'graphql-tag';
 import * as Types from '../../../api/schema.generated';
 import { UserDetailsFragment } from '../Detail/UserDetail.generated';
 import { UserDetailsFragmentDoc } from '../Detail/UserDetail.generated';
+import { UserFormFragment } from '../UserForm/UserForm.generated';
+import { UserFormFragmentDoc } from '../UserForm/UserForm.generated';
 
 export interface UpdateUserMutationVariables {
   input: Types.UpdateUserInput;
@@ -12,7 +14,7 @@ export interface UpdateUserMutationVariables {
 
 export type UpdateUserMutation = { __typename?: 'Mutation' } & {
   updateUser: { __typename?: 'UpdateUserOutput' } & {
-    user: { __typename?: 'User' } & UserDetailsFragment;
+    user: { __typename?: 'User' } & UserDetailsFragment & UserFormFragment;
   };
 };
 
@@ -21,10 +23,12 @@ export const UpdateUserDocument = gql`
     updateUser(input: $input) {
       user {
         ...userDetails
+        ...UserForm
       }
     }
   }
   ${UserDetailsFragmentDoc}
+  ${UserFormFragmentDoc}
 `;
 export type UpdateUserMutationFn = ApolloReactCommon.MutationFunction<
   UpdateUserMutation,
