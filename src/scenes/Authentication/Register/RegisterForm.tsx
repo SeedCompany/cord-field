@@ -1,4 +1,4 @@
-import { makeStyles, Typography } from '@material-ui/core';
+import { Grid, makeStyles, Typography } from '@material-ui/core';
 import { Decorator, Mutator } from 'final-form';
 import React from 'react';
 import { Form, FormProps } from 'react-final-form';
@@ -72,41 +72,62 @@ export const RegisterForm = ({ className, ...props }: RegisterFormProps) => {
           {({ handleSubmit }) => (
             <form onSubmit={handleSubmit}>
               <SubmitError className={classes.formError} />
-              <TextField
-                name="realFirstName"
-                label="First Name"
-                placeholder="Enter First Name"
-                required
-                validate={[required, minLength()]}
-              />
-              <TextField
-                name="realLastName"
-                label="Last Name"
-                placeholder="Enter Last Name"
-                required
-                validate={[required, minLength()]}
-              />
-              <TextField
-                name="displayFirstName"
-                label="Public First Name"
-                placeholder="Enter Public First Name"
-                required
-                validate={[required, minLength()]}
-              />
-              <TextField
-                name="displayLastName"
-                label="Public Last Name"
-                placeholder="Enter Public Last Name"
-                required
-                validate={[required, minLength()]}
-              />
-              <EmailField caseSensitive />
-              <PasswordField />
-              <PasswordField
-                name="confirmPassword"
-                label="Re-Type Password"
-                placeholder="Re-Enter Your Password"
-              />
+              <Grid container spacing={2}>
+                <Grid item xs={12} md={6}>
+                  <TextField
+                    name="realFirstName"
+                    label="First Name"
+                    placeholder="Enter First Name"
+                    required
+                    validate={[required, minLength()]}
+                    margin="none"
+                  />
+                </Grid>
+                <Grid item xs={12} md={6}>
+                  <TextField
+                    name="realLastName"
+                    label="Last Name"
+                    placeholder="Enter Last Name"
+                    required
+                    validate={[required, minLength()]}
+                    margin="none"
+                  />
+                </Grid>
+                <Grid item xs={12} md={6}>
+                  <TextField
+                    name="displayFirstName"
+                    label="Public First Name"
+                    placeholder="Enter Public First Name"
+                    required
+                    validate={[required, minLength()]}
+                    margin="none"
+                  />
+                </Grid>
+                <Grid item xs={12} md={6}>
+                  <TextField
+                    name="displayLastName"
+                    label="Public Last Name"
+                    placeholder="Enter Public Last Name"
+                    required
+                    validate={[required, minLength()]}
+                    margin="none"
+                  />
+                </Grid>
+                <Grid item xs={12}>
+                  <EmailField caseSensitive margin="none" />
+                </Grid>
+                <Grid item xs={12} md={6}>
+                  <PasswordField margin="none" />
+                </Grid>
+                <Grid item xs={12} md={6}>
+                  <PasswordField
+                    name="confirmPassword"
+                    label="Re-Type Password"
+                    placeholder="Re-Enter Your Password"
+                    margin="none"
+                  />
+                </Grid>
+              </Grid>
               <SubmitButton className={classes.submit}>Sign Up</SubmitButton>
             </form>
           )}
