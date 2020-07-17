@@ -6,7 +6,7 @@ import { useUpdateLanguageMutation } from './EditLanguage.generated';
 
 export type EditLanguageProps = Except<
   LanguageFormProps<UpdateLanguageInput>,
-  'prefix' | 'onSubmit' | 'initialValues'
+  'onSubmit' | 'initialValues'
 >;
 
 export const EditLanguage = (props: EditLanguageProps) => {
@@ -17,7 +17,6 @@ export const EditLanguage = (props: EditLanguageProps) => {
     <LanguageForm<UpdateLanguageInput>
       title="Edit Language"
       {...props}
-      prefix="language"
       initialValues={
         language
           ? {
@@ -43,8 +42,8 @@ export const EditLanguage = (props: EditLanguageProps) => {
             }
           : undefined
       }
-      onSubmit={(input) => {
-        updateLanguage({
+      onSubmit={async (input) => {
+        await updateLanguage({
           variables: { input },
         });
       }}
