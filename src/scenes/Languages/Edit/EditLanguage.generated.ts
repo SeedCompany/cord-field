@@ -5,6 +5,8 @@ import gql from 'graphql-tag';
 import * as Types from '../../../api/schema.generated';
 import { LanguageDetailFragment } from '../Detail/LanguageDetail.generated';
 import { LanguageDetailFragmentDoc } from '../Detail/LanguageDetail.generated';
+import { LanguageFormFragment } from '../LanguageForm/LangugeForm.generated';
+import { LanguageFormFragmentDoc } from '../LanguageForm/LangugeForm.generated';
 
 export interface UpdateLanguageMutationVariables {
   input: Types.UpdateLanguageInput;
@@ -12,7 +14,8 @@ export interface UpdateLanguageMutationVariables {
 
 export type UpdateLanguageMutation = { __typename?: 'Mutation' } & {
   updateLanguage: { __typename?: 'UpdateLanguageOutput' } & {
-    language: { __typename?: 'Language' } & LanguageDetailFragment;
+    language: { __typename?: 'Language' } & LanguageDetailFragment &
+      LanguageFormFragment;
   };
 };
 
@@ -21,10 +24,12 @@ export const UpdateLanguageDocument = gql`
     updateLanguage(input: $input) {
       language {
         ...LanguageDetail
+        ...LanguageForm
       }
     }
   }
   ${LanguageDetailFragmentDoc}
+  ${LanguageFormFragmentDoc}
 `;
 export type UpdateLanguageMutationFn = ApolloReactCommon.MutationFunction<
   UpdateLanguageMutation,

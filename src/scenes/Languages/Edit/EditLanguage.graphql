@@ -2,6 +2,7 @@ mutation UpdateLanguage($input: UpdateLanguageInput!) {
   updateLanguage(input: $input) {
     language {
       ...LanguageDetail
+      ...LanguageForm
     }
   }
 }
