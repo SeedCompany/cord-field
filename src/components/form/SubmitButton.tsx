@@ -1,6 +1,6 @@
-import { FORM_ERROR } from 'final-form';
-import { difference } from 'lodash';
-import { FC } from 'react';
+import { FORM_ERROR, setIn } from 'final-form';
+import { cloneDeep, omit } from 'lodash';
+import { FC, useMemo } from 'react';
 import * as React from 'react';
 import { useForm, useFormState } from 'react-final-form';
 import { ProgressButton, ProgressButtonProps } from '../ProgressButton';
@@ -61,11 +61,29 @@ export const SubmitButton: FC<SubmitButtonProps> = ({
   // Ignore FORM_ERROR since it doesn't count as it doesn't go to a field.
   // We'll assume that the form _can_ be re-submitted with these errors.
   // It could be a server error, connection error, etc.
-  const { [FORM_ERROR]: _, ...fieldSubmitErrors } = submitErrors ?? {};
+  const fieldSubmitErrors = useMemo(
+    () => omit(submitErrors ?? {}, FORM_ERROR),
+    [submitErrors]
+  );
 
   const allFieldsTouched = touched
     ? Object.values(touched).every((field) => field)
     : false;
+
+  const allFieldsWithSubmitErrorsAreDirty = useMemo(() => {
+    if (!submitErrors || Object.keys(fieldSubmitErrors).length === 0) {
+      return true;
+    }
+    const unchangedSubmitErrors = Object.keys(
+      dirtyFieldsSinceLastSubmit
+    ).reduce((remaining: object | undefined, field) => {
+      return remaining ? setIn(remaining, field, undefined) : undefined;
+    }, cloneDeep(fieldSubmitErrors));
+    return (
+      !unchangedSubmitErrors || Object.keys(unchangedSubmitErrors).length === 0
+    );
+  }, [submitErrors, fieldSubmitErrors, dirtyFieldsSinceLastSubmit]);
+
   return (
     <ProgressButton
       color="error"
@@ -90,11 +108,7 @@ export const SubmitButton: FC<SubmitButtonProps> = ({
         (allFieldsTouched && hasValidationErrors) ||
         // disable if there are submit/server errors for specific fields
         // and they have not been changed since last submit
-        (submitErrors &&
-          difference(
-            Object.keys(fieldSubmitErrors),
-            Object.keys(dirtyFieldsSinceLastSubmit)
-          ).length > 0)
+        !allFieldsWithSubmitErrorsAreDirty
       }
       progress={spinner && submitting && values.submitAction === action}
     >
