@@ -1,5 +1,5 @@
 import { ApolloError } from '@apollo/client';
-import { FORM_ERROR, SubmissionErrors } from 'final-form';
+import { FORM_ERROR, setIn, SubmissionErrors } from 'final-form';
 import { mapValues } from 'lodash';
 import { Promisable } from 'type-fest';
 
@@ -108,9 +108,15 @@ export type ErrorHandler<E> =
 
 export type ErrorHandlerResult = string | SubmissionErrors | undefined;
 
+const expandDotNotation = (input: Record<string, any>) =>
+  Object.entries(input).reduce(
+    (out, [key, value]) => setIn(out, key, value),
+    {}
+  );
+
 // We'll just use the first human error string for each field
 export const renderValidationErrors = (e: ValidationError) =>
-  mapValues(e.errors, (er) => Object.values(er)[0]);
+  expandDotNotation(mapValues(e.errors, (er) => Object.values(er)[0]));
 
 /**
  * These are the default handles which are used as fallbacks
@@ -120,8 +126,8 @@ export const renderValidationErrors = (e: ValidationError) =>
  */
 const defaultHandlers: ErrorHandlers = {
   Validation: renderValidationErrors,
-  Input: (e) => (e.field ? { [e.field]: e.message } : e.message),
-  Duplicate: (e) => ({ [e.field]: e.message }),
+  Input: (e) => (e.field ? setIn({}, e.field, e.message) : e.message),
+  Duplicate: (e) => setIn({}, e.field, e.message),
 
   // Assume server errors are handled separately
   // Return failure but no error message

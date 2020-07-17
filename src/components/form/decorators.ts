@@ -1,47 +1,72 @@
-import { FormApi, getIn, Unsubscribe } from 'final-form';
+import { FormApi, FormState, getIn, Unsubscribe } from 'final-form';
+import { noop } from 'ts-essentials';
 
 // Updated type to use generic
-const get = getIn as <T>(state: T, complexKey: string) => any;
+const get = getIn as <T, K>(state: T, complexKey: K) => any;
 
 /**
  * Focuses the first field to have a submit error.
  * Be sure to use blurOnSubmit decorator with this one.
  */
-export function focusFirstFieldWithSubmitError<T>(
-  form: FormApi<T>
+export function focusFirstFieldWithSubmitError<T, I>(
+  form: FormApi<T, I>
 ): Unsubscribe {
-  let wasSubmitting = false;
-  return form.subscribe(
-    ({ submitting, submitFailed, submitErrors }) => {
-      if (wasSubmitting && !submitting && submitFailed) {
-        wasSubmitting = false;
-        for (const field of form.getRegisteredFields()) {
-          if (submitErrors?.[field]) {
-            form.focus(field);
-            break;
-          }
-        }
-      }
-      if (submitting) {
-        wasSubmitting = true;
-      }
+  const originalSubmit = form.submit;
+
+  let state: Partial<Pick<FormState<T, I>, 'errors' | 'submitErrors'>> = {};
+  const unsubscribe = form.subscribe(
+    (next) => {
+      state = next;
     },
     {
-      submitting: true,
-      submitFailed: true,
+      errors: true,
       submitErrors: true,
     }
   );
+
+  const afterSubmit = () => {
+    if (state.errors && Object.keys(state.errors).length) {
+      for (const field of form.getRegisteredFields() as Array<keyof T>) {
+        const err = get(state.errors, field);
+        if (err) {
+          form.focus(field);
+          break;
+        }
+      }
+    } else if (state.submitErrors && Object.keys(state.submitErrors).length) {
+      for (const field of form.getRegisteredFields() as Array<keyof T>) {
+        const err = get(state.submitErrors, field);
+        if (err) {
+          form.focus(field);
+          break;
+        }
+      }
+    }
+  };
+
+  form.submit = () => {
+    const result = originalSubmit.call(form);
+    if (result && typeof result.then === 'function') {
+      result.then(afterSubmit, noop);
+    } else {
+      afterSubmit();
+    }
+    return result;
+  };
+  return () => {
+    unsubscribe();
+    form.submit = originalSubmit;
+  };
 }
 
 /**
  * Focuses the last active field after a submit error.
  * Be sure to use blurOnSubmit decorator with this one.
  */
-export function focusLastActiveFieldOnSubmitError<T>(
-  form: FormApi<T>
+export function focusLastActiveFieldOnSubmitError<T, I>(
+  form: FormApi<T, I>
 ): Unsubscribe {
-  let lastActive: string | undefined;
+  let lastActive: keyof T | undefined;
   let wasSubmitting = false;
   return form.subscribe(
     ({ active, submitting, submitFailed }) => {
@@ -82,7 +107,7 @@ export function focusLastActiveFieldOnSubmitError<T>(
  * the submit button, triggers the field to blur which informs FF to remove
  * the active property.
  */
-export function blurOnSubmit<T>(form: FormApi<T>): Unsubscribe {
+export function blurOnSubmit<T, I>(form: FormApi<T, I>): Unsubscribe {
   return form.subscribe(
     ({ submitting, active }) => {
       if (submitting && active) {
@@ -101,15 +126,15 @@ export function blurOnSubmit<T>(form: FormApi<T>): Unsubscribe {
  * value continues to match source field. This allows dest to be in sync until
  * it is changed by user.
  */
-export const matchFieldIfSame = (source: string, dest: string) => <T>(
-  form: FormApi<T>
+export const matchFieldIfSame = (source: string, dest: string) => <T, I>(
+  form: FormApi<T, I>
 ): Unsubscribe => {
-  let prevInitialValues: T;
+  let prevInitialValues: object;
   let prevValues: T;
   return form.subscribe(
     ({ initialValues, values, active }) => {
       if (!prevValues || prevInitialValues !== initialValues) {
-        prevValues = initialValues;
+        prevValues = initialValues as T;
       }
       prevInitialValues = initialValues;
       if (active === source) {
@@ -117,7 +142,7 @@ export const matchFieldIfSame = (source: string, dest: string) => <T>(
         const prevDest = get(prevValues, dest);
         const newA = get(values, source);
         if (prevSrc !== newA && prevDest === prevSrc) {
-          form.change(dest, newA);
+          form.change(dest as keyof T, newA);
         }
       }
       prevValues = values;
