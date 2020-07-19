@@ -47,10 +47,16 @@ const useStyles = makeStyles(({ palette, spacing }) => ({
     justifyContent: 'space-between',
     alignItems: 'center',
     padding: spacing(1),
+    '&.collapsed': {
+      cursor: 'default',
+    },
   },
   title: {
     cursor: 'move',
     paddingLeft: spacing(1),
+    '&.collapsed': {
+      cursor: 'default',
+    },
   },
   titleButtons: {
     marginLeft: 'auto',
@@ -69,12 +75,24 @@ const useStyles = makeStyles(({ palette, spacing }) => ({
 
 const initialPosition = { x: null as null | number, y: null as null | number };
 
-const PaperComponent: FC<PaperProps> = ({ ...props }) => {
-  const [defaultPosition, setPosition] = useState({ x: 0, y: 0 });
+const PaperComponent: FC<PaperProps & { isCollapsed: boolean }> = ({
+  ...props
+}) => {
+  const [position, setPosition] = useState({ x: 0, y: 0 });
+  const [isDragging, setIsDragging] = useState(false);
   const paperRef = useRef<HTMLDivElement>(null);
   const positionRef = useRef(initialPosition);
+  const { isCollapsed, ...rest } = props;
 
   const { width: windowWidth, height: windowHeight } = useWindowSize();
+  const managerSize = {
+    width: (paperRef.current?.offsetWidth ?? 0) + 24,
+    height: (paperRef.current?.offsetHeight ?? 0) + 24,
+  };
+  const collapsedPosition = {
+    x: windowWidth - managerSize.width,
+    y: windowHeight - managerSize.height,
+  };
 
   const calculatePosition = useCallback(() => {
     const x =
@@ -91,20 +109,32 @@ const PaperComponent: FC<PaperProps> = ({ ...props }) => {
     setPosition({ x, y });
   }, [calculatePosition, setPosition]);
 
+  function handleDrag() {
+    setIsDragging(true);
+  }
+
   function handleDragStop(_: DraggableEvent, data: DraggableData) {
-    const { x, y } = data;
-    positionRef.current.x = x;
-    positionRef.current.y = y;
-    setPosition({ x, y });
+    const wasDragging = isDragging;
+    setIsDragging(false);
+    if (wasDragging) {
+      const { x, y } = data;
+      positionRef.current.x = x;
+      positionRef.current.y = y;
+      setPosition({ x, y });
+    }
   }
 
   return (
     <Draggable
+      bounds="parent"
+      cancel="#upload-manager-collapse-button, #upload-manager-close-button"
+      disabled={isCollapsed}
       handle="#draggable-dialog-title"
-      position={defaultPosition}
+      onDrag={handleDrag}
       onStop={handleDragStop}
+      position={isCollapsed ? collapsedPosition : position}
     >
-      <Paper ref={paperRef} {...props} />
+      <Paper ref={paperRef} {...rest} />
     </Draggable>
   );
 };
@@ -123,16 +153,21 @@ const DialogTitle: FC<DialogTitleProps> = (props) => {
   return (
     <MuiDialogTitle
       id={id}
-      className={classes.titleContainer}
+      className={clsx(classes.titleContainer, isCollapsed && 'collapsed')}
       disableTypography
     >
-      <Typography variant="body1" component="h6" className={classes.title}>
+      <Typography
+        variant="body1"
+        component="h6"
+        className={clsx(classes.title, isCollapsed && 'collapsed')}
+      >
         {children}
       </Typography>
       <div className={classes.titleButtons}>
         <IconButton
           aria-label="minimize"
           className={classes.titleButton}
+          id="upload-manager-collapse-button"
           onClick={onCollapseClick}
           size="small"
         >
@@ -141,6 +176,7 @@ const DialogTitle: FC<DialogTitleProps> = (props) => {
         <IconButton
           aria-label="close"
           className={classes.titleButton}
+          id="upload-manager-close-button"
           onClick={onClose}
           size="small"
         >
@@ -165,6 +201,7 @@ export const UploadManager: FC = memo((props) => {
 
   function handleCollapse(event: React.MouseEvent<HTMLButtonElement>) {
     event.stopPropagation();
+    console.log('Changing collapsed');
     setIsCollapsed((isCollapsed) => !isCollapsed);
   }
 
@@ -175,7 +212,9 @@ export const UploadManager: FC = memo((props) => {
       disableEscapeKeyDown
       hideBackdrop
       open={!!session && isManagerOpen}
-      PaperComponent={(props) => <PaperComponent {...props} />}
+      PaperComponent={(props) => (
+        <PaperComponent {...props} isCollapsed={isCollapsed} />
+      )}
       aria-labelledby="draggable-dialog-title"
     >
       <DialogTitle
