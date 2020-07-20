@@ -5,3 +5,9 @@ mutation CreateProduct($input: CreateProductInput!) {
     }
   }
 }
+
+query GetProjectBreadcrumb($input: ID!) {
+  project(id: $input) {
+    ...ProjectBreadcrumb
+  }
+}
