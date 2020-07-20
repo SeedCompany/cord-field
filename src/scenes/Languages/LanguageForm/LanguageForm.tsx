@@ -61,6 +61,7 @@ export const LanguageForm = <T extends any>({
           </Grid>
           {canReadAny(
             language,
+            true,
             'name',
             'displayName',
             'displayNamePronunciation',
@@ -151,6 +152,7 @@ export const LanguageForm = <T extends any>({
           )}
           {canReadAny(
             language?.ethnologue,
+            true,
             'name',
             'id',
             'code',
@@ -232,7 +234,7 @@ export const LanguageForm = <T extends any>({
               </FieldGroup>
             </Grid>
           )}
-          {canReadAny(language, 'leastOfThese', 'leastOfTheseReason') && (
+          {canReadAny(language, true, 'leastOfThese', 'leastOfTheseReason') && (
             <Grid item>
               <Typography variant="h4">Least of These</Typography>
               <SecuredField obj={language} name="leastOfThese">

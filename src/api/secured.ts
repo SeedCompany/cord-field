@@ -20,10 +20,11 @@ export const isSecured = <T>(value: unknown): value is Secured<T> =>
  */
 export const canReadAny = <T, K extends ConditionalKeys<T, Readable>>(
   obj: Nullable<T>,
+  defaultValue = false,
   ...keys: K[]
 ) => {
   if (!obj) {
-    return false;
+    return defaultValue;
   }
   if (keys.length === 0) {
     keys = (Object.keys(obj) as K[]).filter((key) => isSecured(obj[key]));
@@ -38,10 +39,11 @@ export const canReadAny = <T, K extends ConditionalKeys<T, Readable>>(
  */
 export const canEditAny = <T, K extends ConditionalKeys<T, Editable>>(
   obj: Nullable<T>,
+  defaultValue = false,
   ...keys: K[]
 ) => {
   if (!obj) {
-    return false;
+    return defaultValue;
   }
   if (keys.length === 0) {
     keys = (Object.keys(obj) as K[]).filter((key) => isSecured(obj[key]));
