@@ -1,5 +1,5 @@
-import { Grid, makeStyles, Typography } from '@material-ui/core';
-import { Edit } from '@material-ui/icons';
+import { Chip, Grid, makeStyles, Tooltip, Typography } from '@material-ui/core';
+import { Add, Edit } from '@material-ui/icons';
 import { Skeleton } from '@material-ui/lab';
 import clsx from 'clsx';
 import React from 'react';
@@ -11,13 +11,18 @@ import {
   DisplaySimplePropertyProps,
 } from '../../../components/DisplaySimpleProperty';
 import { Fab } from '../../../components/Fab';
-import { useDateTimeFormatter } from '../../../components/Formatters';
+import {
+  useDateTimeFormatter,
+  useNumberFormatter,
+} from '../../../components/Formatters';
 import { ProjectListItemCard } from '../../../components/ProjectListItemCard';
 import { Redacted } from '../../../components/Redacted';
+import { Sensitivity } from '../../../components/Sensitivity';
+import { listOrPlaceholders } from '../../../util';
 import { EditLanguage } from '../Edit';
 import { useLanguageQuery } from './LanguageDetail.generated';
 
-const useStyles = makeStyles(({ spacing, breakpoints }) => ({
+const useStyles = makeStyles(({ palette, spacing, breakpoints }) => ({
   root: {
     overflowY: 'scroll',
     padding: spacing(4),
@@ -36,6 +41,19 @@ const useStyles = makeStyles(({ spacing, breakpoints }) => ({
     flex: 1,
     display: 'flex',
   },
+  chip: {
+    background: palette.info.main,
+    color: palette.info.contrastText,
+  },
+  listHeader: {
+    marginBottom: spacing(1),
+  },
+  listItem: {
+    marginBottom: spacing(2),
+  },
+  hidden: {
+    visibility: 'hidden',
+  },
 }));
 
 export const LanguageDetail = () => {
@@ -45,20 +63,23 @@ export const LanguageDetail = () => {
     variables: { languageId },
   });
 
-  const [editLanguageDialogState, openEditLanguageDialog] = useDialog();
+  const [editState, edit] = useDialog();
 
   const language = data?.language;
+  const { ethnologue, locations, projects } = language ?? {};
 
-  const canEditAnyFields = !language
-    ? false
-    : Object.values(language).some((value) =>
-        isSecured(value) ? value.canEdit : false
-      ) &&
-      Object.values(language.ethnologue).some((value) =>
-        isSecured(value) ? value.canEdit : false
-      );
+  const canEditAnyFields =
+    !language || !ethnologue
+      ? false
+      : Object.values(language).some((value) =>
+          isSecured(value) ? value.canEdit : false
+        ) &&
+        Object.values(ethnologue).some((value) =>
+          isSecured(value) ? value.canEdit : false
+        );
 
-  const dateTimeFormatter = useDateTimeFormatter();
+  const formatDateTime = useDateTimeFormatter();
+  const formatNumber = useNumberFormatter();
 
   return (
     <main className={classes.root}>
@@ -81,40 +102,40 @@ export const LanguageDetail = () => {
               ) : (
                 (language.displayName.value || language.name.value) ?? (
                   <Redacted
-                    info="You don't have permission to view this person's name"
+                    info="You don't have permission to view this language's name"
                     width="100%"
                   />
                 )
               )}
             </Typography>
             {canEditAnyFields ? (
-              <Fab
-                color="primary"
-                aria-label="edit person"
-                onClick={openEditLanguageDialog}
-              >
+              <Fab color="primary" aria-label="edit language" onClick={edit}>
                 <Edit />
               </Fab>
             ) : null}
           </div>
+          <Grid container spacing={2}>
+            <Grid item>
+              <Sensitivity value={language?.sensitivity} loading={!language} />
+            </Grid>
+            {language?.isDialect.value && (
+              <Grid item>
+                <Chip label="Dialect" className={classes.chip} />
+              </Grid>
+            )}
+          </Grid>
           <DisplayProperty
-            label="Created At"
-            value={dateTimeFormatter(language?.createdAt)}
-            loading={!language}
-          />
-          <DisplayProperty
-            label="Pronounciation"
+            label="Pronunciation"
             value={language?.displayNamePronunciation.value}
             loading={!language}
           />
           <DisplayProperty
-            label="Is Dialect"
-            value={Boolean(language?.isDialect.value).toString()}
-            loading={!language}
-          />
-          <DisplayProperty
             label="Ethnologue Code"
-            value={language?.ethnologue.code.value}
+            value={
+              ethnologue?.code.value ?? ethnologue?.provisionalCode.value
+                ? `${ethnologue?.provisionalCode.value} (provisional)`
+                : null
+            }
             loading={!language}
           />
           <DisplayProperty
@@ -124,37 +145,99 @@ export const LanguageDetail = () => {
           />
           <DisplayProperty
             label="Population"
-            value={language?.population.value}
+            value={formatNumber(language?.population.value)}
             loading={!language}
           />
           <DisplayProperty
             label="Sponsor Date"
-            value={dateTimeFormatter(language?.sponsorDate.value)}
-            loading={!language}
-          />
-          <DisplayProperty
-            label="Sensitivity"
-            value={language?.sensitivity}
+            value={formatDateTime(language?.sponsorDate.value)}
             loading={!language}
           />
           <Grid container spacing={3}>
             <Grid item xs={6}>
-              <Typography variant="h4">
-                Locations List goes here when ready
-              </Typography>
+              <Grid
+                container
+                spacing={2}
+                alignItems="center"
+                className={classes.listHeader}
+              >
+                <Grid item>
+                  <Typography variant="h3">Locations</Typography>
+                </Grid>
+                <Grid item>
+                  <Tooltip title="Add location">
+                    <Fab
+                      color="error"
+                      aria-label="add location"
+                      className={
+                        locations?.canCreate === true
+                          ? undefined
+                          : classes.hidden
+                      }
+                    >
+                      <Add />
+                    </Fab>
+                  </Tooltip>
+                </Grid>
+              </Grid>
+              {locations?.items.length === 0 ? (
+                <Typography color="textSecondary">
+                  This language does not have any locations yet
+                </Typography>
+              ) : locations?.canRead === false ? (
+                <Typography color="textSecondary">
+                  You don't have permission to see this language's locations
+                </Typography>
+              ) : null}
             </Grid>
             <Grid item xs={6}>
-              <Typography variant="h4">
-                Projects List goes here when ready
-              </Typography>
-              {language?.projects.items.map((project) => (
-                <ProjectListItemCard project={project} />
+              <Grid
+                container
+                spacing={2}
+                alignItems="center"
+                className={classes.listHeader}
+              >
+                <Grid item>
+                  <Typography variant="h3">Projects</Typography>
+                </Grid>
+                <Grid item>
+                  <Tooltip title="Create project for this language">
+                    <Fab
+                      color="error"
+                      aria-label="create project for this language"
+                      className={
+                        projects?.canCreate === true
+                          ? undefined
+                          : classes.hidden
+                      }
+                    >
+                      <Add />
+                    </Fab>
+                  </Tooltip>
+                </Grid>
+              </Grid>
+              {listOrPlaceholders(projects?.items, 3).map((project, index) => (
+                <ProjectListItemCard
+                  key={project?.id ?? index}
+                  project={project}
+                  className={classes.listItem}
+                />
               ))}
+              {projects?.items.length === 0 ? (
+                <Typography color="textSecondary">
+                  This language is not engaged in any projects
+                </Typography>
+              ) : projects?.canRead === false ? (
+                <Typography color="textSecondary">
+                  You don't have permission to see the projects this language is
+                  engaged in
+                </Typography>
+              ) : null}
             </Grid>
           </Grid>
 
           {language ? (
-            <EditLanguage language={language} {...editLanguageDialogState} />
+            <EditLanguage language={language} {...editState} />
           ) : null}
         </>
       )}

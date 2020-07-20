@@ -58,11 +58,14 @@ fragment LanguageDetail on Language {
   }
   locations {
     canRead
+    canCreate
     items {
       ...DisplayLocation
     }
   }
   projects {
+    canRead
+    canCreate
     items {
       ...ProjectListItem
     }

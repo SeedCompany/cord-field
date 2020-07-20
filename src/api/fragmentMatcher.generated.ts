@@ -42,6 +42,7 @@ const result: PossibleTypesResultData = {
       'SecuredFile',
       'SecuredCeremony',
       'SecuredProjectStep',
+      'SecuredProjectList',
       'SecuredLanguage',
       'SecuredScriptureRanges',
       'SecuredProductMediums',

@@ -60,7 +60,7 @@ export type LanguageDetailFragment = { __typename?: 'Language' } & Pick<
     >;
     locations: { __typename?: 'SecuredLocationList' } & Pick<
       Types.SecuredLocationList,
-      'canRead'
+      'canRead' | 'canCreate'
     > & {
         items: Array<
           | ({ __typename?: 'Country' } & DisplayLocation_Country_Fragment)
@@ -68,16 +68,19 @@ export type LanguageDetailFragment = { __typename?: 'Language' } & Pick<
           | ({ __typename?: 'Zone' } & DisplayLocation_Zone_Fragment)
         >;
       };
-    projects: { __typename?: 'ProjectListOutput' } & {
-      items: Array<
-        | ({
-            __typename?: 'InternshipProject';
-          } & ProjectListItem_InternshipProject_Fragment)
-        | ({
-            __typename?: 'TranslationProject';
-          } & ProjectListItem_TranslationProject_Fragment)
-      >;
-    };
+    projects: { __typename?: 'SecuredProjectList' } & Pick<
+      Types.SecuredProjectList,
+      'canRead' | 'canCreate'
+    > & {
+        items: Array<
+          | ({
+              __typename?: 'TranslationProject';
+            } & ProjectListItem_TranslationProject_Fragment)
+          | ({
+              __typename?: 'InternshipProject';
+            } & ProjectListItem_InternshipProject_Fragment)
+        >;
+      };
   };
 
 export const LanguageDetailFragmentDoc = gql`
@@ -134,11 +137,14 @@ export const LanguageDetailFragmentDoc = gql`
     }
     locations {
       canRead
+      canCreate
       items {
         ...DisplayLocation
       }
     }
     projects {
+      canRead
+      canCreate
       items {
         ...ProjectListItem
       }
