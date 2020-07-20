@@ -22,6 +22,7 @@ export const GQLOperations = {
     UpdateOrganization: 'UpdateOrganization',
     UpdatePartnership: 'UpdatePartnership',
     DeletePartnership: 'DeletePartnership',
+    CreateProduct: 'CreateProduct',
     CreateProject: 'CreateProject',
     CreatePerson: 'CreatePerson',
     UpdateUser: 'UpdateUser',
