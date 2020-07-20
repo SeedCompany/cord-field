@@ -4,7 +4,7 @@ import { Skeleton } from '@material-ui/lab';
 import clsx from 'clsx';
 import React from 'react';
 import { useParams } from 'react-router';
-import { isSecured } from '../../../api';
+import { canEditAny } from '../../../api';
 import { useDialog } from '../../../components/Dialog';
 import {
   DisplaySimpleProperty,
@@ -68,15 +68,7 @@ export const LanguageDetail = () => {
   const language = data?.language;
   const { ethnologue, locations, projects } = language ?? {};
 
-  const canEditAnyFields =
-    !language || !ethnologue
-      ? false
-      : Object.values(language).some((value) =>
-          isSecured(value) ? value.canEdit : false
-        ) &&
-        Object.values(ethnologue).some((value) =>
-          isSecured(value) ? value.canEdit : false
-        );
+  const canEditAnyFields = canEditAny(language) || canEditAny(ethnologue);
 
   const formatDateTime = useDateTimeFormatter();
   const formatNumber = useNumberFormatter();
