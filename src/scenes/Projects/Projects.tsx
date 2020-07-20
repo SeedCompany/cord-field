@@ -2,6 +2,7 @@ import React from 'react';
 import { useRoutes } from 'react-router-dom';
 import { Engagement } from '../Engagement';
 import { PartnershipList } from '../Partnerships/List';
+import { CreateProduct } from '../Products/Create';
 import { ProjectBudget } from './Budget';
 import { ProjectFilesList } from './Files';
 import { ProjectList } from './List';
@@ -41,6 +42,10 @@ export const Projects = () => {
     {
       path: '/:projectId/budget',
       element: <ProjectBudget />,
+    },
+    {
+      path: ':projectId/engagements/:engagementId/create-product',
+      element: <CreateProduct />,
     },
   ]);
 
