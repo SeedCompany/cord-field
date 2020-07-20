@@ -270,7 +270,7 @@ export const ProjectFilesList: FC = () => {
             {loading ? (
               <Skeleton variant="rect" width="100%" height={200} />
             ) : (
-              <Table data={rowData} columns={columns} />
+              <Table data={rowData} columns={columns} draggable />
             )}
           </section>
         </>

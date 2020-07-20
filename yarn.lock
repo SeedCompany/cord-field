@@ -3823,6 +3823,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@types/react-beautiful-dnd@npm:^13.0.0":
+  version: 13.0.0
+  resolution: "@types/react-beautiful-dnd@npm:13.0.0"
+  dependencies:
+    "@types/react": "*"
+  checksum: 3/2f946d2dbfef86fb823758058056f2c4a52d2b7b12fcb1bbdca6a8077891f339b992691cd3dfc084acabb8515c315e87e028b451302fadfaeff902f974c3e0e5
+  languageName: node
+  linkType: hard
+
 "@types/react-color@npm:^3.0.1":
   version: 3.0.1
   resolution: "@types/react-color@npm:3.0.1"
@@ -7293,6 +7302,7 @@ __metadata:
     "@types/luxon": ^1.22.0
     "@types/node": ^12.0.0
     "@types/react": ^16.9.0
+    "@types/react-beautiful-dnd": ^13.0.0
     "@types/react-dom": ^16.9.0
     "@types/seedrandom": ^2.4.28
     "@types/validator": ^13.0.0
@@ -7315,6 +7325,7 @@ __metadata:
     prettier: ^2.0.4
     react: ^16.13.1
     react-app-rewired: ^2.1.5
+    react-beautiful-dnd: ^13.0.0
     react-docgen-typescript-loader: ^3.7.2
     react-dom: ^16.13.1
     react-draggable: ^4.4.3
@@ -7554,7 +7565,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"css-box-model@npm:^1.1.2":
+"css-box-model@npm:^1.1.2, css-box-model@npm:^1.2.0":
   version: 1.2.1
   resolution: "css-box-model@npm:1.2.1"
   dependencies:
@@ -13777,7 +13788,7 @@ fsevents@^1.2.7:
   languageName: node
   linkType: hard
 
-"memoize-one@npm:^5.0.0, memoize-one@npm:^5.0.4":
+"memoize-one@npm:^5.0.0, memoize-one@npm:^5.0.4, memoize-one@npm:^5.1.1":
   version: 5.1.1
   resolution: "memoize-one@npm:5.1.1"
   checksum: 3/e7c4a9cceca71334bf09c38818c375a280dc6e8ec03a92701c16199763269ce756b7b0b370f4b464c071045349fb7b3e4a3cc7460a3f46a277f394d8634a6eb5
@@ -16811,7 +16822,7 @@ fsevents@^1.2.7:
   languageName: node
   linkType: hard
 
-"raf-schd@npm:^4.0.0":
+"raf-schd@npm:^4.0.0, raf-schd@npm:^4.0.2":
   version: 4.0.2
   resolution: "raf-schd@npm:4.0.2"
   checksum: 3/28ad12b28814dc1b145a518e5ec6011e12aaf4b490cc7548ee0f8f2e26a7ac2168b62281588320a61743f7c4f70966c2db947aae60021f17546cb721a8d45821
@@ -16951,6 +16962,24 @@ fsevents@^1.2.7:
   peerDependencies:
     react: ^16.8.5
   checksum: 3/b91912fbd3d49e8c2a2d57f6dbcf2d3f02b6443b9bf54dd42b963a1622c9e951ba2e3a4c455a542641ea3eedb55c22c9ffd16bd7a05df587634b7dff1a3e5067
+  languageName: node
+  linkType: hard
+
+"react-beautiful-dnd@npm:^13.0.0":
+  version: 13.0.0
+  resolution: "react-beautiful-dnd@npm:13.0.0"
+  dependencies:
+    "@babel/runtime": ^7.8.4
+    css-box-model: ^1.2.0
+    memoize-one: ^5.1.1
+    raf-schd: ^4.0.2
+    react-redux: ^7.1.1
+    redux: ^4.0.4
+    use-memo-one: ^1.1.1
+  peerDependencies:
+    react: ^16.8.5
+    react-dom: ^16.8.5
+  checksum: 3/0ce5027375308139c04f6fd1c429591fdd17b175903a63bf238d2e0b2c3db1260272870b24ee50262fc7718db914416274740e50f19eaf0e8bbd03a9cf0cd556
   languageName: node
   linkType: hard
 
@@ -17300,7 +17329,7 @@ fsevents@^1.2.7:
   languageName: node
   linkType: hard
 
-"react-redux@npm:^7.0.3":
+"react-redux@npm:^7.0.3, react-redux@npm:^7.1.1":
   version: 7.2.0
   resolution: "react-redux@npm:7.2.0"
   dependencies:
@@ -17692,7 +17721,7 @@ fsevents@^1.2.7:
   languageName: node
   linkType: hard
 
-"redux@npm:^4.0.1":
+"redux@npm:^4.0.1, redux@npm:^4.0.4":
   version: 4.0.5
   resolution: "redux@npm:4.0.5"
   dependencies:
@@ -20481,7 +20510,7 @@ typescript@^3.8.3:
   languageName: node
   linkType: hard
 
-"use-memo-one@npm:^1.1.0":
+"use-memo-one@npm:^1.1.0, use-memo-one@npm:^1.1.1":
   version: 1.1.1
   resolution: "use-memo-one@npm:1.1.1"
   peerDependencies:
