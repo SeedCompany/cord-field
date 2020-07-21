@@ -88,6 +88,7 @@ export const ToggleButtons = () => {
                 ['start', 'end', 'top', 'bottom'],
                 'end'
               )}
+              pickOne={boolean('pick one', false)}
             >
               {['red', 'blue', 'green', 'yellow'].map((color) => (
                 <ToggleButtonOption
