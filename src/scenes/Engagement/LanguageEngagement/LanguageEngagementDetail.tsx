@@ -19,12 +19,9 @@ import {
   PencilCircledIcon,
   PlantIcon,
 } from '../../../components/Icons';
-import {
-  ProjectBreadcrumb,
-  ProjectBreadcrumbFragment,
-} from '../../../components/ProjectBreadcrumb';
+import { ProjectBreadcrumb } from '../../../components/ProjectBreadcrumb';
 import { Redacted } from '../../../components/Redacted';
-import { LanguageEngagementDetailFragment } from './LanguageEngagementDetail.generated';
+import { EngagementQuery } from '../Engagement.generated';
 
 const useStyles = makeStyles(({ spacing, breakpoints, palette }) => ({
   root: {
@@ -46,12 +43,7 @@ const useStyles = makeStyles(({ spacing, breakpoints, palette }) => ({
   },
 }));
 
-interface LanguageEngagementDetailProps {
-  engagement: LanguageEngagementDetailFragment;
-  project: ProjectBreadcrumbFragment;
-}
-
-export const LanguageEngagementDetail: FC<LanguageEngagementDetailProps> = ({
+export const LanguageEngagementDetail: FC<EngagementQuery> = ({
   project,
   engagement,
 }) => {
@@ -59,6 +51,10 @@ export const LanguageEngagementDetail: FC<LanguageEngagementDetailProps> = ({
 
   const date = securedDateRange(engagement.startDate, engagement.endDate);
   const formatDate = useDateFormatter();
+
+  if (engagement.__typename !== 'LanguageEngagement') {
+    return null; // easiest for typescript
+  }
 
   return (
     <div className={classes.root}>

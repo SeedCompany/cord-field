@@ -7,7 +7,6 @@ import {
 } from '@material-ui/core';
 import { ChatOutlined, DateRange, Publish } from '@material-ui/icons';
 import React, { FC } from 'react';
-import { Merge } from 'type-fest';
 import {
   displayEngagementStatus,
   displayInternPosition,
@@ -27,21 +26,9 @@ import {
 } from '../../../components/Icons';
 import { MentorCard } from '../../../components/MentorCard';
 import { MethodologiesCard } from '../../../components/MethodologiesCard';
-import { MethodologyCardFragment } from '../../../components/MethodologiesCard/MethodologiesCard.generated';
-import {
-  ProjectBreadcrumb,
-  ProjectBreadcrumbFragment,
-} from '../../../components/ProjectBreadcrumb';
+import { ProjectBreadcrumb } from '../../../components/ProjectBreadcrumb';
 import { Redacted } from '../../../components/Redacted';
-import { InternshipEngagementDetailFragment } from './InternshipEngagement.generated';
-
-interface InternshipEngagementDetailProps {
-  engagement: Merge<
-    InternshipEngagementDetailFragment,
-    MethodologyCardFragment
-  >;
-  project: ProjectBreadcrumbFragment;
-}
+import { EngagementQuery } from '../Engagement.generated';
 
 const useStyles = makeStyles(({ spacing, breakpoints, palette }) => ({
   root: {
@@ -66,7 +53,7 @@ const useStyles = makeStyles(({ spacing, breakpoints, palette }) => ({
   },
 }));
 
-export const InternshipEngagementDetail: FC<InternshipEngagementDetailProps> = ({
+export const InternshipEngagementDetail: FC<EngagementQuery> = ({
   project,
   engagement,
 }) => {
@@ -74,6 +61,10 @@ export const InternshipEngagementDetail: FC<InternshipEngagementDetailProps> = (
 
   const date = securedDateRange(engagement.startDate, engagement.endDate);
   const formatDate = useDateFormatter();
+
+  if (engagement.__typename !== 'InternshipEngagement') {
+    return null; // easiest for typescript
+  }
 
   return (
     <div className={classes.root}>

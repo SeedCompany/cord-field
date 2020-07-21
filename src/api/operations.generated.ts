@@ -2,7 +2,6 @@ export const GQLOperations = {
   Query: {
     Session: 'Session',
     Engagement: 'Engagement',
-    ProjectBreadcrumb: 'ProjectBreadcrumb',
     Language: 'Language',
     Languages: 'Languages',
     Organization: 'Organization',

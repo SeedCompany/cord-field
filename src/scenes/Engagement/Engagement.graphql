@@ -1,5 +1,8 @@
-query Engagement($input: ID!) {
-  engagement(id: $input) {
+query Engagement($projectId: ID!, $engagementId: ID!) {
+  project(id: $projectId) {
+    ...ProjectBreadcrumb
+  }
+  engagement(id: $engagementId) {
     id
     __typename
     ... on LanguageEngagement {
@@ -9,11 +12,5 @@ query Engagement($input: ID!) {
       ...InternshipEngagementDetail
       ...MethodologyCard
     }
-  }
-}
-
-query ProjectBreadcrumb($input: ID!) {
-  project(id: $input) {
-    ...ProjectBreadcrumb
   }
 }
