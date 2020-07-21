@@ -217,9 +217,17 @@ export const ProjectOverview: FC = () => {
           </Grid>
           {data?.project?.engagements?.items?.map((engagement) =>
             engagement.__typename === 'LanguageEngagement' ? (
-              <LanguageEngagementListItemCard {...engagement} />
+              <LanguageEngagementListItemCard
+                key={engagement.id}
+                projectId={projectId}
+                {...engagement}
+              />
             ) : engagement.__typename === 'InternshipEngagement' ? (
-              <InternshipEngagementListItemCard {...engagement} />
+              <InternshipEngagementListItemCard
+                key={engagement.id}
+                projectId={projectId}
+                {...engagement}
+              />
             ) : null
           )}
         </div>
