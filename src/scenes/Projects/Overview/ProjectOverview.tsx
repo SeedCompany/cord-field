@@ -9,6 +9,7 @@ import { displayLocation } from '../../../api/location-helper';
 import { BudgetOverviewCard } from '../../../components/BudgetOverviewCard';
 import { CardGroup } from '../../../components/CardGroup';
 import { DataButton } from '../../../components/DataButton';
+import { DisplaySimpleProperty } from '../../../components/DisplaySimpleProperty';
 import { Fab } from '../../../components/Fab';
 import { FilesOverviewCard } from '../../../components/FilesOverviewCard';
 import {
@@ -107,6 +108,29 @@ export const ProjectOverview: FC = () => {
               </Typography>
             )}
           </div>
+
+          <Grid container spacing={1}>
+            <Grid item>
+              <DisplaySimpleProperty
+                loading={!data}
+                label="Project ID"
+                value={data?.project.id}
+                loadingWidth={100}
+                LabelProps={{ color: 'textSecondary' }}
+                ValueProps={{ color: 'textPrimary' }}
+              />
+            </Grid>
+            <Grid item>
+              <DisplaySimpleProperty
+                loading={!data}
+                label="Department ID"
+                value={data?.project.deptId.value}
+                loadingWidth={100}
+                LabelProps={{ color: 'textSecondary' }}
+                ValueProps={{ color: 'textPrimary' }}
+              />
+            </Grid>
+          </Grid>
 
           <Grid container spacing={1} alignItems="center">
             <Grid item>

@@ -1,6 +1,11 @@
 query ProjectOverview($input: ID!) {
   project(id: $input) {
     id
+    deptId {
+      canRead
+      canEdit
+      value
+    }
     name {
       canRead
       canEdit

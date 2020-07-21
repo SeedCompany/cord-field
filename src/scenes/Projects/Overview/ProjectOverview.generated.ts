@@ -26,6 +26,10 @@ export type ProjectOverviewQuery = { __typename?: 'Query' } & {
         Types.TranslationProject,
         'id' | 'status' | 'modifiedAt'
       > & {
+          deptId: { __typename?: 'SecuredString' } & Pick<
+            Types.SecuredString,
+            'canRead' | 'canEdit' | 'value'
+          >;
           name: { __typename?: 'SecuredString' } & Pick<
             Types.SecuredString,
             'canRead' | 'canEdit' | 'value'
@@ -78,6 +82,10 @@ export type ProjectOverviewQuery = { __typename?: 'Query' } & {
         Types.InternshipProject,
         'id' | 'status' | 'modifiedAt'
       > & {
+          deptId: { __typename?: 'SecuredString' } & Pick<
+            Types.SecuredString,
+            'canRead' | 'canEdit' | 'value'
+          >;
           name: { __typename?: 'SecuredString' } & Pick<
             Types.SecuredString,
             'canRead' | 'canEdit' | 'value'
@@ -132,6 +140,11 @@ export const ProjectOverviewDocument = gql`
   query ProjectOverview($input: ID!) {
     project(id: $input) {
       id
+      deptId {
+        canRead
+        canEdit
+        value
+      }
       name {
         canRead
         canEdit
