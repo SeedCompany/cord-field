@@ -21,12 +21,12 @@ import {
   FileActionItem,
   RenameFile,
 } from '../../../components/files/FileActionsMenu';
+import { FilePreview } from '../../../components/files/FilePreview';
 import {
   useDownloadFile,
   useFileNameAndExtension,
   useFileNodeIcon,
 } from '../../../components/files/hooks';
-// import { FilePreview } from '../../../components/FilePreview';
 import {
   formatFileSize,
   useDateTimeFormatter,
@@ -128,7 +128,7 @@ export const ProjectFilesList: FC = () => {
   const [deleteFileState, deleteFile, itemToDelete] = useDialog<
     FileActionItem
   >();
-  // const [filePreviewState, previewFile, fileToPreview] = useDialog<CFFile>();
+  const [filePreviewState, previewFile, fileToPreview] = useDialog<File>();
 
   const [createDirectoryState, createDirectory] = useDialog();
 
@@ -171,6 +171,7 @@ export const ProjectFilesList: FC = () => {
     !parents.some((parent) => parent.id === rootDirectoryId);
 
   const items = directoryIsNotInProject ? [] : data?.directory.children.items;
+  console.log('items', items);
 
   interface FileRowData {
     id: FileNodeInfoFragment['id'];
@@ -271,7 +272,7 @@ export const ProjectFilesList: FC = () => {
     if (isDirectory) {
       navigate(`/projects/${projectId}/files/${id}`);
     } else {
-      console.log('Preview file', item.id);
+      previewFile(item);
     }
   };
 
@@ -356,8 +357,8 @@ export const ProjectFilesList: FC = () => {
         <DeleteFile item={itemToDelete} {...deleteFileState} />
         <FileVersions file={fileVersionToView} {...fileVersionState} />
         <UploadProjectFileVersion file={fileToVersion} {...newVersionState} />
-        {/* <FilePreview file={fileToPreview} {...filePreviewState} /> */}
         <CreateProjectDirectory {...createDirectoryState} />
+        <FilePreview file={fileToPreview} {...filePreviewState} />
       </Content>
     </div>
   );

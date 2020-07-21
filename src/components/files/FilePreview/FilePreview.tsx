@@ -19,7 +19,7 @@ interface FilePreviewProps {
 export const FilePreview: FC<FilePreviewProps> = (props) => {
   const { file, onClose, ...rest } = props;
   const { name, downloadUrl } = file ?? { name: '', downloadUrl: '' };
-  const fileType = name.split('.').pop();
+  const fileType = name.split('.').pop() ?? '.unknown';
   return (
     <Dialog onClose={onClose} {...rest} aria-labelledby="dialog-file-preview">
       <DialogTitle id="dialog-file-preview">{name}</DialogTitle>
