@@ -9,6 +9,7 @@ import { displayLocation } from '../../../api/location-helper';
 import { BudgetOverviewCard } from '../../../components/BudgetOverviewCard';
 import { CardGroup } from '../../../components/CardGroup';
 import { DataButton } from '../../../components/DataButton';
+import { DisplaySimpleProperty } from '../../../components/DisplaySimpleProperty';
 import { Fab } from '../../../components/Fab';
 import { FilesOverviewCard } from '../../../components/FilesOverviewCard';
 import {
@@ -108,6 +109,29 @@ export const ProjectOverview: FC = () => {
             )}
           </div>
 
+          <Grid container spacing={1}>
+            <Grid item>
+              <DisplaySimpleProperty
+                loading={!data}
+                label="Project ID"
+                value={data?.project.id}
+                loadingWidth={100}
+                LabelProps={{ color: 'textSecondary' }}
+                ValueProps={{ color: 'textPrimary' }}
+              />
+            </Grid>
+            <Grid item>
+              <DisplaySimpleProperty
+                loading={!data}
+                label="Department ID"
+                value={data?.project.deptId.value}
+                loadingWidth={100}
+                LabelProps={{ color: 'textSecondary' }}
+                ValueProps={{ color: 'textPrimary' }}
+              />
+            </Grid>
+          </Grid>
+
           <Grid container spacing={1} alignItems="center">
             <Grid item>
               <DataButton
@@ -126,21 +150,6 @@ export const ProjectOverview: FC = () => {
                 redacted="You do not have permission to view start/end dates"
                 children={formatDate.range}
                 empty="Start - End"
-              />
-            </Grid>
-            <Grid item>
-              <DataButton
-                loading={!data}
-                children={`Project Id: ${data?.project.id}`}
-              />
-            </Grid>
-            <Grid item>
-              <DataButton
-                loading={!data}
-                secured={data?.project.deptId}
-                redacted="You do not have permission to view department Id"
-                children={`Department Id: ${data?.project.deptId.value}`}
-                empty="Department Id Not Available"
               />
             </Grid>
             <Grid item>
