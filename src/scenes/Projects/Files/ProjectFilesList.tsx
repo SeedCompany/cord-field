@@ -21,6 +21,7 @@ import {
 } from '../../../components/files/FileActionsMenu';
 import {
   useDownloadFile,
+  useFileNameAndExtension,
   useFileNodeIcon,
 } from '../../../components/files/hooks';
 // import { FilePreview } from '../../../components/FilePreview';
@@ -68,6 +69,7 @@ export const ProjectFilesList: FC = () => {
   const formatDate = useDateFormatter();
   const formatFileSize = useFileSizeFormatter();
   const downloadFile = useDownloadFile();
+  const fileNameAndExtension = useFileNameAndExtension();
   const fileIcon = useFileNodeIcon();
 
   const [renameFileState, renameFile, itemToRename] = useDialog<
@@ -143,7 +145,7 @@ export const ProjectFilesList: FC = () => {
             }
           >
             <Icon className={classes.fileIcon} />
-            {name}
+            {fileNameAndExtension(name).displayName}
           </span>
         );
         return isDirectory ? (
