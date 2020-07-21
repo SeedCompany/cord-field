@@ -1,3 +1,3 @@
 export * from './useDownloadFile';
-export * from './useFileDisplayName';
+export * from './useFileNameAndExtension';
 export * from './useFileNodeIcon';
