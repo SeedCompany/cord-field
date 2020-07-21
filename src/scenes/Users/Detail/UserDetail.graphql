@@ -8,21 +8,25 @@ query User($userId: ID!) {
 fragment userDetails on User {
   id
   email {
-    value
+    ...ss
   }
   fullName
   bio {
-    value
-    canEdit
+    ...ss
   }
   phone {
-    value
-    canEdit
+    ...ss
   }
   timezone {
     value {
       name
+      countries {
+        code
+        name
+      }
     }
+    canRead
+    canEdit
   }
   createdAt
 }

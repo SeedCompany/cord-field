@@ -3,8 +3,11 @@ import * as ApolloReactCommon from '@apollo/client';
 import * as ApolloReactHooks from '@apollo/client';
 import gql from 'graphql-tag';
 import * as Types from '../../../api/schema.generated';
-import { UserFormFragment } from '../UserForm/UserForm.generated';
-import { UserFormFragmentDoc } from '../UserForm/UserForm.generated';
+import { SsFragment, UserFormFragment } from '../UserForm/UserForm.generated';
+import {
+  SsFragmentDoc,
+  UserFormFragmentDoc,
+} from '../UserForm/UserForm.generated';
 
 export interface UserQueryVariables {
   userId: Types.Scalars['ID'];
@@ -18,47 +21,53 @@ export type UserDetailsFragment = { __typename?: 'User' } & Pick<
   Types.User,
   'id' | 'fullName' | 'createdAt'
 > & {
-    email: { __typename?: 'SecuredString' } & Pick<
-      Types.SecuredString,
-      'value'
-    >;
-    bio: { __typename?: 'SecuredString' } & Pick<
-      Types.SecuredString,
-      'value' | 'canEdit'
-    >;
-    phone: { __typename?: 'SecuredString' } & Pick<
-      Types.SecuredString,
-      'value' | 'canEdit'
-    >;
-    timezone: { __typename?: 'SecuredTimeZone' } & {
-      value?: Types.Maybe<
-        { __typename?: 'TimeZone' } & Pick<Types.TimeZone, 'name'>
-      >;
-    };
+    email: { __typename?: 'SecuredString' } & SsFragment;
+    bio: { __typename?: 'SecuredString' } & SsFragment;
+    phone: { __typename?: 'SecuredString' } & SsFragment;
+    timezone: { __typename?: 'SecuredTimeZone' } & Pick<
+      Types.SecuredTimeZone,
+      'canRead' | 'canEdit'
+    > & {
+        value?: Types.Maybe<
+          { __typename?: 'TimeZone' } & Pick<Types.TimeZone, 'name'> & {
+              countries: Array<
+                { __typename?: 'IanaCountry' } & Pick<
+                  Types.IanaCountry,
+                  'code' | 'name'
+                >
+              >;
+            }
+        >;
+      };
   };
 
 export const UserDetailsFragmentDoc = gql`
   fragment userDetails on User {
     id
     email {
-      value
+      ...ss
     }
     fullName
     bio {
-      value
-      canEdit
+      ...ss
     }
     phone {
-      value
-      canEdit
+      ...ss
     }
     timezone {
       value {
         name
+        countries {
+          code
+          name
+        }
       }
+      canRead
+      canEdit
     }
     createdAt
   }
+  ${SsFragmentDoc}
 `;
 export const UserDocument = gql`
   query User($userId: ID!) {
