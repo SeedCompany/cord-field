@@ -68,14 +68,14 @@ export const LanguageForm = <T extends any>({
             'registryOfDialectsCode',
             'populationOverride'
           ) && (
-            <Grid item md={6}>
+            <Grid item xs={12} md={6}>
               <Typography variant="h4" gutterBottom>
                 Info
               </Typography>
               <Grid container spacing={2}>
-                <Grid item xs={12} sm={6}>
-                  <SecuredField obj={language} name="name">
-                    {(props) => (
+                <SecuredField obj={language} name="name">
+                  {(props) => (
+                    <Grid item xs={12} sm={6}>
                       <TextField
                         label="Name"
                         placeholder="Enter Name"
@@ -84,12 +84,12 @@ export const LanguageForm = <T extends any>({
                         margin="none"
                         {...props}
                       />
-                    )}
-                  </SecuredField>
-                </Grid>
-                <Grid item xs={12} sm={6}>
-                  <SecuredField obj={language} name="displayName">
-                    {(props) => (
+                    </Grid>
+                  )}
+                </SecuredField>
+                <SecuredField obj={language} name="displayName">
+                  {(props) => (
+                    <Grid item xs={12} sm={6}>
                       <TextField
                         label="Public Name"
                         placeholder="Enter Public Name"
@@ -98,24 +98,24 @@ export const LanguageForm = <T extends any>({
                         margin="none"
                         {...props}
                       />
-                    )}
-                  </SecuredField>
-                </Grid>
-                <Grid item xs={12}>
-                  <SecuredField obj={language} name="displayNamePronunciation">
-                    {(props) => (
+                    </Grid>
+                  )}
+                </SecuredField>
+                <SecuredField obj={language} name="displayNamePronunciation">
+                  {(props) => (
+                    <Grid item xs={12}>
                       <TextField
                         label="Pronunciation"
                         placeholder="Enter Pronunciation of Public Name"
                         margin="none"
                         {...props}
                       />
-                    )}
-                  </SecuredField>
-                </Grid>
-                <Grid item xs={12} sm={6}>
-                  <SecuredField obj={language} name="registryOfDialectsCode">
-                    {(props) => (
+                    </Grid>
+                  )}
+                </SecuredField>
+                <SecuredField obj={language} name="registryOfDialectsCode">
+                  {(props) => (
+                    <Grid item xs={12} sm={6}>
                       <FormattedTextField
                         label="Registry Of Dialects Code"
                         placeholder="#####"
@@ -131,12 +131,12 @@ export const LanguageForm = <T extends any>({
                         margin="none"
                         {...props}
                       />
-                    )}
-                  </SecuredField>
-                </Grid>
-                <Grid item xs={12} sm={6}>
-                  <SecuredField obj={language} name="populationOverride">
-                    {(props) => (
+                    </Grid>
+                  )}
+                </SecuredField>
+                <SecuredField obj={language} name="populationOverride">
+                  {(props) => (
+                    <Grid item xs={12} sm={6}>
                       <NumberField
                         label="Population"
                         placeholder="Enter Population"
@@ -144,9 +144,9 @@ export const LanguageForm = <T extends any>({
                         margin="none"
                         {...props}
                       />
-                    )}
-                  </SecuredField>
-                </Grid>
+                    </Grid>
+                  )}
+                </SecuredField>
               </Grid>
             </Grid>
           )}
@@ -159,15 +159,15 @@ export const LanguageForm = <T extends any>({
             'provisionalCode',
             'population'
           ) && (
-            <Grid item md={6}>
+            <Grid item xs={12} md={6}>
               <Typography variant="h4" gutterBottom>
                 Ethnologue
               </Typography>
               <FieldGroup prefix="ethnologue">
                 <Grid container spacing={2}>
-                  <Grid item xs={12} sm={6}>
-                    <SecuredField obj={language?.ethnologue} name="name">
-                      {(props) => (
+                  <SecuredField obj={language?.ethnologue} name="name">
+                    {(props) => (
+                      <Grid item xs={12} sm={6}>
                         <TextField
                           label="Ethnologue Name"
                           placeholder="Enter Ethnologue Name"
@@ -175,12 +175,12 @@ export const LanguageForm = <T extends any>({
                           margin="none"
                           {...props}
                         />
-                      )}
-                    </SecuredField>
-                  </Grid>
-                  <Grid item xs={12} sm={6}>
-                    <SecuredField obj={language?.ethnologue} name="id">
-                      {(props) => (
+                      </Grid>
+                    )}
+                  </SecuredField>
+                  <SecuredField obj={language?.ethnologue} name="id">
+                    {(props) => (
+                      <Grid item xs={12} sm={6}>
                         <TextField
                           label="Ethnologue ID"
                           placeholder="Enter Ethnologue ID"
@@ -188,48 +188,48 @@ export const LanguageForm = <T extends any>({
                           margin="none"
                           {...props}
                         />
-                      )}
-                    </SecuredField>
-                  </Grid>
-                  <Grid item xs={12} sm={6}>
-                    <SecuredField obj={language?.ethnologue} name="code">
-                      {(props) => (
+                      </Grid>
+                    )}
+                  </SecuredField>
+                  <SecuredField obj={language?.ethnologue} name="code">
+                    {(props) => (
+                      <Grid item xs={12} sm={6}>
                         <EthnologueCodeField
                           label="Ethnologue Code"
                           placeholder="Enter Ethnologue Code"
                           margin="none"
                           {...props}
                         />
-                      )}
-                    </SecuredField>
-                  </Grid>
-                  <Grid item xs={12} sm={6}>
-                    <SecuredField
-                      obj={language?.ethnologue}
-                      name="provisionalCode"
-                    >
-                      {(props) => (
+                      </Grid>
+                    )}
+                  </SecuredField>
+                  <SecuredField
+                    obj={language?.ethnologue}
+                    name="provisionalCode"
+                  >
+                    {(props) => (
+                      <Grid item xs={12} sm={6}>
                         <EthnologueCodeField
                           label="Provisional Code"
                           placeholder="Enter Provisional Code"
                           margin="none"
                           {...props}
                         />
-                      )}
-                    </SecuredField>
-                  </Grid>
-                  <Grid item xs={12} sm={6}>
-                    <SecuredField obj={language?.ethnologue} name="population">
-                      {(props) => (
+                      </Grid>
+                    )}
+                  </SecuredField>
+                  <SecuredField obj={language?.ethnologue} name="population">
+                    {(props) => (
+                      <Grid item xs={12} sm={6}>
                         <NumberField
                           label="Ethnologue Population"
                           placeholder="Enter Ethnologue Population"
                           margin="none"
                           {...props}
                         />
-                      )}
-                    </SecuredField>
-                  </Grid>
+                      </Grid>
+                    )}
+                  </SecuredField>
                 </Grid>
               </FieldGroup>
             </Grid>
