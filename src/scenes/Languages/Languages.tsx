@@ -1,5 +1,6 @@
 import React from 'react';
 import { useRoutes } from 'react-router-dom';
+import { LanguageDetail } from './Detail';
 import { LanguageList } from './List';
 
 export const Languages = () => {
@@ -7,6 +8,10 @@ export const Languages = () => {
     {
       path: '/',
       element: <LanguageList />,
+    },
+    {
+      path: '/:languageId',
+      element: <LanguageDetail />,
     },
   ]);
 

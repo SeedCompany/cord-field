@@ -1,0 +1,73 @@
+query Language($languageId: ID!) {
+  language(id: $languageId) {
+    ...LanguageDetail
+    ...LanguageForm
+  }
+}
+
+fragment LanguageDetail on Language {
+  id
+  createdAt
+  name {
+    ...ss
+  }
+  displayName {
+    ...ss
+  }
+  displayNamePronunciation {
+    ...ss
+  }
+  isDialect {
+    canRead
+    canEdit
+    value
+  }
+  ethnologue {
+    id {
+      ...ss
+    }
+    code {
+      ...ss
+    }
+    provisionalCode {
+      ...ss
+    }
+    name {
+      ...ss
+    }
+  }
+  registryOfDialectsCode {
+    ...ss
+  }
+  sponsorDate {
+    canRead
+    canEdit
+    value
+  }
+  sensitivity
+  avatarLetters
+  beginFiscalYear {
+    canRead
+    canEdit
+    value
+  }
+  population {
+    canRead
+    canEdit
+    value
+  }
+  locations {
+    canRead
+    canCreate
+    items {
+      ...DisplayLocation
+    }
+  }
+  projects {
+    canRead
+    canCreate
+    items {
+      ...ProjectListItem
+    }
+  }
+}

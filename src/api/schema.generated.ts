@@ -1239,6 +1239,29 @@ export interface ProjectListOutput {
   hasMore: Scalars['Boolean'];
 }
 
+/**
+ * An object whose `items` is a list of projects and additional authorization information.
+ * The value is only given if `canRead` is `true` otherwise it is an empty list.
+ * The `can*` properties are specific to the user making the request.
+ */
+export type SecuredProjectList = Readable & {
+  __typename?: 'SecuredProjectList';
+  /**
+   * The page of projects.
+   * Note that this could include items that where also in sibling pages;
+   * you should de-duplicate these based on ID.
+   */
+  items: Project[];
+  /** The total number of items across all pages */
+  total: Scalars['Int'];
+  /** Whether the next page exists */
+  hasMore: Scalars['Boolean'];
+  /** Whether the current user can read the list of items */
+  canRead: Scalars['Boolean'];
+  /** Whether the current user can add items to this list via the appropriate mutation */
+  canCreate: Scalars['Boolean'];
+};
+
 export interface UpdateProjectOutput {
   __typename?: 'UpdateProjectOutput';
   project: Project;
@@ -1305,7 +1328,7 @@ export type Language = Resource & {
   population: SecuredInt;
   locations: SecuredLocationList;
   /** The list of projects the language is engagement in. */
-  projects: ProjectListOutput;
+  projects: SecuredProjectList;
 };
 
 export interface LanguageLocationsArgs {
