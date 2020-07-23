@@ -1,6 +1,7 @@
 import React, { FC, useEffect, useState } from 'react';
 import XLSX, { XLSX$Utils } from 'xlsx';
 import { PreviewerProps } from './FilePreview';
+import { usePreview } from './PreviewContext';
 import { useRetrieveFile } from './useRetrieveFile';
 
 type ColumnData = Array<{
@@ -52,7 +53,7 @@ export const DataTable: FC<DataTableProps> = (props) => {
 export const ExcelPreview: FC<PreviewerProps> = ({ downloadUrl }) => {
   const [rows, setRows] = useState<ColumnData>([]);
   const [columns, setColumns] = useState<RowData>([]);
-  const [error, setError] = useState('');
+  const { setError } = usePreview();
   const retrieveFile = useRetrieveFile(() =>
     setError('Could not download spreadsheet file')
   );
@@ -78,11 +79,7 @@ export const ExcelPreview: FC<PreviewerProps> = ({ downloadUrl }) => {
       .catch((error) => console.error(error));
   }, [setError, downloadUrl, retrieveFile]);
 
-  return error ? (
-    <div>
-      <p>{error}</p>
-    </div>
-  ) : rows.length < 1 || columns.length < 1 ? null : (
+  return rows.length < 1 || columns.length < 1 ? null : (
     <DataTable rows={rows} columns={columns} />
   );
 };
