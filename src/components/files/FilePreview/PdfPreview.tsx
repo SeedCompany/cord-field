@@ -1,25 +1,22 @@
+import { PDFDocumentProxy } from 'pdfjs-dist';
 import React, { FC, useCallback, useState } from 'react';
 import { Document, Page, pdfjs } from 'react-pdf';
 import { PreviewerProps } from './FilePreview';
 import { usePreview } from './PreviewContext';
+import { PreviewPagination } from './PreviewPagination';
 
 pdfjs.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjs.version}/pdf.worker.js`;
 
 export const PdfPreview: FC<PreviewerProps> = ({ downloadUrl }) => {
-  const [pages, setPages] = useState<{
-    numberOfPages: number;
-    pageNumber: number;
-  }>({ numberOfPages: 1, pageNumber: 1 });
-  const { setPreviewError } = usePreview();
+  const [numberOfPages, setNumberOfPages] = useState(1);
+  const { setPreviewError, previewPage } = usePreview();
 
   const handleLoadSuccess = useCallback(
-    ({ numPages }: { numPages: number }) => {
-      setPages((prevPages) => ({
-        ...prevPages,
-        numberOfPages: numPages,
-      }));
+    (pdf: PDFDocumentProxy) => {
+      const { numPages } = pdf;
+      setNumberOfPages(numPages);
     },
-    []
+    [setNumberOfPages]
   );
 
   const handleError = useCallback(
@@ -30,15 +27,15 @@ export const PdfPreview: FC<PreviewerProps> = ({ downloadUrl }) => {
   );
 
   return (
-    <div>
+    <PreviewPagination pageCount={numberOfPages}>
       <Document
         file={downloadUrl}
         onLoadError={handleError}
         onLoadSuccess={handleLoadSuccess}
         onSourceError={handleError}
       >
-        <Page pageNumber={pages.pageNumber} />
+        <Page pageNumber={previewPage} />
       </Document>
-    </div>
+    </PreviewPagination>
   );
 };
