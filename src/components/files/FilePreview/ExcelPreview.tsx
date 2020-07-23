@@ -53,31 +53,29 @@ export const DataTable: FC<DataTableProps> = (props) => {
 export const ExcelPreview: FC<PreviewerProps> = ({ downloadUrl }) => {
   const [rows, setRows] = useState<ColumnData>([]);
   const [columns, setColumns] = useState<RowData>([]);
-  const { setError } = usePreview();
+  const { setPreviewError } = usePreview();
   const retrieveFile = useRetrieveFile(() =>
-    setError('Could not download spreadsheet file')
+    setPreviewError('Could not download spreadsheet file')
   );
 
   useEffect(() => {
-    retrieveFile(downloadUrl)
-      .then((file) => {
-        if (file) {
-          renderExcelData(file).then(({ data, error }) => {
-            if (error) {
-              setError(error.message);
-            } else if (data) {
-              setRows(data.rows);
-              setColumns(data.columns);
-            } else {
-              setError('Could not read spreadsheet file');
-            }
-          });
-        } else {
-          setError('Could not download spreadsheet file');
-        }
-      })
-      .catch((error) => console.error(error));
-  }, [setError, downloadUrl, retrieveFile]);
+    retrieveFile(downloadUrl).then((file) => {
+      if (file) {
+        renderExcelData(file).then(({ data, error }) => {
+          if (error) {
+            setPreviewError(error.message);
+          } else if (data) {
+            setRows(data.rows);
+            setColumns(data.columns);
+          } else {
+            setPreviewError('Could not read spreadsheet file');
+          }
+        });
+      } else {
+        setPreviewError('Could not download spreadsheet file');
+      }
+    });
+  }, [setPreviewError, downloadUrl, retrieveFile]);
 
   return rows.length < 1 || columns.length < 1 ? null : (
     <DataTable rows={rows} columns={columns} />
@@ -91,8 +89,8 @@ async function renderExcelData(
   error: Error | undefined;
 }> {
   try {
-    const spreadsheetBinary = await file.arrayBuffer();
-    const workbook = XLSX.read(spreadsheetBinary, { type: 'buffer' });
+    const spreadsheetBuffer = await file.arrayBuffer();
+    const workbook = XLSX.read(spreadsheetBuffer, { type: 'buffer' });
     // Only doing first worksheet for now
     const worksheetName = workbook.SheetNames[0];
     const worksheet = workbook.Sheets[worksheetName];

@@ -11,6 +11,7 @@ import { ExcelPreview } from './ExcelPreview';
 import { PdfPreview } from './PdfPreview';
 import { PreviewContextProvider, usePreview } from './PreviewContext';
 import { PreviewError } from './PreviewError';
+import { WordPreview } from './WordPreview';
 
 export interface PreviewerProps {
   downloadUrl: string;
@@ -27,6 +28,7 @@ const previewers = {
   'application/pdf': PdfPreview,
   'application/vnd.ms-excel': ExcelPreview,
   'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet': ExcelPreview,
+  'application/vnd.openxmlformats-officedocument.wordprocessingml.document': WordPreview,
 };
 
 const FilePreviewWrapped: FC<FilePreviewProps> = (props) => {
@@ -36,14 +38,14 @@ const FilePreviewWrapped: FC<FilePreviewProps> = (props) => {
     mimeType: '',
     name: '',
   };
-  const { error } = usePreview();
+  const { previewError } = usePreview();
   const Previewer = previewers[mimeType as keyof typeof previewers];
   return (
     <Dialog onClose={onClose} {...rest} aria-labelledby="dialog-file-preview">
       <DialogTitle id="dialog-file-preview">{name}</DialogTitle>
       <DialogContent>
-        {error ? (
-          <PreviewError errorText={error} />
+        {previewError ? (
+          <PreviewError errorText={previewError} />
         ) : Previewer ? (
           <Previewer downloadUrl={downloadUrl} />
         ) : (

@@ -10,7 +10,7 @@ export const PdfPreview: FC<PreviewerProps> = ({ downloadUrl }) => {
     numberOfPages: number;
     pageNumber: number;
   }>({ numberOfPages: 1, pageNumber: 1 });
-  const { setError } = usePreview();
+  const { setPreviewError } = usePreview();
 
   const handleLoadSuccess = useCallback(
     ({ numPages }: { numPages: number }) => {
@@ -24,9 +24,9 @@ export const PdfPreview: FC<PreviewerProps> = ({ downloadUrl }) => {
 
   const handleError = useCallback(
     (error: Error) => {
-      setError(error.message);
+      setPreviewError(error.message);
     },
-    [setError]
+    [setPreviewError]
   );
 
   return (

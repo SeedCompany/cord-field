@@ -1,20 +1,20 @@
 import React, { createContext, FC, useContext, useState } from 'react';
 
 interface PreviewContextValue {
-  error: string;
-  setError: (message: string) => void;
+  previewError: string;
+  setPreviewError: (message: string) => void;
 }
 
 export const PreviewContext = createContext<PreviewContextValue>({
-  error: '',
-  setError: () => null,
+  previewError: '',
+  setPreviewError: () => null,
 });
 
 export const PreviewContextProvider: FC = ({ children }) => {
-  const [error, setError] = useState('');
+  const [previewError, setPreviewError] = useState('');
 
   return (
-    <PreviewContext.Provider value={{ error, setError }}>
+    <PreviewContext.Provider value={{ previewError, setPreviewError }}>
       {children}
     </PreviewContext.Provider>
   );
