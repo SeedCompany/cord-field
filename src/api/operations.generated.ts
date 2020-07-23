@@ -36,6 +36,7 @@ export const GQLOperations = {
     DisplayZone: 'DisplayZone',
     DisplayPlace: 'DisplayPlace',
     BudgetOverview: 'BudgetOverview',
+    Ceremony: 'Ceremony',
     CeremonyCard: 'CeremonyCard',
     InternshipEngagementListItem: 'InternshipEngagementListItem',
     LanguageEngagementListItem: 'LanguageEngagementListItem',

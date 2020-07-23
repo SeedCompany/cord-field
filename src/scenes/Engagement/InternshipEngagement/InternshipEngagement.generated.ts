@@ -57,12 +57,7 @@ export type InternshipEngagementDetailFragment = {
     mentor: { __typename?: 'SecuredUser' } & {
       value?: Types.Maybe<{ __typename?: 'User' } & MentorCardFragment>;
     };
-    ceremony: { __typename?: 'SecuredCeremony' } & Pick<
-      Types.SecuredCeremony,
-      'canRead' | 'canEdit'
-    > & {
-        value?: Types.Maybe<{ __typename?: 'Ceremony' } & CeremonyCardFragment>;
-      };
+    ceremony: { __typename?: 'SecuredCeremony' } & CeremonyCardFragment;
   };
 
 export const InternshipEngagementDetailFragmentDoc = gql`
@@ -121,11 +116,7 @@ export const InternshipEngagementDetailFragmentDoc = gql`
       }
     }
     ceremony {
-      canRead
-      canEdit
-      value {
-        ...CeremonyCard
-      }
+      ...CeremonyCard
     }
   }
   ${DisplayLocationFragmentDoc}

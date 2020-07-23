@@ -3,101 +3,150 @@ import {
   Card,
   CardActions,
   CardContent,
+  Grid,
   makeStyles,
-  Switch,
+  Tooltip,
   Typography,
 } from '@material-ui/core';
+import { Skeleton } from '@material-ui/lab';
+import clsx from 'clsx';
 import * as React from 'react';
 import { FC } from 'react';
+import { canEditAny } from '../../api';
 import { useDateFormatter } from '../Formatters';
+import { Redacted } from '../Redacted';
 import { CeremonyCardFragment } from './CeremonyCard.generated';
+import { CeremonyPlanned } from './CeremonyPlanned';
+import { LargeDate } from './LargeDate';
 
-const useStyles = makeStyles(({ palette, spacing }) => ({
-  header: {
+const useStyles = makeStyles(({ spacing, typography }) => ({
+  root: {
     display: 'flex',
-    alignItems: 'center',
+    flexDirection: 'column',
+  },
+  header: {
     marginBottom: spacing(1),
   },
-  certificationCard: {
+  card: {
     flex: 1,
+    display: 'flex',
+    flexDirection: 'column',
   },
   cardContent: {
-    display: 'flex',
-    flexDirection: 'column',
-    alignItems: 'center',
+    flex: 1,
   },
-  actualDate: {
-    height: 98,
-    width: 226,
-    backgroundColor: palette.grey[300],
-    borderRadius: 100,
-    display: 'flex',
-    justifyContent: 'center',
-    alignItems: 'center',
-    marginTop: spacing(1),
-    marginBottom: spacing(2),
+  halfWidth: {
+    width: '40%',
   },
-
-  cardActions: {
-    display: 'flex',
-    flexDirection: 'column',
-    alignItems: 'center',
-    padding: spacing(2),
-    borderTop: `1px solid ${palette.grey[300]}`,
+  estimatedDate: {
+    fontWeight: typography.weight.light,
   },
 }));
 
-type CeremonyCardProps = CeremonyCardFragment & {
-  canEdit?: boolean;
-  canRead?: boolean;
-  editCeremony: () => void;
+type CeremonyCardProps = Partial<CeremonyCardFragment> & {
+  onEdit?: () => void;
 };
 
 export const CeremonyCard: FC<CeremonyCardProps> = ({
-  estimatedDate,
-  actualDate,
-  canEdit,
-  editCeremony,
-  type,
-  planned,
-  //TODO: implement canRead functionality
-  // canRead
+  canRead,
+  value: ceremony,
+  onEdit,
 }) => {
+  const { type, planned, estimatedDate, actualDate } = ceremony || {};
+  const loading = canRead == null;
+
   const classes = useStyles();
   const formatDate = useDateFormatter();
 
-  return (
-    <div>
-      <div className={classes.header}>
-        <Switch
-          checked={Boolean(planned.value)}
-          name="planned"
-          color="primary"
-        />
-        <Typography variant="h4">{`${type} Plan`}</Typography>
-      </div>
-      <Card className={classes.certificationCard}>
-        <CardContent className={classes.cardContent}>
-          <Typography color="textPrimary" variant="body2">
-            {`${type} Date`}
-          </Typography>
-          <div className={classes.actualDate}>
-            <Typography color="primary" variant="h2">
-              {formatDate(actualDate.value)}
-            </Typography>
-          </div>
+  const canEditDates = canEditAny(
+    ceremony,
+    false,
+    'actualDate',
+    'estimatedDate'
+  );
+  const editButton = (
+    <Button
+      color="primary"
+      onClick={onEdit}
+      disabled={!canEditDates || !planned?.value}
+    >
+      Edit dates
+    </Button>
+  );
 
-          <Typography color="textPrimary" variant="body1">
-            Estimated Date
-          </Typography>
-          <Typography color="textPrimary" variant="body1">
-            {formatDate(estimatedDate.value)}
-          </Typography>
-        </CardContent>
-        <CardActions className={classes.cardActions}>
-          <Button color="primary" onClick={editCeremony} disabled={!canEdit}>
-            Edit dates
-          </Button>
+  return (
+    <div className={classes.root}>
+      <CeremonyPlanned
+        canRead={canRead}
+        value={ceremony}
+        className={classes.header}
+      />
+      <Card className={classes.card}>
+        <Grid
+          component={CardContent}
+          container
+          direction="column"
+          alignItems="center"
+          justify="space-evenly"
+          spacing={2}
+          className={classes.cardContent}
+        >
+          <Grid item container direction="column" alignItems="center">
+            <Typography
+              variant="body2"
+              className={loading ? classes.halfWidth : undefined}
+              gutterBottom
+            >
+              {!loading ? `Actual Date` : <Skeleton width="100%" />}
+            </Typography>
+            <LargeDate date={actualDate} />
+          </Grid>
+          <Grid item container direction="column" alignItems="center">
+            <Typography
+              variant="body2"
+              className={loading ? classes.halfWidth : undefined}
+              gutterBottom
+            >
+              {!loading ? 'Estimated Date' : <Skeleton width="100%" />}
+            </Typography>
+            <Typography
+              variant="body2"
+              className={clsx(
+                classes.estimatedDate,
+                loading || !canRead || !ceremony?.estimatedDate.canRead
+                  ? classes.halfWidth
+                  : undefined
+              )}
+            >
+              {!loading ? (
+                canRead && ceremony?.estimatedDate.canRead ? (
+                  formatDate(estimatedDate?.value) || <>&nbsp;</>
+                ) : (
+                  <Redacted
+                    info="You don't have permission to view the estimated date"
+                    width="100%"
+                  />
+                )
+              ) : (
+                <Skeleton width="100%" />
+              )}
+            </Typography>
+          </Grid>
+        </Grid>
+        <CardActions>
+          {!loading ? (
+            !planned?.value ? (
+              <Tooltip
+                title={`Mark the ${type?.toLowerCase()} as planned before adding dates`}
+              >
+                <span>{editButton}</span>
+              </Tooltip>
+            ) : (
+              editButton
+            )
+          ) : (
+            <Skeleton>{editButton}</Skeleton>
+          )}
         </CardActions>
       </Card>
     </div>

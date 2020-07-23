@@ -1,4 +1,4 @@
-fragment CeremonyCard on Ceremony {
+fragment Ceremony on Ceremony {
   id
   type
   planned {
@@ -7,9 +7,19 @@ fragment CeremonyCard on Ceremony {
     value
   }
   estimatedDate {
+    canRead
+    canEdit
     value
   }
   actualDate {
+    canRead
+    canEdit
     value
+  }
+}
+fragment CeremonyCard on SecuredCeremony {
+  canRead
+  value {
+    ...Ceremony
   }
 }

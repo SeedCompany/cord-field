@@ -40,12 +40,7 @@ export type LanguageEngagementDetailFragment = {
       Types.SecuredDate,
       'value' | 'canRead' | 'canEdit'
     >;
-    ceremony: { __typename?: 'SecuredCeremony' } & Pick<
-      Types.SecuredCeremony,
-      'canRead' | 'canEdit'
-    > & {
-        value?: Types.Maybe<{ __typename?: 'Ceremony' } & CeremonyCardFragment>;
-      };
+    ceremony: { __typename?: 'SecuredCeremony' } & CeremonyCardFragment;
   };
 
 export const LanguageEngagementDetailFragmentDoc = gql`
@@ -89,11 +84,7 @@ export const LanguageEngagementDetailFragmentDoc = gql`
     modifiedAt
     status
     ceremony {
-      canRead
-      canEdit
-      value {
-        ...CeremonyCard
-      }
+      ...CeremonyCard
     }
   }
   ${CeremonyCardFragmentDoc}

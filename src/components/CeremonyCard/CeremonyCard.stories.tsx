@@ -9,21 +9,31 @@ export default { title: 'Components' };
 export const CeremonyCard = () => (
   <div style={{ width: 600 }}>
     <Card
-      id="123"
-      estimatedDate={{ value: dateTime('Estimated Date') }}
-      actualDate={{ value: dateTime('Actual Date') }}
-      canEdit={boolean('Can Edit', true)}
-      type={select(
-        'Ceremony Type',
-        ['Certification', 'Dedication'],
-        'Certification'
-      )}
-      planned={{
-        canEdit: true,
-        canRead: true,
-        value: boolean('Planned', false),
+      canRead
+      value={{
+        id: '123',
+        estimatedDate: {
+          canRead: true,
+          canEdit: true,
+          value: dateTime('Estimated Date'),
+        },
+        actualDate: {
+          canRead: true,
+          canEdit: true,
+          value: dateTime('Actual Date'),
+        },
+        type: select(
+          'Ceremony Type',
+          ['Certification', 'Dedication'],
+          'Certification'
+        ),
+        planned: {
+          canRead: true,
+          canEdit: true,
+          value: boolean('Planned', false),
+        },
       }}
-      editCeremony={action('edit clicked')}
+      onEdit={action('edit clicked')}
     />
   </div>
 );

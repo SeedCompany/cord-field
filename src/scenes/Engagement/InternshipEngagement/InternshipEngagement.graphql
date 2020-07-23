@@ -53,10 +53,6 @@ fragment InternshipEngagementDetail on InternshipEngagement {
     }
   }
   ceremony {
-    canRead
-    canEdit
-    value {
-      ...CeremonyCard
-    }
+    ...CeremonyCard
   }
 }
