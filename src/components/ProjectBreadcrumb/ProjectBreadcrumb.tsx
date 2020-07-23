@@ -6,7 +6,7 @@ import { ProjectBreadcrumbFragment } from './ProjectBreadcrumb.generated';
 
 export interface ProjectBreadcrumbProps
   extends Except<Partial<SecuredBreadcrumbProps>, 'data'> {
-  data: Nullable<ProjectBreadcrumbFragment>;
+  data?: Nullable<ProjectBreadcrumbFragment>;
 }
 
 export const ProjectBreadcrumb = ({

@@ -3,12 +3,23 @@ fragment LanguageEngagementDetail on LanguageEngagement {
   createdAt
   language {
     value {
+      displayName {
+        value
+      }
       name {
         value
-        canRead
-        canEdit
       }
     }
+  }
+  lukePartnership {
+    canRead
+    canEdit
+    value
+  }
+  firstScripture {
+    canRead
+    canEdit
+    value
   }
   startDate {
     value

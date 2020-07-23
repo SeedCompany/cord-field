@@ -13,13 +13,25 @@ export type LanguageEngagementDetailFragment = {
     language: { __typename?: 'SecuredLanguage' } & {
       value?: Types.Maybe<
         { __typename?: 'Language' } & {
+          displayName: { __typename?: 'SecuredString' } & Pick<
+            Types.SecuredString,
+            'value'
+          >;
           name: { __typename?: 'SecuredString' } & Pick<
             Types.SecuredString,
-            'value' | 'canRead' | 'canEdit'
+            'value'
           >;
         }
       >;
     };
+    lukePartnership: { __typename?: 'SecuredBoolean' } & Pick<
+      Types.SecuredBoolean,
+      'canRead' | 'canEdit' | 'value'
+    >;
+    firstScripture: { __typename?: 'SecuredBoolean' } & Pick<
+      Types.SecuredBoolean,
+      'canRead' | 'canEdit' | 'value'
+    >;
     startDate: { __typename?: 'SecuredDate' } & Pick<
       Types.SecuredDate,
       'value' | 'canRead' | 'canEdit'
@@ -49,12 +61,23 @@ export const LanguageEngagementDetailFragmentDoc = gql`
     createdAt
     language {
       value {
+        displayName {
+          value
+        }
         name {
           value
-          canRead
-          canEdit
         }
       }
+    }
+    lukePartnership {
+      canRead
+      canEdit
+      value
+    }
+    firstScripture {
+      canRead
+      canEdit
+      value
     }
     startDate {
       value

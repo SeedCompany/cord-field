@@ -1,24 +1,23 @@
-import {
-  Breadcrumbs,
-  Fab,
-  Grid,
-  IconButton,
-  makeStyles,
-  Typography,
-} from '@material-ui/core';
-import { ChatOutlined, DateRange, Publish } from '@material-ui/icons';
+import { Breadcrumbs, Grid, makeStyles, Typography } from '@material-ui/core';
+import { ChatOutlined, DateRange, Edit } from '@material-ui/icons';
+import { Skeleton } from '@material-ui/lab';
 import React, { FC } from 'react';
-import { displayEngagementStatus, securedDateRange } from '../../../api';
+import {
+  canEditAny,
+  displayEngagementStatus,
+  securedDateRange,
+} from '../../../api';
+import { BooleanProperty } from '../../../components/BooleanProperty';
 import { Breadcrumb } from '../../../components/Breadcrumb';
 import { CeremonyCard } from '../../../components/CeremonyCard';
 import { DataButton } from '../../../components/DataButton';
+import { Fab } from '../../../components/Fab';
 import { FieldOverviewCard } from '../../../components/FieldOverviewCard';
-import { useDateFormatter } from '../../../components/Formatters';
 import {
-  OptionsIcon,
-  PencilCircledIcon,
-  PlantIcon,
-} from '../../../components/Icons';
+  useDateFormatter,
+  useDateTimeFormatter,
+} from '../../../components/Formatters';
+import { OptionsIcon, PlantIcon } from '../../../components/Icons';
 import { ProjectBreadcrumb } from '../../../components/ProjectBreadcrumb';
 import { Redacted } from '../../../components/Redacted';
 import { EngagementQuery } from '../Engagement.generated';
@@ -31,12 +30,9 @@ const useStyles = makeStyles(({ spacing, breakpoints, palette }) => ({
   },
   main: {
     maxWidth: breakpoints.values.md,
-    '& > *': {
-      marginBottom: spacing(3),
-    },
   },
-  header: {
-    display: 'flex',
+  nameRedacted: {
+    width: '50%',
   },
   infoColor: {
     color: palette.info.main,
@@ -51,45 +47,73 @@ export const LanguageEngagementDetail: FC<EngagementQuery> = ({
 
   const date = securedDateRange(engagement.startDate, engagement.endDate);
   const formatDate = useDateFormatter();
+  const formatDateTime = useDateTimeFormatter();
 
   if (engagement.__typename !== 'LanguageEngagement') {
     return null; // easiest for typescript
   }
 
+  const langName =
+    engagement.language.value?.name ?? engagement.language.value?.displayName;
+  const editable = canEditAny(engagement);
+
   return (
     <div className={classes.root}>
-      <main className={classes.main}>
-        <Breadcrumbs>
-          <ProjectBreadcrumb data={project} />
-          {engagement.language.value?.name.canRead ? (
-            <Breadcrumb
-              to={`/projects/${project.id}/engagements/${engagement.id}`}
-            >
-              {engagement.language.value?.name.value}
-            </Breadcrumb>
-          ) : (
-            <Redacted
-              info="You do not have permission to view the language name"
-              width={200}
-            />
+      <Grid
+        component="main"
+        container
+        direction="column"
+        spacing={3}
+        className={classes.main}
+      >
+        <Grid item>
+          <Breadcrumbs>
+            <ProjectBreadcrumb data={project} />
+            {langName ? (
+              <Breadcrumb to=".">{langName}</Breadcrumb>
+            ) : (
+              <Redacted
+                info="You do not have permission to view this engagement's name"
+                width={200}
+              />
+            )}
+          </Breadcrumbs>
+        </Grid>
+        <Grid item container spacing={3} alignItems="center">
+          <Grid item className={langName ? undefined : classes.nameRedacted}>
+            <Typography variant="h2">
+              {langName ?? (
+                <Redacted
+                  info="You do not have permission to view this engagement's name"
+                  width="100%"
+                />
+              )}
+            </Typography>
+          </Grid>
+          {editable && (
+            <Grid item>
+              <Fab color="primary" aria-label="edit language engagement">
+                <Edit />
+              </Fab>
+            </Grid>
           )}
-        </Breadcrumbs>
-        <Typography variant="h2" className={classes.header}>
-          {engagement.language.value?.name.canRead ? (
-            engagement.language.value?.name.value
-          ) : (
-            <Redacted
-              info="You do not have permission to view then language name"
-              width="50%"
-            />
+        </Grid>
+        <Grid item container spacing={3} alignItems="center">
+          <Grid item>
+            <Typography variant="h4">
+              {engagement ? 'Language Engagement' : <Skeleton width={200} />}
+            </Typography>
+          </Grid>
+
+          {engagement && (
+            <Grid item>
+              <Typography variant="body2" color="textSecondary">
+                Updated {formatDateTime(engagement.modifiedAt)}
+              </Typography>
+            </Grid>
           )}
-          {engagement.language.value?.name.canEdit && (
-            <IconButton color="primary" aria-label="edit language engagement">
-              <PencilCircledIcon />
-            </IconButton>
-          )}
-        </Typography>
-        <Grid container spacing={1} alignItems="center">
+        </Grid>
+        <Grid item container spacing={1} alignItems="center">
           <Grid item>
             <DataButton
               startIcon={<DateRange className={classes.infoColor} />}
@@ -104,59 +128,49 @@ export const LanguageEngagementDetail: FC<EngagementQuery> = ({
               {displayEngagementStatus(engagement.status)}
             </DataButton>
           </Grid>
+          <BooleanProperty
+            label="First Scripture"
+            redacted="You do not have permission to view whether this engagement is the first scripture for this language"
+            data={engagement.firstScripture}
+            wrap={(node) => <Grid item>{node}</Grid>}
+          />
+          <BooleanProperty
+            label="Luke Partnership"
+            redacted="You do not have permission to view whether this engagement is a luke partnership"
+            data={engagement.lukePartnership}
+            wrap={(node) => <Grid item>{node}</Grid>}
+          />
         </Grid>
-        <Grid container spacing={1} alignItems="center">
-          <Grid item>
-            <Fab color="primary" aria-label="Upload PnP">
-              <Publish />
-            </Fab>
-          </Grid>
-          <Grid item>
-            <Typography variant="h4">Upload PnP</Typography>
-          </Grid>
-        </Grid>
-        <Grid container spacing={3} alignItems="center">
+        <Grid item container spacing={3} alignItems="center">
           <Grid item xs={6}>
             <FieldOverviewCard
               title="Growth Plan Complete Date"
-              viewLabel="Edit Complete Date"
               data={{
                 value: formatDate(engagement.completeDate.value),
-                updatedAt: engagement.modifiedAt,
-                to: '/home',
               }}
               icon={PlantIcon}
-              emptyValue="not available"
             />
           </Grid>
           <Grid item xs={6}>
             <FieldOverviewCard
               title="Disbursement Complete Date"
-              viewLabel="Edit Complete Date"
               data={{
                 value: formatDate(engagement.disbursementCompleteDate.value),
-                updatedAt: engagement.modifiedAt,
-                to: '/home',
               }}
               icon={OptionsIcon}
-              emptyValue="not available"
             />
           </Grid>
           <Grid item xs={6}>
             <FieldOverviewCard
               title="Communications Complete Date"
-              viewLabel="Edit Complete Date"
               data={{
                 value: formatDate(engagement.communicationsCompleteDate.value),
-                updatedAt: engagement.modifiedAt,
-                to: '/home',
               }}
               icon={ChatOutlined}
-              emptyValue="not available"
             />
           </Grid>
         </Grid>
-        <Grid container spacing={3} alignItems="center">
+        <Grid item container spacing={3} alignItems="center">
           <Grid item xs={6}>
             <CeremonyCard
               {...engagement.ceremony}
@@ -164,9 +178,7 @@ export const LanguageEngagementDetail: FC<EngagementQuery> = ({
             />
           </Grid>
         </Grid>
-        <Typography variant="h4">Products</Typography>
-        Product list goes here when ready
-      </main>
+      </Grid>
     </div>
   );
 };

@@ -16,7 +16,7 @@ export const Engagement = () => {
   });
 
   if (loading) {
-    return <EngagementDetailLoading projectId={projectId} />;
+    return <EngagementDetailLoading />;
   }
   if (!data) {
     return <span>Could Not Find Engagement</span>;
