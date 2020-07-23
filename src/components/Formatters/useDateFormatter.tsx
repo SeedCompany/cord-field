@@ -37,6 +37,9 @@ function rangeFormatter<T extends DateTime>(
         : rangeOrStart;
     const actualEnd =
       rangeOrStart && 'end' in rangeOrStart ? rangeOrStart.end : end;
+    if (!start && !actualEnd) {
+      return null;
+    }
     return formatter(start) + ' - ' + formatter(actualEnd);
   }
 

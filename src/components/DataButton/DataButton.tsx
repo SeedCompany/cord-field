@@ -37,7 +37,7 @@ export const DataButton = <T extends any>({
 
   const data = isFunction(children)
     ? showData && secured?.value
-      ? children(secured.value)
+      ? children(secured.value) ?? empty
       : empty
     : children;
 
