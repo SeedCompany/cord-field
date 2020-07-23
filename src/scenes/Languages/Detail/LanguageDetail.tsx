@@ -1,10 +1,11 @@
-import { Chip, Grid, makeStyles, Tooltip, Typography } from '@material-ui/core';
+import { Grid, makeStyles, Tooltip, Typography } from '@material-ui/core';
 import { Add, Edit } from '@material-ui/icons';
 import { Skeleton } from '@material-ui/lab';
 import clsx from 'clsx';
 import React from 'react';
 import { useParams } from 'react-router';
 import { canEditAny } from '../../../api';
+import { BooleanProperty } from '../../../components/BooleanProperty';
 import { useDialog } from '../../../components/Dialog';
 import {
   DisplaySimpleProperty,
@@ -22,7 +23,7 @@ import { listOrPlaceholders } from '../../../util';
 import { EditLanguage } from '../Edit';
 import { useLanguageQuery } from './LanguageDetail.generated';
 
-const useStyles = makeStyles(({ palette, spacing, breakpoints }) => ({
+const useStyles = makeStyles(({ spacing, breakpoints }) => ({
   root: {
     overflowY: 'scroll',
     padding: spacing(4),
@@ -40,10 +41,6 @@ const useStyles = makeStyles(({ palette, spacing, breakpoints }) => ({
   header: {
     flex: 1,
     display: 'flex',
-  },
-  chip: {
-    background: palette.info.main,
-    color: palette.info.contrastText,
   },
   listHeader: {
     marginBottom: spacing(1),
@@ -110,11 +107,12 @@ export const LanguageDetail = () => {
             <Grid item>
               <Sensitivity value={language?.sensitivity} loading={!language} />
             </Grid>
-            {language?.isDialect.value && (
-              <Grid item>
-                <Chip label="Dialect" className={classes.chip} />
-              </Grid>
-            )}
+            <BooleanProperty
+              label="Dialect"
+              redacted="You do not have permission to view whether the language is a dialect"
+              data={language?.isDialect}
+              wrap={(node) => <Grid item>{node}</Grid>}
+            />
           </Grid>
           <DisplayProperty
             label="Pronunciation"
