@@ -52,7 +52,10 @@ export const DataTable: FC<DataTableProps> = (props) => {
 export const ExcelPreview: FC<PreviewerProps> = ({ downloadUrl }) => {
   const [rows, setRows] = useState<ColumnData>([]);
   const [columns, setColumns] = useState<RowData>([]);
-  const retrieveFile = useRetrieveFile();
+  const [error, setError] = useState('');
+  const retrieveFile = useRetrieveFile(() =>
+    setError('Could not download spreadsheet file')
+  );
 
   useEffect(() => {
     retrieveFile(downloadUrl)
@@ -60,23 +63,26 @@ export const ExcelPreview: FC<PreviewerProps> = ({ downloadUrl }) => {
         if (file) {
           renderExcelData(file).then(({ data, error }) => {
             if (error) {
-              // TODO display error component
-              console.error(error);
+              setError(error.message);
             } else if (data) {
               setRows(data.rows);
               setColumns(data.columns);
             } else {
-              console.error(new Error('Could not read spreadsheet file'));
+              setError('Could not read spreadsheet file');
             }
           });
         } else {
-          console.error(new Error('Could not download spreadsheet file'));
+          setError('Could not download spreadsheet file');
         }
       })
       .catch((error) => console.error(error));
-  }, [downloadUrl, retrieveFile]);
+  }, [setError, downloadUrl, retrieveFile]);
 
-  return rows.length < 1 || columns.length < 1 ? null : (
+  return error ? (
+    <div>
+      <p>{error}</p>
+    </div>
+  ) : rows.length < 1 || columns.length < 1 ? null : (
     <DataTable rows={rows} columns={columns} />
   );
 };
