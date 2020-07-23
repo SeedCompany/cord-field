@@ -1,4 +1,4 @@
-export const books = [
+export const oldTestament = [
   'Genesis',
   'Exodus',
   'Leviticus',
@@ -38,6 +38,9 @@ export const books = [
   'Haggai',
   'Zechariah',
   'Malachi',
+];
+
+export const newTestament = [
   'Matthew',
   'Mark',
   'Luke',
@@ -66,3 +69,17 @@ export const books = [
   'Jude',
   'Revelation',
 ];
+
+export const methodologyCategories: any = {
+  Paratext: 'Written',
+  OtherWritten: 'Written',
+  Render: 'OralTranslation',
+  OtherOralTranslation: 'OralTranslation',
+  BibleStories: 'OralStories',
+  BibleStorying: 'OralStories',
+  OneStory: 'OralStories',
+  OtherOralStories: 'OralStories',
+  Film: 'Visual',
+  SignLanguage: 'Visual',
+  OtherVisual: 'Visual',
+};

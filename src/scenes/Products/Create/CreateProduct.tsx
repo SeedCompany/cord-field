@@ -27,7 +27,7 @@ import {
   ToggleButtonsField,
 } from '../../../components/form';
 import { ProjectBreadcrumb } from '../../../components/ProjectBreadcrumb';
-import { books } from './books';
+import { methodologyCategories, newTestament, oldTestament } from './constants';
 import {
   useCreateProductMutation,
   useGetProjectBreadcrumbQuery,
@@ -47,6 +47,14 @@ const useStyles = makeStyles(({ spacing, breakpoints }) => ({
     display: 'flex',
     flexDirection: 'column',
   },
+  accordionSection: {
+    display: 'flex',
+    flexDirection: 'column',
+  },
+  buttonListWrapper: {
+    display: 'flex',
+    flexWrap: 'wrap',
+  },
 }));
 
 export const CreateProduct: FC = () => {
@@ -59,7 +67,7 @@ export const CreateProduct: FC = () => {
   const [scriptureReferences, setScriptureReferences] = useState<
     ScriptureRangeInput[]
   >([]);
-  const [formValues, setFormvalues] = useState({});
+  const [formValues, setFormvalues] = useState<any>({});
   console.log('formValues: ', formValues);
 
   const { data } = useGetProjectBreadcrumbQuery({
@@ -124,15 +132,27 @@ export const CreateProduct: FC = () => {
     setOpenedSection(isExpanded ? panel : '');
   };
 
+  const productType = formValues.productType?.[0];
+  const produces = formValues.produces;
+  const productButtonText =
+    productType === 'scripture'
+      ? productType
+      : `${productType}: ${produces || ''}`;
+
+  const methodology: string = formValues.methodology?.[0];
+  const methodologyButtonText = `${methodologyCategories[methodology]} - ${methodology}`;
+
   return (
     <main className={classes.root}>
       <Breadcrumbs>
         <ProjectBreadcrumb data={project} />
-        <Breadcrumb to={`/projects/${projectId}/engagements`}>
-          engagement
-        </Breadcrumb>
         <Breadcrumb to={`/projects/${projectId}/engagements/${engagementId}`}>
           {engagementId}
+        </Breadcrumb>
+        <Breadcrumb
+          to={`/projects/${projectId}/engagements/${engagementId}/create-product`}
+        >
+          Create Product
         </Breadcrumb>
       </Breadcrumbs>
       <Typography variant="h2">Create Product</Typography>
@@ -163,6 +183,11 @@ export const CreateProduct: FC = () => {
               >
                 <AccordionSummary expandIcon={<ExpandMore />}>
                   <Typography>Choose Product</Typography>
+                  {productType && (
+                    <ToggleButton selected value={produces || ''}>
+                      {productButtonText}
+                    </ToggleButton>
+                  )}
                 </AccordionSummary>
                 <AccordionDetails className={classes.productSection}>
                   <ToggleButtonsField name="productType" pickOne>
@@ -193,21 +218,45 @@ export const CreateProduct: FC = () => {
               >
                 <AccordionSummary expandIcon={<ExpandMore />}>
                   <Typography>Scripture Ranges</Typography>
-                  {scriptureReferences.map((scriptureRange) => (
-                    <ToggleButton selected>
-                      {`${scriptureRange.start.book} ${scriptureRange.start.chapter}:${scriptureRange.start.verse} -  ${scriptureRange.end.chapter}:${scriptureRange.end.verse}`}
-                    </ToggleButton>
-                  ))}
+                  {scriptureReferences.map((scriptureRange) => {
+                    const rangeString = `${scriptureRange.start.book} ${scriptureRange.start.chapter}:${scriptureRange.start.verse} -  ${scriptureRange.end.chapter}:${scriptureRange.end.verse}`;
+                    return (
+                      <ToggleButton
+                        selected
+                        key={rangeString}
+                        value={scriptureRange}
+                      >
+                        {rangeString}
+                      </ToggleButton>
+                    );
+                  })}
                 </AccordionSummary>
                 <AccordionDetails>
-                  <ToggleButtonsField name="books" pickOne>
-                    {books.map((option) => (
-                      <ToggleButtonOption
-                        key={option}
-                        label={option}
-                        value={option}
-                      />
-                    ))}
+                  <ToggleButtonsField
+                    name="books"
+                    pickOne
+                    className={classes.accordionSection}
+                  >
+                    <Typography variant="h6">Old Testament</Typography>
+                    <div className={classes.buttonListWrapper}>
+                      {oldTestament.map((option) => (
+                        <ToggleButtonOption
+                          key={option}
+                          label={option}
+                          value={option}
+                        />
+                      ))}
+                    </div>
+                    <Typography variant="h6">New Testament</Typography>
+                    <div className={classes.buttonListWrapper}>
+                      {newTestament.map((option) => (
+                        <ToggleButtonOption
+                          key={option}
+                          label={option}
+                          value={option}
+                        />
+                      ))}
+                    </div>
                   </ToggleButtonsField>
                 </AccordionDetails>
               </Accordion>
@@ -218,6 +267,13 @@ export const CreateProduct: FC = () => {
               >
                 <AccordionSummary expandIcon={<ExpandMore />}>
                   <Typography>Choose Medium</Typography>
+                  {formValues.mediums?.map((medium: string) => {
+                    return (
+                      <ToggleButton selected key={medium} value={medium}>
+                        {medium}
+                      </ToggleButton>
+                    );
+                  })}
                 </AccordionSummary>
                 <AccordionDetails>
                   <ToggleButtonsField name="mediums">
@@ -247,6 +303,13 @@ export const CreateProduct: FC = () => {
               >
                 <AccordionSummary expandIcon={<ExpandMore />}>
                   <Typography>Choose Purposes</Typography>
+                  {formValues.purposes?.map((purpose: string) => {
+                    return (
+                      <ToggleButton selected key={purpose} value={purpose}>
+                        {purpose}
+                      </ToggleButton>
+                    );
+                  })}
                 </AccordionSummary>
                 <AccordionDetails>
                   <ToggleButtonsField name="purposes">
@@ -273,30 +336,61 @@ export const CreateProduct: FC = () => {
               >
                 <AccordionSummary expandIcon={<ExpandMore />}>
                   <Typography>Choose Methodology</Typography>
+                  {methodology && (
+                    <ToggleButton selected value={methodology}>
+                      {methodologyButtonText}
+                    </ToggleButton>
+                  )}
                 </AccordionSummary>
-                <AccordionDetails>
-                  <ToggleButtonsField name="methodology" pickOne>
-                    {[
-                      'Paratext',
-                      'OtherWritten',
-                      'Render',
-                      'OtherOralTranslation',
-                      'BibleStories',
-                      'BibleStorying',
-                      'OneStory',
-                      'OtherOralStories',
-                      'Film',
-                      'SignLanguage',
-                      'OtherVisual',
-                    ].map((option) => (
-                      <ToggleButtonOption
-                        key={option}
-                        label={option}
-                        value={option}
-                      />
-                    ))}
-                  </ToggleButtonsField>
-                </AccordionDetails>
+                <ToggleButtonsField name="methodology" pickOne>
+                  <AccordionDetails className={classes.accordionSection}>
+                    <Typography variant="h6">Written</Typography>
+                    <div className={classes.buttonListWrapper}>
+                      {['Paratext', 'OtherWritten'].map((option) => (
+                        <ToggleButtonOption
+                          key={option}
+                          label={option}
+                          value={option}
+                        />
+                      ))}
+                    </div>
+                    <Typography variant="h6">Oral Translation</Typography>
+                    <div className={classes.buttonListWrapper}>
+                      {['Render', 'OtherOralTranslation'].map((option) => (
+                        <ToggleButtonOption
+                          key={option}
+                          label={option}
+                          value={option}
+                        />
+                      ))}
+                    </div>
+                    <Typography variant="h6">Oral Stories</Typography>
+                    <div className={classes.buttonListWrapper}>
+                      {[
+                        'BibleStories',
+                        'BibleStorying',
+                        'OneStory',
+                        'OtherOralStories',
+                      ].map((option) => (
+                        <ToggleButtonOption
+                          key={option}
+                          label={option}
+                          value={option}
+                        />
+                      ))}
+                    </div>
+                    <Typography variant="h6">Visual</Typography>
+                    <div className={classes.buttonListWrapper}>
+                      {['Film', 'SignLanguage', 'OtherVisual'].map((option) => (
+                        <ToggleButtonOption
+                          key={option}
+                          label={option}
+                          value={option}
+                        />
+                      ))}
+                    </div>
+                  </AccordionDetails>
+                </ToggleButtonsField>
               </Accordion>
 
               <SubmitButton fullWidth={false} color="primary" size="medium">
