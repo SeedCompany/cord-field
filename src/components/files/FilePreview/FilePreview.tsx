@@ -1,4 +1,5 @@
 import {
+  Box,
   Button,
   Dialog,
   DialogActions,
@@ -41,16 +42,23 @@ const FilePreviewWrapped: FC<FilePreviewProps> = (props) => {
   const { previewError } = usePreview();
   const Previewer = previewers[mimeType as keyof typeof previewers];
   return (
-    <Dialog onClose={onClose} {...rest} aria-labelledby="dialog-file-preview">
+    <Dialog
+      onClose={onClose}
+      {...rest}
+      maxWidth={false}
+      aria-labelledby="dialog-file-preview"
+    >
       <DialogTitle id="dialog-file-preview">{name}</DialogTitle>
       <DialogContent>
-        {previewError ? (
-          <PreviewError errorText={previewError} />
-        ) : Previewer ? (
-          <Previewer downloadUrl={downloadUrl} />
-        ) : (
-          <iframe title={`${name} file preview`} src={downloadUrl} />
-        )}
+        <Box>
+          {previewError ? (
+            <PreviewError errorText={previewError} />
+          ) : Previewer ? (
+            <Previewer downloadUrl={downloadUrl} />
+          ) : (
+            <iframe title={`${name} file preview`} src={downloadUrl} />
+          )}
+        </Box>
       </DialogContent>
       <DialogActions>
         <Button color="secondary" onClick={onClose}>

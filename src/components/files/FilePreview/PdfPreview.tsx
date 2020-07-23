@@ -11,7 +11,7 @@ export const PdfPreview: FC<PreviewerProps> = ({ downloadUrl }) => {
   const [numberOfPages, setNumberOfPages] = useState(1);
   const { setPreviewError, previewPage } = usePreview();
 
-  const handleLoadSuccess = useCallback(
+  const handlePdfLoadSuccess = useCallback(
     (pdf: PDFDocumentProxy) => {
       const { numPages } = pdf;
       setNumberOfPages(numPages);
@@ -31,7 +31,7 @@ export const PdfPreview: FC<PreviewerProps> = ({ downloadUrl }) => {
       <Document
         file={downloadUrl}
         onLoadError={handleError}
-        onLoadSuccess={handleLoadSuccess}
+        onLoadSuccess={handlePdfLoadSuccess}
         onSourceError={handleError}
       >
         <Page pageNumber={previewPage} />

@@ -19,7 +19,7 @@ export const PreviewPagination: FC<PreviewPaginationProps> = (props) => {
   );
 
   return (
-    <Box width="100%">
+    <>
       <Box width="100%" display="flex" justifyContent="center">
         <Pagination
           count={pageCount}
@@ -29,7 +29,7 @@ export const PreviewPagination: FC<PreviewPaginationProps> = (props) => {
           showLastButton
         />
       </Box>
-      <Box width="100%">{children}</Box>
-    </Box>
+      <Box>{children}</Box>
+    </>
   );
 };
