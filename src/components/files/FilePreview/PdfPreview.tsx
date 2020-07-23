@@ -1,13 +1,10 @@
 import React, { FC, useState } from 'react';
 import { Document, Page, pdfjs } from 'react-pdf';
+import { PreviewerProps } from './FilePreview';
 
 pdfjs.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjs.version}/pdf.worker.js`;
 
-interface PdfPreviewProps {
-  downloadUrl: string;
-}
-
-export const PdfPreview: FC<PdfPreviewProps> = ({ downloadUrl }) => {
+export const PdfPreview: FC<PreviewerProps> = ({ downloadUrl }) => {
   const [pages, setPages] = useState<{
     numberOfPages: number;
     pageNumber: number;

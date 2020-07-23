@@ -7,7 +7,12 @@ import {
 } from '@material-ui/core';
 import React, { FC } from 'react';
 import { File } from '../../../api';
+import { ExcelPreview } from './ExcelPreview';
 import { PdfPreview } from './PdfPreview';
+
+export interface PreviewerProps {
+  downloadUrl: string;
+}
 
 interface FilePreviewProps {
   file?: File;
@@ -18,6 +23,8 @@ interface FilePreviewProps {
 
 const previewers = {
   'application/pdf': PdfPreview,
+  'application/vnd.ms-excel': ExcelPreview,
+  'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet': ExcelPreview,
 };
 
 export const FilePreview: FC<FilePreviewProps> = (props) => {

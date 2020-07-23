@@ -6790,7 +6790,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"cfb@npm:^1.1.2":
+"cfb@npm:^1.1.4":
   version: 1.2.0
   resolution: "cfb@npm:1.2.0"
   dependencies:
@@ -17913,17 +17913,6 @@ material-table@1.60.0:
   languageName: node
   linkType: hard
 
-"react-excel-renderer@npm:^1.1.0":
-  version: 1.1.0
-  resolution: "react-excel-renderer@npm:1.1.0"
-  dependencies:
-    react: ^16.7.0
-    webpack: ^4.12.0
-    xlsx: ^0.14.1
-  checksum: 3/260c856a928f007adcbb2a717c9320450497e0b03b761a08f8d1bed6f14ddd0e2487d391b38782215e45858cad96b8eac2d6bc747e14532e61419ac596003a79
-  languageName: node
-  linkType: hard
-
 "react-fast-compare@npm:^2.0.4":
   version: 2.0.4
   resolution: "react-fast-compare@npm:2.0.4"
@@ -18329,7 +18318,7 @@ material-table@1.60.0:
   languageName: node
   linkType: hard
 
-"react@npm:^16.13.1, react@npm:^16.7.0, react@npm:^16.8.3":
+"react@npm:^16.13.1, react@npm:^16.8.3":
   version: 16.13.1
   resolution: "react@npm:16.13.1"
   dependencies:
@@ -19993,14 +19982,12 @@ resolve@^1.17.0:
   languageName: node
   linkType: hard
 
-"ssf@npm:~0.10.2":
-  version: 0.10.3
-  resolution: "ssf@npm:0.10.3"
+"ssf@npm:~0.11.2":
+  version: 0.11.2
+  resolution: "ssf@npm:0.11.2"
   dependencies:
     frac: ~1.1.2
-  bin:
-    ssf: bin/ssf.njs
-  checksum: 3/f7f5f0e4c4b4b3771c0a0747a593379ef274bedbe14c1e885d42c1d93d4d35a75e9f0f3dafcbeb633eeaba6b692e74c4ff928331ad572a89c4c5760d69c99e91
+  checksum: 3/c917f19a04accb5bc8ee9be7d0b1abf77a0a3588c7f30eb7b9eb5b58439eec13cd9c60b7cf2c024559ce2dc360a1f990260651cc2a50cc7b358463a4eec57b04
   languageName: node
   linkType: hard
 
@@ -21809,7 +21796,7 @@ resolve@^1.17.0:
   languageName: node
   linkType: hard
 
-"webpack@npm:4.42.0, webpack@npm:^4.12.0":
+"webpack@npm:4.42.0":
   version: 4.42.0
   resolution: "webpack@npm:4.42.0"
   dependencies:
@@ -22017,6 +22004,13 @@ resolve@^1.17.0:
   version: 1.2.3
   resolution: "word-wrap@npm:1.2.3"
   checksum: 3/6526abd75d4409c76d1989cf2fbf6080b903db29824be3d17d0a0b8f6221486c76a021174eda2616cf311199787983c34bae3c5e7b51d2ad7476f2066cddb75a
+  languageName: node
+  linkType: hard
+
+"word@npm:~0.3.0":
+  version: 0.3.0
+  resolution: "word@npm:0.3.0"
+  checksum: 3/dee95a1ce8a4996f8cd7f42674a43a96cfce16fab8e948183d8fdd6f04c2379836326ae92f9d76882819330dac69d3a09cccf537b52893fccb906bf708dd0d73
   languageName: node
   linkType: hard
 
@@ -22317,20 +22311,22 @@ resolve@^1.17.0:
   languageName: node
   linkType: hard
 
-"xlsx@npm:^0.14.1":
-  version: 0.14.5
-  resolution: "xlsx@npm:0.14.5"
+"xlsx@npm:^0.16.4":
+  version: 0.16.4
+  resolution: "xlsx@npm:0.16.4"
   dependencies:
     adler-32: ~1.2.0
-    cfb: ^1.1.2
+    cfb: ^1.1.4
     codepage: ~1.14.0
     commander: ~2.17.1
     crc-32: ~1.2.0
     exit-on-epipe: ~1.0.1
-    ssf: ~0.10.2
+    ssf: ~0.11.2
+    wmf: ~1.0.1
+    word: ~0.3.0
   bin:
-    xlsx: ./bin/xlsx.njs
-  checksum: 3/a73c249850a0878f65e086cd1bac50c3908bdda283e58b8f0f6472c533885cbcc0147e5e4477a454121094ba14e1c48dc73cdc2da813cdfd2b82441e5c664e7a
+    xlsx: bin/xlsx.njs
+  checksum: 3/360fcb72e9277c13a0b704042c9e585ca02da1b8ae767622a80b8b0cdc8c2c20e97ffea654ac62cd15125d1df1e5bb84aa9601c5a5b17449324a8f96ba4796f3
   languageName: node
   linkType: hard
 
