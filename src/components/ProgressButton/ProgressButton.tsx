@@ -60,7 +60,7 @@ export const ProgressButton: FC<ProgressButtonProps> = ({
       {progress ? (
         <div className={progressWrapper}>
           <CircularProgress
-            size={size === 'small' ? 22 : 26}
+            size={size === 'large' ? 26 : size === 'small' ? 16 : 20}
             {...progressProps}
           />
         </div>
