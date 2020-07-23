@@ -126,8 +126,6 @@ export type Order = 'ASC' | 'DESC';
 export interface EngagementFilters {
   /** Only engagements matching this type */
   type?: Maybe<Scalars['String']>;
-  /** Only engagements matching this name */
-  name?: Maybe<Scalars['String']>;
   /** Only engagements matching this projectId */
   projectId?: Maybe<Scalars['ID']>;
 }
@@ -1436,43 +1434,99 @@ export interface UpdateLanguageOutput {
   language: Language;
 }
 
-/** A reference to a scripture verse */
-export interface ScriptureReference {
-  __typename?: 'ScriptureReference';
-  /** The code of the Bible book */
-  book: Scalars['String'];
-  /** The chapter number */
-  chapter: Scalars['Int'];
-  /** The verse number */
-  verse: Scalars['Int'];
-  bookName: Scalars['String'];
-  label: Scalars['String'];
-}
+export type BudgetRecord = Resource & {
+  __typename?: 'BudgetRecord';
+  id: Scalars['ID'];
+  createdAt: Scalars['DateTime'];
+  fiscalYear: SecuredInt;
+  amount: SecuredFloat;
+  organization: SecuredOrganization;
+};
+
+export type Budget = Resource & {
+  __typename?: 'Budget';
+  id: Scalars['ID'];
+  createdAt: Scalars['DateTime'];
+  status: Scalars['String'];
+  records: BudgetRecord[];
+  total: Scalars['Int'];
+};
 
 /**
- * A range of scripture.
- * i.e. Matthew 1:1-2:10
- */
-export interface ScriptureRange {
-  __typename?: 'ScriptureRange';
-  /** The starting verse */
-  start: ScriptureReference;
-  /** The ending verse */
-  end: ScriptureReference;
-}
-
-/**
- * An object whose `value` is a list of scripture ranges and has additional authorization information.
- * The value is only given if `canRead` is `true` otherwise it is empty: `[]`.
+ * An object with a budget `value` and additional authorization information.
+ * The value is only given if `canRead` is `true` otherwise it is `null`.
  * These `can*` authorization properties are specific to the user making the request.
  */
-export type SecuredScriptureRanges = Readable &
+export type SecuredBudget = Readable &
   Editable & {
-    __typename?: 'SecuredScriptureRanges';
+    __typename?: 'SecuredBudget';
     canEdit: Scalars['Boolean'];
     canRead: Scalars['Boolean'];
-    value: ScriptureRange[];
+    value?: Maybe<Budget>;
   };
+
+export interface CreateBudgetOutput {
+  __typename?: 'CreateBudgetOutput';
+  budget: Budget;
+}
+
+export interface BudgetListOutput {
+  __typename?: 'BudgetListOutput';
+  /**
+   * The page of budget.
+   * Note that this could include items that where also in sibling pages;
+   * you should de-duplicate these based on ID.
+   */
+  items: Budget[];
+  /** The total number of items across all pages */
+  total: Scalars['Int'];
+  /** Whether the next page exists */
+  hasMore: Scalars['Boolean'];
+}
+
+export interface UpdateBudgetOutput {
+  __typename?: 'UpdateBudgetOutput';
+  budget: Budget;
+}
+
+export interface UpdateBudgetRecordOutput {
+  __typename?: 'UpdateBudgetRecordOutput';
+  budgetRecord: BudgetRecord;
+}
+
+/**
+ * An object with an intern position `value` and additional authorization information.
+ * The value is only given if `canRead` is `true` otherwise it is `null`.
+ * These `can*` authorization properties are specific to the user making the request.
+ */
+export type SecuredInternPosition = Readable &
+  Editable & {
+    __typename?: 'SecuredInternPosition';
+    canEdit: Scalars['Boolean'];
+    canRead: Scalars['Boolean'];
+    value?: Maybe<InternshipEngagementPosition>;
+  };
+
+export type InternshipEngagementPosition =
+  | 'ExegeticalFacilitator'
+  | 'TranslationConsultantInTraining'
+  | 'AdministrativeSupportSpecialist'
+  | 'BusinessSupportSpecialist'
+  | 'CommunicationSpecialistInternal'
+  | 'CommunicationSpecialistMarketing'
+  | 'LanguageProgramManager'
+  | 'LanguageProgramManagerOrFieldOperations'
+  | 'LanguageSoftwareSupportSpecialist'
+  | 'LeadershipDevelopment'
+  | 'LiteracySpecialist'
+  | 'LukePartnershipFacilitatorOrSpecialist'
+  | 'MobilizerOrPartnershipSupportSpecialist'
+  | 'OralFacilitatorOrSpecialist'
+  | 'PersonnelOrHrSpecialist'
+  | 'ScriptureUseSpecialist'
+  | 'TechnicalSupportSpecialist'
+  | 'TranslationFacilitator'
+  | 'Translator';
 
 /**
  * An object whose `value` is a list of product mediums and has additional authorization information.
@@ -1557,6 +1611,44 @@ export type ProductPurpose =
   | 'ChurchMaturity'
   | 'SocialIssues'
   | 'Discipleship';
+
+/** A reference to a scripture verse */
+export interface ScriptureReference {
+  __typename?: 'ScriptureReference';
+  /** The code of the Bible book */
+  book: Scalars['String'];
+  /** The chapter number */
+  chapter: Scalars['Int'];
+  /** The verse number */
+  verse: Scalars['Int'];
+  bookName: Scalars['String'];
+  label: Scalars['String'];
+}
+
+/**
+ * A range of scripture.
+ * i.e. Matthew 1:1-2:10
+ */
+export interface ScriptureRange {
+  __typename?: 'ScriptureRange';
+  /** The starting verse */
+  start: ScriptureReference;
+  /** The ending verse */
+  end: ScriptureReference;
+}
+
+/**
+ * An object whose `value` is a list of scripture ranges and has additional authorization information.
+ * The value is only given if `canRead` is `true` otherwise it is empty: `[]`.
+ * These `can*` authorization properties are specific to the user making the request.
+ */
+export type SecuredScriptureRanges = Readable &
+  Editable & {
+    __typename?: 'SecuredScriptureRanges';
+    canEdit: Scalars['Boolean'];
+    canRead: Scalars['Boolean'];
+    value: ScriptureRange[];
+  };
 
 /**
  * An object with a producible `value` and additional authorization information.
@@ -1664,139 +1756,6 @@ export type SecuredProductList = Readable & {
   /** Whether the current user can add items to this list via the appropriate mutation */
   canCreate: Scalars['Boolean'];
 };
-
-export type Film = Producible &
-  Resource & {
-    __typename?: 'Film';
-    id: Scalars['ID'];
-    createdAt: Scalars['DateTime'];
-    scriptureReferences: SecuredScriptureRanges;
-    name: SecuredString;
-  };
-
-export interface CreateFilmOutput {
-  __typename?: 'CreateFilmOutput';
-  film: Film;
-}
-
-export interface FilmListOutput {
-  __typename?: 'FilmListOutput';
-  /**
-   * The page of film.
-   * Note that this could include items that where also in sibling pages;
-   * you should de-duplicate these based on ID.
-   */
-  items: Film[];
-  /** The total number of items across all pages */
-  total: Scalars['Int'];
-  /** Whether the next page exists */
-  hasMore: Scalars['Boolean'];
-}
-
-export interface UpdateFilmOutput {
-  __typename?: 'UpdateFilmOutput';
-  film: Film;
-}
-
-export type LiteracyMaterial = Producible &
-  Resource & {
-    __typename?: 'LiteracyMaterial';
-    id: Scalars['ID'];
-    createdAt: Scalars['DateTime'];
-    scriptureReferences: SecuredScriptureRanges;
-    name: SecuredString;
-  };
-
-export interface CreateLiteracyMaterialOutput {
-  __typename?: 'CreateLiteracyMaterialOutput';
-  literacyMaterial: LiteracyMaterial;
-}
-
-export interface LiteracyMaterialListOutput {
-  __typename?: 'LiteracyMaterialListOutput';
-  /**
-   * The page of literacymaterial.
-   * Note that this could include items that where also in sibling pages;
-   * you should de-duplicate these based on ID.
-   */
-  items: LiteracyMaterial[];
-  /** The total number of items across all pages */
-  total: Scalars['Int'];
-  /** Whether the next page exists */
-  hasMore: Scalars['Boolean'];
-}
-
-export interface UpdateLiteracyMaterialOutput {
-  __typename?: 'UpdateLiteracyMaterialOutput';
-  literacyMaterial: LiteracyMaterial;
-}
-
-export type Story = Producible &
-  Resource & {
-    __typename?: 'Story';
-    id: Scalars['ID'];
-    createdAt: Scalars['DateTime'];
-    scriptureReferences: SecuredScriptureRanges;
-    name: SecuredString;
-  };
-
-export interface CreateStoryOutput {
-  __typename?: 'CreateStoryOutput';
-  story: Story;
-}
-
-export interface StoryListOutput {
-  __typename?: 'StoryListOutput';
-  /**
-   * The page of story.
-   * Note that this could include items that where also in sibling pages;
-   * you should de-duplicate these based on ID.
-   */
-  items: Story[];
-  /** The total number of items across all pages */
-  total: Scalars['Int'];
-  /** Whether the next page exists */
-  hasMore: Scalars['Boolean'];
-}
-
-export interface UpdateStoryOutput {
-  __typename?: 'UpdateStoryOutput';
-  story: Story;
-}
-
-/**
- * An object with an intern position `value` and additional authorization information.
- * The value is only given if `canRead` is `true` otherwise it is `null`.
- * These `can*` authorization properties are specific to the user making the request.
- */
-export type SecuredInternPosition = Readable &
-  Editable & {
-    __typename?: 'SecuredInternPosition';
-    canEdit: Scalars['Boolean'];
-    canRead: Scalars['Boolean'];
-    value?: Maybe<InternshipEngagementPosition>;
-  };
-
-export type InternshipEngagementPosition =
-  | 'ExegeticalFacilitator'
-  | 'TranslationConsultantInTraining'
-  | 'AdministrativeSupportSpecialist'
-  | 'BusinessSupportSpecialist'
-  | 'CommunicationSpecialistInternal'
-  | 'CommunicationSpecialistMarketing'
-  | 'LanguageProgramManager'
-  | 'LanguageProgramManagerOrFieldOperations'
-  | 'LanguageSoftwareSupportSpecialist'
-  | 'LeadershipDevelopment'
-  | 'LiteracySpecialist'
-  | 'LukePartnershipFacilitatorOrSpecialist'
-  | 'MobilizerOrPartnershipSupportSpecialist'
-  | 'OralFacilitatorOrSpecialist'
-  | 'PersonnelOrHrSpecialist'
-  | 'ScriptureUseSpecialist'
-  | 'TechnicalSupportSpecialist'
-  | 'TranslationFacilitator'
-  | 'Translator';
 
 export type LanguageEngagement = Engagement &
   Resource & {
@@ -1935,135 +1894,6 @@ export interface UpdateInternshipEngagementOutput {
 }
 
 /**
- * An object whose `value` is a list of roles and has additional authorization information.
- * The value is only given if `canRead` is `true` otherwise it is empty: `[]`.
- * These `can*` authorization properties are specific to the user making the request.
- */
-export type SecuredRoles = Readable &
-  Editable & {
-    __typename?: 'SecuredRoles';
-    canEdit: Scalars['Boolean'];
-    canRead: Scalars['Boolean'];
-    value: Role[];
-  };
-
-export type ProjectMember = Resource & {
-  __typename?: 'ProjectMember';
-  id: Scalars['ID'];
-  createdAt: Scalars['DateTime'];
-  user: SecuredUser;
-  roles: SecuredRoles;
-  modifiedAt: Scalars['DateTime'];
-};
-
-export interface CreateProjectMemberOutput {
-  __typename?: 'CreateProjectMemberOutput';
-  projectMember: ProjectMember;
-}
-
-export interface UpdateProjectMemberOutput {
-  __typename?: 'UpdateProjectMemberOutput';
-  projectMember: ProjectMember;
-}
-
-export interface ProjectMemberListOutput {
-  __typename?: 'ProjectMemberListOutput';
-  /**
-   * The page of projectmember.
-   * Note that this could include items that where also in sibling pages;
-   * you should de-duplicate these based on ID.
-   */
-  items: ProjectMember[];
-  /** The total number of items across all pages */
-  total: Scalars['Int'];
-  /** Whether the next page exists */
-  hasMore: Scalars['Boolean'];
-}
-
-/**
- * An object whose `items` is a list of project members and additional authorization information.
- * The value is only given if `canRead` is `true` otherwise it is an empty list.
- * The `can*` properties are specific to the user making the request.
- */
-export type SecuredProjectMemberList = Readable & {
-  __typename?: 'SecuredProjectMemberList';
-  /**
-   * The page of projectmember.
-   * Note that this could include items that where also in sibling pages;
-   * you should de-duplicate these based on ID.
-   */
-  items: ProjectMember[];
-  /** The total number of items across all pages */
-  total: Scalars['Int'];
-  /** Whether the next page exists */
-  hasMore: Scalars['Boolean'];
-  /** Whether the current user can read the list of items */
-  canRead: Scalars['Boolean'];
-  /** Whether the current user can add items to this list via the appropriate mutation */
-  canCreate: Scalars['Boolean'];
-};
-
-export type BudgetRecord = Resource & {
-  __typename?: 'BudgetRecord';
-  id: Scalars['ID'];
-  createdAt: Scalars['DateTime'];
-  fiscalYear: SecuredInt;
-  amount: SecuredFloat;
-  organization: SecuredOrganization;
-};
-
-export type Budget = Resource & {
-  __typename?: 'Budget';
-  id: Scalars['ID'];
-  createdAt: Scalars['DateTime'];
-  status: Scalars['String'];
-  records: BudgetRecord[];
-  total: Scalars['Int'];
-};
-
-/**
- * An object with a budget `value` and additional authorization information.
- * The value is only given if `canRead` is `true` otherwise it is `null`.
- * These `can*` authorization properties are specific to the user making the request.
- */
-export type SecuredBudget = Readable &
-  Editable & {
-    __typename?: 'SecuredBudget';
-    canEdit: Scalars['Boolean'];
-    canRead: Scalars['Boolean'];
-    value?: Maybe<Budget>;
-  };
-
-export interface CreateBudgetOutput {
-  __typename?: 'CreateBudgetOutput';
-  budget: Budget;
-}
-
-export interface BudgetListOutput {
-  __typename?: 'BudgetListOutput';
-  /**
-   * The page of budget.
-   * Note that this could include items that where also in sibling pages;
-   * you should de-duplicate these based on ID.
-   */
-  items: Budget[];
-  /** The total number of items across all pages */
-  total: Scalars['Int'];
-  /** Whether the next page exists */
-  hasMore: Scalars['Boolean'];
-}
-
-export interface UpdateBudgetOutput {
-  __typename?: 'UpdateBudgetOutput';
-  budget: Budget;
-}
-
-export interface UpdateBudgetRecordOutput {
-  __typename?: 'UpdateBudgetRecordOutput';
-  budgetRecord: BudgetRecord;
-}
-
-/**
  * An object with a partnership agreement status `value` and additional authorization information.
  * The value is only given if `canRead` is `true` otherwise it is `null`.
  * These `can*` authorization properties are specific to the user making the request.
@@ -2165,6 +1995,174 @@ export type SecuredPartnershipList = Readable & {
   /** Whether the current user can add items to this list via the appropriate mutation */
   canCreate: Scalars['Boolean'];
 };
+
+/**
+ * An object whose `value` is a list of roles and has additional authorization information.
+ * The value is only given if `canRead` is `true` otherwise it is empty: `[]`.
+ * These `can*` authorization properties are specific to the user making the request.
+ */
+export type SecuredRoles = Readable &
+  Editable & {
+    __typename?: 'SecuredRoles';
+    canEdit: Scalars['Boolean'];
+    canRead: Scalars['Boolean'];
+    value: Role[];
+  };
+
+export type ProjectMember = Resource & {
+  __typename?: 'ProjectMember';
+  id: Scalars['ID'];
+  createdAt: Scalars['DateTime'];
+  user: SecuredUser;
+  roles: SecuredRoles;
+  modifiedAt: Scalars['DateTime'];
+};
+
+export interface CreateProjectMemberOutput {
+  __typename?: 'CreateProjectMemberOutput';
+  projectMember: ProjectMember;
+}
+
+export interface UpdateProjectMemberOutput {
+  __typename?: 'UpdateProjectMemberOutput';
+  projectMember: ProjectMember;
+}
+
+export interface ProjectMemberListOutput {
+  __typename?: 'ProjectMemberListOutput';
+  /**
+   * The page of projectmember.
+   * Note that this could include items that where also in sibling pages;
+   * you should de-duplicate these based on ID.
+   */
+  items: ProjectMember[];
+  /** The total number of items across all pages */
+  total: Scalars['Int'];
+  /** Whether the next page exists */
+  hasMore: Scalars['Boolean'];
+}
+
+/**
+ * An object whose `items` is a list of project members and additional authorization information.
+ * The value is only given if `canRead` is `true` otherwise it is an empty list.
+ * The `can*` properties are specific to the user making the request.
+ */
+export type SecuredProjectMemberList = Readable & {
+  __typename?: 'SecuredProjectMemberList';
+  /**
+   * The page of projectmember.
+   * Note that this could include items that where also in sibling pages;
+   * you should de-duplicate these based on ID.
+   */
+  items: ProjectMember[];
+  /** The total number of items across all pages */
+  total: Scalars['Int'];
+  /** Whether the next page exists */
+  hasMore: Scalars['Boolean'];
+  /** Whether the current user can read the list of items */
+  canRead: Scalars['Boolean'];
+  /** Whether the current user can add items to this list via the appropriate mutation */
+  canCreate: Scalars['Boolean'];
+};
+
+export type Film = Producible &
+  Resource & {
+    __typename?: 'Film';
+    id: Scalars['ID'];
+    createdAt: Scalars['DateTime'];
+    scriptureReferences: SecuredScriptureRanges;
+    name: SecuredString;
+  };
+
+export interface CreateFilmOutput {
+  __typename?: 'CreateFilmOutput';
+  film: Film;
+}
+
+export interface FilmListOutput {
+  __typename?: 'FilmListOutput';
+  /**
+   * The page of film.
+   * Note that this could include items that where also in sibling pages;
+   * you should de-duplicate these based on ID.
+   */
+  items: Film[];
+  /** The total number of items across all pages */
+  total: Scalars['Int'];
+  /** Whether the next page exists */
+  hasMore: Scalars['Boolean'];
+}
+
+export interface UpdateFilmOutput {
+  __typename?: 'UpdateFilmOutput';
+  film: Film;
+}
+
+export type LiteracyMaterial = Producible &
+  Resource & {
+    __typename?: 'LiteracyMaterial';
+    id: Scalars['ID'];
+    createdAt: Scalars['DateTime'];
+    scriptureReferences: SecuredScriptureRanges;
+    name: SecuredString;
+  };
+
+export interface CreateLiteracyMaterialOutput {
+  __typename?: 'CreateLiteracyMaterialOutput';
+  literacyMaterial: LiteracyMaterial;
+}
+
+export interface LiteracyMaterialListOutput {
+  __typename?: 'LiteracyMaterialListOutput';
+  /**
+   * The page of literacymaterial.
+   * Note that this could include items that where also in sibling pages;
+   * you should de-duplicate these based on ID.
+   */
+  items: LiteracyMaterial[];
+  /** The total number of items across all pages */
+  total: Scalars['Int'];
+  /** Whether the next page exists */
+  hasMore: Scalars['Boolean'];
+}
+
+export interface UpdateLiteracyMaterialOutput {
+  __typename?: 'UpdateLiteracyMaterialOutput';
+  literacyMaterial: LiteracyMaterial;
+}
+
+export type Story = Producible &
+  Resource & {
+    __typename?: 'Story';
+    id: Scalars['ID'];
+    createdAt: Scalars['DateTime'];
+    scriptureReferences: SecuredScriptureRanges;
+    name: SecuredString;
+  };
+
+export interface CreateStoryOutput {
+  __typename?: 'CreateStoryOutput';
+  story: Story;
+}
+
+export interface StoryListOutput {
+  __typename?: 'StoryListOutput';
+  /**
+   * The page of story.
+   * Note that this could include items that where also in sibling pages;
+   * you should de-duplicate these based on ID.
+   */
+  items: Story[];
+  /** The total number of items across all pages */
+  total: Scalars['Int'];
+  /** Whether the next page exists */
+  hasMore: Scalars['Boolean'];
+}
+
+export interface UpdateStoryOutput {
+  __typename?: 'UpdateStoryOutput';
+  story: Story;
+}
 
 export type Favorite = Resource & {
   __typename?: 'Favorite';
@@ -2336,6 +2334,22 @@ export interface Query {
   ceremonies: CeremonyListOutput;
   /** Check Consistency in Ceremony Nodes */
   checkCeremonyConsistency: Scalars['Boolean'];
+  /** Look up a project member by ID */
+  projectMember: ProjectMember;
+  /** Look up project members */
+  projectMembers: ProjectMemberListOutput;
+  /** Look up a partnership by ID */
+  partnership: Partnership;
+  /** Look up partnerships */
+  partnerships: PartnershipListOutput;
+  /** Check partnership node consistency */
+  checkPartnershipConsistency: Scalars['Boolean'];
+  /** Look up a project by its ID */
+  project: Project;
+  /** Look up projects */
+  projects: ProjectListOutput;
+  /** Check Consistency in Project Nodes */
+  checkProjectConsistency: Scalars['Boolean'];
   /** Look up a language by its ID */
   language: Language;
   /** Look up languages */
@@ -2364,22 +2378,6 @@ export interface Query {
   engagements: EngagementListOutput;
   /** Check Consistency in Engagement Nodes */
   checkEngagementConsistency: Scalars['Boolean'];
-  /** Look up a project member by ID */
-  projectMember: ProjectMember;
-  /** Look up project members */
-  projectMembers: ProjectMemberListOutput;
-  /** Look up a partnership by ID */
-  partnership: Partnership;
-  /** Look up partnerships */
-  partnerships: PartnershipListOutput;
-  /** Check partnership node consistency */
-  checkPartnershipConsistency: Scalars['Boolean'];
-  /** Look up a project by its ID */
-  project: Project;
-  /** Look up projects */
-  projects: ProjectListOutput;
-  /** Check Consistency in Project Nodes */
-  checkProjectConsistency: Scalars['Boolean'];
   /** Look up a budget by its ID */
   budget: Budget;
   /** Look up budgets by projectId */
@@ -2494,6 +2492,30 @@ export interface QueryCeremoniesArgs {
   input?: Maybe<CeremonyListInput>;
 }
 
+export interface QueryProjectMemberArgs {
+  id: Scalars['ID'];
+}
+
+export interface QueryProjectMembersArgs {
+  input?: Maybe<ProjectMemberListInput>;
+}
+
+export interface QueryPartnershipArgs {
+  id: Scalars['ID'];
+}
+
+export interface QueryPartnershipsArgs {
+  input?: Maybe<PartnershipListInput>;
+}
+
+export interface QueryProjectArgs {
+  id: Scalars['ID'];
+}
+
+export interface QueryProjectsArgs {
+  input?: Maybe<ProjectListInput>;
+}
+
 export interface QueryLanguageArgs {
   id: Scalars['ID'];
 }
@@ -2544,30 +2566,6 @@ export interface QueryEngagementsArgs {
 
 export interface QueryCheckEngagementConsistencyArgs {
   input: EngagementConsistencyInput;
-}
-
-export interface QueryProjectMemberArgs {
-  id: Scalars['ID'];
-}
-
-export interface QueryProjectMembersArgs {
-  input?: Maybe<ProjectMemberListInput>;
-}
-
-export interface QueryPartnershipArgs {
-  id: Scalars['ID'];
-}
-
-export interface QueryPartnershipsArgs {
-  input?: Maybe<PartnershipListInput>;
-}
-
-export interface QueryProjectArgs {
-  id: Scalars['ID'];
-}
-
-export interface QueryProjectsArgs {
-  input?: Maybe<ProjectListInput>;
 }
 
 export interface QueryBudgetArgs {
@@ -2863,6 +2861,8 @@ export interface Mutation {
   logout: Scalars['Boolean'];
   /** Register a new user */
   register: RegisterOutput;
+  /** Change your password */
+  changePassword: Scalars['Boolean'];
   /** Forgot password; send password reset email */
   forgotPassword: Scalars['Boolean'];
   /** Reset Password */
@@ -2900,6 +2900,24 @@ export interface Mutation {
   moveFileNode: FileNode;
   /** Update a ceremony */
   updateCeremony: UpdateCeremonyOutput;
+  /** Create a project member */
+  createProjectMember: CreateProjectMemberOutput;
+  /** Update a project member */
+  updateProjectMember: UpdateProjectMemberOutput;
+  /** Delete a project member */
+  deleteProjectMember: Scalars['Boolean'];
+  /** Create a Partnership entry */
+  createPartnership: CreatePartnershipOutput;
+  /** Update a Partnership */
+  updatePartnership: UpdatePartnershipOutput;
+  /** Delete a Partnership */
+  deletePartnership: Scalars['Boolean'];
+  /** Create a project */
+  createProject: CreateProjectOutput;
+  /** Update a project */
+  updateProject: UpdateProjectOutput;
+  /** Delete a project */
+  deleteProject: Scalars['Boolean'];
   /** Create a language */
   createLanguage: CreateLanguageOutput;
   /** Update a language */
@@ -2944,24 +2962,6 @@ export interface Mutation {
   updateInternshipEngagement: UpdateInternshipEngagementOutput;
   /** Delete an engagement */
   deleteEngagement: Scalars['Boolean'];
-  /** Create a project member */
-  createProjectMember: CreateProjectMemberOutput;
-  /** Update a project member */
-  updateProjectMember: UpdateProjectMemberOutput;
-  /** Delete a project member */
-  deleteProjectMember: Scalars['Boolean'];
-  /** Create a Partnership entry */
-  createPartnership: CreatePartnershipOutput;
-  /** Update a Partnership */
-  updatePartnership: UpdatePartnershipOutput;
-  /** Delete a Partnership */
-  deletePartnership: Scalars['Boolean'];
-  /** Create a project */
-  createProject: CreateProjectOutput;
-  /** Update a project */
-  updateProject: UpdateProjectOutput;
-  /** Delete a project */
-  deleteProject: Scalars['Boolean'];
   /** Update a budgetRecord */
   updateBudgetRecord: UpdateBudgetRecordOutput;
   /** Create a budget */
@@ -3114,6 +3114,11 @@ export interface MutationRegisterArgs {
   input: RegisterInput;
 }
 
+export interface MutationChangePasswordArgs {
+  oldPassword: Scalars['String'];
+  newPassword: Scalars['String'];
+}
+
 export interface MutationForgotPasswordArgs {
   email: Scalars['String'];
 }
@@ -3172,6 +3177,42 @@ export interface MutationMoveFileNodeArgs {
 
 export interface MutationUpdateCeremonyArgs {
   input: UpdateCeremonyInput;
+}
+
+export interface MutationCreateProjectMemberArgs {
+  input: CreateProjectMemberInput;
+}
+
+export interface MutationUpdateProjectMemberArgs {
+  input: UpdateProjectMemberInput;
+}
+
+export interface MutationDeleteProjectMemberArgs {
+  id: Scalars['ID'];
+}
+
+export interface MutationCreatePartnershipArgs {
+  input: CreatePartnershipInput;
+}
+
+export interface MutationUpdatePartnershipArgs {
+  input: UpdatePartnershipInput;
+}
+
+export interface MutationDeletePartnershipArgs {
+  id: Scalars['ID'];
+}
+
+export interface MutationCreateProjectArgs {
+  input: CreateProjectInput;
+}
+
+export interface MutationUpdateProjectArgs {
+  input: UpdateProjectInput;
+}
+
+export interface MutationDeleteProjectArgs {
+  id: Scalars['ID'];
 }
 
 export interface MutationCreateLanguageArgs {
@@ -3261,42 +3302,6 @@ export interface MutationUpdateInternshipEngagementArgs {
 }
 
 export interface MutationDeleteEngagementArgs {
-  id: Scalars['ID'];
-}
-
-export interface MutationCreateProjectMemberArgs {
-  input: CreateProjectMemberInput;
-}
-
-export interface MutationUpdateProjectMemberArgs {
-  input: UpdateProjectMemberInput;
-}
-
-export interface MutationDeleteProjectMemberArgs {
-  id: Scalars['ID'];
-}
-
-export interface MutationCreatePartnershipArgs {
-  input: CreatePartnershipInput;
-}
-
-export interface MutationUpdatePartnershipArgs {
-  input: UpdatePartnershipInput;
-}
-
-export interface MutationDeletePartnershipArgs {
-  id: Scalars['ID'];
-}
-
-export interface MutationCreateProjectArgs {
-  input: CreateProjectInput;
-}
-
-export interface MutationUpdateProjectArgs {
-  input: UpdateProjectInput;
-}
-
-export interface MutationDeleteProjectArgs {
   id: Scalars['ID'];
 }
 
@@ -3550,7 +3555,7 @@ export interface CreatePersonInput {
 }
 
 export interface CreatePerson {
-  email?: Maybe<Scalars['String']>;
+  email: Scalars['String'];
   realFirstName: Scalars['String'];
   realLastName: Scalars['String'];
   displayFirstName: Scalars['String'];
@@ -3567,6 +3572,7 @@ export interface UpdateUserInput {
 
 export interface UpdateUser {
   id: Scalars['ID'];
+  email?: Maybe<Scalars['String']>;
   realFirstName?: Maybe<Scalars['String']>;
   realLastName?: Maybe<Scalars['String']>;
   displayFirstName?: Maybe<Scalars['String']>;
@@ -3730,6 +3736,97 @@ export interface UpdateCeremony {
   actualDate?: Maybe<Scalars['Date']>;
 }
 
+export interface CreateProjectMemberInput {
+  projectMember: CreateProjectMember;
+}
+
+export interface CreateProjectMember {
+  /** A user ID */
+  userId: Scalars['ID'];
+  /** A project ID */
+  projectId: Scalars['ID'];
+  roles?: Maybe<Role[]>;
+}
+
+export interface UpdateProjectMemberInput {
+  projectMember: UpdateProjectMember;
+}
+
+export interface UpdateProjectMember {
+  id: Scalars['ID'];
+  roles?: Maybe<Role[]>;
+}
+
+export interface CreatePartnershipInput {
+  partnership: CreatePartnership;
+}
+
+export interface CreatePartnership {
+  organizationId: Scalars['ID'];
+  projectId: Scalars['ID'];
+  agreementStatus?: Maybe<PartnershipAgreementStatus>;
+  /** The partner agreement */
+  agreement?: Maybe<CreateDefinedFileVersionInput>;
+  /** The MOU agreement */
+  mou?: Maybe<CreateDefinedFileVersionInput>;
+  mouStatus?: Maybe<PartnershipAgreementStatus>;
+  mouStartOverride?: Maybe<Scalars['Date']>;
+  mouEndOverride?: Maybe<Scalars['Date']>;
+  types?: Maybe<PartnershipType[]>;
+}
+
+export interface CreateDefinedFileVersionInput {
+  /** The ID returned from the `requestFileUpload` mutation */
+  uploadId: Scalars['ID'];
+  /** An optional name. Defaults to file name. */
+  name: Scalars['String'];
+}
+
+export interface UpdatePartnershipInput {
+  partnership: UpdatePartnership;
+}
+
+export interface UpdatePartnership {
+  id: Scalars['ID'];
+  agreementStatus?: Maybe<PartnershipAgreementStatus>;
+  /** The partner agreement */
+  agreement?: Maybe<CreateDefinedFileVersionInput>;
+  /** The MOU agreement */
+  mou?: Maybe<CreateDefinedFileVersionInput>;
+  mouStatus?: Maybe<PartnershipAgreementStatus>;
+  mouStartOverride?: Maybe<Scalars['Date']>;
+  mouEndOverride?: Maybe<Scalars['Date']>;
+  types?: Maybe<PartnershipType[]>;
+}
+
+export interface CreateProjectInput {
+  project: CreateProject;
+}
+
+export interface CreateProject {
+  name: Scalars['String'];
+  type: ProjectType;
+  /** A country ID */
+  locationId?: Maybe<Scalars['ID']>;
+  mouStart?: Maybe<Scalars['Date']>;
+  mouEnd?: Maybe<Scalars['Date']>;
+  estimatedSubmission?: Maybe<Scalars['Date']>;
+}
+
+export interface UpdateProjectInput {
+  project: UpdateProject;
+}
+
+export interface UpdateProject {
+  id: Scalars['ID'];
+  name?: Maybe<Scalars['String']>;
+  /** A country ID */
+  locationId?: Maybe<Scalars['ID']>;
+  mouStart?: Maybe<Scalars['Date']>;
+  mouEnd?: Maybe<Scalars['Date']>;
+  estimatedSubmission?: Maybe<Scalars['Date']>;
+}
+
 export interface CreateLanguageInput {
   language: CreateLanguage;
 }
@@ -3865,23 +3962,6 @@ export interface CreateProduct {
    * If omitted a `DirectScriptureProduct` will be created instead.
    */
   produces?: Maybe<Scalars['ID']>;
-  mediums?: Maybe<ProductMedium[]>;
-  purposes?: Maybe<ProductPurpose[]>;
-  methodology?: Maybe<ProductMethodology>;
-}
-
-export interface UpdateProductInput {
-  product: UpdateProduct;
-}
-
-export interface UpdateProduct {
-  id: Scalars['ID'];
-  /**
-   * An ID of a `Producible` object to change.
-   *
-   * Note only `DerivativeScriptureProduct`s can use this field.
-   */
-  produces?: Maybe<Scalars['ID']>;
   /**
    * Change this list of `scriptureReferences` if provided.
    *
@@ -3902,6 +3982,38 @@ export interface UpdateProduct {
   methodology?: Maybe<ProductMethodology>;
 }
 
+export interface UpdateProductInput {
+  product: UpdateProduct;
+}
+
+export interface UpdateProduct {
+  /**
+   * Change this list of `scriptureReferences` if provided.
+   *
+   * Note only `DirectScriptureProduct`s can use this field.
+   */
+  scriptureReferences?: Maybe<ScriptureRangeInput[]>;
+  /**
+   * The `Producible` defines a `scriptureReferences` list, and this is
+   * used by default in this product's `scriptureReferences` list.
+   * If this product _specifically_ needs to customize the references, then
+   * this property can be set (and read) to "override" the `producible`'s list.
+   *
+   * Note only `DerivativeScriptureProduct`s can use this field.
+   */
+  scriptureReferencesOverride?: Maybe<ScriptureRangeInput[]>;
+  mediums?: Maybe<ProductMedium[]>;
+  purposes?: Maybe<ProductPurpose[]>;
+  methodology?: Maybe<ProductMethodology>;
+  id: Scalars['ID'];
+  /**
+   * An ID of a `Producible` object to change.
+   *
+   * Note only `DerivativeScriptureProduct`s can use this field.
+   */
+  produces?: Maybe<Scalars['ID']>;
+}
+
 export interface CreateLanguageEngagementInput {
   engagement: CreateLanguageEngagement;
 }
@@ -3918,13 +4030,6 @@ export interface CreateLanguageEngagement {
   lukePartnership?: Maybe<Scalars['Boolean']>;
   paraTextRegistryId?: Maybe<Scalars['String']>;
   pnp?: Maybe<CreateDefinedFileVersionInput>;
-}
-
-export interface CreateDefinedFileVersionInput {
-  /** The ID returned from the `requestFileUpload` mutation */
-  uploadId: Scalars['ID'];
-  /** An optional name. Defaults to file name. */
-  name: Scalars['String'];
 }
 
 export interface CreateInternshipEngagementInput {
@@ -3979,90 +4084,6 @@ export interface UpdateInternshipEngagement {
   position?: Maybe<InternshipEngagementPosition>;
   methodologies?: Maybe<ProductMethodology[]>;
   growthPlan?: Maybe<CreateDefinedFileVersionInput>;
-}
-
-export interface CreateProjectMemberInput {
-  projectMember: CreateProjectMember;
-}
-
-export interface CreateProjectMember {
-  /** A user ID */
-  userId: Scalars['ID'];
-  /** A project ID */
-  projectId: Scalars['ID'];
-  roles?: Maybe<Role[]>;
-}
-
-export interface UpdateProjectMemberInput {
-  projectMember: UpdateProjectMember;
-}
-
-export interface UpdateProjectMember {
-  id: Scalars['ID'];
-  roles?: Maybe<Role[]>;
-}
-
-export interface CreatePartnershipInput {
-  partnership: CreatePartnership;
-}
-
-export interface CreatePartnership {
-  organizationId: Scalars['ID'];
-  projectId: Scalars['ID'];
-  agreementStatus?: Maybe<PartnershipAgreementStatus>;
-  /** The partner agreement */
-  agreement?: Maybe<CreateDefinedFileVersionInput>;
-  /** The MOU agreement */
-  mou?: Maybe<CreateDefinedFileVersionInput>;
-  mouStatus?: Maybe<PartnershipAgreementStatus>;
-  mouStartOverride?: Maybe<Scalars['Date']>;
-  mouEndOverride?: Maybe<Scalars['Date']>;
-  types?: Maybe<PartnershipType[]>;
-}
-
-export interface UpdatePartnershipInput {
-  partnership: UpdatePartnership;
-}
-
-export interface UpdatePartnership {
-  id: Scalars['ID'];
-  agreementStatus?: Maybe<PartnershipAgreementStatus>;
-  /** The partner agreement */
-  agreement?: Maybe<CreateDefinedFileVersionInput>;
-  /** The MOU agreement */
-  mou?: Maybe<CreateDefinedFileVersionInput>;
-  mouStatus?: Maybe<PartnershipAgreementStatus>;
-  mouStartOverride?: Maybe<Scalars['Date']>;
-  mouEndOverride?: Maybe<Scalars['Date']>;
-  types?: Maybe<PartnershipType[]>;
-}
-
-export interface CreateProjectInput {
-  project: CreateProject;
-}
-
-export interface CreateProject {
-  name: Scalars['String'];
-  type: ProjectType;
-  /** A country ID */
-  locationId?: Maybe<Scalars['ID']>;
-  mouStart?: Maybe<Scalars['Date']>;
-  mouEnd?: Maybe<Scalars['Date']>;
-  estimatedSubmission?: Maybe<Scalars['Date']>;
-}
-
-export interface UpdateProjectInput {
-  project: UpdateProject;
-}
-
-export interface UpdateProject {
-  id: Scalars['ID'];
-  name?: Maybe<Scalars['String']>;
-  /** A country ID */
-  locationId?: Maybe<Scalars['ID']>;
-  mouStart?: Maybe<Scalars['Date']>;
-  mouEnd?: Maybe<Scalars['Date']>;
-  estimatedSubmission?: Maybe<Scalars['Date']>;
 }
 
 export interface UpdateBudgetRecordInput {
