@@ -8,31 +8,25 @@ import {
   DialogActions,
   DialogContent,
   DialogTitle,
-  IconButton,
   makeStyles,
   Typography,
 } from '@material-ui/core';
+import { ExpandMore } from '@material-ui/icons';
 import { ToggleButton } from '@material-ui/lab';
-import React, { FC, useReducer } from 'react';
-import { Form } from 'react-final-form';
+import { isEmpty } from 'lodash';
+import React, { FC, useState } from 'react';
+import { Form, FormSpy } from 'react-final-form';
 import { useParams } from 'react-router';
 import { ScriptureRangeInput } from '../../../api';
 import { Breadcrumb } from '../../../components/Breadcrumb';
 import {
   NumberField,
+  SubmitButton,
   TextField,
   ToggleButtonOption,
   ToggleButtonsField,
 } from '../../../components/form';
-import { PencilCircledIcon } from '../../../components/Icons';
 import { ProjectBreadcrumb } from '../../../components/ProjectBreadcrumb';
-import {
-  AccordionState,
-  accordionStateReducer,
-  addScriptureRange,
-  expandSection,
-  initialAccordionState,
-} from './AccordionState';
 import { books } from './books';
 import {
   useCreateProductMutation,
@@ -49,12 +43,24 @@ const useStyles = makeStyles(({ spacing, breakpoints }) => ({
     padding: spacing(4),
     maxWidth: breakpoints.values.md,
   },
+  productSection: {
+    display: 'flex',
+    flexDirection: 'column',
+  },
 }));
 
 export const CreateProduct: FC = () => {
   const classes = useStyles();
 
   const { projectId, engagementId } = useParams();
+
+  const [openedSection, setOpenedSection] = useState<string>('produces');
+  const [selectedBook, setSelectedBook] = useState<string>('');
+  const [scriptureReferences, setScriptureReferences] = useState<
+    ScriptureRangeInput[]
+  >([]);
+  const [formValues, setFormvalues] = useState({});
+  console.log('formValues: ', formValues);
 
   const { data } = useGetProjectBreadcrumbQuery({
     variables: {
@@ -63,19 +69,9 @@ export const CreateProduct: FC = () => {
   });
 
   const project = data?.project;
-  const [accordionState, dispatch] = useReducer(
-    accordionStateReducer,
-    initialAccordionState
-  );
 
   const selectVerse = (
-    {
-      scriptureReferences: [book],
-      startChapter,
-      startVerse,
-      endChapter,
-      endVerse,
-    }: any,
+    { books: [book], startChapter, startVerse, endChapter, endVerse }: any,
     form: any
   ) => {
     // add a book and verse to the list
@@ -91,10 +87,10 @@ export const CreateProduct: FC = () => {
         verse: endVerse,
       },
     };
-    dispatch(addScriptureRange(scriptureRange));
+    setScriptureReferences([...scriptureReferences, scriptureRange]);
     //unselect the book from form state
     form.mutators.clear(
-      'scriptureReferences',
+      'books',
       'startChapter',
       'startVerse',
       'endChapter',
@@ -105,8 +101,6 @@ export const CreateProduct: FC = () => {
   const [createProduct] = useCreateProductMutation();
 
   const onSubmit = async ({ productType, ...inputs }: any) => {
-    const { scriptureReferences } = accordionState;
-    console.log('formInputValues: ', inputs);
     const input = {
       ...inputs,
       engagementId,
@@ -121,6 +115,13 @@ export const CreateProduct: FC = () => {
         },
       },
     });
+  };
+
+  const handleChange = (panel: string) => (
+    event: React.ChangeEvent<{}>,
+    isExpanded: boolean
+  ) => {
+    setOpenedSection(isExpanded ? panel : '');
   };
 
   return (
@@ -149,20 +150,21 @@ export const CreateProduct: FC = () => {
           console.log('rest: ', rest);
           return (
             <form onSubmit={handleSubmit}>
-              <AccordionState dispatch={dispatch} />
-              <Accordion expanded={accordionState.expand.product}>
-                <AccordionSummary>
+              <FormSpy
+                subscription={{ values: true }}
+                onChange={({ values }) => {
+                  setSelectedBook(values.books?.[0] || '');
+                  !isEmpty(values) && setFormvalues(values);
+                }}
+              />
+              <Accordion
+                expanded={openedSection === 'produces'}
+                onChange={handleChange('produces')}
+              >
+                <AccordionSummary expandIcon={<ExpandMore />}>
                   <Typography>Choose Product</Typography>
-                  {!accordionState.expand.product && (
-                    <IconButton
-                      color="primary"
-                      onClick={() => dispatch(expandSection('product'))}
-                    >
-                      <PencilCircledIcon />
-                    </IconButton>
-                  )}
                 </AccordionSummary>
-                <AccordionDetails>
+                <AccordionDetails className={classes.productSection}>
                   <ToggleButtonsField name="productType" pickOne>
                     {[
                       'scripture',
@@ -178,168 +180,129 @@ export const CreateProduct: FC = () => {
                       />
                     ))}
                   </ToggleButtonsField>
+                  <TextField
+                    name="produces"
+                    disabled={values.productType?.[0] === 'scripture'}
+                  />
                 </AccordionDetails>
               </Accordion>
-              {accordionState.show.produces && (
-                <Accordion expanded={accordionState.expand.produces}>
-                  <AccordionSummary>
-                    <Typography>Find Derivative Product</Typography>
-                    {!accordionState.expand.produces && (
-                      <IconButton
-                        color="primary"
-                        onClick={() => dispatch(expandSection('produces'))}
-                      >
-                        <PencilCircledIcon />
-                      </IconButton>
-                    )}
-                  </AccordionSummary>
-                  <AccordionDetails>
-                    <TextField name="produces" />
-                  </AccordionDetails>
-                </Accordion>
-              )}
-              {accordionState.show.scriptureReferences && (
-                <Accordion expanded={accordionState.expand.scriptureReferences}>
-                  <AccordionSummary>
-                    <Typography>Scripture Ranges</Typography>
-                    {accordionState.selectedScriptureRanges.map(
-                      (scriptureRange: ScriptureRangeInput) => (
-                        <ToggleButton selected>
-                          {`${scriptureRange.start.book} ${scriptureRange.start.chapter}:${scriptureRange.start.verse} -  ${scriptureRange.end.chapter}:${scriptureRange.end.verse}`}
-                        </ToggleButton>
-                      )
-                    )}
-                    {!accordionState.expand.scriptureReferences && (
-                      <IconButton
-                        color="primary"
-                        onClick={() =>
-                          dispatch(expandSection('scriptureReferences'))
-                        }
-                      >
-                        <PencilCircledIcon />
-                      </IconButton>
-                    )}
-                  </AccordionSummary>
-                  <AccordionDetails>
-                    <ToggleButtonsField name="scriptureReferences" pickOne>
-                      {books.map((option) => (
-                        <ToggleButtonOption
-                          key={option}
-                          label={option}
-                          value={option}
-                        />
-                      ))}
-                    </ToggleButtonsField>
-                  </AccordionDetails>
-                </Accordion>
-              )}
-              {accordionState.show.mediums && (
-                <Accordion expanded={accordionState.expand.mediums}>
-                  <AccordionSummary>
-                    <Typography>Choose Medium</Typography>
-                    {!accordionState.expand.mediums && (
-                      <IconButton
-                        color="primary"
-                        onClick={() => dispatch(expandSection('mediums'))}
-                      >
-                        <PencilCircledIcon />
-                      </IconButton>
-                    )}
-                  </AccordionSummary>
-                  <AccordionDetails>
-                    <ToggleButtonsField name="mediums">
-                      {[
-                        'Print',
-                        'Web',
-                        'EBook',
-                        'App',
-                        'Audio',
-                        'OralTranslation',
-                        'Video',
-                        'Other',
-                      ].map((option) => (
-                        <ToggleButtonOption
-                          key={option}
-                          label={option}
-                          value={option}
-                        />
-                      ))}
-                    </ToggleButtonsField>
-                  </AccordionDetails>
-                </Accordion>
-              )}
-              {accordionState.show.purposes && (
-                <Accordion expanded={accordionState.expand.purposes}>
-                  <AccordionSummary>
-                    <Typography>Choose Purposes</Typography>
-                    {!accordionState.expand.purposes && (
-                      <IconButton
-                        color="primary"
-                        onClick={() => dispatch(expandSection('purposes'))}
-                      >
-                        <PencilCircledIcon />
-                      </IconButton>
-                    )}
-                  </AccordionSummary>
-                  <AccordionDetails>
-                    <ToggleButtonsField name="purposes">
-                      {[
-                        'EvangelismChurchPlanting',
-                        'ChurchLife',
-                        'ChurchMaturity',
-                        'SocialIssues',
-                        'Discipleship',
-                      ].map((option) => (
-                        <ToggleButtonOption
-                          key={option}
-                          label={option}
-                          value={option}
-                        />
-                      ))}
-                    </ToggleButtonsField>
-                  </AccordionDetails>
-                </Accordion>
-              )}
-              {accordionState.show.methodology && (
-                <Accordion expanded={accordionState.expand.methodology}>
-                  <AccordionSummary>
-                    <Typography>Choose Methodology</Typography>
-                    {!accordionState.expand.methodology && (
-                      <IconButton
-                        color="primary"
-                        onClick={() => dispatch(expandSection('methodology'))}
-                      >
-                        <PencilCircledIcon />
-                      </IconButton>
-                    )}
-                  </AccordionSummary>
-                  <AccordionDetails>
-                    <ToggleButtonsField name="methodology" pickOne>
-                      {[
-                        'Paratext',
-                        'OtherWritten',
-                        'Render',
-                        'OtherOralTranslation',
-                        'BibleStories',
-                        'BibleStorying',
-                        'OneStory',
-                        'OtherOralStories',
-                        'Film',
-                        'SignLanguage',
-                        'OtherVisual',
-                      ].map((option) => (
-                        <ToggleButtonOption
-                          key={option}
-                          label={option}
-                          value={option}
-                        />
-                      ))}
-                    </ToggleButtonsField>
-                  </AccordionDetails>
-                </Accordion>
-              )}
-              <button type="submit">submit</button>
-              <Dialog open={Boolean(accordionState.selectedBook)}>
+
+              <Accordion
+                expanded={openedSection === 'scriptureReferences'}
+                onChange={handleChange('scriptureReferences')}
+              >
+                <AccordionSummary expandIcon={<ExpandMore />}>
+                  <Typography>Scripture Ranges</Typography>
+                  {scriptureReferences.map((scriptureRange) => (
+                    <ToggleButton selected>
+                      {`${scriptureRange.start.book} ${scriptureRange.start.chapter}:${scriptureRange.start.verse} -  ${scriptureRange.end.chapter}:${scriptureRange.end.verse}`}
+                    </ToggleButton>
+                  ))}
+                </AccordionSummary>
+                <AccordionDetails>
+                  <ToggleButtonsField name="books" pickOne>
+                    {books.map((option) => (
+                      <ToggleButtonOption
+                        key={option}
+                        label={option}
+                        value={option}
+                      />
+                    ))}
+                  </ToggleButtonsField>
+                </AccordionDetails>
+              </Accordion>
+
+              <Accordion
+                expanded={openedSection === 'mediums'}
+                onChange={handleChange('mediums')}
+              >
+                <AccordionSummary expandIcon={<ExpandMore />}>
+                  <Typography>Choose Medium</Typography>
+                </AccordionSummary>
+                <AccordionDetails>
+                  <ToggleButtonsField name="mediums">
+                    {[
+                      'Print',
+                      'Web',
+                      'EBook',
+                      'App',
+                      'Audio',
+                      'OralTranslation',
+                      'Video',
+                      'Other',
+                    ].map((option) => (
+                      <ToggleButtonOption
+                        key={option}
+                        label={option}
+                        value={option}
+                      />
+                    ))}
+                  </ToggleButtonsField>
+                </AccordionDetails>
+              </Accordion>
+
+              <Accordion
+                expanded={openedSection === 'purposes'}
+                onChange={handleChange('purposes')}
+              >
+                <AccordionSummary expandIcon={<ExpandMore />}>
+                  <Typography>Choose Purposes</Typography>
+                </AccordionSummary>
+                <AccordionDetails>
+                  <ToggleButtonsField name="purposes">
+                    {[
+                      'EvangelismChurchPlanting',
+                      'ChurchLife',
+                      'ChurchMaturity',
+                      'SocialIssues',
+                      'Discipleship',
+                    ].map((option) => (
+                      <ToggleButtonOption
+                        key={option}
+                        label={option}
+                        value={option}
+                      />
+                    ))}
+                  </ToggleButtonsField>
+                </AccordionDetails>
+              </Accordion>
+
+              <Accordion
+                expanded={openedSection === 'methodology'}
+                onChange={handleChange('methodology')}
+              >
+                <AccordionSummary expandIcon={<ExpandMore />}>
+                  <Typography>Choose Methodology</Typography>
+                </AccordionSummary>
+                <AccordionDetails>
+                  <ToggleButtonsField name="methodology" pickOne>
+                    {[
+                      'Paratext',
+                      'OtherWritten',
+                      'Render',
+                      'OtherOralTranslation',
+                      'BibleStories',
+                      'BibleStorying',
+                      'OneStory',
+                      'OtherOralStories',
+                      'Film',
+                      'SignLanguage',
+                      'OtherVisual',
+                    ].map((option) => (
+                      <ToggleButtonOption
+                        key={option}
+                        label={option}
+                        value={option}
+                      />
+                    ))}
+                  </ToggleButtonsField>
+                </AccordionDetails>
+              </Accordion>
+
+              <SubmitButton fullWidth={false} color="primary" size="medium">
+                Submit
+              </SubmitButton>
+              <Dialog open={Boolean(selectedBook)}>
                 <DialogTitle>Choose Verse</DialogTitle>
                 <DialogContent>
                   <Typography>Start</Typography>
@@ -370,7 +333,7 @@ export const CreateProduct: FC = () => {
                   <Button
                     onClick={() =>
                       form.mutators.clear(
-                        'scriptureReferences',
+                        'books',
                         'startChapter',
                         'startVerse',
                         'endChapter',
