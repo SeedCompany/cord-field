@@ -47,8 +47,8 @@ interface FieldOverviewCardData {
 }
 
 export interface FieldOverviewCardProps extends Pick<HugeIconProps, 'icon'> {
-  title: string;
-  viewLabel: string;
+  title?: string;
+  viewLabel?: string;
   data?: FieldOverviewCardData;
   className?: string;
   emptyValue?: string;
@@ -60,7 +60,7 @@ const DEFAULT_EMPTY = <>&nbsp;</>;
 
 export const FieldOverviewCard: FC<FieldOverviewCardProps> = ({
   className,
-  viewLabel,
+  viewLabel: buttonLabel,
   title,
   icon,
   data,
@@ -98,37 +98,39 @@ export const FieldOverviewCard: FC<FieldOverviewCardProps> = ({
           </Typography>
         </div>
       </ActionArea>
-      <CardActions>
-        <Grid
-          container
-          spacing={!data ? 4 : 2}
-          wrap="nowrap"
-          className={classes.bottomArea}
-        >
-          <Grid item xs={!data}>
-            <Btn
-              color="primary"
-              to={data?.to ?? ''}
-              disabled={!data}
-              fullWidth
-              onClick={onButtonClick}
-            >
-              {data ? viewLabel : <Skeleton width="100%" />}
-            </Btn>
+      {buttonLabel && (
+        <CardActions>
+          <Grid
+            container
+            spacing={!data ? 4 : 2}
+            wrap="nowrap"
+            className={classes.bottomArea}
+          >
+            <Grid item xs={!data}>
+              <Btn
+                color="primary"
+                to={data?.to ?? ''}
+                disabled={!data}
+                fullWidth
+                onClick={onButtonClick}
+              >
+                {data ? buttonLabel : <Skeleton width="100%" />}
+              </Btn>
+            </Grid>
+            <Grid item xs={!data}>
+              <Typography color="textSecondary" variant="body2">
+                {data ? (
+                  data.updatedAt ? (
+                    <> Updated {dateTimeFormatter(data.updatedAt)}</>
+                  ) : null
+                ) : (
+                  <Skeleton />
+                )}
+              </Typography>
+            </Grid>
           </Grid>
-          <Grid item xs={!data}>
-            <Typography color="textSecondary" variant="body2">
-              {data ? (
-                data.updatedAt ? (
-                  <> Updated {dateTimeFormatter(data.updatedAt)}</>
-                ) : null
-              ) : (
-                <Skeleton />
-              )}
-            </Typography>
-          </Grid>
-        </Grid>
-      </CardActions>
+        </CardActions>
+      )}
     </Card>
   );
 };
