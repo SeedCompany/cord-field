@@ -9,8 +9,8 @@ export const PreviewError: FC<PreviewErrorProps> = (props) => {
   const { errorText } = props;
   const { spacing } = useTheme();
   return (
-    <Box margin={spacing(2)}>
-      <Typography variant="h2" color="error">
+    <Box margin={spacing(2)} textAlign="center">
+      <Typography variant="h3" color="textSecondary">
         {errorText}
       </Typography>
     </Box>

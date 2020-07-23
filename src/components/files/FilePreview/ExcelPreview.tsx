@@ -110,7 +110,10 @@ async function renderExcelData(
     return { data, error: undefined };
   } catch (error) {
     console.log(error);
-    return { data: undefined, error };
+    return {
+      data: undefined,
+      error: new Error('Could not open spreadsheet file'),
+    };
   }
 }
 
