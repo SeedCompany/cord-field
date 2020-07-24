@@ -11,10 +11,6 @@ import {
   useGetProductBreadcrumbQuery,
 } from './CreateProduct.generated';
 
-// const wipeFieldMutator = ([name]: string, state: any, { changeValue }: any) => {
-//   changeValue(state, name, () => undefined);
-// };
-
 const useStyles = makeStyles(({ spacing, breakpoints }) => ({
   root: {
     overflowY: 'scroll',
