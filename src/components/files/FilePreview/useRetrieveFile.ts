@@ -11,18 +11,20 @@ export const useRetrieveFile = () => {
   }, [enqueueSnackbar]);
 
   const retrieveFile = useCallback(
-    async (url: string, errorHandler?: () => void): Promise<File | null> => {
+    async (
+      url: string,
+      callback: (file: File) => Promise<void>,
+      errorHandler?: () => void
+    ): Promise<void> => {
       try {
         const response = await fetch(url);
         if (response.status === 200) {
-          return new File([await response.blob()], 'Preview');
+          callback(new File([await response.blob()], 'Preview'));
         } else {
           errorHandler ? errorHandler() : showSnackbarError();
-          return null;
         }
       } catch {
         errorHandler ? errorHandler() : showSnackbarError();
-        return null;
       }
     },
     [showSnackbarError]

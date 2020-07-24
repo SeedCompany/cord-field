@@ -2,7 +2,8 @@ import parse from 'html-react-parser';
 import mammoth from 'mammoth';
 import React, { FC, useCallback, useEffect, useState } from 'react';
 import { PreviewerProps } from './FilePreview';
-import { usePreview } from './PreviewContext';
+import { usePreview, usePreviewError } from './PreviewContext';
+import { PreviewLoading } from './PreviewLoading';
 import { useRetrieveFile } from './useRetrieveFile';
 
 const mammothOptions = {
@@ -11,10 +12,11 @@ const mammothOptions = {
 
 export const WordPreview: FC<PreviewerProps> = ({ downloadUrl }) => {
   const [html, setHtml] = useState('');
-  const { setPreviewError } = usePreview();
+  const { previewLoading, setPreviewLoading } = usePreview();
+  const handleError = usePreviewError();
   const retrieveFile = useRetrieveFile();
 
-  const renderDocToHtml = useCallback(
+  const extractHtmlFromDocument = useCallback(
     async (file: File) => {
       try {
         const docBuffer = await file.arrayBuffer();
@@ -28,28 +30,30 @@ export const WordPreview: FC<PreviewerProps> = ({ downloadUrl }) => {
             '<img style="max-width: 100%;"'
           );
           setHtml(imageStyledRawHtml);
+          setPreviewLoading(false);
         } else {
-          setPreviewError('Could not read document file');
+          handleError('Could not read document file');
         }
       } catch (error) {
         console.log(error);
-        setPreviewError('Could not read document file');
+        handleError('Could not read document file');
       }
     },
-    [setPreviewError]
+    [setPreviewLoading, handleError]
   );
 
   useEffect(() => {
-    retrieveFile(downloadUrl, () =>
-      setPreviewError('Could not download document')
-    ).then((file) => {
-      if (file) {
-        renderDocToHtml(file);
-      } else {
-        setPreviewError('Could not download document');
-      }
-    });
-  }, [retrieveFile, setPreviewError, renderDocToHtml, downloadUrl]);
+    setPreviewLoading(true);
+    retrieveFile(downloadUrl, extractHtmlFromDocument, () =>
+      handleError('Could not download document')
+    );
+  }, [
+    retrieveFile,
+    setPreviewLoading,
+    handleError,
+    extractHtmlFromDocument,
+    downloadUrl,
+  ]);
 
-  return <>{parse(html)}</>;
+  return previewLoading ? <PreviewLoading /> : <>{parse(html)}</>;
 };

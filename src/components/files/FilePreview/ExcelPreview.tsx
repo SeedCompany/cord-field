@@ -1,8 +1,9 @@
 import { makeStyles, Typography } from '@material-ui/core';
-import React, { FC, useEffect, useState } from 'react';
+import React, { FC, useCallback, useEffect, useState } from 'react';
 import XLSX, { XLSX$Utils } from 'xlsx';
 import { PreviewerProps } from './FilePreview';
-import { usePreview } from './PreviewContext';
+import { usePreview, usePreviewError } from './PreviewContext';
+import { PreviewLoading } from './PreviewLoading';
 import { PreviewPagination } from './PreviewPagination';
 import { useRetrieveFile } from './useRetrieveFile';
 
@@ -94,34 +95,47 @@ export const SpreadsheetView: FC<DataTableProps> = (props) => {
 
 export const ExcelPreview: FC<PreviewerProps> = ({ downloadUrl }) => {
   const [sheets, setSheets] = useState<SheetData[]>([]);
-  const { previewPage, setPreviewError } = usePreview();
+  const { previewPage, previewLoading, setPreviewLoading } = usePreview();
   const retrieveFile = useRetrieveFile();
+  const handleError = usePreviewError();
+
+  const extractExcelDataFromWorkbook = useCallback(
+    async (file: File) => {
+      const { data, error } = await extractExcelData(file);
+      if (error) {
+        handleError(error.message);
+      } else if (data) {
+        setSheets(data);
+        setPreviewLoading(false);
+      } else {
+        handleError('Could not read spreadsheet file');
+      }
+    },
+    [setSheets, handleError, setPreviewLoading]
+  );
 
   useEffect(() => {
-    retrieveFile(downloadUrl, () =>
-      setPreviewError('Could not download spreadsheet file')
-    ).then((file) => {
-      if (file) {
-        extractExcelData(file).then(({ data, error }) => {
-          if (error) {
-            setPreviewError(error.message);
-          } else if (data) {
-            setSheets(data);
-          } else {
-            setPreviewError('Could not read spreadsheet file');
-          }
-        });
-      } else {
-        setPreviewError('Could not download spreadsheet file');
-      }
-    });
-  }, [setPreviewError, downloadUrl, retrieveFile]);
+    setPreviewLoading(true);
+    retrieveFile(downloadUrl, extractExcelDataFromWorkbook, () =>
+      handleError('Could not download spreadsheet file')
+    );
+  }, [
+    extractExcelDataFromWorkbook,
+    handleError,
+    setPreviewLoading,
+    downloadUrl,
+    retrieveFile,
+  ]);
 
   const currentSheet = sheets[previewPage - 1];
 
-  return sheets.length < 1 ? null : (
+  return !previewLoading && sheets.length < 1 ? null : (
     <PreviewPagination pageCount={sheets.length}>
-      <SpreadsheetView {...currentSheet} />
+      {previewLoading ? (
+        <PreviewLoading />
+      ) : (
+        <SpreadsheetView {...currentSheet} />
+      )}
     </PreviewPagination>
   );
 };
