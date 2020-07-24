@@ -1,0 +1,52 @@
+mutation UpdateProduct($input: UpdateProductInput!) {
+  updateProduct(input: $input) {
+    product {
+      id
+    }
+  }
+}
+
+query Product($productId: ID!, $projectId: ID!, $engagementId: ID!) {
+  product(id: $productId) {
+    id
+    scriptureReferences {
+      value {
+        start {
+          book
+          chapter
+          verse
+        }
+        end {
+          book
+          chapter
+          verse
+        }
+      }
+    }
+    mediums {
+      value
+    }
+    purposes {
+      value
+    }
+    methodology {
+      value
+    }
+    approach
+    legacyType
+  }
+  project(id: $projectId) {
+    ...ProjectBreadcrumb
+  }
+  engagement(id: $engagementId) {
+    ... on LanguageEngagement {
+      language {
+        value {
+          name {
+            value
+          }
+        }
+      }
+    }
+  }
+}
