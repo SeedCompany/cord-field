@@ -1,8 +1,36 @@
+import { makeStyles } from '@material-ui/core';
 import React, { FC, useEffect, useState } from 'react';
 import XLSX, { XLSX$Utils } from 'xlsx';
 import { PreviewerProps } from './FilePreview';
 import { usePreview } from './PreviewContext';
 import { useRetrieveFile } from './useRetrieveFile';
+
+const useStyles = makeStyles(() => {
+  const backgroundColor = '#e6e6e6';
+  const borderColor = '#d8d8df';
+  const headerBorderColor = '#d1cacb';
+  return {
+    excelTable: {
+      border: `1px solid ${headerBorderColor}`,
+      borderCollapse: 'collapse',
+      borderSpacing: '0px',
+      borderWidth: '1px 0px 0px 1px',
+      fontFamily: 'Arial',
+    },
+    cell: {
+      backgroundColor: 'white',
+      border: `1px solid ${borderColor}`,
+      borderWidth: '0px 1px 1px 0px',
+      padding: '2px 4px',
+    },
+    heading: {
+      backgroundColor: backgroundColor,
+      border: `1px solid ${headerBorderColor}`,
+      borderWidth: '0px 1px 1px 0px',
+      textAlign: 'center',
+    },
+  };
+});
 
 type ColumnData = Array<{
   name: ReturnType<XLSX$Utils['encode_col']>;
@@ -17,30 +45,30 @@ interface DataTableProps {
 
 export const DataTable: FC<DataTableProps> = (props) => {
   const { columns, rows } = props;
+  const classes = useStyles();
   return (
     <div>
-      <table className="tableClassName">
+      <table className={classes.excelTable}>
         <tbody>
           <tr>
             {columns.map((column) => {
               const { key, name } = column;
               return (
-                <th
-                  key={key}
-                  className={key === -1 ? 'tableHeaderRowClass' : ''}
-                >
-                  {key === -1 ? '' : name}
+                <th key={key} className={classes.heading}>
+                  {name}
                 </th>
               );
             })}
           </tr>
           {rows.map((row, index) => (
             <tr key={index}>
-              <td key={index} className="tableHeaderRowClass">
+              <td key={index} className={classes.heading}>
                 {index}
               </td>
               {columns.map((column) => (
-                <td key={column.key}>{row[column.key]}</td>
+                <td key={column.key} className={classes.cell}>
+                  {row[column.key]}
+                </td>
               ))}
             </tr>
           ))}
