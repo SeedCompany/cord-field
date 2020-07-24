@@ -6,8 +6,19 @@ mutation CreateProduct($input: CreateProductInput!) {
   }
 }
 
-query GetProjectBreadcrumb($input: ID!) {
-  project(id: $input) {
+query GetProductBreadcrumb($projectId: ID!, $engagementId: ID!) {
+  project(id: $projectId) {
     ...ProjectBreadcrumb
+  }
+  engagement(id: $engagementId) {
+    ... on LanguageEngagement {
+      language {
+        value {
+          name {
+            value
+          }
+        }
+      }
+    }
   }
 }

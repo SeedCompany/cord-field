@@ -27,11 +27,12 @@ export type CreateProductMutation = { __typename?: 'Mutation' } & {
   };
 };
 
-export interface GetProjectBreadcrumbQueryVariables {
-  input: Types.Scalars['ID'];
+export interface GetProductBreadcrumbQueryVariables {
+  projectId: Types.Scalars['ID'];
+  engagementId: Types.Scalars['ID'];
 }
 
-export type GetProjectBreadcrumbQuery = { __typename?: 'Query' } & {
+export type GetProductBreadcrumbQuery = { __typename?: 'Query' } & {
   project:
     | ({
         __typename?: 'TranslationProject';
@@ -39,6 +40,20 @@ export type GetProjectBreadcrumbQuery = { __typename?: 'Query' } & {
     | ({
         __typename?: 'InternshipProject';
       } & ProjectBreadcrumb_InternshipProject_Fragment);
+  engagement:
+    | ({ __typename?: 'LanguageEngagement' } & {
+        language: { __typename?: 'SecuredLanguage' } & {
+          value?: Types.Maybe<
+            { __typename?: 'Language' } & {
+              name: { __typename?: 'SecuredString' } & Pick<
+                Types.SecuredString,
+                'value'
+              >;
+            }
+          >;
+        };
+      })
+    | { __typename?: 'InternshipEngagement' };
 };
 
 export const CreateProductDocument = gql`
@@ -93,60 +108,72 @@ export type CreateProductMutationOptions = ApolloReactCommon.BaseMutationOptions
   CreateProductMutation,
   CreateProductMutationVariables
 >;
-export const GetProjectBreadcrumbDocument = gql`
-  query GetProjectBreadcrumb($input: ID!) {
-    project(id: $input) {
+export const GetProductBreadcrumbDocument = gql`
+  query GetProductBreadcrumb($projectId: ID!, $engagementId: ID!) {
+    project(id: $projectId) {
       ...ProjectBreadcrumb
+    }
+    engagement(id: $engagementId) {
+      ... on LanguageEngagement {
+        language {
+          value {
+            name {
+              value
+            }
+          }
+        }
+      }
     }
   }
   ${ProjectBreadcrumbFragmentDoc}
 `;
 
 /**
- * __useGetProjectBreadcrumbQuery__
+ * __useGetProductBreadcrumbQuery__
  *
- * To run a query within a React component, call `useGetProjectBreadcrumbQuery` and pass it any options that fit your needs.
- * When your component renders, `useGetProjectBreadcrumbQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * To run a query within a React component, call `useGetProductBreadcrumbQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetProductBreadcrumbQuery` returns an object from Apollo Client that contains loading, error, and data properties
  * you can use to render your UI.
  *
  * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
  *
  * @example
- * const { data, loading, error } = useGetProjectBreadcrumbQuery({
+ * const { data, loading, error } = useGetProductBreadcrumbQuery({
  *   variables: {
- *      input: // value for 'input'
+ *      projectId: // value for 'projectId'
+ *      engagementId: // value for 'engagementId'
  *   },
  * });
  */
-export function useGetProjectBreadcrumbQuery(
+export function useGetProductBreadcrumbQuery(
   baseOptions?: ApolloReactHooks.QueryHookOptions<
-    GetProjectBreadcrumbQuery,
-    GetProjectBreadcrumbQueryVariables
+    GetProductBreadcrumbQuery,
+    GetProductBreadcrumbQueryVariables
   >
 ) {
   return ApolloReactHooks.useQuery<
-    GetProjectBreadcrumbQuery,
-    GetProjectBreadcrumbQueryVariables
-  >(GetProjectBreadcrumbDocument, baseOptions);
+    GetProductBreadcrumbQuery,
+    GetProductBreadcrumbQueryVariables
+  >(GetProductBreadcrumbDocument, baseOptions);
 }
-export function useGetProjectBreadcrumbLazyQuery(
+export function useGetProductBreadcrumbLazyQuery(
   baseOptions?: ApolloReactHooks.LazyQueryHookOptions<
-    GetProjectBreadcrumbQuery,
-    GetProjectBreadcrumbQueryVariables
+    GetProductBreadcrumbQuery,
+    GetProductBreadcrumbQueryVariables
   >
 ) {
   return ApolloReactHooks.useLazyQuery<
-    GetProjectBreadcrumbQuery,
-    GetProjectBreadcrumbQueryVariables
-  >(GetProjectBreadcrumbDocument, baseOptions);
+    GetProductBreadcrumbQuery,
+    GetProductBreadcrumbQueryVariables
+  >(GetProductBreadcrumbDocument, baseOptions);
 }
-export type GetProjectBreadcrumbQueryHookResult = ReturnType<
-  typeof useGetProjectBreadcrumbQuery
+export type GetProductBreadcrumbQueryHookResult = ReturnType<
+  typeof useGetProductBreadcrumbQuery
 >;
-export type GetProjectBreadcrumbLazyQueryHookResult = ReturnType<
-  typeof useGetProjectBreadcrumbLazyQuery
+export type GetProductBreadcrumbLazyQueryHookResult = ReturnType<
+  typeof useGetProductBreadcrumbLazyQuery
 >;
-export type GetProjectBreadcrumbQueryResult = ApolloReactCommon.QueryResult<
-  GetProjectBreadcrumbQuery,
-  GetProjectBreadcrumbQueryVariables
+export type GetProductBreadcrumbQueryResult = ApolloReactCommon.QueryResult<
+  GetProductBreadcrumbQuery,
+  GetProductBreadcrumbQueryVariables
 >;
