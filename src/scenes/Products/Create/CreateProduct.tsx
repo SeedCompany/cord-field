@@ -14,6 +14,7 @@ import {
 import { ExpandMore } from '@material-ui/icons';
 import { ToggleButton } from '@material-ui/lab';
 import { isEmpty } from 'lodash';
+import { useSnackbar } from 'notistack';
 import React, { FC, useState } from 'react';
 import { Form, FormSpy } from 'react-final-form';
 import { useParams } from 'react-router';
@@ -27,6 +28,7 @@ import {
   ToggleButtonsField,
 } from '../../../components/form';
 import { ProjectBreadcrumb } from '../../../components/ProjectBreadcrumb';
+import { ButtonLink } from '../../../components/Routing';
 import { methodologyCategories, newTestament, oldTestament } from './constants';
 import {
   useCreateProductMutation,
@@ -69,6 +71,7 @@ export const CreateProduct: FC = () => {
   const classes = useStyles();
 
   const { projectId, engagementId } = useParams();
+  const { enqueueSnackbar } = useSnackbar();
 
   const [openedSection, setOpenedSection] = useState<string>('produces');
   const [selectedBook, setSelectedBook] = useState<string>('');
@@ -124,12 +127,26 @@ export const CreateProduct: FC = () => {
       methodology: inputs.methodology?.[0],
     };
     //TODO: need to catch this error
-    await createProduct({
+    const { data } = await createProduct({
       variables: {
         input: {
           product: input,
         },
       },
+    });
+
+    const { product } = data!.createProduct;
+
+    enqueueSnackbar(`Created Product: ${product.id}`, {
+      variant: 'success',
+      action: () => (
+        <ButtonLink
+          color="inherit"
+          to={`/projects/${projectId}/${engagementId}/${product.id}/edit`}
+        >
+          Edit
+        </ButtonLink>
+      ),
     });
   };
 
@@ -155,7 +172,7 @@ export const CreateProduct: FC = () => {
             data.engagement.language.value?.name.value}
         </Breadcrumb>
         <Breadcrumb
-          to={`/projects/${projectId}/engagements/${engagementId}/create-product`}
+          to={`/projects/${projectId}/${engagementId}/create-product`}
         >
           Create Product
         </Breadcrumb>
