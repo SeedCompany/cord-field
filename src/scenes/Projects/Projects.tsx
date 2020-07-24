@@ -3,6 +3,7 @@ import { useRoutes } from 'react-router-dom';
 import { Engagement } from '../Engagement';
 import { PartnershipList } from '../Partnerships/List';
 import { CreateProduct } from '../Products/Create';
+import { EditProduct } from '../Products/Edit';
 import { ProjectBudget } from './Budget';
 import { ProjectFilesList } from './Files';
 import { ProjectList } from './List';
@@ -46,6 +47,10 @@ export const Projects = () => {
     {
       path: ':projectId/engagements/:engagementId/create-product',
       element: <CreateProduct />,
+    },
+    {
+      path: ':projectId/:engagementId/:productId/edit-product',
+      element: <EditProduct />,
     },
   ]);
 
