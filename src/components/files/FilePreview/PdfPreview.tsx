@@ -31,7 +31,7 @@ export const PdfPreview: FC<PreviewerProps> = ({ downloadUrl }) => {
     <PreviewPagination pageCount={numberOfPages}>
       <Document
         file={downloadUrl}
-        loading={PreviewLoading}
+        loading={<PreviewLoading />}
         onLoadError={handleError}
         onLoadSuccess={handlePdfLoadSuccess}
         onSourceError={handleError}

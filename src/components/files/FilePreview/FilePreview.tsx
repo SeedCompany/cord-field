@@ -9,6 +9,7 @@ import {
 import React, { FC } from 'react';
 import { File } from '../../../api';
 import { ExcelPreview } from './ExcelPreview';
+import { ImagePreview } from './ImagePreview';
 import { PdfPreview } from './PdfPreview';
 import { PreviewContextProvider, usePreview } from './PreviewContext';
 import { PreviewError } from './PreviewError';
@@ -30,6 +31,10 @@ const previewers = {
   'application/vnd.ms-excel': ExcelPreview,
   'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet': ExcelPreview,
   'application/vnd.openxmlformats-officedocument.wordprocessingml.document': WordPreview,
+  'image/gif': ImagePreview,
+  'image/jpeg': ImagePreview,
+  'image/png': ImagePreview,
+  'image/svg+xml': ImagePreview,
 };
 
 const FilePreviewWrapped: FC<FilePreviewProps> = (props) => {

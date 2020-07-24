@@ -13,7 +13,7 @@ export const useRetrieveFile = () => {
   const retrieveFile = useCallback(
     async (
       url: string,
-      callback: (file: File) => Promise<void>,
+      callback: (file: File) => void | Promise<void>,
       errorHandler?: () => void
     ): Promise<void> => {
       try {
