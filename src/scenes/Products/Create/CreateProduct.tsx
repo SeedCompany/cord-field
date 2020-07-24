@@ -20,23 +20,6 @@ const useStyles = makeStyles(({ spacing, breakpoints }) => ({
       marginBottom: spacing(2),
     },
   },
-  form: {
-    '& > *': {
-      marginBottom: spacing(2),
-    },
-  },
-  productSection: {
-    display: 'flex',
-    flexDirection: 'column',
-  },
-  accordionSection: {
-    display: 'flex',
-    flexDirection: 'column',
-  },
-  buttonListWrapper: {
-    display: 'flex',
-    flexWrap: 'wrap',
-  },
 }));
 
 export const CreateProduct: FC = () => {

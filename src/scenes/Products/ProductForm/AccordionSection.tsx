@@ -23,11 +23,7 @@ import {
   ToggleButtonOption,
   ToggleButtonsField,
 } from '../../../components/form';
-import {
-  methodologyCategories,
-  newTestament,
-  oldTestament,
-} from '../Create/constants';
+import { methodologyCategories, newTestament, oldTestament } from './constants';
 
 const useStyles = makeStyles(({ spacing }) => ({
   form: {
