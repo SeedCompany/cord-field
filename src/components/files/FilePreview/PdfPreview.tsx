@@ -3,6 +3,7 @@ import React, { FC, useCallback, useState } from 'react';
 import { Document, Page, pdfjs } from 'react-pdf';
 import { PreviewerProps } from './FilePreview';
 import { usePreview } from './PreviewContext';
+import { PreviewLoading } from './PreviewLoading';
 import { PreviewPagination } from './PreviewPagination';
 
 pdfjs.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjs.version}/pdf.worker.js`;
@@ -30,6 +31,7 @@ export const PdfPreview: FC<PreviewerProps> = ({ downloadUrl }) => {
     <PreviewPagination pageCount={numberOfPages}>
       <Document
         file={downloadUrl}
+        loading={PreviewLoading}
         onLoadError={handleError}
         onLoadSuccess={handlePdfLoadSuccess}
         onSourceError={handleError}
