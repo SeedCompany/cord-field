@@ -1,15 +1,19 @@
-import { makeStyles } from '@material-ui/core';
+import { makeStyles, Typography } from '@material-ui/core';
 import React, { FC, useEffect, useState } from 'react';
 import XLSX, { XLSX$Utils } from 'xlsx';
 import { PreviewerProps } from './FilePreview';
 import { usePreview } from './PreviewContext';
+import { PreviewPagination } from './PreviewPagination';
 import { useRetrieveFile } from './useRetrieveFile';
 
-const useStyles = makeStyles(() => {
+const useStyles = makeStyles(({ spacing }) => {
   const backgroundColor = '#e6e6e6';
   const borderColor = '#d8d8df';
   const headerBorderColor = '#d1cacb';
   return {
+    sheetHeader: {
+      marginBottom: spacing(2),
+    },
     excelTable: {
       border: `1px solid ${headerBorderColor}`,
       borderCollapse: 'collapse',
@@ -23,7 +27,7 @@ const useStyles = makeStyles(() => {
       borderWidth: '0px 1px 1px 0px',
       padding: '2px 4px',
     },
-    heading: {
+    tableHeader: {
       backgroundColor: backgroundColor,
       border: `1px solid ${headerBorderColor}`,
       borderWidth: '0px 1px 1px 0px',
@@ -38,23 +42,33 @@ type ColumnData = Array<{
 }>;
 type RowData = ReturnType<XLSX$Utils['sheet_to_json']>;
 
+interface SheetData {
+  name: string;
+  rows: RowData;
+  columns: ColumnData;
+}
+
 interface DataTableProps {
   columns: ColumnData;
+  name: string;
   rows: RowData;
 }
 
 export const SpreadsheetView: FC<DataTableProps> = (props) => {
-  const { columns, rows } = props;
+  const { columns, name, rows } = props;
   const classes = useStyles();
   return (
     <div>
+      <Typography variant="h3" className={classes.sheetHeader}>
+        {name}
+      </Typography>
       <table className={classes.excelTable}>
         <tbody>
           <tr>
             {columns.map((column) => {
               const { key, name } = column;
               return (
-                <th key={key} className={classes.heading}>
+                <th key={key} className={classes.tableHeader}>
                   {name}
                 </th>
               );
@@ -62,7 +76,7 @@ export const SpreadsheetView: FC<DataTableProps> = (props) => {
           </tr>
           {rows.map((row, index) => (
             <tr key={index}>
-              <td key={index} className={classes.heading}>
+              <td key={index} className={classes.tableHeader}>
                 {index}
               </td>
               {columns.map((column) => (
@@ -79,9 +93,8 @@ export const SpreadsheetView: FC<DataTableProps> = (props) => {
 };
 
 export const ExcelPreview: FC<PreviewerProps> = ({ downloadUrl }) => {
-  const [rows, setRows] = useState<ColumnData>([]);
-  const [columns, setColumns] = useState<RowData>([]);
-  const { setPreviewError } = usePreview();
+  const [sheets, setSheets] = useState<SheetData[]>([]);
+  const { previewPage, setPreviewError } = usePreview();
   const retrieveFile = useRetrieveFile();
 
   useEffect(() => {
@@ -89,12 +102,11 @@ export const ExcelPreview: FC<PreviewerProps> = ({ downloadUrl }) => {
       setPreviewError('Could not download spreadsheet file')
     ).then((file) => {
       if (file) {
-        renderExcelData(file).then(({ data, error }) => {
+        extractExcelData(file).then(({ data, error }) => {
           if (error) {
             setPreviewError(error.message);
           } else if (data) {
-            setRows(data.rows);
-            setColumns(data.columns);
+            setSheets(data);
           } else {
             setPreviewError('Could not read spreadsheet file');
           }
@@ -105,35 +117,44 @@ export const ExcelPreview: FC<PreviewerProps> = ({ downloadUrl }) => {
     });
   }, [setPreviewError, downloadUrl, retrieveFile]);
 
-  return rows.length < 1 || columns.length < 1 ? null : (
-    <SpreadsheetView rows={rows} columns={columns} />
+  const currentSheet = sheets[previewPage - 1];
+
+  return sheets.length < 1 ? null : (
+    <PreviewPagination pageCount={sheets.length}>
+      <SpreadsheetView {...currentSheet} />
+    </PreviewPagination>
   );
 };
 
-async function renderExcelData(
+async function extractExcelData(
   file: File
 ): Promise<{
-  data: { rows: RowData; columns: ColumnData } | undefined;
+  data: SheetData[] | undefined;
   error: Error | undefined;
 }> {
   try {
     const spreadsheetBuffer = await file.arrayBuffer();
     const workbook = XLSX.read(spreadsheetBuffer, { type: 'buffer' });
-    // Only doing first worksheet for now
-    const worksheetName = workbook.SheetNames[0];
-    const worksheet = workbook.Sheets[worksheetName];
-    const rows = XLSX.utils.sheet_to_json(worksheet, { header: 1 });
-    // '!ref' is a special key that gives the used cell range
-    const usedCellRange = worksheet['!ref'];
-    if (!usedCellRange) {
-      return {
-        data: undefined,
-        error: new Error('Could not retrieve cell data for spreadsheet'),
-      };
-    }
-    const columns = formatColumns(usedCellRange);
-    const data = { rows, columns };
-    return { data, error: undefined };
+    const data = workbook.SheetNames.reduce(
+      (sheets: SheetData[], worksheetName) => {
+        const worksheet = workbook.Sheets[worksheetName];
+        const rows = XLSX.utils.sheet_to_json(worksheet, { header: 1 });
+        // '!ref' is a special key that gives the used cell range
+        const usedCellRange = worksheet['!ref'];
+        const columns = usedCellRange ? formatColumns(usedCellRange) : [];
+        const newSheet = usedCellRange
+          ? { name: worksheetName, rows, columns }
+          : { name: 'Unreadable Sheet', rows: [], columns };
+        return sheets.concat(newSheet);
+      },
+      []
+    );
+    return data.length > 0
+      ? { data, error: undefined }
+      : {
+          data: undefined,
+          error: new Error('Could not read spreadsheet data'),
+        };
   } catch (error) {
     console.log(error);
     return {
