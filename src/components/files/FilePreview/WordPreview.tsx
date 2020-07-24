@@ -12,9 +12,7 @@ const mammothOptions = {
 export const WordPreview: FC<PreviewerProps> = ({ downloadUrl }) => {
   const [html, setHtml] = useState('');
   const { setPreviewError } = usePreview();
-  const retrieveFile = useRetrieveFile(() =>
-    setPreviewError('Could not download document')
-  );
+  const retrieveFile = useRetrieveFile();
 
   const renderDocToHtml = useCallback(
     async (file: File) => {
@@ -42,7 +40,9 @@ export const WordPreview: FC<PreviewerProps> = ({ downloadUrl }) => {
   );
 
   useEffect(() => {
-    retrieveFile(downloadUrl).then((file) => {
+    retrieveFile(downloadUrl, () =>
+      setPreviewError('Could not download document')
+    ).then((file) => {
       if (file) {
         renderDocToHtml(file);
       } else {

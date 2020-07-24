@@ -1,29 +1,31 @@
 import { useSnackbar } from 'notistack';
 import { useCallback } from 'react';
 
-export const useRetrieveFile = (errorHandler?: () => void) => {
+export const useRetrieveFile = () => {
   const { enqueueSnackbar } = useSnackbar();
-  const showFileRetrievalError = useCallback(() => {
+
+  const showSnackbarError = useCallback(() => {
     enqueueSnackbar('Could not retrieve file', {
       variant: 'error',
     });
   }, [enqueueSnackbar]);
+
   const retrieveFile = useCallback(
-    async (url: string): Promise<File | null> => {
+    async (url: string, errorHandler?: () => void): Promise<File | null> => {
       try {
         const response = await fetch(url);
         if (response.status === 200) {
           return new File([await response.blob()], 'Preview');
         } else {
-          errorHandler ? errorHandler() : showFileRetrievalError();
+          errorHandler ? errorHandler() : showSnackbarError();
           return null;
         }
       } catch {
-        errorHandler ? errorHandler() : showFileRetrievalError();
+        errorHandler ? errorHandler() : showSnackbarError();
         return null;
       }
     },
-    [errorHandler, showFileRetrievalError]
+    [showSnackbarError]
   );
 
   return retrieveFile;

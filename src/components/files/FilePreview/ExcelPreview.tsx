@@ -43,7 +43,7 @@ interface DataTableProps {
   rows: RowData;
 }
 
-export const DataTable: FC<DataTableProps> = (props) => {
+export const SpreadsheetView: FC<DataTableProps> = (props) => {
   const { columns, rows } = props;
   const classes = useStyles();
   return (
@@ -82,12 +82,12 @@ export const ExcelPreview: FC<PreviewerProps> = ({ downloadUrl }) => {
   const [rows, setRows] = useState<ColumnData>([]);
   const [columns, setColumns] = useState<RowData>([]);
   const { setPreviewError } = usePreview();
-  const retrieveFile = useRetrieveFile(() =>
-    setPreviewError('Could not download spreadsheet file')
-  );
+  const retrieveFile = useRetrieveFile();
 
   useEffect(() => {
-    retrieveFile(downloadUrl).then((file) => {
+    retrieveFile(downloadUrl, () =>
+      setPreviewError('Could not download spreadsheet file')
+    ).then((file) => {
       if (file) {
         renderExcelData(file).then(({ data, error }) => {
           if (error) {
@@ -106,7 +106,7 @@ export const ExcelPreview: FC<PreviewerProps> = ({ downloadUrl }) => {
   }, [setPreviewError, downloadUrl, retrieveFile]);
 
   return rows.length < 1 || columns.length < 1 ? null : (
-    <DataTable rows={rows} columns={columns} />
+    <SpreadsheetView rows={rows} columns={columns} />
   );
 };
 
