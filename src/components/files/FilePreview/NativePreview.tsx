@@ -3,6 +3,7 @@ import React, { FC, useCallback, useEffect, useState } from 'react';
 import { PreviewerProps } from './FilePreview';
 import { usePreview, usePreviewError } from './PreviewContext';
 import { PreviewLoading } from './PreviewLoading';
+import { PreviewNotSupported } from './PreviewNotSupported';
 import { useRetrieveFile } from './useRetrieveFile';
 
 const useStyles = makeStyles(() => ({
@@ -51,14 +52,23 @@ export const NativePreview: FC<NativePreviewProps> = ({
     createUrlForFile,
   ]);
 
+  const unsupportedTypeMessage =
+    'Your browser does not support this media type';
+
   const player = (type: NativePreviewType) => {
     return type === NativePreviewType.Image ? (
       <img src={url} className={classes.media} alt="" />
-    ) : (
+    ) : type === NativePreviewType.Audio ? (
+      <audio controls autoPlay src={url}>
+        {unsupportedTypeMessage}
+      </audio>
+    ) : type === NativePreviewType.Video ? (
       <video className={classes.media} controls autoPlay>
         <source src={url} />
-        Your browser does not support HTML5 video.
+        {unsupportedTypeMessage}
       </video>
+    ) : (
+      <PreviewNotSupported />
     );
   };
 

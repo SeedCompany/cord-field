@@ -14,6 +14,7 @@ import { NativePreview, NativePreviewType } from './NativePreview';
 import { PdfPreview } from './PdfPreview';
 import { PreviewContextProvider, usePreview } from './PreviewContext';
 import { PreviewError } from './PreviewError';
+import { PreviewNotSupported } from './PreviewNotSupported';
 import { WordPreview } from './WordPreview';
 
 const useStyles = makeStyles(() => ({
@@ -33,13 +34,48 @@ interface FilePreviewProps {
   onExited: () => void;
 }
 
-const imageTypes = ['image/gif', 'image/jpeg', 'image/png', 'image/svg+xml'];
+const imageTypes = [
+  'image/bmp',
+  'image/gif',
+  'image/jpeg',
+  'image/png',
+  'image/svg+xml',
+  'image/tiff',
+  'image/webp',
+];
 const imagePreviewers = imageTypes.reduce(
   (previewers, imageType) => ({
     ...previewers,
     [imageType]: {
       component: NativePreview,
       props: { type: NativePreviewType.Image },
+    },
+  }),
+  {}
+);
+
+const audioTypes = [
+  'audio/3gpp',
+  'audio/3gpp2',
+  'audio/aac',
+  'audio/m4a',
+  'audio/midi',
+  'audio/mpeg',
+  'audio/ogg',
+  'audio/opus',
+  'audio/wav',
+  'audio/webm',
+  'audio/x-aiff',
+  'audio/x-m4a',
+  'audio/x-midi',
+];
+
+const audioPreviewers = audioTypes.reduce(
+  (previewers, audioType) => ({
+    ...previewers,
+    [audioType]: {
+      component: NativePreview,
+      props: { type: NativePreviewType.Audio },
     },
   }),
   {}
@@ -85,6 +121,7 @@ const previewers = {
     props: {},
   },
   ...imagePreviewers,
+  ...audioPreviewers,
   ...videoPreviewers,
 };
 
@@ -114,7 +151,7 @@ const FilePreviewWrapped: FC<FilePreviewProps> = (props) => {
           ) : Previewer ? (
             <Previewer downloadUrl={downloadUrl} {...previewerProps} />
           ) : (
-            <iframe title={`${name} file preview`} src={downloadUrl} />
+            <PreviewNotSupported />
           )}
         </Box>
       </DialogContent>
