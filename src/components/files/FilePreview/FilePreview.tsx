@@ -5,15 +5,22 @@ import {
   DialogActions,
   DialogContent,
   DialogTitle,
+  makeStyles,
 } from '@material-ui/core';
 import React, { FC } from 'react';
 import { File } from '../../../api';
 import { ExcelPreview } from './ExcelPreview';
-import { ImagePreview } from './ImagePreview';
+import { NativePreview, NativePreviewType } from './NativePreview';
 import { PdfPreview } from './PdfPreview';
 import { PreviewContextProvider, usePreview } from './PreviewContext';
 import { PreviewError } from './PreviewError';
 import { WordPreview } from './WordPreview';
+
+const useStyles = makeStyles(() => ({
+  dialogContent: {
+    height: '100%',
+  },
+}));
 
 export interface PreviewerProps {
   downloadUrl: string;
@@ -26,18 +33,63 @@ interface FilePreviewProps {
   onExited: () => void;
 }
 
+const imageTypes = ['image/gif', 'image/jpeg', 'image/png', 'image/svg+xml'];
+const imagePreviewers = imageTypes.reduce(
+  (previewers, imageType) => ({
+    ...previewers,
+    [imageType]: {
+      component: NativePreview,
+      props: { type: NativePreviewType.Image },
+    },
+  }),
+  {}
+);
+
+const videoTypes = [
+  'video/3gpp',
+  'video/3gpp2',
+  'video/mp2t',
+  'video/mp4',
+  'video/mpeg',
+  'video/ogg',
+  'video/quicktime',
+  'video/webm',
+  'video/x-msvideo',
+];
+const videoPreviewers = videoTypes.reduce(
+  (previewers, videoType) => ({
+    ...previewers,
+    [videoType]: {
+      component: NativePreview,
+      props: { type: NativePreviewType.Video },
+    },
+  }),
+  {}
+);
+
 const previewers = {
-  'application/pdf': PdfPreview,
-  'application/vnd.ms-excel': ExcelPreview,
-  'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet': ExcelPreview,
-  'application/vnd.openxmlformats-officedocument.wordprocessingml.document': WordPreview,
-  'image/gif': ImagePreview,
-  'image/jpeg': ImagePreview,
-  'image/png': ImagePreview,
-  'image/svg+xml': ImagePreview,
+  'application/pdf': {
+    component: PdfPreview,
+    props: {},
+  },
+  'application/vnd.ms-excel': {
+    component: ExcelPreview,
+    props: {},
+  },
+  'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet': {
+    component: ExcelPreview,
+    props: {},
+  },
+  'application/vnd.openxmlformats-officedocument.wordprocessingml.document': {
+    component: WordPreview,
+    props: {},
+  },
+  ...imagePreviewers,
+  ...videoPreviewers,
 };
 
 const FilePreviewWrapped: FC<FilePreviewProps> = (props) => {
+  const classes = useStyles();
   const { file, onClose, ...rest } = props;
   const { downloadUrl, mimeType, name } = file ?? {
     downloadUrl: '',
@@ -45,7 +97,8 @@ const FilePreviewWrapped: FC<FilePreviewProps> = (props) => {
     name: '',
   };
   const { previewError } = usePreview();
-  const Previewer = previewers[mimeType as keyof typeof previewers];
+  const Previewer = previewers[mimeType as keyof typeof previewers]?.component;
+  const previewerProps = previewers[mimeType as keyof typeof previewers]?.props;
   return (
     <Dialog
       onClose={onClose}
@@ -54,12 +107,12 @@ const FilePreviewWrapped: FC<FilePreviewProps> = (props) => {
       aria-labelledby="dialog-file-preview"
     >
       <DialogTitle id="dialog-file-preview">{name}</DialogTitle>
-      <DialogContent>
-        <Box>
+      <DialogContent className={classes.dialogContent}>
+        <Box height="100%">
           {previewError ? (
             <PreviewError errorText={previewError} />
           ) : Previewer ? (
-            <Previewer downloadUrl={downloadUrl} />
+            <Previewer downloadUrl={downloadUrl} {...previewerProps} />
           ) : (
             <iframe title={`${name} file preview`} src={downloadUrl} />
           )}

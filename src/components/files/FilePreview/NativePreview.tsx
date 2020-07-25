@@ -6,20 +6,31 @@ import { PreviewLoading } from './PreviewLoading';
 import { useRetrieveFile } from './useRetrieveFile';
 
 const useStyles = makeStyles(() => ({
-  image: {
+  media: {
     maxWidth: '100%',
     maxHeight: '100%',
   },
 }));
 
-export const ImagePreview: FC<PreviewerProps> = ({ downloadUrl }) => {
+export enum NativePreviewType {
+  Video = 'video',
+  Image = 'image',
+  Audio = 'audio',
+}
+
+type NativePreviewProps = PreviewerProps & { type: NativePreviewType };
+
+export const NativePreview: FC<NativePreviewProps> = ({
+  downloadUrl,
+  type,
+}) => {
   const classes = useStyles();
   const [url, setUrl] = useState('');
   const retrieveFile = useRetrieveFile();
   const { previewLoading, setPreviewLoading } = usePreview();
   const handleError = usePreviewError();
 
-  const createImageUrl = useCallback(
+  const createUrlForFile = useCallback(
     (file: File) => {
       setUrl(URL.createObjectURL(file));
       setPreviewLoading(false);
@@ -29,7 +40,7 @@ export const ImagePreview: FC<PreviewerProps> = ({ downloadUrl }) => {
 
   useEffect(() => {
     setPreviewLoading(true);
-    retrieveFile(downloadUrl, createImageUrl, () =>
+    retrieveFile(downloadUrl, createUrlForFile, () =>
       handleError('Could not download image')
     );
   }, [
@@ -37,16 +48,23 @@ export const ImagePreview: FC<PreviewerProps> = ({ downloadUrl }) => {
     handleError,
     retrieveFile,
     setPreviewLoading,
-    createImageUrl,
+    createUrlForFile,
   ]);
 
+  const player = (type: NativePreviewType) => {
+    return type === NativePreviewType.Image ? (
+      <img src={url} className={classes.media} alt="" />
+    ) : (
+      <video className={classes.media} controls autoPlay>
+        <source src={url} />
+        Your browser does not support HTML5 video.
+      </video>
+    );
+  };
+
   return (
-    <Box>
-      {previewLoading ? (
-        <PreviewLoading />
-      ) : url ? (
-        <img src={url} className={classes.image} alt="" />
-      ) : null}
+    <Box width="100%" height="100%" display="flex" justifyContent="center">
+      {previewLoading ? <PreviewLoading /> : url ? player(type) : null}
     </Box>
   );
 };
