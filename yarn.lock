@@ -4024,6 +4024,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@types/papaparse@npm:^5.0.5":
+  version: 5.0.5
+  resolution: "@types/papaparse@npm:5.0.5"
+  dependencies:
+    "@types/node": "*"
+  checksum: 3/c2e1e3dcbf9769e80f5e69e5b4ad9a3383bcab477233f1f268dd63515b395339e534dae7f013cc6279924e9476243dcb58a4356c54145439a2675a63752d54b9
+  languageName: node
+  linkType: hard
+
 "@types/parse-json@npm:^4.0.0":
   version: 4.0.0
   resolution: "@types/parse-json@npm:4.0.0"
@@ -15914,6 +15923,13 @@ material-table@1.60.0:
   version: 1.0.11
   resolution: "pako@npm:1.0.11"
   checksum: 3/71c60150b68220ec52a404f3c39a4ed38f750e42452b88fe0eb2e6b5c98e91f73f706444359b097aca1e6db83ef8fef50b5a9ec100e30a606cda6da8d45e5439
+  languageName: node
+  linkType: hard
+
+"papaparse@npm:^5.2.0":
+  version: 5.2.0
+  resolution: "papaparse@npm:5.2.0"
+  checksum: 3/c0b50b987b9a33a2bc9faab10b9b65e01a5bd37af25a8ba47a08db86013950570c2b452c8ca447cb3a48ab84b5cb86cefb1bd8dd8268164c93e7100c58e2a94d
   languageName: node
   linkType: hard
 

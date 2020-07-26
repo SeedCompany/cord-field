@@ -9,6 +9,7 @@ import {
 } from '@material-ui/core';
 import React, { FC } from 'react';
 import { File } from '../../../api';
+import { CsvPreview } from './CsvPreview';
 import { ExcelPreview } from './ExcelPreview';
 import { NativePreview, NativePreviewType } from './NativePreview';
 import { PdfPreview } from './PdfPreview';
@@ -118,6 +119,10 @@ const previewers = {
   },
   'application/vnd.openxmlformats-officedocument.wordprocessingml.document': {
     component: WordPreview,
+    props: {},
+  },
+  'text/csv': {
+    component: CsvPreview,
     props: {},
   },
   ...imagePreviewers,

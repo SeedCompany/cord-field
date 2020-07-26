@@ -1,97 +1,23 @@
-import { makeStyles, Typography } from '@material-ui/core';
 import React, { FC, useCallback, useEffect, useState } from 'react';
 import XLSX, { XLSX$Utils } from 'xlsx';
 import { PreviewerProps } from './FilePreview';
 import { usePreview, usePreviewError } from './PreviewContext';
 import { PreviewLoading } from './PreviewLoading';
 import { PreviewPagination } from './PreviewPagination';
+import { SpreadsheetView } from './SpreadsheetView';
 import { useRetrieveFile } from './useRetrieveFile';
 
-const useStyles = makeStyles(({ spacing }) => {
-  const backgroundColor = '#e6e6e6';
-  const borderColor = '#d8d8df';
-  const headerBorderColor = '#d1cacb';
-  return {
-    sheetHeader: {
-      marginBottom: spacing(2),
-    },
-    excelTable: {
-      border: `1px solid ${headerBorderColor}`,
-      borderCollapse: 'collapse',
-      borderSpacing: '0px',
-      borderWidth: '1px 0px 0px 1px',
-      fontFamily: 'Arial',
-    },
-    cell: {
-      backgroundColor: 'white',
-      border: `1px solid ${borderColor}`,
-      borderWidth: '0px 1px 1px 0px',
-      padding: '2px 4px',
-    },
-    tableHeader: {
-      backgroundColor: backgroundColor,
-      border: `1px solid ${headerBorderColor}`,
-      borderWidth: '0px 1px 1px 0px',
-      textAlign: 'center',
-    },
-  };
-});
-
-type ColumnData = Array<{
+export type ColumnData = Array<{
   name: ReturnType<XLSX$Utils['encode_col']>;
   key: number;
 }>;
-type RowData = ReturnType<XLSX$Utils['sheet_to_json']>;
+export type RowData = ReturnType<XLSX$Utils['sheet_to_json']>;
 
 interface SheetData {
   name: string;
   rows: RowData;
   columns: ColumnData;
 }
-
-interface DataTableProps {
-  columns: ColumnData;
-  name: string;
-  rows: RowData;
-}
-
-export const SpreadsheetView: FC<DataTableProps> = (props) => {
-  const { columns, name, rows } = props;
-  const classes = useStyles();
-  return (
-    <div>
-      <Typography variant="h3" className={classes.sheetHeader}>
-        {name}
-      </Typography>
-      <table className={classes.excelTable}>
-        <tbody>
-          <tr>
-            {columns.map((column) => {
-              const { key, name } = column;
-              return (
-                <th key={key} className={classes.tableHeader}>
-                  {name}
-                </th>
-              );
-            })}
-          </tr>
-          {rows.map((row, index) => (
-            <tr key={index}>
-              <td key={index} className={classes.tableHeader}>
-                {index}
-              </td>
-              {columns.map((column) => (
-                <td key={column.key} className={classes.cell}>
-                  {row[column.key]}
-                </td>
-              ))}
-            </tr>
-          ))}
-        </tbody>
-      </table>
-    </div>
-  );
-};
 
 export const ExcelPreview: FC<PreviewerProps> = ({ downloadUrl }) => {
   const [sheets, setSheets] = useState<SheetData[]>([]);
