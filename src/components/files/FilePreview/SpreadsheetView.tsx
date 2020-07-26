@@ -1,6 +1,6 @@
 import { makeStyles, Typography } from '@material-ui/core';
 import React, { FC } from 'react';
-import { ColumnData, RowData } from './ExcelPreview';
+import { XLSX$Utils } from 'xlsx';
 
 const useStyles = makeStyles(({ spacing }) => {
   const backgroundColor = '#e6e6e6';
@@ -31,6 +31,14 @@ const useStyles = makeStyles(({ spacing }) => {
     },
   };
 });
+
+/* Using typings from `xlsx` here because we want to play it
+  safe when we use these typings in the `ExcelPreview` component */
+export type ColumnData = Array<{
+  name: ReturnType<XLSX$Utils['encode_col']>;
+  key: number;
+}>;
+export type RowData = ReturnType<XLSX$Utils['sheet_to_json']>;
 
 interface SpreadsheetViewProps {
   columns: ColumnData;

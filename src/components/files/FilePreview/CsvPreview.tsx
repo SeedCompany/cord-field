@@ -1,10 +1,9 @@
 import Papa, { ParseError, ParseResult } from 'papaparse';
 import React, { FC, useCallback, useEffect, useState } from 'react';
-import { ColumnData } from './ExcelPreview';
 import { PreviewerProps } from './FilePreview';
 import { usePreview, usePreviewError } from './PreviewContext';
 import { PreviewLoading } from './PreviewLoading';
-import { SpreadsheetView } from './SpreadsheetView';
+import { ColumnData, SpreadsheetView } from './SpreadsheetView';
 
 export const CsvPreview: FC<PreviewerProps> = ({ downloadUrl }) => {
   const [csvData, setCsvData] = useState<ParseResult<string[]>['data']>([]);

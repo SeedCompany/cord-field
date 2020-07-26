@@ -1,17 +1,11 @@
 import React, { FC, useCallback, useEffect, useState } from 'react';
-import XLSX, { XLSX$Utils } from 'xlsx';
+import XLSX from 'xlsx';
 import { PreviewerProps } from './FilePreview';
 import { usePreview, usePreviewError } from './PreviewContext';
 import { PreviewLoading } from './PreviewLoading';
 import { PreviewPagination } from './PreviewPagination';
-import { SpreadsheetView } from './SpreadsheetView';
+import { ColumnData, RowData, SpreadsheetView } from './SpreadsheetView';
 import { useRetrieveFile } from './useRetrieveFile';
-
-export type ColumnData = Array<{
-  name: ReturnType<XLSX$Utils['encode_col']>;
-  key: number;
-}>;
-export type RowData = ReturnType<XLSX$Utils['sheet_to_json']>;
 
 interface SheetData {
   name: string;
