@@ -1,3 +1,11 @@
+query FileDownloadUrl($id: ID!) {
+  file(id: $id) {
+    id
+    downloadUrl
+    name
+  }
+}
+
 mutation RenameFileNode($input: RenameFileInput!) {
   renameFileNode(input: $input) {
     id

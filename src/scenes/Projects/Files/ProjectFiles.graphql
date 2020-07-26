@@ -36,13 +36,11 @@ query ProjectDirectory($id: ID!) {
         ... on File {
           ...FileNodeInfo
           size
-          downloadUrl
           mimeType
         }
         ... on FileVersion {
           ...FileNodeInfo
           size
-          downloadUrl
         }
       }
     }
