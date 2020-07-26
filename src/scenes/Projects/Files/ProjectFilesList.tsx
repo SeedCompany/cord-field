@@ -217,11 +217,16 @@ export const ProjectFilesList: FC = () => {
       hidden: true,
     },
     {
+      title: 'Mime Type',
+      field: 'mimeType',
+      hidden: true,
+    },
+    {
       title: 'Name',
       field: 'name',
       render: (rowData: FileRowData) => {
-        const { category, name } = rowData;
-        const Icon = fileIcon(category);
+        const { name, mimeType } = rowData;
+        const Icon = fileIcon(mimeType);
         return (
           <span className={classes.fileName}>
             <Icon className={classes.fileIcon} />

@@ -9,6 +9,7 @@ import {
 } from '@material-ui/core';
 import React, { FC } from 'react';
 import { File } from '../../../api';
+import { AUDIO_TYPES, IMAGE_TYPES, VIDEO_TYPES } from '../FILE_MIME_TYPES';
 import { CsvPreview } from './CsvPreview';
 import { ExcelPreview } from './ExcelPreview';
 import { NativePreview, NativePreviewType } from './NativePreview';
@@ -35,16 +36,7 @@ interface FilePreviewProps {
   onExited: () => void;
 }
 
-const imageTypes = [
-  'image/bmp',
-  'image/gif',
-  'image/jpeg',
-  'image/png',
-  'image/svg+xml',
-  'image/tiff',
-  'image/webp',
-];
-const imagePreviewers = imageTypes.reduce(
+const imagePreviewers = IMAGE_TYPES.reduce(
   (previewers, imageType) => ({
     ...previewers,
     [imageType]: {
@@ -55,23 +47,7 @@ const imagePreviewers = imageTypes.reduce(
   {}
 );
 
-const audioTypes = [
-  'audio/3gpp',
-  'audio/3gpp2',
-  'audio/aac',
-  'audio/m4a',
-  'audio/midi',
-  'audio/mpeg',
-  'audio/ogg',
-  'audio/opus',
-  'audio/wav',
-  'audio/webm',
-  'audio/x-aiff',
-  'audio/x-m4a',
-  'audio/x-midi',
-];
-
-const audioPreviewers = audioTypes.reduce(
+const audioPreviewers = AUDIO_TYPES.reduce(
   (previewers, audioType) => ({
     ...previewers,
     [audioType]: {
@@ -82,18 +58,7 @@ const audioPreviewers = audioTypes.reduce(
   {}
 );
 
-const videoTypes = [
-  'video/3gpp',
-  'video/3gpp2',
-  'video/mp2t',
-  'video/mp4',
-  'video/mpeg',
-  'video/ogg',
-  'video/quicktime',
-  'video/webm',
-  'video/x-msvideo',
-];
-const videoPreviewers = videoTypes.reduce(
+const videoPreviewers = VIDEO_TYPES.reduce(
   (previewers, videoType) => ({
     ...previewers,
     [videoType]: {

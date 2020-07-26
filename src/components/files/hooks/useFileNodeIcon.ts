@@ -1,30 +1,56 @@
 import {
-  Description as DescriptionIcon,
+  GraphicEq as AudioIcon,
+  Description as DocumentIcon,
   Folder as FolderIcon,
-  GraphicEq as GraphicEqIcon,
+  InsertDriveFile as GenericFileIcon,
   Image as ImageIcon,
-  InsertDriveFile as InsertDriveFileIcon,
+  PictureAsPdf as PdfIcon,
+  TableChart as SpreadsheetIcon,
   SvgIconComponent,
-  TableChart as TableChartIcon,
   VideoLibrary as VideoLibraryIcon,
 } from '@material-ui/icons';
-import { FileNode, FileNodeCategory } from '../../../api';
+import { File } from '../../../api';
+import { AUDIO_TYPES, IMAGE_TYPES, VIDEO_TYPES } from '../FILE_MIME_TYPES';
 
-const icons: Partial<Record<FileNodeCategory, SvgIconComponent>> = {
-  Audio: GraphicEqIcon,
-  Directory: FolderIcon,
-  Document: DescriptionIcon,
-  Image: ImageIcon,
-  Other: InsertDriveFileIcon,
-  Spreadsheet: TableChartIcon,
-  Video: VideoLibraryIcon,
+const audioIcons = AUDIO_TYPES.reduce(
+  (icons, type) => ({
+    ...icons,
+    [type]: AudioIcon,
+  }),
+  {}
+);
+const imageIcons = IMAGE_TYPES.reduce(
+  (icons, type) => ({
+    ...icons,
+    [type]: ImageIcon,
+  }),
+  {}
+);
+const videoIcons = VIDEO_TYPES.reduce(
+  (icons, type) => ({
+    ...icons,
+    [type]: VideoLibraryIcon,
+  }),
+  {}
+);
+
+const icons = {
+  directory: FolderIcon,
+  'application/pdf': PdfIcon,
+  'application/vnd.ms-excel': SpreadsheetIcon,
+  'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet': SpreadsheetIcon,
+  'application/vnd.openxmlformats-officedocument.wordprocessingml.document': DocumentIcon,
+  'text/csv': SpreadsheetIcon,
+  ...audioIcons,
+  ...imageIcons,
+  ...videoIcons,
 };
 
 export const useFileNodeIcon = (): ((
-  category: FileNode['category']
+  type: File['mimeType'] | 'directory'
 ) => SvgIconComponent) => {
-  const fileIcon = (category: FileNode['category']) => {
-    const Icon = icons[category] ?? InsertDriveFileIcon;
+  const fileIcon = (type: File['mimeType']) => {
+    const Icon = icons[type as keyof typeof icons] ?? GenericFileIcon;
     return Icon;
   };
   return fileIcon;
