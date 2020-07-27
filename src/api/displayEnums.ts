@@ -2,6 +2,7 @@ import { startCase } from 'lodash';
 import {
   EngagementStatus,
   PartnershipAgreementStatus,
+  ProductApproach,
   ProjectStatus,
   Role,
 } from '.';
@@ -34,3 +35,4 @@ export const PartnershipStatuses: PartnershipAgreementStatus[] = [
 ];
 
 export const displayMethodology = displayEnum<ProductMethodology>();
+export const displayApproach = displayEnum<ProductApproach>();

@@ -5,4 +5,4 @@ export * from './operations.generated';
 export * from './displayEnums';
 export * from './dateRange';
 export * from './secured';
-export * from './methodologies';
+export * from './approach';

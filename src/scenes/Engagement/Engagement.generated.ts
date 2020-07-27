@@ -3,8 +3,6 @@ import * as ApolloReactCommon from '@apollo/client';
 import * as ApolloReactHooks from '@apollo/client';
 import gql from 'graphql-tag';
 import * as Types from '../../api/schema.generated';
-import { MethodologyCardFragment } from '../../components/MethodologiesCard/MethodologiesCard.generated';
-import { MethodologyCardFragmentDoc } from '../../components/MethodologiesCard/MethodologiesCard.generated';
 import {
   ProjectBreadcrumb_InternshipProject_Fragment,
   ProjectBreadcrumb_TranslationProject_Fragment,
@@ -38,8 +36,7 @@ export type EngagementQuery = { __typename?: 'Query' } & {
         Types.InternshipEngagement,
         'id'
       > &
-        InternshipEngagementDetailFragment &
-        MethodologyCardFragment);
+        InternshipEngagementDetailFragment);
 };
 
 export const EngagementDocument = gql`
@@ -55,14 +52,12 @@ export const EngagementDocument = gql`
       }
       ... on InternshipEngagement {
         ...InternshipEngagementDetail
-        ...MethodologyCard
       }
     }
   }
   ${ProjectBreadcrumbFragmentDoc}
   ${LanguageEngagementDetailFragmentDoc}
   ${InternshipEngagementDetailFragmentDoc}
-  ${MethodologyCardFragmentDoc}
 `;
 
 /**

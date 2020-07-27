@@ -42,7 +42,7 @@ export const GQLOperations = {
     LanguageEngagementListItem: 'LanguageEngagementListItem',
     LanguageListItem: 'LanguageListItem',
     MentorCard: 'MentorCard',
-    MethodologyCard: 'MethodologyCard',
+    MethodologiesCard: 'MethodologiesCard',
     OrganizationListItem: 'OrganizationListItem',
     PartnershipCard: 'PartnershipCard',
     PartnershipSummary: 'PartnershipSummary',

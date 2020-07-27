@@ -1,7 +1,5 @@
-fragment MethodologyCard on InternshipEngagement {
-  methodologies {
-    canRead
-    canEdit
-    value
-  }
+fragment MethodologiesCard on SecuredMethodologies {
+  canRead
+  canEdit
+  value
 }

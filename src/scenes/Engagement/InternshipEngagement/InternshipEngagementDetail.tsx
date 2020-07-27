@@ -187,11 +187,7 @@ export const InternshipEngagementDetail: FC<EngagementQuery> = ({
             />
           </Grid>
           <Grid item xs={6}>
-            <MethodologiesCard
-              onEdit={() => null}
-              methodologies={engagement.methodologies}
-              updatedAt={engagement.modifiedAt}
-            />
+            <MethodologiesCard data={engagement.methodologies} />
           </Grid>
         </Grid>
         <Grid container spacing={3} alignItems="center">

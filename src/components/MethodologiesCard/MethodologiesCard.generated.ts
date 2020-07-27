@@ -2,21 +2,14 @@
 import gql from 'graphql-tag';
 import * as Types from '../../api/schema.generated';
 
-export type MethodologyCardFragment = {
-  __typename?: 'InternshipEngagement';
-} & {
-  methodologies: { __typename?: 'SecuredMethodologies' } & Pick<
-    Types.SecuredMethodologies,
-    'canRead' | 'canEdit' | 'value'
-  >;
-};
+export type MethodologiesCardFragment = {
+  __typename?: 'SecuredMethodologies';
+} & Pick<Types.SecuredMethodologies, 'canRead' | 'canEdit' | 'value'>;
 
-export const MethodologyCardFragmentDoc = gql`
-  fragment MethodologyCard on InternshipEngagement {
-    methodologies {
-      canRead
-      canEdit
-      value
-    }
+export const MethodologiesCardFragmentDoc = gql`
+  fragment MethodologiesCard on SecuredMethodologies {
+    canRead
+    canEdit
+    value
   }
 `;

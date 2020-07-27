@@ -7,6 +7,8 @@ import { CeremonyCardFragment } from '../../../components/CeremonyCard/CeremonyC
 import { CeremonyCardFragmentDoc } from '../../../components/CeremonyCard/CeremonyCard.generated';
 import { MentorCardFragment } from '../../../components/MentorCard/MentorCard.generated';
 import { MentorCardFragmentDoc } from '../../../components/MentorCard/MentorCard.generated';
+import { MethodologiesCardFragment } from '../../../components/MethodologiesCard/MethodologiesCard.generated';
+import { MethodologiesCardFragmentDoc } from '../../../components/MethodologiesCard/MethodologiesCard.generated';
 
 export type InternshipEngagementDetailFragment = {
   __typename?: 'InternshipEngagement';
@@ -58,6 +60,9 @@ export type InternshipEngagementDetailFragment = {
       value?: Types.Maybe<{ __typename?: 'User' } & MentorCardFragment>;
     };
     ceremony: { __typename?: 'SecuredCeremony' } & CeremonyCardFragment;
+    methodologies: {
+      __typename?: 'SecuredMethodologies';
+    } & MethodologiesCardFragment;
   };
 
 export const InternshipEngagementDetailFragmentDoc = gql`
@@ -118,8 +123,12 @@ export const InternshipEngagementDetailFragmentDoc = gql`
     ceremony {
       ...CeremonyCard
     }
+    methodologies {
+      ...MethodologiesCard
+    }
   }
   ${DisplayLocationFragmentDoc}
   ${MentorCardFragmentDoc}
   ${CeremonyCardFragmentDoc}
+  ${MethodologiesCardFragmentDoc}
 `;

@@ -1,111 +1,109 @@
 import {
-  Button,
   Card,
-  CardActions,
+  CardActionArea,
   CardContent,
+  Grid,
   makeStyles,
   Typography,
 } from '@material-ui/core';
+import { Skeleton } from '@material-ui/lab';
+import clsx from 'clsx';
+import React from 'react';
 import {
-  Hearing,
-  MenuBook,
-  PlayCircleFilled,
-  Translate,
-} from '@material-ui/icons';
-import { DateTime } from 'luxon';
-import React, { FC } from 'react';
-import { displayMethodology, methodologyGroups } from '../../api';
-import { useDateTimeFormatter } from '../Formatters';
-import { MethodologyCardFragment } from './MethodologiesCard.generated';
+  ApproachIcons,
+  displayMethodology,
+  MethodologyToApproach,
+} from '../../api';
+import { listOrPlaceholders } from '../../util';
+import { MethodologiesCardFragment } from './MethodologiesCard.generated';
 
-const useStyles = makeStyles(({ spacing, palette }) => ({
+const useStyles = makeStyles(({ palette, spacing }) => ({
+  root: {
+    width: '100%',
+    height: '100%',
+  },
+  actionArea: {
+    height: '100%',
+  },
   cardContent: {
+    height: '100%',
     display: 'flex',
     flexDirection: 'column',
-    height: spacing(16),
     padding: spacing(3, 4),
-    borderBottom: `0.5px solid ${palette.divider}`,
   },
-  methodologyChipContainer: {
-    //TODO: decide how to fix the display
-    '& > *': {
-      display: 'inline',
-    },
-  },
-  groupChip: {
-    alignItems: 'center',
-    marginTop: spacing(2),
-    marginRight: spacing(1),
-    '& > *': {
-      marginRight: spacing(1),
-    },
-  },
-  cardActions: {
+  methodology: {
     display: 'flex',
-    justifyContent: 'space-between',
-    paddingRight: spacing(2),
+    alignItems: 'center',
+  },
+  icon: {
+    display: 'flex',
+    color: palette.text.secondary,
+    marginRight: spacing(0.5),
   },
 }));
 
-export type PartnershipCardProps = {
-  onEdit: () => void;
+export interface MethodologiesCardProps {
+  data?: MethodologiesCardFragment;
+  onClick?: () => void;
   className?: string;
-  updatedAt?: DateTime;
-} & MethodologyCardFragment;
+}
 
-export const MethodologiesCard: FC<PartnershipCardProps> = ({
-  methodologies: { canEdit, value },
-  onEdit,
+export const MethodologiesCard = ({
+  data,
+  onClick,
   className,
-  updatedAt,
-}) => {
+}: MethodologiesCardProps) => {
   const classes = useStyles();
 
-  const dateTimeFormatter = useDateTimeFormatter();
+  if (data?.canRead === false) {
+    return null;
+  }
 
-  const methodologyListChips = value
-    //TODO: decide how to show overflow
-    // .slice(0, 2)
-    .map((methodologyVal) => {
-      const group = methodologyGroups[methodologyVal];
-      const groupIcon =
-        group === 'Written' ? (
-          <MenuBook color="inherit" />
-        ) : group === 'Oral Translation' ? (
-          <Translate color="inherit" />
-        ) : group === 'Oral Stories' ? (
-          <Hearing color="inherit" />
-        ) : group === 'Visual' ? (
-          <PlayCircleFilled color="inherit" />
-        ) : null;
-      return (
-        <Typography
-          key={methodologyVal}
-          className={classes.groupChip}
-          color="textSecondary"
-        >
-          {groupIcon}
-          {displayMethodology(methodologyVal)}
-        </Typography>
-      );
-    });
+  const methodologyListChips = listOrPlaceholders(data?.value, 2).map(
+    (methodology, index) => (
+      <Grid item className={classes.methodology} key={methodology ?? index}>
+        {methodology && (
+          <Grid item wrap="nowrap" className={classes.icon}>
+            {ApproachIcons[MethodologyToApproach[methodology]]}
+          </Grid>
+        )}
+        <Grid item component={Typography} color="textSecondary">
+          {methodology ? (
+            displayMethodology(methodology)
+          ) : (
+            <Skeleton width={200} />
+          )}
+        </Grid>
+      </Grid>
+    )
+  );
+
+  const content = (
+    <CardContent className={classes.cardContent}>
+      <Typography variant="h4" paragraph>
+        Methodologies
+      </Typography>
+      <Grid container spacing={1}>
+        {data?.value.length === 0 ? (
+          <Grid item component={Typography} color="textSecondary">
+            {data.canEdit ? 'None yet, click here to add some' : 'None yet'}
+          </Grid>
+        ) : (
+          methodologyListChips
+        )}
+      </Grid>
+    </CardContent>
+  );
 
   return (
-    <Card className={className}>
-      <CardContent className={classes.cardContent}>
-        <Typography variant="h4">Methodologies</Typography>
-        <div className={classes.methodologyChipContainer}>
-          {methodologyListChips}
-        </div>
-      </CardContent>
-      <CardActions className={classes.cardActions}>
-        <Button color="primary" disabled={!canEdit} onClick={onEdit}>
-          Edit Methodologies
-        </Button>
-        <Typography color="textSecondary" variant="body2">
-          Updated {dateTimeFormatter(updatedAt)}
-        </Typography>
-      </CardActions>
+    <Card className={clsx(classes.root, className)}>
+      {data?.canEdit ? (
+        <CardActionArea onClick={onClick} className={classes.actionArea}>
+          {content}
+        </CardActionArea>
+      ) : (
+        content
+      )}
     </Card>
   );
 };

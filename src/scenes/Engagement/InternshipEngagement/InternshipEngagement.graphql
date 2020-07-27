@@ -55,4 +55,7 @@ fragment InternshipEngagementDetail on InternshipEngagement {
   ceremony {
     ...CeremonyCard
   }
+  methodologies {
+    ...MethodologiesCard
+  }
 }
