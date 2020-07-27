@@ -21,6 +21,7 @@ import { LargeDate } from './LargeDate';
 
 const useStyles = makeStyles(({ spacing, typography }) => ({
   root: {
+    height: '100%',
     display: 'flex',
     flexDirection: 'column',
   },

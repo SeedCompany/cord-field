@@ -16,14 +16,11 @@ export type InternshipEngagementDetailFragment = {
   Types.InternshipEngagement,
   'id' | 'createdAt' | 'status' | 'modifiedAt'
 > & {
-    intern: { __typename?: 'SecuredUser' } & Pick<
-      Types.SecuredUser,
-      'canRead' | 'canEdit'
-    > & {
-        value?: Types.Maybe<
-          { __typename?: 'User' } & Pick<Types.User, 'fullName'>
-        >;
-      };
+    intern: { __typename?: 'SecuredUser' } & {
+      value?: Types.Maybe<
+        { __typename?: 'User' } & Pick<Types.User, 'fullName'>
+      >;
+    };
     position: { __typename?: 'SecuredInternPosition' } & Pick<
       Types.SecuredInternPosition,
       'canRead' | 'canEdit' | 'value'
@@ -73,8 +70,6 @@ export const InternshipEngagementDetailFragmentDoc = gql`
       value {
         fullName
       }
-      canRead
-      canEdit
     }
     position {
       canRead

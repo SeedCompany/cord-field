@@ -1,13 +1,9 @@
-import {
-  Breadcrumbs,
-  Grid,
-  IconButton,
-  makeStyles,
-  Typography,
-} from '@material-ui/core';
-import { ChatOutlined, DateRange, Publish } from '@material-ui/icons';
+import { Breadcrumbs, Grid, makeStyles, Typography } from '@material-ui/core';
+import { ChatOutlined, DateRange, Edit } from '@material-ui/icons';
+import { Skeleton } from '@material-ui/lab';
 import React, { FC } from 'react';
 import {
+  canEditAny,
   displayEngagementStatus,
   displayInternPosition,
   securedDateRange,
@@ -18,12 +14,11 @@ import { CeremonyCard } from '../../../components/CeremonyCard';
 import { DataButton } from '../../../components/DataButton';
 import { Fab } from '../../../components/Fab';
 import { FieldOverviewCard } from '../../../components/FieldOverviewCard';
-import { useDateFormatter } from '../../../components/Formatters';
 import {
-  OptionsIcon,
-  PencilCircledIcon,
-  PlantIcon,
-} from '../../../components/Icons';
+  useDateFormatter,
+  useDateTimeFormatter,
+} from '../../../components/Formatters';
+import { OptionsIcon, PlantIcon } from '../../../components/Icons';
 import { MentorCard } from '../../../components/MentorCard';
 import { MethodologiesCard } from '../../../components/MethodologiesCard';
 import { ProjectBreadcrumb } from '../../../components/ProjectBreadcrumb';
@@ -38,18 +33,12 @@ const useStyles = makeStyles(({ spacing, breakpoints, palette }) => ({
   },
   main: {
     maxWidth: breakpoints.values.md,
-    '& > *': {
-      marginBottom: spacing(3),
-    },
   },
-  header: {
-    display: 'flex',
+  nameRedacted: {
+    width: '50%',
   },
   infoColor: {
     color: palette.info.main,
-  },
-  bottomCardsContainer: {
-    '& > *': { marginBottom: spacing(2) },
   },
 }));
 
@@ -61,63 +50,86 @@ export const InternshipEngagementDetail: FC<EngagementQuery> = ({
 
   const date = securedDateRange(engagement.startDate, engagement.endDate);
   const formatDate = useDateFormatter();
+  const formatDateTime = useDateTimeFormatter();
 
   if (engagement.__typename !== 'InternshipEngagement') {
     return null; // easiest for typescript
   }
 
+  const name = engagement.intern?.value?.fullName;
+  const editable = canEditAny(engagement);
+
   return (
     <div className={classes.root}>
-      <main className={classes.main}>
-        <Breadcrumbs>
-          <ProjectBreadcrumb data={project} />
-          {engagement.intern.canRead ? (
-            <Breadcrumb
-              to={`/projects/${project.id}/engagements/${engagement.id}`}
-            >
-              {engagement.intern.value?.fullName}
-            </Breadcrumb>
-          ) : (
-            <Redacted
-              info="You do not have permission to view the intern name"
-              width={200}
-            />
+      <Grid
+        component="main"
+        container
+        direction="column"
+        spacing={3}
+        className={classes.main}
+      >
+        <Grid item>
+          <Breadcrumbs>
+            <ProjectBreadcrumb data={project} />
+            {name ? (
+              <Breadcrumb to=".">{name}</Breadcrumb>
+            ) : (
+              <Redacted
+                info="You do not have permission to view this engagement's name"
+                width={200}
+              />
+            )}
+          </Breadcrumbs>
+        </Grid>
+
+        <Grid item container spacing={3} alignItems="center">
+          <Grid item className={name ? undefined : classes.nameRedacted}>
+            <Typography variant="h2">
+              {name ?? (
+                <Redacted
+                  info="You do not have permission to view this engagement's name"
+                  width="100%"
+                />
+              )}
+            </Typography>
+          </Grid>
+          {editable && (
+            <Grid item>
+              <Fab color="primary" aria-label="edit internship engagement">
+                <Edit />
+              </Fab>
+            </Grid>
           )}
-        </Breadcrumbs>
-        <Typography variant="h2" className={classes.header}>
-          {engagement.intern.canRead ? (
-            engagement.intern.value?.fullName
-          ) : (
-            <Redacted
-              info="You do not have permission to view the intern name"
-              width="50%"
-            />
+        </Grid>
+        <Grid item container spacing={3} alignItems="center">
+          <Grid item>
+            <Typography variant="h4">
+              {engagement ? 'Internship Engagement' : <Skeleton width={200} />}
+            </Typography>
+          </Grid>
+
+          {engagement && (
+            <Grid item>
+              <Typography variant="body2" color="textSecondary">
+                Updated {formatDateTime(engagement.modifiedAt)}
+              </Typography>
+            </Grid>
           )}
-          {engagement.intern.canEdit && (
-            <IconButton color="primary" aria-label="edit internship engagement">
-              <PencilCircledIcon />
-            </IconButton>
-          )}
-        </Typography>
-        <Grid container spacing={1} alignItems="center">
+        </Grid>
+        <Grid item container spacing={1} alignItems="center">
           <Grid item>
             <DataButton
-              size="small"
-              color="primary"
-              variant="contained"
               secured={engagement.position}
+              empty="Enter Intern Position"
               redacted="You do not have permission to view intern position"
-            >
-              {displayInternPosition(engagement.position.value)}
-            </DataButton>
+              children={displayInternPosition}
+            />
           </Grid>
-        </Grid>
-        <Grid container spacing={1} alignItems="center">
           <Grid item>
             <DataButton
               secured={engagement.countryOfOrigin}
-              empty="Enter Location"
-              redacted="You do not have permission to view location"
+              empty="Enter Country of Origin"
+              redacted="You do not have permission to view country of origin"
               children={displayLocation}
             />
           </Grid>
@@ -136,62 +148,43 @@ export const InternshipEngagementDetail: FC<EngagementQuery> = ({
             </DataButton>
           </Grid>
         </Grid>
-        <Grid container spacing={1} alignItems="center">
-          <Grid item>
-            <Fab color="primary" aria-label="Upload Files">
-              <Publish />
-            </Fab>
-          </Grid>
-          <Grid item>
-            <Typography variant="h4">Upload Files</Typography>
-          </Grid>
-        </Grid>
-        <Grid container spacing={3} alignItems="center">
+        <Grid item container spacing={3}>
           <Grid item xs={6}>
             <FieldOverviewCard
               title="Growth Plan Complete Date"
-              viewLabel="Edit Complete Date"
               data={{
                 value: formatDate(engagement.completeDate.value),
-                updatedAt: engagement.modifiedAt,
-                to: '/home',
               }}
               icon={PlantIcon}
-              emptyValue="Not available"
+              emptyValue="None"
             />
           </Grid>
           <Grid item xs={6}>
             <FieldOverviewCard
               title="Disbursement Complete Date"
-              viewLabel="Edit Complete Date"
               data={{
                 value: formatDate(engagement.disbursementCompleteDate.value),
-                updatedAt: engagement.modifiedAt,
-                to: '/home',
               }}
               icon={OptionsIcon}
-              emptyValue="Not available"
+              emptyValue="None"
             />
           </Grid>
           <Grid item xs={6}>
             <FieldOverviewCard
               title="Communications Complete Date"
-              viewLabel="Edit Complete Date"
               data={{
                 value: formatDate(engagement.communicationsCompleteDate.value),
-                updatedAt: engagement.modifiedAt,
-                to: '/home',
               }}
               icon={ChatOutlined}
-              emptyValue="Not available"
+              emptyValue="None"
             />
           </Grid>
           <Grid item xs={6}>
             <MethodologiesCard data={engagement.methodologies} />
           </Grid>
         </Grid>
-        <Grid container spacing={3} alignItems="center">
-          <Grid item xs={6} className={classes.bottomCardsContainer}>
+        <Grid item container spacing={3}>
+          <Grid item xs={6}>
             <CeremonyCard
               {...engagement.ceremony}
               onEdit={() => console.log('edit ceremony clicked')}
@@ -206,7 +199,7 @@ export const InternshipEngagementDetail: FC<EngagementQuery> = ({
             )}
           />
         </Grid>
-      </main>
+      </Grid>
     </div>
   );
 };
