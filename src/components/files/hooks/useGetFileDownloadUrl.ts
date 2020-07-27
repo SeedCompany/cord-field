@@ -1,13 +1,13 @@
 import { useApolloClient } from '@apollo/client';
 import { useSnackbar } from 'notistack';
 import { useCallback } from 'react';
-import { FileDownloadUrl_Directory_Fragment } from '../../../components/files/FileActionsMenu';
 import {
-  ProjectFileNodeDownloadUrlDocument,
-  ProjectFileNodeDownloadUrlQuery,
-} from './ProjectFiles.generated';
+  FileDownloadUrl_Directory_Fragment,
+  FileNodeDownloadUrlDocument,
+  FileNodeDownloadUrlQuery,
+} from '../FileActions';
 
-export const useProjectFileDownloadUrl = () => {
+export const useGetFileDownloadUrl = () => {
   const { enqueueSnackbar } = useSnackbar();
 
   const showSnackbarError = useCallback(() => {
@@ -18,16 +18,16 @@ export const useProjectFileDownloadUrl = () => {
 
   const client = useApolloClient();
 
-  const queryDownloadUrl = useCallback(
+  const getFileDownloadUrl = useCallback(
     async (id: string): Promise<string> => {
       try {
-        const { data } = await client.query<ProjectFileNodeDownloadUrlQuery>({
-          query: ProjectFileNodeDownloadUrlDocument,
+        const { data } = await client.query<FileNodeDownloadUrlQuery>({
+          query: FileNodeDownloadUrlDocument,
           variables: { id },
           fetchPolicy: 'network-only',
         });
         const isDirectory = (
-          node: ProjectFileNodeDownloadUrlQuery['fileNode'] | undefined
+          node: FileNodeDownloadUrlQuery['fileNode'] | undefined
         ): node is FileDownloadUrl_Directory_Fragment => {
           return node?.type === 'Directory';
         };
@@ -41,5 +41,5 @@ export const useProjectFileDownloadUrl = () => {
     },
     [client, showSnackbarError]
   );
-  return queryDownloadUrl;
+  return getFileDownloadUrl;
 };

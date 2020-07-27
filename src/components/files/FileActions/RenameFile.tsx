@@ -2,10 +2,10 @@ import React from 'react';
 import { Except } from 'type-fest';
 import { GQLOperations, RenameFileInput } from '../../../api';
 import { DialogForm, DialogFormProps } from '../../Dialog/DialogForm';
-import { useFileNameAndExtension } from '../../files/hooks';
 import { SubmitError, TextField } from '../../form';
+import { useFileNameAndExtension } from '../hooks';
 import { useRenameFileNodeMutation } from './FileActions.generated';
-import { FileActionItem } from './FileActionsMenu';
+import { FileActionItem } from './FileActionsContext';
 
 export type RenameFileProps = DialogFormProps<RenameFileInput> & {
   item: FileActionItem | undefined;

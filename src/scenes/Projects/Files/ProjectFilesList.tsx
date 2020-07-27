@@ -10,20 +10,18 @@ import { Skeleton } from '@material-ui/lab';
 import React, { FC } from 'react';
 import { useDropzone } from 'react-dropzone';
 import { useNavigate, useParams } from 'react-router-dom';
-import { File as CFFile, FileVersion } from '../../../api';
+import { File, FileVersion } from '../../../api';
 import { Breadcrumb } from '../../../components/Breadcrumb';
 import { ContentContainer as Content } from '../../../components/ContentContainer';
 import { useDialog } from '../../../components/Dialog';
 import {
   FileActionsPopup as ActionsMenu,
-  DeleteFile,
-  FileActionHandler,
-  FileActionItem,
-  RenameFile,
-} from '../../../components/files/FileActionsMenu';
+  FileActions,
+  FileActionsContextProvider,
+  useFileActions,
+} from '../../../components/files/FileActions';
 import { FilePreview } from '../../../components/files/FilePreview';
 import {
-  useDownloadFile,
   useFileNameAndExtension,
   useFileNodeIcon,
 } from '../../../components/files/hooks';
@@ -34,12 +32,10 @@ import {
 import { ProjectBreadcrumb } from '../../../components/ProjectBreadcrumb';
 import { Table } from '../../../components/Table';
 import { CreateProjectDirectory } from './CreateProjectDirectory';
-import { FileVersions } from './FileVersions';
 import {
   FileNodeInfoFragment,
   useProjectDirectoryQuery,
 } from './ProjectFiles.generated';
-import { UploadProjectFileVersion } from './UploadProjectFileVersion';
 import { useProjectCurrentDirectory } from './useProjectCurrentDirectory';
 import { useUploadProjectFiles } from './useUploadProjectFiles';
 
@@ -99,15 +95,20 @@ const useStyles = makeStyles(({ palette, spacing }) => ({
   },
 }));
 
-export const ProjectFilesList: FC = () => {
+const ProjectFilesListWrapped: FC = () => {
   const classes = useStyles();
   const { spacing } = useTheme();
   const navigate = useNavigate();
   const { projectId } = useParams();
   const formatDate = useDateTimeFormatter();
-  const downloadFile = useDownloadFile();
   const fileNameAndExtension = useFileNameAndExtension();
   const fileIcon = useFileNodeIcon();
+
+  const {
+    previewState: { dialogState: previewState },
+    fileToPreview,
+    openFilePreview,
+  } = useFileActions();
 
   const {
     project,
@@ -116,20 +117,6 @@ export const ProjectFilesList: FC = () => {
   } = useProjectCurrentDirectory();
 
   const handleFilesDrop = useUploadProjectFiles(directoryId);
-
-  const [renameFileState, renameFile, itemToRename] = useDialog<
-    FileActionItem
-  >();
-  const [fileVersionState, showVersions, fileVersionToView] = useDialog<
-    CFFile
-  >();
-  const [newVersionState, createNewVersion, fileToVersion] = useDialog<
-    CFFile
-  >();
-  const [deleteFileState, deleteFile, itemToDelete] = useDialog<
-    FileActionItem
-  >();
-  const [filePreviewState, previewFile, fileToPreview] = useDialog<File>();
 
   const [createDirectoryState, createDirectory] = useDialog();
 
@@ -144,17 +131,6 @@ export const ProjectFilesList: FC = () => {
     noKeyboard: true,
   });
 
-  const actions = {
-    rename: (item: FileActionItem) => renameFile(item as any),
-    download: (item: FileActionItem) => downloadFile(item as CFFile),
-    history: (item: FileActionItem) => showVersions(item as CFFile),
-    'new version': (item: FileActionItem) => createNewVersion(item as CFFile),
-    delete: (item: FileActionItem) => deleteFile(item as any),
-  };
-
-  const handleFileActionClick: FileActionHandler = (item, action) => {
-    actions[action](item);
-  };
   const isNotRootDirectory = directoryId !== rootDirectoryId;
 
   const { data, loading, error } = useProjectDirectoryQuery({
@@ -179,6 +155,7 @@ export const ProjectFilesList: FC = () => {
     name: FileNodeInfoFragment['name'];
     createdAt: string;
     createdBy: string;
+    mimeType: File['mimeType'];
     size: number;
     item: FileNodeInfoFragment;
   }
@@ -254,12 +231,7 @@ export const ProjectFilesList: FC = () => {
     {
       title: '',
       field: 'item',
-      render: (rowData: FileRowData) => (
-        <ActionsMenu
-          item={rowData.item as any}
-          onFileAction={handleFileActionClick}
-        />
-      ),
+      render: (rowData: FileRowData) => <ActionsMenu item={rowData.item} />,
       sorting: false,
       cellStyle: {
         padding: spacing(0.5),
@@ -277,7 +249,7 @@ export const ProjectFilesList: FC = () => {
     if (isDirectory) {
       navigate(`/projects/${projectId}/files/${id}`);
     } else {
-      previewFile(item);
+      openFilePreview(item);
     }
   };
 
@@ -358,13 +330,16 @@ export const ProjectFilesList: FC = () => {
             </section>
           </>
         )}
-        <RenameFile item={itemToRename} {...renameFileState} />
-        <DeleteFile item={itemToDelete} {...deleteFileState} />
-        <FileVersions file={fileVersionToView} {...fileVersionState} />
-        <UploadProjectFileVersion file={fileToVersion} {...newVersionState} />
+        <FileActions />
         <CreateProjectDirectory {...createDirectoryState} />
-        <FilePreview file={fileToPreview} {...filePreviewState} />
+        <FilePreview file={fileToPreview} {...previewState} />
       </Content>
     </div>
   );
 };
+
+export const ProjectFilesList: FC = () => (
+  <FileActionsContextProvider>
+    <ProjectFilesListWrapped />
+  </FileActionsContextProvider>
+);

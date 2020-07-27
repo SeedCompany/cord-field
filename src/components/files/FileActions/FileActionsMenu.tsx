@@ -18,8 +18,12 @@ import {
 } from '@material-ui/icons';
 import React, { FC, useState } from 'react';
 import { useDropzone } from 'react-dropzone';
-import { Directory, File } from '../../../api';
 import { useUploadProjectFiles } from '../../../scenes/Projects/Files';
+import {
+  FileAction,
+  FileActionItem,
+  useFileActions,
+} from './FileActionsContext';
 
 const useStyles = makeStyles(({ spacing }) => ({
   listItemIcon: {
@@ -31,24 +35,8 @@ const useStyles = makeStyles(({ spacing }) => ({
   },
 }));
 
-export type FileActionItem = File | Directory;
-
-export enum FileAction {
-  Rename = 'rename',
-  Download = 'download',
-  History = 'history',
-  NewVersion = 'new version',
-  Delete = 'delete',
-}
-
-export type FileActionHandler = (
-  item: FileActionItem,
-  action: FileAction
-) => void;
-
 interface FileActionsPopupProps {
   item: FileActionItem;
-  onFileAction: FileActionHandler;
 }
 
 const menuItems = [
@@ -77,7 +65,7 @@ const menuItems = [
 ];
 
 export const FileActionsPopup: FC<FileActionsPopupProps> = (props) => {
-  const { item, onFileAction } = props;
+  const { item } = props;
   const [anchor, setAnchor] = useState<MenuProps['anchorEl']>();
 
   const openAddMenu = (e: React.MouseEvent) => {
@@ -94,19 +82,13 @@ export const FileActionsPopup: FC<FileActionsPopupProps> = (props) => {
       <IconButton onClick={openAddMenu}>
         <MoreIcon />
       </IconButton>
-      <FileActionsMenu
-        anchorEl={anchor}
-        onAction={onFileAction}
-        onClose={closeAddMenu}
-        item={item}
-      />
+      <FileActionsMenu anchorEl={anchor} onClose={closeAddMenu} item={item} />
     </>
   );
 };
 
 type FileActionsMenuProps = Partial<MenuProps> & {
   item: FileActionItem;
-  onAction: FileActionHandler;
 };
 
 export const FileActionsMenu: FC<FileActionsMenuProps> = (props) => {
@@ -114,13 +96,14 @@ export const FileActionsMenu: FC<FileActionsMenuProps> = (props) => {
   const classes = useStyles();
   const { spacing } = useTheme();
   const handleFilesSelection = useUploadProjectFiles(item.id);
+  const { handleFileActionClick } = useFileActions();
 
   const close = () => props.onClose?.({}, 'backdropClick');
 
   const handleActionClick = (event: React.MouseEvent, action: FileAction) => {
     event.stopPropagation();
     close();
-    onAction(item, action);
+    handleFileActionClick(item, action);
   };
 
   const renderedMenuItem = (menuItem: typeof menuItems[0]) => {

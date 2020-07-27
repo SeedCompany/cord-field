@@ -9,13 +9,13 @@ import {
 } from '@material-ui/core';
 import React, { FC, useEffect, useState } from 'react';
 import { File } from '../../../api';
-import { useProjectFileDownloadUrl } from '../../../scenes/Projects/Files';
 import { AUDIO_TYPES, IMAGE_TYPES, VIDEO_TYPES } from '../FILE_MIME_TYPES';
+import { useFileActions } from '../FileActions';
+import { useGetFileDownloadUrl } from '../hooks';
 import { CsvPreview } from './CsvPreview';
 import { ExcelPreview } from './ExcelPreview';
 import { NativePreview, NativePreviewType } from './NativePreview';
 import { PdfPreview } from './PdfPreview';
-import { PreviewContextProvider, usePreview } from './PreviewContext';
 import { PreviewError } from './PreviewError';
 import { PreviewNotSupported } from './PreviewNotSupported';
 import { WordPreview } from './WordPreview';
@@ -96,11 +96,13 @@ const previewers = {
   ...videoPreviewers,
 };
 
-const FilePreviewWrapped: FC<FilePreviewProps> = (props) => {
+export const FilePreview: FC<FilePreviewProps> = (props) => {
   const classes = useStyles();
   const [downloadUrl, setDownloadUrl] = useState('');
-  const { previewError, setPreviewError } = usePreview();
-  const queryDownloadUrl = useProjectFileDownloadUrl();
+  const {
+    previewState: { previewError, setPreviewError },
+  } = useFileActions();
+  const getDownloadUrl = useGetFileDownloadUrl();
   const { file, onClose, ...rest } = props;
   const { id, mimeType, name } = file ?? {
     id: '',
@@ -110,12 +112,12 @@ const FilePreviewWrapped: FC<FilePreviewProps> = (props) => {
 
   useEffect(() => {
     if (id) {
-      queryDownloadUrl(id).then((downloadUrl) => setDownloadUrl(downloadUrl));
+      getDownloadUrl(id).then((downloadUrl) => setDownloadUrl(downloadUrl));
     } else {
       setDownloadUrl('');
     }
     return () => setPreviewError('');
-  }, [id, queryDownloadUrl, setPreviewError]);
+  }, [id, getDownloadUrl, setPreviewError]);
 
   const Previewer = previewers[mimeType as keyof typeof previewers]?.component;
   const previewerProps = previewers[mimeType as keyof typeof previewers]?.props;
@@ -144,13 +146,5 @@ const FilePreviewWrapped: FC<FilePreviewProps> = (props) => {
         </Button>
       </DialogActions>
     </Dialog>
-  );
-};
-
-export const FilePreview: FC<FilePreviewProps> = (props) => {
-  return (
-    <PreviewContextProvider>
-      <FilePreviewWrapped {...props} />
-    </PreviewContextProvider>
   );
 };

@@ -50,21 +50,3 @@ query ProjectDirectory($id: ID!) {
     }
   }
 }
-
-query ProjectFileVersions($id: ID!) {
-  file(id: $id) {
-    id
-    children {
-      items {
-        ...FileVersionItem
-      }
-      total
-    }
-  }
-}
-
-query ProjectFileNodeDownloadUrl($id: ID!) {
-  fileNode(id: $id) {
-    ...FileDownloadUrl
-  }
-}

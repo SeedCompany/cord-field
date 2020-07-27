@@ -9,8 +9,8 @@ import {
 } from '@material-ui/core';
 import React, { FC, Fragment } from 'react';
 import { File } from '../../../api';
-import { FileVersionItem } from '../../../components/files/FileVersionItem';
-import { useProjectFileVersionsQuery } from './ProjectFiles.generated';
+import { FileVersionItem } from '../FileVersionItem';
+import { useFileVersionsQuery } from './FileActions.generated';
 
 type FileVersionsProps = DialogProps & {
   file: File | undefined;
@@ -20,7 +20,7 @@ export const FileVersions: FC<FileVersionsProps> = (props) => {
   const { file, ...dialogProps } = props;
   const { onClose } = dialogProps;
   const id = file?.id ?? '';
-  const { data, loading } = useProjectFileVersionsQuery({
+  const { data, loading } = useFileVersionsQuery({
     variables: { id },
     skip: !file,
   });

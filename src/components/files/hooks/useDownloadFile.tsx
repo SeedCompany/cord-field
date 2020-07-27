@@ -3,7 +3,7 @@ import { useSnackbar } from 'notistack';
 import { useCallback } from 'react';
 import { PartialDeep } from 'type-fest';
 import { Directory, File, FileVersion } from '../../../api';
-import { useProjectFileDownloadUrl } from '../../../scenes/Projects/Files';
+import { useGetFileDownloadUrl } from './useGetFileDownloadUrl';
 
 type DownloadableFile = PartialDeep<Directory | File | FileVersion>;
 
@@ -16,7 +16,7 @@ export const useDownloadFile = (): ((file: DownloadableFile) => void) => {
     });
   }, [enqueueSnackbar]);
 
-  const queryDownloadUrl = useProjectFileDownloadUrl();
+  const getFileDownloadUrl = useGetFileDownloadUrl();
 
   const downloadFile = useCallback(
     async (file: DownloadableFile) => {
@@ -29,7 +29,7 @@ export const useDownloadFile = (): ((file: DownloadableFile) => void) => {
       ): file is PartialDeep<Directory> => file.type === 'Directory';
       if (!isDirectory(file)) {
         try {
-          const downloadUrl = await queryDownloadUrl(file.id!);
+          const downloadUrl = await getFileDownloadUrl(file.id!);
           if (downloadUrl)
             FileSaver.saveAs(downloadUrl, file.name ?? undefined);
         } catch {
@@ -37,7 +37,7 @@ export const useDownloadFile = (): ((file: DownloadableFile) => void) => {
         }
       }
     },
-    [queryDownloadUrl, showSnackbarError]
+    [getFileDownloadUrl, showSnackbarError]
   );
   return downloadFile;
 };

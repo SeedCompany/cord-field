@@ -5,23 +5,21 @@ import {
   UploadCallback,
   UploadFilesForm,
   UploadFilesFormProps,
-} from '../../../components/Upload';
-import { useCreateProjectFileVersionMutation } from './CreateProjectFile.generated';
+} from '../../Upload';
+import { useCreateFileVersionMutation } from './FileActions.generated';
 
-export type UploadProjectFileVersionProps = Except<
+export type UploadFileVersionProps = Except<
   UploadFilesFormProps,
   'onFinalizeUpload' | 'onSubmit' | 'title'
 > & {
   file?: File;
 };
 
-export const UploadProjectFileVersion: FC<UploadProjectFileVersionProps> = (
-  props
-) => {
+export const UploadFileVersion: FC<UploadFileVersionProps> = (props) => {
   const { file, ...rest } = props;
   const id = file?.id ?? '';
   const fileName = file?.name ?? '';
-  const [createFileVersion] = useCreateProjectFileVersionMutation();
+  const [createFileVersion] = useCreateFileVersionMutation();
 
   const handleUploadCompleted: UploadCallback = async (uploadId, name) => {
     const input = {

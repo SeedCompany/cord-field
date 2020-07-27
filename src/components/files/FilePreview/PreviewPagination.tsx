@@ -1,7 +1,7 @@
 import { Box } from '@material-ui/core';
 import { Pagination } from '@material-ui/lab';
 import React, { FC, useCallback, useEffect } from 'react';
-import { usePreview } from './PreviewContext';
+import { usePreview } from '../FileActions';
 
 interface PreviewPaginationProps {
   pageCount: number;

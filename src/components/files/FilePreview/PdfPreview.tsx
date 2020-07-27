@@ -1,8 +1,8 @@
 import { PDFDocumentProxy } from 'pdfjs-dist';
 import React, { FC, useCallback, useState } from 'react';
 import { Document, Page, pdfjs } from 'react-pdf';
+import { usePreview } from '../FileActions';
 import { PreviewerProps } from './FilePreview';
-import { usePreview } from './PreviewContext';
 import { PreviewLoading } from './PreviewLoading';
 import { PreviewPagination } from './PreviewPagination';
 

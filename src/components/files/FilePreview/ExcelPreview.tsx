@@ -1,7 +1,7 @@
 import React, { FC, useCallback, useEffect, useState } from 'react';
 import XLSX from 'xlsx';
+import { usePreview, usePreviewError } from '../FileActions';
 import { PreviewerProps } from './FilePreview';
-import { usePreview, usePreviewError } from './PreviewContext';
 import { PreviewLoading } from './PreviewLoading';
 import { PreviewPagination } from './PreviewPagination';
 import { ColumnData, RowData, SpreadsheetView } from './SpreadsheetView';

@@ -1,0 +1,47 @@
+query FileVersions($id: ID!) {
+  file(id: $id) {
+    id
+    children {
+      items {
+        ...FileVersionItem
+      }
+      total
+    }
+  }
+}
+
+mutation CreateFileVersion($input: CreateFileVersionInput!) {
+  createFileVersion(input: $input) {
+    id
+    name
+  }
+}
+
+fragment FileDownloadUrl on FileNode {
+  id
+  name
+  type
+  ... on File {
+    downloadUrl
+  }
+  ... on FileVersion {
+    downloadUrl
+  }
+}
+
+query FileNodeDownloadUrl($id: ID!) {
+  fileNode(id: $id) {
+    ...FileDownloadUrl
+  }
+}
+
+mutation RenameFileNode($input: RenameFileInput!) {
+  renameFileNode(input: $input) {
+    id
+    name
+  }
+}
+
+mutation DeleteFileNode($id: ID!) {
+  deleteFileNode(id: $id)
+}

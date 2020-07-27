@@ -1,7 +1,7 @@
 import Papa, { ParseResult } from 'papaparse';
 import React, { FC, useCallback, useEffect, useState } from 'react';
+import { usePreview, usePreviewError } from '../FileActions';
 import { PreviewerProps } from './FilePreview';
-import { usePreview, usePreviewError } from './PreviewContext';
 import { PreviewLoading } from './PreviewLoading';
 import { ColumnData, SpreadsheetView } from './SpreadsheetView';
 

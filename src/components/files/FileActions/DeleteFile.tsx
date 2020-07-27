@@ -5,7 +5,7 @@ import { GQLOperations } from '../../../api';
 import { DialogForm, DialogFormProps } from '../../Dialog/DialogForm';
 import { SubmitError } from '../../form';
 import { useDeleteFileNodeMutation } from './FileActions.generated';
-import { FileActionItem } from './FileActionsMenu';
+import { FileActionItem } from './FileActionsContext';
 
 export type DeleteFileProps = DialogFormProps<{ id: string }> & {
   item: FileActionItem | undefined;
