@@ -40,7 +40,7 @@ export const UploadProjectFileVersion: FC<UploadProjectFileVersionProps> = (
       {...rest}
       onFinalizeUpload={handleUploadCompleted}
       multiple={false}
-      title={fileName ? `Upload new version of ${fileName}` : undefined}
+      title={fileName ? `Upload new version of "${fileName}"` : undefined}
     />
   );
 };
