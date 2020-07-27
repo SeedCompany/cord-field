@@ -20,8 +20,10 @@ import { ButtonLink, CardActionAreaLink } from '../Routing';
 const useStyles = makeStyles(({ spacing, palette }) => ({
   root: {
     flex: 1,
+    height: '100%',
   },
   topArea: {
+    height: '100%',
     display: 'flex',
     justifyContent: 'space-evenly',
     padding: spacing(3, 4),
@@ -29,6 +31,9 @@ const useStyles = makeStyles(({ spacing, palette }) => ({
   rightContent: {
     flex: 1,
     paddingLeft: spacing(4),
+    display: 'flex',
+    flexDirection: 'column',
+    justifyContent: 'space-evenly',
   },
   emptyValue: {
     color: palette.action.disabled,
