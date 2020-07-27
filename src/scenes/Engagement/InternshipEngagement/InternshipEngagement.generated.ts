@@ -56,9 +56,7 @@ export type InternshipEngagementDetailFragment = {
           { __typename?: 'Country' } & DisplayLocation_Country_Fragment
         >;
       };
-    mentor: { __typename?: 'SecuredUser' } & {
-      value?: Types.Maybe<{ __typename?: 'User' } & MentorCardFragment>;
-    };
+    mentor: { __typename?: 'SecuredUser' } & MentorCardFragment;
     ceremony: { __typename?: 'SecuredCeremony' } & CeremonyCardFragment;
     methodologies: {
       __typename?: 'SecuredMethodologies';
@@ -116,9 +114,7 @@ export const InternshipEngagementDetailFragmentDoc = gql`
       }
     }
     mentor {
-      value {
-        ...MentorCard
-      }
+      ...MentorCard
     }
     ceremony {
       ...CeremonyCard

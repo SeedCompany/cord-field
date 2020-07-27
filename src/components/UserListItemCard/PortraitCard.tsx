@@ -7,17 +7,26 @@ import {
 } from '@material-ui/core';
 import { Skeleton } from '@material-ui/lab';
 import clsx from 'clsx';
+import { ReactNode } from 'react';
 import * as React from 'react';
 import { square } from '../../util';
 import { Avatar } from '../Avatar';
-import { ButtonLink } from '../Routing';
+import { ButtonLink, CardActionAreaLink } from '../Routing';
 import { UserListItemFragment } from './UserListItem.generated';
 
 const useStyles = makeStyles(({ spacing, typography }) => ({
   root: {
     maxWidth: 247,
+    flex: 1,
+    display: 'flex',
+    flexDirection: 'column',
+  },
+  actionArea: {
+    flex: 1,
+    display: 'flex',
   },
   cardContent: {
+    flex: 1,
     display: 'flex',
     flexDirection: 'column',
     alignItems: 'stretch',
@@ -41,11 +50,15 @@ const useStyles = makeStyles(({ spacing, typography }) => ({
 export interface UserListItemCardPortraitProps {
   user?: UserListItemFragment;
   className?: string;
+  content?: ReactNode;
+  action?: ReactNode;
 }
 
 export const UserListItemCardPortrait = ({
   user,
   className,
+  content,
+  action,
 }: UserListItemCardPortraitProps) => {
   const classes = useStyles();
 
@@ -53,21 +66,39 @@ export const UserListItemCardPortrait = ({
 
   return (
     <Card className={clsx(classes.root, className)}>
-      <CardContent className={classes.cardContent}>
-        <Avatar loading={!user} className={classes.personImage}>
-          {user?.avatarLetters}
-        </Avatar>
-        <Typography variant="h4" className={classes.personName}>
-          {!user ? <Skeleton width="100%" /> : user.fullName}
-        </Typography>
-        <Typography variant="body2" color="primary">
-          {!user ? <Skeleton width="100%" /> : org?.name.value}
-        </Typography>
-      </CardContent>
+      {content !== undefined ? (
+        content
+      ) : (
+        <CardActionAreaLink
+          to={`/users/${user?.id}`}
+          disabled={!user}
+          className={classes.actionArea}
+        >
+          <CardContent className={classes.cardContent}>
+            <Avatar loading={!user} className={classes.personImage}>
+              {user?.avatarLetters}
+            </Avatar>
+            <Typography variant="h4" className={classes.personName}>
+              {!user ? <Skeleton width="100%" /> : user.fullName}
+            </Typography>
+            <Typography variant="body2" color="primary">
+              {!user ? <Skeleton width="100%" /> : org?.name.value}
+            </Typography>
+          </CardContent>
+        </CardActionAreaLink>
+      )}
       <CardActions className={classes.cardActions}>
-        <ButtonLink disabled={!user} color="primary" to={`/users/${user?.id}`}>
-          View Details
-        </ButtonLink>
+        {action !== undefined ? (
+          action
+        ) : (
+          <ButtonLink
+            disabled={!user}
+            color="primary"
+            to={`/users/${user?.id}`}
+          >
+            View Details
+          </ButtonLink>
+        )}
       </CardActions>
     </Card>
   );

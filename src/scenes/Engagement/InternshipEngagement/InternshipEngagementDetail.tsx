@@ -197,16 +197,14 @@ export const InternshipEngagementDetail: FC<EngagementQuery> = ({
               onEdit={() => console.log('edit ceremony clicked')}
             />
           </Grid>
-          <Grid item xs={6} className={classes.bottomCardsContainer}>
-            <Typography variant="h4">Mentor</Typography>
-            {engagement.mentor.value && (
-              <MentorCard
-                {...engagement.mentor.value}
-                // TODO: add image when ready in data
-                // imageSource="images/favicon-32x32.png"
-              />
+          <MentorCard
+            data={engagement.mentor}
+            wrap={(node) => (
+              <Grid item xs={6}>
+                {node}
+              </Grid>
             )}
-          </Grid>
+          />
         </Grid>
       </main>
     </div>

@@ -1,32 +1,21 @@
 /* eslint-disable import/no-duplicates, @typescript-eslint/no-empty-interface */
 import gql from 'graphql-tag';
 import * as Types from '../../api/schema.generated';
+import { UserListItemFragment } from '../UserListItemCard/UserListItem.generated';
+import { UserListItemFragmentDoc } from '../UserListItemCard/UserListItem.generated';
 
-export type MentorCardFragment = { __typename?: 'User' } & Pick<
-  Types.User,
-  'fullName'
-> & {
-    organizations: { __typename?: 'SecuredOrganizationList' } & {
-      items: Array<
-        { __typename?: 'Organization' } & {
-          name: { __typename?: 'SecuredString' } & Pick<
-            Types.SecuredString,
-            'value'
-          >;
-        }
-      >;
-    };
-  };
+export type MentorCardFragment = { __typename?: 'SecuredUser' } & Pick<
+  Types.SecuredUser,
+  'canRead' | 'canEdit'
+> & { value?: Types.Maybe<{ __typename?: 'User' } & UserListItemFragment> };
 
 export const MentorCardFragmentDoc = gql`
-  fragment MentorCard on User {
-    fullName
-    organizations {
-      items {
-        name {
-          value
-        }
-      }
+  fragment MentorCard on SecuredUser {
+    canRead
+    canEdit
+    value {
+      ...UserListItem
     }
   }
+  ${UserListItemFragmentDoc}
 `;

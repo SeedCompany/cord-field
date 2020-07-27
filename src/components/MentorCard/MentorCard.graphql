@@ -1,10 +1,7 @@
-fragment MentorCard on User {
-  fullName
-  organizations {
-    items {
-      name {
-        value
-      }
-    }
+fragment MentorCard on SecuredUser {
+  canRead
+  canEdit
+  value {
+    ...UserListItem
   }
 }
