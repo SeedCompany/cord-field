@@ -54,7 +54,8 @@ export const LanguageEngagementDetail: FC<EngagementQuery> = ({
   }
 
   const langName =
-    engagement.language.value?.name ?? engagement.language.value?.displayName;
+    engagement.language.value?.name.value ??
+    engagement.language.value?.displayName.value;
   const editable = canEditAny(engagement);
 
   return (
@@ -144,7 +145,7 @@ export const LanguageEngagementDetail: FC<EngagementQuery> = ({
         <Grid item container spacing={3} alignItems="center">
           <Grid item xs={6}>
             <FieldOverviewCard
-              title="Growth Plan Complete Date"
+              title="Translation Complete Date"
               data={{
                 value: formatDate(engagement.completeDate.value),
               }}
