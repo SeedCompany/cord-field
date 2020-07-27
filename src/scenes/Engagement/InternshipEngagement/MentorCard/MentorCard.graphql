@@ -1,0 +1,7 @@
+fragment MentorCard on SecuredUser {
+  canRead
+  canEdit
+  value {
+    ...UserListItem
+  }
+}

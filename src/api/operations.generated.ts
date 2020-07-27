@@ -1,6 +1,7 @@
 export const GQLOperations = {
   Query: {
     Session: 'Session',
+    Engagement: 'Engagement',
     Language: 'Language',
     Languages: 'Languages',
     Organization: 'Organization',
@@ -38,6 +39,7 @@ export const GQLOperations = {
     InternshipEngagementListItem: 'InternshipEngagementListItem',
     LanguageEngagementListItem: 'LanguageEngagementListItem',
     LanguageListItem: 'LanguageListItem',
+    MethodologiesCard: 'MethodologiesCard',
     OrganizationListItem: 'OrganizationListItem',
     PartnershipCard: 'PartnershipCard',
     PartnershipSummary: 'PartnershipSummary',
@@ -49,6 +51,11 @@ export const GQLOperations = {
     ProjectMemberList: 'ProjectMemberList',
     LoggedInUser: 'LoggedInUser',
     UserListItem: 'UserListItem',
+    Ceremony: 'Ceremony',
+    CeremonyCard: 'CeremonyCard',
+    InternshipEngagementDetail: 'InternshipEngagementDetail',
+    MentorCard: 'MentorCard',
+    LanguageEngagementDetail: 'LanguageEngagementDetail',
     LanguageDetail: 'LanguageDetail',
     LanguageForm: 'LanguageForm',
     ss: 'ss',

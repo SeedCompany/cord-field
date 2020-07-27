@@ -1,0 +1,57 @@
+fragment InternshipEngagementDetail on InternshipEngagement {
+  id
+  createdAt
+  status
+  modifiedAt
+  intern {
+    value {
+      fullName
+    }
+  }
+  position {
+    canRead
+    canEdit
+    value
+  }
+  startDate {
+    value
+    canRead
+    canEdit
+  }
+  endDate {
+    value
+    canRead
+    canEdit
+  }
+  completeDate {
+    value
+    canRead
+    canEdit
+  }
+  disbursementCompleteDate {
+    value
+    canRead
+    canEdit
+  }
+  communicationsCompleteDate {
+    value
+    canRead
+    canEdit
+  }
+  countryOfOrigin {
+    canRead
+    canEdit
+    value {
+      ...DisplayLocation
+    }
+  }
+  mentor {
+    ...MentorCard
+  }
+  ceremony {
+    ...CeremonyCard
+  }
+  methodologies {
+    ...MethodologiesCard
+  }
+}

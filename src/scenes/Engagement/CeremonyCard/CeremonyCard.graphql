@@ -1,0 +1,25 @@
+fragment Ceremony on Ceremony {
+  id
+  type
+  planned {
+    canRead
+    canEdit
+    value
+  }
+  estimatedDate {
+    canRead
+    canEdit
+    value
+  }
+  actualDate {
+    canRead
+    canEdit
+    value
+  }
+}
+fragment CeremonyCard on SecuredCeremony {
+  canRead
+  value {
+    ...Ceremony
+  }
+}

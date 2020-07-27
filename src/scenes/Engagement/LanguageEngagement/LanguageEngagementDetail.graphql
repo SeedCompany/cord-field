@@ -1,0 +1,54 @@
+fragment LanguageEngagementDetail on LanguageEngagement {
+  id
+  createdAt
+  language {
+    value {
+      displayName {
+        value
+      }
+      name {
+        value
+      }
+    }
+  }
+  lukePartnership {
+    canRead
+    canEdit
+    value
+  }
+  firstScripture {
+    canRead
+    canEdit
+    value
+  }
+  startDate {
+    value
+    canRead
+    canEdit
+  }
+  endDate {
+    value
+    canRead
+    canEdit
+  }
+  completeDate {
+    value
+    canRead
+    canEdit
+  }
+  disbursementCompleteDate {
+    value
+    canRead
+    canEdit
+  }
+  communicationsCompleteDate {
+    value
+    canRead
+    canEdit
+  }
+  modifiedAt
+  status
+  ceremony {
+    ...CeremonyCard
+  }
+}

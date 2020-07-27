@@ -9,6 +9,7 @@ export default { title: 'Components' };
 export const InternshipEngagementListItemCard = () => (
   <Card
     id="123123"
+    projectId="123123"
     status={text('status', 'InDevelopment') as EngagementStatus}
     position={{
       value: 'LeadershipDevelopment',

@@ -1,5 +1,6 @@
 import { Box } from '@material-ui/core';
 import { AccountBalance } from '@material-ui/icons';
+import { action } from '@storybook/addon-actions';
 import { boolean, text } from '@storybook/addon-knobs';
 import React from 'react';
 import { dateTime } from '../knobs.stories';
@@ -26,6 +27,9 @@ export const FieldOverviewCard = () => (
               updatedAt: dateTime('updatedAt'),
             }
       }
+      emptyValue={text('Empty placeholder', 'N/A') || undefined}
+      onClick={action('action area click')}
+      onButtonClick={action('button click')}
     />
   </Box>
 );

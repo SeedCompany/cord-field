@@ -1,0 +1,15 @@
+query Engagement($projectId: ID!, $engagementId: ID!) {
+  project(id: $projectId) {
+    ...ProjectBreadcrumb
+  }
+  engagement(id: $engagementId) {
+    id
+    __typename
+    ... on LanguageEngagement {
+      ...LanguageEngagementDetail
+    }
+    ... on InternshipEngagement {
+      ...InternshipEngagementDetail
+    }
+  }
+}
