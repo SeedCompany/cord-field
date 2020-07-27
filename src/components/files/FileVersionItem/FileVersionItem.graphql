@@ -13,6 +13,7 @@ fragment FileVersionItem on FileNode {
   name
   ... on FileVersion {
     downloadUrl
+    mimeType
   }
   type
 }

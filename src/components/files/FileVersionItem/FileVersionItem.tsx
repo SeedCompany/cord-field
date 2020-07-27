@@ -10,7 +10,10 @@ import { CloudDownload as DownloadIcon } from '@material-ui/icons';
 import React, { FC } from 'react';
 import { useDateTimeFormatter } from '../../Formatters';
 import { useDownloadFile, useFileNodeIcon } from '../hooks';
-import { FileVersionItemFragment } from './FileVersionItem.generated';
+import {
+  FileVersionItem_FileVersion_Fragment,
+  FileVersionItemFragment,
+} from './FileVersionItem.generated';
 
 const useStyles = makeStyles(({ spacing, typography }) => ({
   iconContainer: {
@@ -35,8 +38,14 @@ export const FileVersionItem: FC<FileVersionItemProps> = (props) => {
   const downloadFile = useDownloadFile();
   const fileIcon = useFileNodeIcon();
   const { version } = props;
-  const { category, createdAt, createdBy, name } = version;
-  const Icon = fileIcon(category);
+
+  const isFileVersion = (
+    version: FileVersionItemFragment
+  ): version is FileVersionItem_FileVersion_Fragment =>
+    version.type === 'FileVersion';
+  const { createdAt, createdBy, name } = version;
+  const mimeType = isFileVersion(version) ? version.mimeType : '';
+  const Icon = fileIcon(mimeType);
   const createdByUser = `${createdBy.displayFirstName.value} ${createdBy.displayLastName.value}`;
   return (
     <ListItem>
