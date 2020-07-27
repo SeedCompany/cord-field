@@ -1,4 +1,4 @@
-import Papa, { ParseError, ParseResult } from 'papaparse';
+import Papa, { ParseResult } from 'papaparse';
 import React, { FC, useCallback, useEffect, useState } from 'react';
 import { PreviewerProps } from './FilePreview';
 import { usePreview, usePreviewError } from './PreviewContext';
@@ -19,22 +19,14 @@ export const CsvPreview: FC<PreviewerProps> = ({ downloadUrl }) => {
     [setPreviewLoading]
   );
 
-  const handleReadError = useCallback(
-    (error: ParseError) => {
-      console.log(error);
-      handleError('Could not read CSV');
-    },
-    [handleError]
-  );
-
   useEffect(() => {
     setPreviewLoading(true);
     Papa.parse(downloadUrl, {
       complete: handleReadComplete,
       download: true,
-      error: handleReadError,
+      error: () => handleError('Could not read CSV'),
     });
-  }, [downloadUrl, setPreviewLoading, handleReadComplete, handleReadError]);
+  }, [downloadUrl, setPreviewLoading, handleReadComplete, handleError]);
 
   const hasParsed = csvData.length > 0;
 

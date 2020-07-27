@@ -89,8 +89,7 @@ async function extractExcelData(
           data: undefined,
           error: new Error('Could not read spreadsheet data'),
         };
-  } catch (error) {
-    console.log(error);
+  } catch {
     return {
       data: undefined,
       error: new Error('Could not open spreadsheet file'),

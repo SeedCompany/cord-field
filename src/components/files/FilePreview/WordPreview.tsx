@@ -34,8 +34,7 @@ export const WordPreview: FC<PreviewerProps> = ({ downloadUrl }) => {
         } else {
           handleError('Could not read document file');
         }
-      } catch (error) {
-        console.log(error);
+      } catch {
         handleError('Could not read document file');
       }
     },

@@ -33,8 +33,7 @@ export const useProjectFileDownloadUrl = () => {
         return !isDirectory(data?.fileNode)
           ? data?.fileNode.downloadUrl ?? ''
           : '';
-      } catch (error) {
-        console.log(error);
+      } catch {
         showSnackbarError();
         return '';
       }

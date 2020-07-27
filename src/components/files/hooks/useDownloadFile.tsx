@@ -32,8 +32,7 @@ export const useDownloadFile = (): ((file: DownloadableFile) => void) => {
           const downloadUrl = await queryDownloadUrl(file.id!);
           if (downloadUrl)
             FileSaver.saveAs(downloadUrl, file.name ?? undefined);
-        } catch (error) {
-          console.log(error);
+        } catch {
           showSnackbarError();
         }
       }
