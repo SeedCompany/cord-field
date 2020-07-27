@@ -7,7 +7,7 @@ import {
   Divider,
   List,
 } from '@material-ui/core';
-import React, { FC } from 'react';
+import React, { FC, Fragment } from 'react';
 import { File } from '../../../api';
 import { FileVersionItem } from '../../../components/files/FileVersionItem';
 import { useProjectFileVersionsQuery } from './ProjectFiles.generated';
@@ -24,20 +24,24 @@ export const FileVersions: FC<FileVersionsProps> = (props) => {
     variables: { id },
     skip: !file,
   });
-  const versions = data?.file.children.items ?? [];
   const total = data?.file.children.total;
+  const versions =
+    data?.file.children.items.filter((item) => item.type === 'FileVersion') ??
+    [];
 
   return !file || loading ? null : (
     <Dialog {...dialogProps} aria-labelledby="dialog-file-versions">
       <DialogTitle id="dialog-file-versions">File History</DialogTitle>
-      <List dense>
-        {versions.map((version, index) => (
-          <React.Fragment key={version.id}>
-            <FileVersionItem version={version} />
-            {total && index !== total - 1 && <Divider />}
-          </React.Fragment>
-        ))}
-      </List>
+      <DialogContent>
+        <List dense>
+          {versions.map((version, index) => (
+            <Fragment key={version.id}>
+              <FileVersionItem version={version} />
+              {total && index !== total - 1 && <Divider />}
+            </Fragment>
+          ))}
+        </List>
+      </DialogContent>
       <DialogActions>
         <Button
           color="secondary"

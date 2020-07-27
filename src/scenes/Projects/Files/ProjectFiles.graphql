@@ -62,3 +62,9 @@ query ProjectFileVersions($id: ID!) {
     }
   }
 }
+
+query ProjectFileNodeDownloadUrl($id: ID!) {
+  fileNode(id: $id) {
+    ...FileDownloadUrl
+  }
+}

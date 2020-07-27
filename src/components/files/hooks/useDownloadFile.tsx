@@ -1,13 +1,9 @@
-import { useApolloClient } from '@apollo/client';
 import FileSaver from 'file-saver';
 import { useSnackbar } from 'notistack';
 import { useCallback } from 'react';
 import { PartialDeep } from 'type-fest';
 import { Directory, File, FileVersion } from '../../../api';
-import {
-  FileDownloadUrlDocument,
-  FileDownloadUrlQuery,
-} from '../FileActionsMenu';
+import { useProjectFileDownloadUrl } from '../../../scenes/Projects/Files';
 
 type DownloadableFile = PartialDeep<Directory | File | FileVersion>;
 
@@ -20,24 +16,7 @@ export const useDownloadFile = (): ((file: DownloadableFile) => void) => {
     });
   }, [enqueueSnackbar]);
 
-  const client = useApolloClient();
-
-  const queryDownloadUrl = useCallback(
-    async (id: string): Promise<string> => {
-      try {
-        const { data } = await client.query<FileDownloadUrlQuery>({
-          query: FileDownloadUrlDocument,
-          variables: { id },
-        });
-        return data?.file.downloadUrl ?? '';
-      } catch (error) {
-        console.log(error);
-        showSnackbarError();
-        return '';
-      }
-    },
-    [client, showSnackbarError]
-  );
+  const queryDownloadUrl = useProjectFileDownloadUrl();
 
   const downloadFile = useCallback(
     async (file: DownloadableFile) => {

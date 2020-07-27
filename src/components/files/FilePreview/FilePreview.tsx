@@ -7,8 +7,9 @@ import {
   DialogTitle,
   makeStyles,
 } from '@material-ui/core';
-import React, { FC } from 'react';
+import React, { FC, useEffect, useState } from 'react';
 import { File } from '../../../api';
+import { useProjectFileDownloadUrl } from '../../../scenes/Projects/Files';
 import { AUDIO_TYPES, IMAGE_TYPES, VIDEO_TYPES } from '../FILE_MIME_TYPES';
 import { CsvPreview } from './CsvPreview';
 import { ExcelPreview } from './ExcelPreview';
@@ -97,16 +98,27 @@ const previewers = {
 
 const FilePreviewWrapped: FC<FilePreviewProps> = (props) => {
   const classes = useStyles();
+  const [downloadUrl, setDownloadUrl] = useState('');
+  const queryDownloadUrl = useProjectFileDownloadUrl();
   const { file, onClose, ...rest } = props;
-  const { downloadUrl, mimeType, name } = file ?? {
-    downloadUrl: '',
+  const { id, mimeType, name } = file ?? {
+    id: '',
     mimeType: '',
     name: '',
   };
+
+  useEffect(() => {
+    if (id) {
+      queryDownloadUrl(id).then((downloadUrl) => setDownloadUrl(downloadUrl));
+    } else {
+      setDownloadUrl('');
+    }
+  }, [id, queryDownloadUrl]);
+
   const { previewError } = usePreview();
   const Previewer = previewers[mimeType as keyof typeof previewers]?.component;
   const previewerProps = previewers[mimeType as keyof typeof previewers]?.props;
-  return (
+  return !downloadUrl ? null : (
     <Dialog
       onClose={onClose}
       {...rest}

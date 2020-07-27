@@ -1,8 +1,12 @@
-query FileDownloadUrl($id: ID!) {
-  file(id: $id) {
-    id
+fragment FileDownloadUrl on FileNode {
+  id
+  name
+  type
+  ... on File {
     downloadUrl
-    name
+  }
+  ... on FileVersion {
+    downloadUrl
   }
 }
 
