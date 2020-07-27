@@ -2,10 +2,10 @@ import { makeStyles, Typography } from '@material-ui/core';
 import { Skeleton } from '@material-ui/lab';
 import clsx from 'clsx';
 import * as React from 'react';
-import { Secured } from '../../api';
-import { CalendarDate, Nullable } from '../../util';
-import { useDateFormatter } from '../Formatters';
-import { Redacted } from '../Redacted';
+import { Secured } from '../../../api';
+import { useDateFormatter } from '../../../components/Formatters';
+import { Redacted } from '../../../components/Redacted';
+import { CalendarDate, Nullable } from '../../../util';
 
 const useStyles = makeStyles(({ palette, spacing }) => ({
   root: {

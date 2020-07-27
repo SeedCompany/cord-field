@@ -9,7 +9,6 @@ import {
 } from '../../../api';
 import { BooleanProperty } from '../../../components/BooleanProperty';
 import { Breadcrumb } from '../../../components/Breadcrumb';
-import { CeremonyCard } from '../../../components/CeremonyCard';
 import { DataButton } from '../../../components/DataButton';
 import { Fab } from '../../../components/Fab';
 import { FieldOverviewCard } from '../../../components/FieldOverviewCard';
@@ -20,6 +19,7 @@ import {
 import { OptionsIcon, PlantIcon } from '../../../components/Icons';
 import { ProjectBreadcrumb } from '../../../components/ProjectBreadcrumb';
 import { Redacted } from '../../../components/Redacted';
+import { CeremonyCard } from '../CeremonyCard';
 import { EngagementQuery } from '../Engagement.generated';
 
 const useStyles = makeStyles(({ spacing, breakpoints, palette }) => ({

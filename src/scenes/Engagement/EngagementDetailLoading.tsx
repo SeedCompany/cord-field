@@ -3,11 +3,11 @@ import { Edit } from '@material-ui/icons';
 import { Skeleton } from '@material-ui/lab';
 import React from 'react';
 import { Breadcrumb } from '../../components/Breadcrumb';
-import { CeremonyCard } from '../../components/CeremonyCard';
 import { DataButton } from '../../components/DataButton';
 import { Fab } from '../../components/Fab';
 import { FieldOverviewCard } from '../../components/FieldOverviewCard';
 import { ProjectBreadcrumb } from '../../components/ProjectBreadcrumb';
+import { CeremonyCard } from './CeremonyCard';
 
 const useStyles = makeStyles(({ spacing, breakpoints }) => ({
   root: {

@@ -10,7 +10,6 @@ import {
 } from '../../../api';
 import { displayLocation } from '../../../api/location-helper';
 import { Breadcrumb } from '../../../components/Breadcrumb';
-import { CeremonyCard } from '../../../components/CeremonyCard';
 import { DataButton } from '../../../components/DataButton';
 import { Fab } from '../../../components/Fab';
 import { FieldOverviewCard } from '../../../components/FieldOverviewCard';
@@ -19,11 +18,12 @@ import {
   useDateTimeFormatter,
 } from '../../../components/Formatters';
 import { OptionsIcon, PlantIcon } from '../../../components/Icons';
-import { MentorCard } from '../../../components/MentorCard';
 import { MethodologiesCard } from '../../../components/MethodologiesCard';
 import { ProjectBreadcrumb } from '../../../components/ProjectBreadcrumb';
 import { Redacted } from '../../../components/Redacted';
+import { CeremonyCard } from '../CeremonyCard';
 import { EngagementQuery } from '../Engagement.generated';
+import { MentorCard } from './MentorCard';
 
 const useStyles = makeStyles(({ spacing, breakpoints, palette }) => ({
   root: {

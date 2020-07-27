@@ -3,12 +3,12 @@ import gql from 'graphql-tag';
 import { DisplayLocation_Country_Fragment } from '../../../api/fragments/location.generated';
 import { DisplayLocationFragmentDoc } from '../../../api/fragments/location.generated';
 import * as Types from '../../../api/schema.generated';
-import { CeremonyCardFragment } from '../../../components/CeremonyCard/CeremonyCard.generated';
-import { CeremonyCardFragmentDoc } from '../../../components/CeremonyCard/CeremonyCard.generated';
-import { MentorCardFragment } from '../../../components/MentorCard/MentorCard.generated';
-import { MentorCardFragmentDoc } from '../../../components/MentorCard/MentorCard.generated';
 import { MethodologiesCardFragment } from '../../../components/MethodologiesCard/MethodologiesCard.generated';
 import { MethodologiesCardFragmentDoc } from '../../../components/MethodologiesCard/MethodologiesCard.generated';
+import { CeremonyCardFragment } from '../CeremonyCard/CeremonyCard.generated';
+import { CeremonyCardFragmentDoc } from '../CeremonyCard/CeremonyCard.generated';
+import { MentorCardFragment } from './MentorCard/MentorCard.generated';
+import { MentorCardFragmentDoc } from './MentorCard/MentorCard.generated';
 
 export type InternshipEngagementDetailFragment = {
   __typename?: 'InternshipEngagement';

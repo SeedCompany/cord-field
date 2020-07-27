@@ -8,9 +8,9 @@ import {
 import { Add } from '@material-ui/icons';
 import * as React from 'react';
 import { ReactElement, ReactNode } from 'react';
-import { square } from '../../util';
-import { Avatar } from '../Avatar';
-import { UserListItemCardPortrait as UserCard } from '../UserListItemCard';
+import { Avatar } from '../../../../components/Avatar';
+import { UserListItemCardPortrait as UserCard } from '../../../../components/UserListItemCard';
+import { square } from '../../../../util';
 import { MentorCardFragment } from './MentorCard.generated';
 
 const useStyles = makeStyles(({ palette }) => ({
