@@ -8,13 +8,11 @@ import {
   makeStyles,
   Typography,
 } from '@material-ui/core';
-import {
-  Clear as ClearIcon,
-  InsertDriveFile as FileIcon,
-} from '@material-ui/icons';
+import { Clear as ClearIcon } from '@material-ui/icons';
 import clsx from 'clsx';
 import React, { FC, useCallback, useMemo } from 'react';
 import { useDropzone } from 'react-dropzone';
+import { useFileNodeIcon } from '../files/hooks';
 import { useFieldName } from './FieldGroup';
 import { FieldConfig, useField } from './useField';
 
@@ -51,6 +49,7 @@ export const DropzoneField: FC<DropzoneFieldProps> = ({
   name: nameProp,
 }) => {
   const classes = useStyles();
+  const fileIcon = useFileNodeIcon();
 
   // Memoize defaultValue to prevent re-renders when not changing.
   const defaultValue = useMemo(() => [], []);
@@ -108,24 +107,28 @@ export const DropzoneField: FC<DropzoneFieldProps> = ({
       {currentFiles.length > 0 && (
         <>
           <List dense>
-            {currentFiles.map((file, index) => (
-              <ListItem key={index}>
-                <ListItemIcon>
-                  <FileIcon />
-                </ListItemIcon>
-                <ListItemText primary={file.name} />
-                <ListItemSecondaryAction>
-                  <IconButton
-                    edge="end"
-                    aria-label="remove"
-                    size="small"
-                    onClick={() => handleRemoveFileClick(index)}
-                  >
-                    <ClearIcon />
-                  </IconButton>
-                </ListItemSecondaryAction>
-              </ListItem>
-            ))}
+            {currentFiles.map((file, index) => {
+              const { name, type } = file;
+              const Icon = fileIcon(type);
+              return (
+                <ListItem key={index}>
+                  <ListItemIcon>
+                    <Icon />
+                  </ListItemIcon>
+                  <ListItemText primary={name} />
+                  <ListItemSecondaryAction>
+                    <IconButton
+                      edge="end"
+                      aria-label="remove"
+                      size="small"
+                      onClick={() => handleRemoveFileClick(index)}
+                    >
+                      <ClearIcon />
+                    </IconButton>
+                  </ListItemSecondaryAction>
+                </ListItem>
+              );
+            })}
           </List>
         </>
       )}
