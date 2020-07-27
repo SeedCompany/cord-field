@@ -223,7 +223,7 @@ export const ProjectBudget = () => {
             ...records[index],
             amount: {
               ...records[index].amount,
-              value: data.amount as number,
+              value: Number(data.amount),
             },
           }
         : undefined;
@@ -233,6 +233,10 @@ export const ProjectBudget = () => {
           .concat(updatedRecord)
           .concat(records.slice(index + 1))
       : records;
+    const total = updatedRecords.reduce(
+      (total, record) => total + (record.amount.value ?? 0),
+      0
+    );
     return new Promise((resolve) =>
       resolve(
         setMock((mock) => ({
@@ -246,6 +250,7 @@ export const ProjectBudget = () => {
                 value: {
                   ...mock.data!.project.budget.value!,
                   records: updatedRecords,
+                  total,
                 },
               },
             },
