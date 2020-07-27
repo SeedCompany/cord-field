@@ -99,6 +99,7 @@ const previewers = {
 const FilePreviewWrapped: FC<FilePreviewProps> = (props) => {
   const classes = useStyles();
   const [downloadUrl, setDownloadUrl] = useState('');
+  const { previewError, setPreviewError } = usePreview();
   const queryDownloadUrl = useProjectFileDownloadUrl();
   const { file, onClose, ...rest } = props;
   const { id, mimeType, name } = file ?? {
@@ -113,9 +114,9 @@ const FilePreviewWrapped: FC<FilePreviewProps> = (props) => {
     } else {
       setDownloadUrl('');
     }
-  }, [id, queryDownloadUrl]);
+    return () => setPreviewError('');
+  }, [id, queryDownloadUrl, setPreviewError]);
 
-  const { previewError } = usePreview();
   const Previewer = previewers[mimeType as keyof typeof previewers]?.component;
   const previewerProps = previewers[mimeType as keyof typeof previewers]?.props;
   return !downloadUrl ? null : (

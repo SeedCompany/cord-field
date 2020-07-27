@@ -24,6 +24,7 @@ export const useProjectFileDownloadUrl = () => {
         const { data } = await client.query<ProjectFileNodeDownloadUrlQuery>({
           query: ProjectFileNodeDownloadUrlDocument,
           variables: { id },
+          fetchPolicy: 'network-only',
         });
         const isDirectory = (
           node: ProjectFileNodeDownloadUrlQuery['fileNode'] | undefined
