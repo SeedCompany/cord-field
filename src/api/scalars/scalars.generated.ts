@@ -133,6 +133,20 @@ export const typePolicies: TypePolicies = {
       },
     },
   },
+  BudgetRecord: {
+    fields: {
+      createdAt: {
+        read: Parsers.DateTime,
+      },
+    },
+  },
+  Budget: {
+    fields: {
+      createdAt: {
+        read: Parsers.DateTime,
+      },
+    },
+  },
   DirectScriptureProduct: {
     fields: {
       createdAt: {
@@ -141,27 +155,6 @@ export const typePolicies: TypePolicies = {
     },
   },
   DerivativeScriptureProduct: {
-    fields: {
-      createdAt: {
-        read: Parsers.DateTime,
-      },
-    },
-  },
-  Film: {
-    fields: {
-      createdAt: {
-        read: Parsers.DateTime,
-      },
-    },
-  },
-  LiteracyMaterial: {
-    fields: {
-      createdAt: {
-        read: Parsers.DateTime,
-      },
-    },
-  },
-  Story: {
     fields: {
       createdAt: {
         read: Parsers.DateTime,
@@ -188,6 +181,13 @@ export const typePolicies: TypePolicies = {
       },
     },
   },
+  Partnership: {
+    fields: {
+      createdAt: {
+        read: Parsers.DateTime,
+      },
+    },
+  },
   ProjectMember: {
     fields: {
       createdAt: {
@@ -198,21 +198,21 @@ export const typePolicies: TypePolicies = {
       },
     },
   },
-  BudgetRecord: {
+  Film: {
     fields: {
       createdAt: {
         read: Parsers.DateTime,
       },
     },
   },
-  Budget: {
+  LiteracyMaterial: {
     fields: {
       createdAt: {
         read: Parsers.DateTime,
       },
     },
   },
-  Partnership: {
+  Story: {
     fields: {
       createdAt: {
         read: Parsers.DateTime,
