@@ -116,7 +116,6 @@ export const ProjectOverview: FC = () => {
               <Typography variant="h4">
                 {data ? 'Project Overview' : <Skeleton width={200} />}
               </Typography>
-
               {data && (
                 <Typography variant="body2" color="textSecondary">
                   Updated {formatDateTime(data.project.modifiedAt)}

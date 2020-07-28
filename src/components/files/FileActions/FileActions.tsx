@@ -1,11 +1,9 @@
 import React, { FC } from 'react';
-import {
-  DeleteFile,
-  FileVersions,
-  RenameFile,
-  UploadFileVersion,
-  useFileActions,
-} from '.';
+import { DeleteFile } from './DeleteFile';
+import { useFileActions } from './FileActionsContext';
+import { FileVersions } from './FileVersions';
+import { RenameFile } from './RenameFile';
+import { UploadFileVersion } from './UploadFileVersion';
 
 export const FileActions: FC = () => {
   const {
