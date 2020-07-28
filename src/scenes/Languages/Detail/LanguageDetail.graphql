@@ -22,6 +22,7 @@ fragment LanguageDetail on Language {
     canEdit
     value
   }
+  ...LeastOfThese
   ethnologue {
     id {
       ...ss

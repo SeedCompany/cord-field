@@ -57,6 +57,7 @@ export const GQLOperations = {
     MentorCard: 'MentorCard',
     LanguageEngagementDetail: 'LanguageEngagementDetail',
     LanguageDetail: 'LanguageDetail',
+    LeastOfThese: 'LeastOfThese',
     LanguageForm: 'LanguageForm',
     ss: 'ss',
     orgDetails: 'orgDetails',

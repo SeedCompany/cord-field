@@ -18,6 +18,8 @@ import { SsFragment } from '../../Users/UserForm/UserForm.generated';
 import { SsFragmentDoc } from '../../Users/UserForm/UserForm.generated';
 import { LanguageFormFragment } from '../LanguageForm/LangugeForm.generated';
 import { LanguageFormFragmentDoc } from '../LanguageForm/LangugeForm.generated';
+import { LeastOfTheseFragment } from './LeastOfThese/LeastOfThese.generated';
+import { LeastOfTheseFragmentDoc } from './LeastOfThese/LeastOfThese.generated';
 
 export interface LanguageQueryVariables {
   languageId: Types.Scalars['ID'];
@@ -81,7 +83,7 @@ export type LanguageDetailFragment = { __typename?: 'Language' } & Pick<
             } & ProjectListItem_InternshipProject_Fragment)
         >;
       };
-  };
+  } & LeastOfTheseFragment;
 
 export const LanguageDetailFragmentDoc = gql`
   fragment LanguageDetail on Language {
@@ -101,6 +103,7 @@ export const LanguageDetailFragmentDoc = gql`
       canEdit
       value
     }
+    ...LeastOfThese
     ethnologue {
       id {
         ...ss
@@ -151,6 +154,7 @@ export const LanguageDetailFragmentDoc = gql`
     }
   }
   ${SsFragmentDoc}
+  ${LeastOfTheseFragmentDoc}
   ${DisplayLocationFragmentDoc}
   ${ProjectListItemFragmentDoc}
 `;

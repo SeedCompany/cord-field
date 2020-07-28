@@ -1,15 +1,14 @@
-import { Chip, makeStyles } from '@material-ui/core';
+import { Chip, ChipProps, makeStyles } from '@material-ui/core';
 import { Skeleton } from '@material-ui/lab';
-import React, { ReactElement, ReactNode } from 'react';
-import { Except } from 'type-fest';
+import React, { ReactElement } from 'react';
+import { Except, SetRequired } from 'type-fest';
 import { Secured } from '../../api';
 import { Redacted } from '../Redacted';
 
-export interface BooleanPropertyProps {
-  label: ReactNode;
+export interface BooleanPropertyProps extends SetRequired<ChipProps, 'label'> {
   redacted: string;
   data?: Except<Secured<boolean>, 'canEdit'>;
-  wrap?: (node: ReactNode) => ReactElement;
+  wrap?: (node: ReactElement) => ReactElement;
 }
 
 const useStyles = makeStyles(({ palette, shape }) => ({
@@ -22,14 +21,14 @@ const useStyles = makeStyles(({ palette, shape }) => ({
 }));
 
 export const BooleanProperty = ({
-  label,
   redacted,
   data,
   wrap,
+  ...rest
 }: BooleanPropertyProps) => {
   const classes = useStyles();
 
-  const chip = <Chip label={label} className={classes.root} />;
+  const chip = <Chip {...rest} className={classes.root} />;
 
   const out = !data ? (
     <Skeleton>{chip}</Skeleton>

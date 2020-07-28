@@ -22,6 +22,7 @@ import { Sensitivity } from '../../../components/Sensitivity';
 import { listOrPlaceholders } from '../../../util';
 import { EditLanguage } from '../Edit';
 import { useLanguageQuery } from './LanguageDetail.generated';
+import { LeastOfThese } from './LeastOfThese';
 
 const useStyles = makeStyles(({ spacing, breakpoints }) => ({
   root: {
@@ -113,6 +114,7 @@ export const LanguageDetail = () => {
               data={language?.isDialect}
               wrap={(node) => <Grid item>{node}</Grid>}
             />
+            <LeastOfThese language={language} />
           </Grid>
           <DisplayProperty
             label="Pronunciation"
