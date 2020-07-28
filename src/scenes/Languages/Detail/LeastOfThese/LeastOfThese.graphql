@@ -1,0 +1,10 @@
+fragment LeastOfThese on Language {
+  leastOfThese {
+    canRead
+    value
+  }
+  leastOfTheseReason {
+    canRead
+    value
+  }
+}
