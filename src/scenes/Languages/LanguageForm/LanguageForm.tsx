@@ -66,7 +66,8 @@ export const LanguageForm = <T extends any>({
             'displayName',
             'displayNamePronunciation',
             'registryOfDialectsCode',
-            'populationOverride'
+            'populationOverride',
+            'isDialect'
           ) && (
             <Grid item xs={12} md={6}>
               <Typography variant="h4" gutterBottom>
@@ -141,6 +142,17 @@ export const LanguageForm = <T extends any>({
                         label="Population"
                         placeholder="Enter Population"
                         helperText="Leave blank to use population from Ethnologue"
+                        margin="none"
+                        {...props}
+                      />
+                    </Grid>
+                  )}
+                </SecuredField>
+                <SecuredField obj={language} name="isDialect">
+                  {(props) => (
+                    <Grid item xs={12} sm={6}>
+                      <CheckboxField
+                        label="Is this language a dialect?"
                         margin="none"
                         {...props}
                       />
