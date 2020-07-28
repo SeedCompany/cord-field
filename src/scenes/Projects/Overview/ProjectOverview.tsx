@@ -15,6 +15,7 @@ import { FilesOverviewCard } from '../../../components/FilesOverviewCard';
 import {
   useDateFormatter,
   useDateTimeFormatter,
+  useNumberFormatter,
 } from '../../../components/Formatters';
 import { InternshipEngagementListItemCard } from '../../../components/InternshipEngagementListItemCard';
 import { LanguageEngagementListItemCard } from '../../../components/LanguageEngagementListItemCard';
@@ -59,6 +60,7 @@ export const ProjectOverview: FC = () => {
   const { projectId } = useParams();
   const formatDate = useDateFormatter();
   const formatDateTime = useDateTimeFormatter();
+  const formatNumber = useNumberFormatter();
 
   const { data, error } = useProjectOverviewQuery({
     variables: {
@@ -71,6 +73,14 @@ export const ProjectOverview: FC = () => {
       ? 'Language'
       : 'Intern'
     : null;
+
+  const engagementTotal = data
+    ? data.project.engagements.items.reduce((total: number, item) => {
+        return item.__typename === 'LanguageEngagement'
+          ? total + (item?.language.value?.population.value ?? 0)
+          : 0;
+      }, 0)
+    : undefined;
 
   const date = data
     ? securedDateRange(data.project.mouStart, data.project.mouEnd)
@@ -129,6 +139,18 @@ export const ProjectOverview: FC = () => {
                 LabelProps={{ color: 'textSecondary' }}
                 ValueProps={{ color: 'textPrimary' }}
               />
+            </Grid>
+            <Grid item>
+              <Tooltip title="Total of all languages engaged">
+                <DisplaySimpleProperty
+                  loading={!data}
+                  label="Population Total"
+                  value={formatNumber(engagementTotal)}
+                  loadingWidth={100}
+                  LabelProps={{ color: 'textSecondary' }}
+                  ValueProps={{ color: 'textPrimary' }}
+                />
+              </Tooltip>
             </Grid>
           </Grid>
 
