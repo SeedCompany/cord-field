@@ -4,8 +4,7 @@ import { Skeleton } from '@material-ui/lab';
 import { FC } from 'react';
 import * as React from 'react';
 import { useParams } from 'react-router-dom';
-import { PartialDeep } from 'type-fest';
-import { Directory, displayStatus, securedDateRange } from '../../../api';
+import { displayStatus, securedDateRange } from '../../../api';
 import { displayLocation } from '../../../api/location-helper';
 import { BudgetOverviewCard } from '../../../components/BudgetOverviewCard';
 import { CardGroup } from '../../../components/CardGroup';
@@ -89,21 +88,6 @@ export const ProjectOverview: FC = () => {
 
   const date = data
     ? securedDateRange(data.project.mouStart, data.project.mouEnd)
-    : undefined;
-
-  const calculateDescendants = (directory: PartialDeep<Directory>) => {
-    const total = directory.children?.total ?? 0;
-    const children = directory.children?.items ?? [];
-    const childrenTotal: number = children.reduce((total, child) => {
-      const isDirectory = child?.type === 'Directory';
-      // Subtract 1 for the directory itself, which shouldn't count as a "file"
-      return isDirectory ? total + calculateDescendants(child!) - 1 : total;
-    }, 0);
-    return total + childrenTotal;
-  };
-
-  const totalFiles = data
-    ? calculateDescendants(data?.project.rootDirectory)
     : undefined;
 
   return (
@@ -231,7 +215,7 @@ export const ProjectOverview: FC = () => {
                 className={classes.budgetOverviewCard}
                 budget={data?.project.budget.value}
               />
-              <FilesOverviewCard loading={!data} total={totalFiles} />
+              <FilesOverviewCard loading={!data} total={undefined} />
             </div>
             <CardGroup>
               <ProjectMembersSummary members={data?.project.team} />

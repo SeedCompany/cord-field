@@ -1,8 +1,3 @@
-fragment DirectoryInfo on Directory {
-  id
-  type
-}
-
 query ProjectOverview($input: ID!) {
   project(id: $input) {
     __typename
@@ -47,39 +42,6 @@ query ProjectOverview($input: ID!) {
     }
     partnerships {
       ...PartnershipSummary
-    }
-    rootDirectory {
-      ...DirectoryInfo
-      children {
-        total
-        items {
-          ... on Directory {
-            ...DirectoryInfo
-            children {
-              total
-              items {
-                ... on Directory {
-                  ...DirectoryInfo
-                  children {
-                    total
-                    items {
-                      ... on Directory {
-                        ...DirectoryInfo
-                        children {
-                          total
-                          items {
-                            type
-                          }
-                        }
-                      }
-                    }
-                  }
-                }
-              }
-            }
-          }
-        }
-      }
     }
     engagements {
       canRead
