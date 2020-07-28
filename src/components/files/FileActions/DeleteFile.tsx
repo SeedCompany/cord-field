@@ -20,7 +20,6 @@ export const DeleteFile = (props: Except<DeleteFileProps, 'onSubmit'>) => {
   const isDirectory = type === 'Directory';
 
   const onSubmit: DeleteFileProps['onSubmit'] = async () => {
-    console.log('id', id);
     await deleteFile({
       variables: { id },
       refetchQueries: [GQLOperations.Query.ProjectDirectory],
