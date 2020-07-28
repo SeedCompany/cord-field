@@ -14,7 +14,6 @@ export type DeleteFileProps = DialogFormProps<{ id: string }> & {
 export const DeleteFile = (props: Except<DeleteFileProps, 'onSubmit'>) => {
   const { item } = props;
   const [deleteFile] = useDeleteFileNodeMutation();
-  console.log('item', item);
 
   if (!item) return null;
   const { id, type } = item;

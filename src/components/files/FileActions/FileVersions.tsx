@@ -27,7 +27,6 @@ export const FileVersions: FC<FileVersionsProps> = (props) => {
   const { onClose } = dialogProps;
 
   const id = file?.id ?? '';
-  console.log('id', id);
   const { data, loading } = useFileVersionsQuery({
     variables: { id },
     skip: !file,

@@ -43,11 +43,13 @@ const menuItems = [
   {
     text: FileAction.Rename,
     icon: RenameIcon,
+    version: true,
     directory: true,
   },
   {
     text: FileAction.Download,
     icon: DownloadIcon,
+    version: true,
   },
   {
     text: FileAction.History,
@@ -60,6 +62,7 @@ const menuItems = [
   {
     text: FileAction.Delete,
     icon: DeleteIcon,
+    version: true,
     directory: true,
   },
 ];
@@ -97,7 +100,6 @@ export const FileActionsMenu: FC<FileActionsMenuProps> = (props) => {
   const { spacing } = useTheme();
   const handleFilesSelection = useUploadProjectFiles(item.id);
   const { handleFileActionClick } = useFileActions();
-  console.log('item', item);
 
   const close = () => props.onClose?.({}, 'backdropClick');
 
@@ -108,8 +110,9 @@ export const FileActionsMenu: FC<FileActionsMenuProps> = (props) => {
   };
 
   const renderedMenuItem = (menuItem: typeof menuItems[0]) => {
-    const { text, icon: Icon, directory } = menuItem;
-    return item.category === 'Directory' && !directory ? null : (
+    const { text, icon: Icon, directory, version } = menuItem;
+    return (item.type === 'Directory' && !directory) ||
+      (item.type === 'FileVersion' && !version) ? null : (
       <MenuItem
         key={text}
         onClick={
