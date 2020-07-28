@@ -97,6 +97,7 @@ export const FileActionsMenu: FC<FileActionsMenuProps> = (props) => {
   const { spacing } = useTheme();
   const handleFilesSelection = useUploadProjectFiles(item.id);
   const { handleFileActionClick } = useFileActions();
+  console.log('item', item);
 
   const close = () => props.onClose?.({}, 'backdropClick');
 

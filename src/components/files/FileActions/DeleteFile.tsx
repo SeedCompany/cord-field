@@ -14,12 +14,14 @@ export type DeleteFileProps = DialogFormProps<{ id: string }> & {
 export const DeleteFile = (props: Except<DeleteFileProps, 'onSubmit'>) => {
   const { item } = props;
   const [deleteFile] = useDeleteFileNodeMutation();
+  console.log('item', item);
 
   if (!item) return null;
   const { id, type } = item;
   const isDirectory = type === 'Directory';
 
   const onSubmit: DeleteFileProps['onSubmit'] = async () => {
+    console.log('id', id);
     await deleteFile({
       variables: { id },
       refetchQueries: [GQLOperations.Query.ProjectDirectory],

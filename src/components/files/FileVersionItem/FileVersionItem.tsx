@@ -1,15 +1,18 @@
 import {
-  IconButton,
   ListItem,
   ListItemIcon,
   ListItemSecondaryAction,
   ListItemText,
   makeStyles,
 } from '@material-ui/core';
-import { CloudDownload as DownloadIcon } from '@material-ui/icons';
 import React, { FC } from 'react';
+import { File } from '../../../api';
 import { useDateTimeFormatter } from '../../Formatters';
-import { useDownloadFile, useFileNodeIcon } from '../hooks';
+import {
+  FileActionsPopup as ActionsMenu,
+  useFileActions,
+} from '../FileActions';
+import { useFileNodeIcon } from '../hooks';
 import {
   FileVersionItem_FileVersion_Fragment,
   FileVersionItemFragment,
@@ -24,6 +27,7 @@ const useStyles = makeStyles(({ spacing, typography }) => ({
     fontSize: typography.h2.fontSize,
   },
   text: {
+    cursor: 'pointer',
     marginRight: spacing(3),
   },
 }));
@@ -35,33 +39,36 @@ interface FileVersionItemProps {
 export const FileVersionItem: FC<FileVersionItemProps> = (props) => {
   const classes = useStyles();
   const formatDate = useDateTimeFormatter();
-  const downloadFile = useDownloadFile();
   const fileIcon = useFileNodeIcon();
+  const { openFilePreview } = useFileActions();
   const { version } = props;
 
   const isFileVersion = (
     version: FileVersionItemFragment
   ): version is FileVersionItem_FileVersion_Fragment =>
     version.type === 'FileVersion';
+
   const { createdAt, createdBy, name } = version;
   const mimeType = isFileVersion(version) ? version.mimeType : '';
   const Icon = fileIcon(mimeType);
   const createdByUser = `${createdBy.displayFirstName.value} ${createdBy.displayLastName.value}`;
+
   return (
-    <ListItem>
-      <ListItemIcon className={classes.iconContainer}>
-        <Icon className={classes.icon} />
-      </ListItemIcon>
-      <ListItemText
-        className={classes.text}
-        primary={name}
-        secondary={`Created on ${formatDate(createdAt)} by ${createdByUser}`}
-      />
-      <ListItemSecondaryAction>
-        <IconButton onClick={() => downloadFile(version)}>
-          <DownloadIcon />
-        </IconButton>
-      </ListItemSecondaryAction>
-    </ListItem>
+    <>
+      <ListItem>
+        <ListItemIcon className={classes.iconContainer}>
+          <Icon className={classes.icon} />
+        </ListItemIcon>
+        <ListItemText
+          onClick={() => openFilePreview(version as File)}
+          className={classes.text}
+          primary={name}
+          secondary={`Created on ${formatDate(createdAt)} by ${createdByUser}`}
+        />
+        <ListItemSecondaryAction>
+          <ActionsMenu item={version as File} />
+        </ListItemSecondaryAction>
+      </ListItem>
+    </>
   );
 };

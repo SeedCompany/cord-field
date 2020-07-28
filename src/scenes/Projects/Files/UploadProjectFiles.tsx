@@ -24,6 +24,9 @@ export const UploadProjectFiles = (props: UploadProjectFilesProps) => {
       name,
       parentId: directoryId,
     };
+    console.log('directoryId', directoryId);
+    console.log('name', name);
+    console.log('uploadId', uploadId);
     await createFileVersion({
       variables: { input },
       refetchQueries: [GQLOperations.Query.ProjectDirectory],
