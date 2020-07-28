@@ -167,33 +167,6 @@ export const ProjectOverview: FC = () => {
 
             <Grid container spacing={1} alignItems="center">
               <Grid item>
-                <DataButton
-                  loading={!data}
-                  secured={data?.project.location}
-                  empty="Enter Location"
-                  redacted="You do not have permission to view location"
-                  children={displayLocation}
-                />
-              </Grid>
-              <Grid item>
-                <DataButton
-                  loading={!data}
-                  startIcon={<DateRange className={classes.infoColor} />}
-                  secured={date}
-                  redacted="You do not have permission to view start/end dates"
-                  children={formatDate.range}
-                  empty="Start - End"
-                />
-              </Grid>
-              <Grid item>
-                <DataButton loading={!data}>
-                  {displayStatus(data?.project.status)}
-                </DataButton>
-              </Grid>
-            </Grid>
-
-            <Grid container spacing={1} alignItems="center">
-              <Grid item>
                 <Fab
                   loading={!data}
                   onClick={uploadFile}
