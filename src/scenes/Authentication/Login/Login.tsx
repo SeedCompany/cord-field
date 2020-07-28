@@ -14,12 +14,13 @@ export const Login = (props: Except<Props, 'onSubmit'>) => {
   const [session, sessionLoading, setUserSession] = useSession();
   const [success, setSuccess] = useState(false);
 
-  // Redirect to homepage if already logged in (and not from successful login)
+  // Redirect to homepage or returnTo url if already logged in (and not from successful login)
   useEffect(() => {
     if (!sessionLoading && session && !success) {
-      navigate('/', { replace: true });
+      const returnTo = decodeURIComponent(query.get('returnTo') ?? '/');
+      navigate(returnTo, { replace: true });
     }
-  }, [navigate, session, sessionLoading, success]);
+  }, [navigate, query, session, sessionLoading, success]);
 
   const submit: Props['onSubmit'] = async (input) => {
     try {
