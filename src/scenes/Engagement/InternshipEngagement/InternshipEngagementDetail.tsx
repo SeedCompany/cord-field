@@ -21,6 +21,7 @@ import { OptionsIcon, PlantIcon } from '../../../components/Icons';
 import { MethodologiesCard } from '../../../components/MethodologiesCard';
 import { ProjectBreadcrumb } from '../../../components/ProjectBreadcrumb';
 import { Redacted } from '../../../components/Redacted';
+import { Link } from '../../../components/Routing';
 import { CeremonyCard } from '../CeremonyCard';
 import { EngagementQuery } from '../Engagement.generated';
 import { MentorCard } from './MentorCard';
@@ -56,7 +57,8 @@ export const InternshipEngagementDetail: FC<EngagementQuery> = ({
     return null; // easiest for typescript
   }
 
-  const name = engagement.intern?.value?.fullName;
+  const intern = engagement.intern?.value;
+  const name = intern?.fullName;
   const editable = canEditAny(engagement);
 
   return (
@@ -84,10 +86,17 @@ export const InternshipEngagementDetail: FC<EngagementQuery> = ({
 
         <Grid item container spacing={3} alignItems="center">
           <Grid item className={name ? undefined : classes.nameRedacted}>
-            <Typography variant="h2">
+            <Typography
+              variant="h2"
+              {...(intern
+                ? { component: Link, to: `/users/${intern.id}` }
+                : {})}
+            >
               {name ?? (
                 <Redacted
-                  info="You do not have permission to view this engagement's name"
+                  info={`You do not have permission to view this engagement's ${
+                    intern ? 'name' : 'intern'
+                  }`}
                   width="100%"
                 />
               )}

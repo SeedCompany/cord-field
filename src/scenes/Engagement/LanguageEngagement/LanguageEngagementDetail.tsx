@@ -19,6 +19,7 @@ import {
 import { OptionsIcon, PlantIcon } from '../../../components/Icons';
 import { ProjectBreadcrumb } from '../../../components/ProjectBreadcrumb';
 import { Redacted } from '../../../components/Redacted';
+import { Link } from '../../../components/Routing';
 import { CeremonyCard } from '../CeremonyCard';
 import { EngagementQuery } from '../Engagement.generated';
 
@@ -53,9 +54,8 @@ export const LanguageEngagementDetail: FC<EngagementQuery> = ({
     return null; // easiest for typescript
   }
 
-  const langName =
-    engagement.language.value?.name.value ??
-    engagement.language.value?.displayName.value;
+  const language = engagement.language.value;
+  const langName = language?.name.value ?? language?.displayName.value;
   const editable = canEditAny(engagement);
 
   return (
@@ -82,10 +82,17 @@ export const LanguageEngagementDetail: FC<EngagementQuery> = ({
         </Grid>
         <Grid item container spacing={3} alignItems="center">
           <Grid item className={langName ? undefined : classes.nameRedacted}>
-            <Typography variant="h2">
+            <Typography
+              variant="h2"
+              {...(language
+                ? { component: Link, to: `/languages/${language.id}` }
+                : {})}
+            >
               {langName ?? (
                 <Redacted
-                  info="You do not have permission to view this engagement's name"
+                  info={`You do not have permission to view this engagement's ${
+                    language ? 'name' : 'language'
+                  }`}
                   width="100%"
                 />
               )}

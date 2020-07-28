@@ -12,16 +12,16 @@ export type LanguageEngagementDetailFragment = {
 > & {
     language: { __typename?: 'SecuredLanguage' } & {
       value?: Types.Maybe<
-        { __typename?: 'Language' } & {
-          displayName: { __typename?: 'SecuredString' } & Pick<
-            Types.SecuredString,
-            'value'
-          >;
-          name: { __typename?: 'SecuredString' } & Pick<
-            Types.SecuredString,
-            'value'
-          >;
-        }
+        { __typename?: 'Language' } & Pick<Types.Language, 'id'> & {
+            displayName: { __typename?: 'SecuredString' } & Pick<
+              Types.SecuredString,
+              'value'
+            >;
+            name: { __typename?: 'SecuredString' } & Pick<
+              Types.SecuredString,
+              'value'
+            >;
+          }
       >;
     };
     lukePartnership: { __typename?: 'SecuredBoolean' } & Pick<
@@ -61,6 +61,7 @@ export const LanguageEngagementDetailFragmentDoc = gql`
     createdAt
     language {
       value {
+        id
         displayName {
           value
         }

@@ -5,6 +5,7 @@ fragment InternshipEngagementDetail on InternshipEngagement {
   modifiedAt
   intern {
     value {
+      id
       fullName
     }
   }

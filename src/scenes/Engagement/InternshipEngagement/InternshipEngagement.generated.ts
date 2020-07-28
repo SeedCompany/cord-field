@@ -18,7 +18,7 @@ export type InternshipEngagementDetailFragment = {
 > & {
     intern: { __typename?: 'SecuredUser' } & {
       value?: Types.Maybe<
-        { __typename?: 'User' } & Pick<Types.User, 'fullName'>
+        { __typename?: 'User' } & Pick<Types.User, 'id' | 'fullName'>
       >;
     };
     position: { __typename?: 'SecuredInternPosition' } & Pick<
@@ -68,6 +68,7 @@ export const InternshipEngagementDetailFragmentDoc = gql`
     modifiedAt
     intern {
       value {
+        id
         fullName
       }
     }

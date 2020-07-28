@@ -3,6 +3,7 @@ fragment LanguageEngagementDetail on LanguageEngagement {
   createdAt
   language {
     value {
+      id
       displayName {
         value
       }
