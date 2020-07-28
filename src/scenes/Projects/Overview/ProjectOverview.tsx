@@ -74,12 +74,22 @@ export const ProjectOverview: FC = () => {
       : 'Intern'
     : null;
 
+  /* We might not have population totals for any language
+    engagements. In that case, we'll returned `undefined`
+    so our `DisplaySimpleProperty` component can just not
+    render. */
   const engagementTotal = data
-    ? data.project.engagements.items.reduce((total: number, item) => {
-        return item.__typename === 'LanguageEngagement'
-          ? total + (item?.language.value?.population.value ?? 0)
-          : 0;
-      }, 0)
+    ? data.project.engagements.items.reduce(
+        (total: number | undefined, item) => {
+          if (item.__typename === 'LanguageEngagement') {
+            const itemTotal = item?.language.value?.population.value;
+            return itemTotal ? (total ?? 0) + itemTotal : total;
+          } else {
+            return total;
+          }
+        },
+        undefined
+      )
     : undefined;
 
   const date = data
@@ -140,18 +150,20 @@ export const ProjectOverview: FC = () => {
                 ValueProps={{ color: 'textPrimary' }}
               />
             </Grid>
-            <Grid item>
+            {engagementTotal !== undefined && (
               <Tooltip title="Total of all languages engaged">
-                <DisplaySimpleProperty
-                  loading={!data}
-                  label="Population Total"
-                  value={formatNumber(engagementTotal)}
-                  loadingWidth={100}
-                  LabelProps={{ color: 'textSecondary' }}
-                  ValueProps={{ color: 'textPrimary' }}
-                />
+                <Grid item>
+                  <DisplaySimpleProperty
+                    loading={!data}
+                    label="Population Total"
+                    value={formatNumber(engagementTotal)}
+                    loadingWidth={100}
+                    LabelProps={{ color: 'textSecondary' }}
+                    ValueProps={{ color: 'textPrimary' }}
+                  />
+                </Grid>
               </Tooltip>
-            </Grid>
+            )}
           </Grid>
 
           <Grid container spacing={1} alignItems="center">
