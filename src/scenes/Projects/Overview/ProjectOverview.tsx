@@ -215,8 +215,10 @@ export const ProjectOverview: FC = () => {
                 className={classes.budgetOverviewCard}
                 budget={data?.project.budget.value}
               />
-              {/* TODO When file api is finished need to update query and pass in file information */}
-              <FilesOverviewCard loading={!data} />
+              <FilesOverviewCard
+                loading={!data}
+                total={data?.project.rootDirectory.children.total}
+              />
             </div>
             <CardGroup>
               <ProjectMembersSummary members={data?.project.team} />

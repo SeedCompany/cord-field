@@ -43,6 +43,12 @@ query ProjectOverview($input: ID!) {
     partnerships {
       ...PartnershipSummary
     }
+    rootDirectory {
+      id
+      children {
+        total
+      }
+    }
     engagements {
       canRead
       canCreate
