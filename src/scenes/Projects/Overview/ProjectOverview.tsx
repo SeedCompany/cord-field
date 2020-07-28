@@ -76,8 +76,7 @@ export const ProjectOverview: FC = () => {
 
   /* We might not have population totals for any language
     engagements. In that case, we'll returned `undefined`
-    so our `DisplaySimpleProperty` component can just not
-    render. */
+    so we can just not render this UI. */
   const engagementTotal = data
     ? data.project.engagements.items.reduce(
         (total: number | undefined, item) => {
@@ -150,19 +149,25 @@ export const ProjectOverview: FC = () => {
                 ValueProps={{ color: 'textPrimary' }}
               />
             </Grid>
-            {engagementTotal !== undefined && (
-              <Tooltip title="Total of all languages engaged">
-                <Grid item>
-                  <DisplaySimpleProperty
-                    loading={!data}
-                    label="Population Total"
-                    value={formatNumber(engagementTotal)}
-                    loadingWidth={100}
-                    LabelProps={{ color: 'textSecondary' }}
-                    ValueProps={{ color: 'textPrimary' }}
-                  />
-                </Grid>
-              </Tooltip>
+            {!!engagementTotal && (
+              <Grid item>
+                <Tooltip title="Total of all languages engaged">
+                  <Typography variant="body2">
+                    {!data ? (
+                      <Skeleton width={100} />
+                    ) : (
+                      <>
+                        <Typography variant="inherit" color="textSecondary">
+                          Population Total:&nbsp;
+                        </Typography>
+                        <Typography variant="inherit" color="textPrimary">
+                          {formatNumber(engagementTotal)}
+                        </Typography>
+                      </>
+                    )}
+                  </Typography>
+                </Tooltip>
+              </Grid>
             )}
           </Grid>
 
