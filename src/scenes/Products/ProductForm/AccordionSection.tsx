@@ -62,7 +62,13 @@ export const AccordionSection: FC<FormRenderProps> = ({
   };
 
   const productType = values.productType?.[0];
-  const produces = values.produces;
+  const produces = values.produces || '';
+  const isDerivativeProduct = [
+    'story',
+    'film',
+    'song',
+    'literacyMaterial',
+  ].includes(productType);
 
   const methodology = values.methodology?.[0];
   const methodologyButtonText = `${methodologyCategories[methodology]} - ${methodology}`;
@@ -76,8 +82,8 @@ export const AccordionSection: FC<FormRenderProps> = ({
         <AccordionSummary expandIcon={<ExpandMore />}>
           <Typography>Choose Product</Typography>
           {productType && openedSection !== 'produces' && (
-            <ToggleButton selected value={produces || ''}>
-              {`${productType} ${produces || ''}`}
+            <ToggleButton selected value={produces}>
+              {`${productType} ${isDerivativeProduct ? produces : ''}`}
             </ToggleButton>
           )}
         </AccordionSummary>
@@ -93,14 +99,7 @@ export const AccordionSection: FC<FormRenderProps> = ({
               )
             )}
           </ToggleButtonsField>
-          <TextField
-            name="produces"
-            disabled={
-              !['story', 'film', 'song', 'literacyMaterial'].includes(
-                values.productType?.[0]
-              )
-            }
-          />
+          {isDerivativeProduct && <TextField name="produces" required />}
         </AccordionDetails>
       </Accordion>
 

@@ -40,8 +40,10 @@ export const CreateProduct: FC = () => {
   const [createProduct] = useCreateProductMutation();
 
   const onSubmit = async ({ productType, ...inputs }: any) => {
+    const produces = productType === 'scripture' ? undefined : inputs.produces;
     const input = {
       ...inputs,
+      produces,
       engagementId,
       methodology: inputs.methodology?.[0],
     };
