@@ -6,6 +6,7 @@ hooks:
   afterAllFileWrite:
     - eslint --fix --ext .generated.ts
 generates:
+  # Generate fragment matcher for Apollo's caching
   ./src/api/fragmentMatcher.generated.ts:
     plugins:
       - add: /* eslint-disable import/no-default-export */
@@ -15,11 +16,15 @@ generates:
           content: export const possibleTypes = result.possibleTypes;
     config:
       apolloClientVersion: 3
+
+  # Generate type policies so custom scalars can be parsed automatically
   ./src/api/scalars/scalars.generated.ts:
     plugins:
       - ./src/api/scalars/scalars.codegen
     config:
       parserImport: ./scalars.parser
+
+  # Generate TypeScript version of graphql schema
   ./src/api/schema.generated.ts:
     plugins:
       - typescript
@@ -35,11 +40,16 @@ generates:
         DateTime: DateTime
       skipTypename: false
       enumsAsTypes: true
+
+  # Generate an object housing all of our operations
+  # This allows operations to be cross-referenced (i.e. `refetchQueries`) without needing to rely on magic strings
   ./src/api/operations.generated.ts:
     plugins:
       - named-operations-object
     config:
       identifierName: GQLOperations
+
+  # Generate types & react hooks for our operations
   ./src/:
     preset: near-operation-file
     presetConfig:
