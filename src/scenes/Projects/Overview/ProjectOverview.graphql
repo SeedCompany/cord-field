@@ -1,5 +1,6 @@
 query ProjectOverview($input: ID!) {
   project(id: $input) {
+    __typename
     id
     deptId {
       canRead
@@ -48,9 +49,11 @@ query ProjectOverview($input: ID!) {
       total
       items {
         ... on LanguageEngagement {
+          __typename
           ...LanguageEngagementListItem
         }
         ... on InternshipEngagement {
+          __typename
           ...InternshipEngagementListItem
         }
       }
