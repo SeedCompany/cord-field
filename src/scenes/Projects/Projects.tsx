@@ -49,7 +49,7 @@ export const Projects = () => {
       element: <CreateProduct />,
     },
     {
-      path: ':projectId/:engagementId/:productId/edit-product',
+      path: ':projectId/engagements/:engagementId/products/:productId',
       element: <EditProduct />,
     },
   ]);

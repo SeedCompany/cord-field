@@ -4,7 +4,6 @@ import React, { FC } from 'react';
 import { useParams } from 'react-router';
 import { Breadcrumb } from '../../../components/Breadcrumb';
 import { ProjectBreadcrumb } from '../../../components/ProjectBreadcrumb';
-import { ButtonLink } from '../../../components/Routing';
 import { ProductForm } from '../ProductForm';
 import {
   useProductQuery,
@@ -72,16 +71,8 @@ export const EditProduct: FC = () => {
 
     const { product } = data!.updateProduct;
 
-    enqueueSnackbar(`Created Product: ${product.id}`, {
+    enqueueSnackbar(`Edited Product: ${product.id}`, {
       variant: 'success',
-      action: () => (
-        <ButtonLink
-          color="inherit"
-          to={`/projects/${projectId}/${engagementId}/${product.id}/edit`}
-        >
-          Edit
-        </ButtonLink>
-      ),
     });
   };
 
@@ -93,13 +84,9 @@ export const EditProduct: FC = () => {
           {data?.engagement.__typename === 'LanguageEngagement' &&
             data.engagement.language.value?.name.value}
         </Breadcrumb>
-        <Breadcrumb
-          to={`/projects/${projectId}/${engagementId}/create-product`}
-        >
-          Create Product
-        </Breadcrumb>
+        <Typography variant="h4">Edit Product</Typography>
       </Breadcrumbs>
-      <Typography variant="h2">Create Product</Typography>
+      <Typography variant="h2">Edit Product</Typography>
       <ProductForm
         onSubmit={onSubmit}
         initialValues={initialValuesWithMethodology}

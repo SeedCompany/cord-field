@@ -47,11 +47,7 @@ export const CreateProduct = () => {
           {data?.engagement.__typename === 'LanguageEngagement' &&
             data.engagement.language.value?.name.value}
         </Breadcrumb>
-        <Breadcrumb
-          to={`/projects/${projectId}/${engagementId}/create-product`}
-        >
-          Create Product
-        </Breadcrumb>
+        <Typography variant="h4">Create Product</Typography>
       </Breadcrumbs>
       <Typography variant="h2">Create Product</Typography>
       <ProductForm
@@ -102,7 +98,7 @@ export const CreateProduct = () => {
             action: () => (
               <ButtonLink
                 color="inherit"
-                to={`/projects/${projectId}/${engagementId}/${product.id}/edit`}
+                to={`/projects/${projectId}/engagements/${engagementId}/products/${product.id}/edit-product`}
               >
                 Edit
               </ButtonLink>
