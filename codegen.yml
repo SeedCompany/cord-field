@@ -70,3 +70,6 @@ generates:
       withHOC: false
       withComponent: false
       enumsAsTypes: true
+      # Instead of Pick-ing from generated schema, redefine shape inline
+      # Skipping for now, since schema has docs which IDE can provide when Pick is used.
+      preResolveTypes: false
