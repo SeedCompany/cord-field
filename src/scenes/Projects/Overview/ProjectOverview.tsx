@@ -150,7 +150,11 @@ export const ProjectOverview: FC = () => {
               ValueProps={{ color: 'textPrimary' }}
               wrap={(node) => (
                 <Grid item>
-                  <Tooltip title="Total population of all languages engaged">
+                  <Tooltip
+                    title={
+                      data ? 'Total population of all languages engaged' : ''
+                    }
+                  >
                     {node}
                   </Tooltip>
                 </Grid>
