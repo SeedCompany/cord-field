@@ -11,52 +11,54 @@ import { MentorCardFragment } from './MentorCard/MentorCard.generated';
 import { MentorCardFragmentDoc } from './MentorCard/MentorCard.generated';
 
 export type InternshipEngagementDetailFragment = {
-  __typename?: 'InternshipEngagement';
+  readonly __typename?: 'InternshipEngagement';
 } & Pick<
   Types.InternshipEngagement,
   'id' | 'createdAt' | 'status' | 'modifiedAt'
 > & {
-    intern: { __typename?: 'SecuredUser' } & {
-      value?: Types.Maybe<
-        { __typename?: 'User' } & Pick<Types.User, 'id' | 'fullName'>
+    readonly intern: { readonly __typename?: 'SecuredUser' } & {
+      readonly value?: Types.Maybe<
+        { readonly __typename?: 'User' } & Pick<Types.User, 'id' | 'fullName'>
       >;
     };
-    position: { __typename?: 'SecuredInternPosition' } & Pick<
+    readonly position: { readonly __typename?: 'SecuredInternPosition' } & Pick<
       Types.SecuredInternPosition,
       'canRead' | 'canEdit' | 'value'
     >;
-    startDate: { __typename?: 'SecuredDate' } & Pick<
+    readonly startDate: { readonly __typename?: 'SecuredDate' } & Pick<
       Types.SecuredDate,
       'value' | 'canRead' | 'canEdit'
     >;
-    endDate: { __typename?: 'SecuredDate' } & Pick<
+    readonly endDate: { readonly __typename?: 'SecuredDate' } & Pick<
       Types.SecuredDate,
       'value' | 'canRead' | 'canEdit'
     >;
-    completeDate: { __typename?: 'SecuredDate' } & Pick<
+    readonly completeDate: { readonly __typename?: 'SecuredDate' } & Pick<
       Types.SecuredDate,
       'value' | 'canRead' | 'canEdit'
     >;
-    disbursementCompleteDate: { __typename?: 'SecuredDate' } & Pick<
-      Types.SecuredDate,
-      'value' | 'canRead' | 'canEdit'
-    >;
-    communicationsCompleteDate: { __typename?: 'SecuredDate' } & Pick<
-      Types.SecuredDate,
-      'value' | 'canRead' | 'canEdit'
-    >;
-    countryOfOrigin: { __typename?: 'SecuredCountry' } & Pick<
+    readonly disbursementCompleteDate: {
+      readonly __typename?: 'SecuredDate';
+    } & Pick<Types.SecuredDate, 'value' | 'canRead' | 'canEdit'>;
+    readonly communicationsCompleteDate: {
+      readonly __typename?: 'SecuredDate';
+    } & Pick<Types.SecuredDate, 'value' | 'canRead' | 'canEdit'>;
+    readonly countryOfOrigin: { readonly __typename?: 'SecuredCountry' } & Pick<
       Types.SecuredCountry,
       'canRead' | 'canEdit'
     > & {
-        value?: Types.Maybe<
-          { __typename?: 'Country' } & DisplayLocation_Country_Fragment
+        readonly value?: Types.Maybe<
+          { readonly __typename?: 'Country' } & DisplayLocation_Country_Fragment
         >;
       };
-    mentor: { __typename?: 'SecuredUser' } & MentorCardFragment;
-    ceremony: { __typename?: 'SecuredCeremony' } & CeremonyCardFragment;
-    methodologies: {
-      __typename?: 'SecuredMethodologies';
+    readonly mentor: {
+      readonly __typename?: 'SecuredUser';
+    } & MentorCardFragment;
+    readonly ceremony: {
+      readonly __typename?: 'SecuredCeremony';
+    } & CeremonyCardFragment;
+    readonly methodologies: {
+      readonly __typename?: 'SecuredMethodologies';
     } & MethodologiesCardFragment;
   };
 

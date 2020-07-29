@@ -13,8 +13,10 @@ export type UpdateLanguageMutationVariables = Types.Exact<{
 }>;
 
 export interface UpdateLanguageMutation {
-  updateLanguage: { __typename?: 'UpdateLanguageOutput' } & {
-    language: { __typename?: 'Language' } & LanguageDetailFragment &
+  readonly updateLanguage: { readonly __typename?: 'UpdateLanguageOutput' } & {
+    readonly language: {
+      readonly __typename?: 'Language';
+    } & LanguageDetailFragment &
       LanguageFormFragment;
   };
 }

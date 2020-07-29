@@ -13,8 +13,9 @@ export type UpdateUserMutationVariables = Types.Exact<{
 }>;
 
 export interface UpdateUserMutation {
-  updateUser: { __typename?: 'UpdateUserOutput' } & {
-    user: { __typename?: 'User' } & UserDetailsFragment & UserFormFragment;
+  readonly updateUser: { readonly __typename?: 'UpdateUserOutput' } & {
+    readonly user: { readonly __typename?: 'User' } & UserDetailsFragment &
+      UserFormFragment;
   };
 }
 

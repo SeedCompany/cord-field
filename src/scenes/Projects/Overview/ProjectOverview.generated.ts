@@ -21,115 +21,123 @@ export type ProjectOverviewQueryVariables = Types.Exact<{
 }>;
 
 export interface ProjectOverviewQuery {
-  project:
-    | ({ __typename: 'TranslationProject' } & Pick<
+  readonly project:
+    | ({ readonly __typename: 'TranslationProject' } & Pick<
         Types.TranslationProject,
         'id' | 'status' | 'modifiedAt'
       > & {
-          deptId: { __typename?: 'SecuredString' } & Pick<
+          readonly deptId: { readonly __typename?: 'SecuredString' } & Pick<
             Types.SecuredString,
             'canRead' | 'canEdit' | 'value'
           >;
-          name: { __typename?: 'SecuredString' } & Pick<
+          readonly name: { readonly __typename?: 'SecuredString' } & Pick<
             Types.SecuredString,
             'canRead' | 'canEdit' | 'value'
           >;
-          location: { __typename?: 'SecuredCountry' } & Pick<
+          readonly location: { readonly __typename?: 'SecuredCountry' } & Pick<
             Types.SecuredCountry,
             'canRead' | 'canEdit'
           > & {
-              value?: Types.Maybe<
-                { __typename?: 'Country' } & DisplayLocation_Country_Fragment
+              readonly value?: Types.Maybe<
+                {
+                  readonly __typename?: 'Country';
+                } & DisplayLocation_Country_Fragment
               >;
             };
-          mouStart: { __typename?: 'SecuredDate' } & Pick<
+          readonly mouStart: { readonly __typename?: 'SecuredDate' } & Pick<
             Types.SecuredDate,
             'canRead' | 'canEdit' | 'value'
           >;
-          mouEnd: { __typename?: 'SecuredDate' } & Pick<
+          readonly mouEnd: { readonly __typename?: 'SecuredDate' } & Pick<
             Types.SecuredDate,
             'canRead' | 'canEdit' | 'value'
           >;
-          budget: { __typename?: 'SecuredBudget' } & Pick<
+          readonly budget: { readonly __typename?: 'SecuredBudget' } & Pick<
             Types.SecuredBudget,
             'canRead'
           > & {
-              value?: Types.Maybe<
-                { __typename?: 'Budget' } & BudgetOverviewFragment
+              readonly value?: Types.Maybe<
+                { readonly __typename?: 'Budget' } & BudgetOverviewFragment
               >;
             };
-          team: {
-            __typename?: 'SecuredProjectMemberList';
+          readonly team: {
+            readonly __typename?: 'SecuredProjectMemberList';
           } & ProjectMemberListFragment;
-          partnerships: {
-            __typename?: 'SecuredPartnershipList';
+          readonly partnerships: {
+            readonly __typename?: 'SecuredPartnershipList';
           } & PartnershipSummaryFragment;
-          engagements: { __typename?: 'SecuredEngagementList' } & Pick<
+          readonly engagements: {
+            readonly __typename?: 'SecuredEngagementList';
+          } & Pick<
             Types.SecuredEngagementList,
             'canRead' | 'canCreate' | 'total'
           > & {
-              items: Array<
+              readonly items: ReadonlyArray<
                 | ({
-                    __typename: 'LanguageEngagement';
+                    readonly __typename: 'LanguageEngagement';
                   } & LanguageEngagementListItemFragment)
                 | ({
-                    __typename: 'InternshipEngagement';
+                    readonly __typename: 'InternshipEngagement';
                   } & InternshipEngagementListItemFragment)
               >;
             };
         })
-    | ({ __typename: 'InternshipProject' } & Pick<
+    | ({ readonly __typename: 'InternshipProject' } & Pick<
         Types.InternshipProject,
         'id' | 'status' | 'modifiedAt'
       > & {
-          deptId: { __typename?: 'SecuredString' } & Pick<
+          readonly deptId: { readonly __typename?: 'SecuredString' } & Pick<
             Types.SecuredString,
             'canRead' | 'canEdit' | 'value'
           >;
-          name: { __typename?: 'SecuredString' } & Pick<
+          readonly name: { readonly __typename?: 'SecuredString' } & Pick<
             Types.SecuredString,
             'canRead' | 'canEdit' | 'value'
           >;
-          location: { __typename?: 'SecuredCountry' } & Pick<
+          readonly location: { readonly __typename?: 'SecuredCountry' } & Pick<
             Types.SecuredCountry,
             'canRead' | 'canEdit'
           > & {
-              value?: Types.Maybe<
-                { __typename?: 'Country' } & DisplayLocation_Country_Fragment
+              readonly value?: Types.Maybe<
+                {
+                  readonly __typename?: 'Country';
+                } & DisplayLocation_Country_Fragment
               >;
             };
-          mouStart: { __typename?: 'SecuredDate' } & Pick<
+          readonly mouStart: { readonly __typename?: 'SecuredDate' } & Pick<
             Types.SecuredDate,
             'canRead' | 'canEdit' | 'value'
           >;
-          mouEnd: { __typename?: 'SecuredDate' } & Pick<
+          readonly mouEnd: { readonly __typename?: 'SecuredDate' } & Pick<
             Types.SecuredDate,
             'canRead' | 'canEdit' | 'value'
           >;
-          budget: { __typename?: 'SecuredBudget' } & Pick<
+          readonly budget: { readonly __typename?: 'SecuredBudget' } & Pick<
             Types.SecuredBudget,
             'canRead'
           > & {
-              value?: Types.Maybe<
-                { __typename?: 'Budget' } & BudgetOverviewFragment
+              readonly value?: Types.Maybe<
+                { readonly __typename?: 'Budget' } & BudgetOverviewFragment
               >;
             };
-          team: {
-            __typename?: 'SecuredProjectMemberList';
+          readonly team: {
+            readonly __typename?: 'SecuredProjectMemberList';
           } & ProjectMemberListFragment;
-          partnerships: {
-            __typename?: 'SecuredPartnershipList';
+          readonly partnerships: {
+            readonly __typename?: 'SecuredPartnershipList';
           } & PartnershipSummaryFragment;
-          engagements: { __typename?: 'SecuredEngagementList' } & Pick<
+          readonly engagements: {
+            readonly __typename?: 'SecuredEngagementList';
+          } & Pick<
             Types.SecuredEngagementList,
             'canRead' | 'canCreate' | 'total'
           > & {
-              items: Array<
+              readonly items: ReadonlyArray<
                 | ({
-                    __typename: 'LanguageEngagement';
+                    readonly __typename: 'LanguageEngagement';
                   } & LanguageEngagementListItemFragment)
                 | ({
-                    __typename: 'InternshipEngagement';
+                    readonly __typename: 'InternshipEngagement';
                   } & InternshipEngagementListItemFragment)
               >;
             };

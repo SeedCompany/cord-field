@@ -6,26 +6,31 @@ import { DisplayCountryFragmentDoc } from '../../api/fragments/location.generate
 import * as Types from '../../api/schema.generated';
 
 export type InternshipEngagementListItemFragment = {
-  __typename?: 'InternshipEngagement';
+  readonly __typename?: 'InternshipEngagement';
 } & Pick<Types.InternshipEngagement, 'id' | 'status'> & {
-    intern: { __typename?: 'SecuredUser' } & {
-      value?: Types.Maybe<
-        { __typename?: 'User' } & Pick<Types.User, 'fullName'>
+    readonly intern: { readonly __typename?: 'SecuredUser' } & {
+      readonly value?: Types.Maybe<
+        { readonly __typename?: 'User' } & Pick<Types.User, 'fullName'>
       >;
     };
-    countryOfOrigin: { __typename?: 'SecuredCountry' } & {
-      value?: Types.Maybe<{ __typename?: 'Country' } & DisplayCountryFragment>;
+    readonly countryOfOrigin: { readonly __typename?: 'SecuredCountry' } & {
+      readonly value?: Types.Maybe<
+        { readonly __typename?: 'Country' } & DisplayCountryFragment
+      >;
     };
-    position: { __typename?: 'SecuredInternPosition' } & Pick<
+    readonly position: { readonly __typename?: 'SecuredInternPosition' } & Pick<
       Types.SecuredInternPosition,
       'value'
     >;
-    endDate: { __typename?: 'SecuredDate' } & Pick<Types.SecuredDate, 'value'>;
-    initialEndDate: { __typename?: 'SecuredDate' } & Pick<
+    readonly endDate: { readonly __typename?: 'SecuredDate' } & Pick<
       Types.SecuredDate,
       'value'
     >;
-    completeDate: { __typename?: 'SecuredDate' } & Pick<
+    readonly initialEndDate: { readonly __typename?: 'SecuredDate' } & Pick<
+      Types.SecuredDate,
+      'value'
+    >;
+    readonly completeDate: { readonly __typename?: 'SecuredDate' } & Pick<
       Types.SecuredDate,
       'value'
     >;

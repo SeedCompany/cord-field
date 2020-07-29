@@ -10,14 +10,15 @@ export type OrganizationQueryVariables = Types.Exact<{
 }>;
 
 export interface OrganizationQuery {
-  organization: { __typename?: 'Organization' } & OrgDetailsFragment;
+  readonly organization: {
+    readonly __typename?: 'Organization';
+  } & OrgDetailsFragment;
 }
 
-export type OrgDetailsFragment = { __typename?: 'Organization' } & Pick<
-  Types.Organization,
-  'id' | 'createdAt' | 'avatarLetters'
-> & {
-    name: { __typename?: 'SecuredString' } & Pick<
+export type OrgDetailsFragment = {
+  readonly __typename?: 'Organization';
+} & Pick<Types.Organization, 'id' | 'createdAt' | 'avatarLetters'> & {
+    readonly name: { readonly __typename?: 'SecuredString' } & Pick<
       Types.SecuredString,
       'value' | 'canEdit'
     >;

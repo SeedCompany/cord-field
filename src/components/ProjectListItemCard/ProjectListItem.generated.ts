@@ -6,51 +6,59 @@ import { DisplayCountryFragmentDoc } from '../../api/fragments/location.generate
 import * as Types from '../../api/schema.generated';
 
 export type ProjectListItem_TranslationProject_Fragment = {
-  __typename?: 'TranslationProject';
+  readonly __typename?: 'TranslationProject';
 } & Pick<
   Types.TranslationProject,
   'id' | 'createdAt' | 'type' | 'sensitivity' | 'status' | 'modifiedAt'
 > & {
-    name: { __typename?: 'SecuredString' } & Pick<Types.SecuredString, 'value'>;
-    deptId: { __typename?: 'SecuredString' } & Pick<
+    readonly name: { readonly __typename?: 'SecuredString' } & Pick<
       Types.SecuredString,
       'value'
     >;
-    step: { __typename?: 'SecuredProjectStep' } & Pick<
+    readonly deptId: { readonly __typename?: 'SecuredString' } & Pick<
+      Types.SecuredString,
+      'value'
+    >;
+    readonly step: { readonly __typename?: 'SecuredProjectStep' } & Pick<
       Types.SecuredProjectStep,
       'value'
     >;
-    location: { __typename?: 'SecuredCountry' } & {
-      value?: Types.Maybe<{ __typename?: 'Country' } & DisplayCountryFragment>;
+    readonly location: { readonly __typename?: 'SecuredCountry' } & {
+      readonly value?: Types.Maybe<
+        { readonly __typename?: 'Country' } & DisplayCountryFragment
+      >;
     };
-    estimatedSubmission: { __typename?: 'SecuredDate' } & Pick<
-      Types.SecuredDate,
-      'value'
-    >;
+    readonly estimatedSubmission: {
+      readonly __typename?: 'SecuredDate';
+    } & Pick<Types.SecuredDate, 'value'>;
   };
 
 export type ProjectListItem_InternshipProject_Fragment = {
-  __typename?: 'InternshipProject';
+  readonly __typename?: 'InternshipProject';
 } & Pick<
   Types.InternshipProject,
   'id' | 'createdAt' | 'type' | 'sensitivity' | 'status' | 'modifiedAt'
 > & {
-    name: { __typename?: 'SecuredString' } & Pick<Types.SecuredString, 'value'>;
-    deptId: { __typename?: 'SecuredString' } & Pick<
+    readonly name: { readonly __typename?: 'SecuredString' } & Pick<
       Types.SecuredString,
       'value'
     >;
-    step: { __typename?: 'SecuredProjectStep' } & Pick<
+    readonly deptId: { readonly __typename?: 'SecuredString' } & Pick<
+      Types.SecuredString,
+      'value'
+    >;
+    readonly step: { readonly __typename?: 'SecuredProjectStep' } & Pick<
       Types.SecuredProjectStep,
       'value'
     >;
-    location: { __typename?: 'SecuredCountry' } & {
-      value?: Types.Maybe<{ __typename?: 'Country' } & DisplayCountryFragment>;
+    readonly location: { readonly __typename?: 'SecuredCountry' } & {
+      readonly value?: Types.Maybe<
+        { readonly __typename?: 'Country' } & DisplayCountryFragment
+      >;
     };
-    estimatedSubmission: { __typename?: 'SecuredDate' } & Pick<
-      Types.SecuredDate,
-      'value'
-    >;
+    readonly estimatedSubmission: {
+      readonly __typename?: 'SecuredDate';
+    } & Pick<Types.SecuredDate, 'value'>;
   };
 
 export type ProjectListItemFragment =

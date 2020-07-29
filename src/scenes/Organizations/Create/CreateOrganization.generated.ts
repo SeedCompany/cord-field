@@ -10,12 +10,14 @@ export type CreateOrganizationMutationVariables = Types.Exact<{
 }>;
 
 export interface CreateOrganizationMutation {
-  createOrganization: { __typename?: 'CreateOrganizationOutput' } & {
-    organization: { __typename?: 'Organization' } & Pick<
+  readonly createOrganization: {
+    readonly __typename?: 'CreateOrganizationOutput';
+  } & {
+    readonly organization: { readonly __typename?: 'Organization' } & Pick<
       Types.Organization,
       'id' | 'createdAt'
     > & {
-        name: { __typename?: 'SecuredString' } & Pick<
+        readonly name: { readonly __typename?: 'SecuredString' } & Pick<
           Types.SecuredString,
           'value' | 'canRead' | 'canEdit'
         >;

@@ -2,15 +2,14 @@
 import gql from 'graphql-tag';
 import * as Types from '../../api/schema.generated';
 
-export type PartnershipItemFragment = { __typename?: 'Partnership' } & Pick<
-  Types.Partnership,
-  'id'
-> & {
-    organization: { __typename?: 'Organization' } & Pick<
+export type PartnershipItemFragment = {
+  readonly __typename?: 'Partnership';
+} & Pick<Types.Partnership, 'id'> & {
+    readonly organization: { readonly __typename?: 'Organization' } & Pick<
       Types.Organization,
       'id' | 'avatarLetters'
     > & {
-        name: { __typename?: 'SecuredString' } & Pick<
+        readonly name: { readonly __typename?: 'SecuredString' } & Pick<
           Types.SecuredString,
           'value'
         >;

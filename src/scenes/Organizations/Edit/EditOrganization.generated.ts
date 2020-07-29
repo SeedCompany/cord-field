@@ -11,8 +11,12 @@ export type UpdateOrganizationMutationVariables = Types.Exact<{
 }>;
 
 export interface UpdateOrganizationMutation {
-  updateOrganization: { __typename?: 'UpdateOrganizationOutput' } & {
-    organization: { __typename?: 'Organization' } & OrgDetailsFragment;
+  readonly updateOrganization: {
+    readonly __typename?: 'UpdateOrganizationOutput';
+  } & {
+    readonly organization: {
+      readonly __typename?: 'Organization';
+    } & OrgDetailsFragment;
   };
 }
 

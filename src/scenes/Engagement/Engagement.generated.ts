@@ -19,20 +19,20 @@ export type EngagementQueryVariables = Types.Exact<{
 }>;
 
 export interface EngagementQuery {
-  project:
+  readonly project:
     | ({
-        __typename?: 'TranslationProject';
+        readonly __typename?: 'TranslationProject';
       } & ProjectBreadcrumb_TranslationProject_Fragment)
     | ({
-        __typename?: 'InternshipProject';
+        readonly __typename?: 'InternshipProject';
       } & ProjectBreadcrumb_InternshipProject_Fragment);
-  engagement:
-    | ({ __typename: 'LanguageEngagement' } & Pick<
+  readonly engagement:
+    | ({ readonly __typename: 'LanguageEngagement' } & Pick<
         Types.LanguageEngagement,
         'id'
       > &
         LanguageEngagementDetailFragment)
-    | ({ __typename: 'InternshipEngagement' } & Pick<
+    | ({ readonly __typename: 'InternshipEngagement' } & Pick<
         Types.InternshipEngagement,
         'id'
       > &

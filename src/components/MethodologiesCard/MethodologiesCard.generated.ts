@@ -3,7 +3,7 @@ import gql from 'graphql-tag';
 import * as Types from '../../api/schema.generated';
 
 export type MethodologiesCardFragment = {
-  __typename?: 'SecuredMethodologies';
+  readonly __typename?: 'SecuredMethodologies';
 } & Pick<Types.SecuredMethodologies, 'canRead' | 'canEdit' | 'value'>;
 
 export const MethodologiesCardFragmentDoc = gql`

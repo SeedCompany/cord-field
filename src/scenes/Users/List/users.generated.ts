@@ -11,10 +11,14 @@ export type UsersQueryVariables = Types.Exact<{
 }>;
 
 export interface UsersQuery {
-  users: { __typename?: 'UserListOutput' } & Pick<
+  readonly users: { readonly __typename?: 'UserListOutput' } & Pick<
     Types.UserListOutput,
     'hasMore' | 'total'
-  > & { items: Array<{ __typename?: 'User' } & UserListItemFragment> };
+  > & {
+      readonly items: ReadonlyArray<
+        { readonly __typename?: 'User' } & UserListItemFragment
+      >;
+    };
 }
 
 export const UsersDocument = gql`

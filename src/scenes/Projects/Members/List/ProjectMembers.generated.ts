@@ -16,24 +16,26 @@ export type ProjectMembersQueryVariables = Types.Exact<{
 }>;
 
 export interface ProjectMembersQuery {
-  project:
-    | ({ __typename?: 'TranslationProject' } & {
-        team: { __typename?: 'SecuredProjectMemberList' } & Pick<
-          Types.SecuredProjectMemberList,
-          'canRead' | 'canCreate'
-        > & {
-            items: Array<
-              { __typename?: 'ProjectMember' } & ProjectMemberCardFragment
+  readonly project:
+    | ({ readonly __typename?: 'TranslationProject' } & {
+        readonly team: {
+          readonly __typename?: 'SecuredProjectMemberList';
+        } & Pick<Types.SecuredProjectMemberList, 'canRead' | 'canCreate'> & {
+            readonly items: ReadonlyArray<
+              {
+                readonly __typename?: 'ProjectMember';
+              } & ProjectMemberCardFragment
             >;
           };
       } & ProjectBreadcrumb_TranslationProject_Fragment)
-    | ({ __typename?: 'InternshipProject' } & {
-        team: { __typename?: 'SecuredProjectMemberList' } & Pick<
-          Types.SecuredProjectMemberList,
-          'canRead' | 'canCreate'
-        > & {
-            items: Array<
-              { __typename?: 'ProjectMember' } & ProjectMemberCardFragment
+    | ({ readonly __typename?: 'InternshipProject' } & {
+        readonly team: {
+          readonly __typename?: 'SecuredProjectMemberList';
+        } & Pick<Types.SecuredProjectMemberList, 'canRead' | 'canCreate'> & {
+            readonly items: ReadonlyArray<
+              {
+                readonly __typename?: 'ProjectMember';
+              } & ProjectMemberCardFragment
             >;
           };
       } & ProjectBreadcrumb_InternshipProject_Fragment);

@@ -2,16 +2,18 @@
 import gql from 'graphql-tag';
 import * as Types from '../../api/schema.generated';
 
-export type ProjectMemberCardFragment = { __typename?: 'ProjectMember' } & Pick<
-  Types.ProjectMember,
-  'id' | 'createdAt'
-> & {
-    user: { __typename?: 'SecuredUser' } & {
-      value?: Types.Maybe<
-        { __typename?: 'User' } & Pick<Types.User, 'fullName' | 'avatarLetters'>
+export type ProjectMemberCardFragment = {
+  readonly __typename?: 'ProjectMember';
+} & Pick<Types.ProjectMember, 'id' | 'createdAt'> & {
+    readonly user: { readonly __typename?: 'SecuredUser' } & {
+      readonly value?: Types.Maybe<
+        { readonly __typename?: 'User' } & Pick<
+          Types.User,
+          'fullName' | 'avatarLetters'
+        >
       >;
     };
-    roles: { __typename?: 'SecuredRoles' } & Pick<
+    readonly roles: { readonly __typename?: 'SecuredRoles' } & Pick<
       Types.SecuredRoles,
       'value' | 'canRead'
     >;

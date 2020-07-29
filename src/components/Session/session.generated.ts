@@ -8,37 +8,39 @@ import * as Types from '../../api/schema.generated';
 export type SessionQueryVariables = Types.Exact<{ [key: string]: never }>;
 
 export interface SessionQuery {
-  session: { __typename?: 'SessionOutput' } & {
-    user?: Types.Maybe<{ __typename?: 'User' } & LoggedInUserFragment>;
+  readonly session: { readonly __typename?: 'SessionOutput' } & {
+    readonly user?: Types.Maybe<
+      { readonly __typename?: 'User' } & LoggedInUserFragment
+    >;
   };
 }
 
-export type LoggedInUserFragment = { __typename?: 'User' } & Pick<
+export type LoggedInUserFragment = { readonly __typename?: 'User' } & Pick<
   Types.User,
   'id'
 > & {
-    email: { __typename?: 'SecuredString' } & Pick<
+    readonly email: { readonly __typename?: 'SecuredString' } & Pick<
       Types.SecuredString,
       'value'
     >;
-    timezone: { __typename?: 'SecuredTimeZone' } & {
-      value?: Types.Maybe<
-        { __typename?: 'TimeZone' } & Pick<Types.TimeZone, 'name'>
+    readonly timezone: { readonly __typename?: 'SecuredTimeZone' } & {
+      readonly value?: Types.Maybe<
+        { readonly __typename?: 'TimeZone' } & Pick<Types.TimeZone, 'name'>
       >;
     };
-    realFirstName: { __typename?: 'SecuredString' } & Pick<
+    readonly realFirstName: { readonly __typename?: 'SecuredString' } & Pick<
       Types.SecuredString,
       'value'
     >;
-    realLastName: { __typename?: 'SecuredString' } & Pick<
+    readonly realLastName: { readonly __typename?: 'SecuredString' } & Pick<
       Types.SecuredString,
       'value'
     >;
-    displayFirstName: { __typename?: 'SecuredString' } & Pick<
+    readonly displayFirstName: { readonly __typename?: 'SecuredString' } & Pick<
       Types.SecuredString,
       'value'
     >;
-    displayLastName: { __typename?: 'SecuredString' } & Pick<
+    readonly displayLastName: { readonly __typename?: 'SecuredString' } & Pick<
       Types.SecuredString,
       'value'
     >;

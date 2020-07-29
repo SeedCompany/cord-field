@@ -11,8 +11,11 @@ export type CreatePersonMutationVariables = Types.Exact<{
 }>;
 
 export interface CreatePersonMutation {
-  createPerson: { __typename?: 'CreatePersonOutput' } & {
-    user: { __typename?: 'User' } & Pick<Types.User, 'id' | 'fullName'> &
+  readonly createPerson: { readonly __typename?: 'CreatePersonOutput' } & {
+    readonly user: { readonly __typename?: 'User' } & Pick<
+      Types.User,
+      'id' | 'fullName'
+    > &
       UserDetailsFragment;
   };
 }

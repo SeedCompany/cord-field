@@ -11,8 +11,8 @@ export type LoginMutationVariables = Types.Exact<{
 }>;
 
 export interface LoginMutation {
-  login: { __typename?: 'LoginOutput' } & {
-    user: { __typename?: 'User' } & LoggedInUserFragment;
+  readonly login: { readonly __typename?: 'LoginOutput' } & {
+    readonly user: { readonly __typename?: 'User' } & LoggedInUserFragment;
   };
 }
 

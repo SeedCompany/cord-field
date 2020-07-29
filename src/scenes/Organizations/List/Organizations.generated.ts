@@ -11,12 +11,11 @@ export type OrganizationsQueryVariables = Types.Exact<{
 }>;
 
 export interface OrganizationsQuery {
-  organizations: { __typename?: 'OrganizationListOutput' } & Pick<
-    Types.OrganizationListOutput,
-    'hasMore' | 'total'
-  > & {
-      items: Array<
-        { __typename?: 'Organization' } & OrganizationListItemFragment
+  readonly organizations: {
+    readonly __typename?: 'OrganizationListOutput';
+  } & Pick<Types.OrganizationListOutput, 'hasMore' | 'total'> & {
+      readonly items: ReadonlyArray<
+        { readonly __typename?: 'Organization' } & OrganizationListItemFragment
       >;
     };
 }

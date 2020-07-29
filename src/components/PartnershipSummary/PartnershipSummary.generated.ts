@@ -5,9 +5,11 @@ import { PartnershipItemFragment } from './PartnershpItem.generated';
 import { PartnershipItemFragmentDoc } from './PartnershpItem.generated';
 
 export type PartnershipSummaryFragment = {
-  __typename?: 'SecuredPartnershipList';
+  readonly __typename?: 'SecuredPartnershipList';
 } & Pick<Types.SecuredPartnershipList, 'total'> & {
-    items: Array<{ __typename?: 'Partnership' } & PartnershipItemFragment>;
+    readonly items: ReadonlyArray<
+      { readonly __typename?: 'Partnership' } & PartnershipItemFragment
+    >;
   };
 
 export const PartnershipSummaryFragmentDoc = gql`

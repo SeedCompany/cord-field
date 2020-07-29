@@ -2,40 +2,50 @@
 import gql from 'graphql-tag';
 import * as Types from '../../../api/schema.generated';
 
-export type LanguageFormFragment = { __typename?: 'Language' } & Pick<
+export type LanguageFormFragment = { readonly __typename?: 'Language' } & Pick<
   Types.Language,
   'id'
 > & {
-    name: { __typename?: 'SecuredString' } & SsFragment;
-    displayName: { __typename?: 'SecuredString' } & SsFragment;
-    displayNamePronunciation: { __typename?: 'SecuredString' } & SsFragment;
-    isDialect: { __typename?: 'SecuredBoolean' } & Pick<
+    readonly name: { readonly __typename?: 'SecuredString' } & SsFragment;
+    readonly displayName: {
+      readonly __typename?: 'SecuredString';
+    } & SsFragment;
+    readonly displayNamePronunciation: {
+      readonly __typename?: 'SecuredString';
+    } & SsFragment;
+    readonly isDialect: { readonly __typename?: 'SecuredBoolean' } & Pick<
       Types.SecuredBoolean,
       'value' | 'canRead' | 'canEdit'
     >;
-    ethnologue: { __typename?: 'EthnologueLanguage' } & {
-      id: { __typename?: 'SecuredString' } & SsFragment;
-      name: { __typename?: 'SecuredString' } & SsFragment;
-      code: { __typename?: 'SecuredString' } & SsFragment;
-      provisionalCode: { __typename?: 'SecuredString' } & SsFragment;
-      population: { __typename?: 'SecuredInt' } & Pick<
+    readonly ethnologue: { readonly __typename?: 'EthnologueLanguage' } & {
+      readonly id: { readonly __typename?: 'SecuredString' } & SsFragment;
+      readonly name: { readonly __typename?: 'SecuredString' } & SsFragment;
+      readonly code: { readonly __typename?: 'SecuredString' } & SsFragment;
+      readonly provisionalCode: {
+        readonly __typename?: 'SecuredString';
+      } & SsFragment;
+      readonly population: { readonly __typename?: 'SecuredInt' } & Pick<
         Types.SecuredInt,
         'value' | 'canRead' | 'canEdit'
       >;
     };
-    populationOverride: { __typename?: 'SecuredInt' } & Pick<
+    readonly populationOverride: { readonly __typename?: 'SecuredInt' } & Pick<
       Types.SecuredInt,
       'value' | 'canRead' | 'canEdit'
     >;
-    registryOfDialectsCode: { __typename?: 'SecuredString' } & SsFragment;
-    leastOfThese: { __typename?: 'SecuredBoolean' } & Pick<
+    readonly registryOfDialectsCode: {
+      readonly __typename?: 'SecuredString';
+    } & SsFragment;
+    readonly leastOfThese: { readonly __typename?: 'SecuredBoolean' } & Pick<
       Types.SecuredBoolean,
       'value' | 'canRead' | 'canEdit'
     >;
-    leastOfTheseReason: { __typename?: 'SecuredString' } & SsFragment;
+    readonly leastOfTheseReason: {
+      readonly __typename?: 'SecuredString';
+    } & SsFragment;
   };
 
-export type SsFragment = { __typename?: 'SecuredString' } & Pick<
+export type SsFragment = { readonly __typename?: 'SecuredString' } & Pick<
   Types.SecuredString,
   'value' | 'canRead' | 'canEdit'
 >;

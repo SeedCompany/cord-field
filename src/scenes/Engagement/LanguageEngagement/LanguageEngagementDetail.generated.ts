@@ -5,54 +5,53 @@ import { CeremonyCardFragment } from '../CeremonyCard/CeremonyCard.generated';
 import { CeremonyCardFragmentDoc } from '../CeremonyCard/CeremonyCard.generated';
 
 export type LanguageEngagementDetailFragment = {
-  __typename?: 'LanguageEngagement';
+  readonly __typename?: 'LanguageEngagement';
 } & Pick<
   Types.LanguageEngagement,
   'id' | 'createdAt' | 'modifiedAt' | 'status'
 > & {
-    language: { __typename?: 'SecuredLanguage' } & {
-      value?: Types.Maybe<
-        { __typename?: 'Language' } & Pick<Types.Language, 'id'> & {
-            displayName: { __typename?: 'SecuredString' } & Pick<
-              Types.SecuredString,
-              'value'
-            >;
-            name: { __typename?: 'SecuredString' } & Pick<
+    readonly language: { readonly __typename?: 'SecuredLanguage' } & {
+      readonly value?: Types.Maybe<
+        { readonly __typename?: 'Language' } & Pick<Types.Language, 'id'> & {
+            readonly displayName: {
+              readonly __typename?: 'SecuredString';
+            } & Pick<Types.SecuredString, 'value'>;
+            readonly name: { readonly __typename?: 'SecuredString' } & Pick<
               Types.SecuredString,
               'value'
             >;
           }
       >;
     };
-    lukePartnership: { __typename?: 'SecuredBoolean' } & Pick<
+    readonly lukePartnership: { readonly __typename?: 'SecuredBoolean' } & Pick<
       Types.SecuredBoolean,
       'canRead' | 'canEdit' | 'value'
     >;
-    firstScripture: { __typename?: 'SecuredBoolean' } & Pick<
+    readonly firstScripture: { readonly __typename?: 'SecuredBoolean' } & Pick<
       Types.SecuredBoolean,
       'canRead' | 'canEdit' | 'value'
     >;
-    startDate: { __typename?: 'SecuredDate' } & Pick<
+    readonly startDate: { readonly __typename?: 'SecuredDate' } & Pick<
       Types.SecuredDate,
       'value' | 'canRead' | 'canEdit'
     >;
-    endDate: { __typename?: 'SecuredDate' } & Pick<
+    readonly endDate: { readonly __typename?: 'SecuredDate' } & Pick<
       Types.SecuredDate,
       'value' | 'canRead' | 'canEdit'
     >;
-    completeDate: { __typename?: 'SecuredDate' } & Pick<
+    readonly completeDate: { readonly __typename?: 'SecuredDate' } & Pick<
       Types.SecuredDate,
       'value' | 'canRead' | 'canEdit'
     >;
-    disbursementCompleteDate: { __typename?: 'SecuredDate' } & Pick<
-      Types.SecuredDate,
-      'value' | 'canRead' | 'canEdit'
-    >;
-    communicationsCompleteDate: { __typename?: 'SecuredDate' } & Pick<
-      Types.SecuredDate,
-      'value' | 'canRead' | 'canEdit'
-    >;
-    ceremony: { __typename?: 'SecuredCeremony' } & CeremonyCardFragment;
+    readonly disbursementCompleteDate: {
+      readonly __typename?: 'SecuredDate';
+    } & Pick<Types.SecuredDate, 'value' | 'canRead' | 'canEdit'>;
+    readonly communicationsCompleteDate: {
+      readonly __typename?: 'SecuredDate';
+    } & Pick<Types.SecuredDate, 'value' | 'canRead' | 'canEdit'>;
+    readonly ceremony: {
+      readonly __typename?: 'SecuredCeremony';
+    } & CeremonyCardFragment;
   };
 
 export const LanguageEngagementDetailFragmentDoc = gql`

@@ -1,6 +1,6 @@
 import { compact, fill, times } from 'lodash';
 
-export type ArrayItem<T> = T extends Array<infer U> ? U : never;
+export type ArrayItem<T> = T extends ReadonlyArray<infer U> ? U : never;
 
 export type Many<T> = T | readonly T[];
 

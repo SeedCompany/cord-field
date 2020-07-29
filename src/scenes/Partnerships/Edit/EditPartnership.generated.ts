@@ -11,8 +11,12 @@ export type UpdatePartnershipMutationVariables = Types.Exact<{
 }>;
 
 export interface UpdatePartnershipMutation {
-  updatePartnership: { __typename?: 'UpdatePartnershipOutput' } & {
-    partnership: { __typename?: 'Partnership' } & PartnershipCardFragment;
+  readonly updatePartnership: {
+    readonly __typename?: 'UpdatePartnershipOutput';
+  } & {
+    readonly partnership: {
+      readonly __typename?: 'Partnership';
+    } & PartnershipCardFragment;
   };
 }
 
@@ -25,23 +29,21 @@ export type DeletePartnershipMutation = Pick<
   'deletePartnership'
 >;
 
-export type EditPartnershipFragment = { __typename?: 'Partnership' } & Pick<
-  Types.Partnership,
-  'id'
-> & {
-    types: { __typename?: 'SecuredPartnershipTypes' } & Pick<
+export type EditPartnershipFragment = {
+  readonly __typename?: 'Partnership';
+} & Pick<Types.Partnership, 'id'> & {
+    readonly types: { readonly __typename?: 'SecuredPartnershipTypes' } & Pick<
       Types.SecuredPartnershipTypes,
       'value' | 'canEdit'
     >;
-    agreementStatus: {
-      __typename?: 'SecuredPartnershipAgreementStatus';
+    readonly agreementStatus: {
+      readonly __typename?: 'SecuredPartnershipAgreementStatus';
     } & Pick<Types.SecuredPartnershipAgreementStatus, 'value' | 'canEdit'>;
-    mouStatus: { __typename?: 'SecuredPartnershipAgreementStatus' } & Pick<
-      Types.SecuredPartnershipAgreementStatus,
-      'value' | 'canEdit'
-    >;
-    organization: { __typename?: 'Organization' } & {
-      name: { __typename?: 'SecuredString' } & Pick<
+    readonly mouStatus: {
+      readonly __typename?: 'SecuredPartnershipAgreementStatus';
+    } & Pick<Types.SecuredPartnershipAgreementStatus, 'value' | 'canEdit'>;
+    readonly organization: { readonly __typename?: 'Organization' } & {
+      readonly name: { readonly __typename?: 'SecuredString' } & Pick<
         Types.SecuredString,
         'value'
       >;

@@ -14,16 +14,16 @@ export type ProjectListQueryVariables = Types.Exact<{
 }>;
 
 export interface ProjectListQuery {
-  projects: { __typename?: 'ProjectListOutput' } & Pick<
+  readonly projects: { readonly __typename?: 'ProjectListOutput' } & Pick<
     Types.ProjectListOutput,
     'hasMore' | 'total'
   > & {
-      items: Array<
+      readonly items: ReadonlyArray<
         | ({
-            __typename?: 'TranslationProject';
+            readonly __typename?: 'TranslationProject';
           } & ProjectListItem_TranslationProject_Fragment)
         | ({
-            __typename?: 'InternshipProject';
+            readonly __typename?: 'InternshipProject';
           } & ProjectListItem_InternshipProject_Fragment)
       >;
     };

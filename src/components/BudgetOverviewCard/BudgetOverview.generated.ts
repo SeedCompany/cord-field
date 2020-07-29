@@ -2,7 +2,7 @@
 import gql from 'graphql-tag';
 import * as Types from '../../api/schema.generated';
 
-export type BudgetOverviewFragment = { __typename?: 'Budget' } & Pick<
+export type BudgetOverviewFragment = { readonly __typename?: 'Budget' } & Pick<
   Types.Budget,
   'id' | 'createdAt' | 'total'
 >;

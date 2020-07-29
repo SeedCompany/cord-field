@@ -3,15 +3,15 @@ import gql from 'graphql-tag';
 import * as Types from '../schema.generated';
 
 export type DisplayLocation_Country_Fragment = {
-  __typename?: 'Country';
+  readonly __typename?: 'Country';
 } & DisplayCountryFragment;
 
 export type DisplayLocation_Region_Fragment = {
-  __typename?: 'Region';
+  readonly __typename?: 'Region';
 } & DisplayRegionFragment;
 
 export type DisplayLocation_Zone_Fragment = {
-  __typename?: 'Zone';
+  readonly __typename?: 'Zone';
 } & DisplayZoneFragment;
 
 export type DisplayLocationFragment =
@@ -19,32 +19,49 @@ export type DisplayLocationFragment =
   | DisplayLocation_Region_Fragment
   | DisplayLocation_Zone_Fragment;
 
-export type DisplayCountryFragment = { __typename?: 'Country' } & {
-  region: { __typename?: 'SecuredRegion' } & {
-    value?: Types.Maybe<{ __typename?: 'Region' } & DisplayRegionFragment>;
+export type DisplayCountryFragment = { readonly __typename?: 'Country' } & {
+  readonly region: { readonly __typename?: 'SecuredRegion' } & {
+    readonly value?: Types.Maybe<
+      { readonly __typename?: 'Region' } & DisplayRegionFragment
+    >;
   };
 } & DisplayPlace_Country_Fragment;
 
-export type DisplayRegionFragment = { __typename?: 'Region' } & {
-  zone: { __typename?: 'SecuredZone' } & {
-    value?: Types.Maybe<{ __typename?: 'Zone' } & DisplayPlace_Zone_Fragment>;
+export type DisplayRegionFragment = { readonly __typename?: 'Region' } & {
+  readonly zone: { readonly __typename?: 'SecuredZone' } & {
+    readonly value?: Types.Maybe<
+      { readonly __typename?: 'Zone' } & DisplayPlace_Zone_Fragment
+    >;
   };
 } & DisplayPlace_Region_Fragment;
 
 export type DisplayZoneFragment = {
-  __typename?: 'Zone';
+  readonly __typename?: 'Zone';
 } & DisplayPlace_Zone_Fragment;
 
-export type DisplayPlace_Zone_Fragment = { __typename?: 'Zone' } & {
-  name: { __typename?: 'SecuredString' } & Pick<Types.SecuredString, 'value'>;
+export type DisplayPlace_Zone_Fragment = { readonly __typename?: 'Zone' } & {
+  readonly name: { readonly __typename?: 'SecuredString' } & Pick<
+    Types.SecuredString,
+    'value'
+  >;
 };
 
-export type DisplayPlace_Region_Fragment = { __typename?: 'Region' } & {
-  name: { __typename?: 'SecuredString' } & Pick<Types.SecuredString, 'value'>;
+export type DisplayPlace_Region_Fragment = {
+  readonly __typename?: 'Region';
+} & {
+  readonly name: { readonly __typename?: 'SecuredString' } & Pick<
+    Types.SecuredString,
+    'value'
+  >;
 };
 
-export type DisplayPlace_Country_Fragment = { __typename?: 'Country' } & {
-  name: { __typename?: 'SecuredString' } & Pick<Types.SecuredString, 'value'>;
+export type DisplayPlace_Country_Fragment = {
+  readonly __typename?: 'Country';
+} & {
+  readonly name: { readonly __typename?: 'SecuredString' } & Pick<
+    Types.SecuredString,
+    'value'
+  >;
 };
 
 export type DisplayPlaceFragment =

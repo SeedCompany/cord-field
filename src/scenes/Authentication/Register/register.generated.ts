@@ -11,8 +11,8 @@ export type RegisterMutationVariables = Types.Exact<{
 }>;
 
 export interface RegisterMutation {
-  register: { __typename?: 'RegisterOutput' } & {
-    user: { __typename?: 'User' } & LoggedInUserFragment;
+  readonly register: { readonly __typename?: 'RegisterOutput' } & {
+    readonly user: { readonly __typename?: 'User' } & LoggedInUserFragment;
   };
 }
 

@@ -11,10 +11,14 @@ export type LanguagesQueryVariables = Types.Exact<{
 }>;
 
 export interface LanguagesQuery {
-  languages: { __typename?: 'LanguageListOutput' } & Pick<
+  readonly languages: { readonly __typename?: 'LanguageListOutput' } & Pick<
     Types.LanguageListOutput,
     'hasMore' | 'total'
-  > & { items: Array<{ __typename?: 'Language' } & LanguageListItemFragment> };
+  > & {
+      readonly items: ReadonlyArray<
+        { readonly __typename?: 'Language' } & LanguageListItemFragment
+      >;
+    };
 }
 
 export const LanguagesDocument = gql`

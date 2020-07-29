@@ -10,12 +10,12 @@ export type CreateLanguageMutationVariables = Types.Exact<{
 }>;
 
 export interface CreateLanguageMutation {
-  createLanguage: { __typename?: 'CreateLanguageOutput' } & {
-    language: { __typename?: 'Language' } & Pick<
+  readonly createLanguage: { readonly __typename?: 'CreateLanguageOutput' } & {
+    readonly language: { readonly __typename?: 'Language' } & Pick<
       Types.Language,
       'id' | 'createdAt'
     > & {
-        name: { __typename?: 'SecuredString' } & Pick<
+        readonly name: { readonly __typename?: 'SecuredString' } & Pick<
           Types.SecuredString,
           'value' | 'canRead' | 'canEdit'
         >;

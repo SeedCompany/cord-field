@@ -10,22 +10,22 @@ export type CreateProjectMutationVariables = Types.Exact<{
 }>;
 
 export interface CreateProjectMutation {
-  createProject: { __typename?: 'CreateProjectOutput' } & {
-    project:
-      | ({ __typename?: 'TranslationProject' } & Pick<
+  readonly createProject: { readonly __typename?: 'CreateProjectOutput' } & {
+    readonly project:
+      | ({ readonly __typename?: 'TranslationProject' } & Pick<
           Types.TranslationProject,
           'id' | 'type' | 'createdAt'
         > & {
-            name: { __typename?: 'SecuredString' } & Pick<
+            readonly name: { readonly __typename?: 'SecuredString' } & Pick<
               Types.SecuredString,
               'value' | 'canRead' | 'canEdit'
             >;
           })
-      | ({ __typename?: 'InternshipProject' } & Pick<
+      | ({ readonly __typename?: 'InternshipProject' } & Pick<
           Types.InternshipProject,
           'id' | 'type' | 'createdAt'
         > & {
-            name: { __typename?: 'SecuredString' } & Pick<
+            readonly name: { readonly __typename?: 'SecuredString' } & Pick<
               Types.SecuredString,
               'value' | 'canRead' | 'canEdit'
             >;

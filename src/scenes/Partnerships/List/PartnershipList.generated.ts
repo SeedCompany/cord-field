@@ -18,25 +18,27 @@ export type ProjectPartnershipsQueryVariables = Types.Exact<{
 }>;
 
 export interface ProjectPartnershipsQuery {
-  project:
-    | ({ __typename?: 'TranslationProject' } & {
-        partnerships: { __typename?: 'SecuredPartnershipList' } & Pick<
-          Types.SecuredPartnershipList,
-          'canCreate' | 'total'
-        > & {
-            items: Array<
-              { __typename?: 'Partnership' } & PartnershipCardFragment &
+  readonly project:
+    | ({ readonly __typename?: 'TranslationProject' } & {
+        readonly partnerships: {
+          readonly __typename?: 'SecuredPartnershipList';
+        } & Pick<Types.SecuredPartnershipList, 'canCreate' | 'total'> & {
+            readonly items: ReadonlyArray<
+              {
+                readonly __typename?: 'Partnership';
+              } & PartnershipCardFragment &
                 EditPartnershipFragment
             >;
           };
       } & ProjectBreadcrumb_TranslationProject_Fragment)
-    | ({ __typename?: 'InternshipProject' } & {
-        partnerships: { __typename?: 'SecuredPartnershipList' } & Pick<
-          Types.SecuredPartnershipList,
-          'canCreate' | 'total'
-        > & {
-            items: Array<
-              { __typename?: 'Partnership' } & PartnershipCardFragment &
+    | ({ readonly __typename?: 'InternshipProject' } & {
+        readonly partnerships: {
+          readonly __typename?: 'SecuredPartnershipList';
+        } & Pick<Types.SecuredPartnershipList, 'canCreate' | 'total'> & {
+            readonly items: ReadonlyArray<
+              {
+                readonly __typename?: 'Partnership';
+              } & PartnershipCardFragment &
                 EditPartnershipFragment
             >;
           };

@@ -20,26 +20,26 @@ export interface Scalars {
 }
 
 export interface FileNode {
-  id: Scalars['ID'];
-  createdAt: Scalars['DateTime'];
-  type: FileNodeType;
-  category: FileNodeCategory;
+  readonly id: Scalars['ID'];
+  readonly createdAt: Scalars['DateTime'];
+  readonly type: FileNodeType;
+  readonly category: FileNodeCategory;
   /**
    * The name of the node.
    * This is user defined but does not necessarily need to be url safe.
    */
-  name: Scalars['String'];
+  readonly name: Scalars['String'];
   /**
    * The user who created this node.
    * For files, this is the user who uploaded the first version of the file.
    */
-  createdBy: User;
+  readonly createdBy: User;
   /**
    * A list of the parents all the way up the tree.
    * This can be used to populate a path-like UI,
    * without having to fetch each parent serially.
    */
-  parents: FileNode[];
+  readonly parents: readonly FileNode[];
 }
 
 /** The type of node in the file tree. A file, directory or file version. */
@@ -60,29 +60,29 @@ export type FileNodeCategory =
   | 'Video';
 
 export interface Project {
-  id: Scalars['ID'];
-  createdAt: Scalars['DateTime'];
-  type: ProjectType;
-  sensitivity: Sensitivity;
-  name: SecuredString;
+  readonly id: Scalars['ID'];
+  readonly createdAt: Scalars['DateTime'];
+  readonly type: ProjectType;
+  readonly sensitivity: Sensitivity;
+  readonly name: SecuredString;
   /** The legacy department ID */
-  deptId: SecuredString;
-  step: SecuredProjectStep;
-  status: ProjectStatus;
-  location: SecuredCountry;
-  mouStart: SecuredDate;
-  mouEnd: SecuredDate;
-  estimatedSubmission: SecuredDate;
-  modifiedAt: Scalars['DateTime'];
-  avatarLetters?: Maybe<Scalars['String']>;
+  readonly deptId: SecuredString;
+  readonly step: SecuredProjectStep;
+  readonly status: ProjectStatus;
+  readonly location: SecuredCountry;
+  readonly mouStart: SecuredDate;
+  readonly mouEnd: SecuredDate;
+  readonly estimatedSubmission: SecuredDate;
+  readonly modifiedAt: Scalars['DateTime'];
+  readonly avatarLetters?: Maybe<Scalars['String']>;
   /** The project's current budget */
-  budget: SecuredBudget;
-  engagements: SecuredEngagementList;
+  readonly budget: SecuredBudget;
+  readonly engagements: SecuredEngagementList;
   /** The project members */
-  team: SecuredProjectMemberList;
-  partnerships: SecuredPartnershipList;
+  readonly team: SecuredProjectMemberList;
+  readonly partnerships: SecuredPartnershipList;
   /** The root filesystem directory of this project */
-  rootDirectory: Directory;
+  readonly rootDirectory: Directory;
 }
 
 export interface ProjectEngagementsArgs {
@@ -111,14 +111,14 @@ export type ProjectStatus =
 
 export interface EngagementListInput {
   /** The number of items to return in a single page */
-  count?: Maybe<Scalars['Int']>;
+  readonly count?: Maybe<Scalars['Int']>;
   /** 1-indexed page number for offset pagination. */
-  page?: Maybe<Scalars['Int']>;
+  readonly page?: Maybe<Scalars['Int']>;
   /** The field in which to sort on */
-  sort?: Maybe<Scalars['String']>;
+  readonly sort?: Maybe<Scalars['String']>;
   /** The order in which to sort the list */
-  order?: Maybe<Order>;
-  filter?: Maybe<EngagementFilters>;
+  readonly order?: Maybe<Order>;
+  readonly filter?: Maybe<EngagementFilters>;
 }
 
 /** A sort order either ascending or descending */
@@ -126,28 +126,28 @@ export type Order = 'ASC' | 'DESC';
 
 export interface EngagementFilters {
   /** Only engagements matching this type */
-  type?: Maybe<Scalars['String']>;
+  readonly type?: Maybe<Scalars['String']>;
   /** Only engagements matching this projectId */
-  projectId?: Maybe<Scalars['ID']>;
+  readonly projectId?: Maybe<Scalars['ID']>;
 }
 
 export interface ProjectMemberListInput {
   /** The number of items to return in a single page */
-  count?: Maybe<Scalars['Int']>;
+  readonly count?: Maybe<Scalars['Int']>;
   /** 1-indexed page number for offset pagination. */
-  page?: Maybe<Scalars['Int']>;
+  readonly page?: Maybe<Scalars['Int']>;
   /** The field in which to sort on */
-  sort?: Maybe<Scalars['String']>;
+  readonly sort?: Maybe<Scalars['String']>;
   /** The order in which to sort the list */
-  order?: Maybe<Order>;
-  filter?: Maybe<ProjectMemberFilters>;
+  readonly order?: Maybe<Order>;
+  readonly filter?: Maybe<ProjectMemberFilters>;
 }
 
 export interface ProjectMemberFilters {
   /** Only members with these roles */
-  roles?: Maybe<Role[]>;
+  readonly roles?: Maybe<readonly Role[]>;
   /** Only members of this project */
-  projectId?: Maybe<Scalars['ID']>;
+  readonly projectId?: Maybe<Scalars['ID']>;
 }
 
 export type Role =
@@ -175,38 +175,38 @@ export type Role =
 
 export interface PartnershipListInput {
   /** The number of items to return in a single page */
-  count?: Maybe<Scalars['Int']>;
+  readonly count?: Maybe<Scalars['Int']>;
   /** 1-indexed page number for offset pagination. */
-  page?: Maybe<Scalars['Int']>;
+  readonly page?: Maybe<Scalars['Int']>;
   /** The field in which to sort on */
-  sort?: Maybe<Scalars['String']>;
+  readonly sort?: Maybe<Scalars['String']>;
   /** The order in which to sort the list */
-  order?: Maybe<Order>;
-  filter?: Maybe<PartnershipFilters>;
+  readonly order?: Maybe<Order>;
+  readonly filter?: Maybe<PartnershipFilters>;
 }
 
 export interface PartnershipFilters {
   /** Find all partnerships in a project */
-  projectId?: Maybe<Scalars['ID']>;
+  readonly projectId?: Maybe<Scalars['ID']>;
 }
 
 /** Something that is _producible_ via a Product */
 export interface Producible {
-  id: Scalars['ID'];
-  createdAt: Scalars['DateTime'];
-  scriptureReferences: SecuredScriptureRanges;
+  readonly id: Scalars['ID'];
+  readonly createdAt: Scalars['DateTime'];
+  readonly scriptureReferences: SecuredScriptureRanges;
 }
 
 export interface Product {
-  id: Scalars['ID'];
-  createdAt: Scalars['DateTime'];
-  scriptureReferences: SecuredScriptureRanges;
-  mediums: SecuredProductMediums;
-  purposes: SecuredProductPurposes;
-  methodology: SecuredMethodology;
-  approach?: Maybe<ProductApproach>;
+  readonly id: Scalars['ID'];
+  readonly createdAt: Scalars['DateTime'];
+  readonly scriptureReferences: SecuredScriptureRanges;
+  readonly mediums: SecuredProductMediums;
+  readonly purposes: SecuredProductPurposes;
+  readonly methodology: SecuredMethodology;
+  readonly approach?: Maybe<ProductApproach>;
   /** Provide what would be the "type" of product in the old schema. */
-  legacyType: ProductType;
+  readonly legacyType: ProductType;
 }
 
 /** This is a roll up of methodology, for easier querying */
@@ -231,22 +231,22 @@ export type ProductType =
   | 'Genesis';
 
 export interface Engagement {
-  id: Scalars['ID'];
-  createdAt: Scalars['DateTime'];
-  status: EngagementStatus;
+  readonly id: Scalars['ID'];
+  readonly createdAt: Scalars['DateTime'];
+  readonly status: EngagementStatus;
   /** Translation / Growth Plan complete date */
-  completeDate: SecuredDate;
-  disbursementCompleteDate: SecuredDate;
-  communicationsCompleteDate: SecuredDate;
-  startDate: SecuredDate;
-  endDate: SecuredDate;
-  initialEndDate: SecuredDate;
-  lastSuspendedAt: SecuredDateTime;
-  lastReactivatedAt: SecuredDateTime;
+  readonly completeDate: SecuredDate;
+  readonly disbursementCompleteDate: SecuredDate;
+  readonly communicationsCompleteDate: SecuredDate;
+  readonly startDate: SecuredDate;
+  readonly endDate: SecuredDate;
+  readonly initialEndDate: SecuredDate;
+  readonly lastSuspendedAt: SecuredDateTime;
+  readonly lastReactivatedAt: SecuredDateTime;
   /** The last time the engagement status was modified */
-  statusModifiedAt: SecuredDateTime;
-  modifiedAt: Scalars['DateTime'];
-  ceremony: SecuredCeremony;
+  readonly statusModifiedAt: SecuredDateTime;
+  readonly modifiedAt: Scalars['DateTime'];
+  readonly ceremony: SecuredCeremony;
 }
 
 export type EngagementStatus =
@@ -269,22 +269,22 @@ export type EngagementStatus =
  */
 export type SecuredString = Readable &
   Editable & {
-    __typename?: 'SecuredString';
-    canEdit: Scalars['Boolean'];
-    canRead: Scalars['Boolean'];
-    value?: Maybe<Scalars['String']>;
+    readonly __typename?: 'SecuredString';
+    readonly canEdit: Scalars['Boolean'];
+    readonly canRead: Scalars['Boolean'];
+    readonly value?: Maybe<Scalars['String']>;
   };
 
 /** Entities that are readable */
 export interface Readable {
   /** Whether the current user can read this object */
-  canRead: Scalars['Boolean'];
+  readonly canRead: Scalars['Boolean'];
 }
 
 /** Entities that are editable */
 export interface Editable {
   /** Whether the current user can edit this object */
-  canEdit: Scalars['Boolean'];
+  readonly canEdit: Scalars['Boolean'];
 }
 
 /**
@@ -294,10 +294,10 @@ export interface Editable {
  */
 export type SecuredInt = Readable &
   Editable & {
-    __typename?: 'SecuredInt';
-    canEdit: Scalars['Boolean'];
-    canRead: Scalars['Boolean'];
-    value?: Maybe<Scalars['Int']>;
+    readonly __typename?: 'SecuredInt';
+    readonly canEdit: Scalars['Boolean'];
+    readonly canRead: Scalars['Boolean'];
+    readonly value?: Maybe<Scalars['Int']>;
   };
 
 /**
@@ -307,10 +307,10 @@ export type SecuredInt = Readable &
  */
 export type SecuredFloat = Readable &
   Editable & {
-    __typename?: 'SecuredFloat';
-    canEdit: Scalars['Boolean'];
-    canRead: Scalars['Boolean'];
-    value?: Maybe<Scalars['Float']>;
+    readonly __typename?: 'SecuredFloat';
+    readonly canEdit: Scalars['Boolean'];
+    readonly canRead: Scalars['Boolean'];
+    readonly value?: Maybe<Scalars['Float']>;
   };
 
 /**
@@ -320,81 +320,81 @@ export type SecuredFloat = Readable &
  */
 export type SecuredBoolean = Readable &
   Editable & {
-    __typename?: 'SecuredBoolean';
-    canEdit: Scalars['Boolean'];
-    canRead: Scalars['Boolean'];
-    value?: Maybe<Scalars['Boolean']>;
+    readonly __typename?: 'SecuredBoolean';
+    readonly canEdit: Scalars['Boolean'];
+    readonly canRead: Scalars['Boolean'];
+    readonly value?: Maybe<Scalars['Boolean']>;
   };
 
 export type SecuredDateTime = Readable &
   Editable & {
-    __typename?: 'SecuredDateTime';
-    canEdit: Scalars['Boolean'];
-    canRead: Scalars['Boolean'];
-    value?: Maybe<Scalars['DateTime']>;
+    readonly __typename?: 'SecuredDateTime';
+    readonly canEdit: Scalars['Boolean'];
+    readonly canRead: Scalars['Boolean'];
+    readonly value?: Maybe<Scalars['DateTime']>;
   };
 
 export type SecuredDate = Readable &
   Editable & {
-    __typename?: 'SecuredDate';
-    canEdit: Scalars['Boolean'];
-    canRead: Scalars['Boolean'];
-    value?: Maybe<Scalars['Date']>;
+    readonly __typename?: 'SecuredDate';
+    readonly canEdit: Scalars['Boolean'];
+    readonly canRead: Scalars['Boolean'];
+    readonly value?: Maybe<Scalars['Date']>;
   };
 
 export interface CreatePermissionOutput {
-  __typename?: 'CreatePermissionOutput';
-  success: Scalars['Boolean'];
-  id?: Maybe<Scalars['ID']>;
+  readonly __typename?: 'CreatePermissionOutput';
+  readonly success: Scalars['Boolean'];
+  readonly id?: Maybe<Scalars['ID']>;
 }
 
 export interface CreateSecurityGroupOutput {
-  __typename?: 'CreateSecurityGroupOutput';
-  success: Scalars['Boolean'];
-  id?: Maybe<Scalars['ID']>;
+  readonly __typename?: 'CreateSecurityGroupOutput';
+  readonly success: Scalars['Boolean'];
+  readonly id?: Maybe<Scalars['ID']>;
 }
 
 export interface Permission {
-  __typename?: 'Permission';
-  id: Scalars['ID'];
-  property: Scalars['String'];
-  read: Scalars['Boolean'];
-  write: Scalars['Boolean'];
+  readonly __typename?: 'Permission';
+  readonly id: Scalars['ID'];
+  readonly property: Scalars['String'];
+  readonly read: Scalars['Boolean'];
+  readonly write: Scalars['Boolean'];
 }
 
 export interface ListPermissionOutput {
-  __typename?: 'ListPermissionOutput';
-  items: Permission[];
+  readonly __typename?: 'ListPermissionOutput';
+  readonly items: readonly Permission[];
 }
 
 export interface SecurityGroup {
-  __typename?: 'SecurityGroup';
-  id: Scalars['ID'];
-  name: Scalars['String'];
+  readonly __typename?: 'SecurityGroup';
+  readonly id: Scalars['ID'];
+  readonly name: Scalars['String'];
 }
 
 export interface ListSecurityGroupOutput {
-  __typename?: 'ListSecurityGroupOutput';
-  items: SecurityGroup[];
+  readonly __typename?: 'ListSecurityGroupOutput';
+  readonly items: readonly SecurityGroup[];
 }
 
 export interface UpdateSecurityGroupNameOutput {
-  __typename?: 'UpdateSecurityGroupNameOutput';
-  id: Scalars['ID'];
-  name: Scalars['String'];
+  readonly __typename?: 'UpdateSecurityGroupNameOutput';
+  readonly id: Scalars['ID'];
+  readonly name: Scalars['String'];
 }
 
 export type Organization = Resource & {
-  __typename?: 'Organization';
-  id: Scalars['ID'];
-  createdAt: Scalars['DateTime'];
-  name: SecuredString;
-  avatarLetters?: Maybe<Scalars['String']>;
+  readonly __typename?: 'Organization';
+  readonly id: Scalars['ID'];
+  readonly createdAt: Scalars['DateTime'];
+  readonly name: SecuredString;
+  readonly avatarLetters?: Maybe<Scalars['String']>;
 };
 
 export interface Resource {
-  id: Scalars['ID'];
-  createdAt: Scalars['DateTime'];
+  readonly id: Scalars['ID'];
+  readonly createdAt: Scalars['DateTime'];
 }
 
 /**
@@ -404,29 +404,29 @@ export interface Resource {
  */
 export type SecuredOrganization = Readable &
   Editable & {
-    __typename?: 'SecuredOrganization';
-    canEdit: Scalars['Boolean'];
-    canRead: Scalars['Boolean'];
-    value?: Maybe<Organization>;
+    readonly __typename?: 'SecuredOrganization';
+    readonly canEdit: Scalars['Boolean'];
+    readonly canRead: Scalars['Boolean'];
+    readonly value?: Maybe<Organization>;
   };
 
 export interface CreateOrganizationOutput {
-  __typename?: 'CreateOrganizationOutput';
-  organization: Organization;
+  readonly __typename?: 'CreateOrganizationOutput';
+  readonly organization: Organization;
 }
 
 export interface OrganizationListOutput {
-  __typename?: 'OrganizationListOutput';
+  readonly __typename?: 'OrganizationListOutput';
   /**
    * The page of organization.
    * Note that this could include items that where also in sibling pages;
    * you should de-duplicate these based on ID.
    */
-  items: Organization[];
+  readonly items: readonly Organization[];
   /** The total number of items across all pages */
-  total: Scalars['Int'];
+  readonly total: Scalars['Int'];
   /** Whether the next page exists */
-  hasMore: Scalars['Boolean'];
+  readonly hasMore: Scalars['Boolean'];
 }
 
 /**
@@ -435,26 +435,26 @@ export interface OrganizationListOutput {
  * The `can*` properties are specific to the user making the request.
  */
 export type SecuredOrganizationList = Readable & {
-  __typename?: 'SecuredOrganizationList';
+  readonly __typename?: 'SecuredOrganizationList';
   /**
    * The page of organization.
    * Note that this could include items that where also in sibling pages;
    * you should de-duplicate these based on ID.
    */
-  items: Organization[];
+  readonly items: readonly Organization[];
   /** The total number of items across all pages */
-  total: Scalars['Int'];
+  readonly total: Scalars['Int'];
   /** Whether the next page exists */
-  hasMore: Scalars['Boolean'];
+  readonly hasMore: Scalars['Boolean'];
   /** Whether the current user can read the list of items */
-  canRead: Scalars['Boolean'];
+  readonly canRead: Scalars['Boolean'];
   /** Whether the current user can add items to this list via the appropriate mutation */
-  canCreate: Scalars['Boolean'];
+  readonly canCreate: Scalars['Boolean'];
 };
 
 export interface UpdateOrganizationOutput {
-  __typename?: 'UpdateOrganizationOutput';
-  organization: Organization;
+  readonly __typename?: 'UpdateOrganizationOutput';
+  readonly organization: Organization;
 }
 
 /**
@@ -464,33 +464,33 @@ export interface UpdateOrganizationOutput {
  */
 export type SecuredUserStatus = Readable &
   Editable & {
-    __typename?: 'SecuredUserStatus';
-    canEdit: Scalars['Boolean'];
-    canRead: Scalars['Boolean'];
-    value?: Maybe<UserStatus>;
+    readonly __typename?: 'SecuredUserStatus';
+    readonly canEdit: Scalars['Boolean'];
+    readonly canRead: Scalars['Boolean'];
+    readonly value?: Maybe<UserStatus>;
   };
 
 export type UserStatus = 'Active' | 'Disabled';
 
 export type User = Resource & {
-  __typename?: 'User';
-  id: Scalars['ID'];
-  createdAt: Scalars['DateTime'];
-  email: SecuredString;
-  realFirstName: SecuredString;
-  realLastName: SecuredString;
-  displayFirstName: SecuredString;
-  displayLastName: SecuredString;
-  phone: SecuredString;
-  bio: SecuredString;
-  status: SecuredUserStatus;
-  fullName?: Maybe<Scalars['String']>;
-  firstName?: Maybe<Scalars['String']>;
-  avatarLetters?: Maybe<Scalars['String']>;
-  timezone: SecuredTimeZone;
-  unavailabilities: SecuredUnavailabilityList;
-  organizations: SecuredOrganizationList;
-  education: SecuredEducationList;
+  readonly __typename?: 'User';
+  readonly id: Scalars['ID'];
+  readonly createdAt: Scalars['DateTime'];
+  readonly email: SecuredString;
+  readonly realFirstName: SecuredString;
+  readonly realLastName: SecuredString;
+  readonly displayFirstName: SecuredString;
+  readonly displayLastName: SecuredString;
+  readonly phone: SecuredString;
+  readonly bio: SecuredString;
+  readonly status: SecuredUserStatus;
+  readonly fullName?: Maybe<Scalars['String']>;
+  readonly firstName?: Maybe<Scalars['String']>;
+  readonly avatarLetters?: Maybe<Scalars['String']>;
+  readonly timezone: SecuredTimeZone;
+  readonly unavailabilities: SecuredUnavailabilityList;
+  readonly organizations: SecuredOrganizationList;
+  readonly education: SecuredEducationList;
 };
 
 export interface UserUnavailabilitiesArgs {
@@ -507,55 +507,55 @@ export interface UserEducationArgs {
 
 export interface UnavailabilityListInput {
   /** The number of items to return in a single page */
-  count?: Maybe<Scalars['Int']>;
+  readonly count?: Maybe<Scalars['Int']>;
   /** 1-indexed page number for offset pagination. */
-  page?: Maybe<Scalars['Int']>;
+  readonly page?: Maybe<Scalars['Int']>;
   /** The field in which to sort on */
-  sort?: Maybe<Scalars['String']>;
+  readonly sort?: Maybe<Scalars['String']>;
   /** The order in which to sort the list */
-  order?: Maybe<Order>;
-  filter?: Maybe<UnavailabilityFilters>;
+  readonly order?: Maybe<Order>;
+  readonly filter?: Maybe<UnavailabilityFilters>;
 }
 
 export interface UnavailabilityFilters {
   /** Unavailabilities for UserId */
-  userId?: Maybe<Scalars['ID']>;
+  readonly userId?: Maybe<Scalars['ID']>;
 }
 
 export interface OrganizationListInput {
   /** The number of items to return in a single page */
-  count?: Maybe<Scalars['Int']>;
+  readonly count?: Maybe<Scalars['Int']>;
   /** 1-indexed page number for offset pagination. */
-  page?: Maybe<Scalars['Int']>;
+  readonly page?: Maybe<Scalars['Int']>;
   /** The field in which to sort on */
-  sort?: Maybe<Scalars['String']>;
+  readonly sort?: Maybe<Scalars['String']>;
   /** The order in which to sort the list */
-  order?: Maybe<Order>;
-  filter?: Maybe<OrganizationFilters>;
+  readonly order?: Maybe<Order>;
+  readonly filter?: Maybe<OrganizationFilters>;
 }
 
 export interface OrganizationFilters {
   /** Only organizations matching this name */
-  name?: Maybe<Scalars['String']>;
+  readonly name?: Maybe<Scalars['String']>;
   /** User IDs ANY of which must belong to the organizations */
-  userId?: Maybe<Array<Scalars['ID']>>;
+  readonly userId?: Maybe<ReadonlyArray<Scalars['ID']>>;
 }
 
 export interface EducationListInput {
   /** The number of items to return in a single page */
-  count?: Maybe<Scalars['Int']>;
+  readonly count?: Maybe<Scalars['Int']>;
   /** 1-indexed page number for offset pagination. */
-  page?: Maybe<Scalars['Int']>;
+  readonly page?: Maybe<Scalars['Int']>;
   /** The field in which to sort on */
-  sort?: Maybe<Scalars['String']>;
+  readonly sort?: Maybe<Scalars['String']>;
   /** The order in which to sort the list */
-  order?: Maybe<Order>;
-  filter?: Maybe<EducationFilters>;
+  readonly order?: Maybe<Order>;
+  readonly filter?: Maybe<EducationFilters>;
 }
 
 export interface EducationFilters {
   /** Educations for UserId */
-  userId?: Maybe<Scalars['ID']>;
+  readonly userId?: Maybe<Scalars['ID']>;
 }
 
 /**
@@ -565,34 +565,34 @@ export interface EducationFilters {
  */
 export type SecuredUser = Readable &
   Editable & {
-    __typename?: 'SecuredUser';
-    canEdit: Scalars['Boolean'];
-    canRead: Scalars['Boolean'];
-    value?: Maybe<User>;
+    readonly __typename?: 'SecuredUser';
+    readonly canEdit: Scalars['Boolean'];
+    readonly canRead: Scalars['Boolean'];
+    readonly value?: Maybe<User>;
   };
 
 export interface UserListOutput {
-  __typename?: 'UserListOutput';
+  readonly __typename?: 'UserListOutput';
   /**
    * The page of user.
    * Note that this could include items that where also in sibling pages;
    * you should de-duplicate these based on ID.
    */
-  items: User[];
+  readonly items: readonly User[];
   /** The total number of items across all pages */
-  total: Scalars['Int'];
+  readonly total: Scalars['Int'];
   /** Whether the next page exists */
-  hasMore: Scalars['Boolean'];
+  readonly hasMore: Scalars['Boolean'];
 }
 
 export interface CreatePersonOutput {
-  __typename?: 'CreatePersonOutput';
-  user: User;
+  readonly __typename?: 'CreatePersonOutput';
+  readonly user: User;
 }
 
 export interface UpdateUserOutput {
-  __typename?: 'UpdateUserOutput';
-  user: User;
+  readonly __typename?: 'UpdateUserOutput';
+  readonly user: User;
 }
 
 /**
@@ -602,38 +602,38 @@ export interface UpdateUserOutput {
  */
 export type SecuredDegree = Readable &
   Editable & {
-    __typename?: 'SecuredDegree';
-    canEdit: Scalars['Boolean'];
-    canRead: Scalars['Boolean'];
-    value?: Maybe<Scalars['String']>;
+    readonly __typename?: 'SecuredDegree';
+    readonly canEdit: Scalars['Boolean'];
+    readonly canRead: Scalars['Boolean'];
+    readonly value?: Maybe<Scalars['String']>;
   };
 
 export type Education = Resource & {
-  __typename?: 'Education';
-  id: Scalars['ID'];
-  createdAt: Scalars['DateTime'];
-  degree: SecuredDegree;
-  major: SecuredString;
-  institution: SecuredString;
+  readonly __typename?: 'Education';
+  readonly id: Scalars['ID'];
+  readonly createdAt: Scalars['DateTime'];
+  readonly degree: SecuredDegree;
+  readonly major: SecuredString;
+  readonly institution: SecuredString;
 };
 
 export interface CreateEducationOutput {
-  __typename?: 'CreateEducationOutput';
-  education: Education;
+  readonly __typename?: 'CreateEducationOutput';
+  readonly education: Education;
 }
 
 export interface EducationListOutput {
-  __typename?: 'EducationListOutput';
+  readonly __typename?: 'EducationListOutput';
   /**
    * The page of education.
    * Note that this could include items that where also in sibling pages;
    * you should de-duplicate these based on ID.
    */
-  items: Education[];
+  readonly items: readonly Education[];
   /** The total number of items across all pages */
-  total: Scalars['Int'];
+  readonly total: Scalars['Int'];
   /** Whether the next page exists */
-  hasMore: Scalars['Boolean'];
+  readonly hasMore: Scalars['Boolean'];
 }
 
 /**
@@ -642,54 +642,54 @@ export interface EducationListOutput {
  * The `can*` properties are specific to the user making the request.
  */
 export type SecuredEducationList = Readable & {
-  __typename?: 'SecuredEducationList';
+  readonly __typename?: 'SecuredEducationList';
   /**
    * The page of education.
    * Note that this could include items that where also in sibling pages;
    * you should de-duplicate these based on ID.
    */
-  items: Education[];
+  readonly items: readonly Education[];
   /** The total number of items across all pages */
-  total: Scalars['Int'];
+  readonly total: Scalars['Int'];
   /** Whether the next page exists */
-  hasMore: Scalars['Boolean'];
+  readonly hasMore: Scalars['Boolean'];
   /** Whether the current user can read the list of items */
-  canRead: Scalars['Boolean'];
+  readonly canRead: Scalars['Boolean'];
   /** Whether the current user can add items to this list via the appropriate mutation */
-  canCreate: Scalars['Boolean'];
+  readonly canCreate: Scalars['Boolean'];
 };
 
 export interface UpdateEducationOutput {
-  __typename?: 'UpdateEducationOutput';
-  education: Education;
+  readonly __typename?: 'UpdateEducationOutput';
+  readonly education: Education;
 }
 
 export type Unavailability = Resource & {
-  __typename?: 'Unavailability';
-  id: Scalars['ID'];
-  createdAt: Scalars['DateTime'];
-  description: SecuredString;
-  start: Scalars['DateTime'];
-  end: Scalars['DateTime'];
+  readonly __typename?: 'Unavailability';
+  readonly id: Scalars['ID'];
+  readonly createdAt: Scalars['DateTime'];
+  readonly description: SecuredString;
+  readonly start: Scalars['DateTime'];
+  readonly end: Scalars['DateTime'];
 };
 
 export interface CreateUnavailabilityOutput {
-  __typename?: 'CreateUnavailabilityOutput';
-  unavailability: Unavailability;
+  readonly __typename?: 'CreateUnavailabilityOutput';
+  readonly unavailability: Unavailability;
 }
 
 export interface UnavailabilityListOutput {
-  __typename?: 'UnavailabilityListOutput';
+  readonly __typename?: 'UnavailabilityListOutput';
   /**
    * The page of unavailability.
    * Note that this could include items that where also in sibling pages;
    * you should de-duplicate these based on ID.
    */
-  items: Unavailability[];
+  readonly items: readonly Unavailability[];
   /** The total number of items across all pages */
-  total: Scalars['Int'];
+  readonly total: Scalars['Int'];
   /** Whether the next page exists */
-  hasMore: Scalars['Boolean'];
+  readonly hasMore: Scalars['Boolean'];
 }
 
 /**
@@ -698,48 +698,48 @@ export interface UnavailabilityListOutput {
  * The `can*` properties are specific to the user making the request.
  */
 export type SecuredUnavailabilityList = Readable & {
-  __typename?: 'SecuredUnavailabilityList';
+  readonly __typename?: 'SecuredUnavailabilityList';
   /**
    * The page of unavailability.
    * Note that this could include items that where also in sibling pages;
    * you should de-duplicate these based on ID.
    */
-  items: Unavailability[];
+  readonly items: readonly Unavailability[];
   /** The total number of items across all pages */
-  total: Scalars['Int'];
+  readonly total: Scalars['Int'];
   /** Whether the next page exists */
-  hasMore: Scalars['Boolean'];
+  readonly hasMore: Scalars['Boolean'];
   /** Whether the current user can read the list of items */
-  canRead: Scalars['Boolean'];
+  readonly canRead: Scalars['Boolean'];
   /** Whether the current user can add items to this list via the appropriate mutation */
-  canCreate: Scalars['Boolean'];
+  readonly canCreate: Scalars['Boolean'];
 };
 
 export interface UpdateUnavailabilityOutput {
-  __typename?: 'UpdateUnavailabilityOutput';
-  unavailability: Unavailability;
+  readonly __typename?: 'UpdateUnavailabilityOutput';
+  readonly unavailability: Unavailability;
 }
 
 export interface RegisterOutput {
-  __typename?: 'RegisterOutput';
-  user: User;
+  readonly __typename?: 'RegisterOutput';
+  readonly user: User;
 }
 
 /** An IANA Time Zone */
 export interface TimeZone {
-  __typename?: 'TimeZone';
-  name: Scalars['String'];
-  lat: Scalars['Float'];
-  long: Scalars['Float'];
-  countries: IanaCountry[];
+  readonly __typename?: 'TimeZone';
+  readonly name: Scalars['String'];
+  readonly lat: Scalars['Float'];
+  readonly long: Scalars['Float'];
+  readonly countries: readonly IanaCountry[];
 }
 
 /** An IANA Country associated with timezones */
 export interface IanaCountry {
-  __typename?: 'IanaCountry';
-  code: Scalars['String'];
-  name: Scalars['String'];
-  zones: TimeZone[];
+  readonly __typename?: 'IanaCountry';
+  readonly code: Scalars['String'];
+  readonly name: Scalars['String'];
+  readonly zones: readonly TimeZone[];
 }
 
 /**
@@ -749,41 +749,41 @@ export interface IanaCountry {
  */
 export type SecuredTimeZone = Readable &
   Editable & {
-    __typename?: 'SecuredTimeZone';
-    canEdit: Scalars['Boolean'];
-    canRead: Scalars['Boolean'];
-    value?: Maybe<TimeZone>;
+    readonly __typename?: 'SecuredTimeZone';
+    readonly canEdit: Scalars['Boolean'];
+    readonly canRead: Scalars['Boolean'];
+    readonly value?: Maybe<TimeZone>;
   };
 
 export interface SessionOutput {
-  __typename?: 'SessionOutput';
+  readonly __typename?: 'SessionOutput';
   /**
    * Use this token in future requests in the Authorization header.
    * Authorization: Bearer {token}.
    * This token is only returned when the `browser` argument is not set to `true`.
    */
-  token?: Maybe<Scalars['String']>;
+  readonly token?: Maybe<Scalars['String']>;
   /** Only returned if there is a logged-in user tied to the current session. */
-  user?: Maybe<User>;
+  readonly user?: Maybe<User>;
 }
 
 export interface LoginOutput {
-  __typename?: 'LoginOutput';
+  readonly __typename?: 'LoginOutput';
   /** The logged-in user */
-  user: User;
+  readonly user: User;
 }
 
 export type Zone = Resource &
   Place & {
-    __typename?: 'Zone';
-    id: Scalars['ID'];
-    createdAt: Scalars['DateTime'];
-    name: SecuredString;
-    director: SecuredUser;
+    readonly __typename?: 'Zone';
+    readonly id: Scalars['ID'];
+    readonly createdAt: Scalars['DateTime'];
+    readonly name: SecuredString;
+    readonly director: SecuredUser;
   };
 
 export interface Place {
-  name: SecuredString;
+  readonly name: SecuredString;
 }
 
 /**
@@ -793,20 +793,20 @@ export interface Place {
  */
 export type SecuredZone = Readable &
   Editable & {
-    __typename?: 'SecuredZone';
-    canEdit: Scalars['Boolean'];
-    canRead: Scalars['Boolean'];
-    value?: Maybe<Zone>;
+    readonly __typename?: 'SecuredZone';
+    readonly canEdit: Scalars['Boolean'];
+    readonly canRead: Scalars['Boolean'];
+    readonly value?: Maybe<Zone>;
   };
 
 export type Region = Resource &
   Place & {
-    __typename?: 'Region';
-    id: Scalars['ID'];
-    createdAt: Scalars['DateTime'];
-    name: SecuredString;
-    zone: SecuredZone;
-    director: SecuredUser;
+    readonly __typename?: 'Region';
+    readonly id: Scalars['ID'];
+    readonly createdAt: Scalars['DateTime'];
+    readonly name: SecuredString;
+    readonly zone: SecuredZone;
+    readonly director: SecuredUser;
   };
 
 /**
@@ -816,19 +816,19 @@ export type Region = Resource &
  */
 export type SecuredRegion = Readable &
   Editable & {
-    __typename?: 'SecuredRegion';
-    canEdit: Scalars['Boolean'];
-    canRead: Scalars['Boolean'];
-    value?: Maybe<Region>;
+    readonly __typename?: 'SecuredRegion';
+    readonly canEdit: Scalars['Boolean'];
+    readonly canRead: Scalars['Boolean'];
+    readonly value?: Maybe<Region>;
   };
 
 export type Country = Resource &
   Place & {
-    __typename?: 'Country';
-    id: Scalars['ID'];
-    createdAt: Scalars['DateTime'];
-    name: SecuredString;
-    region: SecuredRegion;
+    readonly __typename?: 'Country';
+    readonly id: Scalars['ID'];
+    readonly createdAt: Scalars['DateTime'];
+    readonly name: SecuredString;
+    readonly region: SecuredRegion;
   };
 
 /**
@@ -838,144 +838,144 @@ export type Country = Resource &
  */
 export type SecuredCountry = Readable &
   Editable & {
-    __typename?: 'SecuredCountry';
-    canEdit: Scalars['Boolean'];
-    canRead: Scalars['Boolean'];
-    value?: Maybe<Country>;
+    readonly __typename?: 'SecuredCountry';
+    readonly canEdit: Scalars['Boolean'];
+    readonly canRead: Scalars['Boolean'];
+    readonly value?: Maybe<Country>;
   };
 
 export interface CreateZoneOutput {
-  __typename?: 'CreateZoneOutput';
-  zone: Zone;
+  readonly __typename?: 'CreateZoneOutput';
+  readonly zone: Zone;
 }
 
 export interface CreateRegionOutput {
-  __typename?: 'CreateRegionOutput';
-  region: Region;
+  readonly __typename?: 'CreateRegionOutput';
+  readonly region: Region;
 }
 
 export interface CreateCountryOutput {
-  __typename?: 'CreateCountryOutput';
-  country: Country;
+  readonly __typename?: 'CreateCountryOutput';
+  readonly country: Country;
 }
 
 export interface UpdateZoneOutput {
-  __typename?: 'UpdateZoneOutput';
-  zone: Zone;
+  readonly __typename?: 'UpdateZoneOutput';
+  readonly zone: Zone;
 }
 
 export interface UpdateRegionOutput {
-  __typename?: 'UpdateRegionOutput';
-  region: Region;
+  readonly __typename?: 'UpdateRegionOutput';
+  readonly region: Region;
 }
 
 export interface UpdateCountryOutput {
-  __typename?: 'UpdateCountryOutput';
-  country: Country;
+  readonly __typename?: 'UpdateCountryOutput';
+  readonly country: Country;
 }
 
 export interface LocationListOutput {
-  __typename?: 'LocationListOutput';
+  readonly __typename?: 'LocationListOutput';
   /**
    * The page of locations.
    * Note that this could include items that where also in sibling pages;
    * you should de-duplicate these based on ID.
    */
-  items: Location[];
+  readonly items: readonly Location[];
   /** The total number of items across all pages */
-  total: Scalars['Int'];
+  readonly total: Scalars['Int'];
   /** Whether the next page exists */
-  hasMore: Scalars['Boolean'];
+  readonly hasMore: Scalars['Boolean'];
 }
 
 export type Location = Country | Region | Zone;
 
 export type SecuredLocationList = Readable & {
-  __typename?: 'SecuredLocationList';
+  readonly __typename?: 'SecuredLocationList';
   /**
    * An object whose `items` is a list of locations and additional authorization information.
    * The value is only given if `canRead` is `true` otherwise it is an empty list.
    * The `can*` properties are specific to the user making the request.
    */
-  items: Location[];
+  readonly items: readonly Location[];
   /** The total number of items across all pages */
-  total: Scalars['Int'];
+  readonly total: Scalars['Int'];
   /** Whether the next page exists */
-  hasMore: Scalars['Boolean'];
+  readonly hasMore: Scalars['Boolean'];
   /** Whether the current user can read the list of items */
-  canRead: Scalars['Boolean'];
+  readonly canRead: Scalars['Boolean'];
   /** Whether the current user can add items to this list via the appropriate mutation */
-  canCreate: Scalars['Boolean'];
+  readonly canCreate: Scalars['Boolean'];
 };
 
 export interface RequestUploadOutput {
-  __typename?: 'RequestUploadOutput';
-  id: Scalars['ID'];
+  readonly __typename?: 'RequestUploadOutput';
+  readonly id: Scalars['ID'];
   /** A pre-signed url to upload the file to */
-  url: Scalars['String'];
+  readonly url: Scalars['String'];
 }
 
 export type FileVersion = FileNode &
   Resource & {
-    __typename?: 'FileVersion';
-    mimeType: Scalars['String'];
-    size: Scalars['Int'];
-    id: Scalars['ID'];
-    createdAt: Scalars['DateTime'];
-    type: FileNodeType;
-    category: FileNodeCategory;
+    readonly __typename?: 'FileVersion';
+    readonly mimeType: Scalars['String'];
+    readonly size: Scalars['Int'];
+    readonly id: Scalars['ID'];
+    readonly createdAt: Scalars['DateTime'];
+    readonly type: FileNodeType;
+    readonly category: FileNodeCategory;
     /**
      * The name of the node.
      * This is user defined but does not necessarily need to be url safe.
      */
-    name: Scalars['String'];
+    readonly name: Scalars['String'];
     /**
      * The user who created this node.
      * For files, this is the user who uploaded the first version of the file.
      */
-    createdBy: User;
+    readonly createdBy: User;
     /**
      * A list of the parents all the way up the tree.
      * This can be used to populate a path-like UI,
      * without having to fetch each parent serially.
      */
-    parents: FileNode[];
+    readonly parents: readonly FileNode[];
     /** A direct url to download the file version */
-    downloadUrl: Scalars['String'];
+    readonly downloadUrl: Scalars['String'];
   };
 
 export type File = FileNode &
   Resource & {
-    __typename?: 'File';
-    mimeType: Scalars['String'];
-    size: Scalars['Int'];
-    id: Scalars['ID'];
-    createdAt: Scalars['DateTime'];
-    type: FileNodeType;
-    category: FileNodeCategory;
+    readonly __typename?: 'File';
+    readonly mimeType: Scalars['String'];
+    readonly size: Scalars['Int'];
+    readonly id: Scalars['ID'];
+    readonly createdAt: Scalars['DateTime'];
+    readonly type: FileNodeType;
+    readonly category: FileNodeCategory;
     /**
      * The name of the node.
      * This is user defined but does not necessarily need to be url safe.
      */
-    name: Scalars['String'];
+    readonly name: Scalars['String'];
     /**
      * The user who created this node.
      * For files, this is the user who uploaded the first version of the file.
      */
-    createdBy: User;
+    readonly createdBy: User;
     /**
      * A list of the parents all the way up the tree.
      * This can be used to populate a path-like UI,
      * without having to fetch each parent serially.
      */
-    parents: FileNode[];
-    modifiedAt: Scalars['DateTime'];
+    readonly parents: readonly FileNode[];
+    readonly modifiedAt: Scalars['DateTime'];
     /** The user who uploaded the most recent version of this file */
-    modifiedBy: User;
+    readonly modifiedBy: User;
     /** Return the versions of this file */
-    children: FileListOutput;
+    readonly children: FileListOutput;
     /** A direct url to download the file */
-    downloadUrl: Scalars['String'];
+    readonly downloadUrl: Scalars['String'];
   };
 
 export interface FileChildrenArgs {
@@ -984,50 +984,50 @@ export interface FileChildrenArgs {
 
 export interface FileListInput {
   /** The number of items to return in a single page */
-  count?: Maybe<Scalars['Int']>;
+  readonly count?: Maybe<Scalars['Int']>;
   /** 1-indexed page number for offset pagination. */
-  page?: Maybe<Scalars['Int']>;
+  readonly page?: Maybe<Scalars['Int']>;
   /** The field in which to sort on */
-  sort?: Maybe<Scalars['String']>;
+  readonly sort?: Maybe<Scalars['String']>;
   /** The order in which to sort the list */
-  order?: Maybe<Order>;
-  filter?: Maybe<FileFilters>;
+  readonly order?: Maybe<Order>;
+  readonly filter?: Maybe<FileFilters>;
 }
 
 export interface FileFilters {
   /** Only file nodes matching this name */
-  name?: Maybe<Scalars['String']>;
+  readonly name?: Maybe<Scalars['String']>;
   /** Only file nodes matching this type */
-  type?: Maybe<FileNodeType>;
+  readonly type?: Maybe<FileNodeType>;
   /** Only file nodes matching these categories */
-  category?: Maybe<FileNodeCategory[]>;
+  readonly category?: Maybe<readonly FileNodeCategory[]>;
 }
 
 export type Directory = FileNode &
   Resource & {
-    __typename?: 'Directory';
-    id: Scalars['ID'];
-    createdAt: Scalars['DateTime'];
-    type: FileNodeType;
-    category: FileNodeCategory;
+    readonly __typename?: 'Directory';
+    readonly id: Scalars['ID'];
+    readonly createdAt: Scalars['DateTime'];
+    readonly type: FileNodeType;
+    readonly category: FileNodeCategory;
     /**
      * The name of the node.
      * This is user defined but does not necessarily need to be url safe.
      */
-    name: Scalars['String'];
+    readonly name: Scalars['String'];
     /**
      * The user who created this node.
      * For files, this is the user who uploaded the first version of the file.
      */
-    createdBy: User;
+    readonly createdBy: User;
     /**
      * A list of the parents all the way up the tree.
      * This can be used to populate a path-like UI,
      * without having to fetch each parent serially.
      */
-    parents: FileNode[];
+    readonly parents: readonly FileNode[];
     /** Return the file nodes of this directory */
-    children: FileListOutput;
+    readonly children: FileListOutput;
   };
 
 export interface DirectoryChildrenArgs {
@@ -1041,34 +1041,34 @@ export interface DirectoryChildrenArgs {
  */
 export type SecuredFile = Readable &
   Editable & {
-    __typename?: 'SecuredFile';
-    canEdit: Scalars['Boolean'];
-    canRead: Scalars['Boolean'];
-    value?: Maybe<File>;
+    readonly __typename?: 'SecuredFile';
+    readonly canEdit: Scalars['Boolean'];
+    readonly canRead: Scalars['Boolean'];
+    readonly value?: Maybe<File>;
   };
 
 export interface FileListOutput {
-  __typename?: 'FileListOutput';
+  readonly __typename?: 'FileListOutput';
   /**
    * The page of file nodes.
    * Note that this could include items that where also in sibling pages;
    * you should de-duplicate these based on ID.
    */
-  items: FileNode[];
+  readonly items: readonly FileNode[];
   /** The total number of items across all pages */
-  total: Scalars['Int'];
+  readonly total: Scalars['Int'];
   /** Whether the next page exists */
-  hasMore: Scalars['Boolean'];
+  readonly hasMore: Scalars['Boolean'];
 }
 
 export type Ceremony = Resource & {
-  __typename?: 'Ceremony';
-  id: Scalars['ID'];
-  createdAt: Scalars['DateTime'];
-  type: CeremonyType;
-  planned: SecuredBoolean;
-  estimatedDate: SecuredDate;
-  actualDate: SecuredDate;
+  readonly __typename?: 'Ceremony';
+  readonly id: Scalars['ID'];
+  readonly createdAt: Scalars['DateTime'];
+  readonly type: CeremonyType;
+  readonly planned: SecuredBoolean;
+  readonly estimatedDate: SecuredDate;
+  readonly actualDate: SecuredDate;
 };
 
 export type CeremonyType = 'Dedication' | 'Certification';
@@ -1080,29 +1080,29 @@ export type CeremonyType = 'Dedication' | 'Certification';
  */
 export type SecuredCeremony = Readable &
   Editable & {
-    __typename?: 'SecuredCeremony';
-    canEdit: Scalars['Boolean'];
-    canRead: Scalars['Boolean'];
-    value?: Maybe<Ceremony>;
+    readonly __typename?: 'SecuredCeremony';
+    readonly canEdit: Scalars['Boolean'];
+    readonly canRead: Scalars['Boolean'];
+    readonly value?: Maybe<Ceremony>;
   };
 
 export interface CeremonyListOutput {
-  __typename?: 'CeremonyListOutput';
+  readonly __typename?: 'CeremonyListOutput';
   /**
    * The page of ceremony.
    * Note that this could include items that where also in sibling pages;
    * you should de-duplicate these based on ID.
    */
-  items: Ceremony[];
+  readonly items: readonly Ceremony[];
   /** The total number of items across all pages */
-  total: Scalars['Int'];
+  readonly total: Scalars['Int'];
   /** Whether the next page exists */
-  hasMore: Scalars['Boolean'];
+  readonly hasMore: Scalars['Boolean'];
 }
 
 export interface UpdateCeremonyOutput {
-  __typename?: 'UpdateCeremonyOutput';
-  ceremony: Ceremony;
+  readonly __typename?: 'UpdateCeremonyOutput';
+  readonly ceremony: Ceremony;
 }
 
 /**
@@ -1112,10 +1112,10 @@ export interface UpdateCeremonyOutput {
  */
 export type SecuredProjectStep = Readable &
   Editable & {
-    __typename?: 'SecuredProjectStep';
-    canEdit: Scalars['Boolean'];
-    canRead: Scalars['Boolean'];
-    value?: Maybe<ProjectStep>;
+    readonly __typename?: 'SecuredProjectStep';
+    readonly canEdit: Scalars['Boolean'];
+    readonly canRead: Scalars['Boolean'];
+    readonly value?: Maybe<ProjectStep>;
   };
 
 export type ProjectStep =
@@ -1141,30 +1141,30 @@ export type ProjectStep =
 
 export type TranslationProject = Project &
   Resource & {
-    __typename?: 'TranslationProject';
-    id: Scalars['ID'];
-    createdAt: Scalars['DateTime'];
-    type: ProjectType;
-    sensitivity: Sensitivity;
-    name: SecuredString;
+    readonly __typename?: 'TranslationProject';
+    readonly id: Scalars['ID'];
+    readonly createdAt: Scalars['DateTime'];
+    readonly type: ProjectType;
+    readonly sensitivity: Sensitivity;
+    readonly name: SecuredString;
     /** The legacy department ID */
-    deptId: SecuredString;
-    step: SecuredProjectStep;
-    status: ProjectStatus;
-    location: SecuredCountry;
-    mouStart: SecuredDate;
-    mouEnd: SecuredDate;
-    estimatedSubmission: SecuredDate;
-    modifiedAt: Scalars['DateTime'];
-    avatarLetters?: Maybe<Scalars['String']>;
+    readonly deptId: SecuredString;
+    readonly step: SecuredProjectStep;
+    readonly status: ProjectStatus;
+    readonly location: SecuredCountry;
+    readonly mouStart: SecuredDate;
+    readonly mouEnd: SecuredDate;
+    readonly estimatedSubmission: SecuredDate;
+    readonly modifiedAt: Scalars['DateTime'];
+    readonly avatarLetters?: Maybe<Scalars['String']>;
     /** The project's current budget */
-    budget: SecuredBudget;
-    engagements: SecuredEngagementList;
+    readonly budget: SecuredBudget;
+    readonly engagements: SecuredEngagementList;
     /** The project members */
-    team: SecuredProjectMemberList;
-    partnerships: SecuredPartnershipList;
+    readonly team: SecuredProjectMemberList;
+    readonly partnerships: SecuredPartnershipList;
     /** The root filesystem directory of this project */
-    rootDirectory: Directory;
+    readonly rootDirectory: Directory;
   };
 
 export interface TranslationProjectEngagementsArgs {
@@ -1181,30 +1181,30 @@ export interface TranslationProjectPartnershipsArgs {
 
 export type InternshipProject = Project &
   Resource & {
-    __typename?: 'InternshipProject';
-    id: Scalars['ID'];
-    createdAt: Scalars['DateTime'];
-    type: ProjectType;
-    sensitivity: Sensitivity;
-    name: SecuredString;
+    readonly __typename?: 'InternshipProject';
+    readonly id: Scalars['ID'];
+    readonly createdAt: Scalars['DateTime'];
+    readonly type: ProjectType;
+    readonly sensitivity: Sensitivity;
+    readonly name: SecuredString;
     /** The legacy department ID */
-    deptId: SecuredString;
-    step: SecuredProjectStep;
-    status: ProjectStatus;
-    location: SecuredCountry;
-    mouStart: SecuredDate;
-    mouEnd: SecuredDate;
-    estimatedSubmission: SecuredDate;
-    modifiedAt: Scalars['DateTime'];
-    avatarLetters?: Maybe<Scalars['String']>;
+    readonly deptId: SecuredString;
+    readonly step: SecuredProjectStep;
+    readonly status: ProjectStatus;
+    readonly location: SecuredCountry;
+    readonly mouStart: SecuredDate;
+    readonly mouEnd: SecuredDate;
+    readonly estimatedSubmission: SecuredDate;
+    readonly modifiedAt: Scalars['DateTime'];
+    readonly avatarLetters?: Maybe<Scalars['String']>;
     /** The project's current budget */
-    budget: SecuredBudget;
-    engagements: SecuredEngagementList;
+    readonly budget: SecuredBudget;
+    readonly engagements: SecuredEngagementList;
     /** The project members */
-    team: SecuredProjectMemberList;
-    partnerships: SecuredPartnershipList;
+    readonly team: SecuredProjectMemberList;
+    readonly partnerships: SecuredPartnershipList;
     /** The root filesystem directory of this project */
-    rootDirectory: Directory;
+    readonly rootDirectory: Directory;
   };
 
 export interface InternshipProjectEngagementsArgs {
@@ -1220,22 +1220,22 @@ export interface InternshipProjectPartnershipsArgs {
 }
 
 export interface CreateProjectOutput {
-  __typename?: 'CreateProjectOutput';
-  project: Project;
+  readonly __typename?: 'CreateProjectOutput';
+  readonly project: Project;
 }
 
 export interface ProjectListOutput {
-  __typename?: 'ProjectListOutput';
+  readonly __typename?: 'ProjectListOutput';
   /**
    * The page of projects.
    * Note that this could include items that where also in sibling pages;
    * you should de-duplicate these based on ID.
    */
-  items: Project[];
+  readonly items: readonly Project[];
   /** The total number of items across all pages */
-  total: Scalars['Int'];
+  readonly total: Scalars['Int'];
   /** Whether the next page exists */
-  hasMore: Scalars['Boolean'];
+  readonly hasMore: Scalars['Boolean'];
 }
 
 /**
@@ -1244,90 +1244,90 @@ export interface ProjectListOutput {
  * The `can*` properties are specific to the user making the request.
  */
 export type SecuredProjectList = Readable & {
-  __typename?: 'SecuredProjectList';
+  readonly __typename?: 'SecuredProjectList';
   /**
    * The page of projects.
    * Note that this could include items that where also in sibling pages;
    * you should de-duplicate these based on ID.
    */
-  items: Project[];
+  readonly items: readonly Project[];
   /** The total number of items across all pages */
-  total: Scalars['Int'];
+  readonly total: Scalars['Int'];
   /** Whether the next page exists */
-  hasMore: Scalars['Boolean'];
+  readonly hasMore: Scalars['Boolean'];
   /** Whether the current user can read the list of items */
-  canRead: Scalars['Boolean'];
+  readonly canRead: Scalars['Boolean'];
   /** Whether the current user can add items to this list via the appropriate mutation */
-  canCreate: Scalars['Boolean'];
+  readonly canCreate: Scalars['Boolean'];
 };
 
 export interface UpdateProjectOutput {
-  __typename?: 'UpdateProjectOutput';
-  project: Project;
+  readonly __typename?: 'UpdateProjectOutput';
+  readonly project: Project;
 }
 
 export interface EthnologueLanguage {
-  __typename?: 'EthnologueLanguage';
-  id: SecuredString;
+  readonly __typename?: 'EthnologueLanguage';
+  readonly id: SecuredString;
   /** ISO 639-3 code */
-  code: SecuredString;
+  readonly code: SecuredString;
   /**
    * Provisional Ethnologue Code.
    * Used until official ethnologue code is created by SIL.
    */
-  provisionalCode: SecuredString;
-  name: SecuredString;
-  population: SecuredInt;
+  readonly provisionalCode: SecuredString;
+  readonly name: SecuredString;
+  readonly population: SecuredInt;
 }
 
 export type Language = Resource & {
-  __typename?: 'Language';
-  id: Scalars['ID'];
-  createdAt: Scalars['DateTime'];
+  readonly __typename?: 'Language';
+  readonly id: Scalars['ID'];
+  readonly createdAt: Scalars['DateTime'];
   /** The real language name */
-  name: SecuredString;
+  readonly name: SecuredString;
   /**
    * The public name which will be used/shown when real name
    * is unauthorized to be viewed/read.
    * This should always be viewable.
    */
-  displayName: SecuredString;
+  readonly displayName: SecuredString;
   /** The pronunciation of the display name */
-  displayNamePronunciation: SecuredString;
+  readonly displayNamePronunciation: SecuredString;
   /** Whether this language is a dialect. */
-  isDialect: SecuredBoolean;
-  ethnologue: EthnologueLanguage;
+  readonly isDialect: SecuredBoolean;
+  readonly ethnologue: EthnologueLanguage;
   /** An override for the ethnologue's population */
-  populationOverride: SecuredInt;
+  readonly populationOverride: SecuredInt;
   /**
    * Registry of Dialects Code.
    * 5 digit number including leading zeros.
    * https://globalrecordings.net/en/rod
    */
-  registryOfDialectsCode: SecuredString;
+  readonly registryOfDialectsCode: SecuredString;
   /** Whether this language has a Least Of These grant. */
-  leastOfThese: SecuredBoolean;
+  readonly leastOfThese: SecuredBoolean;
   /** Reason why this language is apart of the Least of These program. */
-  leastOfTheseReason: SecuredString;
+  readonly leastOfTheseReason: SecuredString;
   /** The earliest start date from its engagements */
-  sponsorDate: SecuredDate;
+  readonly sponsorDate: SecuredDate;
   /**
    * The language's sensitivity.
    * It's based on its most sensitive location.
    */
-  sensitivity: Sensitivity;
-  avatarLetters?: Maybe<Scalars['String']>;
+  readonly sensitivity: Sensitivity;
+  readonly avatarLetters?: Maybe<Scalars['String']>;
   /** The fiscal year of the sponsor date */
-  beginFiscalYear: SecuredInt;
+  readonly beginFiscalYear: SecuredInt;
   /**
    * The language's population.
    * This is either the `populationOverride` if defined
    * or the ethnologue population as a fallback.
    */
-  population: SecuredInt;
-  locations: SecuredLocationList;
+  readonly population: SecuredInt;
+  readonly locations: SecuredLocationList;
   /** The list of projects the language is engagement in. */
-  projects: SecuredProjectList;
+  readonly projects: SecuredProjectList;
 };
 
 export interface LanguageLocationsArgs {
@@ -1340,64 +1340,64 @@ export interface LanguageProjectsArgs {
 
 export interface LocationListInput {
   /** The number of items to return in a single page */
-  count?: Maybe<Scalars['Int']>;
+  readonly count?: Maybe<Scalars['Int']>;
   /** 1-indexed page number for offset pagination. */
-  page?: Maybe<Scalars['Int']>;
+  readonly page?: Maybe<Scalars['Int']>;
   /** The field in which to sort on */
-  sort?: Maybe<Scalars['String']>;
+  readonly sort?: Maybe<Scalars['String']>;
   /** The order in which to sort the list */
-  order?: Maybe<Order>;
-  filter?: Maybe<LocationFilters>;
+  readonly order?: Maybe<Order>;
+  readonly filter?: Maybe<LocationFilters>;
 }
 
 export interface LocationFilters {
   /** Only locations matching this name */
-  name?: Maybe<Scalars['String']>;
+  readonly name?: Maybe<Scalars['String']>;
   /** Filter to only these types of locations */
-  types: Array<Scalars['String']>;
+  readonly types: ReadonlyArray<Scalars['String']>;
 }
 
 export interface ProjectListInput {
   /** The number of items to return in a single page */
-  count?: Maybe<Scalars['Int']>;
+  readonly count?: Maybe<Scalars['Int']>;
   /** 1-indexed page number for offset pagination. */
-  page?: Maybe<Scalars['Int']>;
+  readonly page?: Maybe<Scalars['Int']>;
   /** The field in which to sort on */
-  sort?: Maybe<Scalars['String']>;
+  readonly sort?: Maybe<Scalars['String']>;
   /** The order in which to sort the list */
-  order?: Maybe<Order>;
-  filter?: Maybe<ProjectFilters>;
+  readonly order?: Maybe<Order>;
+  readonly filter?: Maybe<ProjectFilters>;
 }
 
 export interface ProjectFilters {
   /** Only projects matching this name */
-  name?: Maybe<Scalars['String']>;
+  readonly name?: Maybe<Scalars['String']>;
   /** Only projects of this type */
-  type?: Maybe<ProjectType>;
+  readonly type?: Maybe<ProjectType>;
   /** Only projects with these sensitivities */
-  sensitivity?: Maybe<Sensitivity[]>;
+  readonly sensitivity?: Maybe<readonly Sensitivity[]>;
   /** Only projects matching these statuses */
-  status?: Maybe<ProjectStatus[]>;
+  readonly status?: Maybe<readonly ProjectStatus[]>;
   /** Only projects matching these steps */
-  step?: Maybe<ProjectStep[]>;
+  readonly step?: Maybe<readonly ProjectStep[]>;
   /** Only projects in ANY of these locations */
-  locationIds?: Maybe<Array<Scalars['ID']>>;
+  readonly locationIds?: Maybe<ReadonlyArray<Scalars['ID']>>;
   /** Only projects created within this time range */
-  createdAt?: Maybe<DateTimeFilter>;
+  readonly createdAt?: Maybe<DateTimeFilter>;
   /** Only projects modified within this time range */
-  modifiedAt?: Maybe<DateTimeFilter>;
+  readonly modifiedAt?: Maybe<DateTimeFilter>;
   /** only mine */
-  mine?: Maybe<Scalars['Boolean']>;
+  readonly mine?: Maybe<Scalars['Boolean']>;
   /** Cluster project */
-  clusters?: Maybe<Scalars['Boolean']>;
+  readonly clusters?: Maybe<Scalars['Boolean']>;
 }
 
 /** A filter range designed for date time fields */
 export interface DateTimeFilter {
   /** After or equal to this time */
-  after?: Maybe<Scalars['DateTime']>;
+  readonly after?: Maybe<Scalars['DateTime']>;
   /** Before or equal to this time */
-  before?: Maybe<Scalars['DateTime']>;
+  readonly before?: Maybe<Scalars['DateTime']>;
 }
 
 /**
@@ -1407,52 +1407,52 @@ export interface DateTimeFilter {
  */
 export type SecuredLanguage = Readable &
   Editable & {
-    __typename?: 'SecuredLanguage';
-    canEdit: Scalars['Boolean'];
-    canRead: Scalars['Boolean'];
-    value?: Maybe<Language>;
+    readonly __typename?: 'SecuredLanguage';
+    readonly canEdit: Scalars['Boolean'];
+    readonly canRead: Scalars['Boolean'];
+    readonly value?: Maybe<Language>;
   };
 
 export interface CreateLanguageOutput {
-  __typename?: 'CreateLanguageOutput';
-  language: Language;
+  readonly __typename?: 'CreateLanguageOutput';
+  readonly language: Language;
 }
 
 export interface LanguageListOutput {
-  __typename?: 'LanguageListOutput';
+  readonly __typename?: 'LanguageListOutput';
   /**
    * The page of language.
    * Note that this could include items that where also in sibling pages;
    * you should de-duplicate these based on ID.
    */
-  items: Language[];
+  readonly items: readonly Language[];
   /** The total number of items across all pages */
-  total: Scalars['Int'];
+  readonly total: Scalars['Int'];
   /** Whether the next page exists */
-  hasMore: Scalars['Boolean'];
+  readonly hasMore: Scalars['Boolean'];
 }
 
 export interface UpdateLanguageOutput {
-  __typename?: 'UpdateLanguageOutput';
-  language: Language;
+  readonly __typename?: 'UpdateLanguageOutput';
+  readonly language: Language;
 }
 
 export type BudgetRecord = Resource & {
-  __typename?: 'BudgetRecord';
-  id: Scalars['ID'];
-  createdAt: Scalars['DateTime'];
-  fiscalYear: SecuredInt;
-  amount: SecuredFloat;
-  organization: SecuredOrganization;
+  readonly __typename?: 'BudgetRecord';
+  readonly id: Scalars['ID'];
+  readonly createdAt: Scalars['DateTime'];
+  readonly fiscalYear: SecuredInt;
+  readonly amount: SecuredFloat;
+  readonly organization: SecuredOrganization;
 };
 
 export type Budget = Resource & {
-  __typename?: 'Budget';
-  id: Scalars['ID'];
-  createdAt: Scalars['DateTime'];
-  status: Scalars['String'];
-  records: BudgetRecord[];
-  total: Scalars['Int'];
+  readonly __typename?: 'Budget';
+  readonly id: Scalars['ID'];
+  readonly createdAt: Scalars['DateTime'];
+  readonly status: Scalars['String'];
+  readonly records: readonly BudgetRecord[];
+  readonly total: Scalars['Int'];
 };
 
 /**
@@ -1462,39 +1462,39 @@ export type Budget = Resource & {
  */
 export type SecuredBudget = Readable &
   Editable & {
-    __typename?: 'SecuredBudget';
-    canEdit: Scalars['Boolean'];
-    canRead: Scalars['Boolean'];
-    value?: Maybe<Budget>;
+    readonly __typename?: 'SecuredBudget';
+    readonly canEdit: Scalars['Boolean'];
+    readonly canRead: Scalars['Boolean'];
+    readonly value?: Maybe<Budget>;
   };
 
 export interface CreateBudgetOutput {
-  __typename?: 'CreateBudgetOutput';
-  budget: Budget;
+  readonly __typename?: 'CreateBudgetOutput';
+  readonly budget: Budget;
 }
 
 export interface BudgetListOutput {
-  __typename?: 'BudgetListOutput';
+  readonly __typename?: 'BudgetListOutput';
   /**
    * The page of budget.
    * Note that this could include items that where also in sibling pages;
    * you should de-duplicate these based on ID.
    */
-  items: Budget[];
+  readonly items: readonly Budget[];
   /** The total number of items across all pages */
-  total: Scalars['Int'];
+  readonly total: Scalars['Int'];
   /** Whether the next page exists */
-  hasMore: Scalars['Boolean'];
+  readonly hasMore: Scalars['Boolean'];
 }
 
 export interface UpdateBudgetOutput {
-  __typename?: 'UpdateBudgetOutput';
-  budget: Budget;
+  readonly __typename?: 'UpdateBudgetOutput';
+  readonly budget: Budget;
 }
 
 export interface UpdateBudgetRecordOutput {
-  __typename?: 'UpdateBudgetRecordOutput';
-  budgetRecord: BudgetRecord;
+  readonly __typename?: 'UpdateBudgetRecordOutput';
+  readonly budgetRecord: BudgetRecord;
 }
 
 /**
@@ -1504,10 +1504,10 @@ export interface UpdateBudgetRecordOutput {
  */
 export type SecuredInternPosition = Readable &
   Editable & {
-    __typename?: 'SecuredInternPosition';
-    canEdit: Scalars['Boolean'];
-    canRead: Scalars['Boolean'];
-    value?: Maybe<InternshipEngagementPosition>;
+    readonly __typename?: 'SecuredInternPosition';
+    readonly canEdit: Scalars['Boolean'];
+    readonly canRead: Scalars['Boolean'];
+    readonly value?: Maybe<InternshipEngagementPosition>;
   };
 
 export type InternshipEngagementPosition =
@@ -1538,10 +1538,10 @@ export type InternshipEngagementPosition =
  */
 export type SecuredProductMediums = Readable &
   Editable & {
-    __typename?: 'SecuredProductMediums';
-    canEdit: Scalars['Boolean'];
-    canRead: Scalars['Boolean'];
-    value: ProductMedium[];
+    readonly __typename?: 'SecuredProductMediums';
+    readonly canEdit: Scalars['Boolean'];
+    readonly canRead: Scalars['Boolean'];
+    readonly value: readonly ProductMedium[];
   };
 
 /** How the product is delivered */
@@ -1562,10 +1562,10 @@ export type ProductMedium =
  */
 export type SecuredMethodology = Readable &
   Editable & {
-    __typename?: 'SecuredMethodology';
-    canEdit: Scalars['Boolean'];
-    canRead: Scalars['Boolean'];
-    value?: Maybe<ProductMethodology>;
+    readonly __typename?: 'SecuredMethodology';
+    readonly canEdit: Scalars['Boolean'];
+    readonly canRead: Scalars['Boolean'];
+    readonly value?: Maybe<ProductMethodology>;
   };
 
 /** How is this translation being done */
@@ -1589,10 +1589,10 @@ export type ProductMethodology =
  */
 export type SecuredMethodologies = Readable &
   Editable & {
-    __typename?: 'SecuredMethodologies';
-    canEdit: Scalars['Boolean'];
-    canRead: Scalars['Boolean'];
-    value: ProductMethodology[];
+    readonly __typename?: 'SecuredMethodologies';
+    readonly canEdit: Scalars['Boolean'];
+    readonly canRead: Scalars['Boolean'];
+    readonly value: readonly ProductMethodology[];
   };
 
 /**
@@ -1602,10 +1602,10 @@ export type SecuredMethodologies = Readable &
  */
 export type SecuredProductPurposes = Readable &
   Editable & {
-    __typename?: 'SecuredProductPurposes';
-    canEdit: Scalars['Boolean'];
-    canRead: Scalars['Boolean'];
-    value: ProductPurpose[];
+    readonly __typename?: 'SecuredProductPurposes';
+    readonly canEdit: Scalars['Boolean'];
+    readonly canRead: Scalars['Boolean'];
+    readonly value: readonly ProductPurpose[];
   };
 
 export type ProductPurpose =
@@ -1617,15 +1617,15 @@ export type ProductPurpose =
 
 /** A reference to a scripture verse */
 export interface ScriptureReference {
-  __typename?: 'ScriptureReference';
+  readonly __typename?: 'ScriptureReference';
   /** The code of the Bible book */
-  book: Scalars['String'];
+  readonly book: Scalars['String'];
   /** The chapter number */
-  chapter: Scalars['Int'];
+  readonly chapter: Scalars['Int'];
   /** The verse number */
-  verse: Scalars['Int'];
-  bookName: Scalars['String'];
-  label: Scalars['String'];
+  readonly verse: Scalars['Int'];
+  readonly bookName: Scalars['String'];
+  readonly label: Scalars['String'];
 }
 
 /**
@@ -1633,11 +1633,11 @@ export interface ScriptureReference {
  * i.e. Matthew 1:1-2:10
  */
 export interface ScriptureRange {
-  __typename?: 'ScriptureRange';
+  readonly __typename?: 'ScriptureRange';
   /** The starting verse */
-  start: ScriptureReference;
+  readonly start: ScriptureReference;
   /** The ending verse */
-  end: ScriptureReference;
+  readonly end: ScriptureReference;
   /**
    * A human readable label for this range.
    *
@@ -1650,9 +1650,9 @@ export interface ScriptureRange {
    *   - Matthew 1-John 2
    *   - Matthew 1:3-John 2:4
    */
-  label: Scalars['String'];
+  readonly label: Scalars['String'];
   /** The total number of verses in this scripture range */
-  totalVerses: Scalars['Int'];
+  readonly totalVerses: Scalars['Int'];
 }
 
 /**
@@ -1662,10 +1662,10 @@ export interface ScriptureRange {
  */
 export type SecuredScriptureRanges = Readable &
   Editable & {
-    __typename?: 'SecuredScriptureRanges';
-    canEdit: Scalars['Boolean'];
-    canRead: Scalars['Boolean'];
-    value: ScriptureRange[];
+    readonly __typename?: 'SecuredScriptureRanges';
+    readonly canEdit: Scalars['Boolean'];
+    readonly canRead: Scalars['Boolean'];
+    readonly value: readonly ScriptureRange[];
   };
 
 /**
@@ -1675,26 +1675,26 @@ export type SecuredScriptureRanges = Readable &
  */
 export type SecuredProducible = Readable &
   Editable & {
-    __typename?: 'SecuredProducible';
-    canEdit: Scalars['Boolean'];
-    canRead: Scalars['Boolean'];
-    value?: Maybe<Producible>;
+    readonly __typename?: 'SecuredProducible';
+    readonly canEdit: Scalars['Boolean'];
+    readonly canRead: Scalars['Boolean'];
+    readonly value?: Maybe<Producible>;
   };
 
 /** A product producing direct scripture only. */
 export type DirectScriptureProduct = Product &
   Producible &
   Resource & {
-    __typename?: 'DirectScriptureProduct';
-    id: Scalars['ID'];
-    createdAt: Scalars['DateTime'];
-    scriptureReferences: SecuredScriptureRanges;
-    mediums: SecuredProductMediums;
-    purposes: SecuredProductPurposes;
-    methodology: SecuredMethodology;
-    approach?: Maybe<ProductApproach>;
+    readonly __typename?: 'DirectScriptureProduct';
+    readonly id: Scalars['ID'];
+    readonly createdAt: Scalars['DateTime'];
+    readonly scriptureReferences: SecuredScriptureRanges;
+    readonly mediums: SecuredProductMediums;
+    readonly purposes: SecuredProductPurposes;
+    readonly methodology: SecuredMethodology;
+    readonly approach?: Maybe<ProductApproach>;
     /** Provide what would be the "type" of product in the old schema. */
-    legacyType: ProductType;
+    readonly legacyType: ProductType;
   };
 
 /**
@@ -1704,52 +1704,52 @@ export type DirectScriptureProduct = Product &
 export type DerivativeScriptureProduct = Product &
   Producible &
   Resource & {
-    __typename?: 'DerivativeScriptureProduct';
-    id: Scalars['ID'];
-    createdAt: Scalars['DateTime'];
-    scriptureReferences: SecuredScriptureRanges;
-    mediums: SecuredProductMediums;
-    purposes: SecuredProductPurposes;
-    methodology: SecuredMethodology;
-    approach?: Maybe<ProductApproach>;
+    readonly __typename?: 'DerivativeScriptureProduct';
+    readonly id: Scalars['ID'];
+    readonly createdAt: Scalars['DateTime'];
+    readonly scriptureReferences: SecuredScriptureRanges;
+    readonly mediums: SecuredProductMediums;
+    readonly purposes: SecuredProductPurposes;
+    readonly methodology: SecuredMethodology;
+    readonly approach?: Maybe<ProductApproach>;
     /** Provide what would be the "type" of product in the old schema. */
-    legacyType: ProductType;
+    readonly legacyType: ProductType;
     /**
      * The object that this product is producing.
      * i.e. A film named "Jesus Film".
      */
-    produces: SecuredProducible;
+    readonly produces: SecuredProducible;
     /**
      * The `Producible` defines a `scriptureReferences` list, and this is
      * used by default in this product's `scriptureReferences` list.
      * If this product _specifically_ needs to customize the references, then
      * this property can be set (and read) to "override" the `producible`'s list.
      */
-    scriptureReferencesOverride?: Maybe<SecuredScriptureRanges>;
+    readonly scriptureReferencesOverride?: Maybe<SecuredScriptureRanges>;
   };
 
 export interface CreateProductOutput {
-  __typename?: 'CreateProductOutput';
-  product: Product;
+  readonly __typename?: 'CreateProductOutput';
+  readonly product: Product;
 }
 
 export interface UpdateProductOutput {
-  __typename?: 'UpdateProductOutput';
-  product: Product;
+  readonly __typename?: 'UpdateProductOutput';
+  readonly product: Product;
 }
 
 export interface ProductListOutput {
-  __typename?: 'ProductListOutput';
+  readonly __typename?: 'ProductListOutput';
   /**
    * The page of product.
    * Note that this could include items that where also in sibling pages;
    * you should de-duplicate these based on ID.
    */
-  items: Product[];
+  readonly items: readonly Product[];
   /** The total number of items across all pages */
-  total: Scalars['Int'];
+  readonly total: Scalars['Int'];
   /** Whether the next page exists */
-  hasMore: Scalars['Boolean'];
+  readonly hasMore: Scalars['Boolean'];
 }
 
 /**
@@ -1758,50 +1758,50 @@ export interface ProductListOutput {
  * The `can*` properties are specific to the user making the request.
  */
 export type SecuredProductList = Readable & {
-  __typename?: 'SecuredProductList';
+  readonly __typename?: 'SecuredProductList';
   /**
    * The page of product.
    * Note that this could include items that where also in sibling pages;
    * you should de-duplicate these based on ID.
    */
-  items: Product[];
+  readonly items: readonly Product[];
   /** The total number of items across all pages */
-  total: Scalars['Int'];
+  readonly total: Scalars['Int'];
   /** Whether the next page exists */
-  hasMore: Scalars['Boolean'];
+  readonly hasMore: Scalars['Boolean'];
   /** Whether the current user can read the list of items */
-  canRead: Scalars['Boolean'];
+  readonly canRead: Scalars['Boolean'];
   /** Whether the current user can add items to this list via the appropriate mutation */
-  canCreate: Scalars['Boolean'];
+  readonly canCreate: Scalars['Boolean'];
 };
 
 export type LanguageEngagement = Engagement &
   Resource & {
-    __typename?: 'LanguageEngagement';
-    id: Scalars['ID'];
-    createdAt: Scalars['DateTime'];
-    status: EngagementStatus;
+    readonly __typename?: 'LanguageEngagement';
+    readonly id: Scalars['ID'];
+    readonly createdAt: Scalars['DateTime'];
+    readonly status: EngagementStatus;
     /** Translation / Growth Plan complete date */
-    completeDate: SecuredDate;
-    disbursementCompleteDate: SecuredDate;
-    communicationsCompleteDate: SecuredDate;
-    startDate: SecuredDate;
-    endDate: SecuredDate;
-    initialEndDate: SecuredDate;
-    lastSuspendedAt: SecuredDateTime;
-    lastReactivatedAt: SecuredDateTime;
+    readonly completeDate: SecuredDate;
+    readonly disbursementCompleteDate: SecuredDate;
+    readonly communicationsCompleteDate: SecuredDate;
+    readonly startDate: SecuredDate;
+    readonly endDate: SecuredDate;
+    readonly initialEndDate: SecuredDate;
+    readonly lastSuspendedAt: SecuredDateTime;
+    readonly lastReactivatedAt: SecuredDateTime;
     /** The last time the engagement status was modified */
-    statusModifiedAt: SecuredDateTime;
-    modifiedAt: Scalars['DateTime'];
-    ceremony: SecuredCeremony;
-    firstScripture: SecuredBoolean;
-    lukePartnership: SecuredBoolean;
+    readonly statusModifiedAt: SecuredDateTime;
+    readonly modifiedAt: Scalars['DateTime'];
+    readonly ceremony: SecuredCeremony;
+    readonly firstScripture: SecuredBoolean;
+    readonly lukePartnership: SecuredBoolean;
     /** Not used anymore, but exposing for legacy data. */
-    sentPrintingDate: SecuredDate;
-    paraTextRegistryId: SecuredString;
-    language: SecuredLanguage;
-    products: SecuredProductList;
-    pnp: SecuredFile;
+    readonly sentPrintingDate: SecuredDate;
+    readonly paraTextRegistryId: SecuredString;
+    readonly language: SecuredLanguage;
+    readonly products: SecuredProductList;
+    readonly pnp: SecuredFile;
   };
 
 export interface LanguageEngagementProductsArgs {
@@ -1810,72 +1810,72 @@ export interface LanguageEngagementProductsArgs {
 
 export interface ProductListInput {
   /** The number of items to return in a single page */
-  count?: Maybe<Scalars['Int']>;
+  readonly count?: Maybe<Scalars['Int']>;
   /** 1-indexed page number for offset pagination. */
-  page?: Maybe<Scalars['Int']>;
+  readonly page?: Maybe<Scalars['Int']>;
   /** The field in which to sort on */
-  sort?: Maybe<Scalars['String']>;
+  readonly sort?: Maybe<Scalars['String']>;
   /** The order in which to sort the list */
-  order?: Maybe<Order>;
-  filter?: Maybe<ProductFilters>;
+  readonly order?: Maybe<Order>;
+  readonly filter?: Maybe<ProductFilters>;
 }
 
 export interface ProductFilters {
   /** Only products matching this approach */
-  approach?: Maybe<ProductApproach>;
+  readonly approach?: Maybe<ProductApproach>;
   /** Only products matching this methodology */
-  methodology?: Maybe<ProductMethodology>;
+  readonly methodology?: Maybe<ProductMethodology>;
 }
 
 export type InternshipEngagement = Engagement &
   Resource & {
-    __typename?: 'InternshipEngagement';
-    id: Scalars['ID'];
-    createdAt: Scalars['DateTime'];
-    status: EngagementStatus;
+    readonly __typename?: 'InternshipEngagement';
+    readonly id: Scalars['ID'];
+    readonly createdAt: Scalars['DateTime'];
+    readonly status: EngagementStatus;
     /** Translation / Growth Plan complete date */
-    completeDate: SecuredDate;
-    disbursementCompleteDate: SecuredDate;
-    communicationsCompleteDate: SecuredDate;
-    startDate: SecuredDate;
-    endDate: SecuredDate;
-    initialEndDate: SecuredDate;
-    lastSuspendedAt: SecuredDateTime;
-    lastReactivatedAt: SecuredDateTime;
+    readonly completeDate: SecuredDate;
+    readonly disbursementCompleteDate: SecuredDate;
+    readonly communicationsCompleteDate: SecuredDate;
+    readonly startDate: SecuredDate;
+    readonly endDate: SecuredDate;
+    readonly initialEndDate: SecuredDate;
+    readonly lastSuspendedAt: SecuredDateTime;
+    readonly lastReactivatedAt: SecuredDateTime;
     /** The last time the engagement status was modified */
-    statusModifiedAt: SecuredDateTime;
-    modifiedAt: Scalars['DateTime'];
-    ceremony: SecuredCeremony;
-    position: SecuredInternPosition;
-    methodologies: SecuredMethodologies;
-    growthPlan: SecuredFile;
-    intern: SecuredUser;
-    mentor: SecuredUser;
-    countryOfOrigin: SecuredCountry;
+    readonly statusModifiedAt: SecuredDateTime;
+    readonly modifiedAt: Scalars['DateTime'];
+    readonly ceremony: SecuredCeremony;
+    readonly position: SecuredInternPosition;
+    readonly methodologies: SecuredMethodologies;
+    readonly growthPlan: SecuredFile;
+    readonly intern: SecuredUser;
+    readonly mentor: SecuredUser;
+    readonly countryOfOrigin: SecuredCountry;
   };
 
 export interface CreateLanguageEngagementOutput {
-  __typename?: 'CreateLanguageEngagementOutput';
-  engagement: LanguageEngagement;
+  readonly __typename?: 'CreateLanguageEngagementOutput';
+  readonly engagement: LanguageEngagement;
 }
 
 export interface CreateInternshipEngagementOutput {
-  __typename?: 'CreateInternshipEngagementOutput';
-  engagement: InternshipEngagement;
+  readonly __typename?: 'CreateInternshipEngagementOutput';
+  readonly engagement: InternshipEngagement;
 }
 
 export interface EngagementListOutput {
-  __typename?: 'EngagementListOutput';
+  readonly __typename?: 'EngagementListOutput';
   /**
    * The page of engagements.
    * Note that this could include items that where also in sibling pages;
    * you should de-duplicate these based on ID.
    */
-  items: Engagement[];
+  readonly items: readonly Engagement[];
   /** The total number of items across all pages */
-  total: Scalars['Int'];
+  readonly total: Scalars['Int'];
   /** Whether the next page exists */
-  hasMore: Scalars['Boolean'];
+  readonly hasMore: Scalars['Boolean'];
 }
 
 /**
@@ -1884,31 +1884,31 @@ export interface EngagementListOutput {
  * The `can*` properties are specific to the user making the request.
  */
 export type SecuredEngagementList = Readable & {
-  __typename?: 'SecuredEngagementList';
+  readonly __typename?: 'SecuredEngagementList';
   /**
    * The page of engagements.
    * Note that this could include items that where also in sibling pages;
    * you should de-duplicate these based on ID.
    */
-  items: Engagement[];
+  readonly items: readonly Engagement[];
   /** The total number of items across all pages */
-  total: Scalars['Int'];
+  readonly total: Scalars['Int'];
   /** Whether the next page exists */
-  hasMore: Scalars['Boolean'];
+  readonly hasMore: Scalars['Boolean'];
   /** Whether the current user can read the list of items */
-  canRead: Scalars['Boolean'];
+  readonly canRead: Scalars['Boolean'];
   /** Whether the current user can add items to this list via the appropriate mutation */
-  canCreate: Scalars['Boolean'];
+  readonly canCreate: Scalars['Boolean'];
 };
 
 export interface UpdateLanguageEngagementOutput {
-  __typename?: 'UpdateLanguageEngagementOutput';
-  engagement: LanguageEngagement;
+  readonly __typename?: 'UpdateLanguageEngagementOutput';
+  readonly engagement: LanguageEngagement;
 }
 
 export interface UpdateInternshipEngagementOutput {
-  __typename?: 'UpdateInternshipEngagementOutput';
-  engagement: InternshipEngagement;
+  readonly __typename?: 'UpdateInternshipEngagementOutput';
+  readonly engagement: InternshipEngagement;
 }
 
 /**
@@ -1918,10 +1918,10 @@ export interface UpdateInternshipEngagementOutput {
  */
 export type SecuredPartnershipAgreementStatus = Readable &
   Editable & {
-    __typename?: 'SecuredPartnershipAgreementStatus';
-    canEdit: Scalars['Boolean'];
-    canRead: Scalars['Boolean'];
-    value?: Maybe<PartnershipAgreementStatus>;
+    readonly __typename?: 'SecuredPartnershipAgreementStatus';
+    readonly canEdit: Scalars['Boolean'];
+    readonly canRead: Scalars['Boolean'];
+    readonly value?: Maybe<PartnershipAgreementStatus>;
   };
 
 export type PartnershipAgreementStatus =
@@ -1936,10 +1936,10 @@ export type PartnershipAgreementStatus =
  */
 export type SecuredPartnershipTypes = Readable &
   Editable & {
-    __typename?: 'SecuredPartnershipTypes';
-    canEdit: Scalars['Boolean'];
-    canRead: Scalars['Boolean'];
-    value: PartnershipType[];
+    readonly __typename?: 'SecuredPartnershipTypes';
+    readonly canEdit: Scalars['Boolean'];
+    readonly canRead: Scalars['Boolean'];
+    readonly value: readonly PartnershipType[];
   };
 
 export type PartnershipType =
@@ -1950,45 +1950,45 @@ export type PartnershipType =
   | 'Resource';
 
 export type Partnership = Resource & {
-  __typename?: 'Partnership';
-  id: Scalars['ID'];
-  createdAt: Scalars['DateTime'];
-  agreementStatus: SecuredPartnershipAgreementStatus;
-  mouStatus: SecuredPartnershipAgreementStatus;
-  mouStart: SecuredDate;
-  mouEnd: SecuredDate;
-  mouStartOverride: SecuredDate;
-  mouEndOverride: SecuredDate;
-  organization: Organization;
-  types: SecuredPartnershipTypes;
+  readonly __typename?: 'Partnership';
+  readonly id: Scalars['ID'];
+  readonly createdAt: Scalars['DateTime'];
+  readonly agreementStatus: SecuredPartnershipAgreementStatus;
+  readonly mouStatus: SecuredPartnershipAgreementStatus;
+  readonly mouStart: SecuredDate;
+  readonly mouEnd: SecuredDate;
+  readonly mouStartOverride: SecuredDate;
+  readonly mouEndOverride: SecuredDate;
+  readonly organization: Organization;
+  readonly types: SecuredPartnershipTypes;
   /** The MOU agreement */
-  mou: SecuredFile;
+  readonly mou: SecuredFile;
   /** The partner agreement */
-  agreement: SecuredFile;
+  readonly agreement: SecuredFile;
 };
 
 export interface CreatePartnershipOutput {
-  __typename?: 'CreatePartnershipOutput';
-  partnership: Partnership;
+  readonly __typename?: 'CreatePartnershipOutput';
+  readonly partnership: Partnership;
 }
 
 export interface UpdatePartnershipOutput {
-  __typename?: 'UpdatePartnershipOutput';
-  partnership: Partnership;
+  readonly __typename?: 'UpdatePartnershipOutput';
+  readonly partnership: Partnership;
 }
 
 export interface PartnershipListOutput {
-  __typename?: 'PartnershipListOutput';
+  readonly __typename?: 'PartnershipListOutput';
   /**
    * The page of partnership.
    * Note that this could include items that where also in sibling pages;
    * you should de-duplicate these based on ID.
    */
-  items: Partnership[];
+  readonly items: readonly Partnership[];
   /** The total number of items across all pages */
-  total: Scalars['Int'];
+  readonly total: Scalars['Int'];
   /** Whether the next page exists */
-  hasMore: Scalars['Boolean'];
+  readonly hasMore: Scalars['Boolean'];
 }
 
 /**
@@ -1997,21 +1997,21 @@ export interface PartnershipListOutput {
  * The `can*` properties are specific to the user making the request.
  */
 export type SecuredPartnershipList = Readable & {
-  __typename?: 'SecuredPartnershipList';
+  readonly __typename?: 'SecuredPartnershipList';
   /**
    * The page of partnership.
    * Note that this could include items that where also in sibling pages;
    * you should de-duplicate these based on ID.
    */
-  items: Partnership[];
+  readonly items: readonly Partnership[];
   /** The total number of items across all pages */
-  total: Scalars['Int'];
+  readonly total: Scalars['Int'];
   /** Whether the next page exists */
-  hasMore: Scalars['Boolean'];
+  readonly hasMore: Scalars['Boolean'];
   /** Whether the current user can read the list of items */
-  canRead: Scalars['Boolean'];
+  readonly canRead: Scalars['Boolean'];
   /** Whether the current user can add items to this list via the appropriate mutation */
-  canCreate: Scalars['Boolean'];
+  readonly canCreate: Scalars['Boolean'];
 };
 
 /**
@@ -2021,43 +2021,43 @@ export type SecuredPartnershipList = Readable & {
  */
 export type SecuredRoles = Readable &
   Editable & {
-    __typename?: 'SecuredRoles';
-    canEdit: Scalars['Boolean'];
-    canRead: Scalars['Boolean'];
-    value: Role[];
+    readonly __typename?: 'SecuredRoles';
+    readonly canEdit: Scalars['Boolean'];
+    readonly canRead: Scalars['Boolean'];
+    readonly value: readonly Role[];
   };
 
 export type ProjectMember = Resource & {
-  __typename?: 'ProjectMember';
-  id: Scalars['ID'];
-  createdAt: Scalars['DateTime'];
-  user: SecuredUser;
-  roles: SecuredRoles;
-  modifiedAt: Scalars['DateTime'];
+  readonly __typename?: 'ProjectMember';
+  readonly id: Scalars['ID'];
+  readonly createdAt: Scalars['DateTime'];
+  readonly user: SecuredUser;
+  readonly roles: SecuredRoles;
+  readonly modifiedAt: Scalars['DateTime'];
 };
 
 export interface CreateProjectMemberOutput {
-  __typename?: 'CreateProjectMemberOutput';
-  projectMember: ProjectMember;
+  readonly __typename?: 'CreateProjectMemberOutput';
+  readonly projectMember: ProjectMember;
 }
 
 export interface UpdateProjectMemberOutput {
-  __typename?: 'UpdateProjectMemberOutput';
-  projectMember: ProjectMember;
+  readonly __typename?: 'UpdateProjectMemberOutput';
+  readonly projectMember: ProjectMember;
 }
 
 export interface ProjectMemberListOutput {
-  __typename?: 'ProjectMemberListOutput';
+  readonly __typename?: 'ProjectMemberListOutput';
   /**
    * The page of projectmember.
    * Note that this could include items that where also in sibling pages;
    * you should de-duplicate these based on ID.
    */
-  items: ProjectMember[];
+  readonly items: readonly ProjectMember[];
   /** The total number of items across all pages */
-  total: Scalars['Int'];
+  readonly total: Scalars['Int'];
   /** Whether the next page exists */
-  hasMore: Scalars['Boolean'];
+  readonly hasMore: Scalars['Boolean'];
 }
 
 /**
@@ -2066,147 +2066,147 @@ export interface ProjectMemberListOutput {
  * The `can*` properties are specific to the user making the request.
  */
 export type SecuredProjectMemberList = Readable & {
-  __typename?: 'SecuredProjectMemberList';
+  readonly __typename?: 'SecuredProjectMemberList';
   /**
    * The page of projectmember.
    * Note that this could include items that where also in sibling pages;
    * you should de-duplicate these based on ID.
    */
-  items: ProjectMember[];
+  readonly items: readonly ProjectMember[];
   /** The total number of items across all pages */
-  total: Scalars['Int'];
+  readonly total: Scalars['Int'];
   /** Whether the next page exists */
-  hasMore: Scalars['Boolean'];
+  readonly hasMore: Scalars['Boolean'];
   /** Whether the current user can read the list of items */
-  canRead: Scalars['Boolean'];
+  readonly canRead: Scalars['Boolean'];
   /** Whether the current user can add items to this list via the appropriate mutation */
-  canCreate: Scalars['Boolean'];
+  readonly canCreate: Scalars['Boolean'];
 };
 
 export type Film = Producible &
   Resource & {
-    __typename?: 'Film';
-    id: Scalars['ID'];
-    createdAt: Scalars['DateTime'];
-    scriptureReferences: SecuredScriptureRanges;
-    name: SecuredString;
+    readonly __typename?: 'Film';
+    readonly id: Scalars['ID'];
+    readonly createdAt: Scalars['DateTime'];
+    readonly scriptureReferences: SecuredScriptureRanges;
+    readonly name: SecuredString;
   };
 
 export interface CreateFilmOutput {
-  __typename?: 'CreateFilmOutput';
-  film: Film;
+  readonly __typename?: 'CreateFilmOutput';
+  readonly film: Film;
 }
 
 export interface FilmListOutput {
-  __typename?: 'FilmListOutput';
+  readonly __typename?: 'FilmListOutput';
   /**
    * The page of film.
    * Note that this could include items that where also in sibling pages;
    * you should de-duplicate these based on ID.
    */
-  items: Film[];
+  readonly items: readonly Film[];
   /** The total number of items across all pages */
-  total: Scalars['Int'];
+  readonly total: Scalars['Int'];
   /** Whether the next page exists */
-  hasMore: Scalars['Boolean'];
+  readonly hasMore: Scalars['Boolean'];
 }
 
 export interface UpdateFilmOutput {
-  __typename?: 'UpdateFilmOutput';
-  film: Film;
+  readonly __typename?: 'UpdateFilmOutput';
+  readonly film: Film;
 }
 
 export type LiteracyMaterial = Producible &
   Resource & {
-    __typename?: 'LiteracyMaterial';
-    id: Scalars['ID'];
-    createdAt: Scalars['DateTime'];
-    scriptureReferences: SecuredScriptureRanges;
-    name: SecuredString;
+    readonly __typename?: 'LiteracyMaterial';
+    readonly id: Scalars['ID'];
+    readonly createdAt: Scalars['DateTime'];
+    readonly scriptureReferences: SecuredScriptureRanges;
+    readonly name: SecuredString;
   };
 
 export interface CreateLiteracyMaterialOutput {
-  __typename?: 'CreateLiteracyMaterialOutput';
-  literacyMaterial: LiteracyMaterial;
+  readonly __typename?: 'CreateLiteracyMaterialOutput';
+  readonly literacyMaterial: LiteracyMaterial;
 }
 
 export interface LiteracyMaterialListOutput {
-  __typename?: 'LiteracyMaterialListOutput';
+  readonly __typename?: 'LiteracyMaterialListOutput';
   /**
    * The page of literacymaterial.
    * Note that this could include items that where also in sibling pages;
    * you should de-duplicate these based on ID.
    */
-  items: LiteracyMaterial[];
+  readonly items: readonly LiteracyMaterial[];
   /** The total number of items across all pages */
-  total: Scalars['Int'];
+  readonly total: Scalars['Int'];
   /** Whether the next page exists */
-  hasMore: Scalars['Boolean'];
+  readonly hasMore: Scalars['Boolean'];
 }
 
 export interface UpdateLiteracyMaterialOutput {
-  __typename?: 'UpdateLiteracyMaterialOutput';
-  literacyMaterial: LiteracyMaterial;
+  readonly __typename?: 'UpdateLiteracyMaterialOutput';
+  readonly literacyMaterial: LiteracyMaterial;
 }
 
 export type Story = Producible &
   Resource & {
-    __typename?: 'Story';
-    id: Scalars['ID'];
-    createdAt: Scalars['DateTime'];
-    scriptureReferences: SecuredScriptureRanges;
-    name: SecuredString;
+    readonly __typename?: 'Story';
+    readonly id: Scalars['ID'];
+    readonly createdAt: Scalars['DateTime'];
+    readonly scriptureReferences: SecuredScriptureRanges;
+    readonly name: SecuredString;
   };
 
 export interface CreateStoryOutput {
-  __typename?: 'CreateStoryOutput';
-  story: Story;
+  readonly __typename?: 'CreateStoryOutput';
+  readonly story: Story;
 }
 
 export interface StoryListOutput {
-  __typename?: 'StoryListOutput';
+  readonly __typename?: 'StoryListOutput';
   /**
    * The page of story.
    * Note that this could include items that where also in sibling pages;
    * you should de-duplicate these based on ID.
    */
-  items: Story[];
+  readonly items: readonly Story[];
   /** The total number of items across all pages */
-  total: Scalars['Int'];
+  readonly total: Scalars['Int'];
   /** Whether the next page exists */
-  hasMore: Scalars['Boolean'];
+  readonly hasMore: Scalars['Boolean'];
 }
 
 export interface UpdateStoryOutput {
-  __typename?: 'UpdateStoryOutput';
-  story: Story;
+  readonly __typename?: 'UpdateStoryOutput';
+  readonly story: Story;
 }
 
 export type Favorite = Resource & {
-  __typename?: 'Favorite';
-  id: Scalars['ID'];
-  createdAt: Scalars['DateTime'];
-  baseNodeId: Scalars['String'];
+  readonly __typename?: 'Favorite';
+  readonly id: Scalars['ID'];
+  readonly createdAt: Scalars['DateTime'];
+  readonly baseNodeId: Scalars['String'];
 };
 
 export interface FavoriteListOutput {
-  __typename?: 'FavoriteListOutput';
+  readonly __typename?: 'FavoriteListOutput';
   /**
    * The page of favorite.
    * Note that this could include items that where also in sibling pages;
    * you should de-duplicate these based on ID.
    */
-  items: Favorite[];
+  readonly items: readonly Favorite[];
   /** The total number of items across all pages */
-  total: Scalars['Int'];
+  readonly total: Scalars['Int'];
   /** Whether the next page exists */
-  hasMore: Scalars['Boolean'];
+  readonly hasMore: Scalars['Boolean'];
 }
 
 export interface SearchOutput {
-  __typename?: 'SearchOutput';
+  readonly __typename?: 'SearchOutput';
   /** The search string to look for. */
-  items: SearchResult[];
+  readonly items: readonly SearchResult[];
 }
 
 export type SearchResult =
@@ -2221,201 +2221,201 @@ export type SearchResult =
 
 export type Song = Producible &
   Resource & {
-    __typename?: 'Song';
-    id: Scalars['ID'];
-    createdAt: Scalars['DateTime'];
-    scriptureReferences: SecuredScriptureRanges;
-    name: SecuredString;
+    readonly __typename?: 'Song';
+    readonly id: Scalars['ID'];
+    readonly createdAt: Scalars['DateTime'];
+    readonly scriptureReferences: SecuredScriptureRanges;
+    readonly name: SecuredString;
   };
 
 export interface CreateSongOutput {
-  __typename?: 'CreateSongOutput';
-  song: Song;
+  readonly __typename?: 'CreateSongOutput';
+  readonly song: Song;
 }
 
 export interface SongListOutput {
-  __typename?: 'SongListOutput';
+  readonly __typename?: 'SongListOutput';
   /**
    * The page of song.
    * Note that this could include items that where also in sibling pages;
    * you should de-duplicate these based on ID.
    */
-  items: Song[];
+  readonly items: readonly Song[];
   /** The total number of items across all pages */
-  total: Scalars['Int'];
+  readonly total: Scalars['Int'];
   /** Whether the next page exists */
-  hasMore: Scalars['Boolean'];
+  readonly hasMore: Scalars['Boolean'];
 }
 
 export interface UpdateSongOutput {
-  __typename?: 'UpdateSongOutput';
-  song: Song;
+  readonly __typename?: 'UpdateSongOutput';
+  readonly song: Song;
 }
 
 export interface State {
-  __typename?: 'State';
-  id: Scalars['ID'];
-  value: Scalars['String'];
+  readonly __typename?: 'State';
+  readonly id: Scalars['ID'];
+  readonly value: Scalars['String'];
 }
 
 export interface Workflow {
-  __typename?: 'Workflow';
-  id: Scalars['ID'];
-  stateIdentifier: Scalars['String'];
-  startingState: State;
+  readonly __typename?: 'Workflow';
+  readonly id: Scalars['ID'];
+  readonly stateIdentifier: Scalars['String'];
+  readonly startingState: State;
 }
 
 export interface CreateWorkflowOutput {
-  __typename?: 'CreateWorkflowOutput';
-  workflow: Workflow;
+  readonly __typename?: 'CreateWorkflowOutput';
+  readonly workflow: Workflow;
 }
 
 export interface AddStateOutput {
-  __typename?: 'AddStateOutput';
-  state: State;
+  readonly __typename?: 'AddStateOutput';
+  readonly state: State;
 }
 
 export interface StateListOutput {
-  __typename?: 'StateListOutput';
-  items: State[];
+  readonly __typename?: 'StateListOutput';
+  readonly items: readonly State[];
 }
 
 export interface FieldObject {
-  __typename?: 'FieldObject';
-  value: Scalars['String'];
+  readonly __typename?: 'FieldObject';
+  readonly value: Scalars['String'];
 }
 
 export interface RequiredFieldListOutput {
-  __typename?: 'RequiredFieldListOutput';
-  items: FieldObject[];
+  readonly __typename?: 'RequiredFieldListOutput';
+  readonly items: readonly FieldObject[];
 }
 
 export interface Query {
-  __typename?: 'Query';
+  readonly __typename?: 'Query';
   /** List security groups that user is a member of */
-  securityGroupsUserIsMemberOf: ListSecurityGroupOutput;
+  readonly securityGroupsUserIsMemberOf: ListSecurityGroupOutput;
   /** List security groups that user is an admin of */
-  securityGroupsUserIsAdminOf: ListSecurityGroupOutput;
+  readonly securityGroupsUserIsAdminOf: ListSecurityGroupOutput;
   /** List permissions that belong to a security group */
-  permissionsInSecurityGroup: ListPermissionOutput;
+  readonly permissionsInSecurityGroup: ListPermissionOutput;
   /** Look up an organization by its ID */
-  organization: Organization;
+  readonly organization: Organization;
   /** Look up organizations */
-  organizations: OrganizationListOutput;
+  readonly organizations: OrganizationListOutput;
   /** Check all organization nodes for consistency */
-  checkOrganizations: Scalars['Boolean'];
+  readonly checkOrganizations: Scalars['Boolean'];
   /** Check Consistency in Organization Nodes */
-  checkOrganizationConsistency: Scalars['Boolean'];
+  readonly checkOrganizationConsistency: Scalars['Boolean'];
   /** Look up an education by its ID */
-  education: Education;
+  readonly education: Education;
   /** Look up educations by user id */
-  educations: EducationListOutput;
+  readonly educations: EducationListOutput;
   /** Check Consistency across Education Nodes */
-  checkEducationConsistency: Scalars['Boolean'];
+  readonly checkEducationConsistency: Scalars['Boolean'];
   /** Look up a unavailability by its ID */
-  unavailability: Unavailability;
+  readonly unavailability: Unavailability;
   /** Look up unavailabilities by user id */
-  unavailabilities: UnavailabilityListOutput;
+  readonly unavailabilities: UnavailabilityListOutput;
   /** Check Consistency across Unavailability Nodes */
-  checkUnavailabilityConsistency: Scalars['Boolean'];
-  timezones: TimeZone[];
-  timezone?: Maybe<TimeZone>;
-  ianaCountries: IanaCountry[];
-  ianaCountry?: Maybe<IanaCountry>;
+  readonly checkUnavailabilityConsistency: Scalars['Boolean'];
+  readonly timezones: readonly TimeZone[];
+  readonly timezone?: Maybe<TimeZone>;
+  readonly ianaCountries: readonly IanaCountry[];
+  readonly ianaCountry?: Maybe<IanaCountry>;
   /** Look up a user by its ID */
-  user: User;
+  readonly user: User;
   /** Look up users */
-  users: UserListOutput;
+  readonly users: UserListOutput;
   /** Checks whether a provided email already exists */
-  checkEmail: Scalars['Boolean'];
+  readonly checkEmail: Scalars['Boolean'];
   /** Check Consistency across User Nodes */
-  checkUserConsistency: Scalars['Boolean'];
+  readonly checkUserConsistency: Scalars['Boolean'];
   /** Create or retrieve an existing session */
-  session: SessionOutput;
+  readonly session: SessionOutput;
   /** Read one Location by id */
-  location: Location;
+  readonly location: Location;
   /** Look up locations */
-  locations: LocationListOutput;
+  readonly locations: LocationListOutput;
   /** Check location consistency */
-  checkLocationConsistency: Scalars['Boolean'];
-  directory: Directory;
-  file: File;
-  fileNode: FileNode;
+  readonly checkLocationConsistency: Scalars['Boolean'];
+  readonly directory: Directory;
+  readonly file: File;
+  readonly fileNode: FileNode;
   /**
    * Check Consistency in File Nodes
    * @deprecated This should have never existed
    */
-  checkFileConsistency: Scalars['Boolean'];
+  readonly checkFileConsistency: Scalars['Boolean'];
   /** Look up a ceremony by its ID */
-  ceremony: Ceremony;
+  readonly ceremony: Ceremony;
   /** Look up ceremonies */
-  ceremonies: CeremonyListOutput;
+  readonly ceremonies: CeremonyListOutput;
   /** Check Consistency in Ceremony Nodes */
-  checkCeremonyConsistency: Scalars['Boolean'];
+  readonly checkCeremonyConsistency: Scalars['Boolean'];
   /** Look up a project member by ID */
-  projectMember: ProjectMember;
+  readonly projectMember: ProjectMember;
   /** Look up project members */
-  projectMembers: ProjectMemberListOutput;
+  readonly projectMembers: ProjectMemberListOutput;
   /** Look up a partnership by ID */
-  partnership: Partnership;
+  readonly partnership: Partnership;
   /** Look up partnerships */
-  partnerships: PartnershipListOutput;
+  readonly partnerships: PartnershipListOutput;
   /** Check partnership node consistency */
-  checkPartnershipConsistency: Scalars['Boolean'];
+  readonly checkPartnershipConsistency: Scalars['Boolean'];
   /** Look up a project by its ID */
-  project: Project;
+  readonly project: Project;
   /** Look up projects */
-  projects: ProjectListOutput;
+  readonly projects: ProjectListOutput;
   /** Check Consistency in Project Nodes */
-  checkProjectConsistency: Scalars['Boolean'];
+  readonly checkProjectConsistency: Scalars['Boolean'];
   /** Look up a language by its ID */
-  language: Language;
+  readonly language: Language;
   /** Look up languages */
-  languages: LanguageListOutput;
+  readonly languages: LanguageListOutput;
   /** Check language node consistency */
-  checkLanguageConsistency: Scalars['Boolean'];
+  readonly checkLanguageConsistency: Scalars['Boolean'];
   /** Look up a film by its ID */
-  film: Film;
+  readonly film: Film;
   /** Look up films */
-  films: FilmListOutput;
+  readonly films: FilmListOutput;
   /** Look up a literacy material */
-  literacyMaterial: LiteracyMaterial;
+  readonly literacyMaterial: LiteracyMaterial;
   /** Look up literacy materials */
-  literacyMaterials: LiteracyMaterialListOutput;
+  readonly literacyMaterials: LiteracyMaterialListOutput;
   /** Look up a story by its ID */
-  story: Story;
+  readonly story: Story;
   /** Look up stories */
-  stories: StoryListOutput;
+  readonly stories: StoryListOutput;
   /** Read a product by id */
-  product: Product;
+  readonly product: Product;
   /** Look up products */
-  products: ProductListOutput;
+  readonly products: ProductListOutput;
   /** Lookup an engagement by ID */
-  engagement: Engagement;
+  readonly engagement: Engagement;
   /** Look up engagements */
-  engagements: EngagementListOutput;
+  readonly engagements: EngagementListOutput;
   /** Check Consistency in Engagement Nodes */
-  checkEngagementConsistency: Scalars['Boolean'];
+  readonly checkEngagementConsistency: Scalars['Boolean'];
   /** Look up a budget by its ID */
-  budget: Budget;
+  readonly budget: Budget;
   /** Look up budgets by projectId */
-  budgets: BudgetListOutput;
+  readonly budgets: BudgetListOutput;
   /** Check Consistency in Budget Nodes */
-  checkBudgetConsistency: Scalars['Boolean'];
+  readonly checkBudgetConsistency: Scalars['Boolean'];
   /** Look up favorites */
-  favorites: FavoriteListOutput;
+  readonly favorites: FavoriteListOutput;
   /** Perform a search across resources */
-  search: SearchOutput;
+  readonly search: SearchOutput;
   /** Look up a song by its ID */
-  song: Song;
+  readonly song: Song;
   /** Look up stories */
-  songs: SongListOutput;
+  readonly songs: SongListOutput;
   /** Look up all states on workflow */
-  states: StateListOutput;
+  readonly states: StateListOutput;
   /** Look up all next possible states on workflow */
-  nextStates: StateListOutput;
+  readonly nextStates: StateListOutput;
   /** List required fields in state */
-  listRequiredFields: RequiredFieldListOutput;
+  readonly listRequiredFields: RequiredFieldListOutput;
 }
 
 export interface QuerySecurityGroupsUserIsMemberOfArgs {
@@ -2623,154 +2623,154 @@ export interface QueryListRequiredFieldsArgs {
 }
 
 export interface ListSecurityGroupInput {
-  userId: Scalars['ID'];
+  readonly userId: Scalars['ID'];
 }
 
 export interface ListPermissionInput {
-  sgId: Scalars['ID'];
+  readonly sgId: Scalars['ID'];
 }
 
 export interface UserListInput {
   /** The number of items to return in a single page */
-  count?: Maybe<Scalars['Int']>;
+  readonly count?: Maybe<Scalars['Int']>;
   /** 1-indexed page number for offset pagination. */
-  page?: Maybe<Scalars['Int']>;
+  readonly page?: Maybe<Scalars['Int']>;
   /** The field in which to sort on */
-  sort?: Maybe<Scalars['String']>;
+  readonly sort?: Maybe<Scalars['String']>;
   /** The order in which to sort the list */
-  order?: Maybe<Order>;
-  filter?: Maybe<UserFilters>;
+  readonly order?: Maybe<Order>;
+  readonly filter?: Maybe<UserFilters>;
 }
 
 export interface UserFilters {
   /** Only users matching this first name */
-  displayFirstName?: Maybe<Scalars['String']>;
+  readonly displayFirstName?: Maybe<Scalars['String']>;
   /** Only users matching this last name */
-  displayLastName?: Maybe<Scalars['String']>;
+  readonly displayLastName?: Maybe<Scalars['String']>;
 }
 
 export interface CeremonyListInput {
   /** The number of items to return in a single page */
-  count?: Maybe<Scalars['Int']>;
+  readonly count?: Maybe<Scalars['Int']>;
   /** 1-indexed page number for offset pagination. */
-  page?: Maybe<Scalars['Int']>;
+  readonly page?: Maybe<Scalars['Int']>;
   /** The field in which to sort on */
-  sort?: Maybe<Scalars['String']>;
+  readonly sort?: Maybe<Scalars['String']>;
   /** The order in which to sort the list */
-  order?: Maybe<Order>;
-  filter?: Maybe<CeremonyFilters>;
+  readonly order?: Maybe<Order>;
+  readonly filter?: Maybe<CeremonyFilters>;
 }
 
 export interface CeremonyFilters {
   /** Only ceremonies of this type */
-  type?: Maybe<CeremonyType>;
+  readonly type?: Maybe<CeremonyType>;
 }
 
 export interface LanguageListInput {
   /** The number of items to return in a single page */
-  count?: Maybe<Scalars['Int']>;
+  readonly count?: Maybe<Scalars['Int']>;
   /** 1-indexed page number for offset pagination. */
-  page?: Maybe<Scalars['Int']>;
+  readonly page?: Maybe<Scalars['Int']>;
   /** The field in which to sort on */
-  sort?: Maybe<Scalars['String']>;
+  readonly sort?: Maybe<Scalars['String']>;
   /** The order in which to sort the list */
-  order?: Maybe<Order>;
-  filter?: Maybe<LanguageFilters>;
+  readonly order?: Maybe<Order>;
+  readonly filter?: Maybe<LanguageFilters>;
 }
 
 export interface LanguageFilters {
   /** Only languages matching this name */
-  name?: Maybe<Scalars['String']>;
+  readonly name?: Maybe<Scalars['String']>;
 }
 
 export interface FilmListInput {
   /** The number of items to return in a single page */
-  count?: Maybe<Scalars['Int']>;
+  readonly count?: Maybe<Scalars['Int']>;
   /** 1-indexed page number for offset pagination. */
-  page?: Maybe<Scalars['Int']>;
+  readonly page?: Maybe<Scalars['Int']>;
   /** The field in which to sort on */
-  sort?: Maybe<Scalars['String']>;
+  readonly sort?: Maybe<Scalars['String']>;
   /** The order in which to sort the list */
-  order?: Maybe<Order>;
-  filter?: Maybe<FilmFilters>;
+  readonly order?: Maybe<Order>;
+  readonly filter?: Maybe<FilmFilters>;
 }
 
 export interface FilmFilters {
   /** Only films matching this name */
-  name?: Maybe<Scalars['String']>;
+  readonly name?: Maybe<Scalars['String']>;
 }
 
 export interface LiteracyMaterialListInput {
   /** The number of items to return in a single page */
-  count?: Maybe<Scalars['Int']>;
+  readonly count?: Maybe<Scalars['Int']>;
   /** 1-indexed page number for offset pagination. */
-  page?: Maybe<Scalars['Int']>;
+  readonly page?: Maybe<Scalars['Int']>;
   /** The field in which to sort on */
-  sort?: Maybe<Scalars['String']>;
+  readonly sort?: Maybe<Scalars['String']>;
   /** The order in which to sort the list */
-  order?: Maybe<Order>;
-  filter?: Maybe<LiteracyMaterialFilters>;
+  readonly order?: Maybe<Order>;
+  readonly filter?: Maybe<LiteracyMaterialFilters>;
 }
 
 export interface LiteracyMaterialFilters {
   /** Only literacy material matching this name */
-  name?: Maybe<Scalars['String']>;
+  readonly name?: Maybe<Scalars['String']>;
 }
 
 export interface StoryListInput {
   /** The number of items to return in a single page */
-  count?: Maybe<Scalars['Int']>;
+  readonly count?: Maybe<Scalars['Int']>;
   /** 1-indexed page number for offset pagination. */
-  page?: Maybe<Scalars['Int']>;
+  readonly page?: Maybe<Scalars['Int']>;
   /** The field in which to sort on */
-  sort?: Maybe<Scalars['String']>;
+  readonly sort?: Maybe<Scalars['String']>;
   /** The order in which to sort the list */
-  order?: Maybe<Order>;
-  filter?: Maybe<StoryFilters>;
+  readonly order?: Maybe<Order>;
+  readonly filter?: Maybe<StoryFilters>;
 }
 
 export interface StoryFilters {
   /** Only stories matching this name */
-  name?: Maybe<Scalars['String']>;
+  readonly name?: Maybe<Scalars['String']>;
 }
 
 export interface EngagementConsistencyInput {
   /** engagement type */
-  baseNode: Scalars['String'];
+  readonly baseNode: Scalars['String'];
 }
 
 export interface BudgetListInput {
   /** The number of items to return in a single page */
-  count?: Maybe<Scalars['Int']>;
+  readonly count?: Maybe<Scalars['Int']>;
   /** 1-indexed page number for offset pagination. */
-  page?: Maybe<Scalars['Int']>;
+  readonly page?: Maybe<Scalars['Int']>;
   /** The field in which to sort on */
-  sort?: Maybe<Scalars['String']>;
+  readonly sort?: Maybe<Scalars['String']>;
   /** The order in which to sort the list */
-  order?: Maybe<Order>;
-  filter?: Maybe<BudgetFilters>;
+  readonly order?: Maybe<Order>;
+  readonly filter?: Maybe<BudgetFilters>;
 }
 
 export interface BudgetFilters {
   /** Only budgets matching this projectId */
-  projectId?: Maybe<Scalars['ID']>;
+  readonly projectId?: Maybe<Scalars['ID']>;
 }
 
 export interface FavoriteListInput {
   /** The number of items to return in a single page */
-  count?: Maybe<Scalars['Int']>;
+  readonly count?: Maybe<Scalars['Int']>;
   /** 1-indexed page number for offset pagination. */
-  page?: Maybe<Scalars['Int']>;
+  readonly page?: Maybe<Scalars['Int']>;
   /** The field in which to sort on */
-  sort?: Maybe<Scalars['String']>;
+  readonly sort?: Maybe<Scalars['String']>;
   /** The order in which to sort the list */
-  order?: Maybe<Order>;
-  filter?: Maybe<FavoriteFilters>;
+  readonly order?: Maybe<Order>;
+  readonly filter?: Maybe<FavoriteFilters>;
 }
 
 export interface FavoriteFilters {
   /** Only items matching this node */
-  baseNode?: Maybe<BaseNode>;
+  readonly baseNode?: Maybe<BaseNode>;
 }
 
 export type BaseNode =
@@ -2785,13 +2785,13 @@ export type BaseNode =
 
 export interface SearchInput {
   /** The number of items to return in a single page */
-  count?: Maybe<Scalars['Int']>;
+  readonly count?: Maybe<Scalars['Int']>;
   /** 1-indexed page number for offset pagination. */
-  page?: Maybe<Scalars['Int']>;
+  readonly page?: Maybe<Scalars['Int']>;
   /** The search string to look for. */
-  query: Scalars['String'];
+  readonly query: Scalars['String'];
   /** Limit results to one of these types */
-  type?: Maybe<SearchType[]>;
+  readonly type?: Maybe<readonly SearchType[]>;
 }
 
 export type SearchType =
@@ -2808,102 +2808,102 @@ export type SearchType =
 
 export interface SongListInput {
   /** The number of items to return in a single page */
-  count?: Maybe<Scalars['Int']>;
+  readonly count?: Maybe<Scalars['Int']>;
   /** 1-indexed page number for offset pagination. */
-  page?: Maybe<Scalars['Int']>;
+  readonly page?: Maybe<Scalars['Int']>;
   /** The field in which to sort on */
-  sort?: Maybe<Scalars['String']>;
+  readonly sort?: Maybe<Scalars['String']>;
   /** The order in which to sort the list */
-  order?: Maybe<Order>;
-  filter?: Maybe<SongFilters>;
+  readonly order?: Maybe<Order>;
+  readonly filter?: Maybe<SongFilters>;
 }
 
 export interface SongFilters {
   /** Only songs matching this name */
-  name?: Maybe<Scalars['String']>;
+  readonly name?: Maybe<Scalars['String']>;
 }
 
 export interface Mutation {
-  __typename?: 'Mutation';
+  readonly __typename?: 'Mutation';
   /** Create a new permission between a security group and a base node */
-  createPermission: CreatePermissionOutput;
+  readonly createPermission: CreatePermissionOutput;
   /** Create a new security group */
-  createSecurityGroup: CreateSecurityGroupOutput;
+  readonly createSecurityGroup: CreateSecurityGroupOutput;
   /** Attach a user to a security group (without admin privileges) */
-  attachUserToSecurityGroup: Scalars['Boolean'];
+  readonly attachUserToSecurityGroup: Scalars['Boolean'];
   /** Add a property to a security group */
-  addPropertyToSecurityGroup: Scalars['Boolean'];
+  readonly addPropertyToSecurityGroup: Scalars['Boolean'];
   /** Remove a permission from a security group */
-  removePermissionFromSecurityGroup: Scalars['Boolean'];
+  readonly removePermissionFromSecurityGroup: Scalars['Boolean'];
   /** Remove a user from a security group */
-  removeUserFromSecurityGroup: Scalars['Boolean'];
+  readonly removeUserFromSecurityGroup: Scalars['Boolean'];
   /** Promote a user to become an admin of a security group */
-  promoteUserToAdminOfSecurityGroup: Scalars['Boolean'];
+  readonly promoteUserToAdminOfSecurityGroup: Scalars['Boolean'];
   /** Promote a user to become an admin of a base node */
-  promoteUserToAdminOfBaseNode: Scalars['Boolean'];
+  readonly promoteUserToAdminOfBaseNode: Scalars['Boolean'];
   /** Delete a security group */
-  deleteSecurityGroup: Scalars['Boolean'];
+  readonly deleteSecurityGroup: Scalars['Boolean'];
   /** Update a security group's name */
-  updateSecurityGroupName: UpdateSecurityGroupNameOutput;
+  readonly updateSecurityGroupName: UpdateSecurityGroupNameOutput;
   /** Create an organization */
-  createOrganization: CreateOrganizationOutput;
+  readonly createOrganization: CreateOrganizationOutput;
   /** Update an organization */
-  updateOrganization: UpdateOrganizationOutput;
+  readonly updateOrganization: UpdateOrganizationOutput;
   /** Delete an organization */
-  deleteOrganization: Scalars['Boolean'];
+  readonly deleteOrganization: Scalars['Boolean'];
   /** Create an education entry */
-  createEducation: CreateEducationOutput;
+  readonly createEducation: CreateEducationOutput;
   /** Update an education */
-  updateEducation: UpdateEducationOutput;
+  readonly updateEducation: UpdateEducationOutput;
   /** Delete an education */
-  deleteEducation: Scalars['Boolean'];
+  readonly deleteEducation: Scalars['Boolean'];
   /** Create an unavailability */
-  createUnavailability: CreateUnavailabilityOutput;
+  readonly createUnavailability: CreateUnavailabilityOutput;
   /** Update an unavailability */
-  updateUnavailability: UpdateUnavailabilityOutput;
+  readonly updateUnavailability: UpdateUnavailabilityOutput;
   /** Delete an unavailability */
-  deleteUnavailability: Scalars['Boolean'];
+  readonly deleteUnavailability: Scalars['Boolean'];
   /** Create a person */
-  createPerson: CreatePersonOutput;
+  readonly createPerson: CreatePersonOutput;
   /** Update a user */
-  updateUser: UpdateUserOutput;
+  readonly updateUser: UpdateUserOutput;
   /** Delete a user */
-  deleteUser: Scalars['Boolean'];
+  readonly deleteUser: Scalars['Boolean'];
   /** Assign organization OR primaryOrganization to user */
-  assignOrganizationToUser: Scalars['Boolean'];
+  readonly assignOrganizationToUser: Scalars['Boolean'];
   /** Remove organization OR primaryOrganization from user */
-  removeOrganizationFromUser: Scalars['Boolean'];
+  readonly removeOrganizationFromUser: Scalars['Boolean'];
   /** Login a user */
-  login: LoginOutput;
+  readonly login: LoginOutput;
   /** Logout a user */
-  logout: Scalars['Boolean'];
+  readonly logout: Scalars['Boolean'];
   /** Register a new user */
-  register: RegisterOutput;
+  readonly register: RegisterOutput;
   /** Change your password */
-  changePassword: Scalars['Boolean'];
+  readonly changePassword: Scalars['Boolean'];
   /** Forgot password; send password reset email */
-  forgotPassword: Scalars['Boolean'];
+  readonly forgotPassword: Scalars['Boolean'];
   /** Reset Password */
-  resetPassword: Scalars['Boolean'];
+  readonly resetPassword: Scalars['Boolean'];
   /** Create a zone */
-  createZone: CreateZoneOutput;
+  readonly createZone: CreateZoneOutput;
   /** Create a region */
-  createRegion: CreateRegionOutput;
+  readonly createRegion: CreateRegionOutput;
   /** Create a country */
-  createCountry: CreateCountryOutput;
+  readonly createCountry: CreateCountryOutput;
   /** Update a zone */
-  updateZone: UpdateZoneOutput;
+  readonly updateZone: UpdateZoneOutput;
   /** Update a region */
-  updateRegion: UpdateRegionOutput;
+  readonly updateRegion: UpdateRegionOutput;
   /** Update a country */
-  updateCountry: UpdateCountryOutput;
+  readonly updateCountry: UpdateCountryOutput;
   /** Delete a location */
-  deleteLocation: Scalars['Boolean'];
-  createDirectory: Directory;
+  readonly deleteLocation: Scalars['Boolean'];
+  readonly createDirectory: Directory;
   /** Delete a file or directory */
-  deleteFileNode: Scalars['Boolean'];
+  readonly deleteFileNode: Scalars['Boolean'];
   /** Start the file upload process by requesting an upload */
-  requestFileUpload: RequestUploadOutput;
+  readonly requestFileUpload: RequestUploadOutput;
   /**
    * Create a new file version.
    * This is always the second step after `requestFileUpload` mutation.
@@ -2911,121 +2911,121 @@ export interface Mutation {
    * If the given parent is a directory, this will attach the new version to
    * the existing file with the same name or create a new file if not found.
    */
-  createFileVersion: File;
+  readonly createFileVersion: File;
   /** Rename a file or directory */
-  renameFileNode: FileNode;
+  readonly renameFileNode: FileNode;
   /** Move a file or directory */
-  moveFileNode: FileNode;
+  readonly moveFileNode: FileNode;
   /** Update a ceremony */
-  updateCeremony: UpdateCeremonyOutput;
+  readonly updateCeremony: UpdateCeremonyOutput;
   /** Create a project member */
-  createProjectMember: CreateProjectMemberOutput;
+  readonly createProjectMember: CreateProjectMemberOutput;
   /** Update a project member */
-  updateProjectMember: UpdateProjectMemberOutput;
+  readonly updateProjectMember: UpdateProjectMemberOutput;
   /** Delete a project member */
-  deleteProjectMember: Scalars['Boolean'];
+  readonly deleteProjectMember: Scalars['Boolean'];
   /** Create a Partnership entry */
-  createPartnership: CreatePartnershipOutput;
+  readonly createPartnership: CreatePartnershipOutput;
   /** Update a Partnership */
-  updatePartnership: UpdatePartnershipOutput;
+  readonly updatePartnership: UpdatePartnershipOutput;
   /** Delete a Partnership */
-  deletePartnership: Scalars['Boolean'];
+  readonly deletePartnership: Scalars['Boolean'];
   /** Create a project */
-  createProject: CreateProjectOutput;
+  readonly createProject: CreateProjectOutput;
   /** Update a project */
-  updateProject: UpdateProjectOutput;
+  readonly updateProject: UpdateProjectOutput;
   /** Delete a project */
-  deleteProject: Scalars['Boolean'];
+  readonly deleteProject: Scalars['Boolean'];
   /** Create a language */
-  createLanguage: CreateLanguageOutput;
+  readonly createLanguage: CreateLanguageOutput;
   /** Update a language */
-  updateLanguage: UpdateLanguageOutput;
+  readonly updateLanguage: UpdateLanguageOutput;
   /** Delete a language */
-  deleteLanguage: Scalars['Boolean'];
+  readonly deleteLanguage: Scalars['Boolean'];
   /** Add a location to a language */
-  addLocationToLanguage: Language;
+  readonly addLocationToLanguage: Language;
   /** Remove a location from a language */
-  removeLocationFromLanguage: Language;
+  readonly removeLocationFromLanguage: Language;
   /** Create a film */
-  createFilm: CreateFilmOutput;
+  readonly createFilm: CreateFilmOutput;
   /** Update a film */
-  updateFilm: UpdateFilmOutput;
+  readonly updateFilm: UpdateFilmOutput;
   /** Delete a film */
-  deleteFilm: Scalars['Boolean'];
+  readonly deleteFilm: Scalars['Boolean'];
   /** Create a literacy material */
-  createLiteracyMaterial: CreateLiteracyMaterialOutput;
+  readonly createLiteracyMaterial: CreateLiteracyMaterialOutput;
   /** Update a literacy material */
-  updateLiteracyMaterial: UpdateLiteracyMaterialOutput;
+  readonly updateLiteracyMaterial: UpdateLiteracyMaterialOutput;
   /** Delete a literacy material */
-  deleteLiteracyMaterial: Scalars['Boolean'];
+  readonly deleteLiteracyMaterial: Scalars['Boolean'];
   /** Create a story */
-  createStory: CreateStoryOutput;
+  readonly createStory: CreateStoryOutput;
   /** Update a story */
-  updateStory: UpdateStoryOutput;
+  readonly updateStory: UpdateStoryOutput;
   /** Delete a story */
-  deleteStory: Scalars['Boolean'];
+  readonly deleteStory: Scalars['Boolean'];
   /** Create a product entry */
-  createProduct: CreateProductOutput;
+  readonly createProduct: CreateProductOutput;
   /** Update a product entry */
-  updateProduct: UpdateProductOutput;
+  readonly updateProduct: UpdateProductOutput;
   /** Delete a product entry */
-  deleteProduct: Scalars['Boolean'];
+  readonly deleteProduct: Scalars['Boolean'];
   /** Create a language engagement */
-  createLanguageEngagement: CreateLanguageEngagementOutput;
+  readonly createLanguageEngagement: CreateLanguageEngagementOutput;
   /** Create an internship engagement */
-  createInternshipEngagement: CreateInternshipEngagementOutput;
+  readonly createInternshipEngagement: CreateInternshipEngagementOutput;
   /** Update a language engagement */
-  updateLanguageEngagement: UpdateLanguageEngagementOutput;
+  readonly updateLanguageEngagement: UpdateLanguageEngagementOutput;
   /** Update an internship engagement */
-  updateInternshipEngagement: UpdateInternshipEngagementOutput;
+  readonly updateInternshipEngagement: UpdateInternshipEngagementOutput;
   /** Delete an engagement */
-  deleteEngagement: Scalars['Boolean'];
+  readonly deleteEngagement: Scalars['Boolean'];
   /** Update a budgetRecord */
-  updateBudgetRecord: UpdateBudgetRecordOutput;
+  readonly updateBudgetRecord: UpdateBudgetRecordOutput;
   /** Create a budget */
-  createBudget: CreateBudgetOutput;
+  readonly createBudget: CreateBudgetOutput;
   /** Update a budget */
-  updateBudget: UpdateBudgetOutput;
+  readonly updateBudget: UpdateBudgetOutput;
   /** Delete an budget */
-  deleteBudget: Scalars['Boolean'];
+  readonly deleteBudget: Scalars['Boolean'];
   /** add an favorite */
-  addFavorite: Scalars['String'];
+  readonly addFavorite: Scalars['String'];
   /** Delete an favorite */
-  removeFavorite: Scalars['Boolean'];
+  readonly removeFavorite: Scalars['Boolean'];
   /** Create a song */
-  createSong: CreateSongOutput;
+  readonly createSong: CreateSongOutput;
   /** Update a song */
-  updateSong: UpdateSongOutput;
+  readonly updateSong: UpdateSongOutput;
   /** Delete a song */
-  deleteSong: Scalars['Boolean'];
+  readonly deleteSong: Scalars['Boolean'];
   /** Create an Workflow */
-  createWorkflow: CreateWorkflowOutput;
+  readonly createWorkflow: CreateWorkflowOutput;
   /** Delete an Workflow */
-  deleteWorkflow: Scalars['Boolean'];
+  readonly deleteWorkflow: Scalars['Boolean'];
   /** Add a State to a Workflow */
-  addState: AddStateOutput;
+  readonly addState: AddStateOutput;
   /** Update a State */
-  updateState: AddStateOutput;
+  readonly updateState: AddStateOutput;
   /** Delete an State from Workflow */
-  deleteState: Scalars['Boolean'];
+  readonly deleteState: Scalars['Boolean'];
   /** Attach securitygroup to state */
-  attachSecurityGroup: Scalars['Boolean'];
+  readonly attachSecurityGroup: Scalars['Boolean'];
   /** Remove security group from state */
-  removeSecurityGroup: Scalars['Boolean'];
+  readonly removeSecurityGroup: Scalars['Boolean'];
   /** Attach notification group to state */
-  attachNotificationGroup: Scalars['Boolean'];
+  readonly attachNotificationGroup: Scalars['Boolean'];
   /** Remove notification group to state */
-  removeNotificationGroup: Scalars['Boolean'];
+  readonly removeNotificationGroup: Scalars['Boolean'];
   /** Change current statee in workflow */
-  changeCurrentState: Scalars['Boolean'];
+  readonly changeCurrentState: Scalars['Boolean'];
   /** Add possible state to a state */
-  addPossibleState: Scalars['Boolean'];
+  readonly addPossibleState: Scalars['Boolean'];
   /** Remove possible state to a state */
-  removePossibleState: Scalars['Boolean'];
+  readonly removePossibleState: Scalars['Boolean'];
   /** Add a required field to a state */
-  addRequiredField: Scalars['Boolean'];
+  readonly addRequiredField: Scalars['Boolean'];
   /** Remove a required field from state */
-  removeRequiredField: Scalars['Boolean'];
+  readonly removeRequiredField: Scalars['Boolean'];
 }
 
 export interface MutationCreatePermissionArgs {
@@ -3416,115 +3416,115 @@ export interface MutationRemoveRequiredFieldArgs {
 }
 
 export interface CreatePermissionInput {
-  request: CreatePermission;
+  readonly request: CreatePermission;
 }
 
 export interface CreatePermission {
-  sgId: Scalars['ID'];
-  baseNodeId: Scalars['ID'];
-  propertyName: Scalars['String'];
-  read: Scalars['Boolean'];
-  write: Scalars['Boolean'];
+  readonly sgId: Scalars['ID'];
+  readonly baseNodeId: Scalars['ID'];
+  readonly propertyName: Scalars['String'];
+  readonly read: Scalars['Boolean'];
+  readonly write: Scalars['Boolean'];
 }
 
 export interface CreateSecurityGroupInput {
-  request: CreateSecurityGroup;
+  readonly request: CreateSecurityGroup;
 }
 
 export interface CreateSecurityGroup {
-  name: Scalars['String'];
+  readonly name: Scalars['String'];
 }
 
 export interface AttachUserToSecurityGroupInput {
-  request: AttachUserToSecurityGroup;
+  readonly request: AttachUserToSecurityGroup;
 }
 
 export interface AttachUserToSecurityGroup {
-  sgId: Scalars['ID'];
-  userId: Scalars['ID'];
+  readonly sgId: Scalars['ID'];
+  readonly userId: Scalars['ID'];
 }
 
 export interface AddPropertyToSecurityGroupInput {
-  request: AddPropertyToSecurityGroup;
+  readonly request: AddPropertyToSecurityGroup;
 }
 
 export interface AddPropertyToSecurityGroup {
-  sgId: Scalars['ID'];
-  property: Scalars['String'];
+  readonly sgId: Scalars['ID'];
+  readonly property: Scalars['String'];
 }
 
 export interface RemovePermissionFromSecurityGroupInput {
-  request: RemovePermissionFromSecurityGroup;
+  readonly request: RemovePermissionFromSecurityGroup;
 }
 
 export interface RemovePermissionFromSecurityGroup {
-  id: Scalars['ID'];
-  sgId: Scalars['ID'];
-  baseNodeId: Scalars['ID'];
+  readonly id: Scalars['ID'];
+  readonly sgId: Scalars['ID'];
+  readonly baseNodeId: Scalars['ID'];
 }
 
 export interface RemoveUserFromSecurityGroupInput {
-  request: RemoveUserFromSecurityGroup;
+  readonly request: RemoveUserFromSecurityGroup;
 }
 
 export interface RemoveUserFromSecurityGroup {
-  sgId: Scalars['ID'];
-  userId: Scalars['ID'];
+  readonly sgId: Scalars['ID'];
+  readonly userId: Scalars['ID'];
 }
 
 export interface PromoteUserToAdminOfSecurityGroupInput {
-  request: PromoteUserToAdminOfSecurityGroup;
+  readonly request: PromoteUserToAdminOfSecurityGroup;
 }
 
 export interface PromoteUserToAdminOfSecurityGroup {
-  sgId: Scalars['ID'];
-  userId: Scalars['ID'];
+  readonly sgId: Scalars['ID'];
+  readonly userId: Scalars['ID'];
 }
 
 export interface PromoteUserToAdminOfBaseNodeInput {
-  request: PromoteUserToAdminOfBaseNode;
+  readonly request: PromoteUserToAdminOfBaseNode;
 }
 
 export interface PromoteUserToAdminOfBaseNode {
-  baseNodeId: Scalars['ID'];
-  userId: Scalars['ID'];
+  readonly baseNodeId: Scalars['ID'];
+  readonly userId: Scalars['ID'];
 }
 
 export interface UpdateSecurityGroupNameInput {
-  request: UpdateSecurityGroupName;
+  readonly request: UpdateSecurityGroupName;
 }
 
 export interface UpdateSecurityGroupName {
-  id: Scalars['ID'];
-  name: Scalars['String'];
+  readonly id: Scalars['ID'];
+  readonly name: Scalars['String'];
 }
 
 export interface CreateOrganizationInput {
-  organization: CreateOrganization;
+  readonly organization: CreateOrganization;
 }
 
 export interface CreateOrganization {
-  name: Scalars['String'];
+  readonly name: Scalars['String'];
 }
 
 export interface UpdateOrganizationInput {
-  organization: UpdateOrganization;
+  readonly organization: UpdateOrganization;
 }
 
 export interface UpdateOrganization {
-  id: Scalars['ID'];
-  name?: Maybe<Scalars['String']>;
+  readonly id: Scalars['ID'];
+  readonly name?: Maybe<Scalars['String']>;
 }
 
 export interface CreateEducationInput {
-  education: CreateEducation;
+  readonly education: CreateEducation;
 }
 
 export interface CreateEducation {
-  userId: Scalars['ID'];
-  degree: Degree;
-  major: Scalars['String'];
-  institution: Scalars['String'];
+  readonly userId: Scalars['ID'];
+  readonly degree: Degree;
+  readonly major: Scalars['String'];
+  readonly institution: Scalars['String'];
 }
 
 export type Degree =
@@ -3536,456 +3536,456 @@ export type Degree =
   | 'Doctorate';
 
 export interface UpdateEducationInput {
-  education: UpdateEducation;
+  readonly education: UpdateEducation;
 }
 
 export interface UpdateEducation {
-  id: Scalars['ID'];
-  degree?: Maybe<Degree>;
-  major?: Maybe<Scalars['String']>;
-  institution?: Maybe<Scalars['String']>;
+  readonly id: Scalars['ID'];
+  readonly degree?: Maybe<Degree>;
+  readonly major?: Maybe<Scalars['String']>;
+  readonly institution?: Maybe<Scalars['String']>;
 }
 
 export interface CreateUnavailabilityInput {
-  unavailability: CreateUnavailability;
+  readonly unavailability: CreateUnavailability;
 }
 
 export interface CreateUnavailability {
-  userId: Scalars['ID'];
-  description: Scalars['String'];
-  start: Scalars['DateTime'];
-  end: Scalars['DateTime'];
+  readonly userId: Scalars['ID'];
+  readonly description: Scalars['String'];
+  readonly start: Scalars['DateTime'];
+  readonly end: Scalars['DateTime'];
 }
 
 export interface UpdateUnavailabilityInput {
-  unavailability: UpdateUnavailability;
+  readonly unavailability: UpdateUnavailability;
 }
 
 export interface UpdateUnavailability {
-  id: Scalars['ID'];
-  description?: Maybe<Scalars['String']>;
-  start?: Maybe<Scalars['DateTime']>;
-  end?: Maybe<Scalars['DateTime']>;
+  readonly id: Scalars['ID'];
+  readonly description?: Maybe<Scalars['String']>;
+  readonly start?: Maybe<Scalars['DateTime']>;
+  readonly end?: Maybe<Scalars['DateTime']>;
 }
 
 export interface CreatePersonInput {
-  person: CreatePerson;
+  readonly person: CreatePerson;
 }
 
 export interface CreatePerson {
-  email: Scalars['String'];
-  realFirstName: Scalars['String'];
-  realLastName: Scalars['String'];
-  displayFirstName: Scalars['String'];
-  displayLastName: Scalars['String'];
-  phone?: Maybe<Scalars['String']>;
-  timezone?: Maybe<Scalars['String']>;
-  bio?: Maybe<Scalars['String']>;
-  status?: Maybe<UserStatus>;
+  readonly email: Scalars['String'];
+  readonly realFirstName: Scalars['String'];
+  readonly realLastName: Scalars['String'];
+  readonly displayFirstName: Scalars['String'];
+  readonly displayLastName: Scalars['String'];
+  readonly phone?: Maybe<Scalars['String']>;
+  readonly timezone?: Maybe<Scalars['String']>;
+  readonly bio?: Maybe<Scalars['String']>;
+  readonly status?: Maybe<UserStatus>;
 }
 
 export interface UpdateUserInput {
-  user: UpdateUser;
+  readonly user: UpdateUser;
 }
 
 export interface UpdateUser {
-  id: Scalars['ID'];
-  email?: Maybe<Scalars['String']>;
-  realFirstName?: Maybe<Scalars['String']>;
-  realLastName?: Maybe<Scalars['String']>;
-  displayFirstName?: Maybe<Scalars['String']>;
-  displayLastName?: Maybe<Scalars['String']>;
-  phone?: Maybe<Scalars['String']>;
-  timezone?: Maybe<Scalars['String']>;
-  bio?: Maybe<Scalars['String']>;
-  status?: Maybe<UserStatus>;
+  readonly id: Scalars['ID'];
+  readonly email?: Maybe<Scalars['String']>;
+  readonly realFirstName?: Maybe<Scalars['String']>;
+  readonly realLastName?: Maybe<Scalars['String']>;
+  readonly displayFirstName?: Maybe<Scalars['String']>;
+  readonly displayLastName?: Maybe<Scalars['String']>;
+  readonly phone?: Maybe<Scalars['String']>;
+  readonly timezone?: Maybe<Scalars['String']>;
+  readonly bio?: Maybe<Scalars['String']>;
+  readonly status?: Maybe<UserStatus>;
 }
 
 export interface AssignOrganizationToUserInput {
-  request: AssignOrganizationToUser;
+  readonly request: AssignOrganizationToUser;
 }
 
 export interface AssignOrganizationToUser {
-  orgId: Scalars['ID'];
-  userId: Scalars['ID'];
-  primary?: Maybe<Scalars['Boolean']>;
+  readonly orgId: Scalars['ID'];
+  readonly userId: Scalars['ID'];
+  readonly primary?: Maybe<Scalars['Boolean']>;
 }
 
 export interface RemoveOrganizationFromUserInput {
-  request: RemoveOrganizationFromUser;
+  readonly request: RemoveOrganizationFromUser;
 }
 
 export interface RemoveOrganizationFromUser {
-  orgId: Scalars['ID'];
-  userId: Scalars['ID'];
+  readonly orgId: Scalars['ID'];
+  readonly userId: Scalars['ID'];
 }
 
 export interface LoginInput {
-  email: Scalars['String'];
-  password: Scalars['String'];
+  readonly email: Scalars['String'];
+  readonly password: Scalars['String'];
 }
 
 export interface RegisterInput {
-  email: Scalars['String'];
-  realFirstName: Scalars['String'];
-  realLastName: Scalars['String'];
-  displayFirstName: Scalars['String'];
-  displayLastName: Scalars['String'];
-  phone?: Maybe<Scalars['String']>;
-  timezone?: Maybe<Scalars['String']>;
-  bio?: Maybe<Scalars['String']>;
-  status?: Maybe<UserStatus>;
-  password: Scalars['String'];
+  readonly email: Scalars['String'];
+  readonly realFirstName: Scalars['String'];
+  readonly realLastName: Scalars['String'];
+  readonly displayFirstName: Scalars['String'];
+  readonly displayLastName: Scalars['String'];
+  readonly phone?: Maybe<Scalars['String']>;
+  readonly timezone?: Maybe<Scalars['String']>;
+  readonly bio?: Maybe<Scalars['String']>;
+  readonly status?: Maybe<UserStatus>;
+  readonly password: Scalars['String'];
 }
 
 export interface ResetPasswordInput {
-  token: Scalars['String'];
-  password: Scalars['String'];
+  readonly token: Scalars['String'];
+  readonly password: Scalars['String'];
 }
 
 export interface CreateZoneInput {
-  zone: CreateZone;
+  readonly zone: CreateZone;
 }
 
 export interface CreateZone {
-  name: Scalars['String'];
+  readonly name: Scalars['String'];
   /** A user ID that will be the director of the zone */
-  directorId: Scalars['ID'];
+  readonly directorId: Scalars['ID'];
 }
 
 export interface CreateRegionInput {
-  region: CreateRegion;
+  readonly region: CreateRegion;
 }
 
 export interface CreateRegion {
-  name: Scalars['String'];
+  readonly name: Scalars['String'];
   /** The zone ID that the region will be associated with */
-  zoneId: Scalars['ID'];
+  readonly zoneId: Scalars['ID'];
   /** A user ID that will be the director of the region */
-  directorId: Scalars['ID'];
+  readonly directorId: Scalars['ID'];
 }
 
 export interface CreateCountryInput {
-  country: CreateCountry;
+  readonly country: CreateCountry;
 }
 
 export interface CreateCountry {
-  name: Scalars['String'];
-  regionId: Scalars['ID'];
+  readonly name: Scalars['String'];
+  readonly regionId: Scalars['ID'];
 }
 
 export interface UpdateZoneInput {
-  zone: UpdateZone;
+  readonly zone: UpdateZone;
 }
 
 export interface UpdateZone {
-  id: Scalars['ID'];
-  name?: Maybe<Scalars['String']>;
+  readonly id: Scalars['ID'];
+  readonly name?: Maybe<Scalars['String']>;
   /** A user ID that will be the new director of the zone */
-  directorId?: Maybe<Scalars['ID']>;
+  readonly directorId?: Maybe<Scalars['ID']>;
 }
 
 export interface UpdateRegionInput {
-  region: UpdateRegion;
+  readonly region: UpdateRegion;
 }
 
 export interface UpdateRegion {
-  id: Scalars['ID'];
-  name?: Maybe<Scalars['String']>;
+  readonly id: Scalars['ID'];
+  readonly name?: Maybe<Scalars['String']>;
   /** The zone ID that the region will be associated with */
-  zoneId?: Maybe<Scalars['ID']>;
+  readonly zoneId?: Maybe<Scalars['ID']>;
   /** A user ID that will be the director of the region */
-  directorId?: Maybe<Scalars['ID']>;
+  readonly directorId?: Maybe<Scalars['ID']>;
 }
 
 export interface UpdateCountryInput {
-  country: UpdateCountry;
+  readonly country: UpdateCountry;
 }
 
 export interface UpdateCountry {
-  id: Scalars['ID'];
-  name?: Maybe<Scalars['String']>;
-  regionId?: Maybe<Scalars['ID']>;
+  readonly id: Scalars['ID'];
+  readonly name?: Maybe<Scalars['String']>;
+  readonly regionId?: Maybe<Scalars['ID']>;
 }
 
 export interface CreateDirectoryInput {
   /** The ID for the parent directory */
-  parentId: Scalars['ID'];
+  readonly parentId: Scalars['ID'];
   /** The directory name */
-  name: Scalars['String'];
+  readonly name: Scalars['String'];
 }
 
 export interface CreateFileVersionInput {
   /** The ID returned from the `requestFileUpload` mutation */
-  uploadId: Scalars['ID'];
+  readonly uploadId: Scalars['ID'];
   /** The directory ID if creating a new file or the file ID if creating a new version */
-  parentId: Scalars['ID'];
+  readonly parentId: Scalars['ID'];
   /** The file name */
-  name: Scalars['String'];
+  readonly name: Scalars['String'];
 }
 
 export interface RenameFileInput {
   /** The file node's ID */
-  id: Scalars['ID'];
+  readonly id: Scalars['ID'];
   /** The new name */
-  name: Scalars['String'];
+  readonly name: Scalars['String'];
 }
 
 export interface MoveFileInput {
   /** The file or directory's ID */
-  id: Scalars['ID'];
+  readonly id: Scalars['ID'];
   /** The new parent ID */
-  parentId: Scalars['ID'];
+  readonly parentId: Scalars['ID'];
   /**
    * Optionally change the name as well.
    * Could be helpful for if the destination has a node with the same name.
    */
-  name?: Maybe<Scalars['String']>;
+  readonly name?: Maybe<Scalars['String']>;
 }
 
 export interface UpdateCeremonyInput {
-  ceremony: UpdateCeremony;
+  readonly ceremony: UpdateCeremony;
 }
 
 export interface UpdateCeremony {
-  id: Scalars['ID'];
-  planned?: Maybe<Scalars['Boolean']>;
-  estimatedDate?: Maybe<Scalars['Date']>;
-  actualDate?: Maybe<Scalars['Date']>;
+  readonly id: Scalars['ID'];
+  readonly planned?: Maybe<Scalars['Boolean']>;
+  readonly estimatedDate?: Maybe<Scalars['Date']>;
+  readonly actualDate?: Maybe<Scalars['Date']>;
 }
 
 export interface CreateProjectMemberInput {
-  projectMember: CreateProjectMember;
+  readonly projectMember: CreateProjectMember;
 }
 
 export interface CreateProjectMember {
   /** A user ID */
-  userId: Scalars['ID'];
+  readonly userId: Scalars['ID'];
   /** A project ID */
-  projectId: Scalars['ID'];
-  roles?: Maybe<Role[]>;
+  readonly projectId: Scalars['ID'];
+  readonly roles?: Maybe<readonly Role[]>;
 }
 
 export interface UpdateProjectMemberInput {
-  projectMember: UpdateProjectMember;
+  readonly projectMember: UpdateProjectMember;
 }
 
 export interface UpdateProjectMember {
-  id: Scalars['ID'];
-  roles?: Maybe<Role[]>;
+  readonly id: Scalars['ID'];
+  readonly roles?: Maybe<readonly Role[]>;
 }
 
 export interface CreatePartnershipInput {
-  partnership: CreatePartnership;
+  readonly partnership: CreatePartnership;
 }
 
 export interface CreatePartnership {
-  organizationId: Scalars['ID'];
-  projectId: Scalars['ID'];
-  agreementStatus?: Maybe<PartnershipAgreementStatus>;
+  readonly organizationId: Scalars['ID'];
+  readonly projectId: Scalars['ID'];
+  readonly agreementStatus?: Maybe<PartnershipAgreementStatus>;
   /** The partner agreement */
-  agreement?: Maybe<CreateDefinedFileVersionInput>;
+  readonly agreement?: Maybe<CreateDefinedFileVersionInput>;
   /** The MOU agreement */
-  mou?: Maybe<CreateDefinedFileVersionInput>;
-  mouStatus?: Maybe<PartnershipAgreementStatus>;
-  mouStartOverride?: Maybe<Scalars['Date']>;
-  mouEndOverride?: Maybe<Scalars['Date']>;
-  types?: Maybe<PartnershipType[]>;
+  readonly mou?: Maybe<CreateDefinedFileVersionInput>;
+  readonly mouStatus?: Maybe<PartnershipAgreementStatus>;
+  readonly mouStartOverride?: Maybe<Scalars['Date']>;
+  readonly mouEndOverride?: Maybe<Scalars['Date']>;
+  readonly types?: Maybe<readonly PartnershipType[]>;
 }
 
 export interface CreateDefinedFileVersionInput {
   /** The ID returned from the `requestFileUpload` mutation */
-  uploadId: Scalars['ID'];
+  readonly uploadId: Scalars['ID'];
   /** An optional name. Defaults to file name. */
-  name: Scalars['String'];
+  readonly name: Scalars['String'];
 }
 
 export interface UpdatePartnershipInput {
-  partnership: UpdatePartnership;
+  readonly partnership: UpdatePartnership;
 }
 
 export interface UpdatePartnership {
-  id: Scalars['ID'];
-  agreementStatus?: Maybe<PartnershipAgreementStatus>;
+  readonly id: Scalars['ID'];
+  readonly agreementStatus?: Maybe<PartnershipAgreementStatus>;
   /** The partner agreement */
-  agreement?: Maybe<CreateDefinedFileVersionInput>;
+  readonly agreement?: Maybe<CreateDefinedFileVersionInput>;
   /** The MOU agreement */
-  mou?: Maybe<CreateDefinedFileVersionInput>;
-  mouStatus?: Maybe<PartnershipAgreementStatus>;
-  mouStartOverride?: Maybe<Scalars['Date']>;
-  mouEndOverride?: Maybe<Scalars['Date']>;
-  types?: Maybe<PartnershipType[]>;
+  readonly mou?: Maybe<CreateDefinedFileVersionInput>;
+  readonly mouStatus?: Maybe<PartnershipAgreementStatus>;
+  readonly mouStartOverride?: Maybe<Scalars['Date']>;
+  readonly mouEndOverride?: Maybe<Scalars['Date']>;
+  readonly types?: Maybe<readonly PartnershipType[]>;
 }
 
 export interface CreateProjectInput {
-  project: CreateProject;
+  readonly project: CreateProject;
 }
 
 export interface CreateProject {
-  name: Scalars['String'];
-  type: ProjectType;
+  readonly name: Scalars['String'];
+  readonly type: ProjectType;
   /** A country ID */
-  locationId?: Maybe<Scalars['ID']>;
-  mouStart?: Maybe<Scalars['Date']>;
-  mouEnd?: Maybe<Scalars['Date']>;
-  estimatedSubmission?: Maybe<Scalars['Date']>;
+  readonly locationId?: Maybe<Scalars['ID']>;
+  readonly mouStart?: Maybe<Scalars['Date']>;
+  readonly mouEnd?: Maybe<Scalars['Date']>;
+  readonly estimatedSubmission?: Maybe<Scalars['Date']>;
 }
 
 export interface UpdateProjectInput {
-  project: UpdateProject;
+  readonly project: UpdateProject;
 }
 
 export interface UpdateProject {
-  id: Scalars['ID'];
-  name?: Maybe<Scalars['String']>;
+  readonly id: Scalars['ID'];
+  readonly name?: Maybe<Scalars['String']>;
   /** A country ID */
-  locationId?: Maybe<Scalars['ID']>;
-  mouStart?: Maybe<Scalars['Date']>;
-  mouEnd?: Maybe<Scalars['Date']>;
-  estimatedSubmission?: Maybe<Scalars['Date']>;
+  readonly locationId?: Maybe<Scalars['ID']>;
+  readonly mouStart?: Maybe<Scalars['Date']>;
+  readonly mouEnd?: Maybe<Scalars['Date']>;
+  readonly estimatedSubmission?: Maybe<Scalars['Date']>;
 }
 
 export interface CreateLanguageInput {
-  language: CreateLanguage;
+  readonly language: CreateLanguage;
 }
 
 export interface CreateLanguage {
-  name: Scalars['String'];
-  displayName: Scalars['String'];
-  displayNamePronunciation?: Maybe<Scalars['String']>;
-  isDialect?: Maybe<Scalars['Boolean']>;
-  ethnologue?: Maybe<CreateEthnologueLanguage>;
-  populationOverride?: Maybe<Scalars['Int']>;
-  registryOfDialectsCode?: Maybe<Scalars['String']>;
-  leastOfThese?: Maybe<Scalars['Boolean']>;
-  leastOfTheseReason?: Maybe<Scalars['String']>;
+  readonly name: Scalars['String'];
+  readonly displayName: Scalars['String'];
+  readonly displayNamePronunciation?: Maybe<Scalars['String']>;
+  readonly isDialect?: Maybe<Scalars['Boolean']>;
+  readonly ethnologue?: Maybe<CreateEthnologueLanguage>;
+  readonly populationOverride?: Maybe<Scalars['Int']>;
+  readonly registryOfDialectsCode?: Maybe<Scalars['String']>;
+  readonly leastOfThese?: Maybe<Scalars['Boolean']>;
+  readonly leastOfTheseReason?: Maybe<Scalars['String']>;
 }
 
 export interface CreateEthnologueLanguage {
-  id?: Maybe<Scalars['String']>;
-  code?: Maybe<Scalars['String']>;
-  provisionalCode?: Maybe<Scalars['String']>;
-  name?: Maybe<Scalars['String']>;
-  population?: Maybe<Scalars['Int']>;
+  readonly id?: Maybe<Scalars['String']>;
+  readonly code?: Maybe<Scalars['String']>;
+  readonly provisionalCode?: Maybe<Scalars['String']>;
+  readonly name?: Maybe<Scalars['String']>;
+  readonly population?: Maybe<Scalars['Int']>;
 }
 
 export interface UpdateLanguageInput {
-  language: UpdateLanguage;
+  readonly language: UpdateLanguage;
 }
 
 export interface UpdateLanguage {
-  id: Scalars['ID'];
-  name?: Maybe<Scalars['String']>;
-  displayName?: Maybe<Scalars['String']>;
-  displayNamePronunciation?: Maybe<Scalars['String']>;
-  isDialect?: Maybe<Scalars['Boolean']>;
-  ethnologue?: Maybe<UpdateEthnologueLanguage>;
-  populationOverride?: Maybe<Scalars['Int']>;
-  registryOfDialectsCode?: Maybe<Scalars['String']>;
-  leastOfThese?: Maybe<Scalars['Boolean']>;
-  leastOfTheseReason?: Maybe<Scalars['String']>;
+  readonly id: Scalars['ID'];
+  readonly name?: Maybe<Scalars['String']>;
+  readonly displayName?: Maybe<Scalars['String']>;
+  readonly displayNamePronunciation?: Maybe<Scalars['String']>;
+  readonly isDialect?: Maybe<Scalars['Boolean']>;
+  readonly ethnologue?: Maybe<UpdateEthnologueLanguage>;
+  readonly populationOverride?: Maybe<Scalars['Int']>;
+  readonly registryOfDialectsCode?: Maybe<Scalars['String']>;
+  readonly leastOfThese?: Maybe<Scalars['Boolean']>;
+  readonly leastOfTheseReason?: Maybe<Scalars['String']>;
 }
 
 export interface UpdateEthnologueLanguage {
-  id?: Maybe<Scalars['String']>;
-  code?: Maybe<Scalars['String']>;
-  provisionalCode?: Maybe<Scalars['String']>;
-  name?: Maybe<Scalars['String']>;
-  population?: Maybe<Scalars['Int']>;
+  readonly id?: Maybe<Scalars['String']>;
+  readonly code?: Maybe<Scalars['String']>;
+  readonly provisionalCode?: Maybe<Scalars['String']>;
+  readonly name?: Maybe<Scalars['String']>;
+  readonly population?: Maybe<Scalars['Int']>;
 }
 
 export interface CreateFilmInput {
-  film: CreateFilm;
+  readonly film: CreateFilm;
 }
 
 export interface CreateFilm {
-  name: Scalars['String'];
-  scriptureReferences?: Maybe<ScriptureRangeInput[]>;
+  readonly name: Scalars['String'];
+  readonly scriptureReferences?: Maybe<readonly ScriptureRangeInput[]>;
 }
 
 export interface ScriptureRangeInput {
   /** The starting verse */
-  start: ScriptureReferenceInput;
+  readonly start: ScriptureReferenceInput;
   /** The ending verse */
-  end: ScriptureReferenceInput;
+  readonly end: ScriptureReferenceInput;
 }
 
 /** A reference to a scripture verse */
 export interface ScriptureReferenceInput {
   /** The code of the Bible book */
-  book: Scalars['String'];
+  readonly book: Scalars['String'];
   /** The chapter number */
-  chapter: Scalars['Int'];
+  readonly chapter: Scalars['Int'];
   /** The verse number */
-  verse: Scalars['Int'];
+  readonly verse: Scalars['Int'];
 }
 
 export interface UpdateFilmInput {
-  film: UpdateFilm;
+  readonly film: UpdateFilm;
 }
 
 export interface UpdateFilm {
-  id: Scalars['ID'];
-  name?: Maybe<Scalars['String']>;
-  scriptureReferences?: Maybe<ScriptureRangeInput[]>;
+  readonly id: Scalars['ID'];
+  readonly name?: Maybe<Scalars['String']>;
+  readonly scriptureReferences?: Maybe<readonly ScriptureRangeInput[]>;
 }
 
 export interface CreateLiteracyMaterialInput {
-  literacyMaterial: CreateLiteracyMaterial;
+  readonly literacyMaterial: CreateLiteracyMaterial;
 }
 
 export interface CreateLiteracyMaterial {
-  name: Scalars['String'];
-  scriptureReferences?: Maybe<ScriptureRangeInput[]>;
+  readonly name: Scalars['String'];
+  readonly scriptureReferences?: Maybe<readonly ScriptureRangeInput[]>;
 }
 
 export interface UpdateLiteracyMaterialInput {
-  literacyMaterial: UpdateLiteracyMaterial;
+  readonly literacyMaterial: UpdateLiteracyMaterial;
 }
 
 export interface UpdateLiteracyMaterial {
-  id: Scalars['ID'];
-  name?: Maybe<Scalars['String']>;
-  scriptureReferences?: Maybe<ScriptureRangeInput[]>;
+  readonly id: Scalars['ID'];
+  readonly name?: Maybe<Scalars['String']>;
+  readonly scriptureReferences?: Maybe<readonly ScriptureRangeInput[]>;
 }
 
 export interface CreateStoryInput {
-  story: CreateStory;
+  readonly story: CreateStory;
 }
 
 export interface CreateStory {
-  name: Scalars['String'];
-  scriptureReferences?: Maybe<ScriptureRangeInput[]>;
+  readonly name: Scalars['String'];
+  readonly scriptureReferences?: Maybe<readonly ScriptureRangeInput[]>;
 }
 
 export interface UpdateStoryInput {
-  story: UpdateStory;
+  readonly story: UpdateStory;
 }
 
 export interface UpdateStory {
-  id: Scalars['ID'];
-  name?: Maybe<Scalars['String']>;
-  scriptureReferences?: Maybe<ScriptureRangeInput[]>;
+  readonly id: Scalars['ID'];
+  readonly name?: Maybe<Scalars['String']>;
+  readonly scriptureReferences?: Maybe<readonly ScriptureRangeInput[]>;
 }
 
 export interface CreateProductInput {
-  product: CreateProduct;
+  readonly product: CreateProduct;
 }
 
 export interface CreateProduct {
   /** An ID of a `LanguageEngagement` to create this product for */
-  engagementId: Scalars['String'];
+  readonly engagementId: Scalars['String'];
   /**
    * An ID of a `Producible` object, which will create a `DerivativeScriptureProduct`.
    * If omitted a `DirectScriptureProduct` will be created instead.
    */
-  produces?: Maybe<Scalars['ID']>;
+  readonly produces?: Maybe<Scalars['ID']>;
   /**
    * Change this list of `scriptureReferences` if provided.
    *
    * Note only `DirectScriptureProduct`s can use this field.
    */
-  scriptureReferences?: Maybe<ScriptureRangeInput[]>;
+  readonly scriptureReferences?: Maybe<readonly ScriptureRangeInput[]>;
   /**
    * The `Producible` defines a `scriptureReferences` list, and this is
    * used by default in this product's `scriptureReferences` list.
@@ -3994,14 +3994,14 @@ export interface CreateProduct {
    *
    * Note only `DerivativeScriptureProduct`s can use this field.
    */
-  scriptureReferencesOverride?: Maybe<ScriptureRangeInput[]>;
-  mediums?: Maybe<ProductMedium[]>;
-  purposes?: Maybe<ProductPurpose[]>;
-  methodology?: Maybe<ProductMethodology>;
+  readonly scriptureReferencesOverride?: Maybe<readonly ScriptureRangeInput[]>;
+  readonly mediums?: Maybe<readonly ProductMedium[]>;
+  readonly purposes?: Maybe<readonly ProductPurpose[]>;
+  readonly methodology?: Maybe<ProductMethodology>;
 }
 
 export interface UpdateProductInput {
-  product: UpdateProduct;
+  readonly product: UpdateProduct;
 }
 
 export interface UpdateProduct {
@@ -4010,7 +4010,7 @@ export interface UpdateProduct {
    *
    * Note only `DirectScriptureProduct`s can use this field.
    */
-  scriptureReferences?: Maybe<ScriptureRangeInput[]>;
+  readonly scriptureReferences?: Maybe<readonly ScriptureRangeInput[]>;
   /**
    * The `Producible` defines a `scriptureReferences` list, and this is
    * used by default in this product's `scriptureReferences` list.
@@ -4019,207 +4019,207 @@ export interface UpdateProduct {
    *
    * Note only `DerivativeScriptureProduct`s can use this field.
    */
-  scriptureReferencesOverride?: Maybe<ScriptureRangeInput[]>;
-  mediums?: Maybe<ProductMedium[]>;
-  purposes?: Maybe<ProductPurpose[]>;
-  methodology?: Maybe<ProductMethodology>;
-  id: Scalars['ID'];
+  readonly scriptureReferencesOverride?: Maybe<readonly ScriptureRangeInput[]>;
+  readonly mediums?: Maybe<readonly ProductMedium[]>;
+  readonly purposes?: Maybe<readonly ProductPurpose[]>;
+  readonly methodology?: Maybe<ProductMethodology>;
+  readonly id: Scalars['ID'];
   /**
    * An ID of a `Producible` object to change.
    *
    * Note only `DerivativeScriptureProduct`s can use this field.
    */
-  produces?: Maybe<Scalars['ID']>;
+  readonly produces?: Maybe<Scalars['ID']>;
 }
 
 export interface CreateLanguageEngagementInput {
-  engagement: CreateLanguageEngagement;
+  readonly engagement: CreateLanguageEngagement;
 }
 
 export interface CreateLanguageEngagement {
-  projectId: Scalars['ID'];
-  completeDate?: Maybe<Scalars['Date']>;
-  disbursementCompleteDate?: Maybe<Scalars['Date']>;
-  communicationsCompleteDate?: Maybe<Scalars['Date']>;
-  startDate?: Maybe<Scalars['Date']>;
-  endDate?: Maybe<Scalars['Date']>;
-  languageId: Scalars['ID'];
-  firstScripture?: Maybe<Scalars['Boolean']>;
-  lukePartnership?: Maybe<Scalars['Boolean']>;
-  paraTextRegistryId?: Maybe<Scalars['String']>;
-  pnp?: Maybe<CreateDefinedFileVersionInput>;
+  readonly projectId: Scalars['ID'];
+  readonly completeDate?: Maybe<Scalars['Date']>;
+  readonly disbursementCompleteDate?: Maybe<Scalars['Date']>;
+  readonly communicationsCompleteDate?: Maybe<Scalars['Date']>;
+  readonly startDate?: Maybe<Scalars['Date']>;
+  readonly endDate?: Maybe<Scalars['Date']>;
+  readonly languageId: Scalars['ID'];
+  readonly firstScripture?: Maybe<Scalars['Boolean']>;
+  readonly lukePartnership?: Maybe<Scalars['Boolean']>;
+  readonly paraTextRegistryId?: Maybe<Scalars['String']>;
+  readonly pnp?: Maybe<CreateDefinedFileVersionInput>;
 }
 
 export interface CreateInternshipEngagementInput {
-  engagement: CreateInternshipEngagement;
+  readonly engagement: CreateInternshipEngagement;
 }
 
 export interface CreateInternshipEngagement {
-  projectId: Scalars['ID'];
-  completeDate?: Maybe<Scalars['Date']>;
-  disbursementCompleteDate?: Maybe<Scalars['Date']>;
-  communicationsCompleteDate?: Maybe<Scalars['Date']>;
-  startDate?: Maybe<Scalars['Date']>;
-  endDate?: Maybe<Scalars['Date']>;
-  internId: Scalars['ID'];
-  mentorId?: Maybe<Scalars['ID']>;
-  countryOfOriginId?: Maybe<Scalars['ID']>;
-  position?: Maybe<InternshipEngagementPosition>;
-  methodologies?: Maybe<ProductMethodology[]>;
-  growthPlan?: Maybe<CreateDefinedFileVersionInput>;
+  readonly projectId: Scalars['ID'];
+  readonly completeDate?: Maybe<Scalars['Date']>;
+  readonly disbursementCompleteDate?: Maybe<Scalars['Date']>;
+  readonly communicationsCompleteDate?: Maybe<Scalars['Date']>;
+  readonly startDate?: Maybe<Scalars['Date']>;
+  readonly endDate?: Maybe<Scalars['Date']>;
+  readonly internId: Scalars['ID'];
+  readonly mentorId?: Maybe<Scalars['ID']>;
+  readonly countryOfOriginId?: Maybe<Scalars['ID']>;
+  readonly position?: Maybe<InternshipEngagementPosition>;
+  readonly methodologies?: Maybe<readonly ProductMethodology[]>;
+  readonly growthPlan?: Maybe<CreateDefinedFileVersionInput>;
 }
 
 export interface UpdateLanguageEngagementInput {
-  engagement: UpdateLanguageEngagement;
+  readonly engagement: UpdateLanguageEngagement;
 }
 
 export interface UpdateLanguageEngagement {
-  id: Scalars['ID'];
-  completeDate?: Maybe<Scalars['Date']>;
-  disbursementCompleteDate?: Maybe<Scalars['Date']>;
-  communicationsCompleteDate?: Maybe<Scalars['Date']>;
-  startDate?: Maybe<Scalars['Date']>;
-  endDate?: Maybe<Scalars['Date']>;
-  firstScripture?: Maybe<Scalars['Boolean']>;
-  lukePartnership?: Maybe<Scalars['Boolean']>;
-  paraTextRegistryId?: Maybe<Scalars['String']>;
-  pnp?: Maybe<CreateDefinedFileVersionInput>;
+  readonly id: Scalars['ID'];
+  readonly completeDate?: Maybe<Scalars['Date']>;
+  readonly disbursementCompleteDate?: Maybe<Scalars['Date']>;
+  readonly communicationsCompleteDate?: Maybe<Scalars['Date']>;
+  readonly startDate?: Maybe<Scalars['Date']>;
+  readonly endDate?: Maybe<Scalars['Date']>;
+  readonly firstScripture?: Maybe<Scalars['Boolean']>;
+  readonly lukePartnership?: Maybe<Scalars['Boolean']>;
+  readonly paraTextRegistryId?: Maybe<Scalars['String']>;
+  readonly pnp?: Maybe<CreateDefinedFileVersionInput>;
 }
 
 export interface UpdateInternshipEngagementInput {
-  engagement: UpdateInternshipEngagement;
+  readonly engagement: UpdateInternshipEngagement;
 }
 
 export interface UpdateInternshipEngagement {
-  id: Scalars['ID'];
-  completeDate?: Maybe<Scalars['Date']>;
-  disbursementCompleteDate?: Maybe<Scalars['Date']>;
-  communicationsCompleteDate?: Maybe<Scalars['Date']>;
-  startDate?: Maybe<Scalars['Date']>;
-  endDate?: Maybe<Scalars['Date']>;
-  mentorId?: Maybe<Scalars['ID']>;
-  countryOfOriginId?: Maybe<Scalars['ID']>;
-  position?: Maybe<InternshipEngagementPosition>;
-  methodologies?: Maybe<ProductMethodology[]>;
-  growthPlan?: Maybe<CreateDefinedFileVersionInput>;
+  readonly id: Scalars['ID'];
+  readonly completeDate?: Maybe<Scalars['Date']>;
+  readonly disbursementCompleteDate?: Maybe<Scalars['Date']>;
+  readonly communicationsCompleteDate?: Maybe<Scalars['Date']>;
+  readonly startDate?: Maybe<Scalars['Date']>;
+  readonly endDate?: Maybe<Scalars['Date']>;
+  readonly mentorId?: Maybe<Scalars['ID']>;
+  readonly countryOfOriginId?: Maybe<Scalars['ID']>;
+  readonly position?: Maybe<InternshipEngagementPosition>;
+  readonly methodologies?: Maybe<readonly ProductMethodology[]>;
+  readonly growthPlan?: Maybe<CreateDefinedFileVersionInput>;
 }
 
 export interface UpdateBudgetRecordInput {
-  budgetRecord: UpdateBudgetRecord;
+  readonly budgetRecord: UpdateBudgetRecord;
 }
 
 export interface UpdateBudgetRecord {
-  id: Scalars['ID'];
-  amount: Scalars['Int'];
+  readonly id: Scalars['ID'];
+  readonly amount: Scalars['Int'];
 }
 
 export interface CreateBudgetInput {
-  budget: CreateBudget;
+  readonly budget: CreateBudget;
 }
 
 export interface CreateBudget {
-  projectId: Scalars['ID'];
+  readonly projectId: Scalars['ID'];
 }
 
 export interface UpdateBudgetInput {
-  budget: UpdateBudget;
+  readonly budget: UpdateBudget;
 }
 
 export interface UpdateBudget {
-  id: Scalars['ID'];
-  status: BudgetStatus;
+  readonly id: Scalars['ID'];
+  readonly status: BudgetStatus;
 }
 
 export type BudgetStatus = 'Pending' | 'Current' | 'Superceded' | 'Rejected';
 
 export interface AddFavoriteInput {
-  favorite: AddFavorite;
+  readonly favorite: AddFavorite;
 }
 
 export interface AddFavorite {
-  baseNodeId: Scalars['String'];
+  readonly baseNodeId: Scalars['String'];
 }
 
 export interface CreateSongInput {
-  song: CreateSong;
+  readonly song: CreateSong;
 }
 
 export interface CreateSong {
-  name: Scalars['String'];
-  scriptureReferences?: Maybe<ScriptureRangeInput[]>;
+  readonly name: Scalars['String'];
+  readonly scriptureReferences?: Maybe<readonly ScriptureRangeInput[]>;
 }
 
 export interface UpdateSongInput {
-  song: UpdateSong;
+  readonly song: UpdateSong;
 }
 
 export interface UpdateSong {
-  id: Scalars['ID'];
-  name?: Maybe<Scalars['String']>;
-  scriptureReferences?: Maybe<ScriptureRangeInput[]>;
+  readonly id: Scalars['ID'];
+  readonly name?: Maybe<Scalars['String']>;
+  readonly scriptureReferences?: Maybe<readonly ScriptureRangeInput[]>;
 }
 
 export interface CreateWorkflowInput {
-  workflow: CreateWorkflow;
+  readonly workflow: CreateWorkflow;
 }
 
 export interface CreateWorkflow {
-  baseNodeId: Scalars['ID'];
-  startingStateName: Scalars['String'];
-  stateIdentifier: Scalars['String'];
+  readonly baseNodeId: Scalars['ID'];
+  readonly startingStateName: Scalars['String'];
+  readonly stateIdentifier: Scalars['String'];
 }
 
 export interface AddStateInput {
-  state: AddState;
+  readonly state: AddState;
 }
 
 export interface AddState {
-  workflowId: Scalars['ID'];
-  stateName: Scalars['String'];
+  readonly workflowId: Scalars['ID'];
+  readonly stateName: Scalars['String'];
 }
 
 export interface UpdateStateInput {
-  state: UpdateState;
+  readonly state: UpdateState;
 }
 
 export interface UpdateState {
-  stateId: Scalars['ID'];
-  workflowId: Scalars['ID'];
-  stateName: Scalars['String'];
+  readonly stateId: Scalars['ID'];
+  readonly workflowId: Scalars['ID'];
+  readonly stateName: Scalars['String'];
 }
 
 export interface GroupStateInput {
-  groupState: GroupState;
+  readonly groupState: GroupState;
 }
 
 export interface GroupState {
-  stateId: Scalars['ID'];
-  securityGroupId: Scalars['ID'];
+  readonly stateId: Scalars['ID'];
+  readonly securityGroupId: Scalars['ID'];
 }
 
 export interface ChangeCurrentStateInput {
-  state: ChangeCurrentState;
+  readonly state: ChangeCurrentState;
 }
 
 export interface ChangeCurrentState {
-  newStateId: Scalars['ID'];
-  workflowId: Scalars['ID'];
+  readonly newStateId: Scalars['ID'];
+  readonly workflowId: Scalars['ID'];
 }
 
 export interface PossibleStateInput {
-  state: PossibleState;
+  readonly state: PossibleState;
 }
 
 export interface PossibleState {
-  fromStateId: Scalars['ID'];
-  toStateId: Scalars['ID'];
+  readonly fromStateId: Scalars['ID'];
+  readonly toStateId: Scalars['ID'];
 }
 
 export interface RequiredFieldInput {
-  field: RequiredField;
+  readonly field: RequiredField;
 }
 
 export interface RequiredField {
-  stateId: Scalars['ID'];
-  propertyName: Scalars['String'];
+  readonly stateId: Scalars['ID'];
+  readonly propertyName: Scalars['String'];
 }
