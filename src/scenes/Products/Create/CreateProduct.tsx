@@ -1,6 +1,6 @@
 import { Breadcrumbs, makeStyles, Typography } from '@material-ui/core';
 import { useSnackbar } from 'notistack';
-import React, { FC } from 'react';
+import React from 'react';
 import { useParams } from 'react-router';
 import { Breadcrumb } from '../../../components/Breadcrumb';
 import { ProjectBreadcrumb } from '../../../components/ProjectBreadcrumb';
@@ -22,7 +22,7 @@ const useStyles = makeStyles(({ spacing, breakpoints }) => ({
   },
 }));
 
-export const CreateProduct: FC = () => {
+export const CreateProduct = () => {
   const classes = useStyles();
 
   const { projectId, engagementId } = useParams();
@@ -62,7 +62,7 @@ export const CreateProduct: FC = () => {
           methodology,
           scriptureReferences,
           ...inputs
-        }: any) => {
+        }) => {
           const isDerivativeProduct =
             productType?.[0] &&
             ['story', 'film', 'song', 'literacyMaterial'].includes(

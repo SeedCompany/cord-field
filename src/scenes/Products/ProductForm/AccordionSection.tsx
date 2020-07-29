@@ -12,7 +12,7 @@ import {
 } from '@material-ui/core';
 import { ExpandMore } from '@material-ui/icons';
 import { ToggleButton } from '@material-ui/lab';
-import React, { FC, useState } from 'react';
+import React, { useState } from 'react';
 import { FormRenderProps } from 'react-final-form';
 import { ScriptureRangeInput } from '../../../api';
 import {
@@ -45,11 +45,11 @@ const useStyles = makeStyles(({ spacing }) => ({
   },
 }));
 
-export const AccordionSection: FC<FormRenderProps> = ({
+export const AccordionSection = ({
   handleSubmit,
   values,
   form,
-}) => {
+}: FormRenderProps) => {
   const classes = useStyles();
 
   const [openedSection, setOpenedSection] = useState<string>('produces');

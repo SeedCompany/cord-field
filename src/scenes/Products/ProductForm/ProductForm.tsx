@@ -1,4 +1,4 @@
-import React, { FC } from 'react';
+import React from 'react';
 import { Form, FormProps, FormSpyRenderProps } from 'react-final-form';
 import { Except } from 'type-fest';
 import { CreateProduct, ProductMethodology } from '../../../api';
@@ -14,14 +14,7 @@ export type ProductFormValues = Except<CreateProduct, 'methodology'> & {
   methodology?: ProductMethodology[];
 };
 
-type ProductFormProps = Pick<FormProps, 'onSubmit'> & {
-  initialValues?: ProductFormValues;
-};
-
-export const ProductForm: FC<ProductFormProps> = ({
-  onSubmit,
-  initialValues,
-}) => {
+export const ProductForm = (props: FormProps<ProductFormValues>) => {
   const parseScriptureRange = ({
     books,
     startChapter,
@@ -43,8 +36,7 @@ export const ProductForm: FC<ProductFormProps> = ({
 
   return (
     <Form
-      initialValues={initialValues}
-      onSubmit={onSubmit}
+      {...props}
       mutators={{
         clear: (fieldNames, state, { changeValue }) => {
           fieldNames.forEach((name: string) =>
@@ -63,7 +55,7 @@ export const ProductForm: FC<ProductFormProps> = ({
         },
       }}
       //Separating out AccordionSection and passing as render prop so when accordion state gets updated (expand/collapes) the Form doesn't rerender
-      render={AccordionSection}
+      children={AccordionSection}
     ></Form>
   );
 };
