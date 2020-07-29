@@ -64,6 +64,10 @@ generates:
       # import/no-duplicates is here until hooks & common can be merged into one import
       - add: /* eslint-disable import/no-duplicates, @typescript-eslint/no-empty-interface */
       - typescript-operations
+      # Look into this which would allow typed documents
+      # This means that we wouldn't need custom hooks generated for every operation
+      # https://graphql-code-generator.com/docs/plugins/typed-document-node
+      # - typed-document-node
       - typescript-react-apollo
     config:
       reactApolloVersion: 3
