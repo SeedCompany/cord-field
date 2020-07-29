@@ -60,6 +60,7 @@ export const CreateProduct: FC = () => {
           books,
           produces,
           methodology,
+          scriptureReferences,
           ...inputs
         }: any) => {
           const isDerivativeProduct =
@@ -72,10 +73,12 @@ export const CreateProduct: FC = () => {
             isDerivativeProduct && produces
               ? {
                   produces,
+                  scriptureReferencesOverride: scriptureReferences,
                   ...inputs,
                 }
               : {
                   ...inputs,
+                  scriptureReferences,
                 };
 
           //TODO: remove this step once ToggleButtonsField saves single select values as strings
