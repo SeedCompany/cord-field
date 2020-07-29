@@ -8,16 +8,18 @@ import { LanguageDetailFragmentDoc } from '../Detail/LanguageDetail.generated';
 import { LanguageFormFragment } from '../LanguageForm/LangugeForm.generated';
 import { LanguageFormFragmentDoc } from '../LanguageForm/LangugeForm.generated';
 
-export interface UpdateLanguageMutationVariables {
+export type UpdateLanguageMutationVariables = Types.Exact<{
   input: Types.UpdateLanguageInput;
-}
+}>;
 
-export type UpdateLanguageMutation = { __typename?: 'Mutation' } & {
-  updateLanguage: { __typename?: 'UpdateLanguageOutput' } & {
-    language: { __typename?: 'Language' } & LanguageDetailFragment &
+export interface UpdateLanguageMutation {
+  readonly updateLanguage: { readonly __typename?: 'UpdateLanguageOutput' } & {
+    readonly language: {
+      readonly __typename?: 'Language';
+    } & LanguageDetailFragment &
       LanguageFormFragment;
   };
-};
+}
 
 export const UpdateLanguageDocument = gql`
   mutation UpdateLanguage($input: UpdateLanguageInput!) {

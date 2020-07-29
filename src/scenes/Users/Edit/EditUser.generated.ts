@@ -8,15 +8,16 @@ import { UserDetailsFragmentDoc } from '../Detail/UserDetail.generated';
 import { UserFormFragment } from '../UserForm/UserForm.generated';
 import { UserFormFragmentDoc } from '../UserForm/UserForm.generated';
 
-export interface UpdateUserMutationVariables {
+export type UpdateUserMutationVariables = Types.Exact<{
   input: Types.UpdateUserInput;
-}
+}>;
 
-export type UpdateUserMutation = { __typename?: 'Mutation' } & {
-  updateUser: { __typename?: 'UpdateUserOutput' } & {
-    user: { __typename?: 'User' } & UserDetailsFragment & UserFormFragment;
+export interface UpdateUserMutation {
+  readonly updateUser: { readonly __typename?: 'UpdateUserOutput' } & {
+    readonly user: { readonly __typename?: 'User' } & UserDetailsFragment &
+      UserFormFragment;
   };
-};
+}
 
 export const UpdateUserDocument = gql`
   mutation UpdateUser($input: UpdateUserInput!) {

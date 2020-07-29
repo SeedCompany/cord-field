@@ -5,14 +5,11 @@ import * as ApolloReactHooks from '@apollo/client';
 import gql from 'graphql-tag';
 import * as Types from '../../../api/schema.generated';
 
-export interface ForgotPasswordMutationVariables {
+export type ForgotPasswordMutationVariables = Types.Exact<{
   email: Types.Scalars['String'];
-}
+}>;
 
-export type ForgotPasswordMutation = { __typename?: 'Mutation' } & Pick<
-  Types.Mutation,
-  'forgotPassword'
->;
+export type ForgotPasswordMutation = Pick<Types.Mutation, 'forgotPassword'>;
 
 export const ForgotPasswordDocument = gql`
   mutation ForgotPassword($email: String!) {

@@ -6,15 +6,15 @@ import * as Types from '../../../api/schema.generated';
 import { LoggedInUserFragment } from '../../../components/Session/session.generated';
 import { LoggedInUserFragmentDoc } from '../../../components/Session/session.generated';
 
-export interface LoginMutationVariables {
+export type LoginMutationVariables = Types.Exact<{
   input: Types.LoginInput;
-}
+}>;
 
-export type LoginMutation = { __typename?: 'Mutation' } & {
-  login: { __typename?: 'LoginOutput' } & {
-    user: { __typename?: 'User' } & LoggedInUserFragment;
+export interface LoginMutation {
+  readonly login: { readonly __typename?: 'LoginOutput' } & {
+    readonly user: { readonly __typename?: 'User' } & LoggedInUserFragment;
   };
-};
+}
 
 export const LoginDocument = gql`
   mutation Login($input: LoginInput!) {

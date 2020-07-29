@@ -5,23 +5,23 @@ import * as ApolloReactHooks from '@apollo/client';
 import gql from 'graphql-tag';
 import * as Types from '../../../api/schema.generated';
 
-export interface CreateLanguageMutationVariables {
+export type CreateLanguageMutationVariables = Types.Exact<{
   input: Types.CreateLanguageInput;
-}
+}>;
 
-export type CreateLanguageMutation = { __typename?: 'Mutation' } & {
-  createLanguage: { __typename?: 'CreateLanguageOutput' } & {
-    language: { __typename?: 'Language' } & Pick<
+export interface CreateLanguageMutation {
+  readonly createLanguage: { readonly __typename?: 'CreateLanguageOutput' } & {
+    readonly language: { readonly __typename?: 'Language' } & Pick<
       Types.Language,
       'id' | 'createdAt'
     > & {
-        name: { __typename?: 'SecuredString' } & Pick<
+        readonly name: { readonly __typename?: 'SecuredString' } & Pick<
           Types.SecuredString,
           'value' | 'canRead' | 'canEdit'
         >;
       };
   };
-};
+}
 
 export const CreateLanguageDocument = gql`
   mutation createLanguage($input: CreateLanguageInput!) {

@@ -5,33 +5,33 @@ import * as ApolloReactHooks from '@apollo/client';
 import gql from 'graphql-tag';
 import * as Types from '../../../api/schema.generated';
 
-export interface CreateProjectMutationVariables {
+export type CreateProjectMutationVariables = Types.Exact<{
   input: Types.CreateProjectInput;
-}
+}>;
 
-export type CreateProjectMutation = { __typename?: 'Mutation' } & {
-  createProject: { __typename?: 'CreateProjectOutput' } & {
-    project:
-      | ({ __typename?: 'TranslationProject' } & Pick<
+export interface CreateProjectMutation {
+  readonly createProject: { readonly __typename?: 'CreateProjectOutput' } & {
+    readonly project:
+      | ({ readonly __typename?: 'TranslationProject' } & Pick<
           Types.TranslationProject,
           'id' | 'type' | 'createdAt'
         > & {
-            name: { __typename?: 'SecuredString' } & Pick<
+            readonly name: { readonly __typename?: 'SecuredString' } & Pick<
               Types.SecuredString,
               'value' | 'canRead' | 'canEdit'
             >;
           })
-      | ({ __typename?: 'InternshipProject' } & Pick<
+      | ({ readonly __typename?: 'InternshipProject' } & Pick<
           Types.InternshipProject,
           'id' | 'type' | 'createdAt'
         > & {
-            name: { __typename?: 'SecuredString' } & Pick<
+            readonly name: { readonly __typename?: 'SecuredString' } & Pick<
               Types.SecuredString,
               'value' | 'canRead' | 'canEdit'
             >;
           });
   };
-};
+}
 
 export const CreateProjectDocument = gql`
   mutation CreateProject($input: CreateProjectInput!) {

@@ -2,28 +2,31 @@
 import gql from 'graphql-tag';
 import * as Types from '../../../api/schema.generated';
 
-export type CeremonyFragment = { __typename?: 'Ceremony' } & Pick<
+export type CeremonyFragment = { readonly __typename?: 'Ceremony' } & Pick<
   Types.Ceremony,
   'id' | 'type'
 > & {
-    planned: { __typename?: 'SecuredBoolean' } & Pick<
+    readonly planned: { readonly __typename?: 'SecuredBoolean' } & Pick<
       Types.SecuredBoolean,
       'canRead' | 'canEdit' | 'value'
     >;
-    estimatedDate: { __typename?: 'SecuredDate' } & Pick<
+    readonly estimatedDate: { readonly __typename?: 'SecuredDate' } & Pick<
       Types.SecuredDate,
       'canRead' | 'canEdit' | 'value'
     >;
-    actualDate: { __typename?: 'SecuredDate' } & Pick<
+    readonly actualDate: { readonly __typename?: 'SecuredDate' } & Pick<
       Types.SecuredDate,
       'canRead' | 'canEdit' | 'value'
     >;
   };
 
-export type CeremonyCardFragment = { __typename?: 'SecuredCeremony' } & Pick<
-  Types.SecuredCeremony,
-  'canRead'
-> & { value?: Types.Maybe<{ __typename?: 'Ceremony' } & CeremonyFragment> };
+export type CeremonyCardFragment = {
+  readonly __typename?: 'SecuredCeremony';
+} & Pick<Types.SecuredCeremony, 'canRead'> & {
+    readonly value?: Types.Maybe<
+      { readonly __typename?: 'Ceremony' } & CeremonyFragment
+    >;
+  };
 
 export const CeremonyFragmentDoc = gql`
   fragment Ceremony on Ceremony {

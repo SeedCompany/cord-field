@@ -22,7 +22,7 @@ export const displayPartnershipStatus = displayEnum<
 >();
 export const displayEngagementStatus = displayEnum<EngagementStatus>();
 export const displayRole = displayEnum<Role>();
-export const displayRoles = (roles: Role[]) =>
+export const displayRoles = (roles: readonly Role[]) =>
   roles.map(displayRole).join(', ');
 
 export const displayInternPosition = displayEnum<

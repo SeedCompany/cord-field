@@ -6,16 +6,20 @@ import * as Types from '../../../api/schema.generated';
 import { UserListItemFragment } from '../../../components/UserListItemCard/UserListItem.generated';
 import { UserListItemFragmentDoc } from '../../../components/UserListItemCard/UserListItem.generated';
 
-export interface UsersQueryVariables {
+export type UsersQueryVariables = Types.Exact<{
   input?: Types.Maybe<Types.UserListInput>;
-}
+}>;
 
-export type UsersQuery = { __typename?: 'Query' } & {
-  users: { __typename?: 'UserListOutput' } & Pick<
+export interface UsersQuery {
+  readonly users: { readonly __typename?: 'UserListOutput' } & Pick<
     Types.UserListOutput,
     'hasMore' | 'total'
-  > & { items: Array<{ __typename?: 'User' } & UserListItemFragment> };
-};
+  > & {
+      readonly items: ReadonlyArray<
+        { readonly __typename?: 'User' } & UserListItemFragment
+      >;
+    };
+}
 
 export const UsersDocument = gql`
   query Users($input: UserListInput) {

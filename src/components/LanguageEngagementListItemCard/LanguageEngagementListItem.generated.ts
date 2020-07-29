@@ -3,51 +3,55 @@ import gql from 'graphql-tag';
 import * as Types from '../../api/schema.generated';
 
 export type LanguageEngagementListItemFragment = {
-  __typename?: 'LanguageEngagement';
+  readonly __typename?: 'LanguageEngagement';
 } & Pick<Types.LanguageEngagement, 'id' | 'status'> & {
-    language: { __typename?: 'SecuredLanguage' } & {
-      value?: Types.Maybe<
-        { __typename?: 'Language' } & Pick<Types.Language, 'avatarLetters'> & {
-            name: { __typename?: 'SecuredString' } & Pick<
+    readonly language: { readonly __typename?: 'SecuredLanguage' } & {
+      readonly value?: Types.Maybe<
+        { readonly __typename?: 'Language' } & Pick<
+          Types.Language,
+          'avatarLetters'
+        > & {
+            readonly name: { readonly __typename?: 'SecuredString' } & Pick<
               Types.SecuredString,
               'value'
             >;
-            displayName: { __typename?: 'SecuredString' } & Pick<
-              Types.SecuredString,
-              'value'
-            >;
-            population: { __typename?: 'SecuredInt' } & Pick<
+            readonly displayName: {
+              readonly __typename?: 'SecuredString';
+            } & Pick<Types.SecuredString, 'value'>;
+            readonly population: { readonly __typename?: 'SecuredInt' } & Pick<
               Types.SecuredInt,
               'value'
             >;
-            registryOfDialectsCode: { __typename?: 'SecuredString' } & Pick<
-              Types.SecuredString,
-              'value'
-            >;
+            readonly registryOfDialectsCode: {
+              readonly __typename?: 'SecuredString';
+            } & Pick<Types.SecuredString, 'value'>;
           }
       >;
     };
-    products: { __typename?: 'SecuredProductList' } & Pick<
+    readonly products: { readonly __typename?: 'SecuredProductList' } & Pick<
       Types.SecuredProductList,
       'total'
     > & {
-        items: Array<
-          | ({ __typename?: 'DirectScriptureProduct' } & Pick<
+        readonly items: ReadonlyArray<
+          | ({ readonly __typename?: 'DirectScriptureProduct' } & Pick<
               Types.DirectScriptureProduct,
               'id'
             >)
-          | ({ __typename?: 'DerivativeScriptureProduct' } & Pick<
+          | ({ readonly __typename?: 'DerivativeScriptureProduct' } & Pick<
               Types.DerivativeScriptureProduct,
               'id'
             >)
         >;
       };
-    endDate: { __typename?: 'SecuredDate' } & Pick<Types.SecuredDate, 'value'>;
-    initialEndDate: { __typename?: 'SecuredDate' } & Pick<
+    readonly endDate: { readonly __typename?: 'SecuredDate' } & Pick<
       Types.SecuredDate,
       'value'
     >;
-    completeDate: { __typename?: 'SecuredDate' } & Pick<
+    readonly initialEndDate: { readonly __typename?: 'SecuredDate' } & Pick<
+      Types.SecuredDate,
+      'value'
+    >;
+    readonly completeDate: { readonly __typename?: 'SecuredDate' } & Pick<
       Types.SecuredDate,
       'value'
     >;

@@ -9,25 +9,25 @@ import {
 } from '../../../components/ProjectListItemCard/ProjectListItem.generated';
 import { ProjectListItemFragmentDoc } from '../../../components/ProjectListItemCard/ProjectListItem.generated';
 
-export interface ProjectListQueryVariables {
+export type ProjectListQueryVariables = Types.Exact<{
   input: Types.ProjectListInput;
-}
+}>;
 
-export type ProjectListQuery = { __typename?: 'Query' } & {
-  projects: { __typename?: 'ProjectListOutput' } & Pick<
+export interface ProjectListQuery {
+  readonly projects: { readonly __typename?: 'ProjectListOutput' } & Pick<
     Types.ProjectListOutput,
     'hasMore' | 'total'
   > & {
-      items: Array<
+      readonly items: ReadonlyArray<
         | ({
-            __typename?: 'TranslationProject';
+            readonly __typename?: 'TranslationProject';
           } & ProjectListItem_TranslationProject_Fragment)
         | ({
-            __typename?: 'InternshipProject';
+            readonly __typename?: 'InternshipProject';
           } & ProjectListItem_InternshipProject_Fragment)
       >;
     };
-};
+}
 
 export const ProjectListDocument = gql`
   query ProjectList($input: ProjectListInput!) {

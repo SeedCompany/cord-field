@@ -6,15 +6,19 @@ import * as Types from '../../../api/schema.generated';
 import { OrgDetailsFragment } from '../Detail/OrganizationDetail.generated';
 import { OrgDetailsFragmentDoc } from '../Detail/OrganizationDetail.generated';
 
-export interface UpdateOrganizationMutationVariables {
+export type UpdateOrganizationMutationVariables = Types.Exact<{
   input: Types.UpdateOrganizationInput;
-}
+}>;
 
-export type UpdateOrganizationMutation = { __typename?: 'Mutation' } & {
-  updateOrganization: { __typename?: 'UpdateOrganizationOutput' } & {
-    organization: { __typename?: 'Organization' } & OrgDetailsFragment;
+export interface UpdateOrganizationMutation {
+  readonly updateOrganization: {
+    readonly __typename?: 'UpdateOrganizationOutput';
+  } & {
+    readonly organization: {
+      readonly __typename?: 'Organization';
+    } & OrgDetailsFragment;
   };
-};
+}
 
 export const UpdateOrganizationDocument = gql`
   mutation UpdateOrganization($input: UpdateOrganizationInput!) {

@@ -2,12 +2,12 @@
 import gql from 'graphql-tag';
 import * as Types from '../../../../api/schema.generated';
 
-export type LeastOfTheseFragment = { __typename?: 'Language' } & {
-  leastOfThese: { __typename?: 'SecuredBoolean' } & Pick<
+export type LeastOfTheseFragment = { readonly __typename?: 'Language' } & {
+  readonly leastOfThese: { readonly __typename?: 'SecuredBoolean' } & Pick<
     Types.SecuredBoolean,
     'canRead' | 'value'
   >;
-  leastOfTheseReason: { __typename?: 'SecuredString' } & Pick<
+  readonly leastOfTheseReason: { readonly __typename?: 'SecuredString' } & Pick<
     Types.SecuredString,
     'canRead' | 'value'
   >;

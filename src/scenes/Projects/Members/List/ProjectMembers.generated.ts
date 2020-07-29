@@ -11,33 +11,35 @@ import { ProjectBreadcrumbFragmentDoc } from '../../../../components/ProjectBrea
 import { ProjectMemberCardFragment } from '../../../../components/ProjectMemberCard/ProjectMember.generated';
 import { ProjectMemberCardFragmentDoc } from '../../../../components/ProjectMemberCard/ProjectMember.generated';
 
-export interface ProjectMembersQueryVariables {
+export type ProjectMembersQueryVariables = Types.Exact<{
   input: Types.Scalars['ID'];
-}
+}>;
 
-export type ProjectMembersQuery = { __typename?: 'Query' } & {
-  project:
-    | ({ __typename?: 'TranslationProject' } & {
-        team: { __typename?: 'SecuredProjectMemberList' } & Pick<
-          Types.SecuredProjectMemberList,
-          'canRead' | 'canCreate'
-        > & {
-            items: Array<
-              { __typename?: 'ProjectMember' } & ProjectMemberCardFragment
+export interface ProjectMembersQuery {
+  readonly project:
+    | ({ readonly __typename?: 'TranslationProject' } & {
+        readonly team: {
+          readonly __typename?: 'SecuredProjectMemberList';
+        } & Pick<Types.SecuredProjectMemberList, 'canRead' | 'canCreate'> & {
+            readonly items: ReadonlyArray<
+              {
+                readonly __typename?: 'ProjectMember';
+              } & ProjectMemberCardFragment
             >;
           };
       } & ProjectBreadcrumb_TranslationProject_Fragment)
-    | ({ __typename?: 'InternshipProject' } & {
-        team: { __typename?: 'SecuredProjectMemberList' } & Pick<
-          Types.SecuredProjectMemberList,
-          'canRead' | 'canCreate'
-        > & {
-            items: Array<
-              { __typename?: 'ProjectMember' } & ProjectMemberCardFragment
+    | ({ readonly __typename?: 'InternshipProject' } & {
+        readonly team: {
+          readonly __typename?: 'SecuredProjectMemberList';
+        } & Pick<Types.SecuredProjectMemberList, 'canRead' | 'canCreate'> & {
+            readonly items: ReadonlyArray<
+              {
+                readonly __typename?: 'ProjectMember';
+              } & ProjectMemberCardFragment
             >;
           };
       } & ProjectBreadcrumb_InternshipProject_Fragment);
-};
+}
 
 export const ProjectMembersDocument = gql`
   query ProjectMembers($input: ID!) {

@@ -5,19 +5,20 @@ import * as ApolloReactHooks from '@apollo/client';
 import gql from 'graphql-tag';
 import * as Types from '../../../api/schema.generated';
 
-export interface OrganizationQueryVariables {
+export type OrganizationQueryVariables = Types.Exact<{
   input: Types.Scalars['ID'];
+}>;
+
+export interface OrganizationQuery {
+  readonly organization: {
+    readonly __typename?: 'Organization';
+  } & OrgDetailsFragment;
 }
 
-export type OrganizationQuery = { __typename?: 'Query' } & {
-  organization: { __typename?: 'Organization' } & OrgDetailsFragment;
-};
-
-export type OrgDetailsFragment = { __typename?: 'Organization' } & Pick<
-  Types.Organization,
-  'id' | 'createdAt' | 'avatarLetters'
-> & {
-    name: { __typename?: 'SecuredString' } & Pick<
+export type OrgDetailsFragment = {
+  readonly __typename?: 'Organization';
+} & Pick<Types.Organization, 'id' | 'createdAt' | 'avatarLetters'> & {
+    readonly name: { readonly __typename?: 'SecuredString' } & Pick<
       Types.SecuredString,
       'value' | 'canEdit'
     >;

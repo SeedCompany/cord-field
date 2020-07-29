@@ -6,16 +6,20 @@ import * as Types from '../../../api/schema.generated';
 import { LanguageListItemFragment } from '../../../components/LanguageListItemCard/LanguageListItem.generated';
 import { LanguageListItemFragmentDoc } from '../../../components/LanguageListItemCard/LanguageListItem.generated';
 
-export interface LanguagesQueryVariables {
+export type LanguagesQueryVariables = Types.Exact<{
   input: Types.LanguageListInput;
-}
+}>;
 
-export type LanguagesQuery = { __typename?: 'Query' } & {
-  languages: { __typename?: 'LanguageListOutput' } & Pick<
+export interface LanguagesQuery {
+  readonly languages: { readonly __typename?: 'LanguageListOutput' } & Pick<
     Types.LanguageListOutput,
     'hasMore' | 'total'
-  > & { items: Array<{ __typename?: 'Language' } & LanguageListItemFragment> };
-};
+  > & {
+      readonly items: ReadonlyArray<
+        { readonly __typename?: 'Language' } & LanguageListItemFragment
+      >;
+    };
+}
 
 export const LanguagesDocument = gql`
   query Languages($input: LanguageListInput!) {

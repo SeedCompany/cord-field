@@ -6,15 +6,15 @@ import * as Types from '../../../api/schema.generated';
 import { LoggedInUserFragment } from '../../../components/Session/session.generated';
 import { LoggedInUserFragmentDoc } from '../../../components/Session/session.generated';
 
-export interface RegisterMutationVariables {
+export type RegisterMutationVariables = Types.Exact<{
   input: Types.RegisterInput;
-}
+}>;
 
-export type RegisterMutation = { __typename?: 'Mutation' } & {
-  register: { __typename?: 'RegisterOutput' } & {
-    user: { __typename?: 'User' } & LoggedInUserFragment;
+export interface RegisterMutation {
+  readonly register: { readonly __typename?: 'RegisterOutput' } & {
+    readonly user: { readonly __typename?: 'User' } & LoggedInUserFragment;
   };
-};
+}
 
 export const RegisterDocument = gql`
   mutation Register($input: RegisterInput!) {

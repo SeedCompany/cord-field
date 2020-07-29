@@ -2,26 +2,30 @@
 import gql from 'graphql-tag';
 import * as Types from '../../api/schema.generated';
 
-export type LanguageListItemFragment = { __typename?: 'Language' } & Pick<
-  Types.Language,
-  'id'
-> & {
-    name: { __typename?: 'SecuredString' } & Pick<Types.SecuredString, 'value'>;
-    displayName: { __typename?: 'SecuredString' } & Pick<
+export type LanguageListItemFragment = {
+  readonly __typename?: 'Language';
+} & Pick<Types.Language, 'id'> & {
+    readonly name: { readonly __typename?: 'SecuredString' } & Pick<
       Types.SecuredString,
       'value'
     >;
-    ethnologue: { __typename?: 'EthnologueLanguage' } & {
-      code: { __typename?: 'SecuredString' } & Pick<
+    readonly displayName: { readonly __typename?: 'SecuredString' } & Pick<
+      Types.SecuredString,
+      'value'
+    >;
+    readonly ethnologue: { readonly __typename?: 'EthnologueLanguage' } & {
+      readonly code: { readonly __typename?: 'SecuredString' } & Pick<
         Types.SecuredString,
         'value'
       >;
     };
-    registryOfDialectsCode: { __typename?: 'SecuredString' } & Pick<
-      Types.SecuredString,
+    readonly registryOfDialectsCode: {
+      readonly __typename?: 'SecuredString';
+    } & Pick<Types.SecuredString, 'value'>;
+    readonly population: { readonly __typename?: 'SecuredInt' } & Pick<
+      Types.SecuredInt,
       'value'
     >;
-    population: { __typename?: 'SecuredInt' } & Pick<Types.SecuredInt, 'value'>;
   };
 
 export const LanguageListItemFragmentDoc = gql`

@@ -5,7 +5,16 @@ overwrite: true
 hooks:
   afterAllFileWrite:
     - eslint --fix --ext .generated.ts
+config:
+  # Use `import type` which should be default for TS 3.8+
+  # Not yet working in all plugins, waiting for future release
+  useTypeImports: true
+  # Immutability is great, but Apollo also enforces this at runtime (at least in dev)
+  # so this ensures that invalid code is caught before runtime.
+  immutableTypes: true
+
 generates:
+  # Generate fragment matcher for Apollo's caching
   ./src/api/fragmentMatcher.generated.ts:
     plugins:
       - add: /* eslint-disable import/no-default-export */
@@ -15,11 +24,15 @@ generates:
           content: export const possibleTypes = result.possibleTypes;
     config:
       apolloClientVersion: 3
+
+  # Generate type policies so custom scalars can be parsed automatically
   ./src/api/scalars/scalars.generated.ts:
     plugins:
       - ./src/api/scalars/scalars.codegen
     config:
       parserImport: ./scalars.parser
+
+  # Generate TypeScript version of graphql schema
   ./src/api/schema.generated.ts:
     plugins:
       - typescript
@@ -35,11 +48,16 @@ generates:
         DateTime: DateTime
       skipTypename: false
       enumsAsTypes: true
+
+  # Generate an object housing all of our operations
+  # This allows operations to be cross-referenced (i.e. `refetchQueries`) without needing to rely on magic strings
   ./src/api/operations.generated.ts:
     plugins:
       - named-operations-object
     config:
       identifierName: GQLOperations
+
+  # Generate types & react hooks for our operations
   ./src/:
     preset: near-operation-file
     presetConfig:
@@ -49,6 +67,10 @@ generates:
       # import/no-duplicates is here until hooks & common can be merged into one import
       - add: /* eslint-disable import/no-duplicates, @typescript-eslint/no-empty-interface */
       - typescript-operations
+      # Look into this which would allow typed documents
+      # This means that we wouldn't need custom hooks generated for every operation
+      # https://graphql-code-generator.com/docs/plugins/typed-document-node
+      # - typed-document-node
       - typescript-react-apollo
     config:
       reactApolloVersion: 3
@@ -60,3 +82,8 @@ generates:
       withHOC: false
       withComponent: false
       enumsAsTypes: true
+      # Instead of Pick-ing from generated schema, redefine shape inline
+      # Skipping for now, since schema has docs which IDE can provide when Pick is used.
+      preResolveTypes: false
+      # Removes useless __typename from query/mutation root types which are always "Query" or "Mutation"
+      skipTypeNameForRoot: true

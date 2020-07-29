@@ -13,35 +13,37 @@ import { ProjectBreadcrumbFragmentDoc } from '../../../components/ProjectBreadcr
 import { EditPartnershipFragment } from '../Edit/EditPartnership.generated';
 import { EditPartnershipFragmentDoc } from '../Edit/EditPartnership.generated';
 
-export interface ProjectPartnershipsQueryVariables {
+export type ProjectPartnershipsQueryVariables = Types.Exact<{
   input: Types.Scalars['ID'];
-}
+}>;
 
-export type ProjectPartnershipsQuery = { __typename?: 'Query' } & {
-  project:
-    | ({ __typename?: 'TranslationProject' } & {
-        partnerships: { __typename?: 'SecuredPartnershipList' } & Pick<
-          Types.SecuredPartnershipList,
-          'canCreate' | 'total'
-        > & {
-            items: Array<
-              { __typename?: 'Partnership' } & PartnershipCardFragment &
+export interface ProjectPartnershipsQuery {
+  readonly project:
+    | ({ readonly __typename?: 'TranslationProject' } & {
+        readonly partnerships: {
+          readonly __typename?: 'SecuredPartnershipList';
+        } & Pick<Types.SecuredPartnershipList, 'canCreate' | 'total'> & {
+            readonly items: ReadonlyArray<
+              {
+                readonly __typename?: 'Partnership';
+              } & PartnershipCardFragment &
                 EditPartnershipFragment
             >;
           };
       } & ProjectBreadcrumb_TranslationProject_Fragment)
-    | ({ __typename?: 'InternshipProject' } & {
-        partnerships: { __typename?: 'SecuredPartnershipList' } & Pick<
-          Types.SecuredPartnershipList,
-          'canCreate' | 'total'
-        > & {
-            items: Array<
-              { __typename?: 'Partnership' } & PartnershipCardFragment &
+    | ({ readonly __typename?: 'InternshipProject' } & {
+        readonly partnerships: {
+          readonly __typename?: 'SecuredPartnershipList';
+        } & Pick<Types.SecuredPartnershipList, 'canCreate' | 'total'> & {
+            readonly items: ReadonlyArray<
+              {
+                readonly __typename?: 'Partnership';
+              } & PartnershipCardFragment &
                 EditPartnershipFragment
             >;
           };
       } & ProjectBreadcrumb_InternshipProject_Fragment);
-};
+}
 
 export const ProjectPartnershipsDocument = gql`
   query ProjectPartnerships($input: ID!) {

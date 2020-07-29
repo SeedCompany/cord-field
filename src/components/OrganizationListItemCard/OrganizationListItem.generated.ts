@@ -3,9 +3,12 @@ import gql from 'graphql-tag';
 import * as Types from '../../api/schema.generated';
 
 export type OrganizationListItemFragment = {
-  __typename?: 'Organization';
+  readonly __typename?: 'Organization';
 } & Pick<Types.Organization, 'id'> & {
-    name: { __typename?: 'SecuredString' } & Pick<Types.SecuredString, 'value'>;
+    readonly name: { readonly __typename?: 'SecuredString' } & Pick<
+      Types.SecuredString,
+      'value'
+    >;
   };
 
 export const OrganizationListItemFragmentDoc = gql`

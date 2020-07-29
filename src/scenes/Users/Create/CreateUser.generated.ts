@@ -6,16 +6,19 @@ import * as Types from '../../../api/schema.generated';
 import { UserDetailsFragment } from '../Detail/UserDetail.generated';
 import { UserDetailsFragmentDoc } from '../Detail/UserDetail.generated';
 
-export interface CreatePersonMutationVariables {
+export type CreatePersonMutationVariables = Types.Exact<{
   input: Types.CreatePersonInput;
-}
+}>;
 
-export type CreatePersonMutation = { __typename?: 'Mutation' } & {
-  createPerson: { __typename?: 'CreatePersonOutput' } & {
-    user: { __typename?: 'User' } & Pick<Types.User, 'id' | 'fullName'> &
+export interface CreatePersonMutation {
+  readonly createPerson: { readonly __typename?: 'CreatePersonOutput' } & {
+    readonly user: { readonly __typename?: 'User' } & Pick<
+      Types.User,
+      'id' | 'fullName'
+    > &
       UserDetailsFragment;
   };
-};
+}
 
 export const CreatePersonDocument = gql`
   mutation CreatePerson($input: CreatePersonInput!) {

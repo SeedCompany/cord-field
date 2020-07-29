@@ -5,23 +5,25 @@ import * as ApolloReactHooks from '@apollo/client';
 import gql from 'graphql-tag';
 import * as Types from '../../../api/schema.generated';
 
-export interface CreateOrganizationMutationVariables {
+export type CreateOrganizationMutationVariables = Types.Exact<{
   input: Types.CreateOrganizationInput;
-}
+}>;
 
-export type CreateOrganizationMutation = { __typename?: 'Mutation' } & {
-  createOrganization: { __typename?: 'CreateOrganizationOutput' } & {
-    organization: { __typename?: 'Organization' } & Pick<
+export interface CreateOrganizationMutation {
+  readonly createOrganization: {
+    readonly __typename?: 'CreateOrganizationOutput';
+  } & {
+    readonly organization: { readonly __typename?: 'Organization' } & Pick<
       Types.Organization,
       'id' | 'createdAt'
     > & {
-        name: { __typename?: 'SecuredString' } & Pick<
+        readonly name: { readonly __typename?: 'SecuredString' } & Pick<
           Types.SecuredString,
           'value' | 'canRead' | 'canEdit'
         >;
       };
   };
-};
+}
 
 export const CreateOrganizationDocument = gql`
   mutation createOrganization($input: CreateOrganizationInput!) {

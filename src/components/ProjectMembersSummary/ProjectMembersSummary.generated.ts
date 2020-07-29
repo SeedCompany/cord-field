@@ -5,9 +5,11 @@ import { ProjectMemberItemFragment } from './ProjectMemberItem.generated';
 import { ProjectMemberItemFragmentDoc } from './ProjectMemberItem.generated';
 
 export type ProjectMemberListFragment = {
-  __typename?: 'SecuredProjectMemberList';
+  readonly __typename?: 'SecuredProjectMemberList';
 } & Pick<Types.SecuredProjectMemberList, 'total'> & {
-    items: Array<{ __typename?: 'ProjectMember' } & ProjectMemberItemFragment>;
+    readonly items: ReadonlyArray<
+      { readonly __typename?: 'ProjectMember' } & ProjectMemberItemFragment
+    >;
   };
 
 export const ProjectMemberListFragmentDoc = gql`

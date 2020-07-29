@@ -2,23 +2,34 @@
 import gql from 'graphql-tag';
 import * as Types from '../../../api/schema.generated';
 
-export type UserFormFragment = { __typename?: 'User' } & Pick<
+export type UserFormFragment = { readonly __typename?: 'User' } & Pick<
   Types.User,
   'id'
 > & {
-    realFirstName: { __typename?: 'SecuredString' } & SsFragment;
-    realLastName: { __typename?: 'SecuredString' } & SsFragment;
-    displayFirstName: { __typename?: 'SecuredString' } & SsFragment;
-    displayLastName: { __typename?: 'SecuredString' } & SsFragment;
-    email: { __typename?: 'SecuredString' } & SsFragment;
-    timezone: { __typename?: 'SecuredTimeZone' } & Pick<
+    readonly realFirstName: {
+      readonly __typename?: 'SecuredString';
+    } & SsFragment;
+    readonly realLastName: {
+      readonly __typename?: 'SecuredString';
+    } & SsFragment;
+    readonly displayFirstName: {
+      readonly __typename?: 'SecuredString';
+    } & SsFragment;
+    readonly displayLastName: {
+      readonly __typename?: 'SecuredString';
+    } & SsFragment;
+    readonly email: { readonly __typename?: 'SecuredString' } & SsFragment;
+    readonly timezone: { readonly __typename?: 'SecuredTimeZone' } & Pick<
       Types.SecuredTimeZone,
       'canRead' | 'canEdit'
     > & {
-        value?: Types.Maybe<
-          { __typename?: 'TimeZone' } & Pick<Types.TimeZone, 'name'> & {
-              countries: Array<
-                { __typename?: 'IanaCountry' } & Pick<
+        readonly value?: Types.Maybe<
+          { readonly __typename?: 'TimeZone' } & Pick<
+            Types.TimeZone,
+            'name'
+          > & {
+              readonly countries: ReadonlyArray<
+                { readonly __typename?: 'IanaCountry' } & Pick<
                   Types.IanaCountry,
                   'code' | 'name'
                 >
@@ -26,11 +37,11 @@ export type UserFormFragment = { __typename?: 'User' } & Pick<
             }
         >;
       };
-    phone: { __typename?: 'SecuredString' } & SsFragment;
-    bio: { __typename?: 'SecuredString' } & SsFragment;
+    readonly phone: { readonly __typename?: 'SecuredString' } & SsFragment;
+    readonly bio: { readonly __typename?: 'SecuredString' } & SsFragment;
   };
 
-export type SsFragment = { __typename?: 'SecuredString' } & Pick<
+export type SsFragment = { readonly __typename?: 'SecuredString' } & Pick<
   Types.SecuredString,
   'value' | 'canRead' | 'canEdit'
 >;

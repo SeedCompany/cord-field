@@ -21,65 +21,81 @@ import { LanguageFormFragmentDoc } from '../LanguageForm/LangugeForm.generated';
 import { LeastOfTheseFragment } from './LeastOfThese/LeastOfThese.generated';
 import { LeastOfTheseFragmentDoc } from './LeastOfThese/LeastOfThese.generated';
 
-export interface LanguageQueryVariables {
+export type LanguageQueryVariables = Types.Exact<{
   languageId: Types.Scalars['ID'];
+}>;
+
+export interface LanguageQuery {
+  readonly language: {
+    readonly __typename?: 'Language';
+  } & LanguageDetailFragment &
+    LanguageFormFragment;
 }
 
-export type LanguageQuery = { __typename?: 'Query' } & {
-  language: { __typename?: 'Language' } & LanguageDetailFragment &
-    LanguageFormFragment;
-};
-
-export type LanguageDetailFragment = { __typename?: 'Language' } & Pick<
+export type LanguageDetailFragment = {
+  readonly __typename?: 'Language';
+} & Pick<
   Types.Language,
   'id' | 'createdAt' | 'sensitivity' | 'avatarLetters'
 > & {
-    name: { __typename?: 'SecuredString' } & SsFragment;
-    displayName: { __typename?: 'SecuredString' } & SsFragment;
-    displayNamePronunciation: { __typename?: 'SecuredString' } & SsFragment;
-    isDialect: { __typename?: 'SecuredBoolean' } & Pick<
+    readonly name: { readonly __typename?: 'SecuredString' } & SsFragment;
+    readonly displayName: {
+      readonly __typename?: 'SecuredString';
+    } & SsFragment;
+    readonly displayNamePronunciation: {
+      readonly __typename?: 'SecuredString';
+    } & SsFragment;
+    readonly isDialect: { readonly __typename?: 'SecuredBoolean' } & Pick<
       Types.SecuredBoolean,
       'canRead' | 'canEdit' | 'value'
     >;
-    ethnologue: { __typename?: 'EthnologueLanguage' } & {
-      id: { __typename?: 'SecuredString' } & SsFragment;
-      code: { __typename?: 'SecuredString' } & SsFragment;
-      provisionalCode: { __typename?: 'SecuredString' } & SsFragment;
-      name: { __typename?: 'SecuredString' } & SsFragment;
+    readonly ethnologue: { readonly __typename?: 'EthnologueLanguage' } & {
+      readonly id: { readonly __typename?: 'SecuredString' } & SsFragment;
+      readonly code: { readonly __typename?: 'SecuredString' } & SsFragment;
+      readonly provisionalCode: {
+        readonly __typename?: 'SecuredString';
+      } & SsFragment;
+      readonly name: { readonly __typename?: 'SecuredString' } & SsFragment;
     };
-    registryOfDialectsCode: { __typename?: 'SecuredString' } & SsFragment;
-    sponsorDate: { __typename?: 'SecuredDate' } & Pick<
+    readonly registryOfDialectsCode: {
+      readonly __typename?: 'SecuredString';
+    } & SsFragment;
+    readonly sponsorDate: { readonly __typename?: 'SecuredDate' } & Pick<
       Types.SecuredDate,
       'canRead' | 'canEdit' | 'value'
     >;
-    beginFiscalYear: { __typename?: 'SecuredInt' } & Pick<
+    readonly beginFiscalYear: { readonly __typename?: 'SecuredInt' } & Pick<
       Types.SecuredInt,
       'canRead' | 'canEdit' | 'value'
     >;
-    population: { __typename?: 'SecuredInt' } & Pick<
+    readonly population: { readonly __typename?: 'SecuredInt' } & Pick<
       Types.SecuredInt,
       'canRead' | 'canEdit' | 'value'
     >;
-    locations: { __typename?: 'SecuredLocationList' } & Pick<
+    readonly locations: { readonly __typename?: 'SecuredLocationList' } & Pick<
       Types.SecuredLocationList,
       'canRead' | 'canCreate'
     > & {
-        items: Array<
-          | ({ __typename?: 'Country' } & DisplayLocation_Country_Fragment)
-          | ({ __typename?: 'Region' } & DisplayLocation_Region_Fragment)
-          | ({ __typename?: 'Zone' } & DisplayLocation_Zone_Fragment)
+        readonly items: ReadonlyArray<
+          | ({
+              readonly __typename?: 'Country';
+            } & DisplayLocation_Country_Fragment)
+          | ({
+              readonly __typename?: 'Region';
+            } & DisplayLocation_Region_Fragment)
+          | ({ readonly __typename?: 'Zone' } & DisplayLocation_Zone_Fragment)
         >;
       };
-    projects: { __typename?: 'SecuredProjectList' } & Pick<
+    readonly projects: { readonly __typename?: 'SecuredProjectList' } & Pick<
       Types.SecuredProjectList,
       'canRead' | 'canCreate'
     > & {
-        items: Array<
+        readonly items: ReadonlyArray<
           | ({
-              __typename?: 'TranslationProject';
+              readonly __typename?: 'TranslationProject';
             } & ProjectListItem_TranslationProject_Fragment)
           | ({
-              __typename?: 'InternshipProject';
+              readonly __typename?: 'InternshipProject';
             } & ProjectListItem_InternshipProject_Fragment)
         >;
       };

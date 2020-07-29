@@ -6,42 +6,44 @@ import * as Types from '../../../api/schema.generated';
 import { PartnershipCardFragment } from '../../../components/PartnershipCard/PartnershipCard.generated';
 import { PartnershipCardFragmentDoc } from '../../../components/PartnershipCard/PartnershipCard.generated';
 
-export interface UpdatePartnershipMutationVariables {
+export type UpdatePartnershipMutationVariables = Types.Exact<{
   input: Types.UpdatePartnershipInput;
-}
+}>;
 
-export type UpdatePartnershipMutation = { __typename?: 'Mutation' } & {
-  updatePartnership: { __typename?: 'UpdatePartnershipOutput' } & {
-    partnership: { __typename?: 'Partnership' } & PartnershipCardFragment;
+export interface UpdatePartnershipMutation {
+  readonly updatePartnership: {
+    readonly __typename?: 'UpdatePartnershipOutput';
+  } & {
+    readonly partnership: {
+      readonly __typename?: 'Partnership';
+    } & PartnershipCardFragment;
   };
-};
-
-export interface DeletePartnershipMutationVariables {
-  input: Types.Scalars['ID'];
 }
 
-export type DeletePartnershipMutation = { __typename?: 'Mutation' } & Pick<
+export type DeletePartnershipMutationVariables = Types.Exact<{
+  input: Types.Scalars['ID'];
+}>;
+
+export type DeletePartnershipMutation = Pick<
   Types.Mutation,
   'deletePartnership'
 >;
 
-export type EditPartnershipFragment = { __typename?: 'Partnership' } & Pick<
-  Types.Partnership,
-  'id'
-> & {
-    types: { __typename?: 'SecuredPartnershipTypes' } & Pick<
+export type EditPartnershipFragment = {
+  readonly __typename?: 'Partnership';
+} & Pick<Types.Partnership, 'id'> & {
+    readonly types: { readonly __typename?: 'SecuredPartnershipTypes' } & Pick<
       Types.SecuredPartnershipTypes,
       'value' | 'canEdit'
     >;
-    agreementStatus: {
-      __typename?: 'SecuredPartnershipAgreementStatus';
+    readonly agreementStatus: {
+      readonly __typename?: 'SecuredPartnershipAgreementStatus';
     } & Pick<Types.SecuredPartnershipAgreementStatus, 'value' | 'canEdit'>;
-    mouStatus: { __typename?: 'SecuredPartnershipAgreementStatus' } & Pick<
-      Types.SecuredPartnershipAgreementStatus,
-      'value' | 'canEdit'
-    >;
-    organization: { __typename?: 'Organization' } & {
-      name: { __typename?: 'SecuredString' } & Pick<
+    readonly mouStatus: {
+      readonly __typename?: 'SecuredPartnershipAgreementStatus';
+    } & Pick<Types.SecuredPartnershipAgreementStatus, 'value' | 'canEdit'>;
+    readonly organization: { readonly __typename?: 'Organization' } & {
+      readonly name: { readonly __typename?: 'SecuredString' } & Pick<
         Types.SecuredString,
         'value'
       >;

@@ -9,29 +9,33 @@ import {
   UserFormFragmentDoc,
 } from '../UserForm/UserForm.generated';
 
-export interface UserQueryVariables {
+export type UserQueryVariables = Types.Exact<{
   userId: Types.Scalars['ID'];
+}>;
+
+export interface UserQuery {
+  readonly user: { readonly __typename?: 'User' } & UserDetailsFragment &
+    UserFormFragment;
 }
 
-export type UserQuery = { __typename?: 'Query' } & {
-  user: { __typename?: 'User' } & UserDetailsFragment & UserFormFragment;
-};
-
-export type UserDetailsFragment = { __typename?: 'User' } & Pick<
+export type UserDetailsFragment = { readonly __typename?: 'User' } & Pick<
   Types.User,
   'id' | 'fullName' | 'createdAt'
 > & {
-    email: { __typename?: 'SecuredString' } & SsFragment;
-    bio: { __typename?: 'SecuredString' } & SsFragment;
-    phone: { __typename?: 'SecuredString' } & SsFragment;
-    timezone: { __typename?: 'SecuredTimeZone' } & Pick<
+    readonly email: { readonly __typename?: 'SecuredString' } & SsFragment;
+    readonly bio: { readonly __typename?: 'SecuredString' } & SsFragment;
+    readonly phone: { readonly __typename?: 'SecuredString' } & SsFragment;
+    readonly timezone: { readonly __typename?: 'SecuredTimeZone' } & Pick<
       Types.SecuredTimeZone,
       'canRead' | 'canEdit'
     > & {
-        value?: Types.Maybe<
-          { __typename?: 'TimeZone' } & Pick<Types.TimeZone, 'name'> & {
-              countries: Array<
-                { __typename?: 'IanaCountry' } & Pick<
+        readonly value?: Types.Maybe<
+          { readonly __typename?: 'TimeZone' } & Pick<
+            Types.TimeZone,
+            'name'
+          > & {
+              readonly countries: ReadonlyArray<
+                { readonly __typename?: 'IanaCountry' } & Pick<
                   Types.IanaCountry,
                   'code' | 'name'
                 >

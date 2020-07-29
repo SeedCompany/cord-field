@@ -5,14 +5,11 @@ import * as ApolloReactHooks from '@apollo/client';
 import gql from 'graphql-tag';
 import * as Types from '../../../api/schema.generated';
 
-export interface ResetPasswordMutationVariables {
+export type ResetPasswordMutationVariables = Types.Exact<{
   input: Types.ResetPasswordInput;
-}
+}>;
 
-export type ResetPasswordMutation = { __typename?: 'Mutation' } & Pick<
-  Types.Mutation,
-  'resetPassword'
->;
+export type ResetPasswordMutation = Pick<Types.Mutation, 'resetPassword'>;
 
 export const ResetPasswordDocument = gql`
   mutation ResetPassword($input: ResetPasswordInput!) {
