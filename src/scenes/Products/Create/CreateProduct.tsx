@@ -39,59 +39,6 @@ export const CreateProduct: FC = () => {
 
   const [createProduct] = useCreateProductMutation();
 
-  const onSubmit = async ({
-    productType,
-    books,
-    produces,
-    methodology,
-    ...inputs
-  }: any) => {
-    const isDerivativeProduct = [
-      'story',
-      'film',
-      'song',
-      'literacyMaterial',
-    ].includes(productType?.[0]);
-
-    const inputWithProduces =
-      isDerivativeProduct && produces
-        ? {
-            produces,
-            ...inputs,
-          }
-        : {
-            ...inputs,
-          };
-
-    //TODO: remove this step once ToggleButtonsField saves single select values as strings
-    const inputWithMethodology = methodology?.[0]
-      ? { ...inputWithProduces, methodology: methodology[0] }
-      : inputWithProduces;
-
-    //TODO: need to catch this error
-    const { data } = await createProduct({
-      variables: {
-        input: {
-          product: inputWithMethodology,
-        },
-      },
-    });
-
-    const { product } = data!.createProduct;
-
-    enqueueSnackbar(`Created Product: ${product.id}`, {
-      variant: 'success',
-      action: () => (
-        <ButtonLink
-          color="inherit"
-          to={`/projects/${projectId}/${engagementId}/${product.id}/edit`}
-        >
-          Edit
-        </ButtonLink>
-      ),
-    });
-  };
-
   return (
     <main className={classes.root}>
       <Breadcrumbs>
@@ -107,7 +54,60 @@ export const CreateProduct: FC = () => {
         </Breadcrumb>
       </Breadcrumbs>
       <Typography variant="h2">Create Product</Typography>
-      <ProductForm onSubmit={onSubmit} initialValues={{ engagementId }} />
+      <ProductForm
+        onSubmit={async ({
+          productType,
+          books,
+          produces,
+          methodology,
+          ...inputs
+        }: any) => {
+          const isDerivativeProduct =
+            productType?.[0] &&
+            ['story', 'film', 'song', 'literacyMaterial'].includes(
+              productType[0]
+            );
+
+          const inputWithProduces =
+            isDerivativeProduct && produces
+              ? {
+                  produces,
+                  ...inputs,
+                }
+              : {
+                  ...inputs,
+                };
+
+          //TODO: remove this step once ToggleButtonsField saves single select values as strings
+          const inputWithMethodology = methodology?.[0]
+            ? { ...inputWithProduces, methodology: methodology[0] }
+            : inputWithProduces;
+
+          //TODO: need to catch this error
+          const { data } = await createProduct({
+            variables: {
+              input: {
+                product: inputWithMethodology,
+              },
+            },
+          });
+
+          const { product } = data!.createProduct;
+
+          enqueueSnackbar(`Created Product: ${product.id}`, {
+            variant: 'success',
+            action: () => (
+              <ButtonLink
+                color="inherit"
+                to={`/projects/${projectId}/${engagementId}/${product.id}/edit`}
+              >
+                Edit
+              </ButtonLink>
+            ),
+          });
+        }}
+        initialValues={{ engagementId }}
+      />
     </main>
   );
 };

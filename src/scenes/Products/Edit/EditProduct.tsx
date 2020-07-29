@@ -40,12 +40,19 @@ export const EditProduct: FC = () => {
   const product = data?.product;
 
   const initialValues = {
+    engagementId,
     id: product?.id,
     scriptureReferences: product?.scriptureReferences.value,
     mediums: product?.mediums.value,
     purposes: product?.purposes.value,
-    methodology: [product?.methodology.value],
   };
+
+  const initialValuesWithMethodology = product?.methodology.value
+    ? {
+        ...initialValues,
+        methodology: [product.methodology.value],
+      }
+    : initialValues;
 
   const [createProduct] = useUpdateProductMutation();
 
@@ -93,7 +100,10 @@ export const EditProduct: FC = () => {
         </Breadcrumb>
       </Breadcrumbs>
       <Typography variant="h2">Create Product</Typography>
-      <ProductForm onSubmit={onSubmit} initialValues={initialValues} />
+      <ProductForm
+        onSubmit={onSubmit}
+        initialValues={initialValuesWithMethodology}
+      />
     </main>
   );
 };

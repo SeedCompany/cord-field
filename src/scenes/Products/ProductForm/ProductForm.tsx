@@ -1,9 +1,21 @@
 import React, { FC } from 'react';
-import { Form, FormProps } from 'react-final-form';
+import { Form, FormProps, FormSpyRenderProps } from 'react-final-form';
+import { Except } from 'type-fest';
+import { CreateProduct, ProductMethodology } from '../../../api';
 import { AccordionSection } from './AccordionSection';
 
+export type ProductFormValues = Except<CreateProduct, 'methodology'> & {
+  productType?: string[];
+  books?: string[];
+  startChapter?: string;
+  startVerse?: string;
+  endChapter?: string;
+  endVerse?: string;
+  methodology?: ProductMethodology[];
+};
+
 type ProductFormProps = Pick<FormProps, 'onSubmit'> & {
-  initialValues?: any;
+  initialValues?: ProductFormValues;
 };
 
 export const ProductForm: FC<ProductFormProps> = ({
@@ -11,19 +23,19 @@ export const ProductForm: FC<ProductFormProps> = ({
   initialValues,
 }) => {
   const parseScriptureRange = ({
-    books: [book],
+    books,
     startChapter,
     startVerse,
     endChapter,
     endVerse,
-  }: any) => ({
+  }: FormSpyRenderProps['values']) => ({
     start: {
-      book,
+      book: books?.[0],
       chapter: startChapter,
       verse: startVerse,
     },
     end: {
-      book,
+      book: books?.[0],
       chapter: endChapter,
       verse: endVerse,
     },
