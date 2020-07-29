@@ -6,9 +6,9 @@ import * as Types from '../../../api/schema.generated';
 import { LoggedInUserFragment } from '../../../components/Session/session.generated';
 import { LoggedInUserFragmentDoc } from '../../../components/Session/session.generated';
 
-export interface RegisterMutationVariables {
+export type RegisterMutationVariables = Types.Exact<{
   input: Types.RegisterInput;
-}
+}>;
 
 export type RegisterMutation = { __typename?: 'Mutation' } & {
   register: { __typename?: 'RegisterOutput' } & {

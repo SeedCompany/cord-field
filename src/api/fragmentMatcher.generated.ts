@@ -5,7 +5,6 @@ export interface PossibleTypesResultData {
     [key: string]: string[];
   };
 }
-
 const result: PossibleTypesResultData = {
   possibleTypes: {
     FileNode: ['FileVersion', 'File', 'Directory'],
@@ -134,7 +133,6 @@ const result: PossibleTypesResultData = {
     ],
   },
 };
-
 export default result;
 
 export const possibleTypes = result.possibleTypes;

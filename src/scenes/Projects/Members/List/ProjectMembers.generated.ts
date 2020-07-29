@@ -11,9 +11,9 @@ import { ProjectBreadcrumbFragmentDoc } from '../../../../components/ProjectBrea
 import { ProjectMemberCardFragment } from '../../../../components/ProjectMemberCard/ProjectMember.generated';
 import { ProjectMemberCardFragmentDoc } from '../../../../components/ProjectMemberCard/ProjectMember.generated';
 
-export interface ProjectMembersQueryVariables {
+export type ProjectMembersQueryVariables = Types.Exact<{
   input: Types.Scalars['ID'];
-}
+}>;
 
 export type ProjectMembersQuery = { __typename?: 'Query' } & {
   project:

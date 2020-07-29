@@ -6,9 +6,9 @@ import * as Types from '../../../api/schema.generated';
 import { UserListItemFragment } from '../../../components/UserListItemCard/UserListItem.generated';
 import { UserListItemFragmentDoc } from '../../../components/UserListItemCard/UserListItem.generated';
 
-export interface UsersQueryVariables {
+export type UsersQueryVariables = Types.Exact<{
   input?: Types.Maybe<Types.UserListInput>;
-}
+}>;
 
 export type UsersQuery = { __typename?: 'Query' } & {
   users: { __typename?: 'UserListOutput' } & Pick<

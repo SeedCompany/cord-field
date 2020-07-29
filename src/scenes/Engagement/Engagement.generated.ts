@@ -13,10 +13,10 @@ import { InternshipEngagementDetailFragmentDoc } from './InternshipEngagement/In
 import { LanguageEngagementDetailFragment } from './LanguageEngagement/LanguageEngagementDetail.generated';
 import { LanguageEngagementDetailFragmentDoc } from './LanguageEngagement/LanguageEngagementDetail.generated';
 
-export interface EngagementQueryVariables {
+export type EngagementQueryVariables = Types.Exact<{
   projectId: Types.Scalars['ID'];
   engagementId: Types.Scalars['ID'];
-}
+}>;
 
 export type EngagementQuery = { __typename?: 'Query' } & {
   project:

@@ -9,9 +9,9 @@ import {
   UserFormFragmentDoc,
 } from '../UserForm/UserForm.generated';
 
-export interface UserQueryVariables {
+export type UserQueryVariables = Types.Exact<{
   userId: Types.Scalars['ID'];
-}
+}>;
 
 export type UserQuery = { __typename?: 'Query' } & {
   user: { __typename?: 'User' } & UserDetailsFragment & UserFormFragment;

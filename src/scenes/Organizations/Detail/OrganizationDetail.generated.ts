@@ -5,9 +5,9 @@ import * as ApolloReactHooks from '@apollo/client';
 import gql from 'graphql-tag';
 import * as Types from '../../../api/schema.generated';
 
-export interface OrganizationQueryVariables {
+export type OrganizationQueryVariables = Types.Exact<{
   input: Types.Scalars['ID'];
-}
+}>;
 
 export type OrganizationQuery = { __typename?: 'Query' } & {
   organization: { __typename?: 'Organization' } & OrgDetailsFragment;

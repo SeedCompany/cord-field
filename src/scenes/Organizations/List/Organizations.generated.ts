@@ -6,9 +6,9 @@ import * as Types from '../../../api/schema.generated';
 import { OrganizationListItemFragment } from '../../../components/OrganizationListItemCard/OrganizationListItem.generated';
 import { OrganizationListItemFragmentDoc } from '../../../components/OrganizationListItemCard/OrganizationListItem.generated';
 
-export interface OrganizationsQueryVariables {
+export type OrganizationsQueryVariables = Types.Exact<{
   input: Types.OrganizationListInput;
-}
+}>;
 
 export type OrganizationsQuery = { __typename?: 'Query' } & {
   organizations: { __typename?: 'OrganizationListOutput' } & Pick<

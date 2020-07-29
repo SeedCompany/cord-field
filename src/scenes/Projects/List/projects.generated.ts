@@ -9,9 +9,9 @@ import {
 } from '../../../components/ProjectListItemCard/ProjectListItem.generated';
 import { ProjectListItemFragmentDoc } from '../../../components/ProjectListItemCard/ProjectListItem.generated';
 
-export interface ProjectListQueryVariables {
+export type ProjectListQueryVariables = Types.Exact<{
   input: Types.ProjectListInput;
-}
+}>;
 
 export type ProjectListQuery = { __typename?: 'Query' } & {
   projects: { __typename?: 'ProjectListOutput' } & Pick<

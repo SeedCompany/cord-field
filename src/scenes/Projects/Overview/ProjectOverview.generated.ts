@@ -16,9 +16,9 @@ import { PartnershipSummaryFragmentDoc } from '../../../components/PartnershipSu
 import { ProjectMemberListFragment } from '../../../components/ProjectMembersSummary/ProjectMembersSummary.generated';
 import { ProjectMemberListFragmentDoc } from '../../../components/ProjectMembersSummary/ProjectMembersSummary.generated';
 
-export interface ProjectOverviewQueryVariables {
+export type ProjectOverviewQueryVariables = Types.Exact<{
   input: Types.Scalars['ID'];
-}
+}>;
 
 export type ProjectOverviewQuery = { __typename?: 'Query' } & {
   project:

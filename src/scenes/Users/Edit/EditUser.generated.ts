@@ -8,9 +8,9 @@ import { UserDetailsFragmentDoc } from '../Detail/UserDetail.generated';
 import { UserFormFragment } from '../UserForm/UserForm.generated';
 import { UserFormFragmentDoc } from '../UserForm/UserForm.generated';
 
-export interface UpdateUserMutationVariables {
+export type UpdateUserMutationVariables = Types.Exact<{
   input: Types.UpdateUserInput;
-}
+}>;
 
 export type UpdateUserMutation = { __typename?: 'Mutation' } & {
   updateUser: { __typename?: 'UpdateUserOutput' } & {

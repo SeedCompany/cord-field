@@ -6,9 +6,9 @@ import * as Types from '../../../api/schema.generated';
 import { UserDetailsFragment } from '../Detail/UserDetail.generated';
 import { UserDetailsFragmentDoc } from '../Detail/UserDetail.generated';
 
-export interface CreatePersonMutationVariables {
+export type CreatePersonMutationVariables = Types.Exact<{
   input: Types.CreatePersonInput;
-}
+}>;
 
 export type CreatePersonMutation = { __typename?: 'Mutation' } & {
   createPerson: { __typename?: 'CreatePersonOutput' } & {

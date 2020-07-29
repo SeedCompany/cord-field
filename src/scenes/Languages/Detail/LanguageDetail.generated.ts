@@ -21,9 +21,9 @@ import { LanguageFormFragmentDoc } from '../LanguageForm/LangugeForm.generated';
 import { LeastOfTheseFragment } from './LeastOfThese/LeastOfThese.generated';
 import { LeastOfTheseFragmentDoc } from './LeastOfThese/LeastOfThese.generated';
 
-export interface LanguageQueryVariables {
+export type LanguageQueryVariables = Types.Exact<{
   languageId: Types.Scalars['ID'];
-}
+}>;
 
 export type LanguageQuery = { __typename?: 'Query' } & {
   language: { __typename?: 'Language' } & LanguageDetailFragment &

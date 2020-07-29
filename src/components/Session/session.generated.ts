@@ -5,7 +5,7 @@ import * as ApolloReactHooks from '@apollo/client';
 import gql from 'graphql-tag';
 import * as Types from '../../api/schema.generated';
 
-export interface SessionQueryVariables {}
+export type SessionQueryVariables = Types.Exact<{ [key: string]: never }>;
 
 export type SessionQuery = { __typename?: 'Query' } & {
   session: { __typename?: 'SessionOutput' } & {

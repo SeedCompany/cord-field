@@ -5,9 +5,9 @@ import * as ApolloReactHooks from '@apollo/client';
 import gql from 'graphql-tag';
 import * as Types from '../../../api/schema.generated';
 
-export interface CreateOrganizationMutationVariables {
+export type CreateOrganizationMutationVariables = Types.Exact<{
   input: Types.CreateOrganizationInput;
-}
+}>;
 
 export type CreateOrganizationMutation = { __typename?: 'Mutation' } & {
   createOrganization: { __typename?: 'CreateOrganizationOutput' } & {

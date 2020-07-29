@@ -13,9 +13,9 @@ import { ProjectBreadcrumbFragmentDoc } from '../../../components/ProjectBreadcr
 import { EditPartnershipFragment } from '../Edit/EditPartnership.generated';
 import { EditPartnershipFragmentDoc } from '../Edit/EditPartnership.generated';
 
-export interface ProjectPartnershipsQueryVariables {
+export type ProjectPartnershipsQueryVariables = Types.Exact<{
   input: Types.Scalars['ID'];
-}
+}>;
 
 export type ProjectPartnershipsQuery = { __typename?: 'Query' } & {
   project:

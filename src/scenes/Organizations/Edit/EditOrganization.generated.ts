@@ -6,9 +6,9 @@ import * as Types from '../../../api/schema.generated';
 import { OrgDetailsFragment } from '../Detail/OrganizationDetail.generated';
 import { OrgDetailsFragmentDoc } from '../Detail/OrganizationDetail.generated';
 
-export interface UpdateOrganizationMutationVariables {
+export type UpdateOrganizationMutationVariables = Types.Exact<{
   input: Types.UpdateOrganizationInput;
-}
+}>;
 
 export type UpdateOrganizationMutation = { __typename?: 'Mutation' } & {
   updateOrganization: { __typename?: 'UpdateOrganizationOutput' } & {

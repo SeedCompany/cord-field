@@ -8,9 +8,9 @@ import { LanguageDetailFragmentDoc } from '../Detail/LanguageDetail.generated';
 import { LanguageFormFragment } from '../LanguageForm/LangugeForm.generated';
 import { LanguageFormFragmentDoc } from '../LanguageForm/LangugeForm.generated';
 
-export interface UpdateLanguageMutationVariables {
+export type UpdateLanguageMutationVariables = Types.Exact<{
   input: Types.UpdateLanguageInput;
-}
+}>;
 
 export type UpdateLanguageMutation = { __typename?: 'Mutation' } & {
   updateLanguage: { __typename?: 'UpdateLanguageOutput' } & {

@@ -5,9 +5,9 @@ import * as ApolloReactHooks from '@apollo/client';
 import gql from 'graphql-tag';
 import * as Types from '../../../api/schema.generated';
 
-export interface CreateProjectMutationVariables {
+export type CreateProjectMutationVariables = Types.Exact<{
   input: Types.CreateProjectInput;
-}
+}>;
 
 export type CreateProjectMutation = { __typename?: 'Mutation' } & {
   createProject: { __typename?: 'CreateProjectOutput' } & {

@@ -6,9 +6,9 @@ import * as Types from '../../../api/schema.generated';
 import { LanguageListItemFragment } from '../../../components/LanguageListItemCard/LanguageListItem.generated';
 import { LanguageListItemFragmentDoc } from '../../../components/LanguageListItemCard/LanguageListItem.generated';
 
-export interface LanguagesQueryVariables {
+export type LanguagesQueryVariables = Types.Exact<{
   input: Types.LanguageListInput;
-}
+}>;
 
 export type LanguagesQuery = { __typename?: 'Query' } & {
   languages: { __typename?: 'LanguageListOutput' } & Pick<

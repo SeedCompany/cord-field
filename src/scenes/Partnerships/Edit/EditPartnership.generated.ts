@@ -6,9 +6,9 @@ import * as Types from '../../../api/schema.generated';
 import { PartnershipCardFragment } from '../../../components/PartnershipCard/PartnershipCard.generated';
 import { PartnershipCardFragmentDoc } from '../../../components/PartnershipCard/PartnershipCard.generated';
 
-export interface UpdatePartnershipMutationVariables {
+export type UpdatePartnershipMutationVariables = Types.Exact<{
   input: Types.UpdatePartnershipInput;
-}
+}>;
 
 export type UpdatePartnershipMutation = { __typename?: 'Mutation' } & {
   updatePartnership: { __typename?: 'UpdatePartnershipOutput' } & {
@@ -16,9 +16,9 @@ export type UpdatePartnershipMutation = { __typename?: 'Mutation' } & {
   };
 };
 
-export interface DeletePartnershipMutationVariables {
+export type DeletePartnershipMutationVariables = Types.Exact<{
   input: Types.Scalars['ID'];
-}
+}>;
 
 export type DeletePartnershipMutation = { __typename?: 'Mutation' } & Pick<
   Types.Mutation,
