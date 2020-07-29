@@ -10,12 +10,12 @@ export type UsersQueryVariables = Types.Exact<{
   input?: Types.Maybe<Types.UserListInput>;
 }>;
 
-export type UsersQuery = { __typename?: 'Query' } & {
+export interface UsersQuery {
   users: { __typename?: 'UserListOutput' } & Pick<
     Types.UserListOutput,
     'hasMore' | 'total'
   > & { items: Array<{ __typename?: 'User' } & UserListItemFragment> };
-};
+}
 
 export const UsersDocument = gql`
   query Users($input: UserListInput) {

@@ -10,12 +10,12 @@ export type LanguagesQueryVariables = Types.Exact<{
   input: Types.LanguageListInput;
 }>;
 
-export type LanguagesQuery = { __typename?: 'Query' } & {
+export interface LanguagesQuery {
   languages: { __typename?: 'LanguageListOutput' } & Pick<
     Types.LanguageListOutput,
     'hasMore' | 'total'
   > & { items: Array<{ __typename?: 'Language' } & LanguageListItemFragment> };
-};
+}
 
 export const LanguagesDocument = gql`
   query Languages($input: LanguageListInput!) {

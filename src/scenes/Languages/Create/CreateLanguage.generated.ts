@@ -9,7 +9,7 @@ export type CreateLanguageMutationVariables = Types.Exact<{
   input: Types.CreateLanguageInput;
 }>;
 
-export type CreateLanguageMutation = { __typename?: 'Mutation' } & {
+export interface CreateLanguageMutation {
   createLanguage: { __typename?: 'CreateLanguageOutput' } & {
     language: { __typename?: 'Language' } & Pick<
       Types.Language,
@@ -21,7 +21,7 @@ export type CreateLanguageMutation = { __typename?: 'Mutation' } & {
         >;
       };
   };
-};
+}
 
 export const CreateLanguageDocument = gql`
   mutation createLanguage($input: CreateLanguageInput!) {

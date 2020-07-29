@@ -10,11 +10,11 @@ export type RegisterMutationVariables = Types.Exact<{
   input: Types.RegisterInput;
 }>;
 
-export type RegisterMutation = { __typename?: 'Mutation' } & {
+export interface RegisterMutation {
   register: { __typename?: 'RegisterOutput' } & {
     user: { __typename?: 'User' } & LoggedInUserFragment;
   };
-};
+}
 
 export const RegisterDocument = gql`
   mutation Register($input: RegisterInput!) {

@@ -73,3 +73,5 @@ generates:
       # Instead of Pick-ing from generated schema, redefine shape inline
       # Skipping for now, since schema has docs which IDE can provide when Pick is used.
       preResolveTypes: false
+      # Removes useless __typename from query/mutation root types which are always "Query" or "Mutation"
+      skipTypeNameForRoot: true

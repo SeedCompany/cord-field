@@ -7,11 +7,11 @@ import * as Types from '../../api/schema.generated';
 
 export type SessionQueryVariables = Types.Exact<{ [key: string]: never }>;
 
-export type SessionQuery = { __typename?: 'Query' } & {
+export interface SessionQuery {
   session: { __typename?: 'SessionOutput' } & {
     user?: Types.Maybe<{ __typename?: 'User' } & LoggedInUserFragment>;
   };
-};
+}
 
 export type LoggedInUserFragment = { __typename?: 'User' } & Pick<
   Types.User,

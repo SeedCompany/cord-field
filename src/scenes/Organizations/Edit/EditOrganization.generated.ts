@@ -10,11 +10,11 @@ export type UpdateOrganizationMutationVariables = Types.Exact<{
   input: Types.UpdateOrganizationInput;
 }>;
 
-export type UpdateOrganizationMutation = { __typename?: 'Mutation' } & {
+export interface UpdateOrganizationMutation {
   updateOrganization: { __typename?: 'UpdateOrganizationOutput' } & {
     organization: { __typename?: 'Organization' } & OrgDetailsFragment;
   };
-};
+}
 
 export const UpdateOrganizationDocument = gql`
   mutation UpdateOrganization($input: UpdateOrganizationInput!) {

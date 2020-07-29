@@ -9,10 +9,7 @@ export type ForgotPasswordMutationVariables = Types.Exact<{
   email: Types.Scalars['String'];
 }>;
 
-export type ForgotPasswordMutation = { __typename?: 'Mutation' } & Pick<
-  Types.Mutation,
-  'forgotPassword'
->;
+export type ForgotPasswordMutation = Pick<Types.Mutation, 'forgotPassword'>;
 
 export const ForgotPasswordDocument = gql`
   mutation ForgotPassword($email: String!) {

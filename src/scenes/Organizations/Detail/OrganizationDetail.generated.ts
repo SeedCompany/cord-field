@@ -9,9 +9,9 @@ export type OrganizationQueryVariables = Types.Exact<{
   input: Types.Scalars['ID'];
 }>;
 
-export type OrganizationQuery = { __typename?: 'Query' } & {
+export interface OrganizationQuery {
   organization: { __typename?: 'Organization' } & OrgDetailsFragment;
-};
+}
 
 export type OrgDetailsFragment = { __typename?: 'Organization' } & Pick<
   Types.Organization,

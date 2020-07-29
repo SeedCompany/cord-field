@@ -12,12 +12,12 @@ export type UpdateLanguageMutationVariables = Types.Exact<{
   input: Types.UpdateLanguageInput;
 }>;
 
-export type UpdateLanguageMutation = { __typename?: 'Mutation' } & {
+export interface UpdateLanguageMutation {
   updateLanguage: { __typename?: 'UpdateLanguageOutput' } & {
     language: { __typename?: 'Language' } & LanguageDetailFragment &
       LanguageFormFragment;
   };
-};
+}
 
 export const UpdateLanguageDocument = gql`
   mutation UpdateLanguage($input: UpdateLanguageInput!) {

@@ -9,7 +9,7 @@ export type CreateOrganizationMutationVariables = Types.Exact<{
   input: Types.CreateOrganizationInput;
 }>;
 
-export type CreateOrganizationMutation = { __typename?: 'Mutation' } & {
+export interface CreateOrganizationMutation {
   createOrganization: { __typename?: 'CreateOrganizationOutput' } & {
     organization: { __typename?: 'Organization' } & Pick<
       Types.Organization,
@@ -21,7 +21,7 @@ export type CreateOrganizationMutation = { __typename?: 'Mutation' } & {
         >;
       };
   };
-};
+}
 
 export const CreateOrganizationDocument = gql`
   mutation createOrganization($input: CreateOrganizationInput!) {

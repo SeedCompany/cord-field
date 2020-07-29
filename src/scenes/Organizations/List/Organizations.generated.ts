@@ -10,7 +10,7 @@ export type OrganizationsQueryVariables = Types.Exact<{
   input: Types.OrganizationListInput;
 }>;
 
-export type OrganizationsQuery = { __typename?: 'Query' } & {
+export interface OrganizationsQuery {
   organizations: { __typename?: 'OrganizationListOutput' } & Pick<
     Types.OrganizationListOutput,
     'hasMore' | 'total'
@@ -19,7 +19,7 @@ export type OrganizationsQuery = { __typename?: 'Query' } & {
         { __typename?: 'Organization' } & OrganizationListItemFragment
       >;
     };
-};
+}
 
 export const OrganizationsDocument = gql`
   query Organizations($input: OrganizationListInput!) {

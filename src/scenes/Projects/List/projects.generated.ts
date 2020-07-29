@@ -13,7 +13,7 @@ export type ProjectListQueryVariables = Types.Exact<{
   input: Types.ProjectListInput;
 }>;
 
-export type ProjectListQuery = { __typename?: 'Query' } & {
+export interface ProjectListQuery {
   projects: { __typename?: 'ProjectListOutput' } & Pick<
     Types.ProjectListOutput,
     'hasMore' | 'total'
@@ -27,7 +27,7 @@ export type ProjectListQuery = { __typename?: 'Query' } & {
           } & ProjectListItem_InternshipProject_Fragment)
       >;
     };
-};
+}
 
 export const ProjectListDocument = gql`
   query ProjectList($input: ProjectListInput!) {

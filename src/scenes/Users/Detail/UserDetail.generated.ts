@@ -13,9 +13,9 @@ export type UserQueryVariables = Types.Exact<{
   userId: Types.Scalars['ID'];
 }>;
 
-export type UserQuery = { __typename?: 'Query' } & {
+export interface UserQuery {
   user: { __typename?: 'User' } & UserDetailsFragment & UserFormFragment;
-};
+}
 
 export type UserDetailsFragment = { __typename?: 'User' } & Pick<
   Types.User,

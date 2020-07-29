@@ -10,11 +10,11 @@ export type LoginMutationVariables = Types.Exact<{
   input: Types.LoginInput;
 }>;
 
-export type LoginMutation = { __typename?: 'Mutation' } & {
+export interface LoginMutation {
   login: { __typename?: 'LoginOutput' } & {
     user: { __typename?: 'User' } & LoggedInUserFragment;
   };
-};
+}
 
 export const LoginDocument = gql`
   mutation Login($input: LoginInput!) {

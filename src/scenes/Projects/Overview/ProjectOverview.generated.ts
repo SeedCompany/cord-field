@@ -20,7 +20,7 @@ export type ProjectOverviewQueryVariables = Types.Exact<{
   input: Types.Scalars['ID'];
 }>;
 
-export type ProjectOverviewQuery = { __typename?: 'Query' } & {
+export interface ProjectOverviewQuery {
   project:
     | ({ __typename: 'TranslationProject' } & Pick<
         Types.TranslationProject,
@@ -134,7 +134,7 @@ export type ProjectOverviewQuery = { __typename?: 'Query' } & {
               >;
             };
         });
-};
+}
 
 export const ProjectOverviewDocument = gql`
   query ProjectOverview($input: ID!) {

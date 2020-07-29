@@ -10,12 +10,12 @@ export type CreatePersonMutationVariables = Types.Exact<{
   input: Types.CreatePersonInput;
 }>;
 
-export type CreatePersonMutation = { __typename?: 'Mutation' } & {
+export interface CreatePersonMutation {
   createPerson: { __typename?: 'CreatePersonOutput' } & {
     user: { __typename?: 'User' } & Pick<Types.User, 'id' | 'fullName'> &
       UserDetailsFragment;
   };
-};
+}
 
 export const CreatePersonDocument = gql`
   mutation CreatePerson($input: CreatePersonInput!) {

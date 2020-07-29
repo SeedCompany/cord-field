@@ -10,17 +10,17 @@ export type UpdatePartnershipMutationVariables = Types.Exact<{
   input: Types.UpdatePartnershipInput;
 }>;
 
-export type UpdatePartnershipMutation = { __typename?: 'Mutation' } & {
+export interface UpdatePartnershipMutation {
   updatePartnership: { __typename?: 'UpdatePartnershipOutput' } & {
     partnership: { __typename?: 'Partnership' } & PartnershipCardFragment;
   };
-};
+}
 
 export type DeletePartnershipMutationVariables = Types.Exact<{
   input: Types.Scalars['ID'];
 }>;
 
-export type DeletePartnershipMutation = { __typename?: 'Mutation' } & Pick<
+export type DeletePartnershipMutation = Pick<
   Types.Mutation,
   'deletePartnership'
 >;

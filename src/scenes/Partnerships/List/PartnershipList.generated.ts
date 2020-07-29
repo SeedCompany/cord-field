@@ -17,7 +17,7 @@ export type ProjectPartnershipsQueryVariables = Types.Exact<{
   input: Types.Scalars['ID'];
 }>;
 
-export type ProjectPartnershipsQuery = { __typename?: 'Query' } & {
+export interface ProjectPartnershipsQuery {
   project:
     | ({ __typename?: 'TranslationProject' } & {
         partnerships: { __typename?: 'SecuredPartnershipList' } & Pick<
@@ -41,7 +41,7 @@ export type ProjectPartnershipsQuery = { __typename?: 'Query' } & {
             >;
           };
       } & ProjectBreadcrumb_InternshipProject_Fragment);
-};
+}
 
 export const ProjectPartnershipsDocument = gql`
   query ProjectPartnerships($input: ID!) {

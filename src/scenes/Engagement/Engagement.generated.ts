@@ -18,7 +18,7 @@ export type EngagementQueryVariables = Types.Exact<{
   engagementId: Types.Scalars['ID'];
 }>;
 
-export type EngagementQuery = { __typename?: 'Query' } & {
+export interface EngagementQuery {
   project:
     | ({
         __typename?: 'TranslationProject';
@@ -37,7 +37,7 @@ export type EngagementQuery = { __typename?: 'Query' } & {
         'id'
       > &
         InternshipEngagementDetailFragment);
-};
+}
 
 export const EngagementDocument = gql`
   query Engagement($projectId: ID!, $engagementId: ID!) {

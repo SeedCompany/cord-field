@@ -12,11 +12,11 @@ export type UpdateUserMutationVariables = Types.Exact<{
   input: Types.UpdateUserInput;
 }>;
 
-export type UpdateUserMutation = { __typename?: 'Mutation' } & {
+export interface UpdateUserMutation {
   updateUser: { __typename?: 'UpdateUserOutput' } & {
     user: { __typename?: 'User' } & UserDetailsFragment & UserFormFragment;
   };
-};
+}
 
 export const UpdateUserDocument = gql`
   mutation UpdateUser($input: UpdateUserInput!) {

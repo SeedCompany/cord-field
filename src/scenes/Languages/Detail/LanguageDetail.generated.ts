@@ -25,10 +25,10 @@ export type LanguageQueryVariables = Types.Exact<{
   languageId: Types.Scalars['ID'];
 }>;
 
-export type LanguageQuery = { __typename?: 'Query' } & {
+export interface LanguageQuery {
   language: { __typename?: 'Language' } & LanguageDetailFragment &
     LanguageFormFragment;
-};
+}
 
 export type LanguageDetailFragment = { __typename?: 'Language' } & Pick<
   Types.Language,

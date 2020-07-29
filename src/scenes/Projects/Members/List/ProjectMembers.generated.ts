@@ -15,7 +15,7 @@ export type ProjectMembersQueryVariables = Types.Exact<{
   input: Types.Scalars['ID'];
 }>;
 
-export type ProjectMembersQuery = { __typename?: 'Query' } & {
+export interface ProjectMembersQuery {
   project:
     | ({ __typename?: 'TranslationProject' } & {
         team: { __typename?: 'SecuredProjectMemberList' } & Pick<
@@ -37,7 +37,7 @@ export type ProjectMembersQuery = { __typename?: 'Query' } & {
             >;
           };
       } & ProjectBreadcrumb_InternshipProject_Fragment);
-};
+}
 
 export const ProjectMembersDocument = gql`
   query ProjectMembers($input: ID!) {

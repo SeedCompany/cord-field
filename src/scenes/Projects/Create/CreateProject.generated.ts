@@ -9,7 +9,7 @@ export type CreateProjectMutationVariables = Types.Exact<{
   input: Types.CreateProjectInput;
 }>;
 
-export type CreateProjectMutation = { __typename?: 'Mutation' } & {
+export interface CreateProjectMutation {
   createProject: { __typename?: 'CreateProjectOutput' } & {
     project:
       | ({ __typename?: 'TranslationProject' } & Pick<
@@ -31,7 +31,7 @@ export type CreateProjectMutation = { __typename?: 'Mutation' } & {
             >;
           });
   };
-};
+}
 
 export const CreateProjectDocument = gql`
   mutation CreateProject($input: CreateProjectInput!) {

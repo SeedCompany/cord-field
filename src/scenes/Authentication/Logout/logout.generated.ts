@@ -7,10 +7,7 @@ import * as Types from '../../../api/schema.generated';
 
 export type LogoutMutationVariables = Types.Exact<{ [key: string]: never }>;
 
-export type LogoutMutation = { __typename?: 'Mutation' } & Pick<
-  Types.Mutation,
-  'logout'
->;
+export type LogoutMutation = Pick<Types.Mutation, 'logout'>;
 
 export const LogoutDocument = gql`
   mutation Logout {
