@@ -19,6 +19,7 @@ import {
 } from '../../../components/Formatters';
 import { InternshipEngagementListItemCard } from '../../../components/InternshipEngagementListItemCard';
 import { LanguageEngagementListItemCard } from '../../../components/LanguageEngagementListItemCard';
+import { PaperTooltip } from '../../../components/PaperTooltip';
 import { PartnershipSummary } from '../../../components/PartnershipSummary';
 import { ProjectMembersSummary } from '../../../components/ProjectMembersSummary';
 import { Redacted } from '../../../components/Redacted';
@@ -150,24 +151,21 @@ export const ProjectOverview: FC = () => {
               />
             </Grid>
             {!!engagementTotal && (
-              <Grid item>
-                <Tooltip title="Total of all languages engaged">
-                  <Typography variant="body2">
-                    {!data ? (
-                      <Skeleton width={100} />
-                    ) : (
-                      <>
-                        <Typography variant="inherit" color="textSecondary">
-                          Population Total:&nbsp;
-                        </Typography>
-                        <Typography variant="inherit" color="textPrimary">
-                          {formatNumber(engagementTotal)}
-                        </Typography>
-                      </>
-                    )}
-                  </Typography>
-                </Tooltip>
-              </Grid>
+              <DisplaySimpleProperty
+                loading={!data}
+                label="Population Total"
+                value={formatNumber(engagementTotal)}
+                loadingWidth={100}
+                LabelProps={{ color: 'textSecondary' }}
+                ValueProps={{ color: 'textPrimary' }}
+                wrap={(node) => (
+                  <Grid item>
+                    <PaperTooltip title="Total of all languages engaged">
+                      {node}
+                    </PaperTooltip>
+                  </Grid>
+                )}
+              />
             )}
           </Grid>
 
