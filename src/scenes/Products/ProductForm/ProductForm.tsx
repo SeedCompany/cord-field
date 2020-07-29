@@ -31,7 +31,7 @@ export const ProductForm: FC<ProductFormProps> = ({
 
   return (
     <Form
-      initialValues={{ scriptureReferences: [], ...initialValues }}
+      initialValues={initialValues}
       onSubmit={onSubmit}
       mutators={{
         clear: (fieldNames, state, { changeValue }) => {
@@ -40,10 +40,14 @@ export const ProductForm: FC<ProductFormProps> = ({
           );
         },
         setScriptureReferencesField: (_args, state, { changeValue }) => {
-          changeValue(state, 'scriptureReferences', (scriptureReferences) => [
-            ...scriptureReferences,
-            parseScriptureRange(state.formState.values),
-          ]);
+          changeValue(state, 'scriptureReferences', (scriptureReferences) =>
+            scriptureReferences
+              ? [
+                  ...scriptureReferences,
+                  parseScriptureRange(state.formState.values),
+                ]
+              : [parseScriptureRange(state.formState.values)]
+          );
         },
       }}
       //Separating out AccordionSection and passing as render prop so when accordion state gets updated (expand/collapes) the Form doesn't rerender
