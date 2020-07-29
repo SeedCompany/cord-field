@@ -19,7 +19,6 @@ import {
 } from '../../../components/Formatters';
 import { InternshipEngagementListItemCard } from '../../../components/InternshipEngagementListItemCard';
 import { LanguageEngagementListItemCard } from '../../../components/LanguageEngagementListItemCard';
-import { PaperTooltip } from '../../../components/PaperTooltip';
 import { PartnershipSummary } from '../../../components/PartnershipSummary';
 import { ProjectMembersSummary } from '../../../components/ProjectMembersSummary';
 import { Redacted } from '../../../components/Redacted';
@@ -75,22 +74,14 @@ export const ProjectOverview: FC = () => {
       : 'Intern'
     : null;
 
-  /* We might not have population totals for any language
-    engagements. In that case, we'll returned `undefined`
-    so we can just not render this UI. */
-  const engagementTotal = data
-    ? data.project.engagements.items.reduce(
-        (total: number | undefined, item) => {
-          if (item.__typename === 'LanguageEngagement') {
-            const itemTotal = item?.language.value?.population.value;
-            return itemTotal ? (total ?? 0) + itemTotal : total;
-          } else {
-            return total;
-          }
-        },
-        undefined
-      )
-    : undefined;
+  const populationTotal =
+    data?.project.engagements.items.reduce(
+      (total, item) =>
+        item.__typename === 'LanguageEngagement'
+          ? total + (item?.language.value?.population.value ?? 0)
+          : total,
+      0
+    ) || undefined;
 
   const date = data
     ? securedDateRange(data.project.mouStart, data.project.mouEnd)
@@ -150,23 +141,21 @@ export const ProjectOverview: FC = () => {
                 ValueProps={{ color: 'textPrimary' }}
               />
             </Grid>
-            {!!engagementTotal && (
-              <DisplaySimpleProperty
-                loading={!data}
-                label="Population Total"
-                value={formatNumber(engagementTotal)}
-                loadingWidth={100}
-                LabelProps={{ color: 'textSecondary' }}
-                ValueProps={{ color: 'textPrimary' }}
-                wrap={(node) => (
-                  <Grid item>
-                    <PaperTooltip title="Total of all languages engaged">
-                      {node}
-                    </PaperTooltip>
-                  </Grid>
-                )}
-              />
-            )}
+            <DisplaySimpleProperty
+              loading={!data}
+              label="Population Total"
+              value={formatNumber(populationTotal)}
+              loadingWidth={100}
+              LabelProps={{ color: 'textSecondary' }}
+              ValueProps={{ color: 'textPrimary' }}
+              wrap={(node) => (
+                <Grid item>
+                  <Tooltip title="Total population of all languages engaged">
+                    {node}
+                  </Tooltip>
+                </Grid>
+              )}
+            />
           </Grid>
 
           <Grid container spacing={1} alignItems="center">
