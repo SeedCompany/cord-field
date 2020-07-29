@@ -22,7 +22,7 @@ export interface ProjectOverviewQueryVariables {
 
 export type ProjectOverviewQuery = { __typename?: 'Query' } & {
   project:
-    | ({ __typename?: 'TranslationProject' } & Pick<
+    | ({ __typename: 'TranslationProject' } & Pick<
         Types.TranslationProject,
         'id' | 'status' | 'modifiedAt'
       > & {
@@ -70,15 +70,15 @@ export type ProjectOverviewQuery = { __typename?: 'Query' } & {
           > & {
               items: Array<
                 | ({
-                    __typename?: 'LanguageEngagement';
+                    __typename: 'LanguageEngagement';
                   } & LanguageEngagementListItemFragment)
                 | ({
-                    __typename?: 'InternshipEngagement';
+                    __typename: 'InternshipEngagement';
                   } & InternshipEngagementListItemFragment)
               >;
             };
         })
-    | ({ __typename?: 'InternshipProject' } & Pick<
+    | ({ __typename: 'InternshipProject' } & Pick<
         Types.InternshipProject,
         'id' | 'status' | 'modifiedAt'
       > & {
@@ -126,10 +126,10 @@ export type ProjectOverviewQuery = { __typename?: 'Query' } & {
           > & {
               items: Array<
                 | ({
-                    __typename?: 'LanguageEngagement';
+                    __typename: 'LanguageEngagement';
                   } & LanguageEngagementListItemFragment)
                 | ({
-                    __typename?: 'InternshipEngagement';
+                    __typename: 'InternshipEngagement';
                   } & InternshipEngagementListItemFragment)
               >;
             };
@@ -139,6 +139,7 @@ export type ProjectOverviewQuery = { __typename?: 'Query' } & {
 export const ProjectOverviewDocument = gql`
   query ProjectOverview($input: ID!) {
     project(id: $input) {
+      __typename
       id
       deptId {
         canRead
@@ -187,9 +188,11 @@ export const ProjectOverviewDocument = gql`
         total
         items {
           ... on LanguageEngagement {
+            __typename
             ...LanguageEngagementListItem
           }
           ... on InternshipEngagement {
+            __typename
             ...InternshipEngagementListItem
           }
         }

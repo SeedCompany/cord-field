@@ -1,7 +1,6 @@
 import { Typography, TypographyProps } from '@material-ui/core';
 import { Skeleton } from '@material-ui/lab';
-import { ReactNode } from 'react';
-import * as React from 'react';
+import React, { ReactElement, ReactNode } from 'react';
 
 export type DisplaySimplePropertyProps = TypographyProps & {
   label?: string;
@@ -10,6 +9,7 @@ export type DisplaySimplePropertyProps = TypographyProps & {
   ValueProps?: TypographyProps;
   loading?: boolean | ReactNode;
   loadingWidth?: number | string;
+  wrap?: (node: ReactElement) => ReactElement;
 };
 
 export const DisplaySimpleProperty = ({
@@ -19,22 +19,26 @@ export const DisplaySimpleProperty = ({
   ValueProps,
   loading,
   loadingWidth,
+  wrap,
   ...props
-}: DisplaySimplePropertyProps) => (
-  <Typography variant="body2" {...props}>
-    {loading === true ? (
-      <Skeleton width={loadingWidth} />
-    ) : loading ? (
-      loading
-    ) : label && value ? (
-      <>
-        <Typography variant="inherit" {...LabelProps}>
-          {label}:&nbsp;
-        </Typography>
-        <Typography variant="inherit" color="textSecondary" {...ValueProps}>
-          {value}
-        </Typography>
-      </>
-    ) : null}
-  </Typography>
-);
+}: DisplaySimplePropertyProps) => {
+  const property = (
+    <Typography variant="body2" {...props}>
+      {loading === true ? (
+        <Skeleton width={loadingWidth} />
+      ) : loading ? (
+        loading
+      ) : label && value ? (
+        <>
+          <Typography variant="inherit" {...LabelProps}>
+            {label}:&nbsp;
+          </Typography>
+          <Typography variant="inherit" color="textSecondary" {...ValueProps}>
+            {value}
+          </Typography>
+        </>
+      ) : null}
+    </Typography>
+  );
+  return wrap ? wrap(property) : property;
+};

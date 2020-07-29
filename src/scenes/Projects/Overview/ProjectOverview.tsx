@@ -15,6 +15,7 @@ import { FilesOverviewCard } from '../../../components/FilesOverviewCard';
 import {
   useDateFormatter,
   useDateTimeFormatter,
+  useNumberFormatter,
 } from '../../../components/Formatters';
 import { InternshipEngagementListItemCard } from '../../../components/InternshipEngagementListItemCard';
 import { LanguageEngagementListItemCard } from '../../../components/LanguageEngagementListItemCard';
@@ -59,6 +60,7 @@ export const ProjectOverview: FC = () => {
   const { projectId } = useParams();
   const formatDate = useDateFormatter();
   const formatDateTime = useDateTimeFormatter();
+  const formatNumber = useNumberFormatter();
 
   const { data, error } = useProjectOverviewQuery({
     variables: {
@@ -71,6 +73,15 @@ export const ProjectOverview: FC = () => {
       ? 'Language'
       : 'Intern'
     : null;
+
+  const populationTotal =
+    data?.project.engagements.items.reduce(
+      (total, item) =>
+        item.__typename === 'LanguageEngagement'
+          ? total + (item?.language.value?.population.value ?? 0)
+          : total,
+      0
+    ) || undefined;
 
   const date = data
     ? securedDateRange(data.project.mouStart, data.project.mouEnd)
@@ -130,6 +141,25 @@ export const ProjectOverview: FC = () => {
                 ValueProps={{ color: 'textPrimary' }}
               />
             </Grid>
+            <DisplaySimpleProperty
+              loading={!data}
+              label="Population Total"
+              value={formatNumber(populationTotal)}
+              loadingWidth={100}
+              LabelProps={{ color: 'textSecondary' }}
+              ValueProps={{ color: 'textPrimary' }}
+              wrap={(node) => (
+                <Grid item>
+                  <Tooltip
+                    title={
+                      data ? 'Total population of all languages engaged' : ''
+                    }
+                  >
+                    {node}
+                  </Tooltip>
+                </Grid>
+              )}
+            />
           </Grid>
 
           <Grid container spacing={1} alignItems="center">
