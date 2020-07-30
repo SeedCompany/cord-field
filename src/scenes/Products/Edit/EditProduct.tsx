@@ -70,7 +70,7 @@ export const EditProduct: FC = () => {
     <main className={classes.root}>
       <Breadcrumbs>
         <ProjectBreadcrumb data={project} />
-        <Breadcrumb to={`/projects/${projectId}/${engagementId}`}>
+        <Breadcrumb to={`/projects/${projectId}/engagements/${engagementId}`}>
           {data?.engagement.__typename === 'LanguageEngagement' &&
             data.engagement.language.value?.name.value}
         </Breadcrumb>

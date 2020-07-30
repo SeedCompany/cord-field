@@ -43,7 +43,7 @@ export const CreateProduct = () => {
     <main className={classes.root}>
       <Breadcrumbs>
         <ProjectBreadcrumb data={project} />
-        <Breadcrumb to={`/projects/${projectId}/${engagementId}`}>
+        <Breadcrumb to={`/projects/${projectId}/engagements/${engagementId}`}>
           {data?.engagement.__typename === 'LanguageEngagement' &&
             data.engagement.language.value?.name.value}
         </Breadcrumb>
@@ -90,7 +90,7 @@ export const CreateProduct = () => {
             action: () => (
               <ButtonLink
                 color="inherit"
-                to={`/projects/${projectId}/engagements/${engagementId}/products/${product.id}/edit-product`}
+                to={`/projects/${projectId}/engagements/${engagementId}/products/${product.id}`}
               >
                 Edit
               </ButtonLink>
