@@ -1,18 +1,19 @@
 import React from 'react';
 import { Form, FormProps, FormSpyRenderProps } from 'react-final-form';
-import { CreateProduct } from '../../../api';
 import { AccordionSection } from './AccordionSection';
 
-export type ProductFormValues = CreateProduct & {
+interface ProductFormCustomValues {
   productType?: string;
   books?: string;
   startChapter?: string;
   startVerse?: string;
   endChapter?: string;
   endVerse?: string;
-};
+}
 
-export const ProductForm = (props: FormProps<ProductFormValues>) => {
+export const ProductForm = <FormMutationValues extends any>(
+  props: FormProps<ProductFormCustomValues & FormMutationValues>
+) => {
   const parseScriptureRange = ({
     book,
     startChapter,

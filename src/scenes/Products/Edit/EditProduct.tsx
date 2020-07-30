@@ -1,7 +1,8 @@
 import { Breadcrumbs, makeStyles, Typography } from '@material-ui/core';
 import { useSnackbar } from 'notistack';
-import React, { FC } from 'react';
+import React from 'react';
 import { useParams } from 'react-router';
+import { UpdateProduct } from '../../../api';
 import { Breadcrumb } from '../../../components/Breadcrumb';
 import { ProjectBreadcrumb } from '../../../components/ProjectBreadcrumb';
 import { ProductForm } from '../ProductForm';
@@ -21,7 +22,7 @@ const useStyles = makeStyles(({ spacing, breakpoints }) => ({
   },
 }));
 
-export const EditProduct: FC = () => {
+export const EditProduct = () => {
   const classes = useStyles();
 
   const { projectId, engagementId, productId } = useParams();
@@ -49,23 +50,6 @@ export const EditProduct: FC = () => {
 
   const [createProduct] = useUpdateProductMutation();
 
-  const onSubmit = async ({ productType, ...input }: any) => {
-    //TODO: need to catch this error
-    const { data } = await createProduct({
-      variables: {
-        input: {
-          product: input,
-        },
-      },
-    });
-
-    const { product } = data!.updateProduct;
-
-    enqueueSnackbar(`Edited Product: ${product.id}`, {
-      variant: 'success',
-    });
-  };
-
   return (
     <main className={classes.root}>
       <Breadcrumbs>
@@ -77,7 +61,25 @@ export const EditProduct: FC = () => {
         <Typography variant="h4">Edit Product</Typography>
       </Breadcrumbs>
       <Typography variant="h2">Edit Product</Typography>
-      <ProductForm onSubmit={onSubmit} initialValues={initialValues} />
+      <ProductForm<UpdateProduct>
+        onSubmit={async ({ productType, ...input }) => {
+          //TODO: need to catch this error
+          const { data } = await createProduct({
+            variables: {
+              input: {
+                product: input,
+              },
+            },
+          });
+
+          const { product } = data!.updateProduct;
+
+          enqueueSnackbar(`Edited Product: ${product.id}`, {
+            variant: 'success',
+          });
+        }}
+        initialValues={initialValues}
+      />
     </main>
   );
 };

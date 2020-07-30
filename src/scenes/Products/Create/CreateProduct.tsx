@@ -2,6 +2,7 @@ import { Breadcrumbs, makeStyles, Typography } from '@material-ui/core';
 import { useSnackbar } from 'notistack';
 import React from 'react';
 import { useParams } from 'react-router';
+import { CreateProduct as CreateProductType } from '../../../api';
 import { Breadcrumb } from '../../../components/Breadcrumb';
 import { ProjectBreadcrumb } from '../../../components/ProjectBreadcrumb';
 import { ButtonLink } from '../../../components/Routing';
@@ -50,7 +51,7 @@ export const CreateProduct = () => {
         <Typography variant="h4">Create Product</Typography>
       </Breadcrumbs>
       <Typography variant="h2">Create Product</Typography>
-      <ProductForm
+      <ProductForm<CreateProductType>
         onSubmit={async ({
           productType,
           books,
