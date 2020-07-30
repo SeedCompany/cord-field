@@ -2,7 +2,7 @@ import { Breadcrumbs, makeStyles, Typography } from '@material-ui/core';
 import { useSnackbar } from 'notistack';
 import React from 'react';
 import { useParams } from 'react-router';
-import { UpdateProduct } from '../../../api';
+import { handleFormError, UpdateProduct } from '../../../api';
 import { Breadcrumb } from '../../../components/Breadcrumb';
 import { ProjectBreadcrumb } from '../../../components/ProjectBreadcrumb';
 import { ProductForm } from '../ProductForm';
@@ -71,20 +71,23 @@ export const EditProduct = () => {
       <ProductForm<UpdateProduct>
         product={product}
         onSubmit={async ({ productType, ...input }) => {
-          //TODO: need to catch this error
-          const { data } = await createProduct({
-            variables: {
-              input: {
-                product: input,
+          try {
+            const { data } = await createProduct({
+              variables: {
+                input: {
+                  product: input,
+                },
               },
-            },
-          });
+            });
 
-          const { product } = data!.updateProduct;
+            const { product } = data!.updateProduct;
 
-          enqueueSnackbar(`Edited Product: ${product.id}`, {
-            variant: 'success',
-          });
+            enqueueSnackbar(`Edited Product: ${product.id}`, {
+              variant: 'success',
+            });
+          } catch (e) {
+            await handleFormError(e);
+          }
         }}
         initialValues={initialValues}
       />

@@ -2,7 +2,10 @@ import { Breadcrumbs, makeStyles, Typography } from '@material-ui/core';
 import { useSnackbar } from 'notistack';
 import React from 'react';
 import { useParams } from 'react-router';
-import { CreateProduct as CreateProductType } from '../../../api';
+import {
+  CreateProduct as CreateProductType,
+  handleFormError,
+} from '../../../api';
 import { Breadcrumb } from '../../../components/Breadcrumb';
 import { ProjectBreadcrumb } from '../../../components/ProjectBreadcrumb';
 import { ButtonLink } from '../../../components/Routing';
@@ -75,28 +78,31 @@ export const CreateProduct = () => {
                   scriptureReferences,
                 };
 
-          //TODO: need to catch this error
-          const { data } = await createProduct({
-            variables: {
-              input: {
-                product: inputWithProduces,
+          try {
+            const { data } = await createProduct({
+              variables: {
+                input: {
+                  product: inputWithProduces,
+                },
               },
-            },
-          });
+            });
 
-          const { product } = data!.createProduct;
+            const { product } = data!.createProduct;
 
-          enqueueSnackbar(`Created Product: ${product.id}`, {
-            variant: 'success',
-            action: () => (
-              <ButtonLink
-                color="inherit"
-                to={`/projects/${projectId}/engagements/${engagementId}/products/${product.id}`}
-              >
-                Edit
-              </ButtonLink>
-            ),
-          });
+            enqueueSnackbar(`Created Product: ${product.id}`, {
+              variant: 'success',
+              action: () => (
+                <ButtonLink
+                  color="inherit"
+                  to={`/projects/${projectId}/engagements/${engagementId}/products/${product.id}`}
+                >
+                  Edit
+                </ButtonLink>
+              ),
+            });
+          } catch (e) {
+            await handleFormError(e);
+          }
         }}
         initialValues={{ engagementId }}
       />
