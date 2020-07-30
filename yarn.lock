@@ -5350,7 +5350,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"babel-jest@npm:^24.9.0":
+"babel-jest@npm:24.9.0, babel-jest@npm:^24.9.0":
   version: 24.9.0
   resolution: "babel-jest@npm:24.9.0"
   dependencies:
@@ -7218,6 +7218,7 @@ __metadata:
     "@types/react-dom": ^16.9.8
     "@types/seedrandom": ^2.4.28
     "@types/validator": ^13.1.0
+    babel-jest: 24.9.0
     babel-plugin-import: ^1.13.0
     babel-plugin-mui-make-styles: ^0.1.1
     clsx: ^1.1.1

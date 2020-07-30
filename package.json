@@ -78,6 +78,7 @@
     "@types/react-dom": "^16.9.8",
     "@types/seedrandom": "^2.4.28",
     "@types/validator": "^13.1.0",
+    "babel-jest": "24.9.0",
     "babel-plugin-import": "^1.13.0",
     "babel-plugin-mui-make-styles": "^0.1.1",
     "customize-cra": "^1.0.0",
