@@ -9,107 +9,113 @@ import {
 } from '../../../components/ProjectBreadcrumb/ProjectBreadcrumb.generated';
 import { ProjectBreadcrumbFragmentDoc } from '../../../components/ProjectBreadcrumb/ProjectBreadcrumb.generated';
 
-export interface UpdateProductMutationVariables {
+export type UpdateProductMutationVariables = Types.Exact<{
   input: Types.UpdateProductInput;
-}
+}>;
 
-export type UpdateProductMutation = { __typename?: 'Mutation' } & {
-  updateProduct: { __typename?: 'UpdateProductOutput' } & {
-    product:
-      | ({ __typename?: 'DirectScriptureProduct' } & Pick<
+export interface UpdateProductMutation {
+  readonly updateProduct: { readonly __typename?: 'UpdateProductOutput' } & {
+    readonly product:
+      | ({ readonly __typename?: 'DirectScriptureProduct' } & Pick<
           Types.DirectScriptureProduct,
           'id'
         >)
-      | ({ __typename?: 'DerivativeScriptureProduct' } & Pick<
+      | ({ readonly __typename?: 'DerivativeScriptureProduct' } & Pick<
           Types.DerivativeScriptureProduct,
           'id'
         >);
   };
-};
+}
 
-export interface ProductQueryVariables {
+export type ProductQueryVariables = Types.Exact<{
   productId: Types.Scalars['ID'];
   projectId: Types.Scalars['ID'];
   engagementId: Types.Scalars['ID'];
-}
+}>;
 
-export type ProductQuery = { __typename?: 'Query' } & {
-  product:
-    | ({ __typename?: 'DirectScriptureProduct' } & Pick<
+export interface ProductQuery {
+  readonly product:
+    | ({ readonly __typename?: 'DirectScriptureProduct' } & Pick<
         Types.DirectScriptureProduct,
         'id' | 'approach' | 'legacyType'
       > & {
-          scriptureReferences: { __typename?: 'SecuredScriptureRanges' } & {
-            value: Array<
-              { __typename?: 'ScriptureRange' } & {
-                start: { __typename?: 'ScriptureReference' } & Pick<
+          readonly scriptureReferences: {
+            readonly __typename?: 'SecuredScriptureRanges';
+          } & {
+            readonly value: ReadonlyArray<
+              { readonly __typename?: 'ScriptureRange' } & {
+                readonly start: {
+                  readonly __typename?: 'ScriptureReference';
+                } & Pick<
                   Types.ScriptureReference,
                   'book' | 'chapter' | 'verse'
                 >;
-                end: { __typename?: 'ScriptureReference' } & Pick<
+                readonly end: {
+                  readonly __typename?: 'ScriptureReference';
+                } & Pick<
                   Types.ScriptureReference,
                   'book' | 'chapter' | 'verse'
                 >;
               }
             >;
           };
-          mediums: { __typename?: 'SecuredProductMediums' } & Pick<
-            Types.SecuredProductMediums,
-            'value'
-          >;
-          purposes: { __typename?: 'SecuredProductPurposes' } & Pick<
-            Types.SecuredProductPurposes,
-            'value'
-          >;
-          methodology: { __typename?: 'SecuredMethodology' } & Pick<
-            Types.SecuredMethodology,
-            'value'
-          >;
+          readonly mediums: {
+            readonly __typename?: 'SecuredProductMediums';
+          } & Pick<Types.SecuredProductMediums, 'value'>;
+          readonly purposes: {
+            readonly __typename?: 'SecuredProductPurposes';
+          } & Pick<Types.SecuredProductPurposes, 'value'>;
+          readonly methodology: {
+            readonly __typename?: 'SecuredMethodology';
+          } & Pick<Types.SecuredMethodology, 'value'>;
         })
-    | ({ __typename?: 'DerivativeScriptureProduct' } & Pick<
+    | ({ readonly __typename?: 'DerivativeScriptureProduct' } & Pick<
         Types.DerivativeScriptureProduct,
         'id' | 'approach' | 'legacyType'
       > & {
-          scriptureReferences: { __typename?: 'SecuredScriptureRanges' } & {
-            value: Array<
-              { __typename?: 'ScriptureRange' } & {
-                start: { __typename?: 'ScriptureReference' } & Pick<
+          readonly scriptureReferences: {
+            readonly __typename?: 'SecuredScriptureRanges';
+          } & {
+            readonly value: ReadonlyArray<
+              { readonly __typename?: 'ScriptureRange' } & {
+                readonly start: {
+                  readonly __typename?: 'ScriptureReference';
+                } & Pick<
                   Types.ScriptureReference,
                   'book' | 'chapter' | 'verse'
                 >;
-                end: { __typename?: 'ScriptureReference' } & Pick<
+                readonly end: {
+                  readonly __typename?: 'ScriptureReference';
+                } & Pick<
                   Types.ScriptureReference,
                   'book' | 'chapter' | 'verse'
                 >;
               }
             >;
           };
-          mediums: { __typename?: 'SecuredProductMediums' } & Pick<
-            Types.SecuredProductMediums,
-            'value'
-          >;
-          purposes: { __typename?: 'SecuredProductPurposes' } & Pick<
-            Types.SecuredProductPurposes,
-            'value'
-          >;
-          methodology: { __typename?: 'SecuredMethodology' } & Pick<
-            Types.SecuredMethodology,
-            'value'
-          >;
+          readonly mediums: {
+            readonly __typename?: 'SecuredProductMediums';
+          } & Pick<Types.SecuredProductMediums, 'value'>;
+          readonly purposes: {
+            readonly __typename?: 'SecuredProductPurposes';
+          } & Pick<Types.SecuredProductPurposes, 'value'>;
+          readonly methodology: {
+            readonly __typename?: 'SecuredMethodology';
+          } & Pick<Types.SecuredMethodology, 'value'>;
         });
-  project:
+  readonly project:
     | ({
-        __typename?: 'TranslationProject';
+        readonly __typename?: 'TranslationProject';
       } & ProjectBreadcrumb_TranslationProject_Fragment)
     | ({
-        __typename?: 'InternshipProject';
+        readonly __typename?: 'InternshipProject';
       } & ProjectBreadcrumb_InternshipProject_Fragment);
-  engagement:
-    | ({ __typename?: 'LanguageEngagement' } & {
-        language: { __typename?: 'SecuredLanguage' } & {
-          value?: Types.Maybe<
-            { __typename?: 'Language' } & {
-              name: { __typename?: 'SecuredString' } & Pick<
+  readonly engagement:
+    | ({ readonly __typename?: 'LanguageEngagement' } & {
+        readonly language: { readonly __typename?: 'SecuredLanguage' } & {
+          readonly value?: Types.Maybe<
+            { readonly __typename?: 'Language' } & {
+              readonly name: { readonly __typename?: 'SecuredString' } & Pick<
                 Types.SecuredString,
                 'value'
               >;
@@ -117,8 +123,8 @@ export type ProductQuery = { __typename?: 'Query' } & {
           >;
         };
       })
-    | { __typename?: 'InternshipEngagement' };
-};
+    | { readonly __typename?: 'InternshipEngagement' };
+}
 
 export const UpdateProductDocument = gql`
   mutation UpdateProduct($input: UpdateProductInput!) {

@@ -9,43 +9,43 @@ import {
 } from '../../../components/ProjectBreadcrumb/ProjectBreadcrumb.generated';
 import { ProjectBreadcrumbFragmentDoc } from '../../../components/ProjectBreadcrumb/ProjectBreadcrumb.generated';
 
-export interface CreateProductMutationVariables {
+export type CreateProductMutationVariables = Types.Exact<{
   input: Types.CreateProductInput;
-}
+}>;
 
-export type CreateProductMutation = { __typename?: 'Mutation' } & {
-  createProduct: { __typename?: 'CreateProductOutput' } & {
-    product:
-      | ({ __typename?: 'DirectScriptureProduct' } & Pick<
+export interface CreateProductMutation {
+  readonly createProduct: { readonly __typename?: 'CreateProductOutput' } & {
+    readonly product:
+      | ({ readonly __typename?: 'DirectScriptureProduct' } & Pick<
           Types.DirectScriptureProduct,
           'id'
         >)
-      | ({ __typename?: 'DerivativeScriptureProduct' } & Pick<
+      | ({ readonly __typename?: 'DerivativeScriptureProduct' } & Pick<
           Types.DerivativeScriptureProduct,
           'id'
         >);
   };
-};
-
-export interface GetProductBreadcrumbQueryVariables {
-  projectId: Types.Scalars['ID'];
-  engagementId: Types.Scalars['ID'];
 }
 
-export type GetProductBreadcrumbQuery = { __typename?: 'Query' } & {
-  project:
+export type GetProductBreadcrumbQueryVariables = Types.Exact<{
+  projectId: Types.Scalars['ID'];
+  engagementId: Types.Scalars['ID'];
+}>;
+
+export interface GetProductBreadcrumbQuery {
+  readonly project:
     | ({
-        __typename?: 'TranslationProject';
+        readonly __typename?: 'TranslationProject';
       } & ProjectBreadcrumb_TranslationProject_Fragment)
     | ({
-        __typename?: 'InternshipProject';
+        readonly __typename?: 'InternshipProject';
       } & ProjectBreadcrumb_InternshipProject_Fragment);
-  engagement:
-    | ({ __typename?: 'LanguageEngagement' } & {
-        language: { __typename?: 'SecuredLanguage' } & {
-          value?: Types.Maybe<
-            { __typename?: 'Language' } & {
-              name: { __typename?: 'SecuredString' } & Pick<
+  readonly engagement:
+    | ({ readonly __typename?: 'LanguageEngagement' } & {
+        readonly language: { readonly __typename?: 'SecuredLanguage' } & {
+          readonly value?: Types.Maybe<
+            { readonly __typename?: 'Language' } & {
+              readonly name: { readonly __typename?: 'SecuredString' } & Pick<
                 Types.SecuredString,
                 'value'
               >;
@@ -53,8 +53,8 @@ export type GetProductBreadcrumbQuery = { __typename?: 'Query' } & {
           >;
         };
       })
-    | { __typename?: 'InternshipEngagement' };
-};
+    | { readonly __typename?: 'InternshipEngagement' };
+}
 
 export const CreateProductDocument = gql`
   mutation CreateProduct($input: CreateProductInput!) {
