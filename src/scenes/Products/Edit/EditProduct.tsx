@@ -40,12 +40,19 @@ export const EditProduct = () => {
   const product = data?.product;
 
   const initialValues = {
-    engagementId,
     id: product?.id,
-    scriptureReferences: product?.scriptureReferences.value,
     mediums: product?.mediums.value,
     purposes: product?.purposes.value,
     methodology: product?.methodology.value,
+    //TODO: make sure these are shown when response is ready
+    ...(product?.__typename === 'DirectScriptureProduct'
+      ? { scriptureReferences: product.scriptureReferences.value }
+      : product?.__typename === 'DerivativeScriptureProduct'
+      ? {
+          scriptureReferences: product.scriptureReferencesOverride?.value,
+          produces: product.produces.__typename,
+        }
+      : undefined),
   };
 
   const [createProduct] = useUpdateProductMutation();
