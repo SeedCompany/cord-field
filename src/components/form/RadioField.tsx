@@ -21,7 +21,7 @@ export type RadioFieldProps<T = string> = FieldConfig<T> & {
   name: string;
   label?: string;
   helperText?: ReactNode;
-} & Omit<FormControlProps, 'required'> &
+} & FormControlProps &
   Pick<RadioGroupProps, 'row'> &
   Pick<FormControlLabelProps, 'labelPlacement'>;
 
@@ -65,12 +65,13 @@ export const RadioField = <FieldValue extends any = string>({
   helperText,
   labelPlacement,
   row,
+  required = true,
   ...props
 }: RadioFieldProps<FieldValue>) => {
   const name = useFieldName(nameProp);
   const { input, meta, rest } = useField(name, {
     ...props,
-    required: true,
+    required,
     // FF expects each radio option to be its own field.
     // However, we want them grouped up because it works better with MUI &
     // you only have to specify field name, validators, etc. once.
@@ -84,7 +85,7 @@ export const RadioField = <FieldValue extends any = string>({
       {...rest}
       component="fieldset"
       error={showError(meta)}
-      required
+      required={required}
       disabled={disabled}
     >
       {label && (
