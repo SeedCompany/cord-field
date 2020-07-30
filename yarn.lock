@@ -5595,9 +5595,9 @@ __metadata:
   linkType: hard
 
 "attr-accept@npm:^2.0.0":
-  version: 2.1.0
-  resolution: "attr-accept@npm:2.1.0"
-  checksum: 3/a31fdf3b37daed32e8f33a46e17b3a85b156900c9b7e564cf9202a4893bf475aeebda41421c0febce65bac02c528cbe603abc18592af907fc4a7b839a181a5e4
+  version: 2.2.0
+  resolution: "attr-accept@npm:2.2.0"
+  checksum: 3/63879c7d9952be9d6549c0252700c991a1bb80cad8deede5572518280c239489abfe239e96649d9373ef099afbdee1d9cca6344f2df4ce34759325971f13f4ef
   languageName: node
   linkType: hard
 
