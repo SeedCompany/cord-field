@@ -1,4 +1,5 @@
 import { Breadcrumbs, makeStyles, Typography } from '@material-ui/core';
+import { Skeleton } from '@material-ui/lab';
 import { useSnackbar } from 'notistack';
 import React from 'react';
 import { useParams } from 'react-router';
@@ -13,7 +14,7 @@ import {
 
 const useStyles = makeStyles(({ spacing, breakpoints }) => ({
   root: {
-    overflowY: 'scroll',
+    overflowY: 'auto',
     padding: spacing(4),
     maxWidth: breakpoints.values.md,
     '& > *': {
@@ -28,7 +29,7 @@ export const EditProduct = () => {
   const { projectId, engagementId, productId } = useParams();
   const { enqueueSnackbar } = useSnackbar();
 
-  const { data } = useProductQuery({
+  const { data, loading } = useProductQuery({
     variables: {
       projectId,
       engagementId,
@@ -67,30 +68,34 @@ export const EditProduct = () => {
         </Breadcrumb>
         <Typography variant="h4">Edit Product</Typography>
       </Breadcrumbs>
-      <Typography variant="h2">Edit Product</Typography>
-      <ProductForm<UpdateProduct>
-        product={product}
-        onSubmit={async ({ productType, ...input }) => {
-          try {
-            const { data } = await createProduct({
-              variables: {
-                input: {
-                  product: input,
+      <Typography variant="h2">
+        {loading ? <Skeleton width="50%" variant="text" /> : 'Edit Product'}
+      </Typography>
+      {!loading && (
+        <ProductForm<UpdateProduct>
+          product={product}
+          onSubmit={async ({ productType, ...input }) => {
+            try {
+              const { data } = await createProduct({
+                variables: {
+                  input: {
+                    product: input,
+                  },
                 },
-              },
-            });
+              });
 
-            const { product } = data!.updateProduct;
+              const { product } = data!.updateProduct;
 
-            enqueueSnackbar(`Edited Product: ${product.id}`, {
-              variant: 'success',
-            });
-          } catch (e) {
-            await handleFormError(e);
-          }
-        }}
-        initialValues={initialValues}
-      />
+              enqueueSnackbar(`Edited Product: ${product.id}`, {
+                variant: 'success',
+              });
+            } catch (e) {
+              await handleFormError(e);
+            }
+          }}
+          initialValues={initialValues}
+        />
+      )}
     </main>
   );
 };

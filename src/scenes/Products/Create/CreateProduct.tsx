@@ -1,4 +1,5 @@
 import { Breadcrumbs, makeStyles, Typography } from '@material-ui/core';
+import { Skeleton } from '@material-ui/lab';
 import { useSnackbar } from 'notistack';
 import React from 'react';
 import { useParams } from 'react-router';
@@ -17,7 +18,7 @@ import {
 
 const useStyles = makeStyles(({ spacing, breakpoints }) => ({
   root: {
-    overflowY: 'scroll',
+    overflowY: 'auto',
     padding: spacing(4),
     maxWidth: breakpoints.values.md,
     '& > *': {
@@ -32,7 +33,7 @@ export const CreateProduct = () => {
   const { projectId, engagementId } = useParams();
   const { enqueueSnackbar } = useSnackbar();
 
-  const { data } = useGetProductBreadcrumbQuery({
+  const { data, loading } = useGetProductBreadcrumbQuery({
     variables: {
       projectId,
       engagementId,
@@ -53,59 +54,65 @@ export const CreateProduct = () => {
         </Breadcrumb>
         <Typography variant="h4">Create Product</Typography>
       </Breadcrumbs>
-      <Typography variant="h2">Create Product</Typography>
-      <ProductForm<CreateProductType>
-        onSubmit={async ({
-          productType,
-          books,
-          produces,
-          scriptureReferences,
-          ...inputs
-        }) => {
-          const isDerivativeProduct =
-            productType &&
-            ['story', 'film', 'song', 'literacyMaterial'].includes(productType);
+      <Typography variant="h2">
+        {loading ? <Skeleton width="50%" variant="text" /> : 'Create Product'}
+      </Typography>
+      {!loading && (
+        <ProductForm<CreateProductType>
+          onSubmit={async ({
+            productType,
+            books,
+            produces,
+            scriptureReferences,
+            ...inputs
+          }) => {
+            const isDerivativeProduct =
+              productType &&
+              ['story', 'film', 'song', 'literacyMaterial'].includes(
+                productType
+              );
 
-          const inputWithProduces =
-            isDerivativeProduct && produces
-              ? {
-                  produces,
-                  scriptureReferencesOverride: scriptureReferences,
-                  ...inputs,
-                }
-              : {
-                  ...inputs,
-                  scriptureReferences,
-                };
+            const inputWithProduces =
+              isDerivativeProduct && produces
+                ? {
+                    produces,
+                    scriptureReferencesOverride: scriptureReferences,
+                    ...inputs,
+                  }
+                : {
+                    ...inputs,
+                    scriptureReferences,
+                  };
 
-          try {
-            const { data } = await createProduct({
-              variables: {
-                input: {
-                  product: inputWithProduces,
+            try {
+              const { data } = await createProduct({
+                variables: {
+                  input: {
+                    product: inputWithProduces,
+                  },
                 },
-              },
-            });
+              });
 
-            const { product } = data!.createProduct;
+              const { product } = data!.createProduct;
 
-            enqueueSnackbar(`Created Product: ${product.id}`, {
-              variant: 'success',
-              action: () => (
-                <ButtonLink
-                  color="inherit"
-                  to={`/projects/${projectId}/engagements/${engagementId}/products/${product.id}`}
-                >
-                  Edit
-                </ButtonLink>
-              ),
-            });
-          } catch (e) {
-            await handleFormError(e);
-          }
-        }}
-        initialValues={{ engagementId }}
-      />
+              enqueueSnackbar(`Created Product: ${product.id}`, {
+                variant: 'success',
+                action: () => (
+                  <ButtonLink
+                    color="inherit"
+                    to={`/projects/${projectId}/engagements/${engagementId}/products/${product.id}`}
+                  >
+                    Edit
+                  </ButtonLink>
+                ),
+              });
+            } catch (e) {
+              await handleFormError(e);
+            }
+          }}
+          initialValues={{ engagementId }}
+        />
+      )}
     </main>
   );
 };
