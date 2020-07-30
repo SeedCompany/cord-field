@@ -19,6 +19,7 @@ import {
   NumberField,
   RadioField,
   RadioOption,
+  SecuredField,
   SubmitButton,
   SubmitError,
   TextField,
@@ -26,6 +27,7 @@ import {
   ToggleButtonsField,
 } from '../../../components/form';
 import { methodologyCategories, newTestament, oldTestament } from './constants';
+import { ProductFormFragment } from './ProductForm.generated';
 
 const useStyles = makeStyles(({ spacing }) => ({
   form: {
@@ -47,7 +49,7 @@ const useStyles = makeStyles(({ spacing }) => ({
   },
 }));
 
-export const AccordionSection = ({
+export const renderAccordionSection = (productObj?: ProductFormFragment) => ({
   handleSubmit,
   values,
   form,
@@ -77,6 +79,7 @@ export const AccordionSection = ({
   return (
     <form onSubmit={handleSubmit} className={classes.form}>
       <SubmitError />
+      {/* TODO: secure this accordion with name=produces */}
       <Accordion
         expanded={openedSection === 'produces'}
         onChange={handleChange('produces')}
@@ -101,154 +104,184 @@ export const AccordionSection = ({
         </AccordionDetails>
       </Accordion>
 
-      <Accordion
-        expanded={openedSection === 'scriptureReferences'}
-        onChange={handleChange('scriptureReferences')}
-      >
-        <AccordionSummary expandIcon={<ExpandMore />}>
-          <Typography>Scripture Ranges</Typography>
-          {values.scriptureReferences?.map(
-            (scriptureRange: ScriptureRangeInput) => {
-              const rangeString = `${scriptureRange.start.book} ${scriptureRange.start.chapter}:${scriptureRange.start.verse} -  ${scriptureRange.end.chapter}:${scriptureRange.end.verse}`;
-              return (
-                <ToggleButton selected key={rangeString} value={scriptureRange}>
-                  {rangeString}
-                </ToggleButton>
-              );
-            }
-          )}
-        </AccordionSummary>
-        <AccordionDetails>
-          <RadioField
-            name="book"
-            className={classes.accordionSection}
-            required={false}
+      {/* //TODO: include scriptureReferencesOverride in the name */}
+      <SecuredField obj={productObj} name="scriptureReferences">
+        {(props) => (
+          <Accordion
+            expanded={openedSection === 'scriptureReferences'}
+            onChange={handleChange('scriptureReferences')}
           >
-            <Typography variant="h6">Old Testament</Typography>
-            <div className={classes.buttonListWrapper}>
-              {oldTestament.map((option) => (
-                <RadioOption key={option} label={option} value={option} />
-              ))}
-            </div>
-            <Typography variant="h6">New Testament</Typography>
-            <div className={classes.buttonListWrapper}>
-              {newTestament.map((option) => (
-                <RadioOption key={option} label={option} value={option} />
-              ))}
-            </div>
-          </RadioField>
-        </AccordionDetails>
-      </Accordion>
+            <AccordionSummary expandIcon={<ExpandMore />}>
+              <Typography>Scripture Ranges</Typography>
+              {values.scriptureReferences?.map(
+                (scriptureRange: ScriptureRangeInput) => {
+                  const rangeString = `${scriptureRange.start.book} ${scriptureRange.start.chapter}:${scriptureRange.start.verse} -  ${scriptureRange.end.chapter}:${scriptureRange.end.verse}`;
+                  return (
+                    <ToggleButton
+                      selected
+                      key={rangeString}
+                      value={scriptureRange}
+                    >
+                      {rangeString}
+                    </ToggleButton>
+                  );
+                }
+              )}
+            </AccordionSummary>
+            <AccordionDetails>
+              <RadioField
+                {...props}
+                name="book"
+                className={classes.accordionSection}
+                required={false}
+              >
+                <Typography variant="h6">Old Testament</Typography>
+                <div className={classes.buttonListWrapper}>
+                  {oldTestament.map((option) => (
+                    <RadioOption key={option} label={option} value={option} />
+                  ))}
+                </div>
+                <Typography variant="h6">New Testament</Typography>
+                <div className={classes.buttonListWrapper}>
+                  {newTestament.map((option) => (
+                    <RadioOption key={option} label={option} value={option} />
+                  ))}
+                </div>
+              </RadioField>
+            </AccordionDetails>
+          </Accordion>
+        )}
+      </SecuredField>
 
-      <Accordion
-        expanded={openedSection === 'mediums'}
-        onChange={handleChange('mediums')}
-      >
-        <AccordionSummary expandIcon={<ExpandMore />}>
-          <Typography>Choose Medium</Typography>
-          {openedSection !== 'mediums' &&
-            values.mediums?.map((medium: string) => {
-              return (
-                <ToggleButton selected key={medium} value={medium}>
-                  {medium}
+      <SecuredField obj={productObj} name="mediums">
+        {(props) => (
+          <Accordion
+            expanded={openedSection === 'mediums'}
+            onChange={handleChange('mediums')}
+          >
+            <AccordionSummary expandIcon={<ExpandMore />}>
+              <Typography>Choose Medium</Typography>
+              {openedSection !== 'mediums' &&
+                values.mediums?.map((medium: string) => {
+                  return (
+                    <ToggleButton selected key={medium} value={medium}>
+                      {medium}
+                    </ToggleButton>
+                  );
+                })}
+            </AccordionSummary>
+            <AccordionDetails>
+              <ToggleButtonsField {...props}>
+                {[
+                  'Print',
+                  'Web',
+                  'EBook',
+                  'App',
+                  'Audio',
+                  'OralTranslation',
+                  'Video',
+                  'Other',
+                ].map((option) => (
+                  <ToggleButtonOption
+                    key={option}
+                    label={option}
+                    value={option}
+                  />
+                ))}
+              </ToggleButtonsField>
+            </AccordionDetails>
+          </Accordion>
+        )}
+      </SecuredField>
+
+      <SecuredField obj={productObj} name="purposes">
+        {(props) => (
+          <Accordion
+            expanded={openedSection === 'purposes'}
+            onChange={handleChange('purposes')}
+          >
+            <AccordionSummary expandIcon={<ExpandMore />}>
+              <Typography>Choose Purposes</Typography>
+              {openedSection !== 'purposes' &&
+                values.purposes?.map((purpose: string) => {
+                  return (
+                    <ToggleButton selected key={purpose} value={purpose}>
+                      {purpose}
+                    </ToggleButton>
+                  );
+                })}
+            </AccordionSummary>
+            <AccordionDetails>
+              <ToggleButtonsField {...props}>
+                {[
+                  'EvangelismChurchPlanting',
+                  'ChurchLife',
+                  'ChurchMaturity',
+                  'SocialIssues',
+                  'Discipleship',
+                ].map((option) => (
+                  <ToggleButtonOption
+                    key={option}
+                    label={option}
+                    value={option}
+                  />
+                ))}
+              </ToggleButtonsField>
+            </AccordionDetails>
+          </Accordion>
+        )}
+      </SecuredField>
+
+      <SecuredField obj={productObj} name="purposes">
+        {(props) => (
+          <Accordion
+            expanded={openedSection === 'methodology'}
+            onChange={handleChange('methodology')}
+          >
+            <AccordionSummary expandIcon={<ExpandMore />}>
+              <Typography>Choose Methodology</Typography>
+              {methodology && openedSection !== 'methodology' && (
+                <ToggleButton selected value={methodology}>
+                  {methodologyButtonText}
                 </ToggleButton>
-              );
-            })}
-        </AccordionSummary>
-        <AccordionDetails>
-          <ToggleButtonsField name="mediums">
-            {[
-              'Print',
-              'Web',
-              'EBook',
-              'App',
-              'Audio',
-              'OralTranslation',
-              'Video',
-              'Other',
-            ].map((option) => (
-              <ToggleButtonOption key={option} label={option} value={option} />
-            ))}
-          </ToggleButtonsField>
-        </AccordionDetails>
-      </Accordion>
-
-      <Accordion
-        expanded={openedSection === 'purposes'}
-        onChange={handleChange('purposes')}
-      >
-        <AccordionSummary expandIcon={<ExpandMore />}>
-          <Typography>Choose Purposes</Typography>
-          {openedSection !== 'purposes' &&
-            values.purposes?.map((purpose: string) => {
-              return (
-                <ToggleButton selected key={purpose} value={purpose}>
-                  {purpose}
-                </ToggleButton>
-              );
-            })}
-        </AccordionSummary>
-        <AccordionDetails>
-          <ToggleButtonsField name="purposes">
-            {[
-              'EvangelismChurchPlanting',
-              'ChurchLife',
-              'ChurchMaturity',
-              'SocialIssues',
-              'Discipleship',
-            ].map((option) => (
-              <ToggleButtonOption key={option} label={option} value={option} />
-            ))}
-          </ToggleButtonsField>
-        </AccordionDetails>
-      </Accordion>
-
-      <Accordion
-        expanded={openedSection === 'methodology'}
-        onChange={handleChange('methodology')}
-      >
-        <AccordionSummary expandIcon={<ExpandMore />}>
-          <Typography>Choose Methodology</Typography>
-          {methodology && openedSection !== 'methodology' && (
-            <ToggleButton selected value={methodology}>
-              {methodologyButtonText}
-            </ToggleButton>
-          )}
-        </AccordionSummary>
-        <RadioField name="methodology" required={false}>
-          <AccordionDetails className={classes.accordionSection}>
-            <Typography variant="h6">Written</Typography>
-            <div className={classes.buttonListWrapper}>
-              {['Paratext', 'OtherWritten'].map((option) => (
-                <RadioOption key={option} label={option} value={option} />
-              ))}
-            </div>
-            <Typography variant="h6">Oral Translation</Typography>
-            <div className={classes.buttonListWrapper}>
-              {['Render', 'OtherOralTranslation'].map((option) => (
-                <RadioOption key={option} label={option} value={option} />
-              ))}
-            </div>
-            <Typography variant="h6">Oral Stories</Typography>
-            <div className={classes.buttonListWrapper}>
-              {[
-                'BibleStories',
-                'BibleStorying',
-                'OneStory',
-                'OtherOralStories',
-              ].map((option) => (
-                <RadioOption key={option} label={option} value={option} />
-              ))}
-            </div>
-            <Typography variant="h6">Visual</Typography>
-            <div className={classes.buttonListWrapper}>
-              {['Film', 'SignLanguage', 'OtherVisual'].map((option) => (
-                <RadioOption key={option} label={option} value={option} />
-              ))}
-            </div>
-          </AccordionDetails>
-        </RadioField>
-      </Accordion>
+              )}
+            </AccordionSummary>
+            <RadioField {...props} required={false}>
+              <AccordionDetails className={classes.accordionSection}>
+                <Typography variant="h6">Written</Typography>
+                <div className={classes.buttonListWrapper}>
+                  {['Paratext', 'OtherWritten'].map((option) => (
+                    <RadioOption key={option} label={option} value={option} />
+                  ))}
+                </div>
+                <Typography variant="h6">Oral Translation</Typography>
+                <div className={classes.buttonListWrapper}>
+                  {['Render', 'OtherOralTranslation'].map((option) => (
+                    <RadioOption key={option} label={option} value={option} />
+                  ))}
+                </div>
+                <Typography variant="h6">Oral Stories</Typography>
+                <div className={classes.buttonListWrapper}>
+                  {[
+                    'BibleStories',
+                    'BibleStorying',
+                    'OneStory',
+                    'OtherOralStories',
+                  ].map((option) => (
+                    <RadioOption key={option} label={option} value={option} />
+                  ))}
+                </div>
+                <Typography variant="h6">Visual</Typography>
+                <div className={classes.buttonListWrapper}>
+                  {['Film', 'SignLanguage', 'OtherVisual'].map((option) => (
+                    <RadioOption key={option} label={option} value={option} />
+                  ))}
+                </div>
+              </AccordionDetails>
+            </RadioField>
+          </Accordion>
+        )}
+      </SecuredField>
 
       <SubmitButton fullWidth={false} color="primary" size="medium">
         Submit

@@ -69,6 +69,7 @@ export const EditProduct = () => {
       </Breadcrumbs>
       <Typography variant="h2">Edit Product</Typography>
       <ProductForm<UpdateProduct>
+        product={product}
         onSubmit={async ({ productType, ...input }) => {
           //TODO: need to catch this error
           const { data } = await createProduct({

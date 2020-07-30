@@ -1,6 +1,7 @@
 import React from 'react';
 import { Form, FormProps, FormSpyRenderProps } from 'react-final-form';
-import { AccordionSection } from './AccordionSection';
+import { renderAccordionSection } from './AccordionSection';
+import { ProductFormFragment } from './ProductForm.generated';
 
 interface ProductFormCustomValues {
   productType?: string;
@@ -11,9 +12,12 @@ interface ProductFormCustomValues {
   endVerse?: string;
 }
 
-export const ProductForm = <FormMutationValues extends any>(
-  props: FormProps<ProductFormCustomValues & FormMutationValues>
-) => {
+export const ProductForm = <FormMutationValues extends any>({
+  product,
+  ...formProps
+}: FormProps<ProductFormCustomValues & FormMutationValues> & {
+  product?: ProductFormFragment;
+}) => {
   const parseScriptureRange = ({
     book,
     startChapter,
@@ -35,7 +39,7 @@ export const ProductForm = <FormMutationValues extends any>(
 
   return (
     <Form
-      {...props}
+      {...formProps}
       mutators={{
         clear: (fieldNames, state, { changeValue }) => {
           fieldNames.forEach((name: string) =>
@@ -54,7 +58,7 @@ export const ProductForm = <FormMutationValues extends any>(
         },
       }}
       //Separating out AccordionSection and passing as render prop so when accordion state gets updated (expand/collapes) the Form doesn't rerender
-      children={AccordionSection}
+      children={renderAccordionSection(product)}
     ></Form>
   );
 };
