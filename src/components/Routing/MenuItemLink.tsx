@@ -26,11 +26,15 @@ export const MenuItemLink = forwardRef<HTMLAnchorElement, MenuItemLinkProps>(
   ({ external, to, children, ...props }, ref) => {
     if (external) {
       assert(typeof to === 'string');
-      return (
-        <MenuItem {...props} href={to} button ref={ref} component="a">
-          {children}
-        </MenuItem>
-      );
+      // Types are all messed up, but this works.
+      const miProps: any = {
+        ...props,
+        href: to,
+        button: true,
+        ref: ref,
+        component: 'a',
+      };
+      return <MenuItem {...miProps}>{children}</MenuItem>;
     }
 
     return (

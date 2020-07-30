@@ -3698,12 +3698,21 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/react-dom@npm:*, @types/react-dom@npm:^16.9.0":
+"@types/react-dom@npm:*":
   version: 16.9.6
   resolution: "@types/react-dom@npm:16.9.6"
   dependencies:
     "@types/react": "*"
   checksum: 3/b6f6b8876d67f8673ab7a634a12ef4e834804e9e84e115b3e12e35026e2c956d42887c691e0cbda68db5c5dd42c2160715c14bf391fabf8661c93efb6aab89a2
+  languageName: node
+  linkType: hard
+
+"@types/react-dom@npm:^16.9.8":
+  version: 16.9.8
+  resolution: "@types/react-dom@npm:16.9.8"
+  dependencies:
+    "@types/react": "*"
+  checksum: 3/53a223c0266178bca9161301d18ee6199e8f75f88caed5c4601c5aaedaf4c68f03bd72f6aafa979254beb20759f0b68a542ce04295d704eb67ae179769c50813
   languageName: node
   linkType: hard
 
@@ -3734,13 +3743,23 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/react@npm:*, @types/react@npm:^16.9.0, @types/react@npm:^16.9.11":
+"@types/react@npm:*, @types/react@npm:^16.9.11":
   version: 16.9.34
   resolution: "@types/react@npm:16.9.34"
   dependencies:
     "@types/prop-types": "*"
     csstype: ^2.2.0
   checksum: 3/40912bdb87db9663ee77b7a0980c07a7a2617ec60495631d6f9575f4abab41269fad522eb4d6d2109e119c06891d03ac65bb96ddb847fc35c8a5558bfb4ebae0
+  languageName: node
+  linkType: hard
+
+"@types/react@npm:^16.9.43":
+  version: 16.9.43
+  resolution: "@types/react@npm:16.9.43"
+  dependencies:
+    "@types/prop-types": "*"
+    csstype: ^2.2.0
+  checksum: 3/b9d4491463ab013e0752bf6f99bd578f91504f74dfd1ebd7fbceebbdffe89762b040494a78403e249bb72d1645d2784f844890e7b1acdb3634432533ff9732fb
   languageName: node
   linkType: hard
 
@@ -7012,8 +7031,8 @@ __metadata:
     "@types/lodash": ^4.14.149
     "@types/luxon": 1.24.2
     "@types/node": ^12.0.0
-    "@types/react": ^16.9.0
-    "@types/react-dom": ^16.9.0
+    "@types/react": ^16.9.43
+    "@types/react-dom": ^16.9.8
     "@types/seedrandom": ^2.4.28
     "@types/validator": ^13.0.0
     babel-plugin-import: ^1.13.0
