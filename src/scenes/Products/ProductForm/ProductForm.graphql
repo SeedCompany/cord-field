@@ -1,0 +1,64 @@
+fragment ProductForm on Product {
+  ... on DerivativeScriptureProduct {
+    produces {
+      canRead
+      canEdit
+      value {
+        __typename
+        createdAt
+      }
+    }
+    scriptureReferencesOverride {
+      canRead
+      canEdit
+      value {
+        start {
+          book
+          chapter
+          verse
+        }
+        end {
+          book
+          chapter
+          verse
+        }
+      }
+    }
+  }
+
+  id
+  legacyType
+  scriptureReferences {
+    canRead
+    canEdit
+    value {
+      start {
+        book
+        chapter
+        verse
+      }
+      end {
+        book
+        chapter
+        verse
+      }
+    }
+  }
+  mediums {
+    canRead
+    canEdit
+    value
+  }
+  purposes {
+    canRead
+    canEdit
+    value
+  }
+  methodology {
+    canRead
+    canEdit
+    value
+  }
+  approach
+  legacyType
+}
