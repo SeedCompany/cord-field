@@ -2517,15 +2517,15 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@material-ui/core@npm:^4.10.1":
-  version: 4.10.1
-  resolution: "@material-ui/core@npm:4.10.1"
+"@material-ui/core@npm:^4.11.0":
+  version: 4.11.0
+  resolution: "@material-ui/core@npm:4.11.0"
   dependencies:
     "@babel/runtime": ^7.4.4
     "@material-ui/styles": ^4.10.0
     "@material-ui/system": ^4.9.14
     "@material-ui/types": ^5.1.0
-    "@material-ui/utils": ^4.9.12
+    "@material-ui/utils": ^4.10.2
     "@types/react-transition-group": ^4.2.0
     clsx: ^1.0.4
     hoist-non-react-statics: ^3.3.2
@@ -2540,7 +2540,7 @@ __metadata:
   peerDependenciesMeta:
     "@types/react":
       optional: true
-  checksum: 3/3a0390f8f40a62b5d4f8b5c6b29588102e222a99d276f0865bcfca688a7eef6f26e70bd370fbc29bf984e6b9d4463523fafe1c8670970f0c4e975560c6ae799c
+  checksum: 3/02b3ada79f258f5e5d64fbab804c65d07ea3e8b2533e40c18fcab49c8065ebcb5acfea4ea0b033f2d91dee1fee3a6720f567c0c60f3be1bb5bd754be2d9bf322
   languageName: node
   linkType: hard
 
@@ -2561,12 +2561,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@material-ui/lab@npm:^4.0.0-alpha.55":
-  version: 4.0.0-alpha.55
-  resolution: "@material-ui/lab@npm:4.0.0-alpha.55"
+"@material-ui/lab@npm:^4.0.0-alpha.56":
+  version: 4.0.0-alpha.56
+  resolution: "@material-ui/lab@npm:4.0.0-alpha.56"
   dependencies:
     "@babel/runtime": ^7.4.4
-    "@material-ui/utils": ^4.9.6
+    "@material-ui/utils": ^4.10.2
     clsx: ^1.0.4
     prop-types: ^15.7.2
     react-is: ^16.8.0
@@ -2578,7 +2578,7 @@ __metadata:
   peerDependenciesMeta:
     "@types/react":
       optional: true
-  checksum: 3/7611e0fe8ecfb91c5454f413dd6d46b4e5751c5e943ccc8b608cd522946e5a262db01516758d624a7b441be2bc425e3d3314d8e737f51102cacf75b2f255098f
+  checksum: 3/ed04d1f6c3cd926e05b4c6423c16411b6ece41adcb0a40e7a69fd29029628bc164db4579f5158fb1e7b0e26cd37769b7fc28e5a5eb3f2f7147d9c27cb1937256
   languageName: node
   linkType: hard
 
@@ -2671,9 +2671,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@material-ui/utils@npm:^4.9.12":
-  version: 4.9.12
-  resolution: "@material-ui/utils@npm:4.9.12"
+"@material-ui/utils@npm:^4.10.2":
+  version: 4.10.2
+  resolution: "@material-ui/utils@npm:4.10.2"
   dependencies:
     "@babel/runtime": ^7.4.4
     prop-types: ^15.7.2
@@ -2681,7 +2681,7 @@ __metadata:
   peerDependencies:
     react: ^16.8.0
     react-dom: ^16.8.0
-  checksum: 3/5674fdb1a72644baab5288ec171e935286f56a1fa691229ad12d19e8aae304c52ae8c2f5286f28eec47fc8740dc9d709cde590228284c88fb76237ed62986881
+  checksum: 3/53b2a9ca15fce2b692c41bec9e59a10c47c2527a864f81081432d92bd82fbf8748200df6c52dc4ae459f041740ec599cd34f62b210a50b27992b4032742a273f
   languageName: node
   linkType: hard
 
@@ -6992,9 +6992,9 @@ __metadata:
     "@graphql-codegen/typescript": ^1.17.6
     "@graphql-codegen/typescript-operations": ^1.17.6
     "@graphql-codegen/typescript-react-apollo": ^1.17.6
-    "@material-ui/core": ^4.10.1
+    "@material-ui/core": ^4.11.0
     "@material-ui/icons": ^4.9.1
-    "@material-ui/lab": ^4.0.0-alpha.55
+    "@material-ui/lab": ^4.0.0-alpha.56
     "@material-ui/pickers": 4.0.0-alpha.8
     "@seedcompany/eslint-plugin": ~0.0.6
     "@storybook/addon-actions": ^5.3.18
