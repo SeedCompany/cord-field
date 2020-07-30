@@ -17,6 +17,8 @@ import { FormRenderProps } from 'react-final-form';
 import { ScriptureRangeInput } from '../../../api';
 import {
   NumberField,
+  RadioField,
+  RadioOption,
   SubmitButton,
   SubmitError,
   TextField,
@@ -61,7 +63,7 @@ export const AccordionSection = ({
     setOpenedSection(isExpanded ? panel : '');
   };
 
-  const productType = values.productType?.[0];
+  const productType = values.productType;
   const produces = values.produces || '';
   const isDerivativeProduct = [
     'story',
@@ -70,7 +72,7 @@ export const AccordionSection = ({
     'literacyMaterial',
   ].includes(productType);
 
-  const methodology = values.methodology?.[0];
+  const methodology = values.methodology;
   const methodologyButtonText = `${methodologyCategories[methodology]} - ${methodology}`;
   return (
     <form onSubmit={handleSubmit} className={classes.form}>
@@ -88,17 +90,13 @@ export const AccordionSection = ({
           )}
         </AccordionSummary>
         <AccordionDetails className={classes.productSection}>
-          <ToggleButtonsField name="productType" pickOne>
+          <RadioField name="productType" required={false}>
             {['scripture', 'story', 'film', 'song', 'literacyMaterial'].map(
               (option) => (
-                <ToggleButtonOption
-                  key={option}
-                  label={option}
-                  value={option}
-                />
+                <RadioOption key={option} label={option} value={option} />
               )
             )}
-          </ToggleButtonsField>
+          </RadioField>
           {isDerivativeProduct && <TextField name="produces" required />}
         </AccordionDetails>
       </Accordion>
@@ -121,32 +119,24 @@ export const AccordionSection = ({
           )}
         </AccordionSummary>
         <AccordionDetails>
-          <ToggleButtonsField
-            name="books"
-            pickOne
+          <RadioField
+            name="book"
             className={classes.accordionSection}
+            required={false}
           >
             <Typography variant="h6">Old Testament</Typography>
             <div className={classes.buttonListWrapper}>
               {oldTestament.map((option) => (
-                <ToggleButtonOption
-                  key={option}
-                  label={option}
-                  value={option}
-                />
+                <RadioOption key={option} label={option} value={option} />
               ))}
             </div>
             <Typography variant="h6">New Testament</Typography>
             <div className={classes.buttonListWrapper}>
               {newTestament.map((option) => (
-                <ToggleButtonOption
-                  key={option}
-                  label={option}
-                  value={option}
-                />
+                <RadioOption key={option} label={option} value={option} />
               ))}
             </div>
-          </ToggleButtonsField>
+          </RadioField>
         </AccordionDetails>
       </Accordion>
 
@@ -225,26 +215,18 @@ export const AccordionSection = ({
             </ToggleButton>
           )}
         </AccordionSummary>
-        <ToggleButtonsField name="methodology" pickOne>
+        <RadioField name="methodology" required={false}>
           <AccordionDetails className={classes.accordionSection}>
             <Typography variant="h6">Written</Typography>
             <div className={classes.buttonListWrapper}>
               {['Paratext', 'OtherWritten'].map((option) => (
-                <ToggleButtonOption
-                  key={option}
-                  label={option}
-                  value={option}
-                />
+                <RadioOption key={option} label={option} value={option} />
               ))}
             </div>
             <Typography variant="h6">Oral Translation</Typography>
             <div className={classes.buttonListWrapper}>
               {['Render', 'OtherOralTranslation'].map((option) => (
-                <ToggleButtonOption
-                  key={option}
-                  label={option}
-                  value={option}
-                />
+                <RadioOption key={option} label={option} value={option} />
               ))}
             </div>
             <Typography variant="h6">Oral Stories</Typography>
@@ -255,31 +237,23 @@ export const AccordionSection = ({
                 'OneStory',
                 'OtherOralStories',
               ].map((option) => (
-                <ToggleButtonOption
-                  key={option}
-                  label={option}
-                  value={option}
-                />
+                <RadioOption key={option} label={option} value={option} />
               ))}
             </div>
             <Typography variant="h6">Visual</Typography>
             <div className={classes.buttonListWrapper}>
               {['Film', 'SignLanguage', 'OtherVisual'].map((option) => (
-                <ToggleButtonOption
-                  key={option}
-                  label={option}
-                  value={option}
-                />
+                <RadioOption key={option} label={option} value={option} />
               ))}
             </div>
           </AccordionDetails>
-        </ToggleButtonsField>
+        </RadioField>
       </Accordion>
 
       <SubmitButton fullWidth={false} color="primary" size="medium">
         Submit
       </SubmitButton>
-      <Dialog open={Boolean(values.books?.[0])}>
+      <Dialog open={Boolean(values.book)}>
         <DialogTitle>Choose Verse</DialogTitle>
         <DialogContent>
           <Typography>Start</Typography>
@@ -310,7 +284,7 @@ export const AccordionSection = ({
           <Button
             onClick={() =>
               form.mutators.clear(
-                'books',
+                'book',
                 'startChapter',
                 'startVerse',
                 'endChapter',
@@ -324,7 +298,7 @@ export const AccordionSection = ({
             onClick={() => {
               form.mutators.setScriptureReferencesField();
               form.mutators.clear(
-                'books',
+                'book',
                 'startChapter',
                 'startVerse',
                 'endChapter',

@@ -44,22 +44,12 @@ export const EditProduct: FC = () => {
     scriptureReferences: product?.scriptureReferences.value,
     mediums: product?.mediums.value,
     purposes: product?.purposes.value,
+    methodology: product?.methodology.value,
   };
-
-  const initialValuesWithMethodology = product?.methodology.value
-    ? {
-        ...initialValues,
-        methodology: [product.methodology.value],
-      }
-    : initialValues;
 
   const [createProduct] = useUpdateProductMutation();
 
-  const onSubmit = async ({ productType, ...inputs }: any) => {
-    const input = {
-      ...inputs,
-      methodology: inputs.methodology?.[0],
-    };
+  const onSubmit = async ({ productType, ...input }: any) => {
     //TODO: need to catch this error
     const { data } = await createProduct({
       variables: {
@@ -87,10 +77,7 @@ export const EditProduct: FC = () => {
         <Typography variant="h4">Edit Product</Typography>
       </Breadcrumbs>
       <Typography variant="h2">Edit Product</Typography>
-      <ProductForm
-        onSubmit={onSubmit}
-        initialValues={initialValuesWithMethodology}
-      />
+      <ProductForm onSubmit={onSubmit} initialValues={initialValues} />
     </main>
   );
 };

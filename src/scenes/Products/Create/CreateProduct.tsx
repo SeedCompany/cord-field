@@ -55,15 +55,12 @@ export const CreateProduct = () => {
           productType,
           books,
           produces,
-          methodology,
           scriptureReferences,
           ...inputs
         }) => {
           const isDerivativeProduct =
-            productType?.[0] &&
-            ['story', 'film', 'song', 'literacyMaterial'].includes(
-              productType[0]
-            );
+            productType &&
+            ['story', 'film', 'song', 'literacyMaterial'].includes(productType);
 
           const inputWithProduces =
             isDerivativeProduct && produces
@@ -77,16 +74,11 @@ export const CreateProduct = () => {
                   scriptureReferences,
                 };
 
-          //TODO: remove this step once ToggleButtonsField saves single select values as strings
-          const inputWithMethodology = methodology?.[0]
-            ? { ...inputWithProduces, methodology: methodology[0] }
-            : inputWithProduces;
-
           //TODO: need to catch this error
           const { data } = await createProduct({
             variables: {
               input: {
-                product: inputWithMethodology,
+                product: inputWithProduces,
               },
             },
           });
