@@ -8,8 +8,38 @@ mutation UpdateProduct($input: UpdateProductInput!) {
 
 query Product($productId: ID!, $projectId: ID!, $engagementId: ID!) {
   product(id: $productId) {
+    ... on DerivativeScriptureProduct {
+      produces {
+        canRead
+        canEdit
+        value {
+          __typename
+          createdAt
+        }
+      }
+      scriptureReferencesOverride {
+        canRead
+        canEdit
+        value {
+          start {
+            book
+            chapter
+            verse
+          }
+          end {
+            book
+            chapter
+            verse
+          }
+        }
+      }
+    }
+
     id
+    legacyType
     scriptureReferences {
+      canRead
+      canEdit
       value {
         start {
           book
@@ -24,12 +54,18 @@ query Product($productId: ID!, $projectId: ID!, $engagementId: ID!) {
       }
     }
     mediums {
+      canRead
+      canEdit
       value
     }
     purposes {
+      canRead
+      canEdit
       value
     }
     methodology {
+      canRead
+      canEdit
       value
     }
     approach
