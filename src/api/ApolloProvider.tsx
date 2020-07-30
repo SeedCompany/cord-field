@@ -5,7 +5,10 @@ import {
   HttpLink,
   InMemoryCache,
 } from '@apollo/client';
-import { onError as createErrorLink, ErrorHandler } from '@apollo/link-error';
+import {
+  onError as createErrorLink,
+  ErrorHandler,
+} from '@apollo/client/link/error';
 import { IconButton } from '@material-ui/core';
 import { Close } from '@material-ui/icons';
 import { ProviderContext as Snackbar, useSnackbar } from 'notistack';
