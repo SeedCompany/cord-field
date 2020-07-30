@@ -5367,7 +5367,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"babel-loader@npm:8.1.0":
+"babel-loader@npm:8.1.0, babel-loader@npm:^8.1.0":
   version: 8.1.0
   resolution: "babel-loader@npm:8.1.0"
   dependencies:
@@ -7219,6 +7219,7 @@ __metadata:
     "@types/seedrandom": ^2.4.28
     "@types/validator": ^13.1.0
     babel-jest: 24.9.0
+    babel-loader: ^8.1.0
     babel-plugin-import: ^1.13.0
     babel-plugin-mui-make-styles: ^0.1.1
     clsx: ^1.1.1
