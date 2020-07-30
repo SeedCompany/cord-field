@@ -3630,10 +3630,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/luxon@npm:^1.22.0":
-  version: 1.22.0
-  resolution: "@types/luxon@npm:1.22.0"
-  checksum: 3/62fb1afd7f217781f40a7297fe7ca974294d0e41aeab64e5c0aa49ddd9d01f937dcb91b8fb5df2b561189091acc82ebcc81585c562ca1d2ae50fb70950e83df8
+"@types/luxon@npm:1.24.2":
+  version: 1.24.2
+  resolution: "@types/luxon@npm:1.24.2"
+  checksum: 3/f2a659d79d7c0a4c234439c97f257415cc0489942e6ed00c64a1ff3d010cf4a2f9fb1b67fc422a82b67d680ab7a33bc53150715898700022b4dc064680f43bde
   languageName: node
   linkType: hard
 
@@ -7010,7 +7010,7 @@ __metadata:
     "@testing-library/user-event": ^7.1.2
     "@types/jest": ^24.2.1
     "@types/lodash": ^4.14.149
-    "@types/luxon": ^1.22.0
+    "@types/luxon": 1.24.2
     "@types/node": ^12.0.0
     "@types/react": ^16.9.0
     "@types/react-dom": ^16.9.0
@@ -7028,7 +7028,7 @@ __metadata:
     husky: ^4.2.5
     lint-staged: ^10.1.3
     lodash: ^4.17.15
-    luxon: ^1.23.0
+    luxon: ^1.24.1
     notistack: ^0.9.11
     npm-run-all: ^4.1.5
     prettier: ^2.0.4
@@ -13241,10 +13241,10 @@ fsevents@^1.2.7:
   languageName: node
   linkType: hard
 
-"luxon@npm:^1.23.0":
-  version: 1.23.0
-  resolution: "luxon@npm:1.23.0"
-  checksum: 3/0d7238f2612cd9303f6670c31e2fcc75578bb4e4dc4d649989d4a79df428c9046e3525fccb58e040de3de8c21647521efa4aa25eff8fb5a9320d47bc5a1eee07
+"luxon@npm:^1.24.1":
+  version: 1.24.1
+  resolution: "luxon@npm:1.24.1"
+  checksum: 3/3e5a9599e1fb49d2b5e9c6f6d42ce4e4d05d785310785ac8a67ef2ccd26477dd123eb688057366330be847ef400bb2503f77ac26cb7560c09f32846c7973ee34
   languageName: node
   linkType: hard
 
