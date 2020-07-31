@@ -117,7 +117,7 @@ export const LanguageDetail = () => {
             <LeastOfThese language={language} />
           </Grid>
           <DisplayProperty
-            label="Pronunciation"
+            label="Pronunciation Guide"
             value={language?.displayNamePronunciation.value}
             loading={!language}
           />

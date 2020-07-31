@@ -106,7 +106,7 @@ export const LanguageForm = <T extends any>({
                   {(props) => (
                     <Grid item xs={12}>
                       <TextField
-                        label="Pronunciation"
+                        label="Pronunciation Guide"
                         placeholder="Enter Pronunciation of Public Name"
                         margin="none"
                         {...props}
