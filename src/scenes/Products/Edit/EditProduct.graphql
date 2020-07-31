@@ -14,14 +14,6 @@ query Product($productId: ID!, $projectId: ID!, $engagementId: ID!) {
     ...ProjectBreadcrumb
   }
   engagement(id: $engagementId) {
-    ... on LanguageEngagement {
-      language {
-        value {
-          name {
-            value
-          }
-        }
-      }
-    }
+    ...EngagementBreadcrumb
   }
 }
