@@ -7,7 +7,7 @@ import {
   CreateProduct as CreateProductType,
   handleFormError,
 } from '../../../api';
-import { Breadcrumb } from '../../../components/Breadcrumb';
+import { EngagementBreadcrumb } from '../../../components/EngagementBreadcrumb';
 import { ProjectBreadcrumb } from '../../../components/ProjectBreadcrumb';
 import { ButtonLink } from '../../../components/Routing';
 import { ProductForm } from '../ProductForm';
@@ -41,6 +41,7 @@ export const CreateProduct = () => {
   });
 
   const project = data?.project;
+  const engagement = data?.engagement;
 
   const [createProduct] = useCreateProductMutation();
 
@@ -48,10 +49,7 @@ export const CreateProduct = () => {
     <main className={classes.root}>
       <Breadcrumbs>
         <ProjectBreadcrumb data={project} />
-        <Breadcrumb to={`/projects/${projectId}/engagements/${engagementId}`}>
-          {data?.engagement.__typename === 'LanguageEngagement' &&
-            data.engagement.language.value?.name.value}
-        </Breadcrumb>
+        <EngagementBreadcrumb data={engagement} projectId={projectId} />
         <Typography variant="h4">Create Product</Typography>
       </Breadcrumbs>
       <Typography variant="h2">

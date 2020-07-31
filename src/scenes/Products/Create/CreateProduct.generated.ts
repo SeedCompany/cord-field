@@ -4,6 +4,11 @@ import * as ApolloReactHooks from '@apollo/client';
 import gql from 'graphql-tag';
 import * as Types from '../../../api/schema.generated';
 import {
+  EngagementBreadcrumb_InternshipEngagement_Fragment,
+  EngagementBreadcrumb_LanguageEngagement_Fragment,
+} from '../../../components/EngagementBreadcrumb/EngagementBreadcrumb.generated';
+import { EngagementBreadcrumbFragmentDoc } from '../../../components/EngagementBreadcrumb/EngagementBreadcrumb.generated';
+import {
   ProjectBreadcrumb_InternshipProject_Fragment,
   ProjectBreadcrumb_TranslationProject_Fragment,
 } from '../../../components/ProjectBreadcrumb/ProjectBreadcrumb.generated';
@@ -41,19 +46,12 @@ export interface GetProductBreadcrumbQuery {
         readonly __typename?: 'InternshipProject';
       } & ProjectBreadcrumb_InternshipProject_Fragment);
   readonly engagement:
-    | ({ readonly __typename?: 'LanguageEngagement' } & {
-        readonly language: { readonly __typename?: 'SecuredLanguage' } & {
-          readonly value?: Types.Maybe<
-            { readonly __typename?: 'Language' } & {
-              readonly name: { readonly __typename?: 'SecuredString' } & Pick<
-                Types.SecuredString,
-                'value'
-              >;
-            }
-          >;
-        };
-      })
-    | { readonly __typename?: 'InternshipEngagement' };
+    | ({
+        readonly __typename?: 'LanguageEngagement';
+      } & EngagementBreadcrumb_LanguageEngagement_Fragment)
+    | ({
+        readonly __typename?: 'InternshipEngagement';
+      } & EngagementBreadcrumb_InternshipEngagement_Fragment);
 }
 
 export const CreateProductDocument = gql`
@@ -114,18 +112,11 @@ export const GetProductBreadcrumbDocument = gql`
       ...ProjectBreadcrumb
     }
     engagement(id: $engagementId) {
-      ... on LanguageEngagement {
-        language {
-          value {
-            name {
-              value
-            }
-          }
-        }
-      }
+      ...EngagementBreadcrumb
     }
   }
   ${ProjectBreadcrumbFragmentDoc}
+  ${EngagementBreadcrumbFragmentDoc}
 `;
 
 /**
