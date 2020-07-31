@@ -1,0 +1,55 @@
+fragment ProductCard on Product {
+  ... on DerivativeScriptureProduct {
+    produces {
+      canRead
+      canEdit
+      value {
+        __typename
+        createdAt
+      }
+    }
+    scriptureReferencesOverride {
+      canRead
+      canEdit
+      value {
+        start {
+          book
+          chapter
+          verse
+        }
+        end {
+          book
+          chapter
+          verse
+        }
+      }
+    }
+  }
+  id
+  scriptureReferences {
+    canRead
+    canEdit
+    value {
+      start {
+        book
+        chapter
+        verse
+      }
+      end {
+        book
+        chapter
+        verse
+      }
+    }
+  }
+  mediums {
+    canRead
+    canEdit
+    value
+  }
+  methodology {
+    canRead
+    canEdit
+    value
+  }
+}
