@@ -1,0 +1,13 @@
+fragment EngagementBreadcrumb on Engagement {
+  id
+  ... on LanguageEngagement {
+    language {
+      value {
+        name {
+          canRead
+          value
+        }
+      }
+    }
+  }
+}
