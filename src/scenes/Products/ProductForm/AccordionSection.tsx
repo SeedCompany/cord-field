@@ -12,6 +12,7 @@ import {
 } from '@material-ui/core';
 import { ExpandMore } from '@material-ui/icons';
 import { ToggleButton } from '@material-ui/lab';
+import { startCase } from 'lodash';
 import React, { useState } from 'react';
 import { FormRenderProps } from 'react-final-form';
 import { ScriptureRangeInput } from '../../../api';
@@ -35,6 +36,10 @@ const useStyles = makeStyles(({ spacing }) => ({
       marginBottom: spacing(2),
     },
   },
+  accordionSummary: {
+    flexDirection: 'column',
+  },
+
   productSection: {
     display: 'flex',
     flexDirection: 'column',
@@ -68,14 +73,16 @@ export const renderAccordionSection = (productObj?: ProductFormFragment) => ({
   const productType = values.productType;
   const produces = values.produces || '';
   const isDerivativeProduct = [
-    'story',
-    'film',
-    'song',
-    'literacyMaterial',
+    'Story',
+    'Film',
+    'Song',
+    'LiteracyMaterial',
   ].includes(productType);
 
   const methodology = values.methodology;
-  const methodologyButtonText = `${methodologyCategories[methodology]} - ${methodology}`;
+  const methodologyButtonText = `${startCase(
+    methodologyCategories[methodology]
+  )} - ${startCase(methodology)}`;
   return (
     <form onSubmit={handleSubmit} className={classes.form}>
       <SubmitError />
@@ -84,19 +91,30 @@ export const renderAccordionSection = (productObj?: ProductFormFragment) => ({
         expanded={openedSection === 'produces'}
         onChange={handleChange('produces')}
       >
-        <AccordionSummary expandIcon={<ExpandMore />}>
-          <Typography>Choose Product</Typography>
-          {productType && openedSection !== 'produces' && (
-            <ToggleButton selected value={produces}>
-              {`${productType} ${isDerivativeProduct ? produces : ''}`}
-            </ToggleButton>
-          )}
+        <AccordionSummary
+          expandIcon={<ExpandMore />}
+          classes={{ content: classes.accordionSummary }}
+        >
+          <Typography variant="h5">Choose Product</Typography>
+          <div>
+            {productType && openedSection !== 'produces' && (
+              <ToggleButton selected value={produces}>
+                {`${startCase(productType)} ${
+                  isDerivativeProduct ? produces : ''
+                }`}
+              </ToggleButton>
+            )}
+          </div>
         </AccordionSummary>
         <AccordionDetails className={classes.productSection}>
           <RadioField name="productType" required={false}>
-            {['scripture', 'story', 'film', 'song', 'literacyMaterial'].map(
+            {['Scripture', 'Story', 'Film', 'Song', 'LiteracyMaterial'].map(
               (option) => (
-                <RadioOption key={option} label={option} value={option} />
+                <RadioOption
+                  key={option}
+                  label={startCase(option)}
+                  value={option}
+                />
               )
             )}
           </RadioField>
@@ -111,22 +129,27 @@ export const renderAccordionSection = (productObj?: ProductFormFragment) => ({
             expanded={openedSection === 'scriptureReferences'}
             onChange={handleChange('scriptureReferences')}
           >
-            <AccordionSummary expandIcon={<ExpandMore />}>
-              <Typography>Scripture Ranges</Typography>
-              {values.scriptureReferences?.map(
-                (scriptureRange: ScriptureRangeInput) => {
-                  const rangeString = `${scriptureRange.start.book} ${scriptureRange.start.chapter}:${scriptureRange.start.verse} -  ${scriptureRange.end.chapter}:${scriptureRange.end.verse}`;
-                  return (
-                    <ToggleButton
-                      selected
-                      key={rangeString}
-                      value={scriptureRange}
-                    >
-                      {rangeString}
-                    </ToggleButton>
-                  );
-                }
-              )}
+            <AccordionSummary
+              expandIcon={<ExpandMore />}
+              classes={{ content: classes.accordionSummary }}
+            >
+              <Typography variant="h5">Scripture Ranges</Typography>
+              <div>
+                {values.scriptureReferences?.map(
+                  (scriptureRange: ScriptureRangeInput) => {
+                    const rangeString = `${scriptureRange.start.book} ${scriptureRange.start.chapter}:${scriptureRange.start.verse} -  ${scriptureRange.end.chapter}:${scriptureRange.end.verse}`;
+                    return (
+                      <ToggleButton
+                        selected
+                        key={rangeString}
+                        value={scriptureRange}
+                      >
+                        {rangeString}
+                      </ToggleButton>
+                    );
+                  }
+                )}
+              </div>
             </AccordionSummary>
             <AccordionDetails>
               <RadioField
@@ -159,16 +182,21 @@ export const renderAccordionSection = (productObj?: ProductFormFragment) => ({
             expanded={openedSection === 'mediums'}
             onChange={handleChange('mediums')}
           >
-            <AccordionSummary expandIcon={<ExpandMore />}>
-              <Typography>Choose Medium</Typography>
-              {openedSection !== 'mediums' &&
-                values.mediums?.map((medium: string) => {
-                  return (
-                    <ToggleButton selected key={medium} value={medium}>
-                      {medium}
-                    </ToggleButton>
-                  );
-                })}
+            <AccordionSummary
+              expandIcon={<ExpandMore />}
+              classes={{ content: classes.accordionSummary }}
+            >
+              <Typography variant="h5">Choose Medium</Typography>
+              <div>
+                {openedSection !== 'mediums' &&
+                  values.mediums?.map((medium: string) => {
+                    return (
+                      <ToggleButton selected key={medium} value={medium}>
+                        {startCase(medium)}
+                      </ToggleButton>
+                    );
+                  })}
+              </div>
             </AccordionSummary>
             <AccordionDetails>
               <ToggleButtonsField {...props}>
@@ -184,7 +212,7 @@ export const renderAccordionSection = (productObj?: ProductFormFragment) => ({
                 ].map((option) => (
                   <ToggleButtonOption
                     key={option}
-                    label={option}
+                    label={startCase(option)}
                     value={option}
                   />
                 ))}
@@ -200,16 +228,21 @@ export const renderAccordionSection = (productObj?: ProductFormFragment) => ({
             expanded={openedSection === 'purposes'}
             onChange={handleChange('purposes')}
           >
-            <AccordionSummary expandIcon={<ExpandMore />}>
-              <Typography>Choose Purposes</Typography>
-              {openedSection !== 'purposes' &&
-                values.purposes?.map((purpose: string) => {
-                  return (
-                    <ToggleButton selected key={purpose} value={purpose}>
-                      {purpose}
-                    </ToggleButton>
-                  );
-                })}
+            <AccordionSummary
+              expandIcon={<ExpandMore />}
+              classes={{ content: classes.accordionSummary }}
+            >
+              <Typography variant="h5">Choose Purposes</Typography>
+              <div>
+                {openedSection !== 'purposes' &&
+                  values.purposes?.map((purpose: string) => {
+                    return (
+                      <ToggleButton selected key={purpose} value={purpose}>
+                        {startCase(purpose)}
+                      </ToggleButton>
+                    );
+                  })}
+              </div>
             </AccordionSummary>
             <AccordionDetails>
               <ToggleButtonsField {...props}>
@@ -222,7 +255,7 @@ export const renderAccordionSection = (productObj?: ProductFormFragment) => ({
                 ].map((option) => (
                   <ToggleButtonOption
                     key={option}
-                    label={option}
+                    label={startCase(option)}
                     value={option}
                   />
                 ))}
@@ -232,32 +265,45 @@ export const renderAccordionSection = (productObj?: ProductFormFragment) => ({
         )}
       </SecuredField>
 
-      <SecuredField obj={productObj} name="purposes">
+      <SecuredField obj={productObj} name="methodology">
         {(props) => (
           <Accordion
             expanded={openedSection === 'methodology'}
             onChange={handleChange('methodology')}
           >
-            <AccordionSummary expandIcon={<ExpandMore />}>
-              <Typography>Choose Methodology</Typography>
-              {methodology && openedSection !== 'methodology' && (
-                <ToggleButton selected value={methodology}>
-                  {methodologyButtonText}
-                </ToggleButton>
-              )}
+            <AccordionSummary
+              expandIcon={<ExpandMore />}
+              classes={{ content: classes.accordionSummary }}
+            >
+              <Typography variant="h5">Choose Methodology</Typography>
+              <div>
+                {methodology && openedSection !== 'methodology' && (
+                  <ToggleButton selected value={methodology}>
+                    {methodologyButtonText}
+                  </ToggleButton>
+                )}
+              </div>
             </AccordionSummary>
             <RadioField {...props} required={false}>
               <AccordionDetails className={classes.accordionSection}>
                 <Typography variant="h6">Written</Typography>
                 <div className={classes.buttonListWrapper}>
                   {['Paratext', 'OtherWritten'].map((option) => (
-                    <RadioOption key={option} label={option} value={option} />
+                    <RadioOption
+                      key={option}
+                      label={startCase(option)}
+                      value={option}
+                    />
                   ))}
                 </div>
                 <Typography variant="h6">Oral Translation</Typography>
                 <div className={classes.buttonListWrapper}>
                   {['Render', 'OtherOralTranslation'].map((option) => (
-                    <RadioOption key={option} label={option} value={option} />
+                    <RadioOption
+                      key={option}
+                      label={startCase(option)}
+                      value={option}
+                    />
                   ))}
                 </div>
                 <Typography variant="h6">Oral Stories</Typography>
@@ -268,13 +314,21 @@ export const renderAccordionSection = (productObj?: ProductFormFragment) => ({
                     'OneStory',
                     'OtherOralStories',
                   ].map((option) => (
-                    <RadioOption key={option} label={option} value={option} />
+                    <RadioOption
+                      key={option}
+                      label={startCase(option)}
+                      value={option}
+                    />
                   ))}
                 </div>
                 <Typography variant="h6">Visual</Typography>
                 <div className={classes.buttonListWrapper}>
                   {['Film', 'SignLanguage', 'OtherVisual'].map((option) => (
-                    <RadioOption key={option} label={option} value={option} />
+                    <RadioOption
+                      key={option}
+                      label={startCase(option)}
+                      value={option}
+                    />
                   ))}
                 </div>
               </AccordionDetails>

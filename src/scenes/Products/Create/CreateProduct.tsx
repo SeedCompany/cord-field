@@ -68,27 +68,25 @@ export const CreateProduct = () => {
           }) => {
             const isDerivativeProduct =
               productType &&
-              ['story', 'film', 'song', 'literacyMaterial'].includes(
+              ['Story', 'Film', 'Song', 'LiteracyMaterial'].includes(
                 productType
               );
-
-            const inputWithProduces =
-              isDerivativeProduct && produces
-                ? {
-                    produces,
-                    scriptureReferencesOverride: scriptureReferences,
-                    ...inputs,
-                  }
-                : {
-                    ...inputs,
-                    scriptureReferences,
-                  };
 
             try {
               const { data } = await createProduct({
                 variables: {
                   input: {
-                    product: inputWithProduces,
+                    product: {
+                      ...inputs,
+                      ...(isDerivativeProduct && produces
+                        ? {
+                            produces,
+                            scriptureReferencesOverride: scriptureReferences,
+                          }
+                        : {
+                            scriptureReferences,
+                          }),
+                    },
                   },
                 },
               });

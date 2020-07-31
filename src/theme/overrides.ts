@@ -101,6 +101,7 @@ export const appOverrides: ThemeOptions['overrides'] = ({
     },
     MuiToggleButton: {
       root: {
+        textTransform: 'none',
         borderRadius: 14,
         color: palette.text.primary,
         backgroundColor: palette.background.paper,
