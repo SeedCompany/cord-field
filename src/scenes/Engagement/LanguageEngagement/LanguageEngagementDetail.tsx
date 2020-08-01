@@ -23,6 +23,7 @@ import {
   useDateTimeFormatter,
 } from '../../../components/Formatters';
 import { OptionsIcon, PlantIcon } from '../../../components/Icons';
+import { ProductCard } from '../../../components/ProductCard';
 import { ProjectBreadcrumb } from '../../../components/ProjectBreadcrumb';
 import { Redacted } from '../../../components/Redacted';
 import { Link } from '../../../components/Routing';
@@ -206,6 +207,14 @@ export const LanguageEngagementDetail: FC<EngagementQuery> = ({
           <Grid item xs={6}>
             <CeremonyCard {...engagement.ceremony} />
           </Grid>
+        </Grid>
+        <Typography variant="h4">Products</Typography>
+        <Grid item container spacing={3} alignItems="center">
+          {engagement.products.items.map((product) => (
+            <Grid item xs={4} key={product.id}>
+              <ProductCard product={product} />
+            </Grid>
+          ))}
         </Grid>
       </Grid>
       <EditEngagementDialog
