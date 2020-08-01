@@ -26,6 +26,7 @@
     "@material-ui/pickers": "4.0.0-alpha.8",
     "clsx": "^1.1.1",
     "constate": "^2.0.0",
+    "file-saver": "^2.0.2",
     "final-form": "^4.20.1",
     "history": "^5.0.0",
     "lodash": "^4.17.19",
