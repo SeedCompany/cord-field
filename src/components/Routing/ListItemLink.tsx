@@ -40,15 +40,11 @@ export const ListItemLink = forwardRef<HTMLAnchorElement, ListItemLinkProps>(
 
     if (external) {
       assert(typeof to === 'string');
-      // Types are all messed up, but this works.
-      const liProps: any = {
-        ...props,
-        href: to,
-        button: true,
-        ref: ref,
-        component: 'a',
-      };
-      return <ListItem {...liProps}>{children}</ListItem>;
+      return (
+        <ListItem {...props} href={to} button ref={ref} component="a">
+          {children}
+        </ListItem>
+      );
     }
 
     const { activeStyle, activeClassName } = props as InternalProps;
