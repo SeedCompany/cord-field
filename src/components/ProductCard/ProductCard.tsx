@@ -14,7 +14,7 @@ import {
 } from '@material-ui/icons';
 import { startCase } from 'lodash';
 import React from 'react';
-import { displayMethodologyWithLabel } from '../../api';
+import { displayMethodologyWithLabel, displayScripture } from '../../api';
 import { DisplaySimpleProperty } from '../DisplaySimpleProperty';
 import { ButtonLink, CardActionAreaLink } from '../Routing';
 import { ProductCardFragment } from './ProductCard.generated';
@@ -75,15 +75,13 @@ export const ProductCard = ({ product }: ProductCardProps) => {
   };
   return (
     <Card className={classes.root}>
-      <CardContent>
-        <CardActionAreaLink
-          to={`products/${product.id}`}
-          className={classes.content}
-        >
+      <CardActionAreaLink to={`products/${product.id}`}>
+        <CardContent className={classes.content}>
           {icons[type]}
           <Typography variant="h4">{startCase(type)}</Typography>
           <DisplaySimpleProperty
             label="Method"
+            align="center"
             value={
               product.methodology.value &&
               displayMethodologyWithLabel(product.methodology.value)
@@ -91,12 +89,20 @@ export const ProductCard = ({ product }: ProductCardProps) => {
           />
           <DisplaySimpleProperty
             label="Mediums"
+            align="center"
             value={product.mediums.value
               .map((medium) => startCase(medium))
               .join(', ')}
           />
-        </CardActionAreaLink>
-      </CardContent>
+          <DisplaySimpleProperty
+            label="Books"
+            align="center"
+            value={product.scriptureReferences.value
+              .map((scriptureReference) => displayScripture(scriptureReference))
+              .join(', ')}
+          />
+        </CardContent>
+      </CardActionAreaLink>
       <CardActions classes={{ root: classes.actions }}>
         <ButtonLink to={`products/${product.id}`} color="primary">
           Edit Product
