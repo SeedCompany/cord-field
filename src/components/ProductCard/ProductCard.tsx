@@ -1,4 +1,5 @@
 import {
+  Button,
   Card,
   CardActions,
   CardContent,
@@ -42,9 +43,10 @@ const useStyles = makeStyles(({ spacing }) => ({
 
 interface ProductCardProps {
   product: ProductCardFragment;
+  handleDelete: () => void;
 }
 
-export const ProductCard = ({ product }: ProductCardProps) => {
+export const ProductCard = ({ product, handleDelete }: ProductCardProps) => {
   const classes = useStyles();
   const type =
     product.__typename === 'DerivativeScriptureProduct'
@@ -104,6 +106,7 @@ export const ProductCard = ({ product }: ProductCardProps) => {
         </CardContent>
       </CardActionAreaLink>
       <CardActions classes={{ root: classes.actions }}>
+        <Button onClick={handleDelete}>Delete Product</Button>
         <ButtonLink to={`products/${product.id}`} color="primary">
           Edit Product
         </ButtonLink>

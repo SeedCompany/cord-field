@@ -33,7 +33,8 @@ import {
   EditableEngagementField,
   EditEngagementDialog,
 } from '../EditEngagement/EditEngagementDialog';
-import { EngagementQuery } from '../Engagement.generated';
+import { EngagementDocument, EngagementQuery } from '../Engagement.generated';
+import { useDeleteProductMutation } from './LanguageEngagementDetail.generated';
 
 const useStyles = makeStyles(({ spacing, breakpoints, palette }) => ({
   root: {
@@ -65,6 +66,25 @@ export const LanguageEngagementDetail: FC<EngagementQuery> = ({
   const date = securedDateRange(engagement.startDate, engagement.endDate);
   const formatDate = useDateFormatter();
   const formatDateTime = useDateTimeFormatter();
+
+  const [deleteProduct] = useDeleteProductMutation();
+
+  const handleDelete = (productId: string) => {
+    deleteProduct({
+      variables: {
+        productId,
+      },
+      refetchQueries: [
+        {
+          query: EngagementDocument,
+          variables: {
+            projectId: project.id,
+            engagementId: engagement.id,
+          },
+        },
+      ],
+    });
+  };
 
   if (engagement.__typename !== 'LanguageEngagement') {
     return null; // easiest for typescript
@@ -212,7 +232,10 @@ export const LanguageEngagementDetail: FC<EngagementQuery> = ({
         <Grid item container spacing={3} alignItems="center">
           {engagement.products.items.map((product) => (
             <Grid item xs={4} key={product.id}>
-              <ProductCard product={product} />
+              <ProductCard
+                product={product}
+                handleDelete={() => handleDelete(product.id)}
+              />
             </Grid>
           ))}
         </Grid>
