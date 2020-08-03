@@ -1,11 +1,13 @@
 import {
   Breadcrumbs,
+  Card,
+  CardContent,
   Grid,
   makeStyles,
   Tooltip,
   Typography,
 } from '@material-ui/core';
-import { ChatOutlined, DateRange, Edit } from '@material-ui/icons';
+import { AddCircle, ChatOutlined, DateRange, Edit } from '@material-ui/icons';
 import React, { FC } from 'react';
 import {
   canEditAny,
@@ -26,7 +28,7 @@ import { OptionsIcon, PlantIcon } from '../../../components/Icons';
 import { ProductCard } from '../../../components/ProductCard';
 import { ProjectBreadcrumb } from '../../../components/ProjectBreadcrumb';
 import { Redacted } from '../../../components/Redacted';
-import { Link } from '../../../components/Routing';
+import { CardActionAreaLink, Link } from '../../../components/Routing';
 import { Many } from '../../../util';
 import { CeremonyCard } from '../CeremonyCard';
 import {
@@ -50,6 +52,26 @@ const useStyles = makeStyles(({ spacing, breakpoints, palette }) => ({
   },
   infoColor: {
     color: palette.info.main,
+  },
+  addProductCard: {
+    height: 300,
+    width: 240,
+    display: 'flex',
+    '& a': {
+      display: 'flex',
+    },
+  },
+  cardContent: {
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'center',
+    '& > *': {
+      margin: spacing(1, 0),
+    },
+  },
+  cardIcon: {
+    height: spacing(10),
+    width: spacing(10),
   },
 }));
 
@@ -238,6 +260,19 @@ export const LanguageEngagementDetail: FC<EngagementQuery> = ({
               />
             </Grid>
           ))}
+          <Grid item xs={4}>
+            <Card className={classes.addProductCard}>
+              <CardActionAreaLink to="./create-product">
+                <CardContent className={classes.cardContent}>
+                  <AddCircle
+                    color="disabled"
+                    classes={{ root: classes.cardIcon }}
+                  />
+                  <Typography variant="h4">Add Product</Typography>
+                </CardContent>
+              </CardActionAreaLink>
+            </Card>
+          </Grid>
         </Grid>
       </Grid>
       <EditEngagementDialog
