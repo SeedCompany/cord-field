@@ -1,6 +1,11 @@
-import { boolean, object, select } from '@storybook/addon-knobs';
+import { action } from '@storybook/addon-actions';
+import { boolean, number, object, select } from '@storybook/addon-knobs';
 import { DateTime } from 'luxon';
 import * as React from 'react';
+import {
+  newTestament,
+  oldTestament,
+} from '../../scenes/Products/ProductForm/constants';
 import { ProductCard } from './ProductCard';
 import { ProductCardFragment } from './ProductCard.generated';
 
@@ -26,6 +31,37 @@ const getProduct = () => {
     'Paratext'
   );
 
+  const getScriptureRange = () => {
+    const books = [...oldTestament, ...newTestament];
+    const book = books[Math.floor(Math.random() * books.length)];
+    return {
+      start: {
+        book,
+        chapter: Math.ceil(Math.random() * 20),
+        verse: Math.ceil(Math.random() * 20),
+      },
+      end: {
+        book,
+        chapter: Math.ceil(Math.random() * 20),
+        verse: Math.ceil(Math.random() * 20),
+      },
+    };
+  };
+
+  const getScriptureRangeArray = () => {
+    const scriptureCount = number('Number of Scripture Ranges', 1, {
+      range: true,
+      min: 0,
+      max: 20,
+      step: 1,
+    });
+    const scriptureRangeArray = [];
+    for (let i = 1; i <= scriptureCount; i++) {
+      scriptureRangeArray.push(getScriptureRange());
+    }
+    return scriptureRangeArray;
+  };
+
   const sharedValues: Pick<
     ProductCardFragment,
     'id' | 'scriptureReferences' | 'mediums' | 'methodology'
@@ -34,32 +70,7 @@ const getProduct = () => {
     scriptureReferences: {
       canRead: true,
       canEdit: true,
-      value: [
-        {
-          start: {
-            book: 'Jeremiah',
-            chapter: 2,
-            verse: 3,
-          },
-          end: {
-            book: 'Jeremiah',
-            chapter: 4,
-            verse: 5,
-          },
-        },
-        {
-          start: {
-            book: 'Acts',
-            chapter: 6,
-            verse: 7,
-          },
-          end: {
-            book: 'Acts',
-            chapter: 8,
-            verse: 9,
-          },
-        },
-      ],
+      value: getScriptureRangeArray(),
       __typename: 'SecuredScriptureRanges',
     },
     mediums: {
@@ -105,4 +116,6 @@ const getProduct = () => {
   return isDirectProduct ? directProduct : derivativeProduct;
 };
 
-export const Product = () => <ProductCard product={getProduct()} />;
+export const Product = () => (
+  <ProductCard product={getProduct()} handleDelete={action('delete clicked')} />
+);
