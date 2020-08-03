@@ -61,3 +61,7 @@ fragment LanguageEngagementDetail on LanguageEngagement {
   }
   ...EditEngagement
 }
+
+mutation DeleteProduct($productId: ID!) {
+  deleteProduct(id: $productId)
+}
