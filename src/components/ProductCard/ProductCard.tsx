@@ -14,6 +14,7 @@ import {
 } from '@material-ui/icons';
 import { startCase } from 'lodash';
 import React from 'react';
+import { displayMethodologyWithLabel } from '../../api';
 import { DisplaySimpleProperty } from '../DisplaySimpleProperty';
 import { ButtonLink, CardActionAreaLink } from '../Routing';
 import { ProductCardFragment } from './ProductCard.generated';
@@ -84,11 +85,12 @@ export const ProductCard = ({ product }: ProductCardProps) => {
           <DisplaySimpleProperty
             label="Method"
             value={
-              product.methodology.value && startCase(product.methodology.value)
+              product.methodology.value &&
+              displayMethodologyWithLabel(product.methodology.value)
             }
           />
           <DisplaySimpleProperty
-            label="Medium"
+            label="Mediums"
             value={product.mediums.value
               .map((medium) => startCase(medium))
               .join(', ')}

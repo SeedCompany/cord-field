@@ -11,6 +11,7 @@ import { EngagementBreadcrumb } from '../../../components/EngagementBreadcrumb';
 import { ProjectBreadcrumb } from '../../../components/ProjectBreadcrumb';
 import { ButtonLink } from '../../../components/Routing';
 import { ProductForm } from '../ProductForm';
+import { getIsDerivativeProduct } from '../ProductForm/helpers';
 import {
   useCreateProductMutation,
   useGetProductBreadcrumbQuery,
@@ -65,10 +66,7 @@ export const CreateProduct = () => {
             ...inputs
           }) => {
             const isDerivativeProduct =
-              productType &&
-              ['Story', 'Film', 'Song', 'LiteracyMaterial'].includes(
-                productType
-              );
+              productType && getIsDerivativeProduct(productType);
 
             try {
               const { data } = await createProduct({

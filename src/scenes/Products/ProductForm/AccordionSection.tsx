@@ -15,7 +15,11 @@ import { ToggleButton } from '@material-ui/lab';
 import { startCase } from 'lodash';
 import React, { useState } from 'react';
 import { FormRenderProps } from 'react-final-form';
-import { ScriptureRangeInput } from '../../../api';
+import {
+  displayMethodologyWithLabel,
+  displayScripture,
+  ScriptureRangeInput,
+} from '../../../api';
 import {
   NumberField,
   RadioField,
@@ -27,7 +31,8 @@ import {
   ToggleButtonOption,
   ToggleButtonsField,
 } from '../../../components/form';
-import { methodologyCategories, newTestament, oldTestament } from './constants';
+import { newTestament, oldTestament } from './constants';
+import { getIsDerivativeProduct } from './helpers';
 import { ProductFormFragment } from './ProductForm.generated';
 
 const useStyles = makeStyles(({ spacing }) => ({
@@ -70,19 +75,10 @@ export const renderAccordionSection = (productObj?: ProductFormFragment) => ({
     setOpenedSection(isExpanded ? panel : '');
   };
 
-  const productType = values.productType;
-  const produces = values.produces || '';
-  const isDerivativeProduct = [
-    'Story',
-    'Film',
-    'Song',
-    'LiteracyMaterial',
-  ].includes(productType);
+  const { methodology, productType, produces } = values;
 
-  const methodology = values.methodology;
-  const methodologyButtonText = `${startCase(
-    methodologyCategories[methodology]
-  )} - ${startCase(methodology)}`;
+  const isDerivativeProduct = getIsDerivativeProduct(productType);
+
   return (
     <form onSubmit={handleSubmit} className={classes.form}>
       <SubmitError />
@@ -100,7 +96,7 @@ export const renderAccordionSection = (productObj?: ProductFormFragment) => ({
             {productType && openedSection !== 'produces' && (
               <ToggleButton selected value={produces}>
                 {`${startCase(productType)} ${
-                  isDerivativeProduct ? produces : ''
+                  isDerivativeProduct && produces ? produces : ''
                 }`}
               </ToggleButton>
             )}
@@ -137,7 +133,7 @@ export const renderAccordionSection = (productObj?: ProductFormFragment) => ({
               <div>
                 {values.scriptureReferences?.map(
                   (scriptureRange: ScriptureRangeInput) => {
-                    const rangeString = `${scriptureRange.start.book} ${scriptureRange.start.chapter}:${scriptureRange.start.verse} -  ${scriptureRange.end.chapter}:${scriptureRange.end.verse}`;
+                    const rangeString = displayScripture(scriptureRange);
                     return (
                       <ToggleButton
                         selected
@@ -279,7 +275,7 @@ export const renderAccordionSection = (productObj?: ProductFormFragment) => ({
               <div>
                 {methodology && openedSection !== 'methodology' && (
                   <ToggleButton selected value={methodology}>
-                    {methodologyButtonText}
+                    {displayMethodologyWithLabel(methodology)}
                   </ToggleButton>
                 )}
               </div>

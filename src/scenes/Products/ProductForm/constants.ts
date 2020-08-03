@@ -69,17 +69,3 @@ export const newTestament = [
   'Jude',
   'Revelation',
 ];
-
-export const methodologyCategories: any = {
-  Paratext: 'Written',
-  OtherWritten: 'Written',
-  Render: 'OralTranslation',
-  OtherOralTranslation: 'OralTranslation',
-  BibleStories: 'OralStories',
-  BibleStorying: 'OralStories',
-  OneStory: 'OralStories',
-  OtherOralStories: 'OralStories',
-  Film: 'Visual',
-  SignLanguage: 'Visual',
-  OtherVisual: 'Visual',
-};

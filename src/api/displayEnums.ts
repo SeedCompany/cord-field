@@ -8,10 +8,12 @@ import {
   Role,
 } from '.';
 import { Nullable } from '../util';
+import { MethodologyToApproach } from './approach';
 import {
   InternshipEngagementPosition,
   ProductMethodology,
   ProjectStep,
+  ScriptureRangeInput,
 } from './schema.generated';
 
 // Helper to display enums in a generic way
@@ -42,3 +44,11 @@ export const PartnershipStatuses: PartnershipAgreementStatus[] = [
 
 export const displayMethodology = displayEnum<ProductMethodology>();
 export const displayApproach = displayEnum<ProductApproach>();
+
+export const displayMethodologyWithLabel = (methodology: ProductMethodology) =>
+  `${displayApproach(
+    MethodologyToApproach[methodology]
+  )} - ${displayMethodology(methodology)}`;
+
+export const displayScripture = ({ start, end }: ScriptureRangeInput) =>
+  `${start.book} ${start.chapter}:${start.verse} -  ${end.chapter}:${end.verse}`;
