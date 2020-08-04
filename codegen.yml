@@ -74,9 +74,6 @@ generates:
       - typescript-react-apollo
     config:
       reactApolloVersion: 3
-      scalars:
-        Date: string
-        DateTime: string
       skipTypename: false
       withHooks: true
       withHOC: false
