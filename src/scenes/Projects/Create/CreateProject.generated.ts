@@ -1,9 +1,7 @@
 /* eslint-disable import/no-duplicates, @typescript-eslint/no-empty-interface */
-
-import * as ApolloReactCommon from '@apollo/client';
-import * as ApolloReactHooks from '@apollo/client';
+import * as Apollo from '@apollo/client';
 import gql from 'graphql-tag';
-import * as Types from '../../../api/schema.generated';
+import type * as Types from '../../../api/schema.generated';
 
 export type CreateProjectMutationVariables = Types.Exact<{
   input: Types.CreateProjectInput;
@@ -49,7 +47,7 @@ export const CreateProjectDocument = gql`
     }
   }
 `;
-export type CreateProjectMutationFn = ApolloReactCommon.MutationFunction<
+export type CreateProjectMutationFn = Apollo.MutationFunction<
   CreateProjectMutation,
   CreateProjectMutationVariables
 >;
@@ -72,12 +70,12 @@ export type CreateProjectMutationFn = ApolloReactCommon.MutationFunction<
  * });
  */
 export function useCreateProjectMutation(
-  baseOptions?: ApolloReactHooks.MutationHookOptions<
+  baseOptions?: Apollo.MutationHookOptions<
     CreateProjectMutation,
     CreateProjectMutationVariables
   >
 ) {
-  return ApolloReactHooks.useMutation<
+  return Apollo.useMutation<
     CreateProjectMutation,
     CreateProjectMutationVariables
   >(CreateProjectDocument, baseOptions);
@@ -85,10 +83,10 @@ export function useCreateProjectMutation(
 export type CreateProjectMutationHookResult = ReturnType<
   typeof useCreateProjectMutation
 >;
-export type CreateProjectMutationResult = ApolloReactCommon.MutationResult<
+export type CreateProjectMutationResult = Apollo.MutationResult<
   CreateProjectMutation
 >;
-export type CreateProjectMutationOptions = ApolloReactCommon.BaseMutationOptions<
+export type CreateProjectMutationOptions = Apollo.BaseMutationOptions<
   CreateProjectMutation,
   CreateProjectMutationVariables
 >;

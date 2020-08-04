@@ -1,9 +1,7 @@
 /* eslint-disable import/no-duplicates, @typescript-eslint/no-empty-interface */
-
-import * as ApolloReactCommon from '@apollo/client';
-import * as ApolloReactHooks from '@apollo/client';
+import * as Apollo from '@apollo/client';
 import gql from 'graphql-tag';
-import * as Types from '../../api/schema.generated';
+import type * as Types from '../../api/schema.generated';
 
 export type SessionQueryVariables = Types.Exact<{ [key: string]: never }>;
 
@@ -98,30 +96,24 @@ export const SessionDocument = gql`
  * });
  */
 export function useSessionQuery(
-  baseOptions?: ApolloReactHooks.QueryHookOptions<
-    SessionQuery,
-    SessionQueryVariables
-  >
+  baseOptions?: Apollo.QueryHookOptions<SessionQuery, SessionQueryVariables>
 ) {
-  return ApolloReactHooks.useQuery<SessionQuery, SessionQueryVariables>(
+  return Apollo.useQuery<SessionQuery, SessionQueryVariables>(
     SessionDocument,
     baseOptions
   );
 }
 export function useSessionLazyQuery(
-  baseOptions?: ApolloReactHooks.LazyQueryHookOptions<
-    SessionQuery,
-    SessionQueryVariables
-  >
+  baseOptions?: Apollo.LazyQueryHookOptions<SessionQuery, SessionQueryVariables>
 ) {
-  return ApolloReactHooks.useLazyQuery<SessionQuery, SessionQueryVariables>(
+  return Apollo.useLazyQuery<SessionQuery, SessionQueryVariables>(
     SessionDocument,
     baseOptions
   );
 }
 export type SessionQueryHookResult = ReturnType<typeof useSessionQuery>;
 export type SessionLazyQueryHookResult = ReturnType<typeof useSessionLazyQuery>;
-export type SessionQueryResult = ApolloReactCommon.QueryResult<
+export type SessionQueryResult = Apollo.QueryResult<
   SessionQuery,
   SessionQueryVariables
 >;

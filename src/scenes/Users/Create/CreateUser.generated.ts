@@ -1,9 +1,8 @@
 /* eslint-disable import/no-duplicates, @typescript-eslint/no-empty-interface */
-import * as ApolloReactCommon from '@apollo/client';
-import * as ApolloReactHooks from '@apollo/client';
+import * as Apollo from '@apollo/client';
 import gql from 'graphql-tag';
-import * as Types from '../../../api/schema.generated';
-import { UserDetailsFragment } from '../Detail/UserDetail.generated';
+import type * as Types from '../../../api/schema.generated';
+import type { UserDetailsFragment } from '../Detail/UserDetail.generated';
 import { UserDetailsFragmentDoc } from '../Detail/UserDetail.generated';
 
 export type CreatePersonMutationVariables = Types.Exact<{
@@ -32,7 +31,7 @@ export const CreatePersonDocument = gql`
   }
   ${UserDetailsFragmentDoc}
 `;
-export type CreatePersonMutationFn = ApolloReactCommon.MutationFunction<
+export type CreatePersonMutationFn = Apollo.MutationFunction<
   CreatePersonMutation,
   CreatePersonMutationVariables
 >;
@@ -55,12 +54,12 @@ export type CreatePersonMutationFn = ApolloReactCommon.MutationFunction<
  * });
  */
 export function useCreatePersonMutation(
-  baseOptions?: ApolloReactHooks.MutationHookOptions<
+  baseOptions?: Apollo.MutationHookOptions<
     CreatePersonMutation,
     CreatePersonMutationVariables
   >
 ) {
-  return ApolloReactHooks.useMutation<
+  return Apollo.useMutation<
     CreatePersonMutation,
     CreatePersonMutationVariables
   >(CreatePersonDocument, baseOptions);
@@ -68,10 +67,10 @@ export function useCreatePersonMutation(
 export type CreatePersonMutationHookResult = ReturnType<
   typeof useCreatePersonMutation
 >;
-export type CreatePersonMutationResult = ApolloReactCommon.MutationResult<
+export type CreatePersonMutationResult = Apollo.MutationResult<
   CreatePersonMutation
 >;
-export type CreatePersonMutationOptions = ApolloReactCommon.BaseMutationOptions<
+export type CreatePersonMutationOptions = Apollo.BaseMutationOptions<
   CreatePersonMutation,
   CreatePersonMutationVariables
 >;

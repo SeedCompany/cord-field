@@ -1,16 +1,15 @@
 /* eslint-disable import/no-duplicates, @typescript-eslint/no-empty-interface */
-import * as ApolloReactCommon from '@apollo/client';
-import * as ApolloReactHooks from '@apollo/client';
+import * as Apollo from '@apollo/client';
 import gql from 'graphql-tag';
-import * as Types from '../../../api/schema.generated';
-import { PartnershipCardFragment } from '../../../components/PartnershipCard/PartnershipCard.generated';
+import type * as Types from '../../../api/schema.generated';
+import type { PartnershipCardFragment } from '../../../components/PartnershipCard/PartnershipCard.generated';
 import { PartnershipCardFragmentDoc } from '../../../components/PartnershipCard/PartnershipCard.generated';
-import {
+import type {
   ProjectBreadcrumb_InternshipProject_Fragment,
   ProjectBreadcrumb_TranslationProject_Fragment,
 } from '../../../components/ProjectBreadcrumb/ProjectBreadcrumb.generated';
 import { ProjectBreadcrumbFragmentDoc } from '../../../components/ProjectBreadcrumb/ProjectBreadcrumb.generated';
-import { EditPartnershipFragment } from '../Edit/EditPartnership.generated';
+import type { EditPartnershipFragment } from '../Edit/EditPartnership.generated';
 import { EditPartnershipFragmentDoc } from '../Edit/EditPartnership.generated';
 
 export type ProjectPartnershipsQueryVariables = Types.Exact<{
@@ -81,23 +80,23 @@ export const ProjectPartnershipsDocument = gql`
  * });
  */
 export function useProjectPartnershipsQuery(
-  baseOptions?: ApolloReactHooks.QueryHookOptions<
+  baseOptions?: Apollo.QueryHookOptions<
     ProjectPartnershipsQuery,
     ProjectPartnershipsQueryVariables
   >
 ) {
-  return ApolloReactHooks.useQuery<
+  return Apollo.useQuery<
     ProjectPartnershipsQuery,
     ProjectPartnershipsQueryVariables
   >(ProjectPartnershipsDocument, baseOptions);
 }
 export function useProjectPartnershipsLazyQuery(
-  baseOptions?: ApolloReactHooks.LazyQueryHookOptions<
+  baseOptions?: Apollo.LazyQueryHookOptions<
     ProjectPartnershipsQuery,
     ProjectPartnershipsQueryVariables
   >
 ) {
-  return ApolloReactHooks.useLazyQuery<
+  return Apollo.useLazyQuery<
     ProjectPartnershipsQuery,
     ProjectPartnershipsQueryVariables
   >(ProjectPartnershipsDocument, baseOptions);
@@ -108,7 +107,7 @@ export type ProjectPartnershipsQueryHookResult = ReturnType<
 export type ProjectPartnershipsLazyQueryHookResult = ReturnType<
   typeof useProjectPartnershipsLazyQuery
 >;
-export type ProjectPartnershipsQueryResult = ApolloReactCommon.QueryResult<
+export type ProjectPartnershipsQueryResult = Apollo.QueryResult<
   ProjectPartnershipsQuery,
   ProjectPartnershipsQueryVariables
 >;

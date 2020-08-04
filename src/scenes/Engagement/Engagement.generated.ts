@@ -1,16 +1,15 @@
 /* eslint-disable import/no-duplicates, @typescript-eslint/no-empty-interface */
-import * as ApolloReactCommon from '@apollo/client';
-import * as ApolloReactHooks from '@apollo/client';
+import * as Apollo from '@apollo/client';
 import gql from 'graphql-tag';
-import * as Types from '../../api/schema.generated';
-import {
+import type * as Types from '../../api/schema.generated';
+import type {
   ProjectBreadcrumb_InternshipProject_Fragment,
   ProjectBreadcrumb_TranslationProject_Fragment,
 } from '../../components/ProjectBreadcrumb/ProjectBreadcrumb.generated';
 import { ProjectBreadcrumbFragmentDoc } from '../../components/ProjectBreadcrumb/ProjectBreadcrumb.generated';
-import { InternshipEngagementDetailFragment } from './InternshipEngagement/InternshipEngagement.generated';
+import type { InternshipEngagementDetailFragment } from './InternshipEngagement/InternshipEngagement.generated';
 import { InternshipEngagementDetailFragmentDoc } from './InternshipEngagement/InternshipEngagement.generated';
-import { LanguageEngagementDetailFragment } from './LanguageEngagement/LanguageEngagementDetail.generated';
+import type { LanguageEngagementDetailFragment } from './LanguageEngagement/LanguageEngagementDetail.generated';
 import { LanguageEngagementDetailFragmentDoc } from './LanguageEngagement/LanguageEngagementDetail.generated';
 
 export type EngagementQueryVariables = Types.Exact<{
@@ -78,32 +77,32 @@ export const EngagementDocument = gql`
  * });
  */
 export function useEngagementQuery(
-  baseOptions?: ApolloReactHooks.QueryHookOptions<
+  baseOptions?: Apollo.QueryHookOptions<
     EngagementQuery,
     EngagementQueryVariables
   >
 ) {
-  return ApolloReactHooks.useQuery<EngagementQuery, EngagementQueryVariables>(
+  return Apollo.useQuery<EngagementQuery, EngagementQueryVariables>(
     EngagementDocument,
     baseOptions
   );
 }
 export function useEngagementLazyQuery(
-  baseOptions?: ApolloReactHooks.LazyQueryHookOptions<
+  baseOptions?: Apollo.LazyQueryHookOptions<
     EngagementQuery,
     EngagementQueryVariables
   >
 ) {
-  return ApolloReactHooks.useLazyQuery<
-    EngagementQuery,
-    EngagementQueryVariables
-  >(EngagementDocument, baseOptions);
+  return Apollo.useLazyQuery<EngagementQuery, EngagementQueryVariables>(
+    EngagementDocument,
+    baseOptions
+  );
 }
 export type EngagementQueryHookResult = ReturnType<typeof useEngagementQuery>;
 export type EngagementLazyQueryHookResult = ReturnType<
   typeof useEngagementLazyQuery
 >;
-export type EngagementQueryResult = ApolloReactCommon.QueryResult<
+export type EngagementQueryResult = Apollo.QueryResult<
   EngagementQuery,
   EngagementQueryVariables
 >;

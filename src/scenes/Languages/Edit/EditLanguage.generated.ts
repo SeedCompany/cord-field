@@ -1,11 +1,10 @@
 /* eslint-disable import/no-duplicates, @typescript-eslint/no-empty-interface */
-import * as ApolloReactCommon from '@apollo/client';
-import * as ApolloReactHooks from '@apollo/client';
+import * as Apollo from '@apollo/client';
 import gql from 'graphql-tag';
-import * as Types from '../../../api/schema.generated';
-import { LanguageDetailFragment } from '../Detail/LanguageDetail.generated';
+import type * as Types from '../../../api/schema.generated';
+import type { LanguageDetailFragment } from '../Detail/LanguageDetail.generated';
 import { LanguageDetailFragmentDoc } from '../Detail/LanguageDetail.generated';
-import { LanguageFormFragment } from '../LanguageForm/LangugeForm.generated';
+import type { LanguageFormFragment } from '../LanguageForm/LangugeForm.generated';
 import { LanguageFormFragmentDoc } from '../LanguageForm/LangugeForm.generated';
 
 export type UpdateLanguageMutationVariables = Types.Exact<{
@@ -33,7 +32,7 @@ export const UpdateLanguageDocument = gql`
   ${LanguageDetailFragmentDoc}
   ${LanguageFormFragmentDoc}
 `;
-export type UpdateLanguageMutationFn = ApolloReactCommon.MutationFunction<
+export type UpdateLanguageMutationFn = Apollo.MutationFunction<
   UpdateLanguageMutation,
   UpdateLanguageMutationVariables
 >;
@@ -56,12 +55,12 @@ export type UpdateLanguageMutationFn = ApolloReactCommon.MutationFunction<
  * });
  */
 export function useUpdateLanguageMutation(
-  baseOptions?: ApolloReactHooks.MutationHookOptions<
+  baseOptions?: Apollo.MutationHookOptions<
     UpdateLanguageMutation,
     UpdateLanguageMutationVariables
   >
 ) {
-  return ApolloReactHooks.useMutation<
+  return Apollo.useMutation<
     UpdateLanguageMutation,
     UpdateLanguageMutationVariables
   >(UpdateLanguageDocument, baseOptions);
@@ -69,10 +68,10 @@ export function useUpdateLanguageMutation(
 export type UpdateLanguageMutationHookResult = ReturnType<
   typeof useUpdateLanguageMutation
 >;
-export type UpdateLanguageMutationResult = ApolloReactCommon.MutationResult<
+export type UpdateLanguageMutationResult = Apollo.MutationResult<
   UpdateLanguageMutation
 >;
-export type UpdateLanguageMutationOptions = ApolloReactCommon.BaseMutationOptions<
+export type UpdateLanguageMutationOptions = Apollo.BaseMutationOptions<
   UpdateLanguageMutation,
   UpdateLanguageMutationVariables
 >;

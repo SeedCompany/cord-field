@@ -1,9 +1,11 @@
 /* eslint-disable import/no-duplicates, @typescript-eslint/no-empty-interface */
-import * as ApolloReactCommon from '@apollo/client';
-import * as ApolloReactHooks from '@apollo/client';
+import * as Apollo from '@apollo/client';
 import gql from 'graphql-tag';
-import * as Types from '../../../api/schema.generated';
-import { SsFragment, UserFormFragment } from '../UserForm/UserForm.generated';
+import type * as Types from '../../../api/schema.generated';
+import type {
+  SsFragment,
+  UserFormFragment,
+} from '../UserForm/UserForm.generated';
 import {
   SsFragmentDoc,
   UserFormFragmentDoc,
@@ -101,27 +103,21 @@ export const UserDocument = gql`
  * });
  */
 export function useUserQuery(
-  baseOptions?: ApolloReactHooks.QueryHookOptions<UserQuery, UserQueryVariables>
+  baseOptions?: Apollo.QueryHookOptions<UserQuery, UserQueryVariables>
 ) {
-  return ApolloReactHooks.useQuery<UserQuery, UserQueryVariables>(
+  return Apollo.useQuery<UserQuery, UserQueryVariables>(
     UserDocument,
     baseOptions
   );
 }
 export function useUserLazyQuery(
-  baseOptions?: ApolloReactHooks.LazyQueryHookOptions<
-    UserQuery,
-    UserQueryVariables
-  >
+  baseOptions?: Apollo.LazyQueryHookOptions<UserQuery, UserQueryVariables>
 ) {
-  return ApolloReactHooks.useLazyQuery<UserQuery, UserQueryVariables>(
+  return Apollo.useLazyQuery<UserQuery, UserQueryVariables>(
     UserDocument,
     baseOptions
   );
 }
 export type UserQueryHookResult = ReturnType<typeof useUserQuery>;
 export type UserLazyQueryHookResult = ReturnType<typeof useUserLazyQuery>;
-export type UserQueryResult = ApolloReactCommon.QueryResult<
-  UserQuery,
-  UserQueryVariables
->;
+export type UserQueryResult = Apollo.QueryResult<UserQuery, UserQueryVariables>;

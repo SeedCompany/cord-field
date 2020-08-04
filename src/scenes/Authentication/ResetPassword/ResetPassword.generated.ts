@@ -1,9 +1,7 @@
 /* eslint-disable import/no-duplicates, @typescript-eslint/no-empty-interface */
-
-import * as ApolloReactCommon from '@apollo/client';
-import * as ApolloReactHooks from '@apollo/client';
+import * as Apollo from '@apollo/client';
 import gql from 'graphql-tag';
-import * as Types from '../../../api/schema.generated';
+import type * as Types from '../../../api/schema.generated';
 
 export type ResetPasswordMutationVariables = Types.Exact<{
   input: Types.ResetPasswordInput;
@@ -16,7 +14,7 @@ export const ResetPasswordDocument = gql`
     resetPassword(input: $input)
   }
 `;
-export type ResetPasswordMutationFn = ApolloReactCommon.MutationFunction<
+export type ResetPasswordMutationFn = Apollo.MutationFunction<
   ResetPasswordMutation,
   ResetPasswordMutationVariables
 >;
@@ -39,12 +37,12 @@ export type ResetPasswordMutationFn = ApolloReactCommon.MutationFunction<
  * });
  */
 export function useResetPasswordMutation(
-  baseOptions?: ApolloReactHooks.MutationHookOptions<
+  baseOptions?: Apollo.MutationHookOptions<
     ResetPasswordMutation,
     ResetPasswordMutationVariables
   >
 ) {
-  return ApolloReactHooks.useMutation<
+  return Apollo.useMutation<
     ResetPasswordMutation,
     ResetPasswordMutationVariables
   >(ResetPasswordDocument, baseOptions);
@@ -52,10 +50,10 @@ export function useResetPasswordMutation(
 export type ResetPasswordMutationHookResult = ReturnType<
   typeof useResetPasswordMutation
 >;
-export type ResetPasswordMutationResult = ApolloReactCommon.MutationResult<
+export type ResetPasswordMutationResult = Apollo.MutationResult<
   ResetPasswordMutation
 >;
-export type ResetPasswordMutationOptions = ApolloReactCommon.BaseMutationOptions<
+export type ResetPasswordMutationOptions = Apollo.BaseMutationOptions<
   ResetPasswordMutation,
   ResetPasswordMutationVariables
 >;

@@ -1,24 +1,23 @@
 /* eslint-disable import/no-duplicates, @typescript-eslint/no-empty-interface */
-import * as ApolloReactCommon from '@apollo/client';
-import * as ApolloReactHooks from '@apollo/client';
+import * as Apollo from '@apollo/client';
 import gql from 'graphql-tag';
-import {
+import type {
   DisplayLocation_Country_Fragment,
   DisplayLocation_Region_Fragment,
   DisplayLocation_Zone_Fragment,
 } from '../../../api/fragments/location.generated';
 import { DisplayLocationFragmentDoc } from '../../../api/fragments/location.generated';
-import * as Types from '../../../api/schema.generated';
-import {
+import type * as Types from '../../../api/schema.generated';
+import type {
   ProjectListItem_InternshipProject_Fragment,
   ProjectListItem_TranslationProject_Fragment,
 } from '../../../components/ProjectListItemCard/ProjectListItem.generated';
 import { ProjectListItemFragmentDoc } from '../../../components/ProjectListItemCard/ProjectListItem.generated';
-import { SsFragment } from '../../Users/UserForm/UserForm.generated';
+import type { SsFragment } from '../../Users/UserForm/UserForm.generated';
 import { SsFragmentDoc } from '../../Users/UserForm/UserForm.generated';
-import { LanguageFormFragment } from '../LanguageForm/LangugeForm.generated';
+import type { LanguageFormFragment } from '../LanguageForm/LangugeForm.generated';
 import { LanguageFormFragmentDoc } from '../LanguageForm/LangugeForm.generated';
-import { LeastOfTheseFragment } from './LeastOfThese/LeastOfThese.generated';
+import type { LeastOfTheseFragment } from './LeastOfThese/LeastOfThese.generated';
 import { LeastOfTheseFragmentDoc } from './LeastOfThese/LeastOfThese.generated';
 
 export type LanguageQueryVariables = Types.Exact<{
@@ -202,23 +201,20 @@ export const LanguageDocument = gql`
  * });
  */
 export function useLanguageQuery(
-  baseOptions?: ApolloReactHooks.QueryHookOptions<
-    LanguageQuery,
-    LanguageQueryVariables
-  >
+  baseOptions?: Apollo.QueryHookOptions<LanguageQuery, LanguageQueryVariables>
 ) {
-  return ApolloReactHooks.useQuery<LanguageQuery, LanguageQueryVariables>(
+  return Apollo.useQuery<LanguageQuery, LanguageQueryVariables>(
     LanguageDocument,
     baseOptions
   );
 }
 export function useLanguageLazyQuery(
-  baseOptions?: ApolloReactHooks.LazyQueryHookOptions<
+  baseOptions?: Apollo.LazyQueryHookOptions<
     LanguageQuery,
     LanguageQueryVariables
   >
 ) {
-  return ApolloReactHooks.useLazyQuery<LanguageQuery, LanguageQueryVariables>(
+  return Apollo.useLazyQuery<LanguageQuery, LanguageQueryVariables>(
     LanguageDocument,
     baseOptions
   );
@@ -227,7 +223,7 @@ export type LanguageQueryHookResult = ReturnType<typeof useLanguageQuery>;
 export type LanguageLazyQueryHookResult = ReturnType<
   typeof useLanguageLazyQuery
 >;
-export type LanguageQueryResult = ApolloReactCommon.QueryResult<
+export type LanguageQueryResult = Apollo.QueryResult<
   LanguageQuery,
   LanguageQueryVariables
 >;

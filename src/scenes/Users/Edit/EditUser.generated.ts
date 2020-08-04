@@ -1,11 +1,10 @@
 /* eslint-disable import/no-duplicates, @typescript-eslint/no-empty-interface */
-import * as ApolloReactCommon from '@apollo/client';
-import * as ApolloReactHooks from '@apollo/client';
+import * as Apollo from '@apollo/client';
 import gql from 'graphql-tag';
-import * as Types from '../../../api/schema.generated';
-import { UserDetailsFragment } from '../Detail/UserDetail.generated';
+import type * as Types from '../../../api/schema.generated';
+import type { UserDetailsFragment } from '../Detail/UserDetail.generated';
 import { UserDetailsFragmentDoc } from '../Detail/UserDetail.generated';
-import { UserFormFragment } from '../UserForm/UserForm.generated';
+import type { UserFormFragment } from '../UserForm/UserForm.generated';
 import { UserFormFragmentDoc } from '../UserForm/UserForm.generated';
 
 export type UpdateUserMutationVariables = Types.Exact<{
@@ -31,7 +30,7 @@ export const UpdateUserDocument = gql`
   ${UserDetailsFragmentDoc}
   ${UserFormFragmentDoc}
 `;
-export type UpdateUserMutationFn = ApolloReactCommon.MutationFunction<
+export type UpdateUserMutationFn = Apollo.MutationFunction<
   UpdateUserMutation,
   UpdateUserMutationVariables
 >;
@@ -54,23 +53,23 @@ export type UpdateUserMutationFn = ApolloReactCommon.MutationFunction<
  * });
  */
 export function useUpdateUserMutation(
-  baseOptions?: ApolloReactHooks.MutationHookOptions<
+  baseOptions?: Apollo.MutationHookOptions<
     UpdateUserMutation,
     UpdateUserMutationVariables
   >
 ) {
-  return ApolloReactHooks.useMutation<
-    UpdateUserMutation,
-    UpdateUserMutationVariables
-  >(UpdateUserDocument, baseOptions);
+  return Apollo.useMutation<UpdateUserMutation, UpdateUserMutationVariables>(
+    UpdateUserDocument,
+    baseOptions
+  );
 }
 export type UpdateUserMutationHookResult = ReturnType<
   typeof useUpdateUserMutation
 >;
-export type UpdateUserMutationResult = ApolloReactCommon.MutationResult<
+export type UpdateUserMutationResult = Apollo.MutationResult<
   UpdateUserMutation
 >;
-export type UpdateUserMutationOptions = ApolloReactCommon.BaseMutationOptions<
+export type UpdateUserMutationOptions = Apollo.BaseMutationOptions<
   UpdateUserMutation,
   UpdateUserMutationVariables
 >;

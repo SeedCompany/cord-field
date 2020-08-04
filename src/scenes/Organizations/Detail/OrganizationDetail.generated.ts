@@ -1,9 +1,7 @@
 /* eslint-disable import/no-duplicates, @typescript-eslint/no-empty-interface */
-
-import * as ApolloReactCommon from '@apollo/client';
-import * as ApolloReactHooks from '@apollo/client';
+import * as Apollo from '@apollo/client';
 import gql from 'graphql-tag';
-import * as Types from '../../../api/schema.generated';
+import type * as Types from '../../../api/schema.generated';
 
 export type OrganizationQueryVariables = Types.Exact<{
   input: Types.Scalars['ID'];
@@ -61,26 +59,26 @@ export const OrganizationDocument = gql`
  * });
  */
 export function useOrganizationQuery(
-  baseOptions?: ApolloReactHooks.QueryHookOptions<
+  baseOptions?: Apollo.QueryHookOptions<
     OrganizationQuery,
     OrganizationQueryVariables
   >
 ) {
-  return ApolloReactHooks.useQuery<
-    OrganizationQuery,
-    OrganizationQueryVariables
-  >(OrganizationDocument, baseOptions);
+  return Apollo.useQuery<OrganizationQuery, OrganizationQueryVariables>(
+    OrganizationDocument,
+    baseOptions
+  );
 }
 export function useOrganizationLazyQuery(
-  baseOptions?: ApolloReactHooks.LazyQueryHookOptions<
+  baseOptions?: Apollo.LazyQueryHookOptions<
     OrganizationQuery,
     OrganizationQueryVariables
   >
 ) {
-  return ApolloReactHooks.useLazyQuery<
-    OrganizationQuery,
-    OrganizationQueryVariables
-  >(OrganizationDocument, baseOptions);
+  return Apollo.useLazyQuery<OrganizationQuery, OrganizationQueryVariables>(
+    OrganizationDocument,
+    baseOptions
+  );
 }
 export type OrganizationQueryHookResult = ReturnType<
   typeof useOrganizationQuery
@@ -88,7 +86,7 @@ export type OrganizationQueryHookResult = ReturnType<
 export type OrganizationLazyQueryHookResult = ReturnType<
   typeof useOrganizationLazyQuery
 >;
-export type OrganizationQueryResult = ApolloReactCommon.QueryResult<
+export type OrganizationQueryResult = Apollo.QueryResult<
   OrganizationQuery,
   OrganizationQueryVariables
 >;

@@ -1,19 +1,18 @@
 /* eslint-disable import/no-duplicates, @typescript-eslint/no-empty-interface */
-import * as ApolloReactCommon from '@apollo/client';
-import * as ApolloReactHooks from '@apollo/client';
+import * as Apollo from '@apollo/client';
 import gql from 'graphql-tag';
-import { DisplayLocation_Country_Fragment } from '../../../api/fragments/location.generated';
+import type { DisplayLocation_Country_Fragment } from '../../../api/fragments/location.generated';
 import { DisplayLocationFragmentDoc } from '../../../api/fragments/location.generated';
-import * as Types from '../../../api/schema.generated';
-import { BudgetOverviewFragment } from '../../../components/BudgetOverviewCard/BudgetOverview.generated';
+import type * as Types from '../../../api/schema.generated';
+import type { BudgetOverviewFragment } from '../../../components/BudgetOverviewCard/BudgetOverview.generated';
 import { BudgetOverviewFragmentDoc } from '../../../components/BudgetOverviewCard/BudgetOverview.generated';
-import { InternshipEngagementListItemFragment } from '../../../components/InternshipEngagementListItemCard/InternshipEngagementListItem.generated';
+import type { InternshipEngagementListItemFragment } from '../../../components/InternshipEngagementListItemCard/InternshipEngagementListItem.generated';
 import { InternshipEngagementListItemFragmentDoc } from '../../../components/InternshipEngagementListItemCard/InternshipEngagementListItem.generated';
-import { LanguageEngagementListItemFragment } from '../../../components/LanguageEngagementListItemCard/LanguageEngagementListItem.generated';
+import type { LanguageEngagementListItemFragment } from '../../../components/LanguageEngagementListItemCard/LanguageEngagementListItem.generated';
 import { LanguageEngagementListItemFragmentDoc } from '../../../components/LanguageEngagementListItemCard/LanguageEngagementListItem.generated';
-import { PartnershipSummaryFragment } from '../../../components/PartnershipSummary/PartnershipSummary.generated';
+import type { PartnershipSummaryFragment } from '../../../components/PartnershipSummary/PartnershipSummary.generated';
 import { PartnershipSummaryFragmentDoc } from '../../../components/PartnershipSummary/PartnershipSummary.generated';
-import { ProjectMemberListFragment } from '../../../components/ProjectMembersSummary/ProjectMembersSummary.generated';
+import type { ProjectMemberListFragment } from '../../../components/ProjectMembersSummary/ProjectMembersSummary.generated';
 import { ProjectMemberListFragmentDoc } from '../../../components/ProjectMembersSummary/ProjectMembersSummary.generated';
 
 export type ProjectOverviewQueryVariables = Types.Exact<{
@@ -232,23 +231,23 @@ export const ProjectOverviewDocument = gql`
  * });
  */
 export function useProjectOverviewQuery(
-  baseOptions?: ApolloReactHooks.QueryHookOptions<
+  baseOptions?: Apollo.QueryHookOptions<
     ProjectOverviewQuery,
     ProjectOverviewQueryVariables
   >
 ) {
-  return ApolloReactHooks.useQuery<
-    ProjectOverviewQuery,
-    ProjectOverviewQueryVariables
-  >(ProjectOverviewDocument, baseOptions);
+  return Apollo.useQuery<ProjectOverviewQuery, ProjectOverviewQueryVariables>(
+    ProjectOverviewDocument,
+    baseOptions
+  );
 }
 export function useProjectOverviewLazyQuery(
-  baseOptions?: ApolloReactHooks.LazyQueryHookOptions<
+  baseOptions?: Apollo.LazyQueryHookOptions<
     ProjectOverviewQuery,
     ProjectOverviewQueryVariables
   >
 ) {
-  return ApolloReactHooks.useLazyQuery<
+  return Apollo.useLazyQuery<
     ProjectOverviewQuery,
     ProjectOverviewQueryVariables
   >(ProjectOverviewDocument, baseOptions);
@@ -259,7 +258,7 @@ export type ProjectOverviewQueryHookResult = ReturnType<
 export type ProjectOverviewLazyQueryHookResult = ReturnType<
   typeof useProjectOverviewLazyQuery
 >;
-export type ProjectOverviewQueryResult = ApolloReactCommon.QueryResult<
+export type ProjectOverviewQueryResult = Apollo.QueryResult<
   ProjectOverviewQuery,
   ProjectOverviewQueryVariables
 >;

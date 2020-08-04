@@ -1,7 +1,7 @@
 /* eslint-disable import/no-duplicates, @typescript-eslint/no-empty-interface */
 import gql from 'graphql-tag';
-import * as Types from '../../api/schema.generated';
-import { ProjectMemberItemFragment } from './ProjectMemberItem.generated';
+import type * as Types from '../../api/schema.generated';
+import type { ProjectMemberItemFragment } from './ProjectMemberItem.generated';
 import { ProjectMemberItemFragmentDoc } from './ProjectMemberItem.generated';
 
 export type ProjectMemberListFragment = {
