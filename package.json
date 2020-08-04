@@ -10,7 +10,7 @@
     "lint": "eslint --ext .ts,.tsx --fix --max-warnings 0 .",
     "type-check": "tsc -p .",
     "analyze": "yarn build --analyze",
-    "gql-gen": "graphql-codegen",
+    "gql-gen": "TS_NODE_PROJECT=tsconfig.codegen.json graphql-codegen -r ts-node/register",
     "storybook": "start-storybook -p 9009 -s public",
     "build-storybook": "build-storybook -s public"
   },
