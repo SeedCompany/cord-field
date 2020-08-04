@@ -73,6 +73,11 @@ export const appOverrides: ThemeOptions['overrides'] = ({
         },
       },
     },
+    MuiOutlinedInput: {
+      notchedOutline: {
+        textTransform: 'uppercase',
+      },
+    },
     MuiFormControlLabel: {
       label: {
         // Disallow user selection on labels as they are often clicked to change
