@@ -1,5 +1,4 @@
 import { LazyQueryHookOptions, QueryTuple } from '@apollo/client';
-import { isNetworkRequestInFlight } from '@apollo/client/core/networkStatus';
 import {
   Chip,
   ChipProps,
@@ -12,6 +11,7 @@ import { camelCase } from 'camel-case';
 import { identity, upperFirst } from 'lodash';
 import React, { useEffect, useState } from 'react';
 import { Except, Merge, SetOptional } from 'type-fest';
+import { isNetworkRequestInFlight } from '../../../api';
 import { FieldConfig, useField, useFieldName } from '../index';
 import {
   areListsEqual,
