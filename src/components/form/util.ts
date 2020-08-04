@@ -1,3 +1,4 @@
+import { difference, isEmpty } from 'lodash';
 import {
   MutableRefObject,
   ReactNode,
@@ -63,4 +64,20 @@ export const useFocusOnEnabled = <
     }
   }, [meta.active, disabled, focus]);
   return ref;
+};
+
+export const areListsEqual = (a: any, b: any) =>
+  isEmpty(difference(a, b)) && isEmpty(difference(b, a));
+
+export const compareNullable = <T>(fn: (a: T, b: T) => boolean) => (
+  a: T,
+  b: T
+) => {
+  if (a == null && b == null) {
+    return true;
+  }
+  if ((a == null && b) || (a && b == null)) {
+    return false;
+  }
+  return fn(a, b);
 };

@@ -1,0 +1,16 @@
+query OrganizationLookup($query: String!) {
+  search(input: { query: $query, type: [Organization] }) {
+    items {
+      ... on Organization {
+        ...OrganizationLookupItem
+      }
+    }
+  }
+}
+
+fragment OrganizationLookupItem on Organization {
+  id
+  name {
+    value
+  }
+}

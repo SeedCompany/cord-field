@@ -1,7 +1,7 @@
 export const GQLOperations = {
   Query: {
-    OrganizationAutocomplete: 'OrganizationAutocomplete',
     Session: 'Session',
+    OrganizationLookup: 'OrganizationLookup',
     Engagement: 'Engagement',
     Language: 'Language',
     Languages: 'Languages',
@@ -52,6 +52,7 @@ export const GQLOperations = {
     ProjectMemberList: 'ProjectMemberList',
     LoggedInUser: 'LoggedInUser',
     UserListItem: 'UserListItem',
+    OrganizationLookupItem: 'OrganizationLookupItem',
     Ceremony: 'Ceremony',
     CeremonyCard: 'CeremonyCard',
     InternshipEngagementDetail: 'InternshipEngagementDetail',
