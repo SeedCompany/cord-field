@@ -192,10 +192,7 @@ export const LanguageEngagementDetail: FC<EngagementQuery> = ({
         </Grid>
         <Grid item container spacing={3} alignItems="center">
           <Grid item xs={6}>
-            <CeremonyCard
-              {...engagement.ceremony}
-              onEdit={() => console.log('edit ceremony clicked')}
-            />
+            <CeremonyCard {...engagement.ceremony} />
           </Grid>
         </Grid>
       </Grid>

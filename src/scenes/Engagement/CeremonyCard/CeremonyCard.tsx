@@ -12,7 +12,10 @@ import { Skeleton } from '@material-ui/lab';
 import clsx from 'clsx';
 import * as React from 'react';
 import { FC } from 'react';
-import { canEditAny } from '../../../api';
+import { canEditAny, UpdateCeremonyInput } from '../../../api';
+import { useDialog } from '../../../components/Dialog';
+import { DialogForm } from '../../../components/Dialog/DialogForm';
+import { DateField, SubmitError } from '../../../components/form';
 import { useDateFormatter } from '../../../components/Formatters';
 import { Redacted } from '../../../components/Redacted';
 import {
@@ -47,14 +50,11 @@ const useStyles = makeStyles(({ spacing, typography }) => ({
   },
 }));
 
-type CeremonyCardProps = Partial<CeremonyCardFragment> & {
-  onEdit?: () => void;
-};
+type CeremonyCardProps = Partial<CeremonyCardFragment>;
 
 export const CeremonyCard: FC<CeremonyCardProps> = ({
   canRead,
   value: ceremony,
-  onEdit,
 }) => {
   const { id, type, planned, estimatedDate, actualDate } = ceremony || {};
   const loading = canRead == null;
@@ -62,6 +62,7 @@ export const CeremonyCard: FC<CeremonyCardProps> = ({
   const classes = useStyles();
   const formatDate = useDateFormatter();
   const [updateCeremony] = useUpdateCeremonyMutation();
+  const [dialogState, openDialog] = useDialog();
 
   const canEditDates = canEditAny(
     ceremony,
@@ -72,7 +73,7 @@ export const CeremonyCard: FC<CeremonyCardProps> = ({
   const editButton = (
     <Button
       color="primary"
-      onClick={onEdit}
+      onClick={openDialog}
       disabled={!canEditDates || !planned?.value}
     >
       Edit dates
@@ -168,6 +169,28 @@ export const CeremonyCard: FC<CeremonyCardProps> = ({
           )}
         </CardActions>
       </Card>
+      <DialogForm<UpdateCeremonyInput>
+        title="Update Ceremony"
+        closeLabel="Close"
+        submitLabel="Submit"
+        {...dialogState}
+        initialValues={{
+          ceremony: {
+            id: id || '',
+            estimatedDate: estimatedDate?.value,
+            actualDate: actualDate?.value,
+          },
+        }}
+        onSubmit={(input) => {
+          updateCeremony({ variables: { input } });
+        }}
+      >
+        <SubmitError />
+        <Typography>Estimated Date</Typography>
+        <DateField name="ceremony.estimatedDate" />
+        <Typography>Actual Date</Typography>
+        <DateField name="ceremony.actualDate" />
+      </DialogForm>
     </div>
   );
 };
