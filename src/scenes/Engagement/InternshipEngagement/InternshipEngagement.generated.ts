@@ -1,13 +1,13 @@
 /* eslint-disable import/no-duplicates, @typescript-eslint/no-empty-interface */
 import gql from 'graphql-tag';
-import { DisplayLocation_Country_Fragment } from '../../../api/fragments/location.generated';
+import type { DisplayLocation_Country_Fragment } from '../../../api/fragments/location.generated';
 import { DisplayLocationFragmentDoc } from '../../../api/fragments/location.generated';
-import * as Types from '../../../api/schema.generated';
-import { MethodologiesCardFragment } from '../../../components/MethodologiesCard/MethodologiesCard.generated';
+import type * as Types from '../../../api/schema.generated';
+import type { MethodologiesCardFragment } from '../../../components/MethodologiesCard/MethodologiesCard.generated';
 import { MethodologiesCardFragmentDoc } from '../../../components/MethodologiesCard/MethodologiesCard.generated';
-import { CeremonyCardFragment } from '../CeremonyCard/CeremonyCard.generated';
+import type { CeremonyCardFragment } from '../CeremonyCard/CeremonyCard.generated';
 import { CeremonyCardFragmentDoc } from '../CeremonyCard/CeremonyCard.generated';
-import { MentorCardFragment } from './MentorCard/MentorCard.generated';
+import type { MentorCardFragment } from './MentorCard/MentorCard.generated';
 import { MentorCardFragmentDoc } from './MentorCard/MentorCard.generated';
 
 export type InternshipEngagementDetailFragment = {

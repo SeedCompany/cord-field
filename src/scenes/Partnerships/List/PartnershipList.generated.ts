@@ -1,16 +1,16 @@
 /* eslint-disable import/no-duplicates, @typescript-eslint/no-empty-interface */
-import * as ApolloReactCommon from '@apollo/client';
+import type * as ApolloReactCommon from '@apollo/client';
 import * as ApolloReactHooks from '@apollo/client';
 import gql from 'graphql-tag';
-import * as Types from '../../../api/schema.generated';
-import { PartnershipCardFragment } from '../../../components/PartnershipCard/PartnershipCard.generated';
+import type * as Types from '../../../api/schema.generated';
+import type { PartnershipCardFragment } from '../../../components/PartnershipCard/PartnershipCard.generated';
 import { PartnershipCardFragmentDoc } from '../../../components/PartnershipCard/PartnershipCard.generated';
-import {
+import type {
   ProjectBreadcrumb_InternshipProject_Fragment,
   ProjectBreadcrumb_TranslationProject_Fragment,
 } from '../../../components/ProjectBreadcrumb/ProjectBreadcrumb.generated';
 import { ProjectBreadcrumbFragmentDoc } from '../../../components/ProjectBreadcrumb/ProjectBreadcrumb.generated';
-import { EditPartnershipFragment } from '../Edit/EditPartnership.generated';
+import type { EditPartnershipFragment } from '../Edit/EditPartnership.generated';
 import { EditPartnershipFragmentDoc } from '../Edit/EditPartnership.generated';
 
 export type ProjectPartnershipsQueryVariables = Types.Exact<{

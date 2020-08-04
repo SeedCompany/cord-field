@@ -1,9 +1,9 @@
 /* eslint-disable import/no-duplicates, @typescript-eslint/no-empty-interface */
-import * as ApolloReactCommon from '@apollo/client';
+import type * as ApolloReactCommon from '@apollo/client';
 import * as ApolloReactHooks from '@apollo/client';
 import gql from 'graphql-tag';
-import * as Types from '../../../api/schema.generated';
-import { UserDetailsFragment } from '../Detail/UserDetail.generated';
+import type * as Types from '../../../api/schema.generated';
+import type { UserDetailsFragment } from '../Detail/UserDetail.generated';
 import { UserDetailsFragmentDoc } from '../Detail/UserDetail.generated';
 
 export type CreatePersonMutationVariables = Types.Exact<{

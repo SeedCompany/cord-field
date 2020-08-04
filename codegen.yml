@@ -7,7 +7,6 @@ hooks:
     - eslint --fix --ext .generated.ts
 config:
   # Use `import type` which should be default for TS 3.8+
-  # Not yet working in all plugins, waiting for future release
   useTypeImports: true
   # Immutability is great, but Apollo also enforces this at runtime (at least in dev)
   # so this ensures that invalid code is caught before runtime.

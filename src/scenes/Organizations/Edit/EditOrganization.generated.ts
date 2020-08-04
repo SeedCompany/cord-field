@@ -1,9 +1,9 @@
 /* eslint-disable import/no-duplicates, @typescript-eslint/no-empty-interface */
-import * as ApolloReactCommon from '@apollo/client';
+import type * as ApolloReactCommon from '@apollo/client';
 import * as ApolloReactHooks from '@apollo/client';
 import gql from 'graphql-tag';
-import * as Types from '../../../api/schema.generated';
-import { OrgDetailsFragment } from '../Detail/OrganizationDetail.generated';
+import type * as Types from '../../../api/schema.generated';
+import type { OrgDetailsFragment } from '../Detail/OrganizationDetail.generated';
 import { OrgDetailsFragmentDoc } from '../Detail/OrganizationDetail.generated';
 
 export type UpdateOrganizationMutationVariables = Types.Exact<{

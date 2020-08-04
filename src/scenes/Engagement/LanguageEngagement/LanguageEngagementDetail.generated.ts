@@ -1,7 +1,7 @@
 /* eslint-disable import/no-duplicates, @typescript-eslint/no-empty-interface */
 import gql from 'graphql-tag';
-import * as Types from '../../../api/schema.generated';
-import { CeremonyCardFragment } from '../CeremonyCard/CeremonyCard.generated';
+import type * as Types from '../../../api/schema.generated';
+import type { CeremonyCardFragment } from '../CeremonyCard/CeremonyCard.generated';
 import { CeremonyCardFragmentDoc } from '../CeremonyCard/CeremonyCard.generated';
 
 export type LanguageEngagementDetailFragment = {

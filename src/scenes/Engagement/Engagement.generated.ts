@@ -1,16 +1,16 @@
 /* eslint-disable import/no-duplicates, @typescript-eslint/no-empty-interface */
-import * as ApolloReactCommon from '@apollo/client';
+import type * as ApolloReactCommon from '@apollo/client';
 import * as ApolloReactHooks from '@apollo/client';
 import gql from 'graphql-tag';
-import * as Types from '../../api/schema.generated';
-import {
+import type * as Types from '../../api/schema.generated';
+import type {
   ProjectBreadcrumb_InternshipProject_Fragment,
   ProjectBreadcrumb_TranslationProject_Fragment,
 } from '../../components/ProjectBreadcrumb/ProjectBreadcrumb.generated';
 import { ProjectBreadcrumbFragmentDoc } from '../../components/ProjectBreadcrumb/ProjectBreadcrumb.generated';
-import { InternshipEngagementDetailFragment } from './InternshipEngagement/InternshipEngagement.generated';
+import type { InternshipEngagementDetailFragment } from './InternshipEngagement/InternshipEngagement.generated';
 import { InternshipEngagementDetailFragmentDoc } from './InternshipEngagement/InternshipEngagement.generated';
-import { LanguageEngagementDetailFragment } from './LanguageEngagement/LanguageEngagementDetail.generated';
+import type { LanguageEngagementDetailFragment } from './LanguageEngagement/LanguageEngagementDetail.generated';
 import { LanguageEngagementDetailFragmentDoc } from './LanguageEngagement/LanguageEngagementDetail.generated';
 
 export type EngagementQueryVariables = Types.Exact<{

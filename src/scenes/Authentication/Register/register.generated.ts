@@ -1,9 +1,9 @@
 /* eslint-disable import/no-duplicates, @typescript-eslint/no-empty-interface */
-import * as ApolloReactCommon from '@apollo/client';
+import type * as ApolloReactCommon from '@apollo/client';
 import * as ApolloReactHooks from '@apollo/client';
 import gql from 'graphql-tag';
-import * as Types from '../../../api/schema.generated';
-import { LoggedInUserFragment } from '../../../components/Session/session.generated';
+import type * as Types from '../../../api/schema.generated';
+import type { LoggedInUserFragment } from '../../../components/Session/session.generated';
 import { LoggedInUserFragmentDoc } from '../../../components/Session/session.generated';
 
 export type RegisterMutationVariables = Types.Exact<{

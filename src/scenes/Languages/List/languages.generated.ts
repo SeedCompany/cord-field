@@ -1,9 +1,9 @@
 /* eslint-disable import/no-duplicates, @typescript-eslint/no-empty-interface */
-import * as ApolloReactCommon from '@apollo/client';
+import type * as ApolloReactCommon from '@apollo/client';
 import * as ApolloReactHooks from '@apollo/client';
 import gql from 'graphql-tag';
-import * as Types from '../../../api/schema.generated';
-import { LanguageListItemFragment } from '../../../components/LanguageListItemCard/LanguageListItem.generated';
+import type * as Types from '../../../api/schema.generated';
+import type { LanguageListItemFragment } from '../../../components/LanguageListItemCard/LanguageListItem.generated';
 import { LanguageListItemFragmentDoc } from '../../../components/LanguageListItemCard/LanguageListItem.generated';
 
 export type LanguagesQueryVariables = Types.Exact<{

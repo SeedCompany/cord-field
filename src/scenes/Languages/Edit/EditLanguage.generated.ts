@@ -1,11 +1,11 @@
 /* eslint-disable import/no-duplicates, @typescript-eslint/no-empty-interface */
-import * as ApolloReactCommon from '@apollo/client';
+import type * as ApolloReactCommon from '@apollo/client';
 import * as ApolloReactHooks from '@apollo/client';
 import gql from 'graphql-tag';
-import * as Types from '../../../api/schema.generated';
-import { LanguageDetailFragment } from '../Detail/LanguageDetail.generated';
+import type * as Types from '../../../api/schema.generated';
+import type { LanguageDetailFragment } from '../Detail/LanguageDetail.generated';
 import { LanguageDetailFragmentDoc } from '../Detail/LanguageDetail.generated';
-import { LanguageFormFragment } from '../LanguageForm/LangugeForm.generated';
+import type { LanguageFormFragment } from '../LanguageForm/LangugeForm.generated';
 import { LanguageFormFragmentDoc } from '../LanguageForm/LangugeForm.generated';
 
 export type UpdateLanguageMutationVariables = Types.Exact<{

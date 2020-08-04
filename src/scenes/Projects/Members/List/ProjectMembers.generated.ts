@@ -1,14 +1,14 @@
 /* eslint-disable import/no-duplicates, @typescript-eslint/no-empty-interface */
-import * as ApolloReactCommon from '@apollo/client';
+import type * as ApolloReactCommon from '@apollo/client';
 import * as ApolloReactHooks from '@apollo/client';
 import gql from 'graphql-tag';
-import * as Types from '../../../../api/schema.generated';
-import {
+import type * as Types from '../../../../api/schema.generated';
+import type {
   ProjectBreadcrumb_InternshipProject_Fragment,
   ProjectBreadcrumb_TranslationProject_Fragment,
 } from '../../../../components/ProjectBreadcrumb/ProjectBreadcrumb.generated';
 import { ProjectBreadcrumbFragmentDoc } from '../../../../components/ProjectBreadcrumb/ProjectBreadcrumb.generated';
-import { ProjectMemberCardFragment } from '../../../../components/ProjectMemberCard/ProjectMember.generated';
+import type { ProjectMemberCardFragment } from '../../../../components/ProjectMemberCard/ProjectMember.generated';
 import { ProjectMemberCardFragmentDoc } from '../../../../components/ProjectMemberCard/ProjectMember.generated';
 
 export type ProjectMembersQueryVariables = Types.Exact<{

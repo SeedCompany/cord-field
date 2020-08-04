@@ -1,19 +1,19 @@
 /* eslint-disable import/no-duplicates, @typescript-eslint/no-empty-interface */
-import * as ApolloReactCommon from '@apollo/client';
+import type * as ApolloReactCommon from '@apollo/client';
 import * as ApolloReactHooks from '@apollo/client';
 import gql from 'graphql-tag';
-import { DisplayLocation_Country_Fragment } from '../../../api/fragments/location.generated';
+import type { DisplayLocation_Country_Fragment } from '../../../api/fragments/location.generated';
 import { DisplayLocationFragmentDoc } from '../../../api/fragments/location.generated';
-import * as Types from '../../../api/schema.generated';
-import { BudgetOverviewFragment } from '../../../components/BudgetOverviewCard/BudgetOverview.generated';
+import type * as Types from '../../../api/schema.generated';
+import type { BudgetOverviewFragment } from '../../../components/BudgetOverviewCard/BudgetOverview.generated';
 import { BudgetOverviewFragmentDoc } from '../../../components/BudgetOverviewCard/BudgetOverview.generated';
-import { InternshipEngagementListItemFragment } from '../../../components/InternshipEngagementListItemCard/InternshipEngagementListItem.generated';
+import type { InternshipEngagementListItemFragment } from '../../../components/InternshipEngagementListItemCard/InternshipEngagementListItem.generated';
 import { InternshipEngagementListItemFragmentDoc } from '../../../components/InternshipEngagementListItemCard/InternshipEngagementListItem.generated';
-import { LanguageEngagementListItemFragment } from '../../../components/LanguageEngagementListItemCard/LanguageEngagementListItem.generated';
+import type { LanguageEngagementListItemFragment } from '../../../components/LanguageEngagementListItemCard/LanguageEngagementListItem.generated';
 import { LanguageEngagementListItemFragmentDoc } from '../../../components/LanguageEngagementListItemCard/LanguageEngagementListItem.generated';
-import { PartnershipSummaryFragment } from '../../../components/PartnershipSummary/PartnershipSummary.generated';
+import type { PartnershipSummaryFragment } from '../../../components/PartnershipSummary/PartnershipSummary.generated';
 import { PartnershipSummaryFragmentDoc } from '../../../components/PartnershipSummary/PartnershipSummary.generated';
-import { ProjectMemberListFragment } from '../../../components/ProjectMembersSummary/ProjectMembersSummary.generated';
+import type { ProjectMemberListFragment } from '../../../components/ProjectMembersSummary/ProjectMembersSummary.generated';
 import { ProjectMemberListFragmentDoc } from '../../../components/ProjectMembersSummary/ProjectMembersSummary.generated';
 
 export type ProjectOverviewQueryVariables = Types.Exact<{
