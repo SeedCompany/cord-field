@@ -15,7 +15,10 @@ import { FC } from 'react';
 import { canEditAny } from '../../../api';
 import { useDateFormatter } from '../../../components/Formatters';
 import { Redacted } from '../../../components/Redacted';
-import { CeremonyCardFragment } from './CeremonyCard.generated';
+import {
+  CeremonyCardFragment,
+  useUpdateCeremonyMutation,
+} from './CeremonyCard.generated';
 import { CeremonyPlanned } from './CeremonyPlanned';
 import { LargeDate } from './LargeDate';
 
@@ -53,11 +56,12 @@ export const CeremonyCard: FC<CeremonyCardProps> = ({
   value: ceremony,
   onEdit,
 }) => {
-  const { type, planned, estimatedDate, actualDate } = ceremony || {};
+  const { id, type, planned, estimatedDate, actualDate } = ceremony || {};
   const loading = canRead == null;
 
   const classes = useStyles();
   const formatDate = useDateFormatter();
+  const [updateCeremony] = useUpdateCeremonyMutation();
 
   const canEditDates = canEditAny(
     ceremony,
@@ -75,12 +79,26 @@ export const CeremonyCard: FC<CeremonyCardProps> = ({
     </Button>
   );
 
+  const toggleCeremonyPlannedState = (planned: boolean) =>
+    id &&
+    updateCeremony({
+      variables: {
+        input: {
+          ceremony: {
+            id,
+            planned,
+          },
+        },
+      },
+    });
+
   return (
     <div className={classes.root}>
       <CeremonyPlanned
         canRead={canRead}
         value={ceremony}
         className={classes.header}
+        onPlannedChange={toggleCeremonyPlannedState}
       />
       <Card className={classes.card}>
         <Grid

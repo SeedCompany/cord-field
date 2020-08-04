@@ -23,3 +23,11 @@ fragment CeremonyCard on SecuredCeremony {
     ...Ceremony
   }
 }
+
+mutation UpdateCeremony($input: UpdateCeremonyInput!) {
+  updateCeremony(input: $input) {
+    ceremony {
+      ...Ceremony
+    }
+  }
+}
