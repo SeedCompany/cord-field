@@ -1,6 +1,5 @@
 /* eslint-disable import/no-duplicates, @typescript-eslint/no-empty-interface */
-import type * as ApolloReactCommon from '@apollo/client';
-import * as ApolloReactHooks from '@apollo/client';
+import * as Apollo from '@apollo/client';
 import gql from 'graphql-tag';
 import type * as Types from '../../../api/schema.generated';
 import type { PartnershipCardFragment } from '../../../components/PartnershipCard/PartnershipCard.generated';
@@ -82,7 +81,7 @@ export const UpdatePartnershipDocument = gql`
   }
   ${PartnershipCardFragmentDoc}
 `;
-export type UpdatePartnershipMutationFn = ApolloReactCommon.MutationFunction<
+export type UpdatePartnershipMutationFn = Apollo.MutationFunction<
   UpdatePartnershipMutation,
   UpdatePartnershipMutationVariables
 >;
@@ -105,12 +104,12 @@ export type UpdatePartnershipMutationFn = ApolloReactCommon.MutationFunction<
  * });
  */
 export function useUpdatePartnershipMutation(
-  baseOptions?: ApolloReactHooks.MutationHookOptions<
+  baseOptions?: Apollo.MutationHookOptions<
     UpdatePartnershipMutation,
     UpdatePartnershipMutationVariables
   >
 ) {
-  return ApolloReactHooks.useMutation<
+  return Apollo.useMutation<
     UpdatePartnershipMutation,
     UpdatePartnershipMutationVariables
   >(UpdatePartnershipDocument, baseOptions);
@@ -118,10 +117,10 @@ export function useUpdatePartnershipMutation(
 export type UpdatePartnershipMutationHookResult = ReturnType<
   typeof useUpdatePartnershipMutation
 >;
-export type UpdatePartnershipMutationResult = ApolloReactCommon.MutationResult<
+export type UpdatePartnershipMutationResult = Apollo.MutationResult<
   UpdatePartnershipMutation
 >;
-export type UpdatePartnershipMutationOptions = ApolloReactCommon.BaseMutationOptions<
+export type UpdatePartnershipMutationOptions = Apollo.BaseMutationOptions<
   UpdatePartnershipMutation,
   UpdatePartnershipMutationVariables
 >;
@@ -130,7 +129,7 @@ export const DeletePartnershipDocument = gql`
     deletePartnership(id: $input)
   }
 `;
-export type DeletePartnershipMutationFn = ApolloReactCommon.MutationFunction<
+export type DeletePartnershipMutationFn = Apollo.MutationFunction<
   DeletePartnershipMutation,
   DeletePartnershipMutationVariables
 >;
@@ -153,12 +152,12 @@ export type DeletePartnershipMutationFn = ApolloReactCommon.MutationFunction<
  * });
  */
 export function useDeletePartnershipMutation(
-  baseOptions?: ApolloReactHooks.MutationHookOptions<
+  baseOptions?: Apollo.MutationHookOptions<
     DeletePartnershipMutation,
     DeletePartnershipMutationVariables
   >
 ) {
-  return ApolloReactHooks.useMutation<
+  return Apollo.useMutation<
     DeletePartnershipMutation,
     DeletePartnershipMutationVariables
   >(DeletePartnershipDocument, baseOptions);
@@ -166,10 +165,10 @@ export function useDeletePartnershipMutation(
 export type DeletePartnershipMutationHookResult = ReturnType<
   typeof useDeletePartnershipMutation
 >;
-export type DeletePartnershipMutationResult = ApolloReactCommon.MutationResult<
+export type DeletePartnershipMutationResult = Apollo.MutationResult<
   DeletePartnershipMutation
 >;
-export type DeletePartnershipMutationOptions = ApolloReactCommon.BaseMutationOptions<
+export type DeletePartnershipMutationOptions = Apollo.BaseMutationOptions<
   DeletePartnershipMutation,
   DeletePartnershipMutationVariables
 >;

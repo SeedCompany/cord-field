@@ -41,7 +41,6 @@ generates:
             import { DateTime } from 'luxon';
             import { CalendarDate } from '../util';
     config:
-      reactApolloVersion: 3
       scalars:
         Date: CalendarDate
         DateTime: DateTime
@@ -72,11 +71,8 @@ generates:
       # - typed-document-node
       - typescript-react-apollo
     config:
-      reactApolloVersion: 3
+      gqlImport: graphql-tag
       skipTypename: false
-      withHooks: true
-      withHOC: false
-      withComponent: false
       enumsAsTypes: true
       # Instead of Pick-ing from generated schema, redefine shape inline
       # Skipping for now, since schema has docs which IDE can provide when Pick is used.

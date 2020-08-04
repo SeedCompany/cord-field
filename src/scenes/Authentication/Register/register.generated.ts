@@ -1,6 +1,5 @@
 /* eslint-disable import/no-duplicates, @typescript-eslint/no-empty-interface */
-import type * as ApolloReactCommon from '@apollo/client';
-import * as ApolloReactHooks from '@apollo/client';
+import * as Apollo from '@apollo/client';
 import gql from 'graphql-tag';
 import type * as Types from '../../../api/schema.generated';
 import type { LoggedInUserFragment } from '../../../components/Session/session.generated';
@@ -26,7 +25,7 @@ export const RegisterDocument = gql`
   }
   ${LoggedInUserFragmentDoc}
 `;
-export type RegisterMutationFn = ApolloReactCommon.MutationFunction<
+export type RegisterMutationFn = Apollo.MutationFunction<
   RegisterMutation,
   RegisterMutationVariables
 >;
@@ -49,21 +48,19 @@ export type RegisterMutationFn = ApolloReactCommon.MutationFunction<
  * });
  */
 export function useRegisterMutation(
-  baseOptions?: ApolloReactHooks.MutationHookOptions<
+  baseOptions?: Apollo.MutationHookOptions<
     RegisterMutation,
     RegisterMutationVariables
   >
 ) {
-  return ApolloReactHooks.useMutation<
-    RegisterMutation,
-    RegisterMutationVariables
-  >(RegisterDocument, baseOptions);
+  return Apollo.useMutation<RegisterMutation, RegisterMutationVariables>(
+    RegisterDocument,
+    baseOptions
+  );
 }
 export type RegisterMutationHookResult = ReturnType<typeof useRegisterMutation>;
-export type RegisterMutationResult = ApolloReactCommon.MutationResult<
-  RegisterMutation
->;
-export type RegisterMutationOptions = ApolloReactCommon.BaseMutationOptions<
+export type RegisterMutationResult = Apollo.MutationResult<RegisterMutation>;
+export type RegisterMutationOptions = Apollo.BaseMutationOptions<
   RegisterMutation,
   RegisterMutationVariables
 >;

@@ -1,7 +1,5 @@
 /* eslint-disable import/no-duplicates, @typescript-eslint/no-empty-interface */
-
-import type * as ApolloReactCommon from '@apollo/client';
-import * as ApolloReactHooks from '@apollo/client';
+import * as Apollo from '@apollo/client';
 import gql from 'graphql-tag';
 import type * as Types from '../../../api/schema.generated';
 
@@ -16,7 +14,7 @@ export const ForgotPasswordDocument = gql`
     forgotPassword(email: $email)
   }
 `;
-export type ForgotPasswordMutationFn = ApolloReactCommon.MutationFunction<
+export type ForgotPasswordMutationFn = Apollo.MutationFunction<
   ForgotPasswordMutation,
   ForgotPasswordMutationVariables
 >;
@@ -39,12 +37,12 @@ export type ForgotPasswordMutationFn = ApolloReactCommon.MutationFunction<
  * });
  */
 export function useForgotPasswordMutation(
-  baseOptions?: ApolloReactHooks.MutationHookOptions<
+  baseOptions?: Apollo.MutationHookOptions<
     ForgotPasswordMutation,
     ForgotPasswordMutationVariables
   >
 ) {
-  return ApolloReactHooks.useMutation<
+  return Apollo.useMutation<
     ForgotPasswordMutation,
     ForgotPasswordMutationVariables
   >(ForgotPasswordDocument, baseOptions);
@@ -52,10 +50,10 @@ export function useForgotPasswordMutation(
 export type ForgotPasswordMutationHookResult = ReturnType<
   typeof useForgotPasswordMutation
 >;
-export type ForgotPasswordMutationResult = ApolloReactCommon.MutationResult<
+export type ForgotPasswordMutationResult = Apollo.MutationResult<
   ForgotPasswordMutation
 >;
-export type ForgotPasswordMutationOptions = ApolloReactCommon.BaseMutationOptions<
+export type ForgotPasswordMutationOptions = Apollo.BaseMutationOptions<
   ForgotPasswordMutation,
   ForgotPasswordMutationVariables
 >;

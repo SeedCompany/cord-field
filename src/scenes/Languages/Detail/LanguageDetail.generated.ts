@@ -1,6 +1,5 @@
 /* eslint-disable import/no-duplicates, @typescript-eslint/no-empty-interface */
-import type * as ApolloReactCommon from '@apollo/client';
-import * as ApolloReactHooks from '@apollo/client';
+import * as Apollo from '@apollo/client';
 import gql from 'graphql-tag';
 import type {
   DisplayLocation_Country_Fragment,
@@ -202,23 +201,20 @@ export const LanguageDocument = gql`
  * });
  */
 export function useLanguageQuery(
-  baseOptions?: ApolloReactHooks.QueryHookOptions<
-    LanguageQuery,
-    LanguageQueryVariables
-  >
+  baseOptions?: Apollo.QueryHookOptions<LanguageQuery, LanguageQueryVariables>
 ) {
-  return ApolloReactHooks.useQuery<LanguageQuery, LanguageQueryVariables>(
+  return Apollo.useQuery<LanguageQuery, LanguageQueryVariables>(
     LanguageDocument,
     baseOptions
   );
 }
 export function useLanguageLazyQuery(
-  baseOptions?: ApolloReactHooks.LazyQueryHookOptions<
+  baseOptions?: Apollo.LazyQueryHookOptions<
     LanguageQuery,
     LanguageQueryVariables
   >
 ) {
-  return ApolloReactHooks.useLazyQuery<LanguageQuery, LanguageQueryVariables>(
+  return Apollo.useLazyQuery<LanguageQuery, LanguageQueryVariables>(
     LanguageDocument,
     baseOptions
   );
@@ -227,7 +223,7 @@ export type LanguageQueryHookResult = ReturnType<typeof useLanguageQuery>;
 export type LanguageLazyQueryHookResult = ReturnType<
   typeof useLanguageLazyQuery
 >;
-export type LanguageQueryResult = ApolloReactCommon.QueryResult<
+export type LanguageQueryResult = Apollo.QueryResult<
   LanguageQuery,
   LanguageQueryVariables
 >;

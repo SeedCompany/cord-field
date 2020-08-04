@@ -1,7 +1,5 @@
 /* eslint-disable import/no-duplicates, @typescript-eslint/no-empty-interface */
-
-import type * as ApolloReactCommon from '@apollo/client';
-import * as ApolloReactHooks from '@apollo/client';
+import * as Apollo from '@apollo/client';
 import gql from 'graphql-tag';
 import type * as Types from '../../../api/schema.generated';
 
@@ -38,7 +36,7 @@ export const CreateLanguageDocument = gql`
     }
   }
 `;
-export type CreateLanguageMutationFn = ApolloReactCommon.MutationFunction<
+export type CreateLanguageMutationFn = Apollo.MutationFunction<
   CreateLanguageMutation,
   CreateLanguageMutationVariables
 >;
@@ -61,12 +59,12 @@ export type CreateLanguageMutationFn = ApolloReactCommon.MutationFunction<
  * });
  */
 export function useCreateLanguageMutation(
-  baseOptions?: ApolloReactHooks.MutationHookOptions<
+  baseOptions?: Apollo.MutationHookOptions<
     CreateLanguageMutation,
     CreateLanguageMutationVariables
   >
 ) {
-  return ApolloReactHooks.useMutation<
+  return Apollo.useMutation<
     CreateLanguageMutation,
     CreateLanguageMutationVariables
   >(CreateLanguageDocument, baseOptions);
@@ -74,10 +72,10 @@ export function useCreateLanguageMutation(
 export type CreateLanguageMutationHookResult = ReturnType<
   typeof useCreateLanguageMutation
 >;
-export type CreateLanguageMutationResult = ApolloReactCommon.MutationResult<
+export type CreateLanguageMutationResult = Apollo.MutationResult<
   CreateLanguageMutation
 >;
-export type CreateLanguageMutationOptions = ApolloReactCommon.BaseMutationOptions<
+export type CreateLanguageMutationOptions = Apollo.BaseMutationOptions<
   CreateLanguageMutation,
   CreateLanguageMutationVariables
 >;

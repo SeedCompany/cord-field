@@ -1,6 +1,5 @@
 /* eslint-disable import/no-duplicates, @typescript-eslint/no-empty-interface */
-import type * as ApolloReactCommon from '@apollo/client';
-import * as ApolloReactHooks from '@apollo/client';
+import * as Apollo from '@apollo/client';
 import gql from 'graphql-tag';
 import type * as Types from '../../../api/schema.generated';
 import type { PartnershipCardFragment } from '../../../components/PartnershipCard/PartnershipCard.generated';
@@ -81,23 +80,23 @@ export const ProjectPartnershipsDocument = gql`
  * });
  */
 export function useProjectPartnershipsQuery(
-  baseOptions?: ApolloReactHooks.QueryHookOptions<
+  baseOptions?: Apollo.QueryHookOptions<
     ProjectPartnershipsQuery,
     ProjectPartnershipsQueryVariables
   >
 ) {
-  return ApolloReactHooks.useQuery<
+  return Apollo.useQuery<
     ProjectPartnershipsQuery,
     ProjectPartnershipsQueryVariables
   >(ProjectPartnershipsDocument, baseOptions);
 }
 export function useProjectPartnershipsLazyQuery(
-  baseOptions?: ApolloReactHooks.LazyQueryHookOptions<
+  baseOptions?: Apollo.LazyQueryHookOptions<
     ProjectPartnershipsQuery,
     ProjectPartnershipsQueryVariables
   >
 ) {
-  return ApolloReactHooks.useLazyQuery<
+  return Apollo.useLazyQuery<
     ProjectPartnershipsQuery,
     ProjectPartnershipsQueryVariables
   >(ProjectPartnershipsDocument, baseOptions);
@@ -108,7 +107,7 @@ export type ProjectPartnershipsQueryHookResult = ReturnType<
 export type ProjectPartnershipsLazyQueryHookResult = ReturnType<
   typeof useProjectPartnershipsLazyQuery
 >;
-export type ProjectPartnershipsQueryResult = ApolloReactCommon.QueryResult<
+export type ProjectPartnershipsQueryResult = Apollo.QueryResult<
   ProjectPartnershipsQuery,
   ProjectPartnershipsQueryVariables
 >;

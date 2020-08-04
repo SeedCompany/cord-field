@@ -1,6 +1,5 @@
 /* eslint-disable import/no-duplicates, @typescript-eslint/no-empty-interface */
-import type * as ApolloReactCommon from '@apollo/client';
-import * as ApolloReactHooks from '@apollo/client';
+import * as Apollo from '@apollo/client';
 import gql from 'graphql-tag';
 import type * as Types from '../../../api/schema.generated';
 import type { OrgDetailsFragment } from '../Detail/OrganizationDetail.generated';
@@ -30,7 +29,7 @@ export const UpdateOrganizationDocument = gql`
   }
   ${OrgDetailsFragmentDoc}
 `;
-export type UpdateOrganizationMutationFn = ApolloReactCommon.MutationFunction<
+export type UpdateOrganizationMutationFn = Apollo.MutationFunction<
   UpdateOrganizationMutation,
   UpdateOrganizationMutationVariables
 >;
@@ -53,12 +52,12 @@ export type UpdateOrganizationMutationFn = ApolloReactCommon.MutationFunction<
  * });
  */
 export function useUpdateOrganizationMutation(
-  baseOptions?: ApolloReactHooks.MutationHookOptions<
+  baseOptions?: Apollo.MutationHookOptions<
     UpdateOrganizationMutation,
     UpdateOrganizationMutationVariables
   >
 ) {
-  return ApolloReactHooks.useMutation<
+  return Apollo.useMutation<
     UpdateOrganizationMutation,
     UpdateOrganizationMutationVariables
   >(UpdateOrganizationDocument, baseOptions);
@@ -66,10 +65,10 @@ export function useUpdateOrganizationMutation(
 export type UpdateOrganizationMutationHookResult = ReturnType<
   typeof useUpdateOrganizationMutation
 >;
-export type UpdateOrganizationMutationResult = ApolloReactCommon.MutationResult<
+export type UpdateOrganizationMutationResult = Apollo.MutationResult<
   UpdateOrganizationMutation
 >;
-export type UpdateOrganizationMutationOptions = ApolloReactCommon.BaseMutationOptions<
+export type UpdateOrganizationMutationOptions = Apollo.BaseMutationOptions<
   UpdateOrganizationMutation,
   UpdateOrganizationMutationVariables
 >;

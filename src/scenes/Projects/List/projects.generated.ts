@@ -1,6 +1,5 @@
 /* eslint-disable import/no-duplicates, @typescript-eslint/no-empty-interface */
-import type * as ApolloReactCommon from '@apollo/client';
-import * as ApolloReactHooks from '@apollo/client';
+import * as Apollo from '@apollo/client';
 import gql from 'graphql-tag';
 import type * as Types from '../../../api/schema.generated';
 import type {
@@ -59,32 +58,32 @@ export const ProjectListDocument = gql`
  * });
  */
 export function useProjectListQuery(
-  baseOptions?: ApolloReactHooks.QueryHookOptions<
+  baseOptions?: Apollo.QueryHookOptions<
     ProjectListQuery,
     ProjectListQueryVariables
   >
 ) {
-  return ApolloReactHooks.useQuery<ProjectListQuery, ProjectListQueryVariables>(
+  return Apollo.useQuery<ProjectListQuery, ProjectListQueryVariables>(
     ProjectListDocument,
     baseOptions
   );
 }
 export function useProjectListLazyQuery(
-  baseOptions?: ApolloReactHooks.LazyQueryHookOptions<
+  baseOptions?: Apollo.LazyQueryHookOptions<
     ProjectListQuery,
     ProjectListQueryVariables
   >
 ) {
-  return ApolloReactHooks.useLazyQuery<
-    ProjectListQuery,
-    ProjectListQueryVariables
-  >(ProjectListDocument, baseOptions);
+  return Apollo.useLazyQuery<ProjectListQuery, ProjectListQueryVariables>(
+    ProjectListDocument,
+    baseOptions
+  );
 }
 export type ProjectListQueryHookResult = ReturnType<typeof useProjectListQuery>;
 export type ProjectListLazyQueryHookResult = ReturnType<
   typeof useProjectListLazyQuery
 >;
-export type ProjectListQueryResult = ApolloReactCommon.QueryResult<
+export type ProjectListQueryResult = Apollo.QueryResult<
   ProjectListQuery,
   ProjectListQueryVariables
 >;

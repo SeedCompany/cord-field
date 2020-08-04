@@ -1,7 +1,5 @@
 /* eslint-disable import/no-duplicates, @typescript-eslint/no-empty-interface */
-
-import type * as ApolloReactCommon from '@apollo/client';
-import * as ApolloReactHooks from '@apollo/client';
+import * as Apollo from '@apollo/client';
 import gql from 'graphql-tag';
 import type * as Types from '../../../api/schema.generated';
 
@@ -40,7 +38,7 @@ export const CreateOrganizationDocument = gql`
     }
   }
 `;
-export type CreateOrganizationMutationFn = ApolloReactCommon.MutationFunction<
+export type CreateOrganizationMutationFn = Apollo.MutationFunction<
   CreateOrganizationMutation,
   CreateOrganizationMutationVariables
 >;
@@ -63,12 +61,12 @@ export type CreateOrganizationMutationFn = ApolloReactCommon.MutationFunction<
  * });
  */
 export function useCreateOrganizationMutation(
-  baseOptions?: ApolloReactHooks.MutationHookOptions<
+  baseOptions?: Apollo.MutationHookOptions<
     CreateOrganizationMutation,
     CreateOrganizationMutationVariables
   >
 ) {
-  return ApolloReactHooks.useMutation<
+  return Apollo.useMutation<
     CreateOrganizationMutation,
     CreateOrganizationMutationVariables
   >(CreateOrganizationDocument, baseOptions);
@@ -76,10 +74,10 @@ export function useCreateOrganizationMutation(
 export type CreateOrganizationMutationHookResult = ReturnType<
   typeof useCreateOrganizationMutation
 >;
-export type CreateOrganizationMutationResult = ApolloReactCommon.MutationResult<
+export type CreateOrganizationMutationResult = Apollo.MutationResult<
   CreateOrganizationMutation
 >;
-export type CreateOrganizationMutationOptions = ApolloReactCommon.BaseMutationOptions<
+export type CreateOrganizationMutationOptions = Apollo.BaseMutationOptions<
   CreateOrganizationMutation,
   CreateOrganizationMutationVariables
 >;

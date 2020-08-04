@@ -2141,20 +2141,20 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@graphql-codegen/typescript-react-apollo@npm:^1.17.7":
-  version: 1.17.7
-  resolution: "@graphql-codegen/typescript-react-apollo@npm:1.17.7"
+"@graphql-codegen/typescript-react-apollo@npm:^2.0.4":
+  version: 2.0.4
+  resolution: "@graphql-codegen/typescript-react-apollo@npm:2.0.4"
   dependencies:
-    "@graphql-codegen/plugin-helpers": 1.17.7
-    "@graphql-codegen/visitor-plugin-common": 1.17.7
+    "@graphql-codegen/plugin-helpers": ^1.17.7
+    "@graphql-codegen/visitor-plugin-common": ^1.17.11
     auto-bind: ~4.0.0
-    camel-case: 4.1.1
-    pascal-case: 3.1.1
+    camel-case: ^4.1.1
+    pascal-case: ^3.1.1
     tslib: ~2.0.0
   peerDependencies:
     graphql: ^0.8.0 || ^0.9.0 || ^0.10.0 || ^0.11.0 || ^0.12.0 || ^0.13.0 || ^14.0.0 || ^15.0.0
     graphql-tag: ^2.0.0
-  checksum: 3/757fdda2aec7ee8c4e9b30075cb3601ed60961a985ff3ce04b8b2350b9797ba04e7e23b00e9e68f19cf4c7066a51f671d94cd97fce2d944c89b40bd859b5af15
+  checksum: 3/eab0d933a149825b71bcbf15355c7f459a4bb2bbf2f0dcb1c3f923def0cf1ced26b2f7b1a41b19155e20ae18c35ffe03ef302563f7f53c1713d9f767041151dd
   languageName: node
   linkType: hard
 
@@ -2188,6 +2188,25 @@ __metadata:
   peerDependencies:
     graphql: ^0.8.0 || ^0.9.0 || ^0.10.0 || ^0.11.0 || ^0.12.0 || ^0.13.0 || ^14.0.0 || ^15.0.0
   checksum: 3/4e35d412e47ea034e4e20175b982ca5828e03d39412c3c19829a0d3a8bc8ad5a49d70d80b1acf8dd13548b5607bd707c64a6ce2da5e22deeed80b0760b39d3a1
+  languageName: node
+  linkType: hard
+
+"@graphql-codegen/visitor-plugin-common@npm:^1.17.11":
+  version: 1.17.11
+  resolution: "@graphql-codegen/visitor-plugin-common@npm:1.17.11"
+  dependencies:
+    "@graphql-codegen/plugin-helpers": ^1.17.7
+    "@graphql-tools/relay-operation-optimizer": 6.0.15
+    array.prototype.flatmap: ^1.2.3
+    auto-bind: ~4.0.0
+    dependency-graph: ^0.9.0
+    graphql-tag: ^2.11.0
+    parse-filepath: ^1.0.2
+    pascal-case: ^3.1.1
+    tslib: ~2.0.0
+  peerDependencies:
+    graphql: ^0.8.0 || ^0.9.0 || ^0.10.0 || ^0.11.0 || ^0.12.0 || ^0.13.0 || ^14.0.0 || ^15.0.0
+  checksum: 3/62898d335b67e9f455721aaaaa64637b5e1af3f00ffa540b52bb7de11c32473bd003a94353df5d119c653cf701314d17eb3beb333757ee728900ccbabd4ad641
   languageName: node
   linkType: hard
 
@@ -5063,7 +5082,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"array.prototype.flatmap@npm:1.2.3, array.prototype.flatmap@npm:^1.2.1":
+"array.prototype.flatmap@npm:1.2.3, array.prototype.flatmap@npm:^1.2.1, array.prototype.flatmap@npm:^1.2.3":
   version: 1.2.3
   resolution: "array.prototype.flatmap@npm:1.2.3"
   dependencies:
@@ -7207,7 +7226,7 @@ __metadata:
     "@graphql-codegen/plugin-helpers": ^1.17.7
     "@graphql-codegen/typescript": ^1.17.7
     "@graphql-codegen/typescript-operations": ^1.17.7
-    "@graphql-codegen/typescript-react-apollo": ^1.17.7
+    "@graphql-codegen/typescript-react-apollo": ^2.0.4
     "@material-ui/core": ^4.11.0
     "@material-ui/icons": ^4.9.1
     "@material-ui/lab": ^4.0.0-alpha.56
@@ -8056,7 +8075,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"dependency-graph@npm:0.9.0":
+"dependency-graph@npm:0.9.0, dependency-graph@npm:^0.9.0":
   version: 0.9.0
   resolution: "dependency-graph@npm:0.9.0"
   checksum: 3/bd4be777ce16fd5412db9cf7df3c7a5e76bd2029a79b624db716e130ed7efaf606f3086234fc26fa9f317db4a2760006cb6397d165b14a314f1bb50a1c632e2c
@@ -15070,7 +15089,7 @@ fsevents@^1.2.7:
   languageName: node
   linkType: hard
 
-"parse-filepath@npm:1.0.2":
+"parse-filepath@npm:1.0.2, parse-filepath@npm:^1.0.2":
   version: 1.0.2
   resolution: "parse-filepath@npm:1.0.2"
   dependencies:

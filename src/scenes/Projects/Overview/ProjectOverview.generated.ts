@@ -1,6 +1,5 @@
 /* eslint-disable import/no-duplicates, @typescript-eslint/no-empty-interface */
-import type * as ApolloReactCommon from '@apollo/client';
-import * as ApolloReactHooks from '@apollo/client';
+import * as Apollo from '@apollo/client';
 import gql from 'graphql-tag';
 import type { DisplayLocation_Country_Fragment } from '../../../api/fragments/location.generated';
 import { DisplayLocationFragmentDoc } from '../../../api/fragments/location.generated';
@@ -232,23 +231,23 @@ export const ProjectOverviewDocument = gql`
  * });
  */
 export function useProjectOverviewQuery(
-  baseOptions?: ApolloReactHooks.QueryHookOptions<
+  baseOptions?: Apollo.QueryHookOptions<
     ProjectOverviewQuery,
     ProjectOverviewQueryVariables
   >
 ) {
-  return ApolloReactHooks.useQuery<
-    ProjectOverviewQuery,
-    ProjectOverviewQueryVariables
-  >(ProjectOverviewDocument, baseOptions);
+  return Apollo.useQuery<ProjectOverviewQuery, ProjectOverviewQueryVariables>(
+    ProjectOverviewDocument,
+    baseOptions
+  );
 }
 export function useProjectOverviewLazyQuery(
-  baseOptions?: ApolloReactHooks.LazyQueryHookOptions<
+  baseOptions?: Apollo.LazyQueryHookOptions<
     ProjectOverviewQuery,
     ProjectOverviewQueryVariables
   >
 ) {
-  return ApolloReactHooks.useLazyQuery<
+  return Apollo.useLazyQuery<
     ProjectOverviewQuery,
     ProjectOverviewQueryVariables
   >(ProjectOverviewDocument, baseOptions);
@@ -259,7 +258,7 @@ export type ProjectOverviewQueryHookResult = ReturnType<
 export type ProjectOverviewLazyQueryHookResult = ReturnType<
   typeof useProjectOverviewLazyQuery
 >;
-export type ProjectOverviewQueryResult = ApolloReactCommon.QueryResult<
+export type ProjectOverviewQueryResult = Apollo.QueryResult<
   ProjectOverviewQuery,
   ProjectOverviewQueryVariables
 >;

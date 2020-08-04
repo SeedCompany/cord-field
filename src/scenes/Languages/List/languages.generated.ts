@@ -1,6 +1,5 @@
 /* eslint-disable import/no-duplicates, @typescript-eslint/no-empty-interface */
-import type * as ApolloReactCommon from '@apollo/client';
-import * as ApolloReactHooks from '@apollo/client';
+import * as Apollo from '@apollo/client';
 import gql from 'graphql-tag';
 import type * as Types from '../../../api/schema.generated';
 import type { LanguageListItemFragment } from '../../../components/LanguageListItemCard/LanguageListItem.generated';
@@ -51,23 +50,20 @@ export const LanguagesDocument = gql`
  * });
  */
 export function useLanguagesQuery(
-  baseOptions?: ApolloReactHooks.QueryHookOptions<
-    LanguagesQuery,
-    LanguagesQueryVariables
-  >
+  baseOptions?: Apollo.QueryHookOptions<LanguagesQuery, LanguagesQueryVariables>
 ) {
-  return ApolloReactHooks.useQuery<LanguagesQuery, LanguagesQueryVariables>(
+  return Apollo.useQuery<LanguagesQuery, LanguagesQueryVariables>(
     LanguagesDocument,
     baseOptions
   );
 }
 export function useLanguagesLazyQuery(
-  baseOptions?: ApolloReactHooks.LazyQueryHookOptions<
+  baseOptions?: Apollo.LazyQueryHookOptions<
     LanguagesQuery,
     LanguagesQueryVariables
   >
 ) {
-  return ApolloReactHooks.useLazyQuery<LanguagesQuery, LanguagesQueryVariables>(
+  return Apollo.useLazyQuery<LanguagesQuery, LanguagesQueryVariables>(
     LanguagesDocument,
     baseOptions
   );
@@ -76,7 +72,7 @@ export type LanguagesQueryHookResult = ReturnType<typeof useLanguagesQuery>;
 export type LanguagesLazyQueryHookResult = ReturnType<
   typeof useLanguagesLazyQuery
 >;
-export type LanguagesQueryResult = ApolloReactCommon.QueryResult<
+export type LanguagesQueryResult = Apollo.QueryResult<
   LanguagesQuery,
   LanguagesQueryVariables
 >;
