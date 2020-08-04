@@ -129,15 +129,12 @@ export function LookupField<
   // Only open popup if searching for item
   const open = Boolean(input) && input !== selectedText;
 
-  const options =
-    input === ''
-      ? [] // don't show results for no input (results will be previous too)
-      : [
-          ...(data?.search.items ?? []),
-          // Add currently selected items to options so prevent MUI warning
-          // They will be hidden via filterSelectedOptions
-          ...((multiple ? field.value : []) as T[]),
-        ];
+  const options = [
+    ...(data?.search.items ?? []),
+    // Add currently selected items to options so prevent MUI warning
+    // They will be hidden via filterSelectedOptions
+    ...((multiple ? field.value : []) as T[]),
+  ];
 
   return (
     <Autocomplete<T, Multiple, DisableClearable, FreeSolo>
