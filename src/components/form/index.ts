@@ -1,3 +1,4 @@
+export * from './Lookup/LookupField';
 export * from './CheckboxField';
 export * from './CheckboxesField';
 export * from './decorators';

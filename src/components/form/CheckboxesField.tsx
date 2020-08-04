@@ -12,7 +12,6 @@ import {
 } from '@material-ui/core';
 import { ToggleButton, ToggleButtonProps } from '@material-ui/lab';
 import clsx from 'clsx';
-import { difference, isEmpty } from 'lodash';
 import React, {
   createContext,
   FocusEvent,
@@ -24,7 +23,7 @@ import React, {
 import { MergeExclusive } from 'type-fest';
 import { useFieldName } from './FieldGroup';
 import { FieldConfig, useField } from './useField';
-import { getHelperText, showError } from './util';
+import { areListsEqual, getHelperText, showError } from './util';
 
 type LabelPlacement = FormControlLabelProps['labelPlacement'];
 
@@ -58,8 +57,6 @@ const useStyles = makeStyles(({ typography, spacing }) => ({
 }));
 
 const defaultDefaultValue: string[] = [];
-const areListsEqual = (a: any, b: any) =>
-  isEmpty(difference(a, b)) && isEmpty(difference(b, a));
 
 export const CheckboxesField = ({
   children,
