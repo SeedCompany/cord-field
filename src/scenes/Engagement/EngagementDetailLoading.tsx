@@ -12,7 +12,7 @@ import { CeremonyCard } from './CeremonyCard';
 const useStyles = makeStyles(({ spacing, breakpoints }) => ({
   root: {
     flex: 1,
-    overflowY: 'scroll',
+    overflowY: 'auto',
     padding: spacing(4),
   },
   main: {

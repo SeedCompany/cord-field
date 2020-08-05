@@ -27,7 +27,7 @@ import { EngagementQuery } from '../Engagement.generated';
 const useStyles = makeStyles(({ spacing, breakpoints, palette }) => ({
   root: {
     flex: 1,
-    overflowY: 'scroll',
+    overflowY: 'auto',
     padding: spacing(4),
   },
   main: {
