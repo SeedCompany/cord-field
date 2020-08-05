@@ -2,12 +2,19 @@ import {
   Divider,
   makeStyles,
   Menu,
+  MenuItem,
   MenuProps,
   Typography,
   useTheme,
 } from '@material-ui/core';
+<<<<<<< HEAD
 import React from 'react';
+=======
+import * as React from 'react';
+import { useDialog } from '../../../../components/Dialog';
+>>>>>>> Change password
 import { MenuItemLink } from '../../../../components/Routing';
+import { ChangePassword } from '../../../Authentication/ChangePassword';
 
 const useStyles = makeStyles(({ spacing }) => ({
   menu: {
@@ -28,6 +35,7 @@ const skipAutoFocus: any = { disabled: true };
 export const ProfileMenu = (props: Partial<MenuProps>) => {
   const classes = useStyles();
   const { spacing } = useTheme();
+  const [changePasswordState, changePassword] = useDialog();
 
   return (
     <Menu
@@ -49,6 +57,8 @@ export const ProfileMenu = (props: Partial<MenuProps>) => {
       </Typography>
       <Divider {...skipAutoFocus} />
       <MenuItemLink to="/logout">Sign Out</MenuItemLink>
+      <MenuItem onClick={changePassword}>Change Password</MenuItem>
+      <ChangePassword {...changePasswordState} />
     </Menu>
   );
 };
