@@ -11,6 +11,7 @@ fragment DisplayLocation on Location {
 }
 
 fragment DisplayCountry on Country {
+  id
   ...DisplayPlace
   region {
     value {
@@ -20,6 +21,7 @@ fragment DisplayCountry on Country {
 }
 
 fragment DisplayRegion on Region {
+  id
   ...DisplayPlace
   zone {
     value {
@@ -29,6 +31,7 @@ fragment DisplayRegion on Region {
 }
 
 fragment DisplayZone on Zone {
+  id
   ...DisplayPlace
 }
 
