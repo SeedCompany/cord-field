@@ -1,6 +1,6 @@
 import { useCallback, useMemo, useState } from 'react';
 
-export function useDialog<T = undefined>() {
+export function useDialog<T = never>() {
   const [isOpen, setOpen] = useState(false);
   const [item, setItem] = useState<T | undefined>(undefined);
   const show = useCallback((item: T) => {
@@ -18,4 +18,4 @@ export function useDialog<T = undefined>() {
   return [state, show, item] as const;
 }
 
-type ShowFn<T> = T extends undefined ? () => void : (item: T) => void;
+type ShowFn<T> = [T] extends [never] ? () => void : (item: T) => void;
