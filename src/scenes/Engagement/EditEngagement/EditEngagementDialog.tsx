@@ -15,6 +15,7 @@ import {
 } from '../../../components/Dialog/DialogForm';
 import {
   CheckboxesField,
+  CheckboxField,
   CheckboxOption,
   DateField,
   RadioField,
@@ -93,6 +94,8 @@ export const EditEngagementDialog: FC<EditEngagementDialogProps> = ({
       ? 'Change Location'
       : editValue === 'mentor'
       ? 'Change Mentor'
+      : editValue === 'firstScriptureAndLukePartnership'
+      ? 'Change First Scripture and Luke Partnership'
       : null;
 
   const fields =
@@ -141,6 +144,25 @@ export const EditEngagementDialog: FC<EditEngagementDialogProps> = ({
       <TextField name="engagement.countryOfOriginId" />
     ) : editValue === 'mentor' ? (
       <TextField name="engagement.mentorId" />
+    ) : editValue === 'firstScriptureAndLukePartnership' ? (
+      <>
+        <CheckboxField
+          name="engagement.firstScripture"
+          label="First Scripture"
+          defaultValue={
+            engagement.__typename === 'LanguageEngagement' &&
+            Boolean(engagement.firstScripture.value)
+          }
+        />
+        <CheckboxField
+          name="engagement.lukePartnership"
+          label="Luke Partnership"
+          defaultValue={
+            engagement.__typename === 'LanguageEngagement' &&
+            Boolean(engagement.lukePartnership.value)
+          }
+        />
+      </>
     ) : null);
 
   // Filter out relevant initial values so the other values don't get added to the mutation

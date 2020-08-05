@@ -103,7 +103,11 @@ export const LanguageEngagementDetail: FC<EngagementQuery> = ({
           </Grid>
           {editable && (
             <Grid item>
-              <Fab color="primary" aria-label="edit language engagement">
+              <Fab
+                color="primary"
+                aria-label="edit language engagement"
+                onClick={() => show('firstScriptureAndLukePartnership')}
+              >
                 <Edit />
               </Fab>
             </Grid>
