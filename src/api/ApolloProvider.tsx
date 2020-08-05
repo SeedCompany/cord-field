@@ -1,6 +1,5 @@
 import {
   ApolloClient,
-  ApolloQueryResult,
   ApolloProvider as BaseApolloProvider,
   concat,
   HttpLink,
@@ -18,6 +17,7 @@ import { ProviderContext as Snackbar, useSnackbar } from 'notistack';
 import React, { FC, useRef, useState } from 'react';
 import { SessionDocument } from '../components/Session/session.generated';
 import { possibleTypes } from './fragmentMatcher.generated';
+import { GQLOperations } from './operations.generated';
 import { typePolicies } from './typePolicies';
 
 const serverHost = process.env.REACT_APP_API_BASE_URL || '';
@@ -67,9 +67,12 @@ const errorHandler = (
     const ext = gqlError.extensions ?? {};
     const schemaError = ext.code === 'INTERNAL_SERVER_ERROR';
 
-    if (ext.code === 'NoSession' && operation.operationName !== 'Session') {
-      // If error code is `NoSession`, we'll re-execute the session query then retry the previous operation
-      return queryToObservable(
+    // Re-establish session if needed then retry the operation
+    if (
+      ext.code === 'NoSession' &&
+      operation.operationName !== GQLOperations.Query.Session
+    ) {
+      return promiseToObservable(
         client.query({
           query: SessionDocument,
           fetchPolicy: 'network-only',
@@ -98,15 +101,13 @@ const errorHandler = (
 };
 
 /**
- * Used for executing apollo client queries as observables
- * error link cannot support promises - we must return an observable
- * Read here for more info: https://github.com/apollographql/apollo-link/issues/646
+ * Convert promise to observable
+ * @see https://github.com/apollographql/apollo-link/issues/646#issuecomment-423279220
  */
-function queryToObservable(query: Promise<ApolloQueryResult<any>>) {
-  return new Observable((subscriber) => {
+function promiseToObservable<T>(query: Promise<T>) {
+  return new Observable<T>((subscriber) => {
     query
       .then((value) => {
-        console.log('INSIDE OF PROMISE');
         if (subscriber.closed) return;
         subscriber.next(value);
         subscriber.complete();
