@@ -28,6 +28,7 @@ const result: PossibleTypesResultData = {
       'SecuredDate',
       'SecuredOrganization',
       'SecuredOrganizationList',
+      'SecuredRoles',
       'SecuredUserStatus',
       'SecuredUser',
       'SecuredDegree',
@@ -56,7 +57,6 @@ const result: PossibleTypesResultData = {
       'SecuredPartnershipAgreementStatus',
       'SecuredPartnershipTypes',
       'SecuredPartnershipList',
-      'SecuredRoles',
       'SecuredProjectMemberList',
     ],
     Editable: [
@@ -67,6 +67,7 @@ const result: PossibleTypesResultData = {
       'SecuredDateTime',
       'SecuredDate',
       'SecuredOrganization',
+      'SecuredRoles',
       'SecuredUserStatus',
       'SecuredUser',
       'SecuredDegree',
@@ -88,7 +89,6 @@ const result: PossibleTypesResultData = {
       'SecuredProducible',
       'SecuredPartnershipAgreementStatus',
       'SecuredPartnershipTypes',
-      'SecuredRoles',
     ],
     Resource: [
       'Organization',
@@ -130,6 +130,10 @@ const result: PossibleTypesResultData = {
       'TranslationProject',
       'InternshipProject',
       'User',
+      'Film',
+      'Story',
+      'LiteracyMaterial',
+      'Song',
     ],
   },
 };
