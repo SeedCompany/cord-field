@@ -1,6 +1,7 @@
 import { PluginFunction } from '@graphql-codegen/plugin-helpers';
 import { IndentationText, Project, QuoteKind, SyntaxKind } from 'ts-morph';
 import { generateScalars } from './scalars/scalars.codegen';
+import { generateSecured } from './secured/secured.codegen';
 
 export const plugin: PluginFunction = (schema, documents, config, _info) => {
   const project = new Project({
@@ -21,6 +22,7 @@ export const plugin: PluginFunction = (schema, documents, config, _info) => {
     .getInitializerIfKindOrThrow(SyntaxKind.ObjectLiteralExpression);
 
   generateScalars(schema, newGenFile, typePolicies);
+  generateSecured(schema, newGenFile, typePolicies);
 
   return newGenFile.getFullText();
 };
