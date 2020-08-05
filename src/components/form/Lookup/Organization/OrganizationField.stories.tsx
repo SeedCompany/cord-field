@@ -1,4 +1,3 @@
-import { Box } from '@material-ui/core';
 import { action } from '@storybook/addon-actions';
 import React, { FC } from 'react';
 import { Form } from 'react-final-form';
@@ -34,9 +33,7 @@ const FF: FC = ({ children }) => (
 export const Single = () => (
   <FF>
     <OA name="organization" label="Org" required />
-    <Box mt={50}>
-      <FieldSpy name="organization" />
-    </Box>
+    <FieldSpy name="organization" />
   </FF>
 );
 

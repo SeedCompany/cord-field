@@ -20,6 +20,10 @@ export interface OrganizationLookupQuery {
       | { readonly __typename?: 'TranslationProject' }
       | { readonly __typename?: 'InternshipProject' }
       | { readonly __typename?: 'User' }
+      | { readonly __typename?: 'Film' }
+      | { readonly __typename?: 'Story' }
+      | { readonly __typename?: 'LiteracyMaterial' }
+      | { readonly __typename?: 'Song' }
     >;
   };
 }
