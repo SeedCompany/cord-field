@@ -3,9 +3,9 @@ import { pick, startCase } from 'lodash';
 import React, { FC } from 'react';
 import { Except } from 'type-fest';
 import {
-  MethodologyToApproach,
   displayInternPosition,
   InternshipEngagementPosition,
+  MethodologyToApproach,
   UpdateInternshipEngagementInput,
   UpdateLanguageEngagementInput,
 } from '../../../api';
