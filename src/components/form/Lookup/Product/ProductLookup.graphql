@@ -1,0 +1,67 @@
+query FilmLookup($query: String!) {
+  search(input: { query: $query, type: [Film] }) {
+    items {
+      ... on Film {
+        ...FilmLookupItem
+      }
+    }
+  }
+}
+
+query StoryLookup($query: String!) {
+  search(input: { query: $query, type: [Story] }) {
+    items {
+      ... on Story {
+        ...StoryLookupItem
+      }
+    }
+  }
+}
+
+query LiteracyMaterialLookup($query: String!) {
+  search(input: { query: $query, type: [LiteracyMaterial] }) {
+    items {
+      ... on LiteracyMaterial {
+        ...LiteracyMaterialLookupItem
+      }
+    }
+  }
+}
+
+query SongLookup($query: String!) {
+  search(input: { query: $query, type: [Song] }) {
+    items {
+      ... on Song {
+        ...SongLookupItem
+      }
+    }
+  }
+}
+
+fragment FilmLookupItem on Film {
+  id
+  name {
+    value
+  }
+}
+
+fragment StoryLookupItem on Story {
+  id
+  name {
+    value
+  }
+}
+
+fragment LiteracyMaterialLookupItem on LiteracyMaterial {
+  id
+  name {
+    value
+  }
+}
+
+fragment SongLookupItem on Song {
+  id
+  name {
+    value
+  }
+}
