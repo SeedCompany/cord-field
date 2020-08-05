@@ -24,12 +24,10 @@ generates:
     config:
       apolloClientVersion: 3
 
-  # Generate type policies so custom scalars can be parsed automatically
-  ./src/api/scalars/scalars.generated.ts:
+  # Generate type policies automatically specific to our API
+  ./src/api/typePolicies/typePolicies.generated.ts:
     plugins:
-      - ./src/api/scalars/scalars.codegen
-    config:
-      parserImport: ./scalars.parser
+      - ./src/api/typePolicies/typePolicies.codegen
 
   # Generate TypeScript version of graphql schema
   ./src/api/schema.generated.ts:
