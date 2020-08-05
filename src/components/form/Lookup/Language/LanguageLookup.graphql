@@ -1,0 +1,19 @@
+query LanguageLookup($query: String!) {
+  search(input: { query: $query, type: [Language] }) {
+    items {
+      ... on Language {
+        ...LanguageLookupItem
+      }
+    }
+  }
+}
+
+fragment LanguageLookupItem on Language {
+  id
+  name {
+    value
+  }
+  displayName {
+    value
+  }
+}
