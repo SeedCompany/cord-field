@@ -164,10 +164,8 @@ export const InternshipEngagementDetail: FC<EngagementQuery> = ({
               title="Growth Plan Complete Date"
               data={{
                 value: formatDate(engagement.completeDate.value),
-                updatedAt: engagement.modifiedAt,
               }}
               icon={PlantIcon}
-              emptyValue="Not available"
               onClick={() => show('completeDate')}
               onButtonClick={() => show('completeDate')}
             />
@@ -177,10 +175,8 @@ export const InternshipEngagementDetail: FC<EngagementQuery> = ({
               title="Disbursement Complete Date"
               data={{
                 value: formatDate(engagement.disbursementCompleteDate.value),
-                updatedAt: engagement.modifiedAt,
               }}
               icon={OptionsIcon}
-              emptyValue="Not available"
               onClick={() => show('disbursementCompleteDate')}
               onButtonClick={() => show('disbursementCompleteDate')}
             />
@@ -190,10 +186,8 @@ export const InternshipEngagementDetail: FC<EngagementQuery> = ({
               title="Communications Complete Date"
               data={{
                 value: formatDate(engagement.communicationsCompleteDate.value),
-                updatedAt: engagement.modifiedAt,
               }}
               icon={ChatOutlined}
-              emptyValue="Not available"
               onClick={() => show('communicationsCompleteDate')}
               onButtonClick={() => show('communicationsCompleteDate')}
             />
@@ -202,8 +196,6 @@ export const InternshipEngagementDetail: FC<EngagementQuery> = ({
             <MethodologiesCard
               onClick={() => show('methodologies')}
               data={engagement.methodologies}
-              //TODO: implement
-              // updatedAt={engagement.modifiedAt}
             />
           </Grid>
         </Grid>
