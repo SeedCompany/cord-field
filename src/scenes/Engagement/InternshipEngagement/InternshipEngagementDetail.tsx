@@ -1,8 +1,7 @@
 import { Breadcrumbs, Grid, makeStyles, Typography } from '@material-ui/core';
-import { ChatOutlined, DateRange, Edit } from '@material-ui/icons';
+import { ChatOutlined, DateRange } from '@material-ui/icons';
 import React, { FC } from 'react';
 import {
-  canEditAny,
   displayEngagementStatus,
   displayInternPosition,
   securedDateRange,
@@ -11,7 +10,6 @@ import { displayLocation } from '../../../api/location-helper';
 import { Breadcrumb } from '../../../components/Breadcrumb';
 import { DataButton } from '../../../components/DataButton';
 import { useDialog } from '../../../components/Dialog';
-import { Fab } from '../../../components/Fab';
 import { FieldOverviewCard } from '../../../components/FieldOverviewCard';
 import {
   useDateFormatter,
@@ -61,7 +59,6 @@ export const InternshipEngagementDetail: FC<EngagementQuery> = ({
 
   const intern = engagement.intern.value;
   const name = intern?.fullName;
-  const editable = canEditAny(engagement);
 
   return (
     <div className={classes.root}>
@@ -104,13 +101,6 @@ export const InternshipEngagementDetail: FC<EngagementQuery> = ({
               )}
             </Typography>
           </Grid>
-          {editable && (
-            <Grid item>
-              <Fab color="primary" aria-label="edit internship engagement">
-                <Edit />
-              </Fab>
-            </Grid>
-          )}
         </Grid>
         <Grid item container spacing={3} alignItems="center">
           <Grid item>
