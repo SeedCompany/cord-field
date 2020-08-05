@@ -1,27 +1,26 @@
-import { Box } from '@material-ui/core';
 import { action } from '@storybook/addon-actions';
 import React, { FC } from 'react';
 import { Form } from 'react-final-form';
 import { FieldSpy } from '../../FieldSpy';
-import { OrganizationField as OA } from './OrganizationField';
+import { LanguageField } from './LanguageField';
 
-export default { title: 'Components/Forms/Fields/Lookup/Organization' };
+export default { title: 'Components/Forms/Fields/Lookup/Language' };
 
 const FF: FC = ({ children }) => (
   <Form
     onSubmit={action('submit')}
     initialValues={{
-      organization: {
-        id: 'seedcompanyid',
+      language: {
+        id: 'languageid',
         name: {
-          value: 'Seed Company',
+          value: 'Borana',
         },
       },
-      organizations: [
+      languages: [
         {
-          id: 'seedcompanyid',
+          id: 'languageid',
           name: {
-            value: 'Seed Company',
+            value: 'Borana',
           },
         },
       ],
@@ -33,16 +32,14 @@ const FF: FC = ({ children }) => (
 
 export const Single = () => (
   <FF>
-    <OA name="organization" label="Org" required />
-    <Box mt={50}>
-      <FieldSpy name="organization" />
-    </Box>
+    <LanguageField name="language" label="Lang" required />
+    <FieldSpy name="language" />
   </FF>
 );
 
 export const Multiple = () => (
   <FF>
-    <OA name="organizations" multiple label="Orgs" />
-    <FieldSpy name="organizations" />
+    <LanguageField name="languages" multiple label="Langs" />
+    <FieldSpy name="languages" />
   </FF>
 );

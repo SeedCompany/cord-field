@@ -19,25 +19,33 @@ export type DisplayLocationFragment =
   | DisplayLocation_Region_Fragment
   | DisplayLocation_Zone_Fragment;
 
-export type DisplayCountryFragment = { readonly __typename?: 'Country' } & {
-  readonly region: { readonly __typename?: 'SecuredRegion' } & {
-    readonly value?: Types.Maybe<
-      { readonly __typename?: 'Region' } & DisplayRegionFragment
-    >;
-  };
-} & DisplayPlace_Country_Fragment;
+export type DisplayCountryFragment = { readonly __typename?: 'Country' } & Pick<
+  Types.Country,
+  'id'
+> & {
+    readonly region: { readonly __typename?: 'SecuredRegion' } & {
+      readonly value?: Types.Maybe<
+        { readonly __typename?: 'Region' } & DisplayRegionFragment
+      >;
+    };
+  } & DisplayPlace_Country_Fragment;
 
-export type DisplayRegionFragment = { readonly __typename?: 'Region' } & {
-  readonly zone: { readonly __typename?: 'SecuredZone' } & {
-    readonly value?: Types.Maybe<
-      { readonly __typename?: 'Zone' } & DisplayPlace_Zone_Fragment
-    >;
-  };
-} & DisplayPlace_Region_Fragment;
+export type DisplayRegionFragment = { readonly __typename?: 'Region' } & Pick<
+  Types.Region,
+  'id'
+> & {
+    readonly zone: { readonly __typename?: 'SecuredZone' } & {
+      readonly value?: Types.Maybe<
+        { readonly __typename?: 'Zone' } & DisplayPlace_Zone_Fragment
+      >;
+    };
+  } & DisplayPlace_Region_Fragment;
 
-export type DisplayZoneFragment = {
-  readonly __typename?: 'Zone';
-} & DisplayPlace_Zone_Fragment;
+export type DisplayZoneFragment = { readonly __typename?: 'Zone' } & Pick<
+  Types.Zone,
+  'id'
+> &
+  DisplayPlace_Zone_Fragment;
 
 export type DisplayPlace_Zone_Fragment = { readonly __typename?: 'Zone' } & {
   readonly name: { readonly __typename?: 'SecuredString' } & Pick<
@@ -78,6 +86,7 @@ export const DisplayPlaceFragmentDoc = gql`
 `;
 export const DisplayRegionFragmentDoc = gql`
   fragment DisplayRegion on Region {
+    id
     ...DisplayPlace
     zone {
       value {
@@ -89,6 +98,7 @@ export const DisplayRegionFragmentDoc = gql`
 `;
 export const DisplayCountryFragmentDoc = gql`
   fragment DisplayCountry on Country {
+    id
     ...DisplayPlace
     region {
       value {
@@ -101,6 +111,7 @@ export const DisplayCountryFragmentDoc = gql`
 `;
 export const DisplayZoneFragmentDoc = gql`
   fragment DisplayZone on Zone {
+    id
     ...DisplayPlace
   }
   ${DisplayPlaceFragmentDoc}

@@ -460,6 +460,19 @@ export interface UpdateOrganizationOutput {
 }
 
 /**
+ * An object whose `value` is a list of roles and has additional authorization information.
+ * The value is only given if `canRead` is `true` otherwise it is empty: `[]`.
+ * These `can*` authorization properties are specific to the user making the request.
+ */
+export type SecuredRoles = Readable &
+  Editable & {
+    readonly __typename?: 'SecuredRoles';
+    readonly canEdit: Scalars['Boolean'];
+    readonly canRead: Scalars['Boolean'];
+    readonly value: readonly Role[];
+  };
+
+/**
  * An object with a user status `value` and additional authorization information.
  * The value is only given if `canRead` is `true` otherwise it is `null`.
  * These `can*` authorization properties are specific to the user making the request.
@@ -486,6 +499,7 @@ export type User = Resource & {
   readonly phone: SecuredString;
   readonly bio: SecuredString;
   readonly status: SecuredUserStatus;
+  readonly roles: SecuredRoles;
   readonly fullName?: Maybe<Scalars['String']>;
   readonly firstName?: Maybe<Scalars['String']>;
   readonly avatarLetters?: Maybe<Scalars['String']>;
@@ -540,7 +554,7 @@ export interface OrganizationFilters {
   /** Only organizations matching this name */
   readonly name?: Maybe<Scalars['String']>;
   /** User IDs ANY of which must belong to the organizations */
-  readonly userId?: Maybe<ReadonlyArray<Scalars['ID']>>;
+  readonly userId?: Maybe<Scalars['ID']>;
 }
 
 export interface EducationListInput {
@@ -2016,19 +2030,6 @@ export type SecuredPartnershipList = Readable & {
   readonly canCreate: Scalars['Boolean'];
 };
 
-/**
- * An object whose `value` is a list of roles and has additional authorization information.
- * The value is only given if `canRead` is `true` otherwise it is empty: `[]`.
- * These `can*` authorization properties are specific to the user making the request.
- */
-export type SecuredRoles = Readable &
-  Editable & {
-    readonly __typename?: 'SecuredRoles';
-    readonly canEdit: Scalars['Boolean'];
-    readonly canRead: Scalars['Boolean'];
-    readonly value: readonly Role[];
-  };
-
 export type ProjectMember = Resource & {
   readonly __typename?: 'ProjectMember';
   readonly id: Scalars['ID'];
@@ -2205,22 +2206,6 @@ export interface FavoriteListOutput {
   readonly hasMore: Scalars['Boolean'];
 }
 
-export interface SearchOutput {
-  readonly __typename?: 'SearchOutput';
-  /** The search string to look for. */
-  readonly items: readonly SearchResult[];
-}
-
-export type SearchResult =
-  | Organization
-  | Country
-  | Region
-  | Zone
-  | Language
-  | TranslationProject
-  | InternshipProject
-  | User;
-
 export type Song = Producible &
   Resource & {
     readonly __typename?: 'Song';
@@ -2253,6 +2238,26 @@ export interface UpdateSongOutput {
   readonly __typename?: 'UpdateSongOutput';
   readonly song: Song;
 }
+
+export interface SearchOutput {
+  readonly __typename?: 'SearchOutput';
+  /** The search string to look for. */
+  readonly items: readonly SearchResult[];
+}
+
+export type SearchResult =
+  | Organization
+  | Country
+  | Region
+  | Zone
+  | Language
+  | TranslationProject
+  | InternshipProject
+  | User
+  | Film
+  | Story
+  | LiteracyMaterial
+  | Song;
 
 export interface State {
   readonly __typename?: 'State';
@@ -2406,12 +2411,12 @@ export interface Query {
   readonly checkBudgetConsistency: Scalars['Boolean'];
   /** Look up favorites */
   readonly favorites: FavoriteListOutput;
-  /** Perform a search across resources */
-  readonly search: SearchOutput;
   /** Look up a song by its ID */
   readonly song: Song;
   /** Look up stories */
   readonly songs: SongListOutput;
+  /** Perform a search across resources */
+  readonly search: SearchOutput;
   /** Look up all states on workflow */
   readonly states: StateListOutput;
   /** Look up all next possible states on workflow */
@@ -2600,16 +2605,16 @@ export interface QueryFavoritesArgs {
   input?: Maybe<FavoriteListInput>;
 }
 
-export interface QuerySearchArgs {
-  input?: Maybe<SearchInput>;
-}
-
 export interface QuerySongArgs {
   id: Scalars['ID'];
 }
 
 export interface QuerySongsArgs {
   input?: Maybe<SongListInput>;
+}
+
+export interface QuerySearchArgs {
+  input?: Maybe<SearchInput>;
 }
 
 export interface QueryStatesArgs {
@@ -2785,6 +2790,23 @@ export type BaseNode =
   | 'LiteracyMaterial'
   | 'User';
 
+export interface SongListInput {
+  /** The number of items to return in a single page */
+  readonly count?: Maybe<Scalars['Int']>;
+  /** 1-indexed page number for offset pagination. */
+  readonly page?: Maybe<Scalars['Int']>;
+  /** The field in which to sort on */
+  readonly sort?: Maybe<Scalars['String']>;
+  /** The order in which to sort the list */
+  readonly order?: Maybe<Order>;
+  readonly filter?: Maybe<SongFilters>;
+}
+
+export interface SongFilters {
+  /** Only songs matching this name */
+  readonly name?: Maybe<Scalars['String']>;
+}
+
 export interface SearchInput {
   /** The number of items to return in a single page */
   readonly count?: Maybe<Scalars['Int']>;
@@ -2805,25 +2827,12 @@ export type SearchType =
   | 'TranslationProject'
   | 'InternshipProject'
   | 'User'
+  | 'Film'
+  | 'Story'
+  | 'LiteracyMaterial'
+  | 'Song'
   | 'Project'
   | 'Location';
-
-export interface SongListInput {
-  /** The number of items to return in a single page */
-  readonly count?: Maybe<Scalars['Int']>;
-  /** 1-indexed page number for offset pagination. */
-  readonly page?: Maybe<Scalars['Int']>;
-  /** The field in which to sort on */
-  readonly sort?: Maybe<Scalars['String']>;
-  /** The order in which to sort the list */
-  readonly order?: Maybe<Order>;
-  readonly filter?: Maybe<SongFilters>;
-}
-
-export interface SongFilters {
-  /** Only songs matching this name */
-  readonly name?: Maybe<Scalars['String']>;
-}
 
 export interface Mutation {
   readonly __typename?: 'Mutation';
@@ -3584,6 +3593,7 @@ export interface CreatePerson {
   readonly timezone?: Maybe<Scalars['String']>;
   readonly bio?: Maybe<Scalars['String']>;
   readonly status?: Maybe<UserStatus>;
+  readonly roles?: Maybe<readonly Role[]>;
 }
 
 export interface UpdateUserInput {
@@ -3601,6 +3611,7 @@ export interface UpdateUser {
   readonly timezone?: Maybe<Scalars['String']>;
   readonly bio?: Maybe<Scalars['String']>;
   readonly status?: Maybe<UserStatus>;
+  readonly roles?: Maybe<readonly Role[]>;
 }
 
 export interface AssignOrganizationToUserInput {
@@ -3637,6 +3648,7 @@ export interface RegisterInput {
   readonly timezone?: Maybe<Scalars['String']>;
   readonly bio?: Maybe<Scalars['String']>;
   readonly status?: Maybe<UserStatus>;
+  readonly roles?: Maybe<readonly Role[]>;
   readonly password: Scalars['String'];
 }
 

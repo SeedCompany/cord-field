@@ -1,0 +1,52 @@
+query ProjectLookup($query: String!) {
+  search(
+    input: { query: $query, type: [TranslationProject, InternshipProject] }
+  ) {
+    items {
+      ... on Project {
+        ...ProjectLookupItem
+      }
+    }
+  }
+}
+
+query TranslationProjectLookup($query: String!) {
+  search(input: { query: $query, type: [TranslationProject] }) {
+    items {
+      ... on TranslationProject {
+        ...TranslationProjectLookupItem
+      }
+    }
+  }
+}
+
+query InternshipProjectLookup($query: String!) {
+  search(input: { query: $query, type: [InternshipProject] }) {
+    items {
+      ... on InternshipProject {
+        ...InternshipProjectLookupItem
+      }
+    }
+  }
+}
+
+fragment ProjectLookupItem on Project {
+  id
+  name {
+    value
+  }
+}
+
+fragment TranslationProjectLookupItem on TranslationProject {
+  id
+  name {
+    value
+  }
+}
+
+fragment InternshipProjectLookupItem on InternshipProject {
+  id
+  name {
+    value
+  }
+}

@@ -1,0 +1,14 @@
+query UserLookup($query: String!) {
+  search(input: { query: $query, type: [User] }) {
+    items {
+      ... on User {
+        ...UserLookupItem
+      }
+    }
+  }
+}
+
+fragment UserLookupItem on User {
+  id
+  fullName
+}

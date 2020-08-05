@@ -34,9 +34,11 @@ export const ProjectListItemCard = () => {
     location: {
       value: {
         __typename: 'Country',
+        id: '123',
         name: { value: text('location', 'Texas') },
         region: {
           value: {
+            id: '123',
             name: {
               value: text('region', 'United States'),
             },
