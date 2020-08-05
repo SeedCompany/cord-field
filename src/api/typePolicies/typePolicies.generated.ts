@@ -1,9 +1,5 @@
 import { TypePolicies } from '@apollo/client';
-import { Parsers } from './scalars.parser';
-
-const optional = <T, R>(parser: (val: T) => R) => (
-  val: T | null | undefined
-): R | null => (val != null ? parser(val) : null);
+import { optional, Parsers } from './scalars/scalars.parser';
 
 export const typePolicies: TypePolicies = {
   SecuredDateTime: {

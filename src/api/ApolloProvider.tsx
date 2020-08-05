@@ -14,7 +14,7 @@ import { Close } from '@material-ui/icons';
 import { ProviderContext as Snackbar, useSnackbar } from 'notistack';
 import React, { FC, useRef, useState } from 'react';
 import { possibleTypes } from './fragmentMatcher.generated';
-import { typePolicies } from './scalars';
+import { typePolicies } from './typePolicies';
 
 const serverHost = process.env.REACT_APP_API_BASE_URL || '';
 
