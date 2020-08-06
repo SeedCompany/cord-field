@@ -160,7 +160,6 @@ export const UploadProvider: FC = ({ children }) => {
       xhr.upload.onprogress = handleFileProgress.bind(null, queueId);
       xhr.upload.onerror = () => handleUploadError(queueId);
       xhr.open('PUT', url);
-      xhr.setRequestHeader('Access-Control-Allow-Headers', '*');
       xhr.setRequestHeader('Content-Type', file.type);
       xhr.send(file);
     },
