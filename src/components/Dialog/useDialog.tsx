@@ -6,11 +6,7 @@ export interface DialogState {
   onExited: () => void;
 }
 
-export function useDialog<T = never>(): readonly [
-  DialogState,
-  ShowFn<T>,
-  T | undefined
-] {
+export function useDialog<T = never>() {
   const [isOpen, setOpen] = useState(false);
   const [item, setItem] = useState<T | undefined>(undefined);
   const show = useCallback((item: T) => {

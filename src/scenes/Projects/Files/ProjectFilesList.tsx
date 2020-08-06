@@ -26,8 +26,8 @@ import {
 } from '../../../components/files/hooks';
 // import { FilePreview } from '../../../components/FilePreview';
 import {
+  formatFileSize,
   useDateFormatter,
-  useFileSizeFormatter,
 } from '../../../components/Formatters';
 import { ProjectBreadcrumb } from '../../../components/ProjectBreadcrumb';
 import { RowData, Table } from '../../../components/Table';
@@ -67,7 +67,6 @@ export const ProjectFilesList: FC = () => {
   const { spacing } = useTheme();
   const { projectId } = useParams();
   const formatDate = useDateFormatter();
-  const formatFileSize = useFileSizeFormatter();
   const downloadFile = useDownloadFile();
   const fileNameAndExtension = useFileNameAndExtension();
   const fileIcon = useFileNodeIcon();
