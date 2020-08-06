@@ -12,7 +12,7 @@ export type UploadFilesFormProps = DialogFormProps<{ files: File[] }> & {
 export const UploadFilesForm = (
   props: Except<UploadFilesFormProps, 'onSubmit'>
 ) => {
-  const { callback, multiple = true, title = 'Upload Files' } = props;
+  const { callback, multiple = true } = props;
   const { addFilesToUploadQueue } = useUpload();
 
   const onSubmit: UploadFilesFormProps['onSubmit'] = ({ files }) => {
