@@ -69,6 +69,7 @@ const menuItems = [
 
 export const FileActionsPopup: FC<FileActionsPopupProps> = (props) => {
   const { item } = props;
+  console.log('item', item);
   const [anchor, setAnchor] = useState<MenuProps['anchorEl']>();
 
   const openAddMenu = (e: React.MouseEvent) => {
