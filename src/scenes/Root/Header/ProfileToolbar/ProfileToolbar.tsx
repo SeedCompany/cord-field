@@ -5,16 +5,10 @@ import {
   MenuProps,
   Typography,
 } from '@material-ui/core';
-import {
-  AccountCircle,
-  CloudUpload,
-  MoreVert,
-  NotificationsNone,
-} from '@material-ui/icons';
+import { AccountCircle, MoreVert, NotificationsNone } from '@material-ui/icons';
 import { FC, useState } from 'react';
 import * as React from 'react';
 import { useSession } from '../../../../components/Session';
-import { useUploadManager } from '../../../../components/Upload';
 import { ProfileMenu } from '../ProfileMenu';
 
 const useStyles = makeStyles(({ typography, spacing }) => ({
@@ -33,7 +27,6 @@ const useStyles = makeStyles(({ typography, spacing }) => ({
 export const ProfileToolbar: FC = () => {
   const classes = useStyles();
   const [session] = useSession();
-  const { isManagerOpen, setIsManagerOpen } = useUploadManager();
   const [anchor, setAnchor] = useState<MenuProps['anchorEl']>();
 
   return (
@@ -53,12 +46,7 @@ export const ProfileToolbar: FC = () => {
         <IconButton>
           <NotificationsNone />
         </IconButton>
-        {!isManagerOpen && (
-          <IconButton onClick={() => setIsManagerOpen(true)}>
-            <CloudUpload />
-          </IconButton>
-        )}
-        <IconButton>
+        <IconButton onClick={(e) => setAnchor(e.currentTarget)}>
           <MoreVert />
         </IconButton>
       </Card>
