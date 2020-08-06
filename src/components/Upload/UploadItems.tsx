@@ -5,7 +5,7 @@ import { UploadItem } from './UploadItem';
 
 const useStyles = makeStyles(({ palette }) => ({
   noUploadsText: {
-    color: palette.grey[400],
+    color: palette.action.disabled,
   },
 }));
 
