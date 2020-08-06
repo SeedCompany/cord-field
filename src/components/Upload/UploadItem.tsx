@@ -1,5 +1,5 @@
 import {
-  Box,
+  Grid,
   IconButton,
   LinearProgress,
   makeStyles,
@@ -16,8 +16,10 @@ const useStyles = makeStyles(({ palette, spacing }) => ({
       borderBottom: `1px solid ${palette.divider}`,
     },
   },
+  gridItem: {
+    marginRight: spacing(2),
+  },
   fileName: {
-    width: '18ch',
     overflow: 'hidden',
     textOverflow: 'ellipsis',
     whiteSpace: 'nowrap',
@@ -55,18 +57,19 @@ export const UploadItem: FC<UploadItemProps> = (props) => {
     : 'Uploading';
 
   return (
-    <Box
-      display="flex"
-      justifyContent="space-between"
+    <Grid
+      container
+      justify="space-between"
       alignItems="center"
+      spacing={2}
       className={classes.container}
     >
-      <Box mr={2}>
+      <Grid item xs={4}>
         <Typography variant="body2" className={classes.fileName}>
           {fileName}
         </Typography>
-      </Box>
-      <Box flex={1} mr={2} className={classes.progressBarBox}>
+      </Grid>
+      <Grid item xs={7} className={classes.progressBarBox}>
         <LinearProgress
           variant="determinate"
           value={!error ? percentCompleted : 0}
@@ -78,8 +81,8 @@ export const UploadItem: FC<UploadItemProps> = (props) => {
         >
           {progressLabel}
         </Typography>
-      </Box>
-      <Box>
+      </Grid>
+      <Grid item xs={1}>
         {!error ? (
           <Typography
             variant="body2"
@@ -98,7 +101,7 @@ export const UploadItem: FC<UploadItemProps> = (props) => {
             <CancelIcon fontSize="small" />
           </IconButton>
         )}
-      </Box>
-    </Box>
+      </Grid>
+    </Grid>
   );
 };
