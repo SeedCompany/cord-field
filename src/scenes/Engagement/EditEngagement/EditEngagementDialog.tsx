@@ -9,6 +9,7 @@ import {
   UpdateInternshipEngagementInput,
   UpdateLanguageEngagementInput,
 } from '../../../api';
+import { DisplayCountryFragment } from '../../../api/fragments/location.generated';
 import {
   DialogForm,
   DialogFormProps,
@@ -22,8 +23,9 @@ import {
   RadioField,
   RadioOption,
   SubmitError,
-  TextField,
 } from '../../../components/form';
+import { CountryField, UserField } from '../../../components/form/Lookup';
+import { UserLookupItemFragment } from '../../../components/form/Lookup/User/UserLookup.generated';
 import { InternshipEngagementDetailFragment } from '../InternshipEngagement/InternshipEngagement.generated';
 import { LanguageEngagementDetailFragment } from '../LanguageEngagement/LanguageEngagementDetail.generated';
 import {
@@ -42,6 +44,14 @@ type EditEngagementDialogProps = Except<
     | LanguageEngagementDetailFragment;
   editValue?: string;
 };
+
+type DialogFormInput = UpdateInternshipEngagementInput &
+  UpdateLanguageEngagementInput & {
+    engagement: {
+      mentor?: UserLookupItemFragment;
+      country?: DisplayCountryFragment;
+    };
+  };
 
 const internshipEngagementPositions: InternshipEngagementPosition[] = [
   'ExegeticalFacilitator',
@@ -134,10 +144,9 @@ export const EditEngagementDialog: FC<EditEngagementDialogProps> = ({
         ))}
       </RadioField>
     ) : editValue === 'countryOfOrigin' ? (
-      //TODO: replace with autocomplete when ready
-      <TextField name="countryOfOriginId" label="Country of Origin" />
+      <CountryField name="country" label="Country of Origin" />
     ) : editValue === 'mentor' ? (
-      <TextField name="mentorId" label="Mentor" />
+      <UserField name="mentor" label="Mentor" />
     ) : editValue === 'firstScriptureAndLukePartnership' ? (
       <>
         <CheckboxField
@@ -190,13 +199,23 @@ export const EditEngagementDialog: FC<EditEngagementDialogProps> = ({
   };
 
   return (
-    <DialogForm<UpdateInternshipEngagementInput | UpdateLanguageEngagementInput>
+    <DialogForm<DialogFormInput>
       title="Update Engagement"
       closeLabel="Close"
       submitLabel="Save"
       {...props}
       initialValues={filteredInitialValues}
-      onSubmit={async (input) => {
+      onSubmit={async ({ engagement: { mentor, country, ...rest } }) => {
+        const mentorId = mentor?.id;
+        const countryOfOriginId = country?.id;
+        const input = {
+          engagement: {
+            ...rest,
+            ...(mentorId ? { mentorId } : {}),
+            ...(countryOfOriginId ? { countryOfOriginId } : {}),
+          },
+        };
+
         await updateEngagement({ variables: { input } });
       }}
       DialogProps={{
