@@ -1,4 +1,10 @@
-import { Breadcrumbs, Grid, makeStyles, Typography } from '@material-ui/core';
+import {
+  Breadcrumbs,
+  Grid,
+  makeStyles,
+  Tooltip,
+  Typography,
+} from '@material-ui/core';
 import { ChatOutlined, DateRange, Edit } from '@material-ui/icons';
 import React, { FC } from 'react';
 import {
@@ -103,13 +109,15 @@ export const LanguageEngagementDetail: FC<EngagementQuery> = ({
           </Grid>
           {editable && (
             <Grid item>
-              <Fab
-                color="primary"
-                aria-label="edit language engagement"
-                onClick={() => show('firstScriptureAndLukePartnership')}
-              >
-                <Edit />
-              </Fab>
+              <Tooltip title="Update First Scripture and Luke Partnership">
+                <Fab
+                  color="primary"
+                  aria-label="Update language engagement"
+                  onClick={() => show('firstScriptureAndLukePartnership')}
+                >
+                  <Edit />
+                </Fab>
+              </Tooltip>
             </Grid>
           )}
         </Grid>
