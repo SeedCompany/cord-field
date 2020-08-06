@@ -39,7 +39,7 @@ const useStyles = makeStyles(({ palette, spacing }) => ({
     position: 'absolute',
     top: 0,
     left: 0,
-    width: `${PAPER_WIDTH}px`,
+    width: PAPER_WIDTH,
   },
   titleContainer: {
     cursor: 'move',
