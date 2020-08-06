@@ -5,7 +5,6 @@ import React, {
   useContext,
   useEffect,
   useReducer,
-  useState,
 } from 'react';
 import { sleep } from '../../util/sleep';
 import * as actions from './Reducer/uploadActions';
@@ -18,6 +17,7 @@ import {
 } from './Upload.generated';
 import { UploadItems } from './UploadItems';
 import { UploadManager } from './UploadManager';
+import { useUploadManager } from './UploadManagerContext';
 
 interface UploadContextValue {
   addFilesToUploadQueue: (files: Types.FileInput[]) => void;
@@ -31,21 +31,6 @@ export const UploadContext = createContext<UploadContextValue>(
   initialUploadContext
 );
 UploadContext.displayName = 'UploadContext';
-
-interface UploadManagerContextValue {
-  isManagerOpen: boolean;
-  setIsManagerOpen: (isOpen: boolean) => void;
-}
-
-const initialUploadManagerContext = {
-  isManagerOpen: false,
-  setIsManagerOpen: () => null,
-};
-
-export const UploadManagerContext = createContext<UploadManagerContextValue>(
-  initialUploadManagerContext
-);
-UploadManagerContext.displayName = 'UploadManagerContext';
 
 export const UploadProvider: FC = ({ children }) => {
   const [state, dispatch] = useReducer(uploadReducer, initialState);
@@ -211,14 +196,4 @@ export const UploadProvider: FC = ({ children }) => {
   );
 };
 
-export const UploadManagerProvider: FC = ({ children }) => {
-  const [isManagerOpen, setIsManagerOpen] = useState(false);
-  return (
-    <UploadManagerContext.Provider value={{ isManagerOpen, setIsManagerOpen }}>
-      {children}
-    </UploadManagerContext.Provider>
-  );
-};
-
 export const useUpload = () => useContext(UploadContext);
-export const useUploadManager = () => useContext(UploadManagerContext);

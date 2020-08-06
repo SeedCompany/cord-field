@@ -25,7 +25,7 @@ import React, {
 import Draggable, { DraggableData, DraggableEvent } from 'react-draggable';
 import { useWindowSize } from 'react-use';
 import { useSession } from '../Session';
-import { useUploadManager } from './UploadContext';
+import { useUploadManager } from './UploadManagerContext';
 
 const PAPER_WIDTH = 480;
 
