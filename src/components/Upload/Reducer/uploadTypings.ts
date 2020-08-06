@@ -27,8 +27,7 @@ export interface UploadState {
   submittedFiles: UploadFile[];
 }
 
-interface FileAction extends Pick<UploadFile, 'queueId'> {
-}
+type FileAction = Pick<UploadFile, 'queueId'>;
 
 export interface FileSubmittedAction {
   type: typeof actions.FILES_SUBMITTED;

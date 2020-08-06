@@ -5,21 +5,21 @@ import { DropzoneField, SubmitError } from '../form';
 import { UploadCallback, useUpload } from '../Upload';
 
 export type UploadFilesFormProps = DialogFormProps<{ files: File[] }> & {
-  callback: UploadCallback;
+  onFinalizeUpload: UploadCallback;
   multiple?: boolean;
 };
 
 export const UploadFilesForm = (
   props: Except<UploadFilesFormProps, 'onSubmit'>
 ) => {
-  const { callback, multiple = true } = props;
+  const { onFinalizeUpload, multiple = true } = props;
   const { addFilesToUploadQueue } = useUpload();
 
   const onSubmit: UploadFilesFormProps['onSubmit'] = ({ files }) => {
     const fileInputs = files.map((file) => ({
       file,
       fileName: file.name,
-      callback,
+      callback: onFinalizeUpload,
     }));
     addFilesToUploadQueue(fileInputs);
   };

@@ -10,7 +10,7 @@ import { useCreateProjectFileVersionMutation } from './CreateProjectFile.generat
 
 export type UploadProjectFileVersionProps = Except<
   UploadFilesFormProps,
-  'callback' | 'onSubmit' | 'title'
+  'onFinalizeUpload' | 'onSubmit' | 'title'
 > & {
   file?: File;
 };
@@ -38,7 +38,7 @@ export const UploadProjectFileVersion: FC<UploadProjectFileVersionProps> = (
   return !id ? null : (
     <UploadFilesForm
       {...rest}
-      callback={handleUploadCompleted}
+      onFinalizeUpload={handleUploadCompleted}
       multiple={false}
       title={fileName ? `Upload new version of ${fileName}` : undefined}
     />

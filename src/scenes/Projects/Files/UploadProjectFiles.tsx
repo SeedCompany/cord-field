@@ -11,7 +11,7 @@ import { useProjectCurrentDirectory } from './useProjectCurrentDirectory';
 
 export type UploadProjectFilesProps = Except<
   UploadFilesFormProps,
-  'callback' | 'onSubmit' | 'title'
+  'onFinalizeUpload' | 'onSubmit' | 'title'
 >;
 
 export const UploadProjectFiles = (props: UploadProjectFilesProps) => {
@@ -30,5 +30,7 @@ export const UploadProjectFiles = (props: UploadProjectFilesProps) => {
     });
   };
 
-  return <UploadFilesForm {...props} callback={handleUploadCompleted} />;
+  return (
+    <UploadFilesForm {...props} onFinalizeUpload={handleUploadCompleted} />
+  );
 };
