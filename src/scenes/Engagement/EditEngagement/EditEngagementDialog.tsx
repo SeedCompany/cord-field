@@ -1,4 +1,4 @@
-import { Typography } from '@material-ui/core';
+import { makeStyles } from '@material-ui/core';
 import { pick, startCase } from 'lodash';
 import React, { FC } from 'react';
 import { Except } from 'type-fest';
@@ -18,6 +18,7 @@ import {
   CheckboxField,
   CheckboxOption,
   DateField,
+  FieldGroup,
   RadioField,
   RadioOption,
   SubmitError,
@@ -64,11 +65,18 @@ const internshipEngagementPositions: InternshipEngagementPosition[] = [
   'Translator',
 ];
 
+const useStyles = makeStyles(() => ({
+  dialog: {
+    width: 400,
+  },
+}));
+
 export const EditEngagementDialog: FC<EditEngagementDialogProps> = ({
   engagement,
   editValue,
   ...props
 }) => {
+  const classes = useStyles();
   const [updateInternshipEngagement] = useUpdateInternshipEngagementMutation();
   const [updateLanguageEngagement] = useUpdateLanguageEngagementMutation();
 
@@ -77,49 +85,35 @@ export const EditEngagementDialog: FC<EditEngagementDialogProps> = ({
       ? updateInternshipEngagement
       : updateLanguageEngagement;
 
-  const title =
-    editValue === 'startEndDate'
-      ? 'Change Engagement Start and End Dates'
-      : editValue === 'completeDate'
-      ? 'Change Growth Plan Complete Date'
-      : editValue === 'disbursementCompleteDate'
-      ? 'Change Disbursement Complete Date'
-      : editValue === 'communicationsCompleteDate'
-      ? 'Change Communications Complete Date'
-      : editValue === 'methodologies'
-      ? 'Change Methodologies'
-      : editValue === 'position'
-      ? 'Change Intern Position'
-      : editValue === 'countryOfOrigin'
-      ? 'Change Location'
-      : editValue === 'mentor'
-      ? 'Change Mentor'
-      : editValue === 'firstScriptureAndLukePartnership'
-      ? 'Change First Scripture and Luke Partnership'
-      : null;
-
   const fields =
     editValue &&
     (editValue === 'startEndDate' ? (
       <>
-        <Typography>Start Date</Typography>
-        <DateField name="engagement.startDate" />
-        <Typography>End Date</Typography>
-        <DateField name="engagement.endDate" />
+        <DateField name="startDate" label="Start Date" />
+        <DateField name="endDate" label="End Date" />
       </>
-    ) : [
-        'completeDate',
-        'disbursementCompleteDate',
-        'communicationsCompleteDate',
-      ].includes(editValue) ? (
-      <>
-        <Typography>Complete Date</Typography>
-        <DateField name={`engagement.${editValue}`} />
-      </>
+    ) : editValue === 'completeDate' ? (
+      <DateField
+        name="completeDate"
+        label={
+          engagement.__typename === 'InternshipEngagement'
+            ? 'Growth Plan Complete Date'
+            : 'Translation Complete Date'
+        }
+      />
+    ) : editValue === 'disbursementCompleteDate' ? (
+      <DateField
+        name="disbursementCompleteDate"
+        label="Disbursement Complete Date"
+      />
+    ) : editValue === 'communicationsCompleteDate' ? (
+      <DateField
+        name="communicationsCompleteDate"
+        label="Communications Complete Date"
+      />
     ) : editValue === 'methodologies' ? (
       <>
-        <Typography>Methodologies</Typography>
-        <CheckboxesField name="engagement.methodologies">
+        <CheckboxesField name="methodologies" label="Methodologies">
           {Object.keys(MethodologyToApproach).map((group) => (
             <CheckboxOption
               key={group}
@@ -130,7 +124,7 @@ export const EditEngagementDialog: FC<EditEngagementDialogProps> = ({
         </CheckboxesField>
       </>
     ) : editValue === 'position' ? (
-      <RadioField name="engagement.position" label="Position">
+      <RadioField name="position" label="Intern Position">
         {internshipEngagementPositions.map((position) => (
           <RadioOption
             key={position}
@@ -141,13 +135,13 @@ export const EditEngagementDialog: FC<EditEngagementDialogProps> = ({
       </RadioField>
     ) : editValue === 'countryOfOrigin' ? (
       //TODO: replace with autocomplete when ready
-      <TextField name="engagement.countryOfOriginId" />
+      <TextField name="countryOfOriginId" label="Country of Origin" />
     ) : editValue === 'mentor' ? (
-      <TextField name="engagement.mentorId" />
+      <TextField name="mentorId" label="Mentor" />
     ) : editValue === 'firstScriptureAndLukePartnership' ? (
       <>
         <CheckboxField
-          name="engagement.firstScripture"
+          name="firstScripture"
           label="First Scripture"
           defaultValue={
             engagement.__typename === 'LanguageEngagement' &&
@@ -155,7 +149,7 @@ export const EditEngagementDialog: FC<EditEngagementDialogProps> = ({
           }
         />
         <CheckboxField
-          name="engagement.lukePartnership"
+          name="lukePartnership"
           label="Luke Partnership"
           defaultValue={
             engagement.__typename === 'LanguageEngagement' &&
@@ -197,17 +191,22 @@ export const EditEngagementDialog: FC<EditEngagementDialogProps> = ({
 
   return (
     <DialogForm<UpdateInternshipEngagementInput | UpdateLanguageEngagementInput>
-      title={title}
+      title="Update Engagement"
       closeLabel="Close"
-      submitLabel="Update Engagement"
+      submitLabel="Save"
       {...props}
       initialValues={filteredInitialValues}
-      onSubmit={(input) => {
-        updateEngagement({ variables: { input } });
+      onSubmit={async (input) => {
+        await updateEngagement({ variables: { input } });
+      }}
+      DialogProps={{
+        classes: {
+          paper: classes.dialog,
+        },
       }}
     >
       <SubmitError />
-      {fields}
+      <FieldGroup prefix="engagement">{fields}</FieldGroup>
     </DialogForm>
   );
 };
