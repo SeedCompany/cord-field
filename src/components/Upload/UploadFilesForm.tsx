@@ -7,7 +7,6 @@ import { UploadCallback, useUpload } from '../Upload';
 export type UploadFilesFormProps = DialogFormProps<{ files: File[] }> & {
   callback: UploadCallback;
   multiple?: boolean;
-  title?: string;
 };
 
 export const UploadFilesForm = (
