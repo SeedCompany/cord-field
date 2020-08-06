@@ -30,9 +30,9 @@ export const UploadFilesForm = (
         fullWidth: true,
         maxWidth: 'xs',
       }}
+      title="Upload Files"
       {...props}
       onSubmit={onSubmit}
-      title={title}
     >
       <SubmitError />
       <DropzoneField multiple={multiple} name="files" />
