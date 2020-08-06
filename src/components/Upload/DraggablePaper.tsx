@@ -20,10 +20,30 @@ export const DraggablePaper: FC<PaperProps & { isCollapsed: boolean }> = ({
   const positionRef = useRef(initialPosition);
   const { isCollapsed, ...rest } = props;
 
+  const calculateMargin = (
+    element: HTMLDivElement | null,
+    side: 'Top' | 'Bottom' | 'Left' | 'Right'
+  ): number => {
+    const style = element?.style ?? {
+      marginTop: '0px',
+      marginBottom: '0px',
+      marginLeft: '0px',
+      marginRight: '0px',
+    };
+    const property = `margin${side}` as keyof typeof style;
+    return Number(style[property].split('px')[0]);
+  };
+
   const { width: windowWidth, height: windowHeight } = useWindowSize();
   const managerSize = {
-    width: (paperRef.current?.offsetWidth ?? 0) + 24,
-    height: (paperRef.current?.offsetHeight ?? 0) + 24,
+    width:
+      (paperRef.current?.offsetWidth ?? 0) +
+      calculateMargin(paperRef.current, 'Left') +
+      calculateMargin(paperRef.current, 'Right'),
+    height:
+      (paperRef.current?.offsetHeight ?? 0) +
+      calculateMargin(paperRef.current, 'Top') +
+      calculateMargin(paperRef.current, 'Bottom'),
   };
   const collapsedPosition = {
     x: windowWidth - managerSize.width,
@@ -33,10 +53,16 @@ export const DraggablePaper: FC<PaperProps & { isCollapsed: boolean }> = ({
   const calculatePosition = useCallback(() => {
     const x =
       positionRef.current.x ??
-      windowWidth - (paperRef.current?.offsetWidth ?? 0) - 24;
+      windowWidth -
+        (paperRef.current?.offsetWidth ?? 0) -
+        calculateMargin(paperRef.current, 'Left') -
+        calculateMargin(paperRef.current, 'Right');
     const y =
       positionRef.current.y ??
-      windowHeight - (paperRef.current?.offsetHeight ?? 0) - 24;
+      windowHeight -
+        (paperRef.current?.offsetHeight ?? 0) -
+        calculateMargin(paperRef.current, 'Top') -
+        calculateMargin(paperRef.current, 'Bottom');
     return { x, y };
   }, [windowWidth, windowHeight, paperRef, positionRef]);
 
@@ -70,7 +96,7 @@ export const DraggablePaper: FC<PaperProps & { isCollapsed: boolean }> = ({
       onStop={handleDragStop}
       position={isCollapsed ? collapsedPosition : position}
     >
-      <Paper ref={paperRef} {...rest} />
+      <Paper ref={paperRef} style={{ margin: 24 }} {...rest} />
     </Draggable>
   );
 };
