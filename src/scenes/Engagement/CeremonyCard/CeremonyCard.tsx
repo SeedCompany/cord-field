@@ -15,7 +15,7 @@ import { FC } from 'react';
 import { canEditAny, UpdateCeremonyInput } from '../../../api';
 import { useDialog } from '../../../components/Dialog';
 import { DialogForm } from '../../../components/Dialog/DialogForm';
-import { DateField, SubmitError } from '../../../components/form';
+import { DateField, FieldGroup, SubmitError } from '../../../components/form';
 import { useDateFormatter } from '../../../components/Formatters';
 import { Redacted } from '../../../components/Redacted';
 import {
@@ -47,6 +47,9 @@ const useStyles = makeStyles(({ spacing, typography }) => ({
   },
   estimatedDate: {
     fontWeight: typography.weight.light,
+  },
+  dialog: {
+    width: 400,
   },
 }));
 
@@ -172,7 +175,8 @@ export const CeremonyCard: FC<CeremonyCardProps> = ({
       <DialogForm<UpdateCeremonyInput>
         title="Update Ceremony"
         closeLabel="Close"
-        submitLabel="Submit"
+        submitLabel="Save"
+        onlyDirtySubmit
         {...dialogState}
         initialValues={{
           ceremony: {
@@ -181,15 +185,20 @@ export const CeremonyCard: FC<CeremonyCardProps> = ({
             actualDate: actualDate?.value,
           },
         }}
-        onSubmit={(input) => {
-          updateCeremony({ variables: { input } });
+        onSubmit={async (input) => {
+          await updateCeremony({ variables: { input } });
+        }}
+        DialogProps={{
+          classes: {
+            paper: classes.dialog,
+          },
         }}
       >
         <SubmitError />
-        <Typography>Estimated Date</Typography>
-        <DateField name="ceremony.estimatedDate" />
-        <Typography>Actual Date</Typography>
-        <DateField name="ceremony.actualDate" />
+        <FieldGroup prefix="ceremony">
+          <DateField name="estimatedDate" label="Estimated Date" />
+          <DateField name="actualDate" label="Actual Date" />
+        </FieldGroup>
       </DialogForm>
     </div>
   );
