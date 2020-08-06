@@ -201,7 +201,6 @@ export const UploadManager: FC = memo((props) => {
 
   function handleCollapse(event: React.MouseEvent<HTMLButtonElement>) {
     event.stopPropagation();
-    console.log('Changing collapsed');
     setIsCollapsed((isCollapsed) => !isCollapsed);
   }
 
