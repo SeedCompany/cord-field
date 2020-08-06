@@ -4,8 +4,6 @@ import {
   IconButton,
   makeStyles,
   DialogTitle as MuiDialogTitle,
-  Paper,
-  PaperProps,
   Typography,
 } from '@material-ui/core';
 import {
@@ -14,17 +12,9 @@ import {
   Minimize as MinimizeIcon,
 } from '@material-ui/icons';
 import clsx from 'clsx';
-import React, {
-  FC,
-  memo,
-  useCallback,
-  useLayoutEffect,
-  useRef,
-  useState,
-} from 'react';
-import Draggable, { DraggableData, DraggableEvent } from 'react-draggable';
-import { useWindowSize } from 'react-use';
+import React, { FC, memo, useState } from 'react';
 import { useSession } from '../Session';
+import { DraggablePaper } from './DraggablePaper';
 import { useUploadManager } from './UploadManagerContext';
 
 const PAPER_WIDTH = 480;
@@ -72,72 +62,6 @@ const useStyles = makeStyles(({ palette, spacing }) => ({
     color: palette.grey[400],
   },
 }));
-
-const initialPosition = { x: null as null | number, y: null as null | number };
-
-const PaperComponent: FC<PaperProps & { isCollapsed: boolean }> = ({
-  ...props
-}) => {
-  const [position, setPosition] = useState({ x: 0, y: 0 });
-  const [isDragging, setIsDragging] = useState(false);
-  const paperRef = useRef<HTMLDivElement>(null);
-  const positionRef = useRef(initialPosition);
-  const { isCollapsed, ...rest } = props;
-
-  const { width: windowWidth, height: windowHeight } = useWindowSize();
-  const managerSize = {
-    width: (paperRef.current?.offsetWidth ?? 0) + 24,
-    height: (paperRef.current?.offsetHeight ?? 0) + 24,
-  };
-  const collapsedPosition = {
-    x: windowWidth - managerSize.width,
-    y: windowHeight - managerSize.height,
-  };
-
-  const calculatePosition = useCallback(() => {
-    const x =
-      positionRef.current.x ??
-      windowWidth - (paperRef.current?.offsetWidth ?? 0) - 24;
-    const y =
-      positionRef.current.y ??
-      windowHeight - (paperRef.current?.offsetHeight ?? 0) - 24;
-    return { x, y };
-  }, [windowWidth, windowHeight, paperRef, positionRef]);
-
-  useLayoutEffect(() => {
-    const { x, y } = calculatePosition();
-    setPosition({ x, y });
-  }, [calculatePosition, setPosition]);
-
-  function handleDrag() {
-    setIsDragging(true);
-  }
-
-  function handleDragStop(_: DraggableEvent, data: DraggableData) {
-    const wasDragging = isDragging;
-    setIsDragging(false);
-    if (wasDragging) {
-      const { x, y } = data;
-      positionRef.current.x = x;
-      positionRef.current.y = y;
-      setPosition({ x, y });
-    }
-  }
-
-  return (
-    <Draggable
-      bounds="parent"
-      cancel="#upload-manager-collapse-button, #upload-manager-close-button"
-      disabled={isCollapsed}
-      handle="#draggable-dialog-title"
-      onDrag={handleDrag}
-      onStop={handleDragStop}
-      position={isCollapsed ? collapsedPosition : position}
-    >
-      <Paper ref={paperRef} {...rest} />
-    </Draggable>
-  );
-};
 
 interface DialogTitleProps {
   id: string;
@@ -212,7 +136,7 @@ export const UploadManager: FC = memo((props) => {
       hideBackdrop
       open={!!session && isManagerOpen}
       PaperComponent={(props) => (
-        <PaperComponent {...props} isCollapsed={isCollapsed} />
+        <DraggablePaper {...props} isCollapsed={isCollapsed} />
       )}
       aria-labelledby="draggable-dialog-title"
     >
