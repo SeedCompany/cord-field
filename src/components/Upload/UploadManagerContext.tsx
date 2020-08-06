@@ -1,18 +1,15 @@
 import React, { createContext, FC, useContext, useState } from 'react';
 
-interface UploadManagerContextValue {
-  isManagerOpen: boolean;
-  setIsManagerOpen: (isOpen: boolean) => void;
-}
-
 const initialUploadManagerContext = {
   isManagerOpen: false,
-  setIsManagerOpen: () => null,
+  setIsManagerOpen: (_: boolean) => {
+    return;
+  },
 };
 
-export const UploadManagerContext = createContext<UploadManagerContextValue>(
-  initialUploadManagerContext
-);
+export const UploadManagerContext = createContext<
+  typeof initialUploadManagerContext
+>(initialUploadManagerContext);
 UploadManagerContext.displayName = 'UploadManagerContext';
 
 export const UploadManagerProvider: FC = ({ children }) => {

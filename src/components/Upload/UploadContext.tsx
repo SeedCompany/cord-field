@@ -19,15 +19,13 @@ import { UploadItems } from './UploadItems';
 import { UploadManager } from './UploadManager';
 import { useUploadManager } from './UploadManagerContext';
 
-interface UploadContextValue {
-  addFilesToUploadQueue: (files: Types.FileInput[]) => void;
-}
-
 const initialUploadContext = {
-  addFilesToUploadQueue: () => null,
+  addFilesToUploadQueue: (_: Types.FileInput[]) => {
+    return;
+  },
 };
 
-export const UploadContext = createContext<UploadContextValue>(
+export const UploadContext = createContext<typeof initialUploadContext>(
   initialUploadContext
 );
 UploadContext.displayName = 'UploadContext';
