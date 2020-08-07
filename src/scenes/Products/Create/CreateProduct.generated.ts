@@ -1,14 +1,13 @@
 /* eslint-disable import/no-duplicates, @typescript-eslint/no-empty-interface */
-import * as ApolloReactCommon from '@apollo/client';
-import * as ApolloReactHooks from '@apollo/client';
+import * as Apollo from '@apollo/client';
 import gql from 'graphql-tag';
-import * as Types from '../../../api/schema.generated';
-import {
+import type * as Types from '../../../api/schema.generated';
+import type {
   EngagementBreadcrumb_InternshipEngagement_Fragment,
   EngagementBreadcrumb_LanguageEngagement_Fragment,
 } from '../../../components/EngagementBreadcrumb/EngagementBreadcrumb.generated';
 import { EngagementBreadcrumbFragmentDoc } from '../../../components/EngagementBreadcrumb/EngagementBreadcrumb.generated';
-import {
+import type {
   ProjectBreadcrumb_InternshipProject_Fragment,
   ProjectBreadcrumb_TranslationProject_Fragment,
 } from '../../../components/ProjectBreadcrumb/ProjectBreadcrumb.generated';
@@ -63,7 +62,7 @@ export const CreateProductDocument = gql`
     }
   }
 `;
-export type CreateProductMutationFn = ApolloReactCommon.MutationFunction<
+export type CreateProductMutationFn = Apollo.MutationFunction<
   CreateProductMutation,
   CreateProductMutationVariables
 >;
@@ -86,12 +85,12 @@ export type CreateProductMutationFn = ApolloReactCommon.MutationFunction<
  * });
  */
 export function useCreateProductMutation(
-  baseOptions?: ApolloReactHooks.MutationHookOptions<
+  baseOptions?: Apollo.MutationHookOptions<
     CreateProductMutation,
     CreateProductMutationVariables
   >
 ) {
-  return ApolloReactHooks.useMutation<
+  return Apollo.useMutation<
     CreateProductMutation,
     CreateProductMutationVariables
   >(CreateProductDocument, baseOptions);
@@ -99,10 +98,10 @@ export function useCreateProductMutation(
 export type CreateProductMutationHookResult = ReturnType<
   typeof useCreateProductMutation
 >;
-export type CreateProductMutationResult = ApolloReactCommon.MutationResult<
+export type CreateProductMutationResult = Apollo.MutationResult<
   CreateProductMutation
 >;
-export type CreateProductMutationOptions = ApolloReactCommon.BaseMutationOptions<
+export type CreateProductMutationOptions = Apollo.BaseMutationOptions<
   CreateProductMutation,
   CreateProductMutationVariables
 >;
@@ -137,23 +136,23 @@ export const GetProductBreadcrumbDocument = gql`
  * });
  */
 export function useGetProductBreadcrumbQuery(
-  baseOptions?: ApolloReactHooks.QueryHookOptions<
+  baseOptions?: Apollo.QueryHookOptions<
     GetProductBreadcrumbQuery,
     GetProductBreadcrumbQueryVariables
   >
 ) {
-  return ApolloReactHooks.useQuery<
+  return Apollo.useQuery<
     GetProductBreadcrumbQuery,
     GetProductBreadcrumbQueryVariables
   >(GetProductBreadcrumbDocument, baseOptions);
 }
 export function useGetProductBreadcrumbLazyQuery(
-  baseOptions?: ApolloReactHooks.LazyQueryHookOptions<
+  baseOptions?: Apollo.LazyQueryHookOptions<
     GetProductBreadcrumbQuery,
     GetProductBreadcrumbQueryVariables
   >
 ) {
-  return ApolloReactHooks.useLazyQuery<
+  return Apollo.useLazyQuery<
     GetProductBreadcrumbQuery,
     GetProductBreadcrumbQueryVariables
   >(GetProductBreadcrumbDocument, baseOptions);
@@ -164,7 +163,7 @@ export type GetProductBreadcrumbQueryHookResult = ReturnType<
 export type GetProductBreadcrumbLazyQueryHookResult = ReturnType<
   typeof useGetProductBreadcrumbLazyQuery
 >;
-export type GetProductBreadcrumbQueryResult = ApolloReactCommon.QueryResult<
+export type GetProductBreadcrumbQueryResult = Apollo.QueryResult<
   GetProductBreadcrumbQuery,
   GetProductBreadcrumbQueryVariables
 >;

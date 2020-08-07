@@ -1,19 +1,18 @@
 /* eslint-disable import/no-duplicates, @typescript-eslint/no-empty-interface */
-import * as ApolloReactCommon from '@apollo/client';
-import * as ApolloReactHooks from '@apollo/client';
+import * as Apollo from '@apollo/client';
 import gql from 'graphql-tag';
-import * as Types from '../../../api/schema.generated';
-import {
+import type * as Types from '../../../api/schema.generated';
+import type {
   EngagementBreadcrumb_InternshipEngagement_Fragment,
   EngagementBreadcrumb_LanguageEngagement_Fragment,
 } from '../../../components/EngagementBreadcrumb/EngagementBreadcrumb.generated';
 import { EngagementBreadcrumbFragmentDoc } from '../../../components/EngagementBreadcrumb/EngagementBreadcrumb.generated';
-import {
+import type {
   ProjectBreadcrumb_InternshipProject_Fragment,
   ProjectBreadcrumb_TranslationProject_Fragment,
 } from '../../../components/ProjectBreadcrumb/ProjectBreadcrumb.generated';
 import { ProjectBreadcrumbFragmentDoc } from '../../../components/ProjectBreadcrumb/ProjectBreadcrumb.generated';
-import {
+import type {
   ProductForm_DerivativeScriptureProduct_Fragment,
   ProductForm_DirectScriptureProduct_Fragment,
 } from '../ProductForm/ProductForm.generated';
@@ -26,14 +25,12 @@ export type UpdateProductMutationVariables = Types.Exact<{
 export interface UpdateProductMutation {
   readonly updateProduct: { readonly __typename?: 'UpdateProductOutput' } & {
     readonly product:
-      | ({ readonly __typename?: 'DirectScriptureProduct' } & Pick<
-          Types.DirectScriptureProduct,
-          'id'
-        >)
-      | ({ readonly __typename?: 'DerivativeScriptureProduct' } & Pick<
-          Types.DerivativeScriptureProduct,
-          'id'
-        >);
+      | ({
+          readonly __typename?: 'DirectScriptureProduct';
+        } & ProductForm_DirectScriptureProduct_Fragment)
+      | ({
+          readonly __typename?: 'DerivativeScriptureProduct';
+        } & ProductForm_DerivativeScriptureProduct_Fragment);
   };
 }
 
@@ -71,12 +68,13 @@ export const UpdateProductDocument = gql`
   mutation UpdateProduct($input: UpdateProductInput!) {
     updateProduct(input: $input) {
       product {
-        id
+        ...ProductForm
       }
     }
   }
+  ${ProductFormFragmentDoc}
 `;
-export type UpdateProductMutationFn = ApolloReactCommon.MutationFunction<
+export type UpdateProductMutationFn = Apollo.MutationFunction<
   UpdateProductMutation,
   UpdateProductMutationVariables
 >;
@@ -99,12 +97,12 @@ export type UpdateProductMutationFn = ApolloReactCommon.MutationFunction<
  * });
  */
 export function useUpdateProductMutation(
-  baseOptions?: ApolloReactHooks.MutationHookOptions<
+  baseOptions?: Apollo.MutationHookOptions<
     UpdateProductMutation,
     UpdateProductMutationVariables
   >
 ) {
-  return ApolloReactHooks.useMutation<
+  return Apollo.useMutation<
     UpdateProductMutation,
     UpdateProductMutationVariables
   >(UpdateProductDocument, baseOptions);
@@ -112,10 +110,10 @@ export function useUpdateProductMutation(
 export type UpdateProductMutationHookResult = ReturnType<
   typeof useUpdateProductMutation
 >;
-export type UpdateProductMutationResult = ApolloReactCommon.MutationResult<
+export type UpdateProductMutationResult = Apollo.MutationResult<
   UpdateProductMutation
 >;
-export type UpdateProductMutationOptions = ApolloReactCommon.BaseMutationOptions<
+export type UpdateProductMutationOptions = Apollo.BaseMutationOptions<
   UpdateProductMutation,
   UpdateProductMutationVariables
 >;
@@ -155,30 +153,24 @@ export const ProductDocument = gql`
  * });
  */
 export function useProductQuery(
-  baseOptions?: ApolloReactHooks.QueryHookOptions<
-    ProductQuery,
-    ProductQueryVariables
-  >
+  baseOptions?: Apollo.QueryHookOptions<ProductQuery, ProductQueryVariables>
 ) {
-  return ApolloReactHooks.useQuery<ProductQuery, ProductQueryVariables>(
+  return Apollo.useQuery<ProductQuery, ProductQueryVariables>(
     ProductDocument,
     baseOptions
   );
 }
 export function useProductLazyQuery(
-  baseOptions?: ApolloReactHooks.LazyQueryHookOptions<
-    ProductQuery,
-    ProductQueryVariables
-  >
+  baseOptions?: Apollo.LazyQueryHookOptions<ProductQuery, ProductQueryVariables>
 ) {
-  return ApolloReactHooks.useLazyQuery<ProductQuery, ProductQueryVariables>(
+  return Apollo.useLazyQuery<ProductQuery, ProductQueryVariables>(
     ProductDocument,
     baseOptions
   );
 }
 export type ProductQueryHookResult = ReturnType<typeof useProductQuery>;
 export type ProductLazyQueryHookResult = ReturnType<typeof useProductLazyQuery>;
-export type ProductQueryResult = ApolloReactCommon.QueryResult<
+export type ProductQueryResult = Apollo.QueryResult<
   ProductQuery,
   ProductQueryVariables
 >;
