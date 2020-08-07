@@ -10,6 +10,7 @@ import { FC, useState } from 'react';
 import * as React from 'react';
 import { useSession } from '../../../../components/Session';
 import { ProfileMenu } from '../ProfileMenu';
+import { UserActionsMenu } from '../UserActionsMenu';
 
 const useStyles = makeStyles(({ typography, spacing }) => ({
   card: {
@@ -27,7 +28,8 @@ const useStyles = makeStyles(({ typography, spacing }) => ({
 export const ProfileToolbar: FC = () => {
   const classes = useStyles();
   const [session] = useSession();
-  const [anchor, setAnchor] = useState<MenuProps['anchorEl']>();
+  const [profileAnchor, setProfileAnchor] = useState<MenuProps['anchorEl']>();
+  const [actionsAnchor, setActionsAnchor] = useState<MenuProps['anchorEl']>();
 
   return (
     <>
@@ -39,18 +41,25 @@ export const ProfileToolbar: FC = () => {
           color="secondary"
           aria-controls="profile-menu"
           aria-haspopup="true"
-          onClick={(e) => setAnchor(e.currentTarget)}
+          onClick={(e) => setProfileAnchor(e.currentTarget)}
         >
           <AccountCircle />
         </IconButton>
         <IconButton>
           <NotificationsNone />
         </IconButton>
-        <IconButton onClick={(e) => setAnchor(e.currentTarget)}>
+        <IconButton onClick={(e) => setActionsAnchor(e.currentTarget)}>
           <MoreVert />
         </IconButton>
       </Card>
-      <ProfileMenu anchorEl={anchor} onClose={() => setAnchor(null)} />
+      <ProfileMenu
+        anchorEl={profileAnchor}
+        onClose={() => setProfileAnchor(null)}
+      />
+      <UserActionsMenu
+        anchorEl={actionsAnchor}
+        onClose={() => setActionsAnchor(null)}
+      />
     </>
   );
 };
