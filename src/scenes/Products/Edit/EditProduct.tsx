@@ -7,10 +7,21 @@ import { handleFormError, UpdateProduct } from '../../../api';
 import { EngagementBreadcrumb } from '../../../components/EngagementBreadcrumb';
 import { ProjectBreadcrumb } from '../../../components/ProjectBreadcrumb';
 import { ProductForm } from '../ProductForm';
+import { ProductForm_DirectScriptureProduct_Fragment } from '../ProductForm/ProductForm.generated';
 import {
   useProductQuery,
   useUpdateProductMutation,
 } from './EditProduct.generated';
+
+const removeScriptureTypename = (
+  scriptureReferenceArray?: ProductForm_DirectScriptureProduct_Fragment['scriptureReferences']['value']
+) =>
+  scriptureReferenceArray?.map(
+    ({ start: { __typename, ...start }, end: { __typename: _, ...end } }) => ({
+      start,
+      end,
+    })
+  );
 
 const useStyles = makeStyles(({ spacing, breakpoints }) => ({
   root: {
@@ -48,10 +59,16 @@ export const EditProduct = () => {
     methodology: product?.methodology.value,
     //TODO: make sure these are shown when response is ready
     ...(product?.__typename === 'DirectScriptureProduct'
-      ? { scriptureReferences: product.scriptureReferences.value }
+      ? {
+          scriptureReferences: removeScriptureTypename(
+            product.scriptureReferences.value
+          ),
+        }
       : product?.__typename === 'DerivativeScriptureProduct'
       ? {
-          scriptureReferences: product.scriptureReferencesOverride?.value,
+          scriptureReferences: removeScriptureTypename(
+            product.scriptureReferencesOverride?.value
+          ),
           produces: product.produces.__typename,
         }
       : undefined),

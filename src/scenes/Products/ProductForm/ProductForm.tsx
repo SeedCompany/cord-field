@@ -26,12 +26,13 @@ export const ProductForm = <FormMutationValues extends any>({
     endVerse,
   }: FormSpyRenderProps['values']) => ({
     start: {
-      book,
+      //Need first
+      book: book[0],
       chapter: startChapter,
       verse: startVerse,
     },
     end: {
-      book,
+      book: book[0],
       chapter: endChapter,
       verse: endVerse,
     },
