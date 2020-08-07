@@ -1,5 +1,13 @@
 import { useCallback, useMemo, useState } from 'react';
 
+export interface DialogState {
+  open: boolean;
+  onClose: () => void;
+  onExited: () => void;
+}
+
+export type ShowFn<T> = [T] extends [never] ? () => void : (item: T) => void;
+
 export function useDialog<T = never>() {
   const [isOpen, setOpen] = useState(false);
   const [item, setItem] = useState<T | undefined>(undefined);
@@ -17,5 +25,3 @@ export function useDialog<T = never>() {
   );
   return [state, show, item] as const;
 }
-
-type ShowFn<T> = [T] extends [never] ? () => void : (item: T) => void;
