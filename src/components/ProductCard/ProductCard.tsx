@@ -20,10 +20,7 @@ import { DisplaySimpleProperty } from '../DisplaySimpleProperty';
 import { ButtonLink, CardActionAreaLink } from '../Routing';
 import { ProductCardFragment } from './ProductCard.generated';
 
-const useStyles = makeStyles(({ spacing }) => ({
-  root: {
-    width: 240,
-  },
+const useStyles = makeStyles(({ spacing, palette }) => ({
   content: {
     display: 'flex',
     flexDirection: 'column',
@@ -33,11 +30,14 @@ const useStyles = makeStyles(({ spacing }) => ({
     },
   },
   actions: {
-    justifyContent: 'center',
+    justifyContent: 'space-around',
   },
   icon: {
     height: spacing(10),
     width: spacing(10),
+  },
+  deleteButton: {
+    color: palette.error.main,
   },
 }));
 
@@ -76,13 +76,13 @@ export const ProductCard = ({ product, handleDelete }: ProductCardProps) => {
     Scripture: <MenuBook color="secondary" classes={{ root: classes.icon }} />,
   };
   return (
-    <Card className={classes.root}>
+    <Card>
       <CardActionAreaLink to={`products/${product.id}`}>
         <CardContent className={classes.content}>
           {icons[type]}
           <Typography variant="h4">{startCase(type)}</Typography>
           <DisplaySimpleProperty
-            label="Method"
+            label="Methodology"
             align="center"
             value={
               product.methodology.value &&
@@ -97,7 +97,7 @@ export const ProductCard = ({ product, handleDelete }: ProductCardProps) => {
               .join(', ')}
           />
           <DisplaySimpleProperty
-            label="Books"
+            label="Scripture"
             align="center"
             value={product.scriptureReferences.value
               .map((scriptureReference) => displayScripture(scriptureReference))
@@ -106,9 +106,11 @@ export const ProductCard = ({ product, handleDelete }: ProductCardProps) => {
         </CardContent>
       </CardActionAreaLink>
       <CardActions classes={{ root: classes.actions }}>
-        <Button onClick={handleDelete}>Delete Product</Button>
+        <Button onClick={handleDelete} className={classes.deleteButton}>
+          Delete
+        </Button>
         <ButtonLink to={`products/${product.id}`} color="primary">
-          Edit Product
+          Edit
         </ButtonLink>
       </CardActions>
     </Card>
