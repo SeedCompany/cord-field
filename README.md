@@ -8,7 +8,7 @@ To run the web server (for development) run: `yarn start`
 
 To view storybook run: `yarn storybook`
 
-### Connecting to API Server
+### Connecting to the API Server
 
 By default, this project will attempt to access the `cord-api-v3` project that's running locally on your machine.
 
