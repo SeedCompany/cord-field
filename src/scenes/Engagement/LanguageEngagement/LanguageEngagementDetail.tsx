@@ -262,7 +262,7 @@ export const LanguageEngagementDetail: FC<EngagementQuery> = ({
           ))}
           <Grid item xs={4}>
             <Card className={classes.addProductCard}>
-              <CardActionAreaLink to="./create-product">
+              <CardActionAreaLink to="./products/create">
                 <CardContent className={classes.cardContent}>
                   <AddCircle
                     color="disabled"

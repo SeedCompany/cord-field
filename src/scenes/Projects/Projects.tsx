@@ -45,7 +45,7 @@ export const Projects = () => {
       element: <ProjectBudget />,
     },
     {
-      path: ':projectId/engagements/:engagementId/create-product',
+      path: ':projectId/engagements/:engagementId/products/create',
       element: <CreateProduct />,
     },
     {
