@@ -5,7 +5,7 @@ import { ProductFormFragment } from './ProductForm.generated';
 
 interface ProductFormCustomValues {
   productType?: string;
-  books?: string;
+  book?: string;
   startChapter?: string;
   startVerse?: string;
   endChapter?: string;

@@ -2,7 +2,7 @@ import { Breadcrumbs, makeStyles, Typography } from '@material-ui/core';
 import { Skeleton } from '@material-ui/lab';
 import { useSnackbar } from 'notistack';
 import React from 'react';
-import { useParams } from 'react-router';
+import { useNavigate, useParams } from 'react-router';
 import {
   CreateProduct as CreateProductType,
   handleFormError,
@@ -30,6 +30,7 @@ const useStyles = makeStyles(({ spacing, breakpoints }) => ({
 
 export const CreateProduct = () => {
   const classes = useStyles();
+  const navigate = useNavigate();
 
   const { projectId, engagementId } = useParams();
   const { enqueueSnackbar } = useSnackbar();
@@ -60,7 +61,7 @@ export const CreateProduct = () => {
         <ProductForm<CreateProductType>
           onSubmit={async ({
             productType,
-            books,
+            book,
             produces,
             scriptureReferences,
             ...inputs
@@ -89,7 +90,8 @@ export const CreateProduct = () => {
 
               const { product } = data!.createProduct;
 
-              enqueueSnackbar(`Created Product: ${product.id}`, {
+              //TODO: confirm with design what to show here
+              enqueueSnackbar(`Created ${product.__typename}`, {
                 variant: 'success',
                 action: () => (
                   <ButtonLink
@@ -100,6 +102,8 @@ export const CreateProduct = () => {
                   </ButtonLink>
                 ),
               });
+
+              navigate('../../');
             } catch (e) {
               await handleFormError(e);
             }
