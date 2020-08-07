@@ -11,10 +11,10 @@ export const FileCreateActions = () => {
   return (
     <>
       <Box>
-        <IconButton color="inherit" onClick={uploadFile} size="small">
+        <IconButton onClick={uploadFile} size="small">
           <Publish />
         </IconButton>
-        <IconButton color="inherit" onClick={createDirectory} size="small">
+        <IconButton onClick={createDirectory} size="small">
           <CreateNewFolder />
         </IconButton>
       </Box>

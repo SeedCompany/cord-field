@@ -31,7 +31,7 @@ export const useUploadFile = (
             queueId,
             completedAt: new Date(),
           });
-          await sleep(10000);
+          await sleep(30000);
           dispatch({ type: actions.REMOVE_UPLOAD, queueId });
         } catch (error) {
           setUploadError(file.queueId, 'Post-upload action failed');

@@ -8,7 +8,7 @@ import {
 } from '@material-ui/core';
 import { CloudDownload as DownloadIcon } from '@material-ui/icons';
 import React, { FC } from 'react';
-import { useDateFormatter } from '../../Formatters';
+import { useDateTimeFormatter } from '../../Formatters';
 import { useDownloadFile, useFileNodeIcon } from '../hooks';
 import { FileVersionItemFragment } from './FileVersionItem.generated';
 
@@ -31,7 +31,7 @@ interface FileVersionItemProps {
 
 export const FileVersionItem: FC<FileVersionItemProps> = (props) => {
   const classes = useStyles();
-  const formatDate = useDateFormatter();
+  const formatDate = useDateTimeFormatter();
   const downloadFile = useDownloadFile();
   const fileIcon = useFileNodeIcon();
   const { version } = props;
@@ -46,7 +46,7 @@ export const FileVersionItem: FC<FileVersionItemProps> = (props) => {
       <ListItemText
         className={classes.text}
         primary={name}
-        secondary={`Modified on ${formatDate(createdAt)} by ${createdByUser}`}
+        secondary={`Created on ${formatDate(createdAt)} by ${createdByUser}`}
       />
       <ListItemSecondaryAction>
         <IconButton onClick={() => downloadFile(version)}>

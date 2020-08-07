@@ -7,6 +7,7 @@ import {
   Typography,
   useTheme,
 } from '@material-ui/core';
+import { Check } from '@material-ui/icons';
 import React from 'react';
 import { MenuItemLink } from '../../../../components/Routing';
 import { useUploadManager } from '../../../../components/Upload';
@@ -52,7 +53,7 @@ export const ProfileMenu = (props: Partial<MenuProps>) => {
       </Typography>
       <Divider {...skipAutoFocus} />
       <MenuItem onClick={() => setIsManagerOpen(!isManagerOpen)}>
-        {isManagerOpen ? 'Hide ' : 'Show '} Upload Manager
+        {isManagerOpen ? <Check /> : null} Upload Manager
       </MenuItem>
       <MenuItemLink to="/logout">Sign Out</MenuItemLink>
     </Menu>

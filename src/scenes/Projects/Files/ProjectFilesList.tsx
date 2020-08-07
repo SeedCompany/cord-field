@@ -27,7 +27,7 @@ import {
 // import { FilePreview } from '../../../components/FilePreview';
 import {
   formatFileSize,
-  useDateFormatter,
+  useDateTimeFormatter,
 } from '../../../components/Formatters';
 import { ProjectBreadcrumb } from '../../../components/ProjectBreadcrumb';
 import { RowData, Table } from '../../../components/Table';
@@ -37,7 +37,7 @@ import { useProjectDirectoryQuery } from './ProjectFiles.generated';
 import { UploadProjectFileVersion } from './UploadProjectFileVersion';
 import { useProjectCurrentDirectory } from './useProjectCurrentDirectory';
 
-const useStyles = makeStyles(({ spacing }) => ({
+const useStyles = makeStyles(({ palette, spacing }) => ({
   headerContainer: {
     margin: spacing(3, 0),
     display: 'flex',
@@ -58,6 +58,7 @@ const useStyles = makeStyles(({ spacing }) => ({
     alignItems: 'center',
   },
   fileIcon: {
+    color: palette.action.active,
     marginRight: spacing(0.5),
   },
 }));
@@ -66,7 +67,7 @@ export const ProjectFilesList: FC = () => {
   const classes = useStyles();
   const { spacing } = useTheme();
   const { projectId } = useParams();
-  const formatDate = useDateFormatter();
+  const formatDate = useDateTimeFormatter();
   const downloadFile = useDownloadFile();
   const fileNameAndExtension = useFileNameAndExtension();
   const fileIcon = useFileNodeIcon();
