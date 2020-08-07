@@ -2,7 +2,6 @@ import {
   Button,
   Dialog,
   DialogActions,
-  DialogContent,
   DialogTitle,
   Divider,
   List,
@@ -31,16 +30,14 @@ export const FileVersions: FC<FileVersionsProps> = (props) => {
   return !file || loading ? null : (
     <Dialog {...dialogProps} aria-labelledby="dialog-file-versions">
       <DialogTitle id="dialog-file-versions">File History</DialogTitle>
-      <DialogContent>
-        <List dense>
-          {versions.map((version, index) => (
-            <>
-              <FileVersionItem key={version.id} version={version} />
-              {total && index !== total - 1 && <Divider />}
-            </>
-          ))}
-        </List>
-      </DialogContent>
+      <List dense>
+        {versions.map((version, index) => (
+          <>
+            <FileVersionItem key={version.id} version={version} />
+            {total && index !== total - 1 && <Divider />}
+          </>
+        ))}
+      </List>
       <DialogActions>
         <Button color="secondary" onClick={onClose}>
           Close
