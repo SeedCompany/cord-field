@@ -1,0 +1,7 @@
+mutation createInternshipEngagement($input: CreateInternshipEngagementInput!) {
+  createInternshipEngagement(input: $input) {
+    engagement {
+      ...InternshipEngagementListItem
+    }
+  }
+}
