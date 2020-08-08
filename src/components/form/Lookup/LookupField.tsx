@@ -40,7 +40,7 @@ export type LookupFieldProps<
   FieldConfig<Value<T, Multiple, DisableClearable, FreeSolo>>,
   'multiple' | 'allowNull' | 'parse' | 'format'
 > &
-  Pick<TextFieldProps, 'helperText' | 'label' | 'required'> & {
+  Pick<TextFieldProps, 'helperText' | 'label' | 'required' | 'autoFocus'> & {
     name: string;
     useLookup: LookupQueryHook<T>;
     getCompareBy: (item: T) => any;
@@ -72,6 +72,7 @@ export function LookupField<
   disabled: disabledProp,
   useLookup,
   ChipProps,
+  autoFocus,
   helperText,
   label,
   required,
@@ -177,6 +178,7 @@ export function LookupField<
           required={required}
           inputRef={ref}
           error={showError(meta)}
+          autoFocus={autoFocus}
           // variant="outlined" TODO maybe for multiple?
         />
       )}
