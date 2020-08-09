@@ -45,16 +45,14 @@ export const FileVersions: FC<FileVersionsProps> = (props) => {
     <>
       <Dialog {...dialogProps} aria-labelledby="dialog-file-versions">
         <DialogTitle id="dialog-file-versions">File History</DialogTitle>
-        <DialogContent>
-          <List dense>
-            {descendingVersions.map((version, index) => (
-              <Fragment key={version.id}>
-                <FileVersionItem version={version} />
-                {total && index !== total - 1 && <Divider />}
-              </Fragment>
-            ))}
-          </List>
-        </DialogContent>
+        <List dense>
+          {descendingVersions.map((version, index) => (
+            <Fragment key={version.id}>
+              <FileVersionItem version={version} />
+              {total && index !== total - 1 && <Divider />}
+            </Fragment>
+          ))}
+        </List>
         <DialogActions>
           <Button color="secondary" onClick={onClose}>
             Close

@@ -10,7 +10,7 @@ import { Skeleton } from '@material-ui/lab';
 import React, { FC } from 'react';
 import { useDropzone } from 'react-dropzone';
 import { useNavigate, useParams } from 'react-router-dom';
-import { File, FileVersion } from '../../../api';
+import { File } from '../../../api';
 import { Breadcrumb } from '../../../components/Breadcrumb';
 import { ContentContainer as Content } from '../../../components/ContentContainer';
 import { useDialog } from '../../../components/Dialog';
@@ -33,6 +33,8 @@ import { ProjectBreadcrumb } from '../../../components/ProjectBreadcrumb';
 import { Table } from '../../../components/Table';
 import { CreateProjectDirectory } from './CreateProjectDirectory';
 import {
+  FileNodeInfo_Directory_Fragment,
+  FileNodeInfo_FileVersion_Fragment,
   FileNodeInfoFragment,
   useProjectDirectoryQuery,
 } from './ProjectFiles.generated';
@@ -160,10 +162,21 @@ const ProjectFilesListWrapped: FC = () => {
     item: FileNodeInfoFragment;
   }
 
+  const isDirectory = (
+    fileNode: FileNodeInfoFragment
+  ): fileNode is FileNodeInfo_Directory_Fragment => {
+    return fileNode['__typename'] === 'Directory';
+  };
+
+  const isFileVersion = (
+    fileNode: FileNodeInfoFragment
+  ): fileNode is FileNodeInfo_FileVersion_Fragment => {
+    return fileNode['__typename'] === 'FileVersion';
+  };
+
   const rowData =
     items?.reduce((rows: FileRowData[], item) => {
-      const isDirectory = item.type === 'Directory';
-      const isFileVersion = item.type === 'FileVersion';
+      if (isFileVersion(item)) return rows;
       const { id, name, category, createdAt, createdBy } = item;
       const {
         displayFirstName: { value: firstName },
@@ -176,10 +189,11 @@ const ProjectFilesListWrapped: FC = () => {
         name,
         createdAt: formatDate(createdAt),
         createdBy: `${firstName} ${lastName}`,
-        size: isDirectory ? 0 : (item as File | FileVersion).size,
+        mimeType: isDirectory(item) ? 'directory' : item.mimeType,
+        size: isDirectory(item) ? 0 : item.size,
         item,
       };
-      return isFileVersion ? rows : rows.concat(row);
+      return rows.concat(row);
     }, []) ?? [];
 
   const columns = [
@@ -231,7 +245,9 @@ const ProjectFilesListWrapped: FC = () => {
     {
       title: '',
       field: 'item',
-      render: (rowData: FileRowData) => <ActionsMenu item={rowData.item} />,
+      render: (rowData: FileRowData) => (
+        <ActionsMenu item={rowData.item as File} />
+      ),
       sorting: false,
       cellStyle: {
         padding: spacing(0.5),
@@ -244,12 +260,11 @@ const ProjectFilesListWrapped: FC = () => {
   ];
 
   const handleRowClick = (rowData: FileRowData) => {
-    const { category, id, item } = rowData;
-    const isDirectory = category === 'Directory';
-    if (isDirectory) {
+    const { id, item } = rowData;
+    if (isDirectory(item)) {
       navigate(`/projects/${projectId}/files/${id}`);
     } else {
-      openFilePreview(item);
+      openFilePreview(item as File);
     }
   };
 
