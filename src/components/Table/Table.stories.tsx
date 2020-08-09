@@ -1,6 +1,6 @@
 import { boolean, number, select, text } from '@storybook/addon-knobs';
 import React from 'react';
-import { RowData, Table as TableComponent } from './Table';
+import { Table as TableComponent } from './Table';
 
 export default { title: 'Components/Table' };
 
@@ -15,39 +15,6 @@ const typeOptions = {
 };
 
 export const Table = () => {
-  const columns = [
-    {
-      title: text('title.id', 'ID'),
-      field: 'id',
-      hidden: boolean('hidden', true),
-    },
-    {
-      title: text('title.organization', 'Organization'),
-      field: 'organization',
-      type: select('organizationType', typeOptions, undefined),
-      editable: 'never' as const,
-    },
-    {
-      title: text('title.fiscalYear', 'Fiscal Year'),
-      field: 'fiscalYear',
-      type: select('fiscalYearType', typeOptions, undefined),
-      editable: 'never' as const,
-      render: (rowData: RowData) =>
-        text('prefix', 'FY') + String(rowData.fiscalYear),
-    },
-    {
-      title: text('title.amount', 'Amount'),
-      field: 'amount',
-      type: select('amountType', typeOptions, 'currency'),
-      editable: (_: unknown, rowData: RowData) => !!rowData.canEdit,
-    },
-    {
-      title: text('title.canEdit', 'Can Edit'),
-      field: 'canEdit',
-      hidden: boolean('hidden', true),
-    },
-  ];
-
   const rows = [
     {
       id: '456789',
@@ -71,6 +38,40 @@ export const Table = () => {
       canEdit: boolean('canEdit.row3', true),
     },
   ];
+
+  const columns = [
+    {
+      title: text('title.id', 'ID'),
+      field: 'id',
+      hidden: boolean('hidden', true),
+    },
+    {
+      title: text('title.organization', 'Organization'),
+      field: 'organization',
+      type: select('organizationType', typeOptions, undefined),
+      editable: 'never' as const,
+    },
+    {
+      title: text('title.fiscalYear', 'Fiscal Year'),
+      field: 'fiscalYear',
+      type: select('fiscalYearType', typeOptions, undefined),
+      editable: 'never' as const,
+      render: (rowData: any) =>
+        text('prefix', 'FY') + String(rowData.fiscalYear),
+    },
+    {
+      title: text('title.amount', 'Amount'),
+      field: 'amount',
+      type: select('amountType', typeOptions, 'currency'),
+      editable: (_: unknown, rowData: any) => !!rowData.canEdit,
+    },
+    {
+      title: text('title.canEdit', 'Can Edit'),
+      field: 'canEdit',
+      hidden: boolean('hidden', true),
+    },
+  ];
+
   return (
     <TableComponent
       columns={columns}

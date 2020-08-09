@@ -1,37 +1,42 @@
-import { makeStyles, Typography } from '@material-ui/core';
+import { createMuiTheme, ThemeProvider, useTheme } from '@material-ui/core';
 import { ArrowDownward, Check, Clear, Edit } from '@material-ui/icons';
 import MaterialTable, { Column, Icons } from 'material-table';
-import React, { FC, forwardRef } from 'react';
+import React, { forwardRef, ReactElement } from 'react';
 
-export interface RowData {
-  [key: string]: any;
-}
-
-interface TableProps {
+interface TableProps<RowData extends object> {
+  onRowClick?: (rowData: RowData) => void;
   columns: Array<Column<RowData>>;
   data: RowData[];
-  header?: React.ReactElement;
+  header?: ReactElement;
   isEditable?: boolean;
-  onRowUpdate?: (newData: RowData, oldData?: RowData) => Promise<any>;
-  title?: string;
+  onRowUpdate?: (newData: RowData, oldData?: RowData) => Promise<unknown>;
+  toolbarContents?: ReactElement;
 }
 
-const useStyles = makeStyles(({ spacing }) => ({
-  toolbar: {
-    padding: spacing(2),
-    paddingBottom: spacing(1),
-  },
-}));
-
-export const Table: FC<TableProps> = (props) => {
+export const Table = <RowData extends object>(props: TableProps<RowData>) => {
   const {
+    onRowClick,
     columns: columnData,
     data,
     isEditable = false,
     onRowUpdate,
-    title,
+    toolbarContents,
   } = props;
-  const classes = useStyles();
+
+  const theme = useTheme();
+  const tableTheme = createMuiTheme({
+    ...theme,
+    overrides: {
+      MuiTableRow: {
+        root: {
+          ...(onRowClick ? { cursor: 'pointer' } : null),
+          '&:hover': {
+            backgroundColor: theme.palette.action.hover,
+          },
+        },
+      },
+    },
+  });
 
   /* We'll always want the headers of currency columns
     to be right-aligned, so let's do it here instead
@@ -73,37 +78,39 @@ export const Table: FC<TableProps> = (props) => {
   const editable = !isEditable
     ? undefined
     : {
-        isEditable: (rowData: RowData) => !!rowData.canEdit,
+        isEditable: (rowData: any) => !!rowData.canEdit,
         isDeletable: () => false,
         onRowUpdate,
       };
 
+  const handleRowClick = (_?: React.MouseEvent, rowData?: RowData) => {
+    onRowClick && rowData && onRowClick(rowData);
+  };
+
   return (
-    <MaterialTable
-      columns={columns}
-      components={{
-        Toolbar: () =>
-          title ? (
-            <div className={classes.toolbar}>
-              <Typography variant="h3">{title}</Typography>
-            </div>
-          ) : null,
-      }}
-      data={data}
-      editable={editable}
-      icons={icons}
-      localization={{
-        header: {
-          actions: '',
-        },
-        body: {
-          emptyDataSourceMessage: '',
-        },
-      }}
-      options={{
-        paging: false,
-        search: false,
-      }}
-    />
+    <ThemeProvider theme={tableTheme}>
+      <MaterialTable
+        columns={columns}
+        components={{
+          Toolbar: () => toolbarContents ?? null,
+        }}
+        data={data}
+        editable={editable}
+        icons={icons}
+        localization={{
+          header: {
+            actions: '',
+          },
+          body: {
+            emptyDataSourceMessage: '',
+          },
+        }}
+        onRowClick={handleRowClick}
+        options={{
+          paging: false,
+          search: false,
+        }}
+      />
+    </ThemeProvider>
   );
 };
