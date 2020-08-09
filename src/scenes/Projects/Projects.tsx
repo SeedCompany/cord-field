@@ -22,7 +22,7 @@ export const Projects = () => {
       element: <ProjectFilesList />,
     },
     {
-      path: ':projectId/folders/:folderId',
+      path: ':projectId/files/:folderId',
       element: <ProjectFilesList />,
     },
     {

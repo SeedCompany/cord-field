@@ -38,7 +38,7 @@ export const CreateProjectDirectory = (
       action: () => (
         <ButtonLink
           color="inherit"
-          to={`/projects/${project!.id}/folders/${directory.id}`}
+          to={`/projects/${project!.id}/files/${directory.id}`}
         >
           View
         </ButtonLink>

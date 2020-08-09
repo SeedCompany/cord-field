@@ -151,7 +151,7 @@ export const ProjectFilesList: FC = () => {
         return isDirectory ? (
           <Link
             className={classes.folderLink}
-            to={`/projects/${projectId}/folders/${id}`}
+            to={`/projects/${projectId}/files/${id}`}
           >
             {content}
           </Link>
@@ -241,14 +241,14 @@ export const ProjectFilesList: FC = () => {
                 {breadcrumbsParents.map((parent) => (
                   <Breadcrumb
                     key={parent.id}
-                    to={`/projects/${projectId}/folders/${parent.id}`}
+                    to={`/projects/${projectId}/files/${parent.id}`}
                   >
                     {parent.name}
                   </Breadcrumb>
                 ))}
                 {isNotRootDirectory && (
                   <Breadcrumb
-                    to={`/projects/${projectId}/folders/${directoryId}`}
+                    to={`/projects/${projectId}/files/${directoryId}`}
                   >
                     {data?.directory.name}
                   </Breadcrumb>
