@@ -3,11 +3,10 @@ import { Skeleton } from '@material-ui/lab';
 import { DateTime } from 'luxon';
 import React, { useState } from 'react';
 import { useParams } from 'react-router-dom';
-// import { BudgetRecord, Budget } from '../../../api';
 import { Breadcrumb } from '../../../components/Breadcrumb';
 import { ContentContainer as Content } from '../../../components/ContentContainer';
 import { useCurrencyFormatter } from '../../../components/Formatters/useCurrencyFormatter';
-import { RowData, Table } from '../../../components/Table';
+import { Table } from '../../../components/Table';
 import {
   ProjectBudgetQueryResult,
   useProjectBudgetQuery,
@@ -142,6 +141,10 @@ const useStyles = makeStyles(({ spacing }) => ({
   tableWrapper: {
     marginTop: spacing(4),
   },
+  toolbar: {
+    padding: spacing(2),
+    paddingBottom: spacing(1),
+  },
 }));
 
 export const ProjectBudget = () => {
@@ -167,7 +170,15 @@ export const ProjectBudget = () => {
   const canEditBudget = data?.project?.budget.canEdit;
   const budgetRecords = budget?.records ?? [];
 
-  const rowData = budgetRecords.reduce((rows: RowData[], record) => {
+  interface BudgetRowData {
+    id: string;
+    organization: string;
+    fiscalYear: string;
+    amount: string;
+    canEdit: boolean;
+  }
+
+  const rowData = budgetRecords.reduce((rows: BudgetRowData[], record) => {
     const { amount, fiscalYear, id, organization } = record;
     const { value: dollarAmount, canEdit } = amount;
     const { value: year } = fiscalYear;
@@ -176,8 +187,8 @@ export const ProjectBudget = () => {
     const row = {
       id,
       organization: orgName ?? '',
-      fiscalYear: year ?? '',
-      amount: dollarAmount ?? '',
+      fiscalYear: String(year) ?? '',
+      amount: String(dollarAmount) ?? '',
       canEdit,
     };
     return rows.concat(row);
@@ -198,13 +209,13 @@ export const ProjectBudget = () => {
       title: 'Fiscal Year',
       field: 'fiscalYear',
       editable: 'never' as const,
-      render: (rowData: RowData) => `FY${rowData.fiscalYear}`,
+      render: (rowData: BudgetRowData) => `FY${rowData.fiscalYear}`,
     },
     {
       title: 'Amount',
       field: 'amount',
       type: 'currency' as const,
-      editable: (_: unknown, rowData: RowData) => !!rowData.canEdit,
+      editable: (_: unknown, rowData: BudgetRowData) => !!rowData.canEdit,
     },
     {
       title: 'Can Edit',
@@ -213,7 +224,7 @@ export const ProjectBudget = () => {
     },
   ];
 
-  function handleRowUpdate(data: RowData) {
+  function handleRowUpdate(data: BudgetRowData) {
     // We'll totally redo this when we have a working query + mutation
     const records = mock.data?.project.budget.value?.records ?? [];
     const index = records.findIndex((record) => record.id === data.id);
@@ -305,7 +316,11 @@ export const ProjectBudget = () => {
                 columns={columns}
                 isEditable={canEditBudget}
                 onRowUpdate={handleRowUpdate}
-                title="Budget Records"
+                toolbarContents={
+                  <div className={classes.toolbar}>
+                    <Typography variant="h3">Budget Records</Typography>
+                  </div>
+                }
               />
             )}
           </section>
