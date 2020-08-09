@@ -78,8 +78,14 @@ export const FileActionsPopup: FC<FileActionsPopupProps> = (props) => {
   const { item, onFileAction } = props;
   const [anchor, setAnchor] = useState<MenuProps['anchorEl']>();
 
-  const openAddMenu = (e: any) => setAnchor(e.currentTarget);
-  const closeAddMenu = () => setAnchor(null);
+  const openAddMenu = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    setAnchor(e.currentTarget);
+  };
+  const closeAddMenu = (e: React.MouseEvent) => {
+    e.stopPropagation && e.stopPropagation();
+    setAnchor(null);
+  };
 
   return (
     <>
@@ -108,7 +114,8 @@ export const FileActionsMenu: FC<FileActionsMenuProps> = (props) => {
 
   const close = () => props.onClose?.({}, 'backdropClick');
 
-  const handleActionClick = (action: FileAction) => {
+  const handleActionClick = (event: React.MouseEvent, action: FileAction) => {
+    event.stopPropagation();
     close();
     onAction(item, action);
   };
@@ -126,7 +133,10 @@ export const FileActionsMenu: FC<FileActionsMenuProps> = (props) => {
       {menuItems.map((menuItem) => {
         const { text, icon: Icon, directory } = menuItem;
         return item.category === 'Directory' && !directory ? null : (
-          <MenuItem key={text} onClick={handleActionClick.bind(null, text)}>
+          <MenuItem
+            key={text}
+            onClick={(event) => handleActionClick(event, text)}
+          >
             <ListItemIcon className={classes.listItemIcon}>
               <Icon fontSize="small" />
             </ListItemIcon>

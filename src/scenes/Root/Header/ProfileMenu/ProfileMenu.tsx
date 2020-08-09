@@ -2,15 +2,12 @@ import {
   Divider,
   makeStyles,
   Menu,
-  MenuItem,
   MenuProps,
   Typography,
   useTheme,
 } from '@material-ui/core';
-import { Check } from '@material-ui/icons';
 import React from 'react';
 import { MenuItemLink } from '../../../../components/Routing';
-import { useUploadManager } from '../../../../components/Upload';
 
 const useStyles = makeStyles(({ spacing }) => ({
   menu: {
@@ -31,7 +28,6 @@ const skipAutoFocus: any = { disabled: true };
 export const ProfileMenu = (props: Partial<MenuProps>) => {
   const classes = useStyles();
   const { spacing } = useTheme();
-  const { isManagerOpen, setIsManagerOpen } = useUploadManager();
 
   return (
     <Menu
@@ -52,9 +48,6 @@ export const ProfileMenu = (props: Partial<MenuProps>) => {
         Profile Info
       </Typography>
       <Divider {...skipAutoFocus} />
-      <MenuItem onClick={() => setIsManagerOpen(!isManagerOpen)}>
-        {isManagerOpen ? <Check /> : null} Upload Manager
-      </MenuItem>
       <MenuItemLink to="/logout">Sign Out</MenuItemLink>
     </Menu>
   );

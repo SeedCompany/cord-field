@@ -7,7 +7,7 @@ import {
 } from '@material-ui/core';
 import { Skeleton } from '@material-ui/lab';
 import React, { FC } from 'react';
-import { Link, useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { File, FileVersion } from '../../../api';
 import { Breadcrumb } from '../../../components/Breadcrumb';
 import { ContentContainer as Content } from '../../../components/ContentContainer';
@@ -30,10 +30,13 @@ import {
   useDateTimeFormatter,
 } from '../../../components/Formatters';
 import { ProjectBreadcrumb } from '../../../components/ProjectBreadcrumb';
-import { RowData, Table } from '../../../components/Table';
+import { Table } from '../../../components/Table';
 import { FileCreateActions } from './FileCreateActions';
 import { FileVersions } from './FileVersions';
-import { useProjectDirectoryQuery } from './ProjectFiles.generated';
+import {
+  FileNodeInfoFragment,
+  useProjectDirectoryQuery,
+} from './ProjectFiles.generated';
 import { UploadProjectFileVersion } from './UploadProjectFileVersion';
 import { useProjectCurrentDirectory } from './useProjectCurrentDirectory';
 
@@ -42,8 +45,11 @@ const useStyles = makeStyles(({ palette, spacing }) => ({
     margin: spacing(3, 0),
     display: 'flex',
   },
-  title: {
-    marginRight: spacing(3),
+  toolbarContainer: {
+    display: 'flex',
+    flexDirection: 'row-reverse',
+    padding: spacing(1),
+    width: '100%',
   },
   tableWrapper: {
     marginTop: spacing(4),
@@ -66,6 +72,7 @@ const useStyles = makeStyles(({ palette, spacing }) => ({
 export const ProjectFilesList: FC = () => {
   const classes = useStyles();
   const { spacing } = useTheme();
+  const navigate = useNavigate();
   const { projectId } = useParams();
   const formatDate = useDateTimeFormatter();
   const downloadFile = useDownloadFile();
@@ -117,84 +124,18 @@ export const ProjectFilesList: FC = () => {
 
   const items = directoryIsNotInProject ? [] : data?.directory.children.items;
 
-  const columns = [
-    {
-      title: 'ID',
-      field: 'id',
-      hidden: true,
-    },
-    {
-      title: 'Category',
-      field: 'category',
-      hidden: true,
-    },
-    {
-      title: 'Name',
-      field: 'name',
-      render: (rowData: RowData) => {
-        const { category, id, name, item } = rowData;
-        const Icon = fileIcon(category);
-        const isDirectory = category === 'Directory';
-        const content = (
-          <span
-            className={classes.fileName}
-            onClick={
-              isDirectory
-                ? undefined
-                : () => console.log('Preview file', item.id)
-            }
-          >
-            <Icon className={classes.fileIcon} />
-            {fileNameAndExtension(name).displayName}
-          </span>
-        );
-        return isDirectory ? (
-          <Link
-            className={classes.folderLink}
-            to={`/projects/${projectId}/files/${id}`}
-          >
-            {content}
-          </Link>
-        ) : (
-          content
-        );
-      },
-    },
-    {
-      title: 'Created',
-      field: 'createdAt',
-    },
-    {
-      title: 'Uploaded By',
-      field: 'createdBy',
-    },
-    {
-      title: 'File Size',
-      field: 'size',
-      render: (rowData: RowData) => {
-        const { category, size } = rowData;
-        return category === 'Directory' ? '–' : formatFileSize(Number(size));
-      },
-    },
-    {
-      title: '',
-      field: 'item',
-      render: (rowData: RowData) => (
-        <ActionsMenu item={rowData.item} onFileAction={handleFileActionClick} />
-      ),
-      sorting: false,
-      cellStyle: {
-        padding: spacing(0.5),
-        width: spacing(6),
-      },
-      headerStyle: {
-        padding: spacing(0.5),
-      },
-    },
-  ];
+  interface FileRowData {
+    id: FileNodeInfoFragment['id'];
+    category: FileNodeInfoFragment['category'];
+    name: FileNodeInfoFragment['name'];
+    createdAt: string;
+    createdBy: string;
+    size: number;
+    item: FileNodeInfoFragment;
+  }
 
   const rowData =
-    items?.reduce((rows: RowData[], item) => {
+    items?.reduce((rows: FileRowData[], item) => {
       const isDirectory = item.type === 'Directory';
       const isFileVersion = item.type === 'FileVersion';
       const { id, name, category, createdAt, createdBy } = item;
@@ -214,6 +155,77 @@ export const ProjectFilesList: FC = () => {
       };
       return isFileVersion ? rows : rows.concat(row);
     }, []) ?? [];
+
+  const columns = [
+    {
+      title: 'ID',
+      field: 'id',
+      hidden: true,
+    },
+    {
+      title: 'Category',
+      field: 'category',
+      hidden: true,
+    },
+    {
+      title: 'Name',
+      field: 'name',
+      render: (rowData: FileRowData) => {
+        const { category, name } = rowData;
+        const Icon = fileIcon(category);
+        return (
+          <span className={classes.fileName}>
+            <Icon className={classes.fileIcon} />
+            {fileNameAndExtension(name).displayName}
+          </span>
+        );
+      },
+    },
+    {
+      title: 'Created',
+      field: 'createdAt',
+    },
+    {
+      title: 'Uploaded By',
+      field: 'createdBy',
+    },
+    {
+      title: 'File Size',
+      field: 'size',
+      render: (rowData: FileRowData) => {
+        const { category, size } = rowData;
+        return category === 'Directory' ? '–' : formatFileSize(Number(size));
+      },
+    },
+    {
+      title: '',
+      field: 'item',
+      render: (rowData: FileRowData) => (
+        <ActionsMenu
+          item={rowData.item as any}
+          onFileAction={handleFileActionClick}
+        />
+      ),
+      sorting: false,
+      cellStyle: {
+        padding: spacing(0.5),
+        width: spacing(6),
+      },
+      headerStyle: {
+        padding: spacing(0.5),
+      },
+    },
+  ];
+
+  const handleRowClick = (rowData: FileRowData) => {
+    const { category, id, item } = rowData;
+    const isDirectory = category === 'Directory';
+    if (isDirectory) {
+      navigate(`/projects/${projectId}/files/${id}`);
+    } else {
+      console.log('Preview file', item.id);
+    }
+  };
 
   return (
     <Content>
@@ -254,25 +266,22 @@ export const ProjectFilesList: FC = () => {
                   </Breadcrumb>
                 )}
               </Breadcrumbs>
-              <FileCreateActions />
             </Box>
           )}
-          <header className={classes.headerContainer}>
-            {loading ? (
-              <>
-                <Skeleton variant="text" width="20%" />
-              </>
-            ) : (
-              <Typography variant="h2" className={classes.title}>
-                Files
-              </Typography>
-            )}
-          </header>
           <section className={classes.tableWrapper}>
             {loading ? (
               <Skeleton variant="rect" width="100%" height={200} />
             ) : (
-              <Table data={rowData} columns={columns} />
+              <Table
+                data={rowData}
+                columns={columns}
+                onRowClick={handleRowClick}
+                toolbarContents={
+                  <div className={classes.toolbarContainer}>
+                    <FileCreateActions />
+                  </div>
+                }
+              />
             )}
           </section>
         </>

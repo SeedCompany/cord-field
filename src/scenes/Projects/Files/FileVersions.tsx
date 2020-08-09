@@ -32,10 +32,10 @@ export const FileVersions: FC<FileVersionsProps> = (props) => {
       <DialogTitle id="dialog-file-versions">File History</DialogTitle>
       <List dense>
         {versions.map((version, index) => (
-          <>
-            <FileVersionItem key={version.id} version={version} />
+          <React.Fragment key={version.id}>
+            <FileVersionItem version={version} />
             {total && index !== total - 1 && <Divider />}
-          </>
+          </React.Fragment>
         ))}
       </List>
       <DialogActions>
