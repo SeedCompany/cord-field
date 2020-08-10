@@ -1,4 +1,4 @@
-import { difference, isEmpty } from 'lodash';
+import { difference, differenceWith, isEmpty, isEqual } from 'lodash';
 import {
   MutableRefObject,
   ReactNode,
@@ -83,6 +83,10 @@ export const isListEqualBy = <T>(compareBy: (item: T) => any) =>
 
 export const areListsEqual = (a: any, b: any) =>
   isEmpty(difference(a, b)) && isEmpty(difference(b, a));
+
+export const areListsDeepEqual = (a: any, b: any) =>
+  isEmpty(differenceWith(a, b, isEqual)) &&
+  isEmpty(differenceWith(b, a, isEqual));
 
 export const compareNullable = <T>(fn: (a: T, b: T) => boolean) => (
   a: Nullable<T>,
