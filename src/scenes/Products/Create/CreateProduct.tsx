@@ -3,14 +3,11 @@ import { Skeleton } from '@material-ui/lab';
 import { useSnackbar } from 'notistack';
 import React from 'react';
 import { useNavigate, useParams } from 'react-router';
-import {
-  CreateProduct as CreateProductType,
-  handleFormError,
-} from '../../../api';
+import { CreateProductInput, handleFormError } from '../../../api';
 import { EngagementBreadcrumb } from '../../../components/EngagementBreadcrumb';
 import { ProjectBreadcrumb } from '../../../components/ProjectBreadcrumb';
 import { ButtonLink } from '../../../components/Routing';
-import { ProductForm } from '../ProductForm';
+import { ProductForm, ProductFormCustomValues } from '../ProductForm';
 import { getIsDerivativeProduct } from '../ProductForm/helpers';
 import {
   useCreateProductMutation,
@@ -58,13 +55,15 @@ export const CreateProduct = () => {
         {loading ? <Skeleton width="50%" variant="text" /> : 'Create Product'}
       </Typography>
       {!loading && (
-        <ProductForm<CreateProductType>
+        <ProductForm<CreateProductInput & ProductFormCustomValues>
           onSubmit={async ({
-            productType,
-            book,
-            produces,
-            scriptureReferences,
-            ...inputs
+            product: {
+              productType,
+              book,
+              produces,
+              scriptureReferences,
+              ...inputs
+            },
           }) => {
             const isDerivativeProduct =
               productType && getIsDerivativeProduct(productType);
@@ -108,7 +107,7 @@ export const CreateProduct = () => {
               await handleFormError(e);
             }
           }}
-          initialValues={{ engagementId }}
+          initialValues={{ product: { engagementId } }}
         />
       )}
     </main>

@@ -3,10 +3,10 @@ import { Skeleton } from '@material-ui/lab';
 import { useSnackbar } from 'notistack';
 import React from 'react';
 import { useParams } from 'react-router';
-import { handleFormError, UpdateProduct } from '../../../api';
+import { handleFormError, UpdateProductInput } from '../../../api';
 import { EngagementBreadcrumb } from '../../../components/EngagementBreadcrumb';
 import { ProjectBreadcrumb } from '../../../components/ProjectBreadcrumb';
-import { ProductForm } from '../ProductForm';
+import { ProductForm, ProductFormCustomValues } from '../ProductForm';
 import { ProductForm_DirectScriptureProduct_Fragment } from '../ProductForm/ProductForm.generated';
 import {
   useProductQuery,
@@ -50,28 +50,58 @@ export const EditProduct = () => {
 
   const project = data?.project;
   const engagement = data?.engagement;
-  const product = data?.product;
 
-  const initialValues = {
-    id: product?.id,
-    mediums: product?.mediums.value,
-    purposes: product?.purposes.value,
-    methodology: product?.methodology.value,
-    //TODO: make sure these are shown when response is ready
-    ...(product?.__typename === 'DirectScriptureProduct'
-      ? {
-          scriptureReferences: removeScriptureTypename(
-            product.scriptureReferences.value
-          ),
-        }
-      : product?.__typename === 'DerivativeScriptureProduct'
-      ? {
-          scriptureReferences: removeScriptureTypename(
-            product.scriptureReferencesOverride?.value
-          ),
-          produces: product.produces.__typename,
-        }
-      : undefined),
+  const renderProductForm = () => {
+    if (!data) return null;
+    const { product } = data;
+    const { id, mediums, purposes, methodology, scriptureReferences } = product;
+
+    const initialValues = {
+      id,
+      mediums: mediums.value,
+      purposes: purposes.value,
+      methodology: methodology.value,
+      //TODO: make sure these are shown when response is ready
+      ...(product.__typename === 'DirectScriptureProduct'
+        ? {
+            scriptureReferences: removeScriptureTypename(
+              scriptureReferences.value
+            ),
+          }
+        : product.__typename === 'DerivativeScriptureProduct'
+        ? {
+            scriptureReferences: removeScriptureTypename(
+              product.scriptureReferencesOverride?.value
+            ),
+            produces: product.produces.__typename,
+          }
+        : undefined),
+    };
+    return (
+      <ProductForm<UpdateProductInput & ProductFormCustomValues>
+        product={product}
+        onSubmit={async ({ product: { productType, book, ...input } }) => {
+          try {
+            const { data } = await createProduct({
+              variables: {
+                input: {
+                  product: input,
+                },
+              },
+            });
+
+            const { product } = data!.updateProduct;
+
+            enqueueSnackbar(`Edited Product: ${product.id}`, {
+              variant: 'success',
+            });
+          } catch (e) {
+            await handleFormError(e);
+          }
+        }}
+        initialValues={{ product: initialValues }}
+      />
+    );
   };
 
   const [createProduct] = useUpdateProductMutation();
@@ -86,31 +116,7 @@ export const EditProduct = () => {
       <Typography variant="h2">
         {loading ? <Skeleton width="50%" variant="text" /> : 'Edit Product'}
       </Typography>
-      {!loading && (
-        <ProductForm<UpdateProduct>
-          product={product}
-          onSubmit={async ({ productType, ...input }) => {
-            try {
-              const { data } = await createProduct({
-                variables: {
-                  input: {
-                    product: input,
-                  },
-                },
-              });
-
-              const { product } = data!.updateProduct;
-
-              enqueueSnackbar(`Edited Product: ${product.id}`, {
-                variant: 'success',
-              });
-            } catch (e) {
-              await handleFormError(e);
-            }
-          }}
-          initialValues={initialValues}
-        />
-      )}
+      {renderProductForm()}
     </main>
   );
 };

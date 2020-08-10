@@ -3,9 +3,11 @@ import { Form, FormProps, FormSpyRenderProps } from 'react-final-form';
 import { renderAccordionSection } from './AccordionSection';
 import { ProductFormFragment } from './ProductForm.generated';
 
-interface ProductFormCustomValues {
-  productType?: string;
-  book?: string;
+export interface ProductFormCustomValues {
+  product: {
+    book?: string;
+    productType?: string;
+  };
   startChapter?: string;
   startVerse?: string;
   endChapter?: string;
@@ -15,11 +17,11 @@ interface ProductFormCustomValues {
 export const ProductForm = <FormMutationValues extends any>({
   product,
   ...formProps
-}: FormProps<ProductFormCustomValues & FormMutationValues> & {
+}: FormProps<FormMutationValues> & {
   product?: ProductFormFragment;
 }) => {
   const parseScriptureRange = ({
-    book,
+    product: { book },
     startChapter,
     startVerse,
     endChapter,
@@ -39,7 +41,7 @@ export const ProductForm = <FormMutationValues extends any>({
   });
 
   return (
-    <Form
+    <Form<FormMutationValues>
       {...formProps}
       mutators={{
         clear: (fieldNames, state, { changeValue }) => {
@@ -48,13 +50,16 @@ export const ProductForm = <FormMutationValues extends any>({
           );
         },
         setScriptureReferencesField: (_args, state, { changeValue }) => {
-          changeValue(state, 'scriptureReferences', (scriptureReferences) =>
-            scriptureReferences
-              ? [
-                  ...scriptureReferences,
-                  parseScriptureRange(state.formState.values),
-                ]
-              : [parseScriptureRange(state.formState.values)]
+          changeValue(
+            state,
+            'product.scriptureReferences',
+            (scriptureReferences) =>
+              scriptureReferences
+                ? [
+                    ...scriptureReferences,
+                    parseScriptureRange(state.formState.values),
+                  ]
+                : [parseScriptureRange(state.formState.values)]
           );
         },
       }}
