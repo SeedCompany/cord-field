@@ -7,8 +7,9 @@ import {
 } from '@material-ui/core';
 import { Skeleton } from '@material-ui/lab';
 import React, { FC } from 'react';
+import { useDropzone } from 'react-dropzone';
 import { useNavigate, useParams } from 'react-router-dom';
-import { File, FileVersion } from '../../../api';
+import { File as CFFile, FileVersion, GQLOperations } from '../../../api';
 import { Breadcrumb } from '../../../components/Breadcrumb';
 import { ContentContainer as Content } from '../../../components/ContentContainer';
 import { useDialog } from '../../../components/Dialog';
@@ -31,6 +32,8 @@ import {
 } from '../../../components/Formatters';
 import { ProjectBreadcrumb } from '../../../components/ProjectBreadcrumb';
 import { Table } from '../../../components/Table';
+import { UploadCallback, useUpload } from '../../../components/Upload';
+import { useCreateProjectFileVersionMutation } from './CreateProjectFile.generated';
 import { FileCreateActions } from './FileCreateActions';
 import { FileVersions } from './FileVersions';
 import {
@@ -41,6 +44,31 @@ import { UploadProjectFileVersion } from './UploadProjectFileVersion';
 import { useProjectCurrentDirectory } from './useProjectCurrentDirectory';
 
 const useStyles = makeStyles(({ palette, spacing }) => ({
+  dropzone: {
+    position: 'relative',
+    width: '100%',
+    height: '100%',
+  },
+  dropContainer: {
+    backgroundColor: palette.action.disabled,
+    border: `4px dashed ${palette.divider}`,
+    cursor: 'pointer',
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
+    // opacity: 0.7,
+    padding: spacing(3),
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    bottom: 0,
+    right: 0,
+    zIndex: 100,
+  },
+  instructions: {
+    color: palette.text.secondary,
+    textAlign: 'center',
+  },
   headerContainer: {
     margin: spacing(3, 0),
     display: 'flex',
@@ -78,22 +106,28 @@ export const ProjectFilesList: FC = () => {
   const downloadFile = useDownloadFile();
   const fileNameAndExtension = useFileNameAndExtension();
   const fileIcon = useFileNodeIcon();
+  const { addFilesToUploadQueue } = useUpload();
+  const [createFileVersion] = useCreateProjectFileVersionMutation();
 
   const [renameFileState, renameFile, itemToRename] = useDialog<
     FileActionItem
   >();
-  const [fileVersionState, showVersions, fileVersionToView] = useDialog<File>();
-  const [newVersionState, createNewVersion, fileToVersion] = useDialog<File>();
+  const [fileVersionState, showVersions, fileVersionToView] = useDialog<
+    CFFile
+  >();
+  const [newVersionState, createNewVersion, fileToVersion] = useDialog<
+    CFFile
+  >();
   const [deleteFileState, deleteFile, itemToDelete] = useDialog<
     FileActionItem
   >();
-  // const [filePreviewState, previewFile, fileToPreview] = useDialog<File>();
+  // const [filePreviewState, previewFile, fileToPreview] = useDialog<CFFile>();
 
   const actions = {
     rename: (item: FileActionItem) => renameFile(item as any),
-    download: (item: FileActionItem) => downloadFile(item as File),
-    history: (item: FileActionItem) => showVersions(item as File),
-    'new version': (item: FileActionItem) => createNewVersion(item as File),
+    download: (item: FileActionItem) => downloadFile(item as CFFile),
+    history: (item: FileActionItem) => showVersions(item as CFFile),
+    'new version': (item: FileActionItem) => createNewVersion(item as CFFile),
     delete: (item: FileActionItem) => deleteFile(item as any),
   };
 
@@ -227,70 +261,107 @@ export const ProjectFilesList: FC = () => {
     }
   };
 
+  const handleUploadCompleted: UploadCallback = async (uploadId, name) => {
+    const input = {
+      uploadId,
+      name,
+      parentId: directoryId,
+    };
+    await createFileVersion({
+      variables: { input },
+      refetchQueries: [GQLOperations.Query.ProjectDirectory],
+    });
+  };
+
+  const handleFilesDrop = (files: File[]) => {
+    const fileInputs = files.map((file) => ({
+      file,
+      fileName: file.name,
+      callback: handleUploadCompleted,
+    }));
+    addFilesToUploadQueue(fileInputs);
+  };
+
+  const { getRootProps, getInputProps, isDragActive } = useDropzone({
+    onDrop: handleFilesDrop,
+    noClick: true,
+    noKeyboard: true,
+  });
+
   return (
-    <Content>
-      {error || (!loading && !items) ? (
-        <Typography variant="h4">Error fetching Project Files</Typography>
-      ) : directoryIsNotInProject ? (
-        <Typography variant="h4">
-          This folder does not exist in this project
-        </Typography>
-      ) : (
-        <>
-          {loading ? (
-            <Skeleton variant="text" width="20%" />
-          ) : (
-            <Box
-              display="flex"
-              justifyContent="space-between"
-              alignItems="center"
-            >
-              <Breadcrumbs>
-                <ProjectBreadcrumb data={project} />
-                <Breadcrumb to={`/projects/${projectId}/files`}>
-                  Files
-                </Breadcrumb>
-                {breadcrumbsParents.map((parent) => (
-                  <Breadcrumb
-                    key={parent.id}
-                    to={`/projects/${projectId}/files/${parent.id}`}
-                  >
-                    {parent.name}
-                  </Breadcrumb>
-                ))}
-                {isNotRootDirectory && (
-                  <Breadcrumb
-                    to={`/projects/${projectId}/files/${directoryId}`}
-                  >
-                    {data?.directory.name}
-                  </Breadcrumb>
-                )}
-              </Breadcrumbs>
-            </Box>
-          )}
-          <section className={classes.tableWrapper}>
-            {loading ? (
-              <Skeleton variant="rect" width="100%" height={200} />
-            ) : (
-              <Table
-                data={rowData}
-                columns={columns}
-                onRowClick={handleRowClick}
-                toolbarContents={
-                  <div className={classes.toolbarContainer}>
-                    <FileCreateActions />
-                  </div>
-                }
-              />
-            )}
-          </section>
-        </>
+    <div className={classes.dropzone} {...getRootProps()}>
+      {isDragActive && (
+        <div className={classes.dropContainer}>
+          <input {...getInputProps()} name="files_list_uploader" />
+          <Typography variant="h1" className={classes.instructions}>
+            Drop files to start uploading
+          </Typography>
+        </div>
       )}
-      <RenameFile item={itemToRename} {...renameFileState} />
-      <DeleteFile item={itemToDelete} {...deleteFileState} />
-      <FileVersions file={fileVersionToView} {...fileVersionState} />
-      <UploadProjectFileVersion file={fileToVersion} {...newVersionState} />
-      {/* <FilePreview file={fileToPreview} {...filePreviewState} /> */}
-    </Content>
+      <Content>
+        {error || (!loading && !items) ? (
+          <Typography variant="h4">Error fetching Project Files</Typography>
+        ) : directoryIsNotInProject ? (
+          <Typography variant="h4">
+            This folder does not exist in this project
+          </Typography>
+        ) : (
+          <>
+            {loading ? (
+              <Skeleton variant="text" width="20%" />
+            ) : (
+              <Box
+                display="flex"
+                justifyContent="space-between"
+                alignItems="center"
+              >
+                <Breadcrumbs>
+                  <ProjectBreadcrumb data={project} />
+                  <Breadcrumb to={`/projects/${projectId}/files`}>
+                    Files
+                  </Breadcrumb>
+                  {breadcrumbsParents.map((parent) => (
+                    <Breadcrumb
+                      key={parent.id}
+                      to={`/projects/${projectId}/files/${parent.id}`}
+                    >
+                      {parent.name}
+                    </Breadcrumb>
+                  ))}
+                  {isNotRootDirectory && (
+                    <Breadcrumb
+                      to={`/projects/${projectId}/files/${directoryId}`}
+                    >
+                      {data?.directory.name}
+                    </Breadcrumb>
+                  )}
+                </Breadcrumbs>
+              </Box>
+            )}
+            <section className={classes.tableWrapper}>
+              {loading ? (
+                <Skeleton variant="rect" width="100%" height={200} />
+              ) : (
+                <Table
+                  data={rowData}
+                  columns={columns}
+                  onRowClick={handleRowClick}
+                  toolbarContents={
+                    <div className={classes.toolbarContainer}>
+                      <FileCreateActions />
+                    </div>
+                  }
+                />
+              )}
+            </section>
+          </>
+        )}
+        <RenameFile item={itemToRename} {...renameFileState} />
+        <DeleteFile item={itemToDelete} {...deleteFileState} />
+        <FileVersions file={fileVersionToView} {...fileVersionState} />
+        <UploadProjectFileVersion file={fileToVersion} {...newVersionState} />
+        {/* <FilePreview file={fileToPreview} {...filePreviewState} /> */}
+      </Content>
+    </div>
   );
 };

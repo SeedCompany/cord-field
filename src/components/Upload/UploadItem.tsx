@@ -60,9 +60,7 @@ export const UploadItem: FC<UploadItemProps> = (props) => {
   const { file, onClear } = props;
   const { error, fileName, percentCompleted, uploadId, completedAt } = file;
   const classes = useStyles();
-  console.log('completedAt', completedAt);
 
-  console.log('uploadId', uploadId);
   const progressLabel = error
     ? error.message
     : !uploadId
