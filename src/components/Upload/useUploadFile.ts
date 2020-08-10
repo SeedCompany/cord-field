@@ -1,5 +1,4 @@
 import { Dispatch, useCallback } from 'react';
-import { sleep } from '../../util/sleep';
 import * as actions from './Reducer/uploadActions';
 import * as Types from './Reducer/uploadTypings';
 import { useDeleteFileNodeMutation } from './Upload.generated';
@@ -31,8 +30,6 @@ export const useUploadFile = (
             queueId,
             completedAt: new Date(),
           });
-          await sleep(30000);
-          dispatch({ type: actions.REMOVE_UPLOAD, queueId });
         } catch (error) {
           setUploadError(file.queueId, 'Post-upload action failed');
           deleteFile({ variables: { id: file.uploadId } });

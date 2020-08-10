@@ -21,6 +21,19 @@ export const UploadItems: FC<UploadItemsProps> = (props) => {
   } = props;
   const areFilesUploading = submittedFiles.length > 0;
   const classes = useStyles();
+
+  // const testFile = {
+  //   completedAt: undefined,
+  //   error: undefined,
+  //   file: new File([''], 'filename', { type: 'text/html' }),
+  //   fileName:
+  //     'Expense Reimbursement Form - 2014-07 - And some other words here',
+  //   percentCompleted: 80,
+  //   queueId: 12345,
+  //   uploadId: '12345',
+  //   uploading: true,
+  // };
+
   return (
     <>
       {areFilesUploading ? (
@@ -45,5 +58,10 @@ export const UploadItems: FC<UploadItemsProps> = (props) => {
         </Box>
       )}
     </>
+    // <UploadItem
+    //   key={testFile.queueId}
+    //   file={testFile}
+    //   onClear={() => removeUpload(testFile.queueId)}
+    // />
   );
 };

@@ -17,7 +17,7 @@ import { useSession } from '../Session';
 import { DraggablePaper } from './DraggablePaper';
 import { useUploadManager } from './UploadManagerContext';
 
-const PAPER_WIDTH = 480;
+const PAPER_WIDTH = 360;
 
 const useStyles = makeStyles(({ palette, spacing }) => ({
   root: {
