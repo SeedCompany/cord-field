@@ -30,11 +30,13 @@ export const parseScriptureRange = (
   // eslint-disable-next-line prefer-const
   let [startChapter, startVerse] = start.split(':').map(Number);
 
+  // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
   const endParts = end?.split(':').map(Number);
   let endChapter: number | undefined = undefined;
   let endVerse: number | undefined = undefined;
 
   // it can be either a chapter or a verse
+  // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
   if (endParts?.length === 1) {
     // {chapter}:{verse}-{verse}
     if (startChapter && startVerse) {
@@ -50,12 +52,14 @@ export const parseScriptureRange = (
   }
   // not normal, but we want to handle it
   // {chapter}-{chapter}:{verse}
+  // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
   else if (endParts?.length === 2 && !startVerse) {
     startVerse = 1;
     endChapter = endParts[0];
     endVerse = endParts[1];
   }
   // {chapter}:{verse}-{chapter}:{verse}
+  // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
   else if (endParts?.length > 0) {
     endChapter = endParts[0];
     endVerse = endParts[1];
@@ -103,8 +107,8 @@ export const validateScriptureRange = (
       `The first verse must come before the last verse`
     );
   }
-  // then each part
-  Object.keys(range).map((part: string) => {
+
+  Object.keys(range).forEach((part: string) => {
     // part (p) being start or end
     const p = (range as any)[part];
     const bookName = p.book;
