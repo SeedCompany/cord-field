@@ -11,6 +11,13 @@ import { ProductCardFragment } from './ProductCard.generated';
 
 export default {
   title: 'Components',
+  decorators: [
+    (Story: React.FC) => (
+      <div style={{ width: 300 }}>
+        <Story />
+      </div>
+    ),
+  ],
 };
 
 const getProduct = () => {
