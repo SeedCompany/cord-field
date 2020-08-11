@@ -129,8 +129,6 @@ export type Order = 'ASC' | 'DESC';
 export interface EngagementFilters {
   /** Only engagements matching this type */
   readonly type?: Maybe<Scalars['String']>;
-  /** Only engagements matching this projectId */
-  readonly projectId?: Maybe<Scalars['ID']>;
 }
 
 export interface ProjectMemberListInput {
@@ -148,8 +146,6 @@ export interface ProjectMemberListInput {
 export interface ProjectMemberFilters {
   /** Only members with these roles */
   readonly roles?: Maybe<readonly Role[]>;
-  /** Only members of this project */
-  readonly projectId?: Maybe<Scalars['ID']>;
 }
 
 export type Role =
@@ -184,12 +180,6 @@ export interface PartnershipListInput {
   readonly sort?: Maybe<Scalars['String']>;
   /** The order in which to sort the list */
   readonly order?: Maybe<Order>;
-  readonly filter?: Maybe<PartnershipFilters>;
-}
-
-export interface PartnershipFilters {
-  /** Find all partnerships in a project */
-  readonly projectId?: Maybe<Scalars['ID']>;
 }
 
 /** Something that is _producible_ via a Product */
@@ -242,6 +232,8 @@ export interface Engagement {
   readonly communicationsCompleteDate: SecuredDate;
   readonly startDate: SecuredDate;
   readonly endDate: SecuredDate;
+  readonly startDateOverride: SecuredDate;
+  readonly endDateOverride: SecuredDate;
   readonly initialEndDate: SecuredDate;
   readonly lastSuspendedAt: SecuredDateTime;
   readonly lastReactivatedAt: SecuredDateTime;
@@ -530,12 +522,6 @@ export interface UnavailabilityListInput {
   readonly sort?: Maybe<Scalars['String']>;
   /** The order in which to sort the list */
   readonly order?: Maybe<Order>;
-  readonly filter?: Maybe<UnavailabilityFilters>;
-}
-
-export interface UnavailabilityFilters {
-  /** Unavailabilities for UserId */
-  readonly userId?: Maybe<Scalars['ID']>;
 }
 
 export interface OrganizationListInput {
@@ -553,8 +539,6 @@ export interface OrganizationListInput {
 export interface OrganizationFilters {
   /** Only organizations matching this name */
   readonly name?: Maybe<Scalars['String']>;
-  /** User IDs ANY of which must belong to the organizations */
-  readonly userId?: Maybe<Scalars['ID']>;
 }
 
 export interface EducationListInput {
@@ -566,12 +550,6 @@ export interface EducationListInput {
   readonly sort?: Maybe<Scalars['String']>;
   /** The order in which to sort the list */
   readonly order?: Maybe<Order>;
-  readonly filter?: Maybe<EducationFilters>;
-}
-
-export interface EducationFilters {
-  /** Educations for UserId */
-  readonly userId?: Maybe<Scalars['ID']>;
 }
 
 /**
@@ -1396,8 +1374,6 @@ export interface ProjectFilters {
   readonly status?: Maybe<readonly ProjectStatus[]>;
   /** Only projects matching these steps */
   readonly step?: Maybe<readonly ProjectStep[]>;
-  /** Only projects in ANY of these locations */
-  readonly locationIds?: Maybe<ReadonlyArray<Scalars['ID']>>;
   /** Only projects created within this time range */
   readonly createdAt?: Maybe<DateTimeFilter>;
   /** Only projects modified within this time range */
@@ -1803,6 +1779,8 @@ export type LanguageEngagement = Engagement &
     readonly communicationsCompleteDate: SecuredDate;
     readonly startDate: SecuredDate;
     readonly endDate: SecuredDate;
+    readonly startDateOverride: SecuredDate;
+    readonly endDateOverride: SecuredDate;
     readonly initialEndDate: SecuredDate;
     readonly lastSuspendedAt: SecuredDateTime;
     readonly lastReactivatedAt: SecuredDateTime;
@@ -1855,6 +1833,8 @@ export type InternshipEngagement = Engagement &
     readonly communicationsCompleteDate: SecuredDate;
     readonly startDate: SecuredDate;
     readonly endDate: SecuredDate;
+    readonly startDateOverride: SecuredDate;
+    readonly endDateOverride: SecuredDate;
     readonly initialEndDate: SecuredDate;
     readonly lastSuspendedAt: SecuredDateTime;
     readonly lastReactivatedAt: SecuredDateTime;
@@ -2359,16 +2339,16 @@ export interface Query {
   readonly ceremonies: CeremonyListOutput;
   /** Check Consistency in Ceremony Nodes */
   readonly checkCeremonyConsistency: Scalars['Boolean'];
-  /** Look up a project member by ID */
-  readonly projectMember: ProjectMember;
-  /** Look up project members */
-  readonly projectMembers: ProjectMemberListOutput;
   /** Look up a partnership by ID */
   readonly partnership: Partnership;
   /** Look up partnerships */
   readonly partnerships: PartnershipListOutput;
   /** Check partnership node consistency */
   readonly checkPartnershipConsistency: Scalars['Boolean'];
+  /** Look up a project member by ID */
+  readonly projectMember: ProjectMember;
+  /** Look up project members */
+  readonly projectMembers: ProjectMemberListOutput;
   /** Look up a project by its ID */
   readonly project: Project;
   /** Look up projects */
@@ -2517,20 +2497,20 @@ export interface QueryCeremoniesArgs {
   input?: Maybe<CeremonyListInput>;
 }
 
-export interface QueryProjectMemberArgs {
-  id: Scalars['ID'];
-}
-
-export interface QueryProjectMembersArgs {
-  input?: Maybe<ProjectMemberListInput>;
-}
-
 export interface QueryPartnershipArgs {
   id: Scalars['ID'];
 }
 
 export interface QueryPartnershipsArgs {
   input?: Maybe<PartnershipListInput>;
+}
+
+export interface QueryProjectMemberArgs {
+  id: Scalars['ID'];
+}
+
+export interface QueryProjectMembersArgs {
+  input?: Maybe<ProjectMemberListInput>;
 }
 
 export interface QueryProjectArgs {
@@ -2755,12 +2735,6 @@ export interface BudgetListInput {
   readonly sort?: Maybe<Scalars['String']>;
   /** The order in which to sort the list */
   readonly order?: Maybe<Order>;
-  readonly filter?: Maybe<BudgetFilters>;
-}
-
-export interface BudgetFilters {
-  /** Only budgets matching this projectId */
-  readonly projectId?: Maybe<Scalars['ID']>;
 }
 
 export interface FavoriteListInput {
@@ -2929,18 +2903,18 @@ export interface Mutation {
   readonly moveFileNode: FileNode;
   /** Update a ceremony */
   readonly updateCeremony: UpdateCeremonyOutput;
-  /** Create a project member */
-  readonly createProjectMember: CreateProjectMemberOutput;
-  /** Update a project member */
-  readonly updateProjectMember: UpdateProjectMemberOutput;
-  /** Delete a project member */
-  readonly deleteProjectMember: Scalars['Boolean'];
   /** Create a Partnership entry */
   readonly createPartnership: CreatePartnershipOutput;
   /** Update a Partnership */
   readonly updatePartnership: UpdatePartnershipOutput;
   /** Delete a Partnership */
   readonly deletePartnership: Scalars['Boolean'];
+  /** Create a project member */
+  readonly createProjectMember: CreateProjectMemberOutput;
+  /** Update a project member */
+  readonly updateProjectMember: UpdateProjectMemberOutput;
+  /** Delete a project member */
+  readonly deleteProjectMember: Scalars['Boolean'];
   /** Create a project */
   readonly createProject: CreateProjectOutput;
   /** Update a project */
@@ -3208,18 +3182,6 @@ export interface MutationUpdateCeremonyArgs {
   input: UpdateCeremonyInput;
 }
 
-export interface MutationCreateProjectMemberArgs {
-  input: CreateProjectMemberInput;
-}
-
-export interface MutationUpdateProjectMemberArgs {
-  input: UpdateProjectMemberInput;
-}
-
-export interface MutationDeleteProjectMemberArgs {
-  id: Scalars['ID'];
-}
-
 export interface MutationCreatePartnershipArgs {
   input: CreatePartnershipInput;
 }
@@ -3229,6 +3191,18 @@ export interface MutationUpdatePartnershipArgs {
 }
 
 export interface MutationDeletePartnershipArgs {
+  id: Scalars['ID'];
+}
+
+export interface MutationCreateProjectMemberArgs {
+  input: CreateProjectMemberInput;
+}
+
+export interface MutationUpdateProjectMemberArgs {
+  input: UpdateProjectMemberInput;
+}
+
+export interface MutationDeleteProjectMemberArgs {
   id: Scalars['ID'];
 }
 
@@ -3768,27 +3742,6 @@ export interface UpdateCeremony {
   readonly actualDate?: Maybe<Scalars['Date']>;
 }
 
-export interface CreateProjectMemberInput {
-  readonly projectMember: CreateProjectMember;
-}
-
-export interface CreateProjectMember {
-  /** A user ID */
-  readonly userId: Scalars['ID'];
-  /** A project ID */
-  readonly projectId: Scalars['ID'];
-  readonly roles?: Maybe<readonly Role[]>;
-}
-
-export interface UpdateProjectMemberInput {
-  readonly projectMember: UpdateProjectMember;
-}
-
-export interface UpdateProjectMember {
-  readonly id: Scalars['ID'];
-  readonly roles?: Maybe<readonly Role[]>;
-}
-
 export interface CreatePartnershipInput {
   readonly partnership: CreatePartnership;
 }
@@ -3829,6 +3782,27 @@ export interface UpdatePartnership {
   readonly mouStartOverride?: Maybe<Scalars['Date']>;
   readonly mouEndOverride?: Maybe<Scalars['Date']>;
   readonly types?: Maybe<readonly PartnershipType[]>;
+}
+
+export interface CreateProjectMemberInput {
+  readonly projectMember: CreateProjectMember;
+}
+
+export interface CreateProjectMember {
+  /** A user ID */
+  readonly userId: Scalars['ID'];
+  /** A project ID */
+  readonly projectId: Scalars['ID'];
+  readonly roles?: Maybe<readonly Role[]>;
+}
+
+export interface UpdateProjectMemberInput {
+  readonly projectMember: UpdateProjectMember;
+}
+
+export interface UpdateProjectMember {
+  readonly id: Scalars['ID'];
+  readonly roles?: Maybe<readonly Role[]>;
 }
 
 export interface CreateProjectInput {
@@ -4055,8 +4029,8 @@ export interface CreateLanguageEngagement {
   readonly completeDate?: Maybe<Scalars['Date']>;
   readonly disbursementCompleteDate?: Maybe<Scalars['Date']>;
   readonly communicationsCompleteDate?: Maybe<Scalars['Date']>;
-  readonly startDate?: Maybe<Scalars['Date']>;
-  readonly endDate?: Maybe<Scalars['Date']>;
+  readonly startDateOverride?: Maybe<Scalars['Date']>;
+  readonly endDateOverride?: Maybe<Scalars['Date']>;
   readonly languageId: Scalars['ID'];
   readonly firstScripture?: Maybe<Scalars['Boolean']>;
   readonly lukePartnership?: Maybe<Scalars['Boolean']>;
@@ -4073,8 +4047,8 @@ export interface CreateInternshipEngagement {
   readonly completeDate?: Maybe<Scalars['Date']>;
   readonly disbursementCompleteDate?: Maybe<Scalars['Date']>;
   readonly communicationsCompleteDate?: Maybe<Scalars['Date']>;
-  readonly startDate?: Maybe<Scalars['Date']>;
-  readonly endDate?: Maybe<Scalars['Date']>;
+  readonly startDateOverride?: Maybe<Scalars['Date']>;
+  readonly endDateOverride?: Maybe<Scalars['Date']>;
   readonly internId: Scalars['ID'];
   readonly mentorId?: Maybe<Scalars['ID']>;
   readonly countryOfOriginId?: Maybe<Scalars['ID']>;
@@ -4092,8 +4066,8 @@ export interface UpdateLanguageEngagement {
   readonly completeDate?: Maybe<Scalars['Date']>;
   readonly disbursementCompleteDate?: Maybe<Scalars['Date']>;
   readonly communicationsCompleteDate?: Maybe<Scalars['Date']>;
-  readonly startDate?: Maybe<Scalars['Date']>;
-  readonly endDate?: Maybe<Scalars['Date']>;
+  readonly startDateOverride?: Maybe<Scalars['Date']>;
+  readonly endDateOverride?: Maybe<Scalars['Date']>;
   readonly firstScripture?: Maybe<Scalars['Boolean']>;
   readonly lukePartnership?: Maybe<Scalars['Boolean']>;
   readonly paraTextRegistryId?: Maybe<Scalars['String']>;
@@ -4109,8 +4083,8 @@ export interface UpdateInternshipEngagement {
   readonly completeDate?: Maybe<Scalars['Date']>;
   readonly disbursementCompleteDate?: Maybe<Scalars['Date']>;
   readonly communicationsCompleteDate?: Maybe<Scalars['Date']>;
-  readonly startDate?: Maybe<Scalars['Date']>;
-  readonly endDate?: Maybe<Scalars['Date']>;
+  readonly startDateOverride?: Maybe<Scalars['Date']>;
+  readonly endDateOverride?: Maybe<Scalars['Date']>;
   readonly mentorId?: Maybe<Scalars['ID']>;
   readonly countryOfOriginId?: Maybe<Scalars['ID']>;
   readonly position?: Maybe<InternshipEngagementPosition>;

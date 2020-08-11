@@ -58,6 +58,9 @@ export const typePolicies: TypePolicies = {
       status: {
         merge: mergeObjects,
       },
+      roles: {
+        merge: mergeObjects,
+      },
       timezone: {
         merge: mergeObjects,
       },
@@ -408,6 +411,12 @@ export const typePolicies: TypePolicies = {
       endDate: {
         merge: mergeObjects,
       },
+      startDateOverride: {
+        merge: mergeObjects,
+      },
+      endDateOverride: {
+        merge: mergeObjects,
+      },
       initialEndDate: {
         merge: mergeObjects,
       },
@@ -467,6 +476,12 @@ export const typePolicies: TypePolicies = {
         merge: mergeObjects,
       },
       endDate: {
+        merge: mergeObjects,
+      },
+      startDateOverride: {
+        merge: mergeObjects,
+      },
+      endDateOverride: {
         merge: mergeObjects,
       },
       initialEndDate: {
@@ -631,6 +646,9 @@ export const typePolicies: TypePolicies = {
   SecuredOrganizationList: {
     keyFields: false,
   },
+  SecuredRoles: {
+    keyFields: false,
+  },
   SecuredUserStatus: {
     keyFields: false,
   },
@@ -732,9 +750,6 @@ export const typePolicies: TypePolicies = {
     keyFields: false,
   },
   SecuredPartnershipList: {
-    keyFields: false,
-  },
-  SecuredRoles: {
     keyFields: false,
   },
   SecuredProjectMemberList: {
