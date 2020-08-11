@@ -12,9 +12,13 @@ import {
   MusicNote,
   PlayCircleFilled,
 } from '@material-ui/icons';
-import { startCase } from 'lodash';
 import React from 'react';
-import { displayMethodologyWithLabel, displayScripture } from '../../api';
+import {
+  displayMethodologyWithLabel,
+  displayProductMedium,
+  displayProductTypes,
+  displayScripture,
+} from '../../api';
 import { DisplaySimpleProperty } from '../DisplaySimpleProperty';
 import { ProgressButton } from '../ProgressButton';
 import { ButtonLink, CardActionAreaLink } from '../Routing';
@@ -66,7 +70,7 @@ export const ProductCard = ({
   const type =
     product.__typename === 'DerivativeScriptureProduct'
       ? product.produces.value?.__typename || 'DerivativeScriptureProduct'
-      : 'Scripture';
+      : product.__typename;
 
   const icons = {
     DirectScriptureProduct: (
@@ -88,14 +92,16 @@ export const ProductCard = ({
     DerivativeScriptureProduct: (
       <DescriptionOutlined color="secondary" classes={{ root: classes.icon }} />
     ),
-    Scripture: <MenuBook color="secondary" classes={{ root: classes.icon }} />,
   };
+
   return (
     <Card classes={{ root: classes.root }}>
       <CardActionAreaLink to={`products/${product.id}`}>
         <CardContent className={classes.content}>
-          {icons[type]}
-          <Typography variant="h4">{startCase(type)}</Typography>
+          {type && icons[type]}
+          {type && (
+            <Typography variant="h4">{displayProductTypes(type)}</Typography>
+          )}
           <DisplaySimpleProperty
             label="Methodology"
             align="center"
@@ -108,7 +114,7 @@ export const ProductCard = ({
             label="Mediums"
             align="center"
             value={product.mediums.value
-              .map((medium) => startCase(medium))
+              .map((medium) => displayProductMedium(medium))
               .join(', ')}
           />
           <DisplaySimpleProperty

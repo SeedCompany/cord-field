@@ -7,11 +7,14 @@ import {
   ProjectStatus,
   Role,
 } from '.';
+import { ProductTypes } from '../scenes/Products/ProductForm/constants';
 import { Nullable } from '../util';
 import { MethodologyToApproach } from './approach';
 import {
   InternshipEngagementPosition,
+  ProductMedium,
   ProductMethodology,
+  ProductPurpose,
   ProjectStep,
   ScriptureRangeInput,
 } from './schema.generated';
@@ -42,7 +45,11 @@ export const PartnershipStatuses: PartnershipAgreementStatus[] = [
   'Signed',
 ];
 
-export const displayMethodology = displayEnum<ProductMethodology>();
+export const displayMethodology = (methodology: ProductMethodology) =>
+  methodology.includes('Other')
+    ? 'Other'
+    : displayEnum<ProductMethodology>()(methodology);
+
 export const displayApproach = displayEnum<ProductApproach>();
 
 export const displayMethodologyWithLabel = (methodology: ProductMethodology) =>
@@ -52,3 +59,13 @@ export const displayMethodologyWithLabel = (methodology: ProductMethodology) =>
 
 export const displayScripture = ({ start, end }: ScriptureRangeInput) =>
   `${start.book} ${start.chapter}:${start.verse} -  ${end.chapter}:${end.verse}`;
+
+export const displayProductMedium = (medium: ProductMedium) =>
+  medium === 'EBook' ? 'E-Book' : displayEnum<ProductMedium>()(medium);
+
+export const displayProductPurpose = displayEnum<ProductPurpose>();
+
+export const displayProductTypes = (type: ProductTypes) =>
+  type === 'DirectScriptureProduct'
+    ? 'Scripture'
+    : displayEnum<ProductTypes>()(type);

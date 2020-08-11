@@ -69,3 +69,15 @@ export const newTestament = [
   'Jude',
   'Revelation',
 ];
+
+export const productTypes = [
+  'DirectScriptureProduct',
+  'Story',
+  'Film',
+  'Song',
+  'LiteracyMaterial',
+] as const;
+
+export type ProductTypes =
+  | typeof productTypes[number]
+  | 'DerivativeScriptureProduct';
