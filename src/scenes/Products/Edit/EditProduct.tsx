@@ -3,7 +3,8 @@ import { Skeleton } from '@material-ui/lab';
 import { useSnackbar } from 'notistack';
 import React from 'react';
 import { useParams } from 'react-router';
-import { handleFormError, UpdateProductInput } from '../../../api';
+import { Except } from 'type-fest';
+import { handleFormError, UpdateProduct } from '../../../api';
 import { EngagementBreadcrumb } from '../../../components/EngagementBreadcrumb';
 import { ProjectBreadcrumb } from '../../../components/ProjectBreadcrumb';
 import { ProductForm, ProductFormCustomValues } from '../ProductForm';
@@ -67,25 +68,40 @@ export const EditProduct = () => {
             scriptureReferences: removeScriptureTypename(
               scriptureReferences.value
             ),
+            productType: product.__typename,
           }
-        : product.__typename === 'DerivativeScriptureProduct'
+        : product.__typename === 'DerivativeScriptureProduct' &&
+          (product.produces.value?.__typename === 'Film' ||
+            product.produces.value?.__typename === 'Song' ||
+            product.produces.value?.__typename === 'LiteracyMaterial' ||
+            product.produces.value?.__typename === 'Story')
         ? {
             scriptureReferences: removeScriptureTypename(
               product.scriptureReferencesOverride?.value
             ),
-            produces: product.produces.__typename,
+            produces: {
+              id: product.produces.value?.id,
+              name: product.produces.value?.name,
+            },
+            productType: product.produces.value.__typename,
           }
         : undefined),
     };
     return (
-      <ProductForm<UpdateProductInput & ProductFormCustomValues>
+      <ProductForm<
+        ProductFormCustomValues & {
+          product: Except<UpdateProduct, 'produces'>;
+        }
+      >
         product={product}
-        onSubmit={async ({ product: { productType, book, ...input } }) => {
+        onSubmit={async ({
+          product: { productType, book, produces, ...input },
+        }) => {
           try {
             const { data } = await createProduct({
               variables: {
                 input: {
-                  product: input,
+                  product: { ...input, produces: produces?.id },
                 },
               },
             });

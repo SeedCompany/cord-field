@@ -76,7 +76,7 @@ export const CreateProduct = () => {
                       ...inputs,
                       ...(isDerivativeProduct && produces
                         ? {
-                            produces,
+                            produces: produces.id,
                             scriptureReferencesOverride: scriptureReferences,
                           }
                         : {

@@ -28,10 +28,15 @@ import {
   SecuredField,
   SubmitButton,
   SubmitError,
-  TextField,
   ToggleButtonOption,
   ToggleButtonsField,
 } from '../../../components/form';
+import {
+  FilmField,
+  LiteracyMaterialField,
+  SongField,
+  StoryField,
+} from '../../../components/form/Lookup';
 import { newTestament, oldTestament } from './constants';
 import { getIsDerivativeProduct } from './helpers';
 import { ProductFormFragment } from './ProductForm.generated';
@@ -69,6 +74,21 @@ const useStyles = makeStyles(({ spacing, typography }) => ({
   },
 }));
 
+const productField = {
+  Film: <FilmField name="produces" label="Search Film" required />,
+  Story: <StoryField name="produces" label="Search Story" required />,
+  LiteracyMaterial: (
+    <LiteracyMaterialField
+      name="produces"
+      label="Search Literacy Material"
+      required
+    />
+  ),
+  Song: <SongField name="produces" label="Search Song" required />,
+};
+const getProductField = (productType: keyof typeof productField) =>
+  productField[productType];
+
 export const renderAccordionSection = (productObj?: ProductFormFragment) => ({
   handleSubmit,
   values,
@@ -98,7 +118,7 @@ export const renderAccordionSection = (productObj?: ProductFormFragment) => ({
   const isDerivativeProduct = getIsDerivativeProduct(productType);
 
   const isProducesFieldMissing: boolean =
-    form.getFieldState('produces')?.error === 'Required';
+    form.getFieldState('product.produces')?.error === 'Required';
 
   return (
     <form onSubmit={handleSubmit} className={classes.form}>
@@ -118,7 +138,7 @@ export const renderAccordionSection = (productObj?: ProductFormFragment) => ({
               {productType && openedSection !== 'produces' && (
                 <ToggleButton selected value={produces || ''}>
                   {`${startCase(productType)} ${
-                    isDerivativeProduct && produces ? produces : ''
+                    (isDerivativeProduct && produces?.name.value) || ''
                   }`}
                 </ToggleButton>
               )}
@@ -142,9 +162,7 @@ export const renderAccordionSection = (productObj?: ProductFormFragment) => ({
                   )
                 )}
               </div>
-              {isDerivativeProduct && (
-                <TextField name="produces" required label="producible" />
-              )}
+              {getProductField(productType)}
             </AccordionDetails>
           </RadioField>
         </Accordion>

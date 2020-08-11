@@ -4,8 +4,7 @@ fragment ProductForm on Product {
       canRead
       canEdit
       value {
-        __typename
-        createdAt
+        ...Producible
       }
     }
     scriptureReferencesOverride {
@@ -61,4 +60,30 @@ fragment ProductForm on Product {
   }
   approach
   legacyType
+}
+
+fragment Producible on Producible {
+  id
+  __typename
+  createdAt
+  ... on Film {
+    name {
+      ...ss
+    }
+  }
+  ... on LiteracyMaterial {
+    name {
+      ...ss
+    }
+  }
+  ... on Story {
+    name {
+      ...ss
+    }
+  }
+  ... on Song {
+    name {
+      ...ss
+    }
+  }
 }
