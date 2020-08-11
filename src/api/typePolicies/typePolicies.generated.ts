@@ -1,6 +1,5 @@
 import { TypePolicies } from '@apollo/client';
 import { optional, Parsers } from './scalars/scalars.parser';
-import { mergeObjects } from './secured/secured';
 
 export const typePolicies: TypePolicies = {
   SecuredDateTime: {
@@ -25,7 +24,7 @@ export const typePolicies: TypePolicies = {
         read: Parsers.DateTime,
       },
       name: {
-        merge: mergeObjects,
+        merge: true,
       },
     },
   },
@@ -35,43 +34,43 @@ export const typePolicies: TypePolicies = {
         read: Parsers.DateTime,
       },
       email: {
-        merge: mergeObjects,
+        merge: true,
       },
       realFirstName: {
-        merge: mergeObjects,
+        merge: true,
       },
       realLastName: {
-        merge: mergeObjects,
+        merge: true,
       },
       displayFirstName: {
-        merge: mergeObjects,
+        merge: true,
       },
       displayLastName: {
-        merge: mergeObjects,
+        merge: true,
       },
       phone: {
-        merge: mergeObjects,
+        merge: true,
       },
       bio: {
-        merge: mergeObjects,
+        merge: true,
       },
       status: {
-        merge: mergeObjects,
+        merge: true,
       },
       roles: {
-        merge: mergeObjects,
+        merge: true,
       },
       timezone: {
-        merge: mergeObjects,
+        merge: true,
       },
       unavailabilities: {
-        merge: mergeObjects,
+        merge: true,
       },
       organizations: {
-        merge: mergeObjects,
+        merge: true,
       },
       education: {
-        merge: mergeObjects,
+        merge: true,
       },
     },
   },
@@ -81,13 +80,13 @@ export const typePolicies: TypePolicies = {
         read: Parsers.DateTime,
       },
       degree: {
-        merge: mergeObjects,
+        merge: true,
       },
       major: {
-        merge: mergeObjects,
+        merge: true,
       },
       institution: {
-        merge: mergeObjects,
+        merge: true,
       },
     },
   },
@@ -103,7 +102,7 @@ export const typePolicies: TypePolicies = {
         read: Parsers.DateTime,
       },
       description: {
-        merge: mergeObjects,
+        merge: true,
       },
     },
   },
@@ -113,10 +112,10 @@ export const typePolicies: TypePolicies = {
         read: Parsers.DateTime,
       },
       name: {
-        merge: mergeObjects,
+        merge: true,
       },
       director: {
-        merge: mergeObjects,
+        merge: true,
       },
     },
   },
@@ -126,13 +125,13 @@ export const typePolicies: TypePolicies = {
         read: Parsers.DateTime,
       },
       name: {
-        merge: mergeObjects,
+        merge: true,
       },
       zone: {
-        merge: mergeObjects,
+        merge: true,
       },
       director: {
-        merge: mergeObjects,
+        merge: true,
       },
     },
   },
@@ -142,10 +141,10 @@ export const typePolicies: TypePolicies = {
         read: Parsers.DateTime,
       },
       name: {
-        merge: mergeObjects,
+        merge: true,
       },
       region: {
-        merge: mergeObjects,
+        merge: true,
       },
     },
   },
@@ -179,13 +178,13 @@ export const typePolicies: TypePolicies = {
         read: Parsers.DateTime,
       },
       planned: {
-        merge: mergeObjects,
+        merge: true,
       },
       estimatedDate: {
-        merge: mergeObjects,
+        merge: true,
       },
       actualDate: {
-        merge: mergeObjects,
+        merge: true,
       },
     },
   },
@@ -198,37 +197,37 @@ export const typePolicies: TypePolicies = {
         read: Parsers.DateTime,
       },
       name: {
-        merge: mergeObjects,
+        merge: true,
       },
       deptId: {
-        merge: mergeObjects,
+        merge: true,
       },
       step: {
-        merge: mergeObjects,
+        merge: true,
       },
       location: {
-        merge: mergeObjects,
+        merge: true,
       },
       mouStart: {
-        merge: mergeObjects,
+        merge: true,
       },
       mouEnd: {
-        merge: mergeObjects,
+        merge: true,
       },
       estimatedSubmission: {
-        merge: mergeObjects,
+        merge: true,
       },
       budget: {
-        merge: mergeObjects,
+        merge: true,
       },
       engagements: {
-        merge: mergeObjects,
+        merge: true,
       },
       team: {
-        merge: mergeObjects,
+        merge: true,
       },
       partnerships: {
-        merge: mergeObjects,
+        merge: true,
       },
     },
   },
@@ -241,37 +240,37 @@ export const typePolicies: TypePolicies = {
         read: Parsers.DateTime,
       },
       name: {
-        merge: mergeObjects,
+        merge: true,
       },
       deptId: {
-        merge: mergeObjects,
+        merge: true,
       },
       step: {
-        merge: mergeObjects,
+        merge: true,
       },
       location: {
-        merge: mergeObjects,
+        merge: true,
       },
       mouStart: {
-        merge: mergeObjects,
+        merge: true,
       },
       mouEnd: {
-        merge: mergeObjects,
+        merge: true,
       },
       estimatedSubmission: {
-        merge: mergeObjects,
+        merge: true,
       },
       budget: {
-        merge: mergeObjects,
+        merge: true,
       },
       engagements: {
-        merge: mergeObjects,
+        merge: true,
       },
       team: {
-        merge: mergeObjects,
+        merge: true,
       },
       partnerships: {
-        merge: mergeObjects,
+        merge: true,
       },
     },
   },
@@ -281,43 +280,43 @@ export const typePolicies: TypePolicies = {
         read: Parsers.DateTime,
       },
       name: {
-        merge: mergeObjects,
+        merge: true,
       },
       displayName: {
-        merge: mergeObjects,
+        merge: true,
       },
       displayNamePronunciation: {
-        merge: mergeObjects,
+        merge: true,
       },
       isDialect: {
-        merge: mergeObjects,
+        merge: true,
       },
       populationOverride: {
-        merge: mergeObjects,
+        merge: true,
       },
       registryOfDialectsCode: {
-        merge: mergeObjects,
+        merge: true,
       },
       leastOfThese: {
-        merge: mergeObjects,
+        merge: true,
       },
       leastOfTheseReason: {
-        merge: mergeObjects,
+        merge: true,
       },
       sponsorDate: {
-        merge: mergeObjects,
+        merge: true,
       },
       beginFiscalYear: {
-        merge: mergeObjects,
+        merge: true,
       },
       population: {
-        merge: mergeObjects,
+        merge: true,
       },
       locations: {
-        merge: mergeObjects,
+        merge: true,
       },
       projects: {
-        merge: mergeObjects,
+        merge: true,
       },
     },
   },
@@ -327,13 +326,13 @@ export const typePolicies: TypePolicies = {
         read: Parsers.DateTime,
       },
       fiscalYear: {
-        merge: mergeObjects,
+        merge: true,
       },
       amount: {
-        merge: mergeObjects,
+        merge: true,
       },
       organization: {
-        merge: mergeObjects,
+        merge: true,
       },
     },
   },
@@ -350,16 +349,16 @@ export const typePolicies: TypePolicies = {
         read: Parsers.DateTime,
       },
       scriptureReferences: {
-        merge: mergeObjects,
+        merge: true,
       },
       mediums: {
-        merge: mergeObjects,
+        merge: true,
       },
       purposes: {
-        merge: mergeObjects,
+        merge: true,
       },
       methodology: {
-        merge: mergeObjects,
+        merge: true,
       },
     },
   },
@@ -369,22 +368,22 @@ export const typePolicies: TypePolicies = {
         read: Parsers.DateTime,
       },
       scriptureReferences: {
-        merge: mergeObjects,
+        merge: true,
       },
       mediums: {
-        merge: mergeObjects,
+        merge: true,
       },
       purposes: {
-        merge: mergeObjects,
+        merge: true,
       },
       methodology: {
-        merge: mergeObjects,
+        merge: true,
       },
       produces: {
-        merge: mergeObjects,
+        merge: true,
       },
       scriptureReferencesOverride: {
-        merge: mergeObjects,
+        merge: true,
       },
     },
   },
@@ -397,61 +396,61 @@ export const typePolicies: TypePolicies = {
         read: Parsers.DateTime,
       },
       completeDate: {
-        merge: mergeObjects,
+        merge: true,
       },
       disbursementCompleteDate: {
-        merge: mergeObjects,
+        merge: true,
       },
       communicationsCompleteDate: {
-        merge: mergeObjects,
+        merge: true,
       },
       startDate: {
-        merge: mergeObjects,
+        merge: true,
       },
       endDate: {
-        merge: mergeObjects,
+        merge: true,
       },
       startDateOverride: {
-        merge: mergeObjects,
+        merge: true,
       },
       endDateOverride: {
-        merge: mergeObjects,
+        merge: true,
       },
       initialEndDate: {
-        merge: mergeObjects,
+        merge: true,
       },
       lastSuspendedAt: {
-        merge: mergeObjects,
+        merge: true,
       },
       lastReactivatedAt: {
-        merge: mergeObjects,
+        merge: true,
       },
       statusModifiedAt: {
-        merge: mergeObjects,
+        merge: true,
       },
       ceremony: {
-        merge: mergeObjects,
+        merge: true,
       },
       firstScripture: {
-        merge: mergeObjects,
+        merge: true,
       },
       lukePartnership: {
-        merge: mergeObjects,
+        merge: true,
       },
       sentPrintingDate: {
-        merge: mergeObjects,
+        merge: true,
       },
       paraTextRegistryId: {
-        merge: mergeObjects,
+        merge: true,
       },
       language: {
-        merge: mergeObjects,
+        merge: true,
       },
       products: {
-        merge: mergeObjects,
+        merge: true,
       },
       pnp: {
-        merge: mergeObjects,
+        merge: true,
       },
     },
   },
@@ -464,58 +463,58 @@ export const typePolicies: TypePolicies = {
         read: Parsers.DateTime,
       },
       completeDate: {
-        merge: mergeObjects,
+        merge: true,
       },
       disbursementCompleteDate: {
-        merge: mergeObjects,
+        merge: true,
       },
       communicationsCompleteDate: {
-        merge: mergeObjects,
+        merge: true,
       },
       startDate: {
-        merge: mergeObjects,
+        merge: true,
       },
       endDate: {
-        merge: mergeObjects,
+        merge: true,
       },
       startDateOverride: {
-        merge: mergeObjects,
+        merge: true,
       },
       endDateOverride: {
-        merge: mergeObjects,
+        merge: true,
       },
       initialEndDate: {
-        merge: mergeObjects,
+        merge: true,
       },
       lastSuspendedAt: {
-        merge: mergeObjects,
+        merge: true,
       },
       lastReactivatedAt: {
-        merge: mergeObjects,
+        merge: true,
       },
       statusModifiedAt: {
-        merge: mergeObjects,
+        merge: true,
       },
       ceremony: {
-        merge: mergeObjects,
+        merge: true,
       },
       position: {
-        merge: mergeObjects,
+        merge: true,
       },
       methodologies: {
-        merge: mergeObjects,
+        merge: true,
       },
       growthPlan: {
-        merge: mergeObjects,
+        merge: true,
       },
       intern: {
-        merge: mergeObjects,
+        merge: true,
       },
       mentor: {
-        merge: mergeObjects,
+        merge: true,
       },
       countryOfOrigin: {
-        merge: mergeObjects,
+        merge: true,
       },
     },
   },
@@ -525,31 +524,31 @@ export const typePolicies: TypePolicies = {
         read: Parsers.DateTime,
       },
       agreementStatus: {
-        merge: mergeObjects,
+        merge: true,
       },
       mouStatus: {
-        merge: mergeObjects,
+        merge: true,
       },
       mouStart: {
-        merge: mergeObjects,
+        merge: true,
       },
       mouEnd: {
-        merge: mergeObjects,
+        merge: true,
       },
       mouStartOverride: {
-        merge: mergeObjects,
+        merge: true,
       },
       mouEndOverride: {
-        merge: mergeObjects,
+        merge: true,
       },
       types: {
-        merge: mergeObjects,
+        merge: true,
       },
       mou: {
-        merge: mergeObjects,
+        merge: true,
       },
       agreement: {
-        merge: mergeObjects,
+        merge: true,
       },
     },
   },
@@ -562,10 +561,10 @@ export const typePolicies: TypePolicies = {
         read: Parsers.DateTime,
       },
       user: {
-        merge: mergeObjects,
+        merge: true,
       },
       roles: {
-        merge: mergeObjects,
+        merge: true,
       },
     },
   },
@@ -575,10 +574,10 @@ export const typePolicies: TypePolicies = {
         read: Parsers.DateTime,
       },
       scriptureReferences: {
-        merge: mergeObjects,
+        merge: true,
       },
       name: {
-        merge: mergeObjects,
+        merge: true,
       },
     },
   },
@@ -588,10 +587,10 @@ export const typePolicies: TypePolicies = {
         read: Parsers.DateTime,
       },
       scriptureReferences: {
-        merge: mergeObjects,
+        merge: true,
       },
       name: {
-        merge: mergeObjects,
+        merge: true,
       },
     },
   },
@@ -601,10 +600,10 @@ export const typePolicies: TypePolicies = {
         read: Parsers.DateTime,
       },
       scriptureReferences: {
-        merge: mergeObjects,
+        merge: true,
       },
       name: {
-        merge: mergeObjects,
+        merge: true,
       },
     },
   },
@@ -621,10 +620,10 @@ export const typePolicies: TypePolicies = {
         read: Parsers.DateTime,
       },
       scriptureReferences: {
-        merge: mergeObjects,
+        merge: true,
       },
       name: {
-        merge: mergeObjects,
+        merge: true,
       },
     },
   },
@@ -694,19 +693,19 @@ export const typePolicies: TypePolicies = {
   EthnologueLanguage: {
     fields: {
       id: {
-        merge: mergeObjects,
+        merge: true,
       },
       code: {
-        merge: mergeObjects,
+        merge: true,
       },
       provisionalCode: {
-        merge: mergeObjects,
+        merge: true,
       },
       name: {
-        merge: mergeObjects,
+        merge: true,
       },
       population: {
-        merge: mergeObjects,
+        merge: true,
       },
     },
   },
