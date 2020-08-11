@@ -12,6 +12,7 @@ import {
 } from '@material-ui/core';
 import { ExpandMore } from '@material-ui/icons';
 import { ToggleButton } from '@material-ui/lab';
+import clsx from 'clsx';
 import { startCase } from 'lodash';
 import React, { useState } from 'react';
 import { FormRenderProps } from 'react-final-form';
@@ -58,15 +59,15 @@ const useStyles = makeStyles(({ spacing, typography }) => ({
     flexDirection: 'column',
     '& p': {
       fontWeight: typography.fontWeightBold,
+      margin: spacing(2, 0),
     },
   },
   buttonListWrapper: {
     display: 'flex',
     flexWrap: 'wrap',
   },
-  //To offset the -8 margin from the checkboxes field
-  bookSectionHeader: {
-    marginLeft: spacing(1),
+  booksWrapper: {
+    marginLeft: spacing(-1),
   },
   submissionBlurb: {
     margin: spacing(4, 0),
@@ -97,6 +98,7 @@ export const renderAccordionSection = (productObj?: ProductFormFragment) => ({
   const classes = useStyles();
 
   const [openedSection, setOpenedSection] = useState<string>('produces');
+  const [selectedBook, setSelectedBook] = useState<string>('');
 
   const handleChange = (panel: string) => (
     event: React.ChangeEvent<{}>,
@@ -112,7 +114,6 @@ export const renderAccordionSection = (productObj?: ProductFormFragment) => ({
     scriptureReferences,
     mediums,
     purposes,
-    book,
   } = values.product;
 
   const isDerivativeProduct = getIsDerivativeProduct(productType);
@@ -168,7 +169,7 @@ export const renderAccordionSection = (productObj?: ProductFormFragment) => ({
         </Accordion>
         {/* //TODO: include scriptureReferencesOverride in the name */}
         <SecuredField obj={productObj} name="scriptureReferences">
-          {(props) => (
+          {({ disabled }) => (
             <Accordion
               expanded={openedSection === 'scriptureReferences'}
               onChange={handleChange('scriptureReferences')}
@@ -179,53 +180,79 @@ export const renderAccordionSection = (productObj?: ProductFormFragment) => ({
               >
                 <Typography variant="h4">Choose Scripture</Typography>
                 <div className={classes.accordionSummaryButtonsContainer}>
-                  {scriptureReferences?.map(
-                    (scriptureRange: ScriptureRangeInput) => {
-                      const rangeString = displayScripture(scriptureRange);
-                      return (
-                        <ToggleButton
-                          selected
-                          key={rangeString}
-                          value={scriptureRange}
-                        >
-                          {rangeString}
-                        </ToggleButton>
-                      );
-                    }
-                  )}
+                  {openedSection !== 'scriptureReferences' &&
+                    scriptureReferences?.map(
+                      (scriptureRange: ScriptureRangeInput) => {
+                        const rangeString = displayScripture(scriptureRange);
+                        return (
+                          <ToggleButton
+                            selected
+                            key={rangeString}
+                            value={scriptureRange}
+                          >
+                            {rangeString}
+                          </ToggleButton>
+                        );
+                      }
+                    )}
                 </div>
               </AccordionSummary>
-              <AccordionDetails>
-                <ToggleButtonsField
-                  {...props}
-                  name="book"
-                  className={classes.accordionSection}
+              <AccordionDetails className={classes.accordionSection}>
+                <Typography>Old Testament</Typography>
+                <div
+                  className={clsx(
+                    classes.buttonListWrapper,
+                    classes.booksWrapper
+                  )}
                 >
-                  <Typography className={classes.bookSectionHeader}>
-                    Old Testament
-                  </Typography>
-                  <div className={classes.buttonListWrapper}>
-                    {oldTestament.map((option) => (
-                      <ToggleButtonOption
+                  {oldTestament.map((option) => {
+                    const matchingScriptureRange = scriptureReferences?.find(
+                      ({ start: { book } }: ScriptureRangeInput) =>
+                        book === option
+                    );
+                    return (
+                      <ToggleButton
                         key={option}
-                        label={option}
                         value={option}
-                      />
-                    ))}
-                  </div>
-                  <Typography className={classes.bookSectionHeader}>
-                    New Testament
-                  </Typography>
-                  <div className={classes.buttonListWrapper}>
-                    {newTestament.map((option) => (
-                      <ToggleButtonOption
+                        selected={Boolean(matchingScriptureRange)}
+                        disabled={disabled}
+                        onClick={() => setSelectedBook(option)}
+                      >
+                        {matchingScriptureRange
+                          ? //TODO: display the combined ranges when the logic from scripture pills is ready
+                            displayScripture(matchingScriptureRange)
+                          : option}
+                      </ToggleButton>
+                    );
+                  })}
+                </div>
+                <Typography>New Testament</Typography>
+                <div
+                  className={clsx(
+                    classes.buttonListWrapper,
+                    classes.booksWrapper
+                  )}
+                >
+                  {newTestament.map((option) => {
+                    const matchingScriptureRange = scriptureReferences?.find(
+                      ({ start: { book } }: ScriptureRangeInput) =>
+                        book === option
+                    );
+                    return (
+                      <ToggleButton
                         key={option}
-                        label={option}
                         value={option}
-                      />
-                    ))}
-                  </div>
-                </ToggleButtonsField>
+                        selected={Boolean(matchingScriptureRange)}
+                        disabled={disabled}
+                        onClick={() => setSelectedBook(option)}
+                      >
+                        {matchingScriptureRange
+                          ? displayScripture(matchingScriptureRange)
+                          : option}
+                      </ToggleButton>
+                    );
+                  })}
+                </div>
               </AccordionDetails>
             </Accordion>
           )}
@@ -403,7 +430,7 @@ export const renderAccordionSection = (productObj?: ProductFormFragment) => ({
       <SubmitButton fullWidth={false} color="error" size="medium">
         Save Product
       </SubmitButton>
-      <Dialog open={Boolean(book?.length)}>
+      <Dialog open={Boolean(selectedBook)}>
         <DialogTitle>Choose Verse</DialogTitle>
         <DialogContent>
           <Typography>Start</Typography>
@@ -432,28 +459,28 @@ export const renderAccordionSection = (productObj?: ProductFormFragment) => ({
         </DialogContent>
         <DialogActions>
           <Button
-            onClick={() =>
-              form.mutators.clear(
-                'product.book',
-                'startChapter',
-                'startVerse',
-                'endChapter',
-                'endVerse'
-              )
-            }
-          >
-            Cancel
-          </Button>
-          <Button
             onClick={() => {
-              form.mutators.setScriptureReferencesField();
               form.mutators.clear(
-                'product.book',
                 'startChapter',
                 'startVerse',
                 'endChapter',
                 'endVerse'
               );
+              setSelectedBook('');
+            }}
+          >
+            Cancel
+          </Button>
+          <Button
+            onClick={() => {
+              form.mutators.setScriptureReferencesField(selectedBook);
+              form.mutators.clear(
+                'startChapter',
+                'startVerse',
+                'endChapter',
+                'endVerse'
+              );
+              setSelectedBook('');
             }}
           >
             Select

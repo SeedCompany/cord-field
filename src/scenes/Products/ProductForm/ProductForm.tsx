@@ -31,21 +31,22 @@ export const ProductForm = <FormMutationValues extends any>({
 }: FormProps<FormMutationValues> & {
   product?: ProductFormFragment;
 }) => {
-  const parseScriptureRange = ({
-    product: { book },
-    startChapter,
-    startVerse,
-    endChapter,
-    endVerse,
-  }: FormSpyRenderProps['values']) => ({
+  const parseScriptureRange = (
+    {
+      startChapter,
+      startVerse,
+      endChapter,
+      endVerse,
+    }: FormSpyRenderProps['values'],
+    book: string
+  ) => ({
     start: {
-      //Need first
-      book: book[0],
+      book,
       chapter: startChapter,
       verse: startVerse,
     },
     end: {
-      book: book[0],
+      book,
       chapter: endChapter,
       verse: endVerse,
     },
@@ -60,7 +61,7 @@ export const ProductForm = <FormMutationValues extends any>({
             changeValue(state, name, () => undefined)
           );
         },
-        setScriptureReferencesField: (_args, state, { changeValue }) => {
+        setScriptureReferencesField: ([book], state, { changeValue }) => {
           changeValue(
             state,
             'product.scriptureReferences',
@@ -68,9 +69,9 @@ export const ProductForm = <FormMutationValues extends any>({
               scriptureReferences
                 ? [
                     ...scriptureReferences,
-                    parseScriptureRange(state.formState.values),
+                    parseScriptureRange(state.formState.values, book),
                   ]
-                : [parseScriptureRange(state.formState.values)]
+                : [parseScriptureRange(state.formState.values, book)]
           );
         },
       }}
