@@ -13,3 +13,4 @@ node_modules
 build
 coverage
 schema.graphql
+*.generated.ts
