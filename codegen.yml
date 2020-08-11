@@ -2,9 +2,6 @@ schema: schema.graphql
 documents:
   - ./src/**/*.graphql
 overwrite: true
-hooks:
-  afterAllFileWrite:
-    - eslint --fix --ext .generated.ts
 config:
   # Use `import type` which should be default for TS 3.8+
   useTypeImports: true
@@ -16,7 +13,6 @@ generates:
   # Generate fragment matcher for Apollo's caching
   ./src/api/fragmentMatcher.generated.ts:
     plugins:
-      - add: /* eslint-disable import/no-default-export */
       - fragment-matcher
       - add:
           placement: append
@@ -60,8 +56,6 @@ generates:
       extension: .generated.ts
       baseTypesPath: api/schema.generated.ts
     plugins:
-      # import/no-duplicates is here until hooks & common can be merged into one import
-      - add: /* eslint-disable import/no-duplicates, @typescript-eslint/no-empty-interface */
       - typescript-operations
       # Look into this which would allow typed documents
       # This means that we wouldn't need custom hooks generated for every operation
