@@ -9,7 +9,7 @@ import { Skeleton } from '@material-ui/lab';
 import React, { FC } from 'react';
 import { useDropzone } from 'react-dropzone';
 import { useNavigate, useParams } from 'react-router-dom';
-import { File as CFFile, FileVersion, GQLOperations } from '../../../api';
+import { File as CFFile, FileVersion } from '../../../api';
 import { Breadcrumb } from '../../../components/Breadcrumb';
 import { ContentContainer as Content } from '../../../components/ContentContainer';
 import { useDialog } from '../../../components/Dialog';
@@ -32,8 +32,6 @@ import {
 } from '../../../components/Formatters';
 import { ProjectBreadcrumb } from '../../../components/ProjectBreadcrumb';
 import { Table } from '../../../components/Table';
-import { UploadCallback, useUpload } from '../../../components/Upload';
-import { useCreateProjectFileVersionMutation } from './CreateProjectFile.generated';
 import { FileCreateActions } from './FileCreateActions';
 import { FileVersions } from './FileVersions';
 import {
@@ -42,6 +40,7 @@ import {
 } from './ProjectFiles.generated';
 import { UploadProjectFileVersion } from './UploadProjectFileVersion';
 import { useProjectCurrentDirectory } from './useProjectCurrentDirectory';
+import { useUploadProjectFiles } from './useUploadProjectFiles';
 
 const useStyles = makeStyles(({ palette, spacing }) => ({
   dropzone: {
@@ -106,8 +105,7 @@ export const ProjectFilesList: FC = () => {
   const downloadFile = useDownloadFile();
   const fileNameAndExtension = useFileNameAndExtension();
   const fileIcon = useFileNodeIcon();
-  const { addFilesToUploadQueue } = useUpload();
-  const [createFileVersion] = useCreateProjectFileVersionMutation();
+  const handleFilesDrop = useUploadProjectFiles();
 
   const [renameFileState, renameFile, itemToRename] = useDialog<
     FileActionItem
@@ -259,27 +257,6 @@ export const ProjectFilesList: FC = () => {
     } else {
       console.log('Preview file', item.id);
     }
-  };
-
-  const handleUploadCompleted: UploadCallback = async (uploadId, name) => {
-    const input = {
-      uploadId,
-      name,
-      parentId: directoryId,
-    };
-    await createFileVersion({
-      variables: { input },
-      refetchQueries: [GQLOperations.Query.ProjectDirectory],
-    });
-  };
-
-  const handleFilesDrop = (files: File[]) => {
-    const fileInputs = files.map((file) => ({
-      file,
-      fileName: file.name,
-      callback: handleUploadCompleted,
-    }));
-    addFilesToUploadQueue(fileInputs);
   };
 
   const { getRootProps, getInputProps, isDragActive } = useDropzone({
