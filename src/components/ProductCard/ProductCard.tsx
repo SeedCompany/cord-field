@@ -21,10 +21,20 @@ import { ButtonLink, CardActionAreaLink } from '../Routing';
 import { ProductCardFragment } from './ProductCard.generated';
 
 const useStyles = makeStyles(({ spacing, palette }) => ({
+  root: {
+    height: '100%',
+    display: 'flex',
+    flexDirection: 'column',
+    '& > a': {
+      flexGrow: 1,
+    },
+  },
   content: {
     display: 'flex',
     flexDirection: 'column',
     alignItems: 'center',
+    justifyContent: 'center',
+    height: '100%',
     '& > *': {
       margin: spacing(1, 0),
     },
@@ -76,7 +86,7 @@ export const ProductCard = ({ product, handleDelete }: ProductCardProps) => {
     Scripture: <MenuBook color="secondary" classes={{ root: classes.icon }} />,
   };
   return (
-    <Card>
+    <Card classes={{ root: classes.root }}>
       <CardActionAreaLink to={`products/${product.id}`}>
         <CardContent className={classes.content}>
           {icons[type]}

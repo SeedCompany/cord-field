@@ -54,8 +54,7 @@ const useStyles = makeStyles(({ spacing, breakpoints, palette }) => ({
     color: palette.info.main,
   },
   addProductCard: {
-    height: 300,
-    width: 240,
+    height: '100%',
     display: 'flex',
     '& a': {
       display: 'flex',
@@ -210,7 +209,7 @@ export const LanguageEngagementDetail: FC<EngagementQuery> = ({
             wrap={(node) => <Grid item>{node}</Grid>}
           />
         </Grid>
-        <Grid item container spacing={3} alignItems="center">
+        <Grid item container spacing={3}>
           <Grid item xs={6}>
             <FieldOverviewCard
               title="Translation Complete Date"
@@ -220,6 +219,7 @@ export const LanguageEngagementDetail: FC<EngagementQuery> = ({
               icon={PlantIcon}
               onClick={() => show('completeDate')}
               onButtonClick={() => show('completeDate')}
+              emptyValue="None"
             />
           </Grid>
           <Grid item xs={6}>
@@ -231,6 +231,7 @@ export const LanguageEngagementDetail: FC<EngagementQuery> = ({
               icon={OptionsIcon}
               onClick={() => show('disbursementCompleteDate')}
               onButtonClick={() => show('disbursementCompleteDate')}
+              emptyValue="None"
             />
           </Grid>
           <Grid item xs={6}>
@@ -242,6 +243,7 @@ export const LanguageEngagementDetail: FC<EngagementQuery> = ({
               icon={ChatOutlined}
               onClick={() => show('communicationsCompleteDate')}
               onButtonClick={() => show('communicationsCompleteDate')}
+              emptyValue="None"
             />
           </Grid>
         </Grid>
@@ -251,7 +253,7 @@ export const LanguageEngagementDetail: FC<EngagementQuery> = ({
           </Grid>
         </Grid>
         <Typography variant="h4">Products</Typography>
-        <Grid item container spacing={3} alignItems="center">
+        <Grid item container spacing={3}>
           {engagement.products.items.map((product) => (
             <Grid item xs={4} key={product.id}>
               <ProductCard
