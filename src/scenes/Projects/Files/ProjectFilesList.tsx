@@ -44,6 +44,7 @@ import { useUploadProjectFiles } from './useUploadProjectFiles';
 
 const useStyles = makeStyles(({ palette, spacing }) => ({
   dropzone: {
+    overflowY: 'scroll',
     position: 'relative',
     width: '100%',
     height: '100%',
