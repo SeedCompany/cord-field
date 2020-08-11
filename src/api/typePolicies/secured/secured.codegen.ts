@@ -8,11 +8,6 @@ export const generateSecured = (
   file: SourceFile,
   typePolicies: ObjectLiteralExpression
 ) => {
-  file.addImportDeclaration({
-    namedImports: ['mergeObjects'],
-    moduleSpecifier: './secured/secured',
-  });
-
   for (const val of getSchemaTypes(schema).filter(isObjectType)) {
     // Set Secured Types to disable normalization
     // This tells Apollo that they should just be cached on their parent object
@@ -44,7 +39,7 @@ export const generateSecured = (
       );
       fieldDef.addPropertyAssignment({
         name: 'merge',
-        initializer: 'mergeObjects',
+        initializer: 'true',
       });
     }
   }
