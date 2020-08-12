@@ -30,14 +30,17 @@ export const useUploadProjectFiles = (
 
   const handleUploadCompleted = useHandleUploadCompleted(parentId);
 
-  const handleFilesDrop = (files: File[]) => {
-    const fileInputs = files.map((file) => ({
-      file,
-      fileName: file.name,
-      callback: handleUploadCompleted,
-    }));
-    addFilesToUploadQueue(fileInputs);
-  };
+  const handleFilesDrop = useCallback(
+    (files: File[]) => {
+      const fileInputs = files.map((file) => ({
+        file,
+        fileName: file.name,
+        callback: handleUploadCompleted,
+      }));
+      addFilesToUploadQueue(fileInputs);
+    },
+    [addFilesToUploadQueue, handleUploadCompleted]
+  );
 
   return handleFilesDrop;
 };
