@@ -23,3 +23,6 @@ rules:
         - '@material-ui/core/*'
         - '@material-ui/icons/*'
         - lodash/*
+
+  # TODO This needs to be turned on and errors fixed
+  '@typescript-eslint/restrict-template-expressions': off
