@@ -40,3 +40,4 @@ Thumbs.db
 
 # Generated files
 /schema.graphql
+*.generated.ts

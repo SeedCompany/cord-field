@@ -1,7 +1,7 @@
 # Versioned but ignore
 .*
 !.babelrc
-codegen.yml
+!.eslintignore
 
 # Yarn / NPM
 !.yarnrc.yml
@@ -13,3 +13,4 @@ node_modules
 build
 coverage
 schema.graphql
+*.generated.ts

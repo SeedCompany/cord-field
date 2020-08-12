@@ -2136,6 +2136,40 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@graphql-codegen/plugin-helpers@npm:^1.17.8":
+  version: 1.17.8
+  resolution: "@graphql-codegen/plugin-helpers@npm:1.17.8"
+  dependencies:
+    "@graphql-tools/utils": ^6.0.18
+    camel-case: 4.1.1
+    common-tags: 1.8.0
+    constant-case: 3.0.3
+    import-from: 3.0.0
+    lodash: ~4.17.15
+    lower-case: 2.0.1
+    param-case: 3.0.3
+    pascal-case: 3.1.1
+    tslib: ~2.0.0
+    upper-case: 2.0.1
+  peerDependencies:
+    graphql: ^0.8.0 || ^0.9.0 || ^0.10.0 || ^0.11.0 || ^0.12.0 || ^0.13.0 || ^14.0.0 || ^15.0.0
+  checksum: 3/b324ca7888adcb360ba79de2674c8b06ce36e014ef8293e6c994430bd860e04a1a2f8e9575b7c3d13b162b91d03015825f8adc0b6c1d7040aca82e244bc4eb7f
+  languageName: node
+  linkType: hard
+
+"@graphql-codegen/schema-ast@npm:^1.17.8":
+  version: 1.17.8
+  resolution: "@graphql-codegen/schema-ast@npm:1.17.8"
+  dependencies:
+    "@graphql-codegen/plugin-helpers": ^1.17.8
+    "@graphql-tools/utils": ^6.0.18
+    tslib: ~2.0.0
+  peerDependencies:
+    graphql: ^0.8.0 || ^0.9.0 || ^0.10.0 || ^0.11.0 || ^0.12.0 || ^0.13.0 || ^14.0.0 || ^15.0.0
+  checksum: 3/8036979f88de278c89512501c0c14e796ac49f58d0c5ec6ed4b22f213df46ef198d0a7251fc18919212b596517f9261b8738801a3418a9863a5a61d8c7efbe14
+  languageName: node
+  linkType: hard
+
 "@graphql-codegen/typescript-operations@npm:^1.17.7":
   version: 1.17.7
   resolution: "@graphql-codegen/typescript-operations@npm:1.17.7"
@@ -2454,6 +2488,18 @@ __metadata:
   peerDependencies:
     graphql: ^14.0.0 || ^15.0.0
   checksum: 3/fd89977d6850009d7374408866b3f6bf129de4a63363b1cc2147bf751eec8f04d14bb6bfd5386c168afea9932eede9ed4f3bb1854e58197af3c3642176eb9ee8
+  languageName: node
+  linkType: hard
+
+"@graphql-tools/utils@npm:^6.0.18":
+  version: 6.0.18
+  resolution: "@graphql-tools/utils@npm:6.0.18"
+  dependencies:
+    "@ardatan/aggregate-error": 0.0.1
+    camel-case: 4.1.1
+  peerDependencies:
+    graphql: ^14.0.0 || ^15.0.0
+  checksum: 3/f7c93ddfcb6d3bc143548a613f663ba2bfecfe7f1fc06274d6126ccdfe2167f6b9d3c9be5786c44fd3467467d49e93702675e73c56b2bfc02c3b58b9595447eb
   languageName: node
   linkType: hard
 
@@ -7269,6 +7315,7 @@ __metadata:
     "@graphql-codegen/named-operations-object": ^1.17.7
     "@graphql-codegen/near-operation-file-preset": ^1.17.7
     "@graphql-codegen/plugin-helpers": ^1.17.7
+    "@graphql-codegen/schema-ast": ^1.17.8
     "@graphql-codegen/typescript": ^1.17.7
     "@graphql-codegen/typescript-operations": ^1.17.7
     "@graphql-codegen/typescript-react-apollo": ^2.0.4
