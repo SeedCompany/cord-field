@@ -40,8 +40,6 @@ jobs:
 
       - name: Build
         run: yarn react-app-rewired build
-        env:
-          EXTEND_ESLINT: true
 
       - name: Test
         run: yarn test
