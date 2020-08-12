@@ -24,6 +24,13 @@ export const LanguageEngagementListItemCard = () => (
         registryOfDialectsCode: {
           value: text('Registry Of Dialects Code', '01234'),
         },
+        ethnologue: {
+          code: {
+            canRead: true,
+            canEdit: true,
+            value: text('Ethnologue Code', 'abc'),
+          },
+        },
         population: { value: number('population', 10000) },
         avatarLetters: 'E',
         displayName: {},
