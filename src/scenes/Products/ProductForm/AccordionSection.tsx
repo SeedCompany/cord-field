@@ -127,8 +127,9 @@ export const renderAccordionSection = (productObj?: ProductFormFragment) => ({
 
   const isDerivativeProduct = getIsDerivativeProduct(productType);
 
-  const isProducesFieldMissing: boolean =
-    form.getFieldState('product.produces')?.error === 'Required';
+  const isProducesFieldMissing =
+    form.getFieldState('product.produces')?.error === 'Required' ||
+    form.getFieldState('product.productType')?.error === 'Required';
 
   return (
     <form onSubmit={handleSubmit} className={classes.form}>
@@ -161,7 +162,7 @@ export const renderAccordionSection = (productObj?: ProductFormFragment) => ({
               )}
             </div>
           </AccordionSummary>
-          <RadioField name="productType" required={false}>
+          <RadioField name="productType" disabled={Boolean(productObj)}>
             <AccordionDetails className={classes.accordionSection}>
               <div>
                 {productTypes.map((option) => (
@@ -448,7 +449,7 @@ export const renderAccordionSection = (productObj?: ProductFormFragment) => ({
       <div className={classes.submissionBlurb}>
         <Typography variant="h4">Check Your Selections</Typography>
         <Typography>
-          If the selections above look good to you. Go ahead and save your
+          If the selections above look good to you, go ahead and save your
           Product. If you need to edit your choices, do that above.
         </Typography>
       </div>
