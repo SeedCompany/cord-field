@@ -154,7 +154,7 @@ export const ProjectListItemCard: FC<ProjectListItemCardProps> = ({
                     className={classes.skeletonRight}
                   />
                 ) : (
-                  0
+                  project?.engagements.total
                 )}
               </Typography>
               <Typography variant="body2" color="primary">
