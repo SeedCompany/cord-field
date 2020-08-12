@@ -83,13 +83,11 @@ const useStyles = makeStyles(({ palette, spacing }) => ({
   },
   folderLink: {
     color: 'inherit',
-    textDecoration: 'underline',
   },
   fileName: {
     cursor: 'pointer',
     display: 'flex',
     alignItems: 'center',
-    textDecoration: 'underline',
   },
   fileIcon: {
     color: palette.action.active,
