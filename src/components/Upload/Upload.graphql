@@ -1,0 +1,10 @@
+mutation RequestFileUpload {
+  requestFileUpload {
+    id
+    url
+  }
+}
+
+mutation DeleteFileNode($id: ID!) {
+  deleteFileNode(id: $id)
+}

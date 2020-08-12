@@ -6,7 +6,7 @@ import {
   Typography,
   useTheme,
 } from '@material-ui/core';
-import * as React from 'react';
+import React from 'react';
 import { MenuItemLink } from '../../../../components/Routing';
 
 const useStyles = makeStyles(({ spacing }) => ({
@@ -15,6 +15,9 @@ const useStyles = makeStyles(({ spacing }) => ({
   },
   menuHeading: {
     padding: spacing(1, 2, 2, 2),
+  },
+  uploadButtonText: {
+    marginLeft: spacing(1),
   },
 }));
 

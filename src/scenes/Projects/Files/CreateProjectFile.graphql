@@ -1,0 +1,13 @@
+mutation CreateProjectDirectory($input: CreateDirectoryInput!) {
+  createDirectory(input: $input) {
+    id
+    name
+  }
+}
+
+mutation CreateProjectFileVersion($input: CreateFileVersionInput!) {
+  createFileVersion(input: $input) {
+    id
+    name
+  }
+}

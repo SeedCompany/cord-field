@@ -1,5 +1,11 @@
 import { useCallback, useMemo, useState } from 'react';
 
+export interface DialogState {
+  open: boolean;
+  onClose: () => void;
+  onExited: () => void;
+}
+
 export function useDialog<T = never>() {
   const [isOpen, setOpen] = useState(false);
   const [item, setItem] = useState<T | undefined>(undefined);

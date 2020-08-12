@@ -3,6 +3,7 @@ export * from './CheckboxField';
 export * from './CheckboxesField';
 export * from './decorators';
 export * from './DateField';
+export * from './Dropzone';
 export * from './EmailField';
 export * from './FieldGroup';
 export * from './FormattedTextField';
