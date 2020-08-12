@@ -1,5 +1,5 @@
 import { action } from '@storybook/addon-actions';
-import { boolean, number, object, select } from '@storybook/addon-knobs';
+import { number, object, select, text } from '@storybook/addon-knobs';
 import { DateTime } from 'luxon';
 import * as React from 'react';
 import {
@@ -19,6 +19,13 @@ export default {
     ),
   ],
 };
+
+const derivativeScriptureProducts = [
+  'Song',
+  'Story',
+  'Film',
+  'LiteracyMaterial',
+] as const;
 
 const getProduct = () => {
   const methodologyValue = select(
@@ -101,8 +108,8 @@ const getProduct = () => {
 
   const productType = select(
     'Product Type',
-    ['Song', 'Story', 'Film', 'LiteracyMaterial'],
-    'Song'
+    derivativeScriptureProducts,
+    'Story'
   );
 
   const derivativeProduct: ProductCardFragment = {
@@ -113,14 +120,20 @@ const getProduct = () => {
       canEdit: true,
       value: {
         __typename: productType,
+        id: '123',
+        name: {
+          canRead: true,
+          canEdit: true,
+          value: text('Producible Name', 'My Childhood Story'),
+        },
         createdAt: DateTime.local(),
       },
     },
   };
 
-  const isDirectProduct = boolean('Direct Scripture Product?', true);
-
-  return isDirectProduct ? directProduct : derivativeProduct;
+  return derivativeScriptureProducts.includes(productType)
+    ? derivativeProduct
+    : directProduct;
 };
 
 export const Product = () => (

@@ -94,13 +94,27 @@ export const ProductCard = ({
     ),
   };
 
+  const producibleName =
+    product.__typename === 'DerivativeScriptureProduct' &&
+    (product.produces.value?.__typename === 'Film'
+      ? product.produces.value.name.value
+      : product.produces.value?.__typename === 'LiteracyMaterial'
+      ? product.produces.value.name.value
+      : product.produces.value?.__typename === 'Song'
+      ? product.produces.value.name.value
+      : product.produces.value?.__typename === 'Story'
+      ? product.produces.value.name.value
+      : '');
+
   return (
     <Card classes={{ root: classes.root }}>
       <CardActionAreaLink to={`products/${product.id}`}>
         <CardContent className={classes.content}>
           {type && icons[type]}
           {type && (
-            <Typography variant="h4">{displayProductTypes(type)}</Typography>
+            <Typography variant="h4" align="center">{`${displayProductTypes(
+              type
+            )}${producibleName ? ` - ${producibleName}` : ''}`}</Typography>
           )}
           <DisplaySimpleProperty
             label="Methodology"
