@@ -10,6 +10,11 @@ config:
   immutableTypes: true
 
 generates:
+  # Generate schema file so IDEs can autocomplete graphql documents
+  ./schema.graphql:
+    plugins:
+      - schema-ast
+
   # Generate fragment matcher for Apollo's caching
   ./src/api/fragmentMatcher.generated.ts:
     plugins:
