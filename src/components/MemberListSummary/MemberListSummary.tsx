@@ -112,10 +112,8 @@ function memberNames(members: MemberSummaryItem[] | undefined, max: number) {
   const membersToDisplay = compact(
     members?.map((member) => member.label)
   ).slice(0, max);
-  const remainingCount = membersToDisplay
-    ? members!.length - membersToDisplay.length
-    : 0;
-  const names = membersToDisplay.join(', ') ?? '';
+  const remainingCount = members!.length - membersToDisplay.length;
+  const names = membersToDisplay.join(', ');
   const extra =
     remainingCount > 0
       ? `${remainingCount} other${remainingCount > 1 ? 's' : ''}`

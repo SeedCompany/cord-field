@@ -8,9 +8,9 @@ import {
   TableChart as TableChartIcon,
   VideoLibrary as VideoLibraryIcon,
 } from '@material-ui/icons';
-import { FileNode } from '../../../api';
+import { FileNode, FileNodeCategory } from '../../../api';
 
-const icons = {
+const icons: Partial<Record<FileNodeCategory, SvgIconComponent>> = {
   Audio: GraphicEqIcon,
   Directory: FolderIcon,
   Document: DescriptionIcon,

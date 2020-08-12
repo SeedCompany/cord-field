@@ -261,13 +261,13 @@ export const ProjectOverview: FC = () => {
                   projectId={projectId}
                   {...engagement}
                 />
-              ) : engagement.__typename === 'InternshipEngagement' ? (
+              ) : (
                 <InternshipEngagementListItemCard
                   key={engagement.id}
                   projectId={projectId}
                   {...engagement}
                 />
-              ) : null
+              )
             )}
           </div>
         )}

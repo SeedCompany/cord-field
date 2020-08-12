@@ -61,7 +61,7 @@ export const ProgressButton: FC<ProgressButtonProps> = ({
         <div className={progressWrapper}>
           <CircularProgress
             size={size === 'large' ? 26 : size === 'small' ? 16 : 20}
-            color={progress && !rest.disabled ? 'inherit' : 'primary'}
+            color={!rest.disabled ? 'inherit' : 'primary'}
             {...progressProps}
           />
         </div>

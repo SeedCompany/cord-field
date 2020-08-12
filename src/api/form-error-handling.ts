@@ -160,7 +160,7 @@ export const handleFormError = async (e: unknown, handlers?: ErrorHandlers) => {
 };
 
 const isClientError = (e: unknown): e is ApolloError => {
-  if (!(e instanceof ApolloError) || !e.graphQLErrors[0]) {
+  if (!(e instanceof ApolloError) || e.graphQLErrors.length === 0) {
     return false;
   }
   // For mutations we will assume they will only have one error
