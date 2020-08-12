@@ -1,10 +1,10 @@
 import { useCallback } from 'react';
 import { GQLOperations } from '../../../api';
+import { useCreateFileVersionMutation } from '../../../components/files/FileActions';
 import { UploadCallback, useUpload } from '../../../components/Upload';
-import { useCreateProjectFileVersionMutation } from './CreateProjectFile.generated';
 
 export const useHandleUploadCompleted = (parentId: string): UploadCallback => {
-  const [createFileVersion] = useCreateProjectFileVersionMutation();
+  const [createFileVersion] = useCreateFileVersionMutation();
 
   const handleUploadCompleted: UploadCallback = useCallback(
     async (uploadId, name) => {

@@ -69,7 +69,6 @@ const menuItems = [
 
 export const FileActionsPopup: FC<FileActionsPopupProps> = (props) => {
   const { item } = props;
-  console.log('item', item);
   const [anchor, setAnchor] = useState<MenuProps['anchorEl']>();
 
   const openAddMenu = (e: React.MouseEvent) => {
@@ -96,7 +95,7 @@ type FileActionsMenuProps = Partial<MenuProps> & {
 };
 
 export const FileActionsMenu: FC<FileActionsMenuProps> = (props) => {
-  const { item, onAction, ...rest } = props;
+  const { item, ...rest } = props;
   const classes = useStyles();
   const { spacing } = useTheme();
   const handleFilesSelection = useUploadProjectFiles(item.id);
