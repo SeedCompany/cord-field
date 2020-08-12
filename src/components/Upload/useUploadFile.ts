@@ -32,7 +32,7 @@ export const useUploadFile = (
           });
         } catch (error) {
           setUploadError(file.queueId, 'Post-upload action failed');
-          deleteFile({ variables: { id: file.uploadId } });
+          await deleteFile({ variables: { id: file.uploadId } });
         }
       }
     },
@@ -79,7 +79,7 @@ export const useUploadFile = (
           const { status } = xhr;
           const success = status >= 200 && status < 400;
           if (success) {
-            handleFileUploadSuccess(uploadFile);
+            void handleFileUploadSuccess(uploadFile);
           } else {
             handleFileUploadCompleteError(xhr.statusText, queueId);
           }

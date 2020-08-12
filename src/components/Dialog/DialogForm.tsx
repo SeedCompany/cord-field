@@ -117,7 +117,7 @@ export function DialogForm<T, R = void>({
             {...DialogProps}
             open={open}
             onClose={(e, reason) => {
-              reset();
+              void reset();
               onClose?.(reason, form);
             }}
             onExited={onExited}
@@ -142,7 +142,7 @@ export function DialogForm<T, R = void>({
                   color="secondary"
                   {...CloseProps}
                   onClick={() => {
-                    reset();
+                    void reset();
                     onClose?.('cancel', form);
                   }}
                 >

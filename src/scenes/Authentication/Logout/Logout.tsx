@@ -13,7 +13,7 @@ export const Logout = () => {
   const [, , setCurrentUser] = useSession();
 
   useEffect(() => {
-    logout()
+    void logout()
       .then(() => client.resetStore())
       .then(() => {
         setCurrentUser(null);
