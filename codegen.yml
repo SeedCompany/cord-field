@@ -1,4 +1,4 @@
-schema: schema.graphql
+schema: ${REACT_APP_API_BASE_URL}/graphql
 documents:
   - ./src/**/*.graphql
 overwrite: true
