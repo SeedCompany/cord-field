@@ -2,17 +2,17 @@ import {
   Button,
   Dialog,
   DialogActions,
+  DialogProps,
   DialogTitle,
   Divider,
   List,
 } from '@material-ui/core';
 import React, { FC } from 'react';
 import { File } from '../../../api';
-import { DialogState } from '../../../components/Dialog';
-import { FileVersionItem } from '../../../components/files/FileVersionItem/FileVersionItem';
+import { FileVersionItem } from '../../../components/files/FileVersionItem';
 import { useProjectFileVersionsQuery } from './ProjectFiles.generated';
 
-type FileVersionsProps = DialogState & {
+type FileVersionsProps = DialogProps & {
   file: File | undefined;
 };
 
@@ -39,7 +39,10 @@ export const FileVersions: FC<FileVersionsProps> = (props) => {
         ))}
       </List>
       <DialogActions>
-        <Button color="secondary" onClick={onClose}>
+        <Button
+          color="secondary"
+          onClick={(e) => onClose?.(e, 'backdropClick')}
+        >
           Close
         </Button>
       </DialogActions>
