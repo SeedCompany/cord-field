@@ -146,7 +146,7 @@ export const LanguageDetail = () => {
             loading={!language}
           />
           <Grid container spacing={3}>
-            <Grid item xs={6}>
+            <Grid item xs={12}>
               <Grid
                 container
                 spacing={2}
@@ -182,7 +182,7 @@ export const LanguageDetail = () => {
                 </Typography>
               ) : null}
             </Grid>
-            <Grid item xs={6}>
+            <Grid item xs={12}>
               <Grid
                 container
                 spacing={2}
