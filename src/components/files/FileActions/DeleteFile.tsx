@@ -22,7 +22,11 @@ export const DeleteFile = (props: Except<DeleteFileProps, 'onSubmit'>) => {
   const onSubmit: DeleteFileProps['onSubmit'] = async () => {
     await deleteFile({
       variables: { id },
-      refetchQueries: [GQLOperations.Query.ProjectDirectory],
+      refetchQueries: [
+        type === 'FileVersion'
+          ? GQLOperations.Query.FileVersions
+          : GQLOperations.Query.ProjectDirectory,
+      ],
     });
   };
 

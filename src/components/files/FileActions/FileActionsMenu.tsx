@@ -108,7 +108,7 @@ export const FileActionsMenu: FC<FileActionsMenuProps> = (props) => {
   const { item, ...rest } = props;
   const classes = useStyles();
   const { spacing } = useTheme();
-  const handleFilesSelection = useUploadProjectFiles(item.id);
+  const handleFilesSelection = useUploadProjectFiles(item.id, 'version');
   const { handleFileActionClick } = useFileActions();
 
   const close = () => props.onClose?.({}, 'backdropClick');
@@ -120,6 +120,7 @@ export const FileActionsMenu: FC<FileActionsMenuProps> = (props) => {
   };
 
   const { getRootProps, getInputProps } = useDropzone({
+    multiple: false,
     onDrop: handleFilesSelection,
     noDrag: true,
   });

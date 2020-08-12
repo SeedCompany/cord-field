@@ -7,7 +7,7 @@ export const useHandleUploadCompleted = (parentId: string): UploadCallback => {
   const [createFileVersion] = useCreateFileVersionMutation();
 
   const handleUploadCompleted: UploadCallback = useCallback(
-    async (uploadId, name) => {
+    async (uploadId, name, action) => {
       const input = {
         uploadId,
         name,
@@ -15,7 +15,11 @@ export const useHandleUploadCompleted = (parentId: string): UploadCallback => {
       };
       await createFileVersion({
         variables: { input },
-        refetchQueries: [GQLOperations.Query.ProjectDirectory],
+        refetchQueries: [
+          action === 'version'
+            ? GQLOperations.Query.FileVersions
+            : GQLOperations.Query.ProjectDirectory,
+        ],
       });
     },
     [parentId, createFileVersion]
@@ -24,7 +28,8 @@ export const useHandleUploadCompleted = (parentId: string): UploadCallback => {
 };
 
 export const useUploadProjectFiles = (
-  parentId: string
+  parentId: string,
+  action?: Parameters<UploadCallback>[2]
 ): ((files: File[]) => void) => {
   const { addFilesToUploadQueue } = useUpload();
 
@@ -35,11 +40,14 @@ export const useUploadProjectFiles = (
       const fileInputs = files.map((file) => ({
         file,
         fileName: file.name,
-        callback: handleUploadCompleted,
+        callback: (
+          uploadId: Parameters<UploadCallback>[0],
+          name: Parameters<UploadCallback>[1]
+        ) => handleUploadCompleted(uploadId, name, action),
       }));
       addFilesToUploadQueue(fileInputs);
     },
-    [addFilesToUploadQueue, handleUploadCompleted]
+    [action, addFilesToUploadQueue, handleUploadCompleted]
   );
 
   return handleFilesDrop;
