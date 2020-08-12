@@ -4,11 +4,13 @@ import React from 'react';
 import { useDropzone } from 'react-dropzone';
 import { useDialog } from '../../../components/Dialog';
 import { CreateProjectDirectory } from './CreateProjectDirectory';
+import { useProjectCurrentDirectory } from './useProjectCurrentDirectory';
 import { useUploadProjectFiles } from './useUploadProjectFiles';
 
 export const FileCreateActions = () => {
   const [createDirectoryState, createDirectory] = useDialog();
-  const handleFilesDrop = useUploadProjectFiles();
+  const { directoryId } = useProjectCurrentDirectory();
+  const handleFilesDrop = useUploadProjectFiles(directoryId);
 
   const { getRootProps, getInputProps, open: openFileBrowser } = useDropzone({
     onDrop: handleFilesDrop,

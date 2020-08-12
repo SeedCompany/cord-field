@@ -2,28 +2,33 @@ import { useCallback } from 'react';
 import { GQLOperations } from '../../../api';
 import { UploadCallback, useUpload } from '../../../components/Upload';
 import { useCreateProjectFileVersionMutation } from './CreateProjectFile.generated';
-import { useProjectCurrentDirectory } from './useProjectCurrentDirectory';
 
-export const useUploadProjectFiles = (): ((files: File[]) => void) => {
-  const { addFilesToUploadQueue } = useUpload();
+export const useHandleUploadCompleted = (parentId: string): UploadCallback => {
   const [createFileVersion] = useCreateProjectFileVersionMutation();
-
-  const { directoryId } = useProjectCurrentDirectory();
 
   const handleUploadCompleted: UploadCallback = useCallback(
     async (uploadId, name) => {
       const input = {
         uploadId,
         name,
-        parentId: directoryId,
+        parentId,
       };
       await createFileVersion({
         variables: { input },
         refetchQueries: [GQLOperations.Query.ProjectDirectory],
       });
     },
-    [directoryId, createFileVersion]
+    [parentId, createFileVersion]
   );
+  return handleUploadCompleted;
+};
+
+export const useUploadProjectFiles = (
+  parentId: string
+): ((files: File[]) => void) => {
+  const { addFilesToUploadQueue } = useUpload();
+
+  const handleUploadCompleted = useHandleUploadCompleted(parentId);
 
   const handleFilesDrop = (files: File[]) => {
     const fileInputs = files.map((file) => ({

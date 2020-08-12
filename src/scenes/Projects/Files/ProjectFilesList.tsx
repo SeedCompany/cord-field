@@ -106,7 +106,14 @@ export const ProjectFilesList: FC = () => {
   const downloadFile = useDownloadFile();
   const fileNameAndExtension = useFileNameAndExtension();
   const fileIcon = useFileNodeIcon();
-  const handleFilesDrop = useUploadProjectFiles();
+
+  const {
+    project,
+    directoryId,
+    rootDirectoryId,
+  } = useProjectCurrentDirectory();
+
+  const handleFilesDrop = useUploadProjectFiles(directoryId);
 
   const [renameFileState, renameFile, itemToRename] = useDialog<
     FileActionItem
@@ -133,12 +140,6 @@ export const ProjectFilesList: FC = () => {
   const handleFileActionClick: FileActionHandler = (item, action) => {
     actions[action](item);
   };
-
-  const {
-    project,
-    directoryId,
-    rootDirectoryId,
-  } = useProjectCurrentDirectory();
   const isNotRootDirectory = directoryId !== rootDirectoryId;
 
   const { data, loading, error } = useProjectDirectoryQuery({

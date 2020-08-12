@@ -17,7 +17,9 @@ import {
   BorderColor as RenameIcon,
 } from '@material-ui/icons';
 import React, { FC, useState } from 'react';
+import { useDropzone } from 'react-dropzone';
 import { Directory, File } from '../../../api';
+import { useUploadProjectFiles } from '../../../scenes/Projects/Files';
 
 const useStyles = makeStyles(({ spacing }) => ({
   listItemIcon: {
@@ -108,9 +110,10 @@ type FileActionsMenuProps = Partial<MenuProps> & {
 };
 
 export const FileActionsMenu: FC<FileActionsMenuProps> = (props) => {
+  const { item, onAction, ...rest } = props;
   const classes = useStyles();
   const { spacing } = useTheme();
-  const { item, onAction, ...rest } = props;
+  const handleFilesSelection = useUploadProjectFiles(item.id);
 
   const close = () => props.onClose?.({}, 'backdropClick');
 
@@ -119,6 +122,30 @@ export const FileActionsMenu: FC<FileActionsMenuProps> = (props) => {
     close();
     onAction(item, action);
   };
+
+  const renderedMenuItem = (menuItem: typeof menuItems[0]) => {
+    const { text, icon: Icon, directory } = menuItem;
+    return item.category === 'Directory' && !directory ? null : (
+      <MenuItem
+        key={text}
+        onClick={
+          text === FileAction['NewVersion']
+            ? undefined
+            : (event) => handleActionClick(event, text)
+        }
+      >
+        <ListItemIcon className={classes.listItemIcon}>
+          <Icon fontSize="small" />
+        </ListItemIcon>
+        <ListItemText className={classes.listItemText} primary={text} />
+      </MenuItem>
+    );
+  };
+
+  const { getRootProps, getInputProps } = useDropzone({
+    onDrop: handleFilesSelection,
+    noDrag: true,
+  });
 
   return (
     <Menu
@@ -131,17 +158,13 @@ export const FileActionsMenu: FC<FileActionsMenuProps> = (props) => {
       {...rest}
     >
       {menuItems.map((menuItem) => {
-        const { text, icon: Icon, directory } = menuItem;
-        return item.category === 'Directory' && !directory ? null : (
-          <MenuItem
-            key={text}
-            onClick={(event) => handleActionClick(event, text)}
-          >
-            <ListItemIcon className={classes.listItemIcon}>
-              <Icon fontSize="small" />
-            </ListItemIcon>
-            <ListItemText className={classes.listItemText} primary={text} />
-          </MenuItem>
+        return menuItem.text === FileAction['NewVersion'] ? (
+          <div {...getRootProps()}>
+            <input {...getInputProps()} name="file-version-uploader" />
+            {renderedMenuItem(menuItem)}
+          </div>
+        ) : (
+          renderedMenuItem(menuItem)
         );
       })}
     </Menu>
