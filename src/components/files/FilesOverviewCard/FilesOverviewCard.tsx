@@ -1,6 +1,5 @@
 import { LibraryBooksOutlined } from '@material-ui/icons';
-import * as React from 'react';
-import { FC } from 'react';
+import React, { FC } from 'react';
 import { FieldOverviewCard } from '../../FieldOverviewCard';
 import { useNumberFormatter } from '../../Formatters';
 

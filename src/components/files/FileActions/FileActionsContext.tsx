@@ -110,11 +110,11 @@ export const FileActionsContextProvider: FC = ({ children }) => {
   };
 
   const actions = {
-    rename: (item: FileActionItem) => renameFile(item as any),
-    download: (item: FileActionItem) => downloadFile(item as File),
+    rename: (item: FileActionItem) => renameFile(item),
+    download: (item: FileActionItem) => downloadFile(item),
     history: (item: FileActionItem) => showVersions(item as File),
     'new version': (item: FileActionItem) => createNewVersion(item as File),
-    delete: (item: FileActionItem) => deleteFile(item as any),
+    delete: (item: FileActionItem) => deleteFile(item),
   };
 
   const handleFileActionClick: FileActionHandler = (item, action) => {

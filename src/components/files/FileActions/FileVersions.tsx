@@ -31,11 +31,13 @@ export const FileVersions: FC<FileVersionsProps> = (props) => {
     variables: { id },
     skip: !file,
   });
+
   const total = data?.file.children.total;
+
   const versions: FileVersionsList =
     (data?.file.children.items.filter(
       (item) => item.type === 'FileVersion'
-    ) as FileVersionsList) ?? ([] as FileVersionsList);
+    ) as FileVersionsList) ?? [];
   const descendingVersions = versions.reduceRight(
     (descending, version) => descending.concat(version),
     [] as FileVersionsList
