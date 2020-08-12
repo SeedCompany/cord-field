@@ -20,6 +20,9 @@ const initialUploadContext = {
   addFilesToUploadQueue: (_: Types.FileInput[]) => {
     return;
   },
+  removeCompletedUploads: () => {
+    return;
+  },
 };
 
 export const UploadContext = createContext<typeof initialUploadContext>(
@@ -57,6 +60,10 @@ export const UploadProvider: FC = ({ children }) => {
     dispatch({ type: actions.REMOVE_UPLOAD, queueId });
   }, []);
 
+  const removeCompletedUploads = useCallback(() => {
+    dispatch({ type: actions.REMOVE_COMPLETED_UPLOADS });
+  }, []);
+
   const handleFileAdded = useCallback(
     async (file: Types.UploadFile) => {
       const { data } = await requestFileUpload();
@@ -88,9 +95,11 @@ export const UploadProvider: FC = ({ children }) => {
   }, [submittedFiles, handleFileAdded, setUploadingStatus]);
 
   return (
-    <UploadContext.Provider value={{ addFilesToUploadQueue }}>
+    <UploadContext.Provider
+      value={{ addFilesToUploadQueue, removeCompletedUploads }}
+    >
       {children}
-      <UploadManager>
+      <UploadManager removeCompletedUploads={removeCompletedUploads}>
         <UploadItems state={state} removeUpload={removeUpload} />
       </UploadManager>
     </UploadContext.Provider>

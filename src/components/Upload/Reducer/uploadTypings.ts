@@ -44,6 +44,10 @@ export interface RemoveCompletedUploadAction extends FileAction {
   type: typeof actions.REMOVE_UPLOAD;
 }
 
+export interface RemoveAllCompletedUploadsAction {
+  type: typeof actions.REMOVE_COMPLETED_UPLOADS;
+}
+
 export interface FileUploadCompletedAction extends FileAction {
   type: typeof actions.FILE_UPLOAD_COMPLETED;
   completedAt: UploadFile['completedAt'];
@@ -68,6 +72,7 @@ export type UploadAction =
   | FileSubmittedAction
   | FileUploadRequestSucceeded
   | RemoveCompletedUploadAction
+  | RemoveAllCompletedUploadsAction
   | FileUploadCompletedAction
   | UploadErrorOccurredAction
   | UploadPercentCompletedUpdateAction

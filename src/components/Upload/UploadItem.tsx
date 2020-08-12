@@ -88,7 +88,7 @@ export const UploadItem: FC<UploadItemProps> = (props) => {
             variant="caption"
             color="primary"
           >
-            – {Math.round(percentCompleted)}%
+            &nbsp;– {Math.round(percentCompleted)}%
           </Typography>
         )}
       </div>

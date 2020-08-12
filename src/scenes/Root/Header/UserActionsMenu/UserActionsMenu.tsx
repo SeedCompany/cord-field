@@ -12,7 +12,7 @@ import {
   Visibility as ShowIcon,
 } from '@material-ui/icons';
 import React from 'react';
-import { useUploadManager } from '../../../../components/Upload';
+import { useUpload, useUploadManager } from '../../../../components/Upload';
 
 const useStyles = makeStyles(({ spacing }) => ({
   menu: {
@@ -31,8 +31,16 @@ export const UserActionsMenu = (props: Partial<MenuProps>) => {
   const classes = useStyles();
   const { spacing } = useTheme();
   const { isManagerOpen, setIsManagerOpen } = useUploadManager();
+  const { removeCompletedUploads } = useUpload();
 
   const UmIcon = isManagerOpen ? HideIcon : ShowIcon;
+
+  const handleUploadManagerToggle = () => {
+    if (isManagerOpen) {
+      removeCompletedUploads();
+    }
+    setIsManagerOpen(!isManagerOpen);
+  };
 
   return (
     <Menu
@@ -45,7 +53,7 @@ export const UserActionsMenu = (props: Partial<MenuProps>) => {
       classes={{ paper: classes.menu }}
       {...props}
     >
-      <MenuItem onClick={() => setIsManagerOpen(!isManagerOpen)}>
+      <MenuItem onClick={handleUploadManagerToggle}>
         <ListItemIcon className={classes.listItemIcon}>
           <UmIcon fontSize="small" />
         </ListItemIcon>

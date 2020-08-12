@@ -111,8 +111,12 @@ const DialogTitle: FC<DialogTitleProps> = (props) => {
   );
 };
 
-export const UploadManager: FC = memo((props) => {
-  const { children } = props;
+interface UploadManagerProps {
+  removeCompletedUploads: () => void;
+}
+
+export const UploadManager: FC<UploadManagerProps> = memo((props) => {
+  const { children, removeCompletedUploads } = props;
   const [session] = useSession();
   const { isManagerOpen, setIsManagerOpen } = useUploadManager();
   const [isCollapsed, setIsCollapsed] = useState(false);
@@ -120,6 +124,7 @@ export const UploadManager: FC = memo((props) => {
 
   function handleClose(event: React.MouseEvent<HTMLButtonElement>) {
     event.stopPropagation();
+    removeCompletedUploads();
     setIsManagerOpen(false);
   }
 

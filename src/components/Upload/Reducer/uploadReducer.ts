@@ -48,6 +48,17 @@ export const uploadReducer = (
       };
     }
 
+    case actions.REMOVE_COMPLETED_UPLOADS: {
+      const { submittedFiles } = state;
+      const nonCompletedFiles = submittedFiles.filter(
+        (file) => !file.completedAt
+      );
+      return {
+        ...state,
+        submittedFiles: nonCompletedFiles,
+      };
+    }
+
     case actions.FILE_UPLOAD_ERROR_OCCURRED: {
       const { submittedFiles } = state;
       const file = findFileById(action.queueId, submittedFiles);
@@ -96,7 +107,9 @@ function updateSimpleFileState(
   state: Types.UploadState,
   action: Exclude<
     Types.UploadAction,
-    Types.FileSubmittedAction | Types.RemoveCompletedUploadAction
+    | Types.FileSubmittedAction
+    | Types.RemoveCompletedUploadAction
+    | Types.RemoveAllCompletedUploadsAction
   >,
   key: keyof Types.UploadFile
 ) {
