@@ -37,14 +37,14 @@ const useStyles = makeStyles(({ palette, spacing }) => ({
     justifyContent: 'space-between',
     alignItems: 'center',
     padding: spacing(1),
-    '&.collapsed': {
+    '&$collapsed': {
       cursor: 'default',
     },
   },
   title: {
     cursor: 'move',
     paddingLeft: spacing(1),
-    '&.collapsed': {
+    '&$collapsed': {
       cursor: 'default',
     },
   },
@@ -54,13 +54,14 @@ const useStyles = makeStyles(({ palette, spacing }) => ({
   titleButton: {},
   contentContainer: {
     padding: spacing(1),
-    '&.collapsed': {
+    '&$collapsed': {
       display: 'none',
     },
   },
   noUploadsText: {
     color: palette.grey[400],
   },
+  collapsed: {}, // here to pacify TypeScript
 }));
 
 interface DialogTitleProps {
@@ -77,13 +78,13 @@ const DialogTitle: FC<DialogTitleProps> = (props) => {
   return (
     <MuiDialogTitle
       id={id}
-      className={clsx(classes.titleContainer, isCollapsed && 'collapsed')}
+      className={clsx(classes.titleContainer, isCollapsed && classes.collapsed)}
       disableTypography
     >
       <Typography
         variant="body1"
         component="h6"
-        className={clsx(classes.title, isCollapsed && 'collapsed')}
+        className={clsx(classes.title, isCollapsed && classes.collapsed)}
       >
         {children}
       </Typography>
@@ -154,7 +155,10 @@ export const UploadManager: FC<UploadManagerProps> = memo((props) => {
         Upload Manager
       </DialogTitle>
       <DialogContent
-        className={clsx(classes.contentContainer, isCollapsed && 'collapsed')}
+        className={clsx(
+          classes.contentContainer,
+          isCollapsed && classes.collapsed
+        )}
       >
         {children}
       </DialogContent>
