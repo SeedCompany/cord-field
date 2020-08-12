@@ -92,7 +92,7 @@ export const SubmitButton: FC<SubmitButtonProps> = ({
       variant="contained"
       {...rest}
       onClick={(e) => {
-        rest.onClick && rest.onClick(e);
+        rest.onClick?.(e);
         if (e.isPropagationStopped()) {
           return;
         }

@@ -84,8 +84,8 @@ export const FileActionsPopup: FC<FileActionsPopupProps> = (props) => {
     e.stopPropagation();
     setAnchor(e.currentTarget);
   };
-  const closeAddMenu = (e: React.MouseEvent) => {
-    e.stopPropagation && e.stopPropagation();
+  const closeAddMenu = (e: Partial<React.SyntheticEvent>) => {
+    e.stopPropagation?.();
     setAnchor(null);
   };
 
