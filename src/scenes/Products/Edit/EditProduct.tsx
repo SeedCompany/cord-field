@@ -2,7 +2,7 @@ import { Breadcrumbs, makeStyles, Typography } from '@material-ui/core';
 import { Skeleton } from '@material-ui/lab';
 import { useSnackbar } from 'notistack';
 import React from 'react';
-import { useParams } from 'react-router';
+import { useNavigate, useParams } from 'react-router';
 import { Except } from 'type-fest';
 import { handleFormError, UpdateProduct } from '../../../api';
 import { EngagementBreadcrumb } from '../../../components/EngagementBreadcrumb';
@@ -37,6 +37,7 @@ const useStyles = makeStyles(({ spacing, breakpoints }) => ({
 
 export const EditProduct = () => {
   const classes = useStyles();
+  const navigate = useNavigate();
 
   const { projectId, engagementId, productId } = useParams();
   const { enqueueSnackbar } = useSnackbar();
@@ -98,7 +99,7 @@ export const EditProduct = () => {
           product: { productType, book, produces, ...input },
         }) => {
           try {
-            const { data } = await createProduct({
+            await createProduct({
               variables: {
                 input: {
                   product: { ...input, produces: produces?.id },
@@ -106,11 +107,11 @@ export const EditProduct = () => {
               },
             });
 
-            const { product } = data!.updateProduct;
-
-            enqueueSnackbar(`Edited Product: ${product.id}`, {
+            enqueueSnackbar(`Updates Saved`, {
               variant: 'success',
             });
+
+            navigate('../../');
           } catch (e) {
             await handleFormError(e);
           }
