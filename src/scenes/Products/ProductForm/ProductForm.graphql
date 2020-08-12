@@ -1,30 +1,4 @@
 fragment ProductForm on Product {
-  ... on DerivativeScriptureProduct {
-    produces {
-      canRead
-      canEdit
-      value {
-        ...Producible
-      }
-    }
-    scriptureReferencesOverride {
-      canRead
-      canEdit
-      value {
-        start {
-          book
-          chapter
-          verse
-        }
-        end {
-          book
-          chapter
-          verse
-        }
-      }
-    }
-  }
-
   id
   legacyType
   scriptureReferences {
@@ -60,6 +34,31 @@ fragment ProductForm on Product {
   }
   approach
   legacyType
+  ... on DerivativeScriptureProduct {
+    produces {
+      canRead
+      canEdit
+      value {
+        ...Producible
+      }
+    }
+    scriptureReferencesOverride {
+      canRead
+      canEdit
+      value {
+        start {
+          book
+          chapter
+          verse
+        }
+        end {
+          book
+          chapter
+          verse
+        }
+      }
+    }
+  }
 }
 
 fragment Producible on Producible {
