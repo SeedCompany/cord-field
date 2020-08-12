@@ -1,5 +1,5 @@
 import { Box } from '@material-ui/core';
-import { boolean, select, text } from '@storybook/addon-knobs';
+import { boolean, number, select, text } from '@storybook/addon-knobs';
 import React from 'react';
 import { date, dateTime } from '../knobs.stories';
 import { ProjectListItemFragment } from './ProjectListItem.generated';
@@ -53,7 +53,7 @@ export const ProjectListItemCard = () => {
         },
       },
     },
-    // engagements:{ total: number('Engagements', 123) }
+    engagements: { total: number('Engagements', 123) },
   };
   return (
     <Box display="flex">
