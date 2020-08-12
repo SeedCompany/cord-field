@@ -113,7 +113,10 @@ export const FileActionsMenu: FC<FileActionsMenuProps> = (props) => {
 
   const close = () => props.onClose?.({}, 'backdropClick');
 
-  const handleActionClick = (event: React.MouseEvent, action: FileAction) => {
+  const handleActionClick = (
+    event: React.MouseEvent,
+    action: Exclude<FileAction, FileAction.NewVersion>
+  ) => {
     event.stopPropagation();
     close();
     handleFileActionClick(item, action);
@@ -149,18 +152,17 @@ export const FileActionsMenu: FC<FileActionsMenuProps> = (props) => {
     >
       {menuItems.map((menuItem) => {
         const { text, directory, version } = menuItem;
-        const isNewVersion = text === FileAction['NewVersion'];
         return (item.type === 'Directory' && !directory) ||
           (item.type === 'FileVersion' && !version) ? null : (
           <MenuItem
             key={text}
             onClick={
-              isNewVersion
+              text === FileAction['NewVersion']
                 ? (event) => event.stopPropagation()
                 : (event) => handleActionClick(event, text)
             }
           >
-            {isNewVersion ? (
+            {text === FileAction['NewVersion'] ? (
               <span {...getRootProps()} className={classes.newVersionItem}>
                 <input {...getInputProps()} name="file-version-uploader" />
                 {menuItemContents(menuItem)}

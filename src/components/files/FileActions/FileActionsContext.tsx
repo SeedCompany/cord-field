@@ -19,7 +19,10 @@ export enum FileAction {
   Delete = 'delete',
 }
 
-type FileActionHandler = (item: FileActionItem, action: FileAction) => void;
+type FileActionHandler = (
+  item: FileActionItem,
+  action: Exclude<FileAction, FileAction.NewVersion>
+) => void;
 
 interface PreviewState {
   dialogState: DialogState;
@@ -37,8 +40,6 @@ export interface FileActionsContextValue {
   fileNodeToRename: FileActionItem | undefined;
   versionState: DialogState;
   versionToView: File | undefined;
-  newVersionState: DialogState;
-  versionToCreate: File | undefined;
   deleteState: DialogState;
   fileNodeToDelete: FileActionItem | undefined;
   previewState: PreviewState;
@@ -90,9 +91,6 @@ export const FileActionsContextProvider: FC = ({ children }) => {
     FileActionItem
   >();
   const [versionState, showVersions, versionToView] = useDialog<File>();
-  const [newVersionState, createNewVersion, versionToCreate] = useDialog<
-    File
-  >();
   const [deleteState, deleteFile, fileNodeToDelete] = useDialog<
     FileActionItem
   >();
@@ -113,7 +111,6 @@ export const FileActionsContextProvider: FC = ({ children }) => {
     rename: (item: FileActionItem) => renameFile(item),
     download: (item: FileActionItem) => downloadFile(item),
     history: (item: FileActionItem) => showVersions(item as File),
-    'new version': (item: FileActionItem) => createNewVersion(item as File),
     delete: (item: FileActionItem) => deleteFile(item),
   };
 
@@ -129,8 +126,6 @@ export const FileActionsContextProvider: FC = ({ children }) => {
         fileNodeToRename,
         versionState,
         versionToView,
-        newVersionState,
-        versionToCreate,
         deleteState,
         fileNodeToDelete,
         previewState,
