@@ -8,7 +8,7 @@ import {
   Typography,
 } from '@material-ui/core';
 import { AddCircle, ChatOutlined, DateRange, Edit } from '@material-ui/icons';
-import React, { FC } from 'react';
+import React, { FC, useRef } from 'react';
 import {
   canEditAny,
   displayEngagementStatus,
@@ -92,7 +92,10 @@ export const LanguageEngagementDetail: FC<EngagementQuery> = ({
     awaitRefetchQueries: true,
   });
 
+  const productIdProcessingDelete = useRef<string>();
+
   const handleDelete = (productId: string) => {
+    productIdProcessingDelete.current = productId;
     deleteProduct({
       variables: {
         productId,
@@ -261,7 +264,9 @@ export const LanguageEngagementDetail: FC<EngagementQuery> = ({
               <ProductCard
                 product={product}
                 handleDelete={() => handleDelete(product.id)}
-                isDeleteLoading={loading}
+                isDeleteLoading={
+                  productIdProcessingDelete.current === product.id && loading
+                }
               />
             </Grid>
           ))}
