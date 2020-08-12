@@ -129,14 +129,15 @@ export function blurOnSubmit<T, I>(form: FormApi<T, I>): Unsubscribe {
 export const matchFieldIfSame = (source: string, dest: string) => <T, I>(
   form: FormApi<T, I>
 ): Unsubscribe => {
-  let prevInitialValues: object;
+  let prevInitialValues: I;
   let prevValues: T;
   return form.subscribe(
     ({ initialValues, values, active }) => {
       if (!prevValues || prevInitialValues !== initialValues) {
         prevValues = initialValues as T;
       }
-      prevInitialValues = initialValues;
+      // typecasting because FF doesn't pass through InitialValue generic
+      prevInitialValues = initialValues as I;
       if (active === source) {
         const prevSrc = get(prevValues, source);
         const prevDest = get(prevValues, dest);

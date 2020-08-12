@@ -76,9 +76,12 @@ export const SubmitButton: FC<SubmitButtonProps> = ({
     }
     const unchangedSubmitErrors = Object.keys(
       dirtyFieldsSinceLastSubmit
-    ).reduce((remaining: object | undefined, field) => {
-      return remaining ? setIn(remaining, field, undefined) : undefined;
-    }, cloneDeep(fieldSubmitErrors));
+    ).reduce(
+      (remaining: Partial<typeof fieldSubmitErrors> | undefined, field) => {
+        return remaining ? setIn(remaining, field, undefined) : undefined;
+      },
+      cloneDeep(fieldSubmitErrors)
+    );
     return (
       !unchangedSubmitErrors || Object.keys(unchangedSubmitErrors).length === 0
     );

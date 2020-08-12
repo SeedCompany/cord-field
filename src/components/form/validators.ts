@@ -7,7 +7,7 @@ import isEmail from 'validator/lib/isEmail';
  */
 export type Validator<Value> = (
   value: Value,
-  allValues: object,
+  allValues: Record<string, any>,
   meta?: FieldState<Value>
 ) => Promisable<string | undefined>;
 

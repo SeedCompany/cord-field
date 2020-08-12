@@ -3,7 +3,7 @@ import { ArrowDownward, Check, Clear, Edit } from '@material-ui/icons';
 import MaterialTable, { Column, Icons } from 'material-table';
 import React, { forwardRef, ReactElement } from 'react';
 
-interface TableProps<RowData extends object> {
+interface TableProps<RowData extends Record<string, any>> {
   onRowClick?: (rowData: RowData) => void;
   columns: Array<Column<RowData>>;
   data: RowData[];
@@ -13,7 +13,9 @@ interface TableProps<RowData extends object> {
   toolbarContents?: ReactElement;
 }
 
-export const Table = <RowData extends object>(props: TableProps<RowData>) => {
+export const Table = <RowData extends Record<string, any>>(
+  props: TableProps<RowData>
+) => {
   const {
     onRowClick,
     columns: columnData,
