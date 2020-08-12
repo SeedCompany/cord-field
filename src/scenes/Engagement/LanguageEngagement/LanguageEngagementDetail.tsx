@@ -88,7 +88,9 @@ export const LanguageEngagementDetail: FC<EngagementQuery> = ({
   const formatDate = useDateFormatter();
   const formatDateTime = useDateTimeFormatter();
 
-  const [deleteProduct] = useDeleteProductMutation();
+  const [deleteProduct, { loading }] = useDeleteProductMutation({
+    awaitRefetchQueries: true,
+  });
 
   const handleDelete = (productId: string) => {
     deleteProduct({
@@ -259,6 +261,7 @@ export const LanguageEngagementDetail: FC<EngagementQuery> = ({
               <ProductCard
                 product={product}
                 handleDelete={() => handleDelete(product.id)}
+                isDeleteLoading={loading}
               />
             </Grid>
           ))}

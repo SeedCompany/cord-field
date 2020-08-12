@@ -1,5 +1,4 @@
 import {
-  Button,
   Card,
   CardActions,
   CardContent,
@@ -17,6 +16,7 @@ import { startCase } from 'lodash';
 import React from 'react';
 import { displayMethodologyWithLabel, displayScripture } from '../../api';
 import { DisplaySimpleProperty } from '../DisplaySimpleProperty';
+import { ProgressButton } from '../ProgressButton';
 import { ButtonLink, CardActionAreaLink } from '../Routing';
 import { ProductCardFragment } from './ProductCard.generated';
 
@@ -54,9 +54,14 @@ const useStyles = makeStyles(({ spacing, palette }) => ({
 interface ProductCardProps {
   product: ProductCardFragment;
   handleDelete: () => void;
+  isDeleteLoading?: boolean;
 }
 
-export const ProductCard = ({ product, handleDelete }: ProductCardProps) => {
+export const ProductCard = ({
+  product,
+  handleDelete,
+  isDeleteLoading = false,
+}: ProductCardProps) => {
   const classes = useStyles();
   const type =
     product.__typename === 'DerivativeScriptureProduct'
@@ -116,9 +121,15 @@ export const ProductCard = ({ product, handleDelete }: ProductCardProps) => {
         </CardContent>
       </CardActionAreaLink>
       <CardActions classes={{ root: classes.actions }}>
-        <Button onClick={handleDelete} className={classes.deleteButton}>
-          Delete
-        </Button>
+        {
+          <ProgressButton
+            progress={isDeleteLoading}
+            onClick={handleDelete}
+            className={classes.deleteButton}
+          >
+            Delete
+          </ProgressButton>
+        }
         <ButtonLink to={`products/${product.id}`} color="primary">
           Edit
         </ButtonLink>
