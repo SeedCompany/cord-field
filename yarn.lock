@@ -7566,7 +7566,7 @@ __metadata:
     customize-cra: ^1.0.0
     eslint: ^7.6.0
     file-saver: ^2.0.2
-    final-form: ^4.20.1
+    final-form: "patch:final-form@4.20.1#./patches/final-form.patch"
     graphql: ^15.3.0
     history: ^5.0.0
     husky: ^4.2.5
@@ -10219,12 +10219,21 @@ __metadata:
   languageName: node
   linkType: hard
 
-"final-form@npm:^4.20.1":
+final-form@4.20.1:
   version: 4.20.1
   resolution: "final-form@npm:4.20.1"
   dependencies:
     "@babel/runtime": ^7.10.0
   checksum: 3/007bc31ead06ad92ec9a3a917183c8e36cbf2f4a5a7188fa938b8212953e16580db61eedbfca443edcc8402d671b7828b3514f82f5ab03886611f8ccf8f3f847
+  languageName: node
+  linkType: hard
+
+"final-form@patch:final-form@4.20.1#./patches/final-form.patch::locator=cord-field%40workspace%3A.":
+  version: 4.20.1
+  resolution: "final-form@patch:final-form@npm%3A4.20.1#./patches/final-form.patch::version=4.20.1&hash=01fe78&locator=cord-field%40workspace%3A."
+  dependencies:
+    "@babel/runtime": ^7.10.0
+  checksum: 3/03cd59b926e4d3e63080a5724b724f3f66c4ce4fe542865c635f1ab37ed43a663e7d2828f5ff4cd560c2aaea4d7e7a6556a5804fa4a9f88112816848811883d8
   languageName: node
   linkType: hard
 

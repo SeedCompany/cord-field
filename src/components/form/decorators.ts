@@ -134,10 +134,9 @@ export const matchFieldIfSame = (source: string, dest: string) => <T, I>(
   return form.subscribe(
     ({ initialValues, values, active }) => {
       if (!prevValues || prevInitialValues !== initialValues) {
-        prevValues = initialValues as T;
+        prevValues = (initialValues as unknown) as T;
       }
-      // typecasting because FF doesn't pass through InitialValue generic
-      prevInitialValues = initialValues as I;
+      prevInitialValues = initialValues;
       if (active === source) {
         const prevSrc = get(prevValues, source);
         const prevDest = get(prevValues, dest);
