@@ -192,7 +192,7 @@ export const CheckboxOption = ({
           return;
         }
         e.preventDefault();
-        ctx?.onFocus();
+        ctx.onFocus();
       }}
     />
   );

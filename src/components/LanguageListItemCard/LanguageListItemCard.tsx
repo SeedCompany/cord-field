@@ -59,7 +59,7 @@ export const LanguageListItemCard: FC<LanguageListItemCardProps> = ({
               {!language ? (
                 <Skeleton width="50%" variant="text" />
               ) : (
-                language.name?.value ?? language.displayName?.value
+                language.name.value ?? language.displayName.value
               )}
             </Typography>
             <DisplaySimpleProperty

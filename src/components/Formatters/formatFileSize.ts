@@ -4,5 +4,5 @@ export const formatFileSize = (bytes: number): string => {
     return `${bytes} ${sizes[0]}`;
   }
   const sizeIndex = Number(Math.floor(Math.log(bytes) / Math.log(1024)));
-  return `${Math.round(bytes / Math.pow(1024, sizeIndex))} ${sizes[sizeIndex]}`;
+  return `${Math.round(bytes / 1024 ** sizeIndex)} ${sizes[sizeIndex]}`;
 };

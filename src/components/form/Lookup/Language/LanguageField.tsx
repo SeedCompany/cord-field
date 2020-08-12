@@ -6,5 +6,5 @@ export const LanguageField = LookupField.createFor<LanguageLookupItem>({
   resource: 'Language',
   useLookup: useLanguageLookupLazyQuery,
   getOptionLabel: (option) =>
-    option?.name?.value ?? option?.displayName?.value ?? '',
+    option.name.value ?? option.displayName.value ?? '',
 });

@@ -57,7 +57,7 @@ export const InternshipEngagementDetail: FC<EngagementQuery> = ({
     return null; // easiest for typescript
   }
 
-  const intern = engagement.intern?.value;
+  const intern = engagement.intern.value;
   const name = intern?.fullName;
   const editable = canEditAny(engagement);
 

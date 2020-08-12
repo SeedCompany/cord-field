@@ -55,7 +55,7 @@ export const LargeDate = ({ date, className }: LargeDateProps) => {
       )}
     >
       {date?.value ? (
-        formatDate(date?.value)
+        formatDate(date.value)
       ) : (
         <>
           <span className={classes.hidden}>{formatDate(placeholderNow)}</span>

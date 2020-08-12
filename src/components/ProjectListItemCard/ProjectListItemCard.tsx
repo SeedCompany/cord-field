@@ -101,7 +101,7 @@ export const ProjectListItemCard: FC<ProjectListItemCardProps> = ({
           >
             <Grid item>
               <Typography variant="h4">
-                {!project ? <Skeleton variant="text" /> : project.name?.value}
+                {!project ? <Skeleton variant="text" /> : project.name.value}
               </Typography>
             </Grid>
             <Grid item>
@@ -154,7 +154,7 @@ export const ProjectListItemCard: FC<ProjectListItemCardProps> = ({
                     className={classes.skeletonRight}
                   />
                 ) : (
-                  project?.engagements.total
+                  project.engagements.total
                 )}
               </Typography>
               <Typography variant="body2" color="primary">
@@ -186,8 +186,8 @@ export const ProjectListItemCard: FC<ProjectListItemCardProps> = ({
               <DisplaySimpleProperty
                 label="ESAD"
                 value={
-                  project.estimatedSubmission?.value
-                    ? formatDate(project.estimatedSubmission?.value)
+                  project.estimatedSubmission.value
+                    ? formatDate(project.estimatedSubmission.value)
                     : undefined
                 }
                 ValueProps={{ color: 'primary' }}

@@ -91,7 +91,7 @@ export const UserDetail = () => {
             label="Local Time"
             value={
               user?.timezone.value?.name ? (
-                <LocalTime timezone={user?.timezone.value?.name} />
+                <LocalTime timezone={user.timezone.value.name} />
               ) : null
             }
             loading={!user}

@@ -125,7 +125,7 @@ export const LanguageDetail = () => {
             label="Ethnologue Code"
             value={
               ethnologue?.code.value ?? ethnologue?.provisionalCode.value
-                ? `${ethnologue?.provisionalCode.value} (provisional)`
+                ? `${ethnologue.provisionalCode.value} (provisional)`
                 : null
             }
             loading={!language}

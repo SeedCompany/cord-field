@@ -53,24 +53,24 @@ interface FileActionsPopupProps {
 
 const menuItems = [
   {
-    text: FileAction['Rename'],
+    text: FileAction.Rename,
     icon: RenameIcon,
     directory: true,
   },
   {
-    text: FileAction['Download'],
+    text: FileAction.Download,
     icon: DownloadIcon,
   },
   {
-    text: FileAction['History'],
+    text: FileAction.History,
     icon: HistoryIcon,
   },
   {
-    text: FileAction['NewVersion'],
+    text: FileAction.NewVersion,
     icon: AddIcon,
   },
   {
-    text: FileAction['Delete'],
+    text: FileAction.Delete,
     icon: DeleteIcon,
     directory: true,
   },
@@ -129,7 +129,7 @@ export const FileActionsMenu: FC<FileActionsMenuProps> = (props) => {
       <MenuItem
         key={text}
         onClick={
-          text === FileAction['NewVersion']
+          text === FileAction.NewVersion
             ? undefined
             : (event) => handleActionClick(event, text)
         }
@@ -158,7 +158,7 @@ export const FileActionsMenu: FC<FileActionsMenuProps> = (props) => {
       {...rest}
     >
       {menuItems.map((menuItem) => {
-        return menuItem.text === FileAction['NewVersion'] ? (
+        return menuItem.text === FileAction.NewVersion ? (
           <div {...getRootProps()}>
             <input {...getInputProps()} name="file-version-uploader" />
             {renderedMenuItem(menuItem)}

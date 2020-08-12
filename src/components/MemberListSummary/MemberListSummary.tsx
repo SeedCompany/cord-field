@@ -115,7 +115,7 @@ function memberNames(members: MemberSummaryItem[] | undefined, max: number) {
   const remainingCount = membersToDisplay
     ? members!.length - membersToDisplay.length
     : 0;
-  const names = membersToDisplay?.join(', ') ?? '';
+  const names = membersToDisplay.join(', ') ?? '';
   const extra =
     remainingCount > 0
       ? `${remainingCount} other${remainingCount > 1 ? 's' : ''}`

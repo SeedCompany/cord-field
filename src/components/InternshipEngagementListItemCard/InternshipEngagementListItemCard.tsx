@@ -76,8 +76,8 @@ export const InternshipEngagementListItemCard: FC<InternshipEngagementListItemCa
 
   const fullName = props.intern.value?.fullName;
   const endDate = getEndDate(props);
-  const position = props.position?.value;
-  const country = props.countryOfOrigin?.value?.name.value;
+  const position = props.position.value;
+  const country = props.countryOfOrigin.value?.name.value;
 
   return (
     <Card className={clsx(classes.root, props.className)}>

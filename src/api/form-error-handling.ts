@@ -139,8 +139,8 @@ const defaultHandlers: ErrorHandlers = {
  */
 export const handleFormError = async (e: unknown, handlers?: ErrorHandlers) => {
   if (!isClientError(e)) {
-    const handler = handlers?.Server ?? defaultHandlers?.Server;
-    return invokeHandler(handler, e);
+    const handler = handlers?.Server ?? defaultHandlers.Server;
+    return await invokeHandler(handler, e);
   }
 
   const { message, extensions = {} } = e.graphQLErrors[0];
@@ -152,7 +152,7 @@ export const handleFormError = async (e: unknown, handlers?: ErrorHandlers) => {
 
   const handler =
     handlers?.[code] ??
-    defaultHandlers?.[code] ??
+    defaultHandlers[code] ??
     handlers?.Default ??
     (({ message }: { message: string }) => message);
 
@@ -160,7 +160,7 @@ export const handleFormError = async (e: unknown, handlers?: ErrorHandlers) => {
 };
 
 const isClientError = (e: unknown): e is ApolloError => {
-  if (!(e instanceof ApolloError) || !e.graphQLErrors?.[0]) {
+  if (!(e instanceof ApolloError) || !e.graphQLErrors[0]) {
     return false;
   }
   // For mutations we will assume they will only have one error

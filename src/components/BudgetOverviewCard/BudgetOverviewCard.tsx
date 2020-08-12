@@ -24,7 +24,7 @@ export const BudgetOverviewCard: FC<BudgetOverviewCardProps> = ({
       data={
         budget
           ? {
-              updatedAt: budget?.createdAt,
+              updatedAt: budget.createdAt,
               value: formatCurrency(budget.total),
               to: `budget`,
             }

@@ -81,7 +81,7 @@ export const ProjectOverview: FC = () => {
     data?.project.engagements.items.reduce(
       (total, item) =>
         item.__typename === 'LanguageEngagement'
-          ? total + (item?.language.value?.population.value ?? 0)
+          ? total + (item.language.value?.population.value ?? 0)
           : total,
       0
     ) || undefined;
@@ -214,7 +214,7 @@ export const ProjectOverview: FC = () => {
             <div className={classes.container}>
               <BudgetOverviewCard
                 className={classes.budgetOverviewCard}
-                budget={data?.project.budget?.value}
+                budget={data?.project.budget.value}
               />
               {/* TODO When file api is finished need to update query and pass in file information */}
               <FilesOverviewCard loading={!data} />
@@ -254,7 +254,7 @@ export const ProjectOverview: FC = () => {
                 )}
               </Grid>
             </Grid>
-            {data?.project?.engagements?.items?.map((engagement) =>
+            {data?.project.engagements.items.map((engagement) =>
               engagement.__typename === 'LanguageEngagement' ? (
                 <LanguageEngagementListItemCard
                   key={engagement.id}
