@@ -33,6 +33,16 @@ const useStyles = makeStyles(({ spacing }) => ({
   listItemText: {
     textTransform: 'capitalize',
   },
+  newVersionItem: {
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginLeft: spacing(-2),
+    marginRight: spacing(-2),
+    paddingLeft: spacing(2),
+    paddingRight: spacing(2),
+    width: `calc(100% + (${spacing(2)}px * 2))`,
+  },
 }));
 
 interface FileActionsPopupProps {
@@ -109,30 +119,22 @@ export const FileActionsMenu: FC<FileActionsMenuProps> = (props) => {
     handleFileActionClick(item, action);
   };
 
-  const renderedMenuItem = (menuItem: typeof menuItems[0]) => {
-    const { text, icon: Icon, directory, version } = menuItem;
-    return (item.type === 'Directory' && !directory) ||
-      (item.type === 'FileVersion' && !version) ? null : (
-      <MenuItem
-        key={text}
-        onClick={
-          text === FileAction.NewVersion
-            ? undefined
-            : (event) => handleActionClick(event, text)
-        }
-      >
-        <ListItemIcon className={classes.listItemIcon}>
-          <Icon fontSize="small" />
-        </ListItemIcon>
-        <ListItemText className={classes.listItemText} primary={text} />
-      </MenuItem>
-    );
-  };
-
   const { getRootProps, getInputProps } = useDropzone({
     onDrop: handleFilesSelection,
     noDrag: true,
   });
+
+  const menuItemContents = (menuItem: typeof menuItems[0]) => {
+    const { text, icon: Icon } = menuItem;
+    return (
+      <>
+        <ListItemIcon className={classes.listItemIcon}>
+          <Icon fontSize="small" />
+        </ListItemIcon>
+        <ListItemText className={classes.listItemText} primary={text} />
+      </>
+    );
+  };
 
   return (
     <Menu
@@ -145,13 +147,27 @@ export const FileActionsMenu: FC<FileActionsMenuProps> = (props) => {
       {...rest}
     >
       {menuItems.map((menuItem) => {
-        return menuItem.text === FileAction.NewVersion ? (
-          <div {...getRootProps()} key={menuItem.text}>
-            <input {...getInputProps()} name="file-version-uploader" />
-            {renderedMenuItem(menuItem)}
-          </div>
-        ) : (
-          renderedMenuItem(menuItem)
+        const { text, directory, version } = menuItem;
+        const isNewVersion = text === FileAction['NewVersion'];
+        return (item.type === 'Directory' && !directory) ||
+          (item.type === 'FileVersion' && !version) ? null : (
+          <MenuItem
+            key={text}
+            onClick={
+              isNewVersion
+                ? (event) => event.stopPropagation()
+                : (event) => handleActionClick(event, text)
+            }
+          >
+            {isNewVersion ? (
+              <span {...getRootProps()} className={classes.newVersionItem}>
+                <input {...getInputProps()} name="file-version-uploader" />
+                {menuItemContents(menuItem)}
+              </span>
+            ) : (
+              menuItemContents(menuItem)
+            )}
+          </MenuItem>
         );
       })}
     </Menu>
