@@ -23,6 +23,3 @@ rules:
         - '@material-ui/core/*'
         - '@material-ui/icons/*'
         - lodash/*
-
-  '@typescript-eslint/no-unnecessary-condition': off
-  '@typescript-eslint/restrict-template-expressions': off
