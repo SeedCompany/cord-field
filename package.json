@@ -5,7 +5,7 @@
     "start": "run-p \"start:*\"",
     "start:server": "react-app-rewired start",
     "start:gql-gen": "yarn gql-gen --watch",
-    "build": "react-app-rewired build",
+    "build": "yarn gql-gen && react-app-rewired build",
     "test": "react-app-rewired test",
     "lint": "eslint --ext .ts,.tsx --fix --max-warnings 0 .",
     "type-check": "tsc -p .",
