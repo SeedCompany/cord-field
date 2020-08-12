@@ -5,6 +5,9 @@ on:
     branches:
       - v3
 
+env:
+  REACT_APP_API_BASE_URL: ${{ secrets.API_BASE_URL }}
+
 jobs:
   run:
     runs-on: ubuntu-latest
@@ -26,6 +29,9 @@ jobs:
         run: yarn install --immutable
         if: steps.yarn-cache.outputs.cache-hit != 'true'
 
+      - name: Generate GraphQL types
+        run: yarn gql-gen
+
       - name: Check TypeScript
         run: yarn type-check
 
@@ -33,7 +39,7 @@ jobs:
         run: yarn eslint --ext .ts,.tsx --max-warnings 0 .
 
       - name: Build
-        run: yarn build
+        run: react-app-rewired build
 
       - name: Test
         run: yarn test
