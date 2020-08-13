@@ -7699,7 +7699,7 @@ __metadata:
     react-dropzone: ^11.0.3
     react-final-form: ^6.5.1
     react-intersection-observer: ^8.26.2
-    react-pdf: 5.0.0-beta.4
+    react-pdf: 5.0.0-beta.5
     react-router: ^6.0.0-beta.0
     react-router-dom: ^6.0.0-beta.0
     react-scripts: ^3.4.1
@@ -18130,9 +18130,9 @@ material-table@1.60.0:
   languageName: node
   linkType: hard
 
-"react-pdf@npm:5.0.0-beta.4":
-  version: 5.0.0-beta.4
-  resolution: "react-pdf@npm:5.0.0-beta.4"
+"react-pdf@npm:5.0.0-beta.5":
+  version: 5.0.0-beta.5
+  resolution: "react-pdf@npm:5.0.0-beta.5"
   dependencies:
     "@babel/runtime": ^7.0.0
     make-cancellable-promise: ^1.0.0
@@ -18144,7 +18144,7 @@ material-table@1.60.0:
   peerDependencies:
     react: ^16.3.0
     react-dom: ^16.3.0
-  checksum: 3/970771a52034b5f95921d2c306eb9fc92d3306a9a905fc89f540120f4fd2d05877203cf9fd4762cd21d42f08b88fc4192563bdc28092da9207eb517c6354e3aa
+  checksum: 3/920d497ff3e96038b7df0e21fe021503e81d65b9aa64013ed3b6e696deed2c7d1821b6ee04d57bd1bab4ffde03c42ef83d28e515a9e8d20ada22b2d844f0cefd
   languageName: node
   linkType: hard
 

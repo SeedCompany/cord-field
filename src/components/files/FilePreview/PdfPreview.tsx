@@ -6,7 +6,7 @@ import { PreviewerProps } from './FilePreview';
 import { PreviewLoading } from './PreviewLoading';
 import { PreviewPagination } from './PreviewPagination';
 
-pdfjs.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjs.version}/pdf.worker.js`;
+pdfjs.GlobalWorkerOptions.workerSrc = `https://cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjs.version}/pdf.worker.js`;
 
 export const PdfPreview: FC<PreviewerProps> = ({ downloadUrl }) => {
   const [numberOfPages, setNumberOfPages] = useState(1);
