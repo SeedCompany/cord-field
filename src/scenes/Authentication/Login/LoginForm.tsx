@@ -120,7 +120,7 @@ const Footer = ({
 }: JSX.IntrinsicElements['footer'] & { quote: Quote }) => {
   const classes = useStyles();
   return (
-    <footer {...props} className={clsx(classes.footer, props?.className)}>
+    <footer {...props} className={clsx(classes.footer, props.className)}>
       <Typography color="textSecondary" className={classes.verse}>
         “{quote}”
       </Typography>

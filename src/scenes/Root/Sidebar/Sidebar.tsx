@@ -38,7 +38,7 @@ const useStyles = makeStyles(({ spacing }) => ({
 
 export const Sidebar: FC = () => {
   const classes = useStyles();
-  const [anchorEl, setAnchorEl] = useState(null);
+  const [anchorEl, setAnchorEl] = useState<Element | null>(null);
 
   const openAddMenu = (e: any) => setAnchorEl(e.currentTarget);
   const closeAddMenu = () => setAnchorEl(null);

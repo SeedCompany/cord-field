@@ -188,11 +188,11 @@ export const CheckboxOption = ({
         }
         // Don't mess with focus if clicking on checkbox since it doesn't need help
         // and preventDefault() will actually prevent blurring when wanted.
-        if (e.target && (e.target as HTMLElement).tagName === 'INPUT') {
+        if ((e.target as HTMLElement).tagName === 'INPUT') {
           return;
         }
         e.preventDefault();
-        ctx?.onFocus();
+        ctx.onFocus();
       }}
     />
   );

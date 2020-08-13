@@ -21,7 +21,6 @@ if (process.env.NODE_ENV !== 'production') {
 
 const root = document.getElementById('root');
 
-// eslint-disable-next-line @typescript-eslint/no-floating-promises
-Promise.all(setup).then(() => {
+void Promise.all(setup).then(() => {
   ReactDOM.render(<App />, root);
 });

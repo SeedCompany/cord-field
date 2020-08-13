@@ -78,7 +78,7 @@ export const LanguageEngagementListItemCard: FC<LanguageEngagementListItemCardPr
   const pic = useRandomPicture({ seed: props.id, width: 300, height: 200 });
 
   const language = props.language.value;
-  const name = language?.name.value ?? language?.displayName?.value;
+  const name = language?.name.value ?? language?.displayName.value;
   const population = language?.population.value;
   const registryOfDialectsCode = language?.registryOfDialectsCode.value;
   const ethnologueCode = language?.ethnologue.code.value;
@@ -151,7 +151,7 @@ export const LanguageEngagementListItemCard: FC<LanguageEngagementListItemCardPr
               </Typography>
             </Grid>
           </Grid>
-          {population && endDate ? (
+          {population || endDate ? (
             <div className={classes.rightContent}>
               <DisplaySimpleProperty aria-hidden="true" />
               {population ? (

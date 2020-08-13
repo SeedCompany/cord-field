@@ -35,7 +35,7 @@ export const ProfileToolbar: FC = () => {
     <>
       <Card className={classes.card}>
         <Typography className={classes.name} color="primary">
-          Hi, {session?.realFirstName?.value ?? 'Friend'}
+          Hi, {session?.realFirstName.value ?? 'Friend'}
         </Typography>
         <IconButton
           color="secondary"

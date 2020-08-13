@@ -34,8 +34,8 @@ export const EditOrganization = ({ org, ...props }: EditOrganizationProps) => {
           name: org.name.value,
         },
       }}
-      onSubmit={(input) => {
-        updateOrg({
+      onSubmit={async (input) => {
+        await updateOrg({
           variables: { input },
         });
       }}

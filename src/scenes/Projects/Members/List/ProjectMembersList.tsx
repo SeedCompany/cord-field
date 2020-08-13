@@ -42,7 +42,7 @@ export const ProjectMembersList: FC = () => {
       input: projectId,
     },
   });
-  const members = data?.project?.team;
+  const members = data?.project.team;
 
   return (
     <div className={classes.root}>

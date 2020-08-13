@@ -9,5 +9,5 @@ export const OrganizationField = LookupField.createFor<
 >({
   resource: 'Organization',
   useLookup: useOrganizationLookupLazyQuery,
-  getOptionLabel: (option) => option?.name?.value ?? '',
+  getOptionLabel: (option) => option.name.value ?? '',
 });

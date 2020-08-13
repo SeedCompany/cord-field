@@ -2,7 +2,10 @@ import { useParams } from 'react-router-dom';
 import { useProjectRootDirectoryQuery } from './ProjectFiles.generated';
 
 export const useProjectCurrentDirectory = () => {
-  const { projectId, folderId } = useParams();
+  const { projectId, folderId } = useParams() as {
+    projectId: string;
+    folderId?: string;
+  };
   const { data } = useProjectRootDirectoryQuery({
     variables: {
       id: projectId,

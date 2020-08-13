@@ -1,6 +1,5 @@
 import { Breadcrumbs, Grid, makeStyles, Typography } from '@material-ui/core';
 import { ChatOutlined, DateRange, Edit } from '@material-ui/icons';
-import { Skeleton } from '@material-ui/lab';
 import React, { FC } from 'react';
 import {
   canEditAny,
@@ -57,7 +56,7 @@ export const InternshipEngagementDetail: FC<EngagementQuery> = ({
     return null; // easiest for typescript
   }
 
-  const intern = engagement.intern?.value;
+  const intern = engagement.intern.value;
   const name = intern?.fullName;
   const editable = canEditAny(engagement);
 
@@ -112,18 +111,14 @@ export const InternshipEngagementDetail: FC<EngagementQuery> = ({
         </Grid>
         <Grid item container spacing={3} alignItems="center">
           <Grid item>
-            <Typography variant="h4">
-              {engagement ? 'Internship Engagement' : <Skeleton width={200} />}
-            </Typography>
+            <Typography variant="h4">Internship Engagement</Typography>
           </Grid>
 
-          {engagement && (
-            <Grid item>
-              <Typography variant="body2" color="textSecondary">
-                Updated {formatDateTime(engagement.modifiedAt)}
-              </Typography>
-            </Grid>
-          )}
+          <Grid item>
+            <Typography variant="body2" color="textSecondary">
+              Updated {formatDateTime(engagement.modifiedAt)}
+            </Typography>
+          </Grid>
         </Grid>
         <Grid item container spacing={1} alignItems="center">
           <Grid item>

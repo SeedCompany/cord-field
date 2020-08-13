@@ -48,7 +48,7 @@ const slider = (name: string) =>
 const Story = (props: Partial<MemberListSummaryProps>) => (
   <Card style={{ maxWidth: 400 }}>
     <MemberListSummary
-      members={members?.slice(0, slider('# of members'))}
+      members={members.slice(0, slider('# of members'))}
       max={slider('max listed')}
       to={text('to', '/someplace')}
       icon={Group}

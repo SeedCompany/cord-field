@@ -90,7 +90,7 @@ export const UploadProvider: FC = ({ children }) => {
     );
     for (const file of filesNotStarted) {
       setUploadingStatus(file.queueId, true);
-      handleFileAdded(file);
+      void handleFileAdded(file);
     }
   }, [submittedFiles, handleFileAdded, setUploadingStatus]);
 

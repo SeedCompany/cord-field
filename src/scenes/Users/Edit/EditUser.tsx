@@ -30,7 +30,7 @@ export const EditUser = (props: EditUserProps) => {
                 phone: user.phone.value,
                 timezone: user.timezone.value?.name,
                 bio: user.bio.value,
-                email: user.email?.value,
+                email: user.email.value,
               },
             }
           : undefined

@@ -69,7 +69,7 @@ export const ProjectMemberCard: FC<ProjectMemberCardProps> = ({
             {!projectMember ? (
               <Skeleton variant="text" width="40%" />
             ) : (
-              projectMember?.user.value?.fullName
+              projectMember.user.value?.fullName
             )}
           </Typography>
           <Typography variant="body2" color="primary">

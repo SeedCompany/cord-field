@@ -41,7 +41,7 @@ interface QueryChangeOptions {
   // Whether to push a new history state or replace the existing one.
   // We replace by default here since that's more common with query params.
   push?: boolean | undefined;
-  state?: object | null | undefined;
+  state?: Record<string, any> | null | undefined;
 }
 
 /**

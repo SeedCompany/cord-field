@@ -43,6 +43,8 @@ function splitProps(input: any) {
   const props: any = {};
   for (const key of Object.keys(input)) {
     props[key] = input[key];
+    // We have to modify input object for this
+    // eslint-disable-next-line @typescript-eslint/no-dynamic-delete
     delete input[key];
   }
   return props;

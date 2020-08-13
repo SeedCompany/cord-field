@@ -116,7 +116,7 @@ export function LookupField<
       // don't fetch for no input (results will be hidden too)
       return;
     }
-    if (!multiple && field.value && input === selectedText) {
+    if (!multiple && (field.value as Val | null) && input === selectedText) {
       return;
     }
     fetch({
