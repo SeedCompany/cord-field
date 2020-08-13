@@ -151,7 +151,7 @@ export const LanguageEngagementListItemCard: FC<LanguageEngagementListItemCardPr
               </Typography>
             </Grid>
           </Grid>
-          {population && endDate ? (
+          {population || endDate ? (
             <div className={classes.rightContent}>
               <DisplaySimpleProperty aria-hidden="true" />
               {population ? (
