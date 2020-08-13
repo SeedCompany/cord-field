@@ -1,5 +1,5 @@
 import { Grid, makeStyles, Tooltip, Typography } from '@material-ui/core';
-import { Add, DateRange, Publish } from '@material-ui/icons';
+import { DateRange, Publish } from '@material-ui/icons';
 import { Skeleton } from '@material-ui/lab';
 import React, { FC } from 'react';
 import { useDropzone } from 'react-dropzone';
@@ -218,18 +218,18 @@ export const ProjectOverview: FC = () => {
             </Grid>
           </Grid>
 
-            <div className={classes.container}>
-              <BudgetOverviewCard
-                className={classes.budgetOverviewCard}
-                budget={data?.project.budget.value}
-              />
-              {/* TODO When file api is finished need to update query and pass in file information */}
-              <FilesOverviewCard loading={!data} total={undefined} />
-            </div>
-            <CardGroup>
-              <ProjectMembersSummary members={data?.project.team} />
-              <PartnershipSummary partnerships={data?.project.partnerships} />
-            </CardGroup>
+          <div className={classes.container}>
+            <BudgetOverviewCard
+              className={classes.budgetOverviewCard}
+              budget={data?.project.budget.value}
+            />
+            {/* TODO When file api is finished need to update query and pass in file information */}
+            <FilesOverviewCard loading={!data} total={undefined} />
+          </div>
+          <CardGroup>
+            <ProjectMembersSummary members={data?.project.team} />
+            <PartnershipSummary partnerships={data?.project.partnerships} />
+          </CardGroup>
 
           <Grid container spacing={2} alignItems="center">
             <Grid item>
@@ -263,8 +263,9 @@ export const ProjectOverview: FC = () => {
                 />
               )
             )}
-          </div>
-        )}
-      </main>
+          </Grid>
+        </div>
+      )}
+    </main>
   );
 };

@@ -22122,6 +22122,13 @@ resolve@^1.17.0:
   languageName: node
   linkType: hard
 
+"wmf@npm:~1.0.1":
+  version: 1.0.2
+  resolution: "wmf@npm:1.0.2"
+  checksum: 3/a78653ce9f47645ca8c2cf966884be156aeb69a7c7bb9229a350bd0d61e96a05abaa4b8d83ee6dccaf8dc710cfd6a8b3f8c59584ab44194a8fdabf57e3f0f3d2
+  languageName: node
+  linkType: hard
+
 "word-wrap@npm:^1.2.3, word-wrap@npm:~1.2.3":
   version: 1.2.3
   resolution: "word-wrap@npm:1.2.3"
