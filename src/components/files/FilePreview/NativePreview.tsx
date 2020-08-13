@@ -1,4 +1,4 @@
-import { Box, makeStyles } from '@material-ui/core';
+import { Grid, makeStyles } from '@material-ui/core';
 import React, { FC, useCallback, useEffect, useState } from 'react';
 import { usePreview, usePreviewError } from '../FileActions';
 import { PreviewerProps } from './FilePreview';
@@ -72,9 +72,9 @@ export const NativePreview: FC<NativePreviewProps> = ({
     );
   };
 
-  return (
-    <Box width="100%" height="100%" display="flex" justifyContent="center">
-      {previewLoading ? <PreviewLoading /> : url ? player(type) : null}
-    </Box>
+  return previewLoading ? (
+    <PreviewLoading />
+  ) : (
+    <Grid item>{url ? player(type) : null}</Grid>
   );
 };

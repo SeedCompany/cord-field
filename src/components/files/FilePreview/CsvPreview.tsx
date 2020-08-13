@@ -1,3 +1,4 @@
+import { Grid } from '@material-ui/core';
 import Papa, { ParseResult } from 'papaparse';
 import React, { FC, useCallback, useEffect, useState } from 'react';
 import { usePreview, usePreviewError } from '../FileActions';
@@ -42,6 +43,8 @@ export const CsvPreview: FC<PreviewerProps> = ({ downloadUrl }) => {
   return previewLoading ? (
     <PreviewLoading />
   ) : !hasParsed ? null : (
-    <SpreadsheetView columns={columns} rows={rows} />
+    <Grid item>
+      <SpreadsheetView columns={columns} rows={rows} />
+    </Grid>
   );
 };

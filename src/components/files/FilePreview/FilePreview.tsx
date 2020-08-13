@@ -1,10 +1,10 @@
 import {
-  Box,
   Button,
   Dialog,
   DialogActions,
   DialogContent,
   DialogTitle,
+  Grid,
   makeStyles,
 } from '@material-ui/core';
 import React, { FC, useEffect, useState } from 'react';
@@ -130,7 +130,7 @@ export const FilePreview: FC<FilePreviewProps> = (props) => {
     >
       <DialogTitle id="dialog-file-preview">{name}</DialogTitle>
       <DialogContent className={classes.dialogContent}>
-        <Box height="100%">
+        <Grid container direction="column" spacing={2} alignItems="center">
           {previewError ? (
             <PreviewError errorText={previewError} />
           ) : Previewer ? (
@@ -138,7 +138,7 @@ export const FilePreview: FC<FilePreviewProps> = (props) => {
           ) : (
             <PreviewNotSupported />
           )}
-        </Box>
+        </Grid>
       </DialogContent>
       <DialogActions>
         <Button color="secondary" onClick={onClose}>

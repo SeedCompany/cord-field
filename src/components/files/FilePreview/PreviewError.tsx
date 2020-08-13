@@ -1,5 +1,12 @@
-import { Box, Typography, useTheme } from '@material-ui/core';
+import { Grid, makeStyles, Typography } from '@material-ui/core';
 import React, { FC } from 'react';
+
+const useStyles = makeStyles(({ breakpoints }) => ({
+  text: {
+    maxWidth: breakpoints.values.sm,
+    textAlign: 'center',
+  },
+}));
 
 interface PreviewErrorProps {
   errorText: string;
@@ -7,12 +14,12 @@ interface PreviewErrorProps {
 
 export const PreviewError: FC<PreviewErrorProps> = (props) => {
   const { errorText } = props;
-  const { spacing } = useTheme();
+  const classes = useStyles();
   return (
-    <Box margin={spacing(2)} maxWidth="600px" textAlign="center">
-      <Typography variant="h3" color="textSecondary">
+    <Grid item>
+      <Typography variant="h3" color="textSecondary" className={classes.text}>
         {errorText}
       </Typography>
-    </Box>
+    </Grid>
   );
 };

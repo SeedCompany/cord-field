@@ -49,13 +49,11 @@ export const ExcelPreview: FC<PreviewerProps> = ({ downloadUrl }) => {
 
   const currentSheet = sheets[previewPage - 1];
 
-  return !previewLoading && sheets.length < 1 ? null : (
+  return previewLoading ? (
+    <PreviewLoading />
+  ) : sheets.length < 1 ? null : (
     <PreviewPagination pageCount={sheets.length}>
-      {previewLoading ? (
-        <PreviewLoading />
-      ) : (
-        <SpreadsheetView {...currentSheet} />
-      )}
+      <SpreadsheetView {...currentSheet} />
     </PreviewPagination>
   );
 };

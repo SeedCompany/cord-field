@@ -1,3 +1,4 @@
+import { Grid } from '@material-ui/core';
 import parse from 'html-react-parser';
 import mammoth from 'mammoth';
 import React, { FC, useCallback, useEffect, useState } from 'react';
@@ -54,5 +55,5 @@ export const WordPreview: FC<PreviewerProps> = ({ downloadUrl }) => {
     downloadUrl,
   ]);
 
-  return previewLoading ? <PreviewLoading /> : <>{parse(html)}</>;
+  return previewLoading ? <PreviewLoading /> : <Grid item>{parse(html)}</Grid>;
 };
