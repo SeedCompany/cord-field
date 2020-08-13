@@ -104,15 +104,18 @@ export const ProjectListItemCard: FC<ProjectListItemCardProps> = ({
                 {!project ? <Skeleton variant="text" /> : project.name?.value}
               </Typography>
             </Grid>
-            <Grid item>
-              <Typography variant="body2" color="textSecondary">
-                {!project ? (
-                  <Skeleton variant="text" width="30%" />
-                ) : (
-                  project.deptId.value ?? project.id
-                )}
-              </Typography>
-            </Grid>
+            <DisplaySimpleProperty
+              loading={!project}
+              label="Project ID"
+              value={project?.id}
+              wrap={(node) => <Grid item>{node}</Grid>}
+            />
+            <DisplaySimpleProperty
+              loading={!project}
+              label="Department ID"
+              value={project?.deptId.value}
+              wrap={(node) => <Grid item>{node}</Grid>}
+            />
             <Grid item>
               <Typography variant="body2" color="primary">
                 {!project ? (
