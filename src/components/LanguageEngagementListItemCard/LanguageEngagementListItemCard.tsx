@@ -81,6 +81,7 @@ export const LanguageEngagementListItemCard: FC<LanguageEngagementListItemCardPr
   const name = language?.name.value ?? language?.displayName?.value;
   const population = language?.population.value;
   const registryOfDialectsCode = language?.registryOfDialectsCode.value;
+  const ethnologueCode = language?.ethnologue.code.value;
   const endDate = getEndDate(props);
 
   return (
@@ -103,19 +104,21 @@ export const LanguageEngagementListItemCard: FC<LanguageEngagementListItemCardPr
             <Grid item>
               <Typography variant="h4">{name}</Typography>
             </Grid>
-            {registryOfDialectsCode ? (
-              <Grid item>
-                <Typography variant="body2" color="textSecondary">
-                  Registry Of Dialects Code: {registryOfDialectsCode}
-                </Typography>
-              </Grid>
-            ) : null}
-            <Grid item>
-              <DisplaySimpleProperty
-                label="Status"
-                value={displayEngagementStatus(props.status)}
-              />
-            </Grid>
+            <DisplaySimpleProperty
+              label="Registry Of Dialects Code"
+              value={registryOfDialectsCode}
+              wrap={(node) => <Grid item>{node}</Grid>}
+            />
+            <DisplaySimpleProperty
+              label="Ethnologue Code"
+              value={ethnologueCode}
+              wrap={(node) => <Grid item>{node}</Grid>}
+            />
+            <DisplaySimpleProperty
+              label="Status"
+              value={displayEngagementStatus(props.status)}
+              wrap={(node) => <Grid item>{node}</Grid>}
+            />
             {props.products.total > 0 ? (
               <Grid item>
                 <Typography variant="body2" gutterBottom>
@@ -148,26 +151,28 @@ export const LanguageEngagementListItemCard: FC<LanguageEngagementListItemCardPr
               </Typography>
             </Grid>
           </Grid>
-          <div className={classes.rightContent}>
-            <DisplaySimpleProperty aria-hidden="true" />
-            {population ? (
-              <div>
-                <Typography variant="h1">
-                  {numberFormatter(population)}
-                </Typography>
-                <Typography variant="body2" color="primary">
-                  Population
-                </Typography>
-              </div>
-            ) : null}
-            {endDate ? (
-              <DisplaySimpleProperty
-                label={endDate.label}
-                value={dateFormatter(endDate.value)}
-                ValueProps={{ color: 'primary' }}
-              />
-            ) : null}
-          </div>
+          {population && endDate ? (
+            <div className={classes.rightContent}>
+              <DisplaySimpleProperty aria-hidden="true" />
+              {population ? (
+                <div>
+                  <Typography variant="h1">
+                    {numberFormatter(population)}
+                  </Typography>
+                  <Typography variant="body2" color="primary">
+                    Population
+                  </Typography>
+                </div>
+              ) : null}
+              {endDate ? (
+                <DisplaySimpleProperty
+                  label={endDate.label}
+                  value={dateFormatter(endDate.value)}
+                  ValueProps={{ color: 'primary' }}
+                />
+              ) : null}
+            </div>
+          ) : null}
         </CardContent>
       </CardActionAreaLink>
     </Card>

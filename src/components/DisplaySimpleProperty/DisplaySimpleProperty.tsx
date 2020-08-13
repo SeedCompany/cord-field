@@ -22,6 +22,8 @@ export const DisplaySimpleProperty = ({
   wrap,
   ...props
 }: DisplaySimplePropertyProps) => {
+  const shouldRenderElement = loading || (label && value);
+  if (!shouldRenderElement) return null;
   const property = (
     <Typography variant="body2" {...props}>
       {loading === true ? (

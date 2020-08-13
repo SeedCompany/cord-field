@@ -15,6 +15,13 @@ fragment LanguageEngagementListItem on LanguageEngagement {
       registryOfDialectsCode {
         value
       }
+      ethnologue {
+        code {
+          canRead
+          canEdit
+          value
+        }
+      }
       avatarLetters
     }
   }
