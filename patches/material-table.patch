@@ -1,8 +1,16 @@
 diff --git a/types/index.d.ts b/types/index.d.ts
-index b756e3a3..0d3408f9 100644
+index b756e3a3..dd2c0cda 100644
 --- a/types/index.d.ts
 +++ b/types/index.d.ts
-@@ -177,23 +177,23 @@ export const MTableToolbar: (props: any) => React.ReactElement<any>;
+@@ -151,6 +151,7 @@ export interface Components {
+   Container?: React.ComponentType<any>;
+   EditField?: React.ComponentType<any>;
+   EditRow?: React.ComponentType<any>;
++  EditCell?: React.ComponentType<any>;
+   FilterRow?: React.ComponentType<any>;
+   Groupbar?: React.ComponentType<any>;
+   GroupRow?: React.ComponentType<any>;
+@@ -177,23 +178,23 @@ export const MTableToolbar: (props: any) => React.ReactElement<any>;
  export const MTable: (props: any) => React.ReactElement<any>;
  
  export interface Icons {
