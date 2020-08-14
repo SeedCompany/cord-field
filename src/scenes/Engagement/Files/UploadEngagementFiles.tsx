@@ -64,7 +64,7 @@ export const UploadEngagementFiles: FC<UploadEngagementFilesProps> = ({
     });
   };
 
-  return (
+  return !engagement ? null : (
     <UploadFilesForm {...props} onFinalizeUpload={handleUploadCompleted} />
   );
 };
