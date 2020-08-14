@@ -159,7 +159,7 @@ export const FileActionsMenu: FC<FileActionsMenuProps> = (props) => {
     >
       {menuItems.map((menuItem) => {
         return menuItem.text === FileAction.NewVersion ? (
-          <div {...getRootProps()}>
+          <div {...getRootProps()} key={menuItem.text}>
             <input {...getInputProps()} name="file-version-uploader" />
             {renderedMenuItem(menuItem)}
           </div>
