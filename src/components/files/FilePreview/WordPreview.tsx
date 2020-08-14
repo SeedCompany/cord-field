@@ -12,7 +12,7 @@ const mammothOptions = {
 };
 
 export const WordPreview: FC<PreviewerProps> = ({ downloadUrl }) => {
-  const [html, setHtml] = useState('');
+  const [html, setHtml] = useState<JSX.Element | JSX.Element[] | null>(null);
   const { previewLoading, setPreviewLoading } = usePreview();
   const handleError = usePreviewError();
   const retrieveFile = useRetrieveFile();
@@ -30,7 +30,7 @@ export const WordPreview: FC<PreviewerProps> = ({ downloadUrl }) => {
             /<img/gi,
             '<img style="max-width: 100%;"'
           );
-          setHtml(imageStyledRawHtml);
+          setHtml(parse(imageStyledRawHtml));
           setPreviewLoading(false);
         } else {
           handleError('Could not read document file');
@@ -55,5 +55,5 @@ export const WordPreview: FC<PreviewerProps> = ({ downloadUrl }) => {
     downloadUrl,
   ]);
 
-  return previewLoading ? <PreviewLoading /> : <Grid item>{parse(html)}</Grid>;
+  return previewLoading ? <PreviewLoading /> : <Grid item>{html}</Grid>;
 };
