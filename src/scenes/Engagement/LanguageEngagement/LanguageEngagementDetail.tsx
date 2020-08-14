@@ -27,7 +27,6 @@ import { OptionsIcon, PlantIcon } from '../../../components/Icons';
 import { AddProductCard, ProductCard } from '../../../components/ProductCard';
 import { ProjectBreadcrumb } from '../../../components/ProjectBreadcrumb';
 import { Redacted } from '../../../components/Redacted';
-import { Link } from '../../../components/Routing';
 import { Many } from '../../../util';
 import { CeremonyCard } from '../CeremonyCard';
 import {
@@ -35,6 +34,7 @@ import {
   EditEngagementDialog,
 } from '../EditEngagement/EditEngagementDialog';
 import { EngagementQuery } from '../Engagement.generated';
+import { UploadEngagementFiles } from '../Files';
 
 const useStyles = makeStyles(({ spacing, breakpoints, palette }) => ({
   root: {
@@ -58,6 +58,7 @@ export const LanguageEngagementDetail: FC<EngagementQuery> = ({
   engagement,
 }) => {
   const classes = useStyles();
+  const [uploadFileState, uploadFile] = useDialog();
 
   const [editState, show, editField] = useDialog<
     Many<EditableEngagementField>
@@ -77,44 +78,27 @@ export const LanguageEngagementDetail: FC<EngagementQuery> = ({
   const editable = canEditAny(engagement);
 
   return (
-    <div className={classes.root}>
-      <Grid
-        component="main"
-        container
-        direction="column"
-        spacing={3}
-        className={classes.main}
-      >
-        <Grid item>
-          <Breadcrumbs>
-            <ProjectBreadcrumb data={project} />
-            {langName ? (
-              <Breadcrumb to=".">{langName}</Breadcrumb>
-            ) : (
-              <Redacted
-                info="You do not have permission to view this engagement's name"
-                width={200}
-              />
-            )}
-          </Breadcrumbs>
-        </Grid>
-        <Grid item container spacing={3} alignItems="center">
-          <Grid item className={langName ? undefined : classes.nameRedacted}>
-            <Typography
-              variant="h2"
-              {...(language
-                ? { component: Link, to: `/languages/${language.id}` }
-                : {})}
-            >
-              {langName ?? (
+    <>
+      <div className={classes.root}>
+        <Grid
+          component="main"
+          container
+          direction="column"
+          spacing={3}
+          className={classes.main}
+        >
+          <Grid item>
+            <Breadcrumbs>
+              <ProjectBreadcrumb data={project} />
+              {langName ? (
+                <Breadcrumb to=".">{langName}</Breadcrumb>
+              ) : (
                 <Redacted
-                  info={`You do not have permission to view this engagement's ${
-                    language ? 'name' : 'language'
-                  }`}
-                  width="100%"
+                  info="You do not have permission to view this engagement's name"
+                  width={200}
                 />
               )}
-            </Typography>
+            </Breadcrumbs>
           </Grid>
           {editable && (
             <Grid item>
@@ -216,18 +200,15 @@ export const LanguageEngagementDetail: FC<EngagementQuery> = ({
               emptyValue="None"
             />
           </Grid>
-        </Grid>
-        <Grid item container spacing={3} alignItems="center">
-          <Grid item>
-            <Typography variant="h4">PnP</Typography>
+          <Grid item container spacing={3} alignItems="center">
+            <Grid item xs={6}>
+              <Typography variant="h4">PnP</Typography>
+            </Grid>
           </Grid>
-        </Grid>
-        <Grid item container spacing={3} alignItems="center">
-          <Grid item xs={6}>
-            <AddItemCard
-              onClick={() => console.log('Create PnP')}
-              itemType="plan"
-            />
+          <Grid item container spacing={3} alignItems="center">
+            <Grid item xs={6}>
+              <AddItemCard onClick={uploadFile} itemType="plan" />
+            </Grid>
           </Grid>
         </Grid>
         <Grid item container spacing={3} alignItems="center">
@@ -258,12 +239,13 @@ export const LanguageEngagementDetail: FC<EngagementQuery> = ({
             </Typography>
           )}
         </Grid>
-      </Grid>
+      </div>
       <EditEngagementDialog
         {...editState}
         engagement={engagement}
         editFields={editField}
       />
-    </div>
+      <UploadEngagementFiles engagement={engagement} {...uploadFileState} />
+    </>
   );
 };
