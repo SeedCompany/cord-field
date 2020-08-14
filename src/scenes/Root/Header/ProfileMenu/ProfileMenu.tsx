@@ -7,12 +7,8 @@ import {
   Typography,
   useTheme,
 } from '@material-ui/core';
-<<<<<<< HEAD
-import React from 'react';
-=======
 import * as React from 'react';
 import { useDialog } from '../../../../components/Dialog';
->>>>>>> Change password
 import { MenuItemLink } from '../../../../components/Routing';
 import { ChangePassword } from '../../../Authentication/ChangePassword';
 
