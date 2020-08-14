@@ -1,18 +1,19 @@
 import { ArrowDownward, Check, Clear, Edit } from '@material-ui/icons';
-import MaterialTable, { Column, Icons } from 'material-table';
+import MaterialTable, { Icons, MaterialTableProps } from 'material-table';
 import React, { ReactElement } from 'react';
+import { Merge } from 'type-fest';
 
-interface TableProps<RowData extends Record<string, any>> {
-  onRowClick?: (rowData: RowData) => void;
-  columns: Array<Column<RowData>>;
-  data: RowData[];
-  header?: ReactElement;
-  isEditable?: boolean;
-  onRowUpdate?: (newData: RowData, oldData?: RowData) => Promise<unknown>;
-  toolbarContents?: ReactElement;
-}
+export type TableProps<RowData extends Record<string, any>> = Merge<
+  MaterialTableProps<RowData>,
+  {
+    isEditable?: boolean;
+    onRowUpdate?: (newData: RowData, oldData?: RowData) => Promise<unknown>;
+    toolbarContents?: ReactElement;
+    onRowClick?: (rowData: RowData) => void;
+  }
+>;
 
-const icons: Icons = {
+const defaultIcons: Icons = {
   Check,
   Clear,
   Edit,
@@ -23,15 +24,16 @@ export const Table = <RowData extends Record<string, any>>(
   props: TableProps<RowData>
 ) => {
   const {
-    onRowClick,
-    columns: columnData,
-    data,
+    columns: columnsProp,
+    icons: iconsProp,
     isEditable = false,
     onRowUpdate,
+    onRowClick,
     toolbarContents,
+    ...rest
   } = props;
 
-  const columns: typeof columnData = columnData.map((column) => ({
+  const columns: typeof columnsProp = columnsProp.map((column) => ({
     ...column,
     headerStyle: {
       ...column.headerStyle,
@@ -59,31 +61,34 @@ export const Table = <RowData extends Record<string, any>>(
         onRowUpdate,
       };
 
-  const handleRowClick = (_?: React.MouseEvent, rowData?: RowData) => {
-    onRowClick && rowData && onRowClick(rowData);
-  };
+  const icons = iconsProp ? { ...defaultIcons, ...iconsProp } : defaultIcons;
 
   return (
     <MaterialTable
       columns={columns}
+      {...rest}
       components={{
         Toolbar: () => toolbarContents ?? null,
+        ...rest.components,
       }}
-      data={data}
       editable={editable}
       icons={icons}
+      onRowClick={onRowClick ? (_, row) => row && onRowClick(row) : undefined}
       localization={{
+        ...rest.localization,
         header: {
           actions: '',
+          ...rest.localization?.header,
         },
         body: {
           emptyDataSourceMessage: '',
+          ...rest.localization?.body,
         },
       }}
-      onRowClick={onRowClick ? handleRowClick : undefined}
       options={{
         paging: false,
         search: false,
+        ...rest.options,
       }}
     />
   );
