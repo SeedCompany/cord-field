@@ -10,12 +10,10 @@ import React, { FC, Fragment } from 'react';
 import { ProjectDirectoryFile } from '../../../scenes/Projects/Files';
 import { DialogState } from '../../Dialog';
 import {
+  FileVersionItem_FileVersion_Fragment as FileVersion,
   FileVersionItem,
-  FileVersionItem_FileVersion_Fragment,
 } from '../FileVersionItem';
 import { useFileVersionsQuery } from './FileActions.generated';
-
-type FileVersionsList = FileVersionItem_FileVersion_Fragment[];
 
 type FileVersionsProps = DialogState & {
   file: ProjectDirectoryFile | undefined;
@@ -33,12 +31,10 @@ export const FileVersions: FC<FileVersionsProps> = (props) => {
 
   const total = data?.file.children.total;
 
-  const versions: FileVersionsList =
-    data?.file.children.items.filter(
-      (item): item is FileVersionItem_FileVersion_Fragment => {
-        return item.__typename === 'FileVersion';
-      }
-    ) ?? [];
+  const versions =
+    data?.file.children.items.filter((item): item is FileVersion => {
+      return item.__typename === 'FileVersion';
+    }) ?? [];
 
   return !file || loading ? null : (
     <>
