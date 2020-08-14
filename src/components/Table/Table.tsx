@@ -13,6 +13,13 @@ interface TableProps<RowData extends Record<string, any>> {
   toolbarContents?: ReactElement;
 }
 
+const icons: Icons = {
+  Check,
+  Clear,
+  Edit,
+  SortArrow: ArrowDownward,
+};
+
 export const Table = <RowData extends Record<string, any>>(
   props: TableProps<RowData>
 ) => {
@@ -59,13 +66,6 @@ export const Table = <RowData extends Record<string, any>>(
     // table column width is 'auto'.
     width: 'auto',
   }));
-
-  const icons: Icons = {
-    Check,
-    Clear,
-    Edit,
-    SortArrow: ArrowDownward,
-  };
 
   const editable = !isEditable
     ? undefined
