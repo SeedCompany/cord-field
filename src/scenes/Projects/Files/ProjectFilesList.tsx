@@ -128,6 +128,7 @@ const ProjectFilesListWrapped: FC = () => {
   } = useFileActions();
 
   const {
+    loading: directoryLoading,
     project,
     directoryId,
     rootDirectoryId,
@@ -161,6 +162,7 @@ const ProjectFilesListWrapped: FC = () => {
   const breadcrumbsParents = parents.slice(0, -1);
 
   const directoryIsNotInProject =
+    !directoryLoading &&
     isNotRootDirectory &&
     !parents.some((parent) => parent.id === rootDirectoryId);
 
@@ -283,7 +285,7 @@ const ProjectFilesListWrapped: FC = () => {
     }
   };
 
-  return (
+  return directoryLoading ? null : (
     <div className={classes.dropzone} {...getRootProps()}>
       <input {...getInputProps()} name="files_list_uploader" />
       {isDragActive && (
