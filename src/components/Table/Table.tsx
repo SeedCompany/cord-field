@@ -40,27 +40,25 @@ export const Table = <RowData extends Record<string, any>>(
     },
   });
 
-  /* We'll always want the headers of currency columns
-    to be right-aligned, so let's do it here instead
-    of having to pass styles every time. */
-  const columns = columnData.map((column) =>
-    column.type === 'currency'
-      ? {
-          ...column,
-          headerStyle: {
-            ...column.cellStyle,
+  const columns: typeof columnData = columnData.map((column) => ({
+    ...column,
+    headerStyle: {
+      ...column.headerStyle,
+      ...(column.type === 'currency' || column.type === 'numeric'
+        ? {
+            // We always want the headers of currency & numeric columns
+            // to be right-aligned.
             textAlign: 'right',
+            // Move sorting arrow to other side so label & values are aligned.
             flexDirection: 'row-reverse',
-          },
-        }
-      : {
-          ...column,
-          // This is required to fix a bug that causes column headers
-          // to be fixed-width even though the default layout for the
-          // table column width is 'auto'.
-          width: 'auto',
-        }
-  );
+          }
+        : {}),
+    },
+    // This is required to fix a bug that causes column headers
+    // to be fixed-width even though the default layout for the
+    // table column width is 'auto'.
+    width: 'auto',
+  }));
 
   const icons: Icons = {
     Check,
