@@ -5,6 +5,7 @@ import {
   Typography,
   useTheme,
 } from '@material-ui/core';
+import { CreateNewFolder, Publish } from '@material-ui/icons';
 import { Skeleton } from '@material-ui/lab';
 import React, { FC } from 'react';
 import { useDropzone } from 'react-dropzone';
@@ -32,7 +33,7 @@ import {
 } from '../../../components/Formatters';
 import { ProjectBreadcrumb } from '../../../components/ProjectBreadcrumb';
 import { Table } from '../../../components/Table';
-import { FileCreateActions } from './FileCreateActions';
+import { CreateProjectDirectory } from './CreateProjectDirectory';
 import { FileVersions } from './FileVersions';
 import {
   FileNodeInfoFragment,
@@ -128,6 +129,19 @@ export const ProjectFilesList: FC = () => {
     FileActionItem
   >();
   // const [filePreviewState, previewFile, fileToPreview] = useDialog<CFFile>();
+
+  const [createDirectoryState, createDirectory] = useDialog();
+
+  const {
+    getRootProps,
+    getInputProps,
+    isDragActive,
+    open: openFileBrowser,
+  } = useDropzone({
+    onDrop: handleFilesDrop,
+    noClick: true,
+    noKeyboard: true,
+  });
 
   const actions = {
     rename: (item: FileActionItem) => renameFile(item as any),
@@ -261,17 +275,11 @@ export const ProjectFilesList: FC = () => {
     }
   };
 
-  const { getRootProps, getInputProps, isDragActive } = useDropzone({
-    onDrop: handleFilesDrop,
-    noClick: true,
-    noKeyboard: true,
-  });
-
   return (
     <div className={classes.dropzone} {...getRootProps()}>
+      <input {...getInputProps()} name="files_list_uploader" />
       {isDragActive && (
         <div className={classes.dropContainer}>
-          <input {...getInputProps()} name="files_list_uploader" />
           <Typography variant="h1" className={classes.instructions}>
             Drop files to start uploading
           </Typography>
@@ -325,11 +333,20 @@ export const ProjectFilesList: FC = () => {
                   data={rowData}
                   columns={columns}
                   onRowClick={handleRowClick}
-                  toolbarContents={
-                    <div className={classes.toolbarContainer}>
-                      <FileCreateActions />
-                    </div>
-                  }
+                  actions={[
+                    {
+                      icon: Publish,
+                      tooltip: 'Upload Files',
+                      isFreeAction: true,
+                      onClick: openFileBrowser,
+                    },
+                    {
+                      icon: CreateNewFolder,
+                      tooltip: 'Create Folder',
+                      isFreeAction: true,
+                      onClick: createDirectory,
+                    },
+                  ]}
                 />
               )}
             </section>
@@ -340,6 +357,7 @@ export const ProjectFilesList: FC = () => {
         <FileVersions file={fileVersionToView} {...fileVersionState} />
         <UploadProjectFileVersion file={fileToVersion} {...newVersionState} />
         {/* <FilePreview file={fileToPreview} {...filePreviewState} /> */}
+        <CreateProjectDirectory {...createDirectoryState} />
       </Content>
     </div>
   );

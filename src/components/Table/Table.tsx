@@ -1,6 +1,6 @@
 import { ArrowDownward, Check, Clear, Edit } from '@material-ui/icons';
 import MaterialTable, { Icons, MaterialTableProps } from 'material-table';
-import React, { ReactElement } from 'react';
+import React from 'react';
 import { Merge } from 'type-fest';
 
 export type TableProps<RowData extends Record<string, any>> = Merge<
@@ -8,7 +8,6 @@ export type TableProps<RowData extends Record<string, any>> = Merge<
   {
     isEditable?: boolean;
     onRowUpdate?: (newData: RowData, oldData?: RowData) => Promise<unknown>;
-    toolbarContents?: ReactElement;
     onRowClick?: (rowData: RowData) => void;
   }
 >;
@@ -29,7 +28,6 @@ export const Table = <RowData extends Record<string, any>>(
     isEditable = false,
     onRowUpdate,
     onRowClick,
-    toolbarContents,
     ...rest
   } = props;
 
@@ -65,12 +63,9 @@ export const Table = <RowData extends Record<string, any>>(
 
   return (
     <MaterialTable
+      title="" // empty by default
       columns={columns}
       {...rest}
-      components={{
-        Toolbar: () => toolbarContents ?? null,
-        ...rest.components,
-      }}
       editable={editable}
       icons={icons}
       onRowClick={onRowClick ? (_, row) => row && onRowClick(row) : undefined}
