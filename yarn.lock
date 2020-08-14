@@ -7582,7 +7582,7 @@ __metadata:
     react-docgen-typescript-loader: ^3.7.2
     react-dom: ^16.13.1
     react-draggable: ^4.4.3
-    react-dropzone: "patch:react-dropzone@11.0.2#./patches/react-dropzone.patch"
+    react-dropzone: ^11.0.3
     react-final-form: ^6.5.1
     react-intersection-observer: ^8.26.2
     react-router: ^6.0.0-beta.0
@@ -17684,29 +17684,16 @@ fsevents@^1.2.7:
   languageName: node
   linkType: hard
 
-react-dropzone@11.0.2:
-  version: 11.0.2
-  resolution: "react-dropzone@npm:11.0.2"
+"react-dropzone@npm:^11.0.3":
+  version: 11.0.3
+  resolution: "react-dropzone@npm:11.0.3"
   dependencies:
     attr-accept: ^2.0.0
     file-selector: ^0.1.12
     prop-types: ^15.7.2
   peerDependencies:
     react: ">= 16.8"
-  checksum: 3/fb4d3dbe92954ddd0d137fec97c58169f1c33a735fda3bf1070ffc0e41d6b42490234d77be4c7535a6f8cbe1b1e608f502946d82678f80c1c52ac61bf2483901
-  languageName: node
-  linkType: hard
-
-"react-dropzone@patch:react-dropzone@11.0.2#./patches/react-dropzone.patch::locator=cord-field%40workspace%3A.":
-  version: 11.0.2
-  resolution: "react-dropzone@patch:react-dropzone@npm%3A11.0.2#./patches/react-dropzone.patch::version=11.0.2&hash=81050d&locator=cord-field%40workspace%3A."
-  dependencies:
-    attr-accept: ^2.0.0
-    file-selector: ^0.1.12
-    prop-types: ^15.7.2
-  peerDependencies:
-    react: ">= 16.8"
-  checksum: 3/c6b99cf982e3ba8f8dd6c0e396b42ea53d51f1f8d59e0f0836ccc3a3ebabbadbf1499be237d91a56043d3394ae80cc0f96971f2107c6fdf6029f5ddd27036455
+  checksum: 3/f9c445b4e79a36ae29763c408b8005f102771dd12ae68df53e4e5d60ee4d1a3681065db18db378f6dae60af9dffc978893e8bf08986a20061c8e53c5c3f07291
   languageName: node
   linkType: hard
 
