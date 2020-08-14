@@ -10,7 +10,6 @@ import {
   ProjectDirectoryDirectory,
   ProjectDirectoryFile,
 } from '../../../scenes/Projects/Files';
-import { ExcludeImplementationFromUnion } from '../../../util';
 import { DialogState, ShowFn, useDialog } from '../../Dialog';
 import { FileVersionItem_FileVersion_Fragment } from '../FileVersionItem';
 import { useDownloadFile } from '../hooks';
@@ -22,7 +21,7 @@ export type FilesActionItem =
   | ProjectDirectoryFile
   | FileVersionItem_FileVersion_Fragment;
 
-export type FileVersionActionItem = ExcludeImplementationFromUnion<
+export type FileVersionActionItem = Exclude<
   FilesActionItem,
   ProjectDirectoryDirectory | ProjectDirectoryFile | Directory | File
 >;

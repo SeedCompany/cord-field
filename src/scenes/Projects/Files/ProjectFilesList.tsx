@@ -37,7 +37,6 @@ import {
 } from '../../../components/Formatters';
 import { ProjectBreadcrumb } from '../../../components/ProjectBreadcrumb';
 import { Table } from '../../../components/Table';
-import { ExcludeImplementationFromUnion } from '../../../util';
 import { CreateProjectDirectory } from './CreateProjectDirectory';
 import {
   ProjectDirectoryQuery,
@@ -101,13 +100,13 @@ const useStyles = makeStyles(({ palette, spacing }) => ({
 }));
 
 type ProjectDirectoryFileNode = ProjectDirectoryQuery['directory']['children']['items'][0];
-export type ProjectDirectoryDirectory = ExcludeImplementationFromUnion<
+export type ProjectDirectoryDirectory = Exclude<
   ProjectDirectoryFileNode,
   | FileNodeInfo_FileVersion_Fragment
   | FileNodeInfo_File_Fragment
   | FileNodeInfo_FileVersion_Fragment
 >;
-export type ProjectDirectoryFile = ExcludeImplementationFromUnion<
+export type ProjectDirectoryFile = Exclude<
   ProjectDirectoryFileNode,
   FileNodeInfo_Directory_Fragment | FileNodeInfo_FileVersion_Fragment
 >;
