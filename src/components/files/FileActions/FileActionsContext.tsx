@@ -10,7 +10,7 @@ import {
   ProjectDirectoryDirectory,
   ProjectDirectoryFile,
 } from '../../../scenes/Projects/Files';
-import { DialogState, ShowFn, useDialog } from '../../Dialog';
+import { DialogState, useDialog } from '../../Dialog';
 import { FileVersionItem_FileVersion_Fragment } from '../FileVersionItem';
 import { useDownloadFile } from '../hooks';
 
@@ -59,7 +59,7 @@ export interface FileActionsContextValue {
   fileNodeToDelete: FilesActionItem | undefined;
   previewState: PreviewState;
   fileToPreview: File | undefined;
-  openFilePreview: ShowFn<File>;
+  openFilePreview: (file: File) => void;
 }
 
 const initialDialogState = {
