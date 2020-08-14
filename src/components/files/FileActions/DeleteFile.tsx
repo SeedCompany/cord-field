@@ -9,10 +9,11 @@ import { FilesActionItem } from './FileActionsContext';
 
 export type DeleteFileProps = DialogFormProps<{ id: string }> & {
   item: FilesActionItem | undefined;
+  refetchQueries?: Array<keyof typeof GQLOperations.Query>;
 };
 
 export const DeleteFile = (props: Except<DeleteFileProps, 'onSubmit'>) => {
-  const { item } = props;
+  const { item, refetchQueries } = props;
   const [deleteFile] = useDeleteFileNodeMutation();
 
   if (!item) return null;
@@ -22,11 +23,7 @@ export const DeleteFile = (props: Except<DeleteFileProps, 'onSubmit'>) => {
   const onSubmit: DeleteFileProps['onSubmit'] = async () => {
     await deleteFile({
       variables: { id },
-      refetchQueries: [
-        type === 'FileVersion'
-          ? GQLOperations.Query.FileVersions
-          : GQLOperations.Query.ProjectDirectory,
-      ],
+      ...(refetchQueries ? { refetchQueries } : null),
     });
   };
 

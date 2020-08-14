@@ -9,10 +9,11 @@ import { FilesActionItem } from './FileActionsContext';
 
 export type RenameFileProps = DialogFormProps<RenameFileInput> & {
   item: FilesActionItem | undefined;
+  refetchQueries?: Array<keyof typeof GQLOperations.Query>;
 };
 
 export const RenameFile = (props: Except<RenameFileProps, 'onSubmit'>) => {
-  const { item } = props;
+  const { item, refetchQueries } = props;
   const fileNameAndExtension = useFileNameAndExtension();
   const [renameFile] = useRenameFileNodeMutation();
 
@@ -29,7 +30,7 @@ export const RenameFile = (props: Except<RenameFileProps, 'onSubmit'>) => {
     };
     await renameFile({
       variables: { input },
-      refetchQueries: [GQLOperations.Query.ProjectDirectory],
+      ...(refetchQueries ? { refetchQueries } : null),
     });
   };
 
