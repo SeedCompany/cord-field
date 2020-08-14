@@ -2,13 +2,12 @@ import {
   Button,
   Dialog,
   DialogActions,
-  DialogProps,
   DialogTitle,
   Divider,
   List,
 } from '@material-ui/core';
 import React, { FC, Fragment } from 'react';
-import { File } from '../../../api';
+import { ProjectDirectoryFile } from '../../../scenes/Projects/Files';
 import { DialogState } from '../../Dialog';
 import {
   FileVersionItem,
@@ -19,7 +18,7 @@ import { useFileVersionsQuery } from './FileActions.generated';
 type FileVersionsList = FileVersionItem_FileVersion_Fragment[];
 
 type FileVersionsProps = DialogState & {
-  file: File | undefined;
+  file: ProjectDirectoryFile | undefined;
 };
 
 export const FileVersions: FC<FileVersionsProps> = (props) => {
@@ -35,12 +34,14 @@ export const FileVersions: FC<FileVersionsProps> = (props) => {
   const total = data?.file.children.total;
 
   const versions: FileVersionsList =
-    (data?.file.children.items.filter(
-      (item) => item.type === 'FileVersion'
-    ) as FileVersionsList) ?? [];
+    data?.file.children.items.filter(
+      (item): item is FileVersionItem_FileVersion_Fragment => {
+        return item.__typename === 'FileVersion';
+      }
+    ) ?? [];
   const descendingVersions = versions.reduceRight(
-    (descending, version) => descending.concat(version),
-    [] as FileVersionsList
+    (descending: FileVersionsList, version) => descending.concat(version),
+    []
   );
 
   return !file || loading ? null : (

@@ -1,0 +1,30 @@
+fragment FileNodeInfo on FileNode {
+  category
+  id
+  name
+  type
+  createdAt
+  createdBy {
+    displayFirstName {
+      value
+    }
+    displayLastName {
+      value
+    }
+  }
+  ... on File {
+    ...FileInfo
+  }
+}
+
+fragment FileInfo on File {
+  modifiedAt
+  modifiedBy {
+    displayFirstName {
+      value
+    }
+    displayLastName {
+      value
+    }
+  }
+}

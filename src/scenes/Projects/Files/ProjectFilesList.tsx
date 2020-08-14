@@ -22,6 +22,12 @@ import {
 } from '../../../components/files/FileActions';
 import { FilePreview } from '../../../components/files/FilePreview';
 import {
+  FileNodeInfo_Directory_Fragment,
+  FileNodeInfo_File_Fragment,
+  FileNodeInfo_FileVersion_Fragment,
+  FileNodeInfoFragment,
+} from '../../../components/files/files.generated';
+import {
   useFileNameAndExtension,
   useFileNodeIcon,
 } from '../../../components/files/hooks';
@@ -31,11 +37,10 @@ import {
 } from '../../../components/Formatters';
 import { ProjectBreadcrumb } from '../../../components/ProjectBreadcrumb';
 import { Table } from '../../../components/Table';
+import { ExcludeImplementationFromUnion } from '../../../util';
 import { CreateProjectDirectory } from './CreateProjectDirectory';
 import {
-  FileNodeInfo_Directory_Fragment,
-  FileNodeInfo_FileVersion_Fragment,
-  FileNodeInfoFragment,
+  ProjectDirectoryQuery,
   useProjectDirectoryQuery,
 } from './ProjectFiles.generated';
 import { useProjectCurrentDirectory } from './useProjectCurrentDirectory';
@@ -94,6 +99,18 @@ const useStyles = makeStyles(({ palette, spacing }) => ({
     marginRight: spacing(0.5),
   },
 }));
+
+type ProjectDirectoryFileNode = ProjectDirectoryQuery['directory']['children']['items'][0];
+export type ProjectDirectoryDirectory = ExcludeImplementationFromUnion<
+  ProjectDirectoryFileNode,
+  | FileNodeInfo_FileVersion_Fragment
+  | FileNodeInfo_File_Fragment
+  | FileNodeInfo_FileVersion_Fragment
+>;
+export type ProjectDirectoryFile = ExcludeImplementationFromUnion<
+  ProjectDirectoryFileNode,
+  FileNodeInfo_Directory_Fragment | FileNodeInfo_FileVersion_Fragment
+>;
 
 const ProjectFilesListWrapped: FC = () => {
   const classes = useStyles();
@@ -163,13 +180,13 @@ const ProjectFilesListWrapped: FC = () => {
   const isDirectory = (
     fileNode: FileNodeInfoFragment
   ): fileNode is FileNodeInfo_Directory_Fragment => {
-    return fileNode['__typename'] === 'Directory';
+    return fileNode.__typename === 'Directory';
   };
 
   const isFileVersion = (
     fileNode: FileNodeInfoFragment
   ): fileNode is FileNodeInfo_FileVersion_Fragment => {
-    return fileNode['__typename'] === 'FileVersion';
+    return fileNode.__typename === 'FileVersion';
   };
 
   const rowData =

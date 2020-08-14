@@ -5,10 +5,10 @@ import { GQLOperations } from '../../../api';
 import { DialogForm, DialogFormProps } from '../../Dialog/DialogForm';
 import { SubmitError } from '../../form';
 import { useDeleteFileNodeMutation } from './FileActions.generated';
-import { FileActionItem } from './FileActionsContext';
+import { FilesActionItem } from './FileActionsContext';
 
 export type DeleteFileProps = DialogFormProps<{ id: string }> & {
-  item: FileActionItem | undefined;
+  item: FilesActionItem | undefined;
 };
 
 export const DeleteFile = (props: Except<DeleteFileProps, 'onSubmit'>) => {

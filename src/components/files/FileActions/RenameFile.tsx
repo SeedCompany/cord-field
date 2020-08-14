@@ -5,10 +5,10 @@ import { DialogForm, DialogFormProps } from '../../Dialog/DialogForm';
 import { SubmitError, TextField } from '../../form';
 import { useFileNameAndExtension } from '../hooks';
 import { useRenameFileNodeMutation } from './FileActions.generated';
-import { FileActionItem } from './FileActionsContext';
+import { FilesActionItem } from './FileActionsContext';
 
 export type RenameFileProps = DialogFormProps<RenameFileInput> & {
-  item: FileActionItem | undefined;
+  item: FilesActionItem | undefined;
 };
 
 export const RenameFile = (props: Except<RenameFileProps, 'onSubmit'>) => {

@@ -21,7 +21,7 @@ import { useDropzone } from 'react-dropzone';
 import { useUploadProjectFiles } from '../../../scenes/Projects/Files';
 import {
   FileAction,
-  FileActionItem,
+  FilesActionItem,
   useFileActions,
 } from './FileActionsContext';
 
@@ -46,7 +46,7 @@ const useStyles = makeStyles(({ spacing }) => ({
 }));
 
 interface FileActionsPopupProps {
-  item: FileActionItem;
+  item: FilesActionItem;
 }
 
 const menuItems = [
@@ -101,7 +101,7 @@ export const FileActionsPopup: FC<FileActionsPopupProps> = (props) => {
 };
 
 type FileActionsMenuProps = Partial<MenuProps> & {
-  item: FileActionItem;
+  item: FilesActionItem;
 };
 
 export const FileActionsMenu: FC<FileActionsMenuProps> = (props) => {
@@ -157,12 +157,12 @@ export const FileActionsMenu: FC<FileActionsMenuProps> = (props) => {
           <MenuItem
             key={text}
             onClick={
-              text === FileAction['NewVersion']
+              text === FileAction.NewVersion
                 ? (event) => event.stopPropagation()
                 : (event) => handleActionClick(event, text)
             }
           >
-            {text === FileAction['NewVersion'] ? (
+            {text === FileAction.NewVersion ? (
               <span {...getRootProps()} className={classes.newVersionItem}>
                 <input {...getInputProps()} name="file-version-uploader" />
                 {menuItemContents(menuItem)}

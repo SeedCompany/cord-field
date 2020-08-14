@@ -13,10 +13,7 @@ import {
   useFileActions,
 } from '../FileActions';
 import { useFileNodeIcon } from '../hooks';
-import {
-  FileVersionItem_FileVersion_Fragment,
-  FileVersionItemFragment,
-} from './FileVersionItem.generated';
+import { FileVersionItem_FileVersion_Fragment } from './FileVersionItem.generated';
 
 const useStyles = makeStyles(({ spacing, typography }) => ({
   iconContainer: {
@@ -33,7 +30,7 @@ const useStyles = makeStyles(({ spacing, typography }) => ({
 }));
 
 interface FileVersionItemProps {
-  version: FileVersionItemFragment;
+  version: FileVersionItem_FileVersion_Fragment;
 }
 
 export const FileVersionItem: FC<FileVersionItemProps> = (props) => {
@@ -43,14 +40,8 @@ export const FileVersionItem: FC<FileVersionItemProps> = (props) => {
   const { openFilePreview } = useFileActions();
   const { version } = props;
 
-  const isFileVersion = (
-    version: FileVersionItemFragment
-  ): version is FileVersionItem_FileVersion_Fragment =>
-    version.type === 'FileVersion';
-
   const { createdAt, createdBy, name } = version;
-  const mimeType = isFileVersion(version) ? version.mimeType : '';
-  const Icon = fileIcon(mimeType);
+  const Icon = fileIcon(version.mimeType);
   const createdByUser = `${createdBy.displayFirstName.value} ${createdBy.displayLastName.value}`;
 
   return (

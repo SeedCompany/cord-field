@@ -6,10 +6,26 @@ import React, {
   useState,
 } from 'react';
 import { Directory, File } from '../../../api';
+import {
+  ProjectDirectoryDirectory,
+  ProjectDirectoryFile,
+} from '../../../scenes/Projects/Files';
+import { ExcludeImplementationFromUnion } from '../../../util';
 import { DialogState, ShowFn, useDialog } from '../../Dialog';
+import { FileVersionItem_FileVersion_Fragment } from '../FileVersionItem';
 import { useDownloadFile } from '../hooks';
 
-export type FileActionItem = File | Directory;
+export type FilesActionItem =
+  | File
+  | Directory
+  | ProjectDirectoryDirectory
+  | ProjectDirectoryFile
+  | FileVersionItem_FileVersion_Fragment;
+
+export type FileVersionActionItem = ExcludeImplementationFromUnion<
+  FilesActionItem,
+  ProjectDirectoryDirectory | ProjectDirectoryFile | Directory | File
+>;
 
 export enum FileAction {
   Rename = 'rename',
@@ -20,7 +36,7 @@ export enum FileAction {
 }
 
 type FileActionHandler = (
-  item: FileActionItem,
+  item: FilesActionItem,
   action: Exclude<FileAction, FileAction.NewVersion>
 ) => void;
 
@@ -37,11 +53,11 @@ interface PreviewState {
 export interface FileActionsContextValue {
   handleFileActionClick: FileActionHandler;
   renameState: DialogState;
-  fileNodeToRename: FileActionItem | undefined;
+  fileNodeToRename: FilesActionItem | undefined;
   versionState: DialogState;
   versionToView: File | undefined;
   deleteState: DialogState;
-  fileNodeToDelete: FileActionItem | undefined;
+  fileNodeToDelete: FilesActionItem | undefined;
   previewState: PreviewState;
   fileToPreview: File | undefined;
   openFilePreview: ShowFn<File>;
@@ -88,11 +104,11 @@ export const FileActionsContextProvider: FC = ({ children }) => {
   const downloadFile = useDownloadFile();
 
   const [renameState, renameFile, fileNodeToRename] = useDialog<
-    FileActionItem
+    FilesActionItem
   >();
   const [versionState, showVersions, versionToView] = useDialog<File>();
   const [deleteState, deleteFile, fileNodeToDelete] = useDialog<
-    FileActionItem
+    FilesActionItem
   >();
   const [previewDialogState, openFilePreview, fileToPreview] = useDialog<
     File
@@ -108,10 +124,10 @@ export const FileActionsContextProvider: FC = ({ children }) => {
   };
 
   const actions = {
-    rename: (item: FileActionItem) => renameFile(item),
-    download: (item: FileActionItem) => downloadFile(item),
-    history: (item: FileActionItem) => showVersions(item as File),
-    delete: (item: FileActionItem) => deleteFile(item),
+    rename: (item: FilesActionItem) => renameFile(item),
+    download: (item: FilesActionItem) => downloadFile(item),
+    history: (item: FilesActionItem) => showVersions(item as File),
+    delete: (item: FilesActionItem) => deleteFile(item),
   };
 
   const handleFileActionClick: FileActionHandler = (item, action) => {

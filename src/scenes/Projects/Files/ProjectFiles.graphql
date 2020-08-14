@@ -7,22 +7,6 @@ query ProjectRootDirectory($id: ID!) {
   }
 }
 
-fragment FileNodeInfo on FileNode {
-  category
-  id
-  name
-  type
-  createdAt
-  createdBy {
-    displayFirstName {
-      value
-    }
-    displayLastName {
-      value
-    }
-  }
-}
-
 query ProjectDirectory($id: ID!) {
   directory(id: $id) {
     ...FileNodeInfo
@@ -35,6 +19,7 @@ query ProjectDirectory($id: ID!) {
         }
         ... on File {
           ...FileNodeInfo
+          ...FileInfo
           size
           mimeType
         }
