@@ -39,17 +39,13 @@ export const FileVersions: FC<FileVersionsProps> = (props) => {
         return item.__typename === 'FileVersion';
       }
     ) ?? [];
-  const descendingVersions = versions.reduceRight(
-    (descending: FileVersionsList, version) => descending.concat(version),
-    []
-  );
 
   return !file || loading ? null : (
     <>
       <Dialog {...dialogProps} aria-labelledby="dialog-file-versions">
         <DialogTitle id="dialog-file-versions">File History</DialogTitle>
         <List dense>
-          {descendingVersions.map((version, index) => (
+          {versions.map((version, index) => (
             <Fragment key={version.id}>
               <FileVersionItem version={version} />
               {total && index !== total - 1 && <Divider />}

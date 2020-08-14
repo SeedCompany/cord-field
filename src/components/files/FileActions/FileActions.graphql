@@ -1,7 +1,7 @@
 query FileVersions($id: ID!) {
   file(id: $id) {
     id
-    children {
+    children(input: { order: DESC, sort: "createdAt" }) {
       items {
         ...FileVersionItem
       }

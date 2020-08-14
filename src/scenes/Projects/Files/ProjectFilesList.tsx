@@ -165,6 +165,7 @@ const ProjectFilesListWrapped: FC = () => {
     !parents.some((parent) => parent.id === rootDirectoryId);
 
   const items = directoryIsNotInProject ? [] : data?.directory.children.items;
+  console.log('items', items);
 
   interface FileRowData {
     id: FileNodeInfoFragment['id'];
