@@ -1,7 +1,7 @@
 import { createMuiTheme, ThemeProvider, useTheme } from '@material-ui/core';
 import { ArrowDownward, Check, Clear, Edit } from '@material-ui/icons';
 import MaterialTable, { Column, Icons } from 'material-table';
-import React, { forwardRef, ReactElement } from 'react';
+import React, { ReactElement } from 'react';
 
 interface TableProps<RowData extends Record<string, any>> {
   onRowClick?: (rowData: RowData) => void;
@@ -69,12 +69,10 @@ export const Table = <RowData extends Record<string, any>>(
   );
 
   const icons: Icons = {
-    Check: forwardRef((props, ref) => <Check {...props} ref={ref} />),
-    Clear: forwardRef((props, ref) => <Clear {...props} ref={ref} />),
-    Edit: forwardRef((props, ref) => <Edit {...props} ref={ref} />),
-    SortArrow: forwardRef((props, ref) => (
-      <ArrowDownward {...props} ref={ref} />
-    )),
+    Check,
+    Clear,
+    Edit,
+    SortArrow: ArrowDownward,
   };
 
   const editable = !isEditable

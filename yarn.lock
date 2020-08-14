@@ -7573,7 +7573,7 @@ __metadata:
     lint-staged: ^10.2.11
     lodash: ^4.17.19
     luxon: ^1.24.1
-    material-table: 1.60.0
+    material-table: "patch:material-table@1.60.0#./patches/material-table.patch"
     notistack: ^0.9.17
     npm-run-all: ^4.1.5
     prettier: ^2.0.5
@@ -14213,7 +14213,7 @@ fsevents@^1.2.7:
   languageName: node
   linkType: hard
 
-"material-table@npm:1.60.0":
+material-table@1.60.0:
   version: 1.60.0
   resolution: "material-table@npm:1.60.0"
   dependencies:
@@ -14233,6 +14233,29 @@ fsevents@^1.2.7:
     react: ^16.8.4
     react-dom: ^16.8.4
   checksum: 3/a90efe732bb378ed8ad8ea5b8359c700f88bafebc9c6fdcae670fb78a24372e99b7ad5c0a7cdab657409fcd4b05f11ce75ddad8806b644f3dbe0be2df556772b
+  languageName: node
+  linkType: hard
+
+"material-table@patch:material-table@1.60.0#./patches/material-table.patch::locator=cord-field%40workspace%3A.":
+  version: 1.60.0
+  resolution: "material-table@patch:material-table@npm%3A1.60.0#./patches/material-table.patch::version=1.60.0&hash=e08675&locator=cord-field%40workspace%3A."
+  dependencies:
+    "@date-io/date-fns": ^1.1.0
+    "@material-ui/pickers": ^3.2.2
+    classnames: ^2.2.6
+    date-fns: ^2.0.0-alpha.27
+    debounce: ^1.2.0
+    fast-deep-equal: 2.0.1
+    filefy: 0.1.10
+    prop-types: ^15.6.2
+    react-beautiful-dnd: 11.0.3
+    react-double-scrollbar: 0.0.15
+  peerDependencies:
+    "@date-io/core": ^1.3.6
+    "@material-ui/core": ^4.0.1
+    react: ^16.8.4
+    react-dom: ^16.8.4
+  checksum: 3/4aa16055e7613087305c76dc2fafe0ae8fc563570750be4e813031e1d04fba8f593889a495351c3702f605fe7bb757756fe11b0210e4523618cdec53fd505dc2
   languageName: node
   linkType: hard
 
