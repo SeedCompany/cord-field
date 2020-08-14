@@ -1,4 +1,3 @@
-import { createMuiTheme, ThemeProvider, useTheme } from '@material-ui/core';
 import { ArrowDownward, Check, Clear, Edit } from '@material-ui/icons';
 import MaterialTable, { Column, Icons } from 'material-table';
 import React, { ReactElement } from 'react';
@@ -31,21 +30,6 @@ export const Table = <RowData extends Record<string, any>>(
     onRowUpdate,
     toolbarContents,
   } = props;
-
-  const theme = useTheme();
-  const tableTheme = createMuiTheme({
-    ...theme,
-    overrides: {
-      MuiTableRow: {
-        root: {
-          ...(onRowClick ? { cursor: 'pointer' } : null),
-          '&:hover': {
-            backgroundColor: theme.palette.action.hover,
-          },
-        },
-      },
-    },
-  });
 
   const columns: typeof columnData = columnData.map((column) => ({
     ...column,
@@ -80,29 +64,27 @@ export const Table = <RowData extends Record<string, any>>(
   };
 
   return (
-    <ThemeProvider theme={tableTheme}>
-      <MaterialTable
-        columns={columns}
-        components={{
-          Toolbar: () => toolbarContents ?? null,
-        }}
-        data={data}
-        editable={editable}
-        icons={icons}
-        localization={{
-          header: {
-            actions: '',
-          },
-          body: {
-            emptyDataSourceMessage: '',
-          },
-        }}
-        onRowClick={handleRowClick}
-        options={{
-          paging: false,
-          search: false,
-        }}
-      />
-    </ThemeProvider>
+    <MaterialTable
+      columns={columns}
+      components={{
+        Toolbar: () => toolbarContents ?? null,
+      }}
+      data={data}
+      editable={editable}
+      icons={icons}
+      localization={{
+        header: {
+          actions: '',
+        },
+        body: {
+          emptyDataSourceMessage: '',
+        },
+      }}
+      onRowClick={onRowClick ? handleRowClick : undefined}
+      options={{
+        paging: false,
+        search: false,
+      }}
+    />
   );
 };

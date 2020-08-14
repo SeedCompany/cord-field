@@ -1,3 +1,4 @@
+import { action } from '@storybook/addon-actions';
 import { boolean, number, select, text } from '@storybook/addon-knobs';
 import React from 'react';
 import { Table as TableComponent } from './Table';
@@ -71,6 +72,9 @@ export const Table = () => {
       hidden: boolean('hidden', true),
     },
   ];
+  const onRowClick = boolean('onRowClick', false)
+    ? action('row clicked')
+    : undefined;
 
   return (
     <TableComponent
@@ -78,6 +82,7 @@ export const Table = () => {
       data={rows}
       isEditable={boolean('isEditable', true)}
       onRowUpdate={() => new Promise((resolve) => resolve())}
+      onRowClick={onRowClick}
     />
   );
 };
