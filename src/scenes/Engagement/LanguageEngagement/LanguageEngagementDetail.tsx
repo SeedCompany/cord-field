@@ -12,6 +12,7 @@ import {
   displayEngagementStatus,
   securedDateRange,
 } from '../../../api';
+import { AddItemCard } from '../../../components/AddItemCard';
 import { BooleanProperty } from '../../../components/BooleanProperty';
 import { Breadcrumb } from '../../../components/Breadcrumb';
 import { DataButton } from '../../../components/DataButton';
@@ -133,7 +134,6 @@ export const LanguageEngagementDetail: FC<EngagementQuery> = ({
           <Grid item>
             <Typography variant="h4">Language Engagement</Typography>
           </Grid>
-
           <Grid item>
             <Typography variant="body2" color="textSecondary">
               Updated {formatDateTime(engagement.modifiedAt)}
@@ -214,6 +214,19 @@ export const LanguageEngagementDetail: FC<EngagementQuery> = ({
               onClick={() => show('communicationsCompleteDate')}
               onButtonClick={() => show('communicationsCompleteDate')}
               emptyValue="None"
+            />
+          </Grid>
+        </Grid>
+        <Grid item container spacing={3} alignItems="center">
+          <Grid item>
+            <Typography variant="h4">PnP</Typography>
+          </Grid>
+        </Grid>
+        <Grid item container spacing={3} alignItems="center">
+          <Grid item xs={6}>
+            <AddItemCard
+              onClick={() => console.log('Create PnP')}
+              itemType="plan"
             />
           </Grid>
         </Grid>
