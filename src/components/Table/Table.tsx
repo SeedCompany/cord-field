@@ -49,14 +49,8 @@ export const Table = <RowData extends Record<string, any>>(
           ...column,
           headerStyle: {
             ...column.cellStyle,
-            textAlign: 'right' as const,
-          },
-          cellStyle: {
-            ...column.cellStyle,
-            /* Compensate for the sort icon in the header
-              so the text still comes out looking nicely
-              right-aligned with the header text. */
-            paddingRight: 'calc(1em + 4px + 4px + 16px)',
+            textAlign: 'right',
+            flexDirection: 'row-reverse',
           },
         }
       : {
