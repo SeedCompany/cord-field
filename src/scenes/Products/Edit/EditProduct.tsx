@@ -8,16 +8,14 @@ import { handleFormError, UpdateProduct } from '../../../api';
 import { EngagementBreadcrumb } from '../../../components/EngagementBreadcrumb';
 import { ProjectBreadcrumb } from '../../../components/ProjectBreadcrumb';
 import { ProductForm, ProductFormCustomValues } from '../ProductForm';
-import { ProductForm_DirectScriptureProduct_Fragment } from '../ProductForm/ProductForm.generated';
 import {
+  ProductQuery,
   useProductQuery,
   useUpdateProductMutation,
 } from './EditProduct.generated';
 
-const removeScriptureTypename = (
-  scriptureReferenceArray?: ProductForm_DirectScriptureProduct_Fragment['scriptureReferences']['value']
-) =>
-  scriptureReferenceArray?.map(
+const removeScriptureTypename = (product: ProductQuery['product']) =>
+  product?.scriptureReferences?.value.map(
     ({ start: { __typename, ...start }, end: { __typename: _, ...end } }) => ({
       start,
       end,
@@ -56,7 +54,7 @@ export const EditProduct = () => {
   const renderProductForm = () => {
     if (!data) return null;
     const { product } = data;
-    const { id, mediums, purposes, methodology, scriptureReferences } = product;
+    const { id, mediums, purposes, methodology } = product;
 
     const initialValues = {
       id,
@@ -66,9 +64,7 @@ export const EditProduct = () => {
       //TODO: make sure these are shown when response is ready
       ...(product.__typename === 'DirectScriptureProduct'
         ? {
-            scriptureReferences: removeScriptureTypename(
-              scriptureReferences.value
-            ),
+            scriptureReferences: removeScriptureTypename(product),
             productType: product.__typename,
           }
         : product.__typename === 'DerivativeScriptureProduct' &&
@@ -77,9 +73,7 @@ export const EditProduct = () => {
             product.produces.value?.__typename === 'LiteracyMaterial' ||
             product.produces.value?.__typename === 'Story')
         ? {
-            scriptureReferences: removeScriptureTypename(
-              product.scriptureReferencesOverride?.value
-            ),
+            scriptureReferences: removeScriptureTypename(product),
             produces: {
               id: product.produces.value?.id,
               name: product.produces.value?.name,

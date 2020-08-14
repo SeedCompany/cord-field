@@ -129,6 +129,10 @@ const getProduct = () => {
         createdAt: DateTime.local(),
       },
     },
+    scriptureReferencesOverride: {
+      canRead: true,
+      canEdit: true,
+    },
   };
 
   return derivativeScriptureProducts.includes(productType)
