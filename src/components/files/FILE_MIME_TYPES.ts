@@ -35,3 +35,20 @@ export const VIDEO_TYPES = [
   'video/webm',
   'video/x-msvideo',
 ];
+
+export const DOCUMENT_TYPES = [
+  'application/pdf',
+  'application/vnd.ms-excel',
+  'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+  'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+  'text/csv',
+];
+
+export const SUPPORTED_TYPES = [
+  ...IMAGE_TYPES,
+  ...AUDIO_TYPES,
+  ...VIDEO_TYPES,
+  ...DOCUMENT_TYPES,
+] as const;
+
+export type SupportedType = typeof SUPPORTED_TYPES[number];

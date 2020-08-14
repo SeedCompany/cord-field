@@ -44,7 +44,7 @@ export const WordPreview: FC<PreviewerProps> = ({ downloadUrl }) => {
 
   useEffect(() => {
     setPreviewLoading(true);
-    retrieveFile(downloadUrl, extractHtmlFromDocument, () =>
+    void retrieveFile(downloadUrl, extractHtmlFromDocument, () =>
       handleError('Could not download document')
     );
   }, [

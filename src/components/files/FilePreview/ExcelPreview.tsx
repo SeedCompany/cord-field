@@ -36,7 +36,7 @@ export const ExcelPreview: FC<PreviewerProps> = ({ downloadUrl }) => {
 
   useEffect(() => {
     setPreviewLoading(true);
-    retrieveFile(downloadUrl, extractExcelDataFromWorkbook, () =>
+    void retrieveFile(downloadUrl, extractExcelDataFromWorkbook, () =>
       handleError('Could not download spreadsheet file')
     );
   }, [
@@ -96,10 +96,9 @@ async function extractExcelData(
 }
 
 function formatColumns(usedCellRange: string) {
-  const columns = [],
-    cellAddress = XLSX.utils.decode_range(usedCellRange).e.c;
-  for (let i = 0; i <= cellAddress; ++i) {
-    columns[i] = { name: XLSX.utils.encode_col(i), key: i };
-  }
+  const cellAddress = XLSX.utils.decode_range(usedCellRange).e.c;
+  const columns = Array(cellAddress)
+    .fill(null)
+    .map((_, index) => ({ name: XLSX.utils.encode_col(index), key: index }));
   return columns;
 }

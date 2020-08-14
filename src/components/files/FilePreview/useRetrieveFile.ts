@@ -19,7 +19,7 @@ export const useRetrieveFile = () => {
       try {
         const response = await fetch(url);
         if (response.status === 200) {
-          callback(new File([await response.blob()], 'Preview'));
+          void callback(new File([await response.blob()], 'Preview'));
         } else {
           errorHandler ? errorHandler() : showSnackbarError();
         }

@@ -10,7 +10,12 @@ import {
   VideoLibrary as VideoLibraryIcon,
 } from '@material-ui/icons';
 import { File } from '../../../api';
-import { AUDIO_TYPES, IMAGE_TYPES, VIDEO_TYPES } from '../FILE_MIME_TYPES';
+import {
+  AUDIO_TYPES,
+  IMAGE_TYPES,
+  SupportedType,
+  VIDEO_TYPES,
+} from '../FILE_MIME_TYPES';
 
 const audioIcons = AUDIO_TYPES.reduce(
   (icons, type) => ({
@@ -34,7 +39,7 @@ const videoIcons = VIDEO_TYPES.reduce(
   {}
 );
 
-const icons = {
+const icons: { [key in SupportedType]?: SvgIconComponent } = {
   directory: FolderIcon,
   'application/pdf': PdfIcon,
   'application/vnd.ms-excel': SpreadsheetIcon,
@@ -50,7 +55,7 @@ export const useFileNodeIcon = (): ((
   type: File['mimeType'] | 'directory'
 ) => SvgIconComponent) => {
   const fileIcon = (type: File['mimeType']) => {
-    const Icon = icons[type as keyof typeof icons] ?? GenericFileIcon;
+    const Icon = icons[type] ?? GenericFileIcon;
     return Icon;
   };
   return fileIcon;
