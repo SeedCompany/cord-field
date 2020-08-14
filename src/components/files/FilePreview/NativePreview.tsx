@@ -3,13 +3,11 @@ import React, { FC, useCallback, useEffect, useState } from 'react';
 import { usePreview, usePreviewError } from '../FileActions';
 import { PreviewerProps } from './FilePreview';
 import { PreviewLoading } from './PreviewLoading';
-import { PreviewNotSupported } from './PreviewNotSupported';
 import { useRetrieveFile } from './useRetrieveFile';
 
 const useStyles = makeStyles(() => ({
   media: {
-    maxWidth: '100%',
-    maxHeight: '100%',
+    maxWidth: 800,
   },
 }));
 
@@ -41,7 +39,7 @@ export const NativePreview: FC<NativePreviewProps> = ({
 
   useEffect(() => {
     setPreviewLoading(true);
-    retrieveFile(downloadUrl, createUrlForFile, () =>
+    void retrieveFile(downloadUrl, createUrlForFile, () =>
       handleError('Could not download image')
     );
   }, [
@@ -62,13 +60,11 @@ export const NativePreview: FC<NativePreviewProps> = ({
       <audio controls autoPlay src={url}>
         {unsupportedTypeMessage}
       </audio>
-    ) : type === NativePreviewType.Video ? (
+    ) : (
       <video className={classes.media} controls autoPlay>
         <source src={url} />
         {unsupportedTypeMessage}
       </video>
-    ) : (
-      <PreviewNotSupported />
     );
   };
 
