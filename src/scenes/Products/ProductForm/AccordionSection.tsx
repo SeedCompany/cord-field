@@ -128,8 +128,7 @@ export const renderAccordionSection = (productObj?: ProductFormFragment) => ({
   const isDerivativeProduct = getIsDerivativeProduct(productType);
 
   const isProducesFieldMissing =
-    form.getFieldState('product.produces')?.error === 'Required' ||
-    form.getFieldState('product.productType')?.error === 'Required';
+    form.getFieldState('product.produces')?.error === 'Required';
 
   return (
     <form onSubmit={handleSubmit} className={classes.form}>
@@ -162,7 +161,11 @@ export const renderAccordionSection = (productObj?: ProductFormFragment) => ({
               )}
             </div>
           </AccordionSummary>
-          <RadioField name="productType" disabled={Boolean(productObj)}>
+          <RadioField
+            name="productType"
+            disabled={Boolean(productObj)}
+            defaultValue="DirectScriptureProduct"
+          >
             <AccordionDetails className={classes.accordionSection}>
               <div>
                 {productTypes.map((option) => (
