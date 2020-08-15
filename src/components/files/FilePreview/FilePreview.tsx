@@ -8,14 +8,13 @@ import {
   makeStyles,
 } from '@material-ui/core';
 import React, { FC, useEffect, useState } from 'react';
-import { File } from '../../../api';
 import {
   AUDIO_TYPES,
   IMAGE_TYPES,
   SupportedType,
   VIDEO_TYPES,
 } from '../FILE_MIME_TYPES';
-import { useFileActions } from '../FileActions';
+import { NonDirectoryActionItem, useFileActions } from '../FileActions';
 import { useGetFileDownloadUrl } from '../hooks';
 import { CsvPreview } from './CsvPreview';
 import { ExcelPreview } from './ExcelPreview';
@@ -36,7 +35,7 @@ export interface PreviewerProps {
 }
 
 interface FilePreviewProps {
-  file?: File;
+  file?: NonDirectoryActionItem;
   open: boolean;
   onClose: () => void;
   onExited: () => void;

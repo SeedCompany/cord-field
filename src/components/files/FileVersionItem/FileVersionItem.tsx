@@ -6,7 +6,6 @@ import {
   makeStyles,
 } from '@material-ui/core';
 import React, { FC } from 'react';
-import { File } from '../../../api';
 import { useDateTimeFormatter } from '../../Formatters';
 import {
   FileActionsPopup as ActionsMenu,
@@ -51,13 +50,13 @@ export const FileVersionItem: FC<FileVersionItemProps> = (props) => {
           <Icon className={classes.icon} />
         </ListItemIcon>
         <ListItemText
-          onClick={() => openFilePreview(version as File)}
+          onClick={() => openFilePreview(version)}
           className={classes.text}
           primary={name}
           secondary={`Created on ${formatDate(createdAt)} by ${createdByUser}`}
         />
         <ListItemSecondaryAction>
-          <ActionsMenu item={version as File} />
+          <ActionsMenu item={version} />
         </ListItemSecondaryAction>
       </ListItem>
     </>

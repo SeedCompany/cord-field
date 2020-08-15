@@ -100,13 +100,15 @@ const useStyles = makeStyles(({ palette, spacing }) => ({
 type ProjectDirectoryFileNode = ProjectDirectoryQuery['directory']['children']['items'][0];
 export type ProjectDirectoryDirectory = Exclude<
   ProjectDirectoryFileNode,
-  | FileNodeInfo_FileVersion_Fragment
-  | FileNodeInfo_File_Fragment
-  | FileNodeInfo_FileVersion_Fragment
+  FileNodeInfo_FileVersion_Fragment | FileNodeInfo_File_Fragment
 >;
 export type ProjectDirectoryFile = Exclude<
   ProjectDirectoryFileNode,
   FileNodeInfo_Directory_Fragment | FileNodeInfo_FileVersion_Fragment
+>;
+export type ProjectDirectoryNonVersion = Exclude<
+  ProjectDirectoryFileNode,
+  FileNodeInfo_FileVersion_Fragment
 >;
 
 const ProjectFilesListWrapped: FC = () => {
@@ -169,7 +171,7 @@ const ProjectFilesListWrapped: FC = () => {
     createdBy: string;
     mimeType: File['mimeType'];
     size: number;
-    item: FileNodeInfoFragment;
+    item: ProjectDirectoryNonVersion;
   }
 
   const isDirectory = (
@@ -255,9 +257,7 @@ const ProjectFilesListWrapped: FC = () => {
     {
       title: '',
       field: 'item',
-      render: (rowData: FileRowData) => (
-        <ActionsMenu item={rowData.item as File} />
-      ),
+      render: (rowData: FileRowData) => <ActionsMenu item={rowData.item} />,
       sorting: false,
       cellStyle: {
         padding: spacing(0.5),
@@ -274,7 +274,7 @@ const ProjectFilesListWrapped: FC = () => {
     if (isDirectory(item)) {
       navigate(`/projects/${projectId}/files/${id}`);
     } else {
-      openFilePreview(item as File);
+      openFilePreview(item);
     }
   };
 

@@ -25,7 +25,11 @@ export type FilesActionItem =
   | ProjectDirectoryFile
   | FileVersionItem_FileVersion_Fragment;
 
-type FileActionItem = File | ProjectDirectoryFile;
+export type FileActionItem = File | ProjectDirectoryFile;
+export type NonDirectoryActionItem = Exclude<
+  FilesActionItem,
+  Directory | ProjectDirectoryDirectory
+>;
 
 export enum FileAction {
   Rename = 'rename',
@@ -54,7 +58,7 @@ export const initialFileActionsContext = {
   setPreviewPage: (_: number) => {
     return;
   },
-  openFilePreview: (_: File) => {
+  openFilePreview: (_: NonDirectoryActionItem) => {
     return;
   },
 };
@@ -80,7 +84,7 @@ export const FileActionsContextProvider: FC = ({ children }) => {
     FilesActionItem
   >();
   const [previewDialogState, openFilePreview, fileToPreview] = useDialog<
-    File
+    NonDirectoryActionItem
   >();
 
   const actions = {
