@@ -53,17 +53,12 @@ export const FileVersions: FC<FileVersionsProps> = (props) => {
         <List dense>
           {loading
             ? [0, 1, 2].map((item) => (
-                <>
+                <React.Fragment key={item}>
                   <div className={classes.skeleton}>
-                    <Skeleton
-                      key={item}
-                      variant="rect"
-                      width={400}
-                      height={50}
-                    />
+                    <Skeleton variant="rect" width={400} height={50} />
                   </div>
                   {item < 2 && <Divider />}
-                </>
+                </React.Fragment>
               ))
             : versions.map((version, index) => (
                 <Fragment key={version.id}>
