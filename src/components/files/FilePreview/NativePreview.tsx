@@ -1,5 +1,6 @@
 import { Grid, makeStyles } from '@material-ui/core';
 import React, { FC, useCallback, useEffect, useState } from 'react';
+import { SupportedType } from '../FILE_MIME_TYPES';
 import { useFileActions, usePreviewError } from '../FileActions';
 import { PreviewerProps } from './FilePreview';
 import { PreviewLoading } from './PreviewLoading';
@@ -17,11 +18,15 @@ export enum NativePreviewType {
   Audio = 'audio',
 }
 
-type NativePreviewProps = PreviewerProps & { type: NativePreviewType };
+type NativePreviewProps = PreviewerProps & {
+  type: NativePreviewType;
+  mimeType: SupportedType;
+};
 
 export const NativePreview: FC<NativePreviewProps> = ({
   downloadUrl,
   type,
+  mimeType,
 }) => {
   const classes = useStyles();
   const [url, setUrl] = useState('');
@@ -29,8 +34,10 @@ export const NativePreview: FC<NativePreviewProps> = ({
   const { previewLoading, setPreviewLoading } = useFileActions();
   const handleError = usePreviewError();
 
+  console.log('url', url);
   const createUrlForFile = useCallback(
     (file: File) => {
+      console.log('file', file);
       setUrl(URL.createObjectURL(file));
       setPreviewLoading(false);
     },
@@ -39,11 +46,12 @@ export const NativePreview: FC<NativePreviewProps> = ({
 
   useEffect(() => {
     setPreviewLoading(true);
-    void retrieveFile(downloadUrl, createUrlForFile, () =>
+    void retrieveFile(downloadUrl, mimeType, createUrlForFile, () =>
       handleError('Could not download image')
     );
   }, [
     downloadUrl,
+    mimeType,
     handleError,
     retrieveFile,
     setPreviewLoading,

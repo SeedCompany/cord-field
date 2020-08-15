@@ -2,6 +2,7 @@ import { Grid } from '@material-ui/core';
 import parse from 'html-react-parser';
 import mammoth from 'mammoth';
 import React, { FC, useCallback, useEffect, useState } from 'react';
+import { SupportedType } from '../FILE_MIME_TYPES';
 import { useFileActions, usePreviewError } from '../FileActions';
 import { PreviewerProps } from './FilePreview';
 import { PreviewLoading } from './PreviewLoading';
@@ -11,7 +12,10 @@ const mammothOptions = {
   styleMap: ['u => em'],
 };
 
-export const WordPreview: FC<PreviewerProps> = ({ downloadUrl }) => {
+export const WordPreview: FC<PreviewerProps & { mimeType: SupportedType }> = ({
+  downloadUrl,
+  mimeType,
+}) => {
   const [html, setHtml] = useState<JSX.Element | JSX.Element[] | null>(null);
   const { previewLoading, setPreviewLoading } = useFileActions();
   const handleError = usePreviewError();
@@ -44,7 +48,7 @@ export const WordPreview: FC<PreviewerProps> = ({ downloadUrl }) => {
 
   useEffect(() => {
     setPreviewLoading(true);
-    void retrieveFile(downloadUrl, extractHtmlFromDocument, () =>
+    void retrieveFile(downloadUrl, mimeType, extractHtmlFromDocument, () =>
       handleError('Could not download document')
     );
   }, [
@@ -53,6 +57,7 @@ export const WordPreview: FC<PreviewerProps> = ({ downloadUrl }) => {
     handleError,
     extractHtmlFromDocument,
     downloadUrl,
+    mimeType,
   ]);
 
   return previewLoading ? <PreviewLoading /> : <Grid item>{html}</Grid>;

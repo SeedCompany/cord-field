@@ -1,5 +1,6 @@
 import React, { FC, useCallback, useEffect, useState } from 'react';
 import XLSX from 'xlsx';
+import { SupportedType } from '../FILE_MIME_TYPES';
 import { useFileActions, usePreviewError } from '../FileActions';
 import { PreviewerProps } from './FilePreview';
 import { PreviewLoading } from './PreviewLoading';
@@ -13,7 +14,10 @@ interface SheetData {
   columns: ColumnData;
 }
 
-export const ExcelPreview: FC<PreviewerProps> = ({ downloadUrl }) => {
+export const ExcelPreview: FC<PreviewerProps & { mimeType: SupportedType }> = ({
+  downloadUrl,
+  mimeType,
+}) => {
   const [sheets, setSheets] = useState<SheetData[]>([]);
   const { previewPage, previewLoading, setPreviewLoading } = useFileActions();
   const retrieveFile = useRetrieveFile();
@@ -36,7 +40,7 @@ export const ExcelPreview: FC<PreviewerProps> = ({ downloadUrl }) => {
 
   useEffect(() => {
     setPreviewLoading(true);
-    void retrieveFile(downloadUrl, extractExcelDataFromWorkbook, () =>
+    void retrieveFile(downloadUrl, mimeType, extractExcelDataFromWorkbook, () =>
       handleError('Could not download spreadsheet file')
     );
   }, [
@@ -44,6 +48,7 @@ export const ExcelPreview: FC<PreviewerProps> = ({ downloadUrl }) => {
     handleError,
     setPreviewLoading,
     downloadUrl,
+    mimeType,
     retrieveFile,
   ]);
 

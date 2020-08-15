@@ -46,7 +46,7 @@ const imagePreviewers = IMAGE_TYPES.reduce(
     ...previewers,
     [imageType]: {
       component: NativePreview,
-      props: { type: NativePreviewType.Image },
+      props: { type: NativePreviewType.Image, mimeType: imageType },
     },
   }),
   {}
@@ -57,7 +57,7 @@ const audioPreviewers = AUDIO_TYPES.reduce(
     ...previewers,
     [audioType]: {
       component: NativePreview,
-      props: { type: NativePreviewType.Audio },
+      props: { type: NativePreviewType.Audio, mimeType: audioType },
     },
   }),
   {}
@@ -68,7 +68,7 @@ const videoPreviewers = VIDEO_TYPES.reduce(
     ...previewers,
     [videoType]: {
       component: NativePreview,
-      props: { type: NativePreviewType.Video },
+      props: { type: NativePreviewType.Video, mimeType: videoType },
     },
   }),
   {}
@@ -79,6 +79,7 @@ type PreviewerProperties = {
     component: React.ElementType;
     props: {
       type?: keyof NativePreviewType;
+      mimeType?: SupportedType;
     };
   };
 };
