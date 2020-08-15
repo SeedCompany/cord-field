@@ -1,7 +1,7 @@
 import { PDFDocumentProxy } from 'pdfjs-dist';
 import React, { FC, useCallback, useState } from 'react';
 import { Document, Page, pdfjs } from 'react-pdf';
-import { usePreview } from '../FileActions';
+import { useFileActions } from '../FileActions';
 import { PreviewerProps } from './FilePreview';
 import { PreviewLoading } from './PreviewLoading';
 import { PreviewPagination } from './PreviewPagination';
@@ -10,7 +10,7 @@ pdfjs.GlobalWorkerOptions.workerSrc = `https://cdnjs.cloudflare.com/ajax/libs/pd
 
 export const PdfPreview: FC<PreviewerProps> = ({ downloadUrl }) => {
   const [numberOfPages, setNumberOfPages] = useState(1);
-  const { setPreviewError, previewPage } = usePreview();
+  const { setPreviewError, previewPage } = useFileActions();
 
   const handlePdfLoadSuccess = useCallback(
     (pdf: PDFDocumentProxy) => {

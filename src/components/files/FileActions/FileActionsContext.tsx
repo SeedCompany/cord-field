@@ -5,14 +5,18 @@ import React, {
   useContext,
   useState,
 } from 'react';
-import { Directory, File } from '../../../api';
+import { Directory, File, GQLOperations } from '../../../api';
 import {
   ProjectDirectoryDirectory,
   ProjectDirectoryFile,
 } from '../../../scenes/Projects/Files';
-import { DialogState, useDialog } from '../../Dialog';
+import { useDialog } from '../../Dialog';
+import { FilePreview } from '../FilePreview';
 import { FileVersionItem_FileVersion_Fragment } from '../FileVersionItem';
 import { useDownloadFile } from '../hooks';
+import { DeleteFile } from './DeleteFile';
+import { FileVersions } from './FileVersions';
+import { RenameFile } from './RenameFile';
 
 export type FilesActionItem =
   | File
@@ -21,10 +25,7 @@ export type FilesActionItem =
   | ProjectDirectoryFile
   | FileVersionItem_FileVersion_Fragment;
 
-export type FileVersionActionItem = Exclude<
-  FilesActionItem,
-  ProjectDirectoryDirectory | ProjectDirectoryFile | Directory | File
->;
+type FileActionItem = File | ProjectDirectoryFile;
 
 export enum FileAction {
   Rename = 'rename',
@@ -34,66 +35,33 @@ export enum FileAction {
   Delete = 'delete',
 }
 
-type FileActionHandler = (
-  item: FilesActionItem,
-  action: Exclude<FileAction, FileAction.NewVersion>
-) => void;
-
-interface PreviewState {
-  dialogState: DialogState;
-  previewError: string;
-  setPreviewError: (message: string) => void;
-  previewLoading: boolean;
-  setPreviewLoading: (isLoading: boolean) => void;
-  previewPage: number;
-  setPreviewPage: (page: number) => void;
-}
-
-export interface FileActionsContextValue {
-  handleFileActionClick: FileActionHandler;
-  renameState: DialogState;
-  fileNodeToRename: FilesActionItem | undefined;
-  versionState: DialogState;
-  versionToView: File | undefined;
-  deleteState: DialogState;
-  fileNodeToDelete: FilesActionItem | undefined;
-  previewState: PreviewState;
-  fileToPreview: File | undefined;
-  openFilePreview: (file: File) => void;
-}
-
-const initialDialogState = {
-  open: false,
-  onClose: () => null,
-  onExited: () => null,
-};
-
 export const initialFileActionsContext = {
-  handleFileActionClick: () => null,
-  renameState: initialDialogState,
-  fileNodeToRename: undefined,
-  versionState: initialDialogState,
-  versionToView: undefined,
-  newVersionState: initialDialogState,
-  versionToCreate: undefined,
-  deleteState: initialDialogState,
-  fileNodeToDelete: undefined,
-  previewState: {
-    dialogState: initialDialogState,
-    previewError: '',
-    setPreviewError: () => null,
-    previewLoading: false,
-    setPreviewLoading: () => null,
-    previewPage: 1,
-    setPreviewPage: () => null,
+  handleFileActionClick: (
+    _: FilesActionItem,
+    __: Exclude<FileAction, FileAction.NewVersion>
+  ) => {
+    return;
   },
-  fileToPreview: undefined,
-  openFilePreview: () => null,
+  previewError: '',
+  setPreviewError: (_: string) => {
+    return;
+  },
+  previewLoading: false,
+  setPreviewLoading: (_: boolean) => {
+    return;
+  },
+  previewPage: 1,
+  setPreviewPage: (_: number) => {
+    return;
+  },
+  openFilePreview: (_: File) => {
+    return;
+  },
 };
 
-export const FileActionsContext = createContext<FileActionsContextValue>(
-  initialFileActionsContext
-);
+export const FileActionsContext = createContext<
+  typeof initialFileActionsContext
+>(initialFileActionsContext);
 
 export const FileActionsContextProvider: FC = ({ children }) => {
   const [previewError, setPreviewError] = useState('');
@@ -105,63 +73,72 @@ export const FileActionsContextProvider: FC = ({ children }) => {
   const [renameState, renameFile, fileNodeToRename] = useDialog<
     FilesActionItem
   >();
-  const [versionState, showVersions, versionToView] = useDialog<File>();
+  const [versionState, showVersions, versionToView] = useDialog<
+    FileActionItem
+  >();
   const [deleteState, deleteFile, fileNodeToDelete] = useDialog<
     FilesActionItem
   >();
   const [previewDialogState, openFilePreview, fileToPreview] = useDialog<
     File
   >();
-  const previewState = {
-    dialogState: previewDialogState,
-    previewError,
-    setPreviewError,
-    previewLoading,
-    setPreviewLoading,
-    previewPage,
-    setPreviewPage,
-  };
 
   const actions = {
     rename: (item: FilesActionItem) => renameFile(item),
     download: (item: FilesActionItem) => downloadFile(item),
-    history: (item: FilesActionItem) => showVersions(item as File),
+    history: (item: FilesActionItem) => {
+      if (item.__typename === 'File') {
+        showVersions(item);
+      }
+    },
     delete: (item: FilesActionItem) => deleteFile(item),
   };
 
-  const handleFileActionClick: FileActionHandler = (item, action) => {
+  const handleFileActionClick = (
+    item: FilesActionItem,
+    action: Exclude<FileAction, FileAction.NewVersion>
+  ) => {
     actions[action](item);
   };
+
+  const deleteRefetches =
+    fileNodeToDelete?.__typename === 'FileVersion'
+      ? (GQLOperations.Query.FileVersions as keyof typeof GQLOperations.Query)
+      : (GQLOperations.Query
+          .ProjectDirectory as keyof typeof GQLOperations.Query);
 
   return (
     <FileActionsContext.Provider
       value={{
         handleFileActionClick,
-        renameState,
-        fileNodeToRename,
-        versionState,
-        versionToView,
-        deleteState,
-        fileNodeToDelete,
-        previewState,
-        fileToPreview,
+        previewLoading,
+        setPreviewLoading,
+        previewError,
+        setPreviewError,
+        previewPage,
+        setPreviewPage,
         openFilePreview,
       }}
     >
-      {children}
+      <>
+        {children}
+        <RenameFile item={fileNodeToRename} {...renameState} />
+        <DeleteFile
+          item={fileNodeToDelete}
+          refetchQueries={[deleteRefetches]}
+          {...deleteState}
+        />
+        <FileVersions file={versionToView} {...versionState} />
+        <FilePreview file={fileToPreview} {...previewDialogState} />
+      </>
     </FileActionsContext.Provider>
   );
 };
 
 export const useFileActions = () => useContext(FileActionsContext);
 
-export const usePreview = () => {
-  const { previewState } = useFileActions();
-  return { ...previewState };
-};
-
 export const usePreviewError = () => {
-  const { setPreviewError, setPreviewLoading } = usePreview();
+  const { setPreviewError, setPreviewLoading } = useFileActions();
   const handlePreviewError = useCallback(
     (error: string) => {
       setPreviewError(error);

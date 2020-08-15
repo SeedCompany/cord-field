@@ -113,9 +113,7 @@ const previewers: PreviewerProperties = {
 export const FilePreview: FC<FilePreviewProps> = (props) => {
   const classes = useStyles();
   const [downloadUrl, setDownloadUrl] = useState('');
-  const {
-    previewState: { previewError, setPreviewError },
-  } = useFileActions();
+  const { previewError, setPreviewError } = useFileActions();
   const getDownloadUrl = useGetFileDownloadUrl();
   const { file, onClose, ...rest } = props;
   const { id, mimeType, name } = file ?? {

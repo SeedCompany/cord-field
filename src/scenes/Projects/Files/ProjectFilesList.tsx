@@ -16,11 +16,9 @@ import { ContentContainer as Content } from '../../../components/ContentContaine
 import { useDialog } from '../../../components/Dialog';
 import {
   FileActionsPopup as ActionsMenu,
-  FileActions,
   FileActionsContextProvider,
   useFileActions,
 } from '../../../components/files/FileActions';
-import { FilePreview } from '../../../components/files/FilePreview';
 import {
   FileNodeInfo_Directory_Fragment,
   FileNodeInfo_File_Fragment,
@@ -120,11 +118,7 @@ const ProjectFilesListWrapped: FC = () => {
   const fileNameAndExtension = useFileNameAndExtension();
   const fileIcon = useFileNodeIcon();
 
-  const {
-    previewState: { dialogState: previewState },
-    fileToPreview,
-    openFilePreview,
-  } = useFileActions();
+  const { openFilePreview } = useFileActions();
 
   const {
     loading: directoryLoading,
@@ -361,9 +355,7 @@ const ProjectFilesListWrapped: FC = () => {
             </section>
           </>
         )}
-        <FileActions />
         <CreateProjectDirectory {...createDirectoryState} />
-        <FilePreview file={fileToPreview} {...previewState} />
       </Content>
     </div>
   );

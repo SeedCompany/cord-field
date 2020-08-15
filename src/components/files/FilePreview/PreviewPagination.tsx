@@ -1,7 +1,7 @@
 import { Grid } from '@material-ui/core';
 import { Pagination } from '@material-ui/lab';
 import React, { FC, useCallback, useEffect } from 'react';
-import { usePreview } from '../FileActions';
+import { useFileActions } from '../FileActions';
 
 interface PreviewPaginationProps {
   pageCount: number;
@@ -9,7 +9,7 @@ interface PreviewPaginationProps {
 
 export const PreviewPagination: FC<PreviewPaginationProps> = (props) => {
   const { children, pageCount } = props;
-  const { previewPage, setPreviewPage } = usePreview();
+  const { previewPage, setPreviewPage } = useFileActions();
 
   useEffect(() => {
     return () => setPreviewPage(1);

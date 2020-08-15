@@ -2,7 +2,7 @@ import { Grid } from '@material-ui/core';
 import parse from 'html-react-parser';
 import mammoth from 'mammoth';
 import React, { FC, useCallback, useEffect, useState } from 'react';
-import { usePreview, usePreviewError } from '../FileActions';
+import { useFileActions, usePreviewError } from '../FileActions';
 import { PreviewerProps } from './FilePreview';
 import { PreviewLoading } from './PreviewLoading';
 import { useRetrieveFile } from './useRetrieveFile';
@@ -13,7 +13,7 @@ const mammothOptions = {
 
 export const WordPreview: FC<PreviewerProps> = ({ downloadUrl }) => {
   const [html, setHtml] = useState<JSX.Element | JSX.Element[] | null>(null);
-  const { previewLoading, setPreviewLoading } = usePreview();
+  const { previewLoading, setPreviewLoading } = useFileActions();
   const handleError = usePreviewError();
   const retrieveFile = useRetrieveFile();
 

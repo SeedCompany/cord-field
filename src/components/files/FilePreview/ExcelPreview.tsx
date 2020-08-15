@@ -1,6 +1,6 @@
 import React, { FC, useCallback, useEffect, useState } from 'react';
 import XLSX from 'xlsx';
-import { usePreview, usePreviewError } from '../FileActions';
+import { useFileActions, usePreviewError } from '../FileActions';
 import { PreviewerProps } from './FilePreview';
 import { PreviewLoading } from './PreviewLoading';
 import { PreviewPagination } from './PreviewPagination';
@@ -15,7 +15,7 @@ interface SheetData {
 
 export const ExcelPreview: FC<PreviewerProps> = ({ downloadUrl }) => {
   const [sheets, setSheets] = useState<SheetData[]>([]);
-  const { previewPage, previewLoading, setPreviewLoading } = usePreview();
+  const { previewPage, previewLoading, setPreviewLoading } = useFileActions();
   const retrieveFile = useRetrieveFile();
   const handleError = usePreviewError();
 

@@ -1,14 +1,14 @@
 import { Grid } from '@material-ui/core';
 import Papa, { ParseResult } from 'papaparse';
 import React, { FC, useCallback, useEffect, useState } from 'react';
-import { usePreview, usePreviewError } from '../FileActions';
+import { useFileActions, usePreviewError } from '../FileActions';
 import { PreviewerProps } from './FilePreview';
 import { PreviewLoading } from './PreviewLoading';
 import { ColumnData, SpreadsheetView } from './SpreadsheetView';
 
 export const CsvPreview: FC<PreviewerProps> = ({ downloadUrl }) => {
   const [csvData, setCsvData] = useState<ParseResult<string[]>['data']>([]);
-  const { previewLoading, setPreviewLoading } = usePreview();
+  const { previewLoading, setPreviewLoading } = useFileActions();
   const handleError = usePreviewError();
 
   // ignoring result.errors for now and just using result.data

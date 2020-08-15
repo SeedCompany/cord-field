@@ -1,6 +1,6 @@
 import { Grid, makeStyles } from '@material-ui/core';
 import React, { FC, useCallback, useEffect, useState } from 'react';
-import { usePreview, usePreviewError } from '../FileActions';
+import { useFileActions, usePreviewError } from '../FileActions';
 import { PreviewerProps } from './FilePreview';
 import { PreviewLoading } from './PreviewLoading';
 import { useRetrieveFile } from './useRetrieveFile';
@@ -26,7 +26,7 @@ export const NativePreview: FC<NativePreviewProps> = ({
   const classes = useStyles();
   const [url, setUrl] = useState('');
   const retrieveFile = useRetrieveFile();
-  const { previewLoading, setPreviewLoading } = usePreview();
+  const { previewLoading, setPreviewLoading } = useFileActions();
   const handleError = usePreviewError();
 
   const createUrlForFile = useCallback(
