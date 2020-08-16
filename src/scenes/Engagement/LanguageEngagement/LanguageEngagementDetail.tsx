@@ -17,6 +17,7 @@ import { BooleanProperty } from '../../../components/BooleanProperty';
 import { Breadcrumb } from '../../../components/Breadcrumb';
 import { DataButton } from '../../../components/DataButton';
 import { useDialog } from '../../../components/Dialog';
+import { EngagementFileCard } from '../../../components/EngagementFileCard';
 import { Fab } from '../../../components/Fab';
 import { FieldOverviewCard } from '../../../components/FieldOverviewCard';
 import {
@@ -76,6 +77,8 @@ export const LanguageEngagementDetail: FC<EngagementQuery> = ({
   const langName = language?.name.value ?? language?.displayName.value;
   const ptRegistryId = engagement.paraTextRegistryId;
   const editable = canEditAny(engagement);
+
+  const pnp = engagement.pnp.value;
 
   return (
     <>
@@ -207,7 +210,11 @@ export const LanguageEngagementDetail: FC<EngagementQuery> = ({
           </Grid>
           <Grid item container spacing={3} alignItems="center">
             <Grid item xs={6}>
-              <AddItemCard onClick={uploadFile} itemType="plan" />
+              {pnp ? (
+                <EngagementFileCard file={pnp} />
+              ) : (
+                <AddItemCard onClick={uploadFile} itemType="plan" />
+              )}
             </Grid>
           </Grid>
         </Grid>

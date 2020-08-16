@@ -6,6 +6,7 @@ import {
 } from '@material-ui/core';
 import { Skeleton } from '@material-ui/lab';
 import React, { FC } from 'react';
+import { LanguageEngagementDetailFragment } from '../../scenes/Engagement/LanguageEngagement';
 import { useDateFormatter } from '../Formatters';
 import { HugeIcon, ReportIcon } from '../Icons';
 
@@ -33,7 +34,7 @@ const useStyles = makeStyles(({ palette, spacing }) => ({
 }));
 
 export interface EngagementFileCardProps {
-  file: any;
+  file: LanguageEngagementDetailFragment['pnp']['value'];
 }
 
 const FileCardMeta: FC<{ loading: boolean; text: string }> = ({
@@ -56,9 +57,15 @@ const FileCardMeta: FC<{ loading: boolean; text: string }> = ({
 export const EngagementFileCard: FC<EngagementFileCardProps> = (props) => {
   const classes = useStyles();
   const { file } = props;
-  console.log('file', file);
   const formatDate = useDateFormatter();
-  const { modifiedAt, name, modifiedBy } = file;
+  const { modifiedAt, name, modifiedBy } = file ?? {
+    modifiedAt: undefined,
+    name: '',
+    modifiedBy: {
+      displayFirstName: { value: '' },
+      displayLastName: { value: '' },
+    },
+  };
   const {
     displayFirstName: { value: firstName },
     displayLastName: { value: lastName },

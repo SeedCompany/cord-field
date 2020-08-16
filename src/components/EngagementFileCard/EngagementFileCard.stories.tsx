@@ -1,5 +1,6 @@
 import { Box } from '@material-ui/core';
 import { text } from '@storybook/addon-knobs';
+import { DateTime } from 'luxon';
 import React from 'react';
 import { dateTime } from '../knobs.stories';
 import { EngagementFileCard as Card } from './EngagementFileCard';
@@ -31,9 +32,9 @@ export const EngagementFileCard = () => {
     mimeType: 'application/pdf',
     size: 6000,
     id: '12345',
-    createdAt: new Date(),
-    type: 'File',
-    category: 'Document',
+    createdAt: DateTime.local(),
+    type: 'File' as const,
+    category: 'Document' as const,
     name: 'Language PnP',
     createdBy: createdByUser,
     modifiedAt: new Date(),
@@ -44,9 +45,9 @@ export const EngagementFileCard = () => {
     mimeType: 'application/pdf',
     size: 6000,
     id: '12345',
-    createdAt: new Date(),
-    type: 'File',
-    category: 'Document',
+    createdAt: DateTime.local(),
+    type: 'File' as const,
+    category: 'Document' as const,
     name: text('name', 'Language PnP'),
     createdBy: createdByUser,
     modifiedAt: dateTime('modifiedAt'),
