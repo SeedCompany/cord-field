@@ -59,6 +59,7 @@ export const SpreadsheetView: FC<SpreadsheetViewProps> = (props) => {
       <table className={classes.excelTable}>
         <tbody>
           <tr>
+            <th className={classes.tableHeader}>&nbsp;</th>
             {columns.map((column) => {
               const { key, name } = column;
               return (
