@@ -16,6 +16,7 @@ export const FileVersionItem = () => {
     },
     name: text('Name', 'Test File'),
     mimeType: text('mimeType', 'application/pdf'),
+    size: 1234,
     downloadUrl: '',
     type: 'FileVersion' as const,
   };
