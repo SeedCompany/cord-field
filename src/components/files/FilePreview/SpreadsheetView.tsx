@@ -78,7 +78,9 @@ export const SpreadsheetView: FC<SpreadSheetViewProps> = (props) => {
   );
 
   const activeTab = previewPage - 1;
-  return (
+  return data.length === 1 ? (
+    <div className={classes.container}>{data[0].html}</div>
+  ) : (
     <Grid item>
       <Tabs
         value={activeTab}
