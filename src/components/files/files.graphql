@@ -10,9 +10,15 @@ fragment FileNodeInfo on FileNode {
   ... on File {
     ...FileInfo
   }
+  ... on FileVersion {
+    mimeType
+    size
+  }
 }
 
 fragment FileInfo on File {
+  mimeType
+  size
   modifiedAt
   modifiedBy {
     id
