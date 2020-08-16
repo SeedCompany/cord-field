@@ -1,31 +1,30 @@
+import parse from 'html-react-parser';
 import React, { FC, useCallback, useEffect, useState } from 'react';
 import XLSX from 'xlsx';
 import { SupportedType } from '../FILE_MIME_TYPES';
 import { useFileActions, usePreviewError } from '../FileActions';
 import { PreviewerProps } from './FilePreview';
 import { PreviewLoading } from './PreviewLoading';
-import { PreviewPagination } from './PreviewPagination';
-import { ColumnData, RowData, SpreadsheetView } from './SpreadsheetView';
+import { SpreadsheetView } from './SpreadsheetView';
 import { useRetrieveFile } from './useRetrieveFile';
 
-interface SheetData {
+interface Sheet {
   name: string;
-  rows: RowData;
-  columns: ColumnData;
+  html: JSX.Element | JSX.Element[];
 }
 
 export const ExcelPreview: FC<PreviewerProps & { mimeType: SupportedType }> = ({
   downloadUrl,
   mimeType,
 }) => {
-  const [sheets, setSheets] = useState<SheetData[]>([]);
-  const { previewPage, previewLoading, setPreviewLoading } = useFileActions();
+  const [sheets, setSheets] = useState<Sheet[]>([]);
+  const { previewLoading, setPreviewLoading } = useFileActions();
   const retrieveFile = useRetrieveFile();
   const handleError = usePreviewError();
 
   const extractExcelDataFromWorkbook = useCallback(
     async (file: File) => {
-      const { data, error } = await extractExcelData(file);
+      const { data, error } = await convertToHtml(file);
       if (error) {
         handleError(error.message);
       } else if (data) {
@@ -52,36 +51,37 @@ export const ExcelPreview: FC<PreviewerProps & { mimeType: SupportedType }> = ({
     retrieveFile,
   ]);
 
-  const currentSheet = sheets[previewPage - 1];
-
   return previewLoading ? (
     <PreviewLoading />
   ) : sheets.length < 1 ? null : (
-    <PreviewPagination pageCount={sheets.length}>
-      <SpreadsheetView {...currentSheet} />
-    </PreviewPagination>
+    <SpreadsheetView data={sheets} />
   );
 };
 
-async function extractExcelData(
+async function convertToHtml(
   file: File
 ): Promise<{
-  data: SheetData[] | undefined;
+  data: Sheet[] | undefined;
   error: Error | undefined;
 }> {
   try {
     const spreadsheetBuffer = await file.arrayBuffer();
     const workbook = XLSX.read(spreadsheetBuffer, { type: 'buffer' });
     const data = workbook.SheetNames.reduce(
-      (sheets: SheetData[], worksheetName) => {
+      (sheets: Sheet[], worksheetName) => {
         const worksheet = workbook.Sheets[worksheetName];
-        const rows = XLSX.utils.sheet_to_json(worksheet, { header: 1 });
         // '!ref' is a special key that gives the used cell range
         const usedCellRange = worksheet['!ref'];
-        const columns = usedCellRange ? formatColumns(usedCellRange) : [];
-        const newSheet = usedCellRange
-          ? { name: worksheetName, rows, columns }
-          : { name: 'Unreadable Sheet', rows: [], columns };
+        const html = usedCellRange
+          ? XLSX.utils.sheet_to_html(worksheet, {
+              header: '',
+              footer: '',
+            })
+          : `<h2>Empty Sheet</h2>`;
+        const newSheet = {
+          name: worksheetName,
+          html: parse(html),
+        };
         return sheets.concat(newSheet);
       },
       []
@@ -92,18 +92,11 @@ async function extractExcelData(
           data: undefined,
           error: new Error('Could not read spreadsheet data'),
         };
-  } catch {
+  } catch (error) {
+    console.log('error', error);
     return {
       data: undefined,
       error: new Error('Could not open spreadsheet file'),
     };
   }
-}
-
-function formatColumns(usedCellRange: string) {
-  const cellAddress = XLSX.utils.decode_range(usedCellRange).e.c;
-  const columns = Array(cellAddress)
-    .fill(null)
-    .map((_, index) => ({ name: XLSX.utils.encode_col(index), key: index }));
-  return columns;
 }

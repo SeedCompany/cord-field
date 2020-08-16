@@ -1,88 +1,108 @@
-import { makeStyles, Typography } from '@material-ui/core';
-import React, { FC } from 'react';
-import { XLSX$Utils } from 'xlsx';
+import { Grid, makeStyles, Tab, Tabs } from '@material-ui/core';
+import React, { FC, useCallback, useEffect } from 'react';
+import { useFileActions } from '../FileActions';
 
 const useStyles = makeStyles(({ spacing }) => {
   const backgroundColor = '#e6e6e6';
   const borderColor = '#d8d8df';
   const headerBorderColor = '#d1cacb';
+  const headerStyles = {
+    backgroundColor: backgroundColor,
+    border: `1px solid ${headerBorderColor}`,
+    borderWidth: '0px 1px 1px 0px',
+    textAlign: 'center',
+  };
   return {
     sheetHeader: {
       marginBottom: spacing(2),
     },
-    excelTable: {
-      border: `1px solid ${headerBorderColor}`,
-      borderCollapse: 'collapse',
-      borderSpacing: '0px',
-      borderWidth: '1px 0px 0px 1px',
-      fontFamily: 'Arial',
-    },
-    cell: {
-      backgroundColor: 'white',
-      border: `1px solid ${borderColor}`,
-      borderWidth: '0px 1px 1px 0px',
-      padding: '2px 4px',
-    },
-    tableHeader: {
-      backgroundColor: backgroundColor,
-      border: `1px solid ${headerBorderColor}`,
-      borderWidth: '0px 1px 1px 0px',
-      textAlign: 'center',
+    container: {
+      '& h2': {
+        fontFamily: 'Arial',
+        fontWeight: 'normal',
+        textAlign: 'center',
+      },
+      '& table': {
+        border: `1px solid ${headerBorderColor}`,
+        borderCollapse: 'collapse',
+        borderSpacing: '0px',
+        borderWidth: '1px 0px 0px 1px',
+        fontFamily: 'Arial',
+      },
+      '& th': {
+        ...headerStyles,
+      },
+      '& .table-header': {
+        ...headerStyles,
+      },
+      '& td': {
+        backgroundColor: 'white',
+        border: `1px solid ${borderColor}`,
+        borderWidth: '0px 1px 1px 0px',
+        padding: '2px 4px',
+      },
     },
   };
 });
 
-/* Using typings from `xlsx` here because we want to play it
-  safe when we use these typings in the `ExcelPreview` component */
-export type ColumnData = Array<{
-  name: ReturnType<XLSX$Utils['encode_col']>;
-  key: number;
-}>;
-export type RowData = ReturnType<XLSX$Utils['sheet_to_json']>;
-
-interface SpreadsheetViewProps {
-  columns: ColumnData;
-  name?: string;
-  rows: RowData;
+export interface SheetData {
+  name: string;
+  html: JSX.Element | JSX.Element[];
 }
 
-export const SpreadsheetView: FC<SpreadsheetViewProps> = (props) => {
-  const { columns, name, rows } = props;
+interface SpreadSheetViewProps {
+  data: SheetData[];
+}
+
+export const SpreadsheetView: FC<SpreadSheetViewProps> = (props) => {
   const classes = useStyles();
+  const { data } = props;
+  const { previewPage, setPreviewPage } = useFileActions();
+
+  useEffect(() => {
+    return () => setPreviewPage(1);
+  }, [setPreviewPage]);
+
+  function a11yProps(index: number) {
+    return {
+      id: `sheet-tab-${index}`,
+      'aria-controls': `sheet-tabpanel-${index}`,
+    };
+  }
+
+  const handleChange = useCallback(
+    (_: React.ChangeEvent<unknown>, value: number) => {
+      setPreviewPage(value + 1);
+    },
+    [setPreviewPage]
+  );
+
+  const activeTab = previewPage - 1;
   return (
-    <div>
-      {name && (
-        <Typography variant="h3" className={classes.sheetHeader}>
-          {name}
-        </Typography>
-      )}
-      <table className={classes.excelTable}>
-        <tbody>
-          <tr>
-            <th className={classes.tableHeader}>&nbsp;</th>
-            {columns.map((column) => {
-              const { key, name } = column;
-              return (
-                <th key={key} className={classes.tableHeader}>
-                  {name}
-                </th>
-              );
-            })}
-          </tr>
-          {rows.map((row, index) => (
-            <tr key={index}>
-              <td key={index} className={classes.tableHeader}>
-                {index}
-              </td>
-              {columns.map((column) => (
-                <td key={column.key} className={classes.cell}>
-                  {row[column.key]}
-                </td>
-              ))}
-            </tr>
-          ))}
-        </tbody>
-      </table>
-    </div>
+    <Grid item>
+      <Tabs
+        value={activeTab}
+        onChange={handleChange}
+        aria-label="Spreadsheet tabs"
+      >
+        {data.map((sheet, index) => (
+          <Tab key={sheet.name} label={sheet.name} {...a11yProps(index)} />
+        ))}
+      </Tabs>
+      {data.map((sheet, index) => {
+        return (
+          <div
+            key={sheet.name}
+            aria-labelledby={`sheet-tab-${index}`}
+            className={classes.container}
+            hidden={activeTab !== index}
+            id={`sheet-tabpanel-${index}`}
+            role="tabpanel"
+          >
+            {activeTab === index ? sheet.html : null}
+          </div>
+        );
+      })}
+    </Grid>
   );
 };
