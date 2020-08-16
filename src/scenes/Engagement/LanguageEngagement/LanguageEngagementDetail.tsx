@@ -20,6 +20,7 @@ import { useDialog } from '../../../components/Dialog';
 import { EngagementFileCard } from '../../../components/EngagementFileCard';
 import { Fab } from '../../../components/Fab';
 import { FieldOverviewCard } from '../../../components/FieldOverviewCard';
+import { FileActionsContextProvider } from '../../../components/files/FileActions';
 import {
   useDateFormatter,
   useDateTimeFormatter,
@@ -54,7 +55,7 @@ const useStyles = makeStyles(({ spacing, breakpoints, palette }) => ({
   },
 }));
 
-export const LanguageEngagementDetail: FC<EngagementQuery> = ({
+const LanguageEngagementDetailWrapped: FC<EngagementQuery> = ({
   project,
   engagement,
 }) => {
@@ -256,3 +257,9 @@ export const LanguageEngagementDetail: FC<EngagementQuery> = ({
     </>
   );
 };
+
+export const LanguageEngagementDetail: FC<EngagementQuery> = (props) => (
+  <FileActionsContextProvider>
+    <LanguageEngagementDetailWrapped {...props} />
+  </FileActionsContextProvider>
+);

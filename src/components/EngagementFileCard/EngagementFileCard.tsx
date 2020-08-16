@@ -7,6 +7,7 @@ import {
 import { Skeleton } from '@material-ui/lab';
 import React, { FC } from 'react';
 import { LanguageEngagementDetailFragment } from '../../scenes/Engagement/LanguageEngagement';
+import { useFileActions } from '../files/FileActions';
 import { useDateFormatter } from '../Formatters';
 import { HugeIcon, ReportIcon } from '../Icons';
 
@@ -58,6 +59,7 @@ export const EngagementFileCard: FC<EngagementFileCardProps> = (props) => {
   const classes = useStyles();
   const { file } = props;
   const formatDate = useDateFormatter();
+  const { openFilePreview } = useFileActions();
   const { modifiedAt, name, modifiedBy } = file ?? {
     modifiedAt: undefined,
     name: '',
@@ -75,7 +77,7 @@ export const EngagementFileCard: FC<EngagementFileCardProps> = (props) => {
     <Card className={classes.root}>
       <CardActionArea
         className={classes.actionArea}
-        onClick={() => console.log('Preview File')}
+        onClick={() => file && openFilePreview(file)}
       >
         <HugeIcon icon={ReportIcon} loading={!file} />
         <div className={classes.fileInfo}>
