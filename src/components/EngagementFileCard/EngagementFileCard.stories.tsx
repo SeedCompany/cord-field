@@ -2,6 +2,7 @@ import { Box } from '@material-ui/core';
 import { text } from '@storybook/addon-knobs';
 import { DateTime } from 'luxon';
 import React from 'react';
+import { LanguageEngagement } from '../../api';
 import { dateTime } from '../knobs.stories';
 import { EngagementFileCard as Card } from './EngagementFileCard';
 
@@ -59,15 +60,28 @@ export const EngagementFileCard = () => {
     },
     downloadUrl: '',
   };
+  const secured = {
+    canRead: true,
+    canEdit: true,
+  };
+  const languageEngagement = {
+    id: '09877',
+    pnp: {
+      ...secured,
+      value: file,
+    },
+  };
   return (
     <Box display="flex" width={400}>
-      <Card file={file} />
+      <Card
+        engagement={(languageEngagement as unknown) as LanguageEngagement}
+      />
     </Box>
   );
 };
 
-export const Loading = () => (
-  <Box display="flex" width={400}>
-    <Card file={undefined} />
-  </Box>
-);
+// export const Loading = () => (
+//   <Box display="flex" width={400}>
+//     <Card file={undefined} />
+//   </Box>
+// );

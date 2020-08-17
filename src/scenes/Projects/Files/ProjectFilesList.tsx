@@ -10,7 +10,7 @@ import { Skeleton } from '@material-ui/lab';
 import React, { FC } from 'react';
 import { useDropzone } from 'react-dropzone';
 import { useNavigate, useParams } from 'react-router-dom';
-import { File } from '../../../api';
+import { File as CFFile } from '../../../api';
 import { Breadcrumb } from '../../../components/Breadcrumb';
 import { useDialog } from '../../../components/Dialog';
 import {
@@ -126,9 +126,13 @@ const ProjectFilesListWrapped: FC = () => {
     rootDirectoryId,
   } = useProjectCurrentDirectory();
 
-  const handleFilesDrop = useUploadProjectFiles(directoryId);
+  const uploadProjectFiles = useUploadProjectFiles();
 
   const [createDirectoryState, createDirectory] = useDialog();
+
+  const handleDrop = (files: File[]) => {
+    uploadProjectFiles({ files, parentId: directoryId });
+  };
 
   const {
     getRootProps,
@@ -136,7 +140,7 @@ const ProjectFilesListWrapped: FC = () => {
     isDragActive,
     open: openFileBrowser,
   } = useDropzone({
-    onDrop: handleFilesDrop,
+    onDrop: handleDrop,
     noClick: true,
     noKeyboard: true,
     disabled: !directoryId,
@@ -174,7 +178,7 @@ const ProjectFilesListWrapped: FC = () => {
     name: FileNodeInfoFragment['name'];
     createdAt: string;
     createdBy: string;
-    mimeType: File['mimeType'];
+    mimeType: CFFile['mimeType'];
     size: number;
     item: ProjectDirectoryNonVersion;
   }
@@ -257,7 +261,18 @@ const ProjectFilesListWrapped: FC = () => {
     {
       title: '',
       field: 'item',
-      render: (rowData: FileRowData) => <ActionsMenu item={rowData.item} />,
+      render: (rowData: FileRowData) => (
+        <ActionsMenu
+          item={rowData.item}
+          onVersionUpload={(files) =>
+            uploadProjectFiles({
+              files,
+              parentId: rowData.item.id,
+              action: 'version',
+            })
+          }
+        />
+      ),
       sorting: false,
       cellStyle: {
         padding: spacing(0.5),
@@ -366,7 +381,7 @@ const ProjectFilesListWrapped: FC = () => {
 };
 
 export const ProjectFilesList: FC = () => (
-  <FileActionsContextProvider>
+  <FileActionsContextProvider context="project">
     <ProjectFilesListWrapped />
   </FileActionsContextProvider>
 );

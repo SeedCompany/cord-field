@@ -20,9 +20,11 @@ export type FilesActionItem =
   | FileVersionItem_FileVersion_Fragment;
 
 export type FileActionItem = File | ProjectDirectoryFile;
+export type VersionActionItem = FileVersionItem_FileVersion_Fragment;
+export type DirectoryActionItem = Directory | ProjectDirectoryDirectory;
 export type NonDirectoryActionItem = Exclude<
   FilesActionItem,
-  Directory | ProjectDirectoryDirectory
+  DirectoryActionItem
 >;
 
 export enum FileAction {
@@ -33,7 +35,12 @@ export enum FileAction {
   Delete = 'delete',
 }
 
+interface FileActionsContextProviderProps {
+  context: 'project' | 'engagement';
+}
+
 export const initialFileActionsContext = {
+  context: '' as FileActionsContextProviderProps['context'],
   handleFileActionClick: (
     _: FilesActionItem,
     __: Exclude<FileAction, FileAction.NewVersion>
@@ -53,7 +60,10 @@ export const FileActionsContext = createContext<
   typeof initialFileActionsContext
 >(initialFileActionsContext);
 
-export const FileActionsContextProvider: FC = ({ children }) => {
+export const FileActionsContextProvider: FC<FileActionsContextProviderProps> = (
+  props
+) => {
+  const { context, children } = props;
   const [previewPage, setPreviewPage] = useState(1);
 
   const downloadFile = useDownloadFile();
@@ -97,6 +107,7 @@ export const FileActionsContextProvider: FC = ({ children }) => {
   return (
     <FileActionsContext.Provider
       value={{
+        context,
         handleFileActionClick,
         previewPage,
         setPreviewPage,

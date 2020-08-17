@@ -1,26 +1,26 @@
-import {
-  Card,
-  CardActionArea,
-  makeStyles,
-  Typography,
-} from '@material-ui/core';
+import { Card, makeStyles, Typography } from '@material-ui/core';
 import { Skeleton } from '@material-ui/lab';
+import { DateTime } from 'luxon';
 import React, { FC } from 'react';
+import { GQLOperations } from '../../api';
+import { useUploadLanguageEngagementPnpMutation } from '../../scenes/Engagement/Files';
 import { LanguageEngagementDetailFragment } from '../../scenes/Engagement/LanguageEngagement';
-import { useFileActions } from '../files/FileActions';
+import {
+  FileActionsPopup as ActionsMenu,
+  useFileActions,
+} from '../files/FileActions';
 import { useDateFormatter } from '../Formatters';
 import { HugeIcon, ReportIcon } from '../Icons';
+import { UploadCallback, useUpload } from '../Upload';
 
 const useStyles = makeStyles(({ palette, spacing }) => ({
   root: {
+    cursor: 'pointer',
     flex: 1,
     height: '100%',
-  },
-  actionArea: {
-    height: '100%',
     display: 'flex',
-    justifyContent: 'space-evenly',
-    padding: spacing(3, 4),
+    justifyContent: 'space-between',
+    padding: spacing(3),
   },
   fileInfo: {
     flex: 1,
@@ -32,10 +32,14 @@ const useStyles = makeStyles(({ palette, spacing }) => ({
   fileMeta: {
     color: palette.text.secondary,
   },
+  actionsMenu: {
+    alignSelf: 'flex-start',
+    marginTop: spacing(-1.5),
+  },
 }));
 
 export interface EngagementFileCardProps {
-  file: LanguageEngagementDetailFragment['pnp']['value'];
+  engagement: LanguageEngagementDetailFragment;
 }
 
 const FileCardMeta: FC<{ loading: boolean; text: string }> = ({
@@ -57,11 +61,35 @@ const FileCardMeta: FC<{ loading: boolean; text: string }> = ({
 
 export const EngagementFileCard: FC<EngagementFileCardProps> = (props) => {
   const classes = useStyles();
-  const { file } = props;
+  const { engagement } = props;
+  const { id } = engagement;
+  const file = engagement.pnp.value;
   const formatDate = useDateFormatter();
   const { openFilePreview } = useFileActions();
+  const { addFilesToUploadQueue } = useUpload();
+  const [uploadEngagementFile] = useUploadLanguageEngagementPnpMutation();
+
+  const uploadFile = async (
+    uploadId: Parameters<UploadCallback>[0],
+    name: Parameters<UploadCallback>[1]
+  ): Promise<void> => {
+    await uploadEngagementFile({
+      variables: { id, pnp: { uploadId, name } },
+      refetchQueries: [GQLOperations.Query.Engagement],
+    });
+  };
+
+  const handleVersionUpload = (files: File[]) => {
+    const fileInputs = files.map((file) => ({
+      file,
+      fileName: file.name,
+      callback: uploadFile,
+    }));
+    addFilesToUploadQueue(fileInputs);
+  };
+
   const { modifiedAt, name, modifiedBy } = file ?? {
-    modifiedAt: undefined,
+    modifiedAt: DateTime.local(),
     name: '',
     modifiedBy: {
       displayFirstName: { value: '' },
@@ -74,23 +102,26 @@ export const EngagementFileCard: FC<EngagementFileCardProps> = (props) => {
   } = modifiedBy;
 
   return (
-    <Card className={classes.root}>
-      <CardActionArea
-        className={classes.actionArea}
-        onClick={() => file && openFilePreview(file)}
-      >
-        <HugeIcon icon={ReportIcon} loading={!file} />
-        <div className={classes.fileInfo}>
-          <Typography className={classes.fileName} color="initial" variant="h4">
-            {file ? name : <Skeleton width="80%" />}
-          </Typography>
-          <FileCardMeta
-            text={`Updated by ${firstName} ${lastName}`}
-            loading={!file}
-          />
-          <FileCardMeta text={formatDate(modifiedAt)} loading={!file} />
-        </div>
-      </CardActionArea>
+    <Card
+      className={classes.root}
+      onClick={() => file && openFilePreview(file)}
+    >
+      <HugeIcon icon={ReportIcon} loading={!file} />
+      <div className={classes.fileInfo}>
+        <Typography className={classes.fileName} color="initial" variant="h4">
+          {file ? name : <Skeleton width="80%" />}
+        </Typography>
+        <FileCardMeta
+          text={`Updated by ${firstName} ${lastName}`}
+          loading={!file}
+        />
+        <FileCardMeta text={formatDate(modifiedAt)} loading={!file} />
+      </div>
+      <div className={classes.actionsMenu}>
+        {file && (
+          <ActionsMenu item={file} onVersionUpload={handleVersionUpload} />
+        )}
+      </div>
     </Card>
   );
 };

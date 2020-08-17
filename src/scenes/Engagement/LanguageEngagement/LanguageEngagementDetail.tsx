@@ -78,7 +78,6 @@ const LanguageEngagementDetailWrapped: FC<EngagementQuery> = ({
   const langName = language?.name.value ?? language?.displayName.value;
   const ptRegistryId = engagement.paraTextRegistryId;
   const editable = canEditAny(engagement);
-
   const pnp = engagement.pnp.value;
 
   return (
@@ -212,7 +211,7 @@ const LanguageEngagementDetailWrapped: FC<EngagementQuery> = ({
           <Grid item container spacing={3} alignItems="center">
             <Grid item xs={6}>
               {pnp ? (
-                <EngagementFileCard file={pnp} />
+                <EngagementFileCard engagement={engagement} />
               ) : (
                 <AddItemCard onClick={uploadFile} itemType="plan" />
               )}
@@ -259,7 +258,7 @@ const LanguageEngagementDetailWrapped: FC<EngagementQuery> = ({
 };
 
 export const LanguageEngagementDetail: FC<EngagementQuery> = (props) => (
-  <FileActionsContextProvider>
+  <FileActionsContextProvider context="engagement">
     <LanguageEngagementDetailWrapped {...props} />
   </FileActionsContextProvider>
 );

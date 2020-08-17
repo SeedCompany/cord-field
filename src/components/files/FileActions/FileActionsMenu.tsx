@@ -18,11 +18,12 @@ import {
 } from '@material-ui/icons';
 import React, { FC, useState } from 'react';
 import { useDropzone } from 'react-dropzone';
-import { useUploadProjectFiles } from '../../../scenes/Projects/Files';
 import {
+  DirectoryActionItem,
   FileAction,
-  FilesActionItem,
+  FileActionItem,
   useFileActions,
+  VersionActionItem,
 } from './FileActionsContext';
 
 const useStyles = makeStyles(({ spacing }) => ({
@@ -45,11 +46,18 @@ const useStyles = makeStyles(({ spacing }) => ({
   },
 }));
 
-interface FileActionsPopupProps {
-  item: FilesActionItem;
+interface NonVersionPopupProps {
+  item: DirectoryActionItem | FileActionItem;
+  onVersionUpload?: (files: File[]) => void;
 }
 
-const menuItems = [
+interface VersionPopupProps {
+  item: VersionActionItem;
+}
+
+type FileActionsPopupProps = NonVersionPopupProps | VersionPopupProps;
+
+const MENU_ITEMS = [
   {
     text: FileAction.Rename,
     icon: RenameIcon,
@@ -60,14 +68,17 @@ const menuItems = [
     text: FileAction.Download,
     icon: DownloadIcon,
     version: true,
+    engagement: true,
   },
   {
     text: FileAction.History,
     icon: HistoryIcon,
+    engagement: true,
   },
   {
     text: FileAction.NewVersion,
     icon: AddIcon,
+    engagement: true,
   },
   {
     text: FileAction.Delete,
@@ -78,7 +89,6 @@ const menuItems = [
 ];
 
 export const FileActionsPopup: FC<FileActionsPopupProps> = (props) => {
-  const { item } = props;
   const [anchor, setAnchor] = useState<MenuProps['anchorEl']>();
 
   const openAddMenu = (e: React.MouseEvent) => {
@@ -95,21 +105,28 @@ export const FileActionsPopup: FC<FileActionsPopupProps> = (props) => {
       <IconButton onClick={openAddMenu}>
         <MoreIcon />
       </IconButton>
-      <FileActionsMenu anchorEl={anchor} onClose={closeAddMenu} item={item} />
+      <FileActionsMenu anchorEl={anchor} onClose={closeAddMenu} {...props} />
     </>
   );
 };
 
-type FileActionsMenuProps = Partial<MenuProps> & {
-  item: FilesActionItem;
-};
+type FileActionsMenuProps = Partial<MenuProps> & FileActionsPopupProps;
 
 export const FileActionsMenu: FC<FileActionsMenuProps> = (props) => {
-  const { item, ...rest } = props;
   const classes = useStyles();
   const { spacing } = useTheme();
-  const handleFilesSelection = useUploadProjectFiles(item.id, 'version');
-  const { handleFileActionClick } = useFileActions();
+  const { item, ...rest } = props;
+
+  const { context, handleFileActionClick } = useFileActions();
+
+  const menuProps = Object.entries(rest).reduce((menuProps, [key, value]) => {
+    return key === 'onVersionUpload'
+      ? menuProps
+      : {
+          ...menuProps,
+          [key]: value,
+        };
+  }, {});
 
   const close = () => props.onClose?.({}, 'backdropClick');
 
@@ -124,8 +141,26 @@ export const FileActionsMenu: FC<FileActionsMenuProps> = (props) => {
 
   const { getRootProps, getInputProps } = useDropzone({
     multiple: false,
-    onDrop: handleFilesSelection,
+    onDrop:
+      'onVersionUpload' in props
+        ? props.onVersionUpload
+        : () => {
+            return;
+          },
     noDrag: true,
+  });
+
+  const menuItems = MENU_ITEMS.filter((menuItem) => {
+    const { directory, engagement, version } = menuItem;
+    return context === 'engagement'
+      ? item.type === 'FileVersion'
+        ? engagement && version
+        : engagement
+      : item.type === 'Directory'
+      ? directory
+      : item.type === 'FileVersion'
+      ? version
+      : true;
   });
 
   const menuItemContents = (menuItem: typeof menuItems[0]) => {
@@ -147,12 +182,11 @@ export const FileActionsMenu: FC<FileActionsMenuProps> = (props) => {
       getContentAnchorEl={null}
       anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
       transformOrigin={{ vertical: spacing(-2), horizontal: 'right' }}
-      {...rest}
+      {...menuProps}
     >
       {menuItems.map((menuItem) => {
-        const { text, directory, version } = menuItem;
-        return (item.type === 'Directory' && !directory) ||
-          (item.type === 'FileVersion' && !version) ? null : (
+        const { text } = menuItem;
+        return (
           <MenuItem
             key={text}
             onClick={
