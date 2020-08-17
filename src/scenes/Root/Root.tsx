@@ -6,6 +6,7 @@ import { Home } from '../Home';
 import { Languages } from '../Languages';
 import { Organizations } from '../Organizations';
 import { Projects } from '../Projects';
+import { SearchResults } from '../SearchResults';
 import { Users } from '../Users';
 import { Header } from './Header';
 import { Sidebar } from './Sidebar';
@@ -39,6 +40,7 @@ export const Root = () => {
       <Route path="/projects/*" element={<Projects />} />
       <Route path="/languages/*" element={<Languages />} />
       <Route path="/users/*" element={<Users />} />
+      <Route path="/search" element={<SearchResults />} />
     </Routes>
   );
 
