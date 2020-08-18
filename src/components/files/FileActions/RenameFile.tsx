@@ -3,7 +3,7 @@ import { Except } from 'type-fest';
 import { GQLOperations, RenameFileInput } from '../../../api';
 import { DialogForm, DialogFormProps } from '../../Dialog/DialogForm';
 import { SubmitError, TextField } from '../../form';
-import { useFileNameAndExtension } from '../hooks';
+import { parseFileNameAndExtension } from '../../Formatters';
 import { useRenameFileNodeMutation } from './FileActions.generated';
 import { FilesActionItem } from './FileActionsContext';
 
@@ -14,7 +14,6 @@ export type RenameFileProps = DialogFormProps<RenameFileInput> & {
 
 export const RenameFile = (props: Except<RenameFileProps, 'onSubmit'>) => {
   const { item, refetchQueries } = props;
-  const fileNameAndExtension = useFileNameAndExtension();
   const [renameFile] = useRenameFileNodeMutation();
 
   if (!item) return null;
@@ -23,7 +22,7 @@ export const RenameFile = (props: Except<RenameFileProps, 'onSubmit'>) => {
   const onSubmit: RenameFileProps['onSubmit'] = async ({
     name: inputtedName,
   }) => {
-    const { extension } = fileNameAndExtension(name);
+    const { extension } = parseFileNameAndExtension(name);
     const input = {
       id,
       name: `${inputtedName}.${extension}`,
@@ -46,7 +45,7 @@ export const RenameFile = (props: Except<RenameFileProps, 'onSubmit'>) => {
     >
       <SubmitError />
       <TextField
-        defaultValue={fileNameAndExtension(name).displayName}
+        defaultValue={parseFileNameAndExtension(name).displayName}
         name="name"
         label="Name"
         placeholder={`Enter new ${type.toLowerCase()} name`}

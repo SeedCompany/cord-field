@@ -10,7 +10,7 @@ import {
 } from '@material-ui/core';
 import { Clear as ClearIcon } from '@material-ui/icons';
 import clsx from 'clsx';
-import React, { FC, useCallback, useMemo } from 'react';
+import React, { FC, useMemo } from 'react';
 import { useDropzone } from 'react-dropzone';
 import { useFileNodeIcon } from '../files/hooks';
 import { useFieldName } from './FieldGroup';
@@ -58,33 +58,27 @@ export const DropzoneField: FC<DropzoneFieldProps> = ({
     input: { onChange, value: currentFiles },
   } = useField<File[], HTMLInputElement>(name, { defaultValue });
 
-  const onDrop = useCallback(
-    (acceptedFiles) => {
-      const updatedFiles =
-        // If no files are accepted, we want to leave the existing ones in place
-        acceptedFiles.length === 0
-          ? currentFiles
-          : // If we allow multiples, we want to add all new files
-          // to the existing ones. If not, we will overwrite.
-          // `react-dropzone` won't accept more than one file if
-          // `multiple` is false.
-          multiple
-          ? currentFiles.concat(acceptedFiles)
-          : acceptedFiles;
-      onChange(updatedFiles);
-    },
-    [onChange, currentFiles, multiple]
-  );
+  const onDrop = (acceptedFiles: File[]) => {
+    const updatedFiles =
+      // If no files are accepted, we want to leave the existing ones in place
+      acceptedFiles.length === 0
+        ? currentFiles
+        : // If we allow multiples, we want to add all new files
+        // to the existing ones. If not, we will overwrite.
+        // `react-dropzone` won't accept more than one file if
+        // `multiple` is false.
+        multiple
+        ? currentFiles.concat(acceptedFiles)
+        : acceptedFiles;
+    onChange(updatedFiles);
+  };
 
-  const handleRemoveFileClick = useCallback(
-    (index: number) => {
-      const updatedFiles = currentFiles
-        .slice(0, index)
-        .concat(currentFiles.slice(index + 1));
-      onChange(updatedFiles);
-    },
-    [onChange, currentFiles]
-  );
+  const handleRemoveFileClick = (index: number) => {
+    const updatedFiles = currentFiles
+      .slice(0, index)
+      .concat(currentFiles.slice(index + 1));
+    onChange(updatedFiles);
+  };
 
   const { getRootProps, getInputProps, isDragActive } = useDropzone({
     multiple,

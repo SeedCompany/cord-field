@@ -25,12 +25,10 @@ import {
   FileNodeInfo_FileVersion_Fragment,
   FileNodeInfoFragment,
 } from '../../../components/files/files.generated';
-import {
-  useFileNameAndExtension,
-  useFileNodeIcon,
-} from '../../../components/files/hooks';
+import { useFileNodeIcon } from '../../../components/files/hooks';
 import {
   formatFileSize,
+  parseFileNameAndExtension,
   useDateTimeFormatter,
 } from '../../../components/Formatters';
 import { ProjectBreadcrumb } from '../../../components/ProjectBreadcrumb';
@@ -117,7 +115,6 @@ const ProjectFilesListWrapped: FC = () => {
   const navigate = useNavigate();
   const { projectId } = useParams();
   const formatDate = useDateTimeFormatter();
-  const fileNameAndExtension = useFileNameAndExtension();
   const fileIcon = useFileNodeIcon();
 
   const { openFilePreview } = useFileActions();
@@ -233,7 +230,7 @@ const ProjectFilesListWrapped: FC = () => {
         return (
           <span className={classes.fileName}>
             <Icon className={classes.fileIcon} />
-            {fileNameAndExtension(name).displayName}
+            {parseFileNameAndExtension(name).displayName}
           </span>
         );
       },

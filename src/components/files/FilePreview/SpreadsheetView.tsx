@@ -1,5 +1,5 @@
 import { Grid, makeStyles, Tab, Tabs } from '@material-ui/core';
-import React, { FC, useCallback, useEffect } from 'react';
+import React, { FC, useEffect } from 'react';
 import { useFileActions } from '../FileActions';
 
 const useStyles = makeStyles(({ spacing }) => {
@@ -70,12 +70,9 @@ export const SpreadsheetView: FC<SpreadSheetViewProps> = (props) => {
     };
   }
 
-  const handleChange = useCallback(
-    (_: React.ChangeEvent<unknown>, value: number) => {
-      setPreviewPage(value + 1);
-    },
-    [setPreviewPage]
-  );
+  const handleChange = (_: React.ChangeEvent<unknown>, value: number) => {
+    setPreviewPage(value + 1);
+  };
 
   const activeTab = previewPage - 1;
   return data.length === 1 ? (

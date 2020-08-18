@@ -12,13 +12,10 @@ export const PdfPreview: FC<PreviewerProps> = ({ downloadUrl }) => {
   const [numberOfPages, setNumberOfPages] = useState(1);
   const { setPreviewError, previewPage } = useFileActions();
 
-  const handlePdfLoadSuccess = useCallback(
-    (pdf: PDFDocumentProxy) => {
-      const { numPages } = pdf;
-      setNumberOfPages(numPages);
-    },
-    [setNumberOfPages]
-  );
+  const handlePdfLoadSuccess = (pdf: PDFDocumentProxy) => {
+    const { numPages } = pdf;
+    setNumberOfPages(numPages);
+  };
 
   const handleError = useCallback(
     (error: Error) => {

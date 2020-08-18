@@ -34,10 +34,8 @@ export const NativePreview: FC<NativePreviewProps> = ({
   const { previewLoading, setPreviewLoading } = useFileActions();
   const handleError = usePreviewError();
 
-  console.log('url', url);
   const createUrlForFile = useCallback(
     (file: File) => {
-      console.log('file', file);
       setUrl(URL.createObjectURL(file));
       setPreviewLoading(false);
     },
