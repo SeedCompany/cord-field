@@ -69,7 +69,12 @@ export const NativePreview: FC<NativePreviewProps> = ({
         {unsupportedTypeMessage}
       </audio>
     ) : (
-      <video className={classes.media} controls autoPlay>
+      <video
+        className={classes.media}
+        controls
+        autoPlay
+        controlsList="nodownload"
+      >
         <source src={url} />
         {unsupportedTypeMessage}
       </video>
