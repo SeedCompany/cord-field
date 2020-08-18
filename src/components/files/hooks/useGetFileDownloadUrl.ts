@@ -1,5 +1,6 @@
 import { useApolloClient } from '@apollo/client';
 import { useSnackbar } from 'notistack';
+import { useCallback } from 'react';
 import {
   FileDownloadUrl_Directory_Fragment,
   FileNodeDownloadUrlDocument,
@@ -9,33 +10,36 @@ import {
 export const useGetFileDownloadUrl = () => {
   const { enqueueSnackbar } = useSnackbar();
 
-  const showSnackbarError = () => {
+  const showSnackbarError = useCallback(() => {
     enqueueSnackbar('Could not download file', {
       variant: 'error',
     });
-  };
+  }, [enqueueSnackbar]);
 
   const client = useApolloClient();
 
-  const getFileDownloadUrl = async (id: string): Promise<string> => {
-    try {
-      const { data } = await client.query<FileNodeDownloadUrlQuery>({
-        query: FileNodeDownloadUrlDocument,
-        variables: { id },
-        fetchPolicy: 'network-only',
-      });
-      const isDirectory = (
-        node: FileNodeDownloadUrlQuery['fileNode'] | undefined
-      ): node is FileDownloadUrl_Directory_Fragment => {
-        return node?.type === 'Directory';
-      };
-      return !isDirectory(data?.fileNode)
-        ? data?.fileNode.downloadUrl ?? ''
-        : '';
-    } catch {
-      showSnackbarError();
-      return '';
-    }
-  };
+  const getFileDownloadUrl = useCallback(
+    async (id: string): Promise<string> => {
+      try {
+        const { data } = await client.query<FileNodeDownloadUrlQuery>({
+          query: FileNodeDownloadUrlDocument,
+          variables: { id },
+          fetchPolicy: 'network-only',
+        });
+        const isDirectory = (
+          node: FileNodeDownloadUrlQuery['fileNode'] | undefined
+        ): node is FileDownloadUrl_Directory_Fragment => {
+          return node?.type === 'Directory';
+        };
+        return !isDirectory(data?.fileNode)
+          ? data?.fileNode.downloadUrl ?? ''
+          : '';
+      } catch {
+        showSnackbarError();
+        return '';
+      }
+    },
+    [showSnackbarError, client]
+  );
   return getFileDownloadUrl;
 };
