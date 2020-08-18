@@ -1,5 +1,4 @@
 fragment FileNodeInfo on FileNode {
-  category
   id
   name
   type

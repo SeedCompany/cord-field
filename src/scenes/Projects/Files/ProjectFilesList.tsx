@@ -162,7 +162,7 @@ const ProjectFilesListWrapped: FC = () => {
 
   interface FileRowData {
     id: FileNodeInfoFragment['id'];
-    category: FileNodeInfoFragment['category'];
+    type: FileNodeInfoFragment['type'];
     name: FileNodeInfoFragment['name'];
     createdAt: string;
     createdBy: string;
@@ -186,7 +186,7 @@ const ProjectFilesListWrapped: FC = () => {
   const rowData =
     items?.reduce((rows: FileRowData[], item) => {
       if (isFileVersion(item)) return rows;
-      const { id, name, category, createdAt, createdBy } = item;
+      const { id, name, type, createdAt, createdBy } = item;
       const {
         displayFirstName: { value: firstName },
         displayLastName: { value: lastName },
@@ -194,7 +194,7 @@ const ProjectFilesListWrapped: FC = () => {
 
       const row = {
         id,
-        category,
+        type,
         name,
         createdAt: formatDate(createdAt),
         createdBy: `${firstName} ${lastName}`,
@@ -212,8 +212,8 @@ const ProjectFilesListWrapped: FC = () => {
       hidden: true,
     },
     {
-      title: 'Category',
-      field: 'category',
+      title: 'Type',
+      field: 'type',
       hidden: true,
     },
     {
@@ -247,8 +247,8 @@ const ProjectFilesListWrapped: FC = () => {
       title: 'File Size',
       field: 'size',
       render: (rowData: FileRowData) => {
-        const { category, size } = rowData;
-        return category === 'Directory' ? '–' : formatFileSize(Number(size));
+        const { type, size } = rowData;
+        return type === 'Directory' ? '–' : formatFileSize(Number(size));
       },
     },
     {
