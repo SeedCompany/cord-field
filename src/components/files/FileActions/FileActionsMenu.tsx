@@ -48,7 +48,7 @@ const useStyles = makeStyles(({ spacing }) => ({
 
 interface NonVersionPopupProps {
   item: DirectoryActionItem | FileActionItem;
-  onVersionUpload?: (files: File[]) => void;
+  onVersionUpload: (files: File[]) => void;
 }
 
 interface VersionPopupProps {
