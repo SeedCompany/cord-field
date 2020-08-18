@@ -4,7 +4,7 @@ import React, { FC, useCallback, useEffect, useState } from 'react';
 import { useFileActions, usePreviewError } from '../FileActions';
 import { PreviewerProps } from './FilePreview';
 import { PreviewLoading } from './PreviewLoading';
-import { SpreadsheetView } from './SpreadsheetView';
+import { ColumnData, SpreadsheetView } from './SpreadsheetView';
 
 export const CsvPreview: FC<PreviewerProps> = ({ downloadUrl }) => {
   const [csvData, setCsvData] = useState<ParseResult<string[]>['data']>([]);
@@ -33,42 +33,18 @@ export const CsvPreview: FC<PreviewerProps> = ({ downloadUrl }) => {
 
   const columns = hasParsed
     ? csvData[0].reduce(
-        (columns: Array<{ name: string; key: number }>, columnName, index) =>
+        (columns: ColumnData, columnName, index) =>
           columns.concat({ name: columnName, key: index }),
         []
       )
     : [];
   const rows = hasParsed ? csvData.slice(1) : [];
 
-  const html = (
-    <table>
-      <tbody>
-        <tr>
-          <th>&nbsp;</th>
-          {columns.map((column) => {
-            const { key, name } = column;
-            return <th key={key}>{name}</th>;
-          })}
-        </tr>
-        {rows.map((row, index) => (
-          <tr key={index}>
-            <td key={index} className="table-header">
-              {index}
-            </td>
-            {columns.map((column) => (
-              <td key={column.key}>{row[column.key]}</td>
-            ))}
-          </tr>
-        ))}
-      </tbody>
-    </table>
-  );
-
   return previewLoading ? (
     <PreviewLoading />
   ) : !hasParsed ? null : (
     <Grid item>
-      <SpreadsheetView data={[{ name: 'Sheet1', html }]} />
+      <SpreadsheetView data={[{ name: 'Sheet`', rows, columns }]} />
     </Grid>
   );
 };

@@ -1,5 +1,6 @@
 import { Grid, makeStyles, Tab, Tabs } from '@material-ui/core';
 import React, { FC, useEffect } from 'react';
+import { XLSX$Utils } from 'xlsx';
 import { useFileActions } from '../FileActions';
 
 const useStyles = makeStyles(({ spacing }) => {
@@ -45,14 +46,50 @@ const useStyles = makeStyles(({ spacing }) => {
   };
 });
 
+/* Using typings from `xlsx` here because we want to play it
+   safe when we use these typings in the `ExcelPreview` component */
+export type ColumnData = Array<{
+  name: ReturnType<XLSX$Utils['encode_col']>;
+  key: number;
+}>;
+export type RowData = ReturnType<XLSX$Utils['sheet_to_json']>;
+
 export interface SheetData {
   name: string;
-  html: JSX.Element | JSX.Element[];
+  rows: RowData;
+  columns: ColumnData;
 }
 
 interface SpreadSheetViewProps {
   data: SheetData[];
 }
+
+const RenderedSheet: FC<Omit<SheetData, 'name'>> = (props) => {
+  const { rows, columns } = props;
+  return (
+    <table>
+      <tbody>
+        <tr>
+          <th>&nbsp;</th>
+          {columns.map((column) => {
+            const { key, name } = column;
+            return <th key={key}>{name}</th>;
+          })}
+        </tr>
+        {rows.map((row, index) => (
+          <tr key={index}>
+            <td key={index} className="table-header">
+              {index}
+            </td>
+            {columns.map((column) => (
+              <td key={column.key}>{row[column.key]}</td>
+            ))}
+          </tr>
+        ))}
+      </tbody>
+    </table>
+  );
+};
 
 export const SpreadsheetView: FC<SpreadSheetViewProps> = (props) => {
   const classes = useStyles();
@@ -76,7 +113,9 @@ export const SpreadsheetView: FC<SpreadSheetViewProps> = (props) => {
 
   const activeTab = previewPage - 1;
   return data.length === 1 ? (
-    <div className={classes.container}>{data[0].html}</div>
+    <div className={classes.container}>
+      <RenderedSheet rows={data[0].rows} columns={data[0].columns} />
+    </div>
   ) : (
     <Grid item>
       <Tabs
@@ -89,16 +128,19 @@ export const SpreadsheetView: FC<SpreadSheetViewProps> = (props) => {
         ))}
       </Tabs>
       {data.map((sheet, index) => {
+        const { name, rows, columns } = sheet;
         return (
           <div
-            key={sheet.name}
+            key={name}
             aria-labelledby={`sheet-tab-${index}`}
             className={classes.container}
             hidden={activeTab !== index}
             id={`sheet-tabpanel-${index}`}
             role="tabpanel"
           >
-            {activeTab === index ? sheet.html : null}
+            {activeTab === index && columns.length > 0 ? (
+              <RenderedSheet rows={rows} columns={columns} />
+            ) : null}
           </div>
         );
       })}
