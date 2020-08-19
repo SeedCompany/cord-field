@@ -19,6 +19,7 @@ import {
 import { useGetFileDownloadUrl } from '../hooks';
 import { CsvPreview } from './CsvPreview';
 import { ExcelPreview } from './ExcelPreview';
+import { HtmlPreview } from './HtmlPreview';
 import { NativePreview, NativePreviewType } from './NativePreview';
 import { PdfPreview } from './PdfPreview';
 import { PlainTextPreview } from './PlainTextPreview';
@@ -130,7 +131,7 @@ const previewers: PreviewerProperties = {
     props: { mimeType: 'text/css' },
   },
   'text/html': {
-    component: PlainTextPreview,
+    component: HtmlPreview,
     props: { mimeType: 'text/html' },
   },
   ...imagePreviewers,
