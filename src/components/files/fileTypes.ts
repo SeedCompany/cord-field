@@ -638,7 +638,7 @@ export const fileTypes: FileType[] = [
   {
     mimeType: 'text/html',
     Icon: DocumentIcon,
-    previewSupported: false,
+    previewSupported: true,
   },
   {
     mimeType: 'text/plain',

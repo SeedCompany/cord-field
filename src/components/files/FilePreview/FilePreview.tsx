@@ -129,6 +129,10 @@ const previewers: PreviewerProperties = {
     component: PlainTextPreview,
     props: { mimeType: 'text/css' },
   },
+  'text/html': {
+    component: PlainTextPreview,
+    props: { mimeType: 'text/html' },
+  },
   ...imagePreviewers,
   ...audioPreviewers,
   ...videoPreviewers,
