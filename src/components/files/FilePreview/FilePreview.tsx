@@ -21,7 +21,7 @@ import { CsvPreview } from './CsvPreview';
 import { ExcelPreview } from './ExcelPreview';
 import { NativePreview, NativePreviewType } from './NativePreview';
 import { PdfPreview } from './PdfPreview';
-import { PlainTextPreview } from './PlainTextPreviewer';
+import { PlainTextPreview } from './PlainTextPreview';
 import { PreviewError } from './PreviewError';
 import { PreviewNotSupported } from './PreviewNotSupported';
 import { RtfPreview } from './RtfPreview';
