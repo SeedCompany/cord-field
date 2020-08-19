@@ -25,7 +25,7 @@ import {
   FileNodeInfo_FileVersion_Fragment,
   FileNodeInfoFragment,
 } from '../../../components/files/files.generated';
-import { useFileNodeIcon } from '../../../components/files/hooks';
+import { fileIcon } from '../../../components/files/fileTypes';
 import {
   formatFileSize,
   parseFileNameAndExtension,
@@ -115,7 +115,6 @@ const ProjectFilesListWrapped: FC = () => {
   const navigate = useNavigate();
   const { projectId } = useParams();
   const formatDate = useDateTimeFormatter();
-  const fileIcon = useFileNodeIcon();
 
   const { openFilePreview } = useFileActions();
 

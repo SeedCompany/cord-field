@@ -8,13 +8,13 @@ import {
   makeStyles,
 } from '@material-ui/core';
 import React, { FC, useEffect, useState } from 'react';
-import {
-  AUDIO_TYPES,
-  IMAGE_TYPES,
-  SupportedType,
-  VIDEO_TYPES,
-} from '../FILE_MIME_TYPES';
 import { NonDirectoryActionItem, useFileActions } from '../FileActions';
+import {
+  previewableAudioTypes,
+  previewableImageTypes,
+  PreviewableMimeType,
+  previewableVideoTypes,
+} from '../fileTypes';
 import { useGetFileDownloadUrl } from '../hooks';
 import { CsvPreview } from './CsvPreview';
 import { ExcelPreview } from './ExcelPreview';
@@ -41,45 +41,45 @@ interface FilePreviewProps {
   onExited: () => void;
 }
 
-const imagePreviewers = IMAGE_TYPES.reduce(
+const imagePreviewers = previewableImageTypes.reduce(
   (previewers, imageType) => ({
     ...previewers,
-    [imageType]: {
+    [imageType.mimeType]: {
       component: NativePreview,
-      props: { type: NativePreviewType.Image, mimeType: imageType },
+      props: { type: NativePreviewType.Image, mimeType: imageType.mimeType },
     },
   }),
   {}
 );
 
-const audioPreviewers = AUDIO_TYPES.reduce(
+const audioPreviewers = previewableAudioTypes.reduce(
   (previewers, audioType) => ({
     ...previewers,
-    [audioType]: {
+    [audioType.mimeType]: {
       component: NativePreview,
-      props: { type: NativePreviewType.Audio, mimeType: audioType },
+      props: { type: NativePreviewType.Audio, mimeType: audioType.mimeType },
     },
   }),
   {}
 );
 
-const videoPreviewers = VIDEO_TYPES.reduce(
+const videoPreviewers = previewableVideoTypes.reduce(
   (previewers, videoType) => ({
     ...previewers,
-    [videoType]: {
+    [videoType.mimeType]: {
       component: NativePreview,
-      props: { type: NativePreviewType.Video, mimeType: videoType },
+      props: { type: NativePreviewType.Video, mimeType: videoType.mimeType },
     },
   }),
   {}
 );
 
 type PreviewerProperties = {
-  [key in SupportedType]?: {
+  [key in PreviewableMimeType]?: {
     component: React.ElementType;
     props: {
       type?: keyof NativePreviewType;
-      mimeType?: SupportedType;
+      mimeType?: PreviewableMimeType;
     };
   };
 };

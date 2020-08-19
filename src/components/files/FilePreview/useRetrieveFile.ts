@@ -1,6 +1,6 @@
 import { useSnackbar } from 'notistack';
 import { useCallback } from 'react';
-import { SupportedType } from '../FILE_MIME_TYPES';
+import { PreviewableMimeType } from '../fileTypes';
 
 export const useRetrieveFile = () => {
   const { enqueueSnackbar } = useSnackbar();
@@ -14,7 +14,7 @@ export const useRetrieveFile = () => {
   const retrieveFile = useCallback(
     async (
       url: string,
-      type: SupportedType,
+      type: PreviewableMimeType,
       callback: (file: File) => void | Promise<void>,
       errorHandler?: () => void
     ): Promise<void> => {

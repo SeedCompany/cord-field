@@ -2,8 +2,8 @@ import { Grid } from '@material-ui/core';
 import parse from 'html-react-parser';
 import mammoth from 'mammoth';
 import React, { FC, useCallback, useEffect, useState } from 'react';
-import { SupportedType } from '../FILE_MIME_TYPES';
 import { useFileActions, usePreviewError } from '../FileActions';
+import { PreviewableMimeType } from '../fileTypes';
 import { PreviewerProps } from './FilePreview';
 import { PreviewLoading } from './PreviewLoading';
 import { useRetrieveFile } from './useRetrieveFile';
@@ -12,10 +12,9 @@ const mammothOptions = {
   styleMap: ['u => em'],
 };
 
-export const WordPreview: FC<PreviewerProps & { mimeType: SupportedType }> = ({
-  downloadUrl,
-  mimeType,
-}) => {
+export const WordPreview: FC<
+  PreviewerProps & { mimeType: PreviewableMimeType }
+> = ({ downloadUrl, mimeType }) => {
   const [html, setHtml] = useState<JSX.Element | JSX.Element[] | null>(null);
   const { previewLoading, setPreviewLoading } = useFileActions();
   const handleError = usePreviewError();

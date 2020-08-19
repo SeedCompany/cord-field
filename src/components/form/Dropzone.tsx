@@ -12,7 +12,7 @@ import { Clear as ClearIcon } from '@material-ui/icons';
 import clsx from 'clsx';
 import React, { FC, useMemo } from 'react';
 import { useDropzone } from 'react-dropzone';
-import { useFileNodeIcon } from '../files/hooks';
+import { fileIcon } from '../files/fileTypes';
 import { useFieldName } from './FieldGroup';
 import { FieldConfig, useField } from './useField';
 
@@ -49,7 +49,6 @@ export const DropzoneField: FC<DropzoneFieldProps> = ({
   name: nameProp,
 }) => {
   const classes = useStyles();
-  const fileIcon = useFileNodeIcon();
 
   // Memoize defaultValue to prevent re-renders when not changing.
   const defaultValue = useMemo(() => [], []);

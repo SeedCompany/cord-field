@@ -1,7 +1,7 @@
 import React, { FC, useCallback, useEffect, useState } from 'react';
 import XLSX from 'xlsx';
-import { SupportedType } from '../FILE_MIME_TYPES';
 import { useFileActions, usePreviewError } from '../FileActions';
+import { PreviewableMimeType } from '../fileTypes';
 import { PreviewerProps } from './FilePreview';
 import { PreviewLoading } from './PreviewLoading';
 import { ColumnData, RowData, SpreadsheetView } from './SpreadsheetView';
@@ -13,10 +13,9 @@ interface SheetData {
   columns: ColumnData;
 }
 
-export const ExcelPreview: FC<PreviewerProps & { mimeType: SupportedType }> = ({
-  downloadUrl,
-  mimeType,
-}) => {
+export const ExcelPreview: FC<
+  PreviewerProps & { mimeType: PreviewableMimeType }
+> = ({ downloadUrl, mimeType }) => {
   const [sheets, setSheets] = useState<SheetData[]>([]);
   const { previewLoading, setPreviewLoading } = useFileActions();
   const retrieveFile = useRetrieveFile();

@@ -1,7 +1,7 @@
 import { Grid, makeStyles } from '@material-ui/core';
 import React, { FC, useCallback, useEffect, useState } from 'react';
-import { SupportedType } from '../FILE_MIME_TYPES';
 import { useFileActions, usePreviewError } from '../FileActions';
+import { PreviewableMimeType } from '../fileTypes';
 import { PreviewerProps } from './FilePreview';
 import { PreviewLoading } from './PreviewLoading';
 import { useRetrieveFile } from './useRetrieveFile';
@@ -20,7 +20,7 @@ export enum NativePreviewType {
 
 type NativePreviewProps = PreviewerProps & {
   type: NativePreviewType;
-  mimeType: SupportedType;
+  mimeType: PreviewableMimeType;
 };
 
 export const NativePreview: FC<NativePreviewProps> = ({

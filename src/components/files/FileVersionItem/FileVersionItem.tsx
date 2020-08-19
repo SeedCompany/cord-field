@@ -11,7 +11,7 @@ import {
   FileActionsPopup as ActionsMenu,
   useFileActions,
 } from '../FileActions';
-import { useFileNodeIcon } from '../hooks';
+import { fileIcon } from '../fileTypes';
 import { FileVersionItem_FileVersion_Fragment } from './FileVersionItem.generated';
 
 const useStyles = makeStyles(({ spacing, typography }) => ({
@@ -35,7 +35,6 @@ interface FileVersionItemProps {
 export const FileVersionItem: FC<FileVersionItemProps> = (props) => {
   const classes = useStyles();
   const formatDate = useDateTimeFormatter();
-  const fileIcon = useFileNodeIcon();
   const { openFilePreview } = useFileActions();
   const { version } = props;
 
