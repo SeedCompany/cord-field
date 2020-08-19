@@ -46,7 +46,7 @@ export const fileTypes: FileType[] = [
   {
     mimeType: 'application/rtf',
     Icon: DocumentIcon,
-    previewSupported: false,
+    previewSupported: true,
   },
   {
     mimeType: 'application/vnd.ms-excel',
@@ -644,6 +644,11 @@ export const fileTypes: FileType[] = [
     mimeType: 'text/plain',
     Icon: DocumentIcon,
     previewSupported: false,
+  },
+  {
+    mimeType: 'text/rtf',
+    Icon: DocumentIcon,
+    previewSupported: true,
   },
   {
     mimeType: 'text/richtext',

@@ -23,6 +23,7 @@ import { NativePreview, NativePreviewType } from './NativePreview';
 import { PdfPreview } from './PdfPreview';
 import { PreviewError } from './PreviewError';
 import { PreviewNotSupported } from './PreviewNotSupported';
+import { RtfPreview } from './RtfPreview';
 import { WordPreview } from './WordPreview';
 
 const useStyles = makeStyles(() => ({
@@ -105,6 +106,14 @@ const previewers: PreviewerProperties = {
   },
   'text/csv': {
     component: CsvPreview,
+    props: {},
+  },
+  'application/rtf': {
+    component: RtfPreview,
+    props: {},
+  },
+  'text/rtf': {
+    component: RtfPreview,
     props: {},
   },
   ...imagePreviewers,
