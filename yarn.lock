@@ -2598,6 +2598,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@iarna/rtf-to-html@npm:^1.1.0":
+  version: 1.1.0
+  resolution: "@iarna/rtf-to-html@npm:1.1.0"
+  dependencies:
+    rtf-parser: ^1.0.4
+  checksum: 3/9ae479bac5f774bbbd4b6edfd90fc07d77e5060c457faeca8d51a02a733b9252b6e08f5c02c46fc2577b9600db7605a63cb1c0dfd5348f3e9793c04f99704b38
+  languageName: node
+  linkType: hard
+
 "@icons/material@npm:^0.2.4":
   version: 0.2.4
   resolution: "@icons/material@npm:0.2.4"
@@ -7641,6 +7650,7 @@ __metadata:
     "@graphql-codegen/typescript": ^1.17.7
     "@graphql-codegen/typescript-operations": ^1.17.7
     "@graphql-codegen/typescript-react-apollo": ^2.0.4
+    "@iarna/rtf-to-html": ^1.1.0
     "@material-ui/core": ^4.11.0
     "@material-ui/icons": ^4.9.1
     "@material-ui/lab": ^4.0.0-alpha.56
@@ -11663,7 +11673,7 @@ fsevents@^1.2.7:
   languageName: node
   linkType: hard
 
-"iconv-lite@npm:0.4.24, iconv-lite@npm:^0.4.24, iconv-lite@npm:^0.4.4, iconv-lite@npm:~0.4.13":
+"iconv-lite@npm:0.4.24, iconv-lite@npm:^0.4.15, iconv-lite@npm:^0.4.24, iconv-lite@npm:^0.4.4, iconv-lite@npm:~0.4.13":
   version: 0.4.24
   resolution: "iconv-lite@npm:0.4.24"
   dependencies:
@@ -19178,6 +19188,16 @@ resolve@^1.17.0:
   version: 4.8.5
   resolution: "rsvp@npm:4.8.5"
   checksum: 3/eb70274fb392bb5e4f33ce8ebdee411fc8ce813ccf7d1684830c6752ba1b0346f0527107dcd7ce690ba7c1a9f2c731918fcd4ded11f57ed612897527a46c5f44
+  languageName: node
+  linkType: hard
+
+"rtf-parser@npm:^1.0.4":
+  version: 1.3.3
+  resolution: "rtf-parser@npm:1.3.3"
+  dependencies:
+    iconv-lite: ^0.4.15
+    readable-stream: ^2.2.2
+  checksum: 3/3ce6167d1112ba0798fb5a1caf3463bc8b2054ce0928a6e25cd92024182ce36a80066f55307c81221f5579c879e7cc4ce800f2ad245f0b6f4d75b41dacceccc5
   languageName: node
   linkType: hard
 
