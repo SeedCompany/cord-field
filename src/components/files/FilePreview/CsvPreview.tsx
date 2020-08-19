@@ -44,7 +44,7 @@ export const CsvPreview: FC<PreviewerProps> = ({ downloadUrl }) => {
     <PreviewLoading />
   ) : !hasParsed ? null : (
     <Grid item>
-      <SpreadsheetView data={[{ name: 'Sheet`', rows, columns }]} />
+      <SpreadsheetView data={[{ name: 'Sheet1', rows, columns }]} />
     </Grid>
   );
 };
