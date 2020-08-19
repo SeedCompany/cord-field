@@ -21,6 +21,7 @@ import { CsvPreview } from './CsvPreview';
 import { ExcelPreview } from './ExcelPreview';
 import { NativePreview, NativePreviewType } from './NativePreview';
 import { PdfPreview } from './PdfPreview';
+import { PlainTextPreview } from './PlainTextPreviewer';
 import { PreviewError } from './PreviewError';
 import { PreviewNotSupported } from './PreviewNotSupported';
 import { RtfPreview } from './RtfPreview';
@@ -38,6 +39,10 @@ export interface PreviewerProps {
   setPreviewLoading: (loading: boolean) => void;
   previewError: string | null;
   setPreviewError: (error: string | null) => void;
+}
+
+export interface MultiTypePreviewerProps extends PreviewerProps {
+  mimeType: PreviewableMimeType;
 }
 
 interface FilePreviewProps extends DialogProps {
@@ -115,6 +120,14 @@ const previewers: PreviewerProperties = {
   'text/rtf': {
     component: RtfPreview,
     props: {},
+  },
+  'text/plain': {
+    component: PlainTextPreview,
+    props: { mimeType: 'text/plain' },
+  },
+  'text/css': {
+    component: PlainTextPreview,
+    props: { mimeType: 'text/css' },
   },
   ...imagePreviewers,
   ...audioPreviewers,

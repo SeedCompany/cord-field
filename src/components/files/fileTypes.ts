@@ -628,12 +628,12 @@ export const fileTypes: FileType[] = [
   {
     mimeType: 'text/css',
     Icon: OtherIcon,
-    previewSupported: false,
+    previewSupported: true,
   },
   {
     mimeType: 'text/csv',
     Icon: SpreadsheetIcon,
-    previewSupported: false,
+    previewSupported: true,
   },
   {
     mimeType: 'text/html',
@@ -643,7 +643,7 @@ export const fileTypes: FileType[] = [
   {
     mimeType: 'text/plain',
     Icon: DocumentIcon,
-    previewSupported: false,
+    previewSupported: true,
   },
   {
     mimeType: 'text/rtf',
