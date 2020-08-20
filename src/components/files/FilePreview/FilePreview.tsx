@@ -3,6 +3,7 @@ import {
   Dialog,
   DialogActions,
   DialogContent,
+  DialogProps,
   DialogTitle,
   Grid,
   makeStyles,
@@ -130,6 +131,10 @@ export const FilePreview: FC<FilePreviewProps> = (props) => {
     return () => setPreviewError('');
   }, [id, getDownloadUrl, setPreviewError]);
 
+  const handleCloseButtonClick = () => {
+    onClose?.({}, 'backdropClick');
+  };
+
   const Previewer = previewers[mimeType]?.component;
   const previewerProps = previewers[mimeType]?.props;
   return !downloadUrl ? null : (
@@ -152,7 +157,7 @@ export const FilePreview: FC<FilePreviewProps> = (props) => {
         </Grid>
       </DialogContent>
       <DialogActions>
-        <Button color="secondary" onClick={onClose}>
+        <Button color="secondary" onClick={handleCloseButtonClick}>
           Close
         </Button>
       </DialogActions>
