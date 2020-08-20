@@ -1,11 +1,11 @@
 import { Grid, makeStyles } from '@material-ui/core';
 import parse from 'html-react-parser';
-import mammoth from 'mammoth';
+import mammoth, { MammothOptions } from 'mammoth';
 import React, { FC, useCallback, useEffect, useState } from 'react';
 import { PreviewerProps } from './FilePreview';
 import { PreviewLoading } from './PreviewLoading';
 
-const mammothOptions = {
+const mammothOptions: MammothOptions = {
   styleMap: ['u => em'],
 };
 
@@ -30,12 +30,8 @@ export const WordPreview: FC<PreviewerProps> = (props) => {
           { arrayBuffer: docBuffer },
           mammothOptions
         );
-        if (result) {
-          setHtml(parse(result.value));
-          setPreviewLoading(false);
-        } else {
-          setPreviewError('Could not read document file');
-        }
+        setHtml(parse(result.value));
+        setPreviewLoading(false);
       } catch {
         setPreviewError('Could not read document file');
       }
