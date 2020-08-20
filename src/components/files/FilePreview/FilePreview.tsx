@@ -34,11 +34,8 @@ export interface PreviewerProps {
   downloadUrl: string;
 }
 
-interface FilePreviewProps {
+interface FilePreviewProps extends DialogProps {
   file?: NonDirectoryActionItem;
-  open: boolean;
-  onClose: () => void;
-  onExited: () => void;
 }
 
 const imagePreviewers = previewableImageTypes.reduce(
