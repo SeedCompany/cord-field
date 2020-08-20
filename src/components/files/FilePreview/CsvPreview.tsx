@@ -41,6 +41,6 @@ export const CsvPreview: FC<PreviewerProps> = (props) => {
   return previewLoading ? (
     <PreviewLoading />
   ) : !hasParsed ? null : (
-    <SpreadsheetView data={[{ name: 'Sheet1', rows, columns }]} />
+    <SpreadsheetView data={[{ name: 'Sheet1', rows, columns, spans: [] }]} />
   );
 };
