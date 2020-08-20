@@ -23,7 +23,7 @@ export const DeleteFile = (props: Except<DeleteFileProps, 'onSubmit'>) => {
   const onSubmit: DeleteFileProps['onSubmit'] = async () => {
     await deleteFile({
       variables: { id },
-      ...(refetchQueries ? { refetchQueries } : null),
+      refetchQueries,
     });
   };
 
