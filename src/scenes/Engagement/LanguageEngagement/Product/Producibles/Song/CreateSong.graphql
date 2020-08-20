@@ -1,0 +1,20 @@
+mutation CreateSong($input: CreateSongInput!) {
+  createSong(input: $input) {
+    song {
+      id
+      name {
+        value
+      }
+    }
+  }
+}
+query Songs {
+  songs {
+    items {
+      id
+      name {
+        value
+      }
+    }
+  }
+}
