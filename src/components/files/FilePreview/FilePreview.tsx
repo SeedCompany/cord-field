@@ -8,8 +8,12 @@ import {
   Grid,
   makeStyles,
 } from '@material-ui/core';
-import React, { FC, useEffect, useState } from 'react';
-import { NonDirectoryActionItem, useFileActions } from '../FileActions';
+import React, { FC, useCallback, useEffect, useState } from 'react';
+import {
+  NonDirectoryActionItem,
+  useFileActions,
+  usePreviewError,
+} from '../FileActions';
 import {
   previewableAudioTypes,
   previewableImageTypes,
@@ -32,7 +36,7 @@ const useStyles = makeStyles(() => ({
 }));
 
 export interface PreviewerProps {
-  downloadUrl: string;
+  file?: File;
 }
 
 interface FilePreviewProps extends DialogProps {
@@ -110,8 +114,9 @@ const previewers: PreviewerProperties = {
 
 export const FilePreview: FC<FilePreviewProps> = (props) => {
   const classes = useStyles();
-  const [downloadUrl, setDownloadUrl] = useState('');
-  const { previewError, setPreviewError } = useFileActions();
+  const [previewFile, setPreviewFile] = useState<File | null>(null);
+  const { previewError, setPreviewError, setPreviewLoading } = useFileActions();
+  const handleError = usePreviewError();
   const getDownloadUrl = useGetFileDownloadUrl();
   const { file, onClose, ...rest } = props;
   const { id, mimeType, name } = file ?? {
@@ -120,24 +125,65 @@ export const FilePreview: FC<FilePreviewProps> = (props) => {
     name: '',
   };
 
+  const Previewer = previewers[mimeType]?.component;
+  const previewerProps = previewers[mimeType]?.props;
+
+  const retrieveFile = useCallback(
+    async (
+      url: string,
+      mimeType: PreviewableMimeType,
+      onError: typeof handleError
+    ) => {
+      try {
+        const response = await fetch(url);
+        if (response.status === 200) {
+          const blob = await response.blob();
+          setPreviewFile(
+            new File([blob], 'Preview', {
+              type: mimeType,
+            })
+          );
+        }
+      } catch {
+        onError('Could not retrieve file');
+      }
+    },
+    []
+  );
+
   useEffect(() => {
-    if (id) {
-      void getDownloadUrl(id).then((downloadUrl) =>
-        setDownloadUrl(downloadUrl ?? '')
-      );
+    if (id && Previewer) {
+      setPreviewLoading(true);
+      void getDownloadUrl(id)
+        .then((downloadUrl) => {
+          if (downloadUrl) {
+            void retrieveFile(downloadUrl, mimeType, handleError);
+          } else {
+            handleError('Could not get file download URL');
+          }
+        })
+        .catch(() => handleError('Could not get file download URL'));
     } else {
-      setDownloadUrl('');
+      setPreviewFile(null);
+      setPreviewLoading(false);
     }
-    return () => setPreviewError('');
-  }, [id, getDownloadUrl, setPreviewError]);
+    return () => setPreviewError(null);
+  }, [
+    id,
+    Previewer,
+    mimeType,
+    getDownloadUrl,
+    handleError,
+    retrieveFile,
+    setPreviewError,
+    setPreviewLoading,
+  ]);
 
   const handleCloseButtonClick = () => {
     onClose?.({}, 'backdropClick');
   };
 
-  const Previewer = previewers[mimeType]?.component;
-  const previewerProps = previewers[mimeType]?.props;
-  return !downloadUrl ? null : (
+  return !file ? null : (
     <Dialog
       onClose={onClose}
       {...rest}
@@ -150,7 +196,7 @@ export const FilePreview: FC<FilePreviewProps> = (props) => {
           {previewError ? (
             <PreviewError errorText={previewError} />
           ) : Previewer ? (
-            <Previewer downloadUrl={downloadUrl} {...previewerProps} />
+            <Previewer file={previewFile} {...previewerProps} />
           ) : (
             <PreviewNotSupported />
           )}

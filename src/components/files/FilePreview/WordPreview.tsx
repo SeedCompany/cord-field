@@ -3,22 +3,17 @@ import parse from 'html-react-parser';
 import mammoth from 'mammoth';
 import React, { FC, useCallback, useEffect, useState } from 'react';
 import { useFileActions, usePreviewError } from '../FileActions';
-import { PreviewableMimeType } from '../fileTypes';
 import { PreviewerProps } from './FilePreview';
 import { PreviewLoading } from './PreviewLoading';
-import { useRetrieveFile } from './useRetrieveFile';
 
 const mammothOptions = {
   styleMap: ['u => em'],
 };
 
-export const WordPreview: FC<
-  PreviewerProps & { mimeType: PreviewableMimeType }
-> = ({ downloadUrl, mimeType }) => {
+export const WordPreview: FC<PreviewerProps> = ({ file }) => {
   const [html, setHtml] = useState<JSX.Element | JSX.Element[] | null>(null);
   const { previewLoading, setPreviewLoading } = useFileActions();
   const handleError = usePreviewError();
-  const retrieveFile = useRetrieveFile();
 
   const extractHtmlFromDocument = useCallback(
     async (file: File) => {
@@ -46,18 +41,10 @@ export const WordPreview: FC<
   );
 
   useEffect(() => {
-    setPreviewLoading(true);
-    void retrieveFile(downloadUrl, mimeType, extractHtmlFromDocument, () =>
-      handleError('Could not download document')
-    );
-  }, [
-    retrieveFile,
-    setPreviewLoading,
-    handleError,
-    extractHtmlFromDocument,
-    downloadUrl,
-    mimeType,
-  ]);
+    if (file) {
+      void extractHtmlFromDocument(file);
+    }
+  }, [file, extractHtmlFromDocument]);
 
   return previewLoading ? <PreviewLoading /> : <Grid item>{html}</Grid>;
 };

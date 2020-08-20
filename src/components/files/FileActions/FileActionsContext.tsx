@@ -46,8 +46,8 @@ export const initialFileActionsContext = {
   ) => {
     return;
   },
-  previewError: '',
-  setPreviewError: (_: string) => {
+  previewError: '' as string | null,
+  setPreviewError: (_: string | null) => {
     return;
   },
   previewLoading: false,
@@ -68,7 +68,7 @@ export const FileActionsContext = createContext<
 >(initialFileActionsContext);
 
 export const FileActionsContextProvider: FC = ({ children }) => {
-  const [previewError, setPreviewError] = useState('');
+  const [previewError, setPreviewError] = useState<string | null>(null);
   const [previewLoading, setPreviewLoading] = useState(false);
   const [previewPage, setPreviewPage] = useState(1);
 

@@ -1,11 +1,9 @@
 import React, { FC, useCallback, useEffect, useState } from 'react';
 import XLSX from 'xlsx';
 import { useFileActions, usePreviewError } from '../FileActions';
-import { PreviewableMimeType } from '../fileTypes';
 import { PreviewerProps } from './FilePreview';
 import { PreviewLoading } from './PreviewLoading';
 import { ColumnData, RowData, SpreadsheetView } from './SpreadsheetView';
-import { useRetrieveFile } from './useRetrieveFile';
 
 interface SheetData {
   name: string;
@@ -13,12 +11,9 @@ interface SheetData {
   columns: ColumnData;
 }
 
-export const ExcelPreview: FC<
-  PreviewerProps & { mimeType: PreviewableMimeType }
-> = ({ downloadUrl, mimeType }) => {
+export const ExcelPreview: FC<PreviewerProps> = ({ file }) => {
   const [sheets, setSheets] = useState<SheetData[]>([]);
   const { previewLoading, setPreviewLoading } = useFileActions();
-  const retrieveFile = useRetrieveFile();
   const handleError = usePreviewError();
 
   const extractExcelDataFromWorkbook = useCallback(
@@ -37,18 +32,10 @@ export const ExcelPreview: FC<
   );
 
   useEffect(() => {
-    setPreviewLoading(true);
-    void retrieveFile(downloadUrl, mimeType, extractExcelDataFromWorkbook, () =>
-      handleError('Could not download spreadsheet file')
-    );
-  }, [
-    extractExcelDataFromWorkbook,
-    handleError,
-    setPreviewLoading,
-    downloadUrl,
-    mimeType,
-    retrieveFile,
-  ]);
+    if (file) {
+      void extractExcelDataFromWorkbook(file);
+    }
+  }, [file, extractExcelDataFromWorkbook]);
 
   return previewLoading ? (
     <PreviewLoading />

@@ -1,10 +1,8 @@
 import { Grid, makeStyles } from '@material-ui/core';
 import React, { FC, useCallback, useEffect, useState } from 'react';
-import { useFileActions, usePreviewError } from '../FileActions';
-import { PreviewableMimeType } from '../fileTypes';
+import { useFileActions } from '../FileActions';
 import { PreviewerProps } from './FilePreview';
 import { PreviewLoading } from './PreviewLoading';
-import { useRetrieveFile } from './useRetrieveFile';
 
 const useStyles = makeStyles(() => ({
   media: {
@@ -20,41 +18,26 @@ export enum NativePreviewType {
 
 type NativePreviewProps = PreviewerProps & {
   type: NativePreviewType;
-  mimeType: PreviewableMimeType;
 };
 
-export const NativePreview: FC<NativePreviewProps> = ({
-  downloadUrl,
-  type,
-  mimeType,
-}) => {
+export const NativePreview: FC<NativePreviewProps> = ({ file, type }) => {
   const classes = useStyles();
   const [url, setUrl] = useState('');
-  const retrieveFile = useRetrieveFile();
   const { previewLoading, setPreviewLoading } = useFileActions();
-  const handleError = usePreviewError();
 
   const createUrlForFile = useCallback(
     (file: File) => {
       setUrl(URL.createObjectURL(file));
       setPreviewLoading(false);
     },
-    [setPreviewLoading, setUrl]
+    [setPreviewLoading]
   );
 
   useEffect(() => {
-    setPreviewLoading(true);
-    void retrieveFile(downloadUrl, mimeType, createUrlForFile, () =>
-      handleError('Could not download image')
-    );
-  }, [
-    downloadUrl,
-    mimeType,
-    handleError,
-    retrieveFile,
-    setPreviewLoading,
-    createUrlForFile,
-  ]);
+    if (file) {
+      void createUrlForFile(file);
+    }
+  }, [file, createUrlForFile]);
 
   const unsupportedTypeMessage =
     'Your browser does not support this media type';

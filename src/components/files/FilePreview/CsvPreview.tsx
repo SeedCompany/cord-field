@@ -6,7 +6,7 @@ import { PreviewerProps } from './FilePreview';
 import { PreviewLoading } from './PreviewLoading';
 import { ColumnData, SpreadsheetView } from './SpreadsheetView';
 
-export const CsvPreview: FC<PreviewerProps> = ({ downloadUrl }) => {
+export const CsvPreview: FC<PreviewerProps> = ({ file }) => {
   const [csvData, setCsvData] = useState<ParseResult<string[]>['data']>([]);
   const { previewLoading, setPreviewLoading } = useFileActions();
   const handleError = usePreviewError();
@@ -21,13 +21,14 @@ export const CsvPreview: FC<PreviewerProps> = ({ downloadUrl }) => {
   );
 
   useEffect(() => {
-    setPreviewLoading(true);
-    Papa.parse(downloadUrl, {
-      complete: handleReadComplete,
-      download: true,
-      error: () => handleError('Could not read CSV'),
-    });
-  }, [downloadUrl, setPreviewLoading, handleReadComplete, handleError]);
+    if (file) {
+      Papa.parse(file, {
+        complete: handleReadComplete,
+        download: true,
+        error: () => handleError('Could not read CSV'),
+      });
+    }
+  }, [file, handleReadComplete, handleError]);
 
   const hasParsed = csvData.length > 0;
 
