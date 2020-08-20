@@ -2,6 +2,7 @@ import {
   Button,
   Dialog,
   DialogActions,
+  DialogProps,
   DialogTitle,
   Divider,
   List,
@@ -10,7 +11,6 @@ import {
 import { Skeleton } from '@material-ui/lab';
 import React, { FC, Fragment } from 'react';
 import { ProjectDirectoryFile } from '../../../scenes/Projects/Files';
-import { DialogState } from '../../Dialog';
 import {
   FileVersionItem_FileVersion_Fragment as FileVersion,
   FileVersionItem,
@@ -23,7 +23,7 @@ const useStyles = makeStyles(({ spacing }) => ({
   },
 }));
 
-type FileVersionsProps = DialogState & {
+type FileVersionsProps = DialogProps & {
   file: ProjectDirectoryFile | undefined;
 };
 
@@ -68,7 +68,10 @@ export const FileVersions: FC<FileVersionsProps> = (props) => {
               ))}
         </List>
         <DialogActions>
-          <Button color="secondary" onClick={onClose}>
+          <Button
+            color="secondary"
+            onClick={(e) => onClose?.(e, 'backdropClick')}
+          >
             Close
           </Button>
         </DialogActions>
