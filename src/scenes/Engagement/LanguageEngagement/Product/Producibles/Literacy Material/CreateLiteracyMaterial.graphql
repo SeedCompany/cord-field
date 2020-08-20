@@ -1,0 +1,20 @@
+mutation CreateLiteracyMaterial($input: CreateLiteracyMaterialInput!) {
+  createLiteracyMaterial(input: $input) {
+    literacyMaterial {
+      id
+      name {
+        value
+      }
+    }
+  }
+}
+query LiteracyMaterials {
+  literacyMaterials {
+    items {
+      id
+      name {
+        value
+      }
+    }
+  }
+}
