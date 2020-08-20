@@ -143,7 +143,6 @@ export const FileActionsMenu: FC<FileActionsMenuProps> = (props) => {
   return (
     <Menu
       id="file-actions-menu"
-      keepMounted
       open={Boolean(props.anchorEl)}
       getContentAnchorEl={null}
       anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
