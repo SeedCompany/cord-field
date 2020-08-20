@@ -1,6 +1,7 @@
 import {
   GraphicEq as AudioIcon,
   Description as DocumentIcon,
+  Folder as FolderIcon,
   Image as ImageIcon,
   InsertDriveFile as OtherIcon,
   PictureAsPdf as PdfIcon,
@@ -16,6 +17,12 @@ export interface FileType {
 }
 
 export const fileTypes: FileType[] = [
+  {
+    // Fake type just to handle icons for folders
+    mimeType: 'directory',
+    Icon: FolderIcon,
+    previewSupported: false,
+  },
   {
     mimeType: 'application/msword',
     Icon: DocumentIcon,
