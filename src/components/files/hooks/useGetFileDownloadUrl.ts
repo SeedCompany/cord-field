@@ -24,6 +24,9 @@ export const useGetFileDownloadUrl = () => {
         const { data } = await client.query<FileNodeDownloadUrlQuery>({
           query: FileNodeDownloadUrlDocument,
           variables: { id },
+          // We don't want to retrieve this from cache because the
+          // presigned URL might have expired while the user kept the
+          // tab open past 15 minutes.
           fetchPolicy: 'network-only',
         });
         const isDirectory = (
