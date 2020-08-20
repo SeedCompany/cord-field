@@ -11,12 +11,8 @@ export const FileVersionItem = () => {
     id: '12345',
     createdAt: DateTime.local(),
     createdBy: {
-      displayFirstName: {
-        value: text('First Name', 'Jane'),
-      },
-      displayLastName: {
-        value: text('Last Name', 'Doe'),
-      },
+      id: '12345',
+      fullName: text('Creator', 'Jane Doe'),
     },
     name: text('Name', 'Test File'),
     mimeType: text('mimeType', 'application/pdf'),

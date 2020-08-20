@@ -185,17 +185,12 @@ const ProjectFilesListWrapped: FC = () => {
     items?.reduce((rows: FileRowData[], item) => {
       if (isFileVersion(item)) return rows;
       const { id, name, type, createdAt, createdBy } = item;
-      const {
-        displayFirstName: { value: firstName },
-        displayLastName: { value: lastName },
-      } = createdBy;
-
       const row = {
         id,
         type,
         name,
         createdAt: formatDate(createdAt),
-        createdBy: `${firstName} ${lastName}`,
+        createdBy: createdBy.fullName ?? '',
         mimeType: isDirectory(item) ? 'directory' : item.mimeType,
         size: isDirectory(item) ? 0 : item.size,
         item,

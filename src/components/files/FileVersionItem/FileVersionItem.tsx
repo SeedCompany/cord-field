@@ -40,7 +40,7 @@ export const FileVersionItem: FC<FileVersionItemProps> = (props) => {
 
   const { createdAt, createdBy, name } = version;
   const Icon = fileIcon(version.mimeType);
-  const createdByUser = `${createdBy.displayFirstName.value} ${createdBy.displayLastName.value}`;
+  const createdByUser = createdBy.fullName;
 
   return (
     <ListItem>
@@ -51,7 +51,9 @@ export const FileVersionItem: FC<FileVersionItemProps> = (props) => {
         onClick={() => openFilePreview(version)}
         className={classes.text}
         primary={name}
-        secondary={`Created on ${formatDate(createdAt)} by ${createdByUser}`}
+        secondary={`Created on ${formatDate(createdAt)}${
+          createdByUser ? ` by ${createdByUser}` : ''
+        }`}
       />
       <ListItemSecondaryAction>
         <ActionsMenu item={version} />

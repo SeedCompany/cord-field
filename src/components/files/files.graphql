@@ -4,12 +4,8 @@ fragment FileNodeInfo on FileNode {
   type
   createdAt
   createdBy {
-    displayFirstName {
-      value
-    }
-    displayLastName {
-      value
-    }
+    id
+    fullName
   }
   ... on File {
     ...FileInfo
@@ -19,11 +15,7 @@ fragment FileNodeInfo on FileNode {
 fragment FileInfo on File {
   modifiedAt
   modifiedBy {
-    displayFirstName {
-      value
-    }
-    displayLastName {
-      value
-    }
+    id
+    fullName
   }
 }
