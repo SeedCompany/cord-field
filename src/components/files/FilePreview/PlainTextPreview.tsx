@@ -1,9 +1,8 @@
 import { Grid, makeStyles } from '@material-ui/core';
 import React, { FC, useCallback, useEffect, useState } from 'react';
 import { useFileActions, usePreviewError } from '../FileActions';
-import { MultiTypePreviewerProps } from './FilePreview';
+import { PreviewerProps } from './FilePreview';
 import { PreviewLoading } from './PreviewLoading';
-import { useRetrieveFile } from './useRetrieveFile';
 
 const useStyles = makeStyles(() => ({
   paragraph: {
@@ -12,15 +11,11 @@ const useStyles = makeStyles(() => ({
   },
 }));
 
-export const PlainTextPreview: FC<MultiTypePreviewerProps> = ({
-  downloadUrl,
-  mimeType,
-}) => {
+export const PlainTextPreview: FC<PreviewerProps> = ({ file }) => {
   const [html, setHtml] = useState<JSX.Element | JSX.Element[] | null>(null);
   const classes = useStyles();
   const { previewLoading, setPreviewLoading } = useFileActions();
   const handleError = usePreviewError();
-  const retrieveFile = useRetrieveFile();
 
   const renderHtml = useCallback(
     async (file: File) => {
@@ -48,18 +43,10 @@ export const PlainTextPreview: FC<MultiTypePreviewerProps> = ({
   );
 
   useEffect(() => {
-    setPreviewLoading(true);
-    void retrieveFile(downloadUrl, mimeType, renderHtml, () =>
-      handleError('Could not download document')
-    );
-  }, [
-    retrieveFile,
-    setPreviewLoading,
-    handleError,
-    renderHtml,
-    downloadUrl,
-    mimeType,
-  ]);
+    if (file) {
+      void renderHtml(file);
+    }
+  }, [file, renderHtml]);
 
   return previewLoading ? (
     <PreviewLoading />

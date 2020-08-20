@@ -5,13 +5,11 @@ import React, { FC, useCallback, useEffect, useState } from 'react';
 import { useFileActions, usePreviewError } from '../FileActions';
 import { PreviewerProps } from './FilePreview';
 import { PreviewLoading } from './PreviewLoading';
-import { useRetrieveFile } from './useRetrieveFile';
 
-export const RtfPreview: FC<PreviewerProps> = ({ downloadUrl }) => {
+export const RtfPreview: FC<PreviewerProps> = ({ file }) => {
   const [html, setHtml] = useState<JSX.Element | JSX.Element[] | null>(null);
   const { previewLoading, setPreviewLoading } = useFileActions();
   const handleError = usePreviewError();
-  const retrieveFile = useRetrieveFile();
 
   const extractHtmlFromDocument = useCallback(
     async (file: File) => {
@@ -54,20 +52,10 @@ export const RtfPreview: FC<PreviewerProps> = ({ downloadUrl }) => {
   );
 
   useEffect(() => {
-    setPreviewLoading(true);
-    void retrieveFile(
-      downloadUrl,
-      'application/rtf',
-      extractHtmlFromDocument,
-      () => handleError('Could not download document')
-    );
-  }, [
-    retrieveFile,
-    setPreviewLoading,
-    handleError,
-    extractHtmlFromDocument,
-    downloadUrl,
-  ]);
+    if (file) {
+      void extractHtmlFromDocument(file);
+    }
+  }, [file, extractHtmlFromDocument]);
 
   return previewLoading ? <PreviewLoading /> : <Grid item>{html}</Grid>;
 };
