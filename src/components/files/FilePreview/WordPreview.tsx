@@ -1,4 +1,4 @@
-import { Grid } from '@material-ui/core';
+import { Grid, makeStyles } from '@material-ui/core';
 import parse from 'html-react-parser';
 import mammoth from 'mammoth';
 import React, { FC, useCallback, useEffect, useState } from 'react';
@@ -9,9 +9,18 @@ const mammothOptions = {
   styleMap: ['u => em'],
 };
 
+const useStyles = makeStyles(() => ({
+  root: {
+    '& img': {
+      maxWidth: '100%',
+    },
+  },
+}));
+
 export const WordPreview: FC<PreviewerProps> = (props) => {
   const { file, previewLoading, setPreviewLoading, setPreviewError } = props;
   const [html, setHtml] = useState<JSX.Element | JSX.Element[] | null>(null);
+  const classes = useStyles();
 
   const extractHtmlFromDocument = useCallback(
     async (file: File) => {
@@ -22,11 +31,7 @@ export const WordPreview: FC<PreviewerProps> = (props) => {
           mammothOptions
         );
         if (result) {
-          const imageStyledRawHtml = result.value.replace(
-            /<img/gi,
-            '<img style="max-width: 100%;"'
-          );
-          setHtml(parse(imageStyledRawHtml));
+          setHtml(parse(result.value));
           setPreviewLoading(false);
         } else {
           setPreviewError('Could not read document file');
@@ -44,5 +49,11 @@ export const WordPreview: FC<PreviewerProps> = (props) => {
     }
   }, [file, extractHtmlFromDocument]);
 
-  return previewLoading ? <PreviewLoading /> : <Grid item>{html}</Grid>;
+  return previewLoading ? (
+    <PreviewLoading />
+  ) : (
+    <Grid item className={classes.root}>
+      {html}
+    </Grid>
+  );
 };
