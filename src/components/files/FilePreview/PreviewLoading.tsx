@@ -1,10 +1,13 @@
-import { Grid, makeStyles } from '@material-ui/core';
-import { Skeleton } from '@material-ui/lab';
+import { CircularProgress, Grid, makeStyles } from '@material-ui/core';
 import React from 'react';
 
 const useStyles = makeStyles(() => ({
   container: {
-    minWidth: '200px',
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
+    height: 200,
+    width: 200,
   },
 }));
 
@@ -12,12 +15,9 @@ export const PreviewLoading = () => {
   const classes = useStyles();
   return (
     <Grid item>
-      <Skeleton
-        variant="rect"
-        className={classes.container}
-        width="100%"
-        height={200}
-      />
+      <div className={classes.container}>
+        <CircularProgress size={60} />
+      </div>
     </Grid>
   );
 };
