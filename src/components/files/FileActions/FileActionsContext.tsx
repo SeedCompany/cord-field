@@ -107,9 +107,8 @@ export const FileActionsContextProvider: FC = ({ children }) => {
 
   const deleteRefetches =
     fileNodeToDelete?.__typename === 'FileVersion'
-      ? (GQLOperations.Query.FileVersions as keyof typeof GQLOperations.Query)
-      : (GQLOperations.Query
-          .ProjectDirectory as keyof typeof GQLOperations.Query);
+      ? GQLOperations.Query.FileVersions
+      : GQLOperations.Query.ProjectDirectory;
 
   return (
     <FileActionsContext.Provider
