@@ -19,7 +19,7 @@ import { useFileVersionsQuery } from './FileActions.generated';
 
 const useStyles = makeStyles(({ spacing }) => ({
   skeleton: {
-    padding: `${spacing(1)}px ${spacing(3)}px`,
+    padding: spacing(1, 3),
   },
 }));
 
