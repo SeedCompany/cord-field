@@ -123,7 +123,7 @@ export const FilePreview: FC<FilePreviewProps> = (props) => {
   useEffect(() => {
     if (id) {
       void getDownloadUrl(id).then((downloadUrl) =>
-        setDownloadUrl(downloadUrl)
+        setDownloadUrl(downloadUrl ?? '')
       );
     } else {
       setDownloadUrl('');

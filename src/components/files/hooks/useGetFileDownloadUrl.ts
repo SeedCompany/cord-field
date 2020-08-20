@@ -19,7 +19,7 @@ export const useGetFileDownloadUrl = () => {
   const client = useApolloClient();
 
   const getFileDownloadUrl = useCallback(
-    async (id: string): Promise<string> => {
+    async (id: string): Promise<string | null> => {
       try {
         const { data } = await client.query<FileNodeDownloadUrlQuery>({
           query: FileNodeDownloadUrlDocument,
@@ -35,11 +35,11 @@ export const useGetFileDownloadUrl = () => {
           return node?.type === 'Directory';
         };
         return !isDirectory(data?.fileNode)
-          ? data?.fileNode.downloadUrl ?? ''
-          : '';
+          ? data?.fileNode.downloadUrl ?? null
+          : null;
       } catch {
         showSnackbarError();
-        return '';
+        return null;
       }
     },
     [showSnackbarError, client]
