@@ -2,7 +2,8 @@ import * as actions from './uploadActions';
 
 export type UploadCallback = (
   uploadId: string,
-  fileName: string
+  fileName: string,
+  action?: 'file' | 'version'
 ) => Promise<void>;
 
 export interface FileInput {

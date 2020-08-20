@@ -1,19 +1,20 @@
+import { MutationFunctionOptions } from '@apollo/client';
 import React from 'react';
 import { Except } from 'type-fest';
-import { GQLOperations, RenameFileInput } from '../../../api';
+import { RenameFileInput } from '../../../api';
 import { DialogForm, DialogFormProps } from '../../Dialog/DialogForm';
-import { useFileNameAndExtension } from '../../files/hooks';
 import { SubmitError, TextField } from '../../form';
+import { parseFileNameAndExtension } from '../../Formatters';
 import { useRenameFileNodeMutation } from './FileActions.generated';
-import { FileActionItem } from './FileActionsMenu';
+import { FilesActionItem } from './FileActionsContext';
 
 export type RenameFileProps = DialogFormProps<RenameFileInput> & {
-  item: FileActionItem | undefined;
+  item: FilesActionItem | undefined;
+  refetchQueries?: MutationFunctionOptions['refetchQueries'];
 };
 
 export const RenameFile = (props: Except<RenameFileProps, 'onSubmit'>) => {
-  const { item } = props;
-  const fileNameAndExtension = useFileNameAndExtension();
+  const { item, refetchQueries } = props;
   const [renameFile] = useRenameFileNodeMutation();
 
   if (!item) return null;
@@ -22,14 +23,14 @@ export const RenameFile = (props: Except<RenameFileProps, 'onSubmit'>) => {
   const onSubmit: RenameFileProps['onSubmit'] = async ({
     name: inputtedName,
   }) => {
-    const { extension } = fileNameAndExtension(name);
+    const { extension } = parseFileNameAndExtension(name);
     const input = {
       id,
       name: `${inputtedName}.${extension}`,
     };
     await renameFile({
       variables: { input },
-      refetchQueries: [GQLOperations.Query.ProjectDirectory],
+      refetchQueries,
     });
   };
 
@@ -45,7 +46,7 @@ export const RenameFile = (props: Except<RenameFileProps, 'onSubmit'>) => {
     >
       <SubmitError />
       <TextField
-        defaultValue={fileNameAndExtension(name).displayName}
+        defaultValue={parseFileNameAndExtension(name).displayName}
         name="name"
         label="Name"
         placeholder={`Enter new ${type.toLowerCase()} name`}

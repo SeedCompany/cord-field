@@ -1,16 +1,18 @@
 import {
-  IconButton,
   ListItem,
   ListItemIcon,
   ListItemSecondaryAction,
   ListItemText,
   makeStyles,
 } from '@material-ui/core';
-import { CloudDownload as DownloadIcon } from '@material-ui/icons';
 import React, { FC } from 'react';
 import { useDateTimeFormatter } from '../../Formatters';
-import { useDownloadFile, useFileNodeIcon } from '../hooks';
-import { FileVersionItemFragment } from './FileVersionItem.generated';
+import {
+  FileActionsPopup as ActionsMenu,
+  useFileActions,
+} from '../FileActions';
+import { fileIcon } from '../fileTypes';
+import { FileVersionItem_FileVersion_Fragment } from './FileVersionItem.generated';
 
 const useStyles = makeStyles(({ spacing, typography }) => ({
   iconContainer: {
@@ -21,37 +23,40 @@ const useStyles = makeStyles(({ spacing, typography }) => ({
     fontSize: typography.h2.fontSize,
   },
   text: {
+    cursor: 'pointer',
     marginRight: spacing(3),
   },
 }));
 
 interface FileVersionItemProps {
-  version: FileVersionItemFragment;
+  version: FileVersionItem_FileVersion_Fragment;
 }
 
 export const FileVersionItem: FC<FileVersionItemProps> = (props) => {
   const classes = useStyles();
   const formatDate = useDateTimeFormatter();
-  const downloadFile = useDownloadFile();
-  const fileIcon = useFileNodeIcon();
+  const { openFilePreview } = useFileActions();
   const { version } = props;
-  const { category, createdAt, createdBy, name } = version;
-  const Icon = fileIcon(category);
-  const createdByUser = `${createdBy.displayFirstName.value} ${createdBy.displayLastName.value}`;
+
+  const { createdAt, createdBy, name } = version;
+  const Icon = fileIcon(version.mimeType);
+  const createdByUser = createdBy.fullName;
+
   return (
     <ListItem>
       <ListItemIcon className={classes.iconContainer}>
         <Icon className={classes.icon} />
       </ListItemIcon>
       <ListItemText
+        onClick={() => openFilePreview(version)}
         className={classes.text}
         primary={name}
-        secondary={`Created on ${formatDate(createdAt)} by ${createdByUser}`}
+        secondary={`Created on ${formatDate(createdAt)}${
+          createdByUser ? ` by ${createdByUser}` : ''
+        }`}
       />
       <ListItemSecondaryAction>
-        <IconButton onClick={() => downloadFile(version)}>
-          <DownloadIcon />
-        </IconButton>
+        <ActionsMenu item={version} />
       </ListItemSecondaryAction>
     </ListItem>
   );

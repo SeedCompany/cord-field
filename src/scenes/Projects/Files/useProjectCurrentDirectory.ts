@@ -6,7 +6,7 @@ export const useProjectCurrentDirectory = () => {
     projectId: string;
     folderId?: string;
   };
-  const { data } = useProjectRootDirectoryQuery({
+  const { data, loading } = useProjectRootDirectoryQuery({
     variables: {
       id: projectId,
     },
@@ -14,5 +14,5 @@ export const useProjectCurrentDirectory = () => {
   const project = data?.project;
   const rootDirectoryId = data?.project.rootDirectory.id;
   const directoryId = folderId ?? rootDirectoryId ?? '';
-  return { project, directoryId, rootDirectoryId };
+  return { loading, project, directoryId, rootDirectoryId };
 };
