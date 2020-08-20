@@ -1,9 +1,11 @@
-import { Box, makeStyles, Typography } from '@material-ui/core';
+import { makeStyles, Typography } from '@material-ui/core';
 import React from 'react';
 
 const useStyles = makeStyles(({ spacing }) => ({
   container: {
+    display: 'flex',
     margin: spacing(4),
+    textAlign: 'center',
   },
   text: {
     lineHeight: 1.5,
@@ -13,12 +15,12 @@ const useStyles = makeStyles(({ spacing }) => ({
 export const PreviewNotSupported = () => {
   const classes = useStyles();
   return (
-    <Box className={classes.container} textAlign="center">
+    <div className={classes.container}>
       <Typography variant="h3" className={classes.text}>
         Previewing is not supported
         <br />
         for this file type
       </Typography>
-    </Box>
+    </div>
   );
 };
