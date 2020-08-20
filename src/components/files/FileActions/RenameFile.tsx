@@ -1,6 +1,7 @@
+import { MutationFunctionOptions } from '@apollo/client';
 import React from 'react';
 import { Except } from 'type-fest';
-import { GQLOperations, RenameFileInput } from '../../../api';
+import { RenameFileInput } from '../../../api';
 import { DialogForm, DialogFormProps } from '../../Dialog/DialogForm';
 import { SubmitError, TextField } from '../../form';
 import { parseFileNameAndExtension } from '../../Formatters';
@@ -9,7 +10,7 @@ import { FilesActionItem } from './FileActionsContext';
 
 export type RenameFileProps = DialogFormProps<RenameFileInput> & {
   item: FilesActionItem | undefined;
-  refetchQueries?: Array<keyof typeof GQLOperations.Query>;
+  refetchQueries?: MutationFunctionOptions['refetchQueries'];
 };
 
 export const RenameFile = (props: Except<RenameFileProps, 'onSubmit'>) => {

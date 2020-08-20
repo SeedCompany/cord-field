@@ -1,7 +1,7 @@
+import { MutationFunctionOptions } from '@apollo/client';
 import { Typography } from '@material-ui/core';
 import React from 'react';
 import { Except } from 'type-fest';
-import { GQLOperations } from '../../../api';
 import { DialogForm, DialogFormProps } from '../../Dialog/DialogForm';
 import { SubmitError } from '../../form';
 import { useDeleteFileNodeMutation } from './FileActions.generated';
@@ -9,7 +9,7 @@ import { FilesActionItem } from './FileActionsContext';
 
 export type DeleteFileProps = DialogFormProps<{ id: string }> & {
   item: FilesActionItem | undefined;
-  refetchQueries?: Array<keyof typeof GQLOperations.Query>;
+  refetchQueries?: MutationFunctionOptions['refetchQueries'];
 };
 
 export const DeleteFile = (props: Except<DeleteFileProps, 'onSubmit'>) => {
