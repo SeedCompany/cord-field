@@ -1,0 +1,16 @@
+query FilmLookup($query: String!) {
+  search(input: { query: $query, type: [Film] }) {
+    items {
+      ... on Film {
+        ...FilmLookupItem
+      }
+    }
+  }
+}
+
+fragment FilmLookupItem on Film {
+  id
+  name {
+    value
+  }
+}
