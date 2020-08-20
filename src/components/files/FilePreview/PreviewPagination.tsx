@@ -20,7 +20,7 @@ export const PreviewPagination: FC<PreviewPaginationProps> = (props) => {
   };
 
   return (
-    <>
+    <Grid container direction="column" spacing={2} alignItems="center">
       <Grid item xs={12}>
         <Pagination
           count={pageCount}
@@ -33,6 +33,6 @@ export const PreviewPagination: FC<PreviewPaginationProps> = (props) => {
       <Grid item xs={12}>
         {children}
       </Grid>
-    </>
+    </Grid>
   );
 };

@@ -1,4 +1,4 @@
-import { Grid, makeStyles, Tab, Tabs } from '@material-ui/core';
+import { makeStyles, Tab, Tabs } from '@material-ui/core';
 import React, { FC, useEffect } from 'react';
 import { XLSX$Utils } from 'xlsx';
 import { useFileActions } from '../FileActions';
@@ -117,7 +117,7 @@ export const SpreadsheetView: FC<SpreadSheetViewProps> = (props) => {
       <RenderedSheet rows={data[0].rows} columns={data[0].columns} />
     </div>
   ) : (
-    <Grid item>
+    <>
       <Tabs
         value={activeTab}
         onChange={handleChange}
@@ -144,6 +144,6 @@ export const SpreadsheetView: FC<SpreadSheetViewProps> = (props) => {
           </div>
         );
       })}
-    </Grid>
+    </>
   );
 };

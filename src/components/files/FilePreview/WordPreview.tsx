@@ -1,4 +1,4 @@
-import { Grid, makeStyles } from '@material-ui/core';
+import { makeStyles } from '@material-ui/core';
 import parse from 'html-react-parser';
 import mammoth, { MammothOptions } from 'mammoth';
 import React, { FC, useCallback, useEffect, useState } from 'react';
@@ -48,8 +48,6 @@ export const WordPreview: FC<PreviewerProps> = (props) => {
   return previewLoading ? (
     <PreviewLoading />
   ) : (
-    <Grid item className={classes.root}>
-      {html}
-    </Grid>
+    <div className={classes.root}>{html}</div>
   );
 };

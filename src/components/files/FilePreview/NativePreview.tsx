@@ -1,4 +1,4 @@
-import { Grid, makeStyles } from '@material-ui/core';
+import { makeStyles } from '@material-ui/core';
 import React, { FC, useCallback, useEffect, useState } from 'react';
 import { PreviewerProps } from './FilePreview';
 import { PreviewLoading } from './PreviewLoading';
@@ -61,9 +61,5 @@ export const NativePreview: FC<NativePreviewProps> = (props) => {
     );
   };
 
-  return previewLoading ? (
-    <PreviewLoading />
-  ) : (
-    <Grid item>{url ? player(type) : null}</Grid>
-  );
+  return previewLoading ? <PreviewLoading /> : url ? player(type) : null;
 };

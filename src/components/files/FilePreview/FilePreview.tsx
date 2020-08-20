@@ -201,20 +201,22 @@ export const FilePreview: FC<FilePreviewProps> = (props) => {
       <DialogTitle id="dialog-file-preview">{name}</DialogTitle>
       <DialogContent className={classes.dialogContent}>
         <Grid container direction="column" spacing={2} alignItems="center">
-          {previewError ? (
-            <PreviewError errorText={previewError} />
-          ) : Previewer ? (
-            <Previewer
-              file={previewFile}
-              previewLoading={previewLoading}
-              setPreviewLoading={setPreviewLoading}
-              previewError={previewError}
-              setPreviewError={handleError}
-              {...previewerProps}
-            />
-          ) : (
-            <PreviewNotSupported />
-          )}
+          <Grid item>
+            {previewError ? (
+              <PreviewError errorText={previewError} />
+            ) : Previewer ? (
+              <Previewer
+                file={previewFile}
+                previewLoading={previewLoading}
+                setPreviewLoading={setPreviewLoading}
+                previewError={previewError}
+                setPreviewError={handleError}
+                {...previewerProps}
+              />
+            ) : (
+              <PreviewNotSupported />
+            )}
+          </Grid>
         </Grid>
       </DialogContent>
       <DialogActions>
