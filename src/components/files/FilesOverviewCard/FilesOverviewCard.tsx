@@ -6,7 +6,7 @@ import { useNumberFormatter } from '../../Formatters';
 export interface BudgetOverviewCardProps {
   className?: string;
   loading?: boolean;
-  total: number | undefined;
+  total?: number;
 }
 
 export const FilesOverviewCard: FC<BudgetOverviewCardProps> = ({
