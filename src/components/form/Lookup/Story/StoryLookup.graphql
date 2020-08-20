@@ -1,0 +1,16 @@
+query StoryLookup($query: String!) {
+  search(input: { query: $query, type: [Story] }) {
+    items {
+      ... on Story {
+        ...StoryLookupItem
+      }
+    }
+  }
+}
+
+fragment StoryLookupItem on Story {
+  id
+  name {
+    value
+  }
+}
