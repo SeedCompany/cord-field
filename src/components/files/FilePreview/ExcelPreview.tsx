@@ -1,6 +1,5 @@
 import React, { FC, useCallback, useEffect, useState } from 'react';
 import XLSX from 'xlsx';
-import { useFileActions, usePreviewError } from '../FileActions';
 import { PreviewerProps } from './FilePreview';
 import { PreviewLoading } from './PreviewLoading';
 import { ColumnData, RowData, SpreadsheetView } from './SpreadsheetView';
@@ -11,24 +10,23 @@ interface SheetData {
   columns: ColumnData;
 }
 
-export const ExcelPreview: FC<PreviewerProps> = ({ file }) => {
+export const ExcelPreview: FC<PreviewerProps> = (props) => {
+  const { file, previewLoading, setPreviewLoading, setPreviewError } = props;
   const [sheets, setSheets] = useState<SheetData[]>([]);
-  const { previewLoading, setPreviewLoading } = useFileActions();
-  const handleError = usePreviewError();
 
   const extractExcelDataFromWorkbook = useCallback(
     async (file: File) => {
       const { data, error } = await extractExcelData(file);
       if (error) {
-        handleError(error.message);
+        setPreviewError(error.message);
       } else if (data) {
         setSheets(data);
         setPreviewLoading(false);
       } else {
-        handleError('Could not read spreadsheet file');
+        setPreviewError('Could not read spreadsheet file');
       }
     },
-    [setSheets, handleError, setPreviewLoading]
+    [setSheets, setPreviewError, setPreviewLoading]
   );
 
   useEffect(() => {

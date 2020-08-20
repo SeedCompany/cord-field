@@ -1,10 +1,4 @@
-import React, {
-  createContext,
-  FC,
-  useCallback,
-  useContext,
-  useState,
-} from 'react';
+import React, { createContext, FC, useContext, useState } from 'react';
 import { Directory, File, GQLOperations } from '../../../api';
 import {
   ProjectDirectoryDirectory,
@@ -46,14 +40,6 @@ export const initialFileActionsContext = {
   ) => {
     return;
   },
-  previewError: '' as string | null,
-  setPreviewError: (_: string | null) => {
-    return;
-  },
-  previewLoading: false,
-  setPreviewLoading: (_: boolean) => {
-    return;
-  },
   previewPage: 1,
   setPreviewPage: (_: number) => {
     return;
@@ -68,8 +54,6 @@ export const FileActionsContext = createContext<
 >(initialFileActionsContext);
 
 export const FileActionsContextProvider: FC = ({ children }) => {
-  const [previewError, setPreviewError] = useState<string | null>(null);
-  const [previewLoading, setPreviewLoading] = useState(false);
   const [previewPage, setPreviewPage] = useState(1);
 
   const downloadFile = useDownloadFile();
@@ -114,10 +98,6 @@ export const FileActionsContextProvider: FC = ({ children }) => {
     <FileActionsContext.Provider
       value={{
         handleFileActionClick,
-        previewLoading,
-        setPreviewLoading,
-        previewError,
-        setPreviewError,
         previewPage,
         setPreviewPage,
         openFilePreview,
@@ -139,15 +119,3 @@ export const FileActionsContextProvider: FC = ({ children }) => {
 };
 
 export const useFileActions = () => useContext(FileActionsContext);
-
-export const usePreviewError = () => {
-  const { setPreviewError, setPreviewLoading } = useFileActions();
-  const handlePreviewError = useCallback(
-    (error: string) => {
-      setPreviewError(error);
-      setPreviewLoading(false);
-    },
-    [setPreviewError, setPreviewLoading]
-  );
-  return handlePreviewError;
-};

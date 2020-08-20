@@ -9,11 +9,7 @@ import {
   makeStyles,
 } from '@material-ui/core';
 import React, { FC, useCallback, useEffect, useState } from 'react';
-import {
-  NonDirectoryActionItem,
-  useFileActions,
-  usePreviewError,
-} from '../FileActions';
+import { NonDirectoryActionItem } from '../FileActions';
 import {
   previewableAudioTypes,
   previewableImageTypes,
@@ -37,6 +33,10 @@ const useStyles = makeStyles(() => ({
 
 export interface PreviewerProps {
   file?: File;
+  previewLoading: boolean;
+  setPreviewLoading: (loading: boolean) => void;
+  previewError: string | null;
+  setPreviewError: (error: string | null) => void;
 }
 
 interface FilePreviewProps extends DialogProps {
@@ -115,8 +115,8 @@ const previewers: PreviewerProperties = {
 export const FilePreview: FC<FilePreviewProps> = (props) => {
   const classes = useStyles();
   const [previewFile, setPreviewFile] = useState<File | null>(null);
-  const { previewError, setPreviewError, setPreviewLoading } = useFileActions();
-  const handleError = usePreviewError();
+  const [previewLoading, setPreviewLoading] = useState(false);
+  const [previewError, setPreviewError] = useState<string | null>(null);
   const getDownloadUrl = useGetFileDownloadUrl();
   const { file, onClose, ...rest } = props;
   const { id, mimeType, name } = file ?? {
@@ -124,6 +124,14 @@ export const FilePreview: FC<FilePreviewProps> = (props) => {
     mimeType: '',
     name: '',
   };
+
+  const handleError = useCallback(
+    (error: string) => {
+      setPreviewError(error);
+      setPreviewLoading(false);
+    },
+    [setPreviewError, setPreviewLoading]
+  );
 
   const Previewer = previewers[mimeType]?.component;
   const previewerProps = previewers[mimeType]?.props;
@@ -196,7 +204,14 @@ export const FilePreview: FC<FilePreviewProps> = (props) => {
           {previewError ? (
             <PreviewError errorText={previewError} />
           ) : Previewer ? (
-            <Previewer file={previewFile} {...previewerProps} />
+            <Previewer
+              file={previewFile}
+              previewLoading={previewLoading}
+              setPreviewLoading={setPreviewLoading}
+              previewError={previewError}
+              setPreviewError={handleError}
+              {...previewerProps}
+            />
           ) : (
             <PreviewNotSupported />
           )}
