@@ -29,7 +29,7 @@ export const RenameFile = (props: Except<RenameFileProps, 'onSubmit'>) => {
     };
     await renameFile({
       variables: { input },
-      ...(refetchQueries ? { refetchQueries } : null),
+      refetchQueries,
     });
   };
 
