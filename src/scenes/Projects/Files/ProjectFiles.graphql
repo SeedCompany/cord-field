@@ -7,26 +7,30 @@ query ProjectRootDirectory($id: ID!) {
   }
 }
 
+fragment ProjectDirectoryFileNode on FileNode {
+  ...FileNodeInfo
+  ... on Directory {
+    ...FileNodeInfo
+  }
+  ... on File {
+    ...FileNodeInfo
+    ...FileInfo
+    size
+    mimeType
+  }
+  ... on FileVersion {
+    ...FileNodeInfo
+    size
+  }
+}
+
 query ProjectDirectory($id: ID!) {
   directory(id: $id) {
     ...FileNodeInfo
     children {
       total
       items {
-        ...FileNodeInfo
-        ... on Directory {
-          ...FileNodeInfo
-        }
-        ... on File {
-          ...FileNodeInfo
-          ...FileInfo
-          size
-          mimeType
-        }
-        ... on FileVersion {
-          ...FileNodeInfo
-          size
-        }
+        ...ProjectDirectoryFileNode
       }
     }
     parents {

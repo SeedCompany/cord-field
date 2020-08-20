@@ -35,7 +35,7 @@ import { ProjectBreadcrumb } from '../../../components/ProjectBreadcrumb';
 import { Table } from '../../../components/Table';
 import { CreateProjectDirectory } from './CreateProjectDirectory';
 import {
-  ProjectDirectoryQuery,
+  ProjectDirectoryFileNodeFragment,
   useProjectDirectoryQuery,
 } from './ProjectFiles.generated';
 import { useProjectCurrentDirectory } from './useProjectCurrentDirectory';
@@ -95,17 +95,16 @@ const useStyles = makeStyles(({ palette, spacing }) => ({
   },
 }));
 
-type ProjectDirectoryFileNode = ProjectDirectoryQuery['directory']['children']['items'][0];
 export type ProjectDirectoryDirectory = Exclude<
-  ProjectDirectoryFileNode,
+  ProjectDirectoryFileNodeFragment,
   FileNodeInfo_FileVersion_Fragment | FileNodeInfo_File_Fragment
 >;
 export type ProjectDirectoryFile = Exclude<
-  ProjectDirectoryFileNode,
+  ProjectDirectoryFileNodeFragment,
   FileNodeInfo_Directory_Fragment | FileNodeInfo_FileVersion_Fragment
 >;
 export type ProjectDirectoryNonVersion = Exclude<
-  ProjectDirectoryFileNode,
+  ProjectDirectoryFileNodeFragment,
   FileNodeInfo_FileVersion_Fragment
 >;
 
