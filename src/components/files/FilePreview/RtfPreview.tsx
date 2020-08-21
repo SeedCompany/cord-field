@@ -2,14 +2,12 @@ import rtfToHTML from '@iarna/rtf-to-html';
 import { Grid } from '@material-ui/core';
 import parse from 'html-react-parser';
 import React, { FC, useCallback, useEffect, useState } from 'react';
-import { useFileActions, usePreviewError } from '../FileActions';
 import { PreviewerProps } from './FilePreview';
 import { PreviewLoading } from './PreviewLoading';
 
-export const RtfPreview: FC<PreviewerProps> = ({ file }) => {
+export const RtfPreview: FC<PreviewerProps> = (props) => {
+  const { file, previewLoading, setPreviewLoading, setPreviewError } = props;
   const [html, setHtml] = useState<JSX.Element | JSX.Element[] | null>(null);
-  const { previewLoading, setPreviewLoading } = useFileActions();
-  const handleError = usePreviewError();
 
   const extractHtmlFromDocument = useCallback(
     async (file: File) => {
@@ -37,7 +35,7 @@ export const RtfPreview: FC<PreviewerProps> = ({ file }) => {
           (error: Error | null, html: string) => {
             if (error) {
               console.log(error);
-              handleError('Could not read document file');
+              setPreviewError('Could not read document file');
             } else {
               setHtml(parse(html));
               setPreviewLoading(false);
@@ -45,10 +43,10 @@ export const RtfPreview: FC<PreviewerProps> = ({ file }) => {
           }
         );
       } catch {
-        handleError('Could not read document file');
+        setPreviewError('Could not read document file');
       }
     },
-    [setPreviewLoading, handleError]
+    [setPreviewLoading, setPreviewError]
   );
 
   useEffect(() => {

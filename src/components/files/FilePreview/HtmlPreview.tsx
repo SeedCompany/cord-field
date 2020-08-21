@@ -1,12 +1,11 @@
 import { Grid } from '@material-ui/core';
 import React, { FC, useCallback, useEffect, useState } from 'react';
-import { useFileActions } from '../FileActions';
 import { PreviewerProps } from './FilePreview';
 import { PreviewLoading } from './PreviewLoading';
 
-export const HtmlPreview: FC<PreviewerProps> = ({ file }) => {
+export const HtmlPreview: FC<PreviewerProps> = (props) => {
+  const { file, previewLoading, setPreviewLoading } = props;
   const [url, setUrl] = useState('');
-  const { previewLoading, setPreviewLoading } = useFileActions();
 
   const createUrlForFile = useCallback(
     (file: File) => {
