@@ -46,7 +46,7 @@ export const fileTypes: FileType[] = [
   {
     mimeType: 'application/rtf',
     Icon: DocumentIcon,
-    previewSupported: false,
+    previewSupported: true,
   },
   {
     mimeType: 'application/vnd.ms-excel',
@@ -628,22 +628,27 @@ export const fileTypes: FileType[] = [
   {
     mimeType: 'text/css',
     Icon: OtherIcon,
-    previewSupported: false,
+    previewSupported: true,
   },
   {
     mimeType: 'text/csv',
     Icon: SpreadsheetIcon,
-    previewSupported: false,
+    previewSupported: true,
   },
   {
     mimeType: 'text/html',
     Icon: DocumentIcon,
-    previewSupported: false,
+    previewSupported: true,
   },
   {
     mimeType: 'text/plain',
     Icon: DocumentIcon,
-    previewSupported: false,
+    previewSupported: true,
+  },
+  {
+    mimeType: 'text/rtf',
+    Icon: DocumentIcon,
+    previewSupported: true,
   },
   {
     mimeType: 'text/richtext',

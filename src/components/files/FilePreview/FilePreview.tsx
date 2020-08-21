@@ -19,10 +19,13 @@ import {
 import { useGetFileDownloadUrl } from '../hooks';
 import { CsvPreview } from './CsvPreview';
 import { ExcelPreview } from './ExcelPreview';
+import { HtmlPreview } from './HtmlPreview';
 import { NativePreview, NativePreviewType } from './NativePreview';
 import { PdfPreview } from './PdfPreview';
+import { PlainTextPreview } from './PlainTextPreview';
 import { PreviewError } from './PreviewError';
 import { PreviewNotSupported } from './PreviewNotSupported';
+import { RtfPreview } from './RtfPreview';
 import { WordPreview } from './WordPreview';
 
 const useStyles = makeStyles(() => ({
@@ -106,6 +109,26 @@ const previewers: PreviewerProperties = {
   'text/csv': {
     component: CsvPreview,
     props: {},
+  },
+  'application/rtf': {
+    component: RtfPreview,
+    props: {},
+  },
+  'text/rtf': {
+    component: RtfPreview,
+    props: {},
+  },
+  'text/plain': {
+    component: PlainTextPreview,
+    props: { mimeType: 'text/plain' },
+  },
+  'text/css': {
+    component: PlainTextPreview,
+    props: { mimeType: 'text/css' },
+  },
+  'text/html': {
+    component: HtmlPreview,
+    props: { mimeType: 'text/html' },
   },
   ...imagePreviewers,
   ...audioPreviewers,
