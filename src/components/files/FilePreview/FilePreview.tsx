@@ -42,10 +42,6 @@ export interface PreviewerProps {
   setPreviewError: (error: string | null) => void;
 }
 
-export interface MultiTypePreviewerProps extends PreviewerProps {
-  mimeType: PreviewableMimeType;
-}
-
 interface FilePreviewProps extends DialogProps {
   file?: NonDirectoryActionItem;
 }
