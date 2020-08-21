@@ -1,4 +1,4 @@
-import rtfToHTML from '@iarna/rtf-to-html';
+import * as rtfToHTML from '@iarna/rtf-to-html';
 import { Grid } from '@material-ui/core';
 import parse from 'html-react-parser';
 import React, { FC, useCallback, useEffect, useState } from 'react';
@@ -32,8 +32,8 @@ export const RtfPreview: FC<PreviewerProps> = (props) => {
               `;
             },
           },
-          (error: Error | null, html: string) => {
-            if (error) {
+          (error, html) => {
+            if (error || !html) {
               console.log(error);
               setPreviewError('Could not read document file');
             } else {
