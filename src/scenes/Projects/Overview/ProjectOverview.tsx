@@ -1,5 +1,5 @@
 import { Grid, makeStyles, Tooltip, Typography } from '@material-ui/core';
-import { DateRange, Publish } from '@material-ui/icons';
+import { Add, DateRange, Publish } from '@material-ui/icons';
 import { Skeleton } from '@material-ui/lab';
 import React, { FC } from 'react';
 import { useDropzone } from 'react-dropzone';
@@ -9,6 +9,7 @@ import { displayLocation } from '../../../api/location-helper';
 import { BudgetOverviewCard } from '../../../components/BudgetOverviewCard';
 import { CardGroup } from '../../../components/CardGroup';
 import { DataButton } from '../../../components/DataButton';
+import { useDialog } from '../../../components/Dialog';
 import { DisplaySimpleProperty } from '../../../components/DisplaySimpleProperty';
 import { Fab } from '../../../components/Fab';
 import { FilesOverviewCard } from '../../../components/files/FilesOverviewCard';
@@ -22,6 +23,8 @@ import { LanguageEngagementListItemCard } from '../../../components/LanguageEnga
 import { PartnershipSummary } from '../../../components/PartnershipSummary';
 import { ProjectMembersSummary } from '../../../components/ProjectMembersSummary';
 import { Redacted } from '../../../components/Redacted';
+import { CreateInternshipEngagement } from '../../Engagement/InternshipEngagement/Create/CreateInternshipEngagement';
+import { CreateLanguageEngagement } from '../../Engagement/LanguageEngagement/Create/CreateLanguageEngagement';
 import { useProjectCurrentDirectory, useUploadProjectFiles } from '../Files';
 import { useProjectOverviewQuery } from './ProjectOverview.generated';
 
@@ -71,6 +74,8 @@ export const ProjectOverview: FC = () => {
     noClick: true,
   });
 
+  const [createEngagementState, createEngagement] = useDialog();
+
   const { data, error } = useProjectOverviewQuery({
     variables: {
       input: projectId,
@@ -95,6 +100,11 @@ export const ProjectOverview: FC = () => {
   const date = data
     ? securedDateRange(data.project.mouStart, data.project.mouEnd)
     : undefined;
+
+  const CreateEngagement =
+    data?.project.__typename === 'TranslationProject'
+      ? CreateLanguageEngagement
+      : CreateInternshipEngagement;
 
   return (
     <main className={classes.root}>
@@ -247,6 +257,23 @@ export const ProjectOverview: FC = () => {
                   <Skeleton width="40%" />
                 )}
               </Typography>
+            </Grid>
+            <Grid item>
+              {data?.project.engagements.canCreate && (
+                <Tooltip title={`Add ${engagementTypeLabel} Engagement`}>
+                  <Fab
+                    color="error"
+                    aria-label={`Add ${engagementTypeLabel} Engagement`}
+                    onClick={createEngagement}
+                  >
+                    <Add />
+                    <CreateEngagement
+                      projectId={projectId}
+                      {...createEngagementState}
+                    />
+                  </Fab>
+                </Tooltip>
+              )}
             </Grid>
             {data?.project.engagements.items.map((engagement) =>
               engagement.__typename === 'LanguageEngagement' ? (
