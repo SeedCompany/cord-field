@@ -1,5 +1,4 @@
 import * as rtfToHTML from '@iarna/rtf-to-html';
-import { Grid } from '@material-ui/core';
 import parse from 'html-react-parser';
 import React, { FC, useCallback, useEffect, useState } from 'react';
 import { PreviewerProps } from './FilePreview';
@@ -55,5 +54,5 @@ export const RtfPreview: FC<PreviewerProps> = (props) => {
     }
   }, [file, extractHtmlFromDocument]);
 
-  return previewLoading ? <PreviewLoading /> : <Grid item>{html}</Grid>;
+  return previewLoading ? <PreviewLoading /> : html;
 };

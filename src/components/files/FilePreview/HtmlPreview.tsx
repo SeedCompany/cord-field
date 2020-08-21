@@ -1,4 +1,3 @@
-import { Grid } from '@material-ui/core';
 import React, { FC, useCallback, useEffect, useState } from 'react';
 import { PreviewerProps } from './FilePreview';
 import { PreviewLoading } from './PreviewLoading';
@@ -24,14 +23,12 @@ export const HtmlPreview: FC<PreviewerProps> = (props) => {
   return previewLoading ? (
     <PreviewLoading />
   ) : (
-    <Grid item>
-      <iframe
-        src={url}
-        width={800}
-        height={600}
-        title="File Preview"
-        referrerPolicy="no-referrer"
-      />
-    </Grid>
+    <iframe
+      src={url}
+      width={800}
+      height={600}
+      title="File Preview"
+      referrerPolicy="no-referrer"
+    />
   );
 };

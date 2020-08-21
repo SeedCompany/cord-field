@@ -1,4 +1,4 @@
-import { Grid, makeStyles } from '@material-ui/core';
+import { makeStyles } from '@material-ui/core';
 import React, { FC, useCallback, useEffect, useState } from 'react';
 import { PreviewerProps } from './FilePreview';
 import { PreviewLoading } from './PreviewLoading';
@@ -49,8 +49,6 @@ export const PlainTextPreview: FC<PreviewerProps> = (props) => {
   return previewLoading ? (
     <PreviewLoading />
   ) : (
-    <Grid item>
-      <div style={{ width: '80ch' }}>{html}</div>
-    </Grid>
+    <div style={{ width: '80ch' }}>{html}</div>
   );
 };
