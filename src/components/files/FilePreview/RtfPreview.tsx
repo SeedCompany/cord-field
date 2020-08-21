@@ -20,6 +20,8 @@ export const RtfPreview: FC<PreviewerProps> = (props) => {
               __: rtfToHTML.RtfToHtmlDefaults,
               content: string
             ) => {
+              // Adding this wrapper <div> prevents the library from adding
+              // <html> and <body> tags
               return `
                 <div>
                   ${content.replace(/\n/, '\n    ')}
