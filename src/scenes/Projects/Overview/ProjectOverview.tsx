@@ -101,6 +101,11 @@ export const ProjectOverview: FC = () => {
     ? securedDateRange(data.project.mouStart, data.project.mouEnd)
     : undefined;
 
+  const CreateEngagement =
+    data?.project.__typename === 'TranslationProject'
+      ? CreateLanguageEngagement
+      : CreateInternshipEngagement;
+
   return (
     <main className={classes.root}>
       {error ? (
@@ -255,28 +260,19 @@ export const ProjectOverview: FC = () => {
             </Grid>
             <Grid item>
               {data?.project.engagements.canCreate && (
-                <>
-                  <Tooltip title={`Add ${engagementTypeLabel} Engagement`}>
-                    <Fab
-                      color="error"
-                      aria-label={`Add ${engagementTypeLabel} Engagement`}
-                      onClick={createEngagement}
-                    >
-                      <Add />
-                    </Fab>
-                  </Tooltip>
-                  {data.project.__typename === 'TranslationProject' ? (
-                    <CreateLanguageEngagement
+                <Tooltip title={`Add ${engagementTypeLabel} Engagement`}>
+                  <Fab
+                    color="error"
+                    aria-label={`Add ${engagementTypeLabel} Engagement`}
+                    onClick={createEngagement}
+                  >
+                    <Add />
+                    <CreateEngagement
                       projectId={projectId}
                       {...createEngagementState}
                     />
-                  ) : (
-                    <CreateInternshipEngagement
-                      projectId={projectId}
-                      {...createEngagementState}
-                    />
-                  )}
-                </>
+                  </Fab>
+                </Tooltip>
               )}
             </Grid>
             {data?.project.engagements.items.map((engagement) =>
