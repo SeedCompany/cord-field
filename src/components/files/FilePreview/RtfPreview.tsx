@@ -16,16 +16,12 @@ export const RtfPreview: FC<PreviewerProps> = (props) => {
           rtfString,
           {
             template: (
-              _: Record<string, any>,
-              defaults: Record<string, any>,
+              _: rtfToHTML.RtfToHtmlDoc,
+              __: rtfToHTML.RtfToHtmlDefaults,
               content: string
             ) => {
               return `
-                <div style="
-                  font-size: ${defaults.fontSize / 2}px;
-                  text-indent: ${defaults.firstLineIndent / 20}px;
-                  width: 80ch;
-                ">
+                <div>
                   ${content.replace(/\n/, '\n    ')}
                 </div>
               `;
@@ -54,5 +50,9 @@ export const RtfPreview: FC<PreviewerProps> = (props) => {
     }
   }, [file, extractHtmlFromDocument]);
 
-  return previewLoading ? <PreviewLoading /> : html;
+  return previewLoading ? (
+    <PreviewLoading />
+  ) : (
+    <div style={{ width: '80ch' }}>{html}</div>
+  );
 };

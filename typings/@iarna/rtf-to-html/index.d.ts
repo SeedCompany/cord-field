@@ -25,6 +25,8 @@ function outputTemplate(
   content: string
 ): string;
 
+export type RtfToHtmlDoc = RTFDocument;
+
 export type RtfToHtmlCallback = (
   err: Error | undefined,
   html: string | undefined
