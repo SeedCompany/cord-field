@@ -8,12 +8,7 @@ import {
   DialogForm,
   DialogFormProps,
 } from '../../../components/Dialog/DialogForm';
-import {
-  PasswordField,
-  SubmitError,
-  TextField,
-} from '../../../components/form';
-import { required } from '../../../components/form/validators';
+import { PasswordField, SubmitError } from '../../../components/form';
 import { useChangePasswordMutation } from './ChangePassword.generated';
 
 type ChangePasswordProps = Except<
@@ -61,12 +56,11 @@ export const ChangePassword = (props: ChangePasswordProps) => {
           <SubmitError align="left" />
         </Grid>
         <Grid item xs={12}>
-          <TextField
+          <PasswordField
             name="oldPassword"
             label="Old Password"
             placeholder="Old Password"
             required
-            validate={[required]}
             margin="none"
           />
         </Grid>
