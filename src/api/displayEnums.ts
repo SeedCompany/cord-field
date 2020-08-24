@@ -10,6 +10,7 @@ import { Nullable } from '../util';
 import {
   InternshipEngagementPosition,
   ProductMethodology,
+  ProjectStep,
 } from './schema.generated';
 
 // Helper to display enums in a generic way
@@ -17,6 +18,7 @@ const displayEnum = <T extends string>() => (enumVal: Nullable<T>) =>
   startCase(enumVal ?? undefined);
 
 export const displayStatus = displayEnum<ProjectStatus>();
+export const displayProjectStep = displayEnum<ProjectStep>();
 export const displayPartnershipStatus = displayEnum<
   PartnershipAgreementStatus
 >();
