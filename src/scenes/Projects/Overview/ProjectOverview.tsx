@@ -4,7 +4,7 @@ import { Skeleton } from '@material-ui/lab';
 import React, { FC } from 'react';
 import { useDropzone } from 'react-dropzone';
 import { useParams } from 'react-router-dom';
-import { displayStatus, securedDateRange } from '../../../api';
+import { displayProjectStep, securedDateRange } from '../../../api';
 import { displayLocation } from '../../../api/location-helper';
 import { BudgetOverviewCard } from '../../../components/BudgetOverviewCard';
 import { CardGroup } from '../../../components/CardGroup';
@@ -26,6 +26,7 @@ import { Redacted } from '../../../components/Redacted';
 import { CreateInternshipEngagement } from '../../Engagement/InternshipEngagement/Create/CreateInternshipEngagement';
 import { CreateLanguageEngagement } from '../../Engagement/LanguageEngagement/Create/CreateLanguageEngagement';
 import { useProjectCurrentDirectory, useUploadProjectFiles } from '../Files';
+import { UpdateProjectStepDialog } from '../Update';
 import { useProjectOverviewQuery } from './ProjectOverview.generated';
 
 const useStyles = makeStyles(({ spacing, breakpoints, palette }) => ({
@@ -65,6 +66,8 @@ export const ProjectOverview: FC = () => {
   const formatDate = useDateFormatter();
   const formatDateTime = useDateTimeFormatter();
   const formatNumber = useNumberFormatter();
+
+  const [editProjectDialogState, openEditProjectDialog] = useDialog();
 
   const { directoryId } = useProjectCurrentDirectory();
   const handleFilesDrop = useUploadProjectFiles(directoryId);
@@ -201,8 +204,13 @@ export const ProjectOverview: FC = () => {
               />
             </Grid>
             <Grid item>
-              <DataButton loading={!data}>
-                {displayStatus(data?.project.status)}
+              <DataButton
+                loading={!data}
+                secured={data?.project.step}
+                redacted="You do not have permission to view project step"
+                onClick={openEditProjectDialog}
+              >
+                {displayProjectStep(data?.project.step.value)}
               </DataButton>
             </Grid>
           </Grid>
@@ -293,6 +301,10 @@ export const ProjectOverview: FC = () => {
           )}
         </div>
       )}
+      <UpdateProjectStepDialog
+        {...editProjectDialogState}
+        project={data?.project}
+      />
     </main>
   );
 };
