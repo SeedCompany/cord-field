@@ -17,6 +17,7 @@ type MockQueryReturn = Pick<
   'data' | 'loading' | 'error'
 >;
 
+/* eslint-disable @typescript-eslint/no-unnecessary-condition */
 export const MOCK_QUERY_RETURN: MockQueryReturn = {
   loading: false,
   error: undefined,
@@ -316,11 +317,6 @@ export const ProjectBudget = () => {
                 columns={columns}
                 isEditable={canEditBudget}
                 onRowUpdate={handleRowUpdate}
-                toolbarContents={
-                  <div className={classes.toolbar}>
-                    <Typography variant="h3">Budget Records</Typography>
-                  </div>
-                }
               />
             )}
           </section>
