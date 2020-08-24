@@ -7686,7 +7686,7 @@ __metadata:
     constate: ^2.0.0
     customize-cra: ^1.0.0
     eslint: ^7.6.0
-    file-saver: ^2.0.2
+    file-saver: "patch:file-saver@2.0.2#./patches/file-saver.patch"
     final-form: "patch:final-form@4.20.1#./patches/final-form.patch"
     graphql: ^15.3.0
     history: ^5.0.0
@@ -10297,10 +10297,17 @@ __metadata:
   languageName: node
   linkType: hard
 
-"file-saver@npm:^2.0.2":
+file-saver@2.0.2:
   version: 2.0.2
   resolution: "file-saver@npm:2.0.2"
   checksum: 3/3b4e66bf4ec88740b4076792b74db91e534e27400babe43a5a0b533238551842e5e1bd108c350b3e2129de14be0d11759a3098ba0d4d19f7eaaf88976f6fd415
+  languageName: node
+  linkType: hard
+
+"file-saver@patch:file-saver@2.0.2#./patches/file-saver.patch::locator=cord-field%40workspace%3A.":
+  version: 2.0.2
+  resolution: "file-saver@patch:file-saver@npm%3A2.0.2#./patches/file-saver.patch::version=2.0.2&hash=635748&locator=cord-field%40workspace%3A."
+  checksum: 3/4f83ae8dfab206b5c698ffc3ddf57cb8499fc63d9cf8b004712cbb5e63158e918d1f72631d481f5f207dc7a031f8c143369d734c12bd365e0d7920d4b940e725
   languageName: node
   linkType: hard
 

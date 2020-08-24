@@ -27,7 +27,7 @@
     "@material-ui/pickers": "4.0.0-alpha.8",
     "clsx": "^1.1.1",
     "constate": "^2.0.0",
-    "file-saver": "^2.0.2",
+    "file-saver": "patch:file-saver@2.0.2#./patches/file-saver.patch",
     "final-form": "patch:final-form@4.20.1#./patches/final-form.patch",
     "history": "^5.0.0",
     "html-react-parser": "^0.13.0",
