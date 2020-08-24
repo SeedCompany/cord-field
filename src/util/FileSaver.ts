@@ -4,12 +4,20 @@
  */
 import { noop } from 'ts-essentials';
 
-export const download = (url: string, name?: string) => {
+interface FileSaveOptions {
+  skipCorsCheck?: boolean;
+}
+
+export const download = (
+  url: string,
+  name?: string,
+  options?: FileSaveOptions
+) => {
   const xhr = new XMLHttpRequest();
   xhr.open('GET', url);
   xhr.responseType = 'blob';
   xhr.onload = () => {
-    saveAs(xhr.response, name);
+    saveAs(xhr.response, name, options);
   };
   xhr.onerror = () => {
     console.error('could not download file');
@@ -26,7 +34,11 @@ export const saveAs =
     ? saveAsAnchorDownload
     : saveAsWithFileReader;
 
-function saveAsAnchorDownload(blob: File | Blob | string, name?: string) {
+function saveAsAnchorDownload(
+  blob: File | Blob | string,
+  name?: string,
+  options?: FileSaveOptions
+) {
   // Namespace is used to prevent conflict w/ Chrome Poper Blocker extension (Issue #561)
   const a = document.createElementNS(
     'http://www.w3.org/1999/xhtml',
@@ -44,7 +56,7 @@ function saveAsAnchorDownload(blob: File | Blob | string, name?: string) {
     // Support regular links
     a.href = blob;
     if (a.origin !== globalThis.location.origin) {
-      if (corsEnabled(a.href)) {
+      if (options?.skipCorsCheck || corsEnabled(a.href)) {
         download(blob, fileName);
       } else {
         a.target = '_blank';
@@ -66,14 +78,10 @@ function saveAsAnchorDownload(blob: File | Blob | string, name?: string) {
 }
 
 // Fallback to using FileReader and a popup
-function saveAsWithFileReader(
-  blob: File | Blob | string,
-  name?: string,
-  popup?: Window | null
-) {
+function saveAsWithFileReader(blob: File | Blob | string, name?: string) {
   // Open a popup immediately do go around popup blocker
   // Mostly only available on user interaction and the fileReader is async so...
-  popup = popup || globalThis.open('', '_blank');
+  let popup = globalThis.open('', '_blank');
   if (popup) {
     popup.document.title = popup.document.body.innerText = 'downloading...';
   }

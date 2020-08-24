@@ -28,7 +28,9 @@ export const useDownloadFile = (): ((file: DownloadableFile) => void) => {
     if (!isDirectory(file)) {
       try {
         const downloadUrl = await getFileDownloadUrl(file.id!);
-        if (downloadUrl) saveAs(downloadUrl, file.name ?? undefined);
+        if (downloadUrl) {
+          saveAs(downloadUrl, file.name ?? undefined, { skipCorsCheck: true });
+        }
       } catch {
         showSnackbarError();
       }
