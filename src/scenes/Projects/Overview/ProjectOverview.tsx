@@ -275,22 +275,22 @@ export const ProjectOverview: FC = () => {
                 </Tooltip>
               )}
             </Grid>
-            {data?.project.engagements.items.map((engagement) =>
-              engagement.__typename === 'LanguageEngagement' ? (
-                <LanguageEngagementListItemCard
-                  key={engagement.id}
-                  projectId={projectId}
-                  {...engagement}
-                />
-              ) : (
-                <InternshipEngagementListItemCard
-                  key={engagement.id}
-                  projectId={projectId}
-                  {...engagement}
-                />
-              )
-            )}
           </Grid>
+          {data?.project.engagements.items.map((engagement) =>
+            engagement.__typename === 'LanguageEngagement' ? (
+              <LanguageEngagementListItemCard
+                key={engagement.id}
+                projectId={projectId}
+                {...engagement}
+              />
+            ) : (
+              <InternshipEngagementListItemCard
+                key={engagement.id}
+                projectId={projectId}
+                {...engagement}
+              />
+            )
+          )}
         </div>
       )}
     </main>
