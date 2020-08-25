@@ -21,10 +21,11 @@ interface PluginParams<T> {
     [key: string]: any;
   };
   project: Project;
+  file: SourceFile;
 }
 
 export const tsMorphPlugin = <T>(
-  plugin: (params: PluginParams<T>) => Promisable<SourceFile>
+  plugin: (params: PluginParams<T>) => Promisable<SourceFile | void>
 ): PluginFunction<T> => async (schema, documents, config, info) => {
   const project = new Project({
     tsConfigFilePath: 'tsconfig.json',
@@ -34,14 +35,17 @@ export const tsMorphPlugin = <T>(
       useTrailingCommas: true,
     },
   });
+  const file = project.createSourceFile('__temp.ts', '', { overwrite: true });
 
-  const result = await plugin({
+  const out = (await plugin({
     schema,
     documents,
     config,
     info,
     project,
-  });
+    file,
+  })) as SourceFile | undefined;
+  const result = out ?? file;
 
   result.formatText();
   return result.getFullText();
