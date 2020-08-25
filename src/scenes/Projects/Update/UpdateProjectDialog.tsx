@@ -12,7 +12,7 @@ import {
   DialogForm,
   DialogFormProps,
 } from '../../../components/Dialog/DialogForm';
-import { FieldGroup, SubmitError } from '../../../components/form';
+import { DateField, FieldGroup, SubmitError } from '../../../components/form';
 import { AutocompleteField } from '../../../components/form/AutocompleteField';
 import { ExtractStrict, many, Many } from '../../../util';
 import { ProjectOverviewFragment } from '../Overview/ProjectOverview.generated';
@@ -21,7 +21,7 @@ import { useUpdateProjectMutation } from './UpdateProject.generated';
 export type EditableProjectField = ExtractStrict<
   keyof UpdateProject,
   // Add more fields here as needed
-  'step'
+  'step' | 'mouStart' | 'mouEnd'
 >;
 
 interface ProjectFieldProps {
@@ -35,6 +35,8 @@ const fieldMapping: Record<
   EditableProjectField,
   ComponentType<ProjectFieldProps>
 > = {
+  mouStart: ({ props }) => <DateField {...props} label="Start Date" />,
+  mouEnd: ({ props }) => <DateField {...props} label="End Date" />,
   step: ({ props }) => (
     <AutocompleteField
       label="Step"
@@ -68,6 +70,8 @@ export const UpdateProjectDialog = ({
 
   const fullInitialValues: Except<UpdateProjectInput['project'], 'id'> = {
     step: project.step.value,
+    mouStart: project.mouStart.value,
+    mouEnd: project.mouEnd.value,
   };
 
   // Filter out irrelevant initial values so they don't get added to the mutation
@@ -75,7 +79,7 @@ export const UpdateProjectDialog = ({
 
   return (
     <DialogForm<UpdateProjectInput>
-      title="Update Project Step"
+      title="Update Project"
       closeLabel="Close"
       submitLabel="Save"
       {...props}

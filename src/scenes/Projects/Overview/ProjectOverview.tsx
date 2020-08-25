@@ -23,6 +23,7 @@ import { LanguageEngagementListItemCard } from '../../../components/LanguageEnga
 import { PartnershipSummary } from '../../../components/PartnershipSummary';
 import { ProjectMembersSummary } from '../../../components/ProjectMembersSummary';
 import { Redacted } from '../../../components/Redacted';
+import { Many } from '../../../util';
 import { CreateInternshipEngagement } from '../../Engagement/InternshipEngagement/Create/CreateInternshipEngagement';
 import { CreateLanguageEngagement } from '../../Engagement/LanguageEngagement/Create/CreateLanguageEngagement';
 import { useProjectCurrentDirectory, useUploadProjectFiles } from '../Files';
@@ -68,7 +69,7 @@ export const ProjectOverview: FC = () => {
   const formatNumber = useNumberFormatter();
 
   const [editState, editField, fieldsBeingEdited] = useDialog<
-    EditableProjectField
+    Many<EditableProjectField>
   >();
 
   const { directoryId } = useProjectCurrentDirectory();
@@ -203,6 +204,7 @@ export const ProjectOverview: FC = () => {
                 redacted="You do not have permission to view start/end dates"
                 children={formatDate.range}
                 empty="Start - End"
+                onClick={() => editField(['mouStart', 'mouEnd'])}
               />
             </Grid>
             <Grid item>
