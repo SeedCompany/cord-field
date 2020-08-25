@@ -62,12 +62,13 @@ export function AutocompleteField<
   label,
   variant,
   required,
-  getCompareBy = identity,
+  getCompareBy: getCompareByProp,
   options,
   ...props
 }: AutocompleteFieldProps<T, Multiple, DisableClearable, FreeSolo>) {
   type Val = Value<T, Multiple, DisableClearable, FreeSolo>;
 
+  const getCompareBy = getCompareByProp ?? identity;
   const name = useFieldName(nameProp);
   const { input: field, meta, rest: autocompleteProps } = useField<Val>(name, {
     ...props,
@@ -90,7 +91,7 @@ export function AutocompleteField<
   });
   const disabled = disabledProp ?? meta.submitting;
   const ref = useFocusOnEnabled(meta, disabled);
-  const getOptionLabel = props.getOptionLabel || identity;
+  const getOptionLabel = props.getOptionLabel ?? identity;
 
   return (
     <Autocomplete<T, Multiple, typeof required, FreeSolo>
