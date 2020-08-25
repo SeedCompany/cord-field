@@ -13,7 +13,7 @@ import {
   useFocusOnEnabled,
 } from './util';
 
-export type LookupFieldProps<
+export type AutocompleteFieldProps<
   T,
   Multiple extends boolean | undefined,
   DisableClearable extends boolean | undefined,
@@ -65,7 +65,7 @@ export function AutocompleteField<
   getCompareBy = identity,
   options,
   ...props
-}: LookupFieldProps<T, Multiple, DisableClearable, FreeSolo>) {
+}: AutocompleteFieldProps<T, Multiple, DisableClearable, FreeSolo>) {
   type Val = Value<T, Multiple, DisableClearable, FreeSolo>;
 
   const name = useFieldName(nameProp);
