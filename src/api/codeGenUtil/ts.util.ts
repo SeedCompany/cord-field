@@ -1,13 +1,19 @@
 import { PluginFunction, Types } from '@graphql-codegen/plugin-helpers/types';
 import { GraphQLSchema } from 'graphql';
 import {
+  CodeBlockWriter,
   IndentationText,
   Node,
   ObjectLiteralExpression,
+  OptionalKind,
+  printNode,
   Project,
   QuoteKind,
   SourceFile,
   SyntaxKind,
+  ts,
+  VariableDeclarationKind,
+  VariableDeclarationStructure,
 } from 'ts-morph';
 import { Promisable } from 'type-fest';
 
@@ -80,4 +86,40 @@ export const getPropertyAssignment = (
     return prop;
   }
   return undefined;
+};
+
+export const addExportedConst = (
+  file: SourceFile,
+  declaration: OptionalKind<VariableDeclarationStructure>
+) => file.addVariableStatement(exportedConst(declaration));
+
+export const exportedConst = (
+  declaration: OptionalKind<VariableDeclarationStructure>
+) => ({
+  isExported: true,
+  declarationKind: VariableDeclarationKind.Const,
+  declarations: [declaration],
+  leadingTrivia: '\n',
+  trailingTrivia: '\n',
+});
+
+export const writeArray = (
+  writer: CodeBlockWriter,
+  items: ReadonlyArray<ts.Expression | string>
+) => {
+  writer.writeLine('[');
+  for (const item of items) {
+    const str = typeof item === 'string' ? item : printNode(item);
+    writer.writeLine(str + ',');
+  }
+  writer.write(']');
+};
+
+export const createStringLiteral = (text: string, doubleQuote = false) => {
+  const literal = ts.createStringLiteral(text);
+  if (!doubleQuote) {
+    // @ts-expect-error this is undocumented
+    literal.singleQuote = true;
+  }
+  return literal;
 };
