@@ -54,18 +54,25 @@ export type ColumnData = Array<{
 }>;
 export type RowData = ReturnType<XLSX$Utils['sheet_to_json']>;
 
-export interface TableSpan {
-  startColumn: number;
-  startRow: number;
-  colspan: number;
-  rowspan: number;
+export interface TableCellSpanned {
+  index: number;
+  spanned: true;
 }
+
+export interface TableCellData {
+  index: number;
+  spanned: false;
+  rowspan: number;
+  colspan: number;
+  content: string | number;
+}
+
+export type TableRow = Array<TableCellSpanned | TableCellData>;
 
 export interface SheetData {
   name: string;
-  rows: RowData;
+  rows: TableRow[];
   columns: ColumnData;
-  spans: TableSpan[];
 }
 
 interface SpreadSheetViewProps {
@@ -73,10 +80,7 @@ interface SpreadSheetViewProps {
 }
 
 const RenderedSheet: FC<Omit<SheetData, 'name'>> = (props) => {
-  const { rows, columns, spans } = props;
-  console.log('rows', rows);
-  console.log('columns', columns);
-  console.log('spans', spans);
+  const { rows, columns } = props;
   return (
     <table>
       <tbody>
@@ -87,22 +91,22 @@ const RenderedSheet: FC<Omit<SheetData, 'name'>> = (props) => {
             return <th key={key}>{name}</th>;
           })}
         </tr>
-        {rows.map((row, rowIndex) => (
-          <tr key={rowIndex}>
-            <td key={rowIndex} className="table-header">
-              {rowIndex}
-            </td>
-            {columns.map((column, columnIndex) => {
-              console.log('columnIndex', columnIndex);
-              // const span = spans.find(
-              //   (span) =>
-              //     span.startColumn === columnIndex && span.startRow === rowIndex
-              // );
-              // const { rowspan, colspan } = span ?? { rowspan: 1, colspan: 1 };
-              return <td key={column.key}>{row[column.key]}</td>;
-            })}
-          </tr>
-        ))}
+        {rows.map((cells, rowIndex) => {
+          return (
+            <tr key={rowIndex}>
+              <th className="table-header">{rowIndex + 1}</th>
+              {cells.map((cell) => {
+                if (cell.spanned) return null;
+                const { index, rowspan, colspan, content } = cell;
+                return (
+                  <td key={index} rowSpan={rowspan} colSpan={colspan}>
+                    {content}
+                  </td>
+                );
+              })}
+            </tr>
+          );
+        })}
       </tbody>
     </table>
   );
@@ -131,11 +135,7 @@ export const SpreadsheetView: FC<SpreadSheetViewProps> = (props) => {
   const activeTab = previewPage - 1;
   return data.length === 1 ? (
     <div className={classes.container}>
-      <RenderedSheet
-        rows={data[0].rows}
-        columns={data[0].columns}
-        spans={data[0].spans}
-      />
+      <RenderedSheet rows={data[0].rows} columns={data[0].columns} />
     </div>
   ) : (
     <>
@@ -149,7 +149,7 @@ export const SpreadsheetView: FC<SpreadSheetViewProps> = (props) => {
         ))}
       </Tabs>
       {data.map((sheet, index) => {
-        const { name, rows, columns, spans } = sheet;
+        const { name, rows, columns } = sheet;
         return (
           <div
             key={name}
@@ -160,7 +160,7 @@ export const SpreadsheetView: FC<SpreadSheetViewProps> = (props) => {
             role="tabpanel"
           >
             {activeTab === index && columns.length > 0 ? (
-              <RenderedSheet rows={rows} columns={columns} spans={spans} />
+              <RenderedSheet rows={rows} columns={columns} />
             ) : null}
           </div>
         );

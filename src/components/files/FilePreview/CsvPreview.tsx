@@ -36,11 +36,21 @@ export const CsvPreview: FC<PreviewerProps> = (props) => {
         []
       )
     : [];
-  const rows = hasParsed ? csvData.slice(1) : [];
+  const rows = hasParsed
+    ? csvData.slice(1).map((row) =>
+        row.map((cell, index) => ({
+          index,
+          spanned: false,
+          rowspan: 1,
+          colspan: 1,
+          content: cell,
+        }))
+      )
+    : [];
 
   return previewLoading ? (
     <PreviewLoading />
   ) : !hasParsed ? null : (
-    <SpreadsheetView data={[{ name: 'Sheet1', rows, columns, spans: [] }]} />
+    <SpreadsheetView data={[{ name: 'Sheet1', rows, columns }]} />
   );
 };

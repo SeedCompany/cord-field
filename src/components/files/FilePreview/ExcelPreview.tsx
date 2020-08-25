@@ -2,7 +2,12 @@ import React, { FC, useCallback, useEffect, useState } from 'react';
 import XLSX from 'xlsx';
 import { PreviewerProps } from './FilePreview';
 import { PreviewLoading } from './PreviewLoading';
-import { SheetData, SpreadsheetView, TableSpan } from './SpreadsheetView';
+import {
+  RowData,
+  SheetData,
+  SpreadsheetView,
+  TableRow,
+} from './SpreadsheetView';
 
 export const ExcelPreview: FC<PreviewerProps> = (props) => {
   const { file, previewLoading, setPreviewLoading, setPreviewError } = props;
@@ -36,6 +41,15 @@ export const ExcelPreview: FC<PreviewerProps> = (props) => {
   );
 };
 
+interface TableSpan {
+  startColumn: number;
+  endColumn: number;
+  startRow: number;
+  endRow: number;
+  colspan: number;
+  rowspan: number;
+}
+
 async function extractExcelData(
   file: File
 ): Promise<{
@@ -55,7 +69,6 @@ async function extractExcelData(
             name: worksheetName,
             rows: [],
             columns: [],
-            spans: [],
           });
         }
 
@@ -66,43 +79,54 @@ async function extractExcelData(
           trims off empty rows and columns. So we need to figure out an
           offset to use when calculating where the merged cells actually
           occur in the resulting JSON. */
-        const rangeStart = usedCellRange.split(':')[0].split(/[A-Z]+/);
-        const rangeStartColumn = Array.from(rangeStart[0]);
+        const rangeStart = usedCellRange.split(':')[0];
+        const rangeStartColumn = rangeStart[0].match(/[A-Z]+/g)![0];
+        const rangeStartRow = rangeStart.split(rangeStartColumn)[1];
 
         const columnOffset =
-          rangeStartColumn.reduce(
+          Array.from(rangeStartColumn).reduce(
             (offset: number, component, index) => {
-              // 41 is 'A', and we want an `indexValue` for 'A' to be 1
-              const indexValue = component.charCodeAt(0) - 40;
+              // 65 is 'A', and we want an `indexValue` for 'A' to be 1
+              const indexValue = component.charCodeAt(0) - 64;
               /* For a `rangeStartColumn` value of 'AAA' and an `index` of 0,
             we want `power` to be 2. */
               const power = rangeStartColumn.length - index - 1;
-              const componentValue = 26 ** power + indexValue;
+              const componentValue =
+                power > 0 ? 26 ** power + indexValue : indexValue;
               return componentValue + offset;
             },
             0
             // We subtract 1 because spreadsheets start at 1 but we start at 0.
           ) - 1;
-        const rowOffset = Number(rangeStart[1]) - 1;
+        const rowOffset = Number(rangeStartRow) - 1;
         const spans =
           mergedCells?.reduce((spans: TableSpan[], merge) => {
             const startColumn = merge.s.c - columnOffset;
             const startRow = merge.s.r - rowOffset;
             const colspan = merge.e.c - merge.s.c + 1;
             const rowspan = merge.e.r - merge.s.r + 1;
+            const endColumn = startColumn + colspan - 1;
+            const endRow = startRow + rowspan - 1;
             const span: TableSpan = {
               startColumn,
+              endColumn,
+              endRow,
               startRow,
               colspan,
               rowspan,
             };
             return spans.concat(span);
           }, []) ?? [];
+        const convertedRows = XLSX.utils.sheet_to_json(worksheet, {
+          header: 1,
+          defval: '',
+        });
+        const rows = calculateMergedRows(convertedRows, spans);
+        const columns = formatColumns(usedCellRange);
         const newSheet = {
           name: worksheetName,
-          rows: XLSX.utils.sheet_to_json(worksheet, { header: 1, defval: '' }),
-          columns: formatColumns(usedCellRange),
-          spans,
+          rows,
+          columns,
         };
         return sheets.concat(newSheet);
       },
@@ -124,8 +148,106 @@ async function extractExcelData(
 
 function formatColumns(usedCellRange: string) {
   const cellAddress = XLSX.utils.decode_range(usedCellRange).e.c;
-  const columns = Array(cellAddress)
-    .fill(null)
+  const columns = Array(cellAddress + 1)
+    .fill(undefined)
     .map((_, index) => ({ name: XLSX.utils.encode_col(index), key: index }));
   return columns;
+}
+
+function calculateMergedRows(rows: RowData, spans: TableSpan[]): TableRow[] {
+  return rows.reduce((mergedRows: TableRow[], currentRow, rowIndex) => {
+    if (mergedRows[rowIndex]) {
+      return mergedRows;
+    }
+    const rowMerges: TableSpan[] = currentRow.reduce(
+      (merges: TableSpan[], _: any, ci: number) => {
+        const cellMerge = spans.find(
+          (span) =>
+            span.startColumn === ci &&
+            span.startRow === rowIndex &&
+            span.rowspan > 1
+        );
+        return !cellMerge ? merges : merges.concat(cellMerge);
+      },
+      []
+    );
+
+    const subsequentMergedRows = rowMerges.map((rowMerge) => {
+      const { rowspan, startColumn, colspan } = rowMerge;
+      const columnsToMerge = Array(colspan)
+        .fill(undefined)
+        .reduce(
+          (columns: number[], __, i) => columns.concat(startColumn + i),
+          []
+        );
+      return Array(rowspan - 1)
+        .fill(undefined)
+        .reduce((mergedRows, _, newRowIndex) => {
+          const originalRowData = rows[rowIndex + newRowIndex + 1];
+          const mergedRow = originalRowData.reduce(
+            (mergedRow: TableRow, cell: RowData[0], cellIndex: number) => {
+              const mergedCell = columnsToMerge.includes(cellIndex)
+                ? {
+                    index: cellIndex,
+                    spanned: true as const,
+                  }
+                : {
+                    index: cellIndex,
+                    spanned: false as const,
+                    rowspan: 1,
+                    colspan: 1,
+                    content: String(cell),
+                  };
+              return mergedRow.concat(mergedCell);
+            },
+            []
+          );
+          return [...mergedRows, mergedRow];
+        }, []);
+    });
+
+    const mergedColumns = currentRow.reduce(
+      (mergedColumns: TableRow, column: any, columnIndex: number) => {
+        if (mergedColumns[columnIndex]?.spanned) {
+          return mergedColumns;
+        }
+
+        const columnMerge = spans.find(
+          (span) =>
+            span.startColumn === columnIndex && span.startRow === rowIndex
+        );
+
+        if (!columnMerge) {
+          return [
+            ...mergedColumns,
+            {
+              index: columnIndex,
+              spanned: false as const,
+              rowspan: 1,
+              colspan: 1,
+              content: column,
+            },
+          ];
+        }
+
+        const { colspan, rowspan } = columnMerge;
+        const currentColumnData = {
+          index: columnIndex,
+          spanned: false as const,
+          rowspan,
+          colspan,
+          content: column,
+        };
+        const spannedColumns = Array(colspan - 1)
+          .fill(undefined)
+          .map((_, index) => ({
+            index,
+            spanned: true as const,
+          }));
+        return [...mergedColumns, currentColumnData, ...spannedColumns];
+      },
+      []
+    );
+    return [...mergedRows, mergedColumns, ...subsequentMergedRows.flat()];
+  }, []);
 }
