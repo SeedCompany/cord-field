@@ -26,7 +26,7 @@ import { Redacted } from '../../../components/Redacted';
 import { CreateInternshipEngagement } from '../../Engagement/InternshipEngagement/Create/CreateInternshipEngagement';
 import { CreateLanguageEngagement } from '../../Engagement/LanguageEngagement/Create/CreateLanguageEngagement';
 import { useProjectCurrentDirectory, useUploadProjectFiles } from '../Files';
-import { UpdateProjectStepDialog } from '../Update';
+import { UpdateProjectDialog } from '../Update';
 import { useProjectOverviewQuery } from './ProjectOverview.generated';
 
 const useStyles = makeStyles(({ spacing, breakpoints, palette }) => ({
@@ -301,7 +301,7 @@ export const ProjectOverview: FC = () => {
           )}
         </div>
       )}
-      <UpdateProjectStepDialog
+      <UpdateProjectDialog
         {...editProjectDialogState}
         project={data?.project}
       />
