@@ -43,9 +43,7 @@ export const ExcelPreview: FC<PreviewerProps> = (props) => {
 
 interface TableSpan {
   startColumn: number;
-  endColumn: number;
   startRow: number;
-  endRow: number;
   colspan: number;
   rowspan: number;
 }
@@ -105,12 +103,8 @@ async function extractExcelData(
             const startRow = merge.s.r - rowOffset;
             const colspan = merge.e.c - merge.s.c + 1;
             const rowspan = merge.e.r - merge.s.r + 1;
-            const endColumn = startColumn + colspan - 1;
-            const endRow = startRow + rowspan - 1;
             const span: TableSpan = {
               startColumn,
-              endColumn,
-              endRow,
               startRow,
               colspan,
               rowspan,
