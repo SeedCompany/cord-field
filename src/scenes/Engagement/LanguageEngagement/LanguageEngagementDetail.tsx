@@ -150,7 +150,7 @@ export const LanguageEngagementDetail: FC<EngagementQuery> = ({
             />
           </Grid>
           <Grid item>
-            <DataButton>
+            <DataButton onClick={() => show('status')}>
               {displayEngagementStatus(engagement.status)}
             </DataButton>
           </Grid>
