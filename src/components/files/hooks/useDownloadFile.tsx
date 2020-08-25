@@ -1,7 +1,7 @@
-import FileSaver from 'file-saver';
 import { useSnackbar } from 'notistack';
 import { PartialDeep } from 'type-fest';
 import { Directory, File, FileVersion } from '../../../api';
+import { saveAs } from '../../../util/FileSaver';
 import { useGetFileDownloadUrl } from './useGetFileDownloadUrl';
 
 type DownloadableFile = PartialDeep<Directory | File | FileVersion>;
@@ -28,7 +28,9 @@ export const useDownloadFile = (): ((file: DownloadableFile) => void) => {
     if (!isDirectory(file)) {
       try {
         const downloadUrl = await getFileDownloadUrl(file.id!);
-        if (downloadUrl) FileSaver.saveAs(downloadUrl, file.name ?? undefined);
+        if (downloadUrl) {
+          saveAs(downloadUrl, file.name ?? undefined, { skipCorsCheck: true });
+        }
       } catch {
         showSnackbarError();
       }
