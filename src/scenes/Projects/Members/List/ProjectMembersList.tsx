@@ -9,10 +9,12 @@ import { FC } from 'react';
 import * as React from 'react';
 import { useParams } from 'react-router-dom';
 import { Breadcrumb } from '../../../../components/Breadcrumb';
+import { useDialog } from '../../../../components/Dialog';
 import { Fab } from '../../../../components/Fab';
 import { ProjectBreadcrumb } from '../../../../components/ProjectBreadcrumb';
 import { ProjectMemberCard } from '../../../../components/ProjectMemberCard';
 import { listOrPlaceholders } from '../../../../util';
+import { CreateProjectMember } from '../Create/CreateProjectMember';
 import { useProjectMembersQuery } from './ProjectMembers.generated';
 
 const useStyles = makeStyles(({ spacing, breakpoints }) => ({
@@ -44,6 +46,10 @@ export const ProjectMembersList: FC = () => {
   });
   const members = data?.project.team;
 
+  const [
+    createProjectMemberDialogState,
+    openCreateProjectMemberDialog,
+  ] = useDialog();
   return (
     <div className={classes.root}>
       <Breadcrumbs>
@@ -56,11 +62,20 @@ export const ProjectMembersList: FC = () => {
         </Typography>
         {(!members || members.canCreate) && (
           <Tooltip title="Add Team Member">
-            <Fab color="error" aria-label="Add Team Member" loading={!members}>
+            <Fab
+              color="error"
+              aria-label="Add Team Member"
+              loading={!members}
+              onClick={openCreateProjectMemberDialog}
+            >
               <Add />
             </Fab>
           </Tooltip>
         )}
+        <CreateProjectMember
+          {...createProjectMemberDialogState}
+          projectId={projectId}
+        />
       </div>
       {members?.canRead === false ? (
         <Typography>
