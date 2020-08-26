@@ -19,6 +19,7 @@ function Session({ user }: { user?: SessionUser | null }) {
         query: SessionDocument,
         data: {
           session: {
+            __typename: 'SessionOutput',
             user,
           },
         },
