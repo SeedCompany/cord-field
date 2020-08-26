@@ -8,12 +8,15 @@ import {
 } from '../../../../components/Dialog/DialogForm';
 import { SubmitError } from '../../../../components/form';
 import { AutocompleteField } from '../../../../components/form/AutocompleteField';
-import { useUpdateProjectMemberMutation } from './UpdateProjectMember.generated';
+import {
+  useGetUserRolesQuery,
+  useUpdateProjectMemberMutation,
+} from './UpdateProjectMember.generated';
 
 interface DialogValues {
   projectMember: {
     id: string;
-    roles?: Role[];
+    roles?: readonly Role[];
   };
 }
 
@@ -22,6 +25,8 @@ type UpdateProjectMemberProps = Except<
   'onSubmit' | 'initialValues'
 > & {
   id: string;
+  userId: string;
+  userRoles?: readonly Role[];
 };
 
 const useStyles = makeStyles({
@@ -32,11 +37,19 @@ const useStyles = makeStyles({
 
 export const UpdateProjectMember = ({
   id,
+  userId,
+  userRoles,
   ...props
 }: UpdateProjectMemberProps) => {
   const classes = useStyles();
   const [updateProjectMember] = useUpdateProjectMemberMutation();
 
+  const { data } = useGetUserRolesQuery({
+    variables: {
+      userId,
+    },
+  });
+  const availableRoles = data?.user.roles.value ?? [];
   return (
     <DialogForm<DialogValues>
       title="Update Team Member Role"
@@ -47,17 +60,10 @@ export const UpdateProjectMember = ({
       initialValues={{
         projectMember: {
           id,
-          roles: [],
+          roles: userRoles ?? [],
         },
       }}
       onSubmit={async (input) => {
-        // const input = {
-        //   projectMember: {
-        //     userId: userId!.id,
-        //     ...rest,
-        //   },
-        // };
-
         await updateProjectMember({ variables: { input } });
       }}
     >
@@ -70,9 +76,7 @@ export const UpdateProjectMember = ({
           getOptionLabel={displayRole}
           name="projectMember.roles"
           label="Roles"
-          //   getOptionDisabled={(option) =>
-          //     !!userRoles && !userRoles.includes(option)
-          //   }
+          getOptionDisabled={(option) => !availableRoles.includes(option)}
           variant="outlined"
         />
       </Container>
