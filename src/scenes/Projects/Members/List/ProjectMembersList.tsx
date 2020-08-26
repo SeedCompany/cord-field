@@ -8,6 +8,7 @@ import { Add } from '@material-ui/icons';
 import { FC } from 'react';
 import * as React from 'react';
 import { useParams } from 'react-router-dom';
+import { Role } from '../../../../api';
 import { Breadcrumb } from '../../../../components/Breadcrumb';
 import { useDialog } from '../../../../components/Dialog';
 import { Fab } from '../../../../components/Fab';
@@ -15,6 +16,7 @@ import { ProjectBreadcrumb } from '../../../../components/ProjectBreadcrumb';
 import { ProjectMemberCard } from '../../../../components/ProjectMemberCard';
 import { listOrPlaceholders } from '../../../../util';
 import { CreateProjectMember } from '../Create/CreateProjectMember';
+import { UpdateProjectMember } from '../Update';
 import { useProjectMembersQuery } from './ProjectMembers.generated';
 
 const useStyles = makeStyles(({ spacing, breakpoints }) => ({
@@ -50,6 +52,17 @@ export const ProjectMembersList: FC = () => {
     createProjectMemberDialogState,
     openCreateProjectMemberDialog,
   ] = useDialog();
+
+  const [
+    updateProjectMemberDialogState,
+    openUpdateProjectMemberDialog,
+    projectMemberProps,
+  ] = useDialog<{
+    projectMemberId?: string;
+    userId?: string;
+    userRoles?: readonly Role[];
+  }>();
+
   return (
     <div className={classes.root}>
       <Breadcrumbs>
@@ -87,9 +100,22 @@ export const ProjectMembersList: FC = () => {
             key={item?.id ?? index}
             projectMember={item}
             className={classes.item}
+            onEdit={() =>
+              openUpdateProjectMemberDialog({
+                projectMemberId: item?.id,
+                userId: item?.user.value?.id,
+                userRoles: item?.roles.value,
+              })
+            }
           />
         ))
       )}
+      <UpdateProjectMember
+        {...updateProjectMemberDialogState}
+        id={projectMemberProps?.projectMemberId ?? ''}
+        userId={projectMemberProps?.userId ?? ''}
+        userRoles={projectMemberProps?.userRoles}
+      />
     </div>
   );
 };
