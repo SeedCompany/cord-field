@@ -1,18 +1,17 @@
-import { Typography } from '@material-ui/core';
-import React, { Fragment } from 'react';
+import React from 'react';
 import { Except } from 'type-fest';
 import {
   displayProjectStep,
   displayStatus,
   UpdateProjectInput,
 } from '../../../api';
-import { projectStepToStatusMap } from '../../../api/projectSteps';
+import { projectStatusFromStep, projectSteps } from '../../../api/projectSteps';
 import {
   DialogForm,
   DialogFormProps,
 } from '../../../components/Dialog/DialogForm';
-import { RadioField, RadioOption, SubmitError } from '../../../components/form';
-import { entries } from '../../../util';
+import { SubmitError } from '../../../components/form';
+import { AutocompleteField } from '../../../components/form/AutocompleteField';
 import { ProjectOverviewFragment } from '../Overview/ProjectOverview.generated';
 import { useUpdateProjectMutation } from './UpdateProject.generated';
 
@@ -35,6 +34,10 @@ export const UpdateProjectDialog = ({
       closeLabel="Close"
       submitLabel="Save"
       onlyDirtySubmit
+      DialogProps={{
+        fullWidth: true,
+        maxWidth: 'xs',
+      }}
       {...props}
       initialValues={{
         project: {
@@ -47,20 +50,17 @@ export const UpdateProjectDialog = ({
       }}
     >
       <SubmitError />
-      <RadioField name="project.step">
-        {entries(projectStepToStatusMap).map(([status, steps]) => (
-          <Fragment key={status}>
-            <Typography variant="h4">{displayStatus(status)}</Typography>
-            {steps.map((step) => (
-              <RadioOption
-                key={step}
-                label={displayProjectStep(step)}
-                value={step}
-              />
-            ))}
-          </Fragment>
-        ))}
-      </RadioField>
+      <AutocompleteField
+        name="project.step"
+        required
+        options={projectSteps}
+        groupBy={(step) => displayStatus(projectStatusFromStep[step])}
+        getOptionLabel={displayProjectStep}
+        variant="outlined"
+        autoFocus
+        openOnFocus
+        autoComplete
+      />
     </DialogForm>
   );
 };

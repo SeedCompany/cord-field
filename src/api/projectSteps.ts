@@ -1,6 +1,7 @@
+import { entries, mapFromList } from '../util';
 import { ProjectStatus, ProjectStep } from './schema.generated';
 
-export const projectStepToStatusMap: Record<ProjectStatus, ProjectStep[]> = {
+export const projectStatusToStepsMap: Record<ProjectStatus, ProjectStep[]> = {
   InDevelopment: [
     'EarlyConversations',
     'PrepForConsultantEndorsement',
@@ -22,3 +23,13 @@ export const projectStepToStatusMap: Record<ProjectStatus, ProjectStep[]> = {
   Stopped: ['Suspended', 'Rejected', 'Terminated'],
   Finished: ['DidNotDevelop', 'Completed'],
 };
+
+export const projectSteps = Object.values(projectStatusToStepsMap).flat();
+
+export const projectStatusFromStep = entries(projectStatusToStepsMap).reduce(
+  (map, [status, steps]) => ({
+    ...map,
+    ...mapFromList(steps, (step) => [step, status]),
+  }),
+  {}
+) as Record<ProjectStep, ProjectStatus>;
