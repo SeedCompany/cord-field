@@ -42,7 +42,10 @@ export type LookupFieldProps<
   FieldConfig<Value<T, Multiple, DisableClearable, false>>,
   'multiple' | 'allowNull' | 'parse' | 'format'
 > &
-  Pick<TextFieldProps, 'helperText' | 'label' | 'required' | 'autoFocus'> & {
+  Pick<
+    TextFieldProps,
+    'helperText' | 'label' | 'required' | 'autoFocus' | 'variant'
+  > & {
     name: string;
     useLookup: LookupQueryHook<T>;
     getCompareBy: (item: T) => any;
@@ -90,6 +93,7 @@ export function LookupField<
   getInitialValues,
   getCompareBy,
   getOptionLabel: getOptionLabelProp,
+  variant,
   ...props
 }: LookupFieldProps<T, Multiple, DisableClearable, CreateFormValues>) {
   const freeSolo = !!CreateDialogForm;
@@ -272,7 +276,7 @@ export function LookupField<
           inputRef={ref}
           error={showError(meta)}
           autoFocus={autoFocus}
-          // variant="outlined" TODO maybe for multiple?
+          variant={variant}
         />
       )}
     />
