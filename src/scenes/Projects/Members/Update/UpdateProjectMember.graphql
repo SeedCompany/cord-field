@@ -1,7 +1,17 @@
 mutation UpdateProjectMember($input: UpdateProjectMemberInput!) {
   updateProjectMember(input: $input) {
     projectMember {
-      id
+      ...ProjectMemberCard
+    }
+  }
+}
+
+query GetUserRoles($userId: ID!) {
+  user(id: $userId) {
+    id
+    roles {
+      canRead
+      value
     }
   }
 }
