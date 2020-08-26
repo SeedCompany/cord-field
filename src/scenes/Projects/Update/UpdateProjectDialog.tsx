@@ -1,5 +1,5 @@
 import { Typography } from '@material-ui/core';
-import React from 'react';
+import React, { Fragment } from 'react';
 import { Except } from 'type-fest';
 import {
   displayProjectStep,
@@ -49,7 +49,7 @@ export const UpdateProjectDialog = ({
       <SubmitError />
       <RadioField name="project.step">
         {entries(projectStepToStatusMap).map(([status, steps]) => (
-          <>
+          <Fragment key={status}>
             <Typography variant="h4">{displayStatus(status)}</Typography>
             {steps.map((step) => (
               <RadioOption
@@ -58,7 +58,7 @@ export const UpdateProjectDialog = ({
                 value={step}
               />
             ))}
-          </>
+          </Fragment>
         ))}
       </RadioField>
     </DialogForm>
