@@ -54,7 +54,7 @@ export function AutocompleteField<
 >({
   name: nameProp,
   multiple,
-  defaultValue,
+  defaultValue: defaultValueProp,
   disabled: disabledProp,
   ChipProps,
   autoFocus,
@@ -69,12 +69,15 @@ export function AutocompleteField<
   type Val = Value<T, Multiple, DisableClearable, FreeSolo>;
 
   const getCompareBy = getCompareByProp ?? identity;
+  const defaultValue =
+    defaultValueProp ?? ((multiple ? emptyArray : null) as Val);
+
   const name = useFieldName(nameProp);
   const { input: field, meta, rest: autocompleteProps } = useField<Val>(name, {
     ...props,
     required,
     allowNull: !multiple,
-    defaultValue: (multiple ? emptyArray : null) as Val,
+    defaultValue,
     isEqual: compareNullable((a, b) =>
       multiple
         ? areListsEqual(a.map(getCompareBy), b.map(getCompareBy))
@@ -112,7 +115,8 @@ export function AutocompleteField<
           />
         ))
       }
-      value={field.value}
+      // FF for some reason doesn't handle defaultValue correctly
+      value={(field.value as Val | '') || defaultValue}
       onBlur={field.onBlur}
       onFocus={field.onFocus}
       onChange={(_, value) => {
