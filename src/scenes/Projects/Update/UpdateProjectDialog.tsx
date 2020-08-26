@@ -4,8 +4,6 @@ import { Except } from 'type-fest';
 import {
   displayProjectStep,
   displayStatus,
-  ProjectStatus,
-  ProjectStep,
   UpdateProjectInput,
 } from '../../../api';
 import { projectStepToStatusMap } from '../../../api/projectSteps';
@@ -14,6 +12,7 @@ import {
   DialogFormProps,
 } from '../../../components/Dialog/DialogForm';
 import { RadioField, RadioOption, SubmitError } from '../../../components/form';
+import { entries } from '../../../util';
 import { ProjectOverviewFragment } from '../Overview/ProjectOverview.generated';
 import { useUpdateProjectMutation } from './UpdateProject.generated';
 
@@ -49,12 +48,10 @@ export const UpdateProjectDialog = ({
     >
       <SubmitError />
       <RadioField name="project.step">
-        {(Object.entries(projectStepToStatusMap) as Array<
-          [ProjectStatus, ProjectStep[]]
-        >).map(([status, stepsArr]) => (
+        {entries(projectStepToStatusMap).map(([status, steps]) => (
           <>
             <Typography variant="h4">{displayStatus(status)}</Typography>
-            {stepsArr.map((step) => (
+            {steps.map((step) => (
               <RadioOption
                 key={step}
                 label={displayProjectStep(step)}
