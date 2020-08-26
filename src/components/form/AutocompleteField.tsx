@@ -1,7 +1,7 @@
 import { Chip, ChipProps, TextField, TextFieldProps } from '@material-ui/core';
 import { Autocomplete, AutocompleteProps, Value } from '@material-ui/lab';
 import { identity } from 'lodash';
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Except } from 'type-fest';
 import { useFieldName } from './FieldGroup';
 import { FieldConfig, useField } from './useField';
@@ -95,6 +95,16 @@ export function AutocompleteField<
   const disabled = disabledProp ?? meta.submitting;
   const ref = useFocusOnEnabled(meta, disabled);
   const getOptionLabel = props.getOptionLabel ?? identity;
+
+  const shouldSelect = autoFocus && (props.selectOnFocus ?? !props.freeSolo);
+  useEffect(() => {
+    if (shouldSelect && ref.current) {
+      setTimeout(
+        () => (ref.current as HTMLInputElement | undefined)?.select(),
+        100
+      );
+    }
+  }, [shouldSelect, ref]);
 
   return (
     <Autocomplete<T, Multiple, typeof required, FreeSolo>
