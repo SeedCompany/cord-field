@@ -3,6 +3,7 @@ fragment ProjectMemberCard on ProjectMember {
   createdAt
   user {
     value {
+      id
       fullName
       avatarLetters
     }
