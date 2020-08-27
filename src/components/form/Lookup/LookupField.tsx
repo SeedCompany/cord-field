@@ -8,7 +8,7 @@ import {
 } from '@material-ui/core';
 import { Autocomplete, AutocompleteProps, Value } from '@material-ui/lab';
 import { camelCase } from 'camel-case';
-import { identity, last, upperFirst } from 'lodash';
+import { last, upperFirst } from 'lodash';
 import React, { ComponentType, useEffect, useState } from 'react';
 import { Except, Merge, SetOptional } from 'type-fest';
 import { isNetworkRequestInFlight } from '../../../api';
@@ -52,6 +52,7 @@ export type LookupFieldProps<
       Except<DialogFormProps<CreateFormValues, T>, 'onSubmit'>
     >;
     getInitialValues?: (val: string) => Partial<CreateFormValues>;
+    getOptionLabel: (option: T) => string | null | undefined;
   } & Except<
     AutocompleteProps<T, Multiple, DisableClearable, FreeSolo>,
     | 'value'
@@ -63,6 +64,7 @@ export type LookupFieldProps<
     | 'filterSelectedOptions'
     | 'options'
     | 'ChipProps'
+    | 'getOptionLabel'
   >;
 
 const emptyArray = [] as const;
@@ -87,6 +89,7 @@ export function LookupField<
   CreateDialogForm,
   getInitialValues,
   getCompareBy,
+  getOptionLabel: getOptionLabelProp,
   ...props
 }: LookupFieldProps<
   T,
@@ -112,10 +115,11 @@ export function LookupField<
   const disabled = disabledProp ?? meta.submitting;
   const ref = useFocusOnEnabled(meta, disabled);
 
+  const getOptionLabel = (val: T | string) =>
+    typeof val === 'string' ? val : getOptionLabelProp(val) ?? '';
+
   const selectedText =
-    multiple || !field.value
-      ? ''
-      : (props.getOptionLabel || identity)(field.value as T) ?? '';
+    multiple || !field.value ? '' : getOptionLabel(field.value as T);
 
   const [input, setInput] = useState(selectedText);
 
@@ -170,17 +174,18 @@ export function LookupField<
           <Chip
             variant="outlined"
             {...ChipProps}
-            label={props.getOptionLabel?.(option) ?? option}
+            label={getOptionLabel(option)}
             {...getTagProps({ index })}
           />
         ))
       }
       options={options}
+      getOptionLabel={getOptionLabel}
       renderOption={(option) => {
         if (typeof option === 'string') {
           return `Add "${option}"`;
         }
-        return props.getOptionLabel?.(option) ?? option;
+        return getOptionLabel(option);
       }}
       filterOptions={(options, params) => {
         // If freeSolo we can add new options i.e. 'Add "X"'.
@@ -192,15 +197,9 @@ export function LookupField<
           ...(multiple ? (field.value as T[]) : []),
         ];
 
-        const allOptionLabels = props.getOptionLabel
-          ? allOptions.map(props.getOptionLabel)
-          : // @ts-expect-error If getOptionLabel is not given, we expect T to be a string.
-            (allOptions as string[]);
+        const allLabels = allOptions.map(getOptionLabel);
 
-        if (
-          params.inputValue === '' ||
-          allOptionLabels.includes(params.inputValue)
-        ) {
+        if (params.inputValue === '' || allLabels.includes(params.inputValue)) {
           return options;
         }
         // If the freeSolo value doesn't match an existing or previously selected option, add it to the list.
@@ -298,7 +297,7 @@ LookupField.createFor = <T extends { id: string }, CreateFormValues = never>({
         FreeSolo,
         CreateFormValues
       >,
-      'useLookup' | 'getCompareBy'
+      'useLookup' | 'getCompareBy' | 'getOptionLabel'
     >
   ) {
     return (
