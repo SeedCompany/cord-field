@@ -11,7 +11,6 @@ export const StoryField = LookupField.createFor<Story, CreateStoryInput>({
   useLookup: useStoryLookupLazyQuery,
   getOptionLabel: (option) => option.name.value ?? '',
   CreateDialogForm: CreateStory,
-  freeSolo: true,
   getInitialValues: (value) => ({
     story: {
       name: value,

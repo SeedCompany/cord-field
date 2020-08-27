@@ -11,7 +11,6 @@ export const SongField = LookupField.createFor<Song, CreateSongInput>({
   useLookup: useSongLookupLazyQuery,
   getOptionLabel: (option) => option.name.value ?? '',
   CreateDialogForm: CreateSong,
-  freeSolo: true,
   getInitialValues: (value) => ({
     song: {
       name: value,

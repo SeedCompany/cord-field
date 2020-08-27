@@ -37,10 +37,9 @@ export type LookupFieldProps<
   T,
   Multiple extends boolean | undefined,
   DisableClearable extends boolean | undefined,
-  FreeSolo extends boolean | undefined,
   CreateFormValues
 > = Except<
-  FieldConfig<Value<T, Multiple, DisableClearable, FreeSolo>>,
+  FieldConfig<Value<T, Multiple, DisableClearable, false>>,
   'multiple' | 'allowNull' | 'parse' | 'format'
 > &
   Pick<TextFieldProps, 'helperText' | 'label' | 'required' | 'autoFocus'> & {
@@ -54,10 +53,11 @@ export type LookupFieldProps<
     getInitialValues?: (val: string) => Partial<CreateFormValues>;
     getOptionLabel: (option: T) => string | null | undefined;
   } & Except<
-    AutocompleteProps<T, Multiple, DisableClearable, FreeSolo>,
+    AutocompleteProps<T, Multiple, DisableClearable, false>,
     | 'value'
     | 'onChange'
     | 'defaultValue'
+    | 'freeSolo'
     | 'renderInput'
     | 'renderTags'
     | 'loading'
@@ -73,7 +73,6 @@ export function LookupField<
   T,
   Multiple extends boolean | undefined,
   DisableClearable extends boolean | undefined,
-  FreeSolo extends boolean | undefined,
   CreateFormValues = never
 >({
   name: nameProp,
@@ -91,14 +90,9 @@ export function LookupField<
   getCompareBy,
   getOptionLabel: getOptionLabelProp,
   ...props
-}: LookupFieldProps<
-  T,
-  Multiple,
-  DisableClearable,
-  FreeSolo,
-  CreateFormValues
->) {
-  type Val = Value<T, Multiple, DisableClearable, FreeSolo>;
+}: LookupFieldProps<T, Multiple, DisableClearable, CreateFormValues>) {
+  const freeSolo = !!CreateDialogForm;
+  type Val = Value<T, Multiple, DisableClearable, false>;
 
   const name = useFieldName(nameProp);
   const { input: field, meta, rest: autocompleteProps } = useField<Val>(name, {
@@ -162,7 +156,7 @@ export function LookupField<
     ...((multiple ? field.value : []) as T[]),
   ];
   const autocomplete = (
-    <Autocomplete<T, Multiple, DisableClearable, FreeSolo>
+    <Autocomplete<T, Multiple, DisableClearable, typeof freeSolo>
       getOptionSelected={(a, b) => getCompareBy(a) === getCompareBy(b)}
       loadingText={<CircularProgress size={16} />}
       // Otherwise it looks like an item is selected when it's just a search value
@@ -189,6 +183,7 @@ export function LookupField<
       }
       options={options}
       getOptionLabel={getOptionLabel}
+      freeSolo={freeSolo}
       renderOption={(option) => {
         if (typeof option === 'string') {
           return `Add "${option}"`;
@@ -197,7 +192,7 @@ export function LookupField<
       }}
       filterOptions={(options, params) => {
         // If freeSolo we can add new options i.e. 'Add "X"'.
-        if (!props.freeSolo || loading) return options;
+        if (!freeSolo || loading) return options;
 
         const allOptions = [
           ...options,
@@ -227,7 +222,7 @@ export function LookupField<
       }}
       onChange={(_, value) => {
         const lastItem = multiple ? last(value as T[]) : value;
-        if (typeof lastItem === 'string' && props.freeSolo) {
+        if (typeof lastItem === 'string' && freeSolo) {
           createDialogItem(lastItem);
           // Don't store the new value as a string in FF.
           // Wait till it's successfully created and returned from the API.
@@ -280,7 +275,7 @@ LookupField.createFor = <T extends { id: string }, CreateFormValues = never>({
 }: Merge<
   Except<
     SetOptional<
-      LookupFieldProps<T, any, any, any, CreateFormValues>,
+      LookupFieldProps<T, any, any, CreateFormValues>,
       'name' | 'getCompareBy'
     >,
     'value' | 'defaultValue'
@@ -291,22 +286,15 @@ LookupField.createFor = <T extends { id: string }, CreateFormValues = never>({
 >) => {
   const Comp = function <
     Multiple extends boolean | undefined,
-    DisableClearable extends boolean | undefined,
-    FreeSolo extends boolean | undefined
+    DisableClearable extends boolean | undefined
   >(
     props: Except<
-      LookupFieldProps<
-        T,
-        Multiple,
-        DisableClearable,
-        FreeSolo,
-        CreateFormValues
-      >,
+      LookupFieldProps<T, Multiple, DisableClearable, CreateFormValues>,
       'useLookup' | 'getCompareBy' | 'getOptionLabel'
     >
   ) {
     return (
-      <LookupField<T, Multiple, DisableClearable, FreeSolo, CreateFormValues>
+      <LookupField<T, Multiple, DisableClearable, CreateFormValues>
         getCompareBy={(item) => item.id}
         {...(config as any)}
         {...props}
