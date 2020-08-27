@@ -189,7 +189,7 @@ export function LookupField<
       }}
       filterOptions={(options, params) => {
         // If freeSolo we can add new options i.e. 'Add "X"'.
-        if (!props.freeSolo) return options;
+        if (!props.freeSolo || loading) return options;
 
         const allOptions = [
           ...options,
