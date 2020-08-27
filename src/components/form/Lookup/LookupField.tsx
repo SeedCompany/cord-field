@@ -167,6 +167,9 @@ export function LookupField<
       loadingText={<CircularProgress size={16} />}
       // Otherwise it looks like an item is selected when it's just a search value
       clearOnBlur
+      // Auto highlight the first option so a valid lookup item isn't
+      // interrupted as free solo selection
+      autoHighlight
       {...autocompleteProps}
       disabled={disabled}
       // FF also has multiple and defaultValue
