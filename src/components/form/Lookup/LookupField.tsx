@@ -152,8 +152,8 @@ export function LookupField<
     });
   }, [input, fetch, field.value, multiple, selectedText]);
 
-  // Only open popup if searching for item
-  const open = Boolean(input) && input !== selectedText;
+  // Only open popup if searching for item & focused
+  const open = Boolean(input) && input !== selectedText && meta.active;
 
   const options = [
     ...(data?.search.items ?? []),
