@@ -226,6 +226,10 @@ export function LookupField<
       onChange={(_, value) => {
         const lastItem = multiple ? last(value as T[]) : value;
         if (typeof lastItem === 'string' && freeSolo) {
+          if (loading) {
+            // Prevent creating while loading
+            return;
+          }
           createDialogItem(lastItem);
           // Don't store the new value as a string in FF.
           // Wait till it's successfully created and returned from the API.
