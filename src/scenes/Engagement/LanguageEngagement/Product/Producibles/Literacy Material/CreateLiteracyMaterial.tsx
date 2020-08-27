@@ -41,7 +41,7 @@ export const CreateLiteracyMaterial = (props: CreateLiteracyMaterialProps) => {
       <SubmitError />
       <TextField
         name="literacyMaterial.name"
-        label="LiteracyMaterial"
+        label="Name"
         placeholder="Enter literacy material name"
         autoFocus
       />

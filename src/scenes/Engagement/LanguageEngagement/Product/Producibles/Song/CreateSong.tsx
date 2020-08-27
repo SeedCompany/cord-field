@@ -33,12 +33,12 @@ export const CreateSong = (props: CreateSongProps) => {
 
         return data!.createSong.song;
       }}
-      title="Create song"
+      title="Create Song"
     >
       <SubmitError />
       <TextField
         name="song.name"
-        label="song"
+        label="Name"
         placeholder="Enter song name"
         autoFocus
       />

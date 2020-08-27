@@ -38,7 +38,7 @@ export const CreateStory = (props: CreateStoryProps) => {
       <SubmitError />
       <TextField
         name="story.name"
-        label="Story"
+        label="Name"
         placeholder="Enter story name"
         autoFocus
       />
