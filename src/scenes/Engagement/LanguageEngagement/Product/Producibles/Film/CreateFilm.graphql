@@ -1,0 +1,20 @@
+mutation CreateFilm($input: CreateFilmInput!) {
+  createFilm(input: $input) {
+    film {
+      id
+      name {
+        value
+      }
+    }
+  }
+}
+query Films {
+  films {
+    items {
+      id
+      name {
+        value
+      }
+    }
+  }
+}

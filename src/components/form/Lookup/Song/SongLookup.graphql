@@ -1,0 +1,16 @@
+query SongLookup($query: String!) {
+  search(input: { query: $query, type: [Song] }) {
+    items {
+      ... on Song {
+        ...SongLookupItem
+      }
+    }
+  }
+}
+
+fragment SongLookupItem on Song {
+  id
+  name {
+    value
+  }
+}

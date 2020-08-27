@@ -1,10 +1,11 @@
-import { LanguageLookupItem } from '.';
 import { LookupField } from '../../index';
-import { useLanguageLookupLazyQuery } from './LanguageLookup.generated';
+import {
+  LanguageLookupItemFragment as Language,
+  useLanguageLookupLazyQuery,
+} from './LanguageLookup.generated';
 
-export const LanguageField = LookupField.createFor<LanguageLookupItem>({
+export const LanguageField = LookupField.createFor<Language>({
   resource: 'Language',
   useLookup: useLanguageLookupLazyQuery,
-  getOptionLabel: (option) =>
-    option.name.value ?? option.displayName.value ?? '',
+  getOptionLabel: (option) => option.name.value ?? option.displayName.value,
 });

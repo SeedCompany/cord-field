@@ -13,17 +13,14 @@ import {
 export const CountryField = LookupField.createFor<CountryLookupItem>({
   resource: 'Country',
   useLookup: useCountryLookupLazyQuery,
-  getOptionLabel: (option) => option.name.value ?? '',
 });
 
 export const RegionField = LookupField.createFor<RegionLookupItem>({
   resource: 'Region',
   useLookup: useRegionLookupLazyQuery,
-  getOptionLabel: (option) => option.name.value ?? '',
 });
 
 export const ZoneField = LookupField.createFor<ZoneLookupItem>({
   resource: 'Zone',
   useLookup: useZoneLookupLazyQuery,
-  getOptionLabel: (option) => option.name.value ?? '',
 });

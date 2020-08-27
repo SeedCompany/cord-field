@@ -1,0 +1,16 @@
+query LiteracyMaterialLookup($query: String!) {
+  search(input: { query: $query, type: [LiteracyMaterial] }) {
+    items {
+      ... on LiteracyMaterial {
+        ...LiteracyMaterialLookupItem
+      }
+    }
+  }
+}
+
+fragment LiteracyMaterialLookupItem on LiteracyMaterial {
+  id
+  name {
+    value
+  }
+}

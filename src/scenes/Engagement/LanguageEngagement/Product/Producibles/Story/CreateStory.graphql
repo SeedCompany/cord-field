@@ -1,0 +1,20 @@
+mutation CreateStory($input: CreateStoryInput!) {
+  createStory(input: $input) {
+    story {
+      id
+      name {
+        value
+      }
+    }
+  }
+}
+query Stories {
+  stories {
+    items {
+      id
+      name {
+        value
+      }
+    }
+  }
+}
