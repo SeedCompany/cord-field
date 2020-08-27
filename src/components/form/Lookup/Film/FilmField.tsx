@@ -9,7 +9,6 @@ import {
 export const FilmField = LookupField.createFor<Film, CreateFilmInput>({
   resource: 'Film',
   useLookup: useFilmLookupLazyQuery,
-  getOptionLabel: (option) => option.name.value ?? '',
   CreateDialogForm: CreateFilm,
   getInitialValues: (value) => ({
     film: {

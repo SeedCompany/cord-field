@@ -9,7 +9,6 @@ import {
 export const StoryField = LookupField.createFor<Story, CreateStoryInput>({
   resource: 'Story',
   useLookup: useStoryLookupLazyQuery,
-  getOptionLabel: (option) => option.name.value ?? '',
   CreateDialogForm: CreateStory,
   getInitialValues: (value) => ({
     story: {

@@ -7,6 +7,5 @@ import {
 export const LanguageField = LookupField.createFor<Language>({
   resource: 'Language',
   useLookup: useLanguageLookupLazyQuery,
-  getOptionLabel: (option) =>
-    option.name.value ?? option.displayName.value ?? '',
+  getOptionLabel: (option) => option.name.value ?? option.displayName.value,
 });

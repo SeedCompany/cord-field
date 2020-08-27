@@ -12,7 +12,6 @@ export const LiteracyMaterialField = LookupField.createFor<
 >({
   resource: 'LiteracyMaterial',
   useLookup: useLiteracyMaterialLookupLazyQuery,
-  getOptionLabel: (option) => option.name.value ?? '',
   CreateDialogForm: CreateLiteracyMaterial,
   getInitialValues: (value) => ({
     literacyMaterial: {

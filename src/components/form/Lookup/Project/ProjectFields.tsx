@@ -10,17 +10,14 @@ import {
 export const ProjectField = LookupField.createFor<Project>({
   resource: 'Project',
   useLookup: useProjectLookupLazyQuery,
-  getOptionLabel: (option) => option.name.value ?? '',
 });
 
 export const TranslationProjectField = LookupField.createFor<Project>({
   resource: 'TranslationProject',
   useLookup: useTranslationProjectLookupLazyQuery,
-  getOptionLabel: (option) => option.name.value ?? '',
 });
 
 export const InternshipProjectField = LookupField.createFor<Project>({
   resource: 'InternshipProject',
   useLookup: useInternshipProjectLookupLazyQuery,
-  getOptionLabel: (option) => option.name.value ?? '',
 });

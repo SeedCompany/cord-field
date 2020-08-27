@@ -269,14 +269,30 @@ export function LookupField<
   );
 }
 
+interface StandardNamedObject {
+  readonly name: { readonly value?: string | null };
+}
+
+type SetOptionalIf<
+  T,
+  Keys extends keyof T,
+  Subject,
+  Condition
+> = Subject extends Condition ? SetOptional<T, Keys> : T;
+
 LookupField.createFor = <T extends { id: string }, CreateFormValues = never>({
   resource,
   ...config
 }: Merge<
   Except<
-    SetOptional<
-      LookupFieldProps<T, any, any, CreateFormValues>,
-      'name' | 'getCompareBy'
+    SetOptionalIf<
+      SetOptional<
+        LookupFieldProps<T, any, any, CreateFormValues>,
+        'name' | 'getCompareBy'
+      >,
+      'getOptionLabel',
+      T,
+      StandardNamedObject
     >,
     'value' | 'defaultValue'
   >,
@@ -296,6 +312,7 @@ LookupField.createFor = <T extends { id: string }, CreateFormValues = never>({
     return (
       <LookupField<T, Multiple, DisableClearable, CreateFormValues>
         getCompareBy={(item) => item.id}
+        getOptionLabel={(item: StandardNamedObject) => item.name.value}
         {...(config as any)}
         {...props}
       />

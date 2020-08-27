@@ -7,5 +7,5 @@ import {
 export const UserField = LookupField.createFor<UserLookupItemFragment>({
   resource: 'User',
   useLookup: useUserLookupLazyQuery,
-  getOptionLabel: (option) => option.fullName ?? '',
+  getOptionLabel: (option) => option.fullName,
 });
