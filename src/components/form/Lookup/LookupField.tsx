@@ -163,6 +163,9 @@ export function LookupField<
   ];
   const autocomplete = (
     <Autocomplete<T, Multiple, DisableClearable, FreeSolo>
+      getOptionSelected={(a, b) => getCompareBy(a) === getCompareBy(b)}
+      loadingText={<CircularProgress size={16} />}
+      {...autocompleteProps}
       disabled={disabled}
       // FF also has multiple and defaultValue
       multiple={multiple}
@@ -228,7 +231,6 @@ export function LookupField<
         field.onChange(value);
       }}
       loading={loading}
-      loadingText={<CircularProgress size={16} />}
       open={open}
       forcePopupIcon={!open ? false : undefined}
       renderInput={(params) => (
@@ -243,8 +245,6 @@ export function LookupField<
           // variant="outlined" TODO maybe for multiple?
         />
       )}
-      getOptionSelected={(a, b) => getCompareBy(a) === getCompareBy(b)}
-      {...autocompleteProps}
     />
   );
   return (
