@@ -165,6 +165,8 @@ export function LookupField<
     <Autocomplete<T, Multiple, DisableClearable, FreeSolo>
       getOptionSelected={(a, b) => getCompareBy(a) === getCompareBy(b)}
       loadingText={<CircularProgress size={16} />}
+      // Otherwise it looks like an item is selected when it's just a search value
+      clearOnBlur
       {...autocompleteProps}
       disabled={disabled}
       // FF also has multiple and defaultValue
