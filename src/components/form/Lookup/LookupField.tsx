@@ -164,6 +164,9 @@ export function LookupField<
       // Auto highlight the first option so a valid lookup item isn't
       // interrupted as free solo selection
       autoHighlight
+      // Helps represent that his is a valid object & makes it easier to replace
+      // Works well with clearOnBlur
+      selectOnFocus
       {...autocompleteProps}
       disabled={disabled}
       // FF also has multiple and defaultValue
