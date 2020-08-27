@@ -1,11 +1,13 @@
-import { LiteracyMaterialLookupItem } from '.';
 import { CreateLiteracyMaterialInput } from '../../../../api';
 import { CreateLiteracyMaterial } from '../../../../scenes/Engagement/LanguageEngagement/Product/Producibles/Literacy Material/CreateLiteracyMaterial';
 import { LookupField } from '../../index';
-import { useLiteracyMaterialLookupLazyQuery } from './LiteracyMaterialLookup.generated';
+import {
+  LiteracyMaterialLookupItemFragment as LiteracyMaterial,
+  useLiteracyMaterialLookupLazyQuery,
+} from './LiteracyMaterialLookup.generated';
 
 export const LiteracyMaterialField = LookupField.createFor<
-  LiteracyMaterialLookupItem,
+  LiteracyMaterial,
   CreateLiteracyMaterialInput
 >({
   resource: 'LiteracyMaterial',

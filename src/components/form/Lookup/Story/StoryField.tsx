@@ -1,13 +1,12 @@
-import { StoryLookupItem } from '.';
 import { CreateStoryInput } from '../../../../api';
 import { CreateStory } from '../../../../scenes/Engagement/LanguageEngagement/Product/Producibles/Story/CreateStory';
 import { LookupField } from '../../index';
-import { useStoryLookupLazyQuery } from './StoryLookup.generated';
+import {
+  StoryLookupItemFragment as Story,
+  useStoryLookupLazyQuery,
+} from './StoryLookup.generated';
 
-export const StoryField = LookupField.createFor<
-  StoryLookupItem,
-  CreateStoryInput
->({
+export const StoryField = LookupField.createFor<Story, CreateStoryInput>({
   resource: 'Story',
   useLookup: useStoryLookupLazyQuery,
   getOptionLabel: (option) => option.name.value ?? '',
