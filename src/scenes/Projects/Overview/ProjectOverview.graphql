@@ -1,61 +1,70 @@
 query ProjectOverview($input: ID!) {
   project(id: $input) {
-    __typename
-    id
-    deptId {
-      canRead
-      canEdit
-      value
+    ...ProjectOverview
+  }
+}
+
+fragment ProjectOverview on Project {
+  __typename
+  id
+  deptId {
+    canRead
+    canEdit
+    value
+  }
+  name {
+    canRead
+    canEdit
+    value
+  }
+  location {
+    canRead
+    canEdit
+    value {
+      ...DisplayLocation
     }
-    name {
-      canRead
-      canEdit
-      value
+  }
+  mouStart {
+    canRead
+    canEdit
+    value
+  }
+  mouEnd {
+    canRead
+    canEdit
+    value
+  }
+  status
+  step {
+    canRead
+    canEdit
+    value
+  }
+  modifiedAt
+  budget {
+    canRead
+    value {
+      ...BudgetOverview
     }
-    location {
-      canRead
-      canEdit
-      value {
-        ...DisplayLocation
+  }
+  team {
+    ...ProjectMemberList
+  }
+  partnerships {
+    ...PartnershipSummary
+  }
+  engagements {
+    canRead
+    canCreate
+    total
+    items {
+      ... on LanguageEngagement {
+        __typename
+        ...LanguageEngagementListItem
       }
-    }
-    mouStart {
-      canRead
-      canEdit
-      value
-    }
-    mouEnd {
-      canRead
-      canEdit
-      value
-    }
-    status
-    modifiedAt
-    budget {
-      canRead
-      value {
-        ...BudgetOverview
-      }
-    }
-    team {
-      ...ProjectMemberList
-    }
-    partnerships {
-      ...PartnershipSummary
-    }
-    engagements {
-      canRead
-      canCreate
-      total
-      items {
-        ... on LanguageEngagement {
-          __typename
-          ...LanguageEngagementListItem
-        }
-        ... on InternshipEngagement {
-          __typename
-          ...InternshipEngagementListItem
-        }
+      ... on InternshipEngagement {
+        __typename
+        ...InternshipEngagementListItem
       }
     }
   }
