@@ -4,7 +4,7 @@ import React, { FC } from 'react';
 import { Except } from 'type-fest';
 import {
   displayInternPosition,
-  InternshipEngagementPosition,
+  InternshipEngagementPositionList,
   MethodologyToApproach,
   UpdateInternshipEngagementInput,
   UpdateLanguageEngagementInput,
@@ -52,28 +52,6 @@ type DialogFormInput = UpdateInternshipEngagementInput &
       country?: DisplayCountryFragment;
     };
   };
-
-const internshipEngagementPositions: InternshipEngagementPosition[] = [
-  'ExegeticalFacilitator',
-  'TranslationConsultantInTraining',
-  'AdministrativeSupportSpecialist',
-  'BusinessSupportSpecialist',
-  'CommunicationSpecialistInternal',
-  'CommunicationSpecialistMarketing',
-  'LanguageProgramManager',
-  'LanguageProgramManagerOrFieldOperations',
-  'LanguageSoftwareSupportSpecialist',
-  'LeadershipDevelopment',
-  'LiteracySpecialist',
-  'LukePartnershipFacilitatorOrSpecialist',
-  'MobilizerOrPartnershipSupportSpecialist',
-  'OralFacilitatorOrSpecialist',
-  'PersonnelOrHrSpecialist',
-  'ScriptureUseSpecialist',
-  'TechnicalSupportSpecialist',
-  'TranslationFacilitator',
-  'Translator',
-];
 
 const useStyles = makeStyles(() => ({
   dialog: {
@@ -135,7 +113,7 @@ export const EditEngagementDialog: FC<EditEngagementDialogProps> = ({
       </>
     ) : editValue === 'position' ? (
       <RadioField name="position" label="Intern Position">
-        {internshipEngagementPositions.map((position) => (
+        {InternshipEngagementPositionList.map((position) => (
           <RadioOption
             key={position}
             label={displayInternPosition(position)}
