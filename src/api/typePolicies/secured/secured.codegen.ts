@@ -1,7 +1,7 @@
 import { GraphQLSchema, isObjectType } from 'graphql';
 import { ObjectLiteralExpression, SourceFile } from 'ts-morph';
-import { getSchemaTypes, resolveType } from '../gql.util';
-import { getOrCreateSubObjects } from '../ts.util';
+import { getSchemaTypes, resolveType } from '../../codeGenUtil/gql.util';
+import { getOrCreateSubObjects } from '../../codeGenUtil/ts.util';
 
 export const generateSecured = (
   schema: GraphQLSchema,
