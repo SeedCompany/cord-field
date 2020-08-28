@@ -1,6 +1,7 @@
 import { ApolloError } from '@apollo/client';
 import { FORM_ERROR, setIn, SubmissionErrors } from 'final-form';
-import { mapValues } from 'lodash';
+import { identity, mapValues } from 'lodash';
+import { assert } from 'ts-essentials';
 import { Promisable } from 'type-fest';
 
 /**
@@ -10,9 +11,9 @@ import { Promisable } from 'type-fest';
  */
 interface ErrorMap {
   Validation: ValidationError;
-  NotFound: ClientError;
-  TokenInvalid: ClientError;
-  TokenExpired: ClientError;
+  NotFound: InputError;
+  TokenInvalid: ErrorInfo;
+  TokenExpired: ErrorInfo;
   Input: InputError;
   Duplicate: DuplicateError;
 
@@ -20,17 +21,25 @@ interface ErrorMap {
    * This is a special one that allows a default handler for any
    * un-handled error codes.
    */
-  Default: ClientError;
+  Client: ErrorInfo;
   /**
    * This is a special one that handles server errors. i.e. 500
    */
-  Server: unknown;
+  Server: ErrorInfo;
+
+  /**
+   * This is a special one that allows a default handler for any
+   * un-handled error codes.
+   */
+  Default: ErrorInfo;
 }
+
+type Code = keyof ErrorMap;
 
 /**
  * The basic error shape
  */
-interface ClientError {
+interface ErrorInfo {
   message: string;
 }
 
@@ -38,7 +47,7 @@ interface ClientError {
  * Validation errors also give an errors object which contains
  * the fields errors.
  */
-export interface ValidationError extends ClientError {
+export interface ValidationError extends ErrorInfo {
   /**
    * All of the invalid fields and their errors.
    * Nested fields are flattened to `a.b` keys which is great for final-form.
@@ -55,7 +64,7 @@ export interface ValidationError extends ClientError {
   errors: Record<string, Record<string, string>>;
 }
 
-export interface InputError extends ClientError {
+export interface InputError extends ErrorInfo {
   field?: string;
 }
 
@@ -66,7 +75,7 @@ export type DuplicateError = Required<InputError>;
  * and the value is an ErrorHandler.
  */
 export type ErrorHandlers = {
-  [Code in keyof ErrorMap]?: ErrorHandler<ErrorMap[Code]>;
+  [Code in keyof ErrorMap]?: ErrorHandler<ErrorMap[Code]> | undefined;
 };
 
 /**
@@ -104,8 +113,9 @@ export type ErrorHandlers = {
  */
 export type ErrorHandler<E> =
   | ErrorHandlerResult
-  | ((e: E) => Promisable<ErrorHandlerResult>);
+  | ((e: E, next: NextHandler<E>) => Promisable<ErrorHandlerResult>);
 
+type NextHandler<E> = (e: E) => Promisable<ErrorHandlerResult>;
 export type ErrorHandlerResult = string | SubmissionErrors | undefined;
 
 const expandDotNotation = (input: Record<string, any>) =>
@@ -119,63 +129,78 @@ export const renderValidationErrors = (e: ValidationError) =>
   expandDotNotation(mapValues(e.errors, (er) => Object.values(er)[0]));
 
 /**
- * These are the default handles which are used as fallbacks
+ * These are the default handlers which are used as fallbacks
  * when handlers are not specified.
- * Note that these that precedence over the `Default` handler.
- * So `Validation` will never use the `Default` handler since it defaulted here.
  */
 const defaultHandlers: ErrorHandlers = {
   Validation: renderValidationErrors,
-  Input: (e) => (e.field ? setIn({}, e.field, e.message) : e.message),
+  Input: (e, next) => (e.field ? setIn({}, e.field, e.message) : next(e)),
   Duplicate: (e) => setIn({}, e.field, e.message),
 
   // Assume server errors are handled separately
   // Return failure but no error message
   Server: {},
+  Default: ({ message }) => message,
 };
 
 /**
  * Handles the error according to the form error handlers passed in.
  */
 export const handleFormError = async (e: unknown, handlers?: ErrorHandlers) => {
-  if (!isClientError(e)) {
-    const handler = handlers?.Server ?? defaultHandlers.Server;
-    return await invokeHandler(handler, e);
-  }
+  const error = getErrorInfo(e);
 
-  const { message, extensions = {} } = e.graphQLErrors[0];
-  const code = extensions.code as Exclude<keyof ErrorMap, 'Server' | 'Default'>;
-  const error: ErrorMap[typeof code] = {
-    message,
-    ...extensions,
-  };
-
-  const handler =
-    handlers?.[code] ??
-    defaultHandlers[code] ??
-    handlers?.Default ??
-    (({ message }: { message: string }) => message);
-
-  return invokeHandler(handler, error);
+  const mergedHandlers = { ...defaultHandlers, ...handlers };
+  const handler = error.codes
+    // get handler for each code
+    .map((c) => mergedHandlers[c])
+    // remove unhandled codes
+    .filter(identity)
+    // normalize handlers to a standard function shape
+    .map(resolveHandler)
+    // In order to build the next function for each handler we need to start
+    // from the end and work backwards
+    .reverse()
+    // Compose the chain of handlers into a single function.
+    // In a way, this converts [a, b, c] into a(b(c()))
+    .reduce(
+      (prev, handler) =>
+        // Return a new function with the handler's next function scoped into it
+        (e) => handler(e, prev),
+      // Start with a noop next handler
+      (() => undefined) as NextHandler<any>
+    );
+  return handler(error);
 };
 
-const isClientError = (e: unknown): e is ApolloError => {
+const getErrorInfo = (e: unknown) => {
   if (!(e instanceof ApolloError) || e.graphQLErrors.length === 0) {
-    return false;
+    // This is really to make TS happy. We should always have an ApolloError here.
+    assert(e instanceof Error);
+    return {
+      message: e.message,
+      codes: ['Default'] as Code[],
+    };
   }
+
   // For mutations we will assume they will only have one error
   // since they should only be doing one operation.
-  const status = e.graphQLErrors[0].extensions?.status;
-  return status && status >= 400 && status < 500;
+  const ext = e.graphQLErrors[0].extensions ?? {};
+  const codes: Code[] = [...(ext.codes ?? [ext.code]), 'Default'];
+  return {
+    message: e.message,
+    ...ext,
+    codes,
+  };
 };
 
 /**
- * Handle the flexibility of error handler.
+ * Normalize the handler to a function and normalize string results.
  */
-const invokeHandler = async (
-  handler: ErrorHandler<unknown>,
-  error: unknown
-): Promise<SubmissionErrors | undefined> => {
-  const result = typeof handler === 'function' ? await handler(error) : handler;
+const resolveHandler = <E>(handler: ErrorHandler<E>) => async (
+  error: E,
+  next: NextHandler<E>
+) => {
+  const result =
+    typeof handler === 'function' ? await handler(error, next) : handler;
   return typeof result === 'string' ? { [FORM_ERROR]: result } : result;
 };
