@@ -48,9 +48,6 @@ const useStyles = makeStyles(({ spacing, typography }) => ({
   estimatedDate: {
     fontWeight: typography.weight.light,
   },
-  dialog: {
-    width: 400,
-  },
 }));
 
 type CeremonyCardProps = Partial<CeremonyCardFragment>;
@@ -159,7 +156,7 @@ export const CeremonyCard: FC<CeremonyCardProps> = ({
         </CardActions>
       </Card>
       <DialogForm<UpdateCeremonyInput>
-        title="Update Ceremony"
+        title={`Update ${type}`}
         closeLabel="Close"
         submitLabel="Save"
         onlyDirtySubmit
@@ -174,10 +171,12 @@ export const CeremonyCard: FC<CeremonyCardProps> = ({
         onSubmit={async (input) => {
           await updateCeremony({ variables: { input } });
         }}
+        errorHandlers={{
+          Default: `Failed to update ${type?.toLowerCase()}`,
+        }}
         DialogProps={{
-          classes: {
-            paper: classes.dialog,
-          },
+          maxWidth: 'xs',
+          fullWidth: true,
         }}
       >
         <SubmitError />
