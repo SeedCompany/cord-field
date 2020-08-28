@@ -28,6 +28,9 @@ export const generateScalars = (
         'fields',
         field.name
       );
+      if (fieldDef.getProperty('read')) {
+        continue;
+      }
 
       let mapper = `Parsers.${type.name}`;
       if (!required) {

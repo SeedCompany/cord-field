@@ -37,6 +37,9 @@ export const generateSecured = (
         'fields',
         field.name
       );
+      if (fieldDef.getProperty('merge')) {
+        continue;
+      }
       fieldDef.addPropertyAssignment({
         name: 'merge',
         initializer: 'true',
