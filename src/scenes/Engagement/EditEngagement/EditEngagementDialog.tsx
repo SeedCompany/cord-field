@@ -1,4 +1,3 @@
-import { makeStyles } from '@material-ui/core';
 import { pick, startCase } from 'lodash';
 import React, { FC } from 'react';
 import { Except } from 'type-fest';
@@ -53,18 +52,11 @@ type DialogFormInput = UpdateInternshipEngagementInput &
     };
   };
 
-const useStyles = makeStyles(() => ({
-  dialog: {
-    width: 400,
-  },
-}));
-
 export const EditEngagementDialog: FC<EditEngagementDialogProps> = ({
   engagement,
   editValue,
   ...props
 }) => {
-  const classes = useStyles();
   const [updateInternshipEngagement] = useUpdateInternshipEngagementMutation();
   const [updateLanguageEngagement] = useUpdateLanguageEngagementMutation();
 
@@ -181,6 +173,10 @@ export const EditEngagementDialog: FC<EditEngagementDialogProps> = ({
       title="Update Engagement"
       closeLabel="Close"
       submitLabel="Save"
+      DialogProps={{
+        maxWidth: 'xs',
+        fullWidth: true,
+      }}
       {...props}
       initialValues={filteredInitialValues}
       onSubmit={async ({ engagement: { mentor, country, ...rest } }) => {
@@ -195,11 +191,6 @@ export const EditEngagementDialog: FC<EditEngagementDialogProps> = ({
         };
 
         await updateEngagement({ variables: { input } });
-      }}
-      DialogProps={{
-        classes: {
-          paper: classes.dialog,
-        },
       }}
     >
       <SubmitError />
