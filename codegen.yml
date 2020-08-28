@@ -30,6 +30,11 @@ generates:
     plugins:
       - ./src/api/typePolicies/typePolicies.codegen
 
+  # Generate lists for all of our enums
+  ./src/api/enumLists/enumLists.generated.ts:
+    plugins:
+      - ./src/api/enumLists/enumLists.codegen
+
   # Generate TypeScript version of graphql schema
   ./src/api/schema.generated.ts:
     plugins:

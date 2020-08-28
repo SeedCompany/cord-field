@@ -1,7 +1,7 @@
 import { GraphQLSchema, isObjectType, isScalarType } from 'graphql';
 import { ObjectLiteralExpression, SourceFile } from 'ts-morph';
-import { getSchemaTypes, resolveType } from '../gql.util';
-import { getOrCreateSubObjects } from '../ts.util';
+import { getSchemaTypes, resolveType } from '../../codeGenUtil/gql.util';
+import { getOrCreateSubObjects } from '../../codeGenUtil/ts.util';
 
 const builtInScalars = ['Boolean', 'ID', 'Int', 'Float', 'String'];
 
