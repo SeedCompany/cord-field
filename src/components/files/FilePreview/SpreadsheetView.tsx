@@ -79,6 +79,18 @@ interface SpreadSheetViewProps {
   data: SheetData[];
 }
 
+export function jsonToTableRows(rows: RowData): TableRow[] {
+  return rows.map((row: RowData[0]) =>
+    row.map((cell: any, index: number) => ({
+      index,
+      spanned: false,
+      rowspan: 1,
+      colspan: 1,
+      content: typeof cell === 'number' ? cell : String(cell),
+    }))
+  );
+}
+
 const RenderedSheet: FC<Omit<SheetData, 'name'>> = (props) => {
   const { rows, columns } = props;
   return (
