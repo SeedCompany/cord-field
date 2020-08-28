@@ -35,7 +35,7 @@ import {
 
 type EditEngagementDialogProps = Except<
   DialogFormProps<
-    UpdateInternshipEngagementInput | UpdateInternshipEngagementInput
+    UpdateLanguageEngagementInput | UpdateInternshipEngagementInput
   >,
   'onSubmit' | 'initialValues'
 > & {
