@@ -1,0 +1,15 @@
+mutation UpdateInternshipEngagement($input: UpdateInternshipEngagementInput!) {
+  updateInternshipEngagement(input: $input) {
+    engagement {
+      ...InternshipEngagementDetail
+    }
+  }
+}
+
+mutation UpdateLanguageEngagement($input: UpdateLanguageEngagementInput!) {
+  updateLanguageEngagement(input: $input) {
+    engagement {
+      ...LanguageEngagementDetail
+    }
+  }
+}

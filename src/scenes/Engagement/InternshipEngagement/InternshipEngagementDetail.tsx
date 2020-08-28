@@ -1,8 +1,7 @@
 import { Breadcrumbs, Grid, makeStyles, Typography } from '@material-ui/core';
-import { ChatOutlined, DateRange, Edit } from '@material-ui/icons';
+import { ChatOutlined, DateRange } from '@material-ui/icons';
 import React, { FC } from 'react';
 import {
-  canEditAny,
   displayEngagementStatus,
   displayInternPosition,
   securedDateRange,
@@ -10,7 +9,7 @@ import {
 import { displayLocation } from '../../../api/location-helper';
 import { Breadcrumb } from '../../../components/Breadcrumb';
 import { DataButton } from '../../../components/DataButton';
-import { Fab } from '../../../components/Fab';
+import { useDialog } from '../../../components/Dialog';
 import { FieldOverviewCard } from '../../../components/FieldOverviewCard';
 import {
   useDateFormatter,
@@ -22,13 +21,14 @@ import { ProjectBreadcrumb } from '../../../components/ProjectBreadcrumb';
 import { Redacted } from '../../../components/Redacted';
 import { Link } from '../../../components/Routing';
 import { CeremonyCard } from '../CeremonyCard';
+import { EditEngagementDialog } from '../EditEngagement/EditEngagementDialog';
 import { EngagementQuery } from '../Engagement.generated';
 import { MentorCard } from './MentorCard';
 
 const useStyles = makeStyles(({ spacing, breakpoints, palette }) => ({
   root: {
     flex: 1,
-    overflowY: 'scroll',
+    overflowY: 'auto',
     padding: spacing(4),
   },
   main: {
@@ -47,6 +47,7 @@ export const InternshipEngagementDetail: FC<EngagementQuery> = ({
   engagement,
 }) => {
   const classes = useStyles();
+  const [state, show, editValue] = useDialog<string>();
 
   const date = securedDateRange(engagement.startDate, engagement.endDate);
   const formatDate = useDateFormatter();
@@ -58,7 +59,6 @@ export const InternshipEngagementDetail: FC<EngagementQuery> = ({
 
   const intern = engagement.intern.value;
   const name = intern?.fullName;
-  const editable = canEditAny(engagement);
 
   return (
     <div className={classes.root}>
@@ -101,13 +101,6 @@ export const InternshipEngagementDetail: FC<EngagementQuery> = ({
               )}
             </Typography>
           </Grid>
-          {editable && (
-            <Grid item>
-              <Fab color="primary" aria-label="edit internship engagement">
-                <Edit />
-              </Fab>
-            </Grid>
-          )}
         </Grid>
         <Grid item container spacing={3} alignItems="center">
           <Grid item>
@@ -127,6 +120,7 @@ export const InternshipEngagementDetail: FC<EngagementQuery> = ({
               empty="Enter Intern Position"
               redacted="You do not have permission to view intern position"
               children={displayInternPosition}
+              onClick={() => show('position')}
             />
           </Grid>
           <Grid item>
@@ -135,6 +129,7 @@ export const InternshipEngagementDetail: FC<EngagementQuery> = ({
               empty="Enter Country of Origin"
               redacted="You do not have permission to view country of origin"
               children={displayLocation}
+              onClick={() => show('countryOfOrigin')}
             />
           </Grid>
           <Grid item>
@@ -144,6 +139,7 @@ export const InternshipEngagementDetail: FC<EngagementQuery> = ({
               redacted="You do not have permission to view start/end dates"
               children={formatDate.range}
               empty="Start - End"
+              onClick={() => show('startEndDate')}
             />
           </Grid>
           <Grid item>
@@ -160,7 +156,8 @@ export const InternshipEngagementDetail: FC<EngagementQuery> = ({
                 value: formatDate(engagement.completeDate.value),
               }}
               icon={PlantIcon}
-              emptyValue="None"
+              onClick={() => show('completeDate')}
+              onButtonClick={() => show('completeDate')}
             />
           </Grid>
           <Grid item xs={6}>
@@ -170,7 +167,8 @@ export const InternshipEngagementDetail: FC<EngagementQuery> = ({
                 value: formatDate(engagement.disbursementCompleteDate.value),
               }}
               icon={OptionsIcon}
-              emptyValue="None"
+              onClick={() => show('disbursementCompleteDate')}
+              onButtonClick={() => show('disbursementCompleteDate')}
             />
           </Grid>
           <Grid item xs={6}>
@@ -180,19 +178,20 @@ export const InternshipEngagementDetail: FC<EngagementQuery> = ({
                 value: formatDate(engagement.communicationsCompleteDate.value),
               }}
               icon={ChatOutlined}
-              emptyValue="None"
+              onClick={() => show('communicationsCompleteDate')}
+              onButtonClick={() => show('communicationsCompleteDate')}
             />
           </Grid>
           <Grid item xs={6}>
-            <MethodologiesCard data={engagement.methodologies} />
+            <MethodologiesCard
+              onClick={() => show('methodologies')}
+              data={engagement.methodologies}
+            />
           </Grid>
         </Grid>
         <Grid item container spacing={3}>
           <Grid item xs={6}>
-            <CeremonyCard
-              {...engagement.ceremony}
-              onEdit={() => console.log('edit ceremony clicked')}
-            />
+            <CeremonyCard {...engagement.ceremony} />
           </Grid>
           <MentorCard
             data={engagement.mentor}
@@ -201,9 +200,15 @@ export const InternshipEngagementDetail: FC<EngagementQuery> = ({
                 {node}
               </Grid>
             )}
+            onEdit={() => show('mentor')}
           />
         </Grid>
       </Grid>
+      <EditEngagementDialog
+        {...state}
+        engagement={engagement}
+        editValue={editValue}
+      />
     </div>
   );
 };

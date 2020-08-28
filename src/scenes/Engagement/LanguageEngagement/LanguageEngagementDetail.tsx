@@ -1,4 +1,10 @@
-import { Breadcrumbs, Grid, makeStyles, Typography } from '@material-ui/core';
+import {
+  Breadcrumbs,
+  Grid,
+  makeStyles,
+  Tooltip,
+  Typography,
+} from '@material-ui/core';
 import { ChatOutlined, DateRange, Edit } from '@material-ui/icons';
 import React, { FC } from 'react';
 import {
@@ -9,6 +15,7 @@ import {
 import { BooleanProperty } from '../../../components/BooleanProperty';
 import { Breadcrumb } from '../../../components/Breadcrumb';
 import { DataButton } from '../../../components/DataButton';
+import { useDialog } from '../../../components/Dialog';
 import { Fab } from '../../../components/Fab';
 import { FieldOverviewCard } from '../../../components/FieldOverviewCard';
 import {
@@ -20,12 +27,13 @@ import { ProjectBreadcrumb } from '../../../components/ProjectBreadcrumb';
 import { Redacted } from '../../../components/Redacted';
 import { Link } from '../../../components/Routing';
 import { CeremonyCard } from '../CeremonyCard';
+import { EditEngagementDialog } from '../EditEngagement/EditEngagementDialog';
 import { EngagementQuery } from '../Engagement.generated';
 
 const useStyles = makeStyles(({ spacing, breakpoints, palette }) => ({
   root: {
     flex: 1,
-    overflowY: 'scroll',
+    overflowY: 'auto',
     padding: spacing(4),
   },
   main: {
@@ -44,6 +52,8 @@ export const LanguageEngagementDetail: FC<EngagementQuery> = ({
   engagement,
 }) => {
   const classes = useStyles();
+
+  const [state, show, editValue] = useDialog<string>();
 
   const date = securedDateRange(engagement.startDate, engagement.endDate);
   const formatDate = useDateFormatter();
@@ -99,9 +109,15 @@ export const LanguageEngagementDetail: FC<EngagementQuery> = ({
           </Grid>
           {editable && (
             <Grid item>
-              <Fab color="primary" aria-label="edit language engagement">
-                <Edit />
-              </Fab>
+              <Tooltip title="Update First Scripture and Luke Partnership">
+                <Fab
+                  color="primary"
+                  aria-label="Update language engagement"
+                  onClick={() => show('firstScriptureAndLukePartnership')}
+                >
+                  <Edit />
+                </Fab>
+              </Tooltip>
             </Grid>
           )}
         </Grid>
@@ -124,6 +140,7 @@ export const LanguageEngagementDetail: FC<EngagementQuery> = ({
               redacted="You do not have permission to view start/end dates"
               children={formatDate.range}
               empty="Start - End"
+              onClick={() => show('startEndDate')}
             />
           </Grid>
           <Grid item>
@@ -152,6 +169,8 @@ export const LanguageEngagementDetail: FC<EngagementQuery> = ({
                 value: formatDate(engagement.completeDate.value),
               }}
               icon={PlantIcon}
+              onClick={() => show('completeDate')}
+              onButtonClick={() => show('completeDate')}
             />
           </Grid>
           <Grid item xs={6}>
@@ -161,6 +180,8 @@ export const LanguageEngagementDetail: FC<EngagementQuery> = ({
                 value: formatDate(engagement.disbursementCompleteDate.value),
               }}
               icon={OptionsIcon}
+              onClick={() => show('disbursementCompleteDate')}
+              onButtonClick={() => show('disbursementCompleteDate')}
             />
           </Grid>
           <Grid item xs={6}>
@@ -170,18 +191,22 @@ export const LanguageEngagementDetail: FC<EngagementQuery> = ({
                 value: formatDate(engagement.communicationsCompleteDate.value),
               }}
               icon={ChatOutlined}
+              onClick={() => show('communicationsCompleteDate')}
+              onButtonClick={() => show('communicationsCompleteDate')}
             />
           </Grid>
         </Grid>
         <Grid item container spacing={3} alignItems="center">
           <Grid item xs={6}>
-            <CeremonyCard
-              {...engagement.ceremony}
-              onEdit={() => console.log('edit ceremony clicked')}
-            />
+            <CeremonyCard {...engagement.ceremony} />
           </Grid>
         </Grid>
       </Grid>
+      <EditEngagementDialog
+        {...state}
+        engagement={engagement}
+        editValue={editValue}
+      />
     </div>
   );
 };

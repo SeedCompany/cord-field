@@ -42,9 +42,6 @@ const useStyles = makeStyles(({ spacing, typography }) => ({
   personName: {
     marginBottom: spacing(3),
   },
-  cardActions: {
-    flexDirection: 'column',
-  },
 }));
 
 export interface UserListItemCardPortraitProps {
@@ -87,7 +84,7 @@ export const UserListItemCardPortrait = ({
           </CardContent>
         </CardActionAreaLink>
       )}
-      <CardActions className={classes.cardActions}>
+      <CardActions>
         {action !== undefined ? (
           action
         ) : (

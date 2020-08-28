@@ -12,10 +12,16 @@ import { Skeleton } from '@material-ui/lab';
 import clsx from 'clsx';
 import * as React from 'react';
 import { FC } from 'react';
-import { canEditAny } from '../../../api';
+import { canEditAny, UpdateCeremonyInput } from '../../../api';
+import { useDialog } from '../../../components/Dialog';
+import { DialogForm } from '../../../components/Dialog/DialogForm';
+import { DateField, FieldGroup, SubmitError } from '../../../components/form';
 import { useDateFormatter } from '../../../components/Formatters';
 import { Redacted } from '../../../components/Redacted';
-import { CeremonyCardFragment } from './CeremonyCard.generated';
+import {
+  CeremonyCardFragment,
+  useUpdateCeremonyMutation,
+} from './CeremonyCard.generated';
 import { CeremonyPlanned } from './CeremonyPlanned';
 import { LargeDate } from './LargeDate';
 
@@ -44,20 +50,19 @@ const useStyles = makeStyles(({ spacing, typography }) => ({
   },
 }));
 
-type CeremonyCardProps = Partial<CeremonyCardFragment> & {
-  onEdit?: () => void;
-};
+type CeremonyCardProps = Partial<CeremonyCardFragment>;
 
 export const CeremonyCard: FC<CeremonyCardProps> = ({
   canRead,
   value: ceremony,
-  onEdit,
 }) => {
-  const { type, planned, estimatedDate, actualDate } = ceremony || {};
+  const { id, type, planned, estimatedDate, actualDate } = ceremony || {};
   const loading = canRead == null;
 
   const classes = useStyles();
   const formatDate = useDateFormatter();
+  const [updateCeremony] = useUpdateCeremonyMutation();
+  const [dialogState, openDialog] = useDialog();
 
   const canEditDates = canEditAny(
     ceremony,
@@ -68,7 +73,7 @@ export const CeremonyCard: FC<CeremonyCardProps> = ({
   const editButton = (
     <Button
       color="primary"
-      onClick={onEdit}
+      onClick={openDialog}
       disabled={!canEditDates || !planned?.value}
     >
       Edit dates
@@ -150,6 +155,36 @@ export const CeremonyCard: FC<CeremonyCardProps> = ({
           )}
         </CardActions>
       </Card>
+      <DialogForm<UpdateCeremonyInput>
+        title={`Update ${type}`}
+        closeLabel="Close"
+        submitLabel="Save"
+        onlyDirtySubmit
+        {...dialogState}
+        initialValues={{
+          ceremony: {
+            id: id || '',
+            estimatedDate: estimatedDate?.value,
+            actualDate: actualDate?.value,
+          },
+        }}
+        onSubmit={async (input) => {
+          await updateCeremony({ variables: { input } });
+        }}
+        errorHandlers={{
+          Default: `Failed to update ${type?.toLowerCase()}`,
+        }}
+        DialogProps={{
+          maxWidth: 'xs',
+          fullWidth: true,
+        }}
+      >
+        <SubmitError />
+        <FieldGroup prefix="ceremony">
+          <DateField name="estimatedDate" label="Estimated Date" />
+          <DateField name="actualDate" label="Actual Date" />
+        </FieldGroup>
+      </DialogForm>
     </div>
   );
 };

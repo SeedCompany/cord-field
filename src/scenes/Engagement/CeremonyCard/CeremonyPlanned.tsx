@@ -1,4 +1,5 @@
 import {
+  CircularProgress,
   FormControlLabel,
   makeStyles,
   Switch,
@@ -7,9 +8,13 @@ import {
 } from '@material-ui/core';
 import { Skeleton } from '@material-ui/lab';
 import clsx from 'clsx';
+import { useSnackbar } from 'notistack';
 import * as React from 'react';
 import { FC } from 'react';
-import { CeremonyCardFragment } from './CeremonyCard.generated';
+import {
+  CeremonyCardFragment,
+  useUpdateCeremonyMutation,
+} from './CeremonyCard.generated';
 
 const useStyles = makeStyles(() => ({
   root: {
@@ -30,14 +35,12 @@ const useStyles = makeStyles(() => ({
 }));
 
 type CeremonyCardProps = Partial<CeremonyCardFragment> & {
-  onPlannedChange?: (planned: boolean) => void;
   className?: string;
 };
 
 export const CeremonyPlanned: FC<CeremonyCardProps> = ({
   canRead: canReadCeremony,
   value: ceremony,
-  onPlannedChange,
   className,
 }) => {
   const { type, planned } = ceremony || {};
@@ -45,6 +48,47 @@ export const CeremonyPlanned: FC<CeremonyCardProps> = ({
   const canRead = canReadCeremony && planned?.canRead;
 
   const classes = useStyles();
+
+  const { enqueueSnackbar } = useSnackbar();
+  const [updateCeremony, updateState] = useUpdateCeremonyMutation({
+    onError: () => {
+      enqueueSnackbar(`Failed to update ${type?.toLowerCase()}`, {
+        key: `ceremony-planned-update-${ceremony?.id}`,
+        preventDuplicate: true,
+        variant: 'error',
+        autoHideDuration: 3000,
+      });
+    },
+    optimisticResponse: ({ input }) => ({
+      __typename: 'Mutation',
+      updateCeremony: {
+        __typename: 'UpdateCeremonyOutput',
+        ceremony: {
+          ...ceremony!,
+          planned: {
+            ...ceremony!.planned,
+            value: input.ceremony.planned!,
+          },
+        },
+      },
+    }),
+  });
+
+  const onChange = (planned: boolean) => {
+    if (!ceremony?.id || updateState.loading) {
+      return;
+    }
+    void updateCeremony({
+      variables: {
+        input: {
+          ceremony: {
+            id: ceremony.id,
+            planned,
+          },
+        },
+      },
+    });
+  };
 
   let title = (
     <Typography
@@ -73,21 +117,24 @@ export const CeremonyPlanned: FC<CeremonyCardProps> = ({
           {title}
         </>
       ) : (
-        <FormControlLabel
-          control={
-            <Tooltip title={`Is a ${type?.toLowerCase()} planned?`}>
-              <Switch
-                checked={Boolean(planned?.value)}
-                name="planned"
-                color="primary"
-                disabled={!planned?.canEdit}
-                onChange={(_, checked) => onPlannedChange?.(checked)}
-              />
-            </Tooltip>
-          }
-          label={title}
-          className={classes.switch}
-        />
+        <>
+          <FormControlLabel
+            control={
+              <Tooltip title={`Is a ${type?.toLowerCase()} planned?`}>
+                <Switch
+                  checked={Boolean(planned?.value)}
+                  name="planned"
+                  color="primary"
+                  disabled={!planned?.canEdit}
+                  onChange={(_, checked) => onChange(checked)}
+                />
+              </Tooltip>
+            }
+            label={title}
+            className={classes.switch}
+          />
+          {updateState.loading ? <CircularProgress size={20} /> : null}
+        </>
       )}
     </div>
   );

@@ -1,4 +1,3 @@
-import { action } from '@storybook/addon-actions';
 import { boolean, select } from '@storybook/addon-knobs';
 import React from 'react';
 import { dateTime } from '../../../components/knobs.stories';
@@ -33,7 +32,6 @@ export const CeremonyCard = () => (
           value: boolean('Planned', false),
         },
       }}
-      onEdit={action('edit clicked')}
     />
   </div>
 );
