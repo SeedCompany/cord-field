@@ -83,26 +83,12 @@ export const CeremonyCard: FC<CeremonyCardProps> = ({
     </Button>
   );
 
-  const toggleCeremonyPlannedState = (planned: boolean) =>
-    id &&
-    updateCeremony({
-      variables: {
-        input: {
-          ceremony: {
-            id,
-            planned,
-          },
-        },
-      },
-    });
-
   return (
     <div className={classes.root}>
       <CeremonyPlanned
         canRead={canRead}
         value={ceremony}
         className={classes.header}
-        onPlannedChange={toggleCeremonyPlannedState}
       />
       <Card className={classes.card}>
         <Grid
