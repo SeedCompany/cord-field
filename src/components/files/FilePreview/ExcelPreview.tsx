@@ -349,7 +349,7 @@ function getSubsequentMergedRows(
 ): TableRow[] {
   console.log(`row merges for row ${rowIndex + 1}`, rowMerges);
   const subsequentMergedRows = rowMerges.reduce(
-    (subsequentRows: TableRow[], rowMerge) => {
+    (subsequentRows: TableRow[], rowMerge, rowMergeIndex) => {
       const { rowspan, startColumn, colspan } = rowMerge;
       /**
        * Which columns in this row merge extend beyond this
@@ -361,23 +361,46 @@ function getSubsequentMergedRows(
           (columns: number[], __, i) => columns.concat(startColumn + i),
           []
         );
-      /**
-       * We might have already made a pass through this `.reduce`
-       * function and have new information that should replace
-       * some of what we originally received in `rowsSnapshot`
-       */
-      const subsequentRowsSnapshot = [
-        ...rowsSnapshot.slice(0, rowIndex + 1),
-        ...subsequentRows,
-        ...rowsSnapshot.slice(rowIndex + 1 + subsequentRows.length),
-      ];
-      const populatedRows = Array(rowspan - 1)
+      const populatedSubsequentRows = Array(rowspan - 1)
         .fill(undefined)
-        .reduce((populatedMergedRows: TableRow[], _, newRowIndex) => {
+        .reduce((populatedRows: TableRow[], _, newRowIndex) => {
           console.log(
             `Populating row ${
               rowIndex + 1 + newRowIndex + 1
             } from merge in row ${rowIndex + 1}`
+          );
+          /**
+           * We might have already made a pass through this `.reduce`
+           * function and have new information that should replace
+           * some of what we originally received in `rowsSnapshot`
+           */
+          const subsequentRowsSnapshot = [
+            ...rowsSnapshot.slice(0, rowIndex + 1),
+            ...subsequentRows.slice(0, rowMergeIndex + 1),
+            ...populatedRows,
+            ...subsequentRows.slice(rowMergeIndex + 2 + populatedRows.length),
+            ...rowsSnapshot.slice(
+              rowIndex + 1 + (subsequentRows.length + populatedRows.length)
+            ),
+          ];
+          console.log(
+            'rowsSnapshot.slice(0, rowIndex + 1)',
+            rowsSnapshot.slice(0, rowIndex + 1)
+          );
+          console.log(
+            'subsequentRows.slice(0, rowMergeIndex)',
+            subsequentRows.slice(0, rowMergeIndex)
+          );
+          console.log('populatedRows', populatedRows);
+          console.log(
+            'subsequentRows.slice(rowMergeIndex + 1 + populatedRows.length)',
+            subsequentRows.slice(rowMergeIndex + 1 + populatedRows.length)
+          );
+          console.log(
+            'rowsSnapshot.slice(rowIndex + 1 + (subsequentRows.length + populatedRows.length))',
+            rowsSnapshot.slice(
+              rowIndex + 1 + (subsequentRows.length + populatedRows.length)
+            )
           );
           /**
            * We need to know how to find the current row (`newRowIndex`
@@ -432,23 +455,21 @@ function getSubsequentMergedRows(
            * need the same kind of data here that we made from the top-
            * level function that calls it: a snapshot of all currently
            * processed rows, the current row we want to evalaute for
-           * row merges, and the index of that row in the full list of
-           * rows.
+           * row merges, and the index of that row in the snapshot.
            */
           const mergedRowsSnapshot = [
             ...subsequentRowsSnapshot.slice(0, rowIndex + 1),
-            ...populatedMergedRows.slice(0, newRowIndex),
+            ...populatedRows.slice(0, newRowIndex),
             mergedRow,
-            ...populatedMergedRows.slice(newRowIndex + 1),
+            ...populatedRows.slice(newRowIndex + 1),
             ...subsequentRowsSnapshot.slice(
-              rowIndex + 1 + populatedMergedRows.length + 1
+              rowIndex + 1 + populatedRows.length + 1
             ),
           ];
           console.log(
             `Getting merged rows for row ${originalIndex + 1} from row ${
               rowIndex + 1
-            }`,
-            mergedRow
+            }`
           );
           const mergesForSubsequentRow = findRowMergesForCurrentRow(
             mergedRow,
@@ -463,24 +484,18 @@ function getSubsequentMergedRows(
             spans
           );
           const newPopulatedRows = [
-            ...populatedMergedRows.slice(0, newRowIndex),
+            ...populatedRows.slice(0, newRowIndex),
             mergedRow,
             ...subSubsequentRows,
-            ...populatedMergedRows.slice(
-              newRowIndex + 1 + subSubsequentRows.length
-            ),
+            ...populatedRows.slice(newRowIndex + 1 + subSubsequentRows.length),
           ];
+          console.log(
+            `newPopulatedRows from row ${rowIndex + 1}`,
+            newPopulatedRows
+          );
           return newPopulatedRows;
         }, []);
-      const populatedSubsequentRows = [
-        // ...subsequentRows.slice(0, rowMergeIndex),
-        ...populatedRows,
-        // ...subsequentRows.slice(rowMergeIndex + 1 + populatedRows.length),
-      ];
-      console.log(
-        `populatedSubsequentRows from row ${rowIndex + 1}`,
-        populatedSubsequentRows
-      );
+
       return populatedSubsequentRows;
     },
     []
