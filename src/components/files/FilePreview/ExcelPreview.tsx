@@ -118,7 +118,6 @@ async function extractExcelData(
         const convertedRows = jsonToTableRows(parsedRows);
         const rows = calculateMergedCells(convertedRows, spans);
         const columns = formatColumns(usedCellRange);
-        console.log('columns', columns);
         const newSheet = {
           name: worksheetName,
           rows,
