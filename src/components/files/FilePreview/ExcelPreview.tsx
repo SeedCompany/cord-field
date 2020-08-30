@@ -78,26 +78,25 @@ async function extractExcelData(
           trims off empty rows and columns. So we need to figure out an
           offset to use when calculating where the merged cells actually
           occur in the resulting JSON. */
-        const rangeStart = usedCellRange.split(':')[0];
-        const rangeStartColumn = rangeStart[0].match(/[A-Z]+/g)![0];
-        const rangeStartRow = rangeStart.split(rangeStartColumn)[1];
+        const range = XLSX.utils.decode_range(usedCellRange);
+        /**
+         * The `decode_range` util provides an object of this shape:
+         *
+         * {
+         *   e: { c: 13, r: 38, },
+         *   s: { c: 1, r: 3, },
+         * }
+         *
+         * Translated into a sensible naming convention:
+         *
+         * {
+         *   end: { column: 13, row: 38, },
+         *   start: { column: 1, row: 3, },
+         * }
+         */
+        const columnOffset = range.s.c;
+        const rowOffset = range.s.r;
 
-        const columnOffset =
-          Array.from(rangeStartColumn).reduce(
-            (offset: number, component, index) => {
-              // 65 is 'A', and we want an `indexValue` for 'A' to be 1
-              const indexValue = component.charCodeAt(0) - 64;
-              /* For a `rangeStartColumn` value of 'AAA' and an `index` of 0,
-            we want `power` to be 2. */
-              const power = rangeStartColumn.length - index - 1;
-              const componentValue =
-                power > 0 ? 26 ** power + indexValue : indexValue;
-              return componentValue + offset;
-            },
-            0
-            // We subtract 1 because spreadsheets start at 1 but we start at 0.
-          ) - 1;
-        const rowOffset = Number(rangeStartRow) - 1;
         const spans =
           mergedCells?.reduce((spans: TableSpan[], merge) => {
             const startColumn = merge.s.c - columnOffset;
@@ -119,6 +118,7 @@ async function extractExcelData(
         const convertedRows = jsonToTableRows(parsedRows);
         const rows = calculateMergedCells(convertedRows, spans);
         const columns = formatColumns(usedCellRange);
+        console.log('columns', columns);
         const newSheet = {
           name: worksheetName,
           rows,
@@ -143,8 +143,24 @@ async function extractExcelData(
 }
 
 function formatColumns(usedCellRange: string) {
-  const cellAddress = XLSX.utils.decode_range(usedCellRange).e.c;
-  const columns = Array(cellAddress + 1)
+  const range = XLSX.utils.decode_range(usedCellRange);
+  /**
+   * The `decode_range` util provides an object of this shape:
+   *
+   * {
+   *   e: { c: 13, r: 38, },
+   *   s: { c: 1, r: 3, },
+   * }
+   *
+   * Translated into a sensible naming convention:
+   *
+   * {
+   *   end: { column: 13, row: 38, },
+   *   start: { column: 1, row: 3, },
+   * }
+   */
+  const numberOfColumns = range.e.c - range.s.c;
+  const columns = Array(numberOfColumns + 1)
     .fill(undefined)
     .map((_, index) => ({ name: XLSX.utils.encode_col(index), key: index }));
   return columns;
