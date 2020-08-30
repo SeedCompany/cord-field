@@ -6,6 +6,7 @@ import {
   jsonToTableRows,
   SheetData,
   SpreadsheetView,
+  TableCellData,
   TableRow,
 } from './SpreadsheetView';
 
@@ -150,355 +151,69 @@ function formatColumns(usedCellRange: string) {
 }
 
 function calculateMergedCells(
-  rows: TableRow[],
+  rows: TableCellData[][],
   spans: TableSpan[]
 ): TableRow[] {
-  return rows.reduce((mergedRows: TableRow[], currentRow, rowIndex) => {
+  /**
+   * First we need to convert `spans` into a list of actual row/column
+   * numbers that we can check each row/column item in the `rows` array
+   * against to see if it should be spanned in the HTML table
+   */
+  interface SpannedCell {
+    column: number;
+    row: number;
+  }
+  const messySpannedCells = spans.reduce((spanned: SpannedCell[], span) => {
+    const { startColumn, startRow, colspan, rowspan } = span;
+    const merges = Array(rowspan)
+      .fill(undefined)
+      .reduce((mergedCells: SpannedCell[], _, rowIndex) => {
+        const mergedColumns = Array(colspan)
+          .fill(undefined)
+          .map((_, columnIndex) => ({
+            row: startRow + rowIndex,
+            column: startColumn + columnIndex,
+          }));
+        return mergedCells.concat(mergedColumns);
+      }, []);
     /**
-     * If this row already exists, that means somewhere lower down we
-     * have processed it completely, so it should be returned as-is.
+     * `merges` includes the cell where the merge starts, but
+     * we want to exclude it.
      */
-    if (mergedRows[rowIndex]) {
-      return mergedRows;
-    }
-
-    // Mark any column-spanned cells in this row as `spanned`
-    const mergedRow = getMergedColumns(currentRow, rowIndex, spans);
-
-    /**
-     * Now we need a snapshot of all the rows we've modified
-     * up until now, together with all remaining unprocessed
-     * rows. We're going to pass that snapshot recursively
-     * back, in case any of the cells we've already processed
-     * have their own merged rows that need to be processed
-     * in
-     */
-    const rowsSnapshot = [
-      ...mergedRows.slice(0, rowIndex),
-      mergedRow,
-      ...mergedRows.slice(rowIndex + 1),
-      ...rows.slice(mergedRows.length + 1),
-    ];
-
-    // Find cells in this row that have `rowspan` > 1
-    console.log(`Getting merged rows for row ${rowIndex + 1}`);
-    const rowMergesForCurrentRow = findRowMergesForCurrentRow(
-      currentRow,
-      rowIndex,
-      spans
+    const mergesWithoutOrigin = merges.filter(
+      (merge) => merge.row !== startRow || merge.column !== startColumn
     );
-
-    const subsequentMergedRows = getSubsequentMergedRows(
-      rowMergesForCurrentRow,
-      rowIndex,
-      rowsSnapshot,
-      spans
-    );
-
-    return [
-      ...mergedRows.slice(0, rowIndex),
-      mergedRow,
-      ...subsequentMergedRows,
-      ...mergedRows.slice(rowIndex + 1 + subsequentMergedRows.length),
-    ];
+    return spanned.concat(mergesWithoutOrigin);
   }, []);
-}
-
-/**
- * Whether we're calling it from the main loop or later while
- * processing merged rows, we need to process the "current" row
- * for column merges.
- */
-function getMergedColumns(
-  currentRow: TableRow,
-  rowIndex: number,
-  spans: TableSpan[]
-): TableRow {
-  return currentRow.reduce((mergedColumns: TableRow, column, columnIndex) => {
-    /**
-     * Some function already decided this cell would be spanned;
-     * return it still spanned.
-     * */
-    if (mergedColumns[columnIndex]?.spanned || column.spanned) {
-      return [
-        ...mergedColumns.slice(0, columnIndex),
-        {
+  /**
+   * It probably wouldn't hurt us much to let there be some
+   * duplicates, but let's be tidy.
+   */
+  const spannedCells = [...new Set(messySpannedCells)];
+  const mergedRows = rows.map((columns, rowIndex) => {
+    const mergedColumns = columns.map((column, columnIndex) => {
+      const isSpanned = spannedCells.find(
+        (spannedCell) =>
+          spannedCell.row === rowIndex && spannedCell.column === columnIndex
+      );
+      if (isSpanned) {
+        return {
           index: columnIndex,
           spanned: true as const,
-        },
-        ...mergedColumns.slice(columnIndex + 1),
-      ];
-    }
-
-    const columnMerge = spans.find(
-      (span) => span.startColumn === columnIndex && span.startRow === rowIndex
-    );
-
-    if (!columnMerge) {
-      return [
-        ...mergedColumns.slice(0, columnIndex),
-        {
-          index: columnIndex,
-          spanned: false as const,
-          rowspan: 1,
-          colspan: 1,
-          content: column.content,
-        },
-        ...mergedColumns.slice(columnIndex + 1),
-      ];
-    }
-
-    const { colspan, rowspan } = columnMerge;
-    const currentColumnData = {
-      index: columnIndex,
-      spanned: false as const,
-      rowspan,
-      colspan,
-      content: column.content,
-    };
-    const spannedColumns = Array(colspan - 1)
-      .fill(undefined)
-      .map((_, index) => ({
-        index,
-        spanned: true as const,
-      }));
-    return [...mergedColumns, currentColumnData, ...spannedColumns];
-  }, []);
-}
-
-/**
- * We need to find any cell with `rowspan` > 1. We'll feed the list
- * of such row merges into a function that evaluates subsequent rows
- * and processes all of **their** merges, recursively.
- */
-function findRowMergesForCurrentRow(
-  row: TableRow,
-  rowIndex: number,
-  spans: TableSpan[]
-): TableSpan[] {
-  return row.reduce((merges: TableSpan[], _, ci) => {
-    const cellMerge = spans.find(
-      (span) =>
-        span.startColumn === ci &&
-        span.startRow === rowIndex &&
-        span.rowspan > 1
-    );
-    return !cellMerge ? merges : merges.concat(cellMerge);
-  }, []);
-}
-
-/**
- * This could really have been one function together with
- * `findRowMergesForCurrentRow`, but we're keeping them separate
- * for readability.
- *
- * The output of `findRowMergesForCurrentRow` is an array of cells
- * in the "current" row (whether the row from the main
- * `calculateMergedCells` function, or one of the subsequent rows
- * being evaluated in the loop of this function that called it
- * recursively) that have `rowspan` > 1. For each of those cells,
- * we need to evaluate any subsequent rows affected by the merged
- * row. They may, in turn, have cells with merged rows, requiring
- * us to call this function again.
- *
- * An example might be useful. Let us say we have a spreadsheet
- * that looks like this:
- *
- *  ┌───────────┬─────────────────┬─────┐
- *  │           │      C1-E1      │ F1  │
- *  │           │                 │     │
- *  │           ├───────────┬─────┴─────┤
- *  │   A1-B3   │           │   E2-F2   │
- *  │           │           │           │
- *  │           │   C2-D3   ├─────┬─────┤
- *  │           │           │     │ F3  │
- *  │           │           │     │     │
- *  ├─────┬─────┼─────┬─────┤E3-E4├─────┤
- *  │ A4  │ B4  │ C4  │ D4  │     │ F4  │
- *  │     │     │     │     │     │     │
- *  └─────┴─────┴─────┴─────┴─────┴─────┘
- *
- * We run `calculateMergedCells`. While processing row 1, it runs
- * `rowMergesForCurrentRow` and finds the merged rows of A1-B3
- * (which also includes merged columns). It passes the information
- * about that merge to `getSubsequentMergedRows`, which identifies
- * the rows below row 1 that need to be processed so their cells
- * that are merged into row 1 can be marked as spanned.
- *
- * While we are doing this processing, we also check for merged rows
- * in a recursive process. So when `getSubsequentMergedRows`
- * processes row 2, it calls `rowMergesForCurrentRow` and finds the
- * merged rows of C2-D3. This means it needs to process row 3, and
- * then it finds E3-E4.
- *
- * ALSO! When processing each row, `getSubsequentMergedRows` calls
- * `getMergedColumns` to make sure all column merges are evaluated.
- * This way, when a given row is finally handed all the way back
- * up to `calculateMergedCells`, it can be added to the accumulator
- * value without further modification. But this means that we always
- * need to be working with the most recently modified version of a row,
- * passing our recent edits forward with each recursive call to
- * `getSubsequentMergedRows` instead of constantly pulling from the
- * original rows passed in to `calculateMergedCells`.
- */
-function getSubsequentMergedRows(
-  rowMerges: TableSpan[],
-  rowIndex: number,
-  rowsSnapshot: TableRow[],
-  spans: TableSpan[]
-): TableRow[] {
-  console.log(`row merges for row ${rowIndex + 1}`, rowMerges);
-  const subsequentMergedRows = rowMerges.reduce(
-    (subsequentRows: TableRow[], rowMerge, rowMergeIndex) => {
-      const { rowspan, startColumn, colspan } = rowMerge;
-      /**
-       * Which columns in this row merge extend beyond this
-       * row into subsequent rows?
-       */
-      const columnsToMerge = Array(colspan)
-        .fill(undefined)
-        .reduce(
-          (columns: number[], __, i) => columns.concat(startColumn + i),
-          []
-        );
-      const populatedSubsequentRows = Array(rowspan - 1)
-        .fill(undefined)
-        .reduce((populatedRows: TableRow[], _, newRowIndex) => {
-          console.log(
-            `Populating row ${
-              rowIndex + 1 + newRowIndex + 1
-            } from merge in row ${rowIndex + 1}`
-          );
-          /**
-           * We might have already made a pass through this `.reduce`
-           * function and have new information that should replace
-           * some of what we originally received in `rowsSnapshot`
-           */
-          const subsequentRowsSnapshot = [
-            ...rowsSnapshot.slice(0, rowIndex + 1),
-            ...subsequentRows.slice(0, rowMergeIndex + 1),
-            ...populatedRows,
-            ...subsequentRows.slice(rowMergeIndex + 2 + populatedRows.length),
-            ...rowsSnapshot.slice(
-              rowIndex + 1 + (subsequentRows.length + populatedRows.length)
-            ),
-          ];
-          console.log(
-            'rowsSnapshot.slice(0, rowIndex + 1)',
-            rowsSnapshot.slice(0, rowIndex + 1)
-          );
-          console.log(
-            'subsequentRows.slice(0, rowMergeIndex)',
-            subsequentRows.slice(0, rowMergeIndex)
-          );
-          console.log('populatedRows', populatedRows);
-          console.log(
-            'subsequentRows.slice(rowMergeIndex + 1 + populatedRows.length)',
-            subsequentRows.slice(rowMergeIndex + 1 + populatedRows.length)
-          );
-          console.log(
-            'rowsSnapshot.slice(rowIndex + 1 + (subsequentRows.length + populatedRows.length))',
-            rowsSnapshot.slice(
-              rowIndex + 1 + (subsequentRows.length + populatedRows.length)
-            )
-          );
-          /**
-           * We need to know how to find the current row (`newRowIndex`
-           * inside this block) in our `rowsSnapshot` so we can retrieve
-           * its values from whichever place has the more recently
-           * modified data.
-           */
-          const originalIndex = rowIndex + newRowIndex + 1;
-
-          /**
-           * If we already processed a row directly from `rows` in a
-           * previous pass but it contains more than one merged row, we
-           * want to modify our previous modification, not the original.
-           */
-          const currentRowData =
-            subsequentRows[newRowIndex] ??
-            subsequentRowsSnapshot[originalIndex];
-          // Calculate all the column merges isolated to this row
-          const mergedColumnsCurrentRowData = getMergedColumns(
-            currentRowData,
-            originalIndex,
-            spans
-          );
-
-          /**
-           * Now that we have the column merges calculated, we need to
-           * identify any cells in this row that are affected by a row
-           * merge from higher up. Some of those cells may already be
-           * marked as `spanned` from a previous pass; if so, our work is
-           * done! Otherwise we'll check against our list of columns in
-           * this row that ought to be merged.
-           */
-          const mergedRow = mergedColumnsCurrentRowData.reduce(
-            (mergedRow: TableRow, cell: TableRow[0], cellIndex: number) => {
-              const mergedCell = columnsToMerge.includes(cellIndex)
-                ? {
-                    index: cellIndex,
-                    spanned: true as const,
-                  }
-                : cell;
-              const newMergedRow = mergedRow.concat(mergedCell);
-              return newMergedRow;
-            },
-            []
-          );
-
-          /**
-           * Now that all necessary cells in this row have been marked
-           * as spanned, we need to check for any row merges in it that
-           * require the processing of rows below it. This is where we
-           * make our recursive call to `getSubsequentMergedRows`, so we
-           * need the same kind of data here that we made from the top-
-           * level function that calls it: a snapshot of all currently
-           * processed rows, the current row we want to evalaute for
-           * row merges, and the index of that row in the snapshot.
-           */
-          const mergedRowsSnapshot = [
-            ...subsequentRowsSnapshot.slice(0, rowIndex + 1),
-            ...populatedRows.slice(0, newRowIndex),
-            mergedRow,
-            ...populatedRows.slice(newRowIndex + 1),
-            ...subsequentRowsSnapshot.slice(
-              rowIndex + 1 + populatedRows.length + 1
-            ),
-          ];
-          console.log(
-            `Getting merged rows for row ${originalIndex + 1} from row ${
-              rowIndex + 1
-            }`
-          );
-          const mergesForSubsequentRow = findRowMergesForCurrentRow(
-            mergedRow,
-            originalIndex,
-            spans
-          );
-
-          const subSubsequentRows = getSubsequentMergedRows(
-            mergesForSubsequentRow,
-            originalIndex,
-            mergedRowsSnapshot,
-            spans
-          );
-          const newPopulatedRows = [
-            ...populatedRows.slice(0, newRowIndex),
-            mergedRow,
-            ...subSubsequentRows,
-            ...populatedRows.slice(newRowIndex + 1 + subSubsequentRows.length),
-          ];
-          console.log(
-            `newPopulatedRows from row ${rowIndex + 1}`,
-            newPopulatedRows
-          );
-          return newPopulatedRows;
-        }, []);
-
-      return populatedSubsequentRows;
-    },
-    []
-  );
-  return subsequentMergedRows;
+        };
+      }
+      const { rowspan, colspan, content } = column;
+      const cellSpan = spans.find(
+        (span) => span.startColumn === columnIndex && span.startRow === rowIndex
+      );
+      return {
+        index: columnIndex,
+        rowspan: cellSpan ? cellSpan.rowspan : rowspan,
+        colspan: cellSpan ? cellSpan.colspan : colspan,
+        content,
+      };
+    });
+    return mergedColumns as TableRow;
+  });
+  return mergedRows;
 }

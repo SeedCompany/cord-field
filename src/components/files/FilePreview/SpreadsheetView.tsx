@@ -79,7 +79,7 @@ interface SpreadSheetViewProps {
   data: SheetData[];
 }
 
-export function jsonToTableRows(rows: RowData): TableRow[] {
+export function jsonToTableRows(rows: RowData): TableCellData[][] {
   return rows.map((row: RowData[0]) =>
     row.map((cell: any, index: number) => ({
       index,
