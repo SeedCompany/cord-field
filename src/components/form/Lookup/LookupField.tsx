@@ -131,6 +131,16 @@ export function LookupField<
     string
   >();
 
+  const shouldSelect = autoFocus && (props.selectOnFocus ?? true);
+  useEffect(() => {
+    if (shouldSelect && ref.current) {
+      setTimeout(
+        () => (ref.current as HTMLInputElement | undefined)?.select(),
+        100
+      );
+    }
+  }, [shouldSelect, ref]);
+
   useEffect(() => {
     setInput(selectedText);
   }, [field.value, selectedText]);
