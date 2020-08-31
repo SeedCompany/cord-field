@@ -77,7 +77,7 @@ export function LookupField<
 >({
   name: nameProp,
   multiple,
-  defaultValue,
+  defaultValue: defaultValueProp,
   disabled: disabledProp,
   useLookup,
   ChipProps,
@@ -93,13 +93,15 @@ export function LookupField<
 }: LookupFieldProps<T, Multiple, DisableClearable, CreateFormValues>) {
   const freeSolo = !!CreateDialogForm;
   type Val = Value<T, Multiple, DisableClearable, false>;
+  const defaultValue =
+    defaultValueProp ?? ((multiple ? emptyArray : null) as Val);
 
   const name = useFieldName(nameProp);
   const { input: field, meta, rest: autocompleteProps } = useField<Val>(name, {
     ...props,
     required,
     allowNull: !multiple,
-    defaultValue: (multiple ? emptyArray : null) as Val,
+    defaultValue,
     isEqual: compareNullable((a, b) =>
       multiple
         ? areListsEqual(a.map(getCompareBy), b.map(getCompareBy))
@@ -218,7 +220,8 @@ export function LookupField<
           params.inputValue as T,
         ];
       }}
-      value={field.value}
+      // FF for some reason doesn't handle defaultValue correctly
+      value={(field.value as Val | '') || defaultValue}
       inputValue={input}
       onBlur={field.onBlur}
       onFocus={field.onFocus}
