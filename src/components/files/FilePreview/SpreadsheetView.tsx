@@ -54,14 +54,41 @@ export type ColumnData = Array<{
 }>;
 export type RowData = ReturnType<XLSX$Utils['sheet_to_json']>;
 
+export interface TableCellSpanned {
+  index: number;
+  spanned: true;
+}
+
+export interface TableCellData {
+  index: number;
+  spanned: false;
+  rowspan: number;
+  colspan: number;
+  content: string | number;
+}
+
+export type TableRow = Array<TableCellSpanned | TableCellData>;
+
 export interface SheetData {
   name: string;
-  rows: RowData;
+  rows: TableRow[];
   columns: ColumnData;
 }
 
 interface SpreadSheetViewProps {
   data: SheetData[];
+}
+
+export function jsonToTableRows(rows: RowData): TableCellData[][] {
+  return rows.map((row: RowData[0]) =>
+    row.map((cell: any, index: number) => ({
+      index,
+      spanned: false,
+      rowspan: 1,
+      colspan: 1,
+      content: typeof cell === 'number' ? cell : String(cell),
+    }))
+  );
 }
 
 const RenderedSheet: FC<Omit<SheetData, 'name'>> = (props) => {
@@ -76,16 +103,22 @@ const RenderedSheet: FC<Omit<SheetData, 'name'>> = (props) => {
             return <th key={key}>{name}</th>;
           })}
         </tr>
-        {rows.map((row, index) => (
-          <tr key={index}>
-            <td key={index} className="table-header">
-              {index}
-            </td>
-            {columns.map((column) => (
-              <td key={column.key}>{row[column.key]}</td>
-            ))}
-          </tr>
-        ))}
+        {rows.map((cells, rowIndex) => {
+          return (
+            <tr key={rowIndex}>
+              <th className="table-header">{rowIndex + 1}</th>
+              {cells.map((cell) => {
+                if (cell.spanned) return null;
+                const { index, rowspan, colspan, content } = cell;
+                return (
+                  <td key={index} rowSpan={rowspan} colSpan={colspan}>
+                    {content}
+                  </td>
+                );
+              })}
+            </tr>
+          );
+        })}
       </tbody>
     </table>
   );

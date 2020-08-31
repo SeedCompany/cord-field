@@ -2,7 +2,11 @@ import Papa, { ParseResult } from 'papaparse';
 import React, { FC, useCallback, useEffect, useState } from 'react';
 import { PreviewerProps } from './FilePreview';
 import { PreviewLoading } from './PreviewLoading';
-import { ColumnData, SpreadsheetView } from './SpreadsheetView';
+import {
+  ColumnData,
+  jsonToTableRows,
+  SpreadsheetView,
+} from './SpreadsheetView';
 
 export const CsvPreview: FC<PreviewerProps> = (props) => {
   const { file, previewLoading, setPreviewLoading, setPreviewError } = props;
@@ -36,7 +40,7 @@ export const CsvPreview: FC<PreviewerProps> = (props) => {
         []
       )
     : [];
-  const rows = hasParsed ? csvData.slice(1) : [];
+  const rows = hasParsed ? jsonToTableRows(csvData.slice(1)) : [];
 
   return previewLoading ? (
     <PreviewLoading />
