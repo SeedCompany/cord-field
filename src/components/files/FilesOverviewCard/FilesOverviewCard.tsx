@@ -4,12 +4,14 @@ import { FieldOverviewCard } from '../../FieldOverviewCard';
 import { useNumberFormatter } from '../../Formatters';
 
 export interface BudgetOverviewCardProps {
+  canReadFiles: boolean;
   className?: string;
   loading?: boolean;
   total?: number;
 }
 
 export const FilesOverviewCard: FC<BudgetOverviewCardProps> = ({
+  canReadFiles,
   className,
   loading,
   total,
@@ -19,10 +21,19 @@ export const FilesOverviewCard: FC<BudgetOverviewCardProps> = ({
     <FieldOverviewCard
       className={className}
       title="Files"
-      viewLabel="View Files"
+      viewLabel={
+        !canReadFiles
+          ? 'You do not have permission to view files for this project'
+          : 'View Files'
+      }
       data={
         loading
           ? undefined
+          : !canReadFiles
+          ? {
+              to: '',
+              value: '—',
+            }
           : {
               to: 'files',
               value: total ? String(formatNumber(total)) : '∞',

@@ -8,7 +8,11 @@ export default { title: 'components' };
 export const FilesOverviewCard = () => {
   return (
     <Box display="flex" width={400}>
-      <Card loading={boolean('loading', false)} total={number('total', 1)} />
+      <Card
+        loading={boolean('loading', false)}
+        total={number('total', 1)}
+        canReadFiles={boolean('canReadFiles', true)}
+      />
     </Box>
   );
 };

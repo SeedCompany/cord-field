@@ -7,6 +7,7 @@ import {
 } from '@material-ui/core';
 import { CreateNewFolder, Publish } from '@material-ui/icons';
 import { Skeleton } from '@material-ui/lab';
+import { useSnackbar } from 'notistack';
 import React, { FC } from 'react';
 import { useDropzone } from 'react-dropzone';
 import { useNavigate, useParams } from 'react-router-dom';
@@ -114,6 +115,7 @@ const ProjectFilesListWrapped: FC = () => {
   const navigate = useNavigate();
   const { projectId } = useParams();
   const formatDate = useDateTimeFormatter();
+  const { enqueueSnackbar } = useSnackbar();
 
   const { openFilePreview } = useFileActions();
 
@@ -124,6 +126,17 @@ const ProjectFilesListWrapped: FC = () => {
     directoryId,
     rootDirectoryId,
   } = useProjectCurrentDirectory();
+
+  if (canReadRootDirectory === false) {
+    enqueueSnackbar(
+      `You don't have permission to view files for this project`,
+      {
+        preventDuplicate: true,
+        variant: 'error',
+        autoHideDuration: 3000,
+      }
+    );
+  }
 
   const handleFilesDrop = useUploadProjectFiles(directoryId);
 
@@ -270,11 +283,7 @@ const ProjectFilesListWrapped: FC = () => {
     }
   };
 
-  return directoryLoading ? null : !canReadRootDirectory ? (
-    <Typography variant="h4">
-      You do not have permission to view this project's files
-    </Typography>
-  ) : (
+  return directoryLoading || !canReadRootDirectory ? null : (
     <div className={classes.dropzone} {...getRootProps()}>
       <input {...getInputProps()} name="files_list_uploader" />
       {isDragActive && (

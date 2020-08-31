@@ -253,7 +253,11 @@ export const ProjectOverview: FC = () => {
               budget={data?.project.budget.value}
             />
             {/* TODO When file api is finished need to update query and pass in file information */}
-            <FilesOverviewCard loading={!data} total={undefined} />
+            <FilesOverviewCard
+              loading={!data}
+              total={undefined}
+              canReadFiles={canReadDirectoryId === true}
+            />
           </div>
           <CardGroup>
             <ProjectMembersSummary members={data?.project.team} />

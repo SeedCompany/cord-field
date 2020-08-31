@@ -25,7 +25,7 @@ export const CreateProjectDirectory = (
   } = useProjectCurrentDirectory();
   const { enqueueSnackbar } = useSnackbar();
 
-  if (!loading && !canRead) {
+  if (canRead === false) {
     enqueueSnackbar(
       `You don't have permission to add folders in this project`,
       {
