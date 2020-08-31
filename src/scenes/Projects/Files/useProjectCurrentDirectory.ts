@@ -12,7 +12,8 @@ export const useProjectCurrentDirectory = () => {
     },
   });
   const project = data?.project;
-  const rootDirectoryId = data?.project.rootDirectory.id;
+  const canRead = data?.project.rootDirectory.canRead;
+  const rootDirectoryId = data?.project.rootDirectory.value?.id;
   const directoryId = folderId ?? rootDirectoryId ?? '';
-  return { loading, project, directoryId, rootDirectoryId };
+  return { loading, canRead, project, directoryId, rootDirectoryId };
 };

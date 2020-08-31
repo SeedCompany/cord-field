@@ -72,12 +72,17 @@ export const ProjectOverview: FC = () => {
     Many<EditableProjectField>
   >();
 
-  const { directoryId } = useProjectCurrentDirectory();
+  const {
+    directoryId,
+    loading: directoryIdLoading,
+    canRead: canReadDirectoryId,
+  } = useProjectCurrentDirectory();
   const handleFilesDrop = useUploadProjectFiles(directoryId);
 
   const { getRootProps, getInputProps, open: openFileBrowser } = useDropzone({
     onDrop: handleFilesDrop,
     noClick: true,
+    disabled: !directoryId,
   });
 
   const [createEngagementState, createEngagement] = useDialog();
@@ -219,26 +224,28 @@ export const ProjectOverview: FC = () => {
             </Grid>
           </Grid>
 
-          <Grid container spacing={1} alignItems="center">
-            <Grid item>
-              <span {...getRootProps()}>
-                <input {...getInputProps()} />
-                <Fab
-                  loading={!data}
-                  onClick={openFileBrowser}
-                  color="primary"
-                  aria-label="Upload Files"
-                >
-                  <Publish />
-                </Fab>
-              </span>
+          {directoryIdLoading || !canReadDirectoryId ? null : (
+            <Grid container spacing={1} alignItems="center">
+              <Grid item>
+                <span {...getRootProps()}>
+                  <input {...getInputProps()} />
+                  <Fab
+                    loading={!data}
+                    onClick={openFileBrowser}
+                    color="primary"
+                    aria-label="Upload Files"
+                  >
+                    <Publish />
+                  </Fab>
+                </span>
+              </Grid>
+              <Grid item>
+                <Typography variant="h4">
+                  {data ? 'Upload Files' : <Skeleton width="12ch" />}
+                </Typography>
+              </Grid>
             </Grid>
-            <Grid item>
-              <Typography variant="h4">
-                {data ? 'Upload Files' : <Skeleton width="12ch" />}
-              </Typography>
-            </Grid>
-          </Grid>
+          )}
 
           <div className={classes.container}>
             <BudgetOverviewCard
