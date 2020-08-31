@@ -1,5 +1,7 @@
 import { Box } from '@material-ui/core';
+import { Decorator } from 'final-form';
 import React, { FC } from 'react';
+import { useFormState } from 'react-final-form';
 import { Except } from 'type-fest';
 import {
   displayPartnershipStatus,
@@ -21,6 +23,7 @@ import {
   SubmitButton,
   SubmitError,
 } from '../../../components/form';
+import { SelectField } from '../../../components/form/SelectField';
 import {
   EditPartnershipFragment,
   useDeletePartnershipMutation,
@@ -33,6 +36,41 @@ type EditPartnershipProps = Except<
 > & {
   partnership: EditPartnershipFragment;
 };
+
+const hasManagingType = (
+  types: readonly PartnershipType[] | null | undefined
+) => types?.some((type) => type === 'Managing') ?? false;
+
+const clearFundingType: Decorator<
+  UpdatePartnershipInput & SubmitAction<'delete'>,
+  Partial<UpdatePartnershipInput & SubmitAction<'delete'>>
+> = (form) => {
+  let prevValues:
+    | Partial<UpdatePartnershipInput & SubmitAction<'delete'>>
+    | undefined = undefined;
+  return form.subscribe(
+    ({ initialValues, values }) => {
+      if (prevValues === undefined) prevValues = initialValues;
+      if (
+        hasManagingType(prevValues.partnership?.types) &&
+        !hasManagingType(values.partnership.types)
+      ) {
+        form.change(
+          'partnership.fundingType' as keyof UpdatePartnershipInput,
+          undefined
+        );
+      }
+      prevValues = values;
+    },
+    {
+      values: true,
+      initialValues: true,
+      active: true,
+    }
+  );
+};
+
+const decorators = [clearFundingType];
 
 export const EditPartnership: FC<EditPartnershipProps> = ({
   partnership,
@@ -87,8 +125,10 @@ export const EditPartnership: FC<EditPartnershipProps> = ({
           agreementStatus: partnership.agreementStatus.value,
           mouStatus: partnership.mouStatus.value,
           types: partnership.types.value,
+          fundingType: partnership.fundingType.value,
         },
       }}
+      decorators={decorators}
     >
       <SubmitError />
       <CheckboxesField
@@ -123,6 +163,24 @@ export const EditPartnership: FC<EditPartnershipProps> = ({
       >
         {radioOptions}
       </RadioField>
+      <FundingType />
     </DialogForm>
   );
+};
+
+const FundingType = () => {
+  const { values } = useFormState<UpdatePartnershipInput>();
+  const managingTypeSelected = hasManagingType(values.partnership.types);
+
+  return managingTypeSelected ? (
+    <SelectField
+      required={managingTypeSelected}
+      name="partnership.fundingType"
+      label="Funding Type"
+      selectOptions={[
+        { value: 'Funded', label: 'Funded' },
+        { value: 'FieldEngaged', label: 'Field Engaged' },
+      ]}
+    />
+  ) : null;
 };
