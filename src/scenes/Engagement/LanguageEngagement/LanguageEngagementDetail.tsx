@@ -26,8 +26,12 @@ import { OptionsIcon, PlantIcon } from '../../../components/Icons';
 import { ProjectBreadcrumb } from '../../../components/ProjectBreadcrumb';
 import { Redacted } from '../../../components/Redacted';
 import { Link } from '../../../components/Routing';
+import { Many } from '../../../util';
 import { CeremonyCard } from '../CeremonyCard';
-import { EditEngagementDialog } from '../EditEngagement/EditEngagementDialog';
+import {
+  EditableEngagementField,
+  EditEngagementDialog,
+} from '../EditEngagement/EditEngagementDialog';
 import { EngagementQuery } from '../Engagement.generated';
 
 const useStyles = makeStyles(({ spacing, breakpoints, palette }) => ({
@@ -53,7 +57,9 @@ export const LanguageEngagementDetail: FC<EngagementQuery> = ({
 }) => {
   const classes = useStyles();
 
-  const [state, show, editValue] = useDialog<string>();
+  const [editState, show, editField] = useDialog<
+    Many<EditableEngagementField>
+  >();
 
   const date = securedDateRange(engagement.startDate, engagement.endDate);
   const formatDate = useDateFormatter();
@@ -113,7 +119,7 @@ export const LanguageEngagementDetail: FC<EngagementQuery> = ({
                 <Fab
                   color="primary"
                   aria-label="Update language engagement"
-                  onClick={() => show('firstScriptureAndLukePartnership')}
+                  onClick={() => show(['firstScripture', 'lukePartnership'])}
                 >
                   <Edit />
                 </Fab>
@@ -140,7 +146,7 @@ export const LanguageEngagementDetail: FC<EngagementQuery> = ({
               redacted="You do not have permission to view start/end dates"
               children={formatDate.range}
               empty="Start - End"
-              onClick={() => show('startEndDate')}
+              onClick={() => show(['startDate', 'endDate'])}
             />
           </Grid>
           <Grid item>
@@ -203,9 +209,9 @@ export const LanguageEngagementDetail: FC<EngagementQuery> = ({
         </Grid>
       </Grid>
       <EditEngagementDialog
-        {...state}
+        {...editState}
         engagement={engagement}
-        editValue={editValue}
+        editFields={editField}
       />
     </div>
   );
