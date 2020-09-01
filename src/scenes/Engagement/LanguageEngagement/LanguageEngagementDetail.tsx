@@ -146,7 +146,7 @@ export const LanguageEngagementDetail: FC<EngagementQuery> = ({
               redacted="You do not have permission to view start/end dates"
               children={formatDate.range}
               empty="Start - End"
-              onClick={() => show(['startDate', 'endDate'])}
+              onClick={() => show(['startDateOverride', 'endDateOverride'])}
             />
           </Grid>
           <Grid item>

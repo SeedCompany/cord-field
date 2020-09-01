@@ -25,7 +25,7 @@ import {
 } from '../../../components/form';
 import { CountryField, UserField } from '../../../components/form/Lookup';
 import { UserLookupItemFragment } from '../../../components/form/Lookup/User/UserLookup.generated';
-import { many, Many } from '../../../util';
+import { ExtractStrict, many, Many } from '../../../util';
 import { InternshipEngagementDetailFragment as InternshipEngagement } from '../InternshipEngagement/InternshipEngagement.generated';
 import { LanguageEngagementDetailFragment as LanguageEngagement } from '../LanguageEngagement/LanguageEngagementDetail.generated';
 import {
@@ -34,15 +34,35 @@ import {
 } from './EditEngagementDialog.generated';
 
 type Engagement = InternshipEngagement | LanguageEngagement;
-type EngagementKeys = keyof InternshipEngagement | keyof LanguageEngagement;
+
+export type EditableEngagementField = ExtractStrict<
+  keyof UpdateInternshipEngagement | keyof UpdateLanguageEngagement,
+  // Add more fields here as needed
+  | 'startDateOverride'
+  | 'endDateOverride'
+  | 'completeDate'
+  | 'disbursementCompleteDate'
+  | 'communicationsCompleteDate'
+  | 'methodologies'
+  | 'position'
+  | 'countryOfOriginId'
+  | 'mentorId'
+  | 'firstScripture'
+  | 'lukePartnership'
+>;
 
 interface EngagementFieldProps {
   engagement: Engagement;
 }
 
-const fieldMapping = {
-  startDate: () => <DateField name="startDate" label="Start Date" />,
-  endDate: () => <DateField name="endDate" label="End Date" />,
+const fieldMapping: Record<
+  EditableEngagementField,
+  ComponentType<EngagementFieldProps>
+> = {
+  startDateOverride: () => (
+    <DateField name="startDateOverride" label="Start Date" />
+  ),
+  endDateOverride: () => <DateField name="endDateOverride" label="End Date" />,
   completeDate: ({ engagement }: EngagementFieldProps) => (
     <DateField
       name="completeDate"
@@ -83,10 +103,10 @@ const fieldMapping = {
       ))}
     </RadioField>
   ),
-  countryOfOrigin: () => (
+  countryOfOriginId: () => (
     <CountryField name="countryOfOriginId" label="Country of Origin" />
   ),
-  mentor: () => <UserField name="mentorId" label="Mentor" />,
+  mentorId: () => <UserField name="mentorId" label="Mentor" />,
   firstScripture: () => (
     <CheckboxField name="firstScripture" label="First Scripture" />
   ),
@@ -95,30 +115,12 @@ const fieldMapping = {
   ),
 };
 
-export type EditableEngagementField = keyof typeof fieldMapping;
-
-// Asserts the above mapping's keys & values are valid fields & components
-// By not declaring/enforcing the type on field mapping TS infers the type,
-// which allows us to define EditableEngagementField. Doing so we can strictly
-// define which fields are editable without having to duplicate the field keys.
-// I spent hours trying to get TS both enforce/constrain the shape while also
-// inferring the actual result with no success. The above solution isn't the best
-// DX either, keys are not autocompleted, props have to be explicitly defined,
-// but at least the strict typing works.
-const _assertMapping: Partial<
-  Record<EngagementKeys, ComponentType<EngagementFieldProps>>
-> &
-  Record<
-    Exclude<EditableEngagementField, EngagementKeys>,
-    never
-  > = fieldMapping;
-
 interface EngagementFormValues {
   engagement: Merge<
     UpdateLanguageEngagement & UpdateInternshipEngagement,
     {
-      mentorId?: UserLookupItemFragment;
-      countryOfOriginId?: DisplayCountryFragment;
+      mentorId?: UserLookupItemFragment | null;
+      countryOfOriginId?: DisplayCountryFragment | null;
     }
   >;
 }
@@ -150,9 +152,9 @@ export const EditEngagementDialog: FC<EditEngagementDialogProps> = ({
       ? updateInternshipEngagement
       : updateLanguageEngagement;
 
-  const fullInitialValues = {
-    startDate: engagement.startDate.value,
-    endDate: engagement.endDate.value,
+  const fullInitialValues: Except<EngagementFormValues['engagement'], 'id'> = {
+    startDateOverride: engagement.startDateOverride.value,
+    endDateOverride: engagement.endDateOverride.value,
     completeDate: engagement.completeDate.value,
     disbursementCompleteDate: engagement.disbursementCompleteDate.value,
     communicationsCompleteDate: engagement.communicationsCompleteDate.value,
@@ -165,6 +167,8 @@ export const EditEngagementDialog: FC<EditEngagementDialogProps> = ({
       ? {
           methodologies: engagement.methodologies.value,
           position: engagement.position.value,
+          mentorId: engagement.mentor.value,
+          countryOfOriginId: engagement.countryOfOrigin.value,
         }
       : {}),
   };

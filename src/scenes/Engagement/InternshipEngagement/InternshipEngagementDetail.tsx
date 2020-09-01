@@ -135,7 +135,7 @@ export const InternshipEngagementDetail: FC<EngagementQuery> = ({
               empty="Enter Country of Origin"
               redacted="You do not have permission to view country of origin"
               children={displayLocation}
-              onClick={() => show('countryOfOrigin')}
+              onClick={() => show('countryOfOriginId')}
             />
           </Grid>
           <Grid item>
@@ -145,7 +145,7 @@ export const InternshipEngagementDetail: FC<EngagementQuery> = ({
               redacted="You do not have permission to view start/end dates"
               children={formatDate.range}
               empty="Start - End"
-              onClick={() => show(['startDate', 'endDate'])}
+              onClick={() => show(['startDateOverride', 'endDateOverride'])}
             />
           </Grid>
           <Grid item>
@@ -206,7 +206,7 @@ export const InternshipEngagementDetail: FC<EngagementQuery> = ({
                 {node}
               </Grid>
             )}
-            onEdit={() => show('mentor')}
+            onEdit={() => show('mentorId')}
           />
         </Grid>
       </Grid>
