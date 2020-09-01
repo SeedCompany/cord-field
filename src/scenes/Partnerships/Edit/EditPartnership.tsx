@@ -25,6 +25,7 @@ import {
   SubmitButton,
   SubmitError,
 } from '../../../components/form';
+import { Nullable } from '../../../util';
 import {
   EditPartnershipFragment,
   useDeletePartnershipMutation,
@@ -38,35 +39,28 @@ type EditPartnershipProps = Except<
   partnership: EditPartnershipFragment;
 };
 
-const hasManagingType = (
-  types: readonly PartnershipType[] | null | undefined
-) => types?.some((type) => type === 'Managing') ?? false;
+const hasManagingType = (types: Nullable<readonly PartnershipType[]>) =>
+  types?.includes('Managing') ?? false;
 
-const clearFundingType: Decorator<
-  UpdatePartnershipInput & SubmitAction<'delete'>,
-  Partial<UpdatePartnershipInput & SubmitAction<'delete'>>
-> = (form) => {
-  let prevValues:
-    | Partial<UpdatePartnershipInput & SubmitAction<'delete'>>
-    | undefined = undefined;
+const clearFundingType: Decorator<UpdatePartnershipInput> = (form) => {
+  let prevValues: Partial<UpdatePartnershipInput> | undefined;
   return form.subscribe(
     ({ initialValues, values }) => {
-      if (prevValues === undefined) prevValues = initialValues;
+      if (prevValues === undefined || prevValues !== initialValues) {
+        prevValues = initialValues;
+      }
       if (
         hasManagingType(prevValues.partnership?.types) &&
         !hasManagingType(values.partnership.types)
       ) {
-        form.change(
-          'partnership.fundingType' as keyof UpdatePartnershipInput,
-          undefined
-        );
+        // @ts-expect-error types don't account for nesting
+        form.change('partnership.fundingType', null);
       }
       prevValues = values;
     },
     {
       values: true,
       initialValues: true,
-      active: true,
     }
   );
 };
