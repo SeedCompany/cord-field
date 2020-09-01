@@ -26,6 +26,7 @@ import { SidebarHeader } from './SidebarHeader';
 const useStyles = makeStyles(({ spacing }) => ({
   root: {
     maxWidth: 248,
+    overflowY: 'scroll',
   },
   content: {
     padding: spacing(0, 2),
