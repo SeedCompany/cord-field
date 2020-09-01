@@ -117,8 +117,8 @@ export const EditPartnership: FC<EditPartnershipProps> = ({
       initialValues={{
         partnership: {
           id: partnership.id,
-          agreementStatus: partnership.agreementStatus.value,
-          mouStatus: partnership.mouStatus.value,
+          agreementStatus: partnership.agreementStatus.value ?? 'NotAttached',
+          mouStatus: partnership.mouStatus.value ?? 'NotAttached',
           types: partnership.types.value,
           fundingType: partnership.fundingType.value,
         },
