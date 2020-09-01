@@ -9,7 +9,10 @@ import {
 } from '@material-ui/core';
 import { Skeleton } from '@material-ui/lab';
 import React, { FC } from 'react';
-import { displayPartnershipStatus } from '../../api';
+import {
+  displayPartnershipFundingType,
+  displayPartnershipStatus,
+} from '../../api';
 import { DisplaySimpleProperty } from '../DisplaySimpleProperty';
 import { useDateTimeFormatter } from '../Formatters';
 import { PartnershipCardFragment } from './PartnershipCard.generated';
@@ -57,6 +60,16 @@ export const PartnershipCard: FC<PartnershipCardProps> = ({
                 <Skeleton width="30%" />
               )}
             </Typography>
+          </Grid>
+          <Grid item>
+            <DisplaySimpleProperty
+              label="Funding Type"
+              value={displayPartnershipFundingType(
+                partnership?.fundingType.value
+              )}
+              loading={!partnership}
+              loadingWidth="40%"
+            />
           </Grid>
 
           <Grid item>

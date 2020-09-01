@@ -1,9 +1,13 @@
 import { Box } from '@material-ui/core';
+import { Decorator } from 'final-form';
 import React, { FC } from 'react';
+import { useFormState } from 'react-final-form';
 import { Except } from 'type-fest';
 import {
+  displayPartnershipFundingType,
   displayPartnershipStatus,
   GQLOperations,
+  PartnershipFundingTypeList,
   PartnershipStatuses,
   PartnershipType,
   UpdatePartnershipInput,
@@ -21,6 +25,7 @@ import {
   SubmitButton,
   SubmitError,
 } from '../../../components/form';
+import { Nullable } from '../../../util';
 import {
   EditPartnershipFragment,
   useDeletePartnershipMutation,
@@ -33,6 +38,34 @@ type EditPartnershipProps = Except<
 > & {
   partnership: EditPartnershipFragment;
 };
+
+const hasManagingType = (types: Nullable<readonly PartnershipType[]>) =>
+  types?.includes('Managing') ?? false;
+
+const clearFundingType: Decorator<UpdatePartnershipInput> = (form) => {
+  let prevValues: Partial<UpdatePartnershipInput> | undefined;
+  return form.subscribe(
+    ({ initialValues, values }) => {
+      if (prevValues === undefined || prevValues !== initialValues) {
+        prevValues = initialValues;
+      }
+      if (
+        hasManagingType(prevValues.partnership?.types) &&
+        !hasManagingType(values.partnership.types)
+      ) {
+        // @ts-expect-error types don't account for nesting
+        form.change('partnership.fundingType', null);
+      }
+      prevValues = values;
+    },
+    {
+      values: true,
+      initialValues: true,
+    }
+  );
+};
+
+const decorators = [clearFundingType];
 
 export const EditPartnership: FC<EditPartnershipProps> = ({
   partnership,
@@ -84,11 +117,13 @@ export const EditPartnership: FC<EditPartnershipProps> = ({
       initialValues={{
         partnership: {
           id: partnership.id,
-          agreementStatus: partnership.agreementStatus.value,
-          mouStatus: partnership.mouStatus.value,
+          agreementStatus: partnership.agreementStatus.value ?? 'NotAttached',
+          mouStatus: partnership.mouStatus.value ?? 'NotAttached',
           types: partnership.types.value,
+          fundingType: partnership.fundingType.value,
         },
       }}
+      decorators={decorators}
     >
       <SubmitError />
       <CheckboxesField
@@ -109,6 +144,7 @@ export const EditPartnership: FC<EditPartnershipProps> = ({
           </Box>
         ))}
       </CheckboxesField>
+      <FundingType />
       <RadioField
         name="partnership.agreementStatus"
         label="Agreement Status"
@@ -125,4 +161,26 @@ export const EditPartnership: FC<EditPartnershipProps> = ({
       </RadioField>
     </DialogForm>
   );
+};
+
+const FundingType = () => {
+  const { values } = useFormState<UpdatePartnershipInput>();
+  const managingTypeSelected = hasManagingType(values.partnership.types);
+
+  return managingTypeSelected ? (
+    <RadioField
+      name="partnership.fundingType"
+      label="Funding Type"
+      fullWidth
+      row
+    >
+      {PartnershipFundingTypeList.map((type) => (
+        <RadioOption
+          key={type}
+          value={type}
+          label={displayPartnershipFundingType(type)}
+        />
+      ))}
+    </RadioField>
+  ) : null;
 };

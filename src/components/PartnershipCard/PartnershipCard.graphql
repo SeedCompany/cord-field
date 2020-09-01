@@ -15,4 +15,7 @@ fragment PartnershipCard on Partnership {
       value
     }
   }
+  fundingType {
+    value
+  }
 }

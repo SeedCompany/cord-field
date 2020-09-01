@@ -8,6 +8,7 @@ import {
   makeStyles,
   Radio,
   RadioGroup,
+  RadioGroupProps,
 } from '@material-ui/core';
 import React, { createContext, ReactNode, useContext } from 'react';
 import { useFieldName } from './FieldGroup';
@@ -21,6 +22,7 @@ export type RadioFieldProps<T = string> = FieldConfig<T> & {
   label?: string;
   helperText?: ReactNode;
 } & Omit<FormControlProps, 'required'> &
+  Pick<RadioGroupProps, 'row'> &
   Pick<FormControlLabelProps, 'labelPlacement'>;
 
 interface RadioOptionProps<T = string>
@@ -62,6 +64,7 @@ export const RadioField = <FieldValue extends any = string>({
   label,
   helperText,
   labelPlacement,
+  row,
   ...props
 }: RadioFieldProps<FieldValue>) => {
   const name = useFieldName(nameProp);
@@ -91,6 +94,7 @@ export const RadioField = <FieldValue extends any = string>({
       )}
       <RadioContext.Provider value={{ disabled, labelPlacement }}>
         <RadioGroup
+          row={row}
           {...input}
           // Pass value instead of event to FF, so FF doesn't try to be smart
           // with its radio logic since we/MUI is already handling it.
