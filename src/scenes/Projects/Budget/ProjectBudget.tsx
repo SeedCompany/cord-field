@@ -36,9 +36,9 @@ export const ProjectBudget = () => {
   });
 
   const projectName = data?.project.name.value;
-  const budget = data?.project.budget.value;
-  const total = budget?.total;
+  const canReadBudget = data?.project.budget.canRead;
   const canEditBudget = data?.project.budget.canEdit;
+  const budget = data?.project.budget.value;
   const budgetRecords = budget?.records ?? [];
 
   interface BudgetRowData {
@@ -101,8 +101,12 @@ export const ProjectBudget = () => {
 
   return (
     <Content>
-      {error || !budget ? (
+      {error ? (
         <Typography variant="h4">Error fetching Project Budget</Typography>
+      ) : canReadBudget === false ? (
+        <Typography variant="h4">
+          You do not have permission to view this project's budget
+        </Typography>
       ) : (
         <>
           {loading ? (
@@ -126,12 +130,11 @@ export const ProjectBudget = () => {
                 <Typography variant="h2">
                   {data?.project.name.value} Budget
                 </Typography>
-                {total ? (
+                {budget && (
                   <Typography variant="body1" className={classes.total}>
-                    {/* This will get updated with a refetch after the mutation */}
-                    Total: {formatCurrency(total)}
+                    Total: {formatCurrency(budget.total)}
                   </Typography>
-                ) : null}
+                )}
               </>
             )}
           </header>
