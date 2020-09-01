@@ -39,6 +39,8 @@ export function TextField<FieldValue = string>({
       InputProps={{ ...InputProps, ...input }}
       helperText={getHelperText(meta, helperText)}
       error={showError(meta)}
+      // no asterisk
+      InputLabelProps={{ ...props.InputLabelProps, required: false }}
     >
       {children}
     </MuiTextField>
