@@ -17,24 +17,8 @@ export const CreateProjectDirectory = (
   props: Except<CreateProjectDirectoryProps, 'onSubmit'>
 ) => {
   const [createDirectory] = useCreateProjectDirectoryMutation();
-  const {
-    project,
-    directoryId,
-    loading,
-    canRead,
-  } = useProjectCurrentDirectory();
+  const { project, directoryId, loading } = useProjectCurrentDirectory();
   const { enqueueSnackbar } = useSnackbar();
-
-  if (canRead === false) {
-    enqueueSnackbar(
-      `You don't have permission to add folders in this project`,
-      {
-        preventDuplicate: true,
-        variant: 'error',
-        autoHideDuration: 3000,
-      }
-    );
-  }
 
   const onSubmit: CreateProjectDirectoryProps['onSubmit'] = async (
     nameInput
