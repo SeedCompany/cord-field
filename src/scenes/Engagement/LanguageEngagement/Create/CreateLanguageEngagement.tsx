@@ -54,7 +54,7 @@ export const CreateLanguageEngagement = ({
       title="Create Language Engagement"
     >
       <SubmitError />
-      <LanguageField name="language" label="Language" />
+      <LanguageField name="language" label="Language" required />
     </DialogForm>
   );
 };

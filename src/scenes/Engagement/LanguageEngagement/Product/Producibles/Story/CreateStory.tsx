@@ -40,6 +40,7 @@ export const CreateStory = (props: CreateStoryProps) => {
         name="story.name"
         label="Name"
         placeholder="Enter story name"
+        required
       />
     </DialogForm>
   );

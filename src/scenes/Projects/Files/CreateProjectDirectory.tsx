@@ -57,7 +57,12 @@ export const CreateProjectDirectory = (
       title="Create Folder"
     >
       <SubmitError />
-      <TextField name="name" label="Name" placeholder="Enter folder name" />
+      <TextField
+        name="name"
+        label="Name"
+        placeholder="Enter folder name"
+        required
+      />
     </DialogForm>
   );
 };

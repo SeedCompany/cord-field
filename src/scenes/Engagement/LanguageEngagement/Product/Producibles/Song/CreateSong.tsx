@@ -36,7 +36,12 @@ export const CreateSong = (props: CreateSongProps) => {
       title="Create Song"
     >
       <SubmitError />
-      <TextField name="song.name" label="Name" placeholder="Enter song name" />
+      <TextField
+        name="song.name"
+        label="Name"
+        placeholder="Enter song name"
+        required
+      />
     </DialogForm>
   );
 };

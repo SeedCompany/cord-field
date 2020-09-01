@@ -55,6 +55,7 @@ export const CreateInternshipEngagement = ({
         name="intern"
         label="Intern"
         placeholder="Enter person's name"
+        required
       />
     </DialogForm>
   );

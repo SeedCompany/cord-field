@@ -24,6 +24,7 @@ export const CreateOrganizationForm = (props: CreateOrganizationFormProps) => (
       name="organization.name"
       label="Name"
       placeholder="Enter partner name"
+      required
     />
   </DialogForm>
 );

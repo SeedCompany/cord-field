@@ -35,7 +35,12 @@ export const CreateFilm = (props: CreateFilmProps) => {
       title="Create Film"
     >
       <SubmitError />
-      <TextField name="film.name" label="Name" placeholder="Enter film name" />
+      <TextField
+        name="film.name"
+        label="Name"
+        placeholder="Enter film name"
+        required
+      />
     </DialogForm>
   );
 };
