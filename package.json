@@ -68,7 +68,7 @@
     "@graphql-codegen/typescript": "^1.17.7",
     "@graphql-codegen/typescript-operations": "^1.17.7",
     "@graphql-codegen/typescript-react-apollo": "^2.0.4",
-    "@seedcompany/eslint-plugin": "^1.0.0",
+    "@seedcompany/eslint-plugin": "^1.2.1",
     "@storybook/addon-actions": "^5.3.19",
     "@storybook/addon-info": "^5.3.19",
     "@storybook/addon-knobs": "^5.3.19",

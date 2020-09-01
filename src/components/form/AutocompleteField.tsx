@@ -87,9 +87,7 @@ export function AutocompleteField<
     validate:
       !props.validate && required && multiple
         ? (val) =>
-            !val || (Array.isArray(val) && val.length === 0)
-              ? 'Required'
-              : undefined
+            Array.isArray(val) && val.length === 0 ? 'Required' : undefined
         : undefined,
   });
   const disabled = disabledProp ?? meta.submitting;

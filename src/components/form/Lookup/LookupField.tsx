@@ -113,7 +113,9 @@ export function LookupField<
     typeof val === 'string' ? val : getOptionLabelProp(val) ?? '';
 
   const selectedText =
-    multiple || !field.value ? '' : getOptionLabel(field.value as T);
+    multiple || !(field.value as T | '')
+      ? ''
+      : getOptionLabel(field.value as T);
 
   const [input, setInput] = useState(selectedText);
 
