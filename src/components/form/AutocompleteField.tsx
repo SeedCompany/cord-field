@@ -29,6 +29,7 @@ export type AutocompleteFieldProps<
     name: string;
     getCompareBy?: (item: T) => any;
     ChipProps?: ChipProps;
+    options: readonly T[];
   } & Except<
     AutocompleteProps<T, Multiple, DisableClearable, FreeSolo>,
     | 'value'
@@ -39,6 +40,7 @@ export type AutocompleteFieldProps<
     | 'loading'
     | 'filterSelectedOptions'
     | 'ChipProps'
+    | 'options'
   >;
 
 const emptyArray = [] as const;
@@ -109,7 +111,7 @@ export function AutocompleteField<
       disableClearable={required}
       disableCloseOnSelect={multiple}
       {...autocompleteProps}
-      options={options}
+      options={options as T[]}
       disabled={disabled}
       // FF also has multiple and defaultValue
       multiple={multiple}
