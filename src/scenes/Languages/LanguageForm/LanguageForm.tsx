@@ -6,10 +6,8 @@ import {
   DialogFormProps,
 } from '../../../components/Dialog/DialogForm';
 import {
-  blurOnSubmit,
   CheckboxField,
   FieldGroup,
-  focusFirstFieldWithSubmitError,
   FormattedTextField,
   FormattedTextFieldProps,
   matchFieldIfSame,
@@ -33,8 +31,7 @@ const useStyles = makeStyles(() => ({
 }));
 
 const decorators = [
-  focusFirstFieldWithSubmitError,
-  blurOnSubmit,
+  ...DialogForm.defaultDecorators,
   matchFieldIfSame(`language.name`, `language.displayName`),
 ];
 
@@ -47,10 +44,8 @@ export const LanguageForm = <T extends any>({
   return (
     <DialogForm<T>
       DialogProps={{
-        fullWidth: true,
         maxWidth: 'lg',
       }}
-      onlyDirtySubmit
       {...rest}
       decorators={decorators}
     >

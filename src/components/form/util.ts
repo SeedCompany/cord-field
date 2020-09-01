@@ -33,16 +33,21 @@ export const getHelperText = (
 /**
  * Helper hook to focus element attached to ref
  */
-export const useFocus = <T extends { focus: () => void } = HTMLElement>(): [
-  () => void,
-  MutableRefObject<T | null>
-] => {
+export const useFocus = <T extends { focus: () => void } = HTMLElement>(
+  andDo?: (el: T) => void
+): [() => void, MutableRefObject<T | null>] => {
   const ref = useRef<T | null>(null);
   const focus = useCallback(() => {
     if (ref.current) {
-      setTimeout(() => ref.current?.focus(), 100);
+      setTimeout(() => {
+        if (!ref.current) {
+          return;
+        }
+        ref.current.focus();
+        andDo?.(ref.current);
+      }, 100);
     }
-  }, [ref]);
+  }, [ref, andDo]);
   return [focus, ref];
 };
 
@@ -54,10 +59,11 @@ export const useFocusOnEnabled = <
   T extends { focus: () => void } = HTMLElement
 >(
   meta: FieldMetaState<unknown>,
-  disabled: boolean
+  disabled: boolean,
+  andDoOnFocus?: (el: T) => void
 ) => {
   // Refocus field if it has become re-enabled and is active
-  const [focus, ref] = useFocus<T>();
+  const [focus, ref] = useFocus<T>(andDoOnFocus);
   useEffect(() => {
     if (!disabled && meta.active) {
       focus();

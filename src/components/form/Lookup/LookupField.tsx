@@ -9,7 +9,7 @@ import {
 import { Autocomplete, AutocompleteProps, Value } from '@material-ui/lab';
 import { camelCase } from 'camel-case';
 import { last, upperFirst } from 'lodash';
-import React, { ComponentType, useEffect, useState } from 'react';
+import React, { ComponentType, useCallback, useEffect, useState } from 'react';
 import { Except, Merge, SetOptional } from 'type-fest';
 import { isNetworkRequestInFlight } from '../../../api';
 import { useDialog } from '../../Dialog';
@@ -77,7 +77,7 @@ export function LookupField<
 >({
   name: nameProp,
   multiple,
-  defaultValue,
+  defaultValue: defaultValueProp,
   disabled: disabledProp,
   useLookup,
   ChipProps,
@@ -93,13 +93,15 @@ export function LookupField<
 }: LookupFieldProps<T, Multiple, DisableClearable, CreateFormValues>) {
   const freeSolo = !!CreateDialogForm;
   type Val = Value<T, Multiple, DisableClearable, false>;
+  const defaultValue =
+    defaultValueProp ?? ((multiple ? emptyArray : null) as Val);
 
   const name = useFieldName(nameProp);
   const { input: field, meta, rest: autocompleteProps } = useField<Val>(name, {
     ...props,
     required,
     allowNull: !multiple,
-    defaultValue: (multiple ? emptyArray : null) as Val,
+    defaultValue,
     isEqual: compareNullable((a, b) =>
       multiple
         ? areListsEqual(a.map(getCompareBy), b.map(getCompareBy))
@@ -107,7 +109,16 @@ export function LookupField<
     ),
   });
   const disabled = disabledProp ?? meta.submitting;
-  const ref = useFocusOnEnabled(meta, disabled);
+
+  const selectOnFocus = props.selectOnFocus ?? true;
+  const andSelectOnFocus = useCallback((el) => selectOnFocus && el.select(), [
+    selectOnFocus,
+  ]);
+  const ref = useFocusOnEnabled<HTMLInputElement>(
+    meta,
+    disabled,
+    andSelectOnFocus
+  );
 
   const getOptionLabel = (val: T | string) =>
     typeof val === 'string' ? val : getOptionLabelProp(val) ?? '';
@@ -218,7 +229,8 @@ export function LookupField<
           params.inputValue as T,
         ];
       }}
-      value={field.value}
+      // FF for some reason doesn't handle defaultValue correctly
+      value={(field.value as Val | '') || defaultValue}
       inputValue={input}
       onBlur={field.onBlur}
       onFocus={field.onFocus}

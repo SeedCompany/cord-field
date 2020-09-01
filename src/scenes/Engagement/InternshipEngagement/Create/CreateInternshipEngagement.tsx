@@ -10,7 +10,9 @@ import { ProjectOverviewDocument as ProjectOverview } from '../../../Projects/Ov
 import { useCreateInternshipEngagementMutation } from './CreateInternshipEngagement.generated';
 
 interface CreateInternshipEngagementFormValues {
-  intern: UserLookupItem;
+  engagement: {
+    internId: UserLookupItem;
+  };
 }
 
 type CreateInternshipEngagementProps = Except<
@@ -25,12 +27,15 @@ export const CreateInternshipEngagement = ({
   ...props
 }: CreateInternshipEngagementProps) => {
   const [createEngagement] = useCreateInternshipEngagementMutation();
-  const submit = async (input: CreateInternshipEngagementFormValues) => {
-    const createInternshipEngagementInput = {
-      engagement: { projectId, internId: input.intern.id },
-    };
+  const submit = async ({
+    engagement,
+  }: CreateInternshipEngagementFormValues) => {
     await createEngagement({
-      variables: { input: createInternshipEngagementInput },
+      variables: {
+        input: {
+          engagement: { projectId, internId: engagement.internId.id },
+        },
+      },
       refetchQueries: [
         {
           query: ProjectOverview,
@@ -42,20 +47,16 @@ export const CreateInternshipEngagement = ({
   };
   return (
     <DialogForm
-      DialogProps={{
-        fullWidth: true,
-        maxWidth: 'xs',
-      }}
       {...props}
       onSubmit={submit}
       title="Create Internship Engagement"
     >
       <SubmitError />
       <UserField
-        name="intern"
+        name="engagement.internId"
         label="Intern"
         placeholder="Enter person's name"
-        autoFocus
+        required
       />
     </DialogForm>
   );

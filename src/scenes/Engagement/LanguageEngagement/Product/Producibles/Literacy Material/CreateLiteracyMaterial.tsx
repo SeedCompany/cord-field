@@ -22,10 +22,6 @@ export const CreateLiteracyMaterial = (props: CreateLiteracyMaterialProps) => {
 
   return (
     <DialogForm
-      DialogProps={{
-        fullWidth: true,
-        maxWidth: 'xs',
-      }}
       {...props}
       onSubmit={async (input) => {
         const { data } = await createLiteracyMaterial({
@@ -43,7 +39,7 @@ export const CreateLiteracyMaterial = (props: CreateLiteracyMaterialProps) => {
         name="literacyMaterial.name"
         label="Name"
         placeholder="Enter literacy material name"
-        autoFocus
+        required
       />
     </DialogForm>
   );

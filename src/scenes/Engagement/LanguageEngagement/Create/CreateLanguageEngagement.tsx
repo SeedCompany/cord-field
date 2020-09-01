@@ -13,7 +13,9 @@ import { ProjectOverviewDocument as ProjectOverview } from '../../../Projects/Ov
 import { useCreateLanguageEngagementMutation } from './CreateLanguageEngagement.generated';
 
 interface CreateLanguageEngagementFormValues {
-  language: LanguageLookupItem;
+  engagement: {
+    languageId: LanguageLookupItem;
+  };
 }
 
 type CreateLanguageEngagementProps = Except<
@@ -28,12 +30,13 @@ export const CreateLanguageEngagement = ({
   ...props
 }: CreateLanguageEngagementProps) => {
   const [createEngagement] = useCreateLanguageEngagementMutation();
-  const submit = async (input: CreateLanguageEngagementFormValues) => {
-    const createLanguageEngagementInput = {
-      engagement: { projectId, languageId: input.language.id },
-    };
+  const submit = async ({ engagement }: CreateLanguageEngagementFormValues) => {
     await createEngagement({
-      variables: { input: createLanguageEngagementInput },
+      variables: {
+        input: {
+          engagement: { projectId, languageId: engagement.languageId.id },
+        },
+      },
       refetchQueries: [
         {
           query: ProjectOverview,
@@ -44,17 +47,9 @@ export const CreateLanguageEngagement = ({
     });
   };
   return (
-    <DialogForm
-      DialogProps={{
-        fullWidth: true,
-        maxWidth: 'xs',
-      }}
-      {...props}
-      onSubmit={submit}
-      title="Create Language Engagement"
-    >
+    <DialogForm {...props} onSubmit={submit} title="Create Language Engagement">
       <SubmitError />
-      <LanguageField name="language" label="Language" autoFocus />
+      <LanguageField name="engagement.languageId" label="Language" required />
     </DialogForm>
   );
 };

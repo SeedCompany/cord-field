@@ -47,21 +47,13 @@ export const CreateProjectDirectory = (
   };
 
   return (
-    <DialogForm
-      DialogProps={{
-        fullWidth: true,
-        maxWidth: 'xs',
-      }}
-      {...props}
-      onSubmit={onSubmit}
-      title="Create Folder"
-    >
+    <DialogForm {...props} onSubmit={onSubmit} title="Create Folder">
       <SubmitError />
       <TextField
         name="name"
         label="Name"
         placeholder="Enter folder name"
-        autoFocus
+        required
       />
     </DialogForm>
   );

@@ -5,6 +5,33 @@ import { noop } from 'ts-essentials';
 const get = getIn as <T, K>(state: T, complexKey: K) => any;
 
 /**
+ * Focuses the first field to register.
+ */
+export function focusFirstFieldRegistered<T, I>(
+  form: FormApi<T, I>
+): Unsubscribe {
+  const originalRegister = form.registerField;
+
+  let firstField: keyof T | undefined;
+  form.registerField = (...args) => {
+    // @ts-expect-error type definition doesn't define this
+    const fieldUnsubscribe = originalRegister.apply(form, args);
+    if (firstField) {
+      return fieldUnsubscribe;
+    }
+    firstField = args[0];
+    setTimeout(() => firstField && form.focus(firstField), 0);
+    return () => {
+      firstField = undefined;
+      fieldUnsubscribe();
+    };
+  };
+  return () => {
+    form.registerField = originalRegister;
+  };
+}
+
+/**
  * Focuses the first field to have a submit error.
  * Be sure to use blurOnSubmit decorator with this one.
  */

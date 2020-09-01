@@ -21,13 +21,8 @@ export const EditOrganization = ({ org, ...props }: EditOrganizationProps) => {
 
   return (
     <DialogForm<UpdateOrganizationInput>
-      DialogProps={{
-        fullWidth: true,
-        maxWidth: 'xs',
-      }}
       title="Edit Partner"
       {...props}
-      onlyDirtySubmit
       initialValues={{
         organization: {
           id: org.id,
@@ -46,7 +41,6 @@ export const EditOrganization = ({ org, ...props }: EditOrganizationProps) => {
         label="Name"
         placeholder="Enter new partner name"
         disabled={!org.name.canEdit}
-        autoFocus
         required
       />
     </DialogForm>

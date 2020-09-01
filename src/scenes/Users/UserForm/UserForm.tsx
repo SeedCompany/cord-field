@@ -22,6 +22,7 @@ export type UserFormProps<T> = DialogFormProps<T> & {
 };
 
 const decorators = memoize((prefix: string) => [
+  ...DialogForm.defaultDecorators,
   matchFieldIfSame(`${prefix}.realFirstName`, `${prefix}.displayFirstName`),
   matchFieldIfSame(`${prefix}.realLastName`, `${prefix}.displayLastName`),
 ]);
@@ -33,10 +34,8 @@ export const UserForm = <T extends any>({
 }: UserFormProps<T>) => (
   <DialogForm<T>
     DialogProps={{
-      fullWidth: true,
       maxWidth: 'sm',
     }}
-    onlyDirtySubmit
     {...rest}
     decorators={decorators(prefix)}
   >

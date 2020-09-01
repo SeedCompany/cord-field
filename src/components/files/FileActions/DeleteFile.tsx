@@ -29,10 +29,6 @@ export const DeleteFile = (props: Except<DeleteFileProps, 'onSubmit'>) => {
 
   return (
     <DialogForm
-      DialogProps={{
-        fullWidth: true,
-        maxWidth: 'xs',
-      }}
       {...props}
       onSubmit={onSubmit}
       title={`Delete ${isDirectory ? 'folder' : type}`}

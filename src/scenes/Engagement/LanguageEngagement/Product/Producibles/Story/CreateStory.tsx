@@ -19,10 +19,6 @@ export const CreateStory = (props: CreateStoryProps) => {
 
   return (
     <DialogForm
-      DialogProps={{
-        fullWidth: true,
-        maxWidth: 'xs',
-      }}
       {...props}
       onSubmit={async (input) => {
         const { data } = await createStory({
@@ -40,7 +36,7 @@ export const CreateStory = (props: CreateStoryProps) => {
         name="story.name"
         label="Name"
         placeholder="Enter story name"
-        autoFocus
+        required
       />
     </DialogForm>
   );

@@ -19,10 +19,6 @@ export const CreateSong = (props: CreateSongProps) => {
 
   return (
     <DialogForm
-      DialogProps={{
-        fullWidth: true,
-        maxWidth: 'xs',
-      }}
       {...props}
       onSubmit={async (input) => {
         const { data } = await createSong({
@@ -40,7 +36,7 @@ export const CreateSong = (props: CreateSongProps) => {
         name="song.name"
         label="Name"
         placeholder="Enter song name"
-        autoFocus
+        required
       />
     </DialogForm>
   );

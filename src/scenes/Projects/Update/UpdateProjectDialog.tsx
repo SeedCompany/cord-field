@@ -33,11 +33,6 @@ export const UpdateProjectDialog = ({
       title="Update Project Step"
       closeLabel="Close"
       submitLabel="Save"
-      onlyDirtySubmit
-      DialogProps={{
-        fullWidth: true,
-        maxWidth: 'xs',
-      }}
       {...props}
       initialValues={{
         project: {
@@ -57,7 +52,6 @@ export const UpdateProjectDialog = ({
         groupBy={(step) => displayStatus(projectStatusFromStep[step])}
         getOptionLabel={displayProjectStep}
         variant="outlined"
-        autoFocus
         autoComplete
       />
     </DialogForm>
