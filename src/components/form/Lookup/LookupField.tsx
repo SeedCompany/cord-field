@@ -257,6 +257,8 @@ export function LookupField<
       renderInput={(params) => (
         <TextField
           {...params}
+          // no asterisk
+          InputLabelProps={{ ...params.InputLabelProps, required: false }}
           label={label}
           helperText={getHelperText(meta, helperText)}
           required={required}
