@@ -6,10 +6,8 @@ import {
   DialogFormProps,
 } from '../../../components/Dialog/DialogForm';
 import {
-  blurOnSubmit,
   CheckboxField,
   FieldGroup,
-  focusFirstFieldWithSubmitError,
   FormattedTextField,
   FormattedTextFieldProps,
   matchFieldIfSame,
@@ -33,8 +31,7 @@ const useStyles = makeStyles(() => ({
 }));
 
 const decorators = [
-  focusFirstFieldWithSubmitError,
-  blurOnSubmit,
+  ...DialogForm.defaultDecorators,
   matchFieldIfSame(`language.name`, `language.displayName`),
 ];
 

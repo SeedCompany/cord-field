@@ -22,6 +22,7 @@ export type UserFormProps<T> = DialogFormProps<T> & {
 };
 
 const decorators = memoize((prefix: string) => [
+  ...DialogForm.defaultDecorators,
   matchFieldIfSame(`${prefix}.realFirstName`, `${prefix}.displayFirstName`),
   matchFieldIfSame(`${prefix}.realLastName`, `${prefix}.displayLastName`),
 ]);

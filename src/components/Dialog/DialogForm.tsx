@@ -178,3 +178,4 @@ export function DialogForm<T, R = void>({
     </Form>
   );
 }
+DialogForm.defaultDecorators = defaultDecorators;
