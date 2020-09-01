@@ -9,7 +9,7 @@ import {
 import { Autocomplete, AutocompleteProps, Value } from '@material-ui/lab';
 import { camelCase } from 'camel-case';
 import { last, upperFirst } from 'lodash';
-import React, { ComponentType, useEffect, useState } from 'react';
+import React, { ComponentType, useCallback, useEffect, useState } from 'react';
 import { Except, Merge, SetOptional } from 'type-fest';
 import { isNetworkRequestInFlight } from '../../../api';
 import { useDialog } from '../../Dialog';
@@ -109,7 +109,16 @@ export function LookupField<
     ),
   });
   const disabled = disabledProp ?? meta.submitting;
-  const ref = useFocusOnEnabled(meta, disabled);
+
+  const selectOnFocus = props.selectOnFocus ?? true;
+  const andSelectOnFocus = useCallback((el) => selectOnFocus && el.select(), [
+    selectOnFocus,
+  ]);
+  const ref = useFocusOnEnabled<HTMLInputElement>(
+    meta,
+    disabled,
+    andSelectOnFocus
+  );
 
   const getOptionLabel = (val: T | string) =>
     typeof val === 'string' ? val : getOptionLabelProp(val) ?? '';
@@ -130,16 +139,6 @@ export function LookupField<
   const [createDialogState, createDialogItem, createDialogValue] = useDialog<
     string
   >();
-
-  const shouldSelect = autoFocus && (props.selectOnFocus ?? true);
-  useEffect(() => {
-    if (shouldSelect && ref.current) {
-      setTimeout(
-        () => (ref.current as HTMLInputElement | undefined)?.select(),
-        100
-      );
-    }
-  }, [shouldSelect, ref]);
 
   useEffect(() => {
     setInput(selectedText);
