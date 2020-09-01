@@ -1,7 +1,9 @@
 import { Grid, makeStyles, Typography } from '@material-ui/core';
+import { Skeleton } from '@material-ui/lab';
 import React, { FC } from 'react';
 import { Organization } from '../../../api';
 import { ContentContainer } from '../../../components/ContentContainer';
+import { useNumberFormatter } from '../../../components/Formatters';
 import { OrganizationListItemCard } from '../../../components/OrganizationListItemCard';
 import { SortButtonDialog, useSort } from '../../../components/Sort';
 import { listOrPlaceholders } from '../../../util';
@@ -18,6 +20,7 @@ const useStyles = makeStyles(({ spacing }) => ({
 }));
 
 export const OrganizationList: FC = () => {
+  const formatNumber = useNumberFormatter();
   const sort = useSort<Organization>();
   const { data } = useOrganizationsQuery({
     variables: {
@@ -43,7 +46,11 @@ export const OrganizationList: FC = () => {
         </Grid>
       </Grid>
       <Typography variant="h3" paragraph>
-        {data?.organizations.total} Partners
+        {data ? (
+          `${formatNumber(data.organizations.total)} Partners`
+        ) : (
+          <Skeleton width="10ch" />
+        )}
       </Typography>
       {listOrPlaceholders(items, 15).map((item, index) => (
         <OrganizationListItemCard

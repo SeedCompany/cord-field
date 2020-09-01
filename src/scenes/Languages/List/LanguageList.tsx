@@ -1,8 +1,10 @@
 import { Button, Grid, makeStyles, Typography } from '@material-ui/core';
+import { Skeleton } from '@material-ui/lab';
 import { times } from 'lodash';
 import React, { FC } from 'react';
 import { Language } from '../../../api';
 import { ContentContainer } from '../../../components/ContentContainer';
+import { useNumberFormatter } from '../../../components/Formatters';
 import { LanguageListItemCard } from '../../../components/LanguageListItemCard';
 import { SortButtonDialog, useSort } from '../../../components/Sort';
 import { useLanguagesQuery } from './languages.generated';
@@ -15,6 +17,7 @@ const useStyles = makeStyles(({ spacing }) => ({
 }));
 
 export const LanguageList: FC = () => {
+  const formatNumber = useNumberFormatter();
   const sort = useSort<Language>();
 
   const { loading, data } = useLanguagesQuery({
@@ -42,7 +45,11 @@ export const LanguageList: FC = () => {
         </Grid>
       </Grid>
       <Typography variant="h3" paragraph>
-        {data?.languages.total} Languages
+        {data ? (
+          `${formatNumber(data.languages.total)} Languages`
+        ) : (
+          <Skeleton width="14ch" />
+        )}
       </Typography>
       <Grid container direction="column" spacing={2}>
         {loading

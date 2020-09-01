@@ -1,8 +1,10 @@
 import { Grid, makeStyles, Typography } from '@material-ui/core';
+import { Skeleton } from '@material-ui/lab';
 import React, { FC } from 'react';
 import { Project } from '../../../api';
 import { ContentContainer } from '../../../components/ContentContainer';
 import { FilterButtonDialog } from '../../../components/Filter';
+import { useNumberFormatter } from '../../../components/Formatters';
 import { ProjectListItemCard } from '../../../components/ProjectListItemCard';
 import { SortButtonDialog, useSort } from '../../../components/Sort';
 import { listOrPlaceholders } from '../../../util';
@@ -23,6 +25,7 @@ const useStyles = makeStyles(({ spacing }) => ({
 }));
 
 export const ProjectList: FC = () => {
+  const formatNumber = useNumberFormatter();
   const sort = useSort<Project>();
   const [filters, setFilters] = useProjectFilters();
 
@@ -54,7 +57,11 @@ export const ProjectList: FC = () => {
         </Grid>
       </Grid>
       <Typography variant="h3" paragraph>
-        {data?.projects.total} Projects
+        {data ? (
+          `${formatNumber(data.projects.total)} Projects`
+        ) : (
+          <Skeleton width="12ch" />
+        )}
       </Typography>
       {listOrPlaceholders(data?.projects.items, 5).map((item, index) => (
         <ProjectListItemCard
