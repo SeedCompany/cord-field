@@ -58,7 +58,6 @@ export const UpdateProjectDialog = ({
         getOptionLabel={displayProjectStep}
         variant="outlined"
         autoFocus
-        openOnFocus
         autoComplete
       />
     </DialogForm>
