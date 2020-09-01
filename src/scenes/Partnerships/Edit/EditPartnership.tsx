@@ -4,8 +4,10 @@ import React, { FC } from 'react';
 import { useFormState } from 'react-final-form';
 import { Except } from 'type-fest';
 import {
+  displayPartnershipFundingType,
   displayPartnershipStatus,
   GQLOperations,
+  PartnershipFundingTypeList,
   PartnershipStatuses,
   PartnershipType,
   UpdatePartnershipInput,
@@ -23,7 +25,6 @@ import {
   SubmitButton,
   SubmitError,
 } from '../../../components/form';
-import { SelectField } from '../../../components/form/SelectField';
 import {
   EditPartnershipFragment,
   useDeletePartnershipMutation,
@@ -149,6 +150,7 @@ export const EditPartnership: FC<EditPartnershipProps> = ({
           </Box>
         ))}
       </CheckboxesField>
+      <FundingType />
       <RadioField
         name="partnership.agreementStatus"
         label="Agreement Status"
@@ -163,7 +165,6 @@ export const EditPartnership: FC<EditPartnershipProps> = ({
       >
         {radioOptions}
       </RadioField>
-      <FundingType />
     </DialogForm>
   );
 };
@@ -173,14 +174,20 @@ const FundingType = () => {
   const managingTypeSelected = hasManagingType(values.partnership.types);
 
   return managingTypeSelected ? (
-    <SelectField
+    <RadioField
       required={managingTypeSelected}
       name="partnership.fundingType"
       label="Funding Type"
-      selectOptions={[
-        { value: 'Funded', label: 'Funded' },
-        { value: 'FieldEngaged', label: 'Field Engaged' },
-      ]}
-    />
+      fullWidth
+      row
+    >
+      {PartnershipFundingTypeList.map((type) => (
+        <RadioOption
+          key={type}
+          value={type}
+          label={displayPartnershipFundingType(type)}
+        />
+      ))}
+    </RadioField>
   ) : null;
 };
