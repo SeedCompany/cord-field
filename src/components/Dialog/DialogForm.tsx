@@ -13,7 +13,6 @@ import React, { ReactNode } from 'react';
 import { Form, FormProps, RenderableProps } from 'react-final-form';
 import { Promisable } from 'type-fest';
 import { ErrorHandlers, handleFormError } from '../../api';
-import { sleep } from '../../util';
 import {
   blurOnSubmit,
   focusFirstFieldRegistered,
@@ -123,8 +122,6 @@ export function DialogForm<T, R = void>({
       }}
     >
       {({ handleSubmit, submitting, form }) => {
-        // wait for UI to hide
-        const reset = () => sleep(500).then(() => form.reset());
         return (
           <Dialog
             fullWidth
@@ -132,10 +129,12 @@ export function DialogForm<T, R = void>({
             {...DialogProps}
             open={open}
             onClose={(e, reason) => {
-              void reset();
               onClose?.(reason, form);
             }}
-            onExited={onExited}
+            onExited={() => {
+              onExited?.();
+              form.reset();
+            }}
             disableBackdropClick={
               DialogProps.disableBackdropClick ?? submitting
             }
@@ -157,7 +156,6 @@ export function DialogForm<T, R = void>({
                   color="secondary"
                   {...CloseProps}
                   onClick={() => {
-                    void reset();
                     onClose?.('cancel', form);
                   }}
                 >
