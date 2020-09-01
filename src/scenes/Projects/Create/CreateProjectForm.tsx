@@ -27,7 +27,6 @@ export const CreateProjectForm = (props: CreateProjectFormProps) => (
       name="project.name"
       label="Name"
       placeholder="Enter project name"
-      autoFocus
     />
     <RadioField name="project.type" label="Type">
       <RadioOption label="Translation" value="Translation" />

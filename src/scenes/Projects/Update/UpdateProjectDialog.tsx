@@ -57,7 +57,6 @@ export const UpdateProjectDialog = ({
         groupBy={(step) => displayStatus(projectStatusFromStep[step])}
         getOptionLabel={displayProjectStep}
         variant="outlined"
-        autoFocus
         autoComplete
       />
     </DialogForm>

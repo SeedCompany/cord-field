@@ -43,7 +43,6 @@ export const CreateLiteracyMaterial = (props: CreateLiteracyMaterialProps) => {
         name="literacyMaterial.name"
         label="Name"
         placeholder="Enter literacy material name"
-        autoFocus
       />
     </DialogForm>
   );

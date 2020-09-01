@@ -50,7 +50,6 @@ export const RenameFile = (props: Except<RenameFileProps, 'onSubmit'>) => {
         name="name"
         label="Name"
         placeholder={`Enter new ${type.toLowerCase()} name`}
-        autoFocus
       />
     </DialogForm>
   );

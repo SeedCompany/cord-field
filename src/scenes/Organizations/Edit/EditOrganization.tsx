@@ -46,7 +46,6 @@ export const EditOrganization = ({ org, ...props }: EditOrganizationProps) => {
         label="Name"
         placeholder="Enter new partner name"
         disabled={!org.name.canEdit}
-        autoFocus
         required
       />
     </DialogForm>
