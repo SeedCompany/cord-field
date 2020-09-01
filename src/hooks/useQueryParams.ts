@@ -1,6 +1,6 @@
 import { compact, omit, pick, pickBy } from 'lodash';
 import { useCallback, useMemo } from 'react';
-import { useSearchParams } from 'react-router-dom';
+import { useLocation, useNavigate, useSearchParams } from 'react-router-dom';
 import {
   decodeDelimitedArray,
   DecodedValueMap,
@@ -83,7 +83,9 @@ interface QueryChangeOptions {
 export const makeQueryHandler = <QPCMap extends QueryParamConfigMap>(
   paramConfigMap: QPCMap
 ) => () => {
-  const [search, setNext] = useSearchParams();
+  const [search] = useSearchParams();
+  const location = useLocation();
+  const navigate = useNavigate();
 
   const query = useMemo(() => {
     const toObj = Object.fromEntries(search);
@@ -108,14 +110,25 @@ export const makeQueryHandler = <QPCMap extends QueryParamConfigMap>(
       );
       const merged = { ...unrelated, ...filtered };
 
-      const nextSearch = new URLSearchParams(merged);
+      // react-router's useSearchParams setter is bugged
+      // https://github.com/ReactTraining/react-router/issues/7496
+      // Passing current path & hash along with setter to function as expected.
+      const nextSearch = new URLSearchParams(merged).toString();
       const { push, state } = options;
-      setNext(nextSearch, {
-        replace: !push,
-        state,
-      });
+      navigate(
+        {
+          search: nextSearch.length ? '?' + nextSearch : '',
+          // Pass current values to leave them unchanged
+          pathname: location.pathname,
+          hash: location.hash,
+        },
+        {
+          replace: !push,
+          state,
+        }
+      );
     },
-    [search, setNext]
+    [search, navigate, location]
   );
 
   return [query, setQuery] as const;
