@@ -20,8 +20,12 @@ import { MethodologiesCard } from '../../../components/MethodologiesCard';
 import { ProjectBreadcrumb } from '../../../components/ProjectBreadcrumb';
 import { Redacted } from '../../../components/Redacted';
 import { Link } from '../../../components/Routing';
+import { Many } from '../../../util';
 import { CeremonyCard } from '../CeremonyCard';
-import { EditEngagementDialog } from '../EditEngagement/EditEngagementDialog';
+import {
+  EditableEngagementField,
+  EditEngagementDialog,
+} from '../EditEngagement/EditEngagementDialog';
 import { EngagementQuery } from '../Engagement.generated';
 import { MentorCard } from './MentorCard';
 
@@ -47,7 +51,9 @@ export const InternshipEngagementDetail: FC<EngagementQuery> = ({
   engagement,
 }) => {
   const classes = useStyles();
-  const [state, show, editValue] = useDialog<string>();
+  const [editState, show, editField] = useDialog<
+    Many<EditableEngagementField>
+  >();
 
   const date = securedDateRange(engagement.startDate, engagement.endDate);
   const formatDate = useDateFormatter();
@@ -129,7 +135,7 @@ export const InternshipEngagementDetail: FC<EngagementQuery> = ({
               empty="Enter Country of Origin"
               redacted="You do not have permission to view country of origin"
               children={displayLocation}
-              onClick={() => show('countryOfOrigin')}
+              onClick={() => show('countryOfOriginId')}
             />
           </Grid>
           <Grid item>
@@ -139,7 +145,7 @@ export const InternshipEngagementDetail: FC<EngagementQuery> = ({
               redacted="You do not have permission to view start/end dates"
               children={formatDate.range}
               empty="Start - End"
-              onClick={() => show('startEndDate')}
+              onClick={() => show(['startDateOverride', 'endDateOverride'])}
             />
           </Grid>
           <Grid item>
@@ -200,14 +206,14 @@ export const InternshipEngagementDetail: FC<EngagementQuery> = ({
                 {node}
               </Grid>
             )}
-            onEdit={() => show('mentor')}
+            onEdit={() => show('mentorId')}
           />
         </Grid>
       </Grid>
       <EditEngagementDialog
-        {...state}
+        {...editState}
         engagement={engagement}
-        editValue={editValue}
+        editFields={editField}
       />
     </div>
   );

@@ -1,13 +1,12 @@
-import { makeStyles } from '@material-ui/core';
 import { pick, startCase } from 'lodash';
-import React, { FC } from 'react';
-import { Except } from 'type-fest';
+import React, { ComponentType, FC } from 'react';
+import { Except, Merge } from 'type-fest';
 import {
   displayInternPosition,
-  InternshipEngagementPosition,
+  InternshipEngagementPositionList,
   MethodologyToApproach,
-  UpdateInternshipEngagementInput,
-  UpdateLanguageEngagementInput,
+  UpdateInternshipEngagement,
+  UpdateLanguageEngagement,
 } from '../../../api';
 import { DisplayCountryFragment } from '../../../api/fragments/location.generated';
 import {
@@ -26,186 +25,183 @@ import {
 } from '../../../components/form';
 import { CountryField, UserField } from '../../../components/form/Lookup';
 import { UserLookupItemFragment } from '../../../components/form/Lookup/User/UserLookup.generated';
-import { InternshipEngagementDetailFragment } from '../InternshipEngagement/InternshipEngagement.generated';
-import { LanguageEngagementDetailFragment } from '../LanguageEngagement/LanguageEngagementDetail.generated';
+import { ExtractStrict, many, Many } from '../../../util';
+import { InternshipEngagementDetailFragment as InternshipEngagement } from '../InternshipEngagement/InternshipEngagement.generated';
+import { LanguageEngagementDetailFragment as LanguageEngagement } from '../LanguageEngagement/LanguageEngagementDetail.generated';
 import {
   useUpdateInternshipEngagementMutation,
   useUpdateLanguageEngagementMutation,
 } from './EditEngagementDialog.generated';
 
-type EditEngagementDialogProps = Except<
-  DialogFormProps<
-    UpdateInternshipEngagementInput | UpdateInternshipEngagementInput
-  >,
-  'onSubmit' | 'initialValues'
-> & {
-  engagement:
-    | InternshipEngagementDetailFragment
-    | LanguageEngagementDetailFragment;
-  editValue?: string;
+type Engagement = InternshipEngagement | LanguageEngagement;
+
+export type EditableEngagementField = ExtractStrict<
+  keyof UpdateInternshipEngagement | keyof UpdateLanguageEngagement,
+  // Add more fields here as needed
+  | 'startDateOverride'
+  | 'endDateOverride'
+  | 'completeDate'
+  | 'disbursementCompleteDate'
+  | 'communicationsCompleteDate'
+  | 'methodologies'
+  | 'position'
+  | 'countryOfOriginId'
+  | 'mentorId'
+  | 'firstScripture'
+  | 'lukePartnership'
+>;
+
+interface EngagementFieldProps {
+  props: {
+    name: string;
+  };
+  engagement: Engagement;
+}
+
+const fieldMapping: Record<
+  EditableEngagementField,
+  ComponentType<EngagementFieldProps>
+> = {
+  startDateOverride: ({ props }) => (
+    <DateField
+      {...props}
+      label="Start Date"
+      helperText="Leave blank to use project's start date"
+    />
+  ),
+  endDateOverride: ({ props }) => (
+    <DateField
+      {...props}
+      label="End Date"
+      helperText="Leave blank to use project's end date"
+    />
+  ),
+  completeDate: ({ props, engagement }) => (
+    <DateField
+      {...props}
+      label={
+        engagement.__typename === 'InternshipEngagement'
+          ? 'Growth Plan Complete Date'
+          : 'Translation Complete Date'
+      }
+    />
+  ),
+  disbursementCompleteDate: ({ props }) => (
+    <DateField {...props} label="Disbursement Complete Date" />
+  ),
+  communicationsCompleteDate: ({ props }) => (
+    <DateField {...props} label="Communications Complete Date" />
+  ),
+  methodologies: ({ props }) => (
+    <CheckboxesField {...props} label="Methodologies">
+      {Object.keys(MethodologyToApproach).map((group) => (
+        <CheckboxOption key={group} label={startCase(group)} value={group} />
+      ))}
+    </CheckboxesField>
+  ),
+  position: ({ props }) => (
+    <RadioField {...props} label="Intern Position">
+      {InternshipEngagementPositionList.map((position) => (
+        <RadioOption
+          key={position}
+          label={displayInternPosition(position)}
+          value={position}
+        />
+      ))}
+    </RadioField>
+  ),
+  countryOfOriginId: ({ props }) => (
+    <CountryField {...props} label="Country of Origin" />
+  ),
+  mentorId: ({ props }) => <UserField {...props} label="Mentor" />,
+  firstScripture: ({ props }) => (
+    <CheckboxField {...props} label="First Scripture" />
+  ),
+  lukePartnership: ({ props }) => (
+    <CheckboxField {...props} label="Luke Partnership" />
+  ),
 };
 
-type DialogFormInput = UpdateInternshipEngagementInput &
-  UpdateLanguageEngagementInput & {
-    engagement: {
-      mentor?: UserLookupItemFragment;
-      country?: DisplayCountryFragment;
-    };
-  };
+interface EngagementFormValues {
+  engagement: Merge<
+    UpdateLanguageEngagement & UpdateInternshipEngagement,
+    {
+      mentorId?: UserLookupItemFragment | null;
+      countryOfOriginId?: DisplayCountryFragment | null;
+    }
+  >;
+}
 
-const internshipEngagementPositions: InternshipEngagementPosition[] = [
-  'ExegeticalFacilitator',
-  'TranslationConsultantInTraining',
-  'AdministrativeSupportSpecialist',
-  'BusinessSupportSpecialist',
-  'CommunicationSpecialistInternal',
-  'CommunicationSpecialistMarketing',
-  'LanguageProgramManager',
-  'LanguageProgramManagerOrFieldOperations',
-  'LanguageSoftwareSupportSpecialist',
-  'LeadershipDevelopment',
-  'LiteracySpecialist',
-  'LukePartnershipFacilitatorOrSpecialist',
-  'MobilizerOrPartnershipSupportSpecialist',
-  'OralFacilitatorOrSpecialist',
-  'PersonnelOrHrSpecialist',
-  'ScriptureUseSpecialist',
-  'TechnicalSupportSpecialist',
-  'TranslationFacilitator',
-  'Translator',
-];
-
-const useStyles = makeStyles(() => ({
-  dialog: {
-    width: 400,
-  },
-}));
+export type EditEngagementDialogProps = Except<
+  DialogFormProps<EngagementFormValues>,
+  'onSubmit' | 'initialValues'
+> & {
+  engagement: Engagement;
+  editFields?: Many<EditableEngagementField>;
+};
 
 export const EditEngagementDialog: FC<EditEngagementDialogProps> = ({
   engagement,
-  editValue,
+  editFields: editFieldsProp,
   ...props
 }) => {
-  const classes = useStyles();
+  const editFields = many(editFieldsProp ?? []);
+
+  const fields = editFields.map((name) => {
+    const Field = fieldMapping[name];
+    return <Field props={{ name }} engagement={engagement} key={name} />;
+  });
+
   const [updateInternshipEngagement] = useUpdateInternshipEngagementMutation();
   const [updateLanguageEngagement] = useUpdateLanguageEngagementMutation();
-
   const updateEngagement =
     engagement.__typename === 'InternshipEngagement'
       ? updateInternshipEngagement
       : updateLanguageEngagement;
 
-  const fields =
-    editValue &&
-    (editValue === 'startEndDate' ? (
-      <>
-        <DateField name="startDate" label="Start Date" />
-        <DateField name="endDate" label="End Date" />
-      </>
-    ) : editValue === 'completeDate' ? (
-      <DateField
-        name="completeDate"
-        label={
-          engagement.__typename === 'InternshipEngagement'
-            ? 'Growth Plan Complete Date'
-            : 'Translation Complete Date'
-        }
-      />
-    ) : editValue === 'disbursementCompleteDate' ? (
-      <DateField
-        name="disbursementCompleteDate"
-        label="Disbursement Complete Date"
-      />
-    ) : editValue === 'communicationsCompleteDate' ? (
-      <DateField
-        name="communicationsCompleteDate"
-        label="Communications Complete Date"
-      />
-    ) : editValue === 'methodologies' ? (
-      <>
-        <CheckboxesField name="methodologies" label="Methodologies">
-          {Object.keys(MethodologyToApproach).map((group) => (
-            <CheckboxOption
-              key={group}
-              label={startCase(group)}
-              value={group}
-            />
-          ))}
-        </CheckboxesField>
-      </>
-    ) : editValue === 'position' ? (
-      <RadioField name="position" label="Intern Position">
-        {internshipEngagementPositions.map((position) => (
-          <RadioOption
-            key={position}
-            label={displayInternPosition(position)}
-            value={position}
-          />
-        ))}
-      </RadioField>
-    ) : editValue === 'countryOfOrigin' ? (
-      <CountryField name="country" label="Country of Origin" />
-    ) : editValue === 'mentor' ? (
-      <UserField name="mentor" label="Mentor" />
-    ) : editValue === 'firstScriptureAndLukePartnership' ? (
-      <>
-        <CheckboxField
-          name="firstScripture"
-          label="First Scripture"
-          defaultValue={
-            engagement.__typename === 'LanguageEngagement' &&
-            Boolean(engagement.firstScripture.value)
-          }
-        />
-        <CheckboxField
-          name="lukePartnership"
-          label="Luke Partnership"
-          defaultValue={
-            engagement.__typename === 'LanguageEngagement' &&
-            Boolean(engagement.lukePartnership.value)
-          }
-        />
-      </>
-    ) : null);
-
-  // Filter out relevant initial values so the other values don't get added to the mutation
-  const sharedInitialValues = {
-    startDate: engagement.startDate.value,
-    endDate: engagement.endDate.value,
+  const fullInitialValues: Except<EngagementFormValues['engagement'], 'id'> = {
+    startDateOverride: engagement.startDateOverride.value,
+    endDateOverride: engagement.endDateOverride.value,
     completeDate: engagement.completeDate.value,
     disbursementCompleteDate: engagement.disbursementCompleteDate.value,
     communicationsCompleteDate: engagement.communicationsCompleteDate.value,
-  };
-
-  const fullInitialValues =
-    engagement.__typename === 'InternshipEngagement'
+    ...(engagement.__typename === 'LanguageEngagement'
       ? {
-          ...sharedInitialValues,
+          lukePartnership: engagement.lukePartnership.value,
+          firstScripture: engagement.firstScripture.value,
+        }
+      : engagement.__typename === 'InternshipEngagement'
+      ? {
           methodologies: engagement.methodologies.value,
           position: engagement.position.value,
+          mentorId: engagement.mentor.value,
+          countryOfOriginId: engagement.countryOfOrigin.value,
         }
-      : sharedInitialValues;
-
-  const pickKeys =
-    editValue === 'startEndDate'
-      ? ['id', 'startDate', 'endDate']
-      : ['id', editValue || ''];
-
-  const filteredInitialValues = {
-    engagement: {
-      id: engagement.id,
-      ...pick(fullInitialValues, pickKeys),
-    },
+      : {}),
   };
 
+  // Filter out irrelevant initial values so they don't get added to the mutation
+  const filteredInitialValues = pick(fullInitialValues, editFields);
+
   return (
-    <DialogForm<DialogFormInput>
+    <DialogForm
       title="Update Engagement"
       closeLabel="Close"
       submitLabel="Save"
+      DialogProps={{
+        maxWidth: 'xs',
+        fullWidth: true,
+      }}
       {...props}
-      initialValues={filteredInitialValues}
-      onSubmit={async ({ engagement: { mentor, country, ...rest } }) => {
+      initialValues={{
+        engagement: {
+          id: engagement.id,
+          ...filteredInitialValues,
+        },
+      }}
+      onSubmit={async ({
+        engagement: { mentorId: mentor, countryOfOriginId: country, ...rest },
+      }) => {
         const mentorId = mentor?.id;
         const countryOfOriginId = country?.id;
         const input = {
@@ -217,11 +213,6 @@ export const EditEngagementDialog: FC<EditEngagementDialogProps> = ({
         };
 
         await updateEngagement({ variables: { input } });
-      }}
-      DialogProps={{
-        classes: {
-          paper: classes.dialog,
-        },
       }}
     >
       <SubmitError />
