@@ -61,6 +61,16 @@ export const PartnershipCard: FC<PartnershipCardProps> = ({
               )}
             </Typography>
           </Grid>
+          <Grid item>
+            <DisplaySimpleProperty
+              label="Funding Type"
+              value={displayPartnershipFundingType(
+                partnership?.fundingType.value
+              )}
+              loading={!partnership}
+              loadingWidth="40%"
+            />
+          </Grid>
 
           <Grid item>
             <DisplaySimpleProperty
@@ -76,16 +86,6 @@ export const PartnershipCard: FC<PartnershipCardProps> = ({
             <DisplaySimpleProperty
               label="Mou Status"
               value={displayPartnershipStatus(partnership?.mouStatus.value)}
-              loading={!partnership}
-              loadingWidth="40%"
-            />
-          </Grid>
-          <Grid item>
-            <DisplaySimpleProperty
-              label="Funding Type"
-              value={displayPartnershipFundingType(
-                partnership?.fundingType.value
-              )}
               loading={!partnership}
               loadingWidth="40%"
             />
