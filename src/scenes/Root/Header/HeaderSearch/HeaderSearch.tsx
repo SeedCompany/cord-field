@@ -1,15 +1,19 @@
-import { InputAdornment, makeStyles, TextField } from '@material-ui/core';
+import { InputAdornment, makeStyles } from '@material-ui/core';
 import { Search } from '@material-ui/icons';
 import { FC } from 'react';
 import * as React from 'react';
+import { Form } from 'react-final-form';
+import { useNavigate } from 'react-router-dom';
+import { TextField } from '../../../../components/form';
 import { makeQueryHandler, StringParam } from '../../../../hooks';
 
 export const useSearch = makeQueryHandler({
-  searchValue: StringParam,
+  q: StringParam,
 });
 
 const useStyles = makeStyles(({ palette, spacing }) => ({
   root: {
+    flex: 1,
     maxWidth: 500,
     marginRight: spacing(3),
   },
@@ -20,29 +24,32 @@ const useStyles = makeStyles(({ palette, spacing }) => ({
 
 export const HeaderSearch: FC = () => {
   const classes = useStyles();
-  const [searchParams, setSearchParams] = useSearch();
-  const searchValue = searchParams.searchValue ?? '';
+  const [{ q: search = '' }] = useSearch();
+  const navigate = useNavigate();
 
   return (
-    <TextField
-      value={searchValue}
-      variant="outlined"
-      className={classes.root}
-      placeholder="Projects, Languages, Locations, People"
-      size="small"
-      onChange={(e) => {
-        // TODO this should also navigate to search page if not already there but currently just trying to get
-        // setSearchParams to not redirect page to /
-        setSearchParams({ searchValue: e.target.value });
-      }}
-      InputProps={{
-        className: classes.input,
-        startAdornment: (
-          <InputAdornment position="start">
-            <Search />
-          </InputAdornment>
-        ),
-      }}
-    />
+    <Form
+      initialValues={{ search }}
+      onSubmit={({ search }) => navigate(`/search?q=${search}`)}
+    >
+      {({ handleSubmit }) => (
+        <form onSubmit={handleSubmit} className={classes.root}>
+          <TextField
+            name="search"
+            variant="outlined"
+            placeholder="Projects, Languages, Locations, People"
+            size="small"
+            InputProps={{
+              className: classes.input,
+              startAdornment: (
+                <InputAdornment position="start">
+                  <Search />
+                </InputAdornment>
+              ),
+            }}
+          />
+        </form>
+      )}
+    </Form>
   );
 };

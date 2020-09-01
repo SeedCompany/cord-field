@@ -1,42 +1,19 @@
 query Search($input: SearchInput!) {
   search(input: $input) {
     items {
-      ... on Country {
-        ...DisplayCountry
-      }
-      ... on InternshipProject {
-        ...ProjectListItem
-      }
-      ... on Language {
-        ...LanguageListItem
-      }
-      ... on Organization {
-        ...OrganizationListItem
-      }
-      ... on Region {
-        ...DisplayRegion
-      }
-      ... on TranslationProject {
-        ...ProjectListItem
-      }
-      ... on User {
-        ...UserListItem
-      }
-      ... on Zone {
-        ...DisplayZone
-      }
-      ... on Film {
-        ...FilmLookupItem
-      }
-      ... on Story {
-        ...StoryLookupItem
-      }
-      ... on LiteracyMaterial {
-        ...LiteracyMaterialLookupItem
-      }
-      ... on Song {
-        ...SongLookupItem
-      }
+      ...SearchResultItem
     }
   }
+}
+
+fragment SearchResultItem on SearchResult {
+  ...ProjectListItem
+  ...LanguageListItem
+  ...OrganizationListItem
+  ...UserListItem
+  ...DisplayLocation
+  ...FilmLookupItem
+  ...StoryLookupItem
+  ...LiteracyMaterialLookupItem
+  ...SongLookupItem
 }
