@@ -26,7 +26,7 @@ import { Redacted } from '../../../components/Redacted';
 import { CreateInternshipEngagement } from '../../Engagement/InternshipEngagement/Create/CreateInternshipEngagement';
 import { CreateLanguageEngagement } from '../../Engagement/LanguageEngagement/Create/CreateLanguageEngagement';
 import { useProjectCurrentDirectory, useUploadProjectFiles } from '../Files';
-import { UpdateProjectDialog } from '../Update';
+import { EditableProjectField, UpdateProjectDialog } from '../Update';
 import { useProjectOverviewQuery } from './ProjectOverview.generated';
 
 const useStyles = makeStyles(({ spacing, breakpoints, palette }) => ({
@@ -67,7 +67,9 @@ export const ProjectOverview: FC = () => {
   const formatDateTime = useDateTimeFormatter();
   const formatNumber = useNumberFormatter();
 
-  const [editProjectDialogState, openEditProjectDialog] = useDialog();
+  const [editState, editField, fieldsBeingEdited] = useDialog<
+    EditableProjectField
+  >();
 
   const { directoryId } = useProjectCurrentDirectory();
   const handleFilesDrop = useUploadProjectFiles(directoryId);
@@ -208,7 +210,7 @@ export const ProjectOverview: FC = () => {
                 loading={!data}
                 secured={data?.project.step}
                 redacted="You do not have permission to view project step"
-                onClick={openEditProjectDialog}
+                onClick={() => editField('step')}
               >
                 {displayProjectStep(data?.project.step.value)}
               </DataButton>
@@ -297,10 +299,13 @@ export const ProjectOverview: FC = () => {
           )}
         </div>
       )}
-      <UpdateProjectDialog
-        {...editProjectDialogState}
-        project={data?.project}
-      />
+      {data ? (
+        <UpdateProjectDialog
+          {...editState}
+          project={data.project}
+          editFields={fieldsBeingEdited}
+        />
+      ) : null}
       <CreateEngagement projectId={projectId} {...createEngagementState} />
     </main>
   );
