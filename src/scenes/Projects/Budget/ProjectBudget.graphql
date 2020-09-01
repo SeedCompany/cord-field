@@ -45,3 +45,14 @@ query ProjectBudget($id: ID!) {
     }
   }
 }
+
+mutation UpdateProjectBudgetRecord($input: UpdateBudgetRecordInput!) {
+  updateBudgetRecord(input: $input) {
+    budgetRecord {
+      id
+      amount {
+        value
+      }
+    }
+  }
+}

@@ -2,11 +2,15 @@ import { Breadcrumbs, makeStyles, Typography } from '@material-ui/core';
 import { Skeleton } from '@material-ui/lab';
 import React from 'react';
 import { useParams } from 'react-router-dom';
+import { GQLOperations } from '../../../api';
 import { Breadcrumb } from '../../../components/Breadcrumb';
 import { ContentContainer as Content } from '../../../components/ContentContainer';
 import { useCurrencyFormatter } from '../../../components/Formatters/useCurrencyFormatter';
 import { Table } from '../../../components/Table';
-import { useProjectBudgetQuery } from './ProjectBudget.generated';
+import {
+  useProjectBudgetQuery,
+  useUpdateProjectBudgetRecordMutation,
+} from './ProjectBudget.generated';
 
 const useStyles = makeStyles(({ spacing }) => ({
   header: {
@@ -34,6 +38,7 @@ export const ProjectBudget = () => {
   const { data, loading, error } = useProjectBudgetQuery({
     variables: { id: projectId },
   });
+  const [updateBudgetRecord] = useUpdateProjectBudgetRecordMutation();
 
   const projectName = data?.project.name.value;
   const canReadBudget = data?.project.budget.canRead;
@@ -86,7 +91,7 @@ export const ProjectBudget = () => {
       title: 'Amount',
       field: 'amount',
       type: 'currency' as const,
-      editable: (_: unknown, rowData: BudgetRowData) => !!rowData.canEdit,
+      editable: (_: unknown, rowData: BudgetRowData) => rowData.canEdit,
     },
     {
       title: 'Can Edit',
@@ -95,8 +100,21 @@ export const ProjectBudget = () => {
     },
   ];
 
-  function handleRowUpdate(data: BudgetRowData): Promise<void> {
-    return new Promise((resolve) => resolve(console.log(data)));
+  async function handleAmountUpdate(
+    newAmount: string,
+    __: unknown,
+    data: BudgetRowData
+  ): Promise<void> {
+    const input = {
+      budgetRecord: {
+        id: data.id,
+        amount: Number(newAmount),
+      },
+    };
+    await updateBudgetRecord({
+      variables: { input },
+      refetchQueries: [GQLOperations.Query.ProjectBudget],
+    });
   }
 
   return (
@@ -145,8 +163,13 @@ export const ProjectBudget = () => {
               <Table
                 data={rowData}
                 columns={columns}
-                isEditable={canEditBudget}
-                onRowUpdate={handleRowUpdate}
+                cellEditable={
+                  canEditBudget
+                    ? {
+                        onCellEditApproved: handleAmountUpdate,
+                      }
+                    : undefined
+                }
               />
             )}
           </section>

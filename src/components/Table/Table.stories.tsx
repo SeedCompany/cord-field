@@ -64,7 +64,7 @@ export const Table = () => {
       title: text('title.amount', 'Amount'),
       field: 'amount',
       type: select('amountType', typeOptions, 'currency'),
-      editable: (_: unknown, rowData: any) => !!rowData.canEdit,
+      editable: (_: unknown, rowData: any) => rowData.canEdit,
     },
     {
       title: text('title.canEdit', 'Can Edit'),
@@ -80,9 +80,14 @@ export const Table = () => {
     <TableComponent
       columns={columns}
       data={rows}
-      isEditable={boolean('isEditable', true)}
-      onRowUpdate={() => new Promise((resolve) => resolve())}
       onRowClick={onRowClick}
+      cellEditable={{
+        onCellEditApproved: () =>
+          new Promise((resolve) => {
+            action('cell edited');
+            resolve();
+          }),
+      }}
     />
   );
 };

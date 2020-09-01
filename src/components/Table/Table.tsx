@@ -1,35 +1,31 @@
-import { ArrowDownward, Check, Clear, Edit } from '@material-ui/icons';
+import {
+  Check,
+  Clear,
+  Edit,
+  ArrowDownward as SortArrow,
+} from '@material-ui/icons';
 import MaterialTable, { Icons, MaterialTableProps } from 'material-table';
-import React from 'react';
+import React, { forwardRef } from 'react';
 import { Merge } from 'type-fest';
 
 export type TableProps<RowData extends Record<string, any>> = Merge<
   MaterialTableProps<RowData>,
   {
-    isEditable?: boolean;
-    onRowUpdate?: (newData: RowData, oldData?: RowData) => Promise<unknown>;
     onRowClick?: (rowData: RowData) => void;
   }
 >;
 
 const defaultIcons: Icons = {
-  Check,
-  Clear,
-  Edit,
-  SortArrow: ArrowDownward,
+  Check: forwardRef((props, ref) => <Check {...props} ref={ref} />),
+  Clear: forwardRef((props, ref) => <Clear {...props} ref={ref} />),
+  Edit: forwardRef((props, ref) => <Edit {...props} ref={ref} />),
+  SortArrow: forwardRef((props, ref) => <SortArrow {...props} ref={ref} />),
 };
 
 export const Table = <RowData extends Record<string, any>>(
   props: TableProps<RowData>
 ) => {
-  const {
-    columns: columnsProp,
-    icons: iconsProp,
-    isEditable = false,
-    onRowUpdate,
-    onRowClick,
-    ...rest
-  } = props;
+  const { columns: columnsProp, icons: iconsProp, onRowClick, ...rest } = props;
 
   const columns: typeof columnsProp = columnsProp.map((column) => ({
     ...column,
@@ -51,14 +47,6 @@ export const Table = <RowData extends Record<string, any>>(
     width: 'auto',
   }));
 
-  const editable = !isEditable
-    ? undefined
-    : {
-        isEditable: (rowData: any) => !!rowData.canEdit,
-        isDeletable: () => false,
-        onRowUpdate,
-      };
-
   const icons = iconsProp ? { ...defaultIcons, ...iconsProp } : defaultIcons;
 
   return (
@@ -66,7 +54,6 @@ export const Table = <RowData extends Record<string, any>>(
       title="" // empty by default
       columns={columns}
       {...rest}
-      editable={editable}
       icons={icons}
       onRowClick={onRowClick ? (_, row) => row && onRowClick(row) : undefined}
       localization={{
