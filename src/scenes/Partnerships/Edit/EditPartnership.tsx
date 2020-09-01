@@ -175,7 +175,6 @@ const FundingType = () => {
 
   return managingTypeSelected ? (
     <RadioField
-      required={managingTypeSelected}
       name="partnership.fundingType"
       label="Funding Type"
       fullWidth
