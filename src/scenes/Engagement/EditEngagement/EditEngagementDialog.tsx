@@ -2,7 +2,9 @@ import { pick, startCase } from 'lodash';
 import React, { ComponentType, FC } from 'react';
 import { Except, Merge } from 'type-fest';
 import {
+  displayEngagementStatus,
   displayInternPosition,
+  EngagementStatusList,
   InternshipEngagementPositionList,
   MethodologyToApproach,
   UpdateInternshipEngagement,
@@ -23,6 +25,7 @@ import {
   RadioOption,
   SubmitError,
 } from '../../../components/form';
+import { AutocompleteField } from '../../../components/form/AutocompleteField';
 import { CountryField, UserField } from '../../../components/form/Lookup';
 import { UserLookupItemFragment } from '../../../components/form/Lookup/User/UserLookup.generated';
 import { ExtractStrict, many, Many } from '../../../util';
@@ -49,6 +52,7 @@ export type EditableEngagementField = ExtractStrict<
   | 'mentorId'
   | 'firstScripture'
   | 'lukePartnership'
+  | 'status'
 >;
 
 interface EngagementFieldProps {
@@ -120,6 +124,17 @@ const fieldMapping: Record<
   lukePartnership: ({ props }) => (
     <CheckboxField {...props} label="Luke Partnership" />
   ),
+  status: ({ props }) => (
+    <AutocompleteField
+      label="Engagement Status"
+      required
+      {...props}
+      options={EngagementStatusList}
+      getOptionLabel={displayEngagementStatus}
+      variant="outlined"
+      autoComplete
+    />
+  ),
 };
 
 interface EngagementFormValues {
@@ -165,6 +180,7 @@ export const EditEngagementDialog: FC<EditEngagementDialogProps> = ({
     completeDate: engagement.completeDate.value,
     disbursementCompleteDate: engagement.disbursementCompleteDate.value,
     communicationsCompleteDate: engagement.communicationsCompleteDate.value,
+    status: engagement.status,
     ...(engagement.__typename === 'LanguageEngagement'
       ? {
           lukePartnership: engagement.lukePartnership.value,
