@@ -275,10 +275,6 @@ export const ProjectOverview: FC = () => {
                     onClick={createEngagement}
                   >
                     <Add />
-                    <CreateEngagement
-                      projectId={projectId}
-                      {...createEngagementState}
-                    />
                   </Fab>
                 </Tooltip>
               )}
@@ -305,6 +301,7 @@ export const ProjectOverview: FC = () => {
         {...editProjectDialogState}
         project={data?.project}
       />
+      <CreateEngagement projectId={projectId} {...createEngagementState} />
     </main>
   );
 };
