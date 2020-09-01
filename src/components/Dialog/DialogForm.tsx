@@ -14,7 +14,13 @@ import { Form, FormProps, RenderableProps } from 'react-final-form';
 import { Promisable } from 'type-fest';
 import { ErrorHandlers, handleFormError } from '../../api';
 import { sleep } from '../../util';
-import { SubmitButton, SubmitButtonProps } from '../form';
+import {
+  blurOnSubmit,
+  focusFirstFieldRegistered,
+  focusFirstFieldWithSubmitError,
+  SubmitButton,
+  SubmitButtonProps,
+} from '../form';
 
 export type DialogFormProps<T, R = void> = Omit<
   FormProps<T>,
@@ -68,6 +74,12 @@ const useStyles = makeStyles(() => ({
   },
 }));
 
+const defaultDecorators = [
+  focusFirstFieldRegistered,
+  focusFirstFieldWithSubmitError,
+  blurOnSubmit,
+];
+
 /**
  * An opinionated component to handle dialog forms.
  */
@@ -93,6 +105,7 @@ export function DialogForm<T, R = void>({
 
   return (
     <Form<T>
+      decorators={defaultDecorators}
       {...FormProps}
       onSubmit={async (data, form) => {
         if (onlyDirtySubmit && !form.getState().dirty) {
