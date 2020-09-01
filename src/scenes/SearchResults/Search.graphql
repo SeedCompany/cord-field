@@ -1,0 +1,19 @@
+query Search($input: SearchInput!) {
+  search(input: $input) {
+    items {
+      ...SearchResultItem
+    }
+  }
+}
+
+fragment SearchResultItem on SearchResult {
+  ...ProjectListItem
+  ...LanguageListItem
+  ...OrganizationListItem
+  ...UserListItem
+  ...DisplayLocation
+  ...FilmLookupItem
+  ...StoryLookupItem
+  ...LiteracyMaterialLookupItem
+  ...SongLookupItem
+}
