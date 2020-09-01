@@ -52,6 +52,9 @@ export type EditableEngagementField = ExtractStrict<
 >;
 
 interface EngagementFieldProps {
+  props: {
+    name: string;
+  };
   engagement: Engagement;
 }
 
@@ -59,13 +62,23 @@ const fieldMapping: Record<
   EditableEngagementField,
   ComponentType<EngagementFieldProps>
 > = {
-  startDateOverride: () => (
-    <DateField name="startDateOverride" label="Start Date" />
-  ),
-  endDateOverride: () => <DateField name="endDateOverride" label="End Date" />,
-  completeDate: ({ engagement }: EngagementFieldProps) => (
+  startDateOverride: ({ props }) => (
     <DateField
-      name="completeDate"
+      {...props}
+      label="Start Date"
+      helperText="Leave blank to use project's start date"
+    />
+  ),
+  endDateOverride: ({ props }) => (
+    <DateField
+      {...props}
+      label="End Date"
+      helperText="Leave blank to use project's end date"
+    />
+  ),
+  completeDate: ({ props, engagement }) => (
+    <DateField
+      {...props}
       label={
         engagement.__typename === 'InternshipEngagement'
           ? 'Growth Plan Complete Date'
@@ -73,27 +86,21 @@ const fieldMapping: Record<
       }
     />
   ),
-  disbursementCompleteDate: () => (
-    <DateField
-      name="disbursementCompleteDate"
-      label="Disbursement Complete Date"
-    />
+  disbursementCompleteDate: ({ props }) => (
+    <DateField {...props} label="Disbursement Complete Date" />
   ),
-  communicationsCompleteDate: () => (
-    <DateField
-      name="communicationsCompleteDate"
-      label="Communications Complete Date"
-    />
+  communicationsCompleteDate: ({ props }) => (
+    <DateField {...props} label="Communications Complete Date" />
   ),
-  methodologies: () => (
-    <CheckboxesField name="methodologies" label="Methodologies">
+  methodologies: ({ props }) => (
+    <CheckboxesField {...props} label="Methodologies">
       {Object.keys(MethodologyToApproach).map((group) => (
         <CheckboxOption key={group} label={startCase(group)} value={group} />
       ))}
     </CheckboxesField>
   ),
-  position: () => (
-    <RadioField name="position" label="Intern Position">
+  position: ({ props }) => (
+    <RadioField {...props} label="Intern Position">
       {InternshipEngagementPositionList.map((position) => (
         <RadioOption
           key={position}
@@ -103,15 +110,15 @@ const fieldMapping: Record<
       ))}
     </RadioField>
   ),
-  countryOfOriginId: () => (
-    <CountryField name="countryOfOriginId" label="Country of Origin" />
+  countryOfOriginId: ({ props }) => (
+    <CountryField {...props} label="Country of Origin" />
   ),
-  mentorId: () => <UserField name="mentorId" label="Mentor" />,
-  firstScripture: () => (
-    <CheckboxField name="firstScripture" label="First Scripture" />
+  mentorId: ({ props }) => <UserField {...props} label="Mentor" />,
+  firstScripture: ({ props }) => (
+    <CheckboxField {...props} label="First Scripture" />
   ),
-  lukePartnership: () => (
-    <CheckboxField name="lukePartnership" label="Luke Partnership" />
+  lukePartnership: ({ props }) => (
+    <CheckboxField {...props} label="Luke Partnership" />
   ),
 };
 
@@ -140,9 +147,9 @@ export const EditEngagementDialog: FC<EditEngagementDialogProps> = ({
 }) => {
   const editFields = many(editFieldsProp ?? []);
 
-  const fields = editFields.map((field) => {
-    const Field = fieldMapping[field];
-    return <Field engagement={engagement} key={field} />;
+  const fields = editFields.map((name) => {
+    const Field = fieldMapping[name];
+    return <Field props={{ name }} engagement={engagement} key={name} />;
   });
 
   const [updateInternshipEngagement] = useUpdateInternshipEngagementMutation();
