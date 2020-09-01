@@ -35,15 +35,7 @@ export const RenameFile = (props: Except<RenameFileProps, 'onSubmit'>) => {
   };
 
   return (
-    <DialogForm
-      DialogProps={{
-        fullWidth: true,
-        maxWidth: 'xs',
-      }}
-      {...props}
-      onSubmit={onSubmit}
-      title={`Rename ${type}`}
-    >
+    <DialogForm {...props} onSubmit={onSubmit} title={`Rename ${type}`}>
       <SubmitError />
       <TextField
         defaultValue={parseFileNameAndExtension(name).displayName}

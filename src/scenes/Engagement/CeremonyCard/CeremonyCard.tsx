@@ -159,7 +159,6 @@ export const CeremonyCard: FC<CeremonyCardProps> = ({
         title={`Update ${type}`}
         closeLabel="Close"
         submitLabel="Save"
-        onlyDirtySubmit
         {...dialogState}
         initialValues={{
           ceremony: {
@@ -173,10 +172,6 @@ export const CeremonyCard: FC<CeremonyCardProps> = ({
         }}
         errorHandlers={{
           Default: `Failed to update ${type?.toLowerCase()}`,
-        }}
-        DialogProps={{
-          maxWidth: 'xs',
-          fullWidth: true,
         }}
       >
         <SubmitError />

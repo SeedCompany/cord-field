@@ -18,10 +18,6 @@ export const CreateFilm = (props: CreateFilmProps) => {
   const [createFilm] = useCreateFilmMutation();
   return (
     <DialogForm
-      DialogProps={{
-        fullWidth: true,
-        maxWidth: 'xs',
-      }}
       {...props}
       onSubmit={async (input) => {
         const { data } = await createFilm({

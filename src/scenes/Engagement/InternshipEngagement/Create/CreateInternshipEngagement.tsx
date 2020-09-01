@@ -42,10 +42,6 @@ export const CreateInternshipEngagement = ({
   };
   return (
     <DialogForm
-      DialogProps={{
-        fullWidth: true,
-        maxWidth: 'xs',
-      }}
       {...props}
       onSubmit={submit}
       title="Create Internship Engagement"

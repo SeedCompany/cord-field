@@ -44,10 +44,8 @@ export const LanguageForm = <T extends any>({
   return (
     <DialogForm<T>
       DialogProps={{
-        fullWidth: true,
         maxWidth: 'lg',
       }}
-      onlyDirtySubmit
       {...rest}
       decorators={decorators}
     >

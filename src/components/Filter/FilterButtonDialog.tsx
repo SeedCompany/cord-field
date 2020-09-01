@@ -24,10 +24,6 @@ export function FilterButtonDialog<T>({
       </Button>
 
       <DialogForm
-        DialogProps={{
-          fullWidth: true,
-          maxWidth: 'xs',
-        }}
         {...state}
         title="Filter Options"
         closeLabel="Reset Filters"

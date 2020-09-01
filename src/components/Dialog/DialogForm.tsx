@@ -90,7 +90,7 @@ export function DialogForm<T, R = void>({
   SubmitProps,
   closeLabel,
   CloseProps,
-  onlyDirtySubmit,
+  onlyDirtySubmit = true,
   open,
   onSuccess,
   errorHandlers,
@@ -127,6 +127,8 @@ export function DialogForm<T, R = void>({
         const reset = () => sleep(500).then(() => form.reset());
         return (
           <Dialog
+            fullWidth
+            maxWidth="xs"
             {...DialogProps}
             open={open}
             onClose={(e, reason) => {

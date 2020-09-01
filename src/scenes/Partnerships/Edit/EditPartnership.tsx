@@ -84,10 +84,6 @@ export const EditPartnership: FC<EditPartnershipProps> = ({
 
   return (
     <DialogForm<UpdatePartnershipInput & SubmitAction<'delete'>>
-      DialogProps={{
-        fullWidth: true,
-        maxWidth: 'xs',
-      }}
       {...props}
       onSubmit={async (input) => {
         const refetchQueries = [GQLOperations.Query.ProjectPartnerships];

@@ -44,15 +44,7 @@ export const CreateLanguageEngagement = ({
     });
   };
   return (
-    <DialogForm
-      DialogProps={{
-        fullWidth: true,
-        maxWidth: 'xs',
-      }}
-      {...props}
-      onSubmit={submit}
-      title="Create Language Engagement"
-    >
+    <DialogForm {...props} onSubmit={submit} title="Create Language Engagement">
       <SubmitError />
       <LanguageField name="language" label="Language" required />
     </DialogForm>

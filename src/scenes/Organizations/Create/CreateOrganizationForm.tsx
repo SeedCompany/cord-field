@@ -11,14 +11,7 @@ export type CreateOrganizationFormProps = DialogFormProps<
 >;
 
 export const CreateOrganizationForm = (props: CreateOrganizationFormProps) => (
-  <DialogForm
-    DialogProps={{
-      fullWidth: true,
-      maxWidth: 'xs',
-    }}
-    {...props}
-    title="Create Partner"
-  >
+  <DialogForm {...props} title="Create Partner">
     <SubmitError />
     <TextField
       name="organization.name"

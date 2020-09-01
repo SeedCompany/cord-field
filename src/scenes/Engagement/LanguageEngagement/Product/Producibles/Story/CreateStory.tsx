@@ -19,10 +19,6 @@ export const CreateStory = (props: CreateStoryProps) => {
 
   return (
     <DialogForm
-      DialogProps={{
-        fullWidth: true,
-        maxWidth: 'xs',
-      }}
       {...props}
       onSubmit={async (input) => {
         const { data } = await createStory({

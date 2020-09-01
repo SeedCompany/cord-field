@@ -14,14 +14,7 @@ import {
 export type CreateProjectFormProps = DialogFormProps<CreateProjectInput>;
 
 export const CreateProjectForm = (props: CreateProjectFormProps) => (
-  <DialogForm
-    DialogProps={{
-      fullWidth: true,
-      maxWidth: 'xs',
-    }}
-    {...props}
-    title="Create Project"
-  >
+  <DialogForm {...props} title="Create Project">
     <SubmitError />
     <TextField
       name="project.name"

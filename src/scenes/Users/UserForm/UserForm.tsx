@@ -34,10 +34,8 @@ export const UserForm = <T extends any>({
 }: UserFormProps<T>) => (
   <DialogForm<T>
     DialogProps={{
-      fullWidth: true,
       maxWidth: 'sm',
     }}
-    onlyDirtySubmit
     {...rest}
     decorators={decorators(prefix)}
   >
