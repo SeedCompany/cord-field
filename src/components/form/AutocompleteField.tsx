@@ -62,6 +62,7 @@ export function AutocompleteField<
   autoFocus,
   helperText,
   label,
+  placeholder,
   variant,
   required,
   getCompareBy: getCompareByProp,
@@ -138,6 +139,7 @@ export function AutocompleteField<
           // no asterisk
           InputLabelProps={{ ...params.InputLabelProps, required: false }}
           label={label}
+          placeholder={placeholder}
           helperText={getHelperText(meta, helperText)}
           required={required}
           inputRef={ref}

@@ -9,4 +9,6 @@ export const OrganizationField = LookupField.createFor<
 >({
   resource: 'Organization',
   useLookup: useOrganizationLookupLazyQuery,
+  label: 'Organization',
+  placeholder: 'Search for an organization by name',
 });

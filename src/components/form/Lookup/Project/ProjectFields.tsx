@@ -10,14 +10,20 @@ import {
 export const ProjectField = LookupField.createFor<Project>({
   resource: 'Project',
   useLookup: useProjectLookupLazyQuery,
+  label: 'Project',
+  placeholder: 'Search for a project by name',
 });
 
 export const TranslationProjectField = LookupField.createFor<Project>({
   resource: 'TranslationProject',
   useLookup: useTranslationProjectLookupLazyQuery,
+  label: 'Project',
+  placeholder: 'Search for a project by name',
 });
 
 export const InternshipProjectField = LookupField.createFor<Project>({
   resource: 'InternshipProject',
   useLookup: useInternshipProjectLookupLazyQuery,
+  label: 'Project',
+  placeholder: 'Search for a project by name',
 });
