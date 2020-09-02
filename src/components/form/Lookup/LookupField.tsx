@@ -84,6 +84,7 @@ export function LookupField<
   autoFocus,
   helperText,
   label,
+  placeholder,
   required,
   CreateDialogForm,
   getInitialValues,
@@ -260,6 +261,7 @@ export function LookupField<
           // no asterisk
           InputLabelProps={{ ...params.InputLabelProps, required: false }}
           label={label}
+          placeholder={placeholder}
           helperText={getHelperText(meta, helperText)}
           required={required}
           inputRef={ref}
