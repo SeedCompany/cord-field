@@ -9,6 +9,8 @@ import {
 export const SongField = LookupField.createFor<Song, CreateSongInput>({
   resource: 'Song',
   useLookup: useSongLookupLazyQuery,
+  label: 'Song',
+  placeholder: 'Search for a song by name',
   CreateDialogForm: CreateSong,
   getInitialValues: (value) => ({
     song: {

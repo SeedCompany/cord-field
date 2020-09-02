@@ -8,4 +8,6 @@ export const UserField = LookupField.createFor<UserLookupItemFragment>({
   resource: 'User',
   useLookup: useUserLookupLazyQuery,
   getOptionLabel: (option) => option.fullName,
+  label: 'Person',
+  placeholder: 'Search for a person by name',
 });
