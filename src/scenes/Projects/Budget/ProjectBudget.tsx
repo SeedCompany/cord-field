@@ -105,23 +105,6 @@ export const ProjectBudget = () => {
     },
   ];
 
-  async function handleAmountUpdate(
-    newAmount: string,
-    __: unknown,
-    data: BudgetRowData
-  ): Promise<void> {
-    const input = {
-      budgetRecord: {
-        id: data.id,
-        amount: Number(newAmount),
-      },
-    };
-    await updateBudgetRecord({
-      variables: { input },
-      refetchQueries: [GQLOperations.Query.ProjectBudget],
-    });
-  }
-
   return (
     <Content>
       {error ? (
@@ -171,7 +154,18 @@ export const ProjectBudget = () => {
                 cellEditable={
                   canEditBudget
                     ? {
-                        onCellEditApproved: handleAmountUpdate,
+                        onCellEditApproved: async (newAmount, _, data) => {
+                          const input = {
+                            budgetRecord: {
+                              id: data.id,
+                              amount: Number(newAmount),
+                            },
+                          };
+                          await updateBudgetRecord({
+                            variables: { input },
+                            refetchQueries: [GQLOperations.Query.ProjectBudget],
+                          });
+                        },
                       }
                     : undefined
                 }
