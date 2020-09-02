@@ -92,6 +92,11 @@ export const ProjectBudget = () => {
       field: 'amount',
       type: 'currency' as const,
       editable: (_: unknown, rowData: BudgetRowData) => rowData.canEdit,
+      cellStyle: {
+        display: 'flex',
+        flexDirection: 'row' as const,
+        justifyContent: 'flex-end',
+      },
     },
     {
       title: 'Can Edit',
