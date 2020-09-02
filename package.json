@@ -33,7 +33,7 @@
     "lodash": "^4.17.19",
     "luxon": "^1.24.1",
     "mammoth": "^1.4.9",
-    "material-table": "patch:material-table@1.60.0#./patches/material-table.patch",
+    "material-table": "patch:material-table@1.68.0#./patches/material-table.patch",
     "notistack": "^0.9.17",
     "papaparse": "^5.2.0",
     "react": "^16.13.1",

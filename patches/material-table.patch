@@ -1,44 +1,116 @@
+diff --git a/dist/components/m-table-edit-field.js b/dist/components/m-table-edit-field.js
+index 36f3c4fd..adb990a7 100644
+--- a/dist/components/m-table-edit-field.js
++++ b/dist/components/m-table-edit-field.js
+@@ -170,9 +170,9 @@ var MTableEditField = /*#__PURE__*/function (_React$Component) {
+           style: {
+             fontSize: 13
+           },
+-          inputProps: {
+-            "aria-label": "".concat(this.props.columnDef.title, ": press space to edit")
+-          }
++        },
++        inputProps: {
++          "aria-label": "".concat(this.props.columnDef.title, ": press space to edit")
+         }
+       })));
+     }
+@@ -190,10 +190,10 @@ var MTableEditField = /*#__PURE__*/function (_React$Component) {
+         InputProps: {
+           style: {
+             fontSize: 13
+-          },
+-          inputProps: {
+-            "aria-label": "".concat(this.props.columnDef.title, ": press space to edit")
+           }
++        },
++        inputProps: {
++          "aria-label": "".concat(this.props.columnDef.title, ": press space to edit")
+         }
+       })));
+     }
+@@ -216,10 +216,10 @@ var MTableEditField = /*#__PURE__*/function (_React$Component) {
+         InputProps: {
+           style: {
+             fontSize: 13
+-          },
+-          inputProps: {
+-            "aria-label": this.props.columnDef.title
+           }
++        },
++        inputProps: {
++          "aria-label": this.props.columnDef.title
+         }
+       }));
+     }
+@@ -244,13 +244,15 @@ var MTableEditField = /*#__PURE__*/function (_React$Component) {
+
+           return _this4.props.onChange(value);
+         },
+-        inputProps: {
++        InputProps: {
+           style: {
+             fontSize: 13,
+             textAlign: "right",
+-            "aria-label": this.props.columnDef.title
+           }
+         },
++        inputProps: {
++          "aria-label": this.props.columnDef.title
++        },
+         onKeyDown: this.props.onKeyDown,
+         autoFocus: this.props.autoFocus
+       }));
 diff --git a/types/index.d.ts b/types/index.d.ts
-index b756e3a3..dd2c0cda 100644
+index c9f3c0ee..8bd5a82e 100644
 --- a/types/index.d.ts
 +++ b/types/index.d.ts
-@@ -151,6 +151,7 @@ export interface Components {
-   Container?: React.ComponentType<any>;
-   EditField?: React.ComponentType<any>;
-   EditRow?: React.ComponentType<any>;
-+  EditCell?: React.ComponentType<any>;
-   FilterRow?: React.ComponentType<any>;
-   Groupbar?: React.ComponentType<any>;
-   GroupRow?: React.ComponentType<any>;
-@@ -177,23 +178,23 @@ export const MTableToolbar: (props: any) => React.ReactElement<any>;
+@@ -250,42 +250,22 @@ export const MTableToolbar: (props: any) => React.ReactElement<any>;
  export const MTable: (props: any) => React.ReactElement<any>;
- 
+
  export interface Icons {
 -  Add?: React.ForwardRefExoticComponent<React.RefAttributes<SVGSVGElement>>;
 -  Check?: React.ForwardRefExoticComponent<React.RefAttributes<SVGSVGElement>>;
 -  Clear?: React.ForwardRefExoticComponent<React.RefAttributes<SVGSVGElement>>;
 -  Delete?: React.ForwardRefExoticComponent<React.RefAttributes<SVGSVGElement>>;
--  DetailPanel?: React.ForwardRefExoticComponent<React.RefAttributes<SVGSVGElement>>;
+-  DetailPanel?: React.ForwardRefExoticComponent<
+-    React.RefAttributes<SVGSVGElement>
+-  >;
 -  Edit?: React.ForwardRefExoticComponent<React.RefAttributes<SVGSVGElement>>;
 -  Export?: React.ForwardRefExoticComponent<React.RefAttributes<SVGSVGElement>>;
 -  Filter?: React.ForwardRefExoticComponent<React.RefAttributes<SVGSVGElement>>;
--  FirstPage?: React.ForwardRefExoticComponent<React.RefAttributes<SVGSVGElement>>;
--  SortArrow?: React.ForwardRefExoticComponent<React.RefAttributes<SVGSVGElement>>;
--  LastPage?: React.ForwardRefExoticComponent<React.RefAttributes<SVGSVGElement>>;
--  NextPage?: React.ForwardRefExoticComponent<React.RefAttributes<SVGSVGElement>>;
--  PreviousPage?: React.ForwardRefExoticComponent<React.RefAttributes<SVGSVGElement>>;
--  ResetSearch?: React.ForwardRefExoticComponent<React.RefAttributes<SVGSVGElement>>;
+-  FirstPage?: React.ForwardRefExoticComponent<
+-    React.RefAttributes<SVGSVGElement>
+-  >;
+-  SortArrow?: React.ForwardRefExoticComponent<
+-    React.RefAttributes<SVGSVGElement>
+-  >;
+-  LastPage?: React.ForwardRefExoticComponent<
+-    React.RefAttributes<SVGSVGElement>
+-  >;
+-  NextPage?: React.ForwardRefExoticComponent<
+-    React.RefAttributes<SVGSVGElement>
+-  >;
+-  PreviousPage?: React.ForwardRefExoticComponent<
+-    React.RefAttributes<SVGSVGElement>
+-  >;
+-  ResetSearch?: React.ForwardRefExoticComponent<
+-    React.RefAttributes<SVGSVGElement>
+-  >;
 -  Search?: React.ForwardRefExoticComponent<React.RefAttributes<SVGSVGElement>>;
--  ThirdStateCheck?: React.ForwardRefExoticComponent<React.RefAttributes<SVGSVGElement>>;
--  ViewColumn?: React.ForwardRefExoticComponent<React.RefAttributes<SVGSVGElement>>;
+-  ThirdStateCheck?: React.ForwardRefExoticComponent<
+-    React.RefAttributes<SVGSVGElement>
+-  >;
+-  ViewColumn?: React.ForwardRefExoticComponent<
+-    React.RefAttributes<SVGSVGElement>
+-  >;
+-  Retry?: React.ForwardRefExoticComponent<React.RefAttributes<SVGSVGElement>>;
 +  Add?: SvgIconComponent;
 +  Check?: SvgIconComponent;
 +  Clear?: SvgIconComponent;
 +  Delete?: SvgIconComponent;
 +  DetailPanel?: SvgIconComponent;
 +  Edit?: SvgIconComponent;
-+  Export?: SvgIconComponent;
-+  Filter?: SvgIconComponent;
 +  FirstPage?: SvgIconComponent;
 +  SortArrow?: SvgIconComponent;
 +  LastPage?: SvgIconComponent;
@@ -48,6 +120,7 @@ index b756e3a3..dd2c0cda 100644
 +  Search?: SvgIconComponent;
 +  ThirdStateCheck?: SvgIconComponent;
 +  ViewColumn?: SvgIconComponent;
++  Retry?: SvgIconComponent;
  }
- 
- export interface Options {
+
+ export interface Options<RowData extends object> {
