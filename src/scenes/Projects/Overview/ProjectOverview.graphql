@@ -45,7 +45,6 @@ fragment ProjectOverview on Project {
     canRead
     value {
       ...BudgetOverview
-      ...BudgetRecords
     }
   }
   team {
