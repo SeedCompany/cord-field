@@ -145,32 +145,29 @@ export const ProjectBudget = () => {
             )}
           </header>
           <section className={classes.tableWrapper}>
-            {loading ? (
-              <Skeleton variant="rect" width="100%" height={200} />
-            ) : (
-              <Table
-                data={rowData}
-                columns={columns}
-                cellEditable={
-                  canEditBudget
-                    ? {
-                        onCellEditApproved: async (newAmount, _, data) => {
-                          const input = {
-                            budgetRecord: {
-                              id: data.id,
-                              amount: Number(newAmount),
-                            },
-                          };
-                          await updateBudgetRecord({
-                            variables: { input },
-                            refetchQueries: [GQLOperations.Query.ProjectBudget],
-                          });
-                        },
-                      }
-                    : undefined
-                }
-              />
-            )}
+            <Table
+              data={rowData}
+              columns={columns}
+              isLoading={loading}
+              cellEditable={
+                canEditBudget
+                  ? {
+                      onCellEditApproved: async (newAmount, _, data) => {
+                        const input = {
+                          budgetRecord: {
+                            id: data.id,
+                            amount: Number(newAmount),
+                          },
+                        };
+                        await updateBudgetRecord({
+                          variables: { input },
+                          refetchQueries: [GQLOperations.Query.ProjectBudget],
+                        });
+                      },
+                    }
+                  : undefined
+              }
+            />
           </section>
         </>
       )}
