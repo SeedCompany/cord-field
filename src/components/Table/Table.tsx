@@ -5,7 +5,7 @@ import {
   ArrowDownward as SortArrow,
 } from '@material-ui/icons';
 import MaterialTable, { Icons, MaterialTableProps } from 'material-table';
-import React from 'react';
+import React, { forwardRef } from 'react';
 import { Merge } from 'type-fest';
 
 export type TableProps<RowData extends Record<string, any>> = Merge<
@@ -16,10 +16,10 @@ export type TableProps<RowData extends Record<string, any>> = Merge<
 >;
 
 const defaultIcons: Icons = {
-  Check,
-  Clear,
-  Edit,
-  SortArrow,
+  Check: forwardRef((props, ref) => <Check {...props} ref={ref} />),
+  Clear: forwardRef((props, ref) => <Clear {...props} ref={ref} />),
+  Edit: forwardRef((props, ref) => <Edit {...props} ref={ref} />),
+  SortArrow: forwardRef((props, ref) => <SortArrow {...props} ref={ref} />),
 };
 
 export const Table = <RowData extends Record<string, any>>(

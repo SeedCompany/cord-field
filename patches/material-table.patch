@@ -1,21 +1,43 @@
+diff --git a/dist/components/m-table-body-row.js b/dist/components/m-table-body-row.js
+index 6a772549..91c12858 100644
+--- a/dist/components/m-table-body-row.js
++++ b/dist/components/m-table-body-row.js
+@@ -420,7 +420,7 @@ var MTableBodyRow = /*#__PURE__*/function (_React$Component) {
+           cellEditable = _this$props.cellEditable,
+           onCellEditStarted = _this$props.onCellEditStarted,
+           onCellEditFinished = _this$props.onCellEditFinished,
+-          rowProps = (0, _objectWithoutProperties2["default"])(_this$props, ["icons", "data", "columns", "components", "detailPanel", "getFieldValue", "isTreeData", "onRowClick", "onRowSelected", "onTreeExpandChanged", "onToggleDetailPanel", "onEditingCanceled", "onEditingApproved", "options", "hasAnyEditingRow", "treeDataMaxLevel", "localization", "actions", "errorState", "cellEditable", "onCellEditStarted", "onCellEditFinished"]);
++          rowProps = (0, _objectWithoutProperties2["default"])(_this$props, ["icons", "data", "columns", "components", "detailPanel", "getFieldValue", "isTreeData", "onRowClick", "onRowSelected", "onTreeExpandChanged", "onToggleDetailPanel", "onEditingCanceled", "onEditingApproved", "options", "hasAnyEditingRow", "treeDataMaxLevel", "localization", "actions", "errorState", "cellEditable", "onCellEditStarted", "onCellEditFinished", "scrollWidth"]);
+       return /*#__PURE__*/React.createElement(React.Fragment, null, /*#__PURE__*/React.createElement(_TableRow["default"], (0, _extends2["default"])({
+         selected: hasAnyEditingRow
+       }, rowProps, {
+diff --git a/dist/components/m-table-cell.js b/dist/components/m-table-cell.js
+index c3290515..fac5ff91 100644
+--- a/dist/components/m-table-cell.js
++++ b/dist/components/m-table-cell.js
+@@ -199,7 +199,7 @@ var MTableCell = /*#__PURE__*/function (_React$Component) {
+           errorState = _this$props.errorState,
+           cellEditable = _this$props.cellEditable,
+           onCellEditStarted = _this$props.onCellEditStarted,
+-          cellProps = (0, _objectWithoutProperties2["default"])(_this$props, ["icons", "columnDef", "rowData", "errorState", "cellEditable", "onCellEditStarted"]);
++          cellProps = (0, _objectWithoutProperties2["default"])(_this$props, ["icons", "columnDef", "rowData", "errorState", "cellEditable", "onCellEditStarted", "scrollWidth"]);
+       var cellAlignment = columnDef.align !== undefined ? columnDef.align : ["numeric", "currency"].indexOf(this.props.columnDef.type) !== -1 ? "right" : "left";
+       var renderValue = this.getRenderValue();
+ 
 diff --git a/dist/components/m-table-edit-field.js b/dist/components/m-table-edit-field.js
-index 36f3c4fd..adb990a7 100644
+index 87a0a9d4..b39c3881 100644
 --- a/dist/components/m-table-edit-field.js
 +++ b/dist/components/m-table-edit-field.js
-@@ -170,9 +170,9 @@ var MTableEditField = /*#__PURE__*/function (_React$Component) {
-           style: {
-             fontSize: 13
-           },
--          inputProps: {
--            "aria-label": "".concat(this.props.columnDef.title, ": press space to edit")
--          }
-+        },
-+        inputProps: {
-+          "aria-label": "".concat(this.props.columnDef.title, ": press space to edit")
-         }
-       })));
+@@ -70,7 +70,7 @@ var MTableEditField = /*#__PURE__*/function (_React$Component) {
+           onRowDataChange = _this$props.onRowDataChange,
+           errorState = _this$props.errorState,
+           onBulkEditRowChanged = _this$props.onBulkEditRowChanged,
+-          props = (0, _objectWithoutProperties2["default"])(_this$props, ["columnDef", "rowData", "onRowDataChange", "errorState", "onBulkEditRowChanged"]);
++          props = (0, _objectWithoutProperties2["default"])(_this$props, ["columnDef", "rowData", "onRowDataChange", "errorState", "onBulkEditRowChanged", "scrollWidth"]);
+       return props;
      }
-@@ -190,10 +190,10 @@ var MTableEditField = /*#__PURE__*/function (_React$Component) {
+   }, {
+@@ -171,10 +171,10 @@ var MTableEditField = /*#__PURE__*/function (_React$Component) {
          InputProps: {
            style: {
              fontSize: 13
@@ -29,7 +51,21 @@ index 36f3c4fd..adb990a7 100644
          }
        })));
      }
-@@ -216,10 +216,10 @@ var MTableEditField = /*#__PURE__*/function (_React$Component) {
+@@ -192,10 +192,10 @@ var MTableEditField = /*#__PURE__*/function (_React$Component) {
+         InputProps: {
+           style: {
+             fontSize: 13
+-          },
+-          inputProps: {
+-            "aria-label": "".concat(this.props.columnDef.title, ": press space to edit")
+           }
++        },
++        inputProps: {
++          "aria-label": "".concat(this.props.columnDef.title, ": press space to edit")
+         }
+       })));
+     }
+@@ -218,10 +218,10 @@ var MTableEditField = /*#__PURE__*/function (_React$Component) {
          InputProps: {
            style: {
              fontSize: 13
@@ -43,8 +79,8 @@ index 36f3c4fd..adb990a7 100644
          }
        }));
      }
-@@ -244,13 +244,15 @@ var MTableEditField = /*#__PURE__*/function (_React$Component) {
-
+@@ -246,13 +246,15 @@ var MTableEditField = /*#__PURE__*/function (_React$Component) {
+ 
            return _this4.props.onChange(value);
          },
 -        inputProps: {
@@ -61,66 +97,16 @@ index 36f3c4fd..adb990a7 100644
          onKeyDown: this.props.onKeyDown,
          autoFocus: this.props.autoFocus
        }));
-diff --git a/types/index.d.ts b/types/index.d.ts
-index c9f3c0ee..8bd5a82e 100644
---- a/types/index.d.ts
-+++ b/types/index.d.ts
-@@ -250,42 +250,22 @@ export const MTableToolbar: (props: any) => React.ReactElement<any>;
- export const MTable: (props: any) => React.ReactElement<any>;
-
- export interface Icons {
--  Add?: React.ForwardRefExoticComponent<React.RefAttributes<SVGSVGElement>>;
--  Check?: React.ForwardRefExoticComponent<React.RefAttributes<SVGSVGElement>>;
--  Clear?: React.ForwardRefExoticComponent<React.RefAttributes<SVGSVGElement>>;
--  Delete?: React.ForwardRefExoticComponent<React.RefAttributes<SVGSVGElement>>;
--  DetailPanel?: React.ForwardRefExoticComponent<
--    React.RefAttributes<SVGSVGElement>
--  >;
--  Edit?: React.ForwardRefExoticComponent<React.RefAttributes<SVGSVGElement>>;
--  Export?: React.ForwardRefExoticComponent<React.RefAttributes<SVGSVGElement>>;
--  Filter?: React.ForwardRefExoticComponent<React.RefAttributes<SVGSVGElement>>;
--  FirstPage?: React.ForwardRefExoticComponent<
--    React.RefAttributes<SVGSVGElement>
--  >;
--  SortArrow?: React.ForwardRefExoticComponent<
--    React.RefAttributes<SVGSVGElement>
--  >;
--  LastPage?: React.ForwardRefExoticComponent<
--    React.RefAttributes<SVGSVGElement>
--  >;
--  NextPage?: React.ForwardRefExoticComponent<
--    React.RefAttributes<SVGSVGElement>
--  >;
--  PreviousPage?: React.ForwardRefExoticComponent<
--    React.RefAttributes<SVGSVGElement>
--  >;
--  ResetSearch?: React.ForwardRefExoticComponent<
--    React.RefAttributes<SVGSVGElement>
--  >;
--  Search?: React.ForwardRefExoticComponent<React.RefAttributes<SVGSVGElement>>;
--  ThirdStateCheck?: React.ForwardRefExoticComponent<
--    React.RefAttributes<SVGSVGElement>
--  >;
--  ViewColumn?: React.ForwardRefExoticComponent<
--    React.RefAttributes<SVGSVGElement>
--  >;
--  Retry?: React.ForwardRefExoticComponent<React.RefAttributes<SVGSVGElement>>;
-+  Add?: SvgIconComponent;
-+  Check?: SvgIconComponent;
-+  Clear?: SvgIconComponent;
-+  Delete?: SvgIconComponent;
-+  DetailPanel?: SvgIconComponent;
-+  Edit?: SvgIconComponent;
-+  FirstPage?: SvgIconComponent;
-+  SortArrow?: SvgIconComponent;
-+  LastPage?: SvgIconComponent;
-+  NextPage?: SvgIconComponent;
-+  PreviousPage?: SvgIconComponent;
-+  ResetSearch?: SvgIconComponent;
-+  Search?: SvgIconComponent;
-+  ThirdStateCheck?: SvgIconComponent;
-+  ViewColumn?: SvgIconComponent;
-+  Retry?: SvgIconComponent;
- }
-
- export interface Options<RowData extends object> {
+diff --git a/dist/components/m-table-edit-row.js b/dist/components/m-table-edit-row.js
+index 6f4ba404..40c4abea 100644
+--- a/dist/components/m-table-edit-row.js
++++ b/dist/components/m-table-edit-row.js
+@@ -399,7 +399,7 @@ var MTableEditRow = /*#__PURE__*/function (_React$Component) {
+           actions = _this$props.actions,
+           errorState = _this$props.errorState,
+           onBulkEditRowChanged = _this$props.onBulkEditRowChanged,
+-          rowProps = (0, _objectWithoutProperties2["default"])(_this$props, ["detailPanel", "isTreeData", "onRowClick", "onRowSelected", "onTreeExpandChanged", "onToggleDetailPanel", "onEditingApproved", "onEditingCanceled", "getFieldValue", "components", "icons", "columns", "localization", "options", "actions", "errorState", "onBulkEditRowChanged"]);
++          rowProps = (0, _objectWithoutProperties2["default"])(_this$props, ["detailPanel", "isTreeData", "onRowClick", "onRowSelected", "onTreeExpandChanged", "onToggleDetailPanel", "onEditingApproved", "onEditingCanceled", "getFieldValue", "components", "icons", "columns", "localization", "options", "actions", "errorState", "onBulkEditRowChanged", "scrollWidth"]);
+       return /*#__PURE__*/React.createElement(React.Fragment, null, /*#__PURE__*/React.createElement(_TableRow["default"], (0, _extends2["default"])({
+         onKeyDown: this.handleKeyDown
+       }, rowProps, {
