@@ -76,23 +76,19 @@ export const ProjectBudget = () => {
 
   const columns: Array<Column<BudgetRowData>> = [
     {
-      title: 'ID',
       field: 'id',
       hidden: true,
     },
     {
-      title: 'Organization',
       field: 'organization',
       editable: 'never',
     },
     {
-      title: 'Fiscal Year',
       field: 'fiscalYear',
       editable: 'never',
       render: (rowData: BudgetRowData) => `FY${rowData.fiscalYear}`,
     },
     {
-      title: 'Amount',
       field: 'amount',
       type: 'currency',
       editable: (_: unknown, rowData: BudgetRowData) => rowData.canEdit,
@@ -102,7 +98,6 @@ export const ProjectBudget = () => {
         }`,
     },
     {
-      title: 'Can Edit',
       field: 'canEdit',
       hidden: true,
     },

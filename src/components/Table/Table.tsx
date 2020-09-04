@@ -5,6 +5,7 @@ import {
   Edit,
   ArrowDownward as SortArrow,
 } from '@material-ui/icons';
+import { startCase } from 'lodash';
 import MaterialTable, {
   Components,
   Icons,
@@ -54,6 +55,9 @@ export const Table = <RowData extends Record<string, any>>(
   } = props;
 
   const columns: typeof columnsProp = columnsProp.map((column) => ({
+    // Default title to field key if it's a string
+    title:
+      typeof column.field === 'string' ? startCase(column.field) : undefined,
     ...column,
     headerStyle: {
       ...column.headerStyle,
