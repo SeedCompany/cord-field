@@ -12,7 +12,7 @@ import MaterialTable, {
   MaterialTableProps,
   MTableCell,
 } from 'material-table';
-import React, { forwardRef } from 'react';
+import React, { forwardRef, useMemo } from 'react';
 import { Merge } from 'type-fest';
 
 export type TableProps<RowData extends Record<string, any>> = Merge<
@@ -54,28 +54,34 @@ export const Table = <RowData extends Record<string, any>>(
     ...rest
   } = props;
 
-  const columns: typeof columnsProp = columnsProp.map((column) => ({
-    // Default title to field key if it's a string
-    title:
-      typeof column.field === 'string' ? startCase(column.field) : undefined,
-    ...column,
-    headerStyle: {
-      ...column.headerStyle,
-      ...(column.type === 'currency' || column.type === 'numeric'
-        ? {
-            // We always want the headers of currency & numeric columns
-            // to be right-aligned.
-            textAlign: 'right',
-            // Move sorting arrow to other side so label & values are aligned.
-            flexDirection: 'row-reverse',
-          }
-        : {}),
-    },
-    // This is required to fix a bug that causes column headers
-    // to be fixed-width even though the default layout for the
-    // table column width is 'auto'.
-    width: 'auto',
-  }));
+  const columns: typeof columnsProp = useMemo(
+    () =>
+      columnsProp.map((column) => ({
+        // Default title to field key if it's a string
+        title:
+          typeof column.field === 'string'
+            ? startCase(column.field)
+            : undefined,
+        ...column,
+        headerStyle: {
+          ...column.headerStyle,
+          ...(column.type === 'currency' || column.type === 'numeric'
+            ? {
+                // We always want the headers of currency & numeric columns
+                // to be right-aligned.
+                textAlign: 'right',
+                // Move sorting arrow to other side so label & values are aligned.
+                flexDirection: 'row-reverse',
+              }
+            : {}),
+        },
+        // This is required to fix a bug that causes column headers
+        // to be fixed-width even though the default layout for the
+        // table column width is 'auto'.
+        width: 'auto',
+      })),
+    [columnsProp]
+  );
 
   const components = componentsProp
     ? { ...defaultComponents, ...componentsProp }

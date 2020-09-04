@@ -2,7 +2,7 @@ import { Breadcrumbs, makeStyles, Typography } from '@material-ui/core';
 import { Skeleton } from '@material-ui/lab';
 import { sumBy } from 'lodash';
 import { Column } from 'material-table';
-import React from 'react';
+import React, { useMemo } from 'react';
 import { useParams } from 'react-router-dom';
 import { Breadcrumb } from '../../../components/Breadcrumb';
 import { ContentContainer as Content } from '../../../components/ContentContainer';
@@ -29,6 +29,14 @@ const useStyles = makeStyles(({ spacing }) => ({
   },
 }));
 
+interface BudgetRowData {
+  id: string;
+  organization: string;
+  fiscalYear: string;
+  amount: string | null;
+  canEdit: boolean;
+}
+
 export const ProjectBudget = () => {
   const { projectId } = useParams();
   const classes = useStyles();
@@ -49,14 +57,6 @@ export const ProjectBudget = () => {
     (record) => record.amount.value ?? 0
   );
 
-  interface BudgetRowData {
-    id: string;
-    organization: string;
-    fiscalYear: string;
-    amount: string | null;
-    canEdit: boolean;
-  }
-
   const blankAmount = 'click to edit';
   const rowData = budgetRecords.reduce((rows: BudgetRowData[], record) => {
     const { amount, fiscalYear, id, organization } = record;
@@ -74,31 +74,34 @@ export const ProjectBudget = () => {
     return rows.concat(row);
   }, []);
 
-  const columns: Array<Column<BudgetRowData>> = [
-    {
-      field: 'id',
-      hidden: true,
-    },
-    {
-      field: 'organization',
-      editable: 'never',
-    },
-    {
-      field: 'fiscalYear',
-      editable: 'never',
-    },
-    {
-      field: 'amount',
-      type: 'currency',
-      editable: (_, rowData) => rowData.canEdit,
-      render: (rowData) =>
-        rowData.amount ? formatCurrency(Number(rowData.amount)) : blankAmount,
-    },
-    {
-      field: 'canEdit',
-      hidden: true,
-    },
-  ];
+  const columns: Array<Column<BudgetRowData>> = useMemo(
+    () => [
+      {
+        field: 'id',
+        hidden: true,
+      },
+      {
+        field: 'organization',
+        editable: 'never',
+      },
+      {
+        field: 'fiscalYear',
+        editable: 'never',
+      },
+      {
+        field: 'amount',
+        type: 'currency',
+        editable: (_, rowData) => rowData.canEdit,
+        render: (rowData) =>
+          rowData.amount ? formatCurrency(Number(rowData.amount)) : blankAmount,
+      },
+      {
+        field: 'canEdit',
+        hidden: true,
+      },
+    ],
+    [formatCurrency]
+  );
 
   return (
     <Content>
