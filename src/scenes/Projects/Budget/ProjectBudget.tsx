@@ -10,6 +10,7 @@ import { useCurrencyFormatter } from '../../../components/Formatters/useCurrency
 import { ProjectBreadcrumb } from '../../../components/ProjectBreadcrumb';
 import { Table } from '../../../components/Table';
 import {
+  BudgetRecordFragment as BudgetRecord,
   useProjectBudgetQuery,
   useUpdateProjectBudgetRecordMutation,
 } from './ProjectBudget.generated';
@@ -47,33 +48,20 @@ export const ProjectBudget = () => {
   });
   const [updateBudgetRecord] = useUpdateProjectBudgetRecordMutation();
 
-  const canReadBudget = data?.project.budget.canRead;
-  const canEditBudget = data?.project.budget.canEdit;
-  const budget = data?.project.budget.value;
-  const budgetRecords = budget?.records ?? [];
+  const budget = data?.project.budget;
+  const records: readonly BudgetRecord[] = budget?.value?.records ?? [];
 
-  const budgetTotal = sumBy(
-    budgetRecords,
-    (record) => record.amount.value ?? 0
-  );
+  const budgetTotal = sumBy(records, (record) => record.amount.value ?? 0);
+
+  const rowData = records.map<BudgetRowData>((record) => ({
+    id: record.id,
+    organization: record.organization.value?.name.value ?? '',
+    fiscalYear: String(record.fiscalYear.value),
+    amount: String(record.amount.value ?? ''),
+    canEdit: record.amount.canEdit,
+  }));
 
   const blankAmount = 'click to edit';
-  const rowData = budgetRecords.reduce((rows: BudgetRowData[], record) => {
-    const { amount, fiscalYear, id, organization } = record;
-    const { value: dollarAmount, canEdit } = amount;
-    const { value: year } = fiscalYear;
-    const orgName = organization.value?.name.value;
-
-    const row = {
-      id,
-      organization: orgName ?? '',
-      fiscalYear: String(year),
-      amount: String(dollarAmount ?? ''),
-      canEdit,
-    };
-    return rows.concat(row);
-  }, []);
-
   const columns: Array<Column<BudgetRowData>> = useMemo(
     () => [
       {
@@ -107,7 +95,7 @@ export const ProjectBudget = () => {
     <Content>
       {error ? (
         <Typography variant="h4">Error fetching Project Budget</Typography>
-      ) : canReadBudget === false ? (
+      ) : budget?.canRead === false ? (
         <Typography variant="h4">
           You do not have permission to view this project's budget
         </Typography>
@@ -144,7 +132,7 @@ export const ProjectBudget = () => {
               columns={columns}
               isLoading={loading}
               cellEditable={
-                canEditBudget
+                budget?.canEdit
                   ? {
                       onCellEditApproved: async (newAmount, _, data) => {
                         if (newAmount === blankAmount || newAmount === '')

@@ -1,28 +1,26 @@
-fragment BudgetRecords on Budget {
-  records {
-    id
-    createdAt
-    amount {
-      canEdit
-      canRead
-      value
-    }
-    fiscalYear {
-      canEdit
-      canRead
-      value
-    }
-    organization {
-      canEdit
-      canRead
-      value {
-        id
-        createdAt
-        name {
-          canEdit
-          canRead
-          value
-        }
+fragment BudgetRecord on BudgetRecord {
+  id
+  createdAt
+  amount {
+    canEdit
+    canRead
+    value
+  }
+  fiscalYear {
+    canEdit
+    canRead
+    value
+  }
+  organization {
+    canEdit
+    canRead
+    value {
+      id
+      createdAt
+      name {
+        canEdit
+        canRead
+        value
       }
     }
   }
@@ -40,7 +38,9 @@ query ProjectBudget($id: ID!) {
       canEdit
       value {
         ...BudgetOverview
-        ...BudgetRecords
+        records {
+          ...BudgetRecord
+        }
       }
     }
   }
