@@ -4557,6 +4557,17 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@welldone-software/why-did-you-render@npm:^5.0.0-alpha.2":
+  version: 5.0.0-alpha.2
+  resolution: "@welldone-software/why-did-you-render@npm:5.0.0-alpha.2"
+  dependencies:
+    lodash: ^4
+  peerDependencies:
+    react: ">=16.13"
+  checksum: 2426e02f27314b4f65ff71f9f10bddd4a119b2bce104a4295f051fc6ebfe9dd4a00c53080dfc8b1f81e963e7a3efba38ce5a5eaa5ac078fa3244d3851770d72e
+  languageName: node
+  linkType: hard
+
 "@wry/context@npm:^0.5.2":
   version: 0.5.2
   resolution: "@wry/context@npm:0.5.2"
@@ -7351,6 +7362,7 @@ __metadata:
     "@types/react-pdf": ^4.0.5
     "@types/seedrandom": ^2.4.28
     "@types/validator": ^13.1.0
+    "@welldone-software/why-did-you-render": ^5.0.0-alpha.2
     babel-jest: 24.9.0
     babel-loader: ^8.1.0
     babel-plugin-import: ^1.13.0
@@ -13793,7 +13805,7 @@ fsevents@^1.2.7:
   languageName: node
   linkType: hard
 
-"lodash@npm:>=3.5 <5, lodash@npm:^4.0.1, lodash@npm:^4.17.11, lodash@npm:^4.17.12, lodash@npm:^4.17.13, lodash@npm:^4.17.14, lodash@npm:^4.17.15, lodash@npm:^4.17.19, lodash@npm:^4.17.4, lodash@npm:^4.17.5, lodash@npm:~4.17.15":
+"lodash@npm:>=3.5 <5, lodash@npm:^4, lodash@npm:^4.0.1, lodash@npm:^4.17.11, lodash@npm:^4.17.12, lodash@npm:^4.17.13, lodash@npm:^4.17.14, lodash@npm:^4.17.15, lodash@npm:^4.17.19, lodash@npm:^4.17.4, lodash@npm:^4.17.5, lodash@npm:~4.17.15":
   version: 4.17.19
   resolution: "lodash@npm:4.17.19"
   checksum: ff2b7a95f0129dba9101e346d44e0eda0f159d76bbbf23721eec1969b87a32bde3de0cfef0733218c64620e9be08040a973278d46a686540233b356115f3527c

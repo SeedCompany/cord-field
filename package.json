@@ -90,6 +90,7 @@
     "@types/react-pdf": "^4.0.5",
     "@types/seedrandom": "^2.4.28",
     "@types/validator": "^13.1.0",
+    "@welldone-software/why-did-you-render": "^5.0.0-alpha.2",
     "babel-jest": "24.9.0",
     "babel-loader": "^8.1.0",
     "babel-plugin-import": "^1.13.0",

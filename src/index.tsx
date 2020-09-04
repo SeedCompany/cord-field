@@ -15,6 +15,11 @@ if (process.env.NODE_ENV !== 'production') {
     );
     // Do hacking to show dates easier
     await import('./util/hacky-inspect-dates');
+
+    const whyDidYouRender = await import(
+      '@welldone-software/why-did-you-render'
+    );
+    whyDidYouRender.default(React);
   };
   setup.push(devSetUp());
 }
