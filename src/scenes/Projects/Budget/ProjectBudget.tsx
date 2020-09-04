@@ -62,10 +62,11 @@ export const ProjectBudget = () => {
     id: string;
     organization: string;
     fiscalYear: string;
-    amount: string;
+    amount: string | null;
     canEdit: boolean;
   }
 
+  const blankAmount = 'click to edit';
   const rowData = budgetRecords.reduce((rows: BudgetRowData[], record) => {
     const { amount, fiscalYear, id, organization } = record;
     const { value: dollarAmount, canEdit } = amount;
@@ -76,7 +77,7 @@ export const ProjectBudget = () => {
       id,
       organization: orgName ?? '',
       fiscalYear: String(year),
-      amount: String(dollarAmount),
+      amount: String(dollarAmount ?? ''),
       canEdit,
     };
     return rows.concat(row);
@@ -104,6 +105,10 @@ export const ProjectBudget = () => {
       field: 'amount',
       type: 'currency',
       editable: (_: unknown, rowData: BudgetRowData) => rowData.canEdit,
+      render: (rowData: BudgetRowData) =>
+        `${
+          rowData.amount ? formatCurrency(Number(rowData.amount)) : blankAmount
+        }`,
     },
     {
       title: 'Can Edit',
@@ -161,6 +166,8 @@ export const ProjectBudget = () => {
                 canEditBudget
                   ? {
                       onCellEditApproved: async (newAmount, _, data) => {
+                        console.log('newAmount', newAmount);
+                        if (newAmount === blankAmount) return;
                         const input = {
                           budgetRecord: {
                             id: data.id,
