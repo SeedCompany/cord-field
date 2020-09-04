@@ -5,6 +5,8 @@ import {
   CardActions,
   Grid,
   makeStyles,
+  Tooltip,
+  TooltipProps,
   Typography,
 } from '@material-ui/core';
 import { Skeleton } from '@material-ui/lab';
@@ -52,37 +54,44 @@ interface FieldOverviewCardData {
 }
 
 export interface FieldOverviewCardProps extends Pick<HugeIconProps, 'icon'> {
+  className?: string;
+  data?: FieldOverviewCardData;
+  emptyValue?: string;
+  loading?: boolean;
+  onButtonClick?: () => void;
+  onClick?: () => void;
+  redactedText?: TooltipProps['title'];
+  redacted?: boolean;
   title?: string;
   viewLabel?: string;
-  data?: FieldOverviewCardData;
-  className?: string;
-  emptyValue?: string;
-  onClick?: () => void;
-  onButtonClick?: () => void;
 }
 
 const DEFAULT_EMPTY = <>&nbsp;</>;
 
 export const FieldOverviewCard: FC<FieldOverviewCardProps> = ({
   className,
-  viewLabel: buttonLabel,
-  title,
-  icon,
   data,
   emptyValue = DEFAULT_EMPTY,
+  icon,
+  loading,
   onClick,
   onButtonClick,
+  redactedText = 'You do not have permission to view this information',
+  redacted,
+  title,
+  viewLabel: buttonLabel,
 }) => {
   const classes = useStyles();
   const dateTimeFormatter = useDateTimeFormatter();
 
-  const ActionArea = data?.to ? CardActionAreaLink : CardActionArea;
+  const showData = !loading && !redacted;
+  const ActionArea = showData && data?.to ? CardActionAreaLink : CardActionArea;
   const Btn = data?.to ? ButtonLink : Button;
 
-  return (
+  const card = (
     <Card className={clsx(classes.root, className)}>
       <ActionArea
-        disabled={!data}
+        disabled={!data || redacted}
         to={data?.to ?? ''}
         className={classes.topArea}
         onClick={onClick}
@@ -90,7 +99,7 @@ export const FieldOverviewCard: FC<FieldOverviewCardProps> = ({
         <HugeIcon icon={icon} loading={!data} />
         <div className={classes.rightContent}>
           <Typography color="initial" variant="h4">
-            {data ? title : <Skeleton width="80%" />}
+            {loading ? <Skeleton width="80%" /> : data ? title : ''}
           </Typography>
           <Typography
             color="initial"
@@ -99,7 +108,13 @@ export const FieldOverviewCard: FC<FieldOverviewCardProps> = ({
               [classes.emptyValue]: data && !data.value,
             })}
           >
-            {data ? data.value || emptyValue : <Skeleton />}
+            {loading || redacted ? (
+              <Skeleton animation={loading ? 'pulse' : false} />
+            ) : data ? (
+              data.value || emptyValue
+            ) : (
+              ''
+            )}
           </Typography>
         </div>
       </ActionArea>
@@ -115,27 +130,35 @@ export const FieldOverviewCard: FC<FieldOverviewCardProps> = ({
               <Btn
                 color="primary"
                 to={data?.to ?? ''}
-                disabled={!data}
+                disabled={redacted || !data}
                 fullWidth
                 onClick={onButtonClick}
               >
-                {data ? buttonLabel : <Skeleton width="100%" />}
+                {loading ? (
+                  <Skeleton width="100%" />
+                ) : !redacted && data ? (
+                  buttonLabel
+                ) : (
+                  <>&nbsp;</>
+                )}
               </Btn>
             </Grid>
             <Grid item xs={!data}>
-              <Typography color="textSecondary" variant="body2">
-                {data ? (
-                  data.updatedAt ? (
+              {!redacted && (
+                <Typography color="textSecondary" variant="body2">
+                  {loading ? (
+                    <Skeleton />
+                  ) : data?.updatedAt ? (
                     <> Updated {dateTimeFormatter(data.updatedAt)}</>
-                  ) : null
-                ) : (
-                  <Skeleton />
-                )}
-              </Typography>
+                  ) : null}
+                </Typography>
+              )}
             </Grid>
           </Grid>
         </CardActions>
       )}
     </Card>
   );
+
+  return redacted ? <Tooltip title={redactedText}>{card}</Tooltip> : card;
 };
