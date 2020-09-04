@@ -12,7 +12,7 @@ import {
   Minimize as MinimizeIcon,
 } from '@material-ui/icons';
 import clsx from 'clsx';
-import React, { FC, memo, useState } from 'react';
+import React, { FC, memo, ReactNode, useState } from 'react';
 import { useSession } from '../Session';
 import { DraggablePaper } from './DraggablePaper';
 import { useUploadManager } from './UploadManagerContext';
@@ -114,9 +114,10 @@ const DialogTitle: FC<DialogTitleProps> = (props) => {
 
 interface UploadManagerProps {
   removeCompletedUploads: () => void;
+  children?: ReactNode;
 }
 
-export const UploadManager: FC<UploadManagerProps> = memo((props) => {
+const UploadManagerImpl = (props: UploadManagerProps) => {
   const { children, removeCompletedUploads } = props;
   const [session] = useSession();
   const { isManagerOpen, setIsManagerOpen } = useUploadManager();
@@ -164,4 +165,7 @@ export const UploadManager: FC<UploadManagerProps> = memo((props) => {
       </DialogContent>
     </Dialog>
   );
-});
+};
+
+UploadManagerImpl.displayName = 'UploadManager';
+export const UploadManager = memo(UploadManagerImpl);
