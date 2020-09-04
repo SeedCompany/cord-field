@@ -18,9 +18,6 @@ const useStyles = makeStyles(({ spacing }) => ({
     justifyContent: 'space-between',
     alignItems: 'flex-end',
   },
-  total: {
-    fontSize: '1.5rem',
-  },
   tableWrapper: {
     marginTop: spacing(4),
   },
@@ -137,7 +134,7 @@ export const ProjectBudget = () => {
                   {data?.project.name.value} Budget
                 </Typography>
                 {budget && (
-                  <Typography variant="body1" className={classes.total}>
+                  <Typography variant="h3">
                     Total: {formatCurrency(budget.total)}
                   </Typography>
                 )}
