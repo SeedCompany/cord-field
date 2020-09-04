@@ -5,6 +5,7 @@ import {
   withStyles,
 } from '@material-ui/core';
 import { Skeleton } from '@material-ui/lab';
+import { sumBy } from 'lodash';
 import { Column, MTableCell } from 'material-table';
 import React from 'react';
 import { useParams } from 'react-router-dom';
@@ -57,14 +58,10 @@ export const ProjectBudget = () => {
   const budget = data?.project.budget.value;
   const budgetRecords = budget?.records ?? [];
 
-  const budgetTotal = budgetRecords.reduce((total: number | null, record) => {
-    const recordValue = record.amount.value;
-    return typeof recordValue !== 'number'
-      ? total
-      : total === null
-      ? recordValue
-      : total + recordValue;
-  }, null);
+  const budgetTotal = sumBy(
+    budgetRecords,
+    (record) => record.amount.value ?? 0
+  );
 
   interface BudgetRowData {
     id: string;
@@ -154,11 +151,9 @@ export const ProjectBudget = () => {
                 <Typography variant="h2">
                   {data?.project.name.value} Budget
                 </Typography>
-                {budgetTotal !== null && (
-                  <Typography variant="h3">
-                    Total: {formatCurrency(budgetTotal)}
-                  </Typography>
-                )}
+                <Typography variant="h3">
+                  Total: {formatCurrency(budgetTotal)}
+                </Typography>
               </>
             )}
           </header>
