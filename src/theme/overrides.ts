@@ -124,5 +124,13 @@ export const appOverrides: ThemeOptions['overrides'] = ({
         },
       },
     },
+    MuiTableRow: {
+      root: {
+        // Remove dangling divider
+        '&:last-child td': {
+          borderBottom: 'none',
+        },
+      },
+    },
   };
 };
