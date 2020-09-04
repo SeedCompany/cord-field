@@ -8,7 +8,6 @@ import { Skeleton } from '@material-ui/lab';
 import { Column, MTableCell } from 'material-table';
 import React from 'react';
 import { useParams } from 'react-router-dom';
-import { GQLOperations } from '../../../api';
 import { Breadcrumb } from '../../../components/Breadcrumb';
 import { ContentContainer as Content } from '../../../components/ContentContainer';
 import { useCurrencyFormatter } from '../../../components/Formatters/useCurrencyFormatter';
@@ -57,6 +56,15 @@ export const ProjectBudget = () => {
   const canEditBudget = data?.project.budget.canEdit;
   const budget = data?.project.budget.value;
   const budgetRecords = budget?.records ?? [];
+
+  const budgetTotal = budgetRecords.reduce((total: number | null, record) => {
+    const recordValue = record.amount.value;
+    return typeof recordValue !== 'number'
+      ? total
+      : total === null
+      ? recordValue
+      : total + recordValue;
+  }, null);
 
   interface BudgetRowData {
     id: string;
@@ -146,9 +154,9 @@ export const ProjectBudget = () => {
                 <Typography variant="h2">
                   {data?.project.name.value} Budget
                 </Typography>
-                {budget && (
+                {budgetTotal !== null && (
                   <Typography variant="h3">
-                    Total: {formatCurrency(budget.total)}
+                    Total: {formatCurrency(budgetTotal)}
                   </Typography>
                 )}
               </>
@@ -174,10 +182,7 @@ export const ProjectBudget = () => {
                             amount: Number(newAmount),
                           },
                         };
-                        await updateBudgetRecord({
-                          variables: { input },
-                          refetchQueries: [GQLOperations.Query.ProjectBudget],
-                        });
+                        await updateBudgetRecord({ variables: { input } });
                       },
                     }
                   : undefined
