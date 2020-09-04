@@ -1,5 +1,6 @@
 import { Breadcrumbs, makeStyles, Typography } from '@material-ui/core';
 import { Skeleton } from '@material-ui/lab';
+import { Column } from 'material-table';
 import React from 'react';
 import { useParams } from 'react-router-dom';
 import { GQLOperations } from '../../../api';
@@ -67,7 +68,7 @@ export const ProjectBudget = () => {
     return rows.concat(row);
   }, []);
 
-  const columns = [
+  const columns: Array<Column<BudgetRowData>> = [
     {
       title: 'ID',
       field: 'id',
@@ -76,22 +77,22 @@ export const ProjectBudget = () => {
     {
       title: 'Organization',
       field: 'organization',
-      editable: 'never' as const,
+      editable: 'never',
     },
     {
       title: 'Fiscal Year',
       field: 'fiscalYear',
-      editable: 'never' as const,
+      editable: 'never',
       render: (rowData: BudgetRowData) => `FY${rowData.fiscalYear}`,
     },
     {
       title: 'Amount',
       field: 'amount',
-      type: 'currency' as const,
+      type: 'currency',
       editable: (_: unknown, rowData: BudgetRowData) => rowData.canEdit,
       cellStyle: {
         display: 'flex',
-        flexDirection: 'row' as const,
+        flexDirection: 'row',
         justifyContent: 'flex-end',
       },
     },
