@@ -6,6 +6,7 @@ import { GQLOperations } from '../../../api';
 import { Breadcrumb } from '../../../components/Breadcrumb';
 import { ContentContainer as Content } from '../../../components/ContentContainer';
 import { useCurrencyFormatter } from '../../../components/Formatters/useCurrencyFormatter';
+import { ProjectBreadcrumb } from '../../../components/ProjectBreadcrumb';
 import { Table } from '../../../components/Table';
 import {
   useProjectBudgetQuery,
@@ -37,7 +38,6 @@ export const ProjectBudget = () => {
   });
   const [updateBudgetRecord] = useUpdateProjectBudgetRecordMutation();
 
-  const projectName = data?.project.name.value;
   const canReadBudget = data?.project.budget.canRead;
   const canEditBudget = data?.project.budget.canEdit;
   const budget = data?.project.budget.value;
@@ -116,10 +116,8 @@ export const ProjectBudget = () => {
             <Skeleton variant="text" width="20%" />
           ) : (
             <Breadcrumbs>
-              <Breadcrumb to="/projects">Projects</Breadcrumb>
-              <Breadcrumb to={`/projects/${projectId}`}>
-                {projectName}
-              </Breadcrumb>
+              <ProjectBreadcrumb data={data?.project} />
+              <Breadcrumb to=".">Budget</Breadcrumb>
             </Breadcrumbs>
           )}
           <header className={classes.header}>
