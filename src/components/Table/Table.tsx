@@ -1,10 +1,16 @@
+import { withStyles } from '@material-ui/core';
 import {
   Check,
   Clear,
   Edit,
   ArrowDownward as SortArrow,
 } from '@material-ui/icons';
-import MaterialTable, { Icons, MaterialTableProps } from 'material-table';
+import MaterialTable, {
+  Components,
+  Icons,
+  MaterialTableProps,
+  MTableCell,
+} from 'material-table';
 import React, { forwardRef } from 'react';
 import { Merge } from 'type-fest';
 
@@ -22,10 +28,30 @@ const defaultIcons: Icons = {
   SortArrow: forwardRef((props, ref) => <SortArrow {...props} ref={ref} />),
 };
 
+const Cell = withStyles({
+  alignRight: {
+    // Fix alignment of editable numeric cells
+    '& > div': {
+      marginLeft: 'auto',
+      marginRight: 0,
+    },
+  },
+})(MTableCell);
+
+const defaultComponents: Components = {
+  Cell,
+};
+
 export const Table = <RowData extends Record<string, any>>(
   props: TableProps<RowData>
 ) => {
-  const { columns: columnsProp, icons: iconsProp, onRowClick, ...rest } = props;
+  const {
+    columns: columnsProp,
+    icons: iconsProp,
+    components: componentsProp,
+    onRowClick,
+    ...rest
+  } = props;
 
   const columns: typeof columnsProp = columnsProp.map((column) => ({
     ...column,
@@ -47,6 +73,9 @@ export const Table = <RowData extends Record<string, any>>(
     width: 'auto',
   }));
 
+  const components = componentsProp
+    ? { ...defaultComponents, ...componentsProp }
+    : defaultComponents;
   const icons = iconsProp ? { ...defaultIcons, ...iconsProp } : defaultIcons;
 
   return (
@@ -55,6 +84,7 @@ export const Table = <RowData extends Record<string, any>>(
       columns={columns}
       {...rest}
       icons={icons}
+      components={components}
       onRowClick={onRowClick ? (_, row) => row && onRowClick(row) : undefined}
       localization={{
         ...rest.localization,
