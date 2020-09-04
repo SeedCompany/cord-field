@@ -166,7 +166,6 @@ export const ProjectBudget = () => {
                 canEditBudget
                   ? {
                       onCellEditApproved: async (newAmount, _, data) => {
-                        console.log('newAmount', newAmount);
                         if (newAmount === blankAmount) return;
                         const input = {
                           budgetRecord: {
