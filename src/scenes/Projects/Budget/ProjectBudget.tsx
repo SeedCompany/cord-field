@@ -17,12 +17,10 @@ import {
 
 const useStyles = makeStyles(({ spacing }) => ({
   header: {
+    margin: spacing(3, 0),
     display: 'flex',
     justifyContent: 'space-between',
     alignItems: 'flex-end',
-  },
-  tableWrapper: {
-    marginTop: spacing(4),
   },
   toolbar: {
     padding: spacing(2),
@@ -117,39 +115,34 @@ export const ProjectBudget = () => {
               </>
             ) : (
               <>
-                <Typography variant="h2">
-                  {data?.project.name.value} Budget
-                </Typography>
+                <Typography variant="h2">Budget</Typography>
                 <Typography variant="h3">
                   Total: {formatCurrency(budgetTotal)}
                 </Typography>
               </>
             )}
           </header>
-          <section className={classes.tableWrapper}>
-            <Table
-              data={rowData}
-              columns={columns}
-              isLoading={loading}
-              cellEditable={
-                budget?.canEdit
-                  ? {
-                      onCellEditApproved: async (newAmount, _, data) => {
-                        if (newAmount === blankAmount || newAmount === '')
-                          return;
-                        const input = {
-                          budgetRecord: {
-                            id: data.id,
-                            amount: Number(newAmount),
-                          },
-                        };
-                        await updateBudgetRecord({ variables: { input } });
-                      },
-                    }
-                  : undefined
-              }
-            />
-          </section>
+          <Table
+            data={rowData}
+            columns={columns}
+            isLoading={loading}
+            cellEditable={
+              budget?.canEdit
+                ? {
+                    onCellEditApproved: async (newAmount, _, data) => {
+                      if (newAmount === blankAmount || newAmount === '') return;
+                      const input = {
+                        budgetRecord: {
+                          id: data.id,
+                          amount: Number(newAmount),
+                        },
+                      };
+                      await updateBudgetRecord({ variables: { input } });
+                    },
+                  }
+                : undefined
+            }
+          />
         </>
       )}
     </Content>
