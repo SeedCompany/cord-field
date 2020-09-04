@@ -1,6 +1,11 @@
-import { Breadcrumbs, makeStyles, Typography } from '@material-ui/core';
+import {
+  Breadcrumbs,
+  makeStyles,
+  Typography,
+  withStyles,
+} from '@material-ui/core';
 import { Skeleton } from '@material-ui/lab';
-import { Column } from 'material-table';
+import { Column, MTableCell } from 'material-table';
 import React from 'react';
 import { useParams } from 'react-router-dom';
 import { GQLOperations } from '../../../api';
@@ -28,6 +33,15 @@ const useStyles = makeStyles(({ spacing }) => ({
     paddingBottom: spacing(1),
   },
 }));
+
+const TableCell = withStyles({
+  root: {
+    '& > div': {
+      marginLeft: 'auto',
+      marginRight: 0,
+    },
+  },
+})(MTableCell);
 
 export const ProjectBudget = () => {
   const { projectId } = useParams();
@@ -90,11 +104,6 @@ export const ProjectBudget = () => {
       field: 'amount',
       type: 'currency',
       editable: (_: unknown, rowData: BudgetRowData) => rowData.canEdit,
-      cellStyle: {
-        display: 'flex',
-        flexDirection: 'row',
-        justifyContent: 'flex-end',
-      },
     },
     {
       title: 'Can Edit',
@@ -144,6 +153,9 @@ export const ProjectBudget = () => {
             <Table
               data={rowData}
               columns={columns}
+              components={{
+                Cell: (props) => <TableCell {...props} />,
+              }}
               isLoading={loading}
               cellEditable={
                 canEditBudget
