@@ -86,16 +86,13 @@ export const ProjectBudget = () => {
     {
       field: 'fiscalYear',
       editable: 'never',
-      render: (rowData: BudgetRowData) => `FY${rowData.fiscalYear}`,
     },
     {
       field: 'amount',
       type: 'currency',
-      editable: (_: unknown, rowData: BudgetRowData) => rowData.canEdit,
-      render: (rowData: BudgetRowData) =>
-        `${
-          rowData.amount ? formatCurrency(Number(rowData.amount)) : blankAmount
-        }`,
+      editable: (_, rowData) => rowData.canEdit,
+      render: (rowData) =>
+        rowData.amount ? formatCurrency(Number(rowData.amount)) : blankAmount,
     },
     {
       field: 'canEdit',
