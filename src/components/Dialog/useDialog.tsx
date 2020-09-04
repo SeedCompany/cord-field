@@ -1,10 +1,16 @@
-import { useCallback, useMemo, useState } from 'react';
+import { SyntheticEvent, useCallback, useMemo, useState } from 'react';
 
 export function useDialog<T = never>() {
   const [isOpen, setOpen] = useState(false);
   const [item, setItem] = useState<T | undefined>(undefined);
   const show = useCallback((item: T) => {
-    setItem(item);
+    // Don't store events. This allows the show function to be passed directly
+    // as an event handler.
+    const isEvent =
+      typeof ((item as unknown) as SyntheticEvent).persist === 'function';
+    if (!isEvent) {
+      setItem(item);
+    }
     setOpen(true);
   }, []) as ShowFn<T>;
   const state = useMemo(
