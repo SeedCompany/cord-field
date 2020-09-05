@@ -47,7 +47,7 @@ interface AddItemDropzoneCard {
 }
 
 interface AddItemModalCard {
-  actionType: 'modal';
+  actionType: 'dialog';
   onClick: () => void;
 }
 
