@@ -7,19 +7,19 @@ import {
 
 type EngagementType = 'language' | 'internship';
 
-interface UploadProjectFilesInput {
+interface UploadEngagementFileInput {
   files: File[];
   engagementId: string;
   action?: Parameters<UploadCallback>[2];
 }
 
 interface HandleUploadCompletedInput
-  extends Omit<UploadProjectFilesInput, 'files'> {
+  extends Omit<UploadEngagementFileInput, 'files'> {
   uploadId: string;
   name: string;
 }
 
-type UploadProjectFilesFunction = (input: UploadProjectFilesInput) => void;
+type UploadProjectFilesFunction = (input: UploadEngagementFileInput) => void;
 
 type HandleUploadCompletedFunction = (
   input: HandleUploadCompletedInput

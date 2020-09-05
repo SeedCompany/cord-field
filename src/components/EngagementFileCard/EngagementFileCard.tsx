@@ -3,8 +3,7 @@ import { Skeleton } from '@material-ui/lab';
 import { DateTime } from 'luxon';
 import React, { FC } from 'react';
 import { useDropzone } from 'react-dropzone';
-import { GQLOperations } from '../../api';
-import { useUploadLanguageEngagementPnpMutation } from '../../scenes/Engagement/Files';
+import { useUploadEngagementFiles } from '../../scenes/Engagement/Files';
 import { LanguageEngagementDetailFragment } from '../../scenes/Engagement/LanguageEngagement';
 import {
   FileActionsPopup as ActionsMenu,
@@ -12,7 +11,7 @@ import {
 } from '../files/FileActions';
 import { useDateFormatter } from '../Formatters';
 import { HugeIcon, ReportIcon } from '../Icons';
-import { DropzoneOverlay, UploadCallback, useUpload } from '../Upload';
+import { DropzoneOverlay } from '../Upload';
 
 const useStyles = makeStyles(({ palette, spacing, typography }) => ({
   root: {
@@ -71,27 +70,10 @@ export const EngagementFileCard: FC<EngagementFileCardProps> = (props) => {
   const file = engagement.pnp.value;
   const formatDate = useDateFormatter();
   const { openFilePreview } = useFileActions();
-  const { addFilesToUploadQueue } = useUpload();
-  const [uploadEngagementFile] = useUploadLanguageEngagementPnpMutation();
+  const uploadFile = useUploadEngagementFiles('language');
 
-  const uploadFile = async (
-    uploadId: Parameters<UploadCallback>[0],
-    name: Parameters<UploadCallback>[1]
-  ): Promise<void> => {
-    await uploadEngagementFile({
-      variables: { id, pnp: { uploadId, name } },
-      refetchQueries: [GQLOperations.Query.Engagement],
-    });
-  };
-
-  const handleVersionUpload = (files: File[]) => {
-    const fileInputs = files.map((file) => ({
-      file,
-      fileName: file.name,
-      callback: uploadFile,
-    }));
-    addFilesToUploadQueue(fileInputs);
-  };
+  const handleVersionUpload = (files: File[]) =>
+    uploadFile({ files, engagementId: id, action: 'version' });
 
   const { getRootProps, getInputProps, isDragActive } = useDropzone({
     onDrop: handleVersionUpload,

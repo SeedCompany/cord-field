@@ -36,7 +36,7 @@ import {
   EditEngagementDialog,
 } from '../EditEngagement/EditEngagementDialog';
 import { EngagementQuery } from '../Engagement.generated';
-import { UploadEngagementFiles } from '../Files';
+import { useUploadEngagementFiles } from '../Files';
 
 const useStyles = makeStyles(({ spacing, breakpoints, palette }) => ({
   root: {
@@ -60,7 +60,7 @@ const LanguageEngagementDetailWrapped: FC<EngagementQuery> = ({
   engagement,
 }) => {
   const classes = useStyles();
-  const [uploadFileState, uploadFile] = useDialog();
+  const uploadFile = useUploadEngagementFiles('language');
 
   const [editState, show, editField] = useDialog<
     Many<EditableEngagementField>
@@ -213,7 +213,13 @@ const LanguageEngagementDetailWrapped: FC<EngagementQuery> = ({
               {pnp ? (
                 <EngagementFileCard engagement={engagement} />
               ) : (
-                <AddItemCard onClick={uploadFile} itemType="plan" />
+                <AddItemCard
+                  actionType="dropzone"
+                  handleFileSelect={(files: File[]) =>
+                    uploadFile({ files, engagementId: engagement.id })
+                  }
+                  itemType="plan"
+                />
               )}
             </Grid>
           </Grid>
@@ -252,7 +258,6 @@ const LanguageEngagementDetailWrapped: FC<EngagementQuery> = ({
         engagement={engagement}
         editFields={editField}
       />
-      <UploadEngagementFiles engagement={engagement} {...uploadFileState} />
     </>
   );
 };
