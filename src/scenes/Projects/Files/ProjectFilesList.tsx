@@ -33,6 +33,7 @@ import {
 import { ContentContainer } from '../../../components/Layout';
 import { ProjectBreadcrumb } from '../../../components/ProjectBreadcrumb';
 import { Table } from '../../../components/Table';
+import { DropzoneOverlay } from '../../../components/Upload';
 import { CreateProjectDirectory } from './CreateProjectDirectory';
 import {
   ProjectDirectoryFileNodeFragment,
@@ -47,26 +48,6 @@ const useStyles = makeStyles(({ palette, spacing, breakpoints }) => ({
     position: 'relative',
     width: '100%',
     height: '100%',
-  },
-  dropContainer: {
-    backgroundColor: palette.action.disabled,
-    border: `4px dashed ${palette.divider}`,
-    cursor: 'pointer',
-    display: 'flex',
-    justifyContent: 'center',
-    alignItems: 'center',
-    // opacity: 0.7,
-    padding: spacing(3),
-    position: 'absolute',
-    top: 0,
-    left: 0,
-    bottom: 0,
-    right: 0,
-    zIndex: 100,
-  },
-  instructions: {
-    color: palette.text.secondary,
-    textAlign: 'center',
   },
   headerContainer: {
     margin: spacing(3, 0),
@@ -300,13 +281,10 @@ const ProjectFilesListWrapped: FC = () => {
   ) : (
     <div className={classes.dropzone} {...getRootProps()}>
       <input {...getInputProps()} name="files_list_uploader" />
-      {isDragActive && (
-        <div className={classes.dropContainer}>
-          <Typography variant="h1" className={classes.instructions}>
-            Drop files to start uploading
-          </Typography>
-        </div>
-      )}
+      <DropzoneOverlay
+        isDragActive={isDragActive}
+        message="Drop files to start uploading"
+      />
       <ContentContainer>
         {error || (!loading && !items) ? (
           <Typography variant="h4">Error fetching Project Files</Typography>
