@@ -77,8 +77,8 @@ const LanguageEngagementDetailWrapped: FC<EngagementQuery> = ({
   const language = engagement.language.value;
   const langName = language?.name.value ?? language?.displayName.value;
   const ptRegistryId = engagement.paraTextRegistryId;
+  const pnp = engagement.pnp;
   const editable = canEditAny(engagement);
-  const pnp = engagement.pnp.value;
 
   return (
     <>
@@ -210,15 +210,17 @@ const LanguageEngagementDetailWrapped: FC<EngagementQuery> = ({
           </Grid>
           <Grid item container spacing={3} alignItems="center">
             <Grid item xs={6}>
-              {pnp ? (
+              {/* TODO: Check `canRead/canEdit` to make sure user is allowed to read/upload */}
+              {pnp.value ? (
                 <EngagementFileCard engagement={engagement} />
               ) : (
                 <AddItemCard
                   actionType="dropzone"
+                  canAdd={pnp.canEdit}
                   handleFileSelect={(files: File[]) =>
                     uploadFile({ files, engagementId: engagement.id })
                   }
-                  itemType="plan"
+                  itemType="PNP"
                 />
               )}
             </Grid>

@@ -3,9 +3,13 @@ import {
   Card,
   CardActionArea,
   makeStyles,
+  Tooltip,
   Typography,
 } from '@material-ui/core';
-import { Add as AddIcon } from '@material-ui/icons';
+import {
+  Add as AddIcon,
+  NotInterested as NotPermittedIcon,
+} from '@material-ui/icons';
 import clsx from 'clsx';
 import React, { FC } from 'react';
 import { DropzoneOptions, useDropzone } from 'react-dropzone';
@@ -52,6 +56,7 @@ interface AddItemModalCard {
 }
 
 interface AddItemCardSharedProps {
+  canAdd: boolean;
   className?: string;
   itemType: string;
 }
@@ -61,7 +66,7 @@ type AddItemCardProps = (AddItemDropzoneCard | AddItemModalCard) &
 
 export const AddItemCard: FC<AddItemCardProps> = (props) => {
   const classes = useStyles();
-  const { actionType, className, itemType } = props;
+  const { actionType, canAdd, className, itemType } = props;
 
   const isDropzone = (
     props: AddItemCardProps
@@ -71,6 +76,7 @@ export const AddItemCard: FC<AddItemCardProps> = (props) => {
   const dropzoneOptions = isDropzone(props)
     ? {
         ...props.DropzoneProps?.options,
+        disabled: !canAdd,
         onDrop: props.handleFileSelect,
       }
     : {};
@@ -79,7 +85,9 @@ export const AddItemCard: FC<AddItemCardProps> = (props) => {
     dropzoneOptions
   );
 
-  return (
+  const Icon = canAdd ? AddIcon : NotPermittedIcon;
+
+  const card = (
     <Card
       className={clsx(classes.root, className)}
       {...(actionType === 'dropzone' ? { ...getRootProps() } : null)}
@@ -96,15 +104,24 @@ export const AddItemCard: FC<AddItemCardProps> = (props) => {
       )}
       <CardActionArea
         className={classes.actionArea}
+        disabled={!canAdd}
         onClick={!isDropzone(props) ? props.onClick : undefined}
       >
         <Avatar classes={{ root: classes.avatar }}>
-          <AddIcon className={classes.icon} fontSize="large" />
+          <Icon className={classes.icon} fontSize="large" />
         </Avatar>
         <Typography variant="button" className={classes.text}>
           Add {itemType}
         </Typography>
       </CardActionArea>
     </Card>
+  );
+
+  return !canAdd ? (
+    <Tooltip title={`You do not have permission to add this ${itemType}`}>
+      {card}
+    </Tooltip>
+  ) : (
+    card
   );
 };
