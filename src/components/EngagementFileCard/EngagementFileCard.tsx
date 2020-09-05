@@ -2,6 +2,7 @@ import { Card, makeStyles, Typography } from '@material-ui/core';
 import { Skeleton } from '@material-ui/lab';
 import { DateTime } from 'luxon';
 import React, { FC } from 'react';
+import { useDropzone } from 'react-dropzone';
 import { GQLOperations } from '../../api';
 import { useUploadLanguageEngagementPnpMutation } from '../../scenes/Engagement/Files';
 import { LanguageEngagementDetailFragment } from '../../scenes/Engagement/LanguageEngagement';
@@ -11,9 +12,9 @@ import {
 } from '../files/FileActions';
 import { useDateFormatter } from '../Formatters';
 import { HugeIcon, ReportIcon } from '../Icons';
-import { UploadCallback, useUpload } from '../Upload';
+import { DropzoneOverlay, UploadCallback, useUpload } from '../Upload';
 
-const useStyles = makeStyles(({ palette, spacing }) => ({
+const useStyles = makeStyles(({ palette, spacing, typography }) => ({
   root: {
     cursor: 'pointer',
     flex: 1,
@@ -21,6 +22,10 @@ const useStyles = makeStyles(({ palette, spacing }) => ({
     display: 'flex',
     justifyContent: 'space-between',
     padding: spacing(3),
+    position: 'relative',
+  },
+  dropzoneText: {
+    fontSize: typography.h2.fontSize,
   },
   fileInfo: {
     flex: 1,
@@ -88,33 +93,39 @@ export const EngagementFileCard: FC<EngagementFileCardProps> = (props) => {
     addFilesToUploadQueue(fileInputs);
   };
 
+  const { getRootProps, getInputProps, isDragActive } = useDropzone({
+    onDrop: handleVersionUpload,
+    noClick: true,
+    noKeyboard: true,
+  });
+
   const { modifiedAt, name, modifiedBy } = file ?? {
     modifiedAt: DateTime.local(),
     name: '',
     modifiedBy: {
-      displayFirstName: { value: '' },
-      displayLastName: { value: '' },
+      fullName: '',
     },
   };
-  const {
-    displayFirstName: { value: firstName },
-    displayLastName: { value: lastName },
-  } = modifiedBy;
+  const { fullName } = modifiedBy;
 
   return (
     <Card
+      {...getRootProps()}
       className={classes.root}
       onClick={() => file && openFilePreview(file)}
     >
+      <input {...getInputProps()} name="pnp_version_uploader" />
+      <DropzoneOverlay
+        classes={{ text: classes.dropzoneText }}
+        isDragActive={isDragActive}
+        message="Drop new version to upload"
+      />
       <HugeIcon icon={ReportIcon} loading={!file} />
       <div className={classes.fileInfo}>
         <Typography className={classes.fileName} color="initial" variant="h4">
           {file ? name : <Skeleton width="80%" />}
         </Typography>
-        <FileCardMeta
-          text={`Updated by ${firstName} ${lastName}`}
-          loading={!file}
-        />
+        <FileCardMeta text={`Updated by ${fullName}`} loading={!file} />
         <FileCardMeta text={formatDate(modifiedAt)} loading={!file} />
       </div>
       <div className={classes.actionsMenu}>
