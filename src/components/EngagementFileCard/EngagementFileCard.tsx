@@ -95,6 +95,7 @@ export const EngagementFileCard: FC<EngagementFileCardProps> = (props) => {
 
   const { getRootProps, getInputProps, isDragActive } = useDropzone({
     onDrop: handleVersionUpload,
+    multiple: false,
     noClick: true,
     noKeyboard: true,
   });
