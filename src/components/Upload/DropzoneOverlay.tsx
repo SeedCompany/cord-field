@@ -30,11 +30,13 @@ const useStyles = makeStyles(({ palette, spacing }) => ({
   },
 }));
 
+export interface DropzoneOverlayClasses {
+  root?: string;
+  text?: string;
+}
+
 interface DropzoneOverlayProps {
-  classes?: {
-    root?: string;
-    text?: string;
-  };
+  classes?: DropzoneOverlayClasses;
   isDragActive: boolean;
   message?: string;
 }
