@@ -210,10 +210,7 @@ const LanguageEngagementDetailWrapped: FC<EngagementQuery> = ({
           </Grid>
           <Grid item container spacing={3} alignItems="center">
             <Grid item xs={6}>
-              {/* TODO: Check `canRead/canEdit` to make sure user is allowed to read/upload */}
-              {pnp.value ? (
-                <EngagementFileCard engagement={engagement} />
-              ) : (
+              {pnp.canRead && !pnp.value ? (
                 <AddItemCard
                   actionType="dropzone"
                   canAdd={pnp.canEdit}
@@ -222,6 +219,8 @@ const LanguageEngagementDetailWrapped: FC<EngagementQuery> = ({
                   }
                   itemType="PNP"
                 />
+              ) : (
+                <EngagementFileCard engagement={engagement} />
               )}
             </Grid>
           </Grid>

@@ -49,6 +49,7 @@ const useStyles = makeStyles(({ spacing }) => ({
 interface NonVersionPopupProps {
   item: DirectoryActionItem | FileActionItem;
   onVersionUpload: (files: File[]) => void;
+  canEdit?: boolean;
 }
 
 interface VersionPopupProps {
@@ -63,28 +64,33 @@ const MENU_ITEMS = [
     icon: RenameIcon,
     version: true,
     directory: true,
+    type: 'edit',
   },
   {
     text: FileAction.Download,
     icon: DownloadIcon,
     version: true,
     engagement: true,
+    type: 'read',
   },
   {
     text: FileAction.History,
     icon: HistoryIcon,
     engagement: true,
+    type: 'read',
   },
   {
     text: FileAction.NewVersion,
     icon: AddIcon,
     engagement: true,
+    type: 'edit',
   },
   {
     text: FileAction.Delete,
     icon: DeleteIcon,
     version: true,
     directory: true,
+    type: 'edit',
   },
 ];
 
@@ -119,6 +125,8 @@ export const FileActionsMenu: FC<FileActionsMenuProps> = (props) => {
 
   const { context, handleFileActionClick } = useFileActions();
 
+  const canEdit = 'canEdit' in props ? props.canEdit : true;
+
   const menuProps = Object.entries(rest).reduce((menuProps, [key, value]) => {
     return key === 'onVersionUpload'
       ? menuProps
@@ -140,19 +148,22 @@ export const FileActionsMenu: FC<FileActionsMenuProps> = (props) => {
   };
 
   const { getRootProps, getInputProps } = useDropzone({
-    multiple: false,
     onDrop:
       'onVersionUpload' in props
         ? props.onVersionUpload
         : () => {
             return;
           },
+    disabled: !canEdit,
+    multiple: false,
     noDrag: true,
   });
 
   const menuItems = MENU_ITEMS.filter((menuItem) => {
-    const { directory, engagement, version } = menuItem;
-    return context === 'engagement'
+    const { directory, engagement, version, type } = menuItem;
+    return type === 'edit' && !canEdit
+      ? false
+      : context === 'engagement'
       ? item.type === 'FileVersion'
         ? engagement && version
         : engagement

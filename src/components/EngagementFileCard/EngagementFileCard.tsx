@@ -1,4 +1,9 @@
-import { Card, makeStyles, Typography } from '@material-ui/core';
+import {
+  Card,
+  CardActionArea,
+  makeStyles,
+  Typography,
+} from '@material-ui/core';
 import { Skeleton } from '@material-ui/lab';
 import { DateTime } from 'luxon';
 import React, { FC } from 'react';
@@ -11,10 +16,14 @@ import {
 } from '../files/FileActions';
 import { useDateFormatter } from '../Formatters';
 import { HugeIcon, ReportIcon } from '../Icons';
+import { Redacted } from '../Redacted';
 import { DropzoneOverlay } from '../Upload';
 
 const useStyles = makeStyles(({ palette, spacing, typography }) => ({
   root: {
+    position: 'relative',
+  },
+  actionArea: {
     cursor: 'pointer',
     flex: 1,
     height: '100%',
@@ -37,8 +46,10 @@ const useStyles = makeStyles(({ palette, spacing, typography }) => ({
     color: palette.text.secondary,
   },
   actionsMenu: {
-    alignSelf: 'flex-start',
-    marginTop: spacing(-1.5),
+    margin: spacing(1),
+    position: 'absolute',
+    right: 0,
+    top: 0,
   },
 }));
 
@@ -46,10 +57,13 @@ export interface EngagementFileCardProps {
   engagement: LanguageEngagementDetailFragment;
 }
 
-const FileCardMeta: FC<{ loading: boolean; text: string }> = ({
-  loading,
-  text,
-}) => {
+interface FileCardMetaProps {
+  canRead: boolean;
+  loading: boolean;
+  text: string;
+}
+
+const FileCardMeta: FC<FileCardMetaProps> = ({ canRead, loading, text }) => {
   const classes = useStyles();
   return (
     <Typography
@@ -58,7 +72,13 @@ const FileCardMeta: FC<{ loading: boolean; text: string }> = ({
       variant="caption"
       component="p"
     >
-      {!loading ? text : <Skeleton />}
+      {loading ? (
+        <Skeleton />
+      ) : !canRead ? (
+        <Redacted info="You do not have permission to view files for this engagement" />
+      ) : (
+        text
+      )}
     </Typography>
   );
 };
@@ -66,8 +86,10 @@ const FileCardMeta: FC<{ loading: boolean; text: string }> = ({
 export const EngagementFileCard: FC<EngagementFileCardProps> = (props) => {
   const classes = useStyles();
   const { engagement } = props;
-  const { id } = engagement;
-  const file = engagement.pnp.value;
+  const { id, pnp } = engagement;
+
+  const { canRead, canEdit } = pnp;
+  const file = pnp.value;
   const formatDate = useDateFormatter();
   const { openFilePreview } = useFileActions();
   const uploadFile = useUploadEngagementFiles('language');
@@ -77,6 +99,7 @@ export const EngagementFileCard: FC<EngagementFileCardProps> = (props) => {
 
   const { getRootProps, getInputProps, isDragActive } = useDropzone({
     onDrop: handleVersionUpload,
+    disabled: !canEdit,
     multiple: false,
     noClick: true,
     noKeyboard: true,
@@ -89,33 +112,50 @@ export const EngagementFileCard: FC<EngagementFileCardProps> = (props) => {
       fullName: '',
     },
   };
+
   const { fullName } = modifiedBy;
 
   return (
-    <Card
-      {...getRootProps()}
-      className={classes.root}
-      onClick={() => file && openFilePreview(file)}
-    >
-      <input {...getInputProps()} name="pnp_version_uploader" />
+    <Card {...getRootProps()} className={classes.root}>
+      <input {...getInputProps()} name="engagement_file_version_uploader" />
       <DropzoneOverlay
         classes={{ text: classes.dropzoneText }}
         isDragActive={isDragActive}
         message="Drop new version to upload"
       />
-      <HugeIcon icon={ReportIcon} loading={!file} />
-      <div className={classes.fileInfo}>
-        <Typography className={classes.fileName} color="initial" variant="h4">
-          {file ? name : <Skeleton width="80%" />}
-        </Typography>
-        <FileCardMeta text={`Updated by ${fullName}`} loading={!file} />
-        <FileCardMeta text={formatDate(modifiedAt)} loading={!file} />
-      </div>
-      <div className={classes.actionsMenu}>
-        {file && (
-          <ActionsMenu item={file} onVersionUpload={handleVersionUpload} />
-        )}
-      </div>
+      <CardActionArea
+        className={classes.actionArea}
+        disabled={!canRead}
+        onClick={() => file && openFilePreview(file)}
+      >
+        <HugeIcon icon={ReportIcon} loading={!file} />
+        <div className={classes.fileInfo}>
+          <Typography className={classes.fileName} color="initial" variant="h4">
+            {file ? name : <Skeleton width="80%" />}
+          </Typography>
+          <FileCardMeta
+            canRead={canRead}
+            text={`Updated by ${fullName}`}
+            loading={!file}
+          />
+          <FileCardMeta
+            canRead={canRead}
+            text={formatDate(modifiedAt)}
+            loading={!file}
+          />
+        </div>
+      </CardActionArea>
+      {canRead && (
+        <div className={classes.actionsMenu}>
+          {file && (
+            <ActionsMenu
+              item={file}
+              onVersionUpload={handleVersionUpload}
+              canEdit={canEdit}
+            />
+          )}
+        </div>
+      )}
     </Card>
   );
 };
