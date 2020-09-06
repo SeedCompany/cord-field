@@ -205,7 +205,7 @@ const LanguageEngagementDetailWrapped: FC<EngagementQuery> = ({
           </Grid>
           <Grid item container spacing={3} alignItems="center">
             <Grid item xs={6}>
-              <Typography variant="h4">PnP</Typography>
+              <Typography variant="h4">PNP</Typography>
             </Grid>
           </Grid>
           <Grid item container spacing={3} alignItems="center">

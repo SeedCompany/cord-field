@@ -128,7 +128,7 @@ export const FileActionsMenu: FC<FileActionsMenuProps> = (props) => {
   const canEdit = 'canEdit' in props ? props.canEdit : true;
 
   const menuProps = Object.entries(rest).reduce((menuProps, [key, value]) => {
-    return key === 'onVersionUpload'
+    return key === 'onVersionUpload' || key === 'canEdit'
       ? menuProps
       : {
           ...menuProps,

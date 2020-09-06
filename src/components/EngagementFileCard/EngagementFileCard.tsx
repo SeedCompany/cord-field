@@ -9,7 +9,8 @@ import { DateTime } from 'luxon';
 import React, { FC } from 'react';
 import { useDropzone } from 'react-dropzone';
 import { useUploadEngagementFiles } from '../../scenes/Engagement/Files';
-import { LanguageEngagementDetailFragment } from '../../scenes/Engagement/LanguageEngagement';
+import { InternshipEngagementDetailFragment as InternshipEngagement } from '../../scenes/Engagement/InternshipEngagement';
+import { LanguageEngagementDetailFragment as LanguageEngagement } from '../../scenes/Engagement/LanguageEngagement';
 import {
   FileActionsPopup as ActionsMenu,
   useFileActions,
@@ -54,7 +55,7 @@ const useStyles = makeStyles(({ palette, spacing, typography }) => ({
 }));
 
 export interface EngagementFileCardProps {
-  engagement: LanguageEngagementDetailFragment;
+  engagement: LanguageEngagement | InternshipEngagement;
 }
 
 interface FileCardMetaProps {
@@ -83,16 +84,26 @@ const FileCardMeta: FC<FileCardMetaProps> = ({ canRead, loading, text }) => {
   );
 };
 
+const isLanguage = (
+  engagement: LanguageEngagement | InternshipEngagement
+): engagement is LanguageEngagement =>
+  engagement.__typename === 'LanguageEngagement';
+
 export const EngagementFileCard: FC<EngagementFileCardProps> = (props) => {
   const classes = useStyles();
   const { engagement } = props;
-  const { id, pnp } = engagement;
+  const document = isLanguage(engagement)
+    ? engagement.pnp
+    : engagement.growthPlan;
+  const { id } = engagement;
 
-  const { canRead, canEdit } = pnp;
-  const file = pnp.value;
+  const { canRead, canEdit } = document;
+  const file = document.value;
   const formatDate = useDateFormatter();
   const { openFilePreview } = useFileActions();
-  const uploadFile = useUploadEngagementFiles('language');
+  const uploadFile = useUploadEngagementFiles(
+    isLanguage(engagement) ? 'language' : 'internship'
+  );
 
   const handleVersionUpload = (files: File[]) =>
     uploadFile({ files, engagementId: id, action: 'version' });

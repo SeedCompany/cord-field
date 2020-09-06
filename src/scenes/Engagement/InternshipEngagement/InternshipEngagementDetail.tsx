@@ -6,10 +6,14 @@ import {
   displayInternPosition,
   securedDateRange,
 } from '../../../api';
+import { displayLocation } from '../../../api/location-helper';
+import { AddItemCard } from '../../../components/AddItemCard';
 import { Breadcrumb } from '../../../components/Breadcrumb';
 import { DataButton } from '../../../components/DataButton';
 import { useDialog } from '../../../components/Dialog';
+import { EngagementFileCard } from '../../../components/EngagementFileCard';
 import { FieldOverviewCard } from '../../../components/FieldOverviewCard';
+import { FileActionsContextProvider } from '../../../components/files/FileActions';
 import {
   useDateFormatter,
   useDateTimeFormatter,
@@ -26,30 +30,38 @@ import {
   EditEngagementDialog,
 } from '../EditEngagement/EditEngagementDialog';
 import { EngagementQuery } from '../Engagement.generated';
+import { useUploadEngagementFiles } from '../Files';
 import { MentorCard } from './MentorCard';
 
-const useStyles = makeStyles(({ spacing, breakpoints, palette }) => ({
-  root: {
-    flex: 1,
-    overflowY: 'auto',
-    padding: spacing(4),
-  },
-  main: {
-    maxWidth: breakpoints.values.md,
-  },
-  nameRedacted: {
-    width: '50%',
-  },
-  infoColor: {
-    color: palette.info.main,
-  },
-}));
+const useStyles = makeStyles(
+  ({ spacing, breakpoints, palette, typography }) => ({
+    root: {
+      flex: 1,
+      overflowY: 'auto',
+      padding: spacing(4),
+    },
+    main: {
+      maxWidth: breakpoints.values.md,
+    },
+    nameRedacted: {
+      width: '50%',
+    },
+    infoColor: {
+      color: palette.info.main,
+    },
+    dropzoneText: {
+      fontSize: typography.h2.fontSize,
+    },
+  })
+);
 
-export const InternshipEngagementDetail: FC<EngagementQuery> = ({
+export const InternshipEngagementDetailWrapped: FC<EngagementQuery> = ({
   project,
   engagement,
 }) => {
   const classes = useStyles();
+  const uploadFile = useUploadEngagementFiles('internship');
+
   const [editState, show, editField] = useDialog<
     Many<EditableEngagementField>
   >();
@@ -64,52 +76,30 @@ export const InternshipEngagementDetail: FC<EngagementQuery> = ({
 
   const intern = engagement.intern.value;
   const name = intern?.fullName;
+  const growthPlan = engagement.growthPlan;
 
   return (
-    <div className={classes.root}>
-      <Grid
-        component="main"
-        container
-        direction="column"
-        spacing={3}
-        className={classes.main}
-      >
-        <Grid item>
-          <Breadcrumbs>
-            <ProjectBreadcrumb data={project} />
-            {name ? (
-              <Breadcrumb to=".">{name}</Breadcrumb>
-            ) : (
-              <Redacted
-                info="You do not have permission to view this engagement's name"
-                width={200}
-              />
-            )}
-          </Breadcrumbs>
-        </Grid>
-
-        <Grid item container spacing={3} alignItems="center">
-          <Grid item className={name ? undefined : classes.nameRedacted}>
-            <Typography
-              variant="h2"
-              {...(intern
-                ? { component: Link, to: `/users/${intern.id}` }
-                : {})}
-            >
-              {name ?? (
+    <>
+      <div className={classes.root}>
+        <Grid
+          component="main"
+          container
+          direction="column"
+          spacing={3}
+          className={classes.main}
+        >
+          <Grid item>
+            <Breadcrumbs>
+              <ProjectBreadcrumb data={project} />
+              {name ? (
+                <Breadcrumb to=".">{name}</Breadcrumb>
+              ) : (
                 <Redacted
-                  info={`You do not have permission to view this engagement's ${
-                    intern ? 'name' : 'intern'
-                  }`}
-                  width="100%"
+                  info="You do not have permission to view this engagement's name"
+                  width={200}
                 />
               )}
-            </Typography>
-          </Grid>
-        </Grid>
-        <Grid item container spacing={3} alignItems="center">
-          <Grid item>
-            <Typography variant="h4">Internship Engagement</Typography>
+            </Breadcrumbs>
           </Grid>
 
           <Grid item>
@@ -137,83 +127,165 @@ export const InternshipEngagementDetail: FC<EngagementQuery> = ({
               children={engagement.countryOfOrigin.value?.name.value}
             />
           </Grid>
-          <Grid item>
-            <DataButton
-              startIcon={<DateRange className={classes.infoColor} />}
-              secured={date}
-              redacted="You do not have permission to view start/end dates"
-              children={formatDate.range}
-              empty="Start - End"
-              onClick={() => show(['startDateOverride', 'endDateOverride'])}
-            />
+          <Grid item container spacing={3} alignItems="center">
+            <Grid item className={name ? undefined : classes.nameRedacted}>
+              <Typography
+                variant="h2"
+                {...(intern
+                  ? { component: Link, to: `/users/${intern.id}` }
+                  : {})}
+              >
+                {name ?? (
+                  <Redacted
+                    info={`You do not have permission to view this engagement's ${
+                      intern ? 'name' : 'intern'
+                    }`}
+                    width="100%"
+                  />
+                )}
+              </Typography>
+            </Grid>
           </Grid>
-          <Grid item>
-            <DataButton onClick={() => show('status')}>
-              {displayEngagementStatus(engagement.status)}
-            </DataButton>
+          <Grid item container spacing={3} alignItems="center">
+            <Grid item>
+              <Typography variant="h4">Internship Engagement</Typography>
+            </Grid>
+
+            <Grid item>
+              <Typography variant="body2" color="textSecondary">
+                Updated {formatDateTime(engagement.modifiedAt)}
+              </Typography>
+            </Grid>
           </Grid>
-        </Grid>
-        <Grid item container spacing={3}>
-          <Grid item xs={6}>
-            <FieldOverviewCard
-              title="Growth Plan Complete Date"
-              data={{
-                value: formatDate(engagement.completeDate.value),
-              }}
-              icon={PlantIcon}
-              onClick={() => show('completeDate')}
-              onButtonClick={() => show('completeDate')}
-            />
+          <Grid item container spacing={1} alignItems="center">
+            <Grid item>
+              <DataButton
+                secured={engagement.position}
+                empty="Enter Intern Position"
+                redacted="You do not have permission to view intern position"
+                children={displayInternPosition}
+                onClick={() => show('position')}
+              />
+            </Grid>
+            <Grid item>
+              <DataButton
+                secured={engagement.countryOfOrigin}
+                empty="Enter Country of Origin"
+                redacted="You do not have permission to view country of origin"
+                children={displayLocation}
+                onClick={() => show('countryOfOriginId')}
+              />
+            </Grid>
+            <Grid item>
+              <DataButton
+                startIcon={<DateRange className={classes.infoColor} />}
+                secured={date}
+                redacted="You do not have permission to view start/end dates"
+                children={formatDate.range}
+                empty="Start - End"
+                onClick={() => show(['startDateOverride', 'endDateOverride'])}
+              />
+            </Grid>
+            <Grid item>
+              <DataButton onClick={() => show('status')}>
+                {displayEngagementStatus(engagement.status)}
+              </DataButton>
+            </Grid>
           </Grid>
-          <Grid item xs={6}>
-            <FieldOverviewCard
-              title="Disbursement Complete Date"
-              data={{
-                value: formatDate(engagement.disbursementCompleteDate.value),
-              }}
-              icon={OptionsIcon}
-              onClick={() => show('disbursementCompleteDate')}
-              onButtonClick={() => show('disbursementCompleteDate')}
-            />
-          </Grid>
-          <Grid item xs={6}>
-            <FieldOverviewCard
-              title="Communications Complete Date"
-              data={{
-                value: formatDate(engagement.communicationsCompleteDate.value),
-              }}
-              icon={ChatOutlined}
-              onClick={() => show('communicationsCompleteDate')}
-              onButtonClick={() => show('communicationsCompleteDate')}
-            />
-          </Grid>
-          <Grid item xs={6}>
-            <MethodologiesCard
-              onClick={() => show('methodologies')}
-              data={engagement.methodologies}
-            />
-          </Grid>
-        </Grid>
-        <Grid item container spacing={3}>
-          <Grid item xs={6}>
-            <CeremonyCard {...engagement.ceremony} />
-          </Grid>
-          <MentorCard
-            data={engagement.mentor}
-            wrap={(node) => (
+          <Grid item container spacing={3}>
+            <Grid item xs={6}>
+              <FieldOverviewCard
+                title="Growth Plan Complete Date"
+                data={{
+                  value: formatDate(engagement.completeDate.value),
+                }}
+                icon={PlantIcon}
+                onClick={() => show('completeDate')}
+                onButtonClick={() => show('completeDate')}
+              />
+            </Grid>
+            <Grid item xs={6}>
+              <FieldOverviewCard
+                title="Disbursement Complete Date"
+                data={{
+                  value: formatDate(engagement.disbursementCompleteDate.value),
+                }}
+                icon={OptionsIcon}
+                onClick={() => show('disbursementCompleteDate')}
+                onButtonClick={() => show('disbursementCompleteDate')}
+              />
+            </Grid>
+            <Grid item xs={6}>
+              <FieldOverviewCard
+                title="Communications Complete Date"
+                data={{
+                  value: formatDate(
+                    engagement.communicationsCompleteDate.value
+                  ),
+                }}
+                icon={ChatOutlined}
+                onClick={() => show('communicationsCompleteDate')}
+                onButtonClick={() => show('communicationsCompleteDate')}
+              />
+            </Grid>
+            <Grid item container spacing={3} alignItems="center">
               <Grid item xs={6}>
-                {node}
+                <Typography variant="h4">Growth Plan</Typography>
               </Grid>
-            )}
-            onEdit={() => show('mentorId')}
-          />
+            </Grid>
+            <Grid item container spacing={3} alignItems="center">
+              <Grid item xs={6}>
+                {growthPlan.canRead && !growthPlan.value ? (
+                  <AddItemCard
+                    actionType="dropzone"
+                    canAdd={growthPlan.canEdit}
+                    DropzoneProps={{
+                      classes: { text: classes.dropzoneText },
+                    }}
+                    handleFileSelect={(files: File[]) =>
+                      uploadFile({ files, engagementId: engagement.id })
+                    }
+                    itemType="Growth Plan"
+                  />
+                ) : (
+                  <EngagementFileCard engagement={engagement} />
+                )}
+              </Grid>
+            </Grid>
+            <Grid item xs={6}>
+              <MethodologiesCard
+                onClick={() => show('methodologies')}
+                data={engagement.methodologies}
+              />
+            </Grid>
+          </Grid>
+          <Grid item container spacing={3}>
+            <Grid item xs={6}>
+              <CeremonyCard {...engagement.ceremony} />
+            </Grid>
+            <MentorCard
+              data={engagement.mentor}
+              wrap={(node) => (
+                <Grid item xs={6}>
+                  {node}
+                </Grid>
+              )}
+              onEdit={() => show('mentorId')}
+            />
+          </Grid>
         </Grid>
-      </Grid>
+      </div>
       <EditEngagementDialog
         {...editState}
         engagement={engagement}
         editFields={editField}
       />
-    </div>
+    </>
   );
 };
+
+export const InternshipEngagementDetail: FC<EngagementQuery> = (props) => (
+  <FileActionsContextProvider context="engagement">
+    <InternshipEngagementDetailWrapped {...props} />
+  </FileActionsContextProvider>
+);
