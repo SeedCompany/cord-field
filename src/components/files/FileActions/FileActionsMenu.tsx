@@ -119,7 +119,7 @@ export const FileActionsMenu: FC<FileActionsMenuProps> = (props) => {
   const { handleFileActionClick } = useFileActions();
 
   const menuProps = Object.entries(rest).reduce((menuProps, [key, value]) => {
-    return key === 'onVersionUpload'
+    return key === 'onVersionUpload' || key === 'canEdit'
       ? menuProps
       : {
           ...menuProps,
