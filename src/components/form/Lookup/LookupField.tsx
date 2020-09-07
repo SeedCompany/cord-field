@@ -235,6 +235,10 @@ export function LookupField<
       inputValue={input}
       onBlur={field.onBlur}
       onFocus={field.onFocus}
+      onKeyDown={(_) => {
+        if ((_.key === 'Enter' || _.keyCode === 13) && loading)
+          _.preventDefault();
+      }}
       onInputChange={(_, val) => {
         setInput(val);
       }}
