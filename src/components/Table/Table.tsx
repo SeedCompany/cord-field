@@ -1,4 +1,10 @@
-import { Paper, withStyles } from '@material-ui/core';
+import {
+  CircularProgress,
+  fade,
+  makeStyles,
+  Paper,
+  withStyles,
+} from '@material-ui/core';
 import {
   Check,
   Clear,
@@ -42,6 +48,38 @@ const Container = withStyles({
   // This is the default Container, only styles above have changed.
 })((props) => <Paper elevation={2} {...props} />);
 
+const useLoadingStyles = makeStyles(
+  ({ palette }) => ({
+    root: {
+      display: 'table',
+      width: '100%',
+      height: '100%',
+      backgroundColor: fade(palette.background.paper, 0.7),
+      borderRadius: 'inherit',
+    },
+    inner: {
+      display: 'table-cell',
+      width: '100%',
+      height: '100%',
+      verticalAlign: 'middle',
+      textAlign: 'center',
+    },
+  }),
+  {
+    classNamePrefix: 'OverlayLoading',
+  }
+);
+const OverlayLoading = () => {
+  const classes = useLoadingStyles();
+  return (
+    <div className={classes.root}>
+      <div className={classes.inner}>
+        <CircularProgress />
+      </div>
+    </div>
+  );
+};
+
 const Cell = withStyles({
   alignRight: {
     // Fix alignment of editable numeric cells
@@ -55,6 +93,7 @@ const Cell = withStyles({
 const defaultComponents: Components = {
   Container,
   Cell,
+  OverlayLoading,
 };
 
 export const Table = <RowData extends Record<string, any>>(
