@@ -11,7 +11,7 @@ import { useOrganizationQuery } from './OrganizationDetail.generated';
 const useStyles = makeStyles(({ spacing, breakpoints }) => ({
   root: {
     flex: 1,
-    overflowY: 'scroll',
+    overflowY: 'auto',
     padding: spacing(4),
     maxWidth: breakpoints.values.md,
   },

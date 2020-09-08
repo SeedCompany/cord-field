@@ -20,7 +20,7 @@ import { useUserQuery } from './UserDetail.generated';
 
 const useStyles = makeStyles(({ spacing, breakpoints }) => ({
   root: {
-    overflowY: 'scroll',
+    overflowY: 'auto',
     padding: spacing(4),
     '& > *:not(:last-child)': {
       marginBottom: spacing(3),

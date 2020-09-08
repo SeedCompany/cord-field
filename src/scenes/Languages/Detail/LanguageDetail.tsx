@@ -26,7 +26,7 @@ import { LeastOfThese } from './LeastOfThese';
 
 const useStyles = makeStyles(({ spacing, breakpoints }) => ({
   root: {
-    overflowY: 'scroll',
+    overflowY: 'auto',
     padding: spacing(4),
     '& > *:not(:last-child)': {
       marginBottom: spacing(3),
