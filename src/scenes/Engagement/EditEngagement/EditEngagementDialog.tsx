@@ -1,5 +1,5 @@
 import { pick, startCase } from 'lodash';
-import React, { ComponentType, FC } from 'react';
+import React, { ComponentType, FC, useMemo } from 'react';
 import { Except, Merge } from 'type-fest';
 import {
   displayEngagementStatus,
@@ -160,7 +160,9 @@ export const EditEngagementDialog: FC<EditEngagementDialogProps> = ({
   editFields: editFieldsProp,
   ...props
 }) => {
-  const editFields = many(editFieldsProp ?? []);
+  const editFields = useMemo(() => many(editFieldsProp ?? []), [
+    editFieldsProp,
+  ]);
 
   const fields = editFields.map((name) => {
     const Field = fieldMapping[name];
@@ -174,30 +176,45 @@ export const EditEngagementDialog: FC<EditEngagementDialogProps> = ({
       ? updateInternshipEngagement
       : updateLanguageEngagement;
 
-  const fullInitialValues: Except<EngagementFormValues['engagement'], 'id'> = {
-    startDateOverride: engagement.startDateOverride.value,
-    endDateOverride: engagement.endDateOverride.value,
-    completeDate: engagement.completeDate.value,
-    disbursementCompleteDate: engagement.disbursementCompleteDate.value,
-    communicationsCompleteDate: engagement.communicationsCompleteDate.value,
-    status: engagement.status,
-    ...(engagement.__typename === 'LanguageEngagement'
-      ? {
-          lukePartnership: engagement.lukePartnership.value,
-          firstScripture: engagement.firstScripture.value,
-        }
-      : engagement.__typename === 'InternshipEngagement'
-      ? {
-          methodologies: engagement.methodologies.value,
-          position: engagement.position.value,
-          mentorId: engagement.mentor.value,
-          countryOfOriginId: engagement.countryOfOrigin.value,
-        }
-      : {}),
-  };
+  const initialValues = useMemo(() => {
+    const fullInitialValuesFields: Except<
+      EngagementFormValues['engagement'],
+      'id'
+    > = {
+      startDateOverride: engagement.startDateOverride.value,
+      endDateOverride: engagement.endDateOverride.value,
+      completeDate: engagement.completeDate.value,
+      disbursementCompleteDate: engagement.disbursementCompleteDate.value,
+      communicationsCompleteDate: engagement.communicationsCompleteDate.value,
+      status: engagement.status,
+      ...(engagement.__typename === 'LanguageEngagement'
+        ? {
+            lukePartnership: engagement.lukePartnership.value,
+            firstScripture: engagement.firstScripture.value,
+          }
+        : engagement.__typename === 'InternshipEngagement'
+        ? {
+            methodologies: engagement.methodologies.value,
+            position: engagement.position.value,
+            mentorId: engagement.mentor.value,
+            countryOfOriginId: engagement.countryOfOrigin.value,
+          }
+        : {}),
+    };
 
-  // Filter out irrelevant initial values so they don't get added to the mutation
-  const filteredInitialValues = pick(fullInitialValues, editFields);
+    // Filter out irrelevant initial values so they don't get added to the mutation
+    const filteredInitialValuesFields = pick(
+      fullInitialValuesFields,
+      editFields
+    );
+
+    return {
+      engagement: {
+        id: engagement.id,
+        ...filteredInitialValuesFields,
+      },
+    };
+  }, [editFields, engagement]);
 
   return (
     <DialogForm
@@ -209,12 +226,7 @@ export const EditEngagementDialog: FC<EditEngagementDialogProps> = ({
         fullWidth: true,
       }}
       {...props}
-      initialValues={{
-        engagement: {
-          id: engagement.id,
-          ...filteredInitialValues,
-        },
-      }}
+      initialValues={initialValues}
       onSubmit={async ({
         engagement: { mentorId: mentor, countryOfOriginId: country, ...rest },
       }) => {

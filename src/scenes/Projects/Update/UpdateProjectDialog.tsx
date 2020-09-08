@@ -1,5 +1,5 @@
 import { pick } from 'lodash';
-import React, { ComponentType } from 'react';
+import React, { ComponentType, useMemo } from 'react';
 import { Except } from 'type-fest';
 import {
   displayProjectStep,
@@ -64,18 +64,41 @@ export const UpdateProjectDialog = ({
   editFields: editFieldsProp,
   ...props
 }: UpdateProjectDialogProps) => {
-  const editFields = many(editFieldsProp ?? []);
+  const editFields = useMemo(() => many(editFieldsProp ?? []), [
+    editFieldsProp,
+  ]);
 
   const [updateProject] = useUpdateProjectMutation();
 
-  const fullInitialValues: Except<UpdateProjectInput['project'], 'id'> = {
-    step: project.step.value,
-    mouStart: project.mouStart.value,
-    mouEnd: project.mouEnd.value,
-  };
+  const initialValues = useMemo(() => {
+    const fullInitialValuesFields: Except<
+      UpdateProjectInput['project'],
+      'id'
+    > = {
+      step: project.step.value,
+      mouStart: project.mouStart.value,
+      mouEnd: project.mouEnd.value,
+    };
 
-  // Filter out irrelevant initial values so they don't get added to the mutation
-  const filteredInitialValues = pick(fullInitialValues, editFields);
+    // Filter out irrelevant initial values so they don't get added to the mutation
+    const filteredInitialValuesFields = pick(
+      fullInitialValuesFields,
+      editFields
+    );
+
+    return {
+      project: {
+        id: project.id,
+        ...filteredInitialValuesFields,
+      },
+    };
+  }, [
+    editFields,
+    project.id,
+    project.mouEnd.value,
+    project.mouStart.value,
+    project.step.value,
+  ]);
 
   return (
     <DialogForm<UpdateProjectInput>
@@ -83,12 +106,7 @@ export const UpdateProjectDialog = ({
       closeLabel="Close"
       submitLabel="Save"
       {...props}
-      initialValues={{
-        project: {
-          id: project.id,
-          ...filteredInitialValues,
-        },
-      }}
+      initialValues={initialValues}
       onSubmit={async (input) => {
         await updateProject({ variables: { input } });
       }}

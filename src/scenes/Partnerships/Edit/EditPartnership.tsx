@@ -1,6 +1,6 @@
 import { Box } from '@material-ui/core';
 import { Decorator } from 'final-form';
-import React, { FC } from 'react';
+import React, { FC, useMemo } from 'react';
 import { useFormState } from 'react-final-form';
 import { Except } from 'type-fest';
 import {
@@ -82,6 +82,25 @@ export const EditPartnership: FC<EditPartnershipProps> = ({
     />
   ));
 
+  const initialValues = useMemo(
+    () => ({
+      partnership: {
+        id: partnership.id,
+        agreementStatus: partnership.agreementStatus.value ?? 'NotAttached',
+        mouStatus: partnership.mouStatus.value ?? 'NotAttached',
+        types: partnership.types.value,
+        fundingType: partnership.fundingType.value,
+      },
+    }),
+    [
+      partnership.agreementStatus.value,
+      partnership.fundingType.value,
+      partnership.id,
+      partnership.mouStatus.value,
+      partnership.types.value,
+    ]
+  );
+
   return (
     <DialogForm<UpdatePartnershipInput & SubmitAction<'delete'>>
       {...props}
@@ -110,15 +129,7 @@ export const EditPartnership: FC<EditPartnershipProps> = ({
           Delete
         </SubmitButton>
       }
-      initialValues={{
-        partnership: {
-          id: partnership.id,
-          agreementStatus: partnership.agreementStatus.value ?? 'NotAttached',
-          mouStatus: partnership.mouStatus.value ?? 'NotAttached',
-          types: partnership.types.value,
-          fundingType: partnership.fundingType.value,
-        },
-      }}
+      initialValues={initialValues}
       decorators={decorators}
     >
       <SubmitError />
