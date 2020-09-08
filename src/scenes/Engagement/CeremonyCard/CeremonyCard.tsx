@@ -10,8 +10,7 @@ import {
 } from '@material-ui/core';
 import { Skeleton } from '@material-ui/lab';
 import clsx from 'clsx';
-import * as React from 'react';
-import { FC } from 'react';
+import React, { FC, useMemo } from 'react';
 import { canEditAny, UpdateCeremonyInput } from '../../../api';
 import { useDialog } from '../../../components/Dialog';
 import { DialogForm } from '../../../components/Dialog/DialogForm';
@@ -78,6 +77,17 @@ export const CeremonyCard: FC<CeremonyCardProps> = ({
     >
       Edit dates
     </Button>
+  );
+
+  const initialValues = useMemo(
+    () => ({
+      ceremony: {
+        id: id || '',
+        estimatedDate: estimatedDate?.value,
+        actualDate: actualDate?.value,
+      },
+    }),
+    [actualDate?.value, estimatedDate?.value, id]
   );
 
   return (
@@ -160,13 +170,7 @@ export const CeremonyCard: FC<CeremonyCardProps> = ({
         closeLabel="Close"
         submitLabel="Save"
         {...dialogState}
-        initialValues={{
-          ceremony: {
-            id: id || '',
-            estimatedDate: estimatedDate?.value,
-            actualDate: actualDate?.value,
-          },
-        }}
+        initialValues={initialValues}
         onSubmit={async (input) => {
           await updateCeremony({ variables: { input } });
         }}
