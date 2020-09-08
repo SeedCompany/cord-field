@@ -22,6 +22,9 @@ const useStyles = makeStyles(({ spacing }) => ({
     justifyContent: 'space-between',
     alignItems: 'flex-end',
   },
+  totalLoading: {
+    width: '10%',
+  },
   toolbar: {
     padding: spacing(2),
     paddingBottom: spacing(1),
@@ -110,11 +113,14 @@ export const ProjectBudget = () => {
           </Breadcrumbs>
           <header className={classes.header}>
             <Typography variant="h2">Budget</Typography>
-            <Typography variant="h3">
+            <Typography
+              variant="h3"
+              className={loading ? classes.totalLoading : undefined}
+            >
               {!loading ? (
                 `Total: ${formatCurrency(budgetTotal)}`
               ) : (
-                <Skeleton width="10%" />
+                <Skeleton width="100%" />
               )}
             </Typography>
           </header>
