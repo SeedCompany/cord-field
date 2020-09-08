@@ -1,0 +1,58 @@
+fragment BudgetRecord on BudgetRecord {
+  id
+  createdAt
+  amount {
+    canEdit
+    canRead
+    value
+  }
+  fiscalYear {
+    canEdit
+    canRead
+    value
+  }
+  organization {
+    canEdit
+    canRead
+    value {
+      id
+      createdAt
+      name {
+        canEdit
+        canRead
+        value
+      }
+    }
+  }
+}
+
+query ProjectBudget($id: ID!) {
+  project(id: $id) {
+    id
+    name {
+      canRead
+      value
+    }
+    budget {
+      canRead
+      canEdit
+      value {
+        ...BudgetOverview
+        records {
+          ...BudgetRecord
+        }
+      }
+    }
+  }
+}
+
+mutation UpdateProjectBudgetRecord($input: UpdateBudgetRecordInput!) {
+  updateBudgetRecord(input: $input) {
+    budgetRecord {
+      id
+      amount {
+        value
+      }
+    }
+  }
+}
