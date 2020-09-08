@@ -235,6 +235,11 @@ export function LookupField<
       inputValue={input}
       onBlur={field.onBlur}
       onFocus={field.onFocus}
+      onKeyDown={(event) => {
+        // Prevent submitting form while searching, user is probably trying
+        // to execute search (which happens automatically).
+        if (event.key === 'Enter' && loading) event.preventDefault();
+      }}
       onInputChange={(_, val) => {
         setInput(val);
       }}
