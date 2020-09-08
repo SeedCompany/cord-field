@@ -99,14 +99,10 @@ export const ProjectBudget = () => {
         </Typography>
       ) : (
         <>
-          {loading ? (
-            <Skeleton variant="text" width="20%" />
-          ) : (
-            <Breadcrumbs>
-              <ProjectBreadcrumb data={data?.project} />
-              <Breadcrumb to=".">Budget</Breadcrumb>
-            </Breadcrumbs>
-          )}
+          <Breadcrumbs>
+            <ProjectBreadcrumb data={data?.project} />
+            <Breadcrumb to=".">Budget</Breadcrumb>
+          </Breadcrumbs>
           <header className={classes.header}>
             {loading ? (
               <>
