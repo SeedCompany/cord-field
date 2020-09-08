@@ -4,7 +4,7 @@ import React, { FC } from 'react';
 const useStyles = makeStyles(({ spacing }) => ({
   root: {
     flex: 1,
-    overflowY: 'hidden',
+    overflow: 'hidden',
     padding: spacing(4, 0, 0, 4),
     display: 'flex',
     flexDirection: 'column',
