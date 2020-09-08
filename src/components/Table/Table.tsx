@@ -1,4 +1,4 @@
-import { withStyles } from '@material-ui/core';
+import { Paper, withStyles } from '@material-ui/core';
 import {
   Check,
   Clear,
@@ -29,6 +29,19 @@ const defaultIcons: Icons = {
   SortArrow: forwardRef((props, ref) => <SortArrow {...props} ref={ref} />),
 };
 
+const Container = withStyles({
+  rounded: {
+    // Fix border radius when Toolbar is omitted.
+    // Actual component rendering problem div is inaccessible, so we've gone up
+    // to its parent. Here's the src producing it:
+    // https://github.com/mbrn/material-table/blob/e81700a/src/material-table.js#L1196-L1199
+    '& > div': {
+      borderRadius: 'inherit',
+    },
+  },
+  // This is the default Container, only styles above have changed.
+})((props) => <Paper elevation={2} {...props} />);
+
 const Cell = withStyles({
   alignRight: {
     // Fix alignment of editable numeric cells
@@ -40,6 +53,7 @@ const Cell = withStyles({
 })(MTableCell);
 
 const defaultComponents: Components = {
+  Container,
   Cell,
 };
 
