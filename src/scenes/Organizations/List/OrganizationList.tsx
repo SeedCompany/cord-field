@@ -19,6 +19,7 @@ const useStyles = makeStyles(({ spacing }) => ({
   },
   listContainer: {
     overflow: 'auto',
+    marginLeft: spacing(-2),
     padding: spacing(2),
   },
 }));
