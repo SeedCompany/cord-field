@@ -104,19 +104,14 @@ export const ProjectBudget = () => {
             <Breadcrumb to=".">Budget</Breadcrumb>
           </Breadcrumbs>
           <header className={classes.header}>
-            {loading ? (
-              <>
-                <Skeleton variant="text" width="20%" />
-                <Skeleton variant="text" width="10%" />
-              </>
-            ) : (
-              <>
-                <Typography variant="h2">Budget</Typography>
-                <Typography variant="h3">
-                  Total: {formatCurrency(budgetTotal)}
-                </Typography>
-              </>
-            )}
+            <Typography variant="h2">Budget</Typography>
+            <Typography variant="h3">
+              {!loading ? (
+                `Total: ${formatCurrency(budgetTotal)}`
+              ) : (
+                <Skeleton width="10%" />
+              )}
+            </Typography>
           </header>
           <Table
             data={rowData}
