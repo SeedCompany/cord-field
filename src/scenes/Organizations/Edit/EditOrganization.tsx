@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import { Except } from 'type-fest';
 import { UpdateOrganizationInput } from '../../../api';
 import {
@@ -19,16 +19,21 @@ export type EditOrganizationProps = Except<
 export const EditOrganization = ({ org, ...props }: EditOrganizationProps) => {
   const [updateOrg] = useUpdateOrganizationMutation();
 
+  const initialValues = useMemo(
+    () => ({
+      organization: {
+        id: org.id,
+        name: org.name.value,
+      },
+    }),
+    [org.id, org.name.value]
+  );
+
   return (
     <DialogForm<UpdateOrganizationInput>
       title="Edit Partner"
       {...props}
-      initialValues={{
-        organization: {
-          id: org.id,
-          name: org.name.value,
-        },
-      }}
+      initialValues={initialValues}
       onSubmit={async (input) => {
         await updateOrg({
           variables: { input },
