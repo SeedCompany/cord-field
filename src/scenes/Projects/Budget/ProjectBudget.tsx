@@ -1,7 +1,7 @@
 import { Breadcrumbs, makeStyles, Typography } from '@material-ui/core';
 import { Skeleton } from '@material-ui/lab';
 import { sumBy } from 'lodash';
-import { Column } from 'material-table';
+import { Column, Components } from 'material-table';
 import React, { useMemo } from 'react';
 import { useParams } from 'react-router-dom';
 import { Breadcrumb } from '../../../components/Breadcrumb';
@@ -27,6 +27,11 @@ const useStyles = makeStyles(({ spacing }) => ({
     paddingBottom: spacing(1),
   },
 }));
+
+const tableComponents: Components = {
+  // No toolbar since it's just empty space, we don't use it for anything.
+  Toolbar: () => null,
+};
 
 interface BudgetRowData {
   id: string;
@@ -117,6 +122,7 @@ export const ProjectBudget = () => {
             data={rowData}
             columns={columns}
             isLoading={loading}
+            components={tableComponents}
             cellEditable={
               budget?.canEdit
                 ? {
