@@ -58,7 +58,7 @@ export const CreateProjectMember = ({
 
   return (
     <DialogForm<FormValues>
-      title="Create Team Member"
+      title="Add Team Member"
       {...props}
       initialValues={initialValues}
       onSubmit={async ({ projectMember }) => {
@@ -90,6 +90,13 @@ export const CreateProjectMember = ({
                 getOptionLabel={displayRole}
                 name="roles"
                 label="Roles"
+                helperText={
+                  user
+                    ? canRead
+                      ? ''
+                      : `You cannot read this person's roles`
+                    : 'Select a person first'
+                }
                 getOptionDisabled={(option) =>
                   !!userRoles && !userRoles.includes(option)
                 }
