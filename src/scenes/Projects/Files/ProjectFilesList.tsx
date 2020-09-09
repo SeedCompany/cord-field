@@ -272,7 +272,7 @@ const ProjectFilesListWrapped: FC = () => {
 
   return directoryLoading ? null : canReadRootDirectory === false ? (
     <Typography color="textSecondary">
-      You don't have permission to see the projects this language is engaged in
+      You do not have permission to see files for this project
     </Typography>
   ) : (
     <div className={classes.dropzone} {...getRootProps()}>
