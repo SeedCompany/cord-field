@@ -1,5 +1,4 @@
 import React, { useMemo } from 'react';
-import { FormSpy } from 'react-final-form';
 import { Except, Merge } from 'type-fest';
 import {
   CreateProjectMember as CreateProjectMemberInput,
@@ -10,7 +9,7 @@ import {
   DialogForm,
   DialogFormProps,
 } from '../../../../components/Dialog/DialogForm';
-import { FieldGroup, SubmitError } from '../../../../components/form';
+import { SubmitError } from '../../../../components/form';
 import { AutocompleteField } from '../../../../components/form/AutocompleteField';
 import { UserField, UserLookupItem } from '../../../../components/form/Lookup';
 import { ProjectMembersDocument } from '../List/ProjectMembers.generated';
@@ -72,40 +71,39 @@ export const CreateProjectMember = ({
 
         await createProjectMember({ variables: { input } });
       }}
+      fieldsPrefix="projectMember"
     >
-      <SubmitError />
-      <FormSpy<FormValues> subscription={{ values: true }}>
-        {({ values }) => {
-          const user = values.projectMember.userId;
-          const canRead = user?.roles.canRead;
-          const userRoles = user?.roles.value;
+      {({ values }) => {
+        const user = values.projectMember.userId;
+        const canRead = user?.roles.canRead;
+        const userRoles = user?.roles.value;
 
-          return (
-            <FieldGroup prefix="projectMember">
-              <UserField name="userId" required variant="outlined" />
-              <AutocompleteField
-                disabled={!canRead || !userRoles}
-                multiple
-                options={RoleList}
-                getOptionLabel={displayRole}
-                name="roles"
-                label="Roles"
-                helperText={
-                  user
-                    ? canRead
-                      ? ''
-                      : `You cannot read this person's roles`
-                    : 'Select a person first'
-                }
-                getOptionDisabled={(option) =>
-                  !!userRoles && !userRoles.includes(option)
-                }
-                variant="outlined"
-              />
-            </FieldGroup>
-          );
-        }}
-      </FormSpy>
+        return (
+          <>
+            <SubmitError />
+            <UserField name="userId" required variant="outlined" />
+            <AutocompleteField
+              disabled={!canRead || !userRoles}
+              multiple
+              options={RoleList}
+              getOptionLabel={displayRole}
+              name="roles"
+              label="Roles"
+              helperText={
+                user
+                  ? canRead
+                    ? ''
+                    : `You cannot read this person's roles`
+                  : 'Select a person first'
+              }
+              getOptionDisabled={(option) =>
+                !!userRoles && !userRoles.includes(option)
+              }
+              variant="outlined"
+            />
+          </>
+        );
+      }}
     </DialogForm>
   );
 };
