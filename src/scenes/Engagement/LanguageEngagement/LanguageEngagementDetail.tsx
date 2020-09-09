@@ -94,9 +94,9 @@ export const LanguageEngagementDetail: FC<EngagementQuery> = ({
 
   const productIdProcessingDelete = useRef<string>();
 
-  const handleDelete = (productId: string) => {
+  const handleDelete = async (productId: string) => {
     productIdProcessingDelete.current = productId;
-    deleteProduct({
+    await deleteProduct({
       variables: {
         productId,
       },
