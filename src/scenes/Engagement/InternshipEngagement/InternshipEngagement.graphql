@@ -48,6 +48,10 @@ fragment InternshipEngagementDetail on InternshipEngagement {
   }
   mentor {
     ...MentorCard
+    # Needed for edit. Should this be moved?
+    value {
+      ...UserLookupItem
+    }
   }
   ceremony {
     ...CeremonyCard

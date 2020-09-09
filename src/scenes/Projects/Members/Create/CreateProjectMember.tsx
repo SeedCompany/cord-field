@@ -1,7 +1,11 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import { FormSpy } from 'react-final-form';
-import { Except } from 'type-fest';
-import { displayRole, Role, RoleList } from '../../../../api';
+import { Except, Merge } from 'type-fest';
+import {
+  CreateProjectMember as CreateProjectMemberInput,
+  displayRole,
+  RoleList,
+} from '../../../../api';
 import {
   DialogForm,
   DialogFormProps,
@@ -9,20 +13,22 @@ import {
 import { FieldGroup, SubmitError } from '../../../../components/form';
 import { AutocompleteField } from '../../../../components/form/AutocompleteField';
 import { UserField, UserLookupItem } from '../../../../components/form/Lookup';
-import { Nullable } from '../../../../util';
 import { ProjectMembersDocument } from '../List/ProjectMembers.generated';
 import { useCreateProjectMemberMutation } from './CreateProjectMember.generated';
 
-interface DialogValues {
-  projectMember: {
-    userId: Nullable<UserLookupItem>;
-    projectId: string;
-    roles?: Role[];
-  };
+interface FormValues {
+  projectMember: Partial<
+    Merge<
+      CreateProjectMemberInput,
+      {
+        userId: UserLookupItem;
+      }
+    >
+  >;
 }
 
 type CreateProjectMemberProps = Except<
-  DialogFormProps<DialogValues>,
+  DialogFormProps<FormValues>,
   'onSubmit' | 'initialValues'
 > & {
   projectId: string;
@@ -41,22 +47,26 @@ export const CreateProjectMember = ({
     ],
   });
 
+  const initialValues = useMemo(
+    () => ({
+      projectMember: {
+        projectId,
+      },
+    }),
+    [projectId]
+  );
+
   return (
-    <DialogForm<DialogValues>
+    <DialogForm<FormValues>
       title="Create Team Member"
       {...props}
-      initialValues={{
-        projectMember: {
-          roles: [],
-          projectId,
-          userId: null,
-        },
-      }}
-      onSubmit={async ({ projectMember: { userId, ...rest } }) => {
+      initialValues={initialValues}
+      onSubmit={async ({ projectMember }) => {
+        const data = projectMember as Required<typeof projectMember>;
         const input = {
           projectMember: {
-            userId: userId!.id,
-            ...rest,
+            ...data,
+            userId: data.userId.id,
           },
         };
 
@@ -64,11 +74,11 @@ export const CreateProjectMember = ({
       }}
     >
       <SubmitError />
-      <FormSpy>
+      <FormSpy<FormValues> subscription={{ values: true }}>
         {({ values }) => {
-          const formValues = values as DialogValues;
-          const canRead = formValues.projectMember.userId?.roles.canRead;
-          const userRoles = formValues.projectMember.userId?.roles.value;
+          const user = values.projectMember.userId;
+          const canRead = user?.roles.canRead;
+          const userRoles = user?.roles.value;
 
           return (
             <FieldGroup prefix="projectMember">
