@@ -110,7 +110,7 @@ export const renderAccordionSection = (productObj?: ProductFormFragment) => ({
   const [selectedBook, setSelectedBook] = useState<string>('');
 
   const handleChange = (panel: string) => (
-    event: React.ChangeEvent<{}>,
+    event: React.ChangeEvent<Record<string, unknown>>,
     isExpanded: boolean
   ) => {
     setOpenedSection(isExpanded ? panel : '');
@@ -144,7 +144,7 @@ export const renderAccordionSection = (productObj?: ProductFormFragment) => ({
             classes={{ content: classes.accordionSummary }}
           >
             <Typography variant="h4">
-              {openedSection === 'produces' && `Choose `}Product
+              {openedSection === 'produces' && 'Choose '}Product
             </Typography>
             <div className={classes.accordionSummaryButtonsContainer}>
               {productType && openedSection !== 'produces' && (
@@ -192,7 +192,7 @@ export const renderAccordionSection = (productObj?: ProductFormFragment) => ({
                 classes={{ content: classes.accordionSummary }}
               >
                 <Typography variant="h4">
-                  {openedSection === 'scriptureReferences' && `Choose `}
+                  {openedSection === 'scriptureReferences' && 'Choose '}
                   Scripture
                 </Typography>
                 <div className={classes.accordionSummaryButtonsContainer}>
@@ -284,7 +284,7 @@ export const renderAccordionSection = (productObj?: ProductFormFragment) => ({
                 classes={{ content: classes.accordionSummary }}
               >
                 <Typography variant="h4">
-                  {openedSection === 'mediums' && `Choose `}Medium
+                  {openedSection === 'mediums' && 'Choose '}Medium
                 </Typography>
                 <div className={classes.accordionSummaryButtonsContainer}>
                   {openedSection !== 'mediums' &&
@@ -333,7 +333,7 @@ export const renderAccordionSection = (productObj?: ProductFormFragment) => ({
                 classes={{ content: classes.accordionSummary }}
               >
                 <Typography variant="h4">
-                  {openedSection === 'purposes' && `Choose `}Purposes
+                  {openedSection === 'purposes' && 'Choose '}Purposes
                 </Typography>
                 <div className={classes.accordionSummaryButtonsContainer}>
                   {openedSection !== 'purposes' &&
@@ -377,7 +377,7 @@ export const renderAccordionSection = (productObj?: ProductFormFragment) => ({
                 classes={{ content: classes.accordionSummary }}
               >
                 <Typography variant="h4">
-                  {openedSection === 'methodology' && `Choose `}Methodology
+                  {openedSection === 'methodology' && 'Choose '}Methodology
                 </Typography>
                 <div className={classes.accordionSummaryButtonsContainer}>
                   {methodology && openedSection !== 'methodology' && (
