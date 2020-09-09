@@ -10,15 +10,15 @@ import { Autocomplete, AutocompleteProps, Value } from '@material-ui/lab';
 import { camelCase } from 'camel-case';
 import { last, upperFirst } from 'lodash';
 import React, { ComponentType, useCallback, useEffect, useState } from 'react';
-import { Except, Merge, SetOptional } from 'type-fest';
+import { Except, SetOptional } from 'type-fest';
 import { isNetworkRequestInFlight } from '../../../api';
 import { useDialog } from '../../Dialog';
 import { DialogFormProps } from '../../Dialog/DialogForm';
 import { FieldConfig, useField, useFieldName } from '../index';
 import {
-  areListsEqual,
-  compareNullable,
   getHelperText,
+  isEqualBy,
+  isListEqualBy,
   showError,
   useFocusOnEnabled,
 } from '../util';
@@ -107,11 +107,7 @@ export function LookupField<
     required,
     allowNull: !multiple,
     defaultValue,
-    isEqual: compareNullable((a, b) =>
-      multiple
-        ? areListsEqual(a.map(getCompareBy), b.map(getCompareBy))
-        : getCompareBy(a) === getCompareBy(b)
-    ),
+    isEqual: multiple ? isListEqualBy(getCompareBy) : isEqualBy(getCompareBy),
   });
   const disabled = disabledProp ?? meta.submitting;
 
@@ -317,23 +313,21 @@ type SetOptionalIf<
 LookupField.createFor = <T extends { id: string }, CreateFormValues = never>({
   resource,
   ...config
-}: Merge<
-  Except<
-    SetOptionalIf<
-      SetOptional<
-        LookupFieldProps<T, any, any, CreateFormValues>,
-        'name' | 'getCompareBy'
-      >,
-      'getOptionLabel',
-      T,
-      StandardNamedObject
+}: SetOptionalIf<
+  SetOptional<
+    Except<
+      LookupFieldProps<T, any, any, CreateFormValues>,
+      'value' | 'defaultValue'
     >,
-    'value' | 'defaultValue'
+    'name' | 'getCompareBy'
   >,
-  {
-    resource: string;
-  }
->) => {
+  'getOptionLabel',
+  T,
+  StandardNamedObject
+> & {
+  resource: string;
+}) => {
+  const compareBy = config.getCompareBy ?? ((item: T) => item.id);
   const Comp = function <
     Multiple extends boolean | undefined,
     DisableClearable extends boolean | undefined
@@ -345,7 +339,7 @@ LookupField.createFor = <T extends { id: string }, CreateFormValues = never>({
   ) {
     return (
       <LookupField<T, Multiple, DisableClearable, CreateFormValues>
-        getCompareBy={(item) => item.id}
+        getCompareBy={compareBy}
         getOptionLabel={(item: StandardNamedObject) => item.name.value}
         {...(config as any)}
         {...props}
@@ -353,5 +347,7 @@ LookupField.createFor = <T extends { id: string }, CreateFormValues = never>({
     );
   };
   Comp.displayName = `Lookup(${upperFirst(camelCase(resource))})`;
+  Comp.isEqual = isEqualBy(compareBy);
+  Comp.isListEqual = isListEqualBy(compareBy);
   return Comp;
 };
