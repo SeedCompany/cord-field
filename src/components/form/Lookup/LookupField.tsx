@@ -171,7 +171,7 @@ export function LookupField<
     ...(data?.search.items ?? []),
     // Add currently selected items to options so prevent MUI warning
     // They will be hidden via filterSelectedOptions
-    ...((multiple ? field.value : []) as T[]),
+    ...((field.value as T | null) ? [field.value] : []),
   ];
   const autocomplete = (
     <Autocomplete<T, Multiple, DisableClearable, typeof freeSolo>
