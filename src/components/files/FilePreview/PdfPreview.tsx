@@ -31,6 +31,7 @@ export const PdfPreview: FC<PreviewerProps> = (props) => {
       <Document
         file={file}
         loading={<PreviewLoading />}
+        noData={<PreviewLoading />}
         onLoadError={handlePdfError}
         onLoadSuccess={handlePdfLoadSuccess}
         onSourceError={handlePdfError}
