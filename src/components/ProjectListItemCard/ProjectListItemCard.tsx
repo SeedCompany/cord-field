@@ -39,6 +39,7 @@ const useStyles = makeStyles(({ breakpoints, spacing }) => {
       padding: spacing(2, 3),
       display: 'flex',
       justifyContent: 'space-between',
+      alignItems: 'center',
     },
     leftContent: {
       flex: 2,
@@ -49,6 +50,7 @@ const useStyles = makeStyles(({ breakpoints, spacing }) => {
     rightContent: {
       flex: 1,
       textAlign: 'right',
+      marginBottom: spacing(2),
       marginLeft: spacing(2),
       display: 'flex',
       flexDirection: 'column',
