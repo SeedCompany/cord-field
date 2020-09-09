@@ -1,3 +1,5 @@
+import { Decorator } from 'final-form';
+import onFieldChange from 'final-form-calculate';
 import React, { useMemo } from 'react';
 import { Except, Merge } from 'type-fest';
 import {
@@ -33,6 +35,15 @@ type CreateProjectMemberProps = Except<
   projectId: string;
 };
 
+const decorators: Array<Decorator<FormValues>> = [
+  ...DialogForm.defaultDecorators,
+  onFieldChange({
+    field: 'projectMember.userId',
+    isEqual: UserField.isEqual,
+    updates: { 'projectMember.roles': () => [] },
+  }),
+];
+
 export const CreateProjectMember = ({
   projectId,
   ...props
@@ -60,6 +71,7 @@ export const CreateProjectMember = ({
       title="Add Team Member"
       {...props}
       initialValues={initialValues}
+      decorators={decorators}
       onSubmit={async ({ projectMember }) => {
         const data = projectMember as Required<typeof projectMember>;
         const input = {
