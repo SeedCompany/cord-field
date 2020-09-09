@@ -15,6 +15,7 @@ import { PartnershipCard } from '../../../components/PartnershipCard';
 import { PartnershipCardFragment } from '../../../components/PartnershipCard/PartnershipCard.generated';
 import { ProjectBreadcrumb } from '../../../components/ProjectBreadcrumb';
 import { listOrPlaceholders } from '../../../util';
+import { CreatePartnership } from '../Create';
 import { EditPartnership } from '../Edit';
 import { PartnershipFormFragment } from '../PartnershipForm';
 import { useProjectPartnershipsQuery } from './PartnershipList.generated';
@@ -48,7 +49,8 @@ export const PartnershipList: FC = () => {
   const project = data?.project;
   const partnerships = project?.partnerships;
 
-  const [dialogState, openDialog, partnership] = useDialog<
+  const [createDialogState, openCreateDialog] = useDialog();
+  const [editDialogState, openEditDialog, partnership] = useDialog<
     Merge<PartnershipCardFragment, PartnershipFormFragment>
   >();
 
@@ -66,7 +68,11 @@ export const PartnershipList: FC = () => {
         </Typography>
         {partnerships?.canCreate && (
           <Tooltip title="Add Partnership">
-            <Fab color="error" aria-label="add partnership">
+            <Fab
+              color="error"
+              aria-label="add partnership"
+              onClick={openCreateDialog}
+            >
               <Add />
             </Fab>
           </Tooltip>
@@ -76,13 +82,14 @@ export const PartnershipList: FC = () => {
         <PartnershipCard
           key={item?.id ?? index}
           partnership={item}
-          onEdit={() => item && openDialog(item)}
+          onEdit={() => item && openEditDialog(item)}
           className={classes.item}
         />
       ))}
       {partnership && (
-        <EditPartnership {...dialogState} partnership={partnership} />
+        <EditPartnership {...editDialogState} partnership={partnership} />
       )}
+      <CreatePartnership {...createDialogState} projectId={projectId} />
     </div>
   );
 };

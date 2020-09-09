@@ -20,7 +20,9 @@ import {
   RadioOption,
   SubmitError,
 } from '../../../components/form';
+import { OrganizationField } from '../../../components/form/Lookup';
 import { Nullable } from '../../../util';
+import { CreatePartnershipFormInput } from '../Create';
 import { PartnershipFormFragment } from './PartnershipForm.generated';
 
 export type PartnershipFormProps<T> = DialogFormProps<T> & {
@@ -30,7 +32,9 @@ export type PartnershipFormProps<T> = DialogFormProps<T> & {
 export const hasManagingType = (types: Nullable<readonly PartnershipType[]>) =>
   types?.includes('Managing') ?? false;
 
-export const PartnershipForm = <T extends any>({
+export const PartnershipForm = <
+  T extends CreatePartnershipFormInput | UpdatePartnershipInput
+>({
   partnership,
   ...rest
 }: PartnershipFormProps<T>) => {
@@ -45,11 +49,18 @@ export const PartnershipForm = <T extends any>({
   return (
     <DialogForm<T> {...rest}>
       <SubmitError />
+      {!partnership && (
+        <OrganizationField
+          name="partnership.organizationId"
+          label="Organization"
+          required
+        />
+      )}
       <CheckboxesField
         name="partnership.types"
         label="Types"
         row
-        disabled={!partnership?.types.canEdit}
+        disabled={partnership ? !partnership.types.canEdit : false}
       >
         {([
           'Managing',
@@ -63,27 +74,33 @@ export const PartnershipForm = <T extends any>({
           </Box>
         ))}
       </CheckboxesField>
-      <FundingType />
-      <RadioField
-        name="partnership.agreementStatus"
-        label="Agreement Status"
-        disabled={!partnership?.agreementStatus.canEdit}
-      >
-        {radioOptions}
-      </RadioField>
-      <RadioField
-        name="partnership.mouStatus"
-        label="Mou Status"
-        disabled={!partnership?.mouStatus.canEdit}
-      >
-        {radioOptions}
-      </RadioField>
+      <FundingType<T> />
+      {partnership && (
+        <>
+          <RadioField
+            name="partnership.agreementStatus"
+            label="Agreement Status"
+            disabled={!partnership.agreementStatus.canEdit}
+          >
+            {radioOptions}
+          </RadioField>
+          <RadioField
+            name="partnership.mouStatus"
+            label="Mou Status"
+            disabled={!partnership.mouStatus.canEdit}
+          >
+            {radioOptions}
+          </RadioField>
+        </>
+      )}
     </DialogForm>
   );
 };
 
-const FundingType = () => {
-  const { values } = useFormState<UpdatePartnershipInput>();
+const FundingType = <
+  InputType extends CreatePartnershipFormInput | UpdatePartnershipInput
+>() => {
+  const { values } = useFormState<InputType>();
   const managingTypeSelected = hasManagingType(values.partnership.types);
 
   return managingTypeSelected ? (

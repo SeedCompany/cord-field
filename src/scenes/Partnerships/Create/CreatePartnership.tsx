@@ -1,42 +1,50 @@
-import { useSnackbar } from 'notistack';
 import React from 'react';
 import { Except } from 'type-fest';
-import { CreatePartnershipInput, GQLOperations } from '../../../api';
-import { ButtonLink } from '../../../components/Routing';
+import {
+  CreatePartnership as CreatePartnershipType,
+  GQLOperations,
+} from '../../../api';
+import { OrganizationLookupItem } from '../../../components/form/Lookup';
 import { PartnershipForm, PartnershipFormProps } from '../PartnershipForm';
 import { useCreatePartnershipMutation } from './CreatePartnership.generated';
 
+export interface CreatePartnershipFormInput {
+  partnership: Pick<
+    CreatePartnershipType,
+    'projectId' | 'types' | 'fundingType'
+  > & {
+    organizationId: OrganizationLookupItem;
+  };
+}
+
 export type CreatePartnershipProps = Except<
-  PartnershipFormProps<CreatePartnershipInput>,
+  PartnershipFormProps<CreatePartnershipFormInput>,
   'onSubmit'
->;
-export const CreatePartnership = (props: CreatePartnershipProps) => {
-  const [createLang] = useCreatePartnershipMutation();
-  const { enqueueSnackbar } = useSnackbar();
+> & {
+  projectId: CreatePartnershipType['projectId'];
+};
+export const CreatePartnership = ({
+  projectId,
+  ...props
+}: CreatePartnershipProps) => {
+  const [createPartnership] = useCreatePartnershipMutation();
 
   return (
-    <PartnershipForm<CreatePartnershipInput>
+    <PartnershipForm<CreatePartnershipFormInput>
       title="Create Language"
       {...props}
-      onSubmit={async (input) => {
-        const res = await createLang({
+      onSubmit={async ({ partnership }) => {
+        const input = {
+          partnership: {
+            ...partnership,
+            projectId,
+            organizationId: partnership.organizationId.id,
+          },
+        };
+        await createPartnership({
           variables: { input },
-          refetchQueries: [GQLOperations.Query.Languages],
+          refetchQueries: [GQLOperations.Query.ProjectPartnerships],
         });
-
-        const { partnership } = res.data!.createPartnership;
-
-        enqueueSnackbar(
-          `Created partnership with organization: ${partnership.organization.name.value}`,
-          {
-            variant: 'success',
-            action: () => (
-              <ButtonLink color="inherit" to={`/languages/${partnership.id}`}>
-                View
-              </ButtonLink>
-            ),
-          }
-        );
       }}
     />
   );
