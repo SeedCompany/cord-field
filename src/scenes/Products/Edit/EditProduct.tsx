@@ -8,14 +8,16 @@ import { handleFormError, UpdateProduct } from '../../../api';
 import { EngagementBreadcrumb } from '../../../components/EngagementBreadcrumb';
 import { ProjectBreadcrumb } from '../../../components/ProjectBreadcrumb';
 import { ProductForm, ProductFormCustomValues } from '../ProductForm';
+import { ScriptureRangeFragment } from '../ProductForm/ProductForm.generated';
 import {
-  ProductQuery,
   useProductQuery,
   useUpdateProductMutation,
 } from './EditProduct.generated';
 
-const removeScriptureTypename = (product: ProductQuery['product']) =>
-  product?.scriptureReferences?.value.map(
+const removeScriptureTypename = (
+  scriptureReferences: readonly ScriptureRangeFragment[]
+) =>
+  scriptureReferences.map(
     ({ start: { __typename, ...start }, end: { __typename: _, ...end } }) => ({
       start,
       end,
@@ -64,7 +66,9 @@ export const EditProduct = () => {
       //TODO: make sure these are shown when response is ready
       ...(product.__typename === 'DirectScriptureProduct'
         ? {
-            scriptureReferences: removeScriptureTypename(product),
+            scriptureReferences: removeScriptureTypename(
+              product.scriptureReferences.value
+            ),
             productType: product.__typename,
           }
         : product.__typename === 'DerivativeScriptureProduct' &&
@@ -73,10 +77,13 @@ export const EditProduct = () => {
             product.produces.value?.__typename === 'LiteracyMaterial' ||
             product.produces.value?.__typename === 'Story')
         ? {
-            scriptureReferences: removeScriptureTypename(product),
+            scriptureReferences: removeScriptureTypename(
+              product.scriptureReferencesOverride.value ??
+                product.produces.value.scriptureReferences.value
+            ),
             produces: {
-              id: product.produces.value?.id,
-              name: product.produces.value?.name,
+              id: product.produces.value.id,
+              name: product.produces.value.name,
             },
             productType: product.produces.value.__typename,
           }
