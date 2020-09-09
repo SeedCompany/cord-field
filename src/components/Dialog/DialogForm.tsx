@@ -20,6 +20,7 @@ import { Except, Promisable } from 'type-fest';
 import { ErrorHandlers, handleFormError } from '../../api';
 import {
   blurOnSubmit,
+  FieldGroup,
   focusFirstFieldRegistered,
   focusFirstFieldWithSubmitError,
   SubmitButton,
@@ -41,6 +42,9 @@ export type DialogFormProps<T, R = void> = Omit<
 
   /** Only call onSubmit if form is dirty, else just close dialog. */
   onlyDirtySubmit?: boolean;
+
+  /** A prefix for all form fields */
+  fieldsPrefix?: string;
 
   /**
    * A bit different than Final Form's onSubmit.
@@ -102,6 +106,7 @@ export function DialogForm<T, R = void>({
   errorHandlers,
   onClose,
   onExited,
+  fieldsPrefix,
   children,
   DialogProps = {},
   onSubmit,
@@ -129,7 +134,7 @@ export function DialogForm<T, R = void>({
       }}
     >
       {({ handleSubmit, submitting, form, ...rest }) => {
-        return (
+        const renderedForm = (
           <Dialog
             fullWidth
             maxWidth="xs"
@@ -184,6 +189,12 @@ export function DialogForm<T, R = void>({
               </DialogActions>
             </form>
           </Dialog>
+        );
+
+        return fieldsPrefix ? (
+          <FieldGroup prefix={fieldsPrefix}>{renderedForm}</FieldGroup>
+        ) : (
+          renderedForm
         );
       }}
     </Form>
