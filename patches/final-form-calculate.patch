@@ -1,0 +1,41 @@
+diff --git a/dist/index.d.ts b/dist/index.d.ts
+index a4c76ad06d0d80d9ede2373f7502f5340b70e87c..57ca07af05e9c5e9904db998849f0f1bcf40a7ec 100644
+--- a/dist/index.d.ts
++++ b/dist/index.d.ts
+@@ -4,25 +4,25 @@ export type FieldName = string
+ 
+ export type FieldPattern = FieldName | RegExp | FieldName[]
+ 
+-export type UpdatesByName = {
+-  [FieldName: string]: (value: any, allValues?: Object, prevValues?: Object) => any
++export type UpdatesByName<FormValues> = {
++  [FieldName: string]: (value: any, allValues: FormValues, prevValues: FormValues) => any
+ }
+ 
+-export type UpdatesForAll = (
++export type UpdatesForAll<FormValues> = (
+   value: any,
+   field: string,
+-  allValues?: Object,
+-  prevValues?: Object,
++  allValues?: FormValues,
++  prevValues?: FormValues,
+ ) => { [FieldName: string]: any }
+ 
+-export type Updates = UpdatesByName | UpdatesForAll
++export type Updates<FormValues> = UpdatesByName<FormValues> | UpdatesForAll<FormValues>
+ 
+-export type Calculation = {
++export type Calculation<FormValues> = {
+   field: FieldPattern,
+-  updates: Updates,
++  updates: Updates<FormValues>,
+   isEqual?: (a: any, b: any) => boolean,
+ }
+ 
+-export default function createDecorator(
+-  ...calculations: Calculation[]
+-): Decorator
++export default function createDecorator<FormValues, InitialFormValues = Partial<FormValues>>(
++  ...calculations: Calculation<FormValues>[]
++): Decorator<FormValues, InitialFormValues>
