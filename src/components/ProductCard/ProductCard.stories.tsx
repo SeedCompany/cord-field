@@ -70,7 +70,7 @@ const getProduct = () => {
       step: 1,
     });
     const scriptureRangeArray = [];
-    for (let i = 1; i <= scriptureCount; i++) {
+    for (const _ of new Array(scriptureCount)) {
       scriptureRangeArray.push(getScriptureRange());
     }
     return scriptureRangeArray;
