@@ -10,8 +10,13 @@ import {
 } from '@material-ui/core';
 import { FormApi } from 'final-form';
 import React, { ReactNode } from 'react';
-import { Form, FormProps, RenderableProps } from 'react-final-form';
-import { Promisable } from 'type-fest';
+import {
+  Form,
+  FormProps,
+  FormRenderProps,
+  RenderableProps,
+} from 'react-final-form';
+import { Except, Promisable } from 'type-fest';
 import { ErrorHandlers, handleFormError } from '../../api';
 import {
   blurOnSubmit,
@@ -64,7 +69,9 @@ export type DialogFormProps<T, R = void> = Omit<
   ) => void;
   onExited?: () => void;
   DialogProps?: Omit<DialogProps, 'open' | 'onClose' | 'onExited'>;
-  children?: ReactNode;
+  children?:
+    | ReactNode
+    | ((props: Except<FormRenderProps<T>, 'handleSubmit'>) => ReactNode);
 };
 
 const useStyles = makeStyles(() => ({
@@ -121,7 +128,7 @@ export function DialogForm<T, R = void>({
         }
       }}
     >
-      {({ handleSubmit, submitting, form }) => {
+      {({ handleSubmit, submitting, form, ...rest }) => {
         return (
           <Dialog
             fullWidth
@@ -144,7 +151,11 @@ export function DialogForm<T, R = void>({
               {title ? (
                 <DialogTitle id="dialog-form">{title}</DialogTitle>
               ) : null}
-              <DialogContent>{children}</DialogContent>
+              <DialogContent>
+                {typeof children === 'function'
+                  ? children({ form, submitting, ...rest })
+                  : children}
+              </DialogContent>
               <DialogActions>
                 {leftAction ? (
                   <>
