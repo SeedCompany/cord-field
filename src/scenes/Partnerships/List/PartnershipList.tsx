@@ -16,7 +16,7 @@ import { PartnershipCardFragment } from '../../../components/PartnershipCard/Par
 import { ProjectBreadcrumb } from '../../../components/ProjectBreadcrumb';
 import { listOrPlaceholders } from '../../../util';
 import { EditPartnership } from '../Edit';
-import { EditPartnershipFragment } from '../Edit/EditPartnership.generated';
+import { PartnershipFormFragment } from '../PartnershipForm';
 import { useProjectPartnershipsQuery } from './PartnershipList.generated';
 
 const useStyles = makeStyles(({ spacing, breakpoints }) => ({
@@ -49,7 +49,7 @@ export const PartnershipList: FC = () => {
   const partnerships = project?.partnerships;
 
   const [dialogState, openDialog, partnership] = useDialog<
-    Merge<PartnershipCardFragment, EditPartnershipFragment>
+    Merge<PartnershipCardFragment, PartnershipFormFragment>
   >();
 
   return (

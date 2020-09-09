@@ -1,0 +1,23 @@
+fragment PartnershipForm on Partnership {
+  id
+  types {
+    value
+    canEdit
+  }
+  agreementStatus {
+    value
+    canEdit
+  }
+  mouStatus {
+    value
+    canEdit
+  }
+  organization {
+    name {
+      value
+    }
+  }
+  fundingType {
+    value
+  }
+}

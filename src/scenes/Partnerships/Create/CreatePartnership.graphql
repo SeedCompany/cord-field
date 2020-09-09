@@ -1,0 +1,7 @@
+mutation CreatePartnership($input: CreatePartnershipInput!) {
+  createPartnership(input: $input) {
+    partnership {
+      ...PartnershipForm
+    }
+  }
+}
