@@ -14,17 +14,20 @@ import {
   useUpdatePartnershipMutation,
 } from './EditPartnership.generated';
 
+export type EditPartnershipFormInput = UpdatePartnershipInput &
+  SubmitAction<'delete'>;
+
 type EditPartnershipProps = Except<
-  PartnershipFormProps<UpdatePartnershipInput>,
+  PartnershipFormProps<EditPartnershipFormInput>,
   'onSubmit' | 'initialValues'
 > & {
   partnership: PartnershipFormFragment;
 };
 
-const clearFinancialReportingType: Decorator<UpdatePartnershipInput> = (
+const clearFinancialReportingType: Decorator<EditPartnershipFormInput> = (
   form
 ) => {
-  let prevValues: Partial<UpdatePartnershipInput> | undefined;
+  let prevValues: Partial<EditPartnershipFormInput> | undefined;
   return form.subscribe(
     ({ initialValues, values }) => {
       if (prevValues === undefined || prevValues !== initialValues) {
@@ -73,7 +76,7 @@ export const EditPartnership: FC<EditPartnershipProps> = (props) => {
   );
 
   return (
-    <PartnershipForm<UpdatePartnershipInput & SubmitAction<'delete'>>
+    <PartnershipForm<EditPartnershipFormInput>
       {...props}
       onSubmit={async (input) => {
         const refetchQueries = [GQLOperations.Query.ProjectPartnerships];

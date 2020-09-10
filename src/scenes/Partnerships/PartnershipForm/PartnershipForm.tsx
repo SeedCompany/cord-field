@@ -7,7 +7,6 @@ import {
   PartnershipFundingTypeList,
   PartnershipStatuses,
   PartnershipType,
-  UpdatePartnershipInput,
 } from '../../../api';
 import {
   DialogForm,
@@ -23,6 +22,7 @@ import {
 import { OrganizationField } from '../../../components/form/Lookup';
 import { Nullable } from '../../../util';
 import { CreatePartnershipFormInput } from '../Create';
+import { EditPartnershipFormInput } from '../Edit';
 import { PartnershipFormFragment } from './PartnershipForm.generated';
 
 export type PartnershipFormProps<T> = DialogFormProps<T> & {
@@ -33,7 +33,7 @@ export const hasManagingType = (types: Nullable<readonly PartnershipType[]>) =>
   types?.includes('Managing') ?? false;
 
 export const PartnershipForm = <
-  T extends CreatePartnershipFormInput | UpdatePartnershipInput
+  T extends CreatePartnershipFormInput | EditPartnershipFormInput
 >({
   partnership,
   ...rest
@@ -98,7 +98,7 @@ export const PartnershipForm = <
 };
 
 const FundingType = <
-  InputType extends CreatePartnershipFormInput | UpdatePartnershipInput
+  InputType extends CreatePartnershipFormInput | EditPartnershipFormInput
 >() => {
   const { values } = useFormState<InputType>();
   const managingTypeSelected = hasManagingType(values.partnership.types);
