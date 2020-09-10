@@ -106,7 +106,7 @@ export function DialogForm<T, R = void>({
   errorHandlers,
   onClose,
   onExited,
-  fieldsPrefix,
+  fieldsPrefix = '',
   children,
   DialogProps = {},
   onSubmit,
@@ -191,10 +191,10 @@ export function DialogForm<T, R = void>({
           </Dialog>
         );
 
-        return fieldsPrefix ? (
-          <FieldGroup prefix={fieldsPrefix}>{renderedForm}</FieldGroup>
-        ) : (
-          renderedForm
+        return (
+          <FieldGroup replace prefix={fieldsPrefix}>
+            {renderedForm}
+          </FieldGroup>
         );
       }}
     </Form>
