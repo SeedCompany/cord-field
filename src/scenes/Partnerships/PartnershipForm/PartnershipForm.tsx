@@ -47,7 +47,7 @@ export const PartnershipForm = <
   ));
 
   return (
-    <DialogForm<T> {...rest}>
+    <DialogForm<T> {...rest} fieldsPrefix="partnership">
       <SubmitError />
       {!partnership && (
         <OrganizationField
