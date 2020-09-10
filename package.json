@@ -28,6 +28,7 @@
     "clsx": "^1.1.1",
     "constate": "^2.0.0",
     "final-form": "patch:final-form@4.20.1#./patches/final-form.patch",
+    "final-form-calculate": "patch:final-form-calculate@1.3.2#./patches/final-form-calculate.patch",
     "history": "^5.0.0",
     "html-react-parser": "^0.13.0",
     "lodash": "^4.17.19",

@@ -7372,6 +7372,7 @@ __metadata:
     customize-cra: ^1.0.0
     eslint: ^7.6.0
     final-form: "patch:final-form@4.20.1#./patches/final-form.patch"
+    final-form-calculate: "patch:final-form-calculate@1.3.2#./patches/final-form-calculate.patch"
     graphql: ^15.3.0
     history: ^5.0.0
     html-react-parser: ^0.13.0
@@ -9979,6 +9980,24 @@ __metadata:
   dependencies:
     to-regex-range: ^5.0.1
   checksum: efca43d59b487ad4bc0b2b1cb9e51617c75a7b0159db51fa190c75c3d634ea5fad1ff4750d7c14346add4cd065e3c46e8f99af333edf2b4ec2a424f87e491a85
+  languageName: node
+  linkType: hard
+
+final-form-calculate@1.3.2:
+  version: 1.3.2
+  resolution: "final-form-calculate@npm:1.3.2"
+  peerDependencies:
+    final-form: ">=1.3.0"
+  checksum: 0187994e07cd09585beb08e4be6b97568c3a1e53f24de0bd66ebfa5b843addf514181a5b3e24fda50f64970b59b30492afc39fa3d7d5c5b30122309a7abc8ed7
+  languageName: node
+  linkType: hard
+
+"final-form-calculate@patch:final-form-calculate@1.3.2#./patches/final-form-calculate.patch::locator=cord-field%40workspace%3A.":
+  version: 1.3.2
+  resolution: "final-form-calculate@patch:final-form-calculate@npm%3A1.3.2#./patches/final-form-calculate.patch::version=1.3.2&hash=476077&locator=cord-field%40workspace%3A."
+  peerDependencies:
+    final-form: ">=1.3.0"
+  checksum: 8706985b7b0cbb92327c2aeb24e5324ded59e84ddaa2c23b8f6caf09ee1d189181c2472881b08c932aa61bbd1922aa9860eb9ac097c1fe76e5e6197b8c56f164
   languageName: node
   linkType: hard
 

@@ -10,11 +10,17 @@ import {
 } from '@material-ui/core';
 import { FormApi } from 'final-form';
 import React, { ReactNode } from 'react';
-import { Form, FormProps, RenderableProps } from 'react-final-form';
-import { Promisable } from 'type-fest';
+import {
+  Form,
+  FormProps,
+  FormRenderProps,
+  RenderableProps,
+} from 'react-final-form';
+import { Except, Promisable } from 'type-fest';
 import { ErrorHandlers, handleFormError } from '../../api';
 import {
   blurOnSubmit,
+  FieldGroup,
   focusFirstFieldRegistered,
   focusFirstFieldWithSubmitError,
   SubmitButton,
@@ -36,6 +42,9 @@ export type DialogFormProps<T, R = void> = Omit<
 
   /** Only call onSubmit if form is dirty, else just close dialog. */
   onlyDirtySubmit?: boolean;
+
+  /** A prefix for all form fields */
+  fieldsPrefix?: string;
 
   /**
    * A bit different than Final Form's onSubmit.
@@ -64,7 +73,9 @@ export type DialogFormProps<T, R = void> = Omit<
   ) => void;
   onExited?: () => void;
   DialogProps?: Omit<DialogProps, 'open' | 'onClose' | 'onExited'>;
-  children?: ReactNode;
+  children?:
+    | ReactNode
+    | ((props: Except<FormRenderProps<T>, 'handleSubmit'>) => ReactNode);
 };
 
 const useStyles = makeStyles(() => ({
@@ -95,6 +106,7 @@ export function DialogForm<T, R = void>({
   errorHandlers,
   onClose,
   onExited,
+  fieldsPrefix = '',
   children,
   DialogProps = {},
   onSubmit,
@@ -121,8 +133,8 @@ export function DialogForm<T, R = void>({
         }
       }}
     >
-      {({ handleSubmit, submitting, form }) => {
-        return (
+      {({ handleSubmit, submitting, form, ...rest }) => {
+        const renderedForm = (
           <Dialog
             fullWidth
             maxWidth="xs"
@@ -144,7 +156,11 @@ export function DialogForm<T, R = void>({
               {title ? (
                 <DialogTitle id="dialog-form">{title}</DialogTitle>
               ) : null}
-              <DialogContent>{children}</DialogContent>
+              <DialogContent>
+                {typeof children === 'function'
+                  ? children({ form, submitting, ...rest })
+                  : children}
+              </DialogContent>
               <DialogActions>
                 {leftAction ? (
                   <>
@@ -173,6 +189,12 @@ export function DialogForm<T, R = void>({
               </DialogActions>
             </form>
           </Dialog>
+        );
+
+        return (
+          <FieldGroup replace prefix={fieldsPrefix}>
+            {renderedForm}
+          </FieldGroup>
         );
       }}
     </Form>

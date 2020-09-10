@@ -6,19 +6,30 @@ import {
   TextField,
   TextFieldProps,
 } from '@material-ui/core';
-import { Autocomplete, AutocompleteProps, Value } from '@material-ui/lab';
+import {
+  Autocomplete,
+  AutocompleteProps,
+  createFilterOptions,
+  Value,
+} from '@material-ui/lab';
 import { camelCase } from 'camel-case';
-import { last, upperFirst } from 'lodash';
-import React, { ComponentType, useCallback, useEffect, useState } from 'react';
-import { Except, Merge, SetOptional } from 'type-fest';
+import { last, uniqBy, upperFirst } from 'lodash';
+import React, {
+  ComponentType,
+  useCallback,
+  useEffect,
+  useMemo,
+  useState,
+} from 'react';
+import { Except, SetOptional } from 'type-fest';
 import { isNetworkRequestInFlight } from '../../../api';
 import { useDialog } from '../../Dialog';
 import { DialogFormProps } from '../../Dialog/DialogForm';
 import { FieldConfig, useField, useFieldName } from '../index';
 import {
-  areListsEqual,
-  compareNullable,
   getHelperText,
+  isEqualBy,
+  isListEqualBy,
   showError,
   useFocusOnEnabled,
 } from '../util';
@@ -42,7 +53,10 @@ export type LookupFieldProps<
   FieldConfig<Value<T, Multiple, DisableClearable, false>>,
   'multiple' | 'allowNull' | 'parse' | 'format'
 > &
-  Pick<TextFieldProps, 'helperText' | 'label' | 'required' | 'autoFocus'> & {
+  Pick<
+    TextFieldProps,
+    'helperText' | 'label' | 'required' | 'autoFocus' | 'variant'
+  > & {
     name: string;
     useLookup: LookupQueryHook<T>;
     getCompareBy: (item: T) => any;
@@ -90,6 +104,7 @@ export function LookupField<
   getInitialValues,
   getCompareBy,
   getOptionLabel: getOptionLabelProp,
+  variant,
   ...props
 }: LookupFieldProps<T, Multiple, DisableClearable, CreateFormValues>) {
   const freeSolo = !!CreateDialogForm;
@@ -103,11 +118,7 @@ export function LookupField<
     required,
     allowNull: !multiple,
     defaultValue,
-    isEqual: compareNullable((a, b) =>
-      multiple
-        ? areListsEqual(a.map(getCompareBy), b.map(getCompareBy))
-        : getCompareBy(a) === getCompareBy(b)
-    ),
+    isEqual: multiple ? isListEqualBy(getCompareBy) : isEqualBy(getCompareBy),
   });
   const disabled = disabledProp ?? meta.submitting;
 
@@ -137,8 +148,8 @@ export function LookupField<
   // Not just for first load, but every network request
   const loading = isNetworkRequestInFlight(networkStatus);
 
-  const [createDialogState, createDialogItem, createDialogValue] = useDialog<
-    string
+  const [createDialogState, createDialogItem, createInitialValues] = useDialog<
+    Partial<CreateFormValues>
   >();
 
   useEffect(() => {
@@ -163,12 +174,24 @@ export function LookupField<
   // Only open popup if searching for item & focused
   const open = Boolean(input) && input !== selectedText && meta.active;
 
-  const options = [
-    ...(data?.search.items ?? []),
-    // Add currently selected items to options so prevent MUI warning
-    // They will be hidden via filterSelectedOptions
-    ...((multiple ? field.value : []) as T[]),
-  ];
+  // Augment results with currently selected items to indicate that
+  // they are still valid (and to prevent MUI warning)
+  const options = useMemo(() => {
+    const selected = multiple
+      ? (field.value as T[])
+      : (field.value as T | null)
+      ? [field.value as T]
+      : [];
+    if (!data?.search.items.length) {
+      return selected; // optimization for no results
+    }
+
+    const resultsWithCurrent = [...data.search.items, ...selected];
+
+    // Filter out duplicates caused by selected items also appearing in search results.
+    return uniqBy(resultsWithCurrent, getCompareBy);
+  }, [data?.search.items, field.value, getCompareBy, multiple]);
+
   const autocomplete = (
     <Autocomplete<T, Multiple, DisableClearable, typeof freeSolo>
       getOptionSelected={(a, b) => getCompareBy(a) === getCompareBy(b)}
@@ -185,9 +208,6 @@ export function LookupField<
       disabled={disabled}
       // FF also has multiple and defaultValue
       multiple={multiple}
-      // if we only have one value that can and has been selected, we don't
-      // want to hide it in the dropdown if we start deleting characters
-      filterSelectedOptions={multiple || input === selectedText}
       renderTags={(values: T[], getTagProps) =>
         values.map((option: T, index: number) => (
           <Chip
@@ -208,25 +228,31 @@ export function LookupField<
         return getOptionLabel(option);
       }}
       filterOptions={(options, params) => {
-        // If freeSolo we can add new options i.e. 'Add "X"'.
-        if (!freeSolo || loading) return options;
+        // Apply default filtering. Even though the API filters for us, we add
+        // the currently selected options back in because they are still valid
+        // but we don't want to show these options if the don't match the
+        // current input text.
+        // Note: `filterSelectedOptions` could still make sense either way
+        // separate from this code below. It could be thought of as a "stricter"
+        // filter that not only removes unrelated results but also related
+        // results that have already been selected.
+        const filtered = createFilterOptions<T>()(options, params);
 
-        const allOptions = [
-          ...options,
-          // selected option(s)
-          ...(multiple ? (field.value as T[]) : []),
-        ];
-
-        const allLabels = allOptions.map(getOptionLabel);
-
-        if (params.inputValue === '' || allLabels.includes(params.inputValue)) {
-          return options;
+        if (
+          !freeSolo ||
+          loading || // item could be returned with request in flight
+          params.inputValue === '' ||
+          filtered.map(getOptionLabel).includes(params.inputValue)
+        ) {
+          return filtered;
         }
-        // If the freeSolo value doesn't match an existing or previously selected option, add it to the list.
+
+        // If freeSolo is enabled and the input value doesn't match an existing
+        // or previously selected option, add it to the list. i.e. 'Add "X"'.
         return [
-          ...options,
-          // @ts-expect-error We want to allow strings for new options, which may differ from T.
-          // We handle them in renderOption.
+          ...filtered,
+          // @ts-expect-error We want to allow strings for new options,
+          // which may differ from T. We handle them in renderOption.
           params.inputValue as T,
         ];
       }}
@@ -250,7 +276,10 @@ export function LookupField<
             // Prevent creating while loading
             return;
           }
-          createDialogItem(lastItem);
+          const initialValues: Partial<CreateFormValues> = getInitialValues
+            ? getInitialValues(lastItem)
+            : {};
+          createDialogItem(initialValues);
           // Don't store the new value as a string in FF.
           // Wait till it's successfully created and returned from the API.
           return;
@@ -272,7 +301,7 @@ export function LookupField<
           inputRef={ref}
           error={showError(meta)}
           autoFocus={autoFocus}
-          // variant="outlined" TODO maybe for multiple?
+          variant={variant}
         />
       )}
     />
@@ -283,11 +312,7 @@ export function LookupField<
       {CreateDialogForm && (
         <CreateDialogForm
           {...createDialogState}
-          initialValues={
-            getInitialValues && createDialogValue
-              ? getInitialValues(createDialogValue)
-              : undefined
-          }
+          initialValues={createInitialValues}
           onSuccess={(newItem: T) => {
             field.onChange(
               multiple ? [...(field.value as T[]), newItem] : newItem
@@ -313,23 +338,21 @@ type SetOptionalIf<
 LookupField.createFor = <T extends { id: string }, CreateFormValues = never>({
   resource,
   ...config
-}: Merge<
-  Except<
-    SetOptionalIf<
-      SetOptional<
-        LookupFieldProps<T, any, any, CreateFormValues>,
-        'name' | 'getCompareBy'
-      >,
-      'getOptionLabel',
-      T,
-      StandardNamedObject
+}: SetOptionalIf<
+  SetOptional<
+    Except<
+      LookupFieldProps<T, any, any, CreateFormValues>,
+      'value' | 'defaultValue'
     >,
-    'value' | 'defaultValue'
+    'name' | 'getCompareBy'
   >,
-  {
-    resource: string;
-  }
->) => {
+  'getOptionLabel',
+  T,
+  StandardNamedObject
+> & {
+  resource: string;
+}) => {
+  const compareBy = config.getCompareBy ?? ((item: T) => item.id);
   const Comp = function <
     Multiple extends boolean | undefined,
     DisableClearable extends boolean | undefined
@@ -341,7 +364,7 @@ LookupField.createFor = <T extends { id: string }, CreateFormValues = never>({
   ) {
     return (
       <LookupField<T, Multiple, DisableClearable, CreateFormValues>
-        getCompareBy={(item) => item.id}
+        getCompareBy={compareBy}
         getOptionLabel={(item: StandardNamedObject) => item.name.value}
         {...(config as any)}
         {...props}
@@ -349,5 +372,7 @@ LookupField.createFor = <T extends { id: string }, CreateFormValues = never>({
     );
   };
   Comp.displayName = `Lookup(${upperFirst(camelCase(resource))})`;
+  Comp.isEqual = isEqualBy(compareBy);
+  Comp.isListEqual = isListEqualBy(compareBy);
   return Comp;
 };

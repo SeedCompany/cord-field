@@ -7,6 +7,7 @@ import {
   useRef,
 } from 'react';
 import { FieldMetaState, useFormState } from 'react-final-form';
+import { Nullable } from '../../util';
 
 export const useIsSubmitting = () => {
   const { submitting } = useFormState({ subscription: { submitting: true } });
@@ -72,12 +73,20 @@ export const useFocusOnEnabled = <
   return ref;
 };
 
+export const isEqualBy = <T>(compareBy: (item: T) => any) =>
+  compareNullable<T>((a, b) => compareBy(a) === compareBy(b));
+
+export const isListEqualBy = <T>(compareBy: (item: T) => any) =>
+  compareNullable<T[]>((a, b) =>
+    areListsEqual(a.map(compareBy), b.map(compareBy))
+  );
+
 export const areListsEqual = (a: any, b: any) =>
   isEmpty(difference(a, b)) && isEmpty(difference(b, a));
 
 export const compareNullable = <T>(fn: (a: T, b: T) => boolean) => (
-  a: T,
-  b: T
+  a: Nullable<T>,
+  b: Nullable<T>
 ) => {
   if (a == null && b == null) {
     return true;
@@ -85,5 +94,5 @@ export const compareNullable = <T>(fn: (a: T, b: T) => boolean) => (
   if ((a == null && b) || (a && b == null)) {
     return false;
   }
-  return fn(a, b);
+  return fn(a!, b!);
 };
