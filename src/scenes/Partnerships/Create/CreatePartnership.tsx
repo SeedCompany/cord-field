@@ -31,7 +31,7 @@ export const CreatePartnership = ({
 
   return (
     <PartnershipForm<CreatePartnershipFormInput>
-      title="Create Language"
+      title="Create Partnership"
       {...props}
       onSubmit={async ({ partnership }) => {
         const input = {
