@@ -12,7 +12,12 @@ import {
   DialogForm,
   DialogFormProps,
 } from '../../../components/Dialog/DialogForm';
-import { DateField, FieldGroup, SubmitError } from '../../../components/form';
+import {
+  DateField,
+  FieldGroup,
+  SubmitError,
+  TextField,
+} from '../../../components/form';
 import { AutocompleteField } from '../../../components/form/AutocompleteField';
 import { ExtractStrict, many, Many } from '../../../util';
 import { ProjectOverviewFragment } from '../Overview/ProjectOverview.generated';
@@ -21,7 +26,7 @@ import { useUpdateProjectMutation } from './UpdateProject.generated';
 export type EditableProjectField = ExtractStrict<
   keyof UpdateProject,
   // Add more fields here as needed
-  'step' | 'mouStart' | 'mouEnd'
+  'name' | 'step' | 'mouStart' | 'mouEnd'
 >;
 
 interface ProjectFieldProps {
@@ -35,6 +40,7 @@ const fieldMapping: Record<
   EditableProjectField,
   ComponentType<ProjectFieldProps>
 > = {
+  name: ({ props }) => <TextField {...props} label="Project Name" />,
   mouStart: ({ props }) => <DateField {...props} label="Start Date" />,
   mouEnd: ({ props }) => <DateField {...props} label="End Date" />,
   step: ({ props }) => (
@@ -75,6 +81,7 @@ export const UpdateProjectDialog = ({
       UpdateProjectInput['project'],
       'id'
     > = {
+      name: project.name.value,
       step: project.step.value,
       mouStart: project.mouStart.value,
       mouEnd: project.mouEnd.value,
@@ -95,6 +102,7 @@ export const UpdateProjectDialog = ({
   }, [
     editFields,
     project.id,
+    project.name.value,
     project.mouEnd.value,
     project.mouStart.value,
     project.step.value,
