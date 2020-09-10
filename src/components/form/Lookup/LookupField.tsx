@@ -148,8 +148,8 @@ export function LookupField<
   // Not just for first load, but every network request
   const loading = isNetworkRequestInFlight(networkStatus);
 
-  const [createDialogState, createDialogItem, createDialogValue] = useDialog<
-    string
+  const [createDialogState, createDialogItem, createInitialValues] = useDialog<
+    Partial<CreateFormValues>
   >();
 
   useEffect(() => {
@@ -276,7 +276,10 @@ export function LookupField<
             // Prevent creating while loading
             return;
           }
-          createDialogItem(lastItem);
+          const initialValues: Partial<CreateFormValues> = getInitialValues
+            ? getInitialValues(lastItem)
+            : {};
+          createDialogItem(initialValues);
           // Don't store the new value as a string in FF.
           // Wait till it's successfully created and returned from the API.
           return;
@@ -309,11 +312,7 @@ export function LookupField<
       {CreateDialogForm && (
         <CreateDialogForm
           {...createDialogState}
-          initialValues={
-            getInitialValues && createDialogValue
-              ? getInitialValues(createDialogValue)
-              : undefined
-          }
+          initialValues={createInitialValues}
           onSuccess={(newItem: T) => {
             field.onChange(
               multiple ? [...(field.value as T[]), newItem] : newItem
