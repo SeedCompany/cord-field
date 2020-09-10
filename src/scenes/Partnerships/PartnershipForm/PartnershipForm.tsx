@@ -1,4 +1,3 @@
-import { Box } from '@material-ui/core';
 import React from 'react';
 import { useFormState } from 'react-final-form';
 import {
@@ -68,9 +67,9 @@ export const PartnershipForm = <
           'Technical',
           'Resource',
         ] as PartnershipType[]).map((type: PartnershipType) => (
-          <Box width="50%" key={type}>
+          <div style={{ width: '50%' }} key={type}>
             <CheckboxOption key={type} label={type} value={type} />
-          </Box>
+          </div>
         ))}
       </CheckboxesField>
       <FundingType<T> />
