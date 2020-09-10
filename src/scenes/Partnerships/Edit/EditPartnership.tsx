@@ -78,17 +78,18 @@ export const EditPartnership: FC<EditPartnershipProps> = (props) => {
   return (
     <PartnershipForm<EditPartnershipFormInput>
       {...props}
-      onSubmit={async (input) => {
+      onlyDirtySubmit={false} // Lets us delete without changing any fields
+      onSubmit={async ({ submitAction, partnership }) => {
         const refetchQueries = [GQLOperations.Query.ProjectPartnerships];
-        if (input.submitAction === 'delete') {
+        if (submitAction === 'delete') {
           await deletePartnership({
-            variables: { input: input.partnership.id },
+            variables: { input: partnership.id },
             refetchQueries,
           });
           return;
         }
         await updatePartnership({
-          variables: { input },
+          variables: { input: { partnership } },
           refetchQueries,
         });
       }}
