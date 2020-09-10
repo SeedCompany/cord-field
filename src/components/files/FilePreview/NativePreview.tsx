@@ -1,6 +1,6 @@
 import { makeStyles } from '@material-ui/core';
-import React, { FC, useCallback, useEffect, useState } from 'react';
-import { PreviewerProps } from './FilePreview';
+import React, { FC } from 'react';
+import { NativePreviewerProps, NativePreviewType } from './FilePreview';
 import { PreviewLoading } from './PreviewLoading';
 
 const useStyles = makeStyles(() => ({
@@ -9,43 +9,18 @@ const useStyles = makeStyles(() => ({
   },
 }));
 
-export enum NativePreviewType {
-  Video = 'video',
-  Image = 'image',
-  Audio = 'audio',
-}
-
-type NativePreviewProps = PreviewerProps & {
-  type: NativePreviewType;
-};
-
-export const NativePreview: FC<NativePreviewProps> = (props) => {
+export const NativePreview: FC<NativePreviewerProps> = (props) => {
   const classes = useStyles();
-  const { file, type, previewLoading, setPreviewLoading } = props;
-  const [url, setUrl] = useState('');
-
-  const createUrlForFile = useCallback(
-    (file: File) => {
-      setUrl(URL.createObjectURL(file));
-      setPreviewLoading(false);
-    },
-    [setPreviewLoading]
-  );
-
-  useEffect(() => {
-    if (file) {
-      void createUrlForFile(file);
-    }
-  }, [file, createUrlForFile]);
+  const { file, type, previewLoading } = props;
 
   const unsupportedTypeMessage =
     'Your browser does not support this media type';
 
   const player = (type: NativePreviewType) => {
     return type === NativePreviewType.Image ? (
-      <img src={url} className={classes.media} alt="" />
+      <img src={file} className={classes.media} alt="" />
     ) : type === NativePreviewType.Audio ? (
-      <audio controls autoPlay src={url}>
+      <audio controls autoPlay src={file}>
         {unsupportedTypeMessage}
       </audio>
     ) : (
@@ -55,11 +30,11 @@ export const NativePreview: FC<NativePreviewProps> = (props) => {
         autoPlay
         controlsList="nodownload"
       >
-        <source src={url} />
+        <source src={file} />
         {unsupportedTypeMessage}
       </video>
     );
   };
 
-  return previewLoading ? <PreviewLoading /> : url ? player(type) : null;
+  return previewLoading ? <PreviewLoading /> : file ? player(type) : null;
 };
