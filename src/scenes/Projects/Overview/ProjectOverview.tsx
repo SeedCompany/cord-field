@@ -1,5 +1,5 @@
 import { Grid, makeStyles, Tooltip, Typography } from '@material-ui/core';
-import { Add, DateRange, Publish } from '@material-ui/icons';
+import { Add, DateRange, Edit, Publish } from '@material-ui/icons';
 import { Skeleton } from '@material-ui/lab';
 import React, { FC } from 'react';
 import { useDropzone } from 'react-dropzone';
@@ -41,6 +41,13 @@ const useStyles = makeStyles(({ spacing, breakpoints, palette }) => ({
     '& > *': {
       marginBottom: spacing(3),
     },
+  },
+  header: {
+    flex: 1,
+    display: 'flex',
+  },
+  name: {
+    marginRight: spacing(4),
   },
   container: {
     display: 'flex',
@@ -118,20 +125,31 @@ export const ProjectOverview: FC = () => {
         <Typography variant="h4">Error loading project</Typography>
       ) : (
         <div className={classes.main}>
-          <Typography variant="h2">
-            {data ? (
-              data.project.name.canRead ? (
-                data.project.name.value
+          <header className={classes.header}>
+            <Typography variant="h2" className={classes.name}>
+              {data ? (
+                data.project.name.canRead ? (
+                  data.project.name.value
+                ) : (
+                  <Redacted
+                    info="You do not have permission to view project's name"
+                    width="50%"
+                  />
+                )
               ) : (
-                <Redacted
-                  info="You do not have permission to view project's name"
-                  width="50%"
-                />
-              )
-            ) : (
-              <Skeleton width="50%" />
+                <Skeleton width="50%" />
+              )}
+            </Typography>
+            {data?.project.name.canEdit && (
+              <Fab
+                color="primary"
+                aria-label="edit project name"
+                onClick={() => editField(['name'])}
+              >
+                <Edit />
+              </Fab>
             )}
-          </Typography>
+          </header>
 
           <div className={classes.subheader}>
             <Typography variant="h4">
