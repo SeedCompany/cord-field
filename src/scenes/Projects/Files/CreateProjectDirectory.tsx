@@ -17,7 +17,7 @@ export const CreateProjectDirectory = (
   props: Except<CreateProjectDirectoryProps, 'onSubmit'>
 ) => {
   const [createDirectory] = useCreateProjectDirectoryMutation();
-  const { project, directoryId, loading } = useProjectCurrentDirectory();
+  const { project, directoryId } = useProjectCurrentDirectory();
   const { enqueueSnackbar } = useSnackbar();
 
   const onSubmit: CreateProjectDirectoryProps['onSubmit'] = async (
