@@ -119,6 +119,7 @@ const ProjectFilesListWrapped: FC = () => {
 
   const {
     loading: directoryLoading,
+    canRead: canReadRootDirectory,
     project,
     directoryId,
     rootDirectoryId,
@@ -137,6 +138,7 @@ const ProjectFilesListWrapped: FC = () => {
     onDrop: handleFilesDrop,
     noClick: true,
     noKeyboard: true,
+    disabled: !directoryId,
   });
 
   const isNotRootDirectory = directoryId !== rootDirectoryId;
@@ -268,7 +270,11 @@ const ProjectFilesListWrapped: FC = () => {
     }
   };
 
-  return directoryLoading ? null : (
+  return directoryLoading ? null : canReadRootDirectory === false ? (
+    <Typography color="textSecondary">
+      You do not have permission to see files for this project
+    </Typography>
+  ) : (
     <div className={classes.dropzone} {...getRootProps()}>
       <input {...getInputProps()} name="files_list_uploader" />
       {isDragActive && (

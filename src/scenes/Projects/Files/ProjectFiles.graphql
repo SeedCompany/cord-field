@@ -2,7 +2,11 @@ query ProjectRootDirectory($id: ID!) {
   project(id: $id) {
     ...ProjectBreadcrumb
     rootDirectory {
-      id
+      canEdit
+      canRead
+      value {
+        id
+      }
     }
   }
 }
