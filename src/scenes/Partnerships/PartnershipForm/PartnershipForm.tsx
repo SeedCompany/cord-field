@@ -3,9 +3,10 @@ import { useFormState } from 'react-final-form';
 import {
   displayPartnershipFundingType,
   displayPartnershipStatus,
+  PartnershipAgreementStatusList,
   PartnershipFundingTypeList,
-  PartnershipStatuses,
   PartnershipType,
+  PartnershipTypeList,
 } from '../../../api';
 import {
   DialogForm,
@@ -37,7 +38,8 @@ export const PartnershipForm = <
   partnership,
   ...rest
 }: PartnershipFormProps<T>) => {
-  const radioOptions = PartnershipStatuses.map((status) => (
+  console.log('partnership', partnership);
+  const radioOptions = PartnershipAgreementStatusList.map((status) => (
     <RadioOption
       key={status}
       label={displayPartnershipStatus(status)}
@@ -49,10 +51,7 @@ export const PartnershipForm = <
     <DialogForm<T> {...rest} fieldsPrefix="partnership">
       <SubmitError />
       {!partnership && (
-        <OrganizationField
-          name="partnership.organizationId"
-          required
-        />
+        <OrganizationField name="partnership.organizationId" required />
       )}
       <CheckboxesField
         name="partnership.types"
@@ -60,13 +59,7 @@ export const PartnershipForm = <
         row
         disabled={partnership ? !partnership.types.canEdit : false}
       >
-        {([
-          'Managing',
-          'Funding',
-          'Impact',
-          'Technical',
-          'Resource',
-        ] as PartnershipType[]).map((type: PartnershipType) => (
+        {PartnershipTypeList.map((type: PartnershipType) => (
           <div style={{ width: '50%' }} key={type}>
             <CheckboxOption key={type} label={type} value={type} />
           </div>
