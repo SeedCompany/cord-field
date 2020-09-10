@@ -7,12 +7,10 @@ import {
 import { Add } from '@material-ui/icons';
 import React, { FC } from 'react';
 import { useParams } from 'react-router-dom';
-import { Merge } from 'type-fest';
 import { Breadcrumb } from '../../../components/Breadcrumb';
 import { useDialog } from '../../../components/Dialog';
 import { Fab } from '../../../components/Fab';
 import { PartnershipCard } from '../../../components/PartnershipCard';
-import { PartnershipCardFragment } from '../../../components/PartnershipCard/PartnershipCard.generated';
 import { ProjectBreadcrumb } from '../../../components/ProjectBreadcrumb';
 import { listOrPlaceholders } from '../../../util';
 import { CreatePartnership } from '../Create';
@@ -51,7 +49,7 @@ export const PartnershipList: FC = () => {
 
   const [createDialogState, openCreateDialog] = useDialog();
   const [editDialogState, openEditDialog, partnership] = useDialog<
-    Merge<PartnershipCardFragment, PartnershipFormFragment>
+    PartnershipFormFragment
   >();
 
   return (
