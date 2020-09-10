@@ -52,7 +52,6 @@ export const PartnershipForm = <
       {!partnership && (
         <OrganizationField
           name="partnership.organizationId"
-          label="Organization"
           required
         />
       )}
