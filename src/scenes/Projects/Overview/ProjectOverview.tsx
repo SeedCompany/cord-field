@@ -143,7 +143,7 @@ export const ProjectOverview: FC = () => {
             {data?.project.name.canEdit && (
               <Fab
                 color="primary"
-                aria-label="edit language"
+                aria-label="edit project name"
                 onClick={() => editField(['name'])}
               >
                 <Edit />
