@@ -65,7 +65,7 @@ export const PartnershipCard: FC<PartnershipCardProps> = ({
             <DisplaySimpleProperty
               label="Funding Type"
               value={displayFinancialReportingType(
-                partnership?.fundingType.value
+                partnership?.financialReportingType.value
               )}
               loading={!partnership}
               loadingWidth="40%"

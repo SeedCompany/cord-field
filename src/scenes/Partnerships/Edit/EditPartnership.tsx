@@ -42,7 +42,9 @@ type EditPartnershipProps = Except<
 const hasManagingType = (types: Nullable<readonly PartnershipType[]>) =>
   types?.includes('Managing') ?? false;
 
-const clearFundingType: Decorator<UpdatePartnershipInput> = (form) => {
+const clearFinancialReportingType: Decorator<UpdatePartnershipInput> = (
+  form
+) => {
   let prevValues: Partial<UpdatePartnershipInput> | undefined;
   return form.subscribe(
     ({ initialValues, values }) => {
@@ -54,7 +56,7 @@ const clearFundingType: Decorator<UpdatePartnershipInput> = (form) => {
         !hasManagingType(values.partnership.types)
       ) {
         // @ts-expect-error types don't account for nesting
-        form.change('partnership.fundingType', null);
+        form.change('partnership.financialReportingType', null);
       }
       prevValues = values;
     },
@@ -65,7 +67,7 @@ const clearFundingType: Decorator<UpdatePartnershipInput> = (form) => {
   );
 };
 
-const decorators = [clearFundingType];
+const decorators = [clearFinancialReportingType];
 
 export const EditPartnership: FC<EditPartnershipProps> = ({
   partnership,
@@ -89,12 +91,12 @@ export const EditPartnership: FC<EditPartnershipProps> = ({
         agreementStatus: partnership.agreementStatus.value ?? 'NotAttached',
         mouStatus: partnership.mouStatus.value ?? 'NotAttached',
         types: partnership.types.value,
-        fundingType: partnership.fundingType.value,
+        financialReportingType: partnership.financialReportingType.value,
       },
     }),
     [
       partnership.agreementStatus.value,
-      partnership.fundingType.value,
+      partnership.financialReportingType.value,
       partnership.id,
       partnership.mouStatus.value,
       partnership.types.value,
@@ -151,7 +153,7 @@ export const EditPartnership: FC<EditPartnershipProps> = ({
           </Box>
         ))}
       </CheckboxesField>
-      <FundingType />
+      <FinancialReportingType />
       <RadioField
         name="partnership.agreementStatus"
         label="Agreement Status"
@@ -170,13 +172,13 @@ export const EditPartnership: FC<EditPartnershipProps> = ({
   );
 };
 
-const FundingType = () => {
+const FinancialReportingType = () => {
   const { values } = useFormState<UpdatePartnershipInput>();
   const managingTypeSelected = hasManagingType(values.partnership.types);
 
   return managingTypeSelected ? (
     <RadioField
-      name="partnership.fundingType"
+      name="partnership.financialReportingType"
       label="Funding Type"
       fullWidth
       row
