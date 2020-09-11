@@ -78,7 +78,7 @@ export const EditPartnership: FC<EditPartnershipProps> = (props) => {
   return (
     <PartnershipForm<EditPartnershipFormInput>
       {...props}
-      onlyDirtySubmit={false} // Lets us delete without changing any fields
+      onlyDirtySubmit="delete" // Lets us delete without changing any fields
       onSubmit={async ({ submitAction, partnership }) => {
         const refetchQueries = [GQLOperations.Query.ProjectPartnerships];
         if (submitAction === 'delete') {

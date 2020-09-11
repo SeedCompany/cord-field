@@ -41,7 +41,7 @@ export type DialogFormProps<T, R = void> = Omit<
   CloseProps?: ButtonProps;
 
   /** Only call onSubmit if form is dirty, else just close dialog. */
-  onlyDirtySubmit?: boolean;
+  onlyDirtySubmit?: boolean | string;
 
   /** A prefix for all form fields */
   fieldsPrefix?: string;
@@ -119,17 +119,24 @@ export function DialogForm<T, R = void>({
       decorators={defaultDecorators}
       {...FormProps}
       onSubmit={async (data, form) => {
-        if (onlyDirtySubmit && !form.getState().dirty) {
+        const submitAction = (data as any).submitAction;
+        if (
+          (onlyDirtySubmit === true && !form.getState().dirty) ||
+          (typeof onlyDirtySubmit === 'string' &&
+            onlyDirtySubmit !== submitAction)
+        ) {
           onClose?.('cleanSubmit', form);
           return null;
         }
-        try {
-          const res = await onSubmit(data, form);
-          onSuccess?.(res);
-          onClose?.('success', form);
-          return null;
-        } catch (e) {
-          return await handleFormError(e, errorHandlers);
+        if (!onlyDirtySubmit || onlyDirtySubmit === submitAction) {
+          try {
+            const res = await onSubmit(data, form);
+            onSuccess?.(res);
+            onClose?.('success', form);
+            return null;
+          } catch (e) {
+            return await handleFormError(e, errorHandlers);
+          }
         }
       }}
     >
