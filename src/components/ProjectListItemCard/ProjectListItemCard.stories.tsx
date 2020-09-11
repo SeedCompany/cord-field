@@ -19,7 +19,7 @@ export const ProjectListItemCard = () => {
     ),
     sensitivity: select('sensitivity', ['High', 'Low', 'Medium'], 'High'),
     modifiedAt: dateTime('modifiedAt'),
-    deptId: { value: text('deptId', '1234567') },
+    departmentId: { value: text('departmentId', '1234567') },
     estimatedSubmission: {
       value: date('estimatedSubmission'),
     },

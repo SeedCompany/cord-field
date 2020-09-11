@@ -182,7 +182,7 @@ export const ProjectOverview: FC = () => {
               <DisplaySimpleProperty
                 loading={!data}
                 label="Department ID"
-                value={data?.project.deptId.value}
+                value={data?.project.departmentId.value}
                 loadingWidth={100}
                 LabelProps={{ color: 'textSecondary' }}
                 ValueProps={{ color: 'textPrimary' }}

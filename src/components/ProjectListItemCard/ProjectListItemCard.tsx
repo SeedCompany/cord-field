@@ -115,7 +115,7 @@ export const ProjectListItemCard: FC<ProjectListItemCardProps> = ({
             <DisplaySimpleProperty
               loading={!project}
               label="Department ID"
-              value={project?.deptId.value}
+              value={project?.departmentId.value}
               wrap={(node) => <Grid item>{node}</Grid>}
             />
             <Grid item>
