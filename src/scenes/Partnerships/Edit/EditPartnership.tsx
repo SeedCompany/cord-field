@@ -4,10 +4,10 @@ import React, { FC, useMemo } from 'react';
 import { useFormState } from 'react-final-form';
 import { Except } from 'type-fest';
 import {
-  displayPartnershipFundingType,
+  displayFinancialReportingType,
   displayPartnershipStatus,
+  FinancialReportingTypeList,
   GQLOperations,
-  PartnershipFundingTypeList,
   PartnershipStatuses,
   PartnershipType,
   UpdatePartnershipInput,
@@ -181,11 +181,11 @@ const FundingType = () => {
       fullWidth
       row
     >
-      {PartnershipFundingTypeList.map((type) => (
+      {FinancialReportingTypeList.map((type) => (
         <RadioOption
           key={type}
           value={type}
-          label={displayPartnershipFundingType(type)}
+          label={displayFinancialReportingType(type)}
         />
       ))}
     </RadioField>

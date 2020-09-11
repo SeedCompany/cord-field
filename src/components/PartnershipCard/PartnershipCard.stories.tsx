@@ -1,7 +1,7 @@
 import { action } from '@storybook/addon-actions';
 import { select, text } from '@storybook/addon-knobs';
 import React from 'react';
-import { PartnershipFundingTypeList, PartnershipStatuses } from '../../api';
+import { FinancialReportingTypeList, PartnershipStatuses } from '../../api';
 import { csv } from '../../util';
 import { dateTime } from '../knobs.stories';
 import { PartnershipCard } from './PartnershipCard';
@@ -26,7 +26,7 @@ export const WithData = () => {
       value: select('Mou Status', PartnershipStatuses, 'NotAttached'),
     },
     fundingType: {
-      value: select('Funding Type', PartnershipFundingTypeList, 'Funded'),
+      value: select('Funding Type', FinancialReportingTypeList, 'Funded'),
     },
   };
 
