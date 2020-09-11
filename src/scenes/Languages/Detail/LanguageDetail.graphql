@@ -37,18 +37,13 @@ fragment LanguageDetail on Language {
   registryOfDialectsCode {
     ...ss
   }
-  sponsorDate {
+  sponsorStartDate {
     canRead
     canEdit
     value
   }
   sensitivity
   avatarLetters
-  beginFiscalYear {
-    canRead
-    canEdit
-    value
-  }
   population {
     canRead
     canEdit

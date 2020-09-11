@@ -141,8 +141,8 @@ export const LanguageDetail = () => {
             loading={!language}
           />
           <DisplayProperty
-            label="Sponsor Date"
-            value={formatDateTime(language?.sponsorDate.value)}
+            label="Sponsor Start Date"
+            value={formatDateTime(language?.sponsorStartDate.value)}
             loading={!language}
           />
           <Grid container spacing={3}>
