@@ -1,7 +1,7 @@
 import { Container, makeStyles } from '@material-ui/core';
 import React from 'react';
 import { Except } from 'type-fest';
-import { displayRole, Role, Roles } from '../../../../api';
+import { displayRole, Role, RoleList } from '../../../../api';
 import {
   DialogForm,
   DialogFormProps,
@@ -72,7 +72,7 @@ export const UpdateProjectMember = ({
         <AutocompleteField
           fullWidth
           multiple
-          options={Roles}
+          options={RoleList}
           getOptionLabel={displayRole}
           name="projectMember.roles"
           label="Roles"
