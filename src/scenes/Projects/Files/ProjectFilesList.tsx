@@ -150,12 +150,13 @@ const ProjectFilesListWrapped: FC = () => {
     skip: !directoryId,
   });
 
-  const parents = data?.directory.parents ?? [];
-  const breadcrumbsParents = parents.slice(0, -1);
+  const parents = data?.directory.parents;
+  const breadcrumbsParents = parents?.slice(0, -1) ?? [];
 
   const directoryIsNotInProject =
     !directoryLoading &&
     isNotRootDirectory &&
+    parents &&
     !parents.some((parent) => parent.id === rootDirectoryId);
 
   const items = directoryIsNotInProject ? [] : data?.directory.children.items;
