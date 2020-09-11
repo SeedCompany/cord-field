@@ -15,7 +15,7 @@ import {
 } from '../../../components/form';
 import { UserFormFragment } from './UserForm.generated';
 
-export type UserFormProps<T> = DialogFormProps<T> & {
+export type UserFormProps<T, R = void> = DialogFormProps<T, R> & {
   /** The pre-existing user to edit */
   user?: UserFormFragment;
   prefix: string;
@@ -27,12 +27,12 @@ const decorators = memoize((prefix: string) => [
   matchFieldIfSame(`${prefix}.realLastName`, `${prefix}.displayLastName`),
 ]);
 
-export const UserForm = <T extends any>({
+export const UserForm = <T, R = void>({
   user,
   prefix,
   ...rest
-}: UserFormProps<T>) => (
-  <DialogForm<T>
+}: UserFormProps<T, R>) => (
+  <DialogForm<T, R>
     DialogProps={{
       maxWidth: 'sm',
     }}

@@ -4,10 +4,16 @@ import { Except } from 'type-fest';
 import { CreatePersonInput, GQLOperations } from '../../../api';
 import { ButtonLink } from '../../../components/Routing';
 import { UserForm, UserFormProps } from '../UserForm';
-import { useCreatePersonMutation } from './CreateUser.generated';
+import {
+  CreatePersonMutation,
+  useCreatePersonMutation,
+} from './CreateUser.generated';
 
 export type CreateUserProps = Except<
-  UserFormProps<CreatePersonInput>,
+  UserFormProps<
+    CreatePersonInput,
+    CreatePersonMutation['createPerson']['user']
+  >,
   'prefix' | 'onSubmit'
 >;
 
@@ -16,17 +22,9 @@ export const CreateUser = (props: CreateUserProps) => {
   const { enqueueSnackbar } = useSnackbar();
 
   return (
-    <UserForm<CreatePersonInput>
+    <UserForm
       title="Create Person"
-      {...props}
-      prefix="person"
-      onSubmit={async (input) => {
-        const { data } = await createPerson({
-          variables: { input },
-          refetchQueries: [GQLOperations.Query.Users],
-        });
-        const user = data!.createPerson.user;
-
+      onSuccess={(user) => {
         enqueueSnackbar(`Created person: ${user.fullName}`, {
           variant: 'success',
           action: () => (
@@ -35,6 +33,15 @@ export const CreateUser = (props: CreateUserProps) => {
             </ButtonLink>
           ),
         });
+      }}
+      {...props}
+      prefix="person"
+      onSubmit={async (input) => {
+        const { data } = await createPerson({
+          variables: { input },
+          refetchQueries: [GQLOperations.Query.Users],
+        });
+        return data!.createPerson.user;
       }}
     />
   );
