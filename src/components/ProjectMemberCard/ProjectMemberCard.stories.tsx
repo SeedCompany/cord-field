@@ -15,6 +15,7 @@ const projectMember: ProjectMemberCardFragment = {
   createdAt: DateTime.local(),
   user: {
     value: {
+      id: '123',
       fullName: 'Julius Cassin',
       avatarLetters: 'JC',
     },

@@ -24,7 +24,6 @@ export const EditLanguage = (props: EditLanguageProps) => {
               displayNamePronunciation: language.displayNamePronunciation.value,
               isDialect: language.isDialect.value,
               ethnologue: {
-                id: language.ethnologue.id.value,
                 code: language.ethnologue.code.value,
                 provisionalCode: language.ethnologue.provisionalCode.value,
                 name: language.ethnologue.name.value,
