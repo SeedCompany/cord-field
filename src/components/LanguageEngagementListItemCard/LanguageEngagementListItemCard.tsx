@@ -131,6 +131,7 @@ export const LanguageEngagementListItemCard: FC<LanguageEngagementListItemCardPr
                       variant="body2"
                       color="textSecondary"
                       className={classes.centerItems}
+                      key={product.id}
                     >
                       {/* TODO Product naming & mapping to icons */}
                       <ScriptIcon className={classes.iconSpacing} />
