@@ -11,4 +11,8 @@ query UserLookup($query: String!) {
 fragment UserLookupItem on User {
   id
   fullName
+  roles {
+    canRead
+    value
+  }
 }
