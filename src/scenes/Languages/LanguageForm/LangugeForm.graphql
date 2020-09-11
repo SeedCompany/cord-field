@@ -15,9 +15,6 @@ fragment LanguageForm on Language {
     canEdit
   }
   ethnologue {
-    id {
-      ...ss
-    }
     name {
       ...ss
     }

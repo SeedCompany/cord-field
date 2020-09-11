@@ -161,7 +161,6 @@ export const LanguageForm = <T extends any>({
             language?.ethnologue,
             true,
             'name',
-            'id',
             'code',
             'provisionalCode',
             'population'
@@ -178,19 +177,6 @@ export const LanguageForm = <T extends any>({
                         <TextField
                           label="Ethnologue Name"
                           placeholder="Enter Ethnologue Name"
-                          validate={minLength()}
-                          margin="none"
-                          {...props}
-                        />
-                      </Grid>
-                    )}
-                  </SecuredField>
-                  <SecuredField obj={language?.ethnologue} name="id">
-                    {(props) => (
-                      <Grid item xs={12} sm={6}>
-                        <TextField
-                          label="Ethnologue ID"
-                          placeholder="Enter Ethnologue ID"
                           validate={minLength()}
                           margin="none"
                           {...props}
