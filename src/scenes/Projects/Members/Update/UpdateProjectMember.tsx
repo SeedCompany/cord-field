@@ -1,4 +1,5 @@
-import { Container, makeStyles } from '@material-ui/core';
+import { Container } from '@material-ui/core';
+import { Skeleton } from '@material-ui/lab';
 import React from 'react';
 import { Except } from 'type-fest';
 import { displayRole, Role, RoleList } from '../../../../api';
@@ -29,22 +30,15 @@ type UpdateProjectMemberProps = Except<
   userRoles?: readonly Role[];
 };
 
-const useStyles = makeStyles({
-  container: {
-    width: 400,
-  },
-});
-
 export const UpdateProjectMember = ({
   id,
   userId,
   userRoles,
   ...props
 }: UpdateProjectMemberProps) => {
-  const classes = useStyles();
   const [updateProjectMember] = useUpdateProjectMemberMutation();
 
-  const { data } = useGetUserRolesQuery({
+  const { data, loading } = useGetUserRolesQuery({
     variables: {
       userId,
     },
@@ -66,19 +60,25 @@ export const UpdateProjectMember = ({
       onSubmit={async (input) => {
         await updateProjectMember({ variables: { input } });
       }}
+      fieldsPrefix="projectMember"
     >
-      <Container className={classes.container}>
+      <Container>
         <SubmitError />
-        <AutocompleteField
-          fullWidth
-          multiple
-          options={RoleList}
-          getOptionLabel={displayRole}
-          name="projectMember.roles"
-          label="Roles"
-          getOptionDisabled={(option) => !availableRoles.includes(option)}
-          variant="outlined"
-        />
+
+        {loading ? (
+          <Skeleton />
+        ) : (
+          <AutocompleteField
+            fullWidth
+            multiple
+            options={RoleList}
+            getOptionLabel={displayRole}
+            name="roles"
+            label="Roles"
+            getOptionDisabled={(option) => !availableRoles.includes(option)}
+            variant="outlined"
+          />
+        )}
       </Container>
     </DialogForm>
   );
