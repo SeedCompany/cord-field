@@ -3,14 +3,17 @@ fragment PartnershipForm on Partnership {
   types {
     value
     canEdit
+    canRead
   }
   agreementStatus {
     value
     canEdit
+    canRead
   }
   mouStatus {
     value
     canEdit
+    canRead
   }
   organization {
     name {
@@ -19,5 +22,7 @@ fragment PartnershipForm on Partnership {
   }
   fundingType {
     value
+    canEdit
+    canRead
   }
 }

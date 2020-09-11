@@ -17,6 +17,7 @@ import {
   CheckboxOption,
   RadioField,
   RadioOption,
+  SecuredField,
   SubmitError,
 } from '../../../components/form';
 import { OrganizationField } from '../../../components/form/Lookup';
@@ -47,41 +48,46 @@ export const PartnershipForm = <
     />
   ));
 
+  const typesCheckboxes = PartnershipTypeList.map((type: PartnershipType) => (
+    <div style={{ width: '50%' }} key={type}>
+      <CheckboxOption key={type} label={type} value={type} />
+    </div>
+  ));
+
   return (
     <DialogForm<T> {...rest} fieldsPrefix="partnership">
       <SubmitError />
-      {!partnership && (
-        <OrganizationField name="partnership.organizationId" required />
+      {!partnership && <OrganizationField name="organizationId" required />}
+      {partnership ? (
+        <SecuredField obj={partnership} name="types">
+          {(props) => (
+            <CheckboxesField label="Types" row {...props}>
+              {typesCheckboxes}
+            </CheckboxesField>
+          )}
+        </SecuredField>
+      ) : (
+        <CheckboxesField label="Types" row name="types">
+          {typesCheckboxes}
+        </CheckboxesField>
       )}
-      <CheckboxesField
-        name="partnership.types"
-        label="Types"
-        row
-        disabled={partnership ? !partnership.types.canEdit : false}
-      >
-        {PartnershipTypeList.map((type: PartnershipType) => (
-          <div style={{ width: '50%' }} key={type}>
-            <CheckboxOption key={type} label={type} value={type} />
-          </div>
-        ))}
-      </CheckboxesField>
-      <FundingType<T> />
+      <FundingType<T> partnership={partnership} />
       {partnership && (
         <>
-          <RadioField
-            name="partnership.agreementStatus"
-            label="Agreement Status"
-            disabled={!partnership.agreementStatus.canEdit}
-          >
-            {radioOptions}
-          </RadioField>
-          <RadioField
-            name="partnership.mouStatus"
-            label="Mou Status"
-            disabled={!partnership.mouStatus.canEdit}
-          >
-            {radioOptions}
-          </RadioField>
+          <SecuredField obj={partnership} name="agreementStatus">
+            {(props) => (
+              <RadioField label="Agreement Status" {...props}>
+                {radioOptions}
+              </RadioField>
+            )}
+          </SecuredField>
+          <SecuredField obj={partnership} name="mouStatus">
+            {(props) => (
+              <RadioField label="Mou Status" {...props}>
+                {radioOptions}
+              </RadioField>
+            )}
+          </SecuredField>
         </>
       )}
     </DialogForm>
@@ -90,24 +96,35 @@ export const PartnershipForm = <
 
 const FundingType = <
   InputType extends CreatePartnershipFormInput | EditPartnershipFormInput
->() => {
+>({
+  partnership,
+}: {
+  partnership: PartnershipFormProps<InputType>['partnership'];
+}) => {
   const { values } = useFormState<InputType>();
   const managingTypeSelected = hasManagingType(values.partnership.types);
 
+  const radioOptions = PartnershipFundingTypeList.map((type) => (
+    <RadioOption
+      key={type}
+      value={type}
+      label={displayPartnershipFundingType(type)}
+    />
+  ));
+
   return managingTypeSelected ? (
-    <RadioField
-      name="partnership.fundingType"
-      label="Funding Type"
-      fullWidth
-      row
-    >
-      {PartnershipFundingTypeList.map((type) => (
-        <RadioOption
-          key={type}
-          value={type}
-          label={displayPartnershipFundingType(type)}
-        />
-      ))}
-    </RadioField>
+    partnership ? (
+      <SecuredField obj={partnership} name="fundingType">
+        {(props) => (
+          <RadioField label="Funding Type" fullWidth row {...props}>
+            {radioOptions}
+          </RadioField>
+        )}
+      </SecuredField>
+    ) : (
+      <RadioField name="fundingType" label="Funding Type" fullWidth row>
+        {radioOptions}
+      </RadioField>
+    )
   ) : null;
 };
