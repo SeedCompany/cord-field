@@ -21,6 +21,8 @@ export default {
 };
 
 const derivativeScriptureProducts = [
+  'DirectScriptureProduct',
+  'DerivativeScriptureProduct',
   'Song',
   'Story',
   'Film',
@@ -127,6 +129,7 @@ const getProduct = () => {
           value: text('Producible Name', 'My Childhood Story'),
         },
         createdAt: DateTime.local(),
+        scriptureReferences: sharedValues.scriptureReferences,
       },
     },
     scriptureReferencesOverride: {
