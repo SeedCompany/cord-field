@@ -7,6 +7,7 @@ export function useDialog<T = never>() {
     // Don't store events. This allows the show function to be passed directly
     // as an event handler.
     const isEvent =
+      item &&
       typeof ((item as unknown) as SyntheticEvent).persist === 'function';
     if (!isEvent) {
       setItem(item);
