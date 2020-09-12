@@ -15,7 +15,9 @@ import { Breadcrumb } from '../../../components/Breadcrumb';
 import { useDialog } from '../../../components/Dialog';
 import {
   FileActionsPopup as ActionsMenu,
+  FileAction,
   FileActionsContextProvider,
+  getPermittedFileActions,
   useFileActions,
 } from '../../../components/files/FileActions';
 import {
@@ -242,18 +244,31 @@ const ProjectFilesListWrapped: FC = () => {
     {
       title: '',
       field: 'item',
-      render: (rowData: FileRowData) => (
-        <ActionsMenu
-          item={rowData.item}
-          onVersionUpload={(files) =>
-            uploadProjectFiles({
-              files,
-              parentId: rowData.item.id,
-              action: 'version',
-            })
-          }
-        />
-      ),
+      render: (rowData: FileRowData) => {
+        const permittedActions = getPermittedFileActions(
+          !!canReadRootDirectory,
+          !!canReadRootDirectory
+        );
+        const directoryActions = permittedActions.filter(
+          (action) =>
+            action === FileAction.Rename || action === FileAction.Delete
+        );
+        return (
+          <ActionsMenu
+            actions={
+              rowData.type === 'Directory' ? directoryActions : permittedActions
+            }
+            item={rowData.item}
+            onVersionUpload={(files) =>
+              uploadProjectFiles({
+                files,
+                parentId: rowData.item.id,
+                action: 'version',
+              })
+            }
+          />
+        );
+      },
       sorting: false,
       cellStyle: {
         padding: spacing(0.5),
@@ -359,7 +374,7 @@ const ProjectFilesListWrapped: FC = () => {
 };
 
 export const ProjectFilesList: FC = () => (
-  <FileActionsContextProvider context="project">
+  <FileActionsContextProvider>
     <ProjectFilesListWrapped />
   </FileActionsContextProvider>
 );

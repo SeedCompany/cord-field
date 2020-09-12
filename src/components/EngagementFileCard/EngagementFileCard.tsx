@@ -13,6 +13,7 @@ import { InternshipEngagementDetailFragment as InternshipEngagement } from '../.
 import { LanguageEngagementDetailFragment as LanguageEngagement } from '../../scenes/Engagement/LanguageEngagement';
 import {
   FileActionsPopup as ActionsMenu,
+  getPermittedFileActions,
   useFileActions,
 } from '../files/FileActions';
 import { useDateFormatter } from '../Formatters';
@@ -160,9 +161,9 @@ export const EngagementFileCard: FC<EngagementFileCardProps> = (props) => {
         <div className={classes.actionsMenu}>
           {file && (
             <ActionsMenu
+              actions={getPermittedFileActions(canRead, canEdit)}
               item={file}
               onVersionUpload={handleVersionUpload}
-              canEdit={canEdit}
             />
           )}
         </div>

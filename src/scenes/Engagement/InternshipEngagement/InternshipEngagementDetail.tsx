@@ -285,7 +285,7 @@ export const InternshipEngagementDetailWrapped: FC<EngagementQuery> = ({
 };
 
 export const InternshipEngagementDetail: FC<EngagementQuery> = (props) => (
-  <FileActionsContextProvider context="engagement">
+  <FileActionsContextProvider>
     <InternshipEngagementDetailWrapped {...props} />
   </FileActionsContextProvider>
 );

@@ -264,7 +264,7 @@ const LanguageEngagementDetailWrapped: FC<EngagementQuery> = ({
 };
 
 export const LanguageEngagementDetail: FC<EngagementQuery> = (props) => (
-  <FileActionsContextProvider context="engagement">
+  <FileActionsContextProvider>
     <LanguageEngagementDetailWrapped {...props} />
   </FileActionsContextProvider>
 );
