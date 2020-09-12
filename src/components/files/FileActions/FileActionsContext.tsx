@@ -1,35 +1,24 @@
 import React, { createContext, FC, useContext, useState } from 'react';
-import { Directory, File, GQLOperations } from '../../../api';
-import { InternshipEngagementDetailFragment as InternshipEngagement } from '../../../scenes/Engagement/InternshipEngagement';
-import { LanguageEngagementDetailFragment as LanguageEngagement } from '../../../scenes/Engagement/LanguageEngagement';
-import {
-  ProjectDirectoryDirectory,
-  ProjectDirectoryFile,
-} from '../../../scenes/Projects/Files';
+import { GQLOperations } from '../../../api';
 import { useDialog } from '../../Dialog';
 import { FilePreview } from '../FilePreview';
-import { FileVersionItem_FileVersion_Fragment as FileVersion } from '../FileVersionItem';
+import {
+  FileNodeInfo_Directory_Fragment as Directory,
+  FileNodeInfo_File_Fragment as File,
+  FileNodeInfoFragment as FileNode,
+  FileNodeInfo_FileVersion_Fragment as FileVersion,
+} from '../files.generated';
 import { useDownloadFile } from '../hooks';
 import { DeleteFile } from './DeleteFile';
 import { FileVersions } from './FileVersions';
 import { RenameFile } from './RenameFile';
 
-type GrowthPlan = NonNullable<InternshipEngagement['growthPlan']['value']>;
-type PNP = NonNullable<LanguageEngagement['pnp']['value']>;
+export type FilesActionItem = FileNode;
 
-export type FilesActionItem =
-  | File
-  | Directory
-  | ProjectDirectoryDirectory
-  | ProjectDirectoryFile
-  | FileVersion
-  | GrowthPlan
-  | PNP;
-
-export type FileActionItem = File | ProjectDirectoryFile | GrowthPlan | PNP;
+export type FileActionItem = File;
 export type VersionActionItem = FileVersion;
 export type NonVersionActionItem = Exclude<FilesActionItem, VersionActionItem>;
-export type DirectoryActionItem = Directory | ProjectDirectoryDirectory;
+export type DirectoryActionItem = Directory;
 export type NonDirectoryActionItem = Exclude<
   FilesActionItem,
   DirectoryActionItem
