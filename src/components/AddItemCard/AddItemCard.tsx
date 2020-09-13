@@ -41,7 +41,13 @@ const useStyles = makeStyles(({ spacing }) => ({
   },
 }));
 
-interface AddItemDropzoneCard {
+interface AddItemCardBaseProps {
+  canAdd: boolean;
+  className?: string;
+  itemType: string;
+}
+
+interface AddItemDropzoneCard extends AddItemCardBaseProps {
   actionType: 'dropzone';
   DropzoneProps?: {
     options?: DropzoneOptions;
@@ -50,27 +56,18 @@ interface AddItemDropzoneCard {
   handleFileSelect: (files: File[]) => void;
 }
 
-interface AddItemModalCard {
+interface AddItemModalCard extends AddItemCardBaseProps {
   actionType: 'dialog';
   onClick: () => void;
 }
 
-interface AddItemCardSharedProps {
-  canAdd: boolean;
-  className?: string;
-  itemType: string;
-}
-
-type AddItemCardProps = (AddItemDropzoneCard | AddItemModalCard) &
-  AddItemCardSharedProps;
+type AddItemCardProps = AddItemDropzoneCard | AddItemModalCard;
 
 export const AddItemCard: FC<AddItemCardProps> = (props) => {
   const classes = useStyles();
   const { actionType, canAdd, className, itemType } = props;
 
-  const isDropzone = (
-    props: AddItemCardProps
-  ): props is AddItemDropzoneCard & AddItemCardSharedProps =>
+  const isDropzone = (props: AddItemCardProps): props is AddItemDropzoneCard =>
     props.actionType === 'dropzone';
 
   const dropzoneOptions = isDropzone(props)
@@ -94,7 +91,7 @@ export const AddItemCard: FC<AddItemCardProps> = (props) => {
     >
       {isDropzone(props) && (
         <>
-          <input {...getInputProps()} name="pnp_version_uploader" />
+          <input {...getInputProps()} name="defined_file_version_uploader" />
           <DropzoneOverlay
             classes={props.DropzoneProps?.classes}
             isDragActive={isDragActive}
