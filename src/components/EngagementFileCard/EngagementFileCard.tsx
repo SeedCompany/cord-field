@@ -13,6 +13,7 @@ import { InternshipEngagementDetailFragment as InternshipEngagement } from '../.
 import { LanguageEngagementDetailFragment as LanguageEngagement } from '../../scenes/Engagement/LanguageEngagement';
 import {
   FileActionsPopup as ActionsMenu,
+  FileAction,
   getPermittedFileActions,
   useFileActions,
 } from '../files/FileActions';
@@ -99,6 +100,12 @@ export const EngagementFileCard: FC<EngagementFileCardProps> = (props) => {
   const { id } = engagement;
 
   const { canRead, canEdit } = document;
+  const standardFileActions = getPermittedFileActions(canRead, canEdit);
+  // PNPs/Growth Plans are always named "PNP" or "Growth Plan"
+  const permittedFileActions = standardFileActions.filter(
+    (action) => action !== FileAction.Rename
+  );
+
   const file = document.value;
   const formatDate = useDateFormatter();
   const { openFilePreview } = useFileActions();
@@ -161,7 +168,7 @@ export const EngagementFileCard: FC<EngagementFileCardProps> = (props) => {
         <div className={classes.actionsMenu}>
           {file && (
             <ActionsMenu
-              actions={getPermittedFileActions(canRead, canEdit)}
+              actions={permittedFileActions}
               item={file}
               onVersionUpload={handleVersionUpload}
             />
