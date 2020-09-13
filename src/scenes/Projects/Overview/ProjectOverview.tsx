@@ -13,6 +13,7 @@ import { useDialog } from '../../../components/Dialog';
 import { DisplaySimpleProperty } from '../../../components/DisplaySimpleProperty';
 import { Fab } from '../../../components/Fab';
 import { FilesOverviewCard } from '../../../components/files/FilesOverviewCard';
+import { useUploadFiles } from '../../../components/files/hooks';
 import {
   useDateFormatter,
   useDateTimeFormatter,
@@ -26,7 +27,10 @@ import { Redacted } from '../../../components/Redacted';
 import { Many } from '../../../util';
 import { CreateInternshipEngagement } from '../../Engagement/InternshipEngagement/Create/CreateInternshipEngagement';
 import { CreateLanguageEngagement } from '../../Engagement/LanguageEngagement/Create/CreateLanguageEngagement';
-import { useProjectCurrentDirectory, useUploadProjectFiles } from '../Files';
+import {
+  useHandleProjectFilesUploadCompleted,
+  useProjectCurrentDirectory,
+} from '../Files';
 import { EditableProjectField, UpdateProjectDialog } from '../Update';
 import {
   useProjectEngagementListOverviewQuery,
@@ -90,10 +94,11 @@ export const ProjectOverview: FC = () => {
     loading: directoryIdLoading,
     canRead: canReadDirectoryId,
   } = useProjectCurrentDirectory();
-  const uploadProjectFiles = useUploadProjectFiles();
+  const uploadFiles = useUploadFiles();
+  const handleUploadCompleted = useHandleProjectFilesUploadCompleted();
 
   const handleDrop = (files: File[]) => {
-    uploadProjectFiles({ files, parentId: directoryId });
+    uploadFiles({ files, handleUploadCompleted, parentId: directoryId });
   };
 
   const { getRootProps, getInputProps, open: openFileBrowser } = useDropzone({

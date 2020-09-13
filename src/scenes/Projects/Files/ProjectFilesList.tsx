@@ -101,12 +101,12 @@ const ProjectFilesListWrapped: FC = () => {
     rootDirectoryId,
   } = useProjectCurrentDirectory();
 
-  const uploadProjectFiles = useUploadProjectFiles();
+  const uploadFiles = useUploadProjectFiles();
 
   const [createDirectoryState, createDirectory] = useDialog();
 
   const handleDrop = (files: File[]) => {
-    uploadProjectFiles({ files, parentId: directoryId });
+    uploadFiles({ files, parentId: directoryId });
   };
 
   const {
@@ -246,7 +246,7 @@ const ProjectFilesListWrapped: FC = () => {
             }
             item={rowData.item}
             onVersionUpload={(files) =>
-              uploadProjectFiles({
+              uploadFiles({
                 action: 'version',
                 files,
                 parentId: rowData.item.id,
