@@ -18,6 +18,7 @@ import {
   FileAction,
   FileActionsContextProvider,
   getPermittedFileActions,
+  isFileVersion,
   useFileActions,
 } from '../../../components/files/FileActions';
 import {
@@ -170,12 +171,6 @@ const ProjectFilesListWrapped: FC = () => {
     fileNode: FileNodeInfoFragment
   ): fileNode is FileNodeInfo_Directory_Fragment => {
     return fileNode.__typename === 'Directory';
-  };
-
-  const isFileVersion = (
-    fileNode: FileNodeInfoFragment
-  ): fileNode is FileNodeInfo_FileVersion_Fragment => {
-    return fileNode.__typename === 'FileVersion';
   };
 
   const rowData =

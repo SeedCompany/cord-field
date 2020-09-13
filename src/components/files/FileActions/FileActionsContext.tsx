@@ -15,8 +15,8 @@ import { RenameFile } from './RenameFile';
 
 /**
  * Strictly speaking, we don't totally need to re-declare these,
- * but we're playing it safe in case we need to expand the types
- * allowed to be used with `FileActionsContext` later.
+ * but we're playing it safe in case we need to later expand the
+ * types allowed to be used with `FileActionsContext`.
  */
 export type FilesActionItem = FileNode;
 
