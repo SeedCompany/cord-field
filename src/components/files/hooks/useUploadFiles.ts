@@ -7,6 +7,11 @@ export interface UploadFilesInput {
   parentId: string;
 }
 
+export type UploadFilesConsumerInput = Omit<
+  UploadFilesInput,
+  'handleUploadCompleted'
+>;
+
 export interface HandleUploadCompletedInput
   extends Omit<UploadFilesInput, 'files' | 'handleUploadCompleted'> {
   name: string;
@@ -14,6 +19,9 @@ export interface HandleUploadCompletedInput
 }
 
 type UploadFilesFunction = (input: UploadFilesInput) => void;
+export type UploadFilesConsumerFunction = (
+  input: UploadFilesConsumerInput
+) => void;
 
 export type HandleUploadCompletedFunction = (
   input: HandleUploadCompletedInput

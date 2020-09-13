@@ -21,7 +21,6 @@ import { useDialog } from '../../../components/Dialog';
 import { Fab } from '../../../components/Fab';
 import { FieldOverviewCard } from '../../../components/FieldOverviewCard';
 import { FileActionsContextProvider } from '../../../components/files/FileActions';
-import { useUploadFiles } from '../../../components/files/hooks';
 import {
   useDateFormatter,
   useDateTimeFormatter,
@@ -37,7 +36,7 @@ import {
   EditEngagementDialog,
 } from '../EditEngagement/EditEngagementDialog';
 import { EngagementQuery } from '../Engagement.generated';
-import { useHandleEngagementFileUploadCompleted } from '../Files';
+import { useUploadEngagementFile } from '../Files';
 
 const useStyles = makeStyles(({ spacing, breakpoints, palette }) => ({
   root: {
@@ -61,10 +60,7 @@ const LanguageEngagementDetailWrapped: FC<EngagementQuery> = ({
   engagement,
 }) => {
   const classes = useStyles();
-  const uploadFile = useUploadFiles();
-  const handleUploadCompleted = useHandleEngagementFileUploadCompleted(
-    'language'
-  );
+  const uploadFile = useUploadEngagementFile('language');
 
   const [editState, show, editField] = useDialog<
     Many<EditableEngagementField>
@@ -219,11 +215,7 @@ const LanguageEngagementDetailWrapped: FC<EngagementQuery> = ({
                   actionType="dropzone"
                   canAdd={pnp.canEdit}
                   handleFileSelect={(files: File[]) =>
-                    uploadFile({
-                      files,
-                      handleUploadCompleted,
-                      parentId: engagement.id,
-                    })
+                    uploadFile({ files, parentId: engagement.id })
                   }
                   itemType="PNP"
                 />
@@ -233,7 +225,6 @@ const LanguageEngagementDetailWrapped: FC<EngagementQuery> = ({
                     uploadFile({
                       action: 'version',
                       files,
-                      handleUploadCompleted,
                       parentId: engagement.id,
                     })
                   }

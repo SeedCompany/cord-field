@@ -1,5 +1,10 @@
 import { GQLOperations } from '../../../api';
-import { HandleUploadCompletedFunction } from '../../../components/files/hooks';
+import {
+  HandleUploadCompletedFunction,
+  UploadFilesConsumerFunction,
+  UploadFilesConsumerInput,
+  useUploadFiles,
+} from '../../../components/files/hooks';
 import {
   useUploadInternshipEngagementGrowthPlanMutation,
   useUploadLanguageEngagementPnpMutation,
@@ -7,11 +12,14 @@ import {
 
 type EngagementType = 'language' | 'internship';
 
-export const useHandleEngagementFileUploadCompleted = (
+export const useUploadEngagementFile = (
   engagementType: EngagementType
-): HandleUploadCompletedFunction => {
+): UploadFilesConsumerFunction => {
+  const uploadFiles = useUploadFiles();
+
   const [uploadPnp] = useUploadLanguageEngagementPnpMutation();
   const [uploadGrowthPlan] = useUploadInternshipEngagementGrowthPlanMutation();
+
   const uploadFile =
     engagementType === 'language' ? uploadPnp : uploadGrowthPlan;
 
@@ -34,5 +42,13 @@ export const useHandleEngagementFileUploadCompleted = (
       ],
     });
   };
-  return handleUploadCompleted;
+
+  const uploadEngagementFile = ({
+    action,
+    files,
+    parentId,
+  }: UploadFilesConsumerInput) =>
+    uploadFiles({ action, files, handleUploadCompleted, parentId });
+
+  return uploadEngagementFile;
 };

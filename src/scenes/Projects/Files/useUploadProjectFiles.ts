@@ -1,8 +1,14 @@
 import { GQLOperations } from '../../../api';
 import { useCreateFileVersionMutation } from '../../../components/files/FileActions';
-import { HandleUploadCompletedFunction } from '../../../components/files/hooks';
+import {
+  HandleUploadCompletedFunction,
+  UploadFilesConsumerFunction,
+  UploadFilesConsumerInput,
+  useUploadFiles,
+} from '../../../components/files/hooks';
 
-export const useHandleProjectFilesUploadCompleted = (): HandleUploadCompletedFunction => {
+export const useUploadProjectFiles = (): UploadFilesConsumerFunction => {
+  const uploadFiles = useUploadFiles();
   const [createFileVersion] = useCreateFileVersionMutation();
 
   const handleUploadCompleted: HandleUploadCompletedFunction = async ({
@@ -25,5 +31,13 @@ export const useHandleProjectFilesUploadCompleted = (): HandleUploadCompletedFun
       ],
     });
   };
-  return handleUploadCompleted;
+
+  const uploadProjectFiles = ({
+    action,
+    files,
+    parentId,
+  }: UploadFilesConsumerInput) =>
+    uploadFiles({ action, files, handleUploadCompleted, parentId });
+
+  return uploadProjectFiles;
 };
