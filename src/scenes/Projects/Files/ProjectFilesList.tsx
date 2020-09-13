@@ -23,7 +23,6 @@ import {
 } from '../../../components/files/FileActions';
 import {
   FileNodeInfo_Directory_Fragment,
-  FileNodeInfo_File_Fragment,
   FileNodeInfo_FileVersion_Fragment,
   FileNodeInfoFragment,
 } from '../../../components/files/files.generated';
@@ -80,15 +79,7 @@ const useStyles = makeStyles(({ palette, spacing, breakpoints }) => ({
   },
 }));
 
-export type ProjectDirectoryDirectory = Exclude<
-  ProjectDirectoryFileNodeFragment,
-  FileNodeInfo_FileVersion_Fragment | FileNodeInfo_File_Fragment
->;
-export type ProjectDirectoryFile = Exclude<
-  ProjectDirectoryFileNodeFragment,
-  FileNodeInfo_Directory_Fragment | FileNodeInfo_FileVersion_Fragment
->;
-export type ProjectDirectoryNonVersion = Exclude<
+type ProjectDirectoryNonVersion = Exclude<
   ProjectDirectoryFileNodeFragment,
   FileNodeInfo_FileVersion_Fragment
 >;
