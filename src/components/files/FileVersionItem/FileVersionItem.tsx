@@ -47,10 +47,14 @@ export const FileVersionItem: FC<FileVersionItemProps> = (props) => {
    * allow for new versions of Versions or for viewing the history of a
    * Version.
    */
-  const menuActions = actions.filter(
-    (action) =>
-      action !== FileAction.History && action !== FileAction.NewVersion
-  );
+  const menuActions = [
+    ...new Set(
+      actions.filter(
+        (action) =>
+          action !== FileAction.History && action !== FileAction.NewVersion
+      )
+    ),
+  ];
 
   const { createdAt, createdBy, name } = version;
   const Icon = fileIcon(version.mimeType);
