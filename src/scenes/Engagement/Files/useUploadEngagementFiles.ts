@@ -1,5 +1,5 @@
 import { GQLOperations } from '../../../api';
-import { UploadCallback, useUpload } from '../../../components/Upload';
+import { HandleUploadCompletedFunction } from '../../../components/files/hooks';
 import {
   useUploadInternshipEngagementGrowthPlanMutation,
   useUploadLanguageEngagementPnpMutation,
@@ -7,25 +7,7 @@ import {
 
 type EngagementType = 'language' | 'internship';
 
-interface UploadEngagementFileInput {
-  files: File[];
-  engagementId: string;
-  action?: Parameters<UploadCallback>[2];
-}
-
-interface HandleUploadCompletedInput
-  extends Omit<UploadEngagementFileInput, 'files'> {
-  uploadId: string;
-  name: string;
-}
-
-type UploadProjectFilesFunction = (input: UploadEngagementFileInput) => void;
-
-type HandleUploadCompletedFunction = (
-  input: HandleUploadCompletedInput
-) => Promise<void>;
-
-export const useHandleUploadCompleted = (
+export const useHandleEngagementFileUploadCompleted = (
   engagementType: EngagementType
 ): HandleUploadCompletedFunction => {
   const [uploadPnp] = useUploadLanguageEngagementPnpMutation();
@@ -36,7 +18,7 @@ export const useHandleUploadCompleted = (
   const handleUploadCompleted: HandleUploadCompletedFunction = async ({
     uploadId,
     name,
-    engagementId: id,
+    parentId: id,
     action,
   }) => {
     await uploadFile({
@@ -53,30 +35,4 @@ export const useHandleUploadCompleted = (
     });
   };
   return handleUploadCompleted;
-};
-
-export const useUploadEngagementFiles = (
-  engagementType: EngagementType
-): UploadProjectFilesFunction => {
-  const { addFilesToUploadQueue } = useUpload();
-
-  const handleUploadCompleted = useHandleUploadCompleted(engagementType);
-
-  const uploadProjectFiles: UploadProjectFilesFunction = ({
-    files,
-    engagementId,
-    action,
-  }) => {
-    const fileInputs = files.map((file) => ({
-      file,
-      fileName: file.name,
-      callback: (
-        uploadId: Parameters<UploadCallback>[0],
-        name: Parameters<UploadCallback>[1]
-      ) => handleUploadCompleted({ uploadId, name, engagementId, action }),
-    }));
-    addFilesToUploadQueue(fileInputs);
-  };
-
-  return uploadProjectFiles;
 };

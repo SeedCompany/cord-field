@@ -27,6 +27,7 @@ import {
   FileNodeInfoFragment,
 } from '../../../components/files/files.generated';
 import { fileIcon } from '../../../components/files/fileTypes';
+import { useUploadFiles } from '../../../components/files/hooks';
 import {
   formatFileSize,
   parseFileNameAndExtension,
@@ -42,7 +43,7 @@ import {
   useProjectDirectoryQuery,
 } from './ProjectFiles.generated';
 import { useProjectCurrentDirectory } from './useProjectCurrentDirectory';
-import { useUploadProjectFiles } from './useUploadProjectFiles';
+import { useHandleProjectFilesUploadCompleted } from './useUploadProjectFiles';
 
 const useStyles = makeStyles(({ palette, spacing, breakpoints }) => ({
   dropzone: {
@@ -101,12 +102,13 @@ const ProjectFilesListWrapped: FC = () => {
     rootDirectoryId,
   } = useProjectCurrentDirectory();
 
-  const uploadProjectFiles = useUploadProjectFiles();
+  const uploadFiles = useUploadFiles();
+  const handleUploadCompleted = useHandleProjectFilesUploadCompleted();
 
   const [createDirectoryState, createDirectory] = useDialog();
 
   const handleDrop = (files: File[]) => {
-    uploadProjectFiles({ files, parentId: directoryId });
+    uploadFiles({ files, handleUploadCompleted, parentId: directoryId });
   };
 
   const {
@@ -246,10 +248,11 @@ const ProjectFilesListWrapped: FC = () => {
             }
             item={rowData.item}
             onVersionUpload={(files) =>
-              uploadProjectFiles({
-                files,
-                parentId: rowData.item.id,
+              uploadFiles({
                 action: 'version',
+                files,
+                handleUploadCompleted,
+                parentId: rowData.item.id,
               })
             }
           />
