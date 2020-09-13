@@ -8,15 +8,14 @@ import { Skeleton } from '@material-ui/lab';
 import { DateTime } from 'luxon';
 import React, { FC } from 'react';
 import { useDropzone } from 'react-dropzone';
-import { useUploadEngagementFiles } from '../../scenes/Engagement/Files';
-import { InternshipEngagementDetailFragment as InternshipEngagement } from '../../scenes/Engagement/InternshipEngagement';
-import { LanguageEngagementDetailFragment as LanguageEngagement } from '../../scenes/Engagement/LanguageEngagement';
+import { Secured } from '../../api';
 import {
   FileActionsPopup as ActionsMenu,
   FileAction,
   getPermittedFileActions,
   useFileActions,
 } from '../files/FileActions';
+import { FileNodeInfo_File_Fragment as FileNode } from '../files/files.generated';
 import { useDateFormatter } from '../Formatters';
 import { HugeIcon, ReportIcon } from '../Icons';
 import { Redacted } from '../Redacted';
@@ -56,17 +55,25 @@ const useStyles = makeStyles(({ palette, spacing, typography }) => ({
   },
 }));
 
-export interface EngagementFileCardProps {
-  engagement: LanguageEngagement | InternshipEngagement;
+export interface DefinedFileCardProps {
+  onVersionUpload: (files: File[]) => void;
+  resourceType: string;
+  securedFile: Secured<FileNode>;
 }
 
 interface FileCardMetaProps {
   canRead: boolean;
   loading: boolean;
+  resourceType: DefinedFileCardProps['resourceType'];
   text: string;
 }
 
-const FileCardMeta: FC<FileCardMetaProps> = ({ canRead, loading, text }) => {
+const FileCardMeta: FC<FileCardMetaProps> = ({
+  canRead,
+  loading,
+  resourceType,
+  text,
+}) => {
   const classes = useStyles();
   return (
     <Typography
@@ -78,7 +85,9 @@ const FileCardMeta: FC<FileCardMetaProps> = ({ canRead, loading, text }) => {
       {loading ? (
         <Skeleton />
       ) : !canRead ? (
-        <Redacted info="You do not have permission to view files for this engagement" />
+        <Redacted
+          info={`You do not have permission to view files for this ${resourceType}`}
+        />
       ) : (
         text
       )}
@@ -86,38 +95,23 @@ const FileCardMeta: FC<FileCardMetaProps> = ({ canRead, loading, text }) => {
   );
 };
 
-const isLanguage = (
-  engagement: LanguageEngagement | InternshipEngagement
-): engagement is LanguageEngagement =>
-  engagement.__typename === 'LanguageEngagement';
-
-export const EngagementFileCard: FC<EngagementFileCardProps> = (props) => {
+export const DefinedFileCard: FC<DefinedFileCardProps> = (props) => {
   const classes = useStyles();
-  const { engagement } = props;
-  const document = isLanguage(engagement)
-    ? engagement.pnp
-    : engagement.growthPlan;
-  const { id } = engagement;
+  const { onVersionUpload, resourceType, securedFile } = props;
 
-  const { canRead, canEdit } = document;
+  const { canRead, canEdit } = securedFile;
   const standardFileActions = getPermittedFileActions(canRead, canEdit);
-  // PNPs/Growth Plans are always named "PNP" or "Growth Plan"
+  // Defined Files seem like they'll probably always have fixed names
   const permittedFileActions = standardFileActions.filter(
     (action) => action !== FileAction.Rename
   );
 
-  const file = document.value;
+  const file = securedFile.value;
   const formatDate = useDateFormatter();
   const { openFilePreview } = useFileActions();
-  const uploadFile = useUploadEngagementFiles(
-    isLanguage(engagement) ? 'language' : 'internship'
-  );
-
-  const handleVersionUpload = (files: File[]) =>
-    uploadFile({ files, engagementId: id, action: 'version' });
 
   const { getRootProps, getInputProps, isDragActive } = useDropzone({
-    onDrop: handleVersionUpload,
+    onDrop: onVersionUpload,
     disabled: !canEdit,
     multiple: false,
     noClick: true,
@@ -136,7 +130,7 @@ export const EngagementFileCard: FC<EngagementFileCardProps> = (props) => {
 
   return (
     <Card {...getRootProps()} className={classes.root}>
-      <input {...getInputProps()} name="engagement_file_version_uploader" />
+      <input {...getInputProps()} name="defined_file_version_uploader" />
       <DropzoneOverlay
         classes={{ text: classes.dropzoneText }}
         isDragActive={isDragActive}
@@ -154,13 +148,15 @@ export const EngagementFileCard: FC<EngagementFileCardProps> = (props) => {
           </Typography>
           <FileCardMeta
             canRead={canRead}
-            text={`Updated by ${fullName}`}
             loading={!file}
+            resourceType={resourceType}
+            text={`Updated by ${fullName}`}
           />
           <FileCardMeta
             canRead={canRead}
-            text={formatDate(modifiedAt)}
             loading={!file}
+            resourceType={resourceType}
+            text={formatDate(modifiedAt)}
           />
         </div>
       </CardActionArea>
@@ -170,7 +166,7 @@ export const EngagementFileCard: FC<EngagementFileCardProps> = (props) => {
             <ActionsMenu
               actions={permittedFileActions}
               item={file}
-              onVersionUpload={handleVersionUpload}
+              onVersionUpload={onVersionUpload}
             />
           )}
         </div>

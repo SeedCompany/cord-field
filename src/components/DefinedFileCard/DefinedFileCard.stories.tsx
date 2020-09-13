@@ -1,16 +1,16 @@
 import { Box } from '@material-ui/core';
-import { text } from '@storybook/addon-knobs';
+import { action } from '@storybook/addon-actions';
+import { boolean, text } from '@storybook/addon-knobs';
 import { DateTime } from 'luxon';
 import React from 'react';
-import { LanguageEngagement } from '../../api';
 import { dateTime } from '../knobs.stories';
-import { EngagementFileCard as Card } from './EngagementFileCard';
+import { DefinedFileCard as Card } from './DefinedFileCard';
 
 export default {
-  title: 'Components/Engagement File Card',
+  title: 'Components/Defined File Card',
 };
 
-export const EngagementFileCard = () => {
+export const DefinedFileCard = () => {
   const createdByUser = {
     id: '9876',
     displayFirstName: {
@@ -34,10 +34,10 @@ export const EngagementFileCard = () => {
     size: 6000,
     id: '12345',
     createdAt: DateTime.local(),
+    createdBy: createdByUser,
     type: 'File' as const,
     category: 'Document' as const,
-    name: 'Language PnP',
-    createdBy: createdByUser,
+    name: 'PNP',
     modifiedAt: new Date(),
     modifiedBy: modifiedByUser,
     downloadUrl: '',
@@ -47,10 +47,10 @@ export const EngagementFileCard = () => {
     size: 6000,
     id: '12345',
     createdAt: DateTime.local(),
+    createdBy: createdByUser,
     type: 'File' as const,
     category: 'Document' as const,
-    name: text('name', 'Language PnP'),
-    createdBy: createdByUser,
+    name: text('name', 'PNP'),
     modifiedAt: dateTime('modifiedAt'),
     modifiedBy: modifiedByUser,
     children: {
@@ -60,21 +60,17 @@ export const EngagementFileCard = () => {
     },
     downloadUrl: '',
   };
-  const secured = {
-    canRead: true,
-    canEdit: true,
-  };
-  const languageEngagement = {
-    id: '09877',
-    pnp: {
-      ...secured,
-      value: file,
-    },
+  const securedFile = {
+    canRead: boolean('canRead', true),
+    canEdit: boolean('canEdit', true),
+    value: file,
   };
   return (
     <Box display="flex" width={400}>
       <Card
-        engagement={(languageEngagement as unknown) as LanguageEngagement}
+        onVersionUpload={action('onVersionUpload')}
+        resourceType={text('resourceType', 'engagement')}
+        securedFile={securedFile}
       />
     </Box>
   );
