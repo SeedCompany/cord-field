@@ -1,10 +1,10 @@
 import React from 'react';
 import { useFormState } from 'react-final-form';
 import {
-  displayPartnershipFundingType,
+  displayFinancialReportingType,
   displayPartnershipStatus,
+  FinancialReportingTypeList,
   PartnershipAgreementStatusList,
-  PartnershipFundingTypeList,
   PartnershipType,
   PartnershipTypeList,
 } from '../../../api';
@@ -104,17 +104,17 @@ const FundingType = <
   const { values } = useFormState<InputType>();
   const managingTypeSelected = hasManagingType(values.partnership.types);
 
-  const radioOptions = PartnershipFundingTypeList.map((type) => (
+  const radioOptions = FinancialReportingTypeList.map((type) => (
     <RadioOption
       key={type}
       value={type}
-      label={displayPartnershipFundingType(type)}
+      label={displayFinancialReportingType(type)}
     />
   ));
 
   return managingTypeSelected ? (
     partnership ? (
-      <SecuredField obj={partnership} name="fundingType">
+      <SecuredField obj={partnership} name="financialReportingType">
         {(props) => (
           <RadioField label="Funding Type" fullWidth row {...props}>
             {radioOptions}
@@ -122,7 +122,12 @@ const FundingType = <
         )}
       </SecuredField>
     ) : (
-      <RadioField name="fundingType" label="Funding Type" fullWidth row>
+      <RadioField
+        name="financialReportingType"
+        label="Funding Type"
+        fullWidth
+        row
+      >
         {radioOptions}
       </RadioField>
     )

@@ -20,7 +20,7 @@ fragment PartnershipForm on Partnership {
       value
     }
   }
-  fundingType {
+  financialReportingType {
     value
     canEdit
     canRead

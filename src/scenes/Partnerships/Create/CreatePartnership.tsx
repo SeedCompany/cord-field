@@ -11,7 +11,7 @@ import { useCreatePartnershipMutation } from './CreatePartnership.generated';
 export interface CreatePartnershipFormInput {
   partnership: Pick<
     CreatePartnershipType,
-    'projectId' | 'types' | 'fundingType'
+    'projectId' | 'types' | 'financialReportingType'
   > & {
     organizationId: OrganizationLookupItem;
   };
