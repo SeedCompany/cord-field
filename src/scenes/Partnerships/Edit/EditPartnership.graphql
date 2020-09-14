@@ -29,7 +29,7 @@ fragment EditPartnership on Partnership {
       value
     }
   }
-  fundingType {
+  financialReportingType {
     value
   }
 }

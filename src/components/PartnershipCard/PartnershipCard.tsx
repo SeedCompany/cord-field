@@ -10,7 +10,7 @@ import {
 import { Skeleton } from '@material-ui/lab';
 import React, { FC } from 'react';
 import {
-  displayPartnershipFundingType,
+  displayFinancialReportingType,
   displayPartnershipStatus,
 } from '../../api';
 import { DisplaySimpleProperty } from '../DisplaySimpleProperty';
@@ -63,9 +63,9 @@ export const PartnershipCard: FC<PartnershipCardProps> = ({
           </Grid>
           <Grid item>
             <DisplaySimpleProperty
-              label="Funding Type"
-              value={displayPartnershipFundingType(
-                partnership?.fundingType.value
+              label="Financial Reporting Type"
+              value={displayFinancialReportingType(
+                partnership?.financialReportingType.value
               )}
               loading={!partnership}
               loadingWidth="40%"
