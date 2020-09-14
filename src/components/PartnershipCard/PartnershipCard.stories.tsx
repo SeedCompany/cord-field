@@ -26,7 +26,11 @@ export const WithData = () => {
       value: select('Mou Status', PartnershipStatuses, 'NotAttached'),
     },
     financialReportingType: {
-      value: select('Funding Type', FinancialReportingTypeList, 'Funded'),
+      value: select(
+        'Financial Reporting Type',
+        FinancialReportingTypeList,
+        'Funded'
+      ),
     },
   };
 

@@ -63,7 +63,7 @@ export const PartnershipCard: FC<PartnershipCardProps> = ({
           </Grid>
           <Grid item>
             <DisplaySimpleProperty
-              label="Funding Type"
+              label="Financial Reporting Type"
               value={displayFinancialReportingType(
                 partnership?.financialReportingType.value
               )}

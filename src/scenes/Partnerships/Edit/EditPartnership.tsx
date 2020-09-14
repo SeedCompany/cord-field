@@ -179,7 +179,7 @@ const FinancialReportingType = () => {
   return managingTypeSelected ? (
     <RadioField
       name="partnership.financialReportingType"
-      label="Funding Type"
+      label="Financial Reporting Type"
       fullWidth
       row
     >
