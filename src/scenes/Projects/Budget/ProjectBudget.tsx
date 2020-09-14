@@ -3,10 +3,13 @@ import { Skeleton } from '@material-ui/lab';
 import { sumBy } from 'lodash';
 import React from 'react';
 import { useParams } from 'react-router-dom';
+import { AddItemCard } from '../../../components/AddItemCard';
 import { Breadcrumb } from '../../../components/Breadcrumb';
+import { DefinedFileCard } from '../../../components/DefinedFileCard';
 import { useCurrencyFormatter } from '../../../components/Formatters/useCurrencyFormatter';
 import { ContentContainer as Content } from '../../../components/Layout/ContentContainer';
 import { ProjectBreadcrumb } from '../../../components/ProjectBreadcrumb';
+import { useUploadBudgetFile } from '../Files';
 import { useProjectBudgetQuery } from './ProjectBudget.generated';
 import { ProjectBudgetRecords } from './ProjectBudgetRecords';
 
@@ -27,6 +30,8 @@ export const ProjectBudget = () => {
   const { projectId } = useParams();
   const formatCurrency = useCurrencyFormatter();
 
+  const uploadFile = useUploadBudgetFile();
+
   const { data, loading, error } = useProjectBudgetQuery({
     variables: { id: projectId },
   });
@@ -37,6 +42,8 @@ export const ProjectBudget = () => {
     budget?.value?.records,
     (record) => record.amount.value ?? 0
   );
+
+  const template = budget?.value?.universalTemplateFile;
 
   return (
     <Content>
@@ -66,6 +73,29 @@ export const ProjectBudget = () => {
             </Typography>
           </header>
           <ProjectBudgetRecords loading={loading} budget={budget} />
+          {!budget?.value || !template ? null : template.canRead &&
+            !template.value ? (
+            <AddItemCard
+              actionType="dropzone"
+              canAdd={template.canEdit}
+              handleFileSelect={(files: File[]) =>
+                uploadFile({ files, parentId: budget.value!.id })
+              }
+              itemType="Universal Template File"
+            />
+          ) : (
+            <DefinedFileCard
+              onVersionUpload={(files) =>
+                uploadFile({
+                  action: 'version',
+                  files,
+                  parentId: budget.value!.id,
+                })
+              }
+              resourceType="budget"
+              securedFile={template}
+            />
+          )}
         </>
       )}
     </Content>

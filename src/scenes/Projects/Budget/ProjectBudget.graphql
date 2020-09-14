@@ -41,6 +41,39 @@ query ProjectBudget($id: ID!) {
         records {
           ...BudgetRecord
         }
+        universalTemplateFile {
+          canEdit
+          canRead
+          value {
+            ...FileNodeInfo
+          }
+        }
+      }
+    }
+  }
+}
+
+mutation UpdateProjectBudgetUniversalTemplate(
+  $id: ID!
+  $status: BudgetStatus!
+  $universalTemplateFile: CreateDefinedFileVersionInput!
+) {
+  updateBudget(
+    input: {
+      budget: {
+        id: $id
+        status: $status
+        universalTemplateFile: $universalTemplateFile
+      }
+    }
+  ) {
+    budget {
+      id
+      universalTemplateFile {
+        value {
+          id
+          name
+        }
       }
     }
   }
