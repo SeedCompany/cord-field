@@ -20,7 +20,7 @@ import { useGetFileDownloadUrl } from '../hooks';
 import { CsvPreview } from './CsvPreview';
 import { ExcelPreview } from './ExcelPreview';
 import { HtmlPreview } from './HtmlPreview';
-import { NativePreview, NativePreviewType } from './NativePreview';
+import { NativePreview } from './NativePreview';
 import { PdfPreview } from './PdfPreview';
 import { PlainTextPreview } from './PlainTextPreview';
 import { PreviewError } from './PreviewError';
@@ -40,6 +40,17 @@ export interface PreviewerProps {
   setPreviewLoading: (loading: boolean) => void;
   previewError: string | null;
   setPreviewError: (error: string | null) => void;
+}
+
+export enum NativePreviewType {
+  Video = 'video',
+  Image = 'image',
+  Audio = 'audio',
+}
+
+export interface NativePreviewerProps extends Omit<PreviewerProps, 'file'> {
+  file?: string;
+  type: NativePreviewType;
 }
 
 interface FilePreviewProps extends DialogProps {
@@ -137,7 +148,7 @@ const previewers: PreviewerProperties = {
 
 export const FilePreview: FC<FilePreviewProps> = (props) => {
   const classes = useStyles();
-  const [previewFile, setPreviewFile] = useState<File | null>(null);
+  const [previewFile, setPreviewFile] = useState<File | string | null>(null);
   const [previewLoading, setPreviewLoading] = useState(false);
   const [previewError, setPreviewError] = useState<string | null>(null);
   const getDownloadUrl = useGetFileDownloadUrl();
@@ -155,6 +166,13 @@ export const FilePreview: FC<FilePreviewProps> = (props) => {
     },
     [setPreviewError, setPreviewLoading]
   );
+
+  const nativeMimeTypes = [
+    ...previewableImageTypes,
+    ...previewableAudioTypes,
+    ...previewableVideoTypes,
+  ].map((type) => type.mimeType);
+  const usesNativePreviewer = nativeMimeTypes.includes(mimeType);
 
   const Previewer = previewers[mimeType]?.component;
   const previewerProps = previewers[mimeType]?.props;
@@ -188,6 +206,11 @@ export const FilePreview: FC<FilePreviewProps> = (props) => {
       void getDownloadUrl(id)
         .then((downloadUrl) => {
           if (downloadUrl) {
+            if (usesNativePreviewer) {
+              setPreviewFile(downloadUrl);
+              setPreviewLoading(false);
+              return;
+            }
             void retrieveFile(downloadUrl, mimeType, handleError);
           } else {
             handleError('Could not get file download URL');
@@ -203,6 +226,7 @@ export const FilePreview: FC<FilePreviewProps> = (props) => {
     id,
     Previewer,
     mimeType,
+    usesNativePreviewer,
     getDownloadUrl,
     handleError,
     retrieveFile,

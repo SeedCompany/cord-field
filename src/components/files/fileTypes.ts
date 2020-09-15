@@ -827,13 +827,13 @@ const previewableTypes = fileTypes.filter((type) => type.previewSupported);
 export type PreviewableMimeType = typeof previewableTypes[number]['mimeType'];
 
 export const previewableImageTypes = previewableTypes.filter(
-  (type) => type.Icon === ImageIcon
+  (type) => type.Icon === ImageIcon && type.previewSupported
 );
 export const previewableAudioTypes = previewableTypes.filter(
-  (type) => type.Icon === AudioIcon
+  (type) => type.Icon === AudioIcon && type.previewSupported
 );
 export const previewableVideoTypes = previewableTypes.filter(
-  (type) => type.Icon === VideoIcon
+  (type) => type.Icon === VideoIcon && type.previewSupported
 );
 
 export const fileIcon = (mimeType: string) => {
