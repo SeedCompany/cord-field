@@ -63,12 +63,12 @@ export const EditProduct = () => {
       mediums: mediums.value,
       purposes: purposes.value,
       methodology: methodology.value,
+      scriptureReferences: removeScriptureTypename(
+        product.scriptureReferences.value
+      ),
       //TODO: make sure these are shown when response is ready
       ...(product.__typename === 'DirectScriptureProduct'
         ? {
-            scriptureReferences: removeScriptureTypename(
-              product.scriptureReferences.value
-            ),
             productType: product.__typename,
           }
         : product.__typename === 'DerivativeScriptureProduct' &&
@@ -77,10 +77,6 @@ export const EditProduct = () => {
             product.produces.value?.__typename === 'LiteracyMaterial' ||
             product.produces.value?.__typename === 'Story')
         ? {
-            scriptureReferences: removeScriptureTypename(
-              product.scriptureReferencesOverride.value ??
-                product.produces.value.scriptureReferences.value
-            ),
             produces: {
               id: product.produces.value.id,
               name: product.produces.value.name,
