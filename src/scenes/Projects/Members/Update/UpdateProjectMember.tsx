@@ -7,9 +7,11 @@ import {
   DialogForm,
   DialogFormProps,
 } from '../../../../components/Dialog/DialogForm';
-import { SubmitError } from '../../../../components/form';
+import { SubmitButton, SubmitError } from '../../../../components/form';
 import { AutocompleteField } from '../../../../components/form/AutocompleteField';
+import { ProjectMembersDocument } from '../List/ProjectMembers.generated';
 import {
+  useDeleteProjectMemberMutation,
   useGetUserRolesQuery,
   useUpdateProjectMemberMutation,
 } from './UpdateProjectMember.generated';
@@ -28,12 +30,14 @@ type UpdateProjectMemberProps = Except<
   id: string;
   userId: string;
   userRoles?: readonly Role[];
+  projectId: string;
 };
 
 export const UpdateProjectMember = ({
   id,
   userId,
   userRoles,
+  projectId,
   ...props
 }: UpdateProjectMemberProps) => {
   const [updateProjectMember] = useUpdateProjectMemberMutation();
@@ -43,6 +47,17 @@ export const UpdateProjectMember = ({
       userId,
     },
   });
+
+  const [deleteProjectMember] = useDeleteProjectMemberMutation({
+    refetchQueries: [
+      {
+        query: ProjectMembersDocument,
+        variables: { input: projectId },
+      },
+    ],
+    awaitRefetchQueries: true,
+  });
+
   const availableRoles = data?.user.roles.value ?? [];
   return (
     <DialogForm<DialogValues>
@@ -61,6 +76,23 @@ export const UpdateProjectMember = ({
         await updateProjectMember({ variables: { input } });
       }}
       fieldsPrefix="projectMember"
+      leftAction={
+        <SubmitButton
+          action="delete"
+          color="error"
+          fullWidth={false}
+          variant="text"
+          onClick={async () => {
+            await deleteProjectMember({
+              variables: {
+                projectMemberId: id,
+              },
+            });
+          }}
+        >
+          Delete
+        </SubmitButton>
+      }
     >
       <Container>
         <SubmitError />
