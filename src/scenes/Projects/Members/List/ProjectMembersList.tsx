@@ -61,6 +61,7 @@ export const ProjectMembersList: FC = () => {
     projectMemberId?: string;
     userId?: string;
     userRoles?: readonly Role[];
+    projectId: string;
   }>();
 
   return (
@@ -105,6 +106,7 @@ export const ProjectMembersList: FC = () => {
                 projectMemberId: item?.id,
                 userId: item?.user.value?.id,
                 userRoles: item?.roles.value,
+                projectId,
               })
             }
           />
@@ -115,6 +117,7 @@ export const ProjectMembersList: FC = () => {
         id={projectMemberProps?.projectMemberId ?? ''}
         userId={projectMemberProps?.userId ?? ''}
         userRoles={projectMemberProps?.userRoles}
+        projectId={projectId}
       />
     </div>
   );
