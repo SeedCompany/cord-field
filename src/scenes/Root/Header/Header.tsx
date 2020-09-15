@@ -6,9 +6,9 @@ import { ProfileToolbar } from './ProfileToolbar';
 
 const useStyles = makeStyles(({ spacing }) => ({
   root: {
-    padding: spacing(4, 4, 0, 4),
+    padding: spacing(4, 4, 1, 4),
     display: 'flex',
-    alignItems: 'baseline',
+    alignItems: 'flex-start',
     justifyContent: 'space-between',
   },
 }));
