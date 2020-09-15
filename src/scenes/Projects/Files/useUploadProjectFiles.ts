@@ -57,7 +57,6 @@ export const useUploadBudgetFile = (): UploadFilesConsumerFunction => {
     await uploadFile({
       variables: {
         id,
-        status: 'Current',
         universalTemplateFile: { uploadId, name },
       },
       refetchQueries: [

@@ -1,4 +1,4 @@
-import { Breadcrumbs, makeStyles, Typography } from '@material-ui/core';
+import { Breadcrumbs, Grid, makeStyles, Typography } from '@material-ui/core';
 import { Skeleton } from '@material-ui/lab';
 import { sumBy } from 'lodash';
 import React from 'react';
@@ -6,6 +6,7 @@ import { useParams } from 'react-router-dom';
 import { AddItemCard } from '../../../components/AddItemCard';
 import { Breadcrumb } from '../../../components/Breadcrumb';
 import { DefinedFileCard } from '../../../components/DefinedFileCard';
+import { FileActionsContextProvider } from '../../../components/files/FileActions';
 import { useCurrencyFormatter } from '../../../components/Formatters/useCurrencyFormatter';
 import { ContentContainer as Content } from '../../../components/Layout/ContentContainer';
 import { ProjectBreadcrumb } from '../../../components/ProjectBreadcrumb';
@@ -25,7 +26,7 @@ const useStyles = makeStyles(({ spacing }) => ({
   },
 }));
 
-export const ProjectBudget = () => {
+export const ProjectBudgetWrapped = () => {
   const classes = useStyles();
   const { projectId } = useParams();
   const formatCurrency = useCurrencyFormatter();
@@ -72,32 +73,45 @@ export const ProjectBudget = () => {
               )}
             </Typography>
           </header>
-          <ProjectBudgetRecords loading={loading} budget={budget} />
-          {!budget?.value || !template ? null : template.canRead &&
-            !template.value ? (
-            <AddItemCard
-              actionType="dropzone"
-              canAdd={template.canEdit}
-              handleFileSelect={(files: File[]) =>
-                uploadFile({ files, parentId: budget.value!.id })
-              }
-              itemType="Universal Template File"
-            />
-          ) : (
-            <DefinedFileCard
-              onVersionUpload={(files) =>
-                uploadFile({
-                  action: 'version',
-                  files,
-                  parentId: budget.value!.id,
-                })
-              }
-              resourceType="budget"
-              securedFile={template}
-            />
-          )}
+          <Grid container direction="column" spacing={3}>
+            <Grid item>
+              <ProjectBudgetRecords loading={loading} budget={budget} />
+            </Grid>
+            {!budget?.value || !template || !template.canRead ? null : (
+              <Grid item xs={6}>
+                {!template.value ? (
+                  <AddItemCard
+                    actionType="dropzone"
+                    canAdd={template.canEdit}
+                    handleFileSelect={(files: File[]) =>
+                      uploadFile({ files, parentId: budget.value!.id })
+                    }
+                    itemType="template"
+                  />
+                ) : (
+                  <DefinedFileCard
+                    onVersionUpload={(files) =>
+                      uploadFile({
+                        action: 'version',
+                        files,
+                        parentId: budget.value!.id,
+                      })
+                    }
+                    resourceType="budget"
+                    securedFile={template}
+                  />
+                )}
+              </Grid>
+            )}
+          </Grid>
         </>
       )}
     </Content>
   );
 };
+
+export const ProjectBudget = () => (
+  <FileActionsContextProvider>
+    <ProjectBudgetWrapped />
+  </FileActionsContextProvider>
+);
