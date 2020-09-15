@@ -1,5 +1,9 @@
 import { GQLOperations } from '../../../api';
-import { useCreateFileVersionMutation } from '../../../components/files/FileActions';
+import {
+  FileVersionsDocument,
+  FileVersionsQuery,
+  useCreateFileVersionMutation,
+} from '../../../components/files/FileActions';
 import {
   HandleUploadCompletedFunction,
   UploadFilesConsumerFunction,
@@ -30,6 +34,31 @@ export const useUploadProjectFiles = (): UploadFilesConsumerFunction => {
           ? GQLOperations.Query.FileVersions
           : GQLOperations.Query.ProjectDirectory,
       ],
+      update: (cache, { data }) => {
+        const response = cache.readQuery<FileVersionsQuery>({
+          query: FileVersionsDocument,
+          variables: { id: parentId },
+        });
+        if (data?.createFileVersion && response) {
+          const updatedVersions = data.createFileVersion.children.items;
+          const updatedData = {
+            ...response,
+            file: {
+              ...response.file,
+              children: {
+                ...response.file.children,
+                items: updatedVersions,
+              },
+            },
+          };
+          console.log('updatedData', updatedData);
+          cache.writeQuery<FileVersionsQuery>({
+            query: FileVersionsDocument,
+            variables: { id: parentId },
+            data: updatedData,
+          });
+        }
+      },
     });
   };
 
