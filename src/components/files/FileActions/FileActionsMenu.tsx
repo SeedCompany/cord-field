@@ -23,6 +23,7 @@ import {
   FileAction,
   FileActionItem,
   HandleFileActionClickParams,
+  PermittedActions,
   useFileActions,
   VersionActionItem,
 } from './FileActionsContext';
@@ -48,7 +49,7 @@ const useStyles = makeStyles(({ spacing }) => ({
 }));
 
 interface FileActionsList {
-  actions: FileAction[];
+  actions: PermittedActions;
 }
 
 interface NonVersionPopupProps extends FileActionsList {
@@ -94,12 +95,23 @@ export const FileActionsPopup: FC<FileActionsPopupProps> = (props) => {
 
 type FileActionsMenuProps = Partial<MenuProps> & FileActionsPopupProps;
 
+const isFileVersion = (
+  props: FileActionsPopupProps
+): props is VersionPopupProps => props.item.__typename === 'FileVersion';
+
 export const FileActionsMenu: FC<FileActionsMenuProps> = (props) => {
   const classes = useStyles();
   const { spacing } = useTheme();
   const { item, actions, ...rest } = props;
 
-  const menuActions = [...new Set(actions)];
+  const menuActions = Array.isArray(actions)
+    ? [...new Set(actions)]
+    : isFileVersion(props)
+    ? [...new Set(actions.version)]
+    : [...new Set(actions.file)];
+  const versionMenuActions = Array.isArray(actions)
+    ? menuActions
+    : [...new Set(actions.version)];
 
   const { handleFileActionClick } = useFileActions();
 
@@ -124,7 +136,7 @@ export const FileActionsMenu: FC<FileActionsMenuProps> = (props) => {
       item,
       action,
       ...(action === FileAction.History
-        ? { versionActions: menuActions }
+        ? { versionActions: versionMenuActions }
         : null),
     };
     handleFileActionClick(params as HandleFileActionClickParams);

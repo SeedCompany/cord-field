@@ -41,9 +41,16 @@ export enum FileAction {
   Delete = 'delete',
 }
 
+export type PermittedActions =
+  | FileAction[]
+  | {
+      file: FileAction[];
+      version: FileAction[];
+    };
+
 interface VersionActionPayload {
   item: FileActionItem;
-  actions: FileAction[];
+  actions: PermittedActions;
 }
 
 interface ActionClickParams {

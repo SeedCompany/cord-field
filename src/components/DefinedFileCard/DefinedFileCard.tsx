@@ -102,9 +102,15 @@ export const DefinedFileCard: FC<DefinedFileCardProps> = (props) => {
   const { canRead, canEdit } = securedFile;
   const standardFileActions = getPermittedFileActions(canRead, canEdit);
   // Defined Files seem like they'll probably always have fixed names
-  const permittedFileActions = standardFileActions.filter(
+  const noRenameFileActions = standardFileActions.filter(
     (action) => action !== FileAction.Rename
   );
+  const permittedFileActions = {
+    // We only want to allow deletion of Defined File `Versions`,
+    // not the files themselves.
+    file: noRenameFileActions.filter((action) => action !== FileAction.Delete),
+    version: noRenameFileActions,
+  };
 
   const file = securedFile.value;
   const formatDate = useDateFormatter();
