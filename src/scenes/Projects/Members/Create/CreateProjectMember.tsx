@@ -55,6 +55,7 @@ export const CreateProjectMember = ({
         variables: { input: projectId },
       },
     ],
+    awaitRefetchQueries: true,
   });
 
   const initialValues = useMemo(
