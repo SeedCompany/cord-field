@@ -2,14 +2,13 @@ import { Container } from '@material-ui/core';
 import { Skeleton } from '@material-ui/lab';
 import React from 'react';
 import { Except } from 'type-fest';
-import { displayRole, Role, RoleList } from '../../../../api';
+import { displayRole, GQLOperations, Role, RoleList } from '../../../../api';
 import {
   DialogForm,
   DialogFormProps,
 } from '../../../../components/Dialog/DialogForm';
 import { SubmitButton, SubmitError } from '../../../../components/form';
 import { AutocompleteField } from '../../../../components/form/AutocompleteField';
-import { ProjectMembersDocument } from '../List/ProjectMembers.generated';
 import {
   useDeleteProjectMemberMutation,
   useGetUserRolesQuery,
@@ -49,12 +48,7 @@ export const UpdateProjectMember = ({
   });
 
   const [deleteProjectMember] = useDeleteProjectMemberMutation({
-    refetchQueries: [
-      {
-        query: ProjectMembersDocument,
-        variables: { input: projectId },
-      },
-    ],
+    refetchQueries: [GQLOperations.Query.ProjectMembers],
     awaitRefetchQueries: true,
   });
 
@@ -64,7 +58,6 @@ export const UpdateProjectMember = ({
       title="Update Team Member Role"
       closeLabel="Close"
       submitLabel="Save"
-      onlyDirtySubmit
       {...props}
       initialValues={{
         projectMember: {
