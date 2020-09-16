@@ -101,7 +101,6 @@ export const ProjectMembersList: FC = () => {
                 projectMemberId: item.id,
                 userId: item.user.value?.id || '',
                 userRoles: item.roles.value,
-                projectId,
               })
             }
           />

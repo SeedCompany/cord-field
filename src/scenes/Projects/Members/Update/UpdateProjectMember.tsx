@@ -5,7 +5,6 @@ import { Except } from 'type-fest';
 import {
   displayRole,
   GQLOperations,
-  Role,
   RoleList,
   UpdateProjectMemberInput,
 } from '../../../../api';
@@ -22,11 +21,11 @@ import {
 } from './UpdateProjectMember.generated';
 
 export interface UpdateProjectMemberFormParams {
-  projectMemberId: string;
+  projectMemberId: UpdateProjectMemberInput['projectMember']['id'];
   userId: string;
-  userRoles: readonly Role[];
-  projectId: string;
+  userRoles: UpdateProjectMemberInput['projectMember']['roles'];
 }
+
 type UpdateProjectMemberProps = Except<
   DialogFormProps<UpdateProjectMemberInput>,
   'onSubmit' | 'initialValues'
@@ -37,7 +36,6 @@ export const UpdateProjectMember = ({
   projectMemberId,
   userId,
   userRoles,
-  projectId,
   ...props
 }: UpdateProjectMemberProps) => {
   const [updateProjectMember] = useUpdateProjectMemberMutation();
