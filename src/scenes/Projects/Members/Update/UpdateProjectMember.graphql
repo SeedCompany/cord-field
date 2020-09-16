@@ -1,0 +1,21 @@
+mutation UpdateProjectMember($input: UpdateProjectMemberInput!) {
+  updateProjectMember(input: $input) {
+    projectMember {
+      ...ProjectMemberCard
+    }
+  }
+}
+
+query GetUserRoles($userId: ID!) {
+  user(id: $userId) {
+    id
+    roles {
+      canRead
+      value
+    }
+  }
+}
+
+mutation DeleteProjectMember($projectMemberId: ID!) {
+  deleteProjectMember(id: $projectMemberId)
+}

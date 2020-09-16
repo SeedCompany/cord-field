@@ -15,6 +15,7 @@ import { ProjectBreadcrumb } from '../../../../components/ProjectBreadcrumb';
 import { ProjectMemberCard } from '../../../../components/ProjectMemberCard';
 import { listOrPlaceholders } from '../../../../util';
 import { CreateProjectMember } from '../Create/CreateProjectMember';
+import { UpdateProjectMember, UpdateProjectMemberFormParams } from '../Update';
 import { useProjectMembersQuery } from './ProjectMembers.generated';
 
 const useStyles = makeStyles(({ spacing, breakpoints }) => ({
@@ -50,6 +51,13 @@ export const ProjectMembersList: FC = () => {
     createProjectMemberDialogState,
     openCreateProjectMemberDialog,
   ] = useDialog();
+
+  const [
+    updateProjectMemberDialogState,
+    openUpdateProjectMemberDialog,
+    projectMemberProps,
+  ] = useDialog<UpdateProjectMemberFormParams>();
+
   return (
     <div className={classes.root}>
       <Breadcrumbs>
@@ -87,8 +95,22 @@ export const ProjectMembersList: FC = () => {
             key={item?.id ?? index}
             projectMember={item}
             className={classes.item}
+            onEdit={() =>
+              item &&
+              openUpdateProjectMemberDialog({
+                projectMemberId: item.id,
+                userId: item.user.value?.id || '',
+                userRoles: item.roles.value,
+              })
+            }
           />
         ))
+      )}
+      {projectMemberProps && (
+        <UpdateProjectMember
+          {...updateProjectMemberDialogState}
+          {...projectMemberProps}
+        />
       )}
     </div>
   );
