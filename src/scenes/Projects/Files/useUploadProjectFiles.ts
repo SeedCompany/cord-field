@@ -62,7 +62,7 @@ export const useUploadBudgetFile = (): UploadFilesConsumerFunction => {
       refetchQueries: [
         action === 'version'
           ? GQLOperations.Query.FileVersions
-          : GQLOperations.Query.Engagement,
+          : GQLOperations.Query.ProjectBudget,
       ],
     });
   };
