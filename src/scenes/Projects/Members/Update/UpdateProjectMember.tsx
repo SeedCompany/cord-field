@@ -2,7 +2,13 @@ import { Container } from '@material-ui/core';
 import { Skeleton } from '@material-ui/lab';
 import React from 'react';
 import { Except } from 'type-fest';
-import { displayRole, GQLOperations, Role, RoleList } from '../../../../api';
+import {
+  displayRole,
+  GQLOperations,
+  Role,
+  RoleList,
+  UpdateProjectMemberInput,
+} from '../../../../api';
 import {
   DialogForm,
   DialogFormProps,
@@ -15,25 +21,20 @@ import {
   useUpdateProjectMemberMutation,
 } from './UpdateProjectMember.generated';
 
-interface DialogValues {
-  projectMember: {
-    id: string;
-    roles?: readonly Role[];
-  };
-}
-
-type UpdateProjectMemberProps = Except<
-  DialogFormProps<DialogValues>,
-  'onSubmit' | 'initialValues'
-> & {
-  id: string;
+export interface UpdateProjectMemberFormParams {
+  projectMemberId: string;
   userId: string;
-  userRoles?: readonly Role[];
+  userRoles: readonly Role[];
   projectId: string;
-};
+}
+type UpdateProjectMemberProps = Except<
+  DialogFormProps<UpdateProjectMemberInput>,
+  'onSubmit' | 'initialValues'
+> &
+  UpdateProjectMemberFormParams;
 
 export const UpdateProjectMember = ({
-  id,
+  projectMemberId,
   userId,
   userRoles,
   projectId,
@@ -54,15 +55,15 @@ export const UpdateProjectMember = ({
 
   const availableRoles = data?.user.roles.value ?? [];
   return (
-    <DialogForm<DialogValues>
+    <DialogForm<UpdateProjectMemberInput>
       title="Update Team Member Role"
       closeLabel="Close"
       submitLabel="Save"
       {...props}
       initialValues={{
         projectMember: {
-          id,
-          roles: userRoles ?? [],
+          id: projectMemberId,
+          roles: userRoles,
         },
       }}
       onSubmit={async (input) => {
@@ -78,7 +79,7 @@ export const UpdateProjectMember = ({
           onClick={async () => {
             await deleteProjectMember({
               variables: {
-                projectMemberId: id,
+                projectMemberId,
               },
             });
           }}
