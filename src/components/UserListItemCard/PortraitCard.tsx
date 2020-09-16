@@ -81,6 +81,9 @@ export const UserListItemCardPortrait = ({
             <Typography variant="body2" color="primary">
               {!user ? <Skeleton width="100%" /> : org?.name.value}
             </Typography>
+            <Typography variant="body2" color="textSecondary">
+              {!user ? <Skeleton width="100%" /> : user.title.value}
+            </Typography>
           </CardContent>
         </CardActionAreaLink>
       )}

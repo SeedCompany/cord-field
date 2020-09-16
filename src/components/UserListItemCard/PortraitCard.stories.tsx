@@ -16,10 +16,12 @@ export const generateUserListItem = () => {
     .split(' ')
     .map((w) => w[0])
     .join('');
+  const title = { value: 'Field Coordinator' };
   const user: UserListItemFragment = {
     id: '123',
     fullName,
     avatarLetters,
+    title,
     organizations: {
       items: [
         {
