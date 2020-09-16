@@ -27,6 +27,11 @@ export const compose = <Value>(
 
 export const required = (value: unknown) => (value ? undefined : 'Required');
 
+// setting null or undefined for value on Autocomplete {multiple} doesn't work, so use []
+export const requiredArray = (value: unknown[]) =>
+  // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+  value?.length > 0 ? undefined : 'Required';
+
 export const email = (value: string) =>
   !value || isEmail(value) ? undefined : 'Invalid email';
 
