@@ -56,7 +56,6 @@ export const useUploadEngagementFile = (
                   const pnp =
                     data.updateLanguageEngagement.engagement.pnp.value;
                   if (pnp) {
-                    console.log('pnp', pnp);
                     const existingVersions = pnp.children.items;
                     updateCachedVersions(cache, existingVersions, pnp.id);
                   }

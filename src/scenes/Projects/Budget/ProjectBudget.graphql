@@ -66,8 +66,12 @@ mutation UpdateProjectBudgetUniversalTemplate(
       id
       universalTemplateFile {
         value {
-          id
-          name
+          ...FileNodeInfo
+          children {
+            items {
+              ...FileNodeInfo
+            }
+          }
         }
       }
     }

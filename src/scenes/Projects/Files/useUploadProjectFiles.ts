@@ -69,11 +69,22 @@ export const useUploadBudgetFile = (): UploadFilesConsumerFunction => {
         id,
         universalTemplateFile: { uploadId, name },
       },
-      refetchQueries: [
-        action === 'version'
-          ? GQLOperations.Query.FileVersions
-          : GQLOperations.Query.ProjectBudget,
-      ],
+      refetchQueries:
+        action === 'file' ? [GQLOperations.Query.ProjectBudget] : undefined,
+      update:
+        action !== 'version'
+          ? undefined
+          : (cache, { data }) => {
+              const template =
+                data?.updateBudget.budget.universalTemplateFile.value;
+              if (template) {
+                updateCachedVersions(
+                  cache,
+                  template.children.items,
+                  template.id
+                );
+              }
+            },
     });
   };
 
