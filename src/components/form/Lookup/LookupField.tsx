@@ -313,7 +313,7 @@ export function LookupField<
         <CreateDialogForm
           {...createDialogState}
           initialValues={createInitialValues}
-          onlyDirtySubmit={false}
+          sendIfClean={true}
           onSuccess={(newItem: T) => {
             field.onChange(
               multiple ? [...(field.value as T[]), newItem] : newItem
