@@ -40,13 +40,8 @@ export const useFocus = <T extends { focus: () => void } = HTMLElement>(
   const ref = useRef<T | null>(null);
   const focus = useCallback(() => {
     if (ref.current) {
-      setTimeout(() => {
-        if (!ref.current) {
-          return;
-        }
-        ref.current.focus();
-        andDo?.(ref.current);
-      }, 100);
+      ref.current.focus();
+      andDo?.(ref.current);
     }
   }, [ref, andDo]);
   return [focus, ref];
