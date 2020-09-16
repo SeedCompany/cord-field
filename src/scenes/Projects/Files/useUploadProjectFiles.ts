@@ -1,7 +1,6 @@
 import { GQLOperations } from '../../../api';
 import {
-  FileVersionsDocument,
-  FileVersionsQuery,
+  CreateFileVersionMutation,
   useCreateFileVersionMutation,
 } from '../../../components/files/FileActions';
 import {
@@ -10,6 +9,7 @@ import {
   UploadFilesConsumerInput,
   useUploadFiles,
 } from '../../../components/files/hooks';
+import { updateCachedVersions } from '../../../components/files/updateCachedVersions';
 import { useUpdateProjectBudgetUniversalTemplateMutation } from '../Budget/ProjectBudget.generated';
 
 export const useUploadProjectFiles = (): UploadFilesConsumerFunction => {
@@ -29,34 +29,15 @@ export const useUploadProjectFiles = (): UploadFilesConsumerFunction => {
     };
     await createFileVersion({
       variables: { input },
-      refetchQueries: [
-        action === 'version'
-          ? GQLOperations.Query.FileVersions
-          : GQLOperations.Query.ProjectDirectory,
-      ],
+      refetchQueries:
+        action === 'file' ? [GQLOperations.Query.ProjectDirectory] : undefined,
       update: (cache, { data }) => {
-        const response = cache.readQuery<FileVersionsQuery>({
-          query: FileVersionsDocument,
-          variables: { id: parentId },
-        });
-        if (data?.createFileVersion && response) {
-          const updatedVersions = data.createFileVersion.children.items;
-          const updatedData = {
-            ...response,
-            file: {
-              ...response.file,
-              children: {
-                ...response.file.children,
-                items: updatedVersions,
-              },
-            },
-          };
-          console.log('updatedData', updatedData);
-          cache.writeQuery<FileVersionsQuery>({
-            query: FileVersionsDocument,
-            variables: { id: parentId },
-            data: updatedData,
-          });
+        if (data?.createFileVersion) {
+          updateCachedVersions<CreateFileVersionMutation>(
+            cache,
+            data.createFileVersion.children.items,
+            parentId
+          );
         }
       },
     });
