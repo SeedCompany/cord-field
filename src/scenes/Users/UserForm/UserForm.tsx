@@ -96,7 +96,6 @@ export const UserForm = <T, R = void>({
       <SecuredField obj={user} name="email">
         {(props) => (
           <EmailField
-            required={false}
             {...props}
             // Email can't be changed right now but still show it
             initialValue={user?.email.value ?? ''}
