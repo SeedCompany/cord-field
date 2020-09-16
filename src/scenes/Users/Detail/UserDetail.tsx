@@ -88,6 +88,11 @@ export const UserDetail = () => {
             loading={!user}
           />
           <DisplayProperty
+            label="Title"
+            value={user?.title.value}
+            loading={!user}
+          />
+          <DisplayProperty
             label="Local Time"
             value={
               user?.timezone.value?.name ? (

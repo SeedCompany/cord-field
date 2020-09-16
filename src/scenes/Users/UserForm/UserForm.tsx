@@ -103,6 +103,11 @@ export const UserForm = <T, R = void>({
           />
         )}
       </SecuredField>
+      <SecuredField obj={user} name="title">
+        {(props) => (
+          <TextField label="Title" placeholder="Enter Title" {...props} />
+        )}
+      </SecuredField>
       <SecuredField obj={user} name="phone">
         {(props) => (
           <TextField

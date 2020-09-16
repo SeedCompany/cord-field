@@ -32,6 +32,9 @@ fragment UserForm on User {
   bio {
     ...ss
   }
+  title {
+    ...ss
+  }
 }
 
 fragment ss on SecuredString {

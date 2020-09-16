@@ -17,6 +17,9 @@ fragment userDetails on User {
   phone {
     ...ss
   }
+  title {
+    ...ss
+  }
   timezone {
     value {
       name

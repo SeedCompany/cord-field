@@ -27,6 +27,7 @@ export const EditUser = (props: EditUserProps) => {
               timezone: user.timezone.value?.name,
               bio: user.bio.value,
               email: user.email.value,
+              title: user.title.value,
             },
           }
         : undefined,

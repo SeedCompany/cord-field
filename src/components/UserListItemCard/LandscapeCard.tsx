@@ -53,6 +53,9 @@ export const UserListItemCardLandscape = ({
             <Typography variant="body2" color="primary">
               {!user ? <Skeleton width="50%" /> : org?.name.value}
             </Typography>
+            <Typography variant="body2" color="textSecondary">
+              {!user ? <Skeleton width="50%" /> : user.title.value}
+            </Typography>
           </div>
         </CardContent>
       </CardActionAreaLink>
