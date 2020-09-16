@@ -8,7 +8,6 @@ import { Add } from '@material-ui/icons';
 import { FC } from 'react';
 import * as React from 'react';
 import { useParams } from 'react-router-dom';
-import { Role } from '../../../../api';
 import { Breadcrumb } from '../../../../components/Breadcrumb';
 import { useDialog } from '../../../../components/Dialog';
 import { Fab } from '../../../../components/Fab';
@@ -16,7 +15,7 @@ import { ProjectBreadcrumb } from '../../../../components/ProjectBreadcrumb';
 import { ProjectMemberCard } from '../../../../components/ProjectMemberCard';
 import { listOrPlaceholders } from '../../../../util';
 import { CreateProjectMember } from '../Create/CreateProjectMember';
-import { UpdateProjectMember } from '../Update';
+import { UpdateProjectMember, UpdateProjectMemberFormParams } from '../Update';
 import { useProjectMembersQuery } from './ProjectMembers.generated';
 
 const useStyles = makeStyles(({ spacing, breakpoints }) => ({
@@ -57,12 +56,7 @@ export const ProjectMembersList: FC = () => {
     updateProjectMemberDialogState,
     openUpdateProjectMemberDialog,
     projectMemberProps,
-  ] = useDialog<{
-    projectMemberId?: string;
-    userId?: string;
-    userRoles?: readonly Role[];
-    projectId: string;
-  }>();
+  ] = useDialog<UpdateProjectMemberFormParams>();
 
   return (
     <div className={classes.root}>
@@ -102,23 +96,23 @@ export const ProjectMembersList: FC = () => {
             projectMember={item}
             className={classes.item}
             onEdit={() =>
+              item &&
               openUpdateProjectMemberDialog({
-                projectMemberId: item?.id,
-                userId: item?.user.value?.id,
-                userRoles: item?.roles.value,
+                projectMemberId: item.id,
+                userId: item.user.value?.id || '',
+                userRoles: item.roles.value,
                 projectId,
               })
             }
           />
         ))
       )}
-      <UpdateProjectMember
-        {...updateProjectMemberDialogState}
-        id={projectMemberProps?.projectMemberId ?? ''}
-        userId={projectMemberProps?.userId ?? ''}
-        userRoles={projectMemberProps?.userRoles}
-        projectId={projectId}
-      />
+      {projectMemberProps && (
+        <UpdateProjectMember
+          {...updateProjectMemberDialogState}
+          {...projectMemberProps}
+        />
+      )}
     </div>
   );
 };
