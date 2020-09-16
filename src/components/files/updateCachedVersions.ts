@@ -7,10 +7,12 @@ export const updateCachedVersions = <MutationData>(
   existingVersions: readonly FileNodeInfoFragment[],
   parentId: string
 ) => {
+  console.log('parentId', parentId);
   const response = cache.readQuery<FileVersionsQuery>({
     query: FileVersionsDocument,
     variables: { id: parentId },
   });
+  console.log('response', response);
   if (response) {
     const updatedData = {
       ...response,
