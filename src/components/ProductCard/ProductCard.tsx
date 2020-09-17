@@ -25,7 +25,6 @@ import {
   scriptureRangeDictionary,
 } from '../../util/biblejs';
 import { DisplaySimpleProperty } from '../DisplaySimpleProperty';
-import { ProgressButton } from '../ProgressButton';
 import { ButtonLink, CardActionAreaLink } from '../Routing';
 import { ProductCardFragment } from './ProductCard.generated';
 
@@ -48,9 +47,7 @@ const useStyles = makeStyles(({ spacing, palette }) => ({
       margin: spacing(1, 0),
     },
   },
-  actions: {
-    justifyContent: 'space-around',
-  },
+
   icon: {
     height: spacing(10),
     width: spacing(10),
@@ -62,15 +59,10 @@ const useStyles = makeStyles(({ spacing, palette }) => ({
 
 interface ProductCardProps {
   product: ProductCardFragment;
-  handleDelete: () => void;
   isDeleteLoading?: boolean;
 }
 
-export const ProductCard = ({
-  product,
-  handleDelete,
-  isDeleteLoading = false,
-}: ProductCardProps) => {
+export const ProductCard = ({ product }: ProductCardProps) => {
   const classes = useStyles();
   const type =
     product.__typename === 'DerivativeScriptureProduct'
@@ -151,16 +143,7 @@ export const ProductCard = ({
           />
         </CardContent>
       </CardActionAreaLink>
-      <CardActions classes={{ root: classes.actions }}>
-        {
-          <ProgressButton
-            progress={isDeleteLoading}
-            onClick={handleDelete}
-            className={classes.deleteButton}
-          >
-            Delete
-          </ProgressButton>
-        }
+      <CardActions>
         <ButtonLink to={`products/${product.id}`} color="primary">
           Edit
         </ButtonLink>

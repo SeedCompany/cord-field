@@ -8,7 +8,7 @@ import {
   Typography,
 } from '@material-ui/core';
 import { AddCircle, ChatOutlined, DateRange, Edit } from '@material-ui/icons';
-import React, { FC, useRef } from 'react';
+import React, { FC } from 'react';
 import {
   canEditAny,
   displayEngagementStatus,
@@ -35,8 +35,7 @@ import {
   EditableEngagementField,
   EditEngagementDialog,
 } from '../EditEngagement/EditEngagementDialog';
-import { EngagementDocument, EngagementQuery } from '../Engagement.generated';
-import { useDeleteProductMutation } from './LanguageEngagementDetail.generated';
+import { EngagementQuery } from '../Engagement.generated';
 
 const useStyles = makeStyles(({ spacing, breakpoints, palette }) => ({
   root: {
@@ -87,30 +86,6 @@ export const LanguageEngagementDetail: FC<EngagementQuery> = ({
   const date = securedDateRange(engagement.startDate, engagement.endDate);
   const formatDate = useDateFormatter();
   const formatDateTime = useDateTimeFormatter();
-
-  const [deleteProduct, { loading }] = useDeleteProductMutation({
-    awaitRefetchQueries: true,
-  });
-
-  const productIdProcessingDelete = useRef<string>();
-
-  const handleDelete = async (productId: string) => {
-    productIdProcessingDelete.current = productId;
-    await deleteProduct({
-      variables: {
-        productId,
-      },
-      refetchQueries: [
-        {
-          query: EngagementDocument,
-          variables: {
-            projectId: project.id,
-            engagementId: engagement.id,
-          },
-        },
-      ],
-    });
-  };
 
   if (engagement.__typename !== 'LanguageEngagement') {
     return null; // easiest for typescript
@@ -261,13 +236,7 @@ export const LanguageEngagementDetail: FC<EngagementQuery> = ({
         <Grid item container spacing={3}>
           {engagement.products.items.map((product) => (
             <Grid item xs={4} key={product.id}>
-              <ProductCard
-                product={product}
-                handleDelete={() => handleDelete(product.id)}
-                isDeleteLoading={
-                  productIdProcessingDelete.current === product.id && loading
-                }
-              />
+              <ProductCard product={product} />
             </Grid>
           ))}
           <Grid item xs={4}>

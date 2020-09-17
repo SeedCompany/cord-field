@@ -1,4 +1,3 @@
-import { action } from '@storybook/addon-actions';
 import { number, object, select, text } from '@storybook/addon-knobs';
 import { DateTime } from 'luxon';
 import * as React from 'react';
@@ -143,6 +142,4 @@ const getProduct = () => {
     : directProduct;
 };
 
-export const Product = () => (
-  <ProductCard product={getProduct()} handleDelete={action('delete clicked')} />
-);
+export const Product = () => <ProductCard product={getProduct()} />;
