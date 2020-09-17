@@ -61,11 +61,6 @@ import {
 } from './ProductForm.generated';
 
 const useStyles = makeStyles(({ spacing, typography }) => ({
-  form: {
-    '& > *': {
-      marginBottom: spacing(2),
-    },
-  },
   accordionSummary: {
     flexDirection: 'column',
   },
@@ -103,6 +98,11 @@ const useStyles = makeStyles(({ spacing, typography }) => ({
   deleteButton: {
     marginLeft: spacing(1),
   },
+  accordionRoot: {
+    '&::before': {
+      backgroundColor: 'transparent',
+    },
+  },
 }));
 
 const productField = {
@@ -126,8 +126,11 @@ export const renderAccordionSection = (productObj?: ProductFormFragment) => ({
   form,
 }: FormRenderProps) => {
   const classes = useStyles();
+  const isEditing = Boolean(productObj);
 
-  const [openedSection, setOpenedSection] = useState<string>('produces');
+  const [openedSection, setOpenedSection] = useState<string>(
+    isEditing ? '' : 'produces'
+  );
   const [selectedBook, setSelectedBook] = useState<string>('');
   const { enqueueSnackbar } = useSnackbar();
   const navigate = useNavigate();
@@ -136,8 +139,6 @@ export const renderAccordionSection = (productObj?: ProductFormFragment) => ({
     awaitRefetchQueries: true,
     refetchQueries: [GQLOperations.Query.Engagement],
   });
-
-  const isEditing = Boolean(productObj);
 
   const handleChange = (panel: string) => (
     event: React.ChangeEvent<Record<string, unknown>>,
@@ -176,13 +177,16 @@ export const renderAccordionSection = (productObj?: ProductFormFragment) => ({
     form.getFieldState('product.produces')?.error === 'Required';
 
   return (
-    <form onSubmit={handleSubmit} className={classes.form}>
+    <form onSubmit={handleSubmit}>
       <SubmitError />
       {/* TODO: secure this accordion with name=produces */}
       <FieldGroup prefix="product">
         <Accordion
           expanded={openedSection === 'produces'}
           onChange={handleChange('produces')}
+          classes={{
+            root: classes.accordionRoot,
+          }}
         >
           <AccordionSummary
             expandIcon={<ExpandMore />}
