@@ -1,6 +1,12 @@
-import { Box } from '@material-ui/core';
+import { Grid } from '@material-ui/core';
 import * as React from 'react';
-import { displayStatus, ProjectStatus, Sensitivity } from '../../../api';
+import {
+  displayStatus,
+  ProjectStatus,
+  ProjectStatusList,
+  Sensitivity,
+  SensitivityList,
+} from '../../../api';
 import { CheckboxesField, CheckboxOption } from '../../../components/form';
 import { SwitchField } from '../../../components/form/SwitchField';
 import { BooleanParam, EnumListParam, makeQueryHandler } from '../../../hooks';
@@ -15,36 +21,32 @@ export const ProjectFilterOptions = () => {
   return (
     <>
       <CheckboxesField name="status" label="Status" row>
-        <Box width="50%">
-          <CheckboxOption label="Show All" default />
-        </Box>
-        {([
-          'Pending',
-          'Suspended',
-          'InDevelopment',
-          'Finished',
-          'Active',
-        ] as ProjectStatus[]).map((status: ProjectStatus) => (
-          <Box width="50%" key={status}>
-            <CheckboxOption
-              key={status}
-              label={displayStatus(status)}
-              value={status}
-            />
-          </Box>
-        ))}
+        <Grid container>
+          <Grid item xs={6}>
+            <CheckboxOption label="Show All" default />
+          </Grid>
+          {ProjectStatusList.map((status) => (
+            <Grid item xs={6} key={status}>
+              <CheckboxOption
+                key={status}
+                label={displayStatus(status)}
+                value={status}
+              />
+            </Grid>
+          ))}
+        </Grid>
       </CheckboxesField>
       <CheckboxesField name="sensitivity" label="Sensitivity" row>
-        <Box width="50%">
-          <CheckboxOption label="Show All" default />
-        </Box>
-        {(['Low', 'Medium', 'High'] as Sensitivity[]).map(
-          (sensitivity: Sensitivity) => (
-            <Box width="50%" key={sensitivity}>
+        <Grid container>
+          <Grid item xs={6}>
+            <CheckboxOption label="Show All" default />
+          </Grid>
+          {SensitivityList.map((sensitivity) => (
+            <Grid item xs={6} key={sensitivity}>
               <CheckboxOption label={sensitivity} value={sensitivity} />
-            </Box>
-          )
-        )}
+            </Grid>
+          ))}
+        </Grid>
       </CheckboxesField>
       <SwitchField name="clusters" label="Only Show Cluster Projects" />
     </>
