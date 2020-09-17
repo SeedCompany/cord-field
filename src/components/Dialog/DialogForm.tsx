@@ -40,7 +40,11 @@ export type DialogFormProps<T, R = void> = Omit<
   closeLabel?: ReactNode;
   CloseProps?: ButtonProps;
 
-  /** Only call onSubmit if form is dirty, else just close dialog. */
+  /**
+   * Optionally call onSubmit even if form is clean,
+   * OR, when a string value, if `sendIfClean === data.submitAction`.
+   * Else just close dialog.
+   */
   sendIfClean?: boolean | string;
 
   /** A prefix for all form fields */
