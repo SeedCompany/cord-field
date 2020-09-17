@@ -17,8 +17,13 @@ import {
   displayMethodologyWithLabel,
   displayProductMedium,
   displayProductTypes,
-  displayScripture,
 } from '../../api';
+import { entries } from '../../util';
+import {
+  getScriptureRangeDisplay,
+  ScriptureRange,
+  scriptureRangeDictionary,
+} from '../../util/biblejs';
 import { DisplaySimpleProperty } from '../DisplaySimpleProperty';
 import { ProgressButton } from '../ProgressButton';
 import { ButtonLink, CardActionAreaLink } from '../Routing';
@@ -134,8 +139,14 @@ export const ProductCard = ({
           <DisplaySimpleProperty
             label="Scripture"
             align="center"
-            value={product.scriptureReferences.value
-              .map((scriptureReference) => displayScripture(scriptureReference))
+            value={entries(
+              scriptureRangeDictionary(
+                product.scriptureReferences.value as ScriptureRange[]
+              )
+            )
+              .map(([book, scriptureRange]) =>
+                getScriptureRangeDisplay(scriptureRange, book)
+              )
               .join(', ')}
           />
         </CardContent>
