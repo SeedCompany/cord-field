@@ -46,6 +46,7 @@ import { entries } from '../../../util';
 import {
   getScriptureRangeDisplay,
   matchingScriptureRanges,
+  mergeScriptureRange,
   scriptureRangeDictionary,
 } from '../../../util/biblejs';
 import { newTestament, oldTestament, productTypes } from './constants';
@@ -467,15 +468,22 @@ export const renderAccordionSection = (productObj?: ProductFormFragment) => ({
           <Button
             onClick={() => {
               setSelectedBook('');
-              form.mutators.clear('updatingScriptures');
+              form.change('updatingScriptures', undefined);
             }}
           >
             Cancel
           </Button>
           <Button
             onClick={() => {
-              form.mutators.setScriptureReferencesField(selectedBook);
-              form.mutators.clear('updatingScriptures');
+              form.change(
+                'product.scriptureReferences',
+                mergeScriptureRange(
+                  values.updatingScriptures,
+                  scriptureReferences,
+                  selectedBook
+                )
+              );
+              form.change('updatingScriptures', undefined);
               setSelectedBook('');
             }}
           >
