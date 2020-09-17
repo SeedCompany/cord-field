@@ -13,6 +13,7 @@ import {
   DisplaySimplePropertyProps,
 } from '../../../components/DisplaySimpleProperty';
 import { Fab } from '../../../components/Fab';
+import { OrganizationListItemCard } from '../../../components/OrganizationListItemCard';
 import { Redacted } from '../../../components/Redacted';
 import { EditUser } from '../Edit';
 import { useUserQuery } from './UserDetail.generated';
@@ -36,6 +37,12 @@ const useStyles = makeStyles(({ spacing, breakpoints }) => ({
     flex: 1,
     display: 'flex',
   },
+  organizationsContainer: {
+    marginTop: spacing(1),
+  },
+  organization: {
+    marginBottom: spacing(2),
+  },
 }));
 
 export const UserDetail = () => {
@@ -48,6 +55,7 @@ export const UserDetail = () => {
   const [editUserState, editUser] = useDialog();
 
   const user = data?.user;
+  console.log('user', user);
 
   const canEditAnyFields = canEditAny(user);
 
@@ -112,6 +120,21 @@ export const UserDetail = () => {
             loading={!user}
           />
           {user ? <EditUser user={user} {...editUserState} /> : null}
+
+          {!!user?.organizations.items.length && (
+            <>
+              <Typography variant="h3">Partners</Typography>
+              <div className={classes.organizationsContainer}>
+                {user.organizations.items.map((item) => (
+                  <OrganizationListItemCard
+                    key={item.id}
+                    organization={item}
+                    className={classes.organization}
+                  />
+                ))}
+              </div>
+            </>
+          )}
         </>
       )}
     </main>
