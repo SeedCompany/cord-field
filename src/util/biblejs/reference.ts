@@ -199,3 +199,29 @@ class ScriptureError extends Error {
     this.code = code;
   }
 }
+
+/**
+ * Takes in a scripture range array and a book to match, outputs a new array with the matching ranges.
+ * This assumes each scripture range object is only contained to one book.
+ * @param bookToMatch The book to match
+ * @param scriptureReferenceArr Array of scripture references, can be undefined
+ */
+export const matchingScriptureRanges = (
+  bookToMatch: string,
+  scriptureReferenceArr: ScriptureRange[] | undefined = []
+) =>
+  scriptureReferenceArr.filter(
+    ({ start: { book } }: ScriptureRange) => book === bookToMatch
+  );
+
+export const getScriptureRangeDisplay = (
+  scriptureReferenceArr: ScriptureRange[],
+  book: string
+) => {
+  const count = scriptureReferenceArr.length;
+  return count
+    ? `${book}: ${formatScriptureRange(scriptureReferenceArr[0])} ${
+        count > 1 ? `+ ${count - 1} more` : ''
+      }`
+    : book;
+};
