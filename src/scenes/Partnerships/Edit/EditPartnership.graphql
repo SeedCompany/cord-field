@@ -1,35 +1,11 @@
 mutation UpdatePartnership($input: UpdatePartnershipInput!) {
   updatePartnership(input: $input) {
     partnership {
-      ...PartnershipCard
+      ...PartnershipForm
     }
   }
 }
 
 mutation DeletePartnership($input: ID!) {
   deletePartnership(id: $input)
-}
-
-fragment EditPartnership on Partnership {
-  id
-  types {
-    value
-    canEdit
-  }
-  agreementStatus {
-    value
-    canEdit
-  }
-  mouStatus {
-    value
-    canEdit
-  }
-  organization {
-    name {
-      value
-    }
-  }
-  financialReportingType {
-    value
-  }
 }

@@ -1,0 +1,28 @@
+fragment PartnershipForm on Partnership {
+  id
+  types {
+    value
+    canEdit
+    canRead
+  }
+  agreementStatus {
+    value
+    canEdit
+    canRead
+  }
+  mouStatus {
+    value
+    canEdit
+    canRead
+  }
+  organization {
+    name {
+      value
+    }
+  }
+  financialReportingType {
+    value
+    canEdit
+    canRead
+  }
+}
