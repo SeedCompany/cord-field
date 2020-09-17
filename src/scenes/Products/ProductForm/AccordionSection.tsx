@@ -21,11 +21,9 @@ import {
   displayProductMedium,
   displayProductPurpose,
   displayProductTypes,
-  displayScripture,
   ProductMedium,
   ProductMethodology,
   ProductPurpose,
-  ScriptureRangeInput,
 } from '../../../api';
 import {
   FieldGroup,
@@ -44,9 +42,11 @@ import {
   StoryField,
 } from '../../../components/form/Lookup';
 import { VersesField } from '../../../components/form/VersesField';
+import { entries } from '../../../util';
 import {
   getScriptureRangeDisplay,
   matchingScriptureRanges,
+  scriptureRangeDictionary,
 } from '../../../util/biblejs';
 import { newTestament, oldTestament, productTypes } from './constants';
 import { getIsDerivativeProduct } from './helpers';
@@ -128,8 +128,6 @@ export const renderAccordionSection = (productObj?: ProductFormFragment) => ({
     mediums,
     purposes,
   } = values.product;
-  console.log('scriptureReferences: ', scriptureReferences);
-  console.log('updatingScriptures: ', values.updatingScriptures);
 
   const isDerivativeProduct = getIsDerivativeProduct(productType);
 
@@ -186,7 +184,7 @@ export const renderAccordionSection = (productObj?: ProductFormFragment) => ({
             </AccordionDetails>
           </RadioField>
         </Accordion>
-        {/* //TODO: include scriptureReferencesOverride in the name */}
+        {/* //TODO: maybe include scriptureReferencesOverride in the name to show api field error */}
         <SecuredField obj={productObj} name="scriptureReferences">
           {({ disabled }) => (
             <Accordion
@@ -203,19 +201,12 @@ export const renderAccordionSection = (productObj?: ProductFormFragment) => ({
                 </Typography>
                 <div className={classes.accordionSummaryButtonsContainer}>
                   {openedSection !== 'scriptureReferences' &&
-                    scriptureReferences?.map(
-                      (scriptureRange: ScriptureRangeInput) => {
-                        const rangeString = displayScripture(scriptureRange);
-                        return (
-                          <ToggleButton
-                            selected
-                            key={rangeString}
-                            value={scriptureRange}
-                          >
-                            {rangeString}
-                          </ToggleButton>
-                        );
-                      }
+                    entries(scriptureRangeDictionary(scriptureReferences)).map(
+                      ([book, scriptureRange]) => (
+                        <ToggleButton selected key={book} value={book}>
+                          {getScriptureRangeDisplay(scriptureRange, book)}
+                        </ToggleButton>
+                      )
                     )}
                 </div>
               </AccordionSummary>
@@ -467,7 +458,7 @@ export const renderAccordionSection = (productObj?: ProductFormFragment) => ({
         Save Product
       </SubmitButton>
       <Dialog open={Boolean(selectedBook)}>
-        <DialogTitle>Choose Verse for</DialogTitle>
+        <DialogTitle>Choose verse(s) for {selectedBook}</DialogTitle>
         <DialogContent>
           <Typography>Start</Typography>
           <VersesField book={selectedBook} name="updatingScriptures" />
