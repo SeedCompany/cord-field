@@ -87,6 +87,12 @@ const useStyles = makeStyles(({ spacing, typography }) => ({
       marginBottom: spacing(1),
     },
   },
+  dialog: {
+    width: 400,
+  },
+  dialogText: {
+    margin: spacing(1, 0),
+  },
 }));
 
 const productField = {
@@ -459,9 +465,16 @@ export const renderAccordionSection = (productObj?: ProductFormFragment) => ({
         Save Product
       </SubmitButton>
       <Dialog open={Boolean(selectedBook)}>
-        <DialogTitle>Choose verse(s) for {selectedBook}</DialogTitle>
-        <DialogContent>
-          <Typography>Start</Typography>
+        <DialogTitle>{selectedBook}</DialogTitle>
+        <DialogContent className={classes.dialog}>
+          <Typography variant="h4" className={classes.dialogText}>
+            Choose Your Chapters
+          </Typography>
+          <Typography className={classes.dialogText}>
+            When choosing chapters and verses, you can make multiple selections.
+            Input your wanted chapter/s and verses to create multiple
+            selections.
+          </Typography>
           <VersesField book={selectedBook} name="updatingScriptures" />
         </DialogContent>
         <DialogActions>
