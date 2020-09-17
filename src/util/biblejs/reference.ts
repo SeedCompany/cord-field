@@ -227,7 +227,29 @@ export const getScriptureRangeDisplay = (
     : book;
 };
 
+/**
+ * Creates a dictary from an array of scripture ranges
+ * Keys are bible books and the values are array of scriptureRanges that start with that book
+ */
 export const scriptureRangeDictionary = (
   scriptureReferenceArr: ScriptureRange[] | undefined = []
 ): Record<string, ScriptureRange[]> =>
   groupBy(scriptureReferenceArr, (range) => range.start.book);
+
+/**
+ * Merge two scripture ranges together
+ * merging all ranges in the the updating values and the ranges in the prevScriptureReferences array that doesn't match the book
+ */
+export const mergeScriptureRange = (
+  updatingScriptures: ScriptureRange[],
+  prevScriptureReferences: ScriptureRange[] | undefined,
+  book: string
+): ScriptureRange[] =>
+  prevScriptureReferences
+    ? [
+        ...prevScriptureReferences.filter(
+          (scriptureRange) => scriptureRange.start.book !== book
+        ),
+        ...updatingScriptures,
+      ]
+    : [...updatingScriptures];
