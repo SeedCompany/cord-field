@@ -2,11 +2,6 @@ import {
   Accordion,
   AccordionDetails,
   AccordionSummary,
-  Button,
-  Dialog,
-  DialogActions,
-  DialogContent,
-  DialogTitle,
   makeStyles,
   Typography,
 } from '@material-ui/core';
@@ -28,6 +23,7 @@ import {
   ProductMethodology,
   ProductPurpose,
 } from '../../../api';
+import { DialogForm } from '../../../components/Dialog/DialogForm';
 import { ErrorButton } from '../../../components/ErrorButton';
 import {
   FieldGroup,
@@ -51,6 +47,7 @@ import {
   getScriptureRangeDisplay,
   matchingScriptureRanges,
   mergeScriptureRange,
+  ScriptureRange,
   scriptureRangeDictionary,
 } from '../../../util/biblejs';
 import { newTestament, oldTestament, productTypes } from './constants';
@@ -274,10 +271,7 @@ export const renderAccordionSection = (productObj?: ProductFormFragment) => ({
                         value={option}
                         selected={Boolean(matchingArr.length)}
                         disabled={disabled}
-                        onClick={() => {
-                          form.change('updatingScriptures', matchingArr);
-                          setSelectedBook(option);
-                        }}
+                        onClick={() => setSelectedBook(option)}
                       >
                         {getScriptureRangeDisplay(matchingArr, option)}
                       </ToggleButton>
@@ -302,10 +296,7 @@ export const renderAccordionSection = (productObj?: ProductFormFragment) => ({
                         value={option}
                         selected={Boolean(matchingArr.length)}
                         disabled={disabled}
-                        onClick={() => {
-                          form.change('updatingScriptures', matchingArr);
-                          setSelectedBook(option);
-                        }}
+                        onClick={() => setSelectedBook(option)}
                       >
                         {getScriptureRangeDisplay(matchingArr, option)}
                       </ToggleButton>
@@ -512,46 +503,37 @@ export const renderAccordionSection = (productObj?: ProductFormFragment) => ({
           Delete Product
         </ErrorButton>
       )}
-      <Dialog open={Boolean(selectedBook)}>
-        <DialogTitle>{selectedBook}</DialogTitle>
-        <DialogContent className={classes.dialog}>
-          <Typography variant="h4" className={classes.dialogText}>
-            Choose Your Chapters
-          </Typography>
-          <Typography className={classes.dialogText}>
-            When choosing chapters and verses, you can make multiple selections.
-            Input your wanted chapter/s and verses to create multiple
-            selections.
-          </Typography>
-          <VersesField book={selectedBook} name="updatingScriptures" />
-        </DialogContent>
-        <DialogActions>
-          <Button
-            onClick={() => {
-              setSelectedBook('');
-              form.change('updatingScriptures', undefined);
-            }}
-          >
-            Cancel
-          </Button>
-          <Button
-            onClick={() => {
-              form.change(
-                'product.scriptureReferences',
-                mergeScriptureRange(
-                  values.updatingScriptures,
-                  scriptureReferences,
-                  selectedBook
-                )
-              );
-              form.change('updatingScriptures', undefined);
-              setSelectedBook('');
-            }}
-          >
-            Select
-          </Button>
-        </DialogActions>
-      </Dialog>
+      <DialogForm<{ updatingScriptures: ScriptureRange[] }>
+        open={Boolean(selectedBook)}
+        title={selectedBook}
+        initialValues={{
+          updatingScriptures: matchingScriptureRanges(
+            selectedBook,
+            scriptureReferences
+          ),
+        }}
+        onSubmit={({ updatingScriptures }) => {
+          form.change(
+            'product.scriptureReferences',
+            mergeScriptureRange(
+              updatingScriptures,
+              scriptureReferences,
+              selectedBook
+            )
+          );
+          setSelectedBook('');
+        }}
+        onClose={() => setSelectedBook('')}
+      >
+        <Typography variant="h4" className={classes.dialogText}>
+          Choose Your Chapters
+        </Typography>
+        <Typography className={classes.dialogText}>
+          When choosing chapters and verses, you can make multiple selections.
+          Input your wanted chapter/s and verses to create multiple selections.
+        </Typography>
+        <VersesField book={selectedBook} name="updatingScriptures" />
+      </DialogForm>
     </form>
   );
 };
