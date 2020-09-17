@@ -9,10 +9,12 @@ import { ExpandMore } from '@material-ui/icons';
 import { ToggleButton } from '@material-ui/lab';
 import clsx from 'clsx';
 import { useSnackbar } from 'notistack';
-import React, { useState } from 'react';
+import React, { Fragment, useState } from 'react';
 import { FormRenderProps } from 'react-final-form';
 import { useNavigate } from 'react-router';
 import {
+  ApproachMethodologies,
+  displayApproach,
   displayMethodology,
   displayMethodologyWithLabel,
   displayProductMedium,
@@ -20,8 +22,9 @@ import {
   displayProductTypes,
   GQLOperations,
   ProductMedium,
-  ProductMethodology,
+  ProductMediumList,
   ProductPurpose,
+  ProductPurposeList,
 } from '../../../api';
 import { DialogForm } from '../../../components/Dialog/DialogForm';
 import { ErrorButton } from '../../../components/ErrorButton';
@@ -332,24 +335,13 @@ export const renderAccordionSection = (productObj?: ProductFormFragment) => ({
               </AccordionSummary>
               <AccordionDetails>
                 <ToggleButtonsField {...props}>
-                  {([
-                    'Print',
-                    'Web',
-                    'EBook',
-                    'App',
-                    'Audio',
-                    'OralTranslation',
-                    'Video',
-                    'Other',
-                  ] as ProductMedium[]).map((option) => {
-                    return (
-                      <ToggleButtonOption
-                        key={option}
-                        label={displayProductMedium(option)}
-                        value={option}
-                      />
-                    );
-                  })}
+                  {ProductMediumList.map((option) => (
+                    <ToggleButtonOption
+                      key={option}
+                      label={displayProductMedium(option)}
+                      value={option}
+                    />
+                  ))}
                 </ToggleButtonsField>
               </AccordionDetails>
             </Accordion>
@@ -381,13 +373,7 @@ export const renderAccordionSection = (productObj?: ProductFormFragment) => ({
               </AccordionSummary>
               <AccordionDetails>
                 <ToggleButtonsField {...props}>
-                  {([
-                    'EvangelismChurchPlanting',
-                    'ChurchLife',
-                    'ChurchMaturity',
-                    'SocialIssues',
-                    'Discipleship',
-                  ] as ProductPurpose[]).map((option) => (
+                  {ProductPurposeList.map((option) => (
                     <ToggleButtonOption
                       key={option}
                       label={displayProductPurpose(option)}
@@ -422,60 +408,22 @@ export const renderAccordionSection = (productObj?: ProductFormFragment) => ({
               </AccordionSummary>
               <RadioField {...props} required={false}>
                 <AccordionDetails className={classes.accordionSection}>
-                  <Typography>Written</Typography>
-                  <div className={classes.buttonListWrapper}>
-                    {(['Paratext', 'OtherWritten'] as ProductMethodology[]).map(
-                      (option) => (
-                        <RadioOption
-                          key={option}
-                          label={displayMethodology(option)}
-                          value={option}
-                        />
-                      )
-                    )}
-                  </div>
-                  <Typography>Oral Translation</Typography>
-                  <div className={classes.buttonListWrapper}>
-                    {([
-                      'Render',
-                      'OtherOralTranslation',
-                    ] as ProductMethodology[]).map((option) => (
-                      <RadioOption
-                        key={option}
-                        label={displayMethodology(option)}
-                        value={option}
-                      />
-                    ))}
-                  </div>
-                  <Typography>Oral Stories</Typography>
-                  <div className={classes.buttonListWrapper}>
-                    {([
-                      'BibleStories',
-                      'BibleStorying',
-                      'OneStory',
-                      'OtherOralStories',
-                    ] as ProductMethodology[]).map((option) => (
-                      <RadioOption
-                        key={option}
-                        label={displayMethodology(option)}
-                        value={option}
-                      />
-                    ))}
-                  </div>
-                  <Typography>Visual</Typography>
-                  <div className={classes.buttonListWrapper}>
-                    {([
-                      'Film',
-                      'SignLanguage',
-                      'OtherVisual',
-                    ] as ProductMethodology[]).map((option) => (
-                      <RadioOption
-                        key={option}
-                        label={displayMethodology(option)}
-                        value={option}
-                      />
-                    ))}
-                  </div>
+                  {entries(ApproachMethodologies).map(
+                    ([approach, methodologies]) => (
+                      <Fragment key={approach}>
+                        <Typography>{displayApproach(approach)}</Typography>
+                        <div className={classes.buttonListWrapper}>
+                          {methodologies.map((option) => (
+                            <RadioOption
+                              key={option}
+                              label={displayMethodology(option)}
+                              value={option}
+                            />
+                          ))}
+                        </div>
+                      </Fragment>
+                    )
+                  )}
                 </AccordionDetails>
               </RadioField>
             </Accordion>

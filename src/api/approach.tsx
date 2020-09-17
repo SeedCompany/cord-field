@@ -5,31 +5,31 @@ import {
   Translate,
 } from '@material-ui/icons';
 import React, { ReactNode } from 'react';
+import { entries, mapFromList } from '../util';
 import { ProductApproach, ProductMethodology } from './schema.generated';
 
-export const MethodologyToApproach: Record<
-  ProductMethodology,
-  ProductApproach
+export const ApproachMethodologies: Record<
+  ProductApproach,
+  ProductMethodology[]
 > = {
-  // Written
-  Paratext: 'Written',
-  OtherWritten: 'Written',
-
-  // Oral Translation
-  Render: 'OralTranslation',
-  OtherOralTranslation: 'OralTranslation',
-
-  // Oral Stories
-  BibleStories: 'OralStories',
-  BibleStorying: 'OralStories',
-  OneStory: 'OralStories',
-  OtherOralStories: 'OralStories',
-
-  // Visual
-  Film: 'Visual',
-  SignLanguage: 'Visual',
-  OtherVisual: 'Visual',
+  Written: ['Paratext', 'OtherWritten'],
+  OralTranslation: ['Render', 'OtherOralTranslation'],
+  OralStories: [
+    'BibleStories',
+    'BibleStorying',
+    'OneStory',
+    'OtherOralStories',
+  ],
+  Visual: ['Film', 'SignLanguage', 'OtherVisual'],
 };
+
+export const MethodologyToApproach = entries(ApproachMethodologies).reduce(
+  (map, [approach, methodologies]) => ({
+    ...map,
+    ...mapFromList(methodologies, (methodology) => [methodology, approach]),
+  }),
+  {}
+) as Record<ProductMethodology, ProductApproach>;
 
 export const ApproachIcons: Record<ProductApproach, ReactNode> = {
   Written: <MenuBook color="inherit" fontSize="inherit" />,
