@@ -107,13 +107,7 @@ export const EditProduct = () => {
         >
           product={product}
           onSubmit={async ({
-            product: {
-              productType,
-              book,
-              produces,
-              scriptureReferences,
-              ...input
-            },
+            product: { productType, produces, scriptureReferences, ...input },
           }) => {
             try {
               await updateProduct({

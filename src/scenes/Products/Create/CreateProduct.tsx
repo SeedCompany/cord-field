@@ -8,7 +8,6 @@ import { EngagementBreadcrumb } from '../../../components/EngagementBreadcrumb';
 import { ProjectBreadcrumb } from '../../../components/ProjectBreadcrumb';
 import { ButtonLink } from '../../../components/Routing';
 import { ProductForm, ProductFormCustomValues } from '../ProductForm';
-import { getIsDerivativeProduct } from '../ProductForm/helpers';
 import {
   useCreateProductMutation,
   useGetProductBreadcrumbQuery,
@@ -61,24 +60,15 @@ export const CreateProduct = () => {
       {!loading && (
         <ProductForm<CreateProductInput & ProductFormCustomValues>
           onSubmit={async ({
-            product: {
-              productType,
-              book,
-              produces,
-              scriptureReferences,
-              ...inputs
-            },
+            product: { productType, produces, scriptureReferences, ...inputs },
           }) => {
-            const isDerivativeProduct =
-              productType && getIsDerivativeProduct(productType);
-
             try {
               const { data } = await createProduct({
                 variables: {
                   input: {
                     product: {
                       ...inputs,
-                      ...(isDerivativeProduct && produces
+                      ...(productType !== 'DirectScriptureProduct' && produces
                         ? {
                             produces: produces.id,
                             scriptureReferencesOverride: scriptureReferences,

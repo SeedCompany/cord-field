@@ -51,7 +51,6 @@ import {
   scriptureRangeDictionary,
 } from '../../../util/biblejs';
 import { newTestament, oldTestament, productTypes } from './constants';
-import { getIsDerivativeProduct } from './helpers';
 import {
   ProductFormFragment,
   useDeleteProductMutation,
@@ -168,8 +167,6 @@ export const renderAccordionSection = (productObj?: ProductFormFragment) => ({
     purposes,
   } = values.product;
 
-  const isDerivativeProduct = getIsDerivativeProduct(productType);
-
   const isProducesFieldMissing =
     form.getFieldState('product.produces')?.error === 'Required';
 
@@ -196,7 +193,9 @@ export const renderAccordionSection = (productObj?: ProductFormFragment) => ({
               {productType && openedSection !== 'produces' && (
                 <ToggleButton selected value={produces || ''}>
                   {`${displayProductTypes(productType)} ${
-                    (isDerivativeProduct && produces?.name.value) || ''
+                    (productType !== 'DirectScriptureProduct' &&
+                      produces?.name.value) ||
+                    ''
                   }`}
                 </ToggleButton>
               )}
