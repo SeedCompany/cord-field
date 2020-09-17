@@ -131,7 +131,7 @@ export function DialogForm<T, R = void>({
           onClose?.('cleanSubmit', form);
           return null;
         }
-        if (sendIfClean || sendIfClean === submitAction) {
+        if (sendIfClean === true || sendIfClean === submitAction) {
           try {
             const res = await onSubmit(data, form);
             onSuccess?.(res);
