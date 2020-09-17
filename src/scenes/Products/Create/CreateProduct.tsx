@@ -1,7 +1,7 @@
 import { Breadcrumbs, makeStyles, Typography } from '@material-ui/core';
 import { Skeleton } from '@material-ui/lab';
 import { useSnackbar } from 'notistack';
-import React from 'react';
+import React, { useMemo } from 'react';
 import { useNavigate, useParams } from 'react-router';
 import { CreateProductInput, handleFormError } from '../../../api';
 import { EngagementBreadcrumb } from '../../../components/EngagementBreadcrumb';
@@ -43,6 +43,10 @@ export const CreateProduct = () => {
   const engagement = data?.engagement;
 
   const [createProduct] = useCreateProductMutation();
+
+  const initialValues = useMemo(() => ({ product: { engagementId } }), [
+    engagementId,
+  ]);
 
   return (
     <main className={classes.root}>
@@ -107,7 +111,7 @@ export const CreateProduct = () => {
               await handleFormError(e);
             }
           }}
-          initialValues={{ product: { engagementId } }}
+          initialValues={initialValues}
         />
       )}
     </main>
