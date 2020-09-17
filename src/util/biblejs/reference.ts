@@ -1,3 +1,4 @@
+import { groupBy } from 'lodash';
 import { books } from './bibleBooks';
 import { Nullable } from '..';
 
@@ -225,3 +226,8 @@ export const getScriptureRangeDisplay = (
       }`
     : book;
 };
+
+export const scriptureRangeDictionary = (
+  scriptureReferenceArr: ScriptureRange[] | undefined = []
+): Record<string, ScriptureRange[]> =>
+  groupBy(scriptureReferenceArr, (range) => range.start.book);
