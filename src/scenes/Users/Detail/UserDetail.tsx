@@ -55,6 +55,7 @@ export const UserDetail = () => {
   const [editUserState, editUser] = useDialog();
 
   const user = data?.user;
+  console.log('user', user);
 
   const canEditAnyFields = canEditAny(user);
 
@@ -124,9 +125,9 @@ export const UserDetail = () => {
             <>
               <Typography variant="h3">Partners</Typography>
               <div className={classes.organizationsContainer}>
-                {user.organizations.items.map((item, index) => (
+                {user.organizations.items.map((item) => (
                   <OrganizationListItemCard
-                    key={item?.id ?? index}
+                    key={item.id}
                     organization={item}
                     className={classes.organization}
                   />
