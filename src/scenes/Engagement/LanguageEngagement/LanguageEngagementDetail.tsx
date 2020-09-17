@@ -5,17 +5,12 @@ import {
   Tooltip,
   Typography,
 } from '@material-ui/core';
-import { ChatOutlined, DateRange, Edit } from '@material-ui/icons';
+import { ChatOutlined, Edit } from '@material-ui/icons';
 import React, { FC } from 'react';
-import {
-  canEditAny,
-  displayEngagementStatus,
-  securedDateRange,
-} from '../../../api';
+import { canEditAny } from '../../../api';
 import { AddItemCard } from '../../../components/AddItemCard';
 import { BooleanProperty } from '../../../components/BooleanProperty';
 import { Breadcrumb } from '../../../components/Breadcrumb';
-import { DataButton } from '../../../components/DataButton';
 import { DefinedFileCard } from '../../../components/DefinedFileCard';
 import { useDialog } from '../../../components/Dialog';
 import { Fab } from '../../../components/Fab';
@@ -29,6 +24,7 @@ import { OptionsIcon, PlantIcon } from '../../../components/Icons';
 import { AddProductCard, ProductCard } from '../../../components/ProductCard';
 import { ProjectBreadcrumb } from '../../../components/ProjectBreadcrumb';
 import { Redacted } from '../../../components/Redacted';
+import { Link } from '../../../components/Routing';
 import { Many } from '../../../util';
 import { CeremonyCard } from '../CeremonyCard';
 import {
@@ -66,7 +62,6 @@ const LanguageEngagementDetailWrapped: FC<EngagementQuery> = ({
     Many<EditableEngagementField>
   >();
 
-  const date = securedDateRange(engagement.startDate, engagement.endDate);
   const formatDate = useDateFormatter();
   const formatDateTime = useDateTimeFormatter();
 
@@ -103,45 +98,48 @@ const LanguageEngagementDetailWrapped: FC<EngagementQuery> = ({
               )}
             </Breadcrumbs>
           </Grid>
-          {editable && (
-            <Grid item>
-              <Tooltip title="Update First Scripture and Luke Partnership">
-                <Fab
-                  color="primary"
-                  aria-label="Update language engagement"
-                  onClick={() => show(['firstScripture', 'lukePartnership'])}
-                >
-                  <Edit />
-                </Fab>
-              </Tooltip>
+          <Grid item container spacing={3} alignItems="center">
+            <Grid item className={langName ? undefined : classes.nameRedacted}>
+              <Typography
+                variant="h2"
+                {...(language
+                  ? { component: Link, to: `/languages/${language.id}` }
+                  : {})}
+              >
+                {langName ?? (
+                  <Redacted
+                    info={`You do not have permission to view this engagement's ${
+                      language ? 'name' : 'language'
+                    }`}
+                    width="100%"
+                  />
+                )}
+              </Typography>
             </Grid>
-          )}
-        </Grid>
-        <Grid item container spacing={3} alignItems="center">
-          <Grid item>
-            <Typography variant="h4">Language Engagement</Typography>
+            {editable && (
+              <Grid item>
+                <Tooltip title="Update First Scripture and Luke Partnership">
+                  <Fab
+                    color="primary"
+                    aria-label="Update language engagement"
+                    onClick={() => show(['firstScripture', 'lukePartnership'])}
+                  >
+                    <Edit />
+                  </Fab>
+                </Tooltip>
+              </Grid>
+            )}
           </Grid>
-          <Grid item>
-            <Typography variant="body2" color="textSecondary">
-              Updated {formatDateTime(engagement.modifiedAt)}
-            </Typography>
-          </Grid>
-        </Grid>
-        <Grid item container spacing={1} alignItems="center">
-          <Grid item>
-            <DataButton
-              startIcon={<DateRange className={classes.infoColor} />}
-              secured={date}
-              redacted="You do not have permission to view start/end dates"
-              children={formatDate.range}
-              empty="Start - End"
-              onClick={() => show(['startDateOverride', 'endDateOverride'])}
-            />
-          </Grid>
-          <Grid item>
-            <DataButton onClick={() => show('status')}>
-              {displayEngagementStatus(engagement.status)}
-            </DataButton>
+          <Grid item container spacing={3} alignItems="center">
+            <Grid item>
+              <Typography variant="h4">Language Engagement</Typography>
+            </Grid>
+
+            <Grid item>
+              <Typography variant="body2" color="textSecondary">
+                Updated {formatDateTime(engagement.modifiedAt)}
+              </Typography>
+            </Grid>
           </Grid>
           <Grid item>
             <DataButton
