@@ -30,7 +30,7 @@ export const DeleteFile = (props: Except<DeleteFileProps, 'onSubmit'>) => {
   return (
     <DialogForm
       {...props}
-      onlyDirtySubmit={false} // There's no way to actually make this form dirty
+      sendIfClean // There's no way to actually make this form dirty
       onSubmit={onSubmit}
       sendIfClean // There's no way to actually make this form dirty
       title={`Delete ${isDirectory ? 'folder' : type}`}
