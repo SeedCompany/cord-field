@@ -44,6 +44,10 @@ import {
   StoryField,
 } from '../../../components/form/Lookup';
 import { VersesField } from '../../../components/form/VersesField';
+import {
+  getScriptureRangeDisplay,
+  matchingScriptureRanges,
+} from '../../../util/biblejs';
 import { newTestament, oldTestament, productTypes } from './constants';
 import { getIsDerivativeProduct } from './helpers';
 import { ProductFormFragment } from './ProductForm.generated';
@@ -224,31 +228,22 @@ export const renderAccordionSection = (productObj?: ProductFormFragment) => ({
                   )}
                 >
                   {oldTestament.map((option) => {
-                    const matchingScriptureRange = scriptureReferences?.find(
-                      ({ start: { book } }: ScriptureRangeInput) =>
-                        book === option
+                    const matchingArr = matchingScriptureRanges(
+                      option,
+                      scriptureReferences
                     );
                     return (
                       <ToggleButton
                         key={option}
                         value={option}
-                        selected={Boolean(matchingScriptureRange)}
+                        selected={Boolean(matchingArr.length)}
                         disabled={disabled}
                         onClick={() => {
-                          form.change(
-                            'updatingScriptures',
-                            scriptureReferences?.filter(
-                              (scriptureRange: ScriptureRangeInput) =>
-                                scriptureRange.start.book === option
-                            )
-                          );
+                          form.change('updatingScriptures', matchingArr);
                           setSelectedBook(option);
                         }}
                       >
-                        {matchingScriptureRange
-                          ? //TODO: display the combined ranges when the logic from scripture pills is ready
-                            displayScripture(matchingScriptureRange)
-                          : option}
+                        {getScriptureRangeDisplay(matchingArr, option)}
                       </ToggleButton>
                     );
                   })}
@@ -261,21 +256,22 @@ export const renderAccordionSection = (productObj?: ProductFormFragment) => ({
                   )}
                 >
                   {newTestament.map((option) => {
-                    const matchingScriptureRange = scriptureReferences?.find(
-                      ({ start: { book } }: ScriptureRangeInput) =>
-                        book === option
+                    const matchingArr = matchingScriptureRanges(
+                      option,
+                      scriptureReferences
                     );
                     return (
                       <ToggleButton
                         key={option}
                         value={option}
-                        selected={Boolean(matchingScriptureRange)}
+                        selected={Boolean(matchingArr.length)}
                         disabled={disabled}
-                        onClick={() => setSelectedBook(option)}
+                        onClick={() => {
+                          form.change('updatingScriptures', matchingArr);
+                          setSelectedBook(option);
+                        }}
                       >
-                        {matchingScriptureRange
-                          ? displayScripture(matchingScriptureRange)
-                          : option}
+                        {getScriptureRangeDisplay(matchingArr, option)}
                       </ToggleButton>
                     );
                   })}
