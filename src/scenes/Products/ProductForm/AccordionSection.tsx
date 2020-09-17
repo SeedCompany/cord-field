@@ -13,18 +13,22 @@ import {
 import { ExpandMore } from '@material-ui/icons';
 import { ToggleButton } from '@material-ui/lab';
 import clsx from 'clsx';
+import { useSnackbar } from 'notistack';
 import React, { useState } from 'react';
 import { FormRenderProps } from 'react-final-form';
+import { useNavigate } from 'react-router';
 import {
   displayMethodology,
   displayMethodologyWithLabel,
   displayProductMedium,
   displayProductPurpose,
   displayProductTypes,
+  GQLOperations,
   ProductMedium,
   ProductMethodology,
   ProductPurpose,
 } from '../../../api';
+import { ErrorButton } from '../../../components/ErrorButton';
 import {
   FieldGroup,
   RadioField,
@@ -51,7 +55,10 @@ import {
 } from '../../../util/biblejs';
 import { newTestament, oldTestament, productTypes } from './constants';
 import { getIsDerivativeProduct } from './helpers';
-import { ProductFormFragment } from './ProductForm.generated';
+import {
+  ProductFormFragment,
+  useDeleteProductMutation,
+} from './ProductForm.generated';
 
 const useStyles = makeStyles(({ spacing, typography }) => ({
   form: {
@@ -93,6 +100,9 @@ const useStyles = makeStyles(({ spacing, typography }) => ({
   dialogText: {
     margin: spacing(1, 0),
   },
+  deleteButton: {
+    marginLeft: spacing(1),
+  },
 }));
 
 const productField = {
@@ -119,12 +129,36 @@ export const renderAccordionSection = (productObj?: ProductFormFragment) => ({
 
   const [openedSection, setOpenedSection] = useState<string>('produces');
   const [selectedBook, setSelectedBook] = useState<string>('');
+  const { enqueueSnackbar } = useSnackbar();
+  const navigate = useNavigate();
+
+  const [deleteProduct] = useDeleteProductMutation({
+    awaitRefetchQueries: true,
+    refetchQueries: [GQLOperations.Query.Engagement],
+  });
+
+  const isEditing = Boolean(productObj);
 
   const handleChange = (panel: string) => (
     event: React.ChangeEvent<Record<string, unknown>>,
     isExpanded: boolean
   ) => {
     setOpenedSection(isExpanded ? panel : '');
+  };
+
+  const handleDelete = async () => {
+    productObj &&
+      (await deleteProduct({
+        variables: {
+          productId: productObj.id,
+        },
+      }));
+
+    enqueueSnackbar(`Product deleted`, {
+      variant: 'success',
+    });
+
+    navigate('../../');
   };
 
   const {
@@ -174,7 +208,7 @@ export const renderAccordionSection = (productObj?: ProductFormFragment) => ({
           </AccordionSummary>
           <RadioField
             name="productType"
-            disabled={Boolean(productObj)}
+            disabled={isEditing}
             defaultValue="DirectScriptureProduct"
           >
             <AccordionDetails className={classes.accordionSection}>
@@ -461,9 +495,19 @@ export const renderAccordionSection = (productObj?: ProductFormFragment) => ({
           Product. If you need to edit your choices, do that above.
         </Typography>
       </div>
-      <SubmitButton fullWidth={false} color="error" size="medium">
+      <SubmitButton fullWidth={false} color="primary" size="medium">
         Save Product
       </SubmitButton>
+      {isEditing && (
+        <ErrorButton
+          fullWidth={false}
+          size="medium"
+          onClick={handleDelete}
+          className={classes.deleteButton}
+        >
+          Delete Product
+        </ErrorButton>
+      )}
       <Dialog open={Boolean(selectedBook)}>
         <DialogTitle>{selectedBook}</DialogTitle>
         <DialogContent className={classes.dialog}>

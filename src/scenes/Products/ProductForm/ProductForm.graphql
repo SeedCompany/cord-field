@@ -101,3 +101,7 @@ fragment ScriptureRange on ScriptureRange {
     verse
   }
 }
+
+mutation DeleteProduct($productId: ID!) {
+  deleteProduct(id: $productId)
+}
