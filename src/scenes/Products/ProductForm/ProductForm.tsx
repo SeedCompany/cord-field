@@ -1,5 +1,6 @@
 import React from 'react';
 import { Form, FormProps, FormSpyRenderProps } from 'react-final-form';
+import { ScriptureRange, ScriptureRangeInput } from '../../../api';
 import {
   FilmLookupItem,
   LiteracyMaterialLookupItem,
@@ -32,25 +33,21 @@ export const ProductForm = <FormMutationValues extends any>({
   product?: ProductFormFragment;
 }) => {
   const parseScriptureRange = (
-    {
-      startChapter,
-      startVerse,
-      endChapter,
-      endVerse,
-    }: FormSpyRenderProps['values'],
+    values: FormSpyRenderProps['values'],
+    prevScriptureReferences: ScriptureRangeInput[] | undefined,
     book: string
-  ) => ({
-    start: {
-      book,
-      chapter: startChapter,
-      verse: startVerse,
-    },
-    end: {
-      book,
-      chapter: endChapter,
-      verse: endVerse,
-    },
-  });
+  ): ScriptureRangeInput[] => {
+    const { updatingScriptures } = values;
+
+    return prevScriptureReferences
+      ? [
+          ...prevScriptureReferences.filter(
+            (scriptureRange) => scriptureRange.start.book !== book
+          ),
+          ...updatingScriptures,
+        ]
+      : [...updatingScriptures];
+  };
 
   return (
     <Form<FormMutationValues>
@@ -65,13 +62,12 @@ export const ProductForm = <FormMutationValues extends any>({
           changeValue(
             state,
             'product.scriptureReferences',
-            (scriptureReferences) =>
-              scriptureReferences
-                ? [
-                    ...scriptureReferences,
-                    parseScriptureRange(state.formState.values, book),
-                  ]
-                : [parseScriptureRange(state.formState.values, book)]
+            (prevScriptureReferences: ScriptureRange[] | undefined) =>
+              parseScriptureRange(
+                state.formState.values,
+                prevScriptureReferences,
+                book
+              )
           );
         },
       }}

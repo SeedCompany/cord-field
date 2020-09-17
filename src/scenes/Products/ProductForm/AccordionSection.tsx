@@ -29,7 +29,6 @@ import {
 } from '../../../api';
 import {
   FieldGroup,
-  NumberField,
   RadioField,
   RadioOption,
   SecuredField,
@@ -44,6 +43,7 @@ import {
   SongField,
   StoryField,
 } from '../../../components/form/Lookup';
+import { VersesField } from '../../../components/form/VersesField';
 import { newTestament, oldTestament, productTypes } from './constants';
 import { getIsDerivativeProduct } from './helpers';
 import { ProductFormFragment } from './ProductForm.generated';
@@ -124,6 +124,8 @@ export const renderAccordionSection = (productObj?: ProductFormFragment) => ({
     mediums,
     purposes,
   } = values.product;
+  console.log('scriptureReferences: ', scriptureReferences);
+  console.log('updatingScriptures: ', values.updatingScriptures);
 
   const isDerivativeProduct = getIsDerivativeProduct(productType);
 
@@ -232,7 +234,16 @@ export const renderAccordionSection = (productObj?: ProductFormFragment) => ({
                         value={option}
                         selected={Boolean(matchingScriptureRange)}
                         disabled={disabled}
-                        onClick={() => setSelectedBook(option)}
+                        onClick={() => {
+                          form.change(
+                            'updatingScriptures',
+                            scriptureReferences?.filter(
+                              (scriptureRange: ScriptureRangeInput) =>
+                                scriptureRange.start.book === option
+                            )
+                          );
+                          setSelectedBook(option);
+                        }}
                       >
                         {matchingScriptureRange
                           ? //TODO: display the combined ranges when the logic from scripture pills is ready
@@ -460,42 +471,16 @@ export const renderAccordionSection = (productObj?: ProductFormFragment) => ({
         Save Product
       </SubmitButton>
       <Dialog open={Boolean(selectedBook)}>
-        <DialogTitle>Choose Verse</DialogTitle>
+        <DialogTitle>Choose Verse for</DialogTitle>
         <DialogContent>
           <Typography>Start</Typography>
-          <NumberField
-            name="startChapter"
-            placeholder="start chapter"
-            required
-          ></NumberField>
-          <NumberField
-            name="startVerse"
-            placeholder="start verse"
-            required
-          ></NumberField>
-
-          <Typography>End</Typography>
-          <NumberField
-            name="endChapter"
-            placeholder="end chapter"
-            required
-          ></NumberField>
-          <NumberField
-            name="endVerse"
-            placeholder="end verse"
-            required
-          ></NumberField>
+          <VersesField book={selectedBook} name="updatingScriptures" />
         </DialogContent>
         <DialogActions>
           <Button
             onClick={() => {
-              form.mutators.clear(
-                'startChapter',
-                'startVerse',
-                'endChapter',
-                'endVerse'
-              );
               setSelectedBook('');
+              form.mutators.clear('updatingScriptures');
             }}
           >
             Cancel
@@ -503,12 +488,7 @@ export const renderAccordionSection = (productObj?: ProductFormFragment) => ({
           <Button
             onClick={() => {
               form.mutators.setScriptureReferencesField(selectedBook);
-              form.mutators.clear(
-                'startChapter',
-                'startVerse',
-                'endChapter',
-                'endVerse'
-              );
+              form.mutators.clear('updatingScriptures');
               setSelectedBook('');
             }}
           >
