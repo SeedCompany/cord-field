@@ -26,6 +26,7 @@ import {
   ProductPurpose,
   ProductPurposeList,
 } from '../../../api';
+import { useDialog } from '../../../components/Dialog';
 import { DialogForm } from '../../../components/Dialog/DialogForm';
 import { ErrorButton } from '../../../components/ErrorButton';
 import {
@@ -105,19 +106,18 @@ const useStyles = makeStyles(({ spacing, typography }) => ({
 }));
 
 const productField = {
-  Film: <FilmField name="produces" label="Search Film" required />,
-  Story: <StoryField name="produces" label="Search Story" required />,
-  LiteracyMaterial: (
-    <LiteracyMaterialField
-      name="produces"
-      label="Search Literacy Material"
-      required
-    />
-  ),
-  Song: <SongField name="produces" label="Search Song" required />,
+  Film: <FilmField name="produces" required />,
+  Story: <StoryField name="produces" required />,
+  LiteracyMaterial: <LiteracyMaterialField name="produces" required />,
+  Song: <SongField name="produces" required />,
 };
 const getProductField = (productType: keyof typeof productField) =>
   productField[productType];
+
+interface ScriptureFormValues {
+  book: string;
+  updatingScriptures: ScriptureRange[];
+}
 
 export const renderAccordionSection = (productObj?: ProductFormFragment) => ({
   handleSubmit,
@@ -126,11 +126,29 @@ export const renderAccordionSection = (productObj?: ProductFormFragment) => ({
 }: FormRenderProps) => {
   const classes = useStyles();
   const isEditing = Boolean(productObj);
+  const {
+    methodology,
+    productType,
+    produces,
+    scriptureReferences,
+    mediums,
+    purposes,
+  } = values.product;
 
   const [openedSection, setOpenedSection] = useState<string>(
     isEditing ? '' : 'produces'
   );
-  const [selectedBook, setSelectedBook] = useState<string>('');
+  const [scriptureForm, openScriptureForm, scriptureInitialValues] = useDialog<
+    ScriptureFormValues
+  >();
+  const selectedBook = scriptureInitialValues?.book;
+  const openBook = (book: string) => {
+    openScriptureForm({
+      book,
+      updatingScriptures: matchingScriptureRanges(book, scriptureReferences),
+    });
+  };
+
   const { enqueueSnackbar } = useSnackbar();
   const navigate = useNavigate();
 
@@ -139,7 +157,7 @@ export const renderAccordionSection = (productObj?: ProductFormFragment) => ({
     refetchQueries: [GQLOperations.Query.Engagement],
   });
 
-  const handleChange = (panel: string) => (
+  const openSection = (panel: string) => (
     event: React.ChangeEvent<Record<string, unknown>>,
     isExpanded: boolean
   ) => {
@@ -161,15 +179,6 @@ export const renderAccordionSection = (productObj?: ProductFormFragment) => ({
     navigate('../../');
   };
 
-  const {
-    methodology,
-    productType,
-    produces,
-    scriptureReferences,
-    mediums,
-    purposes,
-  } = values.product;
-
   const isProducesFieldMissing =
     form.getFieldState('product.produces')?.error === 'Required';
 
@@ -180,7 +189,7 @@ export const renderAccordionSection = (productObj?: ProductFormFragment) => ({
       <FieldGroup prefix="product">
         <Accordion
           expanded={openedSection === 'produces'}
-          onChange={handleChange('produces')}
+          onChange={openSection('produces')}
           classes={{
             root: classes.accordionRoot,
           }}
@@ -233,7 +242,7 @@ export const renderAccordionSection = (productObj?: ProductFormFragment) => ({
           {({ disabled }) => (
             <Accordion
               expanded={openedSection === 'scriptureReferences'}
-              onChange={handleChange('scriptureReferences')}
+              onChange={openSection('scriptureReferences')}
             >
               <AccordionSummary
                 expandIcon={<ExpandMore />}
@@ -262,20 +271,20 @@ export const renderAccordionSection = (productObj?: ProductFormFragment) => ({
                     classes.booksWrapper
                   )}
                 >
-                  {oldTestament.map((option) => {
+                  {oldTestament.map((book) => {
                     const matchingArr = matchingScriptureRanges(
-                      option,
+                      book,
                       scriptureReferences
                     );
                     return (
                       <ToggleButton
-                        key={option}
-                        value={option}
+                        key={book}
+                        value={book}
                         selected={Boolean(matchingArr.length)}
                         disabled={disabled}
-                        onClick={() => setSelectedBook(option)}
+                        onClick={() => openBook(book)}
                       >
-                        {getScriptureRangeDisplay(matchingArr, option)}
+                        {getScriptureRangeDisplay(matchingArr, book)}
                       </ToggleButton>
                     );
                   })}
@@ -287,20 +296,20 @@ export const renderAccordionSection = (productObj?: ProductFormFragment) => ({
                     classes.booksWrapper
                   )}
                 >
-                  {newTestament.map((option) => {
+                  {newTestament.map((book) => {
                     const matchingArr = matchingScriptureRanges(
-                      option,
+                      book,
                       scriptureReferences
                     );
                     return (
                       <ToggleButton
-                        key={option}
-                        value={option}
+                        key={book}
+                        value={book}
                         selected={Boolean(matchingArr.length)}
                         disabled={disabled}
-                        onClick={() => setSelectedBook(option)}
+                        onClick={() => openBook(book)}
                       >
-                        {getScriptureRangeDisplay(matchingArr, option)}
+                        {getScriptureRangeDisplay(matchingArr, book)}
                       </ToggleButton>
                     );
                   })}
@@ -313,7 +322,7 @@ export const renderAccordionSection = (productObj?: ProductFormFragment) => ({
           {(props) => (
             <Accordion
               expanded={openedSection === 'mediums'}
-              onChange={handleChange('mediums')}
+              onChange={openSection('mediums')}
             >
               <AccordionSummary
                 expandIcon={<ExpandMore />}
@@ -351,7 +360,7 @@ export const renderAccordionSection = (productObj?: ProductFormFragment) => ({
           {(props) => (
             <Accordion
               expanded={openedSection === 'purposes'}
-              onChange={handleChange('purposes')}
+              onChange={openSection('purposes')}
             >
               <AccordionSummary
                 expandIcon={<ExpandMore />}
@@ -389,7 +398,7 @@ export const renderAccordionSection = (productObj?: ProductFormFragment) => ({
           {(props) => (
             <Accordion
               expanded={openedSection === 'methodology'}
-              onChange={handleChange('methodology')}
+              onChange={openSection('methodology')}
             >
               <AccordionSummary
                 expandIcon={<ExpandMore />}
@@ -450,37 +459,29 @@ export const renderAccordionSection = (productObj?: ProductFormFragment) => ({
           Delete Product
         </ErrorButton>
       )}
-      <DialogForm<{ updatingScriptures: ScriptureRange[] }>
-        open={Boolean(selectedBook)}
-        title={selectedBook}
-        initialValues={{
-          updatingScriptures: matchingScriptureRanges(
-            selectedBook,
-            scriptureReferences
-          ),
-        }}
-        onSubmit={({ updatingScriptures }) => {
-          form.change(
-            'product.scriptureReferences',
-            mergeScriptureRange(
-              updatingScriptures,
-              scriptureReferences,
-              selectedBook
-            )
-          );
-          setSelectedBook('');
-        }}
-        onClose={() => setSelectedBook('')}
-      >
-        <Typography variant="h4" className={classes.dialogText}>
-          Choose Your Chapters
-        </Typography>
-        <Typography className={classes.dialogText}>
-          When choosing chapters and verses, you can make multiple selections.
-          Input your wanted chapter/s and verses to create multiple selections.
-        </Typography>
-        <VersesField book={selectedBook} name="updatingScriptures" />
-      </DialogForm>
+      {selectedBook && (
+        <DialogForm<ScriptureFormValues>
+          {...scriptureForm}
+          title={selectedBook}
+          initialValues={scriptureInitialValues}
+          onSubmit={({ book, updatingScriptures }) => {
+            form.change(
+              'product.scriptureReferences',
+              mergeScriptureRange(updatingScriptures, scriptureReferences, book)
+            );
+          }}
+        >
+          <Typography variant="h4" className={classes.dialogText}>
+            Choose Your Chapters
+          </Typography>
+          <Typography className={classes.dialogText}>
+            When choosing chapters and verses, you can make multiple selections.
+            Input your wanted chapter/s and verses to create multiple
+            selections.
+          </Typography>
+          <VersesField book={selectedBook} name="updatingScriptures" />
+        </DialogForm>
+      )}
     </form>
   );
 };
