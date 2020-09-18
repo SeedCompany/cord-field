@@ -11,6 +11,7 @@ import {
   MenuBook,
   MusicNote,
   PlayCircleFilled,
+  SvgIconComponent,
 } from '@material-ui/icons';
 import React from 'react';
 import {
@@ -18,6 +19,7 @@ import {
   displayProductMedium,
   displayProductTypes,
 } from '../../api';
+import { ProductTypes } from '../../scenes/Products/ProductForm/constants';
 import { entries } from '../../util';
 import {
   getScriptureRangeDisplay,
@@ -28,39 +30,42 @@ import { DisplaySimpleProperty } from '../DisplaySimpleProperty';
 import { ButtonLink, CardActionAreaLink } from '../Routing';
 import { ProductCardFragment } from './ProductCard.generated';
 
-const useStyles = makeStyles(({ spacing, palette }) => ({
+const useStyles = makeStyles(({ spacing }) => ({
   root: {
     height: '100%',
     display: 'flex',
     flexDirection: 'column',
-    '& > a': {
-      flexGrow: 1,
-    },
+  },
+  actionArea: {
+    flex: 1,
   },
   content: {
+    height: '100%',
     display: 'flex',
     flexDirection: 'column',
     alignItems: 'center',
     justifyContent: 'center',
-    height: '100%',
     '& > *': {
       margin: spacing(1, 0),
     },
   },
-
   icon: {
-    height: spacing(10),
-    width: spacing(10),
-  },
-  deleteButton: {
-    color: palette.error.main,
+    fontSize: 80,
   },
 }));
 
 interface ProductCardProps {
   product: ProductCardFragment;
-  isDeleteLoading?: boolean;
 }
+
+const iconMap: Record<ProductTypes, SvgIconComponent> = {
+  DirectScriptureProduct: MenuBook,
+  Story: DescriptionOutlined,
+  Film: PlayCircleFilled,
+  Song: MusicNote,
+  LiteracyMaterial: LibraryBooksOutlined,
+  DerivativeScriptureProduct: DescriptionOutlined,
+};
 
 export const ProductCard = ({ product }: ProductCardProps) => {
   const classes = useStyles();
@@ -68,28 +73,6 @@ export const ProductCard = ({ product }: ProductCardProps) => {
     product.__typename === 'DerivativeScriptureProduct'
       ? product.produces.value?.__typename || 'DerivativeScriptureProduct'
       : product.__typename;
-
-  const icons = {
-    DirectScriptureProduct: (
-      <MenuBook color="secondary" classes={{ root: classes.icon }} />
-    ),
-    Story: (
-      <DescriptionOutlined color="secondary" classes={{ root: classes.icon }} />
-    ),
-    Film: (
-      <PlayCircleFilled color="secondary" classes={{ root: classes.icon }} />
-    ),
-    Song: <MusicNote color="secondary" classes={{ root: classes.icon }} />,
-    LiteracyMaterial: (
-      <LibraryBooksOutlined
-        color="secondary"
-        classes={{ root: classes.icon }}
-      />
-    ),
-    DerivativeScriptureProduct: (
-      <DescriptionOutlined color="secondary" classes={{ root: classes.icon }} />
-    ),
-  };
 
   const producibleName =
     product.__typename === 'DerivativeScriptureProduct' &&
@@ -103,11 +86,16 @@ export const ProductCard = ({ product }: ProductCardProps) => {
       ? product.produces.value.name.value
       : '');
 
+  const Icon = type ? iconMap[type] : undefined;
+
   return (
-    <Card classes={{ root: classes.root }}>
-      <CardActionAreaLink to={`products/${product.id}`}>
+    <Card className={classes.root}>
+      <CardActionAreaLink
+        to={`products/${product.id}`}
+        className={classes.actionArea}
+      >
         <CardContent className={classes.content}>
-          {type && icons[type]}
+          {Icon && <Icon color="secondary" className={classes.icon} />}
           {type && (
             <Typography variant="h4" align="center">{`${displayProductTypes(
               type
