@@ -54,6 +54,11 @@ export const fileTypes: FileType[] = [
     previewSupported: true,
   },
   {
+    mimeType: 'application/vnd.ms-excel.sheet.macroEnabled.12',
+    Icon: SpreadsheetIcon,
+    previewSupported: true,
+  },
+  {
     mimeType: 'application/vnd.ms-outlook',
     Icon: OtherIcon,
     previewSupported: false,

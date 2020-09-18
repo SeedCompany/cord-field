@@ -109,6 +109,10 @@ const previewers: PreviewerProperties = {
     component: ExcelPreview,
     props: {},
   },
+  'application/vnd.ms-excel.sheet.macroenabled.12': {
+    component: ExcelPreview,
+    props: {},
+  },
   'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet': {
     component: ExcelPreview,
     props: {},
@@ -176,7 +180,6 @@ export const FilePreview: FC<FilePreviewProps> = (props) => {
 
   const Previewer = previewers[mimeType]?.component;
   const previewerProps = previewers[mimeType]?.props;
-
   const retrieveFile = useCallback(
     async (
       url: string,
