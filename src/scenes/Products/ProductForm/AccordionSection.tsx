@@ -12,6 +12,7 @@ import { useSnackbar } from 'notistack';
 import React, { Fragment, MouseEvent, useState } from 'react';
 import { FormRenderProps } from 'react-final-form';
 import { useNavigate } from 'react-router';
+import { UnionToIntersection } from 'type-fest';
 import {
   ApproachMethodologies,
   displayApproach,
@@ -112,6 +113,8 @@ export interface ScriptureFormValues {
   updatingScriptures: ScriptureRange[];
 }
 
+type SectionKey = keyof UnionToIntersection<ProductFormFragment> | undefined;
+
 export const renderAccordionSection = (productObj?: ProductFormFragment) => ({
   handleSubmit,
   values,
@@ -128,8 +131,8 @@ export const renderAccordionSection = (productObj?: ProductFormFragment) => ({
     purposes,
   } = values.product;
 
-  const [openedSection, setOpenedSection] = useState<string>(
-    isEditing ? '' : 'produces'
+  const [openedSection, setOpenedSection] = useState<SectionKey>(
+    isEditing ? undefined : 'produces'
   );
   const [scriptureForm, openScriptureForm, scriptureInitialValues] = useDialog<
     ScriptureFormValues
@@ -153,11 +156,11 @@ export const renderAccordionSection = (productObj?: ProductFormFragment) => ({
     refetchQueries: [GQLOperations.Query.Engagement],
   });
 
-  const openSection = (panel: string) => (
+  const openSection = (panel: SectionKey) => (
     event: React.ChangeEvent<Record<string, unknown>>,
     isExpanded: boolean
   ) => {
-    setOpenedSection(isExpanded ? panel : '');
+    setOpenedSection(isExpanded ? panel : undefined);
   };
 
   const handleDelete = async () => {
