@@ -6,6 +6,7 @@ import {
   DialogFormProps,
 } from '../../../components/Dialog/DialogForm';
 import { VersesField } from '../../../components/form/VersesField';
+import { Nullable } from '../../../util';
 import { ScriptureRange } from '../../../util/biblejs';
 import { ScriptureFormValues } from './AccordionSection';
 
@@ -24,7 +25,7 @@ type VersesDialogProps = Except<
   'initialValues'
 > &
   ScriptureFormValues & {
-    currentScriptureReferences: ScriptureRange[];
+    currentScriptureReferences: Nullable<readonly ScriptureRange[]>;
   };
 
 export const VersesDialog = ({

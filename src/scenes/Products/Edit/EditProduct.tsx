@@ -3,11 +3,10 @@ import { Skeleton } from '@material-ui/lab';
 import { useSnackbar } from 'notistack';
 import React, { useMemo } from 'react';
 import { useNavigate, useParams } from 'react-router';
-import { Except } from 'type-fest';
-import { handleFormError, UpdateProduct } from '../../../api';
+import { handleFormError } from '../../../api';
 import { EngagementBreadcrumb } from '../../../components/EngagementBreadcrumb';
 import { ProjectBreadcrumb } from '../../../components/ProjectBreadcrumb';
-import { ProductForm, ProductFormCustomValues } from '../ProductForm';
+import { ProductForm } from '../ProductForm';
 import { ScriptureRangeFragment } from '../ProductForm/ProductForm.generated';
 import {
   useProductQuery,
@@ -58,11 +57,10 @@ export const EditProduct = () => {
 
   const initialValues = useMemo(() => {
     if (!product) return undefined;
-    const { id, mediums, purposes, methodology, scriptureReferences } = product;
+    const { mediums, purposes, methodology, scriptureReferences } = product;
 
     return {
       product: {
-        id,
         mediums: mediums.value,
         purposes: purposes.value,
         methodology: methodology.value,
@@ -100,11 +98,7 @@ export const EditProduct = () => {
       </Typography>
 
       {product && (
-        <ProductForm<
-          ProductFormCustomValues & {
-            product: Except<UpdateProduct, 'produces'>;
-          }
-        >
+        <ProductForm
           product={product}
           onSubmit={async ({
             product: { productType, produces, scriptureReferences, ...input },
@@ -114,6 +108,7 @@ export const EditProduct = () => {
                 variables: {
                   input: {
                     product: {
+                      id: product.id,
                       ...input,
                       produces: produces?.id,
                       ...(productType !== 'DirectScriptureProduct'

@@ -10,9 +10,10 @@ import { ToggleButton } from '@material-ui/lab';
 import { startCase } from 'lodash';
 import React, { ComponentType, MouseEvent, ReactNode, useState } from 'react';
 import { FormRenderProps } from 'react-final-form';
-import { Except, UnionToIntersection } from 'type-fest';
+import { Except, Merge, UnionToIntersection } from 'type-fest';
 import {
   ApproachMethodologies,
+  CreateProduct,
   displayApproach,
   displayMethodology,
   displayMethodologyWithLabel,
@@ -23,6 +24,7 @@ import {
   ProductMediumList,
   ProductPurpose,
   ProductPurposeList,
+  UpdateProduct,
 } from '../../../api';
 import { useDialog } from '../../../components/Dialog';
 import {
@@ -37,9 +39,13 @@ import {
 } from '../../../components/form';
 import {
   FilmField,
+  FilmLookupItem,
   LiteracyMaterialField,
+  LiteracyMaterialLookupItem,
   SongField,
+  SongLookupItem,
   StoryField,
+  StoryLookupItem,
 } from '../../../components/form/Lookup';
 import { entries } from '../../../util';
 import {
@@ -89,6 +95,21 @@ const productFieldMap: Partial<Record<
   Song: SongField,
 };
 
+export interface ProductFormValues {
+  product: Merge<
+    Except<CreateProduct & UpdateProduct, 'id' | 'engagementId'>,
+    {
+      productType?: ProductTypes;
+      produces?:
+        | FilmLookupItem
+        | StoryLookupItem
+        | LiteracyMaterialLookupItem
+        | SongLookupItem;
+      scriptureReferences?: readonly ScriptureRange[];
+    }
+  >;
+}
+
 export interface ScriptureFormValues {
   book: string;
   updatingScriptures: ScriptureRange[];
@@ -102,20 +123,21 @@ export const AccordionSection = ({
   values,
   form,
   product,
-}: Except<FormRenderProps<any>, 'handleSubmit'> & {
+  touched,
+}: Except<FormRenderProps<ProductFormValues>, 'handleSubmit'> & {
   product?: ProductFormFragment;
 }) => {
   const productObj = product as Product | undefined;
   const classes = useStyles();
   const isEditing = Boolean(productObj);
   const {
+    productType,
     methodology,
     produces,
     scriptureReferences,
     mediums,
     purposes,
-  } = values.product;
-  const productType = values.product.productType as ProductTypes | undefined;
+  } = (values as Partial<ProductFormValues>).product ?? {};
 
   const [openedSection, setOpenedSection] = useState<ProductKey | undefined>(
     isEditing ? undefined : 'produces'
@@ -140,12 +162,12 @@ export const AccordionSection = ({
     });
   };
 
-  const isProducesFieldMissing =
-    form.getFieldState('product.produces')?.error === 'Required';
+  const isProducesFieldMissing = !produces && touched?.['product.produces'];
 
   const onVersesFieldSubmit = ({ updatingScriptures }: versesDialogValues) => {
     scriptureInitialValues &&
       form.change(
+        // @ts-expect-error this is a valid field key
         'product.scriptureReferences',
         mergeScriptureRange(
           updatingScriptures,

@@ -1,13 +1,13 @@
 import { Breadcrumbs, makeStyles, Typography } from '@material-ui/core';
 import { Skeleton } from '@material-ui/lab';
 import { useSnackbar } from 'notistack';
-import React, { useMemo } from 'react';
+import React from 'react';
 import { useNavigate, useParams } from 'react-router';
-import { CreateProductInput, handleFormError } from '../../../api';
+import { handleFormError } from '../../../api';
 import { EngagementBreadcrumb } from '../../../components/EngagementBreadcrumb';
 import { ProjectBreadcrumb } from '../../../components/ProjectBreadcrumb';
 import { ButtonLink } from '../../../components/Routing';
-import { ProductForm, ProductFormCustomValues } from '../ProductForm';
+import { ProductForm } from '../ProductForm';
 import {
   useCreateProductMutation,
   useGetProductBreadcrumbQuery,
@@ -43,10 +43,6 @@ export const CreateProduct = () => {
 
   const [createProduct] = useCreateProductMutation();
 
-  const initialValues = useMemo(() => ({ product: { engagementId } }), [
-    engagementId,
-  ]);
-
   return (
     <main className={classes.root}>
       <Breadcrumbs>
@@ -58,7 +54,7 @@ export const CreateProduct = () => {
         {loading ? <Skeleton width="50%" variant="text" /> : 'Create Product'}
       </Typography>
       {!loading && (
-        <ProductForm<CreateProductInput & ProductFormCustomValues>
+        <ProductForm
           onSubmit={async ({
             product: { productType, produces, scriptureReferences, ...inputs },
           }) => {
@@ -67,6 +63,7 @@ export const CreateProduct = () => {
                 variables: {
                   input: {
                     product: {
+                      engagementId,
                       ...inputs,
                       ...(productType !== 'DirectScriptureProduct' && produces
                         ? {
@@ -101,7 +98,6 @@ export const CreateProduct = () => {
               await handleFormError(e);
             }
           }}
-          initialValues={initialValues}
         />
       )}
     </main>

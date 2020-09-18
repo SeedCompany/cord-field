@@ -10,13 +10,7 @@ import {
   SubmitButton,
   SubmitError,
 } from '../../../components/form';
-import {
-  FilmLookupItem,
-  LiteracyMaterialLookupItem,
-  SongLookupItem,
-  StoryLookupItem,
-} from '../../../components/form/Lookup';
-import { AccordionSection } from './AccordionSection';
+import { AccordionSection, ProductFormValues } from './AccordionSection';
 import {
   ProductFormFragment,
   useDeleteProductMutation,
@@ -35,26 +29,10 @@ const useStyles = makeStyles(({ spacing }) => ({
   },
 }));
 
-export interface ProductFormCustomValues {
-  product: {
-    book?: string;
-    productType?: string;
-    produces?:
-      | FilmLookupItem
-      | StoryLookupItem
-      | LiteracyMaterialLookupItem
-      | SongLookupItem;
-  };
-  startChapter?: string;
-  startVerse?: string;
-  endChapter?: string;
-  endVerse?: string;
-}
-
-export const ProductForm = <FormMutationValues extends any>({
+export const ProductForm = ({
   product,
   ...props
-}: FormProps<FormMutationValues> & {
+}: FormProps<ProductFormValues> & {
   product?: ProductFormFragment;
 }) => {
   const classes = useStyles();
@@ -67,7 +45,7 @@ export const ProductForm = <FormMutationValues extends any>({
   });
 
   return (
-    <Form<FormMutationValues>
+    <Form<ProductFormValues>
       {...props}
       onSubmit={async (data, form) => {
         if ((data as SubmitAction).submitAction !== 'delete') {

@@ -209,14 +209,14 @@ class ScriptureError extends Error {
  */
 export const matchingScriptureRanges = (
   bookToMatch: string,
-  scriptureReferenceArr: ScriptureRange[] | undefined = []
+  scriptureReferenceArr: Nullable<readonly ScriptureRange[]>
 ) =>
-  scriptureReferenceArr.filter(
+  (scriptureReferenceArr ?? []).filter(
     ({ start: { book } }: ScriptureRange) => book === bookToMatch
   );
 
 export const getScriptureRangeDisplay = (
-  scriptureReferenceArr: ScriptureRange[],
+  scriptureReferenceArr: readonly ScriptureRange[],
   book: string
 ) => {
   const count = scriptureReferenceArr.length;
@@ -232,7 +232,7 @@ export const getScriptureRangeDisplay = (
  * Keys are bible books and the values are array of scriptureRanges that start with that book
  */
 export const scriptureRangeDictionary = (
-  scriptureReferenceArr: ScriptureRange[] | undefined = []
+  scriptureReferenceArr: readonly ScriptureRange[] | undefined = []
 ): Record<string, ScriptureRange[]> =>
   groupBy(scriptureReferenceArr, (range) => range.start.book);
 
@@ -241,8 +241,8 @@ export const scriptureRangeDictionary = (
  * merging all ranges in the the updating values and the ranges in the prevScriptureReferences array that doesn't match the book
  */
 export const mergeScriptureRange = (
-  updatingScriptures: ScriptureRange[],
-  prevScriptureReferences: ScriptureRange[] | undefined,
+  updatingScriptures: readonly ScriptureRange[],
+  prevScriptureReferences: Nullable<readonly ScriptureRange[]>,
   book: string
 ): ScriptureRange[] =>
   prevScriptureReferences
