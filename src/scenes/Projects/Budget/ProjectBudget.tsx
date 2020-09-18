@@ -5,8 +5,8 @@ import { Column, Components } from 'material-table';
 import React, { useMemo } from 'react';
 import { useParams } from 'react-router-dom';
 import { Breadcrumb } from '../../../components/Breadcrumb';
-import { ContentContainer as Content } from '../../../components/ContentContainer';
 import { useCurrencyFormatter } from '../../../components/Formatters/useCurrencyFormatter';
+import { ContentContainer } from '../../../components/Layout';
 import { ProjectBreadcrumb } from '../../../components/ProjectBreadcrumb';
 import { Table } from '../../../components/Table';
 import {
@@ -98,7 +98,7 @@ export const ProjectBudget = () => {
   );
 
   return (
-    <Content>
+    <ContentContainer>
       {error ? (
         <Typography variant="h4">Error fetching Project Budget</Typography>
       ) : budget?.canRead === false ? (
@@ -148,6 +148,6 @@ export const ProjectBudget = () => {
           />
         </>
       )}
-    </Content>
+    </ContentContainer>
   );
 };

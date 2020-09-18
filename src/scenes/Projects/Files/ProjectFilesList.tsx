@@ -12,7 +12,6 @@ import { useDropzone } from 'react-dropzone';
 import { useNavigate, useParams } from 'react-router-dom';
 import { File } from '../../../api';
 import { Breadcrumb } from '../../../components/Breadcrumb';
-import { ContentContainer as Content } from '../../../components/ContentContainer';
 import { useDialog } from '../../../components/Dialog';
 import {
   FileActionsPopup as ActionsMenu,
@@ -31,6 +30,7 @@ import {
   parseFileNameAndExtension,
   useDateTimeFormatter,
 } from '../../../components/Formatters';
+import { ContentContainer } from '../../../components/Layout';
 import { ProjectBreadcrumb } from '../../../components/ProjectBreadcrumb';
 import { Table } from '../../../components/Table';
 import { CreateProjectDirectory } from './CreateProjectDirectory';
@@ -285,7 +285,7 @@ const ProjectFilesListWrapped: FC = () => {
           </Typography>
         </div>
       )}
-      <Content>
+      <ContentContainer>
         {error || (!loading && !items) ? (
           <Typography variant="h4">Error fetching Project Files</Typography>
         ) : directoryIsNotInProject ? (
@@ -353,7 +353,7 @@ const ProjectFilesListWrapped: FC = () => {
           </>
         )}
         <CreateProjectDirectory {...createDirectoryState} />
-      </Content>
+      </ContentContainer>
     </div>
   );
 };
