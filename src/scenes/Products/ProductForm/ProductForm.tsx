@@ -4,9 +4,9 @@ import React from 'react';
 import { Form, FormProps } from 'react-final-form';
 import { useNavigate } from 'react-router';
 import { GQLOperations } from '../../../api';
-import { ErrorButton } from '../../../components/ErrorButton';
 import {
   FieldGroup,
+  SubmitAction,
   SubmitButton,
   SubmitError,
 } from '../../../components/form';
@@ -65,23 +65,29 @@ export const ProductForm = <FormMutationValues extends any>({
     awaitRefetchQueries: true,
     refetchQueries: [GQLOperations.Query.Engagement],
   });
-  const handleDelete = async () => {
-    product &&
-      (await deleteProduct({
-        variables: {
-          productId: product.id,
-        },
-      }));
-
-    enqueueSnackbar(`Product deleted`, {
-      variant: 'success',
-    });
-
-    navigate('../../');
-  };
 
   return (
-    <Form<FormMutationValues> {...props}>
+    <Form<FormMutationValues>
+      {...props}
+      onSubmit={async (data, form) => {
+        if ((data as SubmitAction).submitAction !== 'delete') {
+          return await props.onSubmit(data, form);
+        }
+        if (!product) {
+          return;
+        }
+
+        await deleteProduct({
+          variables: {
+            productId: product.id,
+          },
+        });
+        enqueueSnackbar(`Product deleted`, {
+          variant: 'success',
+        });
+        navigate('../../');
+      }}
+    >
       {({ handleSubmit, ...rest }) => (
         <form onSubmit={handleSubmit}>
           <SubmitError />
@@ -99,14 +105,14 @@ export const ProductForm = <FormMutationValues extends any>({
             Save Product
           </SubmitButton>
           {product && (
-            <ErrorButton
+            <SubmitButton
+              action="delete"
               fullWidth={false}
               size="medium"
-              onClick={handleDelete}
               className={classes.deleteButton}
             >
               Delete Product
-            </ErrorButton>
+            </SubmitButton>
           )}
         </form>
       )}
