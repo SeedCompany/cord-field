@@ -5,6 +5,7 @@ import { Project } from '../../../api';
 import { FilterButtonDialog } from '../../../components/Filter';
 import { useNumberFormatter } from '../../../components/Formatters';
 import { ContentContainer } from '../../../components/Layout';
+import { ListContainer } from '../../../components/Layout/ListContainer';
 import { ProjectListItemCard } from '../../../components/ProjectListItemCard';
 import { SortButtonDialog, useSort } from '../../../components/Sort';
 import { listOrPlaceholders } from '../../../util';
@@ -21,11 +22,6 @@ const useStyles = makeStyles(({ spacing }) => ({
   },
   projectItem: {
     marginBottom: spacing(2),
-  },
-  listContainer: {
-    marginLeft: spacing(-2),
-    overflow: 'auto',
-    padding: spacing(2),
   },
 }));
 
@@ -68,7 +64,7 @@ export const ProjectList: FC = () => {
           <Skeleton width="12ch" />
         )}
       </Typography>
-      <div className={classes.listContainer}>
+      <ListContainer>
         {listOrPlaceholders(data?.projects.items, 5).map((item, index) => (
           <ProjectListItemCard
             key={item?.id ?? index}
@@ -76,7 +72,7 @@ export const ProjectList: FC = () => {
             className={classes.projectItem}
           />
         ))}
-      </div>
+      </ListContainer>
     </ContentContainer>
   );
 };

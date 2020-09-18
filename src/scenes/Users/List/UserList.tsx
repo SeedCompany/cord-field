@@ -4,6 +4,7 @@ import React, { FC } from 'react';
 import { User } from '../../../api';
 import { useNumberFormatter } from '../../../components/Formatters';
 import { ContentContainer } from '../../../components/Layout';
+import { ListContainer } from '../../../components/Layout/ListContainer';
 import { SortButtonDialog, useSort } from '../../../components/Sort';
 import { UserListItemCardLandscape as UserCard } from '../../../components/UserListItemCard';
 import { listOrPlaceholders } from '../../../util';
@@ -16,11 +17,6 @@ const useStyles = makeStyles(({ spacing }) => ({
   },
   projectItem: {
     marginBottom: spacing(2),
-  },
-  listContainer: {
-    overflow: 'auto',
-    marginLeft: spacing(-2),
-    padding: spacing(2),
   },
 }));
 
@@ -57,7 +53,7 @@ export const UserList: FC = () => {
           <>{formatNumber(data?.users.total)} People</>
         )}
       </Typography>
-      <div className={classes.listContainer}>
+      <ListContainer>
         {listOrPlaceholders(data?.users.items, 10).map((item, index) => (
           <UserCard
             key={item?.id ?? index}
@@ -65,7 +61,7 @@ export const UserList: FC = () => {
             className={classes.projectItem}
           />
         ))}
-      </div>
+      </ListContainer>
     </ContentContainer>
   );
 };

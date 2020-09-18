@@ -6,6 +6,7 @@ import { Language } from '../../../api';
 import { useNumberFormatter } from '../../../components/Formatters';
 import { LanguageListItemCard } from '../../../components/LanguageListItemCard';
 import { ContentContainer } from '../../../components/Layout';
+import { ListContainer } from '../../../components/Layout/ListContainer';
 import { SortButtonDialog, useSort } from '../../../components/Sort';
 import { useLanguagesQuery } from './languages.generated';
 import { LanguageSortOptions } from './LanguageSortOptions';
@@ -13,11 +14,6 @@ import { LanguageSortOptions } from './LanguageSortOptions';
 const useStyles = makeStyles(({ spacing }) => ({
   options: {
     margin: spacing(3, 0),
-  },
-  listContainer: {
-    overflow: 'auto',
-    marginLeft: spacing(-2),
-    padding: spacing(2),
   },
   item: {
     marginBottom: spacing(2),
@@ -59,7 +55,7 @@ export const LanguageList: FC = () => {
           <Skeleton width="14ch" />
         )}
       </Typography>
-      <div className={classes.listContainer}>
+      <ListContainer>
         {loading
           ? times(10).map((index) => (
               <LanguageListItemCard key={index} className={classes.item} />
@@ -71,7 +67,7 @@ export const LanguageList: FC = () => {
                 className={classes.item}
               />
             ))}
-      </div>
+      </ListContainer>
     </ContentContainer>
   );
 };

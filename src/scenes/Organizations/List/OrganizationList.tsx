@@ -4,6 +4,7 @@ import React, { FC } from 'react';
 import { Organization } from '../../../api';
 import { useNumberFormatter } from '../../../components/Formatters';
 import { ContentContainer } from '../../../components/Layout';
+import { ListContainer } from '../../../components/Layout/ListContainer';
 import { OrganizationListItemCard } from '../../../components/OrganizationListItemCard';
 import { SortButtonDialog, useSort } from '../../../components/Sort';
 import { listOrPlaceholders } from '../../../util';
@@ -16,11 +17,6 @@ const useStyles = makeStyles(({ spacing }) => ({
   },
   item: {
     marginBottom: spacing(2),
-  },
-  listContainer: {
-    overflow: 'auto',
-    marginLeft: spacing(-2),
-    padding: spacing(2),
   },
 }));
 
@@ -57,7 +53,7 @@ export const OrganizationList: FC = () => {
           <Skeleton width="10ch" />
         )}
       </Typography>
-      <div className={classes.listContainer}>
+      <ListContainer>
         {listOrPlaceholders(items, 15).map((item, index) => (
           <OrganizationListItemCard
             key={item?.id ?? index}
@@ -65,7 +61,7 @@ export const OrganizationList: FC = () => {
             className={classes.item}
           />
         ))}
-      </div>
+      </ListContainer>
     </ContentContainer>
   );
 };
