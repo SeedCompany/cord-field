@@ -79,7 +79,7 @@ const useStyles = makeStyles(({ palette, spacing }) => ({
     width: '100%',
   },
   tableWrapper: {
-    marginTop: spacing(4),
+    margin: spacing(4, 4, 4, 0),
   },
   folderLink: {
     color: 'inherit',
