@@ -123,7 +123,7 @@ export const EditProduct = () => {
                 },
               });
 
-              enqueueSnackbar(`Updates Saved`, {
+              enqueueSnackbar(`Updated product`, {
                 variant: 'success',
               });
 

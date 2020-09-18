@@ -60,7 +60,7 @@ export const ProductForm = ({
             productId: product.id,
           },
         });
-        enqueueSnackbar(`Product deleted`, {
+        enqueueSnackbar(`Deleted product`, {
           variant: 'success',
         });
         navigate('../../');

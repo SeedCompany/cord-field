@@ -80,8 +80,7 @@ export const CreateProduct = () => {
 
               const { product } = data!.createProduct;
 
-              //TODO: confirm with design what to show here
-              enqueueSnackbar(`Created ${product.__typename}`, {
+              enqueueSnackbar(`Created product`, {
                 variant: 'success',
                 action: () => (
                   <ButtonLink
