@@ -9,7 +9,7 @@ import { ExpandMore } from '@material-ui/icons';
 import { ToggleButton } from '@material-ui/lab';
 import clsx from 'clsx';
 import { useSnackbar } from 'notistack';
-import React, { Fragment, useState } from 'react';
+import React, { Fragment, MouseEvent, useState } from 'react';
 import { FormRenderProps } from 'react-final-form';
 import { useNavigate } from 'react-router';
 import {
@@ -27,7 +27,6 @@ import {
   ProductPurposeList,
 } from '../../../api';
 import { useDialog } from '../../../components/Dialog';
-import { DialogForm } from '../../../components/Dialog/DialogForm';
 import { ErrorButton } from '../../../components/ErrorButton';
 import {
   FieldGroup,
@@ -45,12 +44,10 @@ import {
   SongField,
   StoryField,
 } from '../../../components/form/Lookup';
-import { VersesField } from '../../../components/form/VersesField';
 import { entries } from '../../../util';
 import {
   getScriptureRangeDisplay,
   matchingScriptureRanges,
-  mergeScriptureRange,
   ScriptureRange,
   scriptureRangeDictionary,
 } from '../../../util/biblejs';
@@ -59,6 +56,7 @@ import {
   ProductFormFragment,
   useDeleteProductMutation,
 } from './ProductForm.generated';
+import { VersesDialog } from './VersesDialog';
 
 const useStyles = makeStyles(({ spacing, typography }) => ({
   accordionSummary: {
@@ -114,7 +112,7 @@ const productField = {
 const getProductField = (productType: keyof typeof productField) =>
   productField[productType];
 
-interface ScriptureFormValues {
+export interface ScriptureFormValues {
   book: string;
   updatingScriptures: ScriptureRange[];
 }
@@ -141,11 +139,14 @@ export const renderAccordionSection = (productObj?: ProductFormFragment) => ({
   const [scriptureForm, openScriptureForm, scriptureInitialValues] = useDialog<
     ScriptureFormValues
   >();
-  const selectedBook = scriptureInitialValues?.book;
-  const openBook = (book: string) => {
+
+  const openBook = (event: MouseEvent<HTMLButtonElement>) => {
     openScriptureForm({
-      book,
-      updatingScriptures: matchingScriptureRanges(book, scriptureReferences),
+      book: event.currentTarget.value,
+      updatingScriptures: matchingScriptureRanges(
+        event.currentTarget.value,
+        scriptureReferences
+      ),
     });
   };
 
@@ -282,7 +283,7 @@ export const renderAccordionSection = (productObj?: ProductFormFragment) => ({
                         value={book}
                         selected={Boolean(matchingArr.length)}
                         disabled={disabled}
-                        onClick={() => openBook(book)}
+                        onClick={openBook}
                       >
                         {getScriptureRangeDisplay(matchingArr, book)}
                       </ToggleButton>
@@ -307,7 +308,7 @@ export const renderAccordionSection = (productObj?: ProductFormFragment) => ({
                         value={book}
                         selected={Boolean(matchingArr.length)}
                         disabled={disabled}
-                        onClick={() => openBook(book)}
+                        onClick={openBook}
                       >
                         {getScriptureRangeDisplay(matchingArr, book)}
                       </ToggleButton>
@@ -459,28 +460,14 @@ export const renderAccordionSection = (productObj?: ProductFormFragment) => ({
           Delete Product
         </ErrorButton>
       )}
-      {selectedBook && (
-        <DialogForm<ScriptureFormValues>
+
+      {scriptureInitialValues && (
+        <VersesDialog
           {...scriptureForm}
-          title={selectedBook}
-          initialValues={scriptureInitialValues}
-          onSubmit={({ book, updatingScriptures }) => {
-            form.change(
-              'product.scriptureReferences',
-              mergeScriptureRange(updatingScriptures, scriptureReferences, book)
-            );
-          }}
-        >
-          <Typography variant="h4" className={classes.dialogText}>
-            Choose Your Chapters
-          </Typography>
-          <Typography className={classes.dialogText}>
-            When choosing chapters and verses, you can make multiple selections.
-            Input your wanted chapter/s and verses to create multiple
-            selections.
-          </Typography>
-          <VersesField book={selectedBook} name="updatingScriptures" />
-        </DialogForm>
+          {...scriptureInitialValues}
+          currentScriptureReferences={scriptureReferences}
+          changeField={form.change}
+        />
       )}
     </form>
   );
