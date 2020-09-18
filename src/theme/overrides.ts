@@ -133,10 +133,5 @@ export const appOverrides: ThemeOptions['overrides'] = ({
         },
       },
     },
-    MuiAccordion: {
-      rounded: {
-        borderRadius: 6,
-      },
-    },
   };
 };
