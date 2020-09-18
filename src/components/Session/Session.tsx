@@ -1,39 +1,38 @@
-import { useApolloClient } from '@apollo/client';
-import constate from 'constate';
-import { useCallback, useEffect } from 'react';
+import { ApolloCache } from '@apollo/client';
+import { LoginMutation } from '../../scenes/Authentication/Login/Login.generated';
+import { RegisterMutation } from '../../scenes/Authentication/Register/register.generated';
 import {
   LoggedInUserFragment,
   SessionDocument,
   SessionQuery,
-  useSessionLazyQuery,
+  useSessionQuery,
 } from './session.generated';
 
-export type SessionUser = LoggedInUserFragment;
+export const useSession = () => {
+  const { data, loading: sessionLoading } = useSessionQuery();
+  const session = data?.session.user;
 
-function Session({ user }: { user?: SessionUser | null }) {
-  const client = useApolloClient();
-  const [getSession, { loading, data, called }] = useSessionLazyQuery();
-  const setSession = useCallback(
-    (user: SessionUser | null) =>
-      client.writeQuery<SessionQuery>({
-        query: SessionDocument,
-        data: {
-          session: {
-            __typename: 'SessionOutput',
-            user,
-          },
+  return { session, sessionLoading };
+};
+
+export const updateSessionCache = <T extends LoginMutation | RegisterMutation>(
+  cache: ApolloCache<T>,
+  user: LoggedInUserFragment
+) => {
+  const currentSession = cache.readQuery<SessionQuery>({
+    query: SessionDocument,
+  });
+  if (currentSession) {
+    const updatedSession = {
+      ...currentSession,
+      session: {
+        ...currentSession.session,
+        user: {
+          ...currentSession.session.user,
+          ...user,
         },
-      }),
-    [client]
-  );
-  useEffect(() => {
-    if (user !== undefined) {
-      setSession(user);
-    }
-    getSession();
-  }, [user, getSession, setSession]);
-
-  return [data?.session.user, called ? loading : true, setSession] as const;
-}
-
-export const [SessionProvider, useSession] = constate(Session);
+      },
+    };
+    cache.writeQuery({ query: SessionDocument, data: updatedSession });
+  }
+};

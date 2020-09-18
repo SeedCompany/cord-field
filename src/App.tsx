@@ -5,7 +5,6 @@ import * as React from 'react';
 import { BrowserRouter } from 'react-router-dom';
 import { ApolloProvider } from './api';
 import { Nest } from './components/Nest';
-import { SessionProvider } from './components/Session';
 import { SnackbarProvider } from './components/Snackbar';
 import { TitleProvider } from './components/title';
 import { UploadManagerProvider, UploadProvider } from './components/Upload';
@@ -27,7 +26,6 @@ export const appProviders = [
   <LocalizationProvider dateAdapter={LuxonUtils} children={<></>} />,
   <SnackbarProvider />,
   <ApolloProvider />,
-  <SessionProvider />,
   <UploadManagerProvider />,
   <UploadProvider />,
 ];

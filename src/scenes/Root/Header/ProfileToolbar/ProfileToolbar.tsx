@@ -27,7 +27,7 @@ const useStyles = makeStyles(({ typography, spacing }) => ({
 
 export const ProfileToolbar: FC = () => {
   const classes = useStyles();
-  const [session] = useSession();
+  const { session } = useSession();
   const [profileAnchor, setProfileAnchor] = useState<MenuProps['anchorEl']>();
   const [actionsAnchor, setActionsAnchor] = useState<MenuProps['anchorEl']>();
 
