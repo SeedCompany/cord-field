@@ -6,6 +6,7 @@ import {
   Typography,
 } from '@material-ui/core';
 import {
+  AddCircle,
   DescriptionOutlined,
   LibraryBooksOutlined,
   MenuBook,
@@ -13,6 +14,7 @@ import {
   PlayCircleFilled,
   SvgIconComponent,
 } from '@material-ui/icons';
+import clsx from 'clsx';
 import React from 'react';
 import {
   displayMethodologyWithLabel,
@@ -44,10 +46,13 @@ const useStyles = makeStyles(({ spacing }) => ({
     display: 'flex',
     flexDirection: 'column',
     alignItems: 'center',
-    justifyContent: 'center',
     '& > *': {
       margin: spacing(1, 0),
     },
+  },
+  contentAdd: {
+    padding: spacing(7, 0),
+    justifyContent: 'center',
   },
   icon: {
     fontSize: 80,
@@ -136,6 +141,21 @@ export const ProductCard = ({ product }: ProductCardProps) => {
           Edit
         </ButtonLink>
       </CardActions>
+    </Card>
+  );
+};
+
+export const AddProductCard = () => {
+  const classes = useStyles();
+
+  return (
+    <Card className={classes.root}>
+      <CardActionAreaLink to="./products/create" className={classes.actionArea}>
+        <CardContent className={clsx(classes.content, classes.contentAdd)}>
+          <AddCircle color="disabled" className={classes.icon} />
+          <Typography variant="h4">Add Product</Typography>
+        </CardContent>
+      </CardActionAreaLink>
     </Card>
   );
 };

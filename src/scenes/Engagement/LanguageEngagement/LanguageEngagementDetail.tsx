@@ -1,13 +1,11 @@
 import {
   Breadcrumbs,
-  Card,
-  CardContent,
   Grid,
   makeStyles,
   Tooltip,
   Typography,
 } from '@material-ui/core';
-import { AddCircle, ChatOutlined, DateRange, Edit } from '@material-ui/icons';
+import { ChatOutlined, DateRange, Edit } from '@material-ui/icons';
 import React, { FC } from 'react';
 import {
   canEditAny,
@@ -25,10 +23,10 @@ import {
   useDateTimeFormatter,
 } from '../../../components/Formatters';
 import { OptionsIcon, PlantIcon } from '../../../components/Icons';
-import { ProductCard } from '../../../components/ProductCard';
+import { AddProductCard, ProductCard } from '../../../components/ProductCard';
 import { ProjectBreadcrumb } from '../../../components/ProjectBreadcrumb';
 import { Redacted } from '../../../components/Redacted';
-import { CardActionAreaLink, Link } from '../../../components/Routing';
+import { Link } from '../../../components/Routing';
 import { Many } from '../../../util';
 import { CeremonyCard } from '../CeremonyCard';
 import {
@@ -51,25 +49,6 @@ const useStyles = makeStyles(({ spacing, breakpoints, palette }) => ({
   },
   infoColor: {
     color: palette.info.main,
-  },
-  addProductCard: {
-    height: '100%',
-    display: 'flex',
-    '& a': {
-      display: 'flex',
-    },
-  },
-  cardContent: {
-    display: 'flex',
-    flexDirection: 'column',
-    alignItems: 'center',
-    '& > *': {
-      margin: spacing(1, 0),
-    },
-  },
-  cardIcon: {
-    height: spacing(10),
-    width: spacing(10),
   },
 }));
 
@@ -232,26 +211,28 @@ export const LanguageEngagementDetail: FC<EngagementQuery> = ({
             <CeremonyCard {...engagement.ceremony} />
           </Grid>
         </Grid>
-        <Typography variant="h4">Products</Typography>
-        <Grid item container spacing={3}>
-          {engagement.products.items.map((product) => (
-            <Grid item xs={4} key={product.id}>
-              <ProductCard product={product} />
+        <Grid item>
+          <Typography variant="h3" paragraph>
+            Products
+          </Typography>
+          {engagement.products.canRead ? (
+            <Grid container spacing={3}>
+              {engagement.products.items.map((product) => (
+                <Grid item xs={4} key={product.id}>
+                  <ProductCard product={product} />
+                </Grid>
+              ))}
+              {engagement.products.canCreate && (
+                <Grid item xs={4}>
+                  <AddProductCard />
+                </Grid>
+              )}
             </Grid>
-          ))}
-          <Grid item xs={4}>
-            <Card className={classes.addProductCard}>
-              <CardActionAreaLink to="./products/create">
-                <CardContent className={classes.cardContent}>
-                  <AddCircle
-                    color="disabled"
-                    classes={{ root: classes.cardIcon }}
-                  />
-                  <Typography variant="h4">Add Product</Typography>
-                </CardContent>
-              </CardActionAreaLink>
-            </Card>
-          </Grid>
+          ) : (
+            <Typography color="textSecondary">
+              You don't have permission to see this engagement's products
+            </Typography>
+          )}
         </Grid>
       </Grid>
       <EditEngagementDialog
