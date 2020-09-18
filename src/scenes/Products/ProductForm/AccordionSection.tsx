@@ -42,12 +42,13 @@ import { entries } from '../../../util';
 import {
   getScriptureRangeDisplay,
   matchingScriptureRanges,
+  mergeScriptureRange,
   ScriptureRange,
   scriptureRangeDictionary,
 } from '../../../util/biblejs';
 import { newTestament, oldTestament, productTypes } from './constants';
 import { ProductFormFragment } from './ProductForm.generated';
-import { VersesDialog } from './VersesDialog';
+import { VersesDialog, versesDialogValues } from './VersesDialog';
 
 const useStyles = makeStyles(({ spacing, typography }) => ({
   accordionSummary: {
@@ -133,6 +134,18 @@ export const AccordionSection = ({
 
   const isProducesFieldMissing =
     form.getFieldState('product.produces')?.error === 'Required';
+
+  const onVersesFieldSubmit = ({ updatingScriptures }: versesDialogValues) => {
+    scriptureInitialValues &&
+      form.change(
+        'product.scriptureReferences',
+        mergeScriptureRange(
+          updatingScriptures,
+          scriptureReferences,
+          scriptureInitialValues.book
+        )
+      );
+  };
 
   return (
     <div>
@@ -390,7 +403,7 @@ export const AccordionSection = ({
           {...scriptureForm}
           {...scriptureInitialValues}
           currentScriptureReferences={scriptureReferences}
-          changeField={form.change}
+          onSubmit={onVersesFieldSubmit}
         />
       )}
     </div>

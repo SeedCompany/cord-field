@@ -1,13 +1,12 @@
 import { makeStyles, Typography } from '@material-ui/core';
-import { FormApi } from 'final-form';
-import React from 'react';
+import React, { useMemo } from 'react';
 import { Except } from 'type-fest';
 import {
   DialogForm,
   DialogFormProps,
 } from '../../../components/Dialog/DialogForm';
 import { VersesField } from '../../../components/form/VersesField';
-import { mergeScriptureRange, ScriptureRange } from '../../../util/biblejs';
+import { ScriptureRange } from '../../../util/biblejs';
 import { ScriptureFormValues } from './AccordionSection';
 
 const useStyles = makeStyles(({ spacing }) => ({
@@ -16,43 +15,35 @@ const useStyles = makeStyles(({ spacing }) => ({
   },
 }));
 
-interface versesDialogValues {
+export interface versesDialogValues {
   updatingScriptures: ScriptureRange[];
 }
 
 type VersesDialogProps = Except<
   DialogFormProps<versesDialogValues>,
-  'onSubmit' | 'initialValues'
+  'initialValues'
 > &
   ScriptureFormValues & {
     currentScriptureReferences: ScriptureRange[];
-    changeField: FormApi['change'];
   };
 
 export const VersesDialog = ({
   book,
   updatingScriptures,
   currentScriptureReferences,
-  changeField,
-  ...dialogState
+  ...dialogProps
 }: VersesDialogProps) => {
   const classes = useStyles();
 
+  const initialValues = useMemo(() => ({ updatingScriptures }), [
+    updatingScriptures,
+  ]);
+
   return (
     <DialogForm<versesDialogValues>
-      {...dialogState}
+      {...dialogProps}
       title={book}
-      initialValues={{ updatingScriptures }}
-      onSubmit={({ updatingScriptures }) => {
-        changeField(
-          'product.scriptureReferences',
-          mergeScriptureRange(
-            updatingScriptures,
-            currentScriptureReferences,
-            book
-          )
-        );
-      }}
+      initialValues={initialValues}
     >
       <Typography variant="h4" className={classes.dialogText}>
         Choose Your Chapters
