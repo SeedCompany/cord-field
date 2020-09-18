@@ -221,7 +221,7 @@ export const getScriptureRangeDisplay = (
 ) => {
   const count = scriptureReferenceArr.length;
   return count
-    ? `${book}: ${formatScriptureRange(scriptureReferenceArr[0])} ${
+    ? `${book} ${formatScriptureRange(scriptureReferenceArr[0])} ${
         count > 1 ? `+ ${count - 1} more` : ''
       }`
     : book;
