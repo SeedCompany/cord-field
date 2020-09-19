@@ -35,6 +35,7 @@ export type CheckboxesFieldProps = FieldConfig<string[]> &
     label?: ReactNode;
     helperText?: ReactNode;
     FormGroupProps?: FormGroupProps;
+    pickOne?: boolean;
   };
 
 export type CheckboxOptionProps = Pick<
@@ -67,6 +68,7 @@ export const CheckboxesField = ({
   labelPlacement = 'end',
   defaultValue: defaultValueProp,
   FormGroupProps,
+  pickOne,
   ...props
 }: CheckboxesFieldProps) => {
   // Memoize defaultValue so array can be passed inline while still preventing
@@ -134,6 +136,14 @@ export const CheckboxesField = ({
                 return;
               }
 
+              if (pickOne && checked) {
+                input.onChange([optName]);
+                return;
+              }
+              if (pickOne && !checked) {
+                input.onChange([]);
+                return;
+              }
               const newVal = new Set(value);
               if (checked) {
                 newVal.add(optName);

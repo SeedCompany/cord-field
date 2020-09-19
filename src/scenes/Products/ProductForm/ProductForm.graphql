@@ -1,0 +1,107 @@
+fragment ProductForm on Product {
+  id
+  legacyType
+  scriptureReferences {
+    ...SecuredScriptureRanges
+  }
+  mediums {
+    canRead
+    canEdit
+    value
+  }
+  purposes {
+    canRead
+    canEdit
+    value
+  }
+  methodology {
+    canRead
+    canEdit
+    value
+  }
+  approach
+  legacyType
+  ... on DerivativeScriptureProduct {
+    produces {
+      canRead
+      canEdit
+      value {
+        ...Producible
+      }
+    }
+    scriptureReferencesOverride {
+      ...SecuredScriptureRangesOverride
+    }
+  }
+}
+
+fragment Producible on Producible {
+  id
+  __typename
+  createdAt
+  ... on Film {
+    name {
+      ...ss
+    }
+    scriptureReferences {
+      ...SecuredScriptureRanges
+    }
+  }
+  ... on LiteracyMaterial {
+    name {
+      ...ss
+    }
+    scriptureReferences {
+      ...SecuredScriptureRanges
+    }
+  }
+  ... on Story {
+    name {
+      ...ss
+    }
+    scriptureReferences {
+      ...SecuredScriptureRanges
+    }
+  }
+  ... on Song {
+    name {
+      ...ss
+    }
+    scriptureReferences {
+      ...SecuredScriptureRanges
+    }
+  }
+}
+
+fragment SecuredScriptureRanges on SecuredScriptureRanges {
+  canRead
+  canEdit
+  value {
+    ...ScriptureRange
+  }
+}
+
+fragment SecuredScriptureRangesOverride on SecuredScriptureRangesOverride {
+  canRead
+  canEdit
+  value {
+    ...ScriptureRange
+  }
+}
+
+fragment ScriptureRange on ScriptureRange {
+  start {
+    book
+    chapter
+    verse
+  }
+  end {
+    book
+    chapter
+    verse
+  }
+}
+
+mutation DeleteProduct($productId: ID!) {
+  deleteProduct(id: $productId)
+}

@@ -23,6 +23,7 @@ import {
   useDateTimeFormatter,
 } from '../../../components/Formatters';
 import { OptionsIcon, PlantIcon } from '../../../components/Icons';
+import { AddProductCard, ProductCard } from '../../../components/ProductCard';
 import { ProjectBreadcrumb } from '../../../components/ProjectBreadcrumb';
 import { Redacted } from '../../../components/Redacted';
 import { Link } from '../../../components/Routing';
@@ -167,7 +168,7 @@ export const LanguageEngagementDetail: FC<EngagementQuery> = ({
             wrap={(node) => <Grid item>{node}</Grid>}
           />
         </Grid>
-        <Grid item container spacing={3} alignItems="center">
+        <Grid item container spacing={3}>
           <Grid item xs={6}>
             <FieldOverviewCard
               title="Translation Complete Date"
@@ -177,6 +178,7 @@ export const LanguageEngagementDetail: FC<EngagementQuery> = ({
               icon={PlantIcon}
               onClick={() => show('completeDate')}
               onButtonClick={() => show('completeDate')}
+              emptyValue="None"
             />
           </Grid>
           <Grid item xs={6}>
@@ -188,6 +190,7 @@ export const LanguageEngagementDetail: FC<EngagementQuery> = ({
               icon={OptionsIcon}
               onClick={() => show('disbursementCompleteDate')}
               onButtonClick={() => show('disbursementCompleteDate')}
+              emptyValue="None"
             />
           </Grid>
           <Grid item xs={6}>
@@ -199,6 +202,7 @@ export const LanguageEngagementDetail: FC<EngagementQuery> = ({
               icon={ChatOutlined}
               onClick={() => show('communicationsCompleteDate')}
               onButtonClick={() => show('communicationsCompleteDate')}
+              emptyValue="None"
             />
           </Grid>
         </Grid>
@@ -206,6 +210,29 @@ export const LanguageEngagementDetail: FC<EngagementQuery> = ({
           <Grid item xs={6}>
             <CeremonyCard {...engagement.ceremony} />
           </Grid>
+        </Grid>
+        <Grid item>
+          <Typography variant="h3" paragraph>
+            Products
+          </Typography>
+          {engagement.products.canRead ? (
+            <Grid container spacing={3}>
+              {engagement.products.items.map((product) => (
+                <Grid item xs={4} key={product.id}>
+                  <ProductCard product={product} />
+                </Grid>
+              ))}
+              {engagement.products.canCreate && (
+                <Grid item xs={4}>
+                  <AddProductCard />
+                </Grid>
+              )}
+            </Grid>
+          ) : (
+            <Typography color="textSecondary">
+              You don't have permission to see this engagement's products
+            </Typography>
+          )}
         </Grid>
       </Grid>
       <EditEngagementDialog

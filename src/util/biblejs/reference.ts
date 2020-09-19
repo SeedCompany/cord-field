@@ -1,3 +1,4 @@
+import { groupBy } from 'lodash';
 import { books } from './bibleBooks';
 import { Nullable } from '..';
 
@@ -199,3 +200,56 @@ class ScriptureError extends Error {
     this.code = code;
   }
 }
+
+/**
+ * Takes in a scripture range array and a book to match, outputs a new array with the matching ranges.
+ * This assumes each scripture range object is only contained to one book.
+ * @param bookToMatch The book to match
+ * @param scriptureReferenceArr Array of scripture references, can be undefined
+ */
+export const matchingScriptureRanges = (
+  bookToMatch: string,
+  scriptureReferenceArr: Nullable<readonly ScriptureRange[]>
+) =>
+  (scriptureReferenceArr ?? []).filter(
+    ({ start: { book } }: ScriptureRange) => book === bookToMatch
+  );
+
+export const getScriptureRangeDisplay = (
+  scriptureReferenceArr: readonly ScriptureRange[],
+  book: string
+) => {
+  const count = scriptureReferenceArr.length;
+  return count
+    ? `${book} ${formatScriptureRange(scriptureReferenceArr[0])} ${
+        count > 1 ? `+ ${count - 1} more` : ''
+      }`
+    : book;
+};
+
+/**
+ * Creates a dictary from an array of scripture ranges
+ * Keys are bible books and the values are array of scriptureRanges that start with that book
+ */
+export const scriptureRangeDictionary = (
+  scriptureReferenceArr: readonly ScriptureRange[] | undefined = []
+): Record<string, ScriptureRange[]> =>
+  groupBy(scriptureReferenceArr, (range) => range.start.book);
+
+/**
+ * Merge two scripture ranges together
+ * merging all ranges in the the updating values and the ranges in the prevScriptureReferences array that doesn't match the book
+ */
+export const mergeScriptureRange = (
+  updatingScriptures: readonly ScriptureRange[],
+  prevScriptureReferences: Nullable<readonly ScriptureRange[]>,
+  book: string
+): ScriptureRange[] =>
+  prevScriptureReferences
+    ? [
+        ...prevScriptureReferences.filter(
+          (scriptureRange) => scriptureRange.start.book !== book
+        ),
+        ...updatingScriptures,
+      ]
+    : [...updatingScriptures];

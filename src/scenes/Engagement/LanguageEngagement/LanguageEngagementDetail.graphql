@@ -52,5 +52,12 @@ fragment LanguageEngagementDetail on LanguageEngagement {
   ceremony {
     ...CeremonyCard
   }
+  products {
+    canRead
+    canCreate
+    items {
+      ...ProductCard
+    }
+  }
   ...EditEngagement
 }

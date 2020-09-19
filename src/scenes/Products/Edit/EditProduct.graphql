@@ -1,0 +1,19 @@
+mutation UpdateProduct($input: UpdateProductInput!) {
+  updateProduct(input: $input) {
+    product {
+      ...ProductForm
+    }
+  }
+}
+
+query Product($productId: ID!, $projectId: ID!, $engagementId: ID!) {
+  product(id: $productId) {
+    ...ProductForm
+  }
+  project(id: $projectId) {
+    ...ProjectBreadcrumb
+  }
+  engagement(id: $engagementId) {
+    ...EngagementBreadcrumb
+  }
+}

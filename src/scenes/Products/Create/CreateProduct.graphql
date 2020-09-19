@@ -1,0 +1,16 @@
+mutation CreateProduct($input: CreateProductInput!) {
+  createProduct(input: $input) {
+    product {
+      id
+    }
+  }
+}
+
+query GetProductBreadcrumb($projectId: ID!, $engagementId: ID!) {
+  project(id: $projectId) {
+    ...ProjectBreadcrumb
+  }
+  engagement(id: $engagementId) {
+    ...EngagementBreadcrumb
+  }
+}
