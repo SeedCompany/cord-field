@@ -35,6 +35,11 @@ fragment ProjectOverview on Project {
     value
   }
   status
+  estimatedSubmission {
+    canRead
+    canEdit
+    value
+  }
   step {
     canRead
     canEdit
