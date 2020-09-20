@@ -33,11 +33,11 @@ export const Register = (props: Except<Props, 'onSubmit'>) => {
         update: (cache, { data }) => {
           const user = data?.register.user;
           if (user) {
+            setSuccess(true);
             updateSessionCache(cache, user);
           }
         },
       });
-      setSuccess(true);
       const returnTo = decodeURIComponent(query.get('returnTo') ?? '/');
       navigate(returnTo, { replace: true });
     } catch (e) {

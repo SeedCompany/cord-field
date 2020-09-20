@@ -28,11 +28,11 @@ export const Login = (props: Except<Props, 'onSubmit'>) => {
         update: (cache, { data }) => {
           const user = data?.login.user;
           if (user) {
+            setSuccess(true);
             updateSessionCache(cache, user);
           }
         },
       });
-      setSuccess(true);
       const returnTo = decodeURIComponent(query.get('returnTo') ?? '/');
       navigate(returnTo, { replace: true });
     } catch (e) {
