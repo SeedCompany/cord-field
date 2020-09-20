@@ -11,11 +11,11 @@ export const Logout = () => {
   const [logout] = useLogoutMutation();
 
   useEffect(() => {
-    void logout().then(() =>
-      client.resetStore().then(() => {
+    void logout()
+      .then(() => client.resetStore())
+      .then(() => {
         navigate('/login', { replace: true });
-      })
-    );
+      });
   }, [logout, client, navigate]);
 
   return <CircularProgress />;
