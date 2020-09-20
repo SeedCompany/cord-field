@@ -329,6 +329,15 @@ export const ProjectOverview: FC = () => {
                 {displayProjectStep(projectOverviewData?.project.step.value)}
               </DataButton>
             </Grid>
+            <Grid item>
+              <DataButton
+                loading={!projectOverviewData}
+                onClick={() => editField('sensitivity')}
+                disabled={projectOverviewData?.project.type === 'Translation'}
+              >
+                {projectOverviewData?.project.sensitivity}
+              </DataButton>
+            </Grid>
           </Grid>
 
           {directoryIdLoading || !canReadDirectoryId ? null : (
