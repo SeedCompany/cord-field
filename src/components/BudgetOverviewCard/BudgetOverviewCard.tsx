@@ -19,7 +19,7 @@ export const BudgetOverviewCard: FC<BudgetOverviewCardProps> = ({
   return (
     <FieldOverviewCard
       className={className}
-      title="Project Budget"
+      title="Field Budget"
       viewLabel="Budget Details"
       data={
         budget
