@@ -11,7 +11,7 @@ export const FilesOverviewCard = () => {
       <Card
         loading={boolean('loading', false)}
         total={number('total', 1)}
-        canReadFiles={boolean('canReadFiles', true)}
+        redacted={boolean('canReadFiles', true)}
       />
     </Box>
   );

@@ -49,6 +49,13 @@ const useStyles = makeStyles(({ spacing, breakpoints, palette }) => ({
   name: {
     marginRight: spacing(4),
   },
+  container: {
+    display: 'flex',
+    alignItems: 'center',
+  },
+  budgetOverviewCard: {
+    marginRight: spacing(3),
+  },
   infoColor: {
     color: palette.info.main,
   },
@@ -257,25 +264,23 @@ export const ProjectOverview: FC = () => {
               </Grid>
             </Grid>
           )}
-          <Grid container spacing={3}>
-            <Grid item xs={6}>
-              <BudgetOverviewCard budget={data?.project.budget.value} />
-            </Grid>
-            <Grid item xs={6}>
-              {/* TODO When file api is finished need to update query and pass in file information */}
-              <FilesOverviewCard
-                loading={!data}
-                total={undefined}
-                canReadFiles={canReadDirectoryId === true}
-              />
-            </Grid>
-            <Grid item xs={12}>
-              <CardGroup>
-                <ProjectMembersSummary members={data?.project.team} />
-                <PartnershipSummary partnerships={data?.project.partnerships} />
-              </CardGroup>
-            </Grid>
-          </Grid>
+          <div className={classes.container}>
+            <BudgetOverviewCard
+              budget={data?.project.budget.value}
+              className={classes.budgetOverviewCard}
+              loading={!data}
+            />
+            {/* TODO When file api is finished need to update query and pass in file information */}
+            <FilesOverviewCard
+              loading={!data}
+              total={undefined}
+              redacted={canReadDirectoryId === true}
+            />
+          </div>
+          <CardGroup>
+            <ProjectMembersSummary members={data?.project.team} />
+            <PartnershipSummary partnerships={data?.project.partnerships} />
+          </CardGroup>
 
           <Grid container spacing={2} alignItems="center">
             <Grid item>
