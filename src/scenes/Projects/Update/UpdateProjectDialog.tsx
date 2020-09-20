@@ -88,6 +88,7 @@ export const UpdateProjectDialog = ({
       step: project.step.value,
       mouStart: project.mouStart.value,
       mouEnd: project.mouEnd.value,
+      estimatedSubmission: project.estimatedSubmission.value,
     };
 
     // Filter out irrelevant initial values so they don't get added to the mutation
@@ -109,6 +110,7 @@ export const UpdateProjectDialog = ({
     project.mouEnd.value,
     project.mouStart.value,
     project.step.value,
+    project.estimatedSubmission.value,
   ]);
 
   return (
