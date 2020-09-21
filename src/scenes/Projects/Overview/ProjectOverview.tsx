@@ -223,6 +223,21 @@ export const ProjectOverview: FC = () => {
                 onClick={() => editField(['mouStart', 'mouEnd'])}
               />
             </Grid>
+            {data?.project.status === 'InDevelopment' && (
+              <Grid item>
+                <Tooltip title="Estimated Submission to Regional Director">
+                  <DataButton
+                    loading={!data}
+                    startIcon={<DateRange className={classes.infoColor} />}
+                    secured={data.project.estimatedSubmission}
+                    redacted="You do not have permission to view estimated submission date"
+                    children={formatDate}
+                    empty="Estimated Submission"
+                    onClick={() => editField(['estimatedSubmission'])}
+                  />
+                </Tooltip>
+              </Grid>
+            )}
             <Grid item>
               <DataButton
                 loading={!data}
@@ -233,19 +248,6 @@ export const ProjectOverview: FC = () => {
                 {displayProjectStep(data?.project.step.value)}
               </DataButton>
             </Grid>
-            {data?.project.status === 'InDevelopment' && (
-              <Grid item>
-                <DataButton
-                  loading={!data}
-                  startIcon={<DateRange className={classes.infoColor} />}
-                  secured={data.project.estimatedSubmission}
-                  redacted="You do not have permission to view estimated submission date"
-                  children={formatDate}
-                  empty="Estimated Submission"
-                  onClick={() => editField(['estimatedSubmission'])}
-                />
-              </Grid>
-            )}
           </Grid>
 
           {directoryIdLoading || !canReadDirectoryId ? null : (
