@@ -41,7 +41,7 @@ import {
 import { useProjectCurrentDirectory } from './useProjectCurrentDirectory';
 import { useUploadProjectFiles } from './useUploadProjectFiles';
 
-const useStyles = makeStyles(({ palette, spacing }) => ({
+const useStyles = makeStyles(({ palette, spacing, breakpoints }) => ({
   dropzone: {
     overflowY: 'auto',
     position: 'relative',
@@ -80,6 +80,7 @@ const useStyles = makeStyles(({ palette, spacing }) => ({
   },
   tableWrapper: {
     margin: spacing(4, 4, 4, 0),
+    maxWidth: breakpoints.values.md,
   },
   folderLink: {
     color: 'inherit',
