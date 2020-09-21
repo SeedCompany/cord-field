@@ -2,9 +2,10 @@ import { Grid, makeStyles, Typography } from '@material-ui/core';
 import { Skeleton } from '@material-ui/lab';
 import React, { FC } from 'react';
 import { Project } from '../../../api';
-import { ContentContainer } from '../../../components/ContentContainer';
 import { FilterButtonDialog } from '../../../components/Filter';
 import { useNumberFormatter } from '../../../components/Formatters';
+import { ContentContainer } from '../../../components/Layout';
+import { ListContainer } from '../../../components/Layout/ListContainer';
 import { ProjectListItemCard } from '../../../components/ProjectListItemCard';
 import { SortButtonDialog, useSort } from '../../../components/Sort';
 import { listOrPlaceholders } from '../../../util';
@@ -63,13 +64,15 @@ export const ProjectList: FC = () => {
           <Skeleton width="12ch" />
         )}
       </Typography>
-      {listOrPlaceholders(data?.projects.items, 5).map((item, index) => (
-        <ProjectListItemCard
-          key={item?.id ?? index}
-          project={item}
-          className={classes.projectItem}
-        />
-      ))}
+      <ListContainer>
+        {listOrPlaceholders(data?.projects.items, 5).map((item, index) => (
+          <ProjectListItemCard
+            key={item?.id ?? index}
+            project={item}
+            className={classes.projectItem}
+          />
+        ))}
+      </ListContainer>
     </ContentContainer>
   );
 };

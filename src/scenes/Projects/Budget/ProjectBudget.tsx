@@ -5,8 +5,8 @@ import { Column, Components } from 'material-table';
 import React, { useMemo } from 'react';
 import { useParams } from 'react-router-dom';
 import { Breadcrumb } from '../../../components/Breadcrumb';
-import { ContentContainer as Content } from '../../../components/ContentContainer';
 import { useCurrencyFormatter } from '../../../components/Formatters/useCurrencyFormatter';
+import { ContentContainer } from '../../../components/Layout';
 import { ProjectBreadcrumb } from '../../../components/ProjectBreadcrumb';
 import { Table } from '../../../components/Table';
 import {
@@ -15,12 +15,17 @@ import {
   useUpdateProjectBudgetRecordMutation,
 } from './ProjectBudget.generated';
 
-const useStyles = makeStyles(({ spacing }) => ({
+const useStyles = makeStyles(({ spacing, breakpoints }) => ({
   header: {
-    margin: spacing(3, 0),
+    margin: spacing(3, 4, 3, 0),
     display: 'flex',
     justifyContent: 'space-between',
     alignItems: 'flex-end',
+    maxWidth: breakpoints.values.md,
+  },
+  tableWrapper: {
+    maxWidth: breakpoints.values.md,
+    margin: spacing(0, 4, 4, 0),
   },
   totalLoading: {
     width: '10%',
@@ -98,7 +103,7 @@ export const ProjectBudget = () => {
   );
 
   return (
-    <Content>
+    <ContentContainer>
       {error ? (
         <Typography variant="h4">Error fetching Project Budget</Typography>
       ) : budget?.canRead === false ? (
@@ -124,30 +129,33 @@ export const ProjectBudget = () => {
               )}
             </Typography>
           </header>
-          <Table
-            data={rowData}
-            columns={columns}
-            isLoading={loading}
-            components={tableComponents}
-            cellEditable={
-              budget?.canEdit
-                ? {
-                    onCellEditApproved: async (newAmount, _, data) => {
-                      if (newAmount === blankAmount || newAmount === '') return;
-                      const input = {
-                        budgetRecord: {
-                          id: data.id,
-                          amount: Number(newAmount),
-                        },
-                      };
-                      await updateBudgetRecord({ variables: { input } });
-                    },
-                  }
-                : undefined
-            }
-          />
+          <div className={classes.tableWrapper}>
+            <Table
+              data={rowData}
+              columns={columns}
+              isLoading={loading}
+              components={tableComponents}
+              cellEditable={
+                budget?.canEdit
+                  ? {
+                      onCellEditApproved: async (newAmount, _, data) => {
+                        if (newAmount === blankAmount || newAmount === '')
+                          return;
+                        const input = {
+                          budgetRecord: {
+                            id: data.id,
+                            amount: Number(newAmount),
+                          },
+                        };
+                        await updateBudgetRecord({ variables: { input } });
+                      },
+                    }
+                  : undefined
+              }
+            />
+          </div>
         </>
       )}
-    </Content>
+    </ContentContainer>
   );
 };

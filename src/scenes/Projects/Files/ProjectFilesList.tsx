@@ -12,7 +12,6 @@ import { useDropzone } from 'react-dropzone';
 import { useNavigate, useParams } from 'react-router-dom';
 import { File } from '../../../api';
 import { Breadcrumb } from '../../../components/Breadcrumb';
-import { ContentContainer as Content } from '../../../components/ContentContainer';
 import { useDialog } from '../../../components/Dialog';
 import {
   FileActionsPopup as ActionsMenu,
@@ -31,6 +30,7 @@ import {
   parseFileNameAndExtension,
   useDateTimeFormatter,
 } from '../../../components/Formatters';
+import { ContentContainer } from '../../../components/Layout';
 import { ProjectBreadcrumb } from '../../../components/ProjectBreadcrumb';
 import { Table } from '../../../components/Table';
 import { CreateProjectDirectory } from './CreateProjectDirectory';
@@ -41,9 +41,9 @@ import {
 import { useProjectCurrentDirectory } from './useProjectCurrentDirectory';
 import { useUploadProjectFiles } from './useUploadProjectFiles';
 
-const useStyles = makeStyles(({ palette, spacing }) => ({
+const useStyles = makeStyles(({ palette, spacing, breakpoints }) => ({
   dropzone: {
-    overflowY: 'scroll',
+    overflowY: 'auto',
     position: 'relative',
     width: '100%',
     height: '100%',
@@ -79,7 +79,8 @@ const useStyles = makeStyles(({ palette, spacing }) => ({
     width: '100%',
   },
   tableWrapper: {
-    marginTop: spacing(4),
+    margin: spacing(4, 4, 4, 0),
+    maxWidth: breakpoints.values.md,
   },
   folderLink: {
     color: 'inherit',
@@ -291,7 +292,7 @@ const ProjectFilesListWrapped: FC = () => {
           </Typography>
         </div>
       )}
-      <Content>
+      <ContentContainer>
         {error || (!loading && !items) ? (
           <Typography variant="h4">Error fetching Project Files</Typography>
         ) : directoryIsNotInProject ? (
@@ -359,7 +360,7 @@ const ProjectFilesListWrapped: FC = () => {
           </>
         )}
         <CreateProjectDirectory {...createDirectoryState} />
-      </Content>
+      </ContentContainer>
     </div>
   );
 };

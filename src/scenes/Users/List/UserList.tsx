@@ -2,8 +2,9 @@ import { Grid, makeStyles, Typography } from '@material-ui/core';
 import { Skeleton } from '@material-ui/lab';
 import React, { FC } from 'react';
 import { User } from '../../../api';
-import { ContentContainer } from '../../../components/ContentContainer';
 import { useNumberFormatter } from '../../../components/Formatters';
+import { ContentContainer } from '../../../components/Layout';
+import { ListContainer } from '../../../components/Layout/ListContainer';
 import { SortButtonDialog, useSort } from '../../../components/Sort';
 import { UserListItemCardLandscape as UserCard } from '../../../components/UserListItemCard';
 import { listOrPlaceholders } from '../../../util';
@@ -52,13 +53,15 @@ export const UserList: FC = () => {
           <>{formatNumber(data?.users.total)} People</>
         )}
       </Typography>
-      {listOrPlaceholders(data?.users.items, 10).map((item, index) => (
-        <UserCard
-          key={item?.id ?? index}
-          user={item}
-          className={classes.projectItem}
-        />
-      ))}
+      <ListContainer>
+        {listOrPlaceholders(data?.users.items, 10).map((item, index) => (
+          <UserCard
+            key={item?.id ?? index}
+            user={item}
+            className={classes.projectItem}
+          />
+        ))}
+      </ListContainer>
     </ContentContainer>
   );
 };

@@ -2,8 +2,9 @@ import { Grid, makeStyles, Typography } from '@material-ui/core';
 import { Skeleton } from '@material-ui/lab';
 import React, { FC } from 'react';
 import { Organization } from '../../../api';
-import { ContentContainer } from '../../../components/ContentContainer';
 import { useNumberFormatter } from '../../../components/Formatters';
+import { ContentContainer } from '../../../components/Layout';
+import { ListContainer } from '../../../components/Layout/ListContainer';
 import { OrganizationListItemCard } from '../../../components/OrganizationListItemCard';
 import { SortButtonDialog, useSort } from '../../../components/Sort';
 import { listOrPlaceholders } from '../../../util';
@@ -52,13 +53,15 @@ export const OrganizationList: FC = () => {
           <Skeleton width="10ch" />
         )}
       </Typography>
-      {listOrPlaceholders(items, 15).map((item, index) => (
-        <OrganizationListItemCard
-          key={item?.id ?? index}
-          organization={item}
-          className={classes.item}
-        />
-      ))}
+      <ListContainer>
+        {listOrPlaceholders(items, 15).map((item, index) => (
+          <OrganizationListItemCard
+            key={item?.id ?? index}
+            organization={item}
+            className={classes.item}
+          />
+        ))}
+      </ListContainer>
     </ContentContainer>
   );
 };

@@ -3,9 +3,10 @@ import { Skeleton } from '@material-ui/lab';
 import { times } from 'lodash';
 import React, { FC } from 'react';
 import { Language } from '../../../api';
-import { ContentContainer } from '../../../components/ContentContainer';
 import { useNumberFormatter } from '../../../components/Formatters';
 import { LanguageListItemCard } from '../../../components/LanguageListItemCard';
+import { ContentContainer } from '../../../components/Layout';
+import { ListContainer } from '../../../components/Layout/ListContainer';
 import { SortButtonDialog, useSort } from '../../../components/Sort';
 import { useLanguagesQuery } from './languages.generated';
 import { LanguageSortOptions } from './LanguageSortOptions';
@@ -13,6 +14,9 @@ import { LanguageSortOptions } from './LanguageSortOptions';
 const useStyles = makeStyles(({ spacing }) => ({
   options: {
     margin: spacing(3, 0),
+  },
+  item: {
+    marginBottom: spacing(2),
   },
 }));
 
@@ -51,19 +55,19 @@ export const LanguageList: FC = () => {
           <Skeleton width="14ch" />
         )}
       </Typography>
-      <Grid container direction="column" spacing={2}>
+      <ListContainer>
         {loading
           ? times(10).map((index) => (
-              <Grid item key={index}>
-                <LanguageListItemCard />
-              </Grid>
+              <LanguageListItemCard key={index} className={classes.item} />
             ))
           : data?.languages.items.map((item) => (
-              <Grid item key={item.id}>
-                <LanguageListItemCard language={item} />
-              </Grid>
+              <LanguageListItemCard
+                language={item}
+                key={item.id}
+                className={classes.item}
+              />
             ))}
-      </Grid>
+      </ListContainer>
     </ContentContainer>
   );
 };
