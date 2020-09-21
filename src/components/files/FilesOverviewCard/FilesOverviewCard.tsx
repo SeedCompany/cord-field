@@ -1,17 +1,17 @@
 import { LibraryBooksOutlined } from '@material-ui/icons';
 import React, { FC } from 'react';
-import { FieldOverviewCard } from '../../FieldOverviewCard';
+import {
+  FieldOverviewCard,
+  FieldOverviewCardProps,
+} from '../../FieldOverviewCard';
 import { useNumberFormatter } from '../../Formatters';
 
-export interface BudgetOverviewCardProps {
-  canReadFiles: boolean;
-  className?: string;
-  loading?: boolean;
+export interface BudgetOverviewCardProps extends FieldOverviewCardProps {
   total?: number;
 }
 
 export const FilesOverviewCard: FC<BudgetOverviewCardProps> = ({
-  canReadFiles,
+  redacted,
   className,
   loading,
   total,
@@ -24,7 +24,7 @@ export const FilesOverviewCard: FC<BudgetOverviewCardProps> = ({
       redactedText="You do not have permission to view files for this project"
       viewLabel="View Files"
       loading={loading}
-      redacted={!canReadFiles}
+      redacted={!redacted}
       data={{
         to: 'files',
         value: total ? String(formatNumber(total)) : '∞',
