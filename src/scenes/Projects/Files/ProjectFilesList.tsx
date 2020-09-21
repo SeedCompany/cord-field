@@ -1,11 +1,5 @@
 import { useQuery } from '@apollo/client';
-import {
-  Box,
-  Breadcrumbs,
-  makeStyles,
-  Typography,
-  useTheme,
-} from '@material-ui/core';
+import { makeStyles, Typography, useTheme } from '@material-ui/core';
 import { CreateNewFolder, Publish } from '@material-ui/icons';
 import { Skeleton } from '@material-ui/lab';
 import React, { FC } from 'react';
@@ -34,7 +28,7 @@ import {
   useDateTimeFormatter,
 } from '../../../components/Formatters';
 import { ContentContainer } from '../../../components/Layout';
-import { ProjectBreadcrumb } from '../../../components/ProjectBreadcrumb';
+import { ProjectDetailNavigation } from '../../../components/ProjectDetailNavigation';
 import { Table } from '../../../components/Table';
 import { DropzoneOverlay } from '../../../components/Upload';
 import { CreateProjectDirectory } from './CreateProjectDirectory';
@@ -299,33 +293,23 @@ const ProjectFilesListWrapped: FC = () => {
             {loading ? (
               <Skeleton variant="text" width="20%" />
             ) : (
-              <Box
-                display="flex"
-                justifyContent="space-between"
-                alignItems="center"
-              >
-                <Breadcrumbs>
-                  <ProjectBreadcrumb data={project} />
-                  <Breadcrumb to={`/projects/${projectId}/files`}>
-                    Files
+              <ProjectDetailNavigation project={project} title="Files">
+                {breadcrumbsParents.map((parent) => (
+                  <Breadcrumb
+                    key={parent.id}
+                    to={`/projects/${projectId}/files/${parent.id}`}
+                  >
+                    {parent.name}
                   </Breadcrumb>
-                  {breadcrumbsParents.map((parent) => (
-                    <Breadcrumb
-                      key={parent.id}
-                      to={`/projects/${projectId}/files/${parent.id}`}
-                    >
-                      {parent.name}
-                    </Breadcrumb>
-                  ))}
-                  {isNotRootDirectory && (
-                    <Breadcrumb
-                      to={`/projects/${projectId}/files/${directoryId}`}
-                    >
-                      {data?.directory.name}
-                    </Breadcrumb>
-                  )}
-                </Breadcrumbs>
-              </Box>
+                ))}
+                {isNotRootDirectory && (
+                  <Breadcrumb
+                    to={`/projects/${projectId}/files/${directoryId}`}
+                  >
+                    {data?.directory.name}
+                  </Breadcrumb>
+                )}
+              </ProjectDetailNavigation>
             )}
             <section className={classes.tableWrapper}>
               {loading ? (

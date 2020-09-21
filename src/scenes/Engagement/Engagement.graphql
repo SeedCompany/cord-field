@@ -1,6 +1,6 @@
 query Engagement($projectId: ID!, $engagementId: ID!) {
   project(id: $projectId) {
-    ...ProjectBreadcrumb
+    ...ProjectDetailNavigation
   }
   engagement(id: $engagementId) {
     id

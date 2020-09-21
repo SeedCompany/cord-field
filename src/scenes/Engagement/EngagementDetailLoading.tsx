@@ -1,12 +1,11 @@
-import { Breadcrumbs, Grid, makeStyles, Typography } from '@material-ui/core';
+import { Grid, makeStyles, Typography } from '@material-ui/core';
 import { Edit } from '@material-ui/icons';
 import { Skeleton } from '@material-ui/lab';
 import React from 'react';
-import { Breadcrumb } from '../../components/Breadcrumb';
 import { DataButton } from '../../components/DataButton';
 import { Fab } from '../../components/Fab';
 import { FieldOverviewCard } from '../../components/FieldOverviewCard';
-import { ProjectBreadcrumb } from '../../components/ProjectBreadcrumb';
+import { ProjectDetailNavigation } from '../../components/ProjectDetailNavigation';
 import { CeremonyCard } from './CeremonyCard';
 
 const useStyles = makeStyles(({ spacing, breakpoints }) => ({
@@ -33,12 +32,7 @@ export const EngagementDetailLoading = () => {
         className={classes.main}
       >
         <Grid item>
-          <Breadcrumbs>
-            <ProjectBreadcrumb />
-            <Breadcrumb to=".">
-              <Skeleton width={200} />
-            </Breadcrumb>
-          </Breadcrumbs>
+          <ProjectDetailNavigation title={<Skeleton width={200} />} />
         </Grid>
         <Grid item container spacing={3} alignItems="center">
           <Grid item style={{ width: '50%' }}>

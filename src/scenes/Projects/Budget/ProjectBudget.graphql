@@ -28,11 +28,7 @@ fragment BudgetRecord on BudgetRecord {
 
 query ProjectBudget($id: ID!) {
   project(id: $id) {
-    id
-    name {
-      canRead
-      value
-    }
+    ...ProjectDetailNavigation
     budget {
       canRead
       canEdit

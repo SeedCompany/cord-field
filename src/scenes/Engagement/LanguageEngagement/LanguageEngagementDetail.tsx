@@ -1,10 +1,4 @@
-import {
-  Breadcrumbs,
-  Grid,
-  makeStyles,
-  Tooltip,
-  Typography,
-} from '@material-ui/core';
+import { Grid, makeStyles, Tooltip, Typography } from '@material-ui/core';
 import { ChatOutlined, DateRange, Edit } from '@material-ui/icons';
 import React, { FC } from 'react';
 import {
@@ -14,7 +8,6 @@ import {
 } from '../../../api';
 import { AddItemCard } from '../../../components/AddItemCard';
 import { BooleanProperty } from '../../../components/BooleanProperty';
-import { Breadcrumb } from '../../../components/Breadcrumb';
 import { DataButton } from '../../../components/DataButton';
 import { DefinedFileCard } from '../../../components/DefinedFileCard';
 import { useDialog } from '../../../components/Dialog';
@@ -26,8 +19,9 @@ import {
   useDateTimeFormatter,
 } from '../../../components/Formatters';
 import { OptionsIcon, PlantIcon } from '../../../components/Icons';
+import { ContentContainer as Content } from '../../../components/Layout/ContentContainer';
 import { AddProductCard, ProductCard } from '../../../components/ProductCard';
-import { ProjectBreadcrumb } from '../../../components/ProjectBreadcrumb';
+import { ProjectDetailNavigation } from '../../../components/ProjectDetailNavigation';
 import { Redacted } from '../../../components/Redacted';
 import { Link } from '../../../components/Routing';
 import { Many } from '../../../util';
@@ -67,6 +61,7 @@ export const LanguageEngagementDetail: FC<EngagementQuery> = ({
     Many<EditableEngagementField>
   >();
 
+  const date = securedDateRange(engagement.startDate, engagement.endDate);
   const formatDate = useDateFormatter();
   const formatDateTime = useDateTimeFormatter();
 
@@ -84,26 +79,20 @@ export const LanguageEngagementDetail: FC<EngagementQuery> = ({
 
   return (
     <>
-      <div className={classes.root}>
-        <Grid
-          component="main"
-          container
-          direction="column"
-          spacing={3}
-          className={classes.main}
-        >
+      <Content>
+        <Grid component="main" container direction="column" spacing={3}>
           <Grid item>
-            <Breadcrumbs>
-              <ProjectBreadcrumb data={project} />
-              {langName ? (
-                <Breadcrumb to=".">{langName}</Breadcrumb>
-              ) : (
-                <Redacted
-                  info="You do not have permission to view this engagement's name"
-                  width={200}
-                />
-              )}
-            </Breadcrumbs>
+            <ProjectDetailNavigation
+              project={project}
+              title={
+                langName ?? (
+                  <Redacted
+                    info="You do not have permission to view this engagement's name"
+                    width={200}
+                  />
+                )
+              }
+            />
           </Grid>
           <Grid item container spacing={3} alignItems="center">
             <Grid item className={langName ? undefined : classes.nameRedacted}>
@@ -141,7 +130,6 @@ export const LanguageEngagementDetail: FC<EngagementQuery> = ({
             <Grid item>
               <Typography variant="h4">Language Engagement</Typography>
             </Grid>
-
             <Grid item>
               <Typography variant="body2" color="textSecondary">
                 Updated {formatDateTime(engagement.modifiedAt)}
@@ -289,7 +277,7 @@ export const LanguageEngagementDetail: FC<EngagementQuery> = ({
             )}
           </Grid>
         </Grid>
-      </div>
+      </Content>
       <EditEngagementDialog
         {...editState}
         engagement={engagement}

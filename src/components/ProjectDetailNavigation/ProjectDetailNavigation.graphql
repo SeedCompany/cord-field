@@ -1,0 +1,4 @@
+fragment ProjectDetailNavigation on Project {
+  ...ProjectBreadcrumb
+  sensitivity
+}

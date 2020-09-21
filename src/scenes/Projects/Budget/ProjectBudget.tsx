@@ -1,16 +1,15 @@
 import { useQuery } from '@apollo/client';
-import { Breadcrumbs, Grid, makeStyles, Typography } from '@material-ui/core';
+import { Grid, makeStyles, Typography } from '@material-ui/core';
 import { Skeleton } from '@material-ui/lab';
 import { sumBy } from 'lodash';
 import React from 'react';
 import { useParams } from 'react-router-dom';
 import { AddItemCard } from '../../../components/AddItemCard';
-import { Breadcrumb } from '../../../components/Breadcrumb';
 import { DefinedFileCard } from '../../../components/DefinedFileCard';
 import { FileActionsContextProvider } from '../../../components/files/FileActions';
 import { useCurrencyFormatter } from '../../../components/Formatters/useCurrencyFormatter';
 import { ContentContainer as Content } from '../../../components/Layout/ContentContainer';
-import { ProjectBreadcrumb } from '../../../components/ProjectBreadcrumb';
+import { ProjectDetailNavigation } from '../../../components/ProjectDetailNavigation';
 import { useUploadBudgetFile } from '../Files';
 import { ProjectBudgetDocument } from './ProjectBudget.generated';
 import { ProjectBudgetRecords } from './ProjectBudgetRecords';
@@ -61,10 +60,10 @@ export const ProjectBudget = () => {
         </Typography>
       ) : (
         <>
-          <Breadcrumbs>
-            <ProjectBreadcrumb data={data?.project} />
-            <Breadcrumb to=".">Field Budget</Breadcrumb>
-          </Breadcrumbs>
+          <ProjectDetailNavigation
+            project={data?.project}
+            title="Field Budget"
+          />
           <header className={classes.header}>
             <Typography variant="h2">Budget</Typography>
             <Typography

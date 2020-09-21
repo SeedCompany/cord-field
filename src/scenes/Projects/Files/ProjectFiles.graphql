@@ -1,6 +1,6 @@
 query ProjectRootDirectory($id: ID!) {
   project(id: $id) {
-    ...ProjectBreadcrumb
+    ...ProjectDetailNavigation
     rootDirectory {
       canEdit
       canRead

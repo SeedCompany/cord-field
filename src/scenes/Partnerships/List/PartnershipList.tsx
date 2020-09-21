@@ -1,18 +1,12 @@
-import { useQuery } from '@apollo/client';
-import {
-  Breadcrumbs,
-  makeStyles,
-  Tooltip,
-  Typography,
-} from '@material-ui/core';
+import { makeStyles, Tooltip, Typography } from '@material-ui/core';
 import { Add } from '@material-ui/icons';
 import React, { FC } from 'react';
 import { useParams } from 'react-router-dom';
-import { Breadcrumb } from '../../../components/Breadcrumb';
 import { useDialog } from '../../../components/Dialog';
 import { Fab } from '../../../components/Fab';
+import { ContentContainer as Content } from '../../../components/Layout';
 import { PartnershipCard } from '../../../components/PartnershipCard';
-import { ProjectBreadcrumb } from '../../../components/ProjectBreadcrumb';
+import { ProjectDetailNavigation } from '../../../components/ProjectDetailNavigation';
 import { listOrPlaceholders } from '../../../util';
 import { CreatePartnership } from '../Create';
 import { EditPartnership } from '../Edit';
@@ -54,13 +48,8 @@ export const PartnershipList: FC = () => {
   >();
 
   return (
-    <div className={classes.root}>
-      <Breadcrumbs>
-        <ProjectBreadcrumb data={project} />
-        <Breadcrumb to={`/projects/${projectId}/partnerships`}>
-          Partnerships
-        </Breadcrumb>
-      </Breadcrumbs>
+    <Content>
+      <ProjectDetailNavigation project={project} title="Partnerships" />
       <div className={classes.headerContainer}>
         <Typography variant="h2" className={classes.title}>
           Partnerships
@@ -89,6 +78,6 @@ export const PartnershipList: FC = () => {
         <EditPartnership {...editDialogState} partnership={partnership} />
       )}
       <CreatePartnership {...createDialogState} projectId={projectId} />
-    </div>
+    </Content>
   );
 };
