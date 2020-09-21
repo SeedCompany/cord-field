@@ -281,9 +281,9 @@ export const ProjectOverview: FC = () => {
             </Grid>
             <Grid item>
               <DataButton
-                loading={!data}
+                loading={!projectOverviewData}
                 startIcon={<DateRange className={classes.infoColor} />}
-                secured={data?.project.estimatedSubmission}
+                secured={projectOverviewData?.project.estimatedSubmission}
                 redacted="You do not have permission to view estimated submission date"
                 children={formatDate}
                 empty="Estimated Submission"
