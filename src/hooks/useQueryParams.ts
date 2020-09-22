@@ -1,4 +1,4 @@
-import { compact, mapValues, omit, pick, pickBy } from 'lodash';
+import { compact, mapKeys, mapValues, omit, pick, pickBy } from 'lodash';
 import { useCallback, useMemo } from 'react';
 import { useLocation, useNavigate, useSearchParams } from 'react-router-dom';
 import {
@@ -11,12 +11,15 @@ import {
   QueryParamConfig as UpstreamQueryParamConfig,
 } from 'serialize-query-params';
 import { areListsEqual, compareNullable } from '../components/form/util';
+import { entries, mapFromList } from '../util';
 
 export { NumberParam, StringParam } from 'serialize-query-params';
 
 export interface QueryParamConfig<Val, Encoded = Val>
   extends UpstreamQueryParamConfig<Val, Encoded> {
   defaultValue?: Val;
+  /** Key used in url */
+  key?: string;
 }
 
 export const ListParam: QueryParamConfig<string[] | undefined> = {
@@ -84,6 +87,11 @@ export const withTransform = <OuterD, InnerD = OuterD>(
   defaultValue: param.defaultValue,
 });
 
+export const withKey = <D>(param: QueryParamConfig<D>, key: string) => ({
+  ...param,
+  key,
+});
+
 /** The value a url parameter can be */
 type RawParamValue = string | Array<string | null> | null | undefined;
 
@@ -136,57 +144,74 @@ type QueryParamConfigMapShape = Record<string, QueryParamConfig<any>>;
  */
 export const makeQueryHandler = <QPCMap extends QueryParamConfigMapShape>(
   paramConfigMap: QPCMap
-) => () => {
-  const [search] = useSearchParams();
-  const location = useLocation();
-  const navigate = useNavigate();
+) => {
+  const rawKeysToOurs = mapFromList(entries(paramConfigMap), ([key, value]) => [
+    value.key ?? key,
+    key,
+  ]);
+  const rawKeys = Object.keys(rawKeysToOurs);
+  const defaultValues = mapValues(paramConfigMap, (c) => c.defaultValue);
 
-  const query = useMemo(() => {
-    const toObj = Object.fromEntries(search);
-    const filtered = pick(toObj, Object.keys(paramConfigMap));
-    const decoded = decodeQueryParams(paramConfigMap, filtered as any);
-    return {
-      ...mapValues(paramConfigMap, (c) => c.defaultValue),
-      ...decoded,
-    };
-  }, [search]);
+  return () => {
+    const [search] = useSearchParams();
+    const location = useLocation();
+    const navigate = useNavigate();
 
-  const setQuery = useCallback(
-    (
-      next: Partial<DecodedValueMap<QPCMap>>,
-      options: QueryChangeOptions = {}
-    ) => {
-      const encoded = encodeQueryParams(paramConfigMap, next);
-      // filter out falsy values to keep url clean
-      const filtered = pickBy(encoded as Record<string, string>);
+    const [query, unrelated] = useMemo(() => {
+      const toObj = Object.fromEntries(search);
 
-      // Merge in unrelated query params so they are preserved
-      const unrelated = omit(
-        Object.fromEntries(search),
-        Object.keys(paramConfigMap)
-      );
-      const merged = { ...unrelated, ...filtered };
+      // Spit object between entries we are managing and unrelated ones.
+      // unrelated will be used in update to preserve their current values.
+      const unrelated = omit(toObj, rawKeys);
+      const filtered = pick(toObj, rawKeys);
 
-      // react-router's useSearchParams setter is bugged
-      // https://github.com/ReactTraining/react-router/issues/7496
-      // Passing current path & hash along with setter to function as expected.
-      const nextSearch = new URLSearchParams(merged).toString();
-      const { push, state } = options;
-      navigate(
-        {
-          search: nextSearch.length ? '?' + nextSearch : '',
-          // Pass current values to leave them unchanged
-          pathname: location.pathname,
-          hash: location.hash,
-        },
-        {
-          replace: !push,
-          state,
-        }
-      );
-    },
-    [search, navigate, location]
-  );
+      // convert raw keys to our keys
+      const mapped = mapKeys(filtered, (_, key) => rawKeysToOurs[key]);
+      // decode values
+      const decoded = decodeQueryParams(paramConfigMap, mapped as any);
+      // merge in default values
+      const defaulted = { ...defaultValues, ...decoded };
 
-  return [query, setQuery] as const;
+      return [defaulted, unrelated] as const;
+    }, [search]);
+
+    const setQuery = useCallback(
+      (
+        next: Partial<DecodedValueMap<QPCMap>>,
+        options: QueryChangeOptions = {}
+      ) => {
+        const encoded = encodeQueryParams(paramConfigMap, next);
+        // filter out falsy values to keep url clean
+        const filtered = pickBy(encoded as Record<string, string>);
+        // convert our keys to the configured raw keys
+        const mapped = mapKeys(
+          filtered,
+          (_, key) => paramConfigMap[key].key ?? key
+        );
+        // Merge in unrelated query params so they are preserved
+        const merged = { ...unrelated, ...mapped };
+
+        // react-router's useSearchParams setter is bugged
+        // https://github.com/ReactTraining/react-router/issues/7496
+        // Passing current path & hash along with setter to function as expected.
+        const nextSearch = new URLSearchParams(merged).toString();
+        const { push, state } = options;
+        navigate(
+          {
+            search: nextSearch.length ? '?' + nextSearch : '',
+            // Pass current values to leave them unchanged
+            pathname: location.pathname,
+            hash: location.hash,
+          },
+          {
+            replace: !push,
+            state,
+          }
+        );
+      },
+      [unrelated, navigate, location]
+    );
+
+    return [query, setQuery] as const;
+  };
 };
