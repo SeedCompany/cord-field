@@ -131,7 +131,6 @@ export const FileActionsContextProvider: FC = (props) => {
   return (
     <FileActionsContext.Provider
       value={{
-        context,
         handleFileActionClick,
         previewPage,
         setPreviewPage,
