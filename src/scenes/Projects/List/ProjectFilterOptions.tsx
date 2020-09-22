@@ -20,7 +20,21 @@ import {
 } from '../../../hooks';
 
 export const useProjectFilters = makeQueryHandler({
-  status: EnumListParam<ProjectStatus>(),
+  status: withTransform(EnumListParam<ProjectStatus>(), {
+    encode: (value, encoder) =>
+      encoder(
+        value?.map((s: ProjectStatus) =>
+          s === 'InDevelopment' ? 'dev' : s.toLowerCase()
+        )
+      ),
+    decode: (value, decoder) =>
+      decoder(value)?.map(
+        (s): ProjectStatus =>
+          s.toLowerCase() === 'dev'
+            ? 'InDevelopment'
+            : (upperFirst(s) as ProjectStatus)
+      ),
+  }),
   sensitivity: withTransform(EnumListParam<Sensitivity>(), {
     encode: (value, encoder) =>
       encoder(value?.map((v: Sensitivity) => v.toLowerCase())),
