@@ -1,6 +1,6 @@
 import { Grid, makeStyles, Typography } from '@material-ui/core';
 import React from 'react';
-import { canReadAny } from '../../../api';
+import { canReadAny, SensitivityList } from '../../../api';
 import {
   DialogForm,
   DialogFormProps,
@@ -16,6 +16,7 @@ import {
   SubmitError,
   TextField,
 } from '../../../components/form';
+import { SelectField } from '../../../components/form/SelectField';
 import { minLength, required } from '../../../components/form/validators';
 import { LanguageFormFragment } from './LangugeForm.generated';
 
@@ -34,6 +35,11 @@ const decorators = [
   ...DialogForm.defaultDecorators,
   matchFieldIfSame(`language.name`, `language.displayName`),
 ];
+
+const sensitivitySelectOptions = SensitivityList.map((sensitivity) => ({
+  value: sensitivity,
+  label: sensitivity,
+}));
 
 export const LanguageForm = <T extends any>({
   language,
@@ -165,6 +171,14 @@ export const LanguageForm = <T extends any>({
                     </Grid>
                   )}
                 </SecuredField>
+                <Grid item xs={12} sm={6}>
+                  <SelectField
+                    label="Sensitivity"
+                    name="sensitivity"
+                    selectOptions={sensitivitySelectOptions}
+                    defaultValue="High"
+                  />
+                </Grid>
               </Grid>
             </Grid>
           )}

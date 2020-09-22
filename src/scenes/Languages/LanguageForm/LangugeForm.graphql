@@ -45,6 +45,7 @@ fragment LanguageForm on Language {
   leastOfTheseReason {
     ...ss
   }
+  sensitivity
 }
 
 fragment ss on SecuredString {
