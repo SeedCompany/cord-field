@@ -35,6 +35,7 @@ export const EditLanguage = (props: EditLanguageProps) => {
               leastOfTheseReason: language.leastOfTheseReason.value,
               isSignLanguage: language.isSignLanguage.value,
               sensitivity: language.sensitivity,
+              sponsorEstimatedEndDate: language.sponsorEstimatedEndDate.value,
             },
           }
         : undefined,

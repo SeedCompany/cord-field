@@ -46,6 +46,16 @@ fragment LanguageForm on Language {
     ...ss
   }
   sensitivity
+  sponsorEstimatedEndDate {
+    canRead
+    canEdit
+    value
+  }
+  sponsorStartDate {
+    canRead
+    canEdit
+    value
+  }
 }
 
 fragment ss on SecuredString {

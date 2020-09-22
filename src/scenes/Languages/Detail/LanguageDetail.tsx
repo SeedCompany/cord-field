@@ -1,11 +1,12 @@
 import { Grid, makeStyles, Tooltip, Typography } from '@material-ui/core';
-import { Add, Edit } from '@material-ui/icons';
+import { Add, DateRange, Edit } from '@material-ui/icons';
 import { Skeleton } from '@material-ui/lab';
 import clsx from 'clsx';
 import React from 'react';
 import { useParams } from 'react-router';
-import { canEditAny } from '../../../api';
+import { canEditAny, securedDateRange } from '../../../api';
 import { BooleanProperty } from '../../../components/BooleanProperty';
+import { DataButton } from '../../../components/DataButton';
 import { useDialog } from '../../../components/Dialog';
 import {
   DisplaySimpleProperty,
@@ -13,6 +14,7 @@ import {
 } from '../../../components/DisplaySimpleProperty';
 import { Fab } from '../../../components/Fab';
 import {
+  useDateFormatter,
   useDateTimeFormatter,
   useNumberFormatter,
 } from '../../../components/Formatters';
@@ -24,7 +26,7 @@ import { EditLanguage } from '../Edit';
 import { useLanguageQuery } from './LanguageDetail.generated';
 import { LeastOfThese } from './LeastOfThese';
 
-const useStyles = makeStyles(({ spacing, breakpoints }) => ({
+const useStyles = makeStyles(({ spacing, breakpoints, palette }) => ({
   root: {
     overflowY: 'auto',
     padding: spacing(4),
@@ -52,6 +54,9 @@ const useStyles = makeStyles(({ spacing, breakpoints }) => ({
   hidden: {
     visibility: 'hidden',
   },
+  calendarIcon: {
+    color: palette.info.main,
+  },
 }));
 
 export const LanguageDetail = () => {
@@ -70,6 +75,8 @@ export const LanguageDetail = () => {
 
   const formatDateTime = useDateTimeFormatter();
   const formatNumber = useNumberFormatter();
+
+  const formatDate = useDateFormatter();
 
   return (
     <main className={classes.root}>
@@ -104,10 +111,24 @@ export const LanguageDetail = () => {
               </Fab>
             ) : null}
           </div>
-          <Grid container spacing={2}>
+          <Grid container spacing={2} alignItems="center">
             <Grid item>
               <Sensitivity value={language?.sensitivity} loading={!language} />
             </Grid>
+            {language && (
+              <Grid item>
+                <DataButton
+                  startIcon={<DateRange className={classes.calendarIcon} />}
+                  secured={securedDateRange(
+                    language.sponsorStartDate,
+                    language.sponsorEstimatedEndDate
+                  )}
+                  redacted="You do not have permission to view start/end dates"
+                  children={formatDate.range}
+                  empty="Start - End"
+                />
+              </Grid>
+            )}
             <BooleanProperty
               label="Dialect"
               redacted="You do not have permission to view whether the language is a dialect"

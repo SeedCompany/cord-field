@@ -7,6 +7,7 @@ import {
 } from '../../../components/Dialog/DialogForm';
 import {
   CheckboxField,
+  DateField,
   FieldGroup,
   FormattedTextField,
   FormattedTextFieldProps,
@@ -179,6 +180,16 @@ export const LanguageForm = <T extends any>({
                     defaultValue="High"
                   />
                 </Grid>
+                <SecuredField obj={language} name="sponsorEstimatedEndDate">
+                  {(props) => (
+                    <Grid item xs={12} sm={6}>
+                      <DateField
+                        label="Estimated Sponsor End Date"
+                        {...props}
+                      />
+                    </Grid>
+                  )}
+                </SecuredField>
               </Grid>
             </Grid>
           )}
