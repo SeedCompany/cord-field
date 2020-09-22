@@ -47,9 +47,16 @@ export const EditLanguage = (props: EditLanguageProps) => {
       title="Edit Language"
       {...props}
       initialValues={initialValues}
-      onSubmit={async (input) => {
+      onSubmit={async ({ language: { populationOverride, ...rest } }) => {
         await updateLanguage({
-          variables: { input },
+          variables: {
+            input: {
+              language: {
+                populationOverride: populationOverride ?? null,
+                ...rest,
+              },
+            },
+          },
         });
       }}
     />
