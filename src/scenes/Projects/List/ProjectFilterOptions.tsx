@@ -1,4 +1,5 @@
 import { Grid, Tooltip } from '@material-ui/core';
+import { upperFirst } from 'lodash';
 import * as React from 'react';
 import {
   displayStatus,
@@ -15,11 +16,17 @@ import {
   makeQueryHandler,
   withDefault,
   withKey,
+  withTransform,
 } from '../../../hooks';
 
 export const useProjectFilters = makeQueryHandler({
   status: EnumListParam<ProjectStatus>(),
-  sensitivity: EnumListParam<Sensitivity>(),
+  sensitivity: withTransform(EnumListParam<Sensitivity>(), {
+    encode: (value, encoder) =>
+      encoder(value?.map((v: Sensitivity) => v.toLowerCase())),
+    decode: (value, decoder) =>
+      decoder(value)?.map((v) => upperFirst(v) as Sensitivity),
+  }),
   onlyMultipleEngagements: withKey(withDefault(BooleanParam(), false), 'multi'),
 });
 
