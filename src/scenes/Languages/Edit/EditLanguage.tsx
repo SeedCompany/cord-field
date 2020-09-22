@@ -33,6 +33,7 @@ export const EditLanguage = (props: EditLanguageProps) => {
               registryOfDialectsCode: language.registryOfDialectsCode.value,
               leastOfThese: language.leastOfThese.value,
               leastOfTheseReason: language.leastOfTheseReason.value,
+              isSignLanguage: language.isSignLanguage.value,
             },
           }
         : undefined,

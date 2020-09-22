@@ -115,6 +115,12 @@ export const LanguageDetail = () => {
               wrap={(node) => <Grid item>{node}</Grid>}
             />
             <LeastOfThese language={language} />
+            <BooleanProperty
+              label="Sign Language"
+              redacted="You do not have permission to view whether the language is a sign language"
+              data={language?.isSignLanguage}
+              wrap={(node) => <Grid item>{node}</Grid>}
+            />
           </Grid>
           <DisplayProperty
             label="Pronunciation Guide"

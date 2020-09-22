@@ -154,6 +154,17 @@ export const LanguageForm = <T extends any>({
                     </Grid>
                   )}
                 </SecuredField>
+                <SecuredField obj={language} name="isSignLanguage">
+                  {(props) => (
+                    <Grid item xs={12} sm={6}>
+                      <CheckboxField
+                        label="Is this language a sign language?"
+                        margin="none"
+                        {...props}
+                      />
+                    </Grid>
+                  )}
+                </SecuredField>
               </Grid>
             </Grid>
           )}
