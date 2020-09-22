@@ -9,12 +9,17 @@ import {
 } from '../../../api';
 import { CheckboxesField, CheckboxOption } from '../../../components/form';
 import { SwitchField } from '../../../components/form/SwitchField';
-import { BooleanParam, EnumListParam, makeQueryHandler } from '../../../hooks';
+import {
+  BooleanParam,
+  EnumListParam,
+  makeQueryHandler,
+  withDefault,
+} from '../../../hooks';
 
 export const useProjectFilters = makeQueryHandler({
   status: EnumListParam<ProjectStatus>(),
   sensitivity: EnumListParam<Sensitivity>(),
-  onlyMultipleEngagements: BooleanParam(),
+  onlyMultipleEngagements: withDefault(BooleanParam(), false),
 });
 
 export const ProjectFilterOptions = () => {

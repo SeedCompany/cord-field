@@ -1,4 +1,4 @@
-import { compact, omit, pick, pickBy } from 'lodash';
+import { compact, mapValues, omit, pick, pickBy } from 'lodash';
 import { useCallback, useMemo } from 'react';
 import { useLocation, useNavigate, useSearchParams } from 'react-router-dom';
 import {
@@ -7,35 +7,62 @@ import {
   decodeQueryParams,
   encodeDelimitedArray,
   encodeQueryParams,
-  QueryParamConfig,
-  QueryParamConfigMap,
   StringParam,
+  QueryParamConfig as UpstreamQueryParamConfig,
 } from 'serialize-query-params';
+import { areListsEqual, compareNullable } from '../components/form/util';
 
-export { withDefault, NumberParam, StringParam } from 'serialize-query-params';
+export { NumberParam, StringParam } from 'serialize-query-params';
 
-// This is a list param that encodes with commas.
-// It also doesn't empty list in the url.
+export interface QueryParamConfig<Val, Encoded = Val>
+  extends UpstreamQueryParamConfig<Val, Encoded> {
+  defaultValue?: Val;
+}
+
 export const ListParam: QueryParamConfig<string[] | undefined> = {
   encode: (val) => encodeDelimitedArray(val, ',') || undefined,
   decode: (val) => compact(decodeDelimitedArray(val, ',')),
+  equals: compareNullable(areListsEqual),
 };
 
-// This is a boolean param, but it doesn't put the default value in the url.
-export const BooleanParam = (
-  defaultVal = false
-): QueryParamConfig<boolean | undefined> => ({
-  encode: (val) => (val == null || val === defaultVal ? '' : val ? '1' : '0'),
-  decode: (val) => (val === '1' ? true : val === '0' ? false : undefined),
+export const BooleanParam = (): QueryParamConfig<boolean | undefined> => ({
+  encode: (val) => (val == null ? undefined : val ? '1' : '0'),
+  decode: (val) =>
+    val === '1' || val === 'true'
+      ? true
+      : val === '0' || val === 'false'
+      ? false
+      : undefined,
 });
 
 // This is just a list param, but is typed as T[]. Useful for string literals.
 export const EnumListParam = <T extends string>() =>
-  (ListParam as unknown) as QueryParamConfig<T[]>;
+  (ListParam as unknown) as QueryParamConfig<T[] | undefined>;
 
 // This is just a string param, but is typed as T. Useful for string literals.
 export const EnumParam = <T extends string>() =>
-  (StringParam as unknown) as QueryParamConfig<T>;
+  (StringParam as unknown) as QueryParamConfig<T | undefined>;
+
+/**
+ * This applies a default value to the param config.
+ * The default value is used when the value is omitted from the url.
+ * The default value is omitted from the url on change.
+ */
+export const withDefault = <Val, Default extends Val>(
+  param: QueryParamConfig<Val | undefined>,
+  defaultValue: Default
+): QueryParamConfig<NonNullable<Val> | Default> => ({
+  ...param,
+  encode: (val) =>
+    (param.equals ?? tripleEquals)(val, defaultValue)
+      ? undefined
+      : param.encode(val),
+  decode: (val) =>
+    val == null ? defaultValue : param.decode(val) ?? defaultValue,
+  defaultValue,
+});
+
+const tripleEquals = (a: unknown, b: unknown) => a === b;
 
 interface QueryChangeOptions {
   // Whether to push a new history state or replace the existing one.
@@ -43,6 +70,8 @@ interface QueryChangeOptions {
   push?: boolean | undefined;
   state?: Record<string, any> | null | undefined;
 }
+
+type QueryParamConfigMapShape = Record<string, QueryParamConfig<any>>;
 
 /**
  * Creates a query/search param hook with a defined schema.
@@ -80,7 +109,7 @@ interface QueryChangeOptions {
  * This is essentially what `use-query-params` library does, but it isn't updated
  * for RR v6. RR v6 includes more OOTB in this area so only thin wrapper is needed.
  */
-export const makeQueryHandler = <QPCMap extends QueryParamConfigMap>(
+export const makeQueryHandler = <QPCMap extends QueryParamConfigMapShape>(
   paramConfigMap: QPCMap
 ) => () => {
   const [search] = useSearchParams();
@@ -91,7 +120,10 @@ export const makeQueryHandler = <QPCMap extends QueryParamConfigMap>(
     const toObj = Object.fromEntries(search);
     const filtered = pick(toObj, Object.keys(paramConfigMap));
     const decoded = decodeQueryParams(paramConfigMap, filtered as any);
-    return decoded;
+    return {
+      ...mapValues(paramConfigMap, (c) => c.defaultValue),
+      ...decoded,
+    };
   }, [search]);
 
   const setQuery = useCallback(
