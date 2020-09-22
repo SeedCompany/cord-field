@@ -17,7 +17,7 @@ import {
   useDateTimeFormatter,
 } from '../../../components/Formatters';
 import { OptionsIcon, PlantIcon } from '../../../components/Icons';
-import { ContentContainer as Content } from '../../../components/Layout/ContentContainer';
+import { ContentContainer as Content } from '../../../components/Layout';
 import { MethodologiesCard } from '../../../components/MethodologiesCard';
 import { ProjectDetailNavigation } from '../../../components/ProjectDetailNavigation';
 import { Redacted } from '../../../components/Redacted';
