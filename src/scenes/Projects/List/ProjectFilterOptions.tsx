@@ -14,12 +14,13 @@ import {
   EnumListParam,
   makeQueryHandler,
   withDefault,
+  withKey,
 } from '../../../hooks';
 
 export const useProjectFilters = makeQueryHandler({
   status: EnumListParam<ProjectStatus>(),
   sensitivity: EnumListParam<Sensitivity>(),
-  onlyMultipleEngagements: withDefault(BooleanParam(), false),
+  onlyMultipleEngagements: withKey(withDefault(BooleanParam(), false), 'multi'),
 });
 
 export const ProjectFilterOptions = () => {
