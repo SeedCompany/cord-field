@@ -16,7 +16,6 @@ import { ProjectBudgetRecords } from './ProjectBudgetRecords';
 
 const useStyles = makeStyles(({ breakpoints, spacing }) => ({
   header: {
-    margin: spacing(3, 0),
     display: 'flex',
     justifyContent: 'space-between',
     alignItems: 'flex-end',
@@ -50,7 +49,6 @@ export const ProjectBudget = () => {
   );
 
   const template = budget?.value?.universalTemplateFile;
-  console.log('template', template);
 
   return (
     <Content>
