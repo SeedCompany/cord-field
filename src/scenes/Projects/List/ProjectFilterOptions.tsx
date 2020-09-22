@@ -1,4 +1,4 @@
-import { Grid } from '@material-ui/core';
+import { Grid, Tooltip } from '@material-ui/core';
 import * as React from 'react';
 import {
   displayStatus,
@@ -14,7 +14,7 @@ import { BooleanParam, EnumListParam, makeQueryHandler } from '../../../hooks';
 export const useProjectFilters = makeQueryHandler({
   status: EnumListParam<ProjectStatus>(),
   sensitivity: EnumListParam<Sensitivity>(),
-  clusters: BooleanParam(),
+  onlyMultipleEngagements: BooleanParam(),
 });
 
 export const ProjectFilterOptions = () => {
@@ -48,7 +48,12 @@ export const ProjectFilterOptions = () => {
           ))}
         </Grid>
       </CheckboxesField>
-      <SwitchField name="clusters" label="Only Show Cluster Projects" />
+      <Tooltip title="Clusters/Cohorts are projects with multiple engagements">
+        <SwitchField
+          name="onlyMultipleEngagements"
+          label="Only Show Cluster/Cohort Projects"
+        />
+      </Tooltip>
     </>
   );
 };
