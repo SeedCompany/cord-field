@@ -54,12 +54,14 @@ export const ProjectFilterOptions = () => {
           ))}
         </Grid>
       </CheckboxesField>
-      <Tooltip title="Clusters/Cohorts are projects with multiple engagements">
-        <SwitchField
-          name="onlyMultipleEngagements"
-          label="Only Show Cluster/Cohort Projects"
-        />
-      </Tooltip>
+      <SwitchField
+        name="onlyMultipleEngagements"
+        label={
+          <Tooltip title="Clusters/Cohorts are projects with multiple engagements">
+            <span>Only Show Cluster/Cohort Projects</span>
+          </Tooltip>
+        }
+      />
     </>
   );
 };
