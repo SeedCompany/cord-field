@@ -50,6 +50,7 @@ export const ProjectBudget = () => {
   );
 
   const template = budget?.value?.universalTemplateFile;
+  console.log('template', template);
 
   return (
     <Content>
