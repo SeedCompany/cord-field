@@ -62,6 +62,31 @@ export const withDefault = <Val, Default extends Val>(
   defaultValue,
 });
 
+export interface Transforms<OuterD, InnerD = OuterD> {
+  encode: (
+    value: OuterD,
+    encoder: QueryParamConfig<InnerD>['encode']
+  ) => RawParamValue;
+  decode: (
+    value: RawParamValue,
+    decoder: QueryParamConfig<InnerD>['decode']
+  ) => OuterD;
+}
+export const withTransform = <OuterD, InnerD = OuterD>(
+  param: QueryParamConfig<InnerD>,
+  transforms: Transforms<OuterD, InnerD>
+): QueryParamConfig<OuterD> => ({
+  ...param,
+  encode: (val) => transforms.encode(val, param.encode),
+  decode: (val) => transforms.decode(val, param.decode),
+  // @ts-expect-error assume default value, if given, is still compatible.
+  // withDefault can be applied on top of this function to fix if its not.
+  defaultValue: param.defaultValue,
+});
+
+/** The value a url parameter can be */
+type RawParamValue = string | Array<string | null> | null | undefined;
+
 const tripleEquals = (a: unknown, b: unknown) => a === b;
 
 interface QueryChangeOptions {
