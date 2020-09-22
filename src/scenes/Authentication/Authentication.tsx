@@ -44,7 +44,7 @@ export const Authentication: FC = ({ children }) => {
   const classes = useStyles();
   const location = useLocation();
   const navigate = useNavigate();
-  const [session, sessionLoading] = useSession();
+  const { session, sessionLoading } = useSession();
 
   const matched = useRoutes([
     {

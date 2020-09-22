@@ -119,7 +119,7 @@ interface UploadManagerProps {
 
 const UploadManagerImpl = (props: UploadManagerProps) => {
   const { children, removeCompletedUploads } = props;
-  const [session] = useSession();
+  const { session } = useSession();
   const { isManagerOpen, setIsManagerOpen } = useUploadManager();
   const [isCollapsed, setIsCollapsed] = useState(false);
   const classes = useStyles();

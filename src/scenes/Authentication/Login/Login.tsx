@@ -3,7 +3,7 @@ import React, { useEffect, useState } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { Except } from 'type-fest';
 import { handleFormError } from '../../../api';
-import { useSession } from '../../../components/Session';
+import { updateSessionCache, useSession } from '../../../components/Session';
 import { useLoginMutation } from './Login.generated';
 import { LoginForm, LoginFormProps as Props } from './LoginForm';
 
@@ -11,7 +11,7 @@ export const Login = (props: Except<Props, 'onSubmit'>) => {
   const [login] = useLoginMutation();
   const navigate = useNavigate();
   const [query] = useSearchParams();
-  const [session, sessionLoading, setUserSession] = useSession();
+  const { session, sessionLoading } = useSession();
   const [success, setSuccess] = useState(false);
 
   // Redirect to homepage if already logged in (and not from successful login)
@@ -23,11 +23,16 @@ export const Login = (props: Except<Props, 'onSubmit'>) => {
 
   const submit: Props['onSubmit'] = async (input) => {
     try {
-      const { data } = await login({
+      await login({
         variables: { input },
+        update: (cache, { data }) => {
+          const user = data?.login.user;
+          if (user) {
+            setSuccess(true);
+            updateSessionCache(cache, user);
+          }
+        },
       });
-      setSuccess(true);
-      setUserSession(data!.login.user);
       const returnTo = decodeURIComponent(query.get('returnTo') ?? '/');
       navigate(returnTo, { replace: true });
     } catch (e) {
