@@ -40,7 +40,7 @@ const useStyles = makeStyles(({ spacing }) => ({
   },
 }));
 
-interface RegisterFields extends RegisterInput {
+export interface RegisterFields extends RegisterInput {
   confirmPassword: string;
 }
 
@@ -149,7 +149,7 @@ export const RegisterForm = ({ className, ...props }: RegisterFormProps) => {
   );
 };
 
-const passwordMatching = ({
+export const passwordMatching = ({
   password,
   confirmPassword,
   ..._otherVals
@@ -172,7 +172,10 @@ const showMatchingErrorsImmediately: Decorator<RegisterFields> = (form) =>
     { active: true, values: true }
   );
 
-const markConfirmPasswordTouched: Mutator<RegisterFields> = (args, state) => {
+export const markConfirmPasswordTouched: Mutator<RegisterFields> = (
+  args,
+  state
+) => {
   state.fields.confirmPassword.touched = true;
 };
 
