@@ -26,6 +26,7 @@ const useStyles = makeStyles(({ spacing, breakpoints }) => ({
   tableWrapper: {
     maxWidth: breakpoints.values.md,
     margin: spacing(0, 4, 4, 0),
+    overflow: 'auto',
   },
   totalLoading: {
     width: '10%',
