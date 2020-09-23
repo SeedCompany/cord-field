@@ -114,10 +114,10 @@ export const ProjectBudget = () => {
         <>
           <Breadcrumbs>
             <ProjectBreadcrumb data={data?.project} />
-            <Breadcrumb to=".">Budget</Breadcrumb>
+            <Breadcrumb to=".">Field Budget</Breadcrumb>
           </Breadcrumbs>
           <header className={classes.header}>
-            <Typography variant="h2">Budget</Typography>
+            <Typography variant="h2">Field Budget</Typography>
             <Typography
               variant="h3"
               className={loading ? classes.totalLoading : undefined}
