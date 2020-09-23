@@ -116,7 +116,7 @@ const FundingType = <
     partnership ? (
       <SecuredField obj={partnership} name="financialReportingType">
         {(props) => (
-          <RadioField label="Funding Type" fullWidth row {...props}>
+          <RadioField label="Financial Reporting Type" fullWidth row {...props}>
             {radioOptions}
           </RadioField>
         )}
@@ -124,7 +124,7 @@ const FundingType = <
     ) : (
       <RadioField
         name="financialReportingType"
-        label="Funding Type"
+        label="Financial Reporting Type"
         fullWidth
         row
       >
