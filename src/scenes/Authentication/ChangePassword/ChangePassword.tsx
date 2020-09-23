@@ -41,7 +41,6 @@ export const ChangePassword = (props: ChangePasswordProps) => {
         fullWidth: true,
         maxWidth: 'xs',
       }}
-      onlyDirtySubmit
       onSubmit={async (input) => {
         await changePassword({
           variables: input,
@@ -52,36 +51,25 @@ export const ChangePassword = (props: ChangePasswordProps) => {
       }}
     >
       <Grid container spacing={3} className={classes.content}>
-        <Grid item xs={12}>
-          <SubmitError align="left" />
-        </Grid>
-        <Grid item xs={12}>
-          <PasswordField
-            name="oldPassword"
-            label="Old Password"
-            placeholder="Old Password"
-            required
-            margin="none"
-          />
-        </Grid>
-        <Grid item xs={12}>
-          <PasswordField
-            name="newPassword"
-            placeholder="Enter New Password"
-            label="New Password"
-            autoComplete="new-password"
-            margin="none"
-          />
-        </Grid>
-        <Grid item xs={12}>
-          <PasswordField
-            name="confirmPassword"
-            label="Re-Type New Password"
-            placeholder="Re-Type Your New Password"
-            autoComplete="new-password"
-            margin="none"
-          />
-        </Grid>
+        <SubmitError align="left" />
+        <PasswordField
+          name="oldPassword"
+          label="Old Password"
+          placeholder="Old Password"
+          required
+        />
+        <PasswordField
+          name="newPassword"
+          placeholder="Enter New Password"
+          label="New Password"
+          autoComplete="new-password"
+        />
+        <PasswordField
+          name="confirmPassword"
+          label="Re-Type New Password"
+          placeholder="Re-Type Your New Password"
+          autoComplete="new-password"
+        />
       </Grid>
     </DialogForm>
   );

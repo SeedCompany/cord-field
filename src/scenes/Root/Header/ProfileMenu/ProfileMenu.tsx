@@ -34,27 +34,29 @@ export const ProfileMenu = (props: Partial<MenuProps>) => {
   const [changePasswordState, changePassword] = useDialog();
 
   return (
-    <Menu
-      id="profile-menu"
-      keepMounted
-      open={Boolean(props.anchorEl)}
-      getContentAnchorEl={null}
-      anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
-      transformOrigin={{ vertical: spacing(-2), horizontal: 'right' }}
-      classes={{ paper: classes.menu }}
-      {...props}
-    >
-      <Typography
-        variant="h4"
-        className={classes.menuHeading}
-        {...skipAutoFocus}
+    <>
+      <Menu
+        id="profile-menu"
+        keepMounted
+        open={Boolean(props.anchorEl)}
+        getContentAnchorEl={null}
+        anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
+        transformOrigin={{ vertical: spacing(-2), horizontal: 'right' }}
+        classes={{ paper: classes.menu }}
+        {...props}
       >
-        Profile Info
-      </Typography>
-      <Divider {...skipAutoFocus} />
-      <MenuItemLink to="/logout">Sign Out</MenuItemLink>
-      <MenuItem onClick={changePassword}>Change Password</MenuItem>
+        <Typography
+          variant="h4"
+          className={classes.menuHeading}
+          {...skipAutoFocus}
+        >
+          Profile Info
+        </Typography>
+        <Divider {...skipAutoFocus} />
+        <MenuItemLink to="/logout">Sign Out</MenuItemLink>
+        <MenuItem onClick={changePassword}>Change Password</MenuItem>
+      </Menu>
       <ChangePassword {...changePasswordState} />
-    </Menu>
+    </>
   );
 };
