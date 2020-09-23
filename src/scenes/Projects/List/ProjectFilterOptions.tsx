@@ -1,4 +1,5 @@
 import { Grid, Tooltip } from '@material-ui/core';
+import { upperFirst } from 'lodash';
 import * as React from 'react';
 import {
   displayStatus,
@@ -9,12 +10,38 @@ import {
 } from '../../../api';
 import { CheckboxesField, CheckboxOption } from '../../../components/form';
 import { SwitchField } from '../../../components/form/SwitchField';
-import { BooleanParam, EnumListParam, makeQueryHandler } from '../../../hooks';
+import {
+  BooleanParam,
+  EnumListParam,
+  makeQueryHandler,
+  withDefault,
+  withKey,
+  withTransform,
+} from '../../../hooks';
 
 export const useProjectFilters = makeQueryHandler({
-  status: EnumListParam<ProjectStatus>(),
-  sensitivity: EnumListParam<Sensitivity>(),
-  onlyMultipleEngagements: BooleanParam(),
+  status: withTransform(EnumListParam<ProjectStatus>(), {
+    encode: (value, encoder) =>
+      encoder(
+        value?.map((s: ProjectStatus) =>
+          s === 'InDevelopment' ? 'dev' : s.toLowerCase()
+        )
+      ),
+    decode: (value, decoder) =>
+      decoder(value)?.map(
+        (s): ProjectStatus =>
+          s.toLowerCase() === 'dev'
+            ? 'InDevelopment'
+            : (upperFirst(s) as ProjectStatus)
+      ),
+  }),
+  sensitivity: withTransform(EnumListParam<Sensitivity>(), {
+    encode: (value, encoder) =>
+      encoder(value?.map((v: Sensitivity) => v.toLowerCase())),
+    decode: (value, decoder) =>
+      decoder(value)?.map((v) => upperFirst(v) as Sensitivity),
+  }),
+  onlyMultipleEngagements: withKey(withDefault(BooleanParam(), false), 'multi'),
 });
 
 export const ProjectFilterOptions = () => {
@@ -48,12 +75,14 @@ export const ProjectFilterOptions = () => {
           ))}
         </Grid>
       </CheckboxesField>
-      <Tooltip title="Clusters/Cohorts are projects with multiple engagements">
-        <SwitchField
-          name="onlyMultipleEngagements"
-          label="Only Show Cluster/Cohort Projects"
-        />
-      </Tooltip>
+      <SwitchField
+        name="onlyMultipleEngagements"
+        label={
+          <Tooltip title="Clusters/Cohorts are projects with multiple engagements">
+            <span>Only Show Cluster/Cohort Projects</span>
+          </Tooltip>
+        }
+      />
     </>
   );
 };

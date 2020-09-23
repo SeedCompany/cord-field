@@ -1,5 +1,4 @@
-import { decodeString, encodeString } from 'serialize-query-params';
-import { makeQueryHandler, StringParam } from '../../hooks';
+import { makeQueryHandler, StringParam, withTransform } from '../../hooks';
 import { SortValue } from './SortControl';
 
 export const useSort = <T>() => {
@@ -13,8 +12,8 @@ export const useSort = <T>() => {
 
 const useSortHandler = makeQueryHandler({
   sort: StringParam,
-  order: {
-    decode: (val) => decodeString(val)?.toUpperCase(),
-    encode: (val) => encodeString(val)?.toLowerCase(),
-  },
+  order: withTransform(StringParam, {
+    encode: (val, encoder) => encoder(val?.toLowerCase()),
+    decode: (val, decoder) => decoder(val)?.toUpperCase(),
+  }),
 });
