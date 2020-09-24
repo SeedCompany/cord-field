@@ -59,5 +59,10 @@ fragment LanguageEngagementDetail on LanguageEngagement {
       ...ProductCard
     }
   }
+  paraTextRegistryId {
+    canRead
+    canEdit
+    value
+  }
   ...EditEngagement
 }
