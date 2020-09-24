@@ -1,0 +1,16 @@
+mutation createPartner($input: CreatePartnerInput!) {
+  createPartner(input: $input) {
+    partner {
+      id
+      organization {
+        value {
+          name {
+            ...ss
+          }
+        }
+        canRead
+        canEdit
+      }
+    }
+  }
+}
