@@ -85,7 +85,7 @@ export const Sidebar: FC = () => {
       <NavItem to="/projects" label="Projects" icon={FolderOpen} />
       <NavItem to="/languages" label="Languages" icon={Language} />
       <NavItem to="/users" label="People" icon={People} />
-      <NavItem to="/organizations" label="Partners" icon={People} />
+      <NavItem to="/partners" label="Partners" icon={People} />
     </List>
   );
 
