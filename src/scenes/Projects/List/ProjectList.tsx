@@ -76,8 +76,11 @@ export const ProjectList: FC = () => {
             }}
             className={classes.projectItem}
           >
-            <ProjectListItemCard key={item?.id ?? index} project={item}
-            className={classes.projectItem} />
+            <ProjectListItemCard
+              key={item?.id ?? index}
+              project={item}
+              className={classes.projectItem}
+            />
           </div>
         )}
         itemHeight={224}
@@ -114,6 +117,6 @@ export const ProjectList: FC = () => {
           }
         }}
       />
-    </div>
+    </ContentContainer>
   );
 };
