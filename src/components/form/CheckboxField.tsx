@@ -45,6 +45,9 @@ export const CheckboxField: FC<CheckboxFieldProps> = ({
   const disabled = disabledProp ?? meta.submitting;
   const ref = useFocusOnEnabled<HTMLInputElement>(meta, disabled);
 
+  const inputValueIsValid =
+    (input.value as unknown) === false || (input.value as unknown) === true;
+
   return (
     <FormControl
       required={props.required}
@@ -62,7 +65,7 @@ export const CheckboxField: FC<CheckboxFieldProps> = ({
           <Checkbox
             {...rest}
             inputRef={ref}
-            checked={input.value}
+            checked={inputValueIsValid ? input.value : defaultValue}
             value={name}
             onChange={(e) => input.onChange(e.target.checked)}
             required={props.required}
