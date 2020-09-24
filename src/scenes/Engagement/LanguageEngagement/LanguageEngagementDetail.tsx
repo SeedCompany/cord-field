@@ -72,6 +72,7 @@ export const LanguageEngagementDetail: FC<EngagementQuery> = ({
 
   const language = engagement.language.value;
   const langName = language?.name.value ?? language?.displayName.value;
+  const ptRegistryId = engagement.paraTextRegistryId;
   const editable = canEditAny(engagement);
 
   return (
@@ -154,6 +155,16 @@ export const LanguageEngagementDetail: FC<EngagementQuery> = ({
             <DataButton onClick={() => show('status')}>
               {displayEngagementStatus(engagement.status)}
             </DataButton>
+          </Grid>
+          <Grid item>
+            <DataButton
+              onClick={() => show(['paraTextRegistryId'])}
+              secured={ptRegistryId}
+              redacted="You do not have permission to view ParaText Registry ID"
+              children={`ParaText Registry ID${
+                ptRegistryId.value ? `: ${ptRegistryId.value}` : ''
+              }`}
+            />
           </Grid>
           <BooleanProperty
             label="First Scripture"

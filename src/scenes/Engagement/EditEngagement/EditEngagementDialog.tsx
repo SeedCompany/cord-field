@@ -24,6 +24,7 @@ import {
   RadioField,
   RadioOption,
   SubmitError,
+  TextField,
 } from '../../../components/form';
 import { AutocompleteField } from '../../../components/form/AutocompleteField';
 import { CountryField, UserField } from '../../../components/form/Lookup';
@@ -53,6 +54,7 @@ export type EditableEngagementField = ExtractStrict<
   | 'firstScripture'
   | 'lukePartnership'
   | 'status'
+  | 'paraTextRegistryId'
 >;
 
 interface EngagementFieldProps {
@@ -135,6 +137,9 @@ const fieldMapping: Record<
       autoComplete
     />
   ),
+  paraTextRegistryId: ({ props }) => (
+    <TextField {...props} label="ParaText Registry ID" />
+  ),
 };
 
 interface EngagementFormValues {
@@ -191,6 +196,7 @@ export const EditEngagementDialog: FC<EditEngagementDialogProps> = ({
         ? {
             lukePartnership: engagement.lukePartnership.value,
             firstScripture: engagement.firstScripture.value,
+            paraTextRegistryId: engagement.paraTextRegistryId.value,
           }
         : engagement.__typename === 'InternshipEngagement'
         ? {
