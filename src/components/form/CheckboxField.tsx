@@ -62,7 +62,7 @@ export const CheckboxField: FC<CheckboxFieldProps> = ({
           <Checkbox
             {...rest}
             inputRef={ref}
-            checked={input.value}
+            checked={input.value || defaultValue}
             value={name}
             onChange={(e) => input.onChange(e.target.checked)}
             required={props.required}
