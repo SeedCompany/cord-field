@@ -10,12 +10,12 @@ export type CreateOrganizationFormProps<T, R = void> = DialogFormProps<T, R>;
 export const CreateOrganizationForm = <T, R = void>(
   props: CreateOrganizationFormProps<T, R>
 ) => (
-  <DialogForm {...props} title="Create Partner">
+  <DialogForm {...props} title="Create Organization">
     <SubmitError />
     <TextField
       name="organization.name"
       label="Name"
-      placeholder="Enter partner name"
+      placeholder="Enter Organization name"
       required
     />
   </DialogForm>

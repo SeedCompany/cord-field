@@ -17,7 +17,7 @@ import { CreateButton } from '../../../components/CreateButton';
 import { useDialog } from '../../../components/Dialog';
 import { ListItemLink, ListItemLinkProps } from '../../../components/Routing';
 import { CreateLanguage } from '../../Languages/Create';
-import { CreateOrganization } from '../../Organizations/Create';
+import { CreatePartner } from '../../Partners/Create';
 import { CreateProject } from '../../Projects/Create';
 import { CreateUser } from '../../Users/Create';
 import { sidebarTheme } from './sidebar.theme';
@@ -47,7 +47,7 @@ export const Sidebar: FC = () => {
     closeAddMenu();
     fn();
   };
-  const [createOrgState, createOrg] = useDialog();
+  const [createPartnerState, createPartner] = useDialog();
   const [createProjectState, createProject] = useDialog();
   const [createLanguageState, createLanguage] = useDialog();
   const [createUserState, createUser] = useDialog();
@@ -69,7 +69,7 @@ export const Sidebar: FC = () => {
         horizontal: 'center',
       }}
     >
-      <MenuItem onClick={closeAnd(createOrg)}>Partner</MenuItem>
+      <MenuItem onClick={closeAnd(createPartner)}>Partner</MenuItem>
       <MenuItem onClick={closeAnd(createProject)}>Project</MenuItem>
       <MenuItem onClick={closeAnd(createLanguage)}>Language</MenuItem>
       <MenuItem onClick={closeAnd(createUser)}>Person</MenuItem>
@@ -114,7 +114,7 @@ export const Sidebar: FC = () => {
   return (
     <>
       {sidebar}
-      <CreateOrganization {...createOrgState} />
+      <CreatePartner {...createPartnerState} />
       <CreateProject {...createProjectState} />
       <CreateLanguage {...createLanguageState} />
       <CreateUser {...createUserState} />
