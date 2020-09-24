@@ -30,6 +30,8 @@ const useStyles = makeStyles(({ spacing }) => {
     },
     name: {
       marginBottom: spacing(2),
+      overflowWrap: 'break-word',
+      wordBreak: 'break-all',
     },
   };
 });
