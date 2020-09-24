@@ -39,7 +39,6 @@ export const PartnershipForm = <
   partnership,
   ...rest
 }: PartnershipFormProps<T>) => {
-  console.log('partnership', partnership);
   const radioOptions = PartnershipAgreementStatusList.map((status) => (
     <RadioOption
       key={status}
