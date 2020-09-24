@@ -123,12 +123,12 @@ export const UserForm = <T, R = void>({
           <TextField label="Timezone" placeholder="Enter Timezone" {...props} />
         )}
       </SecuredField>
-      <SecuredField obj={user} name="bio">
+      <SecuredField obj={user} name="about">
         {(props) => (
           <TextField
-            label="Biography"
+            label="About"
             multiline
-            placeholder="Enter Biography"
+            placeholder="Enter About"
             inputProps={{ rowsMin: 2 }}
             {...props}
           />

@@ -25,7 +25,7 @@ export const EditUser = (props: EditUserProps) => {
               displayLastName: user.displayLastName.value,
               phone: user.phone.value,
               timezone: user.timezone.value?.name,
-              bio: user.bio.value,
+              about: user.about.value,
               email: user.email.value,
               title: user.title.value,
             },

@@ -29,7 +29,7 @@ fragment UserForm on User {
   phone {
     ...ss
   }
-  bio {
+  about {
     ...ss
   }
   title {

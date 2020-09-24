@@ -11,7 +11,7 @@ fragment userDetails on User {
     ...ss
   }
   fullName
-  bio {
+  about {
     ...ss
   }
   phone {
