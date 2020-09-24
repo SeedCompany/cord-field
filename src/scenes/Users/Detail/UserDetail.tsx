@@ -115,8 +115,8 @@ export const UserDetail = () => {
             loading={!user}
           />
           <DisplayProperty
-            label="Biography"
-            value={user?.bio.value}
+            label="About"
+            value={user?.about.value}
             loading={!user}
           />
           {user ? <EditUser user={user} {...editUserState} /> : null}
