@@ -12,7 +12,6 @@ export type EditUserProps = Except<
 export const EditUser = (props: EditUserProps) => {
   const [updateUser] = useUpdateUserMutation();
   const user = props.user;
-  console.log('user', user);
 
   const initialValues = useMemo(
     () =>
