@@ -1,0 +1,20 @@
+query Partner($input: ID!) {
+  partner(id: $input) {
+    ...partnerDetails
+  }
+}
+
+fragment partnerDetails on Partner {
+  id
+  createdAt
+  organization {
+    canRead
+    canEdit
+    value {
+      name {
+        ...ss
+      }
+      avatarLetters
+    }
+  }
+}

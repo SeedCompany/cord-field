@@ -1,5 +1,6 @@
 import React from 'react';
 import { useRoutes } from 'react-router-dom';
+import { PartnerDetail } from './Detail';
 import { PartnerList } from './List';
 
 export const Partners = () => {
@@ -8,10 +9,10 @@ export const Partners = () => {
       path: '/',
       element: <PartnerList />,
     },
-    // {
-    //   path: '/:partnerId',
-    //   element: <PartnerDetail />,
-    // },
+    {
+      path: '/:partnerId',
+      element: <PartnerDetail />,
+    },
   ]);
 
   if (!matched) {
