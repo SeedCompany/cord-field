@@ -8,6 +8,7 @@ mutation createOrganization($input: CreateOrganizationInput!) {
         canEdit
       }
       createdAt
+      ...OrganizationLookupItem
     }
   }
 }
