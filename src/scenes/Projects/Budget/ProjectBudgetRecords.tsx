@@ -33,13 +33,16 @@ export const ProjectBudgetRecords: FC<ProjectBudgetRecordsProps> = (props) => {
 
   const records: readonly BudgetRecord[] = budget?.value?.records ?? [];
 
-  const rowData = records.map<BudgetRowData>((record) => ({
-    id: record.id,
-    fundingPartner: record.organization.value?.name.value ?? '',
-    fiscalYear: String(record.fiscalYear.value),
-    amount: String(record.amount.value ?? ''),
-    canEdit: record.amount.canEdit,
-  }));
+  const rowData = records
+    .map<BudgetRowData>((record) => ({
+      id: record.id,
+      fundingPartner: record.organization.value?.name.value ?? '',
+      fiscalYear: String(record.fiscalYear.value),
+      amount: String(record.amount.value ?? ''),
+      canEdit: record.amount.canEdit,
+    }))
+    .sort((a, b) => (a.fundingPartner > b.fundingPartner ? 1 : -1))
+    .sort((a, b) => Number(a.fiscalYear) - Number(b.fiscalYear));
 
   const blankAmount = 'click to edit';
   const columns: Array<Column<BudgetRowData>> = useMemo(
@@ -93,6 +96,9 @@ export const ProjectBudgetRecords: FC<ProjectBudgetRecordsProps> = (props) => {
             }
           : undefined
       }
+      options={{
+        thirdSortClick: false,
+      }}
     />
   );
 };
