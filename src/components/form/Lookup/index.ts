@@ -7,3 +7,4 @@ export * from './Project';
 export * from './Song';
 export * from './Story';
 export * from './User';
+export * from './Partner';
