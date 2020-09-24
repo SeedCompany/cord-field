@@ -15,7 +15,7 @@ const tableComponents: Components = {
 
 interface BudgetRowData {
   id: string;
-  organization: string;
+  fundingPartner: string;
   fiscalYear: string;
   amount: string | null;
   canEdit: boolean;
@@ -35,7 +35,7 @@ export const ProjectBudgetRecords: FC<ProjectBudgetRecordsProps> = (props) => {
 
   const rowData = records.map<BudgetRowData>((record) => ({
     id: record.id,
-    organization: record.organization.value?.name.value ?? '',
+    fundingPartner: record.organization.value?.name.value ?? '',
     fiscalYear: String(record.fiscalYear.value),
     amount: String(record.amount.value ?? ''),
     canEdit: record.amount.canEdit,
@@ -49,7 +49,7 @@ export const ProjectBudgetRecords: FC<ProjectBudgetRecordsProps> = (props) => {
         hidden: true,
       },
       {
-        field: 'organization',
+        field: 'fundingPartner',
         editable: 'never',
       },
       {
