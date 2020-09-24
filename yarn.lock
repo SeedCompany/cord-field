@@ -3847,7 +3847,7 @@ __metadata:
   dependencies:
     "@types/prop-types": "*"
     "@types/react": "*"
-  checksum: 3/5a53193dc92ec28303da10fa6a94fe143a74620dbef28995bf62be45c60731a7f0c4f7b3ca7ff1fd35294b3bd6c2934d4781ced7c7e9e66ab5fdd065e7bb06d8
+  checksum: 5a53193dc92ec28303da10fa6a94fe143a74620dbef28995bf62be45c60731a7f0c4f7b3ca7ff1fd35294b3bd6c2934d4781ced7c7e9e66ab5fdd065e7bb06d8
   languageName: node
   linkType: hard
 
@@ -6937,7 +6937,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"clsx@npm:^1.0.2, clsx@npm:^1.0.4, clsx@npm:^1.1.0, clsx@npm:^1.1.1":
+"clsx@npm:^1.0.1, clsx@npm:^1.0.2, clsx@npm:^1.0.4, clsx@npm:^1.1.0, clsx@npm:^1.1.1":
   version: 1.1.1
   resolution: "clsx@npm:1.1.1"
   checksum: d8ae10ac0546da19fe8c9516886f6582a64a382cf4d09ea7d36d5287cafbdab1192ab249adc2cdf0310e0b0aeac4f4142cf7c738c98d9cb68c19ba24b6f673d5
@@ -7410,7 +7410,6 @@ __metadata:
     react-router-dom: ^6.0.0-beta.0
     react-scripts: ^3.4.1
     react-use: ^15.3.3
-    react-use: ^14.1.1
     react-virtualized: ^9.21.2
     rifm: ^0.12.0
     seedrandom: ^3.0.5
@@ -18067,7 +18066,7 @@ material-table@1.69.0:
   peerDependencies:
     react: ^15.3.0 || ^16.0.0-alpha
     react-dom: ^15.3.0 || ^16.0.0-alpha
-  checksum: 3/f2e9476db8cff71a056aac66032e79a05c7417a2786cdc3ab4a314ae40d181a206fefaeca1f03a84bc51d76be94455cd24a442ea84e2af52a3b1332f05494927
+  checksum: f2e9476db8cff71a056aac66032e79a05c7417a2786cdc3ab4a314ae40d181a206fefaeca1f03a84bc51d76be94455cd24a442ea84e2af52a3b1332f05494927
   languageName: node
   linkType: hard
 
