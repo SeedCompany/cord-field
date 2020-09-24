@@ -39,7 +39,6 @@ export const PartnershipForm = <
   partnership,
   ...rest
 }: PartnershipFormProps<T>) => {
-  console.log('partnership', partnership);
   const radioOptions = PartnershipAgreementStatusList.map((status) => (
     <RadioOption
       key={status}
@@ -116,7 +115,7 @@ const FundingType = <
     partnership ? (
       <SecuredField obj={partnership} name="financialReportingType">
         {(props) => (
-          <RadioField label="Funding Type" fullWidth row {...props}>
+          <RadioField label="Financial Reporting Type" fullWidth row {...props}>
             {radioOptions}
           </RadioField>
         )}
@@ -124,7 +123,7 @@ const FundingType = <
     ) : (
       <RadioField
         name="financialReportingType"
-        label="Funding Type"
+        label="Financial Reporting Type"
         fullWidth
         row
       >
