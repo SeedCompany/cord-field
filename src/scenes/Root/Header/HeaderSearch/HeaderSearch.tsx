@@ -30,7 +30,11 @@ export const HeaderSearch: FC = () => {
   return (
     <Form
       initialValues={{ search }}
-      onSubmit={({ search }) => navigate(`/search?q=${search}`)}
+      onSubmit={({ search }) => {
+        if (search) {
+          navigate(`/search?q=${search}`);
+        }
+      }}
     >
       {({ handleSubmit }) => (
         <form onSubmit={handleSubmit} className={classes.root}>
