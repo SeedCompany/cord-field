@@ -12,7 +12,6 @@ import { ContentContainer } from '../../../components/Layout';
 import { ListContainer } from '../../../components/Layout/ListContainer';
 import { ProjectListItemCard } from '../../../components/ProjectListItemCard';
 import { SortButtonDialog, useSort } from '../../../components/Sort';
-// import { listOrPlaceholders } from '../../../util';
 import {
   ProjectFilterOptions,
   useProjectFilters,
@@ -98,13 +97,6 @@ export const ProjectList: FC = () => {
                       width={width}
                       itemSize={240}
                       itemCount={data.projects.total}
-                      itemKey={(index) => {
-                        // TypeScript doesn't think the `item` we index below could
-                        // ever be undefined, but it is wrong, as demonstrated while
-                        // building this logic.
-                        /* eslint-disable @typescript-eslint/no-unnecessary-condition */
-                        return data.projects.items[index]?.id ?? index;
-                      }}
                       onItemsRendered={onItemsRendered}
                       overscanCount={2}
                       ref={ref}
