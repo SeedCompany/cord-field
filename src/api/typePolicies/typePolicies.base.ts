@@ -4,6 +4,7 @@ import type {
   KeyFieldsFunction,
 } from '@apollo/client/cache/inmemory/policies';
 import type { GqlTypeMap } from '../typeMap.generated';
+import { ProjectListOutput, QueryProjectsArgs } from '..';
 
 type FieldPolicies<T> = {
   [K in keyof T]?: FieldPolicy<T[K]> | FieldReadFunction<T[K]>;
@@ -40,5 +41,35 @@ export const typePolicies: TypePolicies = {
   },
   ScriptureRange: {
     keyFields: ['start', scriptureKeyFields, 'end', scriptureKeyFields],
+  },
+  Query: {
+    fields: {
+      projects: {
+        merge(
+          existing: ProjectListOutput | undefined,
+          incoming: ProjectListOutput,
+          { args }: { args: QueryProjectsArgs | null }
+        ) {
+          const count = args?.input?.count;
+          const page = args?.input?.page;
+          const DEFAULT_COUNT = 10;
+          const existingProjects = existing?.items ?? [];
+          const startNew = (page ?? 1) * (count ?? DEFAULT_COUNT) + 1;
+          const endNew = (page ?? 1) * (count ?? DEFAULT_COUNT);
+          const updatedProjects = [
+            ...existingProjects.slice(0, startNew),
+            ...incoming.items,
+            ...existingProjects.slice(endNew),
+          ];
+          return {
+            ...incoming,
+            items: updatedProjects,
+          };
+        },
+        read(existing: ProjectListOutput | undefined) {
+          return existing;
+        },
+      },
+    },
   },
 };
