@@ -26,13 +26,12 @@ export const HeaderSearch: FC = () => {
   const classes = useStyles();
   const [{ q: search = '' }] = useSearch();
   const navigate = useNavigate();
-  console.log('search', search);
 
   return (
     <Form
       initialValues={{ search }}
       onSubmit={({ search }) => {
-        if (search !== undefined) {
+        if (search) {
           navigate(`/search?q=${search}`);
         }
       }}
