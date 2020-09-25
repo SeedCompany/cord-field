@@ -2,6 +2,9 @@ import { useQuery } from '@apollo/client';
 import { Grid, makeStyles, Typography } from '@material-ui/core';
 import { Skeleton } from '@material-ui/lab';
 import React, { FC } from 'react';
+import AutoSizer from 'react-virtualized-auto-sizer';
+import { FixedSizeList } from 'react-window';
+import InfiniteLoader from 'react-window-infinite-loader';
 import { Project } from '../../../api';
 import { FilterButtonDialog } from '../../../components/Filter';
 import { useNumberFormatter } from '../../../components/Formatters';
@@ -9,7 +12,7 @@ import { ContentContainer } from '../../../components/Layout';
 import { ListContainer } from '../../../components/Layout/ListContainer';
 import { ProjectListItemCard } from '../../../components/ProjectListItemCard';
 import { SortButtonDialog, useSort } from '../../../components/Sort';
-import { listOrPlaceholders } from '../../../util';
+// import { listOrPlaceholders } from '../../../util';
 import {
   ProjectFilterOptions,
   useProjectFilters,
@@ -27,6 +30,7 @@ const useStyles = makeStyles(({ spacing }) => ({
 }));
 
 export const ProjectList: FC = () => {
+  const classes = useStyles();
   const formatNumber = useNumberFormatter();
   const sort = useSort<Project>();
   const [filters, setFilters] = useProjectFilters();
@@ -36,10 +40,23 @@ export const ProjectList: FC = () => {
       input: {
         ...sort.value,
         filter: filters,
+        count: 5,
       },
     },
   });
-  const classes = useStyles();
+
+  const loadMoreItems = async (startIndex: number) => {
+    await fetchMore({
+      variables: {
+        input: {
+          ...sort.value,
+          filter: filters,
+          count: 5,
+          page: Math.floor(startIndex / 5 + 1),
+        },
+      },
+    });
+  };
 
   return (
     <ContentContainer>
@@ -66,13 +83,42 @@ export const ProjectList: FC = () => {
         )}
       </Typography>
       <ListContainer>
-        {listOrPlaceholders(data?.projects.items, 5).map((item, index) => (
-          <ProjectListItemCard
-            key={item?.id ?? index}
-            project={item}
-            className={classes.projectItem}
-          />
-        ))}
+        {data && (
+          <div style={{ height: '55vh' }}>
+            <AutoSizer>
+              {({ width, height }) => (
+                <InfiniteLoader
+                  isItemLoaded={(index) => !!data.projects.items[index]}
+                  itemCount={data.projects.total}
+                  loadMoreItems={loadMoreItems}
+                >
+                  {({ onItemsRendered, ref }) => (
+                    <FixedSizeList
+                      height={height}
+                      width={width}
+                      itemSize={240}
+                      itemCount={data.projects.total}
+                      // itemKey={(index) => data.projects.items[index].id}
+                      onItemsRendered={onItemsRendered}
+                      overscanCount={2}
+                      ref={ref}
+                    >
+                      {({ index, style }) => (
+                        <div
+                          style={style} /*  className={classes.projectItem} */
+                        >
+                          <ProjectListItemCard
+                            project={data.projects.items[index]}
+                          />
+                        </div>
+                      )}
+                    </FixedSizeList>
+                  )}
+                </InfiniteLoader>
+              )}
+            </AutoSizer>
+          </div>
+        )}
       </ListContainer>
     </ContentContainer>
   );
