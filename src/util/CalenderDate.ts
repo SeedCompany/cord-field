@@ -119,6 +119,18 @@ export class CalendarDate extends DateTime {
     return CalendarDate.fromDateTime(super.utc(year, month, day));
   }
 
+  static toFiscalYear = (dt: DateTime) =>
+    dt.month >= 10 ? dt.year + 1 : dt.year;
+
+  static fiscalYearEndToCalendarDate = (year: number | null | undefined) =>
+    year
+      ? CalendarDate.fromObject({
+          year,
+          month: 9,
+          day: 30,
+        })
+      : undefined;
+
   endOf(unit: DurationUnit): CalendarDate {
     return CalendarDate.fromDateTime(super.endOf(unit));
   }

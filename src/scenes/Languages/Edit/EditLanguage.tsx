@@ -1,11 +1,17 @@
 import React, { useMemo } from 'react';
 import { Except } from 'type-fest';
-import { UpdateLanguageInput } from '../../../api';
+import { UpdateLanguage } from '../../../api';
+import { CalendarDate, Nullable } from '../../../util';
 import { LanguageForm, LanguageFormProps } from '../LanguageForm';
 import { useUpdateLanguageMutation } from './EditLanguage.generated';
 
+interface LanguageFormValues {
+  language: Except<UpdateLanguage, 'sponsorEstimatedEndDate'> & {
+    sponsorEstimatedEndFY?: Nullable<number>;
+  };
+}
 export type EditLanguageProps = Except<
-  LanguageFormProps<UpdateLanguageInput>,
+  LanguageFormProps<LanguageFormValues>,
   'onSubmit' | 'initialValues'
 >;
 
@@ -35,7 +41,11 @@ export const EditLanguage = (props: EditLanguageProps) => {
               leastOfTheseReason: language.leastOfTheseReason.value,
               isSignLanguage: language.isSignLanguage.value,
               sensitivity: language.sensitivity,
-              sponsorEstimatedEndDate: language.sponsorEstimatedEndDate.value,
+              sponsorEstimatedEndFY:
+                language.sponsorEstimatedEndDate.value &&
+                CalendarDate.toFiscalYear(
+                  language.sponsorEstimatedEndDate.value
+                ),
             },
           }
         : undefined,
@@ -43,16 +53,21 @@ export const EditLanguage = (props: EditLanguageProps) => {
   );
 
   return (
-    <LanguageForm<UpdateLanguageInput>
+    <LanguageForm<LanguageFormValues>
       title="Edit Language"
       {...props}
       initialValues={initialValues}
-      onSubmit={async ({ language: { populationOverride, ...rest } }) => {
+      onSubmit={async ({
+        language: { populationOverride, sponsorEstimatedEndFY, ...rest },
+      }) => {
         await updateLanguage({
           variables: {
             input: {
               language: {
                 populationOverride: populationOverride ?? null,
+                sponsorEstimatedEndDate: CalendarDate.fiscalYearEndToCalendarDate(
+                  sponsorEstimatedEndFY
+                ),
                 ...rest,
               },
             },

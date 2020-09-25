@@ -1,12 +1,11 @@
 import { Grid, makeStyles, Tooltip, Typography } from '@material-ui/core';
-import { Add, DateRange, Edit } from '@material-ui/icons';
+import { Add, Edit } from '@material-ui/icons';
 import { Skeleton } from '@material-ui/lab';
 import clsx from 'clsx';
 import React from 'react';
 import { useParams } from 'react-router';
-import { canEditAny, securedDateRange } from '../../../api';
+import { canEditAny } from '../../../api';
 import { BooleanProperty } from '../../../components/BooleanProperty';
-import { DataButton } from '../../../components/DataButton';
 import { useDialog } from '../../../components/Dialog';
 import {
   DisplaySimpleProperty,
@@ -15,25 +14,23 @@ import {
 import { Fab } from '../../../components/Fab';
 import {
   useDateFormatter,
-  useDateTimeFormatter,
   useNumberFormatter,
 } from '../../../components/Formatters';
 import { ProjectListItemCard } from '../../../components/ProjectListItemCard';
 import { Redacted } from '../../../components/Redacted';
 import { Sensitivity } from '../../../components/Sensitivity';
-import { listOrPlaceholders } from '../../../util';
+import { CalendarDate, listOrPlaceholders } from '../../../util';
 import { EditLanguage } from '../Edit';
 import { useLanguageQuery } from './LanguageDetail.generated';
 import { LeastOfThese } from './LeastOfThese';
 
-const useStyles = makeStyles(({ spacing, breakpoints, palette }) => ({
+const useStyles = makeStyles(({ spacing }) => ({
   root: {
     overflowY: 'auto',
     padding: spacing(4),
     '& > *:not(:last-child)': {
       marginBottom: spacing(3),
     },
-    maxWidth: breakpoints.values.md,
   },
   name: {
     marginRight: spacing(4),
@@ -54,9 +51,6 @@ const useStyles = makeStyles(({ spacing, breakpoints, palette }) => ({
   hidden: {
     visibility: 'hidden',
   },
-  calendarIcon: {
-    color: palette.info.main,
-  },
 }));
 
 export const LanguageDetail = () => {
@@ -73,10 +67,8 @@ export const LanguageDetail = () => {
 
   const canEditAnyFields = canEditAny(language) || canEditAny(ethnologue);
 
-  const formatDateTime = useDateTimeFormatter();
-  const formatNumber = useNumberFormatter();
-
   const formatDate = useDateFormatter();
+  const formatNumber = useNumberFormatter();
 
   return (
     <main className={classes.root}>
@@ -115,20 +107,6 @@ export const LanguageDetail = () => {
             <Grid item>
               <Sensitivity value={language?.sensitivity} loading={!language} />
             </Grid>
-            {language && (
-              <Grid item>
-                <DataButton
-                  startIcon={<DateRange className={classes.calendarIcon} />}
-                  secured={securedDateRange(
-                    language.sponsorStartDate,
-                    language.sponsorEstimatedEndDate
-                  )}
-                  redacted="You do not have permission to view start/end dates"
-                  children={formatDate.range}
-                  empty="Start - End"
-                />
-              </Grid>
-            )}
             <BooleanProperty
               label="Dialect"
               redacted="You do not have permission to view whether the language is a dialect"
@@ -174,7 +152,15 @@ export const LanguageDetail = () => {
           />
           <DisplayProperty
             label="Sponsor Start Date"
-            value={formatDateTime(language?.sponsorStartDate.value)}
+            value={formatDate(language?.sponsorStartDate.value)}
+            loading={!language}
+          />
+          <DisplayProperty
+            label="Sponsor Estimated End Fiscal Year"
+            value={
+              language?.sponsorEstimatedEndDate.value &&
+              CalendarDate.toFiscalYear(language.sponsorEstimatedEndDate.value)
+            }
             loading={!language}
           />
           <Grid container spacing={3}>
