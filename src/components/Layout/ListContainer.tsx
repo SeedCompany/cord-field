@@ -9,7 +9,18 @@ const useStyles = makeStyles(({ spacing }) => ({
   },
 }));
 
-export const ListContainer: FC = ({ children }) => {
+interface ListContainerProps {
+  className?: string;
+}
+
+export const ListContainer: FC<ListContainerProps> = ({
+  className,
+  children,
+}) => {
   const classes = useStyles();
-  return <div className={classes.root}>{children}</div>;
+  return (
+    <div className={`${classes.root}${className ? ` ${className}` : ''}`}>
+      {children}
+    </div>
+  );
 };
