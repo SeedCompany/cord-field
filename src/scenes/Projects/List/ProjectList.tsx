@@ -98,7 +98,13 @@ export const ProjectList: FC = () => {
                       width={width}
                       itemSize={240}
                       itemCount={data.projects.total}
-                      // itemKey={(index) => data.projects.items[index].id}
+                      itemKey={(index) => {
+                        // TypeScript doesn't think the `item` we index below could
+                        // ever be undefined, but it is wrong, as demonstrated while
+                        // building this logic.
+                        /* eslint-disable @typescript-eslint/no-unnecessary-condition */
+                        return data.projects.items[index]?.id ?? index;
+                      }}
                       onItemsRendered={onItemsRendered}
                       overscanCount={2}
                       ref={ref}
