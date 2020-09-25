@@ -23,6 +23,9 @@ const useStyles = makeStyles(({ spacing }) => ({
   options: {
     margin: spacing(3, 0),
   },
+  listContainer: {
+    height: '100%',
+  },
   projectItem: {
     marginBottom: spacing(2),
   },
@@ -81,9 +84,9 @@ export const ProjectList: FC = () => {
           <Skeleton width="12ch" />
         )}
       </Typography>
-      <ListContainer>
+      <ListContainer className={classes.listContainer}>
         {data && (
-          <div style={{ height: '55vh' }}>
+          <div style={{ height: '100%', flex: 1 }}>
             <AutoSizer>
               {({ width, height }) => (
                 <InfiniteLoader
