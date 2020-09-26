@@ -2,9 +2,8 @@ import { useQuery } from '@apollo/client';
 import { Grid, makeStyles, Typography } from '@material-ui/core';
 import { Skeleton } from '@material-ui/lab';
 import React, { FC } from 'react';
+import InfiniteScroll from 'react-infinite-scroll-component';
 import AutoSizer from 'react-virtualized-auto-sizer';
-import { FixedSizeList } from 'react-window';
-import InfiniteLoader from 'react-window-infinite-loader';
 import { Project } from '../../../api';
 import { FilterButtonDialog } from '../../../components/Filter';
 import { useNumberFormatter } from '../../../components/Formatters';
@@ -12,6 +11,7 @@ import { ContentContainer } from '../../../components/Layout';
 import { ListContainer } from '../../../components/Layout/ListContainer';
 import { ProjectListItemCard } from '../../../components/ProjectListItemCard';
 import { SortButtonDialog, useSort } from '../../../components/Sort';
+import { listOrPlaceholders } from '../../../util';
 import {
   ProjectFilterOptions,
   useProjectFilters,
@@ -25,6 +25,9 @@ const useStyles = makeStyles(({ spacing }) => ({
   },
   listContainer: {
     height: '100%',
+  },
+  projectItem: {
+    marginBottom: spacing(2),
   },
 }));
 
@@ -44,14 +47,17 @@ export const ProjectList: FC = () => {
     },
   });
 
-  const loadMoreItems = async (startIndex: number) => {
+  const hasMore = data?.projects.hasMore ?? false;
+  const currentItemsCount = data?.projects.items.length ?? 5;
+
+  const loadMoreItems = async () => {
     await fetchMore({
       variables: {
         input: {
           ...sort.value,
           filter: filters,
           count: 5,
-          page: Math.floor(startIndex / 5 + 1),
+          page: Math.floor(currentItemsCount / 5 + 1),
         },
       },
     });
@@ -82,39 +88,31 @@ export const ProjectList: FC = () => {
         )}
       </Typography>
       <ListContainer className={classes.listContainer}>
-        {data && (
-          <div style={{ height: '100%', flex: 1 }}>
-            <AutoSizer>
-              {({ width, height }) => (
-                <InfiniteLoader
-                  isItemLoaded={(index) => !!data.projects.items[index]}
-                  itemCount={data.projects.total}
-                  loadMoreItems={loadMoreItems}
-                >
-                  {({ onItemsRendered, ref }) => (
-                    <FixedSizeList
-                      height={height}
-                      width={width}
-                      itemSize={224 + 16}
-                      itemCount={data.projects.total}
-                      onItemsRendered={onItemsRendered}
-                      overscanCount={2}
-                      ref={ref}
-                    >
-                      {({ index, style }) => (
-                        <div style={style}>
-                          <ProjectListItemCard
-                            project={data.projects.items[index]}
-                          />
-                        </div>
-                      )}
-                    </FixedSizeList>
-                  )}
-                </InfiniteLoader>
-              )}
-            </AutoSizer>
-          </div>
-        )}
+        <div style={{ height: '100%', flex: 1 }}>
+          <AutoSizer disableWidth>
+            {({ height }) => (
+              <InfiniteScroll
+                dataLength={currentItemsCount}
+                next={loadMoreItems}
+                hasMore={hasMore}
+                height={height}
+                loader={<h3>Loading...</h3>}
+                endMessage={<h3>No more records</h3>}
+                onScroll={() => console.log('Scrolling.....')}
+              >
+                {listOrPlaceholders(data?.projects.items, 5).map(
+                  (item, index) => (
+                    <ProjectListItemCard
+                      key={item?.id ?? index}
+                      project={item}
+                      className={classes.projectItem}
+                    />
+                  )
+                )}
+              </InfiniteScroll>
+            )}
+          </AutoSizer>
+        </div>
       </ListContainer>
     </ContentContainer>
   );

@@ -4278,25 +4278,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/react-window-infinite-loader@npm:^1.0.3":
-  version: 1.0.3
-  resolution: "@types/react-window-infinite-loader@npm:1.0.3"
-  dependencies:
-    "@types/react": "*"
-    "@types/react-window": "*"
-  checksum: 10f14ad2c53c1d84f9bf807cccb7f6a6d301ff87ef1130bbe976fb8190f8b4293509165169034a7583b51b3087353bb9dad98382280de2cd5cbd5efd7e0bc686
-  languageName: node
-  linkType: hard
-
-"@types/react-window@npm:*, @types/react-window@npm:^1.8.2":
-  version: 1.8.2
-  resolution: "@types/react-window@npm:1.8.2"
-  dependencies:
-    "@types/react": "*"
-  checksum: 9124565e95741f7cc0082aeeb9638cb4bb756c7921f04983f99d86582d1c4caeec1806d3231250e39e0270ba222b6e7e05d55e7afdb59f394219362ab7f76648
-  languageName: node
-  linkType: hard
-
 "@types/react@npm:*, @types/react@npm:^16.9.0, @types/react@npm:^16.9.11":
   version: 16.9.34
   resolution: "@types/react@npm:16.9.34"
@@ -7715,8 +7696,6 @@ __metadata:
     "@types/react-dom": ^16.9.0
     "@types/react-pdf": ^4.0.5
     "@types/react-virtualized-auto-sizer": ^1.0.0
-    "@types/react-window": ^1.8.2
-    "@types/react-window-infinite-loader": ^1.0.3
     "@types/seedrandom": ^2.4.28
     "@types/validator": ^13.1.0
     "@welldone-software/why-did-you-render": ^5.0.0-alpha.2
@@ -7750,6 +7729,7 @@ __metadata:
     react-draggable: ^4.4.3
     react-dropzone: ^11.0.3
     react-final-form: ^6.5.1
+    react-infinite-scroll-component: ^5.1.0
     react-intersection-observer: ^8.26.2
     react-pdf: ^5.0.0
     react-router: ^6.0.0-beta.0
@@ -7757,8 +7737,6 @@ __metadata:
     react-scripts: "patch:react-scripts@4.0.0#./patches/react-scripts.patch"
     react-use: ^15.3.3
     react-virtualized-auto-sizer: ^1.0.2
-    react-window: ^1.8.5
-    react-window-infinite-loader: ^1.0.5
     rifm: ^0.12.0
     seedrandom: ^3.0.5
     serialize-query-params: ^1.2.1
@@ -14656,7 +14634,7 @@ material-table@1.69.0:
   languageName: node
   linkType: hard
 
-"memoize-one@npm:>=3.1.1 <6, memoize-one@npm:^5.0.0, memoize-one@npm:^5.1.1":
+"memoize-one@npm:^5.0.0, memoize-one@npm:^5.1.1":
   version: 5.1.1
   resolution: "memoize-one@npm:5.1.1"
   checksum: e7c4a9cceca71334bf09c38818c375a280dc6e8ec03a92701c16199763269ce756b7b0b370f4b464c071045349fb7b3e4a3cc7460a3f46a277f394d8634a6eb5
@@ -18115,6 +18093,17 @@ material-table@1.69.0:
   languageName: node
   linkType: hard
 
+"react-infinite-scroll-component@npm:^5.1.0":
+  version: 5.1.0
+  resolution: "react-infinite-scroll-component@npm:5.1.0"
+  dependencies:
+    throttle-debounce: ^2.1.0
+  peerDependencies:
+    react: ">=16.0.0"
+  checksum: 543d9376ad3684132d760c017ec53fa76b81e3727afcb65f8a956c2f38460fa5dbed06b2b8d6fc770d5c5fc666b4c5322491337b8194e465969acb8df0dc6eaa
+  languageName: node
+  linkType: hard
+
 "react-input-autosize@npm:^2.2.2":
   version: 2.2.2
   resolution: "react-input-autosize@npm:2.2.2"
@@ -18552,29 +18541,6 @@ react-scripts@4.0.0:
     react: ^15.3.0 || ^16.0.0-alpha
     react-dom: ^15.3.0 || ^16.0.0-alpha
   checksum: 7038b823539e5d950647a8ed9bc67b41368328f85ed22233a36e950d0359e609887cfb56916481fcc09659f9133b94c960ce734548c6f402be8c0cff052d0b81
-  languageName: node
-  linkType: hard
-
-"react-window-infinite-loader@npm:^1.0.5":
-  version: 1.0.5
-  resolution: "react-window-infinite-loader@npm:1.0.5"
-  peerDependencies:
-    react: ^15.3.0 || ^16.0.0-alpha
-    react-dom: ^15.3.0 || ^16.0.0-alpha
-  checksum: fe2c096429bc1de5c684cadf06b33d122cc1827361bfd3d7f81e94f7ac26b25a78207fa58c1f57587308c7e574aeb905a1a2096a7a843d521092370af3049ec1
-  languageName: node
-  linkType: hard
-
-"react-window@npm:^1.8.5":
-  version: 1.8.6
-  resolution: "react-window@npm:1.8.6"
-  dependencies:
-    "@babel/runtime": ^7.0.0
-    memoize-one: ">=3.1.1 <6"
-  peerDependencies:
-    react: ^15.0.0 || ^16.0.0 || ^17.0.0
-    react-dom: ^15.0.0 || ^16.0.0 || ^17.0.0
-  checksum: e2bfdfbe39f165c8ca4005b36837288546db5701fc6b53da0acb352317f5dad14cd7abbdff3b13644a8615074fa9841996249b2776f8f94e7efa4e37236b06a4
   languageName: node
   linkType: hard
 
