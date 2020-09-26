@@ -26,9 +26,6 @@ const useStyles = makeStyles(({ spacing }) => ({
   listContainer: {
     height: '100%',
   },
-  projectItem: {
-    marginBottom: spacing(2),
-  },
 }));
 
 export const ProjectList: FC = () => {
@@ -98,16 +95,14 @@ export const ProjectList: FC = () => {
                     <FixedSizeList
                       height={height}
                       width={width}
-                      itemSize={240}
+                      itemSize={224 + 16}
                       itemCount={data.projects.total}
                       onItemsRendered={onItemsRendered}
                       overscanCount={2}
                       ref={ref}
                     >
                       {({ index, style }) => (
-                        <div
-                          style={style} /*  className={classes.projectItem} */
-                        >
+                        <div style={style}>
                           <ProjectListItemCard
                             project={data.projects.items[index]}
                           />

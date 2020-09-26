@@ -7,8 +7,7 @@ import {
 } from '@material-ui/core';
 import { Skeleton } from '@material-ui/lab';
 import clsx from 'clsx';
-import { FC } from 'react';
-import * as React from 'react';
+import React, { FC } from 'react';
 import { displayStatus } from '../../api';
 import { DisplaySimpleProperty } from '../DisplaySimpleProperty';
 import { useDateFormatter } from '../Formatters';
