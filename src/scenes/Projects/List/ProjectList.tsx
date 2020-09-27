@@ -3,7 +3,7 @@ import { Grid, makeStyles, Typography } from '@material-ui/core';
 import { Skeleton } from '@material-ui/lab';
 import React, { FC } from 'react';
 import InfiniteScroll from 'react-infinite-scroll-component';
-import AutoSizer from 'react-virtualized-auto-sizer';
+import { useWindowSize } from 'react-use';
 import { Project } from '../../../api';
 import { FilterButtonDialog } from '../../../components/Filter';
 import { useNumberFormatter } from '../../../components/Formatters';
@@ -36,19 +36,34 @@ export const ProjectList: FC = () => {
   const formatNumber = useNumberFormatter();
   const sort = useSort<Project>();
   const [filters, setFilters] = useProjectFilters();
+  const { height: windowHeight } = useWindowSize();
+  const [containerHeight, setContainerHeight] = React.useState<number | null>(
+    null
+  );
+  const containerHeightRef = React.useRef<HTMLDivElement | null>(null);
+
+  React.useEffect(() => {
+    if (containerHeightRef.current) {
+      setContainerHeight(
+        containerHeightRef.current.getBoundingClientRect().height
+      );
+    }
+  }, [containerHeight]);
+
+  const itemsPerPage = Math.ceil((containerHeight ?? windowHeight) / 224) + 1;
 
   const { data } = useQuery(ProjectListDocument, {
     variables: {
       input: {
         ...sort.value,
         filter: filters,
-        count: 5,
+        count: itemsPerPage,
       },
     },
   });
 
   const hasMore = data?.projects.hasMore ?? false;
-  const currentItemsCount = data?.projects.items.length ?? 5;
+  const currentItemsCount = data?.projects.items.length ?? itemsPerPage;
 
   const loadMoreItems = async () => {
     await fetchMore({
@@ -57,7 +72,7 @@ export const ProjectList: FC = () => {
           ...sort.value,
           filter: filters,
           count: 5,
-          page: Math.floor(currentItemsCount / 5 + 1),
+          page: Math.floor(currentItemsCount / itemsPerPage + 1),
         },
       },
     });
@@ -88,30 +103,29 @@ export const ProjectList: FC = () => {
         )}
       </Typography>
       <ListContainer className={classes.listContainer}>
-        <div style={{ height: '100%', flex: 1 }}>
-          <AutoSizer disableWidth>
-            {({ height }) => (
-              <InfiniteScroll
-                dataLength={currentItemsCount}
-                next={loadMoreItems}
-                hasMore={hasMore}
-                height={height}
-                loader={<h3>Loading...</h3>}
-                endMessage={<h3>No more records</h3>}
-                onScroll={() => console.log('Scrolling.....')}
-              >
-                {listOrPlaceholders(data?.projects.items, 5).map(
-                  (item, index) => (
-                    <ProjectListItemCard
-                      key={item?.id ?? index}
-                      project={item}
-                      className={classes.projectItem}
-                    />
-                  )
-                )}
-              </InfiniteScroll>
+        <div
+          id="scrollParent"
+          style={{ height: '100%', flex: 1, overflowY: 'auto' }}
+          ref={containerHeightRef}
+        >
+          <InfiniteScroll
+            dataLength={currentItemsCount}
+            next={loadMoreItems}
+            hasMore={hasMore}
+            loader={<h3>Loading...</h3>}
+            endMessage={<h3>No more records</h3>}
+            scrollableTarget="scrollParent"
+          >
+            {listOrPlaceholders(data?.projects.items, itemsPerPage).map(
+              (item, index) => (
+                <ProjectListItemCard
+                  key={item?.id ?? index}
+                  project={item}
+                  className={classes.projectItem}
+                />
+              )
             )}
-          </AutoSizer>
+          </InfiniteScroll>
         </div>
       </ListContainer>
     </ContentContainer>

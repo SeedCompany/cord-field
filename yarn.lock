@@ -4269,15 +4269,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/react-virtualized-auto-sizer@npm:^1.0.0":
-  version: 1.0.0
-  resolution: "@types/react-virtualized-auto-sizer@npm:1.0.0"
-  dependencies:
-    "@types/react": "*"
-  checksum: 854d67840a30788423f388d72f7f126b14776762d80752a8af208584300862f1acab8ddbd1602e37603c52b913e53df01decba488f246de4b280537bcd63682a
-  languageName: node
-  linkType: hard
-
 "@types/react@npm:*, @types/react@npm:^16.9.0, @types/react@npm:^16.9.11":
   version: 16.9.34
   resolution: "@types/react@npm:16.9.34"
@@ -7695,7 +7686,6 @@ __metadata:
     "@types/react": ^16.9.0
     "@types/react-dom": ^16.9.0
     "@types/react-pdf": ^4.0.5
-    "@types/react-virtualized-auto-sizer": ^1.0.0
     "@types/seedrandom": ^2.4.28
     "@types/validator": ^13.1.0
     "@welldone-software/why-did-you-render": ^5.0.0-alpha.2
@@ -7736,7 +7726,6 @@ __metadata:
     react-router-dom: ^6.0.0-beta.0
     react-scripts: "patch:react-scripts@4.0.0#./patches/react-scripts.patch"
     react-use: ^15.3.3
-    react-virtualized-auto-sizer: ^1.0.2
     rifm: ^0.12.0
     seedrandom: ^3.0.5
     serialize-query-params: ^1.2.1
@@ -18531,16 +18520,6 @@ react-scripts@4.0.0:
     react: ^16.8.0
     react-dom: ^16.8.0
   checksum: 4dbfce198610a8e5d0ff36ff2bfc2e7cfccdd57d1d7b640718317087c1a9ba8dc0276b39ec7976a9d7ff76abecbd2b403fbf000f84b08da8148485b65051da8f
-  languageName: node
-  linkType: hard
-
-"react-virtualized-auto-sizer@npm:^1.0.2":
-  version: 1.0.2
-  resolution: "react-virtualized-auto-sizer@npm:1.0.2"
-  peerDependencies:
-    react: ^15.3.0 || ^16.0.0-alpha
-    react-dom: ^15.3.0 || ^16.0.0-alpha
-  checksum: 7038b823539e5d950647a8ed9bc67b41368328f85ed22233a36e950d0359e609887cfb56916481fcc09659f9133b94c960ce734548c6f402be8c0cff052d0b81
   languageName: node
   linkType: hard
 
