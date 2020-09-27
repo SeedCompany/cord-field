@@ -1,8 +1,7 @@
 import { useQuery } from '@apollo/client';
 import { Grid, makeStyles, Typography } from '@material-ui/core';
 import { Skeleton } from '@material-ui/lab';
-import React, { FC } from 'react';
-import InfiniteScroll from 'react-infinite-scroll-component';
+import React, { FC, useState } from 'react';
 import { useWindowSize } from 'react-use';
 import { Project } from '../../../api';
 import { FilterButtonDialog } from '../../../components/Filter';
@@ -11,6 +10,7 @@ import { ContentContainer } from '../../../components/Layout';
 import { ListContainer } from '../../../components/Layout/ListContainer';
 import { ProjectListItemCard } from '../../../components/ProjectListItemCard';
 import { SortButtonDialog, useSort } from '../../../components/Sort';
+import { VirtualList } from '../../../components/VirtualList';
 import { listOrPlaceholders } from '../../../util';
 import {
   ProjectFilterOptions,
@@ -37,18 +37,7 @@ export const ProjectList: FC = () => {
   const sort = useSort<Project>();
   const [filters, setFilters] = useProjectFilters();
   const { height: windowHeight } = useWindowSize();
-  const [containerHeight, setContainerHeight] = React.useState<number | null>(
-    null
-  );
-  const containerHeightRef = React.useRef<HTMLDivElement | null>(null);
-
-  React.useEffect(() => {
-    if (containerHeightRef.current) {
-      setContainerHeight(
-        containerHeightRef.current.getBoundingClientRect().height
-      );
-    }
-  }, [containerHeight]);
+  const [containerHeight, setContainerHeight] = useState<number | null>(null);
 
   const itemsPerPage = Math.ceil((containerHeight ?? windowHeight) / 224) + 1;
 
@@ -103,30 +92,24 @@ export const ProjectList: FC = () => {
         )}
       </Typography>
       <ListContainer className={classes.listContainer}>
-        <div
-          id="scrollParent"
-          style={{ height: '100%', flex: 1, overflowY: 'auto' }}
-          ref={containerHeightRef}
+        <VirtualList
+          dataLength={currentItemsCount}
+          next={loadMoreItems}
+          hasMore={hasMore}
+          loader={<h3>Loading...</h3>}
+          endMessage={<h3>No more records</h3>}
+          setContainerHeight={setContainerHeight}
         >
-          <InfiniteScroll
-            dataLength={currentItemsCount}
-            next={loadMoreItems}
-            hasMore={hasMore}
-            loader={<h3>Loading...</h3>}
-            endMessage={<h3>No more records</h3>}
-            scrollableTarget="scrollParent"
-          >
-            {listOrPlaceholders(data?.projects.items, itemsPerPage).map(
-              (item, index) => (
-                <ProjectListItemCard
-                  key={item?.id ?? index}
-                  project={item}
-                  className={classes.projectItem}
-                />
-              )
-            )}
-          </InfiniteScroll>
-        </div>
+          {listOrPlaceholders(data?.projects.items, itemsPerPage).map(
+            (item, index) => (
+              <ProjectListItemCard
+                key={item?.id ?? index}
+                project={item}
+                className={classes.projectItem}
+              />
+            )
+          )}
+        </VirtualList>
       </ListContainer>
     </ContentContainer>
   );
