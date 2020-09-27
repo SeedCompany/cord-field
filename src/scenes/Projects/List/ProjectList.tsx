@@ -2,7 +2,6 @@ import { useQuery } from '@apollo/client';
 import { Grid, makeStyles, Typography } from '@material-ui/core';
 import { Skeleton } from '@material-ui/lab';
 import React, { FC, useState } from 'react';
-import { useWindowSize } from 'react-use';
 import { Project } from '../../../api';
 import { FilterButtonDialog } from '../../../components/Filter';
 import { useNumberFormatter } from '../../../components/Formatters';
@@ -10,7 +9,10 @@ import { ContentContainer } from '../../../components/Layout';
 import { ListContainer } from '../../../components/Layout/ListContainer';
 import { ProjectListItemCard } from '../../../components/ProjectListItemCard';
 import { SortButtonDialog, useSort } from '../../../components/Sort';
-import { VirtualList } from '../../../components/VirtualList';
+import {
+  calculateItemsPerPage,
+  VirtualList,
+} from '../../../components/VirtualList';
 import { listOrPlaceholders } from '../../../util';
 import {
   ProjectFilterOptions,
@@ -36,10 +38,11 @@ export const ProjectList: FC = () => {
   const formatNumber = useNumberFormatter();
   const sort = useSort<Project>();
   const [filters, setFilters] = useProjectFilters();
-  const { height: windowHeight } = useWindowSize();
   const [containerHeight, setContainerHeight] = useState<number | null>(null);
 
-  const itemsPerPage = Math.ceil((containerHeight ?? windowHeight) / 224) + 1;
+  const itemsPerPage = containerHeight
+    ? calculateItemsPerPage(containerHeight, 240)
+    : 5;
 
   const { data } = useQuery(ProjectListDocument, {
     variables: {
