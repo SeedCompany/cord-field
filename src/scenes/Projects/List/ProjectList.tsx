@@ -99,8 +99,6 @@ export const ProjectList: FC = () => {
           dataLength={currentItemsCount}
           next={loadMoreItems}
           hasMore={hasMore}
-          loader={<h3>Loading...</h3>}
-          endMessage={<h3>No more records</h3>}
           setContainerHeight={setContainerHeight}
         >
           {listOrPlaceholders(data?.projects.items, itemsPerPage).map(
