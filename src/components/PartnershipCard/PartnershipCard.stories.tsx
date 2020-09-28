@@ -12,8 +12,22 @@ export default { title: 'Components/Partnership Card' };
 export const WithData = () => {
   const partnership: PartnershipCardFragment = {
     id: '123',
-    organization: {
-      name: { value: text('Org name', 'In n Out') },
+    partner: {
+      canRead: true,
+      canEdit: true,
+      value: {
+        id: '123',
+        organization: {
+          canEdit: true,
+          canRead: true,
+          value: {
+            id: '456',
+            name: {
+              value: text('Org name', 'In n Out'),
+            },
+          },
+        },
+      },
     },
     createdAt: dateTime('createdAt'),
     types: {

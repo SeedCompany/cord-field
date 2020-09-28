@@ -1,10 +1,21 @@
 fragment PartnershipItem on Partnership {
   id
-  organization {
-    id
-    name {
-      value
+  partner {
+    canRead
+    canEdit
+    value {
+      id
+      organization {
+        canRead
+        canEdit
+        value {
+          id
+          name {
+            value
+          }
+          avatarLetters
+        }
+      }
     }
-    avatarLetters
   }
 }

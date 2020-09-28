@@ -9,12 +9,20 @@ export default { title: 'Components' };
 
 const generatePartnership = (name: string): PartnershipItemFragment => ({
   id: name,
-  organization: {
-    id: 'abc123',
-    name: {
-      value: name,
+  partner: {
+    canRead: true,
+    canEdit: true,
+    value: {
+      id: '123',
+      organization: {
+        canEdit: true,
+        canRead: true,
+        value: {
+          id: '456',
+          name,
+        },
+      },
     },
-    avatarLetters: name[0],
   },
 });
 
