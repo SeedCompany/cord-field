@@ -58,7 +58,12 @@ export const EditLanguage = (props: EditLanguageProps) => {
       {...props}
       initialValues={initialValues}
       onSubmit={async ({
-        language: { populationOverride, sponsorEstimatedEndFY, ...rest },
+        language: {
+          populationOverride,
+          sponsorEstimatedEndFY,
+          ethnologue,
+          ...rest
+        },
       }) => {
         await updateLanguage({
           variables: {
@@ -68,6 +73,11 @@ export const EditLanguage = (props: EditLanguageProps) => {
                 sponsorEstimatedEndDate: CalendarDate.fiscalYearEndToCalendarDate(
                   sponsorEstimatedEndFY
                 ),
+                ethnologue: {
+                  ...ethnologue,
+                  code: ethnologue?.code ?? null,
+                  provisionalCode: ethnologue?.provisionalCode ?? null,
+                },
                 ...rest,
               },
             },
