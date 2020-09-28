@@ -29,9 +29,14 @@ const ListItem: FC<ListItemProps> = (props) => {
   const { height, index } = props;
   const classes = useStyles();
   return (
-    <div className={classes.listItem} style={{ height }}>
+    <article
+      className={classes.listItem}
+      style={{ height }}
+      aria-label={`Item #${index + 1}`}
+      aria-setsize={-1}
+    >
       <Typography variant="h3">Item #{index + 1}</Typography>
-    </div>
+    </article>
   );
 };
 
