@@ -56,7 +56,7 @@ export const ProjectList: FC = () => {
         input: {
           ...sort.value,
           filter: filters,
-          count: 5,
+          count: itemsPerPage,
           page: Math.floor(currentItemsCount / itemsPerPage + 1),
         },
       },
