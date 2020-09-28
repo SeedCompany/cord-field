@@ -1,4 +1,4 @@
-import { Box, makeStyles } from '@material-ui/core';
+import { Box, makeStyles, Typography } from '@material-ui/core';
 import { text } from '@storybook/addon-knobs';
 import React, { FC, useEffect, useState } from 'react';
 import { sleep } from '../../util';
@@ -7,8 +7,9 @@ import { VirtualList as VL } from './VirtualList';
 
 const useStyles = makeStyles(({ spacing }) => ({
   listItem: {
-    width: 500,
     margin: spacing(2),
+    padding: spacing(2, 4),
+    width: 500,
   },
 }));
 
@@ -22,7 +23,7 @@ const ListItem: FC<ListItemProps> = (props) => {
   const classes = useStyles();
   return (
     <div className={classes.listItem} style={{ height }}>
-      Item #{index}
+      <Typography variant="h3">Item #{index}</Typography>
     </div>
   );
 };
