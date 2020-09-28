@@ -55,7 +55,6 @@ export const UserDetail = () => {
   const [editUserState, editUser] = useDialog();
 
   const user = data?.user;
-  console.log('user', user);
 
   const canEditAnyFields = canEditAny(user);
 
