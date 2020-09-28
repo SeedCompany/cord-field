@@ -39,7 +39,7 @@ export const VirtualList: FC<VirtualListProps> = (props) => {
     dataLength,
     hasMore,
     itemType,
-    next,
+    next: nextProp,
     setContainerHeight,
     children,
   } = props;
@@ -47,6 +47,7 @@ export const VirtualList: FC<VirtualListProps> = (props) => {
   const { height: windowHeight } = useWindowSize();
   const containerRef = useRef<HTMLDivElement | null>(null);
   const [childWidth, setChildWidth] = useState<number | null>(null);
+  const [loadingMore, setLoadingMore] = useState(false);
 
   /**
    * Get the height of the `div` wrapping the `InfiniteScroll` and
@@ -58,6 +59,12 @@ export const VirtualList: FC<VirtualListProps> = (props) => {
       containerRef.current?.getBoundingClientRect().height ?? windowHeight
     );
   }, [setContainerHeight, windowHeight]);
+
+  const next = async () => {
+    setLoadingMore(true);
+    await nextProp();
+    setLoadingMore(false);
+  };
 
   /**
    * Get the width of the first rendered item so we can set our loading
@@ -83,7 +90,13 @@ export const VirtualList: FC<VirtualListProps> = (props) => {
   const statusStyle = childWidth ? { width: childWidth } : undefined;
 
   return (
-    <div id="scrollParent" className={classes.root} ref={containerRef}>
+    <div
+      id="scrollParent"
+      role="feed"
+      aria-busy={loadingMore}
+      className={classes.root}
+      ref={containerRef}
+    >
       <InfiniteScroll
         dataLength={dataLength}
         next={next}

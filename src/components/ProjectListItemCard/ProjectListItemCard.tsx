@@ -78,7 +78,12 @@ export const ProjectListItemCard: FC<ProjectListItemCardProps> = ({
   const formatDate = useDateFormatter();
 
   return (
-    <Card className={clsx(classes.root, className)}>
+    <Card
+      className={clsx(classes.root, className)}
+      component="article"
+      aria-label={project?.name.value ?? ''}
+      aria-setsize={-1}
+    >
       <CardActionAreaLink
         disabled={!project}
         to={`/projects/${project?.id}`}
