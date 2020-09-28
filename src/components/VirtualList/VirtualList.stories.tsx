@@ -2,7 +2,7 @@ import { Box, makeStyles, Typography } from '@material-ui/core';
 import { text } from '@storybook/addon-knobs';
 import React, { FC, useEffect, useState } from 'react';
 import { sleep } from '../../util';
-import { calculateItemsPerPage } from './calculateItemsPerPage';
+import { useItemsPerPage } from './calculateItemsPerPage';
 import { VirtualList as VL } from './VirtualList';
 
 const useStyles = makeStyles(({ spacing }) => ({
@@ -31,11 +31,7 @@ const ListItem: FC<ListItemProps> = (props) => {
 export const VirtualList = () => {
   const [allItems, setAllItems] = useState<ListItemProps[]>([]);
   const [items, setItems] = useState<ListItemProps[]>([]);
-  const [containerHeight, setContainerHeight] = useState<number | null>(null);
-
-  const itemsPerPage = containerHeight
-    ? calculateItemsPerPage(containerHeight, 240)
-    : 5;
+  const [itemsPerPage, setContainerHeight] = useItemsPerPage(276);
 
   const next = async () => {
     await sleep(750);
