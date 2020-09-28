@@ -60,12 +60,6 @@ export const VirtualList: FC<VirtualListProps> = (props) => {
     );
   }, [setContainerHeight, windowHeight]);
 
-  const next = async () => {
-    setLoadingMore(true);
-    await nextProp();
-    setLoadingMore(false);
-  };
-
   /**
    * Get the width of the first rendered item so we can set our loading
    * and "end message" containers to that width; otherwise they fill up
@@ -86,6 +80,12 @@ export const VirtualList: FC<VirtualListProps> = (props) => {
       }
     }
   }, [childWidth]);
+
+  const next = async () => {
+    setLoadingMore(true);
+    await nextProp();
+    setLoadingMore(false);
+  };
 
   const statusStyle = childWidth ? { width: childWidth } : undefined;
 
