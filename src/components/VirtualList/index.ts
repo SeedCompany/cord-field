@@ -1,2 +1,2 @@
 export * from './VirtualList';
-export * from './calculateItemsPerPage';
+export * from './useItemsPerPage';

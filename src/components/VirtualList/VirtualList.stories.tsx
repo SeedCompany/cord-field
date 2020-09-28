@@ -1,9 +1,8 @@
 import { Box, makeStyles, Typography } from '@material-ui/core';
 import { number, text } from '@storybook/addon-knobs';
 import React, { FC, useEffect, useState } from 'react';
+import { useItemsPerPage, VirtualList as VL } from '.';
 import { sleep } from '../../util';
-import { useItemsPerPage } from './calculateItemsPerPage';
-import { VirtualList as VL } from './VirtualList';
 
 export default { title: 'Components/VirtualList' };
 
