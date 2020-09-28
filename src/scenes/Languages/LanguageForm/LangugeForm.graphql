@@ -15,6 +15,9 @@ fragment LanguageForm on Language {
   isSignLanguage {
     ...securedBool
   }
+  signLanguageCode {
+    ...ss
+  }
   ethnologue {
     name {
       ...ss

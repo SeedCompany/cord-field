@@ -63,7 +63,22 @@ export const LanguageDetail = () => {
   const [editState, edit] = useDialog();
 
   const language = data?.language;
-  const { ethnologue, locations, projects } = language ?? {};
+  const {
+    ethnologue,
+    locations,
+    projects,
+    signLanguageCode,
+    isSignLanguage,
+    sensitivity,
+    isDialect,
+    displayNamePronunciation,
+    registryOfDialectsCode,
+    population,
+    sponsorStartDate,
+    sponsorEstimatedEndDate,
+    displayName,
+    name,
+  } = language ?? {};
 
   const canEditAnyFields = canEditAny(language) || canEditAny(ethnologue);
 
@@ -81,15 +96,13 @@ export const LanguageDetail = () => {
               variant="h2"
               className={clsx(
                 classes.name,
-                language?.displayName || language?.name
-                  ? null
-                  : classes.nameLoading
+                displayName || name ? null : classes.nameLoading
               )}
             >
               {!language ? (
                 <Skeleton width="100%" />
               ) : (
-                (language.displayName.value || language.name.value) ?? (
+                (displayName?.value || name?.value) ?? (
                   <Redacted
                     info="You don't have permission to view this language's name"
                     width="100%"
@@ -105,25 +118,25 @@ export const LanguageDetail = () => {
           </div>
           <Grid container spacing={2} alignItems="center">
             <Grid item>
-              <Sensitivity value={language?.sensitivity} loading={!language} />
+              <Sensitivity value={sensitivity} loading={!language} />
             </Grid>
             <BooleanProperty
               label="Dialect"
               redacted="You do not have permission to view whether the language is a dialect"
-              data={language?.isDialect}
+              data={isDialect}
               wrap={(node) => <Grid item>{node}</Grid>}
             />
             <LeastOfThese language={language} />
             <BooleanProperty
               label="Sign Language"
               redacted="You do not have permission to view whether the language is a sign language"
-              data={language?.isSignLanguage}
+              data={isSignLanguage}
               wrap={(node) => <Grid item>{node}</Grid>}
             />
           </Grid>
           <DisplayProperty
             label="Pronunciation Guide"
-            value={language?.displayNamePronunciation.value}
+            value={displayNamePronunciation?.value}
             loading={!language}
           />
           <DisplayProperty
@@ -131,35 +144,43 @@ export const LanguageDetail = () => {
             value={ethnologue?.name.value}
             loading={!language}
           />
-          <DisplayProperty
-            label="Ethnologue Code"
-            value={
-              ethnologue?.code.value ?? ethnologue?.provisionalCode.value
-                ? `${ethnologue.provisionalCode.value} (provisional)`
-                : null
-            }
-            loading={!language}
-          />
+          {isSignLanguage?.value && signLanguageCode?.value ? (
+            <DisplayProperty
+              label="Sign Language Code"
+              value={signLanguageCode.value}
+              loading={!language}
+            />
+          ) : (
+            <DisplayProperty
+              label="Ethnologue Code"
+              value={
+                ethnologue?.code.value ?? ethnologue?.provisionalCode.value
+                  ? `${ethnologue.provisionalCode.value} (provisional)`
+                  : null
+              }
+              loading={!language}
+            />
+          )}
           <DisplayProperty
             label="Registry of Dialects Code"
-            value={language?.registryOfDialectsCode.value}
+            value={registryOfDialectsCode?.value}
             loading={!language}
           />
           <DisplayProperty
             label="Population"
-            value={formatNumber(language?.population.value)}
+            value={formatNumber(population?.value)}
             loading={!language}
           />
           <DisplayProperty
             label="Sponsor Start Date"
-            value={formatDate(language?.sponsorStartDate.value)}
+            value={formatDate(sponsorStartDate?.value)}
             loading={!language}
           />
           <DisplayProperty
             label="Sponsor Estimated End Fiscal Year"
             value={
-              language?.sponsorEstimatedEndDate.value &&
-              CalendarDate.toFiscalYear(language.sponsorEstimatedEndDate.value)
+              sponsorEstimatedEndDate?.value &&
+              CalendarDate.toFiscalYear(sponsorEstimatedEndDate.value)
             }
             loading={!language}
           />

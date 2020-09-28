@@ -1,17 +1,16 @@
 import React, { useMemo } from 'react';
 import { Except } from 'type-fest';
 import { UpdateLanguage } from '../../../api';
-import { CalendarDate, Nullable } from '../../../util';
-import { LanguageForm, LanguageFormProps } from '../LanguageForm';
+import { CalendarDate } from '../../../util';
+import {
+  LanguageForm,
+  LanguageFormProps,
+  LanguageFormValues,
+} from '../LanguageForm';
 import { useUpdateLanguageMutation } from './EditLanguage.generated';
 
-interface LanguageFormValues {
-  language: Except<UpdateLanguage, 'sponsorEstimatedEndDate'> & {
-    sponsorEstimatedEndFY?: Nullable<number>;
-  };
-}
 export type EditLanguageProps = Except<
-  LanguageFormProps<LanguageFormValues>,
+  LanguageFormProps<LanguageFormValues<UpdateLanguage>>,
   'onSubmit' | 'initialValues'
 >;
 
@@ -40,6 +39,7 @@ export const EditLanguage = (props: EditLanguageProps) => {
               leastOfThese: language.leastOfThese.value,
               leastOfTheseReason: language.leastOfTheseReason.value,
               isSignLanguage: language.isSignLanguage.value,
+              signLanguageCode: language.signLanguageCode.value,
               sensitivity: language.sensitivity,
               sponsorEstimatedEndFY:
                 language.sponsorEstimatedEndDate.value &&
@@ -53,7 +53,7 @@ export const EditLanguage = (props: EditLanguageProps) => {
   );
 
   return (
-    <LanguageForm<LanguageFormValues>
+    <LanguageForm<LanguageFormValues<UpdateLanguage>>
       title="Edit Language"
       {...props}
       initialValues={initialValues}

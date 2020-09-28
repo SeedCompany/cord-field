@@ -6,18 +6,16 @@ import {
   GQLOperations,
 } from '../../../api';
 import { ButtonLink } from '../../../components/Routing';
-import { CalendarDate, Nullable } from '../../../util';
-import { LanguageForm, LanguageFormProps } from '../LanguageForm';
+import { CalendarDate } from '../../../util';
+import {
+  LanguageForm,
+  LanguageFormProps,
+  LanguageFormValues,
+} from '../LanguageForm';
 import { useCreateLanguageMutation } from './CreateLanguage.generated';
 
-interface LanguageFormValues {
-  language: Except<CreateLanguageType, 'sponsorEstimatedEndDate'> & {
-    sponsorEstimatedEndFY?: Nullable<number>;
-  };
-}
-
 export type CreateLanguageProps = Except<
-  LanguageFormProps<LanguageFormValues>,
+  LanguageFormProps<LanguageFormValues<CreateLanguageType>>,
   'onSubmit'
 >;
 export const CreateLanguage = (props: CreateLanguageProps) => {
@@ -25,7 +23,7 @@ export const CreateLanguage = (props: CreateLanguageProps) => {
   const { enqueueSnackbar } = useSnackbar();
 
   return (
-    <LanguageForm<LanguageFormValues>
+    <LanguageForm<LanguageFormValues<CreateLanguageType>>
       title="Create Language"
       {...props}
       onSubmit={async ({ language: { sponsorEstimatedEndFY, ...rest } }) => {
