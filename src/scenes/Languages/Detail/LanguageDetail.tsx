@@ -154,9 +154,10 @@ export const LanguageDetail = () => {
             <DisplayProperty
               label="Ethnologue Code"
               value={
-                ethnologue?.code.value ?? ethnologue?.provisionalCode.value
+                ethnologue?.code.value ??
+                (ethnologue?.provisionalCode.value
                   ? `${ethnologue.provisionalCode.value} (provisional)`
-                  : null
+                  : null)
               }
               loading={!language}
             />

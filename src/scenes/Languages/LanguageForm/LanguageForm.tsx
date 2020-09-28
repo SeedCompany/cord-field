@@ -75,7 +75,6 @@ export const LanguageForm = <T extends any>({
       }: {
         values: Partial<LanguageFormValues<CreateLanguage | UpdateLanguage>>;
       }) => {
-        console.log('values: ', values);
         return (
           <Grid container spacing={3} className={classes.content}>
             <Grid item xs={12}>
