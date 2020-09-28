@@ -9,9 +9,12 @@ import {
 } from './CreatePartner.generated';
 import { CreatePartnerForm, CreatePartnerFormProps } from './CreatePartnerForm';
 
+export interface PartnerFormValues {
+  orgLookup: OrganizationLookupItem;
+}
 type CreatePartnerProps = Except<
   CreatePartnerFormProps<
-    { orgLookup: OrganizationLookupItem },
+    PartnerFormValues,
     CreatePartnerMutation['createPartner']['partner']
   >,
   'onSubmit'
