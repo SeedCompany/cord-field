@@ -124,9 +124,17 @@ export function DialogForm<T, R = void>({
       {...FormProps}
       onSubmit={async (data, form) => {
         const submitAction = (data as any).submitAction;
+        const isCleanFormAndNotCleanSubmit =
+          !sendIfClean && !form.getState().dirty;
+
+        const isCleanFormAndSendIfCleanDoesNotMatchSubmitAction =
+          typeof sendIfClean === 'string' &&
+          sendIfClean !== submitAction &&
+          !form.getState().dirty;
+
         if (
-          (!sendIfClean && !form.getState().dirty) ||
-          (typeof sendIfClean === 'string' && sendIfClean !== submitAction)
+          isCleanFormAndNotCleanSubmit ||
+          isCleanFormAndSendIfCleanDoesNotMatchSubmitAction
         ) {
           onClose?.('cleanSubmit', form);
           return null;

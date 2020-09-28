@@ -4,7 +4,7 @@ import {
   CreatePartnership as CreatePartnershipType,
   GQLOperations,
 } from '../../../api';
-import { OrganizationLookupItem } from '../../../components/form/Lookup';
+import { PartnerLookupItem } from '../../../components/form/Lookup';
 import { PartnershipForm, PartnershipFormProps } from '../PartnershipForm';
 import { useCreatePartnershipMutation } from './CreatePartnership.generated';
 
@@ -13,7 +13,7 @@ export interface CreatePartnershipFormInput {
     CreatePartnershipType,
     'projectId' | 'types' | 'financialReportingType'
   > & {
-    organizationId: OrganizationLookupItem;
+    partnerLookupItem: PartnerLookupItem;
   };
 }
 
@@ -33,12 +33,12 @@ export const CreatePartnership = ({
     <PartnershipForm<CreatePartnershipFormInput>
       title="Create Partnership"
       {...props}
-      onSubmit={async ({ partnership }) => {
+      onSubmit={async ({ partnership: { partnerLookupItem, ...rest } }) => {
         const input = {
           partnership: {
-            ...partnership,
+            ...rest,
             projectId,
-            organizationId: partnership.organizationId.id,
+            partnerId: partnerLookupItem.id,
           },
         };
         await createPartnership({

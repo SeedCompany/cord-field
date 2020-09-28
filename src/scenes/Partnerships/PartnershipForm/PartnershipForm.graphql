@@ -15,9 +15,22 @@ fragment PartnershipForm on Partnership {
     canEdit
     canRead
   }
-  organization {
-    name {
-      value
+  partner {
+    canRead
+    canEdit
+    value {
+      id
+      organization {
+        canRead
+        canEdit
+        value {
+          id
+          name {
+            value
+          }
+          avatarLetters
+        }
+      }
     }
   }
   financialReportingType {

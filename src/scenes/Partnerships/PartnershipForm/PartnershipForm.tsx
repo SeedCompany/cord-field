@@ -18,7 +18,7 @@ import {
   SecuredField,
   SubmitError,
 } from '../../../components/form';
-import { OrganizationField } from '../../../components/form/Lookup';
+import { PartnerField } from '../../../components/form/Lookup';
 import { Nullable } from '../../../util';
 import { CreatePartnershipFormInput } from '../Create';
 import { EditPartnershipFormInput } from '../Edit';
@@ -43,7 +43,7 @@ export const PartnershipForm = <
     {({ values }) => (
       <>
         <SubmitError />
-        {!partnership && <OrganizationField name="organizationId" required />}
+        {!partnership && <PartnerField name="partnerLookupItem" required />}
         <SecuredField obj={partnership} name="types">
           {(props) => (
             <EnumField

@@ -93,7 +93,7 @@ export const EditPartnership: FC<EditPartnershipProps> = (props) => {
           refetchQueries,
         });
       }}
-      title={`Edit Partnership with ${partnership.organization.name.value}`}
+      title={`Edit Partnership with ${partnership.partner.value?.organization.value?.name.value}`}
       leftAction={
         <SubmitButton
           action="delete"
