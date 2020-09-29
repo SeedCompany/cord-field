@@ -42,6 +42,7 @@ export const useProjectFilters = makeQueryHandler({
       decoder(value)?.map((v) => upperFirst(v) as Sensitivity),
   }),
   onlyMultipleEngagements: withKey(withDefault(BooleanParam(), false), 'multi'),
+  mine: withDefault(BooleanParam(), true),
 });
 
 export const ProjectFilterOptions = () => {
@@ -83,6 +84,7 @@ export const ProjectFilterOptions = () => {
           </Tooltip>
         }
       />
+      <SwitchField name="mine" label="Only Show My Projects" />
     </>
   );
 };
