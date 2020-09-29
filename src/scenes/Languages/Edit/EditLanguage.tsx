@@ -1,13 +1,19 @@
 import React, { useMemo } from 'react';
+import { useNavigate } from 'react-router';
 import { Except } from 'type-fest';
-import { UpdateLanguage } from '../../../api';
+import { GQLOperations, UpdateLanguage } from '../../../api';
+import { SubmitButton } from '../../../components/form';
 import { CalendarDate } from '../../../util';
 import {
   LanguageForm,
   LanguageFormProps,
   LanguageFormValues,
 } from '../LanguageForm';
-import { useUpdateLanguageMutation } from './EditLanguage.generated';
+import { LanguagesDocument } from '../List/languages.generated';
+import {
+  useDeleteLanguageMutation,
+  useUpdateLanguageMutation,
+} from './EditLanguage.generated';
 
 export type EditLanguageProps = Except<
   LanguageFormProps<LanguageFormValues<UpdateLanguage>>,
@@ -16,6 +22,15 @@ export type EditLanguageProps = Except<
 
 export const EditLanguage = (props: EditLanguageProps) => {
   const [updateLanguage] = useUpdateLanguageMutation();
+
+  const [deleteLanguage] = useDeleteLanguageMutation({
+    //FIXME: for some reason this query isn't executing
+    refetchQueries: [GQLOperations.Query.Languages],
+    awaitRefetchQueries: true,
+  });
+
+  const navigate = useNavigate();
+
   const language = props.language;
 
   const initialValues = useMemo(
@@ -75,6 +90,7 @@ export const EditLanguage = (props: EditLanguageProps) => {
                 ),
                 ethnologue: {
                   ...ethnologue,
+                  //TODO: implement the rest of the null overrides on edit language
                   code: ethnologue?.code ?? null,
                   provisionalCode: ethnologue?.provisionalCode ?? null,
                 },
@@ -84,6 +100,39 @@ export const EditLanguage = (props: EditLanguageProps) => {
           },
         });
       }}
+      leftAction={
+        <SubmitButton
+          action="delete"
+          color="error"
+          fullWidth={false}
+          variant="text"
+          onClick={async () => {
+            await deleteLanguage({
+              variables: {
+                languageId: language?.id || '',
+              },
+              update: (cache, { data }) => {
+                if (data?.deleteLanguage) {
+                  console.log('cache: ', cache);
+                  // updateSessionCache(cache);
+                  const currentLanguages = cache.readQuery({
+                    query: LanguagesDocument,
+                    variables: {
+                      input: {},
+                    },
+                  });
+                  console.log('currentLanguages: ', currentLanguages);
+                }
+              },
+            });
+            navigate('../');
+          }}
+        >
+          Delete
+        </SubmitButton>
+      }
     />
   );
 };
+
+// const updateSessionCache(cache)

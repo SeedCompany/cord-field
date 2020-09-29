@@ -6,3 +6,7 @@ mutation UpdateLanguage($input: UpdateLanguageInput!) {
     }
   }
 }
+
+mutation DeleteLanguage($languageId: ID!) {
+  deleteLanguage(id: $languageId)
+}
