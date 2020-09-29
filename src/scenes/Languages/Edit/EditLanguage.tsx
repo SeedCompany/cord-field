@@ -1,11 +1,16 @@
 import React, { useMemo } from 'react';
 import { Except } from 'type-fest';
-import { UpdateLanguageInput } from '../../../api';
-import { LanguageForm, LanguageFormProps } from '../LanguageForm';
+import { UpdateLanguage } from '../../../api';
+import { CalendarDate } from '../../../util';
+import {
+  LanguageForm,
+  LanguageFormProps,
+  LanguageFormValues,
+} from '../LanguageForm';
 import { useUpdateLanguageMutation } from './EditLanguage.generated';
 
 export type EditLanguageProps = Except<
-  LanguageFormProps<UpdateLanguageInput>,
+  LanguageFormProps<LanguageFormValues<UpdateLanguage>>,
   'onSubmit' | 'initialValues'
 >;
 
@@ -33,6 +38,14 @@ export const EditLanguage = (props: EditLanguageProps) => {
               registryOfDialectsCode: language.registryOfDialectsCode.value,
               leastOfThese: language.leastOfThese.value,
               leastOfTheseReason: language.leastOfTheseReason.value,
+              isSignLanguage: language.isSignLanguage.value,
+              signLanguageCode: language.signLanguageCode.value,
+              sensitivity: language.sensitivity,
+              sponsorEstimatedEndFY:
+                language.sponsorEstimatedEndDate.value &&
+                CalendarDate.toFiscalYear(
+                  language.sponsorEstimatedEndDate.value
+                ),
             },
           }
         : undefined,
@@ -40,13 +53,35 @@ export const EditLanguage = (props: EditLanguageProps) => {
   );
 
   return (
-    <LanguageForm<UpdateLanguageInput>
+    <LanguageForm<LanguageFormValues<UpdateLanguage>>
       title="Edit Language"
       {...props}
       initialValues={initialValues}
-      onSubmit={async (input) => {
+      onSubmit={async ({
+        language: {
+          populationOverride,
+          sponsorEstimatedEndFY,
+          ethnologue,
+          ...rest
+        },
+      }) => {
         await updateLanguage({
-          variables: { input },
+          variables: {
+            input: {
+              language: {
+                populationOverride: populationOverride ?? null,
+                sponsorEstimatedEndDate: CalendarDate.fiscalYearEndToCalendarDate(
+                  sponsorEstimatedEndFY
+                ),
+                ethnologue: {
+                  ...ethnologue,
+                  code: ethnologue?.code ?? null,
+                  provisionalCode: ethnologue?.provisionalCode ?? null,
+                },
+                ...rest,
+              },
+            },
+          },
         });
       }}
     />

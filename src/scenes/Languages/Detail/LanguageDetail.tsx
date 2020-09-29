@@ -13,25 +13,24 @@ import {
 } from '../../../components/DisplaySimpleProperty';
 import { Fab } from '../../../components/Fab';
 import {
-  useDateTimeFormatter,
+  useDateFormatter,
   useNumberFormatter,
 } from '../../../components/Formatters';
 import { ProjectListItemCard } from '../../../components/ProjectListItemCard';
 import { Redacted } from '../../../components/Redacted';
 import { Sensitivity } from '../../../components/Sensitivity';
-import { listOrPlaceholders } from '../../../util';
+import { CalendarDate, listOrPlaceholders } from '../../../util';
 import { EditLanguage } from '../Edit';
 import { useLanguageQuery } from './LanguageDetail.generated';
 import { LeastOfThese } from './LeastOfThese';
 
-const useStyles = makeStyles(({ spacing, breakpoints }) => ({
+const useStyles = makeStyles(({ spacing }) => ({
   root: {
     overflowY: 'auto',
     padding: spacing(4),
     '& > *:not(:last-child)': {
       marginBottom: spacing(3),
     },
-    maxWidth: breakpoints.values.md,
   },
   name: {
     marginRight: spacing(4),
@@ -64,11 +63,26 @@ export const LanguageDetail = () => {
   const [editState, edit] = useDialog();
 
   const language = data?.language;
-  const { ethnologue, locations, projects } = language ?? {};
+  const {
+    ethnologue,
+    locations,
+    projects,
+    signLanguageCode,
+    isSignLanguage,
+    sensitivity,
+    isDialect,
+    displayNamePronunciation,
+    registryOfDialectsCode,
+    population,
+    sponsorStartDate,
+    sponsorEstimatedEndDate,
+    displayName,
+    name,
+  } = language ?? {};
 
   const canEditAnyFields = canEditAny(language) || canEditAny(ethnologue);
 
-  const formatDateTime = useDateTimeFormatter();
+  const formatDate = useDateFormatter();
   const formatNumber = useNumberFormatter();
 
   return (
@@ -82,15 +96,13 @@ export const LanguageDetail = () => {
               variant="h2"
               className={clsx(
                 classes.name,
-                language?.displayName || language?.name
-                  ? null
-                  : classes.nameLoading
+                displayName || name ? null : classes.nameLoading
               )}
             >
               {!language ? (
                 <Skeleton width="100%" />
               ) : (
-                (language.displayName.value || language.name.value) ?? (
+                (displayName?.value || name?.value) ?? (
                   <Redacted
                     info="You don't have permission to view this language's name"
                     width="100%"
@@ -104,45 +116,73 @@ export const LanguageDetail = () => {
               </Fab>
             ) : null}
           </div>
-          <Grid container spacing={2}>
+          <Grid container spacing={2} alignItems="center">
             <Grid item>
-              <Sensitivity value={language?.sensitivity} loading={!language} />
+              <Sensitivity value={sensitivity} loading={!language} />
             </Grid>
             <BooleanProperty
               label="Dialect"
               redacted="You do not have permission to view whether the language is a dialect"
-              data={language?.isDialect}
+              data={isDialect}
               wrap={(node) => <Grid item>{node}</Grid>}
             />
             <LeastOfThese language={language} />
+            <BooleanProperty
+              label="Sign Language"
+              redacted="You do not have permission to view whether the language is a sign language"
+              data={isSignLanguage}
+              wrap={(node) => <Grid item>{node}</Grid>}
+            />
           </Grid>
           <DisplayProperty
             label="Pronunciation Guide"
-            value={language?.displayNamePronunciation.value}
+            value={displayNamePronunciation?.value}
             loading={!language}
           />
           <DisplayProperty
-            label="Ethnologue Code"
-            value={
-              ethnologue?.code.value ?? ethnologue?.provisionalCode.value
-                ? `${ethnologue.provisionalCode.value} (provisional)`
-                : null
-            }
+            label="Ethnologue Name"
+            value={ethnologue?.name.value}
+            loading={!language}
+          />
+          {isSignLanguage?.value && signLanguageCode?.value ? (
+            <DisplayProperty
+              label="Sign Language Code"
+              value={signLanguageCode.value}
+              loading={!language}
+            />
+          ) : (
+            <DisplayProperty
+              label="Ethnologue Code"
+              value={ethnologue?.code.value}
+              loading={!language}
+            />
+          )}
+          <DisplayProperty
+            label="Provisional Code"
+            value={ethnologue?.provisionalCode.value}
             loading={!language}
           />
           <DisplayProperty
             label="Registry of Dialects Code"
-            value={language?.registryOfDialectsCode.value}
+            value={registryOfDialectsCode?.value}
             loading={!language}
           />
           <DisplayProperty
             label="Population"
-            value={formatNumber(language?.population.value)}
+            value={formatNumber(population?.value)}
             loading={!language}
           />
           <DisplayProperty
             label="Sponsor Start Date"
-            value={formatDateTime(language?.sponsorStartDate.value)}
+            value={formatDate(sponsorStartDate?.value)}
+            loading={!language}
+          />
+          <DisplayProperty
+            label="Sponsor Estimated End Fiscal Year"
+            value={
+              sponsorEstimatedEndDate?.value &&
+              CalendarDate.toFiscalYear(sponsorEstimatedEndDate.value)
+            }
             loading={!language}
           />
           <Grid container spacing={3}>

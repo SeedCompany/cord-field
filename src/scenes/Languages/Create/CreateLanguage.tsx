@@ -1,13 +1,21 @@
 import { useSnackbar } from 'notistack';
 import React from 'react';
 import { Except } from 'type-fest';
-import { CreateLanguageInput, GQLOperations } from '../../../api';
+import {
+  CreateLanguage as CreateLanguageType,
+  GQLOperations,
+} from '../../../api';
 import { ButtonLink } from '../../../components/Routing';
-import { LanguageForm, LanguageFormProps } from '../LanguageForm';
+import { CalendarDate } from '../../../util';
+import {
+  LanguageForm,
+  LanguageFormProps,
+  LanguageFormValues,
+} from '../LanguageForm';
 import { useCreateLanguageMutation } from './CreateLanguage.generated';
 
 export type CreateLanguageProps = Except<
-  LanguageFormProps<CreateLanguageInput>,
+  LanguageFormProps<LanguageFormValues<CreateLanguageType>>,
   'onSubmit'
 >;
 export const CreateLanguage = (props: CreateLanguageProps) => {
@@ -15,12 +23,21 @@ export const CreateLanguage = (props: CreateLanguageProps) => {
   const { enqueueSnackbar } = useSnackbar();
 
   return (
-    <LanguageForm<CreateLanguageInput>
+    <LanguageForm<LanguageFormValues<CreateLanguageType>>
       title="Create Language"
       {...props}
-      onSubmit={async (input) => {
+      onSubmit={async ({ language: { sponsorEstimatedEndFY, ...rest } }) => {
         const res = await createLang({
-          variables: { input },
+          variables: {
+            input: {
+              language: {
+                sponsorEstimatedEndDate: CalendarDate.fiscalYearEndToCalendarDate(
+                  sponsorEstimatedEndFY
+                ),
+                ...rest,
+              },
+            },
+          },
           refetchQueries: [GQLOperations.Query.Languages],
         });
 

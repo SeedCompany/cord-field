@@ -10,9 +10,13 @@ fragment LanguageForm on Language {
     ...ss
   }
   isDialect {
-    value
-    canRead
-    canEdit
+    ...securedBool
+  }
+  isSignLanguage {
+    ...securedBool
+  }
+  signLanguageCode {
+    ...ss
   }
   ethnologue {
     name {
@@ -39,16 +43,31 @@ fragment LanguageForm on Language {
     ...ss
   }
   leastOfThese {
-    value
-    canRead
-    canEdit
+    ...securedBool
   }
   leastOfTheseReason {
     ...ss
   }
+  sensitivity
+  sponsorEstimatedEndDate {
+    canRead
+    canEdit
+    value
+  }
+  sponsorStartDate {
+    canRead
+    canEdit
+    value
+  }
 }
 
 fragment ss on SecuredString {
+  value
+  canRead
+  canEdit
+}
+
+fragment securedBool on SecuredBoolean {
   value
   canRead
   canEdit

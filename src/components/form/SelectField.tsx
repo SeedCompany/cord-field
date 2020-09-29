@@ -10,6 +10,7 @@ import {
 import {} from 'react-final-form';
 import { FC, ReactNode } from 'react';
 import * as React from 'react';
+import { useFieldName } from './FieldGroup';
 import { FieldConfig, useField } from './useField';
 import { getHelperText, showError } from './util';
 
@@ -32,13 +33,14 @@ interface SelectItem {
 }
 
 export const SelectField: FC<SelectFieldProps> = ({
-  name,
+  name: nameProp,
   label,
   selectOptions,
   helperText,
   ...props
 }) => {
   const classes = useStyles();
+  const name = useFieldName(nameProp);
   const { input, meta, rest } = useField(name, { ...props });
   const disabled = props.disabled || meta.submitting;
 
