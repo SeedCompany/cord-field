@@ -21,6 +21,8 @@ fragment PartnershipCard on Partnership {
         value {
           id
           name {
+            canRead
+            canEdit
             value
           }
           avatarLetters

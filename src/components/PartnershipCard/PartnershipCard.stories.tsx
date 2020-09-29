@@ -23,6 +23,8 @@ export const WithData = () => {
           value: {
             id: '456',
             name: {
+              canRead: true,
+              canEdit: true,
               value: text('Org name', 'In n Out'),
             },
           },
