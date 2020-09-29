@@ -14,9 +14,13 @@ const useStyles = makeStyles(({ spacing }) => {
       width: '100%',
       maxWidth: 400,
     },
-    cardContent: {
+    name: {
+      marginBottom: spacing(2),
+    },
+    bottomSection: {
       display: 'flex',
       justifyContent: 'space-between',
+      alignItems: 'flex-end',
     },
     leftContent: {
       flex: 1,
@@ -27,11 +31,6 @@ const useStyles = makeStyles(({ spacing }) => {
       flexDirection: 'column',
       justifyContent: 'flex-end',
       textAlign: 'right',
-    },
-    name: {
-      marginBottom: spacing(2),
-      overflowWrap: 'break-word',
-      wordBreak: 'break-all',
     },
   };
 });
@@ -55,45 +54,47 @@ export const LanguageListItemCard: FC<LanguageListItemCardProps> = ({
         disabled={!language}
         to={`/languages/${language?.id}`}
       >
-        <CardContent className={classes.cardContent}>
-          <div className={classes.leftContent}>
-            <Typography variant="h4" className={classes.name}>
-              {!language ? (
-                <Skeleton width="50%" variant="text" />
-              ) : (
-                language.name.value ?? language.displayName.value
-              )}
-            </Typography>
-            <DisplaySimpleProperty
-              LabelProps={{ color: 'textSecondary' }}
-              label="Ethnologue Code"
-              value={language?.ethnologue.code.value}
-              loading={!language}
-              loadingWidth="25%"
-            />
-            <DisplaySimpleProperty
-              LabelProps={{ color: 'textSecondary' }}
-              label="Registry of Dialects Code"
-              value={language?.registryOfDialectsCode.value}
-              loading={!language}
-              loadingWidth="25%"
-            />
-          </div>
-          <div className={classes.rightContent}>
-            {!language || population ? (
-              <>
-                <Typography variant="body2" color="textSecondary">
-                  Population
-                </Typography>
-                <Typography variant="h3">
-                  {!language ? (
-                    <Skeleton variant="text" />
-                  ) : (
-                    formatNumber(population)
-                  )}
-                </Typography>
-              </>
-            ) : null}
+        <CardContent>
+          <Typography variant="h4" className={classes.name}>
+            {!language ? (
+              <Skeleton width="50%" variant="text" />
+            ) : (
+              language.name.value ?? language.displayName.value
+            )}
+          </Typography>
+          <div className={classes.bottomSection}>
+            <div className={classes.leftContent}>
+              <DisplaySimpleProperty
+                LabelProps={{ color: 'textSecondary' }}
+                label="Ethnologue Code"
+                value={language?.ethnologue.code.value}
+                loading={!language}
+                loadingWidth="25%"
+              />
+              <DisplaySimpleProperty
+                LabelProps={{ color: 'textSecondary' }}
+                label="Registry of Dialects Code"
+                value={language?.registryOfDialectsCode.value}
+                loading={!language}
+                loadingWidth="25%"
+              />
+            </div>
+            <div className={classes.rightContent}>
+              {!language || population ? (
+                <>
+                  <Typography variant="body2" color="textSecondary">
+                    Population
+                  </Typography>
+                  <Typography variant="h3">
+                    {!language ? (
+                      <Skeleton variant="text" />
+                    ) : (
+                      formatNumber(population)
+                    )}
+                  </Typography>
+                </>
+              ) : null}
+            </div>
           </div>
         </CardContent>
       </CardActionAreaLink>
