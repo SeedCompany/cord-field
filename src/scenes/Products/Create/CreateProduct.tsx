@@ -13,11 +13,10 @@ import {
   useGetProductBreadcrumbQuery,
 } from './CreateProduct.generated';
 
-const useStyles = makeStyles(({ spacing, breakpoints }) => ({
+const useStyles = makeStyles(({ spacing }) => ({
   root: {
     overflowY: 'auto',
     padding: spacing(4),
-    maxWidth: breakpoints.values.md,
     '& > *': {
       marginBottom: spacing(2),
     },

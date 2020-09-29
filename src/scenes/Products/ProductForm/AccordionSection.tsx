@@ -62,7 +62,10 @@ import {
 import { ProductFormFragment } from './ProductForm.generated';
 import { VersesDialog, versesDialogValues } from './VersesDialog';
 
-const useStyles = makeStyles(({ spacing, typography }) => ({
+const useStyles = makeStyles(({ spacing, typography, breakpoints }) => ({
+  accordionContainer: {
+    maxWidth: breakpoints.values.md,
+  },
   accordionSummary: {
     flexDirection: 'column',
   },
@@ -176,7 +179,7 @@ export const AccordionSection = ({
   };
 
   return (
-    <div>
+    <div className={classes.accordionContainer}>
       <SecuredAccordion
         {...accordionState}
         name="produces"
