@@ -1,6 +1,6 @@
 import { Box } from '@material-ui/core';
 import { action } from '@storybook/addon-actions';
-import { boolean, text } from '@storybook/addon-knobs';
+import { boolean, select, text } from '@storybook/addon-knobs';
 import { startCase } from 'lodash';
 import React from 'react';
 import { Form } from 'react-final-form';
@@ -10,7 +10,14 @@ import { FieldSpy } from './FieldSpy';
 
 export default { title: 'Components/Forms/Fields/Enum' };
 
-export const Checkboxes = () => (
+const variantToggle = () =>
+  select(
+    'variant',
+    ['checkbox', 'radio', 'select', 'toggle-split', 'toggle-grouped'],
+    'toggle-split'
+  ) as any;
+
+export const Multiple = () => (
   <Form
     onSubmit={action('submit')}
     initialValues={{
@@ -25,7 +32,7 @@ export const Checkboxes = () => (
             // row={boolean('row', false)}
             name="colors"
             multiple={true}
-            variant="checkbox"
+            variant={variantToggle()}
             label={text('label', 'Colors')}
             helperText="Choose some colors"
             // defaultValue={csv(text('defaultValue (csv)', ''))}
@@ -68,7 +75,7 @@ export const FromOptions = () => (
   </Form>
 );
 
-export const CheckboxSingle = () => (
+export const Single = () => (
   <Form
     onSubmit={action('submit')}
     initialValues={{
@@ -83,7 +90,7 @@ export const CheckboxSingle = () => (
             // row={boolean('row', false)}
             name="color"
             multiple={false}
-            variant="checkbox"
+            variant={variantToggle()}
             label={text('label', 'Color')}
             helperText="Choose a color"
             defaultValue={text('defaultValue', '') || undefined}

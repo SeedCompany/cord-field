@@ -7,6 +7,8 @@ import {
   FormLabel,
   makeStyles,
 } from '@material-ui/core';
+import { ToggleButton } from '@material-ui/lab';
+import clsx from 'clsx';
 import { sortBy } from 'lodash';
 import * as React from 'react';
 import {
@@ -52,9 +54,13 @@ export type EnumFieldProps<
   disabled?: boolean;
 } & Except<FieldConfig<EnumVal<T, Multiple>>, 'multiple' | 'type'>;
 
-const useStyles = makeStyles(({ typography }) => ({
+const useStyles = makeStyles(({ typography, spacing }) => ({
   fieldLabel: {
     fontWeight: typography.weight.bold,
+  },
+  toggleGroup: {
+    margin: spacing(-1),
+    padding: spacing(1, 0),
   },
 }));
 
@@ -233,7 +239,13 @@ export const EnumField = <
           {label}
         </FormLabel>
       )}
-      <FormGroup>
+      <FormGroup
+        classes={{
+          root: clsx({
+            [classes.toggleGroup]: variant === 'toggle-split',
+          }),
+        }}
+      >
         <EnumContext.Provider value={context}>{children}</EnumContext.Provider>
       </FormGroup>
       <FormHelperText>{getHelperText(meta, helperText)}</FormHelperText>
@@ -274,6 +286,19 @@ export const EnumOption = <T extends string>(props: EnumOptionsProps<T>) => {
           ctx.onFocus();
         }}
       />
+    );
+  } else if (variant === 'toggle-split') {
+    const selected = isChecked(name);
+    return (
+      <ToggleButton
+        {...rest}
+        value={name ?? 'default'}
+        selected={selected}
+        onChange={(_) => onChange(name, !selected)}
+        disabled={disabled}
+      >
+        {props.label}
+      </ToggleButton>
     );
   }
 
