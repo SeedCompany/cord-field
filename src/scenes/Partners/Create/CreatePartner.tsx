@@ -1,6 +1,7 @@
 import { useSnackbar } from 'notistack';
 import React from 'react';
 import { Except } from 'type-fest';
+import { GQLOperations } from '../../../api';
 import { OrganizationLookupItem } from '../../../components/form/Lookup';
 import { ButtonLink } from '../../../components/Routing';
 import {
@@ -49,8 +50,7 @@ export const CreatePartner = (props: CreatePartnerProps) => {
               },
             },
           },
-          //TODO: add in after partner list is ready
-          //   refetchQueries: [GQLOperations.Query.Partners],
+          refetchQueries: [GQLOperations.Query.Partners],
         });
         return data!.createPartner.partner;
       }}
