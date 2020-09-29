@@ -99,14 +99,32 @@ export const appOverrides: ThemeOptions['overrides'] = ({
         color: primaryColorForText,
       },
     },
+    MuiToggleButtonGroup: {
+      root: {
+        backgroundColor: palette.background.paper,
+      },
+      grouped: {
+        borderRadius: 'inherit', // conform to grouped radius
+        // re-apply default MUI styles that are removed below
+        '&.MuiToggleButton-root.Mui-selected': {
+          '& + &': {
+            borderLeft: 0,
+            marginLeft: 0,
+          },
+        },
+      },
+    },
     MuiToggleButton: {
       root: {
         textTransform: 'none',
-        borderRadius: 14,
         color: palette.text.primary,
-        backgroundColor: palette.background.paper,
-        margin: spacing(1),
-        '&$selected': {
+        '&:not(.MuiToggleButtonGroup-grouped)': {
+          backgroundColor: palette.background.paper,
+          borderRadius: 14, // if not grouped use this
+          margin: spacing(1),
+        },
+        // $selected twice to increase specificity over selector above
+        '&$selected$selected': {
           backgroundColor: '#2D9CDB',
           color: palette.getContrastText('#2D9CDB'),
           '&:hover': {
@@ -116,8 +134,14 @@ export const appOverrides: ThemeOptions['overrides'] = ({
             color: palette.getContrastText(fade('#2D9CDB', 0.4)),
             backgroundColor: fade('#2D9CDB', 0.4),
           },
-          // Remove spacing tweaks from MUI that assume the buttons are
-          // right next to each other without spacing
+        },
+        // Remove spacing tweaks from MUI that assume the buttons are
+        // right next to each other without spacing.
+        // This selector has to match MUI's definition exactly
+        // because the nulls are merged/applied in JS not CSS.
+        // We revert this change above in ToggleButtonGroup, so that it only
+        // applies to grouped buttons and not single ones.
+        '&$selected': {
           '& + &': {
             borderLeft: null,
             marginLeft: null,

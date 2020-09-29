@@ -7,7 +7,7 @@ import {
   FormLabel,
   makeStyles,
 } from '@material-ui/core';
-import { ToggleButton } from '@material-ui/lab';
+import { ToggleButton, ToggleButtonGroup } from '@material-ui/lab';
 import clsx from 'clsx';
 import { sortBy } from 'lodash';
 import * as React from 'react';
@@ -209,6 +209,21 @@ export const EnumField = <
     )) ??
     null; // won't be hit because of thrown exception from check above
 
+  const renderedOptions =
+    variant === 'checkbox' || variant === 'toggle-split' ? (
+      <FormGroup
+        classes={{
+          root: clsx({
+            [classes.toggleGroup]: variant === 'toggle-split',
+          }),
+        }}
+      >
+        {children}
+      </FormGroup>
+    ) : variant === 'toggle-grouped' ? (
+      <ToggleButtonGroup exclusive={!multiple}>{children}</ToggleButtonGroup>
+    ) : null;
+
   return (
     <FormControl
       color="primary"
@@ -239,15 +254,9 @@ export const EnumField = <
           {label}
         </FormLabel>
       )}
-      <FormGroup
-        classes={{
-          root: clsx({
-            [classes.toggleGroup]: variant === 'toggle-split',
-          }),
-        }}
-      >
-        <EnumContext.Provider value={context}>{children}</EnumContext.Provider>
-      </FormGroup>
+      <EnumContext.Provider value={context}>
+        {renderedOptions}
+      </EnumContext.Provider>
       <FormHelperText>{getHelperText(meta, helperText)}</FormHelperText>
     </FormControl>
   );
@@ -287,7 +296,7 @@ export const EnumOption = <T extends string>(props: EnumOptionsProps<T>) => {
         }}
       />
     );
-  } else if (variant === 'toggle-split') {
+  } else if (variant === 'toggle-split' || variant === 'toggle-grouped') {
     const selected = isChecked(name);
     return (
       <ToggleButton
