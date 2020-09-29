@@ -45,6 +45,29 @@ export const Checkboxes = () => (
   </Form>
 );
 
+export const FromOptions = () => (
+  <Form onSubmit={action('submit')}>
+    {({ handleSubmit }) => (
+      <>
+        <Box component="form" onSubmit={handleSubmit} mb={4}>
+          <EnumField
+            name="colors"
+            multiple={true}
+            variant={variantToggle()}
+            label={text('label', 'Colors')}
+            helperText="Choose some colors"
+            disabled={boolean('disabled', false)}
+            required={boolean('required', false)}
+            options={['red', 'blue', 'green', 'yellow']}
+            getLabel={startCase}
+          />
+        </Box>
+        <FieldSpy name="colors" />
+      </>
+    )}
+  </Form>
+);
+
 export const CheckboxSingle = () => (
   <Form
     onSubmit={action('submit')}

@@ -42,6 +42,11 @@ export type EnumFieldProps<
     | 'toggle-grouped'
     | (Multiple extends true ? never : 'radio');
   name: string;
+
+  options?: readonly T[];
+  getLabel?: (option: T) => string;
+  children?: ReactNode;
+
   label?: ReactNode;
   helperText?: ReactNode;
   disabled?: boolean;
@@ -68,13 +73,21 @@ export const EnumField = <
     name: nameProp,
     label,
     helperText,
-    children,
+    options,
+    getLabel,
+    children: childrenProp,
   } = props;
 
   if (multiple && variant === 'radio') {
     throw new Error(
       'EnumField.variant=radio cannot be used with multiple=true'
     );
+  }
+  if (!childrenProp && !options) {
+    throw new Error('Either children or options list is required');
+  }
+  if (childrenProp && options) {
+    throw new Error('Only children or options list can be provided');
   }
 
   // Memoize defaultValue so array can be passed inline while still preventing
@@ -178,6 +191,17 @@ export const EnumField = <
     }),
     [disabled, isChecked, name, onBlur, onFocus, onOptionChange, variant]
   );
+
+  const children =
+    childrenProp ??
+    options?.map((option) => (
+      <EnumOption
+        key={option}
+        value={option}
+        label={getLabel?.(option) ?? option}
+      />
+    )) ??
+    null; // won't be hit because of thrown exception from check above
 
   return (
     <FormControl
