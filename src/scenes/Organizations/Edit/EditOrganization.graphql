@@ -1,7 +1,0 @@
-mutation UpdateOrganization($input: UpdateOrganizationInput!) {
-  updateOrganization(input: $input) {
-    organization {
-      ...orgDetails
-    }
-  }
-}

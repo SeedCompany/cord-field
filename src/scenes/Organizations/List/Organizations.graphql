@@ -1,9 +1,0 @@
-query Organizations($input: OrganizationListInput!) {
-  organizations(input: $input) {
-    items {
-      ...OrganizationListItem
-    }
-    hasMore
-    total
-  }
-}
