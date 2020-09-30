@@ -46,15 +46,17 @@ export type EnumFieldProps<
     | 'toggle-grouped'
     | (Multiple extends true ? never : 'radio');
   name: string;
-
-  options?: readonly T[];
-  getLabel?: (option: T) => string;
-  children?: ReactNode;
-
   label?: ReactNode;
   helperText?: ReactNode;
   disabled?: boolean;
-} & Except<FieldConfig<EnumVal<T, Multiple>>, 'multiple' | 'type'>;
+} & Except<FieldConfig<EnumVal<T, Multiple>>, 'multiple' | 'type'> &
+  MergeExclusive<
+    { children: ReactNode },
+    {
+      options: readonly T[];
+      getLabel?: (option: T) => string;
+    }
+  >;
 
 const useStyles = makeStyles(({ typography, spacing }) => ({
   fieldLabel: {
