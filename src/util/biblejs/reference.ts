@@ -1,4 +1,8 @@
-import { groupBy } from 'lodash';
+import { compact, groupBy } from 'lodash';
+import {
+  newTestament,
+  oldTestament,
+} from '../../scenes/Products/ProductForm/constants';
 import { books } from './bibleBooks';
 import { Nullable } from '..';
 
@@ -278,4 +282,42 @@ export const fullNewTestamentRange: ScriptureRange = {
     chapter: 22,
     verse: 21,
   },
+};
+
+export const filterScriptureRangesByTestament = (
+  scriptureReferences: readonly ScriptureRange[] | undefined,
+  fullOldTestament: boolean | undefined,
+  fullNewTestament: boolean | undefined
+) =>
+  scriptureReferences?.filter(({ start: { book } }) => {
+    const fullTestamentSelectedAndMatch =
+      fullOldTestament && oldTestament.includes(book);
+    const newTestamentSelectedAndMatch =
+      fullNewTestament && newTestament.includes(book);
+    return !fullTestamentSelectedAndMatch && !newTestamentSelectedAndMatch;
+  });
+
+export const parsedRangesWithFullTestamentRange = (
+  scriptureReferences: readonly ScriptureRange[] | undefined,
+  fullOldTestament: boolean | undefined,
+  fullNewTestament: boolean | undefined
+) => {
+  const oldTestamentRange = fullOldTestament
+    ? fullOldTestamentRange
+    : undefined;
+  const newTestamentRange = fullNewTestament
+    ? fullNewTestamentRange
+    : undefined;
+
+  const filteredScriptureRange = filterScriptureRangesByTestament(
+    scriptureReferences,
+    fullOldTestament,
+    fullNewTestament
+  );
+
+  return compact([
+    oldTestamentRange,
+    ...(filteredScriptureRange ? filteredScriptureRange : []),
+    newTestamentRange,
+  ]);
 };

@@ -45,8 +45,10 @@ import {
   StoryField,
   StoryLookupItem,
 } from '../../../components/form/Lookup';
+import { SwitchField } from '../../../components/form/SwitchField';
 import { entries } from '../../../util';
 import {
+  filterScriptureRangesByTestament,
   getScriptureRangeDisplay,
   matchingScriptureRanges,
   mergeScriptureRange,
@@ -107,6 +109,8 @@ export interface ProductFormValues {
         | LiteracyMaterialLookupItem
         | SongLookupItem;
       scriptureReferences?: readonly ScriptureRange[];
+      fullOldTestament?: boolean;
+      fullNewTestament?: boolean;
     }
   >;
 }
@@ -138,6 +142,8 @@ export const AccordionSection = ({
     scriptureReferences,
     mediums,
     purposes,
+    fullOldTestament,
+    fullNewTestament,
   } = (values as Partial<ProductFormValues>).product ?? {};
 
   const [openedSection, setOpenedSection] = useState<ProductKey | undefined>(
@@ -236,20 +242,57 @@ export const AccordionSection = ({
         {...accordionState}
         name="scriptureReferences"
         title="Scripture"
-        renderCollapsed={() =>
-          entries(scriptureRangeDictionary(scriptureReferences)).map(
-            ([book, scriptureRange]) => (
-              <ToggleButton selected key={book} value={book}>
-                {getScriptureRangeDisplay(scriptureRange, book)}
-              </ToggleButton>
-            )
-          )
-        }
+        renderCollapsed={() => {
+          const oldTestamentButton = fullOldTestament && (
+            <ToggleButton
+              key="fullOldTestament"
+              value="fullNewTestament"
+              selected
+            >
+              Full Old Testament
+            </ToggleButton>
+          );
+
+          const newTestamentButton = fullNewTestament && (
+            <ToggleButton
+              key="fullNewTestament"
+              value="fullNewTestament"
+              selected
+            >
+              Full New Testament
+            </ToggleButton>
+          );
+
+          const filteredScriptureRange = filterScriptureRangesByTestament(
+            scriptureReferences,
+            fullOldTestament,
+            fullNewTestament
+          );
+
+          const scriptureRangeButtons = entries(
+            scriptureRangeDictionary(filteredScriptureRange)
+          ).map(([book, scriptureRangeArr]) => (
+            <ToggleButton selected key={book} value={book}>
+              {getScriptureRangeDisplay(scriptureRangeArr, book)}
+            </ToggleButton>
+          ));
+
+          return [
+            oldTestamentButton,
+            ...scriptureRangeButtons,
+            newTestamentButton,
+          ];
+        }}
       >
         {({ disabled }) => (
           <>
             <div className={classes.section}>
               <Typography className={classes.label}>Old Testament</Typography>
+              <SwitchField
+                name="fullOldTestament"
+                label="Full Testament"
+                color="primary"
+              />
               <div className={classes.toggleButtonContainer}>
                 {oldTestament.map((book) => {
                   const matchingArr = matchingScriptureRanges(
@@ -261,7 +304,7 @@ export const AccordionSection = ({
                       key={book}
                       value={book}
                       selected={Boolean(matchingArr.length)}
-                      disabled={disabled}
+                      disabled={disabled || fullOldTestament}
                       onClick={openBook}
                     >
                       {getScriptureRangeDisplay(matchingArr, book)}
@@ -271,6 +314,12 @@ export const AccordionSection = ({
               </div>
             </div>
             <Typography className={classes.label}>New Testament</Typography>
+            <SwitchField
+              name="fullNewTestament"
+              label="Full Testament"
+              color="primary"
+            />
+
             <div className={classes.toggleButtonContainer}>
               {newTestament.map((book) => {
                 const matchingArr = matchingScriptureRanges(
@@ -282,7 +331,7 @@ export const AccordionSection = ({
                     key={book}
                     value={book}
                     selected={Boolean(matchingArr.length)}
-                    disabled={disabled}
+                    disabled={disabled || fullNewTestament}
                     onClick={openBook}
                   >
                     {getScriptureRangeDisplay(matchingArr, book)}
