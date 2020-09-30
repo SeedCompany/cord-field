@@ -171,7 +171,10 @@ export const AccordionSection = ({
 
   const isProducesFieldMissing = !produces && touched?.['product.produces'];
 
-  const onVersesFieldSubmit = ({ updatingScriptures }: versesDialogValues) => {
+  const onVersesFieldSubmit = ({
+    updatingScriptures,
+    fullBook,
+  }: versesDialogValues) => {
     scriptureInitialValues &&
       form.change(
         // @ts-expect-error this is a valid field key
@@ -179,7 +182,8 @@ export const AccordionSection = ({
         mergeScriptureRange(
           updatingScriptures,
           scriptureReferences,
-          scriptureInitialValues.book
+          scriptureInitialValues.book,
+          fullBook
         )
       );
   };

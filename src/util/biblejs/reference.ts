@@ -1,4 +1,4 @@
-import { compact, groupBy } from 'lodash';
+import { compact, groupBy, isEqual } from 'lodash';
 import {
   newTestament,
   oldTestament,
@@ -243,20 +243,46 @@ export const scriptureRangeDictionary = (
 /**
  * Merge two scripture ranges together
  * merging all ranges in the the updating values and the ranges in the prevScriptureReferences array that doesn't match the book
+ * If fullBook is true, then merge in the full book range.
  */
 export const mergeScriptureRange = (
   updatingScriptures: readonly ScriptureRange[],
   prevScriptureReferences: Nullable<readonly ScriptureRange[]>,
+  book: string,
+  fullBook: boolean
+): ScriptureRange[] => {
+  const filteredOldRange =
+    prevScriptureReferences?.filter(
+      (scriptureRange) => scriptureRange.start.book !== book
+    ) || [];
+
+  const updatedRange = fullBook ? [getFullBookRange(book)] : updatingScriptures;
+
+  return [...filteredOldRange, ...updatedRange];
+};
+
+export const getFullBookRange = (book: string): ScriptureRange => {
+  const bookObject = books.find((bookObj) => bookObj.names.includes(book));
+  const lastChapter = bookObject ? bookObject.chapters.length : 1;
+  const lastVerse = bookObject ? bookObject.chapters[lastChapter - 1] : 1;
+  return {
+    start: {
+      book,
+      chapter: 1,
+      verse: 1,
+    },
+    end: {
+      book,
+      chapter: lastChapter,
+      verse: lastVerse,
+    },
+  };
+};
+
+export const isFullBookRange = (
+  scriptureRange: ScriptureRange | undefined,
   book: string
-): ScriptureRange[] =>
-  prevScriptureReferences
-    ? [
-        ...prevScriptureReferences.filter(
-          (scriptureRange) => scriptureRange.start.book !== book
-        ),
-        ...updatingScriptures,
-      ]
-    : [...updatingScriptures];
+) => isEqual(scriptureRange, getFullBookRange(book));
 
 export const fullOldTestamentRange: ScriptureRange = {
   start: {
