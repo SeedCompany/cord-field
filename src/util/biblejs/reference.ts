@@ -1,8 +1,9 @@
-import { compact, groupBy, isEqual } from 'lodash';
+import { compact, entries, groupBy, isEqual } from 'lodash';
 import {
   newTestament,
   oldTestament,
 } from '../../scenes/Products/ProductForm/constants';
+import { ScriptureRangeFragment } from '../../scenes/Products/ProductForm/ProductForm.generated';
 import { books } from './bibleBooks';
 import { Nullable } from '..';
 
@@ -347,3 +348,50 @@ export const parsedRangesWithFullTestamentRange = (
     newTestamentRange,
   ]);
 };
+
+/**
+ * Translates scriptureReferences array into readable text, displaying full testaments if found.
+ */
+export const scriptureRangeToText = (scriptureReferences: ScriptureRange[]) => {
+  const isFullOldTestament = scriptureReferences.some((range) =>
+    isEqual(range, fullOldTestamentRange)
+  );
+  const isFullNewTestament = scriptureReferences.some((range) =>
+    isEqual(range, fullNewTestamentRange)
+  );
+
+  const oldTestamentText = isFullOldTestament
+    ? 'Full Old Testament'
+    : undefined;
+
+  const newTestamentText = isFullNewTestament
+    ? 'Full New Testament'
+    : undefined;
+
+  const filteredScriptureRange = filterScriptureRangesByTestament(
+    scriptureReferences,
+    isFullOldTestament,
+    isFullNewTestament
+  );
+
+  const individualRangeText = entries(
+    scriptureRangeDictionary(filteredScriptureRange)
+  ).map(([book, scriptureRange]) =>
+    getScriptureRangeDisplay(scriptureRange, book)
+  );
+  return compact([
+    oldTestamentText,
+    ...individualRangeText,
+    newTestamentText,
+  ]).join(', ');
+};
+
+export const removeScriptureTypename = (
+  scriptureReferences: readonly ScriptureRangeFragment[]
+) =>
+  scriptureReferences.map(
+    ({ start: { __typename, ...start }, end: { __typename: _, ...end } }) => ({
+      start,
+      end,
+    })
+  );

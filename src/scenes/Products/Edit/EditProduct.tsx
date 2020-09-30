@@ -11,23 +11,13 @@ import {
   fullNewTestamentRange,
   fullOldTestamentRange,
   parsedRangesWithFullTestamentRange,
+  removeScriptureTypename,
 } from '../../../util/biblejs';
 import { ProductForm } from '../ProductForm';
-import { ScriptureRangeFragment } from '../ProductForm/ProductForm.generated';
 import {
   useProductQuery,
   useUpdateProductMutation,
 } from './EditProduct.generated';
-
-const removeScriptureTypename = (
-  scriptureReferences: readonly ScriptureRangeFragment[]
-) =>
-  scriptureReferences.map(
-    ({ start: { __typename, ...start }, end: { __typename: _, ...end } }) => ({
-      start,
-      end,
-    })
-  );
 
 const useStyles = makeStyles(({ spacing }) => ({
   root: {
