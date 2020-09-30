@@ -6,6 +6,8 @@ import {
   FormHelperText,
   FormLabel,
   makeStyles,
+  Radio,
+  RadioGroup,
 } from '@material-ui/core';
 import { ToggleButton, ToggleButtonGroup } from '@material-ui/lab';
 import clsx from 'clsx';
@@ -222,6 +224,8 @@ export const EnumField = <
       </FormGroup>
     ) : variant === 'toggle-grouped' ? (
       <ToggleButtonGroup exclusive={!multiple}>{children}</ToggleButtonGroup>
+    ) : variant === 'radio' ? (
+      <RadioGroup>{children}</RadioGroup>
     ) : null;
 
   return (
@@ -271,7 +275,7 @@ export const EnumOption = <T extends string>(props: EnumOptionsProps<T>) => {
   const { variant, isChecked, onChange, ...ctx } = useEnumContext<T>();
   const { disabled = ctx.disabled, value: name, default: _, ...rest } = props;
 
-  if (variant === 'checkbox') {
+  if (variant === 'checkbox' || variant === 'radio') {
     return (
       <FormControlLabel
         {...rest}
@@ -279,7 +283,7 @@ export const EnumOption = <T extends string>(props: EnumOptionsProps<T>) => {
         checked={isChecked(name)}
         onChange={(_, checked) => onChange(name, checked)}
         disabled={disabled}
-        control={<Checkbox />}
+        control={variant === 'checkbox' ? <Checkbox /> : <Radio />}
         // Prevent form control from being blurred when clicking on label.
         // And also enforce that control is focused.
         onMouseDown={(e: MouseEvent<HTMLElement>) => {
