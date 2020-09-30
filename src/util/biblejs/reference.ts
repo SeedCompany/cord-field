@@ -253,3 +253,29 @@ export const mergeScriptureRange = (
         ...updatingScriptures,
       ]
     : [...updatingScriptures];
+
+export const fullOldTestamentRange: ScriptureRange = {
+  start: {
+    book: 'Genesis',
+    chapter: 1,
+    verse: 1,
+  },
+  end: {
+    book: 'Malachi',
+    chapter: 4,
+    verse: 6,
+  },
+};
+
+export const fullNewTestamentRange: ScriptureRange = {
+  start: {
+    book: 'Matthew',
+    chapter: 1,
+    verse: 1,
+  },
+  end: {
+    book: 'Revelation',
+    chapter: 22,
+    verse: 21,
+  },
+};
