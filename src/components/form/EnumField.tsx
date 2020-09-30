@@ -60,9 +60,12 @@ const useStyles = makeStyles(({ typography, spacing }) => ({
   fieldLabel: {
     fontWeight: typography.weight.bold,
   },
-  toggleGroup: {
+  toggleSplitContainer: {
     margin: spacing(-1),
     padding: spacing(1, 0),
+  },
+  toggleGroupedContainer: {
+    margin: spacing(1, 0),
   },
 }));
 
@@ -216,14 +219,19 @@ export const EnumField = <
       <FormGroup
         classes={{
           root: clsx({
-            [classes.toggleGroup]: variant === 'toggle-split',
+            [classes.toggleSplitContainer]: variant === 'toggle-split',
           }),
         }}
       >
         {children}
       </FormGroup>
     ) : variant === 'toggle-grouped' ? (
-      <ToggleButtonGroup exclusive={!multiple}>{children}</ToggleButtonGroup>
+      <ToggleButtonGroup
+        exclusive={!multiple}
+        className={classes.toggleGroupedContainer}
+      >
+        {children}
+      </ToggleButtonGroup>
     ) : variant === 'radio' ? (
       <RadioGroup>{children}</RadioGroup>
     ) : null;
