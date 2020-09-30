@@ -2,7 +2,7 @@ import { Breadcrumbs, makeStyles, Typography } from '@material-ui/core';
 import { Skeleton } from '@material-ui/lab';
 import { sumBy } from 'lodash';
 import { Column, Components } from 'material-table';
-import React, { useMemo } from 'react';
+import React, { useMemo, useRef } from 'react';
 import { useParams } from 'react-router-dom';
 import { Breadcrumb } from '../../../components/Breadcrumb';
 import { useCurrencyFormatter } from '../../../components/Formatters/useCurrencyFormatter';
@@ -26,6 +26,7 @@ const useStyles = makeStyles(({ spacing, breakpoints }) => ({
   tableWrapper: {
     maxWidth: breakpoints.values.md,
     margin: spacing(0, 4, 4, 0),
+    overflow: 'auto',
   },
   totalLoading: {
     width: '10%',
@@ -57,7 +58,12 @@ export const ProjectBudget = () => {
   const { data, loading, error } = useProjectBudgetQuery({
     variables: { id: projectId },
   });
-  const [updateBudgetRecord] = useUpdateProjectBudgetRecordMutation();
+  const [
+    updateBudgetRecord,
+    { loading: isUpdateLoading },
+  ] = useUpdateProjectBudgetRecordMutation();
+
+  const budgetRecordIdInUpdate = useRef<string>();
 
   const budget = data?.project.budget;
   const records: readonly BudgetRecord[] = budget?.value?.records ?? [];
@@ -91,15 +97,20 @@ export const ProjectBudget = () => {
         field: 'amount',
         type: 'currency',
         editable: (_, rowData) => rowData.canEdit,
-        render: (rowData) =>
-          rowData.amount ? formatCurrency(Number(rowData.amount)) : blankAmount,
+        render: (rowData) => {
+          if (isUpdateLoading && rowData.id === budgetRecordIdInUpdate.current)
+            return <Skeleton width={60} />;
+          return rowData.amount
+            ? formatCurrency(Number(rowData.amount))
+            : blankAmount;
+        },
       },
       {
         field: 'canEdit',
         hidden: true,
       },
     ],
-    [formatCurrency]
+    [formatCurrency, isUpdateLoading]
   );
 
   return (
@@ -122,10 +133,10 @@ export const ProjectBudget = () => {
               variant="h3"
               className={loading ? classes.totalLoading : undefined}
             >
-              {!loading ? (
+              {!loading && !isUpdateLoading ? (
                 `Total: ${formatCurrency(budgetTotal)}`
               ) : (
-                <Skeleton width="100%" />
+                <Skeleton width={120} />
               )}
             </Typography>
           </header>
@@ -141,6 +152,7 @@ export const ProjectBudget = () => {
                       onCellEditApproved: async (newAmount, _, data) => {
                         if (newAmount === blankAmount || newAmount === '')
                           return;
+                        budgetRecordIdInUpdate.current = data.id;
                         const input = {
                           budgetRecord: {
                             id: data.id,
