@@ -1,10 +1,10 @@
 query Partner($input: ID!) {
   partner(id: $input) {
-    ...partnerDetails
+    ...PartnerDetails
   }
 }
 
-fragment partnerDetails on Partner {
+fragment PartnerDetails on Partner {
   id
   createdAt
   organization {
