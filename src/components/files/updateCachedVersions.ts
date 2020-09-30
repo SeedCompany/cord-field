@@ -7,25 +7,35 @@ export const updateCachedVersions = <MutationData>(
   existingVersions: readonly FileNodeInfoFragment[],
   parentId: string
 ) => {
-  const response = cache.readQuery<FileVersionsQuery>({
-    query: FileVersionsDocument,
-    variables: { id: parentId },
-  });
-  if (response) {
-    const updatedData = {
-      ...response,
-      file: {
-        ...response.file,
-        children: {
-          ...response.file.children,
-          items: existingVersions,
-        },
-      },
-    };
-    cache.writeQuery<FileVersionsQuery>({
+  try {
+    const response = cache.readQuery<FileVersionsQuery>({
       query: FileVersionsDocument,
       variables: { id: parentId },
-      data: updatedData,
     });
+    if (response) {
+      const updatedData = {
+        ...response,
+        file: {
+          ...response.file,
+          children: {
+            ...response.file.children,
+            items: existingVersions,
+          },
+        },
+      };
+      cache.writeQuery<FileVersionsQuery>({
+        query: FileVersionsDocument,
+        variables: { id: parentId },
+        data: updatedData,
+      });
+    }
+  } catch {
+    /**
+     * We need this try/catch because if this data has never been fetched
+     * before, `cache.readQuery` will throw an error instead of returning
+     * anything, which is apparently a behavior the Apollo team finds
+     * acceptable.
+     */
+    return;
   }
 };
