@@ -14,15 +14,20 @@ import { useUploadBudgetFile } from '../Files';
 import { useProjectBudgetQuery } from './ProjectBudget.generated';
 import { ProjectBudgetRecords } from './ProjectBudgetRecords';
 
-const useStyles = makeStyles(({ spacing }) => ({
+const useStyles = makeStyles(({ breakpoints, spacing }) => ({
   header: {
     margin: spacing(3, 0),
     display: 'flex',
     justifyContent: 'space-between',
     alignItems: 'flex-end',
+    maxWidth: breakpoints.values.md,
   },
   totalLoading: {
     width: '10%',
+  },
+  tableWrapper: {
+    maxWidth: breakpoints.values.md,
+    margin: spacing(0, 4, 4, 0),
   },
 }));
 
@@ -73,37 +78,39 @@ export const ProjectBudgetWrapped = () => {
               )}
             </Typography>
           </header>
-          <Grid container direction="column" spacing={3}>
-            <Grid item>
-              <ProjectBudgetRecords loading={loading} budget={budget} />
-            </Grid>
-            {!budget?.value || !template || !template.canRead ? null : (
-              <Grid item xs={6}>
-                {!template.value ? (
-                  <AddItemCard
-                    actionType="dropzone"
-                    canAdd={template.canEdit}
-                    handleFileSelect={(files: File[]) =>
-                      uploadFile({ files, parentId: budget.value!.id })
-                    }
-                    itemType="template"
-                  />
-                ) : (
-                  <DefinedFileCard
-                    onVersionUpload={(files) =>
-                      uploadFile({
-                        action: 'version',
-                        files,
-                        parentId: budget.value!.id,
-                      })
-                    }
-                    resourceType="budget"
-                    securedFile={template}
-                  />
-                )}
+          <div className={classes.tableWrapper}>
+            <Grid container direction="column" spacing={3}>
+              <Grid item>
+                <ProjectBudgetRecords loading={loading} budget={budget} />
               </Grid>
-            )}
-          </Grid>
+              {!budget?.value || !template || !template.canRead ? null : (
+                <Grid item xs={6}>
+                  {!template.value ? (
+                    <AddItemCard
+                      actionType="dropzone"
+                      canAdd={template.canEdit}
+                      handleFileSelect={(files: File[]) =>
+                        uploadFile({ files, parentId: budget.value!.id })
+                      }
+                      itemType="template"
+                    />
+                  ) : (
+                    <DefinedFileCard
+                      onVersionUpload={(files) =>
+                        uploadFile({
+                          action: 'version',
+                          files,
+                          parentId: budget.value!.id,
+                        })
+                      }
+                      resourceType="budget"
+                      securedFile={template}
+                    />
+                  )}
+                </Grid>
+              )}
+            </Grid>
+          </div>
         </>
       )}
     </Content>
