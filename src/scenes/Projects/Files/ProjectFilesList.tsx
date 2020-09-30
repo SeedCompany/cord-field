@@ -360,7 +360,7 @@ const ProjectFilesListWrapped: FC = () => {
 };
 
 export const ProjectFilesList: FC = () => (
-  <FileActionsContextProvider context="project">
+  <FileActionsContextProvider>
     <ProjectFilesListWrapped />
   </FileActionsContextProvider>
 );
