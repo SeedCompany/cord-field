@@ -6,7 +6,7 @@ import { DateTime } from 'luxon';
 import React, { useState } from 'react';
 import { useParams } from 'react-router';
 import { useInterval } from 'react-use';
-import { canEditAny } from '../../../api';
+import { canEditAny, displayRoles } from '../../../api';
 import { useDialog } from '../../../components/Dialog';
 import {
   DisplaySimpleProperty,
@@ -97,6 +97,11 @@ export const UserDetail = () => {
           <DisplayProperty
             label="Title"
             value={user?.title.value}
+            loading={!user}
+          />
+          <DisplayProperty
+            label="Roles"
+            value={user?.roles.value && displayRoles(user.roles.value)}
             loading={!user}
           />
           <DisplayProperty
