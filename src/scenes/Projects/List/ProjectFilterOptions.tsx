@@ -1,4 +1,4 @@
-import { Grid, Tooltip } from '@material-ui/core';
+import { Tooltip } from '@material-ui/core';
 import { upperFirst } from 'lodash';
 import * as React from 'react';
 import {
@@ -8,8 +8,7 @@ import {
   Sensitivity,
   SensitivityList,
 } from '../../../api';
-import { CheckboxesField, CheckboxOption } from '../../../components/form';
-import { SwitchField } from '../../../components/form/SwitchField';
+import { EnumField, SwitchField } from '../../../components/form';
 import {
   BooleanParam,
   EnumListParam,
@@ -48,34 +47,23 @@ export const useProjectFilters = makeQueryHandler({
 export const ProjectFilterOptions = () => {
   return (
     <>
-      <CheckboxesField name="status" label="Status" row>
-        <Grid container>
-          <Grid item xs={6}>
-            <CheckboxOption label="Show All" default />
-          </Grid>
-          {ProjectStatusList.map((status) => (
-            <Grid item xs={6} key={status}>
-              <CheckboxOption
-                key={status}
-                label={displayStatus(status)}
-                value={status}
-              />
-            </Grid>
-          ))}
-        </Grid>
-      </CheckboxesField>
-      <CheckboxesField name="sensitivity" label="Sensitivity" row>
-        <Grid container>
-          <Grid item xs={6}>
-            <CheckboxOption label="Show All" default />
-          </Grid>
-          {SensitivityList.map((sensitivity) => (
-            <Grid item xs={6} key={sensitivity}>
-              <CheckboxOption label={sensitivity} value={sensitivity} />
-            </Grid>
-          ))}
-        </Grid>
-      </CheckboxesField>
+      <EnumField
+        name="status"
+        label="Status"
+        multiple
+        options={ProjectStatusList}
+        getLabel={displayStatus}
+        defaultOption="Show All"
+        layout="two-column"
+      />
+      <EnumField
+        name="sensitivity"
+        label="Sensitivity"
+        multiple
+        options={SensitivityList}
+        defaultOption="Show All"
+        layout="two-column"
+      />
       <SwitchField
         name="onlyMultipleEngagements"
         label={
