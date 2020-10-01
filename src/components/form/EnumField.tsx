@@ -29,10 +29,15 @@ import { FieldConfig, useField } from './useField';
 import { areListsEqual, getHelperText, showError } from './util';
 import { required, requiredArray, Validator } from './validators';
 
-type EnumVal<
-  T extends string,
-  Multiple extends boolean | undefined
-> = Multiple extends true ? readonly T[] : T;
+type EnumVal<T extends string, Multiple extends boolean | undefined = never> =
+  // be loose if multiple is not specified;
+  // useful for internal usage which handles both.
+  // Otherwise it is a list or single value based on multiple boolean.
+  [Multiple] extends [never]
+    ? readonly T[] | T | null
+    : Multiple extends true
+    ? readonly T[]
+    : T | null;
 
 export type EnumFieldProps<
   T extends string,
@@ -106,15 +111,14 @@ export const EnumField = <
   // Memoize defaultValue so array can be passed inline while still preventing
   // the new array instance from causing re-renders when not changing.
   const defaultValue = useMemo(
-    (): EnumVal<T, Multiple> | undefined =>
-      defaultValueProp ?? multiple
-        ? ((defaultDefaultValue as unknown) as EnumVal<T, Multiple>)
-        : undefined,
+    () => (defaultValueProp ?? multiple ? defaultDefaultValue : null),
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [
       multiple,
       // eslint-disable-next-line react-hooks/exhaustive-deps
-      defaultValueProp ? sortBy(many(defaultValueProp)).join('') : undefined,
+      defaultValueProp
+        ? sortBy(many(defaultValueProp ?? '')).join('')
+        : undefined,
     ]
   );
 
@@ -122,17 +126,17 @@ export const EnumField = <
   // FF handles checkboxes natively but we want one field instance, where FF's
   // has multiple. One field means name only has to be specified once and
   // validation can be done as a group (i.e. check 2+)
-  const { input, meta } = useField<EnumVal<T, Multiple>>(name, {
+  const { input, meta } = useField<EnumVal<T>>(name, {
     // Enforce defaultValue is an array, else an empty string will be used.
     defaultValue,
-    ...props,
     isEqual: multiple ? areListsEqual : undefined,
-    validate:
-      props.validate ?? props.required
-        ? ((multiple ? requiredArray : required) as Validator<
-            EnumVal<T, Multiple>
-          >)
-        : undefined,
+    allowNull: !multiple,
+    validate: (props.validate ?? props.required
+      ? multiple
+        ? requiredArray
+        : required
+      : undefined) as Validator<EnumVal<T>>,
+    format: undefined, // Why does TS need this???
   });
 
   const classes = useStyles();
@@ -142,12 +146,12 @@ export const EnumField = <
   const { onChange, onBlur, onFocus } = input;
 
   const value = useMemo(
-    () =>
+    (): Set<T> | T | null =>
       multiple
         ? new Set(input.value as readonly T[])
-        : (input.value as T | null) || defaultValue,
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    [(input.value as T | null) ? sortBy(many(input.value)).join('') : undefined]
+        : ((input.value || defaultValue) as T | null),
+    // eslint-disable-next-line react-hooks/exhaustive-deps,@typescript-eslint/no-unnecessary-condition
+    [input.value ? sortBy(many(input.value ?? '')).join('') : undefined]
   );
 
   const isChecked = useCallback(
@@ -156,7 +160,7 @@ export const EnumField = <
         const current = value as Set<T>;
         return optionVal ? current.has(optionVal) : current.size === 0;
       }
-      return value === optionVal;
+      return value === (optionVal ?? null);
     },
     [multiple, value]
   );
@@ -164,7 +168,7 @@ export const EnumField = <
   const onOptionChange = useCallback(
     (optionVal: T | undefined, checked: boolean) => {
       if (!optionVal) {
-        onChange(multiple ? [] : undefined);
+        onChange(multiple ? [] : null);
         return;
       }
       if (!multiple) {
