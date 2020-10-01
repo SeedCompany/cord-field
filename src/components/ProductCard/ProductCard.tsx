@@ -120,7 +120,7 @@ export const ProductCard = ({ product }: ProductCardProps) => {
               .join(', ')}
           />
           <DisplaySimpleProperty
-            label="Scripture"
+            label="Scripture Reference"
             align="center"
             value={scriptureRangeToText(
               removeScriptureTypename(product.scriptureReferences.value)

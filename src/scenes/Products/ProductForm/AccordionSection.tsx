@@ -245,7 +245,7 @@ export const AccordionSection = ({
       <SecuredAccordion
         {...accordionState}
         name="scriptureReferences"
-        title="Scripture"
+        title="Scripture Reference"
         renderCollapsed={() => {
           const oldTestamentButton = fullOldTestament && (
             <ToggleButton
