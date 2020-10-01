@@ -76,10 +76,9 @@ const EnumStory = ({
                 [
                   'checkbox',
                   'radio',
-                  'select',
                   'toggle-split',
                   'toggle-grouped',
-                ],
+                ] as const,
                 'toggle-split'
               )}
               layout={select('layout', ['row', 'column'], 'row')}

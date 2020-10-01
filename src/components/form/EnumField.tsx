@@ -46,10 +46,10 @@ export type EnumFieldProps<
   multiple?: Multiple;
   variant?:
     | 'checkbox'
-    | 'select'
     | 'toggle-split'
     | 'toggle-grouped'
-    | (Multiple extends true ? never : 'radio');
+    | (Multiple extends true ? never : 'radio')
+    | symbol; // ignore. just so we can say there's more here in the future
   name: string;
   label?: ReactNode;
   helperText?: ReactNode;
