@@ -4,108 +4,83 @@ import { boolean, select, text } from '@storybook/addon-knobs';
 import { startCase } from 'lodash';
 import React from 'react';
 import { Form } from 'react-final-form';
+import { Except } from 'type-fest';
 import { csv } from '../../util';
-import { EnumField, EnumOption } from './EnumField';
+import { EnumField, EnumFieldProps, EnumOption } from './EnumField';
 import { FieldSpy } from './FieldSpy';
 
 export default { title: 'Components/Forms/Fields/Enum' };
 
-const variantToggle = () =>
-  select(
-    'variant',
-    ['checkbox', 'radio', 'select', 'toggle-split', 'toggle-grouped'],
-    'toggle-split'
-  ) as any;
+const colors = ['red', 'blue', 'green', 'yellow'];
 
 export const Multiple = () => (
-  <Form
-    onSubmit={action('submit')}
-    initialValues={{
-      colors: csv(text('initialValue (csv)', 'blue, teal')),
-    }}
-  >
-    {({ handleSubmit }) => (
-      <>
-        <Box component="form" onSubmit={handleSubmit} mb={4}>
-          <EnumField
-            // fullWidth={boolean('fullWidth', false)}
-            // row={boolean('row', false)}
-            name="colors"
-            multiple={true}
-            variant={variantToggle()}
-            label={text('label', 'Colors')}
-            helperText="Choose some colors"
-            // defaultValue={csv(text('defaultValue (csv)', ''))}
-            disabled={boolean('disabled', false)}
-            required={boolean('required', false)}
-          >
-            <EnumOption default label="All Colors" />
-            {['red', 'blue', 'green', 'yellow'].map((color) => (
-              <EnumOption key={color} label={startCase(color)} value={color} />
-            ))}
-            <EnumOption disabled value="teal" label="Teal" />
-          </EnumField>
-        </Box>
-        <FieldSpy name="colors" />
-      </>
-    )}
-  </Form>
+  <EnumStory multiple>
+    <EnumOption default label="All Colors" />
+    {colors.map((color) => (
+      <EnumOption key={color} label={startCase(color)} value={color} />
+    ))}
+    <EnumOption disabled value="teal" label="Teal" />
+  </EnumStory>
 );
 
 export const FromOptions = () => (
-  <Form onSubmit={action('submit')}>
-    {({ handleSubmit }) => (
-      <>
-        <Box component="form" onSubmit={handleSubmit} mb={4}>
-          <EnumField
-            name="colors"
-            multiple={true}
-            variant={variantToggle()}
-            label={text('label', 'Colors')}
-            helperText="Choose some colors"
-            disabled={boolean('disabled', false)}
-            required={boolean('required', false)}
-            options={['red', 'blue', 'green', 'yellow']}
-            getLabel={startCase}
-          />
-        </Box>
-        <FieldSpy name="colors" />
-      </>
-    )}
-  </Form>
+  <EnumStory multiple options={colors} getLabel={startCase} />
 );
 
 export const Single = () => (
-  <Form
-    onSubmit={action('submit')}
-    initialValues={{
-      color: text('initialValue', 'blue'),
-    }}
-  >
-    {({ handleSubmit }) => (
-      <>
-        <Box component="form" onSubmit={handleSubmit} mb={4}>
-          <EnumField
-            // fullWidth={boolean('fullWidth', false)}
-            // row={boolean('row', false)}
-            name="color"
-            multiple={false}
-            variant={variantToggle()}
-            label={text('label', 'Color')}
-            helperText="Choose a color"
-            defaultValue={text('defaultValue', '') || undefined}
-            disabled={boolean('disabled', false)}
-            required={boolean('required', false)}
-          >
-            <EnumOption default label="No Color" />
-            {['red', 'blue', 'green', 'yellow'].map((color) => (
-              <EnumOption key={color} label={startCase(color)} value={color} />
-            ))}
-            <EnumOption disabled value="teal" label="Teal" />
-          </EnumField>
-        </Box>
-        <FieldSpy name="color" />
-      </>
-    )}
-  </Form>
+  <EnumStory>
+    <EnumOption default label="No Color" />
+    {colors.map((color) => (
+      <EnumOption key={color} label={startCase(color)} value={color} />
+    ))}
+    <EnumOption disabled value="teal" label="Teal" />
+  </EnumStory>
 );
+
+const EnumStory = ({
+  initialValue,
+  ...props
+}: Except<EnumFieldProps<any, any>, 'name'> & { initialValue?: any }) => {
+  const name = props.multiple ? 'colors' : 'color';
+  return (
+    <Form
+      onSubmit={action('submit')}
+      initialValues={{
+        [name]:
+          initialValue ?? props.multiple
+            ? csv(text('initialValue (csv)', 'blue, teal'))
+            : text('initialValue', 'blue') || undefined,
+      }}
+    >
+      {({ handleSubmit }) => (
+        <>
+          <Box component="form" onSubmit={handleSubmit} mb={4}>
+            {/* @ts-expect-error TS doesn't like options or children being passed through */}
+            <EnumField
+              name={name}
+              variant={select(
+                'variant',
+                [
+                  'checkbox',
+                  'radio',
+                  'select',
+                  'toggle-split',
+                  'toggle-grouped',
+                ],
+                'toggle-split'
+              )}
+              label={text('label', props.multiple ? 'Colors' : 'Color')}
+              helperText={
+                props.multiple ? 'Choose some colors' : 'Choose a color'
+              }
+              disabled={boolean('disabled', false)}
+              required={boolean('required', false)}
+              {...props}
+            />
+          </Box>
+          <FieldSpy name={name} />
+        </>
+      )}
+    </Form>
+  );
+};
