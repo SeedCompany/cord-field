@@ -1,3 +1,4 @@
+import { getIn } from 'final-form';
 import React, { useEffect, useState } from 'react';
 import { useForm, useFormState } from 'react-final-form';
 import { Code } from '../Debug';
@@ -21,7 +22,7 @@ export const useFieldSpy = (name: string) => {
   });
   return {
     registered,
-    value: state.values[name],
+    value: getIn(state.values, name),
     active: state.active === name,
     modified: Boolean(state.modified?.[name]),
     visited: Boolean(state.visited?.[name]),
