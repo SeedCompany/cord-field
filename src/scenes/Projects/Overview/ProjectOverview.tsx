@@ -115,14 +115,13 @@ export const ProjectOverview: FC = () => {
       : 'Intern'
     : null;
 
-  const populationTotal =
-    engagementListData?.project.engagements.items.reduce(
-      (total, item) =>
-        item.__typename === 'LanguageEngagement'
-          ? total + (item.language.value?.population.value ?? 0)
-          : total,
-      0
-    ) || undefined;
+  const populationTotal = engagementListData?.project.engagements.items.reduce(
+    (total, item) =>
+      item.__typename === 'LanguageEngagement'
+        ? total + (item.language.value?.population.value ?? 0)
+        : total,
+    0
+  );
 
   const date = projectOverviewData
     ? securedDateRange(
@@ -205,27 +204,20 @@ export const ProjectOverview: FC = () => {
               />
             </Grid>
           </Grid>
-          <DisplaySimpleProperty
-            label="Population Total"
-            value={formatNumber(populationTotal)}
-            loadingWidth={100}
-            LabelProps={{ color: 'textSecondary' }}
-            ValueProps={{ color: 'textPrimary' }}
-            wrap={(node) => (
-              <Grid item>
-                <Tooltip
-                  title={
-                    projectOverviewData
-                      ? 'Total population of all languages engaged'
-                      : ''
-                  }
-                >
-                  {node}
-                </Tooltip>
+          {projectOverviewData?.project.__typename === 'TranslationProject' && (
+            <Tooltip title={'Total population of all languages engaged'}>
+              <Grid item xs={3}>
+                <DisplaySimpleProperty
+                  loading={!engagementListData}
+                  label="Population Total"
+                  value={formatNumber(populationTotal)} // formats to string
+                  loadingWidth={100}
+                  LabelProps={{ color: 'textSecondary' }}
+                  ValueProps={{ color: 'textPrimary' }}
+                />
               </Grid>
-            )}
-          />
-
+            </Tooltip>
+          )}
           <Grid container spacing={1} alignItems="center">
             <Grid item>
               <DataButton
