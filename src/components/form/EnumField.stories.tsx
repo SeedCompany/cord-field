@@ -14,6 +14,15 @@ export default { title: 'Components/Forms/Fields/Enum' };
 const colors = ['red', 'blue', 'green', 'yellow'];
 
 export const Multiple = () => (
+  <EnumStory
+    multiple
+    options={colors}
+    getLabel={startCase}
+    defaultOption={text('defaultOption', 'No Colors') || undefined}
+  />
+);
+
+export const MultipleCustomChildren = () => (
   <EnumStory multiple>
     <EnumOption default label="All Colors" />
     {colors.map((color) => (
@@ -23,16 +32,15 @@ export const Multiple = () => (
   </EnumStory>
 );
 
-export const FromOptions = () => (
+export const Single = () => (
   <EnumStory
-    multiple
     options={colors}
     getLabel={startCase}
     defaultOption={text('defaultOption', 'No Colors') || undefined}
   />
 );
 
-export const Single = () => (
+export const SingleCustomChildren = () => (
   <EnumStory>
     <EnumOption default label="No Color" />
     {colors.map((color) => (
