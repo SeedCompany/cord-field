@@ -5,6 +5,7 @@ import {
   FormGroup,
   FormHelperText,
   FormLabel,
+  Grid,
   makeStyles,
   Radio,
   RadioGroup,
@@ -17,6 +18,7 @@ import {
   createContext,
   FocusEvent,
   MouseEvent,
+  ReactElement,
   ReactNode,
   useCallback,
   useContext,
@@ -54,7 +56,7 @@ export type EnumFieldProps<
   label?: ReactNode;
   helperText?: ReactNode;
   disabled?: boolean;
-  layout?: 'row' | 'column';
+  layout?: 'row' | 'column' | 'two-column';
 } & Except<FieldConfig<EnumVal<T, Multiple>>, 'multiple' | 'type'> &
   MergeExclusive<
     { children: ReactNode },
@@ -111,6 +113,18 @@ export const EnumField = <
   }
   if (childrenProp && options) {
     throw new Error('Only children or options list can be provided');
+  }
+  if (layout === 'two-column') {
+    if (childrenProp) {
+      throw new Error(
+        'Two column layout cannot be applied automatically with custom children'
+      );
+    }
+    if (variant === 'toggle-grouped') {
+      throw new Error(
+        'Two column layout cannot be applied to toggle grouped variant'
+      );
+    }
   }
 
   // Memoize defaultValue so array can be passed inline while still preventing
@@ -214,7 +228,7 @@ export const EnumField = <
     [disabled, isChecked, name, onBlur, onFocus, onOptionChange, variant]
   );
 
-  const children = childrenProp ?? [
+  let children = childrenProp ?? [
     ...(typeof defaultOption === 'string'
       ? [<EnumOption default label={defaultOption} key="enum default" />]
       : defaultOption
@@ -228,6 +242,17 @@ export const EnumField = <
       />
     )),
   ];
+  if (layout === 'two-column') {
+    children = (
+      <Grid container>
+        {(children as ReactElement[]).map((child) => (
+          <Grid item xs={6} key={child.key!}>
+            {child}
+          </Grid>
+        ))}
+      </Grid>
+    );
+  }
 
   const renderedOptions =
     variant === 'checkbox' || variant === 'toggle-split' ? (
