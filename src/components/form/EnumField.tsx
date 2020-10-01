@@ -61,6 +61,8 @@ export type EnumFieldProps<
     {
       options: readonly T[];
       getLabel?: (option: T) => string;
+      // This can be a label to show an empty option or a rendered EnumOption.
+      defaultOption?: string | ReactNode;
     }
   >;
 
@@ -95,6 +97,7 @@ export const EnumField = <
     layout = 'row',
     options,
     getLabel,
+    defaultOption,
     children: childrenProp,
   } = props;
 
@@ -211,16 +214,20 @@ export const EnumField = <
     [disabled, isChecked, name, onBlur, onFocus, onOptionChange, variant]
   );
 
-  const children =
-    childrenProp ??
-    options?.map((option) => (
+  const children = childrenProp ?? [
+    ...(typeof defaultOption === 'string'
+      ? [<EnumOption default label={defaultOption} key="enum default" />]
+      : defaultOption
+      ? [defaultOption]
+      : []),
+    ...options!.map((option) => (
       <EnumOption
         key={option}
         value={option}
         label={getLabel?.(option) ?? option}
       />
-    )) ??
-    null; // won't be hit because of thrown exception from check above
+    )),
+  ];
 
   const renderedOptions =
     variant === 'checkbox' || variant === 'toggle-split' ? (

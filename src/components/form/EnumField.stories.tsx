@@ -24,7 +24,12 @@ export const Multiple = () => (
 );
 
 export const FromOptions = () => (
-  <EnumStory multiple options={colors} getLabel={startCase} />
+  <EnumStory
+    multiple
+    options={colors}
+    getLabel={startCase}
+    defaultOption={text('defaultOption', 'No Colors') || undefined}
+  />
 );
 
 export const Single = () => (
