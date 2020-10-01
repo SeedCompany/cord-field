@@ -130,7 +130,7 @@ export const EnumField = <
   // Memoize defaultValue so array can be passed inline while still preventing
   // the new array instance from causing re-renders when not changing.
   const defaultValue = useMemo(
-    () => (defaultValueProp ?? multiple ? defaultDefaultValue : null),
+    () => defaultValueProp ?? (multiple ? defaultDefaultValue : null),
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [
       multiple,
