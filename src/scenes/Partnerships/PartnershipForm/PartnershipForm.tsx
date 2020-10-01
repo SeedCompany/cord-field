@@ -1,9 +1,9 @@
 import React from 'react';
-import { useFormState } from 'react-final-form';
 import {
   displayFinancialReportingType,
   displayPartnershipStatus,
   FinancialReportingTypeList,
+  PartnershipAgreementStatus,
   PartnershipAgreementStatusList,
   PartnershipType,
   PartnershipTypeList,
@@ -13,10 +13,8 @@ import {
   DialogFormProps,
 } from '../../../components/Dialog/DialogForm';
 import {
-  CheckboxesField,
-  CheckboxOption,
-  RadioField,
-  RadioOption,
+  EnumField,
+  EnumFieldProps,
   SecuredField,
   SubmitError,
 } from '../../../components/form';
@@ -38,97 +36,60 @@ export const PartnershipForm = <
 >({
   partnership,
   ...rest
-}: PartnershipFormProps<T>) => {
-  const radioOptions = PartnershipAgreementStatusList.map((status) => (
-    <RadioOption
-      key={status}
-      label={displayPartnershipStatus(status)}
-      value={status}
-    />
-  ));
-
-  const typesCheckboxes = PartnershipTypeList.map((type: PartnershipType) => (
-    <div style={{ width: '50%' }} key={type}>
-      <CheckboxOption key={type} label={type} value={type} />
-    </div>
-  ));
-
-  return (
-    <DialogForm<T> {...rest} fieldsPrefix="partnership">
-      <SubmitError />
-      {!partnership && <OrganizationField name="organizationId" required />}
-      {partnership ? (
+}: PartnershipFormProps<T>) => (
+  <DialogForm<T> {...rest} fieldsPrefix="partnership">
+    {({ values }) => (
+      <>
+        <SubmitError />
+        {!partnership && <OrganizationField name="organizationId" required />}
         <SecuredField obj={partnership} name="types">
           {(props) => (
-            <CheckboxesField label="Types" row {...props}>
-              {typesCheckboxes}
-            </CheckboxesField>
+            <EnumField
+              multiple
+              label="Types"
+              options={PartnershipTypeList}
+              layout="two-column"
+              {...props}
+            />
           )}
         </SecuredField>
-      ) : (
-        <CheckboxesField label="Types" row name="types">
-          {typesCheckboxes}
-        </CheckboxesField>
-      )}
-      <FundingType<T> partnership={partnership} />
-      {partnership && (
-        <>
-          <SecuredField obj={partnership} name="agreementStatus">
+        {hasManagingType(values.partnership.types) ? (
+          <SecuredField obj={partnership} name="financialReportingType">
             {(props) => (
-              <RadioField label="Agreement Status" {...props}>
-                {radioOptions}
-              </RadioField>
+              <EnumField
+                label="Financial Reporting Type"
+                options={FinancialReportingTypeList}
+                getLabel={displayFinancialReportingType}
+                {...props}
+              />
             )}
           </SecuredField>
-          <SecuredField obj={partnership} name="mouStatus">
-            {(props) => (
-              <RadioField label="Mou Status" {...props}>
-                {radioOptions}
-              </RadioField>
-            )}
-          </SecuredField>
-        </>
-      )}
-    </DialogForm>
-  );
-};
-
-const FundingType = <
-  InputType extends CreatePartnershipFormInput | EditPartnershipFormInput
->({
-  partnership,
-}: {
-  partnership: PartnershipFormProps<InputType>['partnership'];
-}) => {
-  const { values } = useFormState<InputType>();
-  const managingTypeSelected = hasManagingType(values.partnership.types);
-
-  const radioOptions = FinancialReportingTypeList.map((type) => (
-    <RadioOption
-      key={type}
-      value={type}
-      label={displayFinancialReportingType(type)}
-    />
-  ));
-
-  return managingTypeSelected ? (
-    partnership ? (
-      <SecuredField obj={partnership} name="financialReportingType">
-        {(props) => (
-          <RadioField label="Financial Reporting Type" fullWidth row {...props}>
-            {radioOptions}
-          </RadioField>
+        ) : null}
+        {partnership && (
+          <>
+            <SecuredField obj={partnership} name="agreementStatus">
+              {(props) => (
+                <AgreementStatusField label="Agreement Status" {...props} />
+              )}
+            </SecuredField>
+            <SecuredField obj={partnership} name="mouStatus">
+              {(props) => (
+                <AgreementStatusField label="Mou Status" {...props} />
+              )}
+            </SecuredField>
+          </>
         )}
-      </SecuredField>
-    ) : (
-      <RadioField
-        name="financialReportingType"
-        label="Financial Reporting Type"
-        fullWidth
-        row
-      >
-        {radioOptions}
-      </RadioField>
-    )
-  ) : null;
-};
+      </>
+    )}
+  </DialogForm>
+);
+
+const AgreementStatusField = (
+  props: Omit<EnumFieldProps<PartnershipAgreementStatus, false>, 'children'>
+) => (
+  <EnumField
+    {...props}
+    options={PartnershipAgreementStatusList}
+    getLabel={displayPartnershipStatus}
+  />
+);
