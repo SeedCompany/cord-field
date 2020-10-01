@@ -53,18 +53,24 @@ fragment ProjectOverview on Project {
   partnerships {
     ...PartnershipSummary
   }
-  engagements {
-    canRead
-    canCreate
-    total
-    items {
-      ... on LanguageEngagement {
-        __typename
-        ...LanguageEngagementListItem
-      }
-      ... on InternshipEngagement {
-        __typename
-        ...InternshipEngagementListItem
+}
+
+query ProjectEngagementListOverview($input: ID!) {
+  project(id: $input) {
+    id
+    engagements {
+      canRead
+      canCreate
+      total
+      items {
+        ... on LanguageEngagement {
+          __typename
+          ...LanguageEngagementListItem
+        }
+        ... on InternshipEngagement {
+          __typename
+          ...InternshipEngagementListItem
+        }
       }
     }
   }
