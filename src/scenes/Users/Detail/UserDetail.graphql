@@ -37,5 +37,10 @@ fragment userDetails on User {
       ...OrganizationListItem
     }
   }
+  roles {
+    canEdit
+    canRead
+    value
+  }
   createdAt
 }
