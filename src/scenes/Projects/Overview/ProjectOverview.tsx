@@ -218,6 +218,20 @@ export const ProjectOverview: FC = () => {
               </Grid>
             </Tooltip>
           )}
+          {projectOverviewData?.project.__typename === 'InternshipProject' && (
+            <Grid item>
+              <DisplaySimpleProperty
+                loading={!engagementListData}
+                label="Total Interns"
+                value={formatNumber(
+                  engagementListData?.project.engagements.total
+                )} // formats to string
+                loadingWidth={100}
+                LabelProps={{ color: 'textSecondary' }}
+                ValueProps={{ color: 'textPrimary' }}
+              />
+            </Grid>
+          )}
           <Grid container spacing={1} alignItems="center">
             <Grid item>
               <DataButton
