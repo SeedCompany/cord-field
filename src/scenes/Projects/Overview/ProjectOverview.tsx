@@ -97,7 +97,7 @@ export const ProjectOverview: FC = () => {
 
   const [createEngagementState, createEngagement] = useDialog();
 
-  const { data, error } = useProjectOverviewQuery({
+  const { data: projectOverviewData, error } = useProjectOverviewQuery({
     variables: {
       input: projectId,
     },
@@ -109,8 +109,8 @@ export const ProjectOverview: FC = () => {
     },
   });
 
-  const engagementTypeLabel = data?.project.__typename
-    ? data.project.__typename === 'TranslationProject'
+  const engagementTypeLabel = projectOverviewData?.project.__typename
+    ? projectOverviewData.project.__typename === 'TranslationProject'
       ? 'Language'
       : 'Intern'
     : null;
@@ -124,12 +124,15 @@ export const ProjectOverview: FC = () => {
       0
     ) || undefined;
 
-  const date = data
-    ? securedDateRange(data.project.mouStart, data.project.mouEnd)
+  const date = projectOverviewData
+    ? securedDateRange(
+        projectOverviewData.project.mouStart,
+        projectOverviewData.project.mouEnd
+      )
     : undefined;
 
   const CreateEngagement =
-    data?.project.__typename === 'TranslationProject'
+    projectOverviewData?.project.__typename === 'TranslationProject'
       ? CreateLanguageEngagement
       : CreateInternshipEngagement;
 
@@ -141,9 +144,9 @@ export const ProjectOverview: FC = () => {
         <div className={classes.main}>
           <header className={classes.header}>
             <Typography variant="h2" className={classes.name}>
-              {data ? (
-                data.project.name.canRead ? (
-                  data.project.name.value
+              {projectOverviewData ? (
+                projectOverviewData.project.name.canRead ? (
+                  projectOverviewData.project.name.value
                 ) : (
                   <Redacted
                     info="You do not have permission to view project's name"
@@ -154,7 +157,7 @@ export const ProjectOverview: FC = () => {
                 <Skeleton width="50%" />
               )}
             </Typography>
-            {data?.project.name.canEdit && (
+            {projectOverviewData?.project.name.canEdit && (
               <Fab
                 color="primary"
                 aria-label="edit project name"
@@ -167,11 +170,15 @@ export const ProjectOverview: FC = () => {
 
           <div className={classes.subheader}>
             <Typography variant="h4">
-              {data ? 'Project Overview' : <Skeleton width={200} />}
+              {projectOverviewData ? (
+                'Project Overview'
+              ) : (
+                <Skeleton width={200} />
+              )}
             </Typography>
-            {data && (
+            {projectOverviewData && (
               <Typography variant="body2" color="textSecondary">
-                Updated {formatDateTime(data.project.modifiedAt)}
+                Updated {formatDateTime(projectOverviewData.project.modifiedAt)}
               </Typography>
             )}
           </div>
@@ -179,9 +186,9 @@ export const ProjectOverview: FC = () => {
           <Grid container spacing={1}>
             <Grid item>
               <DisplaySimpleProperty
-                loading={!data}
+                loading={!projectOverviewData}
                 label="Project ID"
-                value={data?.project.id}
+                value={projectOverviewData?.project.id}
                 loadingWidth={100}
                 LabelProps={{ color: 'textSecondary' }}
                 ValueProps={{ color: 'textPrimary' }}
@@ -189,9 +196,9 @@ export const ProjectOverview: FC = () => {
             </Grid>
             <Grid item>
               <DisplaySimpleProperty
-                loading={!data}
+                loading={!projectOverviewData}
                 label="Department ID"
-                value={data?.project.departmentId.value}
+                value={projectOverviewData?.project.departmentId.value}
                 loadingWidth={100}
                 LabelProps={{ color: 'textSecondary' }}
                 ValueProps={{ color: 'textPrimary' }}
@@ -208,7 +215,9 @@ export const ProjectOverview: FC = () => {
               <Grid item>
                 <Tooltip
                   title={
-                    data ? 'Total population of all languages engaged' : ''
+                    projectOverviewData
+                      ? 'Total population of all languages engaged'
+                      : ''
                   }
                 >
                   {node}
@@ -220,8 +229,8 @@ export const ProjectOverview: FC = () => {
           <Grid container spacing={1} alignItems="center">
             <Grid item>
               <DataButton
-                loading={!data}
-                secured={data?.project.location}
+                loading={!projectOverviewData}
+                secured={projectOverviewData?.project.location}
                 empty="Enter Location"
                 redacted="You do not have permission to view location"
                 children={displayLocation}
@@ -229,7 +238,7 @@ export const ProjectOverview: FC = () => {
             </Grid>
             <Grid item>
               <DataButton
-                loading={!data}
+                loading={!projectOverviewData}
                 startIcon={<DateRange className={classes.infoColor} />}
                 secured={date}
                 redacted="You do not have permission to view start/end dates"
@@ -240,12 +249,12 @@ export const ProjectOverview: FC = () => {
             </Grid>
             <Grid item>
               <DataButton
-                loading={!data}
-                secured={data?.project.step}
+                loading={!projectOverviewData}
+                secured={projectOverviewData?.project.step}
                 redacted="You do not have permission to view project step"
                 onClick={() => editField('step')}
               >
-                {displayProjectStep(data?.project.step.value)}
+                {displayProjectStep(projectOverviewData?.project.step.value)}
               </DataButton>
             </Grid>
           </Grid>
@@ -256,7 +265,7 @@ export const ProjectOverview: FC = () => {
                 <span {...getRootProps()}>
                   <input {...getInputProps()} />
                   <Fab
-                    loading={!data}
+                    loading={!projectOverviewData}
                     onClick={openFileBrowser}
                     color="primary"
                     aria-label="Upload Files"
@@ -267,33 +276,41 @@ export const ProjectOverview: FC = () => {
               </Grid>
               <Grid item>
                 <Typography variant="h4">
-                  {data ? 'Upload Files' : <Skeleton width="12ch" />}
+                  {projectOverviewData ? (
+                    'Upload Files'
+                  ) : (
+                    <Skeleton width="12ch" />
+                  )}
                 </Typography>
               </Grid>
             </Grid>
           )}
           <div className={classes.container}>
             <BudgetOverviewCard
-              budget={data?.project.budget.value}
+              budget={projectOverviewData?.project.budget.value}
               className={classes.budgetOverviewCard}
-              loading={!data}
+              loading={!projectOverviewData}
             />
             {/* TODO When file api is finished need to update query and pass in file information */}
             <FilesOverviewCard
-              loading={!data}
+              loading={!projectOverviewData}
               total={undefined}
               redacted={canReadDirectoryId === true}
             />
           </div>
           <CardGroup>
-            <ProjectMembersSummary members={data?.project.team} />
-            <PartnershipSummary partnerships={data?.project.partnerships} />
+            <ProjectMembersSummary
+              members={projectOverviewData?.project.team}
+            />
+            <PartnershipSummary
+              partnerships={projectOverviewData?.project.partnerships}
+            />
           </CardGroup>
 
           <Grid container spacing={2} alignItems="center">
             <Grid item>
               <Typography variant="h3">
-                {engagementListData ? (
+                {projectOverviewData && engagementListData ? (
                   !engagementListData.project.engagements.canRead ? (
                     <Redacted
                       info="You do not have permission to view engagements"
@@ -303,7 +320,7 @@ export const ProjectOverview: FC = () => {
                     `${engagementListData.project.engagements.total} ${engagementTypeLabel} Engagements`
                   )
                 ) : (
-                  <Skeleton width="40%" />
+                  <Skeleton width={400} />
                 )}
               </Typography>
             </Grid>
@@ -338,10 +355,10 @@ export const ProjectOverview: FC = () => {
           )}
         </div>
       )}
-      {data ? (
+      {projectOverviewData ? (
         <UpdateProjectDialog
           {...editState}
-          project={data.project}
+          project={projectOverviewData.project}
           editFields={fieldsBeingEdited}
         />
       ) : null}
