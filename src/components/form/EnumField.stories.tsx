@@ -69,6 +69,7 @@ const EnumStory = ({
                 ],
                 'toggle-split'
               )}
+              layout={select('layout', ['row', 'column'], 'row')}
               label={text('label', props.multiple ? 'Colors' : 'Color')}
               helperText={
                 props.multiple ? 'Choose some colors' : 'Choose a color'

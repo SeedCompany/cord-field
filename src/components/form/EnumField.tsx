@@ -54,6 +54,7 @@ export type EnumFieldProps<
   label?: ReactNode;
   helperText?: ReactNode;
   disabled?: boolean;
+  layout?: 'row' | 'column';
 } & Except<FieldConfig<EnumVal<T, Multiple>>, 'multiple' | 'type'> &
   MergeExclusive<
     { children: ReactNode },
@@ -91,6 +92,7 @@ export const EnumField = <
     name: nameProp,
     label,
     helperText,
+    layout = 'row',
     options,
     getLabel,
     children: childrenProp,
@@ -228,18 +230,20 @@ export const EnumField = <
             [classes.toggleSplitContainer]: variant === 'toggle-split',
           }),
         }}
+        row={layout === 'row'}
       >
         {children}
       </FormGroup>
     ) : variant === 'toggle-grouped' ? (
       <ToggleButtonGroup
         exclusive={!multiple}
+        orientation={layout === 'row' ? 'horizontal' : 'vertical'}
         className={classes.toggleGroupedContainer}
       >
         {children}
       </ToggleButtonGroup>
     ) : variant === 'radio' ? (
-      <RadioGroup>{children}</RadioGroup>
+      <RadioGroup row={layout === 'row'}>{children}</RadioGroup>
     ) : null;
 
   return (
