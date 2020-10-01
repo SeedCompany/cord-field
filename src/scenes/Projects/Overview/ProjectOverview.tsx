@@ -28,7 +28,10 @@ import { CreateInternshipEngagement } from '../../Engagement/InternshipEngagemen
 import { CreateLanguageEngagement } from '../../Engagement/LanguageEngagement/Create/CreateLanguageEngagement';
 import { useProjectCurrentDirectory, useUploadProjectFiles } from '../Files';
 import { EditableProjectField, UpdateProjectDialog } from '../Update';
-import { useProjectOverviewQuery } from './ProjectOverview.generated';
+import {
+  useProjectEngagementListOverviewQuery,
+  useProjectOverviewQuery,
+} from './ProjectOverview.generated';
 
 const useStyles = makeStyles(({ spacing, breakpoints, palette }) => ({
   root: {
@@ -100,6 +103,12 @@ export const ProjectOverview: FC = () => {
     },
   });
 
+  const { data: engagementListData } = useProjectEngagementListOverviewQuery({
+    variables: {
+      input: projectId,
+    },
+  });
+
   const engagementTypeLabel = data?.project.__typename
     ? data.project.__typename === 'TranslationProject'
       ? 'Language'
@@ -107,7 +116,7 @@ export const ProjectOverview: FC = () => {
     : null;
 
   const populationTotal =
-    data?.project.engagements.items.reduce(
+    engagementListData?.project.engagements.items.reduce(
       (total, item) =>
         item.__typename === 'LanguageEngagement'
           ? total + (item.language.value?.population.value ?? 0)
@@ -190,7 +199,6 @@ export const ProjectOverview: FC = () => {
             </Grid>
           </Grid>
           <DisplaySimpleProperty
-            loading={!data}
             label="Population Total"
             value={formatNumber(populationTotal)}
             loadingWidth={100}
@@ -285,14 +293,14 @@ export const ProjectOverview: FC = () => {
           <Grid container spacing={2} alignItems="center">
             <Grid item>
               <Typography variant="h3">
-                {data ? (
-                  !data.project.engagements.canRead ? (
+                {engagementListData ? (
+                  !engagementListData.project.engagements.canRead ? (
                     <Redacted
                       info="You do not have permission to view engagements"
                       width="50%"
                     />
                   ) : (
-                    `${data.project.engagements.total} ${engagementTypeLabel} Engagements`
+                    `${engagementListData.project.engagements.total} ${engagementTypeLabel} Engagements`
                   )
                 ) : (
                   <Skeleton width="40%" />
@@ -300,7 +308,7 @@ export const ProjectOverview: FC = () => {
               </Typography>
             </Grid>
             <Grid item>
-              {data?.project.engagements.canCreate && (
+              {engagementListData?.project.engagements.canCreate && (
                 <Tooltip title={`Add ${engagementTypeLabel} Engagement`}>
                   <Fab
                     color="error"
@@ -313,7 +321,7 @@ export const ProjectOverview: FC = () => {
               )}
             </Grid>
           </Grid>
-          {data?.project.engagements.items.map((engagement) =>
+          {engagementListData?.project.engagements.items.map((engagement) =>
             engagement.__typename === 'LanguageEngagement' ? (
               <LanguageEngagementListItemCard
                 key={engagement.id}
