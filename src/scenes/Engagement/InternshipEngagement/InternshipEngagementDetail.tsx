@@ -6,7 +6,6 @@ import {
   displayInternPosition,
   securedDateRange,
 } from '../../../api';
-import { displayLocation } from '../../../api/location-helper';
 import { Breadcrumb } from '../../../components/Breadcrumb';
 import { DataButton } from '../../../components/DataButton';
 import { useDialog } from '../../../components/Dialog';
@@ -134,8 +133,8 @@ export const InternshipEngagementDetail: FC<EngagementQuery> = ({
               secured={engagement.countryOfOrigin}
               empty="Enter Country of Origin"
               redacted="You do not have permission to view country of origin"
-              children={displayLocation}
               onClick={() => show('countryOfOriginId')}
+              children={engagement.countryOfOrigin.value?.name.value}
             />
           </Grid>
           <Grid item>

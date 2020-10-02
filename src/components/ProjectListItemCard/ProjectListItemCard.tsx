@@ -10,7 +10,6 @@ import clsx from 'clsx';
 import { FC } from 'react';
 import * as React from 'react';
 import { displayStatus } from '../../api';
-import { displayLocation } from '../../api/location-helper';
 import { DisplaySimpleProperty } from '../DisplaySimpleProperty';
 import { useDateFormatter } from '../Formatters';
 import { Picture, useRandomPicture } from '../Picture';
@@ -76,7 +75,7 @@ export const ProjectListItemCard: FC<ProjectListItemCardProps> = ({
 }) => {
   const classes = useStyles();
   const pic = useRandomPicture({ seed: project?.id, width: 300, height: 200 });
-  const location = displayLocation(project?.location.value);
+  const location = project?.primaryLocation.value?.name.value;
   const formatDate = useDateFormatter();
 
   return (

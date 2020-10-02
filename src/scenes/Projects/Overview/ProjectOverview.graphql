@@ -17,7 +17,7 @@ fragment ProjectOverview on Project {
     canEdit
     value
   }
-  location {
+  primaryLocation {
     canRead
     canEdit
     value {

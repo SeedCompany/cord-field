@@ -13,9 +13,9 @@ fragment ProjectListItem on Project {
     value
   }
   status
-  location {
+  primaryLocation {
     value {
-      ...DisplayCountry
+      ...DisplayLocation
     }
   }
   estimatedSubmission {

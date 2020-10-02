@@ -5,7 +5,6 @@ import React, { FC } from 'react';
 import { useDropzone } from 'react-dropzone';
 import { useParams } from 'react-router-dom';
 import { displayProjectStep, securedDateRange } from '../../../api';
-import { displayLocation } from '../../../api/location-helper';
 import { BudgetOverviewCard } from '../../../components/BudgetOverviewCard';
 import { CardGroup } from '../../../components/CardGroup';
 import { DataButton } from '../../../components/DataButton';
@@ -236,10 +235,12 @@ export const ProjectOverview: FC = () => {
             <Grid item>
               <DataButton
                 loading={!projectOverviewData}
-                secured={projectOverviewData?.project.location}
+                secured={projectOverviewData?.project.primaryLocation}
                 empty="Enter Location"
                 redacted="You do not have permission to view location"
-                children={displayLocation}
+                children={
+                  projectOverviewData?.project.primaryLocation.value?.name.value
+                }
               />
             </Grid>
             <Grid item>

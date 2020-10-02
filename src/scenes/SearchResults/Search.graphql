@@ -11,9 +11,47 @@ fragment SearchResultItem on SearchResult {
   ...LanguageListItem
   ...OrganizationListItem
   ...UserListItem
-  ...DisplayLocation
+  ...LocationSearchResultItem
   ...FilmLookupItem
   ...StoryLookupItem
   ...LiteracyMaterialLookupItem
   ...SongLookupItem
+}
+
+# We have to inline this because the fragment we would usually
+# insert here has a `type` field that conflicts with a field of the
+# same name on the `Project` type, so we need to use an alias.
+
+fragment LocationSearchResultItem on Location {
+  id
+  createdAt
+  name {
+    ...securedString
+  }
+  locationType: type {
+    canRead
+    canEdit
+    value
+  }
+  sensitivity
+  iso31663 {
+    ...securedString
+  }
+  geographyName {
+    ...securedString
+  }
+  fundingAccount {
+    canRead
+    canEdit
+    value {
+      id
+      createdAt
+      name {
+        ...securedString
+      }
+      accountNumber {
+        ...securedInt
+      }
+    }
+  }
 }

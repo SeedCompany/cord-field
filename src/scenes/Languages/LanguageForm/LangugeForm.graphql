@@ -1,13 +1,13 @@
 fragment LanguageForm on Language {
   id
   name {
-    ...ss
+    ...securedString
   }
   displayName {
-    ...ss
+    ...securedString
   }
   displayNamePronunciation {
-    ...ss
+    ...securedString
   }
   isDialect {
     ...securedBool
@@ -16,17 +16,17 @@ fragment LanguageForm on Language {
     ...securedBool
   }
   signLanguageCode {
-    ...ss
+    ...securedString
   }
   ethnologue {
     name {
-      ...ss
+      ...securedString
     }
     code {
-      ...ss
+      ...securedString
     }
     provisionalCode {
-      ...ss
+      ...securedString
     }
     population {
       value
@@ -40,13 +40,13 @@ fragment LanguageForm on Language {
     canEdit
   }
   registryOfDialectsCode {
-    ...ss
+    ...securedString
   }
   leastOfThese {
     ...securedBool
   }
   leastOfTheseReason {
-    ...ss
+    ...securedString
   }
   sensitivity
   sponsorEstimatedEndDate {
@@ -59,16 +59,4 @@ fragment LanguageForm on Language {
     canEdit
     value
   }
-}
-
-fragment ss on SecuredString {
-  value
-  canRead
-  canEdit
-}
-
-fragment securedBool on SecuredBoolean {
-  value
-  canRead
-  canEdit
 }

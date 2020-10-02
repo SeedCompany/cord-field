@@ -1,42 +1,45 @@
 fragment DisplayLocation on Location {
-  ... on Country {
-    ...DisplayCountry
-  }
-  ... on Region {
-    ...DisplayRegion
-  }
-  ... on Zone {
-    ...DisplayZone
-  }
-}
-
-fragment DisplayCountry on Country {
   id
-  ...DisplayPlace
-  region {
-    value {
-      ...DisplayRegion
-    }
-  }
-}
-
-fragment DisplayRegion on Region {
-  id
-  ...DisplayPlace
-  zone {
-    value {
-      ...DisplayPlace
-    }
-  }
-}
-
-fragment DisplayZone on Zone {
-  id
-  ...DisplayPlace
-}
-
-fragment DisplayPlace on Place {
   name {
-    value
+    ...securedString
+  }
+}
+
+fragment DisplayFieldRegion on FieldRegion {
+  id
+  createdAt
+  name {
+    ...securedString
+  }
+  director {
+    canRead
+    canEdit
+    value {
+      id
+      fullName
+    }
+  }
+  fieldZone {
+    canRead
+    canEdit
+    value {
+      ...DisplayFieldZone
+    }
+  }
+}
+
+fragment DisplayFieldZone on FieldZone {
+  id
+  createdAt
+  name {
+    ...securedString
+  }
+  director {
+    canRead
+    canEdit
+    value {
+      id
+      fullName
+    }
   }
 }

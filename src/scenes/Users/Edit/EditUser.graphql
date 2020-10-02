@@ -1,7 +1,7 @@
 mutation UpdateUser($input: UpdateUserInput!) {
   updateUser(input: $input) {
     user {
-      ...userDetails
+      ...DisplayUser
       ...UserForm
     }
   }

@@ -1,0 +1,17 @@
+fragment securedString on SecuredString {
+  canRead
+  canEdit
+  value
+}
+
+fragment securedInt on SecuredInt {
+  canRead
+  canEdit
+  value
+}
+
+fragment securedBool on SecuredBoolean {
+  canRead
+  canEdit
+  value
+}
