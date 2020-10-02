@@ -1,34 +1,7 @@
 fragment DisplayLocation on Location {
   id
-  createdAt
   name {
     ...securedString
-  }
-  type {
-    canRead
-    canEdit
-    value
-  }
-  sensitivity
-  iso31663 {
-    ...securedString
-  }
-  geographyName {
-    ...securedString
-  }
-  fundingAccount {
-    canRead
-    canEdit
-    value {
-      id
-      createdAt
-      name {
-        ...securedString
-      }
-      accountNumber {
-        ...securedInt
-      }
-    }
   }
 }
 
