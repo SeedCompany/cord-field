@@ -26,7 +26,7 @@ import { useUpdateProjectMutation } from './UpdateProject.generated';
 export type EditableProjectField = ExtractStrict<
   keyof UpdateProject,
   // Add more fields here as needed
-  'name' | 'step' | 'mouStart' | 'mouEnd'
+  'name' | 'step' | 'mouStart' | 'mouEnd' | 'estimatedSubmission'
 >;
 
 interface ProjectFieldProps {
@@ -43,6 +43,9 @@ const fieldMapping: Record<
   name: ({ props }) => <TextField {...props} label="Project Name" />,
   mouStart: ({ props }) => <DateField {...props} label="Start Date" />,
   mouEnd: ({ props }) => <DateField {...props} label="End Date" />,
+  estimatedSubmission: ({ props }) => (
+    <DateField {...props} label="Estimated Submission Date" />
+  ),
   step: ({ props }) => (
     <AutocompleteField
       label="Step"
@@ -85,6 +88,7 @@ export const UpdateProjectDialog = ({
       step: project.step.value,
       mouStart: project.mouStart.value,
       mouEnd: project.mouEnd.value,
+      estimatedSubmission: project.estimatedSubmission.value,
     };
 
     // Filter out irrelevant initial values so they don't get added to the mutation
@@ -106,6 +110,7 @@ export const UpdateProjectDialog = ({
     project.mouEnd.value,
     project.mouStart.value,
     project.step.value,
+    project.estimatedSubmission.value,
   ]);
 
   return (
