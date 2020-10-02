@@ -1,0 +1,51 @@
+fragment DisplayUser on User {
+  id
+  createdAt
+  email {
+    ...securedString
+  }
+  realFirstName {
+    ...securedString
+  }
+  realLastName {
+    ...securedString
+  }
+  displayFirstName {
+    ...securedString
+  }
+  displayLastName {
+    ...securedString
+  }
+  phone {
+    ...securedString
+  }
+  about {
+    ...securedString
+  }
+  organizations {
+    items {
+      id
+      ...OrganizationListItem
+    }
+  }
+  roles {
+    canEdit
+    canRead
+    value
+  }
+  title {
+    ...securedString
+  }
+  fullName
+  timezone {
+    canRead
+    canEdit
+    value {
+      name
+      countries {
+        code
+        name
+      }
+    }
+  }
+}
