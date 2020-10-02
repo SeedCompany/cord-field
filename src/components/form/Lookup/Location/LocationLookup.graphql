@@ -1,23 +1,7 @@
-query CountryLookup($query: String!) {
-  search(input: { query: $query, type: [Country] }) {
+query LocationLookup($query: String!) {
+  search(input: { query: $query, type: [Location] }) {
     items {
-      ...DisplayCountry
-    }
-  }
-}
-
-query RegionLookup($query: String!) {
-  search(input: { query: $query, type: [Region] }) {
-    items {
-      ...DisplayRegion
-    }
-  }
-}
-
-query ZoneLookup($query: String!) {
-  search(input: { query: $query, type: [Zone] }) {
-    items {
-      ...DisplayZone
+      ...DisplayLocation
     }
   }
 }

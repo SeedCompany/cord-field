@@ -41,7 +41,7 @@ fragment Producible on Producible {
   createdAt
   ... on Film {
     name {
-      ...ss
+      ...securedString
     }
     scriptureReferences {
       ...SecuredScriptureRanges
@@ -49,7 +49,7 @@ fragment Producible on Producible {
   }
   ... on LiteracyMaterial {
     name {
-      ...ss
+      ...securedString
     }
     scriptureReferences {
       ...SecuredScriptureRanges
@@ -57,7 +57,7 @@ fragment Producible on Producible {
   }
   ... on Story {
     name {
-      ...ss
+      ...securedString
     }
     scriptureReferences {
       ...SecuredScriptureRanges
@@ -65,7 +65,7 @@ fragment Producible on Producible {
   }
   ... on Song {
     name {
-      ...ss
+      ...securedString
     }
     scriptureReferences {
       ...SecuredScriptureRanges

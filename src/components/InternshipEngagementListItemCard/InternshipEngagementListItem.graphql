@@ -8,7 +8,13 @@ fragment InternshipEngagementListItem on InternshipEngagement {
   }
   countryOfOrigin {
     value {
-      ...DisplayCountry
+      id
+      name {
+        value
+      }
+      geographyName {
+        value
+      }
     }
   }
   position {

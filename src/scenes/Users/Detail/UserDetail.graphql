@@ -1,46 +1,6 @@
 query User($userId: ID!) {
   user(id: $userId) {
-    ...userDetails
+    ...DisplayUser
     ...UserForm
   }
-}
-
-fragment userDetails on User {
-  id
-  email {
-    ...ss
-  }
-  fullName
-  about {
-    ...ss
-  }
-  phone {
-    ...ss
-  }
-  title {
-    ...ss
-  }
-  timezone {
-    value {
-      name
-      countries {
-        code
-        name
-      }
-    }
-    canRead
-    canEdit
-  }
-  organizations {
-    items {
-      id
-      ...OrganizationListItem
-    }
-  }
-  roles {
-    canEdit
-    canRead
-    value
-  }
-  createdAt
 }
