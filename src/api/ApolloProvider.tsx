@@ -1,11 +1,12 @@
 import {
   ApolloClient,
+  ApolloLink,
   ApolloProvider as BaseApolloProvider,
-  concat,
   HttpLink,
   InMemoryCache,
   NormalizedCacheObject,
   Observable,
+  RequestHandler,
 } from '@apollo/client';
 import {
   onError as createErrorLink,
@@ -13,14 +14,23 @@ import {
 } from '@apollo/client/link/error';
 import { IconButton } from '@material-ui/core';
 import { Close } from '@material-ui/icons';
+import { compact } from 'lodash';
 import { ProviderContext as Snackbar, useSnackbar } from 'notistack';
 import React, { FC, useRef, useState } from 'react';
 import { SessionDocument } from '../components/Session/session.generated';
+import { sleep } from '../util';
 import { possibleTypes } from './fragmentMatcher.generated';
 import { GQLOperations } from './operations.generated';
 import { typePolicies } from './typePolicies';
 
 const serverHost = process.env.REACT_APP_API_BASE_URL || '';
+
+const API_DEBUG = {
+  delay: 0,
+};
+if (process.env.NODE_ENV !== 'production') {
+  (globalThis as any).API_DEBUG = API_DEBUG;
+}
 
 export const ApolloProvider: FC = ({ children }) => {
   // Client is created only once.
@@ -29,16 +39,30 @@ export const ApolloProvider: FC = ({ children }) => {
       uri: `${serverHost}/graphql`,
       credentials: 'include',
     });
+
     const errorLink = createErrorLink((error) =>
       errorHandlerRef.current?.(error)
     );
+
+    const delayLink: RequestHandler | null =
+      process.env.NODE_ENV === 'production'
+        ? null
+        : (operation, forward) => {
+            const currentDelay = API_DEBUG.delay;
+            if (!currentDelay) {
+              return forward(operation);
+            }
+            return promiseToObservable(sleep(currentDelay)).flatMap(() =>
+              forward(operation)
+            );
+          };
 
     return new ApolloClient({
       cache: new InMemoryCache({
         possibleTypes,
         typePolicies,
       }),
-      link: concat(errorLink, httpLink),
+      link: ApolloLink.from(compact([errorLink, delayLink, httpLink])),
     });
   });
 
