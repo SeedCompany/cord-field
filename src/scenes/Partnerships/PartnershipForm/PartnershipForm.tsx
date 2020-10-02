@@ -24,7 +24,9 @@ import { CreatePartnershipFormInput } from '../Create';
 import { EditPartnershipFormInput } from '../Edit';
 import { PartnershipFormFragment } from './PartnershipForm.generated';
 
-export type PartnershipFormProps<T> = DialogFormProps<T> & {
+export type PartnershipFormProps<
+  T extends Partial<CreatePartnershipFormInput | EditPartnershipFormInput>
+> = DialogFormProps<T> & {
   partnership?: PartnershipFormFragment;
 };
 
@@ -32,7 +34,7 @@ export const hasManagingType = (types: Nullable<readonly PartnershipType[]>) =>
   types?.includes('Managing') ?? false;
 
 export const PartnershipForm = <
-  T extends CreatePartnershipFormInput | EditPartnershipFormInput
+  T extends Partial<CreatePartnershipFormInput | EditPartnershipFormInput>
 >({
   partnership,
   ...rest
@@ -53,7 +55,7 @@ export const PartnershipForm = <
             />
           )}
         </SecuredField>
-        {hasManagingType(values.partnership.types) ? (
+        {hasManagingType(values.partnership?.types) ? (
           <SecuredField obj={partnership} name="financialReportingType">
             {(props) => (
               <EnumField
