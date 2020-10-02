@@ -10,7 +10,7 @@ import {
   UpdateInternshipEngagement,
   UpdateLanguageEngagement,
 } from '../../../api';
-import { DisplayCountryFragment } from '../../../api/fragments/location.generated';
+import { DisplayLocationFragment } from '../../../api/fragments/location.generated';
 import {
   DialogForm,
   DialogFormProps,
@@ -27,7 +27,7 @@ import {
   TextField,
 } from '../../../components/form';
 import { AutocompleteField } from '../../../components/form/AutocompleteField';
-import { CountryField, UserField } from '../../../components/form/Lookup';
+import { LocationField, UserField } from '../../../components/form/Lookup';
 import { UserLookupItemFragment } from '../../../components/form/Lookup/User/UserLookup.generated';
 import { ExtractStrict, many, Many } from '../../../util';
 import { InternshipEngagementDetailFragment as InternshipEngagement } from '../InternshipEngagement/InternshipEngagement.generated';
@@ -117,7 +117,7 @@ const fieldMapping: Record<
     </RadioField>
   ),
   countryOfOriginId: ({ props }) => (
-    <CountryField {...props} label="Country of Origin" />
+    <LocationField {...props} label="Country of Origin" />
   ),
   mentorId: ({ props }) => <UserField {...props} label="Mentor" />,
   firstScripture: ({ props }) => (
@@ -147,7 +147,7 @@ interface EngagementFormValues {
     UpdateLanguageEngagement & UpdateInternshipEngagement,
     {
       mentorId?: UserLookupItemFragment | null;
-      countryOfOriginId?: DisplayCountryFragment | null;
+      countryOfOriginId?: DisplayLocationFragment | null;
     }
   >;
 }

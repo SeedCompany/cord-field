@@ -12,9 +12,6 @@ fragment InternshipEngagementListItem on InternshipEngagement {
       name {
         value
       }
-      geographyName {
-        value
-      }
     }
   }
   position {

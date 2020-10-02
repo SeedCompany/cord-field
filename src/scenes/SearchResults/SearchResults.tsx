@@ -47,9 +47,7 @@ export const SearchResults: FC = () => {
         return <OrganizationListItemCard key={item.id} organization={item} />;
       case 'User':
         return <UserListItemCardLandscape key={item.id} user={item} />;
-      case 'Country':
-      case 'Region':
-      case 'Zone':
+      case 'Location':
       case 'Film':
       case 'Story':
       case 'LiteracyMaterial':

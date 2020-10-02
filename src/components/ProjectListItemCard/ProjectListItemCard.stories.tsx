@@ -31,25 +31,14 @@ export const ProjectListItemCard = () => {
       ),
     },
     name: { value: text('name', 'Project A') },
-    location: {
+    primaryLocation: {
       value: {
-        __typename: 'Country',
+        __typename: 'Location',
         id: '123',
-        name: { value: text('location', 'Texas') },
-        region: {
-          value: {
-            id: '123',
-            name: {
-              value: text('region', 'United States'),
-            },
-            zone: {
-              value: {
-                name: {
-                  value: text('zone', 'Americas'),
-                },
-              },
-            },
-          },
+        name: {
+          canRead: true,
+          canEdit: true,
+          value: text('location', 'Texas'),
         },
       },
     },

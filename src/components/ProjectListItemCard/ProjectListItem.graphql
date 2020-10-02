@@ -15,7 +15,12 @@ fragment ProjectListItem on Project {
   status
   primaryLocation {
     value {
-      ...DisplayLocation
+      id
+      name {
+        canRead
+        canEdit
+        value
+      }
     }
   }
   estimatedSubmission {
