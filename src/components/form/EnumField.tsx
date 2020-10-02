@@ -179,15 +179,18 @@ export const EnumField = <
         const current = value as Set<T>;
         return optionVal ? current.has(optionVal) : current.size === 0;
       }
-      return value === (optionVal ?? null);
+      if (!optionVal || optionVal === (defaultValue as T | null)) {
+        return value === defaultValue;
+      }
+      return value === optionVal;
     },
-    [multiple, value]
+    [multiple, value, defaultValue]
   );
 
   const onOptionChange = useCallback(
     (optionVal: T | undefined, checked: boolean) => {
       if (!optionVal) {
-        onChange(multiple ? [] : null);
+        onChange(defaultValue);
         return;
       }
       if (!multiple) {
@@ -196,7 +199,7 @@ export const EnumField = <
         } else if (props.required) {
           return; // do nothing
         } else {
-          onChange(undefined);
+          onChange(defaultValue);
         }
         return;
       }
@@ -210,9 +213,9 @@ export const EnumField = <
           return; // don't allow last option to be unchecked
         }
       }
-      onChange([...newVal]);
+      onChange(newVal.size === 0 ? defaultValue : [...newVal]);
     },
-    [multiple, onChange, props.required, value]
+    [multiple, onChange, props.required, value, defaultValue]
   );
 
   const context = useMemo(
