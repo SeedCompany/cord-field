@@ -54,7 +54,14 @@ export const ProfileMenu = (props: Partial<MenuProps>) => {
         </Typography>
         <Divider {...skipAutoFocus} />
         <MenuItemLink to="/logout">Sign Out</MenuItemLink>
-        <MenuItem onClick={changePassword}>Change Password</MenuItem>
+        <MenuItem
+          onClick={(event) => {
+            changePassword();
+            props.onClose?.(event, 'backdropClick');
+          }}
+        >
+          Change Password
+        </MenuItem>
       </Menu>
       <ChangePassword {...changePasswordState} />
     </>
