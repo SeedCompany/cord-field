@@ -1,4 +1,4 @@
-import { makeStyles, Typography } from '@material-ui/core';
+import { Grid, makeStyles, Typography } from '@material-ui/core';
 import { Skeleton } from '@material-ui/lab';
 import React, { FC } from 'react';
 import { Partner } from '../../../api';
@@ -6,9 +6,10 @@ import { useNumberFormatter } from '../../../components/Formatters';
 import { ContentContainer } from '../../../components/Layout';
 import { ListContainer } from '../../../components/Layout/ListContainer';
 import { PartnerListItemCard } from '../../../components/PartnerListItemCard';
-import { useSort } from '../../../components/Sort';
+import { SortButtonDialog, useSort } from '../../../components/Sort';
 import { listOrPlaceholders } from '../../../util';
 import { usePartnersQuery } from './PartnerList.generated';
+import { PartnerSortOptions } from './PartnerSortOptions';
 
 const useStyles = makeStyles(({ spacing }) => ({
   options: {
@@ -38,6 +39,13 @@ export const PartnerList: FC = () => {
       <Typography variant="h2" paragraph>
         Partners
       </Typography>
+      <Grid container spacing={1} className={classes.options}>
+        <Grid item>
+          <SortButtonDialog {...sort}>
+            <PartnerSortOptions />
+          </SortButtonDialog>
+        </Grid>
+      </Grid>
       <Typography variant="h3" paragraph>
         {data ? (
           `${formatNumber(data.partners.total)} Partners`
