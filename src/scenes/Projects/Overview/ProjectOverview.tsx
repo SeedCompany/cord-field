@@ -1,6 +1,7 @@
 import { Grid, makeStyles, Tooltip, Typography } from '@material-ui/core';
 import { Add, DateRange, Edit, Publish } from '@material-ui/icons';
 import { Skeleton } from '@material-ui/lab';
+import clsx from 'clsx';
 import React, { FC } from 'react';
 import { useDropzone } from 'react-dropzone';
 import { useParams } from 'react-router-dom';
@@ -50,6 +51,9 @@ const useStyles = makeStyles(({ spacing, breakpoints, palette }) => ({
   },
   name: {
     marginRight: spacing(4),
+  },
+  nameLoading: {
+    width: '60%',
   },
   container: {
     display: 'flex',
@@ -108,6 +112,8 @@ export const ProjectOverview: FC = () => {
     },
   });
 
+  const projectName = projectOverviewData?.project.name;
+
   const engagementTypeLabel = projectOverviewData?.project.__typename
     ? projectOverviewData.project.__typename === 'TranslationProject'
       ? 'Language'
@@ -141,18 +147,22 @@ export const ProjectOverview: FC = () => {
       ) : (
         <div className={classes.main}>
           <header className={classes.header}>
-            <Typography variant="h2" className={classes.name}>
-              {projectOverviewData ? (
-                projectOverviewData.project.name.canRead ? (
-                  projectOverviewData.project.name.value
-                ) : (
-                  <Redacted
-                    info="You do not have permission to view project's name"
-                    width="50%"
-                  />
-                )
+            <Typography
+              variant="h2"
+              className={clsx(
+                classes.name,
+                projectName ? null : classes.nameLoading
+              )}
+            >
+              {!projectName ? (
+                <Skeleton width="100%" />
+              ) : projectName.canRead ? (
+                projectName.value
               ) : (
-                <Skeleton width="50%" />
+                <Redacted
+                  info="You do not have permission to view project's name"
+                  width="50%"
+                />
               )}
             </Typography>
             {projectOverviewData?.project.name.canEdit && (
