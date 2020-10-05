@@ -15,7 +15,7 @@ fragment PartnerLookupItem on Partner {
     canEdit
     value {
       name {
-        ...ss
+        ...securedString
       }
     }
   }

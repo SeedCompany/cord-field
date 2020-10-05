@@ -12,7 +12,7 @@ fragment PartnerDetails on Partner {
     canEdit
     value {
       name {
-        ...ss
+        ...securedString
       }
       avatarLetters
     }
