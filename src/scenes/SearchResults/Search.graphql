@@ -37,9 +37,6 @@ fragment LocationSearchResultItem on Location {
   iso31663 {
     ...securedString
   }
-  geographyName {
-    ...securedString
-  }
   fundingAccount {
     canRead
     canEdit
