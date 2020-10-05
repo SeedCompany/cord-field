@@ -1,7 +1,6 @@
 import { useSnackbar } from 'notistack';
 import React from 'react';
 import { Except } from 'type-fest';
-import { ButtonLink } from '../../../components/Routing';
 import {
   CreateOrganizationMutation,
   useCreateOrganizationMutation,
@@ -25,13 +24,8 @@ export const CreateOrganization = (props: CreateOrganizationProps) => {
   return (
     <CreateOrganizationForm
       onSuccess={(org) =>
-        enqueueSnackbar(`Created partner: ${org.name.value}`, {
+        enqueueSnackbar(`Created organization: ${org.name.value}`, {
           variant: 'success',
-          action: () => (
-            <ButtonLink color="inherit" to={`/organizations/${org.id}`}>
-              View
-            </ButtonLink>
-          ),
         })
       }
       {...props}
