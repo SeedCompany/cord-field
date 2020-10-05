@@ -1,5 +1,6 @@
 import React from 'react';
 import { Except } from 'type-fest';
+import { GQLOperations } from '../../../../api';
 import {
   DialogForm,
   DialogFormProps,
@@ -9,7 +10,6 @@ import {
   LanguageField,
   LanguageLookupItem,
 } from '../../../../components/form/Lookup';
-import { ProjectOverviewDocument as ProjectOverview } from '../../../Projects/Overview/ProjectOverview.generated';
 import { useCreateLanguageEngagementMutation } from './CreateLanguageEngagement.generated';
 
 interface CreateLanguageEngagementFormValues {
@@ -38,10 +38,8 @@ export const CreateLanguageEngagement = ({
         },
       },
       refetchQueries: [
-        {
-          query: ProjectOverview,
-          variables: { input: projectId },
-        },
+        GQLOperations.Query.ProjectOverview,
+        GQLOperations.Query.ProjectEngagementListOverview,
       ],
       awaitRefetchQueries: true,
     });
