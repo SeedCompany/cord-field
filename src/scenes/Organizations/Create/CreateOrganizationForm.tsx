@@ -15,7 +15,7 @@ export const CreateOrganizationForm = <T, R = void>(
     <TextField
       name="organization.name"
       label="Name"
-      placeholder="Enter Organization name"
+      placeholder="Enter organization name"
       required
     />
   </DialogForm>

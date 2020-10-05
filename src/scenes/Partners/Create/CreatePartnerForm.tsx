@@ -16,7 +16,7 @@ export const CreatePartnerForm = <T, R = void>(
     <OrganizationField
       name="orgLookup"
       label="Organization"
-      placeholder="Enter Organization name"
+      placeholder="Enter organization name"
       required
     />
   </DialogForm>
