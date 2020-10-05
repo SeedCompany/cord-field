@@ -16,13 +16,10 @@ import {
   DialogFormProps,
 } from '../../../components/Dialog/DialogForm';
 import {
-  CheckboxesField,
   CheckboxField,
-  CheckboxOption,
   DateField,
+  EnumField,
   FieldGroup,
-  RadioField,
-  RadioOption,
   SubmitError,
   TextField,
 } from '../../../components/form';
@@ -99,22 +96,21 @@ const fieldMapping: Record<
     <DateField {...props} label="Communications Complete Date" />
   ),
   methodologies: ({ props }) => (
-    <CheckboxesField {...props} label="Methodologies">
-      {Object.keys(MethodologyToApproach).map((group) => (
-        <CheckboxOption key={group} label={startCase(group)} value={group} />
-      ))}
-    </CheckboxesField>
+    <EnumField
+      {...props}
+      label="Methodologies"
+      multiple
+      options={Object.keys(MethodologyToApproach)}
+      getLabel={startCase}
+    />
   ),
   position: ({ props }) => (
-    <RadioField {...props} label="Intern Position">
-      {InternshipEngagementPositionList.map((position) => (
-        <RadioOption
-          key={position}
-          label={displayInternPosition(position)}
-          value={position}
-        />
-      ))}
-    </RadioField>
+    <EnumField
+      {...props}
+      label="Intern Position"
+      options={InternshipEngagementPositionList}
+      getLabel={displayInternPosition}
+    />
   ),
   countryOfOriginId: ({ props }) => (
     <LocationField {...props} label="Country of Origin" />

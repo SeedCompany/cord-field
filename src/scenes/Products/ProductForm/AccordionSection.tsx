@@ -28,14 +28,12 @@ import {
 } from '../../../api';
 import { useDialog } from '../../../components/Dialog';
 import {
+  EnumField,
+  EnumOption,
   FieldConfig,
-  RadioField,
-  RadioOption,
   SecuredField,
   SecuredFieldRenderProps,
   SecuredKeys,
-  ToggleButtonOption,
-  ToggleButtonsField,
 } from '../../../components/form';
 import {
   FilmField,
@@ -204,20 +202,15 @@ export const AccordionSection = ({
       >
         {(props) => {
           const productTypeField = (
-            <RadioField
+            <EnumField
               name="productType"
               disabled={isEditing}
+              options={productTypes}
+              getLabel={displayProductTypes}
               defaultValue="DirectScriptureProduct"
-              row
-            >
-              {productTypes.map((option) => (
-                <RadioOption
-                  key={option}
-                  label={displayProductTypes(option)}
-                  value={option}
-                />
-              ))}
-            </RadioField>
+              required
+              variant="toggle-split"
+            />
           );
 
           const ProductField = productType
@@ -309,15 +302,13 @@ export const AccordionSection = ({
         }
       >
         {(props) => (
-          <ToggleButtonsField {...props}>
-            {ProductMediumList.map((option) => (
-              <ToggleButtonOption
-                key={option}
-                label={displayProductMedium(option)}
-                value={option}
-              />
-            ))}
-          </ToggleButtonsField>
+          <EnumField
+            multiple
+            options={ProductMediumList}
+            getLabel={displayProductMedium}
+            variant="toggle-split"
+            {...props}
+          />
         )}
       </SecuredAccordion>
       <SecuredAccordion
@@ -332,15 +323,13 @@ export const AccordionSection = ({
         }
       >
         {(props) => (
-          <ToggleButtonsField {...props}>
-            {ProductPurposeList.map((option) => (
-              <ToggleButtonOption
-                key={option}
-                label={displayProductPurpose(option)}
-                value={option}
-              />
-            ))}
-          </ToggleButtonsField>
+          <EnumField
+            multiple
+            options={ProductPurposeList}
+            getLabel={displayProductPurpose}
+            variant="toggle-split"
+            {...props}
+          />
         )}
       </SecuredAccordion>
       <SecuredAccordion
@@ -355,14 +344,14 @@ export const AccordionSection = ({
         }
       >
         {(props) => (
-          <RadioField {...props} required={false}>
+          <EnumField layout="column" {...props}>
             {entries(ApproachMethodologies).map(([approach, methodologies]) => (
               <div key={approach} className={classes.section}>
                 <Typography className={classes.label}>
                   {displayApproach(approach)}
                 </Typography>
                 {methodologies.map((option) => (
-                  <RadioOption
+                  <EnumOption
                     key={option}
                     label={displayMethodology(option)}
                     value={option}
@@ -370,7 +359,7 @@ export const AccordionSection = ({
                 ))}
               </div>
             ))}
-          </RadioField>
+          </EnumField>
         )}
       </SecuredAccordion>
       {scriptureInitialValues && (
