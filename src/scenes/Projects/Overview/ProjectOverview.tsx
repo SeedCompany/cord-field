@@ -265,8 +265,8 @@ export const ProjectOverview: FC = () => {
               />
             </Grid>
             {projectOverviewData?.project.status === 'InDevelopment' && (
-              <Grid item>
-                <Tooltip title="Estimated Submission to Regional Director">
+              <Tooltip title="Estimated Submission to Regional Director">
+                <Grid item>
                   <DataButton
                     loading={!projectOverviewData}
                     startIcon={<DateRange className={classes.infoColor} />}
@@ -276,8 +276,8 @@ export const ProjectOverview: FC = () => {
                     empty="Estimated Submission"
                     onClick={() => editField(['estimatedSubmission'])}
                   />
-                </Tooltip>
-              </Grid>
+                </Grid>
+              </Tooltip>
             )}
             <Grid item>
               <DataButton
