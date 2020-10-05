@@ -1,7 +1,6 @@
 import { useSnackbar } from 'notistack';
 import React from 'react';
 import { Except } from 'type-fest';
-import { CreateOrganizationInput } from '../../../api';
 import { ButtonLink } from '../../../components/Routing';
 import {
   CreateOrganizationMutation,
@@ -14,7 +13,6 @@ import {
 
 type CreateOrganizationProps = Except<
   CreateOrganizationFormProps<
-    CreateOrganizationInput,
     CreateOrganizationMutation['createOrganization']['organization']
   >,
   'onSubmit'

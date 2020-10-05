@@ -2,7 +2,6 @@ import { useSnackbar } from 'notistack';
 import React from 'react';
 import { Except } from 'type-fest';
 import { GQLOperations } from '../../../api';
-import { OrganizationLookupItem } from '../../../components/form/Lookup';
 import { ButtonLink } from '../../../components/Routing';
 import {
   CreatePartnerMutation,
@@ -10,14 +9,8 @@ import {
 } from './CreatePartner.generated';
 import { CreatePartnerForm, CreatePartnerFormProps } from './CreatePartnerForm';
 
-export interface PartnerFormValues {
-  orgLookup: OrganizationLookupItem;
-}
 type CreatePartnerProps = Except<
-  CreatePartnerFormProps<
-    PartnerFormValues,
-    CreatePartnerMutation['createPartner']['partner']
-  >,
+  CreatePartnerFormProps<CreatePartnerMutation['createPartner']['partner']>,
   'onSubmit'
 >;
 
@@ -29,7 +22,7 @@ export const CreatePartner = (props: CreatePartnerProps) => {
     <CreatePartnerForm
       onSuccess={(partner) =>
         enqueueSnackbar(
-          `Created partner ${partner.organization.value?.name.value}`,
+          `Created partner: ${partner.organization.value?.name.value}`,
           {
             variant: 'success',
             action: () => (

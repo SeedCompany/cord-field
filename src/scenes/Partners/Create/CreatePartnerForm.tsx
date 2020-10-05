@@ -4,12 +4,19 @@ import {
   DialogFormProps,
 } from '../../../components/Dialog/DialogForm';
 import { SubmitError } from '../../../components/form';
-import { OrganizationField } from '../../../components/form/Lookup';
+import {
+  OrganizationField,
+  OrganizationLookupItem,
+} from '../../../components/form/Lookup';
 
-export type CreatePartnerFormProps<T, R = void> = DialogFormProps<T, R>;
+export interface PartnerFormValues {
+  orgLookup: OrganizationLookupItem;
+}
 
-export const CreatePartnerForm = <T, R = void>(
-  props: CreatePartnerFormProps<T, R>
+export type CreatePartnerFormProps<R> = DialogFormProps<PartnerFormValues, R>;
+
+export const CreatePartnerForm = <R extends any>(
+  props: CreatePartnerFormProps<R>
 ) => (
   <DialogForm {...props} title="Create Partner">
     <SubmitError />

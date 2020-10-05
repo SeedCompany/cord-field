@@ -1,14 +1,18 @@
 import React from 'react';
+import { CreateOrganizationInput } from '../../../api';
 import {
   DialogForm,
   DialogFormProps,
 } from '../../../components/Dialog/DialogForm';
 import { SubmitError, TextField } from '../../../components/form';
 
-export type CreateOrganizationFormProps<T, R = void> = DialogFormProps<T, R>;
+export type CreateOrganizationFormProps<R> = DialogFormProps<
+  CreateOrganizationInput,
+  R
+>;
 
-export const CreateOrganizationForm = <T, R = void>(
-  props: CreateOrganizationFormProps<T, R>
+export const CreateOrganizationForm = <R extends any>(
+  props: CreateOrganizationFormProps<R>
 ) => (
   <DialogForm {...props} title="Create Organization">
     <SubmitError />

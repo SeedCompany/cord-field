@@ -18,5 +18,5 @@ export const PartnerField = LookupField.createFor<
   placeholder: 'Search for an partner by name',
   getOptionLabel: (option) => option.organization.value?.name.value,
   CreateDialogForm: CreatePartner,
-  //Can't pass initivalValues because it does not trigger a organization lookup on OrgField
+  // Can't pass initialValues because it does not trigger a organization lookup on OrgField
 });
