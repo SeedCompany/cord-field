@@ -1,15 +1,15 @@
 import { Grid, makeStyles, Typography } from '@material-ui/core';
 import { Skeleton } from '@material-ui/lab';
 import React, { FC } from 'react';
-import { Organization } from '../../../api';
+import { Partner } from '../../../api';
 import { useNumberFormatter } from '../../../components/Formatters';
 import { ContentContainer } from '../../../components/Layout';
 import { ListContainer } from '../../../components/Layout/ListContainer';
-import { OrganizationListItemCard } from '../../../components/OrganizationListItemCard';
+import { PartnerListItemCard } from '../../../components/PartnerListItemCard';
 import { SortButtonDialog, useSort } from '../../../components/Sort';
 import { listOrPlaceholders } from '../../../util';
-import { useOrganizationsQuery } from './Organizations.generated';
-import { OrganizationSortOptions } from './OrganizationSortOptions';
+import { usePartnersQuery } from './PartnerList.generated';
+import { PartnerSortOptions } from './PartnerSortOptions';
 
 const useStyles = makeStyles(({ spacing }) => ({
   options: {
@@ -20,17 +20,17 @@ const useStyles = makeStyles(({ spacing }) => ({
   },
 }));
 
-export const OrganizationList: FC = () => {
+export const PartnerList: FC = () => {
   const formatNumber = useNumberFormatter();
-  const sort = useSort<Organization>();
-  const { data } = useOrganizationsQuery({
+  const sort = useSort<Partner>();
+  const { data } = usePartnersQuery({
     variables: {
       input: {
         ...sort.value,
       },
     },
   });
-  const items = data?.organizations.items;
+  const items = data?.partners.items;
 
   const classes = useStyles();
 
@@ -42,22 +42,22 @@ export const OrganizationList: FC = () => {
       <Grid container spacing={1} className={classes.options}>
         <Grid item>
           <SortButtonDialog {...sort}>
-            <OrganizationSortOptions />
+            <PartnerSortOptions />
           </SortButtonDialog>
         </Grid>
       </Grid>
       <Typography variant="h3" paragraph>
         {data ? (
-          `${formatNumber(data.organizations.total)} Partners`
+          `${formatNumber(data.partners.total)} Partners`
         ) : (
           <Skeleton width="10ch" />
         )}
       </Typography>
       <ListContainer>
         {listOrPlaceholders(items, 15).map((item, index) => (
-          <OrganizationListItemCard
+          <PartnerListItemCard
             key={item?.id ?? index}
-            organization={item}
+            partner={item}
             className={classes.item}
           />
         ))}

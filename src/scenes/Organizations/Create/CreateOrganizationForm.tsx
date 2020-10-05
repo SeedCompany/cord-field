@@ -6,17 +6,20 @@ import {
 } from '../../../components/Dialog/DialogForm';
 import { SubmitError, TextField } from '../../../components/form';
 
-export type CreateOrganizationFormProps = DialogFormProps<
-  CreateOrganizationInput
+export type CreateOrganizationFormProps<R> = DialogFormProps<
+  CreateOrganizationInput,
+  R
 >;
 
-export const CreateOrganizationForm = (props: CreateOrganizationFormProps) => (
-  <DialogForm {...props} title="Create Partner">
+export const CreateOrganizationForm = <R extends any>(
+  props: CreateOrganizationFormProps<R>
+) => (
+  <DialogForm {...props} title="Create Organization">
     <SubmitError />
     <TextField
       name="organization.name"
       label="Name"
-      placeholder="Enter partner name"
+      placeholder="Enter organization name"
       required
     />
   </DialogForm>

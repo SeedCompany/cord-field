@@ -1,0 +1,9 @@
+query Partners($input: PartnerListInput!) {
+  partners(input: $input) {
+    items {
+      ...PartnerListItem
+    }
+    hasMore
+    total
+  }
+}

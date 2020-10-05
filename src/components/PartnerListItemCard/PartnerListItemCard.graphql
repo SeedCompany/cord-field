@@ -1,0 +1,12 @@
+fragment PartnerListItem on Partner {
+  id
+  organization {
+    canRead
+    canEdit
+    value {
+      name {
+        ...securedString
+      }
+    }
+  }
+}

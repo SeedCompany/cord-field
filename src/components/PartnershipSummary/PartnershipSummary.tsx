@@ -22,8 +22,9 @@ export const PartnershipSummary: FC<PartnershipSummaryProps> = ({
   const members = partnerships?.items.map(
     (item): MemberSummaryItem => ({
       id: item.id,
-      label: item.organization.name.value ?? '',
-      avatarLetters: item.organization.avatarLetters ?? '',
+      label: item.partner.value?.organization.value?.name.value ?? '',
+      avatarLetters:
+        item.partner.value?.organization.value?.avatarLetters ?? '',
     })
   );
   const classes = useStyles();

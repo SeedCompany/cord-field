@@ -1,12 +1,9 @@
-import { IconButton, makeStyles, Typography } from '@material-ui/core';
+import { makeStyles, Typography } from '@material-ui/core';
 import { Skeleton } from '@material-ui/lab';
 import clsx from 'clsx';
 import React from 'react';
 import { useParams } from 'react-router-dom';
-import { useDialog } from '../../../components/Dialog';
-import { PencilCircledIcon } from '../../../components/Icons';
-import { EditOrganization } from '../Edit';
-import { useOrganizationQuery } from './OrganizationDetail.generated';
+import { usePartnerQuery } from './PartnerDetail.generated';
 
 const useStyles = makeStyles(({ spacing, breakpoints }) => ({
   root: {
@@ -30,18 +27,18 @@ const useStyles = makeStyles(({ spacing, breakpoints }) => ({
   },
 }));
 
-export const OrganizationDetail = () => {
+export const PartnerDetail = () => {
   const classes = useStyles();
-  const { orgId } = useParams();
+  const { partnerId } = useParams();
 
-  const { data, error } = useOrganizationQuery({
+  const { data, error } = usePartnerQuery({
     variables: {
-      input: orgId,
+      input: partnerId,
     },
   });
-  const org = data?.organization;
+  const partner = data?.partner;
 
-  const [editOrgState, editOrg] = useDialog();
+  //   const [editPartnerState, editPartner] = useDialog();
 
   return (
     <main className={classes.root}>
@@ -52,21 +49,30 @@ export const OrganizationDetail = () => {
           <div className={classes.header}>
             <Typography
               variant="h2"
-              className={clsx(classes.name, org ? null : classes.nameLoading)}
+              className={clsx(
+                classes.name,
+                partner ? null : classes.nameLoading
+              )}
             >
-              {org ? org.name.value : <Skeleton width="75%" />}
+              {partner ? (
+                partner.organization.value?.name.value
+              ) : (
+                <Skeleton width="75%" />
+              )}
             </Typography>
-            {org ? (
+            {/* {partner ? (
               <IconButton
                 color="primary"
                 aria-label="edit partner"
-                onClick={editOrg}
+                onClick={editPartner}
               >
                 <PencilCircledIcon />
               </IconButton>
-            ) : null}
+            ) : null} */}
           </div>
-          {org ? <EditOrganization org={org} {...editOrgState} /> : null}
+          {/* {partner ? (
+            <EditPartner partner={partner} {...editPartnerState} />
+          ) : null} */}
         </>
       )}
     </main>

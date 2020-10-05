@@ -10,9 +10,24 @@ fragment PartnershipCard on Partnership {
   mouStatus {
     value
   }
-  organization {
-    name {
-      value
+  partner {
+    canRead
+    canEdit
+    value {
+      id
+      organization {
+        canRead
+        canEdit
+        value {
+          id
+          name {
+            canRead
+            canEdit
+            value
+          }
+          avatarLetters
+        }
+      }
     }
   }
   financialReportingType {

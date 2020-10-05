@@ -1,17 +1,17 @@
 import React from 'react';
 import { useRoutes } from 'react-router-dom';
-import { OrganizationDetail } from './Detail';
-import { OrganizationList } from './List';
+import { PartnerDetail } from './Detail';
+import { PartnerList } from './List';
 
-export const Organizations = () => {
+export const Partners = () => {
   const matched = useRoutes([
     {
       path: '/',
-      element: <OrganizationList />,
+      element: <PartnerList />,
     },
     {
-      path: '/:orgId',
-      element: <OrganizationDetail />,
+      path: '/:partnerId',
+      element: <PartnerDetail />,
     },
   ]);
 

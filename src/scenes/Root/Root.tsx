@@ -4,7 +4,7 @@ import { Route, Routes } from 'react-router-dom';
 import { Authentication } from '../Authentication';
 import { Home } from '../Home';
 import { Languages } from '../Languages';
-import { Organizations } from '../Organizations';
+import { Partners } from '../Partners';
 import { Projects } from '../Projects';
 import { SearchResults } from '../SearchResults';
 import { Users } from '../Users';
@@ -36,7 +36,7 @@ export const Root = () => {
   const routes = (
     <Routes>
       <Route path="/" element={<Home />} />
-      <Route path="/organizations/*" element={<Organizations />} />
+      <Route path="/partners/*" element={<Partners />} />
       <Route path="/projects/*" element={<Projects />} />
       <Route path="/languages/*" element={<Languages />} />
       <Route path="/users/*" element={<Users />} />

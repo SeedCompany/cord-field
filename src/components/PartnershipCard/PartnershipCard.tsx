@@ -46,7 +46,7 @@ export const PartnershipCard: FC<PartnershipCardProps> = ({
           <Grid item>
             <Typography variant="h4">
               {partnership ? (
-                partnership.organization.name.value
+                partnership.partner.value?.organization.value?.name.value
               ) : (
                 <Skeleton width="75%" />
               )}

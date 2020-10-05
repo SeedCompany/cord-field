@@ -1,0 +1,22 @@
+query PartnerLookup($query: String!) {
+  search(input: { query: $query, type: [Partner] }) {
+    items {
+      ... on Partner {
+        ...PartnerLookupItem
+      }
+    }
+  }
+}
+
+fragment PartnerLookupItem on Partner {
+  id
+  organization {
+    canRead
+    canEdit
+    value {
+      name {
+        ...securedString
+      }
+    }
+  }
+}
