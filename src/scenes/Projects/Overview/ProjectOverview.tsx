@@ -279,6 +279,17 @@ export const ProjectOverview: FC = () => {
                 {displayProjectStep(projectOverviewData?.project.step.value)}
               </DataButton>
             </Grid>
+            <Grid item>
+              <DataButton
+                loading={!projectOverviewData}
+                startIcon={<DateRange className={classes.infoColor} />}
+                secured={projectOverviewData?.project.estimatedSubmission}
+                redacted="You do not have permission to view estimated submission date"
+                children={formatDate}
+                empty="Estimated Submission"
+                onClick={() => editField(['estimatedSubmission'])}
+              />
+            </Grid>
           </Grid>
 
           {directoryIdLoading || !canReadDirectoryId ? null : (

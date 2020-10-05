@@ -45,8 +45,10 @@ import {
   StoryField,
   StoryLookupItem,
 } from '../../../components/form/Lookup';
+import { SwitchField } from '../../../components/form/SwitchField';
 import { entries } from '../../../util';
 import {
+  filterScriptureRangesByTestament,
   getScriptureRangeDisplay,
   matchingScriptureRanges,
   mergeScriptureRange,
@@ -62,7 +64,10 @@ import {
 import { ProductFormFragment } from './ProductForm.generated';
 import { VersesDialog, versesDialogValues } from './VersesDialog';
 
-const useStyles = makeStyles(({ spacing, typography }) => ({
+const useStyles = makeStyles(({ spacing, typography, breakpoints }) => ({
+  accordionContainer: {
+    maxWidth: breakpoints.values.md,
+  },
   accordionSummary: {
     flexDirection: 'column',
   },
@@ -104,6 +109,8 @@ export interface ProductFormValues {
         | LiteracyMaterialLookupItem
         | SongLookupItem;
       scriptureReferences?: readonly ScriptureRange[];
+      fullOldTestament?: boolean;
+      fullNewTestament?: boolean;
     }
   >;
 }
@@ -135,6 +142,8 @@ export const AccordionSection = ({
     scriptureReferences,
     mediums,
     purposes,
+    fullOldTestament,
+    fullNewTestament,
   } = (values as Partial<ProductFormValues>).product ?? {};
 
   const [openedSection, setOpenedSection] = useState<ProductKey | undefined>(
@@ -162,7 +171,10 @@ export const AccordionSection = ({
 
   const isProducesFieldMissing = !produces && touched?.['product.produces'];
 
-  const onVersesFieldSubmit = ({ updatingScriptures }: versesDialogValues) => {
+  const onVersesFieldSubmit = ({
+    updatingScriptures,
+    fullBook,
+  }: versesDialogValues) => {
     scriptureInitialValues &&
       form.change(
         // @ts-expect-error this is a valid field key
@@ -170,13 +182,14 @@ export const AccordionSection = ({
         mergeScriptureRange(
           updatingScriptures,
           scriptureReferences,
-          scriptureInitialValues.book
+          scriptureInitialValues.book,
+          fullBook
         )
       );
   };
 
   return (
-    <div>
+    <div className={classes.accordionContainer}>
       <SecuredAccordion
         {...accordionState}
         name="produces"
@@ -232,21 +245,58 @@ export const AccordionSection = ({
       <SecuredAccordion
         {...accordionState}
         name="scriptureReferences"
-        title="Scripture"
-        renderCollapsed={() =>
-          entries(scriptureRangeDictionary(scriptureReferences)).map(
-            ([book, scriptureRange]) => (
-              <ToggleButton selected key={book} value={book}>
-                {getScriptureRangeDisplay(scriptureRange, book)}
-              </ToggleButton>
-            )
-          )
-        }
+        title="Scripture Reference"
+        renderCollapsed={() => {
+          const oldTestamentButton = fullOldTestament && (
+            <ToggleButton
+              key="fullOldTestament"
+              value="fullNewTestament"
+              selected
+            >
+              Full Old Testament
+            </ToggleButton>
+          );
+
+          const newTestamentButton = fullNewTestament && (
+            <ToggleButton
+              key="fullNewTestament"
+              value="fullNewTestament"
+              selected
+            >
+              Full New Testament
+            </ToggleButton>
+          );
+
+          const filteredScriptureRange = filterScriptureRangesByTestament(
+            scriptureReferences,
+            fullOldTestament,
+            fullNewTestament
+          );
+
+          const scriptureRangeButtons = entries(
+            scriptureRangeDictionary(filteredScriptureRange)
+          ).map(([book, scriptureRangeArr]) => (
+            <ToggleButton selected key={book} value={book}>
+              {getScriptureRangeDisplay(scriptureRangeArr, book)}
+            </ToggleButton>
+          ));
+
+          return [
+            oldTestamentButton,
+            ...scriptureRangeButtons,
+            newTestamentButton,
+          ];
+        }}
       >
         {({ disabled }) => (
           <>
             <div className={classes.section}>
               <Typography className={classes.label}>Old Testament</Typography>
+              <SwitchField
+                name="fullOldTestament"
+                label="Full Testament"
+                color="primary"
+              />
               <div className={classes.toggleButtonContainer}>
                 {oldTestament.map((book) => {
                   const matchingArr = matchingScriptureRanges(
@@ -258,7 +308,7 @@ export const AccordionSection = ({
                       key={book}
                       value={book}
                       selected={Boolean(matchingArr.length)}
-                      disabled={disabled}
+                      disabled={disabled || fullOldTestament}
                       onClick={openBook}
                     >
                       {getScriptureRangeDisplay(matchingArr, book)}
@@ -268,6 +318,12 @@ export const AccordionSection = ({
               </div>
             </div>
             <Typography className={classes.label}>New Testament</Typography>
+            <SwitchField
+              name="fullNewTestament"
+              label="Full Testament"
+              color="primary"
+            />
+
             <div className={classes.toggleButtonContainer}>
               {newTestament.map((book) => {
                 const matchingArr = matchingScriptureRanges(
@@ -279,7 +335,7 @@ export const AccordionSection = ({
                     key={book}
                     value={book}
                     selected={Boolean(matchingArr.length)}
-                    disabled={disabled}
+                    disabled={disabled || fullNewTestament}
                     onClick={openBook}
                   >
                     {getScriptureRangeDisplay(matchingArr, book)}

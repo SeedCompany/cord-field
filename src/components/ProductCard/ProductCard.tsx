@@ -22,11 +22,9 @@ import {
   displayProductTypes,
 } from '../../api';
 import { ProductTypes } from '../../scenes/Products/ProductForm/constants';
-import { entries } from '../../util';
 import {
-  getScriptureRangeDisplay,
-  ScriptureRange,
-  scriptureRangeDictionary,
+  removeScriptureTypename,
+  scriptureRangeToText,
 } from '../../util/biblejs';
 import { DisplaySimpleProperty } from '../DisplaySimpleProperty';
 import { ButtonLink, CardActionAreaLink } from '../Routing';
@@ -122,17 +120,11 @@ export const ProductCard = ({ product }: ProductCardProps) => {
               .join(', ')}
           />
           <DisplaySimpleProperty
-            label="Scripture"
+            label="Scripture Reference"
             align="center"
-            value={entries(
-              scriptureRangeDictionary(
-                product.scriptureReferences.value as ScriptureRange[]
-              )
-            )
-              .map(([book, scriptureRange]) =>
-                getScriptureRangeDisplay(scriptureRange, book)
-              )
-              .join(', ')}
+            value={scriptureRangeToText(
+              removeScriptureTypename(product.scriptureReferences.value)
+            )}
           />
         </CardContent>
       </CardActionAreaLink>

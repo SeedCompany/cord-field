@@ -1,4 +1,9 @@
-import { groupBy } from 'lodash';
+import { compact, entries, groupBy, isEqual } from 'lodash';
+import {
+  newTestament,
+  oldTestament,
+} from '../../scenes/Products/ProductForm/constants';
+import { ScriptureRangeFragment } from '../../scenes/Products/ProductForm/ProductForm.generated';
 import { books } from './bibleBooks';
 import { Nullable } from '..';
 
@@ -239,17 +244,154 @@ export const scriptureRangeDictionary = (
 /**
  * Merge two scripture ranges together
  * merging all ranges in the the updating values and the ranges in the prevScriptureReferences array that doesn't match the book
+ * If fullBook is true, then merge in the full book range.
  */
 export const mergeScriptureRange = (
   updatingScriptures: readonly ScriptureRange[],
   prevScriptureReferences: Nullable<readonly ScriptureRange[]>,
+  book: string,
+  fullBook: boolean
+): ScriptureRange[] => {
+  const filteredOldRange =
+    prevScriptureReferences?.filter(
+      (scriptureRange) => scriptureRange.start.book !== book
+    ) || [];
+
+  const updatedRange = fullBook ? [getFullBookRange(book)] : updatingScriptures;
+
+  return [...filteredOldRange, ...updatedRange];
+};
+
+export const getFullBookRange = (book: string): ScriptureRange => {
+  const bookObject = books.find((bookObj) => bookObj.names.includes(book));
+  const lastChapter = bookObject ? bookObject.chapters.length : 1;
+  const lastVerse = bookObject ? bookObject.chapters[lastChapter - 1] : 1;
+  return {
+    start: {
+      book,
+      chapter: 1,
+      verse: 1,
+    },
+    end: {
+      book,
+      chapter: lastChapter,
+      verse: lastVerse,
+    },
+  };
+};
+
+export const isFullBookRange = (
+  scriptureRange: ScriptureRange | undefined,
   book: string
-): ScriptureRange[] =>
-  prevScriptureReferences
-    ? [
-        ...prevScriptureReferences.filter(
-          (scriptureRange) => scriptureRange.start.book !== book
-        ),
-        ...updatingScriptures,
-      ]
-    : [...updatingScriptures];
+) => isEqual(scriptureRange, getFullBookRange(book));
+
+export const fullOldTestamentRange: ScriptureRange = {
+  start: {
+    book: 'Genesis',
+    chapter: 1,
+    verse: 1,
+  },
+  end: {
+    book: 'Malachi',
+    chapter: 4,
+    verse: 6,
+  },
+};
+
+export const fullNewTestamentRange: ScriptureRange = {
+  start: {
+    book: 'Matthew',
+    chapter: 1,
+    verse: 1,
+  },
+  end: {
+    book: 'Revelation',
+    chapter: 22,
+    verse: 21,
+  },
+};
+
+export const filterScriptureRangesByTestament = (
+  scriptureReferences: readonly ScriptureRange[] | undefined,
+  fullOldTestament: boolean | undefined,
+  fullNewTestament: boolean | undefined
+) =>
+  scriptureReferences?.filter(({ start: { book } }) => {
+    const fullTestamentSelectedAndMatch =
+      fullOldTestament && oldTestament.includes(book);
+    const newTestamentSelectedAndMatch =
+      fullNewTestament && newTestament.includes(book);
+    return !fullTestamentSelectedAndMatch && !newTestamentSelectedAndMatch;
+  });
+
+export const parsedRangesWithFullTestamentRange = (
+  scriptureReferences: readonly ScriptureRange[] | undefined,
+  fullOldTestament: boolean | undefined,
+  fullNewTestament: boolean | undefined
+) => {
+  const oldTestamentRange = fullOldTestament
+    ? fullOldTestamentRange
+    : undefined;
+  const newTestamentRange = fullNewTestament
+    ? fullNewTestamentRange
+    : undefined;
+
+  const filteredScriptureRange = filterScriptureRangesByTestament(
+    scriptureReferences,
+    fullOldTestament,
+    fullNewTestament
+  );
+
+  return compact([
+    oldTestamentRange,
+    ...(filteredScriptureRange ? filteredScriptureRange : []),
+    newTestamentRange,
+  ]);
+};
+
+/**
+ * Translates scriptureReferences array into readable text, displaying full testaments if found.
+ */
+export const scriptureRangeToText = (scriptureReferences: ScriptureRange[]) => {
+  const isFullOldTestament = scriptureReferences.some((range) =>
+    isEqual(range, fullOldTestamentRange)
+  );
+  const isFullNewTestament = scriptureReferences.some((range) =>
+    isEqual(range, fullNewTestamentRange)
+  );
+
+  const oldTestamentText = isFullOldTestament
+    ? 'Full Old Testament'
+    : undefined;
+
+  const newTestamentText = isFullNewTestament
+    ? 'Full New Testament'
+    : undefined;
+
+  const filteredScriptureRange = filterScriptureRangesByTestament(
+    scriptureReferences,
+    isFullOldTestament,
+    isFullNewTestament
+  );
+
+  const individualRangeText = entries(
+    scriptureRangeDictionary(filteredScriptureRange)
+  ).map(([book, scriptureRange]) =>
+    getScriptureRangeDisplay(scriptureRange, book)
+  );
+  return compact([
+    oldTestamentText,
+    ...individualRangeText,
+    newTestamentText,
+  ]).join(', ');
+};
+
+export const removeScriptureTypename = (
+  scriptureReferences: readonly ScriptureRangeFragment[]
+) =>
+  scriptureReferences.map(
+    ({ start: { __typename, ...start }, end: { __typename: _, ...end } }) => ({
+      start,
+      end,
+    })
+  );

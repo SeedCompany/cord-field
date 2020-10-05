@@ -7,17 +7,17 @@ import { handleFormError } from '../../../api';
 import { EngagementBreadcrumb } from '../../../components/EngagementBreadcrumb';
 import { ProjectBreadcrumb } from '../../../components/ProjectBreadcrumb';
 import { ButtonLink } from '../../../components/Routing';
+import { parsedRangesWithFullTestamentRange } from '../../../util/biblejs';
 import { ProductForm } from '../ProductForm';
 import {
   useCreateProductMutation,
   useGetProductBreadcrumbQuery,
 } from './CreateProduct.generated';
 
-const useStyles = makeStyles(({ spacing, breakpoints }) => ({
+const useStyles = makeStyles(({ spacing }) => ({
   root: {
     overflowY: 'auto',
     padding: spacing(4),
-    maxWidth: breakpoints.values.md,
     '& > *': {
       marginBottom: spacing(2),
     },
@@ -56,8 +56,20 @@ export const CreateProduct = () => {
       {!loading && (
         <ProductForm
           onSubmit={async ({
-            product: { productType, produces, scriptureReferences, ...inputs },
+            product: {
+              productType,
+              produces,
+              scriptureReferences,
+              fullOldTestament,
+              fullNewTestament,
+              ...inputs
+            },
           }) => {
+            const parsedScriptureReferences = parsedRangesWithFullTestamentRange(
+              scriptureReferences,
+              fullOldTestament,
+              fullNewTestament
+            );
             try {
               const { data } = await createProduct({
                 variables: {
@@ -68,10 +80,10 @@ export const CreateProduct = () => {
                       ...(productType !== 'DirectScriptureProduct' && produces
                         ? {
                             produces: produces.id,
-                            scriptureReferencesOverride: scriptureReferences,
+                            scriptureReferencesOverride: parsedScriptureReferences,
                           }
                         : {
-                            scriptureReferences,
+                            scriptureReferences: parsedScriptureReferences,
                           }),
                     },
                   },

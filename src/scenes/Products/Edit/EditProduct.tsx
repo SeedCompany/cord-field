@@ -1,33 +1,28 @@
 import { Breadcrumbs, makeStyles, Typography } from '@material-ui/core';
 import { Skeleton } from '@material-ui/lab';
+import { isEqual } from 'lodash';
 import { useSnackbar } from 'notistack';
 import React, { useMemo } from 'react';
 import { useNavigate, useParams } from 'react-router';
 import { handleFormError } from '../../../api';
 import { EngagementBreadcrumb } from '../../../components/EngagementBreadcrumb';
 import { ProjectBreadcrumb } from '../../../components/ProjectBreadcrumb';
+import {
+  fullNewTestamentRange,
+  fullOldTestamentRange,
+  parsedRangesWithFullTestamentRange,
+  removeScriptureTypename,
+} from '../../../util/biblejs';
 import { ProductForm } from '../ProductForm';
-import { ScriptureRangeFragment } from '../ProductForm/ProductForm.generated';
 import {
   useProductQuery,
   useUpdateProductMutation,
 } from './EditProduct.generated';
 
-const removeScriptureTypename = (
-  scriptureReferences: readonly ScriptureRangeFragment[]
-) =>
-  scriptureReferences.map(
-    ({ start: { __typename, ...start }, end: { __typename: _, ...end } }) => ({
-      start,
-      end,
-    })
-  );
-
-const useStyles = makeStyles(({ spacing, breakpoints }) => ({
+const useStyles = makeStyles(({ spacing }) => ({
   root: {
     overflowY: 'auto',
     padding: spacing(4),
-    maxWidth: breakpoints.values.md,
     '& > *': {
       marginBottom: spacing(2),
     },
@@ -59,12 +54,28 @@ export const EditProduct = () => {
     if (!product) return undefined;
     const { mediums, purposes, methodology, scriptureReferences } = product;
 
+    const scriptureReferencesWithoutTypename = removeScriptureTypename(
+      scriptureReferences.value
+    );
+
+    const referencesWithoutFullTestament = scriptureReferencesWithoutTypename.filter(
+      (reference) =>
+        !isEqual(reference, fullOldTestamentRange) &&
+        !isEqual(reference, fullNewTestamentRange)
+    );
+
     return {
       product: {
         mediums: mediums.value,
         purposes: purposes.value,
         methodology: methodology.value,
-        scriptureReferences: removeScriptureTypename(scriptureReferences.value),
+        scriptureReferences: referencesWithoutFullTestament,
+        fullOldTestament: scriptureReferencesWithoutTypename.some((reference) =>
+          isEqual(reference, fullOldTestamentRange)
+        ),
+        fullNewTestament: scriptureReferencesWithoutTypename.some((reference) =>
+          isEqual(reference, fullNewTestamentRange)
+        ),
         ...(product.__typename === 'DirectScriptureProduct'
           ? {
               productType: product.__typename,
@@ -101,9 +112,22 @@ export const EditProduct = () => {
         <ProductForm
           product={product}
           onSubmit={async ({
-            product: { productType, produces, scriptureReferences, ...input },
+            product: {
+              productType,
+              produces,
+              scriptureReferences,
+              fullOldTestament,
+              fullNewTestament,
+              ...input
+            },
           }) => {
             try {
+              const parsedScriptureReferences = parsedRangesWithFullTestamentRange(
+                scriptureReferences,
+                fullOldTestament,
+                fullNewTestament
+              );
+
               await updateProduct({
                 variables: {
                   input: {
@@ -113,10 +137,10 @@ export const EditProduct = () => {
                       produces: produces?.id,
                       ...(productType !== 'DirectScriptureProduct'
                         ? {
-                            scriptureReferencesOverride: scriptureReferences,
+                            scriptureReferencesOverride: parsedScriptureReferences,
                           }
                         : {
-                            scriptureReferences,
+                            scriptureReferences: parsedScriptureReferences,
                           }),
                     },
                   },
