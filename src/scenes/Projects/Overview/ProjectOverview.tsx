@@ -254,13 +254,13 @@ export const ProjectOverview: FC = () => {
                 onClick={() => editField(['mouStart', 'mouEnd'])}
               />
             </Grid>
-            {data?.project.status === 'InDevelopment' && (
+            {projectOverviewData?.project.status === 'InDevelopment' && (
               <Grid item>
                 <Tooltip title="Estimated Submission to Regional Director">
                   <DataButton
-                    loading={!data}
+                    loading={!projectOverviewData}
                     startIcon={<DateRange className={classes.infoColor} />}
-                    secured={data.project.estimatedSubmission}
+                    secured={projectOverviewData.project.estimatedSubmission}
                     redacted="You do not have permission to view estimated submission date"
                     children={formatDate}
                     empty="Estimated Submission"
