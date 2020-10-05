@@ -5,8 +5,8 @@ import {
   FinancialReportingTypeList,
   PartnershipAgreementStatus,
   PartnershipAgreementStatusList,
-  PartnershipType,
-  PartnershipTypeList,
+  PartnerType,
+  PartnerTypeList,
 } from '../../../api';
 import {
   DialogForm,
@@ -30,7 +30,7 @@ export type PartnershipFormProps<
   partnership?: PartnershipFormFragment;
 };
 
-export const hasManagingType = (types: Nullable<readonly PartnershipType[]>) =>
+export const hasManagingType = (types: Nullable<readonly PartnerType[]>) =>
   types?.includes('Managing') ?? false;
 
 export const PartnershipForm = <
@@ -49,7 +49,7 @@ export const PartnershipForm = <
             <EnumField
               multiple
               label="Types"
-              options={PartnershipTypeList}
+              options={PartnerTypeList}
               layout="two-column"
               {...props}
             />
