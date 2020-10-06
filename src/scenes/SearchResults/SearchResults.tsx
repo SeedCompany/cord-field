@@ -34,6 +34,7 @@ export const SearchResults: FC = () => {
     variables: {
       input: { query: query ?? '' },
     },
+    fetchPolicy: 'cache-and-network',
   });
 
   const displayItem = (item: SearchResult) => {
