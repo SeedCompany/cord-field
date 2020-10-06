@@ -25,15 +25,11 @@ export const BudgetOverviewCard: FC<BudgetOverviewCardProps> = ({
       title="Field Budget"
       viewLabel="Budget Details"
       loading={loading}
-      data={
-        budget
-          ? {
-              updatedAt: budget.createdAt,
-              value: formatCurrency(budget.total),
-              to: `budget`,
-            }
-          : undefined
-      }
+      data={{
+        updatedAt: budget?.createdAt,
+        value: budget ? formatCurrency(budget.total) : 'Not Available',
+        to: `budget`,
+      }}
       icon={AccountBalance}
     />
   );
