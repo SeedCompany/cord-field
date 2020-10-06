@@ -3,7 +3,7 @@ import { Search } from '@material-ui/icons';
 import { FC } from 'react';
 import * as React from 'react';
 import { Form } from 'react-final-form';
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { TextField } from '../../../../components/form';
 import { makeQueryHandler, StringParam } from '../../../../hooks';
 
@@ -25,6 +25,8 @@ const useStyles = makeStyles(({ palette, spacing }) => ({
 export const HeaderSearch: FC = () => {
   const classes = useStyles();
   const [{ q: search = '' }] = useSearch();
+  const { pathname, search: routeSearch } = useLocation();
+  const currentSearch = routeSearch.split('?q=')[1];
   const navigate = useNavigate();
 
   return (
@@ -32,7 +34,12 @@ export const HeaderSearch: FC = () => {
       initialValues={{ search }}
       onSubmit={({ search }) => {
         if (search) {
-          navigate(`/search?q=${search}`);
+          // cover cases where the user searches for the exact same thing again
+          if (pathname === '/search' && search === currentSearch) {
+            navigate(0);
+          } else {
+            navigate(`/search?q=${search}`);
+          }
         }
       }}
     >
