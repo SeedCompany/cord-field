@@ -346,7 +346,7 @@ export const ProjectOverview: FC = () => {
                   !engagementListData.project.engagements.canRead ? (
                     <Redacted
                       info="You do not have permission to view engagements"
-                      width="50%"
+                      width={400}
                     />
                   ) : (
                     `${engagementListData.project.engagements.total} ${engagementTypeLabel} Engagements`
