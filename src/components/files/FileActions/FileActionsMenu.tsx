@@ -45,6 +45,9 @@ const useStyles = makeStyles(({ spacing }) => ({
     paddingLeft: spacing(2),
     paddingRight: spacing(2),
     width: `calc(100% + (${spacing(2)}px * 2))`,
+    '&:focus': {
+      outline: 'none',
+    },
   },
 }));
 
