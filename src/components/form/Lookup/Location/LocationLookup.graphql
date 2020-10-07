@@ -5,3 +5,19 @@ query LocationLookup($query: String!) {
     }
   }
 }
+
+query FieldRegionLookup($query: String!) {
+  search(input: { query: $query, type: [FieldRegion] }) {
+    items {
+      ...DisplayFieldRegion
+    }
+  }
+}
+
+query FieldZoneLookup($query: String!) {
+  search(input: { query: $query, type: [FieldZone] }) {
+    items {
+      ...DisplayFieldZone
+    }
+  }
+}
