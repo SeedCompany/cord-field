@@ -95,7 +95,7 @@ export const AddItemCard: FC<AddItemCardProps> = (props) => {
           <DropzoneOverlay
             classes={props.DropzoneProps?.classes}
             isDragActive={isDragActive}
-            message={`Drop ${itemType} to upload`}
+            message={`Add ${itemType} file`}
           />
         </>
       )}

@@ -204,11 +204,6 @@ const LanguageEngagementDetailWrapped: FC<EngagementQuery> = ({
           </Grid>
           <Grid item container spacing={3} alignItems="center">
             <Grid item xs={6}>
-              <Typography variant="h4">PNP</Typography>
-            </Grid>
-          </Grid>
-          <Grid item container spacing={3} alignItems="center">
-            <Grid item xs={6}>
               {pnp.canRead && !pnp.value ? (
                 <AddItemCard
                   actionType="dropzone"
@@ -216,7 +211,7 @@ const LanguageEngagementDetailWrapped: FC<EngagementQuery> = ({
                   handleFileSelect={(files: File[]) =>
                     uploadFile({ files, parentId: engagement.id })
                   }
-                  itemType="PNP"
+                  itemType="Planning and Progress"
                 />
               ) : (
                 <DefinedFileCard
