@@ -132,6 +132,16 @@ export const ProjectOverview: FC = () => {
     0
   );
 
+  const primaryLocation = projectOverviewData?.project.primaryLocation;
+  const region = projectOverviewData?.project.fieldRegion;
+  const locations = {
+    canRead: (primaryLocation?.canRead || region?.canRead) ?? false,
+    canEdit: (primaryLocation?.canEdit || region?.canEdit) ?? false,
+    value: `${primaryLocation?.value?.name.value ?? 'Enter Location'} | ${
+      region?.value?.name.value ?? 'Enter Region'
+    }`,
+  };
+
   const date = projectOverviewData
     ? securedDateRange(
         projectOverviewData.project.mouStart,
@@ -249,10 +259,10 @@ export const ProjectOverview: FC = () => {
             <Grid item>
               <DataButton
                 loading={!projectOverviewData}
-                secured={projectOverviewData?.project.primaryLocation}
+                secured={locations}
                 empty="Enter Location"
                 redacted="You do not have permission to view location"
-                children={(location) => location.name.value}
+                children={locations.value}
               />
             </Grid>
             <Grid item>
