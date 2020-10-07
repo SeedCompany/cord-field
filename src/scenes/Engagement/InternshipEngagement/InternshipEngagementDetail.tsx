@@ -106,7 +106,7 @@ export const InternshipEngagementDetailWrapped: FC<EngagementQuery> = ({
               Updated {formatDateTime(engagement.modifiedAt)}
             </Typography>
           </Grid>
-          <Grid item container spacing={1} alignItems="center">
+          <Grid item container spacing={3} alignItems="center">
             <Grid item>
               <DataButton
                 secured={engagement.position}
