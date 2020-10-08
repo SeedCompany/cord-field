@@ -241,6 +241,9 @@ export const InternshipEngagementDetailWrapped: FC<EngagementQuery> = ({
                       canAdd={growthPlan.canEdit}
                       DropzoneProps={{
                         classes: { text: classes.dropzoneText },
+                        options: {
+                          multiple: false,
+                        },
                       }}
                       handleFileSelect={(files: File[]) =>
                         uploadFile({ files, parentId: engagement.id })

@@ -212,6 +212,11 @@ const LanguageEngagementDetailWrapped: FC<EngagementQuery> = ({
                     handleFileSelect={(files: File[]) =>
                       uploadFile({ files, parentId: engagement.id })
                     }
+                    DropzoneProps={{
+                      options: {
+                        multiple: false,
+                      },
+                    }}
                     itemType="Planning and Progress"
                   />
                 ) : (
