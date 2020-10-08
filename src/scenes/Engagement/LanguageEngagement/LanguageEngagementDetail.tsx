@@ -52,7 +52,7 @@ const useStyles = makeStyles(({ spacing, breakpoints, palette }) => ({
   },
 }));
 
-const LanguageEngagementDetailWrapped: FC<EngagementQuery> = ({
+export const LanguageEngagementDetail: FC<EngagementQuery> = ({
   project,
   engagement,
 }) => {
@@ -204,35 +204,37 @@ const LanguageEngagementDetailWrapped: FC<EngagementQuery> = ({
               />
             </Grid>
             <Grid item container spacing={3} alignItems="center">
-              <Grid item xs={6}>
-                {pnp.canRead && !pnp.value ? (
-                  <AddItemCard
-                    actionType="dropzone"
-                    canAdd={pnp.canEdit}
-                    handleFileSelect={(files: File[]) =>
-                      uploadFile({ files, parentId: engagement.id })
-                    }
-                    DropzoneProps={{
-                      options: {
-                        multiple: false,
-                      },
-                    }}
-                    itemType="Planning and Progress"
-                  />
-                ) : (
-                  <DefinedFileCard
-                    onVersionUpload={(files) =>
-                      uploadFile({
-                        action: 'version',
-                        files,
-                        parentId: engagement.id,
-                      })
-                    }
-                    resourceType="engagement"
-                    securedFile={engagement.pnp}
-                  />
-                )}
-              </Grid>
+              <FileActionsContextProvider>
+                <Grid item xs={6}>
+                  {pnp.canRead && !pnp.value ? (
+                    <AddItemCard
+                      actionType="dropzone"
+                      canAdd={pnp.canEdit}
+                      handleFileSelect={(files: File[]) =>
+                        uploadFile({ files, parentId: engagement.id })
+                      }
+                      DropzoneProps={{
+                        options: {
+                          multiple: false,
+                        },
+                      }}
+                      itemType="Planning and Progress"
+                    />
+                  ) : (
+                    <DefinedFileCard
+                      onVersionUpload={(files) =>
+                        uploadFile({
+                          action: 'version',
+                          files,
+                          parentId: engagement.id,
+                        })
+                      }
+                      resourceType="engagement"
+                      securedFile={engagement.pnp}
+                    />
+                  )}
+                </Grid>
+              </FileActionsContextProvider>
             </Grid>
           </Grid>
           <Grid item container spacing={3} alignItems="center">
@@ -273,9 +275,3 @@ const LanguageEngagementDetailWrapped: FC<EngagementQuery> = ({
     </>
   );
 };
-
-export const LanguageEngagementDetail: FC<EngagementQuery> = (props) => (
-  <FileActionsContextProvider>
-    <LanguageEngagementDetailWrapped {...props} />
-  </FileActionsContextProvider>
-);

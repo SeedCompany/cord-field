@@ -54,7 +54,7 @@ const useStyles = makeStyles(
   })
 );
 
-export const InternshipEngagementDetailWrapped: FC<EngagementQuery> = ({
+export const InternshipEngagementDetail: FC<EngagementQuery> = ({
   project,
   engagement,
 }) => {
@@ -234,36 +234,38 @@ export const InternshipEngagementDetailWrapped: FC<EngagementQuery> = ({
                 </Grid>
               </Grid>
               <Grid item container spacing={3} alignItems="center">
-                <Grid item xs={6}>
-                  {growthPlan.canRead && !growthPlan.value ? (
-                    <AddItemCard
-                      actionType="dropzone"
-                      canAdd={growthPlan.canEdit}
-                      DropzoneProps={{
-                        classes: { text: classes.dropzoneText },
-                        options: {
-                          multiple: false,
-                        },
-                      }}
-                      handleFileSelect={(files: File[]) =>
-                        uploadFile({ files, parentId: engagement.id })
-                      }
-                      itemType="Growth Plan"
-                    />
-                  ) : (
-                    <DefinedFileCard
-                      onVersionUpload={(files) =>
-                        uploadFile({
-                          action: 'version',
-                          files,
-                          parentId: engagement.id,
-                        })
-                      }
-                      resourceType="engagement"
-                      securedFile={engagement.growthPlan}
-                    />
-                  )}
-                </Grid>
+                <FileActionsContextProvider>
+                  <Grid item xs={6}>
+                    {growthPlan.canRead && !growthPlan.value ? (
+                      <AddItemCard
+                        actionType="dropzone"
+                        canAdd={growthPlan.canEdit}
+                        DropzoneProps={{
+                          classes: { text: classes.dropzoneText },
+                          options: {
+                            multiple: false,
+                          },
+                        }}
+                        handleFileSelect={(files: File[]) =>
+                          uploadFile({ files, parentId: engagement.id })
+                        }
+                        itemType="Growth Plan"
+                      />
+                    ) : (
+                      <DefinedFileCard
+                        onVersionUpload={(files) =>
+                          uploadFile({
+                            action: 'version',
+                            files,
+                            parentId: engagement.id,
+                          })
+                        }
+                        resourceType="engagement"
+                        securedFile={engagement.growthPlan}
+                      />
+                    )}
+                  </Grid>
+                </FileActionsContextProvider>
               </Grid>
               <Grid item xs={6}>
                 <MethodologiesCard
@@ -297,9 +299,3 @@ export const InternshipEngagementDetailWrapped: FC<EngagementQuery> = ({
     </>
   );
 };
-
-export const InternshipEngagementDetail: FC<EngagementQuery> = (props) => (
-  <FileActionsContextProvider>
-    <InternshipEngagementDetailWrapped {...props} />
-  </FileActionsContextProvider>
-);
