@@ -21,7 +21,7 @@ import { Redacted } from '../../../components/Redacted';
 import { Sensitivity } from '../../../components/Sensitivity';
 import { CalendarDate, listOrPlaceholders } from '../../../util';
 import { EditLanguage } from '../Edit';
-import { useLanguageQuery } from './LanguageDetail.generated';
+import { LanguageQuery, useLanguageQuery } from './LanguageDetail.generated';
 import { LeastOfThese } from './LeastOfThese';
 
 const useStyles = makeStyles(({ spacing }) => ({
@@ -65,7 +65,7 @@ export const LanguageDetail = () => {
   const language = data?.language;
   const {
     ethnologue,
-    locations,
+    // locations,
     projects,
     signLanguageCode,
     isSignLanguage,
@@ -79,11 +79,36 @@ export const LanguageDetail = () => {
     displayName,
     name,
   } = language ?? {};
+  console.log('language', language);
 
   const canEditAnyFields = canEditAny(language) || canEditAny(ethnologue);
 
   const formatDate = useDateFormatter();
   const formatNumber = useNumberFormatter();
+
+  // TODO: Switch out this hard-coded temp data for returned data when API is updated
+  const locations: LanguageQuery['language']['locations'] | undefined = {
+    canRead: true,
+    canCreate: true,
+    items: [
+      {
+        id: '1234',
+        name: {
+          canRead: true,
+          canEdit: true,
+          value: 'Winona Lake',
+        },
+      },
+      {
+        id: '9876',
+        name: {
+          canRead: true,
+          canEdit: true,
+          value: 'Houston',
+        },
+      },
+    ],
+  };
 
   return (
     <main className={classes.root}>
@@ -202,9 +227,7 @@ export const LanguageDetail = () => {
                       color="error"
                       aria-label="add location"
                       className={
-                        locations?.canCreate === true
-                          ? undefined
-                          : classes.hidden
+                        locations.canCreate ? undefined : classes.hidden
                       }
                     >
                       <Add />
@@ -212,15 +235,25 @@ export const LanguageDetail = () => {
                   </Tooltip>
                 </Grid>
               </Grid>
-              {locations?.items.length === 0 ? (
+              {locations.items.length === 0 ? (
                 <Typography color="textSecondary">
                   This language does not have any locations yet
                 </Typography>
-              ) : locations?.canRead === false ? (
+              ) : !locations.canRead ? (
                 <Typography color="textSecondary">
                   You don't have permission to see this language's locations
                 </Typography>
-              ) : null}
+              ) : (
+                <Typography variant="body1" color="textPrimary">
+                  {!language ? (
+                    <Skeleton width="40%" />
+                  ) : (
+                    locations.items
+                      .map((location) => location.name.value)
+                      .join(', ')
+                  )}
+                </Typography>
+              )}
             </Grid>
             <Grid item xs={12}>
               <Grid
