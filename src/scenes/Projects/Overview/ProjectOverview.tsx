@@ -165,7 +165,6 @@ export const ProjectOverview: FC = () => {
             region?.value?.name.value ?? (region?.canEdit ? 'Enter Region' : '')
           }`,
   };
-  console.log('locations', locations);
 
   const date = projectOverviewData
     ? securedDateRange(
@@ -288,7 +287,9 @@ export const ProjectOverview: FC = () => {
                 empty="Enter Location | Field Region"
                 redacted="You do not have permission to view location"
                 children={locations.value}
-                onClick={() => editField(['primaryLocation', 'fieldRegion'])}
+                onClick={() =>
+                  editField(['primaryLocationId', 'fieldRegionId'])
+                }
               />
             </Grid>
             <Grid item>
