@@ -121,6 +121,7 @@ export function LookupField<
     isEqual: multiple ? isListEqualBy(getCompareBy) : isEqualBy(getCompareBy),
   });
   const disabled = disabledProp ?? meta.submitting;
+  console.log('field', field);
 
   const selectOnFocus = props.selectOnFocus ?? true;
   const andSelectOnFocus = useCallback((el) => selectOnFocus && el.select(), [
@@ -141,6 +142,7 @@ export function LookupField<
       : getOptionLabel(field.value as T);
 
   const [input, setInput] = useState(selectedText);
+  console.log('input', input);
 
   const [fetch, { data, networkStatus }] = useLookup({
     notifyOnNetworkStatusChange: true,

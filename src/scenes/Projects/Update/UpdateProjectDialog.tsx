@@ -7,6 +7,10 @@ import {
   UpdateProject,
   UpdateProjectInput,
 } from '../../../api';
+import {
+  DisplayFieldRegionFragment as FieldRegionLookupItem,
+  DisplayLocationFragment as LocationLookupItem,
+} from '../../../api/fragments/location.generated';
 import { projectStatusFromStep, projectSteps } from '../../../api/projectSteps';
 import {
   DialogForm,
@@ -19,15 +23,34 @@ import {
   TextField,
 } from '../../../components/form';
 import { AutocompleteField } from '../../../components/form/AutocompleteField';
+import {
+  FieldRegionField,
+  LocationField,
+} from '../../../components/form/Lookup';
 import { ExtractStrict, many, Many } from '../../../util';
 import { ProjectOverviewFragment } from '../Overview/ProjectOverview.generated';
 import { useUpdateProjectMutation } from './UpdateProject.generated';
 
-export type EditableProjectField = ExtractStrict<
-  keyof UpdateProject,
-  // Add more fields here as needed
-  'name' | 'step' | 'mouStart' | 'mouEnd' | 'estimatedSubmission'
->;
+// For when we need to use a non-string value in Final Form
+// Add more fields here as needed
+type ExcludedFieldNames = 'primaryLocationId' | 'fieldRegionId';
+type RemappedFieldNames = 'primaryLocation' | 'fieldRegion';
+interface RemappedFields {
+  primaryLocation: LocationLookupItem | null | undefined;
+  fieldRegion: FieldRegionLookupItem | null | undefined;
+}
+interface RemappedUpdateProjectInput {
+  project: Except<UpdateProjectInput['project'], ExcludedFieldNames> &
+    RemappedFields;
+}
+
+export type EditableProjectField =
+  | ExtractStrict<
+      keyof UpdateProject,
+      // Add more fields here as needed
+      'name' | 'step' | 'mouStart' | 'mouEnd' | 'estimatedSubmission'
+    >
+  | RemappedFieldNames;
 
 interface ProjectFieldProps {
   props: {
@@ -41,6 +64,12 @@ const fieldMapping: Record<
   ComponentType<ProjectFieldProps>
 > = {
   name: ({ props }) => <TextField {...props} label="Project Name" />,
+  primaryLocation: ({ props }) => (
+    <LocationField {...props} label="Project Location" />
+  ),
+  fieldRegion: ({ props }) => (
+    <FieldRegionField {...props} label="Project Field Zone" />
+  ),
   mouStart: ({ props }) => <DateField {...props} label="Start Date" />,
   mouEnd: ({ props }) => <DateField {...props} label="End Date" />,
   estimatedSubmission: ({ props }) => (
@@ -61,7 +90,7 @@ const fieldMapping: Record<
 };
 
 type UpdateProjectDialogProps = Except<
-  DialogFormProps<UpdateProjectInput>,
+  DialogFormProps<RemappedUpdateProjectInput>,
   'onSubmit' | 'initialValues'
 > & {
   project: ProjectOverviewFragment;
@@ -80,12 +109,12 @@ export const UpdateProjectDialog = ({
   const [updateProject] = useUpdateProjectMutation();
 
   const initialValues = useMemo(() => {
-    const fullInitialValuesFields: Except<
-      UpdateProjectInput['project'],
-      'id'
-    > = {
+    const fullInitialValuesFields: RemappedFields &
+      Except<UpdateProjectInput['project'], 'id' | ExcludedFieldNames> = {
       name: project.name.value,
       step: project.step.value,
+      primaryLocation: project.primaryLocation.value,
+      fieldRegion: project.fieldRegion.value,
       mouStart: project.mouStart.value,
       mouEnd: project.mouEnd.value,
       estimatedSubmission: project.estimatedSubmission.value,
@@ -107,6 +136,8 @@ export const UpdateProjectDialog = ({
     editFields,
     project.id,
     project.name.value,
+    project.primaryLocation.value,
+    project.fieldRegion.value,
     project.mouEnd.value,
     project.mouStart.value,
     project.step.value,
@@ -114,13 +145,25 @@ export const UpdateProjectDialog = ({
   ]);
 
   return (
-    <DialogForm<UpdateProjectInput>
+    <DialogForm<RemappedUpdateProjectInput>
       title="Update Project"
       closeLabel="Close"
       submitLabel="Save"
       {...props}
       initialValues={initialValues}
-      onSubmit={async (input) => {
+      onSubmit={async (remappedInput) => {
+        const input = {
+          ...remappedInput,
+          project: {
+            ...remappedInput.project,
+            ...(remappedInput.project.primaryLocation?.id
+              ? { primaryLocationId: remappedInput.project.primaryLocation.id }
+              : null),
+            ...(remappedInput.project.fieldRegion?.id
+              ? { fieldRegion: remappedInput.project.fieldRegion.id }
+              : null),
+          },
+        };
         await updateProject({ variables: { input } });
       }}
     >

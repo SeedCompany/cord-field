@@ -287,6 +287,7 @@ export const ProjectOverview: FC = () => {
                 empty="Enter Location"
                 redacted="You do not have permission to view location"
                 children={locations.value}
+                onClick={() => editField(['primaryLocation', 'fieldRegion'])}
               />
             </Grid>
             <Grid item>

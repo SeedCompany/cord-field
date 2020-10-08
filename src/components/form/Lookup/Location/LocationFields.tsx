@@ -21,6 +21,7 @@ export const FieldRegionField = LookupField.createFor<FieldRegionLookupItem>({
   resource: 'FieldRegion',
   useLookup: useFieldRegionLookupLazyQuery,
   label: 'FieldRegion',
+  getOptionLabel: (value: FieldRegionLookupItem) => value.name.value ?? '',
   placeholder: 'Search for a location by name',
 });
 
