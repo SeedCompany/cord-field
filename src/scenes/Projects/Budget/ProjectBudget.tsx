@@ -31,7 +31,7 @@ const useStyles = makeStyles(({ breakpoints, spacing }) => ({
   },
 }));
 
-export const ProjectBudgetWrapped = () => {
+export const ProjectBudget = () => {
   const classes = useStyles();
   const { projectId } = useParams();
   const formatCurrency = useCurrencyFormatter();
@@ -84,30 +84,32 @@ export const ProjectBudgetWrapped = () => {
                 <ProjectBudgetRecords loading={loading} budget={budget} />
               </Grid>
               {!budget?.value || !template || !template.canRead ? null : (
-                <Grid item xs={6}>
-                  {!template.value ? (
-                    <AddItemCard
-                      actionType="dropzone"
-                      canAdd={template.canEdit}
-                      handleFileSelect={(files: File[]) =>
-                        uploadFile({ files, parentId: budget.value!.id })
-                      }
-                      itemType="template"
-                    />
-                  ) : (
-                    <DefinedFileCard
-                      onVersionUpload={(files) =>
-                        uploadFile({
-                          action: 'version',
-                          files,
-                          parentId: budget.value!.id,
-                        })
-                      }
-                      resourceType="budget"
-                      securedFile={template}
-                    />
-                  )}
-                </Grid>
+                <FileActionsContextProvider>
+                  <Grid item xs={6}>
+                    {!template.value ? (
+                      <AddItemCard
+                        actionType="dropzone"
+                        canAdd={template.canEdit}
+                        handleFileSelect={(files: File[]) =>
+                          uploadFile({ files, parentId: budget.value!.id })
+                        }
+                        itemType="template"
+                      />
+                    ) : (
+                      <DefinedFileCard
+                        onVersionUpload={(files) =>
+                          uploadFile({
+                            action: 'version',
+                            files,
+                            parentId: budget.value!.id,
+                          })
+                        }
+                        resourceType="budget"
+                        securedFile={template}
+                      />
+                    )}
+                  </Grid>
+                </FileActionsContextProvider>
               )}
             </Grid>
           </div>
@@ -116,9 +118,3 @@ export const ProjectBudgetWrapped = () => {
     </Content>
   );
 };
-
-export const ProjectBudget = () => (
-  <FileActionsContextProvider>
-    <ProjectBudgetWrapped />
-  </FileActionsContextProvider>
-);
