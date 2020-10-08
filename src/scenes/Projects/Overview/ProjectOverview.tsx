@@ -141,7 +141,7 @@ export const ProjectOverview: FC = () => {
       /**
        * A lot going on here. Obviously if both values exist, we'll show
        * them. If neither value exists, we want to pass the `DataButton`
-       * a falsy value, and then we just use the `empty` prop of the
+       * `undefined`, and then we just use the `empty` prop of the
        * `DataButton` to display whatever message deem appropriate.
        *
        * But if only one value exists, we still want to display "Enter XX"
@@ -150,7 +150,7 @@ export const ProjectOverview: FC = () => {
        * prompted them to "Enter XX" when really they're not allowed.
        */
       !primaryLocation?.value && !region?.value
-        ? ''
+        ? undefined
         : `${
             primaryLocation?.value?.name.value ??
             (primaryLocation?.canEdit ? 'Enter Location' : '')
@@ -165,6 +165,7 @@ export const ProjectOverview: FC = () => {
             region?.value?.name.value ?? (region?.canEdit ? 'Enter Region' : '')
           }`,
   };
+  console.log('locations', locations);
 
   const date = projectOverviewData
     ? securedDateRange(
@@ -284,7 +285,7 @@ export const ProjectOverview: FC = () => {
               <DataButton
                 loading={!projectOverviewData}
                 secured={locations}
-                empty="Enter Location"
+                empty="Enter Location | Field Region"
                 redacted="You do not have permission to view location"
                 children={locations.value}
                 onClick={() => editField(['primaryLocation', 'fieldRegion'])}

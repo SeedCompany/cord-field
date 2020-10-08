@@ -36,8 +36,8 @@ import { useUpdateProjectMutation } from './UpdateProject.generated';
 type ExcludedFieldNames = 'primaryLocationId' | 'fieldRegionId';
 type RemappedFieldNames = 'primaryLocation' | 'fieldRegion';
 interface RemappedFields {
-  primaryLocation: LocationLookupItem | null | undefined;
-  fieldRegion: FieldRegionLookupItem | null | undefined;
+  primaryLocation?: LocationLookupItem | null | undefined;
+  fieldRegion?: FieldRegionLookupItem | null | undefined;
 }
 interface RemappedUpdateProjectInput {
   project: Except<UpdateProjectInput['project'], ExcludedFieldNames> &
@@ -152,16 +152,17 @@ export const UpdateProjectDialog = ({
       {...props}
       initialValues={initialValues}
       onSubmit={async (remappedInput) => {
+        const {
+          project: { primaryLocation, fieldRegion, ...projectFields },
+        } = remappedInput;
         const input = {
           ...remappedInput,
           project: {
-            ...remappedInput.project,
-            ...(remappedInput.project.primaryLocation?.id
-              ? { primaryLocationId: remappedInput.project.primaryLocation.id }
+            ...projectFields,
+            ...(primaryLocation?.id
+              ? { primaryLocationId: primaryLocation.id }
               : null),
-            ...(remappedInput.project.fieldRegion?.id
-              ? { fieldRegionId: remappedInput.project.fieldRegion.id }
-              : null),
+            ...(fieldRegion?.id ? { fieldRegionId: fieldRegion.id } : null),
           },
         };
         await updateProject({ variables: { input } });
