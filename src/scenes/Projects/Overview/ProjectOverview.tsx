@@ -90,10 +90,14 @@ export const ProjectOverview: FC = () => {
     loading: directoryIdLoading,
     canRead: canReadDirectoryId,
   } = useProjectCurrentDirectory();
-  const handleFilesDrop = useUploadProjectFiles(directoryId);
+  const uploadProjectFiles = useUploadProjectFiles();
+
+  const handleDrop = (files: File[]) => {
+    uploadProjectFiles({ files, parentId: directoryId });
+  };
 
   const { getRootProps, getInputProps, open: openFileBrowser } = useDropzone({
-    onDrop: handleFilesDrop,
+    onDrop: handleDrop,
     noClick: true,
     disabled: !directoryId,
   });

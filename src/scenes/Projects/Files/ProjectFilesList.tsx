@@ -10,17 +10,19 @@ import { Skeleton } from '@material-ui/lab';
 import React, { FC } from 'react';
 import { useDropzone } from 'react-dropzone';
 import { useNavigate, useParams } from 'react-router-dom';
-import { File } from '../../../api';
+import { File as CFFile } from '../../../api';
 import { Breadcrumb } from '../../../components/Breadcrumb';
 import { useDialog } from '../../../components/Dialog';
 import {
   FileActionsPopup as ActionsMenu,
+  FileAction,
   FileActionsContextProvider,
+  getPermittedFileActions,
+  isFileVersion,
   useFileActions,
 } from '../../../components/files/FileActions';
 import {
   FileNodeInfo_Directory_Fragment,
-  FileNodeInfo_File_Fragment,
   FileNodeInfo_FileVersion_Fragment,
   FileNodeInfoFragment,
 } from '../../../components/files/files.generated';
@@ -33,6 +35,7 @@ import {
 import { ContentContainer } from '../../../components/Layout';
 import { ProjectBreadcrumb } from '../../../components/ProjectBreadcrumb';
 import { Table } from '../../../components/Table';
+import { DropzoneOverlay } from '../../../components/Upload';
 import { CreateProjectDirectory } from './CreateProjectDirectory';
 import {
   ProjectDirectoryFileNodeFragment,
@@ -47,26 +50,6 @@ const useStyles = makeStyles(({ palette, spacing, breakpoints }) => ({
     position: 'relative',
     width: '100%',
     height: '100%',
-  },
-  dropContainer: {
-    backgroundColor: palette.action.disabled,
-    border: `4px dashed ${palette.divider}`,
-    cursor: 'pointer',
-    display: 'flex',
-    justifyContent: 'center',
-    alignItems: 'center',
-    // opacity: 0.7,
-    padding: spacing(3),
-    position: 'absolute',
-    top: 0,
-    left: 0,
-    bottom: 0,
-    right: 0,
-    zIndex: 100,
-  },
-  instructions: {
-    color: palette.text.secondary,
-    textAlign: 'center',
   },
   headerContainer: {
     margin: spacing(3, 0),
@@ -96,15 +79,7 @@ const useStyles = makeStyles(({ palette, spacing, breakpoints }) => ({
   },
 }));
 
-export type ProjectDirectoryDirectory = Exclude<
-  ProjectDirectoryFileNodeFragment,
-  FileNodeInfo_FileVersion_Fragment | FileNodeInfo_File_Fragment
->;
-export type ProjectDirectoryFile = Exclude<
-  ProjectDirectoryFileNodeFragment,
-  FileNodeInfo_Directory_Fragment | FileNodeInfo_FileVersion_Fragment
->;
-export type ProjectDirectoryNonVersion = Exclude<
+type ProjectDirectoryNonVersion = Exclude<
   ProjectDirectoryFileNodeFragment,
   FileNodeInfo_FileVersion_Fragment
 >;
@@ -126,9 +101,13 @@ const ProjectFilesListWrapped: FC = () => {
     rootDirectoryId,
   } = useProjectCurrentDirectory();
 
-  const handleFilesDrop = useUploadProjectFiles(directoryId);
+  const uploadProjectFiles = useUploadProjectFiles();
 
   const [createDirectoryState, createDirectory] = useDialog();
+
+  const handleDrop = (files: File[]) => {
+    uploadProjectFiles({ files, parentId: directoryId });
+  };
 
   const {
     getRootProps,
@@ -136,7 +115,7 @@ const ProjectFilesListWrapped: FC = () => {
     isDragActive,
     open: openFileBrowser,
   } = useDropzone({
-    onDrop: handleFilesDrop,
+    onDrop: handleDrop,
     noClick: true,
     noKeyboard: true,
     disabled: !directoryId,
@@ -174,7 +153,7 @@ const ProjectFilesListWrapped: FC = () => {
     name: FileNodeInfoFragment['name'];
     createdAt: string;
     createdBy: string;
-    mimeType: File['mimeType'];
+    mimeType: CFFile['mimeType'];
     size: number;
     item: ProjectDirectoryNonVersion;
   }
@@ -183,12 +162,6 @@ const ProjectFilesListWrapped: FC = () => {
     fileNode: FileNodeInfoFragment
   ): fileNode is FileNodeInfo_Directory_Fragment => {
     return fileNode.__typename === 'Directory';
-  };
-
-  const isFileVersion = (
-    fileNode: FileNodeInfoFragment
-  ): fileNode is FileNodeInfo_FileVersion_Fragment => {
-    return fileNode.__typename === 'FileVersion';
   };
 
   const rowData =
@@ -257,7 +230,31 @@ const ProjectFilesListWrapped: FC = () => {
     {
       title: '',
       field: 'item',
-      render: (rowData: FileRowData) => <ActionsMenu item={rowData.item} />,
+      render: (rowData: FileRowData) => {
+        const permittedActions = getPermittedFileActions(
+          !!canReadRootDirectory,
+          !!canReadRootDirectory
+        );
+        const directoryActions = permittedActions.filter(
+          (action) =>
+            action === FileAction.Rename || action === FileAction.Delete
+        );
+        return (
+          <ActionsMenu
+            actions={
+              rowData.type === 'Directory' ? directoryActions : permittedActions
+            }
+            item={rowData.item}
+            onVersionUpload={(files) =>
+              uploadProjectFiles({
+                action: 'version',
+                files,
+                parentId: rowData.item.id,
+              })
+            }
+          />
+        );
+      },
       sorting: false,
       cellStyle: {
         padding: spacing(0.5),
@@ -285,13 +282,10 @@ const ProjectFilesListWrapped: FC = () => {
   ) : (
     <div className={classes.dropzone} {...getRootProps()}>
       <input {...getInputProps()} name="files_list_uploader" />
-      {isDragActive && (
-        <div className={classes.dropContainer}>
-          <Typography variant="h1" className={classes.instructions}>
-            Drop files to start uploading
-          </Typography>
-        </div>
-      )}
+      <DropzoneOverlay
+        isDragActive={isDragActive}
+        message="Drop files to start uploading"
+      />
       <ContentContainer>
         {error || (!loading && !items) ? (
           <Typography variant="h4">Error fetching Project Files</Typography>

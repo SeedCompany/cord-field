@@ -18,11 +18,14 @@ import {
 } from '@material-ui/icons';
 import React, { FC, useState } from 'react';
 import { useDropzone } from 'react-dropzone';
-import { useUploadProjectFiles } from '../../../scenes/Projects/Files';
 import {
+  DirectoryActionItem,
   FileAction,
-  FilesActionItem,
+  FileActionItem,
+  HandleFileActionClickParams,
+  PermittedActions,
   useFileActions,
+  VersionActionItem,
 } from './FileActionsContext';
 
 const useStyles = makeStyles(({ spacing }) => ({
@@ -42,43 +45,36 @@ const useStyles = makeStyles(({ spacing }) => ({
     paddingLeft: spacing(2),
     paddingRight: spacing(2),
     width: `calc(100% + (${spacing(2)}px * 2))`,
+    '&:focus': {
+      outline: 'none',
+    },
   },
 }));
 
-interface FileActionsPopupProps {
-  item: FilesActionItem;
+interface FileActionsList {
+  actions: PermittedActions;
 }
 
-const menuItems = [
-  {
-    text: FileAction.Rename,
-    icon: RenameIcon,
-    version: true,
-    directory: true,
-  },
-  {
-    text: FileAction.Download,
-    icon: DownloadIcon,
-    version: true,
-  },
-  {
-    text: FileAction.History,
-    icon: HistoryIcon,
-  },
-  {
-    text: FileAction.NewVersion,
-    icon: AddIcon,
-  },
-  {
-    text: FileAction.Delete,
-    icon: DeleteIcon,
-    version: true,
-    directory: true,
-  },
-];
+interface NonVersionPopupProps extends FileActionsList {
+  item: DirectoryActionItem | FileActionItem;
+  onVersionUpload: (files: File[]) => void;
+}
+
+interface VersionPopupProps extends FileActionsList {
+  item: VersionActionItem;
+}
+
+type FileActionsPopupProps = NonVersionPopupProps | VersionPopupProps;
+
+const actionIcons = {
+  [FileAction.Rename]: RenameIcon,
+  [FileAction.Download]: DownloadIcon,
+  [FileAction.History]: HistoryIcon,
+  [FileAction.NewVersion]: AddIcon,
+  [FileAction.Delete]: DeleteIcon,
+};
 
 export const FileActionsPopup: FC<FileActionsPopupProps> = (props) => {
-  const { item } = props;
   const [anchor, setAnchor] = useState<MenuProps['anchorEl']>();
 
   const openAddMenu = (e: React.MouseEvent) => {
@@ -95,21 +91,41 @@ export const FileActionsPopup: FC<FileActionsPopupProps> = (props) => {
       <IconButton onClick={openAddMenu}>
         <MoreIcon />
       </IconButton>
-      <FileActionsMenu anchorEl={anchor} onClose={closeAddMenu} item={item} />
+      <FileActionsMenu anchorEl={anchor} onClose={closeAddMenu} {...props} />
     </>
   );
 };
 
-type FileActionsMenuProps = Partial<MenuProps> & {
-  item: FilesActionItem;
-};
+type FileActionsMenuProps = Partial<MenuProps> & FileActionsPopupProps;
+
+const isFileVersion = (
+  props: FileActionsPopupProps
+): props is VersionPopupProps => props.item.__typename === 'FileVersion';
 
 export const FileActionsMenu: FC<FileActionsMenuProps> = (props) => {
-  const { item, ...rest } = props;
   const classes = useStyles();
   const { spacing } = useTheme();
-  const handleFilesSelection = useUploadProjectFiles(item.id, 'version');
+  const { item, actions, ...rest } = props;
+
+  const menuActions = Array.isArray(actions)
+    ? [...new Set(actions)]
+    : isFileVersion(props)
+    ? [...new Set(actions.version)]
+    : [...new Set(actions.file)];
+  const versionMenuActions = Array.isArray(actions)
+    ? menuActions
+    : [...new Set(actions.version)];
+
   const { handleFileActionClick } = useFileActions();
+
+  const menuProps = Object.entries(rest).reduce((menuProps, [key, value]) => {
+    return key === 'onVersionUpload'
+      ? menuProps
+      : {
+          ...menuProps,
+          [key]: value,
+        };
+  }, {});
 
   const close = () => props.onClose?.({}, 'backdropClick');
 
@@ -119,23 +135,35 @@ export const FileActionsMenu: FC<FileActionsMenuProps> = (props) => {
   ) => {
     event.stopPropagation();
     close();
-    handleFileActionClick(item, action);
+    const params = {
+      item,
+      action,
+      ...(action === FileAction.History
+        ? { versionActions: versionMenuActions }
+        : null),
+    };
+    handleFileActionClick(params as HandleFileActionClickParams);
   };
 
   const { getRootProps, getInputProps } = useDropzone({
+    onDrop:
+      'onVersionUpload' in props
+        ? props.onVersionUpload
+        : () => {
+            return;
+          },
     multiple: false,
-    onDrop: handleFilesSelection,
     noDrag: true,
   });
 
-  const menuItemContents = (menuItem: typeof menuItems[0]) => {
-    const { text, icon: Icon } = menuItem;
+  const menuItemContents = (menuItem: FileAction) => {
+    const Icon = actionIcons[menuItem];
     return (
       <>
         <ListItemIcon className={classes.listItemIcon}>
           <Icon fontSize="small" />
         </ListItemIcon>
-        <ListItemText className={classes.listItemText} primary={text} />
+        <ListItemText className={classes.listItemText} primary={menuItem} />
       </>
     );
   };
@@ -147,27 +175,25 @@ export const FileActionsMenu: FC<FileActionsMenuProps> = (props) => {
       getContentAnchorEl={null}
       anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
       transformOrigin={{ vertical: spacing(-2), horizontal: 'right' }}
-      {...rest}
+      {...menuProps}
     >
-      {menuItems.map((menuItem) => {
-        const { text, directory, version } = menuItem;
-        return (item.type === 'Directory' && !directory) ||
-          (item.type === 'FileVersion' && !version) ? null : (
+      {menuActions.map((action) => {
+        return (
           <MenuItem
-            key={text}
+            key={action}
             onClick={
-              text === FileAction.NewVersion
+              action === FileAction.NewVersion
                 ? (event) => event.stopPropagation()
-                : (event) => handleActionClick(event, text)
+                : (event) => handleActionClick(event, action)
             }
           >
-            {text === FileAction.NewVersion ? (
+            {action === FileAction.NewVersion ? (
               <span {...getRootProps()} className={classes.newVersionItem}>
                 <input {...getInputProps()} name="file-version-uploader" />
-                {menuItemContents(menuItem)}
+                {menuItemContents(action)}
               </span>
             ) : (
-              menuItemContents(menuItem)
+              menuItemContents(action)
             )}
           </MenuItem>
         );

@@ -47,6 +47,13 @@ fragment LanguageEngagementDetail on LanguageEngagement {
     canRead
     canEdit
   }
+  pnp {
+    canRead
+    canEdit
+    value {
+      ...FileNodeInfo
+    }
+  }
   modifiedAt
   status
   ceremony {

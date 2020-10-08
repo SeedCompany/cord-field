@@ -1,0 +1,35 @@
+mutation UploadLanguageEngagementPnp(
+  $id: ID!
+  $pnp: CreateDefinedFileVersionInput!
+) {
+  updateLanguageEngagement(input: { engagement: { id: $id, pnp: $pnp } }) {
+    engagement {
+      id
+      pnp {
+        value {
+          id
+          name
+        }
+      }
+    }
+  }
+}
+
+mutation UploadInternshipEngagementGrowthPlan(
+  $id: ID!
+  $growthPlan: CreateDefinedFileVersionInput!
+) {
+  updateInternshipEngagement(
+    input: { engagement: { id: $id, growthPlan: $growthPlan } }
+  ) {
+    engagement {
+      id
+      growthPlan {
+        value {
+          id
+          name
+        }
+      }
+    }
+  }
+}

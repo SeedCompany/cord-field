@@ -1,29 +1,37 @@
 import React, { createContext, FC, useContext, useState } from 'react';
-import { Directory, File, GQLOperations } from '../../../api';
-import {
-  ProjectDirectoryDirectory,
-  ProjectDirectoryFile,
-} from '../../../scenes/Projects/Files';
+import { GQLOperations } from '../../../api';
 import { useDialog } from '../../Dialog';
 import { FilePreview } from '../FilePreview';
-import { FileVersionItem_FileVersion_Fragment } from '../FileVersionItem';
+import {
+  FileNodeInfo_Directory_Fragment as Directory,
+  FileNodeInfo_File_Fragment as File,
+  FileNodeInfoFragment as FileNode,
+  FileNodeInfo_FileVersion_Fragment as FileVersion,
+} from '../files.generated';
 import { useDownloadFile } from '../hooks';
 import { DeleteFile } from './DeleteFile';
 import { FileVersions } from './FileVersions';
 import { RenameFile } from './RenameFile';
 
-export type FilesActionItem =
-  | File
-  | Directory
-  | ProjectDirectoryDirectory
-  | ProjectDirectoryFile
-  | FileVersionItem_FileVersion_Fragment;
+/**
+ * Strictly speaking, we don't totally need to re-declare these,
+ * but we're playing it safe in case we need to later expand the
+ * types allowed to be used with `FileActionsContext`.
+ */
+export type FilesActionItem = FileNode;
 
-export type FileActionItem = File | ProjectDirectoryFile;
+export type FileActionItem = File;
+export type VersionActionItem = FileVersion;
+export type NonVersionActionItem = Exclude<FilesActionItem, VersionActionItem>;
+export type DirectoryActionItem = Directory;
 export type NonDirectoryActionItem = Exclude<
   FilesActionItem,
-  Directory | ProjectDirectoryDirectory
+  DirectoryActionItem
 >;
+
+export const isFileVersion = (
+  fileNode: FilesActionItem
+): fileNode is VersionActionItem => fileNode.__typename === 'FileVersion';
 
 export enum FileAction {
   Rename = 'rename',
@@ -33,11 +41,35 @@ export enum FileAction {
   Delete = 'delete',
 }
 
+export type PermittedActions =
+  | FileAction[]
+  | {
+      file: FileAction[];
+      version: FileAction[];
+    };
+
+interface VersionActionPayload {
+  item: FileActionItem;
+  actions: PermittedActions;
+}
+
+interface ActionClickParams {
+  action: Exclude<FileAction, FileAction.NewVersion | FileAction.History>;
+  item: FilesActionItem;
+}
+
+interface HistoryActionClickParams {
+  action: FileAction.History;
+  item: FileActionItem;
+  versionActions: FileAction[];
+}
+
+export type HandleFileActionClickParams =
+  | ActionClickParams
+  | HistoryActionClickParams;
+
 export const initialFileActionsContext = {
-  handleFileActionClick: (
-    _: FilesActionItem,
-    __: Exclude<FileAction, FileAction.NewVersion>
-  ) => {
+  handleFileActionClick: (_: HandleFileActionClickParams) => {
     return;
   },
   previewPage: 1,
@@ -53,7 +85,8 @@ export const FileActionsContext = createContext<
   typeof initialFileActionsContext
 >(initialFileActionsContext);
 
-export const FileActionsContextProvider: FC = ({ children }) => {
+export const FileActionsContextProvider: FC = (props) => {
+  const { children } = props;
   const [previewPage, setPreviewPage] = useState(1);
 
   const downloadFile = useDownloadFile();
@@ -61,8 +94,9 @@ export const FileActionsContextProvider: FC = ({ children }) => {
   const [renameState, renameFile, fileNodeToRename] = useDialog<
     FilesActionItem
   >();
+
   const [versionState, showVersions, versionToView] = useDialog<
-    FileActionItem
+    VersionActionPayload
   >();
   const [deleteState, deleteFile, fileNodeToDelete] = useDialog<
     FilesActionItem
@@ -74,19 +108,19 @@ export const FileActionsContextProvider: FC = ({ children }) => {
   const actions = {
     rename: (item: FilesActionItem) => renameFile(item),
     download: (item: FilesActionItem) => downloadFile(item),
-    history: (item: FilesActionItem) => {
-      if (item.__typename === 'File') {
-        showVersions(item);
-      }
-    },
+    history: (item: FileActionItem, actions: FileAction[]) =>
+      showVersions({ item, actions }),
     delete: (item: FilesActionItem) => deleteFile(item),
   };
 
-  const handleFileActionClick = (
-    item: FilesActionItem,
-    action: Exclude<FileAction, FileAction.NewVersion>
-  ) => {
-    actions[action](item);
+  const handleFileActionClick = (params: HandleFileActionClickParams) => {
+    const isHistoryAction = (
+      params: HandleFileActionClickParams
+    ): params is HistoryActionClickParams =>
+      params.action === FileAction.History;
+    isHistoryAction(params)
+      ? actions.history(params.item, params.versionActions)
+      : actions[params.action](params.item);
   };
 
   const deleteRefetches =
@@ -111,7 +145,11 @@ export const FileActionsContextProvider: FC = ({ children }) => {
           refetchQueries={[deleteRefetches]}
           {...deleteState}
         />
-        <FileVersions file={versionToView} {...versionState} />
+        <FileVersions
+          file={versionToView?.item}
+          actions={versionToView?.actions}
+          {...versionState}
+        />
         <FilePreview file={fileToPreview} {...previewDialogState} />
       </>
     </FileActionsContext.Provider>

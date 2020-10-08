@@ -10,7 +10,7 @@ import {
 } from '@material-ui/core';
 import { Skeleton } from '@material-ui/lab';
 import React, { FC, Fragment } from 'react';
-import { ProjectDirectoryFile } from '../../../scenes/Projects/Files';
+import { FileActionItem, PermittedActions } from '../FileActions';
 import {
   FileVersionItem_FileVersion_Fragment as FileVersion,
   FileVersionItem,
@@ -24,11 +24,12 @@ const useStyles = makeStyles(({ spacing }) => ({
 }));
 
 type FileVersionsProps = DialogProps & {
-  file: ProjectDirectoryFile | undefined;
+  file: FileActionItem | undefined;
+  actions: PermittedActions | undefined;
 };
 
 export const FileVersions: FC<FileVersionsProps> = (props) => {
-  const { file, ...dialogProps } = props;
+  const { file, actions, ...dialogProps } = props;
   const { onClose } = dialogProps;
 
   const classes = useStyles();
@@ -52,6 +53,12 @@ export const FileVersions: FC<FileVersionsProps> = (props) => {
       return item.__typename === 'FileVersion';
     }) ?? [];
 
+  const menuActions = actions
+    ? Array.isArray(actions)
+      ? actions
+      : actions.version
+    : [];
+
   return !file ? null : (
     <>
       <Dialog {...dialogProps} aria-labelledby="dialog-file-versions">
@@ -68,7 +75,7 @@ export const FileVersions: FC<FileVersionsProps> = (props) => {
               ))
             : versions.map((version, index) => (
                 <Fragment key={version.id}>
-                  <FileVersionItem version={version} />
+                  <FileVersionItem version={version} actions={menuActions} />
                   {total && index !== total - 1 && <Divider />}
                 </Fragment>
               ))}
