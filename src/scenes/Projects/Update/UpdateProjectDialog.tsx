@@ -31,8 +31,9 @@ import { ExtractStrict, many, Many } from '../../../util';
 import { ProjectOverviewFragment } from '../Overview/ProjectOverview.generated';
 import { useUpdateProjectMutation } from './UpdateProject.generated';
 
-// For when we need to use a non-string value in Final Form
-// Add more fields here as needed
+// For when we need to use a different type in the form than
+// we eventually submit.
+// Add more fields here as needed.
 type ExcludedFieldNames = 'primaryLocationId' | 'fieldRegionId';
 type RemappedFieldNames = 'primaryLocation' | 'fieldRegion';
 interface RemappedFields {
