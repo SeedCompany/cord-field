@@ -27,17 +27,5 @@ fragment LanguageEngagementListItem on LanguageEngagement {
   }
   products {
     total
-    items {
-      id
-    }
-  }
-  endDate {
-    value
-  }
-  initialEndDate {
-    value
-  }
-  completeDate {
-    value
   }
 }
