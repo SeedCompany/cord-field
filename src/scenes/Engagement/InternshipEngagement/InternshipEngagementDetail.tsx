@@ -100,31 +100,7 @@ export const InternshipEngagementDetail: FC<EngagementQuery> = ({
               )}
             </Breadcrumbs>
           </Grid>
-
-          <Grid item>
-            <Typography variant="body2" color="textSecondary">
-              Updated {formatDateTime(engagement.modifiedAt)}
-            </Typography>
-          </Grid>
           <Grid item container spacing={3} alignItems="center">
-            <Grid item>
-              <DataButton
-                secured={engagement.position}
-                empty="Enter Intern Position"
-                redacted="You do not have permission to view intern position"
-                children={displayInternPosition}
-                onClick={() => show('position')}
-              />
-            </Grid>
-            <Grid item>
-              <DataButton
-                secured={engagement.countryOfOrigin}
-                empty="Enter Country of Origin"
-                redacted="You do not have permission to view country of origin"
-                onClick={() => show('countryOfOriginId')}
-                children={engagement.countryOfOrigin.value?.name.value}
-              />
-            </Grid>
             <Grid item container spacing={3} alignItems="center">
               <Grid item className={name ? undefined : classes.nameRedacted}>
                 <Typography
