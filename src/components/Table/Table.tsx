@@ -45,7 +45,7 @@ const Container = withStyles(() => ({
       borderRadius: 'inherit',
     },
   },
-  // This is the default Container, only styles above have changed.
+  // This is the default Container, only `elevation` and styles above have changed.
 }))((props) => <Paper elevation={8} {...props} />);
 
 const useLoadingStyles = makeStyles(
