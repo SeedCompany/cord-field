@@ -146,7 +146,7 @@ export const InternshipEngagementDetail: FC<EngagementQuery> = ({
                   secured={engagement.countryOfOrigin}
                   empty="Enter Country of Origin"
                   redacted="You do not have permission to view country of origin"
-                  children={engagement.countryOfOrigin.value?.name.value}
+                  children={(location) => location.name.value}
                   onClick={() => show('countryOfOriginId')}
                 />
               </Grid>

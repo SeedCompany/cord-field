@@ -252,9 +252,7 @@ export const ProjectOverview: FC = () => {
                 secured={projectOverviewData?.project.primaryLocation}
                 empty="Enter Location"
                 redacted="You do not have permission to view location"
-                children={
-                  projectOverviewData?.project.primaryLocation.value?.name.value
-                }
+                children={(location) => location.name.value}
               />
             </Grid>
             <Grid item>
