@@ -160,7 +160,7 @@ export const UpdateProjectDialog = ({
               ? { primaryLocationId: remappedInput.project.primaryLocation.id }
               : null),
             ...(remappedInput.project.fieldRegion?.id
-              ? { fieldRegion: remappedInput.project.fieldRegion.id }
+              ? { fieldRegionId: remappedInput.project.fieldRegion.id }
               : null),
           },
         };
