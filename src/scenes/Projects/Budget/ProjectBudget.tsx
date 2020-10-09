@@ -1,120 +1,58 @@
-import { Breadcrumbs, makeStyles, Typography } from '@material-ui/core';
+import { Breadcrumbs, Grid, makeStyles, Typography } from '@material-ui/core';
 import { Skeleton } from '@material-ui/lab';
 import { sumBy } from 'lodash';
-import { Column, Components } from 'material-table';
-import React, { useMemo, useRef } from 'react';
+import React from 'react';
 import { useParams } from 'react-router-dom';
+import { AddItemCard } from '../../../components/AddItemCard';
 import { Breadcrumb } from '../../../components/Breadcrumb';
+import { DefinedFileCard } from '../../../components/DefinedFileCard';
+import { FileActionsContextProvider } from '../../../components/files/FileActions';
 import { useCurrencyFormatter } from '../../../components/Formatters/useCurrencyFormatter';
-import { ContentContainer } from '../../../components/Layout';
+import { ContentContainer as Content } from '../../../components/Layout/ContentContainer';
 import { ProjectBreadcrumb } from '../../../components/ProjectBreadcrumb';
-import { Table } from '../../../components/Table';
-import {
-  BudgetRecordFragment as BudgetRecord,
-  useProjectBudgetQuery,
-  useUpdateProjectBudgetRecordMutation,
-} from './ProjectBudget.generated';
+import { useUploadBudgetFile } from '../Files';
+import { useProjectBudgetQuery } from './ProjectBudget.generated';
+import { ProjectBudgetRecords } from './ProjectBudgetRecords';
 
-const useStyles = makeStyles(({ spacing, breakpoints }) => ({
+const useStyles = makeStyles(({ breakpoints, spacing }) => ({
   header: {
-    margin: spacing(3, 4, 3, 0),
+    margin: spacing(3, 0),
     display: 'flex',
     justifyContent: 'space-between',
     alignItems: 'flex-end',
     maxWidth: breakpoints.values.md,
   },
-  tableWrapper: {
-    maxWidth: breakpoints.values.md,
-    margin: spacing(0, 4, 4, 0),
-    overflow: 'auto',
-  },
   totalLoading: {
     width: '10%',
   },
-  toolbar: {
-    padding: spacing(2),
-    paddingBottom: spacing(1),
+  tableWrapper: {
+    maxWidth: breakpoints.values.md,
+    margin: spacing(0, 4, 4, 0),
   },
 }));
 
-const tableComponents: Components = {
-  // No toolbar since it's just empty space, we don't use it for anything.
-  Toolbar: () => null,
-};
-
-interface BudgetRowData {
-  id: string;
-  organization: string;
-  fiscalYear: string;
-  amount: string | null;
-  canEdit: boolean;
-}
-
 export const ProjectBudget = () => {
-  const { projectId } = useParams();
   const classes = useStyles();
+  const { projectId } = useParams();
   const formatCurrency = useCurrencyFormatter();
+
+  const uploadFile = useUploadBudgetFile();
 
   const { data, loading, error } = useProjectBudgetQuery({
     variables: { id: projectId },
   });
-  const [
-    updateBudgetRecord,
-    { loading: isUpdateLoading },
-  ] = useUpdateProjectBudgetRecordMutation();
-
-  const budgetRecordIdInUpdate = useRef<string>();
 
   const budget = data?.project.budget;
-  const records: readonly BudgetRecord[] = budget?.value?.records ?? [];
 
-  const budgetTotal = sumBy(records, (record) => record.amount.value ?? 0);
-
-  const rowData = records.map<BudgetRowData>((record) => ({
-    id: record.id,
-    organization: record.organization.value?.name.value ?? '',
-    fiscalYear: String(record.fiscalYear.value),
-    amount: String(record.amount.value ?? ''),
-    canEdit: record.amount.canEdit,
-  }));
-
-  const blankAmount = 'click to edit';
-  const columns: Array<Column<BudgetRowData>> = useMemo(
-    () => [
-      {
-        field: 'id',
-        hidden: true,
-      },
-      {
-        field: 'organization',
-        editable: 'never',
-      },
-      {
-        field: 'fiscalYear',
-        editable: 'never',
-      },
-      {
-        field: 'amount',
-        type: 'currency',
-        editable: (_, rowData) => rowData.canEdit,
-        render: (rowData) => {
-          if (isUpdateLoading && rowData.id === budgetRecordIdInUpdate.current)
-            return <Skeleton width={60} />;
-          return rowData.amount
-            ? formatCurrency(Number(rowData.amount))
-            : blankAmount;
-        },
-      },
-      {
-        field: 'canEdit',
-        hidden: true,
-      },
-    ],
-    [formatCurrency, isUpdateLoading]
+  const budgetTotal = sumBy(
+    budget?.value?.records,
+    (record) => record.amount.value ?? 0
   );
 
+  const template = budget?.value?.universalTemplateFile;
+
   return (
-    <ContentContainer>
+    <Content>
       {error ? (
         <Typography variant="h4">Error fetching Project Budget</Typography>
       ) : budget?.canRead === false ? (
@@ -128,46 +66,55 @@ export const ProjectBudget = () => {
             <Breadcrumb to=".">Field Budget</Breadcrumb>
           </Breadcrumbs>
           <header className={classes.header}>
-            <Typography variant="h2">Field Budget</Typography>
+            <Typography variant="h2">Budget</Typography>
             <Typography
               variant="h3"
               className={loading ? classes.totalLoading : undefined}
             >
-              {!loading && !isUpdateLoading ? (
+              {!loading ? (
                 `Total: ${formatCurrency(budgetTotal)}`
               ) : (
-                <Skeleton width={120} />
+                <Skeleton width="100%" />
               )}
             </Typography>
           </header>
           <div className={classes.tableWrapper}>
-            <Table
-              data={rowData}
-              columns={columns}
-              isLoading={loading}
-              components={tableComponents}
-              cellEditable={
-                budget?.canEdit
-                  ? {
-                      onCellEditApproved: async (newAmount, _, data) => {
-                        if (newAmount === blankAmount || newAmount === '')
-                          return;
-                        budgetRecordIdInUpdate.current = data.id;
-                        const input = {
-                          budgetRecord: {
-                            id: data.id,
-                            amount: Number(newAmount),
-                          },
-                        };
-                        await updateBudgetRecord({ variables: { input } });
-                      },
-                    }
-                  : undefined
-              }
-            />
+            <Grid container direction="column" spacing={3}>
+              <Grid item>
+                <ProjectBudgetRecords loading={loading} budget={budget} />
+              </Grid>
+              {!budget?.value || !template || !template.canRead ? null : (
+                <FileActionsContextProvider>
+                  <Grid item xs={6}>
+                    {!template.value ? (
+                      <AddItemCard
+                        actionType="dropzone"
+                        canAdd={template.canEdit}
+                        handleFileSelect={(files: File[]) =>
+                          uploadFile({ files, parentId: budget.value!.id })
+                        }
+                        itemType="template"
+                      />
+                    ) : (
+                      <DefinedFileCard
+                        onVersionUpload={(files) =>
+                          uploadFile({
+                            action: 'version',
+                            files,
+                            parentId: budget.value!.id,
+                          })
+                        }
+                        resourceType="budget"
+                        securedFile={template}
+                      />
+                    )}
+                  </Grid>
+                </FileActionsContextProvider>
+              )}
+            </Grid>
           </div>
         </>
       )}
-    </ContentContainer>
+    </Content>
   );
 };

@@ -16,7 +16,7 @@ import {
   useFileActions,
 } from '../files/FileActions';
 import { FileNodeInfo_File_Fragment as FileNode } from '../files/files.generated';
-import { useDateFormatter } from '../Formatters';
+import { useDateTimeFormatter } from '../Formatters';
 import { HugeIcon, ReportIcon } from '../Icons';
 import { Redacted } from '../Redacted';
 import { DropzoneOverlay } from '../Upload';
@@ -113,7 +113,7 @@ export const DefinedFileCard: FC<DefinedFileCardProps> = (props) => {
   };
 
   const file = securedFile.value;
-  const formatDate = useDateFormatter();
+  const formatDateTime = useDateTimeFormatter();
   const { openFilePreview } = useFileActions();
 
   const { getRootProps, getInputProps, isDragActive } = useDropzone({
@@ -162,7 +162,7 @@ export const DefinedFileCard: FC<DefinedFileCardProps> = (props) => {
             canRead={canRead}
             loading={!file}
             resourceType={resourceType}
-            text={formatDate(modifiedAt)}
+            text={formatDateTime(modifiedAt)}
           />
         </div>
       </CardActionArea>

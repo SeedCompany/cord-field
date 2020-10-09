@@ -35,7 +35,7 @@ const defaultIcons: Icons = {
   SortArrow: forwardRef((props, ref) => <SortArrow {...props} ref={ref} />),
 };
 
-const Container = withStyles({
+const Container = withStyles(() => ({
   rounded: {
     // Fix border radius when Toolbar is omitted.
     // Actual component rendering problem div is inaccessible, so we've gone up
@@ -45,8 +45,8 @@ const Container = withStyles({
       borderRadius: 'inherit',
     },
   },
-  // This is the default Container, only styles above have changed.
-})((props) => <Paper elevation={2} {...props} />);
+  // This is the default Container, only `elevation` and styles above have changed.
+}))((props) => <Paper elevation={8} {...props} />);
 
 const useLoadingStyles = makeStyles(
   ({ palette }) => ({
