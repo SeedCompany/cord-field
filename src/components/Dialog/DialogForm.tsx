@@ -35,9 +35,9 @@ export type DialogFormProps<T, R = void> = Omit<
 
   leftAction?: ReactNode;
 
-  submitLabel?: ReactNode;
+  submitLabel?: ReactNode | false;
   SubmitProps?: SubmitButtonProps;
-  closeLabel?: ReactNode;
+  closeLabel?: ReactNode | false;
   CloseProps?: ButtonProps;
 
   /**
@@ -179,24 +179,28 @@ export function DialogForm<T, R = void>({
                     <div className={classes.spacer} />
                   </>
                 ) : null}
-                <Button
-                  color="secondary"
-                  {...CloseProps}
-                  onClick={() => {
-                    onClose?.('cancel', form);
-                  }}
-                >
-                  {closeLabel || 'Cancel'}
-                </Button>
-                <SubmitButton
-                  color="secondary"
-                  size="medium"
-                  fullWidth={false}
-                  disableElevation
-                  {...SubmitProps}
-                >
-                  {submitLabel}
-                </SubmitButton>
+                {closeLabel !== false && (
+                  <Button
+                    color="secondary"
+                    {...CloseProps}
+                    onClick={() => {
+                      onClose?.('cancel', form);
+                    }}
+                  >
+                    {closeLabel || 'Cancel'}
+                  </Button>
+                )}
+                {submitLabel !== false && (
+                  <SubmitButton
+                    color="secondary"
+                    size="medium"
+                    fullWidth={false}
+                    disableElevation
+                    {...SubmitProps}
+                  >
+                    {submitLabel}
+                  </SubmitButton>
+                )}
               </DialogActions>
             </form>
           </Dialog>
