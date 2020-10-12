@@ -5,7 +5,11 @@ import {
   DialogForm,
   DialogFormProps,
 } from '../../../components/Dialog/DialogForm';
-import { CheckboxField, SubmitError } from '../../../components/form';
+import {
+  CheckboxField,
+  SubmitError,
+  TextField,
+} from '../../../components/form';
 import { UserField, UserLookupItem } from '../../../components/form/Lookup';
 import { ExtractStrict, many, Many } from '../../../util';
 import { PartnerDetailsFragment } from '../Detail/PartnerDetail.generated';
@@ -23,7 +27,7 @@ interface PartnerFormValues {
 export type EditablePartnerField = ExtractStrict<
   keyof UpdatePartner,
   // Add more fields here as needed
-  'pointOfContactId' | 'globalInnovationsClient'
+  'pointOfContactId' | 'globalInnovationsClient' | 'pmcEntityCode' | 'active'
 >;
 
 type EditPartnerProps = Except<
@@ -49,6 +53,11 @@ const fieldMapping: Record<
   globalInnovationsClient: ({ props }) => (
     <CheckboxField {...props} label="Global Innovations Client" />
   ),
+  active: ({ props }) => <CheckboxField {...props} label="Active" />,
+  pmcEntityCode: ({ props }) => (
+    //TODO: add in validation 3 uppercase chars
+    <TextField {...props} label="PMC Entity Code" />
+  ),
 };
 
 export const EditPartner = ({
@@ -65,6 +74,8 @@ export const EditPartner = ({
       partner: {
         id: partner.id,
         globalInnovationsClient: partner.globalInnovationsClient.value,
+        pmcEntityCode: partner.pmcEntityCode.value,
+        active: partner.active.value,
       },
     }),
     [partner]

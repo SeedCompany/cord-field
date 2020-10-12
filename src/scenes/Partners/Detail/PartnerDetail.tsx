@@ -7,6 +7,7 @@ import { Many } from 'lodash';
 import React from 'react';
 import { useParams } from 'react-router-dom';
 import { BooleanProperty } from '../../../components/BooleanProperty';
+import { DataButton } from '../../../components/DataButton';
 import { useDialog } from '../../../components/Dialog';
 import { PencilCircledIcon } from '../../../components/Icons';
 import { UserListItemCardPortrait } from '../../../components/UserListItemCard';
@@ -79,6 +80,22 @@ export const PartnerDetail = () => {
                 <PencilCircledIcon />
               </IconButton>
             </div>
+            <DataButton
+              onClick={() => editPartner('pmcEntityCode')}
+              secured={partner?.pmcEntityCode}
+              redacted="You do not have permission to view PMC Entity Code"
+              children={`PMC Entity Code${
+                partner?.pmcEntityCode.value
+                  ? `: ${partner.pmcEntityCode.value}`
+                  : ''
+              }`}
+            />
+            <DataButton
+              onClick={() => editPartner('active')}
+              secured={partner?.active}
+              redacted="You do not have permission to view Status"
+              children={partner?.active.value ? 'Active' : 'Inactive'}
+            />
             <BooleanProperty
               label="Global Innovations Client"
               redacted="You do not have permission to view whether this is a Global Innovations Client"

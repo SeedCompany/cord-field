@@ -27,4 +27,10 @@ fragment PartnerDetails on Partner {
   globalInnovationsClient {
     ...securedBool
   }
+  pmcEntityCode {
+    ...securedString
+  }
+  active {
+    ...securedBool
+  }
 }
