@@ -1,12 +1,14 @@
 import { useQuery } from '@apollo/client';
-import { IconButton, makeStyles, Typography } from '@material-ui/core';
+import { Grid, IconButton, makeStyles, Typography } from '@material-ui/core';
 import { AddCircle } from '@material-ui/icons';
 import { Skeleton } from '@material-ui/lab';
 import clsx from 'clsx';
 import { Many } from 'lodash';
 import React from 'react';
 import { useParams } from 'react-router-dom';
+import { BooleanProperty } from '../../../components/BooleanProperty';
 import { useDialog } from '../../../components/Dialog';
+import { PencilCircledIcon } from '../../../components/Icons';
 import { UserListItemCardPortrait } from '../../../components/UserListItemCard';
 import { EditablePartnerField, EditPartner } from '../Edit';
 import { PartnerDocument } from './PartnerDetail.generated';
@@ -69,7 +71,20 @@ export const PartnerDetail = () => {
                   <Skeleton width="75%" />
                 )}
               </Typography>
+              <IconButton
+                color="primary"
+                aria-label="edit partner"
+                onClick={() => editPartner('globalInnovationsClient')}
+              >
+                <PencilCircledIcon />
+              </IconButton>
             </div>
+            <BooleanProperty
+              label="Global Innovations Client"
+              redacted="You do not have permission to view whether this is a Global Innovations Client"
+              data={partner?.globalInnovationsClient}
+              wrap={(node) => <Grid item>{node}</Grid>}
+            />
             <Typography variant="h3">
               Point of Contact
               <IconButton

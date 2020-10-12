@@ -24,4 +24,7 @@ fragment PartnerDetails on Partner {
       ...UserListItem
     }
   }
+  globalInnovationsClient {
+    ...securedBool
+  }
 }

@@ -5,7 +5,7 @@ import {
   DialogForm,
   DialogFormProps,
 } from '../../../components/Dialog/DialogForm';
-import { SubmitError } from '../../../components/form';
+import { CheckboxField, SubmitError } from '../../../components/form';
 import { UserField, UserLookupItem } from '../../../components/form/Lookup';
 import { ExtractStrict, many, Many } from '../../../util';
 import { PartnerDetailsFragment } from '../Detail/PartnerDetail.generated';
@@ -23,7 +23,7 @@ interface PartnerFormValues {
 export type EditablePartnerField = ExtractStrict<
   keyof UpdatePartner,
   // Add more fields here as needed
-  'pointOfContactId'
+  'pointOfContactId' | 'globalInnovationsClient'
 >;
 
 type EditPartnerProps = Except<
@@ -46,6 +46,9 @@ const fieldMapping: Record<
   pointOfContactId: ({ props }) => (
     <UserField {...props} label="Point of Contact" />
   ),
+  globalInnovationsClient: ({ props }) => (
+    <CheckboxField {...props} label="Global Innovations Client" />
+  ),
 };
 
 export const EditPartner = ({
@@ -61,6 +64,7 @@ export const EditPartner = ({
     () => ({
       partner: {
         id: partner.id,
+        globalInnovationsClient: partner.globalInnovationsClient.value,
       },
     }),
     [partner]
