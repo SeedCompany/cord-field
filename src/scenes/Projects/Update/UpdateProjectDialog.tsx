@@ -1,12 +1,11 @@
 import { pick } from 'lodash';
 import React, { ComponentType, useMemo } from 'react';
 import { Except, Merge } from 'type-fest';
-import { displayProjectStep, displayStatus, UpdateProject } from '../../../api';
+import { UpdateProject } from '../../../api';
 import {
   DisplayFieldRegionFragment,
   DisplayLocationFragment,
 } from '../../../api/fragments/location.generated';
-import { projectStatusFromStep, projectSteps } from '../../../api/projectSteps';
 import {
   DialogForm,
   DialogFormProps,
@@ -17,7 +16,6 @@ import {
   SubmitError,
   TextField,
 } from '../../../components/form';
-import { AutocompleteField } from '../../../components/form/AutocompleteField';
 import {
   FieldRegionField,
   LocationField,
@@ -30,7 +28,6 @@ export type EditableProjectField = ExtractStrict<
   keyof UpdateProject,
   // Add more fields here as needed
   | 'name'
-  | 'step'
   | 'mouStart'
   | 'mouEnd'
   | 'estimatedSubmission'
@@ -60,18 +57,6 @@ const fieldMapping: Record<
   mouEnd: ({ props }) => <DateField {...props} label="End Date" />,
   estimatedSubmission: ({ props }) => (
     <DateField {...props} label="Estimated Submission Date" />
-  ),
-  step: ({ props }) => (
-    <AutocompleteField
-      label="Step"
-      required
-      {...props}
-      options={projectSteps}
-      groupBy={(step) => displayStatus(projectStatusFromStep[step])}
-      getOptionLabel={displayProjectStep}
-      variant="outlined"
-      autoComplete
-    />
   ),
 };
 
@@ -110,7 +95,6 @@ export const UpdateProjectDialog = ({
       'id'
     > = {
       name: project.name.value,
-      step: project.step.value,
       primaryLocationId: project.primaryLocation.value,
       fieldRegionId: project.fieldRegion.value,
       mouStart: project.mouStart.value,
@@ -138,7 +122,6 @@ export const UpdateProjectDialog = ({
     project.fieldRegion.value,
     project.mouEnd.value,
     project.mouStart.value,
-    project.step.value,
     project.estimatedSubmission.value,
   ]);
 
