@@ -1,6 +1,12 @@
 import { Box } from '@material-ui/core';
 import { boolean, number, select, text } from '@storybook/addon-knobs';
 import React from 'react';
+import {
+  ProjectStatusList,
+  ProjectStepList,
+  ProjectTypeList,
+  SensitivityList,
+} from '../../api/enumLists';
 import { date, dateTime } from '../knobs.stories';
 import { ProjectListItemFragment } from './ProjectListItem.generated';
 import { ProjectListItemCard as PIC } from './ProjectListItemCard';
@@ -11,24 +17,16 @@ export const ProjectListItemCard = () => {
   const project: ProjectListItemFragment = {
     id: '123',
     createdAt: dateTime('createdAt'),
-    type: select('Type', ['Translation', 'Internship'], 'Internship'),
-    status: select(
-      'status',
-      ['InDevelopment', 'Pending', 'Active', 'Stopped', 'Finished'],
-      'Active'
-    ),
-    sensitivity: select('sensitivity', ['High', 'Low', 'Medium'], 'High'),
+    type: select('Type', ProjectTypeList, 'Internship'),
+    status: select('status', ProjectStatusList, 'Active'),
+    sensitivity: select('sensitivity', SensitivityList, 'High'),
     modifiedAt: dateTime('modifiedAt'),
     departmentId: { value: text('departmentId', '1234567') },
     estimatedSubmission: {
       value: date('estimatedSubmission'),
     },
     step: {
-      value: select(
-        'ProjectStep',
-        ['Active', 'Rejected', 'Suspended'],
-        'Active'
-      ),
+      value: select('ProjectStep', ProjectStepList, 'Active'),
     },
     name: { value: text('name', 'Project A') },
     primaryLocation: {
