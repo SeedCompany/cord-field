@@ -1,9 +1,12 @@
 import { useQuery } from '@apollo/client';
-import { makeStyles, Typography } from '@material-ui/core';
+import { IconButton, makeStyles, Typography } from '@material-ui/core';
 import { Skeleton } from '@material-ui/lab';
 import clsx from 'clsx';
 import React from 'react';
 import { useParams } from 'react-router-dom';
+import { useDialog } from '../../../components/Dialog';
+import { PencilCircledIcon } from '../../../components/Icons';
+import { EditPartner } from '../Edit';
 import { PartnerDocument } from './PartnerDetail.generated';
 
 const useStyles = makeStyles(({ spacing, breakpoints }) => ({
@@ -39,7 +42,7 @@ export const PartnerDetail = () => {
   });
   const partner = data?.partner;
 
-  //   const [editPartnerState, editPartner] = useDialog();
+  const [editPartnerState, editPartner] = useDialog();
 
   return (
     <main className={classes.root}>
@@ -61,7 +64,7 @@ export const PartnerDetail = () => {
                 <Skeleton width="75%" />
               )}
             </Typography>
-            {/* {partner ? (
+            {partner ? (
               <IconButton
                 color="primary"
                 aria-label="edit partner"
@@ -69,11 +72,11 @@ export const PartnerDetail = () => {
               >
                 <PencilCircledIcon />
               </IconButton>
-            ) : null} */}
+            ) : null}
           </div>
-          {/* {partner ? (
+          {partner ? (
             <EditPartner partner={partner} {...editPartnerState} />
-          ) : null} */}
+          ) : null}
         </>
       )}
     </main>
