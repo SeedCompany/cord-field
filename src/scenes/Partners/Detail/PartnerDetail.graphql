@@ -17,4 +17,11 @@ fragment PartnerDetails on Partner {
       avatarLetters
     }
   }
+  pointOfContact {
+    canRead
+    canEdit
+    value {
+      ...UserListItem
+    }
+  }
 }
