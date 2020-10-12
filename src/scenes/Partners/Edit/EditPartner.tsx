@@ -1,12 +1,19 @@
 import React, { ComponentType, useMemo } from 'react';
 import { Except, Merge } from 'type-fest';
-import { GQLOperations, UpdatePartner } from '../../../api';
+import {
+  displayFinancialReportingType,
+  FinancialReportingTypeList,
+  GQLOperations,
+  PartnerTypeList,
+  UpdatePartner,
+} from '../../../api';
 import {
   DialogForm,
   DialogFormProps,
 } from '../../../components/Dialog/DialogForm';
 import {
   CheckboxField,
+  EnumField,
   SubmitError,
   TextField,
 } from '../../../components/form';
@@ -27,7 +34,12 @@ interface PartnerFormValues {
 export type EditablePartnerField = ExtractStrict<
   keyof UpdatePartner,
   // Add more fields here as needed
-  'pointOfContactId' | 'globalInnovationsClient' | 'pmcEntityCode' | 'active'
+  | 'pointOfContactId'
+  | 'globalInnovationsClient'
+  | 'pmcEntityCode'
+  | 'active'
+  | 'types'
+  | 'financialReportingTypes'
 >;
 
 type EditPartnerProps = Except<
@@ -41,6 +53,7 @@ interface EngagementFieldProps {
   props: {
     name: string;
   };
+  hide?: boolean;
 }
 
 const fieldMapping: Record<
@@ -58,6 +71,25 @@ const fieldMapping: Record<
     //TODO: add in validation 3 uppercase chars
     <TextField {...props} label="PMC Entity Code" />
   ),
+  types: ({ props }) => (
+    <EnumField
+      multiple
+      label="Types"
+      options={PartnerTypeList}
+      layout="two-column"
+      {...props}
+    />
+  ),
+  //TODO: fix hard crash and missing initialValues
+  financialReportingTypes: ({ props, hide }) =>
+    hide ? null : (
+      <EnumField
+        label="Financial Reporting Type"
+        options={FinancialReportingTypeList}
+        {...props}
+        getLabel={displayFinancialReportingType}
+      />
+    ),
 };
 
 export const EditPartner = ({
@@ -76,6 +108,8 @@ export const EditPartner = ({
         globalInnovationsClient: partner.globalInnovationsClient.value,
         pmcEntityCode: partner.pmcEntityCode.value,
         active: partner.active.value,
+        types: partner.types.value,
+        financialReportingTypes: partner.financialReportingTypes.value,
       },
     }),
     [partner]
@@ -84,11 +118,6 @@ export const EditPartner = ({
   const editFields = useMemo(() => many(editFieldsProp ?? []), [
     editFieldsProp,
   ]);
-
-  const fields = editFields.map((name) => {
-    const Field = fieldMapping[name];
-    return <Field props={{ name }} key={name} />;
-  });
 
   return (
     <DialogForm<PartnerFormValues>
@@ -109,8 +138,21 @@ export const EditPartner = ({
       }}
       fieldsPrefix="partner"
     >
-      <SubmitError />
-      {fields}
+      {({ values }) => (
+        <>
+          <SubmitError />
+          {editFields.map((name) => {
+            const Field = fieldMapping[name];
+            return (
+              <Field
+                props={{ name }}
+                key={name}
+                hide={!values.partner.types?.includes('Managing')}
+              />
+            );
+          })}
+        </>
+      )}
     </DialogForm>
   );
 };

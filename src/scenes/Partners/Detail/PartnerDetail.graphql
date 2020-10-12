@@ -33,4 +33,14 @@ fragment PartnerDetails on Partner {
   active {
     ...securedBool
   }
+  types {
+    canRead
+    canEdit
+    value
+  }
+  financialReportingTypes {
+    canRead
+    canEdit
+    value
+  }
 }

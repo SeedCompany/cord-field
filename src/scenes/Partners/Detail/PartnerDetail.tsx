@@ -13,6 +13,7 @@ import { PencilCircledIcon } from '../../../components/Icons';
 import { UserListItemCardPortrait } from '../../../components/UserListItemCard';
 import { EditablePartnerField, EditPartner } from '../Edit';
 import { PartnerDocument } from './PartnerDetail.generated';
+import { PartnerTypeCard } from './PartnerTypesCard';
 
 const useStyles = makeStyles(({ spacing, breakpoints }) => ({
   root: {
@@ -102,6 +103,11 @@ export const PartnerDetail = () => {
               data={partner?.globalInnovationsClient}
               wrap={(node) => <Grid item>{node}</Grid>}
             />
+            <Typography variant="h3">Partner Types</Typography>
+            <PartnerTypeCard
+              partner={partner}
+              onEdit={() => editPartner(['types', 'financialReportingTypes'])}
+            ></PartnerTypeCard>
             <Typography variant="h3">
               Point of Contact
               <IconButton
