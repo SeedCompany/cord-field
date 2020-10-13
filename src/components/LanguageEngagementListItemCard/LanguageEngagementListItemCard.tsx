@@ -109,7 +109,7 @@ export const LanguageEngagementListItemCard: FC<LanguageEngagementListItemCardPr
             />
             <DisplaySimpleProperty
               label="Population"
-              value={population}
+              value={numberFormatter(population)}
               wrap={(node) => <Grid item>{node}</Grid>}
             />
             <DisplaySimpleProperty
