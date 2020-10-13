@@ -132,6 +132,40 @@ export const ProjectOverview: FC = () => {
     0
   );
 
+  const primaryLocation = projectOverviewData?.project.primaryLocation;
+  const region = projectOverviewData?.project.fieldRegion;
+  const locations = {
+    canRead: (primaryLocation?.canRead || region?.canRead) ?? false,
+    canEdit: (primaryLocation?.canEdit || region?.canEdit) ?? false,
+    value:
+      /**
+       * A lot going on here. Obviously if both values exist, we'll show
+       * them. If neither value exists, we want to pass the `DataButton`
+       * `undefined`, and then we just use the `empty` prop of the
+       * `DataButton` to display whatever message deem appropriate.
+       *
+       * But if only one value exists, we still want to display "Enter XX"
+       * in the place where the other value **would** be—BUT ONLY if the
+       * user has edit rights, otherwise they'll just be annoyed that we
+       * prompted them to "Enter XX" when really they're not allowed.
+       */
+      !primaryLocation?.value && !region?.value
+        ? undefined
+        : `${
+            primaryLocation?.value?.name.value ??
+            (primaryLocation?.canEdit ? 'Enter Location' : '')
+          }${
+            (primaryLocation?.value && region?.value) ||
+            (primaryLocation?.canEdit && region?.value) ||
+            (primaryLocation?.value && region?.canEdit) ||
+            (primaryLocation?.canEdit && region?.canEdit)
+              ? ' | '
+              : ''
+          }${
+            region?.value?.name.value ?? (region?.canEdit ? 'Enter Region' : '')
+          }`,
+  };
+
   const date = projectOverviewData
     ? securedDateRange(
         projectOverviewData.project.mouStart,
@@ -249,10 +283,13 @@ export const ProjectOverview: FC = () => {
             <Grid item>
               <DataButton
                 loading={!projectOverviewData}
-                secured={projectOverviewData?.project.primaryLocation}
-                empty="Enter Location"
+                secured={locations}
+                empty="Enter Location | Field Region"
                 redacted="You do not have permission to view location"
-                children={(location) => location.name.value}
+                children={locations.value}
+                onClick={() =>
+                  editField(['primaryLocationId', 'fieldRegionId'])
+                }
               />
             </Grid>
             <Grid item>

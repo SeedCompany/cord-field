@@ -1,12 +1,11 @@
 import { pick } from 'lodash';
 import React, { ComponentType, useMemo } from 'react';
-import { Except } from 'type-fest';
+import { Except, Merge } from 'type-fest';
+import { displayProjectStep, displayStatus, UpdateProject } from '../../../api';
 import {
-  displayProjectStep,
-  displayStatus,
-  UpdateProject,
-  UpdateProjectInput,
-} from '../../../api';
+  DisplayFieldRegionFragment,
+  DisplayLocationFragment,
+} from '../../../api/fragments/location.generated';
 import { projectStatusFromStep, projectSteps } from '../../../api/projectSteps';
 import {
   DialogForm,
@@ -19,6 +18,10 @@ import {
   TextField,
 } from '../../../components/form';
 import { AutocompleteField } from '../../../components/form/AutocompleteField';
+import {
+  FieldRegionField,
+  LocationField,
+} from '../../../components/form/Lookup';
 import { ExtractStrict, many, Many } from '../../../util';
 import { ProjectOverviewFragment } from '../Overview/ProjectOverview.generated';
 import { useUpdateProjectMutation } from './UpdateProject.generated';
@@ -26,7 +29,13 @@ import { useUpdateProjectMutation } from './UpdateProject.generated';
 export type EditableProjectField = ExtractStrict<
   keyof UpdateProject,
   // Add more fields here as needed
-  'name' | 'step' | 'mouStart' | 'mouEnd' | 'estimatedSubmission'
+  | 'name'
+  | 'step'
+  | 'mouStart'
+  | 'mouEnd'
+  | 'estimatedSubmission'
+  | 'fieldRegionId'
+  | 'primaryLocationId'
 >;
 
 interface ProjectFieldProps {
@@ -41,6 +50,12 @@ const fieldMapping: Record<
   ComponentType<ProjectFieldProps>
 > = {
   name: ({ props }) => <TextField {...props} label="Project Name" />,
+  primaryLocationId: ({ props }) => (
+    <LocationField {...props} label="Primary Location" />
+  ),
+  fieldRegionId: ({ props }) => (
+    <FieldRegionField {...props} label="Field Region" />
+  ),
   mouStart: ({ props }) => <DateField {...props} label="Start Date" />,
   mouEnd: ({ props }) => <DateField {...props} label="End Date" />,
   estimatedSubmission: ({ props }) => (
@@ -60,8 +75,18 @@ const fieldMapping: Record<
   ),
 };
 
+interface UpdateProjectFormValues {
+  project: Merge<
+    UpdateProject,
+    {
+      primaryLocationId?: DisplayLocationFragment | null;
+      fieldRegionId?: DisplayFieldRegionFragment | null;
+    }
+  >;
+}
+
 type UpdateProjectDialogProps = Except<
-  DialogFormProps<UpdateProjectInput>,
+  DialogFormProps<UpdateProjectFormValues>,
   'onSubmit' | 'initialValues'
 > & {
   project: ProjectOverviewFragment;
@@ -81,11 +106,13 @@ export const UpdateProjectDialog = ({
 
   const initialValues = useMemo(() => {
     const fullInitialValuesFields: Except<
-      UpdateProjectInput['project'],
+      UpdateProjectFormValues['project'],
       'id'
     > = {
       name: project.name.value,
       step: project.step.value,
+      primaryLocationId: project.primaryLocation.value,
+      fieldRegionId: project.fieldRegion.value,
       mouStart: project.mouStart.value,
       mouEnd: project.mouEnd.value,
       estimatedSubmission: project.estimatedSubmission.value,
@@ -107,6 +134,8 @@ export const UpdateProjectDialog = ({
     editFields,
     project.id,
     project.name.value,
+    project.primaryLocation.value,
+    project.fieldRegion.value,
     project.mouEnd.value,
     project.mouStart.value,
     project.step.value,
@@ -114,13 +143,28 @@ export const UpdateProjectDialog = ({
   ]);
 
   return (
-    <DialogForm<UpdateProjectInput>
+    <DialogForm<UpdateProjectFormValues>
       title="Update Project"
       closeLabel="Close"
       submitLabel="Save"
       {...props}
       initialValues={initialValues}
-      onSubmit={async (input) => {
+      onSubmit={async ({
+        project: {
+          primaryLocationId: primaryLocation,
+          fieldRegionId: fieldRegion,
+          ...rest
+        },
+      }) => {
+        const primaryLocationId = primaryLocation?.id;
+        const fieldRegionId = fieldRegion?.id;
+        const input = {
+          project: {
+            ...rest,
+            ...(primaryLocationId ? { primaryLocationId } : {}),
+            ...(fieldRegionId ? { fieldRegionId } : {}),
+          },
+        };
         await updateProject({ variables: { input } });
       }}
     >

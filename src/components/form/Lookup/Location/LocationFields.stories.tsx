@@ -3,7 +3,11 @@ import { boolean } from '@storybook/addon-knobs';
 import React, { FC } from 'react';
 import { Form } from 'react-final-form';
 import { FieldSpy } from '../../FieldSpy';
-import { LocationField } from './LocationFields';
+import {
+  FieldRegionField,
+  FieldZoneField,
+  LocationField,
+} from './LocationFields';
 
 export default { title: 'Components/Forms/Fields/Lookup/Location' };
 
@@ -15,6 +19,18 @@ const FF: FC = ({ children }) => (
         id: 'locationId',
         name: {
           value: 'Ethiopia',
+        },
+      },
+      region: {
+        id: 'regionid',
+        name: {
+          value: 'Africa - Anglophone East',
+        },
+      },
+      zone: {
+        id: 'zoneid',
+        name: {
+          value: 'Africa',
         },
       },
     }}
@@ -31,5 +47,27 @@ export const Location = () => (
       multiple={boolean('Multiple', false)}
     />
     <FieldSpy name="location" />
+  </FF>
+);
+
+export const FieldRegion = () => (
+  <FF>
+    <FieldRegionField
+      name="fieldRegion"
+      label="Field Regions"
+      multiple={boolean('Multiple', false)}
+    />
+    <FieldSpy name="fieldRegion" />
+  </FF>
+);
+
+export const FieldZone = () => (
+  <FF>
+    <FieldZoneField
+      name="fieldZone"
+      label="Field Zones"
+      multiple={boolean('Multiple', false)}
+    />
+    <FieldSpy name="fieldZone" />
   </FF>
 );

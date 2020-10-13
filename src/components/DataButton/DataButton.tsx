@@ -39,7 +39,7 @@ export const DataButton = <T extends any>({
     ? showData && secured?.value
       ? children(secured.value) ?? empty
       : empty
-    : children;
+    : children ?? empty;
 
   const btn = (
     <Button
