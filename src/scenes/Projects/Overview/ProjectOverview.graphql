@@ -51,6 +51,11 @@ fragment ProjectOverview on Project {
     canRead
     canEdit
     value
+    transitions {
+      to
+      label
+      type
+    }
   }
   modifiedAt
   budget {

@@ -28,7 +28,9 @@ import { CreateInternshipEngagement } from '../../Engagement/InternshipEngagemen
 import { CreateLanguageEngagement } from '../../Engagement/LanguageEngagement/Create/CreateLanguageEngagement';
 import { useProjectCurrentDirectory, useUploadProjectFiles } from '../Files';
 import { EditableProjectField, UpdateProjectDialog } from '../Update';
+import { ProjectWorkflowDialog } from '../Update/ProjectWorkflowDialog';
 import {
+  ProjectOverviewFragment,
   useProjectEngagementListOverviewQuery,
   useProjectOverviewQuery,
 } from './ProjectOverview.generated';
@@ -83,6 +85,9 @@ export const ProjectOverview: FC = () => {
 
   const [editState, editField, fieldsBeingEdited] = useDialog<
     Many<EditableProjectField>
+  >();
+  const [workflowState, openWorkflow, workflowProject] = useDialog<
+    ProjectOverviewFragment
   >();
 
   const {
@@ -323,7 +328,10 @@ export const ProjectOverview: FC = () => {
                 loading={!projectOverviewData}
                 secured={projectOverviewData?.project.step}
                 redacted="You do not have permission to view project step"
-                onClick={() => editField('step')}
+                onClick={() =>
+                  projectOverviewData &&
+                  openWorkflow(projectOverviewData.project)
+                }
               >
                 {displayProjectStep(projectOverviewData?.project.step.value)}
               </DataButton>
@@ -425,6 +433,9 @@ export const ProjectOverview: FC = () => {
             )
           )}
         </div>
+      )}
+      {workflowProject && (
+        <ProjectWorkflowDialog {...workflowState} project={workflowProject} />
       )}
       {projectOverviewData ? (
         <UpdateProjectDialog
