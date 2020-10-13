@@ -43,4 +43,7 @@ fragment PartnerDetails on Partner {
     canEdit
     value
   }
+  address {
+    ...securedString
+  }
 }

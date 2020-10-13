@@ -40,6 +40,7 @@ export type EditablePartnerField = ExtractStrict<
   | 'active'
   | 'types'
   | 'financialReportingTypes'
+  | 'address'
 >;
 
 type EditPartnerProps = Except<
@@ -90,6 +91,7 @@ const fieldMapping: Record<
         getLabel={displayFinancialReportingType}
       />
     ),
+  address: ({ props }) => <TextField {...props} label="Address" />,
 };
 
 export const EditPartner = ({
@@ -110,6 +112,7 @@ export const EditPartner = ({
         active: partner.active.value,
         types: partner.types.value,
         financialReportingTypes: partner.financialReportingTypes.value,
+        address: partner.address.value,
       },
     }),
     [partner]
