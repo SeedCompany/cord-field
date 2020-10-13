@@ -1,12 +1,12 @@
 import React from 'react';
 import { Except } from 'type-fest';
+import { GQLOperations } from '../../../../api';
 import {
   DialogForm,
   DialogFormProps,
 } from '../../../../components/Dialog/DialogForm';
 import { SubmitError } from '../../../../components/form';
 import { UserField, UserLookupItem } from '../../../../components/form/Lookup';
-import { ProjectOverviewDocument as ProjectOverview } from '../../../Projects/Overview/ProjectOverview.generated';
 import { useCreateInternshipEngagementMutation } from './CreateInternshipEngagement.generated';
 
 interface CreateInternshipEngagementFormValues {
@@ -37,10 +37,8 @@ export const CreateInternshipEngagement = ({
         },
       },
       refetchQueries: [
-        {
-          query: ProjectOverview,
-          variables: { input: projectId },
-        },
+        GQLOperations.Query.ProjectOverview,
+        GQLOperations.Query.ProjectEngagementListOverview,
       ],
       awaitRefetchQueries: true,
     });
