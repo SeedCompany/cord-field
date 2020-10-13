@@ -12,6 +12,9 @@ import React, { FC } from 'react';
 import { PartnerDetailsFragment } from './PartnerDetail.generated';
 
 const useStyles = makeStyles(({ spacing }) => ({
+  cardContent: {
+    flexGrow: 1,
+  },
   cardActions: {
     display: 'flex',
     justifyContent: 'space-between',
@@ -36,7 +39,7 @@ export const AddressCard: FC<AddressCardProps> = ({
 
   return (
     <Card className={className}>
-      <CardContent>
+      <CardContent className={classes.cardContent}>
         <Grid container direction="column" spacing={1}>
           <Grid item>
             <Typography variant="h4">
