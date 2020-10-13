@@ -34,7 +34,7 @@ fragment LocationSearchResultItem on Location {
     value
   }
   sensitivity
-  iso31663 {
+  isoAlpha3 {
     ...securedString
   }
   fundingAccount {
