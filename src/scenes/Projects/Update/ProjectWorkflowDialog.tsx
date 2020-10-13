@@ -1,7 +1,7 @@
-import { Grid } from '@material-ui/core';
+import { Grid, Tooltip } from '@material-ui/core';
 import React from 'react';
 import { Except } from 'type-fest';
-import { ProjectStep, TransitionType } from '../../../api';
+import { displayProjectStep, ProjectStep, TransitionType } from '../../../api';
 import {
   DialogForm,
   DialogFormProps,
@@ -65,17 +65,24 @@ export const ProjectWorkflowDialog = ({
       <SubmitError />
       <Grid container direction="column" spacing={1}>
         {project.step.transitions.map((transition, i) => (
-          <Grid item key={i}>
-            <SubmitButton
-              // Ensure submit action/step is unique by appending index. This prevents
-              // multiple spinners for the same next step with different labels.
-              action={`${transition.to}:${i}`}
-              color={transitionTypeToColor[transition.type]}
-              variant={transition.type === 'Approve' ? 'contained' : 'text'}
-            >
-              {transition.label}
-            </SubmitButton>
-          </Grid>
+          <Tooltip
+            title={`This will change the project step to ${displayProjectStep(
+              transition.to
+            )}`}
+            key={i}
+          >
+            <Grid item>
+              <SubmitButton
+                // Ensure submit action/step is unique by appending index. This prevents
+                // multiple spinners for the same next step with different labels.
+                action={`${transition.to}:${i}`}
+                color={transitionTypeToColor[transition.type]}
+                variant={transition.type === 'Approve' ? 'contained' : 'text'}
+              >
+                {transition.label}
+              </SubmitButton>
+            </Grid>
+          </Tooltip>
         ))}
       </Grid>
     </DialogForm>
