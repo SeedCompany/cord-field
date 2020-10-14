@@ -5,6 +5,7 @@ import { Skeleton } from '@material-ui/lab';
 import clsx from 'clsx';
 import React from 'react';
 import { useParams } from 'react-router';
+import { useDialog } from '../../../components/Dialog';
 import {
   DisplaySimpleProperty,
   DisplaySimplePropertyProps,
@@ -13,6 +14,7 @@ import { useDateFormatter } from '../../../components/Formatters';
 import { FundingAccountCard } from '../../../components/FundingAccountCard';
 import { Redacted } from '../../../components/Redacted';
 import { Sensitivity } from '../../../components/Sensitivity';
+import { EditLocation } from '../Edit';
 import { LocationDocument } from './LocationDetail.generated';
 
 const useStyles = makeStyles(({ spacing }) => ({
@@ -39,6 +41,8 @@ export const LocationDetail = () => {
   const classes = useStyles();
   const { locationId } = useParams();
   const dateFormatter = useDateFormatter();
+
+  const [editLocationState, editLocation] = useDialog();
 
   const { data, error } = useQuery(LocationDocument, {
     variables: { locationId },
@@ -71,7 +75,11 @@ export const LocationDetail = () => {
                 )
               )}
             </Typography>
-            <Fab color="primary" aria-label="edit language">
+            <Fab
+              color="primary"
+              aria-label="edit language"
+              onClick={editLocation}
+            >
               <Edit />
             </Fab>
           </div>
@@ -96,6 +104,7 @@ export const LocationDetail = () => {
           <FundingAccountCard fundingAccount={location?.fundingAccount.value} />
         </>
       )}
+      <EditLocation location={location} {...editLocationState} />
     </main>
   );
 };
