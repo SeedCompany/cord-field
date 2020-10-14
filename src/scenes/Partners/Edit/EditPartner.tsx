@@ -18,6 +18,7 @@ import {
   TextField,
 } from '../../../components/form';
 import { UserField, UserLookupItem } from '../../../components/form/Lookup';
+import { isLength } from '../../../components/form/validators';
 import { ExtractStrict, many, Many } from '../../../util';
 import { PartnerDetailsFragment } from '../Detail/PartnerDetail.generated';
 import { useUpdatePartnerMutation } from './EditPartner.generated';
@@ -69,8 +70,7 @@ const fieldMapping: Record<
   ),
   active: ({ props }) => <CheckboxField {...props} label="Active" />,
   pmcEntityCode: ({ props }) => (
-    //TODO: add in validation 3 uppercase chars
-    <TextField {...props} label="PMC Entity Code" />
+    <TextField {...props} label="PMC Entity Code" validate={isLength(3)} />
   ),
   types: ({ props }) => (
     <EnumField
@@ -127,13 +127,16 @@ export const EditPartner = ({
       title="Edit Partner"
       {...props}
       initialValues={initialValues}
-      onSubmit={async ({ partner: { pointOfContactId, ...rest } }) => {
+      onSubmit={async ({
+        partner: { pointOfContactId, pmcEntityCode, ...rest },
+      }) => {
         await updatePartner({
           variables: {
             input: {
               partner: {
                 ...rest,
                 pointOfContactId: pointOfContactId?.id,
+                pmcEntityCode: pmcEntityCode?.toUpperCase(),
               },
             },
           },

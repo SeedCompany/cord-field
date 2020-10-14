@@ -47,3 +47,6 @@ export const minLength = (min = 2) => (value: string) =>
   !value || value.length >= min
     ? undefined
     : `Must be ${min} or more characters`;
+
+export const isLength = (len: number) => (value: string) =>
+  !value || value.length === len ? undefined : `Must be ${len} characters`;
