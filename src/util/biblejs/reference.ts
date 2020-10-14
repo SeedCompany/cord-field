@@ -220,16 +220,25 @@ export const matchingScriptureRanges = (
     ({ start: { book } }: ScriptureRange) => book === bookToMatch
   );
 
+/**
+ * Takes in a scripture range arr and a book, outputs the shortened display string of this range.
+ * Assumes all ranges in array are of the same book
+ * e.g. "Luke 1:2-4 + 1 more" or "Job (Full Book)".
+ * @param scriptureReferenceArr
+ * @param book
+ */
 export const getScriptureRangeDisplay = (
   scriptureReferenceArr: readonly ScriptureRange[],
   book: string
 ) => {
   const count = scriptureReferenceArr.length;
-  return count
-    ? `${book} ${formatScriptureRange(scriptureReferenceArr[0])} ${
+  if (!count) return book;
+  const isFullBook = isEqual(scriptureReferenceArr[0], getFullBookRange(book));
+  return isFullBook
+    ? `${book} (Full Book)`
+    : `${book} ${formatScriptureRange(scriptureReferenceArr[0])} ${
         count > 1 ? `+ ${count - 1} more` : ''
-      }`
-    : book;
+      }`;
 };
 
 /**
