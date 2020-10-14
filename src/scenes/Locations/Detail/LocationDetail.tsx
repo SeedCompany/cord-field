@@ -10,6 +10,7 @@ import {
   DisplaySimplePropertyProps,
 } from '../../../components/DisplaySimpleProperty';
 import { useDateFormatter } from '../../../components/Formatters';
+import { FundingAccountCard } from '../../../components/FundingAccountCard';
 import { Redacted } from '../../../components/Redacted';
 import { Sensitivity } from '../../../components/Sensitivity';
 import { LocationDocument } from './LocationDetail.generated';
@@ -93,11 +94,8 @@ export const LocationDetail = () => {
             loading={!location}
           />
 
-          <DisplayProperty
-            label="Funding Account"
-            value={location?.fundingAccount.value?.name.value}
-            loading={!location}
-          />
+          <Typography>Funding Account</Typography>
+          <FundingAccountCard fundingAccount={location?.fundingAccount.value} />
         </>
       )}
     </main>

@@ -26,10 +26,7 @@ fragment LocationDetail on Location {
     canRead
     canEdit
     value {
-      id
-      name {
-        value
-      }
+      ...FundingAccountCard
     }
   }
 }
