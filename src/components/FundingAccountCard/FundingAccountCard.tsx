@@ -1,10 +1,17 @@
-import { Card, CardContent, makeStyles, Typography } from '@material-ui/core';
+import {
+  Card,
+  CardActions,
+  CardContent,
+  makeStyles,
+  Typography,
+} from '@material-ui/core';
 import { Skeleton } from '@material-ui/lab';
 import clsx from 'clsx';
 import { FC } from 'react';
 import * as React from 'react';
 import { Nullable } from '../../util';
 import { DisplaySimpleProperty } from '../DisplaySimpleProperty';
+import { useDateFormatter } from '../Formatters';
 import { FundingAccountCardFragment } from './FundingAccountCard.generated';
 
 const useStyles = makeStyles(({ spacing }) => {
@@ -15,6 +22,9 @@ const useStyles = makeStyles(({ spacing }) => {
     },
     name: {
       marginBottom: spacing(2),
+    },
+    cardActions: {
+      justifyContent: 'flex-end',
     },
   };
 });
@@ -30,6 +40,8 @@ export const FundingAccountCard: FC<FundingAccountCardProps> = ({
 }) => {
   const classes = useStyles();
 
+  const formatDate = useDateFormatter();
+
   return (
     <Card className={clsx(classes.root, className)}>
       <CardContent>
@@ -41,12 +53,20 @@ export const FundingAccountCard: FC<FundingAccountCardProps> = ({
           )}
         </Typography>
         <DisplaySimpleProperty
-          LabelProps={{ color: 'textSecondary' }}
           label="Account Number"
           value={fundingAccount?.accountNumber.value}
           loading={!fundingAccount}
         />
       </CardContent>
+      <CardActions className={classes.cardActions}>
+        {fundingAccount ? (
+          <Typography variant="caption" color="textSecondary">
+            Created {formatDate(fundingAccount.createdAt)}
+          </Typography>
+        ) : (
+          <Skeleton width="100px" />
+        )}
+      </CardActions>
     </Card>
   );
 };

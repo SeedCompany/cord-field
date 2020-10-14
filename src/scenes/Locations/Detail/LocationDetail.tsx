@@ -93,8 +93,6 @@ export const LocationDetail = () => {
             value={location?.type.value}
             loading={!location}
           />
-
-          <Typography>Funding Account</Typography>
           <FundingAccountCard fundingAccount={location?.fundingAccount.value} />
         </>
       )}
