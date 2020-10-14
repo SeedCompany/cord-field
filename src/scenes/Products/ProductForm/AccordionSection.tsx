@@ -307,11 +307,13 @@ export const AccordionSection = ({
                     <ToggleButton
                       key={book}
                       value={book}
-                      selected={Boolean(matchingArr.length)}
+                      selected={Boolean(matchingArr.length) || fullOldTestament}
                       disabled={disabled || fullOldTestament}
                       onClick={openBook}
                     >
-                      {getScriptureRangeDisplay(matchingArr, book)}
+                      {fullOldTestament
+                        ? book
+                        : getScriptureRangeDisplay(matchingArr, book)}
                     </ToggleButton>
                   );
                 })}
@@ -334,11 +336,13 @@ export const AccordionSection = ({
                   <ToggleButton
                     key={book}
                     value={book}
-                    selected={Boolean(matchingArr.length)}
+                    selected={Boolean(matchingArr.length) || fullNewTestament}
                     disabled={disabled || fullNewTestament}
                     onClick={openBook}
                   >
-                    {getScriptureRangeDisplay(matchingArr, book)}
+                    {fullNewTestament
+                      ? book
+                      : getScriptureRangeDisplay(matchingArr, book)}
                   </ToggleButton>
                 );
               })}
