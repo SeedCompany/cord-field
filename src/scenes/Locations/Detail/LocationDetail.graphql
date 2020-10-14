@@ -1,0 +1,35 @@
+query Location($locationId: ID!) {
+  location(id: $locationId) {
+    ...LocationDetail
+  }
+}
+fragment LocationDetail on Location {
+  id
+  createdAt
+  isoAlpha3 {
+    canRead
+    canEdit
+    value
+  }
+  name {
+    canRead
+    canEdit
+    value
+  }
+  type {
+    canRead
+    canEdit
+    value
+  }
+  sensitivity
+  fundingAccount {
+    canRead
+    canEdit
+    value {
+      id
+      name {
+        value
+      }
+    }
+  }
+}
