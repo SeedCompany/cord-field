@@ -50,3 +50,8 @@ export const minLength = (min = 2) => (value: Nullable<string>) =>
 
 export const isLength = (len: number) => (value: Nullable<string>) =>
   !value || value.length === len ? undefined : `Must be ${len} characters`;
+
+export const isAlpha = (value: string) =>
+  !value || /^[A-Za-z]+$/.exec(value)
+    ? undefined
+    : `Must be only be alpha characters`;
