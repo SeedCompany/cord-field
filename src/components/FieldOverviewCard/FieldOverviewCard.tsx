@@ -23,15 +23,18 @@ const useStyles = makeStyles(({ spacing, palette }) => ({
   root: {
     flex: 1,
     height: '100%',
+    display: 'flex',
+    flexDirection: 'column',
   },
   topArea: {
-    height: '100%',
+    flex: 1,
     display: 'flex',
     justifyContent: 'space-evenly',
     padding: spacing(3, 4),
   },
   rightContent: {
     flex: 1,
+    alignSelf: 'flex-start',
     paddingLeft: spacing(4),
     display: 'flex',
     flexDirection: 'column',
@@ -122,11 +125,11 @@ export const FieldOverviewCard: FC<FieldOverviewCardProps> = ({
         <CardActions>
           <Grid
             container
-            spacing={!data ? 4 : 2}
+            spacing={loading ? 4 : 2}
             wrap="nowrap"
             className={classes.bottomArea}
           >
-            <Grid item xs={!data}>
+            <Grid item xs={loading}>
               <Btn
                 color="primary"
                 to={data?.to ?? ''}
@@ -143,7 +146,7 @@ export const FieldOverviewCard: FC<FieldOverviewCardProps> = ({
                 )}
               </Btn>
             </Grid>
-            <Grid item xs={!data}>
+            <Grid item xs={loading}>
               {!redacted && (
                 <Typography color="textSecondary" variant="body2">
                   {loading ? (

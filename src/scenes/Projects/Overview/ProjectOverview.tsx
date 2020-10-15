@@ -57,13 +57,6 @@ const useStyles = makeStyles(({ spacing, breakpoints, palette }) => ({
   nameLoading: {
     width: '60%',
   },
-  container: {
-    display: 'flex',
-    alignItems: 'center',
-  },
-  budgetOverviewCard: {
-    marginRight: spacing(3),
-  },
   infoColor: {
     color: palette.info.main,
   },
@@ -364,19 +357,22 @@ export const ProjectOverview: FC = () => {
               </Grid>
             </Grid>
           )}
-          <div className={classes.container}>
-            <BudgetOverviewCard
-              budget={projectOverviewData?.project.budget.value}
-              className={classes.budgetOverviewCard}
-              loading={!projectOverviewData}
-            />
-            {/* TODO When file api is finished need to update query and pass in file information */}
-            <FilesOverviewCard
-              loading={!projectOverviewData}
-              total={undefined}
-              redacted={canReadDirectoryId === true}
-            />
-          </div>
+          <Grid container spacing={3}>
+            <Grid item xs={6}>
+              <BudgetOverviewCard
+                budget={projectOverviewData?.project.budget.value}
+                loading={!projectOverviewData}
+              />
+            </Grid>
+            <Grid item xs={6}>
+              {/* TODO When file api is finished need to update query and pass in file information */}
+              <FilesOverviewCard
+                loading={!projectOverviewData}
+                total={undefined}
+                redacted={canReadDirectoryId === true}
+              />
+            </Grid>
+          </Grid>
           <CardGroup>
             <ProjectMembersSummary
               members={projectOverviewData?.project.team}
