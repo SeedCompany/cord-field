@@ -1,0 +1,16 @@
+query FundingAccountLookup($query: String!) {
+  search(input: { query: $query, type: [FundingAccount] }) {
+    items {
+      ... on FundingAccount {
+        ...FundingAccountLookupItem
+      }
+    }
+  }
+}
+
+fragment FundingAccountLookupItem on FundingAccount {
+  id
+  name {
+    value
+  }
+}

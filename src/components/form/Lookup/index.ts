@@ -8,3 +8,4 @@ export * from './Song';
 export * from './Story';
 export * from './User';
 export * from './Partner';
+export * from './FundingAccount';
