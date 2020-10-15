@@ -1,0 +1,8 @@
+mutation CreateLocation($input: CreateLocationInput!) {
+  createLocation(input: $input) {
+    location {
+      ...LocationDetail
+      ...DisplayLocation
+    }
+  }
+}
