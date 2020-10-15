@@ -303,8 +303,6 @@ export const EnumField = <
         }
         onBlur(e);
       }}
-      // If FF says we're focused, show us as focused, regardless of actual focus
-      focused={meta.active}
     >
       {label && (
         <FormLabel component="legend" className={classes.fieldLabel}>
