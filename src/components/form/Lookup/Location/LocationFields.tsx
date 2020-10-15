@@ -1,8 +1,10 @@
+import { CreateLocationInput } from '../../../../api';
 import {
   DisplayFieldRegionFragment as FieldRegionLookupItem,
   DisplayFieldZoneFragment as FieldZoneLookupItem,
   DisplayLocationFragment as LocationLookupItem,
 } from '../../../../api/fragments/location.generated';
+import { CreateLocation } from '../../../../scenes/Locations/Create';
 import { LookupField } from '../../index';
 import {
   FieldRegionLookupDocument,
@@ -10,11 +12,21 @@ import {
   LocationLookupDocument,
 } from './LocationLookup.generated';
 
-export const LocationField = LookupField.createFor<LocationLookupItem>({
+export const LocationField = LookupField.createFor<
+  LocationLookupItem,
+  CreateLocationInput
+>({
   resource: 'Location',
   lookupDocument: LocationLookupDocument,
   label: 'Location',
   placeholder: 'Search for a location by name',
+  CreateDialogForm: CreateLocation,
+  getInitialValues: (val): Partial<CreateLocationInput> => ({
+    // @ts-expect-error the partial type doesn't match
+    location: {
+      name: val,
+    },
+  }),
 });
 
 export const FieldRegionField = LookupField.createFor<FieldRegionLookupItem>({
