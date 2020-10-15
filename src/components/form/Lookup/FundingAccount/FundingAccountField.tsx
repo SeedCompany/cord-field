@@ -1,5 +1,6 @@
 import { LookupField } from '../..';
 import { CreateFundingAccountInput } from '../../../../api';
+import { CreateFundingAccount } from '../../../../scenes/Locations/LocationForm/FundingAccount/CreateFundingAccount';
 import {
   FundingAccountLookupItemFragment as FundingAccount,
   FundingAccountLookupDocument,
@@ -13,4 +14,11 @@ export const FundingAccountField = LookupField.createFor<
   lookupDocument: FundingAccountLookupDocument,
   label: 'Funding Account',
   placeholder: 'Search for a funding account by name',
+  CreateDialogForm: CreateFundingAccount,
+  // @ts-expect-error don't need to pass through entire initialValues
+  getInitialValues: (val) => ({
+    fundingAccount: {
+      name: val,
+    },
+  }),
 });
