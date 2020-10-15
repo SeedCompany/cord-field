@@ -102,7 +102,11 @@ export const LocationDetail = () => {
             value={displayLocationType(location?.type.value)}
             loading={!location}
           />
-          <FundingAccountCard fundingAccount={location?.fundingAccount.value} />
+          {location?.fundingAccount.value && (
+            <FundingAccountCard
+              fundingAccount={location.fundingAccount.value}
+            />
+          )}
         </>
       )}
       <EditLocation location={location} {...editLocationState} />
