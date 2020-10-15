@@ -23,15 +23,18 @@ const useStyles = makeStyles(({ spacing, palette }) => ({
   root: {
     flex: 1,
     height: '100%',
+    display: 'flex',
+    flexDirection: 'column',
   },
   topArea: {
-    height: '100%',
+    flex: 1,
     display: 'flex',
     justifyContent: 'space-evenly',
     padding: spacing(3, 4),
   },
   rightContent: {
     flex: 1,
+    alignSelf: 'flex-start',
     paddingLeft: spacing(4),
     display: 'flex',
     flexDirection: 'column',
