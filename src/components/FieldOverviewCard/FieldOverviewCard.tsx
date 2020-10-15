@@ -125,11 +125,11 @@ export const FieldOverviewCard: FC<FieldOverviewCardProps> = ({
         <CardActions>
           <Grid
             container
-            spacing={!data ? 4 : 2}
+            spacing={loading ? 4 : 2}
             wrap="nowrap"
             className={classes.bottomArea}
           >
-            <Grid item xs={!data}>
+            <Grid item xs={loading}>
               <Btn
                 color="primary"
                 to={data?.to ?? ''}
@@ -146,7 +146,7 @@ export const FieldOverviewCard: FC<FieldOverviewCardProps> = ({
                 )}
               </Btn>
             </Grid>
-            <Grid item xs={!data}>
+            <Grid item xs={loading}>
               {!redacted && (
                 <Typography color="textSecondary" variant="body2">
                   {loading ? (
