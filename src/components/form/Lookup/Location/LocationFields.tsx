@@ -1,10 +1,11 @@
-import { CreateLocationInput } from '../../../../api';
+import { CreateLocation as CreateLocationType } from '../../../../api';
 import {
   DisplayFieldRegionFragment as FieldRegionLookupItem,
   DisplayFieldZoneFragment as FieldZoneLookupItem,
   DisplayLocationFragment as LocationLookupItem,
 } from '../../../../api/fragments/location.generated';
 import { CreateLocation } from '../../../../scenes/Locations/Create';
+import { LocationFormValues } from '../../../../scenes/Locations/LocationForm';
 import { LookupField } from '../../index';
 import {
   FieldRegionLookupDocument,
@@ -14,17 +15,18 @@ import {
 
 export const LocationField = LookupField.createFor<
   LocationLookupItem,
-  CreateLocationInput
+  LocationFormValues<CreateLocationType>
 >({
   resource: 'Location',
   lookupDocument: LocationLookupDocument,
   label: 'Location',
   placeholder: 'Search for a location by name',
   CreateDialogForm: CreateLocation,
-  getInitialValues: (val): Partial<CreateLocationInput> => ({
-    // @ts-expect-error the partial type doesn't match
+  getInitialValues: (val) => ({
     location: {
       name: val,
+      type: 'City',
+      sensitivity: 'High',
     },
   }),
 });

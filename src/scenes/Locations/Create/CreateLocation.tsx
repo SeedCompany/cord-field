@@ -2,9 +2,13 @@ import { useMutation } from '@apollo/client';
 import { useSnackbar } from 'notistack';
 import React from 'react';
 import { Except } from 'type-fest';
-import { CreateLocationInput } from '../../../api';
+import { CreateLocation as CreateLocationType } from '../../../api';
 import { ButtonLink } from '../../../components/Routing';
-import { LocationForm, LocationFormProps } from '../LocationForm';
+import {
+  LocationForm,
+  LocationFormProps,
+  LocationFormValues,
+} from '../LocationForm';
 import {
   CreateLocationDocument,
   CreateLocationMutation,
@@ -12,10 +16,10 @@ import {
 
 export type CreateLocationProps = Except<
   LocationFormProps<
-    CreateLocationInput,
+    LocationFormValues<CreateLocationType>,
     CreateLocationMutation['createLocation']['location']
   >,
-  'prefix' | 'onSubmit'
+  'onSubmit'
 >;
 
 export const CreateLocation = (props: CreateLocationProps) => {
@@ -36,10 +40,16 @@ export const CreateLocation = (props: CreateLocationProps) => {
         });
       }}
       {...props}
-      prefix="person"
-      onSubmit={async (input) => {
+      onSubmit={async ({ location: { fundingAccountLookupItem, ...rest } }) => {
         const { data } = await createLocation({
-          variables: { input },
+          variables: {
+            input: {
+              location: {
+                ...rest,
+                fundingAccountId: fundingAccountLookupItem?.id,
+              },
+            },
+          },
         });
         return data!.createLocation.location;
       }}

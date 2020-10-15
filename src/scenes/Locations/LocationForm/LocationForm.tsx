@@ -1,21 +1,27 @@
 import { Grid } from '@material-ui/core';
 import React from 'react';
 import {
+  CreateLocation,
   displayLocationType,
   LocationTypeList,
   SensitivityList,
+  UpdateLocation,
 } from '../../../api';
 import {
   DialogForm,
   DialogFormProps,
 } from '../../../components/Dialog/DialogForm';
 import {
-  FieldGroup,
   SecuredField,
   SelectField,
   SubmitError,
   TextField,
 } from '../../../components/form';
+import {
+  FundingAccountField,
+  FundingAccountLookupItem,
+} from '../../../components/form/Lookup';
+import { isAlpha, isLength } from '../../../components/form/validators';
 import { LocationFormFragment } from './LocationForm.generated';
 
 const locationTypeSelectOptions = LocationTypeList.map((type) => ({
@@ -28,70 +34,96 @@ const sensitivitySelectOptions = SensitivityList.map((sensitivity) => ({
   label: sensitivity,
 }));
 
-export type LocationFormProps<T, R = void> = DialogFormProps<T, R> & {
+export interface LocationFormValues<
+  CreateOrUpdateType extends CreateLocation | UpdateLocation
+> {
+  location: CreateOrUpdateType & {
+    fundingAccountLookupItem?: FundingAccountLookupItem;
+  };
+}
+
+export type LocationFormProps<CreateOrUpdateInput, R = void> = DialogFormProps<
+  CreateOrUpdateInput,
+  R
+> & {
   location?: LocationFormFragment;
-  prefix: string;
 };
 
-export const LocationForm = <T, R = void>({
+export const LocationForm = <CreateOrUpdateInput, R extends any>({
   location,
+  title,
   ...rest
-}: LocationFormProps<T, R>) => (
-  <DialogForm<T, R>
+}: LocationFormProps<CreateOrUpdateInput, R>) => (
+  <DialogForm
     DialogProps={{
       maxWidth: 'sm',
     }}
+    fieldsPrefix="location"
+    title={title}
     {...rest}
   >
     <SubmitError />
-    <FieldGroup prefix="location">
+    <Grid container spacing={2}>
+      <Grid item xs>
+        <SecuredField obj={location} name="name">
+          {(props) => (
+            <TextField
+              label="Location Name"
+              placeholder="Enter Location Name"
+              required
+              {...props}
+            />
+          )}
+        </SecuredField>
+      </Grid>
+      <Grid item xs>
+        <SecuredField obj={location} name="isoAlpha3">
+          {(props) => (
+            <TextField
+              label="Iso Alpha-3 Code"
+              placeholder="Enter Iso Alpha-3 Code"
+              validate={[isLength(3), isAlpha]}
+              {...props}
+            />
+          )}
+        </SecuredField>
+      </Grid>
+    </Grid>
+    <Grid container spacing={2}>
+      <Grid item xs>
+        <SelectField
+          label="Sensitivity"
+          name="sensitivity"
+          selectOptions={sensitivitySelectOptions}
+          defaultValue="High"
+          required
+        />
+      </Grid>
+      <Grid item xs>
+        <SecuredField obj={location} name="type">
+          {(props) => (
+            <SelectField
+              label="Type"
+              placeholder="Enter Location Type"
+              selectOptions={locationTypeSelectOptions}
+              required
+              defaultValue="City"
+              {...props}
+            />
+          )}
+        </SecuredField>
+      </Grid>
+    </Grid>
+    {title === 'Create Location' && (
       <Grid container spacing={2}>
         <Grid item xs>
-          <SecuredField obj={location} name="name">
+          <SecuredField obj={location} name="fundingAccount">
             {(props) => (
-              <TextField
-                label="Location Name"
-                placeholder="Enter Location Name"
-                {...props}
-              />
-            )}
-          </SecuredField>
-        </Grid>
-        <Grid item xs>
-          <SecuredField obj={location} name="isoAlpha3">
-            {(props) => (
-              <TextField
-                label="Iso Alpha-3 Code"
-                placeholder="Enter Iso Alpha-3 Code"
-                required
-                {...props}
-              />
+              <FundingAccountField {...props} name="fundingAccountLookupItem" />
             )}
           </SecuredField>
         </Grid>
       </Grid>
-      <Grid container spacing={2}>
-        <Grid item xs>
-          <SelectField
-            label="Sensitivity"
-            name="sensitivity"
-            selectOptions={sensitivitySelectOptions}
-            defaultValue="High"
-          />
-        </Grid>
-        <Grid item xs>
-          <SecuredField obj={location} name="type">
-            {(props) => (
-              <SelectField
-                label="Type"
-                placeholder="Enter Location Type"
-                selectOptions={locationTypeSelectOptions}
-                {...props}
-              />
-            )}
-          </SecuredField>
-        </Grid>
-      </Grid>
-    </FieldGroup>
+    )}
   </DialogForm>
 );

@@ -1,13 +1,17 @@
 import { useMutation } from '@apollo/client';
 import React, { useMemo } from 'react';
 import { Except } from 'type-fest';
-import { UpdateLocationInput } from '../../../api';
-import { LocationForm, LocationFormProps } from '../LocationForm';
+import { UpdateLocation } from '../../../api';
+import {
+  LocationForm,
+  LocationFormProps,
+  LocationFormValues,
+} from '../LocationForm';
 import { UpdateLocationDocument } from './EditLocation.generated';
 
 export type EditLocationProps = Except<
-  LocationFormProps<UpdateLocationInput>,
-  'prefix' | 'onSubmit' | 'initialValues'
+  LocationFormProps<LocationFormValues<UpdateLocation>>,
+  'onSubmit' | 'initialValues'
 >;
 
 export const EditLocation = (props: EditLocationProps) => {
@@ -31,10 +35,9 @@ export const EditLocation = (props: EditLocationProps) => {
   );
 
   return (
-    <LocationForm<UpdateLocationInput>
+    <LocationForm
       title="Edit Location"
       {...props}
-      prefix="location"
       initialValues={initialValues}
       onSubmit={async (input) => {
         await updateLocation({
