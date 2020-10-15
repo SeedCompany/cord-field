@@ -58,12 +58,12 @@ export const LocationForm = <T, R = void>({
           </SecuredField>
         </Grid>
         <Grid item xs>
-          <SecuredField obj={location} name="type">
+          <SecuredField obj={location} name="isoAlpha3">
             {(props) => (
-              <SelectField
-                label="Type"
-                placeholder="Enter Location Type"
-                selectOptions={locationTypeSelectOptions}
+              <TextField
+                label="Iso Alpha-3 Code"
+                placeholder="Enter Iso Alpha-3 Code"
+                required
                 {...props}
               />
             )}
@@ -80,12 +80,12 @@ export const LocationForm = <T, R = void>({
           />
         </Grid>
         <Grid item xs>
-          <SecuredField obj={location} name="isoAlpha3">
+          <SecuredField obj={location} name="type">
             {(props) => (
-              <TextField
-                label="Iso Alpha-3 Code"
-                placeholder="Enter Iso Alpha-3 Code"
-                required
+              <SelectField
+                label="Type"
+                placeholder="Enter Location Type"
+                selectOptions={locationTypeSelectOptions}
                 {...props}
               />
             )}

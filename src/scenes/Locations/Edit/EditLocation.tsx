@@ -32,7 +32,7 @@ export const EditLocation = (props: EditLocationProps) => {
 
   return (
     <LocationForm<UpdateLocationInput>
-      title="Edit Person"
+      title="Edit Location"
       {...props}
       prefix="location"
       initialValues={initialValues}
