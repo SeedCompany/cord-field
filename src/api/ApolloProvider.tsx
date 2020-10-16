@@ -25,11 +25,27 @@ import { typePolicies } from './typePolicies';
 
 const serverHost = process.env.REACT_APP_API_BASE_URL || '';
 
-const API_DEBUG = {
+let API_DEBUG = {
   delay: 0,
 };
 if (process.env.NODE_ENV !== 'production') {
+  let privateDelay = 0;
+  API_DEBUG = {
+    get delay() {
+      return privateDelay;
+    },
+    set delay(newDelay) {
+      privateDelay = newDelay;
+      saveState();
+    },
+  };
   (globalThis as any).API_DEBUG = API_DEBUG;
+  const saveState = () =>
+    window.history.replaceState({ API_DEBUG }, window.document.title);
+  const prev = window.history.state?.API_DEBUG;
+  if (prev) {
+    API_DEBUG.delay = prev.delay;
+  }
 }
 
 export const ApolloProvider: FC = ({ children }) => {
