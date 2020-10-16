@@ -23,6 +23,7 @@ import { LanguageEngagementListItemCard } from '../../../components/LanguageEnga
 import { PartnershipSummary } from '../../../components/PartnershipSummary';
 import { ProjectMembersSummary } from '../../../components/ProjectMembersSummary';
 import { Redacted } from '../../../components/Redacted';
+import { SensitivityIcon } from '../../../components/Sensitivity';
 import { Many } from '../../../util';
 import { CreateInternshipEngagement } from '../../Engagement/InternshipEngagement/Create/CreateInternshipEngagement';
 import { CreateLanguageEngagement } from '../../Engagement/LanguageEngagement/Create/CreateLanguageEngagement';
@@ -283,8 +284,16 @@ export const ProjectOverview: FC = () => {
                 loading={!projectOverviewData}
                 onClick={() => editField('sensitivity')}
                 disabled={projectOverviewData?.project.type === 'Translation'}
+                startIcon={
+                  <SensitivityIcon
+                    value={projectOverviewData?.project.sensitivity}
+                    loading={!projectOverviewData}
+                  />
+                }
               >
-                {projectOverviewData?.project.sensitivity}
+                {projectOverviewData
+                  ? `${projectOverviewData.project.sensitivity} Sensitivity`
+                  : null}
               </DataButton>
             </Grid>
             <Grid item>
