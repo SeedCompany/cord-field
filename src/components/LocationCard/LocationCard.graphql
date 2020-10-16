@@ -1,0 +1,13 @@
+fragment LocationCard on Location {
+  id
+  createdAt
+  name {
+    ...securedString
+  }
+  type {
+    canRead
+    canEdit
+    value
+  }
+  sensitivity
+}
