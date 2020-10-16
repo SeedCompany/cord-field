@@ -1,3 +1,4 @@
+import { sortBy } from 'lodash';
 import { Column, Components } from 'material-table';
 import React, { FC, useMemo } from 'react';
 import { useCurrencyFormatter } from '../../../components/Formatters/useCurrencyFormatter';
@@ -15,7 +16,7 @@ const tableComponents: Components = {
 
 interface BudgetRowData {
   id: string;
-  organization: string;
+  fundingPartner: string;
   fiscalYear: string;
   amount: string | null;
   canEdit: boolean;
@@ -33,13 +34,16 @@ export const ProjectBudgetRecords: FC<ProjectBudgetRecordsProps> = (props) => {
 
   const records: readonly BudgetRecord[] = budget?.value?.records ?? [];
 
-  const rowData = records.map<BudgetRowData>((record) => ({
-    id: record.id,
-    organization: record.organization.value?.name.value ?? '',
-    fiscalYear: String(record.fiscalYear.value),
-    amount: String(record.amount.value ?? ''),
-    canEdit: record.amount.canEdit,
-  }));
+  const rowData = sortBy(
+    records.map<BudgetRowData>((record) => ({
+      id: record.id,
+      fundingPartner: record.organization.value?.name.value ?? '',
+      fiscalYear: String(record.fiscalYear.value),
+      amount: String(record.amount.value ?? ''),
+      canEdit: record.amount.canEdit,
+    })),
+    [(record) => record.fiscalYear, (record) => record.fundingPartner]
+  );
 
   const blankAmount = 'click to edit';
   const columns: Array<Column<BudgetRowData>> = useMemo(
@@ -49,12 +53,13 @@ export const ProjectBudgetRecords: FC<ProjectBudgetRecordsProps> = (props) => {
         hidden: true,
       },
       {
-        field: 'organization',
+        field: 'fundingPartner',
         editable: 'never',
       },
       {
         field: 'fiscalYear',
         editable: 'never',
+        defaultSort: 'asc',
       },
       {
         field: 'amount',
@@ -93,6 +98,9 @@ export const ProjectBudgetRecords: FC<ProjectBudgetRecordsProps> = (props) => {
             }
           : undefined
       }
+      options={{
+        thirdSortClick: false,
+      }}
     />
   );
 };
