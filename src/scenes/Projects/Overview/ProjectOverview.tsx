@@ -281,6 +281,15 @@ export const ProjectOverview: FC = () => {
             <Grid item>
               <DataButton
                 loading={!projectOverviewData}
+                onClick={() => editField('sensitivity')}
+                disabled={projectOverviewData?.project.type === 'Translation'}
+              >
+                {projectOverviewData?.project.sensitivity}
+              </DataButton>
+            </Grid>
+            <Grid item>
+              <DataButton
+                loading={!projectOverviewData}
                 secured={locations}
                 empty="Enter Location | Field Region"
                 redacted="You do not have permission to view location"
@@ -327,15 +336,6 @@ export const ProjectOverview: FC = () => {
                 }
               >
                 {displayProjectStep(projectOverviewData?.project.step.value)}
-              </DataButton>
-            </Grid>
-            <Grid item>
-              <DataButton
-                loading={!projectOverviewData}
-                onClick={() => editField('sensitivity')}
-                disabled={projectOverviewData?.project.type === 'Translation'}
-              >
-                {projectOverviewData?.project.sensitivity}
               </DataButton>
             </Grid>
           </Grid>
