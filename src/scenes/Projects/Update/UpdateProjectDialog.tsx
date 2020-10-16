@@ -12,9 +12,8 @@ import {
 } from '../../../components/Dialog/DialogForm';
 import {
   DateField,
+  EnumField,
   FieldGroup,
-  RadioField,
-  RadioOption,
   SubmitError,
   TextField,
 } from '../../../components/form';
@@ -62,15 +61,7 @@ const fieldMapping: Record<
     <DateField {...props} label="Estimated Submission Date" />
   ),
   sensitivity: ({ props }) => (
-    <RadioField {...props} label="Sensitivity">
-      {SensitivityList.map((sensitivity) => (
-        <RadioOption
-          key={sensitivity}
-          label={sensitivity}
-          value={sensitivity}
-        />
-      ))}
-    </RadioField>
+    <EnumField {...props} label="Sensitivity" options={SensitivityList} />
   ),
 };
 
