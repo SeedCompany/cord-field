@@ -93,7 +93,7 @@ export const LocationDetail = () => {
             </Grid>
           </Grid>
           <DisplayProperty
-            label="ISO Alpha-3 Code"
+            label="ISO Alpha-3 Country Code"
             value={location?.isoAlpha3.value}
             loading={!location}
           />

@@ -80,8 +80,8 @@ export const LocationForm = <CreateOrUpdateInput, R extends any>({
         <SecuredField obj={location} name="isoAlpha3">
           {(props) => (
             <TextField
-              label="Iso Alpha-3 Code"
-              placeholder="Enter Iso Alpha-3 Code"
+              label="Iso Alpha-3 Country Code"
+              placeholder="Enter Iso Alpha-3 Country Code"
               validate={[isLength(3), isAlpha]}
               {...props}
             />
