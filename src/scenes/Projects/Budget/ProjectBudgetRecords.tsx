@@ -59,6 +59,7 @@ export const ProjectBudgetRecords: FC<ProjectBudgetRecordsProps> = (props) => {
       {
         field: 'fiscalYear',
         editable: 'never',
+        defaultSort: 'asc',
       },
       {
         field: 'amount',
