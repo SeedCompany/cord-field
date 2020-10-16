@@ -1,3 +1,4 @@
+import { sortBy } from 'lodash';
 import { Column, Components } from 'material-table';
 import React, { FC, useMemo } from 'react';
 import { useCurrencyFormatter } from '../../../components/Formatters/useCurrencyFormatter';
@@ -33,16 +34,16 @@ export const ProjectBudgetRecords: FC<ProjectBudgetRecordsProps> = (props) => {
 
   const records: readonly BudgetRecord[] = budget?.value?.records ?? [];
 
-  const rowData = records
-    .map<BudgetRowData>((record) => ({
+  const rowData = sortBy(
+    records.map<BudgetRowData>((record) => ({
       id: record.id,
       fundingPartner: record.organization.value?.name.value ?? '',
       fiscalYear: String(record.fiscalYear.value),
       amount: String(record.amount.value ?? ''),
       canEdit: record.amount.canEdit,
-    }))
-    .sort((a, b) => (a.fundingPartner > b.fundingPartner ? 1 : -1))
-    .sort((a, b) => Number(a.fiscalYear) - Number(b.fiscalYear));
+    })),
+    [(record) => record.fiscalYear, (record) => record.fundingPartner]
+  );
 
   const blankAmount = 'click to edit';
   const columns: Array<Column<BudgetRowData>> = useMemo(
