@@ -65,7 +65,10 @@ export const ApolloProvider: FC = ({ children }) => {
         ? null
         : (operation, forward) => {
             const currentDelay = API_DEBUG.delay;
-            if (!currentDelay) {
+            if (
+              !currentDelay ||
+              operation.operationName === GQLOperations.Query.Session
+            ) {
               return forward(operation);
             }
             return promiseToObservable(sleep(currentDelay)).flatMap(() =>
