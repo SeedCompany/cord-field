@@ -20,6 +20,7 @@ export const updateCachedVersions = <MutationData>(
           children: {
             ...response.file.children,
             items: existingVersions,
+            total: existingVersions.length,
           },
         },
       };
