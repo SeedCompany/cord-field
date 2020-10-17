@@ -34,7 +34,9 @@ import { MentorCard } from './MentorCard';
 
 const useStyles = makeStyles(({ breakpoints, palette, typography }) => ({
   main: {
+    flexWrap: 'nowrap',
     maxWidth: breakpoints.values.md,
+    overflowY: 'scroll',
   },
   nameRedacted: {
     width: '50%',
@@ -73,7 +75,13 @@ export const InternshipEngagementDetail: FC<EngagementQuery> = ({
   return (
     <>
       <Content>
-        <Grid component="main" container direction="column" spacing={3}>
+        <Grid
+          component="main"
+          container
+          direction="column"
+          spacing={3}
+          className={classes.main}
+        >
           <Grid item>
             <ProjectDetailNavigation
               project={project}
@@ -89,21 +97,6 @@ export const InternshipEngagementDetail: FC<EngagementQuery> = ({
           </Grid>
 
           <Grid item container spacing={3} alignItems="center">
-            <Grid item className={name ? undefined : classes.nameRedacted}>
-              <Typography
-                variant="h2"
-                {...(intern
-                  ? { component: Link, to: `/users/${intern.id}` }
-                  : {})}
-              >
-                {name ?? (
-                  <Redacted
-                    info="You do not have permission to view this engagement's name"
-                    width={200}
-                  />
-                )}
-              </Typography>
-            </Grid>
             <Grid item container spacing={3} alignItems="center">
               <Grid item container spacing={3} alignItems="center">
                 <Grid item className={name ? undefined : classes.nameRedacted}>

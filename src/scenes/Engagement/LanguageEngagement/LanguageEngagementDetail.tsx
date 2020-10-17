@@ -19,7 +19,7 @@ import {
   useDateTimeFormatter,
 } from '../../../components/Formatters';
 import { OptionsIcon, PlantIcon } from '../../../components/Icons';
-import { ContentContainer as Content } from '../../../components/Layout/ContentContainer';
+import { ContentContainer as Content } from '../../../components/Layout';
 import { AddProductCard, ProductCard } from '../../../components/ProductCard';
 import { ProjectDetailNavigation } from '../../../components/ProjectDetailNavigation';
 import { Redacted } from '../../../components/Redacted';
@@ -33,14 +33,11 @@ import {
 import { EngagementQuery } from '../Engagement.generated';
 import { useUploadEngagementFile } from '../Files';
 
-const useStyles = makeStyles(({ spacing, breakpoints, palette }) => ({
-  root: {
-    flex: 1,
-    overflowY: 'auto',
-    padding: spacing(4),
-  },
+const useStyles = makeStyles(({ breakpoints, palette }) => ({
   main: {
+    flexWrap: 'nowrap',
     maxWidth: breakpoints.values.md,
+    overflowY: 'scroll',
   },
   nameRedacted: {
     width: '50%',
@@ -80,7 +77,13 @@ export const LanguageEngagementDetail: FC<EngagementQuery> = ({
   return (
     <>
       <Content>
-        <Grid component="main" container direction="column" spacing={3}>
+        <Grid
+          component="main"
+          container
+          direction="column"
+          spacing={3}
+          className={classes.main}
+        >
           <Grid item>
             <ProjectDetailNavigation
               project={project}
