@@ -1,6 +1,7 @@
 import {
   Button,
   Card,
+  CardActionArea,
   CardActions,
   CardContent,
   Grid,
@@ -37,30 +38,36 @@ export const PartnerTypeCard: FC<PartnerTypeCardProps> = ({
 
   return (
     <Card className={className}>
-      <CardContent className={classes.cardContent}>
-        <Grid container direction="column" spacing={1}>
-          <Grid item>
-            <Typography variant="h4">
-              {partner ? (
-                partner.types.value.join(', ')
-              ) : (
-                <Skeleton width="75%" />
-              )}
-            </Typography>
-          </Grid>
-
-          {partner?.types.value.includes('Managing') && (
+      <CardActionArea
+        onClick={onEdit}
+        className={classes.cardContent}
+        disabled={!partner}
+      >
+        <CardContent className={classes.cardContent}>
+          <Grid container direction="column" spacing={1}>
             <Grid item>
-              <Typography variant="body2" color="textSecondary">
-                Financial Reporting Type
-              </Typography>
               <Typography variant="h4">
-                {partner.financialReportingTypes.value.join(', ')}
+                {partner ? (
+                  partner.types.value.join(', ')
+                ) : (
+                  <Skeleton width="75%" />
+                )}
               </Typography>
             </Grid>
-          )}
-        </Grid>
-      </CardContent>
+
+            {partner?.types.value.includes('Managing') && (
+              <Grid item>
+                <Typography variant="body2" color="textSecondary">
+                  Financial Reporting Type
+                </Typography>
+                <Typography variant="h4">
+                  {partner.financialReportingTypes.value.join(', ')}
+                </Typography>
+              </Grid>
+            )}
+          </Grid>
+        </CardContent>
+      </CardActionArea>
       <CardActions className={classes.cardActions}>
         <Button color="primary" disabled={!partner} onClick={onEdit}>
           Edit

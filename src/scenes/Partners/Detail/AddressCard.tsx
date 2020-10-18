@@ -1,6 +1,7 @@
 import {
   Button,
   Card,
+  CardActionArea,
   CardActions,
   CardContent,
   Grid,
@@ -39,15 +40,21 @@ export const AddressCard: FC<AddressCardProps> = ({
 
   return (
     <Card className={className}>
-      <CardContent className={classes.cardContent}>
-        <Grid container direction="column" spacing={1}>
-          <Grid item>
-            <Typography variant="h4">
-              {partner ? partner.address.value : <Skeleton width="75%" />}
-            </Typography>
+      <CardActionArea
+        onClick={onEdit}
+        className={classes.cardContent}
+        disabled={!partner}
+      >
+        <CardContent className={classes.cardContent}>
+          <Grid container direction="column" spacing={1}>
+            <Grid item>
+              <Typography variant="h4">
+                {partner ? partner.address.value : <Skeleton width="75%" />}
+              </Typography>
+            </Grid>
           </Grid>
-        </Grid>
-      </CardContent>
+        </CardContent>
+      </CardActionArea>
       <CardActions className={classes.cardActions}>
         <Button color="primary" disabled={!partner} onClick={onEdit}>
           Edit
