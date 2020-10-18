@@ -81,12 +81,12 @@ const fieldMapping: Record<
       {...props}
     />
   ),
-  //TODO: fix hard crash and missing initialValues
   financialReportingTypes: ({ props, hide }) =>
     hide ? null : (
       <EnumField
         label="Financial Reporting Type"
         options={FinancialReportingTypeList}
+        multiple
         {...props}
         getLabel={displayFinancialReportingType}
       />
