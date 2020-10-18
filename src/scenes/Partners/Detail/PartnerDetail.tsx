@@ -6,7 +6,7 @@ import {
   Tooltip,
   Typography,
 } from '@material-ui/core';
-import { AddCircle } from '@material-ui/icons';
+import { Add } from '@material-ui/icons';
 import { Skeleton } from '@material-ui/lab';
 import clsx from 'clsx';
 import { Many } from 'lodash';
@@ -15,6 +15,7 @@ import { useParams } from 'react-router-dom';
 import { BooleanProperty } from '../../../components/BooleanProperty';
 import { DataButton } from '../../../components/DataButton';
 import { useDialog } from '../../../components/Dialog';
+import { Fab } from '../../../components/Fab';
 import { useDateFormatter } from '../../../components/Formatters';
 import { PencilCircledIcon } from '../../../components/Icons';
 import { UserListItemCardPortrait } from '../../../components/UserListItemCard';
@@ -71,6 +72,9 @@ const useStyles = makeStyles(({ spacing, breakpoints }) => ({
     display: 'flex',
     alignItems: 'center',
     marginBottom: spacing(1),
+    '& > *': {
+      marginRight: spacing(2),
+    },
   },
 }));
 
@@ -180,14 +184,15 @@ export const PartnerDetail = () => {
           </Grid>
           <div className={classes.sectionTitle}>
             <Typography variant="h3">Point of Contact</Typography>
-            <IconButton
-              color="primary"
-              aria-label="edit partner"
-              onClick={() => editPartner('pointOfContactId')}
-            >
-              <AddCircle />
-            </IconButton>
-            <Typography>Edit</Typography>
+            <Tooltip title="Edit Point Of Contact">
+              <Fab
+                color="primary"
+                aria-label="edit partner"
+                onClick={() => editPartner('pointOfContactId')}
+              >
+                <Add />
+              </Fab>
+            </Tooltip>
           </div>
           <UserListItemCardPortrait
             user={partner?.pointOfContact.value ?? undefined}
