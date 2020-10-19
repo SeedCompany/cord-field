@@ -1,7 +1,7 @@
 import { pick } from 'lodash';
 import React, { ComponentType, useMemo } from 'react';
 import { Except, Merge } from 'type-fest';
-import { UpdateProject } from '../../../api';
+import { SensitivityList, UpdateProject } from '../../../api';
 import {
   DisplayFieldRegionFragment,
   DisplayLocationFragment,
@@ -12,6 +12,7 @@ import {
 } from '../../../components/Dialog/DialogForm';
 import {
   DateField,
+  EnumField,
   FieldGroup,
   SubmitError,
   TextField,
@@ -33,6 +34,7 @@ export type EditableProjectField = ExtractStrict<
   | 'estimatedSubmission'
   | 'fieldRegionId'
   | 'primaryLocationId'
+  | 'sensitivity'
 >;
 
 interface ProjectFieldProps {
@@ -57,6 +59,9 @@ const fieldMapping: Record<
   mouEnd: ({ props }) => <DateField {...props} label="End Date" />,
   estimatedSubmission: ({ props }) => (
     <DateField {...props} label="Estimated Submission Date" />
+  ),
+  sensitivity: ({ props }) => (
+    <EnumField {...props} label="Sensitivity" options={SensitivityList} />
   ),
 };
 
@@ -100,6 +105,7 @@ export const UpdateProjectDialog = ({
       mouStart: project.mouStart.value,
       mouEnd: project.mouEnd.value,
       estimatedSubmission: project.estimatedSubmission.value,
+      sensitivity: project.sensitivity,
     };
 
     // Filter out irrelevant initial values so they don't get added to the mutation
@@ -123,6 +129,7 @@ export const UpdateProjectDialog = ({
     project.mouEnd.value,
     project.mouStart.value,
     project.estimatedSubmission.value,
+    project.sensitivity,
   ]);
 
   return (

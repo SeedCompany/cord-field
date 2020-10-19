@@ -23,6 +23,7 @@ import { LanguageEngagementListItemCard } from '../../../components/LanguageEnga
 import { PartnershipSummary } from '../../../components/PartnershipSummary';
 import { ProjectMembersSummary } from '../../../components/ProjectMembersSummary';
 import { Redacted } from '../../../components/Redacted';
+import { SensitivityIcon } from '../../../components/Sensitivity';
 import { Many } from '../../../util';
 import { CreateInternshipEngagement } from '../../Engagement/InternshipEngagement/Create/CreateInternshipEngagement';
 import { CreateLanguageEngagement } from '../../Engagement/LanguageEngagement/Create/CreateLanguageEngagement';
@@ -115,12 +116,12 @@ export const ProjectOverview: FC = () => {
   });
 
   const projectName = projectOverviewData?.project.name;
-
-  const engagementTypeLabel = projectOverviewData?.project.__typename
+  const isTranslation = projectOverviewData
     ? projectOverviewData.project.__typename === 'TranslationProject'
-      ? 'Language'
-      : 'Intern'
-    : null;
+    : undefined;
+
+  const engagementTypeLabel =
+    isTranslation != null ? (isTranslation ? 'Language' : 'Intern') : null;
 
   const populationTotal = engagementListData?.project.engagements.items.reduce(
     (total, item) =>
@@ -171,10 +172,9 @@ export const ProjectOverview: FC = () => {
       )
     : undefined;
 
-  const CreateEngagement =
-    projectOverviewData?.project.__typename === 'TranslationProject'
-      ? CreateLanguageEngagement
-      : CreateInternshipEngagement;
+  const CreateEngagement = isTranslation
+    ? CreateLanguageEngagement
+    : CreateInternshipEngagement;
 
   return (
     <main className={classes.root}>
@@ -201,11 +201,13 @@ export const ProjectOverview: FC = () => {
                 />
               )}
             </Typography>
-            {projectOverviewData?.project.name.canEdit && (
+            {(!projectOverviewData ||
+              projectOverviewData.project.name.canEdit) && (
               <Fab
                 color="primary"
                 aria-label="edit project name"
                 onClick={() => editField(['name'])}
+                loading={!projectOverviewData}
               >
                 <Edit />
               </Fab>
@@ -227,57 +229,76 @@ export const ProjectOverview: FC = () => {
             )}
           </div>
 
-          <Grid container spacing={1}>
-            <Grid item>
-              <DisplaySimpleProperty
-                loading={!projectOverviewData}
-                label="Project ID"
-                value={projectOverviewData?.project.id}
-                loadingWidth={100}
-                LabelProps={{ color: 'textSecondary' }}
-                ValueProps={{ color: 'textPrimary' }}
-              />
-            </Grid>
-            <Grid item>
-              <DisplaySimpleProperty
-                loading={!projectOverviewData}
-                label="Department ID"
-                value={projectOverviewData?.project.departmentId.value}
-                loadingWidth={100}
-                LabelProps={{ color: 'textSecondary' }}
-                ValueProps={{ color: 'textPrimary' }}
-              />
-            </Grid>
+          <Grid container spacing={2}>
+            <DisplaySimpleProperty
+              loading={!projectOverviewData}
+              label="Project ID"
+              value={projectOverviewData?.project.id}
+              loadingWidth={100}
+              LabelProps={{ color: 'textSecondary' }}
+              ValueProps={{ color: 'textPrimary' }}
+              wrap={(node) => <Grid item>{node}</Grid>}
+            />
+            <DisplaySimpleProperty
+              loading={!projectOverviewData}
+              label="Department ID"
+              value={projectOverviewData?.project.departmentId.value}
+              loadingWidth={100}
+              LabelProps={{ color: 'textSecondary' }}
+              ValueProps={{ color: 'textPrimary' }}
+              wrap={(node) => <Grid item>{node}</Grid>}
+            />
+            <DisplaySimpleProperty
+              loading={!engagementListData || !projectOverviewData}
+              label={isTranslation ? 'Population Total' : 'Total Interns'}
+              value={formatNumber(
+                isTranslation
+                  ? populationTotal
+                  : engagementListData?.project.engagements.total
+              )}
+              loadingWidth={100}
+              LabelProps={{ color: 'textSecondary' }}
+              ValueProps={{ color: 'textPrimary' }}
+              wrap={(node) => (
+                <Tooltip
+                  title={
+                    isTranslation
+                      ? 'Total population of all languages engaged'
+                      : ''
+                  }
+                >
+                  <Grid item>{node}</Grid>
+                </Tooltip>
+              )}
+            />
           </Grid>
-          {projectOverviewData?.project.__typename === 'TranslationProject' && (
-            <Tooltip title={'Total population of all languages engaged'}>
-              <Grid item xs={3}>
-                <DisplaySimpleProperty
-                  loading={!engagementListData}
-                  label="Population Total"
-                  value={formatNumber(populationTotal)} // formats to string
-                  loadingWidth={100}
-                  LabelProps={{ color: 'textSecondary' }}
-                  ValueProps={{ color: 'textPrimary' }}
-                />
+          <Grid container spacing={1} alignItems="center">
+            <Tooltip
+              title={
+                isTranslation
+                  ? 'Sensitivity is automatically determined by the most sensitive language engaged'
+                  : ''
+              }
+            >
+              <Grid item>
+                <DataButton
+                  loading={!projectOverviewData}
+                  onClick={() =>
+                    isTranslation === false && editField('sensitivity')
+                  }
+                  startIcon={
+                    <SensitivityIcon
+                      value={projectOverviewData?.project.sensitivity}
+                      loading={!projectOverviewData}
+                    />
+                  }
+                >
+                  {projectOverviewData
+                    ? `${projectOverviewData.project.sensitivity} Sensitivity`
+                    : null}
+                </DataButton>
               </Grid>
             </Tooltip>
-          )}
-          {projectOverviewData?.project.__typename === 'InternshipProject' && (
-            <Grid item>
-              <DisplaySimpleProperty
-                loading={!engagementListData}
-                label="Total Interns"
-                value={formatNumber(
-                  engagementListData?.project.engagements.total
-                )} // formats to string
-                loadingWidth={100}
-                LabelProps={{ color: 'textSecondary' }}
-                ValueProps={{ color: 'textPrimary' }}
-              />
-            </Grid>
-          )}
-          <Grid container spacing={1} alignItems="center">
             <Grid item>
               <DataButton
                 loading={!projectOverviewData}
@@ -331,32 +352,32 @@ export const ProjectOverview: FC = () => {
             </Grid>
           </Grid>
 
-          {directoryIdLoading || !canReadDirectoryId ? null : (
-            <Grid container spacing={1} alignItems="center">
-              <Grid item>
-                <span {...getRootProps()}>
-                  <input {...getInputProps()} />
-                  <Fab
-                    loading={!projectOverviewData}
-                    onClick={openFileBrowser}
-                    color="primary"
-                    aria-label="Upload Files"
-                  >
-                    <Publish />
-                  </Fab>
-                </span>
-              </Grid>
-              <Grid item>
-                <Typography variant="h4">
-                  {projectOverviewData ? (
-                    'Upload Files'
-                  ) : (
-                    <Skeleton width="12ch" />
-                  )}
-                </Typography>
-              </Grid>
+          <Grid container spacing={1} alignItems="center">
+            <Grid item>
+              <span {...getRootProps()}>
+                <input {...getInputProps()} />
+                <Fab
+                  loading={!projectOverviewData || directoryIdLoading}
+                  disabled={canReadDirectoryId === false}
+                  onClick={openFileBrowser}
+                  color="primary"
+                  aria-label="Upload Files"
+                >
+                  <Publish />
+                </Fab>
+              </span>
             </Grid>
-          )}
+            <Grid item>
+              <Typography variant="h4">
+                {projectOverviewData ? (
+                  'Upload Files'
+                ) : (
+                  <Skeleton width="12ch" />
+                )}
+              </Typography>
+            </Grid>
+          </Grid>
+
           <Grid container spacing={3}>
             <Grid item xs={6}>
               <BudgetOverviewCard

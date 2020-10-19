@@ -57,6 +57,7 @@ fragment ProjectOverview on Project {
       type
     }
   }
+  sensitivity
   modifiedAt
   budget {
     canRead
@@ -67,6 +68,7 @@ fragment ProjectOverview on Project {
   team {
     ...ProjectMemberList
   }
+  type
   partnerships {
     ...PartnershipSummary
   }
