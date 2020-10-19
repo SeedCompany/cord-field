@@ -1,5 +1,5 @@
 import { colors, makeStyles, SvgIconProps } from '@material-ui/core';
-import { VerifiedUserOutlined } from '@material-ui/icons';
+import { VerifiedUser } from '@material-ui/icons';
 import clsx from 'clsx';
 import { FC } from 'react';
 import * as React from 'react';
@@ -31,7 +31,7 @@ export const SensitivityIcon: FC<SensitivityIconProps> = ({
   const classes = useStyles();
 
   return (
-    <VerifiedUserOutlined
+    <VerifiedUser
       className={clsx(!loading && value ? classes[value] : null, className)}
       {...rest}
     />
