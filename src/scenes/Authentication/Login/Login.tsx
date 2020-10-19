@@ -26,10 +26,10 @@ export const Login = (props: Except<Props, 'onSubmit'>) => {
       await login({
         variables: { input },
         update: (cache, { data }) => {
-          const user = data?.login.user;
-          if (user) {
+          const sessionData = data?.login;
+          if (sessionData) {
             setSuccess(true);
-            updateSessionCache(cache, user);
+            updateSessionCache(cache, sessionData);
           }
         },
       });

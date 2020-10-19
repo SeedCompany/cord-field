@@ -1,4 +1,5 @@
 import { ApolloCache } from '@apollo/client';
+import { SessionOutput } from '../../api';
 import { LoginMutation } from '../../scenes/Authentication/Login/Login.generated';
 import { RegisterMutation } from '../../scenes/Authentication/Register/register.generated';
 import {
@@ -18,8 +19,9 @@ export const useSession = () => {
 
 export const updateSessionCache = <T extends LoginMutation | RegisterMutation>(
   cache: ApolloCache<T>,
-  user: LoggedInUserFragment
+  sessionData: { user?: LoggedInUserFragment; powers?: SessionOutput['powers'] }
 ) => {
+  const { user, powers } = sessionData;
   const currentSession = cache.readQuery<SessionQuery>({
     query: SessionDocument,
   });
@@ -32,6 +34,7 @@ export const updateSessionCache = <T extends LoginMutation | RegisterMutation>(
           ...currentSession.session.user,
           ...user,
         },
+        powers: [...(powers ? powers : currentSession.session.powers || [])],
       },
     };
     cache.writeQuery({ query: SessionDocument, data: updatedSession });
