@@ -1,27 +1,39 @@
-import { GQLOperations } from '../../../api';
+import { useMutation } from '@apollo/client';
 import {
   HandleUploadCompletedFunction,
   UploadFilesConsumerFunction,
   UploadFilesConsumerInput,
   useUploadFiles,
 } from '../../../components/files/hooks';
+import { updateCachedVersions } from '../../../components/files/updateCachedVersions';
 import {
-  useUploadInternshipEngagementGrowthPlanMutation,
-  useUploadLanguageEngagementPnpMutation,
+  UploadInternshipEngagementGrowthPlanDocument,
+  UploadInternshipEngagementGrowthPlanMutation,
+  UploadLanguageEngagementPnpDocument,
+  UploadLanguageEngagementPnpMutation,
 } from './UploadEngagementFiles.generated';
 
 type EngagementType = 'language' | 'internship';
+
+const isLanguageEngagementMutation = (
+  data:
+    | UploadInternshipEngagementGrowthPlanMutation
+    | UploadLanguageEngagementPnpMutation
+): data is UploadLanguageEngagementPnpMutation =>
+  'updateLanguageEngagement' in data;
 
 export const useUploadEngagementFile = (
   engagementType: EngagementType
 ): UploadFilesConsumerFunction => {
   const uploadFiles = useUploadFiles();
-
-  const [uploadPnp] = useUploadLanguageEngagementPnpMutation();
-  const [uploadGrowthPlan] = useUploadInternshipEngagementGrowthPlanMutation();
-
-  const uploadFile =
-    engagementType === 'language' ? uploadPnp : uploadGrowthPlan;
+  const MutationDocument =
+    engagementType === 'language'
+      ? UploadLanguageEngagementPnpDocument
+      : UploadInternshipEngagementGrowthPlanDocument;
+  const [uploadFile] = useMutation<
+    | UploadLanguageEngagementPnpMutation
+    | UploadInternshipEngagementGrowthPlanMutation
+  >(MutationDocument);
 
   const handleUploadCompleted: HandleUploadCompletedFunction = async ({
     uploadId,
@@ -35,11 +47,32 @@ export const useUploadEngagementFile = (
         pnp: { uploadId, name },
         growthPlan: { uploadId, name },
       },
-      refetchQueries: [
-        action === 'version'
-          ? GQLOperations.Query.FileVersions
-          : GQLOperations.Query.Engagement,
-      ],
+      update:
+        action !== 'version'
+          ? undefined
+          : (cache, { data }) => {
+              if (data) {
+                if (isLanguageEngagementMutation(data)) {
+                  const pnp =
+                    data.updateLanguageEngagement.engagement.pnp.value;
+                  if (pnp) {
+                    const existingVersions = pnp.children.items;
+                    updateCachedVersions(cache, existingVersions, pnp.id);
+                  }
+                } else {
+                  const growthPlan =
+                    data.updateInternshipEngagement.engagement.growthPlan.value;
+                  if (growthPlan) {
+                    const existingVersions = growthPlan.children.items;
+                    updateCachedVersions(
+                      cache,
+                      existingVersions,
+                      growthPlan.id
+                    );
+                  }
+                }
+              }
+            },
     });
   };
 

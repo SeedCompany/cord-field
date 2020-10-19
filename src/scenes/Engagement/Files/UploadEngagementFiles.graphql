@@ -7,8 +7,12 @@ mutation UploadLanguageEngagementPnp(
       id
       pnp {
         value {
-          id
-          name
+          ...FileNodeInfo
+          children {
+            items {
+              ...FileNodeInfo
+            }
+          }
         }
       }
     }
@@ -26,8 +30,12 @@ mutation UploadInternshipEngagementGrowthPlan(
       id
       growthPlan {
         value {
-          id
-          name
+          ...FileNodeInfo
+          children {
+            items {
+              ...FileNodeInfo
+            }
+          }
         }
       }
     }

@@ -1,11 +1,15 @@
 import { GQLOperations } from '../../../api';
-import { useCreateFileVersionMutation } from '../../../components/files/FileActions';
+import {
+  CreateFileVersionMutation,
+  useCreateFileVersionMutation,
+} from '../../../components/files/FileActions';
 import {
   HandleUploadCompletedFunction,
   UploadFilesConsumerFunction,
   UploadFilesConsumerInput,
   useUploadFiles,
 } from '../../../components/files/hooks';
+import { updateCachedVersions } from '../../../components/files/updateCachedVersions';
 import { useUpdateProjectBudgetUniversalTemplateMutation } from '../Budget/ProjectBudget.generated';
 
 export const useUploadProjectFiles = (): UploadFilesConsumerFunction => {
@@ -25,11 +29,17 @@ export const useUploadProjectFiles = (): UploadFilesConsumerFunction => {
     };
     await createFileVersion({
       variables: { input },
-      refetchQueries: [
-        action === 'version'
-          ? GQLOperations.Query.FileVersions
-          : GQLOperations.Query.ProjectDirectory,
-      ],
+      refetchQueries:
+        action === 'file' ? [GQLOperations.Query.ProjectDirectory] : undefined,
+      update: (cache, { data }) => {
+        if (data?.createFileVersion) {
+          updateCachedVersions<CreateFileVersionMutation>(
+            cache,
+            data.createFileVersion.children.items,
+            parentId
+          );
+        }
+      },
     });
   };
 
@@ -59,11 +69,22 @@ export const useUploadBudgetFile = (): UploadFilesConsumerFunction => {
         id,
         universalTemplateFile: { uploadId, name },
       },
-      refetchQueries: [
-        action === 'version'
-          ? GQLOperations.Query.FileVersions
-          : GQLOperations.Query.ProjectBudget,
-      ],
+      refetchQueries:
+        action === 'file' ? [GQLOperations.Query.ProjectBudget] : undefined,
+      update:
+        action !== 'version'
+          ? undefined
+          : (cache, { data }) => {
+              const template =
+                data?.updateBudget.budget.universalTemplateFile.value;
+              if (template) {
+                updateCachedVersions(
+                  cache,
+                  template.children.items,
+                  template.id
+                );
+              }
+            },
     });
   };
 

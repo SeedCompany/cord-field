@@ -13,7 +13,11 @@ query FileVersions($id: ID!) {
 mutation CreateFileVersion($input: CreateFileVersionInput!) {
   createFileVersion(input: $input) {
     id
-    name
+    children {
+      items {
+        ...FileVersionItem
+      }
+    }
   }
 }
 
