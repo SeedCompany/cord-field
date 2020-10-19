@@ -273,23 +273,32 @@ export const ProjectOverview: FC = () => {
             />
           </Grid>
           <Grid container spacing={1} alignItems="center">
-            <Grid item>
-              <DataButton
-                loading={!projectOverviewData}
-                onClick={() => editField('sensitivity')}
-                disabled={projectOverviewData?.project.type === 'Translation'}
-                startIcon={
-                  <SensitivityIcon
-                    value={projectOverviewData?.project.sensitivity}
-                    loading={!projectOverviewData}
-                  />
-                }
-              >
-                {projectOverviewData
-                  ? `${projectOverviewData.project.sensitivity} Sensitivity`
-                  : null}
-              </DataButton>
-            </Grid>
+            <Tooltip
+              title={
+                isTranslation
+                  ? 'Sensitivity is automatically determined by the most sensitive language engaged'
+                  : ''
+              }
+            >
+              <Grid item>
+                <DataButton
+                  loading={!projectOverviewData}
+                  onClick={() =>
+                    isTranslation === false && editField('sensitivity')
+                  }
+                  startIcon={
+                    <SensitivityIcon
+                      value={projectOverviewData?.project.sensitivity}
+                      loading={!projectOverviewData}
+                    />
+                  }
+                >
+                  {projectOverviewData
+                    ? `${projectOverviewData.project.sensitivity} Sensitivity`
+                    : null}
+                </DataButton>
+              </Grid>
+            </Tooltip>
             <Grid item>
               <DataButton
                 loading={!projectOverviewData}
