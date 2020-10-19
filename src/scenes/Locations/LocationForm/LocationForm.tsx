@@ -114,16 +114,14 @@ export const LocationForm = <CreateOrUpdateInput, R extends any>({
         </SecuredField>
       </Grid>
     </Grid>
-    {title === 'Create Location' && (
-      <Grid container spacing={2}>
-        <Grid item xs>
-          <SecuredField obj={location} name="fundingAccount">
-            {(props) => (
-              <FundingAccountField {...props} name="fundingAccountLookupItem" />
-            )}
-          </SecuredField>
-        </Grid>
+    <Grid container spacing={2}>
+      <Grid item xs>
+        <SecuredField obj={location} name="fundingAccount">
+          {(props) => (
+            <FundingAccountField {...props} name="fundingAccountLookupItem" />
+          )}
+        </SecuredField>
       </Grid>
-    )}
+    </Grid>
   </DialogForm>
 );
