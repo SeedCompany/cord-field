@@ -11,8 +11,9 @@ import {
 export const useSession = () => {
   const { data, loading: sessionLoading } = useSessionQuery();
   const session = data?.session.user;
+  const powers = data?.session.powers;
 
-  return { session, sessionLoading };
+  return { session, sessionLoading, powers };
 };
 
 export const updateSessionCache = <T extends LoginMutation | RegisterMutation>(
