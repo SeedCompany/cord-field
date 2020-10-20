@@ -91,7 +91,14 @@ const fieldMapping: Record<
         getLabel={displayFinancialReportingType}
       />
     ),
-  address: ({ props }) => <TextField {...props} label="Address" />,
+  address: ({ props }) => (
+    <TextField
+      {...props}
+      label="Address"
+      multiline
+      inputProps={{ rowsMin: 2 }}
+    />
+  ),
 };
 
 export const EditPartner = ({
