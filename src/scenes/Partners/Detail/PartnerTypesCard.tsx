@@ -23,13 +23,13 @@ const useStyles = makeStyles(({ spacing }) => ({
   },
 }));
 
-interface PartnerTypeCardProps {
+interface PartnerTypesCardProps {
   partner?: PartnerDetailsFragment;
   onEdit: () => void;
   className?: string;
 }
 
-export const PartnerTypeCard: FC<PartnerTypeCardProps> = ({
+export const PartnerTypesCard: FC<PartnerTypesCardProps> = ({
   partner,
   className,
   onEdit,
@@ -58,7 +58,7 @@ export const PartnerTypeCard: FC<PartnerTypeCardProps> = ({
             {partner?.types.value.includes('Managing') && (
               <Grid item>
                 <Typography variant="body2" color="textSecondary">
-                  Financial Reporting Type
+                  Financial Reporting Types
                 </Typography>
                 <Typography variant="h4">
                   {partner.financialReportingTypes.value.join(', ')}

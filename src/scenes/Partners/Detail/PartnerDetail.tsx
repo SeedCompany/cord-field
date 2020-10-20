@@ -4,12 +4,11 @@ import {
   CardActionArea,
   CardContent,
   Grid,
-  IconButton,
   makeStyles,
   Tooltip,
   Typography,
 } from '@material-ui/core';
-import { Add } from '@material-ui/icons';
+import { Add, Edit } from '@material-ui/icons';
 import { Skeleton } from '@material-ui/lab';
 import clsx from 'clsx';
 import { Many } from 'lodash';
@@ -19,14 +18,14 @@ import { Avatar } from '../../../components/Avatar';
 import { BooleanProperty } from '../../../components/BooleanProperty';
 import { DataButton } from '../../../components/DataButton';
 import { useDialog } from '../../../components/Dialog';
-import { useDateFormatter } from '../../../components/Formatters';
-import { PencilCircledIcon } from '../../../components/Icons';
+import { Fab } from '../../../components/Fab';
+import { useDateTimeFormatter } from '../../../components/Formatters';
 import { UserListItemCardPortrait } from '../../../components/UserListItemCard';
 import { square } from '../../../util';
 import { EditablePartnerField, EditPartner } from '../Edit';
 import { AddressCard } from './AddressCard';
 import { PartnerDocument } from './PartnerDetail.generated';
-import { PartnerTypeCard } from './PartnerTypesCard';
+import { PartnerTypesCard } from './PartnerTypesCard';
 
 const useStyles = makeStyles(({ spacing, breakpoints, palette }) => ({
   root: {
@@ -96,7 +95,7 @@ const useStyles = makeStyles(({ spacing, breakpoints, palette }) => ({
 export const PartnerDetail = () => {
   const classes = useStyles();
   const { partnerId } = useParams();
-  const formatDate = useDateFormatter();
+  const formatDateTime = useDateTimeFormatter();
 
   const { data, error } = useQuery(PartnerDocument, {
     variables: {
@@ -129,15 +128,17 @@ export const PartnerDetail = () => {
                 <Skeleton width="75%" />
               )}
             </Typography>
-            <Tooltip title="Update Global Innovations Client">
-              <IconButton
-                color="primary"
-                aria-label="edit partner"
-                onClick={() => editPartner('globalInnovationsClient')}
-              >
-                <PencilCircledIcon />
-              </IconButton>
-            </Tooltip>
+            {partner && (
+              <Tooltip title="Update Global Innovations Client">
+                <Fab
+                  color="primary"
+                  aria-label="Update Global Innovations Client"
+                  onClick={() => editPartner('globalInnovationsClient')}
+                >
+                  <Edit />
+                </Fab>
+              </Tooltip>
+            )}
           </header>
           <div className={classes.subheader}>
             <Typography variant="h4">
@@ -145,11 +146,21 @@ export const PartnerDetail = () => {
             </Typography>
             {partner && (
               <Typography variant="body2" color="textSecondary">
-                Created {formatDate(partner.createdAt)}
+                Created {formatDateTime(partner.createdAt)}
               </Typography>
             )}
           </div>
           <Grid container spacing={1} alignItems="center">
+            <Grid item>
+              <DataButton
+                onClick={() => editPartner('active')}
+                secured={partner?.active}
+                redacted="You do not have permission to view Status"
+                children={partner?.active.value ? 'Active' : 'Inactive'}
+                loading={!partner}
+                empty={'Enter Status'}
+              />
+            </Grid>
             <Grid item>
               <DataButton
                 onClick={() => editPartner('pmcEntityCode')}
@@ -160,36 +171,31 @@ export const PartnerDetail = () => {
                   `PMC Entity Code: ${partner.pmcEntityCode.value}`
                 }
                 empty={'Enter PMC Entity Code'}
+                loading={!partner}
               />
             </Grid>
-            <Grid item>
-              <DataButton
-                onClick={() => editPartner('active')}
-                secured={partner?.active}
-                redacted="You do not have permission to view Status"
-                children={partner?.active.value ? 'Active' : 'Inactive'}
-              />
-            </Grid>
-            <Grid item>
-              <BooleanProperty
-                label="Global Innovations Client"
-                redacted="You do not have permission to view whether this is a Global Innovations Client"
-                data={partner?.globalInnovationsClient}
-                wrap={(node) => <Grid item>{node}</Grid>}
-              />
-            </Grid>
+            <BooleanProperty
+              label="Global Innovations Client"
+              redacted="You do not have permission to view whether this is a Global Innovations Client"
+              data={partner?.globalInnovationsClient}
+              wrap={(node) => <Grid item>{node}</Grid>}
+            />
           </Grid>
           <Grid container spacing={3}>
             <Grid item xs={6} className={classes.cardSection}>
-              <Typography variant="h3">Partner Types</Typography>
-              <PartnerTypeCard
+              <Typography variant="h3">
+                {partner ? 'Partner Types' : <Skeleton width="120px" />}
+              </Typography>
+              <PartnerTypesCard
                 partner={partner}
                 onEdit={() => editPartner(['types', 'financialReportingTypes'])}
                 className={classes.card}
               />
             </Grid>
             <Grid item xs={6} className={classes.cardSection}>
-              <Typography variant="h3">Address</Typography>
+              <Typography variant="h3">
+                {partner ? 'Address' : <Skeleton width="120px" />}
+              </Typography>
               <AddressCard
                 partner={partner}
                 onEdit={() => editPartner('address')}
@@ -198,7 +204,9 @@ export const PartnerDetail = () => {
             </Grid>
           </Grid>
           <div className={classes.sectionTitle}>
-            <Typography variant="h3">Point of Contact</Typography>
+            <Typography variant="h3">
+              {partner ? 'Point of Contact' : <Skeleton width="120px" />}
+            </Typography>
           </div>
           <UserListItemCardPortrait
             user={partner?.pointOfContact.value || undefined}
