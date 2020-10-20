@@ -22,9 +22,10 @@ import React, {
   useState,
 } from 'react';
 import { Except, SetOptional } from 'type-fest';
-import { isNetworkRequestInFlight } from '../../../api';
+import { isNetworkRequestInFlight, Power } from '../../../api';
 import { useDialog } from '../../Dialog';
 import { DialogFormProps } from '../../Dialog/DialogForm';
+import { useSession } from '../../Session';
 import { FieldConfig, useField, useFieldName } from '../index';
 import {
   getHelperText,
@@ -66,6 +67,7 @@ export type LookupFieldProps<
     >;
     getInitialValues?: (val: string) => Partial<CreateFormValues>;
     getOptionLabel: (option: T) => string | null | undefined;
+    createPower?: Power;
   } & Except<
     AutocompleteProps<T, Multiple, DisableClearable, false>,
     | 'value'
@@ -105,9 +107,12 @@ export function LookupField<
   getCompareBy,
   getOptionLabel: getOptionLabelProp,
   variant,
+  createPower,
   ...props
 }: LookupFieldProps<T, Multiple, DisableClearable, CreateFormValues>) {
-  const freeSolo = !!CreateDialogForm;
+  const { powers } = useSession();
+  const canCreate = createPower && powers?.includes(createPower);
+  const freeSolo = !!CreateDialogForm && canCreate;
   type Val = Value<T, Multiple, DisableClearable, false>;
   const defaultValue =
     defaultValueProp ?? ((multiple ? emptyArray : null) as Val);
@@ -363,12 +368,14 @@ LookupField.createFor = <T extends { id: string }, CreateFormValues = never>({
       'useLookup' | 'getCompareBy' | 'getOptionLabel'
     >
   ) {
+    const createPower = `Create${resource}` as Power;
     return (
       <LookupField<T, Multiple, DisableClearable, CreateFormValues>
         getCompareBy={compareBy}
         getOptionLabel={(item: StandardNamedObject) => item.name.value}
         {...(config as any)}
         {...props}
+        createPower={createPower}
       />
     );
   };
