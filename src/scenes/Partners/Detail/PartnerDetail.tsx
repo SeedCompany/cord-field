@@ -140,11 +140,11 @@ export const PartnerDetail = () => {
                 onClick={() => editPartner('pmcEntityCode')}
                 secured={partner?.pmcEntityCode}
                 redacted="You do not have permission to view PMC Entity Code"
-                children={`PMC Entity Code${
-                  partner?.pmcEntityCode.value
-                    ? `: ${partner.pmcEntityCode.value}`
-                    : ''
-                }`}
+                children={
+                  partner?.pmcEntityCode.value &&
+                  `PMC Entity Code: ${partner.pmcEntityCode.value}`
+                }
+                empty={'Enter PMC Entity Code'}
               />
             </Grid>
             <Grid item>
