@@ -368,14 +368,13 @@ LookupField.createFor = <T extends { id: string }, CreateFormValues = never>({
       'useLookup' | 'getCompareBy' | 'getOptionLabel'
     >
   ) {
-    const createPower = `Create${resource}` as Power;
     return (
       <LookupField<T, Multiple, DisableClearable, CreateFormValues>
         getCompareBy={compareBy}
         getOptionLabel={(item: StandardNamedObject) => item.name.value}
+        createPower={`Create${resource}` as Power}
         {...(config as any)}
         {...props}
-        createPower={createPower}
       />
     );
   };
