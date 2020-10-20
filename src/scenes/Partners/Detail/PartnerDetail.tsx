@@ -1,5 +1,8 @@
 import { useQuery } from '@apollo/client';
 import {
+  Button,
+  CardActionArea,
+  CardContent,
   Grid,
   IconButton,
   makeStyles,
@@ -12,19 +15,20 @@ import clsx from 'clsx';
 import { Many } from 'lodash';
 import React from 'react';
 import { useParams } from 'react-router-dom';
+import { Avatar } from '../../../components/Avatar';
 import { BooleanProperty } from '../../../components/BooleanProperty';
 import { DataButton } from '../../../components/DataButton';
 import { useDialog } from '../../../components/Dialog';
-import { Fab } from '../../../components/Fab';
 import { useDateFormatter } from '../../../components/Formatters';
 import { PencilCircledIcon } from '../../../components/Icons';
 import { UserListItemCardPortrait } from '../../../components/UserListItemCard';
+import { square } from '../../../util';
 import { EditablePartnerField, EditPartner } from '../Edit';
 import { AddressCard } from './AddressCard';
 import { PartnerDocument } from './PartnerDetail.generated';
 import { PartnerTypeCard } from './PartnerTypesCard';
 
-const useStyles = makeStyles(({ spacing, breakpoints }) => ({
+const useStyles = makeStyles(({ spacing, breakpoints, palette }) => ({
   root: {
     flex: 1,
     overflowY: 'auto',
@@ -75,6 +79,17 @@ const useStyles = makeStyles(({ spacing, breakpoints }) => ({
     '& > *': {
       marginRight: spacing(2),
     },
+  },
+  pocCardActionArea: {
+    flex: 1,
+    display: 'flex',
+    flexDirection: 'column',
+  },
+  pocCardAvatar: {
+    ...square(86),
+    fontSize: 70,
+    color: palette.background.paper,
+    backgroundColor: palette.background.default,
   },
 }));
 
@@ -184,18 +199,36 @@ export const PartnerDetail = () => {
           </Grid>
           <div className={classes.sectionTitle}>
             <Typography variant="h3">Point of Contact</Typography>
-            <Tooltip title="Edit Point Of Contact">
-              <Fab
-                color="primary"
-                aria-label="edit partner"
-                onClick={() => editPartner('pointOfContactId')}
-              >
-                <Add />
-              </Fab>
-            </Tooltip>
           </div>
           <UserListItemCardPortrait
-            user={partner?.pointOfContact.value ?? undefined}
+            user={partner?.pointOfContact.value || undefined}
+            content={
+              !partner?.pointOfContact.value ? (
+                <CardActionArea
+                  onClick={() => editPartner('pointOfContactId')}
+                  className={classes.pocCardActionArea}
+                  aria-label="add mentor"
+                >
+                  <CardContent>
+                    <Avatar className={classes.pocCardAvatar}>
+                      <Add fontSize="inherit" />
+                    </Avatar>
+                  </CardContent>
+                </CardActionArea>
+              ) : undefined
+            }
+            action={
+              <Button
+                color="primary"
+                disabled={
+                  !partner?.pointOfContact || !partner.pointOfContact.canEdit
+                }
+                onClick={() => editPartner('pointOfContactId')}
+              >
+                {partner?.pointOfContact.value ? 'Edit' : 'Add'} Point of
+                Contact
+              </Button>
+            }
           />
         </div>
       )}
