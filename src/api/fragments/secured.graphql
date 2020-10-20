@@ -4,6 +4,12 @@ fragment securedString on SecuredString {
   value
 }
 
+fragment securedStringNullable on SecuredStringNullable {
+  canRead
+  canEdit
+  value
+}
+
 fragment securedInt on SecuredInt {
   canRead
   canEdit

@@ -35,7 +35,7 @@ fragment LocationSearchResultItem on Location {
   }
   sensitivity
   isoAlpha3 {
-    ...securedString
+    ...securedStringNullable
   }
   fundingAccount {
     canRead
