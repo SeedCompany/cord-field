@@ -12,7 +12,8 @@ import {
   DialogFormProps,
 } from '../../../components/Dialog/DialogForm';
 import {
-  AlphaUppercaseField,
+  IsoCountry,
+  IsoCountryField,
   SecuredField,
   SelectField,
   SubmitError,
@@ -30,6 +31,7 @@ export interface LocationFormValues<
   location: Merge<
     CreateOrUpdateType,
     {
+      isoAlpha3?: IsoCountry | null;
       fundingAccountId?: FundingAccountLookupItem | null;
     }
   >;
@@ -86,11 +88,9 @@ export const LocationForm = <CreateOrUpdateInput, R extends any>({
       <Grid item xs={6}>
         <SecuredField obj={location} name="isoAlpha3">
           {(props) => (
-            <AlphaUppercaseField
-              chars={3}
-              label="ISO Alpha-3 Country Code"
-              placeholder="Enter ISO Alpha-3 Country Code"
-              margin="none"
+            <IsoCountryField
+              label="ISO Country"
+              placeholder="Select an ISO Country"
               {...props}
             />
           )}

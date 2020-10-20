@@ -11,6 +11,9 @@ fragment LocationDetail on Location {
     canEdit
     value
   }
+  isoCountry {
+    ...isoCountry
+  }
   name {
     canRead
     canEdit

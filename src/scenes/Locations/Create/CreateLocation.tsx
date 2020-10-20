@@ -38,12 +38,15 @@ export const CreateLocation = (props: CreateLocationProps) => {
         });
       }}
       {...props}
-      onSubmit={async ({ location: { fundingAccountId, ...rest } }) => {
+      onSubmit={async ({
+        location: { fundingAccountId, isoAlpha3, ...rest },
+      }) => {
         const { data } = await createLocation({
           variables: {
             input: {
               location: {
                 ...rest,
+                isoAlpha3: isoAlpha3?.alpha3,
                 fundingAccountId: fundingAccountId?.id,
               },
             },

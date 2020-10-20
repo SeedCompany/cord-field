@@ -26,7 +26,7 @@ export const EditLocation = (props: EditLocationProps) => {
               id: location.id,
               name: location.name.value,
               type: location.type.value,
-              isoAlpha3: location.isoAlpha3.value,
+              isoAlpha3: location.isoCountry,
               fundingAccountId: location.fundingAccount.value,
             },
           }
@@ -47,7 +47,7 @@ export const EditLocation = (props: EditLocationProps) => {
             input: {
               location: {
                 ...rest,
-                isoAlpha3: isoAlpha3 ?? null,
+                isoAlpha3: isoAlpha3?.alpha3 ?? null,
                 fundingAccountId: fundingAccountId?.id ?? null,
               },
             },
