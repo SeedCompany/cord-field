@@ -3,6 +3,7 @@ query Session {
     user {
       ...LoggedInUser
     }
+    powers
   }
 }
 

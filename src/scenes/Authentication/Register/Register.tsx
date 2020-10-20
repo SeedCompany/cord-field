@@ -31,10 +31,10 @@ export const Register = (props: Except<Props, 'onSubmit'>) => {
           },
         },
         update: (cache, { data }) => {
-          const user = data?.register.user;
-          if (user) {
+          const sessionData = data?.register;
+          if (sessionData) {
             setSuccess(true);
-            updateSessionCache(cache, user);
+            updateSessionCache(cache, sessionData);
           }
         },
       });

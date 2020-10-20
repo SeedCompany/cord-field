@@ -3,5 +3,6 @@ mutation Login($input: LoginInput!) {
     user {
       ...LoggedInUser
     }
+    powers
   }
 }

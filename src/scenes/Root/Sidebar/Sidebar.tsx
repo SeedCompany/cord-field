@@ -16,6 +16,7 @@ import * as React from 'react';
 import { CreateButton } from '../../../components/CreateButton';
 import { useDialog } from '../../../components/Dialog';
 import { ListItemLink, ListItemLinkProps } from '../../../components/Routing';
+import { useSession } from '../../../components/Session';
 import { CreateLanguage } from '../../Languages/Create';
 import { CreatePartner } from '../../Partners/Create';
 import { CreateProject } from '../../Projects/Create';
@@ -52,6 +53,14 @@ export const Sidebar: FC = () => {
   const [createLanguageState, createLanguage] = useDialog();
   const [createUserState, createUser] = useDialog();
 
+  const { powers } = useSession();
+
+  const canCreatePartner = powers?.includes('CreatePartner');
+  const canCreateProject = powers?.includes('CreateProject');
+  const canCreateLanguage = powers?.includes('CreateLanguage');
+  const canCreateUser = powers?.includes('CreateUser');
+  const canCreateAny =
+    canCreatePartner || canCreateProject || canCreateLanguage || canCreateUser;
   const createMenu = (
     <Menu
       id="create-menu"
@@ -69,10 +78,18 @@ export const Sidebar: FC = () => {
         horizontal: 'center',
       }}
     >
-      <MenuItem onClick={closeAnd(createPartner)}>Partner</MenuItem>
-      <MenuItem onClick={closeAnd(createProject)}>Project</MenuItem>
-      <MenuItem onClick={closeAnd(createLanguage)}>Language</MenuItem>
-      <MenuItem onClick={closeAnd(createUser)}>Person</MenuItem>
+      {canCreatePartner && (
+        <MenuItem onClick={closeAnd(createPartner)}>Partner</MenuItem>
+      )}
+      {canCreateProject && (
+        <MenuItem onClick={closeAnd(createProject)}>Project</MenuItem>
+      )}
+      {canCreateLanguage && (
+        <MenuItem onClick={closeAnd(createLanguage)}>Language</MenuItem>
+      )}
+      {canCreateUser && (
+        <MenuItem onClick={closeAnd(createUser)}>Person</MenuItem>
+      )}
     </Menu>
   );
 
@@ -94,16 +111,18 @@ export const Sidebar: FC = () => {
       <Paper square className={classes.root}>
         <SidebarHeader />
         <div className={classes.content}>
-          <CreateButton
-            className={classes.createNewItem}
-            fullWidth
-            aria-controls="create-menu"
-            aria-haspopup="true"
-            startIcon={<Add />}
-            onClick={openAddMenu}
-          >
-            Create New Item
-          </CreateButton>
+          {canCreateAny && (
+            <CreateButton
+              className={classes.createNewItem}
+              fullWidth
+              aria-controls="create-menu"
+              aria-haspopup="true"
+              startIcon={<Add />}
+              onClick={openAddMenu}
+            >
+              Create New Item
+            </CreateButton>
+          )}
           {createMenu}
           {navList}
         </div>
