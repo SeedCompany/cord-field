@@ -48,7 +48,7 @@ export const PartnerTypeCard: FC<PartnerTypeCardProps> = ({
             <Grid item>
               <Typography variant="h4">
                 {partner ? (
-                  partner.types.value.join(', ')
+                  partner.types.value.join(', ') || 'Add Partner Types'
                 ) : (
                   <Skeleton width="75%" />
                 )}

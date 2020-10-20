@@ -49,7 +49,11 @@ export const AddressCard: FC<AddressCardProps> = ({
           <Grid container direction="column" spacing={1}>
             <Grid item>
               <Typography variant="h4">
-                {partner ? partner.address.value : <Skeleton width="75%" />}
+                {partner ? (
+                  partner.address.value || 'Add Address'
+                ) : (
+                  <Skeleton width="75%" />
+                )}
               </Typography>
             </Grid>
           </Grid>
