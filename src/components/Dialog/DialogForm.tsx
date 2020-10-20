@@ -186,6 +186,7 @@ export function DialogForm<T, R = void>({
                     onClick={() => {
                       onClose?.('cancel', form);
                     }}
+                    disabled={submitting}
                   >
                     {closeLabel || 'Cancel'}
                   </Button>
