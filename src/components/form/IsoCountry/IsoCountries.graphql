@@ -1,0 +1,11 @@
+query IsoCountries {
+  isoCountries {
+    ...isoCountry
+  }
+}
+
+fragment isoCountry on IsoCountry {
+  country
+  alpha2
+  alpha3
+}
