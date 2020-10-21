@@ -1,4 +1,4 @@
-import { makeStyles, Typography } from '@material-ui/core';
+import { makeStyles, Tooltip, Typography } from '@material-ui/core';
 import { Edit } from '@material-ui/icons';
 import { Skeleton } from '@material-ui/lab';
 import clsx from 'clsx';
@@ -84,9 +84,15 @@ export const UserDetail = () => {
               )}
             </Typography>
             {canEditAnyFields ? (
-              <Fab color="primary" aria-label="edit person" onClick={editUser}>
-                <Edit />
-              </Fab>
+              <Tooltip title="Edit Person">
+                <Fab
+                  color="primary"
+                  aria-label="edit person"
+                  onClick={editUser}
+                >
+                  <Edit />
+                </Fab>
+              </Tooltip>
             ) : null}
           </div>
           <DisplayProperty
