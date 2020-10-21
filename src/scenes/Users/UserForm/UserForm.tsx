@@ -118,11 +118,12 @@ export const UserForm = <T, R = void>({
           />
         )}
       </SecuredField>
-      <SecuredField obj={user} name="timezone">
-        {(props) => (
-          <TextField label="Timezone" placeholder="Enter Timezone" {...props} />
-        )}
-      </SecuredField>
+      {/*TODO: Replace with timezone autocomplete #307 */}
+      {/*<SecuredField obj={user} name="timezone">*/}
+      {/*  {(props) => (*/}
+      {/*    <TextField label="Timezone" placeholder="Enter Timezone" {...props} />*/}
+      {/*  )}*/}
+      {/*</SecuredField>*/}
       <SecuredField obj={user} name="about">
         {(props) => (
           <TextField
