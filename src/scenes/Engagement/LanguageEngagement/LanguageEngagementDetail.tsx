@@ -5,9 +5,13 @@ import {
   Tooltip,
   Typography,
 } from '@material-ui/core';
-import { ChatOutlined, Edit } from '@material-ui/icons';
+import { ChatOutlined, DateRange, Edit } from '@material-ui/icons';
 import React, { FC } from 'react';
-import { canEditAny } from '../../../api';
+import {
+  canEditAny,
+  displayEngagementStatus,
+  securedDateRange,
+} from '../../../api';
 import { AddItemCard } from '../../../components/AddItemCard';
 import { BooleanProperty } from '../../../components/BooleanProperty';
 import { Breadcrumb } from '../../../components/Breadcrumb';
@@ -76,6 +80,8 @@ export const LanguageEngagementDetail: FC<EngagementQuery> = ({
   const pnp = engagement.pnp;
   const editable = canEditAny(engagement);
 
+  const date = securedDateRange(engagement.startDate, engagement.endDate);
+
   return (
     <>
       <div className={classes.root}>
@@ -142,28 +148,45 @@ export const LanguageEngagementDetail: FC<EngagementQuery> = ({
               </Typography>
             </Grid>
           </Grid>
-          <Grid item>
-            <DataButton
-              onClick={() => show(['paraTextRegistryId'])}
-              secured={ptRegistryId}
-              redacted="You do not have permission to view ParaText Registry ID"
-              children={`ParaText Registry ID${
-                ptRegistryId.value ? `: ${ptRegistryId.value}` : ''
-              }`}
+          <Grid item container spacing={1} alignItems="center">
+            <Grid item>
+              <DataButton onClick={() => show('status')}>
+                {displayEngagementStatus(engagement.status)}
+              </DataButton>
+            </Grid>
+            <Grid item>
+              <DataButton
+                startIcon={<DateRange className={classes.infoColor} />}
+                secured={date}
+                redacted="You do not have permission to view start/end dates"
+                children={formatDate.range}
+                empty="Start - End"
+                onClick={() => show(['startDateOverride', 'endDateOverride'])}
+              />
+            </Grid>
+            <Grid item>
+              <DataButton
+                onClick={() => show(['paraTextRegistryId'])}
+                secured={ptRegistryId}
+                redacted="You do not have permission to view ParaText Registry ID"
+                children={`ParaText Registry ID${
+                  ptRegistryId.value ? `: ${ptRegistryId.value}` : ''
+                }`}
+              />
+            </Grid>
+            <BooleanProperty
+              label="First Scripture"
+              redacted="You do not have permission to view whether this engagement is the first scripture for this language"
+              data={engagement.firstScripture}
+              wrap={(node) => <Grid item>{node}</Grid>}
+            />
+            <BooleanProperty
+              label="Luke Partnership"
+              redacted="You do not have permission to view whether this engagement is a luke partnership"
+              data={engagement.lukePartnership}
+              wrap={(node) => <Grid item>{node}</Grid>}
             />
           </Grid>
-          <BooleanProperty
-            label="First Scripture"
-            redacted="You do not have permission to view whether this engagement is the first scripture for this language"
-            data={engagement.firstScripture}
-            wrap={(node) => <Grid item>{node}</Grid>}
-          />
-          <BooleanProperty
-            label="Luke Partnership"
-            redacted="You do not have permission to view whether this engagement is a luke partnership"
-            data={engagement.lukePartnership}
-            wrap={(node) => <Grid item>{node}</Grid>}
-          />
           <Grid item container spacing={3}>
             <Grid item xs={6}>
               <FieldOverviewCard
