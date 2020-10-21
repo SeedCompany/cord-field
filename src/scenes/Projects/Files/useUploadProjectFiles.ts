@@ -74,7 +74,7 @@ export const useUploadProjectFiles = (): UploadFilesConsumerFunction => {
             } catch {
               /**
                * We need this try/catch because if this data has never been fetched
-               * before, `cache.readQuery` will throw an error instead of returning
+               * before, `cache.readFragment` will throw an error instead of returning
                * anything, which is apparently a behavior the Apollo team finds
                * acceptable.
                */
