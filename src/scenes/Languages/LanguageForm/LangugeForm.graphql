@@ -59,4 +59,9 @@ fragment LanguageForm on Language {
     canEdit
     value
   }
+  hasExternalFirstScripture {
+    canRead
+    canEdit
+    value
+  }
 }
