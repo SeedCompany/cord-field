@@ -187,6 +187,17 @@ export const LanguageForm = <T extends any>({
                       </Grid>
                     )}
                   </SecuredField>
+                  <SecuredField obj={language} name="hasExternalFirstScripture">
+                    {(props) => (
+                      <Grid item xs={12} sm={6}>
+                        <CheckboxField
+                          label="Was this language's first scripture produced outside of CORD?"
+                          margin="none"
+                          {...props}
+                        />
+                      </Grid>
+                    )}
+                  </SecuredField>
                   <Grid item xs={12} sm={6}>
                     <SelectField
                       label="Sensitivity"

@@ -47,6 +47,8 @@ export const EditLanguage = (props: EditLanguageProps) => {
                 CalendarDate.toFiscalYear(
                   language.sponsorEstimatedEndDate.value
                 ),
+              hasExternalFirstScripture:
+                language.hasExternalFirstScripture.value,
             },
           }
         : undefined,

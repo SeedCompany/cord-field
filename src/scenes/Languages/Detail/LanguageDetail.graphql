@@ -63,6 +63,11 @@ fragment LanguageDetail on Language {
       ...ProjectListItem
     }
   }
+  hasExternalFirstScripture {
+    canRead
+    canEdit
+    value
+  }
 }
 
 mutation RemoveLocationFromLanguage($languageId: ID!, $locationId: ID!) {
