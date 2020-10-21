@@ -203,14 +203,16 @@ export const ProjectOverview: FC = () => {
             </Typography>
             {(!projectOverviewData ||
               projectOverviewData.project.name.canEdit) && (
-              <Fab
-                color="primary"
-                aria-label="edit project name"
-                onClick={() => editField(['name'])}
-                loading={!projectOverviewData}
-              >
-                <Edit />
-              </Fab>
+              <Tooltip title="Edit Project Name">
+                <Fab
+                  color="primary"
+                  aria-label="edit project name"
+                  onClick={() => editField(['name'])}
+                  loading={!projectOverviewData}
+                >
+                  <Edit />
+                </Fab>
+              </Tooltip>
             )}
           </header>
 
@@ -356,15 +358,17 @@ export const ProjectOverview: FC = () => {
             <Grid item>
               <span {...getRootProps()}>
                 <input {...getInputProps()} />
-                <Fab
-                  loading={!projectOverviewData || directoryIdLoading}
-                  disabled={canReadDirectoryId === false}
-                  onClick={openFileBrowser}
-                  color="primary"
-                  aria-label="Upload Files"
-                >
-                  <Publish />
-                </Fab>
+                <Tooltip title="Upload Files">
+                  <Fab
+                    loading={!projectOverviewData || directoryIdLoading}
+                    disabled={canReadDirectoryId === false}
+                    onClick={openFileBrowser}
+                    color="primary"
+                    aria-label="Upload Files"
+                  >
+                    <Publish />
+                  </Fab>
+                </Tooltip>
               </span>
             </Grid>
             <Grid item>

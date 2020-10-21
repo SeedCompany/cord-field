@@ -111,9 +111,11 @@ export const LanguageDetail = () => {
               )}
             </Typography>
             {canEditAnyFields ? (
-              <Fab color="primary" aria-label="edit language" onClick={edit}>
-                <Edit />
-              </Fab>
+              <Tooltip title="Edit Language">
+                <Fab color="primary" aria-label="edit language" onClick={edit}>
+                  <Edit />
+                </Fab>
+              </Tooltip>
             ) : null}
           </div>
           <Grid container spacing={2} alignItems="center">
