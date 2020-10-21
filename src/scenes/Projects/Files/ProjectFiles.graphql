@@ -28,18 +28,22 @@ fragment ProjectDirectoryFileNode on FileNode {
   }
 }
 
+fragment ProjectDirectoryContents on Directory {
+  ...FileNodeInfo
+  children {
+    total
+    items {
+      ...ProjectDirectoryFileNode
+    }
+  }
+  parents {
+    id
+    name
+  }
+}
+
 query ProjectDirectory($id: ID!) {
   directory(id: $id) {
-    ...FileNodeInfo
-    children {
-      total
-      items {
-        ...ProjectDirectoryFileNode
-      }
-    }
-    parents {
-      id
-      name
-    }
+    ...ProjectDirectoryContents
   }
 }
