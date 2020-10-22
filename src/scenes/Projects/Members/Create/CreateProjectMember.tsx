@@ -1,3 +1,4 @@
+import { useMutation } from '@apollo/client';
 import { Decorator } from 'final-form';
 import onFieldChange from 'final-form-calculate';
 import React, { useMemo } from 'react';
@@ -15,7 +16,7 @@ import { SubmitError } from '../../../../components/form';
 import { AutocompleteField } from '../../../../components/form/AutocompleteField';
 import { UserField, UserLookupItem } from '../../../../components/form/Lookup';
 import { ProjectMembersDocument } from '../List/ProjectMembers.generated';
-import { useCreateProjectMemberMutation } from './CreateProjectMember.generated';
+import { CreateProjectMemberDocument } from './CreateProjectMember.generated';
 
 interface FormValues {
   projectMember: Partial<
@@ -48,7 +49,7 @@ export const CreateProjectMember = ({
   projectId,
   ...props
 }: CreateProjectMemberProps) => {
-  const [createProjectMember] = useCreateProjectMemberMutation({
+  const [createProjectMember] = useMutation(CreateProjectMemberDocument, {
     refetchQueries: [
       {
         query: ProjectMembersDocument,

@@ -1,4 +1,4 @@
-import { ApolloCache } from '@apollo/client';
+import { ApolloCache, useQuery } from '@apollo/client';
 import { SessionOutput } from '../../api';
 import { LoginMutation } from '../../scenes/Authentication/Login/Login.generated';
 import { RegisterMutation } from '../../scenes/Authentication/Register/register.generated';
@@ -6,11 +6,10 @@ import {
   LoggedInUserFragment,
   SessionDocument,
   SessionQuery,
-  useSessionQuery,
 } from './session.generated';
 
 export const useSession = () => {
-  const { data, loading: sessionLoading } = useSessionQuery();
+  const { data, loading: sessionLoading } = useQuery(SessionDocument);
   const session = data?.session.user;
   const powers = data?.session.powers;
 

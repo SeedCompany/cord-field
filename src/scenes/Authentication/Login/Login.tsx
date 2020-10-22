@@ -1,14 +1,15 @@
+import { useMutation } from '@apollo/client';
 import { FORM_ERROR } from 'final-form';
 import React, { useEffect, useState } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { Except } from 'type-fest';
 import { handleFormError } from '../../../api';
 import { updateSessionCache, useSession } from '../../../components/Session';
-import { useLoginMutation } from './Login.generated';
+import { LoginDocument } from './Login.generated';
 import { LoginForm, LoginFormProps as Props } from './LoginForm';
 
 export const Login = (props: Except<Props, 'onSubmit'>) => {
-  const [login] = useLoginMutation();
+  const [login] = useMutation(LoginDocument);
   const navigate = useNavigate();
   const [query] = useSearchParams();
   const { session, sessionLoading } = useSession();

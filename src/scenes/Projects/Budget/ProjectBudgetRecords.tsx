@@ -1,3 +1,4 @@
+import { useMutation } from '@apollo/client';
 import { sortBy } from 'lodash';
 import { Column, Components } from 'material-table';
 import React, { FC, useMemo } from 'react';
@@ -6,7 +7,7 @@ import { Table } from '../../../components/Table';
 import {
   BudgetRecordFragment as BudgetRecord,
   ProjectBudgetQuery,
-  useUpdateProjectBudgetRecordMutation,
+  UpdateProjectBudgetRecordDocument,
 } from './ProjectBudget.generated';
 
 const tableComponents: Components = {
@@ -30,7 +31,7 @@ interface ProjectBudgetRecordsProps {
 export const ProjectBudgetRecords: FC<ProjectBudgetRecordsProps> = (props) => {
   const { loading, budget } = props;
   const formatCurrency = useCurrencyFormatter();
-  const [updateBudgetRecord] = useUpdateProjectBudgetRecordMutation();
+  const [updateBudgetRecord] = useMutation(UpdateProjectBudgetRecordDocument);
 
   const records: readonly BudgetRecord[] = budget?.value?.records ?? [];
 

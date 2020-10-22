@@ -1,12 +1,13 @@
+import { useQuery } from '@apollo/client';
 import { useParams } from 'react-router-dom';
-import { useProjectRootDirectoryQuery } from './ProjectFiles.generated';
+import { ProjectRootDirectoryDocument } from './ProjectFiles.generated';
 
 export const useProjectCurrentDirectory = () => {
   const { projectId, folderId } = useParams() as {
     projectId: string;
     folderId?: string;
   };
-  const { data, loading } = useProjectRootDirectoryQuery({
+  const { data, loading } = useQuery(ProjectRootDirectoryDocument, {
     variables: {
       id: projectId,
     },

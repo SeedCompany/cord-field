@@ -1,8 +1,9 @@
+import { useMutation } from '@apollo/client';
 import React, { useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { Except } from 'type-fest';
 import { handleFormError } from '../../../api';
-import { useResetPasswordMutation } from './ResetPassword.generated';
+import { ResetPasswordDocument } from './ResetPassword.generated';
 import {
   ResetPasswordFormProps as Props,
   ResetPasswordForm,
@@ -10,7 +11,7 @@ import {
 import { ResetPasswordSuccess } from './ResetPasswordSuccess';
 
 export const ResetPassword = (props: Except<Props, 'onSubmit'>) => {
-  const [resetPassword] = useResetPasswordMutation();
+  const [resetPassword] = useMutation(ResetPasswordDocument);
   const { token } = useParams() as { token: string };
   const [success, setSuccess] = useState(false);
 

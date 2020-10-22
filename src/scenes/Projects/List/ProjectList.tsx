@@ -1,3 +1,4 @@
+import { useQuery } from '@apollo/client';
 import { Grid, makeStyles, Typography } from '@material-ui/core';
 import { Skeleton } from '@material-ui/lab';
 import React, { FC } from 'react';
@@ -13,7 +14,7 @@ import {
   ProjectFilterOptions,
   useProjectFilters,
 } from './ProjectFilterOptions';
-import { useProjectListQuery } from './projects.generated';
+import { ProjectListDocument } from './projects.generated';
 import { ProjectSortOptions } from './ProjectSortOptions';
 
 const useStyles = makeStyles(({ spacing }) => ({
@@ -30,7 +31,7 @@ export const ProjectList: FC = () => {
   const sort = useSort<Project>();
   const [filters, setFilters] = useProjectFilters();
 
-  const { data } = useProjectListQuery({
+  const { data } = useQuery(ProjectListDocument, {
     variables: {
       input: {
         ...sort.value,

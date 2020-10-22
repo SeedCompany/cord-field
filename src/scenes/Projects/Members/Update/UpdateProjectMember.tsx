@@ -1,3 +1,4 @@
+import { useMutation, useQuery } from '@apollo/client';
 import { Container } from '@material-ui/core';
 import { Skeleton } from '@material-ui/lab';
 import React from 'react';
@@ -15,9 +16,9 @@ import {
 import { SubmitButton, SubmitError } from '../../../../components/form';
 import { AutocompleteField } from '../../../../components/form/AutocompleteField';
 import {
-  useDeleteProjectMemberMutation,
-  useGetUserRolesQuery,
-  useUpdateProjectMemberMutation,
+  DeleteProjectMemberDocument,
+  GetUserRolesDocument,
+  UpdateProjectMemberDocument,
 } from './UpdateProjectMember.generated';
 
 export interface UpdateProjectMemberFormParams {
@@ -38,15 +39,15 @@ export const UpdateProjectMember = ({
   userRoles,
   ...props
 }: UpdateProjectMemberProps) => {
-  const [updateProjectMember] = useUpdateProjectMemberMutation();
+  const [updateProjectMember] = useMutation(UpdateProjectMemberDocument);
 
-  const { data, loading } = useGetUserRolesQuery({
+  const { data, loading } = useQuery(GetUserRolesDocument, {
     variables: {
       userId,
     },
   });
 
-  const [deleteProjectMember] = useDeleteProjectMemberMutation({
+  const [deleteProjectMember] = useMutation(DeleteProjectMemberDocument, {
     refetchQueries: [GQLOperations.Query.ProjectMembers],
     awaitRefetchQueries: true,
   });

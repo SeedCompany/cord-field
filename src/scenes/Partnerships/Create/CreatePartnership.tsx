@@ -1,3 +1,4 @@
+import { useMutation } from '@apollo/client';
 import React from 'react';
 import { Except } from 'type-fest';
 import {
@@ -6,7 +7,7 @@ import {
 } from '../../../api';
 import { PartnerLookupItem } from '../../../components/form/Lookup';
 import { PartnershipForm, PartnershipFormProps } from '../PartnershipForm';
-import { useCreatePartnershipMutation } from './CreatePartnership.generated';
+import { CreatePartnershipDocument } from './CreatePartnership.generated';
 
 export interface CreatePartnershipFormInput {
   partnership: Pick<
@@ -27,7 +28,7 @@ export const CreatePartnership = ({
   projectId,
   ...props
 }: CreatePartnershipProps) => {
-  const [createPartnership] = useCreatePartnershipMutation();
+  const [createPartnership] = useMutation(CreatePartnershipDocument);
 
   return (
     <PartnershipForm<CreatePartnershipFormInput>

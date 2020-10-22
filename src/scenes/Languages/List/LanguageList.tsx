@@ -1,3 +1,4 @@
+import { useQuery } from '@apollo/client';
 import { Button, Grid, makeStyles, Typography } from '@material-ui/core';
 import { Skeleton } from '@material-ui/lab';
 import { times } from 'lodash';
@@ -8,7 +9,7 @@ import { LanguageListItemCard } from '../../../components/LanguageListItemCard';
 import { ContentContainer } from '../../../components/Layout';
 import { ListContainer } from '../../../components/Layout/ListContainer';
 import { SortButtonDialog, useSort } from '../../../components/Sort';
-import { useLanguagesQuery } from './languages.generated';
+import { LanguagesDocument } from './languages.generated';
 import { LanguageSortOptions } from './LanguageSortOptions';
 
 const useStyles = makeStyles(({ spacing }) => ({
@@ -24,7 +25,7 @@ export const LanguageList: FC = () => {
   const formatNumber = useNumberFormatter();
   const sort = useSort<Language>();
 
-  const { loading, data } = useLanguagesQuery({
+  const { loading, data } = useQuery(LanguagesDocument, {
     variables: {
       input: {
         ...sort.value,

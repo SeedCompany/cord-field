@@ -1,11 +1,11 @@
-import { MutationFunctionOptions } from '@apollo/client';
+import { MutationFunctionOptions, useMutation } from '@apollo/client';
 import React from 'react';
 import { Except } from 'type-fest';
 import { RenameFileInput } from '../../../api';
 import { DialogForm, DialogFormProps } from '../../Dialog/DialogForm';
 import { SubmitError, TextField } from '../../form';
 import { parseFileNameAndExtension } from '../../Formatters';
-import { useRenameFileNodeMutation } from './FileActions.generated';
+import { RenameFileNodeDocument } from './FileActions.generated';
 import { FilesActionItem } from './FileActionsContext';
 
 export type RenameFileProps = DialogFormProps<RenameFileInput> & {
@@ -15,7 +15,7 @@ export type RenameFileProps = DialogFormProps<RenameFileInput> & {
 
 export const RenameFile = (props: Except<RenameFileProps, 'onSubmit'>) => {
   const { item, refetchQueries } = props;
-  const [renameFile] = useRenameFileNodeMutation();
+  const [renameFile] = useMutation(RenameFileNodeDocument);
 
   if (!item) return null;
   const { id, name, type } = item;

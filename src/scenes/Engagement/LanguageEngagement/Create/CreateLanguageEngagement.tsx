@@ -1,3 +1,4 @@
+import { useMutation } from '@apollo/client';
 import React from 'react';
 import { Except } from 'type-fest';
 import { GQLOperations } from '../../../../api';
@@ -10,7 +11,7 @@ import {
   LanguageField,
   LanguageLookupItem,
 } from '../../../../components/form/Lookup';
-import { useCreateLanguageEngagementMutation } from './CreateLanguageEngagement.generated';
+import { CreateLanguageEngagementDocument } from './CreateLanguageEngagement.generated';
 
 interface CreateLanguageEngagementFormValues {
   engagement: {
@@ -29,7 +30,7 @@ export const CreateLanguageEngagement = ({
   projectId,
   ...props
 }: CreateLanguageEngagementProps) => {
-  const [createEngagement] = useCreateLanguageEngagementMutation();
+  const [createEngagement] = useMutation(CreateLanguageEngagementDocument);
   const submit = async ({ engagement }: CreateLanguageEngagementFormValues) => {
     await createEngagement({
       variables: {

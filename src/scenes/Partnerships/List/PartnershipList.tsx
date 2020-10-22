@@ -1,3 +1,4 @@
+import { useQuery } from '@apollo/client';
 import {
   Breadcrumbs,
   makeStyles,
@@ -16,7 +17,7 @@ import { listOrPlaceholders } from '../../../util';
 import { CreatePartnership } from '../Create';
 import { EditPartnership } from '../Edit';
 import { PartnershipFormFragment } from '../PartnershipForm';
-import { useProjectPartnershipsQuery } from './PartnershipList.generated';
+import { ProjectPartnershipsDocument } from './PartnershipList.generated';
 
 const useStyles = makeStyles(({ spacing, breakpoints }) => ({
   root: {
@@ -41,7 +42,7 @@ export const PartnershipList: FC = () => {
   const classes = useStyles();
 
   const { projectId } = useParams();
-  const { data } = useProjectPartnershipsQuery({
+  const { data } = useQuery(ProjectPartnershipsDocument, {
     variables: { input: projectId },
   });
   const project = data?.project;

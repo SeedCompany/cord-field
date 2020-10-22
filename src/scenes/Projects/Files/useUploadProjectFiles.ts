@@ -1,7 +1,8 @@
+import { useMutation } from '@apollo/client';
 import { GQLOperations } from '../../../api';
 import {
+  CreateFileVersionDocument,
   CreateFileVersionMutation,
-  useCreateFileVersionMutation,
 } from '../../../components/files/FileActions';
 import {
   HandleUploadCompletedFunction,
@@ -10,7 +11,7 @@ import {
   useUploadFiles,
 } from '../../../components/files/hooks';
 import { updateCachedVersions } from '../../../components/files/updateCachedVersions';
-import { useUpdateProjectBudgetUniversalTemplateMutation } from '../Budget/ProjectBudget.generated';
+import { UpdateProjectBudgetUniversalTemplateDocument } from '../Budget/ProjectBudget.generated';
 import {
   ProjectDirectoryContentsFragment,
   ProjectDirectoryContentsFragmentDoc,
@@ -18,7 +19,7 @@ import {
 
 export const useUploadProjectFiles = (): UploadFilesConsumerFunction => {
   const uploadFiles = useUploadFiles();
-  const [createFileVersion] = useCreateFileVersionMutation();
+  const [createFileVersion] = useMutation(CreateFileVersionDocument);
 
   const handleUploadCompleted: HandleUploadCompletedFunction = async ({
     uploadId,
@@ -99,7 +100,9 @@ export const useUploadProjectFiles = (): UploadFilesConsumerFunction => {
 export const useUploadBudgetFile = (): UploadFilesConsumerFunction => {
   const uploadFiles = useUploadFiles();
 
-  const [uploadFile] = useUpdateProjectBudgetUniversalTemplateMutation();
+  const [uploadFile] = useMutation(
+    UpdateProjectBudgetUniversalTemplateDocument
+  );
 
   const handleUploadCompleted: HandleUploadCompletedFunction = async ({
     uploadId,

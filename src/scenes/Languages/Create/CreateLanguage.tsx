@@ -1,3 +1,4 @@
+import { useMutation } from '@apollo/client';
 import { useSnackbar } from 'notistack';
 import React from 'react';
 import { Except } from 'type-fest';
@@ -12,14 +13,14 @@ import {
   LanguageFormProps,
   LanguageFormValues,
 } from '../LanguageForm';
-import { useCreateLanguageMutation } from './CreateLanguage.generated';
+import { CreateLanguageDocument } from './CreateLanguage.generated';
 
 export type CreateLanguageProps = Except<
   LanguageFormProps<LanguageFormValues<CreateLanguageType>>,
   'onSubmit'
 >;
 export const CreateLanguage = (props: CreateLanguageProps) => {
-  const [createLang] = useCreateLanguageMutation();
+  const [createLang] = useMutation(CreateLanguageDocument);
   const { enqueueSnackbar } = useSnackbar();
 
   return (

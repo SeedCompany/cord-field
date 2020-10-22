@@ -1,3 +1,4 @@
+import { useQuery } from '@apollo/client';
 import {
   Breadcrumbs,
   makeStyles,
@@ -16,7 +17,7 @@ import { ProjectMemberCard } from '../../../../components/ProjectMemberCard';
 import { listOrPlaceholders } from '../../../../util';
 import { CreateProjectMember } from '../Create/CreateProjectMember';
 import { UpdateProjectMember, UpdateProjectMemberFormParams } from '../Update';
-import { useProjectMembersQuery } from './ProjectMembers.generated';
+import { ProjectMembersDocument } from './ProjectMembers.generated';
 
 const useStyles = makeStyles(({ spacing, breakpoints }) => ({
   root: {
@@ -40,7 +41,7 @@ const useStyles = makeStyles(({ spacing, breakpoints }) => ({
 export const ProjectMembersList: FC = () => {
   const classes = useStyles();
   const { projectId } = useParams();
-  const { data } = useProjectMembersQuery({
+  const { data } = useQuery(ProjectMembersDocument, {
     variables: {
       input: projectId,
     },

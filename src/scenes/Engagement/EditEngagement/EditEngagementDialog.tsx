@@ -1,3 +1,4 @@
+import { useMutation } from '@apollo/client';
 import { pick, startCase } from 'lodash';
 import React, { ComponentType, FC, useMemo } from 'react';
 import { Except, Merge } from 'type-fest';
@@ -30,8 +31,8 @@ import { ExtractStrict, many, Many } from '../../../util';
 import { InternshipEngagementDetailFragment as InternshipEngagement } from '../InternshipEngagement/InternshipEngagement.generated';
 import { LanguageEngagementDetailFragment as LanguageEngagement } from '../LanguageEngagement/LanguageEngagementDetail.generated';
 import {
-  useUpdateInternshipEngagementMutation,
-  useUpdateLanguageEngagementMutation,
+  UpdateInternshipEngagementDocument,
+  UpdateLanguageEngagementDocument,
 } from './EditEngagementDialog.generated';
 
 type Engagement = InternshipEngagement | LanguageEngagement;
@@ -170,8 +171,12 @@ export const EditEngagementDialog: FC<EditEngagementDialogProps> = ({
     return <Field props={{ name }} engagement={engagement} key={name} />;
   });
 
-  const [updateInternshipEngagement] = useUpdateInternshipEngagementMutation();
-  const [updateLanguageEngagement] = useUpdateLanguageEngagementMutation();
+  const [updateInternshipEngagement] = useMutation(
+    UpdateInternshipEngagementDocument
+  );
+  const [updateLanguageEngagement] = useMutation(
+    UpdateLanguageEngagementDocument
+  );
   const updateEngagement =
     engagement.__typename === 'InternshipEngagement'
       ? updateInternshipEngagement

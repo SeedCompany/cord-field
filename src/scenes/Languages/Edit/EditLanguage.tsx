@@ -1,3 +1,4 @@
+import { useMutation } from '@apollo/client';
 import React, { useMemo } from 'react';
 import { Except } from 'type-fest';
 import { UpdateLanguage } from '../../../api';
@@ -7,7 +8,7 @@ import {
   LanguageFormProps,
   LanguageFormValues,
 } from '../LanguageForm';
-import { useUpdateLanguageMutation } from './EditLanguage.generated';
+import { UpdateLanguageDocument } from './EditLanguage.generated';
 
 export type EditLanguageProps = Except<
   LanguageFormProps<LanguageFormValues<UpdateLanguage>>,
@@ -15,7 +16,7 @@ export type EditLanguageProps = Except<
 >;
 
 export const EditLanguage = (props: EditLanguageProps) => {
-  const [updateLanguage] = useUpdateLanguageMutation();
+  const [updateLanguage] = useMutation(UpdateLanguageDocument);
   const language = props.language;
 
   const initialValues = useMemo(

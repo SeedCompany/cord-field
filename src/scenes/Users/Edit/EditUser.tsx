@@ -1,8 +1,9 @@
+import { useMutation } from '@apollo/client';
 import React, { useMemo } from 'react';
 import { Except } from 'type-fest';
 import { Maybe, UpdateUserInput } from '../../../api';
 import { UserForm, UserFormProps } from '../UserForm';
-import { useUpdateUserMutation } from './EditUser.generated';
+import { UpdateUserDocument } from './EditUser.generated';
 
 export type EditUserProps = Except<
   UserFormProps<UpdateUserInput>,
@@ -10,7 +11,7 @@ export type EditUserProps = Except<
 >;
 
 export const EditUser = (props: EditUserProps) => {
-  const [updateUser] = useUpdateUserMutation();
+  const [updateUser] = useMutation(UpdateUserDocument);
   const user = props.user;
 
   const initialValues = useMemo(

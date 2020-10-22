@@ -1,11 +1,12 @@
+import { useMutation } from '@apollo/client';
 import { useSnackbar } from 'notistack';
 import React from 'react';
 import { Except } from 'type-fest';
 import { GQLOperations } from '../../../api';
 import { ButtonLink } from '../../../components/Routing';
 import {
+  CreatePartnerDocument,
   CreatePartnerMutation,
-  useCreatePartnerMutation,
 } from './CreatePartner.generated';
 import { CreatePartnerForm, CreatePartnerFormProps } from './CreatePartnerForm';
 
@@ -15,7 +16,7 @@ type CreatePartnerProps = Except<
 >;
 
 export const CreatePartner = (props: CreatePartnerProps) => {
-  const [createPartner] = useCreatePartnerMutation();
+  const [createPartner] = useMutation(CreatePartnerDocument);
   const { enqueueSnackbar } = useSnackbar();
 
   return (

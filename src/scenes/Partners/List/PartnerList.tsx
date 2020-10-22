@@ -1,3 +1,4 @@
+import { useQuery } from '@apollo/client';
 import { Grid, makeStyles, Typography } from '@material-ui/core';
 import { Skeleton } from '@material-ui/lab';
 import React, { FC } from 'react';
@@ -8,7 +9,7 @@ import { ListContainer } from '../../../components/Layout/ListContainer';
 import { PartnerListItemCard } from '../../../components/PartnerListItemCard';
 import { SortButtonDialog, useSort } from '../../../components/Sort';
 import { listOrPlaceholders } from '../../../util';
-import { usePartnersQuery } from './PartnerList.generated';
+import { PartnersDocument } from './PartnerList.generated';
 import { PartnerSortOptions } from './PartnerSortOptions';
 
 const useStyles = makeStyles(({ spacing }) => ({
@@ -23,7 +24,7 @@ const useStyles = makeStyles(({ spacing }) => ({
 export const PartnerList: FC = () => {
   const formatNumber = useNumberFormatter();
   const sort = useSort<Partner>();
-  const { data } = usePartnersQuery({
+  const { data } = useQuery(PartnersDocument, {
     variables: {
       input: {
         ...sort.value,

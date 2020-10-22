@@ -1,7 +1,8 @@
+import { useMutation } from '@apollo/client';
 import React, { useState } from 'react';
 import { Except } from 'type-fest';
 import { handleFormError } from '../../../api';
-import { useForgotPasswordMutation } from './ForgotPassword.generated';
+import { ForgotPasswordDocument } from './ForgotPassword.generated';
 import {
   ForgotPasswordForm,
   ForgotPasswordFormProps as Props,
@@ -9,7 +10,7 @@ import {
 import { ForgotPasswordSuccess } from './ForgotPasswordSuccess';
 
 export const ForgotPassword = (props: Except<Props, 'onSubmit'>) => {
-  const [forgotPassword] = useForgotPasswordMutation();
+  const [forgotPassword] = useMutation(ForgotPasswordDocument);
   const [email, setEmail] = useState<string | null>(null);
 
   const submit: Props['onSubmit'] = async (input) => {

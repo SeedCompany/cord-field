@@ -1,3 +1,4 @@
+import { useQuery } from '@apollo/client';
 import { Breadcrumbs, Grid, makeStyles, Typography } from '@material-ui/core';
 import { Skeleton } from '@material-ui/lab';
 import { sumBy } from 'lodash';
@@ -11,7 +12,7 @@ import { useCurrencyFormatter } from '../../../components/Formatters/useCurrency
 import { ContentContainer as Content } from '../../../components/Layout/ContentContainer';
 import { ProjectBreadcrumb } from '../../../components/ProjectBreadcrumb';
 import { useUploadBudgetFile } from '../Files';
-import { useProjectBudgetQuery } from './ProjectBudget.generated';
+import { ProjectBudgetDocument } from './ProjectBudget.generated';
 import { ProjectBudgetRecords } from './ProjectBudgetRecords';
 
 const useStyles = makeStyles(({ breakpoints, spacing }) => ({
@@ -37,7 +38,7 @@ export const ProjectBudget = () => {
 
   const uploadFile = useUploadBudgetFile();
 
-  const { data, loading, error } = useProjectBudgetQuery({
+  const { data, loading, error } = useQuery(ProjectBudgetDocument, {
     variables: { id: projectId },
   });
 

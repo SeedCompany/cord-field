@@ -1,3 +1,4 @@
+import { useMutation } from '@apollo/client';
 import React from 'react';
 import { Except } from 'type-fest';
 import { CreateSongInput, GQLOperations } from '../../../../../../api';
@@ -7,7 +8,7 @@ import {
 } from '../../../../../../components/Dialog/DialogForm';
 import { SubmitError, TextField } from '../../../../../../components/form';
 import { SongLookupItem } from '../../../../../../components/form/Lookup';
-import { useCreateSongMutation } from './CreateSong.generated';
+import { CreateSongDocument } from './CreateSong.generated';
 
 export type CreateSongProps = Except<
   DialogFormProps<CreateSongInput, SongLookupItem>,
@@ -15,7 +16,7 @@ export type CreateSongProps = Except<
 >;
 
 export const CreateSong = (props: CreateSongProps) => {
-  const [createSong] = useCreateSongMutation();
+  const [createSong] = useMutation(CreateSongDocument);
 
   return (
     <DialogForm

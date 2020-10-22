@@ -1,3 +1,4 @@
+import { useQuery } from '@apollo/client';
 import { Grid, makeStyles, Typography } from '@material-ui/core';
 import { Skeleton } from '@material-ui/lab';
 import React, { FC } from 'react';
@@ -8,7 +9,7 @@ import { ListContainer } from '../../../components/Layout/ListContainer';
 import { SortButtonDialog, useSort } from '../../../components/Sort';
 import { UserListItemCardLandscape as UserCard } from '../../../components/UserListItemCard';
 import { listOrPlaceholders } from '../../../util';
-import { useUsersQuery } from './users.generated';
+import { UsersDocument } from './users.generated';
 import { UserSortOptions } from './UserSortOptions';
 
 const useStyles = makeStyles(({ spacing }) => ({
@@ -23,7 +24,7 @@ const useStyles = makeStyles(({ spacing }) => ({
 export const UserList: FC = () => {
   const sort = useSort<User>();
 
-  const { data, loading } = useUsersQuery({
+  const { data, loading } = useQuery(UsersDocument, {
     variables: {
       input: {
         ...sort.value,

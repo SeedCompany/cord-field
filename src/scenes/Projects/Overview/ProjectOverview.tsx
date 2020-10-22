@@ -1,3 +1,4 @@
+import { useQuery } from '@apollo/client';
 import { Grid, makeStyles, Tooltip, Typography } from '@material-ui/core';
 import { Add, DateRange, Edit, Publish } from '@material-ui/icons';
 import { Skeleton } from '@material-ui/lab';
@@ -31,9 +32,9 @@ import { useProjectCurrentDirectory, useUploadProjectFiles } from '../Files';
 import { EditableProjectField, UpdateProjectDialog } from '../Update';
 import { ProjectWorkflowDialog } from '../Update/ProjectWorkflowDialog';
 import {
+  ProjectEngagementListOverviewDocument,
+  ProjectOverviewDocument,
   ProjectOverviewFragment,
-  useProjectEngagementListOverviewQuery,
-  useProjectOverviewQuery,
 } from './ProjectOverview.generated';
 
 const useStyles = makeStyles(({ spacing, breakpoints, palette }) => ({
@@ -103,17 +104,23 @@ export const ProjectOverview: FC = () => {
 
   const [createEngagementState, createEngagement] = useDialog();
 
-  const { data: projectOverviewData, error } = useProjectOverviewQuery({
-    variables: {
-      input: projectId,
-    },
-  });
+  const { data: projectOverviewData, error } = useQuery(
+    ProjectOverviewDocument,
+    {
+      variables: {
+        input: projectId,
+      },
+    }
+  );
 
-  const { data: engagementListData } = useProjectEngagementListOverviewQuery({
-    variables: {
-      input: projectId,
-    },
-  });
+  const { data: engagementListData } = useQuery(
+    ProjectEngagementListOverviewDocument,
+    {
+      variables: {
+        input: projectId,
+      },
+    }
+  );
 
   const projectName = projectOverviewData?.project.name;
   const isTranslation = projectOverviewData

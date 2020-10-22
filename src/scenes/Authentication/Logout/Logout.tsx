@@ -1,14 +1,14 @@
-import { useApolloClient } from '@apollo/client';
+import { useApolloClient, useMutation } from '@apollo/client';
 import { CircularProgress } from '@material-ui/core';
 import * as React from 'react';
 import { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useLogoutMutation } from './logout.generated';
+import { LogoutDocument } from './logout.generated';
 
 export const Logout = () => {
   const navigate = useNavigate();
   const client = useApolloClient();
-  const [logout] = useLogoutMutation();
+  const [logout] = useMutation(LogoutDocument);
 
   useEffect(() => {
     void logout()

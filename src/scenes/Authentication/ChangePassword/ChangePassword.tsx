@@ -1,3 +1,4 @@
+import { useMutation } from '@apollo/client';
 import { Grid, makeStyles } from '@material-ui/core';
 import { Mutator } from 'final-form';
 import { useSnackbar } from 'notistack';
@@ -9,7 +10,7 @@ import {
   DialogFormProps,
 } from '../../../components/Dialog/DialogForm';
 import { PasswordField, SubmitError } from '../../../components/form';
-import { useChangePasswordMutation } from './ChangePassword.generated';
+import { ChangePasswordDocument } from './ChangePassword.generated';
 
 type ChangePasswordProps = Except<
   DialogFormProps<ChangePasswordFields>,
@@ -27,7 +28,7 @@ const useStyles = makeStyles(() => ({
 }));
 
 export const ChangePassword = (props: ChangePasswordProps) => {
-  const [changePassword] = useChangePasswordMutation();
+  const [changePassword] = useMutation(ChangePasswordDocument);
   const { enqueueSnackbar } = useSnackbar();
   const classes = useStyles();
 

@@ -1,3 +1,4 @@
+import { useMutation } from '@apollo/client';
 import { makeStyles, Typography } from '@material-ui/core';
 import { useSnackbar } from 'notistack';
 import React from 'react';
@@ -12,8 +13,8 @@ import {
 } from '../../../components/form';
 import { AccordionSection, ProductFormValues } from './AccordionSection';
 import {
+  DeleteProductDocument,
   ProductFormFragment,
-  useDeleteProductMutation,
 } from './ProductForm.generated';
 
 const useStyles = makeStyles(({ spacing }) => ({
@@ -39,7 +40,7 @@ export const ProductForm = ({
 
   const { enqueueSnackbar } = useSnackbar();
   const navigate = useNavigate();
-  const [deleteProduct] = useDeleteProductMutation({
+  const [deleteProduct] = useMutation(DeleteProductDocument, {
     awaitRefetchQueries: true,
     refetchQueries: [GQLOperations.Query.Engagement],
   });
