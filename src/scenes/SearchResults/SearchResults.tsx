@@ -3,7 +3,7 @@ import { startCase } from 'lodash';
 import { FC } from 'react';
 import * as React from 'react';
 import { LanguageListItemCard } from '../../components/LanguageListItemCard';
-import { OrganizationListItemCard } from '../../components/OrganizationListItemCard';
+import { PartnerListItemCard } from '../../components/PartnerListItemCard';
 import { ProjectListItemCard } from '../../components/ProjectListItemCard';
 import { UserListItemCardLandscape } from '../../components/UserListItemCard';
 import { useSearch } from '../Root/Header/HeaderSearch';
@@ -32,7 +32,21 @@ export const SearchResults: FC = () => {
   const [{ q: query }] = useSearch();
   const { data, error, loading } = useSearchQuery({
     variables: {
-      input: { query: query ?? '' },
+      input: {
+        query: query ?? '',
+        type: [
+          'InternshipProject',
+          'TranslationProject',
+          'Language',
+          'User',
+          'Partner',
+          'Location',
+          'Film',
+          'Story',
+          'LiteracyMaterial',
+          'Song',
+        ],
+      },
     },
   });
 
@@ -43,10 +57,10 @@ export const SearchResults: FC = () => {
         return <ProjectListItemCard key={item.id} project={item} />;
       case 'Language':
         return <LanguageListItemCard key={item.id} language={item} />;
-      case 'Organization':
-        return <OrganizationListItemCard key={item.id} organization={item} />;
       case 'User':
         return <UserListItemCardLandscape key={item.id} user={item} />;
+      case 'Partner':
+        return <PartnerListItemCard key={item.id} partner={item} />;
       case 'Location':
       case 'Film':
       case 'Story':
