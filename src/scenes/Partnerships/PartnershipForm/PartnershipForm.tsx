@@ -2,7 +2,6 @@ import React from 'react';
 import {
   displayFinancialReportingType,
   displayPartnershipStatus,
-  FinancialReportingTypeList,
   PartnershipAgreementStatus,
   PartnershipAgreementStatusList,
   PartnerType,
@@ -49,17 +48,25 @@ export const PartnershipForm = <T extends PartnershipformValues>({
 }: PartnershipFormProps<T>) => (
   <DialogForm<T> {...rest} fieldsPrefix="partnership">
     {({ values }) => {
+      const lookupPartnerTypes =
+        values.partnership?.partnerLookupItem?.types.value;
+      const lookupPartnerFinType =
+        values.partnership?.partnerLookupItem?.financialReportingTypes.value;
+      const currentPartnerTypes = partnership?.partner.value?.types.value;
+      const currentPartnerFinTypes =
+        partnership?.partner.value?.financialReportingTypes.value;
+
       return (
         <>
           <SubmitError />
           {!partnership && <PartnerField name="partnerLookupItem" required />}
-          {values.partnership?.partnerLookupItem?.types.value.length ? (
+          {lookupPartnerTypes?.length || currentPartnerTypes?.length ? (
             <SecuredField obj={partnership} name="types">
               {(props) => (
                 <EnumField
                   multiple
                   label="Types"
-                  options={values.partnership!.partnerLookupItem!.types.value}
+                  options={lookupPartnerTypes || currentPartnerTypes || []}
                   layout="two-column"
                   {...props}
                 />
@@ -71,7 +78,7 @@ export const PartnershipForm = <T extends PartnershipformValues>({
               {(props) => (
                 <EnumField
                   label="Financial Reporting Type"
-                  options={FinancialReportingTypeList}
+                  options={lookupPartnerFinType || currentPartnerFinTypes || []}
                   getLabel={displayFinancialReportingType}
                   {...props}
                 />
