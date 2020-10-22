@@ -4,6 +4,7 @@ import React, { FC, useMemo } from 'react';
 import { Except } from 'type-fest';
 import { GQLOperations, UpdatePartnershipInput } from '../../../api';
 import { SubmitAction, SubmitButton } from '../../../components/form';
+import { PartnerLookupItem } from '../../../components/form/Lookup';
 import {
   hasManagingType,
   PartnershipForm,
@@ -16,7 +17,11 @@ import {
 } from './EditPartnership.generated';
 
 export type EditPartnershipFormInput = UpdatePartnershipInput &
-  SubmitAction<'delete'>;
+  SubmitAction<'delete'> & {
+    partnership?: {
+      partnerLookupItem?: PartnerLookupItem;
+    };
+  };
 
 type EditPartnershipProps = Except<
   PartnershipFormProps<EditPartnershipFormInput>,
