@@ -9,13 +9,13 @@ query Search($input: SearchInput!) {
 fragment SearchResultItem on SearchResult {
   ...ProjectListItem
   ...LanguageListItem
-  ...OrganizationListItem
   ...UserListItem
   ...LocationSearchResultItem
   ...FilmLookupItem
   ...StoryLookupItem
   ...LiteracyMaterialLookupItem
   ...SongLookupItem
+  ...PartnerListItem
 }
 
 # We have to inline this because the fragment we would usually
