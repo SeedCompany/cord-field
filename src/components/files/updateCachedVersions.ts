@@ -1,14 +1,14 @@
 import { ApolloCache } from '@apollo/client';
-import { FileVersionsDocument, FileVersionsQuery } from './FileActions';
+import { FileVersionsDocument } from './FileActions';
 import { FileNodeInfoFragment } from './files.generated';
 
-export const updateCachedVersions = <MutationData>(
-  cache: ApolloCache<MutationData>,
+export const updateCachedVersions = (
+  cache: ApolloCache<unknown>,
   existingVersions: readonly FileNodeInfoFragment[],
   parentId: string
 ) => {
   try {
-    const response = cache.readQuery<FileVersionsQuery>({
+    const response = cache.readQuery({
       query: FileVersionsDocument,
       variables: { id: parentId },
     });
@@ -24,7 +24,7 @@ export const updateCachedVersions = <MutationData>(
           },
         },
       };
-      cache.writeQuery<FileVersionsQuery>({
+      cache.writeQuery({
         query: FileVersionsDocument,
         variables: { id: parentId },
         data: updatedData,

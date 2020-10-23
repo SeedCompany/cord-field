@@ -1,9 +1,6 @@
 import { useMutation } from '@apollo/client';
 import { GQLOperations } from '../../../api';
-import {
-  CreateFileVersionDocument,
-  CreateFileVersionMutation,
-} from '../../../components/files/FileActions';
+import { CreateFileVersionDocument } from '../../../components/files/FileActions';
 import {
   HandleUploadCompletedFunction,
   UploadFilesConsumerFunction,
@@ -12,10 +9,7 @@ import {
 } from '../../../components/files/hooks';
 import { updateCachedVersions } from '../../../components/files/updateCachedVersions';
 import { UpdateProjectBudgetUniversalTemplateDocument } from '../Budget/ProjectBudget.generated';
-import {
-  ProjectDirectoryContentsFragment,
-  ProjectDirectoryContentsFragmentDoc,
-} from './ProjectFiles.generated';
+import { ProjectDirectoryContentsFragmentDoc } from './ProjectFiles.generated';
 
 export const useUploadProjectFiles = (): UploadFilesConsumerFunction => {
   const uploadFiles = useUploadFiles();
@@ -39,7 +33,7 @@ export const useUploadProjectFiles = (): UploadFilesConsumerFunction => {
       update: (cache, { data }) => {
         if (data?.createFileVersion) {
           if (action === 'version') {
-            updateCachedVersions<CreateFileVersionMutation>(
+            updateCachedVersions(
               cache,
               data.createFileVersion.children.items,
               parentId
@@ -47,9 +41,7 @@ export const useUploadProjectFiles = (): UploadFilesConsumerFunction => {
           } else {
             try {
               const id = `Directory:${parentId}`;
-              const response = cache.readFragment<
-                ProjectDirectoryContentsFragment
-              >({
+              const response = cache.readFragment({
                 id,
                 fragment: ProjectDirectoryContentsFragmentDoc,
                 fragmentName: 'ProjectDirectoryContents',
@@ -65,7 +57,7 @@ export const useUploadProjectFiles = (): UploadFilesConsumerFunction => {
                     total: currentItems.length + 1,
                   },
                 };
-                cache.writeFragment<ProjectDirectoryContentsFragment>({
+                cache.writeFragment({
                   id,
                   fragment: ProjectDirectoryContentsFragmentDoc,
                   fragmentName: 'ProjectDirectoryContents',
