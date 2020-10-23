@@ -2,8 +2,8 @@ import { CreateOrganizationInput } from '../../../../api';
 import { CreateOrganization } from '../../../../scenes/Organizations/Create';
 import { LookupField } from '../../index';
 import {
+  OrganizationLookupDocument,
   OrganizationLookupItemFragment,
-  useOrganizationLookupLazyQuery,
 } from './OrganizationLookup.generated';
 
 export const OrganizationField = LookupField.createFor<
@@ -11,7 +11,7 @@ export const OrganizationField = LookupField.createFor<
   CreateOrganizationInput
 >({
   resource: 'Organization',
-  useLookup: useOrganizationLookupLazyQuery,
+  lookupDocument: OrganizationLookupDocument,
   label: 'Organization',
   placeholder: 'Search for an organization by name',
   CreateDialogForm: CreateOrganization,

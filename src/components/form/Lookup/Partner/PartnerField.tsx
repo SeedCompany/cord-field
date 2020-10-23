@@ -4,8 +4,8 @@ import {
 } from '../../../../scenes/Partners/Create';
 import { LookupField } from '../../index';
 import {
+  PartnerLookupDocument,
   PartnerLookupItemFragment,
-  usePartnerLookupLazyQuery,
 } from './PartnerLookup.generated';
 
 export const PartnerField = LookupField.createFor<
@@ -13,7 +13,7 @@ export const PartnerField = LookupField.createFor<
   PartnerFormValues
 >({
   resource: 'Partner',
-  useLookup: usePartnerLookupLazyQuery,
+  lookupDocument: PartnerLookupDocument,
   label: 'Partner',
   placeholder: 'Search for an partner by name',
   getOptionLabel: (option) => option.organization.value?.name.value,

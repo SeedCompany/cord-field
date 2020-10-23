@@ -2,8 +2,8 @@ import { CreatePersonInput } from '../../../../api';
 import { CreateUser } from '../../../../scenes/Users/Create';
 import { LookupField } from '../../index';
 import {
+  UserLookupDocument,
   UserLookupItemFragment,
-  useUserLookupLazyQuery,
 } from './UserLookup.generated';
 
 export const UserField = LookupField.createFor<
@@ -11,7 +11,7 @@ export const UserField = LookupField.createFor<
   CreatePersonInput
 >({
   resource: 'User',
-  useLookup: useUserLookupLazyQuery,
+  lookupDocument: UserLookupDocument,
   getOptionLabel: (option) => option.fullName,
   label: 'Person',
   placeholder: 'Search for a person by name',

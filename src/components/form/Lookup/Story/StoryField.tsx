@@ -3,12 +3,12 @@ import { CreateStory } from '../../../../scenes/Engagement/LanguageEngagement/Pr
 import { LookupField } from '../../index';
 import {
   StoryLookupItemFragment as Story,
-  useStoryLookupLazyQuery,
+  StoryLookupDocument,
 } from './StoryLookup.generated';
 
 export const StoryField = LookupField.createFor<Story, CreateStoryInput>({
   resource: 'Story',
-  useLookup: useStoryLookupLazyQuery,
+  lookupDocument: StoryLookupDocument,
   label: 'Story',
   placeholder: 'Search for a story by name',
   CreateDialogForm: CreateStory,
