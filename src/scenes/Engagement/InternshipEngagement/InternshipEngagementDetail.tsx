@@ -122,71 +122,11 @@ export const InternshipEngagementDetail: FC<EngagementQuery> = ({
                   <Typography variant="h4">Internship Engagement</Typography>
                 </Grid>
 
-              <Grid item>
-                <Typography variant="body2" color="textSecondary">
-                  Updated {formatDateTime(engagement.modifiedAt)}
-                </Typography>
-              </Grid>
-            </Grid>
-            <Grid item container spacing={1} alignItems="center">
-              <Grid item>
-                <DataButton onClick={() => show('status')}>
-                  {displayEngagementStatus(engagement.status)}
-                </DataButton>
-              </Grid>
-              <Grid item>
-                <DataButton
-                  startIcon={<DateRange className={classes.infoColor} />}
-                  secured={date}
-                  redacted="You do not have permission to view start/end dates"
-                  children={formatDate.range}
-                  empty="Start - End"
-                  onClick={() => show(['startDateOverride', 'endDateOverride'])}
-                />
-              </Grid>
-              <Grid item>
-                <DataButton
-                  secured={engagement.position}
-                  empty="Enter Intern Position"
-                  redacted="You do not have permission to view intern position"
-                  children={displayInternPosition}
-                  onClick={() => show('position')}
-                />
-              </Grid>
-              <Grid item>
-                <DataButton
-                  secured={engagement.countryOfOrigin}
-                  empty="Enter Country of Origin"
-                  redacted="You do not have permission to view country of origin"
-                  children={(location) => location.name.value}
-                  onClick={() => show('countryOfOriginId')}
-                />
-              </Grid>
-            </Grid>
-            <Grid item container spacing={3}>
-              <Grid item xs={6}>
-                <FieldOverviewCard
-                  title="Growth Plan Complete Date"
-                  data={{
-                    value: formatDate(engagement.completeDate.value),
-                  }}
-                  icon={PlantIcon}
-                  onClick={() => show('completeDate')}
-                  onButtonClick={() => show('completeDate')}
-                />
-              </Grid>
-              <Grid item xs={6}>
-                <FieldOverviewCard
-                  title="Disbursement Complete Date"
-                  data={{
-                    value: formatDate(
-                      engagement.disbursementCompleteDate.value
-                    ),
-                  }}
-                  icon={OptionsIcon}
-                  onClick={() => show('disbursementCompleteDate')}
-                  onButtonClick={() => show('disbursementCompleteDate')}
-                />
+                <Grid item>
+                  <Typography variant="body2" color="textSecondary">
+                    Updated {formatDateTime(engagement.modifiedAt)}
+                  </Typography>
+                </Grid>
               </Grid>
               <Grid item container spacing={1} alignItems="center">
                 <Grid item>

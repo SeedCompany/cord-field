@@ -72,8 +72,6 @@ export const LanguageEngagementDetail: FC<EngagementQuery> = ({
   const pnp = engagement.pnp;
   const editable = canEditAny(engagement);
 
-  const date = securedDateRange(engagement.startDate, engagement.endDate);
-
   return (
     <>
       <Content>
