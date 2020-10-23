@@ -1,8 +1,6 @@
+import { useMutation } from '@apollo/client';
 import { GQLOperations } from '../../../api';
-import {
-  CreateFileVersionMutation,
-  useCreateFileVersionMutation,
-} from '../../../components/files/FileActions';
+import { CreateFileVersionDocument } from '../../../components/files/FileActions';
 import {
   HandleUploadCompletedFunction,
   UploadFilesConsumerFunction,
@@ -10,15 +8,12 @@ import {
   useUploadFiles,
 } from '../../../components/files/hooks';
 import { updateCachedVersions } from '../../../components/files/updateCachedVersions';
-import { useUpdateProjectBudgetUniversalTemplateMutation } from '../Budget/ProjectBudget.generated';
-import {
-  ProjectDirectoryContentsFragment,
-  ProjectDirectoryContentsFragmentDoc,
-} from './ProjectFiles.generated';
+import { UpdateProjectBudgetUniversalTemplateDocument } from '../Budget/ProjectBudget.generated';
+import { ProjectDirectoryContentsFragmentDoc } from './ProjectFiles.generated';
 
 export const useUploadProjectFiles = (): UploadFilesConsumerFunction => {
   const uploadFiles = useUploadFiles();
-  const [createFileVersion] = useCreateFileVersionMutation();
+  const [createFileVersion] = useMutation(CreateFileVersionDocument);
 
   const handleUploadCompleted: HandleUploadCompletedFunction = async ({
     uploadId,
@@ -38,7 +33,7 @@ export const useUploadProjectFiles = (): UploadFilesConsumerFunction => {
       update: (cache, { data }) => {
         if (data?.createFileVersion) {
           if (action === 'version') {
-            updateCachedVersions<CreateFileVersionMutation>(
+            updateCachedVersions(
               cache,
               data.createFileVersion.children.items,
               parentId
@@ -46,9 +41,7 @@ export const useUploadProjectFiles = (): UploadFilesConsumerFunction => {
           } else {
             try {
               const id = `Directory:${parentId}`;
-              const response = cache.readFragment<
-                ProjectDirectoryContentsFragment
-              >({
+              const response = cache.readFragment({
                 id,
                 fragment: ProjectDirectoryContentsFragmentDoc,
                 fragmentName: 'ProjectDirectoryContents',
@@ -64,7 +57,7 @@ export const useUploadProjectFiles = (): UploadFilesConsumerFunction => {
                     total: currentItems.length + 1,
                   },
                 };
-                cache.writeFragment<ProjectDirectoryContentsFragment>({
+                cache.writeFragment({
                   id,
                   fragment: ProjectDirectoryContentsFragmentDoc,
                   fragmentName: 'ProjectDirectoryContents',
@@ -99,7 +92,9 @@ export const useUploadProjectFiles = (): UploadFilesConsumerFunction => {
 export const useUploadBudgetFile = (): UploadFilesConsumerFunction => {
   const uploadFiles = useUploadFiles();
 
-  const [uploadFile] = useUpdateProjectBudgetUniversalTemplateMutation();
+  const [uploadFile] = useMutation(
+    UpdateProjectBudgetUniversalTemplateDocument
+  );
 
   const handleUploadCompleted: HandleUploadCompletedFunction = async ({
     uploadId,

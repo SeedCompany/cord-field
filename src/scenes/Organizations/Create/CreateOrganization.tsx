@@ -1,9 +1,10 @@
+import { useMutation } from '@apollo/client';
 import { useSnackbar } from 'notistack';
 import React from 'react';
 import { Except } from 'type-fest';
 import {
+  CreateOrganizationDocument,
   CreateOrganizationMutation,
-  useCreateOrganizationMutation,
 } from './CreateOrganization.generated';
 import {
   CreateOrganizationForm,
@@ -18,7 +19,7 @@ type CreateOrganizationProps = Except<
 >;
 
 export const CreateOrganization = (props: CreateOrganizationProps) => {
-  const [createOrg] = useCreateOrganizationMutation();
+  const [createOrg] = useMutation(CreateOrganizationDocument);
   const { enqueueSnackbar } = useSnackbar();
 
   return (

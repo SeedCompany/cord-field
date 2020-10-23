@@ -1,12 +1,13 @@
+import { useMutation } from '@apollo/client';
 import { Dispatch, useCallback } from 'react';
 import * as actions from './Reducer/uploadActions';
 import * as Types from './Reducer/uploadTypings';
-import { useDeleteFileNodeMutation } from './Upload.generated';
+import { DeleteFileNodeDocument } from './Upload.generated';
 
 export const useUploadFile = (
   dispatch: Dispatch<Types.UploadAction>
 ): ((uploadFile: Types.UploadFile, url: string) => void) => {
-  const [deleteFile] = useDeleteFileNodeMutation();
+  const [deleteFile] = useMutation(DeleteFileNodeDocument);
 
   const setUploadError = useCallback(
     (queueId: Types.UploadFile['queueId'], errorMessage: string) => {

@@ -1,3 +1,4 @@
+import { useMutation } from '@apollo/client';
 import React from 'react';
 import { Except } from 'type-fest';
 import { CreateStoryInput, GQLOperations } from '../../../../../../api';
@@ -7,7 +8,7 @@ import {
 } from '../../../../../../components/Dialog/DialogForm';
 import { SubmitError, TextField } from '../../../../../../components/form';
 import { StoryLookupItem } from '../../../../../../components/form/Lookup';
-import { useCreateStoryMutation } from './CreateStory.generated';
+import { CreateStoryDocument } from './CreateStory.generated';
 
 export type CreateStoryProps = Except<
   DialogFormProps<CreateStoryInput, StoryLookupItem>,
@@ -15,7 +16,7 @@ export type CreateStoryProps = Except<
 >;
 
 export const CreateStory = (props: CreateStoryProps) => {
-  const [createStory] = useCreateStoryMutation();
+  const [createStory] = useMutation(CreateStoryDocument);
 
   return (
     <DialogForm

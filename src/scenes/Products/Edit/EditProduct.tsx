@@ -1,3 +1,4 @@
+import { useMutation, useQuery } from '@apollo/client';
 import { Breadcrumbs, makeStyles, Typography } from '@material-ui/core';
 import { Skeleton } from '@material-ui/lab';
 import { isEqual } from 'lodash';
@@ -15,8 +16,8 @@ import {
 } from '../../../util/biblejs';
 import { ProductForm } from '../ProductForm';
 import {
-  useProductQuery,
-  useUpdateProductMutation,
+  ProductDocument,
+  UpdateProductDocument,
 } from './EditProduct.generated';
 
 const useStyles = makeStyles(({ spacing }) => ({
@@ -36,7 +37,7 @@ export const EditProduct = () => {
   const { projectId, engagementId, productId } = useParams();
   const { enqueueSnackbar } = useSnackbar();
 
-  const { data, loading } = useProductQuery({
+  const { data, loading } = useQuery(ProductDocument, {
     variables: {
       projectId,
       engagementId,
@@ -44,7 +45,7 @@ export const EditProduct = () => {
     },
   });
 
-  const [updateProduct] = useUpdateProductMutation();
+  const [updateProduct] = useMutation(UpdateProductDocument);
 
   const project = data?.project;
   const engagement = data?.engagement;

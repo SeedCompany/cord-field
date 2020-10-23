@@ -1,16 +1,17 @@
+import { useMutation } from '@apollo/client';
 import { useSnackbar } from 'notistack';
 import React from 'react';
 import { Except } from 'type-fest';
 import { GQLOperations } from '../../../api';
 import { ButtonLink } from '../../../components/Routing';
-import { useCreateProjectMutation } from './CreateProject.generated';
+import { CreateProjectDocument } from './CreateProject.generated';
 import {
   CreateProjectForm,
   CreateProjectFormProps as Props,
 } from './CreateProjectForm';
 
 export const CreateProject = (props: Except<Props, 'onSubmit'>) => {
-  const [createProject] = useCreateProjectMutation();
+  const [createProject] = useMutation(CreateProjectDocument);
   const { enqueueSnackbar } = useSnackbar();
   const submit: Props['onSubmit'] = async (input) => {
     const res = await createProject({

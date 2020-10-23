@@ -1,3 +1,4 @@
+import { useMutation } from '@apollo/client';
 import { useSnackbar } from 'notistack';
 import React from 'react';
 import { Except } from 'type-fest';
@@ -8,7 +9,7 @@ import {
 } from '../../../components/Dialog/DialogForm';
 import { SubmitError, TextField } from '../../../components/form';
 import { ButtonLink } from '../../../components/Routing';
-import { useCreateProjectDirectoryMutation } from './CreateProjectFile.generated';
+import { CreateProjectDirectoryDocument } from './CreateProjectFile.generated';
 import { useProjectCurrentDirectory } from './useProjectCurrentDirectory';
 
 export type CreateProjectDirectoryProps = DialogFormProps<CreateDirectoryInput>;
@@ -16,7 +17,7 @@ export type CreateProjectDirectoryProps = DialogFormProps<CreateDirectoryInput>;
 export const CreateProjectDirectory = (
   props: Except<CreateProjectDirectoryProps, 'onSubmit'>
 ) => {
-  const [createDirectory] = useCreateProjectDirectoryMutation();
+  const [createDirectory] = useMutation(CreateProjectDirectoryDocument);
   const { project, directoryId } = useProjectCurrentDirectory();
   const { enqueueSnackbar } = useSnackbar();
 

@@ -1,3 +1,4 @@
+import { useQuery } from '@apollo/client';
 import { Card, CardContent, makeStyles, Typography } from '@material-ui/core';
 import { startCase } from 'lodash';
 import { FC } from 'react';
@@ -8,8 +9,8 @@ import { ProjectListItemCard } from '../../components/ProjectListItemCard';
 import { UserListItemCardLandscape } from '../../components/UserListItemCard';
 import { useSearch } from '../Root/Header/HeaderSearch';
 import {
+  SearchDocument,
   SearchResultItemFragment as SearchResult,
-  useSearchQuery,
 } from './Search.generated';
 
 const useStyles = makeStyles(({ spacing, breakpoints }) => ({
@@ -30,7 +31,7 @@ export const SearchResults: FC = () => {
   const classes = useStyles();
 
   const [{ q: query }] = useSearch();
-  const { data, error, loading } = useSearchQuery({
+  const { data, error, loading } = useQuery(SearchDocument, {
     variables: {
       input: {
         query: query ?? '',

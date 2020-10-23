@@ -1,3 +1,4 @@
+import { useMutation } from '@apollo/client';
 import React, {
   createContext,
   FC,
@@ -10,7 +11,7 @@ import * as actions from './Reducer/uploadActions';
 import { initialState } from './Reducer/uploadInitialState';
 import { uploadReducer } from './Reducer/uploadReducer';
 import * as Types from './Reducer/uploadTypings';
-import { useRequestFileUploadMutation } from './Upload.generated';
+import { RequestFileUploadDocument } from './Upload.generated';
 import { UploadItems } from './UploadItems';
 import { UploadManager } from './UploadManager';
 import { useUploadManager } from './UploadManagerContext';
@@ -34,7 +35,7 @@ export const UploadProvider: FC = ({ children }) => {
   const [state, dispatch] = useReducer(uploadReducer, initialState);
   const { setIsManagerOpen } = useUploadManager();
   const { submittedFiles } = state;
-  const [requestFileUpload] = useRequestFileUploadMutation();
+  const [requestFileUpload] = useMutation(RequestFileUploadDocument);
   const uploadFile = useUploadFile(dispatch);
 
   const addFilesToUploadQueue = useCallback(

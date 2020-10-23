@@ -67,13 +67,10 @@ generates:
       baseTypesPath: api/schema.generated.ts
     plugins:
       - typescript-operations
-      # Look into this which would allow typed documents
-      # This means that we wouldn't need custom hooks generated for every operation
-      # https://graphql-code-generator.com/docs/plugins/typed-document-node
-      # - typed-document-node
-      - typescript-react-apollo
+      - typed-document-node
     config:
       gqlImport: graphql-tag
+      documentMode: graphQLTag
       skipTypename: false
       enumsAsTypes: true
       # Instead of Pick-ing from generated schema, redefine shape inline

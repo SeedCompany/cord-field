@@ -1,3 +1,4 @@
+import { useMutation } from '@apollo/client';
 import { Grid, Tooltip } from '@material-ui/core';
 import React from 'react';
 import { Except } from 'type-fest';
@@ -13,7 +14,7 @@ import {
   SubmitError,
 } from '../../../components/form';
 import { ProjectOverviewFragment } from '../Overview/ProjectOverview.generated';
-import { useUpdateProjectMutation } from './UpdateProject.generated';
+import { UpdateProjectDocument } from './UpdateProject.generated';
 
 const transitionTypeToColor: Record<
   TransitionType,
@@ -35,7 +36,7 @@ export const ProjectWorkflowDialog = ({
   project,
   ...props
 }: UpdateProjectDialogProps) => {
-  const [updateProject] = useUpdateProjectMutation();
+  const [updateProject] = useMutation(UpdateProjectDocument);
 
   return (
     <DialogForm

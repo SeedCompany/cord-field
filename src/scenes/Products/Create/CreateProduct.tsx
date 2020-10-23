@@ -1,3 +1,4 @@
+import { useMutation, useQuery } from '@apollo/client';
 import { Breadcrumbs, makeStyles, Typography } from '@material-ui/core';
 import { Skeleton } from '@material-ui/lab';
 import { useSnackbar } from 'notistack';
@@ -10,8 +11,8 @@ import { ButtonLink } from '../../../components/Routing';
 import { parsedRangesWithFullTestamentRange } from '../../../util/biblejs';
 import { ProductForm } from '../ProductForm';
 import {
-  useCreateProductMutation,
-  useGetProductBreadcrumbQuery,
+  CreateProductDocument,
+  GetProductBreadcrumbDocument,
 } from './CreateProduct.generated';
 
 const useStyles = makeStyles(({ spacing }) => ({
@@ -31,7 +32,7 @@ export const CreateProduct = () => {
   const { projectId, engagementId } = useParams();
   const { enqueueSnackbar } = useSnackbar();
 
-  const { data, loading } = useGetProductBreadcrumbQuery({
+  const { data, loading } = useQuery(GetProductBreadcrumbDocument, {
     variables: {
       projectId,
       engagementId,
@@ -41,7 +42,7 @@ export const CreateProduct = () => {
   const project = data?.project;
   const engagement = data?.engagement;
 
-  const [createProduct] = useCreateProductMutation();
+  const [createProduct] = useMutation(CreateProductDocument);
 
   return (
     <main className={classes.root}>

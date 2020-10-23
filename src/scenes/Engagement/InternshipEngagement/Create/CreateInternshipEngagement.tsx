@@ -1,3 +1,4 @@
+import { useMutation } from '@apollo/client';
 import React from 'react';
 import { Except } from 'type-fest';
 import { GQLOperations } from '../../../../api';
@@ -7,7 +8,7 @@ import {
 } from '../../../../components/Dialog/DialogForm';
 import { SubmitError } from '../../../../components/form';
 import { UserField, UserLookupItem } from '../../../../components/form/Lookup';
-import { useCreateInternshipEngagementMutation } from './CreateInternshipEngagement.generated';
+import { CreateInternshipEngagementDocument } from './CreateInternshipEngagement.generated';
 
 interface CreateInternshipEngagementFormValues {
   engagement: {
@@ -26,7 +27,7 @@ export const CreateInternshipEngagement = ({
   projectId,
   ...props
 }: CreateInternshipEngagementProps) => {
-  const [createEngagement] = useCreateInternshipEngagementMutation();
+  const [createEngagement] = useMutation(CreateInternshipEngagementDocument);
   const submit = async ({
     engagement,
   }: CreateInternshipEngagementFormValues) => {

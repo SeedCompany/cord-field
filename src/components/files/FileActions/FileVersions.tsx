@@ -1,3 +1,4 @@
+import { useQuery } from '@apollo/client';
 import {
   Button,
   Dialog,
@@ -15,7 +16,7 @@ import {
   FileVersionItem_FileVersion_Fragment as FileVersion,
   FileVersionItem,
 } from '../FileVersionItem';
-import { useFileVersionsQuery } from './FileActions.generated';
+import { FileVersionsDocument } from './FileActions.generated';
 
 const useStyles = makeStyles(({ spacing }) => ({
   skeleton: {
@@ -36,7 +37,7 @@ export const FileVersions: FC<FileVersionsProps> = (props) => {
 
   const id = file?.id ?? '';
   const shouldSkipQuery = !file;
-  const { data, loading } = useFileVersionsQuery({
+  const { data, loading } = useQuery(FileVersionsDocument, {
     variables: { id },
     // Workaround for a known bug in Apollo client that causes
     // `skip` to suddenly be ignored when `client.resetStore` is

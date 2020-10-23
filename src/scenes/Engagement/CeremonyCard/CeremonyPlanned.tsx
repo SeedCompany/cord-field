@@ -1,3 +1,4 @@
+import { useMutation } from '@apollo/client';
 import {
   CircularProgress,
   FormControlLabel,
@@ -13,7 +14,7 @@ import * as React from 'react';
 import { FC } from 'react';
 import {
   CeremonyCardFragment,
-  useUpdateCeremonyMutation,
+  UpdateCeremonyDocument,
 } from './CeremonyCard.generated';
 
 const useStyles = makeStyles(() => ({
@@ -50,7 +51,7 @@ export const CeremonyPlanned: FC<CeremonyCardProps> = ({
   const classes = useStyles();
 
   const { enqueueSnackbar } = useSnackbar();
-  const [updateCeremony, updateState] = useUpdateCeremonyMutation({
+  const [updateCeremony, updateState] = useMutation(UpdateCeremonyDocument, {
     onError: () => {
       enqueueSnackbar(`Failed to update ${type?.toLowerCase()}`, {
         key: `ceremony-planned-update-${ceremony?.id}`,
@@ -62,7 +63,7 @@ export const CeremonyPlanned: FC<CeremonyCardProps> = ({
     optimisticResponse: ({ input }) => ({
       __typename: 'Mutation',
       updateCeremony: {
-        __typename: 'UpdateCeremonyOutput',
+        __typename: 'UpdateCeremonyOutput' as const,
         ceremony: {
           ...ceremony!,
           planned: {

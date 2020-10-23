@@ -1,3 +1,4 @@
+import { useQuery } from '@apollo/client';
 import { Grid, makeStyles, Tooltip, Typography } from '@material-ui/core';
 import { Add, Edit } from '@material-ui/icons';
 import { Skeleton } from '@material-ui/lab';
@@ -21,7 +22,7 @@ import { Redacted } from '../../../components/Redacted';
 import { Sensitivity } from '../../../components/Sensitivity';
 import { CalendarDate, listOrPlaceholders } from '../../../util';
 import { EditLanguage } from '../Edit';
-import { useLanguageQuery } from './LanguageDetail.generated';
+import { LanguageDocument } from './LanguageDetail.generated';
 import { LeastOfThese } from './LeastOfThese';
 
 const useStyles = makeStyles(({ spacing }) => ({
@@ -56,7 +57,7 @@ const useStyles = makeStyles(({ spacing }) => ({
 export const LanguageDetail = () => {
   const classes = useStyles();
   const { languageId } = useParams();
-  const { data, error } = useLanguageQuery({
+  const { data, error } = useQuery(LanguageDocument, {
     variables: { languageId },
   });
 

@@ -1,3 +1,4 @@
+import { useQuery } from '@apollo/client';
 import { makeStyles, Tooltip, Typography } from '@material-ui/core';
 import { Edit } from '@material-ui/icons';
 import { Skeleton } from '@material-ui/lab';
@@ -16,7 +17,7 @@ import { Fab } from '../../../components/Fab';
 import { OrganizationListItemCard } from '../../../components/OrganizationListItemCard';
 import { Redacted } from '../../../components/Redacted';
 import { EditUser } from '../Edit';
-import { useUserQuery } from './UserDetail.generated';
+import { UserDocument } from './UserDetail.generated';
 
 const useStyles = makeStyles(({ spacing, breakpoints }) => ({
   root: {
@@ -48,7 +49,7 @@ const useStyles = makeStyles(({ spacing, breakpoints }) => ({
 export const UserDetail = () => {
   const classes = useStyles();
   const { userId } = useParams();
-  const { data, error } = useUserQuery({
+  const { data, error } = useQuery(UserDocument, {
     variables: { userId },
   });
 

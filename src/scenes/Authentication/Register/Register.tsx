@@ -1,14 +1,15 @@
+import { useMutation } from '@apollo/client';
 import { DateTime } from 'luxon';
 import React, { useEffect, useState } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { Except } from 'type-fest';
 import { handleFormError } from '../../../api';
 import { updateSessionCache, useSession } from '../../../components/Session';
-import { useRegisterMutation } from './register.generated';
+import { RegisterDocument } from './register.generated';
 import { RegisterFormProps as Props, RegisterForm } from './RegisterForm';
 
 export const Register = (props: Except<Props, 'onSubmit'>) => {
-  const [register] = useRegisterMutation();
+  const [register] = useMutation(RegisterDocument);
   const navigate = useNavigate();
   const [query] = useSearchParams();
   const { session, sessionLoading } = useSession();

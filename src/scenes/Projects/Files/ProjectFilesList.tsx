@@ -1,3 +1,4 @@
+import { useQuery } from '@apollo/client';
 import {
   Box,
   Breadcrumbs,
@@ -38,8 +39,8 @@ import { Table } from '../../../components/Table';
 import { DropzoneOverlay } from '../../../components/Upload';
 import { CreateProjectDirectory } from './CreateProjectDirectory';
 import {
+  ProjectDirectoryDocument,
   ProjectDirectoryFileNodeFragment,
-  useProjectDirectoryQuery,
 } from './ProjectFiles.generated';
 import { useProjectCurrentDirectory } from './useProjectCurrentDirectory';
 import { useUploadProjectFiles } from './useUploadProjectFiles';
@@ -124,7 +125,7 @@ const ProjectFilesListWrapped: FC = () => {
   const isNotRootDirectory = directoryId !== rootDirectoryId;
 
   const shouldSkipQuery = !directoryId;
-  const { data, loading, error } = useProjectDirectoryQuery({
+  const { data, loading, error } = useQuery(ProjectDirectoryDocument, {
     variables: {
       id: directoryId,
     },

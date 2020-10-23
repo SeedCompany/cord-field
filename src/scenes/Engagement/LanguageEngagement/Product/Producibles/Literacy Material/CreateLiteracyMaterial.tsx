@@ -1,3 +1,4 @@
+import { useMutation } from '@apollo/client';
 import React from 'react';
 import { Except } from 'type-fest';
 import {
@@ -10,7 +11,7 @@ import {
 } from '../../../../../../components/Dialog/DialogForm';
 import { SubmitError, TextField } from '../../../../../../components/form';
 import { LiteracyMaterialLookupItem } from '../../../../../../components/form/Lookup';
-import { useCreateLiteracyMaterialMutation } from './CreateLiteracyMaterial.generated';
+import { CreateLiteracyMaterialDocument } from './CreateLiteracyMaterial.generated';
 
 export type CreateLiteracyMaterialProps = Except<
   DialogFormProps<CreateLiteracyMaterialInput, LiteracyMaterialLookupItem>,
@@ -18,7 +19,7 @@ export type CreateLiteracyMaterialProps = Except<
 >;
 
 export const CreateLiteracyMaterial = (props: CreateLiteracyMaterialProps) => {
-  const [createLiteracyMaterial] = useCreateLiteracyMaterialMutation();
+  const [createLiteracyMaterial] = useMutation(CreateLiteracyMaterialDocument);
 
   return (
     <DialogForm

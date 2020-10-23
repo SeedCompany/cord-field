@@ -3,12 +3,12 @@ import { CreateSong } from '../../../../scenes/Engagement/LanguageEngagement/Pro
 import { LookupField } from '../../index';
 import {
   SongLookupItemFragment as Song,
-  useSongLookupLazyQuery,
+  SongLookupDocument,
 } from './SongLookup.generated';
 
 export const SongField = LookupField.createFor<Song, CreateSongInput>({
   resource: 'Song',
-  useLookup: useSongLookupLazyQuery,
+  lookupDocument: SongLookupDocument,
   label: 'Song',
   placeholder: 'Search for a song by name',
   CreateDialogForm: CreateSong,

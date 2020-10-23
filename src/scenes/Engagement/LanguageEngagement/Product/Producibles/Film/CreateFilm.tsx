@@ -1,3 +1,4 @@
+import { useMutation } from '@apollo/client';
 import React from 'react';
 import { Except } from 'type-fest';
 import { CreateFilmInput, GQLOperations } from '../../../../../../api';
@@ -7,7 +8,7 @@ import {
 } from '../../../../../../components/Dialog/DialogForm';
 import { SubmitError, TextField } from '../../../../../../components/form';
 import { FilmLookupItem } from '../../../../../../components/form/Lookup';
-import { useCreateFilmMutation } from './CreateFilm.generated';
+import { CreateFilmDocument } from './CreateFilm.generated';
 
 export type CreateFilmProps = Except<
   DialogFormProps<CreateFilmInput, FilmLookupItem>,
@@ -15,7 +16,7 @@ export type CreateFilmProps = Except<
 >;
 
 export const CreateFilm = (props: CreateFilmProps) => {
-  const [createFilm] = useCreateFilmMutation();
+  const [createFilm] = useMutation(CreateFilmDocument);
   return (
     <DialogForm
       {...props}

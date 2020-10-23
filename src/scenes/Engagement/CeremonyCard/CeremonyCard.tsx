@@ -1,3 +1,4 @@
+import { useMutation } from '@apollo/client';
 import {
   Button,
   Card,
@@ -19,7 +20,7 @@ import { useDateFormatter } from '../../../components/Formatters';
 import { Redacted } from '../../../components/Redacted';
 import {
   CeremonyCardFragment,
-  useUpdateCeremonyMutation,
+  UpdateCeremonyDocument,
 } from './CeremonyCard.generated';
 import { CeremonyPlanned } from './CeremonyPlanned';
 import { LargeDate } from './LargeDate';
@@ -60,7 +61,7 @@ export const CeremonyCard: FC<CeremonyCardProps> = ({
 
   const classes = useStyles();
   const formatDate = useDateFormatter();
-  const [updateCeremony] = useUpdateCeremonyMutation();
+  const [updateCeremony] = useMutation(UpdateCeremonyDocument);
   const [dialogState, openDialog] = useDialog();
 
   const canEditDates = canEditAny(

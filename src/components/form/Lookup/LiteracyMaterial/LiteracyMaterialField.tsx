@@ -3,7 +3,7 @@ import { CreateLiteracyMaterial } from '../../../../scenes/Engagement/LanguageEn
 import { LookupField } from '../../index';
 import {
   LiteracyMaterialLookupItemFragment as LiteracyMaterial,
-  useLiteracyMaterialLookupLazyQuery,
+  LiteracyMaterialLookupDocument,
 } from './LiteracyMaterialLookup.generated';
 
 export const LiteracyMaterialField = LookupField.createFor<
@@ -11,7 +11,7 @@ export const LiteracyMaterialField = LookupField.createFor<
   CreateLiteracyMaterialInput
 >({
   resource: 'LiteracyMaterial',
-  useLookup: useLiteracyMaterialLookupLazyQuery,
+  lookupDocument: LiteracyMaterialLookupDocument,
   label: 'Literacy Material',
   placeholder: 'Search for a literacy material by name',
   CreateDialogForm: CreateLiteracyMaterial,

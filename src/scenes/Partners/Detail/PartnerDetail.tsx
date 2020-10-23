@@ -1,9 +1,10 @@
+import { useQuery } from '@apollo/client';
 import { makeStyles, Typography } from '@material-ui/core';
 import { Skeleton } from '@material-ui/lab';
 import clsx from 'clsx';
 import React from 'react';
 import { useParams } from 'react-router-dom';
-import { usePartnerQuery } from './PartnerDetail.generated';
+import { PartnerDocument } from './PartnerDetail.generated';
 
 const useStyles = makeStyles(({ spacing, breakpoints }) => ({
   root: {
@@ -31,7 +32,7 @@ export const PartnerDetail = () => {
   const classes = useStyles();
   const { partnerId } = useParams();
 
-  const { data, error } = usePartnerQuery({
+  const { data, error } = useQuery(PartnerDocument, {
     variables: {
       input: partnerId,
     },

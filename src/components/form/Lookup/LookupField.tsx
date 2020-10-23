@@ -1,4 +1,5 @@
-import { LazyQueryHookOptions, QueryTuple } from '@apollo/client';
+import { useLazyQuery } from '@apollo/client';
+import { TypedDocumentNode as DocumentNode } from '@graphql-typed-document-node/core';
 import {
   Chip,
   ChipProps,
@@ -38,12 +39,6 @@ import {
 interface QueryResult<T> {
   search: { items: ReadonlyArray<T | any> };
 }
-interface QueryVars {
-  query: string;
-}
-type LookupQueryHook<T> = (
-  baseOptions?: LazyQueryHookOptions<QueryResult<T>, QueryVars>
-) => QueryTuple<QueryResult<T>, QueryVars>;
 
 export type LookupFieldProps<
   T,
@@ -59,7 +54,7 @@ export type LookupFieldProps<
     'helperText' | 'label' | 'required' | 'autoFocus' | 'variant'
   > & {
     name: string;
-    useLookup: LookupQueryHook<T>;
+    lookupDocument: DocumentNode<QueryResult<T>, { query: string }>;
     getCompareBy: (item: T) => any;
     ChipProps?: ChipProps;
     CreateDialogForm?: ComponentType<
@@ -95,7 +90,7 @@ export function LookupField<
   multiple,
   defaultValue: defaultValueProp,
   disabled: disabledProp,
-  useLookup,
+  lookupDocument,
   ChipProps,
   autoFocus,
   helperText,
@@ -147,7 +142,7 @@ export function LookupField<
 
   const [input, setInput] = useState(selectedText);
 
-  const [fetch, { data, networkStatus }] = useLookup({
+  const [fetch, { data, networkStatus }] = useLazyQuery(lookupDocument, {
     notifyOnNetworkStatusChange: true,
   });
   // Not just for first load, but every network request
@@ -365,7 +360,7 @@ LookupField.createFor = <T extends { id: string }, CreateFormValues = never>({
   >(
     props: Except<
       LookupFieldProps<T, Multiple, DisableClearable, CreateFormValues>,
-      'useLookup' | 'getCompareBy' | 'getOptionLabel'
+      'lookupDocument' | 'getCompareBy' | 'getOptionLabel'
     >
   ) {
     return (

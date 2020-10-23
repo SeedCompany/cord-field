@@ -1,10 +1,10 @@
-import { MutationFunctionOptions } from '@apollo/client';
+import { MutationFunctionOptions, useMutation } from '@apollo/client';
 import { Typography } from '@material-ui/core';
 import React from 'react';
 import { Except } from 'type-fest';
 import { DialogForm, DialogFormProps } from '../../Dialog/DialogForm';
 import { SubmitError } from '../../form';
-import { useDeleteFileNodeMutation } from './FileActions.generated';
+import { DeleteFileNodeDocument } from './FileActions.generated';
 import { FilesActionItem } from './FileActionsContext';
 
 export type DeleteFileProps = DialogFormProps<{ id: string }> & {
@@ -14,7 +14,7 @@ export type DeleteFileProps = DialogFormProps<{ id: string }> & {
 
 export const DeleteFile = (props: Except<DeleteFileProps, 'onSubmit'>) => {
   const { item, refetchQueries } = props;
-  const [deleteFile] = useDeleteFileNodeMutation();
+  const [deleteFile] = useMutation(DeleteFileNodeDocument);
 
   if (!item) return null;
   const { id, type } = item;

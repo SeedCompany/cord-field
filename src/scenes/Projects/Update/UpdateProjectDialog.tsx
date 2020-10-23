@@ -1,3 +1,4 @@
+import { useMutation } from '@apollo/client';
 import { pick } from 'lodash';
 import React, { ComponentType, useMemo } from 'react';
 import { Except, Merge } from 'type-fest';
@@ -23,7 +24,7 @@ import {
 } from '../../../components/form/Lookup';
 import { ExtractStrict, many, Many } from '../../../util';
 import { ProjectOverviewFragment } from '../Overview/ProjectOverview.generated';
-import { useUpdateProjectMutation } from './UpdateProject.generated';
+import { UpdateProjectDocument } from './UpdateProject.generated';
 
 export type EditableProjectField = ExtractStrict<
   keyof UpdateProject,
@@ -92,7 +93,7 @@ export const UpdateProjectDialog = ({
     editFieldsProp,
   ]);
 
-  const [updateProject] = useUpdateProjectMutation();
+  const [updateProject] = useMutation(UpdateProjectDocument);
 
   const initialValues = useMemo(() => {
     const fullInitialValuesFields: Except<

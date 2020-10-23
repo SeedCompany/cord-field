@@ -1,3 +1,4 @@
+import { useMutation } from '@apollo/client';
 import { Decorator } from 'final-form';
 import React, { FC, useMemo } from 'react';
 import { Except } from 'type-fest';
@@ -10,8 +11,8 @@ import {
   PartnershipFormProps,
 } from '../PartnershipForm';
 import {
-  useDeletePartnershipMutation,
-  useUpdatePartnershipMutation,
+  DeletePartnershipDocument,
+  UpdatePartnershipDocument,
 } from './EditPartnership.generated';
 
 export type EditPartnershipFormInput = UpdatePartnershipInput &
@@ -52,8 +53,8 @@ const clearFinancialReportingType: Decorator<EditPartnershipFormInput> = (
 const decorators = [clearFinancialReportingType];
 
 export const EditPartnership: FC<EditPartnershipProps> = (props) => {
-  const [updatePartnership] = useUpdatePartnershipMutation();
-  const [deletePartnership] = useDeletePartnershipMutation();
+  const [updatePartnership] = useMutation(UpdatePartnershipDocument);
+  const [deletePartnership] = useMutation(DeletePartnershipDocument);
   const { partnership } = props;
 
   const initialValues = useMemo(
