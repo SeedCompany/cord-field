@@ -1,8 +1,10 @@
 import { useMutation } from '@apollo/client';
+import type { TypedDocumentNode as DocumentNode } from '@graphql-typed-document-node/core';
 import { useSnackbar } from 'notistack';
 import React from 'react';
 import { Except } from 'type-fest';
 import { ButtonLink } from '../../../components/Routing';
+import { updateListQueryItems } from '../../../util/updateListQueryItems';
 import {
   CreateProjectDocument,
   NewProjectFragmentDoc,
@@ -24,21 +26,13 @@ export const CreateProject = (props: Except<Props, 'onSubmit'>) => {
             projects(existingProjectRefs, { readField }) {
               const newProject = data?.createProject.project;
               if (!newProject) return existingProjectRefs;
-              const newProjectRef = cache.writeFragment({
-                data: newProject,
-                fragment: NewProjectFragmentDoc,
+              updateListQueryItems({
+                cache,
+                existingItemRefs: existingProjectRefs,
+                fragment: NewProjectFragmentDoc as DocumentNode,
+                newItem: newProject,
+                readField,
               });
-              if (
-                existingProjectRefs?.items.some(
-                  (ref: any) => readField('id', ref) === newProject.id
-                )
-              ) {
-                return existingProjectRefs;
-              }
-              return {
-                ...existingProjectRefs,
-                items: [...existingProjectRefs.items, newProjectRef],
-              };
             },
           },
         });
