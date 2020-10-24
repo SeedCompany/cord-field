@@ -1,5 +1,5 @@
 import { CSSProperties } from 'react';
-import { RTFDocument, RTFGroup, RTFParagraph } from 'rtf-parser';
+import { RTFDocument } from 'rtf-parser';
 
 // eslint-disable-next-line import/no-default-export
 export default function asStream(
@@ -18,12 +18,6 @@ export function fromString(
   opts?: RtfToHtmlOptions,
   cb: RtfToHtmlCallback
 ): void;
-
-function outputTemplate(
-  doc: RTFDocument,
-  defaults: RtfToHtmlDefaults,
-  content: string
-): string;
 
 export type RtfToHtmlDoc = RTFDocument;
 
