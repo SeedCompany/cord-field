@@ -1,13 +1,17 @@
 mutation createLanguage($input: CreateLanguageInput!) {
   createLanguage(input: $input) {
     language {
-      id
-      name {
-        value
-        canRead
-        canEdit
-      }
-      createdAt
+      ...NewLanguage
     }
   }
+}
+
+fragment NewLanguage on Language {
+  id
+  name {
+    value
+    canRead
+    canEdit
+  }
+  createdAt
 }

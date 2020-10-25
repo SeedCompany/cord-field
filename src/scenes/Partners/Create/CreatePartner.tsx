@@ -1,12 +1,15 @@
 import { useMutation } from '@apollo/client';
+import type { TypedDocumentNode as DocumentNode } from '@graphql-typed-document-node/core';
 import { useSnackbar } from 'notistack';
 import React from 'react';
 import { Except } from 'type-fest';
 import { GQLOperations } from '../../../api';
 import { ButtonLink } from '../../../components/Routing';
+import { updateListQueryItems } from '../../../util';
 import {
   CreatePartnerDocument,
   CreatePartnerMutation,
+  NewPartnerFragmentDoc,
 } from './CreatePartner.generated';
 import { CreatePartnerForm, CreatePartnerFormProps } from './CreatePartnerForm';
 
@@ -44,7 +47,22 @@ export const CreatePartner = (props: CreatePartnerProps) => {
               },
             },
           },
-          refetchQueries: [GQLOperations.Query.Partners],
+          update(cache, { data }) {
+            cache.modify({
+              fields: {
+                partners(existingItemRefs, { readField }) {
+                  updateListQueryItems({
+                    cache,
+                    existingItemRefs,
+                    fragment: NewPartnerFragmentDoc as DocumentNode,
+                    fragmentName: GQLOperations.Fragment.NewPartner,
+                    newItem: data?.createPartner.partner,
+                    readField,
+                  });
+                },
+              },
+            });
+          },
         });
         return data!.createPartner.partner;
       }}

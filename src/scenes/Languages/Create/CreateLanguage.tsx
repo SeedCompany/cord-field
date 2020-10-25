@@ -1,4 +1,5 @@
 import { useMutation } from '@apollo/client';
+import type { TypedDocumentNode as DocumentNode } from '@graphql-typed-document-node/core';
 import { useSnackbar } from 'notistack';
 import React from 'react';
 import { Except } from 'type-fest';
@@ -7,13 +8,16 @@ import {
   GQLOperations,
 } from '../../../api';
 import { ButtonLink } from '../../../components/Routing';
-import { CalendarDate } from '../../../util';
+import { CalendarDate, updateListQueryItems } from '../../../util';
 import {
   LanguageForm,
   LanguageFormProps,
   LanguageFormValues,
 } from '../LanguageForm';
-import { CreateLanguageDocument } from './CreateLanguage.generated';
+import {
+  CreateLanguageDocument,
+  NewLanguageFragmentDoc,
+} from './CreateLanguage.generated';
 
 export type CreateLanguageProps = Except<
   LanguageFormProps<LanguageFormValues<CreateLanguageType>>,
@@ -39,7 +43,22 @@ export const CreateLanguage = (props: CreateLanguageProps) => {
               },
             },
           },
-          refetchQueries: [GQLOperations.Query.Languages],
+          update(cache, { data }) {
+            cache.modify({
+              fields: {
+                languages(existingItemRefs, { readField }) {
+                  updateListQueryItems({
+                    cache,
+                    existingItemRefs,
+                    fragment: NewLanguageFragmentDoc as DocumentNode,
+                    fragmentName: GQLOperations.Fragment.NewLanguage,
+                    newItem: data?.createLanguage.language,
+                    readField,
+                  });
+                },
+              },
+            });
+          },
         });
 
         const { language } = res.data!.createLanguage;

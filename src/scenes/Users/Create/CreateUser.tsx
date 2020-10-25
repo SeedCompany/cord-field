@@ -1,13 +1,16 @@
 import { useMutation } from '@apollo/client';
+import type { TypedDocumentNode as DocumentNode } from '@graphql-typed-document-node/core';
 import { useSnackbar } from 'notistack';
 import React from 'react';
 import { Except } from 'type-fest';
 import { CreatePersonInput, GQLOperations } from '../../../api';
 import { ButtonLink } from '../../../components/Routing';
+import { updateListQueryItems } from '../../../util';
 import { UserForm, UserFormProps } from '../UserForm';
 import {
   CreatePersonDocument,
   CreatePersonMutation,
+  NewUserFragmentDoc,
 } from './CreateUser.generated';
 
 export type CreateUserProps = Except<
@@ -40,7 +43,22 @@ export const CreateUser = (props: CreateUserProps) => {
       onSubmit={async (input) => {
         const { data } = await createPerson({
           variables: { input },
-          refetchQueries: [GQLOperations.Query.Users],
+          update(cache, { data }) {
+            cache.modify({
+              fields: {
+                users(existingItemRefs, { readField }) {
+                  updateListQueryItems({
+                    cache,
+                    existingItemRefs,
+                    fragment: NewUserFragmentDoc as DocumentNode,
+                    fragmentName: GQLOperations.Fragment.NewUser,
+                    newItem: data?.createPerson.user,
+                    readField,
+                  });
+                },
+              },
+            });
+          },
         });
         return data!.createPerson.user;
       }}

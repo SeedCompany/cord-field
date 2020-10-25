@@ -8,25 +8,35 @@ type ExtractFragmentReturn<Type> = Type extends DocumentNode<infer X>
 
 interface UpdateListQueryItemsInput<
   FragmentDoc extends DocumentNode,
-  Item extends ExtractFragmentReturn<FragmentDoc>
+  Item extends ExtractFragmentReturn<FragmentDoc> | undefined
 > {
   cache: ApolloCache<unknown>;
   existingItemRefs: any;
   fragment: FragmentDoc;
+  fragmentName: string;
   newItem: Item;
   readField: ReadFieldFunction;
 }
 
 export const updateListQueryItems = <
   FragmentDoc extends DocumentNode,
-  Item extends ExtractFragmentReturn<FragmentDoc>
+  Item extends ExtractFragmentReturn<FragmentDoc> | undefined
 >(
   input: UpdateListQueryItemsInput<FragmentDoc, Item>
 ) => {
-  const { fragment, newItem, existingItemRefs, readField, cache } = input;
+  const {
+    cache,
+    existingItemRefs,
+    fragment,
+    fragmentName,
+    newItem,
+    readField,
+  } = input;
+  if (!newItem) return existingItemRefs;
   const newItemRef = cache.writeFragment({
     data: newItem,
     fragment,
+    fragmentName,
   });
   if (
     existingItemRefs?.items.some(
@@ -37,6 +47,7 @@ export const updateListQueryItems = <
   }
   return {
     ...existingItemRefs,
-    items: [...existingItemRefs.items, newItemRef],
+    total: Number(existingItemRefs.total) + 1,
+    items: [newItemRef, ...existingItemRefs.items],
   };
 };

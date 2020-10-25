@@ -3,8 +3,9 @@ import type { TypedDocumentNode as DocumentNode } from '@graphql-typed-document-
 import { useSnackbar } from 'notistack';
 import React from 'react';
 import { Except } from 'type-fest';
+import { GQLOperations } from '../../../api';
 import { ButtonLink } from '../../../components/Routing';
-import { updateListQueryItems } from '../../../util/updateListQueryItems';
+import { updateListQueryItems } from '../../../util';
 import {
   CreateProjectDocument,
   NewProjectFragmentDoc,
@@ -23,14 +24,13 @@ export const CreateProject = (props: Except<Props, 'onSubmit'>) => {
       update(cache, { data }) {
         cache.modify({
           fields: {
-            projects(existingProjectRefs, { readField }) {
-              const newProject = data?.createProject.project;
-              if (!newProject) return existingProjectRefs;
+            projects(existingItemRefs, { readField }) {
               updateListQueryItems({
                 cache,
-                existingItemRefs: existingProjectRefs,
+                existingItemRefs,
                 fragment: NewProjectFragmentDoc as DocumentNode,
-                newItem: newProject,
+                fragmentName: GQLOperations.Fragment.NewProject,
+                newItem: data?.createProject.project,
                 readField,
               });
             },
