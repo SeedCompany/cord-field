@@ -1,4 +1,25 @@
 {
-  "extends": "./tsconfig.paths.json",
-  "compilerOptions": {}
+  "compilerOptions": {
+    "module": "esnext",
+    "moduleResolution": "node",
+    "target": "esnext",
+    "lib": ["esnext", "dom", "dom.iterable"],
+    "noEmit": true,
+    "jsx": "react",
+    "allowJs": true,
+    "skipLibCheck": true,
+    "resolveJsonModule": true,
+    "isolatedModules": true,
+    "esModuleInterop": true,
+    "allowSyntheticDefaultImports": true,
+    "strict": true,
+    "forceConsistentCasingInFileNames": true,
+    "noFallthroughCasesInSwitch": false,
+    "baseUrl": ".",
+    "paths": {
+      "*": ["./typings/*"]
+    }
+  },
+  "include": ["src", "**/*"],
+  "exclude": ["build", "node_modules"]
 }
