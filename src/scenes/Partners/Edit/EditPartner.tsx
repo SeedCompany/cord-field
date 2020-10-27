@@ -1,3 +1,4 @@
+import { useMutation } from '@apollo/client';
 import React, { ComponentType, useMemo } from 'react';
 import { Except, Merge } from 'type-fest';
 import {
@@ -21,7 +22,7 @@ import { UserField, UserLookupItem } from '../../../components/form/Lookup';
 import { isLength } from '../../../components/form/validators';
 import { ExtractStrict, many, Many } from '../../../util';
 import { PartnerDetailsFragment } from '../Detail/PartnerDetail.generated';
-import { useUpdatePartnerMutation } from './EditPartner.generated';
+import { UpdatePartnerDocument } from './EditPartner.generated';
 
 interface PartnerFormValues {
   partner: Merge<
@@ -106,7 +107,7 @@ export const EditPartner = ({
   editFields: editFieldsProp,
   ...props
 }: EditPartnerProps) => {
-  const [updatePartner] = useUpdatePartnerMutation({
+  const [updatePartner] = useMutation(UpdatePartnerDocument, {
     refetchQueries: [GQLOperations.Query.Partner],
   });
 
