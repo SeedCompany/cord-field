@@ -19,8 +19,8 @@ export const ProjectSortOptions = () => (
     <Option
       value="estimatedSubmission"
       label="Estimated Submission Date"
-      asc="Furthest Date to Closest"
-      desc="Closest Date to Furthest"
+      asc="Earliest Date to Latest"
+      desc="Latest Date to Earliest"
       defaultOrder="DESC"
     />
   </>
