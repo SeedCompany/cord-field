@@ -1,5 +1,4 @@
 import { useMutation } from '@apollo/client';
-import type { TypedDocumentNode as DocumentNode } from '@graphql-typed-document-node/core';
 import { useSnackbar } from 'notistack';
 import React from 'react';
 import { Except } from 'type-fest';
@@ -50,7 +49,7 @@ export const CreateLanguage = (props: CreateLanguageProps) => {
                   updateListQueryItems({
                     cache,
                     existingItemRefs,
-                    fragment: NewLanguageFragmentDoc as DocumentNode,
+                    fragment: NewLanguageFragmentDoc,
                     fragmentName: GQLOperations.Fragment.NewLanguage,
                     newItem: data?.createLanguage.language,
                     readField,

@@ -1,5 +1,4 @@
 import { useMutation } from '@apollo/client';
-import type { TypedDocumentNode as DocumentNode } from '@graphql-typed-document-node/core';
 import { useSnackbar } from 'notistack';
 import React from 'react';
 import { Except } from 'type-fest';
@@ -54,7 +53,7 @@ export const CreatePartner = (props: CreatePartnerProps) => {
                   updateListQueryItems({
                     cache,
                     existingItemRefs,
-                    fragment: NewPartnerFragmentDoc as DocumentNode,
+                    fragment: NewPartnerFragmentDoc,
                     fragmentName: GQLOperations.Fragment.NewPartner,
                     newItem: data?.createPartner.partner,
                     readField,

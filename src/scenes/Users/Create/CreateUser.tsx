@@ -1,5 +1,4 @@
 import { useMutation } from '@apollo/client';
-import type { TypedDocumentNode as DocumentNode } from '@graphql-typed-document-node/core';
 import { useSnackbar } from 'notistack';
 import React from 'react';
 import { Except } from 'type-fest';
@@ -50,7 +49,7 @@ export const CreateUser = (props: CreateUserProps) => {
                   updateListQueryItems({
                     cache,
                     existingItemRefs,
-                    fragment: NewUserFragmentDoc as DocumentNode,
+                    fragment: NewUserFragmentDoc,
                     fragmentName: GQLOperations.Fragment.NewUser,
                     newItem: data?.createPerson.user,
                     readField,

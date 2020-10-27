@@ -1,5 +1,4 @@
 import { useMutation } from '@apollo/client';
-import type { TypedDocumentNode as DocumentNode } from '@graphql-typed-document-node/core';
 import { useSnackbar } from 'notistack';
 import React from 'react';
 import { Except } from 'type-fest';
@@ -28,7 +27,7 @@ export const CreateProject = (props: Except<Props, 'onSubmit'>) => {
               updateListQueryItems({
                 cache,
                 existingItemRefs,
-                fragment: NewProjectFragmentDoc as DocumentNode,
+                fragment: NewProjectFragmentDoc,
                 fragmentName: GQLOperations.Fragment.NewProject,
                 newItem: data?.createProject.project,
                 readField,

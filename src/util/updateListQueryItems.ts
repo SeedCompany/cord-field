@@ -2,27 +2,17 @@ import { ApolloCache } from '@apollo/client';
 import { ReadFieldFunction } from '@apollo/client/cache/core/types/common';
 import type { TypedDocumentNode as DocumentNode } from '@graphql-typed-document-node/core';
 
-type ExtractFragmentReturn<Type> = Type extends DocumentNode<infer X>
-  ? X
-  : never;
-
-interface UpdateListQueryItemsInput<
-  FragmentDoc extends DocumentNode,
-  Item extends ExtractFragmentReturn<FragmentDoc> | undefined
-> {
+interface UpdateListQueryItemsInput<Type extends { id: string }> {
   cache: ApolloCache<unknown>;
   existingItemRefs: any;
-  fragment: FragmentDoc;
+  fragment: DocumentNode<Type, unknown>;
   fragmentName: string;
-  newItem: Item;
+  newItem: Type | undefined;
   readField: ReadFieldFunction;
 }
 
-export const updateListQueryItems = <
-  FragmentDoc extends DocumentNode,
-  Item extends ExtractFragmentReturn<FragmentDoc> | undefined
->(
-  input: UpdateListQueryItemsInput<FragmentDoc, Item>
+export const updateListQueryItems = <Type extends { id: string }>(
+  input: UpdateListQueryItemsInput<Type>
 ) => {
   const {
     cache,
