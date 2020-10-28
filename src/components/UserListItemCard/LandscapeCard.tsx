@@ -48,7 +48,11 @@ export const UserListItemCardLandscape = ({
           </Avatar>
           <div className={classes.userInfo}>
             <Typography variant="h4" paragraph>
-              {!user ? <Skeleton width="75%" /> : user.fullName}
+              {!user ? (
+                <Skeleton width="75%" />
+              ) : (
+                `${user.displayFirstName.value} ${user.displayLastName.value}`
+              )}
             </Typography>
             <Typography variant="body2" color="primary">
               {!user ? <Skeleton width="50%" /> : org?.name.value}
