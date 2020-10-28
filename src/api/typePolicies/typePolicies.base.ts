@@ -1,10 +1,11 @@
 import type {
+  FieldFunctionOptions,
   FieldPolicy,
   FieldReadFunction,
   KeyFieldsFunction,
 } from '@apollo/client/cache/inmemory/policies';
 import type { GqlTypeMap } from '../typeMap.generated';
-import { ProjectListOutput, QueryProjectsArgs } from '..';
+import { Scalars } from '..';
 
 type FieldPolicies<T> = {
   [K in keyof T]?: FieldPolicy<T[K]> | FieldReadFunction<T[K]>;
@@ -26,6 +27,41 @@ type TypePolicies = {
 
 const scriptureKeyFields = ['book', 'chapter', 'verse'] as const;
 
+interface ItemOutput<Item> {
+  readonly __typename: any;
+  readonly items: Item[];
+  readonly total: Scalars['Int'];
+  readonly hasMore: Scalars['Boolean'];
+}
+
+type IncomingPageItemsMerge = <Item>(
+  existing: ItemOutput<Item> | undefined,
+  incoming: ItemOutput<Item>,
+  options: FieldFunctionOptions
+) => ItemOutput<Item>;
+
+const mergeIncomingPageItems: IncomingPageItemsMerge = (
+  existing,
+  incoming,
+  { args }
+) => {
+  const count = args?.input?.count;
+  const page = args?.input?.page;
+  const DEFAULT_COUNT = 10;
+  const existingItems = existing?.items ?? [];
+  const startNew = (page ?? 1) * (count ?? DEFAULT_COUNT) + 1;
+  const endNew = (page ?? 1) * (count ?? DEFAULT_COUNT);
+  const updatedItems = [
+    ...existingItems.slice(0, startNew),
+    ...incoming.items,
+    ...existingItems.slice(endNew),
+  ];
+  return {
+    ...incoming,
+    items: updatedItems,
+  };
+};
+
 export const typePolicies: TypePolicies = {
   Language: {
     fields: {
@@ -45,30 +81,20 @@ export const typePolicies: TypePolicies = {
   Query: {
     fields: {
       projects: {
-        merge(
-          existing: ProjectListOutput | undefined,
-          incoming: ProjectListOutput,
-          { args }: { args: QueryProjectsArgs | null }
-        ) {
-          const count = args?.input?.count;
-          const page = args?.input?.page;
-          const DEFAULT_COUNT = 10;
-          const existingProjects = existing?.items ?? [];
-          const startNew = (page ?? 1) * (count ?? DEFAULT_COUNT) + 1;
-          const endNew = (page ?? 1) * (count ?? DEFAULT_COUNT);
-          const updatedProjects = [
-            ...existingProjects.slice(0, startNew),
-            ...incoming.items,
-            ...existingProjects.slice(endNew),
-          ];
-          return {
-            ...incoming,
-            items: updatedProjects,
-          };
-        },
-        read(existing: ProjectListOutput | undefined) {
-          return existing;
-        },
+        merge: mergeIncomingPageItems,
+        read: (existing) => existing,
+      },
+      languages: {
+        merge: mergeIncomingPageItems,
+        read: (existing) => existing,
+      },
+      partners: {
+        merge: mergeIncomingPageItems,
+        read: (existing) => existing,
+      },
+      users: {
+        merge: mergeIncomingPageItems,
+        read: (existing) => existing,
       },
     },
   },
