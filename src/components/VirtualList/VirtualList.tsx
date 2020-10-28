@@ -1,4 +1,4 @@
-import { CircularProgress, makeStyles, Typography } from '@material-ui/core';
+import { CircularProgress, makeStyles } from '@material-ui/core';
 import React, { FC, useEffect, useRef, useState } from 'react';
 import InfiniteScroll, {
   Props as InfiniteScrollProps,
@@ -16,7 +16,16 @@ const useStyles = makeStyles(({ palette, spacing }) => ({
     margin: spacing(4, 0),
   },
   endMessageContainer: {
-    textAlign: 'center',
+    display: 'flex',
+    justifyContent: 'center',
+    padding: '3px 0',
+  },
+  endMessageDot: {
+    border: 'none',
+    borderRadius: '100%',
+    boxShadow: `3px 3px 3px rgba(100, 100, 100, 0.5) inset, 1.3px 1.3px 2px ${palette.grey['800']}`,
+    width: '0.75rem',
+    height: '0.75rem',
   },
   endMessage: {
     color: palette.grey[500],
@@ -29,7 +38,6 @@ interface VirtualListProps
     // Add items here as needed
     'dataLength' | 'next' | 'hasMore'
   > {
-  itemType?: string;
   // Used to estimate number of items to query per page
   setContainerHeight: (height: number) => void;
 }
@@ -38,7 +46,6 @@ export const VirtualList: FC<VirtualListProps> = (props) => {
   const {
     dataLength,
     hasMore,
-    itemType,
     next: nextProp,
     setContainerHeight,
     children,
@@ -108,9 +115,7 @@ export const VirtualList: FC<VirtualListProps> = (props) => {
         }
         endMessage={
           <div className={classes.endMessageContainer} style={statusStyle}>
-            <Typography variant="body1" className={classes.endMessage}>
-              All {itemType ? `${itemType}s` : 'items'} retrieved
-            </Typography>
+            <div className={classes.endMessageDot} />
           </div>
         }
         scrollableTarget="scrollParent"
