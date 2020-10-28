@@ -82,19 +82,15 @@ export const typePolicies: TypePolicies = {
     fields: {
       projects: {
         merge: mergeIncomingPageItems,
-        read: (existing) => existing,
       },
       languages: {
         merge: mergeIncomingPageItems,
-        read: (existing) => existing,
       },
       partners: {
         merge: mergeIncomingPageItems,
-        read: (existing) => existing,
       },
       users: {
         merge: mergeIncomingPageItems,
-        read: (existing) => existing,
       },
     },
   },
