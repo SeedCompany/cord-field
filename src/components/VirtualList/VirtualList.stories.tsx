@@ -1,5 +1,5 @@
 import { Box, makeStyles, Typography } from '@material-ui/core';
-import { number, text } from '@storybook/addon-knobs';
+import { number } from '@storybook/addon-knobs';
 import React, { FC, useEffect, useState } from 'react';
 import { useItemsPerPage, VirtualList as VL } from '.';
 import { sleep } from '../../util';
@@ -39,7 +39,6 @@ const ListItem: FC<ListItemProps> = (props) => {
   );
 };
 
-const itemType = text('itemType', '');
 const numberOfItems = number('numberOfItems', 30);
 
 export const VirtualList = () => {
@@ -83,7 +82,6 @@ export const VirtualList = () => {
         <VL
           dataLength={items.length}
           hasMore={items.length < allItems.length}
-          itemType={itemType}
           next={next}
           setContainerHeight={setContainerHeight}
         >
