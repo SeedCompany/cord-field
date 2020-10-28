@@ -37,7 +37,7 @@ export const ProjectList: FC = () => {
   const [filters, setFilters] = useProjectFilters();
   const [itemsPerPage, setContainerHeight] = useItemsPerPage(240);
 
-  const { data } = useQuery(ProjectListDocument, {
+  const { data, fetchMore } = useQuery(ProjectListDocument, {
     variables: {
       input: {
         ...sort.value,
