@@ -4,8 +4,9 @@ import React, { FC } from 'react';
 
 const useStyles = makeStyles(({ spacing }) => ({
   root: {
-    overflow: 'auto',
+    height: '100%',
     marginLeft: spacing(-2),
+    overflow: 'auto',
     padding: spacing(2),
   },
 }));

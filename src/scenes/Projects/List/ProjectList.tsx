@@ -22,9 +22,6 @@ const useStyles = makeStyles(({ spacing }) => ({
   options: {
     margin: spacing(3, 0),
   },
-  listContainer: {
-    height: '100%',
-  },
   projectItem: {
     marginBottom: spacing(2),
   },
@@ -87,7 +84,7 @@ export const ProjectList: FC = () => {
           <Skeleton width="12ch" />
         )}
       </Typography>
-      <ListContainer className={classes.listContainer}>
+      <ListContainer>
         <VirtualList
           dataLength={currentItemsCount}
           next={loadMoreItems}
