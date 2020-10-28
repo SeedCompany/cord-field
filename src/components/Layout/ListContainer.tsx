@@ -1,4 +1,5 @@
 import { makeStyles } from '@material-ui/core';
+import clsx from 'clsx';
 import React, { FC } from 'react';
 
 const useStyles = makeStyles(({ spacing }) => ({
@@ -18,9 +19,5 @@ export const ListContainer: FC<ListContainerProps> = ({
   children,
 }) => {
   const classes = useStyles();
-  return (
-    <div className={`${classes.root}${className ? ` ${className}` : ''}`}>
-      {children}
-    </div>
-  );
+  return <div className={clsx(classes.root, className)}>{children}</div>;
 };
