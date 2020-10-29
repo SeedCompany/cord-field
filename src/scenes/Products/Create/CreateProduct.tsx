@@ -56,16 +56,19 @@ export const CreateProduct = () => {
       </Typography>
       {!loading && (
         <ProductForm
-          onSubmit={async ({
-            product: {
-              productType,
-              produces,
-              scriptureReferences,
-              fullOldTestament,
-              fullNewTestament,
-              ...inputs
+          onSubmit={async (
+            {
+              product: {
+                productType,
+                produces,
+                scriptureReferences,
+                fullOldTestament,
+                fullNewTestament,
+                ...inputs
+              },
             },
-          }) => {
+            form
+          ) => {
             const parsedScriptureReferences = parsedRangesWithFullTestamentRange(
               scriptureReferences,
               fullOldTestament,
@@ -107,7 +110,7 @@ export const CreateProduct = () => {
 
               navigate('../../');
             } catch (e) {
-              await handleFormError(e);
+              await handleFormError(e, form);
             }
           }}
         />

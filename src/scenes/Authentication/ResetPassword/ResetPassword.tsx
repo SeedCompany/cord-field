@@ -15,7 +15,7 @@ export const ResetPassword = (props: Except<Props, 'onSubmit'>) => {
   const { token } = useParams() as { token: string };
   const [success, setSuccess] = useState(false);
 
-  const submit: Props['onSubmit'] = async ({ password }) => {
+  const submit: Props['onSubmit'] = async ({ password }, form) => {
     try {
       await resetPassword({
         variables: {
@@ -27,7 +27,7 @@ export const ResetPassword = (props: Except<Props, 'onSubmit'>) => {
       });
       setSuccess(true);
     } catch (e) {
-      return await handleFormError(e, {
+      return await handleFormError(e, form, {
         TokenExpired: `Password reset request has expired. Try forgot password again.`,
         Default: `Something went wrong. Try forgot password again.`,
       });

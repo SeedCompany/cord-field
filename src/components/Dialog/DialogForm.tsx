@@ -140,7 +140,7 @@ export function DialogForm<T, R = void>({
           onClose?.('success', form);
           return null;
         } catch (e) {
-          return await handleFormError(e, errorHandlers);
+          return await handleFormError(e, form, errorHandlers);
         }
       }}
     >

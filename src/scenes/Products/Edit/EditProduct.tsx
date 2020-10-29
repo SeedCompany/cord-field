@@ -112,16 +112,19 @@ export const EditProduct = () => {
       {product && (
         <ProductForm
           product={product}
-          onSubmit={async ({
-            product: {
-              productType,
-              produces,
-              scriptureReferences,
-              fullOldTestament,
-              fullNewTestament,
-              ...input
+          onSubmit={async (
+            {
+              product: {
+                productType,
+                produces,
+                scriptureReferences,
+                fullOldTestament,
+                fullNewTestament,
+                ...input
+              },
             },
-          }) => {
+            form
+          ) => {
             try {
               const parsedScriptureReferences = parsedRangesWithFullTestamentRange(
                 scriptureReferences,
@@ -154,7 +157,7 @@ export const EditProduct = () => {
 
               navigate('../../');
             } catch (e) {
-              await handleFormError(e);
+              await handleFormError(e, form);
             }
           }}
           initialValues={initialValues}

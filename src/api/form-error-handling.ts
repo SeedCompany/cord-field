@@ -1,5 +1,5 @@
 import { ApolloError } from '@apollo/client';
-import { FORM_ERROR, setIn, SubmissionErrors } from 'final-form';
+import { FORM_ERROR, FormApi, setIn, SubmissionErrors } from 'final-form';
 import { identity, mapValues } from 'lodash';
 import { assert } from 'ts-essentials';
 import { Promisable } from 'type-fest';
@@ -146,7 +146,11 @@ const defaultHandlers: ErrorHandlers = {
 /**
  * Handles the error according to the form error handlers passed in.
  */
-export const handleFormError = async (e: unknown, handlers?: ErrorHandlers) => {
+export const handleFormError = async <T, P>(
+  e: unknown,
+  form: FormApi<T, P>,
+  handlers?: ErrorHandlers
+) => {
   const error = getErrorInfo(e);
 
   const mergedHandlers = { ...defaultHandlers, ...handlers };

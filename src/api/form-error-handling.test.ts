@@ -1,19 +1,25 @@
 import { ApolloError } from '@apollo/client';
-import { FORM_ERROR } from 'final-form';
+import { createForm, FORM_ERROR, FormApi } from 'final-form';
+import { noop } from 'lodash';
 import { ErrorHandlers, handleFormError } from './form-error-handling';
 
 describe('handleFormError', () => {
   let error: ApolloError;
+  let form: FormApi;
 
   beforeAll(() => {
     error = createError({
       message: 'Not found',
       codes: ['VerySpecific', 'NotFound', 'SomethingElse', 'Input', 'Client'],
     });
+    form = createForm({
+      onSubmit: noop,
+      validate: () => undefined,
+    });
   });
 
   it('forwards to next handler when asked', async () => {
-    const result = await handleFormError(error, {
+    const result = await handleFormError(error, form, {
       NotFound: (e, next) => next(e),
       // Ignore error about key not existing - it's only for tests
       ...{ SomethingElse: 'nexted' },
@@ -22,7 +28,7 @@ describe('handleFormError', () => {
   });
 
   it('skips to first handled code', async () => {
-    const result = await handleFormError(error, {
+    const result = await handleFormError(error, form, {
       NotFound: 'woot',
     });
     expect(result).toEqual({ [FORM_ERROR]: 'woot' });
@@ -34,7 +40,7 @@ describe('handleFormError', () => {
       codes: ['Input'],
       field: 'foo.bar',
     });
-    const result = await handleFormError(inputError);
+    const result = await handleFormError(inputError, form);
     expect(result).toEqual({ foo: { bar: 'You messed up the foo bar' } });
   });
 
@@ -43,7 +49,7 @@ describe('handleFormError', () => {
       message: 'You messed up the foo bar',
       codes: ['Input'],
     });
-    const result = await handleFormError(inputError, {
+    const result = await handleFormError(inputError, form, {
       // Default is next handled
       Default: 'Failed to update X thing',
     });
@@ -55,7 +61,7 @@ describe('handleFormError', () => {
       message: 'Internal Server Error',
       codes: ['Server'],
     });
-    const result = await handleFormError(serverError);
+    const result = await handleFormError(serverError, form);
     expect(result).toEqual({});
   });
 
@@ -64,7 +70,7 @@ describe('handleFormError', () => {
       message: 'Internal Server Error',
       codes: ['Server'],
     });
-    const result = await handleFormError(serverError, {
+    const result = await handleFormError(serverError, form, {
       Server: undefined,
       Default: 'new default',
     });
@@ -72,14 +78,14 @@ describe('handleFormError', () => {
   });
 
   it('default', async () => {
-    const result = await handleFormError(error, {
+    const result = await handleFormError(error, form, {
       Default: 'new default',
     });
     expect(result).toEqual({ [FORM_ERROR]: 'new default' });
   });
 
   it('default default is error message', async () => {
-    const result = await handleFormError(error);
+    const result = await handleFormError(error, form);
     expect(result).toEqual({ [FORM_ERROR]: 'Not found' });
   });
 });

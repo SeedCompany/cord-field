@@ -22,7 +22,7 @@ export const Login = (props: Except<Props, 'onSubmit'>) => {
     }
   }, [navigate, session, sessionLoading, success]);
 
-  const submit: Props['onSubmit'] = async (input) => {
+  const submit: Props['onSubmit'] = async (input, form) => {
     try {
       await login({
         variables: { input },
@@ -37,7 +37,7 @@ export const Login = (props: Except<Props, 'onSubmit'>) => {
       const returnTo = decodeURIComponent(query.get('returnTo') ?? '/');
       navigate(returnTo, { replace: true });
     } catch (e) {
-      return await handleFormError(e, {
+      return await handleFormError(e, form, {
         Default: {
           [FORM_ERROR]: `Something wasn't right. Try again, or reset password.`,
           // Add errors to fields so they show invalid
