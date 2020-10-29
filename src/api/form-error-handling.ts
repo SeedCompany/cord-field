@@ -113,10 +113,16 @@ export type ErrorHandlers = {
  */
 export type ErrorHandler<E> =
   | ErrorHandlerResult
-  | ((e: E, next: NextHandler<E>) => Promisable<ErrorHandlerResult>);
+  | ((
+      e: E,
+      next: NextHandler<E>,
+      utils: HandlerUtils
+    ) => Promisable<ErrorHandlerResult>);
 
 type NextHandler<E> = (e: E) => Promisable<ErrorHandlerResult>;
 export type ErrorHandlerResult = string | SubmissionErrors | undefined;
+
+interface HandlerUtils {}
 
 const expandDotNotation = (input: Record<string, any>) =>
   Object.entries(input).reduce(
@@ -153,6 +159,8 @@ export const handleFormError = async <T, P>(
 ) => {
   const error = getErrorInfo(e);
 
+  const utils: HandlerUtils = {};
+
   const mergedHandlers = { ...defaultHandlers, ...handlers };
   const handler = error.codes
     // get handler for each code
@@ -160,7 +168,7 @@ export const handleFormError = async <T, P>(
     // remove unhandled codes
     .filter(identity)
     // normalize handlers to a standard function shape
-    .map(resolveHandler)
+    .map((h) => resolveHandler(h, utils))
     // In order to build the next function for each handler we need to start
     // from the end and work backwards
     .reverse()
@@ -200,11 +208,11 @@ const getErrorInfo = (e: unknown) => {
 /**
  * Normalize the handler to a function and normalize string results.
  */
-const resolveHandler = <E>(handler: ErrorHandler<E>) => async (
-  error: E,
-  next: NextHandler<E>
-) => {
+const resolveHandler = <E>(
+  handler: ErrorHandler<E>,
+  utils: HandlerUtils
+) => async (error: E, next: NextHandler<E>) => {
   const result =
-    typeof handler === 'function' ? await handler(error, next) : handler;
+    typeof handler === 'function' ? await handler(error, next, utils) : handler;
   return typeof result === 'string' ? { [FORM_ERROR]: result } : result;
 };
