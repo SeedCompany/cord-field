@@ -11,15 +11,20 @@ export default {
 export const Portrait = () => <UserCard user={generateUserListItem()} />;
 
 export const generateUserListItem = () => {
-  const fullName = text('name', 'Julius Rosenberg');
-  const avatarLetters = fullName
-    .split(' ')
-    .map((w) => w[0])
-    .join('');
+  const displayFirstName = text('First Name', 'Julius');
+  const displayLastName = text('Last Name', 'Rosenberg');
+
+  const avatarLetters = `${displayFirstName[0]} ${displayLastName[0]}`;
+
   const title = { value: 'Field Coordinator' };
   const user: UserListItemFragment = {
     id: '123',
-    fullName,
+    displayFirstName: {
+      value: displayFirstName,
+    },
+    displayLastName: {
+      value: displayLastName,
+    },
     avatarLetters,
     title,
     organizations: {

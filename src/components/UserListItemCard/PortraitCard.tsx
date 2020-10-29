@@ -76,7 +76,11 @@ export const UserListItemCardPortrait = ({
               {user?.avatarLetters}
             </Avatar>
             <Typography variant="h4" className={classes.personName}>
-              {!user ? <Skeleton width="100%" /> : user.fullName}
+              {!user ? (
+                <Skeleton width="100%" />
+              ) : (
+                `${user.displayFirstName.value} ${user.displayLastName.value}`
+              )}
             </Typography>
             <Typography variant="body2" color="primary">
               {!user ? <Skeleton width="100%" /> : org?.name.value}
