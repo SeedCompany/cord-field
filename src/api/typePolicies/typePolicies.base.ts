@@ -23,4 +23,11 @@ type TypePolicies = {
   [K in keyof GqlTypeMap]?: TypePolicy<GqlTypeMap[K]>;
 };
 
-export const typePolicies: TypePolicies = {};
+export const typePolicies: TypePolicies = {
+  Language: {
+    fields: {
+      ethnologue: { merge: true },
+    },
+  },
+  EthnologueLanguage: { keyFields: false },
+};
