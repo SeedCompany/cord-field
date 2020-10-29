@@ -2,12 +2,9 @@ import { useMutation } from '@apollo/client';
 import { useSnackbar } from 'notistack';
 import React from 'react';
 import { Except } from 'type-fest';
-import {
-  CreateLanguage as CreateLanguageType,
-  GQLOperations,
-} from '../../../api';
+import { CreateLanguage as CreateLanguageType } from '../../../api';
 import { ButtonLink } from '../../../components/Routing';
-import { CalendarDate, updateListQueryItems } from '../../../util';
+import { addItemToList, CalendarDate } from '../../../util';
 import {
   LanguageForm,
   LanguageFormProps,
@@ -23,7 +20,13 @@ export type CreateLanguageProps = Except<
   'onSubmit'
 >;
 export const CreateLanguage = (props: CreateLanguageProps) => {
-  const [createLang] = useMutation(CreateLanguageDocument);
+  const [createLang] = useMutation(CreateLanguageDocument, {
+    update: addItemToList(
+      'languages',
+      NewLanguageFragmentDoc,
+      (data) => data.createLanguage.language
+    ),
+  });
   const { enqueueSnackbar } = useSnackbar();
 
   return (
@@ -41,22 +44,6 @@ export const CreateLanguage = (props: CreateLanguageProps) => {
                 ...rest,
               },
             },
-          },
-          update(cache, { data }) {
-            cache.modify({
-              fields: {
-                languages(existingItemRefs, { readField }) {
-                  updateListQueryItems({
-                    cache,
-                    existingItemRefs,
-                    fragment: NewLanguageFragmentDoc,
-                    fragmentName: GQLOperations.Fragment.NewLanguage,
-                    newItem: data?.createLanguage.language,
-                    readField,
-                  });
-                },
-              },
-            });
           },
         });
 

@@ -2,9 +2,9 @@ import { useMutation } from '@apollo/client';
 import { useSnackbar } from 'notistack';
 import React from 'react';
 import { Except } from 'type-fest';
-import { CreatePersonInput, GQLOperations } from '../../../api';
+import { CreatePersonInput } from '../../../api';
 import { ButtonLink } from '../../../components/Routing';
-import { updateListQueryItems } from '../../../util';
+import { addItemToList } from '../../../util';
 import { UserForm, UserFormProps } from '../UserForm';
 import {
   CreatePersonDocument,
@@ -21,7 +21,13 @@ export type CreateUserProps = Except<
 >;
 
 export const CreateUser = (props: CreateUserProps) => {
-  const [createPerson] = useMutation(CreatePersonDocument);
+  const [createPerson] = useMutation(CreatePersonDocument, {
+    update: addItemToList(
+      'users',
+      NewUserFragmentDoc,
+      (data) => data.createPerson.user
+    ),
+  });
   const { enqueueSnackbar } = useSnackbar();
 
   return (
@@ -42,22 +48,6 @@ export const CreateUser = (props: CreateUserProps) => {
       onSubmit={async (input) => {
         const { data } = await createPerson({
           variables: { input },
-          update(cache, { data }) {
-            cache.modify({
-              fields: {
-                users(existingItemRefs, { readField }) {
-                  updateListQueryItems({
-                    cache,
-                    existingItemRefs,
-                    fragment: NewUserFragmentDoc,
-                    fragmentName: GQLOperations.Fragment.NewUser,
-                    newItem: data?.createPerson.user,
-                    readField,
-                  });
-                },
-              },
-            });
-          },
         });
         return data!.createPerson.user;
       }}

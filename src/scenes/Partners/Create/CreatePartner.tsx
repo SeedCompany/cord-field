@@ -2,9 +2,8 @@ import { useMutation } from '@apollo/client';
 import { useSnackbar } from 'notistack';
 import React from 'react';
 import { Except } from 'type-fest';
-import { GQLOperations } from '../../../api';
 import { ButtonLink } from '../../../components/Routing';
-import { updateListQueryItems } from '../../../util';
+import { addItemToList } from '../../../util';
 import {
   CreatePartnerDocument,
   CreatePartnerMutation,
@@ -18,7 +17,13 @@ type CreatePartnerProps = Except<
 >;
 
 export const CreatePartner = (props: CreatePartnerProps) => {
-  const [createPartner] = useMutation(CreatePartnerDocument);
+  const [createPartner] = useMutation(CreatePartnerDocument, {
+    update: addItemToList(
+      'partners',
+      NewPartnerFragmentDoc,
+      (data) => data.createPartner.partner
+    ),
+  });
   const { enqueueSnackbar } = useSnackbar();
 
   return (
@@ -45,22 +50,6 @@ export const CreatePartner = (props: CreatePartnerProps) => {
                 organizationId,
               },
             },
-          },
-          update(cache, { data }) {
-            cache.modify({
-              fields: {
-                partners(existingItemRefs, { readField }) {
-                  updateListQueryItems({
-                    cache,
-                    existingItemRefs,
-                    fragment: NewPartnerFragmentDoc,
-                    fragmentName: GQLOperations.Fragment.NewPartner,
-                    newItem: data?.createPartner.partner,
-                    readField,
-                  });
-                },
-              },
-            });
           },
         });
         return data!.createPartner.partner;
