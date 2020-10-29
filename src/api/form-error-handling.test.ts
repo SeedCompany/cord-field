@@ -7,7 +7,7 @@ describe('handleFormError', () => {
   let error: ApolloError;
   let form: FormApi;
 
-  beforeAll(() => {
+  beforeEach(() => {
     error = createError({
       message: 'Not found',
       codes: ['VerySpecific', 'NotFound', 'SomethingElse', 'Input', 'Client'],
@@ -34,14 +34,25 @@ describe('handleFormError', () => {
     expect(result).toEqual({ [FORM_ERROR]: 'woot' });
   });
 
-  it('input with field uses field error', async () => {
+  it('input with registered field uses field error', async () => {
+    const inputError = createError({
+      message: 'You messed up the foo bar',
+      codes: ['Input'],
+      field: 'foo.bar',
+    });
+    form.registerField('foo.bar', noop, {});
+    const result = await handleFormError(inputError, form);
+    expect(result).toEqual({ foo: { bar: 'You messed up the foo bar' } });
+  });
+
+  it('input with unknown field uses next', async () => {
     const inputError = createError({
       message: 'You messed up the foo bar',
       codes: ['Input'],
       field: 'foo.bar',
     });
     const result = await handleFormError(inputError, form);
-    expect(result).toEqual({ foo: { bar: 'You messed up the foo bar' } });
+    expect(result).toEqual({ [FORM_ERROR]: 'You messed up the foo bar' });
   });
 
   it('input without field uses next', async () => {
