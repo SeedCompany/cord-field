@@ -122,7 +122,10 @@ export type ErrorHandler<E> =
 type NextHandler<E> = (e: E) => Promisable<ErrorHandlerResult>;
 export type ErrorHandlerResult = string | SubmissionErrors | undefined;
 
-interface HandlerUtils {}
+interface HandlerUtils {
+  /** Does the form have this field registered? */
+  hasField: (field: string) => boolean;
+}
 
 const expandDotNotation = (input: Record<string, any>) =>
   Object.entries(input).reduce(
@@ -159,7 +162,9 @@ export const handleFormError = async <T, P>(
 ) => {
   const error = getErrorInfo(e);
 
-  const utils: HandlerUtils = {};
+  const utils: HandlerUtils = {
+    hasField: (field) => form.getRegisteredFields().includes(field),
+  };
 
   const mergedHandlers = { ...defaultHandlers, ...handlers };
   const handler = error.codes
