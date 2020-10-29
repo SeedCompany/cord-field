@@ -7,6 +7,7 @@ import {
   NormalizedCacheObject,
   Observable,
   RequestHandler,
+  TypePolicies,
 } from '@apollo/client';
 import {
   onError as createErrorLink,
@@ -79,7 +80,13 @@ export const ApolloProvider: FC = ({ children }) => {
     return new ApolloClient({
       cache: new InMemoryCache({
         possibleTypes,
-        typePolicies,
+        // Yes the assertion is necessary. It's because, as of TS 4.0, index
+        // signatures still incorrectly convey that values for missing keys
+        // would still give the expected value instead of undefined, which is
+        // absolutely how JS works. I believe this is getting fixed finally in 4.1.
+        // See: https://github.com/microsoft/TypeScript/pull/39560
+        // eslint-disable-next-line @typescript-eslint/no-unnecessary-type-assertion
+        typePolicies: typePolicies as TypePolicies,
       }),
       link: ApolloLink.from(compact([errorLink, delayLink, httpLink])),
     });
