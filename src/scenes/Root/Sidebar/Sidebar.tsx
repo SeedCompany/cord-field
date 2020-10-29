@@ -78,9 +78,6 @@ export const Sidebar: FC = () => {
         horizontal: 'center',
       }}
     >
-      {canCreatePartner && (
-        <MenuItem onClick={closeAnd(createPartner)}>Partner</MenuItem>
-      )}
       {canCreateProject && (
         <MenuItem onClick={closeAnd(createProject)}>Project</MenuItem>
       )}
@@ -89,6 +86,9 @@ export const Sidebar: FC = () => {
       )}
       {canCreateUser && (
         <MenuItem onClick={closeAnd(createUser)}>Person</MenuItem>
+      )}
+      {canCreatePartner && (
+        <MenuItem onClick={closeAnd(createPartner)}>Partner</MenuItem>
       )}
     </Menu>
   );
