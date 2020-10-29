@@ -23,6 +23,8 @@ type TypePolicies = {
   [K in keyof GqlTypeMap]?: TypePolicy<GqlTypeMap[K]>;
 };
 
+const scriptureKeyFields = ['book', 'chapter', 'verse'] as const;
+
 export const typePolicies: TypePolicies = {
   Language: {
     fields: {
@@ -30,4 +32,13 @@ export const typePolicies: TypePolicies = {
     },
   },
   EthnologueLanguage: { keyFields: false },
+  IanaCountry: { keyFields: ['code'] },
+  TimeZone: { keyFields: ['name'] },
+  IsoCountry: { keyFields: ['alpha3'] },
+  ScriptureReference: {
+    keyFields: scriptureKeyFields,
+  },
+  ScriptureRange: {
+    keyFields: ['start', scriptureKeyFields, 'end', scriptureKeyFields],
+  },
 };
