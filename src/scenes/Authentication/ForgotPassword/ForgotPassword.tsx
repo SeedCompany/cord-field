@@ -13,14 +13,14 @@ export const ForgotPassword = (props: Except<Props, 'onSubmit'>) => {
   const [forgotPassword] = useMutation(ForgotPasswordDocument);
   const [email, setEmail] = useState<string | null>(null);
 
-  const submit: Props['onSubmit'] = async (input) => {
+  const submit: Props['onSubmit'] = async (input, form) => {
     try {
       await forgotPassword({
         variables: input,
       });
       setEmail(input.email);
     } catch (e) {
-      return await handleFormError(e, {
+      return await handleFormError(e, form, {
         // Shouldn't ever be hit
         Default: `Something wasn't right. Try again or contact Support.`,
       });

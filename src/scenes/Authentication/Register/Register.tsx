@@ -22,7 +22,10 @@ export const Register = (props: Except<Props, 'onSubmit'>) => {
     }
   }, [navigate, session, sessionLoading, success]);
 
-  const submit: Props['onSubmit'] = async ({ confirmPassword, ...input }) => {
+  const submit: Props['onSubmit'] = async (
+    { confirmPassword, ...input },
+    form
+  ) => {
     try {
       await register({
         variables: {
@@ -42,7 +45,7 @@ export const Register = (props: Except<Props, 'onSubmit'>) => {
       const returnTo = decodeURIComponent(query.get('returnTo') ?? '/');
       navigate(returnTo, { replace: true });
     } catch (e) {
-      return await handleFormError(e);
+      return await handleFormError(e, form);
     }
   };
 

@@ -1,5 +1,5 @@
 import { ApolloError } from '@apollo/client';
-import { FORM_ERROR, setIn, SubmissionErrors } from 'final-form';
+import { FORM_ERROR, FormApi, setIn, SubmissionErrors } from 'final-form';
 import { identity, mapValues } from 'lodash';
 import { assert } from 'ts-essentials';
 import { Promisable } from 'type-fest';
@@ -113,10 +113,19 @@ export type ErrorHandlers = {
  */
 export type ErrorHandler<E> =
   | ErrorHandlerResult
-  | ((e: E, next: NextHandler<E>) => Promisable<ErrorHandlerResult>);
+  | ((
+      e: E,
+      next: NextHandler<E>,
+      utils: HandlerUtils
+    ) => Promisable<ErrorHandlerResult>);
 
 type NextHandler<E> = (e: E) => Promisable<ErrorHandlerResult>;
 export type ErrorHandlerResult = string | SubmissionErrors | undefined;
+
+interface HandlerUtils {
+  /** Does the form have this field registered? */
+  hasField: (field: string) => boolean;
+}
 
 const expandDotNotation = (input: Record<string, any>) =>
   Object.entries(input).reduce(
@@ -134,8 +143,8 @@ export const renderValidationErrors = (e: ValidationError) =>
  */
 const defaultHandlers: ErrorHandlers = {
   Validation: renderValidationErrors,
-  Input: (e, next) => (e.field ? setIn({}, e.field, e.message) : next(e)),
-  Duplicate: (e) => setIn({}, e.field, e.message),
+  Input: (e, next, { hasField }) =>
+    e.field && hasField(e.field) ? setIn({}, e.field, e.message) : next(e),
 
   // Assume server errors are handled separately
   // Return failure but no error message
@@ -146,8 +155,16 @@ const defaultHandlers: ErrorHandlers = {
 /**
  * Handles the error according to the form error handlers passed in.
  */
-export const handleFormError = async (e: unknown, handlers?: ErrorHandlers) => {
+export const handleFormError = async <T, P>(
+  e: unknown,
+  form: FormApi<T, P>,
+  handlers?: ErrorHandlers
+) => {
   const error = getErrorInfo(e);
+
+  const utils: HandlerUtils = {
+    hasField: (field) => form.getRegisteredFields().includes(field),
+  };
 
   const mergedHandlers = { ...defaultHandlers, ...handlers };
   const handler = error.codes
@@ -156,7 +173,7 @@ export const handleFormError = async (e: unknown, handlers?: ErrorHandlers) => {
     // remove unhandled codes
     .filter(identity)
     // normalize handlers to a standard function shape
-    .map(resolveHandler)
+    .map((h) => resolveHandler(h, utils))
     // In order to build the next function for each handler we need to start
     // from the end and work backwards
     .reverse()
@@ -196,11 +213,11 @@ const getErrorInfo = (e: unknown) => {
 /**
  * Normalize the handler to a function and normalize string results.
  */
-const resolveHandler = <E>(handler: ErrorHandler<E>) => async (
-  error: E,
-  next: NextHandler<E>
-) => {
+const resolveHandler = <E>(
+  handler: ErrorHandler<E>,
+  utils: HandlerUtils
+) => async (error: E, next: NextHandler<E>) => {
   const result =
-    typeof handler === 'function' ? await handler(error, next) : handler;
+    typeof handler === 'function' ? await handler(error, next, utils) : handler;
   return typeof result === 'string' ? { [FORM_ERROR]: result } : result;
 };
