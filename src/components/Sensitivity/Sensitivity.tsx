@@ -11,11 +11,19 @@ const possible: SensitivityType[] = ['Low', 'Medium', 'High'];
 const avgLength = Math.round(meanBy(possible, (s) => s.length));
 
 const useStyles = makeStyles(({ palette, spacing }) => ({
+  flex: {
+    display: 'flex',
+  },
   iconWrapper: {
     display: 'flex',
     alignItems: 'center',
     marginBottom: spacing(),
+    '&$flexed': {
+      marginRight: spacing(0.5),
+      marginBottom: 0,
+    },
   },
+  flexed: {}, // here to pacify TypeScript
   icon: {
     fontSize: 16,
     color: palette.text.secondary,
@@ -56,20 +64,31 @@ const useStyles = makeStyles(({ palette, spacing }) => ({
 
 export interface SensitivityProps {
   value?: SensitivityType;
+  variant?: 'stacked' | 'flex';
   loading?: boolean;
   className?: string;
 }
 
 export const Sensitivity: FC<SensitivityProps> = ({
   value,
+  variant = 'stacked',
   loading,
   className,
 }) => {
   const classes = useStyles();
 
+  const containerClassName = clsx(
+    className && className,
+    variant === 'flex' && classes.flex
+  );
+  const iconWrapperClassName = clsx(
+    classes.iconWrapper,
+    variant === 'flex' && classes.flexed
+  );
+
   return (
-    <div className={className}>
-      <div className={classes.iconWrapper}>
+    <div className={containerClassName}>
+      <div className={iconWrapperClassName}>
         <VerifiedUserOutlined className={classes.icon} />
         <Typography variant="body2">Sensitivity</Typography>
       </div>
