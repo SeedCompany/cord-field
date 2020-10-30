@@ -1,7 +1,7 @@
 import { Breadcrumbs, makeStyles } from '@material-ui/core';
 import React, { FC, ReactNode } from 'react';
+import { Sensitivity } from '../../components/Sensitivity';
 import { Breadcrumb } from '../Breadcrumb';
-import { DisplaySimpleProperty } from '../DisplaySimpleProperty';
 import { ProjectBreadcrumb } from '../ProjectBreadcrumb';
 import { ProjectDetailNavigationFragment } from './ProjectDetailNavigation.generated';
 
@@ -33,11 +33,10 @@ export const ProjectDetailNavigation: FC<ProjectDetailNavigationProps> = (
         {children}
       </Breadcrumbs>
       <div className={classes.properties}>
-        <DisplaySimpleProperty
-          label="Sensitivity"
-          loading={!project}
-          loadingWidth={100}
+        <Sensitivity
           value={project?.sensitivity}
+          loading={!project}
+          variant="flex"
         />
       </div>
     </>
