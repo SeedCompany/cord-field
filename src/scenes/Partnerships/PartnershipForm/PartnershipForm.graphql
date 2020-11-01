@@ -31,6 +31,12 @@ fragment PartnershipForm on Partnership {
           avatarLetters
         }
       }
+      types {
+        value
+      }
+      financialReportingTypes {
+        value
+      }
     }
   }
   financialReportingType {

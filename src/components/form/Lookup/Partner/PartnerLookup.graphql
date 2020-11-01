@@ -19,4 +19,10 @@ fragment PartnerLookupItem on Partner {
       }
     }
   }
+  types {
+    value
+  }
+  financialReportingTypes {
+    value
+  }
 }
