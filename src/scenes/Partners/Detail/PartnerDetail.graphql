@@ -17,4 +17,33 @@ fragment PartnerDetails on Partner {
       avatarLetters
     }
   }
+  pointOfContact {
+    canRead
+    canEdit
+    value {
+      ...UserListItem
+    }
+  }
+  globalInnovationsClient {
+    ...securedBool
+  }
+  pmcEntityCode {
+    ...securedString
+  }
+  active {
+    ...securedBool
+  }
+  types {
+    canRead
+    canEdit
+    value
+  }
+  financialReportingTypes {
+    canRead
+    canEdit
+    value
+  }
+  address {
+    ...securedString
+  }
 }

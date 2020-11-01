@@ -169,9 +169,11 @@ export const LanguageEngagementDetail: FC<EngagementQuery> = ({
                 onClick={() => show(['paraTextRegistryId'])}
                 secured={ptRegistryId}
                 redacted="You do not have permission to view ParaText Registry ID"
-                children={`ParaText Registry ID${
-                  ptRegistryId.value ? `: ${ptRegistryId.value}` : ''
-                }`}
+                children={
+                  ptRegistryId.value &&
+                  `ParaText Registry ID: ${ptRegistryId.value}`
+                }
+                empty={'Enter ParaText Registry ID'}
               />
             </Grid>
             <BooleanProperty
