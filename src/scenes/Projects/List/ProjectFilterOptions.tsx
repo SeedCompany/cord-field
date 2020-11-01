@@ -68,6 +68,13 @@ export const ProjectFilterOptions = () => {
         defaultOption="Show All"
         layout="two-column"
       />
+      <EnumField
+        name="type"
+        label="Type"
+        options={ProjectTypeList}
+        defaultOption="Show All"
+        layout="two-column"
+      />
       <SwitchField
         name="onlyMultipleEngagements"
         label={
