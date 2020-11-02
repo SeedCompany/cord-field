@@ -5,7 +5,7 @@ import { Skeleton } from '@material-ui/lab';
 import clsx from 'clsx';
 import React from 'react';
 import { useParams } from 'react-router';
-import { canEditAny } from '../../../api';
+import { canEditAny, isTypename } from '../../../api';
 import { BooleanProperty } from '../../../components/BooleanProperty';
 import { useDialog } from '../../../components/Dialog';
 import {
@@ -88,10 +88,7 @@ export const LanguageDetail = () => {
   // If the API is working properly, there should be a maximum of 1
   const firstScriptureEngagement = projects?.items
     .flatMap((project) => project.engagements.items)
-    .filter(
-      (engagement): engagement is LanguageFragment =>
-        engagement.__typename === 'LanguageEngagement'
-    )
+    .filter(isTypename<LanguageFragment>('LanguageEngagement'))
     .find(
       (engagement) =>
         engagement.firstScripture.value &&

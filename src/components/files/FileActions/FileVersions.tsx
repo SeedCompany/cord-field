@@ -11,6 +11,7 @@ import {
 } from '@material-ui/core';
 import { Skeleton } from '@material-ui/lab';
 import React, { FC, Fragment } from 'react';
+import { isTypename } from '../../../api';
 import { FileActionItem, PermittedActions } from '../FileActions';
 import {
   FileVersionItem_FileVersion_Fragment as FileVersion,
@@ -50,9 +51,8 @@ export const FileVersions: FC<FileVersionsProps> = (props) => {
   const total = data?.file.children.total;
 
   const versions =
-    data?.file.children.items.filter((item): item is FileVersion => {
-      return item.__typename === 'FileVersion';
-    }) ?? [];
+    data?.file.children.items.filter(isTypename<FileVersion>('FileVersion')) ??
+    [];
 
   const menuActions = actions
     ? Array.isArray(actions)
