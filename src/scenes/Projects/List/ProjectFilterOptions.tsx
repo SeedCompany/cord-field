@@ -5,6 +5,8 @@ import {
   displayStatus,
   ProjectStatus,
   ProjectStatusList,
+  ProjectType,
+  ProjectTypeList,
   Sensitivity,
   SensitivityList,
 } from '../../../api';
@@ -12,6 +14,7 @@ import { EnumField, SwitchField } from '../../../components/form';
 import {
   BooleanParam,
   EnumListParam,
+  EnumParam,
   makeQueryHandler,
   withDefault,
   withKey,
@@ -40,6 +43,7 @@ export const useProjectFilters = makeQueryHandler({
     decode: (value, decoder) =>
       decoder(value)?.map((v) => upperFirst(v) as Sensitivity),
   }),
+  type: EnumParam<ProjectType>(),
   onlyMultipleEngagements: withKey(withDefault(BooleanParam(), false), 'multi'),
   mine: withDefault(BooleanParam(), true),
 });
@@ -61,6 +65,13 @@ export const ProjectFilterOptions = () => {
         label="Sensitivity"
         multiple
         options={SensitivityList}
+        defaultOption="Show All"
+        layout="two-column"
+      />
+      <EnumField
+        name="type"
+        label="Type"
+        options={ProjectTypeList}
         defaultOption="Show All"
         layout="two-column"
       />
