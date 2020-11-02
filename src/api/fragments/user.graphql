@@ -22,10 +22,10 @@ fragment DisplayUser on User {
   about {
     ...securedString
   }
-  organizations {
+  partners {
     items {
       id
-      ...OrganizationListItem
+      ...PartnerListItem
     }
   }
   roles {
