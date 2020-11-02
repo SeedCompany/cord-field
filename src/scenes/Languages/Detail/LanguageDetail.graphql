@@ -61,12 +61,31 @@ fragment LanguageDetail on Language {
     canCreate
     items {
       ...ProjectListItem
+      engagements {
+        items {
+          ...languageProjectEngagement
+        }
+      }
     }
   }
   hasExternalFirstScripture {
     canRead
     canEdit
     value
+  }
+}
+
+fragment languageProjectEngagement on Engagement {
+  id
+  ... on LanguageEngagement {
+    language {
+      value {
+        id
+      }
+    }
+    firstScripture {
+      value
+    }
   }
 }
 
