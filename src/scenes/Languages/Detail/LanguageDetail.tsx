@@ -22,7 +22,10 @@ import { Redacted } from '../../../components/Redacted';
 import { Sensitivity } from '../../../components/Sensitivity';
 import { CalendarDate, listOrPlaceholders } from '../../../util';
 import { EditLanguage } from '../Edit';
-import { LanguageDocument } from './LanguageDetail.generated';
+import {
+  LanguageDocument,
+  LanguageProjectEngagement_LanguageEngagement_Fragment as LanguageFragment,
+} from './LanguageDetail.generated';
 import { LeastOfThese } from './LeastOfThese';
 
 const useStyles = makeStyles(({ spacing }) => ({
@@ -79,7 +82,34 @@ export const LanguageDetail = () => {
     sponsorEstimatedEndDate,
     displayName,
     name,
+    hasExternalFirstScripture,
   } = language ?? {};
+
+  const engagements = projects?.items.reduce(
+    (e: LanguageFragment[], project) => {
+      const projectEngagements = project.engagements.items.reduce(
+        (pe: LanguageFragment[], engagement) => {
+          if (engagement.__typename === 'LanguageEngagement') {
+            return engagement.language.value?.id === languageId
+              ? pe.concat(engagement)
+              : pe;
+          } else {
+            return pe;
+          }
+        },
+        []
+      );
+      return e.concat(projectEngagements);
+    },
+    []
+  );
+
+  const hasFirstScripture = {
+    value:
+      engagements?.some((engagement) => engagement.firstScripture.value) ||
+      hasExternalFirstScripture?.value,
+    canRead: hasExternalFirstScripture?.canRead ?? true,
+  };
 
   const canEditAnyFields = canEditAny(language) || canEditAny(ethnologue);
 
@@ -187,6 +217,13 @@ export const LanguageDetail = () => {
               CalendarDate.toFiscalYear(sponsorEstimatedEndDate.value)
             }
             loading={!language}
+          />
+
+          <BooleanProperty
+            label="First Scripture"
+            redacted="You do not have permission to view whether the language has a first Scripture"
+            data={hasFirstScripture}
+            wrap={(node) => <Grid item>{node}</Grid>}
           />
           <Grid container spacing={3}>
             <Grid item xs={12}>
