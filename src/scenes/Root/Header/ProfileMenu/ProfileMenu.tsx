@@ -10,6 +10,7 @@ import {
 import * as React from 'react';
 import { useDialog } from '../../../../components/Dialog';
 import { MenuItemLink } from '../../../../components/Routing';
+import { useSession } from '../../../../components/Session';
 import { ChangePassword } from '../../../Authentication/ChangePassword';
 
 const useStyles = makeStyles(({ spacing }) => ({
@@ -31,7 +32,9 @@ const skipAutoFocus: any = { disabled: true };
 export const ProfileMenu = (props: Partial<MenuProps>) => {
   const classes = useStyles();
   const { spacing } = useTheme();
+  const { session } = useSession();
   const [changePasswordState, changePassword] = useDialog();
+  const userId = session?.id;
 
   return (
     <>
@@ -53,7 +56,9 @@ export const ProfileMenu = (props: Partial<MenuProps>) => {
           Profile Info
         </Typography>
         <Divider {...skipAutoFocus} />
-        <MenuItemLink to="/logout">Sign Out</MenuItemLink>
+        {userId && (
+          <MenuItemLink to={`/users/${userId}`}>View Profile</MenuItemLink>
+        )}
         <MenuItem
           onClick={(event) => {
             changePassword();
@@ -62,6 +67,7 @@ export const ProfileMenu = (props: Partial<MenuProps>) => {
         >
           Change Password
         </MenuItem>
+        <MenuItemLink to="/logout">Sign Out</MenuItemLink>
       </Menu>
       <ChangePassword {...changePasswordState} />
     </>
