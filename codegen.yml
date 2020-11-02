@@ -35,6 +35,11 @@ generates:
     plugins:
       - ./src/api/enumLists/enumLists.codegen
 
+  # Generate a type map for all of our GQL object types
+  ./src/api/typeMap.generated.ts:
+    plugins:
+      - ./src/api/typeMap.codegen
+
   # Generate TypeScript version of graphql schema
   ./src/api/schema.generated.ts:
     plugins:
