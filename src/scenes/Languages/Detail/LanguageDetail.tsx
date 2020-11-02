@@ -110,11 +110,19 @@ export const LanguageDetail = () => {
     []
   );
 
+  // If the API is working properly, there should be a maximum of 1
+  const firstScriptureEngagement = engagements?.find(
+    (engagement) => engagement.firstScripture.value
+  );
+
+  const firstScripture = {
+    value: firstScriptureEngagement?.firstScripture.value,
+    canRead: firstScriptureEngagement?.firstScripture.canRead,
+  };
+
   const hasFirstScripture = {
-    value:
-      engagements?.some((engagement) => engagement.firstScripture.value) ||
-      hasExternalFirstScripture?.value,
-    canRead: hasExternalFirstScripture?.canRead ?? true,
+    value: firstScripture.value ?? hasExternalFirstScripture?.value,
+    canRead: !!firstScripture.canRead || !!hasExternalFirstScripture?.canRead,
   };
 
   const canEditAnyFields = canEditAny(language) || canEditAny(ethnologue);

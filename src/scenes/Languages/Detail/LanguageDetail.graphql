@@ -85,6 +85,8 @@ fragment languageProjectEngagement on Engagement {
     }
     firstScripture {
       value
+      canRead
+      canEdit
     }
   }
 }
