@@ -91,29 +91,18 @@ export const LanguageDetail = () => {
     hasExternalFirstScripture,
   } = language ?? {};
 
-  const engagements = projects?.items.reduce(
-    (e: LanguageFragment[], project) => {
-      const projectEngagements = project.engagements.items.reduce(
-        (pe: LanguageFragment[], engagement) => {
-          if (engagement.__typename === 'LanguageEngagement') {
-            return engagement.language.value?.id === languageId
-              ? pe.concat(engagement)
-              : pe;
-          } else {
-            return pe;
-          }
-        },
-        []
-      );
-      return e.concat(projectEngagements);
-    },
-    []
-  );
-
   // If the API is working properly, there should be a maximum of 1
-  const firstScriptureEngagement = engagements?.find(
-    (engagement) => engagement.firstScripture.value
-  );
+  const firstScriptureEngagement = projects?.items
+    .flatMap((project) => project.engagements.items)
+    .filter(
+      (engagement): engagement is LanguageFragment =>
+        engagement.__typename === 'LanguageEngagement'
+    )
+    .find(
+      (engagement) =>
+        engagement.firstScripture.value &&
+        engagement.language.value?.id === languageId
+    );
 
   const firstScripture = {
     value: firstScriptureEngagement?.firstScripture.value,
