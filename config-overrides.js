@@ -2,14 +2,19 @@
 const {
   useBabelRc,
   addBundleVisualizer,
-  disableEsLint,
   fixBabelImports,
   override,
 } = require('customize-cra');
 
 module.exports = override(
   useBabelRc(),
-  disableEsLint(),
+  (config) => {
+    // disable eslint
+    config.plugins = config.plugins.filter(
+      (plugin) => plugin.constructor.name !== 'ESLintWebpackPlugin'
+    );
+    return config;
+  },
   fixBabelImports('lodash', {
     libraryDirectory: '',
     camel2DashComponentName: false,
