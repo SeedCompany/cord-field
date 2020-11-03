@@ -16,6 +16,14 @@ import { ProjectBudgetDocument } from './ProjectBudget.generated';
 import { ProjectBudgetRecords } from './ProjectBudgetRecords';
 
 const useStyles = makeStyles(({ breakpoints, spacing }) => ({
+  root: {
+    overflow: 'auto',
+    marginLeft: spacing(-2),
+    padding: spacing(2),
+    '& > *': {
+      marginBottom: spacing(3),
+    },
+  },
   header: {
     display: 'flex',
     justifyContent: 'space-between',
@@ -60,7 +68,7 @@ export const ProjectBudget = () => {
           You do not have permission to view this project's budget
         </Typography>
       ) : (
-        <>
+        <main className={classes.root}>
           <Breadcrumbs>
             <ProjectBreadcrumb data={data?.project} />
             <Breadcrumb to=".">Field Budget</Breadcrumb>
@@ -113,7 +121,7 @@ export const ProjectBudget = () => {
               )}
             </Grid>
           </div>
-        </>
+        </main>
       )}
     </Content>
   );
