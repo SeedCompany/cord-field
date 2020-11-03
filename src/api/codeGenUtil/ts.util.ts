@@ -91,7 +91,10 @@ export const getPropertyAssignment = (
 export const addExportedConst = (
   file: SourceFile,
   declaration: OptionalKind<VariableDeclarationStructure>
-) => file.addVariableStatement(exportedConst(declaration));
+) => {
+  const statement = file.addVariableStatement(exportedConst(declaration));
+  return statement.getDeclarations()[0];
+};
 
 export const exportedConst = (
   declaration: OptionalKind<VariableDeclarationStructure>
@@ -103,9 +106,11 @@ export const exportedConst = (
   trailingTrivia: '\n',
 });
 
-export const writeArray = (
-  writer: CodeBlockWriter,
-  items: ReadonlyArray<ts.Expression | string>
+export const writeStringArray = (items: readonly string[]) =>
+  writeArray(items.map((item) => createStringLiteral(item)));
+
+export const writeArray = (items: ReadonlyArray<ts.Expression | string>) => (
+  writer: CodeBlockWriter
 ) => {
   writer.writeLine('[');
   for (const item of items) {

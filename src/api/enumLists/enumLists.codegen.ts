@@ -1,9 +1,8 @@
 import { GraphQLEnumType } from 'graphql';
 import {
   addExportedConst,
-  createStringLiteral,
   tsMorphPlugin,
-  writeArray,
+  writeStringArray,
 } from '../codeGenUtil/ts.util';
 
 export const plugin = tsMorphPlugin(({ schema, file }) => {
@@ -21,12 +20,7 @@ export const plugin = tsMorphPlugin(({ schema, file }) => {
     addExportedConst(file, {
       name: `${type.name}List`,
       type: `readonly Types.${type.name}[]`,
-      initializer: (writer) => {
-        writeArray(
-          writer,
-          type.getValues().map((val) => createStringLiteral(val.name))
-        );
-      },
+      initializer: writeStringArray(type.getValues().map((val) => val.name)),
     });
   }
 });
