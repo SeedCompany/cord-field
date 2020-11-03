@@ -70,12 +70,16 @@ export const EditPartnership: FC<EditPartnershipProps> = (props) => {
         mouStatus: partnership.mouStatus.value ?? 'NotAttached',
         types: partnership.types.value,
         financialReportingType: partnership.financialReportingType.value,
+        mouStartOverride: partnership.mouStartOverride.value,
+        mouEndOverride: partnership.mouEndOverride.value,
       },
     }),
     [
       partnership.agreementStatus.value,
       partnership.financialReportingType.value,
       partnership.id,
+      partnership.mouEndOverride.value,
+      partnership.mouStartOverride.value,
       partnership.mouStatus.value,
       partnership.types.value,
     ]
