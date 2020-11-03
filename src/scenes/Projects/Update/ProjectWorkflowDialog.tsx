@@ -1,5 +1,5 @@
 import { useMutation } from '@apollo/client';
-import { Grid, Tooltip } from '@material-ui/core';
+import { Grid, Tooltip, Typography } from '@material-ui/core';
 import React from 'react';
 import { Except } from 'type-fest';
 import { displayProjectStep, ProjectStep, TransitionType } from '../../../api';
@@ -85,6 +85,17 @@ export const ProjectWorkflowDialog = ({
             </Grid>
           </Tooltip>
         ))}
+        {project.step.transitions.length === 0 && (
+          <>
+            <Typography color="textSecondary" paragraph>
+              The status of this project is unable to be changed.
+            </Typography>
+            <Typography variant="body2" color="textSecondary">
+              You do not have permission to change to any of the next available
+              steps or the project has reached its terminal status.
+            </Typography>
+          </>
+        )}
       </Grid>
     </DialogForm>
   );
