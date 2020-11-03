@@ -60,7 +60,7 @@ generates:
   # This allows operations to be cross-referenced (i.e. `refetchQueries`) without needing to rely on magic strings
   ./src/api/operations.generated.ts:
     plugins:
-      - named-operations-object
+      - ./src/api/operations.codegen
     config:
       identifierName: GQLOperations
 
