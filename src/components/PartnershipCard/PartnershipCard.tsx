@@ -12,9 +12,10 @@ import React, { FC } from 'react';
 import {
   displayFinancialReportingType,
   displayPartnershipStatus,
+  securedDateRange,
 } from '../../api';
 import { DisplaySimpleProperty } from '../DisplaySimpleProperty';
-import { useDateTimeFormatter } from '../Formatters';
+import { useDateFormatter, useDateTimeFormatter } from '../Formatters';
 import { PartnershipCardFragment } from './PartnershipCard.generated';
 
 const useStyles = makeStyles(({ spacing }) => ({
@@ -38,6 +39,12 @@ export const PartnershipCard: FC<PartnershipCardProps> = ({
 }) => {
   const classes = useStyles();
   const formatDateTime = useDateTimeFormatter();
+  const formatDate = useDateFormatter();
+  const dateRangeString =
+    partnership &&
+    formatDate.range(
+      securedDateRange(partnership.mouStart, partnership.mouEnd).value
+    );
 
   return (
     <Card className={className}>
@@ -86,6 +93,14 @@ export const PartnershipCard: FC<PartnershipCardProps> = ({
             <DisplaySimpleProperty
               label="Mou Status"
               value={displayPartnershipStatus(partnership?.mouStatus.value)}
+              loading={!partnership}
+              loadingWidth="40%"
+            />
+          </Grid>
+          <Grid item>
+            <DisplaySimpleProperty
+              label="Mou Start - End"
+              value={dateRangeString}
               loading={!partnership}
               loadingWidth="40%"
             />
