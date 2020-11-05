@@ -17,4 +17,5 @@ fragment LanguageListItem on Language {
   population {
     value
   }
+  sensitivity
 }
