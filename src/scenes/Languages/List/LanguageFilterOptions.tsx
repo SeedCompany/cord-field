@@ -18,6 +18,8 @@ export const useLanguageFilters = makeQueryHandler({
       decoder(value)?.map((v) => upperFirst(v) as Sensitivity),
   }),
   leastOfThese: withDefault(BooleanParam(), false),
+  isSignLanguage: withDefault(BooleanParam(), false),
+  isDialect: withDefault(BooleanParam(), false),
 });
 
 export const LanguageFilterOptions = () => {
@@ -35,6 +37,8 @@ export const LanguageFilterOptions = () => {
         name="leastOfThese"
         label="Only Show Least Of These Partnerships"
       />
+      <SwitchField name="isSignLanguage" label="Only Show Sign Languages" />
+      <SwitchField name="isDialect" label="Only Show Dialects" />
     </>
   );
 };
