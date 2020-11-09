@@ -19,6 +19,7 @@ import {
   useDateFormatter,
   useNumberFormatter,
 } from '../../../components/Formatters';
+import { LocationCard } from '../../../components/LocationCard';
 import { ProjectListItemCard } from '../../../components/ProjectListItemCard';
 import { Redacted } from '../../../components/Redacted';
 import { Sensitivity } from '../../../components/Sensitivity';
@@ -222,6 +223,16 @@ export const LanguageDetail = () => {
                   </Tooltip>
                 </Grid>
               </Grid>
+              {listOrPlaceholders(locations?.items, 3).map(
+                (location, index) => (
+                  <LocationCard
+                    key={location?.id ?? index}
+                    location={location}
+                    className={classes.listItem}
+                    loading={!location}
+                  />
+                )
+              )}
               {locations?.items.length === 0 ? (
                 <Typography color="textSecondary">
                   This language does not have any locations yet

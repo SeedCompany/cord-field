@@ -53,7 +53,7 @@ fragment LanguageDetail on Language {
     canRead
     canCreate
     items {
-      ...DisplayLocation
+      ...LocationCard
     }
   }
   projects {
