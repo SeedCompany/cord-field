@@ -10,6 +10,7 @@ import clsx from 'clsx';
 import { FC } from 'react';
 import * as React from 'react';
 import { displayLocationType } from '../../api';
+import { ErrorButton } from '../ErrorButton';
 import { FormattedDateTime } from '../Formatters';
 import { Redacted } from '../Redacted';
 import { ButtonLink, CardActionAreaLink } from '../Routing';
@@ -26,6 +27,9 @@ const useStyles = makeStyles(({ spacing }) => {
       justifyContent: 'space-between',
       paddingRight: spacing(2), // make symmetrical with button padding
     },
+    createdAt: {
+      marginLeft: 'auto',
+    },
   };
 });
 
@@ -33,12 +37,14 @@ export interface LocationCardProps {
   className?: string;
   loading?: boolean;
   location?: LocationCardFragment;
+  deleteAction?: () => void;
 }
 
 export const LocationCard: FC<LocationCardProps> = ({
   location,
   className,
   loading,
+  deleteAction,
 }) => {
   const { id, name, locationType, createdAt } = location ?? {};
   const classes = useStyles();
@@ -72,14 +78,23 @@ export const LocationCard: FC<LocationCardProps> = ({
           </Typography>
         </CardContent>
       </CardActionAreaLink>
-      <CardActions className={classes.cardActions}>
+      <CardActions>
         <ButtonLink to={`/locations/${id}`} color="primary" disabled={loading}>
           View Location
         </ButtonLink>
+        {deleteAction && (
+          <ErrorButton disabled={loading} onClick={deleteAction}>
+            Delete
+          </ErrorButton>
+        )}
         {loading ? (
-          <Skeleton width="25%" />
+          <Skeleton width="25%" className={classes.createdAt} />
         ) : (
-          <Typography variant="caption" color="textSecondary">
+          <Typography
+            variant="caption"
+            color="textSecondary"
+            className={classes.createdAt}
+          >
             Created <FormattedDateTime date={createdAt} />
           </Typography>
         )}

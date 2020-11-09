@@ -1,4 +1,4 @@
-import { useQuery } from '@apollo/client';
+import { useMutation, useQuery } from '@apollo/client';
 import { Grid, makeStyles, Tooltip, Typography } from '@material-ui/core';
 import { Add, Edit } from '@material-ui/icons';
 import { Skeleton } from '@material-ui/lab';
@@ -26,7 +26,10 @@ import { Sensitivity } from '../../../components/Sensitivity';
 import { CalendarDate, listOrPlaceholders } from '../../../util';
 import { EditLanguage } from '../Edit';
 import { AddLocationToLanguageForm } from '../Edit/AddLocationToLanguageForm';
-import { LanguageDocument } from './LanguageDetail.generated';
+import {
+  LanguageDocument,
+  RemoveLocationFromLanguageDocument,
+} from './LanguageDetail.generated';
 import { LeastOfThese } from './LeastOfThese';
 
 const useStyles = makeStyles(({ spacing }) => ({
@@ -90,6 +93,10 @@ export const LanguageDetail = () => {
 
   const formatDate = useDateFormatter();
   const formatNumber = useNumberFormatter();
+
+  const [removeLocationFromLang] = useMutation(
+    RemoveLocationFromLanguageDocument
+  );
 
   return (
     <main className={classes.root}>
@@ -233,6 +240,14 @@ export const LanguageDetail = () => {
                     location={location}
                     className={classes.listItem}
                     loading={!location}
+                    deleteAction={() =>
+                      removeLocationFromLang({
+                        variables: {
+                          languageId: language?.id || '',
+                          locationId: location?.id || '',
+                        },
+                      })
+                    }
                   />
                 )
               )}

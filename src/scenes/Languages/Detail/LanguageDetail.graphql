@@ -64,3 +64,10 @@ fragment LanguageDetail on Language {
     }
   }
 }
+
+mutation RemoveLocationFromLanguage($languageId: ID!, $locationId: ID!) {
+  removeLocationFromLanguage(languageId: $languageId, locationId: $locationId) {
+    ...LanguageDetail
+    ...LanguageForm
+  }
+}
