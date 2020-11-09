@@ -10,8 +10,8 @@ import clsx from 'clsx';
 import { FC } from 'react';
 import * as React from 'react';
 import { displayLocationType } from '../../api';
-import { ErrorButton } from '../ErrorButton';
 import { FormattedDateTime } from '../Formatters';
+import { ProgressButton } from '../ProgressButton';
 import { Redacted } from '../Redacted';
 import { ButtonLink, CardActionAreaLink } from '../Routing';
 import { LocationCardFragment } from './LocationCard.generated';
@@ -38,6 +38,7 @@ export interface LocationCardProps {
   loading?: boolean;
   location?: LocationCardFragment;
   deleteAction?: () => void;
+  loadingDelete?: boolean;
 }
 
 export const LocationCard: FC<LocationCardProps> = ({
@@ -45,6 +46,7 @@ export const LocationCard: FC<LocationCardProps> = ({
   className,
   loading,
   deleteAction,
+  loadingDelete,
 }) => {
   const { id, name, locationType, createdAt } = location ?? {};
   const classes = useStyles();
@@ -78,14 +80,19 @@ export const LocationCard: FC<LocationCardProps> = ({
           </Typography>
         </CardContent>
       </CardActionAreaLink>
-      <CardActions>
+      <CardActions disableSpacing>
         <ButtonLink to={`/locations/${id}`} color="primary" disabled={loading}>
           View Location
         </ButtonLink>
         {deleteAction && (
-          <ErrorButton disabled={loading} onClick={deleteAction}>
+          <ProgressButton
+            disabled={loading}
+            onClick={deleteAction}
+            color="error"
+            progress={loadingDelete}
+          >
             Delete
-          </ErrorButton>
+          </ProgressButton>
         )}
         {loading ? (
           <Skeleton width="25%" className={classes.createdAt} />

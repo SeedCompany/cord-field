@@ -94,7 +94,7 @@ export const LanguageDetail = () => {
   const formatDate = useDateFormatter();
   const formatNumber = useNumberFormatter();
 
-  const [removeLocationFromLang] = useMutation(
+  const [removeLocationFromLang, { loading: loadingRemove }] = useMutation(
     RemoveLocationFromLanguageDocument
   );
 
@@ -240,6 +240,7 @@ export const LanguageDetail = () => {
                     location={location}
                     className={classes.listItem}
                     loading={!location}
+                    loadingDelete={loadingRemove}
                     deleteAction={() =>
                       removeLocationFromLang({
                         variables: {
