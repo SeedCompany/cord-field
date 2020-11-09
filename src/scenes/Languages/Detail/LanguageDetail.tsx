@@ -25,6 +25,7 @@ import { Redacted } from '../../../components/Redacted';
 import { Sensitivity } from '../../../components/Sensitivity';
 import { CalendarDate, listOrPlaceholders } from '../../../util';
 import { EditLanguage } from '../Edit';
+import { AddLocationToLanguageForm } from '../Edit/AddLocationToLanguageForm';
 import { LanguageDocument } from './LanguageDetail.generated';
 import { LeastOfThese } from './LeastOfThese';
 
@@ -65,6 +66,7 @@ export const LanguageDetail = () => {
   });
 
   const [editState, edit] = useDialog();
+  const [locationFormState, openLocationForm] = useDialog();
 
   const language = data?.language;
   const {
@@ -217,6 +219,7 @@ export const LanguageDetail = () => {
                           ? undefined
                           : classes.hidden
                       }
+                      onClick={openLocationForm}
                     >
                       <Add />
                     </Fab>
@@ -269,6 +272,12 @@ export const LanguageDetail = () => {
 
           {language ? (
             <EditLanguage language={language} {...editState} />
+          ) : null}
+          {language ? (
+            <AddLocationToLanguageForm
+              languageId={language.id}
+              {...locationFormState}
+            />
           ) : null}
         </>
       )}
