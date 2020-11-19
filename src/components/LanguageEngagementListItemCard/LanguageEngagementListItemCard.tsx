@@ -114,7 +114,7 @@ export const LanguageEngagementListItemCard: FC<LanguageEngagementListItemCardPr
             />
             <DisplaySimpleProperty
               label="Status"
-              value={displayEngagementStatus(status)}
+              value={displayEngagementStatus(status.value)}
               wrap={(node) => <Grid item>{node}</Grid>}
             />
           </Grid>

@@ -1,6 +1,9 @@
 fragment LanguageEngagementListItem on LanguageEngagement {
   id
-  status
+  status {
+    value
+    canRead
+  }
   language {
     value {
       name {

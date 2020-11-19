@@ -1,7 +1,10 @@
 fragment InternshipEngagementDetail on InternshipEngagement {
   id
   createdAt
-  status
+  status {
+    value
+    canRead
+  }
   modifiedAt
   intern {
     value {

@@ -10,7 +10,10 @@ export const InternshipEngagementListItemCard = () => (
   <Card
     id="123123"
     projectId="123123"
-    status={text('status', 'InDevelopment') as EngagementStatus}
+    status={{
+      value: text('status', 'InDevelopment') as EngagementStatus,
+      canRead: true,
+    }}
     position={{
       value: 'LeadershipDevelopment',
     }}

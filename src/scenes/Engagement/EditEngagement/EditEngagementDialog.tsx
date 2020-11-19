@@ -3,9 +3,7 @@ import { pick, startCase } from 'lodash';
 import React, { ComponentType, FC, useMemo } from 'react';
 import { Except, Merge } from 'type-fest';
 import {
-  displayEngagementStatus,
   displayInternPosition,
-  EngagementStatusList,
   InternshipEngagementPositionList,
   MethodologyToApproach,
   UpdateInternshipEngagement,
@@ -24,7 +22,6 @@ import {
   SubmitError,
   TextField,
 } from '../../../components/form';
-import { AutocompleteField } from '../../../components/form/AutocompleteField';
 import { LocationField, UserField } from '../../../components/form/Lookup';
 import { UserLookupItemFragment } from '../../../components/form/Lookup/User/UserLookup.generated';
 import { ExtractStrict, many, Many } from '../../../util';
@@ -35,7 +32,7 @@ import {
   UpdateLanguageEngagementDocument,
 } from './EditEngagementDialog.generated';
 
-type Engagement = InternshipEngagement | LanguageEngagement;
+export type Engagement = InternshipEngagement | LanguageEngagement;
 
 export type EditableEngagementField = ExtractStrict<
   keyof UpdateInternshipEngagement | keyof UpdateLanguageEngagement,
@@ -51,7 +48,6 @@ export type EditableEngagementField = ExtractStrict<
   | 'mentorId'
   | 'firstScripture'
   | 'lukePartnership'
-  | 'status'
   | 'paraTextRegistryId'
 >;
 
@@ -123,17 +119,6 @@ const fieldMapping: Record<
   lukePartnership: ({ props }) => (
     <CheckboxField {...props} label="Luke Partnership" />
   ),
-  status: ({ props }) => (
-    <AutocompleteField
-      label="Engagement Status"
-      required
-      {...props}
-      options={EngagementStatusList}
-      getOptionLabel={displayEngagementStatus}
-      variant="outlined"
-      autoComplete
-    />
-  ),
   paraTextRegistryId: ({ props }) => (
     <TextField {...props} label="ParaText Registry ID" />
   ),
@@ -192,7 +177,6 @@ export const EditEngagementDialog: FC<EditEngagementDialogProps> = ({
       completeDate: engagement.completeDate.value,
       disbursementCompleteDate: engagement.disbursementCompleteDate.value,
       communicationsCompleteDate: engagement.communicationsCompleteDate.value,
-      status: engagement.status,
       ...(engagement.__typename === 'LanguageEngagement'
         ? {
             lukePartnership: engagement.lukePartnership.value,

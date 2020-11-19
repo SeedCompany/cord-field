@@ -114,7 +114,7 @@ export const InternshipEngagementListItemCard: FC<InternshipEngagementListItemCa
             <Grid item>
               <DisplaySimpleProperty
                 label="Status"
-                value={displayEngagementStatus(props.status)}
+                value={displayEngagementStatus(props.status.value)}
               />
             </Grid>
             <Grid item>
@@ -145,10 +145,11 @@ export const InternshipEngagementListItemCard: FC<InternshipEngagementListItemCa
 };
 
 const getEndDate = (eng: InternshipEngagementListItemFragment) => {
-  const terminal = eng.status !== 'InDevelopment' && eng.status !== 'Active';
+  const status = eng.status.value;
+  const terminal = status !== 'InDevelopment' && status !== 'Active';
   if (terminal && eng.completeDate.value) {
     return {
-      label: displayEngagementStatus(eng.status) + ' Date',
+      label: displayEngagementStatus(status) + ' Date',
       value: eng.completeDate.value,
     };
   }
@@ -156,7 +157,7 @@ const getEndDate = (eng: InternshipEngagementListItemFragment) => {
   if (!endDate) {
     return null;
   }
-  if (eng.status === 'InDevelopment') {
+  if (status === 'InDevelopment') {
     return { label: 'End Date', value: endDate };
   }
   const revised = endDate !== eng.initialEndDate.value;

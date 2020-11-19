@@ -35,7 +35,9 @@ import { CeremonyCard } from '../CeremonyCard';
 import {
   EditableEngagementField,
   EditEngagementDialog,
+  Engagement,
 } from '../EditEngagement/EditEngagementDialog';
+import { EngagementWorkflowDialog } from '../EditEngagement/EngagementWorkflowDialog';
 import { EngagementQuery } from '../Engagement.generated';
 import { useUploadEngagementFile } from '../Files';
 
@@ -65,6 +67,9 @@ export const LanguageEngagementDetail: FC<EngagementQuery> = ({
 
   const [editState, show, editField] = useDialog<
     Many<EditableEngagementField>
+  >();
+  const [workflowState, openWorkflow, workflowEngagement] = useDialog<
+    Engagement
   >();
 
   const formatDate = useDateFormatter();
@@ -150,9 +155,12 @@ export const LanguageEngagementDetail: FC<EngagementQuery> = ({
           </Grid>
           <Grid item container spacing={1} alignItems="center">
             <Grid item>
-              <DataButton onClick={() => show('status')}>
-                {displayEngagementStatus(engagement.status)}
-              </DataButton>
+              <DataButton
+                secured={engagement.status}
+                redacted="You do not have permission to view the engagement's status"
+                onClick={() => openWorkflow(engagement)}
+                children={displayEngagementStatus}
+              />
             </Grid>
             <Grid item>
               <DataButton
@@ -297,6 +305,12 @@ export const LanguageEngagementDetail: FC<EngagementQuery> = ({
         engagement={engagement}
         editFields={editField}
       />
+      {workflowEngagement && (
+        <EngagementWorkflowDialog
+          {...workflowState}
+          engagement={workflowEngagement}
+        />
+      )}
     </>
   );
 };
