@@ -5,7 +5,7 @@ import type {
   KeyFieldsFunction,
 } from '@apollo/client/cache/inmemory/policies';
 import type { GqlTypeMap } from '../typeMap.generated';
-import { Scalars } from '..';
+import type { ProjectListInput, Query } from '..';
 
 type FieldPolicies<T> = {
   [K in keyof T]?: FieldPolicy<T[K]> | FieldReadFunction<T[K]>;
@@ -21,30 +21,29 @@ export interface TypePolicy<T> {
   fields?: FieldPolicies<T>;
 }
 
+type GqlTypeMapAndQueries = GqlTypeMap & { Query: Query };
+
 type TypePolicies = {
-  [K in keyof GqlTypeMap]?: TypePolicy<GqlTypeMap[K]>;
+  [K in keyof GqlTypeMapAndQueries]?: TypePolicy<GqlTypeMapAndQueries[K]>;
 };
 
 const scriptureKeyFields = ['book', 'chapter', 'verse'] as const;
 
-interface ItemOutput<Item> {
-  readonly __typename: any;
-  readonly items: Item[];
-  readonly total: Scalars['Int'];
-  readonly hasMore: Scalars['Boolean'];
+type PaginatedListInput = Exclude<ProjectListInput, 'filters'>;
+interface PaginatedListArgs {
+  input?: PaginatedListInput | null;
 }
-
-type IncomingPageItemsMerge = <Item>(
-  existing: ItemOutput<Item> | undefined,
-  incoming: ItemOutput<Item>,
-  options: FieldFunctionOptions
-) => ItemOutput<Item>;
-
-const mergeIncomingPageItems: IncomingPageItemsMerge = (
-  existing,
-  incoming,
-  { args }
-) => {
+interface PaginatedList<Item> {
+  readonly __typename?: string;
+  readonly items: readonly Item[];
+  readonly total: number;
+  readonly hasMore: boolean;
+}
+const mergeIncomingPageItems = <List extends PaginatedList<unknown>>(
+  existing: List | undefined,
+  incoming: List,
+  { args }: FieldFunctionOptions<PaginatedListArgs>
+): List => {
   const count = args?.input?.count;
   const page = args?.input?.page;
   const DEFAULT_COUNT = 10;
