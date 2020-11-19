@@ -55,7 +55,10 @@ fragment LanguageEngagementDetail on LanguageEngagement {
     }
   }
   modifiedAt
-  status
+  status {
+    value
+    canRead
+  }
   ceremony {
     ...CeremonyCard
   }

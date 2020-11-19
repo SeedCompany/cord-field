@@ -192,7 +192,7 @@ export const EditEngagementDialog: FC<EditEngagementDialogProps> = ({
       completeDate: engagement.completeDate.value,
       disbursementCompleteDate: engagement.disbursementCompleteDate.value,
       communicationsCompleteDate: engagement.communicationsCompleteDate.value,
-      status: engagement.status,
+      status: engagement.status.value,
       ...(engagement.__typename === 'LanguageEngagement'
         ? {
             lukePartnership: engagement.lukePartnership.value,

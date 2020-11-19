@@ -134,7 +134,7 @@ export const InternshipEngagementDetail: FC<EngagementQuery> = ({
             <Grid item container spacing={1} alignItems="center">
               <Grid item>
                 <DataButton onClick={() => show('status')}>
-                  {displayEngagementStatus(engagement.status)}
+                  {displayEngagementStatus(engagement.status.value)}
                 </DataButton>
               </Grid>
               <Grid item>

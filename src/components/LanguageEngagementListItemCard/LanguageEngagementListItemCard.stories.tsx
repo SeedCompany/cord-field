@@ -9,7 +9,10 @@ export const LanguageEngagementListItemCard = () => (
   <Card
     id="123123"
     projectId="123123"
-    status={text('status', 'InDevelopment') as EngagementStatus}
+    status={{
+      value: text('status', 'InDevelopment') as EngagementStatus,
+      canRead: true,
+    }}
     language={{
       value: {
         name: { value: text('name', 'English') },
