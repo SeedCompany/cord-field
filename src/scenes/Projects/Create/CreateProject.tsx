@@ -2,12 +2,10 @@ import { useMutation } from '@apollo/client';
 import { useSnackbar } from 'notistack';
 import React from 'react';
 import { Except } from 'type-fest';
+import { ProjectListItemFragmentDoc } from '../../../components/ProjectListItemCard/ProjectListItem.generated';
 import { ButtonLink } from '../../../components/Routing';
 import { addItemToList } from '../../../util';
-import {
-  CreateProjectDocument,
-  NewProjectFragmentDoc,
-} from './CreateProject.generated';
+import { CreateProjectDocument } from './CreateProject.generated';
 import {
   CreateProjectForm,
   CreateProjectFormProps as Props,
@@ -17,7 +15,7 @@ export const CreateProject = (props: Except<Props, 'onSubmit'>) => {
   const [createProject] = useMutation(CreateProjectDocument, {
     update: addItemToList(
       'projects',
-      NewProjectFragmentDoc,
+      ProjectListItemFragmentDoc,
       (data) => data.createProject.project
     ),
   });

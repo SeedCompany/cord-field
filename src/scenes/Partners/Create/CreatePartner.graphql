@@ -1,12 +1,12 @@
 mutation CreatePartner($input: CreatePartnerInput!) {
   createPartner(input: $input) {
     partner {
-      ...NewPartner
+      id
+      organization { value {
+        name { value }
+      }}
+      ...PartnerListItem
+      ...PartnerLookupItem
     }
   }
-}
-
-fragment NewPartner on Partner {
-  id
-  ...PartnerLookupItem
 }

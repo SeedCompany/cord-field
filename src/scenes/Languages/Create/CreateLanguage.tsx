@@ -3,6 +3,7 @@ import { useSnackbar } from 'notistack';
 import React from 'react';
 import { Except } from 'type-fest';
 import { CreateLanguage as CreateLanguageType } from '../../../api';
+import { LanguageListItemFragmentDoc } from '../../../components/LanguageListItemCard/LanguageListItem.generated';
 import { ButtonLink } from '../../../components/Routing';
 import { addItemToList, CalendarDate } from '../../../util';
 import {
@@ -10,10 +11,7 @@ import {
   LanguageFormProps,
   LanguageFormValues,
 } from '../LanguageForm';
-import {
-  CreateLanguageDocument,
-  NewLanguageFragmentDoc,
-} from './CreateLanguage.generated';
+import { CreateLanguageDocument } from './CreateLanguage.generated';
 
 export type CreateLanguageProps = Except<
   LanguageFormProps<LanguageFormValues<CreateLanguageType>>,
@@ -23,7 +21,7 @@ export const CreateLanguage = (props: CreateLanguageProps) => {
   const [createLang] = useMutation(CreateLanguageDocument, {
     update: addItemToList(
       'languages',
-      NewLanguageFragmentDoc,
+      LanguageListItemFragmentDoc,
       (data) => data.createLanguage.language
     ),
   });

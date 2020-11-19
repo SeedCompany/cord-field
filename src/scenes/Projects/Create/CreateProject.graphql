@@ -1,18 +1,9 @@
 mutation CreateProject($input: CreateProjectInput!) {
   createProject(input: $input) {
     project {
-      ...NewProject
+      id
+      name { value }
+      ...ProjectListItem
     }
   }
-}
-
-fragment NewProject on Project {
-  id
-  name {
-    value
-    canRead
-    canEdit
-  }
-  type
-  createdAt
 }

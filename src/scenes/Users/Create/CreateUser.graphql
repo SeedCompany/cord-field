@@ -1,12 +1,11 @@
 mutation CreatePerson($input: CreatePersonInput!) {
   createPerson(input: $input) {
     user {
-      ...NewUser
+      id
+      fullName
+      ...DisplayUser
+      ...UserLookupItem
+      ...UserListItem
     }
   }
-}
-
-fragment NewUser on User {
-  ...DisplayUser
-  ...UserLookupItem
 }

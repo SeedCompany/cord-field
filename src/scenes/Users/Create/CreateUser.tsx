@@ -4,12 +4,12 @@ import React from 'react';
 import { Except } from 'type-fest';
 import { CreatePersonInput } from '../../../api';
 import { ButtonLink } from '../../../components/Routing';
+import { UserListItemFragmentDoc } from '../../../components/UserListItemCard/UserListItem.generated';
 import { addItemToList } from '../../../util';
 import { UserForm, UserFormProps } from '../UserForm';
 import {
   CreatePersonDocument,
   CreatePersonMutation,
-  NewUserFragmentDoc,
 } from './CreateUser.generated';
 
 export type CreateUserProps = Except<
@@ -24,7 +24,7 @@ export const CreateUser = (props: CreateUserProps) => {
   const [createPerson] = useMutation(CreatePersonDocument, {
     update: addItemToList(
       'users',
-      NewUserFragmentDoc,
+      UserListItemFragmentDoc,
       (data) => data.createPerson.user
     ),
   });
