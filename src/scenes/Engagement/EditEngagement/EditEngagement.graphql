@@ -9,4 +9,12 @@ fragment EditEngagement on Engagement {
     canRead
     canEdit
   }
+  status {
+    transitions {
+      label
+      type
+      to
+    }
+    canEdit
+  }
 }
