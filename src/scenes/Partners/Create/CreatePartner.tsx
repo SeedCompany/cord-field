@@ -2,8 +2,9 @@ import { useMutation } from '@apollo/client';
 import { useSnackbar } from 'notistack';
 import React from 'react';
 import { Except } from 'type-fest';
-import { GQLOperations } from '../../../api';
+import { PartnerListItemFragmentDoc } from '../../../components/PartnerListItemCard/PartnerListItemCard.generated';
 import { ButtonLink } from '../../../components/Routing';
+import { addItemToList } from '../../../util';
 import {
   CreatePartnerDocument,
   CreatePartnerMutation,
@@ -16,7 +17,13 @@ type CreatePartnerProps = Except<
 >;
 
 export const CreatePartner = (props: CreatePartnerProps) => {
-  const [createPartner] = useMutation(CreatePartnerDocument);
+  const [createPartner] = useMutation(CreatePartnerDocument, {
+    update: addItemToList(
+      'partners',
+      PartnerListItemFragmentDoc,
+      (data) => data.createPartner.partner
+    ),
+  });
   const { enqueueSnackbar } = useSnackbar();
 
   return (
@@ -44,7 +51,6 @@ export const CreatePartner = (props: CreatePartnerProps) => {
               },
             },
           },
-          refetchQueries: [GQLOperations.Query.Partners],
         });
         return data!.createPartner.partner;
       }}

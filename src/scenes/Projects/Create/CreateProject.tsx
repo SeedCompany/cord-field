@@ -2,8 +2,9 @@ import { useMutation } from '@apollo/client';
 import { useSnackbar } from 'notistack';
 import React from 'react';
 import { Except } from 'type-fest';
-import { GQLOperations } from '../../../api';
+import { ProjectListItemFragmentDoc } from '../../../components/ProjectListItemCard/ProjectListItem.generated';
 import { ButtonLink } from '../../../components/Routing';
+import { addItemToList } from '../../../util';
 import { CreateProjectDocument } from './CreateProject.generated';
 import {
   CreateProjectForm,
@@ -11,12 +12,17 @@ import {
 } from './CreateProjectForm';
 
 export const CreateProject = (props: Except<Props, 'onSubmit'>) => {
-  const [createProject] = useMutation(CreateProjectDocument);
+  const [createProject] = useMutation(CreateProjectDocument, {
+    update: addItemToList(
+      'projects',
+      ProjectListItemFragmentDoc,
+      (data) => data.createProject.project
+    ),
+  });
   const { enqueueSnackbar } = useSnackbar();
   const submit: Props['onSubmit'] = async (input) => {
     const res = await createProject({
       variables: { input },
-      refetchQueries: [GQLOperations.Query.ProjectList],
     });
     const project = res.data!.createProject.project;
 

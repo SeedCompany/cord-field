@@ -1,8 +1,11 @@
 mutation CreatePerson($input: CreatePersonInput!) {
   createPerson(input: $input) {
     user {
+      id
+      fullName
       ...DisplayUser
       ...UserLookupItem
+      ...UserListItem
     }
   }
 }

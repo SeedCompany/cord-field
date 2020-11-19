@@ -2,12 +2,8 @@ mutation createLanguage($input: CreateLanguageInput!) {
   createLanguage(input: $input) {
     language {
       id
-      name {
-        value
-        canRead
-        canEdit
-      }
-      createdAt
+      name { value }
+      ...LanguageListItem
     }
   }
 }
