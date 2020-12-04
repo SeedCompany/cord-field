@@ -2,6 +2,8 @@ import { startCase } from 'lodash';
 import {
   EngagementStatus,
   FinancialReportingType,
+  InternshipDomain,
+  InternshipProgram,
   PartnershipAgreementStatus,
   ProductApproach,
   ProjectStatus,
@@ -11,7 +13,7 @@ import { ProductTypes } from '../scenes/Products/ProductForm/constants';
 import { Nullable } from '../util';
 import { MethodologyToApproach } from './approach';
 import {
-  InternshipEngagementPosition,
+  InternshipPosition,
   ProductMedium,
   ProductMethodology,
   ProductPurpose,
@@ -36,9 +38,9 @@ export const displayRole = displayEnum<Role>();
 export const displayRoles = (roles: readonly Role[]) =>
   roles.map(displayRole).join(', ');
 
-export const displayInternPosition = displayEnum<
-  InternshipEngagementPosition
->();
+export const displayInternPosition = displayEnum<InternshipPosition>();
+export const displayInternProgram = displayEnum<InternshipProgram>();
+export const displayInternDomain = displayEnum<InternshipDomain>();
 export const PartnershipStatuses: PartnershipAgreementStatus[] = [
   'NotAttached',
   'AwaitingSignature',
