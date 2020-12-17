@@ -13,11 +13,17 @@ export const ApproachMethodologies: Record<
   ProductMethodology[]
 > = {
   Written: ['Paratext', 'OtherWritten'],
-  OralTranslation: ['Render', 'OtherOralTranslation'],
+  OralTranslation: [
+    'Render',
+    'Audacity',
+    'AdobeAudition',
+    'OtherOralTranslation',
+  ],
   OralStories: [
-    'BibleStories',
-    'BibleStorying',
+    'StoryTogether',
+    'SeedCompanyMethod',
     'OneStory',
+    'Craft2Tell',
     'OtherOralStories',
   ],
   Visual: ['Film', 'SignLanguage', 'OtherVisual'],
