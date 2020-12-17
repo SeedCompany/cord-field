@@ -1,6 +1,7 @@
 import { number, object, select, text } from '@storybook/addon-knobs';
 import { DateTime } from 'luxon';
 import * as React from 'react';
+import { ProductMethodologyList } from '../../api';
 import {
   newTestament,
   oldTestament,
@@ -31,19 +32,8 @@ const derivativeScriptureProducts = [
 const getProduct = () => {
   const methodologyValue = select(
     'Methodology',
-    [
-      'Paratext',
-      'OtherWritten',
-      'Render',
-      'OtherOralTranslation',
-      'BibleStories',
-      'OneStory',
-      'OtherOralStories',
-      'Film',
-      'SignLanguage',
-      'OtherVisual',
-    ],
-    'Paratext'
+    ProductMethodologyList,
+    ProductMethodologyList[0]
   );
 
   const getScriptureRange = () => {
