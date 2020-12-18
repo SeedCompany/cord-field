@@ -2,7 +2,6 @@ import LuxonUtils from '@date-io/luxon';
 import { CssBaseline, ThemeProvider } from '@material-ui/core';
 import { LocalizationProvider } from '@material-ui/pickers';
 import * as React from 'react';
-import { BrowserRouter } from 'react-router-dom';
 import { ApolloProvider } from './api';
 import { Nest } from './components/Nest';
 import { SnackbarProvider } from './components/Snackbar';
@@ -30,14 +29,8 @@ export const appProviders = [
   <UploadProvider />,
 ];
 
-// Only providers that should run client-side. No storybook or server-side.
-const clientProviders = [
-  <BrowserRouter />, // router is unique per context
-  ...appProviders,
-];
-
 export const App = () => (
-  <Nest elements={clientProviders}>
+  <Nest elements={appProviders}>
     <Root />
   </Nest>
 );

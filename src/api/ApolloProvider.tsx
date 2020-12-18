@@ -16,6 +16,7 @@ import {
 import { IconButton } from '@material-ui/core';
 import { Close } from '@material-ui/icons';
 import { compact } from 'lodash';
+import fetch from 'node-fetch';
 import { ProviderContext as Snackbar, useSnackbar } from 'notistack';
 import React, { FC, useRef, useState } from 'react';
 import { SessionDocument } from '../components/Session/session.generated';
@@ -24,7 +25,7 @@ import { possibleTypes } from './fragmentMatcher.generated';
 import { GQLOperations } from './operations.generated';
 import { typePolicies } from './typePolicies';
 
-const serverHost = process.env.REACT_APP_API_BASE_URL || '';
+const serverHost = process.env.RAZZLE_API_BASE_URL || '';
 
 let API_DEBUG = {
   delay: 0,
@@ -55,6 +56,8 @@ export const ApolloProvider: FC = ({ children }) => {
     const httpLink = new HttpLink({
       uri: `${serverHost}/graphql`,
       credentials: 'include',
+      // @ts-expect-error not sure why these fetch types are not aligning but this is how they say to do it
+      fetch,
     });
 
     const errorLink = createErrorLink((error) =>
