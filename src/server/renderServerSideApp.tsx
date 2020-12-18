@@ -20,7 +20,7 @@ export const renderServerSideApp = async (req: Request, res: Response) => {
   const helmetContext: Partial<FilledContext> = {};
 
   const extractor = new ChunkExtractor({
-    statsFile: path.resolve(__dirname, '../build/public/loadable-stats.json'),
+    statsFile: path.resolve('build/loadable-stats.json'),
     entrypoints: ['client'],
   });
   const sheets = new ServerStyleSheets();

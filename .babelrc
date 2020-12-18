@@ -1,5 +1,5 @@
 {
-  "presets": ["react-app", "razzle/babel"],
+  "presets": ["razzle/babel"],
   "plugins": [
     "@loadable/babel-plugin",
     "mui-make-styles",
@@ -7,8 +7,6 @@
       "libraryName": "lodash",
       "libraryDirectory": "",
       "camel2DashComponentName": false
-    }, "fix-lodash-imports"],
-    "@babel/plugin-proposal-export-namespace-from",
-    "mui-make-styles"
+    }, "fix-lodash-imports"]
   ]
 }

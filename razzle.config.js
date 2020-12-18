@@ -1,11 +1,13 @@
-/* eslint-disable @typescript-eslint/no-var-requires */
+/* eslint-disable @typescript-eslint/no-var-requires,@typescript-eslint/no-require-imports */
 const LoadablePlugin = require('@loadable/webpack-plugin');
 const _ = require('lodash');
 const path = require('path');
 const { DefinePlugin } = require('webpack');
 const { BundleAnalyzerPlugin } = require('webpack-bundle-analyzer');
 
-const MyPlugin = (config, { target, dev }) => {
+const modifyWebpackConfig = (opts) => {
+  const config = opts.webpackConfig;
+  const { target } = opts.env;
   const isClient = target === 'web';
   const isServer = target === 'node';
 
@@ -32,10 +34,11 @@ const MyPlugin = (config, { target, dev }) => {
   );
 
   if (isClient) {
+    const filename = path.resolve(__dirname, 'build');
     config.plugins.push(
       new LoadablePlugin({
-        filename: 'loadable-stats.json',
-        writeToDisk: true,
+        outputAsset: false,
+        writeToDisk: { filename },
       })
     );
   }
@@ -49,21 +52,6 @@ const MyPlugin = (config, { target, dev }) => {
     );
   }
 
-  // Parse TS via Babel
-  config.resolve.extensions.push('.ts', '.tsx');
-  config.module.rules.unshift({
-    test: /\.tsx?$/,
-    include: path.resolve(__dirname, 'src'),
-    use: [
-      {
-        loader: require.resolve('babel-loader'),
-        options: {
-          babelrc: true,
-        },
-      },
-    ],
-  });
-
   return config;
 };
 
@@ -75,5 +63,9 @@ const replaceItemWith = (list, predicate, replacement) => {
 };
 
 module.exports = {
-  plugins: [MyPlugin],
+  plugins: [],
+  experimental: {
+    reactRefresh: true,
+  },
+  modifyWebpackConfig,
 };

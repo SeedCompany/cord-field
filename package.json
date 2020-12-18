@@ -30,6 +30,7 @@
     "@material-ui/icons": "^4.9.1",
     "@material-ui/lab": "^4.0.0-alpha.56",
     "@material-ui/pickers": "4.0.0-alpha.8",
+    "babel-preset-razzle": "canary",
     "body-parser": "^1.19.0",
     "clsx": "^1.1.1",
     "compression": "^1.7.4",
@@ -47,7 +48,8 @@
     "node-fetch": "^2.6.1",
     "notistack": "^0.9.17",
     "papaparse": "^5.2.0",
-    "razzle": "^3.1.0",
+    "razzle": "canary",
+    "razzle-dev-utils": "canary",
     "react": "^16.13.1",
     "react-dom": "^16.13.1",
     "react-draggable": "^4.4.3",
@@ -58,7 +60,6 @@
     "react-pdf": "^5.1.0",
     "react-router": "^6.0.0-beta.0",
     "react-router-dom": "^6.0.0-beta.0",
-    "react-scripts": "patch:react-scripts@4.0.0#./patches/react-scripts.patch",
     "react-ssr-prepass": "^1.2.1",
     "react-use": "^15.3.3",
     "response-time": "^2.3.2",
@@ -66,7 +67,6 @@
     "serialize-query-params": "^1.2.1",
     "ts-essentials": "^7.0.0",
     "validator": "^13.1.1",
-    "webpack-node-externals": "^1.7.2",
     "xlsx": "^0.16.4"
   },
   "devDependencies": {
@@ -116,6 +116,7 @@
     "@types/response-time": "^2.3.4",
     "@types/seedrandom": "^2.4.28",
     "@types/validator": "^13.1.0",
+    "@types/webpack-env": "^1.16.0",
     "@welldone-software/why-did-you-render": "^5.0.0-alpha.2",
     "babel-jest": "^26.6.1",
     "babel-loader": "^8.1.0",
@@ -134,8 +135,9 @@
     "ts-node": "^9.0.0",
     "type-fest": "^0.16.0",
     "typescript": "^3.9.7",
-    "webpack": "4.44.2",
-    "webpack-bundle-analyzer": "^3.8.0"
+    "webpack": "^4.44.2",
+    "webpack-bundle-analyzer": "^4.3.0",
+    "webpack-dev-server": "^3.11.0"
   },
   "resolutions": {
     "material-table/jspdf": "^2.1.0",
