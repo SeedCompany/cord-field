@@ -30,7 +30,7 @@ const serverHost = process.env.RAZZLE_API_BASE_URL || '';
 let API_DEBUG = {
   delay: 0,
 };
-if (process.env.NODE_ENV !== 'production') {
+if (process.env.NODE_ENV !== 'production' && typeof window !== 'undefined') {
   let privateDelay = 0;
   API_DEBUG = {
     get delay() {
