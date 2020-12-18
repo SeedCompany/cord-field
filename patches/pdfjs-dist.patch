@@ -1,0 +1,15 @@
+diff --git a/lib/web/ui_utils.js b/lib/web/ui_utils.js
+index 96596427e04fa9d0a06e82a2b7b2c6c86763aa66..e2d2b984bce6b5dcacf7d9857ffb6a3ea48a78e5 100644
+--- a/lib/web/ui_utils.js
++++ b/lib/web/ui_utils.js
+@@ -560,6 +560,10 @@ function waitOnEventOrTimeout({
+ }
+ 
+ const animationStarted = new Promise(function (resolve) {
++  // https://github.com/wojtekmaj/react-pdf/issues/657
++  if (typeof window === 'undefined') {
++    return resolve();
++  }
+   window.requestAnimationFrame(resolve);
+ });
+ exports.animationStarted = animationStarted;

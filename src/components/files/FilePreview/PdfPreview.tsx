@@ -1,4 +1,4 @@
-import { PDFDocumentProxy } from 'pdfjs-dist';
+import type { PDFDocumentProxy } from 'pdfjs-dist';
 import React, { FC, useCallback, useState } from 'react';
 import { Document, Page, pdfjs } from 'react-pdf';
 import { useFileActions } from '../FileActions';
