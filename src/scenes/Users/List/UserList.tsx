@@ -30,6 +30,7 @@ export const UserList: FC = () => {
         ...sort.value,
       },
     },
+    ssr: false,
   });
   const classes = useStyles();
   const formatNumber = useNumberFormatter();

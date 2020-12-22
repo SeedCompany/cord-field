@@ -38,6 +38,7 @@ export const ProjectList: FC = () => {
         filter: filters,
       },
     },
+    ssr: false,
   });
   const classes = useStyles();
 

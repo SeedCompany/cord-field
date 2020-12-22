@@ -30,6 +30,7 @@ export const PartnerList: FC = () => {
         ...sort.value,
       },
     },
+    ssr: false,
   });
   const items = data?.partners.items;
 
