@@ -10,12 +10,14 @@ export const indexHtml = ({
   markup,
   extractor,
   sheets,
+  apolloCache,
 }: {
   helmet: HelmetData;
   serverData: ServerData;
   markup: string;
   extractor: ChunkExtractor;
   sheets: ServerStyleSheets;
+  apolloCache: unknown;
 }) => `<!doctype html>
 <html ${helmet.htmlAttributes.toString()}>
 <head>
@@ -34,6 +36,10 @@ export const indexHtml = ({
   <script>
     window.env = ${JSON.stringify(clientEnv)};
     window.__SERVER_DATA__ = ${JSON.stringify(serverData)};
+    window.__APOLLO_STATE__ = ${JSON.stringify(apolloCache).replace(
+      /</g,
+      '\\u003c'
+    )};
   </script>
   ${extractor.getScriptTags()}
 </body>

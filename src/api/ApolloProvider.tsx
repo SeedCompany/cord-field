@@ -16,7 +16,6 @@ import {
 import { IconButton } from '@material-ui/core';
 import { Close } from '@material-ui/icons';
 import { compact } from 'lodash';
-import fetch from 'node-fetch';
 import { ProviderContext as Snackbar, useSnackbar } from 'notistack';
 import React, { FC, useRef, useState } from 'react';
 import { SessionDocument } from '../components/Session/session.generated';
@@ -56,8 +55,6 @@ export const ApolloProvider: FC = ({ children }) => {
     const httpLink = new HttpLink({
       uri: `${serverHost}/graphql`,
       credentials: 'include',
-      // @ts-expect-error not sure why these fetch types are not aligning but this is how they say to do it
-      fetch,
     });
 
     const errorLink = createErrorLink((error) =>
@@ -80,17 +77,24 @@ export const ApolloProvider: FC = ({ children }) => {
             );
           };
 
+    const cache = new InMemoryCache({
+      possibleTypes,
+      // Yes the assertion is necessary. It's because, as of TS 4.0, index
+      // signatures still incorrectly convey that values for missing keys
+      // would still give the expected value instead of undefined, which is
+      // absolutely how JS works. I believe this is getting fixed finally in 4.1.
+      // See: https://github.com/microsoft/TypeScript/pull/39560
+      // eslint-disable-next-line @typescript-eslint/no-unnecessary-type-assertion
+      typePolicies: typePolicies as TypePolicies,
+    });
+
+    const initialState = (window as any).__APOLLO_STATE__;
+    if (initialState) {
+      cache.restore(initialState);
+    }
+
     return new ApolloClient({
-      cache: new InMemoryCache({
-        possibleTypes,
-        // Yes the assertion is necessary. It's because, as of TS 4.0, index
-        // signatures still incorrectly convey that values for missing keys
-        // would still give the expected value instead of undefined, which is
-        // absolutely how JS works. I believe this is getting fixed finally in 4.1.
-        // See: https://github.com/microsoft/TypeScript/pull/39560
-        // eslint-disable-next-line @typescript-eslint/no-unnecessary-type-assertion
-        typePolicies: typePolicies as TypePolicies,
-      }),
+      cache,
       link: ApolloLink.from(compact([errorLink, delayLink, httpLink])),
     });
   });

@@ -3,9 +3,11 @@ import React, { ComponentType } from 'react';
 import ReactDOM from 'react-dom';
 import { HelmetProvider } from 'react-helmet-async';
 import { BrowserRouter } from 'react-router-dom';
+import { ApolloProvider } from './api';
 import { App } from './App';
 import { Nest } from './components/Nest';
 import { ServerDataProvider } from './components/ServerData';
+import { SnackbarProvider } from './components/Snackbar';
 
 const setup: Array<Promise<any>> = [];
 const isBrowser = typeof window !== 'undefined';
@@ -44,6 +46,8 @@ const clientOnlyProviders = [
   <ServerDataProvider value={serverData} />,
   <BrowserRouter />,
   <HelmetProvider children={<></>} />,
+  <SnackbarProvider />, // needed by apollo
+  <ApolloProvider />,
 ];
 
 const render = (TheApp: ComponentType) => {

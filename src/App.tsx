@@ -2,9 +2,7 @@ import LuxonUtils from '@date-io/luxon';
 import { CssBaseline, ThemeProvider } from '@material-ui/core';
 import { LocalizationProvider } from '@material-ui/pickers';
 import * as React from 'react';
-import { ApolloProvider } from './api';
 import { Nest } from './components/Nest';
-import { SnackbarProvider } from './components/Snackbar';
 import { UploadManagerProvider, UploadProvider } from './components/Upload';
 import { Root } from './scenes/Root';
 import { createTheme } from './theme';
@@ -21,8 +19,6 @@ export const appProviders = [
   <ThemeProvider theme={theme} children={<></>} />,
   <CssBaseline />,
   <LocalizationProvider dateAdapter={LuxonUtils} children={<></>} />,
-  <SnackbarProvider />,
-  <ApolloProvider />,
   <UploadManagerProvider />,
   <UploadProvider />,
 ];
