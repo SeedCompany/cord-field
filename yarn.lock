@@ -7788,6 +7788,7 @@ __metadata:
     node-fetch: ^2.6.1
     notistack: ^0.9.17
     npm-run-all: ^4.1.5
+    p-min-delay: ^3.1.0
     papaparse: ^5.2.0
     prettier: ^2.0.5
     razzle: canary
@@ -8674,6 +8675,13 @@ __metadata:
     pify: ^4.0.1
     rimraf: ^2.6.3
   checksum: 87eecb2af52e794f8d9c8d200a31e0032cec8c255f08a97ef28be771bf561f16023746f2329d7b436e0a1fe09abafe80a25b2546131aa809cbd9a6bf49220cf3
+  languageName: node
+  linkType: hard
+
+"delay@npm:^4.1.0":
+  version: 4.4.0
+  resolution: "delay@npm:4.4.0"
+  checksum: cb54b19a68b8f299c601e59819b54f6c9927421556d2eed75ddc1fcffccfe030259fb4b573da41d59d3beca4591c15f7018bfd89c5845cf38dd4897c70730a07
   languageName: node
   linkType: hard
 
@@ -16014,6 +16022,15 @@ material-table@1.69.0:
   dependencies:
     aggregate-error: ^3.0.0
   checksum: d51e630d72b7c38bc9e396710e7a068f0b813fe4db6f4a2d1ce2972e7fa11142c763c3aa39bcfd77c0133688c1ebfdd9b38fa3ac4c6ada20b62df26239c5c0e4
+  languageName: node
+  linkType: hard
+
+"p-min-delay@npm:^3.1.0":
+  version: 3.1.0
+  resolution: "p-min-delay@npm:3.1.0"
+  dependencies:
+    delay: ^4.1.0
+  checksum: c24d870c160683b588b1ed76bdac16c6eff922a0f6ffe43ecfe79e1f6531af64c7fdb476a9fdde7cc03d2c834d56d986c5eed8e169df9ab5cae431739e606f84
   languageName: node
   linkType: hard
 
