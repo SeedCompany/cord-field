@@ -28,7 +28,7 @@ import { indexHtml } from './indexHtml';
 
 const serverHost = process.env.RAZZLE_API_BASE_URL || '';
 
-const createServerApolloClient = (req: Request) => {
+export const createServerApolloClient = (req: Request) => {
   const httpLink = new HttpLink({
     uri: `${serverHost}/graphql`,
     credentials: 'include',

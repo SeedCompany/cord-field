@@ -4,7 +4,11 @@ import express from 'express';
 import helmet from 'helmet';
 import path from 'path';
 import responseTime from 'response-time';
-import { renderServerSideApp } from './renderServerSideApp';
+import { LogoutDocument } from '../scenes/Authentication/Logout/logout.generated';
+import {
+  createServerApolloClient,
+  renderServerSideApp,
+} from './renderServerSideApp';
 
 const {
   PUBLIC_URL = '',
@@ -29,6 +33,15 @@ app.use(
     maxAge: '30 days',
   })
 );
+
+app.get('/logout', (req, res, next) => {
+  createServerApolloClient(req)
+    .mutate({
+      mutation: LogoutDocument,
+    })
+    .then(() => res.redirect('/login'))
+    .catch((e) => next(e));
+});
 
 app.use(
   responseTime((_req, res, time) => {
