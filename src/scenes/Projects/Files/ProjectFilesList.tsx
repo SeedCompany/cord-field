@@ -8,7 +8,7 @@ import {
 } from '@material-ui/core';
 import { CreateNewFolder, Publish } from '@material-ui/icons';
 import { Skeleton } from '@material-ui/lab';
-import React, { FC } from 'react';
+import React, { FC, useEffect } from 'react';
 import { useDropzone } from 'react-dropzone';
 import { useNavigate, useParams } from 'react-router-dom';
 import { File as CFFile } from '../../../api';
@@ -136,6 +136,9 @@ const ProjectFilesListWrapped: FC = () => {
     fetchPolicy: shouldSkipQuery ? 'cache-only' : 'cache-first',
     skip: shouldSkipQuery,
   });
+
+  // Don't wait for data to load table js code
+  useEffect(() => Table.preload(), []);
 
   const parents = data?.directory.parents;
   const breadcrumbsParents = parents?.slice(0, -1) ?? [];
@@ -328,29 +331,26 @@ const ProjectFilesListWrapped: FC = () => {
               </Box>
             )}
             <section className={classes.tableWrapper}>
-              {loading ? (
-                <Skeleton variant="rect" width="100%" height={200} />
-              ) : (
-                <Table
-                  data={rowData}
-                  columns={columns}
-                  onRowClick={handleRowClick}
-                  actions={[
-                    {
-                      icon: Publish,
-                      tooltip: 'Upload Files',
-                      isFreeAction: true,
-                      onClick: openFileBrowser,
-                    },
-                    {
-                      icon: CreateNewFolder,
-                      tooltip: 'Create Folder',
-                      isFreeAction: true,
-                      onClick: createDirectory,
-                    },
-                  ]}
-                />
-              )}
+              <Table
+                isLoading={loading}
+                data={rowData}
+                columns={columns}
+                onRowClick={handleRowClick}
+                actions={[
+                  {
+                    icon: Publish,
+                    tooltip: 'Upload Files',
+                    isFreeAction: true,
+                    onClick: openFileBrowser,
+                  },
+                  {
+                    icon: CreateNewFolder,
+                    tooltip: 'Create Folder',
+                    isFreeAction: true,
+                    onClick: createDirectory,
+                  },
+                ]}
+              />
             </section>
           </>
         )}

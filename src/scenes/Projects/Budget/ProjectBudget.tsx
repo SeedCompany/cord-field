@@ -2,7 +2,7 @@ import { useQuery } from '@apollo/client';
 import { Breadcrumbs, Grid, makeStyles, Typography } from '@material-ui/core';
 import { Skeleton } from '@material-ui/lab';
 import { sumBy } from 'lodash';
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import { AddItemCard } from '../../../components/AddItemCard';
 import { Breadcrumb } from '../../../components/Breadcrumb';
@@ -11,6 +11,7 @@ import { FileActionsContextProvider } from '../../../components/files/FileAction
 import { useCurrencyFormatter } from '../../../components/Formatters/useCurrencyFormatter';
 import { ContentContainer as Content } from '../../../components/Layout/ContentContainer';
 import { ProjectBreadcrumb } from '../../../components/ProjectBreadcrumb';
+import { Table } from '../../../components/Table';
 import { useUploadBudgetFile } from '../Files';
 import { ProjectBudgetDocument } from './ProjectBudget.generated';
 import { ProjectBudgetRecords } from './ProjectBudgetRecords';
@@ -42,6 +43,9 @@ export const ProjectBudget = () => {
   const { data, loading, error } = useQuery(ProjectBudgetDocument, {
     variables: { id: projectId },
   });
+
+  // Don't wait for data to load table js code
+  useEffect(() => Table.preload(), []);
 
   const budget = data?.project.budget;
 
