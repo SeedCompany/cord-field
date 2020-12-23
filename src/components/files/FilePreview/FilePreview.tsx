@@ -1,3 +1,4 @@
+import { lazy } from '@loadable/component';
 import {
   Button,
   Dialog,
@@ -8,7 +9,7 @@ import {
   Grid,
   makeStyles,
 } from '@material-ui/core';
-import React, { FC, useCallback, useEffect, useState } from 'react';
+import React, { FC, Suspense, useCallback, useEffect, useState } from 'react';
 import { NonDirectoryActionItem } from '../FileActions';
 import {
   previewableAudioTypes,
@@ -17,16 +18,18 @@ import {
   previewableVideoTypes,
 } from '../fileTypes';
 import { useGetFileDownloadUrl } from '../hooks';
-import { CsvPreview } from './CsvPreview';
-import { ExcelPreview } from './ExcelPreview';
 import { HtmlPreview } from './HtmlPreview';
 import { NativePreview } from './NativePreview';
-import { PdfPreview } from './PdfPreview';
 import { PlainTextPreview } from './PlainTextPreview';
 import { PreviewError } from './PreviewError';
+import { PreviewLoading } from './PreviewLoading';
 import { PreviewNotSupported } from './PreviewNotSupported';
-import { RtfPreview } from './RtfPreview';
-import { WordPreview } from './WordPreview';
+
+const PdfPreview = lazy(() => import('./PdfPreview'));
+const CsvPreview = lazy(() => import('./CsvPreview'));
+const ExcelPreview = lazy(() => import('./ExcelPreview'));
+const RtfPreview = lazy(() => import('./RtfPreview'));
+const WordPreview = lazy(() => import('./WordPreview'));
 
 const useStyles = makeStyles(() => ({
   dialogContent: {
@@ -255,14 +258,16 @@ export const FilePreview: FC<FilePreviewProps> = (props) => {
             {previewError ? (
               <PreviewError errorText={previewError} />
             ) : Previewer ? (
-              <Previewer
-                file={previewFile}
-                previewLoading={previewLoading}
-                setPreviewLoading={setPreviewLoading}
-                previewError={previewError}
-                setPreviewError={handleError}
-                {...previewerProps}
-              />
+              <Suspense fallback={<PreviewLoading />}>
+                <Previewer
+                  file={previewFile}
+                  previewLoading={previewLoading}
+                  setPreviewLoading={setPreviewLoading}
+                  previewError={previewError}
+                  setPreviewError={handleError}
+                  {...previewerProps}
+                />
+              </Suspense>
             ) : (
               <PreviewNotSupported />
             )}

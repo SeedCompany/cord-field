@@ -58,3 +58,6 @@ export const RtfPreview: FC<PreviewerProps> = (props) => {
     <div style={{ width: '80ch' }}>{html}</div>
   );
 };
+
+// eslint-disable-next-line import/no-default-export
+export default RtfPreview;

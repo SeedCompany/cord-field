@@ -41,3 +41,6 @@ export const PdfPreview: FC<PreviewerProps> = (props) => {
     </PreviewPagination>
   );
 };
+
+// eslint-disable-next-line import/no-default-export
+export default PdfPreview;
