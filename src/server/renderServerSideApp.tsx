@@ -12,6 +12,7 @@ import { Request, Response } from 'express';
 import fetch from 'node-fetch';
 import * as path from 'path';
 import React from 'react';
+import { resetServerContext } from 'react-beautiful-dnd';
 import ReactDOMServer from 'react-dom/server';
 import { FilledContext, HelmetProvider } from 'react-helmet-async';
 import { StaticRouter } from 'react-router-dom/server';
@@ -82,10 +83,12 @@ export const renderServerSideApp = async (req: Request, res: Response) => {
         helmetContext={helmetContext}
       />
     ),
-    renderFunction: (tree) =>
-      ReactDOMServer.renderToString(
+    renderFunction: (tree) => {
+      resetServerContext();
+      return ReactDOMServer.renderToString(
         location.wrap(sheets.collect(extractor.collectChunks(tree)))
-      ),
+      );
+    },
   });
   const { helmet } = helmetContext as FilledContext; // now filled
 

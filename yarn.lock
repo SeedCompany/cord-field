@@ -4259,6 +4259,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@types/react-beautiful-dnd@npm:^13.0.0":
+  version: 13.0.0
+  resolution: "@types/react-beautiful-dnd@npm:13.0.0"
+  dependencies:
+    "@types/react": "*"
+  checksum: 2f946d2dbfef86fb823758058056f2c4a52d2b7b12fcb1bbdca6a8077891f339b992691cd3dfc084acabb8515c315e87e028b451302fadfaeff902f974c3e0e5
+  languageName: node
+  linkType: hard
+
 "@types/react-color@npm:^3.0.1":
   version: 3.0.1
   resolution: "@types/react-color@npm:3.0.1"
@@ -7755,6 +7764,7 @@ __metadata:
     "@types/node-fetch": ^2.5.7
     "@types/papaparse": ^5.0.6
     "@types/react": ^16.9.0
+    "@types/react-beautiful-dnd": ^13.0.0
     "@types/react-dom": ^16.9.0
     "@types/react-pdf": ^5.0.0
     "@types/response-time": ^2.3.4
