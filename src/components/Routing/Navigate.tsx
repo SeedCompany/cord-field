@@ -5,9 +5,11 @@ import type { NavigateFunction, NavigateProps } from 'react-router';
 import {
   Navigate as ClientNavigate,
   useNavigate as useClientNavigate,
+  useLocation,
 } from 'react-router-dom';
 
 const useServerNavigate = (): NavigateFunction => {
+  const location = useLocation();
   const serverLocation = useContext(ServerLocationContext);
   if (!serverLocation) {
     throw new Error('Server location context should be provided for SSR');
@@ -19,10 +21,12 @@ const useServerNavigate = (): NavigateFunction => {
     if (typeof to === 'number') {
       throw new Error('Navigate with delta is not supported with SSR');
     }
-    if (typeof to !== 'string') {
-      throw new Error('Navigate with partial paths are not yet implemented');
-    }
-    serverLocation.url = to;
+    serverLocation.url =
+      typeof to === 'string'
+        ? to
+        : `${to.pathname ?? location.pathname}${to.search ?? ''}${
+            to.hash ?? ''
+          }`;
   };
 };
 
