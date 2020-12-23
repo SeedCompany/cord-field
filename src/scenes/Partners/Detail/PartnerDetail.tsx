@@ -13,6 +13,7 @@ import { Skeleton } from '@material-ui/lab';
 import clsx from 'clsx';
 import { Many } from 'lodash';
 import React from 'react';
+import { Helmet } from 'react-helmet-async';
 import { useParams } from 'react-router-dom';
 import { Avatar } from '../../../components/Avatar';
 import { BooleanProperty } from '../../../components/BooleanProperty';
@@ -103,6 +104,7 @@ export const PartnerDetail = () => {
     },
   });
   const partner = data?.partner;
+  const name = partner?.organization.value?.name.value;
 
   const [editPartnerState, editPartner, editField] = useDialog<
     Many<EditablePartnerField>
@@ -110,6 +112,7 @@ export const PartnerDetail = () => {
 
   return (
     <main className={classes.root}>
+      <Helmet title={name ?? undefined} />
       {error ? (
         <Typography variant="h4">Error fetching partner</Typography>
       ) : (

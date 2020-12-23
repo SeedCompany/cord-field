@@ -7,6 +7,7 @@ import {
 } from '@material-ui/core';
 import { Add } from '@material-ui/icons';
 import React, { FC } from 'react';
+import { Helmet } from 'react-helmet-async';
 import { useParams } from 'react-router-dom';
 import { Breadcrumb } from '../../../components/Breadcrumb';
 import { useDialog } from '../../../components/Dialog';
@@ -55,6 +56,9 @@ export const PartnershipList: FC = () => {
 
   return (
     <div className={classes.root}>
+      <Helmet
+        title={`Partnerships - ${data?.project.name.value ?? 'A Project'}`}
+      />
       <Breadcrumbs>
         <ProjectBreadcrumb data={project} />
         <Breadcrumb to={`/projects/${projectId}/partnerships`}>

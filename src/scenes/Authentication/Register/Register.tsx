@@ -1,6 +1,7 @@
 import { useMutation } from '@apollo/client';
 import { DateTime } from 'luxon';
 import React, { useEffect, useState } from 'react';
+import { Helmet } from 'react-helmet-async';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { Except } from 'type-fest';
 import { handleFormError } from '../../../api';
@@ -49,5 +50,10 @@ export const Register = (props: Except<Props, 'onSubmit'>) => {
     }
   };
 
-  return <RegisterForm {...props} onSubmit={submit} />;
+  return (
+    <>
+      <Helmet title="Register" />
+      <RegisterForm {...props} onSubmit={submit} />
+    </>
+  );
 };

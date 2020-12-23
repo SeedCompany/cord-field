@@ -3,6 +3,7 @@ import { Breadcrumbs, Grid, makeStyles, Typography } from '@material-ui/core';
 import { Skeleton } from '@material-ui/lab';
 import { sumBy } from 'lodash';
 import React, { useEffect } from 'react';
+import { Helmet } from 'react-helmet-async';
 import { useParams } from 'react-router-dom';
 import { AddItemCard } from '../../../components/AddItemCard';
 import { Breadcrumb } from '../../../components/Breadcrumb';
@@ -58,6 +59,7 @@ export const ProjectBudget = () => {
 
   return (
     <Content>
+      <Helmet title={`Budget - ${data?.project.name.value ?? 'A Project'}`} />
       {error ? (
         <Typography variant="h4">Error fetching Project Budget</Typography>
       ) : budget?.canRead === false ? (

@@ -5,6 +5,7 @@ import { Skeleton } from '@material-ui/lab';
 import clsx from 'clsx';
 import React, { FC } from 'react';
 import { useDropzone } from 'react-dropzone';
+import { Helmet } from 'react-helmet-async';
 import { useParams } from 'react-router-dom';
 import { displayProjectStep, securedDateRange } from '../../../api';
 import { BudgetOverviewCard } from '../../../components/BudgetOverviewCard';
@@ -185,6 +186,7 @@ export const ProjectOverview: FC = () => {
 
   return (
     <main className={classes.root}>
+      <Helmet title={projectOverviewData?.project.name.value ?? undefined} />
       {error ? (
         <Typography variant="h4">Error loading project</Typography>
       ) : (

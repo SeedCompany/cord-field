@@ -2,6 +2,7 @@ import { useQuery } from '@apollo/client';
 import { Grid, makeStyles, Typography } from '@material-ui/core';
 import { Skeleton } from '@material-ui/lab';
 import React, { FC } from 'react';
+import { Helmet } from 'react-helmet-async';
 import { Project } from '../../../api';
 import { FilterButtonDialog } from '../../../components/Filter';
 import { useNumberFormatter } from '../../../components/Formatters';
@@ -44,6 +45,7 @@ export const ProjectList: FC = () => {
 
   return (
     <ContentContainer>
+      <Helmet title="Projects" />
       <Typography variant="h2" paragraph>
         My Projects
       </Typography>

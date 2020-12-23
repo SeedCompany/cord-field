@@ -10,6 +10,7 @@ import { CreateNewFolder, Publish } from '@material-ui/icons';
 import { Skeleton } from '@material-ui/lab';
 import React, { FC, useEffect } from 'react';
 import { useDropzone } from 'react-dropzone';
+import { Helmet } from 'react-helmet-async';
 import { useNavigate, useParams } from 'react-router-dom';
 import { File as CFFile } from '../../../api';
 import { Breadcrumb } from '../../../components/Breadcrumb';
@@ -285,6 +286,11 @@ const ProjectFilesListWrapped: FC = () => {
     </Typography>
   ) : (
     <div className={classes.dropzone} {...getRootProps()}>
+      <Helmet
+        title={`${isNotRootDirectory ? data?.directory.name : 'Files'} - ${
+          project ? project.name.value ?? 'A Project' : '...'
+        }`}
+      />
       <input {...getInputProps()} name="files_list_uploader" />
       <DropzoneOverlay
         isDragActive={isDragActive}

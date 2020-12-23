@@ -8,6 +8,7 @@ import {
 import { Add } from '@material-ui/icons';
 import { FC } from 'react';
 import * as React from 'react';
+import { Helmet } from 'react-helmet-async';
 import { useParams } from 'react-router-dom';
 import { Breadcrumb } from '../../../../components/Breadcrumb';
 import { useDialog } from '../../../../components/Dialog';
@@ -61,6 +62,9 @@ export const ProjectMembersList: FC = () => {
 
   return (
     <div className={classes.root}>
+      <Helmet
+        title={`Team Members - ${data?.project.name.value ?? 'A Project'}`}
+      />
       <Breadcrumbs>
         <ProjectBreadcrumb data={data?.project} />
         <Breadcrumb to=".">Team Members</Breadcrumb>

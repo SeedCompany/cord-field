@@ -2,6 +2,7 @@ import { useQuery } from '@apollo/client';
 import { Grid, makeStyles, Typography } from '@material-ui/core';
 import { Skeleton } from '@material-ui/lab';
 import React, { FC } from 'react';
+import { Helmet } from 'react-helmet-async';
 import { Partner } from '../../../api';
 import { useNumberFormatter } from '../../../components/Formatters';
 import { ContentContainer } from '../../../components/Layout';
@@ -38,6 +39,7 @@ export const PartnerList: FC = () => {
 
   return (
     <ContentContainer>
+      <Helmet title="Partners" />
       <Typography variant="h2" paragraph>
         Partners
       </Typography>

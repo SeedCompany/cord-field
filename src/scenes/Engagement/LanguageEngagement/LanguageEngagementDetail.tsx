@@ -7,6 +7,7 @@ import {
 } from '@material-ui/core';
 import { ChatOutlined, DateRange, Edit } from '@material-ui/icons';
 import React, { FC } from 'react';
+import { Helmet } from 'react-helmet-async';
 import {
   canEditAny,
   displayEngagementStatus,
@@ -89,6 +90,11 @@ export const LanguageEngagementDetail: FC<EngagementQuery> = ({
 
   return (
     <>
+      <Helmet
+        title={`${langName ?? 'A Language'} in ${
+          project.name.value ?? 'a project'
+        }`}
+      />
       <div className={classes.root}>
         <Grid
           component="main"
