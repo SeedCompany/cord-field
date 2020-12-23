@@ -60,8 +60,6 @@ const createServerApolloClient = (req: Request) => {
 export const renderServerSideApp = async (req: Request, res: Response) => {
   const apollo = createServerApolloClient(req);
 
-  const data = await fetchDataForRender(ServerApp, req, apollo);
-
   const helmetContext: Partial<FilledContext> = {};
   const extractor = new ChunkExtractor({
     statsFile: path.resolve('build/loadable-stats.json'),
@@ -69,6 +67,11 @@ export const renderServerSideApp = async (req: Request, res: Response) => {
   });
   const sheets = new ServerStyleSheets();
   const location = new ServerLocation();
+
+  const data = await fetchDataForRender(
+    location.wrap(<ServerApp req={req} apollo={apollo} />),
+    req
+  );
 
   const markup = await getMarkupFromTree({
     tree: (
@@ -108,7 +111,7 @@ const ServerApp = ({
   helmetContext,
   apollo,
 }: {
-  data: ServerData;
+  data?: ServerData;
   req: Request;
   helmetContext?: Partial<FilledContext>;
   apollo: ApolloClient<unknown>;
@@ -116,7 +119,7 @@ const ServerApp = ({
   <Nest
     elements={[
       <HelmetProvider context={helmetContext || {}} children={<></>} />,
-      <ServerDataProvider value={data} />,
+      <ServerDataProvider value={data ?? {}} />,
       <StaticRouter location={req.url} />,
       <UserAgentContext.Provider value={req.headers['user-agent']} />,
       <ApolloProvider client={apollo} children={<></>} />,
