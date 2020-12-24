@@ -1,16 +1,10 @@
-import { createContext, useContext, useDebugValue, useState } from 'react';
-
-// Allows user agent to be overridden/defined during SSR
-export const UserAgentContext = createContext(
-  typeof window !== 'undefined' ? window.navigator.userAgent : undefined
-);
+import { useContext, useDebugValue, useState } from 'react';
+import { RequestContext } from './useRequest';
 
 // Use sparingly. Doing things based on User Agent is unreliable and not recommended.
 export const useUserAgent = () => {
-  const ua = useContext(UserAgentContext);
-  if (!ua) {
-    throw new Error('User agent has not been defined');
-  }
+  const req = useContext(RequestContext);
+  const ua = req ? req.header('user-agent')! : window.navigator.userAgent;
   useDebugValue(ua);
   return ua;
 };

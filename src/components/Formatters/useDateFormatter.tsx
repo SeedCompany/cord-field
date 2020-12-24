@@ -1,24 +1,32 @@
 import { DateTime } from 'luxon';
+import { useLocale } from '../../hooks';
 import { CalendarDate, Nullable } from '../../util';
 
-// These are hooks so that they can pull from context later if needed
-// for current locale.
-
 // Returns function for format date or date range
-export const useDateFormatter = () => formatDate;
+export const useDateFormatter = () => {
+  const locale = useLocale();
 
-const formatDate = (date: Nullable<CalendarDate>) =>
-  date ? date.toLocaleString(DateTime.DATE_SHORT) : '';
-
-formatDate.range = rangeFormatter(formatDate);
+  const formatDate = (date: Nullable<CalendarDate>) =>
+    date ? date.toLocaleString({ ...DateTime.DATE_SHORT, locale }) : '';
+  formatDate.range = rangeFormatter(formatDate);
+  return formatDate;
+};
 
 // Returns function for format date time or date time range
-export const useDateTimeFormatter = () => formatDateTime;
+export const useDateTimeFormatter = () => {
+  const locale = useLocale();
 
-const formatDateTime = (date: Nullable<DateTime>) =>
-  date ? date.toLocaleString(DateTime.DATETIME_SHORT) : '';
+  const formatDateTime = (date: Nullable<DateTime>) =>
+    date
+      ? date.toLocaleString({
+          ...DateTime.DATETIME_SHORT,
+          locale,
+        })
+      : '';
 
-formatDateTime.range = rangeFormatter(formatDateTime);
+  formatDateTime.range = rangeFormatter(formatDateTime);
+  return formatDateTime;
+};
 
 function rangeFormatter<T extends DateTime>(
   formatter: (d: Nullable<T>) => string

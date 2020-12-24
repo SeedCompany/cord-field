@@ -23,7 +23,7 @@ import { Nest } from '../components/Nest';
 import { ServerLocation } from '../components/Routing';
 import { ServerData, ServerDataProvider } from '../components/ServerData';
 import { SnackbarProvider } from '../components/Snackbar';
-import { UserAgentContext } from '../hooks';
+import { RequestContext } from '../hooks';
 import { fetchDataForRender } from './fetchDataForRender';
 import { indexHtml } from './indexHtml';
 
@@ -123,8 +123,8 @@ const ServerApp = ({
     elements={[
       <HelmetProvider context={helmetContext || {}} children={<></>} />,
       <ServerDataProvider value={data ?? {}} />,
+      <RequestContext.Provider value={req} children={<></>} />,
       <StaticRouter location={req.url} />,
-      <UserAgentContext.Provider value={req.headers['user-agent']} />,
       <ApolloProvider client={apollo} children={<></>} />,
       <SnackbarProvider />,
     ]}
