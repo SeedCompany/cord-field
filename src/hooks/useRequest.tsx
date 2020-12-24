@@ -5,5 +5,6 @@ export const RequestContext = createContext<Request | undefined>(undefined);
 
 export const useLocale = (): string => {
   const req = useContext(RequestContext);
-  return req?.acceptsLanguages()[0]?.replace('_', '-') ?? navigator.language;
+  const locale = req?.acceptsLanguages()[0] ?? navigator.language;
+  return locale.replace(/_/g, '-');
 };
