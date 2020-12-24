@@ -1,4 +1,4 @@
-import { DateTime } from 'luxon';
+import { DateTime, DateTimeFormatOptions } from 'luxon';
 import { useContext } from 'react';
 import { RequestContext, useLocale } from '../../hooks';
 import { CalendarDate, Nullable } from '../../util';
@@ -16,8 +16,13 @@ const useTimezone = () => {
 export const useDateFormatter = () => {
   const locale = useLocale();
 
-  const formatDate = (date: Nullable<CalendarDate>) =>
-    date ? date.toLocaleString({ ...DateTime.DATE_SHORT, locale }) : '';
+  const formatDate = (
+    date: Nullable<CalendarDate>,
+    options?: DateTimeFormatOptions
+  ) =>
+    date
+      ? date.toLocaleString({ ...(options ?? DateTime.DATE_SHORT), locale })
+      : '';
   formatDate.range = rangeFormatter(formatDate);
   return formatDate;
 };
@@ -27,14 +32,19 @@ export const useDateTimeFormatter = () => {
   const locale = useLocale();
   const timeZone = useTimezone();
 
-  const formatDateTime = (date: Nullable<DateTime>) =>
+  const formatDateTime = (
+    date: Nullable<DateTime>,
+    options?: DateTimeFormatOptions
+  ) =>
     date
       ? date.toLocaleString({
-          ...DateTime.DATETIME_SHORT,
-          // If we don't know the timezone, format with the timezone
-          // so the client's current timezone is not assumed.
-          // This will be mitigated once the client hydrates.
-          timeZoneName: !isClient && !timeZone ? 'short' : undefined,
+          ...(options ?? DateTime.DATETIME_SHORT),
+          timeZoneName:
+            options?.timeZoneName ??
+            // If we don't know the timezone, format with the timezone
+            // so the client's current timezone is not assumed.
+            // This will be mitigated once the client hydrates.
+            (!isClient && !timeZone ? 'short' : undefined),
           locale,
           timeZone,
         })

@@ -16,8 +16,9 @@ import { DisplaySimpleProperty } from '../../../components/DisplaySimpleProperty
 import { Fab } from '../../../components/Fab';
 import { FilesOverviewCard } from '../../../components/files/FilesOverviewCard';
 import {
-  useDateFormatter,
-  useDateTimeFormatter,
+  FormattedDate,
+  FormattedDateRange,
+  FormattedDateTime,
   useNumberFormatter,
 } from '../../../components/Formatters';
 import { InternshipEngagementListItemCard } from '../../../components/InternshipEngagementListItemCard';
@@ -75,8 +76,6 @@ const useStyles = makeStyles(({ spacing, breakpoints, palette }) => ({
 export const ProjectOverview: FC = () => {
   const classes = useStyles();
   const { projectId } = useParams();
-  const formatDate = useDateFormatter();
-  const formatDateTime = useDateTimeFormatter();
   const formatNumber = useNumberFormatter();
 
   const [editState, editField, fieldsBeingEdited] = useDialog<
@@ -235,7 +234,10 @@ export const ProjectOverview: FC = () => {
             </Typography>
             {projectOverviewData && (
               <Typography variant="body2" color="textSecondary">
-                Updated {formatDateTime(projectOverviewData.project.modifiedAt)}
+                Updated{' '}
+                <FormattedDateTime
+                  date={projectOverviewData.project.modifiedAt}
+                />
               </Typography>
             )}
           </div>
@@ -328,7 +330,7 @@ export const ProjectOverview: FC = () => {
                 startIcon={<DateRange className={classes.infoColor} />}
                 secured={date}
                 redacted="You do not have permission to view start/end dates"
-                children={formatDate.range}
+                children={(props) => <FormattedDateRange {...props} />}
                 empty="Start - End"
                 onClick={() => editField(['mouStart', 'mouEnd'])}
               />
@@ -341,7 +343,7 @@ export const ProjectOverview: FC = () => {
                     startIcon={<DateRange className={classes.infoColor} />}
                     secured={projectOverviewData.project.estimatedSubmission}
                     redacted="You do not have permission to view estimated submission date"
-                    children={formatDate}
+                    children={(date) => <FormattedDate date={date} />}
                     empty="Estimated Submission"
                     onClick={() => editField(['estimatedSubmission'])}
                   />
