@@ -2,9 +2,9 @@ import {
   ApolloClient,
   ApolloLink,
   ApolloProvider as BaseApolloProvider,
+  getApolloContext,
   HttpLink,
   InMemoryCache,
-  NormalizedCacheObject,
   Observable,
   RequestHandler,
   TypePolicies,
@@ -17,7 +17,7 @@ import { IconButton } from '@material-ui/core';
 import { Close } from '@material-ui/icons';
 import { compact } from 'lodash';
 import { ProviderContext as Snackbar, useSnackbar } from 'notistack';
-import React, { FC, useRef, useState } from 'react';
+import React, { FC, useContext, useRef, useState } from 'react';
 import { SessionDocument } from '../components/Session/session.generated';
 import { sleep } from '../util';
 import { possibleTypes } from './fragmentMatcher.generated';
@@ -50,8 +50,15 @@ if (process.env.NODE_ENV !== 'production' && typeof window !== 'undefined') {
 }
 
 export const ApolloProvider: FC = ({ children }) => {
+  const parentContext = useContext(getApolloContext());
+
   // Client is created only once.
   const [client] = useState(() => {
+    // Use parent if it's already defined
+    if (parentContext.client) {
+      return parentContext.client;
+    }
+
     const httpLink = new HttpLink({
       uri: `${serverHost}/graphql`,
       credentials: 'include',
@@ -105,12 +112,18 @@ export const ApolloProvider: FC = ({ children }) => {
   const errorHandlerRef = useRef<ErrorHandler>();
   errorHandlerRef.current = errorHandler(useSnackbar(), client);
 
+  // Don't redefine provider if client is already defined, essentially making
+  // this provider a noop.
+  if (parentContext.client) {
+    return <>{children}</>;
+  }
+
   return <BaseApolloProvider client={client}>{children}</BaseApolloProvider>;
 };
 
 const errorHandler = (
   { enqueueSnackbar, closeSnackbar }: Snackbar,
-  client: ApolloClient<NormalizedCacheObject>
+  client: ApolloClient<unknown>
 ): ErrorHandler => ({ graphQLErrors, networkError, operation, forward }) => {
   if (networkError?.message === 'Failed to fetch') {
     enqueueSnackbar('Unable to communicate with CORD Platform', {

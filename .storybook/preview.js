@@ -2,7 +2,6 @@ import { addDecorator, addParameters } from '@storybook/react';
 import { withInfo } from '@storybook/addon-info';
 import { HashRouter } from 'react-router-dom';
 import { createElement, Fragment } from 'react';
-import { ApolloProvider } from '../src/api';
 import { appProviders } from '../src/App';
 import { Nest } from '../src/components/Nest';
 
@@ -12,11 +11,7 @@ import '../src/util/hacky-inspect-dates';
 
 addDecorator(withInfo);
 
-const storybookProviders = [
-  createElement(HashRouter),
-  createElement(ApolloProvider),
-  ...appProviders,
-];
+const storybookProviders = [createElement(HashRouter), ...appProviders];
 
 addDecorator((story) => {
   // render story with contexts provided here.

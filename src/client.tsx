@@ -5,11 +5,9 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import { HelmetProvider } from 'react-helmet-async';
 import { BrowserRouter } from 'react-router-dom';
-import { ApolloProvider } from './api';
 import { App } from './App';
 import { Nest } from './components/Nest';
 import { ServerDataProvider } from './components/ServerData';
-import { SnackbarProvider } from './components/Snackbar';
 
 // Set current timezone in cookie so server can render with it.
 // This isn't great as a change to this or first load will cause the server to
@@ -60,8 +58,6 @@ const clientOnlyProviders = [
   <ServerDataProvider value={serverData} />,
   <BrowserRouter />,
   <HelmetProvider children={<></>} />,
-  <SnackbarProvider />, // needed by apollo
-  <ApolloProvider />,
 ];
 
 // Blur auto-focused elements on app start as MUI doesn't boot state correctly

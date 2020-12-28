@@ -22,7 +22,6 @@ import { App } from '../App';
 import { Nest } from '../components/Nest';
 import { ServerLocation } from '../components/Routing';
 import { ServerData, ServerDataProvider } from '../components/ServerData';
-import { SnackbarProvider } from '../components/Snackbar';
 import { RequestContext } from '../hooks';
 import { fetchDataForRender } from './fetchDataForRender';
 import { indexHtml } from './indexHtml';
@@ -126,7 +125,6 @@ const ServerApp = ({
       <RequestContext.Provider value={req} children={<></>} />,
       <StaticRouter location={req.url} />,
       <ApolloProvider client={apollo} children={<></>} />,
-      <SnackbarProvider />,
     ]}
   >
     <App />
