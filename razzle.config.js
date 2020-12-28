@@ -62,6 +62,21 @@ const modifyWebpackConfig = (opts) => {
         target: `http://localhost:${process.env.SERVER_PORT}`,
       };
       config.devServer.index = '';
+
+      // Ignore proxy created log message on start to reduce clutter & prevent
+      // confusion with ports.
+      const proxyLogger = require('http-proxy-middleware/lib/logger').getInstance();
+      const origInfo = proxyLogger.info;
+      proxyLogger.info = function (...args) {
+        if (
+          typeof args[0] === 'string' &&
+          args[0].startsWith('[HPM] Proxy created:')
+        ) {
+          proxyLogger.debug(...args);
+        } else {
+          origInfo.call(proxyLogger, ...args);
+        }
+      };
     }
   }
 
