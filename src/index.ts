@@ -16,13 +16,11 @@ if (module.hot) {
   console.info('✅  Server-side HMR Enabled!');
 }
 
-const port = process.env.PORT ? parseInt(process.env.PORT, 10) : 3000;
-
 // eslint-disable-next-line import/no-default-export
 export default Promise.resolve().then(() =>
   express()
     .use((req, res) => currentApp(req, res))
-    .listen(port, () => {
-      console.log(`> Started on port ${port}`);
+    .listen(process.env.SERVER_PORT, () => {
+      console.log(`> Started on port ${process.env.PORT}`);
     })
 );

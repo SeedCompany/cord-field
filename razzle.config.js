@@ -43,6 +43,28 @@ const modifyWebpackConfig = (opts) => {
     );
   }
 
+  // define server port to listen on that may be different than the actual exposed port
+  const port = process.env.PORT ?? 3000;
+  process.env.SERVER_PORT = port;
+  if (opts.env.dev) {
+    // WHAT: Configure webpack dev server to listen on exposed port and proxy to
+    // server port that's incremented by 1.
+    // WHY: This prevents cross-origin errors since the browser only uses a single port.
+    // NOTE: This configuration differs from examples by flipping the
+    // configured port and the proxied port, since I think it's confusing, for
+    // example, to set your port to 1234 but have to access in browser at 1235.
+    process.env.SERVER_PORT++;
+    config.output.publicPath = `http://localhost:${port}/`;
+    if (isClient) {
+      config.devServer.port = port;
+      config.devServer.proxy = {
+        context: () => true,
+        target: `http://localhost:${process.env.SERVER_PORT}`,
+      };
+      config.devServer.index = '';
+    }
+  }
+
   if (isClient && process.argv.includes('--analyze')) {
     config.plugins.push(
       new BundleAnalyzerPlugin({
