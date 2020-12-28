@@ -1,7 +1,7 @@
 import { loadableReady } from '@loadable/component';
 import Cookies from 'js-cookie';
 import { Settings } from 'luxon';
-import React, { ComponentType } from 'react';
+import React from 'react';
 import ReactDOM from 'react-dom';
 import { HelmetProvider } from 'react-helmet-async';
 import { BrowserRouter } from 'react-router-dom';
@@ -64,29 +64,18 @@ const clientOnlyProviders = [
   <ApolloProvider />,
 ];
 
-const render = (TheApp: ComponentType) => {
-  void Promise.all(setup).then(() => {
-    ReactDOM.hydrate(
-      <Nest elements={clientOnlyProviders}>
-        <TheApp />
-      </Nest>,
-      root,
-      () => {
-        const jssStyles = document.getElementById('jss-ssr');
-        jssStyles?.parentNode?.removeChild(jssStyles);
-      }
-    );
-  });
-};
-
 // Blur auto-focused elements on app start as MUI doesn't boot state correctly
 (document.activeElement as any)?.blur();
 
-render(App);
-
-if (module.hot) {
-  module.hot.accept('./App', () => {
-    // eslint-disable-next-line @typescript-eslint/no-require-imports,@typescript-eslint/no-var-requires
-    render(require('./App').App);
-  });
-}
+void Promise.all(setup).then(() => {
+  ReactDOM.hydrate(
+    <Nest elements={clientOnlyProviders}>
+      <App />
+    </Nest>,
+    root,
+    () => {
+      const jssStyles = document.getElementById('jss-ssr');
+      jssStyles?.parentNode?.removeChild(jssStyles);
+    }
+  );
+});

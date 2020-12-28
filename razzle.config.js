@@ -101,8 +101,8 @@ const replaceItemWith = (list, predicate, replacement) => {
 
 module.exports = {
   plugins: [],
-  experimental: {
-    reactRefresh: true,
+  options: {
+    useReactRefresh: true,
   },
   modifyWebpackConfig,
 };
