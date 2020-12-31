@@ -1,5 +1,6 @@
 import {
   ApolloClient,
+  ApolloLink,
   ApolloProvider,
   HttpLink,
   InMemoryCache,
@@ -16,6 +17,7 @@ import { resetServerContext } from 'react-beautiful-dnd';
 import ReactDOMServer from 'react-dom/server';
 import { FilledContext, HelmetProvider } from 'react-helmet-async';
 import { StaticRouter } from 'react-router-dom/server';
+import { ErrorCache, ErrorCacheLink } from '../api/errorCache.link';
 import { possibleTypes } from '../api/fragmentMatcher.generated';
 import { typePolicies } from '../api/typePolicies';
 import { App } from '../App';
@@ -28,7 +30,10 @@ import { indexHtml } from './indexHtml';
 
 const serverHost = process.env.RAZZLE_API_BASE_URL || '';
 
-export const createServerApolloClient = (req: Request) => {
+export const createServerApolloClient = (
+  req: Request,
+  errorCache: ErrorCache
+) => {
   const httpLink = new HttpLink({
     uri: `${serverHost}/graphql`,
     credentials: 'include',
@@ -38,6 +43,8 @@ export const createServerApolloClient = (req: Request) => {
       cookie: req.header('Cookie'),
     },
   });
+
+  const errorCacheLink = new ErrorCacheLink(errorCache, true);
 
   const cache = new InMemoryCache({
     possibleTypes,
@@ -53,12 +60,13 @@ export const createServerApolloClient = (req: Request) => {
   return new ApolloClient({
     ssrMode: true,
     cache,
-    link: httpLink,
+    link: ApolloLink.concat(errorCacheLink, httpLink),
   });
 };
 
 export const renderServerSideApp = async (req: Request, res: Response) => {
-  const apollo = createServerApolloClient(req);
+  const errorCache = {};
+  const apollo = createServerApolloClient(req, errorCache);
 
   const helmetContext: Partial<FilledContext> = {};
   const extractor = new ChunkExtractor({
@@ -103,6 +111,7 @@ export const renderServerSideApp = async (req: Request, res: Response) => {
     extractor,
     sheets,
     apolloCache: apollo.extract(),
+    errorCache,
   });
   res.status(location.statusCode ?? 200).send(fullMarkup);
 };

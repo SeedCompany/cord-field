@@ -2,6 +2,7 @@ import { ChunkExtractor } from '@loadable/server';
 import ServerStyleSheets from '@material-ui/styles/ServerStyleSheets';
 import { pickBy } from 'lodash';
 import { HelmetData } from 'react-helmet-async';
+import { ErrorCache } from '../api/errorCache.link';
 import { ServerData } from '../components/ServerData';
 
 export const indexHtml = ({
@@ -11,6 +12,7 @@ export const indexHtml = ({
   extractor,
   sheets,
   apolloCache,
+  errorCache,
 }: {
   helmet: HelmetData;
   serverData: ServerData;
@@ -18,6 +20,7 @@ export const indexHtml = ({
   extractor: ChunkExtractor;
   sheets: ServerStyleSheets;
   apolloCache: unknown;
+  errorCache: ErrorCache;
 }) => `<!doctype html>
 <html ${helmet.htmlAttributes.toString()}>
 <head>
@@ -40,6 +43,7 @@ export const indexHtml = ({
       /</g,
       '\\u003c'
     )};
+    window.__APOLLO_ERRORS__ = ${JSON.stringify(errorCache)};
   </script>
   ${extractor.getScriptTags()}
 </body>

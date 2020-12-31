@@ -9,6 +9,7 @@ import {
 } from '@apollo/client';
 import React, { FC, useContext, useState } from 'react';
 import { delayLink } from './delay.link';
+import { ErrorCache, ErrorCacheLink } from './errorCache.link';
 import { possibleTypes } from './fragmentMatcher.generated';
 import { useErrorRendererLink } from './renderErrors.link';
 import { SessionLink } from './session.link';
@@ -49,12 +50,14 @@ export const ApolloProvider: FC = ({ children }) => {
     if (initialState) {
       cache.restore(initialState);
     }
+    const errorCache: ErrorCache = (window as any).__APOLLO_ERRORS__ || {};
 
     const client = new ApolloClient({
       cache,
       link: ApolloLink.from([
         errorRendererLink,
         delayLink,
+        new ErrorCacheLink(errorCache),
         sessionLink,
         httpLink,
       ]),

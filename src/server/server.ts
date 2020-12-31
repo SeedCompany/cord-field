@@ -37,7 +37,7 @@ app.use(
 );
 
 app.get('/logout', (req, res, next) => {
-  createServerApolloClient(req)
+  createServerApolloClient(req, {})
     .mutate({
       mutation: LogoutDocument,
     })
