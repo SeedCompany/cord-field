@@ -2,11 +2,9 @@ import {
   ApolloClient,
   ApolloLink,
   ApolloProvider as BaseApolloProvider,
-  fromPromise,
   getApolloContext,
   HttpLink,
   InMemoryCache,
-  RequestHandler,
   TypePolicies,
 } from '@apollo/client';
 import {
@@ -15,39 +13,14 @@ import {
 } from '@apollo/client/link/error';
 import { IconButton } from '@material-ui/core';
 import { Close } from '@material-ui/icons';
-import { compact } from 'lodash';
 import { ProviderContext as Snackbar, useSnackbar } from 'notistack';
 import React, { FC, useContext, useRef, useState } from 'react';
-import { sleep } from '../util';
+import { delayLink } from './delay.link';
 import { possibleTypes } from './fragmentMatcher.generated';
-import { GQLOperations } from './operations.generated';
 import { SessionLink } from './session.link';
 import { typePolicies } from './typePolicies';
 
 const serverHost = process.env.RAZZLE_API_BASE_URL || '';
-
-let API_DEBUG = {
-  delay: 0,
-};
-if (process.env.NODE_ENV !== 'production' && typeof window !== 'undefined') {
-  let privateDelay = 0;
-  API_DEBUG = {
-    get delay() {
-      return privateDelay;
-    },
-    set delay(newDelay) {
-      privateDelay = newDelay;
-      saveState();
-    },
-  };
-  (globalThis as any).API_DEBUG = API_DEBUG;
-  const saveState = () =>
-    window.history.replaceState({ API_DEBUG }, window.document.title);
-  const prev = window.history.state?.API_DEBUG;
-  if (prev) {
-    API_DEBUG.delay = prev.delay;
-  }
-}
 
 export const ApolloProvider: FC = ({ children }) => {
   const parentContext = useContext(getApolloContext());
@@ -70,22 +43,6 @@ export const ApolloProvider: FC = ({ children }) => {
       errorRendererRef.current?.(error)
     );
 
-    const delayLink: RequestHandler | null =
-      process.env.NODE_ENV === 'production'
-        ? null
-        : (operation, forward) => {
-            const currentDelay = API_DEBUG.delay;
-            if (
-              !currentDelay ||
-              operation.operationName === GQLOperations.Query.Session
-            ) {
-              return forward(operation);
-            }
-            return fromPromise(sleep(currentDelay)).flatMap(() =>
-              forward(operation)
-            );
-          };
-
     const cache = new InMemoryCache({
       possibleTypes,
       // Yes the assertion is necessary. It's because, as of TS 4.0, index
@@ -104,9 +61,12 @@ export const ApolloProvider: FC = ({ children }) => {
 
     const client = new ApolloClient({
       cache,
-      link: ApolloLink.from(
-        compact([errorRendererLink, delayLink, sessionLink, httpLink])
-      ),
+      link: ApolloLink.from([
+        errorRendererLink,
+        delayLink,
+        sessionLink,
+        httpLink,
+      ]),
     });
     sessionLink.client = client;
 
