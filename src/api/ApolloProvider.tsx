@@ -7,16 +7,10 @@ import {
   InMemoryCache,
   TypePolicies,
 } from '@apollo/client';
-import {
-  onError as createErrorLink,
-  ErrorHandler,
-} from '@apollo/client/link/error';
-import { IconButton } from '@material-ui/core';
-import { Close } from '@material-ui/icons';
-import { ProviderContext as Snackbar, useSnackbar } from 'notistack';
-import React, { FC, useContext, useRef, useState } from 'react';
+import React, { FC, useContext, useState } from 'react';
 import { delayLink } from './delay.link';
 import { possibleTypes } from './fragmentMatcher.generated';
+import { useErrorRendererLink } from './renderErrors.link';
 import { SessionLink } from './session.link';
 import { typePolicies } from './typePolicies';
 
@@ -24,6 +18,7 @@ const serverHost = process.env.RAZZLE_API_BASE_URL || '';
 
 export const ApolloProvider: FC = ({ children }) => {
   const parentContext = useContext(getApolloContext());
+  const errorRendererLink = useErrorRendererLink();
 
   // Client is created only once.
   const [client] = useState(() => {
@@ -38,10 +33,6 @@ export const ApolloProvider: FC = ({ children }) => {
     });
 
     const sessionLink = new SessionLink();
-
-    const errorRendererLink = createErrorLink((error) =>
-      errorRendererRef.current?.(error)
-    );
 
     const cache = new InMemoryCache({
       possibleTypes,
@@ -73,12 +64,6 @@ export const ApolloProvider: FC = ({ children }) => {
     return client;
   });
 
-  // Using ref to store error handler function, so it can be swapped on each
-  // render with one that has access to the current snackbar functions.
-  // (While still allowing use of the same single client)
-  const errorRendererRef = useRef<ErrorHandler>();
-  errorRendererRef.current = errorRenderer(useSnackbar());
-
   // Don't redefine provider if client is already defined, essentially making
   // this provider a noop.
   if (parentContext.client) {
@@ -86,40 +71,4 @@ export const ApolloProvider: FC = ({ children }) => {
   }
 
   return <BaseApolloProvider client={client}>{children}</BaseApolloProvider>;
-};
-
-const errorRenderer = ({
-  enqueueSnackbar,
-  closeSnackbar,
-}: Snackbar): ErrorHandler => ({ graphQLErrors, networkError }) => {
-  if (networkError?.message === 'Failed to fetch') {
-    enqueueSnackbar('Unable to communicate with CORD Platform', {
-      variant: 'error',
-      preventDuplicate: true,
-    });
-    return;
-  }
-
-  for (const gqlError of graphQLErrors || []) {
-    const ext = gqlError.extensions ?? {};
-    const schemaError = ext.code === 'INTERNAL_SERVER_ERROR';
-
-    if (!schemaError && ext.status < 500) {
-      continue;
-    }
-
-    const trace: string[] = ext.exception?.stacktrace ?? [];
-    if (trace.length > 0 && !schemaError) {
-      console.error(trace.join('\n'));
-    }
-    enqueueSnackbar(gqlError.message, {
-      variant: 'error',
-      persist: true,
-      action: (key: string) => (
-        <IconButton color="inherit" onClick={() => closeSnackbar(key)}>
-          <Close />
-        </IconButton>
-      ),
-    });
-  }
 };
