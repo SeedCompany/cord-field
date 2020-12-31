@@ -13,6 +13,7 @@ import { CardGroup } from '../../../components/CardGroup';
 import { DataButton } from '../../../components/DataButton';
 import { useDialog } from '../../../components/Dialog';
 import { DisplaySimpleProperty } from '../../../components/DisplaySimpleProperty';
+import { Error } from '../../../components/Error';
 import { Fab } from '../../../components/Fab';
 import { FilesOverviewCard } from '../../../components/files/FilesOverviewCard';
 import {
@@ -186,9 +187,13 @@ export const ProjectOverview: FC = () => {
   return (
     <main className={classes.root}>
       <Helmet title={projectOverviewData?.project.name.value ?? undefined} />
-      {error ? (
-        <Typography variant="h4">Error loading project</Typography>
-      ) : (
+      <Error error={error}>
+        {{
+          NotFound: 'Could not find project',
+          Default: 'Error loading project',
+        }}
+      </Error>
+      {!error && (
         <div className={classes.main}>
           <header className={classes.header}>
             <Typography
