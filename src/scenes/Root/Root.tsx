@@ -2,6 +2,7 @@ import { makeStyles } from '@material-ui/core';
 import React from 'react';
 import { Helmet } from 'react-helmet-async';
 import { Route, Routes } from 'react-router-dom';
+import { NotFoundPage } from '../../components/Error';
 import { Authentication } from '../Authentication';
 import { Home } from '../Home';
 import { Languages } from '../Languages';
@@ -42,6 +43,7 @@ export const Root = () => {
       <Route path="/languages/*" element={<Languages />} />
       <Route path="/users/*" element={<Users />} />
       <Route path="/search" element={<SearchResults />} />
+      <Route path="*" element={<NotFoundPage />} />
     </Routes>
   );
 
