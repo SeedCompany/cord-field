@@ -43,6 +43,14 @@ export const Navigate =
 export const useNavigate =
   typeof window === 'undefined' ? useServerNavigate : useClientNavigate;
 
+export const StatusCode = ({ code }: { code: number }) => {
+  const serverLocation = useContext(ServerLocationContext);
+  if (serverLocation) {
+    serverLocation.statusCode = code;
+  }
+  return null;
+};
+
 interface ServerLocationContextType {
   url?: string;
   statusCode?: number;
