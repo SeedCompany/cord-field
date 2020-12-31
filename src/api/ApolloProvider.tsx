@@ -2,10 +2,10 @@ import {
   ApolloClient,
   ApolloLink,
   ApolloProvider as BaseApolloProvider,
+  fromPromise,
   getApolloContext,
   HttpLink,
   InMemoryCache,
-  Observable,
   RequestHandler,
   TypePolicies,
 } from '@apollo/client';
@@ -18,10 +18,10 @@ import { Close } from '@material-ui/icons';
 import { compact } from 'lodash';
 import { ProviderContext as Snackbar, useSnackbar } from 'notistack';
 import React, { FC, useContext, useRef, useState } from 'react';
-import { SessionDocument } from '../components/Session/session.generated';
 import { sleep } from '../util';
 import { possibleTypes } from './fragmentMatcher.generated';
 import { GQLOperations } from './operations.generated';
+import { SessionLink } from './session.link';
 import { typePolicies } from './typePolicies';
 
 const serverHost = process.env.RAZZLE_API_BASE_URL || '';
@@ -64,8 +64,10 @@ export const ApolloProvider: FC = ({ children }) => {
       credentials: 'include',
     });
 
-    const errorLink = createErrorLink((error) =>
-      errorHandlerRef.current?.(error)
+    const sessionLink = new SessionLink();
+
+    const errorRendererLink = createErrorLink((error) =>
+      errorRendererRef.current?.(error)
     );
 
     const delayLink: RequestHandler | null =
@@ -79,7 +81,7 @@ export const ApolloProvider: FC = ({ children }) => {
             ) {
               return forward(operation);
             }
-            return promiseToObservable(sleep(currentDelay)).flatMap(() =>
+            return fromPromise(sleep(currentDelay)).flatMap(() =>
               forward(operation)
             );
           };
@@ -100,17 +102,22 @@ export const ApolloProvider: FC = ({ children }) => {
       cache.restore(initialState);
     }
 
-    return new ApolloClient({
+    const client = new ApolloClient({
       cache,
-      link: ApolloLink.from(compact([errorLink, delayLink, httpLink])),
+      link: ApolloLink.from(
+        compact([errorRendererLink, delayLink, sessionLink, httpLink])
+      ),
     });
+    sessionLink.client = client;
+
+    return client;
   });
 
   // Using ref to store error handler function, so it can be swapped on each
   // render with one that has access to the current snackbar functions.
   // (While still allowing use of the same single client)
-  const errorHandlerRef = useRef<ErrorHandler>();
-  errorHandlerRef.current = errorHandler(useSnackbar(), client);
+  const errorRendererRef = useRef<ErrorHandler>();
+  errorRendererRef.current = errorRenderer(useSnackbar());
 
   // Don't redefine provider if client is already defined, essentially making
   // this provider a noop.
@@ -121,10 +128,10 @@ export const ApolloProvider: FC = ({ children }) => {
   return <BaseApolloProvider client={client}>{children}</BaseApolloProvider>;
 };
 
-const errorHandler = (
-  { enqueueSnackbar, closeSnackbar }: Snackbar,
-  client: ApolloClient<unknown>
-): ErrorHandler => ({ graphQLErrors, networkError, operation, forward }) => {
+const errorRenderer = ({
+  enqueueSnackbar,
+  closeSnackbar,
+}: Snackbar): ErrorHandler => ({ graphQLErrors, networkError }) => {
   if (networkError?.message === 'Failed to fetch') {
     enqueueSnackbar('Unable to communicate with CORD Platform', {
       variant: 'error',
@@ -136,19 +143,6 @@ const errorHandler = (
   for (const gqlError of graphQLErrors || []) {
     const ext = gqlError.extensions ?? {};
     const schemaError = ext.code === 'INTERNAL_SERVER_ERROR';
-
-    // Re-establish session if needed then retry the operation
-    if (
-      ext.code === 'NoSession' &&
-      operation.operationName !== GQLOperations.Query.Session
-    ) {
-      return promiseToObservable(
-        client.query({
-          query: SessionDocument,
-          fetchPolicy: 'network-only',
-        })
-      ).flatMap(() => forward(operation));
-    }
 
     if (!schemaError && ext.status < 500) {
       continue;
@@ -169,19 +163,3 @@ const errorHandler = (
     });
   }
 };
-
-/**
- * Convert promise to observable
- * @see https://github.com/apollographql/apollo-link/issues/646#issuecomment-423279220
- */
-function promiseToObservable<T>(query: Promise<T>) {
-  return new Observable<T>((subscriber) => {
-    query
-      .then((value) => {
-        if (subscriber.closed) return;
-        subscriber.next(value);
-        subscriber.complete();
-      })
-      .catch((err) => subscriber.error(err));
-  });
-}
