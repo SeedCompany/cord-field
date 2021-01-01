@@ -1,9 +1,9 @@
 import { ApolloError } from '@apollo/client';
 import { Button, Grid, makeStyles, Typography } from '@material-ui/core';
 import clsx from 'clsx';
-import React, { isValidElement, ReactElement } from 'react';
+import { isPlainObject } from 'lodash';
+import React, { isValidElement, ReactNode } from 'react';
 import { getErrorInfo } from '../../api/error.types';
-import { Many } from '../../util';
 import { ButtonLink, StatusCode, useNavigate } from '../Routing';
 import { ErrorRenderers, renderError } from './error-handling';
 
@@ -28,7 +28,7 @@ export interface ErrorProps {
    * An object can also be given to specify react nodes or render functions for
    * each error code.
    */
-  children: Many<ReactElement> | string | ErrorRenderers;
+  children: ReactNode | ErrorRenderers;
   /**
    * The error. This is used to determine if component should show
    * and it's given to the children error rendering functions
@@ -68,11 +68,9 @@ export const Error = ({
   }
 
   const node =
-    isValidElement(children) ||
-    Array.isArray(children) ||
-    typeof children === 'string'
-      ? children
-      : renderError(error, children as ErrorRenderers);
+    isPlainObject(children) && !isValidElement(children)
+      ? renderError(error, children as ErrorRenderers)
+      : children;
   const rendered =
     typeof node !== 'string' ? (
       node
