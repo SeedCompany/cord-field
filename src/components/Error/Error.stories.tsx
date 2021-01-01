@@ -23,5 +23,6 @@ const apolloErrorInstance = new ApolloError({
 export const Error = () => (
   <ErrorComponent
     error={boolean('Not Found', true) ? apolloErrorInstance : undefined}
+    children={''}
   />
 );
