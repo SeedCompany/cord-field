@@ -13,6 +13,7 @@ import {
   DisplaySimpleProperty,
   DisplaySimplePropertyProps,
 } from '../../../components/DisplaySimpleProperty';
+import { Error } from '../../../components/Error';
 import { Fab } from '../../../components/Fab';
 import {
   useDateFormatter,
@@ -90,9 +91,13 @@ export const LanguageDetail = () => {
   return (
     <main className={classes.root}>
       <Helmet title={displayName?.value || name?.value || undefined} />
-      {error ? (
-        <Typography variant="h4">Error loading Language</Typography>
-      ) : (
+      <Error error={error}>
+        {{
+          NotFound: 'Could not find language',
+          Default: 'Error loading language',
+        }}
+      </Error>
+      {!error && (
         <>
           <div className={classes.header}>
             <Typography

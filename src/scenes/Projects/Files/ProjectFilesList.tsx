@@ -15,6 +15,7 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { File as CFFile } from '../../../api';
 import { Breadcrumb } from '../../../components/Breadcrumb';
 import { useDialog } from '../../../components/Dialog';
+import { Error } from '../../../components/Error';
 import {
   FileActionsPopup as ActionsMenu,
   FileAction,
@@ -298,11 +299,11 @@ const ProjectFilesListWrapped: FC = () => {
       />
       <ContentContainer>
         {error || (!loading && !items) ? (
-          <Typography variant="h4">Error fetching Project Files</Typography>
+          <Error show error={error}>
+            Error loading project's files
+          </Error>
         ) : directoryIsNotInProject ? (
-          <Typography variant="h4">
-            This folder does not exist in this project
-          </Typography>
+          <Error show>This folder does not exist in this project</Error>
         ) : (
           <>
             {loading ? (

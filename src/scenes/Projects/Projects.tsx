@@ -1,62 +1,31 @@
 import React from 'react';
-import { useRoutes } from 'react-router-dom';
+import { Route, Routes } from 'react-router-dom';
+import { NotFoundRoute } from '../../components/Error';
 import { Engagement } from '../Engagement';
 import { PartnershipList } from '../Partnerships/List';
-import { CreateProduct } from '../Products/Create';
-import { EditProduct } from '../Products/Edit';
+import { Products } from '../Products';
 import { ProjectBudget } from './Budget';
-import { ProjectFilesList } from './Files';
+import { Files } from './Files';
 import { ProjectList } from './List';
 import { ProjectMembersList } from './Members/List';
 import { ProjectOverview } from './Overview';
 
-export const Projects = () => {
-  const matched = useRoutes([
-    {
-      path: '',
-      element: <ProjectList />,
-    },
-    {
-      path: ':projectId',
-      element: <ProjectOverview />,
-    },
-    {
-      path: ':projectId/files',
-      element: <ProjectFilesList />,
-    },
-    {
-      path: ':projectId/files/:folderId',
-      element: <ProjectFilesList />,
-    },
-    {
-      path: ':projectId/members',
-      element: <ProjectMembersList />,
-    },
-    {
-      path: ':projectId/engagements/:engagementId',
-      element: <Engagement />,
-    },
-    {
-      path: ':projectId/partnerships',
-      element: <PartnershipList />,
-    },
-    {
-      path: '/:projectId/budget',
-      element: <ProjectBudget />,
-    },
-    {
-      path: ':projectId/engagements/:engagementId/products/create',
-      element: <CreateProduct />,
-    },
-    {
-      path: ':projectId/engagements/:engagementId/products/:productId',
-      element: <EditProduct />,
-    },
-  ]);
-
-  if (!matched) {
-    return <div>Not Found</div>;
-  }
-
-  return <>{matched}</>;
-};
+export const Projects = () => (
+  <Routes>
+    <Route path="" element={<ProjectList />} />
+    <Route path=":projectId">
+      <Route path="" element={<ProjectOverview />} />
+      <Route path="files/*" element={<Files />} />
+      <Route path="members" element={<ProjectMembersList />} />
+      <Route path="engagements/:engagementId">
+        <Route path="" element={<Engagement />} />
+        <Route path="products/*" element={<Products />} />
+        {NotFoundRoute}
+      </Route>
+      <Route path="partnerships" element={<PartnershipList />} />
+      <Route path="budget" element={<ProjectBudget />} />
+      {NotFoundRoute}
+    </Route>
+    {NotFoundRoute}
+  </Routes>
+);

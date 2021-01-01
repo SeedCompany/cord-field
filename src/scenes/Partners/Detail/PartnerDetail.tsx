@@ -19,6 +19,7 @@ import { Avatar } from '../../../components/Avatar';
 import { BooleanProperty } from '../../../components/BooleanProperty';
 import { DataButton } from '../../../components/DataButton';
 import { useDialog } from '../../../components/Dialog';
+import { Error } from '../../../components/Error';
 import { Fab } from '../../../components/Fab';
 import { useDateTimeFormatter } from '../../../components/Formatters';
 import { UserListItemCardPortrait } from '../../../components/UserListItemCard';
@@ -113,9 +114,13 @@ export const PartnerDetail = () => {
   return (
     <main className={classes.root}>
       <Helmet title={name ?? undefined} />
-      {error ? (
-        <Typography variant="h4">Error fetching partner</Typography>
-      ) : (
+      <Error error={error}>
+        {{
+          NotFound: 'Could not find partner',
+          Default: 'Error loading partner',
+        }}
+      </Error>
+      {!error && (
         <div className={classes.main}>
           <header className={classes.header}>
             <Typography

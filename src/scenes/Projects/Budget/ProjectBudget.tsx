@@ -8,6 +8,7 @@ import { useParams } from 'react-router-dom';
 import { AddItemCard } from '../../../components/AddItemCard';
 import { Breadcrumb } from '../../../components/Breadcrumb';
 import { DefinedFileCard } from '../../../components/DefinedFileCard';
+import { Error } from '../../../components/Error';
 import { FileActionsContextProvider } from '../../../components/files/FileActions';
 import { useCurrencyFormatter } from '../../../components/Formatters/useCurrencyFormatter';
 import { ContentContainer as Content } from '../../../components/Layout/ContentContainer';
@@ -61,11 +62,16 @@ export const ProjectBudget = () => {
     <Content>
       <Helmet title={`Budget - ${data?.project.name.value ?? 'A Project'}`} />
       {error ? (
-        <Typography variant="h4">Error fetching Project Budget</Typography>
+        <Error error={error}>
+          {{
+            NotFound: "Could not find project's field budget",
+            Default: "Error loading project's field budget",
+          }}
+        </Error>
       ) : budget?.canRead === false ? (
-        <Typography variant="h4">
-          You do not have permission to view this project's budget
-        </Typography>
+        <Error show>
+          You do not have permission to view this project's field budget
+        </Error>
       ) : (
         <>
           <Breadcrumbs>
