@@ -11,7 +11,6 @@ import { ChunkExtractor } from '@loadable/server';
 import ServerStyleSheets from '@material-ui/styles/ServerStyleSheets';
 import { Request, Response } from 'express';
 import fetch from 'node-fetch';
-import * as path from 'path';
 import React from 'react';
 import { resetServerContext } from 'react-beautiful-dnd';
 import ReactDOMServer from 'react-dom/server';
@@ -70,7 +69,7 @@ export const renderServerSideApp = async (req: Request, res: Response) => {
 
   const helmetContext: Partial<FilledContext> = {};
   const extractor = new ChunkExtractor({
-    statsFile: path.resolve('build/loadable-stats.json'),
+    statsFile: process.env.LOADABLE_STATS_MANIFEST!,
     entrypoints: ['client'],
   });
   const sheets = new ServerStyleSheets();

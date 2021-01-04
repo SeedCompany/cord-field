@@ -41,6 +41,14 @@ const modifyWebpackConfig = (opts) => {
         writeToDisk: { filename },
       })
     );
+  } else {
+    config.plugins.push(
+      new DefinePlugin({
+        'process.env.LOADABLE_STATS_MANIFEST': opts.env.dev
+          ? `require('path').resolve('build/loadable-stats.json')`
+          : `__dirname + '/loadable-stats.json'`,
+      })
+    );
   }
 
   // define server port to listen on that may be different than the actual exposed port
