@@ -3,18 +3,12 @@ import compression from 'compression';
 import cookieParser from 'cookie-parser';
 import express from 'express';
 import helmet from 'helmet';
-import path from 'path';
 import responseTime from 'response-time';
 import { LogoutDocument } from '../scenes/Authentication/Logout/logout.generated';
 import {
   createServerApolloClient,
   renderServerSideApp,
 } from './renderServerSideApp';
-
-const {
-  PUBLIC_URL = '',
-  RAZZLE_PUBLIC_DIR: PUBLIC_DIR = path.resolve(__dirname, '../public'),
-} = process.env;
 
 export const app = express();
 
@@ -30,8 +24,8 @@ app.use(cookieParser());
 
 // Serve static assets
 app.use(
-  PUBLIC_URL,
-  express.static(PUBLIC_DIR, {
+  process.env.PUBLIC_URL || '',
+  express.static(process.env.RAZZLE_PUBLIC_DIR!, {
     maxAge: '30 days',
   })
 );
