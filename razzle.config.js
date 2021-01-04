@@ -78,6 +78,13 @@ const modifyWebpackConfig = (opts) => {
         }
       };
     }
+  } else if (isServer) {
+    // convert SERVER_PORT usage to just PORT since only a single port is used
+    config.plugins.push(
+      new DefinePlugin({
+        'process.env.SERVER_PORT': 'process.env.PORT',
+      })
+    );
   }
 
   if (isClient && process.argv.includes('--analyze')) {
