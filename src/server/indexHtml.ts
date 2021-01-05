@@ -2,7 +2,7 @@ import { ChunkExtractor } from '@loadable/server';
 import ServerStyleSheets from '@material-ui/styles/ServerStyleSheets';
 import { pickBy } from 'lodash';
 import { HelmetData } from 'react-helmet-async';
-import { ErrorCache } from '../api/errorCache.link';
+import { ErrorCache } from '../api/links/errorCache.link';
 import { ServerData } from '../components/ServerData';
 
 export const indexHtml = ({

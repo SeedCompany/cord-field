@@ -8,11 +8,11 @@ import {
   TypePolicies,
 } from '@apollo/client';
 import React, { FC, useContext, useState } from 'react';
-import { delayLink } from './delay.link';
-import { ErrorCache, ErrorCacheLink } from './errorCache.link';
 import { possibleTypes } from './fragmentMatcher.generated';
-import { useErrorRendererLink } from './renderErrors.link';
-import { SessionLink } from './session.link';
+import { delayLink } from './links/delay.link';
+import { ErrorCache, ErrorCacheLink } from './links/errorCache.link';
+import { useErrorRendererLink } from './links/renderErrors.link';
+import { SessionLink } from './links/session.link';
 import { typePolicies } from './typePolicies';
 
 const serverHost = process.env.RAZZLE_API_BASE_URL || '';

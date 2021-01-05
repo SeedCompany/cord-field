@@ -1,6 +1,6 @@
 import { fromPromise, RequestHandler } from '@apollo/client';
-import { sleep } from '../util';
-import { GQLOperations } from './operations.generated';
+import { sleep } from '../../util';
+import { GQLOperations } from '../operations.generated';
 
 let API_DEBUG = {
   delay: 0,
