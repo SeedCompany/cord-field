@@ -27,10 +27,15 @@ if (module.hot) {
 }
 
 // eslint-disable-next-line import/no-default-export
-export default Promise.resolve().then(() =>
-  express()
+export default Promise.resolve().then(() => {
+  const server = express()
     .use((req, res) => currentApp(req, res))
     .listen(process.env.SERVER_PORT, () => {
       console.log(`> Started on port ${process.env.PORT}`);
-    })
-);
+    });
+
+  const signals: NodeJS.Signals[] = ['SIGINT', 'SIGTERM'];
+  for (const signal of signals) {
+    process.on(signal, () => server.close());
+  }
+});
