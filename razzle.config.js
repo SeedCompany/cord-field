@@ -52,7 +52,7 @@ const modifyWebpackConfig = (opts) => {
   }
 
   // define server port to listen on that may be different than the actual exposed port
-  const port = process.env.PORT ?? 3000;
+  const port = process.env.PORT || 3000;
   process.env.SERVER_PORT = port;
   if (opts.env.dev) {
     // WHAT: Configure webpack dev server to listen on exposed port and proxy to
