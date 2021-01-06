@@ -26,7 +26,6 @@ import {
   compareNullable,
   getHelperText,
   showError,
-  useFocusOnEnabled,
 } from './util';
 
 type GenericScriptureRange = ScriptureRange | RawScriptureRange;
@@ -109,7 +108,7 @@ export function VersesField({
   const classes = useStyles();
 
   const [inputValue, setInputValue] = useState<string>('');
-  const { input, meta, rest } = useField<Val>({
+  const { input, meta, ref, rest } = useField<Val>({
     validate: [validateReference, required ? validators.requiredArray : null],
     parse: (value: Val | string): Val => {
       // need to call onChange in two cases
@@ -146,7 +145,6 @@ export function VersesField({
     isEqual: compareNullable((a, b) => areListsDeepEqual(a, b)),
     ...props,
   });
-  const ref = useFocusOnEnabled(meta);
   const [scriptureRanges, setScriptureRanges] = useState<Val>(
     // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
     input.value ?? []

@@ -1,15 +1,21 @@
 import { compact } from 'lodash';
+import { useEffect } from 'react';
 import { UseFieldConfig, useField as useFinalForm } from 'react-final-form';
 import { many, Many } from '../../util';
 import { useFieldName, validators } from './index';
-import { useIsSubmitting } from './util';
+import { useFocus, useIsSubmitting } from './util';
 import { Validator } from './validators';
 
-export type FieldConfig<Value> = Omit<UseFieldConfig<Value>, 'validate'> & {
+export type FieldConfig<Value, T extends HTMLElement = HTMLElement> = Omit<
+  UseFieldConfig<Value>,
+  'validate'
+> & {
   name: string;
   disabled?: boolean;
   required?: boolean;
   validate?: Many<Validator<Value> | null>;
+  /** also do this on focus */
+  onFocus?: (el: T) => void;
 };
 
 export const useField = <Value, T extends HTMLElement = HTMLElement>({
@@ -17,8 +23,9 @@ export const useField = <Value, T extends HTMLElement = HTMLElement>({
   required = false,
   name: nameProp,
   disabled: disabledProp,
+  onFocus: andDoOnFocus,
   ...restConfig
-}: FieldConfig<Value>) => {
+}: FieldConfig<Value, T>) => {
   // If validate is given and an array compose it to a single function
   // Else default to the required validator if required is true.
   const validate = validateProp
@@ -53,9 +60,25 @@ export const useField = <Value, T extends HTMLElement = HTMLElement>({
   });
   const submitting = useIsSubmitting();
 
+  const disabled = disabledProp ?? meta.submitting;
+
+  // Refocus field if it has become re-enabled and is active
+  // When fields are disabled they lose focus so this fixes that.
+  const [focus, ref] = useFocus<T>(andDoOnFocus);
+  useEffect(() => {
+    if (!disabled && meta.active) {
+      focus();
+    }
+  }, [meta.active, disabled, focus]);
+
   return {
     input,
-    meta: { ...meta, submitting, disabled: disabledProp ?? meta.submitting },
+    meta: {
+      ...meta,
+      submitting,
+      disabled,
+    },
+    ref,
     rest,
   };
 };

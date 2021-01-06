@@ -6,7 +6,7 @@ import { useEffect } from 'react';
 import * as React from 'react';
 import { Except } from 'type-fest';
 import { FieldConfig, useField } from './useField';
-import { getHelperText, showError, useFocusOnEnabled } from './util';
+import { getHelperText, showError } from './util';
 
 export type TextFieldProps<FieldValue = string> = FieldConfig<FieldValue> & {
   name: string;
@@ -22,8 +22,7 @@ export function TextField<FieldValue = string>({
   children,
   ...props
 }: TextFieldProps<FieldValue>) {
-  const { input, meta, rest } = useField(props);
-  const ref = useFocusOnEnabled(meta);
+  const { input, meta, ref, rest } = useField(props);
 
   // Call focus explicitly to fix inconsistent state when page loads
   // browser does the autofocus but the field doesn't look active

@@ -9,7 +9,7 @@ import {
 } from '@material-ui/core';
 import React, { FC, ReactNode } from 'react';
 import { FieldConfig, useField } from './useField';
-import { getHelperText, showError, useFocusOnEnabled } from './util';
+import { getHelperText, showError } from './util';
 
 export type SwitchFieldProps = FieldConfig<boolean> & {
   name: string;
@@ -28,12 +28,11 @@ export const SwitchField: FC<SwitchFieldProps> = ({
   variant,
   ...props
 }) => {
-  const { input, meta, rest } = useField({
+  const { input, meta, ref, rest } = useField({
     defaultValue,
     ...props,
     type: 'checkbox',
   });
-  const ref = useFocusOnEnabled<HTMLInputElement>(meta);
 
   return (
     <FormControl

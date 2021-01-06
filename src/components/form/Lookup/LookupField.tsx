@@ -28,13 +28,7 @@ import { useDialog } from '../../Dialog';
 import { DialogFormProps } from '../../Dialog/DialogForm';
 import { useSession } from '../../Session';
 import { FieldConfig, useField } from '../index';
-import {
-  getHelperText,
-  isEqualBy,
-  isListEqualBy,
-  showError,
-  useFocusOnEnabled,
-} from '../util';
+import { getHelperText, isEqualBy, isListEqualBy, showError } from '../util';
 
 interface QueryResult<T> {
   search: { items: ReadonlyArray<T | any> };
@@ -110,19 +104,19 @@ export function LookupField<
   const defaultValue =
     defaultValueProp ?? ((multiple ? emptyArray : null) as Val);
 
-  const { input: field, meta, rest: autocompleteProps } = useField<Val>({
+  const selectOnFocus = props.selectOnFocus ?? true;
+  const andSelectOnFocus = useCallback((el) => selectOnFocus && el.select(), [
+    selectOnFocus,
+  ]);
+
+  const { input: field, meta, ref, rest: autocompleteProps } = useField<Val>({
     ...props,
     required,
     allowNull: !multiple,
     defaultValue,
     isEqual: multiple ? isListEqualBy(getCompareBy) : isEqualBy(getCompareBy),
+    onFocus: andSelectOnFocus,
   });
-
-  const selectOnFocus = props.selectOnFocus ?? true;
-  const andSelectOnFocus = useCallback((el) => selectOnFocus && el.select(), [
-    selectOnFocus,
-  ]);
-  const ref = useFocusOnEnabled<HTMLInputElement>(meta, andSelectOnFocus);
 
   const getOptionLabel = (val: T | string) =>
     typeof val === 'string' ? val : getOptionLabelProp(val) ?? '';

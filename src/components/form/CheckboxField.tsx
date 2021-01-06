@@ -9,7 +9,7 @@ import {
 } from '@material-ui/core';
 import React, { FC, ReactNode } from 'react';
 import { FieldConfig, useField } from './useField';
-import { getHelperText, showError, useFocusOnEnabled } from './util';
+import { getHelperText, showError } from './util';
 
 export type CheckboxFieldProps = FieldConfig<boolean> & {
   name: string;
@@ -37,8 +37,10 @@ export const CheckboxField: FC<CheckboxFieldProps> = ({
   keepHelperTextSpacing,
   ...props
 }) => {
-  const { input, meta, rest } = useField({ defaultValue, ...props });
-  const ref = useFocusOnEnabled<HTMLInputElement>(meta);
+  const { input, meta, ref, rest } = useField<boolean, HTMLInputElement>({
+    defaultValue,
+    ...props,
+  });
 
   const inputValueIsValid =
     (input.value as unknown) === false || (input.value as unknown) === true;

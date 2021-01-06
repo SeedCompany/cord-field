@@ -4,7 +4,7 @@ import React, { useCallback, useEffect, useState } from 'react';
 import { useRifm } from 'rifm';
 import { Except } from 'type-fest';
 import { FieldConfig, useField } from './useField';
-import { getHelperText, showError, useFocusOnEnabled } from './util';
+import { getHelperText, showError } from './util';
 
 export type FormattedTextFieldProps<FieldValue = string> = Except<
   FieldConfig<FieldValue>,
@@ -50,9 +50,8 @@ export function FormattedTextField<FieldValue = string>({
   variant,
   ...props
 }: FormattedTextFieldProps<FieldValue>) {
-  const { input, meta, rest } = useField(props);
+  const { input, meta, ref, rest } = useField(props);
   const name = input.name;
-  const ref = useFocusOnEnabled(meta);
 
   const [managedVal, setManagedVal] = useState<{
     raw: string;

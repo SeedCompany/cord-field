@@ -17,7 +17,7 @@ import { Except } from 'type-fest';
 import { validators } from '.';
 import { CalendarDate } from '../../util';
 import { FieldConfig, useField } from './useField';
-import { getHelperText, showError, useFocusOnEnabled } from './util';
+import { getHelperText, showError } from './util';
 import { Validator } from './validators';
 
 export type DateFieldProps = Except<
@@ -67,7 +67,7 @@ export const DateField = ({
   const initialValue = useDate(initialValueProp);
   const defaultValue = useDate(defaultValueProp);
 
-  const { input, meta, rest } = useField<DateTime | null>({
+  const { input, meta, ref, rest } = useField<DateTime | null>({
     isEqual: isDateEqual,
     ...props,
     defaultValue,
@@ -75,7 +75,6 @@ export const DateField = ({
     validate: [validator, props.required ? validators.required : null],
   });
   const { value, onChange, onFocus, onBlur } = input;
-  const ref = useFocusOnEnabled(meta);
   const open = useRef(false);
 
   // Show understood date but invalid selection errors immediately

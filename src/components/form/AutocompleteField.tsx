@@ -9,7 +9,6 @@ import {
   compareNullable,
   getHelperText,
   showError,
-  useFocusOnEnabled,
 } from './util';
 
 export type AutocompleteFieldProps<
@@ -72,7 +71,12 @@ export function AutocompleteField<
   const defaultValue =
     defaultValueProp ?? ((multiple ? emptyArray : null) as Val);
 
-  const { input: field, meta, rest: autocompleteProps } = useField<Val>({
+  const selectOnFocus = props.selectOnFocus ?? !props.freeSolo;
+  const andSelectOnFocus = useCallback((el) => selectOnFocus && el.select(), [
+    selectOnFocus,
+  ]);
+
+  const { input: field, meta, ref, rest: autocompleteProps } = useField<Val>({
     ...props,
     required,
     allowNull: !multiple,
@@ -88,13 +92,8 @@ export function AutocompleteField<
         ? (val) =>
             Array.isArray(val) && val.length === 0 ? 'Required' : undefined
         : undefined,
+    onFocus: andSelectOnFocus,
   });
-
-  const selectOnFocus = props.selectOnFocus ?? !props.freeSolo;
-  const andSelectOnFocus = useCallback((el) => selectOnFocus && el.select(), [
-    selectOnFocus,
-  ]);
-  const ref = useFocusOnEnabled<HTMLInputElement>(meta, andSelectOnFocus);
 
   const getOptionLabel = props.getOptionLabel ?? identity;
 
