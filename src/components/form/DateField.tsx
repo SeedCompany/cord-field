@@ -14,7 +14,7 @@ import { ParsableDate } from '@material-ui/pickers/constants/prop-types';
 import { DateTime } from 'luxon';
 import React, { useRef } from 'react';
 import { Except } from 'type-fest';
-import { useFieldName, validators } from '.';
+import { validators } from '.';
 import { CalendarDate } from '../../util';
 import { FieldConfig, useField } from './useField';
 import { getHelperText, showError, useFocusOnEnabled } from './util';
@@ -38,9 +38,7 @@ export type DateFieldProps = Except<
   };
 
 export const DateField = ({
-  name: nameProp,
   helperText: helperTextProp,
-  disabled: disabledProp,
   defaultValue: defaultValueProp,
   initialValue: initialValueProp,
   errorMessages,
@@ -69,8 +67,7 @@ export const DateField = ({
   const initialValue = useDate(initialValueProp);
   const defaultValue = useDate(defaultValueProp);
 
-  const name = useFieldName(nameProp);
-  const { input, meta, rest } = useField<DateTime | null>(name, {
+  const { input, meta, rest } = useField<DateTime | null>({
     isEqual: isDateEqual,
     ...props,
     defaultValue,
@@ -78,8 +75,7 @@ export const DateField = ({
     validate: [validator, props.required ? validators.required : null],
   });
   const { value, onChange, onFocus, onBlur } = input;
-  const disabled = disabledProp ?? meta.submitting;
-  const ref = useFocusOnEnabled(meta, disabled);
+  const ref = useFocusOnEnabled(meta);
   const open = useRef(false);
 
   // Show understood date but invalid selection errors immediately
@@ -103,7 +99,7 @@ export const DateField = ({
     <DatePicker
       views={['year', 'month', 'date']}
       openTo={value ? 'date' : 'year'}
-      disabled={disabled}
+      disabled={meta.disabled}
       clearable={!props.required}
       autoOk
       {...defaultRange}
@@ -140,7 +136,7 @@ export const DateField = ({
             ...params.inputProps,
             placeholder,
           }}
-          name={name}
+          name={input.name}
           inputRef={ref}
           helperText={helperText}
           error={error}

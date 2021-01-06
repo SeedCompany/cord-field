@@ -8,7 +8,6 @@ import {
   SwitchProps,
 } from '@material-ui/core';
 import React, { FC, ReactNode } from 'react';
-import { useFieldName } from './FieldGroup';
 import { FieldConfig, useField } from './useField';
 import { getHelperText, showError, useFocusOnEnabled } from './util';
 
@@ -20,37 +19,33 @@ export type SwitchFieldProps = FieldConfig<boolean> & {
   Pick<FormControlProps, 'fullWidth' | 'margin' | 'variant'>;
 
 export const SwitchField: FC<SwitchFieldProps> = ({
-  name: nameProp,
   label,
   labelPlacement,
   helperText,
   defaultValue = false,
-  disabled: disabledProp,
   fullWidth,
   margin,
   variant,
   ...props
 }) => {
-  const name = useFieldName(nameProp);
-  const { input, meta, rest } = useField(name, {
+  const { input, meta, rest } = useField({
     defaultValue,
     ...props,
     type: 'checkbox',
   });
-  const disabled = disabledProp ?? meta.submitting;
-  const ref = useFocusOnEnabled<HTMLInputElement>(meta, disabled);
+  const ref = useFocusOnEnabled<HTMLInputElement>(meta);
 
   return (
     <FormControl
       required={props.required}
       error={showError(meta)}
-      disabled={disabled}
+      disabled={meta.disabled}
       fullWidth={fullWidth}
       margin={margin}
       variant={variant}
     >
       <FormControlLabel
-        name={name}
+        name={input.name}
         label={label}
         labelPlacement={labelPlacement}
         control={
@@ -58,7 +53,7 @@ export const SwitchField: FC<SwitchFieldProps> = ({
             {...rest}
             inputRef={ref}
             checked={input.checked}
-            value={name}
+            value={input.name}
             onChange={(e) => input.onChange(e.target.checked)}
             required={props.required}
           />

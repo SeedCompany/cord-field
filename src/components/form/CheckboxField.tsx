@@ -8,7 +8,6 @@ import {
   FormHelperText,
 } from '@material-ui/core';
 import React, { FC, ReactNode } from 'react';
-import { useFieldName } from './FieldGroup';
 import { FieldConfig, useField } from './useField';
 import { getHelperText, showError, useFocusOnEnabled } from './util';
 
@@ -28,22 +27,18 @@ export type CheckboxFieldProps = FieldConfig<boolean> & {
   };
 
 export const CheckboxField: FC<CheckboxFieldProps> = ({
-  name: nameProp,
   label,
   labelPlacement,
   helperText,
   defaultValue = false,
-  disabled: disabledProp,
   fullWidth,
   margin,
   variant,
   keepHelperTextSpacing,
   ...props
 }) => {
-  const name = useFieldName(nameProp);
-  const { input, meta, rest } = useField(name, { defaultValue, ...props });
-  const disabled = disabledProp ?? meta.submitting;
-  const ref = useFocusOnEnabled<HTMLInputElement>(meta, disabled);
+  const { input, meta, rest } = useField({ defaultValue, ...props });
+  const ref = useFocusOnEnabled<HTMLInputElement>(meta);
 
   const inputValueIsValid =
     (input.value as unknown) === false || (input.value as unknown) === true;
@@ -52,13 +47,13 @@ export const CheckboxField: FC<CheckboxFieldProps> = ({
     <FormControl
       required={props.required}
       error={showError(meta)}
-      disabled={disabled}
+      disabled={meta.disabled}
       fullWidth={fullWidth}
       margin={margin}
       variant={variant}
     >
       <FormControlLabel
-        name={name}
+        name={input.name}
         label={label}
         labelPlacement={labelPlacement}
         control={
@@ -66,7 +61,7 @@ export const CheckboxField: FC<CheckboxFieldProps> = ({
             {...rest}
             inputRef={ref}
             checked={inputValueIsValid ? input.value : defaultValue}
-            value={name}
+            value={input.name}
             onChange={(e) => input.onChange(e.target.checked)}
             required={props.required}
           />

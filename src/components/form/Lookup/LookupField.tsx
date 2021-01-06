@@ -27,7 +27,7 @@ import { isNetworkRequestInFlight, Power } from '../../../api';
 import { useDialog } from '../../Dialog';
 import { DialogFormProps } from '../../Dialog/DialogForm';
 import { useSession } from '../../Session';
-import { FieldConfig, useField, useFieldName } from '../index';
+import { FieldConfig, useField } from '../index';
 import {
   getHelperText,
   isEqualBy,
@@ -86,10 +86,8 @@ export function LookupField<
   DisableClearable extends boolean | undefined,
   CreateFormValues = never
 >({
-  name: nameProp,
   multiple,
   defaultValue: defaultValueProp,
-  disabled: disabledProp,
   lookupDocument,
   ChipProps,
   autoFocus,
@@ -112,25 +110,19 @@ export function LookupField<
   const defaultValue =
     defaultValueProp ?? ((multiple ? emptyArray : null) as Val);
 
-  const name = useFieldName(nameProp);
-  const { input: field, meta, rest: autocompleteProps } = useField<Val>(name, {
+  const { input: field, meta, rest: autocompleteProps } = useField<Val>({
     ...props,
     required,
     allowNull: !multiple,
     defaultValue,
     isEqual: multiple ? isListEqualBy(getCompareBy) : isEqualBy(getCompareBy),
   });
-  const disabled = disabledProp ?? meta.submitting;
 
   const selectOnFocus = props.selectOnFocus ?? true;
   const andSelectOnFocus = useCallback((el) => selectOnFocus && el.select(), [
     selectOnFocus,
   ]);
-  const ref = useFocusOnEnabled<HTMLInputElement>(
-    meta,
-    disabled,
-    andSelectOnFocus
-  );
+  const ref = useFocusOnEnabled<HTMLInputElement>(meta, andSelectOnFocus);
 
   const getOptionLabel = (val: T | string) =>
     typeof val === 'string' ? val : getOptionLabelProp(val) ?? '';
@@ -205,7 +197,7 @@ export function LookupField<
       // Works well with clearOnBlur
       selectOnFocus
       {...autocompleteProps}
-      disabled={disabled}
+      disabled={meta.disabled}
       // FF also has multiple and defaultValue
       multiple={multiple}
       renderTags={(values: T[], getTagProps) =>

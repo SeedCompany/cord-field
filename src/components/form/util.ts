@@ -54,17 +54,16 @@ export const useFocus = <T extends { focus: () => void } = HTMLElement>(
 export const useFocusOnEnabled = <
   T extends { focus: () => void } = HTMLElement
 >(
-  meta: FieldMetaState<unknown>,
-  disabled: boolean,
+  meta: FieldMetaState<unknown> & { disabled?: boolean },
   andDoOnFocus?: (el: T) => void
 ) => {
   // Refocus field if it has become re-enabled and is active
   const [focus, ref] = useFocus<T>(andDoOnFocus);
   useEffect(() => {
-    if (!disabled && meta.active) {
+    if (!meta.disabled && meta.active) {
       focus();
     }
-  }, [meta.active, disabled, focus]);
+  }, [meta.active, meta.disabled, focus]);
   return ref;
 };
 

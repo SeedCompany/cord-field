@@ -5,7 +5,6 @@ import {
 import { useEffect } from 'react';
 import * as React from 'react';
 import { Except } from 'type-fest';
-import { useFieldName } from './FieldGroup';
 import { FieldConfig, useField } from './useField';
 import { getHelperText, showError, useFocusOnEnabled } from './util';
 
@@ -18,17 +17,13 @@ export type TextFieldProps<FieldValue = string> = FieldConfig<FieldValue> & {
 
 /** Combines final form field and MUI text field */
 export function TextField<FieldValue = string>({
-  name: nameProp,
   InputProps,
   helperText,
-  disabled: disabledProp,
   children,
   ...props
 }: TextFieldProps<FieldValue>) {
-  const name = useFieldName(nameProp);
-  const { input, meta, rest } = useField(name, props);
-  const disabled = disabledProp ?? meta.submitting;
-  const ref = useFocusOnEnabled(meta, disabled);
+  const { input, meta, rest } = useField(props);
+  const ref = useFocusOnEnabled(meta);
 
   // Call focus explicitly to fix inconsistent state when page loads
   // browser does the autofocus but the field doesn't look active
@@ -41,10 +36,10 @@ export function TextField<FieldValue = string>({
 
   return (
     <MuiTextField
-      disabled={disabled}
+      disabled={meta.disabled}
       required={props.required}
       {...rest}
-      name={name}
+      name={input.name}
       inputRef={ref}
       InputProps={{ ...InputProps, ...input }}
       helperText={getHelperText(meta, helperText)}

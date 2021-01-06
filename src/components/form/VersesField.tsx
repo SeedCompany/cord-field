@@ -13,7 +13,7 @@ import {
 import { isEqual, uniqWith } from 'lodash';
 import React, { useState } from 'react';
 import { Except } from 'type-fest';
-import { FieldConfig, useField, useFieldName, validators } from '.';
+import { FieldConfig, useField, validators } from '.';
 import {
   formatScriptureRange,
   parseScriptureRange,
@@ -83,11 +83,9 @@ const validateInput = (input: string) => {
 };
 
 export function VersesField({
-  name: nameProp,
   book,
   helperText: helperTextProp,
   ChipProps,
-  disabled: disabledProp,
   autoFocus,
   required,
   label,
@@ -111,8 +109,7 @@ export function VersesField({
   const classes = useStyles();
 
   const [inputValue, setInputValue] = useState<string>('');
-  const name = useFieldName(nameProp);
-  const { input, meta, rest } = useField<Val>(name, {
+  const { input, meta, rest } = useField<Val>({
     validate: [validateReference, required ? validators.requiredArray : null],
     parse: (value: Val | string): Val => {
       // need to call onChange in two cases
@@ -149,8 +146,7 @@ export function VersesField({
     isEqual: compareNullable((a, b) => areListsDeepEqual(a, b)),
     ...props,
   });
-  const disabled = disabledProp ?? meta.submitting;
-  const ref = useFocusOnEnabled(meta, disabled);
+  const ref = useFocusOnEnabled(meta);
   const [scriptureRanges, setScriptureRanges] = useState<Val>(
     // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
     input.value ?? []
@@ -239,12 +235,12 @@ export function VersesField({
       }}
       onFocus={input.onFocus}
       onBlur={input.onBlur}
-      disabled={disabled}
+      disabled={meta.disabled}
       renderInput={(params: AutocompleteRenderInputParams) => {
         return (
           <TextField
             {...params}
-            name={name}
+            name={input.name}
             label={label}
             variant="outlined"
             helperText={helperText}

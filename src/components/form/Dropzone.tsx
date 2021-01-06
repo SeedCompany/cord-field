@@ -13,7 +13,6 @@ import clsx from 'clsx';
 import React, { FC, useMemo } from 'react';
 import { useDropzone } from 'react-dropzone';
 import { fileIcon } from '../files/fileTypes';
-import { useFieldName } from './FieldGroup';
 import { FieldConfig, useField } from './useField';
 
 const useStyles = makeStyles(({ palette, spacing }) => {
@@ -52,10 +51,9 @@ export const DropzoneField: FC<DropzoneFieldProps> = ({
 
   // Memoize defaultValue to prevent re-renders when not changing.
   const defaultValue = useMemo(() => [], []);
-  const name = useFieldName(nameProp);
   const {
-    input: { onChange, value: currentFiles },
-  } = useField<File[], HTMLInputElement>(name, { defaultValue });
+    input: { name, onChange, value: currentFiles },
+  } = useField<File[], HTMLInputElement>({ name: nameProp, defaultValue });
 
   const onDrop = (acceptedFiles: File[]) => {
     const updatedFiles =

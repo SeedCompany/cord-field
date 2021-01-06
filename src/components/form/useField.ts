@@ -1,26 +1,28 @@
 import { compact } from 'lodash';
 import { UseFieldConfig, useField as useFinalForm } from 'react-final-form';
 import { many, Many } from '../../util';
-import { validators } from './index';
+import { useFieldName, validators } from './index';
 import { useIsSubmitting } from './util';
 import { Validator } from './validators';
 
 export type FieldConfig<Value> = Omit<UseFieldConfig<Value>, 'validate'> & {
+  name: string;
+  disabled?: boolean;
   required?: boolean;
   validate?: Many<Validator<Value> | null>;
 };
 
-export const useField = <Value, T extends HTMLElement = HTMLElement>(
-  name: string,
-  config?: FieldConfig<Value>
-) => {
-  const { validate: validateInput = null, required = false, ...restConfig } =
-    config || {};
-
+export const useField = <Value, T extends HTMLElement = HTMLElement>({
+  validate: validateProp = null,
+  required = false,
+  name: nameProp,
+  disabled: disabledProp,
+  ...restConfig
+}: FieldConfig<Value>) => {
   // If validate is given and an array compose it to a single function
   // Else default to the required validator if required is true.
-  const validate = validateInput
-    ? validators.compose(...compact(many(validateInput)))
+  const validate = validateProp
+    ? validators.compose(...compact(many(validateProp)))
     : required
     ? validators.required
     : undefined;
@@ -43,6 +45,8 @@ export const useField = <Value, T extends HTMLElement = HTMLElement>(
     ...rest
   } = restConfig;
 
+  const name = useFieldName(nameProp);
+
   const { input, meta } = useFinalForm<Value, T>(name, {
     validate,
     ...restConfig,
@@ -51,7 +55,7 @@ export const useField = <Value, T extends HTMLElement = HTMLElement>(
 
   return {
     input,
-    meta: { ...meta, submitting },
+    meta: { ...meta, submitting, disabled: disabledProp ?? meta.submitting },
     rest,
   };
 };
