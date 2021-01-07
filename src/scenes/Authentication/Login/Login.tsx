@@ -66,8 +66,3 @@ export const Login = (props: Except<Props, 'onSubmit'>) => {
     </>
   );
 };
-Login.fetchData = async () => {
-  return {
-    random: Math.random(),
-  };
-};

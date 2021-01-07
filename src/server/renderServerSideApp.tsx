@@ -24,7 +24,6 @@ import { Nest } from '../components/Nest';
 import { ServerLocation } from '../components/Routing';
 import { ServerData, ServerDataProvider } from '../components/ServerData';
 import { RequestContext } from '../hooks';
-import { fetchDataForRender } from './fetchDataForRender';
 import { indexHtml } from './indexHtml';
 
 const serverHost = process.env.RAZZLE_API_BASE_URL || '';
@@ -75,10 +74,13 @@ export const renderServerSideApp = async (req: Request, res: Response) => {
   const sheets = new ServerStyleSheets();
   const location = new ServerLocation();
 
-  const data = await fetchDataForRender(
-    location.wrap(<ServerApp req={req} apollo={apollo} />),
-    req
-  );
+  // Disabled for now. This was a PoC and it's not used right now.
+  // All server data comes from the GQL API.
+  // const data = await fetchDataForRender(
+  //   location.wrap(<ServerApp req={req} apollo={apollo} />),
+  //   req
+  // );
+  const data = {};
 
   const markup = await getMarkupFromTree({
     tree: (
