@@ -1,4 +1,4 @@
-import { lazy } from '@loadable/component';
+import { lazy as loadable } from '@loadable/component';
 import {
   Button,
   Dialog,
@@ -25,11 +25,11 @@ import { PreviewError } from './PreviewError';
 import { PreviewLoading } from './PreviewLoading';
 import { PreviewNotSupported } from './PreviewNotSupported';
 
-const PdfPreview = lazy(() => import('./PdfPreview'));
-const CsvPreview = lazy(() => import('./CsvPreview'));
-const ExcelPreview = lazy(() => import('./ExcelPreview'));
-const RtfPreview = lazy(() => import('./RtfPreview'));
-const WordPreview = lazy(() => import('./WordPreview'));
+const PdfPreview = loadable(() => import('./PdfPreview'));
+const CsvPreview = loadable(() => import('./CsvPreview'));
+const ExcelPreview = loadable(() => import('./ExcelPreview'));
+const RtfPreview = loadable(() => import('./RtfPreview'));
+const WordPreview = loadable(() => import('./WordPreview'));
 
 const useStyles = makeStyles(() => ({
   dialogContent: {
