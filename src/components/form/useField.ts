@@ -1,6 +1,7 @@
 import { compact } from 'lodash';
 import { useEffect } from 'react';
-import { UseFieldConfig, useField as useFinalForm } from 'react-final-form';
+import { UseFieldConfig, useField as useFinalField } from 'react-final-form';
+import { useFirstMountState } from 'react-use';
 import { many, Many } from '../../util';
 import { useFieldName, validators } from './index';
 import { useFocus, useIsSubmitting } from './util';
@@ -14,6 +15,7 @@ export type FieldConfig<Value, T extends HTMLElement = HTMLElement> = Omit<
   disabled?: boolean;
   required?: boolean;
   validate?: Many<Validator<Value> | null>;
+  autoFocus?: boolean;
   /** also do this on focus */
   onFocus?: (el: T) => void;
 };
@@ -54,7 +56,7 @@ export const useField = <Value, T extends HTMLElement = HTMLElement>({
 
   const name = useFieldName(nameProp);
 
-  const { input, meta } = useFinalForm<Value, T>(name, {
+  const { input, meta } = useFinalField<Value, T>(name, {
     validate,
     ...restConfig,
   });
@@ -62,14 +64,33 @@ export const useField = <Value, T extends HTMLElement = HTMLElement>({
 
   const disabled = disabledProp ?? meta.submitting;
 
-  // Refocus field if it has become re-enabled and is active
-  // When fields are disabled they lose focus so this fixes that.
-  const [focus, ref] = useFocus<T>(andDoOnFocus);
+  const firstRender = useFirstMountState();
+  const focused = disabled
+    ? false
+    : restConfig.autoFocus && firstRender
+    ? // If auto focus, assume focus on first render.
+      // The browser should apply focus, so this is just visual.
+      // The state should be fixed on next render in the useEffect call below.
+      // This assumption keeps rendered output consistent between SSR and client.
+      true
+    : meta.active;
+
+  const [focusInDoc, ref] = useFocus<T>(andDoOnFocus);
+  const focusInFF = input.onFocus;
   useEffect(() => {
-    if (!disabled && meta.active) {
-      focus();
+    const activeInDoc = ref.current && ref.current === document.activeElement;
+
+    // Refocus field if it has become re-enabled and is active
+    if (!disabled && meta.active && !activeInDoc) {
+      focusInDoc();
     }
-  }, [meta.active, disabled, focus]);
+
+    // Set field active in FF if doc says it's active
+    // This happens on FF initialization/hydration from SSR render
+    if (activeInDoc && !meta.active) {
+      focusInFF();
+    }
+  }, [meta.active, disabled, ref, focusInDoc, focusInFF]);
 
   return {
     input,
@@ -77,6 +98,7 @@ export const useField = <Value, T extends HTMLElement = HTMLElement>({
       ...meta,
       submitting,
       disabled,
+      focused,
     },
     ref,
     rest,

@@ -92,6 +92,7 @@ export function AutocompleteField<
         ? (val) =>
             Array.isArray(val) && val.length === 0 ? 'Required' : undefined
         : undefined,
+    autoFocus,
     onFocus: andSelectOnFocus,
   });
 
@@ -135,6 +136,7 @@ export function AutocompleteField<
           inputRef={ref}
           error={showError(meta)}
           autoFocus={autoFocus}
+          focused={meta.focused}
           variant={variant}
         />
       )}

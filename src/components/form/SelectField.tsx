@@ -40,9 +40,18 @@ export const SelectField: FC<SelectFieldProps> = ({
   const { input, meta, rest } = useField(props);
 
   return (
-    <FormControl disabled={meta.disabled} error={showError(meta)} {...rest}>
+    <FormControl
+      disabled={meta.disabled}
+      focused={meta.focused}
+      error={showError(meta)}
+      {...rest}
+    >
       {label && <FormLabel className={classes.fieldLabel}>{label}</FormLabel>}
-      <Select {...input} onChange={(e) => input.onChange(e.target.value)}>
+      <Select
+        autoFocus={rest.autoFocus}
+        {...input}
+        onChange={(e) => input.onChange(e.target.value)}
+      >
         {selectOptions.map(({ value, label }: SelectItem) => (
           <MenuItem key={value} value={value}>
             {label}

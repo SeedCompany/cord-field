@@ -98,6 +98,7 @@ export function FormattedTextField<FieldValue = string>({
   return (
     <TextField
       disabled={meta.disabled}
+      focused={meta.focused}
       required={props.required}
       {...rest}
       {...input}

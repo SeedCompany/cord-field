@@ -139,6 +139,10 @@ export const DateField = ({
           inputRef={ref}
           helperText={helperText}
           error={error}
+          autoFocus={props.autoFocus}
+          // not applying focused prop here because the field is readonly
+          // until some kind of setup is complete. Not going to mess with it.
+          // field still "auto focuses" after this setup is complete.
         />
       )}
     />

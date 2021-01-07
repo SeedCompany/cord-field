@@ -144,6 +144,7 @@ export function VersesField({
     },
     isEqual: compareNullable((a, b) => areListsDeepEqual(a, b)),
     ...props,
+    autoFocus,
   });
   const [scriptureRanges, setScriptureRanges] = useState<Val>(
     // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
@@ -244,6 +245,7 @@ export function VersesField({
             helperText={helperText}
             error={error}
             autoFocus={autoFocus}
+            focused={meta.focused}
             inputRef={ref}
           />
         );

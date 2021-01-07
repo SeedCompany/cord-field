@@ -60,9 +60,6 @@ const clientOnlyProviders = [
   <HelmetProvider children={<></>} />,
 ];
 
-// Blur auto-focused elements on app start as MUI doesn't boot state correctly
-(document.activeElement as any)?.blur();
-
 void Promise.all(setup).then(() => {
   ReactDOM.hydrate(
     <Nest elements={clientOnlyProviders}>

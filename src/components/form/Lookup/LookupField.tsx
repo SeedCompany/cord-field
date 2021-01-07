@@ -115,6 +115,7 @@ export function LookupField<
     allowNull: !multiple,
     defaultValue,
     isEqual: multiple ? isListEqualBy(getCompareBy) : isEqualBy(getCompareBy),
+    autoFocus,
     onFocus: andSelectOnFocus,
   });
 
@@ -287,6 +288,7 @@ export function LookupField<
           inputRef={ref}
           error={showError(meta)}
           autoFocus={autoFocus}
+          focused={meta.focused}
           variant={variant}
         />
       )}

@@ -50,6 +50,7 @@ export const CheckboxField: FC<CheckboxFieldProps> = ({
       required={props.required}
       error={showError(meta)}
       disabled={meta.disabled}
+      focused={meta.focused}
       fullWidth={fullWidth}
       margin={margin}
       variant={variant}
