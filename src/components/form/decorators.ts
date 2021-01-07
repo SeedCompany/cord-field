@@ -6,6 +6,9 @@ const get = getIn as <T, K>(state: T, complexKey: K) => any;
 
 /**
  * Focuses the first field to register.
+ * NOTE: This only works for dialog forms due to order of code execution.
+ * I'm unable to find an elegant way to apply this to normal forms on page.
+ * Specifying the `autoFocus` prop is sufficient though.
  */
 export function focusFirstFieldRegistered<T, I>(
   form: FormApi<T, I>
