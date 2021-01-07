@@ -6,7 +6,7 @@ on:
       - v3
 
 env:
-  REACT_APP_API_BASE_URL: ${{ secrets.API_BASE_URL }}
+  RAZZLE_API_BASE_URL: ${{ secrets.API_BASE_URL }}
 
 jobs:
   run:
@@ -39,7 +39,7 @@ jobs:
         run: yarn eslint --ext .ts,.tsx --max-warnings 0 .
 
       - name: Build
-        run: yarn react-app-rewired build
+        run: yarn razzle build
 
       - name: Test
         run: yarn test
