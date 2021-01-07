@@ -1,6 +1,7 @@
 {
   "presets": ["razzle/babel"],
   "plugins": [
+    "./src/server/disableSsrByDefault",
     "@loadable/babel-plugin",
     "mui-make-styles",
     ["babel-plugin-import", {

@@ -32,7 +32,6 @@ export const LanguageList: FC = () => {
         ...sort.value,
       },
     },
-    ssr: false,
   });
   const classes = useStyles();
 
