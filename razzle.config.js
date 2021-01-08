@@ -4,6 +4,7 @@ const _ = require('lodash');
 const path = require('path');
 const { DefinePlugin } = require('webpack');
 const { BundleAnalyzerPlugin } = require('webpack-bundle-analyzer');
+const CircularDependencyPlugin = require('circular-dependency-plugin');
 
 const modifyWebpackConfig = (opts) => {
   const config = opts.webpackConfig;
@@ -109,6 +110,13 @@ const modifyWebpackConfig = (opts) => {
   config.performance = {
     hints: false,
   };
+
+  config.plugins.push(
+    new CircularDependencyPlugin({
+      exclude: /node_modules/,
+      failOnError: true,
+    })
+  );
 
   return config;
 };

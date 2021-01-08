@@ -7114,6 +7114,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"circular-dependency-plugin@npm:^5.2.2":
+  version: 5.2.2
+  resolution: "circular-dependency-plugin@npm:5.2.2"
+  peerDependencies:
+    webpack: ">=4.0.1"
+  checksum: 1f6063947017b6b4e4c2111cd097a5bd33e46a20beab07717b2a378641f49c9a5627f89c3e1afee01b032d9758865f61e1c0c11cfc3acaa81068ce900c1cdb81
+  languageName: node
+  linkType: hard
+
 "cjs-module-lexer@npm:^0.6.0":
   version: 0.6.0
   resolution: "cjs-module-lexer@npm:0.6.0"
@@ -7799,6 +7808,7 @@ __metadata:
     babel-plugin-mui-make-styles: ^0.1.1
     babel-preset-razzle: canary
     body-parser: ^1.19.0
+    circular-dependency-plugin: ^5.2.2
     clsx: ^1.1.1
     compression: ^1.7.4
     constate: ^2.0.0

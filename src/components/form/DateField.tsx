@@ -14,11 +14,10 @@ import { ParsableDate } from '@material-ui/pickers/constants/prop-types';
 import { DateTime } from 'luxon';
 import React, { useRef } from 'react';
 import { Except } from 'type-fest';
-import { validators } from '.';
 import { CalendarDate } from '../../util';
 import { FieldConfig, useField } from './useField';
 import { getHelperText, showError } from './util';
-import { Validator } from './validators';
+import { required as requiredValidator, Validator } from './validators';
 
 export type DateFieldProps = Except<
   FieldConfig<CalendarDate | null>,
@@ -72,7 +71,7 @@ export const DateField = ({
     ...props,
     defaultValue,
     initialValue,
-    validate: [validator, props.required ? validators.required : null],
+    validate: [validator, props.required ? requiredValidator : null],
   });
   const { value, onChange, onFocus, onBlur } = input;
   const open = useRef(false);

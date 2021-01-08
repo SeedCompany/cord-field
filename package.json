@@ -130,6 +130,7 @@
     "babel-loader": "^8.1.0",
     "babel-plugin-import": "^1.13.0",
     "babel-plugin-mui-make-styles": "^0.1.1",
+    "circular-dependency-plugin": "^5.2.2",
     "eslint": "^7.12.0",
     "husky": "^4.2.5",
     "lint-staged": "^10.2.11",

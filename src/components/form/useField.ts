@@ -3,9 +3,13 @@ import { useEffect } from 'react';
 import { UseFieldConfig, useField as useFinalField } from 'react-final-form';
 import { useFirstMountState } from 'react-use';
 import { many, Many } from '../../util';
-import { useFieldName, validators } from './index';
+import { useFieldName } from './FieldGroup';
 import { useFocus, useIsSubmitting } from './util';
-import { Validator } from './validators';
+import {
+  compose as composeValidators,
+  required as requiredValidator,
+  Validator,
+} from './validators';
 
 export type FieldConfig<Value, T extends HTMLElement = HTMLElement> = Omit<
   UseFieldConfig<Value>,
@@ -31,9 +35,9 @@ export const useField = <Value, T extends HTMLElement = HTMLElement>({
   // If validate is given and an array compose it to a single function
   // Else default to the required validator if required is true.
   const validate = validateProp
-    ? validators.compose(...compact(many(validateProp)))
+    ? composeValidators(...compact(many(validateProp)))
     : required
-    ? validators.required
+    ? requiredValidator
     : undefined;
 
   const {

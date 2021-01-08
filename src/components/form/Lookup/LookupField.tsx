@@ -27,7 +27,7 @@ import { isNetworkRequestInFlight, Power } from '../../../api';
 import { useDialog } from '../../Dialog';
 import { DialogFormProps } from '../../Dialog/DialogForm';
 import { useSession } from '../../Session';
-import { FieldConfig, useField } from '../index';
+import { FieldConfig, useField } from '../useField';
 import { getHelperText, isEqualBy, isListEqualBy, showError } from '../util';
 
 interface QueryResult<T> {

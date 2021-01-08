@@ -13,7 +13,6 @@ import {
 import { isEqual, uniqWith } from 'lodash';
 import React, { useState } from 'react';
 import { Except } from 'type-fest';
-import { FieldConfig, useField, validators } from '.';
 import {
   formatScriptureRange,
   parseScriptureRange,
@@ -21,12 +20,14 @@ import {
   ScriptureRange,
   validateScriptureRange,
 } from '../../util/biblejs';
+import { FieldConfig, useField } from './useField';
 import {
   areListsDeepEqual,
   compareNullable,
   getHelperText,
   showError,
 } from './util';
+import { requiredArray } from './validators';
 
 type GenericScriptureRange = ScriptureRange | RawScriptureRange;
 
@@ -109,7 +110,7 @@ export function VersesField({
 
   const [inputValue, setInputValue] = useState<string>('');
   const { input, meta, ref, rest } = useField<Val>({
-    validate: [validateReference, required ? validators.requiredArray : null],
+    validate: [validateReference, required ? requiredArray : null],
     parse: (value: Val | string): Val => {
       // need to call onChange in two cases
       // 1: on type (string) so we can show errors in real time
