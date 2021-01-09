@@ -1,3 +1,4 @@
+import loadable from '@loadable/component';
 import { makeStyles } from '@material-ui/core';
 import React from 'react';
 import { Helmet } from 'react-helmet-async';
@@ -5,13 +6,24 @@ import { Route, Routes } from 'react-router-dom';
 import { NotFoundRoute } from '../../components/Error';
 import { Authentication } from '../Authentication';
 import { Home } from '../Home';
-import { Languages } from '../Languages';
-import { Partners } from '../Partners';
-import { Projects } from '../Projects';
-import { SearchResults } from '../SearchResults';
-import { Users } from '../Users';
 import { Header } from './Header';
 import { Sidebar } from './Sidebar';
+
+const Partners = loadable(() => import('../Partners'), {
+  resolveComponent: (m) => m.Partners,
+});
+const Projects = loadable(() => import('../Projects'), {
+  resolveComponent: (m) => m.Projects,
+});
+const Languages = loadable(() => import('../Languages'), {
+  resolveComponent: (m) => m.Languages,
+});
+const Users = loadable(() => import('../Users'), {
+  resolveComponent: (m) => m.Users,
+});
+const SearchResults = loadable(() => import('../SearchResults'), {
+  resolveComponent: (m) => m.SearchResults,
+});
 
 const useStyles = makeStyles(() => ({
   // Use @global basically never
