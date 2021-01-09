@@ -19,7 +19,7 @@ import {
 } from '../fileTypes';
 import { useGetFileDownloadUrl } from '../hooks';
 import { HtmlPreview } from './HtmlPreview';
-import { NativePreview } from './NativePreview';
+import { NativePreview, NativePreviewType } from './NativePreview';
 import { PlainTextPreview } from './PlainTextPreview';
 import { PreviewError } from './PreviewError';
 import { PreviewLoading } from './PreviewLoading';
@@ -43,17 +43,6 @@ export interface PreviewerProps {
   setPreviewLoading: (loading: boolean) => void;
   previewError: string | null;
   setPreviewError: (error: string | null) => void;
-}
-
-export enum NativePreviewType {
-  Video = 'video',
-  Image = 'image',
-  Audio = 'audio',
-}
-
-export interface NativePreviewerProps extends Omit<PreviewerProps, 'file'> {
-  file?: string;
-  type: NativePreviewType;
 }
 
 interface FilePreviewProps extends DialogProps {

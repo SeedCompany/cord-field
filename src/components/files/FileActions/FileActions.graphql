@@ -22,24 +22,6 @@ mutation CreateFileVersion($input: CreateFileVersionInput!) {
   }
 }
 
-fragment FileDownloadUrl on FileNode {
-  id
-  name
-  type
-  ... on File {
-    downloadUrl
-  }
-  ... on FileVersion {
-    downloadUrl
-  }
-}
-
-query FileNodeDownloadUrl($id: ID!) {
-  fileNode(id: $id) {
-    ...FileDownloadUrl
-  }
-}
-
 mutation RenameFileNode($input: RenameFileInput!) {
   renameFileNode(input: $input) {
     id

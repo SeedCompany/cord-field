@@ -5,7 +5,7 @@ import {
   FileDownloadUrl_Directory_Fragment,
   FileNodeDownloadUrlDocument,
   FileNodeDownloadUrlQuery,
-} from '../FileActions';
+} from './DownloadFile.generated';
 
 export const useGetFileDownloadUrl = () => {
   const { enqueueSnackbar } = useSnackbar();
