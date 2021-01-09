@@ -113,7 +113,7 @@ const modifyWebpackConfig = (opts) => {
 
   config.plugins.push(
     new CircularDependencyPlugin({
-      exclude: /node_modules/,
+      exclude: /(node_modules|src\/components\/files)/,
       failOnError: true,
     })
   );
