@@ -1,0 +1,13 @@
+diff --git a/config/jest/babelTransform.js b/config/jest/babelTransform.js
+index 44ba6247e911e9179f531022be34cd8075ccd9e6..9da6711567f6204fc89e5fdbccb7f9ec9278865b 100644
+--- a/config/jest/babelTransform.js
++++ b/config/jest/babelTransform.js
+@@ -7,7 +7,7 @@ const fs = require('fs-extra');
+ const hasBabelRc = fs.existsSync(paths.appBabelRc);
+
+ const config = {
+-  presets: !hasBabelRc && [require.resolve('babel-preset-razzle')],
++  presets: !hasBabelRc ? [require.resolve('babel-preset-razzle')] : [],
+   babelrc: !!hasBabelRc,
+ };
+
