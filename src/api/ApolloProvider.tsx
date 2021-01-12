@@ -7,6 +7,7 @@ import {
   InMemoryCache,
   TypePolicies,
 } from '@apollo/client';
+import fetch from 'cross-fetch';
 import React, { FC, useContext, useState } from 'react';
 import { possibleTypes } from './fragmentMatcher.generated';
 import { delayLink } from './links/delay.link';
@@ -31,6 +32,7 @@ export const ApolloProvider: FC = ({ children }) => {
     const httpLink = new HttpLink({
       uri: `${serverHost}/graphql`,
       credentials: 'include',
+      fetch,
     });
 
     const sessionLink = new SessionLink();

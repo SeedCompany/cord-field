@@ -4078,16 +4078,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/node-fetch@npm:^2.5.7":
-  version: 2.5.7
-  resolution: "@types/node-fetch@npm:2.5.7"
-  dependencies:
-    "@types/node": "*"
-    form-data: ^3.0.0
-  checksum: 101f6e8474407f957dfe1750d82aa0bcaa56347d09c8ba8634e6a901d07032533c0a578860691d915ff8fa230355700c41c04ae7e505840b5d6ff8cc3ece7741
-  languageName: node
-  linkType: hard
-
 "@types/node@npm:*, @types/node@npm:^12.0.0":
   version: 12.12.53
   resolution: "@types/node@npm:12.12.53"
@@ -7623,7 +7613,6 @@ __metadata:
     "@types/lodash": ^4.14.158
     "@types/luxon": ^1.24.2
     "@types/node": ^12.0.0
-    "@types/node-fetch": ^2.5.7
     "@types/papaparse": ^5.0.6
     "@types/react": ^16.9.0
     "@types/react-beautiful-dnd": ^13.0.0
@@ -7645,6 +7634,7 @@ __metadata:
     compression: ^1.7.4
     constate: ^2.0.0
     cookie-parser: ^1.4.5
+    cross-fetch: ^3.0.6
     eslint: ^7.12.0
     express: ^4.17.1
     final-form: "patch:final-form@4.20.1#./patches/final-form.patch"
@@ -7660,7 +7650,6 @@ __metadata:
     luxon: ^1.24.1
     mammoth: ^1.4.9
     material-table: "patch:material-table@1.69.0#./patches/material-table.patch"
-    node-fetch: ^2.6.1
     notistack: ^0.9.17
     npm-run-all: ^4.1.5
     p-min-delay: ^3.1.0

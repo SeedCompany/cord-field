@@ -9,8 +9,8 @@ import {
 import { getMarkupFromTree } from '@apollo/client/react/ssr';
 import { ChunkExtractor } from '@loadable/server';
 import ServerStyleSheets from '@material-ui/styles/ServerStyleSheets';
+import fetch from 'cross-fetch';
 import { Request, Response } from 'express';
-import fetch from 'node-fetch';
 import React from 'react';
 import { resetServerContext } from 'react-beautiful-dnd';
 import ReactDOMServer from 'react-dom/server';
@@ -35,7 +35,6 @@ export const createServerApolloClient = (
   const httpLink = new HttpLink({
     uri: `${serverHost}/graphql`,
     credentials: 'include',
-    // @ts-expect-error not sure why these fetch types are not aligning but this is how they say to do it
     fetch,
     headers: {
       cookie: req.header('Cookie'),
