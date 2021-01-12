@@ -7643,6 +7643,7 @@ __metadata:
     history: ^5.0.0
     html-react-parser: ^0.13.0
     husky: ^4.2.5
+    jest-express: ^1.12.0
     js-cookie: ^2.2.1
     lint-staged: ^10.2.11
     lodash: ^4.17.19
@@ -12781,6 +12782,15 @@ fsevents@^1.2.7:
   languageName: node
   linkType: hard
 
+"jest-express@npm:^1.12.0":
+  version: 1.12.0
+  resolution: "jest-express@npm:1.12.0"
+  dependencies:
+    jest-node-http: 1.0.0
+  checksum: 279fdc42a6cf048846d0cffb715310ed6010b3e33f756932a36e879c51f64133d306c5968a3ef3722acf2dc8a822e71b7ece0964de1ba6b8a37ba54771da248f
+  languageName: node
+  linkType: hard
+
 "jest-get-type@npm:^25.2.6":
   version: 25.2.6
   resolution: "jest-get-type@npm:25.2.6"
@@ -12920,6 +12930,13 @@ fsevents@^1.2.7:
     "@jest/types": ^26.6.2
     "@types/node": "*"
   checksum: 98e658beca866a5391fd5c0503a985a928231fd0652dea31809efa706a043ac4c4559769215ba8c8d0cde758f5c5463fbf99f233441e82641cace68023308fb6
+  languageName: node
+  linkType: hard
+
+"jest-node-http@npm:1.0.0":
+  version: 1.0.0
+  resolution: "jest-node-http@npm:1.0.0"
+  checksum: 438cb6237935a02fe73c17a6fe47489f996874163889dcfc96cce640c6c33ecea27aa4590e6a6cadffc7093965f3e0ef68f050380ff9f540c19fb8bb277da55c
   languageName: node
   linkType: hard
 
