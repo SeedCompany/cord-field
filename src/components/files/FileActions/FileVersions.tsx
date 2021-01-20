@@ -36,15 +36,9 @@ export const FileVersions: FC<FileVersionsProps> = (props) => {
   const classes = useStyles();
 
   const id = file?.id ?? '';
-  const shouldSkipQuery = !file;
   const { data, loading } = useQuery(FileVersionsDocument, {
     variables: { id },
-    // Workaround for a known bug in Apollo client that causes
-    // `skip` to suddenly be ignored when `client.resetStore` is
-    // called:
-    // https://github.com/apollographql/react-apollo/issues/3492#issuecomment-622573677
-    fetchPolicy: shouldSkipQuery ? 'cache-only' : 'cache-first',
-    skip: shouldSkipQuery,
+    skip: !file,
   });
 
   const total = data?.file.children.total;
