@@ -88,10 +88,9 @@ const useStyles = makeStyles(({ spacing, typography, breakpoints }) => ({
   },
 }));
 
-const productFieldMap: Partial<Record<
-  ProductTypes,
-  ComponentType<FieldConfig<any, any>>
->> = {
+const productFieldMap: Partial<
+  Record<ProductTypes, ComponentType<FieldConfig<any, any>>>
+> = {
   Film: FilmField,
   Story: StoryField,
   LiteracyMaterial: LiteracyMaterialField,
@@ -155,9 +154,11 @@ export const AccordionSection = ({
     product: productObj,
   };
 
-  const [scriptureForm, openScriptureForm, scriptureInitialValues] = useDialog<
-    ScriptureFormValues
-  >();
+  const [
+    scriptureForm,
+    openScriptureForm,
+    scriptureInitialValues,
+  ] = useDialog<ScriptureFormValues>();
 
   const openBook = (event: MouseEvent<HTMLButtonElement>) => {
     openScriptureForm({

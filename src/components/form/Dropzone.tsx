@@ -36,9 +36,9 @@ const useStyles = makeStyles(({ palette, spacing }) => {
   };
 });
 
-export type DropzoneFieldProps<FieldValue = File[]> = FieldConfig<
-  FieldValue
-> & {
+export type DropzoneFieldProps<
+  FieldValue = File[]
+> = FieldConfig<FieldValue> & {
   multiple?: boolean;
   name: string;
 };
