@@ -5,7 +5,7 @@ export type ArrayItem<T> = T extends ReadonlyArray<infer U> ? U : never;
 export type Many<T> = T | readonly T[];
 
 export const many = <T>(items: Many<T>): readonly T[] =>
-  Array.isArray(items) ? items : [items];
+  Array.isArray(items) ? items : [items as T];
 
 /** Converts a CSV string into a cleaned list */
 export const csv = <T extends string = string>(

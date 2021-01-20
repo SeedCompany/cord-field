@@ -82,9 +82,11 @@ export const ProjectOverview: FC = () => {
   const [editState, editField, fieldsBeingEdited] = useDialog<
     Many<EditableProjectField>
   >();
-  const [workflowState, openWorkflow, workflowProject] = useDialog<
-    ProjectOverviewFragment
-  >();
+  const [
+    workflowState,
+    openWorkflow,
+    workflowProject,
+  ] = useDialog<ProjectOverviewFragment>();
 
   const {
     directoryId,

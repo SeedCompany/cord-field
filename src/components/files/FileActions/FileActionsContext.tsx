@@ -84,19 +84,27 @@ export const FileActionsContextProvider: FC = (props) => {
 
   const downloadFile = useDownloadFile();
 
-  const [renameState, renameFile, fileNodeToRename] = useDialog<
-    FilesActionItem
-  >();
+  const [
+    renameState,
+    renameFile,
+    fileNodeToRename,
+  ] = useDialog<FilesActionItem>();
 
-  const [versionState, showVersions, versionToView] = useDialog<
-    VersionActionPayload
-  >();
-  const [deleteState, deleteFile, fileNodeToDelete] = useDialog<
-    FilesActionItem
-  >();
-  const [previewDialogState, openFilePreview, fileToPreview] = useDialog<
-    NonDirectoryActionItem
-  >();
+  const [
+    versionState,
+    showVersions,
+    versionToView,
+  ] = useDialog<VersionActionPayload>();
+  const [
+    deleteState,
+    deleteFile,
+    fileNodeToDelete,
+  ] = useDialog<FilesActionItem>();
+  const [
+    previewDialogState,
+    openFilePreview,
+    fileToPreview,
+  ] = useDialog<NonDirectoryActionItem>();
 
   const actions = {
     rename: (item: FilesActionItem) => renameFile(item),

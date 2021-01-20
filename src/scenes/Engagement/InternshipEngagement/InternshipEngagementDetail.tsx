@@ -67,9 +67,11 @@ export const InternshipEngagementDetail: FC<EngagementQuery> = ({
   const [editState, show, editField] = useDialog<
     Many<EditableEngagementField>
   >();
-  const [workflowState, openWorkflow, workflowEngagement] = useDialog<
-    Engagement
-  >();
+  const [
+    workflowState,
+    openWorkflow,
+    workflowEngagement,
+  ] = useDialog<Engagement>();
 
   const date = securedDateRange(engagement.startDate, engagement.endDate);
   const formatDate = useDateFormatter();
