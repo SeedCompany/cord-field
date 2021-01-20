@@ -478,7 +478,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@babel/plugin-proposal-export-namespace-from@npm:^7.10.4, @babel/plugin-proposal-export-namespace-from@npm:^7.12.1":
+"@babel/plugin-proposal-export-namespace-from@npm:^7.12.1":
   version: 7.12.1
   resolution: "@babel/plugin-proposal-export-namespace-from@npm:7.12.1"
   dependencies:
@@ -7654,7 +7654,6 @@ __metadata:
   dependencies:
     "@apollo/client": ^3.1.1
     "@babel/core": ^7.10.5
-    "@babel/plugin-proposal-export-namespace-from": ^7.10.4
     "@date-io/luxon": ^2.8.0
     "@graphql-codegen/add": ^2.0.2
     "@graphql-codegen/cli": ^1.20.0
