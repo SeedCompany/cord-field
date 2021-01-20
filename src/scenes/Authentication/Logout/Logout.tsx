@@ -10,6 +10,7 @@ export const Logout = () => {
   const client = useApolloClient();
   const [logout] = useMutation(LogoutDocument);
 
+  // NOTE: SSR logout is handled independently in server.ts
   useEffect(() => {
     void logout()
       .then(() => client.resetStore())

@@ -48,3 +48,6 @@ export const CsvPreview: FC<PreviewerProps> = (props) => {
     <SpreadsheetView data={[{ name: 'Sheet1', rows, columns }]} />
   );
 };
+
+// eslint-disable-next-line import/no-default-export
+export default CsvPreview;

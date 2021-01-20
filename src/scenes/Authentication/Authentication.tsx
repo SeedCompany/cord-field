@@ -1,9 +1,11 @@
 import { CircularProgress, makeStyles, ThemeProvider } from '@material-ui/core';
 import clsx from 'clsx';
-import React, { FC, useEffect } from 'react';
-import { useLocation, useNavigate, useRoutes } from 'react-router-dom';
+import React, { FC } from 'react';
+import { useLocation, useRoutes } from 'react-router-dom';
 import { Picture } from '../../components/Picture';
+import { useNavigate } from '../../components/Routing';
 import { useSession } from '../../components/Session';
+import { useIsomorphicEffect } from '../../hooks';
 import { createTheme } from '../../theme';
 import backgroundImg from './background.png';
 import { ForgotPassword } from './ForgotPassword';
@@ -63,7 +65,7 @@ export const Authentication: FC = ({ children }) => {
     },
   ]);
 
-  useEffect(() => {
+  useIsomorphicEffect(() => {
     if (!session && !sessionLoading && !matched) {
       const current = location.pathname + location.search + location.hash;
       const returnTo =

@@ -1,6 +1,7 @@
 import { useQuery } from '@apollo/client';
 import React from 'react';
 import { useParams } from 'react-router';
+import { NotFoundPage } from '../../components/Error';
 import { EngagementDocument } from './Engagement.generated';
 import { EngagementDetailLoading } from './EngagementDetailLoading';
 import { InternshipEngagementDetail } from './InternshipEngagement';
@@ -20,7 +21,7 @@ export const Engagement = () => {
     return <EngagementDetailLoading />;
   }
   if (!data) {
-    return <span>Could Not Find Engagement</span>;
+    return <NotFoundPage>Could not find engagement</NotFoundPage>;
   }
   if (data.engagement.__typename === 'LanguageEngagement') {
     return <LanguageEngagementDetail {...data} />;

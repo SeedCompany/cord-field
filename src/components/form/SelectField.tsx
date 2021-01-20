@@ -7,10 +7,8 @@ import {
   MenuItem,
   Select,
 } from '@material-ui/core';
-import {} from 'react-final-form';
 import { FC, ReactNode } from 'react';
 import * as React from 'react';
-import { useFieldName } from './FieldGroup';
 import { FieldConfig, useField } from './useField';
 import { getHelperText, showError } from './util';
 
@@ -33,21 +31,27 @@ interface SelectItem {
 }
 
 export const SelectField: FC<SelectFieldProps> = ({
-  name: nameProp,
   label,
   selectOptions,
   helperText,
   ...props
 }) => {
   const classes = useStyles();
-  const name = useFieldName(nameProp);
-  const { input, meta, rest } = useField(name, { ...props });
-  const disabled = props.disabled || meta.submitting;
+  const { input, meta, rest } = useField(props);
 
   return (
-    <FormControl disabled={disabled} error={showError(meta)} {...rest}>
+    <FormControl
+      disabled={meta.disabled}
+      focused={meta.focused}
+      error={showError(meta)}
+      {...rest}
+    >
       {label && <FormLabel className={classes.fieldLabel}>{label}</FormLabel>}
-      <Select {...input} onChange={(e) => input.onChange(e.target.value)}>
+      <Select
+        autoFocus={rest.autoFocus}
+        {...input}
+        onChange={(e) => input.onChange(e.target.value)}
+      >
         {selectOptions.map(({ value, label }: SelectItem) => (
           <MenuItem key={value} value={value}>
             {label}

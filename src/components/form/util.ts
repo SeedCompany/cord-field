@@ -1,11 +1,5 @@
 import { difference, differenceWith, isEmpty, isEqual } from 'lodash';
-import {
-  MutableRefObject,
-  ReactNode,
-  useCallback,
-  useEffect,
-  useRef,
-} from 'react';
+import { MutableRefObject, ReactNode, useCallback, useRef } from 'react';
 import { FieldMetaState, useFormState } from 'react-final-form';
 import { Nullable } from '../../util';
 
@@ -45,27 +39,6 @@ export const useFocus = <T extends { focus: () => void } = HTMLElement>(
     }
   }, [ref, andDo]);
   return [focus, ref];
-};
-
-/**
- * Focus field if it is enabled and is active.
- * When fields are disabled they lose focus so this fixes that.
- */
-export const useFocusOnEnabled = <
-  T extends { focus: () => void } = HTMLElement
->(
-  meta: FieldMetaState<unknown>,
-  disabled: boolean,
-  andDoOnFocus?: (el: T) => void
-) => {
-  // Refocus field if it has become re-enabled and is active
-  const [focus, ref] = useFocus<T>(andDoOnFocus);
-  useEffect(() => {
-    if (!disabled && meta.active) {
-      focus();
-    }
-  }, [meta.active, disabled, focus]);
-  return ref;
 };
 
 export const isEqualBy = <T>(compareBy: (item: T) => any) =>

@@ -10,6 +10,7 @@ import {
 } from '../files.generated';
 import { useDownloadFile } from '../hooks';
 import { DeleteFile } from './DeleteFile';
+import { FileAction } from './FileAction.enum';
 import { FileVersions } from './FileVersions';
 import { RenameFile } from './RenameFile';
 
@@ -32,14 +33,6 @@ export type NonDirectoryActionItem = Exclude<
 export const isFileVersion = (
   fileNode: FilesActionItem
 ): fileNode is VersionActionItem => fileNode.__typename === 'FileVersion';
-
-export enum FileAction {
-  Rename = 'rename',
-  Download = 'download',
-  History = 'history',
-  NewVersion = 'new version',
-  Delete = 'delete',
-}
 
 export type PermittedActions =
   | FileAction[]

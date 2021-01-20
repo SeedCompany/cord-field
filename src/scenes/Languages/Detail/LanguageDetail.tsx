@@ -4,6 +4,7 @@ import { Add, Edit } from '@material-ui/icons';
 import { Skeleton } from '@material-ui/lab';
 import clsx from 'clsx';
 import React from 'react';
+import { Helmet } from 'react-helmet-async';
 import { useParams } from 'react-router';
 import { canEditAny } from '../../../api';
 import { BooleanProperty } from '../../../components/BooleanProperty';
@@ -12,6 +13,7 @@ import {
   DisplaySimpleProperty,
   DisplaySimplePropertyProps,
 } from '../../../components/DisplaySimpleProperty';
+import { Error } from '../../../components/Error';
 import { Fab } from '../../../components/Fab';
 import {
   useDateFormatter,
@@ -88,9 +90,14 @@ export const LanguageDetail = () => {
 
   return (
     <main className={classes.root}>
-      {error ? (
-        <Typography variant="h4">Error loading Language</Typography>
-      ) : (
+      <Helmet title={displayName?.value || name?.value || undefined} />
+      <Error error={error}>
+        {{
+          NotFound: 'Could not find language',
+          Default: 'Error loading language',
+        }}
+      </Error>
+      {!error && (
         <>
           <div className={classes.header}>
             <Typography

@@ -3,6 +3,7 @@ import type {
   FieldReadFunction,
   KeyFieldsFunction,
 } from '@apollo/client/cache/inmemory/policies';
+import type { Query } from '../schema.generated';
 import type { GqlTypeMap } from '../typeMap.generated';
 
 type FieldPolicies<T> = {
@@ -10,6 +11,8 @@ type FieldPolicies<T> = {
 };
 
 type KeySpecifier<K = string> = ReadonlyArray<K | readonly any[]>;
+
+type GqlTypeMapAndQueries = GqlTypeMap & { Query: Query };
 
 export interface TypePolicy<T> {
   keyFields?: KeySpecifier<keyof T> | KeyFieldsFunction | false;
@@ -20,7 +23,7 @@ export interface TypePolicy<T> {
 }
 
 type TypePolicies = {
-  [K in keyof GqlTypeMap]?: TypePolicy<GqlTypeMap[K]>;
+  [K in keyof GqlTypeMapAndQueries]?: TypePolicy<GqlTypeMapAndQueries[K]>;
 };
 
 const scriptureKeyFields = ['book', 'chapter', 'verse'] as const;

@@ -2,7 +2,8 @@ import React from 'react';
 import { Except } from 'type-fest';
 import { DialogForm, DialogFormProps } from '../Dialog/DialogForm';
 import { DropzoneField, SubmitError } from '../form';
-import { UploadCallback, useUpload } from '../Upload';
+import { UploadCallback } from './Reducer';
+import { useUpload } from './UploadContext';
 
 export type UploadFilesFormProps = DialogFormProps<{ files: File[] }> & {
   onFinalizeUpload: UploadCallback;

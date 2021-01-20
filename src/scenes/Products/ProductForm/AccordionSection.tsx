@@ -90,7 +90,7 @@ const useStyles = makeStyles(({ spacing, typography, breakpoints }) => ({
 
 const productFieldMap: Partial<Record<
   ProductTypes,
-  ComponentType<FieldConfig<any> & { name: string }>
+  ComponentType<FieldConfig<any, any>>
 >> = {
   Film: FilmField,
   Story: StoryField,

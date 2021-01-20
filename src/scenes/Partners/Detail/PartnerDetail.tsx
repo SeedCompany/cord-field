@@ -13,11 +13,13 @@ import { Skeleton } from '@material-ui/lab';
 import clsx from 'clsx';
 import { Many } from 'lodash';
 import React from 'react';
+import { Helmet } from 'react-helmet-async';
 import { useParams } from 'react-router-dom';
 import { Avatar } from '../../../components/Avatar';
 import { BooleanProperty } from '../../../components/BooleanProperty';
 import { DataButton } from '../../../components/DataButton';
 import { useDialog } from '../../../components/Dialog';
+import { Error } from '../../../components/Error';
 import { Fab } from '../../../components/Fab';
 import { useDateTimeFormatter } from '../../../components/Formatters';
 import { UserListItemCardPortrait } from '../../../components/UserListItemCard';
@@ -103,6 +105,7 @@ export const PartnerDetail = () => {
     },
   });
   const partner = data?.partner;
+  const name = partner?.organization.value?.name.value;
 
   const [editPartnerState, editPartner, editField] = useDialog<
     Many<EditablePartnerField>
@@ -110,9 +113,14 @@ export const PartnerDetail = () => {
 
   return (
     <main className={classes.root}>
-      {error ? (
-        <Typography variant="h4">Error fetching partner</Typography>
-      ) : (
+      <Helmet title={name ?? undefined} />
+      <Error error={error}>
+        {{
+          NotFound: 'Could not find partner',
+          Default: 'Error loading partner',
+        }}
+      </Error>
+      {!error && (
         <div className={classes.main}>
           <header className={classes.header}>
             <Typography

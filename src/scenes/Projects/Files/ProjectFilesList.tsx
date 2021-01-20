@@ -8,12 +8,14 @@ import {
 } from '@material-ui/core';
 import { CreateNewFolder, Publish } from '@material-ui/icons';
 import { Skeleton } from '@material-ui/lab';
-import React, { FC } from 'react';
+import React, { FC, useEffect } from 'react';
 import { useDropzone } from 'react-dropzone';
+import { Helmet } from 'react-helmet-async';
 import { useNavigate, useParams } from 'react-router-dom';
 import { File as CFFile } from '../../../api';
 import { Breadcrumb } from '../../../components/Breadcrumb';
 import { useDialog } from '../../../components/Dialog';
+import { Error } from '../../../components/Error';
 import {
   FileActionsPopup as ActionsMenu,
   FileAction,
@@ -136,6 +138,9 @@ const ProjectFilesListWrapped: FC = () => {
     fetchPolicy: shouldSkipQuery ? 'cache-only' : 'cache-first',
     skip: shouldSkipQuery,
   });
+
+  // Don't wait for data to load table js code
+  useEffect(() => Table.preload(), []);
 
   const parents = data?.directory.parents;
   const breadcrumbsParents = parents?.slice(0, -1) ?? [];
@@ -282,6 +287,11 @@ const ProjectFilesListWrapped: FC = () => {
     </Typography>
   ) : (
     <div className={classes.dropzone} {...getRootProps()}>
+      <Helmet
+        title={`${isNotRootDirectory ? data?.directory.name : 'Files'} - ${
+          project ? project.name.value ?? 'A Project' : '...'
+        }`}
+      />
       <input {...getInputProps()} name="files_list_uploader" />
       <DropzoneOverlay
         isDragActive={isDragActive}
@@ -289,11 +299,11 @@ const ProjectFilesListWrapped: FC = () => {
       />
       <ContentContainer>
         {error || (!loading && !items) ? (
-          <Typography variant="h4">Error fetching Project Files</Typography>
+          <Error show error={error}>
+            Error loading project's files
+          </Error>
         ) : directoryIsNotInProject ? (
-          <Typography variant="h4">
-            This folder does not exist in this project
-          </Typography>
+          <Error show>This folder does not exist in this project</Error>
         ) : (
           <>
             {loading ? (
@@ -328,29 +338,26 @@ const ProjectFilesListWrapped: FC = () => {
               </Box>
             )}
             <section className={classes.tableWrapper}>
-              {loading ? (
-                <Skeleton variant="rect" width="100%" height={200} />
-              ) : (
-                <Table
-                  data={rowData}
-                  columns={columns}
-                  onRowClick={handleRowClick}
-                  actions={[
-                    {
-                      icon: Publish,
-                      tooltip: 'Upload Files',
-                      isFreeAction: true,
-                      onClick: openFileBrowser,
-                    },
-                    {
-                      icon: CreateNewFolder,
-                      tooltip: 'Create Folder',
-                      isFreeAction: true,
-                      onClick: createDirectory,
-                    },
-                  ]}
-                />
-              )}
+              <Table
+                isLoading={loading}
+                data={rowData}
+                columns={columns}
+                onRowClick={handleRowClick}
+                actions={[
+                  {
+                    icon: Publish,
+                    tooltip: 'Upload Files',
+                    isFreeAction: true,
+                    onClick: openFileBrowser,
+                  },
+                  {
+                    icon: CreateNewFolder,
+                    tooltip: 'Create Folder',
+                    isFreeAction: true,
+                    onClick: createDirectory,
+                  },
+                ]}
+              />
             </section>
           </>
         )}

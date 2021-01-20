@@ -3,14 +3,12 @@ import { Autocomplete, AutocompleteProps, Value } from '@material-ui/lab';
 import { identity } from 'lodash';
 import React, { useCallback } from 'react';
 import { Except } from 'type-fest';
-import { useFieldName } from './FieldGroup';
 import { FieldConfig, useField } from './useField';
 import {
   areListsEqual,
   compareNullable,
   getHelperText,
   showError,
-  useFocusOnEnabled,
 } from './util';
 
 export type AutocompleteFieldProps<
@@ -54,10 +52,8 @@ export function AutocompleteField<
   DisableClearable extends boolean | undefined,
   FreeSolo extends boolean | undefined
 >({
-  name: nameProp,
   multiple,
   defaultValue: defaultValueProp,
-  disabled: disabledProp,
   ChipProps,
   autoFocus,
   helperText,
@@ -75,8 +71,12 @@ export function AutocompleteField<
   const defaultValue =
     defaultValueProp ?? ((multiple ? emptyArray : null) as Val);
 
-  const name = useFieldName(nameProp);
-  const { input: field, meta, rest: autocompleteProps } = useField<Val>(name, {
+  const selectOnFocus = props.selectOnFocus ?? !props.freeSolo;
+  const andSelectOnFocus = useCallback((el) => selectOnFocus && el.select(), [
+    selectOnFocus,
+  ]);
+
+  const { input: field, meta, ref, rest: autocompleteProps } = useField<Val>({
     ...props,
     required,
     allowNull: !multiple,
@@ -92,18 +92,9 @@ export function AutocompleteField<
         ? (val) =>
             Array.isArray(val) && val.length === 0 ? 'Required' : undefined
         : undefined,
+    autoFocus,
+    onFocus: andSelectOnFocus,
   });
-  const disabled = disabledProp ?? meta.submitting;
-
-  const selectOnFocus = props.selectOnFocus ?? !props.freeSolo;
-  const andSelectOnFocus = useCallback((el) => selectOnFocus && el.select(), [
-    selectOnFocus,
-  ]);
-  const ref = useFocusOnEnabled<HTMLInputElement>(
-    meta,
-    disabled,
-    andSelectOnFocus
-  );
 
   const getOptionLabel = props.getOptionLabel ?? identity;
 
@@ -113,7 +104,7 @@ export function AutocompleteField<
       disableCloseOnSelect={multiple}
       {...autocompleteProps}
       options={options as T[]}
-      disabled={disabled}
+      disabled={meta.disabled}
       // FF also has multiple and defaultValue
       multiple={multiple}
       renderTags={(values: T[], getTagProps) =>
@@ -145,6 +136,7 @@ export function AutocompleteField<
           inputRef={ref}
           error={showError(meta)}
           autoFocus={autoFocus}
+          focused={meta.focused}
           variant={variant}
         />
       )}

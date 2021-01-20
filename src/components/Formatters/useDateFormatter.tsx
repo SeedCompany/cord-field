@@ -1,24 +1,58 @@
-import { DateTime } from 'luxon';
+import { DateTime, DateTimeFormatOptions } from 'luxon';
+import { useContext } from 'react';
+import { RequestContext, useLocale } from '../../hooks';
 import { CalendarDate, Nullable } from '../../util';
 
-// These are hooks so that they can pull from context later if needed
-// for current locale.
+const isClient = typeof window !== 'undefined';
+
+const useTimezone = () => {
+  const req = useContext(RequestContext);
+  const rawTz = req?.cookies.tz;
+  const timezone = typeof rawTz === 'string' ? rawTz : undefined;
+  return timezone;
+};
 
 // Returns function for format date or date range
-export const useDateFormatter = () => formatDate;
+export const useDateFormatter = () => {
+  const locale = useLocale();
 
-const formatDate = (date: Nullable<CalendarDate>) =>
-  date ? date.toLocaleString(DateTime.DATE_SHORT) : '';
-
-formatDate.range = rangeFormatter(formatDate);
+  const formatDate = (
+    date: Nullable<CalendarDate>,
+    options?: DateTimeFormatOptions
+  ) =>
+    date
+      ? date.toLocaleString({ ...(options ?? DateTime.DATE_SHORT), locale })
+      : '';
+  formatDate.range = rangeFormatter(formatDate);
+  return formatDate;
+};
 
 // Returns function for format date time or date time range
-export const useDateTimeFormatter = () => formatDateTime;
+export const useDateTimeFormatter = () => {
+  const locale = useLocale();
+  const timeZone = useTimezone();
 
-const formatDateTime = (date: Nullable<DateTime>) =>
-  date ? date.toLocaleString(DateTime.DATETIME_SHORT) : '';
+  const formatDateTime = (
+    date: Nullable<DateTime>,
+    options?: DateTimeFormatOptions
+  ) =>
+    date
+      ? date.toLocaleString({
+          ...(options ?? DateTime.DATETIME_SHORT),
+          timeZoneName:
+            options?.timeZoneName ??
+            // If we don't know the timezone, format with the timezone
+            // so the client's current timezone is not assumed.
+            // This will be mitigated once the client hydrates.
+            (!isClient && !timeZone ? 'short' : undefined),
+          locale,
+          timeZone,
+        })
+      : '';
 
-formatDateTime.range = rangeFormatter(formatDateTime);
+  formatDateTime.range = rangeFormatter(formatDateTime);
+  return formatDateTime;
+};
 
 function rangeFormatter<T extends DateTime>(
   formatter: (d: Nullable<T>) => string

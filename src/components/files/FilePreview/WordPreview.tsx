@@ -51,3 +51,6 @@ export const WordPreview: FC<PreviewerProps> = (props) => {
     <div className={classes.root}>{html}</div>
   );
 };
+
+// eslint-disable-next-line import/no-default-export
+export default WordPreview;

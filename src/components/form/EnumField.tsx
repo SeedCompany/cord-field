@@ -26,7 +26,6 @@ import {
 } from 'react';
 import { Except, MergeExclusive } from 'type-fest';
 import { many } from '../../util';
-import { useFieldName } from './FieldGroup';
 import { FieldConfig, useField } from './useField';
 import { areListsEqual, getHelperText, showError } from './util';
 import { required, requiredArray, Validator } from './validators';
@@ -141,11 +140,11 @@ export const EnumField = <
     ]
   );
 
-  const name = useFieldName(nameProp);
   // FF handles checkboxes natively but we want one field instance, where FF's
   // has multiple. One field means name only has to be specified once and
   // validation can be done as a group (i.e. check 2+)
-  const { input, meta } = useField<EnumVal<T>>(name, {
+  const { input, meta } = useField<EnumVal<T>>({
+    name: nameProp,
     // Enforce defaultValue is an array, else an empty string will be used.
     defaultValue,
     isEqual: multiple ? areListsEqual : undefined,
@@ -156,13 +155,12 @@ export const EnumField = <
         : required
       : undefined) as Validator<EnumVal<T>>,
     format: undefined, // Why does TS need this???
+    disabled: props.disabled,
   });
 
   const classes = useStyles();
 
-  const disabled = props.disabled ?? meta.submitting;
-
-  const { onChange, onBlur, onFocus } = input;
+  const { name, onChange, onBlur, onFocus } = input;
 
   const value = useMemo(
     (): Set<T> | T | null =>
@@ -226,9 +224,9 @@ export const EnumField = <
       onFocus,
       onBlur,
       fieldName: name,
-      disabled,
+      disabled: meta.disabled ?? false,
     }),
-    [disabled, isChecked, name, onBlur, onFocus, onOptionChange, variant]
+    [meta.disabled, isChecked, name, onBlur, onFocus, onOptionChange, variant]
   );
 
   let children = childrenProp ?? [
@@ -286,7 +284,7 @@ export const EnumField = <
       color="primary"
       component="fieldset"
       error={showError(meta)}
-      disabled={disabled}
+      disabled={meta.disabled}
       onFocus={(e: FocusEvent<HTMLElement>) => {
         // no need to call focus if already active
         if (!meta.active) {

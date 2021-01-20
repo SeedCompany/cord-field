@@ -3,6 +3,8 @@ import { Card, CardContent, makeStyles, Typography } from '@material-ui/core';
 import { startCase } from 'lodash';
 import { FC } from 'react';
 import * as React from 'react';
+import { Helmet } from 'react-helmet-async';
+import { Error } from '../../components/Error';
 import { LanguageListItemCard } from '../../components/LanguageListItemCard';
 import { PartnerListItemCard } from '../../components/PartnerListItemCard';
 import { ProjectListItemCard } from '../../components/ProjectListItemCard';
@@ -76,9 +78,10 @@ export const SearchResults: FC = () => {
 
   return (
     <div className={classes.root}>
+      <Helmet title={`${query} - Search`} />
       <main className={classes.main}>
         {error ? (
-          <Typography>Error loading results</Typography>
+          <Error error={error}>Error loading search results</Error>
         ) : loading ? (
           <Typography>Loading results</Typography>
         ) : data && data.search.items.length > 0 ? (

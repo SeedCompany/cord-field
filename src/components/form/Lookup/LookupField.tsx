@@ -27,14 +27,8 @@ import { isNetworkRequestInFlight, Power } from '../../../api';
 import { useDialog } from '../../Dialog';
 import { DialogFormProps } from '../../Dialog/DialogForm';
 import { useSession } from '../../Session';
-import { FieldConfig, useField, useFieldName } from '../index';
-import {
-  getHelperText,
-  isEqualBy,
-  isListEqualBy,
-  showError,
-  useFocusOnEnabled,
-} from '../util';
+import { FieldConfig, useField } from '../useField';
+import { getHelperText, isEqualBy, isListEqualBy, showError } from '../util';
 
 interface QueryResult<T> {
   search: { items: ReadonlyArray<T | any> };
@@ -86,10 +80,8 @@ export function LookupField<
   DisableClearable extends boolean | undefined,
   CreateFormValues = never
 >({
-  name: nameProp,
   multiple,
   defaultValue: defaultValueProp,
-  disabled: disabledProp,
   lookupDocument,
   ChipProps,
   autoFocus,
@@ -112,25 +104,20 @@ export function LookupField<
   const defaultValue =
     defaultValueProp ?? ((multiple ? emptyArray : null) as Val);
 
-  const name = useFieldName(nameProp);
-  const { input: field, meta, rest: autocompleteProps } = useField<Val>(name, {
+  const selectOnFocus = props.selectOnFocus ?? true;
+  const andSelectOnFocus = useCallback((el) => selectOnFocus && el.select(), [
+    selectOnFocus,
+  ]);
+
+  const { input: field, meta, ref, rest: autocompleteProps } = useField<Val>({
     ...props,
     required,
     allowNull: !multiple,
     defaultValue,
     isEqual: multiple ? isListEqualBy(getCompareBy) : isEqualBy(getCompareBy),
+    autoFocus,
+    onFocus: andSelectOnFocus,
   });
-  const disabled = disabledProp ?? meta.submitting;
-
-  const selectOnFocus = props.selectOnFocus ?? true;
-  const andSelectOnFocus = useCallback((el) => selectOnFocus && el.select(), [
-    selectOnFocus,
-  ]);
-  const ref = useFocusOnEnabled<HTMLInputElement>(
-    meta,
-    disabled,
-    andSelectOnFocus
-  );
 
   const getOptionLabel = (val: T | string) =>
     typeof val === 'string' ? val : getOptionLabelProp(val) ?? '';
@@ -205,7 +192,7 @@ export function LookupField<
       // Works well with clearOnBlur
       selectOnFocus
       {...autocompleteProps}
-      disabled={disabled}
+      disabled={meta.disabled}
       // FF also has multiple and defaultValue
       multiple={multiple}
       renderTags={(values: T[], getTagProps) =>
@@ -301,6 +288,7 @@ export function LookupField<
           inputRef={ref}
           error={showError(meta)}
           autoFocus={autoFocus}
+          focused={meta.focused}
           variant={variant}
         />
       )}

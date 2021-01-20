@@ -5,6 +5,7 @@ import { Skeleton } from '@material-ui/lab';
 import clsx from 'clsx';
 import { DateTime } from 'luxon';
 import React, { useState } from 'react';
+import { Helmet } from 'react-helmet-async';
 import { useParams } from 'react-router';
 import { useInterval } from 'react-use';
 import { canEditAny, displayRoles } from '../../../api';
@@ -61,6 +62,7 @@ export const UserDetail = () => {
 
   return (
     <main className={classes.root}>
+      <Helmet title={user?.fullName ?? undefined} />
       {error ? (
         <Typography variant="h4">Error loading person</Typography>
       ) : (

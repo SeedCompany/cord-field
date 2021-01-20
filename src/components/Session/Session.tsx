@@ -5,7 +5,9 @@ import { RegisterMutation } from '../../scenes/Authentication/Register/register.
 import { LoggedInUserFragment, SessionDocument } from './session.generated';
 
 export const useSession = () => {
-  const { data, loading: sessionLoading } = useQuery(SessionDocument);
+  const { data, loading: sessionLoading } = useQuery(SessionDocument, {
+    ssr: true,
+  });
   const session = data?.session.user;
   const powers = data?.session.powers;
 

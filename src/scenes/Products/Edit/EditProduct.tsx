@@ -4,6 +4,7 @@ import { Skeleton } from '@material-ui/lab';
 import { isEqual } from 'lodash';
 import { useSnackbar } from 'notistack';
 import React, { useMemo } from 'react';
+import { Helmet } from 'react-helmet-async';
 import { useNavigate, useParams } from 'react-router';
 import { handleFormError } from '../../../api';
 import { EngagementBreadcrumb } from '../../../components/EngagementBreadcrumb';
@@ -100,6 +101,8 @@ export const EditProduct = () => {
 
   return (
     <main className={classes.root}>
+      {/* TODO label product */}
+      <Helmet title="Edit Product" />
       <Breadcrumbs>
         <ProjectBreadcrumb data={project} />
         <EngagementBreadcrumb data={engagement} projectId={projectId} />

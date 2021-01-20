@@ -1,23 +1,13 @@
 import React from 'react';
-import { useRoutes } from 'react-router-dom';
+import { Route, Routes } from 'react-router-dom';
+import { NotFoundRoute } from '../../components/Error';
 import { PartnerDetail } from './Detail';
 import { PartnerList } from './List';
 
-export const Partners = () => {
-  const matched = useRoutes([
-    {
-      path: '/',
-      element: <PartnerList />,
-    },
-    {
-      path: '/:partnerId',
-      element: <PartnerDetail />,
-    },
-  ]);
-
-  if (!matched) {
-    return <div>Not Found</div>;
-  }
-
-  return <>{matched}</>;
-};
+export const Partners = () => (
+  <Routes>
+    <Route path="" element={<PartnerList />} />
+    <Route path=":partnerId" element={<PartnerDetail />} />
+    {NotFoundRoute}
+  </Routes>
+);

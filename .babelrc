@@ -1,6 +1,13 @@
 {
+  "presets": ["razzle/babel"],
   "plugins": [
-    "@babel/plugin-proposal-export-namespace-from",
-    "mui-make-styles"
+    "./src/server/disableSsrByDefault",
+    "@loadable/babel-plugin",
+    "mui-make-styles",
+    ["babel-plugin-import", {
+      "libraryName": "lodash",
+      "libraryDirectory": "",
+      "camel2DashComponentName": false
+    }, "fix-lodash-imports"]
   ]
 }

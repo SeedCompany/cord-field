@@ -1,7 +1,7 @@
-import { PDFDocumentProxy } from 'pdfjs-dist';
+import type { PDFDocumentProxy } from 'pdfjs-dist';
 import React, { FC, useCallback, useState } from 'react';
 import { Document, Page, pdfjs } from 'react-pdf';
-import { useFileActions } from '../FileActions';
+import { useFileActions } from '../FileActions/FileActionsContext';
 import { PreviewerProps } from './FilePreview';
 import { PreviewLoading } from './PreviewLoading';
 import { PreviewPagination } from './PreviewPagination';
@@ -41,3 +41,6 @@ export const PdfPreview: FC<PreviewerProps> = (props) => {
     </PreviewPagination>
   );
 };
+
+// eslint-disable-next-line import/no-default-export
+export default PdfPreview;

@@ -3,6 +3,7 @@ import { Button, Grid, makeStyles, Typography } from '@material-ui/core';
 import { Skeleton } from '@material-ui/lab';
 import { times } from 'lodash';
 import React, { FC } from 'react';
+import { Helmet } from 'react-helmet-async';
 import { Language } from '../../../api';
 import { useNumberFormatter } from '../../../components/Formatters';
 import { LanguageListItemCard } from '../../../components/LanguageListItemCard';
@@ -36,6 +37,7 @@ export const LanguageList: FC = () => {
 
   return (
     <ContentContainer>
+      <Helmet title="Languages" />
       <Typography variant="h2" paragraph>
         Languages
       </Typography>

@@ -1,4 +1,4 @@
-import { FileAction } from '.';
+import { FileAction } from './FileAction.enum';
 
 export const getPermittedFileActions = (canRead: boolean, canEdit: boolean) => {
   const readFileActions = canRead
