@@ -33,4 +33,6 @@ export const fetchDataForRender = async (tree: ReactElement, req: Request) => {
 const isElement = (
   el: unknown
 ): el is ReactElement<any, ComponentType & { fetchData?: FetchDataFn }> =>
-  el && typeof el === 'object' && typeof (el as any).type === 'function';
+  Boolean(el) &&
+  typeof el === 'object' &&
+  typeof (el as any).type === 'function';
