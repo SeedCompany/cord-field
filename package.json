@@ -19,7 +19,7 @@
     "node": ">=12"
   },
   "dependencies": {
-    "@apollo/client": "^3.1.1",
+    "@apollo/client": "^3.3.7",
     "@date-io/luxon": "^2.8.0",
     "@iarna/rtf-to-html": "^1.1.0",
     "@loadable/babel-plugin": "^5.13.2",
