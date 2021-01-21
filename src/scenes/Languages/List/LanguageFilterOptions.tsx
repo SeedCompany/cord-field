@@ -7,6 +7,7 @@ import {
   EnumListParam,
   makeQueryHandler,
   withDefault,
+  withKey,
   withTransform,
 } from '../../../hooks';
 
@@ -17,9 +18,9 @@ export const useLanguageFilters = makeQueryHandler({
     decode: (value, decoder) =>
       decoder(value)?.map((v) => upperFirst(v) as Sensitivity),
   }),
-  leastOfThese: withDefault(BooleanParam(), false),
-  isSignLanguage: withDefault(BooleanParam(), false),
-  isDialect: withDefault(BooleanParam(), false),
+  leastOfThese: withKey(withDefault(BooleanParam(), false), 'lot'),
+  isSignLanguage: withKey(withDefault(BooleanParam(), false), 'sign-language'),
+  isDialect: withKey(withDefault(BooleanParam(), false), 'dialect'),
 });
 
 export const LanguageFilterOptions = () => {
