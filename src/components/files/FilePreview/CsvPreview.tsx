@@ -34,7 +34,7 @@ export const CsvPreview: FC<PreviewerProps> = (props) => {
   const hasParsed = csvData.length > 0;
 
   const columns = hasParsed
-    ? csvData[0].reduce(
+    ? csvData[0]!.reduce(
         (columns: ColumnData, columnName, index) =>
           columns.concat({ name: columnName, key: index }),
         []

@@ -15,6 +15,7 @@
     "strict": true,
     "forceConsistentCasingInFileNames": true,
     "noFallthroughCasesInSwitch": false,
+    "noUncheckedIndexedAccess": true,
     "baseUrl": "src",
     "paths": {
       "*": ["./typings/*"]

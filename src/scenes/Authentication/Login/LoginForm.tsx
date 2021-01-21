@@ -143,7 +143,7 @@ const clearSubmitErrorsOnChange: Decorator<LoginInput> = (form) =>
   form.subscribe(
     ({ dirtySinceLastSubmit }) => {
       if (dirtySinceLastSubmit) {
-        form.mutators.clearSubmitErrors();
+        form.mutators.clearSubmitErrors!();
       }
     },
     { dirtySinceLastSubmit: true }

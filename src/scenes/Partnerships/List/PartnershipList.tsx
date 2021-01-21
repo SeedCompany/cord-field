@@ -42,7 +42,7 @@ const useStyles = makeStyles(({ spacing, breakpoints }) => ({
 export const PartnershipList: FC = () => {
   const classes = useStyles();
 
-  const { projectId } = useParams();
+  const { projectId = '' } = useParams();
   const { data } = useQuery(ProjectPartnershipsDocument, {
     variables: { input: projectId },
   });

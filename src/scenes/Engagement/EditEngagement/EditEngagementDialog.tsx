@@ -117,8 +117,8 @@ const fieldMapping: Record<
         groupBy={(p) => {
           const option = groups[p];
           return compact([
-            displayInternProgram(option.program),
-            displayInternDomain(option.domain),
+            displayInternProgram(option?.program),
+            displayInternDomain(option?.domain),
           ]).join(' - ');
         }}
         getOptionLabel={displayInternPosition}

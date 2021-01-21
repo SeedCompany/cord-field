@@ -186,7 +186,7 @@ export const makeQueryHandler = <QPCMap extends QueryParamConfigMapShape>(
         // convert our keys to the configured raw keys
         const mapped = mapKeys(
           filtered,
-          (_, key) => paramConfigMap[key].key ?? key
+          (_, key) => paramConfigMap[key]!.key ?? key
         );
         // Merge in unrelated query params so they are preserved
         const merged = { ...unrelated, ...mapped };
