@@ -126,17 +126,11 @@ const ProjectFilesListWrapped: FC = () => {
 
   const isNotRootDirectory = directoryId !== rootDirectoryId;
 
-  const shouldSkipQuery = !directoryId;
   const { data, loading, error } = useQuery(ProjectDirectoryDocument, {
     variables: {
       id: directoryId,
     },
-    // Workaround for a known bug in Apollo client that causes
-    // `skip` to suddenly be ignored when `client.resetStore` is
-    // called:
-    // https://github.com/apollographql/react-apollo/issues/3492#issuecomment-622573677
-    fetchPolicy: shouldSkipQuery ? 'cache-only' : 'cache-first',
-    skip: shouldSkipQuery,
+    skip: !directoryId,
   });
 
   // Don't wait for data to load table js code

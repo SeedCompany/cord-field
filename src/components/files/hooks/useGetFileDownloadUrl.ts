@@ -1,11 +1,7 @@
 import { useApolloClient } from '@apollo/client';
 import { useSnackbar } from 'notistack';
 import { useCallback } from 'react';
-import {
-  FileDownloadUrl_Directory_Fragment,
-  FileNodeDownloadUrlDocument,
-  FileNodeDownloadUrlQuery,
-} from './DownloadFile.generated';
+import { FileNodeDownloadUrlDocument } from './DownloadFile.generated';
 
 export const useGetFileDownloadUrl = () => {
   const { enqueueSnackbar } = useSnackbar();
@@ -21,21 +17,16 @@ export const useGetFileDownloadUrl = () => {
   const getFileDownloadUrl = useCallback(
     async (id: string): Promise<string | null> => {
       try {
-        const { data } = await client.query<FileNodeDownloadUrlQuery>({
+        const { data } = await client.query({
           query: FileNodeDownloadUrlDocument,
           variables: { id },
           // We don't want to retrieve this from cache because the
-          // presigned URL might have expired while the user kept the
+          // pre-signed URL might have expired while the user kept the
           // tab open past 15 minutes.
           fetchPolicy: 'network-only',
         });
-        const isDirectory = (
-          node: FileNodeDownloadUrlQuery['fileNode'] | undefined
-        ): node is FileDownloadUrl_Directory_Fragment => {
-          return node?.type === 'Directory';
-        };
-        return !isDirectory(data?.fileNode)
-          ? data?.fileNode.downloadUrl ?? null
+        return data.fileNode.__typename === 'File'
+          ? data.fileNode.downloadUrl
           : null;
       } catch {
         showSnackbarError();

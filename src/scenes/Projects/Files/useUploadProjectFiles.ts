@@ -31,50 +31,42 @@ export const useUploadProjectFiles = (): UploadFilesConsumerFunction => {
       refetchQueries:
         action === 'file' ? [GQLOperations.Query.ProjectDirectory] : undefined,
       update: (cache, { data }) => {
-        if (data?.createFileVersion) {
-          if (action === 'version') {
-            updateCachedVersions(
-              cache,
-              data.createFileVersion.children.items,
-              parentId
-            );
-          } else {
-            try {
-              const id = `Directory:${parentId}`;
-              const response = cache.readFragment({
-                id,
-                fragment: ProjectDirectoryContentsFragmentDoc,
-                fragmentName: 'ProjectDirectoryContents',
-              });
-              if (response) {
-                const newFile = data.createFileVersion;
-                const currentItems = response.children.items;
-                const updatedData = {
-                  ...response,
-                  children: {
-                    ...response.children,
-                    items: currentItems.concat(newFile),
-                    total: currentItems.length + 1,
-                  },
-                };
-                cache.writeFragment({
-                  id,
-                  fragment: ProjectDirectoryContentsFragmentDoc,
-                  fragmentName: 'ProjectDirectoryContents',
-                  data: updatedData,
-                });
-              }
-            } catch {
-              /**
-               * We need this try/catch because if this data has never been fetched
-               * before, `cache.readFragment` will throw an error instead of returning
-               * anything, which is apparently a behavior the Apollo team finds
-               * acceptable.
-               */
-              return;
-            }
-          }
+        if (!data?.createFileVersion) {
+          return;
         }
+        if (action === 'version') {
+          updateCachedVersions(
+            cache,
+            data.createFileVersion.children.items,
+            parentId
+          );
+          return;
+        }
+        const id = `Directory:${parentId}`;
+        const cachedDir = cache.readFragment({
+          id,
+          fragment: ProjectDirectoryContentsFragmentDoc,
+          fragmentName: 'ProjectDirectoryContents',
+        });
+        if (!cachedDir) {
+          return;
+        }
+        const newFile = data.createFileVersion;
+        const currentItems = cachedDir.children.items;
+        const updatedData = {
+          ...cachedDir,
+          children: {
+            ...cachedDir.children,
+            items: currentItems.concat(newFile),
+            total: currentItems.length + 1,
+          },
+        };
+        cache.writeFragment({
+          id,
+          fragment: ProjectDirectoryContentsFragmentDoc,
+          fragmentName: 'ProjectDirectoryContents',
+          data: updatedData,
+        });
       },
     });
   };
