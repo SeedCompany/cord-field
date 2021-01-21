@@ -31,6 +31,16 @@ export const WithData = () => {
         },
       },
     },
+    mouStart: {
+      canRead: true,
+      canEdit: true,
+      value: dateTime('updatedAt'),
+    },
+    mouEnd: {
+      canRead: true,
+      canEdit: true,
+      value: dateTime('updatedAt'),
+    },
     createdAt: dateTime('createdAt'),
     types: {
       value: csv(text('Types', 'Managing, Funding')),

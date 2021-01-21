@@ -13,6 +13,7 @@ import {
   DialogFormProps,
 } from '../../../components/Dialog/DialogForm';
 import {
+  DateField,
   EnumField,
   EnumFieldProps,
   SecuredField,
@@ -129,6 +130,25 @@ export const PartnershipForm = <T extends PartnershipFormValues>({
                 <SecuredField obj={partnership} name="mouStatus">
                   {(props) => (
                     <AgreementStatusField label="Mou Status" {...props} />
+                  )}
+                </SecuredField>
+
+                <SecuredField obj={partnership} name="mouStartOverride">
+                  {(props) => (
+                    <DateField
+                      {...props}
+                      label="Start Date"
+                      helperText="Leave blank to use the project's mou start date"
+                    />
+                  )}
+                </SecuredField>
+                <SecuredField obj={partnership} name="mouEndOverride">
+                  {(props) => (
+                    <DateField
+                      {...props}
+                      label="End Date"
+                      helperText="Leave blank to use the project's mou end date"
+                    />
                   )}
                 </SecuredField>
               </>

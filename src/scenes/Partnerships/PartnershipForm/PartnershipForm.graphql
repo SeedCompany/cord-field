@@ -15,6 +15,16 @@ fragment PartnershipForm on Partnership {
     canEdit
     canRead
   }
+  mouEndOverride {
+    canRead
+    canEdit
+    value
+  }
+  mouStartOverride {
+    canRead
+    canEdit
+    value
+  }
   partner {
     canRead
     canEdit
