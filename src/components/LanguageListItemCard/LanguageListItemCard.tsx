@@ -6,6 +6,7 @@ import * as React from 'react';
 import { DisplaySimpleProperty } from '../DisplaySimpleProperty';
 import { useNumberFormatter } from '../Formatters';
 import { CardActionAreaLink } from '../Routing';
+import { Sensitivity } from '../Sensitivity';
 import { LanguageListItemFragment } from './LanguageListItem.generated';
 
 const useStyles = makeStyles(({ spacing }) => {
@@ -31,6 +32,9 @@ const useStyles = makeStyles(({ spacing }) => {
       flexDirection: 'column',
       justifyContent: 'flex-end',
       textAlign: 'right',
+    },
+    sensitivity: {
+      marginTop: spacing(1),
     },
   };
 });
@@ -77,6 +81,11 @@ export const LanguageListItemCard: FC<LanguageListItemCardProps> = ({
                 value={language?.registryOfDialectsCode.value}
                 loading={!language}
                 loadingWidth="25%"
+              />
+              <Sensitivity
+                value={language?.sensitivity}
+                loading={!language}
+                className={classes.sensitivity}
               />
             </div>
             <div className={classes.rightContent}>
