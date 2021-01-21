@@ -22,6 +22,8 @@ const securedRange = <T extends DateTime>() => (
   value:
     start.value && end.value
       ? (Interval.fromDateTimes(start.value, end.value) as DateInterval<T>)
+      : !start.value && !end.value
+      ? null
       : { start: start.value, end: end.value },
 });
 

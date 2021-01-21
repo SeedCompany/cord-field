@@ -337,7 +337,9 @@ export const ProjectOverview: FC = () => {
                 startIcon={<DateRange className={classes.infoColor} />}
                 secured={date}
                 redacted="You do not have permission to view start/end dates"
-                children={(props) => <FormattedDateRange {...props} />}
+                children={({ start, end }) => (
+                  <FormattedDateRange {...{ start, end }} />
+                )}
                 empty="Start - End"
                 onClick={() => editField(['mouStart', 'mouEnd'])}
               />
