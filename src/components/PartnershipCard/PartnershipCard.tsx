@@ -91,7 +91,7 @@ export const PartnershipCard: FC<PartnershipCardProps> = ({
           </Grid>
           <Grid item>
             <DisplaySimpleProperty
-              label="Mou Status"
+              label="MOU Status"
               value={displayPartnershipStatus(partnership?.mouStatus.value)}
               loading={!partnership}
               loadingWidth="40%"
@@ -99,7 +99,7 @@ export const PartnershipCard: FC<PartnershipCardProps> = ({
           </Grid>
           <Grid item>
             <DisplaySimpleProperty
-              label="Mou Start - End"
+              label="MOU Date Range"
               value={dateRangeString}
               loading={!partnership}
               loadingWidth="40%"
