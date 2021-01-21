@@ -30,7 +30,7 @@ export const CreateProduct = () => {
   const classes = useStyles();
   const navigate = useNavigate();
 
-  const { projectId, engagementId } = useParams();
+  const { projectId, engagementId = '' } = useParams();
   const { enqueueSnackbar } = useSnackbar();
 
   const { data, loading } = useQuery(GetProductBreadcrumbDocument, {

@@ -6,6 +6,7 @@ import {
   newTestament,
   oldTestament,
 } from '../../scenes/Products/ProductForm/constants';
+import { ScriptureRange } from '../../util/biblejs';
 import { ProductCard } from './ProductCard';
 import { ProductCardFragment } from './ProductCard.generated';
 
@@ -36,9 +37,9 @@ const getProduct = () => {
     ProductMethodologyList[0]
   );
 
-  const getScriptureRange = () => {
+  const getScriptureRange = (): ScriptureRange => {
     const books = [...oldTestament, ...newTestament];
-    const book = books[Math.floor(Math.random() * books.length)];
+    const book = books[Math.floor(Math.random() * books.length)]!;
     return {
       start: {
         book,

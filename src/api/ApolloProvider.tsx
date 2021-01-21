@@ -39,12 +39,10 @@ export const ApolloProvider: FC = ({ children }) => {
 
     const cache = new InMemoryCache({
       possibleTypes,
-      // Yes the assertion is necessary. It's because, as of TS 4.0, index
-      // signatures still incorrectly convey that values for missing keys
-      // would still give the expected value instead of undefined, which is
-      // absolutely how JS works. I believe this is getting fixed finally in 4.1.
-      // See: https://github.com/microsoft/TypeScript/pull/39560
-      // eslint-disable-next-line @typescript-eslint/no-unnecessary-type-assertion
+      // Our "strict type" allows for partials. Due to a TS limitation, partials
+      // could be missing keys or keys with a value of undefined. We are going
+      // to assume that the values will never explicitly be undefined, but rather
+      // just omitted.
       typePolicies: typePolicies as TypePolicies,
     });
 

@@ -20,10 +20,10 @@ const VariantOptions: TypographyVariant[] = [
   'overline',
 ];
 
-const VariantValues: string[] = [
+const VariantValues = [
   'Heading.',
   'Lorem ipsum dolor sit amet, consectetur adipisicing elit. Quos blanditiis tenetur.',
-];
+] as const;
 
 export const Typography = () => (
   <div>

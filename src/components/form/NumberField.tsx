@@ -77,7 +77,7 @@ const formatNumber = ({
   let head = '';
   let tail = '';
   if (next.includes('.')) {
-    [head, tail] = next.split('.');
+    [head = '', tail = ''] = next.split('.');
 
     // Avoid rounding errors at toLocaleString as when user enters 1.239
     // and maxDigits=2 we must not to convert it to 1.24, it must stay 1.23

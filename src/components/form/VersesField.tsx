@@ -59,7 +59,7 @@ const useStyles = makeStyles(() => ({
 const validateInput = (input: string) => {
   const currentChar = input[input.length - 1];
   const inputWithoutCurrentChar = input.slice(0, -1);
-  const [start, end] = inputWithoutCurrentChar.split('-');
+  const [start = '', end] = inputWithoutCurrentChar.split('-');
   if (
     input.includes(':-') ||
     input.includes('-:') ||
@@ -169,7 +169,7 @@ export function VersesField({
     errorCode === 'invalidVerse' &&
     end &&
     // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
-    (!end.includes(':') || endVerse?.length < 1);
+    (!end.includes(':') || !endVerse);
 
   const error =
     showError(meta) ||

@@ -76,7 +76,7 @@ const useStyles = makeStyles(({ spacing, breakpoints, palette }) => ({
 
 export const ProjectOverview: FC = () => {
   const classes = useStyles();
-  const { projectId } = useParams();
+  const { projectId = '' } = useParams();
   const formatNumber = useNumberFormatter();
 
   const [editState, editField, fieldsBeingEdited] = useDialog<

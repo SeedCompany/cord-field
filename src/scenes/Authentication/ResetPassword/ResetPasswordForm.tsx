@@ -96,14 +96,14 @@ const showMatchingErrorsImmediately: Decorator<Fields> = (form) =>
   form.subscribe(
     ({ active, values }) => {
       if (active === 'confirm' && values.confirm) {
-        form.mutators.markConfirmTouched();
+        form.mutators.markConfirmTouched!();
       }
     },
     { active: true, values: true }
   );
 
 const markConfirmTouched: Mutator<Fields> = (args, state) => {
-  state.fields.confirm.touched = true;
+  state.fields.confirm!.touched = true;
 };
 
 const decorators = [

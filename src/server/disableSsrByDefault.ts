@@ -67,7 +67,7 @@ export default ({ types }: { types: Types }): PluginObj<State> => ({
       // Replace function call with same one with options argument added.
       path.replaceWith(
         types.callExpression(path.node.callee, [
-          path.node.arguments[0],
+          path.node.arguments[0]!,
           options,
         ])
       );

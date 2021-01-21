@@ -166,7 +166,7 @@ const showMatchingErrorsImmediately: Decorator<RegisterFields> = (form) =>
   form.subscribe(
     ({ active, values }) => {
       if (active === 'confirmPassword' && values.confirmPassword) {
-        form.mutators.markConfirmPasswordTouched();
+        form.mutators.markConfirmPasswordTouched!();
       }
     },
     { active: true, values: true }
@@ -176,7 +176,7 @@ export const markConfirmPasswordTouched: Mutator<RegisterFields> = (
   args,
   state
 ) => {
-  state.fields.confirmPassword.touched = true;
+  state.fields.confirmPassword!.touched = true;
 };
 
 // decorators get re-created if array identity changes
