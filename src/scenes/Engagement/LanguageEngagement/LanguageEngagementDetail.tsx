@@ -84,7 +84,7 @@ export const LanguageEngagementDetail: FC<EngagementQuery> = ({
 
   const language = engagement.language.value;
   const langName = language?.name.value ?? language?.displayName.value;
-  const ptRegistryId = engagement.paraTextRegistryId;
+  const ptRegistryId = engagement.paratextRegistryId;
   const pnp = engagement.pnp;
   const editable = canEditAny(engagement);
 
@@ -182,14 +182,14 @@ export const LanguageEngagementDetail: FC<EngagementQuery> = ({
             </Grid>
             <Grid item>
               <DataButton
-                onClick={() => show(['paraTextRegistryId'])}
+                onClick={() => show(['paratextRegistryId'])}
                 secured={ptRegistryId}
-                redacted="You do not have permission to view ParaText Registry ID"
+                redacted="You do not have permission to view Paratext Registry ID"
                 children={
                   ptRegistryId.value &&
-                  `ParaText Registry ID: ${ptRegistryId.value}`
+                  `Paratext Registry ID: ${ptRegistryId.value}`
                 }
-                empty={'Enter ParaText Registry ID'}
+                empty={'Enter Paratext Registry ID'}
               />
             </Grid>
             <BooleanProperty
