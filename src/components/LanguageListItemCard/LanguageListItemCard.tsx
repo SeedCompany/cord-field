@@ -33,6 +33,9 @@ const useStyles = makeStyles(({ spacing }) => {
       justifyContent: 'flex-end',
       textAlign: 'right',
     },
+    sensitivity: {
+      marginTop: spacing(1),
+    },
   };
 });
 
@@ -79,7 +82,11 @@ export const LanguageListItemCard: FC<LanguageListItemCardProps> = ({
                 loading={!language}
                 loadingWidth="25%"
               />
-              <Sensitivity value={language?.sensitivity} loading={!language} />
+              <Sensitivity
+                value={language?.sensitivity}
+                loading={!language}
+                className={classes.sensitivity}
+              />
             </div>
             <div className={classes.rightContent}>
               {!language || population ? (
