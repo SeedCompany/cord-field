@@ -233,31 +233,9 @@ export const LanguageDetail = () => {
               ) : null}
             </Grid>
             <Grid item xs={12}>
-              <Grid
-                container
-                spacing={2}
-                alignItems="center"
-                className={classes.listHeader}
-              >
-                <Grid item>
-                  <Typography variant="h3">Projects</Typography>
-                </Grid>
-                <Grid item>
-                  <Tooltip title="Create project for this language">
-                    <Fab
-                      color="error"
-                      aria-label="create project for this language"
-                      className={
-                        projects?.canCreate === true
-                          ? undefined
-                          : classes.hidden
-                      }
-                    >
-                      <Add />
-                    </Fab>
-                  </Tooltip>
-                </Grid>
-              </Grid>
+              <Typography variant="h3" paragraph>
+                Projects
+              </Typography>
               {listOrPlaceholders(projects?.items, 3).map((project, index) => (
                 <ProjectListItemCard
                   key={project?.id ?? index}
