@@ -111,11 +111,13 @@ const modifyWebpackConfig = (opts) => {
     hints: false,
   };
 
+  const filesPath = path
+    .normalize('src/components/files')
+    // win32 black-slashes need to be escaped for regex input
+    .replace(/\\/g, '\\\\');
   config.plugins.push(
     new CircularDependencyPlugin({
-      exclude: RegExp(
-        `(node_modules|${path.join('src', 'components', 'files')})`
-      ),
+      exclude: RegExp(`(node_modules|${filesPath})`),
       failOnError: true,
     })
   );
