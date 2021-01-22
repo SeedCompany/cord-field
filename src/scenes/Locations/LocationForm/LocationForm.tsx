@@ -1,6 +1,10 @@
 import { Grid } from '@material-ui/core';
 import React from 'react';
-import { LocationTypeList, SensitivityList } from '../../../api';
+import {
+  displayLocationType,
+  LocationTypeList,
+  SensitivityList,
+} from '../../../api';
 import {
   DialogForm,
   DialogFormProps,
@@ -16,7 +20,7 @@ import { LocationFormFragment } from './LocationForm.generated';
 
 const locationTypeSelectOptions = LocationTypeList.map((type) => ({
   value: type,
-  label: type,
+  label: displayLocationType(type),
 }));
 
 const sensitivitySelectOptions = SensitivityList.map((sensitivity) => ({

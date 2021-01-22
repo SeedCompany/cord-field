@@ -5,6 +5,7 @@ import { Skeleton } from '@material-ui/lab';
 import clsx from 'clsx';
 import React from 'react';
 import { useParams } from 'react-router';
+import { displayLocationType } from '../../../api';
 import { useDialog } from '../../../components/Dialog';
 import {
   DisplaySimpleProperty,
@@ -98,7 +99,7 @@ export const LocationDetail = () => {
           />
           <DisplayProperty
             label="Type"
-            value={location?.type.value}
+            value={displayLocationType(location?.type.value)}
             loading={!location}
           />
           <FundingAccountCard fundingAccount={location?.fundingAccount.value} />

@@ -4,6 +4,7 @@ import {
   FinancialReportingType,
   InternshipDomain,
   InternshipProgram,
+  LocationType,
   PartnershipAgreementStatus,
   ProductApproach,
   ProjectStatus,
@@ -42,6 +43,9 @@ export const PartnershipStatuses: PartnershipAgreementStatus[] = [
   'AwaitingSignature',
   'Signed',
 ];
+
+export const displayLocationType = (type: Nullable<LocationType>): string =>
+  !type ? '' : type === 'CrossBorderArea' ? 'Cross-Border Area' : type;
 
 export const displayMethodology = (methodology: ProductMethodology) =>
   methodology.includes('Other')
