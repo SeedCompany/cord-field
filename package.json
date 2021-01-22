@@ -145,6 +145,7 @@
     "webpack-dev-server": "^3.11.0"
   },
   "resolutions": {
+    "@typescript-eslint/parser@^4.11.1": "4.13.0",
     "material-table/jspdf": "^2.1.0",
     "pdfjs-dist": "patch:pdfjs-dist@2.5.207#./patches/pdfjs-dist.patch"
   },
