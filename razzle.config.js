@@ -111,14 +111,21 @@ const modifyWebpackConfig = (opts) => {
     hints: false,
   };
 
-  config.plugins.push(
-    new CircularDependencyPlugin({
-      exclude: RegExp(
-        `(node_modules|${path.join('src', 'components', 'files')})`
-      ),
-      failOnError: true,
-    })
-  );
+  // Run circular dependency checks on build
+  // Webpack doesn't always get the initializing order of these right when
+  // compiling to a single file for the server.
+  if (!opts.env.dev) {
+    const filesPath = path
+      .normalize('src/components/files')
+      // win32 black-slashes need to be escaped for regex input
+      .replace(/\\/g, '\\\\');
+    config.plugins.push(
+      new CircularDependencyPlugin({
+        exclude: RegExp(`(node_modules|${filesPath})`),
+        failOnError: true,
+      })
+    );
+  }
 
   return config;
 };
