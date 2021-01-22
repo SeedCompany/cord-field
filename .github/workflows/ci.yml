@@ -3,7 +3,8 @@ on:
   pull_request:
   push:
     branches:
-      - v3
+      - master
+      - develop
 
 env:
   RAZZLE_API_BASE_URL: ${{ secrets.API_BASE_URL }}
