@@ -1,3 +1,4 @@
+export * from './AlphaLowercaseField';
 export * from './Lookup/LookupField';
 export * from './CheckboxField';
 export * from './decorators';

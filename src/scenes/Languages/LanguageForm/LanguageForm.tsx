@@ -12,6 +12,7 @@ import {
   DialogFormProps,
 } from '../../../components/Dialog/DialogForm';
 import {
+  AlphaLowercaseField,
   CheckboxField,
   FieldGroup,
   FormattedTextField,
@@ -255,7 +256,8 @@ export const LanguageForm = <T extends any>({
                     <SecuredField obj={language?.ethnologue} name="code">
                       {(props) => (
                         <Grid item xs={12} sm={6}>
-                          <EthnologueCodeField
+                          <AlphaLowercaseField
+                            chars={3}
                             label="Ethnologue Code"
                             placeholder="Enter Ethnologue Code"
                             margin="none"
@@ -270,7 +272,8 @@ export const LanguageForm = <T extends any>({
                     >
                       {(props) => (
                         <Grid item xs={12} sm={6}>
-                          <EthnologueCodeField
+                          <AlphaLowercaseField
+                            chars={3}
                             label="Provisional Code"
                             placeholder="Enter Provisional Code"
                             margin="none"
@@ -329,23 +332,6 @@ export const LanguageForm = <T extends any>({
         );
       }}
     </DialogForm>
-  );
-};
-
-// A 3-character lower-cased alpha string
-const EthnologueCodeField = (props: FormattedTextFieldProps) => {
-  return (
-    <FormattedTextField
-      accept={/[a-zA-Z]/g}
-      formatInput={(value) =>
-        (value.match(/[a-zA-Z]+/g) || []).join('').substr(0, 3)
-      }
-      replace={(value) => value.toLowerCase()}
-      validate={(value) =>
-        !value || value.length === 3 ? undefined : `Must be 3 characters`
-      }
-      {...props}
-    />
   );
 };
 
