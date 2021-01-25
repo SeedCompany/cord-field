@@ -2,8 +2,7 @@ import {
   FormControl,
   FormControlProps,
   FormHelperText,
-  FormLabel,
-  makeStyles,
+  InputLabel,
   MenuItem,
   Select,
 } from '@material-ui/core';
@@ -12,22 +11,16 @@ import * as React from 'react';
 import { FieldConfig, useField } from './useField';
 import { getHelperText, showError } from './util';
 
-const useStyles = makeStyles(({ typography }) => ({
-  fieldLabel: {
-    fontWeight: typography.weight.bold,
-  },
-}));
-
 export type SelectFieldProps<T = string> = FieldConfig<T> & {
   name: string;
-  selectOptions: SelectItem[];
+  selectOptions: readonly SelectItem[];
   helperText?: ReactNode;
-  label?: string;
+  label?: ReactNode;
 } & FormControlProps;
 
 interface SelectItem {
   value: any;
-  label: string;
+  label: ReactNode;
 }
 
 export const SelectField: FC<SelectFieldProps> = ({
@@ -36,7 +29,6 @@ export const SelectField: FC<SelectFieldProps> = ({
   helperText,
   ...props
 }) => {
-  const classes = useStyles();
   const { input, meta, rest } = useField(props);
 
   return (
@@ -46,10 +38,11 @@ export const SelectField: FC<SelectFieldProps> = ({
       error={showError(meta)}
       {...rest}
     >
-      {label && <FormLabel className={classes.fieldLabel}>{label}</FormLabel>}
+      {label && <InputLabel>{label}</InputLabel>}
       <Select
         autoFocus={rest.autoFocus}
         {...input}
+        label={label}
         onChange={(e) => input.onChange(e.target.value)}
       >
         {selectOptions.map(({ value, label }: SelectItem) => (
