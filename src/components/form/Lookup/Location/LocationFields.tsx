@@ -6,7 +6,7 @@ import {
 } from '../../../../api/fragments/location.generated';
 import { CreateLocation } from '../../../../scenes/Locations/Create';
 import { LocationFormValues } from '../../../../scenes/Locations/LocationForm';
-import { LookupField } from '../../index';
+import { LookupField } from '../../Lookup/LookupField';
 import {
   FieldRegionLookupDocument,
   FieldZoneLookupDocument,
@@ -22,11 +22,10 @@ export const LocationField = LookupField.createFor<
   label: 'Location',
   placeholder: 'Search for a location by name',
   CreateDialogForm: CreateLocation,
+  // @ts-expect-error don't need to pass through entire initialValues
   getInitialValues: (val) => ({
     location: {
       name: val,
-      type: 'City',
-      sensitivity: 'High',
     },
   }),
 });
