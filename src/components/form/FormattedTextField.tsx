@@ -50,7 +50,7 @@ export function FormattedTextField<FieldValue = string>({
   variant,
   ...props
 }: FormattedTextFieldProps<FieldValue>) {
-  const { input, meta, ref, rest } = useField(props);
+  const { input, meta, ref, rest } = useField<FieldValue, false>(props);
   const name = input.name;
 
   const [managedVal, setManagedVal] = useState<{
@@ -58,12 +58,12 @@ export function FormattedTextField<FieldValue = string>({
     parsed?: FieldValue;
   }>({
     raw: format ? format(input.value, name) : input.value,
-    parsed: input.value,
+    parsed: input.value ?? undefined,
   });
   const updateManagedVal = useCallback(() => {
     setManagedVal({
       raw: format ? format(input.value, name) : input.value,
-      parsed: input.value,
+      parsed: input.value ?? undefined,
     });
   }, [setManagedVal, format, name, input.value]);
   useEffect(() => {

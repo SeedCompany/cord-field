@@ -22,7 +22,7 @@ import React, {
   useMemo,
   useState,
 } from 'react';
-import { Except, SetOptional } from 'type-fest';
+import { Except, SetOptional, SetRequired } from 'type-fest';
 import { isNetworkRequestInFlight, Power } from '../../../api';
 import { useDialog } from '../../Dialog';
 import { DialogFormProps } from '../../Dialog/DialogForm';
@@ -40,16 +40,11 @@ export type LookupFieldProps<
   DisableClearable extends boolean | undefined,
   CreateFormValues
 > = Except<
-  FieldConfig<Value<T, Multiple, DisableClearable, false>>,
+  SetRequired<FieldConfig<T, Multiple>, 'compareBy'>,
   'multiple' | 'allowNull' | 'parse' | 'format'
 > &
-  Pick<
-    TextFieldProps,
-    'helperText' | 'label' | 'required' | 'autoFocus' | 'variant'
-  > & {
-    name: string;
+  Pick<TextFieldProps, 'helperText' | 'label' | 'autoFocus' | 'variant'> & {
     lookupDocument: DocumentNode<QueryResult<T>, { query: string }>;
-    getCompareBy: (item: T) => any;
     ChipProps?: ChipProps;
     CreateDialogForm?: ComponentType<
       Except<DialogFormProps<CreateFormValues, T>, 'onSubmit'>
@@ -72,8 +67,6 @@ export type LookupFieldProps<
     | 'getOptionLabel'
   >;
 
-const emptyArray = [] as const;
-
 export function LookupField<
   T,
   Multiple extends boolean | undefined,
@@ -81,7 +74,7 @@ export function LookupField<
   CreateFormValues = never
 >({
   multiple,
-  defaultValue: defaultValueProp,
+  defaultValue,
   lookupDocument,
   ChipProps,
   autoFocus,
@@ -91,7 +84,7 @@ export function LookupField<
   required,
   CreateDialogForm,
   getInitialValues,
-  getCompareBy,
+  compareBy,
   getOptionLabel: getOptionLabelProp,
   variant,
   createPower,
@@ -101,20 +94,19 @@ export function LookupField<
   const canCreate = createPower && powers?.includes(createPower);
   const freeSolo = !!CreateDialogForm && canCreate;
   type Val = Value<T, Multiple, DisableClearable, false>;
-  const defaultValue =
-    defaultValueProp ?? ((multiple ? emptyArray : null) as Val);
 
   const selectOnFocus = props.selectOnFocus ?? true;
   const andSelectOnFocus = useCallback((el) => selectOnFocus && el.select(), [
     selectOnFocus,
   ]);
 
-  const { input: field, meta, ref, rest: autocompleteProps } = useField<Val>({
+  const { input: field, meta, ref, rest: autocompleteProps } = useField({
     ...props,
     required,
+    multiple,
     allowNull: !multiple,
     defaultValue,
-    isEqual: multiple ? isListEqualBy(getCompareBy) : isEqualBy(getCompareBy),
+    compareBy,
     autoFocus,
     onFocus: andSelectOnFocus,
   });
@@ -165,7 +157,7 @@ export function LookupField<
   // they are still valid (and to prevent MUI warning)
   const options = useMemo(() => {
     const selected = multiple
-      ? (field.value as T[])
+      ? (field.value as readonly T[])
       : (field.value as T | null)
       ? [field.value as T]
       : [];
@@ -176,19 +168,19 @@ export function LookupField<
     const resultsWithCurrent = [...data.search.items, ...selected];
 
     // Filter out duplicates caused by selected items also appearing in search results.
-    return uniqBy(resultsWithCurrent, getCompareBy);
-  }, [data?.search.items, field.value, getCompareBy, multiple]);
+    return uniqBy(resultsWithCurrent, compareBy);
+  }, [data?.search.items, field.value, compareBy, multiple]);
 
   const autocomplete = (
     <Autocomplete<T, Multiple, DisableClearable, typeof freeSolo>
-      getOptionSelected={(a, b) => getCompareBy(a) === getCompareBy(b)}
+      getOptionSelected={(a, b) => compareBy(a) === compareBy(b)}
       loadingText={<CircularProgress size={16} />}
       // Otherwise it looks like an item is selected when it's just a search value
       clearOnBlur
       // Auto highlight the first option so a valid lookup item isn't
       // interrupted as free solo selection
       autoHighlight
-      // Helps represent that his is a valid object & makes it easier to replace
+      // Helps represent that this is a valid object & makes it easier to replace
       // Works well with clearOnBlur
       selectOnFocus
       {...autocompleteProps}
@@ -205,6 +197,7 @@ export function LookupField<
           />
         ))
       }
+      // @ts-expect-error our value is readonly array, MUI's is not but it could be.
       options={options}
       getOptionLabel={getOptionLabel}
       freeSolo={freeSolo}
@@ -244,7 +237,7 @@ export function LookupField<
         ];
       }}
       // FF for some reason doesn't handle defaultValue correctly
-      value={(field.value as Val | '') || defaultValue}
+      value={((field.value as Val | null) || meta.defaultValue) as Val}
       inputValue={input}
       onBlur={field.onBlur}
       onFocus={field.onFocus}
@@ -304,7 +297,7 @@ export function LookupField<
           sendIfClean={true}
           onSuccess={(newItem: T) => {
             field.onChange(
-              multiple ? [...(field.value as T[]), newItem] : newItem
+              multiple ? [...(field.value as readonly T[]), newItem] : newItem
             );
           }}
         />
@@ -333,7 +326,7 @@ LookupField.createFor = <T extends { id: string }, CreateFormValues = never>({
       LookupFieldProps<T, any, any, CreateFormValues>,
       'value' | 'defaultValue'
     >,
-    'name' | 'getCompareBy'
+    'name' | 'compareBy'
   >,
   'getOptionLabel',
   T,
@@ -341,19 +334,19 @@ LookupField.createFor = <T extends { id: string }, CreateFormValues = never>({
 > & {
   resource: string;
 }) => {
-  const compareBy = config.getCompareBy ?? ((item: T) => item.id);
+  const compareBy = config.compareBy ?? ((item: T) => item.id);
   const Comp = function <
     Multiple extends boolean | undefined,
     DisableClearable extends boolean | undefined
   >(
     props: Except<
       LookupFieldProps<T, Multiple, DisableClearable, CreateFormValues>,
-      'lookupDocument' | 'getCompareBy' | 'getOptionLabel'
+      'lookupDocument' | 'compareBy' | 'getOptionLabel'
     >
   ) {
     return (
       <LookupField<T, Multiple, DisableClearable, CreateFormValues>
-        getCompareBy={compareBy}
+        compareBy={compareBy}
         getOptionLabel={(item: StandardNamedObject) => item.name.value}
         createPower={`Create${resource}` as Power}
         {...(config as any)}

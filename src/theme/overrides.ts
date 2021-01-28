@@ -10,6 +10,11 @@ export const appProps: ThemeOptions['props'] = (_theme) => ({
     fullWidth: true,
     margin: 'dense',
   },
+  MuiFormControl: {
+    variant: 'filled',
+    fullWidth: true,
+    margin: 'dense',
+  },
   MuiFormLabel: {
     required: false, // no asterisk
   },
@@ -32,6 +37,7 @@ export const appOverrides: ThemeOptions['overrides'] = ({
   spacing,
   palette,
   typography,
+  shape,
 }) => {
   const primaryColorForText = palette.dark
     ? palette.primary.light
@@ -91,6 +97,18 @@ export const appOverrides: ThemeOptions['overrides'] = ({
         '&:-webkit-autofill': {
           // subtler blue on dark mode
           WebkitBoxShadow: palette.dark ? `0 0 0 100px #2e3d46 inset` : null,
+        },
+      },
+    },
+    MuiSelect: {
+      // Fix focused shade from not having same border radius
+      select: {
+        '&.MuiSelect-filled:focus': {
+          borderTopLeftRadius: shape.borderRadius,
+          borderTopRightRadius: shape.borderRadius,
+        },
+        '&.MuiSelect-outlined:focus': {
+          borderRadius: shape.borderRadius,
         },
       },
     },

@@ -10,8 +10,9 @@ import {
 } from '@material-ui/core';
 import { Clear as ClearIcon } from '@material-ui/icons';
 import clsx from 'clsx';
-import React, { FC, useMemo } from 'react';
+import React from 'react';
 import { useDropzone } from 'react-dropzone';
+import { Except } from 'type-fest';
 import { fileIcon } from '../files/fileTypes';
 import { FieldConfig, useField } from './useField';
 
@@ -36,24 +37,22 @@ const useStyles = makeStyles(({ palette, spacing }) => {
   };
 });
 
-export type DropzoneFieldProps<
-  FieldValue = File[]
-> = FieldConfig<FieldValue> & {
+export type DropzoneFieldProps = Except<FieldConfig<File, true>, 'multiple'> & {
   multiple?: boolean;
-  name: string;
 };
 
-export const DropzoneField: FC<DropzoneFieldProps> = ({
+export function DropzoneField({
   multiple = true,
   name: nameProp,
-}) => {
+}: DropzoneFieldProps) {
   const classes = useStyles();
 
-  // Memoize defaultValue to prevent re-renders when not changing.
-  const defaultValue = useMemo(() => [], []);
   const {
     input: { name, onChange, value: currentFiles },
-  } = useField<File[], HTMLInputElement>({ name: nameProp, defaultValue });
+  } = useField<File, true, HTMLInputElement>({
+    name: nameProp,
+    multiple: true, // always list for FF
+  });
 
   const onDrop = (acceptedFiles: File[]) => {
     const updatedFiles =
@@ -125,4 +124,4 @@ export const DropzoneField: FC<DropzoneFieldProps> = ({
       )}
     </>
   );
-};
+}

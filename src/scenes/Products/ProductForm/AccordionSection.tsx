@@ -88,9 +88,9 @@ const useStyles = makeStyles(({ spacing, typography, breakpoints }) => ({
   },
 }));
 
-const productFieldMap: Partial<
-  Record<ProductTypes, ComponentType<FieldConfig<any, any>>>
-> = {
+type AnyFormFieldComponent = ComponentType<FieldConfig<any, any, any>>;
+
+const productFieldMap: Partial<Record<ProductTypes, AnyFormFieldComponent>> = {
   Film: FilmField,
   Story: StoryField,
   LiteracyMaterial: LiteracyMaterialField,

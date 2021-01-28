@@ -31,10 +31,9 @@ import { requiredArray } from './validators';
 
 type GenericScriptureRange = ScriptureRange | RawScriptureRange;
 
-type Val = Array<GenericScriptureRange | string> | [];
+type Val = GenericScriptureRange | string;
 
-export type VersesFieldProps = Except<FieldConfig<Val>, 'multiple'> & {
-  name: string;
+export type VersesFieldProps = Except<FieldConfig<Val, true>, 'multiple'> & {
   book: string;
 } & Pick<
     AutocompleteProps<GenericScriptureRange | string, true, false, true>,
@@ -92,7 +91,7 @@ export function VersesField({
   ...props
 }: VersesFieldProps) {
   const [errorCode, setErrorCode] = useState('');
-  const validateReference = (ranges: Val) => {
+  const validateReference = (ranges: readonly Val[]) => {
     // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
     if (!ranges || ranges.length === 0) return undefined;
     // only the last needs to be validated since the others have been already
@@ -109,9 +108,10 @@ export function VersesField({
   const classes = useStyles();
 
   const [inputValue, setInputValue] = useState<string>('');
-  const { input, meta, ref, rest } = useField<Val>({
+  const { input, meta, ref, rest } = useField<Val, true>({
+    multiple: true,
     validate: [validateReference, required ? requiredArray : null],
-    parse: (value: Val | string): Val => {
+    parse: (value: readonly Val[] | string): readonly Val[] => {
       // need to call onChange in two cases
       // 1: on type (string) so we can show errors in real time
       // 2: on change when a new value is added to tags (string[])
@@ -147,7 +147,7 @@ export function VersesField({
     ...props,
     autoFocus,
   });
-  const [scriptureRanges, setScriptureRanges] = useState<Val>(
+  const [scriptureRanges, setScriptureRanges] = useState<readonly Val[]>(
     // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
     input.value ?? []
   );
@@ -211,6 +211,7 @@ export function VersesField({
           );
         });
       }}
+      // @ts-expect-error typed as mutable even though its not needed
       value={scriptureRanges}
       inputValue={inputValue}
       onInputChange={(_, value) => {

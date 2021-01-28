@@ -7,9 +7,8 @@ import { Except } from 'type-fest';
 import { FieldConfig, useField } from './useField';
 import { getHelperText, showError } from './util';
 
-export type TextFieldProps<FieldValue = string> = FieldConfig<FieldValue> & {
-  name: string;
-} & Except<
+export type TextFieldProps<FieldValue = string> = FieldConfig<FieldValue> &
+  Except<
     MuiTextFieldProps,
     'defaultValue' | 'error' | 'value' | 'name' | 'inputRef'
   >;

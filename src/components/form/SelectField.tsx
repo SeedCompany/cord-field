@@ -2,63 +2,102 @@ import {
   FormControl,
   FormControlProps,
   FormHelperText,
-  FormLabel,
-  makeStyles,
+  InputLabel,
   MenuItem,
   Select,
+  SelectProps,
 } from '@material-ui/core';
-import { FC, ReactNode } from 'react';
+import { identity } from 'lodash';
+import { ReactNode } from 'react';
 import * as React from 'react';
+import { Except } from 'type-fest';
 import { FieldConfig, useField } from './useField';
 import { getHelperText, showError } from './util';
 
-const useStyles = makeStyles(({ typography }) => ({
-  fieldLabel: {
-    fontWeight: typography.weight.bold,
-  },
-}));
-
-export type SelectFieldProps<T = string> = FieldConfig<T> & {
-  name: string;
-  selectOptions: SelectItem[];
+export type SelectFieldProps<T, Multiple extends boolean | undefined> = Except<
+  FieldConfig<T, Multiple>,
+  'allowNull' | 'isEqual'
+> & {
+  options: readonly T[];
+  getOptionLabel?: (option: T) => string;
+  // This can be a label to show an empty option or a rendered EnumOption.
+  defaultOption?: string | ReactNode;
+  label?: ReactNode;
   helperText?: ReactNode;
-  label?: string;
-} & FormControlProps;
+} & Pick<
+    FormControlProps,
+    'color' | 'fullWidth' | 'margin' | 'size' | 'variant'
+  > &
+  Pick<SelectProps, 'displayEmpty'>;
 
-interface SelectItem {
-  value: any;
-  label: string;
-}
+export function SelectField<T, Multiple extends boolean | undefined>({
+  // value handling
+  options,
+  getOptionLabel: getOptionLabelProp,
+  defaultOption,
+  multiple,
 
-export const SelectField: FC<SelectFieldProps> = ({
+  // display labels
   label,
-  selectOptions,
   helperText,
+
+  // FormControl props
+  color,
+  fullWidth,
+  margin,
+  size,
+  variant,
+
   ...props
-}) => {
-  const classes = useStyles();
-  const { input, meta, rest } = useField(props);
+}: SelectFieldProps<T, Multiple>) {
+  const getOptionLabel = getOptionLabelProp ?? identity;
+
+  const { input, meta, rest } = useField<T, Multiple>({
+    ...props,
+    multiple,
+    allowNull: !multiple,
+  });
 
   return (
     <FormControl
       disabled={meta.disabled}
       focused={meta.focused}
       error={showError(meta)}
-      {...rest}
+      color={color}
+      fullWidth={fullWidth}
+      margin={margin}
+      size={size}
+      variant={variant}
     >
-      {label && <FormLabel className={classes.fieldLabel}>{label}</FormLabel>}
+      {label && <InputLabel>{label}</InputLabel>}
       <Select
         autoFocus={rest.autoFocus}
         {...input}
+        // convert null to empty string so Select shows the label for it.
+        // FF knows to convert empty string to null.
+        // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+        value={input.value ?? meta.defaultValue ?? ''}
+        label={label}
         onChange={(e) => input.onChange(e.target.value)}
+        multiple={multiple}
+        {...rest}
       >
-        {selectOptions.map(({ value, label }: SelectItem) => (
-          <MenuItem key={value} value={value}>
-            {label}
+        {defaultOption && (
+          <MenuItem value="">
+            {typeof defaultOption === 'string' ? (
+              <em>{defaultOption}</em>
+            ) : (
+              defaultOption
+            )}
+          </MenuItem>
+        )}
+        {options.map((option, index) => (
+          <MenuItem key={index} value={option as any}>
+            {getOptionLabel(option)}
           </MenuItem>
         ))}
       </Select>
       <FormHelperText>{getHelperText(meta, helperText)}</FormHelperText>
     </FormControl>
   );
-};
+}

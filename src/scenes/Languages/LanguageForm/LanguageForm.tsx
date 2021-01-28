@@ -12,6 +12,7 @@ import {
   DialogFormProps,
 } from '../../../components/Dialog/DialogForm';
 import {
+  AlphaLowercaseField,
   CheckboxField,
   FieldGroup,
   FormattedTextField,
@@ -49,11 +50,6 @@ const decorators = [
   ...DialogForm.defaultDecorators,
   matchFieldIfSame(`language.name`, `language.displayName`),
 ];
-
-const sensitivitySelectOptions = SensitivityList.map((sensitivity) => ({
-  value: sensitivity,
-  label: sensitivity,
-}));
 
 export const LanguageForm = <T extends any>({
   language,
@@ -195,7 +191,7 @@ export const LanguageForm = <T extends any>({
                     <SelectField
                       label="Sensitivity"
                       name="sensitivity"
-                      selectOptions={sensitivitySelectOptions}
+                      options={SensitivityList}
                       defaultValue="High"
                     />
                   </Grid>
@@ -255,7 +251,8 @@ export const LanguageForm = <T extends any>({
                     <SecuredField obj={language?.ethnologue} name="code">
                       {(props) => (
                         <Grid item xs={12} sm={6}>
-                          <EthnologueCodeField
+                          <AlphaLowercaseField
+                            chars={3}
                             label="Ethnologue Code"
                             placeholder="Enter Ethnologue Code"
                             margin="none"
@@ -270,7 +267,8 @@ export const LanguageForm = <T extends any>({
                     >
                       {(props) => (
                         <Grid item xs={12} sm={6}>
-                          <EthnologueCodeField
+                          <AlphaLowercaseField
+                            chars={3}
                             label="Provisional Code"
                             placeholder="Enter Provisional Code"
                             margin="none"
@@ -329,23 +327,6 @@ export const LanguageForm = <T extends any>({
         );
       }}
     </DialogForm>
-  );
-};
-
-// A 3-character lower-cased alpha string
-const EthnologueCodeField = (props: FormattedTextFieldProps) => {
-  return (
-    <FormattedTextField
-      accept={/[a-zA-Z]/g}
-      formatInput={(value) =>
-        (value.match(/[a-zA-Z]+/g) || []).join('').substr(0, 3)
-      }
-      replace={(value) => value.toLowerCase()}
-      validate={(value) =>
-        !value || value.length === 3 ? undefined : `Must be 3 characters`
-      }
-      {...props}
-    />
   );
 };
 
