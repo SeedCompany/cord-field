@@ -14,7 +14,7 @@ import { ParsableDate } from '@material-ui/pickers/constants/prop-types';
 import { DateTime } from 'luxon';
 import React, { useRef } from 'react';
 import { Except } from 'type-fest';
-import { CalendarDate } from '../../util';
+import { CalendarDate, Nullable } from '../../util';
 import { FieldConfig, useField } from './useField';
 import { getHelperText, showError } from './util';
 import { required as requiredValidator, Validator } from './validators';
@@ -46,7 +46,7 @@ export const DateField = ({
   ...props
 }: DateFieldProps) => {
   const utils = useUtils();
-  const validator: Validator<DateTime | null> = (val) => {
+  const validator: Validator<Nullable<DateTime>> = (val) => {
     const allProps = {
       ...defaultRange,
       ...props,
@@ -66,7 +66,7 @@ export const DateField = ({
   const initialValue = useDate(initialValueProp);
   const defaultValue = useDate(defaultValueProp);
 
-  const { input, meta, ref, rest } = useField<DateTime | null>({
+  const { input, meta, ref, rest } = useField<DateTime, false>({
     isEqual: isDateEqual,
     ...props,
     defaultValue,

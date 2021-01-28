@@ -2,13 +2,14 @@ import { InputAdornment, makeStyles } from '@material-ui/core';
 import clsx from 'clsx';
 import React from 'react';
 import { Except } from 'type-fest';
+import { Nullable } from '../../util';
 import {
   FormattedTextField,
   FormattedTextFieldProps,
 } from './FormattedTextField';
 
 export type NumberFieldProps = Except<
-  FormattedTextFieldProps<number | undefined>,
+  FormattedTextFieldProps<number>,
   'allowNull'
 > &
   Partial<FormattingOptions> & {
@@ -135,7 +136,7 @@ const formatNumber = ({
 };
 
 const formatValidNumber = (
-  string: string | number | undefined,
+  string: Nullable<string | number>,
   minimumFractionDigits: number,
   maximumFractionDigits: number
 ) => {
@@ -200,7 +201,7 @@ export const NumberField = ({
   const formatInput = formatNumber(formatting);
   const replace = replaceNumber(formatting);
   return (
-    <FormattedTextField<number | undefined>
+    <FormattedTextField<number>
       accept={/[\d-.]/g}
       formatInput={formatInput}
       replace={replace}

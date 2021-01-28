@@ -4,28 +4,18 @@ import { identity } from 'lodash';
 import React, { useCallback } from 'react';
 import { Except } from 'type-fest';
 import { FieldConfig, useField } from './useField';
-import {
-  areListsEqual,
-  compareNullable,
-  getHelperText,
-  showError,
-} from './util';
+import { getHelperText, showError } from './util';
 
 export type AutocompleteFieldProps<
   T,
   Multiple extends boolean | undefined,
   DisableClearable extends boolean | undefined,
   FreeSolo extends boolean | undefined
-> = Except<
-  FieldConfig<Value<T, Multiple, DisableClearable, FreeSolo>>,
-  'multiple' | 'allowNull' | 'parse' | 'format'
-> &
+> = Except<FieldConfig<T, Multiple>, 'allowNull' | 'parse' | 'format'> &
   Pick<
     TextFieldProps,
     'helperText' | 'label' | 'required' | 'autoFocus' | 'variant'
   > & {
-    name: string;
-    getCompareBy?: (item: T) => any;
     ChipProps?: ChipProps;
     options: readonly T[];
   } & Except<
@@ -41,8 +31,6 @@ export type AutocompleteFieldProps<
     | 'options'
   >;
 
-const emptyArray = [] as const;
-
 /**
  * This is useful as a select combo field for single or multiple values.
  */
@@ -53,7 +41,7 @@ export function AutocompleteField<
   FreeSolo extends boolean | undefined
 >({
   multiple,
-  defaultValue: defaultValueProp,
+  defaultValue,
   ChipProps,
   autoFocus,
   helperText,
@@ -61,37 +49,24 @@ export function AutocompleteField<
   placeholder,
   variant,
   required,
-  getCompareBy: getCompareByProp,
+  compareBy,
   options,
   ...props
 }: AutocompleteFieldProps<T, Multiple, DisableClearable, FreeSolo>) {
   type Val = Value<T, Multiple, DisableClearable, FreeSolo>;
-
-  const getCompareBy = getCompareByProp ?? identity;
-  const defaultValue =
-    defaultValueProp ?? ((multiple ? emptyArray : null) as Val);
 
   const selectOnFocus = props.selectOnFocus ?? !props.freeSolo;
   const andSelectOnFocus = useCallback((el) => selectOnFocus && el.select(), [
     selectOnFocus,
   ]);
 
-  const { input: field, meta, ref, rest: autocompleteProps } = useField<Val>({
+  const { input: field, meta, ref, rest: autocompleteProps } = useField({
     ...props,
+    multiple,
     required,
     allowNull: !multiple,
     defaultValue,
-    isEqual: compareNullable((a, b) =>
-      multiple
-        ? areListsEqual(a.map(getCompareBy), b.map(getCompareBy))
-        : getCompareBy(a) === getCompareBy(b)
-    ),
-    // Default to at least one item if required & multiple
-    validate:
-      !props.validate && required && multiple
-        ? (val) =>
-            Array.isArray(val) && val.length === 0 ? 'Required' : undefined
-        : undefined,
+    compareBy,
     autoFocus,
     onFocus: andSelectOnFocus,
   });
@@ -118,7 +93,7 @@ export function AutocompleteField<
         ))
       }
       // FF for some reason doesn't handle defaultValue correctly
-      value={(field.value as Val | '') || defaultValue}
+      value={((field.value as Val | null) || meta.defaultValue) as Val}
       onBlur={field.onBlur}
       onFocus={field.onFocus}
       onChange={(_, value) => {
@@ -140,7 +115,9 @@ export function AutocompleteField<
           variant={variant}
         />
       )}
-      getOptionSelected={(a, b) => getCompareBy(a) === getCompareBy(b)}
+      getOptionSelected={
+        compareBy ? (a, b) => compareBy(a) === compareBy(b) : undefined
+      }
     />
   );
 }

@@ -26,37 +26,23 @@ import {
 } from 'react';
 import { Except, MergeExclusive } from 'type-fest';
 import { many } from '../../util';
-import { FieldConfig, useField } from './useField';
-import { areListsEqual, getHelperText, showError } from './util';
-import { required, requiredArray, Validator } from './validators';
-
-type EnumVal<T extends string, Multiple extends boolean | undefined = never> =
-  // be loose if multiple is not specified;
-  // useful for internal usage which handles both.
-  // Otherwise it is a list or single value based on multiple boolean.
-  [Multiple] extends [never]
-    ? readonly T[] | T | null
-    : Multiple extends true
-    ? readonly T[]
-    : T | null;
+import { FieldConfig, useField, Value } from './useField';
+import { getHelperText, showError } from './util';
 
 export type EnumFieldProps<
   T extends string,
   Multiple extends boolean | undefined
 > = {
-  multiple?: Multiple;
   variant?:
     | 'checkbox'
     | 'toggle-split'
     | 'toggle-grouped'
     | (Multiple extends true ? never : 'radio')
     | symbol; // ignore. just so we can say there's more here in the future
-  name: string;
   label?: ReactNode;
   helperText?: ReactNode;
-  disabled?: boolean;
   layout?: 'row' | 'column' | 'two-column';
-} & Except<FieldConfig<EnumVal<T, Multiple>>, 'multiple' | 'type'> &
+} & Except<FieldConfig<T, Multiple>, 'type'> &
   MergeExclusive<
     { children: ReactNode },
     {
@@ -128,8 +114,12 @@ export const EnumField = <
 
   // Memoize defaultValue so array can be passed inline while still preventing
   // the new array instance from causing re-renders when not changing.
+  // TODO should this be moved to useField and applied everywhere?
   const defaultValue = useMemo(
-    () => defaultValueProp ?? (multiple ? defaultDefaultValue : null),
+    () =>
+      defaultValueProp ??
+      // Enforce defaultValue is an array, else an empty string will be used.
+      ((multiple ? defaultDefaultValue : null) as Value<T, Multiple>),
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [
       multiple,
@@ -143,18 +133,12 @@ export const EnumField = <
   // FF handles checkboxes natively but we want one field instance, where FF's
   // has multiple. One field means name only has to be specified once and
   // validation can be done as a group (i.e. check 2+)
-  const { input, meta } = useField<EnumVal<T>>({
+  const { input, meta } = useField<T, Multiple>({
     name: nameProp,
-    // Enforce defaultValue is an array, else an empty string will be used.
+    multiple,
+    required: props.required,
     defaultValue,
-    isEqual: multiple ? areListsEqual : undefined,
     allowNull: !multiple,
-    validate: (props.validate ?? props.required
-      ? multiple
-        ? requiredArray
-        : required
-      : undefined) as Validator<EnumVal<T>>,
-    format: undefined, // Why does TS need this???
     disabled: props.disabled,
   });
 
