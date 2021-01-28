@@ -43,7 +43,10 @@ export type LookupFieldProps<
   SetRequired<FieldConfig<T, Multiple>, 'compareBy'>,
   'multiple' | 'allowNull' | 'parse' | 'format'
 > &
-  Pick<TextFieldProps, 'helperText' | 'label' | 'autoFocus' | 'variant'> & {
+  Pick<
+    TextFieldProps,
+    'helperText' | 'label' | 'autoFocus' | 'variant' | 'margin'
+  > & {
     lookupDocument: DocumentNode<QueryResult<T>, { query: string }>;
     ChipProps?: ChipProps;
     CreateDialogForm?: ComponentType<
@@ -88,6 +91,7 @@ export function LookupField<
   getOptionLabel: getOptionLabelProp,
   variant,
   createPower,
+  margin,
   ...props
 }: LookupFieldProps<T, Multiple, DisableClearable, CreateFormValues>) {
   const { powers } = useSession();
@@ -283,6 +287,7 @@ export function LookupField<
           autoFocus={autoFocus}
           focused={meta.focused}
           variant={variant}
+          margin={margin}
         />
       )}
     />
