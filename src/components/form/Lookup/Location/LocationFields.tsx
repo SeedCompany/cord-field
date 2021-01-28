@@ -35,7 +35,6 @@ export const FieldRegionField = LookupField.createFor<FieldRegionLookupItem>({
   resource: 'FieldRegion',
   lookupDocument: FieldRegionLookupDocument,
   label: 'Field Region',
-  getOptionLabel: (value: FieldRegionLookupItem) => value.name.value ?? '',
   placeholder: 'Search for a field region by name',
 });
 
