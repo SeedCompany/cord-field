@@ -51,11 +51,6 @@ const decorators = [
   matchFieldIfSame(`language.name`, `language.displayName`),
 ];
 
-const sensitivitySelectOptions = SensitivityList.map((sensitivity) => ({
-  value: sensitivity,
-  label: sensitivity,
-}));
-
 export const LanguageForm = <T extends any>({
   language,
   ...rest
@@ -196,7 +191,7 @@ export const LanguageForm = <T extends any>({
                     <SelectField
                       label="Sensitivity"
                       name="sensitivity"
-                      selectOptions={sensitivitySelectOptions}
+                      options={SensitivityList}
                       defaultValue="High"
                     />
                   </Grid>
