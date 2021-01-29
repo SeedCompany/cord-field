@@ -2,7 +2,6 @@ import {
   Card,
   CardActions,
   CardContent,
-  Grid,
   makeStyles,
   Typography,
 } from '@material-ui/core';
@@ -11,10 +10,9 @@ import clsx from 'clsx';
 import { FC } from 'react';
 import * as React from 'react';
 import { displayLocationType } from '../../api';
-import { DisplaySimpleProperty } from '../DisplaySimpleProperty';
-import { useDateFormatter } from '../Formatters';
+import { FormattedDateTime } from '../Formatters';
+import { Redacted } from '../Redacted';
 import { ButtonLink, CardActionAreaLink } from '../Routing';
-import { Sensitivity } from '../Sensitivity';
 import { LocationCardFragment } from './LocationCard.generated';
 
 const useStyles = makeStyles(({ spacing }) => {
@@ -23,20 +21,10 @@ const useStyles = makeStyles(({ spacing }) => {
       width: '100%',
       maxWidth: 400,
     },
-    card: {
-      display: 'flex',
-      alignItems: 'initial',
-    },
-    cardContent: {
-      flex: 1,
-      padding: spacing(2, 3),
-    },
-    leftContent: {
-      '& > *': { marginBottom: spacing(2) },
-    },
     cardActions: {
       display: 'flex',
       justifyContent: 'space-between',
+      paddingRight: spacing(2), // make symmetrical with button padding
     },
   };
 });
@@ -52,33 +40,36 @@ export const LocationCard: FC<LocationCardProps> = ({
   className,
   loading,
 }) => {
-  const { id, name, sensitivity, type, createdAt } = location || {};
-  const dateFormatter = useDateFormatter();
+  const { id, name, locationType, createdAt } = location ?? {};
   const classes = useStyles();
   return (
     <Card className={clsx(classes.root, className)}>
-      <CardActionAreaLink to={`/locations/${id}`} className={classes.card}>
-        <CardContent className={classes.cardContent}>
-          <Grid container justify="space-between" spacing={1}>
-            <Grid item className={classes.leftContent} xs={8}>
-              {loading ? (
-                <Skeleton width="75%" />
-              ) : (
-                <Typography variant="h4">{name?.value}</Typography>
-              )}
-              <DisplaySimpleProperty
-                label="Type"
-                value={displayLocationType(type?.value)}
-                wrap={(node) => <Grid item>{node}</Grid>}
-                loading={loading}
+      <CardActionAreaLink to={`/locations/${id}`}>
+        <CardContent>
+          <Typography variant="h4" gutterBottom>
+            {loading ? (
+              <Skeleton width="75%" />
+            ) : name?.canRead === true ? (
+              name.value
+            ) : (
+              <Redacted
+                info="You don't have permission to view this location's name"
+                width="75%"
               />
-            </Grid>
-            {!loading && (
-              <Grid item xs={4}>
-                <Sensitivity value={sensitivity}></Sensitivity>
-              </Grid>
             )}
-          </Grid>
+          </Typography>
+          <Typography color="textSecondary">
+            {loading ? (
+              <Skeleton width="25%" />
+            ) : locationType?.canRead === true ? (
+              displayLocationType(locationType.value)
+            ) : (
+              <Redacted
+                info="You don't have permission to view this location's type"
+                width="25%"
+              />
+            )}
+          </Typography>
         </CardContent>
       </CardActionAreaLink>
       <CardActions className={classes.cardActions}>
@@ -89,7 +80,7 @@ export const LocationCard: FC<LocationCardProps> = ({
           <Skeleton width="25%" />
         ) : (
           <Typography variant="caption" color="textSecondary">
-            Created {dateFormatter(createdAt)}
+            Created <FormattedDateTime date={createdAt} />
           </Typography>
         )}
       </CardActions>

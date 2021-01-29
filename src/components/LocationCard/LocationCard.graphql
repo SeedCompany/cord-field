@@ -4,10 +4,9 @@ fragment LocationCard on Location {
   name {
     ...securedString
   }
-  type {
+  # rename field so it doesn't conflict with project type in search results
+  locationType: type {
     canRead
-    canEdit
     value
   }
-  sensitivity
 }

@@ -1,36 +1,29 @@
 import { boolean, select, text } from '@storybook/addon-knobs';
 import { DateTime } from 'luxon';
 import React from 'react';
+import { LocationTypeList } from '../../api';
 import { LocationCard as Card } from './LocationCard';
+import { LocationCardFragment } from './LocationCard.generated';
 
 export default { title: 'Components' };
 
 export const LocationCard = () => {
   const loading = boolean('Loading', false);
-  const locationObj = {
+  const locationObj: LocationCardFragment = {
     id: '123123',
     name: {
       canEdit: true,
       canRead: true,
       value: text('Location Name', 'United States'),
     },
-    sensitivity: select('Sensitivity', ['High', 'Medium', 'Low'], 'High'),
-    type: {
-      canEdit: true,
+    locationType: {
       canRead: true,
-      value: select(
-        'Type',
-        ['City', 'County', 'State', 'County', 'CrossBorderArea'],
-        'City'
-      ),
+      value: select('Type', LocationTypeList, LocationTypeList[0]),
     },
     createdAt: DateTime.local(),
   };
 
-  const cardProps = {
-    loading,
-    location: loading ? undefined : locationObj,
-  };
-
-  return <Card {...cardProps} />;
+  return (
+    <Card loading={loading} location={loading ? undefined : locationObj} />
+  );
 };
