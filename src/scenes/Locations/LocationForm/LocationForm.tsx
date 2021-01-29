@@ -4,7 +4,6 @@ import {
   CreateLocation,
   displayLocationType,
   LocationTypeList,
-  SensitivityList,
   UpdateLocation,
 } from '../../../api';
 import {
@@ -12,6 +11,7 @@ import {
   DialogFormProps,
 } from '../../../components/Dialog/DialogForm';
 import {
+  AlphaLowercaseField,
   SecuredField,
   SelectField,
   SubmitError,
@@ -21,18 +21,7 @@ import {
   FundingAccountField,
   FundingAccountLookupItem,
 } from '../../../components/form/Lookup';
-import { isAlpha, isLength } from '../../../components/form/validators';
 import { LocationFormFragment } from './LocationForm.generated';
-
-const locationTypeSelectOptions = LocationTypeList.map((type) => ({
-  value: type,
-  label: displayLocationType(type),
-}));
-
-const sensitivitySelectOptions = SensitivityList.map((sensitivity) => ({
-  value: sensitivity,
-  label: sensitivity,
-}));
 
 export interface LocationFormValues<
   CreateOrUpdateType extends CreateLocation | UpdateLocation
@@ -64,61 +53,55 @@ export const LocationForm = <CreateOrUpdateInput, R extends any>({
   >
     <SubmitError />
     <Grid container spacing={2}>
-      <Grid item xs>
+      <Grid item xs={12}>
         <SecuredField obj={location} name="name">
           {(props) => (
             <TextField
               label="Location Name"
               placeholder="Enter Location Name"
               required
+              margin="none"
               {...props}
             />
           )}
         </SecuredField>
       </Grid>
-      <Grid item xs>
-        <SecuredField obj={location} name="isoAlpha3">
-          {(props) => (
-            <TextField
-              label="Iso Alpha-3 Country Code"
-              placeholder="Enter Iso Alpha-3 Country Code"
-              validate={[isLength(3), isAlpha]}
-              {...props}
-            />
-          )}
-        </SecuredField>
-      </Grid>
-    </Grid>
-    <Grid container spacing={2}>
-      <Grid item xs>
-        <SelectField
-          label="Sensitivity"
-          name="sensitivity"
-          selectOptions={sensitivitySelectOptions}
-          defaultValue="High"
-          required
-        />
-      </Grid>
-      <Grid item xs>
+      <Grid item xs={6}>
         <SecuredField obj={location} name="type">
           {(props) => (
             <SelectField
               label="Type"
-              placeholder="Enter Location Type"
-              selectOptions={locationTypeSelectOptions}
+              options={LocationTypeList}
+              getOptionLabel={displayLocationType}
+              defaultValue={LocationTypeList[0]}
               required
-              defaultValue="City"
+              margin="none"
               {...props}
             />
           )}
         </SecuredField>
       </Grid>
-    </Grid>
-    <Grid container spacing={2}>
-      <Grid item xs>
+      <Grid item xs={6}>
+        <SecuredField obj={location} name="isoAlpha3">
+          {(props) => (
+            <AlphaLowercaseField
+              chars={3}
+              label="ISO Alpha-3 Country Code"
+              placeholder="Enter ISO Alpha-3 Country Code"
+              margin="none"
+              {...props}
+            />
+          )}
+        </SecuredField>
+      </Grid>
+      <Grid item xs={12}>
         <SecuredField obj={location} name="fundingAccount">
           {(props) => (
-            <FundingAccountField {...props} name="fundingAccountLookupItem" />
+            <FundingAccountField
+              margin="none"
+              {...props}
+              name="fundingAccountLookupItem"
+            />
           )}
         </SecuredField>
       </Grid>

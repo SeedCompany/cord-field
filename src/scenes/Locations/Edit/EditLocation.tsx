@@ -26,7 +26,6 @@ export const EditLocation = (props: EditLocationProps) => {
               id: location.id,
               name: location.name.value,
               type: location.type.value,
-              sensitivity: location.sensitivity,
               isoAlpha3: location.isoAlpha3.value,
             },
           }
