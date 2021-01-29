@@ -37,11 +37,17 @@ export const email = (value: Nullable<string>) =>
 
 export const min = (min: number, error?: string) => (
   val: number | null | undefined
-) => (val != null && val < min ? error ?? 'Value is below minimum' : undefined);
+) =>
+  val != null && val < min
+    ? error ?? `Choose value at or above ${min}`
+    : undefined;
 
 export const max = (max: number, error?: string) => (
   val: number | null | undefined
-) => (val != null && val > max ? error ?? 'Value is above maximum' : undefined);
+) =>
+  val != null && val > max
+    ? error ?? `Choose value at or below ${max}`
+    : undefined;
 
 export const minLength = (min = 2) => (value: Nullable<string>) =>
   !value || value.length >= min

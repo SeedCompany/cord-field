@@ -12,6 +12,7 @@ import {
   TextField,
 } from '../../../../components/form';
 import { FundingAccountLookupItem } from '../../../../components/form/Lookup/FundingAccount';
+import { max, min } from '../../../../components/form/validators';
 import { CreateFundingAccountDocument } from './CreateFundingAccount.generated';
 
 export type CreateFundingAccountProps = Except<
@@ -45,7 +46,8 @@ export const CreateFundingAccount = (props: CreateFundingAccountProps) => {
         name="accountNumber"
         label="Account Number"
         placeholder="Enter account number"
-        formatInput={(numString) => numString.replaceAll(',', '')}
+        validate={[min(0), max(9)]}
+        disableGrouping
         required
       />
     </DialogForm>
