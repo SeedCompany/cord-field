@@ -1848,6 +1848,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@godaddy/terminus@npm:^4.6.0":
+  version: 4.6.0
+  resolution: "@godaddy/terminus@npm:4.6.0"
+  dependencies:
+    stoppable: ^1.1.0
+  checksum: 564f1bc9c8949599eefebdf822d587ec71db212d7dea230dbd312491d30f49ee336ea898a40d1297e7cd1130bc1b6c453d27a8049261f92c96fc98f162592723
+  languageName: node
+  linkType: hard
+
 "@graphql-codegen/add@npm:^2.0.2":
   version: 2.0.2
   resolution: "@graphql-codegen/add@npm:2.0.2"
@@ -7727,6 +7736,7 @@ __metadata:
     "@apollo/client": ^3.3.7
     "@babel/core": ^7.10.5
     "@date-io/luxon": ^2.8.0
+    "@godaddy/terminus": ^4.6.0
     "@graphql-codegen/add": ^2.0.2
     "@graphql-codegen/cli": ^1.20.0
     "@graphql-codegen/fragment-matcher": ^2.0.1
@@ -20288,6 +20298,13 @@ resolve@1.17.0:
   version: 1.1.1
   resolution: "stealthy-require@npm:1.1.1"
   checksum: f24a9bc613817dea37afcbf64578f2ba0195916d906ebdaa1c1d5b8e9d51fd462cbf4c61ae04217babd0cf662e6c0115fd972dffa8e62a7f6f44f3109fb4c796
+  languageName: node
+  linkType: hard
+
+"stoppable@npm:^1.1.0":
+  version: 1.1.0
+  resolution: "stoppable@npm:1.1.0"
+  checksum: de24c0aee8f5013f2316b954b40bf39150adadfbf3d87cc88c30f99788eacd8768f600488b7b10ac877e44c12feb8b0378bd34a475a9ca5ddaf603398cf27801
   languageName: node
   linkType: hard
 

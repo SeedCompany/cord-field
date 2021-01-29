@@ -21,6 +21,7 @@
   "dependencies": {
     "@apollo/client": "^3.3.7",
     "@date-io/luxon": "^2.8.0",
+    "@godaddy/terminus": "^4.6.0",
     "@iarna/rtf-to-html": "^1.1.0",
     "@loadable/babel-plugin": "^5.13.2",
     "@loadable/component": "^5.14.1",

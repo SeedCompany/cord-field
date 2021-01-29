@@ -1,3 +1,4 @@
+import { createTerminus } from '@godaddy/terminus';
 import express from 'express';
 import { app } from './server/server';
 
@@ -34,8 +35,12 @@ export default Promise.resolve().then(() => {
       console.log(`> Started on port ${process.env.PORT}`);
     });
 
-  const signals: NodeJS.Signals[] = ['SIGINT', 'SIGTERM'];
-  for (const signal of signals) {
-    process.on(signal, () => server.close());
-  }
+  createTerminus(server, {
+    signals: ['SIGINT', 'SIGTERM'],
+    healthChecks: {
+      '/health': async () => {
+        // we're good?
+      },
+    },
+  });
 });

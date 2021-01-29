@@ -33,7 +33,6 @@ fragment LocationSearchResultItem on Location {
     canEdit
     value
   }
-  sensitivity
   isoAlpha3 {
     ...securedStringNullable
   }
