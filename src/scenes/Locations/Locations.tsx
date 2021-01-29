@@ -1,18 +1,11 @@
 import React from 'react';
-import { useRoutes } from 'react-router-dom';
+import { Route, Routes } from 'react-router-dom';
+import { NotFoundRoute } from '../../components/Error';
 import { LocationDetail } from './Detail';
 
-export const Locations = () => {
-  const matched = useRoutes([
-    {
-      path: '/:locationId',
-      element: <LocationDetail />,
-    },
-  ]);
-
-  if (!matched) {
-    return <div>Not Found</div>;
-  }
-
-  return <>{matched}</>;
-};
+export const Locations = () => (
+  <Routes>
+    <Route path=":locationId" element={<LocationDetail />} />
+    {NotFoundRoute}
+  </Routes>
+);
