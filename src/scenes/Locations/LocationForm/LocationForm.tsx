@@ -27,7 +27,7 @@ export interface LocationFormValues<
   CreateOrUpdateType extends CreateLocation | UpdateLocation
 > {
   location: CreateOrUpdateType & {
-    fundingAccountLookupItem?: FundingAccountLookupItem;
+    fundingAccountLookupItem?: FundingAccountLookupItem | null;
   };
 }
 

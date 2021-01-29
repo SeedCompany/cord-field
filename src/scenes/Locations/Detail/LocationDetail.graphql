@@ -21,11 +21,11 @@ fragment LocationDetail on Location {
     canEdit
     value
   }
-  sensitivity
   fundingAccount {
     canRead
     canEdit
     value {
+      ...FundingAccountLookupItem
       ...FundingAccountCard
     }
   }

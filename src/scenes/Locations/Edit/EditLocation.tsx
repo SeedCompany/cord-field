@@ -27,6 +27,7 @@ export const EditLocation = (props: EditLocationProps) => {
               name: location.name.value,
               type: location.type.value,
               isoAlpha3: location.isoAlpha3.value,
+              fundingAccountLookupItem: location.fundingAccount.value,
             },
           }
         : undefined,
