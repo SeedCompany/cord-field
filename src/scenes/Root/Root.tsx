@@ -21,6 +21,9 @@ const Languages = loadable(() => import('../Languages'), {
 const Users = loadable(() => import('../Users'), {
   resolveComponent: (m) => m.Users,
 });
+const Locations = loadable(() => import('../Locations/Locations'), {
+  resolveComponent: (m) => m.Locations,
+});
 const SearchResults = loadable(() => import('../SearchResults'), {
   resolveComponent: (m) => m.SearchResults,
 });
@@ -55,6 +58,7 @@ export const Root = () => {
       <Route path="/languages/*" element={<Languages />} />
       <Route path="/users/*" element={<Users />} />
       <Route path="/search" element={<SearchResults />} />
+      <Route path="/locations/*" element={<Locations />} />
       {NotFoundRoute}
     </Routes>
   );

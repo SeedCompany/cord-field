@@ -1,0 +1,12 @@
+fragment LocationCard on Location {
+  id
+  createdAt
+  name {
+    ...securedString
+  }
+  # rename field so it doesn't conflict with project type in search results
+  locationType: type {
+    canRead
+    value
+  }
+}

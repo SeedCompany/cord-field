@@ -1,0 +1,10 @@
+fragment FundingAccountCard on FundingAccount {
+  id
+  createdAt
+  name {
+    ...securedString
+  }
+  accountNumber {
+    ...securedInt
+  }
+}

@@ -1,27 +1,39 @@
+import { CreateLocation as CreateLocationType } from '../../../../api';
 import {
   DisplayFieldRegionFragment as FieldRegionLookupItem,
   DisplayFieldZoneFragment as FieldZoneLookupItem,
   DisplayLocationFragment as LocationLookupItem,
 } from '../../../../api/fragments/location.generated';
-import { LookupField } from '../../index';
+import { CreateLocation } from '../../../../scenes/Locations/Create';
+import { LocationFormValues } from '../../../../scenes/Locations/LocationForm';
+import { LookupField } from '../../Lookup/LookupField';
 import {
   FieldRegionLookupDocument,
   FieldZoneLookupDocument,
   LocationLookupDocument,
 } from './LocationLookup.generated';
 
-export const LocationField = LookupField.createFor<LocationLookupItem>({
+export const LocationField = LookupField.createFor<
+  LocationLookupItem,
+  LocationFormValues<CreateLocationType>
+>({
   resource: 'Location',
   lookupDocument: LocationLookupDocument,
   label: 'Location',
   placeholder: 'Search for a location by name',
+  CreateDialogForm: CreateLocation,
+  // @ts-expect-error don't need to pass through entire initialValues
+  getInitialValues: (val) => ({
+    location: {
+      name: val,
+    },
+  }),
 });
 
 export const FieldRegionField = LookupField.createFor<FieldRegionLookupItem>({
   resource: 'FieldRegion',
   lookupDocument: FieldRegionLookupDocument,
   label: 'Field Region',
-  getOptionLabel: (value: FieldRegionLookupItem) => value.name.value ?? '',
   placeholder: 'Search for a field region by name',
 });
 

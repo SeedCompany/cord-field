@@ -6,6 +6,7 @@ import * as React from 'react';
 import { Helmet } from 'react-helmet-async';
 import { Error } from '../../components/Error';
 import { LanguageListItemCard } from '../../components/LanguageListItemCard';
+import { LocationCard } from '../../components/LocationCard';
 import { PartnerListItemCard } from '../../components/PartnerListItemCard';
 import { ProjectListItemCard } from '../../components/ProjectListItemCard';
 import { UserListItemCardLandscape } from '../../components/UserListItemCard';
@@ -65,6 +66,7 @@ export const SearchResults: FC = () => {
       case 'Partner':
         return <PartnerListItemCard key={item.id} partner={item} />;
       case 'Location':
+        return <LocationCard key={item.id} location={item} />;
       case 'Film':
       case 'Story':
       case 'LiteracyMaterial':

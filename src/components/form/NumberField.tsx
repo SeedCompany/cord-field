@@ -20,6 +20,8 @@ interface FormattingOptions {
   allowNegative: boolean;
   minimumFractionDigits: number;
   maximumFractionDigits: number;
+  /** Like thousands separator */
+  disableGrouping?: boolean;
   prefix: string;
   suffix: string;
 }
@@ -34,6 +36,7 @@ const formatNumber = ({
   allowNegative,
   minimumFractionDigits,
   maximumFractionDigits,
+  disableGrouping,
 }: FormattingOptions) => (string: string) => {
   if (!string) {
     return '';
@@ -110,7 +113,8 @@ const formatNumber = ({
   let formatted = formatValidNumber(
     next === '.' ? 0 : next, // period isn't valid, format as zero
     minimumFractionDigits,
-    maximumFractionDigits
+    maximumFractionDigits,
+    disableGrouping
   );
 
   if (maximumFractionDigits > 0) {
@@ -138,7 +142,8 @@ const formatNumber = ({
 const formatValidNumber = (
   string: Nullable<string | number>,
   minimumFractionDigits: number,
-  maximumFractionDigits: number
+  maximumFractionDigits: number,
+  disableGrouping?: boolean
 ) => {
   if (string == null) {
     return '';
@@ -150,6 +155,7 @@ const formatValidNumber = (
     : number.toLocaleString('en', {
         minimumFractionDigits,
         maximumFractionDigits,
+        useGrouping: !disableGrouping,
       });
 };
 
@@ -186,6 +192,7 @@ export const NumberField = ({
   allowNegative = false,
   minimumFractionDigits = 0,
   maximumFractionDigits = 0,
+  disableGrouping = false,
   prefix = '',
   suffix = '',
   ...props
@@ -195,6 +202,7 @@ export const NumberField = ({
     allowNegative,
     minimumFractionDigits,
     maximumFractionDigits,
+    disableGrouping,
     prefix: '',
     suffix,
   };
@@ -206,7 +214,12 @@ export const NumberField = ({
       formatInput={formatInput}
       replace={replace}
       format={(val) =>
-        formatValidNumber(val, minimumFractionDigits, maximumFractionDigits)
+        formatValidNumber(
+          val,
+          minimumFractionDigits,
+          maximumFractionDigits,
+          disableGrouping
+        )
       }
       parse={parseNumber}
       {...props}

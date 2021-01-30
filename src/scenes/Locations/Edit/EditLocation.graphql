@@ -1,0 +1,8 @@
+mutation UpdateLocation($input: UpdateLocationInput!) {
+  updateLocation(input: $input) {
+    location {
+      ...LocationDetail
+      ...LocationForm
+    }
+  }
+}
