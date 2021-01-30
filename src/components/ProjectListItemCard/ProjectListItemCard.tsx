@@ -49,11 +49,16 @@ const useStyles = makeStyles(({ breakpoints, spacing }) => {
     rightContent: {
       flex: 1,
       textAlign: 'right',
-      marginBottom: spacing(2),
       marginLeft: spacing(2),
       display: 'flex',
       flexDirection: 'column',
-      justifyContent: 'space-between',
+      height: '100%',
+    },
+    engagementCount: {
+      flex: 2,
+      display: 'flex',
+      flexDirection: 'column',
+      justifyContent: 'center',
     },
     sensitivity: {
       marginBottom: spacing(1),
@@ -148,7 +153,7 @@ export const ProjectListItemCard: FC<ProjectListItemCardProps> = ({
           <div className={classes.rightContent}>
             <DisplaySimpleProperty aria-hidden="true" />
 
-            <div>
+            <div className={classes.engagementCount}>
               <Typography variant="h1">
                 {!project ? (
                   <Skeleton
