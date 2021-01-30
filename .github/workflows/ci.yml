@@ -31,7 +31,7 @@ jobs:
         if: steps.yarn-cache.outputs.cache-hit != 'true'
 
       - name: Generate GraphQL types
-        run: yarn gql-gen
+        run: yarn gql-gen -e
 
       - name: Check TypeScript
         run: yarn type-check
