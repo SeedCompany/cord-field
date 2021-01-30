@@ -69,7 +69,7 @@ export const LanguageDetail = () => {
   });
 
   const [editState, edit] = useDialog();
-  const [locationFormState, openLocationForm] = useDialog();
+  const [locationFormState, addLocation] = useDialog();
 
   const language = data?.language;
   const {
@@ -94,7 +94,7 @@ export const LanguageDetail = () => {
   const formatDate = useDateFormatter();
   const formatNumber = useNumberFormatter();
 
-  const [removeLocationFromLang, { loading: loadingRemove }] = useMutation(
+  const [removeLocation, { loading: removing }] = useMutation(
     RemoveLocationFromLanguageDocument
   );
 
@@ -226,7 +226,7 @@ export const LanguageDetail = () => {
                           ? undefined
                           : classes.hidden
                       }
-                      onClick={openLocationForm}
+                      onClick={addLocation}
                     >
                       <Add />
                     </Fab>
@@ -240,12 +240,14 @@ export const LanguageDetail = () => {
                     location={location}
                     className={classes.listItem}
                     loading={!location}
-                    loadingDelete={loadingRemove}
-                    deleteAction={() =>
-                      removeLocationFromLang({
+                    removing={removing}
+                    onRemove={() =>
+                      language &&
+                      location &&
+                      removeLocation({
                         variables: {
-                          languageId: language?.id || '',
-                          locationId: location?.id || '',
+                          languageId: language.id,
+                          locationId: location.id,
                         },
                       })
                     }

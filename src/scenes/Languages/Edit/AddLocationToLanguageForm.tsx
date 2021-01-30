@@ -41,7 +41,7 @@ export const AddLocationToLanguageForm = ({
       }}
     >
       <SubmitError />
-      <LocationField name="locationId" required variant="outlined" />
+      <LocationField name="locationId" required />
     </DialogForm>
   );
 };
