@@ -6,3 +6,10 @@ mutation UpdateLanguage($input: UpdateLanguageInput!) {
     }
   }
 }
+
+mutation AddLocationToLanguage($languageId: ID!, $locationId: ID!) {
+  addLocationToLanguage(languageId: $languageId, locationId: $locationId) {
+    ...LanguageDetail
+    ...LanguageForm
+  }
+}

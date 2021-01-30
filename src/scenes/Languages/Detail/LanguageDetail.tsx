@@ -1,4 +1,4 @@
-import { useQuery } from '@apollo/client';
+import { useMutation, useQuery } from '@apollo/client';
 import { Grid, makeStyles, Tooltip, Typography } from '@material-ui/core';
 import { Add, Edit } from '@material-ui/icons';
 import { Skeleton } from '@material-ui/lab';
@@ -19,12 +19,17 @@ import {
   useDateFormatter,
   useNumberFormatter,
 } from '../../../components/Formatters';
+import { LocationCard } from '../../../components/LocationCard';
 import { ProjectListItemCard } from '../../../components/ProjectListItemCard';
 import { Redacted } from '../../../components/Redacted';
 import { Sensitivity } from '../../../components/Sensitivity';
 import { CalendarDate, listOrPlaceholders } from '../../../util';
 import { EditLanguage } from '../Edit';
-import { LanguageDocument } from './LanguageDetail.generated';
+import { AddLocationToLanguageForm } from '../Edit/AddLocationToLanguageForm';
+import {
+  LanguageDocument,
+  RemoveLocationFromLanguageDocument,
+} from './LanguageDetail.generated';
 import { LeastOfThese } from './LeastOfThese';
 
 const useStyles = makeStyles(({ spacing }) => ({
@@ -64,6 +69,7 @@ export const LanguageDetail = () => {
   });
 
   const [editState, edit] = useDialog();
+  const [locationFormState, addLocation] = useDialog();
 
   const language = data?.language;
   const {
@@ -87,6 +93,10 @@ export const LanguageDetail = () => {
 
   const formatDate = useDateFormatter();
   const formatNumber = useNumberFormatter();
+
+  const [removeLocation, { loading: removing }] = useMutation(
+    RemoveLocationFromLanguageDocument
+  );
 
   return (
     <main className={classes.root}>
@@ -216,12 +226,34 @@ export const LanguageDetail = () => {
                           ? undefined
                           : classes.hidden
                       }
+                      onClick={addLocation}
                     >
                       <Add />
                     </Fab>
                   </Tooltip>
                 </Grid>
               </Grid>
+              {listOrPlaceholders(locations?.items, 3).map(
+                (location, index) => (
+                  <LocationCard
+                    key={location?.id ?? index}
+                    location={location}
+                    className={classes.listItem}
+                    loading={!location}
+                    removing={removing}
+                    onRemove={() =>
+                      language &&
+                      location &&
+                      removeLocation({
+                        variables: {
+                          languageId: language.id,
+                          locationId: location.id,
+                        },
+                      })
+                    }
+                  />
+                )
+              )}
               {locations?.items.length === 0 ? (
                 <Typography color="textSecondary">
                   This language does not have any locations yet
@@ -258,6 +290,12 @@ export const LanguageDetail = () => {
 
           {language ? (
             <EditLanguage language={language} {...editState} />
+          ) : null}
+          {language ? (
+            <AddLocationToLanguageForm
+              languageId={language.id}
+              {...locationFormState}
+            />
           ) : null}
         </>
       )}

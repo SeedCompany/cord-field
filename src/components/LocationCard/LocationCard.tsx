@@ -11,6 +11,7 @@ import { FC } from 'react';
 import * as React from 'react';
 import { displayLocationType } from '../../api';
 import { FormattedDateTime } from '../Formatters';
+import { ProgressButton } from '../ProgressButton';
 import { Redacted } from '../Redacted';
 import { ButtonLink, CardActionAreaLink } from '../Routing';
 import { LocationCardFragment } from './LocationCard.generated';
@@ -24,7 +25,9 @@ const useStyles = makeStyles(({ spacing }) => {
     cardActions: {
       display: 'flex',
       justifyContent: 'space-between',
-      paddingRight: spacing(2), // make symmetrical with button padding
+    },
+    createdAt: {
+      paddingRight: spacing(1), // make symmetrical with button padding
     },
   };
 });
@@ -33,12 +36,16 @@ export interface LocationCardProps {
   className?: string;
   loading?: boolean;
   location?: LocationCardFragment;
+  onRemove?: () => void;
+  removing?: boolean;
 }
 
 export const LocationCard: FC<LocationCardProps> = ({
   location,
   className,
   loading,
+  onRemove,
+  removing,
 }) => {
   const { id, name, locationType, createdAt } = location ?? {};
   const classes = useStyles();
@@ -76,11 +83,28 @@ export const LocationCard: FC<LocationCardProps> = ({
         <ButtonLink to={`/locations/${id}`} color="primary" disabled={loading}>
           View Location
         </ButtonLink>
-        {loading ? (
-          <Skeleton width="25%" />
+        {onRemove ? (
+          <ProgressButton
+            disabled={loading}
+            onClick={onRemove}
+            color="error"
+            progress={removing}
+          >
+            Remove
+          </ProgressButton>
         ) : (
-          <Typography variant="caption" color="textSecondary">
-            Created <FormattedDateTime date={createdAt} />
+          <Typography
+            variant="caption"
+            color="textSecondary"
+            className={classes.createdAt}
+          >
+            {loading ? (
+              <Skeleton width="25%" />
+            ) : (
+              <>
+                Created <FormattedDateTime date={createdAt} />
+              </>
+            )}
           </Typography>
         )}
       </CardActions>
