@@ -1,28 +1,33 @@
 import { useQuery } from '@apollo/client';
-import { Fab, Grid, makeStyles, Typography } from '@material-ui/core';
+import { makeStyles, Typography } from '@material-ui/core';
 import { Edit } from '@material-ui/icons';
 import { Skeleton } from '@material-ui/lab';
 import clsx from 'clsx';
 import React from 'react';
+import { Helmet } from 'react-helmet-async';
 import { useParams } from 'react-router';
-import { displayLocationType } from '../../../api';
+import { canEditAny, displayLocationType } from '../../../api';
 import { useDialog } from '../../../components/Dialog';
 import {
   DisplaySimpleProperty,
   DisplaySimplePropertyProps,
 } from '../../../components/DisplaySimpleProperty';
-import { useDateFormatter } from '../../../components/Formatters';
-import { FundingAccountCard } from '../../../components/FundingAccountCard';
+import { Error } from '../../../components/Error';
+import { Fab } from '../../../components/Fab';
+import { FormattedDateTime } from '../../../components/Formatters';
 import { Redacted } from '../../../components/Redacted';
-import { Sensitivity } from '../../../components/Sensitivity';
 import { EditLocation } from '../Edit';
 import { LocationDocument } from './LocationDetail.generated';
 
-const useStyles = makeStyles(({ spacing }) => ({
+const useStyles = makeStyles(({ spacing, breakpoints }) => ({
   root: {
+    flex: 1,
     overflowY: 'auto',
     padding: spacing(4),
-    '& > *:not(:last-child)': {
+  },
+  main: {
+    maxWidth: breakpoints.values.md,
+    '& > *': {
       marginBottom: spacing(3),
     },
   },
@@ -30,34 +35,45 @@ const useStyles = makeStyles(({ spacing }) => ({
     marginRight: spacing(4),
   },
   nameLoading: {
-    width: '60%',
+    width: '40%',
   },
   header: {
     flex: 1,
     display: 'flex',
+  },
+  subheader: {
+    display: 'flex',
+    alignItems: 'baseline',
+    '& > *': {
+      marginRight: spacing(2),
+    },
   },
 }));
 
 export const LocationDetail = () => {
   const classes = useStyles();
   const { locationId } = useParams();
-  const dateFormatter = useDateFormatter();
 
   const [editLocationState, editLocation] = useDialog();
 
   const { data, error } = useQuery(LocationDocument, {
     variables: { locationId },
   });
-
   const location = data?.location;
+  const fundingAccount = location?.fundingAccount.value;
 
   return (
     <main className={classes.root}>
-      {error ? (
-        <Typography variant="h4">Error loading Location</Typography>
-      ) : (
-        <>
-          <div className={classes.header}>
+      <Helmet title={location?.name.value || undefined} />
+      <Error error={error}>
+        {{
+          NotFound: 'Could not find location',
+          Default: 'Error loading location',
+        }}
+      </Error>
+      {!error && (
+        <div className={classes.main}>
+          <header className={classes.header}>
             <Typography
               variant="h2"
               className={clsx(
@@ -70,44 +86,53 @@ export const LocationDetail = () => {
               ) : (
                 location.name.value ?? (
                   <Redacted
-                    info="You don't have permission to view this language's name"
-                    width="100%"
+                    info="You don't have permission to view this location's name"
+                    width="40%"
                   />
                 )
               )}
             </Typography>
-            <Fab
-              color="primary"
-              aria-label="edit language"
-              onClick={editLocation}
-            >
-              <Edit />
-            </Fab>
+            {canEditAny(location, true) && (
+              <Fab
+                color="primary"
+                aria-label="edit location"
+                onClick={editLocation}
+                loading={!location}
+              >
+                <Edit />
+              </Fab>
+            )}
+          </header>
+          <div className={classes.subheader}>
+            <Typography variant="h4">
+              {location ? 'Location' : <Skeleton width={200} />}
+            </Typography>
+            {location && (
+              <Typography variant="body2" color="textSecondary">
+                Created <FormattedDateTime date={location.createdAt} />
+              </Typography>
+            )}
           </div>
-          <Typography variant="body2" color="textSecondary">
-            Created {dateFormatter(location?.createdAt)}
-          </Typography>
-          <Grid container spacing={2} alignItems="center">
-            <Grid item>
-              <Sensitivity value={location?.sensitivity} loading={!location} />
-            </Grid>
-          </Grid>
+          <DisplayProperty
+            label="Type"
+            value={displayLocationType(location?.type.value)}
+            loading={!location}
+          />
           <DisplayProperty
             label="ISO Alpha-3 Country Code"
             value={location?.isoAlpha3.value}
             loading={!location}
           />
           <DisplayProperty
-            label="Type"
-            value={displayLocationType(location?.type.value)}
+            label="Funding Account"
+            value={`${fundingAccount?.name.value ?? ''}${
+              fundingAccount?.accountNumber.value
+                ? ` (${fundingAccount.accountNumber.value})`
+                : ''
+            }`}
             loading={!location}
           />
-          {location?.fundingAccount.value && (
-            <FundingAccountCard
-              fundingAccount={location.fundingAccount.value}
-            />
-          )}
-        </>
+        </div>
       )}
       <EditLocation location={location} {...editLocationState} />
     </main>
