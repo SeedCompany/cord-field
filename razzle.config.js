@@ -14,6 +14,8 @@ const modifyWebpackConfig = (opts) => {
 
   // Limit bundled env vars so that they can be changed at runtime
   // This allows a single build to be used for multiple deployments
+  // TODO investigate using new forceRuntimeEnvVars instead
+  // https://github.com/jaredpalmer/razzle/commit/d8e21c23
   const envVarsToBundle = isClient
     ? ['NODE_ENV']
     : ['NODE_ENV', 'RAZZLE_ASSETS_MANIFEST', 'RAZZLE_PUBLIC_DIR'];
@@ -114,7 +116,7 @@ const modifyWebpackConfig = (opts) => {
   // Run circular dependency checks on build
   // Webpack doesn't always get the initializing order of these right when
   // compiling to a single file for the server.
-  if (!opts.env.dev) {
+  if (!opts.env.dev && isServer) {
     const filesPath = path
       .normalize('src/components/files')
       // win32 black-slashes need to be escaped for regex input

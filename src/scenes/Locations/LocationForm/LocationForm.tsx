@@ -20,7 +20,7 @@ import {
 import {
   FundingAccountField,
   FundingAccountLookupItem,
-} from '../../../components/form/Lookup';
+} from '../../../components/form/Lookup/FundingAccount';
 import { LocationFormFragment } from './LocationForm.generated';
 
 export interface LocationFormValues<
