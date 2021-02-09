@@ -1,0 +1,10 @@
+mutation CreateFundingAccount($input: CreateFundingAccountInput!) {
+  createFundingAccount(input: $input) {
+    fundingAccount {
+      id
+      name {
+        value
+      }
+    }
+  }
+}

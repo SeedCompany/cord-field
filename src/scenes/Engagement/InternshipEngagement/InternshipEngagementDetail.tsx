@@ -1,6 +1,7 @@
 import { Breadcrumbs, Grid, makeStyles, Typography } from '@material-ui/core';
 import { ChatOutlined, DateRange } from '@material-ui/icons';
 import React, { FC } from 'react';
+import { Helmet } from 'react-helmet-async';
 import {
   displayEngagementStatus,
   displayInternPosition,
@@ -66,9 +67,11 @@ export const InternshipEngagementDetail: FC<EngagementQuery> = ({
   const [editState, show, editField] = useDialog<
     Many<EditableEngagementField>
   >();
-  const [workflowState, openWorkflow, workflowEngagement] = useDialog<
-    Engagement
-  >();
+  const [
+    workflowState,
+    openWorkflow,
+    workflowEngagement,
+  ] = useDialog<Engagement>();
 
   const date = securedDateRange(engagement.startDate, engagement.endDate);
   const formatDate = useDateFormatter();
@@ -84,6 +87,11 @@ export const InternshipEngagementDetail: FC<EngagementQuery> = ({
 
   return (
     <>
+      <Helmet
+        title={`${name ?? 'An Engagement'} in ${
+          project.name.value ?? 'a project'
+        }`}
+      />
       <div className={classes.root}>
         <Grid
           component="main"

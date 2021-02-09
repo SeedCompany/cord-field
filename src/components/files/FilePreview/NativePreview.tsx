@@ -1,7 +1,18 @@
 import { makeStyles } from '@material-ui/core';
 import React, { FC } from 'react';
-import { NativePreviewerProps, NativePreviewType } from './FilePreview';
+import type { PreviewerProps } from './FilePreview';
 import { PreviewLoading } from './PreviewLoading';
+
+export enum NativePreviewType {
+  Video = 'video',
+  Image = 'image',
+  Audio = 'audio',
+}
+
+export interface NativePreviewerProps extends Omit<PreviewerProps, 'file'> {
+  file?: string;
+  type: NativePreviewType;
+}
 
 const useStyles = makeStyles(() => ({
   media: {

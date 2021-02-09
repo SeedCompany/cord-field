@@ -18,9 +18,9 @@ import {
 } from '@material-ui/icons';
 import React, { FC, useState } from 'react';
 import { useDropzone } from 'react-dropzone';
+import { FileAction } from './FileAction.enum';
 import {
   DirectoryActionItem,
-  FileAction,
   FileActionItem,
   HandleFileActionClickParams,
   PermittedActions,

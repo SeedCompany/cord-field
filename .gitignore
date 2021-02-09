@@ -2,6 +2,7 @@
 
 # compiled output
 /build
+/cache
 
 # Yarn / NPM
 .yarn/cache

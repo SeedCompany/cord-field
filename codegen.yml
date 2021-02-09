@@ -1,4 +1,4 @@
-schema: ${REACT_APP_API_BASE_URL}/graphql
+schema: ${RAZZLE_API_BASE_URL}/graphql
 documents:
   - ./src/**/*.graphql
 overwrite: true
@@ -22,8 +22,6 @@ generates:
       - add:
           placement: append
           content: export const possibleTypes = result.possibleTypes;
-    config:
-      apolloClientVersion: 3
 
   # Generate type policies automatically specific to our API
   ./src/api/typePolicies/typePolicies.generated.ts:

@@ -7,6 +7,7 @@ import {
 } from '@material-ui/core';
 import { ChatOutlined, DateRange, Edit } from '@material-ui/icons';
 import React, { FC } from 'react';
+import { Helmet } from 'react-helmet-async';
 import {
   canEditAny,
   displayEngagementStatus,
@@ -68,9 +69,11 @@ export const LanguageEngagementDetail: FC<EngagementQuery> = ({
   const [editState, show, editField] = useDialog<
     Many<EditableEngagementField>
   >();
-  const [workflowState, openWorkflow, workflowEngagement] = useDialog<
-    Engagement
-  >();
+  const [
+    workflowState,
+    openWorkflow,
+    workflowEngagement,
+  ] = useDialog<Engagement>();
 
   const formatDate = useDateFormatter();
   const formatDateTime = useDateTimeFormatter();
@@ -81,7 +84,7 @@ export const LanguageEngagementDetail: FC<EngagementQuery> = ({
 
   const language = engagement.language.value;
   const langName = language?.name.value ?? language?.displayName.value;
-  const ptRegistryId = engagement.paraTextRegistryId;
+  const ptRegistryId = engagement.paratextRegistryId;
   const pnp = engagement.pnp;
   const editable = canEditAny(engagement);
 
@@ -89,6 +92,11 @@ export const LanguageEngagementDetail: FC<EngagementQuery> = ({
 
   return (
     <>
+      <Helmet
+        title={`${langName ?? 'A Language'} in ${
+          project.name.value ?? 'a project'
+        }`}
+      />
       <div className={classes.root}>
         <Grid
           component="main"
@@ -174,14 +182,14 @@ export const LanguageEngagementDetail: FC<EngagementQuery> = ({
             </Grid>
             <Grid item>
               <DataButton
-                onClick={() => show(['paraTextRegistryId'])}
+                onClick={() => show(['paratextRegistryId'])}
                 secured={ptRegistryId}
-                redacted="You do not have permission to view ParaText Registry ID"
+                redacted="You do not have permission to view Paratext Registry ID"
                 children={
                   ptRegistryId.value &&
-                  `ParaText Registry ID: ${ptRegistryId.value}`
+                  `Paratext Registry ID: ${ptRegistryId.value}`
                 }
-                empty={'Enter ParaText Registry ID'}
+                empty={'Enter Paratext Registry ID'}
               />
             </Grid>
             <BooleanProperty

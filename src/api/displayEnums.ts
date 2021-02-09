@@ -2,6 +2,9 @@ import { startCase } from 'lodash';
 import {
   EngagementStatus,
   FinancialReportingType,
+  InternshipDomain,
+  InternshipProgram,
+  LocationType,
   PartnershipAgreementStatus,
   ProductApproach,
   ProjectStatus,
@@ -11,7 +14,7 @@ import { ProductTypes } from '../scenes/Products/ProductForm/constants';
 import { Nullable } from '../util';
 import { MethodologyToApproach } from './approach';
 import {
-  InternshipEngagementPosition,
+  InternshipPosition,
   ProductMedium,
   ProductMethodology,
   ProductPurpose,
@@ -25,25 +28,24 @@ const displayEnum = <T extends string>() => (enumVal: Nullable<T>) =>
 
 export const displayStatus = displayEnum<ProjectStatus>();
 export const displayProjectStep = displayEnum<ProjectStep>();
-export const displayPartnershipStatus = displayEnum<
-  PartnershipAgreementStatus
->();
-export const displayFinancialReportingType = displayEnum<
-  FinancialReportingType
->();
+export const displayPartnershipStatus = displayEnum<PartnershipAgreementStatus>();
+export const displayFinancialReportingType = displayEnum<FinancialReportingType>();
 export const displayEngagementStatus = displayEnum<EngagementStatus>();
 export const displayRole = displayEnum<Role>();
 export const displayRoles = (roles: readonly Role[]) =>
   roles.map(displayRole).join(', ');
 
-export const displayInternPosition = displayEnum<
-  InternshipEngagementPosition
->();
+export const displayInternPosition = displayEnum<InternshipPosition>();
+export const displayInternProgram = displayEnum<InternshipProgram>();
+export const displayInternDomain = displayEnum<InternshipDomain>();
 export const PartnershipStatuses: PartnershipAgreementStatus[] = [
   'NotAttached',
   'AwaitingSignature',
   'Signed',
 ];
+
+export const displayLocationType = (type: Nullable<LocationType>): string =>
+  !type ? '' : type === 'CrossBorderArea' ? 'Cross-Border Area' : type;
 
 export const displayMethodology = (methodology: ProductMethodology) =>
   methodology.includes('Other')

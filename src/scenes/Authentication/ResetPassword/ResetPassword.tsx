@@ -1,5 +1,6 @@
 import { useMutation } from '@apollo/client';
 import React, { useState } from 'react';
+import { Helmet } from 'react-helmet-async';
 import { useParams } from 'react-router-dom';
 import { Except } from 'type-fest';
 import { handleFormError } from '../../../api';
@@ -34,9 +35,15 @@ export const ResetPassword = (props: Except<Props, 'onSubmit'>) => {
     }
   };
 
-  return success ? (
+  const out = success ? (
     <ResetPasswordSuccess className={props.className} />
   ) : (
     <ResetPasswordForm {...props} onSubmit={submit} />
+  );
+  return (
+    <>
+      <Helmet title="Reset Password" />
+      {out}
+    </>
   );
 };

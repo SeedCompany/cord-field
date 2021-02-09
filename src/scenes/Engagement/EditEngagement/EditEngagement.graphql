@@ -17,4 +17,14 @@ fragment EditEngagement on Engagement {
     }
     canEdit
   }
+  ... on InternshipEngagement {
+    position {
+      canEdit
+      options {
+        position
+        domain
+        program
+      }
+    }
+  }
 }

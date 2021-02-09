@@ -1,62 +1,55 @@
+import loadable from '@loadable/component';
 import React from 'react';
-import { useRoutes } from 'react-router-dom';
-import { Engagement } from '../Engagement';
-import { PartnershipList } from '../Partnerships/List';
-import { CreateProduct } from '../Products/Create';
-import { EditProduct } from '../Products/Edit';
-import { ProjectBudget } from './Budget';
-import { ProjectFilesList } from './Files';
-import { ProjectList } from './List';
-import { ProjectMembersList } from './Members/List';
-import { ProjectOverview } from './Overview';
+import { Route, Routes } from 'react-router-dom';
+import { NotFoundRoute } from '../../components/Error';
 
-export const Projects = () => {
-  const matched = useRoutes([
-    {
-      path: '',
-      element: <ProjectList />,
-    },
-    {
-      path: ':projectId',
-      element: <ProjectOverview />,
-    },
-    {
-      path: ':projectId/files',
-      element: <ProjectFilesList />,
-    },
-    {
-      path: ':projectId/files/:folderId',
-      element: <ProjectFilesList />,
-    },
-    {
-      path: ':projectId/members',
-      element: <ProjectMembersList />,
-    },
-    {
-      path: ':projectId/engagements/:engagementId',
-      element: <Engagement />,
-    },
-    {
-      path: ':projectId/partnerships',
-      element: <PartnershipList />,
-    },
-    {
-      path: '/:projectId/budget',
-      element: <ProjectBudget />,
-    },
-    {
-      path: ':projectId/engagements/:engagementId/products/create',
-      element: <CreateProduct />,
-    },
-    {
-      path: ':projectId/engagements/:engagementId/products/:productId',
-      element: <EditProduct />,
-    },
-  ]);
-
-  if (!matched) {
-    return <div>Not Found</div>;
+const Engagement = loadable(() => import('../Engagement'), {
+  resolveComponent: (m) => m.Engagement,
+});
+const PartnershipList = loadable(() => import('../Partnerships/List'), {
+  resolveComponent: (m) => m.PartnershipList,
+});
+const Products = loadable(() => import('../Products'), {
+  resolveComponent: (m) => m.Products,
+});
+const ProjectBudget = loadable(() => import('./Budget'), {
+  resolveComponent: (m) => m.ProjectBudget,
+});
+const Files = loadable(() => import('./Files'), {
+  resolveComponent: (m) => m.Files,
+});
+const ProjectList = loadable(
+  () => import(/* webpackChunkName: "Project-List" */ './List'),
+  {
+    resolveComponent: (m) => m.ProjectList,
   }
+);
+const ProjectMembersList = loadable(() => import('./Members/List'), {
+  resolveComponent: (m) => m.ProjectMembersList,
+});
+const ProjectOverview = loadable(
+  () => import(/* webpackChunkName: "Project-Overview" */ './Overview'),
+  {
+    resolveComponent: (m) => m.ProjectOverview,
+  }
+);
 
-  return <>{matched}</>;
-};
+export const Projects = () => (
+  <Routes>
+    <Route path="" element={<ProjectList />} />
+    <Route path=":projectId">
+      <Route path="" element={<ProjectOverview />} />
+      <Route path="files/*" element={<Files />} />
+      <Route path="members" element={<ProjectMembersList />} />
+      <Route path="engagements/:engagementId">
+        <Route path="" element={<Engagement />} />
+        <Route path="products/*" element={<Products />} />
+        {NotFoundRoute}
+      </Route>
+      <Route path="partnerships" element={<PartnershipList />} />
+      <Route path="budget" element={<ProjectBudget />} />
+      {NotFoundRoute}
+    </Route>
+    {NotFoundRoute}
+  </Routes>
+);

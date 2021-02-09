@@ -1,15 +1,32 @@
+import loadable from '@loadable/component';
 import { makeStyles } from '@material-ui/core';
 import React from 'react';
+import { Helmet } from 'react-helmet-async';
 import { Route, Routes } from 'react-router-dom';
+import { NotFoundRoute } from '../../components/Error';
 import { Authentication } from '../Authentication';
 import { Home } from '../Home';
-import { Languages } from '../Languages';
-import { Partners } from '../Partners';
-import { Projects } from '../Projects';
-import { SearchResults } from '../SearchResults';
-import { Users } from '../Users';
 import { Header } from './Header';
 import { Sidebar } from './Sidebar';
+
+const Partners = loadable(() => import('../Partners'), {
+  resolveComponent: (m) => m.Partners,
+});
+const Projects = loadable(() => import('../Projects'), {
+  resolveComponent: (m) => m.Projects,
+});
+const Languages = loadable(() => import('../Languages'), {
+  resolveComponent: (m) => m.Languages,
+});
+const Users = loadable(() => import('../Users'), {
+  resolveComponent: (m) => m.Users,
+});
+const Locations = loadable(() => import('../Locations/Locations'), {
+  resolveComponent: (m) => m.Locations,
+});
+const SearchResults = loadable(() => import('../SearchResults'), {
+  resolveComponent: (m) => m.SearchResults,
+});
 
 const useStyles = makeStyles(() => ({
   // Use @global basically never
@@ -41,18 +58,77 @@ export const Root = () => {
       <Route path="/languages/*" element={<Languages />} />
       <Route path="/users/*" element={<Users />} />
       <Route path="/search" element={<SearchResults />} />
+      <Route path="/locations/*" element={<Locations />} />
+      {NotFoundRoute}
     </Routes>
   );
 
   return (
-    <Authentication>
-      <div className={classes.app}>
-        <Sidebar />
-        <div className={classes.main}>
-          <Header />
-          {routes}
+    <>
+      <Helmet titleTemplate="%s - CORD Field" defaultTitle="CORD Field">
+        <html lang="en" />
+        <meta charSet="utf-8" />
+        <base href="/" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+        {/* sofia-pro font */}
+        <link href="https://use.typekit.net/qrd6jxb.css" rel="stylesheet" />
+
+        {/* Polyfill for IntersectionObserver, ResizeObserver, AbortController */}
+        <script
+          crossOrigin="anonymous"
+          src="https://polyfill.io/v3/polyfill.min.js?features=IntersectionObserverEntry%2CIntersectionObserver%2CResizeObserver%2CAbortController"
+        />
+      </Helmet>
+      <FavIcons />
+      <Authentication>
+        <div className={classes.app}>
+          <Sidebar />
+          <div className={classes.main}>
+            <Header />
+            {routes}
+          </div>
         </div>
-      </div>
-    </Authentication>
+      </Authentication>
+    </>
   );
 };
+
+const { PUBLIC_URL = '' } = process.env;
+
+const FavIcons = () => (
+  <Helmet>
+    <link
+      rel="apple-touch-icon"
+      sizes="180x180"
+      href={`${PUBLIC_URL}/images/apple-touch-icon.png`}
+    />
+    <link
+      rel="icon"
+      type="image/png"
+      sizes="32x32"
+      href={`${PUBLIC_URL}/images/favicon-32x32.png`}
+    />
+    <link
+      rel="icon"
+      type="image/png"
+      sizes="16x16"
+      href={`${PUBLIC_URL}/images/favicon-16x16.png`}
+    />
+    <link rel="manifest" href={`${PUBLIC_URL}/site.webmanifest`} />
+    <link
+      rel="mask-icon"
+      href={`${PUBLIC_URL}/images/safari-pinned-tab.svg`}
+      color="#64b145"
+    />
+    <link rel="shortcut icon" href={`${PUBLIC_URL}/images/favicon.ico`} />
+    <meta name="apple-mobile-web-app-title" content="CORD Field" />
+    <meta name="application-name" content="CORD Field" />
+    <meta name="msapplication-TileColor" content="#64b145" />
+    <meta
+      name="msapplication-config"
+      content={`${PUBLIC_URL}/browserconfig.xml`}
+    />
+    <meta name="theme-color" content="#ffffff" />
+  </Helmet>
+);

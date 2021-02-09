@@ -10,6 +10,16 @@ fragment PartnershipCard on Partnership {
   mouStatus {
     value
   }
+  mouStart {
+    canRead
+    canEdit
+    value
+  }
+  mouEnd {
+    canRead
+    canEdit
+    value
+  }
   partner {
     canRead
     canEdit

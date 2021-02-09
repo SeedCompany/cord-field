@@ -147,7 +147,7 @@ export const SpreadsheetView: FC<SpreadSheetViewProps> = (props) => {
   const activeTab = previewPage - 1;
   return data.length === 1 ? (
     <div className={classes.container}>
-      <RenderedSheet rows={data[0].rows} columns={data[0].columns} />
+      <RenderedSheet rows={data[0]!.rows} columns={data[0]!.columns} />
     </div>
   ) : (
     <>

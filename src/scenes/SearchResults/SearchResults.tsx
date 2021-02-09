@@ -3,7 +3,10 @@ import { Card, CardContent, makeStyles, Typography } from '@material-ui/core';
 import { startCase } from 'lodash';
 import { FC } from 'react';
 import * as React from 'react';
+import { Helmet } from 'react-helmet-async';
+import { Error } from '../../components/Error';
 import { LanguageListItemCard } from '../../components/LanguageListItemCard';
+import { LocationCard } from '../../components/LocationCard';
 import { PartnerListItemCard } from '../../components/PartnerListItemCard';
 import { ProjectListItemCard } from '../../components/ProjectListItemCard';
 import { UserListItemCardLandscape } from '../../components/UserListItemCard';
@@ -63,6 +66,7 @@ export const SearchResults: FC = () => {
       case 'Partner':
         return <PartnerListItemCard key={item.id} partner={item} />;
       case 'Location':
+        return <LocationCard key={item.id} location={item} />;
       case 'Film':
       case 'Story':
       case 'LiteracyMaterial':
@@ -76,9 +80,10 @@ export const SearchResults: FC = () => {
 
   return (
     <div className={classes.root}>
+      <Helmet title={`${query} - Search`} />
       <main className={classes.main}>
         {error ? (
-          <Typography>Error loading results</Typography>
+          <Error error={error}>Error loading search results</Error>
         ) : loading ? (
           <Typography>Loading results</Typography>
         ) : data && data.search.items.length > 0 ? (

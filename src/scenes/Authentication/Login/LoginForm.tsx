@@ -96,7 +96,9 @@ export const LoginForm = ({ className, ...props }: LoginFormProps) => {
           mutators={{ clearSubmitErrors }}
         >
           {({ handleSubmit }) => (
-            <form onSubmit={handleSubmit}>
+            // post method to ensure credentials are not passed in url if form
+            // is submitted before client-side javascript can pick the event.
+            <form method="post" onSubmit={handleSubmit}>
               <SubmitError className={classes.formError} />
               <EmailField autoFocus autoComplete="email" />
               <PasswordField autoComplete="current-password" />
@@ -141,7 +143,7 @@ const clearSubmitErrorsOnChange: Decorator<LoginInput> = (form) =>
   form.subscribe(
     ({ dirtySinceLastSubmit }) => {
       if (dirtySinceLastSubmit) {
-        form.mutators.clearSubmitErrors();
+        form.mutators.clearSubmitErrors!();
       }
     },
     { dirtySinceLastSubmit: true }

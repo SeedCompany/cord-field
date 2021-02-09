@@ -93,5 +93,5 @@ export const markConfirmPasswordTouched: Mutator<ChangePasswordFields> = (
   args,
   state
 ) => {
-  state.fields.confirmPassword.touched = true;
+  state.fields.confirmPassword!.touched = true;
 };

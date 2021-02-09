@@ -1,23 +1,13 @@
 import React from 'react';
-import { useRoutes } from 'react-router-dom';
+import { Route, Routes } from 'react-router-dom';
+import { NotFoundRoute } from '../../components/Error';
 import { UserDetail } from './Detail';
 import { UserList } from './List';
 
-export const Users = () => {
-  const matched = useRoutes([
-    {
-      path: '/',
-      element: <UserList />,
-    },
-    {
-      path: '/:userId',
-      element: <UserDetail />,
-    },
-  ]);
-
-  if (!matched) {
-    return <div>Not Found</div>;
-  }
-
-  return <>{matched}</>;
-};
+export const Users = () => (
+  <Routes>
+    <Route path="" element={<UserList />} />
+    <Route path=":userId" element={<UserDetail />} />
+    {NotFoundRoute}
+  </Routes>
+);

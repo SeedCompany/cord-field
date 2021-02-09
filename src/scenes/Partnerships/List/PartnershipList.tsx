@@ -7,6 +7,7 @@ import {
 } from '@material-ui/core';
 import { Add } from '@material-ui/icons';
 import React, { FC } from 'react';
+import { Helmet } from 'react-helmet-async';
 import { useParams } from 'react-router-dom';
 import { Breadcrumb } from '../../../components/Breadcrumb';
 import { useDialog } from '../../../components/Dialog';
@@ -41,7 +42,7 @@ const useStyles = makeStyles(({ spacing, breakpoints }) => ({
 export const PartnershipList: FC = () => {
   const classes = useStyles();
 
-  const { projectId } = useParams();
+  const { projectId = '' } = useParams();
   const { data } = useQuery(ProjectPartnershipsDocument, {
     variables: { input: projectId },
   });
@@ -49,12 +50,17 @@ export const PartnershipList: FC = () => {
   const partnerships = project?.partnerships;
 
   const [createDialogState, openCreateDialog] = useDialog();
-  const [editDialogState, openEditDialog, partnership] = useDialog<
-    PartnershipFormFragment
-  >();
+  const [
+    editDialogState,
+    openEditDialog,
+    partnership,
+  ] = useDialog<PartnershipFormFragment>();
 
   return (
     <div className={classes.root}>
+      <Helmet
+        title={`Partnerships - ${data?.project.name.value ?? 'A Project'}`}
+      />
       <Breadcrumbs>
         <ProjectBreadcrumb data={project} />
         <Breadcrumb to={`/projects/${projectId}/partnerships`}>

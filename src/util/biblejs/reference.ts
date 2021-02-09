@@ -30,11 +30,11 @@ export const parseScriptureRange = (
 
   const bookIndex = bookIndexFromName(bookName);
 
-  const [start, end] = reference.split('-');
+  const [start = '', end] = reference.split('-');
 
   // want to be able to set startVerse later if necessary
   // eslint-disable-next-line prefer-const
-  let [startChapter, startVerse] = start.split(':').map(Number);
+  let [startChapter = 0, startVerse] = start.split(':').map(Number);
 
   // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
   const endParts = end?.split(':').map(Number);
@@ -47,13 +47,13 @@ export const parseScriptureRange = (
     // {chapter}:{verse}-{verse}
     if (startChapter && startVerse) {
       endChapter = startChapter;
-      endVerse = endParts[0];
+      endVerse = endParts[0]!;
     }
     // {chapter}-{chapter}
     else if (startChapter && !startVerse) {
       startVerse = 1;
-      endChapter = endParts[0];
-      endVerse = books[bookIndex].chapters[endChapter - 1];
+      endChapter = endParts[0]!;
+      endVerse = books[bookIndex]!.chapters[endChapter - 1]!;
     }
   }
   // not normal, but we want to handle it
@@ -61,35 +61,35 @@ export const parseScriptureRange = (
   // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
   else if (endParts?.length === 2 && !startVerse) {
     startVerse = 1;
-    endChapter = endParts[0];
-    endVerse = endParts[1];
+    endChapter = endParts[0]!;
+    endVerse = endParts[1]!;
   }
   // {chapter}:{verse}-{chapter}:{verse}
   // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
-  else if (endParts?.length > 0) {
-    endChapter = endParts[0];
-    endVerse = endParts[1];
+  else if (endParts && endParts.length > 0) {
+    endChapter = endParts[0]!;
+    endVerse = endParts[1]!;
   }
 
   // {chapter}
   if (!end && !startVerse) {
     startVerse = 1;
     endChapter = startChapter;
-    endVerse = books[bookIndex].chapters[startChapter - 1];
+    endVerse = books[bookIndex]!.chapters[startChapter - 1]!;
   }
 
   return {
     start: {
       book: bookName,
       chapter: startChapter,
-      verse: startVerse,
+      verse: startVerse!,
     },
     end: {
       book: bookName,
       // if the reference is only say "Ruth 1", then end of the range's chapter will be 1
       chapter: endChapter || startChapter,
       // if it's "Ruth 1:2", then the end of the range's verse will be 2, the same as the start of the range's verse
-      verse: endVerse || startVerse,
+      verse: (endVerse || startVerse)!,
     },
   };
 };
@@ -119,9 +119,9 @@ export const validateScriptureRange = (
     const p = (range as any)[part];
     const bookName = p.book;
     const bookIndex = bookIndexFromName(bookName);
-    const chaptersInBook = books[bookIndex].chapters.length;
+    const chaptersInBook = books[bookIndex]!.chapters.length;
     const chapterIndex = p.chapter - 1;
-    const versesInChapter = books[bookIndex].chapters[chapterIndex];
+    const versesInChapter = books[bookIndex]!.chapters[chapterIndex]!;
     if (p.chapter > chaptersInBook) {
       throw new ScriptureError(
         'invalidChapter',
@@ -172,7 +172,7 @@ export const formatScriptureRange = (
     if (
       Number(startVerse) === 1 &&
       // if endVerse equals the number of verses in endChapter we know it's a chapter-chapter reference
-      Number(endVerse) === books[bookIndex].chapters[endChapterIndex]
+      Number(endVerse) === books[bookIndex]!.chapters[endChapterIndex]
     ) {
       return `${startChapter}-${endChapter}`;
     }
@@ -185,7 +185,7 @@ export const formatScriptureRange = (
   // {chapter}
   if (
     Number(startVerse) === 1 &&
-    Number(endVerse) === books[bookIndex].chapters[endChapterIndex]
+    Number(endVerse) === books[bookIndex]!.chapters[endChapterIndex]
   ) {
     return `${startChapter}`;
   }
@@ -236,7 +236,7 @@ export const getScriptureRangeDisplay = (
   const isFullBook = isEqual(scriptureReferenceArr[0], getFullBookRange(book));
   return isFullBook
     ? `${book} (Full Book)`
-    : `${book} ${formatScriptureRange(scriptureReferenceArr[0])} ${
+    : `${book} ${formatScriptureRange(scriptureReferenceArr[0]!)} ${
         count > 1 ? `+ ${count - 1} more` : ''
       }`;
 };
@@ -274,7 +274,7 @@ export const mergeScriptureRange = (
 export const getFullBookRange = (book: string): ScriptureRange => {
   const bookObject = books.find((bookObj) => bookObj.names.includes(book));
   const lastChapter = bookObject ? bookObject.chapters.length : 1;
-  const lastVerse = bookObject ? bookObject.chapters[lastChapter - 1] : 1;
+  const lastVerse = bookObject ? bookObject.chapters[lastChapter - 1]! : 1;
   return {
     start: {
       book,

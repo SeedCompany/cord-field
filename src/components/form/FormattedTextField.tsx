@@ -3,9 +3,8 @@ import { identity } from 'lodash';
 import React, { useCallback, useEffect, useState } from 'react';
 import { useRifm } from 'rifm';
 import { Except } from 'type-fest';
-import { useFieldName } from './FieldGroup';
 import { FieldConfig, useField } from './useField';
-import { getHelperText, showError, useFocusOnEnabled } from './util';
+import { getHelperText, showError } from './util';
 
 export type FormattedTextFieldProps<FieldValue = string> = Except<
   FieldConfig<FieldValue>,
@@ -46,29 +45,25 @@ export function FormattedTextField<FieldValue = string>({
   accept,
   format,
   parse,
-  name: nameProp,
   helperText,
-  disabled: disabledProp,
   children,
   variant,
   ...props
 }: FormattedTextFieldProps<FieldValue>) {
-  const name = useFieldName(nameProp);
-  const { input, meta, rest } = useField(name, props);
-  const disabled = disabledProp ?? meta.submitting;
-  const ref = useFocusOnEnabled(meta, disabled);
+  const { input, meta, ref, rest } = useField<FieldValue, false>(props);
+  const name = input.name;
 
   const [managedVal, setManagedVal] = useState<{
     raw: string;
     parsed?: FieldValue;
   }>({
     raw: format ? format(input.value, name) : input.value,
-    parsed: input.value,
+    parsed: input.value ?? undefined,
   });
   const updateManagedVal = useCallback(() => {
     setManagedVal({
       raw: format ? format(input.value, name) : input.value,
-      parsed: input.value,
+      parsed: input.value ?? undefined,
     });
   }, [setManagedVal, format, name, input.value]);
   useEffect(() => {
@@ -102,7 +97,8 @@ export function FormattedTextField<FieldValue = string>({
 
   return (
     <TextField
-      disabled={disabled}
+      disabled={meta.disabled}
+      focused={meta.focused}
       required={props.required}
       {...rest}
       {...input}

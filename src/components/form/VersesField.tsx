@@ -13,7 +13,6 @@ import {
 import { isEqual, uniqWith } from 'lodash';
 import React, { useState } from 'react';
 import { Except } from 'type-fest';
-import { FieldConfig, useField, useFieldName, validators } from '.';
 import {
   formatScriptureRange,
   parseScriptureRange,
@@ -21,20 +20,20 @@ import {
   ScriptureRange,
   validateScriptureRange,
 } from '../../util/biblejs';
+import { FieldConfig, useField } from './useField';
 import {
   areListsDeepEqual,
   compareNullable,
   getHelperText,
   showError,
-  useFocusOnEnabled,
 } from './util';
+import { requiredArray } from './validators';
 
 type GenericScriptureRange = ScriptureRange | RawScriptureRange;
 
-type Val = Array<GenericScriptureRange | string> | [];
+type Val = GenericScriptureRange | string;
 
-export type VersesFieldProps = Except<FieldConfig<Val>, 'multiple'> & {
-  name: string;
+export type VersesFieldProps = Except<FieldConfig<Val, true>, 'multiple'> & {
   book: string;
 } & Pick<
     AutocompleteProps<GenericScriptureRange | string, true, false, true>,
@@ -59,7 +58,7 @@ const useStyles = makeStyles(() => ({
 const validateInput = (input: string) => {
   const currentChar = input[input.length - 1];
   const inputWithoutCurrentChar = input.slice(0, -1);
-  const [start, end] = inputWithoutCurrentChar.split('-');
+  const [start = '', end] = inputWithoutCurrentChar.split('-');
   if (
     input.includes(':-') ||
     input.includes('-:') ||
@@ -83,18 +82,16 @@ const validateInput = (input: string) => {
 };
 
 export function VersesField({
-  name: nameProp,
   book,
   helperText: helperTextProp,
   ChipProps,
-  disabled: disabledProp,
   autoFocus,
   required,
   label,
   ...props
 }: VersesFieldProps) {
   const [errorCode, setErrorCode] = useState('');
-  const validateReference = (ranges: Val) => {
+  const validateReference = (ranges: readonly Val[]) => {
     // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
     if (!ranges || ranges.length === 0) return undefined;
     // only the last needs to be validated since the others have been already
@@ -111,10 +108,10 @@ export function VersesField({
   const classes = useStyles();
 
   const [inputValue, setInputValue] = useState<string>('');
-  const name = useFieldName(nameProp);
-  const { input, meta, rest } = useField<Val>(name, {
-    validate: [validateReference, required ? validators.requiredArray : null],
-    parse: (value: Val | string): Val => {
+  const { input, meta, ref, rest } = useField<Val, true>({
+    multiple: true,
+    validate: [validateReference, required ? requiredArray : null],
+    parse: (value: readonly Val[] | string): readonly Val[] => {
       // need to call onChange in two cases
       // 1: on type (string) so we can show errors in real time
       // 2: on change when a new value is added to tags (string[])
@@ -148,10 +145,9 @@ export function VersesField({
     },
     isEqual: compareNullable((a, b) => areListsDeepEqual(a, b)),
     ...props,
+    autoFocus,
   });
-  const disabled = disabledProp ?? meta.submitting;
-  const ref = useFocusOnEnabled(meta, disabled);
-  const [scriptureRanges, setScriptureRanges] = useState<Val>(
+  const [scriptureRanges, setScriptureRanges] = useState<readonly Val[]>(
     // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
     input.value ?? []
   );
@@ -173,7 +169,7 @@ export function VersesField({
     errorCode === 'invalidVerse' &&
     end &&
     // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
-    (!end.includes(':') || endVerse?.length < 1);
+    (!end.includes(':') || !endVerse);
 
   const error =
     showError(meta) ||
@@ -215,6 +211,7 @@ export function VersesField({
           );
         });
       }}
+      // @ts-expect-error typed as mutable even though its not needed
       value={scriptureRanges}
       inputValue={inputValue}
       onInputChange={(_, value) => {
@@ -239,17 +236,18 @@ export function VersesField({
       }}
       onFocus={input.onFocus}
       onBlur={input.onBlur}
-      disabled={disabled}
+      disabled={meta.disabled}
       renderInput={(params: AutocompleteRenderInputParams) => {
         return (
           <TextField
             {...params}
-            name={name}
+            name={input.name}
             label={label}
             variant="outlined"
             helperText={helperText}
             error={error}
             autoFocus={autoFocus}
+            focused={meta.focused}
             inputRef={ref}
           />
         );

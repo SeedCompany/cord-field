@@ -87,7 +87,7 @@ function saveAsWithFileReader(blob: File | Blob | string, name?: string) {
   }
 
   if (typeof blob === 'string') {
-    return download(blob, name);
+    return void download(blob, name);
   }
 
   const force = blob.type === 'application/octet-stream';

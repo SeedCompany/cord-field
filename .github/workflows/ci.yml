@@ -3,10 +3,11 @@ on:
   pull_request:
   push:
     branches:
-      - v3
+      - master
+      - develop
 
 env:
-  REACT_APP_API_BASE_URL: ${{ secrets.API_BASE_URL }}
+  RAZZLE_API_BASE_URL: ${{ secrets.API_BASE_URL }}
 
 jobs:
   run:
@@ -30,7 +31,7 @@ jobs:
         if: steps.yarn-cache.outputs.cache-hit != 'true'
 
       - name: Generate GraphQL types
-        run: yarn gql-gen
+        run: yarn gql-gen -e
 
       - name: Check TypeScript
         run: yarn type-check
@@ -39,7 +40,7 @@ jobs:
         run: yarn eslint --ext .ts,.tsx --max-warnings 0 .
 
       - name: Build
-        run: yarn react-app-rewired build
+        run: yarn razzle build
 
       - name: Test
         run: yarn test

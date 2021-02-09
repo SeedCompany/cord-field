@@ -168,3 +168,6 @@ export const Table = <RowData extends Record<string, any>>(
     />
   );
 };
+
+// eslint-disable-next-line import/no-default-export
+export default Table;

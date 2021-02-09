@@ -13,6 +13,7 @@ import {
 } from '@material-ui/icons';
 import clsx from 'clsx';
 import React, { FC, memo, ReactNode, useState } from 'react';
+import { useMountedState } from 'react-use';
 import { useSession } from '../Session';
 import { DraggablePaper } from './DraggablePaper';
 import { useUploadManager } from './UploadManagerContext';
@@ -123,16 +124,21 @@ const UploadManagerImpl = (props: UploadManagerProps) => {
   const { isManagerOpen, setIsManagerOpen } = useUploadManager();
   const [isCollapsed, setIsCollapsed] = useState(false);
   const classes = useStyles();
+  const isMounted = useMountedState();
 
   function handleClose(event: React.MouseEvent<HTMLButtonElement>) {
     event.stopPropagation();
     removeCompletedUploads();
-    setIsManagerOpen(false);
+    if (isMounted()) {
+      setIsManagerOpen(false);
+    }
   }
 
   function handleCollapse(event: React.MouseEvent<HTMLButtonElement>) {
     event.stopPropagation();
-    setIsCollapsed((isCollapsed) => !isCollapsed);
+    if (isMounted()) {
+      setIsCollapsed((isCollapsed) => !isCollapsed);
+    }
   }
 
   return (

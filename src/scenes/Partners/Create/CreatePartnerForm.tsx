@@ -7,7 +7,7 @@ import { SubmitError } from '../../../components/form';
 import {
   OrganizationField,
   OrganizationLookupItem,
-} from '../../../components/form/Lookup';
+} from '../../../components/form/Lookup/Organization';
 
 export interface PartnerFormValues {
   orgLookup: OrganizationLookupItem;

@@ -1,0 +1,12 @@
+diff --git a/scripts/build.js b/scripts/build.js
+index 12cba058a136548b2b537ca5423b5d4f9978eb85..b0be215f9bc9d237dcd83a90d3be72893b8141a9 100755
+--- a/scripts/build.js
++++ b/scripts/build.js
+@@ -73,6 +73,7 @@ loadRazzleConfig(webpack).then(
+         },
+         err => {
+           printErrors('Failed to compile.', err, verbose);
++          process.exit(1);
+         }
+       );
+ 

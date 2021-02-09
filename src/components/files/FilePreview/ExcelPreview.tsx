@@ -60,7 +60,7 @@ async function extractExcelData(
     const workbook = XLSX.read(spreadsheetBuffer, { type: 'buffer' });
     const data = workbook.SheetNames.reduce(
       (sheets: SheetData[], worksheetName) => {
-        const worksheet = workbook.Sheets[worksheetName];
+        const worksheet = workbook.Sheets[worksheetName]!;
         // '!ref' is a special key that gives the used cell range
         const usedCellRange = worksheet['!ref'];
         if (!usedCellRange) {
@@ -232,3 +232,6 @@ function calculateMergedCells(
   });
   return mergedRows;
 }
+
+// eslint-disable-next-line import/no-default-export
+export default ExcelPreview;

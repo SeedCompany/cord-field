@@ -1,9 +1,10 @@
-import { useQuery } from '@apollo/client';
+import { useMutation, useQuery } from '@apollo/client';
 import { Grid, makeStyles, Tooltip, Typography } from '@material-ui/core';
 import { Add, Edit } from '@material-ui/icons';
 import { Skeleton } from '@material-ui/lab';
 import clsx from 'clsx';
 import React from 'react';
+import { Helmet } from 'react-helmet-async';
 import { useParams } from 'react-router';
 import { canEditAny } from '../../../api';
 import { BooleanProperty } from '../../../components/BooleanProperty';
@@ -12,17 +13,23 @@ import {
   DisplaySimpleProperty,
   DisplaySimplePropertyProps,
 } from '../../../components/DisplaySimpleProperty';
+import { Error } from '../../../components/Error';
 import { Fab } from '../../../components/Fab';
 import {
   useDateFormatter,
   useNumberFormatter,
 } from '../../../components/Formatters';
+import { LocationCard } from '../../../components/LocationCard';
 import { ProjectListItemCard } from '../../../components/ProjectListItemCard';
 import { Redacted } from '../../../components/Redacted';
 import { Sensitivity } from '../../../components/Sensitivity';
 import { CalendarDate, listOrPlaceholders } from '../../../util';
 import { EditLanguage } from '../Edit';
-import { LanguageDocument } from './LanguageDetail.generated';
+import { AddLocationToLanguageForm } from '../Edit/AddLocationToLanguageForm';
+import {
+  LanguageDocument,
+  RemoveLocationFromLanguageDocument,
+} from './LanguageDetail.generated';
 import { LeastOfThese } from './LeastOfThese';
 
 const useStyles = makeStyles(({ spacing }) => ({
@@ -62,6 +69,7 @@ export const LanguageDetail = () => {
   });
 
   const [editState, edit] = useDialog();
+  const [locationFormState, addLocation] = useDialog();
 
   const language = data?.language;
   const {
@@ -86,11 +94,20 @@ export const LanguageDetail = () => {
   const formatDate = useDateFormatter();
   const formatNumber = useNumberFormatter();
 
+  const [removeLocation, { loading: removing }] = useMutation(
+    RemoveLocationFromLanguageDocument
+  );
+
   return (
     <main className={classes.root}>
-      {error ? (
-        <Typography variant="h4">Error loading Language</Typography>
-      ) : (
+      <Helmet title={displayName?.value || name?.value || undefined} />
+      <Error error={error}>
+        {{
+          NotFound: 'Could not find language',
+          Default: 'Error loading language',
+        }}
+      </Error>
+      {!error && (
         <>
           <div className={classes.header}>
             <Typography
@@ -209,12 +226,34 @@ export const LanguageDetail = () => {
                           ? undefined
                           : classes.hidden
                       }
+                      onClick={addLocation}
                     >
                       <Add />
                     </Fab>
                   </Tooltip>
                 </Grid>
               </Grid>
+              {listOrPlaceholders(locations?.items, 3).map(
+                (location, index) => (
+                  <LocationCard
+                    key={location?.id ?? index}
+                    location={location}
+                    className={classes.listItem}
+                    loading={!location}
+                    removing={removing}
+                    onRemove={() =>
+                      language &&
+                      location &&
+                      removeLocation({
+                        variables: {
+                          languageId: language.id,
+                          locationId: location.id,
+                        },
+                      })
+                    }
+                  />
+                )
+              )}
               {locations?.items.length === 0 ? (
                 <Typography color="textSecondary">
                   This language does not have any locations yet
@@ -226,31 +265,9 @@ export const LanguageDetail = () => {
               ) : null}
             </Grid>
             <Grid item xs={12}>
-              <Grid
-                container
-                spacing={2}
-                alignItems="center"
-                className={classes.listHeader}
-              >
-                <Grid item>
-                  <Typography variant="h3">Projects</Typography>
-                </Grid>
-                <Grid item>
-                  <Tooltip title="Create project for this language">
-                    <Fab
-                      color="error"
-                      aria-label="create project for this language"
-                      className={
-                        projects?.canCreate === true
-                          ? undefined
-                          : classes.hidden
-                      }
-                    >
-                      <Add />
-                    </Fab>
-                  </Tooltip>
-                </Grid>
-              </Grid>
+              <Typography variant="h3" paragraph>
+                Projects
+              </Typography>
               {listOrPlaceholders(projects?.items, 3).map((project, index) => (
                 <ProjectListItemCard
                   key={project?.id ?? index}
@@ -273,6 +290,12 @@ export const LanguageDetail = () => {
 
           {language ? (
             <EditLanguage language={language} {...editState} />
+          ) : null}
+          {language ? (
+            <AddLocationToLanguageForm
+              languageId={language.id}
+              {...locationFormState}
+            />
           ) : null}
         </>
       )}

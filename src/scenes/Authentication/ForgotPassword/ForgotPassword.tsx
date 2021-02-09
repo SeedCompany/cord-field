@@ -1,5 +1,6 @@
 import { useMutation } from '@apollo/client';
 import React, { useState } from 'react';
+import { Helmet } from 'react-helmet-async';
 import { Except } from 'type-fest';
 import { handleFormError } from '../../../api';
 import { ForgotPasswordDocument } from './ForgotPassword.generated';
@@ -27,9 +28,15 @@ export const ForgotPassword = (props: Except<Props, 'onSubmit'>) => {
     }
   };
 
-  return email ? (
+  const out = email ? (
     <ForgotPasswordSuccess email={email} className={props.className} />
   ) : (
     <ForgotPasswordForm {...props} onSubmit={submit} />
+  );
+  return (
+    <>
+      <Helmet title="Forgot Password" />
+      {out}
+    </>
   );
 };

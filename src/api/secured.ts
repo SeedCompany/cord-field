@@ -8,7 +8,7 @@ export interface Secured<T> extends Readable, Editable {
 }
 
 export const isSecured = <T>(value: unknown): value is Secured<T> =>
-  value &&
+  Boolean(value) &&
   isPlainObject(value) &&
   'canEdit' in (value as any) &&
   'canRead' in (value as any);

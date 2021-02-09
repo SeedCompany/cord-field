@@ -13,4 +13,4 @@ export const PaperTooltip = withStyles(
       color: palette.background.paper,
     },
   })
-)(Tooltip);
+)(Tooltip) as typeof Tooltip;

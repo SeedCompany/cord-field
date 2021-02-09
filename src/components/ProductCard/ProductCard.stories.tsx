@@ -1,10 +1,12 @@
 import { number, object, select, text } from '@storybook/addon-knobs';
 import { DateTime } from 'luxon';
 import * as React from 'react';
+import { ProductMethodologyList } from '../../api';
 import {
   newTestament,
   oldTestament,
 } from '../../scenes/Products/ProductForm/constants';
+import { ScriptureRange } from '../../util/biblejs';
 import { ProductCard } from './ProductCard';
 import { ProductCardFragment } from './ProductCard.generated';
 
@@ -31,24 +33,13 @@ const derivativeScriptureProducts = [
 const getProduct = () => {
   const methodologyValue = select(
     'Methodology',
-    [
-      'Paratext',
-      'OtherWritten',
-      'Render',
-      'OtherOralTranslation',
-      'BibleStories',
-      'OneStory',
-      'OtherOralStories',
-      'Film',
-      'SignLanguage',
-      'OtherVisual',
-    ],
-    'Paratext'
+    ProductMethodologyList,
+    ProductMethodologyList[0]
   );
 
-  const getScriptureRange = () => {
+  const getScriptureRange = (): ScriptureRange => {
     const books = [...oldTestament, ...newTestament];
-    const book = books[Math.floor(Math.random() * books.length)];
+    const book = books[Math.floor(Math.random() * books.length)]!;
     return {
       start: {
         book,

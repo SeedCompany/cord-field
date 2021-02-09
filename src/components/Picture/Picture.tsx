@@ -210,7 +210,9 @@ const PictureImpl = ({
 
   const isBot = useIsBot();
   const [supportsNativeLazyLoading] = useState(
-    () => 'loading' in HTMLImageElement.prototype
+    () =>
+      typeof HTMLImageElement !== 'undefined' &&
+      'loading' in HTMLImageElement.prototype
   );
   const lazyNative = lazyProp === 'native' && supportsNativeLazyLoading;
   const lazyObserve =

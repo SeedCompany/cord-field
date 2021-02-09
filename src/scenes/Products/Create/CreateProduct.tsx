@@ -3,6 +3,7 @@ import { Breadcrumbs, makeStyles, Typography } from '@material-ui/core';
 import { Skeleton } from '@material-ui/lab';
 import { useSnackbar } from 'notistack';
 import React from 'react';
+import { Helmet } from 'react-helmet-async';
 import { useNavigate, useParams } from 'react-router';
 import { handleFormError } from '../../../api';
 import { EngagementBreadcrumb } from '../../../components/EngagementBreadcrumb';
@@ -29,7 +30,7 @@ export const CreateProduct = () => {
   const classes = useStyles();
   const navigate = useNavigate();
 
-  const { projectId, engagementId } = useParams();
+  const { projectId, engagementId = '' } = useParams();
   const { enqueueSnackbar } = useSnackbar();
 
   const { data, loading } = useQuery(GetProductBreadcrumbDocument, {
@@ -46,6 +47,7 @@ export const CreateProduct = () => {
 
   return (
     <main className={classes.root}>
+      <Helmet title="Create Product" />
       <Breadcrumbs>
         <ProjectBreadcrumb data={project} />
         <EngagementBreadcrumb data={engagement} projectId={projectId} />

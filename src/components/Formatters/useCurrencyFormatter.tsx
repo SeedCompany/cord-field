@@ -1,5 +1,7 @@
+import { useLocale } from '../../hooks';
+
 export const useCurrencyFormatter = (options?: Intl.NumberFormatOptions) => {
-  const formatter = new Intl.NumberFormat(undefined, {
+  const formatter = new Intl.NumberFormat(useLocale(), {
     style: 'currency',
     currency: 'USD',
     maximumFractionDigits: 0,

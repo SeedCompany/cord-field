@@ -55,7 +55,7 @@ export const Verses = () => (
           label={text('Label', 'Verses')}
           book={select(
             'Book',
-            books.map((b) => b.names[0]),
+            books.map((b) => b.names[0]!),
             'Genesis'
           )}
           fullWidth={boolean('Full Width', true)}

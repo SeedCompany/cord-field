@@ -18,6 +18,7 @@ import { useDialog } from '../../../components/Dialog';
 import { ListItemLink, ListItemLinkProps } from '../../../components/Routing';
 import { useSession } from '../../../components/Session';
 import { CreateLanguage } from '../../Languages/Create';
+import { CreateLocation } from '../../Locations/Create';
 import { CreatePartner } from '../../Partners/Create';
 import { CreateProject } from '../../Projects/Create';
 import { CreateUser } from '../../Users/Create';
@@ -52,6 +53,7 @@ export const Sidebar: FC = () => {
   const [createProjectState, createProject] = useDialog();
   const [createLanguageState, createLanguage] = useDialog();
   const [createUserState, createUser] = useDialog();
+  const [createLocationState, createLocation] = useDialog();
 
   const { powers } = useSession();
 
@@ -59,8 +61,13 @@ export const Sidebar: FC = () => {
   const canCreateProject = powers?.includes('CreateProject');
   const canCreateLanguage = powers?.includes('CreateLanguage');
   const canCreateUser = powers?.includes('CreateUser');
+  const canCreateLocation = powers?.includes('CreateLocation');
   const canCreateAny =
-    canCreatePartner || canCreateProject || canCreateLanguage || canCreateUser;
+    canCreatePartner ||
+    canCreateProject ||
+    canCreateLanguage ||
+    canCreateUser ||
+    canCreateLocation;
   const createMenu = (
     <Menu
       id="create-menu"
@@ -89,6 +96,9 @@ export const Sidebar: FC = () => {
       )}
       {canCreatePartner && (
         <MenuItem onClick={closeAnd(createPartner)}>Partner</MenuItem>
+      )}
+      {canCreateLocation && (
+        <MenuItem onClick={closeAnd(createLocation)}>Location</MenuItem>
       )}
     </Menu>
   );
@@ -137,6 +147,7 @@ export const Sidebar: FC = () => {
       <CreateProject {...createProjectState} />
       <CreateLanguage {...createLanguageState} />
       <CreateUser {...createUserState} />
+      <CreateLocation {...createLocationState} />
     </>
   );
 };

@@ -93,7 +93,7 @@ export const addExportedConst = (
   declaration: OptionalKind<VariableDeclarationStructure>
 ) => {
   const statement = file.addVariableStatement(exportedConst(declaration));
-  return statement.getDeclarations()[0];
+  return statement.getDeclarations()[0]!;
 };
 
 export const exportedConst = (

@@ -11,7 +11,7 @@ import { FC } from 'react';
 import * as React from 'react';
 import { displayStatus } from '../../api';
 import { DisplaySimpleProperty } from '../DisplaySimpleProperty';
-import { useDateFormatter } from '../Formatters';
+import { FormattedDate } from '../Formatters';
 import { Picture, useRandomPicture } from '../Picture';
 import { CardActionAreaLink } from '../Routing';
 import { Sensitivity } from '../Sensitivity';
@@ -49,11 +49,16 @@ const useStyles = makeStyles(({ breakpoints, spacing }) => {
     rightContent: {
       flex: 1,
       textAlign: 'right',
-      marginBottom: spacing(2),
       marginLeft: spacing(2),
       display: 'flex',
       flexDirection: 'column',
-      justifyContent: 'space-between',
+      height: '100%',
+    },
+    engagementCount: {
+      flex: 2,
+      display: 'flex',
+      flexDirection: 'column',
+      justifyContent: 'center',
     },
     sensitivity: {
       marginBottom: spacing(1),
@@ -76,7 +81,6 @@ export const ProjectListItemCard: FC<ProjectListItemCardProps> = ({
   const classes = useStyles();
   const pic = useRandomPicture({ seed: project?.id, width: 300, height: 200 });
   const location = project?.primaryLocation.value?.name.value;
-  const formatDate = useDateFormatter();
 
   return (
     <Card className={clsx(classes.root, className)}>
@@ -149,7 +153,7 @@ export const ProjectListItemCard: FC<ProjectListItemCardProps> = ({
           <div className={classes.rightContent}>
             <DisplaySimpleProperty aria-hidden="true" />
 
-            <div>
+            <div className={classes.engagementCount}>
               <Typography variant="h1">
                 {!project ? (
                   <Skeleton
@@ -190,9 +194,9 @@ export const ProjectListItemCard: FC<ProjectListItemCardProps> = ({
               <DisplaySimpleProperty
                 label="ESAD"
                 value={
-                  project.estimatedSubmission.value
-                    ? formatDate(project.estimatedSubmission.value)
-                    : undefined
+                  project.estimatedSubmission.value ? (
+                    <FormattedDate date={project.estimatedSubmission.value} />
+                  ) : undefined
                 }
                 ValueProps={{ color: 'primary' }}
               />

@@ -1,10 +1,11 @@
 import { useMutation } from '@apollo/client';
-import { pick, startCase } from 'lodash';
+import { compact, keyBy, pick, startCase } from 'lodash';
 import React, { ComponentType, FC, useMemo } from 'react';
 import { Except, Merge } from 'type-fest';
 import {
+  displayInternDomain,
   displayInternPosition,
-  InternshipEngagementPositionList,
+  displayInternProgram,
   MethodologyToApproach,
   UpdateInternshipEngagement,
   UpdateLanguageEngagement,
@@ -22,6 +23,7 @@ import {
   SubmitError,
   TextField,
 } from '../../../components/form';
+import { AutocompleteField } from '../../../components/form/AutocompleteField';
 import { LocationField, UserField } from '../../../components/form/Lookup';
 import { UserLookupItemFragment } from '../../../components/form/Lookup/User/UserLookup.generated';
 import { ExtractStrict, many, Many } from '../../../util';
@@ -48,7 +50,7 @@ export type EditableEngagementField = ExtractStrict<
   | 'mentorId'
   | 'firstScripture'
   | 'lukePartnership'
-  | 'paraTextRegistryId'
+  | 'paratextRegistryId'
 >;
 
 interface EngagementFieldProps {
@@ -101,14 +103,28 @@ const fieldMapping: Record<
       getLabel={startCase}
     />
   ),
-  position: ({ props }) => (
-    <EnumField
-      {...props}
-      label="Intern Position"
-      options={InternshipEngagementPositionList}
-      getLabel={displayInternPosition}
-    />
-  ),
+  position: ({ props, engagement }) => {
+    const options =
+      engagement.__typename === 'InternshipEngagement'
+        ? engagement.position.options
+        : [];
+    const groups = keyBy(options, (o) => o.position);
+    return (
+      <AutocompleteField
+        {...props}
+        label="Intern Position"
+        options={options.map((o) => o.position)}
+        groupBy={(p) => {
+          const option = groups[p];
+          return compact([
+            displayInternProgram(option?.program),
+            displayInternDomain(option?.domain),
+          ]).join(' - ');
+        }}
+        getOptionLabel={displayInternPosition}
+      />
+    );
+  },
   countryOfOriginId: ({ props }) => (
     <LocationField {...props} label="Country of Origin" />
   ),
@@ -119,8 +135,8 @@ const fieldMapping: Record<
   lukePartnership: ({ props }) => (
     <CheckboxField {...props} label="Luke Partnership" />
   ),
-  paraTextRegistryId: ({ props }) => (
-    <TextField {...props} label="ParaText Registry ID" />
+  paratextRegistryId: ({ props }) => (
+    <TextField {...props} label="Paratext Registry ID" />
   ),
 };
 
@@ -181,7 +197,7 @@ export const EditEngagementDialog: FC<EditEngagementDialogProps> = ({
         ? {
             lukePartnership: engagement.lukePartnership.value,
             firstScripture: engagement.firstScripture.value,
-            paraTextRegistryId: engagement.paraTextRegistryId.value,
+            paratextRegistryId: engagement.paratextRegistryId.value,
           }
         : engagement.__typename === 'InternshipEngagement'
         ? {

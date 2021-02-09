@@ -4,7 +4,10 @@ import {
   FormattedTextField,
   FormattedTextFieldProps,
 } from './FormattedTextField';
-import { validators } from './index';
+import {
+  email as emailValidator,
+  required as requiredValidator,
+} from './validators';
 
 export type EmailFieldProps = Except<
   FormattedTextFieldProps,
@@ -25,7 +28,7 @@ export const EmailField: FC<EmailFieldProps> = ({
     name={name}
     label="Email"
     placeholder="Enter Email Address"
-    validate={[required ? validators.required : null, validators.email]}
+    validate={[required ? requiredValidator : null, emailValidator]}
     required={required}
     {...rest}
     inputMode="email"
