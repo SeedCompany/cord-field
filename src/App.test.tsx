@@ -1,7 +1,11 @@
 import { ApolloProvider } from '@apollo/client';
 import { render } from '@testing-library/react';
-import { Request as ExpressRequest } from 'express';
+import {
+  Request as ExpressRequest,
+  Response as ExpressResponse,
+} from 'express';
 import { Request } from 'jest-express/lib/request';
+import { Response } from 'jest-express/lib/response';
 import React, { FC, useState } from 'react';
 import { HelmetProvider } from 'react-helmet-async';
 import { StaticRouter } from 'react-router-dom/server';
@@ -14,7 +18,8 @@ import { createServerApolloClient } from './server/renderServerSideApp';
 const TestContext: FC<{ url: string }> = ({ url, children }) => {
   // @ts-expect-error yes the type doesn't match we are faking it.
   const req: ExpressRequest = new Request(url);
-  const [client] = useState(() => createServerApolloClient(req, {}));
+  const res = (new Response() as unknown) as ExpressResponse;
+  const [client] = useState(() => createServerApolloClient(req, res, {}));
   return (
     <Nest
       elements={[
