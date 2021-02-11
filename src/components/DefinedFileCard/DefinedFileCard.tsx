@@ -40,6 +40,7 @@ const useStyles = makeStyles(({ palette, spacing, typography }) => ({
   fileInfo: {
     flex: 1,
     paddingLeft: spacing(4),
+    paddingRight: spacing(4),
   },
   fileName: {
     marginBottom: spacing(1),
