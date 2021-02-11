@@ -10,7 +10,10 @@ import { getMarkupFromTree } from '@apollo/client/react/ssr';
 import { ChunkExtractor } from '@loadable/server';
 import ServerStyleSheets from '@material-ui/styles/ServerStyleSheets';
 import fetch from 'cross-fetch';
-import { Request, Response } from 'express';
+import {
+  Request as ExpressRequest,
+  Response as ExpressResponse,
+} from 'express';
 import React from 'react';
 import { resetServerContext } from 'react-beautiful-dnd';
 import ReactDOMServer from 'react-dom/server';
@@ -29,7 +32,8 @@ import { indexHtml } from './indexHtml';
 const serverHost = process.env.RAZZLE_API_BASE_URL || '';
 
 export const createServerApolloClient = (
-  req: Request,
+  req: ExpressRequest,
+  res: ExpressResponse,
   errorCache: ErrorCache
 ) => {
   const httpLink = new HttpLink({
@@ -40,6 +44,19 @@ export const createServerApolloClient = (
       cookie: req.header('Cookie'),
     },
   });
+
+  const setCookieLink = new ApolloLink((op, forward) =>
+    forward(op).map((result) => {
+      // If response has new cookie values forward them on so the client can save them
+      const { response } = op.getContext() as { response: Response };
+      const newCookies = response.headers.get('set-cookie');
+      if (newCookies) {
+        res.setHeader('set-cookie', newCookies);
+      }
+
+      return result;
+    })
+  );
 
   const errorCacheLink = new ErrorCacheLink(errorCache, true);
 
@@ -57,13 +74,16 @@ export const createServerApolloClient = (
   return new ApolloClient({
     ssrMode: true,
     cache,
-    link: ApolloLink.concat(errorCacheLink, httpLink),
+    link: ApolloLink.from([errorCacheLink, setCookieLink, httpLink]),
   });
 };
 
-export const renderServerSideApp = async (req: Request, res: Response) => {
+export const renderServerSideApp = async (
+  req: ExpressRequest,
+  res: ExpressResponse
+) => {
   const errorCache = {};
-  const apollo = createServerApolloClient(req, errorCache);
+  const apollo = createServerApolloClient(req, res, errorCache);
 
   const helmetContext: Partial<FilledContext> = {};
   const extractor = new ChunkExtractor({
@@ -123,7 +143,7 @@ const ServerApp = ({
   apollo,
 }: {
   data?: ServerData;
-  req: Request;
+  req: ExpressRequest;
   helmetContext?: Partial<FilledContext>;
   apollo: ApolloClient<unknown>;
 }) => (
