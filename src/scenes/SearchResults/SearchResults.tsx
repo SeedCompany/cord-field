@@ -85,11 +85,18 @@ export const SearchResults: FC = () => {
         {error ? (
           <Error error={error}>Error loading search results</Error>
         ) : loading ? (
-          <Typography>Loading results</Typography>
+          <>
+            <ProjectListItemCard />
+            <UserListItemCardLandscape />
+            <PartnerListItemCard />
+            <ProjectListItemCard />
+            <PartnerListItemCard />
+            <UserListItemCardLandscape />
+          </>
         ) : data && data.search.items.length > 0 ? (
           data.search.items.map(displayItem)
         ) : (
-          <Typography>No results found</Typography>
+          <Error show>No results found</Error>
         )}
       </main>
     </div>
