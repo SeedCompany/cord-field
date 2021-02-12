@@ -106,10 +106,11 @@ export const ProjectBudget = () => {
                         handleFileSelect={(files: File[]) =>
                           uploadFile({ files, parentId: budget.value!.id })
                         }
-                        itemType="template"
+                        itemType="Universal Template"
                       />
                     ) : (
                       <DefinedFileCard
+                        title="Universal Template"
                         onVersionUpload={(files) =>
                           uploadFile({
                             action: 'version',

@@ -263,6 +263,7 @@ export const LanguageEngagementDetail: FC<EngagementQuery> = ({
                     />
                   ) : (
                     <DefinedFileCard
+                      title="Planning and Progress"
                       onVersionUpload={(files) =>
                         uploadFile({
                           action: 'version',
