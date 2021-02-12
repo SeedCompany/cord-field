@@ -37,7 +37,7 @@ const useStyles = makeStyles(({ spacing }) => ({
   },
   text: {
     marginTop: spacing(1),
-    textTransform: 'capitalize',
+    textTransform: 'none',
   },
 }));
 

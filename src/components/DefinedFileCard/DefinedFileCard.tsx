@@ -6,7 +6,7 @@ import {
 } from '@material-ui/core';
 import { Skeleton } from '@material-ui/lab';
 import { DateTime } from 'luxon';
-import React, { FC } from 'react';
+import React, { FC, ReactNode } from 'react';
 import { useDropzone } from 'react-dropzone';
 import { Secured } from '../../api';
 import {
@@ -16,7 +16,7 @@ import {
   useFileActions,
 } from '../files/FileActions';
 import { FileNodeInfo_File_Fragment as FileNode } from '../files/files.generated';
-import { useDateTimeFormatter } from '../Formatters';
+import { FormattedDateTime } from '../Formatters';
 import { HugeIcon, ReportIcon } from '../Icons';
 import { Redacted } from '../Redacted';
 import { DropzoneOverlay } from '../Upload';
@@ -31,7 +31,7 @@ const useStyles = makeStyles(({ palette, spacing, typography }) => ({
     height: '100%',
     display: 'flex',
     justifyContent: 'space-between',
-    padding: spacing(3),
+    padding: spacing(3, 4),
     position: 'relative',
   },
   dropzoneText: {
@@ -40,7 +40,6 @@ const useStyles = makeStyles(({ palette, spacing, typography }) => ({
   fileInfo: {
     flex: 1,
     paddingLeft: spacing(4),
-    paddingRight: spacing(4),
   },
   fileName: {
     marginBottom: spacing(1),
@@ -57,16 +56,17 @@ const useStyles = makeStyles(({ palette, spacing, typography }) => ({
 }));
 
 export interface DefinedFileCardProps {
-  onVersionUpload: (files: File[]) => void;
+  title: ReactNode;
   resourceType: string;
   securedFile: Secured<FileNode>;
+  onVersionUpload: (files: File[]) => void;
 }
 
 interface FileCardMetaProps {
   canRead: boolean;
   loading: boolean;
   resourceType: DefinedFileCardProps['resourceType'];
-  text: string;
+  text: ReactNode;
 }
 
 const FileCardMeta: FC<FileCardMetaProps> = ({
@@ -82,6 +82,7 @@ const FileCardMeta: FC<FileCardMetaProps> = ({
       color="initial"
       variant="caption"
       component="p"
+      gutterBottom
     >
       {loading ? (
         <Skeleton />
@@ -96,9 +97,9 @@ const FileCardMeta: FC<FileCardMetaProps> = ({
   );
 };
 
-export const DefinedFileCard: FC<DefinedFileCardProps> = (props) => {
+export const DefinedFileCard = (props: DefinedFileCardProps) => {
   const classes = useStyles();
-  const { onVersionUpload, resourceType, securedFile } = props;
+  const { title, onVersionUpload, resourceType, securedFile } = props;
 
   const { canRead, canEdit } = securedFile;
   const standardFileActions = getPermittedFileActions(canRead, canEdit);
@@ -114,7 +115,6 @@ export const DefinedFileCard: FC<DefinedFileCardProps> = (props) => {
   };
 
   const file = securedFile.value;
-  const formatDateTime = useDateTimeFormatter();
   const { openFilePreview } = useFileActions();
 
   const { getRootProps, getInputProps, isDragActive } = useDropzone({
@@ -151,19 +151,23 @@ export const DefinedFileCard: FC<DefinedFileCardProps> = (props) => {
         <HugeIcon icon={ReportIcon} loading={!file} />
         <div className={classes.fileInfo}>
           <Typography className={classes.fileName} color="initial" variant="h4">
-            {file ? name : <Skeleton width="80%" />}
+            {file ? title : <Skeleton width="80%" />}
           </Typography>
           <FileCardMeta
             canRead={canRead}
             loading={!file}
             resourceType={resourceType}
-            text={`Updated by ${fullName}`}
+            text={name}
           />
           <FileCardMeta
             canRead={canRead}
             loading={!file}
             resourceType={resourceType}
-            text={formatDateTime(modifiedAt)}
+            text={
+              <>
+                Updated by {fullName} at <FormattedDateTime date={modifiedAt} />
+              </>
+            }
           />
         </div>
       </CardActionArea>
