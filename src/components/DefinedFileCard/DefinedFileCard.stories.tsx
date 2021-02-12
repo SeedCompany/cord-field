@@ -68,6 +68,7 @@ export const DefinedFileCard = () => {
   return (
     <Box display="flex" width={400}>
       <Card
+        title="Growth Plan"
         onVersionUpload={action('onVersionUpload')}
         resourceType={text('resourceType', 'engagement')}
         securedFile={securedFile}

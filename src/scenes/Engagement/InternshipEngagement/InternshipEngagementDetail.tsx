@@ -245,6 +245,7 @@ export const InternshipEngagementDetail: FC<EngagementQuery> = ({
                       />
                     ) : (
                       <DefinedFileCard
+                        title="Growth Plan"
                         onVersionUpload={(files) =>
                           uploadFile({
                             action: 'version',
