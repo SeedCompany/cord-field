@@ -56,6 +56,7 @@ fragment ProjectOverview on Project {
       label
       type
     }
+    canBypassTransitions
   }
   sensitivity
   modifiedAt
