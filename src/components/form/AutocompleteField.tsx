@@ -14,7 +14,7 @@ export type AutocompleteFieldProps<
 > = Except<FieldConfig<T, Multiple>, 'allowNull' | 'parse' | 'format'> &
   Pick<
     TextFieldProps,
-    'helperText' | 'label' | 'required' | 'autoFocus' | 'variant'
+    'helperText' | 'label' | 'required' | 'autoFocus' | 'variant' | 'margin'
   > & {
     ChipProps?: ChipProps;
     options: readonly T[];
@@ -51,6 +51,7 @@ export function AutocompleteField<
   required,
   compareBy,
   options,
+  margin,
   ...props
 }: AutocompleteFieldProps<T, Multiple, DisableClearable, FreeSolo>) {
   type Val = Value<T, Multiple, DisableClearable, FreeSolo>;
@@ -113,6 +114,7 @@ export function AutocompleteField<
           autoFocus={autoFocus}
           focused={meta.focused}
           variant={variant}
+          margin={margin}
         />
       )}
       getOptionSelected={
