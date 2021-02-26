@@ -1,10 +1,11 @@
 import { useMutation } from '@apollo/client';
-import { Grid, Tooltip, Typography } from '@material-ui/core';
+import { Grid, makeStyles, Tooltip, Typography } from '@material-ui/core';
 import React from 'react';
 import { Except } from 'type-fest';
 import {
   displayEngagementStatus,
   EngagementStatus,
+  EngagementStatusList,
   TransitionType,
 } from '../../../api';
 import {
@@ -17,6 +18,7 @@ import {
   SubmitButtonProps,
   SubmitError,
 } from '../../../components/form';
+import { AutocompleteField } from '../../../components/form/AutocompleteField';
 import { Engagement } from './EditEngagementDialog';
 import {
   UpdateInternshipEngagementDocument,
@@ -33,11 +35,17 @@ const transitionTypeToColor: Record<
 };
 
 type UpdateProjectDialogProps = Except<
-  DialogFormProps<SubmitAction>,
+  DialogFormProps<SubmitAction & { engagement: { status?: EngagementStatus } }>,
   'sendIfClean' | 'submitLabel' | 'onSubmit' | 'initialValues' | 'errorHandlers'
 > & {
   engagement: Engagement;
 };
+
+const useStyles = makeStyles(({ spacing }) => ({
+  overrideTitle: {
+    marginTop: spacing(3),
+  },
+}));
 
 export const EngagementWorkflowDialog = ({
   engagement,
@@ -53,22 +61,32 @@ export const EngagementWorkflowDialog = ({
     engagement.__typename === 'InternshipEngagement'
       ? updateInternshipEngagement
       : updateLanguageEngagement;
+  const classes = useStyles();
+
+  const { canBypassTransitions, transitions } = engagement.status;
 
   return (
     <DialogForm
       title="Update Engagement"
       closeLabel="Close"
       {...props}
-      submitLabel={false}
+      submitLabel={canBypassTransitions ? undefined : false}
       sendIfClean
-      onSubmit={async ({ submitAction }) => {
+      onSubmit={async ({ submitAction, engagement: { status } }) => {
+        // If clicking save for status override, but there is no status, do nothing.
+        if (!submitAction && !status) {
+          return;
+        }
+
         await updateEngagement({
           variables: {
             input: {
               engagement: {
                 id: engagement.id,
                 // remove index suffix used to make submit action unique
-                status: submitAction!.split(':')[0] as EngagementStatus,
+                status:
+                  (submitAction?.split(':')[0] as EngagementStatus | null) ??
+                  status,
               },
             },
           },
@@ -81,7 +99,7 @@ export const EngagementWorkflowDialog = ({
     >
       <SubmitError />
       <Grid container direction="column" spacing={1}>
-        {engagement.status.transitions.map((transition, i) => (
+        {transitions.map((transition, i) => (
           <Tooltip
             title={`This will change the engagement status to ${displayEngagementStatus(
               transition.to
@@ -101,16 +119,42 @@ export const EngagementWorkflowDialog = ({
             </Grid>
           </Tooltip>
         ))}
-        {engagement.status.transitions.length === 0 && (
+        {canBypassTransitions ? (
           <>
-            <Typography color="textSecondary" paragraph>
-              The status of this engagement is unable to be changed.
-            </Typography>
-            <Typography variant="body2" color="textSecondary">
-              You do not have permission to change to any of the next available
-              steps or the engagement has reached its terminal status.
-            </Typography>
+            {transitions.length > 0 ? (
+              <Typography
+                color="textSecondary"
+                className={classes.overrideTitle}
+              >
+                Or you can bypass these transitions
+              </Typography>
+            ) : (
+              <Typography color="textSecondary">
+                The status of this engagement doesn't have any available
+                transitions. However, you are allowed to bypass this to set any
+                status.
+              </Typography>
+            )}
+            <AutocompleteField
+              name="engagement.status"
+              label="Override Status"
+              options={EngagementStatusList}
+              getOptionLabel={displayEngagementStatus}
+            />
           </>
+        ) : (
+          transitions.length === 0 && (
+            <>
+              <Typography color="textSecondary" paragraph>
+                The status of this engagement is unable to be changed.
+              </Typography>
+              <Typography variant="body2" color="textSecondary">
+                You do not have permission to change to any of the next
+                available steps or the engagement has reached its terminal
+                status.
+              </Typography>
+            </>
+          )
         )}
       </Grid>
     </DialogForm>

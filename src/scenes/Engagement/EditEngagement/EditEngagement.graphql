@@ -15,6 +15,7 @@ fragment EditEngagement on Engagement {
       type
       to
     }
+    canBypassTransitions
     canEdit
   }
   ... on InternshipEngagement {
