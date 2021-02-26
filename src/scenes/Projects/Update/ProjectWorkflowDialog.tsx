@@ -1,8 +1,13 @@
 import { useMutation } from '@apollo/client';
-import { Grid, Tooltip, Typography } from '@material-ui/core';
+import { Grid, makeStyles, Tooltip, Typography } from '@material-ui/core';
 import React from 'react';
 import { Except } from 'type-fest';
-import { displayProjectStep, ProjectStep, TransitionType } from '../../../api';
+import {
+  displayProjectStep,
+  ProjectStep,
+  ProjectStepList,
+  TransitionType,
+} from '../../../api';
 import {
   DialogForm,
   DialogFormProps,
@@ -13,6 +18,7 @@ import {
   SubmitButtonProps,
   SubmitError,
 } from '../../../components/form';
+import { AutocompleteField } from '../../../components/form/AutocompleteField';
 import { ProjectOverviewFragment } from '../Overview/ProjectOverview.generated';
 import { UpdateProjectDocument } from './UpdateProject.generated';
 
@@ -26,33 +32,47 @@ const transitionTypeToColor: Record<
 };
 
 type UpdateProjectDialogProps = Except<
-  DialogFormProps<SubmitAction>,
+  DialogFormProps<SubmitAction & { project: { step?: ProjectStep } }>,
   'sendIfClean' | 'submitLabel' | 'onSubmit' | 'initialValues' | 'errorHandlers'
 > & {
   project: ProjectOverviewFragment;
 };
+
+const useStyles = makeStyles(({ spacing }) => ({
+  overrideTitle: {
+    marginTop: spacing(3),
+  },
+}));
 
 export const ProjectWorkflowDialog = ({
   project,
   ...props
 }: UpdateProjectDialogProps) => {
   const [updateProject] = useMutation(UpdateProjectDocument);
+  const classes = useStyles();
+  const { canBypassTransitions, transitions } = project.step;
 
   return (
     <DialogForm
       title="Update Project"
       closeLabel="Close"
       {...props}
-      submitLabel={false}
+      submitLabel={canBypassTransitions ? undefined : false}
       sendIfClean
-      onSubmit={async ({ submitAction }) => {
+      onSubmit={async ({ submitAction, project: { step } }) => {
+        // If clicking save for step override, but there is no step, do nothing.
+        if (!submitAction && !step) {
+          return;
+        }
+
         await updateProject({
           variables: {
             input: {
               project: {
                 id: project.id,
                 // remove index suffix used to make submit action unique
-                step: submitAction!.split(':')[0] as ProjectStep,
+                step:
+                  (submitAction?.split(':')[0] as ProjectStep | null) ?? step,
               },
             },
           },
@@ -65,7 +85,7 @@ export const ProjectWorkflowDialog = ({
     >
       <SubmitError />
       <Grid container direction="column" spacing={1}>
-        {project.step.transitions.map((transition, i) => (
+        {transitions.map((transition, i) => (
           <Tooltip
             title={`This will change the project step to ${displayProjectStep(
               transition.to
@@ -85,16 +105,41 @@ export const ProjectWorkflowDialog = ({
             </Grid>
           </Tooltip>
         ))}
-        {project.step.transitions.length === 0 && (
+        {canBypassTransitions ? (
           <>
-            <Typography color="textSecondary" paragraph>
-              The status of this project is unable to be changed.
-            </Typography>
-            <Typography variant="body2" color="textSecondary">
-              You do not have permission to change to any of the next available
-              steps or the project has reached its terminal status.
-            </Typography>
+            {transitions.length > 0 ? (
+              <Typography
+                color="textSecondary"
+                className={classes.overrideTitle}
+              >
+                Or you can bypass these transitions
+              </Typography>
+            ) : (
+              <Typography color="textSecondary">
+                The status of this project doesn't have any available
+                transitions. However, you are allowed to bypass this to set any
+                step.
+              </Typography>
+            )}
+            <AutocompleteField
+              name="project.step"
+              label="Override Step"
+              options={ProjectStepList}
+              getOptionLabel={displayProjectStep}
+            />
           </>
+        ) : (
+          transitions.length === 0 && (
+            <>
+              <Typography color="textSecondary" paragraph>
+                The status of this project is unable to be changed.
+              </Typography>
+              <Typography variant="body2" color="textSecondary">
+                You do not have permission to change to any of the next
+                available steps or the project has reached its terminal status.
+              </Typography>
+            </>
+          )
         )}
       </Grid>
     </DialogForm>
