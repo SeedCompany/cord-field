@@ -55,6 +55,8 @@ fragment ProjectOverview on Project {
       to
       label
       type
+      disabled
+      disabledReason
     }
     canBypassTransitions
   }
