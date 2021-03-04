@@ -32,7 +32,7 @@ const transitionTypeToColor: Record<
 };
 
 type UpdateProjectDialogProps = Except<
-  DialogFormProps<SubmitAction & { project: { step?: ProjectStep } }>,
+  DialogFormProps<SubmitAction & { project?: { step?: ProjectStep } }>,
   'sendIfClean' | 'submitLabel' | 'onSubmit' | 'initialValues' | 'errorHandlers'
 > & {
   project: ProjectOverviewFragment;
@@ -59,7 +59,8 @@ export const ProjectWorkflowDialog = ({
       {...props}
       submitLabel={canBypassTransitions ? undefined : false}
       sendIfClean
-      onSubmit={async ({ submitAction, project: { step } }) => {
+      onSubmit={async ({ submitAction, project: submittedProjectFields }) => {
+        const step = submittedProjectFields?.step;
         // If clicking save for step override, but there is no step, do nothing.
         if (!submitAction && !step) {
           return;
