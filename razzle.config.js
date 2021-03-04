@@ -12,30 +12,6 @@ const modifyWebpackConfig = (opts) => {
   const isClient = target === 'web';
   const isServer = target === 'node';
 
-  // Limit bundled env vars so that they can be changed at runtime
-  // This allows a single build to be used for multiple deployments
-  // TODO investigate using new forceRuntimeEnvVars instead
-  // https://github.com/jaredpalmer/razzle/commit/d8e21c23
-  const envVarsToBundle = isClient
-    ? ['NODE_ENV']
-    : ['NODE_ENV', 'RAZZLE_ASSETS_MANIFEST', 'RAZZLE_PUBLIC_DIR'];
-  replaceItemWith(
-    config.plugins,
-    (plugin) => plugin instanceof DefinePlugin,
-    ({ definitions }) => {
-      const limited = _.pick(
-        definitions,
-        envVarsToBundle.map((e) => `process.env.${e}`)
-      );
-      // For the web, defer all non-bundled vars to window.env which will be
-      // given by server at runtime
-      if (isClient) {
-        limited['process.env'] = 'window.env';
-      }
-      return new DefinePlugin(limited);
-    }
-  );
-
   if (isClient) {
     const filename = path.resolve(__dirname, 'build');
     config.plugins.push(
@@ -107,6 +83,15 @@ const modifyWebpackConfig = (opts) => {
     );
   }
 
+  // https://github.com/jaredpalmer/razzle/issues/1566
+  if (isClient) {
+    config.plugins.push(
+      new DefinePlugin({
+        WEBPACK_VERSION: 4,
+      })
+    );
+  }
+
   // Fails if main file is too big. However it seems to be taking the unzipped sizes.
   // Plus we don't want to fail the build right now.
   config.performance = {
@@ -132,17 +117,11 @@ const modifyWebpackConfig = (opts) => {
   return config;
 };
 
-const replaceItemWith = (list, predicate, replacement) => {
-  const idx = list.findIndex(predicate);
-  if (idx > -1) {
-    list[idx] = replacement(list[idx]);
-  }
-};
-
 module.exports = {
   plugins: [],
   options: {
-    useReactRefresh: true,
+    enableReactRefresh: true,
+    forceRuntimeEnvVars: ['HOST', 'PORT', 'PUBLIC_URL', 'RAZZLE_API_BASE_URL'],
   },
   modifyWebpackConfig,
 };
