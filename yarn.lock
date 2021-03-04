@@ -6143,9 +6143,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"babel-preset-razzle@npm:4.0.1-canary.6":
-  version: 4.0.1-canary.6
-  resolution: "babel-preset-razzle@npm:4.0.1-canary.6"
+"babel-preset-razzle@npm:4.0.1-canary.9":
+  version: 4.0.1-canary.9
+  resolution: "babel-preset-razzle@npm:4.0.1-canary.9"
   dependencies:
     "@babel/core": 7.11.1
     "@babel/plugin-proposal-class-properties": ^7.8.3
@@ -6164,7 +6164,7 @@ __metadata:
     babel-plugin-syntax-jsx: ^6.18.0
     babel-plugin-transform-react-remove-prop-types: 0.4.24
     chalk: ^4.1.0
-  checksum: 96e2dd0e5947755a73d7ee7336024c58534630e356c04af646aff1dc8e4bc48b4f28ba6cd27c1a56d7ea2d7c931af1ee45b825eae03120df3519a113eed3f63b
+  checksum: 8ae15497f8ac09185c920e83378435ffb0198b742ffcfb3d12b8c1759c5dc938b12b6865df0f9e9ec3d3c52c25048fa4cd4e5fd5d7ea12302175852384890e6d
   languageName: node
   linkType: hard
 
@@ -7771,7 +7771,7 @@ __metadata:
     babel-loader: ^8.1.0
     babel-plugin-import: ^1.13.0
     babel-plugin-mui-make-styles: ^0.1.1
-    babel-preset-razzle: 4.0.1-canary.6
+    babel-preset-razzle: 4.0.1-canary.9
     body-parser: ^1.19.0
     circular-dependency-plugin: ^5.2.2
     clsx: ^1.1.1
@@ -7800,8 +7800,8 @@ __metadata:
     p-min-delay: ^3.1.0
     papaparse: ^5.2.0
     query-string: ^6.13.8
-    razzle: 4.0.1-canary.6
-    razzle-dev-utils: 4.0.1-canary.6
+    razzle: 4.0.1-canary.9
+    razzle-dev-utils: 4.0.1-canary.9
     react: ^16.13.1
     react-docgen-typescript-loader: ^3.7.2
     react-dom: ^16.13.1
@@ -17463,9 +17463,9 @@ pdfjs-dist@2.5.207:
   languageName: node
   linkType: hard
 
-"razzle-dev-utils@npm:4.0.1-canary.6":
-  version: 4.0.1-canary.6
-  resolution: "razzle-dev-utils@npm:4.0.1-canary.6"
+"razzle-dev-utils@npm:4.0.1-canary.9":
+  version: 4.0.1-canary.9
+  resolution: "razzle-dev-utils@npm:4.0.1-canary.9"
   dependencies:
     "@babel/code-frame": ^7.8.3
     chalk: ^4.1.0
@@ -17481,22 +17481,22 @@ pdfjs-dist@2.5.207:
   peerDependencies:
     webpack: ~4||~5
     webpack-dev-server: ^3.11.0
-  checksum: e829ac5d44e5bcfae42954d5f42eb47ca5d2c591cdb02909575c29404575706cbacb60999ee5cb0b82f929fe9203efa692365e5df298342490bfef7b72bfc6f4
+  checksum: e43fc2cd1dbd4ff3528d2f8b7a327ea77b6889fd515b3d7e3191ad0dc237114c78dc22df65e65a2d83384c2e6b71287de7547170d055c7b037a1bde738781bbe
   languageName: node
   linkType: hard
 
-"razzle-start-server-webpack-plugin@npm:4.0.1-canary.6":
-  version: 4.0.1-canary.6
-  resolution: "razzle-start-server-webpack-plugin@npm:4.0.1-canary.6"
+"razzle-start-server-webpack-plugin@npm:4.0.1-canary.9":
+  version: 4.0.1-canary.9
+  resolution: "razzle-start-server-webpack-plugin@npm:4.0.1-canary.9"
   peerDependencies:
     webpack: ~4||~5
-  checksum: 68799bd599aa32dd9771fdb9f483ce986cffa94676b3ec5c5bd83306518bb097269b3922a3d4bd0ebcc6d1eeace0422f70e79025208cbb1a164467272790e9e1
+  checksum: 285e54f0661faa2dda81d59ab95b63ba8e14a95e6b0f4c2045f9efe9efddc448cae8eac4a5c5fed88cbcca170c02edb1ec3a6d8c86ccef4b8b18877bbbf2be8f
   languageName: node
   linkType: hard
 
-"razzle@npm:4.0.1-canary.6":
-  version: 4.0.1-canary.6
-  resolution: "razzle@npm:4.0.1-canary.6"
+"razzle@npm:4.0.1-canary.9":
+  version: 4.0.1-canary.9
+  resolution: "razzle@npm:4.0.1-canary.9"
   dependencies:
     "@babel/plugin-transform-modules-commonjs": ^7.12.1
     "@pmmmwh/react-refresh-webpack-plugin": 0.4.3
@@ -17524,7 +17524,7 @@ pdfjs-dist@2.5.207:
     postcss-load-config: 3.0.0
     postcss-loader: 4.2.0
     process: 0.11.10
-    razzle-start-server-webpack-plugin: 4.0.1-canary.6
+    razzle-start-server-webpack-plugin: 4.0.1-canary.9
     react-dev-utils: 10.2.1
     react-refresh: 0.9.0
     resolve: 1.17.0
@@ -17539,15 +17539,15 @@ pdfjs-dist@2.5.207:
     webpack-manifest-plugin: 3.0.0-rc.0
     webpackbar: ~4||~5
   peerDependencies:
-    babel-preset-razzle: 4.0.1-canary.6
+    babel-preset-razzle: 4.0.1-canary.9
     html-webpack-plugin: ~4||~5
     mini-css-extract-plugin: ^0.9.0
-    razzle-dev-utils: 4.0.1-canary.6
+    razzle-dev-utils: 4.0.1-canary.9
     webpack: ~4||~5
     webpack-dev-server: ^3.11.0
   bin:
     razzle: bin/razzle.js
-  checksum: d840418c9757448b1c39ddcc57e31e4aa5595fbc9cdfda00367ed5be21fb8e0dbeb0e8d8580a3bef7dc9d44a050add64e3aac5c0d87861fe939546b869df4f02
+  checksum: c3bfb8d3d7b787cbcc96e3c882fc35a81b976e65ae221d35d3293c904234490e118c66ed31c9035c92bbb56462e452e1442f63a70ae6c95d5fbb1e54d32031d6
   languageName: node
   linkType: hard
 

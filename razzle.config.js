@@ -83,15 +83,6 @@ const modifyWebpackConfig = (opts) => {
     );
   }
 
-  // https://github.com/jaredpalmer/razzle/issues/1566
-  if (isClient) {
-    config.plugins.push(
-      new DefinePlugin({
-        WEBPACK_VERSION: 4,
-      })
-    );
-  }
-
   // Fails if main file is too big. However it seems to be taking the unzipped sizes.
   // Plus we don't want to fail the build right now.
   config.performance = {
