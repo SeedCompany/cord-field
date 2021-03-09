@@ -1,4 +1,3 @@
-import { useQuery } from '@apollo/client';
 import { Grid, makeStyles, Typography } from '@material-ui/core';
 import { Skeleton } from '@material-ui/lab';
 import React, { FC } from 'react';
@@ -6,16 +5,18 @@ import { Helmet } from 'react-helmet-async';
 import { Partner } from '../../../api';
 import { useNumberFormatter } from '../../../components/Formatters';
 import { ContentContainer } from '../../../components/Layout';
-import { ListContainer } from '../../../components/Layout/ListContainer';
-import { PartnerListItemCard } from '../../../components/PartnerListItemCard';
+import { List, useListQuery } from '../../../components/List';
+import { PartnerListItemCard as PartnerCard } from '../../../components/PartnerListItemCard';
 import { SortButtonDialog, useSort } from '../../../components/Sort';
-import { listOrPlaceholders } from '../../../util';
 import { PartnersDocument } from './PartnerList.generated';
 import { PartnerSortOptions } from './PartnerSortOptions';
 
-const useStyles = makeStyles(({ spacing }) => ({
+const useStyles = makeStyles(({ spacing, breakpoints }) => ({
   options: {
     margin: spacing(3, 0),
+  },
+  items: {
+    cardWidth: breakpoints.values.sm,
   },
   item: {
     marginBottom: spacing(2),
@@ -23,18 +24,11 @@ const useStyles = makeStyles(({ spacing }) => ({
 }));
 
 export const PartnerList: FC = () => {
-  const formatNumber = useNumberFormatter();
   const sort = useSort<Partner>();
-  const { data } = useQuery(PartnersDocument, {
-    variables: {
-      input: {
-        ...sort.value,
-      },
-    },
-  });
-  const items = data?.partners.items;
+  const list = useListQuery(PartnersDocument, sort.value);
 
   const classes = useStyles();
+  const formatNumber = useNumberFormatter();
 
   return (
     <ContentContainer>
@@ -50,21 +44,23 @@ export const PartnerList: FC = () => {
         </Grid>
       </Grid>
       <Typography variant="h3" paragraph>
-        {data ? (
-          `${formatNumber(data.partners.total)} Partners`
+        {list.data ? (
+          `${formatNumber(list.data.total)} Partners`
         ) : (
           <Skeleton width="10ch" />
         )}
       </Typography>
-      <ListContainer>
-        {listOrPlaceholders(items, 15).map((item, index) => (
-          <PartnerListItemCard
-            key={item?.id ?? index}
-            partner={item}
-            className={classes.item}
-          />
-        ))}
-      </ListContainer>
+      <List
+        {...list}
+        classes={{ items: classes.items }}
+        renderItem={(item) => (
+          <PartnerCard key={item.id} partner={item} className={classes.item} />
+        )}
+        renderSkeleton={(index) => (
+          <PartnerCard key={index} className={classes.item} />
+        )}
+        skeletonCount={15}
+      />
     </ContentContainer>
   );
 };

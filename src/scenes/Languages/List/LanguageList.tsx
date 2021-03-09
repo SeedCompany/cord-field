@@ -1,26 +1,27 @@
-import { useQuery } from '@apollo/client';
 import { Grid, makeStyles, Typography } from '@material-ui/core';
 import { Skeleton } from '@material-ui/lab';
-import { times } from 'lodash';
 import React, { FC } from 'react';
 import { Helmet } from 'react-helmet-async';
 import { Language } from '../../../api';
 import { FilterButtonDialog } from '../../../components/Filter';
 import { useNumberFormatter } from '../../../components/Formatters';
-import { LanguageListItemCard } from '../../../components/LanguageListItemCard';
+import { LanguageListItemCard as LanguageCard } from '../../../components/LanguageListItemCard';
 import { ContentContainer } from '../../../components/Layout';
-import { ListContainer } from '../../../components/Layout/ListContainer';
+import { List, useListQuery } from '../../../components/List';
 import { SortButtonDialog, useSort } from '../../../components/Sort';
 import {
   LanguageFilterOptions,
   useLanguageFilters,
 } from './LanguageFilterOptions';
-import { LanguagesDocument } from './languages.generated';
+import { LanguagesDocument as Languages } from './languages.generated';
 import { LanguageSortOptions } from './LanguageSortOptions';
 
 const useStyles = makeStyles(({ spacing }) => ({
   options: {
     margin: spacing(3, 0),
+  },
+  items: {
+    maxWidth: 400,
   },
   item: {
     marginBottom: spacing(2),
@@ -28,19 +29,15 @@ const useStyles = makeStyles(({ spacing }) => ({
 }));
 
 export const LanguageList: FC = () => {
-  const formatNumber = useNumberFormatter();
   const sort = useSort<Language>();
   const [filter, setFilters] = useLanguageFilters();
-
-  const { loading, data } = useQuery(LanguagesDocument, {
-    variables: {
-      input: {
-        ...sort.value,
-        filter,
-      },
-    },
+  const list = useListQuery(Languages, {
+    ...sort.value,
+    filter,
   });
+
   const classes = useStyles();
+  const formatNumber = useNumberFormatter();
 
   return (
     <ContentContainer>
@@ -61,25 +58,27 @@ export const LanguageList: FC = () => {
         </Grid>
       </Grid>
       <Typography variant="h3" paragraph>
-        {data ? (
-          `${formatNumber(data.languages.total)} Languages`
+        {list.data ? (
+          `${formatNumber(list.data.total)} Languages`
         ) : (
           <Skeleton width="14ch" />
         )}
       </Typography>
-      <ListContainer>
-        {loading
-          ? times(10).map((index) => (
-              <LanguageListItemCard key={index} className={classes.item} />
-            ))
-          : data?.languages.items.map((item) => (
-              <LanguageListItemCard
-                language={item}
-                key={item.id}
-                className={classes.item}
-              />
-            ))}
-      </ListContainer>
+      <List
+        {...list}
+        classes={{ items: classes.items }}
+        renderItem={(item) => (
+          <LanguageCard
+            language={item}
+            key={item.id}
+            className={classes.item}
+          />
+        )}
+        renderSkeleton={(index) => (
+          <LanguageCard key={index} className={classes.item} />
+        )}
+        skeletonCount={10}
+      />
     </ContentContainer>
   );
 };

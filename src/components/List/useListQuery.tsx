@@ -17,7 +17,7 @@ export interface ListQueryResult<Item> {
 export const useListQuery = <Item, Args extends PaginatedListInput>(
   doc: TypedDocumentNode<
     Record<string, PaginatedListOutput<Item>>,
-    { input: Args }
+    { input?: Args | null }
   >,
   args?: Args
 ): ListQueryResult<Item> => {
