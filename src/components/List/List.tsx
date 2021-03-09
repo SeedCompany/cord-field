@@ -4,6 +4,7 @@ import { times } from 'lodash';
 import { ReactNode } from 'react';
 import * as React from 'react';
 import { isNetworkRequestInFlight } from '../../api';
+import { UseStyles } from '../../util';
 import { ProgressButton } from '../ProgressButton';
 import { ListQueryResult } from './useListQuery';
 
@@ -19,7 +20,9 @@ const useStyles = makeStyles(({ spacing }) => ({
   },
 }));
 
-export interface ListProps<Item> extends ListQueryResult<Item> {
+export interface ListProps<Item>
+  extends ListQueryResult<Item>,
+    UseStyles<typeof useStyles> {
   renderItem: (item: Item) => ReactNode;
   renderSkeleton: (index: number) => ReactNode;
   skeletonCount?: number;
@@ -36,7 +39,7 @@ export const List = <Item extends any>(props: ListProps<Item>) => {
     renderSkeleton,
     className,
   } = props;
-  const classes = useStyles();
+  const classes = useStyles(props);
 
   return (
     <div className={clsx(classes.root, className)}>
