@@ -1,9 +1,10 @@
 import { makeStyles } from '@material-ui/core';
 import clsx from 'clsx';
 import { times } from 'lodash';
-import { ReactNode } from 'react';
+import { ReactNode, useRef } from 'react';
 import * as React from 'react';
 import { isNetworkRequestInFlight } from '../../api';
+import { usePersistedScroll } from '../../hooks/usePersistedScroll';
 import { UseStyles } from '../../util';
 import { ProgressButton } from '../ProgressButton';
 import { ListQueryResult } from './useListQuery';
@@ -41,8 +42,11 @@ export const List = <Item extends any>(props: ListProps<Item>) => {
   } = props;
   const classes = useStyles(props);
 
+  const scrollRef = useRef<HTMLDivElement | null>(null);
+  usePersistedScroll(scrollRef);
+
   return (
-    <div className={clsx(classes.root, className)}>
+    <div className={clsx(classes.root, className)} ref={scrollRef}>
       <div className={classes.items}>
         {!data?.items
           ? times(skeletonCount).map(renderSkeleton)
