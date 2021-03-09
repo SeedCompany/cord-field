@@ -4,18 +4,18 @@ import {
 } from '@apollo/client/cache/inmemory/policies';
 import { isObject } from 'lodash';
 
-interface PaginatedListInput {
-  count?: number;
-  page?: number;
+export interface PaginatedListInput {
+  count?: number | null;
+  page?: number | null;
 }
-interface PaginatedListArgs {
+export interface PaginatedListArgs {
   input?: PaginatedListInput;
 }
 
-interface PaginatedListOutput<T> {
-  hasMore?: boolean;
-  items?: readonly T[];
-  total?: number;
+export interface PaginatedListOutput<T> {
+  hasMore: boolean;
+  items: readonly T[];
+  total: number;
 }
 
 /**
@@ -42,7 +42,7 @@ interface PaginatedListOutput<T> {
  */
 export const pageLimitPagination = <
   T,
-  List extends PaginatedListOutput<T>
+  List extends Partial<PaginatedListOutput<T>>
 >(): FieldPolicy<List> => ({
   // The list is unique for all args except page & count
   keyArgs: (args: PaginatedListArgs | null) => {
@@ -51,7 +51,8 @@ export const pageLimitPagination = <
   },
   merge(existing, incoming, { args }: FieldFunctionOptions<PaginatedListArgs>) {
     // We are assuming these defaults if not given.
-    const { page = 1, count = 25 } = args?.input ?? {};
+    const page = args?.input?.page ?? 1;
+    const count = args?.input?.count ?? 25;
 
     const items = new Array(incoming.total);
     // forEach() is used here because it maintains the sparse array, while only
