@@ -4,6 +4,7 @@ fragment PartnerListItem on Partner {
     canRead
     canEdit
     value {
+      id
       name {
         ...securedString
       }

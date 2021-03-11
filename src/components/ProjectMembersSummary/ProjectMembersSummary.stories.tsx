@@ -13,6 +13,7 @@ const generateUser = (
   firstName: string,
   avatarLetters: string
 ): ArrayItem<ProjectMemberListFragment['items']> => ({
+  id: '',
   user: {
     value: {
       id: '',
