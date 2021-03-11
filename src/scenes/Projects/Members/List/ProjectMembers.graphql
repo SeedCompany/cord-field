@@ -1,10 +1,12 @@
-query ProjectMembers($input: ID!) {
-  project(id: $input) {
+query ProjectMembers($project: ID!, $input: ProjectMemberListInput) {
+  project(id: $project) {
     ...ProjectBreadcrumb
-    team {
+    team(input: $input) {
       items {
         ...ProjectMemberCard
       }
+      total
+      hasMore
       canRead
       canCreate
     }

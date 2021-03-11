@@ -15,7 +15,9 @@ import {
 import { SubmitError } from '../../../../components/form';
 import { AutocompleteField } from '../../../../components/form/AutocompleteField';
 import { UserField, UserLookupItem } from '../../../../components/form/Lookup';
-import { ProjectMembersDocument } from '../List/ProjectMembers.generated';
+import { ProjectMemberCardFragmentDoc } from '../../../../components/ProjectMemberCard/ProjectMember.generated';
+import { addItemToList } from '../../../../util';
+import { ProjectMembersQuery } from '../List/ProjectMembers.generated';
 import { CreateProjectMemberDocument } from './CreateProjectMember.generated';
 
 interface FormValues {
@@ -33,7 +35,7 @@ type CreateProjectMemberProps = Except<
   DialogFormProps<FormValues>,
   'onSubmit' | 'initialValues'
 > & {
-  projectId: string;
+  project: ProjectMembersQuery['project'];
 };
 
 const decorators: Array<Decorator<FormValues>> = [
@@ -46,26 +48,24 @@ const decorators: Array<Decorator<FormValues>> = [
 ];
 
 export const CreateProjectMember = ({
-  projectId,
+  project,
   ...props
 }: CreateProjectMemberProps) => {
   const [createProjectMember] = useMutation(CreateProjectMemberDocument, {
-    refetchQueries: [
-      {
-        query: ProjectMembersDocument,
-        variables: { input: projectId },
-      },
-    ],
-    awaitRefetchQueries: true,
+    update: addItemToList(
+      [project, 'team'],
+      ProjectMemberCardFragmentDoc,
+      (data) => data.createProjectMember.projectMember
+    ),
   });
 
   const initialValues = useMemo(
     () => ({
       projectMember: {
-        projectId,
+        projectId: project.id,
       },
     }),
-    [projectId]
+    [project.id]
   );
 
   return (
