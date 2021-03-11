@@ -32,8 +32,13 @@ export const LanguageList: FC = () => {
   const sort = useSort<Language>();
   const [filter, setFilters] = useLanguageFilters();
   const list = useListQuery(Languages, {
-    ...sort.value,
-    filter,
+    listAt: (data) => data.languages,
+    variables: {
+      input: {
+        ...sort.value,
+        filter,
+      },
+    },
   });
 
   const classes = useStyles();

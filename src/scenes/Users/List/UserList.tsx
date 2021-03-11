@@ -25,7 +25,12 @@ const useStyles = makeStyles(({ spacing, breakpoints }) => ({
 
 export const UserList: FC = () => {
   const sort = useSort<User>();
-  const list = useListQuery(UsersDocument, sort.value);
+  const list = useListQuery(UsersDocument, {
+    listAt: (data) => data.users,
+    variables: {
+      input: sort.value,
+    },
+  });
 
   const classes = useStyles();
   const formatNumber = useNumberFormatter();

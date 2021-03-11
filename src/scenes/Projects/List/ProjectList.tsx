@@ -32,8 +32,13 @@ export const ProjectList: FC = () => {
   const sort = useSort<Project>();
   const [filters, setFilters] = useProjectFilters();
   const list = useListQuery(ProjectListDocument, {
-    ...sort.value,
-    filter: filters,
+    listAt: (data) => data.projects,
+    variables: {
+      input: {
+        ...sort.value,
+        filter: filters,
+      },
+    },
   });
 
   const classes = useStyles();

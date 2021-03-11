@@ -1,5 +1,6 @@
 import { useQuery } from '@apollo/client';
 import { NetworkStatus } from '@apollo/client/core';
+import { QueryHookOptions } from '@apollo/client/react/types/types';
 import { TypedDocumentNode } from '@graphql-typed-document-node/core';
 import { useState } from 'react';
 import {
@@ -7,33 +8,38 @@ import {
   PaginatedListOutput,
 } from '../../api/typePolicies/lists/page-limit-pagination';
 
-export interface ListQueryResult<Item> {
+export interface ListQueryResult<Item, List extends PaginatedListOutput<Item>> {
   loading: boolean;
-  data?: PaginatedListOutput<Item>;
+  data?: List;
   loadMore: () => void;
   networkStatus: NetworkStatus;
 }
 
-export const useListQuery = <Item, Args extends PaginatedListInput>(
-  doc: TypedDocumentNode<
-    Record<string, PaginatedListOutput<Item>>,
-    { input?: Args | null }
-  >,
-  args?: Args
-): ListQueryResult<Item> => {
+export const useListQuery = <
+  Data,
+  Variables extends { input?: PaginatedListInput | null },
+  Item,
+  List extends PaginatedListOutput<Item>
+>(
+  doc: TypedDocumentNode<Data, Variables>,
+  options: QueryHookOptions<Data, Variables> & {
+    listAt: (data: Data) => List;
+  }
+): ListQueryResult<Item, List> => {
+  const { listAt, ...opts } = options;
   const { loading, data: res, fetchMore, networkStatus } = useQuery(doc, {
-    variables: { input: args },
+    ...opts,
     notifyOnNetworkStatusChange: true,
   });
-  // Assume there's only one query in this document/operation
-  const data = res?.[Object.keys(res)[0]!];
+  const data = res ? listAt(res) : undefined;
 
   const [page, setPage] = useState(1);
   const loadMore = () => {
     void fetchMore({
       variables: {
+        ...options.variables,
         input: {
-          ...args,
+          ...options.variables?.input,
           page: page + 1,
         },
       },

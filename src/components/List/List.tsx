@@ -4,6 +4,7 @@ import { times } from 'lodash';
 import { ReactNode, useRef } from 'react';
 import * as React from 'react';
 import { isNetworkRequestInFlight } from '../../api';
+import { PaginatedListOutput } from '../../api/typePolicies/lists/page-limit-pagination';
 import { usePersistedScroll } from '../../hooks/usePersistedScroll';
 import { UseStyles } from '../../util';
 import { ProgressButton } from '../ProgressButton';
@@ -22,7 +23,7 @@ const useStyles = makeStyles(({ spacing }) => ({
 }));
 
 export interface ListProps<Item>
-  extends ListQueryResult<Item>,
+  extends ListQueryResult<Item, PaginatedListOutput<Item>>,
     UseStyles<typeof useStyles> {
   renderItem: (item: Item) => ReactNode;
   renderSkeleton: (index: number) => ReactNode;
