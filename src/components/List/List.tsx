@@ -23,7 +23,7 @@ const useStyles = makeStyles(({ spacing }) => ({
 }));
 
 export interface ListProps<Item>
-  extends ListQueryResult<Item, PaginatedListOutput<Item>>,
+  extends ListQueryResult<Item, PaginatedListOutput<Item>, unknown>,
     UseStyles<typeof useStyles> {
   renderItem: (item: Item) => ReactNode;
   renderSkeleton: (index: number) => ReactNode;

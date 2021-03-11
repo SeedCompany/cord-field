@@ -8,9 +8,15 @@ import {
   PaginatedListOutput,
 } from '../../api/typePolicies/lists/page-limit-pagination';
 
-export interface ListQueryResult<Item, List extends PaginatedListOutput<Item>> {
+export interface ListQueryResult<
+  Item,
+  List extends PaginatedListOutput<Item>,
+  Data
+> {
   loading: boolean;
   data?: List;
+  // The root object of the query result.
+  root?: Data;
   loadMore: () => void;
   networkStatus: NetworkStatus;
 }
@@ -25,7 +31,7 @@ export const useListQuery = <
   options: QueryHookOptions<Data, Variables> & {
     listAt: (data: Data) => List;
   }
-): ListQueryResult<Item, List> => {
+): ListQueryResult<Item, List, Data> => {
   const { listAt, ...opts } = options;
   const { loading, data: res, fetchMore, networkStatus } = useQuery(doc, {
     ...opts,
@@ -48,5 +54,5 @@ export const useListQuery = <
     });
   };
 
-  return { loading, data, loadMore, networkStatus };
+  return { loading, data, loadMore, networkStatus, root: res };
 };
