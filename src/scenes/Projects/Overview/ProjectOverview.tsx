@@ -24,6 +24,7 @@ import {
 } from '../../../components/Formatters';
 import { InternshipEngagementListItemCard } from '../../../components/InternshipEngagementListItemCard';
 import { LanguageEngagementListItemCard } from '../../../components/LanguageEngagementListItemCard';
+import { List, useListQuery } from '../../../components/List';
 import { PartnershipSummary } from '../../../components/PartnershipSummary';
 import { ProjectMembersSummary } from '../../../components/ProjectMembersSummary';
 import { Redacted } from '../../../components/Redacted';
@@ -35,7 +36,7 @@ import { useProjectCurrentDirectory, useUploadProjectFiles } from '../Files';
 import { EditableProjectField, UpdateProjectDialog } from '../Update';
 import { ProjectWorkflowDialog } from '../Update/ProjectWorkflowDialog';
 import {
-  ProjectEngagementListOverviewDocument,
+  ProjectEngagementListOverviewDocument as EngagementList,
   ProjectOverviewDocument,
   ProjectOverviewFragment,
 } from './ProjectOverview.generated';
@@ -48,7 +49,7 @@ const useStyles = makeStyles(({ spacing, breakpoints, palette }) => ({
   },
   main: {
     maxWidth: breakpoints.values.md,
-    '& > *': {
+    '& > *:not(:last-child)': {
       marginBottom: spacing(3),
     },
   },
@@ -71,6 +72,16 @@ const useStyles = makeStyles(({ spacing, breakpoints, palette }) => ({
     '& > *': {
       marginRight: spacing(2),
     },
+  },
+  engagementList: {
+    // fix spacing above applied with > *
+    marginTop: spacing(-3),
+  },
+  engagementListItems: {
+    maxWidth: 600,
+  },
+  engagementCard: {
+    marginBottom: spacing(3),
   },
 }));
 
@@ -116,14 +127,12 @@ export const ProjectOverview: FC = () => {
     }
   );
 
-  const { data: engagementListData } = useQuery(
-    ProjectEngagementListOverviewDocument,
-    {
-      variables: {
-        input: projectId,
-      },
-    }
-  );
+  const engagements = useListQuery(EngagementList, {
+    listAt: (data) => data.project.engagements,
+    variables: {
+      project: projectId,
+    },
+  });
 
   const projectName = projectOverviewData?.project.name;
   const isTranslation = projectOverviewData
@@ -133,10 +142,11 @@ export const ProjectOverview: FC = () => {
   const engagementTypeLabel =
     isTranslation != null ? (isTranslation ? 'Language' : 'Intern') : null;
 
-  const populationTotal = engagementListData?.project.engagements.items.reduce(
+  const populationTotal = engagements.data?.items.reduce(
     (total, item) =>
       item.__typename === 'LanguageEngagement'
-        ? total + (item.language.value?.population.value ?? 0)
+        ? // eslint-disable-next-line @typescript-eslint/restrict-plus-operands
+          total + (item.language.value?.population.value ?? 0)
         : total,
     0
   );
@@ -269,12 +279,14 @@ export const ProjectOverview: FC = () => {
               wrap={(node) => <Grid item>{node}</Grid>}
             />
             <DisplaySimpleProperty
-              loading={!engagementListData || !projectOverviewData}
+              loading={
+                !engagements.data ||
+                engagements.data.hasMore ||
+                !projectOverviewData
+              }
               label={isTranslation ? 'Population Total' : 'Total Interns'}
               value={formatNumber(
-                isTranslation
-                  ? populationTotal
-                  : engagementListData?.project.engagements.total
+                isTranslation ? populationTotal : engagements.data?.total
               )}
               loadingWidth={100}
               LabelProps={{ color: 'textSecondary' }}
@@ -283,7 +295,9 @@ export const ProjectOverview: FC = () => {
                 <Tooltip
                   title={
                     isTranslation
-                      ? 'Total population of all languages engaged'
+                      ? engagements.data?.hasMore
+                        ? 'Load all engagements below to see the total population'
+                        : 'Total population of all languages engaged'
                       : ''
                   }
                 >
@@ -430,14 +444,14 @@ export const ProjectOverview: FC = () => {
           <Grid container spacing={2} alignItems="center">
             <Grid item>
               <Typography variant="h3">
-                {projectOverviewData && engagementListData ? (
-                  !engagementListData.project.engagements.canRead ? (
+                {projectOverviewData && engagements.data ? (
+                  !engagements.data.canRead ? (
                     <Redacted
                       info="You do not have permission to view engagements"
                       width={400}
                     />
                   ) : (
-                    `${engagementListData.project.engagements.total} ${engagementTypeLabel} Engagements`
+                    `${engagements.data.total} ${engagementTypeLabel} Engagements`
                   )
                 ) : (
                   <Skeleton width={400} />
@@ -445,7 +459,7 @@ export const ProjectOverview: FC = () => {
               </Typography>
             </Grid>
             <Grid item>
-              {engagementListData?.project.engagements.canCreate && (
+              {engagements.data?.canCreate && (
                 <Tooltip title={`Add ${engagementTypeLabel} Engagement`}>
                   <Fab
                     color="error"
@@ -458,21 +472,32 @@ export const ProjectOverview: FC = () => {
               )}
             </Grid>
           </Grid>
-          {engagementListData?.project.engagements.items.map((engagement) =>
-            engagement.__typename === 'LanguageEngagement' ? (
-              <LanguageEngagementListItemCard
-                key={engagement.id}
-                projectId={projectId}
-                {...engagement}
-              />
-            ) : (
-              <InternshipEngagementListItemCard
-                key={engagement.id}
-                projectId={projectId}
-                {...engagement}
-              />
-            )
-          )}
+          <List
+            {...engagements}
+            classes={{
+              root: classes.engagementList,
+              items: classes.engagementListItems,
+            }}
+            renderItem={(engagement) =>
+              engagement.__typename === 'LanguageEngagement' ? (
+                <LanguageEngagementListItemCard
+                  key={engagement.id}
+                  projectId={projectId}
+                  {...engagement}
+                  className={classes.engagementCard}
+                />
+              ) : (
+                <InternshipEngagementListItemCard
+                  key={engagement.id}
+                  projectId={projectId}
+                  {...engagement}
+                  className={classes.engagementCard}
+                />
+              )
+            }
+            skeletonCount={0}
+            renderSkeleton={() => null}
+          />
         </div>
       )}
       {workflowProject && (
