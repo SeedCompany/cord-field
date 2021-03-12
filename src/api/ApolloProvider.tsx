@@ -9,7 +9,7 @@ import {
 } from '@apollo/client';
 import fetch from 'cross-fetch';
 import React, { FC, useContext, useState } from 'react';
-import { possibleTypes } from './fragmentMatcher.generated';
+import { possibleTypes } from './fragmentMatcher';
 import { delayLink } from './links/delay.link';
 import { ErrorCache, ErrorCacheLink } from './links/errorCache.link';
 import { useErrorRendererLink } from './links/renderErrors.link';

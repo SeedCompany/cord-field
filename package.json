@@ -80,7 +80,6 @@
     "@babel/core": "^7.10.5",
     "@graphql-codegen/add": "^2.0.2",
     "@graphql-codegen/cli": "^1.20.0",
-    "@graphql-codegen/fragment-matcher": "^2.0.1",
     "@graphql-codegen/introspection": "^1.18.1",
     "@graphql-codegen/named-operations-object": "^1.17.9",
     "@graphql-codegen/near-operation-file-preset": "^1.17.13",

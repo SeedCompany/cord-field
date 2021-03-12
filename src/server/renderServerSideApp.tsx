@@ -19,7 +19,7 @@ import { resetServerContext } from 'react-beautiful-dnd';
 import ReactDOMServer from 'react-dom/server';
 import { FilledContext, HelmetProvider } from 'react-helmet-async';
 import { StaticRouter } from 'react-router-dom/server';
-import { possibleTypes } from '../api/fragmentMatcher.generated';
+import { possibleTypes } from '../api/fragmentMatcher';
 import { ErrorCache, ErrorCacheLink } from '../api/links/errorCache.link';
 import { typePolicies } from '../api/typePolicies';
 import { App } from '../App';
