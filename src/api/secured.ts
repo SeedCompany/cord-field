@@ -10,11 +10,11 @@ interface Editable {
   canEdit: boolean;
 }
 
-export interface Secured<T> extends Readable, Editable {
+export interface SecuredProp<T> extends Readable, Editable {
   value?: Nullable<T>;
 }
 
-export const isSecured = <T>(value: unknown): value is Secured<T> =>
+export const isSecured = <T>(value: unknown): value is SecuredProp<T> =>
   Boolean(value) &&
   isPlainObject(value) &&
   'canEdit' in (value as any) &&

@@ -8,7 +8,7 @@ import { Skeleton } from '@material-ui/lab';
 import { DateTime } from 'luxon';
 import React, { FC, ReactNode } from 'react';
 import { useDropzone } from 'react-dropzone';
-import { Secured } from '../../api';
+import { SecuredProp } from '../../api';
 import {
   FileActionsPopup as ActionsMenu,
   FileAction,
@@ -58,7 +58,7 @@ const useStyles = makeStyles(({ palette, spacing, typography }) => ({
 export interface DefinedFileCardProps {
   title: ReactNode;
   resourceType: string;
-  securedFile: Secured<FileNode>;
+  securedFile: SecuredProp<FileNode>;
   onVersionUpload: (files: File[]) => void;
 }
 

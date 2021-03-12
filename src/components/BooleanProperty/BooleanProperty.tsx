@@ -2,12 +2,12 @@ import { Chip, ChipProps, makeStyles } from '@material-ui/core';
 import { Skeleton } from '@material-ui/lab';
 import React, { ReactElement } from 'react';
 import { Except, SetRequired } from 'type-fest';
-import { Secured } from '../../api';
+import { SecuredProp } from '../../api';
 import { Redacted } from '../Redacted';
 
 export interface BooleanPropertyProps extends SetRequired<ChipProps, 'label'> {
   redacted: string;
-  data?: Except<Secured<boolean>, 'canEdit'>;
+  data?: Except<SecuredProp<boolean>, 'canEdit'>;
   wrap?: (node: ReactElement) => ReactElement;
 }
 

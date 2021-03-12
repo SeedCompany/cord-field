@@ -8,7 +8,7 @@ import { Skeleton } from '@material-ui/lab';
 import { isFunction } from 'lodash';
 import * as React from 'react';
 import { ReactNode } from 'react';
-import { Secured } from '../../api';
+import { SecuredProp } from '../../api';
 import { Redacted } from '../Redacted';
 
 const useStyles = makeStyles(() => ({
@@ -27,7 +27,7 @@ export const DataButton = <T extends any>({
   ...props
 }: ButtonProps & {
   loading?: boolean;
-  secured?: Secured<T>;
+  secured?: SecuredProp<T>;
   redacted?: TooltipProps['title'];
   children: ((value: T) => ReactNode) | ReactNode;
   empty?: ReactNode;
