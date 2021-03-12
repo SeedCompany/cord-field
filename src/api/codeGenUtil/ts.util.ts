@@ -41,7 +41,12 @@ export const tsMorphPlugin = <T>(
       useTrailingCommas: true,
     },
   });
-  const file = project.createSourceFile('__temp.ts', '', { overwrite: true });
+
+  const baseFilePath = info?.outputFile?.replace('.generated.ts', '.base.ts');
+  const base = baseFilePath ? project.getSourceFile(baseFilePath) : undefined;
+  const file = base
+    ? base.copy(info!.outputFile!, { overwrite: true })
+    : project.createSourceFile('__temp.ts', '', { overwrite: true });
 
   const out = (await plugin({
     schema,
