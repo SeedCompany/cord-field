@@ -5,6 +5,7 @@ import {
   getApolloContext,
   HttpLink,
   InMemoryCache,
+  PossibleTypesMap,
   TypePolicies,
 } from '@apollo/client';
 import fetch from 'cross-fetch';
@@ -17,6 +18,23 @@ import { SessionLink } from './links/session.link';
 import { typePolicies } from './typePolicies';
 
 const serverHost = process.env.RAZZLE_API_BASE_URL || '';
+
+export const createCache = () => {
+  // @ts-expect-error since we use `as const` we need to convert the readonly arrays
+  // of specific strings to arrays of any strings.
+  const pt: PossibleTypesMap = possibleTypes;
+
+  // Our "strict type" allows for partials. Due to a TS limitation, partials
+  // could be missing keys or keys with a value of undefined. We are going
+  // to assume that the values will never explicitly be undefined, but rather
+  // just omitted.
+  const tp = typePolicies as TypePolicies;
+
+  return new InMemoryCache({
+    possibleTypes: pt,
+    typePolicies: tp,
+  });
+};
 
 export const ApolloProvider: FC = ({ children }) => {
   const parentContext = useContext(getApolloContext());
@@ -37,14 +55,7 @@ export const ApolloProvider: FC = ({ children }) => {
 
     const sessionLink = new SessionLink();
 
-    const cache = new InMemoryCache({
-      possibleTypes,
-      // Our "strict type" allows for partials. Due to a TS limitation, partials
-      // could be missing keys or keys with a value of undefined. We are going
-      // to assume that the values will never explicitly be undefined, but rather
-      // just omitted.
-      typePolicies: typePolicies as TypePolicies,
-    });
+    const cache = createCache();
 
     const initialState = (window as any).__APOLLO_STATE__;
     if (initialState) {
