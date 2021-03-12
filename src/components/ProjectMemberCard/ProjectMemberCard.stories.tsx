@@ -1,14 +1,15 @@
 import { action } from '@storybook/addon-actions';
 import { boolean } from '@storybook/addon-knobs';
+import { sampleSize } from 'lodash';
 import { DateTime } from 'luxon';
 import React from 'react';
-import { Role } from '../../api/schema.generated';
+import { RoleList } from '../../api';
 import { ProjectMemberCardFragment } from './ProjectMember.generated';
 import { ProjectMemberCard as ProjectMemberCardComponent } from './ProjectMemberCard';
 
 export default { title: 'Components' };
 
-const roles: Role[] = ['Consultant', 'Development'];
+const roles = sampleSize(RoleList, 2);
 
 const projectMember: ProjectMemberCardFragment = {
   id: '0',
