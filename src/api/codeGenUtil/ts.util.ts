@@ -82,6 +82,18 @@ const getOrCreateSubObject = (exp: ObjectLiteralExpression, name: string) =>
     })
   ).getInitializerIfKindOrThrow(SyntaxKind.ObjectLiteralExpression);
 
+export const getOrCreateSubList = (
+  exp: ObjectLiteralExpression,
+  name: string
+) =>
+  (
+    getPropertyAssignment(exp, name) ??
+    exp.addPropertyAssignment({
+      name,
+      initializer: '[]',
+    })
+  ).getInitializerIfKindOrThrow(SyntaxKind.ArrayLiteralExpression);
+
 export const getPropertyAssignment = (
   exp: ObjectLiteralExpression,
   name: string

@@ -1,27 +1,21 @@
 import { isAbstractType } from 'graphql';
-import {
-  OptionalKind,
-  PropertyAssignmentStructure,
-  SyntaxKind,
-} from 'ts-morph';
+import { SyntaxKind } from 'ts-morph';
 import { getSchemaTypes } from '../codeGenUtil/gql.util';
-import { tsMorphPlugin, writeStringArray } from '../codeGenUtil/ts.util';
+import { getOrCreateSubList, tsMorphPlugin } from '../codeGenUtil/ts.util';
 
 export const plugin = tsMorphPlugin(({ schema, file }) => {
-  const props = getSchemaTypes(schema)
-    .filter(isAbstractType)
-    .map(
-      (type): OptionalKind<PropertyAssignmentStructure> => ({
-        name: type.name,
-        initializer: writeStringArray(
-          schema.getPossibleTypes(type).map((possible) => possible.name)
-        ),
-      })
-    );
-
-  file
+  const possibleTypeMap = file
     .getVariableDeclarationOrThrow('possibleTypes')
     .getInitializerIfKindOrThrow(SyntaxKind.AsExpression)
-    .getExpressionIfKindOrThrow(SyntaxKind.ObjectLiteralExpression)
-    .addPropertyAssignments(props);
+    .getExpressionIfKindOrThrow(SyntaxKind.ObjectLiteralExpression);
+
+  for (const abstractType of getSchemaTypes(schema).filter(isAbstractType)) {
+    const list = getOrCreateSubList(possibleTypeMap, abstractType.name);
+
+    const possibleTypes = schema
+      .getPossibleTypes(abstractType)
+      .map((possible) => `'${possible.name}'`);
+
+    list.insertElements(0, possibleTypes, { useNewLines: true });
+  }
 });
