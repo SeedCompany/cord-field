@@ -3,8 +3,6 @@ import {
   ApolloLink,
   ApolloProvider,
   HttpLink,
-  InMemoryCache,
-  TypePolicies,
 } from '@apollo/client';
 import { getMarkupFromTree } from '@apollo/client/react/ssr';
 import { ChunkExtractor } from '@loadable/server';
@@ -19,9 +17,8 @@ import { resetServerContext } from 'react-beautiful-dnd';
 import ReactDOMServer from 'react-dom/server';
 import { FilledContext, HelmetProvider } from 'react-helmet-async';
 import { StaticRouter } from 'react-router-dom/server';
-import { possibleTypes } from '../api/fragmentMatcher.generated';
+import { createCache } from '../api';
 import { ErrorCache, ErrorCacheLink } from '../api/links/errorCache.link';
-import { typePolicies } from '../api/typePolicies';
 import { App } from '../App';
 import { Nest } from '../components/Nest';
 import { ServerLocation } from '../components/Routing';
@@ -60,20 +57,9 @@ export const createServerApolloClient = (
 
   const errorCacheLink = new ErrorCacheLink(errorCache, true);
 
-  const cache = new InMemoryCache({
-    possibleTypes,
-    // Yes the assertion is necessary. It's because, as of TS 4.0, index
-    // signatures still incorrectly convey that values for missing keys
-    // would still give the expected value instead of undefined, which is
-    // absolutely how JS works. I believe this is getting fixed finally in 4.1.
-    // See: https://github.com/microsoft/TypeScript/pull/39560
-    // eslint-disable-next-line @typescript-eslint/no-unnecessary-type-assertion
-    typePolicies: typePolicies as TypePolicies,
-  });
-
   return new ApolloClient({
     ssrMode: true,
-    cache,
+    cache: createCache(),
     link: ApolloLink.from([errorCacheLink, setCookieLink, httpLink]),
   });
 };

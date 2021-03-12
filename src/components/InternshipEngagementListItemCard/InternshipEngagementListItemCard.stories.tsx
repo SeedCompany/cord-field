@@ -36,6 +36,7 @@ export const InternshipEngagementListItemCard = () => (
     }}
     intern={{
       value: {
+        id: '2134',
         fullName: text('fullName', 'John Doe'),
       },
     }}

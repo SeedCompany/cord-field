@@ -1,7 +1,7 @@
 import { DateTime, Interval } from 'luxon';
 import { Merge } from 'type-fest';
 import { CalendarDate, Nullable } from '../util';
-import { Secured } from './secured';
+import { SecuredProp } from './secured';
 
 interface DateRange<T> {
   start: Nullable<T>;
@@ -14,9 +14,9 @@ type DateInterval<T extends DateTime> = Merge<
 >;
 
 const securedRange = <T extends DateTime>() => (
-  start: Secured<T>,
-  end: Secured<T>
-): Secured<DateRange<T>> => ({
+  start: SecuredProp<T>,
+  end: SecuredProp<T>
+): SecuredProp<DateRange<T>> => ({
   canRead: start.canRead && end.canRead,
   canEdit: start.canEdit && end.canEdit,
   value:

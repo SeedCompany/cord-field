@@ -1,13 +1,13 @@
 import { Skeleton } from '@material-ui/lab';
 import * as React from 'react';
 import { Except } from 'type-fest';
-import { Secured } from '../../api';
+import { SecuredProp } from '../../api';
 import { Nullable } from '../../util';
 import { Redacted, RedactedProps } from '../Redacted';
 import { Breadcrumb, BreadcrumbProps } from './Breadcrumb';
 
 export interface SecuredBreadcrumbProps extends BreadcrumbProps {
-  data: Nullable<Except<Secured<string>, 'canEdit'>>;
+  data: Nullable<Except<SecuredProp<string>, 'canEdit'>>;
   loadingWidth?: string | number;
   redacted: RedactedProps['info'];
 }

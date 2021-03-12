@@ -1,3 +1,4 @@
+import { FieldMergeFunction } from '@apollo/client/cache/inmemory/policies';
 import type {
   FieldPolicy,
   FieldReadFunction,
@@ -16,6 +17,7 @@ type GqlTypeMapAndQueries = GqlTypeMap & { Query: Query };
 
 export interface TypePolicy<T> {
   keyFields?: KeySpecifier<keyof T> | KeyFieldsFunction | false;
+  merge?: FieldMergeFunction<T> | boolean;
   queryType?: true;
   mutationType?: true;
   subscriptionType?: true;
@@ -43,5 +45,9 @@ export const typePolicies: TypePolicies = {
   },
   ScriptureRange: {
     keyFields: ['start', scriptureKeyFields, 'end', scriptureKeyFields],
+  },
+  Secured: {
+    keyFields: false,
+    merge: true,
   },
 };

@@ -1,6 +1,6 @@
 import { ReactElement } from 'react';
 import { ConditionalKeys } from 'type-fest';
-import { Secured } from '../../api';
+import { SecuredProp } from '../../api';
 import { Nullable } from '../../util';
 
 export interface SecuredFieldRenderProps<Name extends string = string> {
@@ -8,7 +8,10 @@ export interface SecuredFieldRenderProps<Name extends string = string> {
   disabled?: boolean;
 }
 
-export type SecuredKeys<T> = Extract<ConditionalKeys<T, Secured<any>>, string>;
+export type SecuredKeys<T> = Extract<
+  ConditionalKeys<T, SecuredProp<any>>,
+  string
+>;
 
 /**
  * An experimental way to render a form field of a secured property.
@@ -23,7 +26,7 @@ export const SecuredField = <T, K extends SecuredKeys<T>>({
   name: K;
   children: (props: SecuredFieldRenderProps<K>) => ReactElement;
 }) => {
-  const field = obj?.[name] as Nullable<Secured<any>>;
+  const field = obj?.[name] as Nullable<SecuredProp<any>>;
   if (field && !field.canRead) {
     return null;
   }

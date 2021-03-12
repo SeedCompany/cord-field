@@ -1934,18 +1934,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@graphql-codegen/fragment-matcher@npm:^2.0.1":
-  version: 2.0.1
-  resolution: "@graphql-codegen/fragment-matcher@npm:2.0.1"
-  dependencies:
-    "@graphql-codegen/plugin-helpers": ^1.18.2
-    tslib: ~2.0.1
-  peerDependencies:
-    graphql: ^0.8.0 || ^0.9.0 || ^0.10.0 || ^0.11.0 || ^0.12.0 || ^0.13.0 || ^14.0.0 || ^15.0.0
-  checksum: a52ba89b904fe4bee5fc3d7496a5c72f940d3796745bfef834e6d8fed5a06c8a0363eb163384b0c0390af8d44ace2bf41cab81e6482276d85fb829bacb11f594
-  languageName: node
-  linkType: hard
-
 "@graphql-codegen/introspection@npm:^1.18.1":
   version: 1.18.1
   resolution: "@graphql-codegen/introspection@npm:1.18.1"
@@ -7713,7 +7701,6 @@ __metadata:
     "@godaddy/terminus": ^4.6.0
     "@graphql-codegen/add": ^2.0.2
     "@graphql-codegen/cli": ^1.20.0
-    "@graphql-codegen/fragment-matcher": ^2.0.1
     "@graphql-codegen/introspection": ^1.18.1
     "@graphql-codegen/named-operations-object": ^1.17.9
     "@graphql-codegen/near-operation-file-preset": ^1.17.13

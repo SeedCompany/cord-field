@@ -1,4 +1,5 @@
 fragment ProjectMemberItem on ProjectMember {
+  id
   user {
     canRead
     canEdit
