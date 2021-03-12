@@ -1,6 +1,7 @@
 {
   "presets": ["razzle/babel"],
   "plugins": [
+    "@babel/plugin-proposal-numeric-separator",
     "./src/server/disableSsrByDefault",
     "@loadable/babel-plugin",
     "mui-make-styles",

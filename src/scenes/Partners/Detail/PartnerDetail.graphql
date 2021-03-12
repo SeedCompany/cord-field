@@ -11,6 +11,7 @@ fragment PartnerDetails on Partner {
     canRead
     canEdit
     value {
+      id
       name {
         ...securedString
       }

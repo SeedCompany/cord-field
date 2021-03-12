@@ -6,6 +6,7 @@ fragment InternshipEngagementListItem on InternshipEngagement {
   }
   intern {
     value {
+      id
       fullName
     }
   }

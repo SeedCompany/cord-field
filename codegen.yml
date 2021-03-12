@@ -16,12 +16,9 @@ generates:
       - schema-ast
 
   # Generate fragment matcher for Apollo's caching
-  ./src/api/fragmentMatcher.generated.ts:
+  ./src/api/fragmentMatcher/fragmentMatcher.generated.ts:
     plugins:
-      - fragment-matcher
-      - add:
-          placement: append
-          content: export const possibleTypes = result.possibleTypes;
+      - ./src/api/fragmentMatcher/fragmentMatcher.codegen
 
   # Generate type policies automatically specific to our API
   ./src/api/typePolicies/typePolicies.generated.ts:

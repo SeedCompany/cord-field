@@ -2,7 +2,7 @@ import { makeStyles, Typography } from '@material-ui/core';
 import { Skeleton } from '@material-ui/lab';
 import clsx from 'clsx';
 import * as React from 'react';
-import { Secured } from '../../../api';
+import { SecuredProp } from '../../../api';
 import { useDateFormatter } from '../../../components/Formatters';
 import { Redacted } from '../../../components/Redacted';
 import { CalendarDate, Nullable } from '../../../util';
@@ -34,7 +34,7 @@ const useStyles = makeStyles(({ palette, spacing }) => ({
 }));
 
 interface LargeDateProps {
-  date?: Nullable<Secured<CalendarDate>>;
+  date?: Nullable<SecuredProp<CalendarDate>>;
   className?: string;
 }
 

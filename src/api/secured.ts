@@ -1,13 +1,20 @@
 import isPlainObject from 'is-plain-object';
 import { ConditionalKeys } from 'type-fest';
 import { Nullable } from '../util';
-import { Editable, Readable } from './schema.generated';
 
-export interface Secured<T> extends Readable, Editable {
+interface Readable {
+  canRead: boolean;
+}
+
+interface Editable {
+  canEdit: boolean;
+}
+
+export interface SecuredProp<T> extends Readable, Editable {
   value?: Nullable<T>;
 }
 
-export const isSecured = <T>(value: unknown): value is Secured<T> =>
+export const isSecured = <T>(value: unknown): value is SecuredProp<T> =>
   Boolean(value) &&
   isPlainObject(value) &&
   'canEdit' in (value as any) &&
