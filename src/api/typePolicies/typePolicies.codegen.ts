@@ -1,7 +1,6 @@
 import { SyntaxKind } from 'ts-morph';
 import { tsMorphPlugin } from '../codeGenUtil/ts.util';
 import { generateScalars } from './scalars/scalars.codegen';
-import { generateSecured } from './secured/secured.codegen';
 
 export const plugin = tsMorphPlugin(({ schema, file }) => {
   const typePolicies = file
@@ -9,5 +8,4 @@ export const plugin = tsMorphPlugin(({ schema, file }) => {
     .getInitializerIfKindOrThrow(SyntaxKind.ObjectLiteralExpression);
 
   generateScalars(schema, file, typePolicies);
-  generateSecured(schema, file, typePolicies);
 });
