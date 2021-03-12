@@ -1,7 +1,14 @@
 import isPlainObject from 'is-plain-object';
 import { ConditionalKeys } from 'type-fest';
 import { Nullable } from '../util';
-import { Editable, Readable } from './schema.generated';
+
+interface Readable {
+  canRead: boolean;
+}
+
+interface Editable {
+  canEdit: boolean;
+}
 
 export interface Secured<T> extends Readable, Editable {
   value?: Nullable<T>;
