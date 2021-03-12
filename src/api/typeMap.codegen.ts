@@ -1,4 +1,4 @@
-import { GraphQLNamedType, isObjectType } from 'graphql';
+import { GraphQLNamedType, isAbstractType, isObjectType } from 'graphql';
 import { difference, sortBy } from 'lodash';
 import { OptionalKind, PropertySignatureStructure } from 'ts-morph';
 import { getSchemaTypes } from './codeGenUtil/gql.util';
@@ -20,6 +20,18 @@ export const plugin = tsMorphPlugin(({ schema, file }) => {
       type !== schema.getSubscriptionType()
   );
 
+  const abstractTypes = getSchemaTypes(schema).filter(isAbstractType);
+  for (const abstractType of abstractTypes) {
+    file.addTypeAlias({
+      name: abstractType.name,
+      type: schema
+        .getPossibleTypes(abstractType)
+        .map((possible) => `Types.${possible.name}`)
+        .join(' | '),
+      isExported: true,
+    });
+  }
+
   const mainTypes = userDefinedTypes.filter(
     (t) =>
       !t.name.startsWith('Secured') &&
@@ -30,7 +42,13 @@ export const plugin = tsMorphPlugin(({ schema, file }) => {
   const mainTsType = file.addInterface({
     name: 'GqlTypeMapMain',
     isExported: true,
-    properties: getProperties(mainTypes),
+    properties: [
+      ...getProperties(mainTypes),
+      ...abstractTypes.map((type) => ({
+        name: type.name,
+        type: type.name,
+      })),
+    ],
   });
 
   const auxTypes = difference(userDefinedTypes, mainTypes);
