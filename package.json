@@ -5,7 +5,7 @@
     "start": "run-p \"start:*\"",
     "start:server": "razzle start",
     "start:gql-gen": "yarn gql-gen --watch",
-    "build": "yarn gql-gen && razzle build",
+    "build": "yarn gql-gen && razzle build --noninteractive",
     "test": "razzle test --env=jsdom",
     "lint": "eslint --ext .ts,.tsx --fix --max-warnings 0 .",
     "type-check": "tsc -p .",
