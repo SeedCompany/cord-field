@@ -22,7 +22,7 @@ COPY . .
 
 ARG API_BASE_URL
 ENV RAZZLE_API_BASE_URL=$API_BASE_URL
-RUN yarn gql-gen -e && yarn razzle build
+RUN yarn gql-gen -e && yarn razzle build --noninteractive
 
 # list and remove dev dependencies
 # yarn v2 doesn't have an install only production deps command

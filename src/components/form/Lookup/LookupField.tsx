@@ -13,8 +13,7 @@ import {
   createFilterOptions,
   Value,
 } from '@material-ui/lab';
-import { camelCase } from 'camel-case';
-import { last, uniqBy, upperFirst } from 'lodash';
+import { camelCase, last, uniqBy, upperFirst } from 'lodash';
 import React, {
   ComponentType,
   useCallback,
