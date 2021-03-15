@@ -20,7 +20,9 @@ import { PartnerDetailsFragment } from './PartnerDetail.generated';
 
 const useStyles = makeStyles(({ spacing }) => ({
   cardContent: {
-    flexGrow: 1,
+    display: 'flex',
+    flex: 1,
+    alignSelf: 'flex-start',
     // Allow point events so tooltips can be viewed, but don't seem clickable
     '&.Mui-disabled': {
       pointerEvents: 'auto',
