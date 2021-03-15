@@ -1,4 +1,6 @@
 import { useMutation } from '@apollo/client';
+import { Decorator } from 'final-form';
+import onFieldChange from 'final-form-calculate';
 import React, { ComponentType, useMemo } from 'react';
 import { Except, Merge } from 'type-fest';
 import {
@@ -104,6 +106,22 @@ const fieldMapping: Record<
   ),
 };
 
+const decorators: Array<Decorator<PartnerFormValues>> = [
+  ...DialogForm.defaultDecorators,
+  onFieldChange(
+    // if user unselects managing type, wipe the financial reporting type values
+    {
+      field: 'partner.types',
+      updates: {
+        'partner.financialReportingTypes': (types, currentValues) =>
+          types?.includes('Managing')
+            ? currentValues.partner.financialReportingTypes
+            : undefined,
+      },
+    }
+  ),
+];
+
 export const EditPartner = ({
   partner,
   editFields: editFieldsProp,
@@ -136,6 +154,7 @@ export const EditPartner = ({
     <DialogForm<PartnerFormValues>
       title="Edit Partner"
       {...props}
+      decorators={decorators}
       initialValues={initialValues}
       onSubmit={async ({
         partner: { pointOfContactId, pmcEntityCode, ...rest },
