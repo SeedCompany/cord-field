@@ -52,16 +52,18 @@ type EditPartnerProps = Except<
   partner: PartnerDetailsFragment;
   editFields?: Many<EditablePartnerField>;
 };
-interface EngagementFieldProps {
+
+interface PartnerFieldProps {
   props: {
     name: string;
   };
-  hide?: boolean;
+  partner: PartnerDetailsFragment;
+  values: PartnerFormValues;
 }
 
 const fieldMapping: Record<
   EditablePartnerField,
-  ComponentType<EngagementFieldProps>
+  ComponentType<PartnerFieldProps>
 > = {
   pointOfContactId: ({ props }) => (
     <UserField {...props} label="Point of Contact" />
@@ -82,16 +84,16 @@ const fieldMapping: Record<
       {...props}
     />
   ),
-  financialReportingTypes: ({ props, hide }) =>
-    hide ? null : (
+  financialReportingTypes: ({ props, values }) =>
+    values.partner.types?.includes('Managing') ? (
       <EnumField
-        label="Financial Reporting Type"
+        label="Financial Reporting Types"
         options={FinancialReportingTypeList}
         multiple
         {...props}
         getLabel={displayFinancialReportingType}
       />
-    ),
+    ) : null,
   address: ({ props }) => (
     <TextField
       {...props}
@@ -161,7 +163,8 @@ export const EditPartner = ({
               <Field
                 props={{ name }}
                 key={name}
-                hide={!values.partner.types?.includes('Managing')}
+                partner={partner}
+                values={values}
               />
             );
           })}
