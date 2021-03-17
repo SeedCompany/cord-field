@@ -29,6 +29,7 @@ import { PartnershipSummary } from '../../../components/PartnershipSummary';
 import { ProjectMembersSummary } from '../../../components/ProjectMembersSummary';
 import { Redacted } from '../../../components/Redacted';
 import { SensitivityIcon } from '../../../components/Sensitivity';
+import { TogglePinButton } from '../../../components/TogglePinButton';
 import { Many } from '../../../util';
 import { CreateInternshipEngagement } from '../../Engagement/InternshipEngagement/Create/CreateInternshipEngagement';
 import { CreateLanguageEngagement } from '../../Engagement/LanguageEngagement/Create/CreateLanguageEngagement';
@@ -72,6 +73,9 @@ const useStyles = makeStyles(({ spacing, breakpoints, palette }) => ({
     '& > *': {
       marginRight: spacing(2),
     },
+  },
+  pushPinIcon: {
+    marginLeft: spacing(1),
   },
   engagementList: {
     // fix spacing above applied with > *
@@ -235,6 +239,12 @@ export const ProjectOverview: FC = () => {
                   <Edit />
                 </Fab>
               </Tooltip>
+            )}
+            {projectOverviewData && (
+              <TogglePinButton
+                object={projectOverviewData.project}
+                className={classes.pushPinIcon}
+              />
             )}
           </header>
 

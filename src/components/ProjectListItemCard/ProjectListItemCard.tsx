@@ -15,6 +15,7 @@ import { FormattedDate } from '../Formatters';
 import { Picture, useRandomPicture } from '../Picture';
 import { CardActionAreaLink } from '../Routing';
 import { Sensitivity } from '../Sensitivity';
+import { TogglePinButton } from '../TogglePinButton';
 import { ProjectListItemFragment } from './ProjectListItem.generated';
 
 const useStyles = makeStyles(({ breakpoints, spacing }) => {
@@ -152,7 +153,7 @@ export const ProjectListItemCard: FC<ProjectListItemCardProps> = ({
           </Grid>
           <div className={classes.rightContent}>
             <DisplaySimpleProperty aria-hidden="true" />
-
+            <div>{project && <TogglePinButton object={project} />}</div>
             <div className={classes.engagementCount}>
               <Typography variant="h1">
                 {!project ? (

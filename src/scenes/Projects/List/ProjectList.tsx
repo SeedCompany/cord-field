@@ -1,5 +1,5 @@
-import { Grid, makeStyles, Typography } from '@material-ui/core';
-import { Skeleton } from '@material-ui/lab';
+import { Grid, makeStyles, Tab, Tabs, Typography } from '@material-ui/core';
+import { Skeleton, TabContext } from '@material-ui/lab';
 import React, { FC } from 'react';
 import { Helmet } from 'react-helmet-async';
 import { Project } from '../../../api';
@@ -23,17 +23,31 @@ const useStyles = makeStyles(({ spacing, breakpoints }) => ({
   items: {
     maxWidth: breakpoints.values.sm,
   },
+  projectTotal: {
+    margin: spacing(2, 2),
+  },
 }));
 
 export const ProjectList: FC = () => {
   const sort = useSort<Project>();
   const [filters, setFilters] = useProjectFilters();
+  const getFilters = () => {
+    const { tab, ...otherFilters } = filters;
+    return {
+      ...otherFilters,
+      ...(tab === 'mine'
+        ? { mine: true }
+        : tab === 'pinned'
+        ? { pinned: true }
+        : {}),
+    };
+  };
   const list = useListQuery(ProjectListDocument, {
     listAt: (data) => data.projects,
     variables: {
       input: {
         ...sort.value,
-        filter: filters,
+        filter: getFilters(),
       },
     },
   });
@@ -45,7 +59,7 @@ export const ProjectList: FC = () => {
     <ContentContainer>
       <Helmet title="Projects" />
       <Typography variant="h2" paragraph>
-        My Projects
+        Projects
       </Typography>
       <Grid container spacing={1} className={classes.options}>
         <Grid item>
@@ -59,19 +73,30 @@ export const ProjectList: FC = () => {
           </FilterButtonDialog>
         </Grid>
       </Grid>
-      <Typography variant="h3" paragraph>
-        {list.data ? (
-          `${formatNumber(list.data.total)} Projects`
-        ) : (
-          <Skeleton width="12ch" />
-        )}
-      </Typography>
-      <List
-        {...list}
-        classes={{ container: classes.items }}
-        renderItem={(item) => <ProjectCard project={item} />}
-        renderSkeleton={<ProjectCard />}
-      />
+      <TabContext value={filters.tab}>
+        <Tabs
+          value={filters.tab}
+          onChange={(_e, tab) => setFilters({ ...filters, tab })}
+          aria-label="project navigation tabs"
+        >
+          <Tab label="My Projects" key="mine" value="mine" />
+          <Tab label="All" key="all" value="all" />
+          <Tab label="Pinned" key="pinned" value="pinned" />
+        </Tabs>
+        <Typography variant="h3" className={classes.projectTotal}>
+          {list.data ? (
+            `${formatNumber(list.data.total)} Projects`
+          ) : (
+            <Skeleton width="12ch" />
+          )}
+        </Typography>
+        <List
+          {...list}
+          classes={{ container: classes.items }}
+          renderItem={(item) => <ProjectCard project={item} />}
+          renderSkeleton={<ProjectCard />}
+        />
+      </TabContext>
     </ContentContainer>
   );
 };
