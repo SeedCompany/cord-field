@@ -1,4 +1,6 @@
 import { useMutation } from '@apollo/client';
+import { Decorator } from 'final-form';
+import onFieldChange from 'final-form-calculate';
 import React, { ComponentType, useMemo } from 'react';
 import { Except, Merge } from 'type-fest';
 import {
@@ -52,16 +54,18 @@ type EditPartnerProps = Except<
   partner: PartnerDetailsFragment;
   editFields?: Many<EditablePartnerField>;
 };
-interface EngagementFieldProps {
+
+interface PartnerFieldProps {
   props: {
     name: string;
   };
-  hide?: boolean;
+  partner: PartnerDetailsFragment;
+  values: PartnerFormValues;
 }
 
 const fieldMapping: Record<
   EditablePartnerField,
-  ComponentType<EngagementFieldProps>
+  ComponentType<PartnerFieldProps>
 > = {
   pointOfContactId: ({ props }) => (
     <UserField {...props} label="Point of Contact" />
@@ -82,16 +86,16 @@ const fieldMapping: Record<
       {...props}
     />
   ),
-  financialReportingTypes: ({ props, hide }) =>
-    hide ? null : (
+  financialReportingTypes: ({ props, values }) =>
+    values.partner.types?.includes('Managing') ? (
       <EnumField
-        label="Financial Reporting Type"
+        label="Financial Reporting Types"
         options={FinancialReportingTypeList}
         multiple
         {...props}
         getLabel={displayFinancialReportingType}
       />
-    ),
+    ) : null,
   address: ({ props }) => (
     <TextField
       {...props}
@@ -101,6 +105,22 @@ const fieldMapping: Record<
     />
   ),
 };
+
+const decorators: Array<Decorator<PartnerFormValues>> = [
+  ...DialogForm.defaultDecorators,
+  onFieldChange(
+    // if user unselects managing type, wipe the financial reporting type values
+    {
+      field: 'partner.types',
+      updates: {
+        'partner.financialReportingTypes': (types, currentValues) =>
+          types?.includes('Managing')
+            ? currentValues.partner.financialReportingTypes
+            : undefined,
+      },
+    }
+  ),
+];
 
 export const EditPartner = ({
   partner,
@@ -134,6 +154,7 @@ export const EditPartner = ({
     <DialogForm<PartnerFormValues>
       title="Edit Partner"
       {...props}
+      decorators={decorators}
       initialValues={initialValues}
       onSubmit={async ({
         partner: { pointOfContactId, pmcEntityCode, ...rest },
@@ -161,7 +182,8 @@ export const EditPartner = ({
               <Field
                 props={{ name }}
                 key={name}
-                hide={!values.partner.types?.includes('Managing')}
+                partner={partner}
+                values={values}
               />
             );
           })}
