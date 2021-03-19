@@ -17,7 +17,6 @@ export type SubmitButtonProps = {
 } & Omit<
   ProgressButtonProps,
   | 'type'
-  | 'disabled'
   | 'progress'
   // I really wanted to use `action` for submit action
   // and I've yet to use the `Button.action` prop anywhere ever.
@@ -36,6 +35,7 @@ export const SubmitButton: FC<SubmitButtonProps> = ({
   children,
   spinner = true,
   action,
+  disabled,
   ...rest
 }) => {
   const form = useForm('SubmitButton');
@@ -106,6 +106,7 @@ export const SubmitButton: FC<SubmitButtonProps> = ({
       }}
       type="submit"
       disabled={
+        disabled ||
         submitting ||
         validating ||
         (allFieldsTouched && hasValidationErrors) ||

@@ -88,9 +88,12 @@ export const ProjectWorkflowDialog = ({
       <Grid container direction="column" spacing={1}>
         {transitions.map((transition, i) => (
           <Tooltip
-            title={`This will change the project step to ${displayProjectStep(
-              transition.to
-            )}`}
+            title={
+              transition.disabledReason ??
+              `This will change the project step to ${displayProjectStep(
+                transition.to
+              )}`
+            }
             key={i}
           >
             <Grid item>
@@ -100,6 +103,7 @@ export const ProjectWorkflowDialog = ({
                 action={`${transition.to}:${i}`}
                 color={transitionTypeToColor[transition.type]}
                 variant={transition.type === 'Approve' ? 'contained' : 'text'}
+                disabled={transition.disabled}
               >
                 {transition.label}
               </SubmitButton>

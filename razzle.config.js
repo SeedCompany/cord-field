@@ -2,7 +2,6 @@
 const LoadablePlugin = require('@loadable/webpack-plugin');
 const _ = require('lodash');
 const path = require('path');
-const { DefinePlugin } = require('webpack');
 const { BundleAnalyzerPlugin } = require('webpack-bundle-analyzer');
 const CircularDependencyPlugin = require('circular-dependency-plugin');
 
@@ -11,6 +10,16 @@ const modifyWebpackConfig = (opts) => {
   const { target } = opts.env;
   const isClient = target === 'web';
   const isServer = target === 'node';
+
+  const define = (key, value) => {
+    opts.options.webpackOptions.definePluginOptions[key] = value;
+  };
+
+  if (isClient) {
+    // Any references to process.env forward to window.env which our
+    // SSR html provides based on app env config.
+    define('process.env', 'window.env');
+  }
 
   if (isClient) {
     const filename = path.resolve(__dirname, 'build');
@@ -21,13 +30,9 @@ const modifyWebpackConfig = (opts) => {
       })
     );
   } else {
-    config.plugins.push(
-      new DefinePlugin({
-        'process.env.LOADABLE_STATS_MANIFEST': opts.env.dev
-          ? `require('path').resolve('build/loadable-stats.json')`
-          : `__dirname + '/loadable-stats.json'`,
-      })
-    );
+    define('process.env.LOADABLE_STATS_MANIFEST', opts.env.dev
+      ? `require('path').resolve('build/loadable-stats.json')`
+      : `__dirname + '/loadable-stats.json'`);
   }
 
   // define server port to listen on that may be different than the actual exposed port
@@ -67,11 +72,7 @@ const modifyWebpackConfig = (opts) => {
     }
   } else if (isServer) {
     // convert SERVER_PORT usage to just PORT since only a single port is used
-    config.plugins.push(
-      new DefinePlugin({
-        'process.env.SERVER_PORT': 'process.env.PORT',
-      })
-    );
+    define('process.env.SERVER_PORT', 'process.env.PORT');
   }
 
   if (isClient && process.argv.includes('--analyze')) {

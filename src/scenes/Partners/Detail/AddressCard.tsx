@@ -4,17 +4,30 @@ import {
   CardActionArea,
   CardActions,
   CardContent,
-  Grid,
   makeStyles,
   Typography,
 } from '@material-ui/core';
 import { Skeleton } from '@material-ui/lab';
 import React, { FC } from 'react';
+import { canEditAny } from '../../../api';
+import { Redacted } from '../../../components/Redacted';
 import { PartnerDetailsFragment } from './PartnerDetail.generated';
 
 const useStyles = makeStyles(({ spacing }) => ({
   cardContent: {
-    flexGrow: 1,
+    display: 'flex',
+    flex: 1,
+    alignSelf: 'flex-start',
+    // Allow point events so tooltips can be viewed, but don't seem clickable
+    '&.Mui-disabled': {
+      pointerEvents: 'auto',
+      '& .MuiCardActionArea-focusHighlight': {
+        opacity: 0,
+      },
+    },
+  },
+  address: {
+    width: '100%',
   },
   cardActions: {
     display: 'flex',
@@ -38,29 +51,39 @@ export const AddressCard: FC<AddressCardProps> = ({
 
   // TODO: Implement full address saving and parsing (st, city, state, etc)
 
+  const canEdit = canEditAny(partner, false, 'address');
+
   return (
     <Card className={className}>
       <CardActionArea
         onClick={onEdit}
         className={classes.cardContent}
-        disabled={!partner}
+        disabled={!canEdit}
       >
         <CardContent className={classes.cardContent}>
-          <Grid container direction="column" spacing={1}>
-            <Grid item>
-              <Typography variant="h4">
-                {partner ? (
-                  partner.address.value || 'Add Address'
-                ) : (
-                  <Skeleton width="75%" />
-                )}
-              </Typography>
-            </Grid>
-          </Grid>
+          <Typography
+            variant="h4"
+            className={classes.address}
+            color={!partner?.address.value ? 'textSecondary' : undefined}
+          >
+            {!partner ? (
+              <>
+                <Skeleton width="75%" />
+                <Skeleton width="50%" />
+              </>
+            ) : !partner.address.canRead ? (
+              <Redacted
+                info="You don't have permission to view this partner's address"
+                width="75%"
+              />
+            ) : (
+              partner.address.value || 'Add Address'
+            )}
+          </Typography>
         </CardContent>
       </CardActionArea>
       <CardActions className={classes.cardActions}>
-        <Button color="primary" disabled={!partner} onClick={onEdit}>
+        <Button color="primary" disabled={!canEdit} onClick={onEdit}>
           Edit
         </Button>
       </CardActions>

@@ -6,6 +6,7 @@ import {
   InternshipProgram,
   LocationType,
   PartnershipAgreementStatus,
+  PartnerType,
   ProductApproach,
   ProjectStatus,
   Role,
@@ -29,6 +30,7 @@ const displayEnum = <T extends string>() => (enumVal: Nullable<T>) =>
 export const displayStatus = displayEnum<ProjectStatus>();
 export const displayProjectStep = displayEnum<ProjectStep>();
 export const displayPartnershipStatus = displayEnum<PartnershipAgreementStatus>();
+export const displayPartnerType = displayEnum<PartnerType>();
 export const displayFinancialReportingType = displayEnum<FinancialReportingType>();
 export const displayEngagementStatus = displayEnum<EngagementStatus>();
 export const displayRole = displayEnum<Role>();
