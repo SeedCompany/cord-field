@@ -1,6 +1,8 @@
 import LuxonUtils from '@date-io/luxon';
 import { CssBaseline, ThemeProvider } from '@material-ui/core';
 import { LocalizationProvider } from '@material-ui/pickers';
+import LogRocket from 'logrocket';
+import setupLogRocketReact from 'logrocket-react';
 import * as React from 'react';
 import { ApolloProvider } from './api';
 import { Nest } from './components/Nest';
@@ -8,6 +10,12 @@ import { SnackbarProvider } from './components/Snackbar';
 import { UploadManagerProvider, UploadProvider } from './components/Upload';
 import { Root } from './scenes/Root';
 import { createTheme } from './theme';
+
+const logRocketAppId = process.env.RAZZLE_LOG_ROCKET_APP_ID;
+if (logRocketAppId) {
+  LogRocket.init(logRocketAppId);
+  setupLogRocketReact(LogRocket);
+}
 
 const theme = createTheme();
 
