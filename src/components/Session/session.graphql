@@ -17,6 +17,7 @@ fragment LoggedInUser on User {
       name
     }
   }
+  fullName
   realFirstName {
     value
   }

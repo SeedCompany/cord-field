@@ -4109,6 +4109,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@types/logrocket-react@npm:^3.0.0":
+  version: 3.0.0
+  resolution: "@types/logrocket-react@npm:3.0.0"
+  dependencies:
+    logrocket: 1.0.1
+  checksum: d3469755095468e8dd40a6657547348a0633629421e9e1dfd468cf17a5d4e7b87e3de3098c1abc56b7e2a374c660ec7fbb34dc677eeb73a131067ed86c30eb49
+  languageName: node
+  linkType: hard
+
 "@types/luxon@npm:^1.26.1":
   version: 1.26.1
   resolution: "@types/luxon@npm:1.26.1"
@@ -7743,6 +7752,7 @@ __metadata:
     "@types/loadable__server": ^5.12.3
     "@types/loadable__webpack-plugin": ^5.7.1
     "@types/lodash": ^4.14.158
+    "@types/logrocket-react": ^3.0.0
     "@types/luxon": ^1.26.1
     "@types/node": ^12.0.0
     "@types/papaparse": ^5.0.6
@@ -7779,6 +7789,8 @@ __metadata:
     js-cookie: ^2.2.1
     lint-staged: ^10.2.11
     lodash: ^4.17.19
+    logrocket: ^1.0.14
+    logrocket-react: ^4.0.1
     luxon: ^1.26.0
     mammoth: ^1.4.9
     material-table: "patch:material-table@1.69.0#./patches/material-table.patch"
@@ -14269,6 +14281,30 @@ fsevents@^1.2.7:
     es6-symbol: ^3.1.1
     object.assign: ^4.1.0
   checksum: 57492c93fff6854cd754af3d9829e87a9925bbf79d7f7c26f6712fe736b07dbc7d427066308e906d6483c7ac9ea60ca18813e383a7dc722a8e7f6822abb88266
+  languageName: node
+  linkType: hard
+
+"logrocket-react@npm:^4.0.1":
+  version: 4.0.1
+  resolution: "logrocket-react@npm:4.0.1"
+  peerDependencies:
+    react: ">=16.10"
+    react-dom: ">=16.10"
+  checksum: 5ff17b22ece8ee4097d4c1c2aee619d7d986f6aa96c10a108e276e1301dd4e4d3d2429de9433150a7622a75d327aef307cb13ee44e40340c8dac9504313dc413
+  languageName: node
+  linkType: hard
+
+"logrocket@npm:1.0.1":
+  version: 1.0.1
+  resolution: "logrocket@npm:1.0.1"
+  checksum: e6448802e8cf207be3c38bf9a89bb4ee5503bac2def6d694426f32eb8cfefe7745d1c336ef035ee670c2cf73e6244316ed1c16f8d7e1e804ae30a68a3065d3ba
+  languageName: node
+  linkType: hard
+
+"logrocket@npm:^1.0.14":
+  version: 1.0.14
+  resolution: "logrocket@npm:1.0.14"
+  checksum: 97ab2adffea9c78cf740a8e2e0f76c8a84abf9fe7ca7010200f0e77f26f5bb8f4037ae4817de6558b198739bf0a232c2b6681f7e5b5e946eabf33b1d229ebae1
   languageName: node
   linkType: hard
 
