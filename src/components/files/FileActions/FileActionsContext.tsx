@@ -1,5 +1,6 @@
 import React, { createContext, FC, useContext, useState } from 'react';
 import { GQLOperations } from '../../../api';
+import { isTypename } from '../../../util';
 import { useDialog } from '../../Dialog';
 import { FilePreview } from '../FilePreview';
 import {
@@ -30,9 +31,7 @@ export type NonDirectoryActionItem = Exclude<
   DirectoryActionItem
 >;
 
-export const isFileVersion = (
-  fileNode: FilesActionItem
-): fileNode is VersionActionItem => fileNode.__typename === 'FileVersion';
+export const isFileVersion = isTypename<VersionActionItem>('FileVersion');
 
 export type PermittedActions =
   | FileAction[]
