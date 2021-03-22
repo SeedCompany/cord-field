@@ -22,6 +22,7 @@
     "@apollo/client": "^3.3.7",
     "@babel/plugin-proposal-numeric-separator": "^7.12.13",
     "@date-io/luxon": "^2.8.0",
+    "@freiraum/msgreader": "patch:@freiraum/msgreader@1.1.1#./patches/msg-reader.patch",
     "@godaddy/terminus": "^4.6.0",
     "@iarna/rtf-to-html": "^1.1.0",
     "@loadable/babel-plugin": "^5.13.2",
