@@ -1,0 +1,87 @@
+diff --git a/lib/MsgReader.js b/lib/MsgReader.js
+index 846df14cc69bd871e3d1a7512df10b794f998f31..be1d32994c134e72a2aa9f5b15264acb9d210953 100644
+--- a/lib/MsgReader.js
++++ b/lib/MsgReader.js
+@@ -283,14 +283,22 @@ function fieldsDataDirInner(ds, msgData, dirProperty, fields) {
+   }
+ }
+ 
++function isAddPropertyValue(fieldName, fieldTypeMapped) {
++  return fieldName !== 'body' || fieldTypeMapped !== 'binary';
++}
++
+ function fieldsDataDocument(ds, msgData, documentProperty, fields) {
+   var value = documentProperty.name.substring(12).toLowerCase();
+   var fieldClass = value.substring(0, 4);
+   var fieldType = value.substring(4, 8);
+   var fieldName = _const.default.MSG.FIELD.NAME_MAPPING[fieldClass];
++  var fieldTypeMapped = _const.default.MSG.FIELD.TYPE_MAPPING[fieldType];
+ 
+   if (fieldName) {
+-    fields[fieldName] = getFieldValue(ds, msgData, documentProperty, fieldType);
++    var fieldValue = getFieldValue(ds, msgData, documentProperty, fieldType);
++    if (isAddPropertyValue(fieldName, fieldTypeMapped)) {
++      fields[fieldName] = applyValueConverter(fieldName, fieldTypeMapped, fieldValue);
++    }
+   }
+ 
+   if (fieldClass == _const.default.MSG.FIELD.CLASS_MAPPING.ATTACHMENT_DATA) {
+@@ -300,6 +308,13 @@ function fieldsDataDocument(ds, msgData, documentProperty, fields) {
+   }
+ }
+ 
++function applyValueConverter(fieldName, fieldTypeMapped, fieldValue) {
++  if (fieldTypeMapped === 'binary' && fieldName === 'bodyHTML') {
++    return convertUint8ArrayToString(fieldValue);
++  }
++  return fieldValue;
++}
++
+ function getFieldType(fieldProperty) {
+   var value = fieldProperty.name.substring(12).toLowerCase();
+   return value.substring(4, 8);
+@@ -330,8 +345,8 @@ var extractorFieldValue = {
+       },
+       'binary': function extractBatBinary(ds, msgData, blockStartOffset, bigBlockOffset, blockSize) {
+         ds.seek(blockStartOffset + bigBlockOffset);
+-        var toReadLength = Math.min(Math.min(msgData.bigBlockSize - bigBlockOffset, blockSize), _const.default.MSG.SMALL_BLOCK_SIZE);
+-        return ds.readUint8Array(toReadLength);
++        // https://github.com/FreiraumIO/msgreader/pull/1
++        return ds.readUint8Array(blockSize);
+       }
+     }
+   },
+@@ -397,10 +412,10 @@ function getChainByBlockSmall(ds, msgData, fieldProperty) {
+   return blockChain;
+ }
+ 
+-function getFieldValue(ds, msgData, fieldProperty, type) {
++function getFieldValue(ds, msgData, fieldProperty, typeMapped) {
+   var value = null;
+   var valueExtractor = fieldProperty.sizeBlock < _const.default.MSG.BIG_BLOCK_MIN_DOC_SIZE ? extractorFieldValue.sbat : extractorFieldValue.bat;
+-  var dataTypeExtractor = valueExtractor.dataType[_const.default.MSG.FIELD.TYPE_MAPPING[type]];
++  var dataTypeExtractor = valueExtractor.dataType[_const.default.MSG.FIELD.TYPE_MAPPING[typeMapped]];
+ 
+   if (dataTypeExtractor) {
+     value = valueExtractor.extractor(ds, msgData, fieldProperty, dataTypeExtractor);
+@@ -409,6 +424,10 @@ function getFieldValue(ds, msgData, fieldProperty, type) {
+   return value;
+ }
+ 
++function convertUint8ArrayToString(uint8ArraValue) {
++  return new TextDecoder("utf-8").decode(uint8ArraValue);
++}
++
+ var MsgReader =
+ /*#__PURE__*/
+ function () {
+@@ -443,7 +462,8 @@ function () {
+     value: function getAttachment(attach) {
+       var attachData = typeof attach === 'number' ? this.fileData.fieldsData.attachments[attach] : attach;
+       var fieldProperty = this.fileData.propertyData[attachData.dataId];
+-      var fieldData = getFieldValue(this.ds, this.fileData, fieldProperty, getFieldType(fieldProperty));
++      var fieldTypedMapped = _const.default.MSG.FIELD.TYPE_MAPPING[getFieldType(fieldProperty)];
++      var fieldData = getFieldValue(this.ds, this.fileData, fieldProperty, fieldTypedMapped);
+       return {
+         fileName: attachData.fileName,
+         content: fieldData
