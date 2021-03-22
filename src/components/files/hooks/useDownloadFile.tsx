@@ -6,7 +6,7 @@ import { useGetFileDownloadUrl } from './useGetFileDownloadUrl';
 
 type DownloadableFile = PartialDeep<Directory | File | FileVersion>;
 
-export const useDownloadFile = (): ((file: DownloadableFile) => void) => {
+export const useDownloadFile = () => {
   const { enqueueSnackbar } = useSnackbar();
 
   const showSnackbarError = () => {

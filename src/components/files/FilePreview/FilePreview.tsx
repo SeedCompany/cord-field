@@ -258,7 +258,7 @@ export const FilePreview: FC<FilePreviewProps> = (props) => {
                 />
               </Suspense>
             ) : (
-              <PreviewNotSupported />
+              <PreviewNotSupported file={file} onClose={onClose} />
             )}
           </Grid>
         </Grid>

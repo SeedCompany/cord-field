@@ -1,9 +1,13 @@
-import { makeStyles, Typography } from '@material-ui/core';
+import { Button, makeStyles, ModalProps, Typography } from '@material-ui/core';
+import { CloudDownload } from '@material-ui/icons';
 import React from 'react';
+import { NonDirectoryActionItem } from '../FileActions';
+import { useDownloadFile } from '../hooks';
 
 const useStyles = makeStyles(({ spacing }) => ({
   container: {
     display: 'flex',
+    flexDirection: 'column',
     margin: spacing(4),
     textAlign: 'center',
   },
@@ -12,15 +16,32 @@ const useStyles = makeStyles(({ spacing }) => ({
   },
 }));
 
-export const PreviewNotSupported = () => {
+export const PreviewNotSupported = ({
+  file,
+  onClose,
+}: {
+  file: NonDirectoryActionItem;
+  onClose?: ModalProps['onClose'];
+}) => {
   const classes = useStyles();
+  const download = useDownloadFile();
   return (
     <div className={classes.container}>
-      <Typography variant="h3" className={classes.text}>
+      <Typography variant="h3" paragraph className={classes.text}>
         Previewing is not supported
         <br />
         for this file type
       </Typography>
+      <Button
+        color="primary"
+        size="large"
+        startIcon={<CloudDownload />}
+        onClick={() =>
+          download(file).then(() => onClose?.({}, 'backdropClick'))
+        }
+      >
+        Download
+      </Button>
     </div>
   );
 };
