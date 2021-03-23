@@ -1,13 +1,12 @@
-import { compact, identity } from 'lodash';
+import { identity } from 'lodash';
 import { useEffect } from 'react';
 import { UseFieldConfig, useField as useFinalField } from 'react-final-form';
 import { useFirstMountState } from 'react-use';
 import { Except } from 'type-fest';
-import { many, Many, Nullable } from '../../util';
+import { callSome, Many, many, Nullable } from '../../util';
 import { useFieldName } from './FieldGroup';
 import { isEqualBy, isListEqualBy, useFocus, useIsSubmitting } from './util';
 import {
-  compose as composeValidators,
   requiredArray as requiredArrayValidator,
   required as requiredValidator,
   Validator,
@@ -65,7 +64,7 @@ export const useField = <
   // If validate is given and an array compose it to a single function
   // Else default to the required validator if required is true.
   const validate = validateProp
-    ? composeValidators(...compact(many(validateProp)))
+    ? callSome(...many(validateProp))
     : required
     ? ((multiple ? requiredArrayValidator : requiredValidator) as Validator<
         Value<T, Multiple>

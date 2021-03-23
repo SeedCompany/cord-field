@@ -5,3 +5,4 @@ export * from './sleep';
 export * from './styles';
 export * from './types';
 export * from './use-styles.types';
+export * from './compose-fns';
