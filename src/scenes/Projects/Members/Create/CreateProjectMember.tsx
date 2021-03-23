@@ -4,6 +4,7 @@ import onFieldChange from 'final-form-calculate';
 import React, { useMemo } from 'react';
 import { Except, Merge } from 'type-fest';
 import {
+  addItemToList,
   CreateProjectMember as CreateProjectMemberInput,
   displayRole,
   RoleList,
@@ -16,7 +17,6 @@ import { SubmitError } from '../../../../components/form';
 import { AutocompleteField } from '../../../../components/form/AutocompleteField';
 import { UserField, UserLookupItem } from '../../../../components/form/Lookup';
 import { ProjectMemberCardFragmentDoc } from '../../../../components/ProjectMemberCard/ProjectMember.generated';
-import { addItemToList } from '../../../../util';
 import { ProjectMembersQuery } from '../List/ProjectMembers.generated';
 import { CreateProjectMemberDocument } from './CreateProjectMember.generated';
 
@@ -52,11 +52,11 @@ export const CreateProjectMember = ({
   ...props
 }: CreateProjectMemberProps) => {
   const [createProjectMember] = useMutation(CreateProjectMemberDocument, {
-    update: addItemToList(
-      [project, 'team'],
-      ProjectMemberCardFragmentDoc,
-      (data) => data.createProjectMember.projectMember
-    ),
+    update: addItemToList({
+      listId: [project, 'team'],
+      itemFragment: ProjectMemberCardFragmentDoc,
+      outputToItem: (data) => data.createProjectMember.projectMember,
+    }),
   });
 
   const initialValues = useMemo(

@@ -8,3 +8,4 @@ export * from './enumLists';
 export * from './dateRange';
 export * from './secured';
 export * from './approach';
+export * from './addItemToList';

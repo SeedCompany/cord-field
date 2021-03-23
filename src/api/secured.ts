@@ -1,6 +1,6 @@
 import isPlainObject from 'is-plain-object';
 import { ConditionalKeys } from 'type-fest';
-import { Nullable } from '../util';
+import { has, Nullable } from '../util';
 
 interface Readable {
   canRead: boolean;
@@ -19,6 +19,15 @@ export const isSecured = <T>(value: unknown): value is SecuredProp<T> =>
   isPlainObject(value) &&
   'canEdit' in (value as any) &&
   'canRead' in (value as any);
+
+export const unwrapSecured = (value: unknown): unknown =>
+  isPlainObject(value) &&
+  has('__typename', value) &&
+  typeof value.__typename === 'string' &&
+  value.__typename.startsWith('Secured') &&
+  has('value', value)
+    ? value.value
+    : value;
 
 /**
  * Can the user read any of the fields of this object?

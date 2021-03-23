@@ -2,10 +2,9 @@ import { useMutation } from '@apollo/client';
 import { useSnackbar } from 'notistack';
 import React from 'react';
 import { Except } from 'type-fest';
-import { CreatePersonInput } from '../../../api';
+import { addItemToList, CreatePersonInput } from '../../../api';
 import { ButtonLink } from '../../../components/Routing';
 import { UserListItemFragmentDoc } from '../../../components/UserListItemCard/UserListItem.generated';
-import { addItemToList } from '../../../util';
 import { UserForm, UserFormProps } from '../UserForm';
 import {
   CreatePersonDocument,
@@ -22,11 +21,11 @@ export type CreateUserProps = Except<
 
 export const CreateUser = (props: CreateUserProps) => {
   const [createPerson] = useMutation(CreatePersonDocument, {
-    update: addItemToList(
-      'users',
-      UserListItemFragmentDoc,
-      (data) => data.createPerson.user
-    ),
+    update: addItemToList({
+      listId: 'users',
+      itemFragment: UserListItemFragmentDoc,
+      outputToItem: (data) => data.createPerson.user,
+    }),
   });
   const { enqueueSnackbar } = useSnackbar();
 

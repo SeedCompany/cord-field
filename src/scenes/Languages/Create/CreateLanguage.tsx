@@ -2,10 +2,13 @@ import { useMutation } from '@apollo/client';
 import { useSnackbar } from 'notistack';
 import React from 'react';
 import { Except } from 'type-fest';
-import { CreateLanguage as CreateLanguageType } from '../../../api';
+import {
+  addItemToList,
+  CreateLanguage as CreateLanguageType,
+} from '../../../api';
 import { LanguageListItemFragmentDoc } from '../../../components/LanguageListItemCard/LanguageListItem.generated';
 import { ButtonLink } from '../../../components/Routing';
-import { addItemToList, CalendarDate } from '../../../util';
+import { CalendarDate } from '../../../util';
 import {
   LanguageForm,
   LanguageFormProps,
@@ -19,11 +22,11 @@ export type CreateLanguageProps = Except<
 >;
 export const CreateLanguage = (props: CreateLanguageProps) => {
   const [createLang] = useMutation(CreateLanguageDocument, {
-    update: addItemToList(
-      'languages',
-      LanguageListItemFragmentDoc,
-      (data) => data.createLanguage.language
-    ),
+    update: addItemToList({
+      listId: 'languages',
+      itemFragment: LanguageListItemFragmentDoc,
+      outputToItem: (data) => data.createLanguage.language,
+    }),
   });
   const { enqueueSnackbar } = useSnackbar();
 
