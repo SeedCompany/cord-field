@@ -3,17 +3,12 @@ import type { Reference } from '@apollo/client';
 import { Modifier } from '@apollo/client/cache/core/types/common';
 import { StoreObject } from '@apollo/client/utilities';
 import type { ConditionalKeys } from 'type-fest';
-import type { Query } from '../api';
-import { keys, mapFromList, Nullable } from '../util';
-
-interface PaginatedList<T> {
-  readonly items: readonly T[];
-  readonly total: number;
-  readonly hasMore: boolean;
-}
+import { keys, mapFromList, Nullable } from '../../util';
+import type { Query } from '../schema.generated';
+import { PaginatedListOutput } from './types';
 
 // Only the keys of T that represent list fields.
-type ListFieldKeys<T> = ConditionalKeys<T, Nullable<PaginatedList<any>>>;
+type ListFieldKeys<T> = ConditionalKeys<T, Nullable<PaginatedListOutput<any>>>;
 
 type ObjectWithField<Obj extends StoreObject> =
   | [existingObject: Obj, field: ListFieldKeys<Obj>]
@@ -23,7 +18,7 @@ export type ListIdentifier<OwningObj extends { id: string }> =
   | ListFieldKeys<Query>
   | ObjectWithField<OwningObj>;
 
-export type ListModifier = Modifier<Nullable<PaginatedList<Reference>>>;
+export type ListModifier = Modifier<Nullable<PaginatedListOutput<Reference>>>;
 
 export interface ModifyListOptions<OwningObj extends { id: string }, Args> {
   cache: ApolloCache<unknown>;

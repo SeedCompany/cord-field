@@ -3,10 +3,7 @@ import { NetworkStatus } from '@apollo/client/core';
 import { QueryHookOptions } from '@apollo/client/react/types/types';
 import { TypedDocumentNode } from '@graphql-typed-document-node/core';
 import { useState } from 'react';
-import {
-  PaginatedListInput,
-  PaginatedListOutput,
-} from '../../api/typePolicies/lists/page-limit-pagination';
+import { InputArg, PaginatedListInput, PaginatedListOutput } from '../../api';
 
 export interface ListQueryResult<
   Item,
@@ -23,7 +20,7 @@ export interface ListQueryResult<
 
 export const useListQuery = <
   Data,
-  Variables extends { input?: PaginatedListInput | null },
+  Variables extends InputArg<PaginatedListInput>,
   Item,
   List extends PaginatedListOutput<Item>
 >(

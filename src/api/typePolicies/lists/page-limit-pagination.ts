@@ -3,20 +3,13 @@ import {
   FieldPolicy,
 } from '@apollo/client/cache/inmemory/policies';
 import { isObject } from 'lodash';
+import {
+  InputArg,
+  PaginatedListInput,
+  PaginatedListOutput,
+} from '../../list-caching';
 
-export interface PaginatedListInput {
-  count?: number | null;
-  page?: number | null;
-}
-export interface PaginatedListArgs {
-  input?: PaginatedListInput;
-}
-
-export interface PaginatedListOutput<T> {
-  hasMore: boolean;
-  items: readonly T[];
-  total: number;
-}
+export type PaginatedListArgs = InputArg<PaginatedListInput>;
 
 /**
  * Opinionated pagination handling for our API lists.
@@ -45,7 +38,7 @@ export const pageLimitPagination = <
   List extends Partial<PaginatedListOutput<T>>
 >(): FieldPolicy<List> => ({
   // The list is unique for all args except page & count
-  keyArgs: (args: PaginatedListArgs | null) => {
+  keyArgs: (args: InputArg<PaginatedListInput> | null) => {
     const { count, page, ...rest } = args?.input ?? {};
     return objectToKeyArgs({ input: rest });
   },

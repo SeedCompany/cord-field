@@ -1,24 +1,17 @@
 import type { MutationUpdaterFn } from '@apollo/client/core';
 import type { TypedDocumentNode as DocumentNode } from '@graphql-typed-document-node/core';
-import type { DefinitionNode, ExecutableDefinitionNode } from 'graphql';
 import { orderBy } from 'lodash';
 import { Except } from 'type-fest';
-import { unwrapSecured } from '../api';
-import type { Order } from '../api';
+import type { Order } from '../schema.generated';
+import { unwrapSecured } from '../secured';
 import {
   argsFromStoreFieldName,
   ListModifier,
   modifyList,
   ModifyListOptions,
 } from './modifyList';
-
-export interface SortablePaginatedListInput {
-  sort?: string;
-  order?: Order;
-}
-export interface ListArgs {
-  input?: SortablePaginatedListInput;
-}
+import { InputArg, SortableListInput } from './types';
+import { getFirstExecutableName, sortingFromArgs } from './util';
 
 /**
  * Use this on a mutation's update option to add the newly created item to an
@@ -50,7 +43,7 @@ export const addItemToList = <
   OwningObj extends { id: string },
   Item extends { id: string },
   MutationOutput,
-  Args = ListArgs
+  Args = InputArg<SortableListInput>
 >({
   listId,
   filter,
@@ -92,16 +85,17 @@ export const addItemToList = <
     let newList = [...existing.items, newItemRef];
 
     // Sort the new item appropriately given the list's sort/order params
-    const args = argsFromStoreFieldName<ListArgs>(storeFieldName);
-    if (args.input?.sort && args.input.order) {
+    const args = argsFromStoreFieldName(storeFieldName);
+    const { sort, order } = sortingFromArgs(args);
+    if (sort && order) {
       newList = orderBy(
         newList,
         (ref) => {
-          const field = readField(args.input!.sort!, ref);
+          const field = readField(sort, ref);
           const fieldVal = unwrapSecured(field);
           return fieldVal;
         },
-        args.input.order.toLowerCase() as Lowercase<Order>
+        order.toLowerCase() as Lowercase<Order>
       );
     }
 
@@ -114,13 +108,3 @@ export const addItemToList = <
 
   modifyList({ cache, listId, modifier, filter });
 };
-
-const getFirstExecutableName = (document: DocumentNode<unknown, unknown>) => {
-  const firstDef = document.definitions.find(isExecutableDef);
-  return firstDef?.name?.value;
-};
-
-const isExecutableDef = (
-  def: DefinitionNode
-): def is ExecutableDefinitionNode =>
-  def.kind === 'OperationDefinition' || def.kind === 'FragmentDefinition';
