@@ -108,7 +108,7 @@ export const FileActionsContextProvider: FC = (props) => {
 
   const actions = {
     rename: (item: FilesActionItem) => renameFile(item),
-    download: (item: FilesActionItem) => downloadFile(item),
+    download: (item: FilesActionItem) => void downloadFile(item),
     history: (item: FileActionItem, actions: FileAction[]) =>
       showVersions({ item, actions }),
     delete: (item: FilesActionItem) => deleteFile(item),

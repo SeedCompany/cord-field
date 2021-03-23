@@ -1,5 +1,6 @@
 import { useMutation } from '@apollo/client';
 import { Dispatch, useCallback } from 'react';
+import { getMimeType } from './getMimeType';
 import * as actions from './Reducer/uploadActions';
 import * as Types from './Reducer/uploadTypings';
 import { DeleteFileNodeDocument } from './Upload.generated';
@@ -73,25 +74,27 @@ export const useUploadFile = (
   const uploadFile = useCallback(
     (uploadFile: Types.UploadFile, url: string) => {
       const { queueId, file } = uploadFile;
-      const xhr = new XMLHttpRequest();
 
-      xhr.onreadystatechange = function () {
-        if (xhr.readyState === XMLHttpRequest.DONE) {
-          const { status } = xhr;
-          const success = status >= 200 && status < 400;
-          if (success) {
-            void handleFileUploadSuccess(uploadFile);
-          } else {
-            handleFileUploadCompleteError(xhr.statusText, queueId);
+      void getMimeType(file).then((mimeType) => {
+        const xhr = new XMLHttpRequest();
+        xhr.onreadystatechange = function () {
+          if (xhr.readyState === XMLHttpRequest.DONE) {
+            const { status } = xhr;
+            const success = status >= 200 && status < 400;
+            if (success) {
+              void handleFileUploadSuccess(uploadFile);
+            } else {
+              handleFileUploadCompleteError(xhr.statusText, queueId);
+            }
           }
-        }
-      };
+        };
 
-      xhr.upload.onprogress = handleFileProgress.bind(null, queueId);
-      xhr.upload.onerror = () => handleUploadError(queueId);
-      xhr.open('PUT', url);
-      xhr.setRequestHeader('Content-Type', file.type);
-      xhr.send(file);
+        xhr.upload.onprogress = handleFileProgress.bind(null, queueId);
+        xhr.upload.onerror = () => handleUploadError(queueId);
+        xhr.open('PUT', url);
+        xhr.setRequestHeader('Content-Type', mimeType);
+        xhr.send(file);
+      });
     },
     [
       handleFileUploadSuccess,

@@ -1,6 +1,7 @@
 import {
   GraphicEq as AudioIcon,
   Description as DocumentIcon,
+  Email as EmailIcon,
   Folder as FolderIcon,
   Image as ImageIcon,
   InsertDriveFile as OtherIcon,
@@ -22,6 +23,11 @@ export const fileTypes: FileType[] = [
     mimeType: 'directory',
     Icon: FolderIcon,
     previewSupported: false,
+  },
+  {
+    mimeType: 'application/vnd.ms-outlook',
+    Icon: EmailIcon,
+    previewSupported: true,
   },
   {
     mimeType: 'application/msword',
@@ -54,7 +60,7 @@ export const fileTypes: FileType[] = [
     previewSupported: true,
   },
   {
-    mimeType: 'application/vnd.ms-excel.sheet.macroEnabled.12',
+    mimeType: 'application/vnd.ms-excel.sheet.macroenabled.12',
     Icon: SpreadsheetIcon,
     previewSupported: true,
   },

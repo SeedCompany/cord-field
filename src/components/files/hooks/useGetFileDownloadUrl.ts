@@ -25,7 +25,8 @@ export const useGetFileDownloadUrl = () => {
           // tab open past 15 minutes.
           fetchPolicy: 'network-only',
         });
-        return data.fileNode.__typename === 'File'
+        return data.fileNode.__typename === 'File' ||
+          data.fileNode.__typename === 'FileVersion'
           ? data.fileNode.downloadUrl
           : null;
       } catch {

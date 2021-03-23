@@ -30,6 +30,7 @@ const CsvPreview = loadable(() => import('./CsvPreview'));
 const ExcelPreview = loadable(() => import('./ExcelPreview'));
 const RtfPreview = loadable(() => import('./RtfPreview'));
 const WordPreview = loadable(() => import('./WordPreview'));
+const EmailPreview = loadable(() => import('./EmailPreview'));
 
 const useStyles = makeStyles(() => ({
   dialogContent: {
@@ -111,6 +112,10 @@ const previewers: PreviewerProperties = {
   },
   'application/vnd.openxmlformats-officedocument.wordprocessingml.document': {
     component: WordPreview,
+    props: {},
+  },
+  'application/vnd.ms-outlook': {
+    component: EmailPreview,
     props: {},
   },
   'text/csv': {
@@ -258,7 +263,7 @@ export const FilePreview: FC<FilePreviewProps> = (props) => {
                 />
               </Suspense>
             ) : (
-              <PreviewNotSupported />
+              <PreviewNotSupported file={file} onClose={onClose} />
             )}
           </Grid>
         </Grid>
