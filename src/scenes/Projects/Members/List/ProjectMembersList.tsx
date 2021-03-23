@@ -105,6 +105,7 @@ export const ProjectMembersList: FC = () => {
               className={classes.item}
               onEdit={() =>
                 openUpdateProjectMemberDialog({
+                  project: data!.project,
                   projectMemberId: member.id,
                   userId: member.user.value?.id || '',
                   userRoles: member.roles.value,
