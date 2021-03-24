@@ -17,6 +17,7 @@ import {
   InputArg,
   PaginatedListInput,
   PaginatedListOutput,
+  SortableListInput,
 } from '../../list-caching';
 import { sortingFromArgs } from '../../list-caching/util';
 import { Order } from '../../schema.generated';
@@ -49,7 +50,9 @@ export type PaginatedListArgs = InputArg<PaginatedListInput>;
 export const pageLimitPagination = <
   T,
   List extends Partial<PaginatedListOutput<T>>
->(): FieldPolicy<List> => ({
+>(
+  defaultSort?: SortableListInput
+): FieldPolicy<List> => ({
   // The list is unique for all args except page & count
   keyArgs: (args: InputArg<PaginatedListInput> | null) => {
     const { count, page, ...rest } = args?.input ?? {};
@@ -62,6 +65,7 @@ export const pageLimitPagination = <
       // Work could be done in future to type these as refs to T, and resolving to T.
       existing?.items,
       incoming.items,
+      defaultSort,
       options
     );
 
@@ -79,6 +83,7 @@ export const pageLimitPagination = <
 const mergeList = (
   existing: Nullable<Reference[]>,
   incoming: Nullable<Reference[]>,
+  defaultSort: SortableListInput | undefined,
   { args, readField }: FieldFunctionOptions<PaginatedListArgs>
 ): Reference[] => {
   // Only use incoming if nothing existed
@@ -90,7 +95,7 @@ const mergeList = (
     return existing;
   }
 
-  const { sort, order } = sortingFromArgs(args);
+  const { sort, order } = sortingFromArgs(args, defaultSort);
   const byId = (ref: Reference) => readField('id', ref);
   const readSecuredField = (field: string) => (ref: Reference) => {
     const secured = readField(field, ref);

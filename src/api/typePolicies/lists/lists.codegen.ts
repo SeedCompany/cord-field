@@ -22,6 +22,11 @@ export const generateLists = (
     for (const field of Object.values(typeNode.getFields()).filter(
       isListField
     )) {
+      const { sort, order } =
+        field.args.find((arg) => arg.name === 'input')?.defaultValue ?? {};
+      const defaultSort =
+        sort && order ? `{ sort: '${sort}', order: '${order}' }` : '';
+
       const fieldDef = getOrCreateSubObjects(
         typePolicies,
         typeNode.name,
@@ -32,7 +37,7 @@ export const generateLists = (
       }
       fieldDef.addPropertyAssignment({
         name: field.name,
-        initializer: 'pageLimitPagination()',
+        initializer: `pageLimitPagination(${defaultSort})`,
       });
     }
   }

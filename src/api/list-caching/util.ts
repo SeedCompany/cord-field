@@ -11,7 +11,10 @@ export const isExecutableDef = (
 ): def is ExecutableDefinitionNode =>
   def.kind === 'OperationDefinition' || def.kind === 'FragmentDefinition';
 
-export const sortingFromArgs = (args: any): SortableListInput => ({
-  sort: args?.input?.sort,
-  order: args?.input?.order,
+export const sortingFromArgs = (
+  args: any,
+  defaults?: SortableListInput
+): SortableListInput => ({
+  sort: args?.input?.sort ?? defaults?.sort,
+  order: args?.input?.order ?? defaults?.order,
 });
