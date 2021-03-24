@@ -1,4 +1,5 @@
-import { compact, fill, times } from 'lodash';
+import { compact, fill, isEmpty, times } from 'lodash';
+import { Nullable } from './types';
 
 export type ArrayItem<T> = T extends ReadonlyArray<infer U> ? U : never;
 
@@ -6,6 +7,10 @@ export type Many<T> = T | readonly T[];
 
 export const many = <T>(items: Many<T>): readonly T[] =>
   Array.isArray(items) ? items : [items as T];
+
+export const isListNotEmpty = <T>(
+  list: Nullable<readonly T[]>
+): list is readonly T[] & { 0: T } => !isEmpty(list);
 
 /** Converts a CSV string into a cleaned list */
 export const csv = <T extends string = string>(
