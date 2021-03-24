@@ -1,5 +1,9 @@
 import { Order } from '../schema.generated';
 
+export interface Entity {
+  id: string;
+}
+
 export interface InputArg<T> {
   input?: T | null;
 }

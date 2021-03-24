@@ -10,7 +10,7 @@ import {
   modifyList,
   ModifyListOptions,
 } from './modifyList';
-import { InputArg, SortableListInput } from './types';
+import { Entity, InputArg, SortableListInput } from './types';
 import { getFirstExecutableName, sortingFromArgs } from './util';
 
 /**
@@ -40,8 +40,8 @@ import { getFirstExecutableName, sortingFromArgs } from './util';
  * })
  */
 export const addItemToList = <
-  OwningObj extends { id: string },
-  Item extends { id: string },
+  OwningObj extends Entity,
+  Item extends Entity,
   MutationOutput,
   Args = InputArg<SortableListInput>
 >({
