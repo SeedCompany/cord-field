@@ -78,6 +78,8 @@ export const pageLimitPagination = <
       hasMore: existing?.hasMore === false ? false : incoming.hasMore,
     };
   },
+  // @ts-expect-error shhhh we are quietly going to make it accessible to addItemToList
+  defaultSort,
 });
 
 const mergeList = (

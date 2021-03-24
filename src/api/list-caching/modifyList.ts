@@ -1,10 +1,11 @@
-import { ApolloCache } from '@apollo/client';
+import { ApolloCache, isReference, TypePolicies } from '@apollo/client';
 import type { Reference } from '@apollo/client';
 import { Modifier } from '@apollo/client/cache/core/types/common';
 import type { ConditionalKeys } from 'type-fest';
 import { keys, mapFromList, Nullable } from '../../util';
 import type { Query } from '../schema.generated';
-import { Entity, PaginatedListOutput } from './types';
+import { typePolicies } from '../typePolicies';
+import { Entity, PaginatedListOutput, SortableListInput } from './types';
 
 // Only the keys of T that represent list fields.
 type ListFieldKeys<T> = ConditionalKeys<T, Nullable<PaginatedListOutput<any>>>;
@@ -64,6 +65,23 @@ export const identifyList = <OwningObj extends Entity>(
       // That doesn't matter for this as it would only be widening the type.
       [cache.identify(listId[0]), listId[1] as string]
     : [undefined, listId];
+
+export const defaultSortingForList = <OwningObj extends Entity>(
+  listId: ListIdentifier<OwningObj>
+) => {
+  const [type, field] = Array.isArray(listId)
+    ? [
+        isReference(listId[0])
+          ? listId[0].__ref.slice(0, listId[0].__ref.indexOf(':'))
+          : // @ts-expect-error typename does exist on all of these objects.
+            // we need to change type gen to show that.
+            (listId[0].__typename as string),
+        listId[1] as string,
+      ]
+    : ['Query', listId as string];
+  const fieldPolicy = (typePolicies as TypePolicies)[type]?.fields?.[field];
+  return (fieldPolicy as { defaultSort?: SortableListInput }).defaultSort;
+};
 
 export const argsFromStoreFieldName = <T>(storeFieldName: string): T => {
   const argsStr = /{.*}/.exec(storeFieldName)?.[0];

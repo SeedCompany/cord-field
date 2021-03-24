@@ -6,6 +6,7 @@ import type { Order } from '../schema.generated';
 import { unwrapSecured } from '../secured';
 import {
   argsFromStoreFieldName,
+  defaultSortingForList,
   ListModifier,
   modifyList,
   ModifyListOptions,
@@ -86,7 +87,10 @@ export const addItemToList = <
 
     // Sort the new item appropriately given the list's sort/order params
     const args = argsFromStoreFieldName(storeFieldName);
-    const { sort, order } = sortingFromArgs(args);
+    const { sort, order } = sortingFromArgs(
+      args,
+      defaultSortingForList(listId)
+    );
     if (sort && order) {
       newList = orderBy(
         newList,
