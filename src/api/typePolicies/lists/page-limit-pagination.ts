@@ -55,7 +55,14 @@ export const pageLimitPagination = <
 ): FieldPolicy<List> => ({
   // The list is unique for all args except page & count
   keyArgs: (args: InputArg<PaginatedListInput> | null) => {
-    const { count, page, ...rest } = args?.input ?? {};
+    // This function is called a lot and most of the time there are no args.
+    // Optimization for this case.
+    if (!args || !args.input) {
+      // @ts-expect-error false is fine as a key specifier but Apollo types
+      // incorrectly say that it's not ok when using a function.
+      return false as KeySpecifier;
+    }
+    const { count, page, ...rest } = args.input;
     return objectToKeyArgs({ input: rest });
   },
   merge(existing, incoming, options: FieldFunctionOptions<PaginatedListArgs>) {
