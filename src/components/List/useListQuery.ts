@@ -2,7 +2,6 @@ import { useQuery } from '@apollo/client';
 import { NetworkStatus } from '@apollo/client/core';
 import { QueryHookOptions } from '@apollo/client/react/types/types';
 import { TypedDocumentNode } from '@graphql-typed-document-node/core';
-import { useState } from 'react';
 import { InputArg, PaginatedListInput, PaginatedListOutput } from '../../api';
 
 export interface ListQueryResult<
@@ -36,18 +35,15 @@ export const useListQuery = <
   });
   const data = res ? listAt(res) : undefined;
 
-  const [page, setPage] = useState(1);
   const loadMore = () => {
     void fetchMore({
       variables: {
         ...options.variables,
         input: {
           ...options.variables?.input,
-          page: page + 1,
+          page: data?.nextPage,
         },
       },
-    }).then(() => {
-      setPage(page + 1);
     });
   };
 

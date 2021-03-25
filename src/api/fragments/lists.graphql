@@ -1,4 +1,5 @@
 fragment Pagination on PaginatedList {
   total
   hasMore
+  nextPage @client
 }

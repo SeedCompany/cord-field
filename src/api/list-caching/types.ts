@@ -22,4 +22,5 @@ export interface PaginatedListOutput<T> {
   hasMore: boolean;
   items: readonly T[];
   total: number;
+  nextPage?: number;
 }

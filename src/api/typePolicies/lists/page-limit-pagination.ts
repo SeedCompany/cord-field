@@ -76,6 +76,7 @@ export const pageLimitPagination = <
       // If we already believe to have finished paging, then keep that status
       // even though we've received another non-ending page somehow.
       hasMore: existing?.hasMore === false ? false : incoming.hasMore,
+      nextPage: (options.args?.input?.page ?? 1) + 1,
     };
   },
   // @ts-expect-error shhhh we are quietly going to make it accessible to addItemToList
