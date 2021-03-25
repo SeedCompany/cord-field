@@ -196,14 +196,39 @@ const uniqLastBy = <T>(list: T[], iteratee: ValueIteratee<T>): T[] =>
   uniqBy(list.reverse(), iteratee).reverse();
 
 // Converts an object to a list of Apollo key specifiers
-const objectToKeyArgs = (obj: Record<string, any>): KeySpecifier =>
+// Empty objects are assumed to be the same as omission and therefore
+// left out of the key specifier
+const objectToKeyArgs = (obj: Record<string, any>): KeySpecifier => {
+  const keys = objectToKeyArgsRecurse(cleanEmptyObjects(obj));
+  // @ts-expect-error false is fine as a key specifier but Apollo types
+  // incorrectly say that it's not ok when using a function.
+  return keys.length > 1 ? keys : false;
+};
+const objectToKeyArgsRecurse = (obj: Record<string, any>): KeySpecifier =>
   Object.entries(obj).reduce(
     (keyArgs: KeySpecifier, [key, val]) => [
       ...keyArgs,
       key,
-      ...(isObject(val) ? [objectToKeyArgs(val)] : []),
+      ...(isObject(val) ? [objectToKeyArgsRecurse(val)] : []),
     ],
     []
   );
+
+const cleanEmptyObjects = (obj: Record<string, any>): Record<string, any> => {
+  const res: Record<string, any> = {};
+  for (const [key, value] of Object.entries(obj)) {
+    if (!isObject(value)) {
+      res[key] = value;
+      continue;
+    }
+    // eslint-disable-next-line @seedcompany/no-unused-vars -- no why idea the false positive here
+    const cleanedSub = cleanEmptyObjects(value);
+    if (Object.keys(cleanedSub).length === 0) {
+      continue;
+    }
+    res[key] = cleanedSub;
+  }
+  return res;
+};
 
 type KeySpecifier = Array<string | any[]>;

@@ -43,7 +43,10 @@ export const modifyList = <OwningObj extends Entity, Args>({
   const obj = cache.data?.data[id ?? 'ROOT_QUERY'] ?? {};
   const listVariations = keys(obj)
     .filter(
-      (query) => query.startsWith(`${field}(`) || query.startsWith(`${field}:`)
+      (query) =>
+        query === field ||
+        query.startsWith(`${field}(`) ||
+        query.startsWith(`${field}:`)
     )
     .filter((storeName) =>
       filter ? filter(argsFromStoreFieldName<Args>(storeName)) : true
