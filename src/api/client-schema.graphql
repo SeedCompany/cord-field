@@ -1,0 +1,15 @@
+"""
+This is a client-side field only.
+See [Apollo docs](https://www.apollographql.com/docs/react/local-state/local-state-management/) for more info.
+"""
+directive @client on FIELD
+
+"""
+Since this interface exists from the server it will get merged according to our loader
+"""
+interface PaginatedList {
+  """
+  The next page not in the cache
+  """
+  nextPage: Int!
+}
