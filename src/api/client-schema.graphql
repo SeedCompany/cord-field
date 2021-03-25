@@ -9,7 +9,7 @@ Since this interface exists from the server it will get merged according to our 
 """
 interface PaginatedList {
   """
-  The next page not in the cache
+  The next page based on the most recent page fetched
   """
   nextPage: Int!
 }
