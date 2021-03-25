@@ -69,11 +69,26 @@ export const pageLimitPagination = <
       options
     );
 
+    let nextPage = (options.args?.input?.page ?? 1) + 1;
+    let hasMore = incoming.hasMore;
+
+    if (
+      incoming.hasMore === false &&
+      incoming.total &&
+      items.length < incoming.total
+    ) {
+      // If we've finished paging but our total is less then we missed some,
+      // probably new items. Reset to beginning to try to load them.
+      nextPage = 1;
+      hasMore = true;
+    }
+
     return {
       ...existing,
       ...incoming,
       items,
-      nextPage: (options.args?.input?.page ?? 1) + 1,
+      hasMore,
+      nextPage,
     };
   },
   // @ts-expect-error shhhh we are quietly going to make it accessible to addItemToList
