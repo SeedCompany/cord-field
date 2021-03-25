@@ -65,7 +65,17 @@ export const fileTypes: FileType[] = [
     previewSupported: true,
   },
   {
+    mimeType: 'application/vnd.ms-excel.sheet.macroEnabled.12',
+    Icon: SpreadsheetIcon,
+    previewSupported: true,
+  },
+  {
     mimeType: 'application/vnd.ms-excel.sheet.binary.macroenabled.12',
+    Icon: SpreadsheetIcon,
+    previewSupported: true,
+  },
+  {
+    mimeType: 'application/vnd.ms-excel.sheet.binary.macroEnabled.12',
     Icon: SpreadsheetIcon,
     previewSupported: true,
   },
