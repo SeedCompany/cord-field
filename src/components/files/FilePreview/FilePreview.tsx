@@ -106,7 +106,15 @@ const previewers: PreviewerProperties = {
     component: ExcelPreview,
     props: {},
   },
+  'application/vnd.ms-excel.sheet.macroEnabled.12': {
+    component: ExcelPreview,
+    props: {},
+  },
   'application/vnd.ms-excel.sheet.binary.macroenabled.12': {
+    component: ExcelPreview,
+    props: {},
+  },
+  'application/vnd.ms-excel.sheet.binary.macroEnabled.12': {
     component: ExcelPreview,
     props: {},
   },
