@@ -1,4 +1,3 @@
-import { useQuery } from '@apollo/client';
 import {
   Breadcrumbs,
   makeStyles,
@@ -12,9 +11,9 @@ import { useParams } from 'react-router-dom';
 import { Breadcrumb } from '../../../components/Breadcrumb';
 import { useDialog } from '../../../components/Dialog';
 import { Fab } from '../../../components/Fab';
+import { List, useListQuery } from '../../../components/List';
 import { PartnershipCard } from '../../../components/PartnershipCard';
 import { ProjectBreadcrumb } from '../../../components/ProjectBreadcrumb';
-import { listOrPlaceholders } from '../../../util';
 import { CreatePartnership } from '../Create';
 import { EditPartnership } from '../Edit';
 import { PartnershipFormFragment } from '../PartnershipForm';
@@ -43,8 +42,9 @@ export const PartnershipList: FC = () => {
   const classes = useStyles();
 
   const { projectId = '' } = useParams();
-  const { data } = useQuery(ProjectPartnershipsDocument, {
-    variables: { input: projectId },
+  const { root: data, ...list } = useListQuery(ProjectPartnershipsDocument, {
+    variables: { project: projectId },
+    listAt: (res) => res.project.partnerships,
   });
   const project = data?.project;
   const partnerships = project?.partnerships;
@@ -83,18 +83,30 @@ export const PartnershipList: FC = () => {
           </Tooltip>
         )}
       </div>
-      {listOrPlaceholders(partnerships?.items, 5).map((item, index) => (
-        <PartnershipCard
-          key={item?.id ?? index}
-          partnership={item}
-          onEdit={() => item && openEditDialog(item)}
-          className={classes.item}
+      <List
+        {...list}
+        renderItem={(partnership) => (
+          <PartnershipCard
+            key={partnership.id}
+            partnership={partnership}
+            onEdit={() => openEditDialog(partnership)}
+            className={classes.item}
+          />
+        )}
+        renderSkeleton={(index) => (
+          <PartnershipCard key={index} className={classes.item} />
+        )}
+      />
+      {project && partnership && (
+        <EditPartnership
+          {...editDialogState}
+          partnership={partnership}
+          project={project}
         />
-      ))}
-      {partnership && (
-        <EditPartnership {...editDialogState} partnership={partnership} />
       )}
-      <CreatePartnership {...createDialogState} projectId={projectId} />
+      {project && (
+        <CreatePartnership {...createDialogState} project={project} />
+      )}
     </div>
   );
 };

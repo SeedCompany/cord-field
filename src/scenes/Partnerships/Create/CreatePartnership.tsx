@@ -2,10 +2,12 @@ import { useMutation } from '@apollo/client';
 import React from 'react';
 import { Except } from 'type-fest';
 import {
+  addItemToList,
   CreatePartnership as CreatePartnershipType,
-  GQLOperations,
 } from '../../../api';
 import { PartnerLookupItem } from '../../../components/form/Lookup';
+import { PartnershipCardFragmentDoc } from '../../../components/PartnershipCard/PartnershipCard.generated';
+import { ProjectPartnershipsQuery } from '../List/PartnershipList.generated';
 import { PartnershipForm, PartnershipFormProps } from '../PartnershipForm';
 import { CreatePartnershipDocument } from './CreatePartnership.generated';
 
@@ -22,13 +24,19 @@ export type CreatePartnershipProps = Except<
   PartnershipFormProps<CreatePartnershipFormInput>,
   'onSubmit'
 > & {
-  projectId: CreatePartnershipType['projectId'];
+  project: ProjectPartnershipsQuery['project'];
 };
 export const CreatePartnership = ({
-  projectId,
+  project,
   ...props
 }: CreatePartnershipProps) => {
-  const [createPartnership] = useMutation(CreatePartnershipDocument);
+  const [createPartnership] = useMutation(CreatePartnershipDocument, {
+    update: addItemToList({
+      listId: [project, 'partnerships'],
+      itemFragment: PartnershipCardFragmentDoc,
+      outputToItem: (res) => res.createPartnership.partnership,
+    }),
+  });
 
   return (
     <PartnershipForm<CreatePartnershipFormInput>
@@ -38,13 +46,12 @@ export const CreatePartnership = ({
         const input = {
           partnership: {
             ...rest,
-            projectId,
+            projectId: project.id,
             partnerId: partnerLookupItem.id,
           },
         };
         await createPartnership({
           variables: { input },
-          refetchQueries: [GQLOperations.Query.ProjectPartnerships],
         });
       }}
     />

@@ -1,13 +1,13 @@
-query ProjectPartnerships($input: ID!) {
-  project(id: $input) {
+query ProjectPartnerships($project: ID!, $input: PartnershipListInput) {
+  project(id: $project) {
     ...ProjectBreadcrumb
-    partnerships {
+    partnerships(input: $input) {
       canCreate
-      total
       items {
         ...PartnershipCard
         ...PartnershipForm
       }
+      ...Pagination
     }
   }
 }
