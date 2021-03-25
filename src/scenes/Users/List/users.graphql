@@ -3,7 +3,6 @@ query Users($input: UserListInput) {
     items {
       ...UserListItem
     }
-    hasMore
-    total
+    ...Pagination
   }
 }

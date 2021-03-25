@@ -92,8 +92,6 @@ query ProjectEngagementListOverview(
 fragment ProjectEngagementList on SecuredEngagementList {
   canRead
   canCreate
-  total
-  hasMore
   items {
     ... on LanguageEngagement {
       __typename
@@ -104,4 +102,5 @@ fragment ProjectEngagementList on SecuredEngagementList {
       ...InternshipEngagementListItem
     }
   }
+  ...Pagination
 }

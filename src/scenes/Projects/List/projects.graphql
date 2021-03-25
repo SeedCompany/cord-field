@@ -3,7 +3,6 @@ query ProjectList($input: ProjectListInput!) {
     items {
       ...ProjectListItem
     }
-    hasMore
-    total
+    ...Pagination
   }
 }

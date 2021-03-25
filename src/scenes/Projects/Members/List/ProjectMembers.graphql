@@ -5,8 +5,7 @@ query ProjectMembers($project: ID!, $input: ProjectMemberListInput) {
       items {
         ...ProjectMemberCard
       }
-      total
-      hasMore
+      ...Pagination
       canRead
       canCreate
     }
