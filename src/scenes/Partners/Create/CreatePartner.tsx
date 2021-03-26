@@ -3,7 +3,6 @@ import { useSnackbar } from 'notistack';
 import React from 'react';
 import { Except } from 'type-fest';
 import { addItemToList } from '../../../api';
-import { PartnerListItemFragmentDoc } from '../../../components/PartnerListItemCard/PartnerListItemCard.generated';
 import { ButtonLink } from '../../../components/Routing';
 import {
   CreatePartnerDocument,
@@ -20,7 +19,6 @@ export const CreatePartner = (props: CreatePartnerProps) => {
   const [createPartner] = useMutation(CreatePartnerDocument, {
     update: addItemToList({
       listId: 'partners',
-      itemFragment: PartnerListItemFragmentDoc,
       outputToItem: (data) => data.createPartner.partner,
     }),
   });

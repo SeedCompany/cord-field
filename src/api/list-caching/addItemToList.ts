@@ -1,5 +1,4 @@
 import type { MutationUpdaterFn } from '@apollo/client/core';
-import type { TypedDocumentNode as DocumentNode } from '@graphql-typed-document-node/core';
 import { orderBy } from 'lodash';
 import { Except } from 'type-fest';
 import type { Order } from '../schema.generated';
@@ -12,7 +11,7 @@ import {
   ModifyListOptions,
 } from './modifyList';
 import { Entity, InputArg, SortableListInput } from './types';
-import { getFirstExecutableName, sortingFromArgs } from './util';
+import { sortingFromArgs } from './util';
 
 /**
  * Use this on a mutation's update option to add the newly created item to an
@@ -23,8 +22,6 @@ import { getFirstExecutableName, sortingFromArgs } from './util';
  *   update: addItemToList({
  *     // A gql query called `foos`
  *     listId: 'foos',
- *     // The item fragment used both the list and the mutation result.
- *     itemFragment: FooFragmentDoc,
  *     // Grabbing the newly created item from the output of the mutation
  *     outputToItem: (res) => res.createFoo.foo
  *   })
@@ -35,7 +32,6 @@ import { getFirstExecutableName, sortingFromArgs } from './util';
  *   update: addItemToList({
  *     // An existing object with a members list
  *     listId: [project, 'members'],
- *     itemFragment: MemberFragmentDoc,
  *     outputToItem: (res) => res.createMember.member
  *   })
  * })
@@ -48,12 +44,8 @@ export const addItemToList = <
 >({
   listId,
   filter,
-  itemFragment,
   outputToItem,
 }: Except<ModifyListOptions<OwningObj, Args>, 'cache' | 'modifier'> & {
-  // The fragment representing the item's shape.
-  // This should probably be used in both the list and the mutation.
-  itemFragment: DocumentNode<Item, unknown>;
   // A function describing how to get to the item from the mutation's result
   outputToItem: (out: MutationOutput) => Item;
 }): MutationUpdaterFn<MutationOutput> => (cache, { data }) => {
@@ -63,24 +55,21 @@ export const addItemToList = <
 
   const newItem = outputToItem(data);
 
-  const newItemRef = cache.writeFragment({
-    data: newItem,
-    fragment: itemFragment,
-    // writeFragment wants the fragment name to use when the doc has
-    // multiple. We can safely assume these are all sub-fragments being
-    // referenced, and the first one is the one we want.
-    fragmentName: getFirstExecutableName(itemFragment),
-  });
-  if (!newItemRef) {
-    return;
-  }
-
-  const modifier: ListModifier = (existing, { readField, storeFieldName }) => {
+  const modifier: ListModifier = (
+    existing,
+    { readField, storeFieldName, toReference }
+  ) => {
     if (
       !existing ||
       existing.items.some((ref) => readField('id', ref) === newItem.id)
     ) {
       return existing;
+    }
+
+    // @ts-expect-error type is missing index signature, our type is actually narrower
+    const newItemRef = toReference(newItem);
+    if (!newItemRef) {
+      return;
     }
 
     let newList = [...existing.items, newItemRef];

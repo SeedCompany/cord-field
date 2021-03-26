@@ -16,7 +16,6 @@ import {
 import { SubmitError } from '../../../../components/form';
 import { AutocompleteField } from '../../../../components/form/AutocompleteField';
 import { UserField, UserLookupItem } from '../../../../components/form/Lookup';
-import { ProjectMemberCardFragmentDoc } from '../../../../components/ProjectMemberCard/ProjectMember.generated';
 import { ProjectMembersQuery } from '../List/ProjectMembers.generated';
 import { CreateProjectMemberDocument } from './CreateProjectMember.generated';
 
@@ -54,7 +53,6 @@ export const CreateProjectMember = ({
   const [createProjectMember] = useMutation(CreateProjectMemberDocument, {
     update: addItemToList({
       listId: [project, 'team'],
-      itemFragment: ProjectMemberCardFragmentDoc,
       outputToItem: (data) => data.createProjectMember.projectMember,
     }),
   });

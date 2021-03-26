@@ -3,7 +3,6 @@ import { useSnackbar } from 'notistack';
 import React from 'react';
 import { Except } from 'type-fest';
 import { addItemToList } from '../../../api';
-import { ProjectListItemFragmentDoc } from '../../../components/ProjectListItemCard/ProjectListItem.generated';
 import { ButtonLink } from '../../../components/Routing';
 import { CreateProjectDocument } from './CreateProject.generated';
 import {
@@ -15,7 +14,6 @@ export const CreateProject = (props: Except<Props, 'onSubmit'>) => {
   const [createProject] = useMutation(CreateProjectDocument, {
     update: addItemToList({
       listId: 'projects',
-      itemFragment: ProjectListItemFragmentDoc,
       outputToItem: (data) => data.createProject.project,
     }),
   });

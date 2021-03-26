@@ -4,7 +4,6 @@ import React from 'react';
 import { Except } from 'type-fest';
 import { addItemToList, CreatePersonInput } from '../../../api';
 import { ButtonLink } from '../../../components/Routing';
-import { UserListItemFragmentDoc } from '../../../components/UserListItemCard/UserListItem.generated';
 import { UserForm, UserFormProps } from '../UserForm';
 import {
   CreatePersonDocument,
@@ -23,7 +22,6 @@ export const CreateUser = (props: CreateUserProps) => {
   const [createPerson] = useMutation(CreatePersonDocument, {
     update: addItemToList({
       listId: 'users',
-      itemFragment: UserListItemFragmentDoc,
       outputToItem: (data) => data.createPerson.user,
     }),
   });
