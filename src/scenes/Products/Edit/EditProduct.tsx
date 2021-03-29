@@ -6,7 +6,7 @@ import { useSnackbar } from 'notistack';
 import React, { useMemo } from 'react';
 import { Helmet } from 'react-helmet-async';
 import { useNavigate, useParams } from 'react-router';
-import { handleFormError } from '../../../api';
+import { GQLOperations, handleFormError } from '../../../api';
 import { EngagementBreadcrumb } from '../../../components/EngagementBreadcrumb';
 import { ProjectBreadcrumb } from '../../../components/ProjectBreadcrumb';
 import {
@@ -15,8 +15,9 @@ import {
   parsedRangesWithFullTestamentRange,
   removeScriptureTypename,
 } from '../../../util/biblejs';
-import { ProductForm } from '../ProductForm';
+import { ProductForm, ProductFormProps } from '../ProductForm';
 import {
+  DeleteProductDocument,
   ProductDocument,
   UpdateProductDocument,
 } from './EditProduct.generated';
@@ -45,12 +46,15 @@ export const EditProduct = () => {
       productId,
     },
   });
-
-  const [updateProduct] = useMutation(UpdateProductDocument);
-
   const project = data?.project;
   const engagement = data?.engagement;
   const product = data?.product;
+
+  const [updateProduct] = useMutation(UpdateProductDocument);
+  const [deleteProduct] = useMutation(DeleteProductDocument, {
+    awaitRefetchQueries: true,
+    refetchQueries: [GQLOperations.Query.Engagement],
+  });
 
   const initialValues = useMemo(() => {
     if (!product) return undefined;
@@ -99,6 +103,64 @@ export const EditProduct = () => {
     };
   }, [product]);
 
+  const handleSubmit: ProductFormProps['onSubmit'] = async (data) => {
+    if (!product) {
+      return;
+    }
+
+    if (data.submitAction === 'delete') {
+      await deleteProduct({
+        variables: {
+          productId: product.id,
+        },
+      });
+
+      enqueueSnackbar(`Deleted product`, {
+        variant: 'success',
+      });
+    } else {
+      const {
+        productType,
+        produces,
+        scriptureReferences,
+        fullOldTestament,
+        fullNewTestament,
+        ...input
+      } = data.product;
+
+      const parsedScriptureReferences = parsedRangesWithFullTestamentRange(
+        scriptureReferences,
+        fullOldTestament,
+        fullNewTestament
+      );
+
+      await updateProduct({
+        variables: {
+          input: {
+            product: {
+              id: product.id,
+              ...input,
+              produces: produces?.id,
+              ...(productType !== 'DirectScriptureProduct'
+                ? {
+                    scriptureReferencesOverride: parsedScriptureReferences,
+                  }
+                : {
+                    scriptureReferences: parsedScriptureReferences,
+                  }),
+            },
+          },
+        },
+      });
+
+      enqueueSnackbar(`Updated product`, {
+        variant: 'success',
+      });
+    }
+
+    navigate('../../');
+  };
+
   return (
     <main className={classes.root}>
       {/* TODO label product */}
@@ -115,50 +177,9 @@ export const EditProduct = () => {
       {product && (
         <ProductForm
           product={product}
-          onSubmit={async (
-            {
-              product: {
-                productType,
-                produces,
-                scriptureReferences,
-                fullOldTestament,
-                fullNewTestament,
-                ...input
-              },
-            },
-            form
-          ) => {
+          onSubmit={async (data, form) => {
             try {
-              const parsedScriptureReferences = parsedRangesWithFullTestamentRange(
-                scriptureReferences,
-                fullOldTestament,
-                fullNewTestament
-              );
-
-              await updateProduct({
-                variables: {
-                  input: {
-                    product: {
-                      id: product.id,
-                      ...input,
-                      produces: produces?.id,
-                      ...(productType !== 'DirectScriptureProduct'
-                        ? {
-                            scriptureReferencesOverride: parsedScriptureReferences,
-                          }
-                        : {
-                            scriptureReferences: parsedScriptureReferences,
-                          }),
-                    },
-                  },
-                },
-              });
-
-              enqueueSnackbar(`Updated product`, {
-                variant: 'success',
-              });
-
-              navigate('../../');
+              await handleSubmit(data, form);
             } catch (e) {
               await handleFormError(e, form);
             }
