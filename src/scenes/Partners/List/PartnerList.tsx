@@ -18,9 +18,6 @@ const useStyles = makeStyles(({ spacing, breakpoints }) => ({
   items: {
     cardWidth: breakpoints.values.sm,
   },
-  item: {
-    marginBottom: spacing(2),
-  },
 }));
 
 export const PartnerList: FC = () => {
@@ -57,13 +54,9 @@ export const PartnerList: FC = () => {
       </Typography>
       <List
         {...list}
-        classes={{ items: classes.items }}
-        renderItem={(item) => (
-          <PartnerCard key={item.id} partner={item} className={classes.item} />
-        )}
-        renderSkeleton={(index) => (
-          <PartnerCard key={index} className={classes.item} />
-        )}
+        classes={{ container: classes.items }}
+        renderItem={(item) => <PartnerCard partner={item} />}
+        renderSkeleton={<PartnerCard />}
         skeletonCount={15}
       />
     </ContentContainer>

@@ -33,9 +33,6 @@ const useStyles = makeStyles(({ spacing, breakpoints }) => ({
   title: {
     marginRight: spacing(3),
   },
-  item: {
-    marginBottom: spacing(2),
-  },
 }));
 
 export const PartnershipList: FC = () => {
@@ -87,15 +84,11 @@ export const PartnershipList: FC = () => {
         {...list}
         renderItem={(partnership) => (
           <PartnershipCard
-            key={partnership.id}
             partnership={partnership}
             onEdit={() => openEditDialog(partnership)}
-            className={classes.item}
           />
         )}
-        renderSkeleton={(index) => (
-          <PartnershipCard key={index} className={classes.item} />
-        )}
+        renderSkeleton={<PartnershipCard />}
       />
       {project && partnership && (
         <EditPartnership

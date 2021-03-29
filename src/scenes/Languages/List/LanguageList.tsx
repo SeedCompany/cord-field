@@ -23,9 +23,6 @@ const useStyles = makeStyles(({ spacing }) => ({
   items: {
     maxWidth: 400,
   },
-  item: {
-    marginBottom: spacing(2),
-  },
 }));
 
 export const LanguageList: FC = () => {
@@ -71,17 +68,9 @@ export const LanguageList: FC = () => {
       </Typography>
       <List
         {...list}
-        classes={{ items: classes.items }}
-        renderItem={(item) => (
-          <LanguageCard
-            language={item}
-            key={item.id}
-            className={classes.item}
-          />
-        )}
-        renderSkeleton={(index) => (
-          <LanguageCard key={index} className={classes.item} />
-        )}
+        classes={{ container: classes.items }}
+        renderItem={(item) => <LanguageCard language={item} />}
+        renderSkeleton={<LanguageCard />}
         skeletonCount={10}
       />
     </ContentContainer>

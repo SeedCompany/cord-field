@@ -80,9 +80,6 @@ const useStyles = makeStyles(({ spacing, breakpoints, palette }) => ({
   engagementListItems: {
     maxWidth: 600,
   },
-  engagementCard: {
-    marginBottom: spacing(3),
-  },
 }));
 
 export const ProjectOverview: FC = () => {
@@ -476,27 +473,24 @@ export const ProjectOverview: FC = () => {
             {...engagements}
             classes={{
               root: classes.engagementList,
-              items: classes.engagementListItems,
+              container: classes.engagementListItems,
             }}
+            spacing={3}
             renderItem={(engagement) =>
               engagement.__typename === 'LanguageEngagement' ? (
                 <LanguageEngagementListItemCard
-                  key={engagement.id}
                   projectId={projectId}
                   {...engagement}
-                  className={classes.engagementCard}
                 />
               ) : (
                 <InternshipEngagementListItemCard
-                  key={engagement.id}
                   projectId={projectId}
                   {...engagement}
-                  className={classes.engagementCard}
                 />
               )
             }
             skeletonCount={0}
-            renderSkeleton={() => null}
+            renderSkeleton={null}
           />
         </div>
       )}

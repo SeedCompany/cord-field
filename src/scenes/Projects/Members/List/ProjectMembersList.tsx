@@ -33,9 +33,6 @@ const useStyles = makeStyles(({ spacing, breakpoints }) => ({
   title: {
     marginRight: spacing(3),
   },
-  item: {
-    marginBottom: spacing(3),
-  },
 }));
 
 export const ProjectMembersList: FC = () => {
@@ -98,11 +95,10 @@ export const ProjectMembersList: FC = () => {
       ) : (
         <List
           {...list}
+          spacing={3}
           renderItem={(member) => (
             <ProjectMemberCard
-              key={member.id}
               projectMember={member}
-              className={classes.item}
               onEdit={() =>
                 openUpdateProjectMemberDialog({
                   project: data!.project,
@@ -113,9 +109,7 @@ export const ProjectMembersList: FC = () => {
               }
             />
           )}
-          renderSkeleton={(index) => (
-            <ProjectMemberCard key={index} className={classes.item} />
-          )}
+          renderSkeleton={<ProjectMemberCard />}
         />
       )}
       {projectMemberProps && (

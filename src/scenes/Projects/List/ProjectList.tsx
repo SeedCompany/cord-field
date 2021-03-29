@@ -23,9 +23,6 @@ const useStyles = makeStyles(({ spacing, breakpoints }) => ({
   items: {
     cardWidth: breakpoints.values.sm,
   },
-  item: {
-    marginBottom: spacing(2),
-  },
 }));
 
 export const ProjectList: FC = () => {
@@ -71,13 +68,9 @@ export const ProjectList: FC = () => {
       </Typography>
       <List
         {...list}
-        classes={{ items: classes.items }}
-        renderItem={(item) => (
-          <ProjectCard key={item.id} project={item} className={classes.item} />
-        )}
-        renderSkeleton={(index) => (
-          <ProjectCard key={index} className={classes.item} />
-        )}
+        classes={{ container: classes.items }}
+        renderItem={(item) => <ProjectCard project={item} />}
+        renderSkeleton={<ProjectCard />}
       />
     </ContentContainer>
   );
