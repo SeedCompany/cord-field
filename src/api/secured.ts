@@ -1,4 +1,4 @@
-import isPlainObject from 'is-plain-object';
+import { isPlainObject } from 'lodash';
 import { ConditionalKeys } from 'type-fest';
 import { has, Nullable } from '../util';
 
