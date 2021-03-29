@@ -6,7 +6,11 @@ import { useSnackbar } from 'notistack';
 import React, { useMemo } from 'react';
 import { Helmet } from 'react-helmet-async';
 import { useNavigate, useParams } from 'react-router';
-import { GQLOperations, handleFormError } from '../../../api';
+import {
+  handleFormError,
+  LanguageEngagement,
+  removeItemFromList,
+} from '../../../api';
 import { EngagementBreadcrumb } from '../../../components/EngagementBreadcrumb';
 import { ProjectBreadcrumb } from '../../../components/ProjectBreadcrumb';
 import {
@@ -52,8 +56,10 @@ export const EditProduct = () => {
 
   const [updateProduct] = useMutation(UpdateProductDocument);
   const [deleteProduct] = useMutation(DeleteProductDocument, {
-    awaitRefetchQueries: true,
-    refetchQueries: [GQLOperations.Query.Engagement],
+    update: removeItemFromList({
+      listId: [engagement as LanguageEngagement, 'products'],
+      item: product!,
+    }),
   });
 
   const initialValues = useMemo(() => {

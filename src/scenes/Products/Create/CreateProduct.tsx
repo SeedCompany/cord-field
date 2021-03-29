@@ -5,7 +5,11 @@ import { useSnackbar } from 'notistack';
 import React from 'react';
 import { Helmet } from 'react-helmet-async';
 import { useNavigate, useParams } from 'react-router';
-import { handleFormError } from '../../../api';
+import {
+  addItemToList,
+  handleFormError,
+  LanguageEngagement,
+} from '../../../api';
 import { EngagementBreadcrumb } from '../../../components/EngagementBreadcrumb';
 import { ProjectBreadcrumb } from '../../../components/ProjectBreadcrumb';
 import { ButtonLink } from '../../../components/Routing';
@@ -43,7 +47,12 @@ export const CreateProduct = () => {
   const project = data?.project;
   const engagement = data?.engagement;
 
-  const [createProduct] = useMutation(CreateProductDocument);
+  const [createProduct] = useMutation(CreateProductDocument, {
+    update: addItemToList({
+      listId: [engagement as LanguageEngagement, 'products'],
+      outputToItem: (res) => res.createProduct.product,
+    }),
+  });
 
   return (
     <main className={classes.root}>
