@@ -181,7 +181,7 @@ export const EditProduct = () => {
             try {
               await handleSubmit(data, form);
             } catch (e) {
-              await handleFormError(e, form);
+              return await handleFormError(e, form);
             }
           }}
           initialValues={initialValues}

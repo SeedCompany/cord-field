@@ -112,7 +112,7 @@ export const CreateProduct = () => {
 
               navigate('../../');
             } catch (e) {
-              await handleFormError(e, form);
+              return await handleFormError(e, form);
             }
           }}
         />
