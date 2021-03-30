@@ -46,6 +46,7 @@ export const TogglePinButton = ({
 
   return (
     <IconButton
+      color="secondary"
       {...rest}
       onClick={(event) => {
         void togglePinned();
