@@ -61,7 +61,7 @@ export const TogglePinButton = ({
 
   return (
     <IconButton
-      color="secondary"
+      color={object?.pinned ? 'secondary' : undefined}
       {...rest}
       onClick={(event) => {
         if (!object) {
