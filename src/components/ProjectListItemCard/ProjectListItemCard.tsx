@@ -24,6 +24,7 @@ const useStyles = makeStyles(({ breakpoints, spacing }) => {
     root: {
       width: '100%',
       maxWidth: cardWidth,
+      position: 'relative',
     },
     card: {
       display: 'flex',
@@ -54,6 +55,11 @@ const useStyles = makeStyles(({ breakpoints, spacing }) => {
       display: 'flex',
       flexDirection: 'column',
       height: '100%',
+    },
+    pin: {
+      position: 'absolute',
+      top: 10,
+      right: 10,
     },
     engagementCount: {
       flex: 2,
@@ -153,7 +159,6 @@ export const ProjectListItemCard: FC<ProjectListItemCardProps> = ({
           </Grid>
           <div className={classes.rightContent}>
             <DisplaySimpleProperty aria-hidden="true" />
-            <div>{project && <TogglePinButton object={project} />}</div>
             <div className={classes.engagementCount}>
               <Typography variant="h1">
                 {!project ? (
@@ -205,6 +210,7 @@ export const ProjectListItemCard: FC<ProjectListItemCardProps> = ({
           </div>
         </CardContent>
       </CardActionAreaLink>
+      {project && <TogglePinButton object={project} className={classes.pin} />}
     </Card>
   );
 };
