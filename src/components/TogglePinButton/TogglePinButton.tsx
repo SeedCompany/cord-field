@@ -1,8 +1,8 @@
 import { useMutation } from '@apollo/client';
-import { IconButton, makeStyles } from '@material-ui/core';
+import { IconButton, IconButtonProps, makeStyles } from '@material-ui/core';
 import clsx from 'clsx';
-import { FC, useCallback } from 'react';
 import * as React from 'react';
+import { Except } from 'type-fest';
 import { PushPinIconFilled, PushPinIconOutlined } from '../Icons';
 import {
   TogglePinFragment,
@@ -17,15 +17,15 @@ const useStyles = makeStyles(() => {
   };
 });
 
-export interface TogglePinButtonProps {
+export type TogglePinButtonProps = Except<IconButtonProps, 'children'> & {
   object: TogglePinFragment;
-  className?: string;
-}
+};
 
-export const TogglePinButton: FC<TogglePinButtonProps> = ({
+export const TogglePinButton = ({
   object,
   className,
-}) => {
+  ...rest
+}: TogglePinButtonProps) => {
   const classes = useStyles();
   const [togglePinned] = useMutation(TogglePinnedDocument, {
     variables: {
@@ -44,17 +44,13 @@ export const TogglePinButton: FC<TogglePinButtonProps> = ({
     },
   });
 
-  const handlePin = useCallback(
-    async (evt: React.MouseEvent<HTMLButtonElement>) => {
-      evt.preventDefault();
-      await togglePinned();
-    },
-    [togglePinned]
-  );
-
   return (
     <IconButton
-      onClick={handlePin}
+      {...rest}
+      onClick={(event) => {
+        void togglePinned();
+        rest.onClick?.(event);
+      }}
       className={clsx(classes.pinIcon, className)}
     >
       {object.pinned ? <PushPinIconFilled /> : <PushPinIconOutlined />}
