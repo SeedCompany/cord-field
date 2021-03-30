@@ -213,6 +213,7 @@ export const ProjectListItemCard: FC<ProjectListItemCardProps> = ({
       </CardActionAreaLink>
       <TogglePinButton
         object={project}
+        label="Project"
         listId="projects"
         listFilter={(args: ProjectListQueryVariables) =>
           args.input.filter?.pinned ?? false

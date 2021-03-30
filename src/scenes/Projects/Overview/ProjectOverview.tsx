@@ -251,6 +251,7 @@ export const ProjectOverview: FC = () => {
             )}
             <TogglePinButton
               object={projectOverviewData?.project}
+              label="Project"
               listId="projects"
               listFilter={(args: ProjectListQueryVariables) =>
                 args.input.filter?.pinned ?? false

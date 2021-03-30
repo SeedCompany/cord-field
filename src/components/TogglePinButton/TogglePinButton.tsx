@@ -1,4 +1,5 @@
 import { useMutation } from '@apollo/client';
+import { Tooltip, TooltipProps } from '@material-ui/core';
 import * as React from 'react';
 import { Except } from 'type-fest';
 import { addItemToList, removeItemFromList } from '../../api';
@@ -17,12 +18,16 @@ export type TogglePinButtonProps = Except<IconButtonProps, 'children'> & {
   // Given this list identified by these input args,
   // should it be modified when this object's pin status changes
   listFilter?: (args: any) => boolean;
+  label?: string;
+  TooltipProps?: TooltipProps;
 };
 
 export const TogglePinButton = ({
   object,
+  label,
   listId,
   listFilter,
+  TooltipProps,
   ...rest
 }: TogglePinButtonProps) => {
   const [togglePinned] = useMutation(TogglePinnedDocument, {
@@ -59,7 +64,7 @@ export const TogglePinButton = ({
     },
   });
 
-  return (
+  const button = (
     <IconButton
       color={object?.pinned ? 'secondary' : undefined}
       {...rest}
@@ -78,4 +83,17 @@ export const TogglePinButton = ({
       {object?.pinned ? <PushPinIconFilled /> : <PushPinIconOutlined />}
     </IconButton>
   );
+
+  if (object && label) {
+    return (
+      <Tooltip
+        {...TooltipProps}
+        title={(object.pinned ? 'Unpin ' : 'Pin ') + label}
+      >
+        {button}
+      </Tooltip>
+    );
+  }
+
+  return button;
 };
