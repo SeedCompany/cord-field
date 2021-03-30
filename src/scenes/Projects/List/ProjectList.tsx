@@ -21,7 +21,7 @@ const useStyles = makeStyles(({ spacing, breakpoints }) => ({
     margin: spacing(3, 0),
   },
   items: {
-    cardWidth: breakpoints.values.sm,
+    maxWidth: breakpoints.values.sm,
   },
 }));
 
