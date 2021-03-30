@@ -1,0 +1,8 @@
+fragment TogglePin on Pinnable {
+  id
+  pinned
+}
+
+mutation TogglePinned($pinned: Boolean, $id: ID!) {
+  togglePinned(pinned: $pinned, id: $id)
+}

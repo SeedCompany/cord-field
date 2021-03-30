@@ -10,11 +10,13 @@ import clsx from 'clsx';
 import { FC } from 'react';
 import * as React from 'react';
 import { displayStatus } from '../../api';
+import { ProjectListQueryVariables } from '../../scenes/Projects/List/projects.generated';
 import { DisplaySimpleProperty } from '../DisplaySimpleProperty';
 import { FormattedDate } from '../Formatters';
 import { Picture, useRandomPicture } from '../Picture';
 import { CardActionAreaLink } from '../Routing';
 import { Sensitivity } from '../Sensitivity';
+import { TogglePinButton } from '../TogglePinButton';
 import { ProjectListItemFragment } from './ProjectListItem.generated';
 
 const useStyles = makeStyles(({ breakpoints, spacing }) => {
@@ -23,6 +25,7 @@ const useStyles = makeStyles(({ breakpoints, spacing }) => {
     root: {
       width: '100%',
       maxWidth: cardWidth,
+      position: 'relative',
     },
     card: {
       display: 'flex',
@@ -53,6 +56,11 @@ const useStyles = makeStyles(({ breakpoints, spacing }) => {
       display: 'flex',
       flexDirection: 'column',
       height: '100%',
+    },
+    pin: {
+      position: 'absolute',
+      top: 10,
+      right: 10,
     },
     engagementCount: {
       flex: 2,
@@ -152,7 +160,6 @@ export const ProjectListItemCard: FC<ProjectListItemCardProps> = ({
           </Grid>
           <div className={classes.rightContent}>
             <DisplaySimpleProperty aria-hidden="true" />
-
             <div className={classes.engagementCount}>
               <Typography variant="h1">
                 {!project ? (
@@ -204,6 +211,15 @@ export const ProjectListItemCard: FC<ProjectListItemCardProps> = ({
           </div>
         </CardContent>
       </CardActionAreaLink>
+      <TogglePinButton
+        object={project}
+        label="Project"
+        listId="projects"
+        listFilter={(args: ProjectListQueryVariables) =>
+          args.input.filter?.pinned ?? false
+        }
+        className={classes.pin}
+      />
     </Card>
   );
 };

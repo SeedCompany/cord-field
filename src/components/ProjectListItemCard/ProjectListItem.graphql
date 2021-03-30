@@ -22,6 +22,7 @@ fragment ProjectListItem on Project {
     value
   }
   modifiedAt
+  ...TogglePin
   ... on InternshipProject {
     engagements {
       total

@@ -21,6 +21,7 @@ export const ProjectListItemCard = () => {
     status: select('status', ProjectStatusList, 'Active'),
     sensitivity: select('sensitivity', SensitivityList, 'High'),
     modifiedAt: dateTime('modifiedAt'),
+    pinned: true,
     departmentId: { value: text('departmentId', '1234567') },
     estimatedSubmission: {
       value: date('estimatedSubmission'),
