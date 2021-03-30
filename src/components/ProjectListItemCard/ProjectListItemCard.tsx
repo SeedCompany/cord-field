@@ -211,16 +211,14 @@ export const ProjectListItemCard: FC<ProjectListItemCardProps> = ({
           </div>
         </CardContent>
       </CardActionAreaLink>
-      {project && (
-        <TogglePinButton
-          object={project}
-          listId="projects"
-          listFilter={(args: ProjectListQueryVariables) =>
-            args.input.filter?.pinned ?? false
-          }
-          className={classes.pin}
-        />
-      )}
+      <TogglePinButton
+        object={project}
+        listId="projects"
+        listFilter={(args: ProjectListQueryVariables) =>
+          args.input.filter?.pinned ?? false
+        }
+        className={classes.pin}
+      />
     </Card>
   );
 };
