@@ -1,9 +1,9 @@
 import { useMutation } from '@apollo/client';
-import { IconButton, IconButtonProps } from '@material-ui/core';
 import * as React from 'react';
 import { Except } from 'type-fest';
 import { addItemToList, removeItemFromList } from '../../api';
 import { ListIdentifier } from '../../api/list-caching/modifyList';
+import { IconButton, IconButtonProps } from '../IconButton';
 import { PushPinIconFilled, PushPinIconOutlined } from '../Icons';
 import {
   TogglePinFragment,
@@ -11,7 +11,7 @@ import {
 } from './TogglePinButton.generated';
 
 export type TogglePinButtonProps = Except<IconButtonProps, 'children'> & {
-  object: TogglePinFragment;
+  object?: TogglePinFragment;
   // A list to add/remove the object from this list when pin status changes
   listId?: ListIdentifier<any>;
   // Given this list identified by these input args,
@@ -26,11 +26,8 @@ export const TogglePinButton = ({
   ...rest
 }: TogglePinButtonProps) => {
   const [togglePinned] = useMutation(TogglePinnedDocument, {
-    variables: {
-      id: object.id,
-    },
     update: (cache, result) => {
-      if (!result.data) {
+      if (!result.data || !object) {
         return;
       }
       const pinned = result.data.togglePinned;
@@ -67,11 +64,18 @@ export const TogglePinButton = ({
       color="secondary"
       {...rest}
       onClick={(event) => {
-        void togglePinned();
+        if (!object) {
+          return;
+        }
+        void togglePinned({
+          variables: { id: object.id },
+        });
         rest.onClick?.(event);
       }}
+      disabled={rest.disabled || !object}
+      loading={rest.loading || !object}
     >
-      {object.pinned ? <PushPinIconFilled /> : <PushPinIconOutlined />}
+      {object?.pinned ? <PushPinIconFilled /> : <PushPinIconOutlined />}
     </IconButton>
   );
 };

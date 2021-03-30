@@ -45,10 +45,16 @@ export const IconButton = forwardRef<HTMLButtonElement, IconButtonProps>(
         color={color !== 'error' ? color : undefined}
         className={clsx(
           color === 'error' ? classes.error : undefined,
-          props.className
+          !loading ? props.className : undefined
         )}
       />
     );
-    return loading ? <Skeleton variant="circle">{fab}</Skeleton> : fab;
+    return loading ? (
+      <Skeleton variant="circle" className={props.className}>
+        {fab}
+      </Skeleton>
+    ) : (
+      fab
+    );
   }
 );
