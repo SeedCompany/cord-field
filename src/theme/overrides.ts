@@ -31,6 +31,9 @@ export const appProps: ThemeOptions['props'] = (_theme) => ({
   MuiFab: {
     size: 'small',
   },
+  MuiTabs: {
+    indicatorColor: 'primary',
+  },
 });
 
 export const appOverrides: ThemeOptions['overrides'] = ({
@@ -38,6 +41,7 @@ export const appOverrides: ThemeOptions['overrides'] = ({
   palette,
   typography,
   shape,
+  transitions,
 }) => {
   const primaryColorForText = palette.dark
     ? palette.primary.light
@@ -172,6 +176,19 @@ export const appOverrides: ThemeOptions['overrides'] = ({
         // Remove dangling divider
         '&:last-child td': {
           borderBottom: 'none',
+        },
+      },
+    },
+    MuiTab: {
+      root: {
+        textTransform: 'none',
+      },
+      wrapper: {
+        transition: transitions.create('transform'),
+      },
+      selected: {
+        '& $wrapper': {
+          transform: 'scale(1.43)', // 20px
         },
       },
     },

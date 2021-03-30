@@ -1,5 +1,5 @@
-import { Grid, makeStyles, Tab, Tabs, Typography } from '@material-ui/core';
-import { Skeleton, TabContext } from '@material-ui/lab';
+import { Divider, Grid, makeStyles, Tab, Typography } from '@material-ui/core';
+import { Skeleton, TabContext, TabList, TabPanel } from '@material-ui/lab';
 import React, { FC } from 'react';
 import { Helmet } from 'react-helmet-async';
 import { Project } from '../../../api';
@@ -20,11 +20,17 @@ const useStyles = makeStyles(({ spacing, breakpoints }) => ({
   options: {
     margin: spacing(3, 0),
   },
-  items: {
+  maxWidth: {
     maxWidth: breakpoints.values.sm,
   },
-  projectTotal: {
-    margin: spacing(2, 2),
+  tabPanel: {
+    overflowY: 'auto',
+    // allow card shadow to bleed over instead of cutting it off
+    padding: spacing(0, 0, 0, 2),
+    margin: spacing(0, 0, 0, -2),
+  },
+  total: {
+    marginTop: spacing(2),
   },
 }));
 
@@ -74,28 +80,31 @@ export const ProjectList: FC = () => {
         </Grid>
       </Grid>
       <TabContext value={filters.tab}>
-        <Tabs
-          value={filters.tab}
+        <TabList
           onChange={(_e, tab) => setFilters({ ...filters, tab })}
           aria-label="project navigation tabs"
+          className={classes.maxWidth}
         >
-          <Tab label="My Projects" key="mine" value="mine" />
-          <Tab label="All" key="all" value="all" />
-          <Tab label="Pinned" key="pinned" value="pinned" />
-        </Tabs>
-        <Typography variant="h3" className={classes.projectTotal}>
-          {list.data ? (
-            `${formatNumber(list.data.total)} Projects`
-          ) : (
-            <Skeleton width="12ch" />
-          )}
-        </Typography>
-        <List
-          {...list}
-          classes={{ container: classes.items }}
-          renderItem={(item) => <ProjectCard project={item} />}
-          renderSkeleton={<ProjectCard />}
-        />
+          <Tab label="Pinned" value="pinned" />
+          <Tab label="My Projects" value="mine" />
+          <Tab label="All" value="all" />
+        </TabList>
+        <Divider className={classes.maxWidth} />
+        <TabPanel value={filters.tab} className={classes.tabPanel}>
+          <Typography variant="h3" className={classes.total}>
+            {list.data ? (
+              `${formatNumber(list.data.total)} Projects`
+            ) : (
+              <Skeleton width="12ch" />
+            )}
+          </Typography>
+          <List
+            {...list}
+            classes={{ container: classes.maxWidth }}
+            renderItem={(item) => <ProjectCard project={item} />}
+            renderSkeleton={<ProjectCard />}
+          />
+        </TabPanel>
       </TabContext>
     </ContentContainer>
   );
