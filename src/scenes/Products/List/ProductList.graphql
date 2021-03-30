@@ -1,0 +1,19 @@
+query ProductList($engagement: ID!, $input: ProductListInput) {
+  engagement(id: $engagement) {
+    id
+    ... on LanguageEngagement {
+      products(input: $input) {
+        ...ProductList
+      }
+    }
+  }
+}
+
+fragment ProductList on SecuredProductList {
+  canRead
+  canCreate
+  items {
+    ...ProductCard
+  }
+  ...Pagination
+}
