@@ -2,9 +2,8 @@ import { useMutation } from '@apollo/client';
 import { useSnackbar } from 'notistack';
 import React from 'react';
 import { Except } from 'type-fest';
-import { PartnerListItemFragmentDoc } from '../../../components/PartnerListItemCard/PartnerListItemCard.generated';
+import { addItemToList } from '../../../api';
 import { ButtonLink } from '../../../components/Routing';
-import { addItemToList } from '../../../util';
 import {
   CreatePartnerDocument,
   CreatePartnerMutation,
@@ -18,11 +17,10 @@ type CreatePartnerProps = Except<
 
 export const CreatePartner = (props: CreatePartnerProps) => {
   const [createPartner] = useMutation(CreatePartnerDocument, {
-    update: addItemToList(
-      'partners',
-      PartnerListItemFragmentDoc,
-      (data) => data.createPartner.partner
-    ),
+    update: addItemToList({
+      listId: 'partners',
+      outputToItem: (data) => data.createPartner.partner,
+    }),
   });
   const { enqueueSnackbar } = useSnackbar();
 

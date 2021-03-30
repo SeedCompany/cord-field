@@ -1,6 +1,7 @@
 mutation CreatePartnership($input: CreatePartnershipInput!) {
   createPartnership(input: $input) {
     partnership {
+      ...PartnershipCard
       ...PartnershipForm
     }
   }

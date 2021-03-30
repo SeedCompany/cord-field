@@ -34,6 +34,7 @@ import {
   SecuredField,
   SecuredFieldRenderProps,
   SecuredKeys,
+  SubmitAction,
 } from '../../../components/form';
 import {
   FilmField,
@@ -97,7 +98,7 @@ const productFieldMap: Partial<Record<ProductTypes, AnyFormFieldComponent>> = {
   Song: SongField,
 };
 
-export interface ProductFormValues {
+export interface ProductFormValues extends SubmitAction<'delete'> {
   product: Merge<
     Except<CreateProduct & UpdateProduct, 'id' | 'engagementId'>,
     {

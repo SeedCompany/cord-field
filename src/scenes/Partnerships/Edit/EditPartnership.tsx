@@ -2,9 +2,10 @@ import { useMutation } from '@apollo/client';
 import { Decorator } from 'final-form';
 import React, { FC, useMemo } from 'react';
 import { Except } from 'type-fest';
-import { GQLOperations, UpdatePartnershipInput } from '../../../api';
+import { removeItemFromList, UpdatePartnershipInput } from '../../../api';
 import { SubmitAction, SubmitButton } from '../../../components/form';
 import { PartnerLookupItem } from '../../../components/form/Lookup';
+import { ProjectPartnershipsQuery } from '../List/PartnershipList.generated';
 import {
   hasManagingType,
   PartnershipForm,
@@ -27,6 +28,7 @@ type EditPartnershipProps = Except<
   PartnershipFormProps<EditPartnershipFormInput>,
   'onSubmit' | 'initialValues'
 > & {
+  project: ProjectPartnershipsQuery['project'];
   partnership: PartnershipFormFragment;
 };
 
@@ -58,9 +60,15 @@ const clearFinancialReportingType: Decorator<EditPartnershipFormInput> = (
 const decorators = [clearFinancialReportingType];
 
 export const EditPartnership: FC<EditPartnershipProps> = (props) => {
+  const { partnership, project } = props;
+
   const [updatePartnership] = useMutation(UpdatePartnershipDocument);
-  const [deletePartnership] = useMutation(DeletePartnershipDocument);
-  const { partnership } = props;
+  const [deletePartnership] = useMutation(DeletePartnershipDocument, {
+    update: removeItemFromList({
+      listId: [project, 'partnerships'],
+      item: partnership,
+    }),
+  });
 
   const initialValues = useMemo(
     () => ({
@@ -90,17 +98,14 @@ export const EditPartnership: FC<EditPartnershipProps> = (props) => {
       {...props}
       sendIfClean="delete" // Lets us delete without changing any fields
       onSubmit={async ({ submitAction, partnership }) => {
-        const refetchQueries = [GQLOperations.Query.ProjectPartnerships];
         if (submitAction === 'delete') {
           await deletePartnership({
             variables: { input: partnership.id },
-            refetchQueries,
           });
           return;
         }
         await updatePartnership({
           variables: { input: { partnership } },
-          refetchQueries,
         });
       }}
       title={`Edit Partnership with ${partnership.partner.value?.organization.value?.name.value}`}

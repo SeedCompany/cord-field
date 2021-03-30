@@ -28,7 +28,7 @@ const useStyles = makeStyles(({ spacing }) => ({
 
 export interface PartnershipCardProps {
   partnership?: PartnershipCardFragment;
-  onEdit: () => void;
+  onEdit?: () => void;
   className?: string;
 }
 

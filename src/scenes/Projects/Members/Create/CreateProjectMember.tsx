@@ -4,6 +4,7 @@ import onFieldChange from 'final-form-calculate';
 import React, { useMemo } from 'react';
 import { Except, Merge } from 'type-fest';
 import {
+  addItemToList,
   CreateProjectMember as CreateProjectMemberInput,
   displayRole,
   RoleList,
@@ -15,7 +16,7 @@ import {
 import { SubmitError } from '../../../../components/form';
 import { AutocompleteField } from '../../../../components/form/AutocompleteField';
 import { UserField, UserLookupItem } from '../../../../components/form/Lookup';
-import { ProjectMembersDocument } from '../List/ProjectMembers.generated';
+import { ProjectMembersQuery } from '../List/ProjectMembers.generated';
 import { CreateProjectMemberDocument } from './CreateProjectMember.generated';
 
 interface FormValues {
@@ -33,7 +34,7 @@ type CreateProjectMemberProps = Except<
   DialogFormProps<FormValues>,
   'onSubmit' | 'initialValues'
 > & {
-  projectId: string;
+  project: ProjectMembersQuery['project'];
 };
 
 const decorators: Array<Decorator<FormValues>> = [
@@ -46,26 +47,23 @@ const decorators: Array<Decorator<FormValues>> = [
 ];
 
 export const CreateProjectMember = ({
-  projectId,
+  project,
   ...props
 }: CreateProjectMemberProps) => {
   const [createProjectMember] = useMutation(CreateProjectMemberDocument, {
-    refetchQueries: [
-      {
-        query: ProjectMembersDocument,
-        variables: { input: projectId },
-      },
-    ],
-    awaitRefetchQueries: true,
+    update: addItemToList({
+      listId: [project, 'team'],
+      outputToItem: (data) => data.createProjectMember.projectMember,
+    }),
   });
 
   const initialValues = useMemo(
     () => ({
       projectMember: {
-        projectId,
+        projectId: project.id,
       },
     }),
-    [projectId]
+    [project.id]
   );
 
   return (

@@ -33,6 +33,8 @@ const memberList: ProjectMemberListFragment = {
     generateUser('Ray', 'RJ'),
   ],
   total: 4,
+  hasMore: false,
+  nextPage: 0,
 };
 
 const Story = (props: ProjectMembersSummaryProps) => (

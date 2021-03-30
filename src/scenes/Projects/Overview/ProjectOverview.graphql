@@ -77,23 +77,30 @@ fragment ProjectOverview on Project {
   }
 }
 
-query ProjectEngagementListOverview($input: ID!) {
-  project(id: $input) {
+query ProjectEngagementListOverview(
+  $project: ID!
+  $input: EngagementListInput
+) {
+  project(id: $project) {
     id
-    engagements {
-      canRead
-      canCreate
-      total
-      items {
-        ... on LanguageEngagement {
-          __typename
-          ...LanguageEngagementListItem
-        }
-        ... on InternshipEngagement {
-          __typename
-          ...InternshipEngagementListItem
-        }
-      }
+    engagements(input: $input) {
+      ...ProjectEngagementList
     }
   }
+}
+
+fragment ProjectEngagementList on SecuredEngagementList {
+  canRead
+  canCreate
+  items {
+    ... on LanguageEngagement {
+      __typename
+      ...LanguageEngagementListItem
+    }
+    ... on InternshipEngagement {
+      __typename
+      ...InternshipEngagementListItem
+    }
+  }
+  ...Pagination
 }

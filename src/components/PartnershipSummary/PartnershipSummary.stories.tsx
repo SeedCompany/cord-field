@@ -34,6 +34,8 @@ export const PartnershipSummary = () => {
       generatePartnership('DBS'),
     ],
     total: 3,
+    hasMore: false,
+    nextPage: 0,
   };
 
   return (

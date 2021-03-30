@@ -1,4 +1,3 @@
-import { useQuery } from '@apollo/client';
 import {
   Breadcrumbs,
   makeStyles,
@@ -13,9 +12,9 @@ import { useParams } from 'react-router-dom';
 import { Breadcrumb } from '../../../../components/Breadcrumb';
 import { useDialog } from '../../../../components/Dialog';
 import { Fab } from '../../../../components/Fab';
+import { List, useListQuery } from '../../../../components/List';
 import { ProjectBreadcrumb } from '../../../../components/ProjectBreadcrumb';
 import { ProjectMemberCard } from '../../../../components/ProjectMemberCard';
-import { listOrPlaceholders } from '../../../../util';
 import { CreateProjectMember } from '../Create/CreateProjectMember';
 import { UpdateProjectMember, UpdateProjectMemberFormParams } from '../Update';
 import { ProjectMembersDocument } from './ProjectMembers.generated';
@@ -34,20 +33,17 @@ const useStyles = makeStyles(({ spacing, breakpoints }) => ({
   title: {
     marginRight: spacing(3),
   },
-  item: {
-    marginBottom: spacing(3),
-  },
 }));
 
 export const ProjectMembersList: FC = () => {
   const classes = useStyles();
   const { projectId = '' } = useParams();
-  const { data } = useQuery(ProjectMembersDocument, {
+  const { root: data, ...list } = useListQuery(ProjectMembersDocument, {
+    listAt: (res) => res.project.team,
     variables: {
-      input: projectId,
+      project: projectId,
     },
   });
-  const members = data?.project.team;
 
   const [
     createProjectMemberDialogState,
@@ -73,43 +69,48 @@ export const ProjectMembersList: FC = () => {
         <Typography variant="h2" className={classes.title}>
           Team Members
         </Typography>
-        {(!members || members.canCreate) && (
+        {(!list.data || list.data.canCreate) && (
           <Tooltip title="Add Team Member">
             <Fab
               color="error"
               aria-label="Add Team Member"
-              loading={!members}
+              loading={!list.data}
               onClick={openCreateProjectMemberDialog}
             >
               <Add />
             </Fab>
           </Tooltip>
         )}
-        <CreateProjectMember
-          {...createProjectMemberDialogState}
-          projectId={projectId}
-        />
+        {data && (
+          <CreateProjectMember
+            {...createProjectMemberDialogState}
+            project={data.project}
+          />
+        )}
       </div>
-      {members?.canRead === false ? (
+      {list.data?.canRead === false ? (
         <Typography>
           Sorry, you don't have permission to view this project's team members.
         </Typography>
       ) : (
-        listOrPlaceholders(members?.items, 5).map((item, index) => (
-          <ProjectMemberCard
-            key={item?.id ?? index}
-            projectMember={item}
-            className={classes.item}
-            onEdit={() =>
-              item &&
-              openUpdateProjectMemberDialog({
-                projectMemberId: item.id,
-                userId: item.user.value?.id || '',
-                userRoles: item.roles.value,
-              })
-            }
-          />
-        ))
+        <List
+          {...list}
+          spacing={3}
+          renderItem={(member) => (
+            <ProjectMemberCard
+              projectMember={member}
+              onEdit={() =>
+                openUpdateProjectMemberDialog({
+                  project: data!.project,
+                  projectMemberId: member.id,
+                  userId: member.user.value?.id || '',
+                  userRoles: member.roles.value,
+                })
+              }
+            />
+          )}
+          renderSkeleton={<ProjectMemberCard />}
+        />
       )}
       {projectMemberProps && (
         <UpdateProjectMember

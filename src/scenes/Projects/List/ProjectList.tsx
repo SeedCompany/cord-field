@@ -1,4 +1,3 @@
-import { useQuery } from '@apollo/client';
 import { Grid, makeStyles, Typography } from '@material-ui/core';
 import { Skeleton } from '@material-ui/lab';
 import React, { FC } from 'react';
@@ -7,10 +6,9 @@ import { Project } from '../../../api';
 import { FilterButtonDialog } from '../../../components/Filter';
 import { useNumberFormatter } from '../../../components/Formatters';
 import { ContentContainer } from '../../../components/Layout';
-import { ListContainer } from '../../../components/Layout/ListContainer';
-import { ProjectListItemCard } from '../../../components/ProjectListItemCard';
+import { List, useListQuery } from '../../../components/List';
+import { ProjectListItemCard as ProjectCard } from '../../../components/ProjectListItemCard';
 import { SortButtonDialog, useSort } from '../../../components/Sort';
-import { listOrPlaceholders } from '../../../util';
 import {
   ProjectFilterOptions,
   useProjectFilters,
@@ -18,21 +16,20 @@ import {
 import { ProjectListDocument } from './projects.generated';
 import { ProjectSortOptions } from './ProjectSortOptions';
 
-const useStyles = makeStyles(({ spacing }) => ({
+const useStyles = makeStyles(({ spacing, breakpoints }) => ({
   options: {
     margin: spacing(3, 0),
   },
-  projectItem: {
-    marginBottom: spacing(2),
+  items: {
+    cardWidth: breakpoints.values.sm,
   },
 }));
 
 export const ProjectList: FC = () => {
-  const formatNumber = useNumberFormatter();
   const sort = useSort<Project>();
   const [filters, setFilters] = useProjectFilters();
-
-  const { data } = useQuery(ProjectListDocument, {
+  const list = useListQuery(ProjectListDocument, {
+    listAt: (data) => data.projects,
     variables: {
       input: {
         ...sort.value,
@@ -40,7 +37,9 @@ export const ProjectList: FC = () => {
       },
     },
   });
+
   const classes = useStyles();
+  const formatNumber = useNumberFormatter();
 
   return (
     <ContentContainer>
@@ -61,21 +60,18 @@ export const ProjectList: FC = () => {
         </Grid>
       </Grid>
       <Typography variant="h3" paragraph>
-        {data ? (
-          `${formatNumber(data.projects.total)} Projects`
+        {list.data ? (
+          `${formatNumber(list.data.total)} Projects`
         ) : (
           <Skeleton width="12ch" />
         )}
       </Typography>
-      <ListContainer>
-        {listOrPlaceholders(data?.projects.items, 5).map((item, index) => (
-          <ProjectListItemCard
-            key={item?.id ?? index}
-            project={item}
-            className={classes.projectItem}
-          />
-        ))}
-      </ListContainer>
+      <List
+        {...list}
+        classes={{ container: classes.items }}
+        renderItem={(item) => <ProjectCard project={item} />}
+        renderSkeleton={<ProjectCard />}
+      />
     </ContentContainer>
   );
 };

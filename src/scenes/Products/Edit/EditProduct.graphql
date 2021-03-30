@@ -17,3 +17,7 @@ query Product($productId: ID!, $projectId: ID!, $engagementId: ID!) {
     ...EngagementBreadcrumb
   }
 }
+
+mutation DeleteProduct($productId: ID!) {
+  deleteProduct(id: $productId)
+}
