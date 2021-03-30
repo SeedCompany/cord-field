@@ -1,6 +1,9 @@
-schema: ${RAZZLE_API_BASE_URL}/graphql
+schema:
+  - ${RAZZLE_API_BASE_URL}/graphql:
+      loader: ./src/api/client-schema.graphql.ts
 documents:
   - ./src/**/*.graphql
+  - '!./src/api/client-schema.graphql'
 overwrite: true
 config:
   # Use `import type` which should be default for TS 3.8+

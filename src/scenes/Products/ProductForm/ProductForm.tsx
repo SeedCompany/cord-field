@@ -1,21 +1,13 @@
-import { useMutation } from '@apollo/client';
 import { makeStyles, Typography } from '@material-ui/core';
-import { useSnackbar } from 'notistack';
 import React from 'react';
 import { Form, FormProps } from 'react-final-form';
-import { useNavigate } from 'react-router';
-import { GQLOperations } from '../../../api';
 import {
   FieldGroup,
-  SubmitAction,
   SubmitButton,
   SubmitError,
 } from '../../../components/form';
 import { AccordionSection, ProductFormValues } from './AccordionSection';
-import {
-  DeleteProductDocument,
-  ProductFormFragment,
-} from './ProductForm.generated';
+import { ProductFormFragment } from './ProductForm.generated';
 
 const useStyles = makeStyles(({ spacing }) => ({
   submissionBlurb: {
@@ -30,43 +22,15 @@ const useStyles = makeStyles(({ spacing }) => ({
   },
 }));
 
-export const ProductForm = ({
-  product,
-  ...props
-}: FormProps<ProductFormValues> & {
+export type ProductFormProps = FormProps<ProductFormValues> & {
   product?: ProductFormFragment;
-}) => {
+};
+
+export const ProductForm = ({ product, ...props }: ProductFormProps) => {
   const classes = useStyles();
 
-  const { enqueueSnackbar } = useSnackbar();
-  const navigate = useNavigate();
-  const [deleteProduct] = useMutation(DeleteProductDocument, {
-    awaitRefetchQueries: true,
-    refetchQueries: [GQLOperations.Query.Engagement],
-  });
-
   return (
-    <Form<ProductFormValues>
-      {...props}
-      onSubmit={async (data, form) => {
-        if ((data as SubmitAction).submitAction !== 'delete') {
-          return await props.onSubmit(data, form);
-        }
-        if (!product) {
-          return;
-        }
-
-        await deleteProduct({
-          variables: {
-            productId: product.id,
-          },
-        });
-        enqueueSnackbar(`Deleted product`, {
-          variant: 'success',
-        });
-        navigate('../../');
-      }}
-    >
+    <Form<ProductFormValues> {...props}>
       {({ handleSubmit, ...rest }) => (
         <form onSubmit={handleSubmit}>
           <SubmitError />

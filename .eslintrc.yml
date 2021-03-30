@@ -20,6 +20,8 @@ rules:
           message: Use Link in components/Routing instead which has routing integrated
         - name: 'camel-case'
           message: Use camelCase from lodash instead.
+        - name: 'is-plain-object'
+          message: Use isPlainObject from lodash instead.
 
       patterns:
         # Enforce single import. Leave code splitting to webpack.

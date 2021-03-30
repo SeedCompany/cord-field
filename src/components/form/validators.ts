@@ -12,23 +12,8 @@ export type Validator<Value> = (
   meta?: FieldState<Value>
 ) => Promisable<string | undefined>;
 
-// Compose multiple validators. Order matters.
-export const compose = <Value>(
-  ...validators: Array<Validator<Value>>
-): Validator<Value> => (value: any, allValues: any) => {
-  for (const validator of validators) {
-    const result = validator(value, allValues);
-    if (result) {
-      return result;
-    }
-  }
-
-  return undefined;
-};
-
 export const required = (value: unknown) => (value ? undefined : 'Required');
 
-// setting null or undefined for value on Autocomplete {multiple} doesn't work, so use []
 export const requiredArray = <T>(value: Nullable<readonly T[]>) =>
   value && value.length > 0 ? undefined : 'Required';
 

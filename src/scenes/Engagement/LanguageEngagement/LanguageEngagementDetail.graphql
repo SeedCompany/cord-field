@@ -63,11 +63,10 @@ fragment LanguageEngagementDetail on LanguageEngagement {
     ...CeremonyCard
   }
   products {
-    canRead
-    canCreate
-    items {
-      ...ProductCard
-    }
+    # grab first page of products with engagement
+    # if we'd rather wait until after engagement is loaded to start fetching this
+    # then we can remove this
+    ...ProductList
   }
   paratextRegistryId {
     canRead

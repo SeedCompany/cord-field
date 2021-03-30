@@ -2,6 +2,7 @@ mutation CreateProjectMember($input: CreateProjectMemberInput!) {
   createProjectMember(input: $input) {
     projectMember {
       id
+      ...ProjectMemberCard
     }
   }
 }

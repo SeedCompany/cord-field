@@ -5,7 +5,7 @@ import React from 'react';
 import { Except } from 'type-fest';
 import {
   displayRole,
-  GQLOperations,
+  removeItemFromList,
   RoleList,
   UpdateProjectMemberInput,
 } from '../../../../api';
@@ -15,6 +15,8 @@ import {
 } from '../../../../components/Dialog/DialogForm';
 import { SubmitButton, SubmitError } from '../../../../components/form';
 import { AutocompleteField } from '../../../../components/form/AutocompleteField';
+import { callAll } from '../../../../util';
+import { ProjectMembersQuery } from '../List/ProjectMembers.generated';
 import {
   DeleteProjectMemberDocument,
   GetUserRolesDocument,
@@ -22,6 +24,7 @@ import {
 } from './UpdateProjectMember.generated';
 
 export interface UpdateProjectMemberFormParams {
+  project: ProjectMembersQuery['project'];
   projectMemberId: UpdateProjectMemberInput['projectMember']['id'];
   userId: string;
   userRoles: UpdateProjectMemberInput['projectMember']['roles'];
@@ -34,6 +37,7 @@ type UpdateProjectMemberProps = Except<
   UpdateProjectMemberFormParams;
 
 export const UpdateProjectMember = ({
+  project,
   projectMemberId,
   userId,
   userRoles,
@@ -48,8 +52,16 @@ export const UpdateProjectMember = ({
   });
 
   const [deleteProjectMember] = useMutation(DeleteProjectMemberDocument, {
-    refetchQueries: [GQLOperations.Query.ProjectMembers],
-    awaitRefetchQueries: true,
+    update: callAll(
+      removeItemFromList({
+        listId: 'projectMembers',
+        item: { id: projectMemberId },
+      }),
+      removeItemFromList({
+        listId: [project, 'team'],
+        item: { id: projectMemberId },
+      })
+    ),
   });
 
   const availableRoles = data?.user.roles.value ?? [];

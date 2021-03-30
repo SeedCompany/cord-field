@@ -3,7 +3,6 @@ query Partners($input: PartnerListInput!) {
     items {
       ...PartnerListItem
     }
-    hasMore
-    total
+    ...Pagination
   }
 }

@@ -27,11 +27,11 @@ import {
   useDateTimeFormatter,
 } from '../../../components/Formatters';
 import { OptionsIcon, PlantIcon } from '../../../components/Icons';
-import { AddProductCard, ProductCard } from '../../../components/ProductCard';
 import { ProjectBreadcrumb } from '../../../components/ProjectBreadcrumb';
 import { Redacted } from '../../../components/Redacted';
 import { Link } from '../../../components/Routing';
 import { Many } from '../../../util';
+import { ProductList } from '../../Products/List/ProductList';
 import { CeremonyCard } from '../CeremonyCard';
 import {
   EditableEngagementField,
@@ -288,24 +288,7 @@ export const LanguageEngagementDetail: FC<EngagementQuery> = ({
             <Typography variant="h3" paragraph>
               Products
             </Typography>
-            {engagement.products.canRead ? (
-              <Grid container spacing={3}>
-                {engagement.products.items.map((product) => (
-                  <Grid item xs={4} key={product.id}>
-                    <ProductCard product={product} />
-                  </Grid>
-                ))}
-                {engagement.products.canCreate && (
-                  <Grid item xs={4}>
-                    <AddProductCard />
-                  </Grid>
-                )}
-              </Grid>
-            ) : (
-              <Typography color="textSecondary">
-                You don't have permission to see this engagement's products
-              </Typography>
-            )}
+            <ProductList engagementId={engagement.id} />
           </Grid>
         </Grid>
       </div>

@@ -3,7 +3,6 @@ query Languages($input: LanguageListInput!) {
     items {
       ...LanguageListItem
     }
-    hasMore
-    total
+    ...Pagination
   }
 }
