@@ -19,16 +19,22 @@ const useStyles = makeStyles(({ spacing }) => ({
 }));
 
 export interface ListProps<Item>
-  extends ListQueryResult<Item, PaginatedListOutput<Item>, unknown>,
+  extends ListQueryResult<
+      Item,
+      PaginatedListOutput<Item> & { canCreate?: boolean },
+      unknown
+    >,
     Pick<GridProps, 'spacing'>,
     UseStyles<typeof useStyles> {
   renderItem: (item: Item) => ReactNode;
   renderSkeleton: ReactNode | ((index: number) => ReactNode);
+  renderCreate?: ReactNode;
   skeletonCount?: number;
   ContainerProps?: GridProps;
   ItemProps?: GridProps;
   DataItemProps?: GridProps;
   SkeletonItemProps?: GridProps;
+  CreateItemProps?: GridProps;
   LoadMoreItemProps?: GridProps;
   LoadMoreButtonProps?: ButtonProps;
   className?: string;
@@ -42,11 +48,13 @@ export const List = <Item extends { id: string }>(props: ListProps<Item>) => {
     skeletonCount = 5,
     renderItem,
     renderSkeleton,
+    renderCreate,
     ContainerProps,
     spacing = 2,
     ItemProps,
     SkeletonItemProps,
     DataItemProps,
+    CreateItemProps,
     LoadMoreItemProps,
     LoadMoreButtonProps,
     className,
@@ -78,6 +86,11 @@ export const List = <Item extends { id: string }>(props: ListProps<Item>) => {
                 {renderItem(item)}
               </Grid>
             ))}
+        {data?.canCreate && renderCreate && (
+          <Grid {...ItemProps} {...CreateItemProps} item>
+            {renderCreate}
+          </Grid>
+        )}
         {data?.hasMore && (
           <Grid {...ItemProps} {...LoadMoreItemProps} item>
             <ProgressButton
