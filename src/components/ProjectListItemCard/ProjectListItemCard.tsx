@@ -10,6 +10,7 @@ import clsx from 'clsx';
 import { FC } from 'react';
 import * as React from 'react';
 import { displayStatus } from '../../api';
+import { ProjectListQueryVariables } from '../../scenes/Projects/List/projects.generated';
 import { DisplaySimpleProperty } from '../DisplaySimpleProperty';
 import { FormattedDate } from '../Formatters';
 import { Picture, useRandomPicture } from '../Picture';
@@ -210,7 +211,16 @@ export const ProjectListItemCard: FC<ProjectListItemCardProps> = ({
           </div>
         </CardContent>
       </CardActionAreaLink>
-      {project && <TogglePinButton object={project} className={classes.pin} />}
+      {project && (
+        <TogglePinButton
+          object={project}
+          listId="projects"
+          listFilter={(args: ProjectListQueryVariables) =>
+            args.input.filter?.pinned ?? false
+          }
+          className={classes.pin}
+        />
+      )}
     </Card>
   );
 };

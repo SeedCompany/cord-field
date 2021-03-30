@@ -34,6 +34,7 @@ import { Many } from '../../../util';
 import { CreateInternshipEngagement } from '../../Engagement/InternshipEngagement/Create/CreateInternshipEngagement';
 import { CreateLanguageEngagement } from '../../Engagement/LanguageEngagement/Create/CreateLanguageEngagement';
 import { useProjectCurrentDirectory, useUploadProjectFiles } from '../Files';
+import { ProjectListQueryVariables } from '../List/projects.generated';
 import { EditableProjectField, UpdateProjectDialog } from '../Update';
 import { ProjectWorkflowDialog } from '../Update/ProjectWorkflowDialog';
 import {
@@ -243,6 +244,10 @@ export const ProjectOverview: FC = () => {
             {projectOverviewData && (
               <TogglePinButton
                 object={projectOverviewData.project}
+                listId="projects"
+                listFilter={(args: ProjectListQueryVariables) =>
+                  args.input.filter?.pinned ?? false
+                }
                 className={classes.pushPinIcon}
               />
             )}
