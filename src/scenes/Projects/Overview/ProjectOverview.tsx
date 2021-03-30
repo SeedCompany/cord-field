@@ -22,6 +22,7 @@ import {
   FormattedDateTime,
   useNumberFormatter,
 } from '../../../components/Formatters';
+import { IconButton } from '../../../components/IconButton';
 import { InternshipEngagementListItemCard } from '../../../components/InternshipEngagementListItemCard';
 import { LanguageEngagementListItemCard } from '../../../components/LanguageEngagementListItemCard';
 import { List, useListQuery } from '../../../components/List';
@@ -59,11 +60,14 @@ const useStyles = makeStyles(({ spacing, breakpoints, palette }) => ({
     flex: 1,
     display: 'flex',
   },
+  headerLoading: {
+    alignItems: 'center',
+  },
   name: {
-    marginRight: spacing(4),
+    marginRight: spacing(2),
   },
   nameLoading: {
-    width: '60%',
+    width: '30%',
   },
   infoColor: {
     color: palette.info.main,
@@ -209,7 +213,12 @@ export const ProjectOverview: FC = () => {
       </Error>
       {!error && (
         <div className={classes.main}>
-          <header className={classes.header}>
+          <header
+            className={clsx(
+              classes.header,
+              projectOverviewData ? null : classes.headerLoading
+            )}
+          >
             <Typography
               variant="h2"
               className={clsx(
@@ -231,26 +240,23 @@ export const ProjectOverview: FC = () => {
             {(!projectOverviewData ||
               projectOverviewData.project.name.canEdit) && (
               <Tooltip title="Edit Project Name">
-                <Fab
-                  color="primary"
+                <IconButton
                   aria-label="edit project name"
                   onClick={() => editField(['name'])}
                   loading={!projectOverviewData}
                 >
                   <Edit />
-                </Fab>
+                </IconButton>
               </Tooltip>
             )}
-            {projectOverviewData && (
-              <TogglePinButton
-                object={projectOverviewData.project}
-                listId="projects"
-                listFilter={(args: ProjectListQueryVariables) =>
-                  args.input.filter?.pinned ?? false
-                }
-                className={classes.pushPinIcon}
-              />
-            )}
+            <TogglePinButton
+              object={projectOverviewData?.project}
+              listId="projects"
+              listFilter={(args: ProjectListQueryVariables) =>
+                args.input.filter?.pinned ?? false
+              }
+              className={classes.pushPinIcon}
+            />
           </header>
 
           <div className={classes.subheader}>
