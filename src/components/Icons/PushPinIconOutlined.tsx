@@ -3,7 +3,7 @@ import * as React from 'react';
 import { FC } from 'react';
 
 export const PushPinIconOutlined: FC<SvgIconProps> = (props) => (
-  <SvgIcon {...props} viewBox="0 0 24 24" fill="black">
+  <SvgIcon {...props} viewBox="0 0 24 24">
     <g>
       <rect fill="none" height="24" width="24" />
     </g>
