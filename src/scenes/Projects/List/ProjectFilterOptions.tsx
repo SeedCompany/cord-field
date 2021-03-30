@@ -45,7 +45,7 @@ export const useProjectFilters = makeQueryHandler({
   }),
   type: EnumParam<ProjectType>(),
   onlyMultipleEngagements: withKey(withDefault(BooleanParam(), false), 'multi'),
-  mine: withDefault(BooleanParam(), true),
+  tab: withDefault(EnumParam<'mine' | 'all' | 'pinned'>(), 'mine'),
 });
 
 export const ProjectFilterOptions = () => {
@@ -83,7 +83,6 @@ export const ProjectFilterOptions = () => {
           </Tooltip>
         }
       />
-      <SwitchField name="mine" label="Only Show My Projects" />
     </>
   );
 };

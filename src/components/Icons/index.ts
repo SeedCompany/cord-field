@@ -7,3 +7,5 @@ export * from './PeopleJoinedIcon';
 export * from './PlantIcon';
 export * from './ReportIcon';
 export * from './ScriptIcon';
+export * from './PushPinIconFilled';
+export * from './PushPinIconOutlined';
