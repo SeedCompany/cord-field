@@ -5,13 +5,18 @@ import type { ConditionalKeys } from 'type-fest';
 import { keys, mapFromList, Nullable } from '../../util';
 import type { Query } from '../schema.generated';
 import { typePolicies } from '../typePolicies';
-import { Entity, PaginatedListOutput, SortableListInput } from './types';
+import {
+  Entity,
+  GqlTypeOf,
+  PaginatedListOutput,
+  SortableListInput,
+} from './types';
 
 // Only the keys of T that represent list fields.
 type ListFieldKeys<T> = ConditionalKeys<T, Nullable<PaginatedListOutput<any>>>;
 
 type ObjectWithField<Obj extends Entity> =
-  | [existingObject: Nullable<Obj>, field: ListFieldKeys<Obj>]
+  | [existingObject: Nullable<Obj>, field: ListFieldKeys<GqlTypeOf<Obj>>]
   | [ref: Reference, field: string];
 
 export type ListIdentifier<OwningObj extends Entity> =
