@@ -146,6 +146,8 @@ const UploadManagerImpl = (props: UploadManagerProps) => {
       classes={{ root: classes.root, paper: classes.paper }}
       disableBackdropClick
       disableEscapeKeyDown
+      disableEnforceFocus
+      disableAutoFocus
       hideBackdrop
       open={!!session && isManagerOpen}
       PaperComponent={(props) => (
