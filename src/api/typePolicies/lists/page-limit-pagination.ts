@@ -103,11 +103,11 @@ export const pageLimitPagination = <
 });
 
 const mergeList = (
-  existing: Nullable<Reference[]>,
-  incoming: Nullable<Reference[]>,
+  existing: Nullable<readonly Reference[]>,
+  incoming: Nullable<readonly Reference[]>,
   defaultSort: SortableListInput | undefined,
   { args, readField }: FieldFunctionOptions<PaginatedListArgs>
-): Reference[] => {
+): readonly Reference[] => {
   // Only use incoming if nothing existed
   if (!isListNotEmpty(existing)) {
     return incoming ?? [];
@@ -125,7 +125,7 @@ const mergeList = (
     return fieldVal;
   };
 
-  let items: Reference[];
+  let items: readonly Reference[];
   if (sort && order) {
     // If we have sorting info, replace an entire page section based on this.
     // For example
@@ -165,10 +165,10 @@ const mergeList = (
 
 // This assumes existing list is sorted ascending
 const spliceAscLists = <T>(
-  existing: T[],
-  incoming: T[],
+  existing: readonly T[],
+  incoming: readonly T[],
   iteratee: ValueIteratee<T>
-): T[] => {
+): readonly T[] => {
   // splice starting point is last occurrence of item.
   // list is unique by ID and sorted, but the sorting yield duplicates.
   // such as the same name or created time.
@@ -185,10 +185,10 @@ const spliceAscLists = <T>(
 // lodash doesn't have this implementation so we have to fake it by reversing
 // the lists before and after.
 const spliceDescLists = <T>(
-  existing: T[],
-  incoming: T[],
+  existing: readonly T[],
+  incoming: readonly T[],
   iteratee: ValueIteratee<T>
-) => spliceAscLists(existing.reverse(), incoming.reverse(), iteratee).reverse();
+) => reverse(spliceAscLists(reverse(existing), reverse(incoming), iteratee));
 
 // Array splice but it returns a new list instead of modifying the original one
 // and returning the removed items
@@ -199,8 +199,13 @@ const splice = <T>(list: readonly T[], ...args: Parameters<T[]['splice']>) => {
 };
 
 // Same as uniqBy but it keeps the last item found, instead of the first.
-const uniqLastBy = <T>(list: T[], iteratee: ValueIteratee<T>): T[] =>
-  uniqBy(list.reverse(), iteratee).reverse();
+const uniqLastBy = <T>(
+  list: readonly T[],
+  iteratee: ValueIteratee<T>
+): readonly T[] => reverse(uniqBy(reverse(list), iteratee));
+
+// Array.reverse but it returns a new array instead of modifying the input
+const reverse = <T>(list: readonly T[]): readonly T[] => list.slice().reverse();
 
 // Converts an object to a list of Apollo key specifiers
 // Empty objects are assumed to be the same as omission and therefore
