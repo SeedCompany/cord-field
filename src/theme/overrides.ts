@@ -34,6 +34,10 @@ export const appProps: ThemeOptions['props'] = (_theme) => ({
   MuiTabs: {
     indicatorColor: 'primary',
   },
+  MuiInputAdornment: {
+    // Allow adornments to click through to the input
+    disablePointerEvents: true,
+  },
 });
 
 export const appOverrides: ThemeOptions['overrides'] = ({
