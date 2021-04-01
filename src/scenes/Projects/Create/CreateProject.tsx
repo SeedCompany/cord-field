@@ -4,6 +4,7 @@ import React from 'react';
 import { Except } from 'type-fest';
 import { addItemToList } from '../../../api';
 import { ButtonLink } from '../../../components/Routing';
+import { ProjectListQueryVariables } from '../List/projects.generated';
 import { CreateProjectDocument } from './CreateProject.generated';
 import {
   CreateProjectForm,
@@ -15,6 +16,8 @@ export const CreateProject = (props: Except<Props, 'onSubmit'>) => {
     update: addItemToList({
       listId: 'projects',
       outputToItem: (data) => data.createProject.project,
+      filter: (args: ProjectListQueryVariables) =>
+        args.input.filter?.pinned ?? false,
     }),
   });
   const { enqueueSnackbar } = useSnackbar();
