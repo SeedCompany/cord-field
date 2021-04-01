@@ -30,6 +30,14 @@ app.use(
   })
 );
 
+// Send 404 for not found static assets
+app.use(
+  ['/static/*', '/images/*'].map(
+    (path) => `${process.env.PUBLIC_URL || ''}${path}`
+  ),
+  (req, res) => res.status(404).send('Not Found')
+);
+
 app.get('/logout', (req, res, next) => {
   createServerApolloClient(req, res, {})
     .mutate({
