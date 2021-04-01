@@ -35,7 +35,7 @@ app.use(
   ['/static/*', '/images/*'].map(
     (path) => `${process.env.PUBLIC_URL || ''}${path}`
   ),
-  (req, res) => res.status(404).send('Not Found')
+  (req, res) => res.sendStatus(404)
 );
 
 app.get('/logout', (req, res, next) => {
