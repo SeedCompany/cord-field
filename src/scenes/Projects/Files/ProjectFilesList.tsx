@@ -12,8 +12,6 @@ import React, { FC, useEffect } from 'react';
 import { useDropzone } from 'react-dropzone';
 import { Helmet } from 'react-helmet-async';
 import { useNavigate, useParams } from 'react-router-dom';
-import { File as CFFile } from '../../../api';
-import { Breadcrumb } from '../../../components/Breadcrumb';
 import { useDialog } from '../../../components/Dialog';
 import { Error } from '../../../components/Error';
 import {
@@ -24,11 +22,6 @@ import {
   isFileVersion,
   useFileActions,
 } from '../../../components/files/FileActions';
-import {
-  FileNodeInfo_Directory_Fragment,
-  FileNodeInfo_FileVersion_Fragment,
-  FileNodeInfoFragment,
-} from '../../../components/files/files.generated';
 import { fileIcon } from '../../../components/files/fileTypes';
 import {
   formatFileSize,
@@ -40,12 +33,22 @@ import { ProjectBreadcrumb } from '../../../components/ProjectBreadcrumb';
 import { Table } from '../../../components/Table';
 import { DropzoneOverlay } from '../../../components/Upload';
 import { CreateProjectDirectory } from './CreateProjectDirectory';
-import {
-  ProjectDirectoryDocument,
-  ProjectDirectoryFileNodeFragment,
-} from './ProjectFiles.generated';
+import { DirectoryBreadcrumb } from './DirectoryBreadcrumb';
+import { FileRow } from './FileRow';
+import { NodePreviewLayer } from './NodePreviewLayer';
+import { ProjectDirectoryDocument } from './ProjectFiles.generated';
 import { useProjectCurrentDirectory } from './useProjectCurrentDirectory';
 import { useUploadProjectFiles } from './useUploadProjectFiles';
+import { Directory, FileOrDirectory, isDirectory } from './util';
+
+type FileRowData = Pick<FileOrDirectory, 'id' | 'type' | 'name'> & {
+  createdAt: string;
+  createdBy: string;
+  mimeType: string;
+  size: number;
+  item: FileOrDirectory;
+  parent: Directory;
+};
 
 const useStyles = makeStyles(({ palette, spacing, breakpoints }) => ({
   dropzone: {
@@ -81,11 +84,6 @@ const useStyles = makeStyles(({ palette, spacing, breakpoints }) => ({
     marginRight: spacing(0.5),
   },
 }));
-
-type ProjectDirectoryNonVersion = Exclude<
-  ProjectDirectoryFileNodeFragment,
-  FileNodeInfo_FileVersion_Fragment
->;
 
 const ProjectFilesListWrapped: FC = () => {
   const classes = useStyles();
@@ -147,39 +145,21 @@ const ProjectFilesListWrapped: FC = () => {
 
   const items = directoryIsNotInProject ? [] : data?.directory.children.items;
 
-  interface FileRowData {
-    id: FileNodeInfoFragment['id'];
-    type: FileNodeInfoFragment['type'];
-    name: FileNodeInfoFragment['name'];
-    createdAt: string;
-    createdBy: string;
-    mimeType: CFFile['mimeType'];
-    size: number;
-    item: ProjectDirectoryNonVersion;
-  }
-
-  const isDirectory = (
-    fileNode: FileNodeInfoFragment
-  ): fileNode is FileNodeInfo_Directory_Fragment => {
-    return fileNode.__typename === 'Directory';
-  };
-
-  const rowData =
-    items?.reduce((rows: FileRowData[], item) => {
-      if (isFileVersion(item)) return rows;
-      const { id, name, type, createdAt, createdBy } = item;
-      const row = {
-        id,
-        type,
-        name,
-        createdAt: formatDate(createdAt),
-        createdBy: createdBy.fullName ?? '',
-        mimeType: isDirectory(item) ? 'directory' : item.mimeType,
-        size: isDirectory(item) ? 0 : item.size,
-        item,
-      };
-      return rows.concat(row);
-    }, []) ?? [];
+  const rowData = (items ?? []).flatMap<FileRowData>((item) => {
+    if (isFileVersion(item)) return [];
+    const { id, name, type, createdAt, createdBy } = item;
+    return {
+      id,
+      type,
+      name,
+      createdAt: formatDate(createdAt),
+      createdBy: createdBy.fullName ?? '',
+      mimeType: isDirectory(item) ? 'directory' : item.mimeType,
+      size: isDirectory(item) ? 0 : item.size,
+      item,
+      parent: data!.directory,
+    };
+  });
 
   const columns = [
     {
@@ -258,7 +238,6 @@ const ProjectFilesListWrapped: FC = () => {
       sorting: false,
       cellStyle: {
         padding: spacing(0.5),
-        width: spacing(6),
       },
       headerStyle: {
         padding: spacing(0.5),
@@ -310,23 +289,25 @@ const ProjectFilesListWrapped: FC = () => {
               >
                 <Breadcrumbs>
                   <ProjectBreadcrumb data={project} />
-                  <Breadcrumb to={`/projects/${projectId}/files`}>
-                    Files
-                  </Breadcrumb>
+                  <DirectoryBreadcrumb
+                    // no moving to same directory
+                    id={isNotRootDirectory ? rootDirectoryId : undefined}
+                    name="Files"
+                    to={`/projects/${projectId}/files`}
+                  />
                   {breadcrumbsParents.map((parent) => (
-                    <Breadcrumb
+                    <DirectoryBreadcrumb
                       key={parent.id}
+                      id={parent.id}
+                      name={parent.name}
                       to={`/projects/${projectId}/files/${parent.id}`}
-                    >
-                      {parent.name}
-                    </Breadcrumb>
+                    />
                   ))}
                   {isNotRootDirectory && (
-                    <Breadcrumb
+                    <DirectoryBreadcrumb
+                      name={data?.directory.name}
                       to={`/projects/${projectId}/files/${directoryId}`}
-                    >
-                      {data?.directory.name}
-                    </Breadcrumb>
+                    />
                   )}
                 </Breadcrumbs>
               </Box>
@@ -337,6 +318,9 @@ const ProjectFilesListWrapped: FC = () => {
                 data={rowData}
                 columns={columns}
                 onRowClick={handleRowClick}
+                components={{
+                  Row: FileRow,
+                }}
                 actions={[
                   {
                     icon: Publish,
@@ -352,6 +336,7 @@ const ProjectFilesListWrapped: FC = () => {
                   },
                 ]}
               />
+              <NodePreviewLayer />
             </section>
           </>
         )}

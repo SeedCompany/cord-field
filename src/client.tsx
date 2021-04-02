@@ -2,6 +2,8 @@ import { loadableReady } from '@loadable/component';
 import Cookies from 'js-cookie';
 import { Settings } from 'luxon';
 import React from 'react';
+import { DndProvider } from 'react-dnd';
+import { HTML5Backend } from 'react-dnd-html5-backend';
 import ReactDOM from 'react-dom';
 import { HelmetProvider } from 'react-helmet-async';
 import { BrowserRouter } from 'react-router-dom';
@@ -58,6 +60,7 @@ const clientOnlyProviders = [
   <ServerDataProvider value={serverData} />,
   <BrowserRouter />,
   <HelmetProvider children={<></>} />,
+  <DndProvider backend={HTML5Backend} />,
 ];
 
 void Promise.all(setup).then(() => {
