@@ -23,10 +23,6 @@ import {
   isFileVersion,
   useFileActions,
 } from '../../../components/files/FileActions';
-import {
-  FileNodeInfo_Directory_Fragment as Directory,
-  FileNodeInfo_File_Fragment,
-} from '../../../components/files/files.generated';
 import { fileIcon } from '../../../components/files/fileTypes';
 import {
   formatFileSize,
@@ -37,13 +33,12 @@ import { ContentContainer } from '../../../components/Layout';
 import { ProjectBreadcrumb } from '../../../components/ProjectBreadcrumb';
 import { Table } from '../../../components/Table';
 import { DropzoneOverlay } from '../../../components/Upload';
-import { isTypename } from '../../../util';
 import { CreateProjectDirectory } from './CreateProjectDirectory';
+import { FileRow } from './FileRow';
 import { ProjectDirectoryDocument } from './ProjectFiles.generated';
 import { useProjectCurrentDirectory } from './useProjectCurrentDirectory';
 import { useUploadProjectFiles } from './useUploadProjectFiles';
-
-type FileOrDirectory = Directory | FileNodeInfo_File_Fragment;
+import { FileOrDirectory, isDirectory } from './util';
 
 type FileRowData = Pick<FileOrDirectory, 'id' | 'type' | 'name'> & {
   createdAt: string;
@@ -52,8 +47,6 @@ type FileRowData = Pick<FileOrDirectory, 'id' | 'type' | 'name'> & {
   size: number;
   item: FileOrDirectory;
 };
-
-const isDirectory = isTypename<Directory>('Directory');
 
 const useStyles = makeStyles(({ palette, spacing, breakpoints }) => ({
   dropzone: {
@@ -242,7 +235,6 @@ const ProjectFilesListWrapped: FC = () => {
       sorting: false,
       cellStyle: {
         padding: spacing(0.5),
-        width: spacing(6),
       },
       headerStyle: {
         padding: spacing(0.5),
@@ -321,6 +313,9 @@ const ProjectFilesListWrapped: FC = () => {
                 data={rowData}
                 columns={columns}
                 onRowClick={handleRowClick}
+                components={{
+                  Row: FileRow,
+                }}
                 actions={[
                   {
                     icon: Publish,
