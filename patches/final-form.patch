@@ -1,17 +1,8 @@
 diff --git a/dist/index.d.ts b/dist/index.d.ts
-index dbcf3379..cd7907f3 100644
+index f17e71112bbddff8f2271d804d896bb502e9959a..b40c8988b95897f9630e21b02aba7faaa31d2f58 100644
 --- a/dist/index.d.ts
 +++ b/dist/index.d.ts
-@@ -5,7 +5,7 @@ export interface AnyObject {
-   [key: string]: any
- }
- export interface ValidationErrors extends AnyObject {}
--export interface SubmissionErrors extends AnyObject {}
-+export type SubmissionErrors = AnyObject | undefined;
- 
- export interface FormSubscription {
-   active?: boolean
-@@ -224,7 +224,7 @@ export interface FormApi<FormValues = Record<string, any>, InitialFormValues = P
+@@ -226,7 +226,7 @@ export interface FormApi<FormValues = Record<string, any>, InitialFormValues = P
    ) => void
    submit: () => Promise<FormValues | undefined> | undefined
    subscribe: (
