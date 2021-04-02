@@ -3,8 +3,9 @@ import { makeStyles, useForkRef } from '@material-ui/core';
 import clsx from 'clsx';
 import { MTableBodyRow } from 'material-table';
 import { useSnackbar } from 'notistack';
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useDrag, useDrop } from 'react-dnd';
+import { getEmptyImage } from 'react-dnd-html5-backend';
 import { addItemToList, removeItemFromList } from '../../../api';
 import { callAll } from '../../../util';
 import { MoveFileNodeDocument } from './MoveNode.generated';
@@ -60,7 +61,7 @@ export const FileRow = (props: any) => {
   );
   const { enqueueSnackbar } = useSnackbar();
   const [moveNode] = useMutation(MoveFileNodeDocument);
-  const [{ isDragging }, dragRef] = useDrag(
+  const [{ isDragging }, dragRef, preview] = useDrag(
     () => ({
       type: DndFileNode,
       item: node,
@@ -100,6 +101,11 @@ export const FileRow = (props: any) => {
     }),
     [props.data]
   );
+
+  // Hide drag preview so we can use a custom one.
+  useEffect(() => {
+    preview(getEmptyImage(), { captureDraggingState: true });
+  }, [preview]);
 
   const ref = useForkRef(dropRef, dragRef);
   const classes = useStyles();
