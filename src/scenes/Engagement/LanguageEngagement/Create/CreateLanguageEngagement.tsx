@@ -1,7 +1,7 @@
 import { useMutation } from '@apollo/client';
 import React from 'react';
 import { Except } from 'type-fest';
-import { GQLOperations } from '../../../../api';
+import { addItemToList } from '../../../../api';
 import {
   DialogForm,
   DialogFormProps,
@@ -11,6 +11,7 @@ import {
   LanguageField,
   LanguageLookupItem,
 } from '../../../../components/form/Lookup';
+import { callAll } from '../../../../util';
 import { CreateLanguageEngagementDocument } from './CreateLanguageEngagement.generated';
 
 interface CreateLanguageEngagementFormValues {
@@ -32,17 +33,30 @@ export const CreateLanguageEngagement = ({
 }: CreateLanguageEngagementProps) => {
   const [createEngagement] = useMutation(CreateLanguageEngagementDocument);
   const submit = async ({ engagement }: CreateLanguageEngagementFormValues) => {
+    const projectRef = {
+      __typename: 'TranslationProject',
+      id: projectId,
+    } as const;
+    const languageRef = {
+      __typename: 'Language',
+      id: engagement.languageId.id,
+    } as const;
     await createEngagement({
       variables: {
         input: {
           engagement: { projectId, languageId: engagement.languageId.id },
         },
       },
-      refetchQueries: [
-        GQLOperations.Query.ProjectOverview,
-        GQLOperations.Query.ProjectEngagementListOverview,
-      ],
-      awaitRefetchQueries: true,
+      update: callAll(
+        addItemToList({
+          listId: [projectRef, 'engagements'],
+          outputToItem: (res) => res.createLanguageEngagement.engagement,
+        }),
+        addItemToList({
+          listId: [languageRef, 'projects'],
+          outputToItem: () => projectRef,
+        })
+      ),
     });
   };
   return (
