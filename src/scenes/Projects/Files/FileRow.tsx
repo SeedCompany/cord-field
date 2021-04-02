@@ -1,10 +1,15 @@
+import { useMutation } from '@apollo/client';
 import { makeStyles, useForkRef } from '@material-ui/core';
 import clsx from 'clsx';
 import { MTableBodyRow } from 'material-table';
 import { useSnackbar } from 'notistack';
 import React from 'react';
 import { useDrag, useDrop } from 'react-dnd';
+import { addItemToList, removeItemFromList } from '../../../api';
+import { callAll } from '../../../util';
+import { MoveFileNodeDocument } from './MoveNode.generated';
 import {
+  Directory,
   DndFileNode,
   DropOnDirResult,
   FileOrDirectory,
@@ -38,6 +43,7 @@ const useStyles = makeStyles(({ palette, transitions }) => ({
 }));
 
 export const FileRow = (props: any) => {
+  const parent = props.data.parent as Directory;
   const node = props.data.item as FileOrDirectory;
   const [{ isOver, canDrop, draggingItem }, dropRef] = useDrop(
     () => ({
@@ -53,6 +59,7 @@ export const FileRow = (props: any) => {
     [props.data]
   );
   const { enqueueSnackbar } = useSnackbar();
+  const [moveNode] = useMutation(MoveFileNodeDocument);
   const [{ isDragging }, dragRef] = useDrag(
     () => ({
       type: DndFileNode,
@@ -71,6 +78,24 @@ export const FileRow = (props: any) => {
             variant: 'info',
           }
         );
+        void moveNode({
+          variables: {
+            input: {
+              id: node.id,
+              parentId: res.id,
+            },
+          },
+          update: callAll(
+            removeItemFromList({
+              listId: [parent, 'children'],
+              item: node,
+            }),
+            addItemToList({
+              listId: [{ __typename: 'Directory', id: res.id }, 'children'],
+              outputToItem: () => node,
+            })
+          ),
+        });
       },
     }),
     [props.data]

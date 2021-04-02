@@ -38,7 +38,7 @@ import { FileRow } from './FileRow';
 import { ProjectDirectoryDocument } from './ProjectFiles.generated';
 import { useProjectCurrentDirectory } from './useProjectCurrentDirectory';
 import { useUploadProjectFiles } from './useUploadProjectFiles';
-import { FileOrDirectory, isDirectory } from './util';
+import { Directory, FileOrDirectory, isDirectory } from './util';
 
 type FileRowData = Pick<FileOrDirectory, 'id' | 'type' | 'name'> & {
   createdAt: string;
@@ -46,6 +46,7 @@ type FileRowData = Pick<FileOrDirectory, 'id' | 'type' | 'name'> & {
   mimeType: string;
   size: number;
   item: FileOrDirectory;
+  parent: Directory;
 };
 
 const useStyles = makeStyles(({ palette, spacing, breakpoints }) => ({
@@ -155,6 +156,7 @@ const ProjectFilesListWrapped: FC = () => {
       mimeType: isDirectory(item) ? 'directory' : item.mimeType,
       size: isDirectory(item) ? 0 : item.size,
       item,
+      parent: data!.directory,
     };
   });
 

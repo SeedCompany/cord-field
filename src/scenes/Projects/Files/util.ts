@@ -4,6 +4,8 @@ import {
 } from '../../../components/files/files.generated';
 import { isTypename } from '../../../util';
 
+export type { Directory };
+
 export type FileOrDirectory = Directory | FileNodeInfo_File_Fragment;
 
 export const isDirectory = isTypename<Directory>('Directory');
