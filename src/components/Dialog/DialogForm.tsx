@@ -162,48 +162,46 @@ export function DialogForm<T, R = void>({
               DialogProps.disableBackdropClick ?? submitting
             }
             aria-labelledby={title ? 'dialog-form' : undefined}
+            PaperProps={{ component: 'form', ...DialogProps.PaperProps }}
+            onSubmit={handleSubmit}
           >
-            <form onSubmit={handleSubmit}>
-              {title ? (
-                <DialogTitle id="dialog-form">{title}</DialogTitle>
+            {title ? <DialogTitle id="dialog-form">{title}</DialogTitle> : null}
+            <DialogContent>
+              {typeof children === 'function'
+                ? children({ form, submitting, ...rest })
+                : children}
+            </DialogContent>
+            <DialogActions>
+              {leftAction ? (
+                <>
+                  {leftAction}
+                  <div className={classes.spacer} />
+                </>
               ) : null}
-              <DialogContent>
-                {typeof children === 'function'
-                  ? children({ form, submitting, ...rest })
-                  : children}
-              </DialogContent>
-              <DialogActions>
-                {leftAction ? (
-                  <>
-                    {leftAction}
-                    <div className={classes.spacer} />
-                  </>
-                ) : null}
-                {closeLabel !== false && (
-                  <Button
-                    color="secondary"
-                    {...CloseProps}
-                    onClick={() => {
-                      onClose?.('cancel', form);
-                    }}
-                    disabled={submitting}
-                  >
-                    {closeLabel || 'Cancel'}
-                  </Button>
-                )}
-                {submitLabel !== false && (
-                  <SubmitButton
-                    color="secondary"
-                    size="medium"
-                    fullWidth={false}
-                    disableElevation
-                    {...SubmitProps}
-                  >
-                    {submitLabel}
-                  </SubmitButton>
-                )}
-              </DialogActions>
-            </form>
+              {closeLabel !== false && (
+                <Button
+                  color="secondary"
+                  {...CloseProps}
+                  onClick={() => {
+                    onClose?.('cancel', form);
+                  }}
+                  disabled={submitting}
+                >
+                  {closeLabel || 'Cancel'}
+                </Button>
+              )}
+              {submitLabel !== false && (
+                <SubmitButton
+                  color="secondary"
+                  size="medium"
+                  fullWidth={false}
+                  disableElevation
+                  {...SubmitProps}
+                >
+                  {submitLabel}
+                </SubmitButton>
+              )}
+            </DialogActions>
           </Dialog>
         );
 
