@@ -41,7 +41,7 @@ export const SidebarHeader: FC = () => {
           display="block"
           variant="caption"
         >
-          © Cord Field 2020
+          © Seed Company
         </Typography>
       </div>
     </div>
