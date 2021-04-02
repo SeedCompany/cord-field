@@ -27,6 +27,7 @@ fragment LanguageEngagementListItem on LanguageEngagement {
         }
       }
       avatarLetters
+      sensitivity
     }
   }
   products {

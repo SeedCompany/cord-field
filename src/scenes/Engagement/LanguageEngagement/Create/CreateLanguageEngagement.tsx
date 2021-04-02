@@ -13,6 +13,7 @@ import {
 } from '../../../../components/form/Lookup';
 import { callAll } from '../../../../util';
 import { CreateLanguageEngagementDocument } from './CreateLanguageEngagement.generated';
+import { recalculateSensitivity } from './recalculateSensitivity';
 
 interface CreateLanguageEngagementFormValues {
   engagement: {
@@ -55,7 +56,8 @@ export const CreateLanguageEngagement = ({
         addItemToList({
           listId: [languageRef, 'projects'],
           outputToItem: () => projectRef,
-        })
+        }),
+        recalculateSensitivity(projectRef)
       ),
     });
   };

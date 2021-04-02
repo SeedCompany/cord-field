@@ -9,3 +9,4 @@ export * from './dateRange';
 export * from './secured';
 export * from './approach';
 export * from './list-caching';
+export * from './sensitivity';
