@@ -46,7 +46,7 @@ export const HeaderSearch: FC = () => {
             InputProps={{
               className: classes.input,
               startAdornment: (
-                <InputAdornment position="start">
+                <InputAdornment position="start" disablePointerEvents>
                   <Search />
                 </InputAdornment>
               ),
