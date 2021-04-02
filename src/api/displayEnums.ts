@@ -16,6 +16,8 @@ import { Nullable } from '../util';
 import { MethodologyToApproach } from './approach';
 import {
   InternshipPosition,
+  PlanChangeStatus,
+  PlanChangeType,
   PostShareability,
   ProductMedium,
   ProductMethodology,
@@ -45,6 +47,8 @@ export const displayRoles = (roles: readonly Role[]) =>
 export const displayInternPosition = displayEnum<InternshipPosition>();
 export const displayInternProgram = displayEnum<InternshipProgram>();
 export const displayInternDomain = displayEnum<InternshipDomain>();
+export const displayPlanChangeStatus = displayEnum<PlanChangeStatus>();
+export const displayPlanChangeType = displayEnum<PlanChangeType>();
 export const PartnershipStatuses: PartnershipAgreementStatus[] = [
   'NotAttached',
   'AwaitingSignature',

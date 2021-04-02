@@ -1,0 +1,6 @@
+fragment PlanChangeList on SecuredChangeList {
+  items {
+    ...PlanChangeCard
+  }
+  ...Pagination
+}

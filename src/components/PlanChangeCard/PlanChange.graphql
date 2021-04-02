@@ -1,0 +1,8 @@
+fragment PlanChangeCard on PlanChange {
+  id
+  createdAt
+  canDelete
+  types
+  summary
+  status
+}

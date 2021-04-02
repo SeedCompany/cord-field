@@ -88,6 +88,9 @@ fragment ProjectOverview on Project {
   nextNarrativeReportDue {
     ...SecuredPeriodicReport
   }
+  changes {
+    ...PlanChangeList
+  }
 }
 
 query ProjectPostListOverview($project: ID!, $input: PostListInput) {

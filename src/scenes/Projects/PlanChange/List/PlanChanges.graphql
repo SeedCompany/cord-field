@@ -1,0 +1,13 @@
+query PlanChanges($project: ID!) {
+  project(id: $project) {
+    ...ProjectBreadcrumb
+    changes {
+      items {
+        ...PlanChangeCard
+      }
+      ...Pagination
+      canRead
+      canCreate
+    }
+  }
+}
