@@ -47,11 +47,7 @@ export const CreateInternshipEngagement = ({
     });
   };
   return (
-    <DialogForm
-      {...props}
-      onSubmit={submit}
-      title="Create Internship Engagement"
-    >
+    <DialogForm {...props} onSubmit={submit} title="Create Intern Engagement">
       <SubmitError />
       <UserField
         name="engagement.internId"

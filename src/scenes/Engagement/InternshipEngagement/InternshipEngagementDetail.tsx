@@ -135,7 +135,7 @@ export const InternshipEngagementDetail: FC<EngagementQuery> = ({
             </Grid>
             <Grid item container spacing={3} alignItems="center">
               <Grid item>
-                <Typography variant="h4">Internship Engagement</Typography>
+                <Typography variant="h4">Intern Engagement</Typography>
               </Grid>
 
               <Grid item>
