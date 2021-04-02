@@ -5,11 +5,7 @@ import { useSnackbar } from 'notistack';
 import React from 'react';
 import { Helmet } from 'react-helmet-async';
 import { useNavigate, useParams } from 'react-router';
-import {
-  addItemToList,
-  handleFormError,
-  LanguageEngagement,
-} from '../../../api';
+import { addItemToList, handleFormError } from '../../../api';
 import { EngagementBreadcrumb } from '../../../components/EngagementBreadcrumb';
 import { ProjectBreadcrumb } from '../../../components/ProjectBreadcrumb';
 import { ButtonLink } from '../../../components/Routing';
@@ -49,7 +45,13 @@ export const CreateProduct = () => {
 
   const [createProduct] = useMutation(CreateProductDocument, {
     update: addItemToList({
-      listId: [engagement as LanguageEngagement, 'products'],
+      listId: [
+        // Need to narrow type to language engagement to get the product list on that concrete
+        engagement?.__typename === 'LanguageEngagement'
+          ? engagement
+          : undefined,
+        'products',
+      ],
       outputToItem: (res) => res.createProduct.product,
     }),
   });

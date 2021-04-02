@@ -5,13 +5,18 @@ import type { ConditionalKeys } from 'type-fest';
 import { keys, mapFromList, Nullable } from '../../util';
 import type { Query } from '../schema.generated';
 import { typePolicies } from '../typePolicies';
-import { Entity, PaginatedListOutput, SortableListInput } from './types';
+import {
+  Entity,
+  GqlTypeOf,
+  PaginatedListOutput,
+  SortableListInput,
+} from './types';
 
 // Only the keys of T that represent list fields.
 type ListFieldKeys<T> = ConditionalKeys<T, Nullable<PaginatedListOutput<any>>>;
 
 type ObjectWithField<Obj extends Entity> =
-  | [existingObject: Obj, field: ListFieldKeys<Obj>]
+  | [existingObject: Nullable<Obj>, field: ListFieldKeys<GqlTypeOf<Obj>>]
   | [ref: Reference, field: string];
 
 export type ListIdentifier<OwningObj extends Entity> =
@@ -37,6 +42,14 @@ export const modifyList = <OwningObj extends Entity, Args>({
   modifier,
   filter,
 }: ModifyListOptions<OwningObj, Args>) => {
+  // We allow existing object to be null to help with types. It's common for the
+  // object to be null while it's being loaded. But we expect it to be there
+  // at the time the mutation is invoked. Confirm this assumption here.
+  if (Array.isArray(listId) && !listId[0]) {
+    console.error('Trying to modify list field on object but object was null');
+    return;
+  }
+
   const [id, field] = identifyList(cache, listId);
 
   // @ts-expect-error assuming in memory cache with internal data map
