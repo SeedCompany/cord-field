@@ -4,12 +4,8 @@ query Engagement($projectId: ID!, $engagementId: ID!) {
   }
   engagement(id: $engagementId) {
     id
-    __typename
-    ... on LanguageEngagement {
-      ...LanguageEngagementDetail
-    }
-    ... on InternshipEngagement {
-      ...InternshipEngagementDetail
-    }
+    ...LanguageEngagementDetail
+    ...InternshipEngagementDetail
+    ...EngagementToDelete
   }
 }

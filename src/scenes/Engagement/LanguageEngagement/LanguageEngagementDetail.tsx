@@ -33,6 +33,7 @@ import { Link } from '../../../components/Routing';
 import { Many } from '../../../util';
 import { ProductList } from '../../Products/List/ProductList';
 import { CeremonyCard } from '../CeremonyCard';
+import { DeleteEngagement } from '../Delete';
 import {
   EditableEngagementField,
   EditEngagementDialog,
@@ -149,6 +150,9 @@ export const LanguageEngagementDetail: FC<EngagementQuery> = ({
                 </Tooltip>
               </Grid>
             )}
+            <Grid item>
+              <DeleteEngagement project={project} engagement={engagement} />
+            </Grid>
           </Grid>
           <Grid item container spacing={3} alignItems="center">
             <Grid item>
