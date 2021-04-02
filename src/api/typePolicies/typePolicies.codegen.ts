@@ -1,5 +1,6 @@
 import { SyntaxKind } from 'ts-morph';
 import { tsMorphPlugin } from '../codeGenUtil/ts.util';
+import { generateDeletes } from './deletes/deletes.codegen';
 import { generateLists } from './lists/lists.codegen';
 import { generateScalars } from './scalars/scalars.codegen';
 
@@ -10,4 +11,5 @@ export const plugin = tsMorphPlugin(({ schema, file }) => {
 
   generateScalars(schema, file, typePolicies);
   generateLists(schema, file, typePolicies);
+  generateDeletes(schema, file, typePolicies);
 });

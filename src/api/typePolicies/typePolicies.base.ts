@@ -4,7 +4,7 @@ import type {
   FieldReadFunction,
   KeyFieldsFunction,
 } from '@apollo/client/cache/inmemory/policies';
-import type { Query } from '../schema.generated';
+import type { Mutation, Query } from '../schema.generated';
 import type { GqlTypeMap } from '../typeMap.generated';
 
 type FieldPolicies<T> = {
@@ -13,7 +13,7 @@ type FieldPolicies<T> = {
 
 type KeySpecifier<K = string> = ReadonlyArray<K | readonly any[]>;
 
-type GqlTypeMapAndQueries = GqlTypeMap & { Query: Query };
+type GqlTypeMapAndQueries = GqlTypeMap & { Query: Query; Mutation: Mutation };
 
 export interface TypePolicy<T> {
   keyFields?: KeySpecifier<keyof T> | KeyFieldsFunction | false;
