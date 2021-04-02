@@ -12,7 +12,6 @@ import React, { FC, useEffect } from 'react';
 import { useDropzone } from 'react-dropzone';
 import { Helmet } from 'react-helmet-async';
 import { useNavigate, useParams } from 'react-router-dom';
-import { Breadcrumb } from '../../../components/Breadcrumb';
 import { useDialog } from '../../../components/Dialog';
 import { Error } from '../../../components/Error';
 import {
@@ -34,6 +33,7 @@ import { ProjectBreadcrumb } from '../../../components/ProjectBreadcrumb';
 import { Table } from '../../../components/Table';
 import { DropzoneOverlay } from '../../../components/Upload';
 import { CreateProjectDirectory } from './CreateProjectDirectory';
+import { DirectoryBreadcrumb } from './DirectoryBreadcrumb';
 import { FileRow } from './FileRow';
 import { ProjectDirectoryDocument } from './ProjectFiles.generated';
 import { useProjectCurrentDirectory } from './useProjectCurrentDirectory';
@@ -288,23 +288,25 @@ const ProjectFilesListWrapped: FC = () => {
               >
                 <Breadcrumbs>
                   <ProjectBreadcrumb data={project} />
-                  <Breadcrumb to={`/projects/${projectId}/files`}>
-                    Files
-                  </Breadcrumb>
+                  <DirectoryBreadcrumb
+                    // no moving to same directory
+                    id={isNotRootDirectory ? rootDirectoryId : undefined}
+                    name="Files"
+                    to={`/projects/${projectId}/files`}
+                  />
                   {breadcrumbsParents.map((parent) => (
-                    <Breadcrumb
+                    <DirectoryBreadcrumb
                       key={parent.id}
+                      id={parent.id}
+                      name={parent.name}
                       to={`/projects/${projectId}/files/${parent.id}`}
-                    >
-                      {parent.name}
-                    </Breadcrumb>
+                    />
                   ))}
                   {isNotRootDirectory && (
-                    <Breadcrumb
+                    <DirectoryBreadcrumb
+                      name={data?.directory.name}
                       to={`/projects/${projectId}/files/${directoryId}`}
-                    >
-                      {data?.directory.name}
-                    </Breadcrumb>
+                    />
                   )}
                 </Breadcrumbs>
               </Box>
