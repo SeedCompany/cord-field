@@ -30,7 +30,7 @@ export const CreateLocation = (props: CreateLocationProps) => {
     <LocationForm
       title="Create Location"
       onSuccess={(location) => {
-        enqueueSnackbar(`Created location: ${location.name}`, {
+        enqueueSnackbar(`Created location: ${location.name.value}`, {
           variant: 'success',
           action: () => (
             <ButtonLink color="inherit" to={`/locations/${location.id}`}>
