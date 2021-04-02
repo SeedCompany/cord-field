@@ -30,6 +30,7 @@ export const LanguageEngagementListItemCard = () => (
         population: { value: number('population', 10000) },
         avatarLetters: 'E',
         displayName: {},
+        sensitivity: 'High',
       },
     }}
     products={{ total: 2 }}
