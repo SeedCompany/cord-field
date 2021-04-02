@@ -231,7 +231,7 @@ export const EnumField = <
     children = (
       <Grid container>
         {(children as ReactElement[]).map((child) => (
-          <Grid item xs={6} key={child.key!}>
+          <Grid item xs={6} key={child.key}>
             {child}
           </Grid>
         ))}
