@@ -1,7 +1,7 @@
 import { useMutation } from '@apollo/client';
 import React from 'react';
 import { Except } from 'type-fest';
-import { CreateStoryInput, GQLOperations } from '../../../../../../api';
+import { addItemToList, CreateStoryInput } from '../../../../../../api';
 import {
   DialogForm,
   DialogFormProps,
@@ -16,7 +16,12 @@ export type CreateStoryProps = Except<
 >;
 
 export const CreateStory = (props: CreateStoryProps) => {
-  const [createStory] = useMutation(CreateStoryDocument);
+  const [createStory] = useMutation(CreateStoryDocument, {
+    update: addItemToList({
+      listId: 'stories',
+      outputToItem: (res) => res.createStory.story,
+    }),
+  });
 
   return (
     <DialogForm
@@ -24,8 +29,6 @@ export const CreateStory = (props: CreateStoryProps) => {
       onSubmit={async (input) => {
         const { data } = await createStory({
           variables: { input },
-          refetchQueries: [GQLOperations.Query.Stories],
-          awaitRefetchQueries: true,
         });
 
         return data!.createStory.story;

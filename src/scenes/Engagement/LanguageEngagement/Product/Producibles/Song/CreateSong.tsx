@@ -1,7 +1,7 @@
 import { useMutation } from '@apollo/client';
 import React from 'react';
 import { Except } from 'type-fest';
-import { CreateSongInput, GQLOperations } from '../../../../../../api';
+import { addItemToList, CreateSongInput } from '../../../../../../api';
 import {
   DialogForm,
   DialogFormProps,
@@ -16,7 +16,12 @@ export type CreateSongProps = Except<
 >;
 
 export const CreateSong = (props: CreateSongProps) => {
-  const [createSong] = useMutation(CreateSongDocument);
+  const [createSong] = useMutation(CreateSongDocument, {
+    update: addItemToList({
+      listId: 'songs',
+      outputToItem: (res) => res.createSong.song,
+    }),
+  });
 
   return (
     <DialogForm
@@ -24,8 +29,6 @@ export const CreateSong = (props: CreateSongProps) => {
       onSubmit={async (input) => {
         const { data } = await createSong({
           variables: { input },
-          refetchQueries: [GQLOperations.Query.Songs],
-          awaitRefetchQueries: true,
         });
 
         return data!.createSong.song;
