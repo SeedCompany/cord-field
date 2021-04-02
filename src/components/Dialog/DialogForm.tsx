@@ -126,7 +126,7 @@ export function DialogForm<T, R = void>({
         const submitAction = (data as any).submitAction;
 
         const submitCleanForm =
-          sendIfClean === true || sendIfClean === submitAction;
+          sendIfClean === true || (sendIfClean && sendIfClean === submitAction);
 
         const shouldSubmit = submitCleanForm || form.getState().dirty;
 
