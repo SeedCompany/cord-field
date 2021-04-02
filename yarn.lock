@@ -4267,21 +4267,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/react-dom@npm:*":
-  version: 17.0.2
-  resolution: "@types/react-dom@npm:17.0.2"
+"@types/react-dom@npm:*, @types/react-dom@npm:^17.0.2":
+  version: 17.0.3
+  resolution: "@types/react-dom@npm:17.0.3"
   dependencies:
     "@types/react": "*"
-  checksum: abaadaa2629640870f4b982e3f32cf8f719773cfa97f02931baebef1993c0e2d70fd17f94b29bcf00d45ea099d5f04a042cf55ecb5e2bf8804c4e4cabdb4adc0
-  languageName: node
-  linkType: hard
-
-"@types/react-dom@npm:^16.9.0":
-  version: 16.9.12
-  resolution: "@types/react-dom@npm:16.9.12"
-  dependencies:
-    "@types/react": ^16
-  checksum: 49745de25f49e3fff8e8dbc5751b3845ab3e5f732d03d89d5818148aa2dda1b002d8ddc7dc8976684c5dd9671cdbff8c270ea9f5c05c1349f65d233aaf135f25
+  checksum: 9314c91a985f153591e1e74aef3d63d8b22e098069773f32745bf0733740a49802731761a46da8788a7d3dd2c21346036f12c2c24627630e5a6210b120a650e6
   languageName: node
   linkType: hard
 
@@ -4322,7 +4313,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/react@npm:*":
+"@types/react@npm:*, @types/react@npm:^17.0.3":
   version: 17.0.3
   resolution: "@types/react@npm:17.0.3"
   dependencies:
@@ -4333,7 +4324,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/react@npm:^16, @types/react@npm:^16.9.0, @types/react@npm:^16.9.11":
+"@types/react@npm:^16.9.11":
   version: 16.14.5
   resolution: "@types/react@npm:16.14.5"
   dependencies:
@@ -7799,9 +7790,9 @@ __metadata:
     "@types/luxon": ^1.26.1
     "@types/node": ^12.0.0
     "@types/papaparse": ^5.0.6
-    "@types/react": ^16.9.0
+    "@types/react": ^17.0.3
     "@types/react-beautiful-dnd": ^13.0.0
-    "@types/react-dom": ^16.9.0
+    "@types/react-dom": ^17.0.2
     "@types/react-pdf": ^5.0.0
     "@types/response-time": ^2.3.4
     "@types/seedrandom": ^2.4.28
@@ -7844,9 +7835,9 @@ __metadata:
     query-string: ^6.13.8
     razzle: 4.0.1-canary.9
     razzle-dev-utils: 4.0.1-canary.9
-    react: ^16.13.1
+    react: ^17.0.1
     react-docgen-typescript-loader: ^3.7.2
-    react-dom: ^16.13.1
+    react-dom: ^17.0.1
     react-draggable: ^4.4.3
     react-dropzone: ^11.0.3
     react-final-form: ^6.5.1
@@ -17780,7 +17771,7 @@ pdfjs-dist@2.5.207:
   languageName: node
   linkType: hard
 
-"react-dom@npm:^16.13.1, react-dom@npm:^16.8.3":
+"react-dom@npm:^16.8.3":
   version: 16.14.0
   resolution: "react-dom@npm:16.14.0"
   dependencies:
@@ -17791,6 +17782,19 @@ pdfjs-dist@2.5.207:
   peerDependencies:
     react: ^16.14.0
   checksum: a13558f0e7c6d1a98684214460bcd4b9005500015b5048fb1b0d2856786b8764dbc713e6b078a5b1a56e17866400e1d862183c7a0a513ae8351de11f6f6749d2
+  languageName: node
+  linkType: hard
+
+"react-dom@npm:^17.0.1":
+  version: 17.0.2
+  resolution: "react-dom@npm:17.0.2"
+  dependencies:
+    loose-envify: ^1.1.0
+    object-assign: ^4.1.1
+    scheduler: ^0.20.2
+  peerDependencies:
+    react: 17.0.2
+  checksum: 960a74ff6670766846a73097a599115963df1574833c59ca0c2fd909758ebe7a6214cd14f5e6aa63ce846d8f39fde7f3b80474ccfcfadc45dd7f3246364718c6
   languageName: node
   linkType: hard
 
@@ -18199,7 +18203,7 @@ pdfjs-dist@2.5.207:
   languageName: node
   linkType: hard
 
-"react@npm:^16.13.1, react@npm:^16.8.3":
+"react@npm:^16.8.3":
   version: 16.14.0
   resolution: "react@npm:16.14.0"
   dependencies:
@@ -18207,6 +18211,16 @@ pdfjs-dist@2.5.207:
     object-assign: ^4.1.1
     prop-types: ^15.6.2
   checksum: 2769580b22952a52de3b5b2ea0f09cb904030b762d759739f49ab4da0b1f550e5c087ce3728c4be90f423d09481e0c075483c0c30b1ea9c549445c8b12020fd3
+  languageName: node
+  linkType: hard
+
+"react@npm:^17.0.1":
+  version: 17.0.2
+  resolution: "react@npm:17.0.2"
+  dependencies:
+    loose-envify: ^1.1.0
+    object-assign: ^4.1.1
+  checksum: 7d0dfebafe1d297503157abb2e9acdb49852185deb8700c16f4a6faad87642f84903ab18cfc16f40b9a0dfe97540f99834982ee953e6d48b39c41608dc3e4b29
   languageName: node
   linkType: hard
 
@@ -19059,6 +19073,16 @@ resolve@1.17.0:
     loose-envify: ^1.1.0
     object-assign: ^4.1.1
   checksum: 804f990b9f370cca6d42b65f3cba2cc2bfed4973ee5623bed1ea36a6627842db8c891e2e5ac003f06f9ee892d1d3396921e27fa077346caf0213af05776e8dee
+  languageName: node
+  linkType: hard
+
+"scheduler@npm:^0.20.2":
+  version: 0.20.2
+  resolution: "scheduler@npm:0.20.2"
+  dependencies:
+    loose-envify: ^1.1.0
+    object-assign: ^4.1.1
+  checksum: 2ba121e53e8a438394598612ec9a8f465b39157042f912d2dd5956af643e0d45ec6937ae4eeb0a807d1945b209515263aed12fc3bca95c7a027ec2a54e76b399
   languageName: node
   linkType: hard
 
