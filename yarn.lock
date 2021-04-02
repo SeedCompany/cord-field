@@ -1483,7 +1483,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@babel/runtime@npm:^7.0.0, @babel/runtime@npm:^7.1.2, @babel/runtime@npm:^7.10.0, @babel/runtime@npm:^7.10.2, @babel/runtime@npm:^7.11.2, @babel/runtime@npm:^7.12.1, @babel/runtime@npm:^7.2.0, @babel/runtime@npm:^7.3.1, @babel/runtime@npm:^7.4.4, @babel/runtime@npm:^7.5.0, @babel/runtime@npm:^7.5.5, @babel/runtime@npm:^7.6.3, @babel/runtime@npm:^7.7.2, @babel/runtime@npm:^7.7.6, @babel/runtime@npm:^7.7.7, @babel/runtime@npm:^7.8.3, @babel/runtime@npm:^7.8.4, @babel/runtime@npm:^7.8.7, @babel/runtime@npm:^7.9.2":
+"@babel/runtime@npm:^7.0.0, @babel/runtime@npm:^7.1.2, @babel/runtime@npm:^7.10.0, @babel/runtime@npm:^7.10.2, @babel/runtime@npm:^7.11.2, @babel/runtime@npm:^7.2.0, @babel/runtime@npm:^7.3.1, @babel/runtime@npm:^7.4.4, @babel/runtime@npm:^7.5.0, @babel/runtime@npm:^7.5.5, @babel/runtime@npm:^7.6.3, @babel/runtime@npm:^7.7.2, @babel/runtime@npm:^7.7.6, @babel/runtime@npm:^7.7.7, @babel/runtime@npm:^7.8.3, @babel/runtime@npm:^7.8.4, @babel/runtime@npm:^7.8.7, @babel/runtime@npm:^7.9.2":
   version: 7.13.10
   resolution: "@babel/runtime@npm:7.13.10"
   dependencies:
@@ -7863,7 +7863,7 @@ __metadata:
     react-dom: ^17.0.1
     react-draggable: ^4.4.3
     react-dropzone: ^11.0.3
-    react-final-form: ^6.5.3
+    react-final-form: 6.5.1
     react-helmet-async: ^1.0.7
     react-intersection-observer: ^8.26.2
     react-pdf: ^5.1.0
@@ -17925,15 +17925,15 @@ pdfjs-dist@2.5.207:
   languageName: node
   linkType: hard
 
-"react-final-form@npm:^6.5.3":
-  version: 6.5.3
-  resolution: "react-final-form@npm:6.5.3"
+"react-final-form@npm:6.5.1":
+  version: 6.5.1
+  resolution: "react-final-form@npm:6.5.1"
   dependencies:
-    "@babel/runtime": ^7.12.1
+    "@babel/runtime": ^7.10.0
   peerDependencies:
     final-form: ^4.20.0
-    react: ^16.8.0 || ^17.0.0
-  checksum: 6e1007e1adda1da74d6e0624398f7f04d5b31b409ef0c1c5fe1d35e1789011d0e0788932419b6b51563336fc4374c0322fd71d5794b7d15baceca01a7da74ef8
+    react: ^16.8.0
+  checksum: cc4c0f880afb9e31d70fede69fb104a87799f86ca1e0d75f39b7e84808901d0df455984fb0a294a60997f443500760d84f9841c059cf520d53fe4cf9f49ca6ec
   languageName: node
   linkType: hard
 
