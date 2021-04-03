@@ -1,0 +1,28 @@
+diff --git a/typescript/index.d.ts b/typescript/index.d.ts
+index 055f136507f17b98c4cda728c3cfad7d1dbd2f11..6448f399c5f4860c832d8c298b85017c165ae9d8 100644
+--- a/typescript/index.d.ts
++++ b/typescript/index.d.ts
+@@ -46,7 +46,6 @@ export interface FieldRenderProps<
+ > {
+   input: FieldInputProps<FieldValue, T>;
+   meta: FieldMetaState<FieldValue>;
+-  [otherProp: string]: any;
+ }
+ 
+ export interface FormRenderProps<FormValues = Record<string, any>, InitialFormValues = Partial<FormValues>>
+@@ -78,7 +77,6 @@ export interface FormProps<FormValues = Record<string, any>, InitialFormValues =
+   decorators?: Array<Decorator<FormValues, InitialFormValues>>;
+   form?: FormApi<FormValues, InitialFormValues>;
+   initialValuesEqual?: (a?: AnyObject, b?: AnyObject) => boolean;
+-  [otherProp: string]: any;
+ }
+ 
+ export interface UseFieldConfig<FieldValue> {
+@@ -106,7 +104,6 @@ export interface FieldProps<
+   T extends HTMLElement = HTMLElement
+ > extends UseFieldConfig<FieldValue>, RenderableProps<RP> {
+   name: string;
+-  [otherProp: string]: any;
+ }
+ 
+ export interface UseFormStateParams<FormValues = Record<string, any>, InitialFormValues = Partial<FormValues>> {
