@@ -24,7 +24,10 @@ export interface QueryParamConfig<Val, Encoded = Val>
 
 export const ListParam: QueryParamConfig<string[] | undefined> = {
   encode: (val) => encodeDelimitedArray(val, ',') || undefined,
-  decode: (val) => compact(decodeDelimitedArray(val, ',')),
+  decode: (val) => {
+    const list = compact(decodeDelimitedArray(val, ','));
+    return list.length > 0 ? list : undefined;
+  },
   equals: compareNullable(areListsEqual),
 };
 
