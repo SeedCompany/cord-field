@@ -4316,13 +4316,13 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/react-pdf@npm:^5.0.0":
-  version: 5.0.0
-  resolution: "@types/react-pdf@npm:5.0.0"
+"@types/react-pdf@npm:^5.0.2":
+  version: 5.0.2
+  resolution: "@types/react-pdf@npm:5.0.2"
   dependencies:
     "@types/pdfjs-dist": "*"
     "@types/react": "*"
-  checksum: 8bebbc867e9f6e7b42c0eaf1fa2f1721a2eb718f2e465ad807c57670571b8c0fac0f5ae6ddc4dd1d9063092ead969383de8e570da62fd98812027724167ddc52
+  checksum: edbe76f4df7432735e9729f85c3601978c2796f3d4eba97147896cd9d717a71a00df0b00733bef710c7901eb0344f6aa1c79e4037695a44160acfda5edffc8d3
   languageName: node
   linkType: hard
 
@@ -7799,7 +7799,7 @@ __metadata:
     "@types/react": ^17.0.3
     "@types/react-beautiful-dnd": ^13.0.0
     "@types/react-dom": ^17.0.3
-    "@types/react-pdf": ^5.0.0
+    "@types/react-pdf": ^5.0.2
     "@types/response-time": ^2.3.4
     "@types/seedrandom": ^3.0.0
     "@types/validator": ^13.1.3
@@ -7850,7 +7850,7 @@ __metadata:
     react-final-form: 6.5.1
     react-helmet-async: ^1.0.9
     react-intersection-observer: ^8.31.0
-    react-pdf: ^5.1.0
+    react-pdf: ^5.3.0-beta.3
     react-router: ^6.0.0-beta.0
     react-router-dom: ^6.0.0-beta.0
     react-ssr-prepass: ^1.4.0
@@ -10318,6 +10318,18 @@ __metadata:
   peerDependencies:
     webpack: ^4.0.0
   checksum: 03535f889b56836dc462f20e138ba5ad46893cc079cfb970b3434aa4d4e959a1e52770fa62e87d657f4d7d3dd9207726a464dee19eb82ccdafdc2e5c6a80f92a
+  languageName: node
+  linkType: hard
+
+"file-loader@npm:^6.0.0":
+  version: 6.2.0
+  resolution: "file-loader@npm:6.2.0"
+  dependencies:
+    loader-utils: ^2.0.0
+    schema-utils: ^3.0.0
+  peerDependencies:
+    webpack: ^4.0.0 || ^5.0.0
+  checksum: 0f103418c072ec66c081a9908cd7824ee19905e18be16889cb050f5f373998afaf7ca4c2fd2df4cabf703a2cd526aefe59105930e3f8d266a5b35e6d5f5b3cf4
   languageName: node
   linkType: hard
 
@@ -16408,17 +16420,10 @@ fsevents@^1.2.7:
   languageName: node
   linkType: hard
 
-pdfjs-dist@2.5.207:
-  version: 2.5.207
-  resolution: "pdfjs-dist@npm:2.5.207"
-  checksum: b1a1536d46507493316cdb1f90e103f95a1538353c592c5b31a70bff39d4a10ee731541705d95aa36b7293ffca8af2203af2a86af1761fae75b65b1be196c147
-  languageName: node
-  linkType: hard
-
-"pdfjs-dist@patch:pdfjs-dist@2.5.207#./patches/pdfjs-dist.patch::locator=cord-field%40workspace%3A.":
-  version: 2.5.207
-  resolution: "pdfjs-dist@patch:pdfjs-dist@npm%3A2.5.207#./patches/pdfjs-dist.patch::version=2.5.207&hash=1e9a53&locator=cord-field%40workspace%3A."
-  checksum: b0f1f71d21a54113ae3199a8e333c97df104495e70147202a1ee8f6e35913ca6bed52cffef309cd75983103a674cc5a93601627b762ae367d598753c03762ab1
+"pdfjs-dist@npm:2.6.347":
+  version: 2.6.347
+  resolution: "pdfjs-dist@npm:2.6.347"
+  checksum: 64007e9fce35be3d9e8a2d106bdcd350cd71df4f4fe99a94adbdb4ee662ce1e84abfe0feff38d6cfa94fa79a291cfe96f1efd874e8417c52d7ab753d2046bf26
   languageName: node
   linkType: hard
 
@@ -18095,22 +18100,22 @@ pdfjs-dist@2.5.207:
   languageName: node
   linkType: hard
 
-"react-pdf@npm:^5.1.0":
-  version: 5.1.0
-  resolution: "react-pdf@npm:5.1.0"
+"react-pdf@npm:^5.3.0-beta.3":
+  version: 5.3.0-beta.3
+  resolution: "react-pdf@npm:5.3.0-beta.3"
   dependencies:
     "@babel/runtime": ^7.0.0
+    file-loader: ^6.0.0
     make-cancellable-promise: ^1.0.0
     make-event-props: ^1.1.0
     merge-class-names: ^1.1.1
     merge-refs: ^1.0.0
-    pdfjs-dist: 2.5.207
+    pdfjs-dist: 2.6.347
     prop-types: ^15.6.2
-    worker-loader: ^3.0.0
   peerDependencies:
     react: ^16.3.0 || ^17.0.0-0
     react-dom: ^16.3.0 || ^17.0.0-0
-  checksum: e640faabe85716a0d55f54a392ef3a6852041dc1f1dfd00c33ba41a850811a4c33b67c5f23dd28f2d5e5b4bd15e26928c6108c725841474bd577b4bb8a4a1957
+  checksum: 22ac6f7d7496bcb79130ac9ee725bfa6f576da1c56e12f381ccee83a7ceb7fb4e2423f5f445edc0fa662bdc0db58a13a06d5944f48304499cfc0ba0a16e56524
   languageName: node
   linkType: hard
 
@@ -22261,18 +22266,6 @@ typescript@^4.2.3:
   dependencies:
     errno: ~0.1.7
   checksum: ef76a6892bdf6a4231e6d657c13e2e960278535915d6235d9e0e3e23b65da94a56e5bed17ac5fda282370601d4cd18f4cba9552aa52f4fa9a25cc9fd3fcf58a9
-  languageName: node
-  linkType: hard
-
-"worker-loader@npm:^3.0.0":
-  version: 3.0.6
-  resolution: "worker-loader@npm:3.0.6"
-  dependencies:
-    loader-utils: ^2.0.0
-    schema-utils: ^3.0.0
-  peerDependencies:
-    webpack: ^4.0.0 || ^5.0.0
-  checksum: 76b9461fc236e0a749afe4add7f0564b4f4f11d158e8b47eb8bd8aab513e1eb02050c5d94940a7df960a56c2b0a3190fbd55f4e438380cfe39eafeee1f71a98a
   languageName: node
   linkType: hard
 
