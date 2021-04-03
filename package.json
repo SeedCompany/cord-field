@@ -55,7 +55,7 @@
     "luxon": "^1.26.0",
     "mammoth": "^1.4.16",
     "material-table": "^1.69.2",
-    "notistack": "^0.9.17",
+    "notistack": "^1.0.5",
     "p-min-delay": "^3.2.0",
     "papaparse": "^5.3.0",
     "query-string": "^7.0.0",

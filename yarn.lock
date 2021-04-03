@@ -7843,7 +7843,7 @@ __metadata:
     luxon: ^1.26.0
     mammoth: ^1.4.16
     material-table: ^1.69.2
-    notistack: ^0.9.17
+    notistack: ^1.0.5
     npm-run-all: ^4.1.5
     p-min-delay: ^3.2.0
     papaparse: ^5.3.0
@@ -15520,17 +15520,17 @@ fsevents@^1.2.7:
   languageName: node
   linkType: hard
 
-"notistack@npm:^0.9.17":
-  version: 0.9.17
-  resolution: "notistack@npm:0.9.17"
+"notistack@npm:^1.0.5":
+  version: 1.0.5
+  resolution: "notistack@npm:1.0.5"
   dependencies:
     clsx: ^1.1.0
     hoist-non-react-statics: ^3.3.0
   peerDependencies:
     "@material-ui/core": ^4.0.0
-    react: ^16.8.0
-    react-dom: ^16.8.0
-  checksum: 6f37466bb99562703d25860562bc3179b83fd290c519158bddb64ea8b8b82ffc9e8fb2cb95440dec5405e5fed8658a1060070b73f64703830b73a4992469c276
+    react: ^16.8.0 || ^17.0.0
+    react-dom: ^16.8.0 || ^17.0.0
+  checksum: 3d3f3ac8eb3e8d261a8ea50e1c002da919adfc19ccf1498341b1961e8273fd7bf2d61e50fef46bf6e3a38565246253e3b5c0e47ba793fc97da600e39e856d293
   languageName: node
   linkType: hard
 
