@@ -50,4 +50,11 @@ export const typePolicies: TypePolicies = {
     keyFields: false,
     merge: true,
   },
+  FileNode: {
+    fields: {
+      parents: {
+        merge: false,
+      },
+    },
+  },
 };
