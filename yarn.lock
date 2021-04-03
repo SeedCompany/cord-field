@@ -7631,15 +7631,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"constate@npm:^2.0.0":
-  version: 2.0.0
-  resolution: "constate@npm:2.0.0"
-  peerDependencies:
-    react: ^16.8.0
-  checksum: f508ff6705fa393434af3495f86812ad23afc186f88c140600cd4ddea02dc98cb12278b939748297475bed78bda9553d39eaaef282b82e1883c3141204f4b016
-  languageName: node
-  linkType: hard
-
 "contains-path@npm:^0.1.0":
   version: 0.1.0
   resolution: "contains-path@npm:0.1.0"
@@ -7822,7 +7813,6 @@ __metadata:
     circular-dependency-plugin: ^5.2.2
     clsx: ^1.1.1
     compression: ^1.7.4
-    constate: ^2.0.0
     cookie-parser: ^1.4.5
     cross-fetch: ^3.1.4
     eslint: ^7.23.0
