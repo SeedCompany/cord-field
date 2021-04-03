@@ -1,0 +1,27 @@
+diff --git a/ClockView-68b1ba14.js b/ClockView-68b1ba14.js
+index 4f64875c5897e22800b1b6cfcc395dc686251679..f181629023546bc9258448b3f35e534c760cbce7 100644
+--- a/ClockView-68b1ba14.js
++++ b/ClockView-68b1ba14.js
+@@ -86,7 +86,7 @@ var PickerToolbar = function PickerToolbar(_ref) {
+     variant: "overline"
+   }, toolbarTitle), /*#__PURE__*/createElement(Grid, {
+     container: true,
+-    justifyContent: "space-between",
++    justify: "space-between",
+     className: classes.dateTitleContainer,
+     direction: isLandscape ? landscapeDirection : 'row',
+     alignItems: isLandscape ? 'flex-start' : 'flex-end'
+diff --git a/makePickerWithState-d83c633b.js b/makePickerWithState-d83c633b.js
+index 32beb0d56114f87e51e8425f78e32c854b84ae09..b92a5f0522f6712d419aecde4f6cbaf4db8dd022 100644
+--- a/makePickerWithState-d83c633b.js
++++ b/makePickerWithState-d83c633b.js
+@@ -345,6 +345,9 @@ var DesktopWrapper = function DesktopWrapper(props) {
+     anchorEl: inputRef.current,
+     TransitionComponent: TransitionComponent,
+     PopperProps: PopperProps,
++    TrapFocusProps: {
++      disableEnforceFocus: true,
++    },
+     onClose: onDismiss,
+     onOpen: onOpen
+   }, children)));
