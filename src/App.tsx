@@ -28,7 +28,7 @@ const theme = createTheme();
 export const appProviders = [
   <ThemeProvider theme={theme} children={<></>} />,
   <CssBaseline />,
-  <LocalizationProvider dateAdapter={LuxonUtils} children={<></>} />,
+  <LocalizationProvider dateAdapter={LuxonUtils as any} children={<></>} />,
   <SnackbarProvider />, // needed by apollo
   <ApolloProvider />,
   <UploadManagerProvider />,
