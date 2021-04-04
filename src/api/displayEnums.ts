@@ -49,6 +49,8 @@ export const displayInternProgram = displayEnum<InternshipProgram>();
 export const displayInternDomain = displayEnum<InternshipDomain>();
 export const displayPlanChangeStatus = displayEnum<PlanChangeStatus>();
 export const displayPlanChangeType = displayEnum<PlanChangeType>();
+export const displayPlanChangeTypes = (types: readonly PlanChangeType[]) =>
+  types.map(displayPlanChangeType).join(', ');
 export const PartnershipStatuses: PartnershipAgreementStatus[] = [
   'NotAttached',
   'AwaitingSignature',

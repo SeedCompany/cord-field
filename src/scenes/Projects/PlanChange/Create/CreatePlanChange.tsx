@@ -2,7 +2,7 @@ import { useMutation } from '@apollo/client';
 import { useSnackbar } from 'notistack';
 import React from 'react';
 import { Except } from 'type-fest';
-import { ProjectOverviewQuery } from '../../Overview/ProjectOverview.generated';
+import { PlanChangesQuery } from '../List/PlanChanges.generated';
 import {
   CreatePlanChangeDocument,
   CreatePlanChangeMutation,
@@ -18,7 +18,7 @@ type CreatePlanChangeProps = Except<
   >,
   'onSubmit'
 > & {
-  project: ProjectOverviewQuery['project'];
+  project: PlanChangesQuery['project'];
 };
 
 export const CreatePlanChange = ({

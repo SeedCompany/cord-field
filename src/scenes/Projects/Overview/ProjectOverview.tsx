@@ -28,6 +28,7 @@ import { LanguageEngagementListItemCard } from '../../../components/LanguageEnga
 import { List, useListQuery } from '../../../components/List';
 import { PartnershipSummary } from '../../../components/PartnershipSummary';
 import { PeriodicReportCard } from '../../../components/PeriodicReports';
+import { PlanChangesSummary } from '../../../components/PlanChangesSummary';
 import { ProjectMembersSummary } from '../../../components/ProjectMembersSummary';
 import { Redacted } from '../../../components/Redacted';
 import { SensitivityIcon } from '../../../components/Sensitivity';
@@ -520,6 +521,13 @@ export const ProjectOverview: FC = () => {
               partnerships={projectOverviewData?.project.partnerships}
             />
           </CardGroup>
+          <Grid container spacing={3}>
+            <Grid item xs={6}>
+              <PlanChangesSummary
+                planChanges={projectOverviewData?.project.changes}
+              />
+            </Grid>
+          </Grid>
 
           <Grid container spacing={2} alignItems="center">
             <Grid item>
