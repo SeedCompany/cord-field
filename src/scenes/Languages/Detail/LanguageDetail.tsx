@@ -21,14 +21,15 @@ import {
 } from '../../../components/Formatters';
 import { LocationCard } from '../../../components/LocationCard';
 import { ProjectListItemCard } from '../../../components/ProjectListItemCard';
+import { ProjectListItemFragment } from '../../../components/ProjectListItemCard/ProjectListItem.generated';
 import { Redacted } from '../../../components/Redacted';
 import { Sensitivity } from '../../../components/Sensitivity';
 import { CalendarDate, listOrPlaceholders } from '../../../util';
 import { EditLanguage } from '../Edit';
 import { AddLocationToLanguageForm } from '../Edit/AddLocationToLanguageForm';
+import { FirstScripture } from './FirstScripture';
 import {
   LanguageDocument,
-  LanguageProjectEngagement_LanguageEngagement_Fragment as LanguageFragment,
   RemoveLocationFromLanguageDocument,
 } from './LanguageDetail.generated';
 import { LeastOfThese } from './LeastOfThese';
@@ -88,31 +89,7 @@ export const LanguageDetail = () => {
     sponsorEstimatedEndDate,
     displayName,
     name,
-    hasExternalFirstScripture,
   } = language ?? {};
-
-  // If the API is working properly, there should be a maximum of 1
-  const firstScriptureEngagement = projects?.items
-    .flatMap((project) => project.engagements.items)
-    .filter(
-      (engagement): engagement is LanguageFragment =>
-        engagement.__typename === 'LanguageEngagement'
-    )
-    .find(
-      (engagement) =>
-        engagement.firstScripture.value &&
-        engagement.language.value?.id === languageId
-    );
-
-  const firstScripture = {
-    value: firstScriptureEngagement?.firstScripture.value,
-    canRead: firstScriptureEngagement?.firstScripture.canRead,
-  };
-
-  const hasFirstScripture = {
-    value: firstScripture.value ?? hasExternalFirstScripture?.value,
-    canRead: !!firstScripture.canRead || !!hasExternalFirstScripture?.canRead,
-  };
 
   const canEditAnyFields = canEditAny(language) || canEditAny(ethnologue);
 
@@ -231,12 +208,10 @@ export const LanguageDetail = () => {
             loading={!language}
           />
 
-          <BooleanProperty
-            label="First Scripture"
-            redacted="You do not have permission to view whether the language has a first Scripture"
-            data={hasFirstScripture}
-            wrap={(node) => <Grid item>{node}</Grid>}
-          />
+          <Grid item>
+            <FirstScripture data={data?.language} />
+          </Grid>
+
           <Grid container spacing={3}>
             <Grid item xs={12}>
               <Grid
@@ -300,7 +275,10 @@ export const LanguageDetail = () => {
               <Typography variant="h3" paragraph>
                 Projects
               </Typography>
-              {listOrPlaceholders(projects?.items, 3).map((project, index) => (
+              {listOrPlaceholders(
+                projects?.items as ProjectListItemFragment[] | undefined,
+                3
+              ).map((project, index) => (
                 <ProjectListItemCard
                   key={project?.id ?? index}
                   project={project}
