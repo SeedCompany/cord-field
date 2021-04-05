@@ -192,5 +192,11 @@ export const appOverrides: ThemeOptions['overrides'] = ({
         },
       },
     },
+    MuiTooltip: {
+      tooltip: {
+        fontSize: typography.pxToRem(12),
+        backgroundColor: fade(palette.grey[700], 0.94),
+      },
+    },
   };
 };
