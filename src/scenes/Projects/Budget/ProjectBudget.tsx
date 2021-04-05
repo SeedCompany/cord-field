@@ -19,6 +19,9 @@ import { ProjectBudgetDocument } from './ProjectBudget.generated';
 import { ProjectBudgetRecords } from './ProjectBudgetRecords';
 
 const useStyles = makeStyles(({ breakpoints, spacing }) => ({
+  root: {
+    overflowY: 'auto',
+  },
   header: {
     margin: spacing(3, 0),
     display: 'flex',
@@ -59,7 +62,7 @@ export const ProjectBudget = () => {
   const template = budget?.value?.universalTemplateFile;
 
   return (
-    <Content>
+    <Content className={classes.root}>
       <Helmet title={`Budget - ${data?.project.name.value ?? 'A Project'}`} />
       {error ? (
         <Error error={error}>
