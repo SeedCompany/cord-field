@@ -343,6 +343,7 @@ export const ProjectOverview: FC = () => {
                     <SensitivityIcon
                       value={projectOverviewData?.project.sensitivity}
                       loading={!projectOverviewData}
+                      disableTooltip
                     />
                   }
                 >
