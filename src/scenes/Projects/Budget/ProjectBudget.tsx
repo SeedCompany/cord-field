@@ -23,7 +23,7 @@ const useStyles = makeStyles(({ breakpoints, spacing }) => ({
     overflowY: 'auto',
   },
   header: {
-    margin: spacing(3, 0),
+    margin: spacing(3, 4, 3, 0),
     display: 'flex',
     justifyContent: 'space-between',
     alignItems: 'flex-end',
