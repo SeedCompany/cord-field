@@ -43,6 +43,7 @@ import {
   ProjectOverviewDocument,
   ProjectOverviewFragment,
 } from './ProjectOverview.generated';
+import { ProjectPostList } from './ProjectPostList';
 
 const useStyles = makeStyles(({ spacing, breakpoints, palette }) => ({
   root: {
@@ -518,6 +519,9 @@ export const ProjectOverview: FC = () => {
             skeletonCount={0}
             renderSkeleton={null}
           />
+          {!!projectOverviewData?.project && (
+            <ProjectPostList project={projectOverviewData.project} />
+          )}
         </div>
       )}
       {workflowProject && (
