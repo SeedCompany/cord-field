@@ -1,4 +1,5 @@
 import { Grid, makeStyles, Typography } from '@material-ui/core';
+import { setIn } from 'final-form';
 import React from 'react';
 import { Except } from 'type-fest';
 import {
@@ -65,6 +66,16 @@ export const LanguageForm = <T extends any>({
       {...rest}
       decorators={decorators}
       fieldsPrefix="language"
+      errorHandlers={{
+        Input: (e, next) =>
+          e.field === 'language.hasExternalFirstScripture'
+            ? setIn(
+                {},
+                e.field,
+                'Language already engaged with first Scripture'
+              )
+            : next(e),
+      }}
     >
       {({
         values,
@@ -193,6 +204,7 @@ export const LanguageForm = <T extends any>({
                         <CheckboxField
                           label="Was this language's first scripture produced outside of CORD?"
                           margin="none"
+                          keepHelperTextSpacing
                           {...props}
                         />
                       </Grid>
