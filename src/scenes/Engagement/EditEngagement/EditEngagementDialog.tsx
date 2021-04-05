@@ -1,4 +1,5 @@
 import { useMutation } from '@apollo/client';
+import { setIn } from 'final-form';
 import { compact, keyBy, pick, startCase } from 'lodash';
 import React, { ComponentType, FC, useMemo } from 'react';
 import { Except, Merge } from 'type-fest';
@@ -130,7 +131,7 @@ const fieldMapping: Record<
   ),
   mentorId: ({ props }) => <UserField {...props} label="Mentor" />,
   firstScripture: ({ props }) => (
-    <CheckboxField {...props} label="First Scripture" />
+    <CheckboxField {...props} label="First Scripture" keepHelperTextSpacing />
   ),
   lukePartnership: ({ props }) => (
     <CheckboxField {...props} label="Luke Partnership" />
@@ -248,6 +249,16 @@ export const EditEngagementDialog: FC<EditEngagementDialogProps> = ({
         };
 
         await updateEngagement({ variables: { input } });
+      }}
+      errorHandlers={{
+        Input: (e, next) =>
+          e.field === 'languageEngagement.firstScripture'
+            ? setIn(
+                {},
+                'engagement.firstScripture',
+                'Language has already has first Scripture'
+              )
+            : next(e),
       }}
     >
       <SubmitError />

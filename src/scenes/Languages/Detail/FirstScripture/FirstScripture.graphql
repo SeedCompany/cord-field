@@ -1,0 +1,41 @@
+fragment FirstScripture on Language {
+  id
+  hasExternalFirstScripture {
+    canRead
+    canEdit
+    value
+  }
+  projects {
+    canRead
+    canCreate
+    items {
+      id
+      name {
+        value
+        canRead
+      }
+      engagements {
+        items {
+          ...LanguageProjectEngagement
+        }
+      }
+    }
+  }
+}
+
+fragment LanguageProjectEngagement on Engagement {
+  id
+  ... on LanguageEngagement {
+    language {
+      value {
+        id
+      }
+      canRead
+    }
+    firstScripture {
+      value
+      canRead
+      canEdit
+    }
+  }
+}
