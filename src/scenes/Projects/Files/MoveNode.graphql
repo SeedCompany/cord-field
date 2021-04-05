@@ -1,0 +1,8 @@
+mutation MoveFileNode($input: MoveFileInput!) {
+  moveFileNode(input: $input) {
+    ...FileNodeInfo
+    parents {
+      id
+    }
+  }
+}

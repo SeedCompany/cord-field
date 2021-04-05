@@ -1,7 +1,7 @@
 import { useMutation } from '@apollo/client';
 import React from 'react';
 import { Except } from 'type-fest';
-import { CreateFilmInput, GQLOperations } from '../../../../../../api';
+import { addItemToList, CreateFilmInput } from '../../../../../../api';
 import {
   DialogForm,
   DialogFormProps,
@@ -16,15 +16,18 @@ export type CreateFilmProps = Except<
 >;
 
 export const CreateFilm = (props: CreateFilmProps) => {
-  const [createFilm] = useMutation(CreateFilmDocument);
+  const [createFilm] = useMutation(CreateFilmDocument, {
+    update: addItemToList({
+      listId: 'films',
+      outputToItem: (res) => res.createFilm.film,
+    }),
+  });
   return (
     <DialogForm
       {...props}
       onSubmit={async (input) => {
         const { data } = await createFilm({
           variables: { input },
-          refetchQueries: [GQLOperations.Query.Films],
-          awaitRefetchQueries: true,
         });
 
         return data!.createFilm.film;

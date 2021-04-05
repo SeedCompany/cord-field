@@ -2,8 +2,8 @@ import { useMutation } from '@apollo/client';
 import React from 'react';
 import { Except } from 'type-fest';
 import {
+  addItemToList,
   CreateLiteracyMaterialInput,
-  GQLOperations,
 } from '../../../../../../api';
 import {
   DialogForm,
@@ -19,7 +19,12 @@ export type CreateLiteracyMaterialProps = Except<
 >;
 
 export const CreateLiteracyMaterial = (props: CreateLiteracyMaterialProps) => {
-  const [createLiteracyMaterial] = useMutation(CreateLiteracyMaterialDocument);
+  const [createLiteracyMaterial] = useMutation(CreateLiteracyMaterialDocument, {
+    update: addItemToList({
+      listId: 'literacyMaterials',
+      outputToItem: (res) => res.createLiteracyMaterial.literacyMaterial,
+    }),
+  });
 
   return (
     <DialogForm
@@ -27,8 +32,6 @@ export const CreateLiteracyMaterial = (props: CreateLiteracyMaterialProps) => {
       onSubmit={async (input) => {
         const { data } = await createLiteracyMaterial({
           variables: { input },
-          refetchQueries: [GQLOperations.Query.LiteracyMaterials],
-          awaitRefetchQueries: true,
         });
 
         return data!.createLiteracyMaterial.literacyMaterial;

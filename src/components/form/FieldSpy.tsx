@@ -28,7 +28,7 @@ export const useFieldSpy = (name: string) => {
     visited: Boolean(state.visited?.[name]),
     touched: Boolean(state.touched?.[name]),
     dirty: Boolean(state.dirtyFields[name]),
-    error: state.errors[name] ?? null,
+    error: state.errors?.[name] ?? null,
   };
 };
 

@@ -6,7 +6,6 @@ import { Except, Merge } from 'type-fest';
 import {
   displayFinancialReportingType,
   FinancialReportingTypeList,
-  GQLOperations,
   PartnerTypeList,
   UpdatePartner,
 } from '../../../api';
@@ -127,9 +126,7 @@ export const EditPartner = ({
   editFields: editFieldsProp,
   ...props
 }: EditPartnerProps) => {
-  const [updatePartner] = useMutation(UpdatePartnerDocument, {
-    refetchQueries: [GQLOperations.Query.Partner],
-  });
+  const [updatePartner] = useMutation(UpdatePartnerDocument);
 
   const initialValues = useMemo(
     () => ({

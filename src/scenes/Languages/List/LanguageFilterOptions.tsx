@@ -1,6 +1,5 @@
-import { upperFirst } from 'lodash';
 import * as React from 'react';
-import { Sensitivity, SensitivityList } from '../../../api';
+import { SensitivityList } from '../../../api';
 import { EnumField, SwitchField } from '../../../components/form';
 import {
   BooleanParam,
@@ -8,16 +7,10 @@ import {
   makeQueryHandler,
   withDefault,
   withKey,
-  withTransform,
 } from '../../../hooks';
 
 export const useLanguageFilters = makeQueryHandler({
-  sensitivity: withTransform(EnumListParam<Sensitivity>(), {
-    encode: (value, encoder) =>
-      encoder(value?.map((v: Sensitivity) => v.toLowerCase())),
-    decode: (value, decoder) =>
-      decoder(value)?.map((v) => upperFirst(v) as Sensitivity),
-  }),
+  sensitivity: EnumListParam(SensitivityList),
   leastOfThese: withKey(withDefault(BooleanParam(), false), 'lot'),
   isSignLanguage: withKey(withDefault(BooleanParam(), false), 'sign-language'),
   isDialect: withKey(withDefault(BooleanParam(), false), 'dialect'),

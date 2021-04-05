@@ -1,8 +1,7 @@
 import { TextField, TextFieldProps } from '@material-ui/core';
 import {
+  BaseDatePickerProps,
   DatePicker,
-  DatePickerProps,
-  MaterialUiPickersDate,
   useUtils,
 } from '@material-ui/pickers';
 import {
@@ -11,6 +10,8 @@ import {
 } from '@material-ui/pickers/_helpers/date-utils';
 import { MuiPickersAdapter } from '@material-ui/pickers/_shared/hooks/useUtils';
 import { ParsableDate } from '@material-ui/pickers/constants/prop-types';
+import type { SharedPickerProps } from '@material-ui/pickers/Picker/makePickerWithState';
+import type { ResponsiveWrapper } from '@material-ui/pickers/wrappers/ResponsiveWrapper';
 import { DateTime } from 'luxon';
 import React, { useRef } from 'react';
 import { Except } from 'type-fest';
@@ -18,6 +19,13 @@ import { CalendarDate, Nullable } from '../../util';
 import { FieldConfig, useField } from './useField';
 import { getHelperText, showError } from './util';
 import { required as requiredValidator, Validator } from './validators';
+
+type DatePickerProps = Omit<
+  BaseDatePickerProps<CalendarDate>,
+  keyof DateValidationProps<any>
+> &
+  DateValidationProps<CalendarDate> &
+  SharedPickerProps<CalendarDate, typeof ResponsiveWrapper>;
 
 export type DateFieldProps = Except<
   FieldConfig<CalendarDate | null>,
@@ -45,7 +53,7 @@ export const DateField = ({
   placeholder,
   ...props
 }: DateFieldProps) => {
-  const utils = useUtils();
+  const utils = useUtils<CalendarDate>();
   const validator: Validator<Nullable<DateTime>> = (val) => {
     const allProps = {
       ...defaultRange,
@@ -94,14 +102,14 @@ export const DateField = ({
   );
 
   return (
-    <DatePicker
+    <DatePicker<CalendarDate>
       views={['year', 'month', 'date']}
       openTo={value ? 'date' : 'year'}
       disabled={meta.disabled}
       clearable={!props.required}
-      autoOk
       {...defaultRange}
       {...rest}
+      ref={ref as any}
       inputFormat={inputFormat}
       value={value}
       onOpen={() => {
@@ -135,7 +143,6 @@ export const DateField = ({
             placeholder,
           }}
           name={input.name}
-          inputRef={ref}
           helperText={helperText}
           error={error}
           autoFocus={props.autoFocus}
@@ -160,7 +167,7 @@ const defaultMessages: Record<DateError, string> = {
   minDateUnbound: 'Date is too far in the past',
   maxDateUnbound: 'Date is too far in the future',
   disableFuture: 'Date cannot be in the future',
-  disablePast: 'Date cannot be in the past',
+  disablePast: 'Date cannot be in the past',
   shouldDisableDate: 'Date is unavailable',
 };
 
@@ -222,20 +229,20 @@ const isDateEqual = (a: DateInput, b: DateInput) => {
 
 // Copied from un-exported @material-ui/pickers/_helpers/date-utils
 const validateDate = (
-  utils: MuiPickersAdapter,
-  value: MaterialUiPickersDate | ParsableDate,
+  utils: MuiPickersAdapter<CalendarDate>,
+  value: ParsableDate<CalendarDate>,
   {
     minDate,
     maxDate,
     disableFuture,
     shouldDisableDate,
     disablePast,
-  }: DateValidationProps
+  }: DateValidationProps<CalendarDate>
 ) => {
   const now = utils.date();
   const date = utils.date(value);
 
-  if (value === null) {
+  if (value == null || date == null || now == null) {
     return null;
   }
 

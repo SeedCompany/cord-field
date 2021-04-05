@@ -34,10 +34,6 @@ export const appProps: ThemeOptions['props'] = (_theme) => ({
   MuiTabs: {
     indicatorColor: 'primary',
   },
-  MuiInputAdornment: {
-    // Allow adornments to click through to the input
-    disablePointerEvents: true,
-  },
 });
 
 export const appOverrides: ThemeOptions['overrides'] = ({
@@ -194,6 +190,12 @@ export const appOverrides: ThemeOptions['overrides'] = ({
         '& $wrapper': {
           transform: 'scale(1.43)', // 20px
         },
+      },
+    },
+    MuiTooltip: {
+      tooltip: {
+        fontSize: typography.pxToRem(12),
+        backgroundColor: fade(palette.grey[700], 0.94),
       },
     },
   };

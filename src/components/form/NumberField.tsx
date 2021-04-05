@@ -228,7 +228,9 @@ export const NumberField = ({
         ...(prefix
           ? {
               startAdornment: (
-                <InputAdornment position="start">{prefix}</InputAdornment>
+                <InputAdornment position="start" disablePointerEvents>
+                  {prefix}
+                </InputAdornment>
               ),
             }
           : {}),

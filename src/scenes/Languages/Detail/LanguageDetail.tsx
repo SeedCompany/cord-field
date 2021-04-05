@@ -21,11 +21,13 @@ import {
 } from '../../../components/Formatters';
 import { LocationCard } from '../../../components/LocationCard';
 import { ProjectListItemCard } from '../../../components/ProjectListItemCard';
+import { ProjectListItemFragment } from '../../../components/ProjectListItemCard/ProjectListItem.generated';
 import { Redacted } from '../../../components/Redacted';
 import { Sensitivity } from '../../../components/Sensitivity';
 import { CalendarDate, listOrPlaceholders } from '../../../util';
 import { EditLanguage } from '../Edit';
 import { AddLocationToLanguageForm } from '../Edit/AddLocationToLanguageForm';
+import { FirstScripture } from './FirstScripture';
 import {
   LanguageDocument,
   RemoveLocationFromLanguageDocument,
@@ -205,6 +207,11 @@ export const LanguageDetail = () => {
             }
             loading={!language}
           />
+
+          <Grid item>
+            <FirstScripture data={data?.language} />
+          </Grid>
+
           <Grid container spacing={3}>
             <Grid item xs={12}>
               <Grid
@@ -268,7 +275,10 @@ export const LanguageDetail = () => {
               <Typography variant="h3" paragraph>
                 Projects
               </Typography>
-              {listOrPlaceholders(projects?.items, 3).map((project, index) => (
+              {listOrPlaceholders(
+                projects?.items as ProjectListItemFragment[] | undefined,
+                3
+              ).map((project, index) => (
                 <ProjectListItemCard
                   key={project?.id ?? index}
                   project={project}

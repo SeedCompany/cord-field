@@ -6,7 +6,7 @@ import { PreviewLoading } from './PreviewLoading';
 
 export const RtfPreview: FC<PreviewerProps> = (props) => {
   const { file, previewLoading, setPreviewLoading, setPreviewError } = props;
-  const [html, setHtml] = useState<JSX.Element | JSX.Element[] | null>(null);
+  const [html, setHtml] = useState<ReturnType<typeof parse> | null>(null);
 
   const extractHtmlFromDocument = useCallback(
     async (file: File) => {

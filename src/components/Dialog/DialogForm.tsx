@@ -126,7 +126,7 @@ export function DialogForm<T, R = void>({
         const submitAction = (data as any).submitAction;
 
         const submitCleanForm =
-          sendIfClean === true || sendIfClean === submitAction;
+          sendIfClean === true || (sendIfClean && sendIfClean === submitAction);
 
         const shouldSubmit = submitCleanForm || form.getState().dirty;
 
@@ -162,48 +162,51 @@ export function DialogForm<T, R = void>({
               DialogProps.disableBackdropClick ?? submitting
             }
             aria-labelledby={title ? 'dialog-form' : undefined}
+            PaperProps={{ component: 'form', ...DialogProps.PaperProps }}
+            onSubmit={handleSubmit}
+            // This breaks MUI date picker's popup. This I believe is an acceptable
+            // compromise. Clicking off the dialog still closes it. It only affects
+            // keyboard navigation and accessibility. Maybe this can be removed
+            // with MUI v5.
+            disableEnforceFocus
           >
-            <form onSubmit={handleSubmit}>
-              {title ? (
-                <DialogTitle id="dialog-form">{title}</DialogTitle>
+            {title ? <DialogTitle id="dialog-form">{title}</DialogTitle> : null}
+            <DialogContent>
+              {typeof children === 'function'
+                ? children({ form, submitting, ...rest })
+                : children}
+            </DialogContent>
+            <DialogActions>
+              {leftAction ? (
+                <>
+                  {leftAction}
+                  <div className={classes.spacer} />
+                </>
               ) : null}
-              <DialogContent>
-                {typeof children === 'function'
-                  ? children({ form, submitting, ...rest })
-                  : children}
-              </DialogContent>
-              <DialogActions>
-                {leftAction ? (
-                  <>
-                    {leftAction}
-                    <div className={classes.spacer} />
-                  </>
-                ) : null}
-                {closeLabel !== false && (
-                  <Button
-                    color="secondary"
-                    {...CloseProps}
-                    onClick={() => {
-                      onClose?.('cancel', form);
-                    }}
-                    disabled={submitting}
-                  >
-                    {closeLabel || 'Cancel'}
-                  </Button>
-                )}
-                {submitLabel !== false && (
-                  <SubmitButton
-                    color="secondary"
-                    size="medium"
-                    fullWidth={false}
-                    disableElevation
-                    {...SubmitProps}
-                  >
-                    {submitLabel}
-                  </SubmitButton>
-                )}
-              </DialogActions>
-            </form>
+              {closeLabel !== false && (
+                <Button
+                  color="secondary"
+                  {...CloseProps}
+                  onClick={() => {
+                    onClose?.('cancel', form);
+                  }}
+                  disabled={submitting}
+                >
+                  {closeLabel || 'Cancel'}
+                </Button>
+              )}
+              {submitLabel !== false && (
+                <SubmitButton
+                  color="secondary"
+                  size="medium"
+                  fullWidth={false}
+                  disableElevation
+                  {...SubmitProps}
+                >
+                  {submitLabel}
+                </SubmitButton>
+              )}
+            </DialogActions>
           </Dialog>
         );
 

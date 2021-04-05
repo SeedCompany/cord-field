@@ -1,13 +1,9 @@
 import { Tooltip } from '@material-ui/core';
-import { upperFirst } from 'lodash';
 import * as React from 'react';
 import {
   displayStatus,
-  ProjectStatus,
   ProjectStatusList,
-  ProjectType,
   ProjectTypeList,
-  Sensitivity,
   SensitivityList,
 } from '../../../api';
 import { EnumField, SwitchField } from '../../../components/form';
@@ -18,34 +14,14 @@ import {
   makeQueryHandler,
   withDefault,
   withKey,
-  withTransform,
 } from '../../../hooks';
 
 export const useProjectFilters = makeQueryHandler({
-  status: withTransform(EnumListParam<ProjectStatus>(), {
-    encode: (value, encoder) =>
-      encoder(
-        value?.map((s: ProjectStatus) =>
-          s === 'InDevelopment' ? 'dev' : s.toLowerCase()
-        )
-      ),
-    decode: (value, decoder) =>
-      decoder(value)?.map(
-        (s): ProjectStatus =>
-          s.toLowerCase() === 'dev'
-            ? 'InDevelopment'
-            : (upperFirst(s) as ProjectStatus)
-      ),
-  }),
-  sensitivity: withTransform(EnumListParam<Sensitivity>(), {
-    encode: (value, encoder) =>
-      encoder(value?.map((v: Sensitivity) => v.toLowerCase())),
-    decode: (value, decoder) =>
-      decoder(value)?.map((v) => upperFirst(v) as Sensitivity),
-  }),
-  type: EnumParam<ProjectType>(),
+  status: EnumListParam(ProjectStatusList, { InDevelopment: 'dev' }),
+  sensitivity: EnumListParam(SensitivityList),
+  type: EnumParam(ProjectTypeList),
   onlyMultipleEngagements: withKey(withDefault(BooleanParam(), false), 'multi'),
-  tab: withDefault(EnumParam<'mine' | 'all' | 'pinned'>(), 'mine'),
+  tab: withDefault(EnumParam(['mine', 'all', 'pinned']), 'mine'),
 });
 
 export const ProjectFilterOptions = () => {

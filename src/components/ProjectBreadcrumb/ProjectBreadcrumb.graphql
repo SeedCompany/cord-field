@@ -4,4 +4,5 @@ fragment ProjectBreadcrumb on Project {
     canRead
     value
   }
+  sensitivity
 }

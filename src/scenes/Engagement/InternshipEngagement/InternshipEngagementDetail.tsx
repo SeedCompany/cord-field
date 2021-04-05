@@ -25,6 +25,7 @@ import { Redacted } from '../../../components/Redacted';
 import { Link } from '../../../components/Routing';
 import { Many } from '../../../util';
 import { CeremonyCard } from '../CeremonyCard';
+import { DeleteEngagement } from '../Delete';
 import {
   EditableEngagementField,
   EditEngagementDialog,
@@ -132,10 +133,13 @@ export const InternshipEngagementDetail: FC<EngagementQuery> = ({
                   )}
                 </Typography>
               </Grid>
+              <Grid item>
+                <DeleteEngagement project={project} engagement={engagement} />
+              </Grid>
             </Grid>
             <Grid item container spacing={3} alignItems="center">
               <Grid item>
-                <Typography variant="h4">Internship Engagement</Typography>
+                <Typography variant="h4">Intern Engagement</Typography>
               </Grid>
 
               <Grid item>

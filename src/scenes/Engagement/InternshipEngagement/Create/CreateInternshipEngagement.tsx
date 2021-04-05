@@ -1,7 +1,7 @@
 import { useMutation } from '@apollo/client';
 import React from 'react';
 import { Except } from 'type-fest';
-import { GQLOperations } from '../../../../api';
+import { addItemToList } from '../../../../api';
 import {
   DialogForm,
   DialogFormProps,
@@ -37,19 +37,17 @@ export const CreateInternshipEngagement = ({
           engagement: { projectId, internId: engagement.internId.id },
         },
       },
-      refetchQueries: [
-        GQLOperations.Query.ProjectOverview,
-        GQLOperations.Query.ProjectEngagementListOverview,
-      ],
-      awaitRefetchQueries: true,
+      update: addItemToList({
+        listId: [
+          { __typename: 'InternshipProject', id: projectId },
+          'engagements',
+        ],
+        outputToItem: (res) => res.createInternshipEngagement.engagement,
+      }),
     });
   };
   return (
-    <DialogForm
-      {...props}
-      onSubmit={submit}
-      title="Create Internship Engagement"
-    >
+    <DialogForm {...props} onSubmit={submit} title="Create Intern Engagement">
       <SubmitError />
       <UserField
         name="engagement.internId"

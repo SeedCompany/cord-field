@@ -1,4 +1,12 @@
-import { compact, mapKeys, mapValues, omit, pick, pickBy } from 'lodash';
+import {
+  compact,
+  invert,
+  mapKeys,
+  mapValues,
+  omit,
+  pick,
+  pickBy,
+} from 'lodash';
 import { useCallback, useMemo } from 'react';
 import { useLocation, useNavigate, useSearchParams } from 'react-router-dom';
 import {
@@ -24,7 +32,10 @@ export interface QueryParamConfig<Val, Encoded = Val>
 
 export const ListParam: QueryParamConfig<string[] | undefined> = {
   encode: (val) => encodeDelimitedArray(val, ',') || undefined,
-  decode: (val) => compact(decodeDelimitedArray(val, ',')),
+  decode: (val) => {
+    const list = compact(decodeDelimitedArray(val, ','));
+    return list.length > 0 ? list : undefined;
+  },
   equals: compareNullable(areListsEqual),
 };
 
@@ -38,13 +49,43 @@ export const BooleanParam = (): QueryParamConfig<boolean | undefined> => ({
       : undefined,
 });
 
-// This is just a list param, but is typed as T[]. Useful for string literals.
-export const EnumListParam = <T extends string>() =>
-  (ListParam as unknown) as QueryParamConfig<T[] | undefined>;
+export const EnumListParam = <T extends string>(
+  options: readonly T[],
+  mappingOverride?: Partial<Record<T, string>>
+): QueryParamConfig<readonly T[] | undefined> => {
+  const decodeMapping = mapFromList(options, (opt) => [
+    mappingOverride?.[opt] ?? opt.toLowerCase(),
+    opt,
+  ]);
+  const encodeMapping = invert(decodeMapping);
+  return withTransform(ListParam, {
+    encode: (value, encoder) =>
+      encoder(value?.map((v) => encodeMapping[v] ?? v)),
+    decode: (raw, decoder) => {
+      const value = compact(decoder(raw)?.map((v) => decodeMapping[v]));
+      return value.length > 0 ? value : undefined;
+    },
+  });
+};
 
-// This is just a string param, but is typed as T. Useful for string literals.
-export const EnumParam = <T extends string>() =>
-  (StringParam as unknown) as QueryParamConfig<T | undefined>;
+export const EnumParam = <T extends string>(
+  options: readonly T[],
+  mappingOverride?: Partial<Record<T, string>>
+): QueryParamConfig<T | undefined> => {
+  const decodeMapping = mapFromList(options, (opt) => [
+    mappingOverride?.[opt] ?? opt.toLowerCase(),
+    opt,
+  ]);
+  const encodeMapping = invert(decodeMapping);
+  return withTransform(StringParam, {
+    encode: (value, encoder) =>
+      encoder(value ? encodeMapping[value] : undefined),
+    decode: (raw, decoder) => {
+      const value = decoder(raw);
+      return value ? decodeMapping[value] : undefined;
+    },
+  });
+};
 
 /**
  * This applies a default value to the param config.

@@ -5,3 +5,18 @@ mutation createLanguageEngagement($input: CreateLanguageEngagementInput!) {
     }
   }
 }
+
+fragment TranslationProjectSensitivity on TranslationProject {
+  sensitivity
+  engagements {
+    items {
+      ... on LanguageEngagement {
+        language {
+          value {
+            sensitivity
+          }
+        }
+      }
+    }
+  }
+}

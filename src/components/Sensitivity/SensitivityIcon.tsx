@@ -1,4 +1,4 @@
-import { colors, makeStyles, SvgIconProps } from '@material-ui/core';
+import { colors, makeStyles, SvgIconProps, Tooltip } from '@material-ui/core';
 import { VerifiedUser } from '@material-ui/icons';
 import clsx from 'clsx';
 import { FC } from 'react';
@@ -20,20 +20,24 @@ const useStyles = makeStyles(({ palette }) => ({
 export interface SensitivityIconProps extends SvgIconProps {
   value?: SensitivityType;
   loading?: boolean;
+  disableTooltip?: boolean;
 }
 
 export const SensitivityIcon: FC<SensitivityIconProps> = ({
   value,
   loading,
   className,
+  disableTooltip,
   ...rest
 }) => {
   const classes = useStyles();
 
   return (
-    <VerifiedUser
-      className={clsx(!loading && value ? classes[value] : null, className)}
-      {...rest}
-    />
+    <Tooltip title={!loading && !disableTooltip ? `${value} Sensitivity` : ''}>
+      <VerifiedUser
+        className={clsx(!loading && value ? classes[value] : null, className)}
+        {...rest}
+      />
+    </Tooltip>
   );
 };
