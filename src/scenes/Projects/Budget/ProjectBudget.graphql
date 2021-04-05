@@ -29,6 +29,7 @@ fragment BudgetRecord on BudgetRecord {
 query ProjectBudget($id: ID!) {
   project(id: $id) {
     id
+    ...ProjectBreadcrumb
     name {
       canRead
       value
