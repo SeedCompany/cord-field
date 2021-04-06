@@ -9,6 +9,7 @@ import { ContentContainer } from '../../../components/Layout';
 import { List, useListQuery } from '../../../components/List';
 import { ProjectListItemCard as ProjectCard } from '../../../components/ProjectListItemCard';
 import { SortButtonDialog, useSort } from '../../../components/Sort';
+import { simpleSwitch } from '../../../util';
 import {
   ProjectFilterOptions,
   useProjectFilters,
@@ -37,23 +38,18 @@ const useStyles = makeStyles(({ spacing, breakpoints }) => ({
 export const ProjectList: FC = () => {
   const sort = useSort<Project>();
   const [filters, setFilters] = useProjectFilters();
-  const getFilters = () => {
-    const { tab, ...otherFilters } = filters;
-    return {
-      ...otherFilters,
-      ...(tab === 'mine'
-        ? { mine: true }
-        : tab === 'pinned'
-        ? { pinned: true }
-        : {}),
-    };
-  };
   const list = useListQuery(ProjectListDocument, {
     listAt: (data) => data.projects,
     variables: {
       input: {
         ...sort.value,
-        filter: getFilters(),
+        filter: {
+          ...omit(filters, 'tab'),
+          ...simpleSwitch(filters.tab, {
+            mine: { mine: true },
+            pinned: { pinned: true },
+          }),
+        },
       },
     },
   });
