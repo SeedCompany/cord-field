@@ -1,6 +1,5 @@
 import { Card } from '@material-ui/core';
 import React from 'react';
-import { ArrayItem } from '../../util';
 import {
   ProjectMembersSummary,
   ProjectMembersSummaryProps,
@@ -12,7 +11,7 @@ export default { title: 'Components/Project Member Summary' };
 const generateUser = (
   firstName: string,
   avatarLetters: string
-): ArrayItem<ProjectMemberListFragment['items']> => ({
+): ProjectMemberListFragment['items'][number] => ({
   id: '',
   user: {
     value: {

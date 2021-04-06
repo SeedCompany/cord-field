@@ -1,8 +1,6 @@
 import { compact, fill, isEmpty, times } from 'lodash';
 import { Nullable } from './types';
 
-export type ArrayItem<T> = T extends ReadonlyArray<infer U> ? U : never;
-
 export type Many<T> = T | readonly T[];
 
 export const many = <T>(items: Many<T>): readonly T[] =>

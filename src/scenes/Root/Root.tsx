@@ -8,6 +8,7 @@ import { Authentication } from '../Authentication';
 import { Home } from '../Home';
 import { Header } from './Header';
 import { Sidebar } from './Sidebar';
+import { useNonProdWarning } from './useNonProdWarning';
 
 const Partners = loadable(() => import('../Partners'), {
   resolveComponent: (m) => m.Partners,
@@ -50,6 +51,8 @@ const useStyles = makeStyles(() => ({
 
 export const Root = () => {
   const classes = useStyles();
+  useNonProdWarning();
+
   const routes = (
     <Routes>
       <Route path="/" element={<Home />} />

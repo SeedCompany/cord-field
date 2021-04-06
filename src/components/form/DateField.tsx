@@ -107,6 +107,9 @@ export const DateField = ({
       openTo={value ? 'date' : 'year'}
       disabled={meta.disabled}
       clearable={!props.required}
+      showTodayButton
+      allowSameDateSelection
+      showDaysOutsideCurrentMonth
       {...defaultRange}
       {...rest}
       ref={ref as any}
