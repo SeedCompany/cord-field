@@ -379,7 +379,10 @@ export const ProjectOverview: FC = () => {
               />
             </Grid>
             {projectOverviewData?.project.status === 'InDevelopment' && (
-              <Tooltip title="Estimated Submission to Regional Director">
+              <Tooltip
+                title="Estimated Submission to Regional Director"
+                placement="top"
+              >
                 <Grid item>
                   <DataButton
                     loading={!projectOverviewData}
