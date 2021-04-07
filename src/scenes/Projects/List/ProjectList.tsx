@@ -1,7 +1,7 @@
 import { Divider, Grid, makeStyles, Tab, Typography } from '@material-ui/core';
 import { Skeleton, TabContext, TabList, TabPanel } from '@material-ui/lab';
 import { omit, pickBy } from 'lodash';
-import React, { FC } from 'react';
+import React, { FC, useRef } from 'react';
 import { Helmet } from 'react-helmet-async';
 import { Project } from '../../../api';
 import { FilterButtonDialog } from '../../../components/Filter';
@@ -57,6 +57,7 @@ export const ProjectList: FC = () => {
 
   const classes = useStyles();
   const formatNumber = useNumberFormatter();
+  const scrollRef = useRef<HTMLElement>(null);
 
   return (
     <ContentContainer>
@@ -90,7 +91,11 @@ export const ProjectList: FC = () => {
           <Tab label="All" value="all" />
         </TabList>
         <Divider className={classes.maxWidth} />
-        <TabPanel value={filters.tab} className={classes.tabPanel}>
+        <TabPanel
+          value={filters.tab}
+          className={classes.tabPanel}
+          ref={scrollRef}
+        >
           <Typography variant="h3" className={classes.total}>
             {list.data ? (
               `${formatNumber(list.data.total)} Projects`
@@ -103,6 +108,7 @@ export const ProjectList: FC = () => {
             classes={{ container: classes.maxWidth }}
             renderItem={(item) => <ProjectCard project={item} />}
             renderSkeleton={<ProjectCard />}
+            scrollRef={scrollRef}
           />
         </TabPanel>
       </TabContext>
