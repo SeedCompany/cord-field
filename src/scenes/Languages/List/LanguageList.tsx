@@ -1,5 +1,6 @@
 import { Grid, makeStyles, Typography } from '@material-ui/core';
 import { Skeleton } from '@material-ui/lab';
+import { pickBy } from 'lodash';
 import React, { FC } from 'react';
 import { Helmet } from 'react-helmet-async';
 import { Language } from '../../../api';
@@ -54,7 +55,7 @@ export const LanguageList: FC = () => {
           </SortButtonDialog>
         </Grid>
         <Grid item>
-          <FilterButtonDialog values={filter} onChange={setFilters}>
+          <FilterButtonDialog values={pickBy(filter)} onChange={setFilters}>
             <LanguageFilterOptions />
           </FilterButtonDialog>
         </Grid>

@@ -1,6 +1,7 @@
-import { Button } from '@material-ui/core';
+import { Badge, Button } from '@material-ui/core';
 import { ReactNode } from 'react';
 import * as React from 'react';
+import { keys } from '../../util';
 import { useDialog } from '../Dialog';
 import { DialogForm } from '../Dialog/DialogForm';
 
@@ -19,9 +20,11 @@ export function FilterButtonDialog<T>({
 
   return (
     <>
-      <Button variant="outlined" onClick={() => open()}>
-        Filter Options
-      </Button>
+      <Badge badgeContent={keys(values).length} color="primary">
+        <Button variant="outlined" onClick={() => open()}>
+          Filter Options
+        </Button>
+      </Badge>
 
       <DialogForm
         {...state}

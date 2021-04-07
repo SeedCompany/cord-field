@@ -1,5 +1,6 @@
 import { Divider, Grid, makeStyles, Tab, Typography } from '@material-ui/core';
 import { Skeleton, TabContext, TabList, TabPanel } from '@material-ui/lab';
+import { omit, pickBy } from 'lodash';
 import React, { FC } from 'react';
 import { Helmet } from 'react-helmet-async';
 import { Project } from '../../../api';
@@ -70,7 +71,10 @@ export const ProjectList: FC = () => {
           </SortButtonDialog>
         </Grid>
         <Grid item>
-          <FilterButtonDialog values={filters} onChange={setFilters}>
+          <FilterButtonDialog
+            values={pickBy(omit(filters, 'tab'))}
+            onChange={setFilters}
+          >
             <ProjectFilterOptions />
           </FilterButtonDialog>
         </Grid>
