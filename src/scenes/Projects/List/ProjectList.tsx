@@ -86,7 +86,7 @@ export const ProjectList: FC = () => {
           className={classes.maxWidth}
         >
           <Tab label="Pinned" value="pinned" />
-          <Tab label="My Projects" value="mine" />
+          <Tab label="Mine" value="mine" />
           <Tab label="All" value="all" />
         </TabList>
         <Divider className={classes.maxWidth} />
