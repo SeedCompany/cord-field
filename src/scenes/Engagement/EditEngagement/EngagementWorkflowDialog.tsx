@@ -35,7 +35,9 @@ const transitionTypeToColor: Record<
 };
 
 type UpdateProjectDialogProps = Except<
-  DialogFormProps<SubmitAction & { engagement: { status?: EngagementStatus } }>,
+  DialogFormProps<
+    SubmitAction & { engagement?: { status?: EngagementStatus } }
+  >,
   'sendIfClean' | 'submitLabel' | 'onSubmit' | 'initialValues' | 'errorHandlers'
 > & {
   engagement: Engagement;
@@ -72,7 +74,11 @@ export const EngagementWorkflowDialog = ({
       {...props}
       submitLabel={canBypassTransitions ? undefined : false}
       sendIfClean
-      onSubmit={async ({ submitAction, engagement: { status } }) => {
+      onSubmit={async ({
+        submitAction,
+        engagement: submittedEngagementFields,
+      }) => {
+        const status = submittedEngagementFields?.status;
         // If clicking save for status override, but there is no status, do nothing.
         if (!submitAction && !status) {
           return;
