@@ -114,7 +114,22 @@ export const ProjectBudgetRecords: FC<ProjectBudgetRecordsProps> = (props) => {
                     amount: Number(newAmount),
                   },
                 };
-                await updateBudgetRecord({ variables: { input } });
+                await updateBudgetRecord({
+                  variables: { input },
+                  optimisticResponse: {
+                    updateBudgetRecord: {
+                      __typename: 'UpdateBudgetRecordOutput',
+                      budgetRecord: {
+                        __typename: 'BudgetRecord',
+                        id: data.id,
+                        amount: {
+                          __typename: 'SecuredFloatNullable',
+                          value: input.budgetRecord.amount,
+                        },
+                      },
+                    },
+                  },
+                });
               },
             }
           : undefined
