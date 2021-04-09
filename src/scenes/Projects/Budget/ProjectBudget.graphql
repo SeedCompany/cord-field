@@ -89,3 +89,13 @@ mutation UpdateProjectBudgetRecord($input: UpdateBudgetRecordInput!) {
     }
   }
 }
+
+fragment CalculateNewTotal on Budget {
+  total
+  records {
+    id
+    amount {
+      value
+    }
+  }
+}
