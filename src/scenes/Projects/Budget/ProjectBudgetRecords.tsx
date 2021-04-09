@@ -1,11 +1,12 @@
 import { useMutation } from '@apollo/client';
-import { sortBy } from 'lodash';
+import { sortBy, sumBy } from 'lodash';
 import { Column, Components } from 'material-table';
 import React, { FC, useMemo } from 'react';
 import { useCurrencyFormatter } from '../../../components/Formatters/useCurrencyFormatter';
 import { Table } from '../../../components/Table';
 import {
   BudgetRecordFragment as BudgetRecord,
+  CalculateNewTotalFragmentDoc,
   ProjectBudgetQuery,
   UpdateProjectBudgetRecordDocument,
 } from './ProjectBudget.generated';
@@ -31,7 +32,26 @@ interface ProjectBudgetRecordsProps {
 export const ProjectBudgetRecords: FC<ProjectBudgetRecordsProps> = (props) => {
   const { loading, budget } = props;
   const formatCurrency = useCurrencyFormatter();
-  const [updateBudgetRecord] = useMutation(UpdateProjectBudgetRecordDocument);
+  const [updateBudgetRecord] = useMutation(UpdateProjectBudgetRecordDocument, {
+    update: (cache) => {
+      const budgetId = cache.identify(budget!.value!);
+      const cached = cache.readFragment({
+        id: budgetId,
+        fragment: CalculateNewTotalFragmentDoc,
+      });
+      if (!cached) {
+        return;
+      }
+      cache.writeFragment({
+        id: budgetId,
+        fragment: CalculateNewTotalFragmentDoc,
+        data: {
+          ...cached,
+          total: sumBy(cached.records, (record) => record.amount.value ?? 0),
+        },
+      });
+    },
+  });
 
   const records: readonly BudgetRecord[] = budget?.value?.records ?? [];
 
@@ -94,7 +114,22 @@ export const ProjectBudgetRecords: FC<ProjectBudgetRecordsProps> = (props) => {
                     amount: Number(newAmount),
                   },
                 };
-                await updateBudgetRecord({ variables: { input } });
+                await updateBudgetRecord({
+                  variables: { input },
+                  optimisticResponse: {
+                    updateBudgetRecord: {
+                      __typename: 'UpdateBudgetRecordOutput',
+                      budgetRecord: {
+                        __typename: 'BudgetRecord',
+                        id: data.id,
+                        amount: {
+                          __typename: 'SecuredFloatNullable',
+                          value: input.budgetRecord.amount,
+                        },
+                      },
+                    },
+                  },
+                });
               },
             }
           : undefined

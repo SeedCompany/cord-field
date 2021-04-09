@@ -1,7 +1,6 @@
 import { useQuery } from '@apollo/client';
 import { Breadcrumbs, Grid, makeStyles, Typography } from '@material-ui/core';
 import { Skeleton } from '@material-ui/lab';
-import { sumBy } from 'lodash';
 import React, { useEffect } from 'react';
 import { Helmet } from 'react-helmet-async';
 import { useParams } from 'react-router-dom';
@@ -54,11 +53,6 @@ export const ProjectBudget = () => {
 
   const budget = data?.project.budget;
 
-  const budgetTotal = sumBy(
-    budget?.value?.records,
-    (record) => record.amount.value ?? 0
-  );
-
   const template = budget?.value?.universalTemplateFile;
 
   return (
@@ -87,8 +81,8 @@ export const ProjectBudget = () => {
               variant="h3"
               className={loading ? classes.totalLoading : undefined}
             >
-              {!loading ? (
-                `Total: ${formatCurrency(budgetTotal)}`
+              {!loading && budget?.value?.total != null ? (
+                `Total: ${formatCurrency(budget.value.total)}`
               ) : (
                 <Skeleton width="100%" />
               )}
