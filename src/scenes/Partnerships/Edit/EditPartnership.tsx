@@ -5,6 +5,8 @@ import { Except } from 'type-fest';
 import { removeItemFromList, UpdatePartnershipInput } from '../../../api';
 import { SubmitAction, SubmitButton } from '../../../components/form';
 import { PartnerLookupItem } from '../../../components/form/Lookup';
+import { callAll } from '../../../util';
+import { invalidateBudgetRecords } from '../InvalidateBudget/invalidateBudgetRecords';
 import { ProjectPartnershipsQuery } from '../List/PartnershipList.generated';
 import {
   hasManagingType,
@@ -62,12 +64,21 @@ const decorators = [clearFinancialReportingType];
 export const EditPartnership: FC<EditPartnershipProps> = (props) => {
   const { partnership, project } = props;
 
-  const [updatePartnership] = useMutation(UpdatePartnershipDocument);
+  const [updatePartnership] = useMutation(UpdatePartnershipDocument, {
+    update: invalidateBudgetRecords(
+      project,
+      partnership,
+      (res) => res.updatePartnership.partnership
+    ),
+  });
   const [deletePartnership] = useMutation(DeletePartnershipDocument, {
-    update: removeItemFromList({
-      listId: [project, 'partnerships'],
-      item: partnership,
-    }),
+    update: callAll(
+      removeItemFromList({
+        listId: [project, 'partnerships'],
+        item: partnership,
+      }),
+      invalidateBudgetRecords(project, partnership, undefined)
+    ),
   });
 
   const initialValues = useMemo(
