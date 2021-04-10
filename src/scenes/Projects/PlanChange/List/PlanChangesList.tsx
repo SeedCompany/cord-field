@@ -17,6 +17,7 @@ import { PlanChangeCard } from '../../../../components/PlanChangeCard';
 import { ProjectBreadcrumb } from '../../../../components/ProjectBreadcrumb';
 import { ProjectMemberCard } from '../../../../components/ProjectMemberCard';
 import { CreatePlanChange } from '../Create/CreatePlanChange';
+import { UpdatePlanChange, UpdatePlanChangeFormParams } from '../Update';
 import { PlanChangesDocument } from './PlanChanges.generated';
 
 const useStyles = makeStyles(({ spacing, breakpoints }) => ({
@@ -46,6 +47,12 @@ export const PlanChangesList: FC = () => {
   });
 
   const [createPlanChangeDialogState, openCreatePlanChangeDialog] = useDialog();
+
+  const [
+    updatePlanChangeDialogState,
+    openUpdatePlanChangeDialog,
+    planChangeProps,
+  ] = useDialog<UpdatePlanChangeFormParams>();
 
   return (
     <div className={classes.root}>
@@ -88,9 +95,23 @@ export const PlanChangesList: FC = () => {
           {...list}
           spacing={3}
           renderItem={(planChange) => (
-            <PlanChangeCard planChange={planChange} />
+            <PlanChangeCard
+              planChange={planChange}
+              onEdit={() =>
+                openUpdatePlanChangeDialog({
+                  project: data!.project,
+                  planChange: planChange,
+                })
+              }
+            />
           )}
           renderSkeleton={<ProjectMemberCard />}
+        />
+      )}
+      {planChangeProps && (
+        <UpdatePlanChange
+          {...updatePlanChangeDialogState}
+          {...planChangeProps}
         />
       )}
     </div>

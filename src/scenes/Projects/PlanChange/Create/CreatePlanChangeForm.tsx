@@ -1,9 +1,7 @@
 import React from 'react';
 import {
   CreatePlanChangeInput,
-  displayPlanChangeStatus,
   displayPlanChangeType,
-  PlanChangeStatusList,
   PlanChangeTypeList,
 } from '../../../../api';
 import {
@@ -36,14 +34,6 @@ export const CreatePlanChangeForm = <R extends any>(
       name="planChange.summary"
       label="Summary"
       placeholder="Enter summary"
-      required
-    />
-    <AutocompleteField
-      options={PlanChangeStatusList}
-      getOptionLabel={displayPlanChangeStatus}
-      name="planChange.status"
-      label="Status"
-      variant="outlined"
       required
     />
   </DialogForm>

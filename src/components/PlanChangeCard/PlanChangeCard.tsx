@@ -46,7 +46,7 @@ export const PlanChangeCard: FC<PlanChangeCardProps> = ({
   const classes = useStyles();
   const dateTimeFormatter = useDateTimeFormatter();
 
-  const typesString = displayPlanChangeTypes(planChange?.types ?? []);
+  const typesString = displayPlanChangeTypes(planChange?.types.value ?? []);
   const createdAtString = dateTimeFormatter(planChange?.createdAt);
 
   return (
@@ -57,14 +57,14 @@ export const PlanChangeCard: FC<PlanChangeCardProps> = ({
             {!planChange ? (
               <Skeleton variant="text" width="40%" />
             ) : (
-              planChange.summary
+              planChange.summary.value
             )}
           </Typography>
           <Typography variant="body2" color="primary">
             {!planChange ? (
               <Skeleton variant="text" width="33%" />
             ) : (
-              planChange.status
+              planChange.status.value
             )}
           </Typography>
           <Typography variant="body2" color="textSecondary">

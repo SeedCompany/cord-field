@@ -1,0 +1,11 @@
+mutation UpdatePlanChange($input: UpdatePlanChangeInput!) {
+  updatePlanChange(input: $input) {
+    planChange {
+      ...PlanChangeCard
+    }
+  }
+}
+
+mutation DeletePlanChange($planChangeId: ID!) {
+  deletePlanChange(id: $planChangeId)
+}

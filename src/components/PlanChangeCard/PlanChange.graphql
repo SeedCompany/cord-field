@@ -2,7 +2,19 @@ fragment PlanChangeCard on PlanChange {
   id
   createdAt
   canDelete
-  types
-  summary
-  status
+  types {
+    value
+    canRead
+    canEdit
+  }
+  summary {
+    value
+    canRead
+    canEdit
+  }
+  status {
+    value
+    canRead
+    canEdit
+  }
 }
