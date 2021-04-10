@@ -23,6 +23,10 @@ import {
   LocationField,
 } from '../../../components/form/Lookup';
 import { ExtractStrict, many, Many } from '../../../util';
+import {
+  updateEngagementDateRanges,
+  updatePartnershipsDateRanges,
+} from '../DateRangeCache';
 import { ProjectOverviewFragment } from '../Overview/ProjectOverview.generated';
 import { UpdateProjectDocument } from './UpdateProject.generated';
 
@@ -156,7 +160,30 @@ export const UpdateProjectDialog = ({
             ...(fieldRegionId ? { fieldRegionId } : {}),
           },
         };
-        await updateProject({ variables: { input } });
+        await updateProject({
+          variables: { input },
+          update: (cache) => {
+            if (rest.mouStart === undefined && rest.mouEnd === undefined) {
+              return;
+            }
+
+            // Project date range affects budget records, remove them so
+            // they are re-fetched when needed
+            if (project.budget.value) {
+              cache.modify({
+                id: cache.identify(project.budget.value),
+                fields: {
+                  records: (_, { DELETE }) => DELETE,
+                },
+              });
+            }
+
+            // Adjust cached date ranges of engagements & partnerships
+            // since they are based on the project's date range
+            updateEngagementDateRanges(cache, project);
+            updatePartnershipsDateRanges(cache, project);
+          },
+        });
       }}
     >
       <SubmitError />
