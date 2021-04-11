@@ -6,6 +6,7 @@ import { Route, Routes } from 'react-router-dom';
 import { NotFoundRoute } from '../../components/Error';
 import { Authentication } from '../Authentication';
 import { Home } from '../Home';
+import { CreateDialogProviders } from './Creates';
 import { Header } from './Header';
 import { Sidebar } from './Sidebar';
 import { useNonProdWarning } from './useNonProdWarning';
@@ -86,7 +87,9 @@ export const Root = () => {
       <FavIcons />
       <Authentication>
         <div className={classes.app}>
-          <Sidebar />
+          <CreateDialogProviders>
+            <Sidebar />
+          </CreateDialogProviders>
           <div className={classes.main}>
             <Header />
             {routes}
