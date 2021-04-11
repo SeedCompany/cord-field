@@ -5,9 +5,9 @@ __metadata:
   version: 4
   cacheKey: 7
 
-"@apollo/client@npm:^3.3.13":
-  version: 3.3.13
-  resolution: "@apollo/client@npm:3.3.13"
+"@apollo/client@npm:^3.3.14":
+  version: 3.3.14
+  resolution: "@apollo/client@npm:3.3.14"
   dependencies:
     "@graphql-typed-document-node/core": ^3.0.0
     "@types/zen-observable": ^0.8.0
@@ -31,7 +31,7 @@ __metadata:
       optional: true
     subscriptions-transport-ws:
       optional: true
-  checksum: b53741ce60cbbf5a55f58b590fa76a56af1b1db35ab8dd521a79bfa003033f1134f2ab4917d2b6c86f99e60c0edf317cbf569e9840f0d78bff53285fc48d6697
+  checksum: a08163a9982522dd7c4191e33ef086331de9c3d063438342863cf5ea44ad8baaa51ed4c77f2600620a5ec47dc4d1bd5b4b9a9f95e5cc0e17403d6a0b62c7994c
   languageName: node
   linkType: hard
 
@@ -7742,7 +7742,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "cord-field@workspace:."
   dependencies:
-    "@apollo/client": ^3.3.13
+    "@apollo/client": ^3.3.14
     "@babel/core": ^7.13.14
     "@babel/plugin-proposal-numeric-separator": ^7.12.13
     "@date-io/luxon": ^2.10.8
