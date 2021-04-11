@@ -10,11 +10,12 @@ import {
   SvgIconProps,
   ThemeProvider,
 } from '@material-ui/core';
-import { Add, FolderOpen, Language, People } from '@material-ui/icons';
+import { Add, FolderOpen, Language, Person } from '@material-ui/icons';
 import { ComponentType, FC, useState } from 'react';
 import * as React from 'react';
 import { CreateButton } from '../../../components/CreateButton';
 import { useDialog } from '../../../components/Dialog';
+import { PeopleJoinedIcon } from '../../../components/Icons';
 import { ListItemLink, ListItemLinkProps } from '../../../components/Routing';
 import { useSession } from '../../../components/Session';
 import { CreateLanguage } from '../../Languages/Create';
@@ -111,8 +112,8 @@ export const Sidebar: FC = () => {
     >
       <NavItem to="/projects" label="Projects" icon={FolderOpen} />
       <NavItem to="/languages" label="Languages" icon={Language} />
-      <NavItem to="/users" label="People" icon={People} />
-      <NavItem to="/partners" label="Partners" icon={People} />
+      <NavItem to="/users" label="People" icon={Person} />
+      <NavItem to="/partners" label="Partners" icon={PeopleJoinedIcon} />
     </List>
   );
 
