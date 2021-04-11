@@ -32,7 +32,7 @@ export const PartnershipSummary: FC<PartnershipSummaryProps> = ({
   return (
     <MemberListSummary
       total={partnerships?.total}
-      title="Partners"
+      title="Partnerships"
       to="partnerships"
       members={members}
       icon={<PeopleJoinedIcon className={classes.icon} />}
