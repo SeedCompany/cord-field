@@ -6,6 +6,8 @@ import {
   CreatePartnership as CreatePartnershipType,
 } from '../../../api';
 import { PartnerLookupItem } from '../../../components/form/Lookup';
+import { callAll } from '../../../util';
+import { invalidateBudgetRecords } from '../InvalidateBudget';
 import { ProjectPartnershipsQuery } from '../List/PartnershipList.generated';
 import { PartnershipForm, PartnershipFormProps } from '../PartnershipForm';
 import { CreatePartnershipDocument } from './CreatePartnership.generated';
@@ -30,10 +32,17 @@ export const CreatePartnership = ({
   ...props
 }: CreatePartnershipProps) => {
   const [createPartnership] = useMutation(CreatePartnershipDocument, {
-    update: addItemToList({
-      listId: [project, 'partnerships'],
-      outputToItem: (res) => res.createPartnership.partnership,
-    }),
+    update: callAll(
+      addItemToList({
+        listId: [project, 'partnerships'],
+        outputToItem: (res) => res.createPartnership.partnership,
+      }),
+      invalidateBudgetRecords(
+        project,
+        undefined,
+        (res) => res.createPartnership.partnership
+      )
+    ),
   });
 
   return (

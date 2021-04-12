@@ -58,9 +58,7 @@ export const pageLimitPagination = <
     // This function is called a lot and most of the time there are no args.
     // Optimization for this case.
     if (!args || !args.input) {
-      // @ts-expect-error false is fine as a key specifier but Apollo types
-      // incorrectly say that it's not ok when using a function.
-      return false as KeySpecifier;
+      return false;
     }
     const { count, page, ...rest } = args.input;
     return objectToKeyArgs({ input: rest });

@@ -54,4 +54,5 @@ fragment PartnershipForm on Partnership {
     canEdit
     canRead
   }
+  ...PartnershipToCheckBudgetChange
 }

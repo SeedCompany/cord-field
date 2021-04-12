@@ -1,0 +1,25 @@
+fragment ProjectsBudgetForPartnershipChange on Project {
+  budget {
+    value {
+      id
+    }
+  }
+}
+
+fragment PartnershipToCheckBudgetChange on Partnership {
+  id
+  types {
+    value
+    canRead
+  }
+  mouEnd {
+    value
+    canRead
+    canEdit
+  }
+  mouStart {
+    value
+    canRead
+    canEdit
+  }
+}

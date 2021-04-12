@@ -440,13 +440,13 @@ export const ProjectOverview: FC = () => {
           </Grid>
 
           <Grid container spacing={3}>
-            <Grid item xs={6}>
+            <Grid item xs={12} md={6}>
               <BudgetOverviewCard
                 budget={projectOverviewData?.project.budget.value}
                 loading={!projectOverviewData}
               />
             </Grid>
-            <Grid item xs={6}>
+            <Grid item xs={12} md={6}>
               {/* TODO When file api is finished need to update query and pass in file information */}
               <FilesOverviewCard
                 loading={!projectOverviewData}
@@ -455,7 +455,7 @@ export const ProjectOverview: FC = () => {
               />
             </Grid>
           </Grid>
-          <CardGroup>
+          <CardGroup horizontal="md">
             <ProjectMembersSummary
               members={projectOverviewData?.project.team}
             />

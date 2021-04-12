@@ -1,0 +1,65 @@
+fragment ProjectCachedEngagementDateRanges on Project {
+  id
+  mouStart {
+    canRead
+    value
+  }
+  mouEnd {
+    canRead
+    value
+  }
+  engagements {
+    items {
+      id
+      startDate {
+        canRead
+        value
+      }
+      endDate {
+        canRead
+        value
+      }
+      startDateOverride {
+        canRead
+        value
+      }
+      endDateOverride {
+        canRead
+        value
+      }
+    }
+  }
+}
+
+fragment ProjectCachedPartnershipDateRanges on Project {
+  id
+  mouStart {
+    canRead
+    value
+  }
+  mouEnd {
+    canRead
+    value
+  }
+  partnerships {
+    items {
+      id
+      mouStart {
+        canRead
+        value
+      }
+      mouEnd {
+        canRead
+        value
+      }
+      mouStartOverride {
+        canRead
+        value
+      }
+      mouEndOverride {
+        canRead
+        value
+      }
+    }
+  }
+}
