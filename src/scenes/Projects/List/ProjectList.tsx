@@ -1,6 +1,7 @@
 import { Divider, Grid, makeStyles, Tab, Typography } from '@material-ui/core';
 import { Skeleton, TabContext, TabList, TabPanel } from '@material-ui/lab';
-import React, { FC } from 'react';
+import { omit, pickBy } from 'lodash';
+import React, { FC, useRef } from 'react';
 import { Helmet } from 'react-helmet-async';
 import { Project } from '../../../api';
 import { FilterButtonDialog } from '../../../components/Filter';
@@ -9,6 +10,7 @@ import { ContentContainer } from '../../../components/Layout';
 import { List, useListQuery } from '../../../components/List';
 import { ProjectListItemCard as ProjectCard } from '../../../components/ProjectListItemCard';
 import { SortButtonDialog, useSort } from '../../../components/Sort';
+import { simpleSwitch } from '../../../util';
 import {
   ProjectFilterOptions,
   useProjectFilters,
@@ -37,29 +39,25 @@ const useStyles = makeStyles(({ spacing, breakpoints }) => ({
 export const ProjectList: FC = () => {
   const sort = useSort<Project>();
   const [filters, setFilters] = useProjectFilters();
-  const getFilters = () => {
-    const { tab, ...otherFilters } = filters;
-    return {
-      ...otherFilters,
-      ...(tab === 'mine'
-        ? { mine: true }
-        : tab === 'pinned'
-        ? { pinned: true }
-        : {}),
-    };
-  };
   const list = useListQuery(ProjectListDocument, {
     listAt: (data) => data.projects,
     variables: {
       input: {
         ...sort.value,
-        filter: getFilters(),
+        filter: {
+          ...omit(filters, 'tab'),
+          ...simpleSwitch(filters.tab, {
+            mine: { mine: true },
+            pinned: { pinned: true },
+          }),
+        },
       },
     },
   });
 
   const classes = useStyles();
   const formatNumber = useNumberFormatter();
+  const scrollRef = useRef<HTMLElement>(null);
 
   return (
     <ContentContainer>
@@ -74,7 +72,10 @@ export const ProjectList: FC = () => {
           </SortButtonDialog>
         </Grid>
         <Grid item>
-          <FilterButtonDialog values={filters} onChange={setFilters}>
+          <FilterButtonDialog
+            values={pickBy(omit(filters, 'tab'))}
+            onChange={setFilters}
+          >
             <ProjectFilterOptions />
           </FilterButtonDialog>
         </Grid>
@@ -90,7 +91,11 @@ export const ProjectList: FC = () => {
           <Tab label="All" value="all" />
         </TabList>
         <Divider className={classes.maxWidth} />
-        <TabPanel value={filters.tab} className={classes.tabPanel}>
+        <TabPanel
+          value={filters.tab}
+          className={classes.tabPanel}
+          ref={scrollRef}
+        >
           <Typography variant="h3" className={classes.total}>
             {list.data ? (
               `${formatNumber(list.data.total)} Projects`
@@ -103,6 +108,7 @@ export const ProjectList: FC = () => {
             classes={{ container: classes.maxWidth }}
             renderItem={(item) => <ProjectCard project={item} />}
             renderSkeleton={<ProjectCard />}
+            scrollRef={scrollRef}
           />
         </TabPanel>
       </TabContext>

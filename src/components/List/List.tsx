@@ -1,7 +1,7 @@
 import { ButtonProps, Grid, GridProps, makeStyles } from '@material-ui/core';
 import clsx from 'clsx';
 import { times } from 'lodash';
-import { ReactNode, useRef } from 'react';
+import { ReactNode, RefObject, useRef } from 'react';
 import * as React from 'react';
 import { isNetworkRequestInFlight, PaginatedListOutput } from '../../api';
 import { usePersistedScroll } from '../../hooks/usePersistedScroll';
@@ -37,6 +37,8 @@ export interface ListProps<Item>
   CreateItemProps?: GridProps;
   LoadMoreItemProps?: GridProps;
   LoadMoreButtonProps?: ButtonProps;
+  /** Reference to the element that is actually scrolling, if it's not this list */
+  scrollRef?: RefObject<HTMLElement>;
   className?: string;
 }
 
@@ -57,12 +59,13 @@ export const List = <Item extends { id: string }>(props: ListProps<Item>) => {
     CreateItemProps,
     LoadMoreItemProps,
     LoadMoreButtonProps,
+    scrollRef: scrollRefProp,
     className,
   } = props;
   const classes = useStyles(props);
 
   const scrollRef = useRef<HTMLDivElement | null>(null);
-  usePersistedScroll(scrollRef);
+  usePersistedScroll(scrollRefProp ?? scrollRef);
 
   return (
     <div className={clsx(classes.root, className)} ref={scrollRef}>
