@@ -1,15 +1,20 @@
 import { Order } from '../schema.generated';
 import { GqlTypeMap } from '../typeMap.generated';
 
-export interface Entity {
+export interface GqlObject {
   __typename?: keyof GqlTypeMap;
+}
+
+export interface Entity extends GqlObject {
   id: string;
 }
 
 // With an actual type from an operation, convert it to a schema type
-export type GqlTypeOf<T extends Entity> = GqlTypeMap[NonNullable<
-  T['__typename']
->];
+export type GqlTypeOf<T extends GqlObject> = GqlTypeMap[TypeName<T>];
+
+export type TypeName<T extends GqlObject> = T extends { __typename?: infer N }
+  ? N
+  : never;
 
 export interface InputArg<T> {
   input?: T | null;

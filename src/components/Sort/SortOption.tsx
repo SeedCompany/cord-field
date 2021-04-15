@@ -94,10 +94,12 @@ function ActualSortOption<T>({
         onChange?.(
           {
             target: {
-              value: {
-                sort,
-                order,
-              },
+              value: defaultVal
+                ? {}
+                : {
+                    sort,
+                    order,
+                  },
             },
           } as any,
           ''
