@@ -152,11 +152,13 @@ export const PartnershipForm = <T extends PartnershipFormValues>({
                     />
                   )}
                 </SecuredField>
-                <SecuredField obj={partnership} name="primary">
-                  {() => <SwitchField name="primary" label="Set primary" />}
-                </SecuredField>
               </>
             )}
+            {values.partnership?.partnerLookupItem || partnership ? (
+              <SecuredField obj={partnership} name="primary">
+                {() => <SwitchField name="primary" label="Set primary" />}
+              </SecuredField>
+            ) : null}
           </>
         );
       }}

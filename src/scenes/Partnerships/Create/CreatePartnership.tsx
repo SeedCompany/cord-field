@@ -4,6 +4,7 @@ import { Except } from 'type-fest';
 import {
   addItemToList,
   CreatePartnership as CreatePartnershipType,
+  GQLOperations,
 } from '../../../api';
 import { PartnerLookupItem } from '../../../components/form/Lookup';
 import { callAll } from '../../../util';
@@ -43,6 +44,7 @@ export const CreatePartnership = ({
         (res) => res.createPartnership.partnership
       )
     ),
+    refetchQueries: [GQLOperations.Query.ProjectPartnerships],
   });
 
   return (
