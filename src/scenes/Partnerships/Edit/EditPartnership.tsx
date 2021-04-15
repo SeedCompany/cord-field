@@ -2,7 +2,11 @@ import { useMutation } from '@apollo/client';
 import { Decorator } from 'final-form';
 import React, { FC, useMemo } from 'react';
 import { Except } from 'type-fest';
-import { removeItemFromList, UpdatePartnershipInput } from '../../../api';
+import {
+  GQLOperations,
+  removeItemFromList,
+  UpdatePartnershipInput,
+} from '../../../api';
 import { SubmitAction, SubmitButton } from '../../../components/form';
 import { PartnerLookupItem } from '../../../components/form/Lookup';
 import { callAll } from '../../../util';
@@ -70,6 +74,7 @@ export const EditPartnership: FC<EditPartnershipProps> = (props) => {
       partnership,
       (res) => res.updatePartnership.partnership
     ),
+    refetchQueries: [GQLOperations.Query.ProjectPartnerships],
   });
   const [deletePartnership] = useMutation(DeletePartnershipDocument, {
     update: callAll(
@@ -91,6 +96,7 @@ export const EditPartnership: FC<EditPartnershipProps> = (props) => {
         financialReportingType: partnership.financialReportingType.value,
         mouStartOverride: partnership.mouStartOverride.value,
         mouEndOverride: partnership.mouEndOverride.value,
+        primary: partnership.primary.value,
       },
     }),
     [
@@ -101,6 +107,7 @@ export const EditPartnership: FC<EditPartnershipProps> = (props) => {
       partnership.mouStartOverride.value,
       partnership.mouStatus.value,
       partnership.types.value,
+      partnership.primary.value,
     ]
   );
 

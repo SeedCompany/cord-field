@@ -16,6 +16,7 @@ import {
 } from '../../api';
 import { DisplaySimpleProperty } from '../DisplaySimpleProperty';
 import { useDateFormatter, useDateTimeFormatter } from '../Formatters';
+import { PartnershipPrimaryIcon } from '../PartnershipPrimaryIcon';
 import { PartnershipCardFragment } from './PartnershipCard.generated';
 
 const useStyles = makeStyles(({ spacing }) => ({
@@ -104,6 +105,13 @@ export const PartnershipCard: FC<PartnershipCardProps> = ({
               loading={!partnership}
               loadingWidth="40%"
             />
+          </Grid>
+          <Grid item>
+            {partnership ? (
+              <PartnershipPrimaryIcon value={partnership.primary.value!} />
+            ) : (
+              <Skeleton width="30%" />
+            )}
           </Grid>
         </Grid>
       </CardContent>
