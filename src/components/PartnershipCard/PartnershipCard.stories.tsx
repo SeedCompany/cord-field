@@ -58,6 +58,11 @@ export const WithData = () => {
         'Funded'
       ),
     },
+    primary: {
+      canRead: true,
+      canEdit: true,
+      value: true,
+    },
   };
 
   return <PartnershipCard partnership={partnership} onEdit={action('edit')} />;
