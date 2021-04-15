@@ -7,6 +7,7 @@ import {
 } from '../../../api';
 import { PartnerLookupItem } from '../../../components/form/Lookup';
 import { callAll } from '../../../util';
+import { invalidateOldPrimaryPartnership } from '../Edit';
 import { invalidateBudgetRecords } from '../InvalidateBudget';
 import { ProjectPartnershipsQuery } from '../List/PartnershipList.generated';
 import { PartnershipForm, PartnershipFormProps } from '../PartnershipForm';
@@ -41,7 +42,8 @@ export const CreatePartnership = ({
         project,
         undefined,
         (res) => res.createPartnership.partnership
-      )
+      ),
+      invalidateOldPrimaryPartnership(project)
     ),
   });
 

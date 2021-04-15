@@ -20,6 +20,11 @@ fragment PartnershipCard on Partnership {
     canEdit
     value
   }
+  primary {
+    canRead
+    canEdit
+    value
+  }
   partner {
     canRead
     canEdit

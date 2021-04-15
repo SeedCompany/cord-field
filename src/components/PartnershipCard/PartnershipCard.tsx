@@ -17,12 +17,16 @@ import {
 import { DisplaySimpleProperty } from '../DisplaySimpleProperty';
 import { useDateFormatter, useDateTimeFormatter } from '../Formatters';
 import { PartnershipCardFragment } from './PartnershipCard.generated';
+import { PartnershipPrimaryIcon } from './PartnershipPrimaryIcon';
 
 const useStyles = makeStyles(({ spacing }) => ({
   cardActions: {
     display: 'flex',
     justifyContent: 'space-between',
     paddingRight: spacing(2),
+  },
+  primaryIcon: {
+    marginLeft: spacing(1),
   },
 }));
 
@@ -50,7 +54,7 @@ export const PartnershipCard: FC<PartnershipCardProps> = ({
     <Card className={className}>
       <CardContent>
         <Grid container direction="column" spacing={1}>
-          <Grid item>
+          <Grid item container direction="row" alignItems="flex-start">
             <Typography variant="h4">
               {partnership ? (
                 partnership.partner.value?.organization.value?.name.value
@@ -58,6 +62,9 @@ export const PartnershipCard: FC<PartnershipCardProps> = ({
                 <Skeleton width="75%" />
               )}
             </Typography>
+            {partnership?.primary.value ? (
+              <PartnershipPrimaryIcon className={classes.primaryIcon} />
+            ) : null}
           </Grid>
           <Grid item>
             <Typography>

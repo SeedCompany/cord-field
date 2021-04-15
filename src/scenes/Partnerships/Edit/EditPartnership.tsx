@@ -17,7 +17,9 @@ import {
 import {
   DeletePartnershipDocument,
   UpdatePartnershipDocument,
+  UpdatePartnershipMutation,
 } from './EditPartnership.generated';
+import { invalidateOldPrimaryPartnership } from './InvalidateOldPrimaryPartnership';
 
 export type EditPartnershipFormInput = UpdatePartnershipInput &
   SubmitAction<'delete'> & {
@@ -65,10 +67,13 @@ export const EditPartnership: FC<EditPartnershipProps> = (props) => {
   const { partnership, project } = props;
 
   const [updatePartnership] = useMutation(UpdatePartnershipDocument, {
-    update: invalidateBudgetRecords(
-      project,
-      partnership,
-      (res) => res.updatePartnership.partnership
+    update: callAll(
+      invalidateBudgetRecords(
+        project,
+        partnership,
+        (res: UpdatePartnershipMutation) => res.updatePartnership.partnership
+      ),
+      invalidateOldPrimaryPartnership(project)
     ),
   });
   const [deletePartnership] = useMutation(DeletePartnershipDocument, {
@@ -91,6 +96,7 @@ export const EditPartnership: FC<EditPartnershipProps> = (props) => {
         financialReportingType: partnership.financialReportingType.value,
         mouStartOverride: partnership.mouStartOverride.value,
         mouEndOverride: partnership.mouEndOverride.value,
+        primary: partnership.primary.value,
       },
     }),
     [
@@ -101,6 +107,7 @@ export const EditPartnership: FC<EditPartnershipProps> = (props) => {
       partnership.mouStartOverride.value,
       partnership.mouStatus.value,
       partnership.types.value,
+      partnership.primary.value,
     ]
   );
 
