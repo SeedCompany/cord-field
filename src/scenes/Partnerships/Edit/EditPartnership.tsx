@@ -2,11 +2,7 @@ import { useMutation } from '@apollo/client';
 import { Decorator } from 'final-form';
 import React, { FC, useMemo } from 'react';
 import { Except } from 'type-fest';
-import {
-  GQLOperations,
-  removeItemFromList,
-  UpdatePartnershipInput,
-} from '../../../api';
+import { removeItemFromList, UpdatePartnershipInput } from '../../../api';
 import { SubmitAction, SubmitButton } from '../../../components/form';
 import { PartnerLookupItem } from '../../../components/form/Lookup';
 import { callAll } from '../../../util';
@@ -21,7 +17,9 @@ import {
 import {
   DeletePartnershipDocument,
   UpdatePartnershipDocument,
+  UpdatePartnershipMutation,
 } from './EditPartnership.generated';
+import { invalidateOldPrimaryPartnership } from './InvalidateOldPrimaryPartnership';
 
 export type EditPartnershipFormInput = UpdatePartnershipInput &
   SubmitAction<'delete'> & {
@@ -69,12 +67,14 @@ export const EditPartnership: FC<EditPartnershipProps> = (props) => {
   const { partnership, project } = props;
 
   const [updatePartnership] = useMutation(UpdatePartnershipDocument, {
-    update: invalidateBudgetRecords(
-      project,
-      partnership,
-      (res) => res.updatePartnership.partnership
+    update: callAll(
+      invalidateBudgetRecords(
+        project,
+        partnership,
+        (res: UpdatePartnershipMutation) => res.updatePartnership.partnership
+      ),
+      invalidateOldPrimaryPartnership(project)
     ),
-    refetchQueries: [GQLOperations.Query.ProjectPartnerships],
   });
   const [deletePartnership] = useMutation(DeletePartnershipDocument, {
     update: callAll(
