@@ -4,18 +4,13 @@ import clsx from 'clsx';
 import { FC } from 'react';
 import * as React from 'react';
 
-const useStyles = makeStyles(({ palette }) => ({
+const useStyles = makeStyles(() => ({
   primary: {
-    color: palette.primary.main,
+    color: '#ffb400',
   },
 }));
 
-export interface PartnershipPrimaryIconProps extends SvgIconProps {
-  loading?: boolean;
-}
-
-export const PartnershipPrimaryIcon: FC<PartnershipPrimaryIconProps> = ({
-  loading,
+export const PartnershipPrimaryIcon: FC<SvgIconProps> = ({
   className,
   ...rest
 }) => {
