@@ -31,9 +31,9 @@ import {
   EnumField,
   EnumOption,
   FieldConfig,
+  SecuredEditableKeys,
   SecuredField,
   SecuredFieldRenderProps,
-  SecuredKeys,
   SubmitAction,
 } from '../../../components/form';
 import {
@@ -62,7 +62,11 @@ import {
   ProductTypes,
   productTypes,
 } from './constants';
-import { ProductFormFragment } from './ProductForm.generated';
+import {
+  ProductForm_DerivativeScriptureProduct_Fragment as DerivativeScriptureProduct,
+  ProductForm_DirectScriptureProduct_Fragment as DirectScriptureProduct,
+  ProductFormFragment,
+} from './ProductForm.generated';
 import { VersesDialog, versesDialogValues } from './VersesDialog';
 
 const useStyles = makeStyles(({ spacing, typography, breakpoints }) => ({
@@ -122,7 +126,12 @@ export interface ScriptureFormValues {
 
 type Product = UnionToIntersection<ProductFormFragment>;
 
-type ProductKey = SecuredKeys<Product>;
+type ProductKey = string &
+  (
+    | SecuredEditableKeys<DirectScriptureProduct>
+    | Omit<SecuredEditableKeys<DerivativeScriptureProduct>, 'producesId'>
+    | 'produces'
+  );
 
 export const AccordionSection = ({
   values,
@@ -457,7 +466,11 @@ const SecuredAccordion = <K extends ProductKey>({
   const isOpen = openedSection === name;
 
   return (
-    <SecuredField obj={product} name={name}>
+    <SecuredField
+      obj={product}
+      // @ts-expect-error yes produces key doesn't match convention of ID suffix
+      name={name}
+    >
       {(fieldProps) => (
         <Accordion
           expanded={isOpen}
