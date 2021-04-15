@@ -20,7 +20,8 @@ import {
   CheckboxField,
   DateField,
   EnumField,
-  FieldGroup,
+  SecuredEditableKeys,
+  SecuredField,
   SubmitError,
   TextField,
 } from '../../../components/form';
@@ -38,7 +39,8 @@ import {
 export type Engagement = InternshipEngagement | LanguageEngagement;
 
 export type EditableEngagementField = ExtractStrict<
-  keyof UpdateInternshipEngagement | keyof UpdateLanguageEngagement,
+  | SecuredEditableKeys<LanguageEngagement>
+  | SecuredEditableKeys<InternshipEngagement>,
   // Add more fields here as needed
   | 'startDateOverride'
   | 'endDateOverride'
@@ -170,7 +172,17 @@ export const EditEngagementDialog: FC<EditEngagementDialogProps> = ({
 
   const fields = editFields.map((name) => {
     const Field = fieldMapping[name];
-    return <Field props={{ name }} engagement={engagement} key={name} />;
+    if (!(name in engagement)) {
+      return null;
+    }
+    // Confirm that the name is the expected type, as we just checked it above
+    // Problem comes from the union of both engagement types.
+    const theName = name as SecuredEditableKeys<Engagement>;
+    return (
+      <SecuredField obj={engagement} name={theName} key={name}>
+        {(props) => <Field props={props} engagement={engagement} />}
+      </SecuredField>
+    );
   });
 
   const [updateInternshipEngagement] = useMutation(
@@ -260,9 +272,10 @@ export const EditEngagementDialog: FC<EditEngagementDialogProps> = ({
               )
             : next(e),
       }}
+      fieldsPrefix="engagement"
     >
       <SubmitError />
-      <FieldGroup prefix="engagement">{fields}</FieldGroup>
+      {fields}
     </DialogForm>
   );
 };
