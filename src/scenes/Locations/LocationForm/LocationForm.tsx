@@ -1,5 +1,6 @@
 import { Grid } from '@material-ui/core';
 import React from 'react';
+import { Merge } from 'type-fest';
 import {
   CreateLocation,
   displayLocationType,
@@ -26,9 +27,12 @@ import { LocationFormFragment } from './LocationForm.generated';
 export interface LocationFormValues<
   CreateOrUpdateType extends CreateLocation | UpdateLocation
 > {
-  location: CreateOrUpdateType & {
-    fundingAccountLookupItem?: FundingAccountLookupItem | null;
-  };
+  location: Merge<
+    CreateOrUpdateType,
+    {
+      fundingAccountId?: FundingAccountLookupItem | null;
+    }
+  >;
 }
 
 export type LocationFormProps<CreateOrUpdateInput, R = void> = DialogFormProps<
@@ -95,14 +99,8 @@ export const LocationForm = <CreateOrUpdateInput, R extends any>({
         </SecuredField>
       </Grid>
       <Grid item xs={12}>
-        <SecuredField obj={location} name="fundingAccount">
-          {(props) => (
-            <FundingAccountField
-              margin="none"
-              {...props}
-              name="fundingAccountLookupItem"
-            />
-          )}
+        <SecuredField obj={location} name="fundingAccountId">
+          {(props) => <FundingAccountField margin="none" {...props} />}
         </SecuredField>
       </Grid>
     </Grid>
