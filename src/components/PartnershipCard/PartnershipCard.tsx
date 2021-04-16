@@ -16,17 +16,21 @@ import {
 } from '../../api';
 import { DisplaySimpleProperty } from '../DisplaySimpleProperty';
 import { useDateFormatter, useDateTimeFormatter } from '../Formatters';
+import { Redacted } from '../Redacted';
 import { PartnershipCardFragment } from './PartnershipCard.generated';
 import { PartnershipPrimaryIcon } from './PartnershipPrimaryIcon';
 
 const useStyles = makeStyles(({ spacing }) => ({
+  loadingName: {
+    width: '75%',
+  },
+  primaryIcon: {
+    marginLeft: spacing(1),
+  },
   cardActions: {
     display: 'flex',
     justifyContent: 'space-between',
     paddingRight: spacing(2),
-  },
-  primaryIcon: {
-    marginLeft: spacing(1),
   },
 }));
 
@@ -50,16 +54,25 @@ export const PartnershipCard: FC<PartnershipCardProps> = ({
       securedDateRange(partnership.mouStart, partnership.mouEnd).value
     );
 
+  const name = partnership?.partner.value?.organization.value?.name.value;
   return (
     <Card className={className}>
       <CardContent>
         <Grid container direction="column" spacing={1}>
           <Grid item container direction="row" alignItems="flex-start">
-            <Typography variant="h4">
+            <Typography
+              variant="h4"
+              className={name ? undefined : classes.loadingName}
+            >
               {partnership ? (
-                partnership.partner.value?.organization.value?.name.value
+                name ?? (
+                  <Redacted
+                    info="You don't have permission to view this partner's name"
+                    width="100%"
+                  />
+                )
               ) : (
-                <Skeleton width="75%" />
+                <Skeleton width="100%" />
               )}
             </Typography>
             {partnership?.primary.value ? (

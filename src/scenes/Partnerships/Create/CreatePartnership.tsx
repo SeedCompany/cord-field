@@ -7,16 +7,19 @@ import {
 } from '../../../api';
 import { PartnerLookupItem } from '../../../components/form/Lookup';
 import { callAll } from '../../../util';
-import { invalidateOldPrimaryPartnership } from '../Edit';
+import { updateOldPrimaryPartnership } from '../Edit';
 import { invalidateBudgetRecords } from '../InvalidateBudget';
 import { ProjectPartnershipsQuery } from '../List/PartnershipList.generated';
 import { PartnershipForm, PartnershipFormProps } from '../PartnershipForm';
-import { CreatePartnershipDocument } from './CreatePartnership.generated';
+import {
+  CreatePartnershipDocument,
+  CreatePartnershipMutation,
+} from './CreatePartnership.generated';
 
 export interface CreatePartnershipFormInput {
   partnership: Pick<
     CreatePartnershipType,
-    'projectId' | 'types' | 'financialReportingType'
+    'projectId' | 'types' | 'financialReportingType' | 'primary'
   > & {
     partnerLookupItem: PartnerLookupItem;
   };
@@ -28,6 +31,10 @@ export type CreatePartnershipProps = Except<
 > & {
   project: ProjectPartnershipsQuery['project'];
 };
+
+const createdPartnership = (res: CreatePartnershipMutation) =>
+  res.createPartnership.partnership;
+
 export const CreatePartnership = ({
   project,
   ...props
@@ -36,14 +43,10 @@ export const CreatePartnership = ({
     update: callAll(
       addItemToList({
         listId: [project, 'partnerships'],
-        outputToItem: (res) => res.createPartnership.partnership,
+        outputToItem: createdPartnership,
       }),
-      invalidateBudgetRecords(
-        project,
-        undefined,
-        (res) => res.createPartnership.partnership
-      ),
-      invalidateOldPrimaryPartnership(project)
+      invalidateBudgetRecords(project, undefined, createdPartnership),
+      updateOldPrimaryPartnership(project, createdPartnership)
     ),
   });
 
@@ -52,15 +55,17 @@ export const CreatePartnership = ({
       title="Create Partnership"
       {...props}
       onSubmit={async ({ partnership: { partnerLookupItem, ...rest } }) => {
-        const input = {
-          partnership: {
-            ...rest,
-            projectId: project.id,
-            partnerId: partnerLookupItem.id,
-          },
-        };
         await createPartnership({
-          variables: { input },
+          variables: {
+            input: {
+              partnership: {
+                ...rest,
+                projectId: project.id,
+                partnerId: partnerLookupItem.id,
+                primary: rest.primary || undefined,
+              },
+            },
+          },
         });
       }}
     />

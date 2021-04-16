@@ -156,7 +156,7 @@ export const PartnershipForm = <T extends PartnershipFormValues>({
             )}
             {!partnership || partnership.primary.value === false ? (
               <SecuredField obj={partnership} name="primary">
-                {() => <SwitchField name="primary" label="Set primary" />}
+                {(props) => <SwitchField label="Set primary" {...props} />}
               </SecuredField>
             ) : null}
           </>
