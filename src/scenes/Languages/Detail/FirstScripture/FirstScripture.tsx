@@ -70,7 +70,9 @@ export const FirstScripture = ({ data }: { data?: FirstScriptureFragment }) => {
     return (
       <div className={classes.root}>
         <Check color="primary" className={classes.icon} />
-        <Typography>First Scripture was completed outside of CORD</Typography>
+        <Typography>
+          First Scripture was completed outside of Seed Company
+        </Typography>
       </div>
     );
   }
