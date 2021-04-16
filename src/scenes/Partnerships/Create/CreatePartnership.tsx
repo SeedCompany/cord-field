@@ -7,11 +7,14 @@ import {
 } from '../../../api';
 import { PartnerLookupItem } from '../../../components/form/Lookup';
 import { callAll } from '../../../util';
-import { invalidateOldPrimaryPartnership } from '../Edit';
+import { updateOldPrimaryPartnership } from '../Edit';
 import { invalidateBudgetRecords } from '../InvalidateBudget';
 import { ProjectPartnershipsQuery } from '../List/PartnershipList.generated';
 import { PartnershipForm, PartnershipFormProps } from '../PartnershipForm';
-import { CreatePartnershipDocument } from './CreatePartnership.generated';
+import {
+  CreatePartnershipDocument,
+  CreatePartnershipMutation,
+} from './CreatePartnership.generated';
 
 export interface CreatePartnershipFormInput {
   partnership: Pick<
@@ -28,6 +31,10 @@ export type CreatePartnershipProps = Except<
 > & {
   project: ProjectPartnershipsQuery['project'];
 };
+
+const createdPartnership = (res: CreatePartnershipMutation) =>
+  res.createPartnership.partnership;
+
 export const CreatePartnership = ({
   project,
   ...props
@@ -36,14 +43,10 @@ export const CreatePartnership = ({
     update: callAll(
       addItemToList({
         listId: [project, 'partnerships'],
-        outputToItem: (res) => res.createPartnership.partnership,
+        outputToItem: createdPartnership,
       }),
-      invalidateBudgetRecords(
-        project,
-        undefined,
-        (res) => res.createPartnership.partnership
-      ),
-      invalidateOldPrimaryPartnership(project)
+      invalidateBudgetRecords(project, undefined, createdPartnership),
+      updateOldPrimaryPartnership(project, createdPartnership)
     ),
   });
 
