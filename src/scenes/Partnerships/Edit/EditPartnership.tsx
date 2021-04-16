@@ -111,6 +111,7 @@ export const EditPartnership: FC<EditPartnershipProps> = (props) => {
     ]
   );
 
+  const name = partnership.partner.value?.organization.value?.name.value;
   return (
     <PartnershipForm<EditPartnershipFormInput>
       {...props}
@@ -126,7 +127,7 @@ export const EditPartnership: FC<EditPartnershipProps> = (props) => {
           variables: { input: { partnership } },
         });
       }}
-      title={`Edit Partnership with ${partnership.partner.value?.organization.value?.name.value}`}
+      title={`Edit Partnership ${name ? `with ${name}` : ''}`}
       leftAction={
         <SubmitButton
           action="delete"
