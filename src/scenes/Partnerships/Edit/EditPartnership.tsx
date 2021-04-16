@@ -123,7 +123,14 @@ export const EditPartnership: FC<EditPartnershipProps> = (props) => {
           return;
         }
         await updatePartnership({
-          variables: { input: { partnership } },
+          variables: {
+            input: {
+              partnership: {
+                ...partnership,
+                primary: partnership.primary || undefined,
+              },
+            },
+          },
         });
       }}
       title={`Edit Partnership ${name ? `with ${name}` : ''}`}
