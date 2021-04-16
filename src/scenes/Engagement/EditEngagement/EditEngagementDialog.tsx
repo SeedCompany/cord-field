@@ -172,14 +172,17 @@ export const EditEngagementDialog: FC<EditEngagementDialogProps> = ({
 
   const fields = editFields.map((name) => {
     const Field = fieldMapping[name];
-    if (!(name in engagement)) {
-      return null;
-    }
-    // Confirm that the name is the expected type, as we just checked it above
-    // Problem comes from the union of both engagement types.
-    const theName = name as SecuredEditableKeys<Engagement>;
     return (
-      <SecuredField obj={engagement} name={theName} key={name}>
+      <SecuredField
+        obj={engagement}
+        // @ts-expect-error this error comes from the fact that we are trying to
+        // handle the union of both engagement type's fields. TS correctly
+        // takes the intersection of keys instead of a union, which would be unsafe.
+        // In this case, we verified that the keys are safe with EditableEngagementField
+        // type and SecuredField also gracefully handles bad keys at runtime.
+        name={name}
+        key={name}
+      >
         {(props) => <Field props={props} engagement={engagement} />}
       </SecuredField>
     );

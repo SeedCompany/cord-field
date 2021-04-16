@@ -18,6 +18,7 @@ import {
   EnumFieldProps,
   SecuredField,
   SubmitError,
+  SwitchField,
 } from '../../../components/form';
 import {
   PartnerField,
@@ -153,6 +154,11 @@ export const PartnershipForm = <T extends PartnershipFormValues>({
                 </SecuredField>
               </>
             )}
+            {!partnership || partnership.primary.value === false ? (
+              <SecuredField obj={partnership} name="primary">
+                {(props) => <SwitchField label="Set primary" {...props} />}
+              </SecuredField>
+            ) : null}
           </>
         );
       }}

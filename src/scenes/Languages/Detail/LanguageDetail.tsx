@@ -6,7 +6,7 @@ import clsx from 'clsx';
 import React from 'react';
 import { Helmet } from 'react-helmet-async';
 import { useParams } from 'react-router';
-import { canEditAny } from '../../../api';
+import { canEditAny, removeItemFromList } from '../../../api';
 import { BooleanProperty } from '../../../components/BooleanProperty';
 import { useDialog } from '../../../components/Dialog';
 import {
@@ -256,6 +256,10 @@ export const LanguageDetail = () => {
                           languageId: language.id,
                           locationId: location.id,
                         },
+                        update: removeItemFromList({
+                          listId: [language, 'locations'],
+                          item: location,
+                        }),
                       })
                     }
                   />

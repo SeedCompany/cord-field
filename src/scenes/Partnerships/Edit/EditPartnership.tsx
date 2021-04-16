@@ -17,7 +17,9 @@ import {
 import {
   DeletePartnershipDocument,
   UpdatePartnershipDocument,
+  UpdatePartnershipMutation,
 } from './EditPartnership.generated';
+import { updateOldPrimaryPartnership } from './UpdateOldPrimaryPartnership';
 
 export type EditPartnershipFormInput = UpdatePartnershipInput &
   SubmitAction<'delete'> & {
@@ -61,14 +63,16 @@ const clearFinancialReportingType: Decorator<EditPartnershipFormInput> = (
 
 const decorators = [clearFinancialReportingType];
 
+const updatedPartnership = (res: UpdatePartnershipMutation) =>
+  res.updatePartnership.partnership;
+
 export const EditPartnership: FC<EditPartnershipProps> = (props) => {
   const { partnership, project } = props;
 
   const [updatePartnership] = useMutation(UpdatePartnershipDocument, {
-    update: invalidateBudgetRecords(
-      project,
-      partnership,
-      (res) => res.updatePartnership.partnership
+    update: callAll(
+      invalidateBudgetRecords(project, partnership, updatedPartnership),
+      updateOldPrimaryPartnership(project, updatedPartnership)
     ),
   });
   const [deletePartnership] = useMutation(DeletePartnershipDocument, {
@@ -91,6 +95,7 @@ export const EditPartnership: FC<EditPartnershipProps> = (props) => {
         financialReportingType: partnership.financialReportingType.value,
         mouStartOverride: partnership.mouStartOverride.value,
         mouEndOverride: partnership.mouEndOverride.value,
+        primary: partnership.primary.value,
       },
     }),
     [
@@ -101,9 +106,11 @@ export const EditPartnership: FC<EditPartnershipProps> = (props) => {
       partnership.mouStartOverride.value,
       partnership.mouStatus.value,
       partnership.types.value,
+      partnership.primary.value,
     ]
   );
 
+  const name = partnership.partner.value?.organization.value?.name.value;
   return (
     <PartnershipForm<EditPartnershipFormInput>
       {...props}
@@ -116,10 +123,17 @@ export const EditPartnership: FC<EditPartnershipProps> = (props) => {
           return;
         }
         await updatePartnership({
-          variables: { input: { partnership } },
+          variables: {
+            input: {
+              partnership: {
+                ...partnership,
+                primary: partnership.primary || undefined,
+              },
+            },
+          },
         });
       }}
-      title={`Edit Partnership with ${partnership.partner.value?.organization.value?.name.value}`}
+      title={`Edit Partnership ${name ? `with ${name}` : ''}`}
       leftAction={
         <SubmitButton
           action="delete"
