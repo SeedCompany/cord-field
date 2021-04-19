@@ -13,7 +13,6 @@ import {
   displayEngagementStatus,
   securedDateRange,
 } from '../../../api';
-import { AddItemCard } from '../../../components/AddItemCard';
 import { BooleanProperty } from '../../../components/BooleanProperty';
 import { Breadcrumb } from '../../../components/Breadcrumb';
 import { DataButton } from '../../../components/DataButton';
@@ -86,7 +85,6 @@ export const LanguageEngagementDetail: FC<EngagementQuery> = ({
   const language = engagement.language.value;
   const langName = language?.name.value ?? language?.displayName.value;
   const ptRegistryId = engagement.paratextRegistryId;
-  const pnp = engagement.pnp;
   const editable = canEditAny(engagement);
 
   const date = securedDateRange(engagement.startDate, engagement.endDate);
@@ -251,34 +249,19 @@ export const LanguageEngagementDetail: FC<EngagementQuery> = ({
             <Grid item container spacing={3} alignItems="center">
               <FileActionsContextProvider>
                 <Grid item xs={6}>
-                  {pnp.canRead && !pnp.value ? (
-                    <AddItemCard
-                      actionType="dropzone"
-                      canAdd={pnp.canEdit}
-                      handleFileSelect={(files: File[]) =>
-                        uploadFile({ files, parentId: engagement.id })
-                      }
-                      DropzoneProps={{
-                        options: {
-                          multiple: false,
-                        },
-                      }}
-                      itemType="Planning and Progress"
-                    />
-                  ) : (
-                    <DefinedFileCard
-                      title="Planning and Progress"
-                      onVersionUpload={(files) =>
-                        uploadFile({
-                          action: 'version',
-                          files,
-                          parentId: engagement.id,
-                        })
-                      }
-                      resourceType="engagement"
-                      securedFile={engagement.pnp}
-                    />
-                  )}
+                  <DefinedFileCard
+                    title="Planning and Progress"
+                    onVersionUpload={(files) =>
+                      uploadFile({
+                        action: 'version',
+                        files,
+                        parentId: engagement.id,
+                      })
+                    }
+                    resourceType="engagement"
+                    securedFile={engagement.pnp}
+                  />
+                  {/* )} */}
                 </Grid>
               </FileActionsContextProvider>
             </Grid>

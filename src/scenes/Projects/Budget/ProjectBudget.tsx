@@ -4,7 +4,6 @@ import { Skeleton } from '@material-ui/lab';
 import React, { useEffect } from 'react';
 import { Helmet } from 'react-helmet-async';
 import { useParams } from 'react-router-dom';
-import { AddItemCard } from '../../../components/AddItemCard';
 import { Breadcrumb } from '../../../components/Breadcrumb';
 import { DefinedFileCard } from '../../../components/DefinedFileCard';
 import { Error } from '../../../components/Error';
@@ -96,29 +95,18 @@ export const ProjectBudget = () => {
               {!budget?.value || !template || !template.canRead ? null : (
                 <FileActionsContextProvider>
                   <Grid item xs={6}>
-                    {!template.value ? (
-                      <AddItemCard
-                        actionType="dropzone"
-                        canAdd={template.canEdit}
-                        handleFileSelect={(files: File[]) =>
-                          uploadFile({ files, parentId: budget.value!.id })
-                        }
-                        itemType="Universal Template"
-                      />
-                    ) : (
-                      <DefinedFileCard
-                        title="Universal Template"
-                        onVersionUpload={(files) =>
-                          uploadFile({
-                            action: 'version',
-                            files,
-                            parentId: budget.value!.id,
-                          })
-                        }
-                        resourceType="budget"
-                        securedFile={template}
-                      />
-                    )}
+                    <DefinedFileCard
+                      title="Universal Template"
+                      onVersionUpload={(files) =>
+                        uploadFile({
+                          action: 'version',
+                          files,
+                          parentId: budget.value!.id,
+                        })
+                      }
+                      resourceType="budget"
+                      securedFile={template}
+                    />
                   </Grid>
                 </FileActionsContextProvider>
               )}

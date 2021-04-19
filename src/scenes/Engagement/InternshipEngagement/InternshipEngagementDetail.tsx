@@ -7,7 +7,6 @@ import {
   displayInternPosition,
   securedDateRange,
 } from '../../../api';
-import { AddItemCard } from '../../../components/AddItemCard';
 import { Breadcrumb } from '../../../components/Breadcrumb';
 import { DataButton } from '../../../components/DataButton';
 import { DefinedFileCard } from '../../../components/DefinedFileCard';
@@ -84,7 +83,6 @@ export const InternshipEngagementDetail: FC<EngagementQuery> = ({
 
   const intern = engagement.intern.value;
   const name = intern?.fullName;
-  const growthPlan = engagement.growthPlan;
 
   return (
     <>
@@ -232,35 +230,18 @@ export const InternshipEngagementDetail: FC<EngagementQuery> = ({
               <Grid item container spacing={3} alignItems="center">
                 <FileActionsContextProvider>
                   <Grid item xs={6}>
-                    {growthPlan.canRead && !growthPlan.value ? (
-                      <AddItemCard
-                        actionType="dropzone"
-                        canAdd={growthPlan.canEdit}
-                        DropzoneProps={{
-                          classes: { text: classes.dropzoneText },
-                          options: {
-                            multiple: false,
-                          },
-                        }}
-                        handleFileSelect={(files: File[]) =>
-                          uploadFile({ files, parentId: engagement.id })
-                        }
-                        itemType="Growth Plan"
-                      />
-                    ) : (
-                      <DefinedFileCard
-                        title="Growth Plan"
-                        onVersionUpload={(files) =>
-                          uploadFile({
-                            action: 'version',
-                            files,
-                            parentId: engagement.id,
-                          })
-                        }
-                        resourceType="engagement"
-                        securedFile={engagement.growthPlan}
-                      />
-                    )}
+                    <DefinedFileCard
+                      title="Growth Plan"
+                      onVersionUpload={(files) =>
+                        uploadFile({
+                          action: 'version',
+                          files,
+                          parentId: engagement.id,
+                        })
+                      }
+                      resourceType="engagement"
+                      securedFile={engagement.growthPlan}
+                    />
                   </Grid>
                 </FileActionsContextProvider>
               </Grid>
