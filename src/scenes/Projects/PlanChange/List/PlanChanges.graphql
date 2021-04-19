@@ -1,4 +1,4 @@
-query PlanChanges($project: ID!, $input: PlanChangeListInput) {
+query PlanChanges($project: ID!, $input: ChangeListInput) {
   project(id: $project) {
     ...ProjectBreadcrumb
     changes(input: $input) {
