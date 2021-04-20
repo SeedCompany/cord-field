@@ -1,5 +1,4 @@
 import { useMutation } from '@apollo/client';
-import { GQLOperations } from '../../../api';
 import { CreateFileVersionDocument } from '../../../components/files/FileActions';
 import {
   HandleUploadCompletedFunction,
@@ -7,7 +6,6 @@ import {
   UploadFilesConsumerInput,
   useUploadFiles,
 } from '../../../components/files/hooks';
-import { updateCachedVersions } from '../../../components/files/updateCachedVersions';
 import { UpdateProjectBudgetUniversalTemplateDocument } from '../Budget/ProjectBudget.generated';
 import { ProjectDirectoryContentsFragmentDoc } from './ProjectFiles.generated';
 
@@ -29,16 +27,7 @@ export const useUploadProjectFiles = (): UploadFilesConsumerFunction => {
     await createFileVersion({
       variables: { input },
       update: (cache, { data }) => {
-        console.log(input, action, cache, data);
-        if (!data?.createFileVersion) {
-          return;
-        }
-        if (action === 'version') {
-          updateCachedVersions(
-            cache,
-            data.createFileVersion.children.items,
-            parentId
-          );
+        if (!data?.createFileVersion || action === 'version') {
           return;
         }
         const id = `Directory:${parentId}`;
@@ -91,29 +80,12 @@ export const useUploadBudgetFile = (): UploadFilesConsumerFunction => {
     uploadId,
     name,
     parentId: id,
-    action,
   }) => {
     await uploadFile({
       variables: {
         id,
         universalTemplateFile: { uploadId, name },
       },
-      refetchQueries:
-        action === 'file' ? [GQLOperations.Query.ProjectBudget] : undefined,
-      update:
-        action !== 'version'
-          ? undefined
-          : (cache, { data }) => {
-              const template =
-                data?.updateBudget.budget.universalTemplateFile.value;
-              if (template) {
-                updateCachedVersions(
-                  cache,
-                  template.children.items,
-                  template.id
-                );
-              }
-            },
     });
   };
 

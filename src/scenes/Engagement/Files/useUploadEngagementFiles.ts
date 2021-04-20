@@ -5,7 +5,6 @@ import {
   UploadFilesConsumerInput,
   useUploadFiles,
 } from '../../../components/files/hooks';
-import { updateCachedVersions } from '../../../components/files/updateCachedVersions';
 import {
   UploadInternshipEngagementGrowthPlanDocument,
   UploadInternshipEngagementGrowthPlanMutation,
@@ -14,13 +13,6 @@ import {
 } from './UploadEngagementFiles.generated';
 
 type EngagementType = 'language' | 'internship';
-
-const isLanguageEngagementMutation = (
-  data:
-    | UploadInternshipEngagementGrowthPlanMutation
-    | UploadLanguageEngagementPnpMutation
-): data is UploadLanguageEngagementPnpMutation =>
-  'updateLanguageEngagement' in data;
 
 export const useUploadEngagementFile = (
   engagementType: EngagementType
@@ -39,7 +31,6 @@ export const useUploadEngagementFile = (
     uploadId,
     name,
     parentId: id,
-    action,
   }) => {
     await uploadFile({
       variables: {
@@ -47,32 +38,6 @@ export const useUploadEngagementFile = (
         pnp: { uploadId, name },
         growthPlan: { uploadId, name },
       },
-      update:
-        action !== 'version'
-          ? undefined
-          : (cache, { data }) => {
-              if (data) {
-                if (isLanguageEngagementMutation(data)) {
-                  const pnp =
-                    data.updateLanguageEngagement.engagement.pnp.value;
-                  if (pnp) {
-                    const existingVersions = pnp.children.items;
-                    updateCachedVersions(cache, existingVersions, pnp.id);
-                  }
-                } else {
-                  const growthPlan =
-                    data.updateInternshipEngagement.engagement.growthPlan.value;
-                  if (growthPlan) {
-                    const existingVersions = growthPlan.children.items;
-                    updateCachedVersions(
-                      cache,
-                      existingVersions,
-                      growthPlan.id
-                    );
-                  }
-                }
-              }
-            },
     });
   };
 
