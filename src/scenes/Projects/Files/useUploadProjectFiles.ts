@@ -28,9 +28,8 @@ export const useUploadProjectFiles = (): UploadFilesConsumerFunction => {
     };
     await createFileVersion({
       variables: { input },
-      refetchQueries:
-        action === 'file' ? [GQLOperations.Query.ProjectDirectory] : undefined,
       update: (cache, { data }) => {
+        console.log(input, action, cache, data);
         if (!data?.createFileVersion) {
           return;
         }

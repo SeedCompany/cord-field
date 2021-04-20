@@ -2,7 +2,7 @@ import { useMutation } from '@apollo/client';
 import { useSnackbar } from 'notistack';
 import React from 'react';
 import { Except } from 'type-fest';
-import { CreateDirectoryInput, GQLOperations } from '../../../api';
+import { CreateDirectoryInput } from '../../../api';
 import {
   DialogForm,
   DialogFormProps,
@@ -10,6 +10,7 @@ import {
 import { SubmitError, TextField } from '../../../components/form';
 import { ButtonLink } from '../../../components/Routing';
 import { CreateProjectDirectoryDocument } from './CreateProjectFile.generated';
+import { ProjectDirectoryContentsFragmentDoc } from './ProjectFiles.generated';
 import { useProjectCurrentDirectory } from './useProjectCurrentDirectory';
 
 export type CreateProjectDirectoryProps = DialogFormProps<CreateDirectoryInput>;
@@ -30,7 +31,37 @@ export const CreateProjectDirectory = (
     };
     const { data } = await createDirectory({
       variables: { input },
-      refetchQueries: [GQLOperations.Query.ProjectDirectory],
+      update: (cache, { data }) => {
+        console.log(data);
+        if (!data?.createDirectory) {
+          return;
+        }
+        const id = `Directory:${directoryId}`;
+        const cachedDir = cache.readFragment({
+          id,
+          fragment: ProjectDirectoryContentsFragmentDoc,
+          fragmentName: 'ProjectDirectoryContents',
+        });
+        if (!cachedDir) {
+          return;
+        }
+        const newDirectory = data.createDirectory;
+        const currentItems = cachedDir.children.items;
+        const updatedData = {
+          ...cachedDir,
+          children: {
+            ...cachedDir.children,
+            items: [...currentItems, newDirectory],
+            total: currentItems.length + 1,
+          },
+        };
+        cache.writeFragment({
+          id,
+          fragment: ProjectDirectoryContentsFragmentDoc,
+          fragmentName: 'ProjectDirectoryContents',
+          data: updatedData,
+        });
+      },
     });
     const directory = data!.createDirectory;
 
