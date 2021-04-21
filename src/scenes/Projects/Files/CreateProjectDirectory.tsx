@@ -2,15 +2,14 @@ import { useMutation } from '@apollo/client';
 import { useSnackbar } from 'notistack';
 import React from 'react';
 import { Except } from 'type-fest';
-import { CreateDirectoryInput } from '../../../api';
+import { addItemToList, CreateDirectoryInput } from '../../../api';
 import {
   DialogForm,
   DialogFormProps,
 } from '../../../components/Dialog/DialogForm';
 import { SubmitError, TextField } from '../../../components/form';
 import { ButtonLink } from '../../../components/Routing';
-import { CreateProjectDirectoryDocument } from './CreateProjectFile.generated';
-import { ProjectDirectoryContentsFragmentDoc } from './ProjectFiles.generated';
+import { CreateProjectDirectoryDocument } from './CreateProjectDirectory.generated';
 import { useProjectCurrentDirectory } from './useProjectCurrentDirectory';
 
 export type CreateProjectDirectoryProps = DialogFormProps<CreateDirectoryInput>;
@@ -31,37 +30,10 @@ export const CreateProjectDirectory = (
     };
     const { data } = await createDirectory({
       variables: { input },
-      update: (cache, { data }) => {
-        console.log(data);
-        if (!data?.createDirectory) {
-          return;
-        }
-        const id = `Directory:${directoryId}`;
-        const cachedDir = cache.readFragment({
-          id,
-          fragment: ProjectDirectoryContentsFragmentDoc,
-          fragmentName: 'ProjectDirectoryContents',
-        });
-        if (!cachedDir) {
-          return;
-        }
-        const newDirectory = data.createDirectory;
-        const currentItems = cachedDir.children.items;
-        const updatedData = {
-          ...cachedDir,
-          children: {
-            ...cachedDir.children,
-            items: [...currentItems, newDirectory],
-            total: currentItems.length + 1,
-          },
-        };
-        cache.writeFragment({
-          id,
-          fragment: ProjectDirectoryContentsFragmentDoc,
-          fragmentName: 'ProjectDirectoryContents',
-          data: updatedData,
-        });
-      },
+      update: addItemToList({
+        listId: [{ __typename: 'Directory', id: directoryId }, 'children'],
+        outputToItem: (res) => res.createDirectory,
+      }),
     });
     const directory = data!.createDirectory;
 

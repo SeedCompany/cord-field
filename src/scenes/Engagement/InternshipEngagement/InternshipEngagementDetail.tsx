@@ -32,7 +32,7 @@ import {
 } from '../EditEngagement/EditEngagementDialog';
 import { EngagementWorkflowDialog } from '../EditEngagement/EngagementWorkflowDialog';
 import { EngagementQuery } from '../Engagement.generated';
-import { useUploadEngagementFile } from '../Files';
+import { UploadInternshipEngagementGrowthPlanDocument } from '../Files';
 import { MentorCard } from './MentorCard';
 
 const useStyles = makeStyles(
@@ -62,7 +62,6 @@ export const InternshipEngagementDetail: FC<EngagementQuery> = ({
   engagement,
 }) => {
   const classes = useStyles();
-  const uploadFile = useUploadEngagementFile('internship');
 
   const [editState, show, editField] = useDialog<
     Many<EditableEngagementField>
@@ -232,12 +231,9 @@ export const InternshipEngagementDetail: FC<EngagementQuery> = ({
                   <Grid item xs={6}>
                     <DefinedFileCard
                       title="Growth Plan"
-                      onVersionUpload={(files) =>
-                        uploadFile({
-                          action: 'version',
-                          files,
-                          parentId: engagement.id,
-                        })
+                      parentId={engagement.id}
+                      uploadMutationDocument={
+                        UploadInternshipEngagementGrowthPlanDocument
                       }
                       resourceType="engagement"
                       securedFile={engagement.growthPlan}
