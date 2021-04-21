@@ -12,8 +12,10 @@ import { useCurrencyFormatter } from '../../../components/Formatters/useCurrency
 import { ContentContainer as Content } from '../../../components/Layout/ContentContainer';
 import { ProjectBreadcrumb } from '../../../components/ProjectBreadcrumb';
 import { Table } from '../../../components/Table';
-import { useUploadBudgetFile } from '../Files';
-import { ProjectBudgetDocument } from './ProjectBudget.generated';
+import {
+  ProjectBudgetDocument,
+  UpdateProjectBudgetUniversalTemplateDocument,
+} from './ProjectBudget.generated';
 import { ProjectBudgetRecords } from './ProjectBudgetRecords';
 
 const useStyles = makeStyles(({ breakpoints, spacing }) => ({
@@ -40,8 +42,6 @@ export const ProjectBudget = () => {
   const classes = useStyles();
   const { projectId } = useParams();
   const formatCurrency = useCurrencyFormatter();
-
-  const uploadFile = useUploadBudgetFile();
 
   const { data, loading, error } = useQuery(ProjectBudgetDocument, {
     variables: { id: projectId },
@@ -97,12 +97,9 @@ export const ProjectBudget = () => {
                   <Grid item xs={6}>
                     <DefinedFileCard
                       title="Universal Template"
-                      onVersionUpload={(files) =>
-                        uploadFile({
-                          action: 'version',
-                          files,
-                          parentId: budget.value!.id,
-                        })
+                      parentId={budget.value.id}
+                      uploadMutationDocument={
+                        UpdateProjectBudgetUniversalTemplateDocument
                       }
                       resourceType="budget"
                       securedFile={template}

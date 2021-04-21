@@ -1,3 +1,4 @@
+import { useMutation } from '@apollo/client';
 import {
   Avatar,
   Card,
@@ -11,10 +12,16 @@ import {
   NotInterested as NotPermittedIcon,
 } from '@material-ui/icons';
 import { Skeleton } from '@material-ui/lab';
+import { DocumentNode } from 'graphql';
 import { DateTime } from 'luxon';
-import React, { FC, ReactNode, useMemo } from 'react';
+import React, { FC, ReactNode } from 'react';
 import { useDropzone } from 'react-dropzone';
 import { SecuredProp } from '../../api';
+import {
+  UploadInternshipEngagementGrowthPlanDocument,
+  UploadLanguageEngagementPnpDocument,
+} from '../../scenes/Engagement/Files';
+import { UpdateProjectBudgetUniversalTemplateDocument } from '../../scenes/Projects/Budget/ProjectBudget.generated';
 import {
   FileActionsPopup as ActionsMenu,
   FileAction,
@@ -22,6 +29,7 @@ import {
   useFileActions,
 } from '../files/FileActions';
 import { FileNodeInfo_File_Fragment as FileNode } from '../files/files.generated';
+import { HandleUploadCompletedFunction, useUploadFiles } from '../files/hooks';
 import { FormattedDateTime } from '../Formatters';
 import { HugeIcon, ReportIcon } from '../Icons';
 import { Redacted } from '../Redacted';
@@ -83,7 +91,8 @@ export interface DefinedFileCardProps {
   title: ReactNode;
   resourceType: string;
   securedFile: SecuredProp<FileNode>;
-  onVersionUpload: (files: File[]) => void;
+  uploadMutationDocument: DocumentNode;
+  parentId: string;
 }
 
 interface FileCardMetaProps {
@@ -123,36 +132,66 @@ const FileCardMeta: FC<FileCardMetaProps> = ({
 
 export const DefinedFileCard = (props: DefinedFileCardProps) => {
   const classes = useStyles();
-  const { title, onVersionUpload, resourceType, securedFile } = props;
+  const {
+    title,
+    resourceType,
+    securedFile,
+    uploadMutationDocument,
+    parentId,
+  } = props;
   const { value: file, canRead, canEdit } = securedFile;
+
+  const uploadFiles = useUploadFiles();
+
+  const [uploadFile] = useMutation(uploadMutationDocument);
+
+  const handleUploadCompleted: HandleUploadCompletedFunction = async ({
+    uploadId,
+    name,
+    parentId: id,
+  }) => {
+    let variables;
+    if (
+      uploadMutationDocument === UpdateProjectBudgetUniversalTemplateDocument
+    ) {
+      variables = {
+        id,
+        universalTemplateFile: { uploadId, name },
+      };
+    } else if (
+      uploadMutationDocument === UploadLanguageEngagementPnpDocument ||
+      uploadMutationDocument === UploadInternshipEngagementGrowthPlanDocument
+    ) {
+      variables = {
+        id,
+        pnp: { uploadId, name },
+        growthPlan: { uploadId, name },
+      };
+    }
+    await uploadFile({
+      variables,
+    });
+  };
+
+  const onVersionUpload = (files: File[]) => {
+    uploadFiles({ files, handleUploadCompleted, parentId });
+  };
 
   const { openFilePreview } = useFileActions();
 
-  const standardFileActions = useMemo(
-    () => getPermittedFileActions(canRead, canEdit),
-    [canEdit, canRead]
-  );
+  const standardFileActions = getPermittedFileActions(canRead, canEdit);
   // Defined Files seem like they'll probably always have fixed names
-  const noRenameFileActions = useMemo(
-    () => standardFileActions.filter((action) => action !== FileAction.Rename),
-    [standardFileActions]
+  const noRenameFileActions = standardFileActions.filter(
+    (action) => action !== FileAction.Rename
   );
-  const permittedFileActions = useMemo(
-    () => ({
-      // We only want to allow deletion of Defined File `Versions`,
-      // not the files themselves.
-      file: noRenameFileActions.filter(
-        (action) => action !== FileAction.Delete
-      ),
-      version: noRenameFileActions,
-    }),
-    [noRenameFileActions]
-  );
+  const permittedFileActions = {
+    // We only want to allow deletion of Defined File `Versions`,
+    // not the files themselves.
+    file: noRenameFileActions.filter((action) => action !== FileAction.Delete),
+    version: noRenameFileActions,
+  };
 
-  const isCardDisabled = useMemo(
-    () => (file && !canRead) || (!file && !canEdit),
-    [canEdit, canRead, file]
-  );
+  const isCardDisabled = (file && !canRead) || (!file && !canEdit);
 
   const { getRootProps, getInputProps, isDragActive } = useDropzone({
     onDrop: onVersionUpload,
@@ -172,95 +211,72 @@ export const DefinedFileCard = (props: DefinedFileCardProps) => {
 
   const { fullName } = modifiedBy;
 
-  const Icon = useMemo(() => (!file && canEdit ? AddIcon : NotPermittedIcon), [
-    canEdit,
-    file,
-  ]);
+  const Icon = !file && canEdit ? AddIcon : NotPermittedIcon;
 
-  const card = useMemo(
-    () => (
-      <Card {...getRootProps()} className={classes.root}>
-        <input {...getInputProps()} name="defined_file_version_uploader" />
-        <DropzoneOverlay
-          classes={{ text: classes.dropzoneText }}
-          isDragActive={isDragActive}
-          message={!file ? `Add ${title} file` : 'Drop new version to upload'}
-        />
-        <CardActionArea
-          className={!file ? classes.addActionArea : classes.editActionArea}
-          disabled={isCardDisabled}
-          onClick={() => file && openFilePreview(file)}
-        >
-          {!file ? (
-            <>
-              <Avatar classes={{ root: classes.avatar }}>
-                <Icon className={classes.icon} fontSize="large" />
-              </Avatar>
-              <Typography variant="button" className={classes.text}>
-                Add {title}
+  const card = (
+    <Card {...getRootProps()} className={classes.root}>
+      <input {...getInputProps()} name="defined_file_version_uploader" />
+      <DropzoneOverlay
+        classes={{ text: classes.dropzoneText }}
+        isDragActive={isDragActive}
+        message={!file ? `Add ${title} file` : 'Drop new version to upload'}
+      />
+      <CardActionArea
+        className={!file ? classes.addActionArea : classes.editActionArea}
+        disabled={isCardDisabled}
+        onClick={() => file && openFilePreview(file)}
+      >
+        {!file ? (
+          <>
+            <Avatar classes={{ root: classes.avatar }}>
+              <Icon className={classes.icon} fontSize="large" />
+            </Avatar>
+            <Typography variant="button" className={classes.text}>
+              Add {title}
+            </Typography>
+          </>
+        ) : (
+          <>
+            <HugeIcon icon={ReportIcon} loading={!file} />
+            <div className={classes.fileInfo}>
+              <Typography
+                className={classes.fileName}
+                color="initial"
+                variant="h4"
+              >
+                {title}
               </Typography>
-            </>
-          ) : (
-            <>
-              <HugeIcon icon={ReportIcon} loading={!file} />
-              <div className={classes.fileInfo}>
-                <Typography
-                  className={classes.fileName}
-                  color="initial"
-                  variant="h4"
-                >
-                  {title}
-                </Typography>
-                <FileCardMeta
-                  canRead={canRead}
-                  loading={!file}
-                  resourceType={resourceType}
-                  text={name}
-                />
-                <FileCardMeta
-                  canRead={canRead}
-                  loading={!file}
-                  resourceType={resourceType}
-                  text={
-                    <>
-                      Updated by {fullName} at{' '}
-                      <FormattedDateTime date={modifiedAt} />
-                    </>
-                  }
-                />
-              </div>
-            </>
-          )}
-        </CardActionArea>
-        {file && canRead && (
-          <div className={classes.actionsMenu}>
-            <ActionsMenu
-              actions={permittedFileActions}
-              item={file}
-              onVersionUpload={onVersionUpload}
-            />
-          </div>
+              <FileCardMeta
+                canRead={canRead}
+                loading={!file}
+                resourceType={resourceType}
+                text={name}
+              />
+              <FileCardMeta
+                canRead={canRead}
+                loading={!file}
+                resourceType={resourceType}
+                text={
+                  <>
+                    Updated by {fullName} at{' '}
+                    <FormattedDateTime date={modifiedAt} />
+                  </>
+                }
+              />
+            </div>
+          </>
         )}
-      </Card>
-    ),
-    [
-      Icon,
-      canRead,
-      classes,
-      file,
-      fullName,
-      getInputProps,
-      getRootProps,
-      isCardDisabled,
-      isDragActive,
-      modifiedAt,
-      name,
-      onVersionUpload,
-      openFilePreview,
-      permittedFileActions,
-      resourceType,
-      title,
-    ]
+      </CardActionArea>
+      {file && canRead && (
+        <div className={classes.actionsMenu}>
+          <ActionsMenu
+            actions={permittedFileActions}
+            item={file}
+            onVersionUpload={onVersionUpload}
+          />
+        </div>
+      )}
+    </Card>
   );
 
   return !file && !canEdit ? (

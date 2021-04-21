@@ -40,7 +40,7 @@ import {
 } from '../EditEngagement/EditEngagementDialog';
 import { EngagementWorkflowDialog } from '../EditEngagement/EngagementWorkflowDialog';
 import { EngagementQuery } from '../Engagement.generated';
-import { useUploadEngagementFile } from '../Files';
+import { UploadLanguageEngagementPnpDocument } from '../Files';
 
 const useStyles = makeStyles(({ spacing, breakpoints, palette }) => ({
   root: {
@@ -64,7 +64,6 @@ export const LanguageEngagementDetail: FC<EngagementQuery> = ({
   engagement,
 }) => {
   const classes = useStyles();
-  const uploadFile = useUploadEngagementFile('language');
 
   const [editState, show, editField] = useDialog<
     Many<EditableEngagementField>
@@ -251,13 +250,8 @@ export const LanguageEngagementDetail: FC<EngagementQuery> = ({
                 <Grid item xs={6}>
                   <DefinedFileCard
                     title="Planning and Progress"
-                    onVersionUpload={(files) =>
-                      uploadFile({
-                        action: 'version',
-                        files,
-                        parentId: engagement.id,
-                      })
-                    }
+                    uploadMutationDocument={UploadLanguageEngagementPnpDocument}
+                    parentId={engagement.id}
                     resourceType="engagement"
                     securedFile={engagement.pnp}
                   />
