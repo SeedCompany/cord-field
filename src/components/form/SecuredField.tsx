@@ -49,15 +49,18 @@ export const SecuredField = <
   if (obj) {
     // @ts-expect-error Grab key from object following naming convention. We check below that we grabbed it correctly.
     const field: SecuredProp<any> = obj[name] ?? obj[name.replace(/Id$/, '')];
-    // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- sanity check since we ignored types above
-    if (field.canRead == null || field.canEdit == null) {
-      console.error(
-        `Cannot determine if field should be readable/editable: ${obj.__typename}.${name}`
-      );
-      return null;
+    // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- sanity check
+    if (field) {
+      // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- sanity check since we ignored types above
+      if (field.canRead == null || field.canEdit == null) {
+        console.error(
+          `Cannot determine if field should be readable/editable: ${obj.__typename}.${name}`
+        );
+        return null;
+      }
+      canRead = field.canRead;
+      canEdit = field.canEdit;
     }
-    canRead = field.canRead;
-    canEdit = field.canEdit;
   }
   if (!canRead) {
     return null;
