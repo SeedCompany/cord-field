@@ -111,7 +111,7 @@ export const UploadItem: FC<UploadItemProps> = (props) => {
       ) : (
         <div className={classes.progressContainer}>
           <CircularProgress
-            variant="static"
+            variant="determinate"
             size="1.5em"
             thickness={4.6}
             value={percentCompleted}
