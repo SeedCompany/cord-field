@@ -2,7 +2,7 @@ import { useMutation } from '@apollo/client';
 import { pick } from 'lodash';
 import React, { ComponentType, useMemo } from 'react';
 import { Except, Merge } from 'type-fest';
-import { invalidateProps, SensitivityList, UpdateProject } from '../../../api';
+import { GQLOperations, invalidateProps, SensitivityList, UpdateProject } from '../../../api';
 import {
   DisplayFieldRegionFragment,
   DisplayLocationFragment,
@@ -27,6 +27,7 @@ import {
   updateEngagementDateRanges,
   updatePartnershipsDateRanges,
 } from '../DateRangeCache';
+import { ProjectPlanChangesOverviewFragment } from '../Overview/ProjectChangesOverview.generated';
 import { ProjectOverviewFragment } from '../Overview/ProjectOverview.generated';
 import { UpdateProjectDocument } from './UpdateProject.generated';
 
@@ -85,12 +86,16 @@ type UpdateProjectDialogProps = Except<
   'onSubmit' | 'initialValues'
 > & {
   project: ProjectOverviewFragment;
+  projectChanges: ProjectPlanChangesOverviewFragment;
   editFields?: Many<EditableProjectField>;
+  planChangeId?: string;
 };
 
 export const UpdateProjectDialog = ({
   project,
   editFields: editFieldsProp,
+  projectChanges,
+  planChangeId,
   ...props
 }: UpdateProjectDialogProps) => {
   const editFields = useMemo(
@@ -105,7 +110,7 @@ export const UpdateProjectDialog = ({
       UpdateProjectFormValues['project'],
       'id'
     > = {
-      name: project.name.value,
+      name: planChangeId ? projectChanges.name.value : project.name.value,
       primaryLocationId: project.primaryLocation.value,
       fieldRegionId: project.fieldRegion.value,
       mouStart: project.mouStart.value,
@@ -127,15 +132,17 @@ export const UpdateProjectDialog = ({
       },
     };
   }, [
-    editFields,
-    project.id,
+    planChangeId,
+    projectChanges.name.value,
     project.name.value,
     project.primaryLocation.value,
     project.fieldRegion.value,
-    project.mouEnd.value,
     project.mouStart.value,
+    project.mouEnd.value,
     project.estimatedSubmission.value,
     project.sensitivity,
+    project.id,
+    editFields,
   ]);
 
   return (
@@ -160,6 +167,7 @@ export const UpdateProjectDialog = ({
             ...(primaryLocationId ? { primaryLocationId } : {}),
             ...(fieldRegionId ? { fieldRegionId } : {}),
           },
+          changeId: planChangeId ? planChangeId : null,
         };
         await updateProject({
           variables: { input },
@@ -184,6 +192,7 @@ export const UpdateProjectDialog = ({
             updateEngagementDateRanges(cache, project);
             updatePartnershipsDateRanges(cache, project);
           },
+          refetchQueries: [GQLOperations.Query.ProjectChangesOverview],
         });
       }}
     >

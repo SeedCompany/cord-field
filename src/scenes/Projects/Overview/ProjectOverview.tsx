@@ -28,6 +28,7 @@ import { LanguageEngagementListItemCard } from '../../../components/LanguageEnga
 import { List, useListQuery } from '../../../components/List';
 import { PartnershipSummary } from '../../../components/PartnershipSummary';
 import { PeriodicReportCard } from '../../../components/PeriodicReports';
+import { usePlanChange } from '../../../components/PlanChangeCard';
 import { PlanChangesSummary } from '../../../components/PlanChangesSummary';
 import { ProjectMembersSummary } from '../../../components/ProjectMembersSummary';
 import { Redacted } from '../../../components/Redacted';
@@ -41,6 +42,7 @@ import { ProjectListQueryVariables } from '../List/projects.generated';
 import { CreatePlanChange } from '../PlanChange/Create/CreatePlanChange';
 import { EditableProjectField, UpdateProjectDialog } from '../Update';
 import { ProjectWorkflowDialog } from '../Update/ProjectWorkflowDialog';
+import { ProjectChangesOverviewDocument } from './ProjectChangesOverview.generated';
 import {
   ProjectEngagementListOverviewDocument as EngagementList,
   ProjectOverviewDocument,
@@ -98,6 +100,7 @@ const useStyles = makeStyles(({ spacing, breakpoints, palette }) => ({
 export const ProjectOverview: FC = () => {
   const classes = useStyles();
   const { projectId = '' } = useParams();
+  const { planChangeId } = usePlanChange();
   const formatNumber = useNumberFormatter();
 
   const [editState, editField, fieldsBeingEdited] =
@@ -137,6 +140,15 @@ export const ProjectOverview: FC = () => {
       },
     }
   );
+  const { data: projectChangesData } = useQuery(
+    ProjectChangesOverviewDocument,
+    {
+      variables: {
+        input: projectId,
+        changeId: planChangeId !== '' ? planChangeId : null,
+      },
+    }
+  );
 
   const engagements = useListQuery(EngagementList, {
     listAt: (data) => data.project.engagements,
@@ -146,6 +158,7 @@ export const ProjectOverview: FC = () => {
   });
 
   const projectName = projectOverviewData?.project.name;
+  const projectChanges = projectChangesData?.project.projectChanges;
   const isTranslation = projectOverviewData
     ? projectOverviewData.project.__typename === 'TranslationProject'
     : undefined;
@@ -234,7 +247,14 @@ export const ProjectOverview: FC = () => {
               {!projectName ? (
                 <Skeleton width="100%" />
               ) : projectName.canRead ? (
-                projectName.value
+                <>
+                  {projectName.value}
+                  {projectChanges &&
+                  planChangeId &&
+                  projectChanges.name.value !== projectName.value
+                    ? ` - ${projectChanges.name.value}`
+                    : null}
+                </>
               ) : (
                 <Redacted
                   info="You do not have permission to view project's name"
@@ -591,11 +611,13 @@ export const ProjectOverview: FC = () => {
       {workflowProject && (
         <ProjectWorkflowDialog {...workflowState} project={workflowProject} />
       )}
-      {projectOverviewData ? (
+      {projectOverviewData && projectChanges ? (
         <UpdateProjectDialog
           {...editState}
           project={projectOverviewData.project}
+          projectChanges={projectChanges}
           editFields={fieldsBeingEdited}
+          planChangeId={planChangeId}
         />
       ) : null}
       <CreateEngagement projectId={projectId} {...createEngagementState} />
