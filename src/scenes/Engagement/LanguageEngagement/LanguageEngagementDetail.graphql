@@ -73,8 +73,5 @@ fragment LanguageEngagementDetail on LanguageEngagement {
     canEdit
     value
   }
-  progressReports {
-    ...PeriodicReportList
-  }
   ...EditEngagement
 }

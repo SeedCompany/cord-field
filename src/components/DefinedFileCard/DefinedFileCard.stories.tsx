@@ -1,4 +1,5 @@
 import { Box } from '@material-ui/core';
+import { action } from '@storybook/addon-actions';
 import { boolean, text } from '@storybook/addon-knobs';
 import { DateTime } from 'luxon';
 import React from 'react';
@@ -64,14 +65,11 @@ export const DefinedFileCard = () => {
     canEdit: boolean('canEdit', true),
     value: file,
   };
-
-  const uploadMutationDocument: any = {};
   return (
     <Box display="flex" width={400}>
       <Card
         title="Growth Plan"
-        parentId={text('parentId', '1')}
-        uploadMutationDocument={uploadMutationDocument}
+        onVersionUpload={action('onVersionUpload')}
         resourceType={text('resourceType', 'engagement')}
         securedFile={securedFile}
       />

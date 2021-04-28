@@ -33,13 +33,6 @@ const ProjectOverview = loadable(
     resolveComponent: (m) => m.ProjectOverview,
   }
 );
-const ProjectReports = loadable(() => import('./Reports'), {
-  resolveComponent: (m) => m.Reports,
-});
-
-const EngagementReports = loadable(() => import('../Engagement/Reports'), {
-  resolveComponent: (m) => m.Reports,
-});
 
 export const Projects = () => (
   <Routes>
@@ -51,12 +44,10 @@ export const Projects = () => (
       <Route path="engagements/:engagementId">
         <Route path="" element={<Engagement />} />
         <Route path="products/*" element={<Products />} />
-        <Route path="reports" element={<EngagementReports />} />
         {NotFoundRoute}
       </Route>
       <Route path="partnerships" element={<PartnershipList />} />
       <Route path="budget" element={<ProjectBudget />} />
-      <Route path="reports/:reportType" element={<ProjectReports />} />
       {NotFoundRoute}
     </Route>
     {NotFoundRoute}

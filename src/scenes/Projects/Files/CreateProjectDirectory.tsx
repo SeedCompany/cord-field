@@ -2,14 +2,14 @@ import { useMutation } from '@apollo/client';
 import { useSnackbar } from 'notistack';
 import React from 'react';
 import { Except } from 'type-fest';
-import { addItemToList, CreateDirectoryInput } from '../../../api';
+import { CreateDirectoryInput, GQLOperations } from '../../../api';
 import {
   DialogForm,
   DialogFormProps,
 } from '../../../components/Dialog/DialogForm';
 import { SubmitError, TextField } from '../../../components/form';
 import { ButtonLink } from '../../../components/Routing';
-import { CreateProjectDirectoryDocument } from './CreateProjectDirectory.generated';
+import { CreateProjectDirectoryDocument } from './CreateProjectFile.generated';
 import { useProjectCurrentDirectory } from './useProjectCurrentDirectory';
 
 export type CreateProjectDirectoryProps = DialogFormProps<CreateDirectoryInput>;
@@ -30,10 +30,7 @@ export const CreateProjectDirectory = (
     };
     const { data } = await createDirectory({
       variables: { input },
-      update: addItemToList({
-        listId: [{ __typename: 'Directory', id: directoryId }, 'children'],
-        outputToItem: (res) => res.createDirectory,
-      }),
+      refetchQueries: [GQLOperations.Query.ProjectDirectory],
     });
     const directory = data!.createDirectory;
 

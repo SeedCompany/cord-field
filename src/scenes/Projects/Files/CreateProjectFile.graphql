@@ -2,11 +2,5 @@ mutation CreateProjectDirectory($input: CreateDirectoryInput!) {
   createDirectory(input: $input) {
     id
     name
-    type
-    createdAt
-    createdBy {
-      id
-      fullName
-    }
   }
 }

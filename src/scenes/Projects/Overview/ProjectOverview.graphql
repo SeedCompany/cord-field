@@ -76,17 +76,6 @@ fragment ProjectOverview on Project {
   partnerships {
     ...PartnershipSummary
   }
-  financialReports {
-    ...PeriodicReportList
-  }
-  financialReportPeriod {
-    canRead
-    canEdit
-    value
-  }
-  narrativeReports {
-    ...PeriodicReportList
-  }
 }
 
 query ProjectEngagementListOverview(
