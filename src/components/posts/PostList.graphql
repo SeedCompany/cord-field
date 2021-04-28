@@ -1,0 +1,10 @@
+fragment PostList on SecuredPostList {
+  canRead
+  canCreate
+  total
+  hasMore
+  items {
+    ...PostListItemCard
+  }
+  ...Pagination
+}

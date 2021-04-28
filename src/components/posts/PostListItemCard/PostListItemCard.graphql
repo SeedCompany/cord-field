@@ -1,0 +1,24 @@
+fragment PostListItemCard on Post {
+  id
+  createdAt
+  modifiedAt
+  type
+  shareable
+  body {
+    canRead
+    canEdit
+    value
+  }
+  creator {
+    value {
+      id
+      avatarLetters
+      displayFirstName {
+        value
+      }
+      displayLastName {
+        value
+      }
+    }
+  }
+}
