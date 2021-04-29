@@ -80,7 +80,7 @@ export const PostListItemCard: FC<PostListItemCardProps> = (props) => {
             </Typography>
           </div>
           <div className={classes.typeShareabilityRow}>
-            <Typography variant="h4">Prayer Request</Typography>
+            <Typography variant="h4">{props.type}</Typography>
             <div className={classes.shareability}>
               {props.shareable ? (
                 <Typography variant="body2">
