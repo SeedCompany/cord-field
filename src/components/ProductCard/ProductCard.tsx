@@ -76,7 +76,6 @@ export const ProductCard = ({ product }: ProductCardProps) => {
     product.__typename === 'DerivativeScriptureProduct'
       ? product.produces.value?.__typename || 'DerivativeScriptureProduct'
       : product.__typename;
-
   const producibleName =
     product.__typename === 'DerivativeScriptureProduct' &&
     (product.produces.value?.__typename === 'Film'

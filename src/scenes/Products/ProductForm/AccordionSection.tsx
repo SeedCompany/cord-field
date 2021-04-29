@@ -180,7 +180,10 @@ export const AccordionSection = ({
     });
   };
 
-  const isProducesFieldMissing = !produces && touched?.['product.produces'];
+  const isProducesFieldMissing =
+    !produces &&
+    (touched?.['product.produces'] !== undefined ||
+      !touched?.['product.produces']);
 
   const onVersesFieldSubmit = ({
     updatingScriptures,
@@ -199,59 +202,63 @@ export const AccordionSection = ({
       );
   };
 
+  const producesAccordian = (
+    <SecuredAccordion
+      {...accordionState}
+      name="produces"
+      product={isProducesFieldMissing ? undefined : productObj}
+      title="Product"
+      renderCollapsed={() => (
+        <>
+          {productType && (
+            <ToggleButton selected value={produces || ''}>
+              {`${displayProductTypes(productType)} ${
+                (productType !== 'DirectScriptureProduct' &&
+                  produces?.name.value) ||
+                ''
+              }`}
+            </ToggleButton>
+          )}
+          {isProducesFieldMissing && !isEditing && (
+            <Typography variant="caption" color="error">
+              Product selection required
+            </Typography>
+          )}
+        </>
+      )}
+    >
+      {(props) => {
+        const productTypeField = (
+          <EnumField
+            name="productType"
+            disabled={isEditing}
+            options={productTypes}
+            getLabel={displayProductTypes}
+            defaultValue="DirectScriptureProduct"
+            required
+            variant="toggle-split"
+          />
+        );
+
+        const ProductField = productType
+          ? productFieldMap[productType]
+          : undefined;
+        const productField = ProductField && (
+          <ProductField {...props} required />
+        );
+
+        return (
+          <>
+            {productTypeField}
+            {productField}
+          </>
+        );
+      }}
+    </SecuredAccordion>
+  );
   return (
     <div className={classes.accordionContainer}>
-      <SecuredAccordion
-        {...accordionState}
-        name="produces"
-        title="Product"
-        renderCollapsed={() => (
-          <>
-            {productType && (
-              <ToggleButton selected value={produces || ''}>
-                {`${displayProductTypes(productType)} ${
-                  (productType !== 'DirectScriptureProduct' &&
-                    produces?.name.value) ||
-                  ''
-                }`}
-              </ToggleButton>
-            )}
-            {isProducesFieldMissing && (
-              <Typography variant="caption" color="error">
-                Product selection required
-              </Typography>
-            )}
-          </>
-        )}
-      >
-        {(props) => {
-          const productTypeField = (
-            <EnumField
-              name="productType"
-              disabled={isEditing}
-              options={productTypes}
-              getLabel={displayProductTypes}
-              defaultValue="DirectScriptureProduct"
-              required
-              variant="toggle-split"
-            />
-          );
-
-          const ProductField = productType
-            ? productFieldMap[productType]
-            : undefined;
-          const productField = ProductField && (
-            <ProductField {...props} required />
-          );
-
-          return (
-            <>
-              {productTypeField}
-              {productField}
-            </>
-          );
-        }}
-      </SecuredAccordion>
+      {producesAccordian}
       {/* //TODO: maybe include scriptureReferencesOverride in the name to show api field error */}
       <SecuredAccordion
         {...accordionState}
@@ -464,7 +471,6 @@ const SecuredAccordion = <K extends ProductKey>({
 }) => {
   const classes = useStyles();
   const isOpen = openedSection === name;
-
   return (
     <SecuredField
       obj={product}
