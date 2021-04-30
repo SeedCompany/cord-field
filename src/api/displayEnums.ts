@@ -16,6 +16,7 @@ import { Nullable } from '../util';
 import { MethodologyToApproach } from './approach';
 import {
   InternshipPosition,
+  PostShareability,
   ProductMedium,
   ProductMethodology,
   ProductPurpose,
@@ -73,3 +74,5 @@ export const displayProductTypes = (type: ProductTypes) =>
   type === 'DirectScriptureProduct'
     ? 'Scripture'
     : displayEnum<ProductTypes>()(type);
+
+export const displayPostShareability = displayEnum<PostShareability>();
