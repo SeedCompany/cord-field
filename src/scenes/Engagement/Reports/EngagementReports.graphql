@@ -1,0 +1,13 @@
+query ProgressReports($projectId: ID!, $engagementId: ID!) {
+  project(id: $projectId) {
+    ...ProjectBreadcrumb
+  }
+  engagement(id: $engagementId) {
+    id
+    ...LanguageEngagementDetail
+    ...InternshipEngagementDetail
+    progressReports {
+      ...PeriodicReportList
+    }
+  }
+}

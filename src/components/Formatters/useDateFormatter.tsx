@@ -54,6 +54,28 @@ export const useDateTimeFormatter = () => {
   return formatDateTime;
 };
 
+export const useFiscalQuarterFormater = () => {
+  const formatFiscalQuarter = (date: Nullable<DateTime>) =>
+    date
+      ? `Q${CalendarDate.toFiscalQuarter(date)} - FY${CalendarDate.toFiscalYear(
+          date
+        )}`
+      : '';
+
+  return formatFiscalQuarter;
+};
+
+export const useFiscalMonthFormater = () => {
+  const formatMonthQuarter = (date: Nullable<DateTime>) =>
+    date
+      ? `M${CalendarDate.toFiscalMonth(date)} - FY${CalendarDate.toFiscalYear(
+          date
+        )}`
+      : '';
+
+  return formatMonthQuarter;
+};
+
 function rangeFormatter<T extends DateTime>(
   formatter: (d: Nullable<T>) => string
 ) {

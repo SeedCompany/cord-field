@@ -69,5 +69,8 @@ fragment InternshipEngagementDetail on InternshipEngagement {
   methodologies {
     ...MethodologiesCard
   }
+  progressReports {
+    ...PeriodicReportList
+  }
   ...EditEngagement
 }

@@ -4,7 +4,6 @@ import { Skeleton } from '@material-ui/lab';
 import React, { useEffect } from 'react';
 import { Helmet } from 'react-helmet-async';
 import { useParams } from 'react-router-dom';
-import { AddItemCard } from '../../../components/AddItemCard';
 import { Breadcrumb } from '../../../components/Breadcrumb';
 import { DefinedFileCard } from '../../../components/DefinedFileCard';
 import { Error } from '../../../components/Error';
@@ -13,8 +12,10 @@ import { useCurrencyFormatter } from '../../../components/Formatters/useCurrency
 import { ContentContainer as Content } from '../../../components/Layout/ContentContainer';
 import { ProjectBreadcrumb } from '../../../components/ProjectBreadcrumb';
 import { Table } from '../../../components/Table';
-import { useUploadBudgetFile } from '../Files';
-import { ProjectBudgetDocument } from './ProjectBudget.generated';
+import {
+  ProjectBudgetDocument,
+  UpdateProjectBudgetUniversalTemplateDocument,
+} from './ProjectBudget.generated';
 import { ProjectBudgetRecords } from './ProjectBudgetRecords';
 
 const useStyles = makeStyles(({ breakpoints, spacing }) => ({
@@ -41,8 +42,6 @@ export const ProjectBudget = () => {
   const classes = useStyles();
   const { projectId } = useParams();
   const formatCurrency = useCurrencyFormatter();
-
-  const uploadFile = useUploadBudgetFile();
 
   const { data, loading, error } = useQuery(ProjectBudgetDocument, {
     variables: { id: projectId },
@@ -96,29 +95,15 @@ export const ProjectBudget = () => {
               {!budget?.value || !template || !template.canRead ? null : (
                 <FileActionsContextProvider>
                   <Grid item xs={6}>
-                    {!template.value ? (
-                      <AddItemCard
-                        actionType="dropzone"
-                        canAdd={template.canEdit}
-                        handleFileSelect={(files: File[]) =>
-                          uploadFile({ files, parentId: budget.value!.id })
-                        }
-                        itemType="Universal Template"
-                      />
-                    ) : (
-                      <DefinedFileCard
-                        title="Universal Template"
-                        onVersionUpload={(files) =>
-                          uploadFile({
-                            action: 'version',
-                            files,
-                            parentId: budget.value!.id,
-                          })
-                        }
-                        resourceType="budget"
-                        securedFile={template}
-                      />
-                    )}
+                    <DefinedFileCard
+                      title="Universal Template"
+                      parentId={budget.value.id}
+                      uploadMutationDocument={
+                        UpdateProjectBudgetUniversalTemplateDocument
+                      }
+                      resourceType="budget"
+                      securedFile={template}
+                    />
                   </Grid>
                 </FileActionsContextProvider>
               )}

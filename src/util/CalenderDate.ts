@@ -122,6 +122,14 @@ export class CalendarDate extends DateTime {
   static toFiscalYear = (dt: DateTime) =>
     dt.month >= 10 ? dt.year + 1 : dt.year;
 
+  static toFiscalQuarter = (dt: DateTime) =>
+    dt.quarter === 4 ? 1 : dt.quarter + 1;
+
+  static toFiscalMonth = (dt: DateTime) => {
+    const m = (dt.month + 3) % 12;
+    return m > 0 ? m : 12;
+  };
+
   static fiscalYearEndToCalendarDate = (year: number | null | undefined) =>
     year
       ? CalendarDate.fromObject({
