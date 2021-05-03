@@ -43,7 +43,7 @@ const useStyles = makeStyles(({ spacing, typography }) => {
     shareability: {
       marginLeft: spacing(2),
     },
-    shareableLabel: {
+    shareabilityLabel: {
       fontWeight: typography.fontWeightBold,
       paddingRight: spacing(1),
     },
@@ -82,14 +82,14 @@ export const PostListItemCard: FC<PostListItemCardProps> = (props) => {
           <div className={classes.typeShareabilityRow}>
             <Typography variant="h4">{props.type}</Typography>
             <div className={classes.shareability}>
-              {props.shareable ? (
+              {props.shareability === 'Public' ? (
                 <Typography variant="body2">
-                  <span className={classes.shareableLabel}>PUBLIC</span>Can Be
-                  Shared Externally
+                  <span className={classes.shareabilityLabel}>PUBLIC</span>Can
+                  Be Shared Externally
                 </Typography>
               ) : (
                 <Typography variant="body2">
-                  <span className={classes.shareableLabel}>PRIVATE</span>For
+                  <span className={classes.shareabilityLabel}>PRIVATE</span>For
                   Internal Use Only
                 </Typography>
               )}

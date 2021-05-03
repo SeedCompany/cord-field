@@ -3,8 +3,12 @@ import { Grid, makeStyles } from '@material-ui/core';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
 import { Form } from 'react-final-form';
-import { PostTypeList } from '../../../api';
-import { SelectField, SubmitButton, SwitchField, TextField } from '../../form';
+import {
+  displayPostShareability,
+  PostShareabilityList,
+  PostTypeList,
+} from '../../../api';
+import { SelectField, SubmitButton, TextField } from '../../form';
 import { minLength, required } from '../../form/validators';
 import { CreatePostDocument, CreatePostMutation } from './CreatePost.generated';
 
@@ -39,7 +43,7 @@ export const CreatePostForm = ({
       initialValues={{
         body: '',
         type: 'Note',
-        shareable: true,
+        shareability: 'Public',
       }}
       onSubmit={async (values) => {
         await createPost({
@@ -49,7 +53,7 @@ export const CreatePostForm = ({
                 parentId,
                 body: values.body,
                 type: values.type,
-                shareable: values.shareable,
+                shareability: values.shareability,
               },
             },
           },
@@ -83,7 +87,13 @@ export const CreatePostForm = ({
               />
             </Grid>
             <Grid item>
-              <SwitchField label="Public" name="shareable" />
+              <SelectField
+                label="Shareability"
+                name="shareability"
+                options={PostShareabilityList}
+                variant="outlined"
+                getOptionLabel={displayPostShareability}
+              />
             </Grid>
           </Grid>
           <TextField

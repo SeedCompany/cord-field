@@ -3,7 +3,7 @@ fragment PostListItemCard on Post {
   createdAt
   modifiedAt
   type
-  shareable
+  shareability
   body {
     canRead
     canEdit
