@@ -22,6 +22,7 @@ import {
 import { AutocompleteField } from '../../../../components/form/AutocompleteField';
 import { PlanChangeCardFragment } from '../../../../components/PlanChangeCard/PlanChange.generated';
 import { callAll } from '../../../../util';
+import { ProjectOverviewDocument } from '../../Overview/ProjectOverview.generated';
 import { PlanChangesQuery } from '../List/PlanChanges.generated';
 import {
   DeletePlanChangeDocument,
@@ -74,7 +75,18 @@ export const UpdatePlanChange = ({
         },
       }}
       onSubmit={async (input) => {
-        await updatePlanChange({ variables: { input } });
+        await updatePlanChange({
+          variables: { input },
+          refetchQueries: [
+            {
+              query: ProjectOverviewDocument,
+              variables: {
+                input: project.id,
+                changeId: planChange.id,
+              },
+            },
+          ],
+        });
       }}
       fieldsPrefix="planChange"
       leftAction={

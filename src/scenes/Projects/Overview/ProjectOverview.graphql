@@ -1,4 +1,4 @@
-query ProjectOverview($input: ID!) {
+query ProjectOverview($input: ID!, $changeId: ID) {
   project(id: $input) {
     ...ProjectOverview
   }
@@ -90,6 +90,19 @@ fragment ProjectOverview on Project {
   }
   changes {
     ...PlanChangeList
+  }
+  projectChanges(id: $changeId) {
+    name {
+      canRead
+      canEdit
+      value
+    }
+    step {
+      canRead
+      canEdit
+      value
+    }
+    status
   }
 }
 

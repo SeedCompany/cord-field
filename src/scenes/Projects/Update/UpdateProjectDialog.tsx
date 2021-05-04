@@ -27,7 +27,6 @@ import {
   updateEngagementDateRanges,
   updatePartnershipsDateRanges,
 } from '../DateRangeCache';
-import { ProjectPlanChangesOverviewFragment } from '../Overview/ProjectChangesOverview.generated';
 import { ProjectOverviewFragment } from '../Overview/ProjectOverview.generated';
 import { UpdateProjectDocument } from './UpdateProject.generated';
 
@@ -86,7 +85,6 @@ type UpdateProjectDialogProps = Except<
   'onSubmit' | 'initialValues'
 > & {
   project: ProjectOverviewFragment;
-  projectChanges: ProjectPlanChangesOverviewFragment;
   editFields?: Many<EditableProjectField>;
   planChangeId?: string;
 };
@@ -94,7 +92,6 @@ type UpdateProjectDialogProps = Except<
 export const UpdateProjectDialog = ({
   project,
   editFields: editFieldsProp,
-  projectChanges,
   planChangeId,
   ...props
 }: UpdateProjectDialogProps) => {
@@ -110,7 +107,9 @@ export const UpdateProjectDialog = ({
       UpdateProjectFormValues['project'],
       'id'
     > = {
-      name: planChangeId ? projectChanges.name.value : project.name.value,
+      name: planChangeId
+        ? project.projectChanges.name.value
+        : project.name.value,
       primaryLocationId: project.primaryLocation.value,
       fieldRegionId: project.fieldRegion.value,
       mouStart: project.mouStart.value,
@@ -133,7 +132,7 @@ export const UpdateProjectDialog = ({
     };
   }, [
     planChangeId,
-    projectChanges.name.value,
+    project.projectChanges.name.value,
     project.name.value,
     project.primaryLocation.value,
     project.fieldRegion.value,
@@ -167,10 +166,12 @@ export const UpdateProjectDialog = ({
             ...(primaryLocationId ? { primaryLocationId } : {}),
             ...(fieldRegionId ? { fieldRegionId } : {}),
           },
-          changeId: planChangeId ? planChangeId : null,
         };
         await updateProject({
-          variables: { input },
+          variables: {
+            input,
+            changeId: planChangeId ? planChangeId : null,
+          },
           update: (cache) => {
             if (rest.mouStart === undefined && rest.mouEnd === undefined) {
               return;
@@ -192,7 +193,6 @@ export const UpdateProjectDialog = ({
             updateEngagementDateRanges(cache, project);
             updatePartnershipsDateRanges(cache, project);
           },
-          refetchQueries: [GQLOperations.Query.ProjectChangesOverview],
         });
       }}
     >

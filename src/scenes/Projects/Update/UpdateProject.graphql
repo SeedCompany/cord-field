@@ -1,5 +1,5 @@
-mutation UpdateProject($input: UpdateProjectInput!) {
-  updateProject(input: $input) {
+mutation UpdateProject($input: UpdateProjectInput!, $changeId: ID) {
+  updateProject(input: $input, changeId: $changeId) {
     project {
       ...ProjectOverview
     }

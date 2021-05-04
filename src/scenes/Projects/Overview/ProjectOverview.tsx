@@ -42,7 +42,6 @@ import { ProjectListQueryVariables } from '../List/projects.generated';
 import { CreatePlanChange } from '../PlanChange/Create/CreatePlanChange';
 import { EditableProjectField, UpdateProjectDialog } from '../Update';
 import { ProjectWorkflowDialog } from '../Update/ProjectWorkflowDialog';
-import { ProjectChangesOverviewDocument } from './ProjectChangesOverview.generated';
 import {
   ProjectEngagementListOverviewDocument as EngagementList,
   ProjectOverviewDocument,
@@ -137,15 +136,7 @@ export const ProjectOverview: FC = () => {
     {
       variables: {
         input: projectId,
-      },
-    }
-  );
-  const { data: projectChangesData } = useQuery(
-    ProjectChangesOverviewDocument,
-    {
-      variables: {
-        input: projectId,
-        changeId: planChangeId !== '' ? planChangeId : null,
+        changeId: planChangeId ? planChangeId : null,
       },
     }
   );
@@ -158,7 +149,7 @@ export const ProjectOverview: FC = () => {
   });
 
   const projectName = projectOverviewData?.project.name;
-  const projectChanges = projectChangesData?.project.projectChanges;
+  const projectChanges = projectOverviewData?.project.projectChanges;
   const isTranslation = projectOverviewData
     ? projectOverviewData.project.__typename === 'TranslationProject'
     : undefined;
@@ -611,11 +602,10 @@ export const ProjectOverview: FC = () => {
       {workflowProject && (
         <ProjectWorkflowDialog {...workflowState} project={workflowProject} />
       )}
-      {projectOverviewData && projectChanges ? (
+      {projectOverviewData ? (
         <UpdateProjectDialog
           {...editState}
           project={projectOverviewData.project}
-          projectChanges={projectChanges}
           editFields={fieldsBeingEdited}
           planChangeId={planChangeId}
         />
