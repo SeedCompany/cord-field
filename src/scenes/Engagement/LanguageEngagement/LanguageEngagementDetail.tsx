@@ -6,6 +6,7 @@ import {
   Typography,
 } from '@material-ui/core';
 import { ChatOutlined, DateRange, Edit } from '@material-ui/icons';
+import { last } from 'lodash';
 import React, { FC } from 'react';
 import { Helmet } from 'react-helmet-async';
 import {
@@ -13,11 +14,9 @@ import {
   displayEngagementStatus,
   securedDateRange,
 } from '../../../api';
-import { AddItemCard } from '../../../components/AddItemCard';
 import { BooleanProperty } from '../../../components/BooleanProperty';
 import { Breadcrumb } from '../../../components/Breadcrumb';
 import { DataButton } from '../../../components/DataButton';
-import { DefinedFileCard } from '../../../components/DefinedFileCard';
 import { useDialog } from '../../../components/Dialog';
 import { Fab } from '../../../components/Fab';
 import { FieldOverviewCard } from '../../../components/FieldOverviewCard';
@@ -27,10 +26,11 @@ import {
   useDateTimeFormatter,
 } from '../../../components/Formatters';
 import { OptionsIcon, PlantIcon } from '../../../components/Icons';
+import { PeriodicReportSummaryCard } from '../../../components/PeriodicReportSummaryCard';
 import { ProjectBreadcrumb } from '../../../components/ProjectBreadcrumb';
 import { Redacted } from '../../../components/Redacted';
 import { Link } from '../../../components/Routing';
-import { Many } from '../../../util';
+import { CalendarDate, Many } from '../../../util';
 import { ProductList } from '../../Products/List/ProductList';
 import { CeremonyCard } from '../CeremonyCard';
 import { DeleteEngagement } from '../Delete';
@@ -41,7 +41,6 @@ import {
 } from '../EditEngagement/EditEngagementDialog';
 import { EngagementWorkflowDialog } from '../EditEngagement/EngagementWorkflowDialog';
 import { EngagementQuery } from '../Engagement.generated';
-import { useUploadEngagementFile } from '../Files';
 
 const useStyles = makeStyles(({ spacing, breakpoints, palette }) => ({
   root: {
@@ -65,7 +64,6 @@ export const LanguageEngagementDetail: FC<EngagementQuery> = ({
   engagement,
 }) => {
   const classes = useStyles();
-  const uploadFile = useUploadEngagementFile('language');
 
   const [editState, show, editField] = useDialog<
     Many<EditableEngagementField>
@@ -86,10 +84,15 @@ export const LanguageEngagementDetail: FC<EngagementQuery> = ({
   const language = engagement.language.value;
   const langName = language?.name.value ?? language?.displayName.value;
   const ptRegistryId = engagement.paratextRegistryId;
-  const pnp = engagement.pnp;
   const editable = canEditAny(engagement);
 
   const date = securedDateRange(engagement.startDate, engagement.endDate);
+
+  const currentQuarterStart = CalendarDate.now().startOf('quarter');
+  const progressDueReport =
+    engagement.progressReports.items.find(
+      (report) => +report.start === +currentQuarterStart
+    ) ?? last(engagement.progressReports.items);
 
   return (
     <>
@@ -251,34 +254,12 @@ export const LanguageEngagementDetail: FC<EngagementQuery> = ({
             <Grid item container spacing={3} alignItems="center">
               <FileActionsContextProvider>
                 <Grid item xs={6}>
-                  {pnp.canRead && !pnp.value ? (
-                    <AddItemCard
-                      actionType="dropzone"
-                      canAdd={pnp.canEdit}
-                      handleFileSelect={(files: File[]) =>
-                        uploadFile({ files, parentId: engagement.id })
-                      }
-                      DropzoneProps={{
-                        options: {
-                          multiple: false,
-                        },
-                      }}
-                      itemType="Planning and Progress"
-                    />
-                  ) : (
-                    <DefinedFileCard
-                      title="Planning and Progress"
-                      onVersionUpload={(files) =>
-                        uploadFile({
-                          action: 'version',
-                          files,
-                          parentId: engagement.id,
-                        })
-                      }
-                      resourceType="engagement"
-                      securedFile={engagement.pnp}
-                    />
-                  )}
+                  <PeriodicReportSummaryCard
+                    reportType="Progress"
+                    report={progressDueReport}
+                    loading={!progressDueReport}
+                    total={engagement.progressReports.total}
+                  />
                 </Grid>
               </FileActionsContextProvider>
             </Grid>

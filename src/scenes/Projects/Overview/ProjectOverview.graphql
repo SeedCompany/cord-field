@@ -76,6 +76,17 @@ fragment ProjectOverview on Project {
   partnerships {
     ...PartnershipSummary
   }
+  financialReports {
+    ...PeriodicReportList
+  }
+  financialReportPeriod {
+    canRead
+    canEdit
+    value
+  }
+  narrativeReports {
+    ...PeriodicReportList
+  }
 }
 
 query ProjectPostListOverview($project: ID!, $input: PostListInput) {
