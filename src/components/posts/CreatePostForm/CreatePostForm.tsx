@@ -100,7 +100,7 @@ export const CreatePostForm = ({
             name="body"
             variant="outlined"
             multiline
-            placeholder="Start a new comment"
+            placeholder="Start a new post"
             inputProps={{ rowsMin: 4 }}
             validate={[required, minLength()]}
           />

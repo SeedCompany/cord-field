@@ -27,8 +27,8 @@ const useStyles = makeStyles(({ spacing }) => ({
 
 export const ProjectPostList: FC<ProjectPostListProps> = ({ project }) => {
   const classes = useStyles();
-  const [showCommentField, setShowCommentField] = React.useState(false);
-  const toggleCommentField = () => setShowCommentField(!showCommentField);
+  const [showPostField, setShowPostField] = React.useState(false);
+  const togglePostField = () => setShowPostField(!showPostField);
 
   const posts = useListQuery(PostList, {
     listAt: (data) => data.project.posts,
@@ -41,21 +41,21 @@ export const ProjectPostList: FC<ProjectPostListProps> = ({ project }) => {
     <>
       <Grid container spacing={2} alignItems="center">
         <Grid item>
-          <Typography variant="h3">Comments</Typography>
+          <Typography variant="h3">Posts</Typography>
         </Grid>
         <Grid item>
-          <Tooltip title={`Add Comment`}>
+          <Tooltip title={`Add Post`}>
             <Fab
               color="error"
-              aria-label={`Add Comment`}
-              onClick={toggleCommentField}
+              aria-label={`Add Post`}
+              onClick={togglePostField}
             >
               <Add />
             </Fab>
           </Tooltip>
         </Grid>
       </Grid>
-      {showCommentField && (
+      {showPostField && (
         <CreatePostForm
           parentId={project.id}
           mutationUpdate={addItemToList({
@@ -63,7 +63,7 @@ export const ProjectPostList: FC<ProjectPostListProps> = ({ project }) => {
             outputToItem: (data) => data.createPost.post,
           })}
           onSubmit={() => {
-            toggleCommentField();
+            togglePostField();
           }}
         />
       )}
