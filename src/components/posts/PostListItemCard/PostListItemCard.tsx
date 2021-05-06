@@ -8,6 +8,7 @@ import {
 import clsx from 'clsx';
 import { FC } from 'react';
 import * as React from 'react';
+import { displayPostShareability } from '../../../api';
 import { square } from '../../../util';
 import { useDateTimeFormatter } from '../../Formatters';
 import { PostListItemCardFragment } from './PostListItemCard.generated';
@@ -82,17 +83,14 @@ export const PostListItemCard: FC<PostListItemCardProps> = (props) => {
           <div className={classes.typeShareabilityRow}>
             <Typography variant="h4">{props.type}</Typography>
             <div className={classes.shareability}>
-              {props.shareability === 'Public' ? (
-                <Typography variant="body2">
-                  <span className={classes.shareabilityLabel}>PUBLIC</span>Can
-                  Be Shared Externally
-                </Typography>
-              ) : (
-                <Typography variant="body2">
-                  <span className={classes.shareabilityLabel}>PRIVATE</span>For
-                  Internal Use Only
-                </Typography>
-              )}
+              <Typography variant="body2">
+                <span className={classes.shareabilityLabel}>
+                  {props.shareability.includes('External')
+                    ? 'PUBLIC'
+                    : 'PRIVATE'}
+                </span>
+                {displayPostShareability(props.shareability)}
+              </Typography>
             </div>
           </div>
           <Typography variant="body2">{props.body.value}</Typography>
