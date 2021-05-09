@@ -1,5 +1,6 @@
 import { useMutation } from '@apollo/client';
 import { Grid, makeStyles, Tooltip, Typography } from '@material-ui/core';
+import Alert from '@material-ui/lab/Alert';
 import React from 'react';
 import { Except } from 'type-fest';
 import {
@@ -36,6 +37,7 @@ type UpdateProjectDialogProps = Except<
   'sendIfClean' | 'submitLabel' | 'onSubmit' | 'initialValues' | 'errorHandlers'
 > & {
   project: ProjectOverviewFragment;
+  planChangeId?: string;
 };
 
 const useStyles = makeStyles(({ spacing }) => ({
@@ -46,11 +48,14 @@ const useStyles = makeStyles(({ spacing }) => ({
 
 export const ProjectWorkflowDialog = ({
   project,
+  planChangeId,
   ...props
 }: UpdateProjectDialogProps) => {
   const [updateProject] = useMutation(UpdateProjectDocument);
   const classes = useStyles();
-  const { canBypassTransitions, transitions } = project.step;
+  const { canBypassTransitions, transitions } = planChangeId
+    ? project.projectChanges.step
+    : project.step;
 
   return (
     <DialogForm
@@ -76,6 +81,7 @@ export const ProjectWorkflowDialog = ({
                   (submitAction?.split(':')[0] as ProjectStep | null) ?? step,
               },
             },
+            changeId: planChangeId ? planChangeId : null,
           },
         });
       }}
@@ -84,6 +90,7 @@ export const ProjectWorkflowDialog = ({
         Input: (e) => e.message,
       }}
     >
+      {planChangeId ? <Alert severity="info">You are in CR mode</Alert> : null}
       <SubmitError />
       <Grid container direction="column" spacing={1}>
         {transitions.map((transition, i) => (

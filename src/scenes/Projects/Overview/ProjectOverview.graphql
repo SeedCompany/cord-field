@@ -101,6 +101,14 @@ fragment ProjectOverview on Project {
       canRead
       canEdit
       value
+      transitions(id: $changeId) {
+        to
+        label
+        type
+        disabled
+        disabledReason
+      }
+      canBypassTransitions
     }
     status
   }

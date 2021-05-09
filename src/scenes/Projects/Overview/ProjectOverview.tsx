@@ -240,10 +240,9 @@ export const ProjectOverview: FC = () => {
               ) : projectName.canRead ? (
                 <>
                   {projectName.value}
-                  {projectChanges &&
-                  planChangeId &&
-                  projectChanges.name.value !== projectName.value
-                    ? ` - ${projectChanges.name.value}`
+                  {planChangeId &&
+                  projectChanges?.name.value !== projectName.value
+                    ? ` - ${projectChanges?.name.value}`
                     : null}
                 </>
               ) : (
@@ -423,6 +422,11 @@ export const ProjectOverview: FC = () => {
                 }
               >
                 {displayProjectStep(projectOverviewData?.project.step.value)}
+                {planChangeId &&
+                projectOverviewData?.project.step.value !==
+                  projectChanges?.step.value
+                  ? ` - ${projectChanges?.step.value}`
+                  : null}
               </DataButton>
             </Grid>
           </Grid>
@@ -600,7 +604,11 @@ export const ProjectOverview: FC = () => {
         </div>
       )}
       {workflowProject && (
-        <ProjectWorkflowDialog {...workflowState} project={workflowProject} />
+        <ProjectWorkflowDialog
+          {...workflowState}
+          project={workflowProject}
+          planChangeId={planChangeId}
+        />
       )}
       {projectOverviewData ? (
         <UpdateProjectDialog

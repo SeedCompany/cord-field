@@ -3,7 +3,8 @@ import { useSnackbar } from 'notistack';
 import React from 'react';
 import { Except } from 'type-fest';
 import { addItemToList, PlanChangeStatus } from '../../../../api';
-import { ProjectOverviewFragment } from '../../Overview/ProjectOverview.generated';
+import { ProjectOverviewQuery } from '../../Overview/ProjectOverview.generated';
+import { PlanChangesQuery } from '../List/PlanChanges.generated';
 import {
   CreatePlanChangeDocument,
   CreatePlanChangeMutation,
@@ -19,7 +20,7 @@ type CreatePlanChangeProps = Except<
   >,
   'onSubmit'
 > & {
-  project: ProjectOverviewFragment;
+  project: PlanChangesQuery['project'] | ProjectOverviewQuery['project'];
 };
 
 export const CreatePlanChange = ({

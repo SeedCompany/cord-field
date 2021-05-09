@@ -9,5 +9,6 @@ query PlanChanges($project: ID!, $input: ChangeListInput) {
       canRead
       canCreate
     }
+    status
   }
 }

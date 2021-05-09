@@ -37,12 +37,14 @@ export interface PlanChangeCardProps {
   planChange?: PlanChangeCardFragment;
   onEdit?: () => void;
   className?: string;
+  showCRMode?: boolean;
 }
 
 export const PlanChangeCard: FC<PlanChangeCardProps> = ({
   planChange,
   onEdit,
   className,
+  showCRMode,
 }) => {
   const classes = useStyles();
   const { setPlanChangeId } = usePlanChange();
@@ -88,9 +90,11 @@ export const PlanChangeCard: FC<PlanChangeCardProps> = ({
         <Button disabled={!planChange} color="primary" onClick={onEdit}>
           Edit
         </Button>
-        <Button disabled={!planChange} color="primary" onClick={handleCRMode}>
-          CR Mode
-        </Button>
+        {showCRMode ? (
+          <Button disabled={!planChange} color="primary" onClick={handleCRMode}>
+            CR Mode
+          </Button>
+        ) : null}
         <Typography variant="subtitle2" color="textSecondary">
           {!planChange ? (
             <Skeleton variant="text" width="23ch" />

@@ -15,7 +15,6 @@ import { Fab } from '../../../../components/Fab';
 import { List, useListQuery } from '../../../../components/List';
 import { PlanChangeCard } from '../../../../components/PlanChangeCard';
 import { ProjectBreadcrumb } from '../../../../components/ProjectBreadcrumb';
-import { ProjectMemberCard } from '../../../../components/ProjectMemberCard';
 import { CreatePlanChange } from '../Create/CreatePlanChange';
 import { UpdatePlanChange, UpdatePlanChangeFormParams } from '../Update';
 import { PlanChangesDocument } from './PlanChanges.generated';
@@ -103,9 +102,13 @@ export const PlanChangesList: FC = () => {
                   planChange: planChange,
                 })
               }
+              showCRMode={
+                data!.project.status === 'Active' &&
+                planChange.status.value === 'Pending'
+              }
             />
           )}
-          renderSkeleton={<ProjectMemberCard />}
+          renderSkeleton={<PlanChangeCard />}
         />
       )}
       {planChangeProps && (
