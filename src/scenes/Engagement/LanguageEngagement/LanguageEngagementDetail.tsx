@@ -6,7 +6,6 @@ import {
   Typography,
 } from '@material-ui/core';
 import { ChatOutlined, DateRange, Edit } from '@material-ui/icons';
-import { last } from 'lodash';
 import React, { FC } from 'react';
 import { Helmet } from 'react-helmet-async';
 import {
@@ -30,7 +29,7 @@ import { PeriodicReportSummaryCard } from '../../../components/PeriodicReportSum
 import { ProjectBreadcrumb } from '../../../components/ProjectBreadcrumb';
 import { Redacted } from '../../../components/Redacted';
 import { Link } from '../../../components/Routing';
-import { CalendarDate, Many } from '../../../util';
+import { Many } from '../../../util';
 import { ProductList } from '../../Products/List/ProductList';
 import { CeremonyCard } from '../CeremonyCard';
 import { DeleteEngagement } from '../Delete';
@@ -87,12 +86,6 @@ export const LanguageEngagementDetail: FC<EngagementQuery> = ({
   const editable = canEditAny(engagement);
 
   const date = securedDateRange(engagement.startDate, engagement.endDate);
-
-  const currentQuarterStart = CalendarDate.now().startOf('quarter');
-  const progressDueReport =
-    engagement.progressReports.items.find(
-      (report) => +report.start === +currentQuarterStart
-    ) ?? last(engagement.progressReports.items);
 
   return (
     <>
@@ -256,9 +249,8 @@ export const LanguageEngagementDetail: FC<EngagementQuery> = ({
                 <Grid item xs={6}>
                   <PeriodicReportSummaryCard
                     reportType="Progress"
-                    report={progressDueReport}
-                    loading={!progressDueReport}
-                    total={engagement.progressReports.total}
+                    reports={engagement.progressReports}
+                    loading={!engagement}
                   />
                 </Grid>
               </FileActionsContextProvider>
