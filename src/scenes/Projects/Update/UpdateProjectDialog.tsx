@@ -2,6 +2,7 @@ import { useMutation } from '@apollo/client';
 import { pick } from 'lodash';
 import React, { ComponentType, useMemo } from 'react';
 import { Except, Merge } from 'type-fest';
+import { updateProjectReportsCache } from '.';
 import { SensitivityList, UpdateProject } from '../../../api';
 import {
   DisplayFieldRegionFragment,
@@ -162,7 +163,7 @@ export const UpdateProjectDialog = ({
         };
         await updateProject({
           variables: { input },
-          update: (cache) => {
+          update: (cache, { data }) => {
             if (rest.mouStart === undefined && rest.mouEnd === undefined) {
               return;
             }
@@ -178,6 +179,10 @@ export const UpdateProjectDialog = ({
               });
             }
 
+            updateProjectReportsCache(
+              cache,
+              data?.updateProject.project as any
+            );
             // Adjust cached date ranges of engagements & partnerships
             // since they are based on the project's date range
             updateEngagementDateRanges(cache, project);

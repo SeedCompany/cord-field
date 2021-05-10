@@ -3,7 +3,6 @@ import { Grid, makeStyles, Tooltip, Typography } from '@material-ui/core';
 import { Add, DateRange, Edit, Publish } from '@material-ui/icons';
 import { Skeleton } from '@material-ui/lab';
 import clsx from 'clsx';
-import { last } from 'lodash';
 import React, { FC } from 'react';
 import { useDropzone } from 'react-dropzone';
 import { Helmet } from 'react-helmet-async';
@@ -33,7 +32,7 @@ import { ProjectMembersSummary } from '../../../components/ProjectMembersSummary
 import { Redacted } from '../../../components/Redacted';
 import { SensitivityIcon } from '../../../components/Sensitivity';
 import { TogglePinButton } from '../../../components/TogglePinButton';
-import { CalendarDate, Many } from '../../../util';
+import { Many } from '../../../util';
 import { CreateInternshipEngagement } from '../../Engagement/InternshipEngagement/Create/CreateInternshipEngagement';
 import { CreateLanguageEngagement } from '../../Engagement/LanguageEngagement/Create/CreateLanguageEngagement';
 import { useProjectCurrentDirectory, useUploadProjectFiles } from '../Files';
@@ -127,14 +126,15 @@ export const ProjectOverview: FC = () => {
 
   const [createEngagementState, createEngagement] = useDialog();
 
-  const { data: projectOverviewData, error } = useQuery(
-    ProjectOverviewDocument,
-    {
-      variables: {
-        input: projectId,
-      },
-    }
-  );
+  const {
+    data: projectOverviewData,
+    error,
+    loading: isProjectDataLoading,
+  } = useQuery(ProjectOverviewDocument, {
+    variables: {
+      input: projectId,
+    },
+  });
 
   const engagements = useListQuery(EngagementList, {
     listAt: (data) => data.project.engagements,
@@ -204,21 +204,6 @@ export const ProjectOverview: FC = () => {
   const CreateEngagement = isTranslation
     ? CreateLanguageEngagement
     : CreateInternshipEngagement;
-
-  const currentQuarterStart = CalendarDate.now().startOf('quarter');
-  const currentMonthStart = CalendarDate.now().startOf('month');
-  const financialDueReport =
-    projectOverviewData?.project.financialReports.items.find(
-      (report) =>
-        +report.start ===
-        +(projectOverviewData.project.financialReportPeriod.value === 'Monthly'
-          ? currentMonthStart
-          : currentQuarterStart)
-    ) ?? last(projectOverviewData?.project.financialReports.items);
-  const narrativeDueReport =
-    projectOverviewData?.project.narrativeReports.items.find(
-      (report) => +report.start === +currentQuarterStart
-    ) ?? last(projectOverviewData?.project.narrativeReports.items);
 
   return (
     <main className={classes.root}>
@@ -478,20 +463,18 @@ export const ProjectOverview: FC = () => {
             <Grid item xs={12} md={6}>
               <PeriodicReportSummaryCard
                 reportType="Financial"
-                report={financialDueReport}
+                reports={projectOverviewData?.project.financialReports}
                 reportPeriod={
                   projectOverviewData?.project.financialReportPeriod
                 }
-                loading={!projectOverviewData || !financialDueReport}
-                total={projectOverviewData?.project.financialReports.total}
+                loading={isProjectDataLoading}
               />
             </Grid>
             <Grid item xs={12} md={6}>
               <PeriodicReportSummaryCard
                 reportType="Narrative"
-                report={narrativeDueReport}
-                loading={!projectOverviewData || !narrativeDueReport}
-                total={projectOverviewData?.project.narrativeReports.total}
+                reports={projectOverviewData?.project.narrativeReports}
+                loading={isProjectDataLoading}
               />
             </Grid>
           </Grid>

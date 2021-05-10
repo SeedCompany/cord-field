@@ -19,10 +19,7 @@ import {
 import { PeriodicReportListFragment } from '../../../components/PeriodicReportSummaryCard';
 import { ProjectBreadcrumb } from '../../../components/ProjectBreadcrumb';
 import { SensitivityIcon } from '../../../components/Sensitivity';
-import {
-  FinancialReportsDocument,
-  NarrativeReportsDocument,
-} from './ProjectReports.generated';
+import { ProjectOverviewDocument } from '../Overview/ProjectOverview.generated';
 
 const useStyles = makeStyles(({ spacing, breakpoints }) => ({
   root: {
@@ -49,16 +46,11 @@ const useStyles = makeStyles(({ spacing, breakpoints }) => ({
 export const Reports: FC = () => {
   const classes = useStyles();
   const { projectId = '', reportType = '' } = useParams();
-  const { data } = useQuery(
-    reportType === 'financial'
-      ? FinancialReportsDocument
-      : NarrativeReportsDocument,
-    {
-      variables: {
-        input: projectId,
-      },
-    }
-  );
+  const { data } = useQuery(ProjectOverviewDocument, {
+    variables: {
+      input: projectId,
+    },
+  });
   const fiscalQuarterFormatter = useFiscalQuarterFormater();
   const fiscalMonthFormatter = useFiscalMonthFormater();
   const dateFormatter = useDateFormatter();
