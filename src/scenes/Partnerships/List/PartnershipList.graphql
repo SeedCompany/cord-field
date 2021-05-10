@@ -1,6 +1,11 @@
 query ProjectPartnerships($project: ID!, $input: PartnershipListInput) {
   project(id: $project) {
     ...ProjectBreadcrumb
+    financialReportPeriod {
+      canRead
+      canEdit
+      value
+    }
     partnerships(input: $input) {
       canCreate
       items {

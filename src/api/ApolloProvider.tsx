@@ -72,6 +72,7 @@ export const ApolloProvider: FC = ({ children }) => {
         sessionLink,
         httpLink,
       ]),
+      connectToDevTools: true,
     });
     sessionLink.client = client;
 

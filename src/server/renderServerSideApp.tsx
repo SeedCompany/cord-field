@@ -61,6 +61,7 @@ export const createServerApolloClient = (
     ssrMode: true,
     cache: createCache(),
     link: ApolloLink.from([errorCacheLink, setCookieLink, httpLink]),
+    connectToDevTools: true,
   });
 };
 

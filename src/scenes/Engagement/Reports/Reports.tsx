@@ -66,6 +66,13 @@ export const Reports: FC = () => {
       item,
     })) || [];
 
+  const engagementName =
+    data?.engagement.__typename === 'LanguageEngagement'
+      ? data.engagement.language.value?.displayName.value
+      : data?.engagement.__typename === 'InternshipEngagement'
+      ? data.engagement.intern.value?.fullName
+      : null;
+
   return (
     <div className={classes.root}>
       <Helmet
@@ -73,6 +80,13 @@ export const Reports: FC = () => {
       />
       <Breadcrumbs>
         <ProjectBreadcrumb data={data?.project} />
+        {engagementName && (
+          <Breadcrumb
+            to={`/projects/${data?.project.id}/engagements/${data?.engagement.id}`}
+          >
+            {engagementName}
+          </Breadcrumb>
+        )}
         <Breadcrumb to=".">{reportTypeName}</Breadcrumb>
       </Breadcrumbs>
 

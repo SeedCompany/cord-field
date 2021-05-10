@@ -5,6 +5,7 @@ import clsx from 'clsx';
 import React, { FC, MouseEvent } from 'react';
 import { useDropzone } from 'react-dropzone';
 import { ReportType, SecuredReportPeriod } from '../../api';
+import { CalendarDate } from '../../util';
 import {
   FileActionsPopup as ActionsMenu,
   FileAction,
@@ -21,7 +22,7 @@ import {
 import { HugeIcon } from '../Icons';
 import { NarrativeReportIcon } from '../Icons/NarrativeReportIcon';
 import { CardActionAreaLink } from '../Routing';
-import { PeriodicReportFragment } from './PeriodicReport.generated';
+import { PeriodicReportListFragment } from './PeriodicReport.generated';
 import { useUploadPeriodicReport } from './useUploadPeriodicReport';
 
 const useStyles = makeStyles(({ spacing, palette }) => ({
@@ -30,6 +31,7 @@ const useStyles = makeStyles(({ spacing, palette }) => ({
     height: '100%',
     display: 'flex',
     position: 'relative',
+    outline: 'none',
   },
   topArea: {
     flex: 1,
@@ -84,7 +86,7 @@ const useStyles = makeStyles(({ spacing, palette }) => ({
 }));
 
 export interface PeriodicReportSummaryCardProps {
-  report?: PeriodicReportFragment;
+  reports?: PeriodicReportListFragment;
   reportType: ReportType;
   reportPeriod?: SecuredReportPeriod;
   loading?: boolean;
@@ -92,7 +94,7 @@ export interface PeriodicReportSummaryCardProps {
 }
 
 export const PeriodicReportSummaryCard: FC<PeriodicReportSummaryCardProps> = ({
-  report,
+  reports,
   reportType,
   reportPeriod,
   loading,
@@ -107,8 +109,22 @@ export const PeriodicReportSummaryCard: FC<PeriodicReportSummaryCardProps> = ({
 
   const downloadFile = useDownloadFile();
 
+  const interval = reportPeriod?.value === 'Monthly' ? 'month' : 'quarter';
+  const dueReport = reports?.items.find(
+    (report) => +report.start === +CalendarDate.now().startOf(interval)
+  );
+  const dueDate = dueReport?.end.plus({ days: 1 }).endOf('month');
+  const nextDueReport = dueReport
+    ? reports?.items.find(
+        (report) => +report.start === +dueReport.end.plus({ days: 1 })
+      )
+    : null;
+  const nextDueDate = nextDueReport?.end.plus({ days: 1 }).endOf('month');
+
   const onVersionUpload = (files: File[]) => {
-    uploadPeriodicReport({ files, parentId: report!.id });
+    if (dueReport) {
+      uploadPeriodicReport({ files, parentId: dueReport.id });
+    }
   };
 
   const { getRootProps, getInputProps, open: openFileBrowser } = useDropzone({
@@ -124,12 +140,12 @@ export const PeriodicReportSummaryCard: FC<PeriodicReportSummaryCardProps> = ({
       ? 'Narrative Report'
       : 'Planning and Progress';
 
-  const reportFile = report?.reportFile.value;
-  const standardFileActions = !report?.reportFile
+  const reportFile = dueReport?.reportFile.value;
+  const standardFileActions = !dueReport?.reportFile
     ? []
     : getPermittedFileActions(
-        report.reportFile.canRead,
-        report.reportFile.canEdit
+        dueReport.reportFile.canRead,
+        dueReport.reportFile.canEdit
       );
   const noRenameFileActions = standardFileActions.filter(
     (action) => action !== FileAction.Rename
@@ -150,8 +166,6 @@ export const PeriodicReportSummaryCard: FC<PeriodicReportSummaryCardProps> = ({
     }
   };
 
-  const isFetching = loading && !!total;
-
   return (
     <Card className={classes.root} {...getRootProps()}>
       <input {...getInputProps()} name="report_file_uploader" />
@@ -162,26 +176,26 @@ export const PeriodicReportSummaryCard: FC<PeriodicReportSummaryCardProps> = ({
             ? 'reports'
             : `reports/${reportType.toLowerCase()}`
         }
-        disabled={!report}
+        disabled={!reports?.total}
         className={classes.topArea}
       >
-        <HugeIcon icon={Icon} loading={isFetching} />
+        <HugeIcon icon={Icon} loading={loading} />
 
         <div className={classes.rightContent}>
           <Typography color="initial" variant="h4" className={classes.title}>
-            {isFetching ? <Skeleton width="80%" /> : title}
+            {loading ? <Skeleton width="80%" /> : title}
           </Typography>
           <Typography
             color="initial"
             variant="h5"
             className={classes.reportPeriod}
           >
-            {isFetching ? (
+            {loading ? (
               <Skeleton animation="pulse" />
             ) : reportPeriod?.value === 'Monthly' ? (
-              fiscalMonthFormatter(report?.start)
+              fiscalMonthFormatter(dueReport?.start)
             ) : (
-              fiscalQuarterFormatter(report?.start)
+              fiscalQuarterFormatter(dueReport?.start)
             )}
           </Typography>
           <Typography
@@ -192,7 +206,7 @@ export const PeriodicReportSummaryCard: FC<PeriodicReportSummaryCardProps> = ({
               reportFile ? classes.grayText : undefined
             )}
           >
-            {isFetching ? (
+            {loading ? (
               <Skeleton animation="pulse" />
             ) : reportFile ? (
               <>
@@ -200,8 +214,8 @@ export const PeriodicReportSummaryCard: FC<PeriodicReportSummaryCardProps> = ({
                 <br />
                 <span>{dateTimeFormatter(reportFile.modifiedAt)}</span>
               </>
-            ) : report ? (
-              `Report Due ${dateFormatter(report.end)}`
+            ) : dueReport ? (
+              `Report Due ${dateFormatter(dueDate)}`
             ) : (
               'No Report Available'
             )}
@@ -210,7 +224,7 @@ export const PeriodicReportSummaryCard: FC<PeriodicReportSummaryCardProps> = ({
             color="primary"
             className={classes.fileBtn}
             startIcon={
-              loading ? null : report?.reportFile.value ? (
+              loading || !dueReport ? null : dueReport.reportFile.value ? (
                 <GetAppSharp />
               ) : (
                 <PublishSharp />
@@ -218,12 +232,12 @@ export const PeriodicReportSummaryCard: FC<PeriodicReportSummaryCardProps> = ({
             }
             onClick={uploadOrDownloadReportFile}
           >
-            {isFetching ? (
+            {loading ? (
               <Skeleton width="100%" />
-            ) : report?.reportFile.value ? (
+            ) : dueReport?.reportFile.value ? (
               'Download File'
             ) : (
-              report && 'Upload File'
+              dueReport && 'Upload File'
             )}
           </Button>
           <Typography
@@ -231,10 +245,10 @@ export const PeriodicReportSummaryCard: FC<PeriodicReportSummaryCardProps> = ({
             variant="h6"
             className={classes.reportDue}
           >
-            {isFetching ? (
+            {loading ? (
               <Skeleton animation="pulse" />
             ) : (
-              report && 'Next Report Due 00-00-000'
+              nextDueReport && `Next Report Due ${dateFormatter(nextDueDate)}`
             )}
           </Typography>
           <Typography
@@ -242,7 +256,7 @@ export const PeriodicReportSummaryCard: FC<PeriodicReportSummaryCardProps> = ({
             variant="h6"
             className={classes.reportsCount}
           >
-            {isFetching ? <Skeleton animation="pulse" /> : total! > 0 && total}
+            {loading ? <Skeleton animation="pulse" /> : total! > 0 && total}
           </Typography>
         </div>
       </CardActionAreaLink>
