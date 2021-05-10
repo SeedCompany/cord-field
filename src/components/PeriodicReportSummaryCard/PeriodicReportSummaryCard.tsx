@@ -90,7 +90,6 @@ export interface PeriodicReportSummaryCardProps {
   reportType: ReportType;
   reportPeriod?: SecuredReportPeriod;
   loading?: boolean;
-  total?: number;
 }
 
 export const PeriodicReportSummaryCard: FC<PeriodicReportSummaryCardProps> = ({
@@ -98,7 +97,6 @@ export const PeriodicReportSummaryCard: FC<PeriodicReportSummaryCardProps> = ({
   reportType,
   reportPeriod,
   loading,
-  total,
 }) => {
   const classes = useStyles();
   const dateFormatter = useDateFormatter();
@@ -256,7 +254,7 @@ export const PeriodicReportSummaryCard: FC<PeriodicReportSummaryCardProps> = ({
             variant="h6"
             className={classes.reportsCount}
           >
-            {loading ? <Skeleton animation="pulse" /> : total! > 0 && total}
+            {loading ? <Skeleton animation="pulse" /> : reports?.total || ''}
           </Typography>
         </div>
       </CardActionAreaLink>
