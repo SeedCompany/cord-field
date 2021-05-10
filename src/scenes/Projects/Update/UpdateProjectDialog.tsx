@@ -2,7 +2,6 @@ import { useMutation } from '@apollo/client';
 import { pick } from 'lodash';
 import React, { ComponentType, useMemo } from 'react';
 import { Except, Merge } from 'type-fest';
-import { updateProjectReportsCache } from '.';
 import { SensitivityList, UpdateProject } from '../../../api';
 import {
   DisplayFieldRegionFragment,
@@ -30,6 +29,7 @@ import {
 } from '../DateRangeCache';
 import { ProjectOverviewFragment } from '../Overview/ProjectOverview.generated';
 import { UpdateProjectDocument } from './UpdateProject.generated';
+import { updateProjectReportsCache } from './useProjectUpdate';
 
 export type EditableProjectField = ExtractStrict<
   keyof UpdateProject,
