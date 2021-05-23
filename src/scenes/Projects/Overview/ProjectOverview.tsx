@@ -145,7 +145,9 @@ export const ProjectOverview: FC = () => {
     listAt: (data) => data.project.engagements,
     variables: {
       project: projectId,
+      changeId: planChangeId ? planChangeId : null,
     },
+    fetchPolicy: 'no-cache',
   });
 
   const projectName = projectOverviewData?.project.name;

@@ -11,6 +11,7 @@ import {
   LanguageField,
   LanguageLookupItem,
 } from '../../../../components/form/Lookup';
+import { usePlanChange } from '../../../../components/PlanChangeCard';
 import { callAll } from '../../../../util';
 import { CreateLanguageEngagementDocument } from './CreateLanguageEngagement.generated';
 import { recalculateSensitivity } from './recalculateSensitivity';
@@ -32,6 +33,7 @@ export const CreateLanguageEngagement = ({
   projectId,
   ...props
 }: CreateLanguageEngagementProps) => {
+  const { planChangeId } = usePlanChange();
   const [createEngagement] = useMutation(CreateLanguageEngagementDocument);
   const submit = async ({ engagement }: CreateLanguageEngagementFormValues) => {
     const projectRef = {
@@ -46,6 +48,7 @@ export const CreateLanguageEngagement = ({
       variables: {
         input: {
           engagement: { projectId, languageId: engagement.languageId.id },
+          changeId: planChangeId ? planChangeId : null,
         },
       },
       update: callAll(

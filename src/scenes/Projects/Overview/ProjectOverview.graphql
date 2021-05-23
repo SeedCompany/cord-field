@@ -128,10 +128,11 @@ query ProjectPostListOverview($project: ID!, $input: PostListInput) {
 query ProjectEngagementListOverview(
   $project: ID!
   $input: EngagementListInput
+  $changeId: ID
 ) {
   project(id: $project) {
     id
-    engagements(input: $input) {
+    engagements(input: $input, changeId: $changeId) {
       ...ProjectEngagementList
     }
   }
