@@ -70,11 +70,12 @@ export const EditProduct = () => {
       scriptureReferences.value
     );
 
-    const referencesWithoutFullTestament = scriptureReferencesWithoutTypename.filter(
-      (reference) =>
-        !isEqual(reference, fullOldTestamentRange) &&
-        !isEqual(reference, fullNewTestamentRange)
-    );
+    const referencesWithoutFullTestament =
+      scriptureReferencesWithoutTypename.filter(
+        (reference) =>
+          !isEqual(reference, fullOldTestamentRange) &&
+          !isEqual(reference, fullNewTestamentRange)
+      );
 
     return {
       product: {

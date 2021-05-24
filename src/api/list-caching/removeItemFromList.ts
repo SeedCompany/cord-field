@@ -24,39 +24,41 @@ import { ListModifier, modifyList, ModifyListOptions } from './modifyList';
  *   })
  * })
  */
-export const removeItemFromList = <
-  OwningObj extends { id: string },
-  Item extends { __typename?: string; id: string },
-  Args
->({
-  listId,
-  filter,
-  item,
-}: Except<ModifyListOptions<OwningObj, Args>, 'cache' | 'modifier'> & {
-  item: Item;
-}): MutationUpdaterFn<unknown> => (cache, { data }) => {
-  if (!data) {
-    return;
-  }
-
-  const modifier: ListModifier = (existing, { readField }) => {
-    if (
-      !existing ||
-      !existing.items.some((ref) => readField('id', ref) === item.id)
-    ) {
-      return existing;
+export const removeItemFromList =
+  <
+    OwningObj extends { id: string },
+    Item extends { __typename?: string; id: string },
+    Args
+  >({
+    listId,
+    filter,
+    item,
+  }: Except<ModifyListOptions<OwningObj, Args>, 'cache' | 'modifier'> & {
+    item: Item;
+  }): MutationUpdaterFn<unknown> =>
+  (cache, { data }) => {
+    if (!data) {
+      return;
     }
 
-    const newList = existing.items.filter(
-      (ref) => readField('id', ref) !== item.id
-    );
+    const modifier: ListModifier = (existing, { readField }) => {
+      if (
+        !existing ||
+        !existing.items.some((ref) => readField('id', ref) === item.id)
+      ) {
+        return existing;
+      }
 
-    return {
-      ...existing,
-      total: Number(existing.total) - 1,
-      items: newList,
+      const newList = existing.items.filter(
+        (ref) => readField('id', ref) !== item.id
+      );
+
+      return {
+        ...existing,
+        total: Number(existing.total) - 1,
+        items: newList,
+      };
     };
-  };
 
-  modifyList({ cache, listId, modifier, filter });
-};
+    modifyList({ cache, listId, modifier, filter });
+  };

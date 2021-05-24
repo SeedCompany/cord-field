@@ -6,9 +6,8 @@ export type ServerData = any;
 
 export type FetchDataFn = (req: Request) => Promisable<Partial<ServerData>>;
 
-const ServerDataContext = createContext<{ data: ServerData } | undefined>(
-  undefined
-);
+const ServerDataContext =
+  createContext<{ data: ServerData } | undefined>(undefined);
 
 export const ServerDataProvider: FC<{ value: ServerData }> = (props) => {
   const value = useMemo(

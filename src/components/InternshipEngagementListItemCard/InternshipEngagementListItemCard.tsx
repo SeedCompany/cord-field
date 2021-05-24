@@ -62,87 +62,89 @@ const useStyles = makeStyles(({ spacing }) => {
   };
 });
 
-export type InternshipEngagementListItemCardProps = InternshipEngagementListItemFragment & {
-  projectId: string;
-  className?: string;
-};
+export type InternshipEngagementListItemCardProps =
+  InternshipEngagementListItemFragment & {
+    projectId: string;
+    className?: string;
+  };
 
-export const InternshipEngagementListItemCard: FC<InternshipEngagementListItemCardProps> = (
-  props
-) => {
-  const dateFormatter = useDateFormatter();
-  const classes = useStyles();
-  const pic = useRandomPicture({ seed: props.id, width: 300, height: 200 });
+export const InternshipEngagementListItemCard: FC<InternshipEngagementListItemCardProps> =
+  (props) => {
+    const dateFormatter = useDateFormatter();
+    const classes = useStyles();
+    const pic = useRandomPicture({ seed: props.id, width: 300, height: 200 });
 
-  const fullName = props.intern.value?.fullName;
-  const endDate = getEndDate(props);
-  const position = props.position.value;
-  const country = props.countryOfOrigin.value?.name.value;
+    const fullName = props.intern.value?.fullName;
+    const endDate = getEndDate(props);
+    const position = props.position.value;
+    const country = props.countryOfOrigin.value?.name.value;
 
-  return (
-    <Card className={clsx(classes.root, props.className)}>
-      <CardActionAreaLink
-        to={`/projects/${props.projectId}/engagements/${props.id}`}
-        className={classes.card}
-      >
-        <div className={classes.media}>
-          <Picture fit="cover" {...pic} />
-        </div>
-        <CardContent className={classes.cardContent}>
-          <Grid
-            container
-            direction="column"
-            justify="space-between"
-            spacing={1}
-            className={classes.leftContent}
-          >
-            <Grid item>
-              <Typography variant="h4">{fullName}</Typography>
-            </Grid>
-            {(country || position) && (
-              <Grid item>
-                {position && (
-                  <Typography variant="body2">{startCase(position)}</Typography>
-                )}
-                {country && (
-                  <Typography variant="body2" color="primary">
-                    {country}
-                  </Typography>
-                )}
-              </Grid>
-            )}
-            <Grid item>
-              <DisplaySimpleProperty
-                label="Status"
-                value={displayEngagementStatus(props.status.value)}
-              />
-            </Grid>
-            <Grid item>
-              <Typography
-                variant="body2"
-                color="primary"
-                className={classes.centerItems}
-              >
-                <PencilCircledIcon className={classes.iconSpacing} />
-                Edit Info
-              </Typography>
-            </Grid>
-          </Grid>
-          <div className={classes.rightContent}>
-            <DisplaySimpleProperty aria-hidden="true" />
-            {endDate ? (
-              <DisplaySimpleProperty
-                label={endDate.label}
-                value={dateFormatter(endDate.value)}
-                ValueProps={{ color: 'primary' }}
-              />
-            ) : null}
+    return (
+      <Card className={clsx(classes.root, props.className)}>
+        <CardActionAreaLink
+          to={`/projects/${props.projectId}/engagements/${props.id}`}
+          className={classes.card}
+        >
+          <div className={classes.media}>
+            <Picture fit="cover" {...pic} />
           </div>
-        </CardContent>
-      </CardActionAreaLink>
-    </Card>
-  );
-};
+          <CardContent className={classes.cardContent}>
+            <Grid
+              container
+              direction="column"
+              justify="space-between"
+              spacing={1}
+              className={classes.leftContent}
+            >
+              <Grid item>
+                <Typography variant="h4">{fullName}</Typography>
+              </Grid>
+              {(country || position) && (
+                <Grid item>
+                  {position && (
+                    <Typography variant="body2">
+                      {startCase(position)}
+                    </Typography>
+                  )}
+                  {country && (
+                    <Typography variant="body2" color="primary">
+                      {country}
+                    </Typography>
+                  )}
+                </Grid>
+              )}
+              <Grid item>
+                <DisplaySimpleProperty
+                  label="Status"
+                  value={displayEngagementStatus(props.status.value)}
+                />
+              </Grid>
+              <Grid item>
+                <Typography
+                  variant="body2"
+                  color="primary"
+                  className={classes.centerItems}
+                >
+                  <PencilCircledIcon className={classes.iconSpacing} />
+                  Edit Info
+                </Typography>
+              </Grid>
+            </Grid>
+            <div className={classes.rightContent}>
+              <DisplaySimpleProperty aria-hidden="true" />
+              {endDate ? (
+                <DisplaySimpleProperty
+                  label={endDate.label}
+                  value={dateFormatter(endDate.value)}
+                  ValueProps={{ color: 'primary' }}
+                />
+              ) : null}
+            </div>
+          </CardContent>
+        </CardActionAreaLink>
+      </Card>
+    );
+  };
 
 const getEndDate = (eng: InternshipEngagementListItemFragment) => {
   const status = eng.status.value;

@@ -64,14 +64,10 @@ export const LanguageEngagementDetail: FC<EngagementQuery> = ({
 }) => {
   const classes = useStyles();
 
-  const [editState, show, editField] = useDialog<
-    Many<EditableEngagementField>
-  >();
-  const [
-    workflowState,
-    openWorkflow,
-    workflowEngagement,
-  ] = useDialog<Engagement>();
+  const [editState, show, editField] =
+    useDialog<Many<EditableEngagementField>>();
+  const [workflowState, openWorkflow, workflowEngagement] =
+    useDialog<Engagement>();
 
   const formatDate = useDateFormatter();
   const formatDateTime = useDateTimeFormatter();

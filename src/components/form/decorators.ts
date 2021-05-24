@@ -156,31 +156,31 @@ export function blurOnSubmit<T, I>(form: FormApi<T, I>): Unsubscribe {
  * value continues to match source field. This allows dest to be in sync until
  * it is changed by user.
  */
-export const matchFieldIfSame = (source: string, dest: string) => <T, I>(
-  form: FormApi<T, I>
-): Unsubscribe => {
-  let prevInitialValues: I;
-  let prevValues: T;
-  return form.subscribe(
-    ({ initialValues, values, active }) => {
-      if (!prevValues || prevInitialValues !== initialValues) {
-        prevValues = (initialValues as unknown) as T;
-      }
-      prevInitialValues = initialValues;
-      if (active === source) {
-        const prevSrc = get(prevValues, source);
-        const prevDest = get(prevValues, dest);
-        const newA = get(values, source);
-        if (prevSrc !== newA && prevDest === prevSrc) {
-          form.change(dest as keyof T, newA);
+export const matchFieldIfSame =
+  (source: string, dest: string) =>
+  <T, I>(form: FormApi<T, I>): Unsubscribe => {
+    let prevInitialValues: I;
+    let prevValues: T;
+    return form.subscribe(
+      ({ initialValues, values, active }) => {
+        if (!prevValues || prevInitialValues !== initialValues) {
+          prevValues = initialValues as unknown as T;
         }
+        prevInitialValues = initialValues;
+        if (active === source) {
+          const prevSrc = get(prevValues, source);
+          const prevDest = get(prevValues, dest);
+          const newA = get(values, source);
+          if (prevSrc !== newA && prevDest === prevSrc) {
+            form.change(dest as keyof T, newA);
+          }
+        }
+        prevValues = values;
+      },
+      {
+        values: true,
+        initialValues: true,
+        active: true,
       }
-      prevValues = values;
-    },
-    {
-      values: true,
-      initialValues: true,
-      active: true,
-    }
-  );
-};
+    );
+  };

@@ -143,9 +143,10 @@ export const EditPartner = ({
     [partner]
   );
 
-  const editFields = useMemo(() => many(editFieldsProp ?? []), [
-    editFieldsProp,
-  ]);
+  const editFields = useMemo(
+    () => many(editFieldsProp ?? []),
+    [editFieldsProp]
+  );
 
   return (
     <DialogForm<PartnerFormValues>

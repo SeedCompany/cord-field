@@ -57,11 +57,17 @@ export function AutocompleteField<
   type Val = Value<T, Multiple, DisableClearable, FreeSolo>;
 
   const selectOnFocus = props.selectOnFocus ?? !props.freeSolo;
-  const andSelectOnFocus = useCallback((el) => selectOnFocus && el.select(), [
-    selectOnFocus,
-  ]);
+  const andSelectOnFocus = useCallback(
+    (el) => selectOnFocus && el.select(),
+    [selectOnFocus]
+  );
 
-  const { input: field, meta, ref, rest: autocompleteProps } = useField({
+  const {
+    input: field,
+    meta,
+    ref,
+    rest: autocompleteProps,
+  } = useField({
     ...props,
     multiple,
     required,

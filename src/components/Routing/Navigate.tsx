@@ -56,9 +56,8 @@ interface ServerLocationContextType {
   statusCode?: number;
 }
 
-const ServerLocationContext = createContext<
-  ServerLocationContextType | undefined
->(undefined);
+const ServerLocationContext =
+  createContext<ServerLocationContextType | undefined>(undefined);
 
 export class ServerLocation {
   private context?: ServerLocationContextType;

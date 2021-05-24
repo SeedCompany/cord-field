@@ -125,7 +125,11 @@ export const PeriodicReportSummaryCard: FC<PeriodicReportSummaryCardProps> = ({
     }
   };
 
-  const { getRootProps, getInputProps, open: openFileBrowser } = useDropzone({
+  const {
+    getRootProps,
+    getInputProps,
+    open: openFileBrowser,
+  } = useDropzone({
     onDrop: onVersionUpload,
     noClick: true,
   });

@@ -107,9 +107,8 @@ export const PartnerDetail = () => {
   const partner = data?.partner;
   const name = partner?.organization.value?.name.value;
 
-  const [editPartnerState, editPartner, editField] = useDialog<
-    Many<EditablePartnerField>
-  >();
+  const [editPartnerState, editPartner, editField] =
+    useDialog<Many<EditablePartnerField>>();
 
   return (
     <main className={classes.root}>

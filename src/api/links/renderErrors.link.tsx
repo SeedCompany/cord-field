@@ -22,38 +22,37 @@ export const useErrorRendererLink = () => {
   return link;
 };
 
-const errorRenderer = ({
-  enqueueSnackbar,
-  closeSnackbar,
-}: Snackbar): ErrorHandler => ({ graphQLErrors, networkError }) => {
-  if (networkError?.message === 'Failed to fetch') {
-    enqueueSnackbar('Unable to communicate with CORD Platform', {
-      variant: 'error',
-      preventDuplicate: true,
-    });
-    return;
-  }
-
-  for (const gqlError of graphQLErrors || []) {
-    const ext = gqlError.extensions ?? {};
-    const schemaError = ext.code === 'INTERNAL_SERVER_ERROR';
-
-    if (!schemaError && ext.status < 500) {
-      continue;
+const errorRenderer =
+  ({ enqueueSnackbar, closeSnackbar }: Snackbar): ErrorHandler =>
+  ({ graphQLErrors, networkError }) => {
+    if (networkError?.message === 'Failed to fetch') {
+      enqueueSnackbar('Unable to communicate with CORD Platform', {
+        variant: 'error',
+        preventDuplicate: true,
+      });
+      return;
     }
 
-    const trace: string[] = ext.exception?.stacktrace ?? [];
-    if (trace.length > 0 && !schemaError) {
-      console.error(trace.join('\n'));
+    for (const gqlError of graphQLErrors || []) {
+      const ext = gqlError.extensions ?? {};
+      const schemaError = ext.code === 'INTERNAL_SERVER_ERROR';
+
+      if (!schemaError && ext.status < 500) {
+        continue;
+      }
+
+      const trace: string[] = ext.exception?.stacktrace ?? [];
+      if (trace.length > 0 && !schemaError) {
+        console.error(trace.join('\n'));
+      }
+      enqueueSnackbar(gqlError.message, {
+        variant: 'error',
+        persist: true,
+        action: (key: string) => (
+          <IconButton color="inherit" onClick={() => closeSnackbar(key)}>
+            <Close />
+          </IconButton>
+        ),
+      });
     }
-    enqueueSnackbar(gqlError.message, {
-      variant: 'error',
-      persist: true,
-      action: (key: string) => (
-        <IconButton color="inherit" onClick={() => closeSnackbar(key)}>
-          <Close />
-        </IconButton>
-      ),
-    });
-  }
-};
+  };

@@ -19,6 +19,9 @@
  * .filter(isTypename<Type>('name'))
  * ```
  */
-export const isTypename = <Type extends { __typename?: string }>(
-  name: Type extends { __typename?: infer Name } ? Name : never
-) => (obj: { __typename?: string }): obj is Type => obj.__typename === name;
+export const isTypename =
+  <Type extends { __typename?: string }>(
+    name: Type extends { __typename?: infer Name } ? Name : never
+  ) =>
+  (obj: { __typename?: string }): obj is Type =>
+    obj.__typename === name;

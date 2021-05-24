@@ -58,87 +58,89 @@ const useStyles = makeStyles(({ spacing }) => {
   };
 });
 
-export type LanguageEngagementListItemCardProps = LanguageEngagementListItemFragment & {
-  projectId: string;
-  className?: string;
-};
+export type LanguageEngagementListItemCardProps =
+  LanguageEngagementListItemFragment & {
+    projectId: string;
+    className?: string;
+  };
 
-export const LanguageEngagementListItemCard: FC<LanguageEngagementListItemCardProps> = ({
-  id,
-  language: securedLanguage,
-  className,
-  projectId,
-  status,
-  products,
-}) => {
-  const numberFormatter = useNumberFormatter();
-  const classes = useStyles();
+export const LanguageEngagementListItemCard: FC<LanguageEngagementListItemCardProps> =
+  ({
+    id,
+    language: securedLanguage,
+    className,
+    projectId,
+    status,
+    products,
+  }) => {
+    const numberFormatter = useNumberFormatter();
+    const classes = useStyles();
 
-  const language = securedLanguage.value;
-  const name = language?.name.value ?? language?.displayName.value;
-  const population = language?.population.value;
-  const registryOfDialectsCode = language?.registryOfDialectsCode.value;
-  const ethnologueCode = language?.ethnologue.code.value;
+    const language = securedLanguage.value;
+    const name = language?.name.value ?? language?.displayName.value;
+    const population = language?.population.value;
+    const registryOfDialectsCode = language?.registryOfDialectsCode.value;
+    const ethnologueCode = language?.ethnologue.code.value;
 
-  return (
-    <Card className={clsx(classes.root, className)}>
-      <CardActionAreaLink
-        to={`/projects/${projectId}/engagements/${id}`}
-        className={classes.card}
-      >
-        <CardContent className={classes.cardContent}>
-          <Grid
-            container
-            direction="column"
-            justify="space-between"
-            spacing={1}
-            className={classes.leftContent}
-          >
-            <Grid item>
-              <Typography variant="h4">{name}</Typography>
-            </Grid>
-            <DisplaySimpleProperty
-              label="Registry Of Dialects Code"
-              value={registryOfDialectsCode}
-              wrap={(node) => <Grid item>{node}</Grid>}
-            />
-            <DisplaySimpleProperty
-              label="Ethnologue Code"
-              value={ethnologueCode}
-              wrap={(node) => <Grid item>{node}</Grid>}
-            />
-            <DisplaySimpleProperty
-              label="Population"
-              value={numberFormatter(population)}
-              wrap={(node) => <Grid item>{node}</Grid>}
-            />
-            <DisplaySimpleProperty
-              label="Status"
-              value={displayEngagementStatus(status.value)}
-              wrap={(node) => <Grid item>{node}</Grid>}
-            />
-          </Grid>
-          <div className={classes.rightContent}>
-            <DisplaySimpleProperty aria-hidden="true" />
-            <div>
-              <Typography variant="h1">
-                {numberFormatter(products.total)}
-              </Typography>
-              <Typography variant="body2" color="primary">
-                Products
-              </Typography>
-            </div>
-          </div>
-        </CardContent>
-      </CardActionAreaLink>
-      <CardActions>
-        <ButtonLink
+    return (
+      <Card className={clsx(classes.root, className)}>
+        <CardActionAreaLink
           to={`/projects/${projectId}/engagements/${id}`}
-          color="primary"
+          className={classes.card}
         >
-          View Details
-        </ButtonLink>
-      </CardActions>
-    </Card>
-  );
-};
+          <CardContent className={classes.cardContent}>
+            <Grid
+              container
+              direction="column"
+              justify="space-between"
+              spacing={1}
+              className={classes.leftContent}
+            >
+              <Grid item>
+                <Typography variant="h4">{name}</Typography>
+              </Grid>
+              <DisplaySimpleProperty
+                label="Registry Of Dialects Code"
+                value={registryOfDialectsCode}
+                wrap={(node) => <Grid item>{node}</Grid>}
+              />
+              <DisplaySimpleProperty
+                label="Ethnologue Code"
+                value={ethnologueCode}
+                wrap={(node) => <Grid item>{node}</Grid>}
+              />
+              <DisplaySimpleProperty
+                label="Population"
+                value={numberFormatter(population)}
+                wrap={(node) => <Grid item>{node}</Grid>}
+              />
+              <DisplaySimpleProperty
+                label="Status"
+                value={displayEngagementStatus(status.value)}
+                wrap={(node) => <Grid item>{node}</Grid>}
+              />
+            </Grid>
+            <div className={classes.rightContent}>
+              <DisplaySimpleProperty aria-hidden="true" />
+              <div>
+                <Typography variant="h1">
+                  {numberFormatter(products.total)}
+                </Typography>
+                <Typography variant="body2" color="primary">
+                  Products
+                </Typography>
+              </div>
+            </div>
+          </CardContent>
+        </CardActionAreaLink>
+        <CardActions>
+          <ButtonLink
+            to={`/projects/${projectId}/engagements/${id}`}
+            color="primary"
+          >
+            View Details
+          </ButtonLink>
+        </CardActions>
+      </Card>
+    );
+  };

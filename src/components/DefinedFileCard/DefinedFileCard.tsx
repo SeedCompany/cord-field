@@ -132,13 +132,8 @@ const FileCardMeta: FC<FileCardMetaProps> = ({
 
 export const DefinedFileCard = (props: DefinedFileCardProps) => {
   const classes = useStyles();
-  const {
-    title,
-    resourceType,
-    securedFile,
-    uploadMutationDocument,
-    parentId,
-  } = props;
+  const { title, resourceType, securedFile, uploadMutationDocument, parentId } =
+    props;
   const { value: file, canRead, canEdit } = securedFile;
 
   const uploadFiles = useUploadFiles();

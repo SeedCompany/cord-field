@@ -25,14 +25,18 @@ import {
 } from './schema.generated';
 
 // Helper to display enums in a generic way
-const displayEnum = <T extends string>() => (enumVal: Nullable<T>) =>
-  startCase(enumVal ?? undefined);
+const displayEnum =
+  <T extends string>() =>
+  (enumVal: Nullable<T>) =>
+    startCase(enumVal ?? undefined);
 
 export const displayStatus = displayEnum<ProjectStatus>();
 export const displayProjectStep = displayEnum<ProjectStep>();
-export const displayPartnershipStatus = displayEnum<PartnershipAgreementStatus>();
+export const displayPartnershipStatus =
+  displayEnum<PartnershipAgreementStatus>();
 export const displayPartnerType = displayEnum<PartnerType>();
-export const displayFinancialReportingType = displayEnum<FinancialReportingType>();
+export const displayFinancialReportingType =
+  displayEnum<FinancialReportingType>();
 export const displayEngagementStatus = displayEnum<EngagementStatus>();
 export const displayRole = displayEnum<Role>();
 export const displayRoles = (roles: readonly Role[]) =>

@@ -10,6 +10,6 @@ type LazyTable = (<RowData extends Record<string, any>>(
 ) => ReactElement) &
   LoadableComponentMethods<TableProps<any>>;
 
-export const Table = (loadable(() => import('./Table'), {
+export const Table = loadable(() => import('./Table'), {
   fallback: <TableLoading />,
-}) as unknown) as LazyTable;
+}) as unknown as LazyTable;

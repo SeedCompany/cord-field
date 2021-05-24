@@ -36,68 +36,70 @@ import { sortingFromArgs } from './util';
  *   })
  * })
  */
-export const addItemToList = <
-  OwningObj extends Entity,
-  Item extends Entity,
-  MutationOutput,
-  Args = InputArg<SortableListInput>
->({
-  listId,
-  filter,
-  outputToItem,
-}: Except<ModifyListOptions<OwningObj, Args>, 'cache' | 'modifier'> & {
-  // A function describing how to get to the item from the mutation's result
-  outputToItem: (out: MutationOutput) => Item;
-}): MutationUpdaterFn<MutationOutput> => (cache, { data }) => {
-  if (!data) {
-    return;
-  }
-
-  const newItem = outputToItem(data);
-
-  const modifier: ListModifier = (
-    existing,
-    { readField, storeFieldName, toReference }
-  ) => {
-    if (
-      !existing ||
-      existing.items.some((ref) => readField('id', ref) === newItem.id)
-    ) {
-      return existing;
-    }
-
-    // @ts-expect-error type is missing index signature, our type is actually narrower
-    const newItemRef = toReference(newItem);
-    if (!newItemRef) {
+export const addItemToList =
+  <
+    OwningObj extends Entity,
+    Item extends Entity,
+    MutationOutput,
+    Args = InputArg<SortableListInput>
+  >({
+    listId,
+    filter,
+    outputToItem,
+  }: Except<ModifyListOptions<OwningObj, Args>, 'cache' | 'modifier'> & {
+    // A function describing how to get to the item from the mutation's result
+    outputToItem: (out: MutationOutput) => Item;
+  }): MutationUpdaterFn<MutationOutput> =>
+  (cache, { data }) => {
+    if (!data) {
       return;
     }
 
-    let newList = [...existing.items, newItemRef];
+    const newItem = outputToItem(data);
 
-    // Sort the new item appropriately given the list's sort/order params
-    const args = argsFromStoreFieldName(storeFieldName);
-    const { sort, order } = sortingFromArgs(
-      args,
-      defaultSortingForList(listId)
-    );
-    if (sort && order) {
-      newList = orderBy(
-        newList,
-        (ref) => {
-          const field = readField(sort, ref);
-          const fieldVal = unwrapSecured(field);
-          return fieldVal;
-        },
-        order.toLowerCase() as Lowercase<Order>
+    const modifier: ListModifier = (
+      existing,
+      { readField, storeFieldName, toReference }
+    ) => {
+      if (
+        !existing ||
+        existing.items.some((ref) => readField('id', ref) === newItem.id)
+      ) {
+        return existing;
+      }
+
+      // @ts-expect-error type is missing index signature, our type is actually narrower
+      const newItemRef = toReference(newItem);
+      if (!newItemRef) {
+        return;
+      }
+
+      let newList = [...existing.items, newItemRef];
+
+      // Sort the new item appropriately given the list's sort/order params
+      const args = argsFromStoreFieldName(storeFieldName);
+      const { sort, order } = sortingFromArgs(
+        args,
+        defaultSortingForList(listId)
       );
-    }
+      if (sort && order) {
+        newList = orderBy(
+          newList,
+          (ref) => {
+            const field = readField(sort, ref);
+            const fieldVal = unwrapSecured(field);
+            return fieldVal;
+          },
+          order.toLowerCase() as Lowercase<Order>
+        );
+      }
 
-    return {
-      ...existing,
-      total: Number(existing.total) + 1,
-      items: newList,
+      return {
+        ...existing,
+        total: Number(existing.total) + 1,
+        items: newList,
+      };
     };
-  };
 
-  modifyList({ cache, listId, modifier, filter });
-};
+    modifyList({ cache, listId, modifier, filter });
+  };

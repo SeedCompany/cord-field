@@ -94,9 +94,10 @@ export const UpdateProjectDialog = ({
   editFields: editFieldsProp,
   ...props
 }: UpdateProjectDialogProps) => {
-  const editFields = useMemo(() => many(editFieldsProp ?? []), [
-    editFieldsProp,
-  ]);
+  const editFields = useMemo(
+    () => many(editFieldsProp ?? []),
+    [editFieldsProp]
+  );
 
   const [updateProject] = useMutation(UpdateProjectDocument);
 

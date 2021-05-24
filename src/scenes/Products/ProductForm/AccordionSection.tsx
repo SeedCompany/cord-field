@@ -164,11 +164,8 @@ export const AccordionSection = ({
     product: productObj,
   };
 
-  const [
-    scriptureForm,
-    openScriptureForm,
-    scriptureInitialValues,
-  ] = useDialog<ScriptureFormValues>();
+  const [scriptureForm, openScriptureForm, scriptureInitialValues] =
+    useDialog<ScriptureFormValues>();
 
   const openBook = (event: MouseEvent<HTMLButtonElement>) => {
     openScriptureForm({

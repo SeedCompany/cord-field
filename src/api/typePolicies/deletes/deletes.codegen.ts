@@ -11,9 +11,9 @@ export const generateDeletes = (
   if (!mutations) {
     return;
   }
-  const deleteMutations = Object.values(
-    mutations.getFields()
-  ).filter((mutation) => mutation.name.startsWith('delete'));
+  const deleteMutations = Object.values(mutations.getFields()).filter(
+    (mutation) => mutation.name.startsWith('delete')
+  );
   for (const mutation of deleteMutations) {
     const objName = mutation.name.replace('delete', '');
     const objType = schema.getType(objName);

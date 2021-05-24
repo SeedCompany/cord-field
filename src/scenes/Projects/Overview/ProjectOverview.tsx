@@ -98,14 +98,10 @@ export const ProjectOverview: FC = () => {
   const { projectId = '' } = useParams();
   const formatNumber = useNumberFormatter();
 
-  const [editState, editField, fieldsBeingEdited] = useDialog<
-    Many<EditableProjectField>
-  >();
-  const [
-    workflowState,
-    openWorkflow,
-    workflowProject,
-  ] = useDialog<ProjectOverviewFragment>();
+  const [editState, editField, fieldsBeingEdited] =
+    useDialog<Many<EditableProjectField>>();
+  const [workflowState, openWorkflow, workflowProject] =
+    useDialog<ProjectOverviewFragment>();
 
   const {
     directoryId,
@@ -118,7 +114,11 @@ export const ProjectOverview: FC = () => {
     uploadProjectFiles({ files, parentId: directoryId });
   };
 
-  const { getRootProps, getInputProps, open: openFileBrowser } = useDropzone({
+  const {
+    getRootProps,
+    getInputProps,
+    open: openFileBrowser,
+  } = useDropzone({
     onDrop: handleDrop,
     noClick: true,
     disabled: !directoryId,

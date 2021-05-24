@@ -82,11 +82,12 @@ export const CreateProduct = () => {
             },
             form
           ) => {
-            const parsedScriptureReferences = parsedRangesWithFullTestamentRange(
-              scriptureReferences,
-              fullOldTestament,
-              fullNewTestament
-            );
+            const parsedScriptureReferences =
+              parsedRangesWithFullTestamentRange(
+                scriptureReferences,
+                fullOldTestament,
+                fullNewTestament
+              );
             try {
               const { data } = await createProduct({
                 variables: {
@@ -97,7 +98,8 @@ export const CreateProduct = () => {
                       ...(productType !== 'DirectScriptureProduct' && produces
                         ? {
                             produces: produces.id,
-                            scriptureReferencesOverride: parsedScriptureReferences,
+                            scriptureReferencesOverride:
+                              parsedScriptureReferences,
                           }
                         : {
                             scriptureReferences: parsedScriptureReferences,

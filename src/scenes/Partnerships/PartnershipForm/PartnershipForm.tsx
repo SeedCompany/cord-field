@@ -38,13 +38,12 @@ type PartnershipFormValues = Partial<
   };
 };
 
-export type PartnershipFormProps<
-  T extends PartnershipFormValues
-> = DialogFormProps<T> & {
-  partnership?: PartnershipFormFragment & {
-    financialReportPeriod?: PeriodType;
+export type PartnershipFormProps<T extends PartnershipFormValues> =
+  DialogFormProps<T> & {
+    partnership?: PartnershipFormFragment & {
+      financialReportPeriod?: PeriodType;
+    };
   };
-};
 
 export const hasManagingType = (types: Nullable<readonly PartnerType[]>) =>
   types?.includes('Managing') ?? false;
@@ -82,7 +81,7 @@ export const PartnershipForm = <T extends PartnershipFormValues>({
     <DialogForm<T>
       {...rest}
       fieldsPrefix="partnership"
-      decorators={(decorators as unknown) as Array<Decorator<T>>}
+      decorators={decorators as unknown as Array<Decorator<T>>}
     >
       {({ values }) => {
         const lookupPartnerTypes =
