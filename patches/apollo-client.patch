@@ -1,5 +1,5 @@
-diff --git a/node_modules/@apollo/client/react/hooks/hooks.cjs.js b/node_modules/@apollo/client/react/hooks/hooks.cjs.js
-index a0acfe8..68d0b08 100644
+diff --git a/react/hooks/hooks.cjs.js b/react/hooks/hooks.cjs.js
+index f6c21531940ae1471b3c9f66119d232b55df3096..a58e8041006ac086f1b2cd1eec93faf9aed37c2d 100644
 --- a/react/hooks/hooks.cjs.js
 +++ b/react/hooks/hooks.cjs.js
 @@ -56,8 +56,25 @@ function useBaseQuery(query, options, lazy) {

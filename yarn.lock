@@ -5,9 +5,9 @@ __metadata:
   version: 4
   cacheKey: 7
 
-"@apollo/client@3.3.14":
-  version: 3.3.14
-  resolution: "@apollo/client@npm:3.3.14"
+"@apollo/client@3.3.19":
+  version: 3.3.19
+  resolution: "@apollo/client@npm:3.3.19"
   dependencies:
     "@graphql-typed-document-node/core": ^3.0.0
     "@types/zen-observable": ^0.8.0
@@ -16,7 +16,7 @@ __metadata:
     fast-json-stable-stringify: ^2.0.0
     graphql-tag: ^2.12.0
     hoist-non-react-statics: ^3.3.2
-    optimism: ^0.15.0
+    optimism: ^0.16.0
     prop-types: ^15.7.2
     symbol-observable: ^2.0.0
     ts-invariant: ^0.7.0
@@ -31,13 +31,13 @@ __metadata:
       optional: true
     subscriptions-transport-ws:
       optional: true
-  checksum: a08163a9982522dd7c4191e33ef086331de9c3d063438342863cf5ea44ad8baaa51ed4c77f2600620a5ec47dc4d1bd5b4b9a9f95e5cc0e17403d6a0b62c7994c
+  checksum: a7266cfdff900ef71adece4d24c853fc6179dfe3d3b89905b468b0a487959a435ef84219fb1266c86e2edb0747ff0e52b6ac49dba72bdac7cdbc55e1d0a2e357
   languageName: node
   linkType: hard
 
-"@apollo/client@patch:@apollo/client@3.3.14#./patches/apollo-client.patch::locator=cord-field%40workspace%3A.":
-  version: 3.3.14
-  resolution: "@apollo/client@patch:@apollo/client@npm%3A3.3.14#./patches/apollo-client.patch::version=3.3.14&hash=884fdc&locator=cord-field%40workspace%3A."
+"@apollo/client@patch:@apollo/client@3.3.19#./patches/apollo-client.patch::locator=cord-field%40workspace%3A.":
+  version: 3.3.19
+  resolution: "@apollo/client@patch:@apollo/client@npm%3A3.3.19#./patches/apollo-client.patch::version=3.3.19&hash=ce8a6e&locator=cord-field%40workspace%3A."
   dependencies:
     "@graphql-typed-document-node/core": ^3.0.0
     "@types/zen-observable": ^0.8.0
@@ -46,7 +46,7 @@ __metadata:
     fast-json-stable-stringify: ^2.0.0
     graphql-tag: ^2.12.0
     hoist-non-react-statics: ^3.3.2
-    optimism: ^0.15.0
+    optimism: ^0.16.0
     prop-types: ^15.7.2
     symbol-observable: ^2.0.0
     ts-invariant: ^0.7.0
@@ -61,7 +61,7 @@ __metadata:
       optional: true
     subscriptions-transport-ws:
       optional: true
-  checksum: 58ee9aa3e2671f5cbc82a3da470a470066623da24235da09ab0eda3401d4c7229e988c010caf058a3c346930f0bb635439395a7099119343f34cad9abfa237b4
+  checksum: e61782a31d54332563a8d6badcdeef954698b1cef1c99b168ef00c0bd5dcfc36fc4b16ab7583ed37fa4eb7e32349267c29c837ce1ce2d33393be04433d0c6613
   languageName: node
   linkType: hard
 
@@ -7766,7 +7766,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "cord-field@workspace:."
   dependencies:
-    "@apollo/client": "patch:@apollo/client@3.3.14#./patches/apollo-client.patch"
+    "@apollo/client": "patch:@apollo/client@3.3.19#./patches/apollo-client.patch"
     "@babel/core": ^7.13.14
     "@babel/plugin-proposal-numeric-separator": ^7.12.13
     "@date-io/luxon": ^2.10.8
@@ -15919,13 +15919,13 @@ fsevents@^1.2.7:
   languageName: node
   linkType: hard
 
-"optimism@npm:^0.15.0":
-  version: 0.15.0
-  resolution: "optimism@npm:0.15.0"
+"optimism@npm:^0.16.0":
+  version: 0.16.1
+  resolution: "optimism@npm:0.16.1"
   dependencies:
     "@wry/context": ^0.6.0
     "@wry/trie": ^0.3.0
-  checksum: a9152e33a27be9b2b4a441387061a7e8aff9877872169eba49c11c07fee19b7369efd48f7530f5a65e142f46b63ba3c8a56c9b893eaa696e143f1fdff33760a2
+  checksum: 760b1295525ba86592edf245736ed704670330a8997d91144c1b45bc9f76e392b53c170fb1eb3b265f67584a4f7e205bc777d0c8ed97774326dba9fbfe899e27
   languageName: node
   linkType: hard
 
