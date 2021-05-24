@@ -35,7 +35,7 @@ export const CreateProjectDirectory = (
         outputToItem: (res) => res.createDirectory,
       }),
     });
-    const directory = data.createDirectory;
+    const directory = data!.createDirectory;
 
     enqueueSnackbar(`Created folder: ${directory.name}`, {
       variant: 'success',
