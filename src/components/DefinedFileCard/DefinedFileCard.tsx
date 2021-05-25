@@ -145,26 +145,21 @@ export const DefinedFileCard = (props: DefinedFileCardProps) => {
     name,
     parentId: id,
   }) => {
-    let variables;
-    if (
-      uploadMutationDocument === UpdateProjectBudgetUniversalTemplateDocument
-    ) {
-      variables = {
-        id,
-        universalTemplateFile: { uploadId, name },
-      };
-    } else if (
-      uploadMutationDocument === UploadLanguageEngagementPnpDocument ||
-      uploadMutationDocument === UploadInternshipEngagementGrowthPlanDocument
-    ) {
-      variables = {
-        id,
-        pnp: { uploadId, name },
-        growthPlan: { uploadId, name },
-      };
-    }
     await uploadFile({
-      variables,
+      variables: {
+        id,
+        ...(uploadMutationDocument ===
+        UpdateProjectBudgetUniversalTemplateDocument
+          ? { universalTemplateFile: { uploadId, name } }
+          : {}),
+        ...(uploadMutationDocument === UploadLanguageEngagementPnpDocument
+          ? { pnp: { uploadId, name } }
+          : {}),
+      },
+      ...(uploadMutationDocument ===
+      UploadInternshipEngagementGrowthPlanDocument
+        ? { growthPlan: { uploadId, name } }
+        : {}),
     });
   };
 
