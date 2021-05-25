@@ -16,6 +16,7 @@ import {
 import { BooleanProperty } from '../../../components/BooleanProperty';
 import { Breadcrumb } from '../../../components/Breadcrumb';
 import { DataButton } from '../../../components/DataButton';
+import { DefinedFileCard } from '../../../components/DefinedFileCard';
 import { useDialog } from '../../../components/Dialog';
 import { Fab } from '../../../components/Fab';
 import { FieldOverviewCard } from '../../../components/FieldOverviewCard';
@@ -25,6 +26,7 @@ import {
   useDateTimeFormatter,
 } from '../../../components/Formatters';
 import { OptionsIcon, PlantIcon } from '../../../components/Icons';
+import { PaperTooltip } from '../../../components/PaperTooltip';
 import { PeriodicReportSummaryCard } from '../../../components/PeriodicReportSummaryCard';
 import { ProjectBreadcrumb } from '../../../components/ProjectBreadcrumb';
 import { Redacted } from '../../../components/Redacted';
@@ -40,6 +42,7 @@ import {
 } from '../EditEngagement/EditEngagementDialog';
 import { EngagementWorkflowDialog } from '../EditEngagement/EngagementWorkflowDialog';
 import { EngagementQuery } from '../Engagement.generated';
+import { UploadLanguageEngagementPnpDocument } from '../Files';
 
 const useStyles = makeStyles(({ spacing, breakpoints, palette }) => ({
   root: {
@@ -240,8 +243,8 @@ export const LanguageEngagementDetail: FC<EngagementQuery> = ({
                 emptyValue="None"
               />
             </Grid>
-            <Grid item container spacing={3} alignItems="center">
-              <FileActionsContextProvider>
+            <FileActionsContextProvider>
+              <Grid item container spacing={3} alignItems="flex-start">
                 <Grid item xs={6}>
                   <PeriodicReportSummaryCard
                     reportType="Progress"
@@ -249,8 +252,24 @@ export const LanguageEngagementDetail: FC<EngagementQuery> = ({
                     loading={!engagement}
                   />
                 </Grid>
-              </FileActionsContextProvider>
-            </Grid>
+                <PaperTooltip
+                  title="This holds the planning info of PnP files"
+                  placement="top"
+                >
+                  <Grid item xs={6}>
+                    <DefinedFileCard
+                      title="Planning Spreadsheet"
+                      uploadMutationDocument={
+                        UploadLanguageEngagementPnpDocument
+                      }
+                      parentId={engagement.id}
+                      resourceType="engagement"
+                      securedFile={engagement.pnp}
+                    />
+                  </Grid>
+                </PaperTooltip>
+              </Grid>
+            </FileActionsContextProvider>
           </Grid>
           <Grid item container spacing={3} alignItems="center">
             <Grid item xs={6}>
