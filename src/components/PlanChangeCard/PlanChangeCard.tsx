@@ -10,7 +10,7 @@ import { Skeleton } from '@material-ui/lab';
 import { FC } from 'react';
 import * as React from 'react';
 import { displayPlanChangeTypes } from '../../api';
-import { useDateTimeFormatter } from '../Formatters';
+import { FormattedDateTime } from '../Formatters';
 import { PlanChangeCardFragment } from './PlanChange.generated';
 import { usePlanChange } from './PlanChangeContext';
 
@@ -48,10 +48,8 @@ export const PlanChangeCard: FC<PlanChangeCardProps> = ({
 }) => {
   const classes = useStyles();
   const { setPlanChangeId } = usePlanChange();
-  const dateTimeFormatter = useDateTimeFormatter();
 
   const typesString = displayPlanChangeTypes(planChange?.types.value ?? []);
-  const createdAtString = dateTimeFormatter(planChange?.createdAt);
 
   const handleCRMode = () => {
     if (planChange?.id) {
@@ -99,7 +97,9 @@ export const PlanChangeCard: FC<PlanChangeCardProps> = ({
           {!planChange ? (
             <Skeleton variant="text" width="23ch" />
           ) : (
-            `Created at ${createdAtString}`
+            <>
+              Created at <FormattedDateTime date={planChange.createdAt} />
+            </>
           )}
         </Typography>
       </CardActions>
