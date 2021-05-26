@@ -238,44 +238,6 @@ export const LanguageEngagementDetail: FC<EngagementQuery> = ({
                 <ProductList engagementId={engagement.id} />
               </Grid>
             </Grid>
-            <Grid item xs={5}>
-              {/*
-              <FieldOverviewCard
-                title="Translation Complete Date"
-                data={{
-                  value: formatDate(engagement.completeDate.value),
-                }}
-                icon={PlantIcon}
-                onClick={() => show('completeDate')}
-                onButtonClick={() => show('completeDate')}
-                emptyValue="None"
-              />
-
-              <FieldOverviewCard
-                title="Disbursement Complete Date"
-                data={{
-                  value: formatDate(engagement.disbursementCompleteDate.value),
-                }}
-                icon={OptionsIcon}
-                onClick={() => show('disbursementCompleteDate')}
-                onButtonClick={() => show('disbursementCompleteDate')}
-                emptyValue="None"
-              />
-
-              <FieldOverviewCard
-                title="Communications Complete Date"
-                data={{
-                  value: formatDate(
-                    engagement.communicationsCompleteDate.value
-                  ),
-                }}
-                icon={ChatOutlined}
-                onClick={() => show('communicationsCompleteDate')}
-                onButtonClick={() => show('communicationsCompleteDate')}
-                emptyValue="None"
-              /> */}
-            </Grid>
-            <Grid item xs={7}></Grid>
           </Grid>
         </Grid>
       </div>
