@@ -1,24 +1,14 @@
-import React, { createContext, FC, useContext, useState } from 'react';
+import { makeQueryHandler, StringParam, withKey } from '../../hooks';
+import { Nullable } from '../../util';
 
-const initialPlanChangeContext = {
-  planChangeId: '',
-  setPlanChangeId: (_: string) => {
-    return;
-  },
+const useCurrentPlanChangeUrlState = makeQueryHandler({
+  changeId: withKey(StringParam, 'cr'),
+});
+
+export const useCurrentPlanChange = () => {
+  const [{ changeId }, set] = useCurrentPlanChangeUrlState();
+  const update = (nextChangeId: Nullable<string>) => {
+    set({ changeId: nextChangeId }, { push: true });
+  };
+  return [changeId, update] as const;
 };
-
-export const PlanChangeContext = createContext<typeof initialPlanChangeContext>(
-  initialPlanChangeContext
-);
-PlanChangeContext.displayName = 'PlanChangeContext';
-
-export const PlanChangeProvider: FC = ({ children }) => {
-  const [planChangeId, setPlanChangeId] = useState('');
-  return (
-    <PlanChangeContext.Provider value={{ planChangeId, setPlanChangeId }}>
-      {children}
-    </PlanChangeContext.Provider>
-  );
-};
-
-export const usePlanChange = () => useContext(PlanChangeContext);

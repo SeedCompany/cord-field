@@ -12,7 +12,7 @@ import * as React from 'react';
 import { displayPlanChangeTypes } from '../../api';
 import { FormattedDateTime } from '../Formatters';
 import { PlanChangeCardFragment } from './PlanChange.generated';
-import { usePlanChange } from './PlanChangeContext';
+import { useCurrentPlanChange } from './PlanChangeContext';
 
 const useStyles = makeStyles(({ spacing }) => ({
   cardContent: {
@@ -47,7 +47,7 @@ export const PlanChangeCard: FC<PlanChangeCardProps> = ({
   showCRMode,
 }) => {
   const classes = useStyles();
-  const { setPlanChangeId } = usePlanChange();
+  const [_, setPlanChangeId] = useCurrentPlanChange();
 
   const typesString = displayPlanChangeTypes(planChange?.types.value ?? []);
 

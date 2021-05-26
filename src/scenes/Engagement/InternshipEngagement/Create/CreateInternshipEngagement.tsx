@@ -8,7 +8,7 @@ import {
 } from '../../../../components/Dialog/DialogForm';
 import { SubmitError } from '../../../../components/form';
 import { UserField, UserLookupItem } from '../../../../components/form/Lookup';
-import { usePlanChange } from '../../../../components/PlanChangeCard';
+import { useCurrentPlanChange } from '../../../../components/PlanChangeCard';
 import { CreateInternshipEngagementDocument } from './CreateInternshipEngagement.generated';
 
 interface CreateInternshipEngagementFormValues {
@@ -28,7 +28,7 @@ export const CreateInternshipEngagement = ({
   projectId,
   ...props
 }: CreateInternshipEngagementProps) => {
-  const { planChangeId } = usePlanChange();
+  const [changeId] = useCurrentPlanChange();
   const [createEngagement] = useMutation(CreateInternshipEngagementDocument);
   const submit = async ({
     engagement,
@@ -37,7 +37,7 @@ export const CreateInternshipEngagement = ({
       variables: {
         input: {
           engagement: { projectId, internId: engagement.internId.id },
-          changeId: planChangeId ? planChangeId : null,
+          changeId,
         },
       },
       update: addItemToList({

@@ -2,7 +2,7 @@ import { useQuery } from '@apollo/client';
 import React from 'react';
 import { useParams } from 'react-router';
 import { NotFoundPage } from '../../components/Error';
-import { usePlanChange } from '../../components/PlanChangeCard';
+import { useCurrentPlanChange } from '../../components/PlanChangeCard';
 import { EngagementDocument } from './Engagement.generated';
 import { EngagementDetailLoading } from './EngagementDetailLoading';
 import { InternshipEngagementDetail } from './InternshipEngagement';
@@ -10,12 +10,12 @@ import { LanguageEngagementDetail } from './LanguageEngagement';
 
 export const Engagement = () => {
   const { engagementId = '', projectId = '' } = useParams();
-  const { planChangeId } = usePlanChange();
+  const [changeId] = useCurrentPlanChange();
   const { data, loading } = useQuery(EngagementDocument, {
     variables: {
       projectId,
       engagementId,
-      changeId: planChangeId ? planChangeId : null,
+      changeId,
     },
   });
 

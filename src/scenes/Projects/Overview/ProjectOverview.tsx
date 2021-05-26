@@ -28,7 +28,7 @@ import { LanguageEngagementListItemCard } from '../../../components/LanguageEnga
 import { List, useListQuery } from '../../../components/List';
 import { PartnershipSummary } from '../../../components/PartnershipSummary';
 import { PeriodicReportCard } from '../../../components/PeriodicReports';
-import { usePlanChange } from '../../../components/PlanChangeCard';
+import { useCurrentPlanChange } from '../../../components/PlanChangeCard';
 import { PlanChangesSummary } from '../../../components/PlanChangesSummary';
 import { ProjectMembersSummary } from '../../../components/ProjectMembersSummary';
 import { Redacted } from '../../../components/Redacted';
@@ -99,7 +99,7 @@ const useStyles = makeStyles(({ spacing, breakpoints, palette }) => ({
 export const ProjectOverview: FC = () => {
   const classes = useStyles();
   const { projectId = '' } = useParams();
-  const { planChangeId } = usePlanChange();
+  const [changeId] = useCurrentPlanChange();
   const formatNumber = useNumberFormatter();
 
   const [editState, editField, fieldsBeingEdited] =
@@ -136,7 +136,7 @@ export const ProjectOverview: FC = () => {
     {
       variables: {
         input: projectId,
-        changeId: planChangeId ? planChangeId : null,
+        changeId,
       },
     }
   );
@@ -145,7 +145,7 @@ export const ProjectOverview: FC = () => {
     listAt: (data) => data.project.engagements,
     variables: {
       project: projectId,
-      changeId: planChangeId ? planChangeId : null,
+      changeId,
     },
     fetchPolicy: 'no-cache',
   });
@@ -242,8 +242,7 @@ export const ProjectOverview: FC = () => {
               ) : projectName.canRead ? (
                 <>
                   {projectName.value}
-                  {planChangeId &&
-                  projectChanges?.name.value !== projectName.value
+                  {changeId && projectChanges?.name.value !== projectName.value
                     ? ` - ${projectChanges?.name.value}`
                     : null}
                 </>
@@ -424,7 +423,7 @@ export const ProjectOverview: FC = () => {
                 }
               >
                 {displayProjectStep(projectOverviewData?.project.step.value)}
-                {planChangeId &&
+                {changeId &&
                 projectOverviewData?.project.step.value !==
                   projectChanges?.step.value
                   ? ` - ${projectChanges?.step.value}`
@@ -609,7 +608,7 @@ export const ProjectOverview: FC = () => {
         <ProjectWorkflowDialog
           {...workflowState}
           project={workflowProject}
-          planChangeId={planChangeId}
+          planChangeId={changeId}
         />
       )}
       {projectOverviewData ? (
@@ -617,7 +616,7 @@ export const ProjectOverview: FC = () => {
           {...editState}
           project={projectOverviewData.project}
           editFields={fieldsBeingEdited}
-          planChangeId={planChangeId}
+          planChangeId={changeId}
         />
       ) : null}
       <CreateEngagement projectId={projectId} {...createEngagementState} />

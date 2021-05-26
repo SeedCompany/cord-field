@@ -6,7 +6,6 @@ import setupLogRocketReact from 'logrocket-react';
 import * as React from 'react';
 import { ApolloProvider } from './api';
 import { Nest } from './components/Nest';
-import { PlanChangeProvider } from './components/PlanChangeCard';
 import { SnackbarProvider } from './components/Snackbar';
 import { UploadManagerProvider, UploadProvider } from './components/Upload';
 import { Root } from './scenes/Root';
@@ -34,7 +33,6 @@ export const appProviders = [
   <ApolloProvider />,
   <UploadManagerProvider />,
   <UploadProvider />,
-  <PlanChangeProvider />,
 ];
 
 export const App = () => (

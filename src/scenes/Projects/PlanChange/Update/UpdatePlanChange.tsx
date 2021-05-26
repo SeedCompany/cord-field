@@ -20,7 +20,7 @@ import {
   TextField,
 } from '../../../../components/form';
 import { AutocompleteField } from '../../../../components/form/AutocompleteField';
-import { usePlanChange } from '../../../../components/PlanChangeCard';
+import { useCurrentPlanChange } from '../../../../components/PlanChangeCard';
 import { PlanChangeCardFragment } from '../../../../components/PlanChangeCard/PlanChange.generated';
 import { callAll } from '../../../../util';
 import { ProjectOverviewDocument } from '../../Overview/ProjectOverview.generated';
@@ -46,7 +46,7 @@ export const UpdatePlanChange = ({
   planChange,
   ...props
 }: UpdatePlanChangeProps) => {
-  const { setPlanChangeId } = usePlanChange();
+  const [_, setCurrentChange] = useCurrentPlanChange();
   const [updatePlanChange] = useMutation(UpdatePlanChangeDocument);
 
   const [deletePlanChange] = useMutation(DeletePlanChangeDocument, {
@@ -94,7 +94,7 @@ export const UpdatePlanChange = ({
           input.planChange.status === 'Approved' &&
           planChange.status.value !== input.planChange.status
         ) {
-          setPlanChangeId('');
+          setCurrentChange(null);
         }
       }}
       fieldsPrefix="planChange"

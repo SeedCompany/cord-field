@@ -2,7 +2,7 @@ import { Card, IconButton, makeStyles, Typography } from '@material-ui/core';
 import { Close, Info } from '@material-ui/icons';
 import { FC } from 'react';
 import * as React from 'react';
-import { usePlanChange } from '../../../../components/PlanChangeCard';
+import { useCurrentPlanChange } from '../../../../components/PlanChangeCard';
 
 const useStyles = makeStyles(({ typography, spacing }) => ({
   card: {
@@ -19,9 +19,9 @@ const useStyles = makeStyles(({ typography, spacing }) => ({
 
 export const HeaderPlanChange: FC = () => {
   const classes = useStyles();
-  const { planChangeId, setPlanChangeId } = usePlanChange();
+  const [changeId, setCurrent] = useCurrentPlanChange();
 
-  if (!planChangeId) {
+  if (!changeId) {
     return null;
   }
 
@@ -30,9 +30,9 @@ export const HeaderPlanChange: FC = () => {
       <Card className={classes.card}>
         <Info />
         <Typography className={classes.name} color="primary">
-          You are in CR mode and changes will be requested - {planChangeId}
+          You are in CR mode and changes will be requested - {changeId}
         </Typography>
-        <IconButton color="inherit" onClick={() => setPlanChangeId('')}>
+        <IconButton color="inherit" onClick={() => setCurrent(null)}>
           <Close />
         </IconButton>
       </Card>

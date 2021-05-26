@@ -29,7 +29,7 @@ import {
 import { AutocompleteField } from '../../../components/form/AutocompleteField';
 import { LocationField, UserField } from '../../../components/form/Lookup';
 import { UserLookupItemFragment } from '../../../components/form/Lookup/User/UserLookup.generated';
-import { usePlanChange } from '../../../components/PlanChangeCard';
+import { useCurrentPlanChange } from '../../../components/PlanChangeCard';
 import { ExtractStrict, many, Many } from '../../../util';
 import { InternshipEngagementDetailFragment as InternshipEngagement } from '../InternshipEngagement/InternshipEngagement.generated';
 import { LanguageEngagementDetailFragment as LanguageEngagement } from '../LanguageEngagement/LanguageEngagementDetail.generated';
@@ -172,7 +172,7 @@ export const EditEngagementDialog: FC<EditEngagementDialogProps> = ({
     () => many(editFieldsProp ?? []),
     [editFieldsProp]
   );
-  const { planChangeId } = usePlanChange();
+  const [changeId] = useCurrentPlanChange();
 
   const fields = editFields.map((name) => {
     const Field = fieldMapping[name];
@@ -263,7 +263,7 @@ export const EditEngagementDialog: FC<EditEngagementDialogProps> = ({
             ...(mentorId ? { mentorId } : {}),
             ...(countryOfOriginId ? { countryOfOriginId } : {}),
           },
-          changeId: planChangeId ? planChangeId : null,
+          changeId,
         };
 
         await updateEngagement({
