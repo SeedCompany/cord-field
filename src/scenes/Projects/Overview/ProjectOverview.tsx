@@ -460,7 +460,7 @@ export const ProjectOverview: FC = () => {
           </Grid>
 
           <Grid container spacing={3}>
-            <Grid item xs={12} md={6}>
+            <Grid item container xs={12} md={6}>
               <PeriodicReportSummaryCard
                 reportType="Financial"
                 reports={projectOverviewData?.project.financialReports}
@@ -470,7 +470,7 @@ export const ProjectOverview: FC = () => {
                 loading={isProjectDataLoading}
               />
             </Grid>
-            <Grid item xs={12} md={6}>
+            <Grid item container xs={12} md={6}>
               <PeriodicReportSummaryCard
                 reportType="Narrative"
                 reports={projectOverviewData?.project.narrativeReports}

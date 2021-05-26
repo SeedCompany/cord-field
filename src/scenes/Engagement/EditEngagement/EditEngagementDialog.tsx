@@ -44,9 +44,6 @@ export type EditableEngagementField = ExtractStrict<
   // Add more fields here as needed
   | 'startDateOverride'
   | 'endDateOverride'
-  | 'completeDate'
-  | 'disbursementCompleteDate'
-  | 'communicationsCompleteDate'
   | 'methodologies'
   | 'position'
   | 'countryOfOriginId'
@@ -80,22 +77,6 @@ const fieldMapping: Record<
       label="End Date"
       helperText="Leave blank to use project's end date"
     />
-  ),
-  completeDate: ({ props, engagement }) => (
-    <DateField
-      {...props}
-      label={
-        engagement.__typename === 'InternshipEngagement'
-          ? 'Growth Plan Complete Date'
-          : 'Translation Complete Date'
-      }
-    />
-  ),
-  disbursementCompleteDate: ({ props }) => (
-    <DateField {...props} label="Disbursement Complete Date" />
-  ),
-  communicationsCompleteDate: ({ props }) => (
-    <DateField {...props} label="Communications Complete Date" />
   ),
   methodologies: ({ props }) => (
     <EnumField

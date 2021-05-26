@@ -28,7 +28,6 @@ import { useUploadPeriodicReport } from './useUploadPeriodicReport';
 const useStyles = makeStyles(({ spacing, palette }) => ({
   root: {
     flex: 1,
-    height: '100%',
     display: 'flex',
     position: 'relative',
     outline: 'none',

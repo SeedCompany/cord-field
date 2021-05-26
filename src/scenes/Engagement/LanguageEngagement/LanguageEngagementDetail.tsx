@@ -5,7 +5,7 @@ import {
   Tooltip,
   Typography,
 } from '@material-ui/core';
-import { ChatOutlined, DateRange, Edit } from '@material-ui/icons';
+import { DateRange, Edit } from '@material-ui/icons';
 import React, { FC } from 'react';
 import { Helmet } from 'react-helmet-async';
 import {
@@ -18,20 +18,18 @@ import { Breadcrumb } from '../../../components/Breadcrumb';
 import { DataButton } from '../../../components/DataButton';
 import { useDialog } from '../../../components/Dialog';
 import { Fab } from '../../../components/Fab';
-import { FieldOverviewCard } from '../../../components/FieldOverviewCard';
 import { FileActionsContextProvider } from '../../../components/files/FileActions';
 import {
   useDateFormatter,
   useDateTimeFormatter,
 } from '../../../components/Formatters';
-import { OptionsIcon, PlantIcon } from '../../../components/Icons';
+import { LanguageEngagementForm } from '../../../components/LanguageEngagementForm';
 import { PeriodicReportSummaryCard } from '../../../components/PeriodicReportSummaryCard';
 import { ProjectBreadcrumb } from '../../../components/ProjectBreadcrumb';
 import { Redacted } from '../../../components/Redacted';
 import { Link } from '../../../components/Routing';
 import { Many } from '../../../util';
 import { ProductList } from '../../Products/List/ProductList';
-import { CeremonyCard } from '../CeremonyCard';
 import { DeleteEngagement } from '../Delete';
 import {
   EditableEngagementField,
@@ -55,6 +53,9 @@ const useStyles = makeStyles(({ spacing, breakpoints, palette }) => ({
   },
   infoColor: {
     color: palette.info.main,
+  },
+  details: {
+    marginTop: spacing(4),
   },
 }));
 
@@ -202,7 +203,43 @@ export const LanguageEngagementDetail: FC<EngagementQuery> = ({
             />
           </Grid>
           <Grid item container spacing={3}>
-            <Grid item xs={6}>
+            <Grid item container xs={5}>
+              <Grid item container>
+                <Typography variant="h3" paragraph>
+                  Latest Report
+                </Typography>
+              </Grid>
+              <Grid item container>
+                <FileActionsContextProvider>
+                  <PeriodicReportSummaryCard
+                    reportType="Progress"
+                    reports={engagement.progressReports}
+                    loading={!engagement}
+                  />
+                </FileActionsContextProvider>
+              </Grid>
+
+              <Grid item container className={classes.details}>
+                <Typography variant="h3" paragraph>
+                  Translation Details
+                </Typography>
+              </Grid>
+              <Grid item container>
+                <LanguageEngagementForm engagement={engagement} />
+              </Grid>
+            </Grid>
+            <Grid item xs={7}>
+              <Grid item container>
+                <Typography variant="h3" paragraph>
+                  Products
+                </Typography>
+              </Grid>
+              <Grid item container>
+                <ProductList engagementId={engagement.id} />
+              </Grid>
+            </Grid>
+            <Grid item xs={5}>
+              {/*
               <FieldOverviewCard
                 title="Translation Complete Date"
                 data={{
@@ -213,8 +250,7 @@ export const LanguageEngagementDetail: FC<EngagementQuery> = ({
                 onButtonClick={() => show('completeDate')}
                 emptyValue="None"
               />
-            </Grid>
-            <Grid item xs={6}>
+
               <FieldOverviewCard
                 title="Disbursement Complete Date"
                 data={{
@@ -225,8 +261,7 @@ export const LanguageEngagementDetail: FC<EngagementQuery> = ({
                 onButtonClick={() => show('disbursementCompleteDate')}
                 emptyValue="None"
               />
-            </Grid>
-            <Grid item xs={6}>
+
               <FieldOverviewCard
                 title="Communications Complete Date"
                 data={{
@@ -238,30 +273,9 @@ export const LanguageEngagementDetail: FC<EngagementQuery> = ({
                 onClick={() => show('communicationsCompleteDate')}
                 onButtonClick={() => show('communicationsCompleteDate')}
                 emptyValue="None"
-              />
+              /> */}
             </Grid>
-            <Grid item container spacing={3} alignItems="center">
-              <FileActionsContextProvider>
-                <Grid item xs={6}>
-                  <PeriodicReportSummaryCard
-                    reportType="Progress"
-                    reports={engagement.progressReports}
-                    loading={!engagement}
-                  />
-                </Grid>
-              </FileActionsContextProvider>
-            </Grid>
-          </Grid>
-          <Grid item container spacing={3} alignItems="center">
-            <Grid item xs={6}>
-              <CeremonyCard {...engagement.ceremony} />
-            </Grid>
-          </Grid>
-          <Grid item>
-            <Typography variant="h3" paragraph>
-              Products
-            </Typography>
-            <ProductList engagementId={engagement.id} />
+            <Grid item xs={7}></Grid>
           </Grid>
         </Grid>
       </div>

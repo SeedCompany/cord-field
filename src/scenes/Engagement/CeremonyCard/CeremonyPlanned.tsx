@@ -17,7 +17,7 @@ import {
   UpdateCeremonyDocument,
 } from './CeremonyCard.generated';
 
-const useStyles = makeStyles(() => ({
+const useStyles = makeStyles(({ spacing }) => ({
   root: {
     display: 'flex',
     alignItems: 'center',
@@ -26,7 +26,11 @@ const useStyles = makeStyles(() => ({
     width: '40%',
   },
   switch: {
-    paddingLeft: 2,
+    paddingRight: spacing(1.5),
+    marginLeft: 0,
+    '& > .MuiFormControlLabel-label > .MuiTypography-h4': {
+      fontSize: '12px',
+    },
   },
   switchHidden: {
     visibility: 'hidden',
@@ -126,15 +130,17 @@ export const CeremonyPlanned: FC<CeremonyCardProps> = ({
                   checked={Boolean(planned?.value)}
                   name="planned"
                   color="primary"
+                  size="small"
                   disabled={!planned?.canEdit}
                   onChange={(_, checked) => onChange(checked)}
                 />
               </Tooltip>
             }
             label={title}
+            labelPlacement="start"
             className={classes.switch}
           />
-          {updateState.loading ? <CircularProgress size={20} /> : null}
+          {updateState.loading ? <CircularProgress size={16} /> : null}
         </>
       )}
     </div>
