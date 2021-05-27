@@ -88,10 +88,12 @@ fragment ProjectOverview on Project {
   nextNarrativeReportDue {
     ...SecuredPeriodicReport
   }
+  ...ChangeInfo
   changes {
     ...PlanChangeList
   }
   projectChanges(id: $changeId) {
+    ...ChangeInfo
     name {
       canRead
       canEdit
@@ -132,6 +134,7 @@ query ProjectEngagementListOverview(
 ) {
   project(id: $project) {
     id
+    ...ChangeInfo
     engagements(input: $input, changeId: $changeId) {
       ...ProjectEngagementList
     }

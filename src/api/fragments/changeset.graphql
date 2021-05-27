@@ -1,0 +1,6 @@
+fragment ChangeInfo on ChangesetAware {
+  id
+  change {
+    id
+  }
+}
