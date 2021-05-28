@@ -34,6 +34,10 @@ export const ProjectPostList: FC<ProjectPostListProps> = ({ project }) => {
     listAt: (data) => data.project.posts,
     variables: {
       project: project.id,
+      input: {
+        sort: 'createdAt',
+        order: 'DESC',
+      },
     },
   });
 
