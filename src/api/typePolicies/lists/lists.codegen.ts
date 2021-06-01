@@ -41,6 +41,4 @@ export const generateLists = (
       });
     }
   }
-
-  file.fixMissingImports();
 };

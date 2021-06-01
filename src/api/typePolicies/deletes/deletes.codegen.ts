@@ -33,6 +33,4 @@ export const generateDeletes = (
       initializer: `handleDelete('${objName}')`,
     });
   }
-
-  file.fixMissingImports();
 };
