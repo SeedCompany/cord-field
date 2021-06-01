@@ -2,8 +2,8 @@ import type {
   FieldFunctionOptions,
   FieldPolicy,
 } from '@apollo/client/cache/inmemory/policies';
-import { possibleTypes } from '../../fragmentMatcher';
 import { GqlTypeMap } from '../../typeMap.generated';
+import { getIdArg, getPossibleTypes } from '../util';
 
 export const handleDelete = (typename: keyof GqlTypeMap): FieldPolicy => ({
   merge: (existing, incoming, options) => {
@@ -16,19 +16,9 @@ const removeItem = (
   typename: keyof GqlTypeMap,
   { args, cache, ...opts }: FieldFunctionOptions
 ) => {
-  const id = args?.id;
-  if (!id) {
-    console.error(
-      `Unable to remove ${typename} from cache, because the ID could not be found.
-Change your mutation ID variable to be named \`id\`.
-        `
-    );
-    return;
-  }
-  const storeId = [
-    typename,
-    ...((possibleTypes as Record<string, readonly string[]>)[typename] ?? []),
-  ]
+  const id = getIdArg(args);
+
+  const storeId = getPossibleTypes(typename)
     .map((name) => cache.identify({ __typename: name, id }))
     .find(
       (maybeId) => maybeId && opts.readField('id', opts.toReference(maybeId))
