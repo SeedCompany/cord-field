@@ -59,6 +59,4 @@ export const generateIdLookupRedirects = (
       initializer: `redirectToTypeById('${type.name}')`,
     });
   }
-
-  file.fixMissingImports();
 };

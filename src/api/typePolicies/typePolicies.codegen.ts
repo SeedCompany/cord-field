@@ -14,4 +14,6 @@ export const plugin = tsMorphPlugin(({ schema, file }) => {
   generateLists(schema, file, typePolicies);
   generateDeletes(schema, file, typePolicies);
   generateIdLookupRedirects(schema, file, typePolicies);
+
+  file.fixMissingImports();
 });
