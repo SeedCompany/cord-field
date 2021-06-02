@@ -5,7 +5,7 @@ import {
   Tooltip,
   Typography,
 } from '@material-ui/core';
-import { DateRange, Edit } from '@material-ui/icons';
+import { Add, DateRange, Edit } from '@material-ui/icons';
 import React, { FC } from 'react';
 import { Helmet } from 'react-helmet-async';
 import {
@@ -56,6 +56,19 @@ const useStyles = makeStyles(({ spacing, breakpoints, palette }) => ({
   },
   details: {
     marginTop: spacing(4),
+  },
+  contentColumn: {
+    flexFlow: 'column',
+  },
+  header: {
+    fontSize: '24px',
+    lineHeight: '32px',
+    marginRight: spacing(2),
+  },
+  addProductBtn: {
+    width: 32,
+    height: 32,
+    minHeight: 32,
   },
 }));
 
@@ -203,9 +216,9 @@ export const LanguageEngagementDetail: FC<EngagementQuery> = ({
             />
           </Grid>
           <Grid item container spacing={3}>
-            <Grid item container xs={5}>
+            <Grid className={classes.contentColumn} item container xs={5}>
               <Grid item container>
-                <Typography variant="h3" paragraph>
+                <Typography className={classes.header} variant="h3" paragraph>
                   Latest Report
                 </Typography>
               </Grid>
@@ -220,7 +233,7 @@ export const LanguageEngagementDetail: FC<EngagementQuery> = ({
               </Grid>
 
               <Grid item container className={classes.details}>
-                <Typography variant="h3" paragraph>
+                <Typography className={classes.header} variant="h3" paragraph>
                   Translation Details
                 </Typography>
               </Grid>
@@ -228,11 +241,21 @@ export const LanguageEngagementDetail: FC<EngagementQuery> = ({
                 <LanguageEngagementForm engagement={engagement} />
               </Grid>
             </Grid>
-            <Grid item xs={7}>
+            <Grid className={classes.contentColumn} item container xs={7}>
               <Grid item container>
-                <Typography variant="h3" paragraph>
+                <Typography className={classes.header} variant="h3" paragraph>
                   Products
                 </Typography>
+                <Link to="./products/create">
+                  <Fab
+                    className={classes.addProductBtn}
+                    color="error"
+                    size="small"
+                    aria-label="Add New Product"
+                  >
+                    <Add />
+                  </Fab>
+                </Link>
               </Grid>
               <Grid item container>
                 <ProductList engagementId={engagement.id} />

@@ -74,7 +74,7 @@ export const displayProductMedium = (medium: ProductMedium) =>
 
 export const displayProductPurpose = displayEnum<ProductPurpose>();
 
-export const displayProductTypes = (type: ProductTypes) =>
+export const displayProductTypes = (type?: ProductTypes) =>
   type === 'DirectScriptureProduct'
     ? 'Scripture'
     : displayEnum<ProductTypes>()(type);

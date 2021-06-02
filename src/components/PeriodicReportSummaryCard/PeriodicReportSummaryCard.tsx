@@ -174,10 +174,13 @@ export const PeriodicReportSummaryCard: FC<PeriodicReportSummaryCardProps> = ({
       <CardActionAreaLink
         to={
           reportType === 'Progress'
-            ? 'reports'
+            ? `report/${dueReport?.id}`
             : `reports/${reportType.toLowerCase()}`
         }
-        disabled={!reports?.total}
+        disabled={
+          (reportType === 'Progress' && !dueReport) ||
+          (reportType !== 'Progress' && !reports?.total)
+        }
         className={classes.topArea}
       >
         <HugeIcon icon={Icon} loading={loading} />

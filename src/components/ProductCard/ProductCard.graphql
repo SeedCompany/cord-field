@@ -51,4 +51,7 @@ fragment ProductCard on Product {
       }
     }
   }
+  productSteps {
+    ...ProductStepsList
+  }
 }

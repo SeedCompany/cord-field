@@ -81,3 +81,15 @@ export const productTypes = [
 export type ProductTypes =
   | typeof productTypes[number]
   | 'DerivativeScriptureProduct';
+
+export const scriptureSteps: { [key: string]: string[] } = {
+  DirectScriptureProduct: [
+    'Draft',
+    'Team Check',
+    'Community Test',
+    'Back Translation',
+    'Consultant Check',
+    'Completed',
+  ],
+  Film: ['Translate Script', 'Produce Film'],
+};

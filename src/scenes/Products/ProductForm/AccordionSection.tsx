@@ -67,6 +67,7 @@ import {
   ProductForm_DirectScriptureProduct_Fragment as DirectScriptureProduct,
   ProductFormFragment,
 } from './ProductForm.generated';
+import { StepFormState } from './StepsList';
 import { VersesDialog, versesDialogValues } from './VersesDialog';
 
 const useStyles = makeStyles(({ spacing, typography, breakpoints }) => ({
@@ -115,6 +116,7 @@ export interface ProductFormValues extends SubmitAction<'delete'> {
       scriptureReferences?: readonly ScriptureRange[];
       fullOldTestament?: boolean;
       fullNewTestament?: boolean;
+      productSteps?: StepFormState[];
     }
   >;
 }

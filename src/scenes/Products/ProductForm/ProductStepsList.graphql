@@ -1,0 +1,15 @@
+fragment ProductStepsList on SecuredProductStepList {
+  total
+  items {
+    ...ProductStep
+  }
+}
+
+fragment ProductStep on ProductStep {
+  id
+  createdAt
+  canDelete
+  name
+  progress
+  description
+}

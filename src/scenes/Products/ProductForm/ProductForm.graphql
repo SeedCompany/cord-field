@@ -33,6 +33,9 @@ fragment ProductForm on Product {
       ...SecuredScriptureRangesOverride
     }
   }
+  productSteps {
+    ...ProductStepsList
+  }
 }
 
 fragment Producible on Producible {

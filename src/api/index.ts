@@ -10,3 +10,4 @@ export * from './secured';
 export * from './approach';
 export * from './list-caching';
 export * from './sensitivity';
+export * from './product';
