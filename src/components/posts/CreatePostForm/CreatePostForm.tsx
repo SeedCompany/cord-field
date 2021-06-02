@@ -43,7 +43,7 @@ export const CreatePostForm = ({
       initialValues={{
         body: '',
         type: 'Note',
-        shareability: 'External',
+        shareability: 'Internal',
       }}
       onSubmit={async (values) => {
         await createPost({
