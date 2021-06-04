@@ -1,10 +1,26 @@
+fragment LanguageEngagementProgressReports on LanguageEngagement {
+  language {
+    value {
+      id
+      displayName {
+        value
+      }
+      name {
+        value
+      }
+    }
+  }
+  progressReports {
+    ...PeriodicReportList
+  }
+}
+
 query ProgressReports($projectId: ID!, $engagementId: ID!) {
   project(id: $projectId) {
     ...ProjectBreadcrumb
   }
   engagement(id: $engagementId) {
     id
-    ...LanguageEngagementDetail
-    ...InternshipEngagementDetail
+    ...LanguageEngagementProgressReports
   }
 }
