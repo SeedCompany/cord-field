@@ -3,16 +3,8 @@ import { GetAppSharp, PublishSharp } from '@material-ui/icons';
 import { Skeleton } from '@material-ui/lab';
 import clsx from 'clsx';
 import React, { FC, MouseEvent } from 'react';
-import { useDropzone } from 'react-dropzone';
-import { ReportType, SecuredReportPeriod } from '../../api';
+import { PeriodType } from '../../api';
 import { CalendarDate } from '../../util';
-import {
-  FileActionsPopup as ActionsMenu,
-  FileAction,
-  FileActionsContextProvider,
-  getPermittedFileActions,
-} from '../files/FileActions';
-import { useDownloadFile } from '../files/hooks';
 import {
   useDateFormatter,
   useDateTimeFormatter,
@@ -22,8 +14,6 @@ import {
 import { HugeIcon } from '../Icons';
 import { NarrativeReportIcon } from '../Icons/NarrativeReportIcon';
 import { CardActionAreaLink } from '../Routing';
-import { PeriodicReportListFragment } from './PeriodicReport.generated';
-import { useUploadPeriodicReport } from './useUploadPeriodicReport';
 
 const useStyles = makeStyles(({ spacing, palette }) => ({
   root: {
@@ -85,100 +75,49 @@ const useStyles = makeStyles(({ spacing, palette }) => ({
   },
 }));
 
-export interface PeriodicReportSummaryCardProps {
-  reports?: PeriodicReportListFragment;
-  reportType: ReportType;
-  reportPeriod?: SecuredReportPeriod;
+export interface PeriodicReportCardProps {
+  dueDate?: CalendarDate;
+  nextDueDate?: CalendarDate;
+  link: string;
+  period: PeriodType;
   loading?: boolean;
+  title: string;
+  createdBy?: string;
+  modifiedAt?: CalendarDate;
+  total?: number;
+  onFileActionClick: () => void;
 }
 
-export const PeriodicReportSummaryCard: FC<PeriodicReportSummaryCardProps> = ({
-  reports,
-  reportType,
-  reportPeriod,
+export const PeriodicReportCard: FC<PeriodicReportCardProps> = ({
+  dueDate,
+  nextDueDate,
+  period,
+  link,
   loading,
+  title,
+  createdBy,
+  modifiedAt,
+  total,
+  onFileActionClick,
 }) => {
   const classes = useStyles();
   const dateFormatter = useDateFormatter();
   const dateTimeFormatter = useDateTimeFormatter();
   const fiscalQuarterFormatter = useFiscalQuarterFormater();
   const fiscalMonthFormatter = useFiscalMonthFormater();
-  const uploadPeriodicReport = useUploadPeriodicReport();
-
-  const downloadFile = useDownloadFile();
-
-  const interval = reportPeriod?.value === 'Monthly' ? 'month' : 'quarter';
-  const dueReport = reports?.items.find(
-    (report) => +report.start === +CalendarDate.now().startOf(interval)
-  );
-  const dueDate = dueReport?.end.plus({ days: 1 }).endOf('month');
-  const nextDueReport = dueReport
-    ? reports?.items.find(
-        (report) => +report.start === +dueReport.end.plus({ days: 1 })
-      )
-    : null;
-  const nextDueDate = nextDueReport?.end.plus({ days: 1 }).endOf('month');
-
-  const onVersionUpload = (files: File[]) => {
-    if (dueReport) {
-      uploadPeriodicReport({ files, parentId: dueReport.id });
-    }
-  };
-
-  const {
-    getRootProps,
-    getInputProps,
-    open: openFileBrowser,
-  } = useDropzone({
-    onDrop: onVersionUpload,
-    noClick: true,
-  });
 
   const Icon = NarrativeReportIcon; // Fix me - should be different icon per report type
-  const title =
-    reportType === 'Financial'
-      ? 'Financial Report'
-      : reportType === 'Narrative'
-      ? 'Narrative Report'
-      : 'Planning and Progress';
 
-  const reportFile = dueReport?.reportFile.value;
-  const standardFileActions = !dueReport?.reportFile
-    ? []
-    : getPermittedFileActions(
-        dueReport.reportFile.canRead,
-        dueReport.reportFile.canEdit
-      );
-  const noRenameFileActions = standardFileActions.filter(
-    (action) => action !== FileAction.Rename
-  );
-  const permittedFileActions = {
-    // We only want to allow deletion of Defined File `Versions`,
-    // not the files themselves.
-    file: noRenameFileActions.filter((action) => action !== FileAction.Delete),
-    version: noRenameFileActions,
-  };
-
-  const uploadOrDownloadReportFile = (event: MouseEvent<HTMLButtonElement>) => {
+  const onFileButtonClick = (event: MouseEvent<HTMLButtonElement>) => {
     event.preventDefault();
-    if (reportFile) {
-      void downloadFile(reportFile);
-    } else {
-      openFileBrowser();
-    }
+    onFileActionClick();
   };
 
   return (
-    <Card className={classes.root} {...getRootProps()}>
-      <input {...getInputProps()} name="report_file_uploader" />
-
+    <Card className={classes.root}>
       <CardActionAreaLink
-        to={
-          reportType === 'Progress'
-            ? 'reports'
-            : `reports/${reportType.toLowerCase()}`
-        }
-        disabled={!reports?.total}
+        to={link}
+        disabled={!link}
         className={classes.topArea}
       >
         <HugeIcon icon={Icon} loading={loading} />
@@ -194,10 +133,10 @@ export const PeriodicReportSummaryCard: FC<PeriodicReportSummaryCardProps> = ({
           >
             {loading ? (
               <Skeleton animation="pulse" />
-            ) : reportPeriod?.value === 'Monthly' ? (
-              fiscalMonthFormatter(dueReport?.start)
+            ) : period === 'Monthly' ? (
+              fiscalMonthFormatter(dueDate)
             ) : (
-              fiscalQuarterFormatter(dueReport?.start)
+              fiscalQuarterFormatter(dueDate)
             )}
           </Typography>
           <Typography
@@ -205,18 +144,18 @@ export const PeriodicReportSummaryCard: FC<PeriodicReportSummaryCardProps> = ({
             variant="h6"
             className={clsx(
               classes.reportDue,
-              reportFile ? classes.grayText : undefined
+              createdBy ? classes.grayText : undefined
             )}
           >
             {loading ? (
               <Skeleton animation="pulse" />
-            ) : reportFile ? (
+            ) : createdBy ? (
               <>
-                <span>Uploaded by {reportFile.createdBy.fullName}</span>
+                <span>Uploaded by {createdBy}</span>
                 <br />
-                <span>{dateTimeFormatter(reportFile.modifiedAt)}</span>
+                <span>{dateTimeFormatter(modifiedAt)}</span>
               </>
-            ) : dueReport ? (
+            ) : dueDate ? (
               `Report Due ${dateFormatter(dueDate)}`
             ) : (
               'No Report Available'
@@ -226,20 +165,20 @@ export const PeriodicReportSummaryCard: FC<PeriodicReportSummaryCardProps> = ({
             color="primary"
             className={classes.fileBtn}
             startIcon={
-              loading || !dueReport ? null : dueReport.reportFile.value ? (
+              loading || !dueDate ? null : createdBy ? (
                 <GetAppSharp />
               ) : (
                 <PublishSharp />
               )
             }
-            onClick={uploadOrDownloadReportFile}
+            onClick={onFileButtonClick}
           >
             {loading ? (
               <Skeleton width="100%" />
-            ) : dueReport?.reportFile.value ? (
+            ) : createdBy ? (
               'Download File'
             ) : (
-              dueReport && 'Upload File'
+              dueDate && 'Upload File'
             )}
           </Button>
           <Typography
@@ -250,7 +189,7 @@ export const PeriodicReportSummaryCard: FC<PeriodicReportSummaryCardProps> = ({
             {loading ? (
               <Skeleton animation="pulse" />
             ) : (
-              nextDueReport && `Next Report Due ${dateFormatter(nextDueDate)}`
+              nextDueDate && `Next Report Due ${dateFormatter(nextDueDate)}`
             )}
           </Typography>
           <Typography
@@ -258,22 +197,10 @@ export const PeriodicReportSummaryCard: FC<PeriodicReportSummaryCardProps> = ({
             variant="h6"
             className={classes.reportsCount}
           >
-            {loading ? <Skeleton animation="pulse" /> : reports?.total || ''}
+            {loading ? <Skeleton animation="pulse" /> : total || ''}
           </Typography>
         </div>
       </CardActionAreaLink>
-
-      <FileActionsContextProvider>
-        <div className={classes.actionsMenu}>
-          {reportFile && (
-            <ActionsMenu
-              actions={permittedFileActions}
-              item={reportFile}
-              onVersionUpload={onVersionUpload}
-            />
-          )}
-        </div>
-      </FileActionsContextProvider>
     </Card>
   );
 };

@@ -6,8 +6,5 @@ query ProgressReports($projectId: ID!, $engagementId: ID!) {
     id
     ...LanguageEngagementDetail
     ...InternshipEngagementDetail
-    progressReports {
-      ...PeriodicReportList
-    }
   }
 }

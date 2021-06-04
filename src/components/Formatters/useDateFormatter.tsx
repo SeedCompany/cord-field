@@ -68,7 +68,7 @@ export const useFiscalQuarterFormater = () => {
 export const useFiscalMonthFormater = () => {
   const formatMonthQuarter = (date: Nullable<DateTime>) =>
     date
-      ? `M${CalendarDate.toFiscalMonth(date)} - FY${CalendarDate.toFiscalYear(
+      ? `${CalendarDate.toFiscalMonth(date)} - FY${CalendarDate.toFiscalYear(
           date
         )}`
       : '';

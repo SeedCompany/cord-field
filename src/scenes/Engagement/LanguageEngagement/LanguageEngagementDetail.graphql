@@ -73,8 +73,17 @@ fragment LanguageEngagementDetail on LanguageEngagement {
     canEdit
     value
   }
-  progressReports {
-    ...PeriodicReportList
+  currentProgressReportDue {
+    canRead
+    value {
+      ...PeriodicReport
+    }
+  }
+  nextProgressReportDue {
+    canRead
+    value {
+      ...PeriodicReport
+    }
   }
   ...EditEngagement
 }

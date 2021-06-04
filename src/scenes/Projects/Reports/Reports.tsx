@@ -16,10 +16,14 @@ import {
   PeriodicReportsList,
   ReportRow,
 } from '../../../components/PeriodicReportsList';
-import { PeriodicReportListFragment } from '../../../components/PeriodicReportSummaryCard';
 import { ProjectBreadcrumb } from '../../../components/ProjectBreadcrumb';
 import { SensitivityIcon } from '../../../components/Sensitivity';
-import { ProjectOverviewDocument } from '../Overview/ProjectOverview.generated';
+import {
+  ProjectFinancialReportsDocument,
+  ProjectFinancialReportsQuery,
+  ProjectNarrativeReportsDocument,
+  ProjectNarrativeReportsQuery,
+} from './ProjectReports.generated';
 
 const useStyles = makeStyles(({ spacing, breakpoints }) => ({
   root: {
@@ -46,26 +50,37 @@ const useStyles = makeStyles(({ spacing, breakpoints }) => ({
 export const Reports: FC = () => {
   const classes = useStyles();
   const { projectId = '', reportType = '' } = useParams();
-  const { data } = useQuery(ProjectOverviewDocument, {
-    variables: {
-      input: projectId,
-    },
-  });
+  const { data } = useQuery<
+    ProjectFinancialReportsQuery | ProjectNarrativeReportsQuery
+  >(
+    reportType === 'financial'
+      ? ProjectFinancialReportsDocument
+      : ProjectNarrativeReportsDocument,
+    {
+      variables: {
+        input: projectId,
+      },
+    }
+  );
   const fiscalQuarterFormatter = useFiscalQuarterFormater();
   const fiscalMonthFormatter = useFiscalMonthFormater();
   const dateFormatter = useDateFormatter();
 
   const reportTypeName = `${capitalize(reportType)} Reports`;
 
-  const reports =
-    reportType === 'financial'
-      ? data?.project.financialReports
+  const reports = data
+    ? reportType === 'financial'
+      ? (data as ProjectFinancialReportsQuery).project.financialReports
       : reportType === 'narrative'
-      ? ((data?.project as any).narrativeReports as PeriodicReportListFragment)
-      : null;
+      ? (data as ProjectNarrativeReportsQuery).project.narrativeReports
+      : null
+    : null;
+
   const isMonthlyReport =
+    data &&
     reportType === 'financial' &&
-    data?.project.financialReportPeriod.value === 'Monthly';
+    (data as ProjectFinancialReportsQuery).project.financialReportPeriod
+      .value === 'Monthly';
 
   const rowsData: ReportRow[] =
     reports?.items.map((item) => ({

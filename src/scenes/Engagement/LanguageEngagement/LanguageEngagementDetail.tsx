@@ -25,7 +25,7 @@ import {
   useDateTimeFormatter,
 } from '../../../components/Formatters';
 import { OptionsIcon, PlantIcon } from '../../../components/Icons';
-import { PeriodicReportSummaryCard } from '../../../components/PeriodicReportSummaryCard';
+import { PeriodicReportSummary } from '../../../components/PeriodicReportSummary';
 import { ProjectBreadcrumb } from '../../../components/ProjectBreadcrumb';
 import { Redacted } from '../../../components/Redacted';
 import { Link } from '../../../components/Routing';
@@ -243,10 +243,13 @@ export const LanguageEngagementDetail: FC<EngagementQuery> = ({
             <Grid item container spacing={3} alignItems="center">
               <FileActionsContextProvider>
                 <Grid item xs={6}>
-                  <PeriodicReportSummaryCard
-                    reportType="Progress"
-                    reports={engagement.progressReports}
-                    loading={!engagement}
+                  <PeriodicReportSummary
+                    currentReportDue={
+                      engagement.currentProgressReportDue.value || undefined
+                    }
+                    nextReportDue={
+                      engagement.nextProgressReportDue.value || undefined
+                    }
                   />
                 </Grid>
               </FileActionsContextProvider>

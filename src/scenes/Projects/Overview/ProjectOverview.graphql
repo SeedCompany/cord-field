@@ -76,16 +76,34 @@ fragment ProjectOverview on Project {
   partnerships {
     ...PartnershipSummary
   }
-  financialReports {
-    ...PeriodicReportList
-  }
   financialReportPeriod {
     canRead
     canEdit
     value
   }
-  narrativeReports {
-    ...PeriodicReportList
+  currentFinancialReportDue {
+    canRead
+    value {
+      ...PeriodicReport
+    }
+  }
+  nextFinancialReportDue {
+    canRead
+    value {
+      ...PeriodicReport
+    }
+  }
+  currentNarrativeReportDue {
+    canRead
+    value {
+      ...PeriodicReport
+    }
+  }
+  nextNarrativeReportDue {
+    canRead
+    value {
+      ...PeriodicReport
+    }
   }
 }
 

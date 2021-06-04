@@ -133,6 +133,9 @@ export const EditPartnership: FC<EditPartnershipProps> = (props) => {
           return;
         }
         const { financialReportPeriod, ...rest } = partnership;
+        const {
+          financialReportPeriod: { value: prevFinancialReportPeriod },
+        } = project;
 
         await updatePartnership({
           variables: {
@@ -144,22 +147,24 @@ export const EditPartnership: FC<EditPartnershipProps> = (props) => {
             },
           },
         });
-        await updateProject({
-          variables: {
-            input: {
-              project: {
-                id: project.id,
-                financialReportPeriod: financialReportPeriod,
+        if (financialReportPeriod !== prevFinancialReportPeriod) {
+          await updateProject({
+            variables: {
+              input: {
+                project: {
+                  id: project.id,
+                  financialReportPeriod: financialReportPeriod,
+                },
               },
             },
-          },
-          update: (cache, { data }) => {
-            updateProjectReportsCache(
-              cache,
-              data?.updateProject.project as any
-            );
-          },
-        });
+            update: (cache, { data }) => {
+              updateProjectReportsCache(
+                cache,
+                data?.updateProject.project as any
+              );
+            },
+          });
+        }
       }}
       title={`Edit Partnership ${name ? `with ${name}` : ''}`}
       leftAction={
