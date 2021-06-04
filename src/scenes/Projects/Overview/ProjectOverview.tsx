@@ -474,6 +474,7 @@ export const ProjectOverview: FC = () => {
                   projectOverviewData?.project.financialReportPeriod.value ||
                   'Monthly'
                 }
+                total={projectOverviewData?.project.financialReports.total}
                 loading={isProjectDataLoading}
               />
             </Grid>
@@ -487,6 +488,7 @@ export const ProjectOverview: FC = () => {
                   projectOverviewData?.project.nextNarrativeReportDue.value ||
                   undefined
                 }
+                total={projectOverviewData?.project.narrativeReports.total}
                 loading={isProjectDataLoading}
               />
             </Grid>

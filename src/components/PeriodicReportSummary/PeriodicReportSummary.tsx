@@ -2,6 +2,7 @@ import { makeStyles } from '@material-ui/core';
 import React, { FC } from 'react';
 import { useDropzone } from 'react-dropzone';
 import { PeriodType } from '../../api';
+import { CalendarDate } from '../../util';
 import {
   FileAction,
   FileActionsContextProvider,
@@ -33,6 +34,7 @@ export interface PeriodicReportSummaryProps {
   nextReportDue?: PeriodicReportFragment;
   period?: PeriodType;
   loading?: boolean;
+  total?: number;
 }
 
 export const PeriodicReportSummary: FC<PeriodicReportSummaryProps> = ({
@@ -40,6 +42,7 @@ export const PeriodicReportSummary: FC<PeriodicReportSummaryProps> = ({
   nextReportDue,
   period,
   loading,
+  total,
 }) => {
   const classes = useStyles();
   const uploadPeriodicReport = useUploadPeriodicReport();
@@ -98,6 +101,9 @@ export const PeriodicReportSummary: FC<PeriodicReportSummaryProps> = ({
       : `reports/${currentReportDue.type.toLowerCase()}`
     : '';
 
+  const calculateDueDateOneMonthAfter = (date?: CalendarDate) =>
+    date?.plus({ month: 1 }).endOf('month');
+
   return (
     <div {...getRootProps()}>
       <input {...getInputProps()} name="report_file_uploader" />
@@ -106,11 +112,12 @@ export const PeriodicReportSummary: FC<PeriodicReportSummaryProps> = ({
         title={title}
         link={actionLink}
         loading={loading}
-        period={period || 'Monthly'}
-        dueDate={currentReportDue?.start}
-        nextDueDate={nextReportDue?.start}
+        period={period || 'Quarterly'}
+        dueDate={calculateDueDateOneMonthAfter(currentReportDue?.end)}
+        nextDueDate={calculateDueDateOneMonthAfter(nextReportDue?.end)}
         createdBy={reportFile?.value?.createdBy.fullName || ''}
         modifiedAt={reportFile?.value?.modifiedAt}
+        total={total}
         onFileActionClick={uploadOrDownloadReportFile}
       />
 

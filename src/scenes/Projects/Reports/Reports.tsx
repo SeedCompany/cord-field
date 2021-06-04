@@ -60,6 +60,7 @@ export const Reports: FC = () => {
       variables: {
         input: projectId,
       },
+      fetchPolicy: 'network-only',
     }
   );
   const fiscalQuarterFormatter = useFiscalQuarterFormater();

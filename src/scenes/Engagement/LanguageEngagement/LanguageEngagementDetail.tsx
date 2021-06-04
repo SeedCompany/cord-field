@@ -250,6 +250,7 @@ export const LanguageEngagementDetail: FC<EngagementQuery> = ({
                     nextReportDue={
                       engagement.nextProgressReportDue.value || undefined
                     }
+                    total={engagement.progressReports.total}
                   />
                 </Grid>
               </FileActionsContextProvider>
