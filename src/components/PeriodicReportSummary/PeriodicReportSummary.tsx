@@ -34,7 +34,6 @@ export interface PeriodicReportSummaryProps {
   nextReportDue?: PeriodicReportFragment;
   period?: PeriodType;
   loading?: boolean;
-  total?: number;
 }
 
 export const PeriodicReportSummary: FC<PeriodicReportSummaryProps> = ({
@@ -42,7 +41,6 @@ export const PeriodicReportSummary: FC<PeriodicReportSummaryProps> = ({
   nextReportDue,
   period,
   loading,
-  total,
 }) => {
   const classes = useStyles();
   const uploadPeriodicReport = useUploadPeriodicReport();
@@ -117,7 +115,6 @@ export const PeriodicReportSummary: FC<PeriodicReportSummaryProps> = ({
         nextDueDate={calculateDueDateOneMonthAfter(nextReportDue?.end)}
         createdBy={reportFile?.value?.createdBy.fullName || ''}
         modifiedAt={reportFile?.value?.modifiedAt}
-        total={total}
         onFileActionClick={uploadOrDownloadReportFile}
       />
 

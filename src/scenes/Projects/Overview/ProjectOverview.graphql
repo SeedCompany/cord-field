@@ -105,12 +105,6 @@ fragment ProjectOverview on Project {
       ...PeriodicReport
     }
   }
-  financialReports {
-    total
-  }
-  narrativeReports {
-    total
-  }
 }
 
 query ProjectPostListOverview($project: ID!, $input: PostListInput) {

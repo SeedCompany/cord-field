@@ -62,12 +62,6 @@ const useStyles = makeStyles(({ spacing, palette }) => ({
     marginTop: spacing(1),
     marginBottom: spacing(2.5),
   },
-  reportsCount: {
-    fontSize: '8px',
-    lineHeight: '16px',
-    color: palette.text.secondary,
-    marginTop: spacing(1.5),
-  },
   actionsMenu: {
     position: 'absolute',
     right: 0,
@@ -84,7 +78,6 @@ export interface PeriodicReportCardProps {
   title: string;
   createdBy?: string;
   modifiedAt?: CalendarDate;
-  total?: number;
   onFileActionClick: () => void;
 }
 
@@ -97,7 +90,6 @@ export const PeriodicReportCard: FC<PeriodicReportCardProps> = ({
   title,
   createdBy,
   modifiedAt,
-  total,
   onFileActionClick,
 }) => {
   const classes = useStyles();
@@ -191,13 +183,6 @@ export const PeriodicReportCard: FC<PeriodicReportCardProps> = ({
             ) : (
               nextDueDate && `Next Report Due ${dateFormatter(nextDueDate)}`
             )}
-          </Typography>
-          <Typography
-            color="initial"
-            variant="h6"
-            className={classes.reportsCount}
-          >
-            {loading ? <Skeleton animation="pulse" /> : total || ''}
           </Typography>
         </div>
       </CardActionAreaLink>
