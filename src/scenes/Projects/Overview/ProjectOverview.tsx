@@ -27,7 +27,7 @@ import { InternshipEngagementListItemCard } from '../../../components/Internship
 import { LanguageEngagementListItemCard } from '../../../components/LanguageEngagementListItemCard';
 import { List, useListQuery } from '../../../components/List';
 import { PartnershipSummary } from '../../../components/PartnershipSummary';
-import { PeriodicReportSummaryCard } from '../../../components/PeriodicReportSummaryCard';
+import { PeriodicReportSummary } from '../../../components/PeriodicReportSummary';
 import { ProjectMembersSummary } from '../../../components/ProjectMembersSummary';
 import { Redacted } from '../../../components/Redacted';
 import { SensitivityIcon } from '../../../components/Sensitivity';
@@ -461,19 +461,32 @@ export const ProjectOverview: FC = () => {
 
           <Grid container spacing={3}>
             <Grid item xs={12} md={6}>
-              <PeriodicReportSummaryCard
-                reportType="Financial"
-                reports={projectOverviewData?.project.financialReports}
-                reportPeriod={
-                  projectOverviewData?.project.financialReportPeriod
+              <PeriodicReportSummary
+                currentReportDue={
+                  projectOverviewData?.project.currentFinancialReportDue
+                    .value || undefined
+                }
+                nextReportDue={
+                  projectOverviewData?.project.nextFinancialReportDue.value ||
+                  undefined
+                }
+                period={
+                  projectOverviewData?.project.financialReportPeriod.value ||
+                  'Monthly'
                 }
                 loading={isProjectDataLoading}
               />
             </Grid>
             <Grid item xs={12} md={6}>
-              <PeriodicReportSummaryCard
-                reportType="Narrative"
-                reports={projectOverviewData?.project.narrativeReports}
+              <PeriodicReportSummary
+                currentReportDue={
+                  projectOverviewData?.project.currentNarrativeReportDue
+                    .value || undefined
+                }
+                nextReportDue={
+                  projectOverviewData?.project.nextNarrativeReportDue.value ||
+                  undefined
+                }
                 loading={isProjectDataLoading}
               />
             </Grid>

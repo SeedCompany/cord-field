@@ -1,7 +1,6 @@
 import { makeStyles, useTheme } from '@material-ui/core';
 import { Column } from 'material-table';
 import React, { FC } from 'react';
-import { CalendarDate } from '../../util';
 import {
   FileActionsPopup as ActionsMenu,
   FileAction,
@@ -11,7 +10,7 @@ import {
 import {
   PeriodicReportFragment,
   useUploadPeriodicReport,
-} from '../PeriodicReportSummaryCard';
+} from '../PeriodicReportSummary';
 import { Table } from '../Table';
 
 const useStyles = makeStyles(({ spacing }) => ({
@@ -28,15 +27,6 @@ export interface ReportRow {
   modifiedBy: string;
   modifiedAt: string;
 }
-
-const sortByFiscalYear = (d1: CalendarDate, d2: CalendarDate) => {
-  const d1FiscalYear = CalendarDate.toFiscalYear(d1);
-  const d2FiscalYear = CalendarDate.toFiscalYear(d2);
-  if (d1FiscalYear === d2FiscalYear) {
-    return CalendarDate.toFiscalQuarter(d1) - CalendarDate.toFiscalQuarter(d2);
-  }
-  return d1FiscalYear - d2FiscalYear;
-};
 
 interface PeriodicReportsListProps {
   data: ReportRow[];
@@ -65,7 +55,7 @@ export const PeriodicReportsList: FC<PeriodicReportsListProps> = ({ data }) => {
     {
       title: 'Period',
       field: 'period',
-      customSort: (d1, d2) => sortByFiscalYear(d1.start, d2.start),
+      customSort: (d1, d2) => d1.start.toMillis() - d2.start.toMillis(),
       defaultSort: 'desc',
       headerStyle,
       cellStyle,

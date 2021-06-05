@@ -7,6 +7,7 @@ import {
   Duration,
   DurationObject,
   DurationUnit,
+  Info,
   LocaleOptions,
   ToISOTimeOptions,
   Zone,
@@ -127,7 +128,8 @@ export class CalendarDate extends DateTime {
 
   static toFiscalMonth = (dt: DateTime) => {
     const m = (dt.month + 3) % 12;
-    return m > 0 ? m : 12;
+    const fm = m > 0 ? m : 12;
+    return Info.months('short')[fm - 1];
   };
 
   static fiscalYearEndToCalendarDate = (year: number | null | undefined) =>

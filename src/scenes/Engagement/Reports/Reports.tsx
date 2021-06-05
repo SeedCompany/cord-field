@@ -1,6 +1,5 @@
 import { useQuery } from '@apollo/client';
 import { Breadcrumbs, makeStyles, Typography } from '@material-ui/core';
-import { Skeleton } from '@material-ui/lab';
 import React, { FC } from 'react';
 import { Helmet } from 'react-helmet-async';
 import { useParams } from 'react-router-dom';
@@ -54,35 +53,33 @@ export const Reports: FC = () => {
 
   const reportTypeName = 'Progress Reports';
 
-  const reports = data?.engagement.progressReports;
+  if (data?.engagement.__typename !== 'LanguageEngagement') {
+    return null;
+  }
 
-  const rowsData: ReportRow[] =
-    reports?.items.map((item) => ({
-      id: item.id,
-      period: fiscalQuarterFormatter(item.start),
-      start: item.start,
-      modifiedBy: item.reportFile.value?.modifiedBy.fullName || '',
-      modifiedAt: dateFormatter(item.reportFile.value?.modifiedAt),
-      item,
-    })) || [];
+  const reports = data.engagement.progressReports;
 
-  const engagementName =
-    data?.engagement.__typename === 'LanguageEngagement'
-      ? data.engagement.language.value?.displayName.value
-      : data?.engagement.__typename === 'InternshipEngagement'
-      ? data.engagement.intern.value?.fullName
-      : null;
+  const rowsData: ReportRow[] = reports.items.map((item) => ({
+    id: item.id,
+    period: fiscalQuarterFormatter(item.start),
+    start: item.start,
+    modifiedBy: item.reportFile.value?.modifiedBy.fullName || '',
+    modifiedAt: dateFormatter(item.reportFile.value?.modifiedAt),
+    item,
+  }));
+
+  const engagementName = data.engagement.language.value?.displayName.value;
 
   return (
     <div className={classes.root}>
       <Helmet
-        title={`${reportTypeName} - ${data?.project.name.value ?? 'A Project'}`}
+        title={`${reportTypeName} - ${data.project.name.value ?? 'A Project'}`}
       />
       <Breadcrumbs>
-        <ProjectBreadcrumb data={data?.project} />
+        <ProjectBreadcrumb data={data.project} />
         {engagementName && (
           <Breadcrumb
-            to={`/projects/${data?.project.id}/engagements/${data?.engagement.id}`}
+            to={`/projects/${data.project.id}/engagements/${data.engagement.id}`}
           >
             {engagementName}
           </Breadcrumb>
@@ -91,9 +88,7 @@ export const Reports: FC = () => {
       </Breadcrumbs>
 
       <header className={classes.subheader}>
-        <Typography variant="h4">
-          {data ? data.project.name.value : <Skeleton width={200} />}
-        </Typography>
+        <Typography variant="h4">{data.project.name.value}</Typography>
       </header>
       <header className={classes.header}>
         <Typography variant="h2" className={classes.reportName}>
@@ -103,13 +98,13 @@ export const Reports: FC = () => {
           loading={!data}
           startIcon={
             <SensitivityIcon
-              value={data?.project.sensitivity}
+              value={data.project.sensitivity}
               loading={!data}
               disableTooltip
             />
           }
         >
-          {data ? `${data.project.sensitivity} Sensitivity` : null}
+          {data.project.sensitivity} Sensitivity
         </DataButton>
       </header>
 
