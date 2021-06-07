@@ -3,9 +3,7 @@ declare module '@freiraum/msgreader' {
   export default class MsgReader {
     constructor(buffer: ArrayBuffer);
     getFileData(): OutlookMsgData | ErrorObj;
-    getAttachment(
-      attach: number
-    ): {
+    getAttachment(attach: number): {
       fileName: string;
       content: any;
     };

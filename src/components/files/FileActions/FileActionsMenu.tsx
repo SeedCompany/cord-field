@@ -53,6 +53,7 @@ const useStyles = makeStyles(({ spacing }) => ({
 
 interface FileActionsList {
   actions: PermittedActions;
+  className?: string;
 }
 
 interface NonVersionPopupProps extends FileActionsList {
@@ -88,7 +89,7 @@ export const FileActionsPopup: FC<FileActionsPopupProps> = (props) => {
 
   return (
     <>
-      <IconButton onClick={openAddMenu}>
+      <IconButton className={props.className} onClick={openAddMenu}>
         <MoreIcon />
       </IconButton>
       <FileActionsMenu anchorEl={anchor} onClose={closeAddMenu} {...props} />

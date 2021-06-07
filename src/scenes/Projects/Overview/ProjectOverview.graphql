@@ -76,6 +76,46 @@ fragment ProjectOverview on Project {
   partnerships {
     ...PartnershipSummary
   }
+  financialReportPeriod {
+    canRead
+    canEdit
+    value
+  }
+  currentFinancialReportDue {
+    canRead
+    value {
+      ...PeriodicReport
+    }
+  }
+  nextFinancialReportDue {
+    canRead
+    value {
+      ...PeriodicReport
+    }
+  }
+  currentNarrativeReportDue {
+    canRead
+    value {
+      ...PeriodicReport
+    }
+  }
+  nextNarrativeReportDue {
+    canRead
+    value {
+      ...PeriodicReport
+    }
+  }
+}
+
+query ProjectPostListOverview($project: ID!, $input: PostListInput) {
+  project(id: $project) {
+    id
+    ... on Postable {
+      posts(input: $input) {
+        ...PostList
+      }
+    }
+  }
 }
 
 query ProjectEngagementListOverview(

@@ -26,9 +26,8 @@ const initialUploadContext = {
   },
 };
 
-export const UploadContext = createContext<typeof initialUploadContext>(
-  initialUploadContext
-);
+export const UploadContext =
+  createContext<typeof initialUploadContext>(initialUploadContext);
 UploadContext.displayName = 'UploadContext';
 
 export const UploadProvider: FC = ({ children }) => {

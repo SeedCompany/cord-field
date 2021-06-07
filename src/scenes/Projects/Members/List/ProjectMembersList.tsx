@@ -45,10 +45,8 @@ export const ProjectMembersList: FC = () => {
     },
   });
 
-  const [
-    createProjectMemberDialogState,
-    openCreateProjectMemberDialog,
-  ] = useDialog();
+  const [createProjectMemberDialogState, openCreateProjectMemberDialog] =
+    useDialog();
 
   const [
     updateProjectMemberDialogState,

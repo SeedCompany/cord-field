@@ -15,11 +15,11 @@ import { Nullable } from './types';
  *   ifThing ? conditionalFn : null
  * )
  */
-export const callAll = <Args extends any[]>(
-  ...fns: Array<Nullable<(...args: Args) => void>>
-) => (...args: Args) => {
-  fns.forEach((fn) => fn?.(...args));
-};
+export const callAll =
+  <Args extends any[]>(...fns: Array<Nullable<(...args: Args) => void>>) =>
+  (...args: Args) => {
+    fns.forEach((fn) => fn?.(...args));
+  };
 
 /**
  * Create a new function which calls each function given
@@ -38,16 +38,18 @@ export const callAll = <Args extends any[]>(
  *   ifThing ? conditionalFn : null
  * )
  */
-export const callSome = <Args extends any[], Return>(
-  ...fns: Array<Nullable<(...args: Args) => Return>>
-) => (...args: Args): Return | undefined => {
-  for (const fn of fns) {
-    if (!fn) {
-      continue;
+export const callSome =
+  <Args extends any[], Return>(
+    ...fns: Array<Nullable<(...args: Args) => Return>>
+  ) =>
+  (...args: Args): Return | undefined => {
+    for (const fn of fns) {
+      if (!fn) {
+        continue;
+      }
+      const result = fn(...args);
+      if (result) {
+        return result;
+      }
     }
-    const result = fn(...args);
-    if (result) {
-      return result;
-    }
-  }
-};
+  };

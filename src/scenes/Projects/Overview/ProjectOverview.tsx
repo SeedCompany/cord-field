@@ -27,6 +27,7 @@ import { InternshipEngagementListItemCard } from '../../../components/Internship
 import { LanguageEngagementListItemCard } from '../../../components/LanguageEngagementListItemCard';
 import { List, useListQuery } from '../../../components/List';
 import { PartnershipSummary } from '../../../components/PartnershipSummary';
+import { PeriodicReportSummary } from '../../../components/PeriodicReportSummary';
 import { ProjectMembersSummary } from '../../../components/ProjectMembersSummary';
 import { Redacted } from '../../../components/Redacted';
 import { SensitivityIcon } from '../../../components/Sensitivity';
@@ -43,6 +44,7 @@ import {
   ProjectOverviewDocument,
   ProjectOverviewFragment,
 } from './ProjectOverview.generated';
+import { ProjectPostList } from './ProjectPostList';
 
 const useStyles = makeStyles(({ spacing, breakpoints, palette }) => ({
   root: {
@@ -96,14 +98,10 @@ export const ProjectOverview: FC = () => {
   const { projectId = '' } = useParams();
   const formatNumber = useNumberFormatter();
 
-  const [editState, editField, fieldsBeingEdited] = useDialog<
-    Many<EditableProjectField>
-  >();
-  const [
-    workflowState,
-    openWorkflow,
-    workflowProject,
-  ] = useDialog<ProjectOverviewFragment>();
+  const [editState, editField, fieldsBeingEdited] =
+    useDialog<Many<EditableProjectField>>();
+  const [workflowState, openWorkflow, workflowProject] =
+    useDialog<ProjectOverviewFragment>();
 
   const {
     directoryId,
@@ -116,7 +114,11 @@ export const ProjectOverview: FC = () => {
     uploadProjectFiles({ files, parentId: directoryId });
   };
 
-  const { getRootProps, getInputProps, open: openFileBrowser } = useDropzone({
+  const {
+    getRootProps,
+    getInputProps,
+    open: openFileBrowser,
+  } = useDropzone({
     onDrop: handleDrop,
     noClick: true,
     disabled: !directoryId,
@@ -124,14 +126,15 @@ export const ProjectOverview: FC = () => {
 
   const [createEngagementState, createEngagement] = useDialog();
 
-  const { data: projectOverviewData, error } = useQuery(
-    ProjectOverviewDocument,
-    {
-      variables: {
-        input: projectId,
-      },
-    }
-  );
+  const {
+    data: projectOverviewData,
+    error,
+    loading: isProjectDataLoading,
+  } = useQuery(ProjectOverviewDocument, {
+    variables: {
+      input: projectId,
+    },
+  });
 
   const engagements = useListQuery(EngagementList, {
     listAt: (data) => data.project.engagements,
@@ -455,6 +458,40 @@ export const ProjectOverview: FC = () => {
               />
             </Grid>
           </Grid>
+
+          <Grid container spacing={3}>
+            <Grid item xs={12} md={6}>
+              <PeriodicReportSummary
+                currentReportDue={
+                  projectOverviewData?.project.currentFinancialReportDue
+                    .value || undefined
+                }
+                nextReportDue={
+                  projectOverviewData?.project.nextFinancialReportDue.value ||
+                  undefined
+                }
+                period={
+                  projectOverviewData?.project.financialReportPeriod.value ||
+                  'Monthly'
+                }
+                loading={isProjectDataLoading}
+              />
+            </Grid>
+            <Grid item xs={12} md={6}>
+              <PeriodicReportSummary
+                currentReportDue={
+                  projectOverviewData?.project.currentNarrativeReportDue
+                    .value || undefined
+                }
+                nextReportDue={
+                  projectOverviewData?.project.nextNarrativeReportDue.value ||
+                  undefined
+                }
+                loading={isProjectDataLoading}
+              />
+            </Grid>
+          </Grid>
+
           <CardGroup horizontal="md">
             <ProjectMembersSummary
               members={projectOverviewData?.project.team}
@@ -518,6 +555,9 @@ export const ProjectOverview: FC = () => {
             skeletonCount={0}
             renderSkeleton={null}
           />
+          {!!projectOverviewData?.project && (
+            <ProjectPostList project={projectOverviewData.project} />
+          )}
         </div>
       )}
       {workflowProject && (

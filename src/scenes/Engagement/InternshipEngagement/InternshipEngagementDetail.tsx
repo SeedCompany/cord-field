@@ -7,7 +7,6 @@ import {
   displayInternPosition,
   securedDateRange,
 } from '../../../api';
-import { AddItemCard } from '../../../components/AddItemCard';
 import { Breadcrumb } from '../../../components/Breadcrumb';
 import { DataButton } from '../../../components/DataButton';
 import { DefinedFileCard } from '../../../components/DefinedFileCard';
@@ -33,7 +32,7 @@ import {
 } from '../EditEngagement/EditEngagementDialog';
 import { EngagementWorkflowDialog } from '../EditEngagement/EngagementWorkflowDialog';
 import { EngagementQuery } from '../Engagement.generated';
-import { useUploadEngagementFile } from '../Files';
+import { UploadInternshipEngagementGrowthPlanDocument } from '../Files';
 import { MentorCard } from './MentorCard';
 
 const useStyles = makeStyles(
@@ -63,16 +62,11 @@ export const InternshipEngagementDetail: FC<EngagementQuery> = ({
   engagement,
 }) => {
   const classes = useStyles();
-  const uploadFile = useUploadEngagementFile('internship');
 
-  const [editState, show, editField] = useDialog<
-    Many<EditableEngagementField>
-  >();
-  const [
-    workflowState,
-    openWorkflow,
-    workflowEngagement,
-  ] = useDialog<Engagement>();
+  const [editState, show, editField] =
+    useDialog<Many<EditableEngagementField>>();
+  const [workflowState, openWorkflow, workflowEngagement] =
+    useDialog<Engagement>();
 
   const date = securedDateRange(engagement.startDate, engagement.endDate);
   const formatDate = useDateFormatter();
@@ -84,7 +78,6 @@ export const InternshipEngagementDetail: FC<EngagementQuery> = ({
 
   const intern = engagement.intern.value;
   const name = intern?.fullName;
-  const growthPlan = engagement.growthPlan;
 
   return (
     <>
@@ -232,35 +225,15 @@ export const InternshipEngagementDetail: FC<EngagementQuery> = ({
               <Grid item container spacing={3} alignItems="center">
                 <FileActionsContextProvider>
                   <Grid item xs={6}>
-                    {growthPlan.canRead && !growthPlan.value ? (
-                      <AddItemCard
-                        actionType="dropzone"
-                        canAdd={growthPlan.canEdit}
-                        DropzoneProps={{
-                          classes: { text: classes.dropzoneText },
-                          options: {
-                            multiple: false,
-                          },
-                        }}
-                        handleFileSelect={(files: File[]) =>
-                          uploadFile({ files, parentId: engagement.id })
-                        }
-                        itemType="Growth Plan"
-                      />
-                    ) : (
-                      <DefinedFileCard
-                        title="Growth Plan"
-                        onVersionUpload={(files) =>
-                          uploadFile({
-                            action: 'version',
-                            files,
-                            parentId: engagement.id,
-                          })
-                        }
-                        resourceType="engagement"
-                        securedFile={engagement.growthPlan}
-                      />
-                    )}
+                    <DefinedFileCard
+                      title="Growth Plan"
+                      parentId={engagement.id}
+                      uploadMutationDocument={
+                        UploadInternshipEngagementGrowthPlanDocument
+                      }
+                      resourceType="engagement"
+                      securedFile={engagement.growthPlan}
+                    />
                   </Grid>
                 </FileActionsContextProvider>
               </Grid>

@@ -13,7 +13,6 @@ import {
   displayEngagementStatus,
   securedDateRange,
 } from '../../../api';
-import { AddItemCard } from '../../../components/AddItemCard';
 import { BooleanProperty } from '../../../components/BooleanProperty';
 import { Breadcrumb } from '../../../components/Breadcrumb';
 import { DataButton } from '../../../components/DataButton';
@@ -27,6 +26,7 @@ import {
   useDateTimeFormatter,
 } from '../../../components/Formatters';
 import { OptionsIcon, PlantIcon } from '../../../components/Icons';
+import { PeriodicReportSummary } from '../../../components/PeriodicReportSummary';
 import { ProjectBreadcrumb } from '../../../components/ProjectBreadcrumb';
 import { Redacted } from '../../../components/Redacted';
 import { Link } from '../../../components/Routing';
@@ -41,7 +41,7 @@ import {
 } from '../EditEngagement/EditEngagementDialog';
 import { EngagementWorkflowDialog } from '../EditEngagement/EngagementWorkflowDialog';
 import { EngagementQuery } from '../Engagement.generated';
-import { useUploadEngagementFile } from '../Files';
+import { UploadLanguageEngagementPnpDocument } from '../Files';
 
 const useStyles = makeStyles(({ spacing, breakpoints, palette }) => ({
   root: {
@@ -65,16 +65,11 @@ export const LanguageEngagementDetail: FC<EngagementQuery> = ({
   engagement,
 }) => {
   const classes = useStyles();
-  const uploadFile = useUploadEngagementFile('language');
 
-  const [editState, show, editField] = useDialog<
-    Many<EditableEngagementField>
-  >();
-  const [
-    workflowState,
-    openWorkflow,
-    workflowEngagement,
-  ] = useDialog<Engagement>();
+  const [editState, show, editField] =
+    useDialog<Many<EditableEngagementField>>();
+  const [workflowState, openWorkflow, workflowEngagement] =
+    useDialog<Engagement>();
 
   const formatDate = useDateFormatter();
   const formatDateTime = useDateTimeFormatter();
@@ -86,7 +81,6 @@ export const LanguageEngagementDetail: FC<EngagementQuery> = ({
   const language = engagement.language.value;
   const langName = language?.name.value ?? language?.displayName.value;
   const ptRegistryId = engagement.paratextRegistryId;
-  const pnp = engagement.pnp;
   const editable = canEditAny(engagement);
 
   const date = securedDateRange(engagement.startDate, engagement.endDate);
@@ -248,40 +242,33 @@ export const LanguageEngagementDetail: FC<EngagementQuery> = ({
                 emptyValue="None"
               />
             </Grid>
-            <Grid item container spacing={3} alignItems="center">
-              <FileActionsContextProvider>
+            <FileActionsContextProvider>
+              <Grid item container spacing={3} alignItems="flex-start">
                 <Grid item xs={6}>
-                  {pnp.canRead && !pnp.value ? (
-                    <AddItemCard
-                      actionType="dropzone"
-                      canAdd={pnp.canEdit}
-                      handleFileSelect={(files: File[]) =>
-                        uploadFile({ files, parentId: engagement.id })
-                      }
-                      DropzoneProps={{
-                        options: {
-                          multiple: false,
-                        },
-                      }}
-                      itemType="Planning and Progress"
-                    />
-                  ) : (
+                  <PeriodicReportSummary
+                    currentReportDue={
+                      engagement.currentProgressReportDue.value || undefined
+                    }
+                    nextReportDue={
+                      engagement.nextProgressReportDue.value || undefined
+                    }
+                  />
+                </Grid>
+                <Tooltip title="This holds the planning info of PnP files">
+                  <Grid item xs={6}>
                     <DefinedFileCard
-                      title="Planning and Progress"
-                      onVersionUpload={(files) =>
-                        uploadFile({
-                          action: 'version',
-                          files,
-                          parentId: engagement.id,
-                        })
+                      title="Planning Spreadsheet"
+                      uploadMutationDocument={
+                        UploadLanguageEngagementPnpDocument
                       }
+                      parentId={engagement.id}
                       resourceType="engagement"
                       securedFile={engagement.pnp}
                     />
-                  )}
-                </Grid>
-              </FileActionsContextProvider>
-            </Grid>
+                  </Grid>
+                </Tooltip>
+              </Grid>
+            </FileActionsContextProvider>
           </Grid>
           <Grid item container spacing={3} alignItems="center">
             <Grid item xs={6}>

@@ -29,15 +29,15 @@ export const renderError = (e: unknown, renderers?: ErrorRenderers) => {
     .reduce(
       (prev: NextRenderer<any>, renderer) =>
         // Return a new function with the renderer's next function scoped into it
-        (e) => (typeof renderer === 'function' ? renderer(e, prev) : renderer),
+        (e) =>
+          typeof renderer === 'function' ? renderer(e, prev) : renderer,
       // Start with a noop next renderer
       () => undefined
     );
   return renderer(error);
 };
 
-const resolveRenderer = <E>(renderer: ErrorRenderer<E>) => (
-  error: E,
-  next: NextRenderer
-): ReactNode =>
-  typeof renderer === 'function' ? renderer(error, next) : renderer;
+const resolveRenderer =
+  <E>(renderer: ErrorRenderer<E>) =>
+  (error: E, next: NextRenderer): ReactNode =>
+    typeof renderer === 'function' ? renderer(error, next) : renderer;

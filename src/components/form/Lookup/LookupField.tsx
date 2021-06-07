@@ -99,11 +99,17 @@ export function LookupField<
   type Val = Value<T, Multiple, DisableClearable, false>;
 
   const selectOnFocus = props.selectOnFocus ?? true;
-  const andSelectOnFocus = useCallback((el) => selectOnFocus && el.select(), [
-    selectOnFocus,
-  ]);
+  const andSelectOnFocus = useCallback(
+    (el) => selectOnFocus && el.select(),
+    [selectOnFocus]
+  );
 
-  const { input: field, meta, ref, rest: autocompleteProps } = useField({
+  const {
+    input: field,
+    meta,
+    ref,
+    rest: autocompleteProps,
+  } = useField({
     ...props,
     required,
     multiple,
@@ -130,9 +136,8 @@ export function LookupField<
   // Not just for first load, but every network request
   const loading = isNetworkRequestInFlight(networkStatus);
 
-  const [createDialogState, createDialogItem, createInitialValues] = useDialog<
-    Partial<CreateFormValues>
-  >();
+  const [createDialogState, createDialogItem, createInitialValues] =
+    useDialog<Partial<CreateFormValues>>();
 
   useEffect(() => {
     setInput(selectedText);
@@ -314,12 +319,8 @@ interface StandardNamedObject {
   readonly name: { readonly value?: string | null };
 }
 
-type SetOptionalIf<
-  T,
-  Keys extends keyof T,
-  Subject,
-  Condition
-> = Subject extends Condition ? SetOptional<T, Keys> : T;
+type SetOptionalIf<T, Keys extends keyof T, Subject, Condition> =
+  Subject extends Condition ? SetOptional<T, Keys> : T;
 
 LookupField.createFor = <T extends { id: string }, CreateFormValues = never>({
   resource,

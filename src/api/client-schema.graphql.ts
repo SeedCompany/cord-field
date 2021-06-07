@@ -4,18 +4,32 @@ import { UrlLoader } from '@graphql-tools/url-loader';
 import { buildASTSchema, isInterfaceType } from 'graphql';
 import { GraphQLInterfaceType } from 'graphql/type/definition';
 
+const fromFile = async (path: string) => {
+  const source = await new GraphQLFileLoader().load(path, {});
+  return buildASTSchema(source.document!);
+};
+const fromUrl = async (url: string) => {
+  const source = await new UrlLoader().load(url, {});
+  return source.schema!;
+};
+
 // eslint-disable-next-line import/no-default-export
 export default async function (url: string, _config: unknown) {
-  // Load server schema from url just like normal
-  const serverSource = await new UrlLoader().load(url, {});
-  const serverSchema = serverSource.schema!;
+  // In CI, load server schema from API PR build if given
+  const unmergedServerPath = './server_build/schema.graphql';
+  let unmergedServerSchema = null;
+  if (
+    process.env.CI &&
+    (await new GraphQLFileLoader().canLoad(unmergedServerPath, {}))
+  ) {
+    unmergedServerSchema = await fromFile(unmergedServerPath);
+  }
+
+  // Else load server schema from url just like normal
+  const serverSchema = unmergedServerSchema ?? (await fromUrl(url));
 
   // Load client-side schema from this file
-  const clientSource = await new GraphQLFileLoader().load(
-    __dirname + '/client-schema.graphql',
-    {}
-  );
-  const clientSchema = buildASTSchema(clientSource.document!);
+  const clientSchema = await fromFile(__dirname + '/client-schema.graphql');
 
   // For all client interfaces that also exist in server schema...
   // Add the client-side fields to the server interface & all implementations

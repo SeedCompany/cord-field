@@ -2,10 +2,16 @@ import { useMutation } from '@apollo/client';
 import { Decorator } from 'final-form';
 import React, { FC, useMemo } from 'react';
 import { Except } from 'type-fest';
-import { removeItemFromList, UpdatePartnershipInput } from '../../../api';
+import {
+  PeriodType,
+  removeItemFromList,
+  UpdatePartnershipInput,
+} from '../../../api';
 import { SubmitAction, SubmitButton } from '../../../components/form';
 import { PartnerLookupItem } from '../../../components/form/Lookup';
 import { callAll } from '../../../util';
+import { updateProjectReportsCache } from '../../Projects/Update';
+import { UpdateProjectDocument } from '../../Projects/Update/UpdateProject.generated';
 import { invalidateBudgetRecords } from '../InvalidateBudget/invalidateBudgetRecords';
 import { ProjectPartnershipsQuery } from '../List/PartnershipList.generated';
 import {
@@ -25,6 +31,7 @@ export type EditPartnershipFormInput = UpdatePartnershipInput &
   SubmitAction<'delete'> & {
     partnership?: {
       partnerLookupItem?: PartnerLookupItem;
+      financialReportPeriod?: PeriodType;
     };
   };
 
@@ -84,6 +91,7 @@ export const EditPartnership: FC<EditPartnershipProps> = (props) => {
       invalidateBudgetRecords(project, partnership, undefined)
     ),
   });
+  const [updateProject] = useMutation(UpdateProjectDocument);
 
   const initialValues = useMemo(
     () => ({
@@ -96,17 +104,19 @@ export const EditPartnership: FC<EditPartnershipProps> = (props) => {
         mouStartOverride: partnership.mouStartOverride.value,
         mouEndOverride: partnership.mouEndOverride.value,
         primary: partnership.primary.value,
+        financialReportPeriod: project.financialReportPeriod.value!,
       },
     }),
     [
-      partnership.agreementStatus.value,
-      partnership.financialReportingType.value,
       partnership.id,
-      partnership.mouEndOverride.value,
-      partnership.mouStartOverride.value,
+      partnership.agreementStatus.value,
       partnership.mouStatus.value,
       partnership.types.value,
+      partnership.financialReportingType.value,
+      partnership.mouStartOverride.value,
+      partnership.mouEndOverride.value,
       partnership.primary.value,
+      project.financialReportPeriod.value,
     ]
   );
 
@@ -122,16 +132,39 @@ export const EditPartnership: FC<EditPartnershipProps> = (props) => {
           });
           return;
         }
+        const { financialReportPeriod, ...rest } = partnership;
+        const {
+          financialReportPeriod: { value: prevFinancialReportPeriod },
+        } = project;
+
         await updatePartnership({
           variables: {
             input: {
               partnership: {
-                ...partnership,
+                ...rest,
                 primary: partnership.primary || undefined,
               },
             },
           },
         });
+        if (financialReportPeriod !== prevFinancialReportPeriod) {
+          await updateProject({
+            variables: {
+              input: {
+                project: {
+                  id: project.id,
+                  financialReportPeriod: financialReportPeriod,
+                },
+              },
+            },
+            update: (cache, { data }) => {
+              updateProjectReportsCache(
+                cache,
+                data?.updateProject.project as any
+              );
+            },
+          });
+        }
       }}
       title={`Edit Partnership ${name ? `with ${name}` : ''}`}
       leftAction={

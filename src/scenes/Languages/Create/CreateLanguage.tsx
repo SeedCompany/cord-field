@@ -37,9 +37,10 @@ export const CreateLanguage = (props: CreateLanguageProps) => {
           variables: {
             input: {
               language: {
-                sponsorEstimatedEndDate: CalendarDate.fiscalYearEndToCalendarDate(
-                  sponsorEstimatedEndFY
-                ),
+                sponsorEstimatedEndDate:
+                  CalendarDate.fiscalYearEndToCalendarDate(
+                    sponsorEstimatedEndFY
+                  ),
                 ...rest,
               },
             },

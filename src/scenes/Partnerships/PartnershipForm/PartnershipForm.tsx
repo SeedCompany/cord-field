@@ -7,6 +7,7 @@ import {
   PartnershipAgreementStatus,
   PartnershipAgreementStatusList,
   PartnerType,
+  PeriodType,
 } from '../../../api';
 import {
   DialogForm,
@@ -37,11 +38,12 @@ type PartnershipFormValues = Partial<
   };
 };
 
-export type PartnershipFormProps<
-  T extends PartnershipFormValues
-> = DialogFormProps<T> & {
-  partnership?: PartnershipFormFragment;
-};
+export type PartnershipFormProps<T extends PartnershipFormValues> =
+  DialogFormProps<T> & {
+    partnership?: PartnershipFormFragment & {
+      financialReportPeriod?: PeriodType;
+    };
+  };
 
 export const hasManagingType = (types: Nullable<readonly PartnerType[]>) =>
   types?.includes('Managing') ?? false;
@@ -79,7 +81,7 @@ export const PartnershipForm = <T extends PartnershipFormValues>({
     <DialogForm<T>
       {...rest}
       fieldsPrefix="partnership"
-      decorators={(decorators as unknown) as Array<Decorator<T>>}
+      decorators={decorators as unknown as Array<Decorator<T>>}
     >
       {({ values }) => {
         const lookupPartnerTypes =
@@ -108,18 +110,28 @@ export const PartnershipForm = <T extends PartnershipFormValues>({
               </SecuredField>
             ) : null}
             {hasManagingType(values.partnership?.types) ? (
-              <SecuredField obj={partnership} name="financialReportingType">
-                {(props) => (
+              <>
+                <SecuredField obj={partnership} name="financialReportingType">
+                  {(props) => (
+                    <EnumField
+                      label="Financial Reporting Type"
+                      options={
+                        lookupPartnerFinType || currentPartnerFinTypes || []
+                      }
+                      getLabel={displayFinancialReportingType}
+                      {...props}
+                    />
+                  )}
+                </SecuredField>
+
+                {partnership?.primary && (
                   <EnumField
-                    label="Financial Reporting Type"
-                    options={
-                      lookupPartnerFinType || currentPartnerFinTypes || []
-                    }
-                    getLabel={displayFinancialReportingType}
-                    {...props}
+                    label="Financial Reporting Frequency"
+                    options={['Monthly', 'Quarterly']}
+                    name="financialReportPeriod"
                   />
                 )}
-              </SecuredField>
+              </>
             ) : null}
             {partnership && (
               <>

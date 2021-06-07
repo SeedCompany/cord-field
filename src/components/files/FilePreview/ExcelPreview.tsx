@@ -49,9 +49,7 @@ interface TableSpan {
   rowspan: number;
 }
 
-async function extractExcelData(
-  file: File
-): Promise<{
+async function extractExcelData(file: File): Promise<{
   data: SheetData[] | undefined;
   error: Error | undefined;
 }> {

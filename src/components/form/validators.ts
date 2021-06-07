@@ -20,24 +20,24 @@ export const requiredArray = <T>(value: Nullable<readonly T[]>) =>
 export const email = (value: Nullable<string>) =>
   !value || isEmail(value) ? undefined : 'Invalid email';
 
-export const min = (min: number, error?: string) => (
-  val: number | null | undefined
-) =>
-  val != null && val < min
-    ? error ?? `Choose value at or above ${min}`
-    : undefined;
+export const min =
+  (min: number, error?: string) => (val: number | null | undefined) =>
+    val != null && val < min
+      ? error ?? `Choose value at or above ${min}`
+      : undefined;
 
-export const max = (max: number, error?: string) => (
-  val: number | null | undefined
-) =>
-  val != null && val > max
-    ? error ?? `Choose value at or below ${max}`
-    : undefined;
+export const max =
+  (max: number, error?: string) => (val: number | null | undefined) =>
+    val != null && val > max
+      ? error ?? `Choose value at or below ${max}`
+      : undefined;
 
-export const minLength = (min = 2) => (value: Nullable<string>) =>
-  !value || value.length >= min
-    ? undefined
-    : `Must be ${min} or more characters`;
+export const minLength =
+  (min = 2) =>
+  (value: Nullable<string>) =>
+    !value || value.length >= min
+      ? undefined
+      : `Must be ${min} or more characters`;
 
 export const isLength = (len: number) => (value: Nullable<string>) =>
   !value || value.length === len ? undefined : `Must be ${len} characters`;

@@ -73,9 +73,10 @@ export const EditLanguage = (props: EditLanguageProps) => {
             input: {
               language: {
                 populationOverride: populationOverride ?? null,
-                sponsorEstimatedEndDate: CalendarDate.fiscalYearEndToCalendarDate(
-                  sponsorEstimatedEndFY
-                ),
+                sponsorEstimatedEndDate:
+                  CalendarDate.fiscalYearEndToCalendarDate(
+                    sponsorEstimatedEndFY
+                  ),
                 ethnologue: {
                   ...ethnologue,
                   code: ethnologue?.code ?? null,

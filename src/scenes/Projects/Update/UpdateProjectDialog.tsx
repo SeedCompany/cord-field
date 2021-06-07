@@ -29,6 +29,7 @@ import {
 } from '../DateRangeCache';
 import { ProjectOverviewFragment } from '../Overview/ProjectOverview.generated';
 import { UpdateProjectDocument } from './UpdateProject.generated';
+import { updateProjectReportsCache } from './useProjectUpdate';
 
 export type EditableProjectField = ExtractStrict<
   keyof UpdateProject,
@@ -93,9 +94,10 @@ export const UpdateProjectDialog = ({
   editFields: editFieldsProp,
   ...props
 }: UpdateProjectDialogProps) => {
-  const editFields = useMemo(() => many(editFieldsProp ?? []), [
-    editFieldsProp,
-  ]);
+  const editFields = useMemo(
+    () => many(editFieldsProp ?? []),
+    [editFieldsProp]
+  );
 
   const [updateProject] = useMutation(UpdateProjectDocument);
 
@@ -162,7 +164,7 @@ export const UpdateProjectDialog = ({
         };
         await updateProject({
           variables: { input },
-          update: (cache) => {
+          update: (cache, { data }) => {
             if (rest.mouStart === undefined && rest.mouEnd === undefined) {
               return;
             }
@@ -178,6 +180,10 @@ export const UpdateProjectDialog = ({
               });
             }
 
+            updateProjectReportsCache(
+              cache,
+              data?.updateProject.project as any
+            );
             // Adjust cached date ranges of engagements & partnerships
             // since they are based on the project's date range
             updateEngagementDateRanges(cache, project);

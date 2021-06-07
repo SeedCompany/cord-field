@@ -30,37 +30,39 @@ interface PluginParams<T> {
   file: SourceFile;
 }
 
-export const tsMorphPlugin = <T>(
-  plugin: (params: PluginParams<T>) => Promisable<SourceFile | void>
-): PluginFunction<T> => async (schema, documents, config, info) => {
-  const project = new Project({
-    tsConfigFilePath: 'tsconfig.json',
-    manipulationSettings: {
-      indentationText: IndentationText.TwoSpaces,
-      quoteKind: QuoteKind.Single,
-      useTrailingCommas: true,
-    },
-  });
+export const tsMorphPlugin =
+  <T>(
+    plugin: (params: PluginParams<T>) => Promisable<SourceFile | void>
+  ): PluginFunction<T> =>
+  async (schema, documents, config, info) => {
+    const project = new Project({
+      tsConfigFilePath: 'tsconfig.json',
+      manipulationSettings: {
+        indentationText: IndentationText.TwoSpaces,
+        quoteKind: QuoteKind.Single,
+        useTrailingCommas: true,
+      },
+    });
 
-  const baseFilePath = info?.outputFile?.replace('.generated.ts', '.base.ts');
-  const base = baseFilePath ? project.getSourceFile(baseFilePath) : undefined;
-  const file = base
-    ? base.copy(info!.outputFile!, { overwrite: true })
-    : project.createSourceFile('__temp.ts', '', { overwrite: true });
+    const baseFilePath = info?.outputFile?.replace('.generated.ts', '.base.ts');
+    const base = baseFilePath ? project.getSourceFile(baseFilePath) : undefined;
+    const file = base
+      ? base.copy(info!.outputFile!, { overwrite: true })
+      : project.createSourceFile('__temp.ts', '', { overwrite: true });
 
-  const out = (await plugin({
-    schema,
-    documents,
-    config,
-    info,
-    project,
-    file,
-  })) as SourceFile | undefined;
-  const result = out ?? file;
+    const out = (await plugin({
+      schema,
+      documents,
+      config,
+      info,
+      project,
+      file,
+    })) as SourceFile | undefined;
+    const result = out ?? file;
 
-  result.formatText();
-  return result.getFullText();
-};
+    result.formatText();
+    return result.getFullText();
+  };
 
 export const getOrCreateSubObjects = (
   exp: ObjectLiteralExpression,
@@ -126,16 +128,16 @@ export const exportedConst = (
 export const writeStringArray = (items: readonly string[]) =>
   writeArray(items.map((item) => createStringLiteral(item)));
 
-export const writeArray = (items: ReadonlyArray<ts.Expression | string>) => (
-  writer: CodeBlockWriter
-) => {
-  writer.writeLine('[');
-  for (const item of items) {
-    const str = typeof item === 'string' ? item : printNode(item);
-    writer.writeLine(str + ',');
-  }
-  writer.write(']');
-};
+export const writeArray =
+  (items: ReadonlyArray<ts.Expression | string>) =>
+  (writer: CodeBlockWriter) => {
+    writer.writeLine('[');
+    for (const item of items) {
+      const str = typeof item === 'string' ? item : printNode(item);
+      writer.writeLine(str + ',');
+    }
+    writer.write(']');
+  };
 
 export const createStringLiteral = (text: string, doubleQuote = false) => {
   const literal = ts.createStringLiteral(text);

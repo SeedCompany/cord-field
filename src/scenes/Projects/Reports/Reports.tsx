@@ -1,0 +1,136 @@
+import { useQuery } from '@apollo/client';
+import { Breadcrumbs, makeStyles, Typography } from '@material-ui/core';
+import { Skeleton } from '@material-ui/lab';
+import { capitalize } from 'lodash';
+import React, { FC } from 'react';
+import { Helmet } from 'react-helmet-async';
+import { useParams } from 'react-router-dom';
+import { Breadcrumb } from '../../../components/Breadcrumb';
+import { DataButton } from '../../../components/DataButton';
+import {
+  useDateFormatter,
+  useFiscalMonthFormater,
+  useFiscalQuarterFormater,
+} from '../../../components/Formatters';
+import {
+  PeriodicReportsList,
+  ReportRow,
+} from '../../../components/PeriodicReportsList';
+import { ProjectBreadcrumb } from '../../../components/ProjectBreadcrumb';
+import { SensitivityIcon } from '../../../components/Sensitivity';
+import {
+  ProjectFinancialReportsDocument,
+  ProjectFinancialReportsQuery,
+  ProjectNarrativeReportsDocument,
+  ProjectNarrativeReportsQuery,
+} from './ProjectReports.generated';
+
+const useStyles = makeStyles(({ spacing, breakpoints }) => ({
+  root: {
+    flex: 1,
+    overflowY: 'auto',
+    padding: spacing(4),
+    maxWidth: breakpoints.values.md,
+  },
+  subheader: {
+    marginTop: spacing(2.5),
+  },
+  header: {
+    display: 'flex',
+    maxWidth: breakpoints.values.md,
+  },
+  reportName: {
+    marginRight: spacing(3),
+  },
+  table: {
+    padding: spacing(4, 0),
+  },
+}));
+
+export const Reports: FC = () => {
+  const classes = useStyles();
+  const { projectId = '', reportType = '' } = useParams();
+  const { data } = useQuery<
+    ProjectFinancialReportsQuery | ProjectNarrativeReportsQuery
+  >(
+    reportType === 'financial'
+      ? ProjectFinancialReportsDocument
+      : ProjectNarrativeReportsDocument,
+    {
+      variables: {
+        input: projectId,
+      },
+      fetchPolicy: 'network-only',
+    }
+  );
+  const fiscalQuarterFormatter = useFiscalQuarterFormater();
+  const fiscalMonthFormatter = useFiscalMonthFormater();
+  const dateFormatter = useDateFormatter();
+
+  const reportTypeName = `${capitalize(reportType)} Reports`;
+
+  const reports = data
+    ? reportType === 'financial'
+      ? (data as ProjectFinancialReportsQuery).project.financialReports
+      : reportType === 'narrative'
+      ? (data as ProjectNarrativeReportsQuery).project.narrativeReports
+      : null
+    : null;
+
+  const isMonthlyReport =
+    data &&
+    reportType === 'financial' &&
+    (data as ProjectFinancialReportsQuery).project.financialReportPeriod
+      .value === 'Monthly';
+
+  const rowsData: ReportRow[] =
+    reports?.items.map((item) => ({
+      id: item.id,
+      period: isMonthlyReport
+        ? fiscalMonthFormatter(item.start)
+        : fiscalQuarterFormatter(item.start),
+      start: item.start,
+      modifiedBy: item.reportFile.value?.modifiedBy.fullName || '',
+      modifiedAt: dateFormatter(item.reportFile.value?.modifiedAt),
+      item,
+    })) || [];
+
+  return (
+    <div className={classes.root}>
+      <Helmet
+        title={`${reportTypeName} - ${data?.project.name.value ?? 'A Project'}`}
+      />
+      <Breadcrumbs>
+        <ProjectBreadcrumb data={data?.project} />
+        <Breadcrumb to=".">{reportTypeName}</Breadcrumb>
+      </Breadcrumbs>
+
+      <header className={classes.subheader}>
+        <Typography variant="h4">
+          {data ? data.project.name.value : <Skeleton width={200} />}
+        </Typography>
+      </header>
+      <header className={classes.header}>
+        <Typography variant="h2" className={classes.reportName}>
+          {reportTypeName}
+        </Typography>
+        <DataButton
+          loading={!data}
+          startIcon={
+            <SensitivityIcon
+              value={data?.project.sensitivity}
+              loading={!data}
+              disableTooltip
+            />
+          }
+        >
+          {data ? `${data.project.sensitivity} Sensitivity` : null}
+        </DataButton>
+      </header>
+
+      <div className={classes.table}>
+        <PeriodicReportsList data={rowsData} />
+      </div>
+    </div>
+  );
+};

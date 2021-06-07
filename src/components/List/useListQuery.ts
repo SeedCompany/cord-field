@@ -29,7 +29,12 @@ export const useListQuery = <
   }
 ): ListQueryResult<Item, List, Data> => {
   const { listAt, ...opts } = options;
-  const { loading, data: res, fetchMore, networkStatus } = useQuery(doc, {
+  const {
+    loading,
+    data: res,
+    fetchMore,
+    networkStatus,
+  } = useQuery(doc, {
     ...opts,
     notifyOnNetworkStatusChange: true,
   });

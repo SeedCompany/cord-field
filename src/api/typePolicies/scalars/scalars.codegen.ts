@@ -10,11 +10,6 @@ export const generateScalars = (
   file: SourceFile,
   typePolicies: ObjectLiteralExpression
 ) => {
-  file.addImportDeclaration({
-    namedImports: ['optional', 'Parsers'],
-    moduleSpecifier: './scalars/scalars.parser',
-  });
-
   for (const val of getSchemaTypes(schema).filter(isObjectType)) {
     for (const field of Object.values(val.getFields())) {
       const { type, required } = resolveType(field);

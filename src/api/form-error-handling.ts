@@ -115,7 +115,8 @@ export const handleFormError = async <T, P>(
     .reduce(
       (prev, handler) =>
         // Return a new function with the handler's next function scoped into it
-        (e) => handler(e, prev),
+        (e) =>
+          handler(e, prev),
       // Start with a noop next handler
       (() => undefined) as NextHandler<any>
     );
@@ -125,11 +126,12 @@ export const handleFormError = async <T, P>(
 /**
  * Normalize the handler to a function and normalize string results.
  */
-const resolveHandler = <E>(
-  handler: ErrorHandler<E>,
-  utils: HandlerUtils
-) => async (error: E, next: NextHandler<E>) => {
-  const result =
-    typeof handler === 'function' ? await handler(error, next, utils) : handler;
-  return typeof result === 'string' ? { [FORM_ERROR]: result } : result;
-};
+const resolveHandler =
+  <E>(handler: ErrorHandler<E>, utils: HandlerUtils) =>
+  async (error: E, next: NextHandler<E>) => {
+    const result =
+      typeof handler === 'function'
+        ? await handler(error, next, utils)
+        : handler;
+    return typeof result === 'string' ? { [FORM_ERROR]: result } : result;
+  };

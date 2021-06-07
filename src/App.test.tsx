@@ -18,7 +18,7 @@ import { createServerApolloClient } from './server/renderServerSideApp';
 const TestContext: FC<{ url: string }> = ({ url, children }) => {
   // @ts-expect-error yes the type doesn't match we are faking it.
   const req: ExpressRequest = new Request(url);
-  const res = (new Response() as unknown) as ExpressResponse;
+  const res = new Response() as unknown as ExpressResponse;
   const [client] = useState(() => createServerApolloClient(req, res, {}));
   return (
     <Nest

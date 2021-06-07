@@ -166,9 +166,10 @@ export const EditEngagementDialog: FC<EditEngagementDialogProps> = ({
   editFields: editFieldsProp,
   ...props
 }) => {
-  const editFields = useMemo(() => many(editFieldsProp ?? []), [
-    editFieldsProp,
-  ]);
+  const editFields = useMemo(
+    () => many(editFieldsProp ?? []),
+    [editFieldsProp]
+  );
 
   const fields = editFields.map((name) => {
     const Field = fieldMapping[name];

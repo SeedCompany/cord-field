@@ -47,11 +47,8 @@ export const PartnershipList: FC = () => {
   const partnerships = project?.partnerships;
 
   const [createDialogState, openCreateDialog] = useDialog();
-  const [
-    editDialogState,
-    openEditDialog,
-    partnership,
-  ] = useDialog<PartnershipFormFragment>();
+  const [editDialogState, openEditDialog, partnership] =
+    useDialog<PartnershipFormFragment>();
 
   return (
     <div className={classes.root}>

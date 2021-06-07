@@ -9,6 +9,7 @@ export const Parsers: any = {
   DateTime: (val: string) => DateTime.fromISO(val),
 };
 
-export const optional = <T, R>(parser: (val: T) => R) => (
-  val: T | null | undefined
-): R | null => (val != null ? parser(val) : null);
+export const optional =
+  <T, R>(parser: (val: T) => R) =>
+  (val: T | null | undefined): R | null =>
+    val != null ? parser(val) : null;

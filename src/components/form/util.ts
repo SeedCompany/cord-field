@@ -56,15 +56,14 @@ export const areListsDeepEqual = (a: any, b: any) =>
   isEmpty(differenceWith(a, b, isEqual)) &&
   isEmpty(differenceWith(b, a, isEqual));
 
-export const compareNullable = <T>(fn: (a: T, b: T) => boolean) => (
-  a: Nullable<T>,
-  b: Nullable<T>
-) => {
-  if (a == null && b == null) {
-    return true;
-  }
-  if ((a == null && b) || (a && b == null)) {
-    return false;
-  }
-  return fn(a!, b!);
-};
+export const compareNullable =
+  <T>(fn: (a: T, b: T) => boolean) =>
+  (a: Nullable<T>, b: Nullable<T>) => {
+    if (a == null && b == null) {
+      return true;
+    }
+    if ((a == null && b) || (a && b == null)) {
+      return false;
+    }
+    return fn(a!, b!);
+  };

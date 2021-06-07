@@ -16,34 +16,36 @@ type Partnership = PartnershipToCheckBudgetChangeFragment | undefined;
  * Funding partnerships affect budget records.
  * Invalidate budget records when they are changed.
  */
-export const invalidateBudgetRecords = <R>(
-  project: Project,
-  previousOrFn: Partnership | ((res: R) => Partnership),
-  updatedOrFn: Partnership | ((res: R) => Partnership)
-): MutationUpdaterFn<R> => (cache: ApolloCache<unknown>, res) => {
-  const previous: Partnership = isFunction(previousOrFn)
-    ? res.data
-      ? previousOrFn(res.data)
-      : undefined
-    : previousOrFn;
-  const updated: Partnership = isFunction(updatedOrFn)
-    ? res.data
-      ? updatedOrFn(res.data)
-      : undefined
-    : updatedOrFn;
+export const invalidateBudgetRecords =
+  <R>(
+    project: Project,
+    previousOrFn: Partnership | ((res: R) => Partnership),
+    updatedOrFn: Partnership | ((res: R) => Partnership)
+  ): MutationUpdaterFn<R> =>
+  (cache: ApolloCache<unknown>, res) => {
+    const previous: Partnership = isFunction(previousOrFn)
+      ? res.data
+        ? previousOrFn(res.data)
+        : undefined
+      : previousOrFn;
+    const updated: Partnership = isFunction(updatedOrFn)
+      ? res.data
+        ? updatedOrFn(res.data)
+        : undefined
+      : updatedOrFn;
 
-  const change = determineChange(previous, updated);
-  if (change == null) {
-    console.log('No budget change needed for partnership change');
-    return;
-  }
-  if (change) {
-    console.log('Partnership changed budget in a destructive way');
-  } else {
-    console.log('Partnership changed budget in a non-destructive way');
-  }
-  doInvalidate(cache, project, change);
-};
+    const change = determineChange(previous, updated);
+    if (change == null) {
+      console.log('No budget change needed for partnership change');
+      return;
+    }
+    if (change) {
+      console.log('Partnership changed budget in a destructive way');
+    } else {
+      console.log('Partnership changed budget in a non-destructive way');
+    }
+    doInvalidate(cache, project, change);
+  };
 
 /**
  * Returns boolean for whether the change is destructive or not, or null for no change.
