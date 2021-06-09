@@ -2,7 +2,7 @@ import { useMutation } from '@apollo/client';
 import { pick } from 'lodash';
 import React, { ComponentType, useMemo } from 'react';
 import { Except, Merge } from 'type-fest';
-import { SensitivityList, UpdateProject } from '../../../api';
+import { invalidateProps, SensitivityList, UpdateProject } from '../../../api';
 import {
   DisplayFieldRegionFragment,
   DisplayLocationFragment,
@@ -172,12 +172,7 @@ export const UpdateProjectDialog = ({
             // Project date range affects budget records, remove them so
             // they are re-fetched when needed
             if (project.budget.value) {
-              cache.modify({
-                id: cache.identify(project.budget.value),
-                fields: {
-                  records: (_, { DELETE }) => DELETE,
-                },
-              });
+              invalidateProps(cache, project.budget.value, 'records');
             }
 
             updateProjectReportsCache(
