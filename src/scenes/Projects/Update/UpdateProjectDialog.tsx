@@ -29,7 +29,6 @@ import {
 } from '../DateRangeCache';
 import { ProjectOverviewFragment } from '../Overview/ProjectOverview.generated';
 import { UpdateProjectDocument } from './UpdateProject.generated';
-import { updateProjectReportsCache } from './useProjectUpdate';
 
 export type EditableProjectField = ExtractStrict<
   keyof UpdateProject,
@@ -164,7 +163,7 @@ export const UpdateProjectDialog = ({
         };
         await updateProject({
           variables: { input },
-          update: (cache, { data }) => {
+          update: (cache) => {
             if (rest.mouStart === undefined && rest.mouEnd === undefined) {
               return;
             }
@@ -175,10 +174,11 @@ export const UpdateProjectDialog = ({
               invalidateProps(cache, project.budget.value, 'records');
             }
 
-            updateProjectReportsCache(
-              cache,
-              data?.updateProject.project as any
-            );
+            invalidateProps(cache, project, [
+              'narrativeReports',
+              'financialReports',
+            ]);
+
             // Adjust cached date ranges of engagements & partnerships
             // since they are based on the project's date range
             updateEngagementDateRanges(cache, project);

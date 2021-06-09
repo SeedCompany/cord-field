@@ -3,6 +3,7 @@ import { Decorator } from 'final-form';
 import React, { FC, useMemo } from 'react';
 import { Except } from 'type-fest';
 import {
+  invalidateProps,
   PeriodType,
   removeItemFromList,
   UpdatePartnershipInput,
@@ -10,7 +11,6 @@ import {
 import { SubmitAction, SubmitButton } from '../../../components/form';
 import { PartnerLookupItem } from '../../../components/form/Lookup';
 import { callAll } from '../../../util';
-import { updateProjectReportsCache } from '../../Projects/Update';
 import { UpdateProjectDocument } from '../../Projects/Update/UpdateProject.generated';
 import { invalidateBudgetRecords } from '../InvalidateBudget/invalidateBudgetRecords';
 import { ProjectPartnershipsQuery } from '../List/PartnershipList.generated';
@@ -157,11 +157,13 @@ export const EditPartnership: FC<EditPartnershipProps> = (props) => {
                 },
               },
             },
-            update: (cache, { data }) => {
-              updateProjectReportsCache(
-                cache,
-                data?.updateProject.project as any
-              );
+            update: (cache) => {
+              // Invalidate financial reports as they are now different
+              invalidateProps(cache, project, [
+                'financialReports',
+                'currentFinancialReportDue',
+                'nextFinancialReportDue',
+              ]);
             },
           });
         }
