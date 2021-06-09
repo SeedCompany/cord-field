@@ -1,5 +1,7 @@
 import { Typography } from '@material-ui/core';
 import { Skeleton } from '@material-ui/lab';
+import { omit } from 'lodash';
+import { DateTime } from 'luxon';
 import React, { ReactNode } from 'react';
 import { FormattedDate, FormattedDateTime } from '../Formatters';
 import { Redacted } from '../Redacted';
@@ -55,7 +57,11 @@ export const ReportInfo = ({
             Due{' '}
             <FormattedDate
               date={report.value.due}
-              displayOptions={{ day: 'numeric', month: 'numeric' }}
+              displayOptions={
+                report.value.due.diffNow('years').years < 1 // same year
+                  ? omit(DateTime.DATE_SHORT, 'year')
+                  : undefined
+              }
             />
           </>
         ) : null}
