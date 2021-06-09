@@ -202,6 +202,9 @@ export const FileActionsMenu: FC<FileActionsMenuProps> = (props) => {
           </MenuItem>
         );
       })}
+      {menuActions.length === 0 && (
+        <MenuItem disabled>No actions available</MenuItem>
+      )}
     </Menu>
   );
 };
