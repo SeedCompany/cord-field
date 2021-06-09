@@ -1,5 +1,4 @@
 import {
-  IconButton,
   ListItemIcon,
   ListItemText,
   makeStyles,
@@ -18,6 +17,7 @@ import {
 } from '@material-ui/icons';
 import React, { FC, useState } from 'react';
 import { useDropzone } from 'react-dropzone';
+import { IconButton, IconButtonProps } from '../../IconButton';
 import { FileAction } from './FileAction.enum';
 import {
   DirectoryActionItem,
@@ -53,7 +53,7 @@ const useStyles = makeStyles(({ spacing }) => ({
 
 interface FileActionsList {
   actions: PermittedActions;
-  className?: string;
+  IconButtonProps?: IconButtonProps;
 }
 
 interface NonVersionPopupProps extends FileActionsList {
@@ -75,7 +75,10 @@ const actionIcons = {
   [FileAction.Delete]: DeleteIcon,
 };
 
-export const FileActionsPopup: FC<FileActionsPopupProps> = (props) => {
+export const FileActionsPopup: FC<FileActionsPopupProps> = ({
+  IconButtonProps,
+  ...props
+}) => {
   const [anchor, setAnchor] = useState<MenuProps['anchorEl']>();
 
   const openAddMenu = (e: React.MouseEvent) => {
@@ -89,7 +92,7 @@ export const FileActionsPopup: FC<FileActionsPopupProps> = (props) => {
 
   return (
     <>
-      <IconButton className={props.className} onClick={openAddMenu}>
+      <IconButton {...IconButtonProps} onClick={openAddMenu}>
         <MoreIcon />
       </IconButton>
       <FileActionsMenu anchorEl={anchor} onClose={closeAddMenu} {...props} />

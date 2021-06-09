@@ -1,22 +1,21 @@
-query ProjectNarrativeReports($input: ID!) {
-  project(id: $input) {
+query NarrativeReports($projectId: ID!) {
+  project(id: $projectId) {
     ...ProjectBreadcrumb
-    narrativeReports {
-      ...PeriodicReportList
+    reports: narrativeReports(input: { count: 100 }) {
+      items {
+        ...PeriodicReport
+      }
     }
   }
 }
 
-query ProjectFinancialReports($input: ID!) {
-  project(id: $input) {
+query FinancialReports($projectId: ID!) {
+  project(id: $projectId) {
     ...ProjectBreadcrumb
-    financialReports {
-      ...PeriodicReportList
-    }
-    financialReportPeriod {
-      canRead
-      canEdit
-      value
+    reports: financialReports(input: { count: 100 }) {
+      items {
+        ...PeriodicReport
+      }
     }
   }
 }

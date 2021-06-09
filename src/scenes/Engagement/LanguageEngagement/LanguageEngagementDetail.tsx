@@ -26,7 +26,7 @@ import {
   useDateTimeFormatter,
 } from '../../../components/Formatters';
 import { OptionsIcon, PlantIcon } from '../../../components/Icons';
-import { PeriodicReportSummary } from '../../../components/PeriodicReportSummary';
+import { PeriodicReportCard } from '../../../components/PeriodicReports';
 import { ProjectBreadcrumb } from '../../../components/ProjectBreadcrumb';
 import { Redacted } from '../../../components/Redacted';
 import { Link } from '../../../components/Routing';
@@ -245,13 +245,10 @@ export const LanguageEngagementDetail: FC<EngagementQuery> = ({
             <FileActionsContextProvider>
               <Grid item container spacing={3} alignItems="flex-start">
                 <Grid item xs={6}>
-                  <PeriodicReportSummary
-                    currentReportDue={
-                      engagement.currentProgressReportDue.value || undefined
-                    }
-                    nextReportDue={
-                      engagement.nextProgressReportDue.value || undefined
-                    }
+                  <PeriodicReportCard
+                    type="Progress"
+                    dueCurrently={engagement.currentProgressReportDue}
+                    dueNext={engagement.nextProgressReportDue}
                   />
                 </Grid>
                 <Tooltip title="This holds the planning info of PnP files">

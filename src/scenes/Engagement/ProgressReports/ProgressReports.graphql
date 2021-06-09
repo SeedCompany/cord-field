@@ -1,0 +1,26 @@
+query ProgressReports($projectId: ID!, $engagementId: ID!) {
+  project(id: $projectId) {
+    ...ProjectBreadcrumb
+  }
+  engagement(id: $engagementId) {
+    id
+    ... on LanguageEngagement {
+      language {
+        value {
+          id
+          displayName {
+            value
+          }
+          name {
+            value
+          }
+        }
+      }
+      progressReports {
+        items {
+          ...PeriodicReport
+        }
+      }
+    }
+  }
+}
