@@ -2,7 +2,7 @@ import { useMutation } from '@apollo/client';
 import { pick } from 'lodash';
 import React, { ComponentType, useMemo } from 'react';
 import { Except, Merge } from 'type-fest';
-import { SensitivityList, UpdateProject } from '../../../api';
+import { invalidateProps, SensitivityList, UpdateProject } from '../../../api';
 import {
   DisplayFieldRegionFragment,
   DisplayLocationFragment,
@@ -29,7 +29,6 @@ import {
 } from '../DateRangeCache';
 import { ProjectOverviewFragment } from '../Overview/ProjectOverview.generated';
 import { UpdateProjectDocument } from './UpdateProject.generated';
-import { updateProjectReportsCache } from './useProjectUpdate';
 
 export type EditableProjectField = ExtractStrict<
   keyof UpdateProject,
@@ -164,7 +163,7 @@ export const UpdateProjectDialog = ({
         };
         await updateProject({
           variables: { input },
-          update: (cache, { data }) => {
+          update: (cache) => {
             if (rest.mouStart === undefined && rest.mouEnd === undefined) {
               return;
             }
@@ -172,18 +171,14 @@ export const UpdateProjectDialog = ({
             // Project date range affects budget records, remove them so
             // they are re-fetched when needed
             if (project.budget.value) {
-              cache.modify({
-                id: cache.identify(project.budget.value),
-                fields: {
-                  records: (_, { DELETE }) => DELETE,
-                },
-              });
+              invalidateProps(cache, project.budget.value, 'records');
             }
 
-            updateProjectReportsCache(
-              cache,
-              data?.updateProject.project as any
-            );
+            invalidateProps(cache, project, [
+              'narrativeReports',
+              'financialReports',
+            ]);
+
             // Adjust cached date ranges of engagements & partnerships
             // since they are based on the project's date range
             updateEngagementDateRanges(cache, project);

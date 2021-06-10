@@ -1,14 +1,20 @@
 import { Tooltip } from '@material-ui/core';
-import { DateTime } from 'luxon';
+import { DateTime, DateTimeFormatOptions } from 'luxon';
 import * as React from 'react';
 import { CalendarDate, Nullable } from '../../util';
 import { useDateFormatter, useDateTimeFormatter } from './useDateFormatter';
 
-export const FormattedDate = ({ date }: { date: Nullable<CalendarDate> }) => {
+export const FormattedDate = ({
+  date,
+  displayOptions,
+}: {
+  date: Nullable<CalendarDate>;
+  displayOptions?: DateTimeFormatOptions;
+}) => {
   const format = useDateFormatter();
   return date ? (
     <Tooltip title={format(date, DateTime.DATE_HUGE)}>
-      <time dateTime={date.toISODate()}>{format(date)}</time>
+      <time dateTime={date.toISODate()}>{format(date, displayOptions)}</time>
     </Tooltip>
   ) : null;
 };

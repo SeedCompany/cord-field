@@ -8,6 +8,7 @@ import {
   PartnershipAgreementStatusList,
   PartnerType,
   PeriodType,
+  PeriodTypeList,
 } from '../../../api';
 import {
   DialogForm,
@@ -127,7 +128,7 @@ export const PartnershipForm = <T extends PartnershipFormValues>({
                 {partnership?.primary && (
                   <EnumField
                     label="Financial Reporting Frequency"
-                    options={['Monthly', 'Quarterly']}
+                    options={PeriodTypeList}
                     name="financialReportPeriod"
                   />
                 )}

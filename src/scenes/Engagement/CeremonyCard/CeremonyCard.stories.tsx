@@ -1,6 +1,6 @@
 import { boolean, select } from '@storybook/addon-knobs';
 import React from 'react';
-import { dateTime } from '../../../components/knobs.stories';
+import { date } from '../../../components/knobs.stories';
 import { CeremonyCard as Card } from './CeremonyCard';
 
 export default { title: 'Components' };
@@ -14,12 +14,12 @@ export const CeremonyCard = () => (
         estimatedDate: {
           canRead: true,
           canEdit: true,
-          value: dateTime('Estimated Date'),
+          value: date('Estimated Date'),
         },
         actualDate: {
           canRead: true,
           canEdit: true,
-          value: dateTime('Actual Date'),
+          value: date('Actual Date'),
         },
         type: select(
           'Ceremony Type',

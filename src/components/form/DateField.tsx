@@ -54,7 +54,7 @@ export const DateField = ({
   ...props
 }: DateFieldProps) => {
   const utils = useUtils<CalendarDate>();
-  const validator: Validator<Nullable<DateTime>> = (val) => {
+  const validator: Validator<Nullable<CalendarDate>> = (val) => {
     const allProps = {
       ...defaultRange,
       ...props,
@@ -74,7 +74,7 @@ export const DateField = ({
   const initialValue = useDate(initialValueProp);
   const defaultValue = useDate(defaultValueProp);
 
-  const { input, meta, ref, rest } = useField<DateTime, false>({
+  const { input, meta, ref, rest } = useField<CalendarDate, false>({
     isEqual: isDateEqual,
     ...props,
     defaultValue,

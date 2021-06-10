@@ -27,7 +27,7 @@ import { InternshipEngagementListItemCard } from '../../../components/Internship
 import { LanguageEngagementListItemCard } from '../../../components/LanguageEngagementListItemCard';
 import { List, useListQuery } from '../../../components/List';
 import { PartnershipSummary } from '../../../components/PartnershipSummary';
-import { PeriodicReportSummary } from '../../../components/PeriodicReportSummary';
+import { PeriodicReportCard } from '../../../components/PeriodicReports';
 import { ProjectMembersSummary } from '../../../components/ProjectMembersSummary';
 import { Redacted } from '../../../components/Redacted';
 import { SensitivityIcon } from '../../../components/Sensitivity';
@@ -126,15 +126,14 @@ export const ProjectOverview: FC = () => {
 
   const [createEngagementState, createEngagement] = useDialog();
 
-  const {
-    data: projectOverviewData,
-    error,
-    loading: isProjectDataLoading,
-  } = useQuery(ProjectOverviewDocument, {
-    variables: {
-      input: projectId,
-    },
-  });
+  const { data: projectOverviewData, error } = useQuery(
+    ProjectOverviewDocument,
+    {
+      variables: {
+        input: projectId,
+      },
+    }
+  );
 
   const engagements = useListQuery(EngagementList, {
     listAt: (data) => data.project.engagements,
@@ -461,33 +460,21 @@ export const ProjectOverview: FC = () => {
 
           <Grid container spacing={3}>
             <Grid item xs={12} md={6}>
-              <PeriodicReportSummary
-                currentReportDue={
+              <PeriodicReportCard
+                type="Financial"
+                dueCurrently={
                   projectOverviewData?.project.currentFinancialReportDue
-                    .value || undefined
                 }
-                nextReportDue={
-                  projectOverviewData?.project.nextFinancialReportDue.value ||
-                  undefined
-                }
-                period={
-                  projectOverviewData?.project.financialReportPeriod.value ||
-                  'Monthly'
-                }
-                loading={isProjectDataLoading}
+                dueNext={projectOverviewData?.project.nextFinancialReportDue}
               />
             </Grid>
             <Grid item xs={12} md={6}>
-              <PeriodicReportSummary
-                currentReportDue={
+              <PeriodicReportCard
+                type="Narrative"
+                dueCurrently={
                   projectOverviewData?.project.currentNarrativeReportDue
-                    .value || undefined
                 }
-                nextReportDue={
-                  projectOverviewData?.project.nextNarrativeReportDue.value ||
-                  undefined
-                }
-                loading={isProjectDataLoading}
+                dueNext={projectOverviewData?.project.nextNarrativeReportDue}
               />
             </Grid>
           </Grid>

@@ -1,0 +1,22 @@
+fragment PeriodicReport on PeriodicReport {
+  id
+  type
+  start
+  end
+  due
+  reportFile {
+    canEdit
+    canRead
+    value {
+      ...FileNodeInfo
+    }
+  }
+}
+
+fragment SecuredPeriodicReport on SecuredPeriodicReport {
+  canRead
+  canEdit
+  value {
+    ...PeriodicReport
+  }
+}
