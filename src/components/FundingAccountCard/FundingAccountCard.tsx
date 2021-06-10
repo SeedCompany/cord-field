@@ -9,7 +9,7 @@ import clsx from 'clsx';
 import { FC } from 'react';
 import * as React from 'react';
 import { DisplaySimpleProperty } from '../DisplaySimpleProperty';
-import { useDateFormatter } from '../Formatters';
+import { FormattedDateTime } from '../Formatters';
 import { FundingAccountCardFragment } from './FundingAccountCard.generated';
 
 const useStyles = makeStyles(({ spacing }) => {
@@ -38,8 +38,6 @@ export const FundingAccountCard: FC<FundingAccountCardProps> = ({
 }) => {
   const classes = useStyles();
 
-  const formatDate = useDateFormatter();
-
   return (
     <Card className={clsx(classes.root, className)}>
       <CardContent>
@@ -53,7 +51,7 @@ export const FundingAccountCard: FC<FundingAccountCardProps> = ({
       </CardContent>
       <CardActions className={classes.cardActions}>
         <Typography variant="caption" color="textSecondary">
-          Created {formatDate(fundingAccount.createdAt)}
+          Created <FormattedDateTime date={fundingAccount.createdAt} />
         </Typography>
       </CardActions>
     </Card>

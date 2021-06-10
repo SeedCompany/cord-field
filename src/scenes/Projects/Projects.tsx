@@ -3,14 +3,11 @@ import React from 'react';
 import { Route, Routes } from 'react-router-dom';
 import { NotFoundRoute } from '../../components/Error';
 
-const Engagement = loadable(() => import('../Engagement'), {
-  resolveComponent: (m) => m.Engagement,
+const Engagements = loadable(() => import('../Engagement'), {
+  resolveComponent: (m) => m.Engagements,
 });
 const PartnershipList = loadable(() => import('../Partnerships/List'), {
   resolveComponent: (m) => m.PartnershipList,
-});
-const Products = loadable(() => import('../Products'), {
-  resolveComponent: (m) => m.Products,
 });
 const ProjectBudget = loadable(() => import('./Budget'), {
   resolveComponent: (m) => m.ProjectBudget,
@@ -33,12 +30,8 @@ const ProjectOverview = loadable(
     resolveComponent: (m) => m.ProjectOverview,
   }
 );
-const ProjectReports = loadable(() => import('./Reports'), {
-  resolveComponent: (m) => m.Reports,
-});
-
-const EngagementReports = loadable(() => import('../Engagement/Reports'), {
-  resolveComponent: (m) => m.Reports,
+const Reports = loadable(() => import('./Reports'), {
+  resolveComponent: (m) => m.ProjectReports,
 });
 
 export const Projects = () => (
@@ -48,15 +41,11 @@ export const Projects = () => (
       <Route path="" element={<ProjectOverview />} />
       <Route path="files/*" element={<Files />} />
       <Route path="members" element={<ProjectMembersList />} />
-      <Route path="engagements/:engagementId">
-        <Route path="" element={<Engagement />} />
-        <Route path="products/*" element={<Products />} />
-        <Route path="reports" element={<EngagementReports />} />
-        {NotFoundRoute}
-      </Route>
+      <Route path="engagements/:engagementId/*" element={<Engagements />} />
       <Route path="partnerships" element={<PartnershipList />} />
       <Route path="budget" element={<ProjectBudget />} />
-      <Route path="reports/:reportType" element={<ProjectReports />} />
+      <Route path="reports/financial" element={<Reports type="Financial" />} />
+      <Route path="reports/narrative" element={<Reports type="Narrative" />} />
       {NotFoundRoute}
     </Route>
     {NotFoundRoute}

@@ -1,9 +1,12 @@
 import { ApolloCache } from '@apollo/client';
-import { Modifier } from '@apollo/client/cache/core/types/common';
 import type { MutationUpdaterFn } from '@apollo/client/core';
 import { isFunction } from 'lodash';
 import { DateTime, Interval } from 'luxon';
-import { Project as ProjectShape, SecuredProp } from '../../../api';
+import {
+  invalidateProps,
+  Project as ProjectShape,
+  SecuredProp,
+} from '../../../api';
 import {
   PartnershipToCheckBudgetChangeFragment,
   ProjectsBudgetForPartnershipChangeFragmentDoc as ProjectsBudget,
@@ -141,12 +144,5 @@ const doInvalidate = (
     return;
   }
 
-  const invalidate: Modifier<unknown> = (_, { DELETE }) => DELETE;
-  cache.modify({
-    id: cache.identify(budget),
-    fields: {
-      ...(destructive ? { total: invalidate } : {}),
-      records: invalidate,
-    },
-  });
+  invalidateProps(cache, budget, 'records', destructive ? 'total' : null);
 };

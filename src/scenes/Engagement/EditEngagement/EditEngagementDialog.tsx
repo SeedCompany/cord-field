@@ -7,6 +7,7 @@ import {
   displayInternDomain,
   displayInternPosition,
   displayInternProgram,
+  invalidateProps,
   MethodologyToApproach,
   UpdateInternshipEngagement,
   UpdateLanguageEngagement,
@@ -189,16 +190,11 @@ export const EditEngagementDialog: FC<EditEngagementDialogProps> = ({
     );
   });
 
-  const [updateInternshipEngagement] = useMutation(
-    UpdateInternshipEngagementDocument
-  );
-  const [updateLanguageEngagement] = useMutation(
-    UpdateLanguageEngagementDocument
-  );
-  const updateEngagement =
+  const [updateEngagement] = useMutation(
     engagement.__typename === 'InternshipEngagement'
-      ? updateInternshipEngagement
-      : updateLanguageEngagement;
+      ? UpdateInternshipEngagementDocument
+      : UpdateLanguageEngagementDocument
+  );
 
   const initialValues = useMemo(() => {
     const fullInitialValuesFields: Except<
@@ -251,9 +247,12 @@ export const EditEngagementDialog: FC<EditEngagementDialogProps> = ({
       }}
       {...props}
       initialValues={initialValues}
-      onSubmit={async ({
-        engagement: { mentorId: mentor, countryOfOriginId: country, ...rest },
-      }) => {
+      onSubmit={async (
+        {
+          engagement: { mentorId: mentor, countryOfOriginId: country, ...rest },
+        },
+        form
+      ) => {
         const mentorId = mentor?.id;
         const countryOfOriginId = country?.id;
         const input = {
@@ -264,7 +263,21 @@ export const EditEngagementDialog: FC<EditEngagementDialogProps> = ({
           },
         };
 
-        await updateEngagement({ variables: { input } });
+        await updateEngagement({
+          variables: { input },
+          update: (cache) => {
+            // Invalidate progress reports if engagement date range changes
+            if (engagement.__typename === 'LanguageEngagement') {
+              const dirty = form.getState().dirtyFields;
+              if (
+                'engagement.startDateOverride' in dirty ||
+                'engagement.endDateOverride' in dirty
+              ) {
+                invalidateProps(cache, engagement, 'progressReports');
+              }
+            }
+          },
+        });
       }}
       errorHandlers={{
         Input: (e, next) =>

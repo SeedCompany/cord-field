@@ -1,6 +1,10 @@
 import { ApolloCache } from '@apollo/client';
 import { DeepPartial } from 'ts-essentials';
-import { Project as ProjectShape, SecuredProp } from '../../../api';
+import {
+  invalidateProps,
+  Project as ProjectShape,
+  SecuredProp,
+} from '../../../api';
 import { CalendarDate } from '../../../util';
 import {
   ProjectCachedEngagementDateRangesFragmentDoc,
@@ -37,6 +41,11 @@ export const updateEngagementDateRanges = (
     }
     updateDateCalcField(cache, eng, 'startDate', cached.mouStart);
     updateDateCalcField(cache, eng, 'endDate', cached.mouEnd);
+
+    // Invalidate progress reports as well. These can just be re-fetched when needed.
+    if (eng.__typename === 'LanguageEngagement') {
+      invalidateProps(cache, eng, 'progressReports');
+    }
   }
 };
 

@@ -7,7 +7,6 @@ import {
   Duration,
   DurationObject,
   DurationUnit,
-  Info,
   LocaleOptions,
   ToISOTimeOptions,
   Zone,
@@ -120,17 +119,16 @@ export class CalendarDate extends DateTime {
     return CalendarDate.fromDateTime(super.utc(year, month, day));
   }
 
+  get fiscalYear() {
+    return this.month >= 10 ? this.year + 1 : this.year;
+  }
+
+  get fiscalQuarter() {
+    return this.quarter === 4 ? 1 : this.quarter + 1;
+  }
+
   static toFiscalYear = (dt: DateTime) =>
     dt.month >= 10 ? dt.year + 1 : dt.year;
-
-  static toFiscalQuarter = (dt: DateTime) =>
-    dt.quarter === 4 ? 1 : dt.quarter + 1;
-
-  static toFiscalMonth = (dt: DateTime) => {
-    const m = (dt.month + 3) % 12;
-    const fm = m > 0 ? m : 12;
-    return Info.months('short')[fm - 1];
-  };
 
   static fiscalYearEndToCalendarDate = (year: number | null | undefined) =>
     year

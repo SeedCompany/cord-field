@@ -3,7 +3,7 @@ import { select, text } from '@storybook/addon-knobs';
 import React from 'react';
 import { FinancialReportingTypeList, PartnershipStatuses } from '../../api';
 import { csv } from '../../util';
-import { dateTime } from '../knobs.stories';
+import { date, dateTime } from '../knobs.stories';
 import { PartnershipCard } from './PartnershipCard';
 import { PartnershipCardFragment } from './PartnershipCard.generated';
 
@@ -34,12 +34,12 @@ export const WithData = () => {
     mouStart: {
       canRead: true,
       canEdit: true,
-      value: dateTime('updatedAt'),
+      value: date('updatedAt'),
     },
     mouEnd: {
       canRead: true,
       canEdit: true,
-      value: dateTime('updatedAt'),
+      value: date('updatedAt'),
     },
     createdAt: dateTime('createdAt'),
     types: {
