@@ -71,7 +71,8 @@ const PeriodicReportCardInContext = ({
   const classes = useStyles();
 
   const currentFile = dueCurrently?.value?.reportFile;
-  const needsUpload = currentFile?.canRead && !currentFile.value;
+  const needsUpload =
+    currentFile?.canRead && !currentFile.value && currentFile.canEdit;
 
   const uploadPeriodicReport = useUploadPeriodicReport(dueCurrently?.value?.id);
   const { openFilePreview } = useFileActions();
@@ -81,8 +82,12 @@ const PeriodicReportCardInContext = ({
     open: openFileBrowser,
     isDragActive,
   } = useDropzone({
-    disabled: !dueCurrently?.value || !currentFile?.canEdit,
-    onDrop: (files) => uploadPeriodicReport(files),
+    onDrop: (files) => {
+      if (!currentFile?.canEdit) {
+        return;
+      }
+      uploadPeriodicReport(files);
+    },
     noClick: true,
   });
   const link = `reports/${type.toLowerCase()}`;
@@ -150,9 +155,7 @@ const PeriodicReportCardInContext = ({
           </Tooltip>
         ) : null}
       </CardActions>
-      {dueCurrently && (
-        <DropOverlay report={dueCurrently} show={isDragActive} />
-      )}
+      <DropOverlay report={dueCurrently} show={isDragActive} />
       <input {...getInputProps()} name="report_file_uploader" />
     </Card>
   );
