@@ -2,7 +2,7 @@ import { useMutation } from '@apollo/client';
 import { useSnackbar } from 'notistack';
 import React from 'react';
 import { Except } from 'type-fest';
-import { addItemToList, PlanChangeStatus } from '../../../../api';
+import { addItemToList } from '../../../../api';
 import { ProjectOverviewQuery } from '../../Overview/ProjectOverview.generated';
 import { PlanChangesQuery } from '../List/PlanChanges.generated';
 import {
@@ -27,9 +27,9 @@ export const CreatePlanChange = ({
   project,
   ...props
 }: CreatePlanChangeProps) => {
-  const [createPlanChnage] = useMutation(CreatePlanChangeDocument, {
+  const [createPlanChange] = useMutation(CreatePlanChangeDocument, {
     update: addItemToList({
-      listId: [project, 'changes'],
+      listId: [project, 'planChanges'],
       outputToItem: (data) => data.createPlanChange.planChange,
     }),
   });
@@ -44,15 +44,16 @@ export const CreatePlanChange = ({
       }
       {...props}
       onSubmit={async ({ planChange }) => {
-        const input = {
-          planChange: {
-            ...planChange,
-            status: 'Pending' as PlanChangeStatus,
-            projectId: project.id,
+        const { data } = await createPlanChange({
+          variables: {
+            input: {
+              planChange: {
+                ...planChange,
+                status: 'Pending',
+                projectId: project.id,
+              },
+            },
           },
-        };
-        const { data } = await createPlanChnage({
-          variables: { input },
         });
         return data!.createPlanChange.planChange;
       }}

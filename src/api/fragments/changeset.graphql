@@ -1,6 +1,6 @@
-fragment ChangeInfo on ChangesetAware {
+fragment ChangesetInfo on ChangesetAware {
   id
-  change {
+  changeset {
     id
   }
 }

@@ -1,5 +1,8 @@
-query ProjectOverview($input: ID!, $changeId: ID) {
-  project(id: $input) {
+query ProjectOverview($input: ID!, $changeset: ID, $withOriginal: Boolean!) {
+  project(id: $input, changeset: $changeset) {
+    ...ProjectOverview
+  }
+  original: project(id: $input) @include(if: $withOriginal) {
     ...ProjectOverview
   }
 }
@@ -88,31 +91,9 @@ fragment ProjectOverview on Project {
   nextNarrativeReportDue {
     ...SecuredPeriodicReport
   }
-  ...ChangeInfo
-  changes {
+  ...ChangesetInfo
+  planChanges {
     ...PlanChangeList
-  }
-  projectChanges(id: $changeId) {
-    ...ChangeInfo
-    name {
-      canRead
-      canEdit
-      value
-    }
-    step {
-      canRead
-      canEdit
-      value
-      transitions(id: $changeId) {
-        to
-        label
-        type
-        disabled
-        disabledReason
-      }
-      canBypassTransitions
-    }
-    status
   }
 }
 
@@ -130,12 +111,12 @@ query ProjectPostListOverview($project: ID!, $input: PostListInput) {
 query ProjectEngagementListOverview(
   $project: ID!
   $input: EngagementListInput
-  $changeId: ID
+  $changeset: ID
 ) {
-  project(id: $project) {
+  project(id: $project, changeset: $changeset) {
     id
-    ...ChangeInfo
-    engagements(input: $input, changeId: $changeId) {
+    ...ChangesetInfo
+    engagements(input: $input) {
       ...ProjectEngagementList
     }
   }

@@ -28,7 +28,7 @@ import { LanguageEngagementListItemCard } from '../../../components/LanguageEnga
 import { List, useListQuery } from '../../../components/List';
 import { PartnershipSummary } from '../../../components/PartnershipSummary';
 import { PeriodicReportCard } from '../../../components/PeriodicReports';
-import { useCurrentPlanChange } from '../../../components/PlanChangeCard';
+import { useCurrentChangeset } from '../../../components/PlanChangeCard';
 import { PlanChangesSummary } from '../../../components/PlanChangesSummary';
 import { ProjectMembersSummary } from '../../../components/ProjectMembersSummary';
 import { Redacted } from '../../../components/Redacted';
@@ -99,7 +99,7 @@ const useStyles = makeStyles(({ spacing, breakpoints, palette }) => ({
 export const ProjectOverview: FC = () => {
   const classes = useStyles();
   const { projectId = '' } = useParams();
-  const [changeId] = useCurrentPlanChange();
+  const [changeset] = useCurrentChangeset();
   const formatNumber = useNumberFormatter();
 
   const [editState, editField, fieldsBeingEdited] =
@@ -136,7 +136,8 @@ export const ProjectOverview: FC = () => {
     {
       variables: {
         input: projectId,
-        changeId,
+        changeset,
+        withOriginal: !!changeset,
       },
     }
   );
@@ -145,13 +146,12 @@ export const ProjectOverview: FC = () => {
     listAt: (data) => data.project.engagements,
     variables: {
       project: projectId,
-      changeId,
+      changeset,
     },
     fetchPolicy: 'no-cache',
   });
 
   const projectName = projectOverviewData?.project.name;
-  const projectChanges = projectOverviewData?.project.projectChanges;
   const isTranslation = projectOverviewData
     ? projectOverviewData.project.__typename === 'TranslationProject'
     : undefined;
@@ -242,8 +242,10 @@ export const ProjectOverview: FC = () => {
               ) : projectName.canRead ? (
                 <>
                   {projectName.value}
-                  {changeId && projectChanges?.name.value !== projectName.value
-                    ? ` - ${projectChanges?.name.value}`
+                  {changeset &&
+                  projectOverviewData?.original?.name.value !==
+                    projectName.value
+                    ? ` - ${projectOverviewData?.original?.name.value}`
                     : null}
                 </>
               ) : (
@@ -423,10 +425,10 @@ export const ProjectOverview: FC = () => {
                 }
               >
                 {displayProjectStep(projectOverviewData?.project.step.value)}
-                {changeId &&
+                {changeset &&
                 projectOverviewData?.project.step.value !==
-                  projectChanges?.step.value
-                  ? ` - ${projectChanges?.step.value}`
+                  projectOverviewData?.original?.step.value
+                  ? ` - ${projectOverviewData?.original?.step.value}`
                   : null}
               </DataButton>
             </Grid>
@@ -540,7 +542,7 @@ export const ProjectOverview: FC = () => {
           <Grid container spacing={3}>
             <Grid item xs={6}>
               <PlanChangesSummary
-                planChanges={projectOverviewData?.project.changes}
+                planChanges={projectOverviewData?.project.planChanges}
               />
             </Grid>
           </Grid>
@@ -605,18 +607,13 @@ export const ProjectOverview: FC = () => {
         </div>
       )}
       {workflowProject && (
-        <ProjectWorkflowDialog
-          {...workflowState}
-          project={workflowProject}
-          planChangeId={changeId}
-        />
+        <ProjectWorkflowDialog {...workflowState} project={workflowProject} />
       )}
       {projectOverviewData ? (
         <UpdateProjectDialog
           {...editState}
           project={projectOverviewData.project}
           editFields={fieldsBeingEdited}
-          planChangeId={changeId}
         />
       ) : null}
       <CreateEngagement projectId={projectId} {...createEngagementState} />

@@ -20,7 +20,7 @@ import {
   TextField,
 } from '../../../../components/form';
 import { AutocompleteField } from '../../../../components/form/AutocompleteField';
-import { useCurrentPlanChange } from '../../../../components/PlanChangeCard';
+import { useCurrentChangeset } from '../../../../components/PlanChangeCard';
 import { PlanChangeCardFragment } from '../../../../components/PlanChangeCard/PlanChange.generated';
 import { callAll } from '../../../../util';
 import { ProjectOverviewDocument } from '../../Overview/ProjectOverview.generated';
@@ -46,17 +46,13 @@ export const UpdatePlanChange = ({
   planChange,
   ...props
 }: UpdatePlanChangeProps) => {
-  const [_, setCurrentChange] = useCurrentPlanChange();
+  const [_, setCurrentChangeset] = useCurrentChangeset();
   const [updatePlanChange] = useMutation(UpdatePlanChangeDocument);
 
   const [deletePlanChange] = useMutation(DeletePlanChangeDocument, {
     update: callAll(
       removeItemFromList({
-        listId: 'planChanges',
-        item: { id: planChange.id },
-      }),
-      removeItemFromList({
-        listId: [project, 'changes'],
+        listId: [project, 'planChanges'],
         item: { id: planChange.id },
       })
     ),
@@ -84,7 +80,7 @@ export const UpdatePlanChange = ({
               query: ProjectOverviewDocument,
               variables: {
                 input: project.id,
-                changeId: planChange.id,
+                changeset: planChange.id,
               },
             },
           ],
@@ -94,7 +90,7 @@ export const UpdatePlanChange = ({
           input.planChange.status === 'Approved' &&
           planChange.status.value !== input.planChange.status
         ) {
-          setCurrentChange(null);
+          setCurrentChangeset(null);
         }
       }}
       fieldsPrefix="planChange"

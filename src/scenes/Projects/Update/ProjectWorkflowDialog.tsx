@@ -37,7 +37,6 @@ type UpdateProjectDialogProps = Except<
   'sendIfClean' | 'submitLabel' | 'onSubmit' | 'initialValues' | 'errorHandlers'
 > & {
   project: ProjectOverviewFragment;
-  planChangeId?: string;
 };
 
 const useStyles = makeStyles(({ spacing }) => ({
@@ -48,14 +47,11 @@ const useStyles = makeStyles(({ spacing }) => ({
 
 export const ProjectWorkflowDialog = ({
   project,
-  planChangeId,
   ...props
 }: UpdateProjectDialogProps) => {
   const [updateProject] = useMutation(UpdateProjectDocument);
   const classes = useStyles();
-  const { canBypassTransitions, transitions } = planChangeId
-    ? project.projectChanges.step
-    : project.step;
+  const { canBypassTransitions, transitions } = project.step;
 
   return (
     <DialogForm
@@ -80,8 +76,8 @@ export const ProjectWorkflowDialog = ({
                 step:
                   (submitAction?.split(':')[0] as ProjectStep | null) ?? step,
               },
+              changeset: project.changeset?.id,
             },
-            changeId: planChangeId ? planChangeId : null,
           },
         });
       }}
@@ -90,7 +86,9 @@ export const ProjectWorkflowDialog = ({
         Input: (e) => e.message,
       }}
     >
-      {planChangeId ? <Alert severity="info">You are in CR mode</Alert> : null}
+      {project.changeset ? (
+        <Alert severity="info">You are in CR mode</Alert>
+      ) : null}
       <SubmitError />
       <Grid container direction="column" spacing={1}>
         {transitions.map((transition, i) => (

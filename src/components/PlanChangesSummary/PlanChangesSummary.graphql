@@ -1,4 +1,4 @@
-fragment PlanChangeList on SecuredChangeList {
+fragment PlanChangeList on SecuredPlanChangeList {
   items {
     ...PlanChangeCard
   }

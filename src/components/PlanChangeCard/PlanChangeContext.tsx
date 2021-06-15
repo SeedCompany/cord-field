@@ -1,14 +1,14 @@
 import { makeQueryHandler, StringParam, withKey } from '../../hooks';
 import { Nullable } from '../../util';
 
-const useCurrentPlanChangeUrlState = makeQueryHandler({
-  changeId: withKey(StringParam, 'cr'),
+const useCurrentChangesetUrlState = makeQueryHandler({
+  changeset: withKey(StringParam, 'chgset'),
 });
 
-export const useCurrentPlanChange = () => {
-  const [{ changeId }, set] = useCurrentPlanChangeUrlState();
-  const update = (nextChangeId: Nullable<string>) => {
-    set({ changeId: nextChangeId }, { push: true });
+export const useCurrentChangeset = () => {
+  const [{ changeset }, set] = useCurrentChangesetUrlState();
+  const update = (nextChangeset: Nullable<string>) => {
+    set({ changeset: nextChangeset }, { push: true });
   };
-  return [changeId, update] as const;
+  return [changeset, update] as const;
 };

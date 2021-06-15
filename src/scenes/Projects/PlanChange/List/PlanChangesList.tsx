@@ -39,7 +39,7 @@ export const PlanChangesList: FC = () => {
   const classes = useStyles();
   const { projectId = '' } = useParams();
   const { root: data, ...list } = useListQuery(PlanChangesDocument, {
-    listAt: (res) => res.project.changes,
+    listAt: (res) => res.project.planChanges,
     variables: {
       project: projectId,
     },

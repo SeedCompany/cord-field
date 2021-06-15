@@ -2,7 +2,7 @@ import { useMutation } from '@apollo/client';
 import { pick } from 'lodash';
 import React, { ComponentType, useMemo } from 'react';
 import { Except, Merge } from 'type-fest';
-import { GQLOperations, invalidateProps, SensitivityList, UpdateProject } from '../../../api';
+import { invalidateProps, SensitivityList, UpdateProject } from '../../../api';
 import {
   DisplayFieldRegionFragment,
   DisplayLocationFragment,
@@ -92,7 +92,6 @@ type UpdateProjectDialogProps = Except<
 export const UpdateProjectDialog = ({
   project,
   editFields: editFieldsProp,
-  planChangeId,
   ...props
 }: UpdateProjectDialogProps) => {
   const editFields = useMemo(
@@ -107,9 +106,7 @@ export const UpdateProjectDialog = ({
       UpdateProjectFormValues['project'],
       'id'
     > = {
-      name: planChangeId
-        ? project.projectChanges.name.value
-        : project.name.value,
+      name: project.name.value,
       primaryLocationId: project.primaryLocation.value,
       fieldRegionId: project.fieldRegion.value,
       mouStart: project.mouStart.value,
@@ -131,8 +128,6 @@ export const UpdateProjectDialog = ({
       },
     };
   }, [
-    planChangeId,
-    project.projectChanges.name.value,
     project.name.value,
     project.primaryLocation.value,
     project.fieldRegion.value,
@@ -160,17 +155,16 @@ export const UpdateProjectDialog = ({
       }) => {
         const primaryLocationId = primaryLocation?.id;
         const fieldRegionId = fieldRegion?.id;
-        const input = {
-          project: {
-            ...rest,
-            ...(primaryLocationId ? { primaryLocationId } : {}),
-            ...(fieldRegionId ? { fieldRegionId } : {}),
-          },
-        };
         await updateProject({
           variables: {
-            input,
-            changeId: planChangeId ? planChangeId : null,
+            input: {
+              project: {
+                ...rest,
+                ...(primaryLocationId ? { primaryLocationId } : {}),
+                ...(fieldRegionId ? { fieldRegionId } : {}),
+              },
+              changeset: project.changeset?.id,
+            },
           },
           update: (cache) => {
             if (rest.mouStart === undefined && rest.mouEnd === undefined) {

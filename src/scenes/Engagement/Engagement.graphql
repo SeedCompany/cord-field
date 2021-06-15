@@ -1,8 +1,8 @@
-query Engagement($projectId: ID!, $engagementId: ID!, $changeId: ID) {
-  project(id: $projectId) {
+query Engagement($projectId: ID!, $engagementId: ID!, $changeset: ID) {
+  project(id: $projectId, changeset: $changeset) {
     ...ProjectBreadcrumb
   }
-  engagement(id: $engagementId, changeId: $changeId) {
+  engagement(id: $engagementId, changeset: $changeset) {
     id
     ...LanguageEngagementDetail
     ...InternshipEngagementDetail
