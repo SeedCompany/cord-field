@@ -1,6 +1,6 @@
 import { useQuery } from '@apollo/client';
 import { Grid, makeStyles, Tooltip, Typography } from '@material-ui/core';
-import { Add, Assignment, DateRange, Edit, Publish } from '@material-ui/icons';
+import { Add, DateRange, Edit, Publish } from '@material-ui/icons';
 import { Skeleton } from '@material-ui/lab';
 import clsx from 'clsx';
 import React, { FC } from 'react';
@@ -43,7 +43,6 @@ import { CreateInternshipEngagement } from '../../Engagement/InternshipEngagemen
 import { CreateLanguageEngagement } from '../../Engagement/LanguageEngagement/Create/CreateLanguageEngagement';
 import { useProjectCurrentDirectory, useUploadProjectFiles } from '../Files';
 import { ProjectListQueryVariables } from '../List/projects.generated';
-import { CreatePlanChange } from '../PlanChange/Create/CreatePlanChange';
 import { EditableProjectField, UpdateProjectDialog } from '../Update';
 import { ProjectWorkflowDialog } from '../Update/ProjectWorkflowDialog';
 import {
@@ -133,7 +132,6 @@ export const ProjectOverview: FC = () => {
   });
 
   const [createEngagementState, createEngagement] = useDialog();
-  const [createPlanChangeState, openCreatePlanChangeDialog] = useDialog();
 
   const { data: projectOverviewData, error } = useQuery(
     ProjectOverviewDocument,
@@ -460,37 +458,6 @@ export const ProjectOverview: FC = () => {
               <Typography variant="h4">
                 {projectOverviewData ? (
                   'Upload Files'
-                ) : (
-                  <Skeleton width="12ch" />
-                )}
-              </Typography>
-            </Grid>
-            <Grid item>
-              <span {...getRootProps()}>
-                <input {...getInputProps()} />
-                <Tooltip title="Change to Plan Request">
-                  <Fab
-                    loading={!projectOverviewData || directoryIdLoading}
-                    disabled={canReadDirectoryId === false}
-                    onClick={openCreatePlanChangeDialog}
-                    color="primary"
-                    aria-label="Change to Plan Request"
-                  >
-                    <Assignment />
-                  </Fab>
-                </Tooltip>
-              </span>
-              {projectOverviewData && (
-                <CreatePlanChange
-                  {...createPlanChangeState}
-                  project={projectOverviewData.project}
-                />
-              )}
-            </Grid>
-            <Grid item>
-              <Typography variant="h4">
-                {projectOverviewData ? (
-                  'Change to Plan Request'
                 ) : (
                   <Skeleton width="12ch" />
                 )}
