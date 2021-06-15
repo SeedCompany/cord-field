@@ -14,6 +14,7 @@ import {
 } from '../../../api';
 import { BudgetOverviewCard } from '../../../components/BudgetOverviewCard';
 import { CardGroup } from '../../../components/CardGroup';
+import { ChangesetBadge } from '../../../components/Changeset';
 import { DataButton } from '../../../components/DataButton';
 import { useDialog } from '../../../components/Dialog';
 import { DisplaySimpleProperty } from '../../../components/DisplaySimpleProperty';
@@ -243,14 +244,13 @@ export const ProjectOverview: FC = () => {
               {!projectName ? (
                 <Skeleton width="100%" />
               ) : projectName.canRead ? (
-                <>
+                <ChangesetBadge
+                  current={projectOverviewData?.project}
+                  previous={projectOverviewData?.original}
+                  prop="name"
+                >
                   {projectName.value}
-                  {changeset &&
-                  projectOverviewData?.original?.name.value !==
-                    projectName.value
-                    ? ` - ${projectOverviewData?.original?.name.value}`
-                    : null}
-                </>
+                </ChangesetBadge>
               ) : (
                 <Redacted
                   info="You do not have permission to view project's name"
@@ -418,22 +418,24 @@ export const ProjectOverview: FC = () => {
               </Tooltip>
             )}
             <Grid item>
-              <DataButton
-                loading={!projectOverviewData}
-                secured={projectOverviewData?.project.step}
-                redacted="You do not have permission to view project step"
-                onClick={() =>
-                  projectOverviewData &&
-                  openWorkflow(projectOverviewData.project)
-                }
+              <ChangesetBadge
+                current={projectOverviewData?.project}
+                previous={projectOverviewData?.original}
+                prop="step"
+                labelBy={displayProjectStep}
               >
-                {displayProjectStep(projectOverviewData?.project.step.value)}
-                {changeset &&
-                projectOverviewData?.project.step.value !==
-                  projectOverviewData?.original?.step.value
-                  ? ` - ${projectOverviewData?.original?.step.value}`
-                  : null}
-              </DataButton>
+                <DataButton
+                  loading={!projectOverviewData}
+                  secured={projectOverviewData?.project.step}
+                  redacted="You do not have permission to view project step"
+                  onClick={() =>
+                    projectOverviewData &&
+                    openWorkflow(projectOverviewData.project)
+                  }
+                >
+                  {displayProjectStep(projectOverviewData?.project.step.value)}
+                </DataButton>
+              </ChangesetBadge>
             </Grid>
           </Grid>
 

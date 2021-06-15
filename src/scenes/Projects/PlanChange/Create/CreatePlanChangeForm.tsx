@@ -33,7 +33,8 @@ export const CreatePlanChangeForm = <R extends any>(
     <TextField
       name="planChange.summary"
       label="Summary"
-      placeholder="Enter summary"
+      placeholder="Why is this change request needed?"
+      variant="outlined"
       required
       multiline
       inputProps={{ rowsMin: 2 }}
