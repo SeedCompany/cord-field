@@ -15,6 +15,7 @@ import {
   DialogFormProps,
 } from '../../../../components/Dialog/DialogForm';
 import {
+  SubmitAction,
   SubmitButton,
   SubmitError,
   TextField,
@@ -59,7 +60,7 @@ export const UpdatePlanChange = ({
   });
 
   return (
-    <DialogForm<UpdatePlanChangeInput>
+    <DialogForm<UpdatePlanChangeInput & SubmitAction<'delete'>>
       title="Update Plan Change"
       closeLabel="Close"
       submitLabel="Save"
@@ -73,6 +74,15 @@ export const UpdatePlanChange = ({
         },
       }}
       onSubmit={async (input) => {
+        if (input.submitAction === 'delete') {
+          await deletePlanChange({
+            variables: {
+              planChangeId: planChange.id,
+            },
+          });
+          return;
+        }
+
         await updatePlanChange({
           variables: { input },
           refetchQueries: [
@@ -100,13 +110,6 @@ export const UpdatePlanChange = ({
           color="error"
           fullWidth={false}
           variant="text"
-          onClick={async () => {
-            await deletePlanChange({
-              variables: {
-                planChangeId: planChange.id,
-              },
-            });
-          }}
         >
           Delete
         </SubmitButton>
