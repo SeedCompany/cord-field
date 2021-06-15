@@ -1,5 +1,4 @@
 import { useMutation } from '@apollo/client';
-import { Container } from '@material-ui/core';
 import React from 'react';
 import { Except } from 'type-fest';
 import {
@@ -115,25 +114,29 @@ export const UpdatePlanChange = ({
         </SubmitButton>
       }
     >
-      <Container>
-        <SubmitError />
-        <AutocompleteField
-          multiple
-          options={PlanChangeTypeList}
-          getOptionLabel={displayPlanChangeType}
-          name="types"
-          label="Types"
-          variant="outlined"
-        />
-        <TextField name="summary" label="Summary" placeholder="Enter summary" />
-        <AutocompleteField
-          options={PlanChangeStatusList}
-          getOptionLabel={displayPlanChangeStatus}
-          name="status"
-          label="Status"
-          variant="outlined"
-        />
-      </Container>
+      <SubmitError />
+      <AutocompleteField
+        multiple
+        options={PlanChangeTypeList}
+        getOptionLabel={displayPlanChangeType}
+        name="types"
+        label="Types"
+        variant="outlined"
+      />
+      <TextField
+        name="summary"
+        label="Summary"
+        placeholder="Enter summary"
+        multiline
+        inputProps={{ rowsMin: 2 }}
+      />
+      <AutocompleteField
+        options={PlanChangeStatusList}
+        getOptionLabel={displayPlanChangeStatus}
+        name="status"
+        label="Status"
+        variant="outlined"
+      />
     </DialogForm>
   );
 };

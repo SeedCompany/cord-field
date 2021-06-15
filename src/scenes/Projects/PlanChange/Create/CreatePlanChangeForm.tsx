@@ -35,6 +35,8 @@ export const CreatePlanChangeForm = <R extends any>(
       label="Summary"
       placeholder="Enter summary"
       required
+      multiline
+      inputProps={{ rowsMin: 2 }}
     />
   </DialogForm>
 );
