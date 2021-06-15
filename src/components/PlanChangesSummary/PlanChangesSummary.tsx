@@ -1,4 +1,4 @@
-import { Assignment } from '@material-ui/icons';
+import { ChangeHistory } from '@material-ui/icons';
 import * as React from 'react';
 import { FC } from 'react';
 import { FieldOverviewCard } from '../FieldOverviewCard';
@@ -17,13 +17,16 @@ export const PlanChangesSummary: FC<PlanChangesSummaryProps> = ({
     <FieldOverviewCard
       title="Plan Changes"
       viewLabel="View Changes"
-      data={{
-        to: 'changes',
-        value: planChanges?.total
-          ? String(formatNumber(planChanges.total))
-          : '0',
-      }}
-      icon={Assignment}
+      loading={!planChanges}
+      data={
+        planChanges
+          ? {
+              to: 'changes',
+              value: formatNumber(planChanges.total),
+            }
+          : undefined
+      }
+      icon={ChangeHistory}
     />
   );
 };
