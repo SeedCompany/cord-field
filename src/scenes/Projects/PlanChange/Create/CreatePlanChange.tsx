@@ -1,5 +1,4 @@
 import { useMutation } from '@apollo/client';
-import { useSnackbar } from 'notistack';
 import React from 'react';
 import { Except } from 'type-fest';
 import { addItemToList } from '../../../../api';
@@ -33,15 +32,9 @@ export const CreatePlanChange = ({
       outputToItem: (data) => data.createPlanChange.planChange,
     }),
   });
-  const { enqueueSnackbar } = useSnackbar();
 
   return (
     <CreatePlanChangeForm
-      onSuccess={() =>
-        enqueueSnackbar(`Created change to plan`, {
-          variant: 'success',
-        })
-      }
       {...props}
       onSubmit={async ({ planChange }) => {
         const { data } = await createPlanChange({
