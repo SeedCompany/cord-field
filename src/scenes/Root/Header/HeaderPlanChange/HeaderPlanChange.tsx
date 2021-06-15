@@ -2,7 +2,7 @@ import { Card, IconButton, makeStyles, Typography } from '@material-ui/core';
 import { Close, Info } from '@material-ui/icons';
 import { FC } from 'react';
 import * as React from 'react';
-import { useCurrentChangeset } from '../../../../components/PlanChangeCard';
+import { useCurrentChangeset } from '../../../../api';
 
 const useStyles = makeStyles(({ typography, spacing }) => ({
   card: {

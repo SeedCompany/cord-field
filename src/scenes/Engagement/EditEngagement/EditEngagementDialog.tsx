@@ -11,6 +11,7 @@ import {
   MethodologyToApproach,
   UpdateInternshipEngagement,
   UpdateLanguageEngagement,
+  useCurrentChangeset,
 } from '../../../api';
 import { DisplayLocationFragment } from '../../../api/fragments/location.generated';
 import {
@@ -29,7 +30,6 @@ import {
 import { AutocompleteField } from '../../../components/form/AutocompleteField';
 import { LocationField, UserField } from '../../../components/form/Lookup';
 import { UserLookupItemFragment } from '../../../components/form/Lookup/User/UserLookup.generated';
-import { useCurrentChangeset } from '../../../components/PlanChangeCard';
 import { ExtractStrict, many, Many } from '../../../util';
 import { InternshipEngagementDetailFragment as InternshipEngagement } from '../InternshipEngagement/InternshipEngagement.generated';
 import { LanguageEngagementDetailFragment as LanguageEngagement } from '../LanguageEngagement/LanguageEngagementDetail.generated';

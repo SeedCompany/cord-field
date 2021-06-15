@@ -8,6 +8,7 @@ import {
   PlanChangeTypeList,
   removeItemFromList,
   UpdatePlanChangeInput,
+  useCurrentChangeset,
 } from '../../../../api';
 import {
   DialogForm,
@@ -20,7 +21,6 @@ import {
   TextField,
 } from '../../../../components/form';
 import { AutocompleteField } from '../../../../components/form/AutocompleteField';
-import { useCurrentChangeset } from '../../../../components/PlanChangeCard';
 import { PlanChangeCardFragment } from '../../../../components/PlanChangeCard/PlanChange.generated';
 import { callAll } from '../../../../util';
 import { ProjectOverviewDocument } from '../../Overview/ProjectOverview.generated';

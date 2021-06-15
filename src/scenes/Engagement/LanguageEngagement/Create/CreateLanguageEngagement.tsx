@@ -1,7 +1,7 @@
 import { useMutation } from '@apollo/client';
 import React from 'react';
 import { Except } from 'type-fest';
-import { addItemToList } from '../../../../api';
+import { addItemToList, useCurrentChangeset } from '../../../../api';
 import {
   DialogForm,
   DialogFormProps,
@@ -11,7 +11,6 @@ import {
   LanguageField,
   LanguageLookupItem,
 } from '../../../../components/form/Lookup';
-import { useCurrentChangeset } from '../../../../components/PlanChangeCard';
 import { callAll } from '../../../../util';
 import { CreateLanguageEngagementDocument } from './CreateLanguageEngagement.generated';
 import { recalculateSensitivity } from './recalculateSensitivity';

@@ -9,10 +9,9 @@ import {
 import { Skeleton } from '@material-ui/lab';
 import { FC } from 'react';
 import * as React from 'react';
-import { displayPlanChangeTypes } from '../../api';
+import { displayPlanChangeTypes, useCurrentChangeset } from '../../api';
 import { FormattedDateTime } from '../Formatters';
 import { PlanChangeCardFragment } from './PlanChange.generated';
-import { useCurrentChangeset } from './PlanChangeContext';
 
 const useStyles = makeStyles(({ spacing }) => ({
   cardContent: {

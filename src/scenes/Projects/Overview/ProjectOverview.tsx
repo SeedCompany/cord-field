@@ -7,7 +7,11 @@ import React, { FC } from 'react';
 import { useDropzone } from 'react-dropzone';
 import { Helmet } from 'react-helmet-async';
 import { useParams } from 'react-router-dom';
-import { displayProjectStep, securedDateRange } from '../../../api';
+import {
+  displayProjectStep,
+  securedDateRange,
+  useCurrentChangeset,
+} from '../../../api';
 import { BudgetOverviewCard } from '../../../components/BudgetOverviewCard';
 import { CardGroup } from '../../../components/CardGroup';
 import { DataButton } from '../../../components/DataButton';
@@ -28,7 +32,6 @@ import { LanguageEngagementListItemCard } from '../../../components/LanguageEnga
 import { List, useListQuery } from '../../../components/List';
 import { PartnershipSummary } from '../../../components/PartnershipSummary';
 import { PeriodicReportCard } from '../../../components/PeriodicReports';
-import { useCurrentChangeset } from '../../../components/PlanChangeCard';
 import { PlanChangesSummary } from '../../../components/PlanChangesSummary';
 import { ProjectMembersSummary } from '../../../components/ProjectMembersSummary';
 import { Redacted } from '../../../components/Redacted';
