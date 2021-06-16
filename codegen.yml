@@ -1,9 +1,6 @@
 schema:
   - ${RAZZLE_API_BASE_URL}/graphql:
       loader: ./src/api/client-schema.graphql.ts
-documents:
-  - ./src/**/*.graphql
-  - '!./src/api/client-schema.graphql'
 overwrite: true
 config:
   # Use `import type` which should be default for TS 3.8+
@@ -53,31 +50,3 @@ generates:
         DateTime: DateTime
       skipTypename: false
       enumsAsTypes: true
-
-  # Generate an object housing all of our operations
-  # This allows operations to be cross-referenced (i.e. `refetchQueries`) without needing to rely on magic strings
-  ./src/api/operations.generated.ts:
-    plugins:
-      - ./src/api/operations.codegen
-    config:
-      identifierName: GQLOperations
-
-  # Generate types & react hooks for our operations
-  ./src/:
-    preset: near-operation-file
-    presetConfig:
-      extension: .generated.ts
-      baseTypesPath: api/schema.generated.ts
-    plugins:
-      - typescript-operations
-      - typed-document-node
-    config:
-      gqlImport: graphql-tag
-      documentMode: graphQLTag
-      skipTypename: false
-      enumsAsTypes: true
-      # Instead of Pick-ing from generated schema, redefine shape inline
-      # Skipping for now, since schema has docs which IDE can provide when Pick is used.
-      preResolveTypes: false
-      # Removes useless __typename from query/mutation root types which are always "Query" or "Mutation"
-      skipTypeNameForRoot: true

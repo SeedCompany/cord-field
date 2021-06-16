@@ -4,14 +4,16 @@
   "scripts": {
     "start": "run-p \"start:*\"",
     "start:server": "razzle start",
-    "start:gql-gen": "yarn gql-gen --watch",
+    "start:gql-gen": "run-p \"gql-gen:* --watch\"",
     "build": "yarn gql-gen && razzle build --noninteractive",
     "clean": "rimraf build cache",
     "test": "razzle test --env=jsdom",
     "lint": "eslint --ext .ts,.tsx --fix --max-warnings 0 .",
     "type-check": "tsc -p .",
     "analyze": "yarn build --analyze",
-    "gql-gen": "TS_NODE_PROJECT=tsconfig.codegen.json graphql-codegen -r ts-node/register -r ./src/api/loadEnv.codegen",
+    "gql-gen": "yarn gql-gen:schema \"$@\" && yarn gql-gen:operations \"$@\"",
+    "gql-gen:schema": "TS_NODE_PROJECT=tsconfig.codegen.json graphql-codegen -r ts-node/register -r ./src/api/loadEnv.codegen",
+    "gql-gen:operations": "yarn gql-gen:schema -c codegen-operations.yml",
     "storybook": "start-storybook -p 9009 -s public",
     "build-storybook": "build-storybook -s public",
     "postinstall": "patch-typed-document-node || true"
