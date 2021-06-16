@@ -1,0 +1,17 @@
+query ProjectChangeRequestList(
+  $project: ID!
+  $input: ProjectChangeRequestListInput
+) {
+  project(id: $project) {
+    ...ProjectBreadcrumb
+    changeRequests(input: $input) {
+      items {
+        ...ProjectChangeRequestListItem
+      }
+      ...Pagination
+      canRead
+      canCreate
+    }
+    status
+  }
+}

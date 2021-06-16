@@ -13,11 +13,14 @@ import { Breadcrumb } from '../../../../components/Breadcrumb';
 import { useDialog } from '../../../../components/Dialog';
 import { Fab } from '../../../../components/Fab';
 import { List, useListQuery } from '../../../../components/List';
-import { PlanChangeCard } from '../../../../components/PlanChangeCard';
 import { ProjectBreadcrumb } from '../../../../components/ProjectBreadcrumb';
-import { CreatePlanChange } from '../Create/CreatePlanChange';
-import { UpdatePlanChange, UpdatePlanChangeFormParams } from '../Update';
-import { PlanChangesDocument } from './PlanChanges.generated';
+import { ProjectChangeRequestListItem } from '../../../../components/ProjectChangeRequestListItem';
+import { CreateProjectChangeRequest } from '../Create';
+import {
+  UpdatePlanChangeFormParams,
+  UpdateProjectChangeRequest,
+} from '../Update';
+import { ProjectChangeRequestListDocument as ChangeRequestList } from './ProjectChangeRequestList.generated';
 
 const useStyles = makeStyles(({ spacing, breakpoints }) => ({
   root: {
@@ -35,11 +38,11 @@ const useStyles = makeStyles(({ spacing, breakpoints }) => ({
   },
 }));
 
-export const PlanChangesList: FC = () => {
+export const ProjectChangeRequestList: FC = () => {
   const classes = useStyles();
   const { projectId = '' } = useParams();
-  const { root: data, ...list } = useListQuery(PlanChangesDocument, {
-    listAt: (res) => res.project.planChanges,
+  const { root: data, ...list } = useListQuery(ChangeRequestList, {
+    listAt: (res) => res.project.changeRequests,
     variables: {
       project: projectId,
     },
@@ -47,30 +50,26 @@ export const PlanChangesList: FC = () => {
 
   const [createPlanChangeDialogState, openCreatePlanChangeDialog] = useDialog();
 
-  const [
-    updatePlanChangeDialogState,
-    openUpdatePlanChangeDialog,
-    planChangeProps,
-  ] = useDialog<UpdatePlanChangeFormParams>();
+  const [updateDialogState, openUpdateDialog, requestBeingUpdated] =
+    useDialog<UpdatePlanChangeFormParams>();
 
   return (
     <div className={classes.root}>
       <Helmet
-        title={`Plan Changes - ${data?.project.name.value ?? 'A Project'}`}
+        title={`Change Requests - ${data?.project.name.value ?? 'A Project'}`}
       />
       <Breadcrumbs>
         <ProjectBreadcrumb data={data?.project} />
-        <Breadcrumb to=".">Plan Changes</Breadcrumb>
+        <Breadcrumb to=".">Change Requests</Breadcrumb>
       </Breadcrumbs>
       <div className={classes.headerContainer}>
         <Typography variant="h2" className={classes.title}>
-          Plan Changes
+          Change Requests
         </Typography>
         {(!list.data || list.data.canCreate) && (
-          <Tooltip title="Create Plan Change">
+          <Tooltip title="Create Change Request">
             <Fab
               color="error"
-              aria-label="Create Plan Change"
               loading={!list.data}
               onClick={openCreatePlanChangeDialog}
             >
@@ -79,7 +78,7 @@ export const PlanChangesList: FC = () => {
           </Tooltip>
         )}
         {data && (
-          <CreatePlanChange
+          <CreateProjectChangeRequest
             {...createPlanChangeDialogState}
             project={data.project}
           />
@@ -87,34 +86,35 @@ export const PlanChangesList: FC = () => {
       </div>
       {list.data?.canRead === false ? (
         <Typography>
-          Sorry, you don't have permission to view this project's plan changes.
+          Sorry, you don't have permission to view this project's change
+          requests.
         </Typography>
       ) : (
         <List
           {...list}
           spacing={3}
-          renderItem={(planChange) => (
-            <PlanChangeCard
-              planChange={planChange}
+          renderItem={(changeRequest) => (
+            <ProjectChangeRequestListItem
+              data={changeRequest}
               onEdit={() =>
-                openUpdatePlanChangeDialog({
+                openUpdateDialog({
                   project: data!.project,
-                  planChange: planChange,
+                  changeRequest,
                 })
               }
               showCRMode={
                 data!.project.status === 'Active' &&
-                planChange.status.value === 'Pending'
+                changeRequest.status.value === 'Pending'
               }
             />
           )}
-          renderSkeleton={<PlanChangeCard />}
+          renderSkeleton={<ProjectChangeRequestListItem />}
         />
       )}
-      {planChangeProps && (
-        <UpdatePlanChange
-          {...updatePlanChangeDialogState}
-          {...planChangeProps}
+      {requestBeingUpdated && (
+        <UpdateProjectChangeRequest
+          {...updateDialogState}
+          {...requestBeingUpdated}
         />
       )}
     </div>

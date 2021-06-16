@@ -7,11 +7,13 @@ import {
   Typography,
 } from '@material-ui/core';
 import { Skeleton } from '@material-ui/lab';
-import { FC } from 'react';
 import * as React from 'react';
-import { displayPlanChangeTypes, useCurrentChangeset } from '../../api';
+import {
+  displayProjectChangeRequestTypes,
+  useCurrentChangeset,
+} from '../../api';
 import { FormattedDateTime } from '../Formatters';
-import { PlanChangeCardFragment } from './PlanChange.generated';
+import { ProjectChangeRequestListItemFragment as ChangeRequest } from './ProjectChangeRequestListItem.generated';
 
 const useStyles = makeStyles(({ spacing }) => ({
   cardContent: {
@@ -32,27 +34,27 @@ const useStyles = makeStyles(({ spacing }) => ({
   },
 }));
 
-export interface PlanChangeCardProps {
-  planChange?: PlanChangeCardFragment;
+export interface ProjectChangeRequestListItemProps {
+  data?: ChangeRequest;
   onEdit?: () => void;
   className?: string;
   showCRMode?: boolean;
 }
 
-export const PlanChangeCard: FC<PlanChangeCardProps> = ({
-  planChange,
+export const ProjectChangeRequestListItem = ({
+  data,
   onEdit,
   className,
   showCRMode,
-}) => {
+}: ProjectChangeRequestListItemProps) => {
   const classes = useStyles();
   const [_, setPlanChangeId] = useCurrentChangeset();
 
-  const typesString = displayPlanChangeTypes(planChange?.types.value ?? []);
+  const typesString = displayProjectChangeRequestTypes(data?.types.value ?? []);
 
   const handleCRMode = () => {
-    if (planChange?.id) {
-      setPlanChangeId(planChange.id);
+    if (data?.id) {
+      setPlanChangeId(data.id);
     }
   };
 
@@ -61,43 +63,39 @@ export const PlanChangeCard: FC<PlanChangeCardProps> = ({
       <CardContent className={classes.cardContent}>
         <div className={classes.memberInfo}>
           <Typography>
-            {!planChange ? (
+            {!data ? (
               <Skeleton variant="text" width="40%" />
             ) : (
-              planChange.summary.value
+              data.summary.value
             )}
           </Typography>
           <Typography variant="body2" color="primary">
-            {!planChange ? (
+            {!data ? (
               <Skeleton variant="text" width="33%" />
             ) : (
-              planChange.status.value
+              data.status.value
             )}
           </Typography>
           <Typography variant="body2" color="textSecondary">
-            {!planChange ? (
-              <Skeleton variant="text" width="25%" />
-            ) : (
-              typesString
-            )}
+            {!data ? <Skeleton variant="text" width="25%" /> : typesString}
           </Typography>
         </div>
       </CardContent>
       <CardActions className={classes.cardActions}>
-        <Button disabled={!planChange} color="primary" onClick={onEdit}>
+        <Button disabled={!data} color="primary" onClick={onEdit}>
           Edit
         </Button>
         {showCRMode ? (
-          <Button disabled={!planChange} color="primary" onClick={handleCRMode}>
+          <Button disabled={!data} color="primary" onClick={handleCRMode}>
             CR Mode
           </Button>
         ) : null}
         <Typography variant="subtitle2" color="textSecondary">
-          {!planChange ? (
+          {!data ? (
             <Skeleton variant="text" width="23ch" />
           ) : (
             <>
-              Created at <FormattedDateTime date={planChange.createdAt} />
+              Created at <FormattedDateTime date={data.createdAt} />
             </>
           )}
         </Typography>

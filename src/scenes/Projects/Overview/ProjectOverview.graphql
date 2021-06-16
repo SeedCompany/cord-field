@@ -92,8 +92,8 @@ fragment ProjectOverview on Project {
     ...SecuredPeriodicReport
   }
   ...ChangesetInfo
-  planChanges {
-    ...PlanChangeList
+  changeRequests {
+    ...ProjectChangeRequestSummary
   }
 }
 

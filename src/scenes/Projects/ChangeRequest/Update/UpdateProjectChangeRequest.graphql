@@ -1,0 +1,11 @@
+mutation UpdateProjectChangeRequest($input: UpdateProjectChangeRequestInput!) {
+  updateProjectChangeRequest(input: $input) {
+    projectChangeRequest {
+      ...ProjectChangeRequestListItem
+    }
+  }
+}
+
+mutation DeleteProjectChangeRequest($id: ID!) {
+  deleteProjectChangeRequest(id: $id)
+}

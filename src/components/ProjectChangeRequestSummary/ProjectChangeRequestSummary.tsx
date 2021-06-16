@@ -1,28 +1,27 @@
 import { ChangeHistory } from '@material-ui/icons';
 import * as React from 'react';
-import { FC } from 'react';
 import { FieldOverviewCard } from '../FieldOverviewCard';
 import { useNumberFormatter } from '../Formatters';
-import { PlanChangeListFragment } from './PlanChangesSummary.generated';
+import { ProjectChangeRequestSummaryFragment } from './ProjectChangeRequestSummary.generated';
 
 export interface PlanChangesSummaryProps {
-  planChanges?: PlanChangeListFragment;
+  data?: ProjectChangeRequestSummaryFragment;
 }
 
-export const PlanChangesSummary: FC<PlanChangesSummaryProps> = ({
-  planChanges,
-}) => {
+export const ProjectChangeRequestSummary = ({
+  data,
+}: PlanChangesSummaryProps) => {
   const formatNumber = useNumberFormatter();
   return (
     <FieldOverviewCard
-      title="Plan Changes"
-      viewLabel="View Changes"
-      loading={!planChanges}
+      title="Change Requests"
+      viewLabel="View Requests"
+      loading={!data}
       data={
-        planChanges
+        data
           ? {
-              to: 'changes',
-              value: formatNumber(planChanges.total),
+              to: 'change-requests',
+              value: formatNumber(data.total),
             }
           : undefined
       }

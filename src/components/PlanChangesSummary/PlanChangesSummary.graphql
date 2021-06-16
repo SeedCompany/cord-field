@@ -1,6 +1,0 @@
-fragment PlanChangeList on SecuredPlanChangeList {
-  items {
-    ...PlanChangeCard
-  }
-  ...Pagination
-}

@@ -34,8 +34,8 @@ const Reports = loadable(() => import('./Reports'), {
   resolveComponent: (m) => m.ProjectReports,
 });
 
-const PlanChangesList = loadable(() => import('./PlanChange/List'), {
-  resolveComponent: (m) => m.PlanChangesList,
+const ChangeRequestList = loadable(() => import('./ChangeRequest/List'), {
+  resolveComponent: (m) => m.ProjectChangeRequestList,
 });
 
 export const Projects = () => (
@@ -50,7 +50,7 @@ export const Projects = () => (
       <Route path="budget" element={<ProjectBudget />} />
       <Route path="reports/financial" element={<Reports type="Financial" />} />
       <Route path="reports/narrative" element={<Reports type="Narrative" />} />
-      <Route path="changes" element={<PlanChangesList />} />
+      <Route path="change-requests" element={<ChangeRequestList />} />
       {NotFoundRoute}
     </Route>
     {NotFoundRoute}

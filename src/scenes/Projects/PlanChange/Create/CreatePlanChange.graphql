@@ -1,8 +1,0 @@
-mutation CreatePlanChange($input: CreatePlanChangeInput!) {
-  createPlanChange(input: $input) {
-    planChange {
-      id
-      ...PlanChangeCard
-    }
-  }
-}

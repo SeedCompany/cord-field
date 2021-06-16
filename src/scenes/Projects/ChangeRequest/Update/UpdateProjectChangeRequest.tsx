@@ -3,11 +3,11 @@ import React from 'react';
 import { Except } from 'type-fest';
 import {
   displayPlanChangeStatus,
-  displayPlanChangeType,
-  PlanChangeStatusList,
-  PlanChangeTypeList,
+  displayProjectChangeRequestType,
+  ProjectChangeRequestStatusList,
+  ProjectChangeRequestTypeList,
   removeItemFromList,
-  UpdatePlanChangeInput,
+  UpdateProjectChangeRequestInput,
   useCurrentChangeset,
 } from '../../../../api';
 import {
@@ -21,62 +21,63 @@ import {
   TextField,
 } from '../../../../components/form';
 import { AutocompleteField } from '../../../../components/form/AutocompleteField';
-import { PlanChangeCardFragment } from '../../../../components/PlanChangeCard/PlanChange.generated';
+import { ProjectChangeRequestListItemFragment as ChangeRequest } from '../../../../components/ProjectChangeRequestListItem';
 import { callAll } from '../../../../util';
 import { ProjectOverviewDocument } from '../../Overview/ProjectOverview.generated';
-import { PlanChangesQuery } from '../List/PlanChanges.generated';
+import { ProjectChangeRequestListQuery as ListQuery } from '../List';
 import {
-  DeletePlanChangeDocument,
-  UpdatePlanChangeDocument,
-} from './UpdatePlanChange.generated';
+  DeleteProjectChangeRequestDocument as DeleteRequest,
+  UpdateProjectChangeRequestDocument as UpdateRequest,
+} from './UpdateProjectChangeRequest.generated';
 
 export interface UpdatePlanChangeFormParams {
-  project: PlanChangesQuery['project'];
-  planChange: PlanChangeCardFragment;
+  project: ListQuery['project'];
+  changeRequest: ChangeRequest;
 }
 
+type FormShape = UpdateProjectChangeRequestInput & SubmitAction<'delete'>;
+
 type UpdatePlanChangeProps = Except<
-  DialogFormProps<UpdatePlanChangeInput>,
+  DialogFormProps<FormShape>,
   'onSubmit' | 'initialValues'
 > &
   UpdatePlanChangeFormParams;
 
-export const UpdatePlanChange = ({
+export const UpdateProjectChangeRequest = ({
   project,
-  planChange,
+  changeRequest,
   ...props
 }: UpdatePlanChangeProps) => {
   const [_, setCurrentChangeset] = useCurrentChangeset();
-  const [updatePlanChange] = useMutation(UpdatePlanChangeDocument);
-
-  const [deletePlanChange] = useMutation(DeletePlanChangeDocument, {
+  const [updatePlanChange] = useMutation(UpdateRequest);
+  const [deletePlanChange] = useMutation(DeleteRequest, {
     update: callAll(
       removeItemFromList({
-        listId: [project, 'planChanges'],
-        item: { id: planChange.id },
+        listId: [project, 'changeRequests'],
+        item: { id: changeRequest.id },
       })
     ),
   });
 
   return (
-    <DialogForm<UpdatePlanChangeInput & SubmitAction<'delete'>>
-      title="Update Plan Change"
+    <DialogForm<FormShape>
+      title="Update Change Request"
       closeLabel="Close"
       submitLabel="Save"
       {...props}
       initialValues={{
-        planChange: {
-          id: planChange.id,
-          status: planChange.status.value!,
-          types: planChange.types.value,
-          summary: planChange.summary.value!,
+        projectChangeRequest: {
+          id: changeRequest.id,
+          status: changeRequest.status.value!,
+          types: changeRequest.types.value,
+          summary: changeRequest.summary.value!,
         },
       }}
       onSubmit={async (input) => {
         if (input.submitAction === 'delete') {
           await deletePlanChange({
             variables: {
-              planChangeId: planChange.id,
+              id: changeRequest.id,
             },
           });
           return;
@@ -89,20 +90,20 @@ export const UpdatePlanChange = ({
               query: ProjectOverviewDocument,
               variables: {
                 input: project.id,
-                changeset: planChange.id,
+                changeset: changeRequest.id,
               },
             },
           ],
         });
-        // CR is approved
+        // Change Request is approved
         if (
-          input.planChange.status === 'Approved' &&
-          planChange.status.value !== input.planChange.status
+          input.projectChangeRequest.status === 'Approved' &&
+          changeRequest.status.value !== input.projectChangeRequest.status
         ) {
           setCurrentChangeset(null);
         }
       }}
-      fieldsPrefix="planChange"
+      fieldsPrefix="projectChangeRequest"
       leftAction={
         <SubmitButton
           action="delete"
@@ -117,25 +118,29 @@ export const UpdatePlanChange = ({
       <SubmitError />
       <AutocompleteField
         multiple
-        options={PlanChangeTypeList}
-        getOptionLabel={displayPlanChangeType}
+        options={ProjectChangeRequestTypeList}
+        getOptionLabel={displayProjectChangeRequestType}
         name="types"
         label="Types"
         variant="outlined"
+        required
       />
       <TextField
         name="summary"
         label="Summary"
-        placeholder="Enter summary"
+        placeholder="Why is this change request needed?"
+        variant="outlined"
+        required
         multiline
         inputProps={{ rowsMin: 2 }}
       />
       <AutocompleteField
-        options={PlanChangeStatusList}
+        options={ProjectChangeRequestStatusList}
         getOptionLabel={displayPlanChangeStatus}
         name="status"
         label="Status"
         variant="outlined"
+        required
       />
     </DialogForm>
   );

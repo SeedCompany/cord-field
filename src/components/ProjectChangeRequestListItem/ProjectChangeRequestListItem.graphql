@@ -1,4 +1,4 @@
-fragment PlanChangeCard on PlanChange {
+fragment ProjectChangeRequestListItem on ProjectChangeRequest {
   id
   createdAt
   canDelete
