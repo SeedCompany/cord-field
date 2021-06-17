@@ -38,14 +38,12 @@ export interface ProjectChangeRequestListItemProps {
   data?: ChangeRequest;
   onEdit?: () => void;
   className?: string;
-  showCRMode?: boolean;
 }
 
 export const ProjectChangeRequestListItem = ({
   data,
   onEdit,
   className,
-  showCRMode,
 }: ProjectChangeRequestListItemProps) => {
   const classes = useStyles();
   const [_, setPlanChangeId] = useCurrentChangeset();
@@ -85,7 +83,7 @@ export const ProjectChangeRequestListItem = ({
         <Button disabled={!data} color="primary" onClick={onEdit}>
           Edit
         </Button>
-        {showCRMode ? (
+        {!data || data.canEdit ? (
           <Button disabled={!data} color="primary" onClick={handleCRMode}>
             CR Mode
           </Button>

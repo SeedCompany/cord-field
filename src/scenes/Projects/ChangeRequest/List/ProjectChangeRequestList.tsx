@@ -102,10 +102,6 @@ export const ProjectChangeRequestList: FC = () => {
                   changeRequest,
                 })
               }
-              showCRMode={
-                data!.project.status === 'Active' &&
-                changeRequest.status.value === 'Pending'
-              }
             />
           )}
           renderSkeleton={<ProjectChangeRequestListItem />}

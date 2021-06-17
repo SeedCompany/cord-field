@@ -17,4 +17,5 @@ fragment ProjectChangeRequestListItem on ProjectChangeRequest {
     canRead
     canEdit
   }
+  canEdit
 }

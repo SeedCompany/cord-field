@@ -12,6 +12,5 @@ query ProjectChangeRequestList(
       canRead
       canCreate
     }
-    status
   }
 }
