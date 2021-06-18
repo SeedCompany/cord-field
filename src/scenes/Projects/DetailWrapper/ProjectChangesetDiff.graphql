@@ -1,0 +1,11 @@
+query ProjectChangesetDiff($id: ID!, $changeset: ID!) {
+  project(id: $id, changeset: $changeset) {
+    id
+    changeset {
+      id
+      difference {
+        ...ChangesetDiff
+      }
+    }
+  }
+}

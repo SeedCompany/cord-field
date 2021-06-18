@@ -2,6 +2,7 @@ import loadable from '@loadable/component';
 import React from 'react';
 import { Route, Routes } from 'react-router-dom';
 import { NotFoundRoute } from '../../components/Error';
+import { ProjectDetailWrapper } from './DetailWrapper/DetailWrapper';
 
 const Engagements = loadable(() => import('../Engagement'), {
   resolveComponent: (m) => m.Engagements,
@@ -41,7 +42,14 @@ const ChangeRequestList = loadable(() => import('./ChangeRequest/List'), {
 export const Projects = () => (
   <Routes>
     <Route path="" element={<ProjectList />} />
-    <Route path=":projectId">
+    <Route path=":projectId/*" element={<ProjectDetails />} />
+    {NotFoundRoute}
+  </Routes>
+);
+
+const ProjectDetails = () => (
+  <ProjectDetailWrapper>
+    <Routes>
       <Route path="" element={<ProjectOverview />} />
       <Route path="files/*" element={<Files />} />
       <Route path="members" element={<ProjectMembersList />} />
@@ -52,7 +60,6 @@ export const Projects = () => (
       <Route path="reports/narrative" element={<Reports type="Narrative" />} />
       <Route path="change-requests" element={<ChangeRequestList />} />
       {NotFoundRoute}
-    </Route>
-    {NotFoundRoute}
-  </Routes>
+    </Routes>
+  </ProjectDetailWrapper>
 );

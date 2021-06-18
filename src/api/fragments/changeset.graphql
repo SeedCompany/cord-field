@@ -1,8 +1,12 @@
 fragment ChangesetInfo on ChangesetAware {
   id
   changeset {
-    id
+    ...Changeset
   }
+}
+
+fragment Changeset on Changeset {
+  id
 }
 
 fragment ChangesetDiff on ChangesetDiff {
@@ -13,7 +17,12 @@ fragment ChangesetDiff on ChangesetDiff {
     ...ChangesetDiffItem
   }
   changed {
-    ...ChangesetDiffItem
+    previous {
+      ...ChangesetDiffItem
+    }
+    updated {
+      ...ChangesetDiffItem
+    }
   }
 }
 
