@@ -37,11 +37,6 @@ fragment InternshipEngagementDetail on InternshipEngagement {
     canRead
     canEdit
   }
-  communicationsCompleteDate {
-    value
-    canRead
-    canEdit
-  }
   growthPlan {
     canRead
     canEdit
