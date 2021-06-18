@@ -7,6 +7,9 @@ import { UnsecuredProp, unwrapSecured } from '../../api';
 import { ChangesetBadge } from './ChangesetBadge';
 
 const useStyles = makeStyles(({ palette, shape, spacing }) => ({
+  diff: {
+    marginTop: spacing(0.5),
+  },
   diffItem: {
     padding: spacing(0, 0.5),
     borderRadius: shape.borderRadius,
@@ -108,7 +111,12 @@ const ChangedContent = <T extends any>({
 }) => {
   const classes = useStyles();
   return (
-    <Grid container direction="column" alignItems="flex-start">
+    <Grid
+      container
+      direction="column"
+      alignItems="flex-start"
+      className={classes.diff}
+    >
       <Typography
         className={clsx(classes.diffItem, classes.previous)}
         gutterBottom
