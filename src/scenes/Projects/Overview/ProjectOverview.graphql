@@ -92,6 +92,11 @@ fragment ProjectOverview on Project {
     ...SecuredPeriodicReport
   }
   ...ChangesetInfo
+  changeset {
+    difference {
+      ...ChangesetDiff
+    }
+  }
   changeRequests {
     ...ProjectChangeRequestSummary
   }

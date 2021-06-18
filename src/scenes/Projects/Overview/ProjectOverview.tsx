@@ -14,7 +14,10 @@ import {
 } from '../../../api';
 import { BudgetOverviewCard } from '../../../components/BudgetOverviewCard';
 import { CardGroup } from '../../../components/CardGroup';
-import { ChangesetPropertyBadge } from '../../../components/Changeset';
+import {
+  ChangesetDiffContext,
+  ChangesetPropertyBadge,
+} from '../../../components/Changeset';
 import { DataButton } from '../../../components/DataButton';
 import { useDialog } from '../../../components/Dialog';
 import { DisplaySimpleProperty } from '../../../components/DisplaySimpleProperty';
@@ -225,358 +228,364 @@ export const ProjectOverview: FC = () => {
         }}
       </Error>
       {!error && (
-        <div className={classes.main}>
-          <header
-            className={clsx(
-              classes.header,
-              projectOverviewData ? null : classes.headerLoading
-            )}
-          >
-            <Typography
-              variant="h2"
+        <ChangesetDiffContext.Provider
+          value={projectOverviewData?.project.changeset?.difference}
+        >
+          <div className={classes.main}>
+            <header
               className={clsx(
-                classes.name,
-                projectName ? null : classes.nameLoading
+                classes.header,
+                projectOverviewData ? null : classes.headerLoading
               )}
             >
-              {!projectName ? (
-                <Skeleton width="100%" />
-              ) : projectName.canRead ? (
-                <ChangesetPropertyBadge
-                  current={projectOverviewData?.project}
-                  previous={projectOverviewData?.original}
-                  prop="name"
-                >
-                  {projectName.value}
-                </ChangesetPropertyBadge>
-              ) : (
-                <Redacted
-                  info="You do not have permission to view project's name"
-                  width="50%"
-                />
-              )}
-            </Typography>
-            {(!projectOverviewData ||
-              projectOverviewData.project.name.canEdit) && (
-              <Tooltip title="Edit Project Name">
-                <IconButton
-                  aria-label="edit project name"
-                  onClick={() => editField(['name'])}
-                  loading={!projectOverviewData}
-                >
-                  <Edit />
-                </IconButton>
-              </Tooltip>
-            )}
-            <TogglePinButton
-              object={projectOverviewData?.project}
-              label="Project"
-              listId="projects"
-              listFilter={(args: ProjectListQueryVariables) =>
-                args.input.filter?.pinned ?? false
-              }
-              className={classes.pushPinIcon}
-            />
-          </header>
-
-          <div className={classes.subheader}>
-            <Typography variant="h4">
-              {projectOverviewData ? (
-                'Project Overview'
-              ) : (
-                <Skeleton width={200} />
-              )}
-            </Typography>
-            {projectOverviewData && (
-              <Typography variant="body2" color="textSecondary">
-                Updated{' '}
-                <FormattedDateTime
-                  date={projectOverviewData.project.modifiedAt}
-                />
+              <Typography
+                variant="h2"
+                className={clsx(
+                  classes.name,
+                  projectName ? null : classes.nameLoading
+                )}
+              >
+                {!projectName ? (
+                  <Skeleton width="100%" />
+                ) : projectName.canRead ? (
+                  <ChangesetPropertyBadge
+                    current={projectOverviewData?.project}
+                    previous={projectOverviewData?.original}
+                    prop="name"
+                  >
+                    {projectName.value}
+                  </ChangesetPropertyBadge>
+                ) : (
+                  <Redacted
+                    info="You do not have permission to view project's name"
+                    width="50%"
+                  />
+                )}
               </Typography>
-            )}
-          </div>
-
-          <Grid container spacing={2}>
-            <DisplaySimpleProperty
-              loading={!projectOverviewData}
-              label="Project ID"
-              value={projectOverviewData?.project.id}
-              loadingWidth={100}
-              LabelProps={{ color: 'textSecondary' }}
-              ValueProps={{ color: 'textPrimary' }}
-              wrap={(node) => <Grid item>{node}</Grid>}
-            />
-            <DisplaySimpleProperty
-              loading={!projectOverviewData}
-              label="Department ID"
-              value={projectOverviewData?.project.departmentId.value}
-              loadingWidth={100}
-              LabelProps={{ color: 'textSecondary' }}
-              ValueProps={{ color: 'textPrimary' }}
-              wrap={(node) => <Grid item>{node}</Grid>}
-            />
-            <DisplaySimpleProperty
-              loading={
-                !engagements.data ||
-                engagements.data.hasMore ||
-                !projectOverviewData
-              }
-              label={isTranslation ? 'Population Total' : 'Total Interns'}
-              value={formatNumber(
-                isTranslation ? populationTotal : engagements.data?.total
-              )}
-              loadingWidth={100}
-              LabelProps={{ color: 'textSecondary' }}
-              ValueProps={{ color: 'textPrimary' }}
-              wrap={(node) => (
-                <Tooltip
-                  title={
-                    isTranslation
-                      ? engagements.data?.hasMore
-                        ? 'Load all engagements below to see the total population'
-                        : 'Total population of all languages engaged'
-                      : ''
-                  }
-                >
-                  <Grid item>{node}</Grid>
+              {(!projectOverviewData ||
+                projectOverviewData.project.name.canEdit) && (
+                <Tooltip title="Edit Project Name">
+                  <IconButton
+                    aria-label="edit project name"
+                    onClick={() => editField(['name'])}
+                    loading={!projectOverviewData}
+                  >
+                    <Edit />
+                  </IconButton>
                 </Tooltip>
               )}
-            />
-          </Grid>
-          <Grid container spacing={1} alignItems="center">
-            <Tooltip
-              title={
-                isTranslation
-                  ? 'Sensitivity is automatically determined by the most sensitive language engaged'
-                  : ''
-              }
-            >
-              <Grid item>
-                <DataButton
-                  loading={!projectOverviewData}
-                  onClick={() =>
-                    isTranslation === false && editField('sensitivity')
-                  }
-                  startIcon={
-                    <SensitivityIcon
-                      value={projectOverviewData?.project.sensitivity}
-                      loading={!projectOverviewData}
-                      disableTooltip
-                    />
-                  }
-                >
-                  {projectOverviewData
-                    ? `${projectOverviewData.project.sensitivity} Sensitivity`
-                    : null}
-                </DataButton>
-              </Grid>
-            </Tooltip>
-            <Grid item>
-              <DataButton
-                loading={!projectOverviewData}
-                secured={locations}
-                empty="Enter Location | Field Region"
-                redacted="You do not have permission to view location"
-                children={locations.value}
-                onClick={() =>
-                  editField(['primaryLocationId', 'fieldRegionId'])
+              <TogglePinButton
+                object={projectOverviewData?.project}
+                label="Project"
+                listId="projects"
+                listFilter={(args: ProjectListQueryVariables) =>
+                  args.input.filter?.pinned ?? false
                 }
+                className={classes.pushPinIcon}
               />
-            </Grid>
-            <Grid item>
-              <DataButton
-                loading={!projectOverviewData}
-                startIcon={<DateRange className={classes.infoColor} />}
-                secured={date}
-                redacted="You do not have permission to view start/end dates"
-                children={({ start, end }) => (
-                  <FormattedDateRange {...{ start, end }} />
+            </header>
+
+            <div className={classes.subheader}>
+              <Typography variant="h4">
+                {projectOverviewData ? (
+                  'Project Overview'
+                ) : (
+                  <Skeleton width={200} />
                 )}
-                empty="Start - End"
-                onClick={() => editField(['mouStart', 'mouEnd'])}
+              </Typography>
+              {projectOverviewData && (
+                <Typography variant="body2" color="textSecondary">
+                  Updated{' '}
+                  <FormattedDateTime
+                    date={projectOverviewData.project.modifiedAt}
+                  />
+                </Typography>
+              )}
+            </div>
+
+            <Grid container spacing={2}>
+              <DisplaySimpleProperty
+                loading={!projectOverviewData}
+                label="Project ID"
+                value={projectOverviewData?.project.id}
+                loadingWidth={100}
+                LabelProps={{ color: 'textSecondary' }}
+                ValueProps={{ color: 'textPrimary' }}
+                wrap={(node) => <Grid item>{node}</Grid>}
+              />
+              <DisplaySimpleProperty
+                loading={!projectOverviewData}
+                label="Department ID"
+                value={projectOverviewData?.project.departmentId.value}
+                loadingWidth={100}
+                LabelProps={{ color: 'textSecondary' }}
+                ValueProps={{ color: 'textPrimary' }}
+                wrap={(node) => <Grid item>{node}</Grid>}
+              />
+              <DisplaySimpleProperty
+                loading={
+                  !engagements.data ||
+                  engagements.data.hasMore ||
+                  !projectOverviewData
+                }
+                label={isTranslation ? 'Population Total' : 'Total Interns'}
+                value={formatNumber(
+                  isTranslation ? populationTotal : engagements.data?.total
+                )}
+                loadingWidth={100}
+                LabelProps={{ color: 'textSecondary' }}
+                ValueProps={{ color: 'textPrimary' }}
+                wrap={(node) => (
+                  <Tooltip
+                    title={
+                      isTranslation
+                        ? engagements.data?.hasMore
+                          ? 'Load all engagements below to see the total population'
+                          : 'Total population of all languages engaged'
+                        : ''
+                    }
+                  >
+                    <Grid item>{node}</Grid>
+                  </Tooltip>
+                )}
               />
             </Grid>
-            {projectOverviewData?.project.status === 'InDevelopment' && (
+            <Grid container spacing={1} alignItems="center">
               <Tooltip
-                title="Estimated Submission to Regional Director"
-                placement="top"
+                title={
+                  isTranslation
+                    ? 'Sensitivity is automatically determined by the most sensitive language engaged'
+                    : ''
+                }
               >
                 <Grid item>
                   <DataButton
                     loading={!projectOverviewData}
-                    startIcon={<DateRange className={classes.infoColor} />}
-                    secured={projectOverviewData.project.estimatedSubmission}
-                    redacted="You do not have permission to view estimated submission date"
-                    children={(date) => <FormattedDate date={date} />}
-                    empty="Estimated Submission"
-                    onClick={() => editField(['estimatedSubmission'])}
-                  />
+                    onClick={() =>
+                      isTranslation === false && editField('sensitivity')
+                    }
+                    startIcon={
+                      <SensitivityIcon
+                        value={projectOverviewData?.project.sensitivity}
+                        loading={!projectOverviewData}
+                        disableTooltip
+                      />
+                    }
+                  >
+                    {projectOverviewData
+                      ? `${projectOverviewData.project.sensitivity} Sensitivity`
+                      : null}
+                  </DataButton>
                 </Grid>
               </Tooltip>
-            )}
-            <Grid item>
-              <ChangesetPropertyBadge
-                current={projectOverviewData?.project}
-                previous={projectOverviewData?.original}
-                prop="step"
-                labelBy={displayProjectStep}
-              >
+              <Grid item>
                 <DataButton
                   loading={!projectOverviewData}
-                  secured={projectOverviewData?.project.step}
-                  redacted="You do not have permission to view project step"
+                  secured={locations}
+                  empty="Enter Location | Field Region"
+                  redacted="You do not have permission to view location"
+                  children={locations.value}
                   onClick={() =>
-                    projectOverviewData &&
-                    openWorkflow(projectOverviewData.project)
+                    editField(['primaryLocationId', 'fieldRegionId'])
                   }
+                />
+              </Grid>
+              <Grid item>
+                <DataButton
+                  loading={!projectOverviewData}
+                  startIcon={<DateRange className={classes.infoColor} />}
+                  secured={date}
+                  redacted="You do not have permission to view start/end dates"
+                  children={({ start, end }) => (
+                    <FormattedDateRange {...{ start, end }} />
+                  )}
+                  empty="Start - End"
+                  onClick={() => editField(['mouStart', 'mouEnd'])}
+                />
+              </Grid>
+              {projectOverviewData?.project.status === 'InDevelopment' && (
+                <Tooltip
+                  title="Estimated Submission to Regional Director"
+                  placement="top"
                 >
-                  {displayProjectStep(projectOverviewData?.project.step.value)}
-                </DataButton>
-              </ChangesetPropertyBadge>
-            </Grid>
-          </Grid>
-
-          <Grid container spacing={1} alignItems="center">
-            <Grid item>
-              <span {...getRootProps()}>
-                <input {...getInputProps()} />
-                <Tooltip title="Upload Files">
-                  <Fab
-                    loading={!projectOverviewData || directoryIdLoading}
-                    disabled={canReadDirectoryId === false}
-                    onClick={openFileBrowser}
-                    color="primary"
-                    aria-label="Upload Files"
-                  >
-                    <Publish />
-                  </Fab>
-                </Tooltip>
-              </span>
-            </Grid>
-            <Grid item>
-              <Typography variant="h4">
-                {projectOverviewData ? (
-                  'Upload Files'
-                ) : (
-                  <Skeleton width="12ch" />
-                )}
-              </Typography>
-            </Grid>
-          </Grid>
-
-          <Grid container spacing={3}>
-            <Grid item xs={12} md={6}>
-              <BudgetOverviewCard
-                budget={projectOverviewData?.project.budget.value}
-                loading={!projectOverviewData}
-              />
-            </Grid>
-            <Grid item xs={12} md={6}>
-              {/* TODO When file api is finished need to update query and pass in file information */}
-              <FilesOverviewCard
-                loading={!projectOverviewData}
-                total={undefined}
-                redacted={canReadDirectoryId === true}
-              />
-            </Grid>
-          </Grid>
-
-          <Grid container spacing={3}>
-            <Grid item xs={12} md={6}>
-              <PeriodicReportCard
-                type="Financial"
-                dueCurrently={
-                  projectOverviewData?.project.currentFinancialReportDue
-                }
-                dueNext={projectOverviewData?.project.nextFinancialReportDue}
-              />
-            </Grid>
-            <Grid item xs={12} md={6}>
-              <PeriodicReportCard
-                type="Narrative"
-                dueCurrently={
-                  projectOverviewData?.project.currentNarrativeReportDue
-                }
-                dueNext={projectOverviewData?.project.nextNarrativeReportDue}
-              />
-            </Grid>
-          </Grid>
-
-          <CardGroup horizontal="md">
-            <ProjectMembersSummary
-              members={projectOverviewData?.project.team}
-            />
-            <PartnershipSummary
-              partnerships={projectOverviewData?.project.partnerships}
-            />
-          </CardGroup>
-          <Grid container spacing={3}>
-            <Grid item xs={6}>
-              <ProjectChangeRequestSummary
-                data={projectOverviewData?.project.changeRequests}
-              />
-            </Grid>
-          </Grid>
-
-          <Grid container spacing={2} alignItems="center">
-            <Grid item>
-              <Typography variant="h3">
-                {projectOverviewData && engagements.data ? (
-                  !engagements.data.canRead ? (
-                    <Redacted
-                      info="You do not have permission to view engagements"
-                      width={400}
+                  <Grid item>
+                    <DataButton
+                      loading={!projectOverviewData}
+                      startIcon={<DateRange className={classes.infoColor} />}
+                      secured={projectOverviewData.project.estimatedSubmission}
+                      redacted="You do not have permission to view estimated submission date"
+                      children={(date) => <FormattedDate date={date} />}
+                      empty="Estimated Submission"
+                      onClick={() => editField(['estimatedSubmission'])}
                     />
-                  ) : (
-                    `${engagements.data.total} ${engagementTypeLabel} Engagements`
-                  )
-                ) : (
-                  <Skeleton width={400} />
-                )}
-              </Typography>
-            </Grid>
-            <Grid item>
-              {engagements.data?.canCreate && (
-                <Tooltip title={`Add ${engagementTypeLabel} Engagement`}>
-                  <Fab
-                    color="error"
-                    aria-label={`Add ${engagementTypeLabel} Engagement`}
-                    onClick={createEngagement}
-                  >
-                    <Add />
-                  </Fab>
+                  </Grid>
                 </Tooltip>
               )}
+              <Grid item>
+                <ChangesetPropertyBadge
+                  current={projectOverviewData?.project}
+                  previous={projectOverviewData?.original}
+                  prop="step"
+                  labelBy={displayProjectStep}
+                >
+                  <DataButton
+                    loading={!projectOverviewData}
+                    secured={projectOverviewData?.project.step}
+                    redacted="You do not have permission to view project step"
+                    onClick={() =>
+                      projectOverviewData &&
+                      openWorkflow(projectOverviewData.project)
+                    }
+                  >
+                    {displayProjectStep(
+                      projectOverviewData?.project.step.value
+                    )}
+                  </DataButton>
+                </ChangesetPropertyBadge>
+              </Grid>
             </Grid>
-          </Grid>
-          <List
-            {...engagements}
-            classes={{
-              root: classes.engagementList,
-              container: classes.engagementListItems,
-            }}
-            spacing={3}
-            renderItem={(engagement) =>
-              engagement.__typename === 'LanguageEngagement' ? (
-                <LanguageEngagementListItemCard
-                  projectId={projectId}
-                  {...engagement}
+
+            <Grid container spacing={1} alignItems="center">
+              <Grid item>
+                <span {...getRootProps()}>
+                  <input {...getInputProps()} />
+                  <Tooltip title="Upload Files">
+                    <Fab
+                      loading={!projectOverviewData || directoryIdLoading}
+                      disabled={canReadDirectoryId === false}
+                      onClick={openFileBrowser}
+                      color="primary"
+                      aria-label="Upload Files"
+                    >
+                      <Publish />
+                    </Fab>
+                  </Tooltip>
+                </span>
+              </Grid>
+              <Grid item>
+                <Typography variant="h4">
+                  {projectOverviewData ? (
+                    'Upload Files'
+                  ) : (
+                    <Skeleton width="12ch" />
+                  )}
+                </Typography>
+              </Grid>
+            </Grid>
+
+            <Grid container spacing={3}>
+              <Grid item xs={12} md={6}>
+                <BudgetOverviewCard
+                  budget={projectOverviewData?.project.budget.value}
+                  loading={!projectOverviewData}
                 />
-              ) : (
-                <InternshipEngagementListItemCard
-                  projectId={projectId}
-                  {...engagement}
+              </Grid>
+              <Grid item xs={12} md={6}>
+                {/* TODO When file api is finished need to update query and pass in file information */}
+                <FilesOverviewCard
+                  loading={!projectOverviewData}
+                  total={undefined}
+                  redacted={canReadDirectoryId === true}
                 />
-              )
-            }
-            skeletonCount={0}
-            renderSkeleton={null}
-          />
-          {!!projectOverviewData?.project && (
-            <ProjectPostList project={projectOverviewData.project} />
-          )}
-        </div>
+              </Grid>
+            </Grid>
+
+            <Grid container spacing={3}>
+              <Grid item xs={12} md={6}>
+                <PeriodicReportCard
+                  type="Financial"
+                  dueCurrently={
+                    projectOverviewData?.project.currentFinancialReportDue
+                  }
+                  dueNext={projectOverviewData?.project.nextFinancialReportDue}
+                />
+              </Grid>
+              <Grid item xs={12} md={6}>
+                <PeriodicReportCard
+                  type="Narrative"
+                  dueCurrently={
+                    projectOverviewData?.project.currentNarrativeReportDue
+                  }
+                  dueNext={projectOverviewData?.project.nextNarrativeReportDue}
+                />
+              </Grid>
+            </Grid>
+
+            <CardGroup horizontal="md">
+              <ProjectMembersSummary
+                members={projectOverviewData?.project.team}
+              />
+              <PartnershipSummary
+                partnerships={projectOverviewData?.project.partnerships}
+              />
+            </CardGroup>
+            <Grid container spacing={3}>
+              <Grid item xs={6}>
+                <ProjectChangeRequestSummary
+                  data={projectOverviewData?.project.changeRequests}
+                />
+              </Grid>
+            </Grid>
+
+            <Grid container spacing={2} alignItems="center">
+              <Grid item>
+                <Typography variant="h3">
+                  {projectOverviewData && engagements.data ? (
+                    !engagements.data.canRead ? (
+                      <Redacted
+                        info="You do not have permission to view engagements"
+                        width={400}
+                      />
+                    ) : (
+                      `${engagements.data.total} ${engagementTypeLabel} Engagements`
+                    )
+                  ) : (
+                    <Skeleton width={400} />
+                  )}
+                </Typography>
+              </Grid>
+              <Grid item>
+                {engagements.data?.canCreate && (
+                  <Tooltip title={`Add ${engagementTypeLabel} Engagement`}>
+                    <Fab
+                      color="error"
+                      aria-label={`Add ${engagementTypeLabel} Engagement`}
+                      onClick={createEngagement}
+                    >
+                      <Add />
+                    </Fab>
+                  </Tooltip>
+                )}
+              </Grid>
+            </Grid>
+            <List
+              {...engagements}
+              classes={{
+                root: classes.engagementList,
+                container: classes.engagementListItems,
+              }}
+              spacing={3}
+              renderItem={(engagement) =>
+                engagement.__typename === 'LanguageEngagement' ? (
+                  <LanguageEngagementListItemCard
+                    projectId={projectId}
+                    {...engagement}
+                  />
+                ) : (
+                  <InternshipEngagementListItemCard
+                    projectId={projectId}
+                    {...engagement}
+                  />
+                )
+              }
+              skeletonCount={0}
+              renderSkeleton={null}
+            />
+            {!!projectOverviewData?.project && (
+              <ProjectPostList project={projectOverviewData.project} />
+            )}
+          </div>
+        </ChangesetDiffContext.Provider>
       )}
       {workflowProject && (
         <ProjectWorkflowDialog {...workflowState} project={workflowProject} />

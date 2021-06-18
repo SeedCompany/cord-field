@@ -4,3 +4,20 @@ fragment ChangesetInfo on ChangesetAware {
     id
   }
 }
+
+fragment ChangesetDiff on ChangesetDiff {
+  added {
+    ...ChangesetDiffItem
+  }
+  removed {
+    ...ChangesetDiffItem
+  }
+  changed {
+    ...ChangesetDiffItem
+  }
+}
+
+fragment ChangesetDiffItem on Resource {
+  __typename
+  id
+}
