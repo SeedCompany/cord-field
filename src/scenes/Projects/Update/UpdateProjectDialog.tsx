@@ -7,6 +7,7 @@ import {
   DisplayFieldRegionFragment,
   DisplayLocationFragment,
 } from '../../../api/fragments/location.generated';
+import { ChangesetModificationWarning } from '../../../components/Changeset';
 import {
   DialogForm,
   DialogFormProps,
@@ -190,6 +191,7 @@ export const UpdateProjectDialog = ({
         });
       }}
     >
+      <ChangesetModificationWarning />
       <SubmitError />
       <FieldGroup prefix="project">
         {editFields.map((name) => {

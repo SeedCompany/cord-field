@@ -1,6 +1,5 @@
 import { useMutation } from '@apollo/client';
 import { Grid, makeStyles, Tooltip, Typography } from '@material-ui/core';
-import Alert from '@material-ui/lab/Alert';
 import React from 'react';
 import { Except } from 'type-fest';
 import {
@@ -9,6 +8,7 @@ import {
   ProjectStepList,
   TransitionType,
 } from '../../../api';
+import { ChangesetModificationWarning } from '../../../components/Changeset';
 import {
   DialogForm,
   DialogFormProps,
@@ -86,9 +86,7 @@ export const ProjectWorkflowDialog = ({
         Input: (e) => e.message,
       }}
     >
-      {project.changeset ? (
-        <Alert severity="info">You are in CR mode</Alert>
-      ) : null}
+      <ChangesetModificationWarning />
       <SubmitError />
       <Grid container direction="column" spacing={1}>
         {transitions.map((transition, i) => (
