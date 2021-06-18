@@ -48,7 +48,6 @@ export type EditableEngagementField = ExtractStrict<
   | 'endDateOverride'
   | 'completeDate'
   | 'disbursementCompleteDate'
-  | 'communicationsCompleteDate'
   | 'methodologies'
   | 'position'
   | 'countryOfOriginId'
@@ -95,9 +94,6 @@ const fieldMapping: Record<
   ),
   disbursementCompleteDate: ({ props }) => (
     <DateField {...props} label="Disbursement Complete Date" />
-  ),
-  communicationsCompleteDate: ({ props }) => (
-    <DateField {...props} label="Communications Complete Date" />
   ),
   methodologies: ({ props }) => (
     <EnumField
@@ -207,7 +203,6 @@ export const EditEngagementDialog: FC<EditEngagementDialogProps> = ({
       endDateOverride: engagement.endDateOverride.value,
       completeDate: engagement.completeDate.value,
       disbursementCompleteDate: engagement.disbursementCompleteDate.value,
-      communicationsCompleteDate: engagement.communicationsCompleteDate.value,
       ...(engagement.__typename === 'LanguageEngagement'
         ? {
             lukePartnership: engagement.lukePartnership.value,

@@ -1,5 +1,5 @@
 import { Breadcrumbs, Grid, makeStyles, Typography } from '@material-ui/core';
-import { ChatOutlined, DateRange } from '@material-ui/icons';
+import { DateRange } from '@material-ui/icons';
 import React, { FC } from 'react';
 import { Helmet } from 'react-helmet-async';
 import {
@@ -202,19 +202,6 @@ export const InternshipEngagementDetail: FC<EngagementQuery> = ({
                   icon={OptionsIcon}
                   onClick={() => show('disbursementCompleteDate')}
                   onButtonClick={() => show('disbursementCompleteDate')}
-                />
-              </Grid>
-              <Grid item xs={6}>
-                <FieldOverviewCard
-                  title="Communications Complete Date"
-                  data={{
-                    value: formatDate(
-                      engagement.communicationsCompleteDate.value
-                    ),
-                  }}
-                  icon={ChatOutlined}
-                  onClick={() => show('communicationsCompleteDate')}
-                  onButtonClick={() => show('communicationsCompleteDate')}
                 />
               </Grid>
               <Grid item container spacing={3} alignItems="center">

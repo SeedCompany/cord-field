@@ -5,7 +5,7 @@ import {
   Tooltip,
   Typography,
 } from '@material-ui/core';
-import { ChatOutlined, DateRange, Edit } from '@material-ui/icons';
+import { DateRange, Edit } from '@material-ui/icons';
 import React, { FC } from 'react';
 import { Helmet } from 'react-helmet-async';
 import {
@@ -225,20 +225,6 @@ export const LanguageEngagementDetail: FC<EngagementQuery> = ({
                 icon={OptionsIcon}
                 onClick={() => show('disbursementCompleteDate')}
                 onButtonClick={() => show('disbursementCompleteDate')}
-                emptyValue="None"
-              />
-            </Grid>
-            <Grid item xs={6}>
-              <FieldOverviewCard
-                title="Communications Complete Date"
-                data={{
-                  value: formatDate(
-                    engagement.communicationsCompleteDate.value
-                  ),
-                }}
-                icon={ChatOutlined}
-                onClick={() => show('communicationsCompleteDate')}
-                onButtonClick={() => show('communicationsCompleteDate')}
                 emptyValue="None"
               />
             </Grid>
