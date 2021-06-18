@@ -14,7 +14,7 @@ import {
 } from '../../../api';
 import { BudgetOverviewCard } from '../../../components/BudgetOverviewCard';
 import { CardGroup } from '../../../components/CardGroup';
-import { ChangesetBadge } from '../../../components/Changeset';
+import { ChangesetPropertyBadge } from '../../../components/Changeset';
 import { DataButton } from '../../../components/DataButton';
 import { useDialog } from '../../../components/Dialog';
 import { DisplaySimpleProperty } from '../../../components/DisplaySimpleProperty';
@@ -242,13 +242,13 @@ export const ProjectOverview: FC = () => {
               {!projectName ? (
                 <Skeleton width="100%" />
               ) : projectName.canRead ? (
-                <ChangesetBadge
+                <ChangesetPropertyBadge
                   current={projectOverviewData?.project}
                   previous={projectOverviewData?.original}
                   prop="name"
                 >
                   {projectName.value}
-                </ChangesetBadge>
+                </ChangesetPropertyBadge>
               ) : (
                 <Redacted
                   info="You do not have permission to view project's name"
@@ -416,7 +416,7 @@ export const ProjectOverview: FC = () => {
               </Tooltip>
             )}
             <Grid item>
-              <ChangesetBadge
+              <ChangesetPropertyBadge
                 current={projectOverviewData?.project}
                 previous={projectOverviewData?.original}
                 prop="step"
@@ -433,7 +433,7 @@ export const ProjectOverview: FC = () => {
                 >
                   {displayProjectStep(projectOverviewData?.project.step.value)}
                 </DataButton>
-              </ChangesetBadge>
+              </ChangesetPropertyBadge>
             </Grid>
           </Grid>
 
