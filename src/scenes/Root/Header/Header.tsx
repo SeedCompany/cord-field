@@ -1,7 +1,6 @@
 import { makeStyles } from '@material-ui/core';
 import { FC } from 'react';
 import * as React from 'react';
-import { HeaderPlanChange } from './HeaderPlanChange';
 import { HeaderSearch } from './HeaderSearch';
 import { ProfileToolbar } from './ProfileToolbar';
 
@@ -20,7 +19,6 @@ export const Header: FC = () => {
   return (
     <header className={classes.root}>
       <HeaderSearch />
-      <HeaderPlanChange />
       <ProfileToolbar />
     </header>
   );
