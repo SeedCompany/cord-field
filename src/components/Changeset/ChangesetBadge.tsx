@@ -1,4 +1,10 @@
-import { Badge, Grid, makeStyles, Typography } from '@material-ui/core';
+import {
+  Badge,
+  Grid,
+  makeStyles,
+  TooltipProps,
+  Typography,
+} from '@material-ui/core';
 import {
   Add as AddIcon,
   ChangeHistory as ChangeIcon,
@@ -64,10 +70,11 @@ export interface ChangesetBadgeProps {
   mode?: 'added' | 'removed' | 'changed';
   disableOutline?: boolean;
   moreInfo?: ReactNode;
+  TooltipProps?: Omit<TooltipProps, 'title' | 'children'>;
 }
 
 export const ChangesetBadge = (props: ChangesetBadgeProps) => {
-  const { mode, disableOutline, children, moreInfo } = props;
+  const { mode, disableOutline, children, moreInfo, TooltipProps } = props;
   const outline = !disableOutline;
   const classes = useStyles();
 
@@ -86,6 +93,8 @@ export const ChangesetBadge = (props: ChangesetBadgeProps) => {
       component={BadgeWithTooltip}
       tooltip={(content: ReactElement) => (
         <PaperTooltip
+          placement="right"
+          {...TooltipProps}
           title={
             <Grid container direction="column" alignItems="flex-start">
               <Typography variant="caption" gutterBottom>
@@ -94,7 +103,6 @@ export const ChangesetBadge = (props: ChangesetBadgeProps) => {
               {moreInfo}
             </Grid>
           }
-          placement="right"
         >
           {content}
         </PaperTooltip>

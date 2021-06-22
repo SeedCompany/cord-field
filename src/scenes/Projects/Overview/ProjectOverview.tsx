@@ -385,17 +385,47 @@ export const ProjectOverview: FC = () => {
               />
             </Grid>
             <Grid item>
-              <DataButton
-                loading={!projectOverviewData}
-                startIcon={<DateRange className={classes.infoColor} />}
-                secured={date}
-                redacted="You do not have permission to view start/end dates"
-                children={({ start, end }) => (
-                  <FormattedDateRange {...{ start, end }} />
+              <ChangesetPropertyBadge
+                current={
+                  projectOverviewData?.project
+                    ? {
+                        range: {
+                          start: projectOverviewData.project.mouStart.value,
+                          end: projectOverviewData.project.mouEnd.value,
+                        },
+                      }
+                    : undefined
+                }
+                previous={
+                  projectOverviewData?.original
+                    ? {
+                        range: {
+                          start: projectOverviewData.original.mouStart.value,
+                          end: projectOverviewData.original.mouEnd.value,
+                        },
+                      }
+                    : undefined
+                }
+                prop="range"
+                identifyBy={(range) =>
+                  `${range.start?.toMillis()}/${range.end?.toMillis()}`
+                }
+                labelBy={({ start, end }) => (
+                  <FormattedDateRange start={start} end={end} />
                 )}
-                empty="Start - End"
-                onClick={() => editField(['mouStart', 'mouEnd'])}
-              />
+              >
+                <DataButton
+                  loading={!projectOverviewData}
+                  startIcon={<DateRange className={classes.infoColor} />}
+                  secured={date}
+                  redacted="You do not have permission to view start/end dates"
+                  children={({ start, end }) => (
+                    <FormattedDateRange {...{ start, end }} />
+                  )}
+                  empty="Start - End"
+                  onClick={() => editField(['mouStart', 'mouEnd'])}
+                />
+              </ChangesetPropertyBadge>
             </Grid>
             {projectOverviewData?.project.status === 'InDevelopment' && (
               <Tooltip

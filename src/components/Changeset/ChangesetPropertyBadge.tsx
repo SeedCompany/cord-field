@@ -37,7 +37,7 @@ interface Props<
    * How should this item be labeled in UI
    * @default identity
    */
-  labelBy?: (item: Item) => string | number | boolean;
+  labelBy?: (item: Item) => ReactNode;
   /**
    * How should this item be identified to test if it has changed?
    * @default identity
@@ -94,6 +94,9 @@ export const ChangesetPropertyBadge = <
           )
         ) : null
       }
+      TooltipProps={{
+        interactive: true,
+      }}
     >
       {children}
     </ChangesetBadge>
@@ -107,7 +110,7 @@ const ChangedContent = <T extends any>({
 }: {
   previous: T;
   current: T;
-  labelBy?: (item: T) => string | number | boolean;
+  labelBy?: (item: T) => ReactNode;
 }) => {
   const classes = useStyles();
   return (
