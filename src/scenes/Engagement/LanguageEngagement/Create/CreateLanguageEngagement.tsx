@@ -64,7 +64,12 @@ export const CreateLanguageEngagement = ({
     });
   };
   return (
-    <DialogForm {...props} onSubmit={submit} title="Create Language Engagement">
+    <DialogForm
+      {...props}
+      onSubmit={submit}
+      title="Create Language Engagement"
+      changesetAware
+    >
       <SubmitError />
       <LanguageField name="engagement.languageId" label="Language" required />
     </DialogForm>

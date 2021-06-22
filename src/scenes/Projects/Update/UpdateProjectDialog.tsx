@@ -7,7 +7,6 @@ import {
   DisplayFieldRegionFragment,
   DisplayLocationFragment,
 } from '../../../api/fragments/location.generated';
-import { ChangesetModificationWarning } from '../../../components/Changeset';
 import {
   DialogForm,
   DialogFormProps,
@@ -146,6 +145,8 @@ export const UpdateProjectDialog = ({
       closeLabel="Close"
       submitLabel="Save"
       {...props}
+      // Only simple properties are changeset aware, relationships are not.
+      changesetAware={editFields.every((field) => !field.endsWith('Id'))}
       initialValues={initialValues}
       onSubmit={async ({
         project: {
@@ -191,7 +192,6 @@ export const UpdateProjectDialog = ({
         });
       }}
     >
-      <ChangesetModificationWarning />
       <SubmitError />
       <FieldGroup prefix="project">
         {editFields.map((name) => {

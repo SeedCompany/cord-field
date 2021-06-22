@@ -8,7 +8,6 @@ import {
   ProjectStepList,
   TransitionType,
 } from '../../../api';
-import { ChangesetModificationWarning } from '../../../components/Changeset';
 import {
   DialogForm,
   DialogFormProps,
@@ -60,6 +59,7 @@ export const ProjectWorkflowDialog = ({
       {...props}
       submitLabel={canBypassTransitions ? undefined : false}
       sendIfClean
+      changesetAware
       onSubmit={async ({ submitAction, project: submittedProjectFields }) => {
         const step = submittedProjectFields?.step;
         // If clicking save for step override, but there is no step, do nothing.
@@ -86,7 +86,6 @@ export const ProjectWorkflowDialog = ({
         Input: (e) => e.message,
       }}
     >
-      <ChangesetModificationWarning />
       <SubmitError />
       <Grid container direction="column" spacing={1}>
         {transitions.map((transition, i) => (

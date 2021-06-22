@@ -17,7 +17,8 @@ import {
   RenderableProps,
 } from 'react-final-form';
 import { Except, Promisable } from 'type-fest';
-import { ErrorHandlers, handleFormError } from '../../api';
+import { ErrorHandlers, handleFormError, useCurrentChangeset } from '../../api';
+import { ChangesetModificationWarning } from '../Changeset';
 import {
   blurOnSubmit,
   FieldGroup,
@@ -64,6 +65,13 @@ export type DialogFormProps<T, R = void> = Omit<
 
   /** Error handlers for errors thrown from onSubmit callback */
   errorHandlers?: ErrorHandlers;
+
+  /**
+   * Is this form changeset aware?
+   * If it's not and there is a current changeset, we'll show a warning.
+   * If it is and there is a current changeset, we'll confirm this is applying there.
+   */
+  changesetAware?: boolean;
 
   open: boolean;
   onClose?: (
@@ -114,9 +122,11 @@ export function DialogForm<T, R = void>({
   children,
   DialogProps = {},
   onSubmit,
+  changesetAware,
   ...FormProps
 }: DialogFormProps<T, R>) {
   const classes = useStyles();
+  const [changeset] = useCurrentChangeset();
 
   return (
     <Form<T>
@@ -172,9 +182,16 @@ export function DialogForm<T, R = void>({
           >
             {title ? <DialogTitle id="dialog-form">{title}</DialogTitle> : null}
             <DialogContent>
-              {typeof children === 'function'
-                ? children({ form, submitting, ...rest })
-                : children}
+              <>
+                {changeset ? (
+                  <ChangesetModificationWarning
+                    variant={changesetAware ? 'modifying' : 'ignoring'}
+                  />
+                ) : null}
+                {typeof children === 'function'
+                  ? children({ form, submitting, ...rest })
+                  : children}
+              </>
             </DialogContent>
             <DialogActions>
               {leftAction ? (
