@@ -24,14 +24,16 @@ import { AutocompleteField } from '../../../../components/form/AutocompleteField
 import { ProjectChangeRequestListItemFragment as ChangeRequest } from '../../../../components/ProjectChangeRequestListItem';
 import { callAll } from '../../../../util';
 import { ProjectOverviewDocument } from '../../Overview/ProjectOverview.generated';
-import { ProjectChangeRequestListQuery as ListQuery } from '../List';
 import {
   DeleteProjectChangeRequestDocument as DeleteRequest,
   UpdateProjectChangeRequestDocument as UpdateRequest,
 } from './UpdateProjectChangeRequest.generated';
 
-export interface UpdatePlanChangeFormParams {
-  project: ListQuery['project'];
+export interface UpdateProjectChangeRequestFormParams {
+  project: {
+    __typename?: 'TranslationProject' | 'InternshipProject';
+    id: string;
+  };
   changeRequest: ChangeRequest;
 }
 
@@ -41,7 +43,7 @@ type UpdatePlanChangeProps = Except<
   DialogFormProps<FormShape>,
   'onSubmit' | 'initialValues'
 > &
-  UpdatePlanChangeFormParams;
+  UpdateProjectChangeRequestFormParams;
 
 export const UpdateProjectChangeRequest = ({
   project,

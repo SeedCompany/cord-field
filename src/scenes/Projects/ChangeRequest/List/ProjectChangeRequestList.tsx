@@ -17,8 +17,8 @@ import { ProjectBreadcrumb } from '../../../../components/ProjectBreadcrumb';
 import { ProjectChangeRequestListItem } from '../../../../components/ProjectChangeRequestListItem';
 import { CreateProjectChangeRequest } from '../Create';
 import {
-  UpdatePlanChangeFormParams,
   UpdateProjectChangeRequest,
+  UpdateProjectChangeRequestFormParams,
 } from '../Update';
 import { ProjectChangeRequestListDocument as ChangeRequestList } from './ProjectChangeRequestList.generated';
 
@@ -51,7 +51,7 @@ export const ProjectChangeRequestList: FC = () => {
   const [createPlanChangeDialogState, openCreatePlanChangeDialog] = useDialog();
 
   const [updateDialogState, openUpdateDialog, requestBeingUpdated] =
-    useDialog<UpdatePlanChangeFormParams>();
+    useDialog<UpdateProjectChangeRequestFormParams>();
 
   return (
     <div className={classes.root}>
