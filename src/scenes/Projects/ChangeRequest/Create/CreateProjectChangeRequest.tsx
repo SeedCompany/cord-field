@@ -53,7 +53,6 @@ export const CreateProjectChangeRequest = ({
             input: {
               projectChangeRequest: {
                 ...input,
-                status: 'Pending',
                 projectId: project.id,
               },
             },
