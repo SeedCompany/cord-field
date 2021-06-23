@@ -1,9 +1,11 @@
 query Engagement($projectId: ID!, $engagementId: ID!, $changeset: ID) {
   project(id: $projectId, changeset: $changeset) {
     ...ProjectBreadcrumb
+    ...ChangesetInfo
   }
   engagement(id: $engagementId, changeset: $changeset) {
     id
+    ...ChangesetInfo
     ...LanguageEngagementDetail
     ...InternshipEngagementDetail
     ...EngagementToDelete
