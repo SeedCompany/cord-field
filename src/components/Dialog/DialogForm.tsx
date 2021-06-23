@@ -72,6 +72,7 @@ export type DialogFormProps<T, R = void> = Omit<
    * If it is and there is a current changeset, we'll confirm this is applying there.
    */
   changesetAware?: boolean;
+  disableChangesetWarning?: boolean;
 
   open: boolean;
   onClose?: (
@@ -123,6 +124,7 @@ export function DialogForm<T, R = void>({
   DialogProps = {},
   onSubmit,
   changesetAware,
+  disableChangesetWarning,
   ...FormProps
 }: DialogFormProps<T, R>) {
   const classes = useStyles();
@@ -183,7 +185,7 @@ export function DialogForm<T, R = void>({
             {title ? <DialogTitle id="dialog-form">{title}</DialogTitle> : null}
             <DialogContent>
               <>
-                {changeset ? (
+                {changeset && !disableChangesetWarning ? (
                   <ChangesetModificationWarning
                     variant={changesetAware ? 'modifying' : 'ignoring'}
                   />

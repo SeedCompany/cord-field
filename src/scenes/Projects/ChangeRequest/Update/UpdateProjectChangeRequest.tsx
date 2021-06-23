@@ -67,6 +67,7 @@ export const UpdateProjectChangeRequest = ({
       closeLabel="Close"
       submitLabel="Save"
       {...props}
+      disableChangesetWarning
       initialValues={{
         projectChangeRequest: {
           id: changeRequest.id,
@@ -82,6 +83,7 @@ export const UpdateProjectChangeRequest = ({
               id: changeRequest.id,
             },
           });
+          setCurrentChangeset(null);
           return;
         }
 

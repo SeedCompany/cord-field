@@ -4,6 +4,7 @@ import {
   CardActions,
   CardContent,
   makeStyles,
+  Tooltip,
   Typography,
 } from '@material-ui/core';
 import { Skeleton } from '@material-ui/lab';
@@ -12,85 +13,99 @@ import {
   displayProjectChangeRequestTypes,
   useCurrentChangeset,
 } from '../../api';
+import { DisplaySimpleProperty } from '../DisplaySimpleProperty';
 import { FormattedDateTime } from '../Formatters';
+import { useNavigate } from '../Routing';
 import { ProjectChangeRequestListItemFragment as ChangeRequest } from './ProjectChangeRequestListItem.generated';
 
-const useStyles = makeStyles(({ spacing }) => ({
-  cardContent: {
+const useStyles = makeStyles(({ palette, spacing }) => ({
+  titleLoading: {
     display: 'flex',
+  },
+  dash: {
+    color: palette.text.secondary,
+    margin: spacing(0, 1),
   },
   cardActions: {
     display: 'flex',
-    justifyContent: 'space-between',
     padding: spacing(1, 2, 1, 1),
   },
-  avatar: {
-    width: spacing(7),
-    height: spacing(7),
-    marginRight: spacing(2),
-  },
-  memberInfo: {
-    flexGrow: 1,
+  spacer: {
+    flex: 1,
   },
 }));
 
 export interface ProjectChangeRequestListItemProps {
   data?: ChangeRequest;
-  onEdit?: () => void;
   className?: string;
 }
 
 export const ProjectChangeRequestListItem = ({
   data,
-  onEdit,
   className,
 }: ProjectChangeRequestListItemProps) => {
   const classes = useStyles();
-  const [_, setPlanChangeId] = useCurrentChangeset();
-
-  const typesString = displayProjectChangeRequestTypes(data?.types.value ?? []);
-
-  const handleCRMode = () => {
-    if (data?.id) {
-      setPlanChangeId(data.id);
-    }
-  };
+  const [currentlyViewing, setChangeset] = useCurrentChangeset();
+  const navigate = useNavigate();
 
   return (
     <Card className={className}>
-      <CardContent className={classes.cardContent}>
-        <div className={classes.memberInfo}>
-          <Typography>
+      <CardContent>
+        <Typography
+          variant="body1"
+          className={data ? undefined : classes.titleLoading}
+        >
+          <Typography
+            variant="inherit"
+            color="primary"
+            display="inline"
+            style={data ? undefined : { width: '10%' }}
+          >
+            {!data ? <Skeleton width="100%" /> : data.status.value}
+          </Typography>
+          <span className={classes.dash}>—</span>
+          <Typography
+            variant="inherit"
+            display="inline"
+            style={data ? undefined : { width: '40%' }}
+          >
             {!data ? (
-              <Skeleton variant="text" width="40%" />
+              <Skeleton width="100%" />
             ) : (
-              data.summary.value
+              displayProjectChangeRequestTypes(data.types.value)
             )}
           </Typography>
-          <Typography variant="body2" color="primary">
-            {!data ? (
-              <Skeleton variant="text" width="33%" />
-            ) : (
-              data.status.value
-            )}
-          </Typography>
-          <Typography variant="body2" color="textSecondary">
-            {!data ? <Skeleton variant="text" width="25%" /> : typesString}
-          </Typography>
-        </div>
+        </Typography>
+        <DisplaySimpleProperty
+          label="ID"
+          value={data?.id}
+          loading={!data}
+          loadingWidth="25%"
+          paragraph
+        />
+        <Typography>
+          {!data ? <Skeleton width="40%" /> : data.summary.value}
+        </Typography>
       </CardContent>
       <CardActions className={classes.cardActions}>
-        <Button disabled={!data} color="primary" onClick={onEdit}>
-          Edit
-        </Button>
         {!data || data.canEdit ? (
-          <Button disabled={!data} color="primary" onClick={handleCRMode}>
-            CR Mode
+          <Button
+            disabled={!data || currentlyViewing === data.id}
+            color="primary"
+            onClick={() => data?.id && setChangeset(data.id) && navigate('..')}
+          >
+            {currentlyViewing === data?.id ? 'Viewing' : 'View'}
           </Button>
         ) : null}
+        <Tooltip title={data ? 'Not implemented yet' : ''}>
+          <Button disabled={!data} color="primary">
+            Review
+          </Button>
+        </Tooltip>
+        <div className={classes.spacer} />
         <Typography variant="subtitle2" color="textSecondary">
           {!data ? (
-            <Skeleton variant="text" width="23ch" />
+            <Skeleton width="23ch" />
           ) : (
             <>
               Created at <FormattedDateTime date={data.createdAt} />

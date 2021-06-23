@@ -16,16 +16,14 @@ import { List, useListQuery } from '../../../../components/List';
 import { ProjectBreadcrumb } from '../../../../components/ProjectBreadcrumb';
 import { ProjectChangeRequestListItem } from '../../../../components/ProjectChangeRequestListItem';
 import { CreateProjectChangeRequest } from '../Create';
-import {
-  UpdateProjectChangeRequest,
-  UpdateProjectChangeRequestFormParams,
-} from '../Update';
 import { ProjectChangeRequestListDocument as ChangeRequestList } from './ProjectChangeRequestList.generated';
 
 const useStyles = makeStyles(({ spacing, breakpoints }) => ({
   root: {
     flex: 1,
     overflowY: 'auto',
+  },
+  main: {
     padding: spacing(4),
     maxWidth: breakpoints.values.sm,
   },
@@ -48,71 +46,56 @@ export const ProjectChangeRequestList: FC = () => {
     },
   });
 
-  const [createPlanChangeDialogState, openCreatePlanChangeDialog] = useDialog();
-
-  const [updateDialogState, openUpdateDialog, requestBeingUpdated] =
-    useDialog<UpdateProjectChangeRequestFormParams>();
+  const [createState, openCreateDialog] = useDialog();
 
   return (
     <div className={classes.root}>
-      <Helmet
-        title={`Change Requests - ${data?.project.name.value ?? 'A Project'}`}
-      />
-      <Breadcrumbs>
-        <ProjectBreadcrumb data={data?.project} />
-        <Breadcrumb to=".">Change Requests</Breadcrumb>
-      </Breadcrumbs>
-      <div className={classes.headerContainer}>
-        <Typography variant="h2" className={classes.title}>
-          Change Requests
-        </Typography>
-        {(!list.data || list.data.canCreate) && (
-          <Tooltip title="Create Change Request">
-            <Fab
-              color="error"
-              loading={!list.data}
-              onClick={openCreatePlanChangeDialog}
-            >
-              <Add />
-            </Fab>
-          </Tooltip>
-        )}
-        {data && (
-          <CreateProjectChangeRequest
-            {...createPlanChangeDialogState}
-            project={data.project}
-          />
-        )}
-      </div>
-      {list.data?.canRead === false ? (
-        <Typography>
-          Sorry, you don't have permission to view this project's change
-          requests.
-        </Typography>
-      ) : (
-        <List
-          {...list}
-          spacing={3}
-          renderItem={(changeRequest) => (
-            <ProjectChangeRequestListItem
-              data={changeRequest}
-              onEdit={() =>
-                openUpdateDialog({
-                  project: data!.project,
-                  changeRequest,
-                })
-              }
+      <main className={classes.main}>
+        <Helmet
+          title={`Change Requests - ${data?.project.name.value ?? 'A Project'}`}
+        />
+        <Breadcrumbs>
+          <ProjectBreadcrumb data={data?.project} />
+          <Breadcrumb to=".">Change Requests</Breadcrumb>
+        </Breadcrumbs>
+        <div className={classes.headerContainer}>
+          <Typography variant="h2" className={classes.title}>
+            Change Requests
+          </Typography>
+          {(!list.data || list.data.canCreate) && (
+            <Tooltip title="Create Change Request">
+              <Fab
+                color="error"
+                loading={!list.data}
+                onClick={openCreateDialog}
+              >
+                <Add />
+              </Fab>
+            </Tooltip>
+          )}
+          {data && (
+            <CreateProjectChangeRequest
+              {...createState}
+              project={data.project}
             />
           )}
-          renderSkeleton={<ProjectChangeRequestListItem />}
-        />
-      )}
-      {requestBeingUpdated && (
-        <UpdateProjectChangeRequest
-          {...updateDialogState}
-          {...requestBeingUpdated}
-        />
-      )}
+        </div>
+        {list.data?.canRead === false ? (
+          <Typography>
+            Sorry, you don't have permission to view this project's change
+            requests.
+          </Typography>
+        ) : (
+          <List
+            {...list}
+            spacing={3}
+            renderItem={(changeRequest) => (
+              <ProjectChangeRequestListItem data={changeRequest} />
+            )}
+            renderSkeleton={<ProjectChangeRequestListItem />}
+          />
+        )}
+      </main>
     </div>
   );
 };
