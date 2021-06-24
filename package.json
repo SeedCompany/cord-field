@@ -6,7 +6,7 @@
     "start:server": "razzle start",
     "start:gql-gen": "run-p \"gql-gen:* --watch\"",
     "build": "yarn gql-gen && razzle build --noninteractive",
-    "clean": "rimraf build cache",
+    "clean": "rimraf build cache \"src/**/*.generated.ts\"",
     "test": "razzle test --env=jsdom",
     "lint": "eslint --ext .ts,.tsx --fix --max-warnings 0 .",
     "type-check": "tsc -p .",
