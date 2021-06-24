@@ -58,7 +58,7 @@ export const ProjectMemberCard: FC<ProjectMemberCardProps> = ({
       <CardContent className={classes.cardContent}>
         <Avatar
           className={classes.avatar}
-          variant="circle"
+          variant="circular"
           alt={projectMember?.user.value?.fullName ?? ''}
           loading={!projectMember}
         >

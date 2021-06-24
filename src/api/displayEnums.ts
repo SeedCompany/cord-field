@@ -1,26 +1,26 @@
 import { startCase } from 'lodash';
-import {
-  EngagementStatus,
-  FinancialReportingType,
-  InternshipDomain,
-  InternshipProgram,
-  LocationType,
-  PartnershipAgreementStatus,
-  PartnerType,
-  ProductApproach,
-  ProjectStatus,
-  Role,
-} from '.';
 import { ProductTypes } from '../scenes/Products/ProductForm/constants';
 import { Nullable } from '../util';
 import { MethodologyToApproach } from './approach';
 import {
+  EngagementStatus,
+  FinancialReportingType,
+  InternshipDomain,
   InternshipPosition,
+  InternshipProgram,
+  LocationType,
+  PartnershipAgreementStatus,
+  PartnerType,
   PostShareability,
+  ProductApproach,
   ProductMedium,
   ProductMethodology,
   ProductPurpose,
+  ProjectChangeRequestStatus,
+  ProjectChangeRequestType,
+  ProjectStatus,
   ProjectStep,
+  Role,
   ScriptureRangeInput,
 } from './schema.generated';
 
@@ -29,6 +29,10 @@ const displayEnum =
   <T extends string>() =>
   (enumVal: Nullable<T>) =>
     startCase(enumVal ?? undefined);
+const displayEnums =
+  <T extends string>(fn: (val: Nullable<T>) => string) =>
+  (items: readonly T[]) =>
+    items.map(fn).join(', ');
 
 export const displayStatus = displayEnum<ProjectStatus>();
 export const displayProjectStep = displayEnum<ProjectStep>();
@@ -39,12 +43,18 @@ export const displayFinancialReportingType =
   displayEnum<FinancialReportingType>();
 export const displayEngagementStatus = displayEnum<EngagementStatus>();
 export const displayRole = displayEnum<Role>();
-export const displayRoles = (roles: readonly Role[]) =>
-  roles.map(displayRole).join(', ');
+export const displayRoles = displayEnums(displayRole);
 
 export const displayInternPosition = displayEnum<InternshipPosition>();
 export const displayInternProgram = displayEnum<InternshipProgram>();
 export const displayInternDomain = displayEnum<InternshipDomain>();
+export const displayPlanChangeStatus =
+  displayEnum<ProjectChangeRequestStatus>();
+export const displayProjectChangeRequestType =
+  displayEnum<ProjectChangeRequestType>();
+export const displayProjectChangeRequestTypes = displayEnums(
+  displayProjectChangeRequestType
+);
 export const PartnershipStatuses: PartnershipAgreementStatus[] = [
   'NotAttached',
   'AwaitingSignature',

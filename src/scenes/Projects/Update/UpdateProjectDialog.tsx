@@ -86,6 +86,7 @@ type UpdateProjectDialogProps = Except<
 > & {
   project: ProjectOverviewFragment;
   editFields?: Many<EditableProjectField>;
+  planChangeId?: string;
 };
 
 export const UpdateProjectDialog = ({
@@ -127,15 +128,15 @@ export const UpdateProjectDialog = ({
       },
     };
   }, [
-    editFields,
-    project.id,
     project.name.value,
     project.primaryLocation.value,
     project.fieldRegion.value,
-    project.mouEnd.value,
     project.mouStart.value,
+    project.mouEnd.value,
     project.estimatedSubmission.value,
     project.sensitivity,
+    project.id,
+    editFields,
   ]);
 
   return (
@@ -144,6 +145,8 @@ export const UpdateProjectDialog = ({
       closeLabel="Close"
       submitLabel="Save"
       {...props}
+      // Only simple properties are changeset aware, relationships are not.
+      changesetAware={editFields.every((field) => !field.endsWith('Id'))}
       initialValues={initialValues}
       onSubmit={async ({
         project: {
@@ -154,15 +157,17 @@ export const UpdateProjectDialog = ({
       }) => {
         const primaryLocationId = primaryLocation?.id;
         const fieldRegionId = fieldRegion?.id;
-        const input = {
-          project: {
-            ...rest,
-            ...(primaryLocationId ? { primaryLocationId } : {}),
-            ...(fieldRegionId ? { fieldRegionId } : {}),
-          },
-        };
         await updateProject({
-          variables: { input },
+          variables: {
+            input: {
+              project: {
+                ...rest,
+                ...(primaryLocationId ? { primaryLocationId } : {}),
+                ...(fieldRegionId ? { fieldRegionId } : {}),
+              },
+              changeset: project.changeset?.id,
+            },
+          },
           update: (cache) => {
             if (rest.mouStart === undefined && rest.mouEnd === undefined) {
               return;

@@ -14,11 +14,19 @@ export const redirectToTypeById = (
 ): FieldPolicy => ({
   read: (_, { args, toReference, readField }) => {
     const id = getIdArg(args);
+    // We can't know whether a missing changeset is because it's not needed
+    // or because it's under a different argument. This is concerning, but
+    // as long as we follow the convention it should be ok.
+    // A check could be added to the code gen to check if the output type is
+    // ChangesetAware but an argument could not be found.
+    const changeset: string | undefined = args?.changeset;
 
     for (const possibleType of getPossibleTypes(typename)) {
       const ref = toReference({
         __typename: possibleType,
         id,
+        // This matches the ChangesetAware.keyFields type policy
+        ...(changeset ? { changeset: { id: changeset } } : {}),
       });
       // This is only to save a lookup so if the id field cannot be read,
       // then the object is not cached and the redirect wouldn't save a network

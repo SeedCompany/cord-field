@@ -1,7 +1,7 @@
 import { useMutation } from '@apollo/client';
 import React from 'react';
 import { Except } from 'type-fest';
-import { addItemToList } from '../../../../api';
+import { addItemToList, useCurrentChangeset } from '../../../../api';
 import {
   DialogForm,
   DialogFormProps,
@@ -32,6 +32,7 @@ export const CreateLanguageEngagement = ({
   projectId,
   ...props
 }: CreateLanguageEngagementProps) => {
+  const [changeset] = useCurrentChangeset();
   const [createEngagement] = useMutation(CreateLanguageEngagementDocument);
   const submit = async ({ engagement }: CreateLanguageEngagementFormValues) => {
     const projectRef = {
@@ -46,6 +47,7 @@ export const CreateLanguageEngagement = ({
       variables: {
         input: {
           engagement: { projectId, languageId: engagement.languageId.id },
+          changeset,
         },
       },
       update: callAll(
@@ -62,7 +64,12 @@ export const CreateLanguageEngagement = ({
     });
   };
   return (
-    <DialogForm {...props} onSubmit={submit} title="Create Language Engagement">
+    <DialogForm
+      {...props}
+      onSubmit={submit}
+      title="Create Language Engagement"
+      changesetAware
+    >
       <SubmitError />
       <LanguageField name="engagement.languageId" label="Language" required />
     </DialogForm>

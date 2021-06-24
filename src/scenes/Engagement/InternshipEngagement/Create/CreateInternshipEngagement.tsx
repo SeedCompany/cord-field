@@ -1,7 +1,7 @@
 import { useMutation } from '@apollo/client';
 import React from 'react';
 import { Except } from 'type-fest';
-import { addItemToList } from '../../../../api';
+import { addItemToList, useCurrentChangeset } from '../../../../api';
 import {
   DialogForm,
   DialogFormProps,
@@ -27,6 +27,7 @@ export const CreateInternshipEngagement = ({
   projectId,
   ...props
 }: CreateInternshipEngagementProps) => {
+  const [changeset] = useCurrentChangeset();
   const [createEngagement] = useMutation(CreateInternshipEngagementDocument);
   const submit = async ({
     engagement,
@@ -35,6 +36,7 @@ export const CreateInternshipEngagement = ({
       variables: {
         input: {
           engagement: { projectId, internId: engagement.internId.id },
+          changeset,
         },
       },
       update: addItemToList({
@@ -47,7 +49,12 @@ export const CreateInternshipEngagement = ({
     });
   };
   return (
-    <DialogForm {...props} onSubmit={submit} title="Create Intern Engagement">
+    <DialogForm
+      {...props}
+      onSubmit={submit}
+      title="Create Intern Engagement"
+      changesetAware
+    >
       <SubmitError />
       <UserField
         name="engagement.internId"

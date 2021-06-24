@@ -1,0 +1,32 @@
+fragment ChangesetInfo on ChangesetAware {
+  id
+  changeset {
+    ...Changeset
+  }
+}
+
+fragment Changeset on Changeset {
+  id
+}
+
+fragment ChangesetDiff on ChangesetDiff {
+  added {
+    ...ChangesetDiffItem
+  }
+  removed {
+    ...ChangesetDiffItem
+  }
+  changed {
+    previous {
+      ...ChangesetDiffItem
+    }
+    updated {
+      ...ChangesetDiffItem
+    }
+  }
+}
+
+fragment ChangesetDiffItem on Resource {
+  __typename
+  id
+}

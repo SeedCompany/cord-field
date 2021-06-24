@@ -7,9 +7,14 @@ import React, { FC } from 'react';
 import { useDropzone } from 'react-dropzone';
 import { Helmet } from 'react-helmet-async';
 import { useParams } from 'react-router-dom';
-import { displayProjectStep, securedDateRange } from '../../../api';
+import {
+  displayProjectStep,
+  securedDateRange,
+  useCurrentChangeset,
+} from '../../../api';
 import { BudgetOverviewCard } from '../../../components/BudgetOverviewCard';
 import { CardGroup } from '../../../components/CardGroup';
+import { ChangesetPropertyBadge } from '../../../components/Changeset';
 import { DataButton } from '../../../components/DataButton';
 import { useDialog } from '../../../components/Dialog';
 import { DisplaySimpleProperty } from '../../../components/DisplaySimpleProperty';
@@ -28,6 +33,7 @@ import { LanguageEngagementListItemCard } from '../../../components/LanguageEnga
 import { List, useListQuery } from '../../../components/List';
 import { PartnershipSummary } from '../../../components/PartnershipSummary';
 import { PeriodicReportCard } from '../../../components/PeriodicReports';
+import { ProjectChangeRequestSummary } from '../../../components/ProjectChangeRequestSummary';
 import { ProjectMembersSummary } from '../../../components/ProjectMembersSummary';
 import { Redacted } from '../../../components/Redacted';
 import { SensitivityIcon } from '../../../components/Sensitivity';
@@ -96,6 +102,7 @@ const useStyles = makeStyles(({ spacing, breakpoints, palette }) => ({
 export const ProjectOverview: FC = () => {
   const classes = useStyles();
   const { projectId = '' } = useParams();
+  const [changeset] = useCurrentChangeset();
   const formatNumber = useNumberFormatter();
 
   const [editState, editField, fieldsBeingEdited] =
@@ -131,6 +138,8 @@ export const ProjectOverview: FC = () => {
     {
       variables: {
         input: projectId,
+        changeset,
+        withOriginal: !!changeset,
       },
     }
   );
@@ -139,7 +148,9 @@ export const ProjectOverview: FC = () => {
     listAt: (data) => data.project.engagements,
     variables: {
       project: projectId,
+      changeset,
     },
+    fetchPolicy: 'no-cache',
   });
 
   const projectName = projectOverviewData?.project.name;
@@ -231,7 +242,13 @@ export const ProjectOverview: FC = () => {
               {!projectName ? (
                 <Skeleton width="100%" />
               ) : projectName.canRead ? (
-                projectName.value
+                <ChangesetPropertyBadge
+                  current={projectOverviewData?.project}
+                  previous={projectOverviewData?.original}
+                  prop="name"
+                >
+                  {projectName.value}
+                </ChangesetPropertyBadge>
               ) : (
                 <Redacted
                   info="You do not have permission to view project's name"
@@ -368,17 +385,47 @@ export const ProjectOverview: FC = () => {
               />
             </Grid>
             <Grid item>
-              <DataButton
-                loading={!projectOverviewData}
-                startIcon={<DateRange className={classes.infoColor} />}
-                secured={date}
-                redacted="You do not have permission to view start/end dates"
-                children={({ start, end }) => (
-                  <FormattedDateRange {...{ start, end }} />
+              <ChangesetPropertyBadge
+                current={
+                  projectOverviewData?.project
+                    ? {
+                        range: {
+                          start: projectOverviewData.project.mouStart.value,
+                          end: projectOverviewData.project.mouEnd.value,
+                        },
+                      }
+                    : undefined
+                }
+                previous={
+                  projectOverviewData?.original
+                    ? {
+                        range: {
+                          start: projectOverviewData.original.mouStart.value,
+                          end: projectOverviewData.original.mouEnd.value,
+                        },
+                      }
+                    : undefined
+                }
+                prop="range"
+                identifyBy={(range) =>
+                  `${range.start?.toMillis()}/${range.end?.toMillis()}`
+                }
+                labelBy={({ start, end }) => (
+                  <FormattedDateRange start={start} end={end} />
                 )}
-                empty="Start - End"
-                onClick={() => editField(['mouStart', 'mouEnd'])}
-              />
+              >
+                <DataButton
+                  loading={!projectOverviewData}
+                  startIcon={<DateRange className={classes.infoColor} />}
+                  secured={date}
+                  redacted="You do not have permission to view start/end dates"
+                  children={({ start, end }) => (
+                    <FormattedDateRange {...{ start, end }} />
+                  )}
+                  empty="Start - End"
+                  onClick={() => editField(['mouStart', 'mouEnd'])}
+                />
+              </ChangesetPropertyBadge>
             </Grid>
             {projectOverviewData?.project.status === 'InDevelopment' && (
               <Tooltip
@@ -399,17 +446,24 @@ export const ProjectOverview: FC = () => {
               </Tooltip>
             )}
             <Grid item>
-              <DataButton
-                loading={!projectOverviewData}
-                secured={projectOverviewData?.project.step}
-                redacted="You do not have permission to view project step"
-                onClick={() =>
-                  projectOverviewData &&
-                  openWorkflow(projectOverviewData.project)
-                }
+              <ChangesetPropertyBadge
+                current={projectOverviewData?.project}
+                previous={projectOverviewData?.original}
+                prop="step"
+                labelBy={displayProjectStep}
               >
-                {displayProjectStep(projectOverviewData?.project.step.value)}
-              </DataButton>
+                <DataButton
+                  loading={!projectOverviewData}
+                  secured={projectOverviewData?.project.step}
+                  redacted="You do not have permission to view project step"
+                  onClick={() =>
+                    projectOverviewData &&
+                    openWorkflow(projectOverviewData.project)
+                  }
+                >
+                  {displayProjectStep(projectOverviewData?.project.step.value)}
+                </DataButton>
+              </ChangesetPropertyBadge>
             </Grid>
           </Grid>
 
@@ -487,6 +541,13 @@ export const ProjectOverview: FC = () => {
               partnerships={projectOverviewData?.project.partnerships}
             />
           </CardGroup>
+          <Grid container spacing={3}>
+            <Grid item xs={6}>
+              <ProjectChangeRequestSummary
+                data={projectOverviewData?.project.changeRequests}
+              />
+            </Grid>
+          </Grid>
 
           <Grid container spacing={2} alignItems="center">
             <Grid item>
