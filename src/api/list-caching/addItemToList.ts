@@ -7,6 +7,7 @@ import {
   argsFromStoreFieldName,
   defaultSortingForList,
   ListModifier,
+  modifyChangesetDiff,
   modifyList,
   ModifyListOptions,
 } from './modifyList';
@@ -102,4 +103,10 @@ export const addItemToList =
     };
 
     modifyList({ cache, listId, modifier, filter });
+
+    modifyChangesetDiff(cache, listId, ({ added, removed }) => ({
+      // TODO how are removed items reverted?
+      added: [...added, newItem],
+      removed,
+    }));
   };

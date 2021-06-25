@@ -66,3 +66,18 @@ export function has<K extends string | number | symbol, T>(
 ): obj is T & Record<K, unknown> {
   return key in obj;
 }
+
+/**
+ * Array splice but it returns a new list instead of modifying the original one
+ * and returning the removed items.
+ *
+ * @see Array.splice
+ */
+export const splice = <T>(
+  list: readonly T[],
+  ...args: Parameters<T[]['splice']>
+) => {
+  const newList = list.slice();
+  newList.splice(...args);
+  return newList;
+};

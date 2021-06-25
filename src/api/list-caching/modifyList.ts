@@ -5,6 +5,7 @@ import type { ConditionalKeys } from 'type-fest';
 import { keys, mapFromList, Nullable } from '../../util';
 import type { Query } from '../schema.generated';
 import { typePolicies } from '../typePolicies';
+import { ModifyChangesetDiffOnUpdateFragmentDoc } from './changesetDiff.generated';
 import {
   Entity,
   GqlTypeOf,
@@ -42,15 +43,10 @@ export const modifyList = <OwningObj extends Entity, Args>({
   modifier,
   filter,
 }: ModifyListOptions<OwningObj, Args>) => {
-  // We allow existing object to be null to help with types. It's common for the
-  // object to be null while it's being loaded. But we expect it to be there
-  // at the time the mutation is invoked. Confirm this assumption here.
-  if (Array.isArray(listId) && !listId[0]) {
-    console.error('Trying to modify list field on object but object was null');
+  const [id, field] = identifyList(cache, listId);
+  if (!field) {
     return;
   }
-
-  const [id, field] = identifyList(cache, listId);
 
   // @ts-expect-error assuming in memory cache with internal data map
   const obj = cache.data?.data[id ?? 'ROOT_QUERY'] ?? {};
@@ -72,15 +68,64 @@ export const modifyList = <OwningObj extends Entity, Args>({
   });
 };
 
+type ChangesetDiffCache = Record<'added' | 'removed', readonly Entity[]>;
+export const modifyChangesetDiff = <OwningObj extends Entity>(
+  cache: ApolloCache<unknown>,
+  listId: ListIdentifier<OwningObj>,
+  modifier: (diff: ChangesetDiffCache) => ChangesetDiffCache
+) => {
+  const [id] = identifyList(cache, listId);
+  if (!id) {
+    return;
+  }
+  const owningObj = cache.readFragment({
+    id,
+    fragment: ModifyChangesetDiffOnUpdateFragmentDoc,
+  });
+  const diff = owningObj?.changeset?.difference;
+  if (!owningObj || !diff) {
+    return;
+  }
+  const next = modifier(diff);
+  cache.writeFragment({
+    id,
+    fragment: ModifyChangesetDiffOnUpdateFragmentDoc,
+    data: {
+      ...owningObj,
+      changeset: {
+        ...owningObj.changeset,
+        difference: {
+          ...owningObj.changeset?.difference,
+          ...next,
+        },
+      },
+    },
+  });
+};
+
 export const identifyList = <OwningObj extends Entity>(
   cache: ApolloCache<unknown>,
   listId: ListIdentifier<OwningObj>
-): readonly [objectId: string | undefined, fieldOrQueryName: string] =>
-  Array.isArray(listId)
-    ? // @ts-expect-error TS doesn't like that Entity doesn't have an index signature.
-      // That doesn't matter for this as it would only be widening the type.
-      [cache.identify(listId[0]), listId[1] as string]
-    : [undefined, listId];
+): readonly [
+  objectId: string | undefined,
+  fieldOrQueryName: string | undefined
+] => {
+  if (Array.isArray(listId)) {
+    if (!listId[0]) {
+      // We allow existing object to be null to help with types. It's common for the
+      // object to be null while it's being loaded. But we expect it to be there
+      // at the time the mutation is invoked. Confirm this assumption here.
+      console.error(
+        'Trying to modify list field on object but object was null'
+      );
+      return [undefined, undefined];
+    }
+    // @ts-expect-error TS doesn't like that Entity doesn't have an index signature.
+    // That doesn't matter for this as it would only be widening the type.
+    return [cache.identify(listId[0]), listId[1] as string];
+  }
+  return [undefined, listId];
+};
 
 export const defaultSortingForList = <OwningObj extends Entity>(
   listId: ListIdentifier<OwningObj>

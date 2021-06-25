@@ -12,7 +12,7 @@ import {
   uniqBy,
   ValueIteratee,
 } from 'lodash';
-import { isListNotEmpty, Nullable } from '../../../util';
+import { isListNotEmpty, Nullable, splice } from '../../../util';
 import {
   InputArg,
   PaginatedListInput,
@@ -187,14 +187,6 @@ const spliceDescLists = <T>(
   incoming: readonly T[],
   iteratee: ValueIteratee<T>
 ) => reverse(spliceAscLists(reverse(existing), reverse(incoming), iteratee));
-
-// Array splice but it returns a new list instead of modifying the original one
-// and returning the removed items
-const splice = <T>(list: readonly T[], ...args: Parameters<T[]['splice']>) => {
-  const newList = list.slice();
-  newList.splice(...args);
-  return newList;
-};
 
 // Same as uniqBy but it keeps the last item found, instead of the first.
 const uniqLastBy = <T>(
