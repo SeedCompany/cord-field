@@ -58,8 +58,8 @@ export const typePolicies: TypePolicies = {
     },
   },
   ChangesetAware: {
-    // Include change ID in Changeable's key fields if it is given
-    keyFields: (object) =>
-      object.changeset ? ['id', 'changeset', ['id']] : ['id'],
+    // Include changeset ID in ChangesetAware's key fields if it is given
+    keyFields: (object: any) =>
+      object.changeset?.id ? ['id', 'changeset', ['id']] : ['id'],
   },
 };

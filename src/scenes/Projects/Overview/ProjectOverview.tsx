@@ -150,7 +150,6 @@ export const ProjectOverview: FC = () => {
       project: projectId,
       changeset,
     },
-    fetchPolicy: 'no-cache',
   });
 
   const projectName = projectOverviewData?.project.name;

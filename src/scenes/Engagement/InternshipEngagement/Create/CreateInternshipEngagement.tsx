@@ -41,7 +41,11 @@ export const CreateInternshipEngagement = ({
       },
       update: addItemToList({
         listId: [
-          { __typename: 'InternshipProject', id: projectId },
+          {
+            __typename: 'InternshipProject',
+            id: projectId,
+            changeset: { id: changeset },
+          },
           'engagements',
         ],
         outputToItem: (res) => res.createInternshipEngagement.engagement,

@@ -38,6 +38,7 @@ export const CreateLanguageEngagement = ({
     const projectRef = {
       __typename: 'TranslationProject',
       id: projectId,
+      changeset: { id: changeset },
     } as const;
     const languageRef = {
       __typename: 'Language',
