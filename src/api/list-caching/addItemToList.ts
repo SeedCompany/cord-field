@@ -1,13 +1,13 @@
 import type { MutationUpdaterFn } from '@apollo/client/core';
 import { orderBy } from 'lodash';
 import { Except } from 'type-fest';
+import { modifyChangesetDiff } from '../changesets';
 import type { Order } from '../schema.generated';
 import { unwrapSecured } from '../secured';
 import {
   argsFromStoreFieldName,
   defaultSortingForList,
   ListModifier,
-  modifyChangesetDiff,
   modifyList,
   ModifyListOptions,
 } from './modifyList';
@@ -104,9 +104,13 @@ export const addItemToList =
 
     modifyList({ cache, listId, modifier, filter });
 
-    modifyChangesetDiff(cache, listId, ({ added, removed }) => ({
+    // If object given add resource to changeset diff added list
+    const objRef = Array.isArray(listId) ? listId[0] : undefined;
+    if (!objRef) {
+      return;
+    }
+    modifyChangesetDiff(cache, objRef, ({ added }) => ({
       // TODO how are removed items reverted?
       added: [...added, newItem],
-      removed,
     }));
   };

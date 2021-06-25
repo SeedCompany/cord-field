@@ -9,6 +9,14 @@ fragment ModifyChangesetDiffOnUpdate on ChangesetAware {
       removed {
         id
       }
+      changed {
+        previous {
+          id
+        }
+        updated {
+          id
+        }
+      }
     }
   }
 }

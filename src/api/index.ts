@@ -10,4 +10,4 @@ export * from './approach';
 export * from './list-caching';
 export * from './invalidate-props';
 export * from './sensitivity';
-export * from './changeset';
+export * from './changesets';
