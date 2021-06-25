@@ -11,7 +11,17 @@ query Product(
   $projectId: ID!
   $engagementId: ID!
   $changeset: ID
+  $reportId: ID
 ) {
+  product(id: $productId) {
+    ...ProductForm
+    progressReport(reportId: $reportId) {
+      steps {
+        step
+        percentDone
+      }
+    }
+  }
   project(id: $projectId, changeset: $changeset) {
     ...ProjectBreadcrumb
   }

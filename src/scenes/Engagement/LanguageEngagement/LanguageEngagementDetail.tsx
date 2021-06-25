@@ -5,7 +5,7 @@ import {
   Tooltip,
   Typography,
 } from '@material-ui/core';
-import { DateRange, Edit } from '@material-ui/icons';
+import { Add, DateRange, Edit } from '@material-ui/icons';
 import React, { FC } from 'react';
 import { Helmet } from 'react-helmet-async';
 import { canEditAny, displayEngagementStatus } from '../../../api';
@@ -15,21 +15,18 @@ import { DataButton } from '../../../components/DataButton';
 import { DefinedFileCard } from '../../../components/DefinedFileCard';
 import { useDialog } from '../../../components/Dialog';
 import { Fab } from '../../../components/Fab';
-import { FieldOverviewCard } from '../../../components/FieldOverviewCard';
 import { FileActionsContextProvider } from '../../../components/files/FileActions';
 import {
-  FormattedDate,
   FormattedDateRange,
   FormattedDateTime,
 } from '../../../components/Formatters';
-import { OptionsIcon, PlantIcon } from '../../../components/Icons';
+import { LanguageEngagementForm } from '../../../components/LanguageEngagementForm';
 import { PeriodicReportCard } from '../../../components/PeriodicReports';
 import { ProjectBreadcrumb } from '../../../components/ProjectBreadcrumb';
 import { Redacted } from '../../../components/Redacted';
 import { Link } from '../../../components/Routing';
 import { Many } from '../../../util';
 import { ProductList } from '../../Products/List/ProductList';
-import { CeremonyCard } from '../CeremonyCard';
 import { DeleteEngagement } from '../Delete';
 import {
   EditableEngagementField,
@@ -54,6 +51,22 @@ const useStyles = makeStyles(({ spacing, breakpoints, palette }) => ({
   },
   infoColor: {
     color: palette.info.main,
+  },
+  details: {
+    marginTop: spacing(4),
+  },
+  contentColumn: {
+    flexFlow: 'column',
+  },
+  header: {
+    fontSize: '24px',
+    lineHeight: '32px',
+    marginRight: spacing(2),
+  },
+  addProductBtn: {
+    width: 32,
+    height: 32,
+    minHeight: 32,
   },
 }));
 
@@ -196,71 +209,67 @@ export const LanguageEngagementDetail: FC<EngagementQuery> = ({
             />
           </Grid>
           <Grid item container spacing={3}>
-            <Grid item xs={6}>
-              <FieldOverviewCard
-                title="Translation Complete Date"
-                data={{
-                  value: engagement.completeDate.value ? (
-                    <FormattedDate date={engagement.completeDate.value} />
-                  ) : undefined,
-                }}
-                icon={PlantIcon}
-                onClick={() => show('completeDate')}
-                onButtonClick={() => show('completeDate')}
-                emptyValue="None"
-              />
-            </Grid>
-            <Grid item xs={6}>
-              <FieldOverviewCard
-                title="Disbursement Complete Date"
-                data={{
-                  value: engagement.disbursementCompleteDate.value ? (
-                    <FormattedDate
-                      date={engagement.disbursementCompleteDate.value}
-                    />
-                  ) : undefined,
-                }}
-                icon={OptionsIcon}
-                onClick={() => show('disbursementCompleteDate')}
-                onButtonClick={() => show('disbursementCompleteDate')}
-                emptyValue="None"
-              />
-            </Grid>
-            <FileActionsContextProvider>
-              <Grid item container spacing={3} alignItems="flex-start">
-                <Grid item xs={6}>
-                  <PeriodicReportCard
-                    type="Progress"
-                    dueCurrently={engagement.currentProgressReportDue}
-                    dueNext={engagement.nextProgressReportDue}
-                  />
-                </Grid>
-                <Tooltip title="This holds the planning info of PnP files">
-                  <Grid item xs={6}>
-                    <DefinedFileCard
-                      title="Planning Spreadsheet"
-                      uploadMutationDocument={
-                        UploadLanguageEngagementPnpDocument
-                      }
-                      parentId={engagement.id}
-                      resourceType="engagement"
-                      securedFile={engagement.pnp}
+            <Grid className={classes.contentColumn} item container xs={5}>
+              <Grid item container>
+                <Typography className={classes.header} variant="h3" paragraph>
+                  Latest Report
+                </Typography>
+              </Grid>
+              <FileActionsContextProvider>
+                <Grid item container direction="column" spacing={3}>
+                  <Grid item container>
+                    <PeriodicReportCard
+                      type="Progress"
+                      dueCurrently={engagement.currentProgressReportDue}
+                      dueNext={engagement.nextProgressReportDue}
                     />
                   </Grid>
-                </Tooltip>
+                  <Grid item container>
+                    <Tooltip title="This holds the planning info of PnP files">
+                      <Grid item xs={12}>
+                        <DefinedFileCard
+                          title="Planning Spreadsheet"
+                          uploadMutationDocument={
+                            UploadLanguageEngagementPnpDocument
+                          }
+                          parentId={engagement.id}
+                          resourceType="engagement"
+                          securedFile={engagement.pnp}
+                        />
+                      </Grid>
+                    </Tooltip>
+                  </Grid>
+                </Grid>
+              </FileActionsContextProvider>
+              <Grid item container className={classes.details}>
+                <Typography className={classes.header} variant="h3" paragraph>
+                  Translation Details
+                </Typography>
               </Grid>
-            </FileActionsContextProvider>
-          </Grid>
-          <Grid item container spacing={3} alignItems="center">
-            <Grid item xs={6}>
-              <CeremonyCard {...engagement.ceremony} />
+              <Grid item container>
+                <LanguageEngagementForm engagement={engagement} />
+              </Grid>
             </Grid>
-          </Grid>
-          <Grid item>
-            <Typography variant="h3" paragraph>
-              Products
-            </Typography>
-            <ProductList engagement={engagement} />
+            <Grid className={classes.contentColumn} item container xs={7}>
+              <Grid item container>
+                <Typography className={classes.header} variant="h3" paragraph>
+                  Products
+                </Typography>
+                <Link to="./products/create">
+                  <Fab
+                    className={classes.addProductBtn}
+                    color="error"
+                    size="small"
+                    aria-label="Add New Product"
+                  >
+                    <Add />
+                  </Fab>
+                </Link>
+              </Grid>
+              <Grid item container>
+                <ProductList engagement={engagement} />
+              </Grid>
+            </Grid>
           </Grid>
         </Grid>
       </div>

@@ -51,4 +51,9 @@ fragment ProductCard on Product {
       }
     }
   }
+  steps {
+    canRead
+    canEdit
+    value
+  }
 }

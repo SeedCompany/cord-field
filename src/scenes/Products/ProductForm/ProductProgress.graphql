@@ -1,0 +1,11 @@
+mutation UpdateProductProgress($input: ProductProgressInput!) {
+  updateProductProgress(input: $input) {
+    product {
+      id
+    }
+    steps {
+      step
+      percentDone
+    }
+  }
+}

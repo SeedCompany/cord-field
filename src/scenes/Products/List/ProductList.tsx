@@ -1,11 +1,22 @@
-import { Card, Typography } from '@material-ui/core';
+import { Card, makeStyles, Typography } from '@material-ui/core';
 import React from 'react';
 import { getChangeset, IdFragment } from '../../../api';
 import { List, useListQuery } from '../../../components/List';
-import { AddProductCard, ProductCard } from '../../../components/ProductCard';
+import { ProductCard } from '../../../components/ProductCard';
 import { ProductListDocument } from './ProductList.generated';
 
+const useStyles = makeStyles(() => ({
+  root: {
+    padding: 0,
+    margin: 0,
+    overflow: 'visible',
+    flex: 1,
+  },
+}));
+
 export const ProductList = ({ engagement }: { engagement: IdFragment }) => {
+  const classes = useStyles();
+
   const list = useListQuery(ProductListDocument, {
     variables: {
       engagement: engagement.id,
@@ -34,13 +45,10 @@ export const ProductList = ({ engagement }: { engagement: IdFragment }) => {
   return (
     <List
       {...list}
-      ContainerProps={{ direction: 'row', spacing: 3 }}
-      ItemProps={{ xs: 4 }}
-      LoadMoreItemProps={{ xs: 12 }}
-      LoadMoreButtonProps={{ fullWidth: false }}
+      className={classes.root}
+      ContainerProps={{ direction: 'column', spacing: 3, wrap: 'nowrap' }}
       renderItem={(product) => <ProductCard product={product} />}
       renderSkeleton={<Card />}
-      renderCreate={<AddProductCard />}
     />
   );
 };

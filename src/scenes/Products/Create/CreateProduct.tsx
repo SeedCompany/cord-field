@@ -5,13 +5,20 @@ import { useSnackbar } from 'notistack';
 import React from 'react';
 import { Helmet } from 'react-helmet-async';
 import { useNavigate, useParams } from 'react-router';
-import { addItemToList, handleFormError } from '../../../api';
+import {
+  addItemToList,
+  AvailableMethodologySteps,
+  handleFormError,
+} from '../../../api';
 import { EngagementBreadcrumb } from '../../../components/EngagementBreadcrumb';
 import { ProjectBreadcrumb } from '../../../components/ProjectBreadcrumb';
 import { ButtonLink } from '../../../components/Routing';
 import { parsedRangesWithFullTestamentRange } from '../../../util/biblejs';
 import { useProjectId } from '../../Projects/useProjectId';
+import { EngagementReportDocument } from '../LanguageEngagementReport.generated';
 import { ProductForm } from '../ProductForm';
+import { UpdateProductProgressDocument } from '../ProductForm/ProductProgress.generated';
+import { MethodologyAvailableStepsDocument } from '../Steps.generated';
 import {
   CreateProductDocument,
   GetProductBreadcrumbDocument,
@@ -42,6 +49,21 @@ export const CreateProduct = () => {
       engagementId,
     },
   });
+  const { data: stepsData, loading: stepsDataLoading } = useQuery(
+    MethodologyAvailableStepsDocument
+  );
+  const { data: engagementReportData, loading: engagementReportDataLoading } =
+    useQuery(EngagementReportDocument, {
+      variables: {
+        engagementId,
+      },
+      fetchPolicy: 'network-only',
+    });
+
+  const currentReportDue =
+    engagementReportData?.engagement.__typename === 'LanguageEngagement'
+      ? engagementReportData.engagement.currentProgressReportDue
+      : undefined;
 
   const project = data?.project;
   const engagement = data?.engagement;
@@ -59,6 +81,11 @@ export const CreateProduct = () => {
     }),
   });
 
+  const [updateProductProgress] = useMutation(UpdateProductProgressDocument);
+
+  const methodologyAvailableSteps =
+    stepsData?.methodologyAvailableSteps as AvailableMethodologySteps[];
+
   return (
     <main className={classes.root}>
       <Helmet title="Create Product" />
@@ -68,10 +95,15 @@ export const CreateProduct = () => {
         <Typography variant="h4">Create Product</Typography>
       </Breadcrumbs>
       <Typography variant="h2">
-        {loading ? <Skeleton width="50%" variant="text" /> : 'Create Product'}
+        {loading || stepsDataLoading || engagementReportDataLoading ? (
+          <Skeleton width="50%" variant="text" />
+        ) : (
+          'Create Product'
+        )}
       </Typography>
-      {!loading && (
+      {!loading && !stepsDataLoading && !engagementReportDataLoading && (
         <ProductForm
+          methodologyAvailableSteps={methodologyAvailableSteps}
           onSubmit={async (
             {
               product: {
@@ -80,6 +112,7 @@ export const CreateProduct = () => {
                 scriptureReferences,
                 fullOldTestament,
                 fullNewTestament,
+                productSteps,
                 ...inputs
               },
             },
@@ -113,6 +146,22 @@ export const CreateProduct = () => {
               });
 
               const { product } = data!.createProduct;
+
+              if (currentReportDue?.value) {
+                await updateProductProgress({
+                  variables: {
+                    input: {
+                      steps:
+                        productSteps?.map((step) => ({
+                          step: step.name,
+                          percentDone: step.percentDone || 0,
+                        })) || [],
+                      productId: product.id,
+                      reportId: currentReportDue.value.id,
+                    },
+                  },
+                });
+              }
 
               enqueueSnackbar(`Created product`, {
                 variant: 'success',

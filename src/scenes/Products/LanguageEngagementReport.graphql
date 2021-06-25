@@ -1,0 +1,13 @@
+fragment LanguageEngagementReport on LanguageEngagement {
+  id
+  currentProgressReportDue {
+    ...SecuredPeriodicReport
+  }
+}
+
+query EngagementReport($engagementId: ID!) {
+  engagement(id: $engagementId) {
+    id
+    ...LanguageEngagementReport
+  }
+}
