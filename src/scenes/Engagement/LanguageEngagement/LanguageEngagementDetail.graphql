@@ -42,11 +42,6 @@ fragment LanguageEngagementDetail on LanguageEngagement {
     canRead
     canEdit
   }
-  communicationsCompleteDate {
-    value
-    canRead
-    canEdit
-  }
   pnp {
     canRead
     canEdit
