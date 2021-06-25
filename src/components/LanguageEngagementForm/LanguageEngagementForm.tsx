@@ -75,7 +75,6 @@ type EditableEngagementField = ExtractStrict<
   | 'endDateOverride'
   | 'completeDate'
   | 'disbursementCompleteDate'
-  | 'communicationsCompleteDate'
 >;
 
 interface EngagementFormValues {
@@ -113,9 +112,6 @@ const fieldMapping: Record<
   disbursementCompleteDate: ({ props }) => (
     <DateField {...props} label="Disbursement Complete Date" />
   ),
-  communicationsCompleteDate: ({ props }) => (
-    <DateField {...props} label="Communications Complete Date" />
-  ),
 };
 
 export const LanguageEngagementForm: FC<LanguageEngagementFormProps> = ({
@@ -140,7 +136,6 @@ export const LanguageEngagementForm: FC<LanguageEngagementFormProps> = ({
   const editFields: Many<EditableEngagementField> = [
     'completeDate',
     'disbursementCompleteDate',
-    'communicationsCompleteDate',
   ];
   const fields = editFields.map((name) => {
     const Field = fieldMapping[name];
@@ -158,7 +153,6 @@ export const LanguageEngagementForm: FC<LanguageEngagementFormProps> = ({
     > = {
       completeDate: engagement.completeDate.value,
       disbursementCompleteDate: engagement.disbursementCompleteDate.value,
-      communicationsCompleteDate: engagement.communicationsCompleteDate.value,
     };
 
     return {
