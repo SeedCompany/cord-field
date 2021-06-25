@@ -57,6 +57,8 @@ export const CreateLanguage = (props: CreateLanguageProps) => {
             </ButtonLink>
           ),
         });
+
+        return language;
       }}
     />
   );
