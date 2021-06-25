@@ -5,7 +5,11 @@ import type { ConditionalKeys } from 'type-fest';
 import { keys, mapFromList, Nullable } from '../../util';
 import type { Query } from '../schema.generated';
 import { typePolicies } from '../typePolicies';
-import { ModifyChangesetDiffOnUpdateFragmentDoc } from './changesetDiff.generated';
+import { updateFragment } from '../updateFragment';
+import {
+  ModifyChangesetDiffOnUpdateFragment,
+  ModifyChangesetDiffOnUpdateFragmentDoc,
+} from './changesetDiff.generated';
 import {
   Entity,
   GqlTypeOf,
@@ -78,27 +82,27 @@ export const modifyChangesetDiff = <OwningObj extends Entity>(
   if (!id) {
     return;
   }
-  const owningObj = cache.readFragment({
+  updateFragment(cache, {
     id,
     fragment: ModifyChangesetDiffOnUpdateFragmentDoc,
-  });
-  const diff = owningObj?.changeset?.difference;
-  if (!owningObj || !diff) {
-    return;
-  }
-  const next = modifier(diff);
-  cache.writeFragment({
-    id,
-    fragment: ModifyChangesetDiffOnUpdateFragmentDoc,
-    data: {
-      ...owningObj,
-      changeset: {
-        ...owningObj.changeset,
-        difference: {
-          ...owningObj.changeset?.difference,
-          ...next,
+    updater: (owningObj) => {
+      const diff = owningObj.changeset?.difference;
+      if (!diff) {
+        return;
+      }
+      // The type generation for resource interface is not responding well.
+      const result = modifier(diff as ChangesetDiffCache);
+      const next = {
+        ...owningObj,
+        changeset: {
+          ...owningObj.changeset,
+          difference: {
+            ...owningObj.changeset?.difference,
+            ...result,
+          },
         },
-      },
+      };
+      return next as ModifyChangesetDiffOnUpdateFragment;
     },
   });
 };
