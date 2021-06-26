@@ -11,6 +11,7 @@ import { FC } from 'react';
 import * as React from 'react';
 import { displayStatus } from '../../api';
 import { ProjectListQueryVariables } from '../../scenes/Projects/List/projects.generated';
+import { getProjectUrl } from '../../scenes/Projects/useProjectId';
 import { DisplaySimpleProperty } from '../DisplaySimpleProperty';
 import { FormattedDate } from '../Formatters';
 import { Picture, useRandomPicture } from '../Picture';
@@ -94,7 +95,7 @@ export const ProjectListItemCard: FC<ProjectListItemCardProps> = ({
     <Card className={clsx(classes.root, className)}>
       <CardActionAreaLink
         disabled={!project}
-        to={`/projects/${project?.id}`}
+        to={project ? getProjectUrl(project) : ''}
         className={classes.card}
       >
         <div className={classes.media}>

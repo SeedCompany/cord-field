@@ -1,21 +1,21 @@
 import { useQuery } from '@apollo/client';
 import React from 'react';
-import { useParams } from 'react-router-dom';
 import { ReportType } from '../../../api';
 import { Error } from '../../../components/Error';
 import { PeriodicReportsList } from '../../../components/PeriodicReports/PeriodicReportsList';
 import { ProjectBreadcrumb } from '../../../components/ProjectBreadcrumb';
+import { useProjectId } from '../useProjectId';
 import {
   FinancialReportsDocument,
   NarrativeReportsDocument,
 } from './ProjectReports.generated';
 
 export const ProjectReports = ({ type }: { type: ReportType }) => {
-  const { projectId = '' } = useParams();
+  const { projectId, changesetId } = useProjectId();
   const { data, error } = useQuery(
     type === 'Financial' ? FinancialReportsDocument : NarrativeReportsDocument,
     {
-      variables: { projectId },
+      variables: { projectId, changeset: changesetId },
     }
   );
 

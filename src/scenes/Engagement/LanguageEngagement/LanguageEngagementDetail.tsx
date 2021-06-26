@@ -260,7 +260,7 @@ export const LanguageEngagementDetail: FC<EngagementQuery> = ({
             <Typography variant="h3" paragraph>
               Products
             </Typography>
-            <ProductList engagementId={engagement.id} />
+            <ProductList engagement={engagement} />
           </Grid>
         </Grid>
       </div>

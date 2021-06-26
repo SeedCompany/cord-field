@@ -1,5 +1,5 @@
 fragment BudgetRecord on BudgetRecord {
-  id
+  ...Id
   createdAt
   amount {
     canEdit
@@ -26,8 +26,8 @@ fragment BudgetRecord on BudgetRecord {
   }
 }
 
-query ProjectBudget($id: ID!) {
-  project(id: $id) {
+query ProjectBudget($id: ID!, $changeset: ID) {
+  project(id: $id, changeset: $changeset) {
     id
     ...ProjectBreadcrumb
     name {

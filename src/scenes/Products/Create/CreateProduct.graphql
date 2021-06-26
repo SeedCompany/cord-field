@@ -6,11 +6,15 @@ mutation CreateProduct($input: CreateProductInput!) {
   }
 }
 
-query GetProductBreadcrumb($projectId: ID!, $engagementId: ID!) {
-  project(id: $projectId) {
+query GetProductBreadcrumb(
+  $projectId: ID!
+  $changeset: ID
+  $engagementId: ID!
+) {
+  project(id: $projectId, changeset: $changeset) {
     ...ProjectBreadcrumb
   }
-  engagement(id: $engagementId) {
+  engagement(id: $engagementId, changeset: $changeset) {
     ...EngagementBreadcrumb
   }
 }

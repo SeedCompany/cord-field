@@ -5,6 +5,7 @@ import { Except } from 'type-fest';
 import { addItemToList } from '../../../api';
 import { ButtonLink } from '../../../components/Routing';
 import { ProjectListQueryVariables } from '../List/projects.generated';
+import { getProjectUrl } from '../useProjectId';
 import { CreateProjectDocument } from './CreateProject.generated';
 import {
   CreateProjectForm,
@@ -29,7 +30,7 @@ export const CreateProject = (props: Except<Props, 'onSubmit'>) => {
     enqueueSnackbar(`Created project: ${project.name.value}`, {
       variant: 'success',
       action: () => (
-        <ButtonLink color="inherit" to={`/projects/${project.id}`}>
+        <ButtonLink color="inherit" to={getProjectUrl(project)}>
           View
         </ButtonLink>
       ),

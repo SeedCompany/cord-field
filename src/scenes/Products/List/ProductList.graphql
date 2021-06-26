@@ -1,5 +1,5 @@
-query ProductList($engagement: ID!, $input: ProductListInput) {
-  engagement(id: $engagement) {
+query ProductList($engagement: ID!, $changeset: ID, $input: ProductListInput) {
+  engagement(id: $engagement, changeset: $changeset) {
     id
     ... on LanguageEngagement {
       products(input: $input) {

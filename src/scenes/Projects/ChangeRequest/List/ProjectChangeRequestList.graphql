@@ -1,8 +1,9 @@
 query ProjectChangeRequestList(
   $project: ID!
+  $changeset: ID
   $input: ProjectChangeRequestListInput
 ) {
-  project(id: $project) {
+  project(id: $project, changeset: $changeset) {
     ...ProjectBreadcrumb
     changeRequests(input: $input) {
       items {

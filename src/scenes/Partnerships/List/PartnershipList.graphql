@@ -1,5 +1,9 @@
-query ProjectPartnerships($project: ID!, $input: PartnershipListInput) {
-  project(id: $project) {
+query ProjectPartnerships(
+  $project: ID!
+  $changeset: ID
+  $input: PartnershipListInput
+) {
+  project(id: $project, changeset: $changeset) {
     ...ProjectBreadcrumb
     financialReportPeriod {
       canRead

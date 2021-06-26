@@ -10,6 +10,7 @@ import { EngagementBreadcrumb } from '../../../components/EngagementBreadcrumb';
 import { ProjectBreadcrumb } from '../../../components/ProjectBreadcrumb';
 import { ButtonLink } from '../../../components/Routing';
 import { parsedRangesWithFullTestamentRange } from '../../../util/biblejs';
+import { useProjectId } from '../../Projects/useProjectId';
 import { ProductForm } from '../ProductForm';
 import {
   CreateProductDocument,
@@ -30,12 +31,14 @@ export const CreateProduct = () => {
   const classes = useStyles();
   const navigate = useNavigate();
 
-  const { projectId, engagementId = '' } = useParams();
+  const { projectId, changesetId, projectUrl } = useProjectId();
+  const { engagementId = '' } = useParams();
   const { enqueueSnackbar } = useSnackbar();
 
   const { data, loading } = useQuery(GetProductBreadcrumbDocument, {
     variables: {
       projectId,
+      changeset: changesetId,
       engagementId,
     },
   });
@@ -61,7 +64,7 @@ export const CreateProduct = () => {
       <Helmet title="Create Product" />
       <Breadcrumbs>
         <ProjectBreadcrumb data={project} />
-        <EngagementBreadcrumb data={engagement} projectId={projectId} />
+        <EngagementBreadcrumb data={engagement} />
         <Typography variant="h4">Create Product</Typography>
       </Breadcrumbs>
       <Typography variant="h2">
@@ -116,7 +119,7 @@ export const CreateProduct = () => {
                 action: () => (
                   <ButtonLink
                     color="inherit"
-                    to={`/projects/${projectId}/engagements/${engagementId}/products/${product.id}`}
+                    to={`${projectUrl}/engagements/${engagementId}/products/${product.id}`}
                   >
                     Edit
                   </ButtonLink>

@@ -1,5 +1,5 @@
 fragment InternshipEngagementListItem on InternshipEngagement {
-  id
+  ...Id
   status {
     value
     canRead

@@ -1,13 +1,15 @@
 import { Card, Typography } from '@material-ui/core';
 import React from 'react';
+import { getChangeset, IdFragment } from '../../../api';
 import { List, useListQuery } from '../../../components/List';
 import { AddProductCard, ProductCard } from '../../../components/ProductCard';
 import { ProductListDocument } from './ProductList.generated';
 
-export const ProductList = ({ engagementId }: { engagementId: string }) => {
+export const ProductList = ({ engagement }: { engagement: IdFragment }) => {
   const list = useListQuery(ProductListDocument, {
     variables: {
-      engagement: engagementId,
+      engagement: engagement.id,
+      changeset: getChangeset(engagement)?.id,
     },
     listAt: (data) =>
       data.engagement.__typename === 'LanguageEngagement'

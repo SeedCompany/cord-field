@@ -1,5 +1,5 @@
-query NarrativeReports($projectId: ID!) {
-  project(id: $projectId) {
+query NarrativeReports($projectId: ID!, $changeset: ID) {
+  project(id: $projectId, changeset: $changeset) {
     ...ProjectBreadcrumb
     reports: narrativeReports(input: { count: 100 }) {
       items {
@@ -9,8 +9,8 @@ query NarrativeReports($projectId: ID!) {
   }
 }
 
-query FinancialReports($projectId: ID!) {
-  project(id: $projectId) {
+query FinancialReports($projectId: ID!, $changeset: ID) {
+  project(id: $projectId, changeset: $changeset) {
     ...ProjectBreadcrumb
     reports: financialReports(input: { count: 100 }) {
       items {

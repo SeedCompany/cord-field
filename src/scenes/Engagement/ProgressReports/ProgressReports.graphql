@@ -1,9 +1,9 @@
-query ProgressReports($projectId: ID!, $engagementId: ID!) {
-  project(id: $projectId) {
+query ProgressReports($projectId: ID!, $changeset: ID, $engagementId: ID!) {
+  project(id: $projectId, changeset: $changeset) {
     ...ProjectBreadcrumb
   }
-  engagement(id: $engagementId) {
-    id
+  engagement(id: $engagementId, changeset: $changeset) {
+    ...Id
     ... on LanguageEngagement {
       language {
         value {

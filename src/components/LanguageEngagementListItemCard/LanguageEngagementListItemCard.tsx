@@ -60,19 +60,11 @@ const useStyles = makeStyles(({ spacing }) => {
 
 export type LanguageEngagementListItemCardProps =
   LanguageEngagementListItemFragment & {
-    projectId: string;
     className?: string;
   };
 
 export const LanguageEngagementListItemCard: FC<LanguageEngagementListItemCardProps> =
-  ({
-    id,
-    language: securedLanguage,
-    className,
-    projectId,
-    status,
-    products,
-  }) => {
+  ({ id, language: securedLanguage, className, status, products }) => {
     const numberFormatter = useNumberFormatter();
     const classes = useStyles();
 
@@ -84,10 +76,7 @@ export const LanguageEngagementListItemCard: FC<LanguageEngagementListItemCardPr
 
     return (
       <Card className={clsx(classes.root, className)}>
-        <CardActionAreaLink
-          to={`/projects/${projectId}/engagements/${id}`}
-          className={classes.card}
-        >
+        <CardActionAreaLink to={`engagements/${id}`} className={classes.card}>
           <CardContent className={classes.cardContent}>
             <Grid
               container
@@ -134,10 +123,7 @@ export const LanguageEngagementListItemCard: FC<LanguageEngagementListItemCardPr
           </CardContent>
         </CardActionAreaLink>
         <CardActions>
-          <ButtonLink
-            to={`/projects/${projectId}/engagements/${id}`}
-            color="primary"
-          >
+          <ButtonLink to={`engagements/${id}`} color="primary">
             View Details
           </ButtonLink>
         </CardActions>

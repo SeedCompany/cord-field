@@ -15,7 +15,6 @@ import {
 } from '../../api';
 import { DisplaySimpleProperty } from '../DisplaySimpleProperty';
 import { FormattedDateTime } from '../Formatters';
-import { useNavigate } from '../Routing';
 import { ProjectChangeRequestListItemFragment as ChangeRequest } from './ProjectChangeRequestListItem.generated';
 
 const useStyles = makeStyles(({ palette, spacing }) => ({
@@ -46,7 +45,6 @@ export const ProjectChangeRequestListItem = ({
 }: ProjectChangeRequestListItemProps) => {
   const classes = useStyles();
   const [currentlyViewing, setChangeset] = useCurrentChangeset();
-  const navigate = useNavigate();
 
   return (
     <Card className={className}>
@@ -92,7 +90,7 @@ export const ProjectChangeRequestListItem = ({
           <Button
             disabled={!data || currentlyViewing === data.id}
             color="primary"
-            onClick={() => data?.id && setChangeset(data.id) && navigate('..')}
+            onClick={() => data?.id && setChangeset(data.id)}
           >
             {currentlyViewing === data?.id ? 'Viewing' : 'View'}
           </Button>

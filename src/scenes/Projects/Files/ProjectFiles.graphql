@@ -1,5 +1,5 @@
-query ProjectRootDirectory($id: ID!) {
-  project(id: $id) {
+query ProjectRootDirectory($id: ID!, $changeset: ID) {
+  project(id: $id, changeset: $changeset) {
     ...ProjectBreadcrumb
     rootDirectory {
       canEdit

@@ -1,5 +1,5 @@
 fragment ProjectBreadcrumb on Project {
-  id
+  ...Id
   name {
     canRead
     value

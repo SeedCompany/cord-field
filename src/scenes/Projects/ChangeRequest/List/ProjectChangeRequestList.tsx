@@ -8,13 +8,13 @@ import { Add } from '@material-ui/icons';
 import { FC } from 'react';
 import * as React from 'react';
 import { Helmet } from 'react-helmet-async';
-import { useParams } from 'react-router-dom';
 import { Breadcrumb } from '../../../../components/Breadcrumb';
 import { useDialog } from '../../../../components/Dialog';
 import { Fab } from '../../../../components/Fab';
 import { List, useListQuery } from '../../../../components/List';
 import { ProjectBreadcrumb } from '../../../../components/ProjectBreadcrumb';
 import { ProjectChangeRequestListItem } from '../../../../components/ProjectChangeRequestListItem';
+import { useProjectId } from '../../useProjectId';
 import { CreateProjectChangeRequest } from '../Create';
 import { ProjectChangeRequestListDocument as ChangeRequestList } from './ProjectChangeRequestList.generated';
 
@@ -38,11 +38,12 @@ const useStyles = makeStyles(({ spacing, breakpoints }) => ({
 
 export const ProjectChangeRequestList: FC = () => {
   const classes = useStyles();
-  const { projectId = '' } = useParams();
+  const { projectId, changesetId } = useProjectId();
   const { root: data, ...list } = useListQuery(ChangeRequestList, {
     listAt: (res) => res.project.changeRequests,
     variables: {
       project: projectId,
+      changeset: changesetId,
     },
   });
 

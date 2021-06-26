@@ -1,14 +1,3 @@
-fragment ChangesetInfo on ChangesetAware {
-  id
-  changeset {
-    ...Changeset
-  }
-}
-
-fragment Changeset on Changeset {
-  id
-}
-
 fragment ChangesetDiff on ChangesetDiff {
   added {
     ...ChangesetDiffItem

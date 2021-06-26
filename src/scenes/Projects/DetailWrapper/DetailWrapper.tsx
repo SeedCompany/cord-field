@@ -1,8 +1,7 @@
 import { useQuery } from '@apollo/client';
 import * as React from 'react';
-import { FC } from 'react';
-import { useParams } from 'react-router-dom';
-import { useCurrentChangeset } from '../../../api';
+import { FC, useEffect } from 'react';
+import { currentChangesetVar, useCurrentChangeset } from '../../../api';
 import { ChangesetDiffContext } from '../../../components/Changeset';
 import { useDialog } from '../../../components/Dialog';
 import { ProjectChangeRequestBanner } from '../ChangeRequest/ProjectChangeRequestBanner';
@@ -10,18 +9,23 @@ import {
   UpdateProjectChangeRequest,
   UpdateProjectChangeRequestFormParams,
 } from '../ChangeRequest/Update';
+import { useProjectId } from '../useProjectId';
 import { ProjectChangesetDiffDocument } from './ProjectChangesetDiff.generated';
 
 export const ProjectDetailWrapper: FC = ({ children }) => {
-  const { projectId = '' } = useParams();
-  const [changeset, setChangeset] = useCurrentChangeset();
+  const { projectId, changesetId } = useProjectId();
+  const [_, setChangeset] = useCurrentChangeset();
   const { data } = useQuery(ProjectChangesetDiffDocument, {
     variables: {
       id: projectId,
-      changeset: changeset ?? '',
+      changeset: changesetId ?? '',
     },
-    skip: !changeset,
+    skip: !changesetId,
   });
+
+  useEffect(() => {
+    currentChangesetVar(changesetId);
+  }, [changesetId]);
 
   const [updateDialogState, openUpdateDialog, requestBeingUpdated] =
     useDialog<UpdateProjectChangeRequestFormParams>();
@@ -29,7 +33,7 @@ export const ProjectDetailWrapper: FC = ({ children }) => {
   return (
     <ChangesetDiffContext.Provider value={data?.project.changeset?.difference}>
       <ProjectChangeRequestBanner
-        changesetId={changeset}
+        changesetId={changesetId}
         changeset={data?.project.changeset}
         onEdit={() =>
           data?.project.changeset &&

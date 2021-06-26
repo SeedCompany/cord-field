@@ -3,7 +3,6 @@ import { Breadcrumbs, Grid, makeStyles, Typography } from '@material-ui/core';
 import { Skeleton } from '@material-ui/lab';
 import React, { useEffect } from 'react';
 import { Helmet } from 'react-helmet-async';
-import { useParams } from 'react-router-dom';
 import { Breadcrumb } from '../../../components/Breadcrumb';
 import { DefinedFileCard } from '../../../components/DefinedFileCard';
 import { Error } from '../../../components/Error';
@@ -12,6 +11,7 @@ import { useCurrencyFormatter } from '../../../components/Formatters/useCurrency
 import { ContentContainer as Content } from '../../../components/Layout/ContentContainer';
 import { ProjectBreadcrumb } from '../../../components/ProjectBreadcrumb';
 import { Table } from '../../../components/Table';
+import { useProjectId } from '../useProjectId';
 import {
   ProjectBudgetDocument,
   UpdateProjectBudgetUniversalTemplateDocument,
@@ -40,11 +40,11 @@ const useStyles = makeStyles(({ breakpoints, spacing }) => ({
 
 export const ProjectBudget = () => {
   const classes = useStyles();
-  const { projectId } = useParams();
+  const { projectId, changesetId } = useProjectId();
   const formatCurrency = useCurrencyFormatter();
 
   const { data, loading, error } = useQuery(ProjectBudgetDocument, {
-    variables: { id: projectId },
+    variables: { id: projectId, changeset: changesetId },
   });
 
   // Don't wait for data to load table js code
