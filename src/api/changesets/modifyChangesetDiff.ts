@@ -1,4 +1,5 @@
 import { ApolloCache, Reference } from '@apollo/client';
+import { pickBy } from 'lodash';
 import { Entity } from '../list-caching';
 import { updateFragment } from '../updateFragment';
 import {
@@ -20,6 +21,7 @@ export const modifyChangesetDiff = (
   updateFragment(cache, {
     object: obj,
     fragment: ModifyChangesetDiffOnUpdateFragmentDoc,
+    fragmentName: 'ModifyChangesetDiffOnUpdate',
     updater: (owningObj) => {
       const diff = owningObj.changeset?.difference;
       if (!diff) {
@@ -31,10 +33,10 @@ export const modifyChangesetDiff = (
         ...owningObj,
         changeset: {
           ...owningObj.changeset,
-          difference: {
+          difference: pickBy({
             ...owningObj.changeset?.difference,
             ...result,
-          },
+          }),
         },
       };
       return next as ModifyChangesetDiffOnUpdateFragment;

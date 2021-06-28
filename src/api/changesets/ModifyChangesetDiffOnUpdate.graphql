@@ -4,17 +4,17 @@ fragment ModifyChangesetDiffOnUpdate on ChangesetAware {
     id
     difference {
       added {
-        id
+        ...Id
       }
       removed {
-        id
+        ...Id
       }
       changed {
         previous {
-          id
+          ...Id
         }
         updated {
-          id
+          ...Id
         }
       }
     }
