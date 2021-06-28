@@ -17,7 +17,11 @@ import {
   RenderableProps,
 } from 'react-final-form';
 import { Except, Promisable } from 'type-fest';
-import { ErrorHandlers, handleFormError, useCurrentChangeset } from '../../api';
+import {
+  ErrorHandlers,
+  handleFormError,
+  EXPERIMENTAL_useCurrentChangeset as useCurrentChangeset,
+} from '../../api';
 import { ChangesetModificationWarning } from '../Changeset';
 import {
   blurOnSubmit,

@@ -1,7 +1,10 @@
 import { useQuery } from '@apollo/client';
 import * as React from 'react';
 import { FC, useEffect } from 'react';
-import { currentChangesetVar, useCurrentChangeset } from '../../../api';
+import {
+  EXPERIMENTAL_currentChangesetVar as currentChangesetVar,
+  EXPERIMENTAL_useCurrentChangeset as useCurrentChangeset,
+} from '../../../api';
 import { ChangesetDiffContext } from '../../../components/Changeset';
 import { useDialog } from '../../../components/Dialog';
 import { ProjectChangeRequestBanner } from '../ChangeRequest/ProjectChangeRequestBanner';

@@ -11,7 +11,7 @@ import { Skeleton } from '@material-ui/lab';
 import * as React from 'react';
 import {
   displayProjectChangeRequestTypes,
-  useCurrentChangeset,
+  EXPERIMENTAL_useCurrentChangeset as useCurrentChangeset,
 } from '../../api';
 import { DisplaySimpleProperty } from '../DisplaySimpleProperty';
 import { FormattedDateTime } from '../Formatters';
