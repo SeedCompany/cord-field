@@ -1,7 +1,11 @@
 import { useMutation } from '@apollo/client';
 import React from 'react';
 import { Except } from 'type-fest';
-import { addItemToList, useCurrentChangeset } from '../../../../api';
+import {
+  addItemToList,
+  Id_InternshipProject_Fragment as InternshipProjectIdFragment,
+  Id_TranslationProject_Fragment as TranslationProjectIdFragment,
+} from '../../../../api';
 import {
   DialogForm,
   DialogFormProps,
@@ -21,25 +25,23 @@ interface CreateLanguageEngagementFormValues {
   };
 }
 
+type ProjectIdFragment =
+  | TranslationProjectIdFragment
+  | InternshipProjectIdFragment;
+
 type CreateLanguageEngagementProps = Except<
   DialogFormProps<CreateLanguageEngagementFormValues>,
   'onSubmit'
 > & {
-  projectId: string;
+  project: ProjectIdFragment;
 };
 
 export const CreateLanguageEngagement = ({
-  projectId,
+  project,
   ...props
 }: CreateLanguageEngagementProps) => {
-  const [changeset] = useCurrentChangeset();
   const [createEngagement] = useMutation(CreateLanguageEngagementDocument);
   const submit = async ({ engagement }: CreateLanguageEngagementFormValues) => {
-    const projectRef = {
-      __typename: 'TranslationProject',
-      id: projectId,
-      changeset: { id: changeset },
-    } as const;
     const languageRef = {
       __typename: 'Language',
       id: engagement.languageId.id,
@@ -47,20 +49,23 @@ export const CreateLanguageEngagement = ({
     await createEngagement({
       variables: {
         input: {
-          engagement: { projectId, languageId: engagement.languageId.id },
-          changeset,
+          engagement: {
+            projectId: project.id,
+            languageId: engagement.languageId.id,
+          },
+          changeset: project.changeset?.id,
         },
       },
       update: callAll(
         addItemToList({
-          listId: [projectRef, 'engagements'],
+          listId: [project, 'engagements'],
           outputToItem: (res) => res.createLanguageEngagement.engagement,
         }),
         addItemToList({
           listId: [languageRef, 'projects'],
-          outputToItem: () => projectRef,
+          outputToItem: () => project,
         }),
-        recalculateSensitivity(projectRef)
+        recalculateSensitivity(project)
       ),
     });
   };

@@ -1,10 +1,9 @@
 import { MutationUpdaterFn } from '@apollo/client/core';
-import { StoreObject } from '@apollo/client/utilities';
-import { highestSensitivity } from '../../../../api';
+import { highestSensitivity, IdFragment } from '../../../../api';
 import { TranslationProjectSensitivityFragmentDoc } from './CreateLanguageEngagement.generated';
 
 export const recalculateSensitivity =
-  <Res>(projectRef: StoreObject): MutationUpdaterFn<Res> =>
+  <Res>(projectRef: IdFragment): MutationUpdaterFn<Res> =>
   (cache) => {
     if (projectRef.__typename !== 'TranslationProject') {
       return;

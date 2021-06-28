@@ -581,7 +581,12 @@ export const ProjectOverview: FC = () => {
           editFields={fieldsBeingEdited}
         />
       ) : null}
-      <CreateEngagement projectId={projectId} {...createEngagementState} />
+      {projectOverviewData && (
+        <CreateEngagement
+          project={projectOverviewData.project}
+          {...createEngagementState}
+        />
+      )}
     </main>
   );
 };

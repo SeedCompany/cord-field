@@ -1,7 +1,11 @@
 import { useMutation } from '@apollo/client';
 import React from 'react';
 import { Except } from 'type-fest';
-import { addItemToList, useCurrentChangeset } from '../../../../api';
+import {
+  addItemToList,
+  Id_InternshipProject_Fragment as InternshipProjectIdFragment,
+  Id_TranslationProject_Fragment as TranslationProjectIdFragment,
+} from '../../../../api';
 import {
   DialogForm,
   DialogFormProps,
@@ -16,18 +20,21 @@ interface CreateInternshipEngagementFormValues {
   };
 }
 
+type ProjectIdFragment =
+  | TranslationProjectIdFragment
+  | InternshipProjectIdFragment;
+
 type CreateInternshipEngagementProps = Except<
   DialogFormProps<CreateInternshipEngagementFormValues>,
   'onSubmit'
 > & {
-  projectId: string;
+  project: ProjectIdFragment;
 };
 
 export const CreateInternshipEngagement = ({
-  projectId,
+  project,
   ...props
 }: CreateInternshipEngagementProps) => {
-  const [changeset] = useCurrentChangeset();
   const [createEngagement] = useMutation(CreateInternshipEngagementDocument);
   const submit = async ({
     engagement,
@@ -35,19 +42,15 @@ export const CreateInternshipEngagement = ({
     await createEngagement({
       variables: {
         input: {
-          engagement: { projectId, internId: engagement.internId.id },
-          changeset,
+          engagement: {
+            projectId: project.id,
+            internId: engagement.internId.id,
+          },
+          changeset: project.changeset?.id,
         },
       },
       update: addItemToList({
-        listId: [
-          {
-            __typename: 'InternshipProject',
-            id: projectId,
-            changeset: { id: changeset },
-          },
-          'engagements',
-        ],
+        listId: [project, 'engagements'],
         outputToItem: (res) => res.createInternshipEngagement.engagement,
       }),
     });
