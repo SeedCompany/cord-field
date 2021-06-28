@@ -1,3 +1,15 @@
+# Use with mutation results to fetch & re-calculate the changeset diff from the API
+# considering the change being made.
+fragment RecalculateChangesetDiff on ChangesetAware {
+  id
+  changeset {
+    id
+    difference {
+      ...ChangesetDiff
+    }
+  }
+}
+
 fragment ChangesetDiff on ChangesetDiff {
   added {
     ...ChangesetDiffItem

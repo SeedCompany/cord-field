@@ -3,10 +3,12 @@ mutation UpdatePartnership($input: UpdatePartnershipInput!) {
     partnership {
       ...PartnershipCard
       ...PartnershipForm
+      ...RecalculateChangesetDiff
     }
   }
 }
 
 mutation DeletePartnership($input: ID!) {
+  # TODO Handle ...RecalculateChangesetDiff
   deletePartnership(id: $input)
 }
