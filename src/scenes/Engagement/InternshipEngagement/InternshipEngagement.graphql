@@ -1,5 +1,5 @@
 fragment InternshipEngagementDetail on InternshipEngagement {
-  id
+  ...Id
   createdAt
   status {
     value

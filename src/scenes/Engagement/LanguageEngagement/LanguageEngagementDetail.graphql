@@ -1,5 +1,5 @@
 fragment LanguageEngagementDetail on LanguageEngagement {
-  id
+  ...Id
   createdAt
   language {
     value {

@@ -11,7 +11,6 @@ import {
   MethodologyToApproach,
   UpdateInternshipEngagement,
   UpdateLanguageEngagement,
-  useCurrentChangeset,
 } from '../../../api';
 import { DisplayLocationFragment } from '../../../api/fragments/location.generated';
 import {
@@ -169,7 +168,6 @@ export const EditEngagementDialog: FC<EditEngagementDialogProps> = ({
     () => many(editFieldsProp ?? []),
     [editFieldsProp]
   );
-  const [changeset] = useCurrentChangeset();
 
   const fields = editFields.map((name) => {
     const Field = fieldMapping[name];
@@ -259,7 +257,7 @@ export const EditEngagementDialog: FC<EditEngagementDialogProps> = ({
             ...(mentorId ? { mentorId } : {}),
             ...(countryOfOriginId ? { countryOfOriginId } : {}),
           },
-          changeset,
+          changeset: engagement.changeset?.id,
         };
 
         await updateEngagement({
