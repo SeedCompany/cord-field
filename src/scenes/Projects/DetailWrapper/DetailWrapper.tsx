@@ -5,7 +5,7 @@ import {
   EXPERIMENTAL_currentChangesetVar as currentChangesetVar,
   EXPERIMENTAL_useCurrentChangeset as useCurrentChangeset,
 } from '../../../api';
-import { ChangesetDiffContext } from '../../../components/Changeset';
+import { ChangesetDiffProvider } from '../../../components/Changeset';
 import { useDialog } from '../../../components/Dialog';
 import { ProjectChangeRequestBanner } from '../ChangeRequest/ProjectChangeRequestBanner';
 import {
@@ -34,7 +34,7 @@ export const ProjectDetailWrapper: FC = ({ children }) => {
     useDialog<UpdateProjectChangeRequestFormParams>();
 
   return (
-    <ChangesetDiffContext.Provider value={data?.project.changeset?.difference}>
+    <ChangesetDiffProvider value={data?.project.changeset?.difference}>
       <ProjectChangeRequestBanner
         changesetId={changesetId}
         changeset={data?.project.changeset}
@@ -54,6 +54,6 @@ export const ProjectDetailWrapper: FC = ({ children }) => {
         />
       )}
       {children}
-    </ChangesetDiffContext.Provider>
+    </ChangesetDiffProvider>
   );
 };

@@ -1,14 +1,12 @@
-import { useApolloClient } from '@apollo/client';
-import { StoreObject } from '@apollo/client/utilities';
 import { fade, Grid, makeStyles, Typography } from '@material-ui/core';
 import clsx from 'clsx';
 import { identity } from 'lodash';
 import * as React from 'react';
-import { ReactNode, useContext } from 'react';
+import { ReactNode } from 'react';
 import { UnsecuredProp, unwrapSecured } from '../../api';
 import { has } from '../../util';
 import { ChangesetBadge } from './ChangesetBadge';
-import { ChangesetDiffContext } from './ChangesetDiffContext';
+import { useDiffMode } from './ChangesetDiffContext';
 
 const useStyles = makeStyles(({ palette, shape, spacing }) => ({
   diff: {
@@ -69,17 +67,11 @@ export const ChangesetPropertyBadge = <
     renderChange,
     children,
   } = props;
-  const diff = useContext(ChangesetDiffContext);
-  const apollo = useApolloClient();
-  const currentId = current ? apollo.cache.identify(current as any) : undefined;
-  const change = currentId
-    ? diff?.changed.find((c) => apollo.cache.identify(c.updated) === currentId)
-    : undefined;
+  const [_, __, previous] = useDiffMode(current);
 
-  if (!current || !change) {
+  if (!current || !previous) {
     return <>{children}</>;
   }
-  const previous = change.previous as StoreObject;
   if (!has(prop, previous)) {
     console.error(
       `${

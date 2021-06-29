@@ -1,12 +1,12 @@
 import { ButtonProps, Grid, GridProps, makeStyles } from '@material-ui/core';
 import clsx from 'clsx';
 import { times } from 'lodash';
-import { ReactNode, RefObject, useContext, useRef } from 'react';
+import { ReactNode, RefObject, useRef } from 'react';
 import * as React from 'react';
 import { isNetworkRequestInFlight, PaginatedListOutput } from '../../api';
 import { usePersistedScroll } from '../../hooks/usePersistedScroll';
 import { UseStyles } from '../../util';
-import { ChangesetBadge, ChangesetDiffContext } from '../Changeset';
+import { ChangesetBadge, useDetermineDiffMode } from '../Changeset';
 import { ProgressButton } from '../ProgressButton';
 import { ListQueryResult } from './useListQuery';
 
@@ -72,7 +72,7 @@ export const List = <Item extends Resource>(props: ListProps<Item>) => {
 
   const scrollRef = useRef<HTMLDivElement | null>(null);
   usePersistedScroll(scrollRefProp ?? scrollRef);
-  const changesetDiff = useContext(ChangesetDiffContext);
+  const determineChangeMode = useDetermineDiffMode();
 
   return (
     <div className={clsx(classes.root, className)} ref={scrollRef}>
@@ -91,21 +91,13 @@ export const List = <Item extends Resource>(props: ListProps<Item>) => {
                   : renderSkeleton}
               </Grid>
             ))
-          : data.items.map((item) => {
-              const equals = (res: Resource) =>
-                res.__typename === item.__typename && res.id === item.id;
-              const added = !!changesetDiff?.added.find(equals);
-              const removed = !!changesetDiff?.removed.find(equals);
-              return (
-                <Grid {...ItemProps} {...DataItemProps} item key={item.id}>
-                  <ChangesetBadge
-                    mode={added ? 'added' : removed ? 'removed' : undefined}
-                  >
-                    {renderItem(item)}
-                  </ChangesetBadge>
-                </Grid>
-              );
-            })}
+          : data.items.map((item) => (
+              <Grid {...ItemProps} {...DataItemProps} item key={item.id}>
+                <ChangesetBadge mode={determineChangeMode(item)[0]}>
+                  {renderItem(item)}
+                </ChangesetBadge>
+              </Grid>
+            ))}
         {data?.canCreate && renderCreate && (
           <Grid {...ItemProps} {...CreateItemProps} item>
             {renderCreate}

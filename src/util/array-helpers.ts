@@ -42,7 +42,7 @@ export const keys: <K extends string>(o: Record<K, unknown>) => K[] =
 /** Converts list to map given a function that returns a [key, value] tuple. */
 export const mapFromList = <T, S = T, K extends string = string>(
   list: readonly T[],
-  mapper: (item: T) => [K, S] | null
+  mapper: (item: T) => readonly [K, S] | null
 ): Record<K, S> => {
   const out: Partial<Record<K, S>> = {};
   return list.reduce((acc, item) => {
