@@ -12,10 +12,9 @@ import React, { FC } from 'react';
 import {
   displayFinancialReportingType,
   displayPartnershipStatus,
-  securedDateRange,
 } from '../../api';
 import { DisplaySimpleProperty } from '../DisplaySimpleProperty';
-import { useDateFormatter, useDateTimeFormatter } from '../Formatters';
+import { FormattedDateRange, FormattedDateTime } from '../Formatters';
 import { Redacted } from '../Redacted';
 import { PartnershipCardFragment } from './PartnershipCard.generated';
 import { PartnershipPrimaryIcon } from './PartnershipPrimaryIcon';
@@ -46,13 +45,6 @@ export const PartnershipCard: FC<PartnershipCardProps> = ({
   className,
 }) => {
   const classes = useStyles();
-  const formatDateTime = useDateTimeFormatter();
-  const formatDate = useDateFormatter();
-  const dateRangeString =
-    partnership &&
-    formatDate.range(
-      securedDateRange(partnership.mouStart, partnership.mouEnd).value
-    );
 
   const name = partnership?.partner.value?.organization.value?.name.value;
   return (
@@ -120,7 +112,7 @@ export const PartnershipCard: FC<PartnershipCardProps> = ({
           <Grid item>
             <DisplaySimpleProperty
               label="MOU Date Range"
-              value={dateRangeString}
+              value={<FormattedDateRange range={partnership?.mouRange.value} />}
               loading={!partnership}
               loadingWidth="40%"
             />
@@ -133,7 +125,7 @@ export const PartnershipCard: FC<PartnershipCardProps> = ({
         </Button>
         <DisplaySimpleProperty
           label="Created At"
-          value={formatDateTime(partnership?.createdAt)}
+          value={<FormattedDateTime date={partnership?.createdAt} />}
           ValueProps={{ color: 'textSecondary' }}
           loading={!partnership}
           loadingWidth={`${10 + 15}ch`}

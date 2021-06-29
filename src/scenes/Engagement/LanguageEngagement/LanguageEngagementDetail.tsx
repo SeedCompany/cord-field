@@ -8,11 +8,7 @@ import {
 import { DateRange, Edit } from '@material-ui/icons';
 import React, { FC } from 'react';
 import { Helmet } from 'react-helmet-async';
-import {
-  canEditAny,
-  displayEngagementStatus,
-  securedDateRange,
-} from '../../../api';
+import { canEditAny, displayEngagementStatus } from '../../../api';
 import { BooleanProperty } from '../../../components/BooleanProperty';
 import { Breadcrumb } from '../../../components/Breadcrumb';
 import { DataButton } from '../../../components/DataButton';
@@ -22,8 +18,9 @@ import { Fab } from '../../../components/Fab';
 import { FieldOverviewCard } from '../../../components/FieldOverviewCard';
 import { FileActionsContextProvider } from '../../../components/files/FileActions';
 import {
-  useDateFormatter,
-  useDateTimeFormatter,
+  FormattedDate,
+  FormattedDateRange,
+  FormattedDateTime,
 } from '../../../components/Formatters';
 import { OptionsIcon, PlantIcon } from '../../../components/Icons';
 import { PeriodicReportCard } from '../../../components/PeriodicReports';
@@ -71,9 +68,6 @@ export const LanguageEngagementDetail: FC<EngagementQuery> = ({
   const [workflowState, openWorkflow, workflowEngagement] =
     useDialog<Engagement>();
 
-  const formatDate = useDateFormatter();
-  const formatDateTime = useDateTimeFormatter();
-
   if (engagement.__typename !== 'LanguageEngagement') {
     return null; // easiest for typescript
   }
@@ -82,8 +76,6 @@ export const LanguageEngagementDetail: FC<EngagementQuery> = ({
   const langName = language?.name.value ?? language?.displayName.value;
   const ptRegistryId = engagement.paratextRegistryId;
   const editable = canEditAny(engagement);
-
-  const date = securedDateRange(engagement.startDate, engagement.endDate);
 
   return (
     <>
@@ -155,7 +147,7 @@ export const LanguageEngagementDetail: FC<EngagementQuery> = ({
 
             <Grid item>
               <Typography variant="body2" color="textSecondary">
-                Updated {formatDateTime(engagement.modifiedAt)}
+                Updated <FormattedDateTime date={engagement.modifiedAt} />
               </Typography>
             </Grid>
           </Grid>
@@ -171,11 +163,11 @@ export const LanguageEngagementDetail: FC<EngagementQuery> = ({
             <Grid item>
               <DataButton
                 startIcon={<DateRange className={classes.infoColor} />}
-                secured={date}
+                secured={engagement.dateRange}
                 redacted="You do not have permission to view start/end dates"
-                children={formatDate.range}
+                children={(range) => <FormattedDateRange range={range} />}
                 empty="Start - End"
-                onClick={() => show(['startDateOverride', 'endDateOverride'])}
+                onClick={() => show('dateRangeOverride')}
               />
             </Grid>
             <Grid item>
@@ -208,7 +200,9 @@ export const LanguageEngagementDetail: FC<EngagementQuery> = ({
               <FieldOverviewCard
                 title="Translation Complete Date"
                 data={{
-                  value: formatDate(engagement.completeDate.value),
+                  value: engagement.completeDate.value ? (
+                    <FormattedDate date={engagement.completeDate.value} />
+                  ) : undefined,
                 }}
                 icon={PlantIcon}
                 onClick={() => show('completeDate')}
@@ -220,7 +214,11 @@ export const LanguageEngagementDetail: FC<EngagementQuery> = ({
               <FieldOverviewCard
                 title="Disbursement Complete Date"
                 data={{
-                  value: formatDate(engagement.disbursementCompleteDate.value),
+                  value: engagement.disbursementCompleteDate.value ? (
+                    <FormattedDate
+                      date={engagement.disbursementCompleteDate.value}
+                    />
+                  ) : undefined,
                 }}
                 icon={OptionsIcon}
                 onClick={() => show('disbursementCompleteDate')}

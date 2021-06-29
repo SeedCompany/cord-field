@@ -21,3 +21,12 @@ fragment securedBool on SecuredBoolean {
   canEdit
   value
 }
+
+fragment securedDateRange on SecuredDateRange {
+  canRead
+  canEdit
+  value {
+    start
+    end
+  }
+}

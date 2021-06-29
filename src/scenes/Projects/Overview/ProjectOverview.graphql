@@ -34,15 +34,8 @@ fragment ProjectOverview on Project {
       ...DisplayFieldRegion
     }
   }
-  mouStart {
-    canRead
-    canEdit
-    value
-  }
-  mouEnd {
-    canRead
-    canEdit
-    value
+  mouRange {
+    ...securedDateRange
   }
   status
   estimatedSubmission {

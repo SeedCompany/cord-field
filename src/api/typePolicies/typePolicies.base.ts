@@ -31,6 +31,10 @@ type TypePolicies = {
 const scriptureKeyFields = ['book', 'chapter', 'verse'] as const;
 
 export const typePolicies: TypePolicies = {
+  DateRange: {
+    keyFields: false,
+    merge: true,
+  },
   Language: {
     fields: {
       ethnologue: { merge: true },

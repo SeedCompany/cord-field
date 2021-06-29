@@ -147,22 +147,22 @@ export const PartnershipForm = <T extends PartnershipFormValues>({
                   )}
                 </SecuredField>
 
-                <SecuredField obj={partnership} name="mouStartOverride">
+                <SecuredField obj={partnership} name="mouRange">
                   {(props) => (
-                    <DateField
-                      {...props}
-                      label="Start Date"
-                      helperText="Leave blank to use the project's mou start date"
-                    />
-                  )}
-                </SecuredField>
-                <SecuredField obj={partnership} name="mouEndOverride">
-                  {(props) => (
-                    <DateField
-                      {...props}
-                      label="End Date"
-                      helperText="Leave blank to use the project's mou end date"
-                    />
+                    <>
+                      <DateField
+                        {...props}
+                        name="mouStartOverride"
+                        label="Start Date"
+                        helperText="Leave blank to use the project's mou start date"
+                      />
+                      <DateField
+                        {...props}
+                        name="mouEndOverride"
+                        label="End Date"
+                        helperText="Leave blank to use the project's mou end date"
+                      />
+                    </>
                   )}
                 </SecuredField>
               </>

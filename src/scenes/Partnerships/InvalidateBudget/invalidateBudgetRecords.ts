@@ -7,6 +7,7 @@ import {
   Project as ProjectShape,
   SecuredProp,
 } from '../../../api';
+import { CalendarDate } from '../../../util';
 import {
   PartnershipToCheckBudgetChangeFragment,
   ProjectsBudgetForPartnershipChangeFragmentDoc as ProjectsBudget,
@@ -75,17 +76,12 @@ const determineChange = (previous: Partnership, updated: Partnership) => {
   }
 
   // check date range to determine change
-  if (
-    !previous.mouStart.canRead ||
-    !previous.mouEnd.canRead ||
-    !updated.mouStart.canRead ||
-    !updated.mouEnd.canRead
-  ) {
+  if (!previous.mouRange.canRead || !updated.mouRange.canRead) {
     // If cannot read times, assume the worst
     return true;
   }
-  const prev = interval(previous.mouStart, previous.mouEnd);
-  const now = interval(updated.mouStart, updated.mouEnd);
+  const prev = interval(previous.mouRange);
+  const now = interval(updated.mouRange);
 
   if (!prev) {
     if (!now) {
@@ -113,22 +109,20 @@ const isFunding = (partnership: Partnership) =>
   partnership?.types.value.includes('Funding');
 
 const interval = (
-  start: SecuredProp<DateTime | string>,
-  end: SecuredProp<DateTime | string>
+  range: SecuredProp<{
+    start?: CalendarDate | string | null;
+    end?: CalendarDate | string | null;
+  }>
 ) => {
-  const s = dt(start);
-  const e = dt(end);
+  const s = dt(range.value?.start);
+  const e = dt(range.value?.end);
   return s && e ? Interval.fromDateTimes(s, e) : null;
 };
 
 // values straight from update result don't go through type policy reads,
 // thus they are not parsed to luxon objects.
-const dt = (prop: SecuredProp<DateTime | string>) =>
-  !prop.value
-    ? null
-    : typeof prop.value === 'string'
-    ? DateTime.fromISO(prop.value)
-    : prop.value;
+const dt = (value: DateTime | string | null | undefined) =>
+  !value ? null : typeof value === 'string' ? DateTime.fromISO(value) : value;
 
 const doInvalidate = (
   cache: ApolloCache<unknown>,
