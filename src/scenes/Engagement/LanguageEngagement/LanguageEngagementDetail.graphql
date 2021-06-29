@@ -22,15 +22,8 @@ fragment LanguageEngagementDetail on LanguageEngagement {
     canEdit
     value
   }
-  startDate {
-    value
-    canRead
-    canEdit
-  }
-  endDate {
-    value
-    canRead
-    canEdit
+  dateRange {
+    ...securedDateRange
   }
   completeDate {
     value

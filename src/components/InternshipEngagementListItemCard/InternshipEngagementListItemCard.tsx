@@ -155,7 +155,7 @@ const getEndDate = (eng: InternshipEngagementListItemFragment) => {
       value: eng.completeDate.value,
     };
   }
-  const endDate = eng.endDate.value;
+  const endDate = eng.dateRange.value.end;
   if (!endDate) {
     return null;
   }

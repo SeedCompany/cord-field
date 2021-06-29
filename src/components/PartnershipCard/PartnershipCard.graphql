@@ -10,15 +10,8 @@ fragment PartnershipCard on Partnership {
   mouStatus {
     value
   }
-  mouStart {
-    canRead
-    canEdit
-    value
-  }
-  mouEnd {
-    canRead
-    canEdit
-    value
+  mouRange {
+    ...securedDateRange
   }
   primary {
     canRead

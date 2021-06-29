@@ -7,11 +7,7 @@ import React, { FC } from 'react';
 import { useDropzone } from 'react-dropzone';
 import { Helmet } from 'react-helmet-async';
 import { useParams } from 'react-router-dom';
-import {
-  displayProjectStep,
-  securedDateRange,
-  useCurrentChangeset,
-} from '../../../api';
+import { displayProjectStep, useCurrentChangeset } from '../../../api';
 import { BudgetOverviewCard } from '../../../components/BudgetOverviewCard';
 import { CardGroup } from '../../../components/CardGroup';
 import { ChangesetPropertyBadge } from '../../../components/Changeset';
@@ -203,13 +199,6 @@ export const ProjectOverview: FC = () => {
           }`,
   };
 
-  const date = projectOverviewData
-    ? securedDateRange(
-        projectOverviewData.project.mouStart,
-        projectOverviewData.project.mouEnd
-      )
-    : undefined;
-
   const CreateEngagement = isTranslation
     ? CreateLanguageEngagement
     : CreateInternshipEngagement;
@@ -385,27 +374,9 @@ export const ProjectOverview: FC = () => {
             </Grid>
             <Grid item>
               <ChangesetPropertyBadge
-                current={
-                  projectOverviewData?.project
-                    ? {
-                        range: {
-                          start: projectOverviewData.project.mouStart.value,
-                          end: projectOverviewData.project.mouEnd.value,
-                        },
-                      }
-                    : undefined
-                }
-                previous={
-                  projectOverviewData?.original
-                    ? {
-                        range: {
-                          start: projectOverviewData.original.mouStart.value,
-                          end: projectOverviewData.original.mouEnd.value,
-                        },
-                      }
-                    : undefined
-                }
-                prop="range"
+                current={projectOverviewData?.project}
+                previous={projectOverviewData?.original}
+                prop="mouRange"
                 identifyBy={(range) =>
                   `${range.start?.toMillis()}/${range.end?.toMillis()}`
                 }
@@ -416,13 +387,13 @@ export const ProjectOverview: FC = () => {
                 <DataButton
                   loading={!projectOverviewData}
                   startIcon={<DateRange className={classes.infoColor} />}
-                  secured={date}
+                  secured={projectOverviewData?.project.mouRange}
                   redacted="You do not have permission to view start/end dates"
                   children={({ start, end }) => (
                     <FormattedDateRange {...{ start, end }} />
                   )}
                   empty="Start - End"
-                  onClick={() => editField(['mouStart', 'mouEnd'])}
+                  onClick={() => editField('mouRange')}
                 />
               </ChangesetPropertyBadge>
             </Grid>

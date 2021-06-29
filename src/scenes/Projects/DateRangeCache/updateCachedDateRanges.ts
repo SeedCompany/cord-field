@@ -1,20 +1,14 @@
 import { ApolloCache } from '@apollo/client';
 import { DeepPartial } from 'ts-essentials';
-import {
-  invalidateProps,
-  Project as ProjectShape,
-  SecuredProp,
-} from '../../../api';
-import { CalendarDate } from '../../../util';
+import { invalidateProps, Project as ProjectShape } from '../../../api';
+import { SecuredDateRangeFragment } from '../../../api/fragments/secured.generated';
 import {
   ProjectCachedEngagementDateRangesFragmentDoc,
   ProjectCachedPartnershipDateRangesFragmentDoc,
 } from './CachedProjectDateRanges.generated';
 
 type Project = Pick<ProjectShape, 'id'>;
-type SecuredDate = DeepPartial<
-  Pick<SecuredProp<CalendarDate>, 'value' | 'canRead'>
->;
+type SecuredDateRange = DeepPartial<SecuredDateRangeFragment>;
 
 export const updateEngagementDateRanges = (
   cache: ApolloCache<unknown>,
@@ -39,8 +33,7 @@ export const updateEngagementDateRanges = (
     if (!eng) {
       continue;
     }
-    updateDateCalcField(cache, eng, 'startDate', cached.mouStart);
-    updateDateCalcField(cache, eng, 'endDate', cached.mouEnd);
+    updateDateCalcField(cache, eng, 'dateRange', cached.mouRange);
 
     // Invalidate progress reports as well. These can just be re-fetched when needed.
     if (eng.__typename === 'LanguageEngagement') {
@@ -61,20 +54,19 @@ export const updatePartnershipsDateRanges = (
     return;
   }
   for (const p of partnerships.partnerships.items) {
-    updateDateCalcField(cache, p, 'mouStart', partnerships.mouStart);
-    updateDateCalcField(cache, p, 'mouEnd', partnerships.mouEnd);
+    updateDateCalcField(cache, p, 'mouRange', partnerships.mouRange);
   }
 };
 
 const updateDateCalcField = <Key extends string>(
   cache: ApolloCache<unknown>,
-  obj: Partial<Record<Key | `${Key}Override`, SecuredDate>>,
+  obj: Partial<Record<Key | `${Key}Override`, SecuredDateRange>>,
   key: Key,
-  fromProject: SecuredDate
+  fromProject: SecuredDateRange | undefined
 ) => {
   const calc = obj[key];
   const override = obj[`${key}Override` as const];
-  if (!fromProject.canRead || !calc?.canRead || !override?.canRead) {
+  if (!fromProject?.canRead || !calc?.canRead || !override?.canRead) {
     console.log('Not enough info to determine which fields need to be updated');
     return;
   }
@@ -86,7 +78,11 @@ const updateDateCalcField = <Key extends string>(
     fields: {
       [key]: () => ({
         ...obj[key],
-        value: fromProject.value,
+        value: {
+          ...fromProject.value,
+          start: override.value?.start ?? fromProject.value?.start,
+          end: override.value?.end ?? fromProject.value?.end,
+        },
       }),
     },
   });

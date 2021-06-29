@@ -12,14 +12,7 @@ fragment PartnershipToCheckBudgetChange on Partnership {
     value
     canRead
   }
-  mouEnd {
-    value
-    canRead
-    canEdit
-  }
-  mouStart {
-    value
-    canRead
-    canEdit
+  mouRange {
+    ...securedDateRange
   }
 }

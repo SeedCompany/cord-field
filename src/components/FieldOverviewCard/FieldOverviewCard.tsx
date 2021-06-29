@@ -13,7 +13,7 @@ import { Skeleton } from '@material-ui/lab';
 import clsx from 'clsx';
 import { To } from 'history';
 import { DateTime } from 'luxon';
-import { FC } from 'react';
+import { FC, ReactNode } from 'react';
 import * as React from 'react';
 import { useDateTimeFormatter } from '../Formatters';
 import { HugeIcon, HugeIconProps } from '../Icons';
@@ -51,7 +51,7 @@ const useStyles = makeStyles(({ spacing, palette }) => ({
 }));
 
 interface FieldOverviewCardData {
-  value?: string;
+  value?: ReactNode;
   updatedAt?: DateTime;
   to?: To;
 }

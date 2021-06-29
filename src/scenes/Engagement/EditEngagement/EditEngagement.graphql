@@ -1,13 +1,6 @@
 fragment EditEngagement on Engagement {
-  startDateOverride {
-    value
-    canRead
-    canEdit
-  }
-  endDateOverride {
-    value
-    canRead
-    canEdit
+  dateRangeOverride {
+    ...securedDateRange
   }
   status {
     transitions {

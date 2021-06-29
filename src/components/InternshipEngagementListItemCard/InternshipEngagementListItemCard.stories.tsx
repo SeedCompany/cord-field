@@ -27,7 +27,7 @@ export const InternshipEngagementListItemCard = () => (
         },
       } as any
     }
-    endDate={{ value: date('endDate') }}
+    dateRange={{ value: { end: date('endDate') } }}
     initialEndDate={{
       value: date('initialEndDate'),
     }}

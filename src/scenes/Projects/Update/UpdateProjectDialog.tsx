@@ -31,11 +31,10 @@ import { ProjectOverviewFragment } from '../Overview/ProjectOverview.generated';
 import { UpdateProjectDocument } from './UpdateProject.generated';
 
 export type EditableProjectField = ExtractStrict<
-  keyof UpdateProject,
+  keyof UpdateProject | 'mouRange',
   // Add more fields here as needed
   | 'name'
-  | 'mouStart'
-  | 'mouEnd'
+  | 'mouRange'
   | 'estimatedSubmission'
   | 'fieldRegionId'
   | 'primaryLocationId'
@@ -60,8 +59,12 @@ const fieldMapping: Record<
   fieldRegionId: ({ props }) => (
     <FieldRegionField {...props} label="Field Region" />
   ),
-  mouStart: ({ props }) => <DateField {...props} label="Start Date" />,
-  mouEnd: ({ props }) => <DateField {...props} label="End Date" />,
+  mouRange: ({ props }) => (
+    <>
+      <DateField {...props} name="mouStart" label="Start Date" />
+      <DateField {...props} name="mouEnd" label="End Date" />
+    </>
+  ),
   estimatedSubmission: ({ props }) => (
     <DateField {...props} label="Estimated Submission Date" />
   ),
@@ -109,8 +112,8 @@ export const UpdateProjectDialog = ({
       name: project.name.value,
       primaryLocationId: project.primaryLocation.value,
       fieldRegionId: project.fieldRegion.value,
-      mouStart: project.mouStart.value,
-      mouEnd: project.mouEnd.value,
+      mouStart: project.mouRange.value.start,
+      mouEnd: project.mouRange.value.end,
       estimatedSubmission: project.estimatedSubmission.value,
       sensitivity: project.sensitivity,
     };
@@ -131,8 +134,8 @@ export const UpdateProjectDialog = ({
     project.name.value,
     project.primaryLocation.value,
     project.fieldRegion.value,
-    project.mouStart.value,
-    project.mouEnd.value,
+    project.mouRange.value.start,
+    project.mouRange.value.end,
     project.estimatedSubmission.value,
     project.sensitivity,
     project.id,
