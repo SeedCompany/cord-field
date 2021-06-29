@@ -134,7 +134,6 @@ export const ProjectOverview: FC = () => {
       variables: {
         input: projectId,
         changeset: changesetId,
-        withOriginal: !!changesetId,
       },
     }
   );
@@ -231,7 +230,6 @@ export const ProjectOverview: FC = () => {
               ) : projectName.canRead ? (
                 <ChangesetPropertyBadge
                   current={projectOverviewData?.project}
-                  previous={projectOverviewData?.original}
                   prop="name"
                 >
                   {projectName.value}
@@ -374,7 +372,6 @@ export const ProjectOverview: FC = () => {
             <Grid item>
               <ChangesetPropertyBadge
                 current={projectOverviewData?.project}
-                previous={projectOverviewData?.original}
                 prop="mouRange"
                 identifyBy={(range) =>
                   `${range.start?.toMillis()}/${range.end?.toMillis()}`
@@ -417,7 +414,6 @@ export const ProjectOverview: FC = () => {
             <Grid item>
               <ChangesetPropertyBadge
                 current={projectOverviewData?.project}
-                previous={projectOverviewData?.original}
                 prop="step"
                 labelBy={displayProjectStep}
               >

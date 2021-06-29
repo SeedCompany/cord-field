@@ -1,8 +1,5 @@
-query ProjectOverview($input: ID!, $changeset: ID, $withOriginal: Boolean!) {
+query ProjectOverview($input: ID!, $changeset: ID) {
   project(id: $input, changeset: $changeset) {
-    ...ProjectOverview
-  }
-  original: project(id: $input) @include(if: $withOriginal) {
     ...ProjectOverview
   }
 }
