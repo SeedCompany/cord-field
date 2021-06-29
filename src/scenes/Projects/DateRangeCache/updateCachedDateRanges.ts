@@ -18,6 +18,7 @@ export const updateEngagementDateRanges = (
   updateFragment(cache, {
     object: project,
     fragment: ProjectCachedEngagementDateRangesFragmentDoc,
+    fragmentName: 'ProjectCachedEngagementDateRanges',
     // We need override fields here but the engagement list doesn't have them.
     // If the user visits/caches one of the engagements we need to update that one
     // But without partial data, Apollo will correctly say that not all engagements
@@ -48,6 +49,7 @@ export const updatePartnershipsDateRanges = (
   const partnerships = cache.readFragment({
     id: cache.identify(project),
     fragment: ProjectCachedPartnershipDateRangesFragmentDoc,
+    fragmentName: 'ProjectCachedPartnershipDateRanges',
   });
   if (!partnerships) {
     return;
