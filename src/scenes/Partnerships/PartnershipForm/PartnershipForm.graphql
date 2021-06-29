@@ -1,5 +1,5 @@
 fragment PartnershipForm on Partnership {
-  id
+  ...Id
   types {
     value
     canEdit
