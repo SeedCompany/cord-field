@@ -221,7 +221,11 @@ export const EditEngagementDialog: FC<EditEngagementDialogProps> = ({
     // Filter out irrelevant initial values so they don't get added to the mutation
     const filteredInitialValuesFields = pick(
       fullInitialValuesFields,
-      editFields
+      editFields.flatMap((field) =>
+        field === 'dateRangeOverride'
+          ? ['startDateOverride', 'endDateOverride']
+          : field
+      )
     );
 
     return {
