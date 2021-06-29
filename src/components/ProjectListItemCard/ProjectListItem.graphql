@@ -1,5 +1,5 @@
 fragment ProjectListItem on Project {
-  id
+  ...Id
   createdAt
   name {
     value

@@ -208,14 +208,12 @@ export const EditEngagementDialog: FC<EditEngagementDialogProps> = ({
             firstScripture: engagement.firstScripture.value,
             paratextRegistryId: engagement.paratextRegistryId.value,
           }
-        : engagement.__typename === 'InternshipEngagement'
-        ? {
+        : {
             methodologies: engagement.methodologies.value,
             position: engagement.position.value,
             mentorId: engagement.mentor.value,
             countryOfOriginId: engagement.countryOfOrigin.value,
-          }
-        : {}),
+          }),
     };
 
     // Filter out irrelevant initial values so they don't get added to the mutation

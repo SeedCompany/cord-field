@@ -7,6 +7,7 @@ export default { title: 'Components' };
 
 export const LanguageEngagementListItemCard = () => (
   <Card
+    __typename="LanguageEngagement"
     id="123123"
     status={{
       value: text('status', 'InDevelopment') as EngagementStatus,
