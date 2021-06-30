@@ -28,6 +28,22 @@ fragment ChangesetDiff on ChangesetDiff {
 }
 
 fragment ChangesetDiffItem on Resource {
-  __typename
-  id
+  ...Id
+  ...ProjectChangesetDiff
+}
+
+fragment ProjectChangesetDiff on Project {
+  name {
+    value
+  }
+  mouRange {
+    value {
+      start
+      end
+    }
+  }
+  step {
+    value
+  }
+  status
 }

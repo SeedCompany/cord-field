@@ -2,6 +2,8 @@ fragment ModifyChangesetDiffOnUpdate on ChangesetAware {
   id
   changeset {
     id
+    # Only IDs are needed here because the actual data is fetched separately
+    # This is only to identify which objects have changed/added/removed.
     difference {
       added {
         ...Id
