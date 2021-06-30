@@ -1,5 +1,5 @@
 fragment BudgetRecord on BudgetRecord {
-  id
+  ...Id
   createdAt
   amount {
     canEdit
@@ -26,8 +26,8 @@ fragment BudgetRecord on BudgetRecord {
   }
 }
 
-query ProjectBudget($id: ID!) {
-  project(id: $id) {
+query ProjectBudget($id: ID!, $changeset: ID) {
+  project(id: $id, changeset: $changeset) {
     id
     ...ProjectBreadcrumb
     name {
@@ -64,7 +64,7 @@ mutation UpdateProjectBudgetUniversalTemplate(
     }
   ) {
     budget {
-      id
+      ...Id
       universalTemplateFile {
         value {
           ...FileNodeInfo
@@ -82,18 +82,20 @@ mutation UpdateProjectBudgetUniversalTemplate(
 mutation UpdateProjectBudgetRecord($input: UpdateBudgetRecordInput!) {
   updateBudgetRecord(input: $input) {
     budgetRecord {
-      id
+      ...Id
       amount {
         value
       }
+      ...RecalculateChangesetDiff
     }
   }
 }
 
 fragment CalculateNewTotal on Budget {
+  ...Id
   total
   records {
-    id
+    ...Id
     amount {
       value
     }

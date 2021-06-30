@@ -147,7 +147,7 @@ export const PartnershipForm = <T extends PartnershipFormValues>({
                   )}
                 </SecuredField>
 
-                <SecuredField obj={partnership} name="mouRange">
+                <SecuredField obj={partnership} name="mouRangeOverride">
                   {(props) => (
                     <>
                       <DateField

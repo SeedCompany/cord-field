@@ -64,7 +64,6 @@ const useStyles = makeStyles(({ spacing }) => {
 
 export type InternshipEngagementListItemCardProps =
   InternshipEngagementListItemFragment & {
-    projectId: string;
     className?: string;
   };
 
@@ -82,7 +81,7 @@ export const InternshipEngagementListItemCard: FC<InternshipEngagementListItemCa
     return (
       <Card className={clsx(classes.root, props.className)}>
         <CardActionAreaLink
-          to={`/projects/${props.projectId}/engagements/${props.id}`}
+          to={`engagements/${props.id}`}
           className={classes.card}
         >
           <div className={classes.media}>

@@ -8,7 +8,6 @@ import {
   ProjectChangeRequestTypeList,
   removeItemFromList,
   UpdateProjectChangeRequestInput,
-  useCurrentChangeset,
 } from '../../../../api';
 import {
   DialogForm,
@@ -24,6 +23,7 @@ import { AutocompleteField } from '../../../../components/form/AutocompleteField
 import { ProjectChangeRequestListItemFragment as ChangeRequest } from '../../../../components/ProjectChangeRequestListItem';
 import { callAll } from '../../../../util';
 import { ProjectOverviewDocument } from '../../Overview/ProjectOverview.generated';
+import { useProjectId } from '../../useProjectId';
 import {
   DeleteProjectChangeRequestDocument as DeleteRequest,
   UpdateProjectChangeRequestDocument as UpdateRequest,
@@ -50,7 +50,7 @@ export const UpdateProjectChangeRequest = ({
   changeRequest,
   ...props
 }: UpdatePlanChangeProps) => {
-  const [_, setCurrentChangeset] = useCurrentChangeset();
+  const { closeChangeset } = useProjectId();
   const [updatePlanChange] = useMutation(UpdateRequest);
   const [deletePlanChange] = useMutation(DeleteRequest, {
     update: callAll(
@@ -83,7 +83,7 @@ export const UpdateProjectChangeRequest = ({
               id: changeRequest.id,
             },
           });
-          setCurrentChangeset(null);
+          closeChangeset();
           return;
         }
 
@@ -104,7 +104,7 @@ export const UpdateProjectChangeRequest = ({
           input.projectChangeRequest.status === 'Approved' &&
           changeRequest.status.value !== input.projectChangeRequest.status
         ) {
-          setCurrentChangeset(null);
+          closeChangeset();
         }
       }}
       fieldsPrefix="projectChangeRequest"

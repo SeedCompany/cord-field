@@ -1,5 +1,5 @@
 fragment BudgetOverview on Budget {
-  id
+  ...Id
   createdAt
   total
 }

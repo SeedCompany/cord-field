@@ -144,6 +144,7 @@ export const EditPartnership: FC<EditPartnershipProps> = (props) => {
                 ...rest,
                 primary: partnership.primary || undefined,
               },
+              changeset: props.partnership.changeset?.id,
             },
           },
         });
@@ -155,6 +156,7 @@ export const EditPartnership: FC<EditPartnershipProps> = (props) => {
                   id: project.id,
                   financialReportPeriod: financialReportPeriod,
                 },
+                changeset: project.changeset?.id,
               },
             },
             update: (cache) => {
@@ -181,6 +183,7 @@ export const EditPartnership: FC<EditPartnershipProps> = (props) => {
       }
       initialValues={initialValues}
       decorators={decorators}
+      changesetAware
     />
   );
 };

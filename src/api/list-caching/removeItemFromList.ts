@@ -1,12 +1,8 @@
 import type { MutationUpdaterFn } from '@apollo/client/core';
 import { Except } from 'type-fest';
 import { splice } from '../../util';
-import {
-  ListModifier,
-  modifyChangesetDiff,
-  modifyList,
-  ModifyListOptions,
-} from './modifyList';
+import { modifyChangesetDiff } from '../changesets';
+import { ListModifier, modifyList, ModifyListOptions } from './modifyList';
 import { Entity } from './types';
 
 /**
@@ -65,7 +61,11 @@ export const removeItemFromList =
 
     modifyList({ cache, listId, modifier, filter });
 
-    modifyChangesetDiff(cache, listId, ({ added, removed }) => {
+    const objRef = Array.isArray(listId) ? listId[0] : undefined;
+    if (!objRef) {
+      return;
+    }
+    modifyChangesetDiff(cache, objRef, ({ added, removed }) => {
       const removedItemId = cache.identify(item as any);
       const addedInChangesetIndex = added.findIndex(
         (addedItem) => cache.identify(addedItem as any) === removedItemId

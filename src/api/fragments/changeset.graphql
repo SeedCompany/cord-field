@@ -1,12 +1,13 @@
-fragment ChangesetInfo on ChangesetAware {
+# Use with mutation results to fetch & re-calculate the changeset diff from the API
+# considering the change being made.
+fragment RecalculateChangesetDiff on ChangesetAware {
   id
   changeset {
-    ...Changeset
+    id
+    difference {
+      ...ChangesetDiff
+    }
   }
-}
-
-fragment Changeset on Changeset {
-  id
 }
 
 fragment ChangesetDiff on ChangesetDiff {
@@ -27,6 +28,29 @@ fragment ChangesetDiff on ChangesetDiff {
 }
 
 fragment ChangesetDiffItem on Resource {
-  __typename
-  id
+  ...Id
+  ...ProjectChangesetDiff
+  ...BudgetRecordChangesetDiff
+}
+
+fragment ProjectChangesetDiff on Project {
+  name {
+    value
+  }
+  mouRange {
+    value {
+      start
+      end
+    }
+  }
+  step {
+    value
+  }
+  status
+}
+
+fragment BudgetRecordChangesetDiff on BudgetRecord {
+  amount {
+    value
+  }
 }

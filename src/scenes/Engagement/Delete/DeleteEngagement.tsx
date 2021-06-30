@@ -2,7 +2,11 @@ import { useMutation } from '@apollo/client';
 import { Tooltip, Typography } from '@material-ui/core';
 import { DeleteOutline } from '@material-ui/icons';
 import * as React from 'react';
-import { removeItemFromList } from '../../../api';
+import {
+  Id_InternshipProject_Fragment as InternshipProjectIdFragment,
+  removeItemFromList,
+  Id_TranslationProject_Fragment as TranslationProjectIdFragment,
+} from '../../../api';
 import { useDialog } from '../../../components/Dialog';
 import { DialogForm } from '../../../components/Dialog/DialogForm';
 import { SubmitError } from '../../../components/form';
@@ -15,11 +19,12 @@ import {
   EngagementToDeleteFragment,
 } from './DeleteEngagement.generated';
 
+type ProjectIdFragment =
+  | TranslationProjectIdFragment
+  | InternshipProjectIdFragment;
+
 interface DeleteEngagementProps extends IconButtonProps {
-  project: {
-    __typename?: 'InternshipProject' | 'TranslationProject';
-    id: string;
-  };
+  project: ProjectIdFragment;
   engagement: EngagementToDeleteFragment;
 }
 

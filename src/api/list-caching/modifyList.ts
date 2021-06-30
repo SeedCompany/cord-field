@@ -5,7 +5,6 @@ import type { ConditionalKeys } from 'type-fest';
 import { keys, mapFromList, Nullable } from '../../util';
 import type { Query } from '../schema.generated';
 import { typePolicies } from '../typePolicies';
-import { ModifyChangesetDiffOnUpdateFragmentDoc } from './changesetDiff.generated';
 import {
   Entity,
   GqlTypeOf,
@@ -65,41 +64,6 @@ export const modifyList = <OwningObj extends Entity, Args>({
   cache.modify({
     ...(id ? { id } : {}),
     fields,
-  });
-};
-
-type ChangesetDiffCache = Record<'added' | 'removed', readonly Entity[]>;
-export const modifyChangesetDiff = <OwningObj extends Entity>(
-  cache: ApolloCache<unknown>,
-  listId: ListIdentifier<OwningObj>,
-  modifier: (diff: ChangesetDiffCache) => ChangesetDiffCache
-) => {
-  const [id] = identifyList(cache, listId);
-  if (!id) {
-    return;
-  }
-  const owningObj = cache.readFragment({
-    id,
-    fragment: ModifyChangesetDiffOnUpdateFragmentDoc,
-  });
-  const diff = owningObj?.changeset?.difference;
-  if (!owningObj || !diff) {
-    return;
-  }
-  const next = modifier(diff);
-  cache.writeFragment({
-    id,
-    fragment: ModifyChangesetDiffOnUpdateFragmentDoc,
-    data: {
-      ...owningObj,
-      changeset: {
-        ...owningObj.changeset,
-        difference: {
-          ...owningObj.changeset?.difference,
-          ...next,
-        },
-      },
-    },
   });
 };
 

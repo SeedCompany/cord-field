@@ -1,36 +1,19 @@
-import { fade, Grid, makeStyles, Typography } from '@material-ui/core';
-import clsx from 'clsx';
 import { identity } from 'lodash';
 import * as React from 'react';
 import { ReactNode } from 'react';
-import { UnsecuredProp, unwrapSecured } from '../../api';
+import { Entity, UnsecuredProp, unwrapSecured } from '../../api';
 import { ChangesetBadge } from './ChangesetBadge';
-
-const useStyles = makeStyles(({ palette, shape, spacing }) => ({
-  diff: {
-    marginTop: spacing(0.5),
-  },
-  diffItem: {
-    padding: spacing(0, 0.5),
-    borderRadius: shape.borderRadius,
-  },
-  previous: {
-    textDecoration: 'line-through',
-    color: palette.error.main,
-    background: fade(palette.error.light, 0.5),
-  },
-  current: {
-    color: palette.primary.dark,
-    background: fade(palette.primary.light, 0.5),
-  },
-}));
+import {
+  EntityFromChangesetDiff,
+  useChangesetDiffItem,
+} from './ChangesetDiffContext';
+import { PropertyDiff } from './PropertyDiff';
 
 interface Props<
   Obj,
   Key extends keyof Obj,
   Item extends UnsecuredProp<Obj[Key]>
 > {
-  previous?: Obj | null;
   current?: Obj;
   prop: Key;
   /**
@@ -52,29 +35,36 @@ interface Props<
 }
 
 export const ChangesetPropertyBadge = <
-  Obj,
-  Key extends keyof Obj,
+  Obj extends Entity,
+  Key extends keyof EntityFromChangesetDiff<Obj> & keyof Obj,
   Item extends UnsecuredProp<Obj[Key]>
 >(
   props: Props<Obj, Key, Item>
 ) => {
   const {
     current,
-    previous,
     prop,
     labelBy,
-    identifyBy,
+    identifyBy: identifyByProp,
     renderChange,
     children,
   } = props;
+  const { previous } = useChangesetDiffItem(current);
+
   if (!current || !previous) {
     return <>{children}</>;
   }
+  if (!(prop in previous)) {
+    console.error(
+      `${previous.__typename}.${prop} has not be requested in ChangesetDiff`
+    );
+    return <>{children}</>;
+  }
+
   const currentProp = unwrapSecured(current[prop]) as Item;
   const originalProp = unwrapSecured(previous[prop]) as Item;
-  const isDiff =
-    (identifyBy ?? identity)(currentProp) !==
-    (identifyBy ?? identity)(originalProp);
+  const identifyBy = identifyByProp ?? identity;
+  const isDiff = identifyBy(currentProp) !== identifyBy(originalProp);
   return (
     <ChangesetBadge
       mode={isDiff ? 'changed' : undefined}
@@ -86,7 +76,7 @@ export const ChangesetPropertyBadge = <
               current: currentProp,
             }) ?? ''
           ) : (
-            <ChangedContent
+            <PropertyDiff
               previous={originalProp}
               current={currentProp}
               labelBy={labelBy}
@@ -94,45 +84,8 @@ export const ChangesetPropertyBadge = <
           )
         ) : null
       }
-      TooltipProps={{
-        interactive: true,
-      }}
     >
       {children}
     </ChangesetBadge>
-  );
-};
-
-const ChangedContent = <T extends any>({
-  previous,
-  current,
-  labelBy,
-}: {
-  previous: T;
-  current: T;
-  labelBy?: (item: T) => ReactNode;
-}) => {
-  const classes = useStyles();
-  return (
-    <Grid
-      container
-      direction="column"
-      alignItems="flex-start"
-      className={classes.diff}
-    >
-      <Typography
-        className={clsx(classes.diffItem, classes.previous)}
-        gutterBottom
-        display="inline"
-      >
-        {labelBy ? labelBy(previous) : (previous as ReactNode)}
-      </Typography>
-      <Typography
-        className={clsx(classes.diffItem, classes.current)}
-        display="inline"
-      >
-        {labelBy ? labelBy(current) : (current as ReactNode)}
-      </Typography>
-    </Grid>
   );
 };

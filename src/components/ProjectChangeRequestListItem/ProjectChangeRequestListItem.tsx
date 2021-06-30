@@ -9,10 +9,8 @@ import {
 } from '@material-ui/core';
 import { Skeleton } from '@material-ui/lab';
 import * as React from 'react';
-import {
-  displayProjectChangeRequestTypes,
-  useCurrentChangeset,
-} from '../../api';
+import { displayProjectChangeRequestTypes } from '../../api';
+import { useProjectId } from '../../scenes/Projects/useProjectId';
 import { DisplaySimpleProperty } from '../DisplaySimpleProperty';
 import { FormattedDateTime } from '../Formatters';
 import { useNavigate } from '../Routing';
@@ -45,7 +43,7 @@ export const ProjectChangeRequestListItem = ({
   className,
 }: ProjectChangeRequestListItemProps) => {
   const classes = useStyles();
-  const [currentlyViewing, setChangeset] = useCurrentChangeset();
+  const { projectId, changesetId: currentlyViewing } = useProjectId();
   const navigate = useNavigate();
 
   return (
@@ -92,7 +90,9 @@ export const ProjectChangeRequestListItem = ({
           <Button
             disabled={!data || currentlyViewing === data.id}
             color="primary"
-            onClick={() => data?.id && setChangeset(data.id) && navigate('..')}
+            onClick={() =>
+              data?.id && navigate(`../../${projectId}~${data.id}`)
+            }
           >
             {currentlyViewing === data?.id ? 'Viewing' : 'View'}
           </Button>

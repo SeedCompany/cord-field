@@ -35,7 +35,7 @@ const defaultIcons: Icons = {
   SortArrow: forwardRef((props, ref) => <SortArrow {...props} ref={ref} />),
 };
 
-const Container = withStyles(() => ({
+export const Container = withStyles(() => ({
   rounded: {
     // Fix border radius when Toolbar is omitted.
     // Actual component rendering problem div is inaccessible, so we've gone up
@@ -80,7 +80,7 @@ const OverlayLoading = () => {
   );
 };
 
-const Cell = withStyles({
+export const Cell = withStyles({
   alignRight: {
     // Fix alignment of editable numeric cells
     '& > div': {

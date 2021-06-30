@@ -1,5 +1,5 @@
 fragment FirstScripture on Language {
-  id
+  ...Id
   hasExternalFirstScripture {
     canRead
     canEdit
@@ -9,7 +9,7 @@ fragment FirstScripture on Language {
     canRead
     canCreate
     items {
-      id
+      ...Id
       name {
         value
         canRead
@@ -24,11 +24,11 @@ fragment FirstScripture on Language {
 }
 
 fragment LanguageProjectEngagement on Engagement {
-  id
+  ...Id
   ... on LanguageEngagement {
     language {
       value {
-        id
+        ...Id
       }
       canRead
     }

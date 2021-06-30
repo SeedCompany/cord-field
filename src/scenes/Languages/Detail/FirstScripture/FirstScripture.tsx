@@ -10,6 +10,7 @@ import { assert } from 'ts-essentials';
 import { Redacted } from '../../../../components/Redacted';
 import { Link } from '../../../../components/Routing';
 import { isTypename } from '../../../../util';
+import { getProjectUrl } from '../../../Projects/useProjectId';
 import {
   LanguageProjectEngagement_LanguageEngagement_Fragment as Engagement,
   FirstScriptureFragment,
@@ -94,7 +95,7 @@ export const FirstScripture = ({ data }: { data?: FirstScriptureFragment }) => {
         <Typography className={classes.text}>
           First Scripture:&nbsp;&nbsp;
           <Link
-            to={`/projects/${project.id}/engagements/${engagement.id}`}
+            to={`${getProjectUrl(project)}/engagements/${engagement.id}`}
             underline={project.name.canRead ? undefined : 'none'}
           >
             {project.name.canRead ? (

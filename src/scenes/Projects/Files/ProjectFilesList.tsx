@@ -11,7 +11,7 @@ import { Skeleton } from '@material-ui/lab';
 import React, { FC, useEffect } from 'react';
 import { useDropzone } from 'react-dropzone';
 import { Helmet } from 'react-helmet-async';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { useDialog } from '../../../components/Dialog';
 import { Error } from '../../../components/Error';
 import {
@@ -32,6 +32,7 @@ import { ContentContainer } from '../../../components/Layout';
 import { ProjectBreadcrumb } from '../../../components/ProjectBreadcrumb';
 import { Table } from '../../../components/Table';
 import { DropzoneOverlay } from '../../../components/Upload';
+import { useProjectId } from '../useProjectId';
 import { CreateProjectDirectory } from './CreateProjectDirectory';
 import { DirectoryBreadcrumb } from './DirectoryBreadcrumb';
 import { FileRow } from './FileRow';
@@ -89,7 +90,7 @@ const ProjectFilesListWrapped: FC = () => {
   const classes = useStyles();
   const { spacing } = useTheme();
   const navigate = useNavigate();
-  const { projectId } = useParams();
+  const { projectUrl } = useProjectId();
   const formatDate = useDateTimeFormatter();
 
   const { openFilePreview } = useFileActions();
@@ -248,7 +249,7 @@ const ProjectFilesListWrapped: FC = () => {
   const handleRowClick = (rowData: FileRowData) => {
     const { id, item } = rowData;
     if (isDirectory(item)) {
-      navigate(`/projects/${projectId}/files/${id}`);
+      navigate(`${projectUrl}/files/${id}`);
     } else {
       openFilePreview(item);
     }
@@ -293,20 +294,20 @@ const ProjectFilesListWrapped: FC = () => {
                     // no moving to same directory
                     id={isNotRootDirectory ? rootDirectoryId : undefined}
                     name="Files"
-                    to={`/projects/${projectId}/files`}
+                    to={`${projectUrl}/files`}
                   />
                   {breadcrumbsParents.map((parent) => (
                     <DirectoryBreadcrumb
                       key={parent.id}
                       id={parent.id}
                       name={parent.name}
-                      to={`/projects/${projectId}/files/${parent.id}`}
+                      to={`${projectUrl}/files/${parent.id}`}
                     />
                   ))}
                   {isNotRootDirectory && (
                     <DirectoryBreadcrumb
                       name={data?.directory.name}
-                      to={`/projects/${projectId}/files/${directoryId}`}
+                      to={`${projectUrl}/files/${directoryId}`}
                     />
                   )}
                 </Breadcrumbs>

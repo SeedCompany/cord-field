@@ -2,6 +2,7 @@ import { ApolloCache } from '@apollo/client';
 import { DeepPartial } from 'ts-essentials';
 import { invalidateProps, Project as ProjectShape } from '../../../api';
 import { SecuredDateRangeFragment } from '../../../api/fragments/secured.generated';
+import { updateFragment } from '../../../api/updateFragment';
 import {
   ProjectCachedEngagementDateRangesFragmentDoc,
   ProjectCachedPartnershipDateRangesFragmentDoc,
@@ -14,8 +15,8 @@ export const updateEngagementDateRanges = (
   cache: ApolloCache<unknown>,
   project: Project
 ) => {
-  const cached = cache.readFragment({
-    id: cache.identify(project),
+  updateFragment(cache, {
+    object: project,
     fragment: ProjectCachedEngagementDateRangesFragmentDoc,
     // We need override fields here but the engagement list doesn't have them.
     // If the user visits/caches one of the engagements we need to update that one
@@ -24,22 +25,20 @@ export const updateEngagementDateRanges = (
     // We want to allow some engagements to be missing data, and we'll account
     // for that in our update logic.
     returnPartialData: true,
-  });
-  if (!cached) {
-    return;
-  }
-  for (const eng of (cached as DeepPartial<typeof cached>).engagements?.items ??
-    []) {
-    if (!eng) {
-      continue;
-    }
-    updateDateCalcField(cache, eng, 'dateRange', cached.mouRange);
+    updater: (cached) => {
+      for (const eng of cached.engagements?.items ?? []) {
+        if (!eng) {
+          continue;
+        }
+        updateDateCalcField(cache, eng, 'dateRange', cached.mouRange);
 
-    // Invalidate progress reports as well. These can just be re-fetched when needed.
-    if (eng.__typename === 'LanguageEngagement') {
-      invalidateProps(cache, eng, 'progressReports');
-    }
-  }
+        // Invalidate progress reports as well. These can just be re-fetched when needed.
+        if (eng.__typename === 'LanguageEngagement') {
+          invalidateProps(cache, eng, 'progressReports');
+        }
+      }
+    },
+  });
 };
 
 export const updatePartnershipsDateRanges = (
@@ -49,6 +48,7 @@ export const updatePartnershipsDateRanges = (
   const partnerships = cache.readFragment({
     id: cache.identify(project),
     fragment: ProjectCachedPartnershipDateRangesFragmentDoc,
+    fragmentName: 'ProjectCachedPartnershipDateRanges',
   });
   if (!partnerships) {
     return;

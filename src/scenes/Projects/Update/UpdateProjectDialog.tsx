@@ -121,7 +121,9 @@ export const UpdateProjectDialog = ({
     // Filter out irrelevant initial values so they don't get added to the mutation
     const filteredInitialValuesFields = pick(
       fullInitialValuesFields,
-      editFields
+      editFields.flatMap((field) =>
+        field === 'mouRange' ? ['mouStart', 'mouEnd'] : field
+      )
     );
 
     return {

@@ -64,10 +64,12 @@ export const CreatePartnership = ({
                 partnerId: partnerLookupItem.id,
                 primary: rest.primary || undefined,
               },
+              changeset: project.changeset?.id,
             },
           },
         });
       }}
+      changesetAware
     />
   );
 };

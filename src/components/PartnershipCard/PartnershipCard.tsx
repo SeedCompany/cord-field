@@ -8,6 +8,7 @@ import {
   Typography,
 } from '@material-ui/core';
 import { Skeleton } from '@material-ui/lab';
+import clsx from 'clsx';
 import React, { FC } from 'react';
 import {
   displayFinancialReportingType,
@@ -20,6 +21,9 @@ import { PartnershipCardFragment } from './PartnershipCard.generated';
 import { PartnershipPrimaryIcon } from './PartnershipPrimaryIcon';
 
 const useStyles = makeStyles(({ spacing }) => ({
+  root: {
+    flex: 1,
+  },
   loadingName: {
     width: '75%',
   },
@@ -48,7 +52,7 @@ export const PartnershipCard: FC<PartnershipCardProps> = ({
 
   const name = partnership?.partner.value?.organization.value?.name.value;
   return (
-    <Card className={className}>
+    <Card className={clsx(classes.root, className)}>
       <CardContent>
         <Grid container direction="column" spacing={1}>
           <Grid item container direction="row" alignItems="flex-start">

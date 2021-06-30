@@ -1,0 +1,13 @@
+fragment Id on Resource {
+  __typename
+  id
+  ...ChangesetId
+}
+
+fragment ChangesetId on ChangesetAware {
+  __typename
+  id
+  changeset {
+    id
+  }
+}

@@ -8,8 +8,8 @@ export default { title: 'Components' };
 
 export const InternshipEngagementListItemCard = () => (
   <Card
+    __typename="InternshipEngagement"
     id="123123"
-    projectId="123123"
     status={{
       value: text('status', 'InDevelopment') as EngagementStatus,
       canRead: true,

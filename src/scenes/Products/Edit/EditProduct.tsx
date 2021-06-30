@@ -19,6 +19,7 @@ import {
   parsedRangesWithFullTestamentRange,
   removeScriptureTypename,
 } from '../../../util/biblejs';
+import { useProjectId } from '../../Projects/useProjectId';
 import { ProductForm, ProductFormProps } from '../ProductForm';
 import {
   DeleteProductDocument,
@@ -40,12 +41,14 @@ export const EditProduct = () => {
   const classes = useStyles();
   const navigate = useNavigate();
 
-  const { projectId, engagementId, productId } = useParams();
+  const { projectId, changesetId } = useProjectId();
+  const { engagementId = '', productId = '' } = useParams();
   const { enqueueSnackbar } = useSnackbar();
 
   const { data, loading } = useQuery(ProductDocument, {
     variables: {
       projectId,
+      changeset: changesetId,
       engagementId,
       productId,
     },
@@ -174,7 +177,7 @@ export const EditProduct = () => {
       <Helmet title="Edit Product" />
       <Breadcrumbs>
         <ProjectBreadcrumb data={project} />
-        <EngagementBreadcrumb data={engagement} projectId={projectId} />
+        <EngagementBreadcrumb data={engagement} />
         <Typography variant="h4">Edit Product</Typography>
       </Breadcrumbs>
       <Typography variant="h2">

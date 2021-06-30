@@ -11,7 +11,6 @@ import {
   MethodologyToApproach,
   UpdateInternshipEngagement,
   UpdateLanguageEngagement,
-  useCurrentChangeset,
 } from '../../../api';
 import { DisplayLocationFragment } from '../../../api/fragments/location.generated';
 import {
@@ -169,7 +168,6 @@ export const EditEngagementDialog: FC<EditEngagementDialogProps> = ({
     () => many(editFieldsProp ?? []),
     [editFieldsProp]
   );
-  const [changeset] = useCurrentChangeset();
 
   const fields = editFields.map((name) => {
     const Field = fieldMapping[name];
@@ -210,20 +208,22 @@ export const EditEngagementDialog: FC<EditEngagementDialogProps> = ({
             firstScripture: engagement.firstScripture.value,
             paratextRegistryId: engagement.paratextRegistryId.value,
           }
-        : engagement.__typename === 'InternshipEngagement'
-        ? {
+        : {
             methodologies: engagement.methodologies.value,
             position: engagement.position.value,
             mentorId: engagement.mentor.value,
             countryOfOriginId: engagement.countryOfOrigin.value,
-          }
-        : {}),
+          }),
     };
 
     // Filter out irrelevant initial values so they don't get added to the mutation
     const filteredInitialValuesFields = pick(
       fullInitialValuesFields,
-      editFields
+      editFields.flatMap((field) =>
+        field === 'dateRangeOverride'
+          ? ['startDateOverride', 'endDateOverride']
+          : field
+      )
     );
 
     return {
@@ -259,7 +259,7 @@ export const EditEngagementDialog: FC<EditEngagementDialogProps> = ({
             ...(mentorId ? { mentorId } : {}),
             ...(countryOfOriginId ? { countryOfOriginId } : {}),
           },
-          changeset,
+          changeset: engagement.changeset?.id,
         };
 
         await updateEngagement({

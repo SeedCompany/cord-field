@@ -9,6 +9,7 @@ import {
 } from '../../../components/Dialog/DialogForm';
 import { SubmitError, TextField } from '../../../components/form';
 import { ButtonLink } from '../../../components/Routing';
+import { useProjectId } from '../useProjectId';
 import { CreateProjectDirectoryDocument } from './CreateProjectDirectory.generated';
 import { useProjectCurrentDirectory } from './useProjectCurrentDirectory';
 
@@ -18,7 +19,8 @@ export const CreateProjectDirectory = (
   props: Except<CreateProjectDirectoryProps, 'onSubmit'>
 ) => {
   const [createDirectory] = useMutation(CreateProjectDirectoryDocument);
-  const { project, directoryId } = useProjectCurrentDirectory();
+  const { projectUrl } = useProjectId();
+  const { directoryId } = useProjectCurrentDirectory();
   const { enqueueSnackbar } = useSnackbar();
 
   const onSubmit: CreateProjectDirectoryProps['onSubmit'] = async (
@@ -40,10 +42,7 @@ export const CreateProjectDirectory = (
     enqueueSnackbar(`Created folder: ${directory.name}`, {
       variant: 'success',
       action: () => (
-        <ButtonLink
-          color="inherit"
-          to={`/projects/${project!.id}/files/${directory.id}`}
-        >
+        <ButtonLink color="inherit" to={`${projectUrl}/files/${directory.id}`}>
           View
         </ButtonLink>
       ),

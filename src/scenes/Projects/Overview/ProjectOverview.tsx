@@ -6,8 +6,7 @@ import clsx from 'clsx';
 import React, { FC } from 'react';
 import { useDropzone } from 'react-dropzone';
 import { Helmet } from 'react-helmet-async';
-import { useParams } from 'react-router-dom';
-import { displayProjectStep, useCurrentChangeset } from '../../../api';
+import { displayProjectStep } from '../../../api';
 import { BudgetOverviewCard } from '../../../components/BudgetOverviewCard';
 import { CardGroup } from '../../../components/CardGroup';
 import { ChangesetPropertyBadge } from '../../../components/Changeset';
@@ -41,6 +40,7 @@ import { useProjectCurrentDirectory, useUploadProjectFiles } from '../Files';
 import { ProjectListQueryVariables } from '../List/projects.generated';
 import { EditableProjectField, UpdateProjectDialog } from '../Update';
 import { ProjectWorkflowDialog } from '../Update/ProjectWorkflowDialog';
+import { useProjectId } from '../useProjectId';
 import {
   ProjectEngagementListOverviewDocument as EngagementList,
   ProjectOverviewDocument,
@@ -97,8 +97,7 @@ const useStyles = makeStyles(({ spacing, breakpoints, palette }) => ({
 
 export const ProjectOverview: FC = () => {
   const classes = useStyles();
-  const { projectId = '' } = useParams();
-  const [changeset] = useCurrentChangeset();
+  const { projectId, changesetId } = useProjectId();
   const formatNumber = useNumberFormatter();
 
   const [editState, editField, fieldsBeingEdited] =
@@ -134,8 +133,7 @@ export const ProjectOverview: FC = () => {
     {
       variables: {
         input: projectId,
-        changeset,
-        withOriginal: !!changeset,
+        changeset: changesetId,
       },
     }
   );
@@ -144,7 +142,7 @@ export const ProjectOverview: FC = () => {
     listAt: (data) => data.project.engagements,
     variables: {
       project: projectId,
-      changeset,
+      changeset: changesetId,
     },
   });
 
@@ -232,7 +230,6 @@ export const ProjectOverview: FC = () => {
               ) : projectName.canRead ? (
                 <ChangesetPropertyBadge
                   current={projectOverviewData?.project}
-                  previous={projectOverviewData?.original}
                   prop="name"
                 >
                   {projectName.value}
@@ -375,7 +372,6 @@ export const ProjectOverview: FC = () => {
             <Grid item>
               <ChangesetPropertyBadge
                 current={projectOverviewData?.project}
-                previous={projectOverviewData?.original}
                 prop="mouRange"
                 identifyBy={(range) =>
                   `${range.start?.toMillis()}/${range.end?.toMillis()}`
@@ -418,7 +414,6 @@ export const ProjectOverview: FC = () => {
             <Grid item>
               <ChangesetPropertyBadge
                 current={projectOverviewData?.project}
-                previous={projectOverviewData?.original}
                 prop="step"
                 labelBy={displayProjectStep}
               >
@@ -559,15 +554,9 @@ export const ProjectOverview: FC = () => {
             spacing={3}
             renderItem={(engagement) =>
               engagement.__typename === 'LanguageEngagement' ? (
-                <LanguageEngagementListItemCard
-                  projectId={projectId}
-                  {...engagement}
-                />
+                <LanguageEngagementListItemCard {...engagement} />
               ) : (
-                <InternshipEngagementListItemCard
-                  projectId={projectId}
-                  {...engagement}
-                />
+                <InternshipEngagementListItemCard {...engagement} />
               )
             }
             skeletonCount={0}
@@ -588,7 +577,12 @@ export const ProjectOverview: FC = () => {
           editFields={fieldsBeingEdited}
         />
       ) : null}
-      <CreateEngagement projectId={projectId} {...createEngagementState} />
+      {projectOverviewData && (
+        <CreateEngagement
+          project={projectOverviewData.project}
+          {...createEngagementState}
+        />
+      )}
     </main>
   );
 };
