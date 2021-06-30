@@ -2,6 +2,7 @@ import { useMutation } from '@apollo/client';
 import { sortBy, sumBy } from 'lodash';
 import { Column, Components } from 'material-table';
 import React, { FC, useMemo } from 'react';
+import { onUpdateChangeFragment } from '../../../api';
 import {
   PropertyDiff,
   useDetermineChangesetDiffItem,
@@ -11,7 +12,7 @@ import { ChangesetAwareTable } from '../../../components/Table';
 import type { ChangesetRowData } from '../../../components/Table/ChangesetAwareTable';
 import {
   BudgetRecordFragment as BudgetRecord,
-  CalculateNewTotalFragmentDoc,
+  CalculateNewTotalFragmentDoc as CalculateNewTotal,
   ProjectBudgetQuery,
   UpdateProjectBudgetRecordDocument,
 } from './ProjectBudget.generated';
@@ -37,24 +38,15 @@ export const ProjectBudgetRecords: FC<ProjectBudgetRecordsProps> = (props) => {
   const { loading, budget } = props;
   const formatCurrency = useCurrencyFormatter();
   const [updateBudgetRecord] = useMutation(UpdateProjectBudgetRecordDocument, {
-    update: (cache) => {
-      const budgetId = cache.identify(budget!.value!);
-      const cached = cache.readFragment({
-        id: budgetId,
-        fragment: CalculateNewTotalFragmentDoc,
-      });
-      if (!cached) {
-        return;
-      }
-      cache.writeFragment({
-        id: budgetId,
-        fragment: CalculateNewTotalFragmentDoc,
-        data: {
-          ...cached,
-          total: sumBy(cached.records, (record) => record.amount.value ?? 0),
-        },
-      });
-    },
+    update: onUpdateChangeFragment({
+      object: budget?.value ?? undefined,
+      fragment: CalculateNewTotal,
+      fragmentName: 'CalculateNewTotal',
+      updater: (cached) => ({
+        ...cached,
+        total: sumBy(cached.records, (record) => record.amount.value ?? 0),
+      }),
+    }),
   });
   const determineChangesetDiff = useDetermineChangesetDiffItem();
 

@@ -12,3 +12,4 @@ export * from './list-caching';
 export * from './invalidate-props';
 export * from './sensitivity';
 export * from './changesets';
+export * from './updateFragment';

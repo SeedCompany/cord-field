@@ -1,5 +1,6 @@
 import { ApolloCache } from '@apollo/client';
 import { Cache } from '@apollo/client/cache/core/types/Cache';
+import { MutationUpdaterFn } from '@apollo/client/core';
 import { Reference, StoreObject } from '@apollo/client/utilities';
 import { DeepPartial } from 'ts-essentials';
 import { Entity } from './list-caching';
@@ -7,7 +8,7 @@ import { Entity } from './list-caching';
 export interface UpdateFragmentOptions<
   FragmentType,
   TVariables,
-  Partial extends boolean | undefined
+  Partial extends boolean | undefined = false
 > extends Cache.ReadFragmentOptions<FragmentType, TVariables> {
   object?: StoreObject | Reference | Entity;
   returnPartialData?: Partial;
@@ -37,7 +38,7 @@ type MaybePartial<T, Partial extends boolean | undefined> = Partial extends true
 export const updateFragment = <
   FragmentType,
   TVariables,
-  Partial extends boolean | undefined
+  Partial extends boolean | undefined = false
 >(
   cache: ApolloCache<unknown>,
   {
@@ -77,3 +78,20 @@ export const updateFragment = <
     broadcast,
   });
 };
+
+/**
+ * A variant of {@link updateFragment} that can be given directly to a
+ * mutation's cache function.
+ */
+export const onUpdateChangeFragment =
+  <
+    MutationOutput,
+    FragmentType,
+    TVariables,
+    Partial extends boolean | undefined = false
+  >(
+    options: UpdateFragmentOptions<FragmentType, TVariables, Partial>
+  ): MutationUpdaterFn<MutationOutput> =>
+  (cache) => {
+    updateFragment(cache, options);
+  };
