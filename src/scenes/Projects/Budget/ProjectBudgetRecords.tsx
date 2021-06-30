@@ -1,8 +1,12 @@
-import { useMutation } from '@apollo/client';
+import { useApolloClient, useMutation } from '@apollo/client';
 import { sortBy, sumBy } from 'lodash';
 import { Column, Components } from 'material-table';
 import React, { FC, useMemo } from 'react';
-import { onUpdateChangeFragment } from '../../../api';
+import {
+  onUpdateChangeFragment,
+  readFragment,
+  RecalculateChangesetDiffFragmentDoc as RecalculateChangesetDiff,
+} from '../../../api';
 import {
   PropertyDiff,
   useDetermineChangesetDiffItem,
@@ -37,6 +41,7 @@ interface ProjectBudgetRecordsProps {
 export const ProjectBudgetRecords: FC<ProjectBudgetRecordsProps> = (props) => {
   const { loading, budget } = props;
   const formatCurrency = useCurrencyFormatter();
+  const apollo = useApolloClient();
   const [updateBudgetRecord] = useMutation(UpdateProjectBudgetRecordDocument, {
     update: onUpdateChangeFragment({
       object: budget?.value ?? undefined,
@@ -111,6 +116,21 @@ export const ProjectBudgetRecords: FC<ProjectBudgetRecordsProps> = (props) => {
           ? {
               onCellEditApproved: async (newAmount, _, { record }) => {
                 if (newAmount === blankAmount || newAmount === '') return;
+
+                // If we have a changeset, fetch (from cache) the additional
+                // data required to provide an optimistic response.
+                // We need this because in our update operation we ask for the
+                // API to send back the updated diff. Because of this Apollo
+                // wants the updated diff, so we'll tell it that optimistically
+                // it is unchanged. The actual API result still overrides this
+                // when we get it.
+                const cachedChangeset = record.changeset
+                  ? readFragment(apollo.cache, {
+                      fragment: RecalculateChangesetDiff,
+                      object: record,
+                    })?.changeset
+                  : null;
+
                 await updateBudgetRecord({
                   variables: {
                     input: {
@@ -121,21 +141,25 @@ export const ProjectBudgetRecords: FC<ProjectBudgetRecordsProps> = (props) => {
                       changeset: budget.value?.changeset?.id,
                     },
                   },
-                  optimisticResponse: {
-                    updateBudgetRecord: {
-                      __typename: 'UpdateBudgetRecordOutput',
-                      budgetRecord: {
-                        __typename: 'BudgetRecord',
-                        id: record.id,
-                        // @ts-expect-error ignore changeset is missing new diff info
-                        changeset: record.changeset,
-                        amount: {
-                          __typename: 'SecuredFloatNullable',
-                          value: Number(newAmount),
+                  optimisticResponse:
+                    record.changeset && !cachedChangeset
+                      ? // If we are in a changeset, but we cannot get the required
+                        // data from cache, then skip the optimistic response.
+                        undefined
+                      : {
+                          updateBudgetRecord: {
+                            __typename: 'UpdateBudgetRecordOutput',
+                            budgetRecord: {
+                              __typename: 'BudgetRecord',
+                              id: record.id,
+                              changeset: cachedChangeset,
+                              amount: {
+                                __typename: 'SecuredFloatNullable',
+                                value: Number(newAmount),
+                              },
+                            },
+                          },
                         },
-                      },
-                    },
-                  },
                 });
               },
             }
