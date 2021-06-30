@@ -94,6 +94,8 @@ export const ChangesetBadge = (props: ChangesetBadgeProps) => {
       tooltip={(content: ReactElement) => (
         <PaperTooltip
           placement="right"
+          // Assuming more info is given when changed
+          interactive={mode === 'changed'}
           {...TooltipProps}
           title={
             <Grid container direction="column" alignItems="flex-start">

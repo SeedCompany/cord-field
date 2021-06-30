@@ -104,9 +104,6 @@ export const ChangesetPropertyBadge = <
           )
         ) : null
       }
-      TooltipProps={{
-        interactive: true,
-      }}
     >
       {children}
     </ChangesetBadge>
