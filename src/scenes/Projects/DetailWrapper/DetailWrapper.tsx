@@ -28,6 +28,9 @@ export const ProjectDetailWrapper: FC = ({ children }) => {
 
   useEffect(() => {
     currentChangesetVar(changesetId);
+    return () => {
+      currentChangesetVar(null);
+    };
   }, [changesetId]);
 
   const [updateDialogState, openUpdateDialog, requestBeingUpdated] =
