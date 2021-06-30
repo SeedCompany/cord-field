@@ -1,4 +1,5 @@
 import { useMutation } from '@apollo/client';
+import { TypedDocumentNode as DocumentNode } from '@graphql-typed-document-node/core';
 import {
   Avatar,
   Card,
@@ -12,16 +13,10 @@ import {
   NotInterested as NotPermittedIcon,
 } from '@material-ui/icons';
 import { Skeleton } from '@material-ui/lab';
-import { DocumentNode } from 'graphql';
 import { DateTime } from 'luxon';
 import React, { FC, ReactNode } from 'react';
 import { useDropzone } from 'react-dropzone';
-import { SecuredProp } from '../../api';
-import {
-  UploadInternshipEngagementGrowthPlanDocument,
-  UploadLanguageEngagementPnpDocument,
-} from '../../scenes/Engagement/Files';
-import { UpdateProjectBudgetUniversalTemplateDocument } from '../../scenes/Projects/Budget/ProjectBudget.generated';
+import { CreateDefinedFileVersionInput, SecuredProp } from '../../api';
 import {
   FileActionsPopup as ActionsMenu,
   FileAction,
@@ -91,7 +86,10 @@ export interface DefinedFileCardProps {
   title: ReactNode;
   resourceType: string;
   securedFile: SecuredProp<FileNode>;
-  uploadMutationDocument: DocumentNode;
+  uploadMutationDocument: DocumentNode<
+    unknown,
+    { id: string; upload: CreateDefinedFileVersionInput }
+  >;
   parentId: string;
 }
 
@@ -148,18 +146,8 @@ export const DefinedFileCard = (props: DefinedFileCardProps) => {
     await uploadFile({
       variables: {
         id,
-        ...(uploadMutationDocument ===
-        UpdateProjectBudgetUniversalTemplateDocument
-          ? { universalTemplateFile: { uploadId, name } }
-          : {}),
-        ...(uploadMutationDocument === UploadLanguageEngagementPnpDocument
-          ? { pnp: { uploadId, name } }
-          : {}),
+        upload: { uploadId, name },
       },
-      ...(uploadMutationDocument ===
-      UploadInternshipEngagementGrowthPlanDocument
-        ? { growthPlan: { uploadId, name } }
-        : {}),
     });
   };
 
