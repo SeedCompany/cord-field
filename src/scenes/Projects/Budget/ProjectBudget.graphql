@@ -56,13 +56,9 @@ query ProjectBudget($id: ID!, $changeset: ID) {
 
 mutation UpdateProjectBudgetUniversalTemplate(
   $id: ID!
-  $universalTemplateFile: CreateDefinedFileVersionInput!
+  $upload: CreateDefinedFileVersionInput!
 ) {
-  updateBudget(
-    input: {
-      budget: { id: $id, universalTemplateFile: $universalTemplateFile }
-    }
-  ) {
+  updateBudget(input: { budget: { id: $id, universalTemplateFile: $upload } }) {
     budget {
       ...Id
       universalTemplateFile {
