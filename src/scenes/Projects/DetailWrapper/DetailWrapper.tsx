@@ -1,10 +1,7 @@
 import { useQuery } from '@apollo/client';
 import * as React from 'react';
 import { FC, useEffect } from 'react';
-import {
-  EXPERIMENTAL_currentChangesetVar as currentChangesetVar,
-  EXPERIMENTAL_useCurrentChangeset as useCurrentChangeset,
-} from '../../../api';
+import { inChangesetVar } from '../../../api';
 import { ChangesetDiffProvider } from '../../../components/Changeset';
 import { useDialog } from '../../../components/Dialog';
 import { ProjectChangeRequestBanner } from '../ChangeRequest/ProjectChangeRequestBanner';
@@ -16,8 +13,7 @@ import { useProjectId } from '../useProjectId';
 import { ProjectChangesetDiffDocument } from './ProjectChangesetDiff.generated';
 
 export const ProjectDetailWrapper: FC = ({ children }) => {
-  const { projectId, changesetId } = useProjectId();
-  const [_, setChangeset] = useCurrentChangeset();
+  const { projectId, changesetId, closeChangeset } = useProjectId();
   const { data } = useQuery(ProjectChangesetDiffDocument, {
     variables: {
       id: projectId,
@@ -27,9 +23,9 @@ export const ProjectDetailWrapper: FC = ({ children }) => {
   });
 
   useEffect(() => {
-    currentChangesetVar(changesetId);
+    inChangesetVar(!!changesetId);
     return () => {
-      currentChangesetVar(null);
+      inChangesetVar(false);
     };
   }, [changesetId]);
 
@@ -48,7 +44,7 @@ export const ProjectDetailWrapper: FC = ({ children }) => {
             changeRequest: data.project.changeset,
           })
         }
-        onClose={() => setChangeset(null)}
+        onClose={closeChangeset}
       />
       {requestBeingUpdated && (
         <UpdateProjectChangeRequest

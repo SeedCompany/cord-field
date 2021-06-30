@@ -1,3 +1,4 @@
+import { useReactiveVar } from '@apollo/client';
 import {
   Button,
   ButtonProps,
@@ -17,11 +18,7 @@ import {
   RenderableProps,
 } from 'react-final-form';
 import { Except, Promisable } from 'type-fest';
-import {
-  ErrorHandlers,
-  handleFormError,
-  EXPERIMENTAL_useCurrentChangeset as useCurrentChangeset,
-} from '../../api';
+import { ErrorHandlers, handleFormError, inChangesetVar } from '../../api';
 import { ChangesetModificationWarning } from '../Changeset';
 import {
   blurOnSubmit,
@@ -132,7 +129,7 @@ export function DialogForm<T, R = void>({
   ...FormProps
 }: DialogFormProps<T, R>) {
   const classes = useStyles();
-  const [changeset] = useCurrentChangeset();
+  const inChangeset = useReactiveVar(inChangesetVar);
 
   return (
     <Form<T>
@@ -189,7 +186,7 @@ export function DialogForm<T, R = void>({
             {title ? <DialogTitle id="dialog-form">{title}</DialogTitle> : null}
             <DialogContent>
               <>
-                {changeset && !disableChangesetWarning ? (
+                {inChangeset && !disableChangesetWarning ? (
                   <ChangesetModificationWarning
                     variant={changesetAware ? 'modifying' : 'ignoring'}
                   />
