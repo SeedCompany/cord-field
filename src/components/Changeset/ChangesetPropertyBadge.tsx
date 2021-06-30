@@ -1,5 +1,3 @@
-import { fade, Grid, makeStyles, Typography } from '@material-ui/core';
-import clsx from 'clsx';
 import { identity } from 'lodash';
 import * as React from 'react';
 import { ReactNode } from 'react';
@@ -7,25 +5,7 @@ import { UnsecuredProp, unwrapSecured } from '../../api';
 import { has } from '../../util';
 import { ChangesetBadge } from './ChangesetBadge';
 import { useDiffMode } from './ChangesetDiffContext';
-
-const useStyles = makeStyles(({ palette, shape, spacing }) => ({
-  diff: {
-    marginTop: spacing(0.5),
-  },
-  diffItem: {
-    padding: spacing(0, 0.5),
-    borderRadius: shape.borderRadius,
-  },
-  previous: {
-    textDecoration: 'line-through',
-    color: palette.error.main,
-    background: fade(palette.error.light, 0.5),
-  },
-  current: {
-    color: palette.primary.dark,
-    background: fade(palette.primary.light, 0.5),
-  },
-}));
+import { PropertyDiff } from './PropertyDiff';
 
 interface Props<
   Obj,
@@ -96,7 +76,7 @@ export const ChangesetPropertyBadge = <
               current: currentProp,
             }) ?? ''
           ) : (
-            <ChangedContent
+            <PropertyDiff
               previous={originalProp}
               current={currentProp}
               labelBy={labelBy}
@@ -107,39 +87,5 @@ export const ChangesetPropertyBadge = <
     >
       {children}
     </ChangesetBadge>
-  );
-};
-
-const ChangedContent = <T extends any>({
-  previous,
-  current,
-  labelBy,
-}: {
-  previous: T;
-  current: T;
-  labelBy?: (item: T) => ReactNode;
-}) => {
-  const classes = useStyles();
-  return (
-    <Grid
-      container
-      direction="column"
-      alignItems="flex-start"
-      className={classes.diff}
-    >
-      <Typography
-        className={clsx(classes.diffItem, classes.previous)}
-        gutterBottom
-        display="inline"
-      >
-        {labelBy ? labelBy(previous) : (previous as ReactNode)}
-      </Typography>
-      <Typography
-        className={clsx(classes.diffItem, classes.current)}
-        display="inline"
-      >
-        {labelBy ? labelBy(current) : (current as ReactNode)}
-      </Typography>
-    </Grid>
   );
 };
