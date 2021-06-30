@@ -13,3 +13,4 @@ export * from './invalidate-props';
 export * from './sensitivity';
 export * from './changesets';
 export * from './updateFragment';
+export { readFragment } from './readFragment';
