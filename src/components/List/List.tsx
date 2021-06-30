@@ -3,10 +3,14 @@ import clsx from 'clsx';
 import { times } from 'lodash';
 import { ReactNode, RefObject, useRef } from 'react';
 import * as React from 'react';
-import { isNetworkRequestInFlight, PaginatedListOutput } from '../../api';
+import {
+  Entity,
+  isNetworkRequestInFlight,
+  PaginatedListOutput,
+} from '../../api';
 import { usePersistedScroll } from '../../hooks/usePersistedScroll';
 import { UseStyles } from '../../util';
-import { ChangesetBadge, useDetermineDiffMode } from '../Changeset';
+import { ChangesetBadge, useDetermineChangesetDiffItem } from '../Changeset';
 import { ProgressButton } from '../ProgressButton';
 import { ListQueryResult } from './useListQuery';
 
@@ -19,12 +23,7 @@ const useStyles = makeStyles(({ spacing }) => ({
   container: {},
 }));
 
-interface Resource {
-  __typename?: string;
-  id: string;
-}
-
-export interface ListProps<Item extends Resource>
+export interface ListProps<Item extends Entity>
   extends ListQueryResult<
       Item,
       PaginatedListOutput<Item> & { canCreate?: boolean },
@@ -48,7 +47,7 @@ export interface ListProps<Item extends Resource>
   className?: string;
 }
 
-export const List = <Item extends Resource>(props: ListProps<Item>) => {
+export const List = <Item extends Entity>(props: ListProps<Item>) => {
   const {
     networkStatus,
     data,
@@ -72,7 +71,7 @@ export const List = <Item extends Resource>(props: ListProps<Item>) => {
 
   const scrollRef = useRef<HTMLDivElement | null>(null);
   usePersistedScroll(scrollRefProp ?? scrollRef);
-  const determineChangeMode = useDetermineDiffMode();
+  const determineChangesetDiff = useDetermineChangesetDiffItem();
 
   return (
     <div className={clsx(classes.root, className)} ref={scrollRef}>
@@ -93,7 +92,7 @@ export const List = <Item extends Resource>(props: ListProps<Item>) => {
             ))
           : data.items.map((item) => (
               <Grid {...ItemProps} {...DataItemProps} item key={item.id}>
-                <ChangesetBadge mode={determineChangeMode(item)[0]}>
+                <ChangesetBadge mode={determineChangesetDiff(item).mode}>
                   {renderItem(item)}
                 </ChangesetBadge>
               </Grid>

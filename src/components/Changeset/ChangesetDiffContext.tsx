@@ -2,23 +2,37 @@ import { useApolloClient } from '@apollo/client';
 import * as React from 'react';
 import { createContext, FC, useCallback, useContext, useMemo } from 'react';
 import { Entity } from '../../api';
-import { ChangesetDiffFragment } from '../../api/fragments/changeset.generated';
+import {
+  ChangesetDiffFragment,
+  ChangesetDiffItemFragment,
+} from '../../api/fragments/changeset.generated';
 import { mapFromList } from '../../util';
 
 export type DiffMode = 'added' | 'removed' | 'changed';
-type DetermineDiffModeFn = (
-  obj: unknown
-) => readonly [
-  mode: DiffMode | undefined,
-  current: Entity | undefined,
-  previous: Entity | undefined
-];
+export type EntityFromChangesetDiff<T extends Entity> = Extract<
+  ChangesetDiffItemFragment,
+  {
+    __typename?: T['__typename'];
+  }
+>;
+type DetermineChangesetDiffItemFn = <
+  T extends Entity,
+  DiffItem extends EntityFromChangesetDiff<T>
+>(
+  obj: T | null | undefined
+) =>
+  | { mode: undefined; current: undefined; previous: undefined }
+  | { mode: 'added' | 'removed'; current: DiffItem; previous: undefined }
+  | { mode: 'changed'; current: DiffItem; previous: DiffItem };
 
-export const ChangesetDiffContext = createContext<DetermineDiffModeFn>(() => [
-  undefined,
-  undefined,
-  undefined,
-]);
+const defaultValue = {
+  mode: undefined,
+  current: undefined,
+  previous: undefined,
+};
+export const ChangesetDiffContext = createContext<DetermineChangesetDiffItemFn>(
+  () => defaultValue
+);
 
 export const ChangesetDiffProvider: FC<{
   value: ChangesetDiffFragment | null | undefined;
@@ -39,26 +53,38 @@ export const ChangesetDiffProvider: FC<{
     };
   }, [apollo, props.value]);
 
-  const determineMode: DetermineDiffModeFn = useCallback(
-    (obj) => {
+  const determineMode = useCallback<DetermineChangesetDiffItemFn>(
+    (obj: any) => {
       if (!obj) {
-        return [undefined, undefined, undefined] as const;
+        return defaultValue;
       }
-      const id = apollo.cache.identify(obj as any);
+      const id = apollo.cache.identify(obj);
       if (!id) {
-        return [undefined, undefined, undefined] as const;
+        return defaultValue;
       }
       if (id in value.added) {
-        return ['added', value.added[id], undefined] as const;
+        return {
+          mode: 'added',
+          current: value.added[id]!,
+          previous: undefined,
+        };
       }
       if (id in value.added) {
-        return ['removed', value.removed[id], undefined] as const;
+        return {
+          mode: 'removed',
+          current: value.removed[id]!,
+          previous: undefined,
+        };
       }
       if (id in value.changed) {
         const changed = value.changed[id]!;
-        return ['changed', changed.updated, changed.previous] as const;
+        return {
+          mode: 'changed',
+          current: changed.updated as any,
+          previous: changed.previous as any,
+        };
       }
-      return [undefined, undefined, undefined] as const;
+      return defaultValue;
     },
     [apollo, value]
   );
@@ -70,6 +96,7 @@ export const ChangesetDiffProvider: FC<{
   );
 };
 
-export const useDetermineDiffMode = () => useContext(ChangesetDiffContext);
-export const useDiffMode: DetermineDiffModeFn = (obj) =>
+export const useDetermineChangesetDiffItem = () =>
+  useContext(ChangesetDiffContext);
+export const useChangesetDiffItem: DetermineChangesetDiffItemFn = (obj) =>
   useContext(ChangesetDiffContext)(obj);

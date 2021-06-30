@@ -1,10 +1,12 @@
 import { identity } from 'lodash';
 import * as React from 'react';
 import { ReactNode } from 'react';
-import { UnsecuredProp, unwrapSecured } from '../../api';
-import { has } from '../../util';
+import { Entity, UnsecuredProp, unwrapSecured } from '../../api';
 import { ChangesetBadge } from './ChangesetBadge';
-import { useDiffMode } from './ChangesetDiffContext';
+import {
+  EntityFromChangesetDiff,
+  useChangesetDiffItem,
+} from './ChangesetDiffContext';
 import { PropertyDiff } from './PropertyDiff';
 
 interface Props<
@@ -33,8 +35,8 @@ interface Props<
 }
 
 export const ChangesetPropertyBadge = <
-  Obj,
-  Key extends keyof Obj,
+  Obj extends Entity,
+  Key extends keyof EntityFromChangesetDiff<Obj> & keyof Obj,
   Item extends UnsecuredProp<Obj[Key]>
 >(
   props: Props<Obj, Key, Item>
@@ -47,16 +49,14 @@ export const ChangesetPropertyBadge = <
     renderChange,
     children,
   } = props;
-  const [_, __, previous] = useDiffMode(current);
+  const { previous } = useChangesetDiffItem(current);
 
   if (!current || !previous) {
     return <>{children}</>;
   }
-  if (!has(prop, previous)) {
+  if (!(prop in previous)) {
     console.error(
-      `${
-        previous.__typename ?? 'Unknown'
-      }.${prop} has not be requested in ChangesetDiff`
+      `${previous.__typename}.${prop} has not be requested in ChangesetDiff`
     );
     return <>{children}</>;
   }
