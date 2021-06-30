@@ -41,7 +41,6 @@ export const ProjectBudgetRecords: FC<ProjectBudgetRecordsProps> = (props) => {
     update: onUpdateChangeFragment({
       object: budget?.value ?? undefined,
       fragment: CalculateNewTotal,
-      fragmentName: 'CalculateNewTotal',
       updater: (cached) => ({
         ...cached,
         total: sumBy(cached.records, (record) => record.amount.value ?? 0),

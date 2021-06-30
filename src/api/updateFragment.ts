@@ -2,6 +2,7 @@ import { ApolloCache } from '@apollo/client';
 import { Cache } from '@apollo/client/cache/core/types/Cache';
 import { MutationUpdaterFn } from '@apollo/client/core';
 import { Reference, StoreObject } from '@apollo/client/utilities';
+import { ASTNode, FragmentDefinitionNode, Kind } from 'graphql';
 import { DeepPartial } from 'ts-essentials';
 import { Entity } from './list-caching';
 
@@ -56,9 +57,18 @@ export const updateFragment = <
     }
   }
 
+  const fragmentName =
+    options.fragmentName ??
+    // With our GraphQL gen process each fragment defined gets its own document generated.
+    // In that doc is the fragment being declared is first, and then any inner fragments
+    // referenced are flatly concatenated at the below that. Thus, Apollo maybe cannot
+    // assume which fragment to use, but we can always assume it is the first one.
+    options.fragment.definitions.find(isFragmentDefinition)?.name.value;
+
   const data = cache.readFragment({
     ...options,
     id,
+    fragmentName,
   });
   if (!data) {
     return;
@@ -74,6 +84,7 @@ export const updateFragment = <
   cache.writeFragment({
     ...options,
     id,
+    fragmentName,
     data: next,
     broadcast,
   });
@@ -95,3 +106,6 @@ export const onUpdateChangeFragment =
   (cache) => {
     updateFragment(cache, options);
   };
+
+const isFragmentDefinition = (node: ASTNode): node is FragmentDefinitionNode =>
+  node.kind === Kind.FRAGMENT_DEFINITION;

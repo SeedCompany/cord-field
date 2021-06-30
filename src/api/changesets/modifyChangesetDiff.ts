@@ -21,7 +21,6 @@ export const modifyChangesetDiff = (
   updateFragment(cache, {
     object: obj,
     fragment: ModifyChangesetDiffOnUpdateFragmentDoc,
-    fragmentName: 'ModifyChangesetDiffOnUpdate',
     updater: (owningObj) => {
       const diff = owningObj.changeset?.difference;
       if (!diff) {
