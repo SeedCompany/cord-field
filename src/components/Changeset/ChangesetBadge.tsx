@@ -14,7 +14,7 @@ import clsx from 'clsx';
 import { startCase } from 'lodash';
 import * as React from 'react';
 import { cloneElement, isValidElement, ReactElement, ReactNode } from 'react';
-import { simpleSwitch } from '../../util';
+import { simpleSwitch, UseStyles } from '../../util';
 import { BadgeWithTooltip } from '../BadgeWithTooltip';
 import { PaperTooltip } from '../PaperTooltip';
 
@@ -65,7 +65,7 @@ const useStyles = makeStyles(({ palette }) => ({
   outline: {},
 }));
 
-export interface ChangesetBadgeProps {
+export interface ChangesetBadgeProps extends UseStyles<typeof useStyles> {
   children: ReactNode;
   mode?: 'added' | 'removed' | 'changed';
   disableOutline?: boolean;
@@ -76,7 +76,7 @@ export interface ChangesetBadgeProps {
 export const ChangesetBadge = (props: ChangesetBadgeProps) => {
   const { mode, disableOutline, children, moreInfo, TooltipProps } = props;
   const outline = !disableOutline;
-  const classes = useStyles();
+  const classes = useStyles(props);
 
   if (!mode) {
     return <>{children}</>;

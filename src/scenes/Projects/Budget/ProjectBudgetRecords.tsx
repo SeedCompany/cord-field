@@ -2,8 +2,13 @@ import { useMutation } from '@apollo/client';
 import { sortBy, sumBy } from 'lodash';
 import { Column, Components } from 'material-table';
 import React, { FC, useMemo } from 'react';
+import {
+  PropertyDiff,
+  useDetermineChangesetDiffItem,
+} from '../../../components/Changeset';
 import { useCurrencyFormatter } from '../../../components/Formatters/useCurrencyFormatter';
-import { Table } from '../../../components/Table';
+import { ChangesetAwareTable } from '../../../components/Table';
+import type { ChangesetRowData } from '../../../components/Table/ChangesetAwareTable';
 import {
   BudgetRecordFragment as BudgetRecord,
   CalculateNewTotalFragmentDoc,
@@ -16,12 +21,11 @@ const tableComponents: Components = {
   Toolbar: () => null,
 };
 
-interface BudgetRowData {
-  id: string;
+interface BudgetRowData extends ChangesetRowData {
+  record: BudgetRecord;
   fundingPartner: string;
   fiscalYear: string;
   amount: string | null;
-  canEdit: boolean;
 }
 
 interface ProjectBudgetRecordsProps {
@@ -52,17 +56,29 @@ export const ProjectBudgetRecords: FC<ProjectBudgetRecordsProps> = (props) => {
       });
     },
   });
+  const determineChangesetDiff = useDetermineChangesetDiffItem();
 
   const records: readonly BudgetRecord[] = budget?.value?.records ?? [];
 
   const rowData = sortBy(
-    records.map<BudgetRowData>((record) => ({
-      id: record.id,
-      fundingPartner: record.organization.value?.name.value ?? '',
-      fiscalYear: String(record.fiscalYear.value),
-      amount: String(record.amount.value ?? ''),
-      canEdit: record.amount.canEdit,
-    })),
+    records.map<BudgetRowData>((record) => {
+      const diff = determineChangesetDiff(record);
+      return {
+        record,
+        fundingPartner: record.organization.value?.name.value ?? '',
+        fiscalYear: String(record.fiscalYear.value),
+        amount: String(record.amount.value ?? ''),
+        diffMode: diff.mode,
+        diffInfo:
+          diff.mode === 'changed' ? (
+            <PropertyDiff
+              previous={diff.previous.amount.value ?? 0}
+              current={diff.current.amount.value ?? 0}
+              labelBy={formatCurrency}
+            />
+          ) : undefined,
+      };
+    }),
     [(record) => record.fiscalYear, (record) => record.fundingPartner]
   );
 
@@ -70,7 +86,7 @@ export const ProjectBudgetRecords: FC<ProjectBudgetRecordsProps> = (props) => {
   const columns: Array<Column<BudgetRowData>> = useMemo(
     () => [
       {
-        field: 'id',
+        field: 'record',
         hidden: true,
       },
       {
@@ -85,20 +101,16 @@ export const ProjectBudgetRecords: FC<ProjectBudgetRecordsProps> = (props) => {
       {
         field: 'amount',
         type: 'currency',
-        editable: (_, rowData) => rowData.canEdit,
+        editable: (_, rowData) => rowData.record.amount.canEdit,
         render: (rowData) =>
           rowData.amount ? formatCurrency(Number(rowData.amount)) : blankAmount,
-      },
-      {
-        field: 'canEdit',
-        hidden: true,
       },
     ],
     [formatCurrency]
   );
 
   return (
-    <Table
+    <ChangesetAwareTable
       data={rowData}
       columns={columns}
       isLoading={loading}
@@ -106,25 +118,29 @@ export const ProjectBudgetRecords: FC<ProjectBudgetRecordsProps> = (props) => {
       cellEditable={
         budget?.canEdit
           ? {
-              onCellEditApproved: async (newAmount, _, data) => {
+              onCellEditApproved: async (newAmount, _, { record }) => {
                 if (newAmount === blankAmount || newAmount === '') return;
-                const input = {
-                  budgetRecord: {
-                    id: data.id,
-                    amount: Number(newAmount),
-                  },
-                };
                 await updateBudgetRecord({
-                  variables: { input },
+                  variables: {
+                    input: {
+                      budgetRecord: {
+                        id: record.id,
+                        amount: Number(newAmount),
+                      },
+                      changeset: budget.value?.changeset?.id,
+                    },
+                  },
                   optimisticResponse: {
                     updateBudgetRecord: {
                       __typename: 'UpdateBudgetRecordOutput',
                       budgetRecord: {
                         __typename: 'BudgetRecord',
-                        id: data.id,
+                        id: record.id,
+                        // @ts-expect-error ignore changeset is missing new diff info
+                        changeset: record.changeset,
                         amount: {
                           __typename: 'SecuredFloatNullable',
-                          value: input.budgetRecord.amount,
+                          value: Number(newAmount),
                         },
                       },
                     },
@@ -136,6 +152,9 @@ export const ProjectBudgetRecords: FC<ProjectBudgetRecordsProps> = (props) => {
       }
       options={{
         thirdSortClick: false,
+        headerStyle: {
+          background: 'unset',
+        },
       }}
     />
   );

@@ -30,6 +30,7 @@ fragment ChangesetDiff on ChangesetDiff {
 fragment ChangesetDiffItem on Resource {
   ...Id
   ...ProjectChangesetDiff
+  ...BudgetRecordChangesetDiff
 }
 
 fragment ProjectChangesetDiff on Project {
@@ -46,4 +47,10 @@ fragment ProjectChangesetDiff on Project {
     value
   }
   status
+}
+
+fragment BudgetRecordChangesetDiff on BudgetRecord {
+  amount {
+    value
+  }
 }
