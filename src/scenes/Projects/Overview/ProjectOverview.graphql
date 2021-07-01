@@ -34,7 +34,7 @@ fragment ProjectOverview on Project {
   mouRange {
     ...securedDateRange
   }
-  status
+  projectStatus: status
   estimatedSubmission {
     canRead
     canEdit

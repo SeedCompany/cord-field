@@ -402,7 +402,7 @@ export const ProjectOverview: FC = () => {
                 />
               </ChangesetPropertyBadge>
             </Grid>
-            {projectOverviewData?.project.status === 'InDevelopment' && (
+            {projectOverviewData?.project.projectStatus === 'InDevelopment' && (
               <Tooltip
                 title="Estimated Submission to Regional Director"
                 placement="top"

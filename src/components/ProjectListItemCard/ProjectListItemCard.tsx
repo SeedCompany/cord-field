@@ -154,7 +154,7 @@ export const ProjectListItemCard: FC<ProjectListItemCardProps> = ({
               ) : (
                 <DisplaySimpleProperty
                   label="Status"
-                  value={displayStatus(project.status)}
+                  value={displayStatus(project.projectStatus)}
                 />
               )}
             </Grid>
