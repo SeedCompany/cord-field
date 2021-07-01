@@ -6,6 +6,10 @@ query ProjectChangesetDiff($id: ID!, $changeset: ID!) {
       ...ProjectChangeRequestListItem
       difference {
         ...ChangesetDiff
+        removed {
+          ...LanguageEngagementListItem
+          ...InternshipEngagementListItem
+        }
       }
     }
   }
