@@ -84,7 +84,7 @@ export const ChangesetDiffProvider: FC<{
           previous: undefined,
         };
       }
-      if (id in diff.added) {
+      if (id in diff.removed) {
         return {
           mode: 'removed',
           current: diff.removed[id]!,
