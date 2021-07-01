@@ -1,44 +1,59 @@
 import { useApolloClient } from '@apollo/client';
 import * as React from 'react';
 import { createContext, FC, useCallback, useContext, useMemo } from 'react';
-import { Entity } from '../../api';
 import {
-  ChangesetDiffFragment,
-  ChangesetDiffItemFragment,
-} from '../../api/fragments/changeset.generated';
-import { mapFromList } from '../../util';
+  ChangesetDiffFragment as Diff,
+  ChangesetDiffItemFragment as DiffItem,
+  Entity,
+  IdFragment,
+} from '../../api';
+import { mapFromList, Nullable } from '../../util';
 
 export type DiffMode = 'added' | 'removed' | 'changed';
 export type EntityFromChangesetDiff<T extends Entity> = Extract<
-  ChangesetDiffItemFragment,
+  DiffItem,
   {
     __typename?: T['__typename'];
   }
 >;
 type DetermineChangesetDiffItemFn = <
   T extends Entity,
-  DiffItem extends EntityFromChangesetDiff<T>
+  TDiffItem extends EntityFromChangesetDiff<T>
 >(
-  obj: T | null | undefined
+  obj: Nullable<T>
 ) =>
   | { mode: undefined; current: undefined; previous: undefined }
-  | { mode: 'added' | 'removed'; current: DiffItem; previous: undefined }
-  | { mode: 'changed'; current: DiffItem; previous: DiffItem };
+  | { mode: 'added'; current: TDiffItem; previous: undefined }
+  | { mode: 'removed'; current: TDiffItem; previous: undefined }
+  | { mode: 'changed'; current: TDiffItem; previous: TDiffItem };
 
-const defaultValue = {
+interface ProcessedDiff {
+  added: Record<string, DiffItem>;
+  removed: Record<string, DiffItem>;
+  changed: Record<string, { previous: DiffItem; updated: DiffItem }>;
+}
+
+const defaultDeterminedDiffItem: ReturnType<DetermineChangesetDiffItemFn> = {
   mode: undefined,
   current: undefined,
   previous: undefined,
 };
-export const ChangesetDiffContext = createContext<DetermineChangesetDiffItemFn>(
-  () => defaultValue
-);
+const defaultProcessedDiff: ProcessedDiff = {
+  added: {},
+  removed: {},
+  changed: {},
+};
+export const ChangesetDiffContext = createContext({
+  diff: defaultProcessedDiff,
+  determineChangesetDiffItem: (() =>
+    defaultDeterminedDiffItem) as DetermineChangesetDiffItemFn,
+});
 
 export const ChangesetDiffProvider: FC<{
-  value: ChangesetDiffFragment | null | undefined;
+  value: Diff | null | undefined;
 }> = (props) => {
   const apollo = useApolloClient();
-  const value = useMemo(() => {
+  const diff: ProcessedDiff = useMemo(() => {
     const toCacheId = (obj: any) => {
       const id = apollo.cache.identify(obj);
       return id ? ([id, obj] as const) : null;
@@ -53,50 +68,74 @@ export const ChangesetDiffProvider: FC<{
     };
   }, [apollo, props.value]);
 
-  const determineMode = useCallback<DetermineChangesetDiffItemFn>(
+  const determineChangesetDiffItem = useCallback(
     (obj: any) => {
       if (!obj) {
-        return defaultValue;
+        return defaultDeterminedDiffItem;
       }
       const id = apollo.cache.identify(obj);
       if (!id) {
-        return defaultValue;
+        return defaultDeterminedDiffItem;
       }
-      if (id in value.added) {
+      if (id in diff.added) {
         return {
           mode: 'added',
-          current: value.added[id]!,
+          current: diff.added[id]!,
           previous: undefined,
         };
       }
-      if (id in value.added) {
+      if (id in diff.added) {
         return {
           mode: 'removed',
-          current: value.removed[id]!,
+          current: diff.removed[id]!,
           previous: undefined,
         };
       }
-      if (id in value.changed) {
-        const changed = value.changed[id]!;
+      if (id in diff.changed) {
+        const changed = diff.changed[id]!;
         return {
           mode: 'changed',
-          current: changed.updated as any,
-          previous: changed.previous as any,
+          current: changed.updated,
+          previous: changed.previous,
         };
       }
-      return defaultValue;
+      return defaultDeterminedDiffItem;
     },
-    [apollo, value]
+    [apollo, diff]
+  ) as DetermineChangesetDiffItemFn;
+
+  const contextMemo = useMemo(
+    () => ({
+      diff,
+      determineChangesetDiffItem,
+    }),
+    [diff, determineChangesetDiffItem]
   );
 
   return (
-    <ChangesetDiffContext.Provider value={determineMode}>
+    <ChangesetDiffContext.Provider value={contextMemo}>
       {props.children}
     </ChangesetDiffContext.Provider>
   );
 };
 
 export const useDetermineChangesetDiffItem = () =>
-  useContext(ChangesetDiffContext);
+  useContext(ChangesetDiffContext).determineChangesetDiffItem;
 export const useChangesetDiffItem: DetermineChangesetDiffItemFn = (obj) =>
-  useContext(ChangesetDiffContext)(obj);
+  useContext(ChangesetDiffContext).determineChangesetDiffItem(obj);
+
+export type ChangesetItemFilterFn<R extends DiffItem> = (
+  obj: IdFragment
+) => obj is R;
+
+export const useDeletedItemsOfChangeset = <R extends DiffItem>(
+  filter?: ChangesetItemFilterFn<R>
+): readonly R[] => {
+  const { diff } = useContext(ChangesetDiffContext);
+  return useMemo(() => {
+    if (!filter) {
+      return [];
+    }
+    return Object.values(diff.removed).filter(filter);
+  }, [diff.removed, filter]);
+};
