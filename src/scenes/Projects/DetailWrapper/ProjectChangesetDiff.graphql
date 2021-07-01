@@ -9,6 +9,8 @@ query ProjectChangesetDiff($id: ID!, $changeset: ID!) {
         removed {
           ...LanguageEngagementListItem
           ...InternshipEngagementListItem
+          ...PartnershipCard
+          ...PartnershipForm
         }
       }
     }

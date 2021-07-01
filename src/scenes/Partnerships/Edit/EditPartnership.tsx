@@ -128,7 +128,10 @@ export const EditPartnership: FC<EditPartnershipProps> = (props) => {
       onSubmit={async ({ submitAction, partnership }) => {
         if (submitAction === 'delete') {
           await deletePartnership({
-            variables: { input: partnership.id },
+            variables: {
+              input: partnership.id,
+              changeset: props.partnership.changeset?.id,
+            },
           });
           return;
         }
