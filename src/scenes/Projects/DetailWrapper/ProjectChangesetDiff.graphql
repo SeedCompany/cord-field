@@ -11,6 +11,7 @@ query ProjectChangesetDiff($id: ID!, $changeset: ID!) {
           ...InternshipEngagementListItem
           ...PartnershipCard
           ...PartnershipForm
+          ...BudgetRecord
         }
       }
     }

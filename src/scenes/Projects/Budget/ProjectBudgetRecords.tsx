@@ -9,6 +9,7 @@ import {
 } from '../../../api';
 import {
   PropertyDiff,
+  useDeletedItemsOfChangeset,
   useDetermineChangesetDiffItem,
 } from '../../../components/Changeset';
 import { useCurrencyFormatter } from '../../../components/Formatters/useCurrencyFormatter';
@@ -53,11 +54,14 @@ export const ProjectBudgetRecords: FC<ProjectBudgetRecordsProps> = (props) => {
     }),
   });
   const determineChangesetDiff = useDetermineChangesetDiffItem();
+  const deletedRecords = useDeletedItemsOfChangeset(
+    (obj): obj is BudgetRecord => obj.__typename === 'BudgetRecord'
+  );
 
   const records: readonly BudgetRecord[] = budget?.value?.records ?? [];
 
   const rowData = sortBy(
-    records.map<BudgetRowData>((record) => {
+    [...records, ...deletedRecords].map<BudgetRowData>((record) => {
       const diff = determineChangesetDiff(record);
       return {
         record,
