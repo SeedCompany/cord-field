@@ -1,11 +1,21 @@
 # base ================================
 FROM node:12-alpine as node
 
+LABEL org.opencontainers.image.title="CORD UI"
+LABEL org.opencontainers.image.vendor="Seed Company"
+LABEL org.opencontainers.image.source=https://github.com/SeedCompany/cord-field
+LABEL org.opencontainers.image.licenses="MIT"
+
 WORKDIR /app
 
 ENV NODE_ENV=production \
     PORT=80
 EXPOSE 80
+
+ARG GIT_HASH
+ARG GIT_BRANCH
+RUN echo RAZZLE_GIT_HASH=$GIT_HASH >> .env
+RUN echo RAZZLE_GIT_BRANCH=$GIT_BRANCH >> .env
 
 # builder =============================
 FROM node as builder
