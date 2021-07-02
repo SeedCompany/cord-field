@@ -42,6 +42,8 @@ export const PartnershipList: FC = () => {
   const { root: data, ...list } = useListQuery(ProjectPartnershipsDocument, {
     variables: { project: projectId, changeset: changesetId },
     listAt: (res) => res.project.partnerships,
+    changesetRemovedItems: (obj): obj is PartnershipFormFragment =>
+      obj.__typename === 'Partnership',
   });
   const project = data?.project;
   const partnerships = project?.partnerships;

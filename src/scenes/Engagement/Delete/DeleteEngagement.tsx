@@ -33,6 +33,7 @@ export const DeleteEngagement = (props: DeleteEngagementProps) => {
   const [deleteEng] = useMutation(DeleteEngagementDocument, {
     variables: {
       id: engagement.id,
+      changeset: engagement.changeset?.id,
     },
     update: callAll(
       removeItemFromList({
@@ -68,6 +69,7 @@ export const DeleteEngagement = (props: DeleteEngagementProps) => {
         submitLabel="Delete"
         closeLabel="Keep"
         SubmitProps={{ color: 'error' }}
+        changesetAware
       >
         <SubmitError />
         <Typography variant="body1">

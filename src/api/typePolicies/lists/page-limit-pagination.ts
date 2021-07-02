@@ -49,7 +49,7 @@ export type PaginatedListArgs = InputArg<PaginatedListInput>;
  */
 export const pageLimitPagination = <
   T,
-  List extends Partial<PaginatedListOutput<T>>
+  List extends Partial<PaginatedListOutput<T>> | undefined
 >(
   defaultSort?: SortableListInput
 ): FieldPolicy<List> => ({
@@ -64,6 +64,10 @@ export const pageLimitPagination = <
     return objectToKeyArgs({ input: rest });
   },
   merge(existing, incoming, options: FieldFunctionOptions<PaginatedListArgs>) {
+    if (!incoming) {
+      return existing!;
+    }
+
     const items = mergeList(
       // @ts-expect-error we've mistakenly typed lists as their type,
       // but in actuality they are a reference object (which points to their type).

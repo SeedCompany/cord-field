@@ -24,7 +24,9 @@ import {
 } from '../../../components/Formatters';
 import { IconButton } from '../../../components/IconButton';
 import { InternshipEngagementListItemCard } from '../../../components/InternshipEngagementListItemCard';
+import { InternshipEngagementListItemFragment } from '../../../components/InternshipEngagementListItemCard/InternshipEngagementListItem.generated';
 import { LanguageEngagementListItemCard } from '../../../components/LanguageEngagementListItemCard';
+import { LanguageEngagementListItemFragment } from '../../../components/LanguageEngagementListItemCard/LanguageEngagementListItem.generated';
 import { List, useListQuery } from '../../../components/List';
 import { PartnershipSummary } from '../../../components/PartnershipSummary';
 import { PeriodicReportCard } from '../../../components/PeriodicReports';
@@ -47,6 +49,10 @@ import {
   ProjectOverviewFragment,
 } from './ProjectOverview.generated';
 import { ProjectPostList } from './ProjectPostList';
+
+type EngagementListItem =
+  | LanguageEngagementListItemFragment
+  | InternshipEngagementListItemFragment;
 
 const useStyles = makeStyles(({ spacing, breakpoints, palette }) => ({
   root: {
@@ -140,6 +146,9 @@ export const ProjectOverview: FC = () => {
 
   const engagements = useListQuery(EngagementList, {
     listAt: (data) => data.project.engagements,
+    changesetRemovedItems: (obj): obj is EngagementListItem =>
+      obj.__typename === 'LanguageEngagement' ||
+      obj.__typename === 'InternshipEngagement',
     variables: {
       project: projectId,
       changeset: changesetId,
@@ -393,7 +402,7 @@ export const ProjectOverview: FC = () => {
                 />
               </ChangesetPropertyBadge>
             </Grid>
-            {projectOverviewData?.project.status === 'InDevelopment' && (
+            {projectOverviewData?.project.projectStatus === 'InDevelopment' && (
               <Tooltip
                 title="Estimated Submission to Regional Director"
                 placement="top"

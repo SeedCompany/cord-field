@@ -1,8 +1,8 @@
-mutation DeleteEngagement($id: ID!) {
-  deleteEngagement(id: $id)
+mutation DeleteEngagement($id: ID!, $changeset: ID) {
+  deleteEngagement(id: $id, changeset: $changeset)
 }
 
 fragment EngagementToDelete on Engagement {
-  id
+  ...Id
   canDelete
 }

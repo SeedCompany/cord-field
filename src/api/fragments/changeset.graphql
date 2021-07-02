@@ -46,7 +46,7 @@ fragment ProjectChangesetDiff on Project {
   step {
     value
   }
-  status
+  projectStatus: status
 }
 
 fragment BudgetRecordChangesetDiff on BudgetRecord {
