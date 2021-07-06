@@ -4,19 +4,25 @@ import {
   CardContent,
   Divider,
   makeStyles,
+  TextField,
   Typography,
 } from '@material-ui/core';
-import { isEqual } from 'lodash';
+import { compact, isEqual, keyBy, startCase } from 'lodash';
 import React, { ComponentType, FC, useMemo } from 'react';
 import { Form, FormSpy } from 'react-final-form';
-import { Except } from 'type-fest';
+import { Except, Merge } from 'type-fest';
 import {
+  displayInternDomain,
+  displayInternPosition,
+  displayInternProgram,
+  MethodologyToApproach,
   UpdateCeremonyInput,
   UpdateInternshipEngagement,
   UpdateInternshipEngagementInput,
   UpdateLanguageEngagement,
   UpdateLanguageEngagementInput,
 } from '../../api';
+import { DisplayLocationFragment } from '../../api/fragments/location.generated';
 import { UpdateCeremonyDocument } from '../../scenes/Engagement/CeremonyCard/CeremonyCard.generated';
 import { CeremonyPlanned } from '../../scenes/Engagement/CeremonyCard/CeremonyPlanned';
 import {
@@ -27,11 +33,16 @@ import { InternshipEngagementDetailFragment } from '../../scenes/Engagement/Inte
 import { LanguageEngagementDetailFragment } from '../../scenes/Engagement/LanguageEngagement';
 import { ExtractStrict, Many } from '../../util';
 import {
+  CheckboxField,
   DateField,
+  EnumField,
   FieldGroup,
   SecuredEditableKeys,
   SecuredField,
 } from '../form';
+import { AutocompleteField } from '../form/AutocompleteField';
+import { LocationField, UserField } from '../form/Lookup';
+import { UserLookupItemFragment } from '../form/Lookup/User/UserLookup.generated';
 
 const useStyles = makeStyles(({ spacing }) => ({
   root: {
@@ -71,33 +82,46 @@ type EditableEngagementField = ExtractStrict<
   | SecuredEditableKeys<LanguageEngagementDetailFragment>
   | SecuredEditableKeys<InternshipEngagementDetailFragment>,
   // Add more fields here as needed
-  | 'startDateOverride'
-  | 'endDateOverride'
+  | 'dateRangeOverride'
   | 'completeDate'
   | 'disbursementCompleteDate'
+  | 'methodologies'
+  | 'position'
+  | 'countryOfOriginId'
+  | 'mentorId'
+  | 'firstScripture'
+  | 'lukePartnership'
+  | 'paratextRegistryId'
 >;
 
 interface EngagementFormValues {
-  engagement: UpdateLanguageEngagement & UpdateInternshipEngagement;
+  engagement: Merge<
+    UpdateLanguageEngagement & UpdateInternshipEngagement,
+    {
+      mentorId?: UserLookupItemFragment | null;
+      countryOfOriginId?: DisplayLocationFragment | null;
+    }
+  >;
 }
-
 const fieldMapping: Record<
   EditableEngagementField,
   ComponentType<EngagementFieldProps>
 > = {
-  startDateOverride: ({ props }) => (
-    <DateField
-      {...props}
-      label="Start Date"
-      helperText="Leave blank to use project's start date"
-    />
-  ),
-  endDateOverride: ({ props }) => (
-    <DateField
-      {...props}
-      label="End Date"
-      helperText="Leave blank to use project's end date"
-    />
+  dateRangeOverride: ({ props }) => (
+    <>
+      <DateField
+        {...props}
+        name="startDateOverride"
+        label="Start Date"
+        helperText="Leave blank to use project's start date"
+      />
+      <DateField
+        {...props}
+        name="endDateOverride"
+        label="End Date"
+        helperText="Leave blank to use project's end date"
+      />
+    </>
   ),
   completeDate: ({ props, engagement }) => (
     <DateField
@@ -111,6 +135,50 @@ const fieldMapping: Record<
   ),
   disbursementCompleteDate: ({ props }) => (
     <DateField {...props} label="Disbursement Complete Date" />
+  ),
+  methodologies: ({ props }) => (
+    <EnumField
+      {...props}
+      label="Methodologies"
+      multiple
+      options={Object.keys(MethodologyToApproach)}
+      getLabel={startCase}
+    />
+  ),
+  position: ({ props, engagement }) => {
+    const options =
+      engagement.__typename === 'InternshipEngagement'
+        ? engagement.position.options
+        : [];
+    const groups = keyBy(options, (o) => o.position);
+    return (
+      <AutocompleteField
+        {...props}
+        label="Intern Position"
+        options={options.map((o) => o.position)}
+        groupBy={(p) => {
+          const option = groups[p];
+          return compact([
+            displayInternProgram(option?.program),
+            displayInternDomain(option?.domain),
+          ]).join(' - ');
+        }}
+        getOptionLabel={displayInternPosition}
+      />
+    );
+  },
+  countryOfOriginId: ({ props }) => (
+    <LocationField {...props} label="Country of Origin" />
+  ),
+  mentorId: ({ props }) => <UserField {...props} label="Mentor" />,
+  firstScripture: ({ props }) => (
+    <CheckboxField {...props} label="First Scripture" keepHelperTextSpacing />
+  ),
+  lukePartnership: ({ props }) => (
+    <CheckboxField {...props} label="Luke Partnership" />
+  ),
+  paratextRegistryId: ({ props }) => (
+    <TextField {...props} label="Paratext Registry ID" />
   ),
 };
 
@@ -140,7 +208,16 @@ export const LanguageEngagementForm: FC<LanguageEngagementFormProps> = ({
   const fields = editFields.map((name) => {
     const Field = fieldMapping[name];
     return (
-      <SecuredField obj={engagement} name={name} key={name}>
+      <SecuredField
+        obj={engagement}
+        // @ts-expect-error this error comes from the fact that we are trying to
+        // handle the union of both engagement type's fields. TS correctly
+        // takes the intersection of keys instead of a union, which would be unsafe.
+        // In this case, we verified that the keys are safe with EditableEngagementField
+        // type and SecuredField also gracefully handles bad keys at runtime.
+        name={name}
+        key={name}
+      >
         {(props) => <Field props={props} engagement={engagement} />}
       </SecuredField>
     );
