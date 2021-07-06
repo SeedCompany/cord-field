@@ -72,6 +72,7 @@ export const EditProduct = () => {
       productId,
       reportId: currentReportDue?.value?.id,
     },
+    fetchPolicy: 'network-only',
   });
   const { data: stepsData, loading: stepsDataLoading } = useQuery(
     MethodologyAvailableStepsDocument
@@ -134,8 +135,9 @@ export const EditProduct = () => {
               productType: product.produces.value.__typename,
             }
           : undefined),
+        stepNames: product.progressReport?.steps.map(({ step }) => step),
         productSteps: product.progressReport?.steps.map((step) => ({
-          name: step.step,
+          step: step.step,
           percentDone: step.percentDone,
         })),
       },
@@ -169,6 +171,7 @@ export const EditProduct = () => {
         fullOldTestament,
         fullNewTestament,
         productSteps,
+        stepNames,
         ...input
       } = data.product;
 
@@ -202,10 +205,7 @@ export const EditProduct = () => {
           variables: {
             input: {
               steps:
-                productSteps?.map((step) => ({
-                  step: step.name,
-                  percentDone: step.percentDone || 0,
-                })) || [],
+                productSteps?.filter((s) => stepNames?.includes(s.step)) || [],
               productId: product.id,
               reportId: currentReportDue.value.id,
             },

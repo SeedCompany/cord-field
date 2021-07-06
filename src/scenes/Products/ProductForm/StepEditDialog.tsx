@@ -1,6 +1,6 @@
 import React, { useMemo } from 'react';
 import { Except } from 'type-fest';
-import { MethodologyStep } from '../../../api';
+import { displayProductStep, MethodologyStep } from '../../../api';
 import {
   DialogForm,
   DialogFormProps,
@@ -8,55 +8,52 @@ import {
 import { TextField } from '../../../components/form';
 
 export interface StepFormState {
-  name: MethodologyStep;
+  step: MethodologyStep;
   percentDone?: number | null;
   description?: string;
 }
 
-export interface StepDialogValues {
-  id: string;
-  previousValue: number;
-  newValue: number;
-  description: string;
-  name: string;
+export interface StepFormValues {
+  step: MethodologyStep;
+  percentDone?: number | null;
+  description?: string;
+  isCompletedStep?: boolean;
 }
 
 type StepEditDialogProps = Except<
-  DialogFormProps<StepDialogValues>,
+  DialogFormProps<StepFormValues>,
   'initialValues'
 > &
-  StepFormState;
+  StepFormValues;
 
 export const StepEditDialog = ({
-  name,
+  step,
   percentDone,
   description,
+  isCompletedStep,
   ...dialogProps
 }: StepEditDialogProps) => {
   const initialValues = useMemo(() => {
     return {
-      name: name,
-      previousValue: percentDone || 0,
+      step: step,
+      percentDone: percentDone || 0,
       description: description || '',
     };
-  }, [description, name, percentDone]);
+  }, [description, percentDone, step]);
 
   return (
-    <DialogForm<StepDialogValues>
+    <DialogForm<StepFormState>
       {...dialogProps}
-      title={name}
+      title={displayProductStep(step)}
       initialValues={initialValues}
     >
       {() => {
         return (
           <>
-            <TextField
-              disabled
-              name="previousValue"
-              label="Current Progress Percentage"
-            />
-            <TextField name="newValue" label="New Progress Percentage" />
-            <TextField name="description" label="Description" />
+            <TextField name="percentDone" label="Progress Percentage" />
+            {isCompletedStep && (
+              <TextField name="description" label="Description" />
+            )}
           </>
         );
       }}

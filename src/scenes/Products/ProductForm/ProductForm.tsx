@@ -1,7 +1,6 @@
 import { Grid, makeStyles, Typography } from '@material-ui/core';
-import { isEqual } from 'lodash';
-import React, { useEffect, useState } from 'react';
-import { Form, FormProps, FormSpy } from 'react-final-form';
+import React from 'react';
+import { Form, FormProps } from 'react-final-form';
 import { AvailableMethodologySteps, StepProgress } from '../../../api';
 import {
   FieldGroup,
@@ -10,8 +9,6 @@ import {
 } from '../../../components/form';
 import { AccordionSection, ProductFormValues } from './AccordionSection';
 import { ProductFormFragment } from './ProductForm.generated';
-import { StepFormState } from './StepEditDialog';
-import { StepsList } from './StepsList';
 
 const useStyles = makeStyles(({ spacing }) => ({
   submissionBlurb: {
@@ -40,19 +37,6 @@ export const ProductForm = ({
 }: ProductFormProps) => {
   const classes = useStyles();
 
-  const [steps, setSteps] = useState<StepFormState[]>();
-
-  useEffect(() => {
-    if (productSteps) {
-      setSteps(
-        productSteps.map((step) => ({
-          name: step.step,
-          percentDone: step.percentDone,
-        }))
-      );
-    }
-  }, [productSteps]);
-
   return (
     <Form<ProductFormValues>
       {...props}
@@ -61,45 +45,18 @@ export const ProductForm = ({
           utils.changeValue(state, field, () => value);
         },
       }}
-      onSubmit={(values, form) => {
-        void props.onSubmit(
-          {
-            product: {
-              ...values.product,
-              productSteps: steps,
-            },
-          },
-          form
-        );
-      }}
     >
       {({ handleSubmit, ...rest }) => (
         <form onSubmit={handleSubmit}>
-          <FormSpy<ProductFormValues>
-            subscription={{ values: true }}
-            onChange={async ({ values }) => {
-              if (
-                !isEqual(values, props.initialValues) &&
-                // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
-                values.product?.methodology &&
-                methodologyAvailableSteps
-              ) {
-                const steps = methodologyAvailableSteps.find(
-                  (step) => step.methodology === values.product.methodology
-                )?.steps;
-                setSteps(
-                  steps?.map((stepName) => ({
-                    name: stepName,
-                  }))
-                );
-              }
-            }}
-          />
           <Grid container spacing={3}>
             <Grid item container xs={7} direction="column">
               <SubmitError />
               <FieldGroup prefix="product">
-                <AccordionSection product={product} {...rest} />
+                <AccordionSection
+                  product={product}
+                  methodologyAvailableSteps={methodologyAvailableSteps}
+                  {...rest}
+                />
               </FieldGroup>
               <div className={classes.submissionBlurb}>
                 <Typography variant="h4">Check Your Selections</Typography>
@@ -125,12 +82,6 @@ export const ProductForm = ({
                 )}
               </div>
             </Grid>
-
-            {steps && (
-              <Grid item container xs={5}>
-                <StepsList steps={steps} onSubmit={setSteps} />
-              </Grid>
-            )}
           </Grid>
         </form>
       )}

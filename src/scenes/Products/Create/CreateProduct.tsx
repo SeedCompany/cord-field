@@ -113,6 +113,7 @@ export const CreateProduct = () => {
                 fullOldTestament,
                 fullNewTestament,
                 productSteps,
+                stepNames,
                 ...inputs
               },
             },
@@ -152,10 +153,9 @@ export const CreateProduct = () => {
                   variables: {
                     input: {
                       steps:
-                        productSteps?.map((step) => ({
-                          step: step.name,
-                          percentDone: step.percentDone || 0,
-                        })) || [],
+                        productSteps?.filter((s) =>
+                          stepNames?.includes(s.step)
+                        ) || [],
                       productId: product.id,
                       reportId: currentReportDue.value.id,
                     },

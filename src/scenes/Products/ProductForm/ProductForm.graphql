@@ -21,6 +21,11 @@ fragment ProductForm on Product {
   }
   approach
   legacyType
+  describeCompletion {
+    canRead
+    canEdit
+    value
+  }
   ... on DerivativeScriptureProduct {
     produces {
       canRead
