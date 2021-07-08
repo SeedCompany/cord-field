@@ -99,14 +99,7 @@ export const UserForm = <T, R = void>({
           </Grid>
         </Grid>
         <SecuredField obj={user} name="email">
-          {(props) => (
-            <EmailField
-              {...props}
-              // Email can't be changed right now but still show it
-              initialValue={user?.email.value ?? ''}
-              disabled={!!user}
-            />
-          )}
+          {(props) => <EmailField {...props} required={false} />}
         </SecuredField>
         <SecuredField obj={user} name="title">
           {(props) => (
