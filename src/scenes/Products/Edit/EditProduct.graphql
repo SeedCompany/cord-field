@@ -6,22 +6,12 @@ mutation UpdateProduct($input: UpdateProductInput!) {
   }
 }
 
-query Product(
+query ProductInfoForEdit(
   $productId: ID!
   $projectId: ID!
   $engagementId: ID!
   $changeset: ID
-  $reportId: ID
 ) {
-  product(id: $productId) {
-    ...ProductForm
-    progressReport(reportId: $reportId) {
-      steps {
-        step
-        percentDone
-      }
-    }
-  }
   project(id: $projectId, changeset: $changeset) {
     ...ProjectBreadcrumb
   }
@@ -30,6 +20,19 @@ query Product(
   }
   product(id: $productId) {
     ...ProductForm
+    progressOfCurrentReportDue {
+      report {
+        id
+      }
+      steps {
+        step
+        percentDone
+      }
+    }
+  }
+  methodologyAvailableSteps {
+    methodology
+    steps
   }
 }
 

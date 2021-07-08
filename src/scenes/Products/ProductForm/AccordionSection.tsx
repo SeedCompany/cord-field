@@ -21,7 +21,6 @@ import { FormRenderProps } from 'react-final-form';
 import { Except, Merge, UnionToIntersection } from 'type-fest';
 import {
   ApproachMethodologies,
-  AvailableMethodologySteps,
   CreateProduct,
   displayApproach,
   displayMethodology,
@@ -74,6 +73,7 @@ import {
   productTypes,
 } from './constants';
 import {
+  AvailableMethodologyStepsFragment as AvailableMethodologySteps,
   ProductForm_DerivativeScriptureProduct_Fragment as DerivativeScriptureProduct,
   ProductForm_DirectScriptureProduct_Fragment as DirectScriptureProduct,
   ProductFormFragment,
@@ -159,7 +159,7 @@ export const AccordionSection = ({
   methodologyAvailableSteps,
 }: Except<FormRenderProps<ProductFormValues>, 'handleSubmit'> & {
   product?: ProductFormFragment;
-  methodologyAvailableSteps?: AvailableMethodologySteps[];
+  methodologyAvailableSteps?: readonly AvailableMethodologySteps[];
 }) => {
   const productObj = product as Product | undefined;
   const classes = useStyles();

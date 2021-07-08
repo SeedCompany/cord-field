@@ -106,3 +106,13 @@ fragment ScriptureRange on ScriptureRange {
     verse
   }
 }
+
+fragment AvailableMethodologySteps on AvailableMethodologySteps {
+  steps
+  methodology
+}
+
+fragment StepProgress on StepProgress {
+  step
+  percentDone
+}

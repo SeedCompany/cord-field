@@ -7,11 +7,9 @@ import React, { useMemo } from 'react';
 import { Helmet } from 'react-helmet-async';
 import { useNavigate, useParams } from 'react-router';
 import {
-  AvailableMethodologySteps,
   handleFormError,
   LanguageEngagement,
   removeItemFromList,
-  StepProgress,
 } from '../../../api';
 import { EngagementBreadcrumb } from '../../../components/EngagementBreadcrumb';
 import { ProjectBreadcrumb } from '../../../components/ProjectBreadcrumb';
@@ -22,14 +20,12 @@ import {
   removeScriptureTypename,
 } from '../../../util/biblejs';
 import { useProjectId } from '../../Projects/useProjectId';
-import { EngagementReportDocument } from '../LanguageEngagementReport.generated';
 import { ProductForm, ProductFormProps } from '../ProductForm';
 import { ProductFormValues } from '../ProductForm/AccordionSection';
 import { UpdateProductProgressDocument } from '../ProductForm/ProductProgress.generated';
-import { MethodologyAvailableStepsDocument } from '../Steps.generated';
 import {
   DeleteProductDocument,
-  ProductDocument,
+  ProductInfoForEditDocument,
   UpdateProductDocument,
 } from './EditProduct.generated';
 
@@ -51,32 +47,14 @@ export const EditProduct = () => {
   const { engagementId = '', productId = '' } = useParams();
   const { enqueueSnackbar } = useSnackbar();
 
-  const { data: engagementReportData, loading: engagementReportDataLoading } =
-    useQuery(EngagementReportDocument, {
-      variables: {
-        engagementId,
-      },
-      fetchPolicy: 'network-only',
-    });
-
-  const currentReportDue =
-    engagementReportData?.engagement.__typename === 'LanguageEngagement'
-      ? engagementReportData.engagement.currentProgressReportDue
-      : undefined;
-
-  const { data, loading } = useQuery(ProductDocument, {
+  const { data, loading } = useQuery(ProductInfoForEditDocument, {
     variables: {
       projectId,
       changeset: changesetId,
       engagementId,
       productId,
-      reportId: currentReportDue?.value?.id,
     },
-    fetchPolicy: 'network-only',
   });
-  const { data: stepsData, loading: stepsDataLoading } = useQuery(
-    MethodologyAvailableStepsDocument
-  );
 
   const project = data?.project;
   const engagement = data?.engagement;
@@ -135,8 +113,10 @@ export const EditProduct = () => {
               productType: product.produces.value.__typename,
             }
           : undefined),
-        stepNames: product.progressReport?.steps.map(({ step }) => step),
-        productSteps: product.progressReport?.steps.map((step) => ({
+        stepNames: product.progressOfCurrentReportDue?.steps.map(
+          ({ step }) => step
+        ),
+        productSteps: product.progressOfCurrentReportDue?.steps.map((step) => ({
           step: step.step,
           percentDone: step.percentDone,
         })),
@@ -144,9 +124,6 @@ export const EditProduct = () => {
     };
     return values;
   }, [product]);
-
-  const methodologyAvailableSteps =
-    stepsData?.methodologyAvailableSteps as AvailableMethodologySteps[];
 
   const handleSubmit: ProductFormProps['onSubmit'] = async (data) => {
     if (!product) {
@@ -200,14 +177,15 @@ export const EditProduct = () => {
         },
       });
 
-      if (currentReportDue?.value) {
+      const reportId = product.progressOfCurrentReportDue?.report.id;
+      if (reportId) {
         await updateProductProgress({
           variables: {
             input: {
               steps:
                 productSteps?.filter((s) => stepNames?.includes(s.step)) || [],
               productId: product.id,
-              reportId: currentReportDue.value.id,
+              reportId,
             },
           },
         });
@@ -231,31 +209,24 @@ export const EditProduct = () => {
         <Typography variant="h4">Edit Product</Typography>
       </Breadcrumbs>
       <Typography variant="h2">
-        {loading || engagementReportDataLoading || stepsDataLoading ? (
-          <Skeleton width="50%" variant="text" />
-        ) : (
-          'Edit Product'
-        )}
+        {loading ? <Skeleton width="50%" variant="text" /> : 'Edit Product'}
       </Typography>
 
-      {!loading &&
-        !engagementReportDataLoading &&
-        !stepsDataLoading &&
-        product && (
-          <ProductForm
-            methodologyAvailableSteps={methodologyAvailableSteps}
-            product={product}
-            productSteps={product.progressReport?.steps as StepProgress[]}
-            onSubmit={async (data, form) => {
-              try {
-                await handleSubmit(data, form);
-              } catch (e) {
-                return await handleFormError(e, form);
-              }
-            }}
-            initialValues={initialValues}
-          />
-        )}
+      {!loading && data && product && (
+        <ProductForm
+          methodologyAvailableSteps={data.methodologyAvailableSteps}
+          product={product}
+          productSteps={product.progressOfCurrentReportDue?.steps}
+          onSubmit={async (data, form) => {
+            try {
+              await handleSubmit(data, form);
+            } catch (e) {
+              return await handleFormError(e, form);
+            }
+          }}
+          initialValues={initialValues}
+        />
+      )}
     </main>
   );
 };

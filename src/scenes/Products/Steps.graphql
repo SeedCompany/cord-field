@@ -1,6 +1,0 @@
-query MethodologyAvailableSteps {
-  methodologyAvailableSteps {
-    methodology
-    steps
-  }
-}

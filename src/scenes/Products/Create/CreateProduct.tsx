@@ -5,23 +5,17 @@ import { useSnackbar } from 'notistack';
 import React from 'react';
 import { Helmet } from 'react-helmet-async';
 import { useNavigate, useParams } from 'react-router';
-import {
-  addItemToList,
-  AvailableMethodologySteps,
-  handleFormError,
-} from '../../../api';
+import { addItemToList, handleFormError } from '../../../api';
 import { EngagementBreadcrumb } from '../../../components/EngagementBreadcrumb';
 import { ProjectBreadcrumb } from '../../../components/ProjectBreadcrumb';
 import { ButtonLink } from '../../../components/Routing';
 import { parsedRangesWithFullTestamentRange } from '../../../util/biblejs';
 import { useProjectId } from '../../Projects/useProjectId';
-import { EngagementReportDocument } from '../LanguageEngagementReport.generated';
 import { ProductForm } from '../ProductForm';
 import { UpdateProductProgressDocument } from '../ProductForm/ProductProgress.generated';
-import { MethodologyAvailableStepsDocument } from '../Steps.generated';
 import {
   CreateProductDocument,
-  GetProductBreadcrumbDocument,
+  ProductInfoForCreateDocument,
 } from './CreateProduct.generated';
 
 const useStyles = makeStyles(({ spacing }) => ({
@@ -42,49 +36,29 @@ export const CreateProduct = () => {
   const { engagementId = '' } = useParams();
   const { enqueueSnackbar } = useSnackbar();
 
-  const { data, loading } = useQuery(GetProductBreadcrumbDocument, {
+  const { data, loading } = useQuery(ProductInfoForCreateDocument, {
     variables: {
       projectId,
       changeset: changesetId,
       engagementId,
     },
   });
-  const { data: stepsData, loading: stepsDataLoading } = useQuery(
-    MethodologyAvailableStepsDocument
-  );
-  const { data: engagementReportData, loading: engagementReportDataLoading } =
-    useQuery(EngagementReportDocument, {
-      variables: {
-        engagementId,
-      },
-      fetchPolicy: 'network-only',
-    });
-
-  const currentReportDue =
-    engagementReportData?.engagement.__typename === 'LanguageEngagement'
-      ? engagementReportData.engagement.currentProgressReportDue
-      : undefined;
 
   const project = data?.project;
-  const engagement = data?.engagement;
+  const engagement =
+    // Products are only created for language engagements
+    data?.engagement.__typename === 'LanguageEngagement'
+      ? data.engagement
+      : undefined;
 
   const [createProduct] = useMutation(CreateProductDocument, {
     update: addItemToList({
-      listId: [
-        // Need to narrow type to language engagement to get the product list on that concrete
-        engagement?.__typename === 'LanguageEngagement'
-          ? engagement
-          : undefined,
-        'products',
-      ],
+      listId: [engagement, 'products'],
       outputToItem: (res) => res.createProduct.product,
     }),
   });
 
   const [updateProductProgress] = useMutation(UpdateProductProgressDocument);
-
-  const methodologyAvailableSteps =
-    stepsData?.methodologyAvailableSteps as AvailableMethodologySteps[];
 
   return (
     <main className={classes.root}>
@@ -95,15 +69,11 @@ export const CreateProduct = () => {
         <Typography variant="h4">Create Product</Typography>
       </Breadcrumbs>
       <Typography variant="h2">
-        {loading || stepsDataLoading || engagementReportDataLoading ? (
-          <Skeleton width="50%" variant="text" />
-        ) : (
-          'Create Product'
-        )}
+        {loading ? <Skeleton width="50%" variant="text" /> : 'Create Product'}
       </Typography>
-      {!loading && !stepsDataLoading && !engagementReportDataLoading && (
+      {!loading && data && (
         <ProductForm
-          methodologyAvailableSteps={methodologyAvailableSteps}
+          methodologyAvailableSteps={data.methodologyAvailableSteps}
           onSubmit={async (
             {
               product: {
@@ -148,7 +118,8 @@ export const CreateProduct = () => {
 
               const { product } = data!.createProduct;
 
-              if (currentReportDue?.value) {
+              const reportId = engagement?.currentProgressReportDue.value?.id;
+              if (reportId) {
                 await updateProductProgress({
                   variables: {
                     input: {
@@ -157,7 +128,7 @@ export const CreateProduct = () => {
                           stepNames?.includes(s.step)
                         ) || [],
                       productId: product.id,
-                      reportId: currentReportDue.value.id,
+                      reportId,
                     },
                   },
                 });

@@ -1,14 +1,17 @@
 import { Grid, makeStyles, Typography } from '@material-ui/core';
 import React from 'react';
 import { Form, FormProps } from 'react-final-form';
-import { AvailableMethodologySteps, StepProgress } from '../../../api';
 import {
   FieldGroup,
   SubmitButton,
   SubmitError,
 } from '../../../components/form';
 import { AccordionSection, ProductFormValues } from './AccordionSection';
-import { ProductFormFragment } from './ProductForm.generated';
+import {
+  AvailableMethodologyStepsFragment as AvailableMethodologySteps,
+  ProductFormFragment,
+  StepProgressFragment as StepProgress,
+} from './ProductForm.generated';
 
 const useStyles = makeStyles(({ spacing }) => ({
   submissionBlurb: {
@@ -25,8 +28,8 @@ const useStyles = makeStyles(({ spacing }) => ({
 
 export type ProductFormProps = FormProps<ProductFormValues> & {
   product?: ProductFormFragment;
-  methodologyAvailableSteps?: AvailableMethodologySteps[];
-  productSteps?: StepProgress[];
+  methodologyAvailableSteps?: readonly AvailableMethodologySteps[];
+  productSteps?: readonly StepProgress[];
 };
 
 export const ProductForm = ({
