@@ -1,0 +1,7 @@
+mutation DeletePost($id: ID!) {
+  deletePost(id: $id)
+}
+
+fragment PostToDelete on Post {
+  ...Id
+}

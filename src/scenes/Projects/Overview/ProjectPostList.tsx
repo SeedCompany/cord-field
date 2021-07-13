@@ -3,9 +3,10 @@ import { Add } from '@material-ui/icons';
 import { FC } from 'react';
 import * as React from 'react';
 import { addItemToList } from '../../../api';
+import { useDialog } from '../../../components/Dialog';
 import { Fab } from '../../../components/Fab';
 import { List, useListQuery } from '../../../components/List';
-import { CreatePostForm } from '../../../components/posts/CreatePostForm';
+import { CreatePost } from '../../../components/posts/CreatePost';
 import { PostListItemCard } from '../../../components/posts/PostListItemCard';
 import {
   ProjectPostListOverviewDocument as PostList,
@@ -27,8 +28,8 @@ const useStyles = makeStyles(({ spacing }) => ({
 
 export const ProjectPostList: FC<ProjectPostListProps> = ({ project }) => {
   const classes = useStyles();
-  const [showPostField, setShowPostField] = React.useState(false);
-  const togglePostField = () => setShowPostField(!showPostField);
+
+  const [createPostState, createPost] = useDialog();
 
   const posts = useListQuery(PostList, {
     listAt: (data) => data.project.posts,
@@ -45,37 +46,31 @@ export const ProjectPostList: FC<ProjectPostListProps> = ({ project }) => {
         </Grid>
         <Grid item>
           <Tooltip title={`Add Post`}>
-            <Fab
-              color="error"
-              aria-label={`Add Post`}
-              onClick={togglePostField}
-            >
+            <Fab color="error" aria-label={`Add Post`} onClick={createPost}>
               <Add />
             </Fab>
           </Tooltip>
         </Grid>
       </Grid>
-      {showPostField && (
-        <CreatePostForm
-          parentId={project.id}
-          mutationUpdate={addItemToList({
-            listId: [project, 'posts'],
-            outputToItem: (data) => data.createPost.post,
-          })}
-          onSubmit={() => {
-            togglePostField();
-          }}
-        />
-      )}
       <List
         {...posts}
         classes={{
           container: classes.postListItems,
         }}
         spacing={3}
-        renderItem={(post) => <PostListItemCard {...post} />}
+        renderItem={(post) => (
+          <PostListItemCard project={project} post={post} />
+        )}
         skeletonCount={0}
         renderSkeleton={null}
+      />
+      <CreatePost
+        {...createPostState}
+        parentId={project.id}
+        mutationUpdate={addItemToList({
+          listId: [project, 'posts'],
+          outputToItem: (data) => data.createPost.post,
+        })}
       />
     </>
   );
