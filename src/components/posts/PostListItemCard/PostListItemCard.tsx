@@ -9,7 +9,8 @@ import {
 } from '@material-ui/core';
 import { MoreVert } from '@material-ui/icons';
 import clsx from 'clsx';
-import { FC, useState } from 'react';
+import parse from 'html-react-parser';
+import { FC, useMemo, useState } from 'react';
 import * as React from 'react';
 import { canEditAny, displayPostShareability } from '../../../api';
 import { square } from '../../../util';
@@ -91,6 +92,8 @@ export const PostListItemCard: FC<PostListItemCardProps> = ({
   const [deleteState, deletePost] = useDialog();
   const editable = canEditAny(post);
 
+  const postBody = useMemo(() => parse(post.body.value || ''), [post]);
+
   return (
     <>
       <Card className={clsx(classes.root, props.className)}>
@@ -124,7 +127,7 @@ export const PostListItemCard: FC<PostListItemCardProps> = ({
                 </Typography>
               </div>
             </div>
-            <Typography variant="body2">{post.body.value}</Typography>
+            <Typography variant="body2">{postBody}</Typography>
           </div>
         </CardContent>
         {editable && (

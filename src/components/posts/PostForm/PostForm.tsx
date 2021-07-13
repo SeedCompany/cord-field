@@ -10,11 +10,11 @@ import {
   DialogFormProps,
 } from '../../../components/Dialog/DialogForm';
 import {
+  RichTextField,
   SecuredField,
   SelectField,
   SubmitError,
-  TextField,
-} from '../../../components/form';
+} from '../../form';
 import { minLength, required } from '../../form/validators';
 import { PostFormFragment } from './PostForm.generated';
 
@@ -56,14 +56,7 @@ export const PostForm = <T, R = void>({
     </Grid>
     <SecuredField obj={post} name="body">
       {(props) => (
-        <TextField
-          variant="outlined"
-          multiline
-          placeholder="Say something..."
-          inputProps={{ rowsMin: 4 }}
-          validate={[required, minLength()]}
-          {...props}
-        />
+        <RichTextField validate={[required, minLength()]} {...props} />
       )}
     </SecuredField>
   </DialogForm>
