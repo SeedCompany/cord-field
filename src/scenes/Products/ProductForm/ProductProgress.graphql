@@ -5,7 +5,9 @@ mutation UpdateProductProgress($input: ProductProgressInput!) {
     }
     steps {
       step
-      percentDone
+      percentDone {
+        value
+      }
     }
   }
 }

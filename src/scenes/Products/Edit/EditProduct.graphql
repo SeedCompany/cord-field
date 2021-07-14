@@ -26,7 +26,11 @@ query ProductInfoForEdit(
       }
       steps {
         step
-        percentDone
+        percentDone {
+          canRead
+          canEdit
+          value
+        }
       }
     }
   }

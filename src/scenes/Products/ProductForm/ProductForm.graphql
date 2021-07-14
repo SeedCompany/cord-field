@@ -114,5 +114,8 @@ fragment AvailableMethodologySteps on AvailableMethodologySteps {
 
 fragment StepProgress on StepProgress {
   step
-  percentDone
+  percentDone {
+    canRead
+    value
+  }
 }

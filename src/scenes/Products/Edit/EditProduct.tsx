@@ -118,7 +118,7 @@ export const EditProduct = () => {
         ),
         productSteps: product.progressOfCurrentReportDue?.steps.map((step) => ({
           step: step.step,
-          percentDone: step.percentDone,
+          percentDone: step.percentDone.value,
         })),
       },
     };

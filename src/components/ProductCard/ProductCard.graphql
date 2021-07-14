@@ -56,4 +56,13 @@ fragment ProductCard on Product {
     canEdit
     value
   }
+  progressOfCurrentReportDue {
+    steps {
+      percentDone {
+        canRead
+        canEdit
+        value
+      }
+    }
+  }
 }
