@@ -1,6 +1,7 @@
 import { Grid } from '@material-ui/core';
 import { memoize } from 'lodash';
 import React from 'react';
+import { displayRole, RoleList } from '../../../api';
 import {
   DialogForm,
   DialogFormProps,
@@ -13,6 +14,7 @@ import {
   SubmitError,
   TextField,
 } from '../../../components/form';
+import { AutocompleteField } from '../../../components/form/AutocompleteField';
 import { UserFormFragment } from './UserForm.generated';
 
 export type UserFormProps<T, R = void> = DialogFormProps<T, R> & {
@@ -103,6 +105,21 @@ export const UserForm = <T, R = void>({
           />
         )}
       </SecuredField>
+      <AutocompleteField
+        disabled={user && !user.roles.canEdit}
+        multiple
+        options={RoleList}
+        getOptionLabel={displayRole}
+        name="roles"
+        label="Roles"
+        helperText={
+          user && !user.roles.canEdit
+            ? `You cannot edit this person's roles`
+            : ''
+        }
+        getOptionDisabled={() => !user?.roles.canEdit}
+        variant="outlined"
+      />
       <SecuredField obj={user} name="title">
         {(props) => (
           <TextField label="Title" placeholder="Enter Title" {...props} />
