@@ -64,6 +64,6 @@ export const SecuredField = <
   }
   return children({
     name,
-    disabled: canEdit ? undefined : true,
+    ...(!canEdit ? { disabled: true } : {}),
   });
 };
