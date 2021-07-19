@@ -1,6 +1,7 @@
 import { Grid } from '@material-ui/core';
 import { memoize } from 'lodash';
 import React from 'react';
+import { displayRole, RoleList } from '../../../api';
 import {
   DialogForm,
   DialogFormProps,
@@ -13,6 +14,8 @@ import {
   SubmitError,
   TextField,
 } from '../../../components/form';
+import { AutocompleteField } from '../../../components/form/AutocompleteField';
+import { useSession } from '../../../components/Session';
 import { UserFormFragment } from './UserForm.generated';
 
 export type UserFormProps<T, R = void> = DialogFormProps<T, R> & {
@@ -31,110 +34,126 @@ export const UserForm = <T, R = void>({
   user,
   prefix,
   ...rest
-}: UserFormProps<T, R>) => (
-  <DialogForm<T, R>
-    DialogProps={{
-      maxWidth: 'sm',
-    }}
-    {...rest}
-    decorators={decorators(prefix)}
-  >
-    <SubmitError />
-    <FieldGroup prefix={prefix}>
-      <Grid container spacing={2}>
-        <Grid item xs>
-          <SecuredField obj={user} name="realFirstName">
-            {(props) => (
-              <TextField
-                label="First Name"
-                placeholder="Enter First Name"
-                required
-                {...props}
-              />
-            )}
-          </SecuredField>
+}: UserFormProps<T, R>) => {
+  const { powers } = useSession();
+  return (
+    <DialogForm<T, R>
+      DialogProps={{
+        maxWidth: 'sm',
+      }}
+      {...rest}
+      decorators={decorators(prefix)}
+    >
+      <SubmitError />
+      <FieldGroup prefix={prefix}>
+        <Grid container spacing={2}>
+          <Grid item xs>
+            <SecuredField obj={user} name="realFirstName">
+              {(props) => (
+                <TextField
+                  label="First Name"
+                  placeholder="Enter First Name"
+                  required
+                  {...props}
+                />
+              )}
+            </SecuredField>
+          </Grid>
+          <Grid item xs>
+            <SecuredField obj={user} name="realLastName">
+              {(props) => (
+                <TextField
+                  label="Last Name"
+                  placeholder="Enter Last Name"
+                  required
+                  {...props}
+                />
+              )}
+            </SecuredField>
+          </Grid>
         </Grid>
-        <Grid item xs>
-          <SecuredField obj={user} name="realLastName">
-            {(props) => (
-              <TextField
-                label="Last Name"
-                placeholder="Enter Last Name"
-                required
-                {...props}
-              />
-            )}
-          </SecuredField>
+        <Grid container spacing={2}>
+          <Grid item xs>
+            <SecuredField obj={user} name="displayFirstName">
+              {(props) => (
+                <TextField
+                  label="Public First Name"
+                  placeholder="Enter Public First Name"
+                  required
+                  {...props}
+                />
+              )}
+            </SecuredField>
+          </Grid>
+          <Grid item xs>
+            <SecuredField obj={user} name="displayLastName">
+              {(props) => (
+                <TextField
+                  label="Public Last Name"
+                  placeholder="Enter Public Last Name"
+                  required
+                  {...props}
+                />
+              )}
+            </SecuredField>
+          </Grid>
         </Grid>
-      </Grid>
-      <Grid container spacing={2}>
-        <Grid item xs>
-          <SecuredField obj={user} name="displayFirstName">
-            {(props) => (
-              <TextField
-                label="Public First Name"
-                placeholder="Enter Public First Name"
-                required
-                {...props}
-              />
-            )}
-          </SecuredField>
-        </Grid>
-        <Grid item xs>
-          <SecuredField obj={user} name="displayLastName">
-            {(props) => (
-              <TextField
-                label="Public Last Name"
-                placeholder="Enter Public Last Name"
-                required
-                {...props}
-              />
-            )}
-          </SecuredField>
-        </Grid>
-      </Grid>
-      <SecuredField obj={user} name="email">
-        {(props) => (
-          <EmailField
-            {...props}
-            // Email can't be changed right now but still show it
-            initialValue={user?.email.value ?? ''}
-            disabled={!!user}
-          />
-        )}
-      </SecuredField>
-      <SecuredField obj={user} name="title">
-        {(props) => (
-          <TextField label="Title" placeholder="Enter Title" {...props} />
-        )}
-      </SecuredField>
-      <SecuredField obj={user} name="phone">
-        {(props) => (
-          <TextField
-            label="Phone"
-            placeholder="Enter Phone Number"
-            type="tel"
-            {...props}
-          />
-        )}
-      </SecuredField>
-      {/*TODO: Replace with timezone autocomplete #307 */}
-      {/*<SecuredField obj={user} name="timezone">*/}
-      {/*  {(props) => (*/}
-      {/*    <TextField label="Timezone" placeholder="Enter Timezone" {...props} />*/}
-      {/*  )}*/}
-      {/*</SecuredField>*/}
-      <SecuredField obj={user} name="about">
-        {(props) => (
-          <TextField
-            label="About"
-            multiline
-            placeholder="Enter About"
-            inputProps={{ rowsMin: 2 }}
-            {...props}
-          />
-        )}
-      </SecuredField>
-    </FieldGroup>
-  </DialogForm>
-);
+        <SecuredField obj={user} name="email">
+          {(props) => (
+            <EmailField
+              {...props}
+              // Email can't be changed right now but still show it
+              initialValue={user?.email.value ?? ''}
+              disabled={!!user}
+            />
+          )}
+        </SecuredField>
+        <SecuredField obj={user} name="title">
+          {(props) => (
+            <TextField label="Title" placeholder="Enter Title" {...props} />
+          )}
+        </SecuredField>
+        <SecuredField obj={user} name="phone">
+          {(props) => (
+            <TextField
+              label="Phone"
+              placeholder="Enter Phone Number"
+              type="tel"
+              {...props}
+            />
+          )}
+        </SecuredField>
+        {/*TODO: Replace with timezone autocomplete #307 */}
+        {/*<SecuredField obj={user} name="timezone">*/}
+        {/*  {(props) => (*/}
+        {/*    <TextField label="Timezone" placeholder="Enter Timezone" {...props} />*/}
+        {/*  )}*/}
+        {/*</SecuredField>*/}
+        <SecuredField obj={user} name="about">
+          {(props) => (
+            <TextField
+              label="About"
+              multiline
+              placeholder="Enter About"
+              inputProps={{ rowsMin: 2 }}
+              {...props}
+            />
+          )}
+        </SecuredField>
+        <SecuredField obj={user} name="roles">
+          {(props) => (
+            <AutocompleteField
+              multiple
+              options={RoleList}
+              getOptionLabel={displayRole}
+              label="Roles"
+              variant="outlined"
+              disabled={!powers?.includes('GrantRole')}
+              {...props}
+            />
+          )}
+        </SecuredField>
+      </FieldGroup>
+    </DialogForm>
+  );
+};
