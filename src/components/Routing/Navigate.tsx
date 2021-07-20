@@ -1,9 +1,10 @@
-import type { To } from 'history';
+import type { Path, To } from 'history';
 import * as React from 'react';
 import { createContext, ReactElement, useContext } from 'react';
 import type { NavigateFunction, NavigateProps } from 'react-router';
 import {
   Navigate as ClientNavigate,
+  resolvePath,
   useNavigate as useClientNavigate,
   useLocation,
 } from 'react-router-dom';
@@ -21,14 +22,12 @@ const useServerNavigate = (): NavigateFunction => {
     if (typeof to === 'number') {
       throw new Error('Navigate with delta is not supported with SSR');
     }
-    serverLocation.url =
-      typeof to === 'string'
-        ? to
-        : `${to.pathname ?? location.pathname}${to.search ?? ''}${
-            to.hash ?? ''
-          }`;
+    const resolved = resolvePath(to, location.pathname);
+    serverLocation.url = stringifyPath(resolved);
   };
 };
+
+const stringifyPath = (to: Path) => `${to.pathname}${to.search}${to.hash}`;
 
 const ServerNavigate = ({ to, ...options }: NavigateProps) => {
   const navigate = useServerNavigate();
