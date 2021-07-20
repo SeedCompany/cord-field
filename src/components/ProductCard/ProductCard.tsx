@@ -9,8 +9,8 @@ import {
   DescriptionOutlined,
   LibraryBooksOutlined,
   MenuBook,
+  Movie,
   MusicNote,
-  PlayCircleFilled,
   SvgIconComponent,
 } from '@material-ui/icons';
 import React from 'react';
@@ -49,7 +49,7 @@ interface ProductCardProps {
 const iconMap: Record<ProductTypes, SvgIconComponent> = {
   DirectScriptureProduct: MenuBook,
   Story: DescriptionOutlined,
-  Film: PlayCircleFilled,
+  Film: Movie,
   Song: MusicNote,
   LiteracyMaterial: LibraryBooksOutlined,
   DerivativeScriptureProduct: DescriptionOutlined,
