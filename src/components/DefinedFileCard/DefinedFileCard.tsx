@@ -6,7 +6,6 @@ import {
   CardActionArea,
   makeStyles,
   Typography,
-  useForkRef,
 } from '@material-ui/core';
 import {
   Add as AddIcon,
@@ -128,7 +127,7 @@ const FileCardMeta: FC<FileCardMetaProps> = ({
   );
 };
 
-export const DefinedFileCard = forwardRef<HTMLElement, DefinedFileCardProps>(
+export const DefinedFileCard = forwardRef<any, DefinedFileCardProps>(
   function DefinedFileCard(props, ref) {
     const classes = useStyles();
     const {
@@ -200,10 +199,8 @@ export const DefinedFileCard = forwardRef<HTMLElement, DefinedFileCardProps>(
 
     const Icon = !file && canEdit ? AddIcon : NotPermittedIcon;
 
-    const rootProps = getRootProps();
-    const mergedRef = useForkRef(ref, rootProps.ref);
     const card = (
-      <Card {...rest} {...rootProps} ref={mergedRef} className={classes.root}>
+      <Card {...getRootProps()} className={classes.root}>
         <input {...getInputProps()} name="defined_file_version_uploader" />
         <DropzoneOverlay
           classes={{ text: classes.dropzoneText }}
@@ -211,6 +208,8 @@ export const DefinedFileCard = forwardRef<HTMLElement, DefinedFileCardProps>(
           message={!file ? `Add ${label} file` : 'Drop new version to upload'}
         />
         <CardActionArea
+          {...rest}
+          ref={ref}
           className={!file ? classes.addActionArea : classes.editActionArea}
           disabled={isCardDisabled}
           onClick={() => file && openFilePreview(file)}
