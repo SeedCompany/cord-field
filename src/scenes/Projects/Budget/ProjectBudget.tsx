@@ -96,7 +96,7 @@ export const ProjectBudget = () => {
                 <FileActionsContextProvider>
                   <Grid item xs={6}>
                     <DefinedFileCard
-                      title="Universal Template"
+                      label="Universal Template"
                       parentId={budget.value.id}
                       uploadMutationDocument={
                         UpdateProjectBudgetUniversalTemplateDocument

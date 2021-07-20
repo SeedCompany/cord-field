@@ -210,7 +210,7 @@ export const InternshipEngagementDetail: FC<EngagementQuery> = ({
                 <FileActionsContextProvider>
                   <Grid item xs={6}>
                     <DefinedFileCard
-                      title="Growth Plan"
+                      label="Growth Plan"
                       parentId={engagement.id}
                       uploadMutationDocument={
                         UploadInternshipEngagementGrowthPlanDocument

@@ -69,7 +69,7 @@ export const DefinedFileCard = () => {
   return (
     <Box display="flex" width={400}>
       <Card
-        title="Growth Plan"
+        label="Growth Plan"
         parentId={text('parentId', '1')}
         uploadMutationDocument={uploadMutationDocument}
         resourceType={text('resourceType', 'engagement')}

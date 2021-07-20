@@ -30,7 +30,7 @@ export const ProgressAndPlanning = ({
           <Tooltip title="This holds the planning info of PnP files">
             <Grid item xs={12}>
               <DefinedFileCard
-                title="Planning Spreadsheet"
+                label="Planning Spreadsheet"
                 uploadMutationDocument={UploadLanguageEngagementPnpDocument}
                 parentId={engagement.id}
                 resourceType="engagement"
