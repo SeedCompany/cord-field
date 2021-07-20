@@ -1,12 +1,18 @@
 import { useLocation, useParams } from 'react-router-dom';
 import { hasChangeset, IdFragment } from '../../api';
 import { useNavigate } from '../../components/Routing';
+import { useBetaFeatures } from '../../components/Session';
 
 export const useProjectId = () => {
   const { pathname } = useLocation();
   const navigate = useNavigate();
-  const { projectId: projectAndChangesetId = '' } = useParams();
-  const [projectId = '', changesetId = null] = projectAndChangesetId.split('~');
+  let { projectId: projectAndChangesetId = '' } = useParams();
+  // eslint-disable-next-line prefer-const -- false positive
+  let [projectId = '', changesetId = null] = projectAndChangesetId.split('~');
+  if (!useBetaFeatures()) {
+    projectAndChangesetId = projectId;
+    changesetId = null;
+  }
   return {
     projectUrl: `/projects/${projectAndChangesetId}`,
     projectId,
