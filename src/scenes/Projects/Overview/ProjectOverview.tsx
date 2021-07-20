@@ -507,7 +507,7 @@ export const ProjectOverview: FC = () => {
             </Grid>
           </Grid>
 
-          <CardGroup horizontal="md">
+          <CardGroup horizontal="mdUp">
             <ProjectMembersSummary
               members={projectOverviewData?.project.team}
             />
