@@ -25,7 +25,7 @@ import { LinearProgressBar } from '../LinearProgressBar';
 import { CardActionAreaLink } from '../Routing';
 import { ProductCardFragment } from './ProductCard.generated';
 
-const useStyles = makeStyles(({ spacing }) => ({
+const useStyles = makeStyles(() => ({
   root: {
     display: 'flex',
     flex: 1,
@@ -39,18 +39,6 @@ const useStyles = makeStyles(({ spacing }) => ({
   },
   icon: {
     fontSize: 80,
-    marginRight: spacing(2),
-  },
-  producibleName: {
-    fontSize: '18px',
-    lineHeight: '22px',
-    whiteSpace: 'nowrap',
-    textAlign: 'left',
-  },
-  typeName: {
-    fontSize: '14px',
-    lineHeight: '20px',
-    textAlign: 'left',
   },
 }));
 
@@ -80,32 +68,24 @@ export const ProductCard = ({ product }: ProductCardProps) => {
         to={`products/${product.id}`}
         className={classes.actionArea}
       >
-        <CardContent className={classes.content}>
-          <Grid item container xs={5} alignItems="center">
-            {Icon && <HugeIcon className={classes.icon} icon={Icon} />}
-            {type && (
-              <div>
-                <Typography
-                  className={classes.producibleName}
-                  variant="h3"
-                  align="center"
-                >
-                  {producibleName}
-                </Typography>
-                <Typography
-                  className={classes.typeName}
-                  variant="h4"
-                  align="center"
-                >
-                  {displayProductTypes(type)}
-                </Typography>
-              </div>
-            )}
-          </Grid>
-          <Grid item container xs={7}>
+        <Grid component={CardContent} container spacing={2} alignItems="center">
+          {Icon && (
+            <Grid item>
+              <HugeIcon className={classes.icon} icon={Icon} />
+            </Grid>
+          )}
+          {type && (
+            <Grid item>
+              <Typography variant="h4">{producibleName}</Typography>
+              <Typography variant="body2">
+                {displayProductTypes(type)}
+              </Typography>
+            </Grid>
+          )}
+          <Grid item xs>
             <LinearProgressBar value={0} />
           </Grid>
-        </CardContent>
+        </Grid>
       </CardActionAreaLink>
     </Card>
   );
