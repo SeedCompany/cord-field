@@ -51,4 +51,25 @@ fragment ProductCard on Product {
       }
     }
   }
+  steps {
+    canRead
+    canEdit
+    value
+  }
+  progressOfCurrentReportDue {
+    product {
+      id
+    } # For cache id
+    report {
+      ...PeriodicReport
+    }
+    steps {
+      step
+      percentDone {
+        canRead
+        canEdit
+        value
+      }
+    }
+  }
 }

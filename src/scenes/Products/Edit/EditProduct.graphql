@@ -6,7 +6,7 @@ mutation UpdateProduct($input: UpdateProductInput!) {
   }
 }
 
-query Product(
+query ProductInfoForEdit(
   $productId: ID!
   $projectId: ID!
   $engagementId: ID!
@@ -20,6 +20,9 @@ query Product(
   }
   product(id: $productId) {
     ...ProductForm
+  }
+  methodologyAvailableSteps {
+    ...AvailableMethodologySteps
   }
 }
 

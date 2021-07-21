@@ -6,7 +6,7 @@ mutation CreateProduct($input: CreateProductInput!) {
   }
 }
 
-query GetProductBreadcrumb(
+query ProductInfoForCreate(
   $projectId: ID!
   $changeset: ID
   $engagementId: ID!
@@ -16,5 +16,8 @@ query GetProductBreadcrumb(
   }
   engagement(id: $engagementId, changeset: $changeset) {
     ...EngagementBreadcrumb
+  }
+  methodologyAvailableSteps {
+    ...AvailableMethodologySteps
   }
 }

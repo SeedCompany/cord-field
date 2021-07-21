@@ -1,48 +1,24 @@
-import { Card, CardProps, Divider, makeStyles } from '@material-ui/core';
-// eslint-disable-next-line no-restricted-imports
-import { Breakpoint } from '@material-ui/core/styles/createBreakpoints';
-// eslint-disable-next-line no-restricted-imports
-import { CSSProperties } from '@material-ui/styles';
+import { Card, CardProps, makeStyles } from '@material-ui/core';
 import clsx from 'clsx';
-import { isString } from 'lodash';
 import * as React from 'react';
 import { Children, Fragment } from 'react';
+import { applyBreakpoint, BreakpointAt } from '../../util';
+import { ResponsiveDivider } from '../ResponsiveDivider';
 
 export interface CardGroupProps extends CardProps {
-  horizontal?: Breakpoint | boolean;
+  horizontal?: BreakpointAt;
 }
 
 const useStyles = makeStyles(
-  ({ spacing, breakpoints }) => {
-    const applyHorizontal = (
-      { horizontal }: CardGroupProps,
-      css: CSSProperties
-    ) =>
-      isString(horizontal)
-        ? { [breakpoints.up(horizontal)]: css }
-        : horizontal
-        ? css
-        : {};
-    return {
-      root: (props: CardGroupProps) => ({
-        display: 'flex',
-        flexDirection: 'column',
-        ...applyHorizontal(props, {
-          flexDirection: 'row',
-        }),
+  ({ breakpoints }) => ({
+    root: (props: CardGroupProps) => ({
+      display: 'flex',
+      flexDirection: 'column',
+      ...applyBreakpoint(breakpoints, props.horizontal, {
+        flexDirection: 'row',
       }),
-      divider: (props: CardGroupProps) => ({
-        margin: spacing(0, 2),
-        ...applyHorizontal(props, {
-          margin: spacing(2, 0),
-          // Divider orientation=vertical & flexItem
-          width: 1,
-          height: 'auto',
-          alignSelf: 'stretch',
-        }),
-      }),
-    };
-  },
+    }),
+  }),
   {
     classNamePrefix: 'CardGroup',
   }
@@ -56,7 +32,9 @@ export const CardGroup = (props: CardGroupProps) => {
     <Card {...rest} className={clsx(classes.root, rest.className)}>
       {Children.map(children, (child, index) => (
         <Fragment key={index}>
-          {index % 2 ? <Divider className={classes.divider} /> : null}
+          {index % 2 ? (
+            <ResponsiveDivider vertical={props.horizontal} spacing={2} />
+          ) : null}
           {child}
         </Fragment>
       ))}

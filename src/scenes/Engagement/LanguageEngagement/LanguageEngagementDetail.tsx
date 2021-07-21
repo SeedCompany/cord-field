@@ -1,59 +1,41 @@
-import {
-  Breadcrumbs,
-  Grid,
-  makeStyles,
-  Tooltip,
-  Typography,
-} from '@material-ui/core';
-import { DateRange, Edit } from '@material-ui/icons';
+import { Card, Grid, makeStyles, Tooltip, Typography } from '@material-ui/core';
+import { Add } from '@material-ui/icons';
 import React, { FC } from 'react';
-import { Helmet } from 'react-helmet-async';
-import { canEditAny, displayEngagementStatus } from '../../../api';
-import { BooleanProperty } from '../../../components/BooleanProperty';
-import { Breadcrumb } from '../../../components/Breadcrumb';
-import { DataButton } from '../../../components/DataButton';
-import { DefinedFileCard } from '../../../components/DefinedFileCard';
-import { useDialog } from '../../../components/Dialog';
 import { Fab } from '../../../components/Fab';
-import { FieldOverviewCard } from '../../../components/FieldOverviewCard';
-import { FileActionsContextProvider } from '../../../components/files/FileActions';
-import {
-  FormattedDate,
-  FormattedDateRange,
-  FormattedDateTime,
-} from '../../../components/Formatters';
-import { OptionsIcon, PlantIcon } from '../../../components/Icons';
-import { PeriodicReportCard } from '../../../components/PeriodicReports';
-import { ProjectBreadcrumb } from '../../../components/ProjectBreadcrumb';
-import { Redacted } from '../../../components/Redacted';
+import { ResponsiveDivider } from '../../../components/ResponsiveDivider';
 import { Link } from '../../../components/Routing';
-import { Many } from '../../../util';
 import { ProductList } from '../../Products/List/ProductList';
-import { CeremonyCard } from '../CeremonyCard';
-import { DeleteEngagement } from '../Delete';
-import {
-  EditableEngagementField,
-  EditEngagementDialog,
-  Engagement,
-} from '../EditEngagement/EditEngagementDialog';
-import { EngagementWorkflowDialog } from '../EditEngagement/EngagementWorkflowDialog';
 import { EngagementQuery } from '../Engagement.generated';
-import { UploadLanguageEngagementPnpDocument } from '../Files';
+import { CeremonyForm } from './Ceremony';
+import { DatesForm } from './DatesForm';
+import { LanguageEngagementHeader } from './Header';
+import { PlanningSpreadsheet, ProgressReports } from './ProgressAndPlanning';
 
-const useStyles = makeStyles(({ spacing, breakpoints, palette }) => ({
+const useStyles = makeStyles(({ spacing, breakpoints }) => ({
   root: {
     flex: 1,
     overflowY: 'auto',
     padding: spacing(4),
   },
   main: {
-    maxWidth: breakpoints.values.md,
+    maxWidth: breakpoints.values.lg,
   },
-  nameRedacted: {
-    width: '50%',
+  details: {
+    // 900px is the min width that the periodic report and progress card look
+    // good on the same row
+    [breakpoints.between(900, 'md')]: {
+      // Grid=6 (half)
+      flexGrow: 0,
+      maxWidth: '50%',
+      flexBasis: '50%',
+    },
   },
-  infoColor: {
-    color: palette.info.main,
+  detailsCard: {
+    flex: 1,
+    padding: spacing(3, 2, 1),
+    display: 'flex',
+    flexWrap: 'wrap',
+    alignContent: 'flex-end',
   },
 }));
 
@@ -63,218 +45,72 @@ export const LanguageEngagementDetail: FC<EngagementQuery> = ({
 }) => {
   const classes = useStyles();
 
-  const [editState, show, editField] =
-    useDialog<Many<EditableEngagementField>>();
-  const [workflowState, openWorkflow, workflowEngagement] =
-    useDialog<Engagement>();
-
   if (engagement.__typename !== 'LanguageEngagement') {
     return null; // easiest for typescript
   }
 
-  const language = engagement.language.value;
-  const langName = language?.name.value ?? language?.displayName.value;
-  const ptRegistryId = engagement.paratextRegistryId;
-  const editable = canEditAny(engagement);
-
   return (
-    <>
-      <Helmet
-        title={`${langName ?? 'A Language'} in ${
-          project.name.value ?? 'a project'
-        }`}
-      />
-      <div className={classes.root}>
-        <Grid
-          component="main"
-          container
-          direction="column"
-          spacing={3}
-          className={classes.main}
-        >
-          <Grid item>
-            <Breadcrumbs>
-              <ProjectBreadcrumb data={project} />
-              {langName ? (
-                <Breadcrumb to=".">{langName}</Breadcrumb>
-              ) : (
-                <Redacted
-                  info="You do not have permission to view this engagement's name"
-                  width={200}
-                />
-              )}
-            </Breadcrumbs>
-          </Grid>
-          <Grid item container spacing={3} alignItems="center">
-            <Grid item className={langName ? undefined : classes.nameRedacted}>
-              <Typography
-                variant="h2"
-                {...(language
-                  ? { component: Link, to: `/languages/${language.id}` }
-                  : {})}
-              >
-                {langName ?? (
-                  <Redacted
-                    info={`You do not have permission to view this engagement's ${
-                      language ? 'name' : 'language'
-                    }`}
-                    width="100%"
-                  />
-                )}
-              </Typography>
+    <div className={classes.root}>
+      <Grid
+        component="main"
+        container
+        direction="column"
+        spacing={3}
+        className={classes.main}
+      >
+        <LanguageEngagementHeader engagement={engagement} project={project} />
+        <Grid item container spacing={5}>
+          <Grid item lg={5} container direction="column" spacing={3}>
+            <Grid item container spacing={3}>
+              <Grid item container className={classes.details}>
+                <ProgressReports engagement={engagement} />
+              </Grid>
+              <Grid item container className={classes.details}>
+                <PlanningSpreadsheet engagement={engagement} />
+              </Grid>
             </Grid>
-            {editable && (
+            <Grid item container spacing={3}>
+              <Grid item container className={classes.details}>
+                <Card className={classes.detailsCard}>
+                  <CeremonyForm ceremony={engagement.ceremony} />
+                </Card>
+              </Grid>
+              <Grid item container className={classes.details}>
+                <Card className={classes.detailsCard}>
+                  <Typography variant="h4" gutterBottom>
+                    Translation Details
+                  </Typography>
+                  <DatesForm engagement={engagement} />
+                </Card>
+              </Grid>
+            </Grid>
+          </Grid>
+          <ResponsiveDivider vertical="lgUp" spacing={3} />
+          <Grid item xs md lg container direction="column" spacing={2}>
+            <Grid item container spacing={2} alignItems="center">
+              <Grid item component={Typography} variant="h3" paragraph>
+                Products
+              </Grid>
               <Grid item>
-                <Tooltip title="Update First Scripture and Luke Partnership">
+                <Tooltip title="Create Product">
                   <Fab
-                    color="primary"
-                    aria-label="Update language engagement"
-                    onClick={() => show(['firstScripture', 'lukePartnership'])}
+                    // @ts-expect-error it works. These generics are hard to express.
+                    component={Link}
+                    to="./products/create"
+                    color="error"
+                    size="small"
                   >
-                    <Edit />
+                    <Add />
                   </Fab>
                 </Tooltip>
               </Grid>
-            )}
-            <Grid item>
-              <DeleteEngagement project={project} engagement={engagement} />
             </Grid>
-          </Grid>
-          <Grid item container spacing={3} alignItems="center">
-            <Grid item>
-              <Typography variant="h4">Language Engagement</Typography>
+            <Grid item container>
+              <ProductList engagement={engagement} />
             </Grid>
-
-            <Grid item>
-              <Typography variant="body2" color="textSecondary">
-                Updated <FormattedDateTime date={engagement.modifiedAt} />
-              </Typography>
-            </Grid>
-          </Grid>
-          <Grid item container spacing={1} alignItems="center">
-            <Grid item>
-              <DataButton
-                secured={engagement.status}
-                redacted="You do not have permission to view the engagement's status"
-                onClick={() => openWorkflow(engagement)}
-                children={displayEngagementStatus}
-              />
-            </Grid>
-            <Grid item>
-              <DataButton
-                startIcon={<DateRange className={classes.infoColor} />}
-                secured={engagement.dateRange}
-                redacted="You do not have permission to view start/end dates"
-                children={(range) => <FormattedDateRange range={range} />}
-                empty="Start - End"
-                onClick={() => show('dateRangeOverride')}
-              />
-            </Grid>
-            <Grid item>
-              <DataButton
-                onClick={() => show(['paratextRegistryId'])}
-                secured={ptRegistryId}
-                redacted="You do not have permission to view Paratext Registry ID"
-                children={
-                  ptRegistryId.value &&
-                  `Paratext Registry ID: ${ptRegistryId.value}`
-                }
-                empty={'Enter Paratext Registry ID'}
-              />
-            </Grid>
-            <BooleanProperty
-              label="First Scripture"
-              redacted="You do not have permission to view whether this engagement is the first scripture for this language"
-              data={engagement.firstScripture}
-              wrap={(node) => <Grid item>{node}</Grid>}
-            />
-            <BooleanProperty
-              label="Luke Partnership"
-              redacted="You do not have permission to view whether this engagement is a luke partnership"
-              data={engagement.lukePartnership}
-              wrap={(node) => <Grid item>{node}</Grid>}
-            />
-          </Grid>
-          <Grid item container spacing={3}>
-            <Grid item xs={6}>
-              <FieldOverviewCard
-                title="Translation Complete Date"
-                data={{
-                  value: engagement.completeDate.value ? (
-                    <FormattedDate date={engagement.completeDate.value} />
-                  ) : undefined,
-                }}
-                icon={PlantIcon}
-                onClick={() => show('completeDate')}
-                onButtonClick={() => show('completeDate')}
-                emptyValue="None"
-              />
-            </Grid>
-            <Grid item xs={6}>
-              <FieldOverviewCard
-                title="Disbursement Complete Date"
-                data={{
-                  value: engagement.disbursementCompleteDate.value ? (
-                    <FormattedDate
-                      date={engagement.disbursementCompleteDate.value}
-                    />
-                  ) : undefined,
-                }}
-                icon={OptionsIcon}
-                onClick={() => show('disbursementCompleteDate')}
-                onButtonClick={() => show('disbursementCompleteDate')}
-                emptyValue="None"
-              />
-            </Grid>
-            <FileActionsContextProvider>
-              <Grid item container spacing={3} alignItems="flex-start">
-                <Grid item xs={6}>
-                  <PeriodicReportCard
-                    type="Progress"
-                    dueCurrently={engagement.currentProgressReportDue}
-                    dueNext={engagement.nextProgressReportDue}
-                  />
-                </Grid>
-                <Tooltip title="This holds the planning info of PnP files">
-                  <Grid item xs={6}>
-                    <DefinedFileCard
-                      title="Planning Spreadsheet"
-                      uploadMutationDocument={
-                        UploadLanguageEngagementPnpDocument
-                      }
-                      parentId={engagement.id}
-                      resourceType="engagement"
-                      securedFile={engagement.pnp}
-                    />
-                  </Grid>
-                </Tooltip>
-              </Grid>
-            </FileActionsContextProvider>
-          </Grid>
-          <Grid item container spacing={3} alignItems="center">
-            <Grid item xs={6}>
-              <CeremonyCard {...engagement.ceremony} />
-            </Grid>
-          </Grid>
-          <Grid item>
-            <Typography variant="h3" paragraph>
-              Products
-            </Typography>
-            <ProductList engagement={engagement} />
           </Grid>
         </Grid>
-      </div>
-      <EditEngagementDialog
-        {...editState}
-        engagement={engagement}
-        editFields={editField}
-      />
-      {workflowEngagement && (
-        <EngagementWorkflowDialog
-          {...workflowState}
-          engagement={workflowEngagement}
-        />
-      )}
-    </>
+      </Grid>
+    </div>
   );
 };

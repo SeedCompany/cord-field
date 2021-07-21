@@ -1,4 +1,4 @@
-import { Typography } from '@material-ui/core';
+import { makeStyles, Typography } from '@material-ui/core';
 import { Skeleton } from '@material-ui/lab';
 import { omit } from 'lodash';
 import { DateTime } from 'luxon';
@@ -7,6 +7,12 @@ import { FormattedDate, FormattedDateTime } from '../Formatters';
 import { Redacted } from '../Redacted';
 import { SecuredPeriodicReportFragment } from './PeriodicReport.generated';
 import { ReportLabel } from './ReportLabel';
+
+const useStyles = makeStyles(() => ({
+  label: {
+    whiteSpace: 'nowrap',
+  },
+}));
 
 export const ReportInfo = ({
   title,
@@ -17,6 +23,8 @@ export const ReportInfo = ({
   report?: SecuredPeriodicReportFragment;
   className?: string;
 }) => {
+  const classes = useStyles();
+
   const file = report?.value?.reportFile;
   return (
     <div className={className}>
@@ -28,7 +36,12 @@ export const ReportInfo = ({
       >
         {title}
       </Typography>
-      <Typography variant="h4" display="inline" gutterBottom>
+      <Typography
+        variant="h4"
+        display="inline"
+        gutterBottom
+        className={classes.label}
+      >
         {!report ? (
           <Skeleton />
         ) : report.canRead && !report.value ? (

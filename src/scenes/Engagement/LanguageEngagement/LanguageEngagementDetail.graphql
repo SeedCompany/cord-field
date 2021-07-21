@@ -1,52 +1,8 @@
 fragment LanguageEngagementDetail on LanguageEngagement {
   ...Id
-  createdAt
-  language {
-    value {
-      id
-      displayName {
-        value
-      }
-      name {
-        value
-      }
-    }
-  }
-  lukePartnership {
-    canRead
-    canEdit
-    value
-  }
-  firstScripture {
-    canRead
-    canEdit
-    value
-  }
-  dateRange {
-    ...securedDateRange
-  }
-  completeDate {
-    value
-    canRead
-    canEdit
-  }
-  disbursementCompleteDate {
-    value
-    canRead
-    canEdit
-  }
-  pnp {
-    canRead
-    canEdit
-    value {
-      ...FileNodeInfo
-    }
-  }
-  modifiedAt
-  status {
-    value
-    canRead
-  }
+  ...LanguageEngagementHeader
+  ...ProgressAndPlanning
+  ...LanguageEngagementDatesForm
   ceremony {
     ...CeremonyCard
   }
@@ -56,16 +12,4 @@ fragment LanguageEngagementDetail on LanguageEngagement {
     # then we can remove this
     ...ProductList
   }
-  paratextRegistryId {
-    canRead
-    canEdit
-    value
-  }
-  currentProgressReportDue {
-    ...SecuredPeriodicReport
-  }
-  nextProgressReportDue {
-    ...SecuredPeriodicReport
-  }
-  ...EditEngagement
 }

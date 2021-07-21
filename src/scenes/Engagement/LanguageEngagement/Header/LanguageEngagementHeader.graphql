@@ -1,0 +1,40 @@
+fragment LanguageEngagementHeader on LanguageEngagement {
+  ...Id
+  createdAt
+  language {
+    value {
+      id
+      displayName {
+        value
+      }
+      name {
+        value
+      }
+    }
+  }
+  lukePartnership {
+    canRead
+    canEdit
+    value
+  }
+  firstScripture {
+    canRead
+    canEdit
+    value
+  }
+  dateRange {
+    ...securedDateRange
+  }
+  modifiedAt
+  status {
+    value
+    canRead
+  }
+  paratextRegistryId {
+    canRead
+    canEdit
+    value
+  }
+  ...EditEngagement
+  ...EngagementToDelete
+}

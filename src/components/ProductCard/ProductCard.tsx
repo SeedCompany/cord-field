@@ -1,56 +1,42 @@
 import {
   Card,
-  CardActions,
   CardContent,
+  Grid,
   makeStyles,
   Typography,
 } from '@material-ui/core';
 import {
-  AddCircle,
   DescriptionOutlined,
   LibraryBooksOutlined,
   MenuBook,
+  Movie,
   MusicNote,
-  PlayCircleFilled,
   SvgIconComponent,
 } from '@material-ui/icons';
-import clsx from 'clsx';
 import React from 'react';
 import {
-  displayMethodologyWithLabel,
-  displayProductMedium,
+  displayProductStep,
   displayProductTypes,
+  getProducibleName,
+  getProductType,
 } from '../../api';
 import { ProductTypes } from '../../scenes/Products/ProductForm/constants';
-import {
-  removeScriptureTypename,
-  scriptureRangeToText,
-} from '../../util/biblejs';
-import { DisplaySimpleProperty } from '../DisplaySimpleProperty';
-import { ButtonLink, CardActionAreaLink } from '../Routing';
+import { HugeIcon } from '../Icons';
+import { LinearProgressBar } from '../LinearProgressBar';
+import { CardActionAreaLink } from '../Routing';
 import { ProductCardFragment } from './ProductCard.generated';
 
-const useStyles = makeStyles(({ spacing }) => ({
+const useStyles = makeStyles(() => ({
   root: {
-    height: '100%',
     display: 'flex',
-    flexDirection: 'column',
+    flex: 1,
   },
   actionArea: {
     flex: 1,
   },
   content: {
-    height: '100%',
     display: 'flex',
-    flexDirection: 'column',
     alignItems: 'center',
-    '& > *': {
-      margin: spacing(1, 0),
-    },
-  },
-  contentAdd: {
-    padding: spacing(7, 0),
-    justifyContent: 'center',
   },
   icon: {
     fontSize: 80,
@@ -64,7 +50,7 @@ interface ProductCardProps {
 const iconMap: Record<ProductTypes, SvgIconComponent> = {
   DirectScriptureProduct: MenuBook,
   Story: DescriptionOutlined,
-  Film: PlayCircleFilled,
+  Film: Movie,
   Song: MusicNote,
   LiteracyMaterial: LibraryBooksOutlined,
   DerivativeScriptureProduct: DescriptionOutlined,
@@ -72,23 +58,26 @@ const iconMap: Record<ProductTypes, SvgIconComponent> = {
 
 export const ProductCard = ({ product }: ProductCardProps) => {
   const classes = useStyles();
-  const type =
-    product.__typename === 'DerivativeScriptureProduct'
-      ? product.produces.value?.__typename || 'DerivativeScriptureProduct'
-      : product.__typename;
-  const producibleName =
-    product.__typename === 'DerivativeScriptureProduct' &&
-    (product.produces.value?.__typename === 'Film'
-      ? product.produces.value.name.value
-      : product.produces.value?.__typename === 'LiteracyMaterial'
-      ? product.produces.value.name.value
-      : product.produces.value?.__typename === 'Song'
-      ? product.produces.value.name.value
-      : product.produces.value?.__typename === 'Story'
-      ? product.produces.value.name.value
-      : '');
+  const type = getProductType(product);
+  const producibleName = getProducibleName(product);
 
   const Icon = type ? iconMap[type] : undefined;
+
+  const firstStepNotDone = product.progressOfCurrentReportDue?.steps.find(
+    (step) => step.percentDone.value && step.percentDone.value < 100
+  );
+  const stepToShow = firstStepNotDone
+    ? {
+        step: firstStepNotDone.step,
+        percentDone: firstStepNotDone.percentDone.value!,
+      }
+    : product.progressOfCurrentReportDue && product.steps.value[0]
+    ? { step: product.steps.value[0], percentDone: 0 }
+    : undefined;
+  const stepIndex = stepToShow
+    ? product.steps.value.indexOf(stepToShow.step)
+    : -1;
+  const stepNumber = stepIndex >= 0 ? stepIndex + 1 : null;
 
   return (
     <Card className={classes.root}>
@@ -96,56 +85,30 @@ export const ProductCard = ({ product }: ProductCardProps) => {
         to={`products/${product.id}`}
         className={classes.actionArea}
       >
-        <CardContent className={classes.content}>
-          {Icon && <Icon color="secondary" className={classes.icon} />}
-          {type && (
-            <Typography variant="h4" align="center">{`${displayProductTypes(
-              type
-            )}${producibleName ? ` - ${producibleName}` : ''}`}</Typography>
+        <Grid component={CardContent} container spacing={2} alignItems="center">
+          {Icon && (
+            <Grid item>
+              <HugeIcon className={classes.icon} icon={Icon} />
+            </Grid>
           )}
-          <DisplaySimpleProperty
-            label="Methodology"
-            align="center"
-            value={
-              product.methodology.value &&
-              displayMethodologyWithLabel(product.methodology.value)
-            }
-          />
-          <DisplaySimpleProperty
-            label="Mediums"
-            align="center"
-            value={product.mediums.value
-              .map((medium) => displayProductMedium(medium))
-              .join(', ')}
-          />
-          <DisplaySimpleProperty
-            label="Scripture Reference"
-            align="center"
-            value={scriptureRangeToText(
-              removeScriptureTypename(product.scriptureReferences.value)
-            )}
-          />
-        </CardContent>
-      </CardActionAreaLink>
-      <CardActions>
-        <ButtonLink to={`products/${product.id}`} color="primary">
-          Edit
-        </ButtonLink>
-      </CardActions>
-    </Card>
-  );
-};
-
-export const AddProductCard = () => {
-  const classes = useStyles();
-
-  return (
-    <Card className={classes.root}>
-      <CardActionAreaLink to="./products/create" className={classes.actionArea}>
-        <CardContent className={clsx(classes.content, classes.contentAdd)}>
-          <AddCircle color="disabled" className={classes.icon} />
-          <Typography variant="h4">Add Product</Typography>
-        </CardContent>
+          {type && (
+            <Grid item>
+              <Typography variant="h4">{producibleName}</Typography>
+              <Typography variant="body2">
+                {displayProductTypes(type)}
+              </Typography>
+            </Grid>
+          )}
+          {stepToShow && (
+            <Grid item xs>
+              <Typography variant="body2" align="right">
+                {displayProductStep(stepToShow.step)} (Step {stepNumber} of{' '}
+                {product.steps.value.length})
+              </Typography>
+              <LinearProgressBar value={stepToShow.percentDone} />
+            </Grid>
+          )}
+        </Grid>
       </CardActionAreaLink>
     </Card>
   );

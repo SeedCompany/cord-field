@@ -20,10 +20,14 @@ import {
   removeScriptureTypename,
 } from '../../../util/biblejs';
 import { useProjectId } from '../../Projects/useProjectId';
-import { ProductForm, ProductFormProps } from '../ProductForm';
+import {
+  ProductForm,
+  ProductFormProps,
+  ProductFormValues,
+} from '../ProductForm';
 import {
   DeleteProductDocument,
-  ProductDocument,
+  ProductInfoForEditDocument,
   UpdateProductDocument,
 } from './EditProduct.generated';
 
@@ -45,7 +49,7 @@ export const EditProduct = () => {
   const { engagementId = '', productId = '' } = useParams();
   const { enqueueSnackbar } = useSnackbar();
 
-  const { data, loading } = useQuery(ProductDocument, {
+  const { data, loading } = useQuery(ProductInfoForEditDocument, {
     variables: {
       projectId,
       changeset: changesetId,
@@ -53,6 +57,7 @@ export const EditProduct = () => {
       productId,
     },
   });
+
   const project = data?.project;
   const engagement = data?.engagement;
   const product = data?.product;
@@ -80,11 +85,12 @@ export const EditProduct = () => {
           !isEqual(reference, fullNewTestamentRange)
       );
 
-    return {
+    const values: ProductFormValues = {
       product: {
         mediums: mediums.value,
         purposes: purposes.value,
         methodology: methodology.value,
+        steps: product.steps.value,
         scriptureReferences: referencesWithoutFullTestament,
         fullOldTestament: scriptureReferencesWithoutTypename.some((reference) =>
           isEqual(reference, fullOldTestamentRange)
@@ -111,6 +117,7 @@ export const EditProduct = () => {
           : undefined),
       },
     };
+    return values;
   }, [product]);
 
   const handleSubmit: ProductFormProps['onSubmit'] = async (data) => {
@@ -136,7 +143,7 @@ export const EditProduct = () => {
         fullOldTestament,
         fullNewTestament,
         ...input
-      } = data.product;
+      } = data.product ?? {};
 
       const parsedScriptureReferences = parsedRangesWithFullTestamentRange(
         scriptureReferences,
@@ -184,7 +191,7 @@ export const EditProduct = () => {
         {loading ? <Skeleton width="50%" variant="text" /> : 'Edit Product'}
       </Typography>
 
-      {product && (
+      {!loading && data && product && (
         <ProductForm
           product={product}
           onSubmit={async (data, form) => {

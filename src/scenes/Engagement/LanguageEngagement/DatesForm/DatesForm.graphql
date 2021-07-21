@@ -1,0 +1,13 @@
+fragment LanguageEngagementDatesForm on LanguageEngagement {
+  ...Id
+  completeDate {
+    value
+    canRead
+    canEdit
+  }
+  disbursementCompleteDate {
+    value
+    canRead
+    canEdit
+  }
+}

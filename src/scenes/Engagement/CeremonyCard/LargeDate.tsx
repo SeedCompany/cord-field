@@ -1,6 +1,7 @@
 import { makeStyles, Typography } from '@material-ui/core';
 import { Skeleton } from '@material-ui/lab';
 import clsx from 'clsx';
+import { useState } from 'react';
 import * as React from 'react';
 import { SecuredProp } from '../../../api';
 import { useDateFormatter } from '../../../components/Formatters';
@@ -38,11 +39,10 @@ interface LargeDateProps {
   className?: string;
 }
 
-const placeholderNow = CalendarDate.local();
-
 export const LargeDate = ({ date, className }: LargeDateProps) => {
   const classes = useStyles();
   const formatDate = useDateFormatter();
+  const [placeholderNow] = useState(() => CalendarDate.local());
 
   return (
     <Typography

@@ -9,6 +9,7 @@ import {
   InternshipPosition,
   InternshipProgram,
   LocationType,
+  MethodologyStep,
   PartnershipAgreementStatus,
   PartnerType,
   PostShareability,
@@ -90,3 +91,5 @@ export const displayProductTypes = (type: ProductTypes) =>
     : displayEnum<ProductTypes>()(type);
 
 export const displayPostShareability = displayEnum<PostShareability>();
+
+export const displayProductStep = displayEnum<MethodologyStep>();

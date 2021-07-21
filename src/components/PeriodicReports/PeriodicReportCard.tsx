@@ -40,10 +40,12 @@ const useStyles = makeStyles(({ spacing }) => ({
     alignItems: 'flex-start',
     padding: spacing(3, 4),
   },
+  icon: {
+    marginRight: spacing(4),
+  },
   rightContent: {
     flex: 1,
     alignSelf: 'flex-start',
-    paddingLeft: spacing(4),
     display: 'flex',
     flexDirection: 'column',
     justifyContent: 'space-evenly',
@@ -61,13 +63,11 @@ export interface PeriodicReportCardProps {
   type: ReportType;
   dueCurrently?: SecuredPeriodicReportFragment;
   dueNext?: SecuredPeriodicReportFragment;
+  disableIcon?: boolean;
 }
 
-const PeriodicReportCardInContext = ({
-  type,
-  dueCurrently,
-  dueNext,
-}: PeriodicReportCardProps) => {
+const PeriodicReportCardInContext = (props: PeriodicReportCardProps) => {
+  const { type, dueCurrently, dueNext, disableIcon } = props;
   const classes = useStyles();
 
   const currentFile = dueCurrently?.value?.reportFile;
@@ -95,13 +95,16 @@ const PeriodicReportCardInContext = ({
   return (
     <Card {...getRootProps()} tabIndex={-1} className={classes.root}>
       <CardActionAreaLink to={link} className={classes.topArea}>
-        <HugeIcon
-          icon={simpleSwitch(type, {
-            Narrative: AssignmentOutlined,
-            Financial: ShowChart,
-            Progress: BarChart,
-          })}
-        />
+        {!disableIcon && (
+          <HugeIcon
+            icon={simpleSwitch(type, {
+              Narrative: AssignmentOutlined,
+              Financial: ShowChart,
+              Progress: BarChart,
+            })}
+            className={classes.icon}
+          />
+        )}
 
         <div className={classes.rightContent}>
           <Typography color="initial" variant="h4" paragraph>

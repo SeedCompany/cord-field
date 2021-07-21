@@ -14,7 +14,7 @@ import { useProjectId } from '../../Projects/useProjectId';
 import { ProductForm } from '../ProductForm';
 import {
   CreateProductDocument,
-  GetProductBreadcrumbDocument,
+  ProductInfoForCreateDocument,
 } from './CreateProduct.generated';
 
 const useStyles = makeStyles(({ spacing }) => ({
@@ -35,7 +35,7 @@ export const CreateProduct = () => {
   const { engagementId = '' } = useParams();
   const { enqueueSnackbar } = useSnackbar();
 
-  const { data, loading } = useQuery(GetProductBreadcrumbDocument, {
+  const { data, loading } = useQuery(ProductInfoForCreateDocument, {
     variables: {
       projectId,
       changeset: changesetId,
@@ -44,17 +44,15 @@ export const CreateProduct = () => {
   });
 
   const project = data?.project;
-  const engagement = data?.engagement;
+  const engagement =
+    // Products are only created for language engagements
+    data?.engagement.__typename === 'LanguageEngagement'
+      ? data.engagement
+      : undefined;
 
   const [createProduct] = useMutation(CreateProductDocument, {
     update: addItemToList({
-      listId: [
-        // Need to narrow type to language engagement to get the product list on that concrete
-        engagement?.__typename === 'LanguageEngagement'
-          ? engagement
-          : undefined,
-        'products',
-      ],
+      listId: [engagement, 'products'],
       outputToItem: (res) => res.createProduct.product,
     }),
   });
@@ -70,21 +68,18 @@ export const CreateProduct = () => {
       <Typography variant="h2">
         {loading ? <Skeleton width="50%" variant="text" /> : 'Create Product'}
       </Typography>
-      {!loading && (
+      {!loading && data && (
         <ProductForm
-          onSubmit={async (
-            {
-              product: {
-                productType,
-                produces,
-                scriptureReferences,
-                fullOldTestament,
-                fullNewTestament,
-                ...inputs
-              },
-            },
-            form
-          ) => {
+          onSubmit={async (submitted, form) => {
+            const {
+              productType,
+              produces,
+              scriptureReferences,
+              fullOldTestament,
+              fullNewTestament,
+              ...inputs
+            } = submitted.product ?? {};
+
             const parsedScriptureReferences =
               parsedRangesWithFullTestamentRange(
                 scriptureReferences,
