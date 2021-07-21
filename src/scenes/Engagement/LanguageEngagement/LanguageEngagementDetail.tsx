@@ -1,21 +1,15 @@
-import {
-  Card,
-  CardContent,
-  Divider,
-  Grid,
-  makeStyles,
-  Typography,
-} from '@material-ui/core';
+import { Card, Grid, makeStyles, Tooltip, Typography } from '@material-ui/core';
 import { Add } from '@material-ui/icons';
 import React, { FC } from 'react';
 import { Fab } from '../../../components/Fab';
+import { ResponsiveDivider } from '../../../components/ResponsiveDivider';
 import { Link } from '../../../components/Routing';
 import { ProductList } from '../../Products/List/ProductList';
 import { EngagementQuery } from '../Engagement.generated';
 import { CeremonyForm } from './Ceremony';
 import { DatesForm } from './DatesForm';
 import { LanguageEngagementHeader } from './Header';
-import { ProgressAndPlanning } from './ProgressAndPlanning';
+import { PlanningSpreadsheet, ProgressReports } from './ProgressAndPlanning';
 
 const useStyles = makeStyles(({ spacing, breakpoints }) => ({
   root: {
@@ -24,28 +18,24 @@ const useStyles = makeStyles(({ spacing, breakpoints }) => ({
     padding: spacing(4),
   },
   main: {
-    maxWidth: breakpoints.values.md,
+    maxWidth: breakpoints.values.lg,
   },
   details: {
-    marginTop: spacing(4),
+    // 900px is the min width that the periodic report and progress card look
+    // good on the same row
+    [breakpoints.between(900, 'md')]: {
+      // Grid=6 (half)
+      flexGrow: 0,
+      maxWidth: '50%',
+      flexBasis: '50%',
+    },
   },
   detailsCard: {
     flex: 1,
-    height: '100%',
+    padding: spacing(3, 2, 1),
     display: 'flex',
-    flexDirection: 'column',
-  },
-  header: {
-    fontSize: '12px',
-    fontWeight: 'bold',
-    paddingTop: spacing(2),
-    marginBottom: spacing(2),
-  },
-  addProductBtn: {
-    marginLeft: spacing(2),
-    width: 32,
-    height: 32,
-    minHeight: 32,
+    flexWrap: 'wrap',
+    alignContent: 'flex-end',
   },
 }));
 
@@ -69,46 +59,51 @@ export const LanguageEngagementDetail: FC<EngagementQuery> = ({
         className={classes.main}
       >
         <LanguageEngagementHeader engagement={engagement} project={project} />
-        <Grid item container spacing={3}>
-          <Grid direction="column" item container xs={5}>
-            <ProgressAndPlanning engagement={engagement} />
-
-            <Grid item container className={classes.details}>
-              <Typography variant="h3" paragraph>
-                Translation Details
-              </Typography>
+        <Grid item container spacing={5}>
+          <Grid item lg={5} container direction="column" spacing={3}>
+            <Grid item container spacing={3}>
+              <Grid item container className={classes.details}>
+                <ProgressReports engagement={engagement} />
+              </Grid>
+              <Grid item container className={classes.details}>
+                <PlanningSpreadsheet engagement={engagement} />
+              </Grid>
             </Grid>
-            <Grid item container>
-              <Card className={classes.detailsCard}>
-                <CardContent>
-                  <Typography variant="h3" className={classes.header}>
-                    DEDICATION DATE
-                  </Typography>
+            <Grid item container spacing={3}>
+              <Grid item container className={classes.details}>
+                <Card className={classes.detailsCard}>
                   <CeremonyForm ceremony={engagement.ceremony} />
-                  <Divider />
-                  <Typography variant="h3" className={classes.header}>
-                    TRANSLATION DETAILS
+                </Card>
+              </Grid>
+              <Grid item container className={classes.details}>
+                <Card className={classes.detailsCard}>
+                  <Typography variant="h4" gutterBottom>
+                    Translation Details
                   </Typography>
                   <DatesForm engagement={engagement} />
-                </CardContent>
-              </Card>
+                </Card>
+              </Grid>
             </Grid>
           </Grid>
-          <Grid direction="column" item container xs={7}>
-            <Grid item container>
-              <Typography variant="h3" paragraph>
+          <ResponsiveDivider vertical="lgUp" spacing={3} />
+          <Grid item xs md lg container direction="column" spacing={2}>
+            <Grid item container spacing={2} alignItems="center">
+              <Grid item component={Typography} variant="h3" paragraph>
                 Products
-              </Typography>
-              <Link to="./products/create">
-                <Fab
-                  className={classes.addProductBtn}
-                  color="error"
-                  size="small"
-                  aria-label="Add New Product"
-                >
-                  <Add />
-                </Fab>
-              </Link>
+              </Grid>
+              <Grid item>
+                <Tooltip title="Create Product">
+                  <Fab
+                    // @ts-expect-error it works. These generics are hard to express.
+                    component={Link}
+                    to="./products/create"
+                    color="error"
+                    size="small"
+                  >
+                    <Add />
+                  </Fab>
+                </Tooltip>
+              </Grid>
             </Grid>
             <Grid item container>
               <ProductList engagement={engagement} />

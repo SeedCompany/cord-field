@@ -28,6 +28,11 @@ const useStyles = makeStyles(() => ({
   switch: {
     paddingLeft: 2,
   },
+  flipped: {
+    flexDirection: 'row-reverse',
+    marginLeft: 0,
+    paddingLeft: 0,
+  },
   switchHidden: {
     visibility: 'hidden',
     width: 0,
@@ -37,12 +42,14 @@ const useStyles = makeStyles(() => ({
 
 type CeremonyCardProps = Partial<CeremonyCardFragment> & {
   className?: string;
+  flipped?: boolean;
 };
 
 export const CeremonyPlanned: FC<CeremonyCardProps> = ({
   canRead: canReadCeremony,
   value: ceremony,
   className,
+  flipped,
 }) => {
   const { type, planned } = ceremony || {};
   const loading = canReadCeremony == null;
@@ -132,7 +139,7 @@ export const CeremonyPlanned: FC<CeremonyCardProps> = ({
               </Tooltip>
             }
             label={title}
-            className={classes.switch}
+            className={clsx(classes.switch, flipped ? classes.flipped : null)}
           />
           {updateState.loading ? <CircularProgress size={20} /> : null}
         </>

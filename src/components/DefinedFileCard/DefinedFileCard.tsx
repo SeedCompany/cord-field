@@ -31,6 +31,7 @@ import { DropzoneOverlay } from '../Upload';
 
 const useStyles = makeStyles(({ palette, spacing, typography }) => ({
   root: {
+    flex: 1,
     position: 'relative',
   },
   addActionArea: {
@@ -40,11 +41,9 @@ const useStyles = makeStyles(({ palette, spacing, typography }) => ({
     padding: spacing(3, 4),
   },
   editActionArea: {
-    cursor: 'pointer',
     flex: 1,
     height: '100%',
     display: 'flex',
-    justifyContent: 'space-between',
     padding: spacing(3, 4),
     position: 'relative',
   },
@@ -56,15 +55,27 @@ const useStyles = makeStyles(({ palette, spacing, typography }) => ({
   dropzoneText: {
     fontSize: typography.h2.fontSize,
   },
-  icon: {
+  addIcon: {
     color: 'white',
+  },
+  icon: {
+    marginRight: spacing(4),
+  },
+  info: {
+    flex: 1,
+    height: '100%',
+    display: 'flex',
+    flexDirection: 'column',
   },
   fileInfo: {
     flex: 1,
-    paddingLeft: spacing(4),
+    display: 'flex',
+    flexDirection: 'column',
+    justifyContent: 'center',
   },
   fileName: {
     marginBottom: spacing(1),
+    marginRight: spacing(2), // so it doesn't collide with abs pos context menu
   },
   fileMeta: {
     color: palette.text.secondary,
@@ -90,6 +101,7 @@ export interface DefinedFileCardProps {
     { id: string; upload: CreateDefinedFileVersionInput }
   >;
   parentId: string;
+  disableIcon?: boolean;
 }
 
 interface FileCardMetaProps {
@@ -136,6 +148,7 @@ export const DefinedFileCard = forwardRef<any, DefinedFileCardProps>(
       securedFile,
       uploadMutationDocument,
       parentId,
+      disableIcon,
       ...rest
     } = props;
     const { value: file, canRead, canEdit } = securedFile;
@@ -217,16 +230,26 @@ export const DefinedFileCard = forwardRef<any, DefinedFileCardProps>(
           {!file ? (
             <>
               <Avatar classes={{ root: classes.avatar }}>
-                <Icon className={classes.icon} fontSize="large" />
+                <Icon className={classes.addIcon} fontSize="large" />
               </Avatar>
-              <Typography variant="button" className={classes.text}>
+              <Typography
+                variant="button"
+                align="center"
+                className={classes.text}
+              >
                 {canEdit ? `Add ${label}` : `No ${label} uploaded`}
               </Typography>
             </>
           ) : (
             <>
-              <HugeIcon icon={ReportIcon} loading={!file} />
-              <div className={classes.fileInfo}>
+              {!disableIcon && (
+                <HugeIcon
+                  icon={ReportIcon}
+                  loading={!file}
+                  className={classes.icon}
+                />
+              )}
+              <div className={classes.info}>
                 <Typography
                   className={classes.fileName}
                   color="initial"
@@ -234,23 +257,25 @@ export const DefinedFileCard = forwardRef<any, DefinedFileCardProps>(
                 >
                   {label}
                 </Typography>
-                <FileCardMeta
-                  canRead={canRead}
-                  loading={!file}
-                  resourceType={resourceType}
-                  text={name}
-                />
-                <FileCardMeta
-                  canRead={canRead}
-                  loading={!file}
-                  resourceType={resourceType}
-                  text={
-                    <>
-                      Updated by {fullName} at{' '}
-                      <FormattedDateTime date={modifiedAt} />
-                    </>
-                  }
-                />
+                <div className={classes.fileInfo}>
+                  <FileCardMeta
+                    canRead={canRead}
+                    loading={!file}
+                    resourceType={resourceType}
+                    text={name}
+                  />
+                  <FileCardMeta
+                    canRead={canRead}
+                    loading={!file}
+                    resourceType={resourceType}
+                    text={
+                      <>
+                        Updated by {fullName} at{' '}
+                        <FormattedDateTime date={modifiedAt} />
+                      </>
+                    }
+                  />
+                </div>
               </div>
             </>
           )}

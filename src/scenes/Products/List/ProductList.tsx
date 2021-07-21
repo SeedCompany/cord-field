@@ -46,7 +46,7 @@ export const ProductList = ({ engagement }: { engagement: IdFragment }) => {
     <List
       {...list}
       className={classes.root}
-      ContainerProps={{ direction: 'column', spacing: 3, wrap: 'nowrap' }}
+      spacing={1}
       renderItem={(product) => <ProductCard product={product} />}
       renderSkeleton={<Card />}
     />

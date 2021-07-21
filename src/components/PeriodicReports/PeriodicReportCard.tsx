@@ -52,7 +52,6 @@ const useStyles = makeStyles(({ spacing }) => ({
   },
   relevantReports: {
     display: 'flex',
-    justifyContent: 'space-evenly',
   },
   relevantReport: {
     display: 'flex',

@@ -32,7 +32,7 @@ export const CeremonyForm = ({
 
   return (
     <>
-      <CeremonyPlanned {...ceremony} />
+      <CeremonyPlanned {...ceremony} flipped />
       <Form<UpdateCeremonyInput> initialValues={initialValues} onSubmit={noop}>
         {() => (
           <FieldGroup prefix="ceremony">
