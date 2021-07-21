@@ -20,19 +20,6 @@ query ProductInfoForEdit(
   }
   product(id: $productId) {
     ...ProductForm
-    progressOfCurrentReportDue {
-      report {
-        id
-      }
-      steps {
-        step
-        percentDone {
-          canRead
-          canEdit
-          value
-        }
-      }
-    }
   }
   methodologyAvailableSteps {
     methodology

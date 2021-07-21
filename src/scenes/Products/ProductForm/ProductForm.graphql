@@ -19,6 +19,11 @@ fragment ProductForm on Product {
     canEdit
     value
   }
+  steps {
+    canRead
+    canEdit
+    value
+  }
   approach
   legacyType
   describeCompletion {
@@ -110,12 +115,4 @@ fragment ScriptureRange on ScriptureRange {
 fragment AvailableMethodologySteps on AvailableMethodologySteps {
   steps
   methodology
-}
-
-fragment StepProgress on StepProgress {
-  step
-  percentDone {
-    canRead
-    value
-  }
 }

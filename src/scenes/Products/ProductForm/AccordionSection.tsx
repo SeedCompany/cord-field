@@ -7,13 +7,11 @@ import {
 } from '@material-ui/core';
 import { ExpandMore } from '@material-ui/icons';
 import { ToggleButton } from '@material-ui/lab';
-import { difference, intersection, isEqual, startCase } from 'lodash';
+import { intersection, startCase } from 'lodash';
 import React, {
   ComponentType,
   MouseEvent,
   ReactNode,
-  useCallback,
-  useEffect,
   useMemo,
   useState,
 } from 'react';
@@ -29,7 +27,6 @@ import {
   displayProductPurpose,
   displayProductStep,
   displayProductTypes,
-  MethodologyStep,
   ProductMedium,
   ProductMediumList,
   ProductPurpose,
@@ -78,11 +75,6 @@ import {
   ProductForm_DirectScriptureProduct_Fragment as DirectScriptureProduct,
   ProductFormFragment,
 } from './ProductForm.generated';
-import {
-  StepEditDialog,
-  StepFormState,
-  StepFormValues,
-} from './StepEditDialog';
 import { VersesDialog, versesDialogValues } from './VersesDialog';
 
 const useStyles = makeStyles(({ spacing, typography, breakpoints }) => ({
@@ -131,8 +123,6 @@ export interface ProductFormValues extends SubmitAction<'delete'> {
       scriptureReferences?: readonly ScriptureRange[];
       fullOldTestament?: boolean;
       fullNewTestament?: boolean;
-      productSteps?: StepFormState[];
-      stepNames?: MethodologyStep[];
     }
   >;
 }
@@ -173,13 +163,8 @@ export const AccordionSection = ({
     purposes,
     fullOldTestament,
     fullNewTestament,
-    stepNames,
-    productSteps,
+    steps,
   } = (values as Partial<ProductFormValues>).product ?? {};
-
-  const [previousSelectedSteps, setPreviousSelectedSteps] = useState<
-    MethodologyStep[]
-  >(stepNames || []);
 
   const availableStepsList = useMemo(
     () =>
@@ -199,9 +184,6 @@ export const AccordionSection = ({
 
   const [scriptureForm, openScriptureForm, scriptureInitialValues] =
     useDialog<ScriptureFormValues>();
-
-  const [stepEditForm, openStepEditForm, stepEditInitialValues] =
-    useDialog<StepFormValues>();
 
   const openBook = (event: MouseEvent<HTMLButtonElement>) => {
     openScriptureForm({
@@ -291,68 +273,8 @@ export const AccordionSection = ({
   );
 
   const selectedSteps = useMemo(
-    () => intersection(availableStepsList, stepNames),
-    [availableStepsList, stepNames]
-  );
-
-  useEffect(() => {
-    const newSteps = difference(stepNames, previousSelectedSteps);
-    if (newSteps[0]) {
-      const existingStepFormValue = productSteps?.find(
-        (s) => s.step === newSteps[0]
-      );
-      openStepEditForm({
-        step: newSteps[0],
-        percentDone: existingStepFormValue?.percentDone,
-        isCompletedStep: newSteps[0] === 'Completed',
-        description: product?.describeCompletion.value?.toString(),
-      });
-    }
-    if (!isEqual(stepNames, previousSelectedSteps)) {
-      setPreviousSelectedSteps(stepNames || []);
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [openStepEditForm, stepNames, productSteps, product]);
-
-  const updateProductDescription = useCallback(
-    (newStepValues: StepFormValues) => {
-      const productFormValue = form.getState().values.product;
-      if (newStepValues.step === 'Completed') {
-        form.change('product', {
-          ...productFormValue,
-          describeCompletion: newStepValues.description,
-        });
-      }
-
-      let newProductSteps: StepFormState[];
-      if (
-        productFormValue.productSteps?.find(
-          (s) => s.step === newStepValues.step
-        )
-      ) {
-        newProductSteps = productFormValue.productSteps.map((s) =>
-          s.step === newStepValues.step
-            ? {
-                step: s.step,
-                percentDone: newStepValues.percentDone,
-              }
-            : s
-        );
-      } else {
-        newProductSteps = [
-          ...(productFormValue.productSteps || []),
-          {
-            step: newStepValues.step,
-            percentDone: newStepValues.percentDone,
-          },
-        ];
-      }
-      form.change('product', {
-        ...form.getState().values.product,
-        productSteps: newProductSteps,
-      });
-    },
-    [form]
+    () => intersection(availableStepsList, steps),
+    [availableStepsList, steps]
   );
 
   return (
@@ -574,20 +496,6 @@ export const AccordionSection = ({
           />
         )}
       </div>
-      {stepEditInitialValues && (
-        <StepEditDialog
-          {...stepEditInitialValues}
-          {...stepEditForm}
-          onSubmit={(step) => {
-            updateProductDescription({
-              ...step,
-              percentDone: step.percentDone
-                ? Number(step.percentDone)
-                : undefined,
-            });
-          }}
-        />
-      )}
     </>
   );
 };

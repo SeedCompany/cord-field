@@ -12,7 +12,6 @@ import { ButtonLink } from '../../../components/Routing';
 import { parsedRangesWithFullTestamentRange } from '../../../util/biblejs';
 import { useProjectId } from '../../Projects/useProjectId';
 import { ProductForm } from '../ProductForm';
-import { UpdateProductProgressDocument } from '../ProductForm/ProductProgress.generated';
 import {
   CreateProductDocument,
   ProductInfoForCreateDocument,
@@ -58,8 +57,6 @@ export const CreateProduct = () => {
     }),
   });
 
-  const [updateProductProgress] = useMutation(UpdateProductProgressDocument);
-
   return (
     <main className={classes.root}>
       <Helmet title="Create Product" />
@@ -82,8 +79,6 @@ export const CreateProduct = () => {
                 scriptureReferences,
                 fullOldTestament,
                 fullNewTestament,
-                productSteps,
-                stepNames,
                 ...inputs
               },
             },
@@ -117,22 +112,6 @@ export const CreateProduct = () => {
               });
 
               const { product } = data!.createProduct;
-
-              const reportId = engagement?.currentProgressReportDue.value?.id;
-              if (reportId) {
-                await updateProductProgress({
-                  variables: {
-                    input: {
-                      steps:
-                        productSteps?.filter((s) =>
-                          stepNames?.includes(s.step)
-                        ) || [],
-                      productId: product.id,
-                      reportId,
-                    },
-                  },
-                });
-              }
 
               enqueueSnackbar(`Created product`, {
                 variant: 'success',

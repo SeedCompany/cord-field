@@ -16,13 +16,6 @@ query ProductInfoForCreate(
   }
   engagement(id: $engagementId, changeset: $changeset) {
     ...EngagementBreadcrumb
-    ... on LanguageEngagement {
-      currentProgressReportDue {
-        value {
-          id
-        }
-      }
-    }
   }
   methodologyAvailableSteps {
     methodology

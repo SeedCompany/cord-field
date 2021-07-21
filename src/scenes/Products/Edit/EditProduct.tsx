@@ -22,7 +22,6 @@ import {
 import { useProjectId } from '../../Projects/useProjectId';
 import { ProductForm, ProductFormProps } from '../ProductForm';
 import { ProductFormValues } from '../ProductForm/AccordionSection';
-import { UpdateProductProgressDocument } from '../ProductForm/ProductProgress.generated';
 import {
   DeleteProductDocument,
   ProductInfoForEditDocument,
@@ -67,7 +66,6 @@ export const EditProduct = () => {
       item: product!,
     }),
   });
-  const [updateProductProgress] = useMutation(UpdateProductProgressDocument);
 
   const initialValues = useMemo(() => {
     if (!product) return undefined;
@@ -89,6 +87,7 @@ export const EditProduct = () => {
         mediums: mediums.value,
         purposes: purposes.value,
         methodology: methodology.value,
+        steps: product.steps.value,
         scriptureReferences: referencesWithoutFullTestament,
         fullOldTestament: scriptureReferencesWithoutTypename.some((reference) =>
           isEqual(reference, fullOldTestamentRange)
@@ -113,13 +112,6 @@ export const EditProduct = () => {
               productType: product.produces.value.__typename,
             }
           : undefined),
-        stepNames: product.progressOfCurrentReportDue?.steps.map(
-          ({ step }) => step
-        ),
-        productSteps: product.progressOfCurrentReportDue?.steps.map((step) => ({
-          step: step.step,
-          percentDone: step.percentDone.value,
-        })),
       },
     };
     return values;
@@ -147,8 +139,6 @@ export const EditProduct = () => {
         scriptureReferences,
         fullOldTestament,
         fullNewTestament,
-        productSteps,
-        stepNames,
         ...input
       } = data.product;
 
@@ -177,20 +167,6 @@ export const EditProduct = () => {
         },
       });
 
-      const reportId = product.progressOfCurrentReportDue?.report.id;
-      if (reportId) {
-        await updateProductProgress({
-          variables: {
-            input: {
-              steps:
-                productSteps?.filter((s) => stepNames?.includes(s.step)) || [],
-              productId: product.id,
-              reportId,
-            },
-          },
-        });
-      }
-
       enqueueSnackbar(`Updated product`, {
         variant: 'success',
       });
@@ -216,7 +192,6 @@ export const EditProduct = () => {
         <ProductForm
           methodologyAvailableSteps={data.methodologyAvailableSteps}
           product={product}
-          productSteps={product.progressOfCurrentReportDue?.steps}
           onSubmit={async (data, form) => {
             try {
               await handleSubmit(data, form);
