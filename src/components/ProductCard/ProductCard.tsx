@@ -15,6 +15,7 @@ import {
 } from '@material-ui/icons';
 import React from 'react';
 import {
+  displayProductStep,
   displayProductTypes,
   getProducibleName,
   getProductType,
@@ -62,6 +63,22 @@ export const ProductCard = ({ product }: ProductCardProps) => {
 
   const Icon = type ? iconMap[type] : undefined;
 
+  const firstStepNotDone = product.progressOfCurrentReportDue?.steps.find(
+    (step) => step.percentDone.value && step.percentDone.value < 100
+  );
+  const stepToShow = firstStepNotDone
+    ? {
+        step: firstStepNotDone.step,
+        percentDone: firstStepNotDone.percentDone.value!,
+      }
+    : product.progressOfCurrentReportDue && product.steps.value[0]
+    ? { step: product.steps.value[0], percentDone: 0 }
+    : undefined;
+  const stepIndex = stepToShow
+    ? product.steps.value.indexOf(stepToShow.step)
+    : -1;
+  const stepNumber = stepIndex >= 0 ? stepIndex + 1 : null;
+
   return (
     <Card className={classes.root}>
       <CardActionAreaLink
@@ -82,9 +99,15 @@ export const ProductCard = ({ product }: ProductCardProps) => {
               </Typography>
             </Grid>
           )}
-          <Grid item xs>
-            <LinearProgressBar value={0} />
-          </Grid>
+          {stepToShow && (
+            <Grid item xs>
+              <Typography variant="body2" align="right">
+                {displayProductStep(stepToShow.step)} (Step {stepNumber} of{' '}
+                {product.steps.value.length})
+              </Typography>
+              <LinearProgressBar value={stepToShow.percentDone} />
+            </Grid>
+          )}
         </Grid>
       </CardActionAreaLink>
     </Card>
