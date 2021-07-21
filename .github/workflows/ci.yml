@@ -1,6 +1,11 @@
 name: CI
 on:
   pull_request:
+    types:
+      - opened
+      - reopened
+      - synchronize
+      - edited # Since description can change API schema referenced
   push:
     branches:
       - master
