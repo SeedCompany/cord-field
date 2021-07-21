@@ -20,8 +20,11 @@ import {
   removeScriptureTypename,
 } from '../../../util/biblejs';
 import { useProjectId } from '../../Projects/useProjectId';
-import { ProductForm, ProductFormProps } from '../ProductForm';
-import { ProductFormValues } from '../ProductForm/AccordionSection';
+import {
+  ProductForm,
+  ProductFormProps,
+  ProductFormValues,
+} from '../ProductForm';
 import {
   DeleteProductDocument,
   ProductInfoForEditDocument,
@@ -140,7 +143,7 @@ export const EditProduct = () => {
         fullOldTestament,
         fullNewTestament,
         ...input
-      } = data.product;
+      } = data.product ?? {};
 
       const parsedScriptureReferences = parsedRangesWithFullTestamentRange(
         scriptureReferences,
@@ -190,7 +193,6 @@ export const EditProduct = () => {
 
       {!loading && data && product && (
         <ProductForm
-          methodologyAvailableSteps={data.methodologyAvailableSteps}
           product={product}
           onSubmit={async (data, form) => {
             try {

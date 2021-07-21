@@ -18,7 +18,6 @@ query ProductInfoForCreate(
     ...EngagementBreadcrumb
   }
   methodologyAvailableSteps {
-    methodology
-    steps
+    ...AvailableMethodologySteps
   }
 }

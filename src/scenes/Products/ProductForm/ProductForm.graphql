@@ -26,6 +26,11 @@ fragment ProductForm on Product {
   }
   approach
   legacyType
+  steps {
+    canRead
+    canEdit
+    value
+  }
   describeCompletion {
     canRead
     canEdit
@@ -109,6 +114,12 @@ fragment ScriptureRange on ScriptureRange {
     book
     chapter
     verse
+  }
+}
+
+query AvailableMethodologySteps {
+  methodologyAvailableSteps {
+    ...AvailableMethodologySteps
   }
 }
 

@@ -70,20 +70,16 @@ export const CreateProduct = () => {
       </Typography>
       {!loading && data && (
         <ProductForm
-          methodologyAvailableSteps={data.methodologyAvailableSteps}
-          onSubmit={async (
-            {
-              product: {
-                productType,
-                produces,
-                scriptureReferences,
-                fullOldTestament,
-                fullNewTestament,
-                ...inputs
-              },
-            },
-            form
-          ) => {
+          onSubmit={async (submitted, form) => {
+            const {
+              productType,
+              produces,
+              scriptureReferences,
+              fullOldTestament,
+              fullNewTestament,
+              ...inputs
+            } = submitted.product ?? {};
+
             const parsedScriptureReferences =
               parsedRangesWithFullTestamentRange(
                 scriptureReferences,

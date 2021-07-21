@@ -9,7 +9,7 @@ import { SwitchField } from '../../../components/form/SwitchField';
 import { VersesField } from '../../../components/form/VersesField';
 import { Nullable } from '../../../util';
 import { isFullBookRange, ScriptureRange } from '../../../util/biblejs';
-import { ScriptureFormValues } from './AccordionSection';
+import { ScriptureFormValues } from './ScriptureReferencesSection';
 
 const useStyles = makeStyles(({ spacing }) => ({
   dialogText: {
