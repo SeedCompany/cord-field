@@ -69,4 +69,7 @@ export const typePolicies: TypePolicies = {
   ChangesetDiff: {
     merge: true,
   },
+  ProductProgress: {
+    keyFields: ['product', ['id'], 'report', ['id']],
+  },
 };

@@ -57,6 +57,9 @@ fragment ProductCard on Product {
     value
   }
   progressOfCurrentReportDue {
+    product {
+      id
+    } # For cache id
     report {
       ...PeriodicReport
     }
