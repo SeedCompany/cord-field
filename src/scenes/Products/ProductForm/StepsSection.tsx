@@ -28,15 +28,19 @@ export const StepsSection = ({
   const availableSteps = methodology ? availableStepMap[methodology] : [];
 
   // When methodology changes, remove all currently selected steps that are now unavailable
+  // When steps change, ensure they are ordered by order specified in available steps
   useEffect(() => {
     if (!steps || steps.length === 0) {
       return;
     }
 
-    // @ts-expect-error yes, the field exists.
-    form.change('product.steps', intersection(steps, availableSteps));
-    // eslint-disable-next-line react-hooks/exhaustive-deps -- only when methodology changes
-  }, [methodology]);
+    const orderedAndAvailable = intersection(availableSteps, steps);
+    if (orderedAndAvailable.join() !== steps.join()) {
+      // @ts-expect-error yes, the field exists.
+      form.change('product.steps', orderedAndAvailable);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- only when methodology or steps change
+  }, [methodology, steps]);
 
   if (availableSteps.length === 0) {
     return null;
