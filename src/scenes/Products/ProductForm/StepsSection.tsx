@@ -1,29 +1,42 @@
 import { useQuery } from '@apollo/client';
 import { ToggleButton } from '@material-ui/lab';
 import { intersection } from 'lodash';
-import React, { useMemo } from 'react';
+import React, { useEffect, useMemo } from 'react';
 import { displayProductStep } from '../../../api';
 import { EnumField } from '../../../components/form';
+import { mapFromList } from '../../../util';
 import { AvailableMethodologyStepsDocument as AvailableSteps } from './ProductForm.generated';
 import { SectionProps } from './ProductFormFields';
 import { SecuredAccordion } from './SecuredAccordion';
 
-export const StepsSection = ({ values, accordionState }: SectionProps) => {
-  const { methodology, steps } = values.product ?? {};
-
+export const StepsSection = ({
+  form,
+  values,
+  accordionState,
+}: SectionProps) => {
   const { data } = useQuery(AvailableSteps);
-
-  const availableSteps = useMemo(
+  const availableStepMap = useMemo(
     () =>
-      data?.methodologyAvailableSteps.find((s) => s.methodology === methodology)
-        ?.steps ?? [],
-    [methodology, data]
+      mapFromList(data?.methodologyAvailableSteps ?? [], (pair) => [
+        pair.methodology,
+        pair.steps,
+      ]),
+    [data]
   );
 
-  const selectedSteps = useMemo(
-    () => intersection(availableSteps, steps),
-    [availableSteps, steps]
-  );
+  const { methodology, steps } = values.product ?? {};
+  const availableSteps = methodology ? availableStepMap[methodology] : [];
+
+  // When methodology changes, remove all currently selected steps that are now unavailable
+  useEffect(() => {
+    if (!steps || steps.length === 0) {
+      return;
+    }
+
+    // @ts-expect-error yes, the field exists.
+    form.change('product.steps', intersection(steps, availableSteps));
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- only when methodology changes
+  }, [methodology]);
 
   if (availableSteps.length === 0) {
     return null;
@@ -33,7 +46,7 @@ export const StepsSection = ({ values, accordionState }: SectionProps) => {
       {...accordionState}
       name="steps"
       renderCollapsed={() =>
-        selectedSteps.map((step) => (
+        steps?.map((step) => (
           <ToggleButton selected key={step} value={step}>
             {displayProductStep(step)}
           </ToggleButton>
