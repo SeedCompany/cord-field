@@ -14,4 +14,3 @@ export * from './sensitivity';
 export * from './changesets';
 export * from './updateFragment';
 export { readFragment } from './readFragment';
-export * from './product';

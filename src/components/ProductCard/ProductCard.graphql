@@ -1,5 +1,7 @@
 fragment ProductCard on Product {
   id
+  label
+  category
   scriptureReferences {
     canRead
     canEdit

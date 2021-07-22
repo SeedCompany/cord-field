@@ -14,13 +14,7 @@ import {
   SvgIconComponent,
 } from '@material-ui/icons';
 import React from 'react';
-import {
-  displayProductStep,
-  displayProductTypes,
-  getProducibleName,
-  getProductType,
-} from '../../api';
-import { ProductTypes } from '../../scenes/Products/ProductForm/constants';
+import { displayProductStep } from '../../api';
 import { HugeIcon } from '../Icons';
 import { LinearProgressBar } from '../LinearProgressBar';
 import { CardActionAreaLink } from '../Routing';
@@ -47,21 +41,18 @@ interface ProductCardProps {
   product: ProductCardFragment;
 }
 
-const iconMap: Record<ProductTypes, SvgIconComponent> = {
-  DirectScriptureProduct: MenuBook,
+const iconMap: Record<string, SvgIconComponent> = {
+  Scripture: MenuBook,
   Story: DescriptionOutlined,
   Film: Movie,
   Song: MusicNote,
-  LiteracyMaterial: LibraryBooksOutlined,
-  DerivativeScriptureProduct: DescriptionOutlined,
+  'Literacy Material': LibraryBooksOutlined,
 };
 
 export const ProductCard = ({ product }: ProductCardProps) => {
   const classes = useStyles();
-  const type = getProductType(product);
-  const producibleName = getProducibleName(product);
 
-  const Icon = type ? iconMap[type] : undefined;
+  const Icon = product.category ? iconMap[product.category] : undefined;
 
   const firstStepNotDone = product.progressOfCurrentReportDue?.steps.find(
     (step) => step.percentDone.value && step.percentDone.value < 100
@@ -91,14 +82,10 @@ export const ProductCard = ({ product }: ProductCardProps) => {
               <HugeIcon className={classes.icon} icon={Icon} />
             </Grid>
           )}
-          {type && (
-            <Grid item>
-              <Typography variant="h4">{producibleName}</Typography>
-              <Typography variant="body2">
-                {displayProductTypes(type)}
-              </Typography>
-            </Grid>
-          )}
+          <Grid item>
+            <Typography variant="h4">{product.label}</Typography>
+            <Typography variant="body2">{product.category}</Typography>
+          </Grid>
           {stepToShow && (
             <Grid item xs>
               <Typography variant="body2" align="right">
