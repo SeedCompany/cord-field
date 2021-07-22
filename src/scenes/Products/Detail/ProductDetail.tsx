@@ -1,5 +1,5 @@
 import { useQuery } from '@apollo/client';
-import { Card, Grid, makeStyles, Typography } from '@material-ui/core';
+import { Grid, makeStyles, Typography } from '@material-ui/core';
 import React from 'react';
 import { useParams } from 'react-router-dom';
 import { ReportLabel } from '../../../components/PeriodicReports/ReportLabel';
@@ -7,6 +7,7 @@ import { ResponsiveDivider } from '../../../components/ResponsiveDivider';
 import { ProductDetailDocument } from './ProductDetail.generated';
 import { ProductDetailHeader } from './ProductDetailHeader';
 import { ProductInfo } from './ProductInfo';
+import { StepsList } from './Progress';
 
 const useStyles = makeStyles(({ spacing, breakpoints }) => ({
   root: {
@@ -54,16 +55,9 @@ export const ProductDetail = () => {
                 <Grid item component={Typography} variant="h3" paragraph>
                   Progress for <ReportLabel report={progress.report} />
                 </Grid>
-                {progress.steps.map(({ step, percentDone }) => (
-                  <Grid item key={step}>
-                    <Card>{step}</Card>
-                  </Grid>
-                ))}
-                {progress.steps.length === 0 && (
-                  <Grid item component={Typography} color="textSecondary">
-                    Product does not have any steps
-                  </Grid>
-                )}
+                <Grid item>
+                  <StepsList progress={progress} />
+                </Grid>
               </Grid>
             </>
           )}
