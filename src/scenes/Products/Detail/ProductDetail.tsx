@@ -19,7 +19,10 @@ const useStyles = makeStyles(({ spacing, breakpoints }) => ({
   },
   main: {
     flex: 1,
-    maxWidth: breakpoints.values.lg,
+    maxWidth: breakpoints.values.md,
+  },
+  details: {
+    flex: 1,
   },
 }));
 
@@ -44,14 +47,21 @@ export const ProductDetail = () => {
         className={classes.main}
       >
         <ProductDetailHeader product={product} />
-        <Grid item xs container spacing={5}>
-          <Grid item lg={3} container direction="column" spacing={3}>
+        <Grid item container spacing={5} className={classes.details}>
+          <Grid
+            item
+            md={4}
+            lg={3}
+            container
+            alignContent="flex-start"
+            spacing={3}
+          >
             <ProductInfo product={product} />
           </Grid>
           {progress && (
             <>
-              <ResponsiveDivider vertical="lgUp" spacing={3} />
-              <Grid item xs md lg container direction="column" spacing={2}>
+              <ResponsiveDivider vertical="mdUp" spacing={3} />
+              <Grid item xs lg={7} container direction="column" spacing={2}>
                 <Grid item component={Typography} variant="h3" paragraph>
                   Progress for <ReportLabel report={progress.report} />
                 </Grid>

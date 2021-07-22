@@ -1,6 +1,6 @@
 import { Grid, List, ListItem, Typography } from '@material-ui/core';
 import { Skeleton } from '@material-ui/lab';
-import React from 'react';
+import React, { ReactNode } from 'react';
 import {
   displayMethodologyWithLabel,
   displayProductMedium,
@@ -18,14 +18,14 @@ export const ProductInfo = ({ product }: { product?: Product }) => (
       label="Mediums"
       value={product?.mediums.value.map(displayProductMedium).join(', ')}
       loading={!product}
-      wrap={(node) => <Grid item>{node}</Grid>}
+      wrap={infoWrapper}
     />
 
     <DisplayProperty
       label="Purposes"
       value={product?.purposes.value.map(displayProductPurpose).join(', ')}
       loading={!product}
-      wrap={(node) => <Grid item>{node}</Grid>}
+      wrap={infoWrapper}
     />
 
     <DisplayProperty
@@ -36,7 +36,7 @@ export const ProductInfo = ({ product }: { product?: Product }) => (
           : undefined
       }
       loading={!product}
-      wrap={(node) => <Grid item>{node}</Grid>}
+      wrap={infoWrapper}
     />
 
     <DisplayProperty
@@ -53,9 +53,15 @@ export const ProductInfo = ({ product }: { product?: Product }) => (
         ) : null
       }
       loading={!product}
-      wrap={(node) => <Grid item>{node}</Grid>}
+      wrap={infoWrapper}
     />
   </>
+);
+
+const infoWrapper = (node: ReactNode) => (
+  <Grid item md={12}>
+    {node}
+  </Grid>
 );
 
 const DisplayProperty = (props: DisplaySimplePropertyProps) =>
