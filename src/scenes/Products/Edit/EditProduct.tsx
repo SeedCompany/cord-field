@@ -135,6 +135,8 @@ export const EditProduct = () => {
       enqueueSnackbar(`Deleted product`, {
         variant: 'success',
       });
+      navigate('../../../');
+      return;
     } else {
       const {
         productType,
@@ -175,7 +177,7 @@ export const EditProduct = () => {
       });
     }
 
-    navigate('../../');
+    navigate('../');
   };
 
   return (

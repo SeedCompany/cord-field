@@ -1,5 +1,7 @@
 fragment ProductCard on Product {
   id
+  label
+  category
   scriptureReferences {
     canRead
     canEdit
@@ -57,19 +59,6 @@ fragment ProductCard on Product {
     value
   }
   progressOfCurrentReportDue {
-    product {
-      id
-    } # For cache id
-    report {
-      ...PeriodicReport
-    }
-    steps {
-      step
-      percentDone {
-        canRead
-        canEdit
-        value
-      }
-    }
+    ...ProductProgress
   }
 }

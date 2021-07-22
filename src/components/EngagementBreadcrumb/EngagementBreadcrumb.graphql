@@ -8,6 +8,10 @@ fragment EngagementBreadcrumb on Engagement {
           canRead
           value
         }
+        displayName {
+          canRead
+          value
+        }
       }
     }
   }
