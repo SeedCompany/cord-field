@@ -44,14 +44,17 @@ export const FileVersionItem: FC<FileVersionItemProps> = (props) => {
    * Consumers of the `FileActionsContext` are going to pass in a list
    * of actions that are permitted to the user for this `fileNode`.
    * Regardless of what's passed in, we do not at this time ever want to
-   * allow for new versions of Versions or for viewing the history of a
-   * Version.
+   * allow for new versions of Versions or viewing the history of a
+   * Version. Updating a report received date is also not allowed here
+   * since that only applies at the report/file node level.
    */
   const menuActions = [
     ...new Set(
       actions.filter(
         (action) =>
-          action !== FileAction.History && action !== FileAction.NewVersion
+          action !== FileAction.History &&
+          action !== FileAction.NewVersion &&
+          action !== FileAction.UpdateReceivedDate
       )
     ),
   ];

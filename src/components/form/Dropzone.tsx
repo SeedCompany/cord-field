@@ -38,12 +38,16 @@ const useStyles = makeStyles(({ palette, spacing }) => {
 });
 
 export type DropzoneFieldProps = Except<FieldConfig<File, true>, 'multiple'> & {
+  label?: string;
   multiple?: boolean;
+  className?: string;
 };
 
 export function DropzoneField({
-  multiple = true,
+  multiple = false,
+  label = 'Click or drag files here',
   name: nameProp,
+  className,
 }: DropzoneFieldProps) {
   const classes = useStyles();
 
@@ -84,14 +88,14 @@ export function DropzoneField({
   return (
     <>
       <div
-        className={clsx(classes.dropzone, {
+        className={clsx(className, classes.dropzone, {
           [classes.active]: isDragActive,
         })}
         {...getRootProps()}
       >
         <input {...getInputProps()} name={name} />
         <Typography variant="h4" className={classes.instructions}>
-          Click or drag files in to upload
+          {label}
         </Typography>
       </div>
       {currentFiles.length > 0 && (

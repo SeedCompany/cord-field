@@ -86,10 +86,14 @@ export const DateField = ({
 
   // Show understood date but invalid selection errors immediately
   // Leave invalid text input to be shown only after touched as usual
-  const error = showError(meta) || (meta.error && meta.error !== 'invalidDate');
-  const humanError = { ...defaultMessages, ...errorMessages }[
-    meta.error as DateError
-  ];
+  const error =
+    showError(meta) ||
+    (meta.error && meta.error !== 'invalidDate' && meta.error !== 'Required');
+  const humanError = {
+    ...defaultMessages,
+    ...errorMessages,
+    Required: 'Required',
+  }[meta.error as DateError];
   const helperText = getHelperText(
     {
       ...meta,
