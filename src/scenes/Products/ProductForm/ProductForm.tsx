@@ -49,7 +49,10 @@ export const ProductForm = ({ product, ...props }: ProductFormProps) => {
       {({ handleSubmit, ...rest }) => (
         <form onSubmit={handleSubmit} className={classes.form}>
           <SubmitError />
-          <ProductFormFields product={product} {...rest} />
+          {/* Need to give accordions their own container for styling */}
+          <div>
+            <ProductFormFields product={product} {...rest} />
+          </div>
           <div className={classes.submissionBlurb}>
             <Typography variant="h4">Check Your Selections</Typography>
             <Typography>
