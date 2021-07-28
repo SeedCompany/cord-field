@@ -2,6 +2,7 @@ import React, { ComponentType, useState } from 'react';
 import { FormRenderProps, RenderableProps } from 'react-final-form';
 import { Except, Merge, UnionToIntersection } from 'type-fest';
 import { FieldGroup, SecuredEditableKeys } from '../../../components/form';
+import { CompletionSection } from './CompletionSection';
 import { MediumsSection } from './MediumsSection';
 import { MethodologySection } from './MethodologySection';
 import { ProducesSection } from './ProducesSection';
@@ -43,6 +44,7 @@ const sections: ReadonlyArray<ComponentType<SectionProps>> = [
   PurposesSection,
   MethodologySection,
   StepsSection,
+  CompletionSection,
 ];
 
 export const ProductFormFields = ({

@@ -48,7 +48,7 @@ export const SecuredAccordion = <K extends ProductKey>({
   product?: Product;
   openedSection: ProductKey | undefined;
   onOpen: (name: K | undefined) => void;
-  title?: ReactNode;
+  title?: ReactNode | ((isOpen: boolean) => ReactNode);
   renderCollapsed: () => ReactNode;
   children: (props: SecuredFieldRenderProps<K>) => ReactNode;
 }) => {
@@ -72,10 +72,14 @@ export const SecuredAccordion = <K extends ProductKey>({
             expandIcon={<ExpandMore />}
             classes={{ content: classes.accordionSummary }}
           >
-            <Typography variant="h4">
-              {isOpen && 'Choose '}
-              {title ?? startCase(name)}
-            </Typography>
+            {typeof title === 'function' ? (
+              title(isOpen)
+            ) : (
+              <Typography variant="h4">
+                {isOpen && 'Choose '}
+                {title ?? startCase(name)}
+              </Typography>
+            )}
             <div className={classes.toggleButtonContainer}>
               {isOpen ? null : renderCollapsed()}
             </div>
