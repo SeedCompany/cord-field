@@ -1,4 +1,6 @@
 export * from './AlphaLowercaseField';
+export * from './AutocompleteField';
+export * from './useAutocompleteQuery';
 export * from './Lookup/LookupField';
 export * from './CheckboxField';
 export * from './decorators';
