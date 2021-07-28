@@ -1,6 +1,15 @@
 import { makeStyles, Typography } from '@material-ui/core';
 import React from 'react';
-import { TextField } from '../../../components/form';
+import {
+  AutocompleteField,
+  AutocompleteFieldProps,
+  AutocompleteResult,
+  useAutocompleteQuery,
+} from '../../../components/form';
+import {
+  CompletionDescriptionLookupDocument as Lookup,
+  CompletionDescriptionLookupQueryVariables as LookupVars,
+} from './CompletionDescriptionLookup.generated';
 import { SectionProps } from './ProductFormFields';
 import { SecuredAccordion } from './SecuredAccordion';
 
@@ -29,7 +38,37 @@ export const CompletionSection = ({ values, accordionState }: SectionProps) => {
         </Typography>
       )}
     >
-      {(props) => <TextField label="Completion means..." {...props} />}
+      {(props) => (
+        <CompletionDescriptionField
+          methodology={values.product?.methodology}
+          {...props}
+        />
+      )}
     </SecuredAccordion>
+  );
+};
+
+const CompletionDescriptionField = (
+  props: Omit<
+    AutocompleteFieldProps<string, false, true, true>,
+    keyof AutocompleteResult<any, any>
+  > &
+    LookupVars
+) => {
+  const data = useAutocompleteQuery(Lookup, {
+    variables: (input) => ({
+      query: input,
+      methodology: props.methodology,
+    }),
+    listAt: (res) => res.suggestProductCompletionDescriptions.items,
+  });
+
+  return (
+    <AutocompleteField<string, false, true, true>
+      {...props}
+      {...data}
+      freeSolo
+      autoSelect
+    />
   );
 };
