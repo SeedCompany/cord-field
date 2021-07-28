@@ -40,6 +40,7 @@ export const CompletionSection = ({ values, accordionState }: SectionProps) => {
     >
       {(props) => (
         <CompletionDescriptionField
+          label="Completion means..."
           methodology={values.product?.methodology}
           {...props}
         />
