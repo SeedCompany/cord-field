@@ -80,7 +80,7 @@ export const ProductDetailHeader = ({ product }: { product?: Product }) => {
           {product ? (
             <>Product {product.category ? ` - ${product.category}` : ''}</>
           ) : (
-            <Skeleton />
+            <Skeleton width="25%" />
           )}
         </Typography>
       </Grid>

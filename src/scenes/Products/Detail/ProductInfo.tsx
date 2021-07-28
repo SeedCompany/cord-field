@@ -40,6 +40,13 @@ export const ProductInfo = ({ product }: { product?: Product }) => (
     />
 
     <DisplayProperty
+      label="Completion Description"
+      value={product?.describeCompletion.value}
+      loading={!product}
+      wrap={infoWrapper}
+    />
+
+    <DisplayProperty
       label="Scripture"
       value={
         product && product.scriptureReferences.value.length > 0 ? (

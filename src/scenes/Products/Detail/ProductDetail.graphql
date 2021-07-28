@@ -16,6 +16,9 @@ fragment ProductDetail on Product {
       label
     }
   }
+  describeCompletion {
+    value
+  }
   engagement {
     ...EngagementBreadcrumb
     project {

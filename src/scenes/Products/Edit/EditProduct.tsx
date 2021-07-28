@@ -91,6 +91,7 @@ export const EditProduct = () => {
         purposes: purposes.value,
         methodology: methodology.value,
         steps: product.steps.value,
+        describeCompletion: product.describeCompletion.value,
         scriptureReferences: referencesWithoutFullTestament,
         fullOldTestament: scriptureReferencesWithoutTypename.some((reference) =>
           isEqual(reference, fullOldTestamentRange)

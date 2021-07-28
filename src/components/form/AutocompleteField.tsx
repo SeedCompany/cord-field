@@ -1,7 +1,13 @@
-import { Chip, ChipProps, TextField, TextFieldProps } from '@material-ui/core';
+import {
+  Chip,
+  ChipProps,
+  CircularProgress,
+  TextField,
+  TextFieldProps,
+} from '@material-ui/core';
 import { Autocomplete, AutocompleteProps, Value } from '@material-ui/lab';
 import { identity } from 'lodash';
-import React, { useCallback } from 'react';
+import React, { useCallback, useLayoutEffect } from 'react';
 import { Except } from 'type-fest';
 import { FieldConfig, useField } from './useField';
 import { getHelperText, showError } from './util';
@@ -18,6 +24,8 @@ export type AutocompleteFieldProps<
   > & {
     ChipProps?: ChipProps;
     options: readonly T[];
+    // Allowed but ignored from useAutocompleteQuery
+    root?: unknown;
   } & Except<
     AutocompleteProps<T, Multiple, DisableClearable, FreeSolo>,
     | 'value'
@@ -25,7 +33,6 @@ export type AutocompleteFieldProps<
     | 'defaultValue'
     | 'renderInput'
     | 'renderTags'
-    | 'loading'
     | 'filterSelectedOptions'
     | 'ChipProps'
     | 'options'
@@ -52,6 +59,7 @@ export function AutocompleteField<
   compareBy,
   options,
   margin,
+  root: _,
   ...props
 }: AutocompleteFieldProps<T, Multiple, DisableClearable, FreeSolo>) {
   type Val = Value<T, Multiple, DisableClearable, FreeSolo>;
@@ -80,10 +88,25 @@ export function AutocompleteField<
 
   const getOptionLabel = props.getOptionLabel ?? identity;
 
+  const selectedText =
+    multiple || !(field.value as T | '')
+      ? ''
+      : getOptionLabel(field.value as T);
+  useLayoutEffect(() => {
+    props.onInputChange?.(
+      // @ts-expect-error yeah we are faking the event. yell at me when it's a problem
+      {},
+      selectedText,
+      'reset'
+    );
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [props.onInputChange, selectedText]);
+
   return (
     <Autocomplete<T, Multiple, typeof required, FreeSolo>
       disableClearable={required}
       disableCloseOnSelect={multiple}
+      loadingText={<CircularProgress size={16} />}
       {...autocompleteProps}
       options={options as T[]}
       disabled={meta.disabled}
@@ -105,6 +128,11 @@ export function AutocompleteField<
       onFocus={field.onFocus}
       onChange={(_, value) => {
         field.onChange(value);
+      }}
+      onKeyDown={(event) => {
+        // Prevent submitting form while searching, user is probably trying
+        // to execute search (which happens automatically).
+        if (event.key === 'Enter' && props.loading) event.preventDefault();
       }}
       renderInput={(params) => (
         <TextField

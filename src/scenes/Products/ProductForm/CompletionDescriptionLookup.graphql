@@ -1,0 +1,10 @@
+query CompletionDescriptionLookup(
+  $query: String
+  $methodology: ProductMethodology
+) {
+  suggestProductCompletionDescriptions(
+    input: { query: $query, methodology: $methodology }
+  ) {
+    items
+  }
+}
