@@ -2,7 +2,11 @@ fragment DisplayUser on User {
   id
   createdAt
   email {
-    ...securedString
+    # No fragement here to avoid breaking change.
+    # Type name is changing with https://github.com/SeedCompany/cord-api-v3/pull/2006
+    canEdit
+    canRead
+    value
   }
   realFirstName {
     ...securedString
