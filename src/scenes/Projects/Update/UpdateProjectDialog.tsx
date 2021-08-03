@@ -15,6 +15,7 @@ import {
   DateField,
   EnumField,
   FieldGroup,
+  SecuredField,
   SubmitError,
   TextField,
 } from '../../../components/form';
@@ -201,7 +202,14 @@ export const UpdateProjectDialog = ({
       <FieldGroup prefix="project">
         {editFields.map((name) => {
           const Field = fieldMapping[name];
-          return <Field props={{ name }} project={project} key={name} />;
+          if (name === 'sensitivity') {
+            return <Field props={{ name }} project={project} key={name} />;
+          }
+          return (
+            <SecuredField obj={project} name={name} key={name}>
+              {(props) => <Field props={props} project={project} />}
+            </SecuredField>
+          );
         })}
       </FieldGroup>
     </DialogForm>
