@@ -29,6 +29,8 @@ export const ReportLabel = ({
 };
 
 const getLabel = (start: CalendarDate, end: CalendarDate) =>
-  start.hasSame(end, 'month')
+  +start === +end
+    ? 'Final'
+    : start.hasSame(end, 'month')
     ? start.toFormat('LLLL yyyy')
     : `Q${start.fiscalQuarter} FY${start.fiscalYear}`;
