@@ -185,7 +185,7 @@ export function VersesField({
 
   const helperText = getHelperText(
     meta,
-    error ? meta.error : helperTextProp || ' ',
+    error ? meta.error : helperTextProp || 'Press Enter to Add Selection',
     error
   );
   return (
