@@ -47,6 +47,7 @@ export const ProducesSection = ({
   const { productType, produces } = values.product ?? {};
 
   const isProducesFieldMissing =
+    productType !== 'DirectScriptureProduct' &&
     !produces &&
     (touched?.['product.produces'] !== undefined ||
       !touched?.['product.produces']);
