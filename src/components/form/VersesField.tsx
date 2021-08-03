@@ -39,7 +39,10 @@ export type VersesFieldProps = Except<FieldConfig<Val, true>, 'multiple'> & {
     AutocompleteProps<GenericScriptureRange | string, true, false, true>,
     'fullWidth' | 'classes' | 'disabled' | 'ChipProps'
   > &
-  Pick<TextFieldProps, 'helperText' | 'label' | 'required' | 'autoFocus'>;
+  Pick<
+    TextFieldProps,
+    'helperText' | 'label' | 'required' | 'autoFocus' | 'placeholder'
+  >;
 
 const useStyles = makeStyles(() => ({
   chip: {
@@ -88,6 +91,7 @@ export function VersesField({
   autoFocus,
   required,
   label,
+  placeholder = 'Example: 1:13-19, 12:1-47',
   ...props
 }: VersesFieldProps) {
   const [errorCode, setErrorCode] = useState('');
@@ -244,6 +248,7 @@ export function VersesField({
             name={input.name}
             label={label}
             variant="outlined"
+            placeholder={scriptureRanges.length === 0 ? placeholder : ''}
             helperText={helperText}
             error={error}
             autoFocus={autoFocus}
