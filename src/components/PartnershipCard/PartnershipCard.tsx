@@ -116,7 +116,7 @@ export const PartnershipCard: FC<PartnershipCardProps> = ({
           <Grid item>
             <DisplaySimpleProperty
               label="MOU Date Range"
-              value={<FormattedDateRange range={partnership?.mouRange.value} />}
+              value={FormattedDateRange.orNull(partnership?.mouRange.value)}
               loading={!partnership}
               loadingWidth="40%"
             />

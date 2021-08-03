@@ -48,8 +48,10 @@ export const FormattedDateRange = ({
   );
 };
 
-FormattedDateRange.orNull = (range: DateRange) =>
-  !range.start && !range.end ? null : <FormattedDateRange range={range} />;
+FormattedDateRange.orNull = (range: Nullable<DateRange>) =>
+  !range || (!range.start && !range.end) ? null : (
+    <FormattedDateRange range={range} />
+  );
 
 export const FormattedDateTime = ({ date }: { date: Nullable<DateTime> }) => {
   const format = useDateTimeFormatter();
