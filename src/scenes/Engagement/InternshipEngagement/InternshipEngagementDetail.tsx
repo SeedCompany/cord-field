@@ -148,7 +148,7 @@ export const InternshipEngagementDetail: FC<EngagementQuery> = ({
                   startIcon={<DateRange className={classes.infoColor} />}
                   secured={engagement.dateRange}
                   redacted="You do not have permission to view start/end dates"
-                  children={(range) => <FormattedDateRange range={range} />}
+                  children={FormattedDateRange.orNull}
                   empty="Start - End"
                   onClick={() => show('dateRangeOverride')}
                 />

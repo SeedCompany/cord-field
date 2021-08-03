@@ -394,9 +394,7 @@ export const ProjectOverview: FC = () => {
                   startIcon={<DateRange className={classes.infoColor} />}
                   secured={projectOverviewData?.project.mouRange}
                   redacted="You do not have permission to view start/end dates"
-                  children={({ start, end }) => (
-                    <FormattedDateRange {...{ start, end }} />
-                  )}
+                  children={FormattedDateRange.orNull}
                   empty="Start - End"
                   onClick={() => editField('mouRange')}
                 />
