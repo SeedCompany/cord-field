@@ -55,6 +55,8 @@ export const PeriodicReportsTableInContext = ({
       title: 'Period',
       defaultSort: 'desc',
       render: ({ report }) => <ReportLabel report={report} />,
+      customSort: (row1, row2) =>
+        row1.period.toMillis() - row2.period.toMillis(),
     },
     {
       title: 'Submitted By',
