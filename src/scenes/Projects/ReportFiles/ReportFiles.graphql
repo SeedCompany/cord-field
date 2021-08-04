@@ -1,0 +1,28 @@
+query ProjectReport($projectId: ID!, $reportId: ID!) {
+  project(id: $projectId) {
+    ...ProjectBreadcrumb
+  }
+  periodicReport(id: $reportId) {
+    ...PeriodicReport
+  }
+}
+
+fragment ProjectReportDirectoryContents on Directory {
+  ...FileNodeInfo
+  children {
+    total
+    items {
+      ...FileNodeInfo
+    }
+  }
+  parents {
+    id
+    name
+  }
+}
+
+query ProjectReportDirectory($id: ID!) {
+  directory(id: $id) {
+    ...ProjectReportDirectoryContents
+  }
+}

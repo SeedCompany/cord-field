@@ -34,6 +34,9 @@ const ProjectOverview = loadable(
 const Reports = loadable(() => import('./Reports'), {
   resolveComponent: (m) => m.ProjectReports,
 });
+const ReportFiles = loadable(() => import('./ReportFiles'), {
+  resolveComponent: (m) => m.ReportFilesList,
+});
 
 const ChangeRequestList = loadable(() => import('./ChangeRequest/List'), {
   resolveComponent: (m) => m.ProjectChangeRequestList,
@@ -57,6 +60,10 @@ const ProjectDetails = () => (
       <Route path="partnerships" element={<PartnershipList />} />
       <Route path="budget" element={<ProjectBudget />} />
       <Route path="reports/financial" element={<Reports type="Financial" />} />
+      <Route
+        path="reports/:reportType/:reportId/files"
+        element={<ReportFiles />}
+      />
       <Route path="reports/narrative" element={<Reports type="Narrative" />} />
       <Route path="change-requests" element={<ChangeRequestList />} />
       {NotFoundRoute}

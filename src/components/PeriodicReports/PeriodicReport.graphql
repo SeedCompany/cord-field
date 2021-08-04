@@ -4,7 +4,7 @@ fragment PeriodicReport on PeriodicReport {
   start
   end
   due
-  reportFile {
+  reportDirectory {
     canEdit
     canRead
     value {

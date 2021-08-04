@@ -28,7 +28,7 @@ export const ReportLabel = ({
   return <>{getLabel(rep.start, rep.end)}</>;
 };
 
-const getLabel = (start: CalendarDate, end: CalendarDate) =>
+export const getLabel = (start: CalendarDate, end: CalendarDate) =>
   +start === +end
     ? 'Final'
     : start.hasSame(end, 'month')

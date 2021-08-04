@@ -1,5 +1,0 @@
-mutation UploadPeriodicReport($input: UploadPeriodicReportInput!) {
-  uploadPeriodicReport(input: $input) {
-    ...PeriodicReport
-  }
-}

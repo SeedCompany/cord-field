@@ -1,8 +1,8 @@
 import { without } from 'lodash';
 import { DateTime } from 'luxon';
 import { Column } from 'material-table';
-import { useSnackbar } from 'notistack';
 import React from 'react';
+import { useNavigate } from 'react-router';
 import { Except } from 'type-fest';
 import { CalendarDate } from '../../util';
 import {
@@ -10,7 +10,6 @@ import {
   FileAction,
   FileActionsContextProvider,
   getPermittedFileActions,
-  useFileActions,
 } from '../files/FileActions';
 import { FormattedDateTime } from '../Formatters';
 import { Table } from '../Table';
@@ -38,15 +37,14 @@ export const PeriodicReportsTableInContext = ({
   ...props
 }: PeriodicReportsTableProps) => {
   const uploadFile = useUploadPeriodicReport();
-  const { openFilePreview } = useFileActions();
-  const { enqueueSnackbar } = useSnackbar();
+  const navigate = useNavigate();
 
   const rowsData = (data ?? []).map(
     (report): ReportRow => ({
       report,
       period: report.start,
-      modifiedBy: report.reportFile.value?.modifiedBy.fullName || '',
-      modifiedAt: report.reportFile.value?.modifiedAt,
+      modifiedBy: report.reportDirectory.value?.createdBy.fullName || '',
+      modifiedAt: report.reportDirectory.value?.createdAt,
     })
   );
 
@@ -66,7 +64,7 @@ export const PeriodicReportsTableInContext = ({
       title: 'Submitted Date',
       field: 'modifiedAt',
       render: ({ report }) => (
-        <FormattedDateTime date={report.reportFile.value?.modifiedAt} />
+        <FormattedDateTime date={report.reportDirectory.value?.createdAt} />
       ),
     },
     {
@@ -75,31 +73,22 @@ export const PeriodicReportsTableInContext = ({
       align: 'right',
       sorting: false,
       render: ({ report }) => {
-        const reportFile = report.reportFile;
-        const fileActions = reportFile.value
-          ? without(
-              getPermittedFileActions(reportFile.canRead, reportFile.canEdit),
-              FileAction.Delete,
-              FileAction.Rename
-            )
-          : reportFile.canEdit
-          ? [FileAction.NewVersion]
-          : [];
+        const reportDirectory = report.reportDirectory;
+        const fileActions = without(
+          getPermittedFileActions(true, true),
+          FileAction.Delete,
+          FileAction.Rename
+        );
 
         return (
           <ActionsMenu
             IconButtonProps={{ size: 'small' }}
             actions={{
               file: fileActions,
-              version: [
-                FileAction.Download,
-                ...(reportFile.canEdit
-                  ? [FileAction.Rename, FileAction.Delete]
-                  : []),
-              ],
+              version: [FileAction.Download],
             }}
             // @ts-expect-error refactor file functionality later to make all this easier
-            item={reportFile.value ?? { __typename: '' }}
+            item={reportDirectory.value ?? { __typename: '' }}
             onVersionUpload={(files) => uploadFile(files, report.id)}
           />
         );
@@ -118,17 +107,7 @@ export const PeriodicReportsTableInContext = ({
       }}
       columns={columns}
       onRowClick={({ report }) => {
-        if (!report.reportFile.canRead) {
-          enqueueSnackbar(`You don't have permission to view this report file`);
-          return;
-        }
-        if (report.reportFile.value) {
-          openFilePreview(report.reportFile.value);
-          return;
-        }
-        if (report.reportFile.canEdit) {
-          // TODO Upload
-        }
+        navigate(`${report.id}/files`);
       }}
       options={{
         padding: 'dense',
