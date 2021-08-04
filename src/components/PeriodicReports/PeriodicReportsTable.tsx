@@ -1,22 +1,15 @@
-import { without } from 'lodash';
 import { DateTime } from 'luxon';
 import { Column } from 'material-table';
 import React from 'react';
 import { useNavigate } from 'react-router';
 import { Except } from 'type-fest';
 import { CalendarDate } from '../../util';
-import {
-  FileActionsPopup as ActionsMenu,
-  FileAction,
-  FileActionsContextProvider,
-  getPermittedFileActions,
-} from '../files/FileActions';
+import { FileActionsContextProvider } from '../files/FileActions';
 import { FormattedDateTime } from '../Formatters';
 import { Table } from '../Table';
 import { TableProps } from '../Table/Table';
 import { PeriodicReportFragment } from './PeriodicReport.generated';
 import { ReportLabel } from './ReportLabel';
-import { useUploadPeriodicReport } from './Upload/useUploadPeriodicReport';
 
 export interface ReportRow {
   report: PeriodicReportFragment;
@@ -36,7 +29,6 @@ export const PeriodicReportsTableInContext = ({
   data,
   ...props
 }: PeriodicReportsTableProps) => {
-  const uploadFile = useUploadPeriodicReport();
   const navigate = useNavigate();
 
   const rowsData = (data ?? []).map(
@@ -66,33 +58,6 @@ export const PeriodicReportsTableInContext = ({
       render: ({ report }) => (
         <FormattedDateTime date={report.reportDirectory.value?.createdAt} />
       ),
-    },
-    {
-      title: '',
-      field: 'item',
-      align: 'right',
-      sorting: false,
-      render: ({ report }) => {
-        const reportDirectory = report.reportDirectory;
-        const fileActions = without(
-          getPermittedFileActions(true, true),
-          FileAction.Delete,
-          FileAction.Rename
-        );
-
-        return (
-          <ActionsMenu
-            IconButtonProps={{ size: 'small' }}
-            actions={{
-              file: fileActions,
-              version: [FileAction.Download],
-            }}
-            // @ts-expect-error refactor file functionality later to make all this easier
-            item={reportDirectory.value ?? { __typename: '' }}
-            onVersionUpload={(files) => uploadFile(files, report.id)}
-          />
-        );
-      },
     },
   ];
 
