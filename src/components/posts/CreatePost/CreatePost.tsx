@@ -1,5 +1,4 @@
 import { useMutation } from '@apollo/client';
-import { useSnackbar } from 'notistack';
 import * as React from 'react';
 import { Except } from 'type-fest';
 import { addItemToList, CreatePostInput } from '../../../api';
@@ -21,7 +20,6 @@ export const CreatePost = ({ parent, ...props }: CreatePostProps) => {
       outputToItem: (data) => data.createPost.post,
     }),
   });
-  const { enqueueSnackbar } = useSnackbar();
 
   return (
     <PostForm<CreatePostInput>
@@ -46,10 +44,6 @@ export const CreatePost = ({ parent, ...props }: CreatePostProps) => {
               },
             },
           },
-        });
-
-        enqueueSnackbar(`Comment posted`, {
-          variant: 'success',
         });
       }}
     />
