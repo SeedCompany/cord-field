@@ -5,7 +5,6 @@ import {
   Menu,
   MenuItem,
   MenuProps,
-  useTheme,
 } from '@material-ui/core';
 import { Delete as DeleteIcon, Edit as EditIcon } from '@material-ui/icons';
 import React from 'react';
@@ -25,16 +24,14 @@ const useStyles = makeStyles(({ spacing }) => ({
 export const PostListItemMenu = (props: PostListItemMenuProps) => {
   const { onEdit, onDelete, ...rest } = props;
   const classes = useStyles();
-  const { spacing } = useTheme();
 
   return (
     <Menu
-      id="profile-menu"
+      id="post-options-menu"
       keepMounted
       open={Boolean(props.anchorEl)}
-      getContentAnchorEl={null}
-      anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
-      transformOrigin={{ vertical: spacing(-2), horizontal: 'right' }}
+      anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
+      transformOrigin={{ vertical: 'top', horizontal: 'right' }}
       {...rest}
     >
       <MenuItem onClick={onEdit}>
