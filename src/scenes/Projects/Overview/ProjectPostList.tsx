@@ -2,7 +2,6 @@ import { Grid, makeStyles, Tooltip, Typography } from '@material-ui/core';
 import { Add } from '@material-ui/icons';
 import { FC } from 'react';
 import * as React from 'react';
-import { addItemToList } from '../../../api';
 import { useDialog } from '../../../components/Dialog';
 import { Fab } from '../../../components/Fab';
 import { List, useListQuery } from '../../../components/List';
@@ -64,14 +63,7 @@ export const ProjectPostList: FC<ProjectPostListProps> = ({ project }) => {
         skeletonCount={0}
         renderSkeleton={null}
       />
-      <CreatePost
-        {...createPostState}
-        parentId={project.id}
-        mutationUpdate={addItemToList({
-          listId: [project, 'posts'],
-          outputToItem: (data) => data.createPost.post,
-        })}
-      />
+      <CreatePost {...createPostState} parent={project} />
     </>
   );
 };

@@ -6,3 +6,7 @@ fragment PostForm on Post {
   type
   shareability
 }
+
+fragment PostableId on Postable {
+  ...Id
+}

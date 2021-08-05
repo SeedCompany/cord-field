@@ -1,26 +1,24 @@
-import { MutationUpdaterFn, useMutation } from '@apollo/client';
+import { useMutation } from '@apollo/client';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
 import { Except } from 'type-fest';
-import { CreatePostInput } from '../../../api';
-import { PostForm, PostFormProps } from '../PostForm';
-import { CreatePostDocument, CreatePostMutation } from './CreatePost.generated';
+import { addItemToList, CreatePostInput } from '../../../api';
+import { PostableIdFragment, PostForm, PostFormProps } from '../PostForm';
+import { CreatePostDocument } from './CreatePost.generated';
 
 export type CreatePostProps = Except<
   PostFormProps<CreatePostInput>,
   'onSubmit' | 'initialValues'
 > & {
-  parentId: string;
-  mutationUpdate?: MutationUpdaterFn<CreatePostMutation>;
+  parent: PostableIdFragment;
 };
 
-export const CreatePost = ({
-  parentId,
-  mutationUpdate,
-  ...props
-}: CreatePostProps) => {
+export const CreatePost = ({ parent, ...props }: CreatePostProps) => {
   const [createPost] = useMutation(CreatePostDocument, {
-    update: mutationUpdate,
+    update: addItemToList({
+      listId: [parent, 'posts'],
+      outputToItem: (data) => data.createPost.post,
+    }),
   });
   const { enqueueSnackbar } = useSnackbar();
 
@@ -40,7 +38,7 @@ export const CreatePost = ({
           variables: {
             input: {
               post: {
-                parentId,
+                parentId: parent.id,
                 body: post.body,
                 type: post.type,
                 shareability: post.shareability,
