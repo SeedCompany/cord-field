@@ -2,21 +2,30 @@ import {
   Avatar,
   Card,
   CardContent,
+  IconButton,
   makeStyles,
+  MenuProps,
   Typography,
 } from '@material-ui/core';
+import { MoreVert } from '@material-ui/icons';
 import clsx from 'clsx';
-import { FC } from 'react';
+import { FC, useState } from 'react';
 import * as React from 'react';
-import { displayPostShareability } from '../../../api';
+import { canEditAny, displayPostShareability } from '../../../api';
 import { square } from '../../../util';
-import { useDateTimeFormatter } from '../../Formatters';
+import { useDialog } from '../../Dialog';
+import { FormattedDateTime } from '../../Formatters';
+import { DeletePost } from '../DeletePost';
+import { EditPost } from '../EditPost';
+import { PostableIdFragment } from '../PostableId.generated';
 import { PostListItemCardFragment } from './PostListItemCard.generated';
+import { PostListItemMenu } from './PostListItemMenu';
 
 const useStyles = makeStyles(({ spacing, typography }) => {
   return {
     root: {
       width: '100%',
+      position: 'relative',
     },
     card: {
       display: 'flex',
@@ -32,9 +41,14 @@ const useStyles = makeStyles(({ spacing, typography }) => {
       marginRight: spacing(3),
       marginTop: spacing(6),
     },
-    rightContent: {},
-    topInfo: {
+    rightContent: { flex: 1 },
+    topRightContent: {
+      display: 'flex',
+      alignItems: 'flex-start',
+    },
+    nameAndDate: {
       height: spacing(6),
+      flex: 1,
     },
     typeShareabilityRow: {
       display: 'flex',
@@ -52,50 +66,92 @@ const useStyles = makeStyles(({ spacing, typography }) => {
       ...square(spacing(8)),
       fontSize: typography.h3.fontSize,
     },
+    actionsMenu: {
+      margin: spacing(1),
+      position: 'absolute',
+      right: 0,
+      top: 0,
+    },
   };
 });
 
-type PostListItemCardProps = PostListItemCardFragment & {
+interface PostListItemCardProps {
+  post: PostListItemCardFragment;
   className?: string;
-};
+  parent: PostableIdFragment;
+}
 
-export const PostListItemCard: FC<PostListItemCardProps> = (props) => {
+export const PostListItemCard: FC<PostListItemCardProps> = ({
+  post,
+  ...props
+}) => {
   const classes = useStyles();
-  const formatDate = useDateTimeFormatter();
+  const [actionsAnchor, setActionsAnchor] = useState<MenuProps['anchorEl']>();
+  const [editState, editPost] = useDialog();
+  const [deleteState, deletePost] = useDialog();
+  const editable = canEditAny(post);
 
   return (
-    <Card className={clsx(classes.root, props.className)}>
-      <CardContent className={classes.cardContent}>
-        <div className={classes.leftContent}>
-          <Avatar className={classes.avatar}>
-            {props.creator.value?.avatarLetters}
-          </Avatar>
-        </div>
-        <div className={classes.rightContent}>
-          <div className={classes.topInfo}>
-            <Typography variant="body2">
-              {`${props.creator.value?.displayFirstName.value} ${props.creator.value?.displayLastName.value}`}
-            </Typography>
-            <Typography variant="body2" color="textSecondary">
-              {formatDate(props.createdAt)}
-            </Typography>
+    <>
+      <Card className={clsx(classes.root, props.className)}>
+        <CardContent className={classes.cardContent}>
+          <div className={classes.leftContent}>
+            <Avatar className={classes.avatar}>
+              {post.creator.value?.avatarLetters}
+            </Avatar>
           </div>
-          <div className={classes.typeShareabilityRow}>
-            <Typography variant="h4">{props.type}</Typography>
-            <div className={classes.shareability}>
-              <Typography variant="body2">
-                <span className={classes.shareabilityLabel}>
-                  {props.shareability.includes('External')
-                    ? 'PUBLIC'
-                    : 'PRIVATE'}
-                </span>
-                {displayPostShareability(props.shareability)}
-              </Typography>
+          <div className={classes.rightContent}>
+            <div className={classes.topRightContent}>
+              <div className={classes.nameAndDate}>
+                <Typography variant="body2">
+                  {post.creator.value?.fullName}
+                </Typography>
+                <Typography variant="body2" color="textSecondary">
+                  <FormattedDateTime date={post.createdAt} />
+                </Typography>
+              </div>
             </div>
+            <div className={classes.typeShareabilityRow}>
+              <Typography variant="h4">{post.type}</Typography>
+              <div className={classes.shareability}>
+                <Typography variant="body2">
+                  <span className={classes.shareabilityLabel}>
+                    {post.shareability.includes('External')
+                      ? 'PUBLIC'
+                      : 'PRIVATE'}
+                  </span>
+                  {displayPostShareability(post.shareability)}
+                </Typography>
+              </div>
+            </div>
+            <Typography variant="body2">{post.body.value}</Typography>
           </div>
-          <Typography variant="body2">{props.body.value}</Typography>
-        </div>
-      </CardContent>
-    </Card>
+        </CardContent>
+        {editable && (
+          <IconButton
+            className={classes.actionsMenu}
+            onClick={(e) => setActionsAnchor(e.currentTarget)}
+          >
+            <MoreVert />
+          </IconButton>
+        )}
+      </Card>
+
+      <PostListItemMenu
+        anchorEl={actionsAnchor}
+        open={Boolean(actionsAnchor)}
+        onClose={() => setActionsAnchor(null)}
+        onEdit={() => {
+          editPost();
+          setActionsAnchor(null);
+        }}
+        onDelete={() => {
+          deletePost();
+          setActionsAnchor(null);
+        }}
+      />
+      <EditPost post={post} {...editState} />
+      <DeletePost parent={props.parent} post={post} {...deleteState} />
+    </>
   );
 };
