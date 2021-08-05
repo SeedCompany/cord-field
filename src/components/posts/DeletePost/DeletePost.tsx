@@ -1,34 +1,26 @@
 import { useMutation } from '@apollo/client';
 import { Typography } from '@material-ui/core';
 import * as React from 'react';
-import {
-  Id_InternshipProject_Fragment as InternshipProjectIdFragment,
-  removeItemFromList,
-  Id_TranslationProject_Fragment as TranslationProjectIdFragment,
-} from '../../../api';
-import { DialogForm } from '../../../components/Dialog/DialogForm';
-import { SubmitError } from '../../../components/form';
-import { IconButtonProps } from '../../../components/IconButton';
-import { callAll } from '../../../util';
+import { removeItemFromList } from '../../../api';
+import { DialogForm } from '../../Dialog/DialogForm';
+import { SubmitError } from '../../form';
+import { IconButtonProps } from '../../IconButton';
+import { PostableIdFragment } from '../PostableId.generated';
 import {
   DeletePostDocument,
   PostToDeleteFragment,
 } from './DeletePost.generated';
 
-type ProjectIdFragment =
-  | TranslationProjectIdFragment
-  | InternshipProjectIdFragment;
-
 interface DeletePostProps extends IconButtonProps {
   open: boolean;
-  project: ProjectIdFragment;
+  parent: PostableIdFragment;
   post: PostToDeleteFragment;
   onClose: () => void;
 }
 
 export const DeletePost = ({
   open,
-  project,
+  parent,
   post,
   onClose,
 }: DeletePostProps) => {
@@ -36,12 +28,10 @@ export const DeletePost = ({
     variables: {
       id: post.id,
     },
-    update: callAll(
-      removeItemFromList({
-        listId: [project, 'posts'],
-        item: post,
-      })
-    ),
+    update: removeItemFromList({
+      listId: [parent, 'posts'],
+      item: post,
+    }),
   });
 
   return (

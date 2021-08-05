@@ -3,7 +3,8 @@ import { useSnackbar } from 'notistack';
 import * as React from 'react';
 import { Except } from 'type-fest';
 import { addItemToList, CreatePostInput } from '../../../api';
-import { PostableIdFragment, PostForm, PostFormProps } from '../PostForm';
+import { PostableIdFragment } from '../PostableId.generated';
+import { PostForm, PostFormProps } from '../PostForm';
 import { CreatePostDocument } from './CreatePost.generated';
 
 export type CreatePostProps = Except<

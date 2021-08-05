@@ -12,11 +12,11 @@ import clsx from 'clsx';
 import { FC, useState } from 'react';
 import * as React from 'react';
 import { canEditAny, displayPostShareability } from '../../../api';
-import { ProjectOverviewQuery } from '../../../scenes/Projects/Overview/ProjectOverview.generated';
 import { square } from '../../../util';
 import { FormattedDateTime } from '../../Formatters';
 import { DeletePost } from '../DeletePost';
 import { EditPost } from '../EditPost';
+import { PostableIdFragment } from '../PostableId.generated';
 import { PostListItemCardFragment } from './PostListItemCard.generated';
 import { PostListItemMenu } from './PostListItemMenu';
 
@@ -77,7 +77,7 @@ const useStyles = makeStyles(({ spacing, typography }) => {
 interface PostListItemCardProps {
   post: PostListItemCardFragment;
   className?: string;
-  project: ProjectOverviewQuery['project'];
+  parent: PostableIdFragment;
 }
 
 export const PostListItemCard: FC<PostListItemCardProps> = ({
@@ -152,7 +152,7 @@ export const PostListItemCard: FC<PostListItemCardProps> = ({
       <EditPost post={post} open={edit} onClose={() => setEdit(false)} />
       <DeletePost
         open={deletePost}
-        project={props.project}
+        parent={props.parent}
         post={post}
         onClose={() => setDeletePost(false)}
       />

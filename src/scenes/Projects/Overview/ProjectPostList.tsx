@@ -57,9 +57,7 @@ export const ProjectPostList: FC<ProjectPostListProps> = ({ project }) => {
           container: classes.postListItems,
         }}
         spacing={3}
-        renderItem={(post) => (
-          <PostListItemCard project={project} post={post} />
-        )}
+        renderItem={(post) => <PostListItemCard parent={project} post={post} />}
         skeletonCount={0}
         renderSkeleton={null}
       />
