@@ -38,14 +38,14 @@ export const ProjectPostList: FC<ProjectPostListProps> = ({ project }) => {
   });
 
   return (
-    <>
+    <div>
       <Grid container spacing={2} alignItems="center">
         <Grid item>
           <Typography variant="h3">Posts</Typography>
         </Grid>
         <Grid item>
-          <Tooltip title={`Add Post`}>
-            <Fab color="error" aria-label={`Add Post`} onClick={createPost}>
+          <Tooltip title="Add Post">
+            <Fab color="error" onClick={createPost}>
               <Add />
             </Fab>
           </Tooltip>
@@ -62,6 +62,6 @@ export const ProjectPostList: FC<ProjectPostListProps> = ({ project }) => {
         renderSkeleton={null}
       />
       <CreatePost {...createPostState} parent={project} />
-    </>
+    </div>
   );
 };
