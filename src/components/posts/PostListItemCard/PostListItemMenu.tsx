@@ -23,6 +23,7 @@ const useStyles = makeStyles(({ spacing }) => ({
 }));
 
 export const PostListItemMenu = (props: PostListItemMenuProps) => {
+  const { onEdit, onDelete, ...rest } = props;
   const classes = useStyles();
   const { spacing } = useTheme();
 
@@ -34,15 +35,15 @@ export const PostListItemMenu = (props: PostListItemMenuProps) => {
       getContentAnchorEl={null}
       anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
       transformOrigin={{ vertical: spacing(-2), horizontal: 'right' }}
-      {...props}
+      {...rest}
     >
-      <MenuItem onClick={props.onEdit}>
+      <MenuItem onClick={onEdit}>
         <ListItemIcon className={classes.listItemIcon}>
           <EditIcon fontSize="small" />
         </ListItemIcon>
         <ListItemText primary="Edit Post" />
       </MenuItem>
-      <MenuItem onClick={props.onDelete}>
+      <MenuItem onClick={onDelete}>
         <ListItemIcon className={classes.listItemIcon}>
           <DeleteIcon fontSize="small" />
         </ListItemIcon>
