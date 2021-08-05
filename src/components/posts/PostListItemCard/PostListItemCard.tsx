@@ -13,6 +13,7 @@ import { FC, useState } from 'react';
 import * as React from 'react';
 import { canEditAny, displayPostShareability } from '../../../api';
 import { square } from '../../../util';
+import { useDialog } from '../../Dialog';
 import { FormattedDateTime } from '../../Formatters';
 import { DeletePost } from '../DeletePost';
 import { EditPost } from '../EditPost';
@@ -86,8 +87,8 @@ export const PostListItemCard: FC<PostListItemCardProps> = ({
 }) => {
   const classes = useStyles();
   const [actionsAnchor, setActionsAnchor] = useState<MenuProps['anchorEl']>();
-  const [edit, setEdit] = useState(false);
-  const [deletePost, setDeletePost] = useState(false);
+  const [editState, editPost] = useDialog();
+  const [deleteState, deletePost] = useDialog();
   const editable = canEditAny(post);
 
   return (
@@ -141,21 +142,16 @@ export const PostListItemCard: FC<PostListItemCardProps> = ({
         open={Boolean(actionsAnchor)}
         onClose={() => setActionsAnchor(null)}
         onEdit={() => {
-          setEdit(true);
+          editPost();
           setActionsAnchor(null);
         }}
         onDelete={() => {
-          setDeletePost(true);
+          deletePost();
           setActionsAnchor(null);
         }}
       />
-      <EditPost post={post} open={edit} onClose={() => setEdit(false)} />
-      <DeletePost
-        open={deletePost}
-        parent={props.parent}
-        post={post}
-        onClose={() => setDeletePost(false)}
-      />
+      <EditPost post={post} {...editState} />
+      <DeletePost parent={props.parent} post={post} {...deleteState} />
     </>
   );
 };
