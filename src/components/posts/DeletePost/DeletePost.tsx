@@ -54,7 +54,6 @@ export const DeletePost = ({
         submitLabel="Delete"
         closeLabel="Keep"
         SubmitProps={{ color: 'error' }}
-        changesetAware
         onClose={() => onClose()}
       >
         <SubmitError />
