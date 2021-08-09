@@ -13,7 +13,7 @@ export * from './FormattedTextField';
 export * from './NumberField';
 export * from './PasswordField';
 export * from './SecuredField';
-export * from './RichTextField';
+export * from './RichText';
 export * from './SelectField';
 export * from './SubmitButton';
 export * from './SubmitError';
