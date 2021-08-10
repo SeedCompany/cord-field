@@ -4,6 +4,7 @@ import {
   FormHelperText,
   InputLabel,
   makeStyles,
+  Theme,
 } from '@material-ui/core';
 import { ReactNode } from 'react';
 import * as React from 'react';
@@ -20,14 +21,51 @@ export type RichTextFieldProps = FieldConfig<string> & {
     'color' | 'fullWidth' | 'margin' | 'size' | 'variant'
   >;
 
-const useStyles = makeStyles(() => ({
-  // Use @global basically never
-  '@global': {
-    '.ck-editor__editable_inline': {
-      minHeight: 200,
+const useStyles = makeStyles(
+  (theme: Theme) => ({
+    // Use @global basically never
+    '@global': {
+      '.ck-editor__editable_inline': {
+        minHeight: 200,
+      },
+      // Matches OutlinedInput
+      '.ck.ck-editor__main > .ck-editor__editable:not(.ck-focused):hover': {
+        borderColor: theme.palette.text.primary,
+      },
+      '.ck.ck-tooltip .ck.ck-tooltip__text': {
+        fontSize: (theme.overrides!.MuiTooltip!.tooltip as any).fontSize,
+      },
+      body: {
+        '--ck-border-radius': `${theme.shape.borderRadius}px`,
+
+        '--ck-font-size-base': `${theme.typography.body1.fontSize}px`,
+        '--ck-line-height-base': theme.typography.body1.lineHeight,
+        '--ck-font-face': theme.typography.fontFamily,
+
+        '--ck-color-base-background': theme.palette.background.paper,
+        '--ck-color-button-save': theme.palette.success.main,
+        '--ck-color-button-cancel': theme.palette.error.main,
+        '--ck-color-tooltip-background': (
+          theme.overrides!.MuiTooltip!.tooltip as any
+        ).backgroundColor,
+        '--ck-color-tooltip-text': theme.palette.common.white,
+        '--ck-color-widget-blurred-border': '0',
+        '--ck-color-base-border':
+          // Matches OutlinedInput
+          theme.palette.type === 'light'
+            ? 'rgba(0, 0, 0, 0.23)'
+            : 'rgba(255, 255, 255, 0.23)',
+        '--ck-color-focus-border': `${theme.palette.primary.main}`,
+        '--ck-focus-ring': `2px solid var(--ck-color-focus-border)`,
+        '--ck-inner-shadow': '0',
+        '--ck-focus-outer-shadow': '0',
+      },
     },
-  },
-}));
+  }),
+  {
+    classNamePrefix: 'CKEditor',
+  }
+);
 
 export function RichTextField({
   label,
