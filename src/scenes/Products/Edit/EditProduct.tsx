@@ -133,7 +133,7 @@ export const EditProduct = () => {
         },
       });
 
-      enqueueSnackbar(`Deleted product`, {
+      enqueueSnackbar(`Deleted goal`, {
         variant: 'success',
       });
       navigate('../../../');
@@ -173,7 +173,7 @@ export const EditProduct = () => {
         },
       });
 
-      enqueueSnackbar(`Updated product`, {
+      enqueueSnackbar(`Updated goal`, {
         variant: 'success',
       });
     }
@@ -183,15 +183,15 @@ export const EditProduct = () => {
 
   return (
     <main className={classes.root}>
-      {/* TODO label product */}
-      <Helmet title="Edit Product" />
+      {/* TODO label goal */}
+      <Helmet title="Edit Goal" />
       <Breadcrumbs>
         <ProjectBreadcrumb data={project} />
         <EngagementBreadcrumb data={engagement} />
-        <Typography variant="h4">Edit Product</Typography>
+        <Typography variant="h4">Edit Goal</Typography>
       </Breadcrumbs>
       <Typography variant="h2">
-        {loading ? <Skeleton width="50%" variant="text" /> : 'Edit Product'}
+        {loading ? <Skeleton width="50%" variant="text" /> : 'Edit Goal'}
       </Typography>
 
       {!loading && data && product && (

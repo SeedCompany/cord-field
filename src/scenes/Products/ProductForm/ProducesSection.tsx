@@ -57,7 +57,7 @@ export const ProducesSection = ({
       name="produces"
       {...accordionState}
       product={isProducesFieldMissing ? undefined : product}
-      title="Product"
+      title="Goal"
       renderCollapsed={() => (
         <>
           {productType && (
@@ -71,7 +71,7 @@ export const ProducesSection = ({
           )}
           {isProducesFieldMissing && !isEditing && (
             <Typography variant="caption" color="error">
-              Product selection required
+              Goal selection required
             </Typography>
           )}
         </>

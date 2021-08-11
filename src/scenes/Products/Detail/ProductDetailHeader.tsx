@@ -32,7 +32,7 @@ export const ProductDetailHeader = ({ product }: { product?: Product }) => {
   return (
     <>
       <Helmet
-        title={`${product?.label ?? 'Product'} - ${langName ?? 'A Language'}`}
+        title={`${product?.label ?? 'Goal'} - ${langName ?? 'A Language'}`}
       />
       <Grid item>
         <Breadcrumbs>
@@ -45,7 +45,7 @@ export const ProductDetailHeader = ({ product }: { product?: Product }) => {
               width={200}
             />
           )}
-          <Breadcrumb to=".">Product</Breadcrumb>
+          <Breadcrumb to=".">Goal</Breadcrumb>
         </Breadcrumbs>
       </Grid>
       <Grid item container spacing={3} alignItems="center">
@@ -78,7 +78,7 @@ export const ProductDetailHeader = ({ product }: { product?: Product }) => {
       <Grid item>
         <Typography variant="h4">
           {product ? (
-            <>Product {product.category ? ` - ${product.category}` : ''}</>
+            <>Goal {product.category ? ` - ${product.category}` : ''}</>
           ) : (
             <Skeleton width="25%" />
           )}
