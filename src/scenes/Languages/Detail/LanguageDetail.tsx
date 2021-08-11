@@ -20,6 +20,7 @@ import {
   useNumberFormatter,
 } from '../../../components/Formatters';
 import { LocationCard } from '../../../components/LocationCard';
+import { PresetInventoryFlag } from '../../../components/PresetInventoryFlag';
 import { ProjectListItemCard } from '../../../components/ProjectListItemCard';
 import { ProjectListItemFragment } from '../../../components/ProjectListItemCard/ProjectListItem.generated';
 import { Redacted } from '../../../components/Redacted';
@@ -141,6 +142,12 @@ export const LanguageDetail = () => {
           <Grid container spacing={2} alignItems="center">
             <Grid item>
               <Sensitivity value={sensitivity} loading={!language} />
+            </Grid>
+            <Grid item>
+              <PresetInventoryFlag
+                value={'PresetInventory'}
+                loading={!language}
+              />
             </Grid>
             <BooleanProperty
               label="Dialect"
