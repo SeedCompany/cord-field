@@ -1,10 +1,15 @@
-import { without } from 'lodash';
+import { Many, without } from 'lodash';
 import { DateTime } from 'luxon';
 import { Column } from 'material-table';
 import { useSnackbar } from 'notistack';
-import React from 'react';
+import React, { useState } from 'react';
 import { Except } from 'type-fest';
+import {
+  EditablePeriodicReportField,
+  UpdatePeriodicReportDialog,
+} from '../../scenes/Projects/Reports/UpdatePeriodicReportDialog';
 import { CalendarDate } from '../../util';
+import { useDialog } from '../Dialog';
 import {
   FileActionsPopup as ActionsMenu,
   FileAction,
@@ -12,12 +17,12 @@ import {
   getPermittedFileActions,
   useFileActions,
 } from '../files/FileActions';
-import { FormattedDateTime } from '../Formatters';
+import { FormattedDate, FormattedDateTime } from '../Formatters';
 import { Table } from '../Table';
 import { TableProps } from '../Table/Table';
 import { PeriodicReportFragment } from './PeriodicReport.generated';
 import { ReportLabel } from './ReportLabel';
-import { useUploadPeriodicReport } from './Upload/useUploadPeriodicReport';
+import { useUpdatePeriodicReport } from './Upload/useUpdatePeriodicReport';
 
 export interface ReportRow {
   report: PeriodicReportFragment;
@@ -37,9 +42,16 @@ export const PeriodicReportsTableInContext = ({
   data,
   ...props
 }: PeriodicReportsTableProps) => {
-  const uploadFile = useUploadPeriodicReport();
+  const uploadFile = useUpdatePeriodicReport();
   const { openFilePreview } = useFileActions();
   const { enqueueSnackbar } = useSnackbar();
+  const [reportBeingEdited, editReport] =
+    useState<
+      Omit<PeriodicReportFragment, 'reportFile'> & { reportFile?: File[] }
+    >();
+
+  const [editState, editField, fieldsBeingEdited] =
+    useDialog<Many<EditablePeriodicReportField>>();
 
   const rowsData = (data ?? []).map(
     (report): ReportRow => ({
@@ -70,6 +82,13 @@ export const PeriodicReportsTableInContext = ({
       ),
     },
     {
+      title: 'Received Date',
+      field: 'receivedDate',
+      render: ({ report }) => (
+        <FormattedDate date={report.receivedDate.value} />
+      ),
+    },
+    {
       title: '',
       field: 'item',
       align: 'right',
@@ -90,7 +109,12 @@ export const PeriodicReportsTableInContext = ({
           <ActionsMenu
             IconButtonProps={{ size: 'small' }}
             actions={{
-              file: fileActions,
+              file: [
+                ...fileActions,
+                ...(report.receivedDate.canEdit
+                  ? [FileAction.UpdateReceivedDate]
+                  : []),
+              ],
               version: [
                 FileAction.Download,
                 ...(reportFile.canEdit
@@ -100,7 +124,27 @@ export const PeriodicReportsTableInContext = ({
             }}
             // @ts-expect-error refactor file functionality later to make all this easier
             item={reportFile.value ?? { __typename: '' }}
-            onVersionUpload={(files) => uploadFile(files, report.id)}
+            onVersionUpload={(files) =>
+              reportBeingEdited
+                ? async () => {
+                    editReport(undefined);
+                    await uploadFile(report.id, files);
+                  }
+                : () => {
+                    return;
+                  }
+            }
+            onVersionAccepted={(files) => {
+              editReport({
+                ...report,
+                reportFile: files,
+              });
+              editField(['reportFile', 'receivedDate']);
+            }}
+            onUpdateReceivedDate={() => {
+              editReport({ ...report, reportFile: undefined });
+              editField('receivedDate');
+            }}
           />
         );
       },
@@ -108,35 +152,46 @@ export const PeriodicReportsTableInContext = ({
   ];
 
   return (
-    <Table<ReportRow>
-      isLoading={!data}
-      {...props}
-      data={rowsData}
-      components={{
-        // No toolbar since it's just empty space, we don't use it for anything.
-        Toolbar: () => null,
-      }}
-      columns={columns}
-      onRowClick={({ report }) => {
-        if (!report.reportFile.canRead) {
-          enqueueSnackbar(`You don't have permission to view this report file`);
-          return;
-        }
-        if (report.reportFile.value) {
-          openFilePreview(report.reportFile.value);
-          return;
-        }
-        if (report.reportFile.canEdit) {
-          // TODO Upload
-        }
-      }}
-      options={{
-        padding: 'dense',
-        thirdSortClick: false,
-        draggable: false,
-        ...props.options,
-      }}
-    />
+    <>
+      {reportBeingEdited?.receivedDate.canEdit ? (
+        <UpdatePeriodicReportDialog
+          {...editState}
+          editFields={fieldsBeingEdited}
+          report={reportBeingEdited}
+        />
+      ) : null}
+      <Table<ReportRow>
+        isLoading={!data}
+        {...props}
+        data={rowsData}
+        components={{
+          // No toolbar since it's just empty space, we don't use it for anything.
+          Toolbar: () => null,
+        }}
+        columns={columns}
+        onRowClick={({ report }) => {
+          if (!report.reportFile.canRead) {
+            enqueueSnackbar(
+              `You don't have permission to view this report file`
+            );
+            return;
+          }
+          if (report.reportFile.value) {
+            openFilePreview(report.reportFile.value);
+            return;
+          }
+          if (report.reportFile.canEdit) {
+            // TODO Upload
+          }
+        }}
+        options={{
+          padding: 'dense',
+          thirdSortClick: false,
+          draggable: false,
+          ...props.options,
+        }}
+      />
+    </>
   );
 };
 

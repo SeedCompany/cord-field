@@ -14,7 +14,9 @@ import {
   History as HistoryIcon,
   MoreVert as MoreIcon,
   BorderColor as RenameIcon,
+  Event as UpdateDate,
 } from '@material-ui/icons';
+import { startCase } from 'lodash';
 import React, { FC, useState } from 'react';
 import { useDropzone } from 'react-dropzone';
 import { IconButton, IconButtonProps } from '../../IconButton';
@@ -59,10 +61,12 @@ interface FileActionsList {
 interface NonVersionPopupProps extends FileActionsList {
   item: DirectoryActionItem | FileActionItem;
   onVersionUpload: (files: File[]) => void;
+  onUpdateReceivedDate?: () => void;
 }
 
 interface VersionPopupProps extends FileActionsList {
   item: VersionActionItem;
+  onVersionAccepted?: (files: File[]) => void;
 }
 
 type FileActionsPopupProps = NonVersionPopupProps | VersionPopupProps;
@@ -73,6 +77,7 @@ const actionIcons = {
   [FileAction.History]: HistoryIcon,
   [FileAction.NewVersion]: AddIcon,
   [FileAction.Delete]: DeleteIcon,
+  [FileAction.UpdateReceivedDate]: UpdateDate,
 };
 
 export const FileActionsPopup: FC<FileActionsPopupProps> = ({
@@ -123,7 +128,9 @@ export const FileActionsMenu: FC<FileActionsMenuProps> = (props) => {
   const { handleFileActionClick } = useFileActions();
 
   const menuProps = Object.entries(rest).reduce((menuProps, [key, value]) => {
-    return key === 'onVersionUpload'
+    return key === 'onVersionUpload' ||
+      key === 'onVersionAccepted' ||
+      key === 'onUpdateReceivedDate'
       ? menuProps
       : {
           ...menuProps,
@@ -139,6 +146,14 @@ export const FileActionsMenu: FC<FileActionsMenuProps> = (props) => {
   ) => {
     event.stopPropagation();
     close();
+    if (
+      action === FileAction.UpdateReceivedDate &&
+      !isFileVersion(props) &&
+      props.onUpdateReceivedDate
+    ) {
+      props.onUpdateReceivedDate();
+      return;
+    }
     const params = {
       item,
       action,
@@ -158,6 +173,12 @@ export const FileActionsMenu: FC<FileActionsMenuProps> = (props) => {
           },
     multiple: false,
     noDrag: true,
+    onDropAccepted:
+      'onVersionAccepted' in props
+        ? props.onVersionAccepted
+        : () => {
+            return;
+          },
   });
 
   const menuItemContents = (menuItem: FileAction) => {
@@ -167,7 +188,14 @@ export const FileActionsMenu: FC<FileActionsMenuProps> = (props) => {
         <ListItemIcon className={classes.listItemIcon}>
           <Icon fontSize="small" />
         </ListItemIcon>
-        <ListItemText className={classes.listItemText} primary={menuItem} />
+        <ListItemText
+          className={classes.listItemText}
+          primary={
+            menuItem === FileAction.UpdateReceivedDate
+              ? startCase(menuItem)
+              : menuItem
+          }
+        />
       </>
     );
   };

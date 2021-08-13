@@ -22,6 +22,9 @@ const useStyles = makeStyles(({ palette, spacing }) => {
     borderColor: palette.primary.main,
   };
   return {
+    root: {
+      marginBottom: spacing(2),
+    },
     dropzone: {
       backgroundColor: palette.grey[300],
       border: `2px dashed ${palette.divider}`,
@@ -34,16 +37,23 @@ const useStyles = makeStyles(({ palette, spacing }) => {
       color: palette.text.secondary,
       textAlign: 'center',
     },
+    files: {
+      paddingBottom: 0,
+    },
   };
 });
 
 export type DropzoneFieldProps = Except<FieldConfig<File, true>, 'multiple'> & {
+  label?: string;
   multiple?: boolean;
+  className?: string;
 };
 
 export function DropzoneField({
-  multiple = true,
+  multiple = false,
+  label = 'Click or drag files here',
   name: nameProp,
+  className,
 }: DropzoneFieldProps) {
   const classes = useStyles();
 
@@ -82,7 +92,7 @@ export function DropzoneField({
   });
 
   return (
-    <>
+    <div className={clsx(classes.root, className)}>
       <div
         className={clsx(classes.dropzone, {
           [classes.active]: isDragActive,
@@ -91,12 +101,12 @@ export function DropzoneField({
       >
         <input {...getInputProps()} name={name} />
         <Typography variant="h4" className={classes.instructions}>
-          Click or drag files in to upload
+          {label}
         </Typography>
       </div>
       {currentFiles.length > 0 && (
         <>
-          <List dense>
+          <List dense className={classes.files}>
             {currentFiles.map((file, index) => {
               const { name, type } = file;
               const Icon = fileIcon(type);
@@ -122,6 +132,6 @@ export function DropzoneField({
           </List>
         </>
       )}
-    </>
+    </div>
   );
 }
