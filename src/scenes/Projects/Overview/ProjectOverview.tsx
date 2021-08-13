@@ -34,6 +34,7 @@ import { ProjectChangeRequestSummary } from '../../../components/ProjectChangeRe
 import { ProjectMembersSummary } from '../../../components/ProjectMembersSummary';
 import { Redacted } from '../../../components/Redacted';
 import { SensitivityIcon } from '../../../components/Sensitivity';
+import { useBetaFeatures } from '../../../components/Session';
 import { TogglePinButton } from '../../../components/TogglePinButton';
 import { Many } from '../../../util';
 import { CreateInternshipEngagement } from '../../Engagement/InternshipEngagement/Create/CreateInternshipEngagement';
@@ -104,6 +105,7 @@ const useStyles = makeStyles(({ spacing, breakpoints, palette }) => ({
 export const ProjectOverview: FC = () => {
   const classes = useStyles();
   const { projectId, changesetId } = useProjectId();
+  const beta = useBetaFeatures();
   const formatNumber = useNumberFormatter();
 
   const [editState, editField, fieldsBeingEdited] =
@@ -513,13 +515,16 @@ export const ProjectOverview: FC = () => {
               partnerships={projectOverviewData?.project.partnerships}
             />
           </CardGroup>
-          <Grid container spacing={3}>
-            <Grid item xs={6}>
-              <ProjectChangeRequestSummary
-                data={projectOverviewData?.project.changeRequests}
-              />
+
+          {beta && (
+            <Grid container spacing={3}>
+              <Grid item xs={6}>
+                <ProjectChangeRequestSummary
+                  data={projectOverviewData?.project.changeRequests}
+                />
+              </Grid>
             </Grid>
-          </Grid>
+          )}
 
           <Grid container spacing={2} alignItems="center">
             <Grid item>
