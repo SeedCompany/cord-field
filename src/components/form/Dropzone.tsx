@@ -22,6 +22,9 @@ const useStyles = makeStyles(({ palette, spacing }) => {
     borderColor: palette.primary.main,
   };
   return {
+    root: {
+      marginBottom: spacing(2),
+    },
     dropzone: {
       backgroundColor: palette.grey[300],
       border: `2px dashed ${palette.divider}`,
@@ -33,6 +36,9 @@ const useStyles = makeStyles(({ palette, spacing }) => {
     instructions: {
       color: palette.text.secondary,
       textAlign: 'center',
+    },
+    files: {
+      paddingBottom: 0,
     },
   };
 });
@@ -86,9 +92,9 @@ export function DropzoneField({
   });
 
   return (
-    <>
+    <div className={clsx(classes.root, className)}>
       <div
-        className={clsx(className, classes.dropzone, {
+        className={clsx(classes.dropzone, {
           [classes.active]: isDragActive,
         })}
         {...getRootProps()}
@@ -100,7 +106,7 @@ export function DropzoneField({
       </div>
       {currentFiles.length > 0 && (
         <>
-          <List dense>
+          <List dense className={classes.files}>
             {currentFiles.map((file, index) => {
               const { name, type } = file;
               const Icon = fileIcon(type);
@@ -126,6 +132,6 @@ export function DropzoneField({
           </List>
         </>
       )}
-    </>
+    </div>
   );
 }

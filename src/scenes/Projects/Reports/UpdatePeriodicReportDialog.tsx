@@ -1,4 +1,3 @@
-import { makeStyles } from '@material-ui/core';
 import { pick } from 'lodash';
 import React, { useMemo } from 'react';
 import { Except } from 'type-fest';
@@ -37,12 +36,6 @@ type UpdatePeriodicReportDialogProps = Except<
   editFields?: Many<EditablePeriodicReportField>;
 };
 
-const useStyles = makeStyles(({ spacing }) => ({
-  dropzone: {
-    marginBottom: spacing(3),
-  },
-}));
-
 export const UpdatePeriodicReportDialog = ({
   report,
   editFields: editFieldsProp,
@@ -55,8 +48,6 @@ export const UpdatePeriodicReportDialog = ({
 
   const updateReceivedDateOnly =
     editFields.includes('receivedDate') && !editFields.includes('reportFile');
-
-  const classes = useStyles();
 
   const updatePeriodicReport = useUpdatePeriodicReport();
 
@@ -98,9 +89,7 @@ export const UpdatePeriodicReportDialog = ({
       }
     >
       <SubmitError />
-      {!updateReceivedDateOnly ? (
-        <DropzoneField name="reportFile" className={classes.dropzone} />
-      ) : null}
+      {!updateReceivedDateOnly ? <DropzoneField name="reportFile" /> : null}
       <DateField
         name="receivedDate"
         label="Received Date"
