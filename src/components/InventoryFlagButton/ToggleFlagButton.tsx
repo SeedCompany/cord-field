@@ -7,12 +7,12 @@ import { ListIdentifier } from '../../api/list-caching/modifyList';
 import { IconButton, IconButtonProps } from '../IconButton';
 import { PushFlagIconFilled, PushFlagIconOutlined } from '../Icons';
 import {
-  TogglePinFragment,
+  ToggleFlagFragment,
   ToggleFlaggedDocument,
 } from './ToggleFlagButton.generated';
 
 export type ToggleFlagButtonProps = Except<IconButtonProps, 'children'> & {
-  object?: TogglePinFragment;
+  object?: ToggleFlagFragment;
   // A list to add/remove the object from this list when pin status changes
   listId?: ListIdentifier<any>;
   // Given this list identified by these input args,
@@ -35,6 +35,7 @@ export const ToggleFlagButton = ({
       if (!result.data || !object) {
         return;
       }
+      console.log('Object: ', object);
       console.log('Flag: ', result.data.toggleFlagged);
       const flagged = result.data.toggleFlagged;
 
@@ -67,9 +68,12 @@ export const ToggleFlagButton = ({
 
   const button = (
     <IconButton
-      color={object?.pinned ? 'secondary' : undefined}
+      color={object?.flagged ? 'secondary' : undefined}
       {...rest}
       onClick={(event) => {
+        {
+          console.log('objectButton: ', object);
+        }
         if (!object) {
           return;
         }
@@ -81,7 +85,7 @@ export const ToggleFlagButton = ({
       disabled={rest.disabled || !object}
       loading={rest.loading || !object}
     >
-      {object?.pinned ? <PushFlagIconFilled /> : <PushFlagIconOutlined />}
+      {object?.flagged ? <PushFlagIconFilled /> : <PushFlagIconOutlined />}
     </IconButton>
   );
 
@@ -89,7 +93,7 @@ export const ToggleFlagButton = ({
     return (
       <Tooltip
         {...TooltipProps}
-        title={(object.pinned ? 'Unmark ' : 'Mark ') + label}
+        title={(object.flagged ? 'Unmark ' : 'Mark ') + label}
       >
         {button}
       </Tooltip>

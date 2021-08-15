@@ -3,6 +3,6 @@ fragment TogglePin on Pinnable {
   pinned
 }
 
-mutation ToggleFlagged($pinned: Boolean, $id: ID!) {
-  toggleFlagged(pinned: $pinned, id: $id)
+mutation ToggleFlagged($flagged: Boolean, $id: ID!) {
+  toggleFlagged(flagged: $flagged, id: $id)
 }
