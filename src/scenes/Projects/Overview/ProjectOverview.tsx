@@ -35,6 +35,7 @@ import { ProjectMembersSummary } from '../../../components/ProjectMembersSummary
 import { Redacted } from '../../../components/Redacted';
 import { SensitivityIcon } from '../../../components/Sensitivity';
 import { TogglePinButton } from '../../../components/TogglePinButton';
+import { ToggleFlagButton } from '../../../components/InventoryFlagButton';
 import { Many } from '../../../util';
 import { CreateInternshipEngagement } from '../../Engagement/InternshipEngagement/Create/CreateInternshipEngagement';
 import { CreateLanguageEngagement } from '../../Engagement/LanguageEngagement/Create/CreateLanguageEngagement';
@@ -262,6 +263,15 @@ export const ProjectOverview: FC = () => {
                 </IconButton>
               </Tooltip>
             )}
+            <ToggleFlagButton
+              object={projectOverviewData?.project}
+              label="as Approved Inventory"
+              listId="projects"
+              listFilter={(args: ProjectListQueryVariables) =>
+                args.input.filter?.pinned ?? false
+              }
+              className={classes.pushPinIcon}
+            />
             <TogglePinButton
               object={projectOverviewData?.project}
               label="Project"
