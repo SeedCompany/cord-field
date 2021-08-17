@@ -89,7 +89,7 @@ export const LanguageEngagementDetail: FC<EngagementQuery> = ({
           <Grid item xs md lg container direction="column" spacing={2}>
             <Grid item container spacing={2} alignItems="center">
               <Grid item component={Typography} variant="h3" paragraph>
-                Products
+                Goals
               </Grid>
               <Grid item>
                 <Tooltip title="Create Product">

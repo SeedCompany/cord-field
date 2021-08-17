@@ -59,14 +59,14 @@ export const CreateProduct = () => {
 
   return (
     <main className={classes.root}>
-      <Helmet title="Create Product" />
+      <Helmet title="Create Goal" />
       <Breadcrumbs>
         <ProjectBreadcrumb data={project} />
         <EngagementBreadcrumb data={engagement} />
-        <Typography variant="h4">Create Product</Typography>
+        <Typography variant="h4">Create Goal</Typography>
       </Breadcrumbs>
       <Typography variant="h2">
-        {loading ? <Skeleton width="50%" variant="text" /> : 'Create Product'}
+        {loading ? <Skeleton width="50%" variant="text" /> : 'Create Goal'}
       </Typography>
       {!loading && data && (
         <ProductForm
@@ -109,7 +109,7 @@ export const CreateProduct = () => {
 
               const { product } = data!.createProduct;
 
-              enqueueSnackbar(`Created product`, {
+              enqueueSnackbar(`Created goal`, {
                 variant: 'success',
                 action: () => (
                   <ButtonLink

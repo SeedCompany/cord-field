@@ -57,13 +57,13 @@ export const ProductForm = ({ product, ...props }: ProductFormProps) => {
             <Typography variant="h4">Check Your Selections</Typography>
             <Typography>
               If the selections above look good to you, go ahead and save your
-              Product. If you need to edit your choices, do that above.
+              Goal. If you need to edit your choices, do that above.
             </Typography>
           </div>
 
           <div>
             <SubmitButton fullWidth={false} color="primary" size="medium">
-              Save Product
+              Save Goal
             </SubmitButton>
             {product && (
               <SubmitButton
@@ -72,7 +72,7 @@ export const ProductForm = ({ product, ...props }: ProductFormProps) => {
                 size="medium"
                 className={classes.deleteButton}
               >
-                Delete Product
+                Delete Goal
               </SubmitButton>
             )}
           </div>
