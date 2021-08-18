@@ -35,7 +35,12 @@ export const DisplaySimpleProperty = ({
           <Typography variant="inherit" {...LabelProps}>
             {label}:&nbsp;
           </Typography>
-          <Typography variant="inherit" color="textSecondary" {...ValueProps}>
+          <Typography
+            style={{ wordWrap: 'break-word' }}
+            variant="inherit"
+            color="textSecondary"
+            {...ValueProps}
+          >
             {value}
           </Typography>
         </>
