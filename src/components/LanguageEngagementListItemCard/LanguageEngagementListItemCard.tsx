@@ -12,6 +12,7 @@ import * as React from 'react';
 import { displayEngagementStatus } from '../../api';
 import { DisplaySimpleProperty } from '../DisplaySimpleProperty';
 import { useNumberFormatter } from '../Formatters';
+import { ToggleFlagButton } from '../InventoryFlagButton';
 import { ButtonLink, CardActionAreaLink } from '../Routing';
 import { LanguageEngagementListItemFragment } from './LanguageEngagementListItem.generated';
 
@@ -44,6 +45,12 @@ const useStyles = makeStyles(({ spacing }) => {
       flexDirection: 'column',
       justifyContent: 'flex-end',
     },
+    flag: {
+      position: 'relative',
+      top: 5,
+      fontSize: 10,
+      right: 10,
+    },
     productList: {
       padding: 0,
       margin: spacing(0, 0, 1),
@@ -64,7 +71,7 @@ export type LanguageEngagementListItemCardProps =
   };
 
 export const LanguageEngagementListItemCard: FC<LanguageEngagementListItemCardProps> =
-  ({ id, language: securedLanguage, className, status, products }) => {
+  ({ id, language: securedLanguage, className, status, products, project }) => {
     const numberFormatter = useNumberFormatter();
     const classes = useStyles();
 
@@ -76,6 +83,17 @@ export const LanguageEngagementListItemCard: FC<LanguageEngagementListItemCardPr
 
     return (
       <Card className={clsx(classes.root, className)}>
+        <div className={classes.rightContent}>
+          <div>
+            <ToggleFlagButton
+              object={project}
+              label="as Approved Inventory"
+              listId="projects"
+              className={classes.flag}
+              readOnly={true}
+            />
+          </div>
+        </div>
         <CardActionAreaLink to={`engagements/${id}`} className={classes.card}>
           <CardContent className={classes.cardContent}>
             <Grid

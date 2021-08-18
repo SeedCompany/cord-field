@@ -14,6 +14,7 @@ import { ProjectListQueryVariables } from '../../scenes/Projects/List/projects.g
 import { getProjectUrl } from '../../scenes/Projects/useProjectId';
 import { DisplaySimpleProperty } from '../DisplaySimpleProperty';
 import { FormattedDate } from '../Formatters';
+import { ToggleFlagButton } from '../InventoryFlagButton';
 import { Picture, useRandomPicture } from '../Picture';
 import { CardActionAreaLink } from '../Routing';
 import { Sensitivity } from '../Sensitivity';
@@ -62,6 +63,11 @@ const useStyles = makeStyles(({ breakpoints, spacing }) => {
       position: 'absolute',
       top: 10,
       right: 10,
+    },
+    flag: {
+      position: 'absolute',
+      top: 10,
+      right: 34,
     },
     engagementCount: {
       flex: 2,
@@ -212,6 +218,16 @@ export const ProjectListItemCard: FC<ProjectListItemCardProps> = ({
           </div>
         </CardContent>
       </CardActionAreaLink>
+      <ToggleFlagButton
+        object={project}
+        label="as Approved Inventory"
+        listId="projects"
+        listFilter={(args: ProjectListQueryVariables) =>
+          args.input.filter?.approvedInventory ?? false
+        }
+        className={classes.flag}
+        readOnly={true}
+      />
       <TogglePinButton
         object={project}
         label="Project"

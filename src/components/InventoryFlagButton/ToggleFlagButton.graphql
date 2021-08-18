@@ -1,8 +1,7 @@
-fragment TogglePin on Pinnable {
+fragment ToggleFlag on Flaggable {
   id
-  pinned
+  approvedInventory
 }
-
-mutation ToggleFlagged($flagged: Boolean, $id: ID!) {
-  toggleFlagged(flagged: $flagged, id: $id)
+mutation ToggleFlagged($approvedInventory: Boolean, $id: ID!) {
+  toggleFlagged(approvedInventory: $approvedInventory, id: $id)
 }

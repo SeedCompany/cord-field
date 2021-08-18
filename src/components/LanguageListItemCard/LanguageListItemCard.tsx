@@ -5,6 +5,7 @@ import { FC } from 'react';
 import * as React from 'react';
 import { DisplaySimpleProperty } from '../DisplaySimpleProperty';
 import { useNumberFormatter } from '../Formatters';
+import { ToggleFlagButton } from '../InventoryFlagButton';
 import { CardActionAreaLink } from '../Routing';
 import { Sensitivity } from '../Sensitivity';
 import { LanguageListItemFragment } from './LanguageListItem.generated';
@@ -22,6 +23,12 @@ const useStyles = makeStyles(({ spacing }) => {
       display: 'flex',
       justifyContent: 'space-between',
       alignItems: 'flex-end',
+    },
+    flag: {
+      position: 'relative',
+      top: 5,
+      fontSize: 10,
+      right: 10,
     },
     leftContent: {
       flex: 1,
@@ -52,8 +59,20 @@ export const LanguageListItemCard: FC<LanguageListItemCardProps> = ({
   const formatNumber = useNumberFormatter();
   const population = language?.population.value;
 
+  const approvedInventoryProject = language?.projects.items.find(
+    (item) => item.approvedInventory
+  );
+
   return (
     <Card className={clsx(classes.root, className)}>
+      <div className={classes.rightContent}>
+        <ToggleFlagButton
+          object={approvedInventoryProject}
+          listId="projects"
+          className={classes.flag}
+          readOnly={true}
+        />
+      </div>
       <CardActionAreaLink
         disabled={!language}
         to={`/languages/${language?.id}`}

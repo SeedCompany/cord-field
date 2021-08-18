@@ -92,6 +92,10 @@ export const LanguageDetail = () => {
     name,
   } = language ?? {};
 
+  const approvedInventoryProject = projects?.items.find(
+    (item) => item.approvedInventory
+  );
+
   const canEditAnyFields = canEditAny(language) || canEditAny(ethnologue);
 
   const formatDate = useDateFormatter();
@@ -144,10 +148,14 @@ export const LanguageDetail = () => {
               <Sensitivity value={sensitivity} loading={!language} />
             </Grid>
             <Grid item>
-              <PresetInventoryFlag
-                value={'PresetInventory'}
-                loading={!language}
-              />
+              {approvedInventoryProject ? (
+                <PresetInventoryFlag
+                  value={'PresetInventory'}
+                  loading={!language}
+                />
+              ) : (
+                ''
+              )}
             </Grid>
             <BooleanProperty
               label="Dialect"
@@ -296,6 +304,7 @@ export const LanguageDetail = () => {
                   className={classes.listItem}
                 />
               ))}
+
               {projects?.items.length === 0 ? (
                 <Typography color="textSecondary">
                   This language is not engaged in any projects

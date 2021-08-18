@@ -4,9 +4,8 @@ import clsx from 'clsx';
 import { meanBy } from 'lodash';
 import { FC } from 'react';
 import * as React from 'react';
-import { PresetInventoryFlag as PresetInventoryFlagType } from '../../api';
 
-const possible: PresetInventoryFlagType[] = ['PresetInventory'];
+const possible = 'PresetInventory';
 const avgLength = Math.round(meanBy(possible, (s) => s.length));
 
 const useStyles = makeStyles(({ palette, spacing }) => ({
@@ -49,7 +48,7 @@ const useStyles = makeStyles(({ palette, spacing }) => ({
 }));
 
 export interface PresetInventoryProps {
-  value?: PresetInventoryFlagType;
+  value?: 'PresetInventory';
   loading?: boolean;
   className?: string;
 }

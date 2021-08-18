@@ -2,6 +2,7 @@ import { Card, Grid, makeStyles, Tooltip, Typography } from '@material-ui/core';
 import { Add } from '@material-ui/icons';
 import React, { FC } from 'react';
 import { Fab } from '../../../components/Fab';
+import { PresetInventoryFlag } from '../../../components/PresetInventoryFlag';
 import { ResponsiveDivider } from '../../../components/ResponsiveDivider';
 import { Link } from '../../../components/Routing';
 import { ProductList } from '../../Products/List/ProductList';
@@ -19,6 +20,10 @@ const useStyles = makeStyles(({ spacing, breakpoints }) => ({
   },
   main: {
     maxWidth: breakpoints.values.lg,
+  },
+  flag: {
+    marginTop: -20,
+    marginBottom: 10,
   },
   details: {
     // 900px is the min width that the periodic report and progress card look
@@ -48,6 +53,7 @@ export const LanguageEngagementDetail: FC<EngagementQuery> = ({
   if (engagement.__typename !== 'LanguageEngagement') {
     return null; // easiest for typescript
   }
+  const approvedInventoryProject = project.approvedInventory;
 
   return (
     <div className={classes.root}>
@@ -59,6 +65,13 @@ export const LanguageEngagementDetail: FC<EngagementQuery> = ({
         className={classes.main}
       >
         <LanguageEngagementHeader engagement={engagement} project={project} />
+        <Grid item className={classes.flag}>
+          {approvedInventoryProject ? (
+            <PresetInventoryFlag value={'PresetInventory'} />
+          ) : (
+            ''
+          )}
+        </Grid>
         <Grid item container spacing={5}>
           <Grid item lg={5} container direction="column" spacing={3}>
             <Grid item container spacing={3}>

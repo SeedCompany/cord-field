@@ -30,6 +30,10 @@ fragment LanguageEngagementListItem on LanguageEngagement {
       sensitivity
     }
   }
+  project {
+    id
+    approvedInventory
+  }
   products {
     total
   }

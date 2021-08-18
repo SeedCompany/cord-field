@@ -25,6 +25,7 @@ import {
 import { IconButton } from '../../../components/IconButton';
 import { InternshipEngagementListItemCard } from '../../../components/InternshipEngagementListItemCard';
 import { InternshipEngagementListItemFragment } from '../../../components/InternshipEngagementListItemCard/InternshipEngagementListItem.generated';
+import { ToggleFlagButton } from '../../../components/InventoryFlagButton';
 import { LanguageEngagementListItemCard } from '../../../components/LanguageEngagementListItemCard';
 import { LanguageEngagementListItemFragment } from '../../../components/LanguageEngagementListItemCard/LanguageEngagementListItem.generated';
 import { List, useListQuery } from '../../../components/List';
@@ -35,7 +36,6 @@ import { ProjectMembersSummary } from '../../../components/ProjectMembersSummary
 import { Redacted } from '../../../components/Redacted';
 import { SensitivityIcon } from '../../../components/Sensitivity';
 import { TogglePinButton } from '../../../components/TogglePinButton';
-import { ToggleFlagButton } from '../../../components/InventoryFlagButton';
 import { Many } from '../../../util';
 import { CreateInternshipEngagement } from '../../Engagement/InternshipEngagement/Create/CreateInternshipEngagement';
 import { CreateLanguageEngagement } from '../../Engagement/LanguageEngagement/Create/CreateLanguageEngagement';
@@ -268,7 +268,7 @@ export const ProjectOverview: FC = () => {
               label="as Approved Inventory"
               listId="projects"
               listFilter={(args: ProjectListQueryVariables) =>
-                args.input.filter?.pinned ?? false
+                args.input.filter?.approvedInventory ?? false
               }
               className={classes.pushPinIcon}
             />

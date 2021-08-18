@@ -19,6 +19,7 @@ export type ToggleFlagButtonProps = Except<IconButtonProps, 'children'> & {
   // should it be modified when this object's pin status changes
   listFilter?: (args: any) => boolean;
   label?: string;
+  readOnly?: boolean;
   TooltipProps?: TooltipProps;
 };
 
@@ -28,6 +29,7 @@ export const ToggleFlagButton = ({
   listId,
   listFilter,
   TooltipProps,
+  readOnly,
   ...rest
 }: ToggleFlagButtonProps) => {
   const [toggleFlagged] = useMutation(ToggleFlaggedDocument, {
@@ -35,15 +37,13 @@ export const ToggleFlagButton = ({
       if (!result.data || !object) {
         return;
       }
-      console.log('Object: ', object);
-      console.log('Flag: ', result.data.toggleFlagged);
-      const flagged = result.data.toggleFlagged;
+      const approvedInventory = result.data.toggleFlagged;
 
       // change current item
       cache.modify({
         id: cache.identify(object),
         fields: {
-          flagged: () => flagged,
+          approvedInventory: () => approvedInventory,
         },
       });
 
@@ -51,7 +51,7 @@ export const ToggleFlagButton = ({
       if (!listId) {
         return;
       }
-      const modifier = flagged
+      const modifier = approvedInventory
         ? addItemToList({
             listId,
             filter: listFilter,
@@ -65,18 +65,16 @@ export const ToggleFlagButton = ({
       modifier(cache, result);
     },
   });
-
   const button = (
     <IconButton
-      color={object?.flagged ? 'secondary' : undefined}
+      style={{ cursor: readOnly ? 'default' : 'pointer' }}
+      color={object?.approvedInventory ? 'secondary' : 'primary'}
       {...rest}
       onClick={(event) => {
-        {
-          console.log('objectButton: ', object);
-        }
         if (!object) {
           return;
         }
+        if (readOnly) return;
         void toggleFlagged({
           variables: { id: object.id },
         });
@@ -85,7 +83,11 @@ export const ToggleFlagButton = ({
       disabled={rest.disabled || !object}
       loading={rest.loading || !object}
     >
-      {object?.flagged ? <PushFlagIconFilled /> : <PushFlagIconOutlined />}
+      {object?.approvedInventory ? (
+        <PushFlagIconFilled />
+      ) : (
+        <PushFlagIconOutlined />
+      )}
     </IconButton>
   );
 
@@ -93,12 +95,16 @@ export const ToggleFlagButton = ({
     return (
       <Tooltip
         {...TooltipProps}
-        title={(object.flagged ? 'Unmark ' : 'Mark ') + label}
+        title={
+          !readOnly
+            ? (object.approvedInventory ? 'Unmark ' : 'Mark ') + label
+            : ''
+        }
       >
         {button}
       </Tooltip>
     );
   }
 
-  return button;
+  return readOnly ? <PushFlagIconOutlined /> : button;
 };

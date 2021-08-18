@@ -4,5 +4,6 @@ fragment ProjectBreadcrumb on Project {
     canRead
     value
   }
+  approvedInventory
   sensitivity
 }

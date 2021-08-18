@@ -3,7 +3,6 @@ import { VerifiedUser } from '@material-ui/icons';
 import clsx from 'clsx';
 import { FC } from 'react';
 import * as React from 'react';
-import { PresetInventoryFlag as PresetInventoryFlagType } from '../../api';
 
 const useStyles = makeStyles(({ palette }) => ({
   PresetInventory: {
@@ -12,7 +11,7 @@ const useStyles = makeStyles(({ palette }) => ({
 }));
 
 export interface PresetInventoryIconProps extends SvgIconProps {
-  value?: PresetInventoryFlagType;
+  value?: 'PresetInventory';
   loading?: boolean;
   disableTooltip?: boolean;
 }

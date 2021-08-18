@@ -13,6 +13,7 @@ export const useLanguageFilters = makeQueryHandler({
   sensitivity: EnumListParam(SensitivityList),
   leastOfThese: withKey(withDefault(BooleanParam(), false), 'lot'),
   isSignLanguage: withKey(withDefault(BooleanParam(), false), 'sign-language'),
+  approvedInventory: withKey(withDefault(BooleanParam(), false), 'multi'),
   isDialect: withKey(withDefault(BooleanParam(), false), 'dialect'),
 });
 
@@ -33,6 +34,10 @@ export const LanguageFilterOptions = () => {
       />
       <SwitchField name="isSignLanguage" label="Only Show Sign Languages" />
       <SwitchField name="isDialect" label="Only Show Dialects" />
+      <SwitchField
+        name="approvedInventory"
+        label="Only flagged as Approved Inventory"
+      />
     </>
   );
 };
