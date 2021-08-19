@@ -28,7 +28,7 @@ const useStyles = makeStyles(({ spacing }) => {
       position: 'relative',
       top: 5,
       fontSize: 10,
-      right: 10,
+      right: 5,
     },
     leftContent: {
       flex: 1,
@@ -66,12 +66,14 @@ export const LanguageListItemCard: FC<LanguageListItemCardProps> = ({
   return (
     <Card className={clsx(classes.root, className)}>
       <div className={classes.rightContent}>
-        <ToggleFlagButton
-          object={approvedInventoryProject}
-          listId="projects"
-          className={classes.flag}
-          readOnly={true}
-        />
+        <div>
+          <ToggleFlagButton
+            object={approvedInventoryProject}
+            listId="projects"
+            className={classes.flag}
+            readOnly={true}
+          />
+        </div>
       </div>
       <CardActionAreaLink
         disabled={!language}

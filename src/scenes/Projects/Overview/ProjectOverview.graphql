@@ -54,6 +54,7 @@ fragment ProjectOverview on Project {
     canBypassTransitions
   }
   sensitivity
+  approvedInventory
   modifiedAt
   ...TogglePin
   ...ToggleFlag

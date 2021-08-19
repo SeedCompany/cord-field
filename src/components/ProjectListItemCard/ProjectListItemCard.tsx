@@ -218,16 +218,19 @@ export const ProjectListItemCard: FC<ProjectListItemCardProps> = ({
           </div>
         </CardContent>
       </CardActionAreaLink>
-      <ToggleFlagButton
-        object={project}
-        label="as Approved Inventory"
-        listId="projects"
-        listFilter={(args: ProjectListQueryVariables) =>
-          args.input.filter?.approvedInventory ?? false
-        }
-        className={classes.flag}
-        readOnly={true}
-      />
+      {project?.__typename === 'TranslationProject' && (
+        <ToggleFlagButton
+          object={project}
+          label="as Approved Inventory"
+          listId="projects"
+          listFilter={(args: ProjectListQueryVariables) =>
+            args.input.filter?.approvedInventory ?? false
+          }
+          className={classes.flag}
+          readOnly={true}
+        />
+      )}
+
       <TogglePinButton
         object={project}
         label="Project"

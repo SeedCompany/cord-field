@@ -65,21 +65,34 @@ export const ToggleFlagButton = ({
       modifier(cache, result);
     },
   });
-  const button = (
+  const button = !readOnly ? (
     <IconButton
-      style={{ cursor: readOnly ? 'default' : 'pointer' }}
+      style={{ cursor: 'pointer' }}
       color={object?.approvedInventory ? 'secondary' : 'primary'}
       {...rest}
       onClick={(event) => {
         if (!object) {
           return;
         }
-        if (readOnly) return;
         void toggleFlagged({
           variables: { id: object.id },
         });
         rest.onClick?.(event);
       }}
+      disabled={rest.disabled || !object}
+      loading={rest.loading || !object}
+    >
+      {object?.approvedInventory ? (
+        <PushFlagIconFilled />
+      ) : (
+        <PushFlagIconOutlined />
+      )}
+    </IconButton>
+  ) : (
+    <IconButton
+      style={{ cursor: 'default' }}
+      color={object?.approvedInventory ? 'secondary' : 'primary'}
+      {...rest}
       disabled={rest.disabled || !object}
       loading={rest.loading || !object}
     >
@@ -106,5 +119,5 @@ export const ToggleFlagButton = ({
     );
   }
 
-  return readOnly ? <PushFlagIconOutlined /> : button;
+  return object ? button : <PushFlagIconOutlined />;
 };
