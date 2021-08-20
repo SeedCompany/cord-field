@@ -30,13 +30,7 @@ const useStyles = makeStyles(({ spacing, breakpoints }) => ({
   },
 }));
 
-export const SearchResults = () => (
-  <Error page show>
-    Search is temporarily disabled while performance problems are investigated
-  </Error>
-);
-
-export const SearchResults2: FC = () => {
+export const SearchResults: FC = () => {
   const classes = useStyles();
 
   const [{ q: query }] = useSearch();
