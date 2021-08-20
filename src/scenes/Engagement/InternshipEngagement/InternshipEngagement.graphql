@@ -1,5 +1,5 @@
 fragment InternshipEngagementDetail on InternshipEngagement {
-  id
+  ...Id
   createdAt
   status {
     value
@@ -17,15 +17,8 @@ fragment InternshipEngagementDetail on InternshipEngagement {
     canEdit
     value
   }
-  startDate {
-    value
-    canRead
-    canEdit
-  }
-  endDate {
-    value
-    canRead
-    canEdit
+  dateRange {
+    ...securedDateRange
   }
   completeDate {
     value

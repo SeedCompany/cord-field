@@ -6,10 +6,10 @@ import clsx from 'clsx';
 import React, { FC } from 'react';
 import { useDropzone } from 'react-dropzone';
 import { Helmet } from 'react-helmet-async';
-import { useParams } from 'react-router-dom';
-import { displayProjectStep, securedDateRange } from '../../../api';
+import { displayProjectStep } from '../../../api';
 import { BudgetOverviewCard } from '../../../components/BudgetOverviewCard';
 import { CardGroup } from '../../../components/CardGroup';
+import { ChangesetPropertyBadge } from '../../../components/Changeset';
 import { DataButton } from '../../../components/DataButton';
 import { useDialog } from '../../../components/Dialog';
 import { DisplaySimpleProperty } from '../../../components/DisplaySimpleProperty';
@@ -24,13 +24,17 @@ import {
 } from '../../../components/Formatters';
 import { IconButton } from '../../../components/IconButton';
 import { InternshipEngagementListItemCard } from '../../../components/InternshipEngagementListItemCard';
+import { InternshipEngagementListItemFragment } from '../../../components/InternshipEngagementListItemCard/InternshipEngagementListItem.generated';
 import { LanguageEngagementListItemCard } from '../../../components/LanguageEngagementListItemCard';
+import { LanguageEngagementListItemFragment } from '../../../components/LanguageEngagementListItemCard/LanguageEngagementListItem.generated';
 import { List, useListQuery } from '../../../components/List';
 import { PartnershipSummary } from '../../../components/PartnershipSummary';
 import { PeriodicReportCard } from '../../../components/PeriodicReports';
+import { ProjectChangeRequestSummary } from '../../../components/ProjectChangeRequestSummary';
 import { ProjectMembersSummary } from '../../../components/ProjectMembersSummary';
 import { Redacted } from '../../../components/Redacted';
 import { SensitivityIcon } from '../../../components/Sensitivity';
+import { useBetaFeatures } from '../../../components/Session';
 import { TogglePinButton } from '../../../components/TogglePinButton';
 import { Many } from '../../../util';
 import { CreateInternshipEngagement } from '../../Engagement/InternshipEngagement/Create/CreateInternshipEngagement';
@@ -39,12 +43,17 @@ import { useProjectCurrentDirectory, useUploadProjectFiles } from '../Files';
 import { ProjectListQueryVariables } from '../List/projects.generated';
 import { EditableProjectField, UpdateProjectDialog } from '../Update';
 import { ProjectWorkflowDialog } from '../Update/ProjectWorkflowDialog';
+import { useProjectId } from '../useProjectId';
 import {
   ProjectEngagementListOverviewDocument as EngagementList,
   ProjectOverviewDocument,
   ProjectOverviewFragment,
 } from './ProjectOverview.generated';
 import { ProjectPostList } from './ProjectPostList';
+
+type EngagementListItem =
+  | LanguageEngagementListItemFragment
+  | InternshipEngagementListItemFragment;
 
 const useStyles = makeStyles(({ spacing, breakpoints, palette }) => ({
   root: {
@@ -95,7 +104,8 @@ const useStyles = makeStyles(({ spacing, breakpoints, palette }) => ({
 
 export const ProjectOverview: FC = () => {
   const classes = useStyles();
-  const { projectId = '' } = useParams();
+  const { projectId, changesetId } = useProjectId();
+  const beta = useBetaFeatures();
   const formatNumber = useNumberFormatter();
 
   const [editState, editField, fieldsBeingEdited] =
@@ -131,14 +141,19 @@ export const ProjectOverview: FC = () => {
     {
       variables: {
         input: projectId,
+        changeset: changesetId,
       },
     }
   );
 
   const engagements = useListQuery(EngagementList, {
     listAt: (data) => data.project.engagements,
+    changesetRemovedItems: (obj): obj is EngagementListItem =>
+      obj.__typename === 'LanguageEngagement' ||
+      obj.__typename === 'InternshipEngagement',
     variables: {
       project: projectId,
+      changeset: changesetId,
     },
   });
 
@@ -193,13 +208,6 @@ export const ProjectOverview: FC = () => {
           }`,
   };
 
-  const date = projectOverviewData
-    ? securedDateRange(
-        projectOverviewData.project.mouStart,
-        projectOverviewData.project.mouEnd
-      )
-    : undefined;
-
   const CreateEngagement = isTranslation
     ? CreateLanguageEngagement
     : CreateInternshipEngagement;
@@ -231,7 +239,12 @@ export const ProjectOverview: FC = () => {
               {!projectName ? (
                 <Skeleton width="100%" />
               ) : projectName.canRead ? (
-                projectName.value
+                <ChangesetPropertyBadge
+                  current={projectOverviewData?.project}
+                  prop="name"
+                >
+                  {projectName.value}
+                </ChangesetPropertyBadge>
               ) : (
                 <Redacted
                   info="You do not have permission to view project's name"
@@ -368,19 +381,28 @@ export const ProjectOverview: FC = () => {
               />
             </Grid>
             <Grid item>
-              <DataButton
-                loading={!projectOverviewData}
-                startIcon={<DateRange className={classes.infoColor} />}
-                secured={date}
-                redacted="You do not have permission to view start/end dates"
-                children={({ start, end }) => (
-                  <FormattedDateRange {...{ start, end }} />
+              <ChangesetPropertyBadge
+                current={projectOverviewData?.project}
+                prop="mouRange"
+                identifyBy={(range) =>
+                  `${range.start?.toMillis()}/${range.end?.toMillis()}`
+                }
+                labelBy={({ start, end }) => (
+                  <FormattedDateRange start={start} end={end} />
                 )}
-                empty="Start - End"
-                onClick={() => editField(['mouStart', 'mouEnd'])}
-              />
+              >
+                <DataButton
+                  loading={!projectOverviewData}
+                  startIcon={<DateRange className={classes.infoColor} />}
+                  secured={projectOverviewData?.project.mouRange}
+                  redacted="You do not have permission to view start/end dates"
+                  children={FormattedDateRange.orNull}
+                  empty="Start - End"
+                  onClick={() => editField('mouRange')}
+                />
+              </ChangesetPropertyBadge>
             </Grid>
-            {projectOverviewData?.project.status === 'InDevelopment' && (
+            {projectOverviewData?.project.projectStatus === 'InDevelopment' && (
               <Tooltip
                 title="Estimated Submission to Regional Director"
                 placement="top"
@@ -399,17 +421,23 @@ export const ProjectOverview: FC = () => {
               </Tooltip>
             )}
             <Grid item>
-              <DataButton
-                loading={!projectOverviewData}
-                secured={projectOverviewData?.project.step}
-                redacted="You do not have permission to view project step"
-                onClick={() =>
-                  projectOverviewData &&
-                  openWorkflow(projectOverviewData.project)
-                }
+              <ChangesetPropertyBadge
+                current={projectOverviewData?.project}
+                prop="step"
+                labelBy={displayProjectStep}
               >
-                {displayProjectStep(projectOverviewData?.project.step.value)}
-              </DataButton>
+                <DataButton
+                  loading={!projectOverviewData}
+                  secured={projectOverviewData?.project.step}
+                  redacted="You do not have permission to view project step"
+                  onClick={() =>
+                    projectOverviewData &&
+                    openWorkflow(projectOverviewData.project)
+                  }
+                >
+                  {displayProjectStep(projectOverviewData?.project.step.value)}
+                </DataButton>
+              </ChangesetPropertyBadge>
             </Grid>
           </Grid>
 
@@ -479,7 +507,7 @@ export const ProjectOverview: FC = () => {
             </Grid>
           </Grid>
 
-          <CardGroup horizontal="md">
+          <CardGroup horizontal="mdUp">
             <ProjectMembersSummary
               members={projectOverviewData?.project.team}
             />
@@ -487,6 +515,16 @@ export const ProjectOverview: FC = () => {
               partnerships={projectOverviewData?.project.partnerships}
             />
           </CardGroup>
+
+          {beta && (
+            <Grid container spacing={3}>
+              <Grid item xs={6}>
+                <ProjectChangeRequestSummary
+                  data={projectOverviewData?.project.changeRequests}
+                />
+              </Grid>
+            </Grid>
+          )}
 
           <Grid container spacing={2} alignItems="center">
             <Grid item>
@@ -528,15 +566,9 @@ export const ProjectOverview: FC = () => {
             spacing={3}
             renderItem={(engagement) =>
               engagement.__typename === 'LanguageEngagement' ? (
-                <LanguageEngagementListItemCard
-                  projectId={projectId}
-                  {...engagement}
-                />
+                <LanguageEngagementListItemCard {...engagement} />
               ) : (
-                <InternshipEngagementListItemCard
-                  projectId={projectId}
-                  {...engagement}
-                />
+                <InternshipEngagementListItemCard {...engagement} />
               )
             }
             skeletonCount={0}
@@ -557,7 +589,12 @@ export const ProjectOverview: FC = () => {
           editFields={fieldsBeingEdited}
         />
       ) : null}
-      <CreateEngagement projectId={projectId} {...createEngagementState} />
+      {projectOverviewData && (
+        <CreateEngagement
+          project={projectOverviewData.project}
+          {...createEngagementState}
+        />
+      )}
     </main>
   );
 };

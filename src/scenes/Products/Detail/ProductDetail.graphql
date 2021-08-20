@@ -1,0 +1,28 @@
+query ProductDetail($id: ID!) {
+  product(id: $id) {
+    ...ProductDetail
+  }
+}
+
+fragment ProductDetail on Product {
+  ...Id
+  ...ProductCard
+  purposes {
+    canRead
+    value
+  }
+  scriptureReferences {
+    value {
+      label
+    }
+  }
+  describeCompletion {
+    value
+  }
+  engagement {
+    ...EngagementBreadcrumb
+    project {
+      ...ProjectBreadcrumb
+    }
+  }
+}

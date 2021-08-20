@@ -17,6 +17,10 @@ const removeItem = (
   { args, cache, ...opts }: FieldFunctionOptions
 ) => {
   const id = getIdArg(args);
+  if (args?.changeset) {
+    // Objects deleted in changesets are still around so don't remove them.
+    return;
+  }
 
   const storeId = getPossibleTypes(typename)
     .map((name) => cache.identify({ __typename: name, id }))

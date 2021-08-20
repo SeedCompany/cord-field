@@ -1,31 +1,16 @@
 fragment ProjectCachedEngagementDateRanges on Project {
   id
-  mouStart {
-    canRead
-    value
-  }
-  mouEnd {
-    canRead
-    value
+  mouRange {
+    ...securedDateRange
   }
   engagements {
     items {
       id
-      startDate {
-        canRead
-        value
+      dateRange {
+        ...securedDateRange
       }
-      endDate {
-        canRead
-        value
-      }
-      startDateOverride {
-        canRead
-        value
-      }
-      endDateOverride {
-        canRead
-        value
+      dateRangeOverride {
+        ...securedDateRange
       }
     }
   }
@@ -33,32 +18,17 @@ fragment ProjectCachedEngagementDateRanges on Project {
 
 fragment ProjectCachedPartnershipDateRanges on Project {
   id
-  mouStart {
-    canRead
-    value
-  }
-  mouEnd {
-    canRead
-    value
+  mouRange {
+    ...securedDateRange
   }
   partnerships {
     items {
       id
-      mouStart {
-        canRead
-        value
+      mouRange {
+        ...securedDateRange
       }
-      mouEnd {
-        canRead
-        value
-      }
-      mouStartOverride {
-        canRead
-        value
-      }
-      mouEndOverride {
-        canRead
-        value
+      mouRangeOverride {
+        ...securedDateRange
       }
     }
   }

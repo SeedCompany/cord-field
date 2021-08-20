@@ -10,10 +10,11 @@ import { EngagementBreadcrumb } from '../../../components/EngagementBreadcrumb';
 import { ProjectBreadcrumb } from '../../../components/ProjectBreadcrumb';
 import { ButtonLink } from '../../../components/Routing';
 import { parsedRangesWithFullTestamentRange } from '../../../util/biblejs';
+import { useProjectId } from '../../Projects/useProjectId';
 import { ProductForm } from '../ProductForm';
 import {
   CreateProductDocument,
-  GetProductBreadcrumbDocument,
+  ProductInfoForCreateDocument,
 } from './CreateProduct.generated';
 
 const useStyles = makeStyles(({ spacing }) => ({
@@ -30,58 +31,55 @@ export const CreateProduct = () => {
   const classes = useStyles();
   const navigate = useNavigate();
 
-  const { projectId, engagementId = '' } = useParams();
+  const { projectId, changesetId, projectUrl } = useProjectId();
+  const { engagementId = '' } = useParams();
   const { enqueueSnackbar } = useSnackbar();
 
-  const { data, loading } = useQuery(GetProductBreadcrumbDocument, {
+  const { data, loading } = useQuery(ProductInfoForCreateDocument, {
     variables: {
       projectId,
+      changeset: changesetId,
       engagementId,
     },
   });
 
   const project = data?.project;
-  const engagement = data?.engagement;
+  const engagement =
+    // Products are only created for language engagements
+    data?.engagement.__typename === 'LanguageEngagement'
+      ? data.engagement
+      : undefined;
 
   const [createProduct] = useMutation(CreateProductDocument, {
     update: addItemToList({
-      listId: [
-        // Need to narrow type to language engagement to get the product list on that concrete
-        engagement?.__typename === 'LanguageEngagement'
-          ? engagement
-          : undefined,
-        'products',
-      ],
+      listId: [engagement, 'products'],
       outputToItem: (res) => res.createProduct.product,
     }),
   });
 
   return (
     <main className={classes.root}>
-      <Helmet title="Create Product" />
+      <Helmet title="Create Goal" />
       <Breadcrumbs>
         <ProjectBreadcrumb data={project} />
-        <EngagementBreadcrumb data={engagement} projectId={projectId} />
-        <Typography variant="h4">Create Product</Typography>
+        <EngagementBreadcrumb data={engagement} />
+        <Typography variant="h4">Create Goal</Typography>
       </Breadcrumbs>
       <Typography variant="h2">
-        {loading ? <Skeleton width="50%" variant="text" /> : 'Create Product'}
+        {loading ? <Skeleton width="50%" variant="text" /> : 'Create Goal'}
       </Typography>
-      {!loading && (
+      {!loading && data && (
         <ProductForm
-          onSubmit={async (
-            {
-              product: {
-                productType,
-                produces,
-                scriptureReferences,
-                fullOldTestament,
-                fullNewTestament,
-                ...inputs
-              },
-            },
-            form
-          ) => {
+          onSubmit={async (submitted, form) => {
+            const {
+              productType,
+              produces,
+              scriptureReferences,
+              fullOldTestament,
+              fullNewTestament,
+              ...inputs
+            } = submitted.product ?? {};
+
             const parsedScriptureReferences =
               parsedRangesWithFullTestamentRange(
                 scriptureReferences,
@@ -111,12 +109,12 @@ export const CreateProduct = () => {
 
               const { product } = data!.createProduct;
 
-              enqueueSnackbar(`Created product`, {
+              enqueueSnackbar(`Created goal`, {
                 variant: 'success',
                 action: () => (
                   <ButtonLink
                     color="inherit"
-                    to={`/projects/${projectId}/engagements/${engagementId}/products/${product.id}`}
+                    to={`${projectUrl}/engagements/${engagementId}/products/${product.id}`}
                   >
                     Edit
                   </ButtonLink>

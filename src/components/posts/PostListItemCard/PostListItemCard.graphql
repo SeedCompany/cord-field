@@ -13,6 +13,7 @@ fragment PostListItemCard on Post {
     value {
       id
       avatarLetters
+      fullName
       displayFirstName {
         value
       }
@@ -21,4 +22,6 @@ fragment PostListItemCard on Post {
       }
     }
   }
+  ...PostForm
+  ...PostToDelete
 }

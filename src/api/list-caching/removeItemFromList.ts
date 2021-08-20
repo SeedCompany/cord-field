@@ -1,6 +1,9 @@
 import type { MutationUpdaterFn } from '@apollo/client/core';
 import { Except } from 'type-fest';
+import { splice } from '../../util';
+import { modifyChangesetDiff } from '../changesets';
 import { ListModifier, modifyList, ModifyListOptions } from './modifyList';
+import { Entity } from './types';
 
 /**
  * Use this on a mutation's update option to remove the deleted item from an
@@ -25,11 +28,7 @@ import { ListModifier, modifyList, ModifyListOptions } from './modifyList';
  * })
  */
 export const removeItemFromList =
-  <
-    OwningObj extends { id: string },
-    Item extends { __typename?: string; id: string },
-    Args
-  >({
+  <OwningObj extends { id: string }, Item extends Entity, Args>({
     listId,
     filter,
     item,
@@ -61,4 +60,22 @@ export const removeItemFromList =
     };
 
     modifyList({ cache, listId, modifier, filter });
+
+    const objRef = Array.isArray(listId) ? listId[0] : undefined;
+    if (!objRef) {
+      return;
+    }
+    modifyChangesetDiff(cache, objRef, ({ added, removed }) => {
+      const removedItemId = cache.identify(item as any);
+      const addedInChangesetIndex = added.findIndex(
+        (addedItem) => cache.identify(addedItem as any) === removedItemId
+      );
+      const addedInChangeset = addedInChangesetIndex >= 0;
+      return {
+        added: addedInChangeset
+          ? splice(added, addedInChangesetIndex, 1)
+          : added,
+        removed: addedInChangeset ? removed : [...removed, item],
+      };
+    });
   };

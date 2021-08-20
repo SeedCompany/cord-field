@@ -31,6 +31,10 @@ type TypePolicies = {
 const scriptureKeyFields = ['book', 'chapter', 'verse'] as const;
 
 export const typePolicies: TypePolicies = {
+  DateRange: {
+    keyFields: false,
+    merge: true,
+  },
   Language: {
     fields: {
       ethnologue: { merge: true },
@@ -56,5 +60,16 @@ export const typePolicies: TypePolicies = {
         merge: false,
       },
     },
+  },
+  ChangesetAware: {
+    // Include changeset ID in ChangesetAware's key fields if it is given
+    keyFields: (object: any) =>
+      object?.changeset?.id ? ['id', 'changeset', ['id']] : ['id'],
+  },
+  ChangesetDiff: {
+    merge: true,
+  },
+  ProductProgress: {
+    keyFields: ['product', ['id'], 'report', ['id']],
   },
 };

@@ -1,5 +1,7 @@
 fragment ProductCard on Product {
   id
+  label
+  category
   scriptureReferences {
     canRead
     canEdit
@@ -50,5 +52,13 @@ fragment ProductCard on Product {
         }
       }
     }
+  }
+  steps {
+    canRead
+    canEdit
+    value
+  }
+  progressOfCurrentReportDue {
+    ...ProductProgress
   }
 }

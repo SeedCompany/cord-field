@@ -59,10 +59,10 @@ function rangeFormatter<T extends DateTime>(
 ) {
   function formatRange(start: Nullable<T>, end: Nullable<T>): string;
   function formatRange(
-    range: Nullable<{ start: Nullable<T>; end: Nullable<T> }>
+    range: Nullable<{ start?: Nullable<T>; end?: Nullable<T> }>
   ): string;
   function formatRange(
-    rangeOrStart: Nullable<{ start: Nullable<T>; end: Nullable<T> } | T>,
+    rangeOrStart: Nullable<{ start?: Nullable<T>; end?: Nullable<T> } | T>,
     end?: Nullable<T>
   ) {
     const start =
@@ -74,7 +74,7 @@ function rangeFormatter<T extends DateTime>(
     if (!start && !actualEnd) {
       return null;
     }
-    return formatter(start) + ' - ' + formatter(actualEnd);
+    return formatter(start as T) + ' - ' + formatter(actualEnd);
   }
 
   return formatRange;

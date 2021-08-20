@@ -19,10 +19,15 @@ import {
   parsedRangesWithFullTestamentRange,
   removeScriptureTypename,
 } from '../../../util/biblejs';
-import { ProductForm, ProductFormProps } from '../ProductForm';
+import { useProjectId } from '../../Projects/useProjectId';
+import {
+  ProductForm,
+  ProductFormProps,
+  ProductFormValues,
+} from '../ProductForm';
 import {
   DeleteProductDocument,
-  ProductDocument,
+  ProductInfoForEditDocument,
   UpdateProductDocument,
 } from './EditProduct.generated';
 
@@ -40,16 +45,19 @@ export const EditProduct = () => {
   const classes = useStyles();
   const navigate = useNavigate();
 
-  const { projectId, engagementId, productId } = useParams();
+  const { projectId, changesetId } = useProjectId();
+  const { engagementId = '', productId = '' } = useParams();
   const { enqueueSnackbar } = useSnackbar();
 
-  const { data, loading } = useQuery(ProductDocument, {
+  const { data, loading } = useQuery(ProductInfoForEditDocument, {
     variables: {
       projectId,
+      changeset: changesetId,
       engagementId,
       productId,
     },
   });
+
   const project = data?.project;
   const engagement = data?.engagement;
   const product = data?.product;
@@ -77,11 +85,13 @@ export const EditProduct = () => {
           !isEqual(reference, fullNewTestamentRange)
       );
 
-    return {
+    const values: ProductFormValues = {
       product: {
         mediums: mediums.value,
         purposes: purposes.value,
         methodology: methodology.value,
+        steps: product.steps.value,
+        describeCompletion: product.describeCompletion.value,
         scriptureReferences: referencesWithoutFullTestament,
         fullOldTestament: scriptureReferencesWithoutTypename.some((reference) =>
           isEqual(reference, fullOldTestamentRange)
@@ -108,6 +118,7 @@ export const EditProduct = () => {
           : undefined),
       },
     };
+    return values;
   }, [product]);
 
   const handleSubmit: ProductFormProps['onSubmit'] = async (data) => {
@@ -122,9 +133,11 @@ export const EditProduct = () => {
         },
       });
 
-      enqueueSnackbar(`Deleted product`, {
+      enqueueSnackbar(`Deleted goal`, {
         variant: 'success',
       });
+      navigate('../../../');
+      return;
     } else {
       const {
         productType,
@@ -133,7 +146,7 @@ export const EditProduct = () => {
         fullOldTestament,
         fullNewTestament,
         ...input
-      } = data.product;
+      } = data.product ?? {};
 
       const parsedScriptureReferences = parsedRangesWithFullTestamentRange(
         scriptureReferences,
@@ -160,28 +173,28 @@ export const EditProduct = () => {
         },
       });
 
-      enqueueSnackbar(`Updated product`, {
+      enqueueSnackbar(`Updated goal`, {
         variant: 'success',
       });
     }
 
-    navigate('../../');
+    navigate('../');
   };
 
   return (
     <main className={classes.root}>
-      {/* TODO label product */}
-      <Helmet title="Edit Product" />
+      {/* TODO label goal */}
+      <Helmet title="Edit Goal" />
       <Breadcrumbs>
         <ProjectBreadcrumb data={project} />
-        <EngagementBreadcrumb data={engagement} projectId={projectId} />
-        <Typography variant="h4">Edit Product</Typography>
+        <EngagementBreadcrumb data={engagement} />
+        <Typography variant="h4">Edit Goal</Typography>
       </Breadcrumbs>
       <Typography variant="h2">
-        {loading ? <Skeleton width="50%" variant="text" /> : 'Edit Product'}
+        {loading ? <Skeleton width="50%" variant="text" /> : 'Edit Goal'}
       </Typography>
 
-      {product && (
+      {!loading && data && product && (
         <ProductForm
           product={product}
           onSubmit={async (data, form) => {

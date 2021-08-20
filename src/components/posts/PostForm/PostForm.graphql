@@ -1,0 +1,8 @@
+fragment PostForm on Post {
+  id
+  body {
+    value
+  }
+  type
+  shareability
+}

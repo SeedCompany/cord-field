@@ -4,4 +4,5 @@ export enum FileAction {
   History = 'history',
   NewVersion = 'new version',
   Delete = 'delete',
+  UpdateReceivedDate = 'updateReceivedDate',
 }

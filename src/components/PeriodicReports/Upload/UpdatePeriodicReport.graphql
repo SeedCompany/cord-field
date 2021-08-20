@@ -1,0 +1,5 @@
+mutation UpdatePeriodicReport($input: UpdatePeriodicReportInput!) {
+  updatePeriodicReport(input: $input) {
+    ...PeriodicReport
+  }
+}

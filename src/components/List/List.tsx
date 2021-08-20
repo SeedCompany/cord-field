@@ -3,9 +3,14 @@ import clsx from 'clsx';
 import { times } from 'lodash';
 import { ReactNode, RefObject, useRef } from 'react';
 import * as React from 'react';
-import { isNetworkRequestInFlight, PaginatedListOutput } from '../../api';
+import {
+  Entity,
+  isNetworkRequestInFlight,
+  PaginatedListOutput,
+} from '../../api';
 import { usePersistedScroll } from '../../hooks/usePersistedScroll';
 import { UseStyles } from '../../util';
+import { ChangesetBadge, useDetermineChangesetDiffItem } from '../Changeset';
 import { ProgressButton } from '../ProgressButton';
 import { ListQueryResult } from './useListQuery';
 
@@ -18,7 +23,7 @@ const useStyles = makeStyles(({ spacing }) => ({
   container: {},
 }));
 
-export interface ListProps<Item>
+export interface ListProps<Item extends Entity>
   extends ListQueryResult<
       Item,
       PaginatedListOutput<Item> & { canCreate?: boolean },
@@ -42,7 +47,7 @@ export interface ListProps<Item>
   className?: string;
 }
 
-export const List = <Item extends { id: string }>(props: ListProps<Item>) => {
+export const List = <Item extends Entity>(props: ListProps<Item>) => {
   const {
     networkStatus,
     data,
@@ -66,6 +71,7 @@ export const List = <Item extends { id: string }>(props: ListProps<Item>) => {
 
   const scrollRef = useRef<HTMLDivElement | null>(null);
   usePersistedScroll(scrollRefProp ?? scrollRef);
+  const determineChangesetDiff = useDetermineChangesetDiffItem();
 
   return (
     <div className={clsx(classes.root, className)} ref={scrollRef}>
@@ -86,7 +92,9 @@ export const List = <Item extends { id: string }>(props: ListProps<Item>) => {
             ))
           : data.items.map((item) => (
               <Grid {...ItemProps} {...DataItemProps} item key={item.id}>
-                {renderItem(item)}
+                <ChangesetBadge mode={determineChangesetDiff(item).mode}>
+                  {renderItem(item)}
+                </ChangesetBadge>
               </Grid>
             ))}
         {data?.canCreate && renderCreate && (

@@ -15,10 +15,11 @@ export default { title: 'Components' };
 
 export const ProjectListItemCard = () => {
   const project: ProjectListItemFragment = {
+    __typename: 'TranslationProject',
     id: '123',
     createdAt: dateTime('createdAt'),
     type: select('Type', ProjectTypeList, 'Internship'),
-    status: select('status', ProjectStatusList, 'Active'),
+    projectStatus: select('status', ProjectStatusList, 'Active'),
     sensitivity: select('sensitivity', SensitivityList, 'High'),
     modifiedAt: dateTime('modifiedAt'),
     pinned: true,

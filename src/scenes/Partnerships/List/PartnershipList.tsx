@@ -7,13 +7,13 @@ import {
 import { Add } from '@material-ui/icons';
 import React, { FC } from 'react';
 import { Helmet } from 'react-helmet-async';
-import { useParams } from 'react-router-dom';
 import { Breadcrumb } from '../../../components/Breadcrumb';
 import { useDialog } from '../../../components/Dialog';
 import { Fab } from '../../../components/Fab';
 import { List, useListQuery } from '../../../components/List';
 import { PartnershipCard } from '../../../components/PartnershipCard';
 import { ProjectBreadcrumb } from '../../../components/ProjectBreadcrumb';
+import { useProjectId } from '../../Projects/useProjectId';
 import { CreatePartnership } from '../Create';
 import { EditPartnership } from '../Edit';
 import { PartnershipFormFragment } from '../PartnershipForm';
@@ -38,10 +38,12 @@ const useStyles = makeStyles(({ spacing, breakpoints }) => ({
 export const PartnershipList: FC = () => {
   const classes = useStyles();
 
-  const { projectId = '' } = useParams();
+  const { projectId, changesetId, projectUrl } = useProjectId();
   const { root: data, ...list } = useListQuery(ProjectPartnershipsDocument, {
-    variables: { project: projectId },
+    variables: { project: projectId, changeset: changesetId },
     listAt: (res) => res.project.partnerships,
+    changesetRemovedItems: (obj): obj is PartnershipFormFragment =>
+      obj.__typename === 'Partnership',
   });
   const project = data?.project;
   const partnerships = project?.partnerships;
@@ -57,9 +59,7 @@ export const PartnershipList: FC = () => {
       />
       <Breadcrumbs>
         <ProjectBreadcrumb data={project} />
-        <Breadcrumb to={`/projects/${projectId}/partnerships`}>
-          Partnerships
-        </Breadcrumb>
+        <Breadcrumb to={`${projectUrl}/partnerships`}>Partnerships</Breadcrumb>
       </Breadcrumbs>
       <div className={classes.headerContainer}>
         <Typography variant="h2" className={classes.title}>

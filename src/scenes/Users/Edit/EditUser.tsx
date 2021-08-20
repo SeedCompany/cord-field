@@ -42,7 +42,7 @@ export const EditUser = (props: EditUserProps) => {
       {...props}
       prefix="user"
       initialValues={initialValues}
-      onSubmit={async ({ user: { email, ...user } }) => {
+      onSubmit={async ({ user }) => {
         await updateUser({
           variables: {
             input: {

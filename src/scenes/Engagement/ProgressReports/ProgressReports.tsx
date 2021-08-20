@@ -7,13 +7,16 @@ import { Error } from '../../../components/Error';
 import { PeriodicReportsList } from '../../../components/PeriodicReports';
 import { ProjectBreadcrumb } from '../../../components/ProjectBreadcrumb';
 import { Redacted } from '../../../components/Redacted';
+import { useProjectId } from '../../Projects/useProjectId';
 import { ProgressReportsDocument } from './ProgressReports.generated';
 
 export const ProgressReports = () => {
-  const { projectId = '', engagementId = '' } = useParams();
+  const { projectId, changesetId, projectUrl } = useProjectId();
+  const { engagementId = '' } = useParams();
   const { data, error } = useQuery(ProgressReportsDocument, {
     variables: {
       projectId,
+      changeset: changesetId,
       engagementId,
     },
   });
@@ -43,11 +46,7 @@ export const ProgressReports = () => {
       breadcrumbs={[
         <ProjectBreadcrumb data={data?.project} />,
         <Breadcrumb
-          to={
-            data
-              ? `/projects/${data.project.id}/engagements/${data.engagement.id}`
-              : '.'
-          }
+          to={data ? `${projectUrl}/engagements/${data.engagement.id}` : '.'}
         >
           {!data ? (
             <Skeleton width={200} />

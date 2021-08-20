@@ -1,6 +1,8 @@
 import { Tooltip } from '@material-ui/core';
 import { DateTime, DateTimeFormatOptions } from 'luxon';
 import * as React from 'react';
+import { MergeExclusive } from 'type-fest';
+import { DateRange } from '../../api';
 import { CalendarDate, Nullable } from '../../util';
 import { useDateFormatter, useDateTimeFormatter } from './useDateFormatter';
 
@@ -22,10 +24,18 @@ export const FormattedDate = ({
 export const FormattedDateRange = ({
   start,
   end,
-}: {
-  start: Nullable<CalendarDate>;
-  end: Nullable<CalendarDate>;
-}) => {
+  range,
+}: MergeExclusive<
+  {
+    start: Nullable<CalendarDate>;
+    end: Nullable<CalendarDate>;
+  },
+  { range?: DateRange }
+>) => {
+  if (range) {
+    start = range.start;
+    end = range.end;
+  }
   if (!start && !end) {
     return null;
   }
@@ -37,6 +47,11 @@ export const FormattedDateRange = ({
     </>
   );
 };
+
+FormattedDateRange.orNull = (range: Nullable<DateRange>) =>
+  !range || (!range.start && !range.end) ? null : (
+    <FormattedDateRange range={range} />
+  );
 
 export const FormattedDateTime = ({ date }: { date: Nullable<DateTime> }) => {
   const format = useDateTimeFormatter();

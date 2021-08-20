@@ -31,15 +31,13 @@ export const WithData = () => {
         },
       },
     },
-    mouStart: {
+    mouRange: {
       canRead: true,
       canEdit: true,
-      value: date('updatedAt'),
-    },
-    mouEnd: {
-      canRead: true,
-      canEdit: true,
-      value: date('updatedAt'),
+      value: {
+        start: date('start'),
+        end: date('end'),
+      },
     },
     createdAt: dateTime('createdAt'),
     types: {

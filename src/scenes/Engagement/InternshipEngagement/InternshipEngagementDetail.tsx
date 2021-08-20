@@ -2,11 +2,7 @@ import { Breadcrumbs, Grid, makeStyles, Typography } from '@material-ui/core';
 import { DateRange } from '@material-ui/icons';
 import React, { FC } from 'react';
 import { Helmet } from 'react-helmet-async';
-import {
-  displayEngagementStatus,
-  displayInternPosition,
-  securedDateRange,
-} from '../../../api';
+import { displayEngagementStatus, displayInternPosition } from '../../../api';
 import { Breadcrumb } from '../../../components/Breadcrumb';
 import { DataButton } from '../../../components/DataButton';
 import { DefinedFileCard } from '../../../components/DefinedFileCard';
@@ -14,8 +10,9 @@ import { useDialog } from '../../../components/Dialog';
 import { FieldOverviewCard } from '../../../components/FieldOverviewCard';
 import { FileActionsContextProvider } from '../../../components/files/FileActions';
 import {
-  useDateFormatter,
-  useDateTimeFormatter,
+  FormattedDate,
+  FormattedDateRange,
+  FormattedDateTime,
 } from '../../../components/Formatters';
 import { OptionsIcon, PlantIcon } from '../../../components/Icons';
 import { MethodologiesCard } from '../../../components/MethodologiesCard';
@@ -67,10 +64,6 @@ export const InternshipEngagementDetail: FC<EngagementQuery> = ({
     useDialog<Many<EditableEngagementField>>();
   const [workflowState, openWorkflow, workflowEngagement] =
     useDialog<Engagement>();
-
-  const date = securedDateRange(engagement.startDate, engagement.endDate);
-  const formatDate = useDateFormatter();
-  const formatDateTime = useDateTimeFormatter();
 
   if (engagement.__typename !== 'InternshipEngagement') {
     return null; // easiest for typescript
@@ -137,7 +130,7 @@ export const InternshipEngagementDetail: FC<EngagementQuery> = ({
 
               <Grid item>
                 <Typography variant="body2" color="textSecondary">
-                  Updated {formatDateTime(engagement.modifiedAt)}
+                  Updated <FormattedDateTime date={engagement.modifiedAt} />
                 </Typography>
               </Grid>
             </Grid>
@@ -153,11 +146,11 @@ export const InternshipEngagementDetail: FC<EngagementQuery> = ({
               <Grid item>
                 <DataButton
                   startIcon={<DateRange className={classes.infoColor} />}
-                  secured={date}
+                  secured={engagement.dateRange}
                   redacted="You do not have permission to view start/end dates"
-                  children={formatDate.range}
+                  children={FormattedDateRange.orNull}
                   empty="Start - End"
-                  onClick={() => show(['startDateOverride', 'endDateOverride'])}
+                  onClick={() => show('dateRangeOverride')}
                 />
               </Grid>
               <Grid item>
@@ -184,7 +177,9 @@ export const InternshipEngagementDetail: FC<EngagementQuery> = ({
                 <FieldOverviewCard
                   title="Growth Plan Complete Date"
                   data={{
-                    value: formatDate(engagement.completeDate.value),
+                    value: engagement.completeDate.value ? (
+                      <FormattedDate date={engagement.completeDate.value} />
+                    ) : undefined,
                   }}
                   icon={PlantIcon}
                   onClick={() => show('completeDate')}
@@ -195,9 +190,11 @@ export const InternshipEngagementDetail: FC<EngagementQuery> = ({
                 <FieldOverviewCard
                   title="Disbursement Complete Date"
                   data={{
-                    value: formatDate(
-                      engagement.disbursementCompleteDate.value
-                    ),
+                    value: engagement.disbursementCompleteDate.value ? (
+                      <FormattedDate
+                        date={engagement.disbursementCompleteDate.value}
+                      />
+                    ) : undefined,
                   }}
                   icon={OptionsIcon}
                   onClick={() => show('disbursementCompleteDate')}
@@ -213,7 +210,7 @@ export const InternshipEngagementDetail: FC<EngagementQuery> = ({
                 <FileActionsContextProvider>
                   <Grid item xs={6}>
                     <DefinedFileCard
-                      title="Growth Plan"
+                      label="Growth Plan"
                       parentId={engagement.id}
                       uploadMutationDocument={
                         UploadInternshipEngagementGrowthPlanDocument

@@ -101,8 +101,8 @@ export const EditPartnership: FC<EditPartnershipProps> = (props) => {
         mouStatus: partnership.mouStatus.value ?? 'NotAttached',
         types: partnership.types.value,
         financialReportingType: partnership.financialReportingType.value,
-        mouStartOverride: partnership.mouStartOverride.value,
-        mouEndOverride: partnership.mouEndOverride.value,
+        mouStartOverride: partnership.mouRangeOverride.value.start,
+        mouEndOverride: partnership.mouRangeOverride.value.end,
         primary: partnership.primary.value,
         financialReportPeriod: project.financialReportPeriod.value!,
       },
@@ -113,8 +113,8 @@ export const EditPartnership: FC<EditPartnershipProps> = (props) => {
       partnership.mouStatus.value,
       partnership.types.value,
       partnership.financialReportingType.value,
-      partnership.mouStartOverride.value,
-      partnership.mouEndOverride.value,
+      partnership.mouRangeOverride.value.start,
+      partnership.mouRangeOverride.value.end,
       partnership.primary.value,
       project.financialReportPeriod.value,
     ]
@@ -128,7 +128,10 @@ export const EditPartnership: FC<EditPartnershipProps> = (props) => {
       onSubmit={async ({ submitAction, partnership }) => {
         if (submitAction === 'delete') {
           await deletePartnership({
-            variables: { input: partnership.id },
+            variables: {
+              input: partnership.id,
+              changeset: props.partnership.changeset?.id,
+            },
           });
           return;
         }
@@ -144,6 +147,7 @@ export const EditPartnership: FC<EditPartnershipProps> = (props) => {
                 ...rest,
                 primary: partnership.primary || undefined,
               },
+              changeset: props.partnership.changeset?.id,
             },
           },
         });
@@ -155,6 +159,7 @@ export const EditPartnership: FC<EditPartnershipProps> = (props) => {
                   id: project.id,
                   financialReportPeriod: financialReportPeriod,
                 },
+                changeset: project.changeset?.id,
               },
             },
             update: (cache) => {
@@ -181,6 +186,7 @@ export const EditPartnership: FC<EditPartnershipProps> = (props) => {
       }
       initialValues={initialValues}
       decorators={decorators}
+      changesetAware
     />
   );
 };

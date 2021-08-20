@@ -14,6 +14,8 @@ export interface SecuredProp<T> extends Readable, Editable {
   value?: Nullable<T>;
 }
 
+export type UnsecuredProp<T> = T extends Partial<SecuredProp<infer P>> ? P : T;
+
 export const isSecured = <T>(value: unknown): value is SecuredProp<T> =>
   Boolean(value) &&
   isPlainObject(value) &&

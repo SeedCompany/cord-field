@@ -1,12 +1,12 @@
-query ProjectOverview($input: ID!) {
-  project(id: $input) {
+query ProjectOverview($input: ID!, $changeset: ID) {
+  project(id: $input, changeset: $changeset) {
     ...ProjectOverview
   }
 }
 
 fragment ProjectOverview on Project {
   __typename
-  id
+  ...Id
   departmentId {
     canRead
     canEdit
@@ -31,17 +31,10 @@ fragment ProjectOverview on Project {
       ...DisplayFieldRegion
     }
   }
-  mouStart {
-    canRead
-    canEdit
-    value
+  mouRange {
+    ...securedDateRange
   }
-  mouEnd {
-    canRead
-    canEdit
-    value
-  }
-  status
+  projectStatus: status
   estimatedSubmission {
     canRead
     canEdit
@@ -88,6 +81,9 @@ fragment ProjectOverview on Project {
   nextNarrativeReportDue {
     ...SecuredPeriodicReport
   }
+  changeRequests {
+    ...ProjectChangeRequestSummary
+  }
 }
 
 query ProjectPostListOverview($project: ID!, $input: PostListInput) {
@@ -104,9 +100,10 @@ query ProjectPostListOverview($project: ID!, $input: PostListInput) {
 query ProjectEngagementListOverview(
   $project: ID!
   $input: EngagementListInput
+  $changeset: ID
 ) {
-  project(id: $project) {
-    id
+  project(id: $project, changeset: $changeset) {
+    ...Id
     engagements(input: $input) {
       ...ProjectEngagementList
     }

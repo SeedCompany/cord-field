@@ -2,6 +2,7 @@ import { makeStyles } from '@material-ui/core';
 import { Skeleton } from '@material-ui/lab';
 import clsx from 'clsx';
 import * as React from 'react';
+import { getProjectUrl } from '../../scenes/Projects/useProjectId';
 import { Nullable } from '../../util';
 import { Breadcrumb, BreadcrumbProps } from '../Breadcrumb';
 import { Redacted } from '../Redacted';
@@ -30,7 +31,7 @@ export const ProjectBreadcrumb = ({
 
   return (
     <Breadcrumb
-      to={data ? `/projects/${data.id}` : '..'} // assume subpage until data loads
+      to={data ? getProjectUrl(data) : '..'} // assume subpage until data loads
       LinkProps={{
         underline: data?.name.canRead ? undefined : 'none',
       }}

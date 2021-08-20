@@ -1,18 +1,23 @@
 import { makeStyles, Typography } from '@material-ui/core';
 import React from 'react';
 import { Form, FormProps } from 'react-final-form';
+import { Except, Merge } from 'type-fest';
+import { CreateProduct, UpdateProduct } from '../../../api';
 import {
-  FieldGroup,
+  SubmitAction,
   SubmitButton,
   SubmitError,
 } from '../../../components/form';
-import { AccordionSection, ProductFormValues } from './AccordionSection';
 import { ProductFormFragment } from './ProductForm.generated';
+import { ProductFormFields } from './ProductFormFields';
 
-const useStyles = makeStyles(({ spacing }) => ({
+const useStyles = makeStyles(({ spacing, breakpoints }) => ({
+  form: {
+    maxWidth: breakpoints.values.md,
+  },
   submissionBlurb: {
     margin: spacing(4, 0),
-    width: spacing(50),
+    maxWidth: 400,
     '& h4': {
       marginBottom: spacing(1),
     },
@@ -21,6 +26,16 @@ const useStyles = makeStyles(({ spacing }) => ({
     marginLeft: spacing(1),
   },
 }));
+
+// eslint-disable-next-line @typescript-eslint/no-empty-interface -- Declaration merging is used to define fields in each section
+export interface ProductFormCustomValues {}
+
+export interface ProductFormValues extends SubmitAction<'delete'> {
+  product?: Merge<
+    Except<CreateProduct & UpdateProduct, 'id' | 'engagementId'>,
+    ProductFormCustomValues
+  >;
+}
 
 export type ProductFormProps = FormProps<ProductFormValues> & {
   product?: ProductFormFragment;
@@ -32,31 +47,35 @@ export const ProductForm = ({ product, ...props }: ProductFormProps) => {
   return (
     <Form<ProductFormValues> {...props}>
       {({ handleSubmit, ...rest }) => (
-        <form onSubmit={handleSubmit}>
+        <form onSubmit={handleSubmit} className={classes.form}>
           <SubmitError />
-          <FieldGroup prefix="product">
-            <AccordionSection product={product} {...rest} />
-          </FieldGroup>
+          {/* Need to give accordions their own container for styling */}
+          <div>
+            <ProductFormFields product={product} {...rest} />
+          </div>
           <div className={classes.submissionBlurb}>
             <Typography variant="h4">Check Your Selections</Typography>
             <Typography>
               If the selections above look good to you, go ahead and save your
-              Product. If you need to edit your choices, do that above.
+              Goal. If you need to edit your choices, do that above.
             </Typography>
           </div>
-          <SubmitButton fullWidth={false} color="primary" size="medium">
-            Save Product
-          </SubmitButton>
-          {product && (
-            <SubmitButton
-              action="delete"
-              fullWidth={false}
-              size="medium"
-              className={classes.deleteButton}
-            >
-              Delete Product
+
+          <div>
+            <SubmitButton fullWidth={false} color="primary" size="medium">
+              Save Goal
             </SubmitButton>
-          )}
+            {product && (
+              <SubmitButton
+                action="delete"
+                fullWidth={false}
+                size="medium"
+                className={classes.deleteButton}
+              >
+                Delete Goal
+              </SubmitButton>
+            )}
+          </div>
         </form>
       )}
     </Form>

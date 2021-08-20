@@ -82,7 +82,10 @@ const defaultHandlers: ErrorHandlers = {
   // Assume server errors are handled separately
   // Return failure but no error message
   Server: {},
-  Default: ({ message }) => message,
+  Default: ({ message }) => {
+    console.error(message);
+    return message;
+  },
 };
 
 /**

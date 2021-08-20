@@ -1,5 +1,9 @@
-query ProjectMembers($project: ID!, $input: ProjectMemberListInput) {
-  project(id: $project) {
+query ProjectMembers(
+  $project: ID!
+  $changeset: ID
+  $input: ProjectMemberListInput
+) {
+  project(id: $project, changeset: $changeset) {
     ...ProjectBreadcrumb
     team(input: $input) {
       items {

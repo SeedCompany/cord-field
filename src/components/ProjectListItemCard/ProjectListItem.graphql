@@ -1,5 +1,5 @@
 fragment ProjectListItem on Project {
-  id
+  ...Id
   createdAt
   name {
     value
@@ -12,7 +12,7 @@ fragment ProjectListItem on Project {
   step {
     value
   }
-  status
+  projectStatus: status
   primaryLocation {
     value {
       ...DisplayLocation

@@ -43,8 +43,7 @@ export type EditableEngagementField = ExtractStrict<
   | SecuredEditableKeys<LanguageEngagement>
   | SecuredEditableKeys<InternshipEngagement>,
   // Add more fields here as needed
-  | 'startDateOverride'
-  | 'endDateOverride'
+  | 'dateRangeOverride'
   | 'completeDate'
   | 'disbursementCompleteDate'
   | 'methodologies'
@@ -67,19 +66,21 @@ const fieldMapping: Record<
   EditableEngagementField,
   ComponentType<EngagementFieldProps>
 > = {
-  startDateOverride: ({ props }) => (
-    <DateField
-      {...props}
-      label="Start Date"
-      helperText="Leave blank to use project's start date"
-    />
-  ),
-  endDateOverride: ({ props }) => (
-    <DateField
-      {...props}
-      label="End Date"
-      helperText="Leave blank to use project's end date"
-    />
+  dateRangeOverride: ({ props }) => (
+    <>
+      <DateField
+        {...props}
+        name="startDateOverride"
+        label="Start Date"
+        helperText="Leave blank to use project's start date"
+      />
+      <DateField
+        {...props}
+        name="endDateOverride"
+        label="End Date"
+        helperText="Leave blank to use project's end date"
+      />
+    </>
   ),
   completeDate: ({ props, engagement }) => (
     <DateField
@@ -197,8 +198,8 @@ export const EditEngagementDialog: FC<EditEngagementDialogProps> = ({
       EngagementFormValues['engagement'],
       'id'
     > = {
-      startDateOverride: engagement.startDateOverride.value,
-      endDateOverride: engagement.endDateOverride.value,
+      startDateOverride: engagement.dateRangeOverride.value.start,
+      endDateOverride: engagement.dateRangeOverride.value.end,
       completeDate: engagement.completeDate.value,
       disbursementCompleteDate: engagement.disbursementCompleteDate.value,
       ...(engagement.__typename === 'LanguageEngagement'
@@ -207,20 +208,22 @@ export const EditEngagementDialog: FC<EditEngagementDialogProps> = ({
             firstScripture: engagement.firstScripture.value,
             paratextRegistryId: engagement.paratextRegistryId.value,
           }
-        : engagement.__typename === 'InternshipEngagement'
-        ? {
+        : {
             methodologies: engagement.methodologies.value,
             position: engagement.position.value,
             mentorId: engagement.mentor.value,
             countryOfOriginId: engagement.countryOfOrigin.value,
-          }
-        : {}),
+          }),
     };
 
     // Filter out irrelevant initial values so they don't get added to the mutation
     const filteredInitialValuesFields = pick(
       fullInitialValuesFields,
-      editFields
+      editFields.flatMap((field) =>
+        field === 'dateRangeOverride'
+          ? ['startDateOverride', 'endDateOverride']
+          : field
+      )
     );
 
     return {
@@ -256,6 +259,7 @@ export const EditEngagementDialog: FC<EditEngagementDialogProps> = ({
             ...(mentorId ? { mentorId } : {}),
             ...(countryOfOriginId ? { countryOfOriginId } : {}),
           },
+          changeset: engagement.changeset?.id,
         };
 
         await updateEngagement({

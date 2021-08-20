@@ -37,3 +37,6 @@ export const updateSessionCache = <T extends LoginMutation | RegisterMutation>(
     cache.writeQuery({ query: SessionDocument, data: updatedSession });
   }
 };
+
+export const useBetaFeatures = () =>
+  useSession().powers?.includes('BetaFeatures');

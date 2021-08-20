@@ -1,0 +1,8 @@
+mutation CreateProjectChangeRequest($input: CreateProjectChangeRequestInput!) {
+  createProjectChangeRequest(input: $input) {
+    projectChangeRequest {
+      id
+      ...ProjectChangeRequestListItem
+    }
+  }
+}

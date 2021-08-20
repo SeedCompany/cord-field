@@ -1,0 +1,16 @@
+fragment ProgressAndPlanning on LanguageEngagement {
+  ...Id
+  pnp {
+    canRead
+    canEdit
+    value {
+      ...FileNodeInfo
+    }
+  }
+  currentProgressReportDue {
+    ...SecuredPeriodicReport
+  }
+  nextProgressReportDue {
+    ...SecuredPeriodicReport
+  }
+}

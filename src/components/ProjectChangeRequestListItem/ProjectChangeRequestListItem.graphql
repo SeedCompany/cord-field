@@ -1,0 +1,21 @@
+fragment ProjectChangeRequestListItem on ProjectChangeRequest {
+  id
+  createdAt
+  canDelete
+  types {
+    value
+    canRead
+    canEdit
+  }
+  summary {
+    value
+    canRead
+    canEdit
+  }
+  status {
+    value
+    canRead
+    canEdit
+  }
+  canEdit
+}

@@ -27,6 +27,7 @@ import {
 import { SelectField } from '../../../components/form/SelectField';
 import { minLength, required } from '../../../components/form/validators';
 import { YearField } from '../../../components/form/YearField';
+import { LanguageListItemFragment } from '../../../components/LanguageListItemCard/LanguageListItem.generated';
 import { Nullable } from '../../../util';
 import { LanguageFormFragment } from './LangugeForm.generated';
 
@@ -36,7 +37,10 @@ export interface LanguageFormValues<T extends UpdateLanguage | CreateLanguage> {
   };
 }
 
-export type LanguageFormProps<T> = DialogFormProps<T> & {
+export type LanguageFormProps<T> = DialogFormProps<
+  T,
+  LanguageListItemFragment
+> & {
   /** The pre-existing language to edit */
   language?: LanguageFormFragment;
 };
@@ -59,7 +63,7 @@ export const LanguageForm = <T extends any>({
   const classes = useStyles();
 
   return (
-    <DialogForm<T>
+    <DialogForm
       DialogProps={{
         maxWidth: 'lg',
       }}

@@ -42,7 +42,7 @@ export const keys: <K extends string>(o: Record<K, unknown>) => K[] =
 /** Converts list to map given a function that returns a [key, value] tuple. */
 export const mapFromList = <T, S = T, K extends string = string>(
   list: readonly T[],
-  mapper: (item: T) => [K, S] | null
+  mapper: (item: T) => readonly [K, S] | null
 ): Record<K, S> => {
   const out: Partial<Record<K, S>> = {};
   return list.reduce((acc, item) => {
@@ -66,3 +66,18 @@ export function has<K extends string | number | symbol, T>(
 ): obj is T & Record<K, unknown> {
   return key in obj;
 }
+
+/**
+ * Array splice but it returns a new list instead of modifying the original one
+ * and returning the removed items.
+ *
+ * @see Array.splice
+ */
+export const splice = <T>(
+  list: readonly T[],
+  ...args: Parameters<T[]['splice']>
+) => {
+  const newList = list.slice();
+  newList.splice(...args);
+  return newList;
+};

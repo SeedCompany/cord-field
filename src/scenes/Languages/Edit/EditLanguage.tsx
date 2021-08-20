@@ -68,7 +68,7 @@ export const EditLanguage = (props: EditLanguageProps) => {
           ...rest
         },
       }) => {
-        await updateLanguage({
+        const result = await updateLanguage({
           variables: {
             input: {
               language: {
@@ -87,6 +87,7 @@ export const EditLanguage = (props: EditLanguageProps) => {
             },
           },
         });
+        return result.data!.updateLanguage.language;
       }}
     />
   );

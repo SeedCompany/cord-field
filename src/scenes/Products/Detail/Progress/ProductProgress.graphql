@@ -1,0 +1,26 @@
+fragment ProductProgress on ProductProgress {
+  product {
+    id
+  } # For cache id
+  report {
+    ...PeriodicReport
+  }
+  steps {
+    ...StepProgress
+  }
+}
+
+fragment StepProgress on StepProgress {
+  step
+  percentDone {
+    canRead
+    canEdit
+    value
+  }
+}
+
+mutation UpdateStepProgress($input: ProductProgressInput!) {
+  updateProductProgress(input: $input) {
+    ...ProductProgress
+  }
+}

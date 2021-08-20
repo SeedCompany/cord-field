@@ -8,19 +8,22 @@ import {
   Typography,
 } from '@material-ui/core';
 import { Skeleton } from '@material-ui/lab';
+import clsx from 'clsx';
 import React, { FC } from 'react';
 import {
   displayFinancialReportingType,
   displayPartnershipStatus,
-  securedDateRange,
 } from '../../api';
 import { DisplaySimpleProperty } from '../DisplaySimpleProperty';
-import { useDateFormatter, useDateTimeFormatter } from '../Formatters';
+import { FormattedDateRange, FormattedDateTime } from '../Formatters';
 import { Redacted } from '../Redacted';
 import { PartnershipCardFragment } from './PartnershipCard.generated';
 import { PartnershipPrimaryIcon } from './PartnershipPrimaryIcon';
 
 const useStyles = makeStyles(({ spacing }) => ({
+  root: {
+    flex: 1,
+  },
   loadingName: {
     width: '75%',
   },
@@ -46,17 +49,10 @@ export const PartnershipCard: FC<PartnershipCardProps> = ({
   className,
 }) => {
   const classes = useStyles();
-  const formatDateTime = useDateTimeFormatter();
-  const formatDate = useDateFormatter();
-  const dateRangeString =
-    partnership &&
-    formatDate.range(
-      securedDateRange(partnership.mouStart, partnership.mouEnd).value
-    );
 
   const name = partnership?.partner.value?.organization.value?.name.value;
   return (
-    <Card className={className}>
+    <Card className={clsx(classes.root, className)}>
       <CardContent>
         <Grid container direction="column" spacing={1}>
           <Grid item container direction="row" alignItems="flex-start">
@@ -120,7 +116,7 @@ export const PartnershipCard: FC<PartnershipCardProps> = ({
           <Grid item>
             <DisplaySimpleProperty
               label="MOU Date Range"
-              value={dateRangeString}
+              value={FormattedDateRange.orNull(partnership?.mouRange.value)}
               loading={!partnership}
               loadingWidth="40%"
             />
@@ -133,7 +129,7 @@ export const PartnershipCard: FC<PartnershipCardProps> = ({
         </Button>
         <DisplaySimpleProperty
           label="Created At"
-          value={formatDateTime(partnership?.createdAt)}
+          value={<FormattedDateTime date={partnership?.createdAt} />}
           ValueProps={{ color: 'textSecondary' }}
           loading={!partnership}
           loadingWidth={`${10 + 15}ch`}

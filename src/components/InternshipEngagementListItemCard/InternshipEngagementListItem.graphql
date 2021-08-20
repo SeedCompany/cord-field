@@ -1,5 +1,5 @@
 fragment InternshipEngagementListItem on InternshipEngagement {
-  id
+  ...Id
   status {
     value
     canRead
@@ -21,8 +21,10 @@ fragment InternshipEngagementListItem on InternshipEngagement {
   position {
     value
   }
-  endDate {
-    value
+  dateRange {
+    value {
+      end
+    }
   }
   initialEndDate {
     value

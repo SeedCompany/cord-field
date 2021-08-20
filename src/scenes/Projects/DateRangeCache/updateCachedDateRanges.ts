@@ -1,27 +1,22 @@
 import { ApolloCache } from '@apollo/client';
 import { DeepPartial } from 'ts-essentials';
-import {
-  invalidateProps,
-  Project as ProjectShape,
-  SecuredProp,
-} from '../../../api';
-import { CalendarDate } from '../../../util';
+import { invalidateProps, Project as ProjectShape } from '../../../api';
+import { SecuredDateRangeFragment } from '../../../api/fragments/secured.generated';
+import { updateFragment } from '../../../api/updateFragment';
 import {
   ProjectCachedEngagementDateRangesFragmentDoc,
   ProjectCachedPartnershipDateRangesFragmentDoc,
 } from './CachedProjectDateRanges.generated';
 
 type Project = Pick<ProjectShape, 'id'>;
-type SecuredDate = DeepPartial<
-  Pick<SecuredProp<CalendarDate>, 'value' | 'canRead'>
->;
+type SecuredDateRange = DeepPartial<SecuredDateRangeFragment>;
 
 export const updateEngagementDateRanges = (
   cache: ApolloCache<unknown>,
   project: Project
 ) => {
-  const cached = cache.readFragment({
-    id: cache.identify(project),
+  updateFragment(cache, {
+    object: project,
     fragment: ProjectCachedEngagementDateRangesFragmentDoc,
     // We need override fields here but the engagement list doesn't have them.
     // If the user visits/caches one of the engagements we need to update that one
@@ -30,23 +25,20 @@ export const updateEngagementDateRanges = (
     // We want to allow some engagements to be missing data, and we'll account
     // for that in our update logic.
     returnPartialData: true,
-  });
-  if (!cached) {
-    return;
-  }
-  for (const eng of (cached as DeepPartial<typeof cached>).engagements?.items ??
-    []) {
-    if (!eng) {
-      continue;
-    }
-    updateDateCalcField(cache, eng, 'startDate', cached.mouStart);
-    updateDateCalcField(cache, eng, 'endDate', cached.mouEnd);
+    updater: (cached) => {
+      for (const eng of cached.engagements?.items ?? []) {
+        if (!eng) {
+          continue;
+        }
+        updateDateCalcField(cache, eng, 'dateRange', cached.mouRange);
 
-    // Invalidate progress reports as well. These can just be re-fetched when needed.
-    if (eng.__typename === 'LanguageEngagement') {
-      invalidateProps(cache, eng, 'progressReports');
-    }
-  }
+        // Invalidate progress reports as well. These can just be re-fetched when needed.
+        if (eng.__typename === 'LanguageEngagement') {
+          invalidateProps(cache, eng, 'progressReports');
+        }
+      }
+    },
+  });
 };
 
 export const updatePartnershipsDateRanges = (
@@ -56,25 +48,25 @@ export const updatePartnershipsDateRanges = (
   const partnerships = cache.readFragment({
     id: cache.identify(project),
     fragment: ProjectCachedPartnershipDateRangesFragmentDoc,
+    fragmentName: 'ProjectCachedPartnershipDateRanges',
   });
   if (!partnerships) {
     return;
   }
   for (const p of partnerships.partnerships.items) {
-    updateDateCalcField(cache, p, 'mouStart', partnerships.mouStart);
-    updateDateCalcField(cache, p, 'mouEnd', partnerships.mouEnd);
+    updateDateCalcField(cache, p, 'mouRange', partnerships.mouRange);
   }
 };
 
 const updateDateCalcField = <Key extends string>(
   cache: ApolloCache<unknown>,
-  obj: Partial<Record<Key | `${Key}Override`, SecuredDate>>,
+  obj: Partial<Record<Key | `${Key}Override`, SecuredDateRange>>,
   key: Key,
-  fromProject: SecuredDate
+  fromProject: SecuredDateRange | undefined
 ) => {
   const calc = obj[key];
   const override = obj[`${key}Override` as const];
-  if (!fromProject.canRead || !calc?.canRead || !override?.canRead) {
+  if (!fromProject?.canRead || !calc?.canRead || !override?.canRead) {
     console.log('Not enough info to determine which fields need to be updated');
     return;
   }
@@ -86,7 +78,11 @@ const updateDateCalcField = <Key extends string>(
     fields: {
       [key]: () => ({
         ...obj[key],
-        value: fromProject.value,
+        value: {
+          ...fromProject.value,
+          start: override.value?.start ?? fromProject.value?.start,
+          end: override.value?.end ?? fromProject.value?.end,
+        },
       }),
     },
   });

@@ -11,6 +11,11 @@ fragment PeriodicReport on PeriodicReport {
       ...FileNodeInfo
     }
   }
+  receivedDate {
+    canRead
+    canEdit
+    value
+  }
 }
 
 fragment SecuredPeriodicReport on SecuredPeriodicReport {

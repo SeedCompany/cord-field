@@ -59,6 +59,7 @@ export const ProjectWorkflowDialog = ({
       {...props}
       submitLabel={canBypassTransitions ? undefined : false}
       sendIfClean
+      changesetAware
       onSubmit={async ({ submitAction, project: submittedProjectFields }) => {
         const step = submittedProjectFields?.step;
         // If clicking save for step override, but there is no step, do nothing.
@@ -75,6 +76,7 @@ export const ProjectWorkflowDialog = ({
                 step:
                   (submitAction?.split(':')[0] as ProjectStep | null) ?? step,
               },
+              changeset: project.changeset?.id,
             },
           },
         });

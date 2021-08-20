@@ -12,7 +12,7 @@ import {
   uniqBy,
   ValueIteratee,
 } from 'lodash';
-import { isListNotEmpty, Nullable } from '../../../util';
+import { isListNotEmpty, Nullable, splice } from '../../../util';
 import {
   InputArg,
   PaginatedListInput,
@@ -49,7 +49,7 @@ export type PaginatedListArgs = InputArg<PaginatedListInput>;
  */
 export const pageLimitPagination = <
   T,
-  List extends Partial<PaginatedListOutput<T>>
+  List extends Partial<PaginatedListOutput<T>> | undefined
 >(
   defaultSort?: SortableListInput
 ): FieldPolicy<List> => ({
@@ -64,6 +64,10 @@ export const pageLimitPagination = <
     return objectToKeyArgs({ input: rest });
   },
   merge(existing, incoming, options: FieldFunctionOptions<PaginatedListArgs>) {
+    if (!incoming) {
+      return existing!;
+    }
+
     const items = mergeList(
       // @ts-expect-error we've mistakenly typed lists as their type,
       // but in actuality they are a reference object (which points to their type).
@@ -187,14 +191,6 @@ const spliceDescLists = <T>(
   incoming: readonly T[],
   iteratee: ValueIteratee<T>
 ) => reverse(spliceAscLists(reverse(existing), reverse(incoming), iteratee));
-
-// Array splice but it returns a new list instead of modifying the original one
-// and returning the removed items
-const splice = <T>(list: readonly T[], ...args: Parameters<T[]['splice']>) => {
-  const newList = list.slice();
-  newList.splice(...args);
-  return newList;
-};
 
 // Same as uniqBy but it keeps the last item found, instead of the first.
 const uniqLastBy = <T>(
