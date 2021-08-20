@@ -1,4 +1,4 @@
-import { InputAdornment, makeStyles } from '@material-ui/core';
+import { InputAdornment, makeStyles, Tooltip } from '@material-ui/core';
 import { Search } from '@material-ui/icons';
 import { FC } from 'react';
 import * as React from 'react';
@@ -37,22 +37,25 @@ export const HeaderSearch: FC = () => {
       }}
     >
       {({ handleSubmit }) => (
-        <form onSubmit={handleSubmit} className={classes.root}>
-          <TextField
-            name="search"
-            variant="outlined"
-            placeholder="Projects, Languages, Locations, People, Partners"
-            size="small"
-            InputProps={{
-              className: classes.input,
-              startAdornment: (
-                <InputAdornment position="start" disablePointerEvents>
-                  <Search />
-                </InputAdornment>
-              ),
-            }}
-          />
-        </form>
+        <Tooltip title="Temporarily disabled while performance problems are investigated">
+          <form onSubmit={handleSubmit} className={classes.root}>
+            <TextField
+              name="search"
+              variant="outlined"
+              placeholder="Projects, Languages, Locations, People, Partners"
+              size="small"
+              disabled
+              InputProps={{
+                className: classes.input,
+                startAdornment: (
+                  <InputAdornment position="start" disablePointerEvents>
+                    <Search />
+                  </InputAdornment>
+                ),
+              }}
+            />
+          </form>
+        </Tooltip>
       )}
     </Form>
   );
