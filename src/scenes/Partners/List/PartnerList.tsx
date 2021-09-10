@@ -2,14 +2,13 @@ import { Grid, makeStyles, Typography } from '@material-ui/core';
 import { Skeleton } from '@material-ui/lab';
 import React, { FC } from 'react';
 import { Helmet } from 'react-helmet-async';
-import { Partner } from '../../../api';
 import { useNumberFormatter } from '../../../components/Formatters';
 import { ContentContainer } from '../../../components/Layout';
 import { List, useListQuery } from '../../../components/List';
 import { PartnerListItemCard as PartnerCard } from '../../../components/PartnerListItemCard';
 import { SortButtonDialog, useSort } from '../../../components/Sort';
 import { PartnersDocument } from './PartnerList.generated';
-import { PartnerSortOptions } from './PartnerSortOptions';
+import { PartnerSort, PartnerSortOptions } from './PartnerSortOptions';
 
 const useStyles = makeStyles(({ spacing, breakpoints }) => ({
   options: {
@@ -21,7 +20,7 @@ const useStyles = makeStyles(({ spacing, breakpoints }) => ({
 }));
 
 export const PartnerList: FC = () => {
-  const sort = useSort<Partner>();
+  const sort = useSort<PartnerSort>('name');
   const list = useListQuery(PartnersDocument, {
     listAt: (data) => data.partners,
     variables: {
