@@ -5,15 +5,14 @@ import {
   BooleanParam,
   EnumListParam,
   makeQueryHandler,
-  withDefault,
   withKey,
 } from '../../../hooks';
 
 export const useLanguageFilters = makeQueryHandler({
   sensitivity: EnumListParam(SensitivityList),
-  leastOfThese: withKey(withDefault(BooleanParam(), false), 'lot'),
-  isSignLanguage: withKey(withDefault(BooleanParam(), false), 'sign-language'),
-  isDialect: withKey(withDefault(BooleanParam(), false), 'dialect'),
+  leastOfThese: withKey(BooleanParam(), 'lot'),
+  isSignLanguage: withKey(BooleanParam(), 'sign-language'),
+  isDialect: withKey(BooleanParam(), 'dialect'),
 });
 
 export const LanguageFilterOptions = () => {
@@ -30,9 +29,14 @@ export const LanguageFilterOptions = () => {
       <SwitchField
         name="leastOfThese"
         label="Only Show Least Of These Partnerships"
+        offIsNull
       />
-      <SwitchField name="isSignLanguage" label="Only Show Sign Languages" />
-      <SwitchField name="isDialect" label="Only Show Dialects" />
+      <SwitchField
+        name="isSignLanguage"
+        label="Only Show Sign Languages"
+        offIsNull
+      />
+      <SwitchField name="isDialect" label="Only Show Dialects" offIsNull />
     </>
   );
 };
