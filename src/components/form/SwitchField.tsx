@@ -16,20 +16,24 @@ export type SwitchFieldProps = FieldConfig<boolean> & {
   helperText?: ReactNode;
 } & Omit<SwitchProps, 'defaultValue' | 'value' | 'inputRef'> &
   Pick<FormControlLabelProps, 'label' | 'labelPlacement'> &
-  Pick<FormControlProps, 'fullWidth' | 'margin' | 'variant'>;
+  Pick<FormControlProps, 'fullWidth' | 'margin' | 'variant'> & {
+    /** Treat the "off" UI state as null instead of false */
+    offIsNull?: boolean;
+  };
 
 export const SwitchField: FC<SwitchFieldProps> = ({
   label,
   labelPlacement,
   helperText,
-  defaultValue = false,
+  offIsNull,
   fullWidth,
   margin,
   variant,
   ...props
 }) => {
   const { input, meta, ref, rest } = useField({
-    defaultValue,
+    defaultValue: offIsNull ? null : false,
+    allowNull: offIsNull,
     ...props,
     type: 'checkbox',
   });
@@ -51,9 +55,13 @@ export const SwitchField: FC<SwitchFieldProps> = ({
           <Switch
             {...rest}
             inputRef={ref}
-            checked={input.checked}
+            checked={input.checked ?? (offIsNull ? false : undefined)}
             value={input.name}
-            onChange={(e) => input.onChange(e.target.checked)}
+            onChange={(e) => {
+              const checked = e.target.checked;
+              const newVal = checked || (offIsNull ? null : false);
+              input.onChange(newVal);
+            }}
             required={props.required}
           />
         }
