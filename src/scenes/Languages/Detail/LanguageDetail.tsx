@@ -1,11 +1,5 @@
 import { useMutation, useQuery } from '@apollo/client';
-import {
-  Grid,
-  IconButton,
-  makeStyles,
-  Tooltip,
-  Typography,
-} from '@material-ui/core';
+import { Grid, makeStyles, Tooltip, Typography } from '@material-ui/core';
 import { Add, Edit } from '@material-ui/icons';
 import { Skeleton } from '@material-ui/lab';
 import clsx from 'clsx';
@@ -25,10 +19,7 @@ import {
   useDateFormatter,
   useNumberFormatter,
 } from '../../../components/Formatters';
-import {
-  PresetInventoryIconFilled,
-  PresetInventoryIconOutlined,
-} from '../../../components/Icons';
+import { PresetInventoryIconFilled } from '../../../components/Icons';
 import { LocationCard } from '../../../components/LocationCard';
 import { ProjectListItemCard } from '../../../components/ProjectListItemCard';
 import { ProjectListItemFragment } from '../../../components/ProjectListItemCard/ProjectListItem.generated';
@@ -44,7 +35,7 @@ import {
 } from './LanguageDetail.generated';
 import { LeastOfThese } from './LeastOfThese';
 
-const useStyles = makeStyles(({ spacing }) => ({
+const useStyles = makeStyles(({ spacing, palette }) => ({
   root: {
     overflowY: 'auto',
     padding: spacing(4),
@@ -72,7 +63,10 @@ const useStyles = makeStyles(({ spacing }) => ({
     visibility: 'hidden',
   },
   presetInventoryIcon: {
-    marginLeft: spacing(1),
+    display: 'flex',
+    alignItems: 'center',
+    marginLeft: spacing(2),
+    color: palette.grey[600],
   },
 }));
 
@@ -152,17 +146,13 @@ export const LanguageDetail = () => {
             ) : null}
             {!language ? (
               <Skeleton width="100%" />
-            ) : (
+            ) : language.presetInventory.value ? (
               <Tooltip title="This indicates the project/language(s) will be exposed to major investors to directly fund.">
-                <IconButton className={classes.presetInventoryIcon}>
-                  {language.presetInventory.value ? (
-                    <PresetInventoryIconFilled />
-                  ) : (
-                    <PresetInventoryIconOutlined />
-                  )}
-                </IconButton>
+                <div className={classes.presetInventoryIcon}>
+                  <PresetInventoryIconFilled />
+                </div>
               </Tooltip>
-            )}
+            ) : null}
           </div>
           <Grid item></Grid>
           <Grid container spacing={2} alignItems="center">
