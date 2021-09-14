@@ -1,13 +1,20 @@
+import { isEmpty } from 'lodash';
 import { Order } from '../../api';
 import { makeQueryHandler, StringParam, withTransform } from '../../hooks';
 import { Nullable } from '../../util';
 import { SortValue } from './SortControl';
 
-export const useSort = <T>() => {
+export const useSort = <T>(
+  defaultSort?: keyof T,
+  defaultOrder: Order = 'ASC'
+) => {
   const [value, onChange] = useSortHandler();
   // Adapt output to have generic for sort value
   return {
-    value: value.sort,
+    value:
+      defaultSort && isEmpty(value.sort)
+        ? { sort: defaultSort, order: defaultOrder }
+        : value.sort,
     onChange: (next: Partial<SortValue<T>>) => {
       onChange({
         sort: next as SortValue<Record<string, any>>,
