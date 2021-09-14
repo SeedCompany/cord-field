@@ -1,5 +1,11 @@
 import { useMutation, useQuery } from '@apollo/client';
-import { Grid, makeStyles, Tooltip, Typography } from '@material-ui/core';
+import {
+  Grid,
+  IconButton,
+  makeStyles,
+  Tooltip,
+  Typography,
+} from '@material-ui/core';
 import { Add, Edit } from '@material-ui/icons';
 import { Skeleton } from '@material-ui/lab';
 import clsx from 'clsx';
@@ -19,6 +25,10 @@ import {
   useDateFormatter,
   useNumberFormatter,
 } from '../../../components/Formatters';
+import {
+  PresetInventoryIconFilled,
+  PresetInventoryIconOutlined,
+} from '../../../components/Icons';
 import { LocationCard } from '../../../components/LocationCard';
 import { ProjectListItemCard } from '../../../components/ProjectListItemCard';
 import { ProjectListItemFragment } from '../../../components/ProjectListItemCard/ProjectListItem.generated';
@@ -60,6 +70,9 @@ const useStyles = makeStyles(({ spacing }) => ({
   },
   hidden: {
     visibility: 'hidden',
+  },
+  presetInventoryIcon: {
+    marginLeft: spacing(1),
   },
 }));
 
@@ -137,7 +150,21 @@ export const LanguageDetail = () => {
                 </Fab>
               </Tooltip>
             ) : null}
+            {!language ? (
+              <Skeleton width="100%" />
+            ) : (
+              <Tooltip title="This indicates the project/language(s) will be exposed to major investors to directly fund.">
+                <IconButton className={classes.presetInventoryIcon}>
+                  {language.presetInventory.value ? (
+                    <PresetInventoryIconFilled />
+                  ) : (
+                    <PresetInventoryIconOutlined />
+                  )}
+                </IconButton>
+              </Tooltip>
+            )}
           </div>
+          <Grid item></Grid>
           <Grid container spacing={2} alignItems="center">
             <Grid item>
               <Sensitivity value={sensitivity} loading={!language} />

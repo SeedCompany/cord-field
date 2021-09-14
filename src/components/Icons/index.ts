@@ -9,3 +9,5 @@ export * from './ReportIcon';
 export * from './ScriptIcon';
 export * from './PushPinIconFilled';
 export * from './PushPinIconOutlined';
+export * from './PresetInventoryIconFilled';
+export * from './PresetInventoryIconOutlined';

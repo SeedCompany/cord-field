@@ -21,6 +21,7 @@ export const useProjectFilters = makeQueryHandler({
   sensitivity: EnumListParam(SensitivityList),
   type: EnumParam(ProjectTypeList),
   onlyMultipleEngagements: withKey(BooleanParam(), 'multi'),
+  presetInventory: withKey(BooleanParam(), 'presetInventory'),
   tab: withDefault(EnumParam(['mine', 'all', 'pinned']), 'mine'),
 });
 
@@ -56,6 +57,15 @@ export const ProjectFilterOptions = () => {
         label={
           <Tooltip title="Clusters/Cohorts are projects with multiple engagements">
             <span>Only Show Cluster/Cohort Projects</span>
+          </Tooltip>
+        }
+        offIsNull
+      />
+      <SwitchField
+        name="presetInventory"
+        label={
+          <Tooltip title="Only projects that are (not) in the Preset Inventory">
+            <span>Only Show Preset Inventory Projects</span>
           </Tooltip>
         }
         offIsNull

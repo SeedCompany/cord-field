@@ -49,6 +49,9 @@ fragment LanguageDetail on Language {
     canEdit
     value
   }
+  presetInventory {
+    value
+  }
   locations {
     canRead
     canCreate

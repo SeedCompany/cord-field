@@ -1,4 +1,4 @@
-import { useQuery } from '@apollo/client';
+import { useMutation, useQuery } from '@apollo/client';
 import { Grid, makeStyles, Tooltip, Typography } from '@material-ui/core';
 import { Add, DateRange, Edit, Publish } from '@material-ui/icons';
 import { Skeleton } from '@material-ui/lab';
@@ -23,6 +23,10 @@ import {
   useNumberFormatter,
 } from '../../../components/Formatters';
 import { IconButton } from '../../../components/IconButton';
+import {
+  PresetInventoryIconFilled,
+  PresetInventoryIconOutlined,
+} from '../../../components/Icons';
 import { InternshipEngagementListItemCard } from '../../../components/InternshipEngagementListItemCard';
 import { InternshipEngagementListItemFragment } from '../../../components/InternshipEngagementListItemCard/InternshipEngagementListItem.generated';
 import { LanguageEngagementListItemCard } from '../../../components/LanguageEngagementListItemCard';
@@ -43,6 +47,7 @@ import { useProjectCurrentDirectory, useUploadProjectFiles } from '../Files';
 import { ProjectListQueryVariables } from '../List/projects.generated';
 import { EditableProjectField, UpdateProjectDialog } from '../Update';
 import { ProjectWorkflowDialog } from '../Update/ProjectWorkflowDialog';
+import { UpdateProjectDocument } from '../Update/UpdateProject.generated';
 import { useProjectId } from '../useProjectId';
 import {
   ProjectEngagementListOverviewDocument as EngagementList,
@@ -91,6 +96,9 @@ const useStyles = makeStyles(({ spacing, breakpoints, palette }) => ({
     },
   },
   pushPinIcon: {
+    marginLeft: spacing(1),
+  },
+  presetInventoryIcon: {
     marginLeft: spacing(1),
   },
   engagementList: {
@@ -156,6 +164,8 @@ export const ProjectOverview: FC = () => {
       changeset: changesetId,
     },
   });
+
+  const [updateProject] = useMutation(UpdateProjectDocument);
 
   const projectName = projectOverviewData?.project.name;
   const isTranslation = projectOverviewData
@@ -273,6 +283,40 @@ export const ProjectOverview: FC = () => {
               }
               className={classes.pushPinIcon}
             />
+            {(!projectOverviewData ||
+              projectOverviewData.project.presetInventory.canEdit) && (
+              <Tooltip title="This indicates the project/language(s) will be exposed to major investors to directly fund.">
+                <IconButton
+                  aria-label="edit project presetInventory"
+                  className={classes.presetInventoryIcon}
+                  onClick={async () => {
+                    if (!projectOverviewData) {
+                      return;
+                    }
+                    await updateProject({
+                      variables: {
+                        input: {
+                          project: {
+                            id: projectOverviewData.project.id,
+                            presetInventory:
+                              !projectOverviewData.project.presetInventory
+                                .value,
+                          },
+                          changeset: projectOverviewData.project.changeset?.id,
+                        },
+                      },
+                    });
+                  }}
+                  loading={!projectOverviewData}
+                >
+                  {projectOverviewData?.project.presetInventory.value ? (
+                    <PresetInventoryIconFilled />
+                  ) : (
+                    <PresetInventoryIconOutlined />
+                  )}
+                </IconButton>
+              </Tooltip>
+            )}
           </header>
 
           <div className={classes.subheader}>
