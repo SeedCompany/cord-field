@@ -20,7 +20,7 @@ export const useProjectFilters = makeQueryHandler({
   status: EnumListParam(ProjectStatusList, { InDevelopment: 'dev' }),
   sensitivity: EnumListParam(SensitivityList),
   type: EnumParam(ProjectTypeList),
-  onlyMultipleEngagements: withKey(withDefault(BooleanParam(), false), 'multi'),
+  onlyMultipleEngagements: withKey(BooleanParam(), 'multi'),
   tab: withDefault(EnumParam(['mine', 'all', 'pinned']), 'mine'),
 });
 
@@ -58,6 +58,7 @@ export const ProjectFilterOptions = () => {
             <span>Only Show Cluster/Cohort Projects</span>
           </Tooltip>
         }
+        offIsNull
       />
     </>
   );
