@@ -1,11 +1,12 @@
 import { useMutation } from '@apollo/client';
-import { Tooltip } from '@material-ui/core';
+import { Typography } from '@material-ui/core';
 import React, { FC } from 'react';
 import { IconButton } from '../../../components/IconButton';
 import {
   PresetInventoryIconFilled,
   PresetInventoryIconOutlined,
 } from '../../../components/Icons';
+import { PaperTooltip } from '../../../components/PaperTooltip';
 import { UpdateProjectDocument } from '../Update/UpdateProject.generated';
 import { ProjectOverviewFragment } from './ProjectOverview.generated';
 
@@ -21,9 +22,26 @@ export const PresetInventoryButton: FC<PresetInventoryButtonProps> = ({
   const [updateProject] = useMutation(UpdateProjectDocument);
   const presetInventory = project?.presetInventory.value;
   return (
-    <Tooltip title="This indicates the project/language(s) will be exposed to major investors to directly fund.">
+    <PaperTooltip
+      title={
+        <Typography variant="body2">
+          This project and its associated languages (via engagements) are{' '}
+          {presetInventory ? '' : <em>NOT</em>} apart of our{' '}
+          <em>Preset&nbsp;Inventory</em> {presetInventory ? '✅' : '❌'}
+          <br />
+          <br />
+          This indicates the project/language(s) will be exposed to major
+          investors to directly fund.
+          <br />
+          It also means the project is committed to having quality, consistent
+          reporting.
+        </Typography>
+      }
+    >
       <IconButton
-        aria-label="edit project presetInventory"
+        aria-label={`${
+          presetInventory ? 'Remove' : 'Add'
+        } project to Preset Inventory`}
         className={className}
         onClick={async () => {
           if (!project || !project.presetInventory.canEdit) {
@@ -49,6 +67,6 @@ export const PresetInventoryButton: FC<PresetInventoryButtonProps> = ({
           <PresetInventoryIconOutlined />
         )}
       </IconButton>
-    </Tooltip>
+    </PaperTooltip>
   );
 };
