@@ -88,7 +88,9 @@ export const TogglePinButton = ({
     return (
       <Tooltip
         {...TooltipProps}
-        title={(object.pinned ? 'Unpin ' : 'Pin ') + label}
+        title={
+          (object.pinned ? 'Unpin ' : 'Pin ') + label + ' (only affects you)'
+        }
       >
         {button}
       </Tooltip>
