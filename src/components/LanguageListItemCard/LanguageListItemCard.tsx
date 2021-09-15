@@ -1,10 +1,17 @@
-import { Card, CardContent, makeStyles, Typography } from '@material-ui/core';
+import {
+  Card,
+  CardContent,
+  Grid,
+  makeStyles,
+  Typography,
+} from '@material-ui/core';
 import { Skeleton } from '@material-ui/lab';
 import clsx from 'clsx';
 import { FC } from 'react';
 import * as React from 'react';
 import { DisplaySimpleProperty } from '../DisplaySimpleProperty';
 import { useNumberFormatter } from '../Formatters';
+import { PresetInventoryIconFilled } from '../Icons';
 import { CardActionAreaLink } from '../Routing';
 import { Sensitivity } from '../Sensitivity';
 import { LanguageListItemFragment } from './LanguageListItem.generated';
@@ -59,13 +66,26 @@ export const LanguageListItemCard: FC<LanguageListItemCardProps> = ({
         to={`/languages/${language?.id}`}
       >
         <CardContent>
-          <Typography variant="h4" className={classes.name}>
-            {!language ? (
-              <Skeleton width="50%" variant="text" />
-            ) : (
-              language.name.value ?? language.displayName.value
+          <Grid container spacing={1}>
+            <Grid item>
+              <Typography variant="h4" className={classes.name}>
+                {!language ? (
+                  <Skeleton width="50%" variant="text" />
+                ) : (
+                  language.name.value ?? language.displayName.value
+                )}
+              </Typography>
+            </Grid>
+
+            {language?.presetInventory.value && (
+              <Grid item>
+                <PresetInventoryIconFilled
+                  color="action"
+                  aria-label="preset inventory"
+                />
+              </Grid>
             )}
-          </Typography>
+          </Grid>
           <div className={classes.bottomSection}>
             <div className={classes.leftContent}>
               <DisplaySimpleProperty
