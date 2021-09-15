@@ -1,6 +1,10 @@
 import { useMutation } from '@apollo/client';
 import { Typography } from '@material-ui/core';
 import React, { FC } from 'react';
+import {
+  readFragment,
+  RecalculateChangesetDiffFragmentDoc as RecalculateChangesetDiff,
+} from '../../../api';
 import { IconButton } from '../../../components/IconButton';
 import {
   PresetInventoryIconFilled,
@@ -19,7 +23,7 @@ export const PresetInventoryButton: FC<PresetInventoryButtonProps> = ({
   project,
   className,
 }) => {
-  const [updateProject] = useMutation(UpdateProjectDocument);
+  const [updateProject, { client }] = useMutation(UpdateProjectDocument);
   const presetInventory = project?.presetInventory.value;
   return (
     <PaperTooltip
@@ -47,6 +51,21 @@ export const PresetInventoryButton: FC<PresetInventoryButtonProps> = ({
           if (!project || !project.presetInventory.canEdit) {
             return;
           }
+
+          // If we have a changeset, fetch (from cache) the additional
+          // data required to provide an optimistic response.
+          // We need this because in our update operation we ask for the
+          // API to send back the updated diff. Because of this Apollo
+          // wants the updated diff, so we'll tell it that optimistically
+          // it is unchanged. The actual API result still overrides this
+          // when we get it.
+          const cachedChangeset = project.changeset
+            ? readFragment(client.cache, {
+                fragment: RecalculateChangesetDiff,
+                object: project,
+              })?.changeset
+            : null;
+
           await updateProject({
             variables: {
               input: {
@@ -57,6 +76,24 @@ export const PresetInventoryButton: FC<PresetInventoryButtonProps> = ({
                 changeset: project.changeset?.id,
               },
             },
+            optimisticResponse:
+              project.changeset && !cachedChangeset
+                ? // If we are in a changeset, but we cannot get the required
+                  // data from cache, then skip the optimistic response.
+                  undefined
+                : {
+                    updateProject: {
+                      __typename: 'UpdateProjectOutput',
+                      project: {
+                        ...project,
+                        changeset: cachedChangeset,
+                        presetInventory: {
+                          ...project.presetInventory,
+                          value: !presetInventory,
+                        },
+                      },
+                    },
+                  },
           });
         }}
         loading={!project}
