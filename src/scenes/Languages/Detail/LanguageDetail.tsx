@@ -65,8 +65,7 @@ const useStyles = makeStyles(({ spacing, palette }) => ({
   presetInventoryIcon: {
     display: 'flex',
     alignItems: 'center',
-    marginLeft: spacing(2),
-    color: palette.grey[600],
+    color: palette.info.main,
   },
 }));
 
@@ -144,17 +143,7 @@ export const LanguageDetail = () => {
                 </Fab>
               </Tooltip>
             ) : null}
-            {!language ? (
-              <Skeleton width="100%" />
-            ) : language.presetInventory.value ? (
-              <Tooltip title="This indicates the project/language(s) will be exposed to major investors to directly fund.">
-                <div className={classes.presetInventoryIcon}>
-                  <PresetInventoryIconFilled />
-                </div>
-              </Tooltip>
-            ) : null}
           </div>
-          <Grid item></Grid>
           <Grid container spacing={2} alignItems="center">
             <Grid item>
               <Sensitivity value={sensitivity} loading={!language} />
@@ -172,6 +161,16 @@ export const LanguageDetail = () => {
               data={isSignLanguage}
               wrap={(node) => <Grid item>{node}</Grid>}
             />
+            {language?.presetInventory.value && (
+              <Grid item>
+                <Tooltip title="Preset Inventory: Exposed to major investors to directly fund.">
+                  <PresetInventoryIconFilled
+                    fontSize="large"
+                    className={classes.presetInventoryIcon}
+                  />
+                </Tooltip>
+              </Grid>
+            )}
           </Grid>
           <DisplayProperty
             label="Pronunciation Guide"
