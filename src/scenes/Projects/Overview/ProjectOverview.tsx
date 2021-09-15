@@ -71,6 +71,9 @@ const useStyles = makeStyles(({ spacing, breakpoints, palette }) => ({
   header: {
     flex: 1,
     display: 'flex',
+    '& > *': {
+      marginLeft: spacing(1),
+    },
   },
   headerLoading: {
     alignItems: 'center',
@@ -90,12 +93,6 @@ const useStyles = makeStyles(({ spacing, breakpoints, palette }) => ({
     '& > *': {
       marginRight: spacing(2),
     },
-  },
-  pushPinIcon: {
-    marginLeft: spacing(1),
-  },
-  presetInventoryIcon: {
-    marginLeft: spacing(1),
   },
   engagementList: {
     // fix spacing above applied with > *
@@ -256,6 +253,7 @@ export const ProjectOverview: FC = () => {
                 />
               )}
             </Typography>
+            <PresetInventoryButton project={projectOverviewData?.project} />
             {(!projectOverviewData ||
               projectOverviewData.project.name.canEdit) && (
               <Tooltip title="Edit Project Name">
@@ -275,11 +273,6 @@ export const ProjectOverview: FC = () => {
               listFilter={(args: ProjectListQueryVariables) =>
                 args.input.filter?.pinned ?? false
               }
-              className={classes.pushPinIcon}
-            />
-            <PresetInventoryButton
-              project={projectOverviewData?.project}
-              className={classes.presetInventoryIcon}
             />
           </header>
 
