@@ -44,7 +44,7 @@ import { ProjectListQueryVariables } from '../List/projects.generated';
 import { EditableProjectField, UpdateProjectDialog } from '../Update';
 import { ProjectWorkflowDialog } from '../Update/ProjectWorkflowDialog';
 import { useProjectId } from '../useProjectId';
-import { PresetInventoryButton } from './PresestInventoryButton';
+import { PresetInventoryButton } from './PresetInventory';
 import {
   ProjectEngagementListOverviewDocument as EngagementList,
   ProjectOverviewDocument,
