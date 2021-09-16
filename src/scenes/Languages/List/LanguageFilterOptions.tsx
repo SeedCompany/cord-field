@@ -40,7 +40,7 @@ export const LanguageFilterOptions = () => {
       <SwitchField name="isDialect" label="Only Show Dialects" offIsNull />
       <SwitchField
         name="presetInventory"
-        label="Only Show Present Inventory Languages"
+        label="Only Preset Inventory"
         offIsNull
       />
     </>

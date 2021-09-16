@@ -63,11 +63,7 @@ export const ProjectFilterOptions = () => {
       />
       <SwitchField
         name="presetInventory"
-        label={
-          <Tooltip title="Only projects that are (not) in the Preset Inventory">
-            <span>Only Show Preset Inventory Projects</span>
-          </Tooltip>
-        }
+        label="Only Preset Inventory"
         offIsNull
       />
     </>
