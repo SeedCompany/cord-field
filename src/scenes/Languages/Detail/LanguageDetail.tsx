@@ -19,6 +19,7 @@ import {
   useDateFormatter,
   useNumberFormatter,
 } from '../../../components/Formatters';
+import { PresetInventoryIconFilled } from '../../../components/Icons';
 import { LocationCard } from '../../../components/LocationCard';
 import { ProjectListItemCard } from '../../../components/ProjectListItemCard';
 import { ProjectListItemFragment } from '../../../components/ProjectListItemCard/ProjectListItem.generated';
@@ -34,7 +35,7 @@ import {
 } from './LanguageDetail.generated';
 import { LeastOfThese } from './LeastOfThese';
 
-const useStyles = makeStyles(({ spacing }) => ({
+const useStyles = makeStyles(({ spacing, palette }) => ({
   root: {
     overflowY: 'auto',
     padding: spacing(4),
@@ -60,6 +61,11 @@ const useStyles = makeStyles(({ spacing }) => ({
   },
   hidden: {
     visibility: 'hidden',
+  },
+  presetInventoryIcon: {
+    display: 'flex',
+    alignItems: 'center',
+    color: palette.info.main,
   },
 }));
 
@@ -155,6 +161,16 @@ export const LanguageDetail = () => {
               data={isSignLanguage}
               wrap={(node) => <Grid item>{node}</Grid>}
             />
+            {language?.presetInventory.value && (
+              <Grid item>
+                <Tooltip title="Preset Inventory: Exposed to major investors to directly fund.">
+                  <PresetInventoryIconFilled
+                    fontSize="large"
+                    className={classes.presetInventoryIcon}
+                  />
+                </Tooltip>
+              </Grid>
+            )}
           </Grid>
           <DisplayProperty
             label="Pronunciation Guide"

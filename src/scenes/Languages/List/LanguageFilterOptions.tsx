@@ -13,6 +13,7 @@ export const useLanguageFilters = makeQueryHandler({
   leastOfThese: withKey(BooleanParam(), 'lot'),
   isSignLanguage: withKey(BooleanParam(), 'sign-language'),
   isDialect: withKey(BooleanParam(), 'dialect'),
+  presetInventory: withKey(BooleanParam(), 'presetInventory'),
 });
 
 export const LanguageFilterOptions = () => {
@@ -37,6 +38,11 @@ export const LanguageFilterOptions = () => {
         offIsNull
       />
       <SwitchField name="isDialect" label="Only Show Dialects" offIsNull />
+      <SwitchField
+        name="presetInventory"
+        label="Only Preset Inventory"
+        offIsNull
+      />
     </>
   );
 };

@@ -1,4 +1,4 @@
-import { number, select, text } from '@storybook/addon-knobs';
+import { boolean, number, select, text } from '@storybook/addon-knobs';
 import React from 'react';
 import { LanguageListItemFragment } from './LanguageListItem.generated';
 import { LanguageListItemCard } from './LanguageListItemCard';
@@ -24,6 +24,9 @@ export const WithData = () => {
       value: number('Population', 10000),
     },
     sensitivity: select('Sensitivity', ['High', 'Medium', 'Low'], 'High'),
+    presetInventory: {
+      value: boolean('Preset Inventory', true),
+    },
   };
 
   return <LanguageListItemCard language={language} />;

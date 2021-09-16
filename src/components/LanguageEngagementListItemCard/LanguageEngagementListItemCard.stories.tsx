@@ -31,6 +31,10 @@ export const LanguageEngagementListItemCard = () => (
         avatarLetters: 'E',
         displayName: {},
         sensitivity: 'High',
+        presetInventory: {
+          canRead: true,
+          value: true,
+        },
       },
     }}
     products={{ total: 2 }}

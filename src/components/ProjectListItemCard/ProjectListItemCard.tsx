@@ -14,6 +14,7 @@ import { ProjectListQueryVariables } from '../../scenes/Projects/List/projects.g
 import { getProjectUrl } from '../../scenes/Projects/useProjectId';
 import { DisplaySimpleProperty } from '../DisplaySimpleProperty';
 import { FormattedDate } from '../Formatters';
+import { PresetInventoryIconFilled } from '../Icons';
 import { Picture, useRandomPicture } from '../Picture';
 import { CardActionAreaLink } from '../Routing';
 import { Sensitivity } from '../Sensitivity';
@@ -62,6 +63,10 @@ const useStyles = makeStyles(({ breakpoints, spacing }) => {
       position: 'absolute',
       top: 10,
       right: 10,
+    },
+    presetInventory: {
+      verticalAlign: 'bottom',
+      marginLeft: spacing(1),
     },
     engagementCount: {
       flex: 2,
@@ -116,6 +121,13 @@ export const ProjectListItemCard: FC<ProjectListItemCardProps> = ({
             <Grid item>
               <Typography variant="h4">
                 {!project ? <Skeleton variant="text" /> : project.name.value}
+                {project?.presetInventory.value && (
+                  <PresetInventoryIconFilled
+                    color="action"
+                    className={classes.presetInventory}
+                    aria-label="preset inventory"
+                  />
+                )}
               </Typography>
             </Grid>
             <DisplaySimpleProperty
