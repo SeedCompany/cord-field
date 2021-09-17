@@ -10,6 +10,9 @@ fragment LanguageEngagementHeader on LanguageEngagement {
       name {
         value
       }
+      presetInventory {
+        value
+      }
     }
   }
   lukePartnership {

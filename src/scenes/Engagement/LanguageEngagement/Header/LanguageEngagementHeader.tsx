@@ -18,6 +18,7 @@ import {
   FormattedDateRange,
   FormattedDateTime,
 } from '../../../../components/Formatters';
+import { PresetInventoryIconFilled } from '../../../../components/Icons';
 import {
   ProjectBreadcrumb,
   ProjectBreadcrumbFragment,
@@ -35,12 +36,16 @@ import {
 import { EngagementWorkflowDialog } from '../../EditEngagement/EngagementWorkflowDialog';
 import { LanguageEngagementDetailFragment } from '../LanguageEngagementDetail.generated';
 
-const useStyles = makeStyles(({ palette }) => ({
+const useStyles = makeStyles(({ palette, spacing }) => ({
   nameRedacted: {
     width: '50%',
   },
   infoColor: {
     color: palette.info.main,
+  },
+  presetInventory: {
+    verticalAlign: 'bottom',
+    marginLeft: spacing(1),
   },
 }));
 
@@ -120,7 +125,16 @@ export const LanguageEngagementHeader = ({
       </Grid>
       <Grid item container spacing={3} alignItems="center">
         <Grid item>
-          <Typography variant="h4">Language Engagement</Typography>
+          <Typography variant="h4">
+            Language Engagement
+            {language?.presetInventory.value && (
+              <PresetInventoryIconFilled
+                color="action"
+                className={classes.presetInventory}
+                aria-label="preset inventory"
+              />
+            )}
+          </Typography>
         </Grid>
 
         <Grid item>
