@@ -163,7 +163,7 @@ export const LanguageDetail = () => {
             />
             {language?.presetInventory.value && (
               <Grid item>
-                <Tooltip title="Preset Inventory: Exposed to major investors to directly fund.">
+                <Tooltip title="Preset Inventory: Exposed to major investors to directly fund">
                   <PresetInventoryIconFilled
                     fontSize="large"
                     className={classes.presetInventoryIcon}

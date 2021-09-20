@@ -128,11 +128,13 @@ export const LanguageEngagementHeader = ({
           <Typography variant="h4">
             Language Engagement
             {engagement.project.presetInventory.value && (
-              <PresetInventoryIconFilled
-                color="action"
-                className={classes.presetInventory}
-                aria-label="preset inventory"
-              />
+              <Tooltip title="Preset Inventory: Exposed to major investors to directly fund">
+                <PresetInventoryIconFilled
+                  color="action"
+                  className={classes.presetInventory}
+                  aria-label="preset inventory"
+                />
+              </Tooltip>
             )}
           </Typography>
         </Grid>
