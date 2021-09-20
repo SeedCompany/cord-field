@@ -127,7 +127,7 @@ export const LanguageEngagementHeader = ({
         <Grid item>
           <Typography variant="h4">
             Language Engagement
-            {language?.presetInventory.value && (
+            {engagement.project.presetInventory.value && (
               <PresetInventoryIconFilled
                 color="action"
                 className={classes.presetInventory}

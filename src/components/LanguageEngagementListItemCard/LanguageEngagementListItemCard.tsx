@@ -69,7 +69,7 @@ export type LanguageEngagementListItemCardProps =
   };
 
 export const LanguageEngagementListItemCard: FC<LanguageEngagementListItemCardProps> =
-  ({ id, language: securedLanguage, className, status, products }) => {
+  ({ id, language: securedLanguage, project, className, status, products }) => {
     const numberFormatter = useNumberFormatter();
     const classes = useStyles();
 
@@ -93,7 +93,7 @@ export const LanguageEngagementListItemCard: FC<LanguageEngagementListItemCardPr
               <Grid item>
                 <Typography variant="h4">
                   {name}
-                  {language?.presetInventory.value && (
+                  {project.presetInventory.value && (
                     <PresetInventoryIconFilled
                       color="action"
                       className={classes.presetInventory}
