@@ -37,6 +37,13 @@ export const LanguageEngagementListItemCard = () => (
         },
       },
     }}
+    project={{
+      __typename: 'TranslationProject',
+      id: 'abc',
+      presetInventory: {
+        value: true,
+      },
+    }}
     products={{ total: 2 }}
   />
 );

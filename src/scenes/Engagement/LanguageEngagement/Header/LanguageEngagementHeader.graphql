@@ -12,6 +12,12 @@ fragment LanguageEngagementHeader on LanguageEngagement {
       }
     }
   }
+  project {
+    ...Id
+    presetInventory {
+      value
+    }
+  }
   lukePartnership {
     canRead
     canEdit

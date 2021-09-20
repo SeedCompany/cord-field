@@ -37,6 +37,12 @@ fragment LanguageEngagementListItem on LanguageEngagement {
       }
     }
   }
+  project {
+    ...Id
+    presetInventory {
+      value
+    }
+  }
   products {
     total
   }
