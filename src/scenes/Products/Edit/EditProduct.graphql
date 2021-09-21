@@ -6,6 +6,14 @@ mutation UpdateProduct($input: UpdateProductInput!) {
   }
 }
 
+mutation UpdateOtherProduct($input: UpdateOtherProduct!) {
+  updateOtherProduct(input: $input) {
+    product {
+      ...ProductForm
+    }
+  }
+}
+
 query ProductInfoForEdit(
   $productId: ID!
   $projectId: ID!

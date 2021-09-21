@@ -5,7 +5,7 @@ import { useSnackbar } from 'notistack';
 import React from 'react';
 import { Helmet } from 'react-helmet-async';
 import { useNavigate, useParams } from 'react-router';
-import { addItemToList, handleFormError } from '../../../api';
+import { addItemToList, handleFormError, Product } from '../../../api';
 import { EngagementBreadcrumb } from '../../../components/EngagementBreadcrumb';
 import { ProjectBreadcrumb } from '../../../components/ProjectBreadcrumb';
 import { ButtonLink } from '../../../components/Routing';
@@ -13,6 +13,7 @@ import { parsedRangesWithFullTestamentRange } from '../../../util/biblejs';
 import { useProjectId } from '../../Projects/useProjectId';
 import { ProductForm } from '../ProductForm';
 import {
+  CreateOtherProductDocument,
   CreateProductDocument,
   ProductInfoForCreateDocument,
 } from './CreateProduct.generated';
@@ -56,6 +57,12 @@ export const CreateProduct = () => {
       outputToItem: (res) => res.createProduct.product,
     }),
   });
+  const [createOtherProduct] = useMutation(CreateOtherProductDocument, {
+    update: addItemToList({
+      listId: [engagement, 'products'],
+      outputToItem: (res) => res.createOtherProduct.product,
+    }),
+  });
 
   return (
     <main className={classes.root}>
@@ -77,6 +84,8 @@ export const CreateProduct = () => {
               scriptureReferences,
               fullOldTestament,
               fullNewTestament,
+              title,
+              description,
               ...inputs
             } = submitted.product ?? {};
 
@@ -87,27 +96,41 @@ export const CreateProduct = () => {
                 fullNewTestament
               );
             try {
-              const { data } = await createProduct({
-                variables: {
-                  input: {
-                    product: {
+              let product: Product;
+              if (productType === 'Other') {
+                const { data } = await createOtherProduct({
+                  variables: {
+                    input: {
                       engagementId,
+                      title: title || '',
+                      description,
                       ...inputs,
-                      ...(productType !== 'DirectScriptureProduct' && produces
-                        ? {
-                            produces: produces.id,
-                            scriptureReferencesOverride:
-                              parsedScriptureReferences,
-                          }
-                        : {
-                            scriptureReferences: parsedScriptureReferences,
-                          }),
                     },
                   },
-                },
-              });
-
-              const { product } = data!.createProduct;
+                });
+                product = data?.createOtherProduct.product as Product;
+              } else {
+                const { data } = await createProduct({
+                  variables: {
+                    input: {
+                      product: {
+                        engagementId,
+                        ...inputs,
+                        ...(productType !== 'DirectScriptureProduct' && produces
+                          ? {
+                              produces: produces.id,
+                              scriptureReferencesOverride:
+                                parsedScriptureReferences,
+                            }
+                          : {
+                              scriptureReferences: parsedScriptureReferences,
+                            }),
+                      },
+                    },
+                  },
+                });
+                product = data?.createProduct.product as Product;
+              }
 
               enqueueSnackbar(`Created goal`, {
                 variant: 'success',

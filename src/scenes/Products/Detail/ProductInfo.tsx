@@ -14,6 +14,15 @@ import { ProductDetailFragment as Product } from './ProductDetail.generated';
 
 export const ProductInfo = ({ product }: { product?: Product }) => (
   <>
+    {product?.__typename === 'OtherProduct' && (
+      <DisplayProperty
+        label="Description"
+        value={product.description.value}
+        loading={!product}
+        wrap={infoWrapper}
+      />
+    )}
+
     <DisplayProperty
       label="Mediums"
       value={product?.mediums.value.map(displayProductMedium).join(', ')}

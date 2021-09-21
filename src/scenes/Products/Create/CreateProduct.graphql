@@ -6,6 +6,14 @@ mutation CreateProduct($input: CreateProductInput!) {
   }
 }
 
+mutation CreateOtherProduct($input: CreateOtherProduct!) {
+  createOtherProduct(input: $input) {
+    product {
+      id
+    }
+  }
+}
+
 query ProductInfoForCreate(
   $projectId: ID!
   $changeset: ID

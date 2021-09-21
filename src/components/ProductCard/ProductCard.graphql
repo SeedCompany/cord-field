@@ -53,6 +53,18 @@ fragment ProductCard on Product {
       }
     }
   }
+  ... on OtherProduct {
+    title {
+      canRead
+      canEdit
+      value
+    }
+    description {
+      canRead
+      canEdit
+      value
+    }
+  }
   steps {
     canRead
     canEdit
