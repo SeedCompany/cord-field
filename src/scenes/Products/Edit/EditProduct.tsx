@@ -63,8 +63,6 @@ export const EditProduct = () => {
   const engagement = data?.engagement;
   const product = data?.product;
 
-  console.log(product);
-
   const [updateProduct] = useMutation(UpdateProductDocument);
   const [updateOtherProduct] = useMutation(UpdateOtherProductDocument);
   const [deleteProduct] = useMutation(DeleteProductDocument, {
