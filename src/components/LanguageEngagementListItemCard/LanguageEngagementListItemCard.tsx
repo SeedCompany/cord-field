@@ -12,6 +12,7 @@ import * as React from 'react';
 import { displayEngagementStatus } from '../../api';
 import { DisplaySimpleProperty } from '../DisplaySimpleProperty';
 import { useNumberFormatter } from '../Formatters';
+import { PresetInventoryIconFilled } from '../Icons';
 import { ButtonLink, CardActionAreaLink } from '../Routing';
 import { LanguageEngagementListItemFragment } from './LanguageEngagementListItem.generated';
 
@@ -55,6 +56,10 @@ const useStyles = makeStyles(({ spacing }) => {
     iconSpacing: {
       marginRight: spacing(1),
     },
+    presetInventory: {
+      verticalAlign: 'bottom',
+      marginLeft: spacing(1),
+    },
   };
 });
 
@@ -64,7 +69,7 @@ export type LanguageEngagementListItemCardProps =
   };
 
 export const LanguageEngagementListItemCard: FC<LanguageEngagementListItemCardProps> =
-  ({ id, language: securedLanguage, className, status, products }) => {
+  ({ id, language: securedLanguage, project, className, status, products }) => {
     const numberFormatter = useNumberFormatter();
     const classes = useStyles();
 
@@ -86,7 +91,16 @@ export const LanguageEngagementListItemCard: FC<LanguageEngagementListItemCardPr
               className={classes.leftContent}
             >
               <Grid item>
-                <Typography variant="h4">{name}</Typography>
+                <Typography variant="h4">
+                  {name}
+                  {project.presetInventory.value && (
+                    <PresetInventoryIconFilled
+                      color="action"
+                      className={classes.presetInventory}
+                      aria-label="preset inventory"
+                    />
+                  )}
+                </Typography>
               </Grid>
               <DisplaySimpleProperty
                 label="Registry Of Dialects Code"

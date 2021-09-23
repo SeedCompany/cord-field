@@ -18,4 +18,7 @@ fragment LanguageListItem on Language {
     value
   }
   sensitivity
+  presetInventory {
+    value
+  }
 }
