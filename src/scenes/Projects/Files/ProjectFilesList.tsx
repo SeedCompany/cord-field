@@ -43,8 +43,8 @@ import { useUploadProjectFiles } from './useUploadProjectFiles';
 import { Directory, FileOrDirectory, isDirectory } from './util';
 
 type FileRowData = Pick<FileOrDirectory, 'id' | 'type' | 'name'> & {
-  createdAt: string;
-  createdBy: string;
+  modifiedAt: string;
+  modifiedBy: string;
   mimeType: string;
   size: number;
   item: FileOrDirectory;
@@ -153,8 +153,13 @@ const ProjectFilesListWrapped: FC = () => {
       id,
       type,
       name,
-      createdAt: formatDate(createdAt),
-      createdBy: createdBy.fullName ?? '',
+      modifiedAt: formatDate(
+        item.__typename === 'File' ? item.modifiedAt : createdAt
+      ),
+      modifiedBy:
+        (item.__typename === 'File'
+          ? item.modifiedBy.fullName
+          : createdBy.fullName) ?? '',
       mimeType: isDirectory(item) ? 'directory' : item.mimeType,
       size: isDirectory(item) ? 0 : item.size,
       item,
@@ -193,12 +198,12 @@ const ProjectFilesListWrapped: FC = () => {
       },
     },
     {
-      title: 'Created',
-      field: 'createdAt',
+      title: 'Modified',
+      field: 'modifiedAt',
     },
     {
-      title: 'Uploaded By',
-      field: 'createdBy',
+      title: 'Modified By',
+      field: 'modifiedBy',
     },
     {
       title: 'File Size',
