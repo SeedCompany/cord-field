@@ -14,6 +14,7 @@ import {
   History as HistoryIcon,
   MoreVert as MoreIcon,
   BorderColor as RenameIcon,
+  AlarmOff as Skip,
   Event as UpdateDate,
 } from '@material-ui/icons';
 import { startCase } from 'lodash';
@@ -78,6 +79,7 @@ const actionIcons = {
   [FileAction.NewVersion]: AddIcon,
   [FileAction.Delete]: DeleteIcon,
   [FileAction.UpdateReceivedDate]: UpdateDate,
+  [FileAction.Skip]: Skip,
 };
 
 export const FileActionsPopup: FC<FileActionsPopupProps> = ({

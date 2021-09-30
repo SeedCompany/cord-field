@@ -4,6 +4,7 @@ import { omit } from 'lodash';
 import { DateTime } from 'luxon';
 import React, { ReactNode } from 'react';
 import { FormattedDate, FormattedDateTime } from '../Formatters';
+import { PaperTooltip } from '../PaperTooltip';
 import { Redacted } from '../Redacted';
 import { SecuredPeriodicReportFragment } from './PeriodicReport.generated';
 import { ReportLabel } from './ReportLabel';
@@ -66,17 +67,32 @@ export const ReportInfo = ({
             at <FormattedDateTime date={file.value.modifiedAt} />
           </>
         ) : report.value ? (
-          <>
-            Due{' '}
-            <FormattedDate
-              date={report.value.due}
-              displayOptions={
-                report.value.due.diffNow('years').years < 1 // same year
-                  ? omit(DateTime.DATE_SHORT, 'year')
-                  : undefined
-              }
-            />
-          </>
+          report.value.skippedReason.value ? (
+            <>
+              Skipped
+              <PaperTooltip
+                placement="right"
+                title={'skippedReason'}
+                children={
+                  <Typography variant="body2">
+                    {report.value.skippedReason.value}
+                  </Typography>
+                }
+              ></PaperTooltip>
+            </>
+          ) : (
+            <>
+              Due{' '}
+              <FormattedDate
+                date={report.value.due}
+                displayOptions={
+                  report.value.due.diffNow('years').years < 1 // same year
+                    ? omit(DateTime.DATE_SHORT, 'year')
+                    : undefined
+                }
+              />
+            </>
+          )
         ) : null}
       </Typography>
     </div>

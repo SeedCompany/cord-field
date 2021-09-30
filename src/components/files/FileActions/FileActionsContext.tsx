@@ -48,7 +48,10 @@ interface VersionActionPayload {
 interface ActionClickParams {
   action: Exclude<
     FileAction,
-    FileAction.NewVersion | FileAction.History | FileAction.UpdateReceivedDate
+    | FileAction.NewVersion
+    | FileAction.History
+    | FileAction.UpdateReceivedDate
+    | FileAction.Skip
   >;
   item: FilesActionItem;
 }
