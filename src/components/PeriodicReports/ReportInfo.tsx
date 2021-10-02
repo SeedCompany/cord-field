@@ -68,18 +68,11 @@ export const ReportInfo = ({
           </>
         ) : report.value ? (
           report.value.skippedReason.value ? (
-            <>
-              Skipped
-              <PaperTooltip
-                placement="right"
-                title={'skippedReason'}
-                children={
-                  <Typography variant="body2">
-                    {report.value.skippedReason.value}
-                  </Typography>
-                }
-              ></PaperTooltip>
-            </>
+            <PaperTooltip
+              placement="bottom-start"
+              title={report.value.skippedReason.value}
+              children={<Typography variant="inherit">Skipped</Typography>}
+            ></PaperTooltip>
           ) : (
             <>
               Due{' '}
