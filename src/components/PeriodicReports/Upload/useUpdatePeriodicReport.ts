@@ -7,7 +7,12 @@ export const useUpdatePeriodicReport = () => {
   const uploadFiles = useUploadFiles();
   const [uploadFile] = useMutation(UpdatePeriodicReportDocument);
 
-  return async (id: string, files?: File[], receivedDate?: CalendarDate) => {
+  return async (
+    id: string,
+    files?: File[],
+    receivedDate?: CalendarDate,
+    skippedReason?: string
+  ) => {
     const updateReport = async (uploadId?: string, name?: string) => {
       await uploadFile({
         variables: {
@@ -15,6 +20,7 @@ export const useUpdatePeriodicReport = () => {
             id,
             ...(uploadId ? { reportFile: { uploadId, name } } : {}),
             receivedDate,
+            skippedReason,
           },
         },
       });

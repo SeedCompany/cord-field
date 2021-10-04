@@ -1,9 +1,11 @@
 import { makeStyles, Typography } from '@material-ui/core';
+import { InfoOutlined } from '@material-ui/icons';
 import { Skeleton } from '@material-ui/lab';
 import { omit } from 'lodash';
 import { DateTime } from 'luxon';
 import React, { ReactNode } from 'react';
 import { FormattedDate, FormattedDateTime } from '../Formatters';
+import { IconButton } from '../IconButton';
 import { PaperTooltip } from '../PaperTooltip';
 import { Redacted } from '../Redacted';
 import { SecuredPeriodicReportFragment } from './PeriodicReport.generated';
@@ -67,12 +69,20 @@ export const ReportInfo = ({
             at <FormattedDateTime date={file.value.modifiedAt} />
           </>
         ) : report.value ? (
-          report.value.skippedReason.value ? (
-            <PaperTooltip
-              placement="bottom-start"
-              title={report.value.skippedReason.value}
-              children={<Typography variant="inherit">Skipped</Typography>}
-            ></PaperTooltip>
+          report.value.skippedReason.value &&
+          !report.value.receivedDate.value ? (
+            <>
+              <Typography variant="inherit">Skipped </Typography>
+              <PaperTooltip
+                placement="bottom-start"
+                title={report.value.skippedReason.value}
+                children={
+                  <IconButton size="small">
+                    <InfoOutlined style={{ fontSize: 19 }} />
+                  </IconButton>
+                }
+              ></PaperTooltip>
+            </>
           ) : (
             <>
               Due{' '}

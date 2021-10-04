@@ -63,6 +63,7 @@ interface NonVersionPopupProps extends FileActionsList {
   item: DirectoryActionItem | FileActionItem;
   onVersionUpload: (files: File[]) => void;
   onUpdateReceivedDate?: () => void;
+  onSkip?: () => void;
 }
 
 interface VersionPopupProps extends FileActionsList {
@@ -132,7 +133,8 @@ export const FileActionsMenu: FC<FileActionsMenuProps> = (props) => {
   const menuProps = Object.entries(rest).reduce((menuProps, [key, value]) => {
     return key === 'onVersionUpload' ||
       key === 'onVersionAccepted' ||
-      key === 'onUpdateReceivedDate'
+      key === 'onUpdateReceivedDate' ||
+      key === 'onSkip'
       ? menuProps
       : {
           ...menuProps,
@@ -154,6 +156,10 @@ export const FileActionsMenu: FC<FileActionsMenuProps> = (props) => {
       props.onUpdateReceivedDate
     ) {
       props.onUpdateReceivedDate();
+      return;
+    }
+    if (action === FileAction.Skip && !isFileVersion(props) && props.onSkip) {
+      props.onSkip();
       return;
     }
     const params = {
