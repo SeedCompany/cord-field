@@ -76,6 +76,7 @@ export const productTypes = [
   'Film',
   'Song',
   'LiteracyMaterial',
+  'Other',
 ] as const;
 
 export type ProductTypes =

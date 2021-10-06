@@ -28,6 +28,7 @@ import {
 import {
   DeleteProductDocument,
   ProductInfoForEditDocument,
+  UpdateOtherProductDocument,
   UpdateProductDocument,
 } from './EditProduct.generated';
 
@@ -63,6 +64,7 @@ export const EditProduct = () => {
   const product = data?.product;
 
   const [updateProduct] = useMutation(UpdateProductDocument);
+  const [updateOtherProduct] = useMutation(UpdateOtherProductDocument);
   const [deleteProduct] = useMutation(DeleteProductDocument, {
     update: removeItemFromList({
       listId: [engagement as LanguageEngagement, 'products'],
@@ -99,6 +101,7 @@ export const EditProduct = () => {
         fullNewTestament: scriptureReferencesWithoutTypename.some((reference) =>
           isEqual(reference, fullNewTestamentRange)
         ),
+        title: '',
         ...(product.__typename === 'DirectScriptureProduct'
           ? {
               productType: product.__typename,
@@ -114,6 +117,13 @@ export const EditProduct = () => {
                 name: product.produces.value.name,
               },
               productType: product.produces.value.__typename,
+            }
+          : undefined),
+        ...(product.__typename === 'OtherProduct'
+          ? {
+              productType: 'Other',
+              title: product.title.value || '',
+              description: product.description.value || '',
             }
           : undefined),
       },
@@ -145,6 +155,8 @@ export const EditProduct = () => {
         scriptureReferences,
         fullOldTestament,
         fullNewTestament,
+        title,
+        description,
         ...input
       } = data.product ?? {};
 
@@ -154,24 +166,37 @@ export const EditProduct = () => {
         fullNewTestament
       );
 
-      await updateProduct({
-        variables: {
-          input: {
-            product: {
+      if (productType === 'Other') {
+        await updateOtherProduct({
+          variables: {
+            input: {
               id: product.id,
               ...input,
-              produces: produces?.id,
-              ...(productType !== 'DirectScriptureProduct'
-                ? {
-                    scriptureReferencesOverride: parsedScriptureReferences,
-                  }
-                : {
-                    scriptureReferences: parsedScriptureReferences,
-                  }),
+              title,
+              description,
             },
           },
-        },
-      });
+        });
+      } else {
+        await updateProduct({
+          variables: {
+            input: {
+              product: {
+                id: product.id,
+                ...input,
+                produces: produces?.id,
+                ...(productType !== 'DirectScriptureProduct'
+                  ? {
+                      scriptureReferencesOverride: parsedScriptureReferences,
+                    }
+                  : {
+                      scriptureReferences: parsedScriptureReferences,
+                    }),
+              },
+            },
+          },
+        });
+      }
 
       enqueueSnackbar(`Updated goal`, {
         variant: 'success',

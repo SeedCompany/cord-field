@@ -7,6 +7,7 @@ import {
 } from '@material-ui/core';
 import {
   DescriptionOutlined,
+  HelpOutlined,
   LibraryBooksOutlined,
   MenuBook,
   Movie,
@@ -47,6 +48,7 @@ const iconMap: Record<string, SvgIconComponent> = {
   Film: Movie,
   Song: MusicNote,
   'Literacy Material': LibraryBooksOutlined,
+  Other: HelpOutlined,
 };
 
 export const ProductCard = ({ product }: ProductCardProps) => {

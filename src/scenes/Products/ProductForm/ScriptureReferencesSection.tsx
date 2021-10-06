@@ -69,6 +69,10 @@ export const ScriptureReferencesSection = ({
       );
   };
 
+  if (values.product?.productType === 'Other') {
+    return null;
+  }
+
   return (
     <>
       <SecuredAccordion

@@ -2,7 +2,12 @@ import { makeStyles, Typography } from '@material-ui/core';
 import React from 'react';
 import { Form, FormProps } from 'react-final-form';
 import { Except, Merge } from 'type-fest';
-import { CreateProduct, UpdateProduct } from '../../../api';
+import {
+  CreateOtherProduct,
+  CreateProduct,
+  UpdateOtherProduct,
+  UpdateProduct,
+} from '../../../api';
 import {
   SubmitAction,
   SubmitButton,
@@ -32,7 +37,10 @@ export interface ProductFormCustomValues {}
 
 export interface ProductFormValues extends SubmitAction<'delete'> {
   product?: Merge<
-    Except<CreateProduct & UpdateProduct, 'id' | 'engagementId'>,
+    Except<
+      CreateProduct & UpdateProduct & CreateOtherProduct & UpdateOtherProduct,
+      'id' | 'engagementId'
+    >,
     ProductFormCustomValues
   >;
 }

@@ -48,6 +48,18 @@ fragment ProductForm on Product {
       ...SecuredScriptureRangesOverride
     }
   }
+  ... on OtherProduct {
+    title {
+      canRead
+      canEdit
+      value
+    }
+    description {
+      canRead
+      canEdit
+      value
+    }
+  }
 }
 
 fragment Producible on Producible {
