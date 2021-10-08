@@ -6,4 +6,5 @@ export enum FileAction {
   Delete = 'delete',
   UpdateReceivedDate = 'updateReceivedDate',
   Skip = 'skip',
+  EditSkipReason = 'EditSkipReason',
 }

@@ -78,7 +78,7 @@ export const ReportInfo = ({
                 title={report.value.skippedReason.value}
                 children={
                   <IconButton size="small">
-                    <InfoOutlined style={{ fontSize: 19 }} />
+                    <InfoOutlined style={{ fontSize: 15 }} />
                   </IconButton>
                 }
               ></PaperTooltip>

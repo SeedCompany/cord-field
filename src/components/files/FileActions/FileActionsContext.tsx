@@ -52,6 +52,7 @@ interface ActionClickParams {
     | FileAction.History
     | FileAction.UpdateReceivedDate
     | FileAction.Skip
+    | FileAction.EditSkipReason
   >;
   item: FilesActionItem;
 }

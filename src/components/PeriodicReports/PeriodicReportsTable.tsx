@@ -118,6 +118,9 @@ export const PeriodicReportsTableInContext = ({
                 ...(!report.receivedDate.value && !report.skippedReason.value
                   ? [FileAction.Skip]
                   : []),
+                ...(report.skippedReason.value
+                  ? [FileAction.EditSkipReason]
+                  : []),
               ],
               version: [
                 FileAction.Download,
@@ -150,6 +153,10 @@ export const PeriodicReportsTableInContext = ({
               editField('receivedDate');
             }}
             onSkip={() => {
+              editReport({ ...report, reportFile: undefined });
+              editField('skippedReason');
+            }}
+            onEditSkipReason={async () => {
               editReport({ ...report, reportFile: undefined });
               editField('skippedReason');
             }}

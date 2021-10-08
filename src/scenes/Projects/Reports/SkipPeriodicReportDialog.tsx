@@ -6,16 +6,14 @@ import {
   DialogForm,
   DialogFormProps,
 } from '../../../components/Dialog/DialogForm';
-import { SubmitError, TextField } from '../../../components/form';
+import { SubmitButton, SubmitError, TextField } from '../../../components/form';
 import { PeriodicReportFragment } from '../../../components/PeriodicReports/PeriodicReport.generated';
 import { useUpdatePeriodicReport } from '../../../components/PeriodicReports/Upload/useUpdatePeriodicReport';
 import { many, Many } from '../../../util';
 import { EditablePeriodicReportField } from './UpdatePeriodicReportDialog';
 
 interface SkipPeriodicReportFormValues {
-  report: Omit<UpdatePeriodicReportInput, 'reportFile'> & {
-    reportFile?: File[];
-  };
+  report: UpdatePeriodicReportInput;
 }
 
 type SkipPeriodicReportDialogProps = Except<
@@ -43,7 +41,6 @@ export const SkipPeriodicReportDialog = ({
       SkipPeriodicReportFormValues['report'],
       'id'
     > = {
-      reportFile: report.reportFile,
       skippedReason,
     };
 
@@ -57,29 +54,46 @@ export const SkipPeriodicReportDialog = ({
         ...filteredInitialValuesFields,
       },
     };
-  }, [editFields, report.skippedReason, report.reportFile, report.id]);
+  }, [editFields, report.skippedReason, report.id]);
 
   return (
     <DialogForm<SkipPeriodicReportFormValues>
       {...props}
-      title="Skip Report"
+      title={`${
+        report.skippedReason.value ? 'Edit Skip Reason' : 'Skip Report'
+      }`}
       closeLabel="Close"
       submitLabel="Save"
       fieldsPrefix="report"
       initialValues={initialValues}
-      onSubmit={async ({ report: { id, reportFile, skippedReason } }) =>
+      onSubmit={async ({ report: { id, skippedReason } }) => {
         await updatePeriodicReport(
           id,
-          reportFile,
+          undefined,
           undefined,
           skippedReason ?? undefined
-        )
+        );
+      }}
+      leftAction={
+        report.skippedReason.value ? (
+          <SubmitButton
+            action="delete"
+            color="error"
+            fullWidth={false}
+            variant="text"
+            onClick={async () =>
+              await updatePeriodicReport(report.id, undefined, undefined, null)
+            }
+          >
+            Left Action
+          </SubmitButton>
+        ) : null
       }
     >
       <SubmitError />
       <TextField
         name="skippedReason"
-        label="Skipped Reason"
+        label="Skip Reason"
         placeholder="Why this report is skipped?"
       ></TextField>
     </DialogForm>

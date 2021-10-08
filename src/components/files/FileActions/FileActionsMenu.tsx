@@ -11,6 +11,7 @@ import {
   Add as AddIcon,
   Delete as DeleteIcon,
   CloudDownload as DownloadIcon,
+  Edit as EditSkipReason,
   History as HistoryIcon,
   MoreVert as MoreIcon,
   BorderColor as RenameIcon,
@@ -64,6 +65,7 @@ interface NonVersionPopupProps extends FileActionsList {
   onVersionUpload: (files: File[]) => void;
   onUpdateReceivedDate?: () => void;
   onSkip?: () => void;
+  onEditSkipReason?: () => void;
 }
 
 interface VersionPopupProps extends FileActionsList {
@@ -81,6 +83,7 @@ const actionIcons = {
   [FileAction.Delete]: DeleteIcon,
   [FileAction.UpdateReceivedDate]: UpdateDate,
   [FileAction.Skip]: Skip,
+  [FileAction.EditSkipReason]: EditSkipReason,
 };
 
 export const FileActionsPopup: FC<FileActionsPopupProps> = ({
@@ -134,7 +137,8 @@ export const FileActionsMenu: FC<FileActionsMenuProps> = (props) => {
     return key === 'onVersionUpload' ||
       key === 'onVersionAccepted' ||
       key === 'onUpdateReceivedDate' ||
-      key === 'onSkip'
+      key === 'onSkip' ||
+      key === 'onEditSkipReason'
       ? menuProps
       : {
           ...menuProps,
@@ -160,6 +164,14 @@ export const FileActionsMenu: FC<FileActionsMenuProps> = (props) => {
     }
     if (action === FileAction.Skip && !isFileVersion(props) && props.onSkip) {
       props.onSkip();
+      return;
+    }
+    if (
+      action === FileAction.EditSkipReason &&
+      !isFileVersion(props) &&
+      props.onEditSkipReason
+    ) {
+      props.onEditSkipReason();
       return;
     }
     const params = {
@@ -199,7 +211,8 @@ export const FileActionsMenu: FC<FileActionsMenuProps> = (props) => {
         <ListItemText
           className={classes.listItemText}
           primary={
-            menuItem === FileAction.UpdateReceivedDate
+            menuItem === FileAction.UpdateReceivedDate ||
+            menuItem === FileAction.EditSkipReason
               ? startCase(menuItem)
               : menuItem
           }
