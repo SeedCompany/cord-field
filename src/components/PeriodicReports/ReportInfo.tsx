@@ -1,11 +1,10 @@
-import { makeStyles, Typography } from '@material-ui/core';
-import { InfoOutlined } from '@material-ui/icons';
+import { Grid, makeStyles, Typography } from '@material-ui/core';
+import { SkipNextRounded } from '@material-ui/icons';
 import { Skeleton } from '@material-ui/lab';
 import { omit } from 'lodash';
 import { DateTime } from 'luxon';
 import React, { ReactNode } from 'react';
 import { FormattedDate, FormattedDateTime } from '../Formatters';
-import { IconButton } from '../IconButton';
 import { PaperTooltip } from '../PaperTooltip';
 import { Redacted } from '../Redacted';
 import { SecuredPeriodicReportFragment } from './PeriodicReport.generated';
@@ -29,7 +28,7 @@ export const ReportInfo = ({
   const classes = useStyles();
 
   const file = report?.value?.reportFile;
-  return (
+  const section = (
     <div className={className}>
       <Typography
         variant="body2"
@@ -71,18 +70,10 @@ export const ReportInfo = ({
         ) : report.value ? (
           report.value.skippedReason.value &&
           !report.value.receivedDate.value ? (
-            <>
-              <Typography variant="inherit">Skipped </Typography>
-              <PaperTooltip
-                placement="bottom-start"
-                title={report.value.skippedReason.value}
-                children={
-                  <IconButton size="small">
-                    <InfoOutlined style={{ fontSize: 15 }} />
-                  </IconButton>
-                }
-              ></PaperTooltip>
-            </>
+            <Grid container alignItems="center">
+              <Typography variant="inherit">Skipped</Typography>
+              <SkipNextRounded fontSize="small" />
+            </Grid>
           ) : (
             <>
               Due{' '}
@@ -99,5 +90,13 @@ export const ReportInfo = ({
         ) : null}
       </Typography>
     </div>
+  );
+
+  return (
+    <PaperTooltip
+      placement="bottom"
+      title={report?.value?.skippedReason.value ?? ''}
+      children={section}
+    />
   );
 };
