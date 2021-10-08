@@ -15,7 +15,7 @@ import {
   History as HistoryIcon,
   MoreVert as MoreIcon,
   BorderColor as RenameIcon,
-  AlarmOff as Skip,
+  SkipNextRounded as Skip,
   Event as UpdateDate,
 } from '@material-ui/icons';
 import { startCase } from 'lodash';
