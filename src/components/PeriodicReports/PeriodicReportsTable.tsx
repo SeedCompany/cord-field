@@ -168,13 +168,9 @@ export const PeriodicReportsTableInContext = ({
 
   return (
     <>
-      {reportBeingEdited && fieldsBeingEdited === 'skippedReason' ? (
-        <SkipPeriodicReportDialog
-          {...editState}
-          editFields={fieldsBeingEdited}
-          report={reportBeingEdited}
-        />
-      ) : null}
+      {reportBeingEdited && fieldsBeingEdited === 'skippedReason' && (
+        <SkipPeriodicReportDialog {...editState} report={reportBeingEdited} />
+      )}
 
       {reportBeingEdited?.receivedDate.canEdit &&
       fieldsBeingEdited === 'receivedDate' ? (

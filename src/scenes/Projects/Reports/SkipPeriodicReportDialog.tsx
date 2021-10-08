@@ -1,4 +1,3 @@
-import { pick } from 'lodash';
 import React, { useMemo } from 'react';
 import { Except } from 'type-fest';
 import { UpdatePeriodicReportInput } from '../../../api';
@@ -6,55 +5,40 @@ import {
   DialogForm,
   DialogFormProps,
 } from '../../../components/Dialog/DialogForm';
-import { SubmitButton, SubmitError, TextField } from '../../../components/form';
+import {
+  SubmitAction,
+  SubmitButton,
+  SubmitError,
+  TextField,
+} from '../../../components/form';
 import { PeriodicReportFragment } from '../../../components/PeriodicReports/PeriodicReport.generated';
 import { useUpdatePeriodicReport } from '../../../components/PeriodicReports/Upload/useUpdatePeriodicReport';
-import { many, Many } from '../../../util';
-import { EditablePeriodicReportField } from './UpdatePeriodicReportDialog';
 
-interface SkipPeriodicReportFormValues {
-  report: UpdatePeriodicReportInput;
-}
+type SkipPeriodicReportFormValues = Pick<
+  UpdatePeriodicReportInput,
+  'skippedReason'
+> &
+  SubmitAction<'unskip'>;
 
 type SkipPeriodicReportDialogProps = Except<
   DialogFormProps<SkipPeriodicReportFormValues>,
   'onSubmit' | 'initialValues'
 > & {
-  report: Omit<PeriodicReportFragment, 'reportFile'> & { reportFile?: File[] };
-  editFields?: Many<EditablePeriodicReportField>;
+  report: Pick<PeriodicReportFragment, 'id' | 'skippedReason'>;
 };
 
 export const SkipPeriodicReportDialog = ({
   report,
-  editFields: editFieldsProp,
   ...props
 }: SkipPeriodicReportDialogProps) => {
-  const editFields = useMemo(
-    () => many(editFieldsProp ?? []),
-    [editFieldsProp]
-  );
   const updatePeriodicReport = useUpdatePeriodicReport();
 
-  const initialValues = useMemo(() => {
-    const skippedReason = report.skippedReason.value;
-    const fullInitialValuesFields: Except<
-      SkipPeriodicReportFormValues['report'],
-      'id'
-    > = {
-      skippedReason,
-    };
-
-    const filteredInitialValuesFields = pick(
-      fullInitialValuesFields,
-      editFields
-    );
-    return {
-      report: {
-        id: report.id,
-        ...filteredInitialValuesFields,
-      },
-    };
-  }, [editFields, report.skippedReason, report.id]);
+  const initialValues = useMemo(
+    () => ({
+      skippedReason: report.skippedReason.value,
+    }),
+    [report.skippedReason]
+  );
 
   return (
     <DialogForm<SkipPeriodicReportFormValues>
@@ -62,30 +46,25 @@ export const SkipPeriodicReportDialog = ({
       title={`${
         report.skippedReason.value ? 'Edit Skip Reason' : 'Skip Report'
       }`}
-      closeLabel="Close"
-      submitLabel="Save"
-      fieldsPrefix="report"
       initialValues={initialValues}
-      onSubmit={async ({ report: { id, skippedReason } }) => {
+      sendIfClean="unskip"
+      onSubmit={async ({ skippedReason, submitAction }) => {
         await updatePeriodicReport(
-          id,
+          report.id,
           undefined,
           undefined,
-          skippedReason ?? undefined
+          submitAction === 'unskip' ? null : skippedReason ?? null
         );
       }}
       leftAction={
         report.skippedReason.value ? (
           <SubmitButton
-            action="delete"
-            color="error"
+            action="unskip"
+            color="secondary"
             fullWidth={false}
             variant="text"
-            onClick={async () =>
-              await updatePeriodicReport(report.id, undefined, undefined, null)
-            }
           >
-            Left Action
+            Unskip
           </SubmitButton>
         ) : null
       }
@@ -93,9 +72,11 @@ export const SkipPeriodicReportDialog = ({
       <SubmitError />
       <TextField
         name="skippedReason"
-        label="Skip Reason"
-        placeholder="Why this report is skipped?"
-      ></TextField>
+        label="Reason"
+        placeholder="Why is this report being skipped?"
+        multiline
+        inputProps={{ rowsMin: 2 }}
+      />
     </DialogForm>
   );
 };
