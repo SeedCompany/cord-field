@@ -15,6 +15,10 @@ mutation UploadLanguageEngagementPnp(
           }
         }
       }
+      # Refresh products when uploading pnp as products are created from data extracted from spreadsheet
+      products {
+        ...ProductList
+      }
     }
   }
 }
