@@ -18,7 +18,7 @@ import { ExtractStrict, many, Many } from '../../../util';
 export type EditablePeriodicReportField = ExtractStrict<
   keyof UpdatePeriodicReportInput,
   // Add more fields here as needed
-  'receivedDate' | 'reportFile'
+  'receivedDate' | 'reportFile' | 'skippedReason'
 >;
 
 interface UpdatePeriodicReportFormValues {
