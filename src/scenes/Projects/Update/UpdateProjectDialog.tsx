@@ -168,8 +168,12 @@ export const UpdateProjectDialog = ({
             input: {
               project: {
                 ...rest,
-                ...(primaryLocationId ? { primaryLocationId } : {}),
-                ...(fieldRegionId ? { fieldRegionId } : {}),
+                ...(primaryLocationId
+                  ? { primaryLocationId }
+                  : { primaryLocationId: null }),
+                ...(fieldRegionId
+                  ? { fieldRegionId }
+                  : { fieldRegionId: null }),
               },
               changeset: project.changeset?.id,
             },
