@@ -57,15 +57,15 @@ export const ProductCard = ({ product }: ProductCardProps) => {
   const Icon = product.category ? iconMap[product.category] : undefined;
 
   const firstStepNotDone = product.progressOfCurrentReportDue?.steps.find(
-    (step) => step.percentDone.value && step.percentDone.value < 100
+    (step) => step.completed.value && step.completed.value < 100
   );
   const stepToShow = firstStepNotDone
     ? {
         step: firstStepNotDone.step,
-        percentDone: firstStepNotDone.percentDone.value!,
+        completed: firstStepNotDone.completed.value!,
       }
     : product.progressOfCurrentReportDue && product.steps.value[0]
-    ? { step: product.steps.value[0], percentDone: 0 }
+    ? { step: product.steps.value[0], completed: 0 }
     : undefined;
   const stepIndex = stepToShow
     ? product.steps.value.indexOf(stepToShow.step)
@@ -94,7 +94,7 @@ export const ProductCard = ({ product }: ProductCardProps) => {
                 {displayProductStep(stepToShow.step)} (Step {stepNumber} of{' '}
                 {product.steps.value.length})
               </Typography>
-              <LinearProgressBar value={stepToShow.percentDone} />
+              <LinearProgressBar value={stepToShow.completed} />
             </Grid>
           )}
         </Grid>

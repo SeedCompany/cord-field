@@ -36,6 +36,16 @@ fragment ProductForm on Product {
     canEdit
     value
   }
+  progressStepMeasurement {
+    canRead
+    canEdit
+    value
+  }
+  progressTarget {
+    canRead
+    canEdit
+    value
+  }
   ... on DerivativeScriptureProduct {
     produces {
       canRead

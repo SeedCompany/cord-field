@@ -35,7 +35,11 @@ export const ProductDetail = () => {
     },
   });
   const product = data?.product;
-  const progress = product?.progressOfCurrentReportDue;
+  const {
+    progressOfCurrentReportDue: progress,
+    progressStepMeasurement,
+    progressTarget,
+  } = product ?? {};
 
   return (
     <div className={classes.root}>
@@ -66,7 +70,11 @@ export const ProductDetail = () => {
                   Progress for <ReportLabel report={progress.report} />
                 </Grid>
                 <Grid item>
-                  <StepsList progress={progress} />
+                  <StepsList
+                    progress={progress}
+                    measurement={progressStepMeasurement?.value}
+                    target={progressTarget?.value}
+                  />
                 </Grid>
               </Grid>
             </>

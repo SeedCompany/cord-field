@@ -14,6 +14,8 @@ import {
   ProductFormFragment,
 } from './ProductForm.generated';
 import { ProductSection } from './ProductSection';
+import { ProgressMeasurementSection } from './ProgressMeasurementSection';
+import { ProgressTargetSection } from './ProgressTargetSection';
 import { PurposesSection } from './PurposesSection';
 import { ScriptureReferencesSection } from './ScriptureReferencesSection';
 import { StepsSection } from './StepsSection';
@@ -48,6 +50,8 @@ const sections: ReadonlyArray<ComponentType<SectionProps>> = [
   MediumsSection,
   PurposesSection,
   MethodologySection,
+  ProgressMeasurementSection,
+  ProgressTargetSection,
   StepsSection,
   CompletionSection,
 ];

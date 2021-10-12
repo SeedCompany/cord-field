@@ -7,7 +7,7 @@ import {
   Typography,
 } from '@material-ui/core';
 import React from 'react';
-import { displayProductStep } from '../../../../api';
+import { displayProductStep, ProgressMeasurement } from '../../../../api';
 import { StepProgressFragment } from './ProductProgress.generated';
 import { ProgressIcon } from './ProgressIcon';
 
@@ -18,17 +18,22 @@ const useStyles = makeStyles(({ spacing }) => ({
 }));
 
 export const StepProgress = ({
-  progress: { step, percentDone },
+  measurement,
+  target,
+  progress: { step, completed },
   onClick,
 }: {
+  measurement?: ProgressMeasurement | null;
+  target?: number | null;
   progress: StepProgressFragment;
   onClick?: () => void;
 }) => {
   const classes = useStyles();
+  const progressValue = completed.value || 0;
   return (
     <Grid container wrap="nowrap" alignItems="center" spacing={2}>
       <Grid item>
-        <ProgressIcon percent={percentDone} />
+        <ProgressIcon percent={completed} />
       </Grid>
 
       <Grid item xs>
@@ -46,18 +51,24 @@ export const StepProgress = ({
                 {displayProductStep(step)}
               </Grid>
               <Grid item component={Typography} variant="body2">
-                {!percentDone.canRead
+                {!completed.canRead
                   ? 'No Permission'
-                  : percentDone.value
-                  ? `${percentDone.value}% Completed`
+                  : completed.value
+                  ? `${
+                      measurement === 'Boolean'
+                        ? ''
+                        : `${completed.value}${
+                            measurement === 'Percent' ? '%' : `/${target}`
+                          } `
+                    }Completed`
                   : 'Not Yet Reported'}
               </Grid>
             </Grid>
           </CardActionArea>
           <LinearProgress
-            color={percentDone.canRead ? 'primary' : 'secondary'}
+            color={completed.canRead ? 'primary' : 'secondary'}
             variant="determinate"
-            value={percentDone.value || 0}
+            value={target ? (progressValue / target) * 100 : progressValue}
           />
         </Card>
       </Grid>
