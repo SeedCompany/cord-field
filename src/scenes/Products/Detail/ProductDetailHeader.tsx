@@ -63,7 +63,7 @@ export const ProductDetailHeader = ({ product }: { product?: Product }) => {
           </Typography>
         </Grid>
         <Grid item>
-          <Tooltip title="Edit Product">
+          <Tooltip title="Edit Goal">
             <Fab
               color="primary"
               // @ts-expect-error it works. These generics are hard to express.
