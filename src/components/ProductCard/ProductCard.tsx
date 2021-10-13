@@ -56,13 +56,34 @@ export const ProductCard = ({ product }: ProductCardProps) => {
 
   const Icon = product.category ? iconMap[product.category] : undefined;
 
+  const measurement = product.progressStepMeasurement.value;
+  const progressTarget = product.progressTarget.value;
+
   const firstStepNotDone = product.progressOfCurrentReportDue?.steps.find(
-    (step) => step.completed.value && step.completed.value < 100
+    (step) =>
+      step.completed.value &&
+      progressTarget &&
+      step.completed.value < progressTarget
   );
+  const allStepsDone =
+    product.progressOfCurrentReportDue &&
+    product.progressOfCurrentReportDue.steps.length > 0 &&
+    product.progressOfCurrentReportDue.steps.every(
+      (step) =>
+        step.completed.value &&
+        progressTarget &&
+        step.completed.value === progressTarget
+    );
+
   const stepToShow = firstStepNotDone
     ? {
         step: firstStepNotDone.step,
         completed: firstStepNotDone.completed.value!,
+      }
+    : allStepsDone
+    ? {
+        step: product.steps.value[product.steps.value.length - 1]!,
+        completed: progressTarget!,
       }
     : product.progressOfCurrentReportDue && product.steps.value[0]
     ? { step: product.steps.value[0], completed: 0 }
@@ -88,13 +109,17 @@ export const ProductCard = ({ product }: ProductCardProps) => {
             <Typography variant="h4">{product.label}</Typography>
             <Typography variant="body2">{product.category}</Typography>
           </Grid>
-          {stepToShow && (
+          {stepToShow && measurement && progressTarget && (
             <Grid item xs>
               <Typography variant="body2" align="right">
                 {displayProductStep(stepToShow.step)} (Step {stepNumber} of{' '}
                 {product.steps.value.length})
               </Typography>
-              <LinearProgressBar value={stepToShow.completed} />
+              <LinearProgressBar
+                value={stepToShow.completed}
+                measurement={measurement}
+                target={progressTarget}
+              />
             </Grid>
           )}
         </Grid>

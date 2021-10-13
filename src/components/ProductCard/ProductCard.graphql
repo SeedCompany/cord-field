@@ -70,6 +70,14 @@ fragment ProductCard on Product {
     canEdit
     value
   }
+  progressStepMeasurement {
+    canRead
+    value
+  }
+  progressTarget {
+    canRead
+    value
+  }
   progressOfCurrentReportDue {
     ...ProductProgress
   }
