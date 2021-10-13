@@ -1,7 +1,6 @@
 import { makeStyles } from '@material-ui/core';
 import { CheckCircle } from '@material-ui/icons';
 import React from 'react';
-import { SecuredProp } from '../../../../api';
 
 const useStyles = makeStyles(({ spacing, palette }) => ({
   done: {
@@ -16,14 +15,10 @@ const useStyles = makeStyles(({ spacing, palette }) => ({
   },
 }));
 
-export const ProgressIcon = ({
-  percent,
-}: {
-  percent: Partial<SecuredProp<number | null>>;
-}) => {
+export const ProgressIcon = ({ complete }: { complete: boolean }) => {
   const classes = useStyles();
 
-  return percent.value === 100 ? (
+  return complete ? (
     <CheckCircle color="primary" className={classes.done} />
   ) : (
     <div className={classes.notDone} />

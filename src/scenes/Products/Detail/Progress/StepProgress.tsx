@@ -33,7 +33,7 @@ export const StepProgress = ({
   return (
     <Grid container wrap="nowrap" alignItems="center" spacing={2}>
       <Grid item>
-        <ProgressIcon percent={completed} />
+        <ProgressIcon complete={target === progressValue} />
       </Grid>
 
       <Grid item xs>
