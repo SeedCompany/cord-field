@@ -17,6 +17,7 @@ import {
   ProductMedium,
   ProductMethodology,
   ProductPurpose,
+  ProgressMeasurement,
   ProjectChangeRequestStatus,
   ProjectChangeRequestType,
   ProjectStatus,
@@ -93,3 +94,5 @@ export const displayProductTypes = (type: ProductTypes) =>
 export const displayPostShareability = displayEnum<PostShareability>();
 
 export const displayProductStep = displayEnum<MethodologyStep>();
+
+export const displayProgressMeasurement = displayEnum<ProgressMeasurement>();

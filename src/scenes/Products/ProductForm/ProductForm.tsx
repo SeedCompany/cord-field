@@ -1,10 +1,13 @@
 import { makeStyles, Typography } from '@material-ui/core';
+import { Decorator } from 'final-form';
+import onFieldChange from 'final-form-calculate';
 import React from 'react';
 import { Form, FormProps } from 'react-final-form';
 import { Except, Merge } from 'type-fest';
 import {
   CreateOtherProduct,
   CreateProduct,
+  ProgressMeasurement,
   UpdateOtherProduct,
   UpdateProduct,
 } from '../../../api';
@@ -13,6 +16,7 @@ import {
   SubmitButton,
   SubmitError,
 } from '../../../components/form';
+import { ProductTypes } from './constants';
 import { ProductFormFragment } from './ProductForm.generated';
 import { ProductFormFields } from './ProductFormFields';
 
@@ -49,11 +53,31 @@ export type ProductFormProps = FormProps<ProductFormValues> & {
   product?: ProductFormFragment;
 };
 
+const decorators: Array<Decorator<ProductFormValues>> = [
+  onFieldChange({
+    field: 'product.productType',
+    updates: {
+      'product.progressStepMeasurement': (
+        productType: ProductTypes,
+        { product }
+      ): ProgressMeasurement | undefined => {
+        if (productType === 'Other') {
+          return product?.progressStepMeasurement ?? undefined;
+        }
+        if (productType === 'Song') {
+          return 'Number';
+        }
+        return 'Percent';
+      },
+    },
+  }),
+];
+
 export const ProductForm = ({ product, ...props }: ProductFormProps) => {
   const classes = useStyles();
 
   return (
-    <Form<ProductFormValues> {...props}>
+    <Form<ProductFormValues> decorators={decorators} {...props}>
       {({ handleSubmit, ...rest }) => (
         <form onSubmit={handleSubmit} className={classes.form}>
           <SubmitError />

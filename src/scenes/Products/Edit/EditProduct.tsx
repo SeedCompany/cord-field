@@ -74,7 +74,14 @@ export const EditProduct = () => {
 
   const initialValues = useMemo(() => {
     if (!product) return undefined;
-    const { mediums, purposes, methodology, scriptureReferences } = product;
+    const {
+      mediums,
+      purposes,
+      methodology,
+      scriptureReferences,
+      progressStepMeasurement,
+      progressTarget,
+    } = product;
 
     const scriptureReferencesWithoutTypename = removeScriptureTypename(
       scriptureReferences.value
@@ -101,6 +108,8 @@ export const EditProduct = () => {
         fullNewTestament: scriptureReferencesWithoutTypename.some((reference) =>
           isEqual(reference, fullNewTestamentRange)
         ),
+        progressStepMeasurement: progressStepMeasurement.value,
+        progressTarget: progressTarget.value,
         title: '',
         ...(product.__typename === 'DirectScriptureProduct'
           ? {

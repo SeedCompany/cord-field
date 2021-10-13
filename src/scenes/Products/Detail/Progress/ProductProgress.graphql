@@ -12,7 +12,7 @@ fragment ProductProgress on ProductProgress {
 
 fragment StepProgress on StepProgress {
   step
-  percentDone {
+  completed {
     canRead
     canEdit
     value

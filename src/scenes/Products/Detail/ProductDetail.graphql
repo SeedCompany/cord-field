@@ -25,4 +25,14 @@ fragment ProductDetail on Product {
       ...ProjectBreadcrumb
     }
   }
+  progressStepMeasurement {
+    canRead
+    canEdit
+    value
+  }
+  progressTarget {
+    canRead
+    canEdit
+    value
+  }
 }
