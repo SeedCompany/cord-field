@@ -29,8 +29,8 @@ type StepEditDialogProps = Except<
 > & {
   progress: ProductProgressFragment;
   step: StepProgressFragment;
-  measurement?: ProgressMeasurement | null;
-  target?: number | null;
+  measurement: ProgressMeasurement;
+  target: number;
 };
 
 export const StepEditDialog = ({
@@ -83,11 +83,13 @@ export const StepEditDialog = ({
           ) : (
             <NumberField
               {...props}
-              label={`Progress${
-                measurement === 'Number' ? ` (target: ${target})` : ''
-              }`}
+              label="Progress"
+              helperText={
+                measurement === 'Number' ? `Target is ${target}` : undefined
+              }
+              maximumFractionDigits={4}
               suffix={measurement === 'Percent' ? '%' : undefined}
-              validate={max(measurement === 'Number' && target ? target : 100)}
+              validate={max(target)}
             />
           )
         }

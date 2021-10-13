@@ -15,14 +15,23 @@ interface StepsListProps {
   target?: number | null;
 }
 
-export const StepsList = ({ progress, ...props }: StepsListProps) => {
+export const StepsList = ({
+  progress,
+  measurement,
+  target,
+}: StepsListProps) => {
   const [dialog, edit, editing] = useDialog<StepProgress>();
 
   return (
     <Grid container direction="column" spacing={1}>
       {progress?.steps.map((sp) => (
         <Grid item key={sp.step}>
-          <StepProgressCard progress={sp} onClick={() => edit(sp)} {...props} />
+          <StepProgressCard
+            progress={sp}
+            onClick={() => edit(sp)}
+            measurement={measurement}
+            target={target}
+          />
         </Grid>
       ))}
       {progress && progress.steps.length === 0 && (
@@ -30,12 +39,13 @@ export const StepsList = ({ progress, ...props }: StepsListProps) => {
           Product does not have any steps
         </Grid>
       )}
-      {editing && progress && (
+      {editing && progress && measurement && target && (
         <StepEditDialog
           progress={progress}
+          measurement={measurement}
+          target={target}
           step={editing}
           {...dialog}
-          {...props}
         />
       )}
     </Grid>
