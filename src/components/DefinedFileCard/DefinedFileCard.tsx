@@ -102,6 +102,10 @@ export interface DefinedFileCardProps {
   >;
   parentId: string;
   disableIcon?: boolean;
+  onUpload?: (arg: {
+    files: File[];
+    submit: (next: HandleUploadCompletedFunction) => void;
+  }) => void;
 }
 
 interface FileCardMetaProps {
@@ -149,6 +153,7 @@ export const DefinedFileCard = forwardRef<any, DefinedFileCardProps>(
       uploadMutationDocument,
       parentId,
       disableIcon,
+      onUpload,
       ...rest
     } = props;
     const { value: file, canRead, canEdit } = securedFile;
@@ -171,7 +176,11 @@ export const DefinedFileCard = forwardRef<any, DefinedFileCardProps>(
     };
 
     const onVersionUpload = (files: File[]) => {
-      uploadFiles({ files, handleUploadCompleted, parentId });
+      (onUpload ?? (({ submit }) => submit(handleUploadCompleted)))({
+        files,
+        submit: (next) =>
+          uploadFiles({ files, handleUploadCompleted: next, parentId }),
+      });
     };
 
     const { openFilePreview } = useFileActions();
