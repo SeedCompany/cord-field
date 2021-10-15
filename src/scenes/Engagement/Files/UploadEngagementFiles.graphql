@@ -1,8 +1,11 @@
 mutation UploadLanguageEngagementPnp(
   $id: ID!
   $upload: CreateDefinedFileVersionInput!
+  $methodology: ProductMethodology
 ) {
-  updateLanguageEngagement(input: { engagement: { id: $id, pnp: $upload } }) {
+  updateLanguageEngagement(
+    input: { engagement: { id: $id, pnp: $upload, methodology: $methodology } }
+  ) {
     engagement {
       id
       pnp {
