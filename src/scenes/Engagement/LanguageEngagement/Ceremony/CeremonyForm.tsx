@@ -45,14 +45,20 @@ export const CeremonyForm = ({
               }}
             />
             <DateField
-              disabled={!ceremony.value?.planned.value}
+              disabled={
+                !ceremony.value?.planned.value ||
+                !ceremony.value.estimatedDate.canEdit
+              }
               name="estimatedDate"
               label="Planned Date"
             />
             <DateField
               name="actualDate"
               label="Actual Date"
-              disabled={!ceremony.value?.planned.value}
+              disabled={
+                !ceremony.value?.planned.value ||
+                !ceremony.value.actualDate.canEdit
+              }
             />
           </FieldGroup>
         )}
