@@ -3,6 +3,8 @@ import React, { ComponentType } from 'react';
 import { displayProductTypes } from '../../../api';
 import { FieldConfig } from '../../../components/form';
 import {
+  EthnoArtField,
+  EthnoArtLookupItem,
   FilmField,
   FilmLookupItem,
   LiteracyMaterialField,
@@ -23,7 +25,8 @@ declare module './ProductForm' {
       | FilmLookupItem
       | StoryLookupItem
       | LiteracyMaterialLookupItem
-      | SongLookupItem;
+      | SongLookupItem
+      | EthnoArtLookupItem;
   }
 }
 
@@ -34,6 +37,7 @@ const productFieldMap: Partial<Record<ProductTypes, AnyFormFieldComponent>> = {
   Story: StoryField,
   LiteracyMaterial: LiteracyMaterialField,
   Song: SongField,
+  EthnoArt: EthnoArtField,
 };
 
 export const ProductSection = ({

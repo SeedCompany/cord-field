@@ -1,0 +1,22 @@
+mutation CreateEthnoArt($input: CreateEthnoArtInput!) {
+  createEthnoArt(input: $input) {
+    ethnoArt {
+      id
+      name {
+        value
+      }
+    }
+  }
+}
+
+query EthnoArts {
+  ethnoArts {
+    items {
+      id
+      name {
+        value
+        value
+      }
+    }
+  }
+}

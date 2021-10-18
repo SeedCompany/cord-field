@@ -1,0 +1,23 @@
+import { LookupField } from '../..';
+import { CreateEthnoArtInput } from '../../../../api';
+import { CreateEthnoArt } from '../../../../scenes/Engagement/LanguageEngagement/Product/Producibles/EthnoArt/CreateEthnoArt';
+import {
+  EthnoArtLookupItemFragment as EthnoArt,
+  EthnoArtLookupDocument,
+} from './EthnoArtLookup.generated';
+
+export const EthnoArtField = LookupField.createFor<
+  EthnoArt,
+  CreateEthnoArtInput
+>({
+  resource: 'EthnoArt',
+  lookupDocument: EthnoArtLookupDocument,
+  label: 'Ethno Art',
+  placeholder: 'Search for an etho art by name',
+  CreateDialogForm: CreateEthnoArt,
+  getInitialValues: (value) => ({
+    ethnoArt: {
+      name: value,
+    },
+  }),
+});

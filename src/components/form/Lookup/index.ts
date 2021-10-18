@@ -1,3 +1,4 @@
+export * from './EthnoArt';
 export * from './Film';
 export * from './Language';
 export * from './LiteracyMaterial';
