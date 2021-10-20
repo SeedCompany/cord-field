@@ -1,7 +1,6 @@
 import { useMutation, useQuery } from '@apollo/client';
 import { Breadcrumbs, makeStyles, Typography } from '@material-ui/core';
 import { Skeleton } from '@material-ui/lab';
-import { isEqual } from 'lodash';
 import { useSnackbar } from 'notistack';
 import React, { useMemo } from 'react';
 import { Helmet } from 'react-helmet-async';
@@ -14,9 +13,8 @@ import {
 import { EngagementBreadcrumb } from '../../../components/EngagementBreadcrumb';
 import { ProjectBreadcrumb } from '../../../components/ProjectBreadcrumb';
 import {
-  fullNewTestamentRange,
-  fullOldTestamentRange,
-  parsedRangesWithFullTestamentRange,
+  getFullBookRange,
+  isFullBookRange,
   removeScriptureTypename,
 } from '../../../util/biblejs';
 import { useProjectId } from '../../Projects/useProjectId';
@@ -84,21 +82,21 @@ export const EditProduct = () => {
       mediums,
       purposes,
       methodology,
-      scriptureReferences,
       progressStepMeasurement,
       progressTarget,
     } = product;
 
-    const scriptureReferencesWithoutTypename = removeScriptureTypename(
-      scriptureReferences.value
+    const scriptureReferences = removeScriptureTypename(
+      product.scriptureReferences.value
     );
 
-    const referencesWithoutFullTestament =
-      scriptureReferencesWithoutTypename.filter(
-        (reference) =>
-          !isEqual(reference, fullOldTestamentRange) &&
-          !isEqual(reference, fullNewTestamentRange)
-      );
+    const book = scriptureReferences[0]?.start.book;
+    const bookSelection =
+      scriptureReferences.length > 0 && book
+        ? isFullBookRange(scriptureReferences[0], book)
+          ? 'full'
+          : 'partialKnown'
+        : 'full';
 
     const values: ProductFormValues = {
       product: {
@@ -107,13 +105,9 @@ export const EditProduct = () => {
         methodology: methodology.value,
         steps: product.steps.value,
         describeCompletion: product.describeCompletion.value,
-        scriptureReferences: referencesWithoutFullTestament,
-        fullOldTestament: scriptureReferencesWithoutTypename.some((reference) =>
-          isEqual(reference, fullOldTestamentRange)
-        ),
-        fullNewTestament: scriptureReferencesWithoutTypename.some((reference) =>
-          isEqual(reference, fullNewTestamentRange)
-        ),
+        scriptureReferences: scriptureReferences,
+        book: book,
+        bookSelection: bookSelection,
         progressStepMeasurement: progressStepMeasurement.value,
         progressTarget: progressTarget.value,
         title: '',
@@ -168,19 +162,17 @@ export const EditProduct = () => {
         productType,
         produces,
         scriptureReferences,
-        fullOldTestament,
-        fullNewTestament,
+        book,
+        bookSelection,
         title,
         description,
         ...input
       } = data.product ?? {};
 
-      const parsedScriptureReferences = parsedRangesWithFullTestamentRange(
-        scriptureReferences,
-        fullOldTestament,
-        fullNewTestament
-      );
-
+      const parsedScriptureReferences =
+        bookSelection === 'full' && book
+          ? [getFullBookRange(book)]
+          : scriptureReferences;
       if (productType === 'Other') {
         await updateOtherProduct({
           variables: {

@@ -78,6 +78,24 @@ const decorators: Array<Decorator<ProductFormValues>> = [
       },
     },
   }),
+  onFieldChange({
+    field: 'product.book',
+    updates: (book, field, allValues, prevValues) =>
+      // Clear scripture if book is cleared or a different book is selected
+      !(book && !prevValues?.product?.book)
+        ? {
+            'product.bookSelection': 'full',
+            'product.scriptureReferences': null,
+          }
+        : {},
+  }),
+  onFieldChange({
+    field: 'product.bookSelection',
+    updates: (selection) =>
+      selection !== 'partialKnown'
+        ? { 'product.scriptureReferences': null }
+        : {},
+  }),
 ];
 
 export const ProductForm = ({ product, ...props }: ProductFormProps) => {

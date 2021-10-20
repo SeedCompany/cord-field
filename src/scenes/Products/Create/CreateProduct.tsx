@@ -9,7 +9,7 @@ import { addItemToList, handleFormError, Product } from '../../../api';
 import { EngagementBreadcrumb } from '../../../components/EngagementBreadcrumb';
 import { ProjectBreadcrumb } from '../../../components/ProjectBreadcrumb';
 import { ButtonLink } from '../../../components/Routing';
-import { parsedRangesWithFullTestamentRange } from '../../../util/biblejs';
+import { getFullBookRange } from '../../../util/biblejs';
 import { useProjectId } from '../../Projects/useProjectId';
 import { ProductForm } from '../ProductForm';
 import {
@@ -95,19 +95,17 @@ export const CreateProduct = () => {
               productType,
               produces,
               scriptureReferences,
-              fullOldTestament,
-              fullNewTestament,
+              book,
+              bookSelection,
               title,
               description,
               ...inputs
             } = submitted.product ?? {};
 
             const parsedScriptureReferences =
-              parsedRangesWithFullTestamentRange(
-                scriptureReferences,
-                fullOldTestament,
-                fullNewTestament
-              );
+              bookSelection === 'full' && book
+                ? [getFullBookRange(book)]
+                : scriptureReferences ?? [];
             try {
               let product: Pick<Product, 'id'>;
               if (productType === 'Other') {
