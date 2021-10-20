@@ -28,8 +28,9 @@ import {
 import {
   DeleteProductDocument,
   ProductInfoForEditDocument,
+  UpdateDerivativeScriptureProductDocument,
+  UpdateDirectScriptureProductDocument,
   UpdateOtherProductDocument,
-  UpdateProductDocument,
 } from './EditProduct.generated';
 
 const useStyles = makeStyles(({ spacing }) => ({
@@ -63,7 +64,12 @@ export const EditProduct = () => {
   const engagement = data?.engagement;
   const product = data?.product;
 
-  const [updateProduct] = useMutation(UpdateProductDocument);
+  const [updateDirectScriptureProduct] = useMutation(
+    UpdateDirectScriptureProductDocument
+  );
+  const [updateDerivativeScriptureProduct] = useMutation(
+    UpdateDerivativeScriptureProductDocument
+  );
   const [updateOtherProduct] = useMutation(UpdateOtherProductDocument);
   const [deleteProduct] = useMutation(DeleteProductDocument, {
     update: removeItemFromList({
@@ -186,22 +192,24 @@ export const EditProduct = () => {
             },
           },
         });
-      } else {
-        await updateProduct({
+      } else if (productType === 'DirectScriptureProduct') {
+        await updateDirectScriptureProduct({
           variables: {
             input: {
-              product: {
-                id: product.id,
-                ...input,
-                produces: produces?.id,
-                ...(productType !== 'DirectScriptureProduct'
-                  ? {
-                      scriptureReferencesOverride: parsedScriptureReferences,
-                    }
-                  : {
-                      scriptureReferences: parsedScriptureReferences,
-                    }),
-              },
+              id: product.id,
+              ...input,
+              scriptureReferences: parsedScriptureReferences,
+            },
+          },
+        });
+      } else {
+        await updateDerivativeScriptureProduct({
+          variables: {
+            input: {
+              id: product.id,
+              ...input,
+              produces: produces!.id,
+              scriptureReferencesOverride: parsedScriptureReferences,
             },
           },
         });

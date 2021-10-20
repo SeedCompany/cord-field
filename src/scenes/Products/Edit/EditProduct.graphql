@@ -1,5 +1,15 @@
-mutation UpdateProduct($input: UpdateProductInput!) {
-  updateProduct(input: $input) {
+mutation UpdateDirectScriptureProduct($input: UpdateDirectScriptureProduct!) {
+  updateDirectScriptureProduct(input: $input) {
+    product {
+      ...ProductForm
+    }
+  }
+}
+
+mutation UpdateDerivativeScriptureProduct(
+  $input: UpdateDerivativeScriptureProduct!
+) {
+  updateDerivativeScriptureProduct(input: $input) {
     product {
       ...ProductForm
     }

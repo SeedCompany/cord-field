@@ -13,8 +13,9 @@ import { parsedRangesWithFullTestamentRange } from '../../../util/biblejs';
 import { useProjectId } from '../../Projects/useProjectId';
 import { ProductForm } from '../ProductForm';
 import {
+  CreateDerivativeScriptureDocument,
+  CreateDirectScriptureProductDocument,
   CreateOtherProductDocument,
-  CreateProductDocument,
   ProductInfoForCreateDocument,
 } from './CreateProduct.generated';
 
@@ -51,12 +52,24 @@ export const CreateProduct = () => {
       ? data.engagement
       : undefined;
 
-  const [createProduct] = useMutation(CreateProductDocument, {
-    update: addItemToList({
-      listId: [engagement, 'products'],
-      outputToItem: (res) => res.createProduct.product,
-    }),
-  });
+  const [createDirectScriptureProduct] = useMutation(
+    CreateDirectScriptureProductDocument,
+    {
+      update: addItemToList({
+        listId: [engagement, 'products'],
+        outputToItem: (res) => res.createDirectScriptureProduct.product,
+      }),
+    }
+  );
+  const [createDerivativeScriptureProduct] = useMutation(
+    CreateDerivativeScriptureDocument,
+    {
+      update: addItemToList({
+        listId: [engagement, 'products'],
+        outputToItem: (res) => res.createDerivativeScriptureProduct.product,
+      }),
+    }
+  );
   const [createOtherProduct] = useMutation(CreateOtherProductDocument, {
     update: addItemToList({
       listId: [engagement, 'products'],
@@ -96,7 +109,7 @@ export const CreateProduct = () => {
                 fullNewTestament
               );
             try {
-              let product: Product;
+              let product: Pick<Product, 'id'>;
               if (productType === 'Other') {
                 const { data } = await createOtherProduct({
                   variables: {
@@ -108,28 +121,30 @@ export const CreateProduct = () => {
                     },
                   },
                 });
-                product = data?.createOtherProduct.product as Product;
-              } else {
-                const { data } = await createProduct({
+                product = data!.createOtherProduct.product;
+              } else if (productType === 'DirectScriptureProduct') {
+                const { data } = await createDirectScriptureProduct({
                   variables: {
                     input: {
-                      product: {
-                        engagementId,
-                        ...inputs,
-                        ...(productType !== 'DirectScriptureProduct' && produces
-                          ? {
-                              produces: produces.id,
-                              scriptureReferencesOverride:
-                                parsedScriptureReferences,
-                            }
-                          : {
-                              scriptureReferences: parsedScriptureReferences,
-                            }),
-                      },
+                      engagementId,
+                      scriptureReferences: parsedScriptureReferences,
+                      ...inputs,
                     },
                   },
                 });
-                product = data?.createProduct.product as Product;
+                product = data!.createDirectScriptureProduct.product;
+              } else {
+                const { data } = await createDerivativeScriptureProduct({
+                  variables: {
+                    input: {
+                      engagementId,
+                      ...inputs,
+                      produces: produces!.id,
+                      scriptureReferencesOverride: parsedScriptureReferences,
+                    },
+                  },
+                });
+                product = data!.createDerivativeScriptureProduct.product;
               }
 
               enqueueSnackbar(`Created goal`, {
