@@ -39,7 +39,7 @@ export const CreateEthnoArt = (props: CreateEthnoArtProps) => {
       <TextField
         name="ethnoArt.name"
         label="Name"
-        placeholder="Enter ethno art name"
+        placeholder="Enter EthnoArt name"
         required
       />
     </DialogForm>
