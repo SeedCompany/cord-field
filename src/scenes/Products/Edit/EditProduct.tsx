@@ -90,13 +90,28 @@ export const EditProduct = () => {
       product.scriptureReferences.value
     );
 
-    const book = scriptureReferences[0]?.start.book;
-    const bookSelection =
-      scriptureReferences.length > 0 && book
-        ? isFullBookRange(scriptureReferences[0], book)
-          ? 'full'
-          : 'partialKnown'
-        : 'full';
+    const unspecifiedScripture =
+      product.__typename === 'DirectScriptureProduct'
+        ? product.unspecifiedScripture.value
+        : null;
+
+    const book =
+      product.__typename === 'DirectScriptureProduct'
+        ? product.unspecifiedScripture.value?.book ||
+          scriptureReferences[0]?.start.book
+        : undefined;
+
+    const versesOnly = !!(
+      product.__typename === 'DirectScriptureProduct' &&
+      product.unspecifiedScripture.value
+    );
+    const bookSelection = versesOnly
+      ? 'partialUnknown'
+      : scriptureReferences.length > 0 && book
+      ? isFullBookRange(scriptureReferences[0], book)
+        ? 'full'
+        : 'partialKnown'
+      : 'full';
 
     const values: ProductFormValues = {
       product: {
@@ -110,6 +125,11 @@ export const EditProduct = () => {
         bookSelection: bookSelection,
         progressStepMeasurement: progressStepMeasurement.value,
         progressTarget: progressTarget.value,
+        unspecifiedScripture: unspecifiedScripture
+          ? {
+              totalVerses: unspecifiedScripture.totalVerses,
+            }
+          : undefined,
         title: '',
         ...(product.__typename === 'DirectScriptureProduct'
           ? {
@@ -163,14 +183,17 @@ export const EditProduct = () => {
         produces,
         scriptureReferences,
         book,
-        bookSelection,
         title,
         description,
+        bookSelection,
+        unspecifiedScripture,
         ...input
       } = data.product ?? {};
 
       const parsedScriptureReferences =
-        bookSelection === 'full' && book
+        bookSelection === 'partialUnknown'
+          ? []
+          : bookSelection === 'full' && book
           ? [getFullBookRange(book)]
           : scriptureReferences;
       if (productType === 'Other') {
@@ -191,6 +214,15 @@ export const EditProduct = () => {
               id: product.id,
               ...input,
               scriptureReferences: parsedScriptureReferences,
+              unspecifiedScripture:
+                bookSelection !== 'partialUnknown' ||
+                !book ||
+                !unspecifiedScripture?.totalVerses
+                  ? null
+                  : {
+                      book,
+                      ...unspecifiedScripture,
+                    },
             },
           },
         });

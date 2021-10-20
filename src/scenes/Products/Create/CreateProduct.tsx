@@ -95,6 +95,7 @@ export const CreateProduct = () => {
               productType,
               produces,
               scriptureReferences,
+              unspecifiedScripture,
               book,
               bookSelection,
               title,
@@ -126,6 +127,15 @@ export const CreateProduct = () => {
                     input: {
                       engagementId,
                       scriptureReferences: parsedScriptureReferences,
+                      unspecifiedScripture:
+                        parsedScriptureReferences.length > 0 ||
+                        !unspecifiedScripture?.totalVerses ||
+                        !book
+                          ? null
+                          : {
+                              book,
+                              ...unspecifiedScripture,
+                            },
                       ...inputs,
                     },
                   },

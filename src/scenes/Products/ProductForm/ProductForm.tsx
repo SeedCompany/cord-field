@@ -86,15 +86,20 @@ const decorators: Array<Decorator<ProductFormValues>> = [
         ? {
             'product.bookSelection': 'full',
             'product.scriptureReferences': null,
+            'product.unspecifiedScripture': null,
           }
         : {},
   }),
   onFieldChange({
     field: 'product.bookSelection',
-    updates: (selection) =>
-      selection !== 'partialKnown'
+    updates: (selection) => ({
+      ...(selection !== 'partialKnown'
         ? { 'product.scriptureReferences': null }
-        : {},
+        : {}),
+      ...(selection !== 'partialUnknown'
+        ? { 'product.unspecifiedScripture': null }
+        : {}),
+    }),
   }),
 ];
 

@@ -9,19 +9,21 @@ import {
 import { entries, simpleSwitch } from '../../../util';
 import {
   getScriptureRangeDisplay,
+  getUnspecifiedScriptureDisplay,
   ScriptureRange,
   scriptureRangeDictionary,
 } from '../../../util/biblejs';
 import { newTestament, oldTestament } from './constants';
 import { DefaultAccordion, useStyles } from './DefaultAccordion';
 import { SectionProps } from './ProductFormFields';
+import { VersesCountField } from './VersesCountField';
 
 declare module './ProductForm' {
   interface ProductFormCustomValues {
     scriptureReferences?: readonly ScriptureRange[];
     unspecifiedScripture?: Pick<UnspecifiedScripturePortion, 'totalVerses'>;
     book?: string;
-    bookSelection: 'full' | 'partialKnown';
+    bookSelection: 'full' | 'partialKnown' | 'partialUnknown';
   }
 }
 
@@ -31,7 +33,8 @@ export const ScriptureReferencesSection = ({
 }: SectionProps) => {
   const classes = useStyles();
 
-  const { scriptureReferences, book, bookSelection } = values.product ?? {};
+  const { scriptureReferences, book, bookSelection, unspecifiedScripture } =
+    values.product ?? {};
 
   if (values.product?.productType === 'Other') {
     return null;
@@ -46,6 +49,18 @@ export const ScriptureReferencesSection = ({
         if (book && bookSelection === 'full') {
           return <ToggleButton selected children={book} />;
         }
+
+        if (book && unspecifiedScripture) {
+          return (
+            <ToggleButton selected>
+              {getUnspecifiedScriptureDisplay({
+                book,
+                ...unspecifiedScripture,
+              })}
+            </ToggleButton>
+          );
+        }
+
         return entries(scriptureRangeDictionary(scriptureReferences)).map(
           ([book, scriptureRangeArr]) => (
             <ToggleButton selected key={book} value={book}>
@@ -74,12 +89,14 @@ export const ScriptureReferencesSection = ({
             <EnumField
               name="bookSelection"
               required
-              options={['full', 'partialKnown']}
+              options={['full', 'partialKnown', 'partialUnknown']}
               defaultValue="full"
               getLabel={(key) =>
                 simpleSwitch(key, {
                   full: 'Full Book',
                   partialKnown: 'Partial Book - Known References',
+                  partialUnknown:
+                    'Partial Book - Unknown References - Only total verse count',
                 })!
               }
               layout="column"
@@ -90,6 +107,14 @@ export const ScriptureReferencesSection = ({
               <VersesField
                 name="scriptureReferences"
                 label="Chapter / Verse Selections"
+                book={book}
+                required
+              />
+            ) : bookSelection === 'partialUnknown' ? (
+              <VersesCountField
+                name="unspecifiedScripture.totalVerses"
+                label="Total verse count"
+                variant="outlined"
                 book={book}
                 required
               />
