@@ -2,6 +2,7 @@ mutation UpdateDirectScriptureProduct($input: UpdateDirectScriptureProduct!) {
   updateDirectScriptureProduct(input: $input) {
     product {
       ...ProductForm
+      ...ProductCard
     }
   }
 }
@@ -12,6 +13,7 @@ mutation UpdateDerivativeScriptureProduct(
   updateDerivativeScriptureProduct(input: $input) {
     product {
       ...ProductForm
+      ...ProductCard
     }
   }
 }
@@ -20,6 +22,7 @@ mutation UpdateOtherProduct($input: UpdateOtherProduct!) {
   updateOtherProduct(input: $input) {
     product {
       ...ProductForm
+      ...ProductCard
     }
   }
 }
