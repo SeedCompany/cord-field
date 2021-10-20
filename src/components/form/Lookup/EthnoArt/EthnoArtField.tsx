@@ -12,8 +12,8 @@ export const EthnoArtField = LookupField.createFor<
 >({
   resource: 'EthnoArt',
   lookupDocument: EthnoArtLookupDocument,
-  label: 'Ethno Art',
-  placeholder: 'Search for an etho art by name',
+  label: 'EthnoArt',
+  placeholder: 'Search for an EthnoArt by name',
   CreateDialogForm: CreateEthnoArt,
   getInitialValues: (value) => ({
     ethnoArt: {
