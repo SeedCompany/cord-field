@@ -46,6 +46,11 @@ fragment ProductForm on Product {
     canEdit
     value
   }
+  ... on DirectScriptureProduct {
+    unspecifiedScripture {
+      ...SecuredUnspecifiedScripturePortion
+    }
+  }
   ... on DerivativeScriptureProduct {
     produces {
       canRead
@@ -137,6 +142,19 @@ fragment ScriptureRange on ScriptureRange {
     chapter
     verse
   }
+}
+
+fragment SecuredUnspecifiedScripturePortion on SecuredUnspecifiedScripturePortion {
+  canRead
+  canEdit
+  value {
+    ...UnspecifiedScripturePortion
+  }
+}
+
+fragment UnspecifiedScripturePortion on UnspecifiedScripturePortion {
+  book
+  totalVerses
 }
 
 query AvailableMethodologySteps {

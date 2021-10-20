@@ -1,7 +1,6 @@
 import { useMutation, useQuery } from '@apollo/client';
 import { Breadcrumbs, makeStyles, Typography } from '@material-ui/core';
 import { Skeleton } from '@material-ui/lab';
-import { isEqual } from 'lodash';
 import { useSnackbar } from 'notistack';
 import React, { useMemo } from 'react';
 import { Helmet } from 'react-helmet-async';
@@ -14,9 +13,8 @@ import {
 import { EngagementBreadcrumb } from '../../../components/EngagementBreadcrumb';
 import { ProjectBreadcrumb } from '../../../components/ProjectBreadcrumb';
 import {
-  fullNewTestamentRange,
-  fullOldTestamentRange,
-  parsedRangesWithFullTestamentRange,
+  getFullBookRange,
+  isFullBookRange,
   removeScriptureTypename,
 } from '../../../util/biblejs';
 import { useProjectId } from '../../Projects/useProjectId';
@@ -28,8 +26,9 @@ import {
 import {
   DeleteProductDocument,
   ProductInfoForEditDocument,
+  UpdateDerivativeScriptureProductDocument,
+  UpdateDirectScriptureProductDocument,
   UpdateOtherProductDocument,
-  UpdateProductDocument,
 } from './EditProduct.generated';
 
 const useStyles = makeStyles(({ spacing }) => ({
@@ -63,7 +62,12 @@ export const EditProduct = () => {
   const engagement = data?.engagement;
   const product = data?.product;
 
-  const [updateProduct] = useMutation(UpdateProductDocument);
+  const [updateDirectScriptureProduct] = useMutation(
+    UpdateDirectScriptureProductDocument
+  );
+  const [updateDerivativeScriptureProduct] = useMutation(
+    UpdateDerivativeScriptureProductDocument
+  );
   const [updateOtherProduct] = useMutation(UpdateOtherProductDocument);
   const [deleteProduct] = useMutation(DeleteProductDocument, {
     update: removeItemFromList({
@@ -78,21 +82,36 @@ export const EditProduct = () => {
       mediums,
       purposes,
       methodology,
-      scriptureReferences,
       progressStepMeasurement,
       progressTarget,
     } = product;
 
-    const scriptureReferencesWithoutTypename = removeScriptureTypename(
-      scriptureReferences.value
+    const scriptureReferences = removeScriptureTypename(
+      product.scriptureReferences.value
     );
 
-    const referencesWithoutFullTestament =
-      scriptureReferencesWithoutTypename.filter(
-        (reference) =>
-          !isEqual(reference, fullOldTestamentRange) &&
-          !isEqual(reference, fullNewTestamentRange)
-      );
+    const unspecifiedScripture =
+      product.__typename === 'DirectScriptureProduct'
+        ? product.unspecifiedScripture.value
+        : null;
+
+    const book =
+      product.__typename === 'DirectScriptureProduct'
+        ? product.unspecifiedScripture.value?.book ||
+          scriptureReferences[0]?.start.book
+        : undefined;
+
+    const versesOnly = !!(
+      product.__typename === 'DirectScriptureProduct' &&
+      product.unspecifiedScripture.value
+    );
+    const bookSelection = versesOnly
+      ? 'partialUnknown'
+      : scriptureReferences.length > 0 && book
+      ? isFullBookRange(scriptureReferences[0], book)
+        ? 'full'
+        : 'partialKnown'
+      : 'full';
 
     const values: ProductFormValues = {
       product: {
@@ -101,15 +120,16 @@ export const EditProduct = () => {
         methodology: methodology.value,
         steps: product.steps.value,
         describeCompletion: product.describeCompletion.value,
-        scriptureReferences: referencesWithoutFullTestament,
-        fullOldTestament: scriptureReferencesWithoutTypename.some((reference) =>
-          isEqual(reference, fullOldTestamentRange)
-        ),
-        fullNewTestament: scriptureReferencesWithoutTypename.some((reference) =>
-          isEqual(reference, fullNewTestamentRange)
-        ),
+        scriptureReferences: scriptureReferences,
+        book: book,
+        bookSelection: bookSelection,
         progressStepMeasurement: progressStepMeasurement.value,
         progressTarget: progressTarget.value,
+        unspecifiedScripture: unspecifiedScripture
+          ? {
+              totalVerses: unspecifiedScripture.totalVerses,
+            }
+          : undefined,
         title: '',
         ...(product.__typename === 'DirectScriptureProduct'
           ? {
@@ -162,19 +182,20 @@ export const EditProduct = () => {
         productType,
         produces,
         scriptureReferences,
-        fullOldTestament,
-        fullNewTestament,
+        book,
         title,
         description,
+        bookSelection,
+        unspecifiedScripture,
         ...input
       } = data.product ?? {};
 
-      const parsedScriptureReferences = parsedRangesWithFullTestamentRange(
-        scriptureReferences,
-        fullOldTestament,
-        fullNewTestament
-      );
-
+      const parsedScriptureReferences =
+        bookSelection === 'partialUnknown'
+          ? []
+          : bookSelection === 'full' && book
+          ? [getFullBookRange(book)]
+          : scriptureReferences;
       if (productType === 'Other') {
         await updateOtherProduct({
           variables: {
@@ -186,22 +207,33 @@ export const EditProduct = () => {
             },
           },
         });
-      } else {
-        await updateProduct({
+      } else if (productType === 'DirectScriptureProduct') {
+        await updateDirectScriptureProduct({
           variables: {
             input: {
-              product: {
-                id: product.id,
-                ...input,
-                produces: produces?.id,
-                ...(productType !== 'DirectScriptureProduct'
-                  ? {
-                      scriptureReferencesOverride: parsedScriptureReferences,
-                    }
+              id: product.id,
+              ...input,
+              scriptureReferences: parsedScriptureReferences,
+              unspecifiedScripture:
+                bookSelection !== 'partialUnknown' ||
+                !book ||
+                !unspecifiedScripture?.totalVerses
+                  ? null
                   : {
-                      scriptureReferences: parsedScriptureReferences,
-                    }),
-              },
+                      book,
+                      ...unspecifiedScripture,
+                    },
+            },
+          },
+        });
+      } else {
+        await updateDerivativeScriptureProduct({
+          variables: {
+            input: {
+              id: product.id,
+              ...input,
+              produces: produces!.id,
+              scriptureReferencesOverride: parsedScriptureReferences,
             },
           },
         });

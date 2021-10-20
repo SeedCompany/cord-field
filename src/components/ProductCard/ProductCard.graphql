@@ -28,6 +28,11 @@ fragment ProductCard on Product {
     canEdit
     value
   }
+  ... on DirectScriptureProduct {
+    unspecifiedScripture {
+      ...SecuredUnspecifiedScripturePortion
+    }
+  }
   ... on DerivativeScriptureProduct {
     produces {
       canRead

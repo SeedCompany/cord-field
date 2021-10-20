@@ -5,11 +5,13 @@ import React from 'react';
 import { Form, FormProps } from 'react-final-form';
 import { Except, Merge } from 'type-fest';
 import {
+  CreateDerivativeScriptureProduct,
+  CreateDirectScriptureProduct,
   CreateOtherProduct,
-  CreateProduct,
   ProgressMeasurement,
+  UpdateDerivativeScriptureProduct,
+  UpdateDirectScriptureProduct,
   UpdateOtherProduct,
-  UpdateProduct,
 } from '../../../api';
 import {
   SubmitAction,
@@ -42,7 +44,12 @@ export interface ProductFormCustomValues {}
 export interface ProductFormValues extends SubmitAction<'delete'> {
   product?: Merge<
     Except<
-      CreateProduct & UpdateProduct & CreateOtherProduct & UpdateOtherProduct,
+      CreateDirectScriptureProduct &
+        UpdateDirectScriptureProduct &
+        CreateDerivativeScriptureProduct &
+        UpdateDerivativeScriptureProduct &
+        CreateOtherProduct &
+        UpdateOtherProduct,
       'id' | 'engagementId'
     >,
     ProductFormCustomValues
@@ -70,6 +77,29 @@ const decorators: Array<Decorator<ProductFormValues>> = [
         return 'Percent';
       },
     },
+  }),
+  onFieldChange({
+    field: 'product.book',
+    updates: (book, field, allValues, prevValues) =>
+      // Clear scripture if book is cleared or a different book is selected
+      !(book && !prevValues?.product?.book)
+        ? {
+            'product.bookSelection': 'full',
+            'product.scriptureReferences': null,
+            'product.unspecifiedScripture': null,
+          }
+        : {},
+  }),
+  onFieldChange({
+    field: 'product.bookSelection',
+    updates: (selection) => ({
+      ...(selection !== 'partialKnown'
+        ? { 'product.scriptureReferences': null }
+        : {}),
+      ...(selection !== 'partialUnknown'
+        ? { 'product.unspecifiedScripture': null }
+        : {}),
+    }),
   }),
 ];
 
