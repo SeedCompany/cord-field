@@ -74,8 +74,6 @@ export const productTypes = [
   'DirectScriptureProduct',
   'Story',
   'Film',
-  'Song',
-  'LiteracyMaterial',
   'EthnoArt',
   'Other',
 ] as const;

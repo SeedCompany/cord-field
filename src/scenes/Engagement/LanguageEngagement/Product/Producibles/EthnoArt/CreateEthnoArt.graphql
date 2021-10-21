@@ -15,7 +15,6 @@ query EthnoArts {
       id
       name {
         value
-        value
       }
     }
   }

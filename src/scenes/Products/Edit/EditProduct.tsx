@@ -137,9 +137,8 @@ export const EditProduct = () => {
             }
           : product.__typename === 'DerivativeScriptureProduct' &&
             (product.produces.value?.__typename === 'Film' ||
-              product.produces.value?.__typename === 'Song' ||
-              product.produces.value?.__typename === 'LiteracyMaterial' ||
-              product.produces.value?.__typename === 'Story')
+              product.produces.value?.__typename === 'Story' ||
+              product.produces.value?.__typename === 'EthnoArt')
           ? {
               produces: {
                 id: product.produces.value.id,

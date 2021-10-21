@@ -7,10 +7,6 @@ import {
   EthnoArtLookupItem,
   FilmField,
   FilmLookupItem,
-  LiteracyMaterialField,
-  LiteracyMaterialLookupItem,
-  SongField,
-  SongLookupItem,
   StoryField,
   StoryLookupItem,
 } from '../../../components/form/Lookup';
@@ -21,12 +17,7 @@ import { SecuredAccordion } from './SecuredAccordion';
 declare module './ProductForm' {
   interface ProductFormCustomValues {
     productType?: ProductTypes;
-    produces?:
-      | FilmLookupItem
-      | StoryLookupItem
-      | LiteracyMaterialLookupItem
-      | SongLookupItem
-      | EthnoArtLookupItem;
+    produces?: FilmLookupItem | StoryLookupItem | EthnoArtLookupItem;
   }
 }
 
@@ -35,8 +26,6 @@ type AnyFormFieldComponent = ComponentType<FieldConfig<any, any, any>>;
 const productFieldMap: Partial<Record<ProductTypes, AnyFormFieldComponent>> = {
   Film: FilmField,
   Story: StoryField,
-  LiteracyMaterial: LiteracyMaterialField,
-  Song: SongField,
   EthnoArt: EthnoArtField,
 };
 

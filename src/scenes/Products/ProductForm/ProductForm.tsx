@@ -71,7 +71,7 @@ const decorators: Array<Decorator<ProductFormValues>> = [
         if (productType === 'Other') {
           return product?.progressStepMeasurement ?? undefined;
         }
-        if (productType === 'Song') {
+        if (productType === 'EthnoArt') {
           return 'Number';
         }
         return 'Percent';
