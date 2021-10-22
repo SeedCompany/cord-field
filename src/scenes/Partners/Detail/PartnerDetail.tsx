@@ -22,6 +22,7 @@ import { useDialog } from '../../../components/Dialog';
 import { Error } from '../../../components/Error';
 import { Fab } from '../../../components/Fab';
 import { useDateTimeFormatter } from '../../../components/Formatters';
+import { Redacted } from '../../../components/Redacted';
 import { UserListItemCardPortrait } from '../../../components/UserListItemCard';
 import { square } from '../../../util';
 import { EditablePartnerField, EditPartner } from '../Edit';
@@ -225,9 +226,16 @@ export const PartnerDetail = () => {
                   aria-label="add mentor"
                 >
                   <CardContent>
-                    <Avatar className={classes.pocCardAvatar}>
-                      <Add fontSize="inherit" />
-                    </Avatar>
+                    {!partner?.pointOfContact.canRead ? (
+                      <Redacted
+                        info="You don't have permission to view partner's point of contact"
+                        width={200}
+                      />
+                    ) : (
+                      <Avatar className={classes.pocCardAvatar}>
+                        <Add fontSize="inherit" />
+                      </Avatar>
+                    )}
                   </CardContent>
                 </CardActionArea>
               ) : undefined
