@@ -1,4 +1,5 @@
 import { useMutation } from '@apollo/client';
+import { Alert } from '@material-ui/lab';
 import { isBoolean } from 'lodash';
 import React, { useMemo } from 'react';
 import { Except } from 'type-fest';
@@ -76,6 +77,9 @@ export const StepEditDialog = ({
         });
       }}
     >
+      <Alert severity="warning">
+        Changes will not be applied to the PnP file
+      </Alert>
       <SecuredField obj={step} name="completed">
         {(props) =>
           measurement === 'Boolean' ? (
