@@ -1,4 +1,4 @@
-import { makeStyles, Typography } from '@material-ui/core';
+import { makeStyles } from '@material-ui/core';
 import { Decorator } from 'final-form';
 import onFieldChange from 'final-form-calculate';
 import React from 'react';
@@ -26,12 +26,8 @@ const useStyles = makeStyles(({ spacing, breakpoints }) => ({
   form: {
     maxWidth: breakpoints.values.md,
   },
-  submissionBlurb: {
-    margin: spacing(4, 0),
-    maxWidth: 400,
-    '& h4': {
-      marginBottom: spacing(1),
-    },
+  buttons: {
+    marginTop: spacing(2),
   },
   deleteButton: {
     marginLeft: spacing(1),
@@ -115,15 +111,8 @@ export const ProductForm = ({ product, ...props }: ProductFormProps) => {
           <div>
             <ProductFormFields product={product} {...rest} />
           </div>
-          <div className={classes.submissionBlurb}>
-            <Typography variant="h4">Check Your Selections</Typography>
-            <Typography>
-              If the selections above look good to you, go ahead and save your
-              Goal. If you need to edit your choices, do that above.
-            </Typography>
-          </div>
 
-          <div>
+          <div className={classes.buttons}>
             <SubmitButton fullWidth={false} color="primary" size="medium">
               Save Goal
             </SubmitButton>
