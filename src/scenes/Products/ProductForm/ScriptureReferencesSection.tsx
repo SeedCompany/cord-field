@@ -89,7 +89,13 @@ export const ScriptureReferencesSection = ({
             <EnumField
               name="bookSelection"
               required
-              options={['full', 'partialKnown', 'partialUnknown']}
+              options={[
+                'full',
+                'partialKnown',
+                ...(values.product?.productType === 'DirectScriptureProduct'
+                  ? ['partialUnknown']
+                  : []),
+              ]}
               defaultValue="full"
               getLabel={(key) =>
                 simpleSwitch(key, {
