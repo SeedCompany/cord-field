@@ -81,6 +81,14 @@ fragment Producible on Producible {
   id
   __typename
   createdAt
+  ... on EthnoArt {
+    name {
+      ...securedString
+    }
+    scriptureReferences {
+      ...SecuredScriptureRanges
+    }
+  }
   ... on Film {
     name {
       ...securedString
@@ -89,23 +97,7 @@ fragment Producible on Producible {
       ...SecuredScriptureRanges
     }
   }
-  ... on LiteracyMaterial {
-    name {
-      ...securedString
-    }
-    scriptureReferences {
-      ...SecuredScriptureRanges
-    }
-  }
   ... on Story {
-    name {
-      ...securedString
-    }
-    scriptureReferences {
-      ...SecuredScriptureRanges
-    }
-  }
-  ... on Song {
     name {
       ...securedString
     }

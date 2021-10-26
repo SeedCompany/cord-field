@@ -8,10 +8,8 @@ import {
 import {
   DescriptionOutlined,
   HelpOutlined,
-  LibraryBooksOutlined,
   MenuBook,
   Movie,
-  MusicNote,
   SvgIconComponent,
 } from '@material-ui/icons';
 import React from 'react';
@@ -46,8 +44,6 @@ const iconMap: Record<string, SvgIconComponent> = {
   Scripture: MenuBook,
   Story: DescriptionOutlined,
   Film: Movie,
-  Song: MusicNote,
-  'Literacy Material': LibraryBooksOutlined,
   Other: HelpOutlined,
 };
 

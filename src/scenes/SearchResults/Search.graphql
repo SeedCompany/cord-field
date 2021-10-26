@@ -13,7 +13,6 @@ fragment SearchResultItem on SearchResult {
   ...LocationCard
   ...FilmLookupItem
   ...StoryLookupItem
-  ...LiteracyMaterialLookupItem
-  ...SongLookupItem
+  ...EthnoArtLookupItem
   ...PartnerListItem
 }
