@@ -96,10 +96,9 @@ export const EditProduct = () => {
         : null;
 
     const book =
-      product.__typename === 'DirectScriptureProduct'
-        ? product.unspecifiedScripture.value?.book ||
-          scriptureReferences[0]?.start.book
-        : undefined;
+      (product.__typename === 'DirectScriptureProduct'
+        ? product.unspecifiedScripture.value?.book
+        : undefined) ?? scriptureReferences[0]?.start.book;
 
     const versesOnly = !!(
       product.__typename === 'DirectScriptureProduct' &&
