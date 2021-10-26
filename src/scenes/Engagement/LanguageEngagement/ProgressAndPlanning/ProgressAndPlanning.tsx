@@ -68,6 +68,7 @@ export const PlanningSpreadsheet = ({ engagement }: Props) => {
           }}
           title="Extract Goals?"
           submitLabel="Upload"
+          sendIfClean // Default option leaves form clean, but we want to send it
         >
           <Typography>
             CORD can create goals from this spreadsheet for you. We just need to
