@@ -7,6 +7,7 @@ import {
 } from '@material-ui/core';
 import {
   DescriptionOutlined,
+  FilterVintage,
   HelpOutlined,
   MenuBook,
   Movie,
@@ -44,6 +45,7 @@ const iconMap: Record<string, SvgIconComponent> = {
   Scripture: MenuBook,
   Story: DescriptionOutlined,
   Film: Movie,
+  'Ethno Art': FilterVintage,
   Other: HelpOutlined,
 };
 
