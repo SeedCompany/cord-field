@@ -59,9 +59,8 @@ export const ProductCard = ({ product }: ProductCardProps) => {
 
   const firstStepNotDone = product.progressOfCurrentReportDue?.steps.find(
     (step) =>
-      step.completed.value &&
-      progressTarget &&
-      step.completed.value < progressTarget
+      !step.completed.value ||
+      (progressTarget && step.completed.value < progressTarget)
   );
   const allStepsDone =
     product.progressOfCurrentReportDue &&
