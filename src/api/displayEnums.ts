@@ -9,7 +9,6 @@ import {
   InternshipPosition,
   InternshipProgram,
   LocationType,
-  MethodologyStep,
   PartnershipAgreementStatus,
   PartnerType,
   PostShareability,
@@ -17,6 +16,7 @@ import {
   ProductMedium,
   ProductMethodology,
   ProductPurpose,
+  ProductStep,
   ProgressMeasurement,
   ProjectChangeRequestStatus,
   ProjectChangeRequestType,
@@ -93,6 +93,6 @@ export const displayProductTypes = (type: ProductTypes) =>
 
 export const displayPostShareability = displayEnum<PostShareability>();
 
-export const displayProductStep = displayEnum<MethodologyStep>();
+export const displayProductStep = displayEnum<ProductStep>();
 
 export const displayProgressMeasurement = displayEnum<ProgressMeasurement>();

@@ -42,9 +42,6 @@ query ProductInfoForEdit(
   product(id: $productId) {
     ...ProductForm
   }
-  methodologyAvailableSteps {
-    ...AvailableMethodologySteps
-  }
 }
 
 mutation DeleteProduct($productId: ID!) {

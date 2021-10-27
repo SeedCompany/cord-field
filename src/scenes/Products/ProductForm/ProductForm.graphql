@@ -149,13 +149,9 @@ fragment UnspecifiedScripturePortion on UnspecifiedScripturePortion {
   totalVerses
 }
 
-query AvailableMethodologySteps {
-  methodologyAvailableSteps {
-    ...AvailableMethodologySteps
-  }
-}
-
-fragment AvailableMethodologySteps on AvailableMethodologySteps {
-  steps
-  methodology
+query AvailableProductSteps(
+  $type: ProducibleType
+  $methodology: ProductMethodology
+) {
+  availableProductSteps(type: $type, methodology: $methodology)
 }

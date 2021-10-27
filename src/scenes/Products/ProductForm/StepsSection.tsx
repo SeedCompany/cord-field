@@ -1,11 +1,10 @@
 import { useQuery } from '@apollo/client';
 import { ToggleButton } from '@material-ui/lab';
 import { intersection } from 'lodash';
-import React, { useEffect, useMemo } from 'react';
+import React, { useEffect } from 'react';
 import { displayProductStep } from '../../../api';
 import { EnumField } from '../../../components/form';
-import { mapFromList } from '../../../util';
-import { AvailableMethodologyStepsDocument as AvailableSteps } from './ProductForm.generated';
+import { AvailableProductStepsDocument as AvailableSteps } from './ProductForm.generated';
 import { SectionProps } from './ProductFormFields';
 import { SecuredAccordion } from './SecuredAccordion';
 
@@ -14,18 +13,15 @@ export const StepsSection = ({
   values,
   accordionState,
 }: SectionProps) => {
-  const { data } = useQuery(AvailableSteps);
-  const availableStepMap = useMemo(
-    () =>
-      mapFromList(data?.methodologyAvailableSteps ?? [], (pair) => [
-        pair.methodology,
-        pair.steps,
-      ]),
-    [data]
-  );
+  const { methodology, steps, productType } = values.product ?? {};
 
-  const { methodology, steps } = values.product ?? {};
-  const availableSteps = methodology ? availableStepMap[methodology] : [];
+  const { data } = useQuery(AvailableSteps, {
+    variables: {
+      type: productType === 'Other' ? 'OtherProduct' : productType,
+      methodology,
+    },
+  });
+  const availableSteps = data?.availableProductSteps ?? [];
 
   // When methodology changes, remove all currently selected steps that are now unavailable
   // When steps change, ensure they are ordered by order specified in available steps
