@@ -4,7 +4,7 @@ import { Helmet } from 'react-helmet-async';
 import { ReportType } from '../../api';
 import { Breadcrumb } from '../Breadcrumb';
 import { PeriodicReportFragment } from './PeriodicReport.generated';
-import { PeriodicReportsTable } from './PeriodicReportsTable';
+import { PeriodicReportsTable, ReportRow } from './PeriodicReportsTable';
 
 const useStyles = makeStyles(({ spacing, breakpoints }) => ({
   root: {
@@ -26,11 +26,13 @@ export const PeriodicReportsList = ({
   breadcrumbs = [],
   pageTitleSuffix,
   reports,
+  onRowClick,
 }: {
   type: ReportType;
   breadcrumbs?: ReactNode[];
   pageTitleSuffix?: string;
   reports?: readonly PeriodicReportFragment[];
+  onRowClick?: (rowData: ReportRow) => void;
 }) => {
   const classes = useStyles();
   const reportTypeName = `${type} Reports`;
@@ -50,7 +52,7 @@ export const PeriodicReportsList = ({
           {reportTypeName}
         </Typography>
 
-        <PeriodicReportsTable data={reports} />
+        <PeriodicReportsTable data={reports} onRowClick={onRowClick} />
       </main>
     </div>
   );

@@ -187,19 +187,24 @@ export const PeriodicReportsTableInContext = ({
           Toolbar: () => null,
         }}
         columns={columns}
-        onRowClick={({ report }) => {
-          if (!report.reportFile.canRead) {
-            enqueueSnackbar(
-              `You don't have permission to view this report file`
-            );
-            return;
-          }
-          if (report.reportFile.value) {
-            openFilePreview(report.reportFile.value);
-            return;
-          }
-          if (report.reportFile.canEdit) {
-            // TODO Upload
+        onRowClick={(rowData) => {
+          if (props.onRowClick) {
+            props.onRowClick(rowData);
+          } else {
+            const { report } = rowData;
+            if (!report.reportFile.canRead) {
+              enqueueSnackbar(
+                `You don't have permission to view this report file`
+              );
+              return;
+            }
+            if (report.reportFile.value) {
+              openFilePreview(report.reportFile.value);
+              return;
+            }
+            if (report.reportFile.canEdit) {
+              // TODO Upload
+            }
           }
         }}
         options={{

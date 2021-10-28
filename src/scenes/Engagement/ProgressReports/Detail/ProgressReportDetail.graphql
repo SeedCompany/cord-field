@@ -1,0 +1,38 @@
+query ProgressReportDetail(
+  $projectId: ID!
+  $changeset: ID
+  $engagementId: ID!
+  $progressReportId: ID!
+  $productsListInput: ProductListInput
+) {
+  project(id: $projectId, changeset: $changeset) {
+    ...ProjectBreadcrumb
+  }
+  engagement(id: $engagementId, changeset: $changeset) {
+    ...EngagementBreadcrumb
+    ... on LanguageEngagement {
+      products(input: $productsListInput) {
+        ...ProductList
+      }
+    }
+  }
+  periodicReport(id: $progressReportId) {
+    ...ProgressReport
+  }
+  methodologyAvailableSteps {
+    ...AvailableMethodologySteps
+  }
+}
+
+fragment ProgressReport on ProgressReport {
+  ...PeriodicReport
+  cumulativeSummary {
+    ...ProgressSummary
+  }
+}
+
+fragment ProgressSummary on ProgressSummary {
+  actual
+  planned
+  variance
+}
