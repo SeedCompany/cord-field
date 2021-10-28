@@ -86,4 +86,5 @@ fragment ProductCard on Product {
   progressOfCurrentReportDue {
     ...ProductProgress
   }
+  productAvailableSteps
 }

@@ -1,20 +1,18 @@
-import { Dictionary, indexOf, keyBy, uniq } from 'lodash';
+import { Dictionary, indexOf, uniq } from 'lodash';
 import { Column } from 'material-table';
 import React, { useMemo } from 'react';
-import { displayProductStep, MethodologyStep } from '../../../../api';
+import { displayProductStep, ProductStep } from '../../../../api';
 import { ProductCardFragment } from '../../../../components/ProductCard/ProductCard.generated';
 import { Table } from '../../../../components/Table';
-import { AvailableMethodologyStepsFragment } from '../../../Products/ProductForm/ProductForm.generated';
 
 interface ProductTableProps {
   category: string;
   products: ProductCardFragment[];
-  methodologyAvailableSteps: readonly AvailableMethodologyStepsFragment[];
 }
 
 const mergeMethodologySteps = (
-  steps1: readonly MethodologyStep[],
-  steps2: readonly MethodologyStep[]
+  steps1: readonly ProductStep[],
+  steps2: readonly ProductStep[]
 ) => {
   let mergedSteps = [...steps1];
   let mergingSteps = [...steps2];
@@ -43,39 +41,27 @@ const mergeMethodologySteps = (
   return mergedSteps;
 };
 
-export const ProductTable = ({
-  products,
-  category,
-  methodologyAvailableSteps,
-}: ProductTableProps) => {
+export const ProductTable = ({ products, category }: ProductTableProps) => {
   const steps = uniq(products.flatMap((product) => product.steps.value));
 
   const availableSteps = useMemo(() => {
-    const indexedMethodologyAvailableSteps = keyBy(
-      methodologyAvailableSteps,
-      (ms) => ms.methodology
-    );
-
-    let availableSteps: MethodologyStep[] = [];
+    let availableSteps: ProductStep[] = [];
     products
       .filter((product) => product.methodology.value)
       .forEach((product, index) => {
-        const methodologyAvailableStepsForProduct =
-          indexedMethodologyAvailableSteps[product.methodology.value ?? '']
-            ?.steps ?? [];
         if (index === 0) {
-          availableSteps = [...methodologyAvailableStepsForProduct];
+          availableSteps = [...product.productAvailableSteps];
         } else {
           availableSteps = [
             ...mergeMethodologySteps(
               availableSteps,
-              methodologyAvailableStepsForProduct
+              product.productAvailableSteps
             ),
           ];
         }
       });
     return availableSteps;
-  }, [methodologyAvailableSteps, products]);
+  }, [products]);
 
   const columns: Array<Column<any>> = [
     {

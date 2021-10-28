@@ -19,9 +19,6 @@ query ProgressReportDetail(
   periodicReport(id: $progressReportId) {
     ...ProgressReport
   }
-  methodologyAvailableSteps {
-    ...AvailableMethodologySteps
-  }
 }
 
 fragment ProgressReport on ProgressReport {

@@ -158,12 +158,7 @@ export const ProgressReportDetail: FC = () => {
               Products
             </Grid>
             <Grid item style={{ width: '100%' }}>
-              <ProductTableList
-                products={groupedProducts}
-                methodologyAvailableSteps={
-                  data?.methodologyAvailableSteps ?? []
-                }
-              />
+              <ProductTableList products={groupedProducts} />
             </Grid>
           </Grid>
         </Grid>
