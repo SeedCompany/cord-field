@@ -1,26 +1,33 @@
-import { Grid } from '@material-ui/core';
-import { Dictionary, keys } from 'lodash';
+import { Grid, Typography } from '@material-ui/core';
+import { Skeleton } from '@material-ui/lab';
+import { groupBy } from 'lodash';
 import React from 'react';
-import { ProductCardFragment } from '../../../../components/ProductCard/ProductCard.generated';
+import Table from '../../../../components/Table/Table';
 import { ProductTable } from './ProductTable';
+import { ProgressOfProductForReportFragment } from './ProgressReportDetail.generated';
 
 interface ProductTableListProps {
-  products: Dictionary<ProductCardFragment[]>;
+  products?: readonly ProgressOfProductForReportFragment[];
 }
 
-export const ProductTableList = ({
-  products: groupedProducts,
-}: ProductTableListProps) => {
+export const ProductTableList = ({ products }: ProductTableListProps) => {
+  const grouped = groupBy(products, (product) => product.product.category);
+
   return (
-    <Grid container spacing={4} direction="column">
-      {keys(groupedProducts).map((category) => (
-        <Grid item key={category} style={{ width: '100%' }}>
-          <ProductTable
-            category={category}
-            products={groupedProducts[category] ?? []}
-          />
+    <Grid item container direction="column" spacing={3}>
+      <Grid item component={Typography} variant="h3">
+        {products ? 'Progress for Goals' : <Skeleton width="25%" />}
+      </Grid>
+      {Object.entries(grouped).map(([category, products]) => (
+        <Grid item key={category} xs>
+          <ProductTable category={category} products={products} />
         </Grid>
       ))}
+      {!products && (
+        <Grid item xs>
+          <Table columns={[]} data={[]} isLoading />
+        </Grid>
+      )}
     </Grid>
   );
 };

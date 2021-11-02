@@ -1,19 +1,12 @@
 query ProgressReportDetail(
-  $projectId: ID!
   $changeset: ID
   $engagementId: ID!
   $progressReportId: ID!
-  $productsListInput: ProductListInput
 ) {
-  project(id: $projectId, changeset: $changeset) {
-    ...ProjectBreadcrumb
-  }
   engagement(id: $engagementId, changeset: $changeset) {
     ...EngagementBreadcrumb
-    ... on LanguageEngagement {
-      products(input: $productsListInput) {
-        ...ProductList
-      }
+    project {
+      ...ProjectBreadcrumb
     }
   }
   periodicReport(id: $progressReportId) {
@@ -26,10 +19,39 @@ fragment ProgressReport on ProgressReport {
   cumulativeSummary {
     ...ProgressSummary
   }
+  progress {
+    ...ProgressOfProductForReport
+  }
 }
 
 fragment ProgressSummary on ProgressSummary {
   actual
   planned
   variance
+}
+
+fragment ProgressOfProductForReport on ProductProgress {
+  product {
+    ...Id
+    label
+    category
+    steps {
+      value
+    }
+    availableSteps
+    progressStepMeasurement {
+      value
+    }
+  }
+  report {
+    ...Id
+  }
+  steps {
+    step
+    completed {
+      canRead
+      value
+      canEdit
+    }
+  }
 }

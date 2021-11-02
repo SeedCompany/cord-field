@@ -1,7 +1,6 @@
 import { useQuery } from '@apollo/client';
 import { Breadcrumbs, Grid, makeStyles, Typography } from '@material-ui/core';
 import { Skeleton } from '@material-ui/lab';
-import { groupBy } from 'lodash';
 import React, { FC } from 'react';
 import { Helmet } from 'react-helmet-async';
 import { useParams } from 'react-router-dom';
@@ -39,12 +38,11 @@ const useStyles = makeStyles(({ spacing, breakpoints }) => ({
 
 export const ProgressReportDetail: FC = () => {
   const classes = useStyles();
-  const { projectId, changesetId, projectUrl } = useProjectId();
+  const { changesetId, projectUrl } = useProjectId();
   const { engagementId = '', progressReportId = '' } = useParams();
 
   const { data, error } = useQuery(ProgressReportDetailDocument, {
     variables: {
-      projectId,
       changeset: changesetId,
       engagementId,
       progressReportId,
@@ -69,24 +67,14 @@ export const ProgressReportDetail: FC = () => {
       ? data.periodicReport
       : null;
 
-  const products =
-    data?.engagement.__typename === 'LanguageEngagement'
-      ? data.engagement.products
-      : null;
-
-  const groupedProducts = groupBy(
-    products?.items,
-    (product) => product.category
-  );
-
   return (
     <div className={classes.root}>
       <main className={classes.main}>
         <div>
-          <Helmet title={`Progress Report`} />
+          <Helmet title="Progress Report" />
           <Breadcrumbs
             children={[
-              <ProjectBreadcrumb data={data?.project} />,
+              <ProjectBreadcrumb data={data?.engagement.project} />,
               <Breadcrumb
                 to={
                   data ? `${projectUrl}/engagements/${data.engagement.id}` : '.'
@@ -160,14 +148,7 @@ export const ProgressReportDetail: FC = () => {
               )}
             </Grid>
           </Grid>
-          <Grid item container direction="column" spacing={3}>
-            <Grid item component={Typography} variant={'h3'}>
-              Products
-            </Grid>
-            <Grid item style={{ width: '100%' }}>
-              <ProductTableList products={groupedProducts} />
-            </Grid>
-          </Grid>
+          <ProductTableList products={progressReport?.progress} />
         </Grid>
       </main>
     </div>
