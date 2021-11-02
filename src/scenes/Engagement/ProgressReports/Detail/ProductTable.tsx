@@ -1,4 +1,4 @@
-import { Dictionary, indexOf, uniq } from 'lodash';
+import { sortBy, uniq } from 'lodash';
 import { Column } from 'material-table';
 import React, { useMemo } from 'react';
 import { displayProductStep, ProductStep } from '../../../../api';
@@ -10,57 +10,24 @@ interface ProductTableProps {
   products: ProductCardFragment[];
 }
 
-const mergeMethodologySteps = (
-  steps1: readonly ProductStep[],
-  steps2: readonly ProductStep[]
-) => {
-  let mergedSteps = [...steps1];
-  let mergingSteps = [...steps2];
-
-  while (mergingSteps.length) {
-    // eslint-disable-next-line no-loop-func
-    const index = mergingSteps.findIndex((step2) =>
-      mergedSteps.find((step1) => step1 === step2)
-    );
-    if (index < 0) {
-      mergedSteps = [...mergedSteps, ...mergingSteps];
-      mergingSteps = [];
-    } else {
-      const indexInMergedSteps = indexOf(mergedSteps, mergingSteps[index]);
-
-      mergedSteps = [
-        ...mergedSteps.slice(0, indexInMergedSteps),
-        ...mergingSteps.splice(0, index),
-        ...mergedSteps.slice(indexInMergedSteps),
-      ];
-
-      mergingSteps.splice(0, 1); // remove current iterator
-    }
-  }
-
-  return mergedSteps;
-};
+type RowData = { label: string } & { [K in ProductStep]?: string };
 
 export const ProductTable = ({ products, category }: ProductTableProps) => {
-  const steps = uniq(products.flatMap((product) => product.steps.value));
-
-  const availableSteps = useMemo(() => {
-    let availableSteps: ProductStep[] = [];
-    products
-      .filter((product) => product.methodology.value)
-      .forEach((product, index) => {
-        if (index === 0) {
-          availableSteps = [...product.availableSteps];
-        } else {
-          availableSteps = [
-            ...mergeMethodologySteps(availableSteps, product.availableSteps),
-          ];
-        }
-      });
-    return availableSteps;
+  const steps = useMemo(() => {
+    return uniq(
+      sortBy(
+        products.flatMap((product) =>
+          product.steps.value.map((step) => ({
+            step,
+            position: product.availableSteps.indexOf(step),
+          }))
+        ),
+        (tuple) => tuple.position
+      ).map((tuple) => tuple.step)
+    );
   }, [products]);
 
-  const columns: Array<Column<any>> = [
+  const columns: Array<Column<RowData>> = [
     {
       title: category,
       field: 'label',
@@ -68,28 +35,29 @@ export const ProductTable = ({ products, category }: ProductTableProps) => {
         fontSize: '24px',
       },
     },
-    ...availableSteps.map((step) => ({
+    ...steps.map((step) => ({
       title: displayProductStep(step),
       field: step,
     })),
   ];
 
   const tableData = products.map((product) => {
-    const row: Dictionary<string | number> = { label: product.label ?? '' };
+    const row: RowData = { label: product.label ?? '' };
     const measurement = product.progressStepMeasurement.value;
-    steps.forEach((step) => {
-      const progressStep = product.progressOfCurrentReportDue?.steps.find(
+    for (const step of steps) {
+      const completed = product.progressOfCurrentReportDue?.steps.find(
         (s) => s.step === step
-      );
-      if (progressStep?.completed.value) {
-        row[step] =
-          measurement === 'Percent'
-            ? `${progressStep.completed.value}%`
-            : measurement === 'Boolean'
-            ? 'Completed'
-            : '';
+      )?.completed.value;
+      if (completed == null) {
+        continue;
       }
-    });
+      row[step] =
+        measurement === 'Percent'
+          ? `${completed}%`
+          : measurement === 'Boolean'
+          ? 'Completed'
+          : '';
+    }
     return row;
   });
 
