@@ -103,6 +103,13 @@ export const ProgressReportDetail: FC = () => {
                   />
                 )}
               </Breadcrumb>,
+              <Breadcrumb to="..">
+                {!progressReport ? (
+                  <Skeleton width={200} />
+                ) : (
+                  'Progress Reports'
+                )}
+              </Breadcrumb>,
               <Breadcrumb to=".">
                 {!progressReport ? (
                   <Skeleton width={200} />
