@@ -12,9 +12,9 @@ interface Props {
 export const ProgressReportCard = ({ progressReport }: Props) => {
   return (
     <FileActionsContextProvider>
-      <Tooltip title="This holds the progress report files" placement="top">
+      <Tooltip title="This holds the progress report PnP file" placement="top">
         <DefinedFileCard
-          label="Progress Report"
+          label="PnP File"
           uploadMutationDocument={UploadPeriodicReportFileDocument}
           parentId={progressReport.id}
           resourceType="progressReport"
