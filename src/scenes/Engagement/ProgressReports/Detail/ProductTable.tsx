@@ -2,6 +2,7 @@ import { sortBy, uniq } from 'lodash';
 import { Column } from 'material-table';
 import React, { useMemo } from 'react';
 import { displayProductStep, ProductStep } from '../../../../api';
+import { Link } from '../../../../components/Routing';
 import { Table } from '../../../../components/Table';
 import { ProgressOfProductForReportFragment } from './ProgressReportDetail.generated';
 
@@ -10,7 +11,9 @@ interface ProductTableProps {
   products: readonly ProgressOfProductForReportFragment[];
 }
 
-type RowData = { label: string } & { [K in ProductStep]?: string };
+type RowData = { label: string; data: ProgressOfProductForReportFragment } & {
+  [K in ProductStep]?: string;
+};
 
 export const ProductTable = ({ products, category }: ProductTableProps) => {
   const steps = useMemo(() => {
@@ -34,6 +37,11 @@ export const ProductTable = ({ products, category }: ProductTableProps) => {
       headerStyle: {
         fontSize: '24px',
       },
+      render: ({ data }) => (
+        <Link to={`../../../products/${data.product.id}`}>
+          {data.product.label}
+        </Link>
+      ),
     },
     ...steps.map((step) => ({
       title:
@@ -47,7 +55,10 @@ export const ProductTable = ({ products, category }: ProductTableProps) => {
   ];
 
   const tableData = products.map((progress) => {
-    const row: RowData = { label: progress.product.label ?? '' };
+    const row: RowData = {
+      data: progress,
+      label: progress.product.label ?? '',
+    };
     const measurement = progress.product.progressStepMeasurement.value;
     for (const { step, completed } of progress.steps) {
       if (completed.value == null) {
