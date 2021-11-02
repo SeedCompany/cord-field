@@ -14,10 +14,10 @@ import { ProjectBreadcrumb } from '../../../../components/ProjectBreadcrumb';
 import { Redacted } from '../../../../components/Redacted';
 import { useProjectId } from '../../../Projects/useProjectId';
 import { useLanguageEngagementName } from '../../LanguageEngagement';
-import { CumulativeSummaryCard } from './CumulativeSummaryCard';
 import { ProductTableList } from './ProductTableList';
 import { ProgressReportCard } from './ProgressReportCard';
 import { ProgressReportDetailDocument } from './ProgressReportDetail.generated';
+import { ProgressSummaryCard } from './ProgressSummaryCard';
 
 const useStyles = makeStyles(({ spacing, breakpoints }) => ({
   root: {
@@ -140,7 +140,7 @@ export const ProgressReportDetail: FC = () => {
         <Grid container direction="column" spacing={3}>
           <Grid item container spacing={3}>
             <Grid item xs={12} md={8} container>
-              <CumulativeSummaryCard
+              <ProgressSummaryCard
                 loading={!progressReport}
                 summary={progressReport?.cumulativeSummary ?? null}
               />
