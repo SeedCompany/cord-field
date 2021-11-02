@@ -46,11 +46,17 @@ export const StepsSection = ({
       {...accordionState}
       name="steps"
       renderCollapsed={() =>
-        steps?.map((step) => (
-          <ToggleButton selected key={step} value={step}>
-            {displayProductStep(step)}
+        productType === 'Other' ? (
+          <ToggleButton selected value={availableSteps}>
+            {displayProductStep(availableSteps[0])}
           </ToggleButton>
-        ))
+        ) : (
+          steps?.map((step) => (
+            <ToggleButton selected key={step} value={step}>
+              {displayProductStep(step)}
+            </ToggleButton>
+          ))
+        )
       }
     >
       {(props) => (
