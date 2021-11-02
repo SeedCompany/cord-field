@@ -32,7 +32,7 @@ const useStyles = makeStyles(({ spacing, breakpoints }) => ({
     margin: spacing(3, 0, 2),
   },
   subheader: {
-    margin: spacing(2, 0),
+    margin: spacing(2, 0, 4),
   },
 }));
 
@@ -134,13 +134,13 @@ export const ProgressReportDetail: FC = () => {
 
         <Grid container direction="column" spacing={3}>
           <Grid item container spacing={3}>
-            <Grid item xs={12} md={8} container>
+            <Grid item xs={12} md={7} container>
               <ProgressSummaryCard
                 loading={!progressReport}
                 summary={progressReport?.cumulativeSummary ?? null}
               />
             </Grid>
-            <Grid item xs={12} md={4} container>
+            <Grid item xs={12} md={5} container>
               {progressReport ? (
                 <ProgressReportCard progressReport={progressReport} />
               ) : (
