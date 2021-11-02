@@ -3,3 +3,12 @@ mutation UpdatePeriodicReport($input: UpdatePeriodicReportInput!) {
     ...PeriodicReport
   }
 }
+
+mutation UploadPeriodicReportFile(
+  $id: ID!
+  $upload: CreateDefinedFileVersionInput!
+) {
+  updatePeriodicReport(input: { id: $id, reportFile: $upload }) {
+    ...PeriodicReport
+  }
+}

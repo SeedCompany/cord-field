@@ -103,7 +103,6 @@ export interface DefinedFileCardProps {
     files: File[];
     submit: (next: HandleUploadCompletedFunction) => void;
   }) => void;
-  getUploadVariables?: (uploadId: string, name: string) => any;
 }
 
 interface FileCardMetaProps {
@@ -152,7 +151,6 @@ export const DefinedFileCard = forwardRef<any, DefinedFileCardProps>(
       parentId,
       disableIcon,
       onUpload,
-      getUploadVariables,
       ...rest
     } = props;
     const { value: file, canRead, canEdit } = securedFile;
@@ -166,15 +164,11 @@ export const DefinedFileCard = forwardRef<any, DefinedFileCardProps>(
       name,
       parentId: id,
     }) => {
-      const variables = getUploadVariables
-        ? getUploadVariables(uploadId, name)
-        : {
-            id,
-            upload: { uploadId, name },
-          };
-
       await uploadFile({
-        variables,
+        variables: {
+          id,
+          upload: { uploadId, name },
+        },
       });
     };
 
