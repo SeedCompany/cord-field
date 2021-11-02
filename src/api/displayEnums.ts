@@ -93,6 +93,7 @@ export const displayProductTypes = (type: ProductTypes) =>
 
 export const displayPostShareability = displayEnum<PostShareability>();
 
-export const displayProductStep = displayEnum<ProductStep>();
+export const displayProductStep = (step: Nullable<ProductStep>) =>
+  displayEnum<ProductStep>()(step).replace(' And ', ' & ');
 
 export const displayProgressMeasurement = displayEnum<ProgressMeasurement>();

@@ -36,7 +36,12 @@ export const ProductTable = ({ products, category }: ProductTableProps) => {
       },
     },
     ...steps.map((step) => ({
-      title: displayProductStep(step),
+      title:
+        step === 'ExegesisAndFirstDraft' ? (
+          <>Exegesis&nbsp;& First&nbsp;Draft</>
+        ) : (
+          displayProductStep(step)
+        ),
       field: step,
     })),
   ];
