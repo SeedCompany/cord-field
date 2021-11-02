@@ -19,7 +19,13 @@ const useStyles = makeStyles(() => ({
 const Value = ({ loading, value }: { loading: boolean; value?: number }) => {
   return (
     <Typography variant="h2" gutterBottom>
-      {loading ? <Skeleton width={80} /> : value ? `${value * 100}%` : 'None'}
+      {loading ? (
+        <Skeleton width={80} />
+      ) : value ? (
+        `${(value * 100).toFixed(1)}%`
+      ) : (
+        'None'
+      )}
     </Typography>
   );
 };

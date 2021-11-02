@@ -50,13 +50,10 @@ export const ProductTable = ({ products, category }: ProductTableProps) => {
       .filter((product) => product.methodology.value)
       .forEach((product, index) => {
         if (index === 0) {
-          availableSteps = [...product.productAvailableSteps];
+          availableSteps = [...product.availableSteps];
         } else {
           availableSteps = [
-            ...mergeMethodologySteps(
-              availableSteps,
-              product.productAvailableSteps
-            ),
+            ...mergeMethodologySteps(availableSteps, product.availableSteps),
           ];
         }
       });
