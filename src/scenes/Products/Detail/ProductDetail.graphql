@@ -6,8 +6,17 @@ query ProductDetail($id: ID!) {
 
 fragment ProductDetail on Product {
   ...Id
-  ...ProductCard
+  label
+  category
+  mediums {
+    canRead
+    value
+  }
   purposes {
+    canRead
+    value
+  }
+  methodology {
     canRead
     value
   }
@@ -34,5 +43,15 @@ fragment ProductDetail on Product {
     canRead
     canEdit
     value
+  }
+  progressOfCurrentReportDue {
+    ...ProductProgress
+  }
+
+  ... on OtherProduct {
+    description {
+      canRead
+      value
+    }
   }
 }
