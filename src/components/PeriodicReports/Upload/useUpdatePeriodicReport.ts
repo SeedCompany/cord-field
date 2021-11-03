@@ -22,6 +22,7 @@ export const useUpdatePeriodicReport = () => {
             receivedDate,
             skippedReason,
           },
+          refreshFromPnp: !!uploadId,
         },
       });
     };

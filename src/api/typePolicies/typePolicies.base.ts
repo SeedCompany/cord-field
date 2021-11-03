@@ -28,8 +28,6 @@ type TypePolicies = {
   [K in keyof GqlTypeMapAndQueries]?: TypePolicy<GqlTypeMapAndQueries[K]>;
 };
 
-const scriptureKeyFields = ['book', 'chapter', 'verse'] as const;
-
 export const typePolicies: TypePolicies = {
   DateRange: {
     keyFields: false,
@@ -44,12 +42,6 @@ export const typePolicies: TypePolicies = {
   IanaCountry: { keyFields: ['code'] },
   TimeZone: { keyFields: ['name'] },
   IsoCountry: { keyFields: ['alpha3'] },
-  ScriptureReference: {
-    keyFields: scriptureKeyFields,
-  },
-  ScriptureRange: {
-    keyFields: ['start', scriptureKeyFields, 'end', scriptureKeyFields],
-  },
   Secured: {
     keyFields: false,
     merge: true,

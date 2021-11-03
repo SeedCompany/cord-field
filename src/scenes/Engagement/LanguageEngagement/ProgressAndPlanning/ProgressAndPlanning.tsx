@@ -41,6 +41,7 @@ export const ProgressReports = ({ engagement }: Props) => (
       dueCurrently={engagement.currentProgressReportDue}
       dueNext={engagement.nextProgressReportDue}
       disableIcon
+      hasDetailPage
     />
   </FileActionsContextProvider>
 );

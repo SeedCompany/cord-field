@@ -23,7 +23,7 @@ export const EngagementBreadcrumb = ({
           ? data.language.value?.name
           : undefined
       }
-      redacted="You don't have permission to view this project's name"
+      redacted="You don't have permission to view this engagement's name"
       loadingWidth={200}
       {...rest}
     />
