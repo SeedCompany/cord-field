@@ -68,10 +68,11 @@ export interface PeriodicReportCardProps {
   dueCurrently?: SecuredPeriodicReportFragment;
   dueNext?: SecuredPeriodicReportFragment;
   disableIcon?: boolean;
+  hasDetailPage?: boolean;
 }
 
 const PeriodicReportCardInContext = (props: PeriodicReportCardProps) => {
-  const { type, dueCurrently, dueNext, disableIcon } = props;
+  const { type, dueCurrently, dueNext, disableIcon, hasDetailPage } = props;
   const classes = useStyles();
 
   const currentFile = dueCurrently?.value?.reportFile;
@@ -150,20 +151,29 @@ const PeriodicReportCardInContext = (props: PeriodicReportCardProps) => {
               </Button>
             </Tooltip>
           ) : currentFile?.value ? (
-            <Tooltip
-              title={
-                <>
-                  Preview report for <ReportLabel report={dueCurrently} />
-                </>
-              }
-            >
-              <Button
+            hasDetailPage ? (
+              <ButtonLink
                 color="primary"
-                onClick={() => openFilePreview(currentFile.value!)}
+                to={`${link}/${dueCurrently!.value!.id}`}
               >
-                Preview Report
-              </Button>
-            </Tooltip>
+                View Report
+              </ButtonLink>
+            ) : (
+              <Tooltip
+                title={
+                  <>
+                    Preview report for <ReportLabel report={dueCurrently} />
+                  </>
+                }
+              >
+                <Button
+                  color="primary"
+                  onClick={() => openFilePreview(currentFile.value!)}
+                >
+                  Preview Report
+                </Button>
+              </Tooltip>
+            )
           ) : null}
         </CardActions>
         <DropOverlay report={dueCurrently} show={isDragActive} />
