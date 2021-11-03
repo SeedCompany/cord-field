@@ -1,6 +1,10 @@
-mutation UpdatePeriodicReport($input: UpdatePeriodicReportInput!) {
+mutation UpdatePeriodicReport(
+  $input: UpdatePeriodicReportInput!
+  $refreshFromPnp: Boolean!
+) {
   updatePeriodicReport(input: $input) {
     ...PeriodicReport
+    ...ProgressReport @include(if: $refreshFromPnp)
   }
 }
 
