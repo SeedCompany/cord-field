@@ -6,14 +6,13 @@ import { Helmet } from 'react-helmet-async';
 import { useParams } from 'react-router-dom';
 import { useWindowSize } from 'react-use';
 import { Breadcrumb } from '../../../../components/Breadcrumb';
+import { EngagementBreadcrumb } from '../../../../components/EngagementBreadcrumb';
 import { Error } from '../../../../components/Error';
 import { FieldOverviewCard } from '../../../../components/FieldOverviewCard';
 import { FormattedDateTime } from '../../../../components/Formatters';
 import { ReportLabel } from '../../../../components/PeriodicReports/ReportLabel';
 import { ProjectBreadcrumb } from '../../../../components/ProjectBreadcrumb';
-import { Redacted } from '../../../../components/Redacted';
 import { useProjectId } from '../../../Projects/useProjectId';
-import { useLanguageEngagementName } from '../../LanguageEngagement';
 import { ProductTableList } from './ProductTableList';
 import { ProgressReportCard } from './ProgressReportCard';
 import { ProgressReportDetailDocument } from './ProgressReportDetail.generated';
@@ -39,7 +38,7 @@ const useStyles = makeStyles(({ spacing, breakpoints }) => ({
 
 export const ProgressReportDetail: FC = () => {
   const classes = useStyles();
-  const { changesetId, projectUrl } = useProjectId();
+  const { changesetId } = useProjectId();
   const { engagementId = '', progressReportId = '' } = useParams();
   const windowSize = useWindowSize();
 
@@ -50,9 +49,6 @@ export const ProgressReportDetail: FC = () => {
       progressReportId,
     },
   });
-
-  const languageName = useLanguageEngagementName(data?.engagement);
-
   if (error) {
     return (
       <Error page error={error}>
@@ -77,22 +73,7 @@ export const ProgressReportDetail: FC = () => {
           <Breadcrumbs
             children={[
               <ProjectBreadcrumb data={data?.engagement.project} />,
-              <Breadcrumb
-                to={
-                  data ? `${projectUrl}/engagements/${data.engagement.id}` : '.'
-                }
-              >
-                {!data ? (
-                  <Skeleton width={200} />
-                ) : languageName ? (
-                  languageName
-                ) : (
-                  <Redacted
-                    info="You do not have permission to view this engagement's name"
-                    width={200}
-                  />
-                )}
-              </Breadcrumb>,
+              <EngagementBreadcrumb data={data?.engagement} />,
               <Breadcrumb to="..">
                 {!progressReport ? (
                   <Skeleton width={200} />
