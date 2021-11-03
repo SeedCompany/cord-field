@@ -23,7 +23,7 @@ export const ProductInfo = ({ product }: { product?: Product }) => (
     )}
 
     <DisplayProperty
-      label="Mediums"
+      label="Distribution Methods"
       value={product?.mediums.value.map(displayProductMedium).join(', ')}
       loading={!product}
       wrap={infoWrapper}
