@@ -69,6 +69,8 @@ export const ProductTable = ({ products, category }: ProductTableProps) => {
           ? `${completed.value}%`
           : measurement === 'Boolean'
           ? 'Completed'
+          : measurement === 'Number'
+          ? `${completed.value}`
           : '';
     }
     return row;
