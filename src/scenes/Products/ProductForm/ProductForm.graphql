@@ -9,11 +9,6 @@ fragment ProductForm on Product {
     canEdit
     value
   }
-  purposes {
-    canRead
-    canEdit
-    value
-  }
   methodology {
     canRead
     canEdit
