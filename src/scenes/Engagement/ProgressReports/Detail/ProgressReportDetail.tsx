@@ -14,13 +14,16 @@ import { useParams } from 'react-router-dom';
 import { useWindowSize } from 'react-use';
 import { canEditAny } from '../../../../api';
 import { Breadcrumb } from '../../../../components/Breadcrumb';
+import { useDialog } from '../../../../components/Dialog';
 import { EngagementBreadcrumb } from '../../../../components/EngagementBreadcrumb';
 import { Error } from '../../../../components/Error';
 import { Fab } from '../../../../components/Fab';
 import { FieldOverviewCard } from '../../../../components/FieldOverviewCard';
-import { FormattedDateTime } from '../../../../components/Formatters';
+import { FormattedDate } from '../../../../components/Formatters';
 import { ReportLabel } from '../../../../components/PeriodicReports/ReportLabel';
 import { ProjectBreadcrumb } from '../../../../components/ProjectBreadcrumb';
+import { Redacted } from '../../../../components/Redacted';
+import { UpdatePeriodicReportDialog } from '../../../Projects/Reports/UpdatePeriodicReportDialog';
 import { useProjectId } from '../../../Projects/useProjectId';
 import { ProductTableList } from './ProductTableList';
 import { ProgressReportCard } from './ProgressReportCard';
@@ -51,6 +54,9 @@ export const ProgressReportDetail: FC = () => {
   const { changesetId } = useProjectId();
   const { engagementId = '', progressReportId = '' } = useParams();
   const windowSize = useWindowSize();
+
+  // Single file for new version, empty array for received date update.
+  const [dialogState, setUploading, upload] = useDialog<File[]>();
 
   const { data, error } = useQuery(ProgressReportDetailDocument, {
     variables: {
@@ -119,24 +125,44 @@ export const ProgressReportDetail: FC = () => {
                   color="primary"
                   aria-label="Update report"
                   loading={!report}
+                  onClick={() => setUploading([])}
                 >
                   <Edit />
                 </Fab>
               </Tooltip>
+              {report && (
+                <UpdatePeriodicReportDialog
+                  {...dialogState}
+                  report={{ ...report, reportFile: upload }}
+                  editFields={[
+                    'receivedDate',
+                    ...(upload && upload.length > 0
+                      ? ['reportFile' as const]
+                      : []),
+                  ]}
+                />
+              )}
             </Grid>
           )}
         </Grid>
 
-        <div className={classes.subheader}>
-          {report ? (
-            <Typography variant="body2" color="textSecondary">
-              Submitted{' '}
-              <FormattedDateTime date={report.reportFile.value?.modifiedAt} />
-            </Typography>
+        <Typography
+          variant="body2"
+          color="textSecondary"
+          className={classes.subheader}
+        >
+          {!report ? (
+            <Skeleton width="20ch" />
+          ) : report.receivedDate.value ? (
+            <>
+              Received on <FormattedDate date={report.receivedDate.value} />
+            </>
+          ) : !report.receivedDate.canRead ? (
+            <Redacted info="You don't have permission to view the received date" />
           ) : (
-            <Skeleton width={200} />
+            'Not received yet'
           )}
-        </div>
+        </Typography>
 
         <Grid container direction="column" spacing={3}>
           <Grid item container spacing={3}>
@@ -148,7 +174,11 @@ export const ProgressReportDetail: FC = () => {
             </Grid>
             <Grid item xs={12} md={5} container>
               {report ? (
-                <ProgressReportCard progressReport={report} />
+                <ProgressReportCard
+                  progressReport={report}
+                  disableIcon
+                  onUpload={({ files }) => setUploading(files)}
+                />
               ) : (
                 <FieldOverviewCard />
               )}
