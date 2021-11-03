@@ -4,6 +4,7 @@ import { Skeleton } from '@material-ui/lab';
 import React, { FC } from 'react';
 import { Helmet } from 'react-helmet-async';
 import { useParams } from 'react-router-dom';
+import { useWindowSize } from 'react-use';
 import { Breadcrumb } from '../../../../components/Breadcrumb';
 import { Error } from '../../../../components/Error';
 import { FieldOverviewCard } from '../../../../components/FieldOverviewCard';
@@ -40,6 +41,7 @@ export const ProgressReportDetail: FC = () => {
   const classes = useStyles();
   const { changesetId, projectUrl } = useProjectId();
   const { engagementId = '', progressReportId = '' } = useParams();
+  const windowSize = useWindowSize();
 
   const { data, error } = useQuery(ProgressReportDetailDocument, {
     variables: {
@@ -148,7 +150,16 @@ export const ProgressReportDetail: FC = () => {
               )}
             </Grid>
           </Grid>
-          <ProductTableList products={progressReport?.progress} />
+          <ProductTableList
+            products={progressReport?.progress}
+            style={{
+              maxWidth:
+                windowSize.width !== Infinity
+                  ? // window - sidebar - margin
+                    windowSize.width - 248 - 8 * 2
+                  : undefined,
+            }}
+          />
         </Grid>
       </main>
     </div>
