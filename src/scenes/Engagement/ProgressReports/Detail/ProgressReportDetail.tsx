@@ -1,13 +1,22 @@
 import { useQuery } from '@apollo/client';
-import { Breadcrumbs, Grid, makeStyles, Typography } from '@material-ui/core';
+import {
+  Breadcrumbs,
+  Grid,
+  makeStyles,
+  Tooltip,
+  Typography,
+} from '@material-ui/core';
+import { Edit } from '@material-ui/icons';
 import { Skeleton } from '@material-ui/lab';
 import React, { FC } from 'react';
 import { Helmet } from 'react-helmet-async';
 import { useParams } from 'react-router-dom';
 import { useWindowSize } from 'react-use';
+import { canEditAny } from '../../../../api';
 import { Breadcrumb } from '../../../../components/Breadcrumb';
 import { EngagementBreadcrumb } from '../../../../components/EngagementBreadcrumb';
 import { Error } from '../../../../components/Error';
+import { Fab } from '../../../../components/Fab';
 import { FieldOverviewCard } from '../../../../components/FieldOverviewCard';
 import { FormattedDateTime } from '../../../../components/Formatters';
 import { ReportLabel } from '../../../../components/PeriodicReports/ReportLabel';
@@ -29,7 +38,8 @@ const useStyles = makeStyles(({ spacing, breakpoints }) => ({
     maxWidth: breakpoints.values.md,
   },
   header: {
-    margin: spacing(3, 0, 2),
+    marginTop: spacing(3),
+    marginBottom: spacing(2),
   },
   subheader: {
     margin: spacing(2, 0, 4),
@@ -53,86 +63,99 @@ export const ProgressReportDetail: FC = () => {
     return (
       <Error page error={error}>
         {{
-          NotFound: 'Could not find project, engagement or progress report',
+          NotFound: 'Could not find progress report',
           Default: 'Error loading progress report',
         }}
       </Error>
     );
   }
 
-  const progressReport =
+  const report =
     data?.periodicReport.__typename === 'ProgressReport'
       ? data.periodicReport
       : null;
+  const editable = canEditAny(report);
 
   return (
     <div className={classes.root}>
       <main className={classes.main}>
-        <div>
-          <Helmet title="Progress Report" />
-          <Breadcrumbs
-            children={[
-              <ProjectBreadcrumb data={data?.engagement.project} />,
-              <EngagementBreadcrumb data={data?.engagement} />,
-              <Breadcrumb to="..">
-                {!progressReport ? (
-                  <Skeleton width={200} />
-                ) : (
-                  'Progress Reports'
-                )}
-              </Breadcrumb>,
-              <Breadcrumb to=".">
-                {!progressReport ? (
-                  <Skeleton width={200} />
-                ) : (
-                  <ReportLabel report={progressReport} />
-                )}
-              </Breadcrumb>,
-            ]}
-          />
+        <Helmet title="Progress Report" />
+        <Breadcrumbs
+          children={[
+            <ProjectBreadcrumb data={data?.engagement.project} />,
+            <EngagementBreadcrumb data={data?.engagement} />,
+            <Breadcrumb to="..">
+              {!report ? <Skeleton width={200} /> : 'Progress Reports'}
+            </Breadcrumb>,
+            <Breadcrumb to=".">
+              {!report ? (
+                <Skeleton width={200} />
+              ) : (
+                <ReportLabel report={report} />
+              )}
+            </Breadcrumb>,
+          ]}
+        />
 
-          <Typography variant="h2" className={classes.header}>
+        <Grid
+          container
+          spacing={3}
+          alignItems="center"
+          className={classes.header}
+        >
+          <Grid item component={Typography} variant="h2">
             {data ? (
               <>
-                Progress Report - <ReportLabel report={progressReport} />
+                Progress Report - <ReportLabel report={report} />
               </>
             ) : (
-              <Skeleton width={200} />
+              <Skeleton width={442} />
             )}
-          </Typography>
+          </Grid>
+          {(editable || !report) && (
+            <Grid item>
+              <Tooltip title="Update received date or skipped reason">
+                <Fab
+                  color="primary"
+                  aria-label="Update report"
+                  loading={!report}
+                >
+                  <Edit />
+                </Fab>
+              </Tooltip>
+            </Grid>
+          )}
+        </Grid>
 
-          <div className={classes.subheader}>
-            {progressReport ? (
-              <Typography variant="body2" color="textSecondary">
-                Submitted{' '}
-                <FormattedDateTime
-                  date={progressReport.reportFile.value?.modifiedAt}
-                />
-              </Typography>
-            ) : (
-              <Skeleton width={200} />
-            )}
-          </div>
+        <div className={classes.subheader}>
+          {report ? (
+            <Typography variant="body2" color="textSecondary">
+              Submitted{' '}
+              <FormattedDateTime date={report.reportFile.value?.modifiedAt} />
+            </Typography>
+          ) : (
+            <Skeleton width={200} />
+          )}
         </div>
 
         <Grid container direction="column" spacing={3}>
           <Grid item container spacing={3}>
             <Grid item xs={12} md={7} container>
               <ProgressSummaryCard
-                loading={!progressReport}
-                summary={progressReport?.cumulativeSummary ?? null}
+                loading={!report}
+                summary={report?.cumulativeSummary ?? null}
               />
             </Grid>
             <Grid item xs={12} md={5} container>
-              {progressReport ? (
-                <ProgressReportCard progressReport={progressReport} />
+              {report ? (
+                <ProgressReportCard progressReport={report} />
               ) : (
                 <FieldOverviewCard />
               )}
             </Grid>
           </Grid>
           <ProductTableList
-            products={progressReport?.progress}
+            products={report?.progress}
             style={{
               maxWidth:
                 windowSize.width !== Infinity
