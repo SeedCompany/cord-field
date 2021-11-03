@@ -1,18 +1,19 @@
 import { useQuery } from '@apollo/client';
 import {
   Breadcrumbs,
+  Card,
+  CardContent,
   Grid,
   makeStyles,
   Tooltip,
   Typography,
 } from '@material-ui/core';
-import { Edit } from '@material-ui/icons';
+import { Edit, SkipNextRounded as SkipIcon } from '@material-ui/icons';
 import { Skeleton } from '@material-ui/lab';
 import React, { FC } from 'react';
 import { Helmet } from 'react-helmet-async';
 import { useParams } from 'react-router-dom';
 import { useWindowSize } from 'react-use';
-import { canEditAny } from '../../../../api';
 import { Breadcrumb } from '../../../../components/Breadcrumb';
 import { useDialog } from '../../../../components/Dialog';
 import { EngagementBreadcrumb } from '../../../../components/EngagementBreadcrumb';
@@ -20,9 +21,11 @@ import { Error } from '../../../../components/Error';
 import { Fab } from '../../../../components/Fab';
 import { FieldOverviewCard } from '../../../../components/FieldOverviewCard';
 import { FormattedDate } from '../../../../components/Formatters';
+import { IconButton } from '../../../../components/IconButton';
 import { ReportLabel } from '../../../../components/PeriodicReports/ReportLabel';
 import { ProjectBreadcrumb } from '../../../../components/ProjectBreadcrumb';
 import { Redacted } from '../../../../components/Redacted';
+import { SkipPeriodicReportDialog } from '../../../Projects/Reports/SkipPeriodicReportDialog';
 import { UpdatePeriodicReportDialog } from '../../../Projects/Reports/UpdatePeriodicReportDialog';
 import { useProjectId } from '../../../Projects/useProjectId';
 import { ProductTableList } from './ProductTableList';
@@ -57,6 +60,7 @@ export const ProgressReportDetail: FC = () => {
 
   // Single file for new version, empty array for received date update.
   const [dialogState, setUploading, upload] = useDialog<File[]>();
+  const [skipState, openSkip] = useDialog();
 
   const { data, error } = useQuery(ProgressReportDetailDocument, {
     variables: {
@@ -80,7 +84,6 @@ export const ProgressReportDetail: FC = () => {
     data?.periodicReport.__typename === 'ProgressReport'
       ? data.periodicReport
       : null;
-  const editable = canEditAny(report);
 
   return (
     <div className={classes.root}>
@@ -118,9 +121,9 @@ export const ProgressReportDetail: FC = () => {
               <Skeleton width={442} />
             )}
           </Grid>
-          {(editable || !report) && (
+          {(!report || report.receivedDate.canEdit) && (
             <Grid item>
-              <Tooltip title="Update received date or skipped reason">
+              <Tooltip title="Update received date">
                 <Fab
                   color="primary"
                   aria-label="Update report"
@@ -144,57 +147,96 @@ export const ProgressReportDetail: FC = () => {
               )}
             </Grid>
           )}
-        </Grid>
-
-        <Typography
-          variant="body2"
-          color="textSecondary"
-          className={classes.subheader}
-        >
-          {!report ? (
-            <Skeleton width="20ch" />
-          ) : report.receivedDate.value ? (
-            <>
-              Received on <FormattedDate date={report.receivedDate.value} />
-            </>
-          ) : !report.receivedDate.canRead ? (
-            <Redacted info="You don't have permission to view the received date" />
-          ) : (
-            'Not received yet'
-          )}
-        </Typography>
-
-        <Grid container direction="column" spacing={3}>
-          <Grid item container spacing={3}>
-            <Grid item xs={12} md={7} container>
-              <ProgressSummaryCard
-                loading={!report}
-                summary={report?.cumulativeSummary ?? null}
-              />
-            </Grid>
-            <Grid item xs={12} md={5} container>
-              {report ? (
-                <ProgressReportCard
-                  progressReport={report}
-                  disableIcon
-                  onUpload={({ files }) => setUploading(files)}
-                />
-              ) : (
-                <FieldOverviewCard />
+          {(!report || report.skippedReason.canEdit) && (
+            <Grid item>
+              <Tooltip
+                title={
+                  report?.skippedReason.value
+                    ? 'Edit Skipped Reason'
+                    : 'Skip Report'
+                }
+              >
+                <IconButton
+                  aria-label="Skip report"
+                  loading={!report}
+                  onClick={openSkip}
+                >
+                  <SkipIcon />
+                </IconButton>
+              </Tooltip>
+              {report && (
+                <SkipPeriodicReportDialog {...skipState} report={report} />
               )}
             </Grid>
-          </Grid>
-          <ProductTableList
-            products={report?.progress}
-            style={{
-              maxWidth:
-                windowSize.width !== Infinity
-                  ? // window - sidebar - margin
-                    windowSize.width - 248 - 8 * 2
-                  : undefined,
-            }}
-          />
+          )}
         </Grid>
+
+        {report?.skippedReason.value ? (
+          <Grid container direction="column" spacing={2}>
+            <Grid item component={Typography} variant="h3">
+              Skipped
+            </Grid>
+            <Grid item xs md={8} lg={6}>
+              <Card>
+                <Typography component={CardContent} variant="body2">
+                  {report.skippedReason.value}
+                </Typography>
+              </Card>
+            </Grid>
+          </Grid>
+        ) : (
+          <>
+            <Typography
+              variant="body2"
+              color="textSecondary"
+              className={classes.subheader}
+            >
+              {!report ? (
+                <Skeleton width="20ch" />
+              ) : report.receivedDate.value ? (
+                <>
+                  Received on <FormattedDate date={report.receivedDate.value} />
+                </>
+              ) : !report.receivedDate.canRead ? (
+                <Redacted info="You don't have permission to view the received date" />
+              ) : (
+                'Not received yet'
+              )}
+            </Typography>
+
+            <Grid container direction="column" spacing={3}>
+              <Grid item container spacing={3}>
+                <Grid item xs={12} md={7} container>
+                  <ProgressSummaryCard
+                    loading={!report}
+                    summary={report?.cumulativeSummary ?? null}
+                  />
+                </Grid>
+                <Grid item xs={12} md={5} container>
+                  {report ? (
+                    <ProgressReportCard
+                      progressReport={report}
+                      disableIcon
+                      onUpload={({ files }) => setUploading(files)}
+                    />
+                  ) : (
+                    <FieldOverviewCard />
+                  )}
+                </Grid>
+              </Grid>
+              <ProductTableList
+                products={report?.progress}
+                style={{
+                  maxWidth:
+                    windowSize.width !== Infinity
+                      ? // window - sidebar - margin
+                        windowSize.width - 248 - 8 * 2
+                      : undefined,
+                }}
+              />
+            </Grid>
+          </>
+        )}
       </main>
     </div>
   );
