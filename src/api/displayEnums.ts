@@ -96,4 +96,5 @@ export const displayPostShareability = displayEnum<PostShareability>();
 export const displayProductStep = (step: Nullable<ProductStep>) =>
   displayEnum<ProductStep>()(step).replace(' And ', ' & ');
 
-export const displayProgressMeasurement = displayEnum<ProgressMeasurement>();
+export const displayProgressMeasurement = (value: ProgressMeasurement) =>
+  value === 'Boolean' ? 'Done / Not Done' : value;
