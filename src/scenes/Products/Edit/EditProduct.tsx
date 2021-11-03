@@ -78,13 +78,8 @@ export const EditProduct = () => {
 
   const initialValues = useMemo(() => {
     if (!product) return undefined;
-    const {
-      mediums,
-      purposes,
-      methodology,
-      progressStepMeasurement,
-      progressTarget,
-    } = product;
+    const { mediums, methodology, progressStepMeasurement, progressTarget } =
+      product;
 
     const scriptureReferences = removeScriptureTypename(
       product.scriptureReferences.value
@@ -115,7 +110,6 @@ export const EditProduct = () => {
     const values: ProductFormValues = {
       product: {
         mediums: mediums.value,
-        purposes: purposes.value,
         methodology: methodology.value,
         steps: product.steps.value,
         describeCompletion: product.describeCompletion.value,

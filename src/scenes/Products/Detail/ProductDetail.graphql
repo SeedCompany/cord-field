@@ -12,10 +12,6 @@ fragment ProductDetail on Product {
     canRead
     value
   }
-  purposes {
-    canRead
-    value
-  }
   methodology {
     canRead
     value

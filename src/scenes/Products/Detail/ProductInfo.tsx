@@ -4,7 +4,6 @@ import React, { ReactNode } from 'react';
 import {
   displayMethodologyWithLabel,
   displayProductMedium,
-  displayProductPurpose,
 } from '../../../api';
 import {
   DisplaySimpleProperty,
@@ -26,13 +25,6 @@ export const ProductInfo = ({ product }: { product?: Product }) => (
     <DisplayProperty
       label="Mediums"
       value={product?.mediums.value.map(displayProductMedium).join(', ')}
-      loading={!product}
-      wrap={infoWrapper}
-    />
-
-    <DisplayProperty
-      label="Purposes"
-      value={product?.purposes.value.map(displayProductPurpose).join(', ')}
       loading={!product}
       wrap={infoWrapper}
     />

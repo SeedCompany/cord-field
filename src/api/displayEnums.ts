@@ -15,7 +15,6 @@ import {
   ProductApproach,
   ProductMedium,
   ProductMethodology,
-  ProductPurpose,
   ProductStep,
   ProgressMeasurement,
   ProjectChangeRequestStatus,
@@ -83,8 +82,6 @@ export const displayScripture = ({ start, end }: ScriptureRangeInput) =>
 
 export const displayProductMedium = (medium: ProductMedium) =>
   medium === 'EBook' ? 'E-Book' : displayEnum<ProductMedium>()(medium);
-
-export const displayProductPurpose = displayEnum<ProductPurpose>();
 
 export const displayProductTypes = (type: ProductTypes) =>
   type === 'DirectScriptureProduct'
