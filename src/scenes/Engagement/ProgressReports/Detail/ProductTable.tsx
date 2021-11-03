@@ -67,11 +67,12 @@ export const ProductTable = ({ products, category }: ProductTableProps) => {
         })
       : products
   ).map((progress) => {
+    const product = progress.product;
     const row: RowData = {
       data: progress,
-      label: progress.product.label ?? '',
+      label: product.label ?? '',
     };
-    const measurement = progress.product.progressStepMeasurement.value;
+    const measurement = product.progressStepMeasurement.value;
     for (const { step, completed } of progress.steps) {
       if (completed.value == null) {
         continue;
@@ -82,7 +83,7 @@ export const ProductTable = ({ products, category }: ProductTableProps) => {
           : measurement === 'Boolean'
           ? 'Completed'
           : measurement === 'Number'
-          ? `${completed.value}`
+          ? `${completed.value}/${product.progressTarget.value ?? ''}`
           : '';
     }
     return row;
