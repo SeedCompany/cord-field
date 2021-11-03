@@ -42,6 +42,20 @@ fragment ProgressOfProductForReport on ProductProgress {
     progressStepMeasurement {
       value
     }
+    ... on DirectScriptureProduct {
+      scriptureReferences {
+        value {
+          start {
+            book
+          }
+        }
+      }
+      unspecifiedScripture {
+        value {
+          book
+        }
+      }
+    }
   }
   report {
     ...Id

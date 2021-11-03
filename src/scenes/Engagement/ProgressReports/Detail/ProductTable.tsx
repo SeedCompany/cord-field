@@ -4,6 +4,7 @@ import React, { useMemo } from 'react';
 import { displayProductStep, ProductStep } from '../../../../api';
 import { Link } from '../../../../components/Routing';
 import { Table } from '../../../../components/Table';
+import { bookIndexFromName } from '../../../../util/biblejs';
 import { ProgressOfProductForReportFragment } from './ProgressReportDetail.generated';
 
 interface ProductTableProps {
@@ -54,7 +55,18 @@ export const ProductTable = ({ products, category }: ProductTableProps) => {
     })),
   ];
 
-  const tableData = products.map((progress) => {
+  const tableData = (
+    products[0]?.product.__typename === 'DirectScriptureProduct'
+      ? sortBy(products, ({ product }) => {
+          const book =
+            product.__typename !== 'DirectScriptureProduct'
+              ? undefined
+              : product.unspecifiedScripture.value?.book ??
+                product.scriptureReferences.value[0]?.start.book;
+          return book ? bookIndexFromName(book) : -1;
+        })
+      : products
+  ).map((progress) => {
     const row: RowData = {
       data: progress,
       label: progress.product.label ?? '',
