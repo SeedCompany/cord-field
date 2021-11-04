@@ -103,7 +103,11 @@ export const ProjectBudgetRecords: FC<ProjectBudgetRecordsProps> = (props) => {
         type: 'currency',
         editable: (_, rowData) => rowData.record.amount.canEdit,
         render: (rowData) =>
-          rowData.amount ? formatCurrency(Number(rowData.amount)) : blankAmount,
+          rowData.amount
+            ? formatCurrency(Number(rowData.amount))
+            : rowData.record.amount.canEdit
+            ? blankAmount
+            : undefined,
       },
     ],
     [formatCurrency]
