@@ -4,7 +4,21 @@ import * as React from 'react';
 import { Except } from 'type-fest';
 
 const Editor = (props: Except<CKEditorProps, 'editor'>) => (
-  <ReactCKE editor={ClassicEditor} {...props} />
+  <ReactCKE
+    editor={ClassicEditor}
+    config={{
+      toolbar: [
+        'heading',
+        '|',
+        'bold',
+        'italic',
+        'link',
+        'bulletedList',
+        'numberedList',
+      ],
+    }}
+    {...props}
+  />
 );
 
 // eslint-disable-next-line import/no-default-export
