@@ -28,6 +28,11 @@ fragment LanguageEngagementHeader on LanguageEngagement {
     canEdit
     value
   }
+  openToInvestorVisit {
+    canRead
+    canEdit
+    value
+  }
   dateRange {
     ...securedDateRange
   }

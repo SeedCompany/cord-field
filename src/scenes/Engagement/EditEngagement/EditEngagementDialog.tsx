@@ -53,6 +53,7 @@ export type EditableEngagementField = ExtractStrict<
   | 'firstScripture'
   | 'lukePartnership'
   | 'paratextRegistryId'
+  | 'openToInvestorVisit'
 >;
 
 interface EngagementFieldProps {
@@ -136,6 +137,9 @@ const fieldMapping: Record<
   lukePartnership: ({ props }) => (
     <CheckboxField {...props} label="Luke Partnership" />
   ),
+  openToInvestorVisit: ({ props }) => (
+    <CheckboxField {...props} label="Open to Investor Visitor" />
+  ),
   paratextRegistryId: ({ props }) => (
     <TextField {...props} label="Paratext Registry ID" />
   ),
@@ -207,6 +211,7 @@ export const EditEngagementDialog: FC<EditEngagementDialogProps> = ({
             lukePartnership: engagement.lukePartnership.value,
             firstScripture: engagement.firstScripture.value,
             paratextRegistryId: engagement.paratextRegistryId.value,
+            openToInvestorVisit: engagement.openToInvestorVisit.value,
           }
         : {
             methodologies: engagement.methodologies.value,
