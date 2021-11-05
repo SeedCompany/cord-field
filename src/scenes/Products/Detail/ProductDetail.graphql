@@ -29,6 +29,16 @@ fragment ProductDetail on Product {
     project {
       ...ProjectBreadcrumb
     }
+    partnershipsProducingMediums {
+      items {
+        medium
+        partnership {
+          ...PartnershipForLabel
+        }
+      }
+      canEdit: canCreate
+      canRead
+    }
   }
   progressStepMeasurement {
     canRead
@@ -48,6 +58,26 @@ fragment ProductDetail on Product {
     description {
       canRead
       value
+    }
+  }
+}
+
+fragment PartnershipForLabel on Partnership {
+  ...Id
+  partner {
+    canRead
+    value {
+      ...Id
+      organization {
+        canRead
+        value {
+          ...Id
+          name {
+            canRead
+            value
+          }
+        }
+      }
     }
   }
 }
