@@ -7,6 +7,8 @@ import { GoalsSection } from './GoalsSection';
 import { MediumsSection } from './MediumsSection';
 import { MethodologySection } from './MethodologySection';
 import { OtherProductSection } from './OtherProductSection';
+import { PartnershipProducingMediumsSection } from './PartnershipProducingMediumsSection';
+import { EditPartnershipsProducingMediumsInfoFragment } from './PartnershipsProducingMediums.generated';
 import { ProductFormValues } from './ProductForm';
 import {
   ProductForm_DerivativeScriptureProduct_Fragment as DerivativeScriptureProduct,
@@ -34,6 +36,7 @@ export type SectionProps = Except<
   'handleSubmit' | keyof RenderableProps<any>
 > & {
   product?: Product;
+  engagement: EditPartnershipsProducingMediumsInfoFragment;
   accordionState: {
     product?: Product;
     openedSection: ProductKey | undefined;
@@ -47,6 +50,7 @@ const sections: ReadonlyArray<ComponentType<SectionProps>> = [
   OtherProductSection,
   ScriptureReferencesSection,
   MediumsSection,
+  PartnershipProducingMediumsSection,
   MethodologySection,
   ProgressMeasurementSection,
   ProgressTargetSection,

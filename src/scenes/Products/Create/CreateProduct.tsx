@@ -1,17 +1,21 @@
 import { useMutation, useQuery } from '@apollo/client';
 import { Breadcrumbs, makeStyles, Typography } from '@material-ui/core';
 import { Skeleton } from '@material-ui/lab';
-import { useSnackbar } from 'notistack';
-import React from 'react';
+import React, { useMemo } from 'react';
 import { Helmet } from 'react-helmet-async';
 import { useNavigate, useParams } from 'react-router';
-import { addItemToList, handleFormError, Product } from '../../../api';
+import { addItemToList, handleFormError, ProductMedium } from '../../../api';
 import { EngagementBreadcrumb } from '../../../components/EngagementBreadcrumb';
 import { ProjectBreadcrumb } from '../../../components/ProjectBreadcrumb';
-import { ButtonLink } from '../../../components/Routing';
+import { mapFromList } from '../../../util';
 import { getFullBookRange } from '../../../util/biblejs';
 import { useProjectId } from '../../Projects/useProjectId';
-import { ProductForm } from '../ProductForm';
+import {
+  ProductForm,
+  ProductFormProps,
+  ProductFormValues,
+} from '../ProductForm';
+import { UpdatePartnershipsProducingMediumsDocument } from '../ProductForm/PartnershipsProducingMediums.generated';
 import {
   CreateDerivativeScriptureDocument,
   CreateDirectScriptureProductDocument,
@@ -33,9 +37,8 @@ export const CreateProduct = () => {
   const classes = useStyles();
   const navigate = useNavigate();
 
-  const { projectId, changesetId, projectUrl } = useProjectId();
+  const { projectId, changesetId } = useProjectId();
   const { engagementId = '' } = useParams();
-  const { enqueueSnackbar } = useSnackbar();
 
   const { data, loading } = useQuery(ProductInfoForCreateDocument, {
     variables: {
@@ -76,6 +79,128 @@ export const CreateProduct = () => {
       outputToItem: (res) => res.createOtherProduct.product,
     }),
   });
+  const [updatePartnershipsProducingMediums] = useMutation(
+    UpdatePartnershipsProducingMediumsDocument
+  );
+
+  const initialValues = useMemo(() => {
+    const values: ProductFormValues = {
+      product: {
+        title: '',
+        bookSelection: 'full',
+        producingMediums: mapFromList(
+          engagement?.partnershipsProducingMediums.items ?? [],
+          (pair) => [pair.medium, pair.partnership ?? undefined]
+        ),
+      },
+    };
+    return values;
+  }, [engagement]);
+
+  const handleSubmit: ProductFormProps['onSubmit'] = async (
+    submitted,
+    form
+  ) => {
+    const { dirtyFields } = form.getState();
+
+    const createProduct = async () => {
+      const {
+        productType,
+        produces,
+        scriptureReferences,
+        unspecifiedScripture,
+        book,
+        bookSelection,
+        title,
+        description,
+        producingMediums,
+        ...inputs
+      } = submitted.product ?? {};
+
+      const parsedScriptureReferences =
+        bookSelection === 'full' && book
+          ? [getFullBookRange(book)]
+          : scriptureReferences ?? [];
+
+      if (productType === 'Other') {
+        const { data } = await createOtherProduct({
+          variables: {
+            input: {
+              engagementId,
+              title: title || '',
+              description,
+              ...inputs,
+            },
+          },
+        });
+        return data!.createOtherProduct.product;
+      } else if (productType === 'DirectScriptureProduct') {
+        const { data } = await createDirectScriptureProduct({
+          variables: {
+            input: {
+              engagementId,
+              scriptureReferences: parsedScriptureReferences,
+              unspecifiedScripture:
+                parsedScriptureReferences.length > 0 ||
+                !unspecifiedScripture?.totalVerses ||
+                !book
+                  ? null
+                  : {
+                      book,
+                      ...unspecifiedScripture,
+                    },
+              ...inputs,
+            },
+          },
+        });
+        return data!.createDirectScriptureProduct.product;
+      } else {
+        const { data } = await createDerivativeScriptureProduct({
+          variables: {
+            input: {
+              engagementId,
+              ...inputs,
+              produces: produces!.id,
+              scriptureReferencesOverride: parsedScriptureReferences,
+            },
+          },
+        });
+        return data!.createDerivativeScriptureProduct.product;
+      }
+    };
+    const updatePpm = async () => {
+      if (
+        !engagement ||
+        !Object.keys(dirtyFields).some((field) =>
+          field.startsWith('product.producingMediums.')
+        )
+      ) {
+        // No producing partnerships have changed, API call not needed.
+        return;
+      }
+
+      const ppmInput = Object.entries(
+        submitted.product?.producingMediums ?? {}
+      ).map(([medium, partnership]) => ({
+        medium: medium as ProductMedium,
+        partnership: partnership?.id,
+      }));
+      await updatePartnershipsProducingMediums({
+        variables: {
+          engagementId: engagement.id,
+          input: ppmInput,
+        },
+      });
+    };
+
+    try {
+      await Promise.all([createProduct(), updatePpm()]);
+
+      navigate('../../');
+    } catch (e) {
+      return await handleFormError(e, form);
+    }
+  };
 
   return (
     <main className={classes.root}>
@@ -88,92 +213,15 @@ export const CreateProduct = () => {
       <Typography variant="h2">
         {loading ? <Skeleton width="50%" variant="text" /> : 'Create Goal'}
       </Typography>
-      {!loading && data && (
-        <ProductForm
-          onSubmit={async (submitted, form) => {
-            const {
-              productType,
-              produces,
-              scriptureReferences,
-              unspecifiedScripture,
-              book,
-              bookSelection,
-              title,
-              description,
-              ...inputs
-            } = submitted.product ?? {};
-
-            const parsedScriptureReferences =
-              bookSelection === 'full' && book
-                ? [getFullBookRange(book)]
-                : scriptureReferences ?? [];
-            try {
-              let product: Pick<Product, 'id'>;
-              if (productType === 'Other') {
-                const { data } = await createOtherProduct({
-                  variables: {
-                    input: {
-                      engagementId,
-                      title: title || '',
-                      description,
-                      ...inputs,
-                    },
-                  },
-                });
-                product = data!.createOtherProduct.product;
-              } else if (productType === 'DirectScriptureProduct') {
-                const { data } = await createDirectScriptureProduct({
-                  variables: {
-                    input: {
-                      engagementId,
-                      scriptureReferences: parsedScriptureReferences,
-                      unspecifiedScripture:
-                        parsedScriptureReferences.length > 0 ||
-                        !unspecifiedScripture?.totalVerses ||
-                        !book
-                          ? null
-                          : {
-                              book,
-                              ...unspecifiedScripture,
-                            },
-                      ...inputs,
-                    },
-                  },
-                });
-                product = data!.createDirectScriptureProduct.product;
-              } else {
-                const { data } = await createDerivativeScriptureProduct({
-                  variables: {
-                    input: {
-                      engagementId,
-                      ...inputs,
-                      produces: produces!.id,
-                      scriptureReferencesOverride: parsedScriptureReferences,
-                    },
-                  },
-                });
-                product = data!.createDerivativeScriptureProduct.product;
-              }
-
-              enqueueSnackbar(`Created goal`, {
-                variant: 'success',
-                action: () => (
-                  <ButtonLink
-                    color="inherit"
-                    to={`${projectUrl}/engagements/${engagementId}/products/${product.id}`}
-                  >
-                    Edit
-                  </ButtonLink>
-                ),
-              });
-
-              navigate('../../');
-            } catch (e) {
-              return await handleFormError(e, form);
-            }
-          }}
-        />
-      )}
+      {!loading &&
+        data &&
+        data.engagement.__typename === 'LanguageEngagement' && (
+          <ProductForm
+            engagement={data.engagement}
+            initialValues={initialValues}
+            onSubmit={handleSubmit}
+          />
+        )}
     </main>
   );
 };

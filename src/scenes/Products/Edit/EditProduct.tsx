@@ -1,17 +1,17 @@
 import { useMutation, useQuery } from '@apollo/client';
 import { Breadcrumbs, makeStyles, Typography } from '@material-ui/core';
 import { Skeleton } from '@material-ui/lab';
-import { useSnackbar } from 'notistack';
 import React, { useMemo } from 'react';
 import { Helmet } from 'react-helmet-async';
 import { useNavigate, useParams } from 'react-router';
 import {
   handleFormError,
-  LanguageEngagement,
+  ProductMedium,
   removeItemFromList,
 } from '../../../api';
 import { EngagementBreadcrumb } from '../../../components/EngagementBreadcrumb';
 import { ProjectBreadcrumb } from '../../../components/ProjectBreadcrumb';
+import { mapFromList } from '../../../util';
 import {
   getFullBookRange,
   isFullBookRange,
@@ -23,6 +23,7 @@ import {
   ProductFormProps,
   ProductFormValues,
 } from '../ProductForm';
+import { UpdatePartnershipsProducingMediumsDocument } from '../ProductForm/PartnershipsProducingMediums.generated';
 import {
   DeleteProductDocument,
   ProductInfoForEditDocument,
@@ -47,7 +48,6 @@ export const EditProduct = () => {
 
   const { projectId, changesetId } = useProjectId();
   const { engagementId = '', productId = '' } = useParams();
-  const { enqueueSnackbar } = useSnackbar();
 
   const { data, loading } = useQuery(ProductInfoForEditDocument, {
     variables: {
@@ -59,7 +59,10 @@ export const EditProduct = () => {
   });
 
   const project = data?.project;
-  const engagement = data?.engagement;
+  const engagement =
+    data?.engagement.__typename === 'LanguageEngagement'
+      ? data.engagement
+      : undefined;
   const product = data?.product;
 
   const [updateDirectScriptureProduct] = useMutation(
@@ -71,10 +74,13 @@ export const EditProduct = () => {
   const [updateOtherProduct] = useMutation(UpdateOtherProductDocument);
   const [deleteProduct] = useMutation(DeleteProductDocument, {
     update: removeItemFromList({
-      listId: [engagement as LanguageEngagement, 'products'],
+      listId: [engagement, 'products'],
       item: product!,
     }),
   });
+  const [updatePartnershipsProducingMediums] = useMutation(
+    UpdatePartnershipsProducingMediumsDocument
+  );
 
   const initialValues = useMemo(() => {
     if (!product) return undefined;
@@ -147,13 +153,17 @@ export const EditProduct = () => {
               description: product.description.value || '',
             }
           : undefined),
+        producingMediums: mapFromList(
+          engagement?.partnershipsProducingMediums.items ?? [],
+          (pair) => [pair.medium, pair.partnership ?? undefined]
+        ),
       },
     };
     return values;
-  }, [product]);
+  }, [product, engagement]);
 
-  const handleSubmit: ProductFormProps['onSubmit'] = async (data) => {
-    if (!product) {
+  const handleSubmit: ProductFormProps['onSubmit'] = async (data, form) => {
+    if (!product || !engagement) {
       return;
     }
 
@@ -164,12 +174,21 @@ export const EditProduct = () => {
         },
       });
 
-      enqueueSnackbar(`Deleted goal`, {
-        variant: 'success',
-      });
       navigate('../../../');
       return;
-    } else {
+    }
+    const { dirtyFields } = form.getState();
+
+    const updateProduct = async () => {
+      if (
+        Object.keys(dirtyFields).filter(
+          (field) => !field.startsWith('product.producingMediums.')
+        ).length === 0
+      ) {
+        // Changes have not been made that affect the product.
+        return;
+      }
+
       const {
         productType,
         produces,
@@ -179,6 +198,7 @@ export const EditProduct = () => {
         description,
         bookSelection,
         unspecifiedScripture,
+        producingMediums,
         ...input
       } = data.product ?? {};
 
@@ -230,11 +250,33 @@ export const EditProduct = () => {
           },
         });
       }
+    };
 
-      enqueueSnackbar(`Updated goal`, {
-        variant: 'success',
+    const updatePpm = async () => {
+      if (
+        !Object.keys(dirtyFields).some((field) =>
+          field.startsWith('product.producingMediums.')
+        )
+      ) {
+        // No producing partnerships have changed, API call not needed.
+        return;
+      }
+
+      const ppmInput = Object.entries(data.product?.producingMediums ?? {}).map(
+        ([medium, partnership]) => ({
+          medium: medium as ProductMedium,
+          partnership: partnership?.id,
+        })
+      );
+      await updatePartnershipsProducingMediums({
+        variables: {
+          engagementId: engagement.id,
+          input: ppmInput,
+        },
       });
-    }
+    };
+
+    await Promise.all([updateProduct(), updatePpm()]);
 
     navigate('../');
   };
@@ -252,9 +294,10 @@ export const EditProduct = () => {
         {loading ? <Skeleton width="50%" variant="text" /> : 'Edit Goal'}
       </Typography>
 
-      {!loading && data && product && (
+      {!loading && data && engagement && product && (
         <ProductForm
           product={product}
+          engagement={engagement}
           onSubmit={async (data, form) => {
             try {
               await handleSubmit(data, form);

@@ -52,14 +52,7 @@ export const ProductDetail = () => {
       >
         <ProductDetailHeader product={product} />
         <Grid item container spacing={5} className={classes.details}>
-          <Grid
-            item
-            md={4}
-            lg={3}
-            container
-            alignContent="flex-start"
-            spacing={3}
-          >
+          <Grid item md={4} container alignContent="flex-start" spacing={3}>
             <ProductInfo product={product} />
           </Grid>
           {progress && (
