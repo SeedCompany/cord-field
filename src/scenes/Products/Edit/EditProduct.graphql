@@ -38,6 +38,7 @@ query ProductInfoForEdit(
   }
   engagement(id: $engagementId, changeset: $changeset) {
     ...EngagementBreadcrumb
+    ...EditPartnershipsProducingMediumsInfo
   }
   product(id: $productId) {
     ...ProductForm

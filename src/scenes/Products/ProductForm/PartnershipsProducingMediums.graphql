@@ -1,0 +1,43 @@
+fragment EditPartnershipsProducingMediumsInfo on LanguageEngagement {
+  ...Id
+  partnershipsProducingMediums {
+    canRead
+    canEdit: canCreate
+    items {
+      medium
+      partnership {
+        ...PartnershipForLabel
+      }
+    }
+  }
+  project {
+    ...Id
+    partnerships(input: { count: 100 }) {
+      items {
+        ...PartnershipForLabel
+      }
+    }
+  }
+}
+
+mutation UpdatePartnershipsProducingMediums(
+  $engagementId: ID!
+  $input: [PartnershipProducingMediumInput!]!
+) {
+  updatePartnershipsProducingMediums(
+    engagementId: $engagementId
+    input: $input
+  ) {
+    engagement {
+      ...Id
+      partnershipsProducingMediums {
+        items {
+          medium
+          partnership {
+            ...Id
+          }
+        }
+      }
+    }
+  }
+}

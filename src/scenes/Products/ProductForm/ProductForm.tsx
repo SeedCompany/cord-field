@@ -19,6 +19,7 @@ import {
   SubmitError,
 } from '../../../components/form';
 import { ProductTypes } from './constants';
+import { EditPartnershipsProducingMediumsInfoFragment } from './PartnershipsProducingMediums.generated';
 import { ProductFormFragment } from './ProductForm.generated';
 import { ProductFormFields } from './ProductFormFields';
 
@@ -54,6 +55,7 @@ export interface ProductFormValues extends SubmitAction<'delete'> {
 
 export type ProductFormProps = FormProps<ProductFormValues> & {
   product?: ProductFormFragment;
+  engagement: EditPartnershipsProducingMediumsInfoFragment;
 };
 
 const decorators: Array<Decorator<ProductFormValues>> = [
@@ -99,7 +101,11 @@ const decorators: Array<Decorator<ProductFormValues>> = [
   }),
 ];
 
-export const ProductForm = ({ product, ...props }: ProductFormProps) => {
+export const ProductForm = ({
+  product,
+  engagement,
+  ...props
+}: ProductFormProps) => {
   const classes = useStyles();
 
   return (
@@ -109,7 +115,11 @@ export const ProductForm = ({ product, ...props }: ProductFormProps) => {
           <SubmitError />
           {/* Need to give accordions their own container for styling */}
           <div>
-            <ProductFormFields product={product} {...rest} />
+            <ProductFormFields
+              product={product}
+              engagement={engagement}
+              {...rest}
+            />
           </div>
 
           <div className={classes.buttons}>

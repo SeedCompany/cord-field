@@ -64,4 +64,12 @@ export const typePolicies: TypePolicies = {
   ProductProgress: {
     keyFields: ['product', ['id'], 'report', ['id']],
   },
+  LanguageEngagement: {
+    fields: {
+      partnershipsProducingMediums: {
+        // Entire updated list is returned each time.
+        merge: false,
+      },
+    },
+  },
 };
