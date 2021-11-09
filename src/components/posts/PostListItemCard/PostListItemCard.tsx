@@ -73,6 +73,9 @@ const useStyles = makeStyles(({ spacing, typography }) => {
       right: 0,
       top: 0,
     },
+    postBody: {
+      marginRight: spacing(2),
+    },
   };
 });
 
@@ -127,7 +130,7 @@ export const PostListItemCard: FC<PostListItemCardProps> = ({
                 </Typography>
               </div>
             </div>
-            <Typography variant="body2">{postBody}</Typography>
+            <div className={classes.postBody}>{postBody}</div>
           </div>
         </CardContent>
         {editable && (
