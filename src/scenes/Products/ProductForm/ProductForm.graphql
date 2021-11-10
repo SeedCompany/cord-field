@@ -55,7 +55,11 @@ fragment ProductForm on Product {
       }
     }
     scriptureReferencesOverride {
-      ...SecuredScriptureRangesOverride
+      canRead
+      canEdit
+      value {
+        ...Scripture
+      }
     }
   }
   ... on OtherProduct {
@@ -106,28 +110,7 @@ fragment SecuredScriptureRanges on SecuredScriptureRanges {
   canRead
   canEdit
   value {
-    ...ScriptureRange
-  }
-}
-
-fragment SecuredScriptureRangesOverride on SecuredScriptureRangesOverride {
-  canRead
-  canEdit
-  value {
-    ...ScriptureRange
-  }
-}
-
-fragment ScriptureRange on ScriptureRange {
-  start {
-    book
-    chapter
-    verse
-  }
-  end {
-    book
-    chapter
-    verse
+    ...Scripture
   }
 }
 

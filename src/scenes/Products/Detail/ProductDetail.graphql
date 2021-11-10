@@ -18,7 +18,7 @@ fragment ProductDetail on Product {
   }
   scriptureReferences {
     value {
-      label
+      ...Scripture
     }
   }
   describeCompletion {
