@@ -4,6 +4,7 @@ import React from 'react';
 import { useParams } from 'react-router-dom';
 import { ReportLabel } from '../../../components/PeriodicReports/ReportLabel';
 import { ResponsiveDivider } from '../../../components/ResponsiveDivider';
+import { Link } from '../../../components/Routing';
 import { ProductDetailDocument } from './ProductDetail.generated';
 import { ProductDetailHeader } from './ProductDetailHeader';
 import { ProductInfo } from './ProductInfo';
@@ -60,7 +61,10 @@ export const ProductDetail = () => {
               <ResponsiveDivider vertical="mdUp" spacing={3} />
               <Grid item xs lg={7} container direction="column" spacing={2}>
                 <Grid item component={Typography} variant="h3" paragraph>
-                  Progress for <ReportLabel report={progress.report} />
+                  Progress for{' '}
+                  <Link to={`../../reports/progress/${progress.report.id}`}>
+                    <ReportLabel report={progress.report} />
+                  </Link>
                 </Grid>
                 <Grid item>
                   <StepsList
