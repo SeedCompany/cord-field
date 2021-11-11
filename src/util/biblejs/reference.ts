@@ -1,6 +1,5 @@
 import { groupBy, isEqual, sum } from 'lodash';
-import { UnspecifiedScripturePortion } from '../../api';
-import { ScriptureRangeFragment } from '../../scenes/Products/ProductForm/ProductForm.generated';
+import { ScriptureFragment, UnspecifiedScripturePortion } from '../../api';
 import { books } from './bibleBooks';
 import { Nullable } from '..';
 
@@ -286,10 +285,13 @@ export const isFullBookRange = (
 ) => isEqual(scriptureRange, getFullBookRange(book));
 
 export const removeScriptureTypename = (
-  scriptureReferences: readonly ScriptureRangeFragment[]
+  scriptureReferences: readonly ScriptureFragment[]
 ) =>
   scriptureReferences.map(
-    ({ start: { __typename, ...start }, end: { __typename: _, ...end } }) => ({
+    ({
+      start: { __typename, label, ...start },
+      end: { __typename: _, label: __, ...end },
+    }) => ({
       start,
       end,
     })
