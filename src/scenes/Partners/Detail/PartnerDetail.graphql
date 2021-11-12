@@ -47,4 +47,11 @@ fragment PartnerDetails on Partner {
   address {
     ...securedString
   }
+  projects {
+    canRead
+    canCreate
+    items {
+      ...ProjectListItem
+    }
+  }
 }

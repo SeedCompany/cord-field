@@ -22,8 +22,10 @@ import { useDialog } from '../../../components/Dialog';
 import { Error } from '../../../components/Error';
 import { Fab } from '../../../components/Fab';
 import { useDateTimeFormatter } from '../../../components/Formatters';
+import { ProjectListItemCard } from '../../../components/ProjectListItemCard';
+import { ProjectListItemFragment } from '../../../components/ProjectListItemCard/ProjectListItem.generated';
 import { UserListItemCardPortrait } from '../../../components/UserListItemCard';
-import { square } from '../../../util';
+import { listOrPlaceholders, square } from '../../../util';
 import { EditablePartnerField, EditPartner } from '../Edit';
 import { AddressCard } from './AddressCard';
 import { PartnerDocument } from './PartnerDetail.generated';
@@ -91,6 +93,9 @@ const useStyles = makeStyles(({ spacing, breakpoints, palette }) => ({
     fontSize: 70,
     color: palette.background.paper,
   },
+  listItem: {
+    marginBottom: spacing(2),
+  },
 }));
 
 export const PartnerDetail = () => {
@@ -105,6 +110,7 @@ export const PartnerDetail = () => {
   });
   const partner = data?.partner;
   const name = partner?.organization.value?.name.value;
+  const projects = partner?.projects;
 
   const [editPartnerState, editPartner, editField] =
     useDialog<Many<EditablePartnerField>>();
@@ -244,6 +250,31 @@ export const PartnerDetail = () => {
               </Button>
             }
           />
+          <Grid item xs={12}>
+            <Typography variant="h3" paragraph>
+              Projects
+            </Typography>
+            {listOrPlaceholders(
+              projects?.items as ProjectListItemFragment[] | undefined,
+              3
+            ).map((project, index) => (
+              <ProjectListItemCard
+                key={project?.id ?? index}
+                project={project}
+                className={classes.listItem}
+              />
+            ))}
+            {projects?.items.length === 0 ? (
+              <Typography color="textSecondary">
+                This partner is not engaged in any projects
+              </Typography>
+            ) : projects?.canRead === false ? (
+              <Typography color="textSecondary">
+                You don't have permission to see the projects this partner is
+                engaged in
+              </Typography>
+            ) : null}
+          </Grid>
         </div>
       )}
       {partner ? (
