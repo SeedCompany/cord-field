@@ -154,26 +154,25 @@ export const UpdateProjectDialog = ({
       // Only simple properties are changeset aware, relationships are not.
       changesetAware={editFields.every((field) => !field.endsWith('Id'))}
       initialValues={initialValues}
-      onSubmit={async ({
-        project: {
-          primaryLocationId: primaryLocation,
-          fieldRegionId: fieldRegion,
-          ...rest
-        },
-      }) => {
+      onSubmit={async ({ project: data }, form) => {
+        const { dirtyFields } = form.getState();
         await updateProject({
           variables: {
             input: {
               project: {
-                ...rest,
-                primaryLocationId: primaryLocation?.id ?? null,
-                fieldRegionId: fieldRegion?.id ?? null,
+                ...data,
+                primaryLocationId: dirtyFields['project.primaryLocationId']
+                  ? data.primaryLocationId?.id ?? null
+                  : undefined,
+                fieldRegionId: dirtyFields['project.fieldRegionId']
+                  ? data.fieldRegionId?.id ?? null
+                  : undefined,
               },
               changeset: project.changeset?.id,
             },
           },
           update: (cache) => {
-            if (rest.mouStart === undefined && rest.mouEnd === undefined) {
+            if (data.mouStart === undefined && data.mouEnd === undefined) {
               return;
             }
 
