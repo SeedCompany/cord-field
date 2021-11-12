@@ -6,7 +6,6 @@ import {
 } from '@material-ui/icons';
 import { Skeleton } from '@material-ui/lab';
 import * as React from 'react';
-import { IdFragment } from '../../../../api';
 import { Redacted } from '../../../../components/Redacted';
 import { Link } from '../../../../components/Routing';
 import { getProjectUrl } from '../../../Projects/useProjectId';
@@ -54,7 +53,18 @@ export const FirstScripture = ({ data }: { data?: FirstScriptureFragment }) => {
     );
   }
 
-  if (data.hasExternalFirstScripture.value) {
+  const scripture = data.firstScripture.value;
+
+  if (!scripture?.hasFirst) {
+    return (
+      <div className={classes.root}>
+        <NotInterested className={classes.icon} />
+        <Typography>No Scripture yet</Typography>
+      </div>
+    );
+  }
+
+  if (scripture.__typename === 'ExternalFirstScripture') {
     return (
       <div className={classes.root}>
         <Check color="primary" className={classes.icon} />
@@ -65,39 +75,29 @@ export const FirstScripture = ({ data }: { data?: FirstScriptureFragment }) => {
     );
   }
 
-  const engagement =
-    data.firstScripture.value?.__typename === 'InternalFirstScripture'
-      ? data.firstScripture.value.engagement
-      : null;
-
-  if (engagement) {
-    const project = engagement.project;
-    return (
-      <div className={classes.root}>
-        <Check color="primary" className={classes.icon} />
-        <Typography className={classes.text}>
-          First Scripture:&nbsp;&nbsp;
-          <Link
-            to={`${getProjectUrl(project as IdFragment)}/engagements/${
-              engagement.id
-            }`}
-            underline={project.name.canRead ? undefined : 'none'}
-          >
-            {project.name.canRead ? (
-              project.name.value
-            ) : (
-              <Redacted info="You cannot view the project's name" width={200} />
-            )}
-          </Link>
-        </Typography>
-      </div>
-    );
+  if (scripture.__typename !== 'InternalFirstScripture') {
+    return null; // Shouldn't ever happen, unless other types are added
   }
 
+  const project = scripture.engagement.project;
   return (
     <div className={classes.root}>
-      <NotInterested className={classes.icon} />
-      <Typography>No Scripture yet</Typography>
+      <Check color="primary" className={classes.icon} />
+      <Typography className={classes.text}>
+        First Scripture:&nbsp;&nbsp;
+        <Link
+          to={`${getProjectUrl(project)}/engagements/${
+            scripture.engagement.id
+          }`}
+          underline={project.name.canRead ? undefined : 'none'}
+        >
+          {project.name.canRead ? (
+            project.name.value
+          ) : (
+            <Redacted info="You cannot view the project's name" width={200} />
+          )}
+        </Link>
+      </Typography>
     </div>
   );
 };
