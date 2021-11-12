@@ -52,7 +52,7 @@ export const PartnershipProducingMediumsSection = ({
       {() => (
         <>
           <Typography paragraph>
-            Pick the partners that are producing each medium
+            Pick the partners that are producing each distribution method
             <br />
             Note that these are <b>shared</b> across all goals for the
             engagement
