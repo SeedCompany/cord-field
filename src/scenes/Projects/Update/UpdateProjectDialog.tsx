@@ -161,19 +161,13 @@ export const UpdateProjectDialog = ({
           ...rest
         },
       }) => {
-        const primaryLocationId = primaryLocation?.id;
-        const fieldRegionId = fieldRegion?.id;
         await updateProject({
           variables: {
             input: {
               project: {
                 ...rest,
-                ...(primaryLocationId
-                  ? { primaryLocationId }
-                  : { primaryLocationId: null }),
-                ...(fieldRegionId
-                  ? { fieldRegionId }
-                  : { fieldRegionId: null }),
+                primaryLocationId: primaryLocation?.id ?? null,
+                fieldRegionId: fieldRegion?.id ?? null,
               },
               changeset: project.changeset?.id,
             },
