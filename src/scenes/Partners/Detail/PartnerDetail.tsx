@@ -90,7 +90,6 @@ const useStyles = makeStyles(({ spacing, breakpoints, palette }) => ({
     ...square(86),
     fontSize: 70,
     color: palette.background.paper,
-    backgroundColor: palette.background.default,
   },
 }));
 

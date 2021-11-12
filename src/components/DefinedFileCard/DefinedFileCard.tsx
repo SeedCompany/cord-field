@@ -48,7 +48,6 @@ const useStyles = makeStyles(({ palette, spacing, typography }) => ({
     position: 'relative',
   },
   avatar: {
-    backgroundColor: '#f3f4f6',
     width: 58,
     height: 58,
   },
