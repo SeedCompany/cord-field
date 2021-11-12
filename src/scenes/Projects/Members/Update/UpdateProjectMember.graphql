@@ -17,5 +17,7 @@ query GetUserRoles($userId: ID!) {
 }
 
 mutation DeleteProjectMember($projectMemberId: ID!) {
-  deleteProjectMember(id: $projectMemberId)
+  deleteProjectMember(id: $projectMemberId) {
+    __typename
+  }
 }

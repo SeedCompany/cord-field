@@ -7,5 +7,7 @@ mutation UpdateProjectChangeRequest($input: UpdateProjectChangeRequestInput!) {
 }
 
 mutation DeleteProjectChangeRequest($id: ID!) {
-  deleteProjectChangeRequest(id: $id)
+  deleteProjectChangeRequest(id: $id) {
+    __typename
+  }
 }

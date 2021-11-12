@@ -46,5 +46,7 @@ query ProductInfoForEdit(
 }
 
 mutation DeleteProduct($productId: ID!) {
-  deleteProduct(id: $productId)
+  deleteProduct(id: $productId) {
+    __typename
+  }
 }
