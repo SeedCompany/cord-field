@@ -23,7 +23,6 @@ import { Error } from '../../../components/Error';
 import { Fab } from '../../../components/Fab';
 import { useDateTimeFormatter } from '../../../components/Formatters';
 import { ProjectListItemCard } from '../../../components/ProjectListItemCard';
-import { ProjectListItemFragment } from '../../../components/ProjectListItemCard/ProjectListItem.generated';
 import { UserListItemCardPortrait } from '../../../components/UserListItemCard';
 import { listOrPlaceholders, square } from '../../../util';
 import { EditablePartnerField, EditPartner } from '../Edit';
@@ -264,10 +263,7 @@ export const PartnerDetail = () => {
                 This partner is not engaged in any projects
               </Typography>
             ) : (
-              listOrPlaceholders(
-                projects?.items as ProjectListItemFragment[] | undefined,
-                3
-              ).map((project, index) => (
+              listOrPlaceholders(projects?.items, 3).map((project, index) => (
                 <ProjectListItemCard
                   key={project?.id ?? index}
                   project={project}
