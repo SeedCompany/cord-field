@@ -254,26 +254,27 @@ export const PartnerDetail = () => {
             <Typography variant="h3" paragraph>
               Projects
             </Typography>
-            {listOrPlaceholders(
-              projects?.items as ProjectListItemFragment[] | undefined,
-              3
-            ).map((project, index) => (
-              <ProjectListItemCard
-                key={project?.id ?? index}
-                project={project}
-                className={classes.listItem}
-              />
-            ))}
-            {projects?.items.length === 0 ? (
-              <Typography color="textSecondary">
-                This partner is not engaged in any projects
-              </Typography>
-            ) : projects?.canRead === false ? (
+            {projects?.canRead === false ? (
               <Typography color="textSecondary">
                 You don't have permission to see the projects this partner is
                 engaged in
               </Typography>
-            ) : null}
+            ) : projects?.items.length === 0 ? (
+              <Typography color="textSecondary">
+                This partner is not engaged in any projects
+              </Typography>
+            ) : (
+              listOrPlaceholders(
+                projects?.items as ProjectListItemFragment[] | undefined,
+                3
+              ).map((project, index) => (
+                <ProjectListItemCard
+                  key={project?.id ?? index}
+                  project={project}
+                  className={classes.listItem}
+                />
+              ))
+            )}
           </Grid>
         </div>
       )}
