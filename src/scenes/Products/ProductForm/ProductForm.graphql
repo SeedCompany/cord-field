@@ -9,11 +9,6 @@ fragment ProductForm on Product {
     canEdit
     value
   }
-  purposes {
-    canRead
-    canEdit
-    value
-  }
   methodology {
     canRead
     canEdit
@@ -36,6 +31,21 @@ fragment ProductForm on Product {
     canEdit
     value
   }
+  progressStepMeasurement {
+    canRead
+    canEdit
+    value
+  }
+  progressTarget {
+    canRead
+    canEdit
+    value
+  }
+  ... on DirectScriptureProduct {
+    unspecifiedScripture {
+      ...SecuredUnspecifiedScripturePortion
+    }
+  }
   ... on DerivativeScriptureProduct {
     produces {
       canRead
@@ -45,7 +55,23 @@ fragment ProductForm on Product {
       }
     }
     scriptureReferencesOverride {
-      ...SecuredScriptureRangesOverride
+      canRead
+      canEdit
+      value {
+        ...Scripture
+      }
+    }
+  }
+  ... on OtherProduct {
+    title {
+      canRead
+      canEdit
+      value
+    }
+    description {
+      canRead
+      canEdit
+      value
     }
   }
 }
@@ -54,7 +80,7 @@ fragment Producible on Producible {
   id
   __typename
   createdAt
-  ... on Film {
+  ... on EthnoArt {
     name {
       ...securedString
     }
@@ -62,7 +88,7 @@ fragment Producible on Producible {
       ...SecuredScriptureRanges
     }
   }
-  ... on LiteracyMaterial {
+  ... on Film {
     name {
       ...securedString
     }
@@ -78,52 +104,32 @@ fragment Producible on Producible {
       ...SecuredScriptureRanges
     }
   }
-  ... on Song {
-    name {
-      ...securedString
-    }
-    scriptureReferences {
-      ...SecuredScriptureRanges
-    }
-  }
 }
 
 fragment SecuredScriptureRanges on SecuredScriptureRanges {
   canRead
   canEdit
   value {
-    ...ScriptureRange
+    ...Scripture
   }
 }
 
-fragment SecuredScriptureRangesOverride on SecuredScriptureRangesOverride {
+fragment SecuredUnspecifiedScripturePortion on SecuredUnspecifiedScripturePortion {
   canRead
   canEdit
   value {
-    ...ScriptureRange
+    ...UnspecifiedScripturePortion
   }
 }
 
-fragment ScriptureRange on ScriptureRange {
-  start {
-    book
-    chapter
-    verse
-  }
-  end {
-    book
-    chapter
-    verse
-  }
+fragment UnspecifiedScripturePortion on UnspecifiedScripturePortion {
+  book
+  totalVerses
 }
 
-query AvailableMethodologySteps {
-  methodologyAvailableSteps {
-    ...AvailableMethodologySteps
-  }
-}
-
-fragment AvailableMethodologySteps on AvailableMethodologySteps {
-  steps
-  methodology
+query AvailableProductSteps(
+  $type: ProducibleType
+  $methodology: ProductMethodology
+) {
+  availableProductSteps(type: $type, methodology: $methodology)
 }

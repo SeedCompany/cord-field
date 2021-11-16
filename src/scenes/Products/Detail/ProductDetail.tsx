@@ -4,6 +4,7 @@ import React from 'react';
 import { useParams } from 'react-router-dom';
 import { ReportLabel } from '../../../components/PeriodicReports/ReportLabel';
 import { ResponsiveDivider } from '../../../components/ResponsiveDivider';
+import { Link } from '../../../components/Routing';
 import { ProductDetailDocument } from './ProductDetail.generated';
 import { ProductDetailHeader } from './ProductDetailHeader';
 import { ProductInfo } from './ProductInfo';
@@ -35,7 +36,11 @@ export const ProductDetail = () => {
     },
   });
   const product = data?.product;
-  const progress = product?.progressOfCurrentReportDue;
+  const {
+    progressOfCurrentReportDue: progress,
+    progressStepMeasurement,
+    progressTarget,
+  } = product ?? {};
 
   return (
     <div className={classes.root}>
@@ -48,14 +53,7 @@ export const ProductDetail = () => {
       >
         <ProductDetailHeader product={product} />
         <Grid item container spacing={5} className={classes.details}>
-          <Grid
-            item
-            md={4}
-            lg={3}
-            container
-            alignContent="flex-start"
-            spacing={3}
-          >
+          <Grid item md={4} container alignContent="flex-start" spacing={3}>
             <ProductInfo product={product} />
           </Grid>
           {progress && (
@@ -63,10 +61,17 @@ export const ProductDetail = () => {
               <ResponsiveDivider vertical="mdUp" spacing={3} />
               <Grid item xs lg={7} container direction="column" spacing={2}>
                 <Grid item component={Typography} variant="h3" paragraph>
-                  Progress for <ReportLabel report={progress.report} />
+                  Progress for{' '}
+                  <Link to={`../../reports/progress/${progress.report.id}`}>
+                    <ReportLabel report={progress.report} />
+                  </Link>
                 </Grid>
                 <Grid item>
-                  <StepsList progress={progress} />
+                  <StepsList
+                    progress={progress}
+                    measurement={progressStepMeasurement?.value}
+                    target={progressTarget?.value}
+                  />
                 </Grid>
               </Grid>
             </>

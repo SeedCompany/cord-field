@@ -22,8 +22,9 @@ import { useDialog } from '../../../components/Dialog';
 import { Error } from '../../../components/Error';
 import { Fab } from '../../../components/Fab';
 import { useDateTimeFormatter } from '../../../components/Formatters';
+import { ProjectListItemCard } from '../../../components/ProjectListItemCard';
 import { UserListItemCardPortrait } from '../../../components/UserListItemCard';
-import { square } from '../../../util';
+import { listOrPlaceholders, square } from '../../../util';
 import { EditablePartnerField, EditPartner } from '../Edit';
 import { AddressCard } from './AddressCard';
 import { PartnerDocument } from './PartnerDetail.generated';
@@ -90,7 +91,9 @@ const useStyles = makeStyles(({ spacing, breakpoints, palette }) => ({
     ...square(86),
     fontSize: 70,
     color: palette.background.paper,
-    backgroundColor: palette.background.default,
+  },
+  listItem: {
+    marginBottom: spacing(2),
   },
 }));
 
@@ -106,6 +109,7 @@ export const PartnerDetail = () => {
   });
   const partner = data?.partner;
   const name = partner?.organization.value?.name.value;
+  const projects = partner?.projects;
 
   const [editPartnerState, editPartner, editField] =
     useDialog<Many<EditablePartnerField>>();
@@ -245,6 +249,29 @@ export const PartnerDetail = () => {
               </Button>
             }
           />
+          <Grid item xs={12}>
+            <Typography variant="h3" paragraph>
+              Projects
+            </Typography>
+            {projects?.canRead === false ? (
+              <Typography color="textSecondary">
+                You don't have permission to see the projects this partner is
+                engaged in
+              </Typography>
+            ) : projects?.items.length === 0 ? (
+              <Typography color="textSecondary">
+                This partner is not engaged in any projects
+              </Typography>
+            ) : (
+              listOrPlaceholders(projects?.items, 3).map((project, index) => (
+                <ProjectListItemCard
+                  key={project?.id ?? index}
+                  project={project}
+                  className={classes.listItem}
+                />
+              ))
+            )}
+          </Grid>
         </div>
       )}
       {partner ? (

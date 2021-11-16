@@ -130,7 +130,7 @@ export const LanguageEngagementListItemCard: FC<LanguageEngagementListItemCardPr
                   {numberFormatter(products.total)}
                 </Typography>
                 <Typography variant="body2" color="primary">
-                  Products
+                  Goals
                 </Typography>
               </div>
             </div>

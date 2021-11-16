@@ -47,8 +47,6 @@ export const SearchResults: FC = () => {
           'Location',
           'Film',
           'Story',
-          'LiteracyMaterial',
-          'Song',
         ],
       },
     },
@@ -69,8 +67,7 @@ export const SearchResults: FC = () => {
         return <LocationCard key={item.id} location={item} />;
       case 'Film':
       case 'Story':
-      case 'LiteracyMaterial':
-      case 'Song':
+      case 'EthnoArt':
         return <PlaceholderCard key={item.id} item={item} />;
       default:
         console.error(`Unknown type ${item.__typename} returned from search`);

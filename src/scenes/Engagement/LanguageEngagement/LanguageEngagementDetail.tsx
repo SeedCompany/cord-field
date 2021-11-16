@@ -92,7 +92,7 @@ export const LanguageEngagementDetail: FC<EngagementQuery> = ({
                 Goals
               </Grid>
               <Grid item>
-                <Tooltip title="Create Product">
+                <Tooltip title="Create Goal">
                   <Fab
                     // @ts-expect-error it works. These generics are hard to express.
                     component={Link}

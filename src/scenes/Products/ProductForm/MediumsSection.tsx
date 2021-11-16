@@ -8,6 +8,7 @@ import { SecuredAccordion } from './SecuredAccordion';
 export const MediumsSection = ({ values, accordionState }: SectionProps) => (
   <SecuredAccordion
     {...accordionState}
+    title="Distribution Methods"
     name="mediums"
     renderCollapsed={() =>
       values.product?.mediums?.map((medium) => (

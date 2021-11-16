@@ -1,8 +1,11 @@
 mutation UploadLanguageEngagementPnp(
   $id: ID!
   $upload: CreateDefinedFileVersionInput!
+  $methodology: ProductMethodology
 ) {
-  updateLanguageEngagement(input: { engagement: { id: $id, pnp: $upload } }) {
+  updateLanguageEngagement(
+    input: { engagement: { id: $id, pnp: $upload, methodology: $methodology } }
+  ) {
     engagement {
       id
       pnp {
@@ -14,6 +17,10 @@ mutation UploadLanguageEngagementPnp(
             }
           }
         }
+      }
+      # Refresh products when uploading pnp as products are created from data extracted from spreadsheet
+      products {
+        ...ProductList
       }
     }
   }

@@ -4,6 +4,7 @@ import { Column } from 'material-table';
 import { useSnackbar } from 'notistack';
 import React, { useState } from 'react';
 import { Except } from 'type-fest';
+import { SkipPeriodicReportDialog } from '../../scenes/Projects/Reports/SkipPeriodicReportDialog';
 import {
   EditablePeriodicReportField,
   UpdatePeriodicReportDialog,
@@ -101,7 +102,7 @@ export const PeriodicReportsTableInContext = ({
               FileAction.Delete,
               FileAction.Rename
             )
-          : reportFile.canEdit
+          : reportFile.canEdit && !report.skippedReason.value
           ? [FileAction.NewVersion]
           : [];
 
@@ -111,8 +112,14 @@ export const PeriodicReportsTableInContext = ({
             actions={{
               file: [
                 ...fileActions,
-                ...(report.receivedDate.canEdit
+                ...(report.receivedDate.canEdit && !report.skippedReason.value
                   ? [FileAction.UpdateReceivedDate]
+                  : []),
+                ...(!report.receivedDate.value && !report.skippedReason.value
+                  ? [FileAction.Skip]
+                  : []),
+                ...(report.skippedReason.value
+                  ? [FileAction.EditSkipReason]
                   : []),
               ],
               version: [
@@ -145,6 +152,14 @@ export const PeriodicReportsTableInContext = ({
               editReport({ ...report, reportFile: undefined });
               editField('receivedDate');
             }}
+            onSkip={() => {
+              editReport({ ...report, reportFile: undefined });
+              editField('skippedReason');
+            }}
+            onEditSkipReason={async () => {
+              editReport({ ...report, reportFile: undefined });
+              editField('skippedReason');
+            }}
           />
         );
       },
@@ -153,13 +168,16 @@ export const PeriodicReportsTableInContext = ({
 
   return (
     <>
-      {reportBeingEdited?.receivedDate.canEdit ? (
+      {reportBeingEdited && fieldsBeingEdited === 'skippedReason' ? (
+        <SkipPeriodicReportDialog {...editState} report={reportBeingEdited} />
+      ) : reportBeingEdited?.receivedDate.canEdit ? (
         <UpdatePeriodicReportDialog
           {...editState}
           editFields={fieldsBeingEdited}
           report={reportBeingEdited}
         />
       ) : null}
+
       <Table<ReportRow>
         isLoading={!data}
         {...props}
@@ -169,19 +187,24 @@ export const PeriodicReportsTableInContext = ({
           Toolbar: () => null,
         }}
         columns={columns}
-        onRowClick={({ report }) => {
-          if (!report.reportFile.canRead) {
-            enqueueSnackbar(
-              `You don't have permission to view this report file`
-            );
-            return;
-          }
-          if (report.reportFile.value) {
-            openFilePreview(report.reportFile.value);
-            return;
-          }
-          if (report.reportFile.canEdit) {
-            // TODO Upload
+        onRowClick={(rowData) => {
+          if (props.onRowClick) {
+            props.onRowClick(rowData);
+          } else {
+            const { report } = rowData;
+            if (!report.reportFile.canRead) {
+              enqueueSnackbar(
+                `You don't have permission to view this report file`
+              );
+              return;
+            }
+            if (report.reportFile.value) {
+              openFilePreview(report.reportFile.value);
+              return;
+            }
+            if (report.reportFile.canEdit) {
+              // TODO Upload
+            }
           }
         }}
         options={{

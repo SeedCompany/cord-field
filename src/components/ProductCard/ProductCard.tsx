@@ -7,16 +7,14 @@ import {
 } from '@material-ui/core';
 import {
   DescriptionOutlined,
-  LibraryBooksOutlined,
+  FilterVintage,
+  HelpOutlined,
   MenuBook,
   Movie,
-  MusicNote,
   SvgIconComponent,
 } from '@material-ui/icons';
 import React from 'react';
-import { displayProductStep } from '../../api';
 import { HugeIcon } from '../Icons';
-import { LinearProgressBar } from '../LinearProgressBar';
 import { CardActionAreaLink } from '../Routing';
 import { ProductCardFragment } from './ProductCard.generated';
 
@@ -45,30 +43,14 @@ const iconMap: Record<string, SvgIconComponent> = {
   Scripture: MenuBook,
   Story: DescriptionOutlined,
   Film: Movie,
-  Song: MusicNote,
-  'Literacy Material': LibraryBooksOutlined,
+  'Ethno Art': FilterVintage,
+  Other: HelpOutlined,
 };
 
 export const ProductCard = ({ product }: ProductCardProps) => {
   const classes = useStyles();
 
   const Icon = product.category ? iconMap[product.category] : undefined;
-
-  const firstStepNotDone = product.progressOfCurrentReportDue?.steps.find(
-    (step) => step.percentDone.value && step.percentDone.value < 100
-  );
-  const stepToShow = firstStepNotDone
-    ? {
-        step: firstStepNotDone.step,
-        percentDone: firstStepNotDone.percentDone.value!,
-      }
-    : product.progressOfCurrentReportDue && product.steps.value[0]
-    ? { step: product.steps.value[0], percentDone: 0 }
-    : undefined;
-  const stepIndex = stepToShow
-    ? product.steps.value.indexOf(stepToShow.step)
-    : -1;
-  const stepNumber = stepIndex >= 0 ? stepIndex + 1 : null;
 
   return (
     <Card className={classes.root}>
@@ -86,15 +68,6 @@ export const ProductCard = ({ product }: ProductCardProps) => {
             <Typography variant="h4">{product.label}</Typography>
             <Typography variant="body2">{product.category}</Typography>
           </Grid>
-          {stepToShow && (
-            <Grid item xs>
-              <Typography variant="body2" align="right">
-                {displayProductStep(stepToShow.step)} (Step {stepNumber} of{' '}
-                {product.steps.value.length})
-              </Typography>
-              <LinearProgressBar value={stepToShow.percentDone} />
-            </Grid>
-          )}
         </Grid>
       </CardActionAreaLink>
     </Card>

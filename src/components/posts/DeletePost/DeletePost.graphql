@@ -1,5 +1,7 @@
 mutation DeletePost($id: ID!) {
-  deletePost(id: $id)
+  deletePost(id: $id) {
+    __typename
+  }
 }
 
 fragment PostToDelete on Post {

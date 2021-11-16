@@ -10,5 +10,7 @@ mutation UpdatePartnership($input: UpdatePartnershipInput!) {
 
 mutation DeletePartnership($input: ID!, $changeset: ID) {
   # TODO Handle ...RecalculateChangesetDiff
-  deletePartnership(id: $input, changeset: $changeset)
+  deletePartnership(id: $input, changeset: $changeset) {
+    __typename
+  }
 }

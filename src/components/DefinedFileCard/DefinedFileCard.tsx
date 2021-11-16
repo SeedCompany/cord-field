@@ -15,7 +15,7 @@ import { Skeleton } from '@material-ui/lab';
 import { DateTime } from 'luxon';
 import React, { FC, forwardRef, ReactNode } from 'react';
 import { useDropzone } from 'react-dropzone';
-import { CreateDefinedFileVersionInput, SecuredProp } from '../../api';
+import { SecuredProp } from '../../api';
 import {
   FileActionsPopup as ActionsMenu,
   FileAction,
@@ -48,7 +48,6 @@ const useStyles = makeStyles(({ palette, spacing, typography }) => ({
     position: 'relative',
   },
   avatar: {
-    backgroundColor: '#f3f4f6',
     width: 58,
     height: 58,
   },
@@ -96,12 +95,13 @@ export interface DefinedFileCardProps {
   label: ReactNode;
   resourceType: string;
   securedFile: SecuredProp<FileNode>;
-  uploadMutationDocument: DocumentNode<
-    unknown,
-    { id: string; upload: CreateDefinedFileVersionInput }
-  >;
+  uploadMutationDocument: DocumentNode;
   parentId: string;
   disableIcon?: boolean;
+  onUpload?: (arg: {
+    files: File[];
+    submit: (next: HandleUploadCompletedFunction) => void;
+  }) => void;
 }
 
 interface FileCardMetaProps {
@@ -149,6 +149,7 @@ export const DefinedFileCard = forwardRef<any, DefinedFileCardProps>(
       uploadMutationDocument,
       parentId,
       disableIcon,
+      onUpload,
       ...rest
     } = props;
     const { value: file, canRead, canEdit } = securedFile;
@@ -171,7 +172,11 @@ export const DefinedFileCard = forwardRef<any, DefinedFileCardProps>(
     };
 
     const onVersionUpload = (files: File[]) => {
-      uploadFiles({ files, handleUploadCompleted, parentId });
+      (onUpload ?? (({ submit }) => submit(handleUploadCompleted)))({
+        files,
+        submit: (next) =>
+          uploadFiles({ files, handleUploadCompleted: next, parentId }),
+      });
     };
 
     const { openFilePreview } = useFileActions();

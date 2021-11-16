@@ -1,12 +1,18 @@
 import { useMutation } from '@apollo/client';
+import { Alert } from '@material-ui/lab';
+import { isBoolean } from 'lodash';
 import React, { useMemo } from 'react';
 import { Except } from 'type-fest';
-import { displayProductStep } from '../../../../api';
+import { displayProductStep, ProgressMeasurement } from '../../../../api';
 import {
   DialogForm,
   DialogFormProps,
 } from '../../../../components/Dialog/DialogForm';
-import { NumberField, SecuredField } from '../../../../components/form';
+import {
+  CheckboxField,
+  NumberField,
+  SecuredField,
+} from '../../../../components/form';
 import { max } from '../../../../components/form/validators';
 import {
   ProductProgressFragment,
@@ -15,7 +21,7 @@ import {
 } from './ProductProgress.generated';
 
 export interface StepFormValues {
-  percentDone?: number | null;
+  completed?: number | boolean | null;
 }
 
 type StepEditDialogProps = Except<
@@ -24,18 +30,25 @@ type StepEditDialogProps = Except<
 > & {
   progress: ProductProgressFragment;
   step: StepProgressFragment;
+  measurement: ProgressMeasurement;
+  target: number;
 };
 
 export const StepEditDialog = ({
   progress,
   step,
+  measurement,
+  target,
   ...props
 }: StepEditDialogProps) => {
   const initialValues = useMemo(
     () => ({
-      percentDone: step.percentDone.value,
+      completed:
+        measurement === 'Boolean'
+          ? !!step.completed.value
+          : step.completed.value,
     }),
-    [step]
+    [measurement, step.completed.value]
   );
   const [update] = useMutation(UpdateStepProgressDocument);
 
@@ -45,6 +58,9 @@ export const StepEditDialog = ({
       {...props}
       initialValues={initialValues}
       onSubmit={async (data) => {
+        const completed = isBoolean(data.completed)
+          ? +data.completed
+          : data.completed;
         await update({
           variables: {
             input: {
@@ -53,7 +69,7 @@ export const StepEditDialog = ({
               steps: [
                 {
                   step: step.step,
-                  percentDone: data.percentDone,
+                  completed,
                 },
               ],
             },
@@ -61,15 +77,26 @@ export const StepEditDialog = ({
         });
       }}
     >
-      <SecuredField obj={step} name="percentDone">
-        {(props) => (
-          <NumberField
-            {...props}
-            label="Progress"
-            suffix="%"
-            validate={max(100)}
-          />
-        )}
+      <Alert severity="warning">
+        Changes will not be applied to the PnP file
+      </Alert>
+      <SecuredField obj={step} name="completed">
+        {(props) =>
+          measurement === 'Boolean' ? (
+            <CheckboxField label="Completed?" {...props} />
+          ) : (
+            <NumberField
+              {...props}
+              label="Progress"
+              helperText={
+                measurement === 'Number' ? `Target is ${target}` : undefined
+              }
+              maximumFractionDigits={4}
+              suffix={measurement === 'Percent' ? '%' : undefined}
+              validate={max(target)}
+            />
+          )
+        }
       </SecuredField>
     </DialogForm>
   );

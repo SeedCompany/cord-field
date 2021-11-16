@@ -3,7 +3,7 @@ import { boolean } from '@storybook/addon-knobs';
 import React, { FC } from 'react';
 import { Form } from 'react-final-form';
 import { FieldSpy } from '../../FieldSpy';
-import { LiteracyMaterialField } from './LiteracyMaterialField';
+import { EthnoArtField } from './EthnoArtField';
 
 export default { title: 'Components/Forms/Fields/Lookup' };
 
@@ -13,13 +13,13 @@ const FF: FC = ({ children }) => (
   </Form>
 );
 
-export const LiteracyMaterial = () => (
+export const EthnoArt = () => (
   <FF>
-    <LiteracyMaterialField
-      name="literacyMaterial"
-      label="Literacy Material"
+    <EthnoArtField
+      name="ethnoArt"
+      label="EthnoArt"
       multiple={boolean('Multiple', false)}
     />
-    <FieldSpy name="literacyMaterial" />
+    <FieldSpy name="ethnoArt" />
   </FF>
 );

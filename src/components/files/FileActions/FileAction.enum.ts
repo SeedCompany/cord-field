@@ -5,4 +5,6 @@ export enum FileAction {
   NewVersion = 'new version',
   Delete = 'delete',
   UpdateReceivedDate = 'updateReceivedDate',
+  Skip = 'skip',
+  EditSkipReason = 'EditSkipReason',
 }

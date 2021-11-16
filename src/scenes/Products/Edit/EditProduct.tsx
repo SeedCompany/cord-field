@@ -1,22 +1,20 @@
 import { useMutation, useQuery } from '@apollo/client';
 import { Breadcrumbs, makeStyles, Typography } from '@material-ui/core';
 import { Skeleton } from '@material-ui/lab';
-import { isEqual } from 'lodash';
-import { useSnackbar } from 'notistack';
 import React, { useMemo } from 'react';
 import { Helmet } from 'react-helmet-async';
 import { useNavigate, useParams } from 'react-router';
 import {
   handleFormError,
-  LanguageEngagement,
+  ProductMedium,
   removeItemFromList,
 } from '../../../api';
 import { EngagementBreadcrumb } from '../../../components/EngagementBreadcrumb';
 import { ProjectBreadcrumb } from '../../../components/ProjectBreadcrumb';
+import { mapFromList } from '../../../util';
 import {
-  fullNewTestamentRange,
-  fullOldTestamentRange,
-  parsedRangesWithFullTestamentRange,
+  getFullBookRange,
+  isFullBookRange,
   removeScriptureTypename,
 } from '../../../util/biblejs';
 import { useProjectId } from '../../Projects/useProjectId';
@@ -25,10 +23,13 @@ import {
   ProductFormProps,
   ProductFormValues,
 } from '../ProductForm';
+import { UpdatePartnershipsProducingMediumsDocument } from '../ProductForm/PartnershipsProducingMediums.generated';
 import {
   DeleteProductDocument,
   ProductInfoForEditDocument,
-  UpdateProductDocument,
+  UpdateDerivativeScriptureProductDocument,
+  UpdateDirectScriptureProductDocument,
+  UpdateOtherProductDocument,
 } from './EditProduct.generated';
 
 const useStyles = makeStyles(({ spacing }) => ({
@@ -47,7 +48,6 @@ export const EditProduct = () => {
 
   const { projectId, changesetId } = useProjectId();
   const { engagementId = '', productId = '' } = useParams();
-  const { enqueueSnackbar } = useSnackbar();
 
   const { data, loading } = useQuery(ProductInfoForEditDocument, {
     variables: {
@@ -59,55 +59,85 @@ export const EditProduct = () => {
   });
 
   const project = data?.project;
-  const engagement = data?.engagement;
+  const engagement =
+    data?.engagement.__typename === 'LanguageEngagement'
+      ? data.engagement
+      : undefined;
   const product = data?.product;
 
-  const [updateProduct] = useMutation(UpdateProductDocument);
+  const [updateDirectScriptureProduct] = useMutation(
+    UpdateDirectScriptureProductDocument
+  );
+  const [updateDerivativeScriptureProduct] = useMutation(
+    UpdateDerivativeScriptureProductDocument
+  );
+  const [updateOtherProduct] = useMutation(UpdateOtherProductDocument);
   const [deleteProduct] = useMutation(DeleteProductDocument, {
     update: removeItemFromList({
-      listId: [engagement as LanguageEngagement, 'products'],
+      listId: [engagement, 'products'],
       item: product!,
     }),
   });
+  const [updatePartnershipsProducingMediums] = useMutation(
+    UpdatePartnershipsProducingMediumsDocument
+  );
 
   const initialValues = useMemo(() => {
     if (!product) return undefined;
-    const { mediums, purposes, methodology, scriptureReferences } = product;
+    const { mediums, methodology, progressStepMeasurement, progressTarget } =
+      product;
 
-    const scriptureReferencesWithoutTypename = removeScriptureTypename(
-      scriptureReferences.value
+    const scriptureReferences = removeScriptureTypename(
+      product.scriptureReferences.value
     );
 
-    const referencesWithoutFullTestament =
-      scriptureReferencesWithoutTypename.filter(
-        (reference) =>
-          !isEqual(reference, fullOldTestamentRange) &&
-          !isEqual(reference, fullNewTestamentRange)
-      );
+    const unspecifiedScripture =
+      product.__typename === 'DirectScriptureProduct'
+        ? product.unspecifiedScripture.value
+        : null;
+
+    const book =
+      (product.__typename === 'DirectScriptureProduct'
+        ? product.unspecifiedScripture.value?.book
+        : undefined) ?? scriptureReferences[0]?.start.book;
+
+    const versesOnly = !!(
+      product.__typename === 'DirectScriptureProduct' &&
+      product.unspecifiedScripture.value
+    );
+    const bookSelection = versesOnly
+      ? 'partialUnknown'
+      : scriptureReferences.length > 0 && book
+      ? isFullBookRange(scriptureReferences[0], book)
+        ? 'full'
+        : 'partialKnown'
+      : 'full';
 
     const values: ProductFormValues = {
       product: {
         mediums: mediums.value,
-        purposes: purposes.value,
         methodology: methodology.value,
         steps: product.steps.value,
         describeCompletion: product.describeCompletion.value,
-        scriptureReferences: referencesWithoutFullTestament,
-        fullOldTestament: scriptureReferencesWithoutTypename.some((reference) =>
-          isEqual(reference, fullOldTestamentRange)
-        ),
-        fullNewTestament: scriptureReferencesWithoutTypename.some((reference) =>
-          isEqual(reference, fullNewTestamentRange)
-        ),
+        scriptureReferences: scriptureReferences,
+        book: book,
+        bookSelection: bookSelection,
+        progressStepMeasurement: progressStepMeasurement.value,
+        progressTarget: progressTarget.value,
+        unspecifiedScripture: unspecifiedScripture
+          ? {
+              totalVerses: unspecifiedScripture.totalVerses,
+            }
+          : undefined,
+        title: '',
         ...(product.__typename === 'DirectScriptureProduct'
           ? {
               productType: product.__typename,
             }
           : product.__typename === 'DerivativeScriptureProduct' &&
             (product.produces.value?.__typename === 'Film' ||
-              product.produces.value?.__typename === 'Song' ||
-              product.produces.value?.__typename === 'LiteracyMaterial' ||
-              product.produces.value?.__typename === 'Story')
+              product.produces.value?.__typename === 'Story' ||
+              product.produces.value?.__typename === 'EthnoArt')
           ? {
               produces: {
                 id: product.produces.value.id,
@@ -116,13 +146,24 @@ export const EditProduct = () => {
               productType: product.produces.value.__typename,
             }
           : undefined),
+        ...(product.__typename === 'OtherProduct'
+          ? {
+              productType: 'Other',
+              title: product.title.value || '',
+              description: product.description.value || '',
+            }
+          : undefined),
+        producingMediums: mapFromList(
+          engagement?.partnershipsProducingMediums.items ?? [],
+          (pair) => [pair.medium, pair.partnership ?? undefined]
+        ),
       },
     };
     return values;
-  }, [product]);
+  }, [product, engagement]);
 
-  const handleSubmit: ProductFormProps['onSubmit'] = async (data) => {
-    if (!product) {
+  const handleSubmit: ProductFormProps['onSubmit'] = async (data, form) => {
+    if (!product || !engagement) {
       return;
     }
 
@@ -133,50 +174,109 @@ export const EditProduct = () => {
         },
       });
 
-      enqueueSnackbar(`Deleted goal`, {
-        variant: 'success',
-      });
       navigate('../../../');
       return;
-    } else {
+    }
+    const { dirtyFields } = form.getState();
+
+    const updateProduct = async () => {
+      if (
+        Object.keys(dirtyFields).filter(
+          (field) => !field.startsWith('product.producingMediums.')
+        ).length === 0
+      ) {
+        // Changes have not been made that affect the product.
+        return;
+      }
+
       const {
         productType,
         produces,
         scriptureReferences,
-        fullOldTestament,
-        fullNewTestament,
+        book,
+        title,
+        description,
+        bookSelection,
+        unspecifiedScripture,
+        producingMediums,
         ...input
       } = data.product ?? {};
 
-      const parsedScriptureReferences = parsedRangesWithFullTestamentRange(
-        scriptureReferences,
-        fullOldTestament,
-        fullNewTestament
-      );
-
-      await updateProduct({
-        variables: {
-          input: {
-            product: {
+      const parsedScriptureReferences =
+        bookSelection === 'partialUnknown'
+          ? []
+          : bookSelection === 'full' && book
+          ? [getFullBookRange(book)]
+          : scriptureReferences;
+      if (productType === 'Other') {
+        await updateOtherProduct({
+          variables: {
+            input: {
               id: product.id,
               ...input,
-              produces: produces?.id,
-              ...(productType !== 'DirectScriptureProduct'
-                ? {
-                    scriptureReferencesOverride: parsedScriptureReferences,
-                  }
-                : {
-                    scriptureReferences: parsedScriptureReferences,
-                  }),
+              title,
+              description,
             },
           },
+        });
+      } else if (productType === 'DirectScriptureProduct') {
+        await updateDirectScriptureProduct({
+          variables: {
+            input: {
+              id: product.id,
+              ...input,
+              scriptureReferences: parsedScriptureReferences,
+              unspecifiedScripture:
+                bookSelection !== 'partialUnknown' ||
+                !book ||
+                !unspecifiedScripture?.totalVerses
+                  ? null
+                  : {
+                      book,
+                      ...unspecifiedScripture,
+                    },
+            },
+          },
+        });
+      } else {
+        await updateDerivativeScriptureProduct({
+          variables: {
+            input: {
+              id: product.id,
+              ...input,
+              produces: produces!.id,
+              scriptureReferencesOverride: parsedScriptureReferences,
+            },
+          },
+        });
+      }
+    };
+
+    const updatePpm = async () => {
+      if (
+        !Object.keys(dirtyFields).some((field) =>
+          field.startsWith('product.producingMediums.')
+        )
+      ) {
+        // No producing partnerships have changed, API call not needed.
+        return;
+      }
+
+      const ppmInput = Object.entries(data.product?.producingMediums ?? {}).map(
+        ([medium, partnership]) => ({
+          medium: medium as ProductMedium,
+          partnership: partnership?.id,
+        })
+      );
+      await updatePartnershipsProducingMediums({
+        variables: {
+          engagementId: engagement.id,
+          input: ppmInput,
         },
       });
+    };
 
-      enqueueSnackbar(`Updated goal`, {
-        variant: 'success',
-      });
-    }
+    await Promise.all([updateProduct(), updatePpm()]);
 
     navigate('../');
   };
@@ -194,9 +294,10 @@ export const EditProduct = () => {
         {loading ? <Skeleton width="50%" variant="text" /> : 'Edit Goal'}
       </Typography>
 
-      {!loading && data && product && (
+      {!loading && data && engagement && product && (
         <ProductForm
           product={product}
+          engagement={engagement}
           onSubmit={async (data, form) => {
             try {
               await handleSubmit(data, form);

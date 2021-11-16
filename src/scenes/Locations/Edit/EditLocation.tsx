@@ -39,13 +39,16 @@ export const EditLocation = (props: EditLocationProps) => {
       title="Edit Location"
       {...props}
       initialValues={initialValues}
-      onSubmit={async ({ location: { fundingAccountId, ...rest } }) => {
+      onSubmit={async ({
+        location: { isoAlpha3, fundingAccountId, ...rest },
+      }) => {
         await updateLocation({
           variables: {
             input: {
               location: {
                 ...rest,
-                fundingAccountId: fundingAccountId?.id,
+                isoAlpha3: isoAlpha3 ?? null,
+                fundingAccountId: fundingAccountId?.id ?? null,
               },
             },
           },

@@ -112,7 +112,13 @@ export const LanguageEngagementHeader = ({
               <Fab
                 color="primary"
                 aria-label="Update language engagement"
-                onClick={() => show(['firstScripture', 'lukePartnership'])}
+                onClick={() =>
+                  show([
+                    'firstScripture',
+                    'lukePartnership',
+                    'openToInvestorVisit',
+                  ])
+                }
               >
                 <Edit />
               </Fab>
@@ -186,6 +192,12 @@ export const LanguageEngagementHeader = ({
           label="Luke Partnership"
           redacted="You do not have permission to view whether this engagement is a luke partnership"
           data={engagement.lukePartnership}
+          wrap={(node) => <Grid item>{node}</Grid>}
+        />
+        <BooleanProperty
+          label="Open to Investor Visit"
+          redacted="You do not have permission to view whether this engagement is open to investor visit"
+          data={engagement.openToInvestorVisit}
           wrap={(node) => <Grid item>{node}</Grid>}
         />
       </Grid>

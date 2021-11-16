@@ -7,6 +7,7 @@ import {
   FormLabel,
   Grid,
   makeStyles,
+  PropTypes,
   Radio,
   RadioGroup,
 } from '@material-ui/core';
@@ -42,6 +43,7 @@ export type EnumFieldProps<
   label?: ReactNode;
   helperText?: ReactNode;
   layout?: 'row' | 'column' | 'two-column';
+  margin?: PropTypes.Margin;
 } & Except<FieldConfig<T, Multiple>, 'type'> &
   MergeExclusive<
     { children: ReactNode },
@@ -269,6 +271,7 @@ export const EnumField = <
       component="fieldset"
       error={showError(meta)}
       disabled={meta.disabled}
+      margin={props.margin}
       onFocus={(e: FocusEvent<HTMLElement>) => {
         // no need to call focus if already active
         if (!meta.active) {
@@ -294,7 +297,9 @@ export const EnumField = <
       <EnumContext.Provider value={context}>
         {renderedOptions}
       </EnumContext.Provider>
-      <FormHelperText>{getHelperText(meta, helperText)}</FormHelperText>
+      <FormHelperText>
+        {getHelperText(meta, helperText, undefined, helperText === false)}
+      </FormHelperText>
     </FormControl>
   );
 };

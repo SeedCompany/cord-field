@@ -4,6 +4,11 @@ fragment PeriodicReport on PeriodicReport {
   start
   end
   due
+  skippedReason {
+    value
+    canEdit
+    canRead
+  }
   reportFile {
     canEdit
     canRead

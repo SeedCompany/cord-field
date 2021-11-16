@@ -1,69 +1,123 @@
-import { Grid, List, ListItem, Typography } from '@material-ui/core';
+import {
+  Grid,
+  List,
+  ListItem,
+  ListItemText,
+  makeStyles,
+  Typography,
+} from '@material-ui/core';
 import { Skeleton } from '@material-ui/lab';
 import React, { ReactNode } from 'react';
 import {
   displayMethodologyWithLabel,
   displayProductMedium,
-  displayProductPurpose,
 } from '../../../api';
 import {
   DisplaySimpleProperty,
   DisplaySimplePropertyProps,
 } from '../../../components/DisplaySimpleProperty';
+import { Link } from '../../../components/Routing';
+import { mapFromList } from '../../../util';
 import { ProductDetailFragment as Product } from './ProductDetail.generated';
 
-export const ProductInfo = ({ product }: { product?: Product }) => (
-  <>
-    <DisplayProperty
-      label="Mediums"
-      value={product?.mediums.value.map(displayProductMedium).join(', ')}
-      loading={!product}
-      wrap={infoWrapper}
-    />
+const useStyles = makeStyles(() => ({
+  mediumItem: {
+    margin: 0,
+  },
+}));
 
-    <DisplayProperty
-      label="Purposes"
-      value={product?.purposes.value.map(displayProductPurpose).join(', ')}
-      loading={!product}
-      wrap={infoWrapper}
-    />
+export const ProductInfo = ({ product }: { product?: Product }) => {
+  const classes = useStyles();
+  const ppm = mapFromList(
+    product?.engagement.partnershipsProducingMediums.items ?? [],
+    (pair) => [pair.medium, pair.partnership]
+  );
+  return (
+    <>
+      {product?.__typename === 'OtherProduct' && (
+        <DisplayProperty
+          label="Description"
+          value={product.description.value}
+          loading={!product}
+          wrap={infoWrapper}
+        />
+      )}
 
-    <DisplayProperty
-      label="Methodology"
-      value={
-        product?.methodology.value
-          ? displayMethodologyWithLabel(product.methodology.value)
-          : undefined
-      }
-      loading={!product}
-      wrap={infoWrapper}
-    />
+      <DisplayProperty
+        label="Distribution Methods"
+        value={
+          product && product.mediums.value.length > 0 ? (
+            <List disablePadding>
+              {product.mediums.value.map((medium) => (
+                <ListItem key={medium} disableGutters>
+                  <ListItemText
+                    primary={displayProductMedium(medium)}
+                    secondary={
+                      ppm[medium]?.partner.value?.organization.value?.name
+                        .value ? (
+                        <>
+                          <Typography variant="caption" color="inherit">
+                            &nbsp;via&nbsp;
+                          </Typography>
+                          <Link
+                            to={`/partners/${ppm[medium]!.partner.value!.id}`}
+                          >
+                            {
+                              ppm[medium]!.partner.value!.organization.value!
+                                .name.value
+                            }
+                          </Link>
+                        </>
+                      ) : undefined
+                    }
+                    className={classes.mediumItem}
+                  />
+                </ListItem>
+              ))}
+            </List>
+          ) : null
+        }
+        loading={!product}
+        wrap={infoWrapper}
+      />
 
-    <DisplayProperty
-      label="Completion Description"
-      value={product?.describeCompletion.value}
-      loading={!product}
-      wrap={infoWrapper}
-    />
+      <DisplayProperty
+        label="Methodology"
+        value={
+          product?.methodology.value
+            ? displayMethodologyWithLabel(product.methodology.value)
+            : undefined
+        }
+        loading={!product}
+        wrap={infoWrapper}
+      />
 
-    <DisplayProperty
-      label="Scripture"
-      value={
-        product && product.scriptureReferences.value.length > 0 ? (
-          <List disablePadding>
-            {product.scriptureReferences.value.map((ref, i) => (
-              <ListItem key={i} disableGutters>
-                {ref.label}
-              </ListItem>
-            ))}
-          </List>
-        ) : null
-      }
-      loading={!product}
-      wrap={infoWrapper}
-    />
-  </>
-);
+      <DisplayProperty
+        label="Completion Description"
+        value={product?.describeCompletion.value}
+        loading={!product}
+        wrap={infoWrapper}
+      />
+
+      <DisplayProperty
+        label="Scripture"
+        value={
+          product && product.scriptureReferences.value.length > 0 ? (
+            <List disablePadding>
+              {product.scriptureReferences.value.map((ref, i) => (
+                <ListItem key={i} disableGutters>
+                  {ref.label}
+                </ListItem>
+              ))}
+            </List>
+          ) : null
+        }
+        loading={!product}
+        wrap={infoWrapper}
+      />
+    </>
+  );
+};
 
 const infoWrapper = (node: ReactNode) => (
   <Grid item md={12}>

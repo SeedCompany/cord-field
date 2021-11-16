@@ -6,14 +6,19 @@ query ProductDetail($id: ID!) {
 
 fragment ProductDetail on Product {
   ...Id
-  ...ProductCard
-  purposes {
+  label
+  category
+  mediums {
+    canRead
+    value
+  }
+  methodology {
     canRead
     value
   }
   scriptureReferences {
     value {
-      label
+      ...Scripture
     }
   }
   describeCompletion {
@@ -23,6 +28,56 @@ fragment ProductDetail on Product {
     ...EngagementBreadcrumb
     project {
       ...ProjectBreadcrumb
+    }
+    partnershipsProducingMediums {
+      items {
+        medium
+        partnership {
+          ...PartnershipForLabel
+        }
+      }
+      canEdit: canCreate
+      canRead
+    }
+  }
+  progressStepMeasurement {
+    canRead
+    canEdit
+    value
+  }
+  progressTarget {
+    canRead
+    canEdit
+    value
+  }
+  progressOfCurrentReportDue {
+    ...ProductProgress
+  }
+
+  ... on OtherProduct {
+    description {
+      canRead
+      value
+    }
+  }
+}
+
+fragment PartnershipForLabel on Partnership {
+  ...Id
+  partner {
+    canRead
+    value {
+      ...Id
+      organization {
+        canRead
+        value {
+          ...Id
+          name {
+            canRead
+            value
+          }
+        }
+      }
     }
   }
 }

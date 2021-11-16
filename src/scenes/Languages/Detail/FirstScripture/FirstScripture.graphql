@@ -1,41 +1,21 @@
 fragment FirstScripture on Language {
   ...Id
-  hasExternalFirstScripture {
+  firstScripture {
     canRead
-    canEdit
-    value
-  }
-  projects {
-    canRead
-    canCreate
-    items {
-      ...Id
-      name {
-        value
-        canRead
-      }
-      engagements {
-        items {
-          ...LanguageProjectEngagement
+    value {
+      hasFirst
+      ... on InternalFirstScripture {
+        engagement {
+          ...Id
+          project {
+            ...Id
+            name {
+              canRead
+              value
+            }
+          }
         }
       }
-    }
-  }
-}
-
-fragment LanguageProjectEngagement on Engagement {
-  ...Id
-  ... on LanguageEngagement {
-    language {
-      value {
-        ...Id
-      }
-      canRead
-    }
-    firstScripture {
-      value
-      canRead
-      canEdit
     }
   }
 }

@@ -1,9 +1,5 @@
-import { compact, entries, groupBy, isEqual } from 'lodash';
-import {
-  newTestament,
-  oldTestament,
-} from '../../scenes/Products/ProductForm/constants';
-import { ScriptureRangeFragment } from '../../scenes/Products/ProductForm/ProductForm.generated';
+import { groupBy, isEqual, sum } from 'lodash';
+import { ScriptureFragment, UnspecifiedScripturePortion } from '../../api';
 import { books } from './bibleBooks';
 import { Nullable } from '..';
 
@@ -21,6 +17,12 @@ export interface Range<T> {
 export type RawScriptureRange = Range<Nullable<ScriptureReference>>;
 
 export type ScriptureRange = Range<Required<ScriptureReference>>;
+
+export const getBookTotalVerses = (bookName: string) => {
+  const bookIndex = bookIndexFromName(bookName);
+  const book = books[bookIndex];
+  return book ? sum(book.chapters) : null;
+};
 
 export const parseScriptureRange = (
   bookName: string,
@@ -197,7 +199,7 @@ export const formatScriptureRange = (
   return `${startChapter}:${startVerse}-${endVerse}`;
 };
 
-class ScriptureError extends Error {
+export class ScriptureError extends Error {
   code: string;
   constructor(code: string, message: string) {
     super(message);
@@ -241,35 +243,23 @@ export const getScriptureRangeDisplay = (
       }`;
 };
 
+export const getUnspecifiedScriptureDisplay = (
+  unspecifiedScripture: UnspecifiedScripturePortion
+) => {
+  const { book, totalVerses } = unspecifiedScripture;
+  const validTotalVerses = getBookTotalVerses(book);
+
+  return `${book} (${totalVerses} / ${validTotalVerses} verses)`;
+};
+
 /**
- * Creates a dictary from an array of scripture ranges
+ * Creates a dictionary from an array of scripture ranges
  * Keys are bible books and the values are array of scriptureRanges that start with that book
  */
 export const scriptureRangeDictionary = (
   scriptureReferenceArr: readonly ScriptureRange[] | undefined = []
 ): Record<string, ScriptureRange[]> =>
   groupBy(scriptureReferenceArr, (range) => range.start.book);
-
-/**
- * Merge two scripture ranges together
- * merging all ranges in the the updating values and the ranges in the prevScriptureReferences array that doesn't match the book
- * If fullBook is true, then merge in the full book range.
- */
-export const mergeScriptureRange = (
-  updatingScriptures: readonly ScriptureRange[],
-  prevScriptureReferences: Nullable<readonly ScriptureRange[]>,
-  book: string,
-  fullBook: boolean
-): ScriptureRange[] => {
-  const filteredOldRange =
-    prevScriptureReferences?.filter(
-      (scriptureRange) => scriptureRange.start.book !== book
-    ) || [];
-
-  const updatedRange = fullBook ? [getFullBookRange(book)] : updatingScriptures;
-
-  return [...filteredOldRange, ...updatedRange];
-};
 
 export const getFullBookRange = (book: string): ScriptureRange => {
   const bookObject = books.find((bookObj) => bookObj.names.includes(book));
@@ -294,112 +284,14 @@ export const isFullBookRange = (
   book: string
 ) => isEqual(scriptureRange, getFullBookRange(book));
 
-export const fullOldTestamentRange: ScriptureRange = {
-  start: {
-    book: 'Genesis',
-    chapter: 1,
-    verse: 1,
-  },
-  end: {
-    book: 'Malachi',
-    chapter: 4,
-    verse: 6,
-  },
-};
-
-export const fullNewTestamentRange: ScriptureRange = {
-  start: {
-    book: 'Matthew',
-    chapter: 1,
-    verse: 1,
-  },
-  end: {
-    book: 'Revelation',
-    chapter: 22,
-    verse: 21,
-  },
-};
-
-export const filterScriptureRangesByTestament = (
-  scriptureReferences: readonly ScriptureRange[] | undefined,
-  fullOldTestament: boolean | undefined,
-  fullNewTestament: boolean | undefined
-) =>
-  scriptureReferences?.filter(({ start: { book } }) => {
-    const fullTestamentSelectedAndMatch =
-      fullOldTestament && oldTestament.includes(book);
-    const newTestamentSelectedAndMatch =
-      fullNewTestament && newTestament.includes(book);
-    return !fullTestamentSelectedAndMatch && !newTestamentSelectedAndMatch;
-  });
-
-export const parsedRangesWithFullTestamentRange = (
-  scriptureReferences: readonly ScriptureRange[] | undefined,
-  fullOldTestament: boolean | undefined,
-  fullNewTestament: boolean | undefined
-) => {
-  const oldTestamentRange = fullOldTestament
-    ? fullOldTestamentRange
-    : undefined;
-  const newTestamentRange = fullNewTestament
-    ? fullNewTestamentRange
-    : undefined;
-
-  const filteredScriptureRange = filterScriptureRangesByTestament(
-    scriptureReferences,
-    fullOldTestament,
-    fullNewTestament
-  );
-
-  return compact([
-    oldTestamentRange,
-    ...(filteredScriptureRange ? filteredScriptureRange : []),
-    newTestamentRange,
-  ]);
-};
-
-/**
- * Translates scriptureReferences array into readable text, displaying full testaments if found.
- */
-export const scriptureRangeToText = (scriptureReferences: ScriptureRange[]) => {
-  const isFullOldTestament = scriptureReferences.some((range) =>
-    isEqual(range, fullOldTestamentRange)
-  );
-  const isFullNewTestament = scriptureReferences.some((range) =>
-    isEqual(range, fullNewTestamentRange)
-  );
-
-  const oldTestamentText = isFullOldTestament
-    ? 'Full Old Testament'
-    : undefined;
-
-  const newTestamentText = isFullNewTestament
-    ? 'Full New Testament'
-    : undefined;
-
-  const filteredScriptureRange = filterScriptureRangesByTestament(
-    scriptureReferences,
-    isFullOldTestament,
-    isFullNewTestament
-  );
-
-  const individualRangeText = entries(
-    scriptureRangeDictionary(filteredScriptureRange)
-  ).map(([book, scriptureRange]) =>
-    getScriptureRangeDisplay(scriptureRange, book)
-  );
-  return compact([
-    oldTestamentText,
-    ...individualRangeText,
-    newTestamentText,
-  ]).join(', ');
-};
-
 export const removeScriptureTypename = (
-  scriptureReferences: readonly ScriptureRangeFragment[]
+  scriptureReferences: readonly ScriptureFragment[]
 ) =>
   scriptureReferences.map(
-    ({ start: { __typename, ...start }, end: { __typename: _, ...end } }) => ({
+    ({
+      start: { __typename, label, ...start },
+      end: { __typename: _, label: __, ...end },
+    }) => ({
       start,
       end,
     })

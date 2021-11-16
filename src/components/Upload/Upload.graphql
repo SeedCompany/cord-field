@@ -6,5 +6,7 @@ mutation RequestFileUpload {
 }
 
 mutation DeleteFileNode($id: ID!) {
-  deleteFileNode(id: $id)
+  deleteFileNode(id: $id) {
+    __typename
+  }
 }

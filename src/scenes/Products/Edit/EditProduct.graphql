@@ -1,7 +1,28 @@
-mutation UpdateProduct($input: UpdateProductInput!) {
-  updateProduct(input: $input) {
+mutation UpdateDirectScriptureProduct($input: UpdateDirectScriptureProduct!) {
+  updateDirectScriptureProduct(input: $input) {
     product {
       ...ProductForm
+      ...ProductCard
+    }
+  }
+}
+
+mutation UpdateDerivativeScriptureProduct(
+  $input: UpdateDerivativeScriptureProduct!
+) {
+  updateDerivativeScriptureProduct(input: $input) {
+    product {
+      ...ProductForm
+      ...ProductCard
+    }
+  }
+}
+
+mutation UpdateOtherProduct($input: UpdateOtherProduct!) {
+  updateOtherProduct(input: $input) {
+    product {
+      ...ProductForm
+      ...ProductCard
     }
   }
 }
@@ -17,15 +38,15 @@ query ProductInfoForEdit(
   }
   engagement(id: $engagementId, changeset: $changeset) {
     ...EngagementBreadcrumb
+    ...EditPartnershipsProducingMediumsInfo
   }
   product(id: $productId) {
     ...ProductForm
   }
-  methodologyAvailableSteps {
-    ...AvailableMethodologySteps
-  }
 }
 
 mutation DeleteProduct($productId: ID!) {
-  deleteProduct(id: $productId)
+  deleteProduct(id: $productId) {
+    __typename
+  }
 }

@@ -1,5 +1,21 @@
-mutation CreateProduct($input: CreateProductInput!) {
-  createProduct(input: $input) {
+mutation CreateDirectScriptureProduct($input: CreateDirectScriptureProduct!) {
+  createDirectScriptureProduct(input: $input) {
+    product {
+      id
+    }
+  }
+}
+
+mutation CreateDerivativeScripture($input: CreateDerivativeScriptureProduct!) {
+  createDerivativeScriptureProduct(input: $input) {
+    product {
+      id
+    }
+  }
+}
+
+mutation CreateOtherProduct($input: CreateOtherProduct!) {
+  createOtherProduct(input: $input) {
     product {
       id
     }
@@ -16,8 +32,6 @@ query ProductInfoForCreate(
   }
   engagement(id: $engagementId, changeset: $changeset) {
     ...EngagementBreadcrumb
-  }
-  methodologyAvailableSteps {
-    ...AvailableMethodologySteps
+    ...EditPartnershipsProducingMediumsInfo
   }
 }

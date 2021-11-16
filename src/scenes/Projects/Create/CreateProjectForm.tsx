@@ -15,6 +15,7 @@ export const CreateProjectForm = (props: CreateProjectFormProps) => (
       name="project.name"
       label="Name"
       placeholder="Enter project name"
+      required
     />
     <EnumField
       name="project.type"

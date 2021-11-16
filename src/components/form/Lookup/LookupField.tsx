@@ -211,7 +211,7 @@ export function LookupField<
       freeSolo={freeSolo}
       renderOption={(option) => {
         if (typeof option === 'string') {
-          return `Add "${option}"`;
+          return `Create "${option}"`;
         }
         return getOptionLabel(option);
       }}

@@ -54,7 +54,8 @@ export const FileVersionItem: FC<FileVersionItemProps> = (props) => {
         (action) =>
           action !== FileAction.History &&
           action !== FileAction.NewVersion &&
-          action !== FileAction.UpdateReceivedDate
+          action !== FileAction.UpdateReceivedDate &&
+          action !== FileAction.Skip
       )
     ),
   ];

@@ -1,0 +1,19 @@
+# Just grab all of the properties to prevent cache problems
+# where multiple places need different properties.
+# Since this object doesn't have an ID to normalize on
+# there's no way to merge if different subsets are requested
+fragment Scripture on ScriptureRange {
+  label
+  start {
+    label
+    book
+    chapter
+    verse
+  }
+  end {
+    label
+    book
+    chapter
+    verse
+  }
+}

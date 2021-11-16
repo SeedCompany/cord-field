@@ -12,7 +12,7 @@ import {
   DialogFormProps,
 } from '../../../components/Dialog/DialogForm';
 import {
-  AlphaLowercaseField,
+  AlphaUppercaseField,
   SecuredField,
   SelectField,
   SubmitError,
@@ -44,7 +44,6 @@ export type LocationFormProps<CreateOrUpdateInput, R = void> = DialogFormProps<
 
 export const LocationForm = <CreateOrUpdateInput, R extends any>({
   location,
-  title,
   ...rest
 }: LocationFormProps<CreateOrUpdateInput, R>) => (
   <DialogForm
@@ -52,7 +51,6 @@ export const LocationForm = <CreateOrUpdateInput, R extends any>({
       maxWidth: 'sm',
     }}
     fieldsPrefix="location"
-    title={title}
     {...rest}
   >
     <SubmitError />
@@ -88,7 +86,7 @@ export const LocationForm = <CreateOrUpdateInput, R extends any>({
       <Grid item xs={6}>
         <SecuredField obj={location} name="isoAlpha3">
           {(props) => (
-            <AlphaLowercaseField
+            <AlphaUppercaseField
               chars={3}
               label="ISO Alpha-3 Country Code"
               placeholder="Enter ISO Alpha-3 Country Code"
