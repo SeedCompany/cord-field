@@ -67,7 +67,7 @@ export const LanguageListItemCard: FC<LanguageListItemCardProps> = ({
       >
         <CardContent>
           <Grid container spacing={1}>
-            <Grid item>
+            <Grid item xs={language ? undefined : true}>
               <Typography variant="h4" className={classes.name}>
                 {!language ? (
                   <Skeleton width="50%" variant="text" />
