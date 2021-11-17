@@ -97,9 +97,11 @@ const useStyles = makeStyles(({ spacing, breakpoints, palette }) => ({
   engagementList: {
     // fix spacing above applied with > *
     marginTop: spacing(-3),
+    // marginRight: -16,
+    // padding: 0,
   },
   engagementListItems: {
-    maxWidth: 600,
+    maxWidth: 492,
   },
 }));
 
@@ -519,7 +521,7 @@ export const ProjectOverview: FC = () => {
 
           {beta && (
             <Grid container spacing={3}>
-              <Grid item xs={6}>
+              <Grid item sm={12} md={6}>
                 <ProjectChangeRequestSummary
                   data={projectOverviewData?.project.changeRequests}
                 />
@@ -565,6 +567,7 @@ export const ProjectOverview: FC = () => {
               container: classes.engagementListItems,
             }}
             spacing={3}
+            // ItemProps={{ sm: 12, md: 6 }}
             renderItem={(engagement) =>
               engagement.__typename === 'LanguageEngagement' ? (
                 <LanguageEngagementListItemCard {...engagement} />

@@ -15,7 +15,6 @@ import { getProjectUrl } from '../../scenes/Projects/useProjectId';
 import { DisplaySimpleProperty } from '../DisplaySimpleProperty';
 import { FormattedDate } from '../Formatters';
 import { PresetInventoryIconFilled } from '../Icons';
-import { Picture, useRandomPicture } from '../Picture';
 import { CardActionAreaLink } from '../Routing';
 import { Sensitivity } from '../Sensitivity';
 import { TogglePinButton } from '../TogglePinButton';
@@ -32,11 +31,6 @@ const useStyles = makeStyles(({ breakpoints, spacing }) => {
     card: {
       display: 'flex',
       alignItems: 'initial',
-    },
-    media: {
-      width: cardWidth / 3,
-      borderTopRightRadius: 0,
-      borderBottomRightRadius: 0,
     },
     cardContent: {
       flex: 1,
@@ -93,7 +87,6 @@ export const ProjectListItemCard: FC<ProjectListItemCardProps> = ({
   className,
 }) => {
   const classes = useStyles();
-  const pic = useRandomPicture({ seed: project?.id, width: 300, height: 200 });
   const location = project?.primaryLocation.value?.name.value;
 
   return (
@@ -103,13 +96,6 @@ export const ProjectListItemCard: FC<ProjectListItemCardProps> = ({
         to={project ? getProjectUrl(project) : ''}
         className={classes.card}
       >
-        <div className={classes.media}>
-          {!project ? (
-            <Skeleton variant="rect" height="100%" />
-          ) : (
-            <Picture fit="cover" {...pic} style={{ paddingBottom: 0 }} />
-          )}
-        </div>
         <CardContent className={classes.cardContent}>
           <Grid
             container
