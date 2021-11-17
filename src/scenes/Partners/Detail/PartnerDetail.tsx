@@ -29,6 +29,7 @@ import { EditablePartnerField, EditPartner } from '../Edit';
 import { PartnersQueryVariables } from '../List/PartnerList.generated';
 import { AddressCard } from './AddressCard';
 import { PartnerDocument } from './PartnerDetail.generated';
+import { PartnerPostList } from './PartnerPostList';
 import { PartnerTypesCard } from './PartnerTypesCard';
 
 const useStyles = makeStyles(({ spacing, breakpoints, palette }) => ({
@@ -270,6 +271,7 @@ export const PartnerDetail = () => {
               ))
             )}
           </Grid>
+          <Grid>{!!partner && <PartnerPostList partner={partner} />}</Grid>
         </div>
       )}
       {partner ? (

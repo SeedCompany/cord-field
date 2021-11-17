@@ -56,3 +56,14 @@ fragment PartnerDetails on Partner {
   }
   ...TogglePin
 }
+
+query PartnerPostListOverview($partner: ID!, $input: PostListInput) {
+  partner(id: $partner) {
+    id
+    ... on Postable {
+      posts(input: $input) {
+        ...PostList
+      }
+    }
+  }
+}
