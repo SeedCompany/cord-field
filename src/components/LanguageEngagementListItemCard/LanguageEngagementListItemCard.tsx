@@ -16,52 +16,47 @@ import { PresetInventoryIconFilled } from '../Icons';
 import { ButtonLink, CardActionAreaLink } from '../Routing';
 import { LanguageEngagementListItemFragment } from './LanguageEngagementListItem.generated';
 
-const useStyles = makeStyles(({ spacing }) => {
-  const cardWidth = 600;
-  return {
-    root: {
-      width: '100%',
-      maxWidth: cardWidth,
-      maxHeight: 231,
-    },
-    card: {
-      display: 'flex',
-      alignItems: 'initial',
-    },
+const useStyles = makeStyles(({ spacing }) => ({
+  root: {
+    width: '100%',
+  },
+  card: {
+    display: 'flex',
+    alignItems: 'initial',
+  },
 
-    cardContent: {
-      flex: 1,
-      padding: spacing(2, 3),
-      display: 'flex',
-    },
-    leftContent: {
-      flex: 1,
-    },
-    rightContent: {
-      flex: 0,
-      textAlign: 'right',
-      marginLeft: spacing(2),
-      display: 'flex',
-      flexDirection: 'column',
-      justifyContent: 'flex-end',
-    },
-    productList: {
-      padding: 0,
-      margin: spacing(0, 0, 1),
-    },
-    centerItems: {
-      display: 'flex',
-      alignItems: 'center',
-    },
-    iconSpacing: {
-      marginRight: spacing(1),
-    },
-    presetInventory: {
-      verticalAlign: 'bottom',
-      marginLeft: spacing(1),
-    },
-  };
-});
+  cardContent: {
+    flex: 1,
+    padding: spacing(2, 3),
+    display: 'flex',
+  },
+  leftContent: {
+    flex: 1,
+  },
+  rightContent: {
+    flex: 0,
+    textAlign: 'right',
+    marginLeft: spacing(2),
+    display: 'flex',
+    flexDirection: 'column',
+    justifyContent: 'flex-end',
+  },
+  productList: {
+    padding: 0,
+    margin: spacing(0, 0, 1),
+  },
+  centerItems: {
+    display: 'flex',
+    alignItems: 'center',
+  },
+  iconSpacing: {
+    marginRight: spacing(1),
+  },
+  presetInventory: {
+    verticalAlign: 'bottom',
+    marginLeft: spacing(1),
+  },
+}));
 
 export type LanguageEngagementListItemCardProps =
   LanguageEngagementListItemFragment & {
