@@ -57,11 +57,21 @@ export const ProjectPostList: FC<ProjectPostListProps> = ({ project }) => {
           container: classes.postListItems,
         }}
         spacing={3}
-        renderItem={(post) => <PostListItemCard parent={project} post={post} />}
+        renderItem={(post) => (
+          <PostListItemCard
+            disableMembership={false}
+            parent={project}
+            post={post}
+          />
+        )}
         skeletonCount={0}
         renderSkeleton={null}
       />
-      <CreatePost {...createPostState} parent={project} />
+      <CreatePost
+        disableMembership={false}
+        {...createPostState}
+        parent={project}
+      />
     </div>
   );
 };

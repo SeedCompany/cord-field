@@ -58,12 +58,20 @@ export const PartnerPostList: FC<PartnerPostListProps> = ({ partner }) => {
         }}
         spacing={3}
         renderItem={(post) => (
-          <PostListItemCard parent={partner as any} post={post} />
+          <PostListItemCard
+            disableMembership={true}
+            parent={partner as any}
+            post={post}
+          />
         )}
         skeletonCount={0}
         renderSkeleton={null}
       />
-      <CreatePost {...createPostState} parent={partner as any} />
+      <CreatePost
+        {...createPostState}
+        disableMembership={true}
+        parent={partner as any}
+      />
     </div>
   );
 };

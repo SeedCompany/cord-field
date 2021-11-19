@@ -1,4 +1,5 @@
 import { Grid } from '@material-ui/core';
+import { without } from 'lodash';
 import React from 'react';
 import {
   displayPostShareability,
@@ -21,10 +22,12 @@ import { PostFormFragment } from './PostForm.generated';
 export type PostFormProps<T, R = void> = DialogFormProps<T, R> & {
   /** The pre-existing post to edit */
   post?: PostFormFragment;
+  disableMembership: boolean;
 };
 
 export const PostForm = <T, R = void>({
   post,
+  disableMembership,
   ...rest
 }: PostFormProps<T, R>) => (
   <DialogForm<T, R>
@@ -49,7 +52,11 @@ export const PostForm = <T, R = void>({
         <SelectField
           label="Shareability"
           name="shareability"
-          options={PostShareabilityList}
+          options={
+            disableMembership
+              ? without(PostShareabilityList, 'ProjectTeam')
+              : PostShareabilityList
+          }
           variant="outlined"
           getOptionLabel={displayPostShareability}
           defaultValue={'Internal'}

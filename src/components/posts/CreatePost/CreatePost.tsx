@@ -11,9 +11,14 @@ export type CreatePostProps = Except<
   'onSubmit' | 'initialValues'
 > & {
   parent: PostableIdFragment;
+  disableMembership: boolean;
 };
 
-export const CreatePost = ({ parent, ...props }: CreatePostProps) => {
+export const CreatePost = ({
+  parent,
+  disableMembership,
+  ...props
+}: CreatePostProps) => {
   const [createPost] = useMutation(CreatePostDocument, {
     update: addItemToList({
       listId: [parent, 'posts'],
@@ -25,6 +30,7 @@ export const CreatePost = ({ parent, ...props }: CreatePostProps) => {
     <PostForm<CreatePostInput>
       title="Add Post"
       {...props}
+      disableMembership={disableMembership}
       onSubmit={async ({ post }) => {
         await createPost({
           variables: {

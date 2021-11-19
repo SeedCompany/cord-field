@@ -79,10 +79,12 @@ interface PostListItemCardProps {
   post: PostListItemCardFragment;
   className?: string;
   parent: PostableIdFragment;
+  disableMembership: boolean;
 }
 
 export const PostListItemCard: FC<PostListItemCardProps> = ({
   post,
+  disableMembership = false,
   ...props
 }) => {
   const classes = useStyles();
@@ -150,7 +152,11 @@ export const PostListItemCard: FC<PostListItemCardProps> = ({
           setActionsAnchor(null);
         }}
       />
-      <EditPost post={post} {...editState} />
+      <EditPost
+        disableMembership={disableMembership}
+        post={post}
+        {...editState}
+      />
       <DeletePost parent={props.parent} post={post} {...deleteState} />
     </>
   );
