@@ -153,6 +153,9 @@
     "webpack-bundle-analyzer": "^4.4.2",
     "webpack-dev-server": "^3.11.2"
   },
+  "resolutions": {
+    "@graphql-tools/utils": "patch:@graphql-tools/utils@8.5.3#./patches/graphql-tools-utils.patch"
+  },
   "browserslist": {
     "production": [
       ">0.2%",

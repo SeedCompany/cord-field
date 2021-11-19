@@ -2377,7 +2377,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@graphql-tools/utils@npm:8.5.3, @graphql-tools/utils@npm:^8.1.1, @graphql-tools/utils@npm:^8.3.0, @graphql-tools/utils@npm:^8.5.1, @graphql-tools/utils@npm:^8.5.2, @graphql-tools/utils@npm:^8.5.3":
+"@graphql-tools/utils@8.5.3":
   version: 8.5.3
   resolution: "@graphql-tools/utils@npm:8.5.3"
   dependencies:
@@ -2385,6 +2385,17 @@ __metadata:
   peerDependencies:
     graphql: ^14.0.0 || ^15.0.0 || ^16.0.0
   checksum: e807f61017465a8168fcd51884da9eaff5775210352999411722ee27d5c7d3e4363fc5c48cf412a12e2b13da2b17cda3588a1d48b518b85c6818b6613e3fafbc
+  languageName: node
+  linkType: hard
+
+"@graphql-tools/utils@patch:@graphql-tools/utils@8.5.3#./patches/graphql-tools-utils.patch::locator=cord-field%40workspace%3A.":
+  version: 8.5.3
+  resolution: "@graphql-tools/utils@patch:@graphql-tools/utils@npm%3A8.5.3#./patches/graphql-tools-utils.patch::version=8.5.3&hash=c0bd0e&locator=cord-field%40workspace%3A."
+  dependencies:
+    tslib: ~2.3.0
+  peerDependencies:
+    graphql: ^14.0.0 || ^15.0.0 || ^16.0.0
+  checksum: a73c8a84a8b809477b263d231d06a8647780629536bbbcf053957935a33bf40b9a170f4788a6a880cf66f252057626aa6fc07dca8762908f7b72f1ab26537e0d
   languageName: node
   linkType: hard
 
