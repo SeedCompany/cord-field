@@ -1,8 +1,7 @@
 import { useQuery } from '@apollo/client';
 import { ToggleButton } from '@material-ui/lab';
-import { intersection } from 'lodash';
 import React, { useEffect } from 'react';
-import { displayProductStep, ProductStep } from '../../../api';
+import { displayProductStep } from '../../../api';
 import { EnumField } from '../../../components/form';
 import { AvailableProductStepsDocument as AvailableSteps } from './ProductForm.generated';
 import { SectionProps } from './ProductFormFields';
@@ -15,43 +14,25 @@ export const StepsSection = ({
 }: SectionProps) => {
   const { methodology, steps, productType } = values.product ?? {};
 
-  const { data } = useQuery(AvailableSteps, {
+  const { data, previousData } = useQuery(AvailableSteps, {
     variables: {
       type: productType === 'Other' ? 'OtherProduct' : productType,
       methodology,
     },
   });
   const availableSteps = data?.availableProductSteps;
-
-  // When available steps changes, remove all currently selected steps that are now unavailable
+  const prevSteps = previousData?.availableProductSteps;
   useEffect(() => {
-    let orderedAndAvailable: readonly ProductStep[] = intersection(
-      availableSteps,
-      steps
-    );
-    // If no steps are left over or none have been selected previously,
-    // apply all available steps.
-    if (orderedAndAvailable.length === 0) {
-      orderedAndAvailable = availableSteps ?? [];
-    }
-    // If new value is different, apply change.
-    if (orderedAndAvailable.join() !== steps?.join()) {
+    // When available steps changes, remove all currently selected steps that are now unavailable and set all available steps
+    // @ts-expect-error yes, the field exists.
+    form.change('product.steps', availableSteps);
+    // All goal steps are selected when editing a goal
+    if (!prevSteps) {
       // @ts-expect-error yes, the field exists.
-      form.change('product.steps', orderedAndAvailable);
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps -- only when available steps change
-  }, [availableSteps]);
-
-  // When steps change, ensure they are ordered by order specified in available steps
-  useEffect(() => {
-    const ordered = intersection(availableSteps, steps);
-    // If new value is different, apply change.
-    if (ordered.join() !== steps?.join()) {
-      // @ts-expect-error yes, the field exists.
-      form.change('product.steps', ordered);
+      form.change('product.steps', steps);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps -- only when steps change
-  }, [steps]);
+  }, [availableSteps]);
 
   if (!availableSteps || availableSteps.length === 0) {
     return null;
