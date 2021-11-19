@@ -154,6 +154,7 @@
     "webpack-dev-server": "^3.11.2"
   },
   "resolutions": {
+    "@graphql-codegen/plugin-helpers": "patch:@graphql-codegen/plugin-helpers@2.3.1#./patches/graphql-codegen-plugin-helpers.patch",
     "@graphql-tools/utils": "patch:@graphql-tools/utils@8.5.3#./patches/graphql-tools-utils.patch"
   },
   "browserslist": {

@@ -2013,7 +2013,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@graphql-codegen/plugin-helpers@npm:^2.1.0, @graphql-codegen/plugin-helpers@npm:^2.3.0, @graphql-codegen/plugin-helpers@npm:^2.3.1":
+"@graphql-codegen/plugin-helpers@2.3.1":
   version: 2.3.1
   resolution: "@graphql-codegen/plugin-helpers@npm:2.3.1"
   dependencies:
@@ -2026,6 +2026,22 @@ __metadata:
   peerDependencies:
     graphql: ^0.8.0 || ^0.9.0 || ^0.10.0 || ^0.11.0 || ^0.12.0 || ^0.13.0 || ^14.0.0 || ^15.0.0 || ^16.0.0
   checksum: d300529a7dcb31bab913316d551f3cc6740c31c7f4ea5bfb1e505d22404213ee4e261605a0b4a0599ea1ada0b68088225f9de52c077efdbe19690a425a4c9133
+  languageName: node
+  linkType: hard
+
+"@graphql-codegen/plugin-helpers@patch:@graphql-codegen/plugin-helpers@2.3.1#./patches/graphql-codegen-plugin-helpers.patch::locator=cord-field%40workspace%3A.":
+  version: 2.3.1
+  resolution: "@graphql-codegen/plugin-helpers@patch:@graphql-codegen/plugin-helpers@npm%3A2.3.1#./patches/graphql-codegen-plugin-helpers.patch::version=2.3.1&hash=65657f&locator=cord-field%40workspace%3A."
+  dependencies:
+    "@graphql-tools/utils": ^8.5.2
+    change-case-all: 1.0.14
+    common-tags: 1.8.0
+    import-from: 4.0.0
+    lodash: ~4.17.0
+    tslib: ~2.3.0
+  peerDependencies:
+    graphql: ^0.8.0 || ^0.9.0 || ^0.10.0 || ^0.11.0 || ^0.12.0 || ^0.13.0 || ^14.0.0 || ^15.0.0 || ^16.0.0
+  checksum: 2bde2eb140b84bfad51e7e81bdf9e706213e367703f951ca9d3406f4e2803b02ba8bf8e2190f3afb9eec90c28d2140e8cd86952b37a3b9dc873e16617d9e290c
   languageName: node
   linkType: hard
 
