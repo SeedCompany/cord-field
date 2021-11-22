@@ -1,20 +1,21 @@
 import { GraphQLFileLoader } from '@graphql-tools/graphql-file-loader';
-import { mergeSchemasAsync } from '@graphql-tools/merge';
+import { mergeSchemas } from '@graphql-tools/schema';
 import { UrlLoader } from '@graphql-tools/url-loader';
 import { buildASTSchema, isInterfaceType } from 'graphql';
 import { GraphQLInterfaceType } from 'graphql/type/definition';
+import { memoize } from 'lodash';
 
 const fromFile = async (path: string) => {
   const source = await new GraphQLFileLoader().load(path, {});
-  return buildASTSchema(source.document!);
+  return buildASTSchema(source[0]!.document!);
 };
 const fromUrl = async (url: string) => {
   const source = await new UrlLoader().load(url, {});
-  return source.schema!;
+  return source[0]!.schema!;
 };
 
 // eslint-disable-next-line import/no-default-export
-export default async function (url: string, _config: unknown) {
+const loader = memoize(async (url: string, _config: unknown) => {
   // In CI, load server schema from API PR build if given
   const unmergedServerPath = './server_build/schema.graphql';
   let unmergedServerSchema = null;
@@ -58,9 +59,12 @@ export default async function (url: string, _config: unknown) {
   }
 
   // Merge everything together here
-  const schema = await mergeSchemasAsync({
+  const schema = mergeSchemas({
     schemas: [serverSchema, clientSchema],
   });
 
   return schema;
-}
+});
+
+// eslint-disable-next-line import/no-default-export
+export default loader;

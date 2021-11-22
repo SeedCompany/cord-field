@@ -49,7 +49,7 @@ const useStyles = makeStyles(({ spacing, breakpoints }) => ({
 
 export const UserDetail = () => {
   const classes = useStyles();
-  const { userId } = useParams();
+  const { userId = '' } = useParams();
   const { data, error } = useQuery(UserDocument, {
     variables: { userId },
   });

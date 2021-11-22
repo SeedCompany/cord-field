@@ -17,10 +17,15 @@ export const plugin = tsMorphPlugin(({ schema, file }) => {
       continue;
     }
 
+    const values = type
+      .getValues()
+      .filter((val) => !val.isDeprecated)
+      .map((val) => val.name);
+
     addExportedConst(file, {
       name: `${type.name}List`,
       type: `readonly Types.${type.name}[]`,
-      initializer: writeStringArray(type.getValues().map((val) => val.name)),
+      initializer: writeStringArray(values),
     });
   }
 });

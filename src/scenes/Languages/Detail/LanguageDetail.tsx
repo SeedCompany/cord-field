@@ -71,7 +71,7 @@ const useStyles = makeStyles(({ spacing, palette }) => ({
 
 export const LanguageDetail = () => {
   const classes = useStyles();
-  const { languageId } = useParams();
+  const { languageId = '' } = useParams();
   const { data, error } = useQuery(LanguageDocument, {
     variables: { languageId },
   });
