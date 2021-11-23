@@ -79,12 +79,12 @@ interface PostListItemCardProps {
   post: PostListItemCardFragment;
   className?: string;
   parent: PostableIdFragment;
-  disableMembership: boolean;
+  includeMembership: boolean;
 }
 
 export const PostListItemCard: FC<PostListItemCardProps> = ({
   post,
-  disableMembership = false,
+  includeMembership = false,
   ...props
 }) => {
   const classes = useStyles();
@@ -153,7 +153,7 @@ export const PostListItemCard: FC<PostListItemCardProps> = ({
         }}
       />
       <EditPost
-        disableMembership={disableMembership}
+        includeMembership={includeMembership}
         post={post}
         {...editState}
       />

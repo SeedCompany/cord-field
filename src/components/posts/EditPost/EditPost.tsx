@@ -8,7 +8,7 @@ import { UpdatePostDocument } from './EditPost.generated';
 export type EditPostProps = Except<
   PostFormProps<UpdatePostInput>,
   'onSubmit' | 'initialValues'
-> & { disableMembership: boolean };
+> & { includeMembership: boolean };
 
 export const EditPost = (props: EditPostProps) => {
   const [updateUser] = useMutation(UpdatePostDocument);
@@ -33,7 +33,7 @@ export const EditPost = (props: EditPostProps) => {
       title="Edit Post"
       {...props}
       initialValues={initialValues}
-      disableMembership={props.disableMembership}
+      includeMembership={props.includeMembership}
       onSubmit={async ({ post }) => {
         await updateUser({
           variables: {

@@ -60,10 +60,8 @@ fragment PartnerDetails on Partner {
 query PartnerPostListOverview($partner: ID!, $input: PostListInput) {
   partner(id: $partner) {
     id
-    ... on Postable {
-      posts(input: $input) {
-        ...PostList
-      }
+    posts(input: $input) {
+      ...PostList
     }
   }
 }
