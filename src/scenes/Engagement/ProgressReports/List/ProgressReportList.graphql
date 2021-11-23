@@ -16,7 +16,7 @@ query ProgressReports($projectId: ID!, $changeset: ID, $engagementId: ID!) {
           }
         }
       }
-      progressReports {
+      progressReports(input: { count: 100 }) {
         items {
           ...PeriodicReport
         }
