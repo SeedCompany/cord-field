@@ -13,7 +13,11 @@ import {
   DialogForm,
   DialogFormProps,
 } from '../../../../components/Dialog/DialogForm';
-import { SubmitButton, SubmitError } from '../../../../components/form';
+import {
+  SubmitAction,
+  SubmitButton,
+  SubmitError,
+} from '../../../../components/form';
 import { AutocompleteField } from '../../../../components/form/AutocompleteField';
 import { callAll } from '../../../../util';
 import { ProjectMembersQuery } from '../List/ProjectMembers.generated';
@@ -29,6 +33,8 @@ export interface UpdateProjectMemberFormParams {
   userId: string;
   userRoles: UpdateProjectMemberInput['projectMember']['roles'];
 }
+
+type FormShape = UpdateProjectMemberInput & SubmitAction<'delete'>;
 
 type UpdateProjectMemberProps = Except<
   DialogFormProps<UpdateProjectMemberInput>,
@@ -66,10 +72,11 @@ export const UpdateProjectMember = ({
 
   const availableRoles = data?.user.roles.value ?? [];
   return (
-    <DialogForm<UpdateProjectMemberInput>
+    <DialogForm<FormShape>
       title="Update Team Member Role"
       closeLabel="Close"
       submitLabel="Save"
+      sendIfClean="delete"
       {...props}
       initialValues={{
         projectMember: {
@@ -78,6 +85,14 @@ export const UpdateProjectMember = ({
         },
       }}
       onSubmit={async (input) => {
+        if (input.submitAction === 'delete') {
+          await deleteProjectMember({
+            variables: {
+              projectMemberId,
+            },
+          });
+          return;
+        }
         await updateProjectMember({ variables: { input } });
       }}
       fieldsPrefix="projectMember"
@@ -87,13 +102,6 @@ export const UpdateProjectMember = ({
           color="error"
           fullWidth={false}
           variant="text"
-          onClick={async () => {
-            await deleteProjectMember({
-              variables: {
-                projectMemberId,
-              },
-            });
-          }}
         >
           Delete
         </SubmitButton>
