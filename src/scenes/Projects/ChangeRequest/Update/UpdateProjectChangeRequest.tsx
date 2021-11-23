@@ -67,6 +67,7 @@ export const UpdateProjectChangeRequest = ({
       closeLabel="Close"
       submitLabel="Save"
       {...props}
+      sendIfClean="delete"
       disableChangesetWarning
       initialValues={{
         projectChangeRequest: {
