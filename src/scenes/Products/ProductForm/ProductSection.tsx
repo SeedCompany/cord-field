@@ -1,5 +1,5 @@
 import { Typography } from '@material-ui/core';
-import React, { ComponentType } from 'react';
+import React, { ComponentType, useEffect } from 'react';
 import { displayProductTypes } from '../../../api';
 import { FieldConfig } from '../../../components/form';
 import {
@@ -31,18 +31,22 @@ const productFieldMap: Partial<Record<ProductTypes, AnyFormFieldComponent>> = {
 
 export const ProductSection = ({
   product,
+  form,
   touched,
   values,
   accordionState,
 }: SectionProps) => {
   const { productType, produces } = values.product ?? {};
 
-  if (
-    !productType ||
-    productType === 'DerivativeScriptureProduct' ||
-    productType === 'Other' ||
-    productType === 'DirectScriptureProduct'
-  ) {
+  useEffect(() => {
+    if (productType === 'Other' || productType === 'DirectScriptureProduct') {
+      // @ts-expect-error yes, the field exists.
+      form.change('product.produces', null);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [productType]);
+
+  if (!productType) {
     return null;
   }
 
