@@ -76,3 +76,14 @@ mutation RemoveLocationFromLanguage($languageId: ID!, $locationId: ID!) {
     ...LanguageForm
   }
 }
+
+query LanguagePostListOverview($language: ID!, $input: PostListInput) {
+  language(id: $language) {
+    id
+    ... on Postable {
+      posts(input: $input) {
+        ...PostList
+      }
+    }
+  }
+}
