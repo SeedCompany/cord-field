@@ -48,5 +48,7 @@ generates:
       scalars:
         Date: CalendarDate
         DateTime: DateTime
+        JSONObject: Record<string, any>
+        URL: string
       skipTypename: false
       enumsAsTypes: true

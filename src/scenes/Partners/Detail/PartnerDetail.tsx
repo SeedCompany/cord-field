@@ -99,7 +99,7 @@ const useStyles = makeStyles(({ spacing, breakpoints, palette }) => ({
 
 export const PartnerDetail = () => {
   const classes = useStyles();
-  const { partnerId } = useParams();
+  const { partnerId = '' } = useParams();
   const formatDateTime = useDateTimeFormatter();
 
   const { data, error } = useQuery(PartnerDocument, {

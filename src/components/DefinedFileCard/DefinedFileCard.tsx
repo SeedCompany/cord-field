@@ -15,7 +15,7 @@ import { Skeleton } from '@material-ui/lab';
 import { DateTime } from 'luxon';
 import React, { FC, forwardRef, ReactNode } from 'react';
 import { useDropzone } from 'react-dropzone';
-import { SecuredProp } from '../../api';
+import { CreateDefinedFileVersionInput, SecuredProp } from '../../api';
 import {
   FileActionsPopup as ActionsMenu,
   FileAction,
@@ -95,7 +95,10 @@ export interface DefinedFileCardProps {
   label: ReactNode;
   resourceType: string;
   securedFile: SecuredProp<FileNode>;
-  uploadMutationDocument: DocumentNode;
+  uploadMutationDocument: DocumentNode<
+    unknown,
+    { id: string; upload: CreateDefinedFileVersionInput }
+  >;
   parentId: string;
   disableIcon?: boolean;
   onUpload?: (arg: {

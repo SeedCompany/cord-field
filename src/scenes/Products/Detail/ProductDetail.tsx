@@ -32,7 +32,7 @@ export const ProductDetail = () => {
 
   const { data } = useQuery(ProductDetailDocument, {
     variables: {
-      id: useParams().productId,
+      id: useParams().productId ?? '',
     },
   });
   const product = data?.product;

@@ -25,13 +25,6 @@ export const CreatePost = ({ parent, ...props }: CreatePostProps) => {
     <PostForm<CreatePostInput>
       title="Add Post"
       {...props}
-      initialValues={{
-        post: {
-          body: '',
-          type: 'Note',
-          shareability: 'Internal',
-        },
-      }}
       onSubmit={async ({ post }) => {
         await createPost({
           variables: {

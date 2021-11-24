@@ -42,6 +42,7 @@ export const PostForm = <T, R = void>({
           name="type"
           options={PostTypeList}
           variant="outlined"
+          defaultValue={'Note'}
         />
       </Grid>
       <Grid item xs>
@@ -51,6 +52,7 @@ export const PostForm = <T, R = void>({
           options={PostShareabilityList}
           variant="outlined"
           getOptionLabel={displayPostShareability}
+          defaultValue={'Internal'}
         />
       </Grid>
     </Grid>

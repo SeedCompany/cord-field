@@ -52,7 +52,7 @@ const useStyles = makeStyles(({ spacing, breakpoints }) => ({
 
 export const LocationDetail = () => {
   const classes = useStyles();
-  const { locationId } = useParams();
+  const { locationId = '' } = useParams();
 
   const [editLocationState, editLocation] = useDialog();
 
