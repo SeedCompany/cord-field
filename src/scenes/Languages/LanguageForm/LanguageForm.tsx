@@ -1,6 +1,6 @@
 import { Grid, makeStyles, Typography } from '@material-ui/core';
 import { setIn } from 'final-form';
-import React from 'react';
+import React, { useMemo } from 'react';
 import { Except } from 'type-fest';
 import {
   canReadAny,
@@ -25,8 +25,9 @@ import {
   TextField,
 } from '../../../components/form';
 import { SelectField } from '../../../components/form/SelectField';
-import { minLength, required } from '../../../components/form/validators';
+import { max, minLength, required } from '../../../components/form/validators';
 import { YearField } from '../../../components/form/YearField';
+import { useNumberFormatter } from '../../../components/Formatters';
 import { LanguageListItemFragment } from '../../../components/LanguageListItemCard/LanguageListItem.generated';
 import { Nullable } from '../../../util';
 import { LanguageFormFragment } from './LangugeForm.generated';
@@ -61,6 +62,15 @@ export const LanguageForm = <T extends any>({
   ...rest
 }: LanguageFormProps<T>) => {
   const classes = useStyles();
+  const formatNumber = useNumberFormatter();
+  const maxPopulation = useMemo(
+    () =>
+      max(
+        2_000_000_000 - 1,
+        `Choose value below ${formatNumber(2_000_000_000)}`
+      ),
+    [formatNumber]
+  );
 
   return (
     <DialogForm
@@ -175,6 +185,7 @@ export const LanguageForm = <T extends any>({
                           placeholder="Enter Population"
                           helperText="Leave blank to use population from Ethnologue"
                           margin="none"
+                          validate={maxPopulation}
                           {...props}
                         />
                       </Grid>
@@ -311,6 +322,7 @@ export const LanguageForm = <T extends any>({
                             label="Ethnologue Population"
                             placeholder="Enter Ethnologue Population"
                             margin="none"
+                            validate={maxPopulation}
                             {...props}
                           />
                         </Grid>
