@@ -17,7 +17,9 @@ import {
 import { Fab } from '../../../components/Fab';
 import { PartnerListItemCard } from '../../../components/PartnerListItemCard';
 import { Redacted } from '../../../components/Redacted';
+import { TogglePinButton } from '../../../components/TogglePinButton';
 import { EditUser } from '../Edit';
+import { UsersQueryVariables } from '../List/users.generated';
 import { UserDocument } from './UserDetail.generated';
 
 const useStyles = makeStyles(({ spacing, breakpoints }) => ({
@@ -38,6 +40,7 @@ const useStyles = makeStyles(({ spacing, breakpoints }) => ({
   header: {
     flex: 1,
     display: 'flex',
+    gap: spacing(1),
   },
   partnersContainer: {
     marginTop: spacing(1),
@@ -97,6 +100,14 @@ export const UserDetail = () => {
                 </Fab>
               </Tooltip>
             ) : null}
+            <TogglePinButton
+              object={user}
+              label="User"
+              listId="users"
+              listFilter={(args: UsersQueryVariables) =>
+                args.input?.filter?.pinned ?? false
+              }
+            />
           </div>
           <DisplayProperty
             label="Email"

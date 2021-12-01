@@ -37,6 +37,7 @@ export const generateUserListItem = () => {
         },
       ],
     },
+    pinned: false,
   };
   return boolean('loading', false) ? undefined : user;
 };
