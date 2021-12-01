@@ -23,9 +23,11 @@ import { Error } from '../../../components/Error';
 import { Fab } from '../../../components/Fab';
 import { useDateTimeFormatter } from '../../../components/Formatters';
 import { ProjectListItemCard } from '../../../components/ProjectListItemCard';
+import { TogglePinButton } from '../../../components/TogglePinButton';
 import { UserListItemCardPortrait } from '../../../components/UserListItemCard';
 import { listOrPlaceholders, square } from '../../../util';
 import { EditablePartnerField, EditPartner } from '../Edit';
+import { PartnersQueryVariables } from '../List/PartnerList.generated';
 import { AddressCard } from './AddressCard';
 import { PartnerDocument } from './PartnerDetail.generated';
 import { PartnerTypesCard } from './PartnerTypesCard';
@@ -54,6 +56,7 @@ const useStyles = makeStyles(({ spacing, breakpoints, palette }) => ({
   header: {
     flex: 1,
     display: 'flex',
+    gap: spacing(1),
   },
   subheader: {
     display: 'flex',
@@ -150,6 +153,14 @@ export const PartnerDetail = () => {
                 </Fab>
               </Tooltip>
             )}
+            <TogglePinButton
+              object={partner}
+              label="Partner"
+              listId="partners"
+              listFilter={(args: PartnersQueryVariables) =>
+                args.input.filter?.pinned ?? false
+              }
+            />
           </header>
           <div className={classes.subheader}>
             <Typography variant="h4">

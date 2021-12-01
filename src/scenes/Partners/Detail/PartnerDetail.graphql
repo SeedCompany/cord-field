@@ -54,4 +54,5 @@ fragment PartnerDetails on Partner {
       ...ProjectListItem
     }
   }
+  ...TogglePin
 }
