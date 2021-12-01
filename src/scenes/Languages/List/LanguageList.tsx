@@ -86,7 +86,7 @@ export const LanguageList: FC = () => {
       <TabContext value={filters.tab}>
         <TabList
           onChange={(_e, tab) => setFilters({ ...filters, tab })}
-          aria-label="project navigation tabs"
+          aria-label="language navigation tabs"
           className={classes.maxWidth}
         >
           <Tab label="Pinned" value="pinned" />
