@@ -25,9 +25,11 @@ import { ProjectListItemCard } from '../../../components/ProjectListItemCard';
 import { ProjectListItemFragment } from '../../../components/ProjectListItemCard/ProjectListItem.generated';
 import { Redacted } from '../../../components/Redacted';
 import { Sensitivity } from '../../../components/Sensitivity';
+import { TogglePinButton } from '../../../components/TogglePinButton';
 import { CalendarDate, listOrPlaceholders } from '../../../util';
 import { EditLanguage } from '../Edit';
 import { AddLocationToLanguageForm } from '../Edit/AddLocationToLanguageForm';
+import { LanguagesQueryVariables } from '../List/languages.generated';
 import { FirstScripture } from './FirstScripture';
 import {
   LanguageDocument,
@@ -143,6 +145,14 @@ export const LanguageDetail = () => {
                 </Fab>
               </Tooltip>
             ) : null}
+            <TogglePinButton
+              object={language}
+              label="Language"
+              listId="languages"
+              listFilter={(args: LanguagesQueryVariables) =>
+                args.input.filter?.pinned ?? false
+              }
+            />
           </div>
           <Grid container spacing={2} alignItems="center">
             <Grid item>

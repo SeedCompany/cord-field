@@ -21,4 +21,5 @@ fragment LanguageListItem on Language {
   presetInventory {
     value
   }
+  ...TogglePin
 }
