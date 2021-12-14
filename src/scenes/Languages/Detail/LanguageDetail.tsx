@@ -18,6 +18,7 @@ import {
   useDateFormatter,
   useNumberFormatter,
 } from '../../../components/Formatters';
+import { IconButton } from '../../../components/IconButton';
 import { PresetInventoryIconFilled } from '../../../components/Icons';
 import { LocationCard } from '../../../components/LocationCard';
 import { ProjectListItemCard } from '../../../components/ProjectListItemCard';
@@ -50,7 +51,8 @@ const useStyles = makeStyles(({ spacing, palette }) => ({
     gap: spacing(1),
   },
   name: {
-    marginRight: spacing(4),
+    marginRight: spacing(2), // a little extra between text and buttons
+    lineHeight: 'inherit', // centers text with buttons better
   },
   listHeader: {
     marginBottom: spacing(1),
@@ -131,9 +133,9 @@ export const LanguageDetail = () => {
             </Typography>
             {canEditAnyFields ? (
               <Tooltip title="Edit Language">
-                <Fab color="primary" aria-label="edit language" onClick={edit}>
+                <IconButton aria-label="edit language" onClick={edit}>
                   <Edit />
-                </Fab>
+                </IconButton>
               </Tooltip>
             ) : null}
             <TogglePinButton
