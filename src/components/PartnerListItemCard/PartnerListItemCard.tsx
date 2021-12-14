@@ -37,8 +37,8 @@ const useStyles = makeStyles(({ breakpoints, spacing }) => {
     },
     pin: {
       position: 'absolute',
-      top: 10,
-      right: 10,
+      top: 5,
+      right: 5,
     },
   };
 });
@@ -85,6 +85,7 @@ export const PartnerListItemCard: FC<PartnerListItemCardProps> = ({
           args.input.filter?.pinned ?? false
         }
         className={classes.pin}
+        size="small"
       />
     </Card>
   );
