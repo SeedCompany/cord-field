@@ -64,6 +64,8 @@ export const TogglePinButton = ({
     },
   });
 
+  const Icon = object?.pinned ? PushPinIconFilled : PushPinIconOutlined;
+
   const button = (
     <IconButton
       color={object?.pinned ? 'secondary' : undefined}
@@ -80,7 +82,7 @@ export const TogglePinButton = ({
       disabled={rest.disabled || !object}
       loading={rest.loading || !object}
     >
-      {object?.pinned ? <PushPinIconFilled /> : <PushPinIconOutlined />}
+      <Icon fontSize="inherit" />
     </IconButton>
   );
 
