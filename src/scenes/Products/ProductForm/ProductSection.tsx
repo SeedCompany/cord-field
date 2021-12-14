@@ -39,7 +39,9 @@ export const ProductSection = ({
   const { productType, produces } = values.product ?? {};
 
   useEffect(() => {
-    if (productType === 'Other' || productType === 'DirectScriptureProduct') {
+    if (!produces?.__typename) {
+      return;
+    } else if (productType !== produces.__typename) {
       // @ts-expect-error yes, the field exists.
       form.change('product.produces', null);
     }
