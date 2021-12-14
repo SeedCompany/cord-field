@@ -73,7 +73,7 @@ export const UserListItemCardLandscape = ({
       </CardActionAreaLink>
       <TogglePinButton
         object={user}
-        label="User"
+        label="Person"
         listId="users"
         listFilter={(args: UsersQueryVariables) =>
           args.input?.filter?.pinned ?? false
