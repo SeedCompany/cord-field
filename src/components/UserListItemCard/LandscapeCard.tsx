@@ -2,15 +2,18 @@ import { Card, CardContent, makeStyles, Typography } from '@material-ui/core';
 import { Skeleton } from '@material-ui/lab';
 import clsx from 'clsx';
 import * as React from 'react';
+import { UsersQueryVariables } from '../../scenes/Users/List/users.generated';
 import { square } from '../../util';
 import { Avatar } from '../Avatar';
 import { CardActionAreaLink } from '../Routing';
+import { TogglePinButton } from '../TogglePinButton';
 import { UserListItemFragment } from './UserListItem.generated';
 
 const useStyles = makeStyles(({ breakpoints, spacing, typography }) => ({
   root: {
     flex: 1,
     maxWidth: breakpoints.values.sm,
+    position: 'relative',
   },
   content: {
     display: 'flex',
@@ -23,6 +26,11 @@ const useStyles = makeStyles(({ breakpoints, spacing, typography }) => ({
   },
   userInfo: {
     flex: 1,
+  },
+  pin: {
+    position: 'absolute',
+    top: 10,
+    right: 10,
   },
 }));
 
@@ -63,6 +71,15 @@ export const UserListItemCardLandscape = ({
           </div>
         </CardContent>
       </CardActionAreaLink>
+      <TogglePinButton
+        object={user}
+        label="Person"
+        listId="users"
+        listFilter={(args: UsersQueryVariables) =>
+          args.input?.filter?.pinned ?? false
+        }
+        className={classes.pin}
+      />
     </Card>
   );
 };

@@ -1,6 +1,6 @@
-import { Grid, makeStyles, Typography } from '@material-ui/core';
-import { Skeleton } from '@material-ui/lab';
-import React, { FC } from 'react';
+import { Divider, Grid, makeStyles, Tab, Typography } from '@material-ui/core';
+import { Skeleton, TabContext, TabList, TabPanel } from '@material-ui/lab';
+import React, { FC, useRef } from 'react';
 import { Helmet } from 'react-helmet-async';
 import { User } from '../../../api';
 import { useNumberFormatter } from '../../../components/Formatters';
@@ -8,6 +8,8 @@ import { ContentContainer } from '../../../components/Layout';
 import { List, useListQuery } from '../../../components/List';
 import { SortButtonDialog, useSort } from '../../../components/Sort';
 import { UserListItemCardLandscape as UserCard } from '../../../components/UserListItemCard';
+import { simpleSwitch } from '../../../util';
+import { useUserFilters } from './UserFilterOptions';
 import { UsersDocument } from './users.generated';
 import { UserSortOptions } from './UserSortOptions';
 
@@ -18,19 +20,37 @@ const useStyles = makeStyles(({ spacing, breakpoints }) => ({
   items: {
     maxWidth: breakpoints.values.sm,
   },
+  tabPanel: {
+    overflowY: 'auto',
+    // allow card shadow to bleed over instead of cutting it off
+    padding: spacing(0, 0, 0, 2),
+    margin: spacing(0, 0, 0, -2),
+  },
+  total: {
+    marginTop: spacing(2),
+  },
 }));
 
 export const UserList: FC = () => {
   const sort = useSort<User>();
+  const [filters, setFilters] = useUserFilters();
   const list = useListQuery(UsersDocument, {
     listAt: (data) => data.users,
     variables: {
-      input: sort.value,
+      input: {
+        ...sort.value,
+        filter: {
+          ...simpleSwitch(filters.tab, {
+            pinned: { pinned: true },
+          }),
+        },
+      },
     },
   });
 
   const classes = useStyles();
   const formatNumber = useNumberFormatter();
+  const scrollRef = useRef<HTMLElement>(null);
 
   return (
     <ContentContainer>
@@ -46,20 +66,37 @@ export const UserList: FC = () => {
         </Grid>
       </Grid>
 
-      <Typography variant="h3" paragraph>
-        {list.data ? (
-          <>{formatNumber(list.data.total)} People</>
-        ) : (
-          <Skeleton width="9ch" />
-        )}
-      </Typography>
-      <List
-        {...list}
-        classes={{ container: classes.items }}
-        renderItem={(item) => <UserCard user={item} />}
-        renderSkeleton={<UserCard />}
-        skeletonCount={10}
-      />
+      <TabContext value={filters.tab}>
+        <TabList
+          onChange={(_e, tab) => setFilters({ ...filters, tab })}
+          aria-label="user navigation tabs"
+          className={classes.items}
+        >
+          <Tab label="Pinned" value="pinned" />
+          <Tab label="All" value="all" />
+        </TabList>
+        <Divider className={classes.items} />
+        <TabPanel
+          value={filters.tab}
+          className={classes.tabPanel}
+          ref={scrollRef}
+        >
+          <Typography variant="h3" className={classes.total}>
+            {list.data ? (
+              <>{formatNumber(list.data.total)} People</>
+            ) : (
+              <Skeleton width="9ch" />
+            )}
+          </Typography>
+          <List
+            {...list}
+            classes={{ container: classes.items }}
+            renderItem={(item) => <UserCard user={item} />}
+            renderSkeleton={<UserCard />}
+            scrollRef={scrollRef}
+          />
+        </TabPanel>
+      </TabContext>
     </ContentContainer>
   );
 };
