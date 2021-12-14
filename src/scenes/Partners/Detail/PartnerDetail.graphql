@@ -5,7 +5,7 @@ query Partner($input: ID!) {
 }
 
 fragment PartnerDetails on Partner {
-  id
+  ...Id
   createdAt
   organization {
     canRead

@@ -9,7 +9,7 @@ import {
 } from '@material-ui/core';
 import { MoreVert } from '@material-ui/icons';
 import clsx from 'clsx';
-import { FC, useState } from 'react';
+import { useState } from 'react';
 import * as React from 'react';
 import { canEditAny, displayPostShareability } from '../../../api';
 import { square } from '../../../util';
@@ -76,15 +76,18 @@ const useStyles = makeStyles(({ spacing, typography }) => {
 });
 
 interface PostListItemCardProps {
-  post: PostListItemCardFragment;
-  className?: string;
   parent: PostableIdFragment;
+  post: PostListItemCardFragment;
+  includeMembership: boolean;
+  className?: string;
 }
 
-export const PostListItemCard: FC<PostListItemCardProps> = ({
+export const PostListItemCard = ({
+  parent,
   post,
-  ...props
-}) => {
+  includeMembership = false,
+  className,
+}: PostListItemCardProps) => {
   const classes = useStyles();
   const [actionsAnchor, setActionsAnchor] = useState<MenuProps['anchorEl']>();
   const [editState, editPost] = useDialog();
@@ -93,7 +96,7 @@ export const PostListItemCard: FC<PostListItemCardProps> = ({
 
   return (
     <>
-      <Card className={clsx(classes.root, props.className)}>
+      <Card className={clsx(classes.root, className)}>
         <CardContent className={classes.cardContent}>
           <div className={classes.leftContent}>
             <Avatar className={classes.avatar}>
@@ -150,8 +153,12 @@ export const PostListItemCard: FC<PostListItemCardProps> = ({
           setActionsAnchor(null);
         }}
       />
-      <EditPost post={post} {...editState} />
-      <DeletePost parent={props.parent} post={post} {...deleteState} />
+      <EditPost
+        includeMembership={includeMembership}
+        post={post}
+        {...editState}
+      />
+      <DeletePost parent={parent} post={post} {...deleteState} />
     </>
   );
 };

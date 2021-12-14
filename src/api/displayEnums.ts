@@ -88,7 +88,10 @@ export const displayProductTypes = (type: ProductTypes) =>
     ? 'Scripture'
     : displayEnum<ProductTypes>()(type);
 
-export const displayPostShareability = displayEnum<PostShareability>();
+export const displayPostShareability = (val: PostShareability) =>
+  val === 'ProjectTeam' || val === 'Membership'
+    ? 'Team Members'
+    : displayEnum()(val);
 
 export const displayProductStep = (step: Nullable<ProductStep>) =>
   displayEnum<ProductStep>()(step).replace(' And ', ' & ');
