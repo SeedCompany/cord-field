@@ -9,11 +9,13 @@ import { Skeleton } from '@material-ui/lab';
 import clsx from 'clsx';
 import { FC } from 'react';
 import * as React from 'react';
+import { LanguagesQueryVariables } from '../../scenes/Languages/List/languages.generated';
 import { DisplaySimpleProperty } from '../DisplaySimpleProperty';
 import { useNumberFormatter } from '../Formatters';
 import { PresetInventoryIconFilled } from '../Icons';
 import { CardActionAreaLink } from '../Routing';
 import { Sensitivity } from '../Sensitivity';
+import { TogglePinButton } from '../TogglePinButton';
 import { LanguageListItemFragment } from './LanguageListItem.generated';
 
 const useStyles = makeStyles(({ spacing }) => {
@@ -21,6 +23,7 @@ const useStyles = makeStyles(({ spacing }) => {
     root: {
       width: '100%',
       maxWidth: 400,
+      position: 'relative',
     },
     name: {
       marginBottom: spacing(2),
@@ -42,6 +45,11 @@ const useStyles = makeStyles(({ spacing }) => {
     },
     sensitivity: {
       marginTop: spacing(1),
+    },
+    pin: {
+      position: 'absolute',
+      top: 10,
+      right: 10,
     },
   };
 });
@@ -127,6 +135,15 @@ export const LanguageListItemCard: FC<LanguageListItemCardProps> = ({
           </div>
         </CardContent>
       </CardActionAreaLink>
+      <TogglePinButton
+        object={language}
+        label="Language"
+        listId="languages"
+        listFilter={(args: LanguagesQueryVariables) =>
+          args.input.filter?.pinned ?? false
+        }
+        className={classes.pin}
+      />
     </Card>
   );
 };
