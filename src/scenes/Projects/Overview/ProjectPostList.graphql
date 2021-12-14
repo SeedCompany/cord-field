@@ -1,0 +1,8 @@
+query ProjectPostList($project: ID!, $input: PostListInput) {
+  project(id: $project) {
+    id
+    posts(input: $input) {
+      ...PostList
+    }
+  }
+}

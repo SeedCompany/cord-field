@@ -3,6 +3,7 @@ import { without } from 'lodash';
 import React from 'react';
 import {
   displayPostShareability,
+  PostShareability,
   PostShareabilityList,
   PostTypeList,
 } from '../../../api';
@@ -26,7 +27,10 @@ export type PostFormProps<T, R = void> = DialogFormProps<T, R> & {
 };
 
 const shareabilityList = (includeMembership: boolean) =>
-  without(PostShareabilityList, includeMembership ? null : 'Membership');
+  without<PostShareability>(
+    PostShareabilityList,
+    ...(includeMembership ? [] : ['Membership' as const])
+  );
 
 export const PostForm = <T, R = void>({
   post,

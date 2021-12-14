@@ -1,10 +1,10 @@
 import { Grid, makeStyles, Tooltip, Typography } from '@material-ui/core';
 import { Add } from '@material-ui/icons';
-import { FC } from 'react';
 import * as React from 'react';
+import { Except } from 'type-fest';
 import { useDialog } from '../Dialog';
 import { Fab } from '../Fab';
-import { List } from '../List';
+import { List, ListProps } from '../List';
 import { CreatePost } from './CreatePost';
 import { PostableIdFragment } from './PostableId.generated';
 import { PostListItemCard } from './PostListItemCard';
@@ -16,17 +16,20 @@ const useStyles = makeStyles(() => ({
   },
 }));
 
-interface PostListProps {
+interface PostListProps
+  extends Except<
+    ListProps<PostListItemCardFragment>,
+    'renderItem' | 'renderSkeleton'
+  > {
   parent: PostableIdFragment;
-  posts: any;
   includeMembership?: boolean;
 }
 
-export const PostList: FC<PostListProps> = ({
-  posts,
+export const PostList = ({
   includeMembership = false,
   parent,
-}) => {
+  ...rest
+}: PostListProps) => {
   const classes = useStyles();
   const [createPostState, createPost] = useDialog();
 
@@ -45,14 +48,14 @@ export const PostList: FC<PostListProps> = ({
         </Grid>
       </Grid>
       <List
-        {...posts}
+        {...rest}
         classes={{ container: classes.postListItems }}
         spacing={3}
         renderItem={(post) => (
           <PostListItemCard
             includeMembership={includeMembership}
             parent={parent}
-            post={post as PostListItemCardFragment}
+            post={post}
           />
         )}
         skeletonCount={0}

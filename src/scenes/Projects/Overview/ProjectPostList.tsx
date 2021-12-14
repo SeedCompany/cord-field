@@ -1,17 +1,14 @@
-import { FC } from 'react';
 import * as React from 'react';
 import { useListQuery } from '../../../components/List';
+import { PostableIdFragment } from '../../../components/posts/PostableId.generated';
 import { PostList } from '../../../components/posts/PostList';
-import {
-  ProjectPostListOverviewDocument as PostListQuery,
-  ProjectOverviewQuery,
-} from './ProjectOverview.generated';
+import { ProjectPostListDocument as PostListQuery } from './ProjectPostList.generated';
 
 interface ProjectPostListProps {
-  project: ProjectOverviewQuery['project'];
+  project: PostableIdFragment;
 }
 
-export const ProjectPostList: FC<ProjectPostListProps> = ({ project }) => {
+export const ProjectPostList = ({ project }: ProjectPostListProps) => {
   const posts = useListQuery(PostListQuery, {
     listAt: (data) => data.project.posts,
     variables: {
@@ -19,5 +16,5 @@ export const ProjectPostList: FC<ProjectPostListProps> = ({ project }) => {
     },
   });
 
-  return <PostList parent={project} posts={posts} includeMembership></PostList>;
+  return <PostList parent={project} {...posts} includeMembership />;
 };

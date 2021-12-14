@@ -5,7 +5,7 @@ query Partner($input: ID!) {
 }
 
 fragment PartnerDetails on Partner {
-  id
+  ...Id
   createdAt
   organization {
     canRead
@@ -55,13 +55,4 @@ fragment PartnerDetails on Partner {
     }
   }
   ...TogglePin
-}
-
-query PartnerPostListOverview($partner: ID!, $input: PostListInput) {
-  partner(id: $partner) {
-    id
-    posts(input: $input) {
-      ...PostList
-    }
-  }
 }

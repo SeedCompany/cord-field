@@ -1,18 +1,14 @@
-import { FC } from 'react';
 import * as React from 'react';
 import { useListQuery } from '../../../components/List';
-import { PostableId_Partner_Fragment } from '../../../components/posts/PostableId.generated';
+import { PostableIdFragment } from '../../../components/posts/PostableId.generated';
 import { PostList } from '../../../components/posts/PostList';
-import {
-  PartnerQuery,
-  PartnerPostListOverviewDocument as PostListQuery,
-} from './PartnerDetail.generated';
+import { PartnerPostListDocument as PostListQuery } from './PartnerPostList.generated';
 
 interface PartnerPostListProps {
-  partner: PartnerQuery['partner'];
+  partner: PostableIdFragment;
 }
 
-export const PartnerPostList: FC<PartnerPostListProps> = ({ partner }) => {
+export const PartnerPostList = ({ partner }: PartnerPostListProps) => {
   const posts = useListQuery(PostListQuery, {
     listAt: (data) => data.partner.posts,
     variables: {
@@ -20,7 +16,5 @@ export const PartnerPostList: FC<PartnerPostListProps> = ({ partner }) => {
     },
   });
 
-  return (
-    <PostList parent={partner as PostableId_Partner_Fragment} posts={posts} />
-  );
+  return <PostList parent={partner} {...posts} />;
 };
