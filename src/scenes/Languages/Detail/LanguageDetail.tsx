@@ -54,6 +54,7 @@ const useStyles = makeStyles(({ spacing, palette }) => ({
   header: {
     flex: 1,
     display: 'flex',
+    gap: spacing(1),
   },
   listHeader: {
     marginBottom: spacing(1),
