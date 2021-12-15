@@ -96,7 +96,12 @@ export const PlanningSpreadsheet = ({ engagement }: Props) => {
               <EnumOption default label="Skip extracting goals" />
             </div>
             {entries({
-              ...pick(ApproachMethodologies, 'Written', 'OralTranslation'),
+              ...pick(
+                ApproachMethodologies,
+                'Written',
+                'OralTranslation',
+                'OralStories'
+              ),
               Visual: ['SignLanguage'] as const,
             }).map(([approach, methodologies]) => (
               <div key={approach} className={classes.section}>
