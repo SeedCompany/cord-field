@@ -76,6 +76,9 @@ export const TogglePinButton = ({
         }
         void togglePinned({
           variables: { id: object.id },
+          optimisticResponse: {
+            togglePinned: !object.pinned,
+          },
         });
         rest.onClick?.(event);
       }}
