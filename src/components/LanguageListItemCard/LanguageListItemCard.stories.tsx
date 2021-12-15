@@ -27,6 +27,7 @@ export const WithData = () => {
     presetInventory: {
       value: boolean('Preset Inventory', true),
     },
+    pinned: false,
   };
 
   return <LanguageListItemCard language={language} />;

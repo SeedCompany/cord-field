@@ -67,6 +67,7 @@ fragment LanguageDetail on Language {
     }
   }
   ...FirstScripture
+  ...TogglePin
 }
 
 mutation RemoveLocationFromLanguage($languageId: ID!, $locationId: ID!) {

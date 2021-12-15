@@ -1,0 +1,8 @@
+query PartnerPostList($partner: ID!, $input: PostListInput) {
+  partner(id: $partner) {
+    id
+    posts(input: $input) {
+      ...PostList
+    }
+  }
+}

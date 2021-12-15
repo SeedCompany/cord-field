@@ -9,7 +9,9 @@ import { Skeleton } from '@material-ui/lab';
 import clsx from 'clsx';
 import { random } from 'lodash';
 import React, { FC } from 'react';
+import { PartnersQueryVariables } from '../../scenes/Partners/List/PartnerList.generated';
 import { CardActionAreaLink } from '../Routing';
+import { TogglePinButton } from '../TogglePinButton';
 import { PartnerListItemFragment } from './PartnerListItemCard.generated';
 
 const useStyles = makeStyles(({ breakpoints, spacing }) => {
@@ -18,6 +20,7 @@ const useStyles = makeStyles(({ breakpoints, spacing }) => {
     root: {
       width: '100%',
       maxWidth: cardWidth,
+      position: 'relative',
     },
     card: {
       display: 'flex',
@@ -31,6 +34,11 @@ const useStyles = makeStyles(({ breakpoints, spacing }) => {
     },
     skeletonRight: {
       marginLeft: 'auto',
+    },
+    pin: {
+      position: 'absolute',
+      top: 5,
+      right: 5,
     },
   };
 });
@@ -69,6 +77,16 @@ export const PartnerListItemCard: FC<PartnerListItemCardProps> = ({
           </Grid>
         </CardContent>
       </CardActionAreaLink>
+      <TogglePinButton
+        object={partner}
+        label="Partner"
+        listId="partners"
+        listFilter={(args: PartnersQueryVariables) =>
+          args.input.filter?.pinned ?? false
+        }
+        className={classes.pin}
+        size="small"
+      />
     </Card>
   );
 };

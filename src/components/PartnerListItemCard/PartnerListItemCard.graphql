@@ -10,4 +10,5 @@ fragment PartnerListItem on Partner {
       }
     }
   }
+  ...TogglePin
 }

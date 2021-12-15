@@ -64,6 +64,8 @@ export const TogglePinButton = ({
     },
   });
 
+  const Icon = object?.pinned ? PushPinIconFilled : PushPinIconOutlined;
+
   const button = (
     <IconButton
       color={object?.pinned ? 'secondary' : undefined}
@@ -74,13 +76,16 @@ export const TogglePinButton = ({
         }
         void togglePinned({
           variables: { id: object.id },
+          optimisticResponse: {
+            togglePinned: !object.pinned,
+          },
         });
         rest.onClick?.(event);
       }}
       disabled={rest.disabled || !object}
       loading={rest.loading || !object}
     >
-      {object?.pinned ? <PushPinIconFilled /> : <PushPinIconOutlined />}
+      <Icon fontSize="inherit" />
     </IconButton>
   );
 

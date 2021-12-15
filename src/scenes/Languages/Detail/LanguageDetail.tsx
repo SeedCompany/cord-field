@@ -2,7 +2,6 @@ import { useMutation, useQuery } from '@apollo/client';
 import { Grid, makeStyles, Tooltip, Typography } from '@material-ui/core';
 import { Add, Edit } from '@material-ui/icons';
 import { Skeleton } from '@material-ui/lab';
-import clsx from 'clsx';
 import React from 'react';
 import { Helmet } from 'react-helmet-async';
 import { useParams } from 'react-router';
@@ -19,20 +18,24 @@ import {
   useDateFormatter,
   useNumberFormatter,
 } from '../../../components/Formatters';
+import { IconButton } from '../../../components/IconButton';
 import { PresetInventoryIconFilled } from '../../../components/Icons';
 import { LocationCard } from '../../../components/LocationCard';
 import { ProjectListItemCard } from '../../../components/ProjectListItemCard';
 import { ProjectListItemFragment } from '../../../components/ProjectListItemCard/ProjectListItem.generated';
 import { Redacted } from '../../../components/Redacted';
 import { Sensitivity } from '../../../components/Sensitivity';
+import { TogglePinButton } from '../../../components/TogglePinButton';
 import { CalendarDate, listOrPlaceholders } from '../../../util';
 import { EditLanguage } from '../Edit';
 import { AddLocationToLanguageForm } from '../Edit/AddLocationToLanguageForm';
+import { LanguagesQueryVariables } from '../List/languages.generated';
 import { FirstScripture } from './FirstScripture';
 import {
   LanguageDocument,
   RemoveLocationFromLanguageDocument,
 } from './LanguageDetail.generated';
+import { LanguagePostList } from './LanguagePostList';
 import { LeastOfThese } from './LeastOfThese';
 
 const useStyles = makeStyles(({ spacing, palette }) => ({
@@ -43,15 +46,14 @@ const useStyles = makeStyles(({ spacing, palette }) => ({
       marginBottom: spacing(3),
     },
   },
-  name: {
-    marginRight: spacing(4),
-  },
-  nameLoading: {
-    width: '60%',
-  },
   header: {
     flex: 1,
     display: 'flex',
+    gap: spacing(1),
+  },
+  name: {
+    marginRight: spacing(2), // a little extra between text and buttons
+    lineHeight: 'inherit', // centers text with buttons better
   },
   listHeader: {
     marginBottom: spacing(1),
@@ -118,31 +120,33 @@ export const LanguageDetail = () => {
       {!error && (
         <>
           <div className={classes.header}>
-            <Typography
-              variant="h2"
-              className={clsx(
-                classes.name,
-                displayName || name ? null : classes.nameLoading
-              )}
-            >
+            <Typography variant="h2" className={classes.name}>
               {!language ? (
-                <Skeleton width="100%" />
+                <Skeleton width="16ch" />
               ) : (
                 (displayName?.value || name?.value) ?? (
                   <Redacted
                     info="You don't have permission to view this language's name"
-                    width="100%"
+                    width="16ch"
                   />
                 )
               )}
             </Typography>
             {canEditAnyFields ? (
               <Tooltip title="Edit Language">
-                <Fab color="primary" aria-label="edit language" onClick={edit}>
+                <IconButton aria-label="edit language" onClick={edit}>
                   <Edit />
-                </Fab>
+                </IconButton>
               </Tooltip>
             ) : null}
+            <TogglePinButton
+              object={language}
+              label="Language"
+              listId="languages"
+              listFilter={(args: LanguagesQueryVariables) =>
+                args.input.filter?.pinned ?? false
+              }
+            />
           </div>
           <Grid container spacing={2} alignItems="center">
             <Grid item>
@@ -315,6 +319,9 @@ export const LanguageDetail = () => {
                   engaged in
                 </Typography>
               ) : null}
+            </Grid>
+            <Grid>
+              {!!language && <LanguagePostList language={language} />}
             </Grid>
           </Grid>
 

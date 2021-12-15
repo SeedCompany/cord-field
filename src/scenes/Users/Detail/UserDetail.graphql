@@ -2,5 +2,6 @@ query User($userId: ID!) {
   user(id: $userId) {
     ...DisplayUser
     ...UserForm
+    ...TogglePin
   }
 }

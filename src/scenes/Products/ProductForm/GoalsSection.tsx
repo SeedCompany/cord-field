@@ -25,9 +25,7 @@ export const GoalsSection = ({
           {productType && (
             <ToggleButton selected value={produces || ''}>
               {`${displayProductTypes(productType)} ${
-                (productType !== 'DirectScriptureProduct' &&
-                  produces?.name.value) ||
-                ''
+                produces?.name.value || ''
               }`}
             </ToggleButton>
           )}

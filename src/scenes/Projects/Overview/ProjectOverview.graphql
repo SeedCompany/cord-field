@@ -91,17 +91,6 @@ fragment ProjectOverview on Project {
   }
 }
 
-query ProjectPostListOverview($project: ID!, $input: PostListInput) {
-  project(id: $project) {
-    id
-    ... on Postable {
-      posts(input: $input) {
-        ...PostList
-      }
-    }
-  }
-}
-
 query ProjectEngagementListOverview(
   $project: ID!
   $input: EngagementListInput

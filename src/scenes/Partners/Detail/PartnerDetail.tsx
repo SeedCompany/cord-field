@@ -10,7 +10,6 @@ import {
 } from '@material-ui/core';
 import { Add, Edit } from '@material-ui/icons';
 import { Skeleton } from '@material-ui/lab';
-import clsx from 'clsx';
 import { Many } from 'lodash';
 import React from 'react';
 import { Helmet } from 'react-helmet-async';
@@ -20,14 +19,17 @@ import { BooleanProperty } from '../../../components/BooleanProperty';
 import { DataButton } from '../../../components/DataButton';
 import { useDialog } from '../../../components/Dialog';
 import { Error } from '../../../components/Error';
-import { Fab } from '../../../components/Fab';
 import { useDateTimeFormatter } from '../../../components/Formatters';
+import { IconButton } from '../../../components/IconButton';
 import { ProjectListItemCard } from '../../../components/ProjectListItemCard';
+import { TogglePinButton } from '../../../components/TogglePinButton';
 import { UserListItemCardPortrait } from '../../../components/UserListItemCard';
 import { listOrPlaceholders, square } from '../../../util';
 import { EditablePartnerField, EditPartner } from '../Edit';
+import { PartnersQueryVariables } from '../List/PartnerList.generated';
 import { AddressCard } from './AddressCard';
 import { PartnerDocument } from './PartnerDetail.generated';
+import { PartnerPostList } from './PartnerPostList';
 import { PartnerTypesCard } from './PartnerTypesCard';
 
 const useStyles = makeStyles(({ spacing, breakpoints, palette }) => ({
@@ -42,18 +44,14 @@ const useStyles = makeStyles(({ spacing, breakpoints, palette }) => ({
       marginBottom: spacing(3),
     },
   },
-  name: {
-    // align text with edit button better
-    // should probably fix another way
-    marginTop: 3,
-    marginRight: spacing(2),
-  },
-  nameLoading: {
-    flex: 1,
-  },
   header: {
     flex: 1,
     display: 'flex',
+    gap: spacing(1),
+  },
+  name: {
+    marginRight: spacing(2), // a little extra between text and buttons
+    lineHeight: 'inherit', // centers text with buttons better
   },
   subheader: {
     display: 'flex',
@@ -126,30 +124,31 @@ export const PartnerDetail = () => {
       {!error && (
         <div className={classes.main}>
           <header className={classes.header}>
-            <Typography
-              variant="h2"
-              className={clsx(
-                classes.name,
-                partner ? null : classes.nameLoading
-              )}
-            >
+            <Typography variant="h2" className={classes.name}>
               {partner ? (
                 partner.organization.value?.name.value
               ) : (
-                <Skeleton width="75%" />
+                <Skeleton width="25ch" />
               )}
             </Typography>
             {partner && (
-              <Tooltip title="Update Global Innovations Client">
-                <Fab
-                  color="primary"
-                  aria-label="Update Global Innovations Client"
+              <Tooltip title="Edit Partner">
+                <IconButton
+                  aria-label="Edit Partner"
                   onClick={() => editPartner('globalInnovationsClient')}
                 >
                   <Edit />
-                </Fab>
+                </IconButton>
               </Tooltip>
             )}
+            <TogglePinButton
+              object={partner}
+              label="Partner"
+              listId="partners"
+              listFilter={(args: PartnersQueryVariables) =>
+                args.input.filter?.pinned ?? false
+              }
+            />
           </header>
           <div className={classes.subheader}>
             <Typography variant="h4">
@@ -272,6 +271,7 @@ export const PartnerDetail = () => {
               ))
             )}
           </Grid>
+          <Grid>{!!partner && <PartnerPostList partner={partner} />}</Grid>
         </div>
       )}
       {partner ? (

@@ -71,15 +71,14 @@ const useStyles = makeStyles(({ spacing, breakpoints, palette }) => ({
   header: {
     flex: 1,
     display: 'flex',
-    '& > *': {
-      marginLeft: spacing(1),
-    },
+    gap: spacing(1),
   },
   headerLoading: {
     alignItems: 'center',
   },
   name: {
-    marginRight: spacing(2),
+    marginRight: spacing(2), // a little extra between text and buttons
+    lineHeight: 'inherit', // centers text with buttons better
   },
   nameLoading: {
     width: '30%',

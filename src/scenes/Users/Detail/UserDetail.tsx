@@ -2,7 +2,6 @@ import { useQuery } from '@apollo/client';
 import { makeStyles, Tooltip, Typography } from '@material-ui/core';
 import { Edit } from '@material-ui/icons';
 import { Skeleton } from '@material-ui/lab';
-import clsx from 'clsx';
 import { DateTime } from 'luxon';
 import React, { useState } from 'react';
 import { Helmet } from 'react-helmet-async';
@@ -14,10 +13,12 @@ import {
   DisplaySimpleProperty,
   DisplaySimplePropertyProps,
 } from '../../../components/DisplaySimpleProperty';
-import { Fab } from '../../../components/Fab';
+import { IconButton } from '../../../components/IconButton';
 import { PartnerListItemCard } from '../../../components/PartnerListItemCard';
 import { Redacted } from '../../../components/Redacted';
+import { TogglePinButton } from '../../../components/TogglePinButton';
 import { EditUser } from '../Edit';
+import { UsersQueryVariables } from '../List/users.generated';
 import { UserDocument } from './UserDetail.generated';
 
 const useStyles = makeStyles(({ spacing, breakpoints }) => ({
@@ -29,15 +30,14 @@ const useStyles = makeStyles(({ spacing, breakpoints }) => ({
     },
     maxWidth: breakpoints.values.md,
   },
-  name: {
-    marginRight: spacing(4),
-  },
-  nameLoading: {
-    width: '60%',
-  },
   header: {
     flex: 1,
     display: 'flex',
+    gap: spacing(1),
+  },
+  name: {
+    marginRight: spacing(2), // a little extra between text and buttons
+    lineHeight: 'inherit', // centers text with buttons better
   },
   partnersContainer: {
     marginTop: spacing(1),
@@ -68,35 +68,33 @@ export const UserDetail = () => {
       ) : (
         <>
           <div className={classes.header}>
-            <Typography
-              variant="h2"
-              className={clsx(
-                classes.name,
-                user?.fullName ? null : classes.nameLoading
-              )}
-            >
+            <Typography variant="h2" className={classes.name}>
               {!user ? (
-                <Skeleton width="100%" />
+                <Skeleton width="20ch" />
               ) : (
                 user.fullName ?? (
                   <Redacted
                     info="You don't have permission to view this person's name"
-                    width="100%"
+                    width="20ch"
                   />
                 )
               )}
             </Typography>
             {canEditAnyFields ? (
               <Tooltip title="Edit Person">
-                <Fab
-                  color="primary"
-                  aria-label="edit person"
-                  onClick={editUser}
-                >
+                <IconButton aria-label="edit person" onClick={editUser}>
                   <Edit />
-                </Fab>
+                </IconButton>
               </Tooltip>
             ) : null}
+            <TogglePinButton
+              object={user}
+              label="Person"
+              listId="users"
+              listFilter={(args: UsersQueryVariables) =>
+                args.input?.filter?.pinned ?? false
+              }
+            />
           </div>
           <DisplayProperty
             label="Email"

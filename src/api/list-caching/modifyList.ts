@@ -1,6 +1,7 @@
 import { ApolloCache, isReference, TypePolicies } from '@apollo/client';
 import type { Reference } from '@apollo/client';
 import { Modifier } from '@apollo/client/cache/core/types/common';
+import type { EntityStore } from '@apollo/client/cache/inmemory/entityStore';
 import type { ConditionalKeys } from 'type-fest';
 import { keys, mapFromList, Nullable } from '../../util';
 import type { Query } from '../schema.generated';
@@ -47,8 +48,9 @@ export const modifyList = <OwningObj extends Entity, Args>({
     return;
   }
 
-  // @ts-expect-error assuming in memory cache with internal data map
-  const obj = cache.data?.data[id ?? 'ROOT_QUERY'] ?? {};
+  // @ts-expect-error assuming in memory cache with entity store
+  const store: EntityStore | null = cache.data;
+  const obj = store?.toObject()[id ?? 'ROOT_QUERY'] ?? {};
   const listVariations = keys(obj)
     .filter(
       (query) =>

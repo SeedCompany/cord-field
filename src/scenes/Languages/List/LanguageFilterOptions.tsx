@@ -4,7 +4,9 @@ import { EnumField, SwitchField } from '../../../components/form';
 import {
   BooleanParam,
   EnumListParam,
+  EnumParam,
   makeQueryHandler,
+  withDefault,
   withKey,
 } from '../../../hooks';
 
@@ -14,6 +16,7 @@ export const useLanguageFilters = makeQueryHandler({
   isSignLanguage: withKey(BooleanParam(), 'sign-language'),
   isDialect: withKey(BooleanParam(), 'dialect'),
   presetInventory: withKey(BooleanParam(), 'presetInventory'),
+  tab: withDefault(EnumParam(['all', 'pinned']), 'all'),
 });
 
 export const LanguageFilterOptions = () => {
