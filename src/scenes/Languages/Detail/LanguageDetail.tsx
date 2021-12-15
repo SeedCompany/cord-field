@@ -35,6 +35,7 @@ import {
   LanguageDocument,
   RemoveLocationFromLanguageDocument,
 } from './LanguageDetail.generated';
+import { LanguagePostList } from './LanguagePostList';
 import { LeastOfThese } from './LeastOfThese';
 
 const useStyles = makeStyles(({ spacing, palette }) => ({
@@ -318,6 +319,9 @@ export const LanguageDetail = () => {
                   engaged in
                 </Typography>
               ) : null}
+            </Grid>
+            <Grid>
+              {!!language && <LanguagePostList language={language} />}
             </Grid>
           </Grid>
 

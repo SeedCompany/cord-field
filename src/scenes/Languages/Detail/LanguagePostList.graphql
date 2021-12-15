@@ -1,0 +1,8 @@
+query LanguagePostList($language: ID!, $input: PostListInput) {
+  language(id: $language) {
+    id
+    posts(input: $input) {
+      ...PostList
+    }
+  }
+}
