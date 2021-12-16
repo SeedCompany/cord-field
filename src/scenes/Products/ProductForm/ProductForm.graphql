@@ -1,8 +1,11 @@
 fragment ProductForm on Product {
   id
-  legacyType
   scriptureReferences {
-    ...SecuredScriptureRanges
+    canRead
+    canEdit
+    value {
+      ...Scripture
+    }
   }
   mediums {
     canRead
@@ -19,8 +22,6 @@ fragment ProductForm on Product {
     canEdit
     value
   }
-  approach
-  legacyType
   steps {
     canRead
     canEdit
@@ -43,7 +44,12 @@ fragment ProductForm on Product {
   }
   ... on DirectScriptureProduct {
     unspecifiedScripture {
-      ...SecuredUnspecifiedScripturePortion
+      canRead
+      canEdit
+      value {
+        book
+        totalVerses
+      }
     }
   }
   ... on DerivativeScriptureProduct {
@@ -80,51 +86,28 @@ fragment Producible on Producible {
   id
   __typename
   createdAt
+  scriptureReferences {
+    canRead
+    canEdit
+    value {
+      ...Scripture
+    }
+  }
   ... on EthnoArt {
     name {
       ...securedString
-    }
-    scriptureReferences {
-      ...SecuredScriptureRanges
     }
   }
   ... on Film {
     name {
       ...securedString
     }
-    scriptureReferences {
-      ...SecuredScriptureRanges
-    }
   }
   ... on Story {
     name {
       ...securedString
     }
-    scriptureReferences {
-      ...SecuredScriptureRanges
-    }
   }
-}
-
-fragment SecuredScriptureRanges on SecuredScriptureRanges {
-  canRead
-  canEdit
-  value {
-    ...Scripture
-  }
-}
-
-fragment SecuredUnspecifiedScripturePortion on SecuredUnspecifiedScripturePortion {
-  canRead
-  canEdit
-  value {
-    ...UnspecifiedScripturePortion
-  }
-}
-
-fragment UnspecifiedScripturePortion on UnspecifiedScripturePortion {
-  book
-  totalVerses
 }
 
 query AvailableProductSteps(

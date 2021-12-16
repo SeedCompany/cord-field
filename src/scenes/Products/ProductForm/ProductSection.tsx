@@ -48,7 +48,11 @@ export const ProductSection = ({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [productType]);
 
-  if (!productType) {
+  if (
+    !productType ||
+    productType === 'DirectScriptureProduct' ||
+    productType === 'Other'
+  ) {
     return null;
   }
 
