@@ -1,3 +1,5 @@
+import { makeStyles, useTheme } from '@material-ui/core';
+import { SkipNextRounded as SkipIcon } from '@material-ui/icons';
 import { Many, without } from 'lodash';
 import { DateTime } from 'luxon';
 import { Column } from 'material-table';
@@ -22,6 +24,7 @@ import { FormattedDate, FormattedDateTime } from '../Formatters';
 import { Table } from '../Table';
 import { TableProps } from '../Table/Table';
 import { PeriodicReportFragment } from './PeriodicReport.generated';
+import { PeriodicReportRow } from './PeriodicReportRow';
 import { ReportLabel } from './ReportLabel';
 import { useUpdatePeriodicReport } from './Upload/useUpdatePeriodicReport';
 
@@ -31,6 +34,14 @@ export interface ReportRow {
   modifiedBy: string;
   modifiedAt?: DateTime;
 }
+
+const useStyles = makeStyles(() => ({
+  label: {
+    display: 'inline-flex',
+    alignItems: 'center',
+    gap: '1',
+  },
+}));
 
 type PeriodicReportsTableProps = Except<
   TableProps<ReportRow>,
@@ -63,31 +74,48 @@ export const PeriodicReportsTableInContext = ({
     })
   );
 
+  const classes = useStyles();
+  const theme = useTheme();
+
   const columns: Array<Column<ReportRow>> = [
     {
       title: 'Period',
       defaultSort: 'desc',
-      render: ({ report }) => <ReportLabel report={report} />,
+      render: ({ report }) => (
+        <span className={classes.label}>
+          <ReportLabel report={report} />
+          {report.skippedReason.value && <SkipIcon fontSize="small" />}
+        </span>
+      ),
       customSort: (row1, row2) =>
         row1.period.toMillis() - row2.period.toMillis(),
     },
     {
       title: 'Submitted By',
       field: 'modifiedBy',
+      render: ({ modifiedBy, report }) => {
+        return report.skippedReason.value ? <>&mdash;</> : modifiedBy;
+      },
     },
     {
       title: 'Submitted Date',
       field: 'modifiedAt',
-      render: ({ report }) => (
-        <FormattedDateTime date={report.reportFile.value?.modifiedAt} />
-      ),
+      render: ({ report }) =>
+        report.skippedReason.value ? (
+          <>&mdash;</>
+        ) : (
+          <FormattedDateTime date={report.reportFile.value?.modifiedAt} />
+        ),
     },
     {
       title: 'Received Date',
       field: 'receivedDate',
-      render: ({ report }) => (
-        <FormattedDate date={report.receivedDate.value} />
-      ),
+      render: ({ report }) =>
+        report.skippedReason.value ? (
+          <>&mdash;</>
+        ) : (
+          <FormattedDate date={report.receivedDate.value} />
+        ),
     },
     {
       title: '',
@@ -185,6 +213,7 @@ export const PeriodicReportsTableInContext = ({
         components={{
           // No toolbar since it's just empty space, we don't use it for anything.
           Toolbar: () => null,
+          Row: PeriodicReportRow,
         }}
         columns={columns}
         onRowClick={(rowData) => {
@@ -211,6 +240,12 @@ export const PeriodicReportsTableInContext = ({
           padding: 'dense',
           thirdSortClick: false,
           draggable: false,
+          rowStyle: ({ report }: ReportRow) =>
+            report.skippedReason.value
+              ? {
+                  color: theme.palette.text.disabled,
+                }
+              : {},
           ...props.options,
         }}
       />
