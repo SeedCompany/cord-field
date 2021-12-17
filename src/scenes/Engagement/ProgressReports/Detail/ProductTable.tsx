@@ -52,6 +52,14 @@ export const ProductTable = ({ products, category }: ProductTableProps) => {
           displayProductStep(step)
         ),
       field: step,
+      render: (row: RowData) =>
+        row[step] ? (
+          row[step]
+        ) : row.data.steps.find((s) => s.step === step) ? (
+          ''
+        ) : (
+          <>&mdash;</>
+        ),
     })),
   ];
 
