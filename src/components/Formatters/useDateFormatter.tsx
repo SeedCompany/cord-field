@@ -74,7 +74,7 @@ function rangeFormatter<T extends DateTime>(
     if (!start && !actualEnd) {
       return null;
     }
-    return formatter(start as T) + ' - ' + formatter(actualEnd);
+    return formatter(start as T) + ' – ' + formatter(actualEnd);
   }
 
   return formatRange;
