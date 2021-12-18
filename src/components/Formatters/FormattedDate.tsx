@@ -42,7 +42,7 @@ export const FormattedDateRange = ({
   return (
     <>
       <FormattedDate date={start} />
-      &nbsp;-&nbsp;
+      &nbsp;&ndash;&nbsp;
       <FormattedDate date={end} />
     </>
   );
