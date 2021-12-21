@@ -11,6 +11,7 @@ import React, { ReactNode } from 'react';
 import {
   displayMethodologyWithLabel,
   displayProductMedium,
+  displayProductStep,
 } from '../../../api';
 import {
   DisplaySimpleProperty,
@@ -21,7 +22,7 @@ import { mapFromList } from '../../../util';
 import { ProductDetailFragment as Product } from './ProductDetail.generated';
 
 const useStyles = makeStyles(() => ({
-  mediumItem: {
+  listItem: {
     margin: 0,
   },
 }));
@@ -70,7 +71,7 @@ export const ProductInfo = ({ product }: { product?: Product }) => {
                         </>
                       ) : undefined
                     }
-                    className={classes.mediumItem}
+                    className={classes.listItem}
                   />
                 </ListItem>
               ))}
@@ -115,6 +116,28 @@ export const ProductInfo = ({ product }: { product?: Product }) => {
         loading={!product}
         wrap={infoWrapper}
       />
+
+      {!product?.progressOfCurrentReportDue && (
+        <DisplayProperty
+          label="Goals"
+          value={
+            product && product.steps.value.length > 0 ? (
+              <List disablePadding>
+                {product.steps.value.map((step) => (
+                  <ListItem key={step} disableGutters>
+                    <ListItemText
+                      primary={displayProductStep(step)}
+                      className={classes.listItem}
+                    />
+                  </ListItem>
+                ))}
+              </List>
+            ) : null
+          }
+          loading={!product}
+          wrap={infoWrapper}
+        />
+      )}
     </>
   );
 };
