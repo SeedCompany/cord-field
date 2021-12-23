@@ -26,6 +26,7 @@ import { FileAction } from './FileAction.enum';
 import {
   DirectoryActionItem,
   FileActionItem,
+  FilesActionItem,
   HandleFileActionClickParams,
   PermittedActions,
   useFileActions,
@@ -69,7 +70,7 @@ interface NonVersionPopupProps extends FileActionsList {
 }
 
 interface VersionPopupProps extends FileActionsList {
-  item: VersionActionItem;
+  item: VersionActionItem | FilesActionItem;
   onVersionAccepted?: (files: File[]) => void;
 }
 

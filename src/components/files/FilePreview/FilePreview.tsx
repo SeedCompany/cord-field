@@ -8,9 +8,14 @@ import {
   DialogTitle,
   Grid,
   makeStyles,
+  Typography,
 } from '@material-ui/core';
 import React, { FC, Suspense, useCallback, useEffect, useState } from 'react';
-import { NonDirectoryActionItem } from '../FileActions';
+import {
+  FileAction,
+  FileActionsPopup,
+  NonDirectoryActionItem,
+} from '../FileActions';
 import {
   previewableAudioTypes,
   previewableImageTypes,
@@ -32,9 +37,15 @@ const RtfPreview = loadable(() => import('./RtfPreview'));
 const WordPreview = loadable(() => import('./WordPreview'));
 const EmailPreview = loadable(() => import('./EmailPreview'));
 
-const useStyles = makeStyles(() => ({
+const useStyles = makeStyles(({ spacing }) => ({
   dialogContent: {
     height: '100%',
+  },
+  title: {
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    gap: spacing(2),
   },
 }));
 
@@ -257,7 +268,14 @@ export const FilePreview: FC<FilePreviewProps> = (props) => {
       maxWidth={false}
       aria-labelledby="dialog-file-preview"
     >
-      <DialogTitle id="dialog-file-preview">{name}</DialogTitle>
+      <DialogTitle
+        id="dialog-file-preview"
+        disableTypography
+        className={classes.title}
+      >
+        <Typography variant="h6">{name}</Typography>
+        <FileActionsPopup actions={[FileAction.Download]} item={file} />
+      </DialogTitle>
       <DialogContent className={classes.dialogContent}>
         <Grid container direction="column" spacing={2} alignItems="center">
           <Grid item>
