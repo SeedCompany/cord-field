@@ -56,17 +56,16 @@ async function extractExcelData(file: File): Promise<{
   try {
     const spreadsheetBuffer = await file.arrayBuffer();
     const workbook = XLSX.read(spreadsheetBuffer, { type: 'buffer' });
-    const data = workbook.SheetNames.reduce(
-      (sheets: SheetData[], worksheetName) => {
-        const worksheet = workbook.Sheets[worksheetName]!;
+    const data = Object.entries(workbook.Sheets).flatMap(
+      ([name, worksheet]) => {
         // '!ref' is a special key that gives the used cell range
         const usedCellRange = worksheet['!ref'];
         if (!usedCellRange) {
-          return sheets.concat({
-            name: worksheetName,
+          return {
+            name,
             rows: [],
             columns: [],
-          });
+          };
         }
 
         const mergedCells = worksheet['!merges'];
@@ -116,14 +115,12 @@ async function extractExcelData(file: File): Promise<{
         const convertedRows = jsonToTableRows(parsedRows);
         const rows = calculateMergedCells(convertedRows, spans);
         const columns = formatColumns(usedCellRange);
-        const newSheet = {
-          name: worksheetName,
+        return {
+          name,
           rows,
           columns,
         };
-        return sheets.concat(newSheet);
-      },
-      []
+      }
     );
     return data.length > 0
       ? { data, error: undefined }
