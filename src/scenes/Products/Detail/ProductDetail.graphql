@@ -53,6 +53,9 @@ fragment ProductDetail on Product {
   progressOfCurrentReportDue {
     ...ProductProgress
   }
+  steps {
+    value
+  }
 
   ... on OtherProduct {
     description {
