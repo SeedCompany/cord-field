@@ -119,7 +119,7 @@ export const ProductInfo = ({ product }: { product?: Product }) => {
 
       {!product?.progressOfCurrentReportDue && (
         <DisplayProperty
-          label="Goals"
+          label="Steps"
           value={
             product && product.steps.value.length > 0 ? (
               <List disablePadding>
