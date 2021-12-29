@@ -24,6 +24,7 @@ const useStyles = makeStyles(({ spacing, breakpoints }) => ({
   },
   maxWidth: {
     maxWidth: breakpoints.values.sm,
+    flexWrap: 'nowrap',
   },
   tabPanel: {
     overflowY: 'auto',
