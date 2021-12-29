@@ -60,12 +60,11 @@ async function extractExcelData(file: File): Promise<{
       ([name, worksheet]) => {
         // '!ref' is a special key that gives the used cell range
         const usedCellRange = worksheet['!ref'];
-        if (!usedCellRange) {
-          return {
-            name,
-            rows: [],
-            columns: [],
-          };
+        const hidden =
+          (workbook.Workbook?.Sheets?.find((s) => s.name === name)?.Hidden ??
+            0) > 0;
+        if (!usedCellRange || hidden) {
+          return [];
         }
 
         const mergedCells = worksheet['!merges'];
