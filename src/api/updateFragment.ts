@@ -30,6 +30,11 @@ export interface UpdateFragmentOptions<
  *
  * This is similar to cache.modify but since a fragment is specified cache data
  * is given back exactly like it is asked for, instead of raw normalized references.
+ *
+ * FYI Apollo Client v3.5 has its own updateFragment function, but it is not
+ * as robust as this implementation.
+ * This handles id & fragmentName options automatically, adjust data type to be
+ * recursively partial when using returnPartialData option.
  */
 export const updateFragment = <
   FragmentType,

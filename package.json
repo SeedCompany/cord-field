@@ -22,7 +22,7 @@
     "node": ">=16"
   },
   "dependencies": {
-    "@apollo/client": "patch:@apollo/client@3.3.19#./patches/apollo-client.patch",
+    "@apollo/client": "^3.5.6",
     "@babel/plugin-proposal-numeric-separator": "^7.14.2",
     "@date-io/luxon": "^2.10.11",
     "@freiraum/msgreader": "patch:@freiraum/msgreader@1.1.1#./patches/msg-reader.patch",

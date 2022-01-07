@@ -106,6 +106,12 @@ const modifyWebpackConfig = (opts) => {
     );
   }
 
+  if (!opts.env.dev) {
+    // https://github.com/apollographql/apollo-client/blob/main/CHANGELOG.md#apollo-client-340
+    // https://github.com/apollographql/apollo-client/pull/8347
+    define('__DEV__', 'false');
+  }
+
   return config;
 };
 
