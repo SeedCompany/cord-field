@@ -14,8 +14,10 @@ export interface ReadFragmentOptions<
   returnPartialData?: Partial;
 }
 
-export type MaybePartial<T, Partial extends boolean | undefined> =
-  Partial extends true ? DeepPartial<T> : T;
+export type MaybePartial<
+  T,
+  Partial extends boolean | undefined
+> = Partial extends true ? DeepPartial<T> : T;
 
 /**
  * Small wrapper around ApolloCache.readFragment.
