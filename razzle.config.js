@@ -112,6 +112,9 @@ const modifyWebpackConfig = (opts) => {
     define('__DEV__', 'false');
   }
 
+  // Exclude .cjs files from FileLoader. They should be loaded like other js files.
+  config.module.rules[1].exclude.push(/\.cjs$/);
+
   return config;
 };
 
