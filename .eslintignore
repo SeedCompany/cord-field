@@ -1,3 +1,4 @@
 .yarn
 build
 *.generated.ts
+*.stories.tsx
