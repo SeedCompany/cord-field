@@ -151,7 +151,7 @@ export function LookupField<
     if (!multiple && (field.value as Val | null) && input === selectedText) {
       return;
     }
-    fetch({
+    void fetch({
       variables: {
         query: input,
       },
@@ -319,8 +319,12 @@ interface StandardNamedObject {
   readonly name: { readonly value?: string | null };
 }
 
-type SetOptionalIf<T, Keys extends keyof T, Subject, Condition> =
-  Subject extends Condition ? SetOptional<T, Keys> : T;
+type SetOptionalIf<
+  T,
+  Keys extends keyof T,
+  Subject,
+  Condition
+> = Subject extends Condition ? SetOptional<T, Keys> : T;
 
 LookupField.createFor = <T extends { id: string }, CreateFormValues = never>({
   resource,

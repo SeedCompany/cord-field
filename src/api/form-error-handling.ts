@@ -123,7 +123,7 @@ export const handleFormError = async <T, P>(
       // Start with a noop next handler
       (() => undefined) as NextHandler<any>
     );
-  return handler(error);
+  return await handler(error);
 };
 
 /**
