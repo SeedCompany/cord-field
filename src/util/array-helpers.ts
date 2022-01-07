@@ -28,10 +28,11 @@ export const listOrPlaceholders = <T>(
   list ?? fill(times(placeholderCount), undefined);
 
 /**
- * Just like Object.entries except keys are strict
+ * Just like Object.entries except keys are strict and only pairs that exist are iterated
  */
-export const entries: <K extends string, V>(o: Record<K, V>) => Array<[K, V]> =
-  Object.entries as any;
+export const entries: <K extends string, V>(o: { [Key in K]?: V }) => Array<
+  [K, V]
+> = Object.entries as any;
 
 /**
  * Just like Object.keys except keys are strict

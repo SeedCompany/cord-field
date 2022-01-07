@@ -4,14 +4,10 @@ import { Skeleton } from '@material-ui/lab';
 import React, { useMemo } from 'react';
 import { Helmet } from 'react-helmet-async';
 import { useNavigate, useParams } from 'react-router';
-import {
-  handleFormError,
-  ProductMedium,
-  removeItemFromList,
-} from '../../../api';
+import { handleFormError, removeItemFromList } from '../../../api';
 import { EngagementBreadcrumb } from '../../../components/EngagementBreadcrumb';
 import { ProjectBreadcrumb } from '../../../components/ProjectBreadcrumb';
-import { mapFromList } from '../../../util';
+import { entries, mapFromList } from '../../../util';
 import {
   getFullBookRange,
   isFullBookRange,
@@ -262,9 +258,9 @@ export const EditProduct = () => {
         return;
       }
 
-      const ppmInput = Object.entries(data.product?.producingMediums ?? {}).map(
+      const ppmInput = entries(data.product?.producingMediums ?? {}).map(
         ([medium, partnership]) => ({
-          medium: medium as ProductMedium,
+          medium: medium,
           partnership: partnership?.id,
         })
       );
