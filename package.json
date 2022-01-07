@@ -19,7 +19,7 @@
     "postinstall": "patch-typed-document-node || true"
   },
   "engines": {
-    "node": ">=12"
+    "node": ">=16"
   },
   "dependencies": {
     "@apollo/client": "patch:@apollo/client@3.3.19#./patches/apollo-client.patch",
