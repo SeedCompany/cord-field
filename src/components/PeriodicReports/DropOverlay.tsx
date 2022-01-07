@@ -62,7 +62,7 @@ export const DropOverlay = ({
         ) : report && file ? (
           <>
             <em>
-              <ReportLabel report={report} /> {report.value?.type} Report
+              <ReportLabel report={report} /> {report.value.type} Report
             </em>
             <br />
             Drop here to upload

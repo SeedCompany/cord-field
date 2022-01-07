@@ -33,7 +33,7 @@ export const modifyChangesetDiff = (
         changeset: {
           ...owningObj.changeset,
           difference: pickBy({
-            ...owningObj.changeset?.difference,
+            ...owningObj.changeset.difference,
             ...result,
           }),
         },

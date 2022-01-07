@@ -110,7 +110,7 @@ export const CeremonyPlanned: FC<CeremonyCardProps> = ({
     title = (
       <Tooltip
         title={`A ${type?.toLowerCase()} ${
-          planned?.value ? 'IS' : 'is NOT'
+          planned.value ? 'IS' : 'is NOT'
         } planned`}
       >
         {title}
@@ -130,10 +130,10 @@ export const CeremonyPlanned: FC<CeremonyCardProps> = ({
             control={
               <Tooltip title={`Is a ${type?.toLowerCase()} planned?`}>
                 <Switch
-                  checked={Boolean(planned?.value)}
+                  checked={Boolean(planned.value)}
                   name="planned"
                   color="primary"
-                  disabled={!planned?.canEdit}
+                  disabled={!planned.canEdit}
                   onChange={(_, checked) => onChange(checked)}
                 />
               </Tooltip>
