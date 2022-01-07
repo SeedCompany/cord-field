@@ -31,7 +31,7 @@ export const TogglePinButton = ({
   ...rest
 }: TogglePinButtonProps) => {
   const [togglePinned] = useMutation(TogglePinnedDocument, {
-    update: (cache, result) => {
+    update: (cache, result, options) => {
       if (!result.data || !object) {
         return;
       }
@@ -60,7 +60,7 @@ export const TogglePinButton = ({
             filter: listFilter,
             item: object,
           });
-      modifier(cache, result);
+      modifier(cache, result, options);
     },
   });
 

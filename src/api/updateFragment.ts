@@ -1,6 +1,8 @@
-import { ApolloCache } from '@apollo/client';
-import { MutationUpdaterFn } from '@apollo/client/core';
-import { StoreObject } from '@apollo/client/utilities';
+import {
+  ApolloCache,
+  MutationUpdaterFunction,
+  StoreObject,
+} from '@apollo/client';
 import {
   getFragmentName,
   MaybePartial,
@@ -70,7 +72,7 @@ export const updateFragment = <
     return;
   }
 
-  cache.writeFragment({
+  cache.writeFragment<MaybePartial<FragmentType, Partial>, TVariables>({
     ...options,
     id,
     fragmentName: getFragmentName(options),
@@ -91,7 +93,12 @@ export const onUpdateChangeFragment =
     Partial extends boolean | undefined = false
   >(
     options: UpdateFragmentOptions<FragmentType, TVariables, Partial>
-  ): MutationUpdaterFn<MutationOutput> =>
+  ): MutationUpdaterFunction<
+    MutationOutput,
+    TVariables,
+    unknown,
+    ApolloCache<unknown>
+  > =>
   (cache) => {
     updateFragment(cache, options);
   };

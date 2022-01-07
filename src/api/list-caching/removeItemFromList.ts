@@ -1,4 +1,4 @@
-import type { MutationUpdaterFn } from '@apollo/client/core';
+import { ApolloCache, MutationUpdaterFunction } from '@apollo/client';
 import { Except } from 'type-fest';
 import { splice } from '../../util';
 import { modifyChangesetDiff } from '../changesets';
@@ -34,7 +34,12 @@ export const removeItemFromList =
     item,
   }: Except<ModifyListOptions<OwningObj, Args>, 'cache' | 'modifier'> & {
     item: Item;
-  }): MutationUpdaterFn<unknown> =>
+  }): MutationUpdaterFunction<
+    unknown,
+    unknown,
+    unknown,
+    ApolloCache<unknown>
+  > =>
   (cache, { data }) => {
     if (!data) {
       return;
