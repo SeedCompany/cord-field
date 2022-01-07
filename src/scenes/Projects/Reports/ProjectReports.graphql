@@ -1,7 +1,7 @@
 query NarrativeReports($projectId: ID!, $changeset: ID) {
   project(id: $projectId, changeset: $changeset) {
     ...ProjectBreadcrumb
-    reports: narrativeReports(input: { count: 100 }) {
+    reports: narrativeReports(input: { count: 100, order: DESC }) {
       items {
         ...PeriodicReport
       }
@@ -12,7 +12,7 @@ query NarrativeReports($projectId: ID!, $changeset: ID) {
 query FinancialReports($projectId: ID!, $changeset: ID) {
   project(id: $projectId, changeset: $changeset) {
     ...ProjectBreadcrumb
-    reports: financialReports(input: { count: 100 }) {
+    reports: financialReports(input: { count: 100, order: DESC }) {
       items {
         ...PeriodicReport
       }
