@@ -2,16 +2,6 @@ import { createTerminus } from '@godaddy/terminus';
 import express from 'express';
 import { app } from './server/server';
 
-// Suppress experimental warning for AbortController
-if (typeof AbortController !== 'undefined') {
-  // eslint-disable-next-line @typescript-eslint/unbound-method
-  const emitWarning = process.emitWarning;
-  // eslint-disable-next-line @typescript-eslint/no-empty-function
-  process.emitWarning = () => {};
-  new AbortController();
-  process.emitWarning = emitWarning;
-}
-
 let currentApp = app;
 
 if (module.hot) {
