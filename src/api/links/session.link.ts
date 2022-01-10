@@ -11,7 +11,7 @@ export class SessionLink extends ErrorLink {
   constructor() {
     super(({ graphQLErrors, operation, forward }) => {
       for (const gqlError of graphQLErrors || []) {
-        const ext = gqlError.extensions ?? {};
+        const ext = gqlError.extensions;
 
         // Re-establish session if needed then retry the operation
         if (

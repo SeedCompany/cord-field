@@ -7,7 +7,6 @@ import {
   Typography,
 } from '@material-ui/core';
 import clsx from 'clsx';
-import { FC } from 'react';
 import * as React from 'react';
 import { displayEngagementStatus } from '../../api';
 import { DisplaySimpleProperty } from '../DisplaySimpleProperty';
@@ -63,79 +62,85 @@ export type LanguageEngagementListItemCardProps =
     className?: string;
   };
 
-export const LanguageEngagementListItemCard: FC<LanguageEngagementListItemCardProps> =
-  ({ id, language: securedLanguage, project, className, status, products }) => {
-    const numberFormatter = useNumberFormatter();
-    const classes = useStyles();
+export const LanguageEngagementListItemCard = ({
+  id,
+  language: securedLanguage,
+  project,
+  className,
+  status,
+  products,
+}: LanguageEngagementListItemCardProps) => {
+  const numberFormatter = useNumberFormatter();
+  const classes = useStyles();
 
-    const language = securedLanguage.value;
-    const name = language?.name.value ?? language?.displayName.value;
-    const population = language?.population.value;
-    const registryOfDialectsCode = language?.registryOfDialectsCode.value;
-    const ethnologueCode = language?.ethnologue.code.value;
+  const language = securedLanguage.value;
+  const name = language?.name.value ?? language?.displayName.value;
+  const population = language?.population.value;
+  const registryOfDialectsCode = language?.registryOfDialectsCode.value;
+  const ethnologueCode = language?.ethnologue.code.value;
 
-    return (
-      <Card className={clsx(classes.root, className)}>
-        <CardActionAreaLink to={`engagements/${id}`} className={classes.card}>
-          <CardContent className={classes.cardContent}>
-            <Grid
-              container
-              direction="column"
-              justify="space-between"
-              spacing={1}
-              className={classes.leftContent}
-            >
-              <Grid item>
-                <Typography variant="h4">
-                  {name}
-                  {project.presetInventory.value && (
-                    <PresetInventoryIconFilled
-                      color="action"
-                      className={classes.presetInventory}
-                      aria-label="preset inventory"
-                    />
-                  )}
-                </Typography>
-              </Grid>
-              <DisplaySimpleProperty
-                label="Registry Of Dialects Code"
-                value={registryOfDialectsCode}
-                wrap={(node) => <Grid item>{node}</Grid>}
-              />
-              <DisplaySimpleProperty
-                label="Ethnologue Code"
-                value={ethnologueCode}
-                wrap={(node) => <Grid item>{node}</Grid>}
-              />
-              <DisplaySimpleProperty
-                label="Population"
-                value={numberFormatter(population)}
-                wrap={(node) => <Grid item>{node}</Grid>}
-              />
-              <DisplaySimpleProperty
-                label="Status"
-                value={displayEngagementStatus(status.value)}
-                wrap={(node) => <Grid item>{node}</Grid>}
-              />
+  return (
+    <Card className={clsx(classes.root, className)}>
+      <CardActionAreaLink to={`engagements/${id}`} className={classes.card}>
+        <CardContent className={classes.cardContent}>
+          <Grid
+            container
+            direction="column"
+            justify="space-between"
+            spacing={1}
+            className={classes.leftContent}
+          >
+            <Grid item>
+              <Typography variant="h4">
+                {name}
+                {project.presetInventory.value && (
+                  <PresetInventoryIconFilled
+                    color="action"
+                    className={classes.presetInventory}
+                    aria-label="preset inventory"
+                  />
+                )}
+              </Typography>
             </Grid>
-            <div className={classes.rightContent}>
-              <DisplaySimpleProperty aria-hidden="true" />
-              <div>
-                <Typography variant="h1">
-                  {numberFormatter(products.total)}
-                </Typography>
-                <Typography variant="body2" color="primary">
-                  Goals
-                </Typography>
-              </div>
+            <DisplaySimpleProperty
+              label="Registry Of Dialects Code"
+              value={registryOfDialectsCode}
+              wrap={(node) => <Grid item>{node}</Grid>}
+            />
+            <DisplaySimpleProperty
+              label="Ethnologue Code"
+              value={ethnologueCode}
+              wrap={(node) => <Grid item>{node}</Grid>}
+            />
+            <DisplaySimpleProperty
+              label="Population"
+              value={numberFormatter(population)}
+              wrap={(node) => <Grid item>{node}</Grid>}
+            />
+            <DisplaySimpleProperty
+              label="Status"
+              value={displayEngagementStatus(status.value)}
+              wrap={(node) => <Grid item>{node}</Grid>}
+            />
+          </Grid>
+          <div className={classes.rightContent}>
+            <DisplaySimpleProperty aria-hidden="true" />
+            <div>
+              <Typography variant="h1">
+                {numberFormatter(products.total)}
+              </Typography>
+              <Typography variant="body2" color="primary">
+                Goals
+              </Typography>
             </div>
-          </CardContent>
-        </CardActionAreaLink>
-        <CardActions>
-          <ButtonLink to={`engagements/${id}`} color="primary">
-            View Details
-          </ButtonLink>
-        </CardActions>
-      </Card>
-    );
-  };
+          </div>
+        </CardContent>
+      </CardActionAreaLink>
+      <CardActions>
+        <ButtonLink to={`engagements/${id}`} color="primary">
+          View Details
+        </ButtonLink>
+      </CardActions>
+    </Card>
+  );
+};

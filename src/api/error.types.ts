@@ -68,7 +68,7 @@ export interface InputError extends ErrorInfo {
 export type DuplicateError = Required<InputError>;
 
 export const getErrorInfo = (e: unknown) => {
-  if (!(e instanceof ApolloError) || e.graphQLErrors.length === 0) {
+  if (!(e instanceof ApolloError) || !e.graphQLErrors[0]) {
     // This is really to make TS happy. We should always have an ApolloError here.
     assert(e instanceof Error);
     return {
@@ -79,7 +79,7 @@ export const getErrorInfo = (e: unknown) => {
 
   // For mutations we will assume they will only have one error
   // since they should only be doing one operation.
-  const ext = e.graphQLErrors[0]!.extensions ?? {};
+  const ext = e.graphQLErrors[0].extensions;
   const codes: Code[] = [...(ext.codes ?? [ext.code]), 'Default'];
   return {
     message: e.message,

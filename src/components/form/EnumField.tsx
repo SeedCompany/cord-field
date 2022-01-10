@@ -26,7 +26,7 @@ import {
   useMemo,
 } from 'react';
 import { Except, MergeExclusive } from 'type-fest';
-import { many } from '../../util';
+import { Many, many } from '../../util';
 import { FieldConfig, useField, Value } from './useField';
 import { getHelperText, showError } from './util';
 
@@ -127,7 +127,7 @@ export const EnumField = <
       multiple,
       // eslint-disable-next-line react-hooks/exhaustive-deps
       defaultValueProp
-        ? sortBy(many(defaultValueProp ?? '')).join('')
+        ? sortBy(many(defaultValueProp as Many<T>)).join('')
         : undefined,
     ]
   );

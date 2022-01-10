@@ -17,6 +17,7 @@ import {
   formatScriptureRange,
   parseScriptureRange,
   RawScriptureRange,
+  ScriptureError,
   ScriptureRange,
   validateScriptureRange,
 } from '../../util/biblejs';
@@ -103,7 +104,8 @@ export function VersesField({
     try {
       validateScriptureRange(rawScriptureRange as RawScriptureRange);
       return undefined;
-    } catch (e) {
+    } catch (ex) {
+      const e = ex as ScriptureError;
       setErrorCode(e.code);
       return e.message;
     }

@@ -8,9 +8,9 @@ import { SecuredAccordion } from './SecuredAccordion';
 
 declare module './ProductForm' {
   interface ProductFormCustomValues {
-    producingMediums?: Partial<
-      Record<ProductMedium, PartnershipForLabelFragment>
-    >;
+    producingMediums?: {
+      [K in ProductMedium]?: PartnershipForLabelFragment | null;
+    };
   }
 }
 

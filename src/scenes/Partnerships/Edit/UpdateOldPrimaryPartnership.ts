@@ -1,4 +1,4 @@
-import { ApolloCache, MutationUpdaterFn } from '@apollo/client';
+import { ApolloCache, MutationUpdaterFunction } from '@apollo/client';
 import { Partnership } from '../../../api';
 import { ProjectPartnershipsQuery } from '../List/PartnershipList.generated';
 
@@ -6,7 +6,7 @@ export const updateOldPrimaryPartnership =
   <R>(
     project: ProjectPartnershipsQuery['project'],
     getUpdated: (res: R) => Pick<Partnership, 'id' | 'primary'>
-  ): MutationUpdaterFn<R> =>
+  ): MutationUpdaterFunction<R, unknown, unknown, ApolloCache<unknown>> =>
   (cache: ApolloCache<unknown>, res) => {
     if (!res.data) {
       return;

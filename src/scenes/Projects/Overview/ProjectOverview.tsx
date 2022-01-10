@@ -242,7 +242,7 @@ export const ProjectOverview: FC = () => {
                 <Skeleton width="100%" />
               ) : projectName.canRead ? (
                 <ChangesetPropertyBadge
-                  current={projectOverviewData?.project}
+                  current={projectOverviewData.project}
                   prop="name"
                 >
                   {projectName.value}

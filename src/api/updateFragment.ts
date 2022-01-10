@@ -1,6 +1,8 @@
-import { ApolloCache } from '@apollo/client';
-import { MutationUpdaterFn } from '@apollo/client/core';
-import { StoreObject } from '@apollo/client/utilities';
+import {
+  ApolloCache,
+  MutationUpdaterFunction,
+  StoreObject,
+} from '@apollo/client';
 import {
   getFragmentName,
   MaybePartial,
@@ -30,6 +32,11 @@ export interface UpdateFragmentOptions<
  *
  * This is similar to cache.modify but since a fragment is specified cache data
  * is given back exactly like it is asked for, instead of raw normalized references.
+ *
+ * FYI Apollo Client v3.5 has its own updateFragment function, but it is not
+ * as robust as this implementation.
+ * This handles id & fragmentName options automatically, adjust data type to be
+ * recursively partial when using returnPartialData option.
  */
 export const updateFragment = <
   FragmentType,
@@ -65,7 +72,7 @@ export const updateFragment = <
     return;
   }
 
-  cache.writeFragment({
+  cache.writeFragment<MaybePartial<FragmentType, Partial>, TVariables>({
     ...options,
     id,
     fragmentName: getFragmentName(options),
@@ -86,7 +93,12 @@ export const onUpdateChangeFragment =
     Partial extends boolean | undefined = false
   >(
     options: UpdateFragmentOptions<FragmentType, TVariables, Partial>
-  ): MutationUpdaterFn<MutationOutput> =>
+  ): MutationUpdaterFunction<
+    MutationOutput,
+    TVariables,
+    unknown,
+    ApolloCache<unknown>
+  > =>
   (cache) => {
     updateFragment(cache, options);
   };

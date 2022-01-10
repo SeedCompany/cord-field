@@ -1,4 +1,4 @@
-import type { MutationUpdaterFn } from '@apollo/client/core';
+import { ApolloCache, MutationUpdaterFunction } from '@apollo/client';
 import { orderBy } from 'lodash';
 import { Except } from 'type-fest';
 import { modifyChangesetDiff } from '../changesets';
@@ -50,7 +50,12 @@ export const addItemToList =
   }: Except<ModifyListOptions<OwningObj, Args>, 'cache' | 'modifier'> & {
     // A function describing how to get to the item from the mutation's result
     outputToItem: (out: MutationOutput) => Item;
-  }): MutationUpdaterFn<MutationOutput> =>
+  }): MutationUpdaterFunction<
+    MutationOutput,
+    unknown,
+    unknown,
+    ApolloCache<unknown>
+  > =>
   (cache, { data }) => {
     if (!data) {
       return;
