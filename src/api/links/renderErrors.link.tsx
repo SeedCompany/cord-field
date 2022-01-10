@@ -34,7 +34,7 @@ const errorRenderer =
     }
 
     for (const gqlError of graphQLErrors || []) {
-      const ext = gqlError.extensions ?? {};
+      const ext = gqlError.extensions;
       const schemaError = ext.code === 'INTERNAL_SERVER_ERROR';
 
       if (!schemaError && ext.status < 500) {
