@@ -7,7 +7,7 @@ import {
 } from '@material-ui/core';
 import { ExpandMore } from '@material-ui/icons';
 import { startCase } from 'lodash';
-import React, { ReactNode } from 'react';
+import React, { ReactNode, useEffect } from 'react';
 import {
   SecuredField,
   SecuredFieldRenderProps,
@@ -38,6 +38,7 @@ export const useStyles = makeStyles(({ spacing, typography }) => ({
 export const SecuredAccordion = <K extends ProductKey>({
   name,
   product,
+  errors,
   openedSection,
   onOpen,
   title,
@@ -45,6 +46,7 @@ export const SecuredAccordion = <K extends ProductKey>({
   children,
 }: {
   name: K;
+  errors?: any;
   product?: Product;
   openedSection: ProductKey | undefined;
   onOpen: (name: K | undefined) => void;
@@ -54,6 +56,13 @@ export const SecuredAccordion = <K extends ProductKey>({
 }) => {
   const classes = useStyles();
   const isOpen = openedSection === name;
+
+  useEffect(() => {
+    if (errors?.[name]) {
+      onOpen(name);
+    }
+  }, [errors, name, onOpen]);
+
   return (
     <SecuredField
       obj={product}

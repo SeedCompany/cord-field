@@ -7,7 +7,7 @@ import {
 } from '@material-ui/core';
 import { ExpandMore } from '@material-ui/icons';
 import { startCase } from 'lodash';
-import React, { ReactNode } from 'react';
+import React, { ReactNode, useEffect } from 'react';
 import { ProductKey } from './ProductFormFields';
 
 export const useStyles = makeStyles(({ spacing, typography }) => ({
@@ -33,6 +33,7 @@ export const useStyles = makeStyles(({ spacing, typography }) => ({
 
 export const DefaultAccordion = <K extends ProductKey>({
   name,
+  errors,
   openedSection,
   onOpen,
   title,
@@ -40,6 +41,7 @@ export const DefaultAccordion = <K extends ProductKey>({
   children,
 }: {
   name: K;
+  errors?: any;
   openedSection: ProductKey | undefined;
   onOpen: (name: K | undefined) => void;
   title?: ReactNode | ((isOpen: boolean) => ReactNode);
@@ -48,6 +50,12 @@ export const DefaultAccordion = <K extends ProductKey>({
 }) => {
   const isOpen = openedSection === name;
   const classes = useStyles();
+
+  useEffect(() => {
+    if (errors?.[name]) {
+      onOpen(name);
+    }
+  }, [errors, name, onOpen]);
 
   return (
     <Accordion

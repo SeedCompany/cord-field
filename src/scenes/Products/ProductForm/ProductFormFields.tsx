@@ -40,6 +40,7 @@ export type SectionProps = Except<
   accordionState: {
     product?: Product;
     openedSection: ProductKey | undefined;
+    errors?: any;
     onOpen: (name: ProductKey | undefined) => void;
   };
 };
@@ -78,7 +79,12 @@ export const ProductFormFields = ({
           key={Section.name}
           {...props}
           product={product}
-          accordionState={{ product, openedSection, onOpen }}
+          accordionState={{
+            product,
+            openedSection,
+            onOpen,
+            errors: props.submitFailed ? props.errors?.product : undefined,
+          }}
         />
       ))}
     </FieldGroup>
