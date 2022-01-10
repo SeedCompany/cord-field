@@ -1,5 +1,5 @@
 import { useMutation } from '@apollo/client';
-import { Tooltip, TooltipProps } from '@material-ui/core';
+import { makeStyles, Theme, Tooltip, TooltipProps } from '@material-ui/core';
 import * as React from 'react';
 import { Except } from 'type-fest';
 import { addItemToList, removeItemFromList } from '../../api';
@@ -10,6 +10,19 @@ import {
   TogglePinFragment,
   TogglePinnedDocument,
 } from './TogglePinButton.generated';
+
+const useStyles = makeStyles<Theme, { pinned?: boolean }>(
+  ({ transitions }) => ({
+    button: {
+      '& > span': ({ pinned }) => ({
+        transition: transitions.create('transform', {
+          duration: transitions.duration.short,
+        }),
+        transform: pinned ? 'none' : 'rotate(45deg)',
+      }),
+    },
+  })
+);
 
 export type TogglePinButtonProps = Except<IconButtonProps, 'children'> & {
   object?: TogglePinFragment;
@@ -30,6 +43,8 @@ export const TogglePinButton = ({
   TooltipProps,
   ...rest
 }: TogglePinButtonProps) => {
+  const classes = useStyles({ pinned: object?.pinned });
+
   const [togglePinned] = useMutation(TogglePinnedDocument, {
     update: (cache, result, options) => {
       if (!result.data || !object) {
@@ -84,6 +99,7 @@ export const TogglePinButton = ({
       }}
       disabled={rest.disabled || !object}
       loading={rest.loading || !object}
+      className={classes.button}
     >
       <Icon fontSize="inherit" />
     </IconButton>
