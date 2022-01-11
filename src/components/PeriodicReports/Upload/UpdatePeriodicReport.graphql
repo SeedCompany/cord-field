@@ -1,6 +1,7 @@
 mutation UpdatePeriodicReport(
   $input: UpdatePeriodicReportInput!
   $refreshFromPnp: Boolean!
+  $progressFormat: ProgressFormat
 ) {
   updatePeriodicReport(input: $input) {
     ...PeriodicReport

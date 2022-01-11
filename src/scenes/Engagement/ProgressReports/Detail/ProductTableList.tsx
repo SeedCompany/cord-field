@@ -2,16 +2,19 @@ import { Grid, GridProps, Typography } from '@material-ui/core';
 import { Skeleton } from '@material-ui/lab';
 import { groupBy } from 'lodash';
 import React from 'react';
+import { ProgressFormat } from '../../../../api';
 import Table from '../../../../components/Table/Table';
 import { ProductTable } from './ProductTable';
 import { ProgressOfProductForReportFragment } from './ProgressReportDetail.generated';
 
 interface ProductTableListProps extends GridProps {
   products?: readonly ProgressOfProductForReportFragment[];
+  progressFormat: ProgressFormat;
 }
 
 export const ProductTableList = ({
   products,
+  progressFormat,
   ...rest
 }: ProductTableListProps) => {
   const grouped = groupBy(products, (product) => product.product.category);
@@ -23,7 +26,11 @@ export const ProductTableList = ({
       </Grid>
       {Object.entries(grouped).map(([category, products]) => (
         <Grid item key={category} xs>
-          <ProductTable category={category} products={products} />
+          <ProductTable
+            category={category}
+            products={products}
+            progressFormat={progressFormat}
+          />
         </Grid>
       ))}
       {!products && (

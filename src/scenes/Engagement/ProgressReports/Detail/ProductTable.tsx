@@ -1,7 +1,11 @@
 import { sortBy, uniq } from 'lodash';
 import { Column } from 'material-table';
 import React, { useMemo } from 'react';
-import { displayProductStep, ProductStep } from '../../../../api';
+import {
+  displayProductStep,
+  ProductStep,
+  ProgressFormat,
+} from '../../../../api';
 import { Link } from '../../../../components/Routing';
 import { Table } from '../../../../components/Table';
 import { bookIndexFromName } from '../../../../util/biblejs';
@@ -10,13 +14,18 @@ import { ProgressOfProductForReportFragment } from './ProgressReportDetail.gener
 interface ProductTableProps {
   category: string;
   products: readonly ProgressOfProductForReportFragment[];
+  progressFormat: ProgressFormat;
 }
 
 type RowData = { label: string; data: ProgressOfProductForReportFragment } & {
   [K in ProductStep]?: string;
 };
 
-export const ProductTable = ({ products, category }: ProductTableProps) => {
+export const ProductTable = ({
+  products,
+  category,
+  progressFormat,
+}: ProductTableProps) => {
   const steps = useMemo(() => {
     return uniq(
       sortBy(
@@ -81,12 +90,23 @@ export const ProductTable = ({ products, category }: ProductTableProps) => {
       label: product.label ?? '',
     };
     const measurement = product.progressStepMeasurement.value;
-    for (const { step, completed } of progress.steps) {
+    for (const {
+      step,
+      completed,
+      verses,
+      verseEquivalents,
+    } of progress.steps) {
       if (completed.value == null) {
         continue;
       }
       row[step] =
-        measurement === 'Percent'
+        progressFormat === 'Verses' &&
+        progress.product.__typename !== 'OtherProduct'
+          ? `${verses.value}`
+          : progressFormat === 'VerseEquivalents' &&
+            progress.product.__typename !== 'OtherProduct'
+          ? `${verseEquivalents.value}`
+          : measurement === 'Percent'
           ? `${completed.value}%`
           : measurement === 'Boolean'
           ? 'Completed'
