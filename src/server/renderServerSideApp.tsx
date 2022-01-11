@@ -34,7 +34,7 @@ export const createServerApolloClient = (
   errorCache: ErrorCache
 ) => {
   const httpLink = new HttpLink({
-    uri: `${serverHost}/graphql`,
+    uri: (op) => `${serverHost}/graphql/${op.operationName}`,
     credentials: 'include',
     fetch,
     headers: {
