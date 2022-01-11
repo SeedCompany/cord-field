@@ -2,6 +2,7 @@ query ProgressReportDetail(
   $changeset: ID
   $engagementId: ID!
   $progressReportId: ID!
+  $progressFormat: ProgressFormat!
 ) {
   engagement(id: $engagementId, changeset: $changeset) {
     ...EngagementBreadcrumb
@@ -25,9 +26,9 @@ fragment ProgressReport on ProgressReport {
 }
 
 fragment ProgressSummary on ProgressSummary {
-  actual
-  planned
-  variance
+  actual(format: $progressFormat)
+  planned(format: $progressFormat)
+  variance(format: $progressFormat)
 }
 
 fragment ProgressOfProductForReport on ProductProgress {
@@ -63,7 +64,17 @@ fragment ProgressOfProductForReport on ProductProgress {
   }
   steps {
     step
-    completed {
+    completed(format: Percent) {
+      canRead
+      value
+      canEdit
+    }
+    verses: completed(format: Verses) {
+      canRead
+      value
+      canEdit
+    }
+    verseEquivalents: completed(format: VerseEquivalents) {
       canRead
       value
       canEdit

@@ -3,17 +3,22 @@ import {
   Breadcrumbs,
   Card,
   CardContent,
+  FormControl,
   Grid,
+  InputLabel,
   makeStyles,
+  MenuItem,
+  Select,
   Tooltip,
   Typography,
 } from '@material-ui/core';
 import { Edit, SkipNextRounded as SkipIcon } from '@material-ui/icons';
 import { Skeleton } from '@material-ui/lab';
-import React, { FC } from 'react';
+import React, { FC, useEffect, useState } from 'react';
 import { Helmet } from 'react-helmet-async';
 import { useParams } from 'react-router-dom';
 import { useWindowSize } from 'react-use';
+import { ProgressFormat } from '../../../../api';
 import { Breadcrumb } from '../../../../components/Breadcrumb';
 import { useDialog } from '../../../../components/Dialog';
 import { EngagementBreadcrumb } from '../../../../components/EngagementBreadcrumb';
@@ -56,17 +61,27 @@ export const ProgressReportDetail: FC = () => {
   const classes = useStyles();
   const { changesetId } = useProjectId();
   const { engagementId = '', progressReportId = '' } = useParams();
+  const [progressFormat, setProgressFormat] =
+    useState<ProgressFormat>('Percent');
   const windowSize = useWindowSize();
 
   // Single file for new version, empty array for received date update.
   const [dialogState, setUploading, upload] = useDialog<File[]>();
   const [skipState, openSkip] = useDialog();
 
+  const updateProgressFormat = (event: any) =>
+    setProgressFormat(event.target.value);
+
+  useEffect(() => {
+    // eslint no-empty-function: "error"
+  }, [progressFormat]);
+
   const { data, error } = useQuery(ProgressReportDetailDocument, {
     variables: {
       changeset: changesetId,
       engagementId,
       progressReportId,
+      progressFormat,
     },
   });
   if (error) {
@@ -204,6 +219,28 @@ export const ProgressReportDetail: FC = () => {
               )}
             </Typography>
 
+            {report && (
+              <Grid container xs={3} spacing={4}>
+                <Grid item xs>
+                  <FormControl>
+                    <InputLabel id="progressFormat">Progress Format</InputLabel>
+                    <Select
+                      labelId="progressFormat"
+                      id="progressFormat"
+                      value={progressFormat}
+                      onChange={updateProgressFormat}
+                    >
+                      <MenuItem value={'Percent'}>Percent</MenuItem>
+                      <MenuItem value={'Verses'}>Verses</MenuItem>
+                      <MenuItem value={'VerseEquivalents'}>
+                        Verse Equivalents
+                      </MenuItem>
+                    </Select>
+                  </FormControl>
+                </Grid>
+              </Grid>
+            )}
+
             <Grid container direction="column" spacing={3}>
               <Grid item container spacing={3}>
                 <Grid item xs={12} md={7} container>
@@ -225,6 +262,7 @@ export const ProgressReportDetail: FC = () => {
                 </Grid>
               </Grid>
               <ProductTableList
+                progressFormat={progressFormat}
                 products={report?.progress}
                 style={{
                   maxWidth:

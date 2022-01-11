@@ -16,6 +16,7 @@ import {
   ProductMedium,
   ProductMethodology,
   ProductStep,
+  ProgressFormat,
   ProgressMeasurement,
   ProjectChangeRequestStatus,
   ProjectChangeRequestType,
@@ -98,3 +99,6 @@ export const displayProductStep = (step: Nullable<ProductStep>) =>
 
 export const displayProgressMeasurement = (value: ProgressMeasurement) =>
   value === 'Boolean' ? 'Done / Not Done' : value;
+
+export const displayProgressFormat = (value: ProgressFormat) =>
+  value === 'VerseEquivalents' ? 'Verse Equivalents' : value;
