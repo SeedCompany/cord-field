@@ -1,7 +1,7 @@
 mutation CreateDirectScriptureProduct($input: CreateDirectScriptureProduct!) {
   createDirectScriptureProduct(input: $input) {
     product {
-      id
+      ...ProductCard
     }
   }
 }
@@ -9,7 +9,7 @@ mutation CreateDirectScriptureProduct($input: CreateDirectScriptureProduct!) {
 mutation CreateDerivativeScripture($input: CreateDerivativeScriptureProduct!) {
   createDerivativeScriptureProduct(input: $input) {
     product {
-      id
+      ...ProductCard
     }
   }
 }
@@ -17,7 +17,7 @@ mutation CreateDerivativeScripture($input: CreateDerivativeScriptureProduct!) {
 mutation CreateOtherProduct($input: CreateOtherProduct!) {
   createOtherProduct(input: $input) {
     product {
-      id
+      ...ProductCard
     }
   }
 }
