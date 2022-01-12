@@ -131,7 +131,7 @@ export const PartnerDetail = () => {
                 <Skeleton width="25ch" />
               )}
             </Typography>
-            {partner && (
+            {partner?.organization.canEdit && (
               <Tooltip title="Edit Partner">
                 <IconButton
                   aria-label="Edit Partner"
@@ -163,6 +163,7 @@ export const PartnerDetail = () => {
           <Grid container spacing={1} alignItems="center">
             <Grid item>
               <DataButton
+                disabled={!partner?.active.canEdit}
                 onClick={() => editPartner('active')}
                 secured={partner?.active}
                 redacted="You do not have permission to view Status"
@@ -223,6 +224,7 @@ export const PartnerDetail = () => {
             content={
               !partner?.pointOfContact.value ? (
                 <CardActionArea
+                  disabled={!partner?.pointOfContact.canEdit}
                   onClick={() => editPartner('pointOfContactId')}
                   className={classes.pocCardActionArea}
                   aria-label="add mentor"
