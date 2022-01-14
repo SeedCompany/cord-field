@@ -1,5 +1,6 @@
 import { useMutation } from '@apollo/client';
 import { makeStyles, Theme, Tooltip, TooltipProps } from '@material-ui/core';
+import clsx from 'clsx';
 import * as React from 'react';
 import { Except } from 'type-fest';
 import { addItemToList, removeItemFromList } from '../../api';
@@ -13,14 +14,12 @@ import {
 
 const useStyles = makeStyles<Theme, { pinned?: boolean }>(
   ({ transitions }) => ({
-    button: {
-      '& > span': ({ pinned }) => ({
-        transition: transitions.create('transform', {
-          duration: transitions.duration.short,
-        }),
-        transform: pinned ? 'none' : 'rotate(45deg)',
+    label: ({ pinned }) => ({
+      transition: transitions.create('transform', {
+        duration: transitions.duration.short,
       }),
-    },
+      transform: pinned ? 'none' : 'rotate(45deg)',
+    }),
   })
 );
 
@@ -99,7 +98,10 @@ export const TogglePinButton = ({
       }}
       disabled={rest.disabled || !object}
       loading={rest.loading || !object}
-      className={classes.button}
+      classes={{
+        ...rest.classes,
+        label: clsx(classes.label, rest.classes?.label),
+      }}
     >
       <Icon fontSize="inherit" />
     </IconButton>
