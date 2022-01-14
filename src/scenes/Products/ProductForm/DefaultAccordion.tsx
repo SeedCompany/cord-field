@@ -1,6 +1,7 @@
 import {
   Accordion,
   AccordionDetails,
+  AccordionProps,
   AccordionSummary,
   makeStyles,
   Typography,
@@ -8,6 +9,7 @@ import {
 import { ExpandMore } from '@material-ui/icons';
 import { startCase } from 'lodash';
 import React, { ReactNode, useEffect } from 'react';
+import { Except } from 'type-fest';
 import { ProductKey } from './ProductFormFields';
 
 export const useStyles = makeStyles(({ spacing, typography }) => ({
@@ -31,6 +33,17 @@ export const useStyles = makeStyles(({ spacing, typography }) => ({
   },
 }));
 
+export interface DefaultAccordionProps<K extends ProductKey> {
+  name: K;
+  errors?: any;
+  openedSection: ProductKey | undefined;
+  onOpen: (name: K | undefined) => void;
+  title?: ReactNode | ((isOpen: boolean) => ReactNode);
+  renderCollapsed: () => ReactNode;
+  children: ReactNode;
+  AccordionProps?: Except<AccordionProps, 'expanded' | 'onChange' | 'children'>;
+}
+
 export const DefaultAccordion = <K extends ProductKey>({
   name,
   errors,
@@ -39,15 +52,8 @@ export const DefaultAccordion = <K extends ProductKey>({
   title,
   renderCollapsed,
   children,
-}: {
-  name: K;
-  errors?: any;
-  openedSection: ProductKey | undefined;
-  onOpen: (name: K | undefined) => void;
-  title?: ReactNode | ((isOpen: boolean) => ReactNode);
-  renderCollapsed: () => ReactNode;
-  children: ReactNode;
-}) => {
+  AccordionProps,
+}: DefaultAccordionProps<K>) => {
   const isOpen = openedSection === name;
   const classes = useStyles();
 
@@ -59,6 +65,7 @@ export const DefaultAccordion = <K extends ProductKey>({
 
   return (
     <Accordion
+      {...AccordionProps}
       expanded={isOpen}
       onChange={(event, isExpanded) => {
         onOpen(isExpanded ? name : undefined);
