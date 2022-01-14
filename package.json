@@ -69,6 +69,7 @@
     "react-dom": "^17.0.2",
     "react-draggable": "^4.4.3",
     "react-dropzone": "^11.3.2",
+    "react-error-boundary": "^3.1.4",
     "react-final-form": "patch:react-final-form@6.5.3#./patches/react-final-form.patch",
     "react-helmet-async": "^1.0.9",
     "react-intersection-observer": "^8.32.0",

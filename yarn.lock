@@ -6428,6 +6428,7 @@ __metadata:
     react-dom: ^17.0.2
     react-draggable: ^4.4.3
     react-dropzone: ^11.3.2
+    react-error-boundary: ^3.1.4
     react-final-form: "patch:react-final-form@6.5.3#./patches/react-final-form.patch"
     react-helmet-async: ^1.0.9
     react-intersection-observer: ^8.32.0
@@ -15407,6 +15408,17 @@ fsevents@^1.2.7:
   peerDependencies:
     react: ">= 16.8"
   checksum: 0e566d68f6e2aba064cb082d6c37c55d82823ad5b300880d541a538ff2f8905aa4a4a8e697f5ca0f2b819c1ee98e673cb46261735d9bea1eab16cee07d5e71c8
+  languageName: node
+  linkType: hard
+
+"react-error-boundary@npm:^3.1.4":
+  version: 3.1.4
+  resolution: "react-error-boundary@npm:3.1.4"
+  dependencies:
+    "@babel/runtime": ^7.12.5
+  peerDependencies:
+    react: ">=16.13.1"
+  checksum: f36270a5d775a25c8920f854c0d91649ceea417b15b5bc51e270a959b0476647bb79abb4da3be7dd9a4597b029214e8fe43ea914a7f16fa7543c91f784977f1b
   languageName: node
   linkType: hard
 
