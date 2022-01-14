@@ -8,14 +8,10 @@ import {
   DialogTitle,
   Grid,
   makeStyles,
-  Typography,
 } from '@material-ui/core';
 import React, { FC, Suspense, useCallback, useEffect, useState } from 'react';
-import {
-  FileAction,
-  FileActionsPopup,
-  NonDirectoryActionItem,
-} from '../FileActions';
+import { saveAs } from '../../../util/FileSaver';
+import { NonDirectoryActionItem } from '../FileActions';
 import {
   previewableAudioTypes,
   previewableImageTypes,
@@ -37,15 +33,9 @@ const RtfPreview = loadable(() => import('./RtfPreview'));
 const WordPreview = loadable(() => import('./WordPreview'));
 const EmailPreview = loadable(() => import('./EmailPreview'));
 
-const useStyles = makeStyles(({ spacing }) => ({
+const useStyles = makeStyles(() => ({
   dialogContent: {
     height: '100%',
-  },
-  title: {
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    gap: spacing(2),
   },
 }));
 
@@ -183,6 +173,9 @@ export const FilePreview: FC<FilePreviewProps> = (props) => {
     name: '',
   };
 
+  const handleDownload = () =>
+    saveAs(previewFile!, file!.name, { skipCorsCheck: true });
+
   const handleError = useCallback(
     (error: string) => {
       setPreviewError(error);
@@ -268,14 +261,7 @@ export const FilePreview: FC<FilePreviewProps> = (props) => {
       maxWidth={false}
       aria-labelledby="dialog-file-preview"
     >
-      <DialogTitle
-        id="dialog-file-preview"
-        disableTypography
-        className={classes.title}
-      >
-        <Typography variant="h6">{name}</Typography>
-        <FileActionsPopup actions={[FileAction.Download]} item={file} />
-      </DialogTitle>
+      <DialogTitle id="dialog-file-preview">{name}</DialogTitle>
       <DialogContent className={classes.dialogContent}>
         <Grid container direction="column" spacing={2} alignItems="center">
           <Grid item>
@@ -299,6 +285,13 @@ export const FilePreview: FC<FilePreviewProps> = (props) => {
         </Grid>
       </DialogContent>
       <DialogActions>
+        <Button
+          color="secondary"
+          onClick={handleDownload}
+          disabled={!previewFile}
+        >
+          Download
+        </Button>
         <Button color="secondary" onClick={handleCloseButtonClick}>
           Close
         </Button>
