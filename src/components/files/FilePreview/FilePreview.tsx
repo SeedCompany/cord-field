@@ -10,6 +10,7 @@ import {
   makeStyles,
 } from '@material-ui/core';
 import React, { FC, Suspense, useCallback, useEffect, useState } from 'react';
+import { saveAs } from '../../../util/FileSaver';
 import { NonDirectoryActionItem } from '../FileActions';
 import {
   previewableAudioTypes,
@@ -172,6 +173,9 @@ export const FilePreview: FC<FilePreviewProps> = (props) => {
     name: '',
   };
 
+  const handleDownload = () =>
+    saveAs(previewFile!, file!.name, { skipCorsCheck: true });
+
   const handleError = useCallback(
     (error: string) => {
       setPreviewError(error);
@@ -281,6 +285,13 @@ export const FilePreview: FC<FilePreviewProps> = (props) => {
         </Grid>
       </DialogContent>
       <DialogActions>
+        <Button
+          color="secondary"
+          onClick={handleDownload}
+          disabled={!previewFile}
+        >
+          Download
+        </Button>
         <Button color="secondary" onClick={handleCloseButtonClick}>
           Close
         </Button>
