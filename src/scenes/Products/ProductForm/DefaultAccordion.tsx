@@ -10,7 +10,7 @@ import { ExpandMore } from '@material-ui/icons';
 import clsx from 'clsx';
 import { FormState } from 'final-form';
 import { get, startCase } from 'lodash';
-import React, { ReactNode, useEffect } from 'react';
+import React, { ReactNode } from 'react';
 import { Except } from 'type-fest';
 import { useFieldName } from '../../../components/form';
 import { ProductKey } from './ProductFormFields';
@@ -55,7 +55,6 @@ export const DefaultAccordion = <K extends ProductKey>({
   dirtyFieldsSinceLastSubmit,
   errors,
   touched,
-  submitFailed,
   openedSection,
   onOpen,
   title,
@@ -63,29 +62,31 @@ export const DefaultAccordion = <K extends ProductKey>({
   children,
   AccordionProps,
 }: DefaultAccordionProps<K>) => {
-  const isOpen = openedSection === name;
   const classes = useStyles();
   const fullName = useFieldName(name);
   const isError = !!get(errors, fullName);
   const isTouched = !!get(touched, fullName);
   const isSubmitError = !!get(submitErrors, fullName);
   const isDirtySinceLastSubmit = !!get(dirtyFieldsSinceLastSubmit, fullName);
-  const showError =
-    ((isSubmitError && !isDirtySinceLastSubmit) || isError) && isTouched;
-
-  useEffect(() => {
-    if (showError && submitFailed) {
-      onOpen(name);
-    }
-  }, [showError, submitFailed, name, onOpen]);
+  const hasAnyError = (isSubmitError && !isDirtySinceLastSubmit) || isError;
+  const showError = hasAnyError && isTouched;
+  const isOpen = openedSection === name || hasAnyError;
 
   return (
     <Accordion
       {...AccordionProps}
       expanded={isOpen}
       onChange={(event, isExpanded) => {
-        onOpen(isExpanded ? name : undefined);
+        if (isExpanded) {
+          onOpen(name);
+        } else if (!hasAnyError) {
+          // Only allow closing if there is no error
+          onOpen(undefined);
+        }
       }}
+      // If there is an error and this section is clicked, mark it is the open
+      // one so that it doesn't close unexpectedly when the field becomes valid
+      onClick={() => hasAnyError && onOpen(name)}
     >
       <AccordionSummary
         expandIcon={<ExpandMore />}
