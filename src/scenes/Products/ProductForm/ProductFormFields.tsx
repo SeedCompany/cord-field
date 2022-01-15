@@ -1,5 +1,5 @@
+import { FormApi, FormState } from 'final-form';
 import React, { ComponentType, useState } from 'react';
-import { FormRenderProps, RenderableProps } from 'react-final-form';
 import { Except, Merge, UnionToIntersection } from 'type-fest';
 import { FieldGroup, SecuredEditableKeys } from '../../../components/form';
 import { CompletionSection } from './CompletionSection';
@@ -31,16 +31,14 @@ export type ProductKey = string &
     | 'otherProduct'
   );
 
-export type SectionProps = Except<
-  FormRenderProps<ProductFormValues>,
-  'handleSubmit' | keyof RenderableProps<any>
-> & {
+type FormProps<T> = FormState<T> & { form: FormApi<T> };
+
+export type SectionProps = FormProps<ProductFormValues> & {
   product?: Product;
   engagement: EditPartnershipsProducingMediumsInfoFragment;
-  accordionState: {
+  accordionState: FormProps<ProductFormValues> & {
     product?: Product;
     openedSection: ProductKey | undefined;
-    errors?: any;
     onOpen: (name: ProductKey | undefined) => void;
   };
 };
@@ -61,6 +59,7 @@ const sections: ReadonlyArray<ComponentType<SectionProps>> = [
 
 export const ProductFormFields = ({
   product: productProp,
+  engagement,
   ...props
 }: Merge<
   Except<SectionProps, 'accordionState'>,
@@ -79,11 +78,12 @@ export const ProductFormFields = ({
           key={Section.name}
           {...props}
           product={product}
+          engagement={engagement}
           accordionState={{
             product,
             openedSection,
             onOpen,
-            errors: props.submitFailed ? props.errors?.product : undefined,
+            ...props,
           }}
         />
       ))}

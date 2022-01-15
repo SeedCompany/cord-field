@@ -1,7 +1,5 @@
-import { Typography } from '@material-ui/core';
 import React from 'react';
 import { TextField } from '../../../components/form';
-import { required } from '../../../components/form/validators';
 import { DefaultAccordion } from './DefaultAccordion';
 import { SectionProps } from './ProductFormFields';
 
@@ -15,9 +13,9 @@ export const OtherProductSection = ({
 
   return (
     <DefaultAccordion
-      name="produces"
+      name="title"
       {...accordionState}
-      title={() => <Typography variant="h4">Title & Description</Typography>}
+      title="Title & Description"
       renderCollapsed={() => <></>}
     >
       <TextField
@@ -25,15 +23,15 @@ export const OtherProductSection = ({
         label="Title"
         placeholder="Enter product title"
         required
-        validate={[required]}
-        margin="none"
       />
 
       <TextField
         name="description"
         label="Description"
-        placeholder="(Optional) Enter product description"
+        placeholder="Optionally enter product description"
         margin="none"
+        multiline
+        inputProps={{ rowsMin: 2 }}
       />
     </DefaultAccordion>
   );

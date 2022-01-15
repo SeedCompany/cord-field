@@ -7,12 +7,15 @@ import {
   Typography,
 } from '@material-ui/core';
 import { ExpandMore } from '@material-ui/icons';
-import { startCase } from 'lodash';
+import clsx from 'clsx';
+import { FormState } from 'final-form';
+import { get, startCase } from 'lodash';
 import React, { ReactNode, useEffect } from 'react';
 import { Except } from 'type-fest';
+import { useFieldName } from '../../../components/form';
 import { ProductKey } from './ProductFormFields';
 
-export const useStyles = makeStyles(({ spacing, typography }) => ({
+export const useStyles = makeStyles(({ spacing, typography, palette }) => ({
   section: {
     '&:not(:last-child)': {
       marginBottom: spacing(2),
@@ -31,22 +34,28 @@ export const useStyles = makeStyles(({ spacing, typography }) => ({
     display: 'flex',
     flexDirection: 'column',
   },
+  error: {
+    color: palette.error.main,
+  },
 }));
 
-export interface DefaultAccordionProps<K extends ProductKey> {
+export type DefaultAccordionProps<K extends ProductKey> = {
   name: K;
-  errors?: any;
   openedSection: ProductKey | undefined;
   onOpen: (name: K | undefined) => void;
   title?: ReactNode | ((isOpen: boolean) => ReactNode);
   renderCollapsed: () => ReactNode;
   children: ReactNode;
   AccordionProps?: Except<AccordionProps, 'expanded' | 'onChange' | 'children'>;
-}
+} & FormState<any>;
 
 export const DefaultAccordion = <K extends ProductKey>({
   name,
+  submitErrors,
+  dirtyFieldsSinceLastSubmit,
   errors,
+  touched,
+  submitFailed,
   openedSection,
   onOpen,
   title,
@@ -56,12 +65,19 @@ export const DefaultAccordion = <K extends ProductKey>({
 }: DefaultAccordionProps<K>) => {
   const isOpen = openedSection === name;
   const classes = useStyles();
+  const fullName = useFieldName(name);
+  const isError = !!get(errors, fullName);
+  const isTouched = !!get(touched, fullName);
+  const isSubmitError = !!get(submitErrors, fullName);
+  const isDirtySinceLastSubmit = !!get(dirtyFieldsSinceLastSubmit, fullName);
+  const showError =
+    ((isSubmitError && !isDirtySinceLastSubmit) || isError) && isTouched;
 
   useEffect(() => {
-    if (errors?.[name]) {
+    if (showError && submitFailed) {
       onOpen(name);
     }
-  }, [errors, name, onOpen]);
+  }, [showError, submitFailed, name, onOpen]);
 
   return (
     <Accordion
@@ -73,12 +89,17 @@ export const DefaultAccordion = <K extends ProductKey>({
     >
       <AccordionSummary
         expandIcon={<ExpandMore />}
-        classes={{ content: classes.accordionSummary }}
+        classes={{
+          content: clsx(
+            classes.accordionSummary,
+            showError ? classes.error : undefined
+          ),
+        }}
       >
         {typeof title === 'function' ? (
           title(isOpen)
         ) : (
-          <Typography variant="h4">
+          <Typography variant="h4" color="inherit">
             {isOpen && 'Choose '}
             {title ?? startCase(name)}
           </Typography>

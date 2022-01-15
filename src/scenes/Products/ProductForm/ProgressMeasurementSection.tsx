@@ -1,4 +1,3 @@
-import { Typography } from '@material-ui/core';
 import { ToggleButton } from '@material-ui/lab';
 import React from 'react';
 import { displayProgressMeasurement } from '../../../api';
@@ -27,7 +26,7 @@ export const ProgressMeasurementSection = ({
     <SecuredAccordion
       {...accordionState}
       name="progressStepMeasurement"
-      title={() => <Typography variant="h4">Progress Measurement</Typography>}
+      title="Progress Measurement"
       renderCollapsed={() =>
         progressStepMeasurement && (
           <ToggleButton selected value={progressStepMeasurement}>

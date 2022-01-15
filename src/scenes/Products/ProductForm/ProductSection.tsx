@@ -67,7 +67,7 @@ export const ProductSection = ({
       {...accordionState}
       product={isProducesFieldMissing ? undefined : product}
       title={() => (
-        <Typography variant="h4">
+        <Typography variant="h4" color="inherit">
           {`${displayProductTypes(productType)} ${
             produces?.name.value ? `- ${produces.name.value}` : ''
           }`}
