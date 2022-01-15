@@ -31,7 +31,7 @@ export const CompletionSection = ({ values, accordionState }: SectionProps) => {
     <SecuredAccordion
       {...accordionState}
       name="describeCompletion"
-      title={() => <Typography variant="h4">Completion Description</Typography>}
+      title="Completion Description"
       renderCollapsed={() => (
         <Typography className={classes.collapsed}>
           {values.product?.describeCompletion}

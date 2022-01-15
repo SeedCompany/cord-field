@@ -9,8 +9,9 @@ import {
 } from '../../../api';
 import { EnumField, EnumOption } from '../../../components/form';
 import { entries } from '../../../util';
+import { useStyles } from './DefaultAccordion';
 import { SectionProps } from './ProductFormFields';
-import { SecuredAccordion, useStyles } from './SecuredAccordion';
+import { SecuredAccordion } from './SecuredAccordion';
 
 export const MethodologySection = ({
   values,
