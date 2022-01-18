@@ -43,6 +43,26 @@ app.use(
   (req, res) => res.sendStatus(404)
 );
 
+// Serve Open Search config
+if (process.env.RAZZLE_OPEN_SEARCH === 'true') {
+  app.get(`${BASE_PATH}/opensearch.xml`, (req, res) => {
+    // language=XML
+    const xml = `
+<OpenSearchDescription xmlns="http://a9.com/-/spec/opensearch/1.1/">
+  <ShortName>CORD Field</ShortName>
+  <Description>Search CORD Field</Description>
+  <Image width="512" height="512" type="image/png">${PUBLIC_URL}/images/android-chrome-512x512.png</Image>
+  <Image width="192" height="192" type="image/png">${PUBLIC_URL}/images/android-chrome-192x192.png</Image>
+  <Image width="32" height="32" type="image/png">${PUBLIC_URL}/images/favicon-32x32.png</Image>
+  <Image width="16" height="16" type="image/x-icon">${PUBLIC_URL}/images/favicon.ico</Image>
+  <Url type="text/html" method="get" template="${PUBLIC_URL}/search?q={searchTerms}"/>
+</OpenSearchDescription>
+`.trim();
+
+    res.type('application/xml').send(xml);
+  });
+}
+
 app.get('/logout', (req, res, next) => {
   createServerApolloClient(req, res, {})
     .mutate({
