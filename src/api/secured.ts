@@ -47,7 +47,7 @@ export const canReadAny = <T, K extends ConditionalKeys<T, Readable>>(
   if (keys.length === 0) {
     keys = (Object.keys(obj) as K[]).filter((key) => isSecured(obj[key]));
   }
-  return keys.some((key) => (obj[key] as Readable).canRead);
+  return keys.some((key) => (obj[key] as unknown as Readable).canRead);
 };
 
 /**
@@ -66,5 +66,5 @@ export const canEditAny = <T, K extends ConditionalKeys<T, Editable>>(
   if (keys.length === 0) {
     keys = (Object.keys(obj) as K[]).filter((key) => isSecured(obj[key]));
   }
-  return keys.some((key) => (obj[key] as Editable).canEdit);
+  return keys.some((key) => (obj[key] as unknown as Editable).canEdit);
 };

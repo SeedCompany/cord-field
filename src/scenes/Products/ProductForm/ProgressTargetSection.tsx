@@ -1,4 +1,3 @@
-import { Typography } from '@material-ui/core';
 import { ToggleButton } from '@material-ui/lab';
 import React from 'react';
 import { NumberField } from '../../../components/form';
@@ -19,7 +18,6 @@ export const ProgressTargetSection = ({
     <SecuredAccordion
       {...accordionState}
       name="progressTarget"
-      title={() => <Typography variant="h4">Progress Target</Typography>}
       renderCollapsed={() =>
         progressTarget && (
           <ToggleButton selected value={progressTarget}>

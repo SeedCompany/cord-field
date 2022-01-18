@@ -4,10 +4,10 @@ import { Skeleton } from '@material-ui/lab';
 import React, { useMemo } from 'react';
 import { Helmet } from 'react-helmet-async';
 import { useNavigate, useParams } from 'react-router';
-import { addItemToList, handleFormError, ProductMedium } from '../../../api';
+import { addItemToList, handleFormError } from '../../../api';
 import { EngagementBreadcrumb } from '../../../components/EngagementBreadcrumb';
 import { ProjectBreadcrumb } from '../../../components/ProjectBreadcrumb';
-import { mapFromList } from '../../../util';
+import { entries, mapFromList } from '../../../util';
 import { getFullBookRange } from '../../../util/biblejs';
 import { useProjectId } from '../../Projects/useProjectId';
 import {
@@ -179,12 +179,12 @@ export const CreateProduct = () => {
         return;
       }
 
-      const ppmInput = Object.entries(
-        submitted.product?.producingMediums ?? {}
-      ).map(([medium, partnership]) => ({
-        medium: medium as ProductMedium,
-        partnership: partnership?.id,
-      }));
+      const ppmInput = entries(submitted.product?.producingMediums ?? {}).map(
+        ([medium, partnership]) => ({
+          medium: medium,
+          partnership: partnership?.id,
+        })
+      );
       await updatePartnershipsProducingMediums({
         variables: {
           engagementId: engagement.id,

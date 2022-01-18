@@ -1,5 +1,4 @@
-import { ApolloCache } from '@apollo/client';
-import { MutationUpdaterFn } from '@apollo/client/core';
+import { ApolloCache, MutationUpdaterFunction } from '@apollo/client';
 import { compact, Many } from 'lodash';
 import { mapFromList, Nullable } from '../util';
 import { GqlObject, GqlTypeOf } from './list-caching';
@@ -44,7 +43,12 @@ export const onUpdateInvalidateProps =
   <MutationOutput, OwningObj extends GqlObject>(
     object: OwningObj,
     ...fields: PropKeys<OwningObj>
-  ): MutationUpdaterFn<MutationOutput> =>
+  ): MutationUpdaterFunction<
+    MutationOutput,
+    unknown,
+    unknown,
+    ApolloCache<unknown>
+  > =>
   (cache) => {
     invalidateProps(cache, object, ...fields);
   };

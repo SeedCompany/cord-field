@@ -57,10 +57,9 @@ export const PeriodicReportsTableInContext = ({
   const uploadFile = useUpdatePeriodicReport();
   const { openFilePreview } = useFileActions();
   const { enqueueSnackbar } = useSnackbar();
-  const [reportBeingEdited, editReport] =
-    useState<
-      Omit<PeriodicReportFragment, 'reportFile'> & { reportFile?: File[] }
-    >();
+  const [reportBeingEdited, editReport] = useState<
+    Omit<PeriodicReportFragment, 'reportFile'> & { reportFile?: File[] }
+  >();
 
   const [editState, editField, fieldsBeingEdited] =
     useDialog<Many<EditablePeriodicReportField>>();

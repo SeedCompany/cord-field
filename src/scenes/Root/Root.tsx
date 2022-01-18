@@ -78,6 +78,15 @@ export const Root = () => {
         {/* sofia-pro font */}
         <link href="https://use.typekit.net/qrd6jxb.css" rel="stylesheet" />
 
+        {/* Search in browser bar */}
+        {process.env.RAZZLE_OPEN_SEARCH === 'true' && (
+          <link
+            type="application/opensearchdescription+xml"
+            rel="search"
+            href={`${PUBLIC_URL}/opensearch.xml`}
+          />
+        )}
+
         {/* Polyfill for IntersectionObserver, ResizeObserver, AbortController */}
         <script
           crossOrigin="anonymous"

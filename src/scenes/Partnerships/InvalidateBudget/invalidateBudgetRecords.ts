@@ -1,5 +1,4 @@
-import { ApolloCache } from '@apollo/client';
-import type { MutationUpdaterFn } from '@apollo/client/core';
+import { ApolloCache, MutationUpdaterFunction } from '@apollo/client';
 import { isFunction } from 'lodash';
 import { DateTime, Interval } from 'luxon';
 import {
@@ -25,7 +24,7 @@ export const invalidateBudgetRecords =
     project: Project,
     previousOrFn: Partnership | ((res: R) => Partnership),
     updatedOrFn: Partnership | ((res: R) => Partnership)
-  ): MutationUpdaterFn<R> =>
+  ): MutationUpdaterFunction<R, unknown, unknown, ApolloCache<unknown>> =>
   (cache: ApolloCache<unknown>, res) => {
     const previous: Partnership = isFunction(previousOrFn)
       ? res.data

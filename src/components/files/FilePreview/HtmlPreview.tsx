@@ -16,7 +16,7 @@ export const HtmlPreview: FC<PreviewerProps> = (props) => {
 
   useEffect(() => {
     if (file) {
-      void createUrlForFile(file);
+      createUrlForFile(file);
     }
   }, [file, createUrlForFile]);
 

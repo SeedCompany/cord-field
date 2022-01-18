@@ -106,6 +106,15 @@ const modifyWebpackConfig = (opts) => {
     );
   }
 
+  if (!opts.env.dev) {
+    // https://github.com/apollographql/apollo-client/blob/main/CHANGELOG.md#apollo-client-340
+    // https://github.com/apollographql/apollo-client/pull/8347
+    define('__DEV__', 'false');
+  }
+
+  // Exclude .cjs files from FileLoader. They should be loaded like other js files.
+  config.module.rules[1].exclude.push(/\.cjs$/);
+
   return config;
 };
 

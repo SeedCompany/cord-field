@@ -48,7 +48,7 @@ export const ApolloProvider: FC = ({ children }) => {
     }
 
     const httpLink = new HttpLink({
-      uri: `${serverHost}/graphql`,
+      uri: (op) => `${serverHost}/graphql/${op.operationName}`,
       credentials: 'include',
       fetch,
     });

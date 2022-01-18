@@ -30,7 +30,7 @@ export const DraggablePaper: FC<PaperProps & { isCollapsed: boolean }> = ({
       marginLeft: '0px',
       marginRight: '0px',
     };
-    const property = `margin${side}` as keyof typeof style;
+    const property = `margin${side}` as const;
     return Number(style[property].split('px')[0]);
   };
 
