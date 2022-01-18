@@ -22,9 +22,16 @@ app.use(
 app.use(bodyParser.json());
 app.use(cookieParser());
 
+const withoutEndingSlash = (url: string) =>
+  url.endsWith('/') ? url.slice(0, -1) : url;
+const PUBLIC_URL = process.env.PUBLIC_URL || '';
+const BASE_PATH = withoutEndingSlash(
+  PUBLIC_URL.startsWith('http') ? new URL(PUBLIC_URL).pathname : PUBLIC_URL
+);
+
 // Serve static assets
 app.use(
-  process.env.PUBLIC_URL || '',
+  BASE_PATH,
   express.static(process.env.RAZZLE_PUBLIC_DIR!, {
     maxAge: '30 days',
   })
@@ -32,9 +39,7 @@ app.use(
 
 // Send 404 for not found static assets
 app.use(
-  ['/static/*', '/images/*'].map(
-    (path) => `${process.env.PUBLIC_URL || ''}${path}`
-  ),
+  ['/static/*', '/images/*'].map((path) => `${BASE_PATH}${path}`),
   (req, res) => res.sendStatus(404)
 );
 
