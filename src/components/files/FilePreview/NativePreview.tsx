@@ -1,5 +1,5 @@
 import { makeStyles } from '@material-ui/core';
-import React, { FC } from 'react';
+import React, { FC, useEffect, useState } from 'react';
 import type { PreviewerProps } from './FilePreview';
 import { PreviewLoading } from './PreviewLoading';
 
@@ -9,8 +9,7 @@ export enum NativePreviewType {
   Audio = 'audio',
 }
 
-export interface NativePreviewerProps extends Omit<PreviewerProps, 'file'> {
-  file?: string;
+export interface NativePreviewerProps extends PreviewerProps {
   type: NativePreviewType;
 }
 
@@ -22,16 +21,27 @@ const useStyles = makeStyles(() => ({
 
 export const NativePreview: FC<NativePreviewerProps> = (props) => {
   const classes = useStyles();
-  const { file, type, previewLoading } = props;
+  const { file, type, previewLoading, setPreviewLoading } = props;
+  const [url, setUrl] = useState<string | undefined>();
+  useEffect(() => {
+    if (!file) {
+      setUrl(undefined);
+      return;
+    }
+    const url = URL.createObjectURL(file.slice());
+    setUrl(url);
+    setPreviewLoading(false);
+    return () => URL.revokeObjectURL(url);
+  }, [file, setUrl, setPreviewLoading]);
 
   const unsupportedTypeMessage =
     'Your browser does not support this media type';
 
   const player = (type: NativePreviewType) => {
     return type === NativePreviewType.Image ? (
-      <img src={file} className={classes.media} alt="" />
+      <img src={url} className={classes.media} alt="" />
     ) : type === NativePreviewType.Audio ? (
-      <audio controls autoPlay src={file}>
+      <audio controls autoPlay src={url}>
         {unsupportedTypeMessage}
       </audio>
     ) : (
@@ -41,11 +51,11 @@ export const NativePreview: FC<NativePreviewerProps> = (props) => {
         autoPlay
         controlsList="nodownload"
       >
-        <source src={file} />
+        <source src={url} />
         {unsupportedTypeMessage}
       </video>
     );
   };
 
-  return previewLoading ? <PreviewLoading /> : file ? player(type) : null;
+  return previewLoading ? <PreviewLoading /> : url ? player(type) : null;
 };
