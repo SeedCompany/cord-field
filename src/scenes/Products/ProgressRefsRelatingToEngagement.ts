@@ -14,14 +14,20 @@ import {
 export const modifyProgressRelatingToEngagement =
   <Res>(
     engagement: IdFragment | undefined,
-    action: Modifier<readonly Reference[]>
+    action: (
+      report: DeepPartial<ProgressReport>,
+      result: Res
+    ) => Modifier<readonly Reference[]>
   ): MutationUpdaterFunction<Res, unknown, unknown, ApolloCache<unknown>> =>
-  (cache) => {
+  (cache, res) => {
+    if (!res.data) {
+      return;
+    }
     const reports = progressRelatingToEngagement(cache, engagement);
     for (const report of reports) {
       cache.modify({
         id: cache.identify(report),
-        fields: { progress: action },
+        fields: { progress: action(report, res.data) },
       });
     }
   };

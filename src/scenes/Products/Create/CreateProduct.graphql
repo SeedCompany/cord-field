@@ -1,7 +1,7 @@
 mutation CreateDirectScriptureProduct($input: CreateDirectScriptureProduct!) {
   createProduct: createDirectScriptureProduct(input: $input) {
     product {
-      ...ProductCard
+      ...CreateProductResult
     }
   }
 }
@@ -11,7 +11,7 @@ mutation CreateDerivativeScriptureProduct(
 ) {
   createProduct: createDerivativeScriptureProduct(input: $input) {
     product {
-      ...ProductCard
+      ...CreateProductResult
     }
   }
 }
@@ -19,8 +19,18 @@ mutation CreateDerivativeScriptureProduct(
 mutation CreateOtherProduct($input: CreateOtherProduct!) {
   createProduct: createOtherProduct(input: $input) {
     product {
-      ...ProductCard
+      ...CreateProductResult
     }
+  }
+}
+
+fragment CreateProductResult on Product {
+  ...ProductCard
+  # Include what's needed for progress report, so we don't have to refetch data
+  ...ProductInfoForProgressReport
+  # Needed to create ProductProgress
+  steps {
+    value
   }
 }
 

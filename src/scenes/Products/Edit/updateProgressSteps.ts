@@ -104,9 +104,12 @@ export const deleteProductProgress = (
   engagement: IdFragment,
   product: ProductFormFragment
 ) =>
-  modifyProgressRelatingToEngagement(engagement, (list, { readField }) =>
-    list.filter((progress) => {
-      const productRef = readField<{ id: string }>('product', progress);
-      return productRef?.id !== product.id;
-    })
+  modifyProgressRelatingToEngagement(
+    engagement,
+    (_report) =>
+      (list, { readField }) =>
+        list.filter((progress) => {
+          const productRef = readField<{ id: string }>('product', progress);
+          return productRef?.id !== product.id;
+        })
   );
