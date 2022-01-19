@@ -9,7 +9,7 @@ import {
   Grid,
   makeStyles,
 } from '@material-ui/core';
-import React, { FC, Suspense, useCallback, useEffect, useState } from 'react';
+import React, { Suspense, useCallback, useEffect, useState } from 'react';
 import { saveAs } from '../../../util/FileSaver';
 import { NonDirectoryActionItem } from '../FileActions';
 import {
@@ -160,7 +160,7 @@ const previewers: PreviewerProperties = {
   ...videoPreviewers,
 };
 
-export const FilePreview: FC<FilePreviewProps> = (props) => {
+export const FilePreview = (props: FilePreviewProps) => {
   const classes = useStyles();
   const [previewFile, setPreviewFile] = useState<File | null>(null);
   const [previewLoading, setPreviewLoading] = useState(false);
@@ -173,8 +173,12 @@ export const FilePreview: FC<FilePreviewProps> = (props) => {
     name: '',
   };
 
-  const handleDownload = () =>
+  const handleDownload = () => {
     saveAs(previewFile!, name, { skipCorsCheck: true });
+    // @ts-expect-error reason should be extendable by wrapping components.
+    // Used to tell actual function reason for closing and rarely used.
+    onClose?.({}, 'download');
+  };
 
   const handleError = useCallback(
     (error: string) => {
