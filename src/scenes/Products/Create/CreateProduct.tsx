@@ -7,7 +7,7 @@ import { useNavigate, useParams } from 'react-router';
 import { addItemToList, handleFormError } from '../../../api';
 import { EngagementBreadcrumb } from '../../../components/EngagementBreadcrumb';
 import { ProjectBreadcrumb } from '../../../components/ProjectBreadcrumb';
-import { entries, mapFromList } from '../../../util';
+import { callAll, entries, mapFromList } from '../../../util';
 import { getFullBookRange } from '../../../util/biblejs';
 import { useProjectId } from '../../Projects/useProjectId';
 import {
@@ -17,9 +17,10 @@ import {
 } from '../ProductForm';
 import { UpdatePartnershipsProducingMediumsDocument } from '../ProductForm/PartnershipsProducingMediums.generated';
 import {
-  CreateDerivativeScriptureDocument,
-  CreateDirectScriptureProductDocument,
-  CreateOtherProductDocument,
+  CreateDerivativeScriptureProductDocument as CreateDerivativeScriptureProduct,
+  CreateDirectScriptureProductDocument as CreateDirectScriptureProduct,
+  CreateOtherProductDocument as CreateOtherProduct,
+  CreateDirectScriptureProductMutation as CreateProductMutation,
   ProductInfoForCreateDocument,
 } from './CreateProduct.generated';
 
@@ -55,29 +56,26 @@ export const CreateProduct = () => {
       ? data.engagement
       : undefined;
 
+  const updateCacheForNewProduct = callAll(
+    addItemToList({
+      listId: [engagement, 'products'],
+      outputToItem: (res: CreateProductMutation) => res.createProduct.product,
+    })
+  );
   const [createDirectScriptureProduct] = useMutation(
-    CreateDirectScriptureProductDocument,
+    CreateDirectScriptureProduct,
     {
-      update: addItemToList({
-        listId: [engagement, 'products'],
-        outputToItem: (res) => res.createDirectScriptureProduct.product,
-      }),
+      update: updateCacheForNewProduct,
     }
   );
   const [createDerivativeScriptureProduct] = useMutation(
-    CreateDerivativeScriptureDocument,
+    CreateDerivativeScriptureProduct,
     {
-      update: addItemToList({
-        listId: [engagement, 'products'],
-        outputToItem: (res) => res.createDerivativeScriptureProduct.product,
-      }),
+      update: updateCacheForNewProduct,
     }
   );
-  const [createOtherProduct] = useMutation(CreateOtherProductDocument, {
-    update: addItemToList({
-      listId: [engagement, 'products'],
-      outputToItem: (res) => res.createOtherProduct.product,
-    }),
+  const [createOtherProduct] = useMutation(CreateOtherProduct, {
+    update: updateCacheForNewProduct,
   });
   const [updatePartnershipsProducingMediums] = useMutation(
     UpdatePartnershipsProducingMediumsDocument
@@ -133,7 +131,7 @@ export const CreateProduct = () => {
             },
           },
         });
-        return data!.createOtherProduct.product;
+        return data!.createProduct.product;
       } else if (productType === 'DirectScriptureProduct') {
         const { data } = await createDirectScriptureProduct({
           variables: {
@@ -153,7 +151,7 @@ export const CreateProduct = () => {
             },
           },
         });
-        return data!.createDirectScriptureProduct.product;
+        return data!.createProduct.product;
       } else {
         const { data } = await createDerivativeScriptureProduct({
           variables: {
@@ -165,7 +163,7 @@ export const CreateProduct = () => {
             },
           },
         });
-        return data!.createDerivativeScriptureProduct.product;
+        return data!.createProduct.product;
       }
     };
     const updatePpm = async () => {
