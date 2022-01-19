@@ -7,8 +7,3 @@ fragment CurrentProgressOfProduct on Product {
   }
   # TODO support progressReport(id)
 }
-
-fragment UpdateProductProgressSteps on Product {
-  # Needed to calculate new sort order of ProductProgress.steps
-  availableSteps
-}

@@ -27,7 +27,6 @@ mutation UpdateOtherProduct($input: UpdateOtherProduct!) {
 fragment UpdateProductResult on Product {
   ...ProductForm
   ...ProductCard
-  ...UpdateProductProgressSteps
 }
 
 query ProductInfoForEdit(

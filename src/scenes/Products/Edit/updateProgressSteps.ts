@@ -84,7 +84,7 @@ export const updateProgressSteps =
             const sorted = sortBy(
               newList.map((sp) => ({
                 sp,
-                position: updated.availableSteps.indexOf(sp.step),
+                position: updated.steps.value.indexOf(sp.step),
               })),
               (tuple) => tuple.position
             ).map((tuple) => tuple.sp);
