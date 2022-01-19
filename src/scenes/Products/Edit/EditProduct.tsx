@@ -7,7 +7,7 @@ import { useNavigate, useParams } from 'react-router';
 import { handleFormError, removeItemFromList } from '../../../api';
 import { EngagementBreadcrumb } from '../../../components/EngagementBreadcrumb';
 import { ProjectBreadcrumb } from '../../../components/ProjectBreadcrumb';
-import { entries, mapFromList } from '../../../util';
+import { callAll, entries, mapFromList } from '../../../util';
 import {
   getFullBookRange,
   isFullBookRange,
@@ -27,6 +27,10 @@ import {
   UpdateDirectScriptureProductDocument,
   UpdateOtherProductDocument,
 } from './EditProduct.generated';
+import {
+  deleteProductProgress,
+  updateProgressSteps,
+} from './updateProgressSteps';
 
 const useStyles = makeStyles(({ spacing }) => ({
   root: {
@@ -61,18 +65,27 @@ export const EditProduct = () => {
       : undefined;
   const product = data?.product;
 
+  const onUpdate = updateProgressSteps(engagement!, product!);
   const [updateDirectScriptureProduct] = useMutation(
-    UpdateDirectScriptureProductDocument
+    UpdateDirectScriptureProductDocument,
+    { update: onUpdate }
   );
   const [updateDerivativeScriptureProduct] = useMutation(
-    UpdateDerivativeScriptureProductDocument
+    UpdateDerivativeScriptureProductDocument,
+    { update: onUpdate }
   );
-  const [updateOtherProduct] = useMutation(UpdateOtherProductDocument);
+  const [updateOtherProduct] = useMutation(UpdateOtherProductDocument, {
+    update: onUpdate,
+  });
+
   const [deleteProduct] = useMutation(DeleteProductDocument, {
-    update: removeItemFromList({
-      listId: [engagement, 'products'],
-      item: product!,
-    }),
+    update: callAll(
+      removeItemFromList({
+        listId: [engagement, 'products'],
+        item: product!,
+      }),
+      deleteProductProgress(engagement!, product!)
+    ),
   });
   const [updatePartnershipsProducingMediums] = useMutation(
     UpdatePartnershipsProducingMediumsDocument

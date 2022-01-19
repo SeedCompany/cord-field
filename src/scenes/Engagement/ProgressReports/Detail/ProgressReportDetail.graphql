@@ -32,31 +32,7 @@ fragment ProgressSummary on ProgressSummary {
 
 fragment ProgressOfProductForReport on ProductProgress {
   product {
-    ...Id
-    label
-    category
-    steps {
-      value
-    }
-    availableSteps
-    progressStepMeasurement {
-      value
-    }
-    progressTarget {
-      value
-    }
-    ... on DirectScriptureProduct {
-      scriptureReferences {
-        value {
-          ...Scripture
-        }
-      }
-      unspecifiedScripture {
-        value {
-          book
-        }
-      }
-    }
+    ...ProductInfoForProgressReport
   }
   report {
     ...Id
@@ -67,6 +43,34 @@ fragment ProgressOfProductForReport on ProductProgress {
       canRead
       value
       canEdit
+    }
+  }
+}
+
+fragment ProductInfoForProgressReport on Product {
+  ...Id
+  label
+  category
+  steps {
+    value
+  }
+  availableSteps
+  progressStepMeasurement {
+    value
+  }
+  progressTarget {
+    value
+  }
+  ... on DirectScriptureProduct {
+    scriptureReferences {
+      value {
+        ...Scripture
+      }
+    }
+    unspecifiedScripture {
+      value {
+        book
+      }
     }
   }
 }

@@ -1,8 +1,7 @@
 mutation UpdateDirectScriptureProduct($input: UpdateDirectScriptureProduct!) {
-  updateDirectScriptureProduct(input: $input) {
+  updateProduct: updateDirectScriptureProduct(input: $input) {
     product {
-      ...ProductForm
-      ...ProductCard
+      ...UpdateProductResult
     }
   }
 }
@@ -10,21 +9,24 @@ mutation UpdateDirectScriptureProduct($input: UpdateDirectScriptureProduct!) {
 mutation UpdateDerivativeScriptureProduct(
   $input: UpdateDerivativeScriptureProduct!
 ) {
-  updateDerivativeScriptureProduct(input: $input) {
+  updateProduct: updateDerivativeScriptureProduct(input: $input) {
     product {
-      ...ProductForm
-      ...ProductCard
+      ...UpdateProductResult
     }
   }
 }
 
 mutation UpdateOtherProduct($input: UpdateOtherProduct!) {
-  updateOtherProduct(input: $input) {
+  updateProduct: updateOtherProduct(input: $input) {
     product {
-      ...ProductForm
-      ...ProductCard
+      ...UpdateProductResult
     }
   }
+}
+
+fragment UpdateProductResult on Product {
+  ...ProductForm
+  ...ProductCard
 }
 
 query ProductInfoForEdit(
