@@ -3,7 +3,10 @@ import { difference, sortBy } from 'lodash';
 import { IdFragment, readFragment, StepProgress } from '../../../api';
 import { notNullish } from '../../../util';
 import { ProductFormFragment } from '../ProductForm/ProductForm.generated';
-import { progressRelatingToEngagement } from '../ProgressRefsRelatingToEngagement';
+import {
+  modifyProgressRelatingToEngagement,
+  progressRelatingToEngagement,
+} from '../ProgressRefsRelatingToEngagement';
 import { CurrentProgressOfProductFragmentDoc as CurrentProgressOfProduct } from './CurrentProgessOfProduct.generated';
 import { UpdateDirectScriptureProductMutation as UpdateProductMutation } from './EditProduct.generated';
 
@@ -91,3 +94,19 @@ export const updateProgressSteps =
       });
     }
   };
+
+/**
+ * Remove progress from all related progress reports.
+ * Note eventually in future this could affect summary data as well,
+ * which is not currently accounted for here.
+ */
+export const deleteProductProgress = (
+  engagement: IdFragment,
+  product: ProductFormFragment
+) =>
+  modifyProgressRelatingToEngagement(engagement, (list, { readField }) =>
+    list.filter((progress) => {
+      const productRef = readField<{ id: string }>('product', progress);
+      return productRef?.id !== product.id;
+    })
+  );

@@ -20,7 +20,6 @@ import {
   ProductFormValues,
 } from '../ProductForm';
 import { UpdatePartnershipsProducingMediumsDocument } from '../ProductForm/PartnershipsProducingMediums.generated';
-import { modifyProgressRelatingToEngagement } from '../ProgressRefsRelatingToEngagement';
 import {
   DeleteProductDocument,
   ProductInfoForEditDocument,
@@ -28,7 +27,10 @@ import {
   UpdateDirectScriptureProductDocument,
   UpdateOtherProductDocument,
 } from './EditProduct.generated';
-import { updateProgressSteps } from './updateProgressSteps';
+import {
+  deleteProductProgress,
+  updateProgressSteps,
+} from './updateProgressSteps';
 
 const useStyles = makeStyles(({ spacing }) => ({
   root: {
@@ -82,15 +84,7 @@ export const EditProduct = () => {
         listId: [engagement, 'products'],
         item: product!,
       }),
-      // Remove progress from all related progress reports.
-      // Note eventually in future this could affect summary data as well,
-      // which is not currently accounted for here.
-      modifyProgressRelatingToEngagement(engagement, (list, { readField }) =>
-        list.filter((progress) => {
-          const productRef = readField<{ id: string }>('product', progress);
-          return productRef?.id !== product!.id;
-        })
-      )
+      deleteProductProgress(engagement!, product!)
     ),
   });
   const [updatePartnershipsProducingMediums] = useMutation(
