@@ -16,6 +16,7 @@ import {
   ProductFormValues,
 } from '../ProductForm';
 import { UpdatePartnershipsProducingMediumsDocument } from '../ProductForm/PartnershipsProducingMediums.generated';
+import { modifyProgressRelatingToEngagement } from '../ProgressRefsRelatingToEngagement';
 import {
   CreateDerivativeScriptureProductDocument as CreateDerivativeScriptureProduct,
   CreateDirectScriptureProductDocument as CreateDirectScriptureProduct,
@@ -57,6 +58,9 @@ export const CreateProduct = () => {
       : undefined;
 
   const updateCacheForNewProduct = callAll(
+    // Invalidate progress array field on all ProgressReports related to Engagement
+    // as there is a new ProductProgress object we need to fetch for each report.
+    modifyProgressRelatingToEngagement(engagement, (_, { DELETE }) => DELETE),
     addItemToList({
       listId: [engagement, 'products'],
       outputToItem: (res: CreateProductMutation) => res.createProduct.product,

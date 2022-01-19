@@ -1,0 +1,32 @@
+fragment ProgressRefsRelatingToEngagement on LanguageEngagement {
+  currentProgressReportDue {
+    value {
+      ...ProgressReportRef
+    }
+  }
+  nextProgressReportDue {
+    value {
+      ...ProgressReportRef
+    }
+  }
+  # This input has to match the input the list was fetched with otherwise it's no match
+  # Fine for now as it's hardcoded but if/when it becomes dynamic we'll need to account for
+  # the other list variations
+  progressReports(input: { order: DESC }) {
+    items {
+      ...ProgressReportRef
+    }
+  }
+}
+fragment ProgressReportRef on ProgressReport {
+  ...Id
+  progress {
+    __typename
+    product {
+      ...Id
+    }
+    report {
+      ...Id
+    }
+  }
+}
