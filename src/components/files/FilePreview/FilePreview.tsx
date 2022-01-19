@@ -9,7 +9,7 @@ import {
   Grid,
   makeStyles,
 } from '@material-ui/core';
-import React, { FC, Suspense, useCallback, useEffect, useState } from 'react';
+import React, { Suspense, useCallback, useEffect, useState } from 'react';
 import { saveAs } from '../../../util/FileSaver';
 import { NonDirectoryActionItem } from '../FileActions';
 import {
@@ -160,9 +160,9 @@ const previewers: PreviewerProperties = {
   ...videoPreviewers,
 };
 
-export const FilePreview: FC<FilePreviewProps> = (props) => {
+export const FilePreview = (props: FilePreviewProps) => {
   const classes = useStyles();
-  const [previewFile, setPreviewFile] = useState<File | string | null>(null);
+  const [previewFile, setPreviewFile] = useState<File | null>(null);
   const [previewLoading, setPreviewLoading] = useState(false);
   const [previewError, setPreviewError] = useState<string | null>(null);
   const getDownloadUrl = useGetFileDownloadUrl();
@@ -173,8 +173,12 @@ export const FilePreview: FC<FilePreviewProps> = (props) => {
     name: '',
   };
 
-  const handleDownload = () =>
-    saveAs(previewFile!, file!.name, { skipCorsCheck: true });
+  const handleDownload = () => {
+    saveAs(previewFile!, name, { skipCorsCheck: true });
+    // @ts-expect-error reason should be extendable by wrapping components.
+    // Used to tell actual function reason for closing and rarely used.
+    onClose?.({}, 'download');
+  };
 
   const handleError = useCallback(
     (error: string) => {
@@ -183,13 +187,6 @@ export const FilePreview: FC<FilePreviewProps> = (props) => {
     },
     [setPreviewError, setPreviewLoading]
   );
-
-  const nativeMimeTypes = [
-    ...previewableImageTypes,
-    ...previewableAudioTypes,
-    ...previewableVideoTypes,
-  ].map((type) => type.mimeType);
-  const usesNativePreviewer = nativeMimeTypes.includes(mimeType);
 
   const Previewer = previewers[mimeType]?.component;
   const previewerProps = previewers[mimeType]?.props;
@@ -201,19 +198,21 @@ export const FilePreview: FC<FilePreviewProps> = (props) => {
     ) => {
       try {
         const response = await fetch(url);
-        if (response.status === 200) {
-          const blob = await response.blob();
-          setPreviewFile(
-            new File([blob], 'Preview', {
-              type: mimeType,
-            })
-          );
+        if (response.status !== 200) {
+          onError('Could not retrieve file');
+          return;
         }
+        const blob = await response.blob();
+        setPreviewFile(
+          new File([blob], name, {
+            type: mimeType,
+          })
+        );
       } catch {
         onError('Could not retrieve file');
       }
     },
-    []
+    [name]
   );
 
   useEffect(() => {
@@ -222,11 +221,6 @@ export const FilePreview: FC<FilePreviewProps> = (props) => {
       void getDownloadUrl(id)
         .then((downloadUrl) => {
           if (downloadUrl) {
-            if (usesNativePreviewer) {
-              setPreviewFile(downloadUrl);
-              setPreviewLoading(false);
-              return;
-            }
             void retrieveFile(downloadUrl, mimeType, handleError);
           } else {
             handleError('Could not get file download URL');
@@ -242,7 +236,6 @@ export const FilePreview: FC<FilePreviewProps> = (props) => {
     id,
     Previewer,
     mimeType,
-    usesNativePreviewer,
     getDownloadUrl,
     handleError,
     retrieveFile,
