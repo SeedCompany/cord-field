@@ -7,7 +7,7 @@ import { useNavigate, useParams } from 'react-router';
 import { handleFormError, removeItemFromList } from '../../../api';
 import { EngagementBreadcrumb } from '../../../components/EngagementBreadcrumb';
 import { ProjectBreadcrumb } from '../../../components/ProjectBreadcrumb';
-import { entries, mapFromList } from '../../../util';
+import { callAll, entries, mapFromList } from '../../../util';
 import {
   getFullBookRange,
   isFullBookRange,
@@ -20,6 +20,7 @@ import {
   ProductFormValues,
 } from '../ProductForm';
 import { UpdatePartnershipsProducingMediumsDocument } from '../ProductForm/PartnershipsProducingMediums.generated';
+import { modifyProgressRelatingToEngagement } from '../ProgressRefsRelatingToEngagement';
 import {
   DeleteProductDocument,
   ProductInfoForEditDocument,
@@ -69,10 +70,21 @@ export const EditProduct = () => {
   );
   const [updateOtherProduct] = useMutation(UpdateOtherProductDocument);
   const [deleteProduct] = useMutation(DeleteProductDocument, {
-    update: removeItemFromList({
-      listId: [engagement, 'products'],
-      item: product!,
-    }),
+    update: callAll(
+      removeItemFromList({
+        listId: [engagement, 'products'],
+        item: product!,
+      }),
+      // Remove progress from all related progress reports.
+      // Note eventually in future this could affect summary data as well,
+      // which is not currently accounted for here.
+      modifyProgressRelatingToEngagement(engagement, (list, { readField }) =>
+        list.filter((progress) => {
+          const productRef = readField<{ id: string }>('product', progress);
+          return productRef?.id !== product!.id;
+        })
+      )
+    ),
   });
   const [updatePartnershipsProducingMediums] = useMutation(
     UpdatePartnershipsProducingMediumsDocument
