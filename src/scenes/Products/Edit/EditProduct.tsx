@@ -28,6 +28,7 @@ import {
   UpdateDirectScriptureProductDocument,
   UpdateOtherProductDocument,
 } from './EditProduct.generated';
+import { updateProgressSteps } from './updateProgressSteps';
 
 const useStyles = makeStyles(({ spacing }) => ({
   root: {
@@ -62,13 +63,19 @@ export const EditProduct = () => {
       : undefined;
   const product = data?.product;
 
+  const onUpdate = updateProgressSteps(engagement!, product!);
   const [updateDirectScriptureProduct] = useMutation(
-    UpdateDirectScriptureProductDocument
+    UpdateDirectScriptureProductDocument,
+    { update: onUpdate }
   );
   const [updateDerivativeScriptureProduct] = useMutation(
-    UpdateDerivativeScriptureProductDocument
+    UpdateDerivativeScriptureProductDocument,
+    { update: onUpdate }
   );
-  const [updateOtherProduct] = useMutation(UpdateOtherProductDocument);
+  const [updateOtherProduct] = useMutation(UpdateOtherProductDocument, {
+    update: onUpdate,
+  });
+
   const [deleteProduct] = useMutation(DeleteProductDocument, {
     update: callAll(
       removeItemFromList({

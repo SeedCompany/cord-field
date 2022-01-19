@@ -1,0 +1,14 @@
+fragment CurrentProgressOfProduct on Product {
+  progressOfCurrentReportDue {
+    ...ProductProgressRef
+  }
+  progressReports {
+    ...ProductProgressRef
+  }
+  # TODO support progressReport(id)
+}
+
+fragment UpdateProductProgressSteps on Product {
+  # Needed to calculate new sort order of ProductProgress.steps
+  availableSteps
+}

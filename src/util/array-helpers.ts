@@ -82,3 +82,11 @@ export const splice = <T>(
   newList.splice(...args);
   return newList;
 };
+
+/**
+ * Helper for array filter that correctly narrows type
+ * @example
+ * .filter(notNullish)
+ */
+export const notNullish = <T>(item: T | null | undefined): item is T =>
+  item != null;

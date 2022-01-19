@@ -21,12 +21,15 @@ fragment ProgressRefsRelatingToEngagement on LanguageEngagement {
 fragment ProgressReportRef on ProgressReport {
   ...Id
   progress {
-    __typename
-    product {
-      ...Id
-    }
-    report {
-      ...Id
-    }
+    ...ProductProgressRef
+  }
+}
+fragment ProductProgressRef on ProductProgress {
+  __typename
+  product {
+    ...Id
+  }
+  report {
+    ...Id
   }
 }
