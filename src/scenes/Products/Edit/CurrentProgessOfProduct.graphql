@@ -1,0 +1,9 @@
+fragment CurrentProgressOfProduct on Product {
+  progressOfCurrentReportDue {
+    ...ProductProgressRef
+  }
+  progressReports {
+    ...ProductProgressRef
+  }
+  # TODO support progressReport(id)
+}
