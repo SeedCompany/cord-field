@@ -1,5 +1,5 @@
 import { useQuery } from '@apollo/client';
-import { makeStyles, Tooltip, Typography } from '@material-ui/core';
+import { Grid, makeStyles, Tooltip, Typography } from '@material-ui/core';
 import { Edit } from '@material-ui/icons';
 import { Skeleton } from '@material-ui/lab';
 import { DateTime } from 'luxon';
@@ -15,8 +15,10 @@ import {
 } from '../../../components/DisplaySimpleProperty';
 import { IconButton } from '../../../components/IconButton';
 import { PartnerListItemCard } from '../../../components/PartnerListItemCard';
+import { ProjectListItemCard } from '../../../components/ProjectListItemCard';
 import { Redacted } from '../../../components/Redacted';
 import { TogglePinButton } from '../../../components/TogglePinButton';
+import { listOrPlaceholders } from '../../../util';
 import { EditUser } from '../Edit';
 import { UsersQueryVariables } from '../List/users.generated';
 import { UserDocument } from './UserDetail.generated';
@@ -43,6 +45,9 @@ const useStyles = makeStyles(({ spacing, breakpoints }) => ({
     marginTop: spacing(1),
   },
   partner: {
+    marginBottom: spacing(2),
+  },
+  project: {
     marginBottom: spacing(2),
   },
 }));
@@ -146,6 +151,31 @@ export const UserDetail = () => {
               </div>
             </>
           )}
+          <Grid item xs={12}>
+            <Typography variant="h3" paragraph>
+              Projects
+            </Typography>
+            {!user?.projects.canRead ? (
+              <Typography color="textSecondary">
+                You don't have permission to see the projects this person is
+                engaged in
+              </Typography>
+            ) : user.projects.items.length === 0 ? (
+              <Typography color="textSecondary">
+                This person is not engaged in any projects
+              </Typography>
+            ) : (
+              listOrPlaceholders(user.projects?.items, 3).map(
+                (project, index) => (
+                  <ProjectListItemCard
+                    key={project?.id ?? index}
+                    project={project}
+                    className={classes.project}
+                  />
+                )
+              )
+            )}
+          </Grid>
         </>
       )}
     </main>
