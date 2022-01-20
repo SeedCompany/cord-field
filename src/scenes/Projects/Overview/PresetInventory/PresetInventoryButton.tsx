@@ -101,7 +101,7 @@ export const PresetInventoryButton = ({
       title={
         <Typography variant="body2">
           This project and its associated languages (via engagements) are{' '}
-          {presetInventory ? '' : <em>NOT</em>} apart of our{' '}
+          {presetInventory ? '' : <em>NOT</em>} a part of our{' '}
           <em>Preset&nbsp;Inventory</em> {presetInventory ? '✅' : '❌'}
           <br />
           <br />
