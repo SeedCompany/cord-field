@@ -32,6 +32,13 @@ fragment DisplayUser on User {
       ...PartnerListItem
     }
   }
+  projects {
+    canRead
+    canCreate
+    items {
+      ...ProjectListItem
+    }
+  }
   roles {
     canEdit
     canRead
