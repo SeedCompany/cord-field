@@ -20,7 +20,7 @@ import {
 } from '../../../components/form';
 import { AutocompleteField } from '../../../components/form/AutocompleteField';
 import { ProjectOverviewFragment } from '../Overview/ProjectOverview.generated';
-import { UpdateProjectDocument } from './UpdateProject.generated';
+import { UpdateProjectStepDocument } from './UpdateProjectStep.generated';
 
 const transitionTypeToColor: Record<
   TransitionType,
@@ -48,7 +48,7 @@ export const ProjectWorkflowDialog = ({
   project,
   ...props
 }: UpdateProjectDialogProps) => {
-  const [updateProject] = useMutation(UpdateProjectDocument);
+  const [updateProjectStep] = useMutation(UpdateProjectStepDocument);
   const classes = useStyles();
   const { canBypassTransitions, transitions } = project.step;
 
@@ -67,15 +67,13 @@ export const ProjectWorkflowDialog = ({
           return;
         }
 
-        await updateProject({
+        await updateProjectStep({
           variables: {
             input: {
-              project: {
-                id: project.id,
-                // remove index suffix used to make submit action unique
-                step:
-                  (submitAction?.split(':')[0] as ProjectStep | null) ?? step,
-              },
+              id: project.id,
+              // remove index suffix used to make submit action unique
+              step:
+                (submitAction?.split(':')[0] as ProjectStep | null) ?? step!,
               changeset: project.changeset?.id,
             },
           },
