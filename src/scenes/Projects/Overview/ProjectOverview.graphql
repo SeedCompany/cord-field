@@ -51,6 +51,9 @@ fragment ProjectOverview on Project {
       disabled
       disabledReason
     }
+    history {
+      step
+    }
     canBypassTransitions
   }
   presetInventory {

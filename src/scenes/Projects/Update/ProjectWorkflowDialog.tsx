@@ -1,5 +1,6 @@
 import { useMutation } from '@apollo/client';
 import { Grid, makeStyles, Tooltip, Typography } from '@material-ui/core';
+import { History } from '@material-ui/icons';
 import React from 'react';
 import { Except } from 'type-fest';
 import {
@@ -19,6 +20,7 @@ import {
   SubmitError,
 } from '../../../components/form';
 import { AutocompleteField } from '../../../components/form/AutocompleteField';
+import { SplitButton } from '../../../components/SplitButton';
 import { ProjectOverviewFragment } from '../Overview/ProjectOverview.generated';
 import { UpdateProjectStepDocument } from './UpdateProjectStep.generated';
 
@@ -110,6 +112,16 @@ export const ProjectWorkflowDialog = ({
             </Grid>
           </Tooltip>
         ))}
+        {project.step.history.length > 0 && (
+          <Grid item>
+            <SplitButton
+              icon={<History />}
+              options={project.step.history.map((o) => o.step)}
+            >
+              History
+            </SplitButton>
+          </Grid>
+        )}
         {canBypassTransitions ? (
           <>
             {transitions.length > 0 ? (
