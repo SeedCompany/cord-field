@@ -58,9 +58,22 @@ export const modifyList = <OwningObj extends Entity, Args>({
         query.startsWith(`${field}(`) ||
         query.startsWith(`${field}:`)
     )
-    .filter((storeName) =>
-      filter ? filter(argsFromStoreFieldName<Args>(storeName)) : true
-    );
+    .filter((storeName) => {
+      if (!filter) {
+        return true;
+      }
+      try {
+        return filter(argsFromStoreFieldName<Args>(storeName));
+      } catch (e) {
+        console.error(
+          `List variation filter failed for "${
+            !id ? `Query.${field}` : `${id}.${field}`
+          }"\n`,
+          e
+        );
+        return false;
+      }
+    });
 
   const fields = mapFromList(listVariations, (field) => [field, modifier]);
   cache.modify({
