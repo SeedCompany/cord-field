@@ -104,12 +104,12 @@ export const PresetInventoryButton = ({
           {presetInventory ? '' : <em>NOT</em>} a part of our{' '}
           <em>Preset&nbsp;Inventory</em> {presetInventory ? '✅' : '❌'}
           <br />
+          <hr />
+          <em>Preset Inventory</em> indicates the project/language(s) will be
+          exposed to major investors to directly fund.
           <br />
-          This indicates the project/language(s) will be exposed to major
-          investors to directly fund.
-          <br />
-          It also means the project is committed to having quality, consistent
-          reporting.
+          <em>Preset Inventory</em> projects are committed to having quality,
+          consistent reporting.
         </Typography>
       }
     >
