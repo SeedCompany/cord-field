@@ -4,6 +4,7 @@ import {
   ApolloProvider,
   HttpLink,
 } from '@apollo/client';
+import { RetryLink } from '@apollo/client/link/retry';
 import { getMarkupFromTree } from '@apollo/client/react/ssr';
 import { ChunkExtractor } from '@loadable/server';
 import ServerStyleSheets from '@material-ui/styles/ServerStyleSheets';
@@ -60,7 +61,12 @@ export const createServerApolloClient = (
   return new ApolloClient({
     ssrMode: true,
     cache: createCache(),
-    link: ApolloLink.from([errorCacheLink, setCookieLink, httpLink]),
+    link: ApolloLink.from([
+      errorCacheLink,
+      setCookieLink,
+      new RetryLink(),
+      httpLink,
+    ]),
     connectToDevTools: true,
   });
 };

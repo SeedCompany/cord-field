@@ -8,6 +8,7 @@ import {
   PossibleTypesMap,
   TypePolicies,
 } from '@apollo/client';
+import { RetryLink } from '@apollo/client/link/retry';
 import fetch from 'cross-fetch';
 import React, { FC, useContext, useState } from 'react';
 import { possibleTypes } from './fragmentMatcher';
@@ -70,6 +71,7 @@ export const ApolloProvider: FC = ({ children }) => {
         delayLink,
         new ErrorCacheLink(errorCache),
         sessionLink,
+        new RetryLink(),
         httpLink,
       ]),
       connectToDevTools: true,
