@@ -1,5 +1,5 @@
 # base ================================
-FROM node:16-alpine as node
+FROM ghcr.io/tarampampam/node:16-alpine as node
 
 LABEL org.opencontainers.image.title="CORD UI"
 LABEL org.opencontainers.image.vendor="Seed Company"

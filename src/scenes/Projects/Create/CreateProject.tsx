@@ -17,7 +17,8 @@ export const CreateProject = (props: Except<Props, 'onSubmit'>) => {
     update: addItemToList({
       listId: 'projects',
       outputToItem: (data) => data.createProject.project,
-      filter: (args: ProjectListQueryVariables) => !args.input.filter?.pinned,
+      filter: (args: Partial<ProjectListQueryVariables>) =>
+        !args.input?.filter?.pinned,
     }),
   });
   const { enqueueSnackbar } = useSnackbar();

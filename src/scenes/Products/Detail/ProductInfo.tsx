@@ -25,6 +25,9 @@ const useStyles = makeStyles(() => ({
   listItem: {
     margin: 0,
   },
+  completionDescription: {
+    overflowWrap: 'break-word',
+  },
 }));
 
 export const ProductInfo = ({ product }: { product?: Product }) => {
@@ -98,6 +101,7 @@ export const ProductInfo = ({ product }: { product?: Product }) => {
         value={product?.describeCompletion.value}
         loading={!product}
         wrap={infoWrapper}
+        className={classes.completionDescription}
       />
 
       <DisplayProperty
