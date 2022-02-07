@@ -1,5 +1,5 @@
 import { ApolloCache, MutationUpdaterFunction } from '@apollo/client';
-import { difference, sortBy } from 'lodash';
+import { difference, sortBy, uniqBy } from 'lodash';
 import { IdFragment, readFragment, StepProgress } from '../../../api';
 import { notNullish } from '../../../util';
 import { ProductFormFragment } from '../ProductForm/ProductForm.generated';
@@ -50,15 +50,18 @@ export const updateProgressSteps =
       fragment: CurrentProgressOfProduct,
       returnPartialData: true,
     });
-    const progressList = [
-      ...progressFromEngagement,
-      ...(current?.progressOfCurrentReportDue
-        ? [current.progressOfCurrentReportDue]
-        : []),
-      ...(current?.progressReports ?? []),
-    ];
+    const progressList = uniqBy(
+      [
+        ...progressFromEngagement,
+        ...(current?.progressOfCurrentReportDue
+          ? [current.progressOfCurrentReportDue]
+          : []),
+        ...(current?.progressReports ?? []),
+      ].filter(notNullish),
+      (pp) => pp.report?.id
+    );
 
-    for (const progress of progressList.filter(notNullish)) {
+    for (const progress of progressList) {
       cache.modify({
         id: cache.identify(progress),
         fields: {

@@ -4,6 +4,7 @@ import {
   Reference,
 } from '@apollo/client';
 import { Modifier } from '@apollo/client/cache/core/types/common';
+import { uniqBy } from 'lodash';
 import { DeepPartial } from 'ts-essentials';
 import { IdFragment, readFragment } from '../../api';
 import {
@@ -41,7 +42,7 @@ export const progressRelatingToEngagement = (
     fragment: ProgressRefsRelatingToEngagement,
     returnPartialData: true,
   });
-  return [
+  const list = [
     ...(cached?.progressReports?.items ?? []),
     cached?.currentProgressReportDue?.value,
     cached?.nextProgressReportDue?.value,
@@ -49,4 +50,5 @@ export const progressRelatingToEngagement = (
     (report): report is DeepPartial<ProgressReport> =>
       report?.__typename === 'ProgressReport' && !!report.progress
   );
+  return uniqBy(list, (report) => report.id);
 };
