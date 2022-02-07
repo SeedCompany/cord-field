@@ -76,6 +76,12 @@ export const StepEditDialog = ({
           },
         });
       }}
+      errorHandlers={{
+        Unauthorized: {
+          completed:
+            "You do not have permission to update this step's progress",
+        },
+      }}
     >
       <Alert severity="warning">
         Changes will not be applied to the PnP file
