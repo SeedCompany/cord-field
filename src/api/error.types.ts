@@ -13,6 +13,7 @@ export interface ErrorMap {
   TokenExpired: ErrorInfo;
   Input: InputError;
   Duplicate: DuplicateError;
+  Unauthorized: InputError;
 
   /**
    * This is a special one that allows a default handler for any
