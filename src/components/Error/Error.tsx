@@ -2,7 +2,7 @@ import { ApolloError } from '@apollo/client';
 import { Button, Grid, makeStyles, Typography } from '@material-ui/core';
 import clsx from 'clsx';
 import { isPlainObject } from 'lodash';
-import React, { isValidElement, ReactNode } from 'react';
+import React, { ElementType, isValidElement, ReactNode } from 'react';
 import { getErrorInfo } from '../../api/error.types';
 import { ButtonLink, StatusCode, useNavigate } from '../Routing';
 import { ErrorRenderers, renderError } from './error-handling';
@@ -40,6 +40,7 @@ export interface ErrorProps {
   page?: boolean;
   /** Turn off back & home buttons */
   disableButtons?: boolean;
+  component?: ElementType;
 }
 
 /**
@@ -59,6 +60,7 @@ export const Error = ({
   show,
   page,
   disableButtons,
+  component: Component = 'div',
 }: ErrorProps) => {
   const classes = useStyles();
   const navigate = useNavigate();
@@ -82,7 +84,7 @@ export const Error = ({
     error && getErrorInfo(error).codes.includes('NotFound') ? 404 : 500;
 
   return (
-    <div className={clsx(page && classes.page)}>
+    <Component className={clsx(page && classes.page)}>
       {/* Default status code to be helpful for the most common ones. The
       children can still override this by rendering <StatusCode /> themselves */}
       <StatusCode code={statusCode} />
@@ -106,6 +108,6 @@ export const Error = ({
           </Grid>
         </Grid>
       )}
-    </div>
+    </Component>
   );
 };

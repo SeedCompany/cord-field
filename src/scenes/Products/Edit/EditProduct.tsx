@@ -20,6 +20,7 @@ import {
   ProductFormValues,
 } from '../ProductForm';
 import { UpdatePartnershipsProducingMediumsDocument } from '../ProductForm/PartnershipsProducingMediums.generated';
+import { ProductLoadError } from '../ProductLoadError';
 import {
   DeleteProductDocument,
   ProductInfoForEditDocument,
@@ -49,7 +50,7 @@ export const EditProduct = () => {
   const { projectId, changesetId } = useProjectId();
   const { engagementId = '', productId = '' } = useParams();
 
-  const { data, loading } = useQuery(ProductInfoForEditDocument, {
+  const { data, loading, error } = useQuery(ProductInfoForEditDocument, {
     variables: {
       projectId,
       changeset: changesetId,
@@ -289,6 +290,10 @@ export const EditProduct = () => {
 
     navigate('../');
   };
+
+  if (error) {
+    return <ProductLoadError error={error} />;
+  }
 
   return (
     <main className={classes.root}>

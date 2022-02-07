@@ -5,6 +5,7 @@ import { useParams } from 'react-router-dom';
 import { ReportLabel } from '../../../components/PeriodicReports/ReportLabel';
 import { ResponsiveDivider } from '../../../components/ResponsiveDivider';
 import { Link } from '../../../components/Routing';
+import { ProductLoadError } from '../ProductLoadError';
 import { ProductDetailDocument } from './ProductDetail.generated';
 import { ProductDetailHeader } from './ProductDetailHeader';
 import { ProductInfo } from './ProductInfo';
@@ -30,7 +31,7 @@ const useStyles = makeStyles(({ spacing, breakpoints }) => ({
 export const ProductDetail = () => {
   const classes = useStyles();
 
-  const { data } = useQuery(ProductDetailDocument, {
+  const { data, error } = useQuery(ProductDetailDocument, {
     variables: {
       id: useParams().productId ?? '',
     },
@@ -41,6 +42,10 @@ export const ProductDetail = () => {
     progressStepMeasurement,
     progressTarget,
   } = product ?? {};
+
+  if (error) {
+    return <ProductLoadError error={error} />;
+  }
 
   return (
     <div className={classes.root}>
