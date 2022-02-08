@@ -15,6 +15,7 @@ import { createTheme } from './theme';
 const logRocketAppId = process.env.RAZZLE_LOG_ROCKET_APP_ID;
 if (logRocketAppId) {
   LogRocket.init(logRocketAppId, {
+    shouldParseXHRBlob: true, // Parse API response bodies
     network: {
       requestSanitizer(request) {
         // Relies on operation name suffix which do in Apollo HttpLink config
