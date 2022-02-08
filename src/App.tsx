@@ -14,7 +14,9 @@ import { createTheme } from './theme';
 const logRocketAppId = process.env.RAZZLE_LOG_ROCKET_APP_ID;
 if (logRocketAppId) {
   LogRocket.init(logRocketAppId);
-  setupLogRocketReact(LogRocket);
+  if (typeof window !== 'undefined') {
+    setupLogRocketReact(LogRocket);
+  }
 }
 
 const theme = createTheme();
