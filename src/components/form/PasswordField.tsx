@@ -39,6 +39,10 @@ export const PasswordField: FC<PasswordFieldProps> = ({
           </InputAdornment>
         ),
       }}
+      inputProps={{
+        ...rest.inputProps,
+        'data-private': 'redact', // Hide in LogRocket
+      }}
     />
   );
 };
