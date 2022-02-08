@@ -19,7 +19,7 @@ const useStyles = makeStyles(({ spacing }) => ({
     marginTop: spacing(1),
   },
   loginLink: {
-    display: 'block',
+    display: 'inline-block',
     marginTop: spacing(1),
   },
 }));
