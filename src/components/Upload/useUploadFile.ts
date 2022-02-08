@@ -33,7 +33,8 @@ export const useUploadFile = (
             completedAt: new Date(),
           });
         } catch (error) {
-          setUploadError(file.queueId, 'Post-upload action failed');
+          setUploadError(file.queueId, 'Failed to save file');
+          console.error(error);
           await deleteFile({ variables: { id: file.uploadId } });
         }
       }

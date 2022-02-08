@@ -65,7 +65,7 @@ export const UploadItem: FC<UploadItemProps> = (props) => {
     ? error.message
     : !uploadId
     ? 'Initializing'
-    : percentCompleted === 100
+    : completedAt
     ? 'Completed'
     : 'Uploading';
 
@@ -88,7 +88,7 @@ export const UploadItem: FC<UploadItemProps> = (props) => {
             variant="caption"
             color="primary"
           >
-            &nbsp;– {Math.round(percentCompleted)}%
+            &nbsp;– {Math.min(99, Math.round(percentCompleted))}%
           </Typography>
         )}
       </div>
