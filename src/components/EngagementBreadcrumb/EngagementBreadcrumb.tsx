@@ -17,7 +17,7 @@ export const EngagementBreadcrumb = ({
   const { projectUrl } = useProjectId();
   return (
     <SecuredBreadcrumb
-      to={data ? `${projectUrl}/engagements/${data.id}` : '..'} // assume subpage until data loads
+      to={data ? `${projectUrl}/engagements/${data.id}` : undefined}
       data={
         data?.__typename === 'LanguageEngagement'
           ? data.language.value?.name

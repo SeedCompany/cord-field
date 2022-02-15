@@ -31,7 +31,7 @@ export const ProjectBreadcrumb = ({
 
   return (
     <Breadcrumb
-      to={data ? getProjectUrl(data) : '..'} // assume subpage until data loads
+      to={data ? getProjectUrl(data) : undefined}
       LinkProps={{
         underline: data?.name.canRead ? undefined : 'none',
       }}

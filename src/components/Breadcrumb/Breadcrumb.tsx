@@ -7,7 +7,7 @@ import { useMatch } from 'react-router-dom';
 import { Link, LinkProps } from '../Routing';
 
 export interface BreadcrumbProps {
-  to: To;
+  to?: To;
   LinkProps?: Partial<LinkProps>;
   children?: ReactNode;
   className?: string;
@@ -17,13 +17,13 @@ export interface BreadcrumbProps {
 export const Breadcrumb = forwardRef<HTMLAnchorElement, BreadcrumbProps>(
   ({ to, children, LinkProps, ...rest }, ref) => {
     const active =
-      useMatch(isString(to) ? to : to.pathname!) ||
+      useMatch(to == null ? '' : isString(to) ? to : to.pathname!) ||
       // RR doesn't think current page is active. maybe a bug?
       to === '.';
 
-    if (active) {
+    if (to == null || active) {
       return (
-        <Typography ref={ref} variant="h4" {...rest}>
+        <Typography variant="h4" {...rest} ref={ref}>
           {children}
         </Typography>
       );
