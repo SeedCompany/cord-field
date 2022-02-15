@@ -546,12 +546,21 @@ export const ProjectOverview: FC = () => {
               </Typography>
             </Grid>
             <Grid item>
-              {engagements.data?.canCreate && (
-                <Tooltip title={`Add ${engagementTypeLabel} Engagement`}>
+              {(!engagements.data || engagements.data.canCreate) && (
+                <Tooltip
+                  title={
+                    engagementTypeLabel
+                      ? `Add ${engagementTypeLabel} Engagement`
+                      : ''
+                  }
+                >
                   <Fab
                     color="error"
-                    aria-label={`Add ${engagementTypeLabel} Engagement`}
+                    aria-label={`Add ${
+                      engagementTypeLabel ? engagementTypeLabel + ' ' : ''
+                    }Engagement`}
                     onClick={createEngagement}
+                    loading={!engagements.data}
                   >
                     <Add />
                   </Fab>
