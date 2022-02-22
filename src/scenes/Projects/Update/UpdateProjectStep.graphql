@@ -1,0 +1,8 @@
+mutation UpdateProjectStep($input: ProjectStepChangeInput!) {
+  transitionProject(input: $input) {
+    project {
+      ...ProjectOverview
+      ...RecalculateChangesetDiff
+    }
+  }
+}

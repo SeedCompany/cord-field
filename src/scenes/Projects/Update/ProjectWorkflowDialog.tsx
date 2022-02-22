@@ -1,5 +1,6 @@
 import { useMutation } from '@apollo/client';
 import { Grid, makeStyles, Tooltip, Typography } from '@material-ui/core';
+import { History } from '@material-ui/icons';
 import React from 'react';
 import { Except } from 'type-fest';
 import {
@@ -19,8 +20,9 @@ import {
   SubmitError,
 } from '../../../components/form';
 import { AutocompleteField } from '../../../components/form/AutocompleteField';
+import { SplitButton } from '../../../components/SplitButton';
 import { ProjectOverviewFragment } from '../Overview/ProjectOverview.generated';
-import { UpdateProjectDocument } from './UpdateProject.generated';
+import { UpdateProjectStepDocument } from './UpdateProjectStep.generated';
 
 const transitionTypeToColor: Record<
   TransitionType,
@@ -48,7 +50,7 @@ export const ProjectWorkflowDialog = ({
   project,
   ...props
 }: UpdateProjectDialogProps) => {
-  const [updateProject] = useMutation(UpdateProjectDocument);
+  const [updateProjectStep] = useMutation(UpdateProjectStepDocument);
   const classes = useStyles();
   const { canBypassTransitions, transitions } = project.step;
 
@@ -67,15 +69,13 @@ export const ProjectWorkflowDialog = ({
           return;
         }
 
-        await updateProject({
+        await updateProjectStep({
           variables: {
             input: {
-              project: {
-                id: project.id,
-                // remove index suffix used to make submit action unique
-                step:
-                  (submitAction?.split(':')[0] as ProjectStep | null) ?? step,
-              },
+              id: project.id,
+              // remove index suffix used to make submit action unique
+              step:
+                (submitAction?.split(':')[0] as ProjectStep | null) ?? step!,
               changeset: project.changeset?.id,
             },
           },
@@ -112,6 +112,16 @@ export const ProjectWorkflowDialog = ({
             </Grid>
           </Tooltip>
         ))}
+        {project.step.history.length > 0 && (
+          <Grid item>
+            <SplitButton
+              icon={<History />}
+              options={project.step.history.map((o) => o.step)}
+            >
+              History
+            </SplitButton>
+          </Grid>
+        )}
         {canBypassTransitions ? (
           <>
             {transitions.length > 0 ? (
