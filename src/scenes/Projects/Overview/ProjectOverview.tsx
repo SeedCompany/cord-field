@@ -30,6 +30,7 @@ import { LanguageEngagementListItemFragment } from '../../../components/Language
 import { List, useListQuery } from '../../../components/List';
 import { PartnershipSummary } from '../../../components/PartnershipSummary';
 import { PeriodicReportCard } from '../../../components/PeriodicReports';
+import { FinancialReportGuide } from '../../../components/PeriodicReports/FinancialReportGuide';
 import { ProjectChangeRequestSummary } from '../../../components/ProjectChangeRequestSummary';
 import { ProjectMembersSummary } from '../../../components/ProjectMembersSummary';
 import { Redacted } from '../../../components/Redacted';
@@ -41,6 +42,7 @@ import { CreateInternshipEngagement } from '../../Engagement/InternshipEngagemen
 import { CreateLanguageEngagement } from '../../Engagement/LanguageEngagement/Create/CreateLanguageEngagement';
 import { useProjectCurrentDirectory, useUploadProjectFiles } from '../Files';
 import { ProjectListQueryVariables } from '../List/projects.generated';
+import { FinancialReportsDocument } from '../Reports/ProjectReports.generated';
 import { EditableProjectField, UpdateProjectDialog } from '../Update';
 import { ProjectWorkflowDialog } from '../Update/ProjectWorkflowDialog';
 import { useProjectId } from '../useProjectId';
@@ -157,6 +159,10 @@ export const ProjectOverview: FC = () => {
       project: projectId,
       changeset: changesetId,
     },
+  });
+
+  const { data: financialReportsData } = useQuery(FinancialReportsDocument, {
+    variables: { projectId, changeset: changesetId },
   });
 
   const projectName = projectOverviewData?.project.name;
@@ -496,6 +502,15 @@ export const ProjectOverview: FC = () => {
                   projectOverviewData?.project.currentFinancialReportDue
                 }
                 dueNext={projectOverviewData?.project.nextFinancialReportDue}
+                cardAction={
+                  projectOverviewData?.project &&
+                  financialReportsData?.project.reports.canRead === true &&
+                  financialReportsData.project.reports.items.length === 0 && (
+                    <FinancialReportGuide
+                      project={projectOverviewData.project}
+                    />
+                  )
+                }
               />
             </Grid>
             <Grid item xs={12} md={6}>

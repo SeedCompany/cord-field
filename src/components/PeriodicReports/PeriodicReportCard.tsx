@@ -8,7 +8,7 @@ import {
   Typography,
 } from '@material-ui/core';
 import { AssignmentOutlined, BarChart, ShowChart } from '@material-ui/icons';
-import React, { useState } from 'react';
+import React, { ReactNode, useState } from 'react';
 import { useDropzone } from 'react-dropzone';
 import { ReportType } from '../../api';
 import {
@@ -69,10 +69,18 @@ export interface PeriodicReportCardProps {
   dueNext?: SecuredPeriodicReportFragment;
   disableIcon?: boolean;
   hasDetailPage?: boolean;
+  cardAction?: ReactNode;
 }
 
 const PeriodicReportCardInContext = (props: PeriodicReportCardProps) => {
-  const { type, dueCurrently, dueNext, disableIcon, hasDetailPage } = props;
+  const {
+    type,
+    dueCurrently,
+    dueNext,
+    disableIcon,
+    hasDetailPage,
+    cardAction,
+  } = props;
   const classes = useStyles();
 
   const currentFile = dueCurrently?.value?.reportFile;
@@ -138,6 +146,7 @@ const PeriodicReportCardInContext = (props: PeriodicReportCardProps) => {
           <ButtonLink color="primary" to={link}>
             View Reports
           </ButtonLink>
+          {cardAction}
           {needsUpload ? (
             <Tooltip
               title={
