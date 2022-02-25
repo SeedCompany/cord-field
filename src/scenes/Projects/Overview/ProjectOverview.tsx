@@ -30,7 +30,6 @@ import { LanguageEngagementListItemFragment } from '../../../components/Language
 import { List, useListQuery } from '../../../components/List';
 import { PartnershipSummary } from '../../../components/PartnershipSummary';
 import { PeriodicReportCard } from '../../../components/PeriodicReports';
-import { FinancialReportGuide } from '../../../components/PeriodicReports/FinancialReportGuide';
 import { ProjectChangeRequestSummary } from '../../../components/ProjectChangeRequestSummary';
 import { ProjectMembersSummary } from '../../../components/ProjectMembersSummary';
 import { Redacted } from '../../../components/Redacted';
@@ -502,14 +501,10 @@ export const ProjectOverview: FC = () => {
                   projectOverviewData?.project.currentFinancialReportDue
                 }
                 dueNext={projectOverviewData?.project.nextFinancialReportDue}
-                cardAction={
+                metRequirement={
                   projectOverviewData?.project &&
                   financialReportsData?.project.reports.canRead === true &&
-                  financialReportsData.project.reports.items.length === 0 && (
-                    <FinancialReportGuide
-                      project={projectOverviewData.project}
-                    />
-                  )
+                  financialReportsData.project.reports.items.length > 0
                 }
               />
             </Grid>

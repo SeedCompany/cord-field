@@ -2,6 +2,7 @@ import { useQuery } from '@apollo/client';
 import React from 'react';
 import { ReportType } from '../../../api';
 import { Error } from '../../../components/Error';
+import { FinancialReportCheckList } from '../../../components/PeriodicReports/FinancialReportCheckList';
 import { PeriodicReportsList } from '../../../components/PeriodicReports/PeriodicReportsList';
 import { ProjectBreadcrumb } from '../../../components/ProjectBreadcrumb';
 import { useProjectId } from '../useProjectId';
@@ -36,6 +37,13 @@ export const ProjectReports = ({ type }: { type: ReportType }) => {
       reports={data?.project.reports.items}
       breadcrumbs={[<ProjectBreadcrumb data={data?.project} />]}
       pageTitleSuffix={data?.project.name.value ?? 'A Project'}
+      requirementCheckList={
+        data &&
+        data.project.reports.items.length === 0 &&
+        type === 'Financial' ? (
+          <FinancialReportCheckList data={data} />
+        ) : null
+      }
     />
   );
 };

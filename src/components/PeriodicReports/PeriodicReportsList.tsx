@@ -26,12 +26,14 @@ export const PeriodicReportsList = ({
   breadcrumbs = [],
   pageTitleSuffix,
   reports,
+  requirementCheckList,
   onRowClick,
 }: {
   type: ReportType;
   breadcrumbs?: ReactNode[];
   pageTitleSuffix?: string;
   reports?: readonly PeriodicReportFragment[];
+  requirementCheckList?: ReactNode;
   onRowClick?: (rowData: ReportRow) => void;
 }) => {
   const classes = useStyles();
@@ -52,7 +54,11 @@ export const PeriodicReportsList = ({
           {reportTypeName}
         </Typography>
 
-        <PeriodicReportsTable data={reports} onRowClick={onRowClick} />
+        {requirementCheckList ? (
+          requirementCheckList
+        ) : (
+          <PeriodicReportsTable data={reports} onRowClick={onRowClick} />
+        )}
       </main>
     </div>
   );

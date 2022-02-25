@@ -6,6 +6,17 @@ query NarrativeReports($projectId: ID!, $changeset: ID) {
         ...PeriodicReport
       }
     }
+    mouRange {
+      ...securedDateRange
+    }
+    financialReportPeriod {
+      canRead
+      canEdit
+      value
+    }
+    partnerships {
+      ...PartnershipSummary
+    }
   }
 }
 
@@ -17,6 +28,17 @@ query FinancialReports($projectId: ID!, $changeset: ID) {
         ...PeriodicReport
       }
       canRead
+    }
+    mouRange {
+      ...securedDateRange
+    }
+    financialReportPeriod {
+      canRead
+      canEdit
+      value
+    }
+    partnerships {
+      ...PartnershipSummary
     }
   }
 }
