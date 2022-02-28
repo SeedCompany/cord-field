@@ -41,7 +41,6 @@ import { CreateInternshipEngagement } from '../../Engagement/InternshipEngagemen
 import { CreateLanguageEngagement } from '../../Engagement/LanguageEngagement/Create/CreateLanguageEngagement';
 import { useProjectCurrentDirectory, useUploadProjectFiles } from '../Files';
 import { ProjectListQueryVariables } from '../List/projects.generated';
-import { FinancialReportsDocument } from '../Reports/ProjectReports.generated';
 import { EditableProjectField, UpdateProjectDialog } from '../Update';
 import { ProjectWorkflowDialog } from '../Update/ProjectWorkflowDialog';
 import { useProjectId } from '../useProjectId';
@@ -158,10 +157,6 @@ export const ProjectOverview: FC = () => {
       project: projectId,
       changeset: changesetId,
     },
-  });
-
-  const { data: financialReportsData } = useQuery(FinancialReportsDocument, {
-    variables: { projectId, changeset: changesetId },
   });
 
   const projectName = projectOverviewData?.project.name;
@@ -502,9 +497,8 @@ export const ProjectOverview: FC = () => {
                 }
                 dueNext={projectOverviewData?.project.nextFinancialReportDue}
                 metRequirement={
-                  projectOverviewData?.project &&
-                  financialReportsData?.project.reports.canRead === true &&
-                  financialReportsData.project.reports.items.length > 0
+                  projectOverviewData?.project.financialReports.canRead &&
+                  projectOverviewData.project.financialReports.total > 0
                 }
               />
             </Grid>

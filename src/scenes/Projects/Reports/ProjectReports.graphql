@@ -9,14 +9,6 @@ query NarrativeReports($projectId: ID!, $changeset: ID) {
     mouRange {
       ...securedDateRange
     }
-    financialReportPeriod {
-      canRead
-      canEdit
-      value
-    }
-    partnerships {
-      ...PartnershipSummary
-    }
   }
 }
 
@@ -31,14 +23,6 @@ query FinancialReports($projectId: ID!, $changeset: ID) {
     }
     mouRange {
       ...securedDateRange
-    }
-    financialReportPeriod {
-      canRead
-      canEdit
-      value
-    }
-    partnerships {
-      ...PartnershipSummary
     }
   }
 }

@@ -89,6 +89,13 @@ fragment ProjectOverview on Project {
   changeRequests {
     ...ProjectChangeRequestSummary
   }
+  financialReports {
+    total
+    canRead
+  }
+  financialReportPeriod {
+    value
+  }
 }
 
 query ProjectEngagementListOverview(

@@ -143,8 +143,12 @@ const PeriodicReportCardInContext = (props: PeriodicReportCardProps) => {
               </div>
             ) : (
               <div>
-                <span>Not all requirements have been met</span> <br />
-                <span>Click here to view remaining list</span>
+                <Typography variant="body2">
+                  Not all requirements have been met
+                </Typography>
+                <Typography variant="body2">
+                  Click here to view remaining list
+                </Typography>
               </div>
             )}
           </div>
