@@ -24,6 +24,9 @@ fragment ProductDetail on Product {
   describeCompletion {
     value
   }
+  placeholderDescription {
+    value
+  }
   engagement {
     ...EngagementBreadcrumb
     partnershipsProducingMediums {

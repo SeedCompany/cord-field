@@ -9,6 +9,7 @@ import { MethodologySection } from './MethodologySection';
 import { OtherProductSection } from './OtherProductSection';
 import { PartnershipProducingMediumsSection } from './PartnershipProducingMediumsSection';
 import { EditPartnershipsProducingMediumsInfoFragment } from './PartnershipsProducingMediums.generated';
+import { PlaceholderDescriptionSection } from './PlaceholderDescriptionSection';
 import { ProductFormValues } from './ProductForm';
 import {
   ProductForm_DerivativeScriptureProduct_Fragment as DerivativeScriptureProduct,
@@ -46,6 +47,7 @@ export type SectionProps = FormProps<ProductFormValues> & {
 const sections: ReadonlyArray<ComponentType<SectionProps>> = [
   GoalsSection,
   ProductSection,
+  PlaceholderDescriptionSection,
   OtherProductSection,
   ScriptureReferencesSection,
   MediumsSection,

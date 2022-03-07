@@ -42,6 +42,11 @@ fragment ProductForm on Product {
     canEdit
     value
   }
+  placeholderDescription {
+    canRead
+    canEdit
+    value
+  }
   ... on DirectScriptureProduct {
     unspecifiedScripture {
       canRead

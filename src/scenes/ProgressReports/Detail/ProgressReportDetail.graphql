@@ -66,4 +66,7 @@ fragment ProductInfoForProgressReport on Product {
       }
     }
   }
+  placeholderDescription {
+    value
+  }
 }
