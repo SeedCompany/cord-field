@@ -1,10 +1,10 @@
 import loadable from '@loadable/component';
 import React from 'react';
 import { Route, Routes } from 'react-router-dom';
+import { ChangesetContext } from '../../components/Changeset';
 import { NotFoundRoute } from '../../components/Error';
 import { Navigate } from '../../components/Routing';
 import { useBetaFeatures } from '../../components/Session';
-import { ProjectDetailWrapper } from './DetailWrapper/DetailWrapper';
 
 const Engagements = loadable(() => import('../Engagement'), {
   resolveComponent: (m) => m.Engagements,
@@ -50,7 +50,7 @@ export const Projects = () => (
 );
 
 const ProjectDetails = () => (
-  <ProjectDetailWrapper>
+  <ChangesetContext>
     <Routes>
       <Route path="" element={<ProjectOverview />} />
       <Route path="files/*" element={<Files />} />
@@ -72,5 +72,5 @@ const ProjectDetails = () => (
       />
       {NotFoundRoute}
     </Routes>
-  </ProjectDetailWrapper>
+  </ChangesetContext>
 );

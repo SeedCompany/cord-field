@@ -22,7 +22,6 @@ import {
 import { AutocompleteField } from '../../../../components/form/AutocompleteField';
 import { ProjectChangeRequestListItemFragment as ChangeRequest } from '../../../../components/ProjectChangeRequestListItem';
 import { callAll } from '../../../../util';
-import { ProjectOverviewDocument } from '../../Overview/ProjectOverview.generated';
 import { useProjectId } from '../../useProjectId';
 import {
   DeleteProjectChangeRequestDocument as DeleteRequest,
@@ -51,7 +50,7 @@ export const UpdateProjectChangeRequest = ({
   ...props
 }: UpdatePlanChangeProps) => {
   const { closeChangeset } = useProjectId();
-  const [updatePlanChange] = useMutation(UpdateRequest);
+  const [updatePlanChange, { client }] = useMutation(UpdateRequest);
   const [deletePlanChange] = useMutation(DeleteRequest, {
     update: callAll(
       removeItemFromList({
@@ -90,15 +89,6 @@ export const UpdateProjectChangeRequest = ({
 
         await updatePlanChange({
           variables: { input },
-          refetchQueries: [
-            {
-              query: ProjectOverviewDocument,
-              variables: {
-                input: project.id,
-                changeset: changeRequest.id,
-              },
-            },
-          ],
         });
         // Change Request is approved
         if (
@@ -106,6 +96,10 @@ export const UpdateProjectChangeRequest = ({
           changeRequest.status.value !== input.projectChangeRequest.status
         ) {
           closeChangeset();
+          // A change request approval can have such wide-spread implications,
+          // and it's not a common action, so the easiest solution is just to
+          // wipe the cache.
+          await client.resetStore();
         }
       }}
       fieldsPrefix="projectChangeRequest"
