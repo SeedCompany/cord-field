@@ -26,9 +26,6 @@ fragment ProductDetail on Product {
   }
   engagement {
     ...EngagementBreadcrumb
-    project {
-      ...ProjectBreadcrumb
-    }
     partnershipsProducingMediums {
       items {
         medium

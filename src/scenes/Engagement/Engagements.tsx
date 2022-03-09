@@ -1,13 +1,14 @@
 import loadable from '@loadable/component';
 import React from 'react';
-import { Route, Routes, useParams } from 'react-router-dom';
+import { Route, Routes, useLocation, useParams } from 'react-router-dom';
 import { ChangesetContext } from '../../components/Changeset';
 import { NotFoundRoute } from '../../components/Error';
 import { Navigate } from '../../components/Routing';
+import { splicePath } from '../../util';
 import { Engagement } from './Engagement';
 
-const Products = loadable(() => import('../Products'), {
-  resolveComponent: (m) => m.Products,
+const CreateProduct = loadable(() => import('../Products'), {
+  resolveComponent: (m) => m.CreateProduct,
 });
 const ProgressReportsList = loadable(() => import('../ProgressReports'), {
   resolveComponent: (m) => m.ProgressReportsList,
@@ -24,7 +25,8 @@ const EngagementDetail = () => (
   <ChangesetContext>
     <Routes>
       <Route path="" element={<Engagement />} />
-      <Route path="products/*" element={<Products />} />
+      <Route path="products/create" element={<CreateProduct />} />
+      <Route path="products/*" element={<OldProducts />} />
       <Route path="reports/progress" element={<ProgressReportsList />} />
       <Route
         path="reports/progress/:reportId"
@@ -33,6 +35,10 @@ const EngagementDetail = () => (
       {NotFoundRoute}
     </Routes>
   </ChangesetContext>
+);
+
+const OldProducts = () => (
+  <Navigate replace to={splicePath(useLocation(), 1, 2)} />
 );
 
 const OldProgressReportDetail = () => {

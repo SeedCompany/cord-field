@@ -1,8 +1,10 @@
 import { useQuery } from '@apollo/client';
 import { Grid, makeStyles, Typography } from '@material-ui/core';
 import React from 'react';
-import { useParams } from 'react-router-dom';
-import { idForUrl } from '../../../components/Changeset';
+import {
+  idForUrl,
+  useChangesetAwareIdFromUrl,
+} from '../../../components/Changeset';
 import { ReportLabel } from '../../../components/PeriodicReports/ReportLabel';
 import { ResponsiveDivider } from '../../../components/ResponsiveDivider';
 import { Link } from '../../../components/Routing';
@@ -32,9 +34,10 @@ const useStyles = makeStyles(({ spacing, breakpoints }) => ({
 export const ProductDetail = () => {
   const classes = useStyles();
 
+  const { id } = useChangesetAwareIdFromUrl('productId');
   const { data, error } = useQuery(ProductDetailDocument, {
     variables: {
-      id: useParams().productId ?? '',
+      id,
     },
   });
   const product = data?.product;
