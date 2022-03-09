@@ -34,10 +34,11 @@ const useStyles = makeStyles(({ spacing, breakpoints }) => ({
 export const ProductDetail = () => {
   const classes = useStyles();
 
-  const { id } = useChangesetAwareIdFromUrl('productId');
+  const { id, changesetId } = useChangesetAwareIdFromUrl('productId');
   const { data, error } = useQuery(ProductDetailDocument, {
     variables: {
       id,
+      changesetId,
     },
   });
   const product = data?.product;

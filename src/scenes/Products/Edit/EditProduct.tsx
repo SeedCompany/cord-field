@@ -47,10 +47,11 @@ export const EditProduct = () => {
   const classes = useStyles();
   const navigate = useNavigate();
 
-  const { id } = useChangesetAwareIdFromUrl('productId');
+  const { id, changesetId } = useChangesetAwareIdFromUrl('productId');
   const { data, loading, error } = useQuery(ProductInfoForEditDocument, {
     variables: {
       id,
+      changesetId,
     },
   });
 

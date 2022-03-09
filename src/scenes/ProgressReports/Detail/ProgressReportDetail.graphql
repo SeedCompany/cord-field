@@ -1,5 +1,5 @@
-query ProgressReportDetail($id: ID!) {
-  periodicReport(id: $id) {
+query ProgressReportDetail($id: ID!, $changesetId: ID) {
+  periodicReport(id: $id, changeset: $changesetId) {
     ...ProgressReport
     parent {
       ...EngagementBreadcrumb

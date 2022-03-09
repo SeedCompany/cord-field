@@ -29,8 +29,8 @@ fragment UpdateProductResult on Product {
   ...ProductCard
 }
 
-query ProductInfoForEdit($id: ID!) {
-  product(id: $id) {
+query ProductInfoForEdit($id: ID!, $changesetId: ID) {
+  product(id: $id, changeset: $changesetId) {
     ...ProductForm
     engagement {
       ...EngagementBreadcrumb

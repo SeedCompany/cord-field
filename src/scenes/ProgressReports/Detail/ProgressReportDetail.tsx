@@ -56,7 +56,7 @@ const useStyles = makeStyles(({ spacing, breakpoints }) => ({
 
 export const ProgressReportDetail: FC = () => {
   const classes = useStyles();
-  const { id } = useChangesetAwareIdFromUrl('reportId');
+  const { id, changesetId } = useChangesetAwareIdFromUrl('reportId');
   const windowSize = useWindowSize();
 
   // Single file for new version, empty array for received date update.
@@ -66,6 +66,7 @@ export const ProgressReportDetail: FC = () => {
   const { data, error } = useQuery(ProgressReportDetailDocument, {
     variables: {
       id,
+      changesetId,
     },
   });
   if (error) {

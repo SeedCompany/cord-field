@@ -1,5 +1,5 @@
-query ProductDetail($id: ID!) {
-  product(id: $id) {
+query ProductDetail($id: ID!, $changesetId: ID) {
+  product(id: $id, changeset: $changesetId) {
     ...ProductDetail
   }
 }
