@@ -1,13 +1,11 @@
 import { useQuery } from '@apollo/client';
-import { Skeleton } from '@material-ui/lab';
 import React from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import { Breadcrumb } from '../../../../components/Breadcrumb';
+import { EngagementBreadcrumb } from '../../../../components/EngagementBreadcrumb';
 import { Error } from '../../../../components/Error';
 import { PeriodicReportsList } from '../../../../components/PeriodicReports';
 import { ReportRow } from '../../../../components/PeriodicReports/PeriodicReportsTable';
 import { ProjectBreadcrumb } from '../../../../components/ProjectBreadcrumb';
-import { Redacted } from '../../../../components/Redacted';
 import { useProjectId } from '../../../Projects/useProjectId';
 import { ProgressReportsDocument } from './ProgressReportList.generated';
 
@@ -16,9 +14,8 @@ export const ProgressReportsList = () => {
   const { engagementId = '' } = useParams();
   const { data, error } = useQuery(ProgressReportsDocument, {
     variables: {
-      projectId,
-      changeset: changesetId,
       engagementId,
+      changeset: changesetId,
     },
   });
   const navigate = useNavigate();
@@ -41,8 +38,6 @@ export const ProgressReportsList = () => {
     data?.engagement.__typename === 'LanguageEngagement'
       ? data.engagement
       : undefined;
-  const language = engagement?.language.value;
-  const languageName = language?.name.value ?? language?.displayName.value;
 
   const handleRowClick = (row: ReportRow) => {
     navigate(`${engagementUrl}/reports/progress/${row.report.id}`);
@@ -51,23 +46,10 @@ export const ProgressReportsList = () => {
   return (
     <PeriodicReportsList
       type="Progress"
-      pageTitleSuffix={data?.project.name.value ?? 'A Project'}
+      pageTitleSuffix={engagement?.project.name.value ?? 'A Project'}
       breadcrumbs={[
-        <ProjectBreadcrumb data={data?.project} />,
-        <Breadcrumb
-          to={data ? `${projectUrl}/engagements/${data.engagement.id}` : '.'}
-        >
-          {!data ? (
-            <Skeleton width={200} />
-          ) : languageName ? (
-            languageName
-          ) : (
-            <Redacted
-              info="You do not have permission to view this engagement's name"
-              width={200}
-            />
-          )}
-        </Breadcrumb>,
+        <ProjectBreadcrumb data={engagement?.project} />,
+        <EngagementBreadcrumb data={engagement} />,
       ]}
       reports={engagement?.progressReports.items}
       onRowClick={handleRowClick}

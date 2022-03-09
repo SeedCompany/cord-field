@@ -1,21 +1,8 @@
-query ProgressReports($projectId: ID!, $changeset: ID, $engagementId: ID!) {
-  project(id: $projectId, changeset: $changeset) {
-    ...ProjectBreadcrumb
-  }
+query ProgressReports($engagementId: ID!, $changeset: ID) {
   engagement(id: $engagementId, changeset: $changeset) {
     ...Id
+    ...EngagementBreadcrumb
     ... on LanguageEngagement {
-      language {
-        value {
-          id
-          displayName {
-            value
-          }
-          name {
-            value
-          }
-        }
-      }
       progressReports(input: { count: 100, order: DESC }) {
         items {
           ...PeriodicReport

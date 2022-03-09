@@ -13,7 +13,6 @@ export const Engagement = () => {
   const { engagementId = '' } = useParams();
   const { data, loading } = useQuery(EngagementDocument, {
     variables: {
-      projectId,
       engagementId,
       changeset: changesetId,
     },

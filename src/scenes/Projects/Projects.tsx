@@ -1,14 +1,12 @@
 import loadable from '@loadable/component';
 import React from 'react';
-import { Route, Routes } from 'react-router-dom';
+import { Route, Routes, useLocation } from 'react-router-dom';
 import { ChangesetContext } from '../../components/Changeset';
 import { NotFoundRoute } from '../../components/Error';
 import { Navigate } from '../../components/Routing';
 import { useBetaFeatures } from '../../components/Session';
+import { splicePath } from '../../util';
 
-const Engagements = loadable(() => import('../Engagement'), {
-  resolveComponent: (m) => m.Engagements,
-});
 const PartnershipList = loadable(() => import('../Partnerships/List'), {
   resolveComponent: (m) => m.PartnershipList,
 });
@@ -74,3 +72,5 @@ const ProjectDetails = () => (
     </Routes>
   </ChangesetContext>
 );
+
+const Engagements = () => <Navigate to={splicePath(useLocation(), 1, 2)} />;

@@ -21,6 +21,11 @@ export const EngagementBreadcrumb = ({
       data={
         data?.__typename === 'LanguageEngagement'
           ? data.language.value?.name
+          : data?.__typename === 'InternshipEngagement'
+          ? {
+              canRead: !!data.intern.value?.fullName,
+              value: data.intern.value?.fullName,
+            }
           : undefined
       }
       redacted="You don't have permission to view this engagement's name"

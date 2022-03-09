@@ -34,14 +34,7 @@ fragment CreateProductResult on Product {
   }
 }
 
-query ProductInfoForCreate(
-  $projectId: ID!
-  $changeset: ID
-  $engagementId: ID!
-) {
-  project(id: $projectId, changeset: $changeset) {
-    ...ProjectBreadcrumb
-  }
+query ProductInfoForCreate($engagementId: ID!, $changeset: ID) {
   engagement(id: $engagementId, changeset: $changeset) {
     ...EngagementBreadcrumb
     ...EditPartnershipsProducingMediumsInfo

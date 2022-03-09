@@ -44,13 +44,11 @@ export const CreateProduct = () => {
 
   const { data, loading } = useQuery(ProductInfoForCreateDocument, {
     variables: {
-      projectId,
-      changeset: changesetId,
       engagementId,
+      changeset: changesetId,
     },
   });
 
-  const project = data?.project;
   const engagement =
     // Products are only created for language engagements
     data?.engagement.__typename === 'LanguageEngagement'
@@ -206,7 +204,7 @@ export const CreateProduct = () => {
     <main className={classes.root}>
       <Helmet title="Create Goal" />
       <Breadcrumbs>
-        <ProjectBreadcrumb data={project} />
+        <ProjectBreadcrumb data={engagement?.project} />
         <EngagementBreadcrumb data={engagement} />
         <Typography variant="h4">Create Goal</Typography>
       </Breadcrumbs>
