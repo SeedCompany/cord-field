@@ -2,7 +2,7 @@ import { IdFragment } from '../../api';
 import {
   idForUrl,
   useChangesetAwareIdFromUrl,
-} from '../../components/Changeset';
+} from '../../components/Changeset/useChangesetAwareIdFromUrl';
 
 export const useProjectId = () => {
   const { mergedId, id, ...rest } = useChangesetAwareIdFromUrl('projectId');
