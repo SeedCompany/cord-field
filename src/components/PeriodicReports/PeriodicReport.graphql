@@ -1,5 +1,5 @@
 fragment PeriodicReport on PeriodicReport {
-  id
+  ...Id
   type
   start
   end

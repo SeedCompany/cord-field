@@ -1,10 +1,10 @@
 import { sortBy, uniq } from 'lodash';
 import { Column } from 'material-table';
 import React, { useMemo } from 'react';
-import { displayProductStep, ProductStep } from '../../../../api';
-import { Link } from '../../../../components/Routing';
-import { Table } from '../../../../components/Table';
-import { bookIndexFromName } from '../../../../util/biblejs';
+import { displayProductStep, ProductStep } from '../../../api';
+import { Link } from '../../../components/Routing';
+import { Table } from '../../../components/Table';
+import { bookIndexFromName } from '../../../util/biblejs';
 import { ProgressOfProductForReportFragment } from './ProgressReportDetail.generated';
 
 interface ProductTableProps {

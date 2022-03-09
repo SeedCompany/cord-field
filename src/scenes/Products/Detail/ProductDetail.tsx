@@ -2,6 +2,7 @@ import { useQuery } from '@apollo/client';
 import { Grid, makeStyles, Typography } from '@material-ui/core';
 import React from 'react';
 import { useParams } from 'react-router-dom';
+import { idForUrl } from '../../../components/Changeset';
 import { ReportLabel } from '../../../components/PeriodicReports/ReportLabel';
 import { ResponsiveDivider } from '../../../components/ResponsiveDivider';
 import { Link } from '../../../components/Routing';
@@ -67,7 +68,7 @@ export const ProductDetail = () => {
               <Grid item xs lg={7} container direction="column" spacing={2}>
                 <Grid item component={Typography} variant="h3" paragraph>
                   Progress for{' '}
-                  <Link to={`../../reports/progress/${progress.report.id}`}>
+                  <Link to={`/progress-reports/${idForUrl(progress.report)}`}>
                     <ReportLabel report={progress.report} />
                   </Link>
                 </Grid>

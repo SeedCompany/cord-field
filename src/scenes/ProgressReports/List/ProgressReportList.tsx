@@ -4,12 +4,12 @@ import { useNavigate } from 'react-router-dom';
 import {
   idForUrl,
   useChangesetAwareIdFromUrl,
-} from '../../../../components/Changeset';
-import { EngagementBreadcrumb } from '../../../../components/EngagementBreadcrumb';
-import { Error } from '../../../../components/Error';
-import { PeriodicReportsList } from '../../../../components/PeriodicReports';
-import { ReportRow } from '../../../../components/PeriodicReports/PeriodicReportsTable';
-import { ProjectBreadcrumb } from '../../../../components/ProjectBreadcrumb';
+} from '../../../components/Changeset';
+import { EngagementBreadcrumb } from '../../../components/EngagementBreadcrumb';
+import { Error } from '../../../components/Error';
+import { PeriodicReportsList } from '../../../components/PeriodicReports';
+import { ReportRow } from '../../../components/PeriodicReports/PeriodicReportsTable';
+import { ProjectBreadcrumb } from '../../../components/ProjectBreadcrumb';
 import { ProgressReportsDocument } from './ProgressReportList.generated';
 
 export const ProgressReportsList = () => {
@@ -22,9 +22,6 @@ export const ProgressReportsList = () => {
     },
   });
   const navigate = useNavigate();
-  const engagementUrl = data
-    ? `/engagements/${idForUrl(data.engagement)}`
-    : '.';
 
   if (error) {
     return (
@@ -43,7 +40,7 @@ export const ProgressReportsList = () => {
       : undefined;
 
   const handleRowClick = (row: ReportRow) => {
-    navigate(`${engagementUrl}/reports/progress/${row.report.id}`);
+    navigate(`/progress-reports/${idForUrl(row.report)}`);
   };
 
   return (
