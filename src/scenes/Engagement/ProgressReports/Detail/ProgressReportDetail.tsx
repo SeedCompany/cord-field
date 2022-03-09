@@ -15,6 +15,7 @@ import { Helmet } from 'react-helmet-async';
 import { useParams } from 'react-router-dom';
 import { useWindowSize } from 'react-use';
 import { Breadcrumb } from '../../../../components/Breadcrumb';
+import { useChangesetAwareIdFromUrl } from '../../../../components/Changeset';
 import { useDialog } from '../../../../components/Dialog';
 import { EngagementBreadcrumb } from '../../../../components/EngagementBreadcrumb';
 import { Error } from '../../../../components/Error';
@@ -27,7 +28,6 @@ import { ProjectBreadcrumb } from '../../../../components/ProjectBreadcrumb';
 import { Redacted } from '../../../../components/Redacted';
 import { SkipPeriodicReportDialog } from '../../../Projects/Reports/SkipPeriodicReportDialog';
 import { UpdatePeriodicReportDialog } from '../../../Projects/Reports/UpdatePeriodicReportDialog';
-import { useProjectId } from '../../../Projects/useProjectId';
 import { ProductTableList } from './ProductTableList';
 import { ProgressReportCard } from './ProgressReportCard';
 import { ProgressReportDetailDocument } from './ProgressReportDetail.generated';
@@ -54,8 +54,9 @@ const useStyles = makeStyles(({ spacing, breakpoints }) => ({
 
 export const ProgressReportDetail: FC = () => {
   const classes = useStyles();
-  const { changesetId } = useProjectId();
-  const { engagementId = '', progressReportId = '' } = useParams();
+  const { id: engagementId, changesetId } =
+    useChangesetAwareIdFromUrl('engagementId');
+  const { progressReportId = '' } = useParams();
   const windowSize = useWindowSize();
 
   // Single file for new version, empty array for received date update.

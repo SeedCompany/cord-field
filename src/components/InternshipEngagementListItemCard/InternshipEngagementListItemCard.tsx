@@ -10,6 +10,7 @@ import clsx from 'clsx';
 import { startCase } from 'lodash';
 import * as React from 'react';
 import { displayEngagementStatus } from '../../api';
+import { idForUrl } from '../Changeset';
 import { DisplaySimpleProperty } from '../DisplaySimpleProperty';
 import { FormattedDate } from '../Formatters';
 import { ButtonLink, CardActionAreaLink } from '../Routing';
@@ -68,7 +69,7 @@ export const InternshipEngagementListItemCard = (
   return (
     <Card className={clsx(classes.root, props.className)}>
       <CardActionAreaLink
-        to={`engagements/${props.id}`}
+        to={`/engagements/${idForUrl(props)}`}
         className={classes.card}
       >
         <Grid
@@ -112,7 +113,7 @@ export const InternshipEngagementListItemCard = (
         </Grid>
       </CardActionAreaLink>
       <CardActions>
-        <ButtonLink to={`engagements/${props.id}`} color="primary">
+        <ButtonLink to={`/engagements/${idForUrl(props)}`} color="primary">
           View Details
         </ButtonLink>
       </CardActions>

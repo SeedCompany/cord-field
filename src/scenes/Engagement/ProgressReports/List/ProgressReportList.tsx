@@ -1,17 +1,20 @@
 import { useQuery } from '@apollo/client';
 import React from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
+import {
+  idForUrl,
+  useChangesetAwareIdFromUrl,
+} from '../../../../components/Changeset';
 import { EngagementBreadcrumb } from '../../../../components/EngagementBreadcrumb';
 import { Error } from '../../../../components/Error';
 import { PeriodicReportsList } from '../../../../components/PeriodicReports';
 import { ReportRow } from '../../../../components/PeriodicReports/PeriodicReportsTable';
 import { ProjectBreadcrumb } from '../../../../components/ProjectBreadcrumb';
-import { useProjectId } from '../../../Projects/useProjectId';
 import { ProgressReportsDocument } from './ProgressReportList.generated';
 
 export const ProgressReportsList = () => {
-  const { projectId, changesetId, projectUrl } = useProjectId();
-  const { engagementId = '' } = useParams();
+  const { id: engagementId, changesetId } =
+    useChangesetAwareIdFromUrl('engagementId');
   const { data, error } = useQuery(ProgressReportsDocument, {
     variables: {
       engagementId,
@@ -20,7 +23,7 @@ export const ProgressReportsList = () => {
   });
   const navigate = useNavigate();
   const engagementUrl = data
-    ? `${projectUrl}/engagements/${data.engagement.id}`
+    ? `/engagements/${idForUrl(data.engagement)}`
     : '.';
 
   if (error) {

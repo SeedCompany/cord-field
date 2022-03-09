@@ -3,13 +3,13 @@ import { Breadcrumbs, makeStyles, Typography } from '@material-ui/core';
 import { Skeleton } from '@material-ui/lab';
 import React, { useMemo } from 'react';
 import { Helmet } from 'react-helmet-async';
-import { useNavigate, useParams } from 'react-router';
+import { useNavigate } from 'react-router';
 import { addItemToList, handleFormError } from '../../../api';
+import { useChangesetAwareIdFromUrl } from '../../../components/Changeset';
 import { EngagementBreadcrumb } from '../../../components/EngagementBreadcrumb';
 import { ProjectBreadcrumb } from '../../../components/ProjectBreadcrumb';
 import { callAll, entries, mapFromList } from '../../../util';
 import { getFullBookRange } from '../../../util/biblejs';
-import { useProjectId } from '../../Projects/useProjectId';
 import {
   ProductForm,
   ProductFormProps,
@@ -39,8 +39,8 @@ export const CreateProduct = () => {
   const classes = useStyles();
   const navigate = useNavigate();
 
-  const { projectId, changesetId } = useProjectId();
-  const { engagementId = '' } = useParams();
+  const { id: engagementId, changesetId } =
+    useChangesetAwareIdFromUrl('engagementId');
 
   const { data, loading } = useQuery(ProductInfoForCreateDocument, {
     variables: {

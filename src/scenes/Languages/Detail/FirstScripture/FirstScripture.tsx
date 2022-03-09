@@ -8,7 +8,6 @@ import { Skeleton } from '@material-ui/lab';
 import * as React from 'react';
 import { Redacted } from '../../../../components/Redacted';
 import { Link } from '../../../../components/Routing';
-import { getProjectUrl } from '../../../Projects/useProjectId';
 import { FirstScriptureFragment } from './FirstScripture.generated';
 
 const useStyles = makeStyles(({ spacing }) => ({
@@ -86,9 +85,7 @@ export const FirstScripture = ({ data }: { data?: FirstScriptureFragment }) => {
       <Typography className={classes.text}>
         First Scripture:&nbsp;&nbsp;
         <Link
-          to={`${getProjectUrl(project)}/engagements/${
-            scripture.engagement.id
-          }`}
+          to={`/engagements/${scripture.engagement.id}`}
           underline={project.name.canRead ? undefined : 'none'}
         >
           {project.name.canRead ? (

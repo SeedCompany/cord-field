@@ -1,3 +1,4 @@
+import { Location } from 'history';
 import { compact, fill, isEmpty, times } from 'lodash';
 import { Nullable } from './types';
 
@@ -81,6 +82,14 @@ export const splice = <T>(
   const newList = list.slice();
   newList.splice(...args);
   return newList;
+};
+
+export const splicePath = (
+  path: string | Location,
+  ...args: Parameters<any[]['splice']>
+) => {
+  path = typeof path === 'string' ? path : path.pathname;
+  return splice(path.split('/'), ...args).join('/');
 };
 
 /**
