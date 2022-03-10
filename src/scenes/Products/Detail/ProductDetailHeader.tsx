@@ -10,6 +10,7 @@ import { Skeleton } from '@material-ui/lab';
 import React from 'react';
 import { Helmet } from 'react-helmet-async';
 import { Breadcrumb } from '../../../components/Breadcrumb';
+import { EngagementBreadcrumb } from '../../../components/EngagementBreadcrumb';
 import { Fab } from '../../../components/Fab';
 import { ProjectBreadcrumb } from '../../../components/ProjectBreadcrumb';
 import { Redacted } from '../../../components/Redacted';
@@ -37,14 +38,7 @@ export const ProductDetailHeader = ({ product }: { product?: Product }) => {
       <Grid item>
         <Breadcrumbs>
           <ProjectBreadcrumb data={project} />
-          {langName ? (
-            <Breadcrumb to="../..">{langName}</Breadcrumb>
-          ) : (
-            <Redacted
-              info="You do not have permission to view this engagement's name"
-              width={200}
-            />
-          )}
+          <EngagementBreadcrumb data={product?.engagement} />
           <Breadcrumb to=".">Goal</Breadcrumb>
         </Breadcrumbs>
       </Grid>

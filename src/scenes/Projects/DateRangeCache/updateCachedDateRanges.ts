@@ -34,7 +34,13 @@ export const updateEngagementDateRanges = (
 
         // Invalidate progress reports as well. These can just be re-fetched when needed.
         if (eng.__typename === 'LanguageEngagement') {
-          invalidateProps(cache, eng, 'progressReports');
+          invalidateProps(
+            cache,
+            eng,
+            'progressReports',
+            'currentProgressReportDue',
+            'nextProgressReportDue'
+          );
         }
       }
     },

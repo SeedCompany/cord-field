@@ -6,8 +6,7 @@ import {
 } from '@material-ui/icons';
 import { Alert, AlertTitle } from '@material-ui/lab';
 import * as React from 'react';
-import { IconButton } from '../../../components/IconButton';
-import { ProjectChangeRequestListItemFragment as ChangeRequest } from '../../../components/ProjectChangeRequestListItem';
+import { IconButton } from '../IconButton';
 
 const useStyles = makeStyles(({ spacing, breakpoints }) => ({
   root: {
@@ -18,12 +17,11 @@ const useStyles = makeStyles(({ spacing, breakpoints }) => ({
 
 interface Props {
   changesetId: string | null;
-  changeset?: ChangeRequest | null;
-  onClose?: () => void;
   onEdit?: () => void;
+  onClose?: () => void;
 }
 
-export const ProjectChangeRequestBanner = (props: Props) => {
+export const ChangesetBanner = (props: Props) => {
   const classes = useStyles();
 
   if (!props.changesetId) {
@@ -36,17 +34,21 @@ export const ProjectChangeRequestBanner = (props: Props) => {
       className={classes.root}
       action={
         <>
-          <Tooltip title="Edit Change Request">
-            <IconButton color="inherit" onClick={props.onEdit}>
-              <EditIcon />
-            </IconButton>
-          </Tooltip>
+          {props.onEdit && (
+            <Tooltip title="Edit Change Request">
+              <IconButton color="inherit" onClick={props.onEdit}>
+                <EditIcon />
+              </IconButton>
+            </Tooltip>
+          )}
 
-          <Tooltip title="Close Change Request">
-            <IconButton color="inherit" onClick={props.onClose}>
-              <CloseIcon />
-            </IconButton>
-          </Tooltip>
+          {props.onClose && (
+            <Tooltip title="Close Change Request">
+              <IconButton color="inherit" onClick={props.onClose}>
+                <CloseIcon />
+              </IconButton>
+            </Tooltip>
+          )}
         </>
       }
     >

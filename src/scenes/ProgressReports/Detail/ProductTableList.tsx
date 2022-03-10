@@ -2,7 +2,7 @@ import { Grid, GridProps, Typography } from '@material-ui/core';
 import { Skeleton } from '@material-ui/lab';
 import { groupBy } from 'lodash';
 import React from 'react';
-import Table from '../../../../components/Table/Table';
+import Table from '../../../components/Table/Table';
 import { ProductTable } from './ProductTable';
 import { ProgressOfProductForReportFragment } from './ProgressReportDetail.generated';
 

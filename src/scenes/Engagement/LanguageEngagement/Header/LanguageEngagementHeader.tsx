@@ -10,19 +10,16 @@ import React from 'react';
 import { Helmet } from 'react-helmet-async';
 import { canEditAny, displayEngagementStatus } from '../../../../api';
 import { BooleanProperty } from '../../../../components/BooleanProperty';
-import { Breadcrumb } from '../../../../components/Breadcrumb';
 import { DataButton } from '../../../../components/DataButton';
 import { useDialog } from '../../../../components/Dialog';
+import { EngagementBreadcrumb } from '../../../../components/EngagementBreadcrumb';
 import { Fab } from '../../../../components/Fab';
 import {
   FormattedDateRange,
   FormattedDateTime,
 } from '../../../../components/Formatters';
 import { PresetInventoryIconFilled } from '../../../../components/Icons';
-import {
-  ProjectBreadcrumb,
-  ProjectBreadcrumbFragment,
-} from '../../../../components/ProjectBreadcrumb';
+import { ProjectBreadcrumb } from '../../../../components/ProjectBreadcrumb';
 import { Redacted } from '../../../../components/Redacted';
 import { Link } from '../../../../components/Routing';
 import { Many } from '../../../../util';
@@ -50,11 +47,9 @@ const useStyles = makeStyles(({ palette, spacing }) => ({
 }));
 
 export const LanguageEngagementHeader = ({
-  project,
   engagement,
 }: {
   engagement: LanguageEngagementDetailFragment & EngagementToDeleteFragment;
-  project: ProjectBreadcrumbFragment;
 }) => {
   const classes = useStyles();
 
@@ -72,20 +67,13 @@ export const LanguageEngagementHeader = ({
     <>
       <Helmet
         title={`${langName ?? 'A Language'} in ${
-          project.name.value ?? 'a project'
+          engagement.project.name.value ?? 'a project'
         }`}
       />
       <Grid item>
         <Breadcrumbs>
-          <ProjectBreadcrumb data={project} />
-          {langName ? (
-            <Breadcrumb to=".">{langName}</Breadcrumb>
-          ) : (
-            <Redacted
-              info="You do not have permission to view this engagement's name"
-              width={200}
-            />
-          )}
+          <ProjectBreadcrumb data={engagement.project} />
+          <EngagementBreadcrumb data={engagement} />
         </Breadcrumbs>
       </Grid>
       <Grid item container spacing={3} alignItems="center">
@@ -126,7 +114,10 @@ export const LanguageEngagementHeader = ({
           </Grid>
         )}
         <Grid item>
-          <DeleteEngagement project={project} engagement={engagement} />
+          <DeleteEngagement
+            project={engagement.project}
+            engagement={engagement}
+          />
         </Grid>
       </Grid>
       <Grid item container spacing={3} alignItems="center">

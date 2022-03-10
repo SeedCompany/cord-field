@@ -12,22 +12,24 @@ import { Edit, SkipNextRounded as SkipIcon } from '@material-ui/icons';
 import { Skeleton } from '@material-ui/lab';
 import React, { FC } from 'react';
 import { Helmet } from 'react-helmet-async';
-import { useParams } from 'react-router-dom';
 import { useWindowSize } from 'react-use';
-import { Breadcrumb } from '../../../../components/Breadcrumb';
-import { useDialog } from '../../../../components/Dialog';
-import { EngagementBreadcrumb } from '../../../../components/EngagementBreadcrumb';
-import { Error } from '../../../../components/Error';
-import { Fab } from '../../../../components/Fab';
-import { FieldOverviewCard } from '../../../../components/FieldOverviewCard';
-import { FormattedDate } from '../../../../components/Formatters';
-import { IconButton } from '../../../../components/IconButton';
-import { ReportLabel } from '../../../../components/PeriodicReports/ReportLabel';
-import { ProjectBreadcrumb } from '../../../../components/ProjectBreadcrumb';
-import { Redacted } from '../../../../components/Redacted';
-import { SkipPeriodicReportDialog } from '../../../Projects/Reports/SkipPeriodicReportDialog';
-import { UpdatePeriodicReportDialog } from '../../../Projects/Reports/UpdatePeriodicReportDialog';
-import { useProjectId } from '../../../Projects/useProjectId';
+import { Breadcrumb } from '../../../components/Breadcrumb';
+import {
+  idForUrl,
+  useChangesetAwareIdFromUrl,
+} from '../../../components/Changeset';
+import { useDialog } from '../../../components/Dialog';
+import { EngagementBreadcrumb } from '../../../components/EngagementBreadcrumb';
+import { Error } from '../../../components/Error';
+import { Fab } from '../../../components/Fab';
+import { FieldOverviewCard } from '../../../components/FieldOverviewCard';
+import { FormattedDate } from '../../../components/Formatters';
+import { IconButton } from '../../../components/IconButton';
+import { ReportLabel } from '../../../components/PeriodicReports/ReportLabel';
+import { ProjectBreadcrumb } from '../../../components/ProjectBreadcrumb';
+import { Redacted } from '../../../components/Redacted';
+import { SkipPeriodicReportDialog } from '../../Projects/Reports/SkipPeriodicReportDialog';
+import { UpdatePeriodicReportDialog } from '../../Projects/Reports/UpdatePeriodicReportDialog';
 import { ProductTableList } from './ProductTableList';
 import { ProgressReportCard } from './ProgressReportCard';
 import { ProgressReportDetailDocument } from './ProgressReportDetail.generated';
@@ -54,8 +56,7 @@ const useStyles = makeStyles(({ spacing, breakpoints }) => ({
 
 export const ProgressReportDetail: FC = () => {
   const classes = useStyles();
-  const { changesetId } = useProjectId();
-  const { engagementId = '', progressReportId = '' } = useParams();
+  const { id, changesetId } = useChangesetAwareIdFromUrl('reportId');
   const windowSize = useWindowSize();
 
   // Single file for new version, empty array for received date update.
@@ -64,9 +65,8 @@ export const ProgressReportDetail: FC = () => {
 
   const { data, error } = useQuery(ProgressReportDetailDocument, {
     variables: {
-      changeset: changesetId,
-      engagementId,
-      progressReportId,
+      id,
+      changesetId,
     },
   });
   if (error) {
@@ -84,6 +84,7 @@ export const ProgressReportDetail: FC = () => {
     data?.periodicReport.__typename === 'ProgressReport'
       ? data.periodicReport
       : null;
+  const engagement = report?.parent;
 
   return (
     <div className={classes.root}>
@@ -91,9 +92,15 @@ export const ProgressReportDetail: FC = () => {
         <Helmet title="Progress Report" />
         <Breadcrumbs
           children={[
-            <ProjectBreadcrumb data={data?.engagement.project} />,
-            <EngagementBreadcrumb data={data?.engagement} />,
-            <Breadcrumb to="..">
+            <ProjectBreadcrumb data={engagement?.project} />,
+            <EngagementBreadcrumb data={engagement} />,
+            <Breadcrumb
+              to={
+                engagement
+                  ? `/engagements/${idForUrl(engagement)}/reports/progress`
+                  : undefined
+              }
+            >
               {!report ? <Skeleton width={200} /> : 'Progress Reports'}
             </Breadcrumb>,
             <Breadcrumb to=".">

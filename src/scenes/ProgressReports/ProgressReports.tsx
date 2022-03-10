@@ -2,12 +2,11 @@ import React from 'react';
 import { Route, Routes } from 'react-router-dom';
 import { ChangesetContext } from '../../components/Changeset';
 import { NotFoundRoute } from '../../components/Error';
-import { ProductDetail } from './Detail';
-import { EditProduct } from './Edit';
+import { ProgressReportDetail as ProgressReport } from './Detail';
 
-export const Products = () => (
+export const ProgressReports = () => (
   <Routes>
-    <Route path=":productId/*" element={<Detail />} />
+    <Route path=":reportId/*" element={<Detail />} />
     {NotFoundRoute}
   </Routes>
 );
@@ -15,8 +14,7 @@ export const Products = () => (
 const Detail = () => (
   <ChangesetContext>
     <Routes>
-      <Route path="" element={<ProductDetail />} />
-      <Route path="edit" element={<EditProduct />} />
+      <Route path="" element={<ProgressReport />} />
       {NotFoundRoute}
     </Routes>
   </ChangesetContext>

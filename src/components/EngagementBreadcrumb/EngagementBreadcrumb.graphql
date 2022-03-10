@@ -1,5 +1,8 @@
 fragment EngagementBreadcrumb on Engagement {
   ...Id
+  project {
+    ...ProjectBreadcrumb
+  }
   ... on LanguageEngagement {
     language {
       value {
@@ -12,6 +15,14 @@ fragment EngagementBreadcrumb on Engagement {
           canRead
           value
         }
+      }
+    }
+  }
+  ... on InternshipEngagement {
+    intern {
+      value {
+        id
+        fullName
       }
     }
   }

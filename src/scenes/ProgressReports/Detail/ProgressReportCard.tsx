@@ -3,9 +3,9 @@ import React from 'react';
 import {
   DefinedFileCard,
   DefinedFileCardProps,
-} from '../../../../components/DefinedFileCard';
-import { FileActionsContextProvider } from '../../../../components/files/FileActions';
-import { UploadPeriodicReportFileDocument } from '../../../../components/PeriodicReports/Upload/UpdatePeriodicReport.generated';
+} from '../../../components/DefinedFileCard';
+import { FileActionsContextProvider } from '../../../components/files/FileActions';
+import { UploadPeriodicReportFileDocument } from '../../../components/PeriodicReports/Upload/UpdatePeriodicReport.generated';
 import { ProgressReportFragment } from './ProgressReportDetail.generated';
 
 interface Props extends Pick<DefinedFileCardProps, 'onUpload' | 'disableIcon'> {

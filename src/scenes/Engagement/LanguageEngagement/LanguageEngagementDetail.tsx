@@ -1,6 +1,6 @@
 import { Card, Grid, makeStyles, Tooltip, Typography } from '@material-ui/core';
 import { Add } from '@material-ui/icons';
-import React, { FC } from 'react';
+import React from 'react';
 import { Fab } from '../../../components/Fab';
 import { ResponsiveDivider } from '../../../components/ResponsiveDivider';
 import { Link } from '../../../components/Routing';
@@ -39,10 +39,7 @@ const useStyles = makeStyles(({ spacing, breakpoints }) => ({
   },
 }));
 
-export const LanguageEngagementDetail: FC<EngagementQuery> = ({
-  project,
-  engagement,
-}) => {
+export const LanguageEngagementDetail = ({ engagement }: EngagementQuery) => {
   const classes = useStyles();
 
   if (engagement.__typename !== 'LanguageEngagement') {
@@ -58,7 +55,7 @@ export const LanguageEngagementDetail: FC<EngagementQuery> = ({
         spacing={3}
         className={classes.main}
       >
-        <LanguageEngagementHeader engagement={engagement} project={project} />
+        <LanguageEngagementHeader engagement={engagement} />
         <Grid item container spacing={5}>
           <Grid item lg={5} container direction="column" spacing={3}>
             <Grid item container spacing={3}>

@@ -3,8 +3,9 @@ import { Breadcrumbs, makeStyles, Typography } from '@material-ui/core';
 import { Skeleton } from '@material-ui/lab';
 import React, { useMemo } from 'react';
 import { Helmet } from 'react-helmet-async';
-import { useNavigate, useParams } from 'react-router';
+import { useNavigate } from 'react-router';
 import { handleFormError, removeItemFromList } from '../../../api';
+import { useChangesetAwareIdFromUrl } from '../../../components/Changeset';
 import { EngagementBreadcrumb } from '../../../components/EngagementBreadcrumb';
 import { ProjectBreadcrumb } from '../../../components/ProjectBreadcrumb';
 import { callAll, entries, mapFromList } from '../../../util';
@@ -13,7 +14,6 @@ import {
   isFullBookRange,
   removeScriptureTypename,
 } from '../../../util/biblejs';
-import { useProjectId } from '../../Projects/useProjectId';
 import {
   ProductForm,
   ProductFormProps,
@@ -47,24 +47,17 @@ export const EditProduct = () => {
   const classes = useStyles();
   const navigate = useNavigate();
 
-  const { projectId, changesetId } = useProjectId();
-  const { engagementId = '', productId = '' } = useParams();
-
+  const { id, changesetId } = useChangesetAwareIdFromUrl('productId');
   const { data, loading, error } = useQuery(ProductInfoForEditDocument, {
     variables: {
-      projectId,
-      changeset: changesetId,
-      engagementId,
-      productId,
+      id,
+      changesetId,
     },
   });
 
-  const project = data?.project;
-  const engagement =
-    data?.engagement.__typename === 'LanguageEngagement'
-      ? data.engagement
-      : undefined;
   const product = data?.product;
+  const engagement = product?.engagement;
+  const project = engagement?.project;
 
   const onUpdate = updateProgressSteps(engagement!, product!);
   const [updateDirectScriptureProduct] = useMutation(
@@ -308,10 +301,10 @@ export const EditProduct = () => {
         {loading ? <Skeleton width="50%" variant="text" /> : 'Edit Goal'}
       </Typography>
 
-      {!loading && data && engagement && product && (
+      {!loading && data && (
         <ProductForm
-          product={product}
-          engagement={engagement}
+          product={data.product}
+          engagement={data.product.engagement}
           onSubmit={async (data, form) => {
             try {
               await handleSubmit(data, form);

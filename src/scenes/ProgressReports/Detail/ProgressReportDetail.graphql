@@ -1,16 +1,9 @@
-query ProgressReportDetail(
-  $changeset: ID
-  $engagementId: ID!
-  $progressReportId: ID!
-) {
-  engagement(id: $engagementId, changeset: $changeset) {
-    ...EngagementBreadcrumb
-    project {
-      ...ProjectBreadcrumb
-    }
-  }
-  periodicReport(id: $progressReportId) {
+query ProgressReportDetail($id: ID!, $changesetId: ID) {
+  periodicReport(id: $id, changeset: $changesetId) {
     ...ProgressReport
+    parent {
+      ...EngagementBreadcrumb
+    }
   }
 }
 
