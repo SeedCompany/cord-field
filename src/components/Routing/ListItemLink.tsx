@@ -1,7 +1,6 @@
 import { ListItem, ListItemProps } from '@material-ui/core';
-import clsx from 'clsx';
-import React, { forwardRef, Ref } from 'react';
-import { Link, NavLinkProps, useMatch } from 'react-router-dom';
+import React, { forwardRef } from 'react';
+import { Link, LinkProps, useMatch } from 'react-router-dom';
 import { assert } from 'ts-essentials';
 import { Merge } from 'type-fest';
 
@@ -15,7 +14,7 @@ type BaseProps = Omit<ListItemProps<'a'>, 'button' | 'component' | 'href'> & {
   exact?: boolean;
 };
 
-interface InternalProps extends Merge<BaseProps, NavLinkProps> {
+interface InternalProps extends Merge<BaseProps, LinkProps> {
   external?: false;
 }
 
@@ -47,18 +46,15 @@ export const ListItemLink = forwardRef<HTMLAnchorElement, ListItemLinkProps>(
       );
     }
 
-    const { activeStyle, activeClassName } = props as InternalProps;
     return (
       <ListItem
         selected={Boolean(active)}
         {...props}
         to={to}
         button
-        ref={ref as Ref<HTMLDivElement>}
-        component={Link as any}
+        ref={ref}
+        component={Link}
         aria-current={active ? props['aria-current'] ?? 'page' : undefined}
-        style={{ ...props.style, ...(active ? activeStyle : null) }}
-        className={clsx(props.className, active && activeClassName)}
       >
         {children}
       </ListItem>
