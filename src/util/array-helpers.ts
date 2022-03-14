@@ -85,8 +85,8 @@ export const splice = <T>(
 };
 
 export const splicePath = (
-  path: string | Location,
-  ...args: Parameters<any[]['splice']>
+  path: string | Location<any>,
+  ...args: Parameters<string[]['splice']>
 ) => {
   path = typeof path === 'string' ? path : path.pathname;
   return splice(path.split('/'), ...args).join('/');
