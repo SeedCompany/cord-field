@@ -1,8 +1,6 @@
 import { CircularProgress, makeStyles, ThemeProvider } from '@material-ui/core';
 import clsx from 'clsx';
-import { pickBy } from 'lodash';
-import LogRocket from 'logrocket';
-import React, { FC, useEffect } from 'react';
+import React, { FC } from 'react';
 import { useLocation, useRoutes } from 'react-router-dom';
 import { Picture } from '../../components/Picture';
 import { useNavigate } from '../../components/Routing';
@@ -49,20 +47,6 @@ export const Authentication: FC = ({ children }) => {
   const location = useLocation();
   const navigate = useNavigate();
   const { session, sessionLoading } = useSession();
-
-  useEffect(() => {
-    if (!session) {
-      return;
-    }
-    LogRocket.identify(
-      session.id,
-      pickBy({
-        name: session.fullName,
-        email: session.email.value,
-        timezone: session.timezone.value?.name,
-      }) as Record<string, string>
-    );
-  }, [session]);
 
   const matched = useRoutes([
     {

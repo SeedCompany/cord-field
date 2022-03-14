@@ -4,6 +4,7 @@ import React from 'react';
 import { Helmet } from 'react-helmet-async';
 import { Route, Routes } from 'react-router-dom';
 import { NotFoundRoute } from '../../components/Error';
+import { useIdentifyInLogRocket } from '../../components/Session';
 import { Authentication } from '../Authentication';
 import { Home } from '../Home';
 import { CreateDialogProviders } from './Creates';
@@ -62,6 +63,7 @@ const useStyles = makeStyles(() => ({
 export const Root = () => {
   const classes = useStyles();
   useNonProdWarning();
+  useIdentifyInLogRocket();
 
   const routes = (
     <Routes>
