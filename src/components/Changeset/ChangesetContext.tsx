@@ -22,7 +22,7 @@ export const ChangesetContext: FC = ({ children }) => {
   const params = useParams();
   // First route param key with a ~ in its value
   const key = useMemo(
-    () => Object.entries(params).find(([_, val]) => val.includes('~'))?.[0],
+    () => Object.entries(params).find(([_, val]) => val?.includes('~'))?.[0],
     [params]
   );
   const { changesetId, closeChangeset } = useChangesetAwareIdFromUrl(key ?? '');
