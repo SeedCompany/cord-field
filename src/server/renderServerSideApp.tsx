@@ -25,9 +25,11 @@ import { Nest } from '../components/Nest';
 import { ServerLocation } from '../components/Routing';
 import { ServerData, ServerDataProvider } from '../components/ServerData';
 import { RequestContext } from '../hooks';
+import { basePathOfUrl } from '../util';
 import { indexHtml } from './indexHtml';
 
 const serverHost = process.env.RAZZLE_API_BASE_URL || '';
+const basePath = basePathOfUrl(process.env.PUBLIC_URL);
 
 export const createServerApolloClient = (
   req: ExpressRequest,
@@ -145,7 +147,7 @@ const ServerApp = ({
       <HelmetProvider context={helmetContext || {}} children={<></>} />,
       <ServerDataProvider value={data ?? {}} />,
       <RequestContext.Provider value={req} children={<></>} />,
-      <StaticRouter location={req.url} />,
+      <StaticRouter basename={basePath} location={req.originalUrl} />,
       <ApolloProvider client={apollo} children={<></>} />,
     ]}
   >

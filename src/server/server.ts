@@ -5,16 +5,14 @@ import express from 'express';
 import helmet from 'helmet';
 import responseTime from 'response-time';
 import { LogoutDocument } from '../scenes/Authentication/Logout/logout.generated';
-import { withoutTrailingSlash } from '../util';
+import { basePathOfUrl, withoutTrailingSlash } from '../util';
 import {
   createServerApolloClient,
   renderServerSideApp,
 } from './renderServerSideApp';
 
 const PUBLIC_URL = withoutTrailingSlash(process.env.PUBLIC_URL || '');
-const BASE_PATH = withoutTrailingSlash(
-  PUBLIC_URL.startsWith('http') ? new URL(PUBLIC_URL).pathname : PUBLIC_URL
-);
+const BASE_PATH = withoutTrailingSlash(basePathOfUrl(PUBLIC_URL));
 
 export const app = express();
 const router: express.Router = BASE_PATH ? express.Router() : app;

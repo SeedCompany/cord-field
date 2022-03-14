@@ -14,3 +14,6 @@ export const trailingSlash = (url?: string) =>
 
 export const withoutTrailingSlash = (url: string) =>
   url.endsWith('/') ? url.slice(0, -1) : url;
+
+export const basePathOfUrl = (url?: string) =>
+  url?.startsWith('http') ? new URL(url).pathname : url || '/';
