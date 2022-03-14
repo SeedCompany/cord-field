@@ -1,6 +1,7 @@
 import { GQLOperations } from '../../api';
 
 export * from './Authentication';
+export * from './useAuthRequired';
 
 export const SensitiveOperations = [
   GQLOperations.Mutation.Login,

@@ -1,11 +1,9 @@
 import { CircularProgress, makeStyles, ThemeProvider } from '@material-ui/core';
 import clsx from 'clsx';
 import React, { FC } from 'react';
-import { useLocation, useRoutes } from 'react-router-dom';
+import { useRoutes } from 'react-router-dom';
 import { Picture } from '../../components/Picture';
-import { useNavigate } from '../../components/Routing';
 import { useSession } from '../../components/Session';
-import { useIsomorphicEffect } from '../../hooks';
 import { createTheme } from '../../theme';
 import backgroundImg from './background.png';
 import { ForgotPassword } from './ForgotPassword';
@@ -44,9 +42,7 @@ const authTheme = createTheme({ dark: true });
 
 export const Authentication: FC = ({ children }) => {
   const classes = useStyles();
-  const location = useLocation();
-  const navigate = useNavigate();
-  const { session, sessionLoading } = useSession();
+  const { session } = useSession();
 
   const matched = useRoutes([
     {
@@ -64,16 +60,6 @@ export const Authentication: FC = ({ children }) => {
       element: <ResetPassword className={classes.card} />,
     },
   ]);
-
-  useIsomorphicEffect(() => {
-    if (!session && !sessionLoading && !matched) {
-      const current = location.pathname + location.search + location.hash;
-      const returnTo =
-        current !== '/' ? encodeURIComponent(current) : undefined;
-      const search = returnTo ? `?returnTo=${returnTo}` : undefined;
-      navigate({ pathname: '/login', search }, { replace: true });
-    }
-  }, [session, sessionLoading, navigate, matched, location]);
 
   // render anonymous auth scene, or spinner while waiting
   // for session or redirect to login when not logged in

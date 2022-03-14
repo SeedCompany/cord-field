@@ -1,6 +1,7 @@
 import { makeStyles } from '@material-ui/core';
 import React from 'react';
 import { Outlet } from 'react-router-dom';
+import { useAuthRequired } from '../Authentication';
 import { CreateDialogProviders } from './Creates';
 import { Header } from './Header';
 import { Sidebar } from './Sidebar';
@@ -19,6 +20,7 @@ const useStyles = makeStyles(() => ({
 }));
 
 export const MainLayout = () => {
+  useAuthRequired();
   const classes = useStyles();
   return (
     <div className={classes.root}>
