@@ -5,7 +5,7 @@ import { Skeleton } from '@material-ui/lab';
 import clsx from 'clsx';
 import React from 'react';
 import { Helmet } from 'react-helmet-async';
-import { useParams } from 'react-router';
+import { useParams } from 'react-router-dom';
 import { canEditAny, displayLocationType } from '../../../api';
 import { useDialog } from '../../../components/Dialog';
 import {
