@@ -29,7 +29,7 @@ export const ForgotPassword = (props: Except<Props, 'onSubmit'>) => {
   };
 
   const out = email ? (
-    <ForgotPasswordSuccess email={email} className={props.className} />
+    <ForgotPasswordSuccess email={email} />
   ) : (
     <ForgotPasswordForm {...props} onSubmit={submit} />
   );

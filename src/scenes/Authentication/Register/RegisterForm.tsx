@@ -16,8 +16,14 @@ import {
 import { minLength, required } from '../../../components/form/validators';
 import { CordIcon } from '../../../components/Icons';
 import { Link } from '../../../components/Routing';
+import { AuthContent } from '../AuthContent';
 
-const useStyles = makeStyles(({ spacing }) => ({
+const useStyles = makeStyles(({ spacing, breakpoints }) => ({
+  root: {
+    [breakpoints.up('md')]: {
+      maxWidth: 700,
+    },
+  },
   header: {
     display: 'flex',
     flexDirection: 'column',
@@ -47,105 +53,99 @@ export interface RegisterFields extends RegisterInput {
 export type RegisterFormProps = Pick<
   FormProps<RegisterFields>,
   'onSubmit' | 'initialValues'
-> & { className?: string };
+>;
 
-export const RegisterForm = ({ className, ...props }: RegisterFormProps) => {
+export const RegisterForm = (props: RegisterFormProps) => {
   const classes = useStyles();
   return (
-    <>
-      <div className={className}>
-        <div className={classes.header}>
-          <CordIcon className={classes.icon} />
-          <Typography variant="h4" gutterBottom={true}>
-            CORD FIELD
-          </Typography>
-          <Typography color="textSecondary">
-            Accelerating Bible Translation
-          </Typography>
-        </div>
-        <Form
-          {...props}
-          validate={passwordMatching}
-          decorators={decorators}
-          mutators={{ markConfirmPasswordTouched }}
-        >
-          {({ handleSubmit }) => (
-            <form onSubmit={handleSubmit}>
-              <SubmitError className={classes.formError} />
-              <Grid container spacing={2}>
-                <Grid item xs={12} md={6}>
-                  <TextField
-                    name="realFirstName"
-                    label="First Name"
-                    placeholder="Enter First Name"
-                    required
-                    validate={[required, minLength()]}
-                    margin="none"
-                    autoComplete="given-name"
-                  />
-                </Grid>
-                <Grid item xs={12} md={6}>
-                  <TextField
-                    name="realLastName"
-                    label="Last Name"
-                    placeholder="Enter Last Name"
-                    required
-                    validate={[required, minLength()]}
-                    margin="none"
-                    autoComplete="family-name"
-                  />
-                </Grid>
-                <Grid item xs={12} md={6}>
-                  <TextField
-                    name="displayFirstName"
-                    label="Public First Name"
-                    placeholder="Enter Public First Name"
-                    required
-                    validate={[required, minLength()]}
-                    margin="none"
-                    autoComplete="given-name"
-                  />
-                </Grid>
-                <Grid item xs={12} md={6}>
-                  <TextField
-                    name="displayLastName"
-                    label="Public Last Name"
-                    placeholder="Enter Public Last Name"
-                    required
-                    validate={[required, minLength()]}
-                    margin="none"
-                    autoComplete="family-name"
-                  />
-                </Grid>
-                <Grid item xs={12}>
-                  <EmailField
-                    caseSensitive
-                    autoComplete="email"
-                    margin="none"
-                  />
-                </Grid>
-                <Grid item xs={12} md={6}>
-                  <PasswordField autoComplete="new-password" margin="none" />
-                </Grid>
-                <Grid item xs={12} md={6}>
-                  <PasswordField
-                    name="confirmPassword"
-                    label="Re-Type Password"
-                    placeholder="Re-Enter Your Password"
-                    autoComplete="new-password"
-                    margin="none"
-                  />
-                </Grid>
-              </Grid>
-              <SubmitButton className={classes.submit}>Sign Up</SubmitButton>
-            </form>
-          )}
-        </Form>
-        <Link to="/login" className={classes.loginLink}>
-          Already have an account? Login
-        </Link>
+    <AuthContent className={classes.root}>
+      <div className={classes.header}>
+        <CordIcon className={classes.icon} />
+        <Typography variant="h4" gutterBottom={true}>
+          CORD FIELD
+        </Typography>
+        <Typography color="textSecondary">
+          Accelerating Bible Translation
+        </Typography>
       </div>
-    </>
+      <Form
+        {...props}
+        validate={passwordMatching}
+        decorators={decorators}
+        mutators={{ markConfirmPasswordTouched }}
+      >
+        {({ handleSubmit }) => (
+          <form onSubmit={handleSubmit}>
+            <SubmitError className={classes.formError} />
+            <Grid container spacing={2}>
+              <Grid item xs={12} md={6}>
+                <TextField
+                  name="realFirstName"
+                  label="First Name"
+                  placeholder="Enter First Name"
+                  required
+                  validate={[required, minLength()]}
+                  margin="none"
+                  autoComplete="given-name"
+                />
+              </Grid>
+              <Grid item xs={12} md={6}>
+                <TextField
+                  name="realLastName"
+                  label="Last Name"
+                  placeholder="Enter Last Name"
+                  required
+                  validate={[required, minLength()]}
+                  margin="none"
+                  autoComplete="family-name"
+                />
+              </Grid>
+              <Grid item xs={12} md={6}>
+                <TextField
+                  name="displayFirstName"
+                  label="Public First Name"
+                  placeholder="Enter Public First Name"
+                  required
+                  validate={[required, minLength()]}
+                  margin="none"
+                  autoComplete="given-name"
+                />
+              </Grid>
+              <Grid item xs={12} md={6}>
+                <TextField
+                  name="displayLastName"
+                  label="Public Last Name"
+                  placeholder="Enter Public Last Name"
+                  required
+                  validate={[required, minLength()]}
+                  margin="none"
+                  autoComplete="family-name"
+                />
+              </Grid>
+              <Grid item xs={12}>
+                <EmailField caseSensitive autoComplete="email" margin="none" />
+              </Grid>
+              <Grid item xs={12} md={6}>
+                <PasswordField autoComplete="new-password" margin="none" />
+              </Grid>
+              <Grid item xs={12} md={6}>
+                <PasswordField
+                  name="confirmPassword"
+                  label="Re-Type Password"
+                  placeholder="Re-Enter Your Password"
+                  autoComplete="new-password"
+                  margin="none"
+                />
+              </Grid>
+            </Grid>
+            <SubmitButton className={classes.submit}>Sign Up</SubmitButton>
+          </form>
+        )}
+      </Form>
+      <Link to="/login" className={classes.loginLink}>
+        Already have an account? Login
+      </Link>
+    </AuthContent>
   );
 };
 

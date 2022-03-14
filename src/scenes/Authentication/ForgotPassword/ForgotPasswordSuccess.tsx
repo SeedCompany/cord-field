@@ -1,6 +1,7 @@
 import { makeStyles, Typography } from '@material-ui/core';
 import React from 'react';
 import { ButtonLink } from '../../../components/Routing';
+import { AuthContent } from '../AuthContent';
 
 const useStyles = makeStyles(({ spacing }) => ({
   title: {
@@ -11,16 +12,10 @@ const useStyles = makeStyles(({ spacing }) => ({
   },
 }));
 
-export const ForgotPasswordSuccess = ({
-  email,
-  className,
-}: {
-  email: string;
-  className?: string;
-}) => {
+export const ForgotPasswordSuccess = ({ email }: { email: string }) => {
   const classes = useStyles();
   return (
-    <div className={className}>
+    <AuthContent>
       <Typography variant="h3" align="center" className={classes.title}>
         Check Your Email
       </Typography>
@@ -37,6 +32,6 @@ export const ForgotPasswordSuccess = ({
       >
         Back to Log In
       </ButtonLink>
-    </div>
+    </AuthContent>
   );
 };

@@ -36,7 +36,7 @@ export const ResetPassword = (props: Except<Props, 'onSubmit'>) => {
   };
 
   const out = success ? (
-    <ResetPasswordSuccess className={props.className} />
+    <ResetPasswordSuccess />
   ) : (
     <ResetPasswordForm {...props} onSubmit={submit} />
   );
