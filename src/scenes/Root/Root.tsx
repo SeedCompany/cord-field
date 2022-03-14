@@ -8,6 +8,7 @@ import { useIdentifyInLogRocket } from '../../components/Session';
 import { Authentication } from '../Authentication';
 import { Home } from '../Home';
 import { CreateDialogProviders } from './Creates';
+import { CssBaseline } from './CssBaseline';
 import { Header } from './Header';
 import { Sidebar } from './Sidebar';
 import { useNonProdWarning } from './useNonProdWarning';
@@ -41,13 +42,6 @@ const SearchResults = loadable(() => import('../SearchResults'), {
 });
 
 const useStyles = makeStyles(() => ({
-  // Use @global basically never
-  '@global': {
-    '#root': {
-      minHeight: '100vh',
-      display: 'flex',
-    },
-  },
   app: {
     flex: 1,
     display: 'flex',
@@ -83,6 +77,7 @@ export const Root = () => {
 
   return (
     <>
+      <CssBaseline />
       <Helmet titleTemplate="%s - CORD Field" defaultTitle="CORD Field">
         <html lang="en" />
         <meta charSet="utf-8" />
