@@ -2,8 +2,16 @@ import loadable from '@loadable/component';
 import React from 'react';
 import { Route, Routes } from 'react-router-dom';
 import { NotFoundRoute } from '../../components/Error';
-import { useIdentifyInLogRocket } from '../../components/Session';
-import { Authentication } from '../Authentication';
+import { useIdentifyInLogRocket, useSession } from '../../components/Session';
+import {
+  AuthLayout,
+  AuthWaiting,
+  ForgotPassword,
+  Login,
+  Logout,
+  Register,
+  ResetPassword,
+} from '../Authentication';
 import { Home } from '../Home';
 import { AppMetadata } from './AppMetadata';
 import { CssBaseline } from './CssBaseline';
@@ -41,8 +49,13 @@ const SearchResults = loadable(() => import('../SearchResults'), {
 export const Root = () => {
   useNonProdWarning();
   useIdentifyInLogRocket();
+  const { sessionLoading } = useSession();
 
-  const routes = (
+  const routes = sessionLoading ? (
+    <AuthLayout>
+      <AuthWaiting />
+    </AuthLayout>
+  ) : (
     <Routes>
       <Route key="main" element={<MainLayout />}>
         <Route path="/" element={<Home />} />
@@ -57,6 +70,13 @@ export const Root = () => {
         <Route path="/locations/*" element={<Locations />} />
         {NotFoundRoute}
       </Route>
+      <Route key="auth" element={<AuthLayout />}>
+        <Route path="/register" element={<Register />} />
+        <Route path="/login" element={<Login />} />
+        <Route path="/logout" element={<Logout />} />
+        <Route path="/forgot-password" element={<ForgotPassword />} />
+        <Route path="/reset-password/:token" element={<ResetPassword />} />
+      </Route>
     </Routes>
   );
 
@@ -64,7 +84,7 @@ export const Root = () => {
     <>
       <CssBaseline />
       <AppMetadata />
-      <Authentication>{routes}</Authentication>
+      {routes}
     </>
   );
 };
