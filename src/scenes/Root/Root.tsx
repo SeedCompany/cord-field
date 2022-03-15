@@ -58,24 +58,24 @@ export const Root = () => {
   ) : (
     <Routes>
       <Route key="main" element={<MainLayout />}>
-        <Route path="/" element={<Home />} />
-        <Route path="/partners/*" element={<Partners />} />
-        <Route path="/projects/*" element={<Projects />} />
-        <Route path="/engagements/*" element={<Engagements />} />
-        <Route path="/products/*" element={<Products />} />
-        <Route path="/progress-reports/*" element={<ProgressReports />} />
-        <Route path="/languages/*" element={<Languages />} />
-        <Route path="/users/*" element={<Users />} />
-        <Route path="/search" element={<SearchResults />} />
-        <Route path="/locations/*" element={<Locations />} />
+        <Route index element={<Home />} />
+        <Route path="partners/*" element={<Partners />} />
+        <Route path="projects/*" element={<Projects />} />
+        <Route path="engagements/*" element={<Engagements />} />
+        <Route path="products/*" element={<Products />} />
+        <Route path="progress-reports/*" element={<ProgressReports />} />
+        <Route path="languages/*" element={<Languages />} />
+        <Route path="users/*" element={<Users />} />
+        <Route path="search" element={<SearchResults />} />
+        <Route path="locations/*" element={<Locations />} />
         {NotFoundRoute}
       </Route>
       <Route key="auth" element={<AuthLayout />}>
-        <Route path="/register" element={<Register />} />
-        <Route path="/login" element={<Login />} />
-        <Route path="/logout" element={<Logout />} />
-        <Route path="/forgot-password" element={<ForgotPassword />} />
-        <Route path="/reset-password/:token" element={<ResetPassword />} />
+        <Route path="register" element={<Register />} />
+        <Route path="login" element={<Login />} />
+        <Route path="logout" element={<Logout />} />
+        <Route path="forgot-password" element={<ForgotPassword />} />
+        <Route path="reset-password/:token" element={<ResetPassword />} />
       </Route>
     </Routes>
   );
