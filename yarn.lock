@@ -6430,7 +6430,7 @@ __metadata:
     react-dropzone: ^11.3.2
     react-error-boundary: ^3.1.4
     react-final-form: "patch:react-final-form@6.5.3#./patches/react-final-form.patch"
-    react-helmet-async: ^1.0.9
+    react-helmet-async: ^1.2.3
     react-intersection-observer: ^8.32.0
     react-pdf: ^5.3.0
     react-router-dom: ^6.2.2
@@ -9619,16 +9619,7 @@ fsevents@^1.2.7:
   languageName: node
   linkType: hard
 
-"history@npm:^5.0.0":
-  version: 5.0.0
-  resolution: "history@npm:5.0.0"
-  dependencies:
-    "@babel/runtime": ^7.7.6
-  checksum: 14eab13619b4d297eeda0ae7adcf2dd8e6cec48fc9fac903b8dfb626337f8f6fc12743c286be819885c71f522daf0e9e7f814aa126ae5e1b01ab4a3d6801b5f5
-  languageName: node
-  linkType: hard
-
-"history@npm:^5.2.0":
+"history@npm:^5.0.0, history@npm:^5.2.0":
   version: 5.3.0
   resolution: "history@npm:5.3.0"
   dependencies:
@@ -15469,9 +15460,9 @@ react-final-form@6.5.3:
   languageName: node
   linkType: hard
 
-"react-helmet-async@npm:^1.0.9":
-  version: 1.0.9
-  resolution: "react-helmet-async@npm:1.0.9"
+"react-helmet-async@npm:^1.2.3":
+  version: 1.2.3
+  resolution: "react-helmet-async@npm:1.2.3"
   dependencies:
     "@babel/runtime": ^7.12.5
     invariant: ^2.2.4
@@ -15481,7 +15472,7 @@ react-final-form@6.5.3:
   peerDependencies:
     react: ^16.6.0 || ^17.0.0
     react-dom: ^16.6.0 || ^17.0.0
-  checksum: e7fbc5083437105044da626a48c0ca3a32a687ef249e9a1f74717dd29f44d6ebecb9a9f4ab6ae36e76a98d2d94fa2ae11bc46171fdc01138314eef945f5df2a6
+  checksum: af7041314f6ebaefa64f3c06f75cf1ad62602b93228798615c2ca3365065688ee2b8c58bde98a9ae0d728aecfda5a757e9fc7695da3af2a504ff7e5291c716c9
   languageName: node
   linkType: hard
 
