@@ -5,10 +5,16 @@ import express from 'express';
 import helmet from 'helmet';
 import responseTime from 'response-time';
 import { LogoutDocument } from '../scenes/Authentication/Logout/logout.generated';
+import { withoutTrailingSlash } from '../util';
 import {
   createServerApolloClient,
   renderServerSideApp,
 } from './renderServerSideApp';
+
+const PUBLIC_URL = withoutTrailingSlash(process.env.PUBLIC_URL || '');
+const BASE_PATH = withoutTrailingSlash(
+  PUBLIC_URL.startsWith('http') ? new URL(PUBLIC_URL).pathname : PUBLIC_URL
+);
 
 export const app = express();
 
@@ -21,13 +27,6 @@ app.use(
 );
 app.use(bodyParser.json());
 app.use(cookieParser());
-
-const withoutEndingSlash = (url: string) =>
-  url.endsWith('/') ? url.slice(0, -1) : url;
-const PUBLIC_URL = process.env.PUBLIC_URL || '';
-const BASE_PATH = withoutEndingSlash(
-  PUBLIC_URL.startsWith('http') ? new URL(PUBLIC_URL).pathname : PUBLIC_URL
-);
 
 // Serve static assets
 app.use(

@@ -8,6 +8,7 @@ export * from './types';
 export * from './use-styles.types';
 export * from './compose-fns';
 export * from './isTypename';
+export * from './urls';
 
 export const simpleSwitch = <T, K extends string = string>(
   key: K,

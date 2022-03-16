@@ -4,6 +4,7 @@ import { pickBy } from 'lodash';
 import { HelmetServerState as HelmetData } from 'react-helmet-async';
 import { ErrorCache } from '../api/links/errorCache.link';
 import { ServerData } from '../components/ServerData';
+import { trailingSlash } from '../util';
 
 export const indexHtml = ({
   helmet,
@@ -24,7 +25,7 @@ export const indexHtml = ({
 }) => `<!doctype html>
 <html ${helmet.htmlAttributes.toString()}>
 <head>
-  <base href="/">
+  <base href="${trailingSlash(process.env.PUBLIC_URL)}">
   ${helmet.title.toString()}
   ${helmet.meta.toString()}
   ${extractor.getLinkTags()}
