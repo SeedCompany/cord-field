@@ -24,6 +24,7 @@ export const indexHtml = ({
 }) => `<!doctype html>
 <html ${helmet.htmlAttributes.toString()}>
 <head>
+  <base href="/">
   ${helmet.title.toString()}
   ${helmet.meta.toString()}
   ${extractor.getLinkTags()}
