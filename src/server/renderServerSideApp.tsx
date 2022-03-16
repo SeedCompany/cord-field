@@ -77,12 +77,14 @@ export const renderServerSideApp = async (
   req: ExpressRequest,
   res: ExpressResponse
 ) => {
+  console.log('renderServerSideApp', req.originalUrl);
   const errorCache = {};
   const apollo = createServerApolloClient(req, res, errorCache);
 
   const helmetContext: Partial<FilledContext> = {};
   const extractor = new ChunkExtractor({
     statsFile: process.env.LOADABLE_STATS_MANIFEST!,
+    // publicPath: trailingSlash(process.env.PUBLIC_URL),
     entrypoints: ['client'],
   });
   const sheets = new ServerStyleSheets();
