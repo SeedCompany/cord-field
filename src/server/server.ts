@@ -17,34 +17,32 @@ const BASE_PATH = withoutTrailingSlash(
 );
 
 export const app = express();
+const router: express.Router = BASE_PATH ? express.Router() : app;
+BASE_PATH && app.use(BASE_PATH, router);
 
-app.use(compression());
-app.use(
+router.use(compression());
+router.use(
   helmet({
     contentSecurityPolicy: false,
     hidePoweredBy: true,
   })
 );
-app.use(bodyParser.json());
-app.use(cookieParser());
+router.use(bodyParser.json());
+router.use(cookieParser());
 
 // Serve static assets
-app.use(
-  BASE_PATH,
+router.use(
   express.static(process.env.RAZZLE_PUBLIC_DIR!, {
     maxAge: '30 days',
   })
 );
 
 // Send 404 for not found static assets
-app.use(
-  ['/static/*', '/images/*'].map((path) => `${BASE_PATH}${path}`),
-  (req, res) => res.sendStatus(404)
-);
+router.use(['static/*', 'images/*'], (req, res) => res.sendStatus(404));
 
 // Serve Open Search config
 if (process.env.RAZZLE_OPEN_SEARCH === 'true') {
-  app.get(`${BASE_PATH}/opensearch.xml`, (req, res) => {
+  router.get('opensearch.xml', (req, res) => {
     // language=XML
     const xml = `
 <OpenSearchDescription xmlns="http://a9.com/-/spec/opensearch/1.1/">
@@ -62,20 +60,20 @@ if (process.env.RAZZLE_OPEN_SEARCH === 'true') {
   });
 }
 
-app.get('/logout', (req, res, next) => {
+router.get('logout', (req, res, next) => {
   createServerApolloClient(req, res, {})
     .mutate({
       mutation: LogoutDocument,
     })
-    .then(() => res.redirect('/login'))
+    .then(() => res.redirect('login'))
     .catch((e) => next(e));
 });
 
-app.use(
+router.use(
   responseTime((_req, res, time) => {
     res.setHeader('X-Response-Time', `${time.toFixed(2)}ms`);
     res.setHeader('Server-Timing', `renderServerSideApp;dur=${time}`);
   })
 );
 
-app.use(renderServerSideApp);
+router.use(renderServerSideApp);
