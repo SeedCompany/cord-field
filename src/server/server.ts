@@ -18,11 +18,11 @@ const BASE_PATH = withoutTrailingSlash(
 
 export const app = express();
 
-app.disable('x-powered-by');
 app.use(compression());
 app.use(
   helmet({
     contentSecurityPolicy: false,
+    hidePoweredBy: true,
   })
 );
 app.use(bodyParser.json());
