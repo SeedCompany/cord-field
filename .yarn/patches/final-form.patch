@@ -1,13 +1,13 @@
 diff --git a/dist/index.d.ts b/dist/index.d.ts
-index f17e71112bbddff8f2271d804d896bb502e9959a..b40c8988b95897f9630e21b02aba7faaa31d2f58 100644
+index 617484f0aca73966fb7a57cdf039f1c77a5200a5..700051b103b5a633492838d67c0453f2a078cf44 100644
 --- a/dist/index.d.ts
 +++ b/dist/index.d.ts
-@@ -226,7 +226,7 @@ export interface FormApi<FormValues = Record<string, any>, InitialFormValues = P
-   ) => void
-   submit: () => Promise<FormValues | undefined> | undefined
+@@ -237,7 +237,7 @@ export interface FormApi<
+   ) => void;
+   submit: () => Promise<FormValues | undefined> | undefined;
    subscribe: (
 -    subscriber: FormSubscriber<FormValues>,
 +    subscriber: FormSubscriber<FormValues, InitialFormValues>,
-     subscription: FormSubscription
-   ) => Unsubscribe
+     subscription: FormSubscription,
+   ) => Unsubscribe;
  }

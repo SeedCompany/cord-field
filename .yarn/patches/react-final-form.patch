@@ -1,28 +1,37 @@
 diff --git a/typescript/index.d.ts b/typescript/index.d.ts
-index 055f136507f17b98c4cda728c3cfad7d1dbd2f11..6448f399c5f4860c832d8c298b85017c165ae9d8 100644
+index 6709de686554cec49cef91ac17df98fcca0eb5cb..5c71c318903563f17b1dd8d4dd201405786c48c6 100644
 --- a/typescript/index.d.ts
 +++ b/typescript/index.d.ts
-@@ -46,7 +46,6 @@ export interface FieldRenderProps<
+@@ -50,7 +50,6 @@ export interface FieldRenderProps<
  > {
-   input: FieldInputProps<FieldValue, T>;
+   input: FieldInputProps<InputValue, T>;
    meta: FieldMetaState<FieldValue>;
 -  [otherProp: string]: any;
  }
  
- export interface FormRenderProps<FormValues = Record<string, any>, InitialFormValues = Partial<FormValues>>
-@@ -78,7 +77,6 @@ export interface FormProps<FormValues = Record<string, any>, InitialFormValues =
+ export interface FormRenderProps<
+@@ -63,7 +62,7 @@ export interface FormRenderProps<
+     event?: Partial<
+       Pick<React.SyntheticEvent, "preventDefault" | "stopPropagation">
+     >,
+-  ) => Promise<AnyObject | undefined> | undefined;
++  ) => void;
+ }
+ 
+ export interface FormSpyRenderProps<
+@@ -88,7 +87,6 @@ export interface FormProps<
    decorators?: Array<Decorator<FormValues, InitialFormValues>>;
    form?: FormApi<FormValues, InitialFormValues>;
    initialValuesEqual?: (a?: AnyObject, b?: AnyObject) => boolean;
 -  [otherProp: string]: any;
  }
  
- export interface UseFieldConfig<FieldValue> {
-@@ -106,7 +104,6 @@ export interface FieldProps<
-   T extends HTMLElement = HTMLElement
- > extends UseFieldConfig<FieldValue>, RenderableProps<RP> {
+ export interface UseFieldConfig<FieldValue, InputValue = any> {
+@@ -118,7 +116,6 @@ export interface FieldProps<
+ > extends UseFieldConfig<FieldValue, InputValue>,
+     RenderableProps<RP> {
    name: string;
 -  [otherProp: string]: any;
  }
  
- export interface UseFormStateParams<FormValues = Record<string, any>, InitialFormValues = Partial<FormValues>> {
+ export interface UseFormStateParams<
