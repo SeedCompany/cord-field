@@ -25,7 +25,7 @@ import { Nest } from '../components/Nest';
 import { ServerLocation } from '../components/Routing';
 import { ServerData, ServerDataProvider } from '../components/ServerData';
 import { RequestContext } from '../hooks';
-import { basePathOfUrl } from '../util';
+import { basePathOfUrl, trailingSlash } from '../util';
 import { indexHtml } from './indexHtml';
 
 const serverHost = process.env.RAZZLE_API_BASE_URL || '';
@@ -84,7 +84,11 @@ export const renderServerSideApp = async (
   const helmetContext: Partial<FilledContext> = {};
   const extractor = new ChunkExtractor({
     statsFile: process.env.LOADABLE_STATS_MANIFEST!,
-    // publicPath: trailingSlash(process.env.PUBLIC_URL),
+    publicPath:
+      process.env.NODE_ENV !== 'production'
+        ? // Doesn't work in dev, due to something with webpack dev server config & hot reloading
+          undefined
+        : trailingSlash(process.env.PUBLIC_URL),
     entrypoints: ['client'],
   });
   const sheets = new ServerStyleSheets();

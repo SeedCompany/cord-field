@@ -54,7 +54,7 @@ export const indexHtml = ({
 
 const clientEnv: NodeJS.ProcessEnv = {
   NODE_ENV: process.env.NODE_ENV,
-  PUBLIC_URL: process.env.PUBLIC_URL,
+  PUBLIC_URL: trailingSlash(process.env.PUBLIC_URL),
   VERSION: process.env.VERSION,
   ...pickBy(process.env, (val, key) => key.startsWith('RAZZLE_')),
 };

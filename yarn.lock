@@ -6449,6 +6449,7 @@ __metadata:
     webpack: ^4.46.0
     webpack-bundle-analyzer: ^4.4.2
     webpack-dev-server: ^3.11.2
+    webpack-dynamic-public-path: ^1.0.8
     xlsx: ^0.17.0
   languageName: unknown
   linkType: soft
@@ -19015,6 +19016,13 @@ resolve@^2.0.0-next.3:
   bin:
     webpack-dev-server: bin/webpack-dev-server.js
   checksum: d2bfa2e9a33f96dc5af8f771e9978956e59c3efcad3deaca246ea7ff219c5587ebcf20ea0f0b6af251dec5e8111c0e473aa43a57bc9a88fb3ad8573f4a321805
+  languageName: node
+  linkType: hard
+
+"webpack-dynamic-public-path@npm:^1.0.8":
+  version: 1.0.8
+  resolution: "webpack-dynamic-public-path@npm:1.0.8"
+  checksum: 5ad5fe52f44c7514d2564374521d35ce025f55f8b8a01f881aeb869ecee1a1463daed6320289c7e99406385a03e22c050a4f35c47e90d43db4830abde9d6e4f8
   languageName: node
   linkType: hard
 
