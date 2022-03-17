@@ -1,7 +1,7 @@
 import type { Path, To } from 'history';
 import * as React from 'react';
 import { createContext, ReactElement, useContext } from 'react';
-import type { NavigateFunction, NavigateProps } from 'react-router';
+import type { NavigateFunction, NavigateProps } from 'react-router-dom';
 import {
   Navigate as ClientNavigate,
   resolvePath,

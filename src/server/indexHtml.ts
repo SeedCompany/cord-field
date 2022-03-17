@@ -1,9 +1,10 @@
 import { ChunkExtractor } from '@loadable/server';
 import ServerStyleSheets from '@material-ui/styles/ServerStyleSheets';
 import { pickBy } from 'lodash';
-import { HelmetData } from 'react-helmet-async';
+import { HelmetServerState as HelmetData } from 'react-helmet-async';
 import { ErrorCache } from '../api/links/errorCache.link';
 import { ServerData } from '../components/ServerData';
+import { trailingSlash } from '../util';
 
 export const indexHtml = ({
   helmet,
@@ -24,6 +25,7 @@ export const indexHtml = ({
 }) => `<!doctype html>
 <html ${helmet.htmlAttributes.toString()}>
 <head>
+  <base href="${trailingSlash(process.env.PUBLIC_URL)}">
   ${helmet.title.toString()}
   ${helmet.meta.toString()}
   ${extractor.getLinkTags()}
@@ -52,7 +54,7 @@ export const indexHtml = ({
 
 const clientEnv: NodeJS.ProcessEnv = {
   NODE_ENV: process.env.NODE_ENV,
-  PUBLIC_URL: process.env.PUBLIC_URL,
+  PUBLIC_URL: trailingSlash(process.env.PUBLIC_URL),
   VERSION: process.env.VERSION,
   ...pickBy(process.env, (val, key) => key.startsWith('RAZZLE_')),
 };

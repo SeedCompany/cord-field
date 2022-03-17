@@ -1,5 +1,5 @@
 import LuxonUtils from '@date-io/luxon';
-import { CssBaseline, ThemeProvider } from '@material-ui/core';
+import { ThemeProvider } from '@material-ui/core';
 import { LocalizationProvider } from '@material-ui/pickers';
 import LogRocket from 'logrocket';
 import setupLogRocketReact from 'logrocket-react';
@@ -41,7 +41,6 @@ const theme = createTheme();
  */
 export const appProviders = [
   <ThemeProvider theme={theme} children={<></>} />,
-  <CssBaseline />,
   <LocalizationProvider dateAdapter={LuxonUtils as any} children={<></>} />,
   <SnackbarProvider />, // needed by apollo
   <ApolloProvider />,

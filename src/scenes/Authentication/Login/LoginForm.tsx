@@ -15,6 +15,7 @@ import {
 } from '../../../components/form';
 import { CordIcon } from '../../../components/Icons';
 import { Link } from '../../../components/Routing';
+import { AuthContent } from '../AuthContent';
 
 interface Quote {
   quote: string;
@@ -72,13 +73,13 @@ const useStyles = makeStyles(({ spacing }) => ({
 export type LoginFormProps = Pick<
   FormProps<LoginInput>,
   'onSubmit' | 'initialValues'
-> & { className?: string };
+>;
 
-export const LoginForm = ({ className, ...props }: LoginFormProps) => {
+export const LoginForm = (props: LoginFormProps) => {
   const classes = useStyles();
   const [quote] = useState(() => sample(quotes)!);
   return (
-    <div className={className}>
+    <AuthContent>
       <Footer quote={quote} className={classes.footerSpacer} />
       <div>
         <div className={classes.header}>
@@ -112,7 +113,7 @@ export const LoginForm = ({ className, ...props }: LoginFormProps) => {
         </div>
       </div>
       <Footer quote={quote} />
-    </div>
+    </AuthContent>
   );
 };
 

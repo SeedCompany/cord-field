@@ -1,7 +1,7 @@
 import { useQuery } from '@apollo/client';
 import * as React from 'react';
 import { FC, useEffect, useMemo } from 'react';
-import { useParams } from 'react-router';
+import { useParams } from 'react-router-dom';
 import { inChangesetVar } from '../../api';
 import {
   UpdateProjectChangeRequest,
@@ -22,7 +22,7 @@ export const ChangesetContext: FC = ({ children }) => {
   const params = useParams();
   // First route param key with a ~ in its value
   const key = useMemo(
-    () => Object.entries(params).find(([_, val]) => val.includes('~'))?.[0],
+    () => Object.entries(params).find(([_, val]) => val?.includes('~'))?.[0],
     [params]
   );
   const { changesetId, closeChangeset } = useChangesetAwareIdFromUrl(key ?? '');

@@ -99,7 +99,7 @@ export const PresetInventoryButton = ({
   return (
     <PaperTooltip
       title={
-        <Typography variant="body2">
+        <Typography variant="body2" component="div">
           This project and its associated languages (via engagements) are{' '}
           {presetInventory ? '' : <em>NOT</em>} a part of our{' '}
           <em>Preset&nbsp;Inventory</em> {presetInventory ? '✅' : '❌'}

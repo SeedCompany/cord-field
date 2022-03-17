@@ -1,9 +1,10 @@
 /* eslint-disable @typescript-eslint/no-var-requires,@typescript-eslint/no-require-imports */
 const LoadablePlugin = require('@loadable/webpack-plugin');
+const CircularDependencyPlugin = require('circular-dependency-plugin');
 const _ = require('lodash');
 const path = require('path');
 const { BundleAnalyzerPlugin } = require('webpack-bundle-analyzer');
-const CircularDependencyPlugin = require('circular-dependency-plugin');
+const DynamicPublicPathPlugin = require('webpack-dynamic-public-path');
 
 const modifyWebpackConfig = (opts) => {
   const config = opts.webpackConfig;
@@ -30,9 +31,12 @@ const modifyWebpackConfig = (opts) => {
       })
     );
   } else {
-    define('process.env.LOADABLE_STATS_MANIFEST', opts.env.dev
-      ? `require('path').resolve('build/loadable-stats.json')`
-      : `__dirname + '/loadable-stats.json'`);
+    define(
+      'process.env.LOADABLE_STATS_MANIFEST',
+      opts.env.dev
+        ? `require('path').resolve('build/loadable-stats.json')`
+        : `__dirname + '/loadable-stats.json'`
+    );
   }
 
   // define server port to listen on that may be different than the actual exposed port
@@ -57,7 +61,8 @@ const modifyWebpackConfig = (opts) => {
 
       // Ignore proxy created log message on start to reduce clutter & prevent
       // confusion with ports.
-      const proxyLogger = require('http-proxy-middleware/lib/logger').getInstance();
+      const proxyLogger =
+        require('http-proxy-middleware/lib/logger').getInstance();
       const origInfo = proxyLogger.info;
       proxyLogger.info = function (...args) {
         if (
@@ -73,6 +78,15 @@ const modifyWebpackConfig = (opts) => {
   } else if (isServer) {
     // convert SERVER_PORT usage to just PORT since only a single port is used
     define('process.env.SERVER_PORT', 'process.env.PORT');
+  }
+
+  // Change public path to be dynamic based on PUBLIC_URL env
+  if (!opts.env.dev && isClient) {
+    config.plugins.push(
+      new DynamicPublicPathPlugin({
+        externalPublicPath: 'window.env.PUBLIC_URL',
+      })
+    );
   }
 
   if (isClient && process.argv.includes('--analyze')) {

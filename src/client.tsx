@@ -10,6 +10,7 @@ import { BrowserRouter } from 'react-router-dom';
 import { App } from './App';
 import { Nest } from './components/Nest';
 import { ServerDataProvider } from './components/ServerData';
+import { basePathOfUrl } from './util';
 
 // Set current timezone in cookie so server can render with it.
 // This isn't great as a change to this or first load will cause the server to
@@ -58,7 +59,7 @@ const serverData = (window as any).__SERVER_DATA__;
 
 const clientOnlyProviders = [
   <ServerDataProvider value={serverData} />,
-  <BrowserRouter />,
+  <BrowserRouter basename={basePathOfUrl(process.env.PUBLIC_URL)} />,
   <HelmetProvider children={<></>} />,
   <DndProvider backend={HTML5Backend} />,
 ];

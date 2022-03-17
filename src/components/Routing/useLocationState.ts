@@ -1,4 +1,3 @@
-import { Location } from 'history';
 import { useCallback, useState } from 'react';
 import { useLocation } from 'react-router-dom';
 import { useNavigate } from './Navigate';
@@ -12,9 +11,9 @@ export const useLocationState = <State extends Record<string, any>>(
   defaultValue: State
 ) => {
   const navigate = useNavigate();
-  const location = useLocation() as Location<State | null>;
+  const location = useLocation();
   const [defaultVal] = useState(() => defaultValue);
-  const current: State = location.state ?? defaultVal;
+  const current = (location.state as State | null) ?? defaultVal;
 
   const setState = useCallback(
     (newState: State) => {
