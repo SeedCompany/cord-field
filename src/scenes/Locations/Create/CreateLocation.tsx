@@ -14,11 +14,10 @@ import {
   CreateLocationMutation,
 } from './CreateLocation.generated';
 
+type FormValues = LocationFormValues<CreateLocationType>;
+type SubmitResult = CreateLocationMutation['createLocation']['location'];
 export type CreateLocationProps = Except<
-  LocationFormProps<
-    LocationFormValues<CreateLocationType>,
-    CreateLocationMutation['createLocation']['location']
-  >,
+  LocationFormProps<FormValues, SubmitResult>,
   'onSubmit'
 >;
 
@@ -27,7 +26,7 @@ export const CreateLocation = (props: CreateLocationProps) => {
   const { enqueueSnackbar } = useSnackbar();
 
   return (
-    <LocationForm
+    <LocationForm<FormValues, SubmitResult>
       title="Create Location"
       onSuccess={(location) => {
         enqueueSnackbar(`Created location: ${location.name.value}`, {

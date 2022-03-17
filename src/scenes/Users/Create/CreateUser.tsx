@@ -10,11 +10,9 @@ import {
   CreatePersonMutation,
 } from './CreateUser.generated';
 
+type SubmitResult = CreatePersonMutation['createPerson']['user'];
 export type CreateUserProps = Except<
-  UserFormProps<
-    CreatePersonInput,
-    CreatePersonMutation['createPerson']['user']
-  >,
+  UserFormProps<CreatePersonInput, SubmitResult>,
   'prefix' | 'onSubmit'
 >;
 
@@ -28,7 +26,7 @@ export const CreateUser = (props: CreateUserProps) => {
   const { enqueueSnackbar } = useSnackbar();
 
   return (
-    <UserForm
+    <UserForm<CreatePersonInput, SubmitResult>
       title="Create Person"
       onSuccess={(user) => {
         enqueueSnackbar(`Created person: ${user.fullName}`, {

@@ -10,8 +10,9 @@ import {
 } from './CreatePartner.generated';
 import { CreatePartnerForm, CreatePartnerFormProps } from './CreatePartnerForm';
 
+type SubmitResult = CreatePartnerMutation['createPartner']['partner'];
 type CreatePartnerProps = Except<
-  CreatePartnerFormProps<CreatePartnerMutation['createPartner']['partner']>,
+  CreatePartnerFormProps<SubmitResult>,
   'onSubmit'
 >;
 
@@ -25,7 +26,7 @@ export const CreatePartner = (props: CreatePartnerProps) => {
   const { enqueueSnackbar } = useSnackbar();
 
   return (
-    <CreatePartnerForm
+    <CreatePartnerForm<SubmitResult>
       onSuccess={(partner) =>
         enqueueSnackbar(
           `Created partner: ${partner.organization.value?.name.value}`,
