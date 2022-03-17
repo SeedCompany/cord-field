@@ -89,7 +89,7 @@ const PeriodicReportCardInContext = (props: PeriodicReportCardProps) => {
     isDragActive,
     open: openFileBrowser,
   } = useDropzone({
-    onDrop: async (files) => {
+    onDrop: (files) => {
       if (!currentFile?.canEdit) {
         return;
       }

@@ -271,7 +271,7 @@ export const LanguageDetail = () => {
                     onRemove={() =>
                       language &&
                       location &&
-                      removeLocation({
+                      void removeLocation({
                         variables: {
                           languageId: language.id,
                           locationId: location.id,

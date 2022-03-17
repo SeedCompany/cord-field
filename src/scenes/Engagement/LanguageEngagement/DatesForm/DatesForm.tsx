@@ -31,9 +31,9 @@ export const DatesForm = ({ engagement }: { engagement: Engagement }) => {
         <FieldGroup prefix="engagement">
           <FormSpy<UpdateEngagementInput>
             subscription={{ values: true }}
-            onChange={async ({ values: input }) => {
+            onChange={({ values: input }) => {
               if (!isEqual(initialValues, input)) {
-                await updateEngagement({ variables: { input } });
+                void updateEngagement({ variables: { input } });
               }
             }}
           />

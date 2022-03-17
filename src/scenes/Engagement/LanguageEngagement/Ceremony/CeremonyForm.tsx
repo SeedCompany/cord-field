@@ -38,9 +38,9 @@ export const CeremonyForm = ({
           <FieldGroup prefix="ceremony">
             <FormSpy<UpdateCeremonyInput>
               subscription={{ values: true }}
-              onChange={async ({ values: input }) => {
+              onChange={({ values: input }) => {
                 if (!isEqual(initialValues, input)) {
-                  await updateCeremony({ variables: { input } });
+                  void updateCeremony({ variables: { input } });
                 }
               }}
             />

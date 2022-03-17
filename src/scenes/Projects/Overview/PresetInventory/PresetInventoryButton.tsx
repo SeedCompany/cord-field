@@ -26,7 +26,7 @@ export const PresetInventoryButton = ({
   const [updateProject, { client }] = useMutation(TogglePresetInventory);
   const presetInventory = project?.presetInventory.value;
 
-  const toggle = async () => {
+  const toggle = () => {
     if (!project || !project.presetInventory.canEdit) {
       return;
     }
@@ -38,7 +38,7 @@ export const PresetInventoryButton = ({
       object: project,
     });
 
-    await updateProject({
+    void updateProject({
       variables: {
         input: {
           project: {
