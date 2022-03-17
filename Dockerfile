@@ -25,7 +25,6 @@ RUN apk add --no-cache jq
 # Install dependencies (in separate docker layer from app code)
 COPY .yarn .yarn
 COPY package.json yarn.lock .yarnrc.yml ./
-COPY patches ./patches
 RUN yarn install --immutable
 
 COPY . .
