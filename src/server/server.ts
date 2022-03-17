@@ -3,6 +3,7 @@ import compression from 'compression';
 import cookieParser from 'cookie-parser';
 import express from 'express';
 import helmet from 'helmet';
+import * as path from 'path';
 import responseTime from 'response-time';
 import { LogoutDocument } from '../scenes/Authentication/Logout/logout.generated';
 import { basePathOfUrl, withoutTrailingSlash } from '../util';
@@ -30,7 +31,7 @@ router.use(cookieParser());
 
 // Serve static assets
 router.use(
-  express.static(process.env.RAZZLE_PUBLIC_DIR!, {
+  express.static(path.resolve(__dirname, 'public'), {
     maxAge: '30 days',
   })
 );
