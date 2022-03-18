@@ -13,6 +13,7 @@ import {
   Request as ExpressRequest,
   Response as ExpressResponse,
 } from 'express';
+import { pickBy } from 'lodash';
 import React from 'react';
 import { resetServerContext } from 'react-beautiful-dnd';
 import ReactDOMServer from 'react-dom/server';
@@ -77,8 +78,7 @@ export const renderServerSideApp = async (
   req: ExpressRequest,
   res: ExpressResponse
 ) => {
-  console.log('renderServerSideApp', req.originalUrl);
-  const errorCache = {};
+  const errorCache: ErrorCache = {};
   const apollo = createServerApolloClient(req, res, errorCache);
 
   const helmetContext: Partial<FilledContext> = {};
@@ -126,13 +126,16 @@ export const renderServerSideApp = async (
   }
 
   const fullMarkup = indexHtml({
-    serverData: data,
     markup,
     helmet,
     extractor,
     sheets,
-    apolloCache: apollo.extract(),
-    errorCache,
+    globals: {
+      env: clientEnv,
+      __SERVER_DATA__: data,
+      __APOLLO_STATE__: apollo.extract(),
+      __APOLLO_ERRORS__: errorCache,
+    },
   });
   res.status(location.statusCode ?? 200).send(fullMarkup);
 };
@@ -160,3 +163,10 @@ const ServerApp = ({
     <App />
   </Nest>
 );
+
+const clientEnv: NodeJS.ProcessEnv = {
+  NODE_ENV: process.env.NODE_ENV,
+  PUBLIC_URL: trailingSlash(process.env.PUBLIC_URL),
+  VERSION: process.env.VERSION,
+  ...pickBy(process.env, (val, key) => key.startsWith('RAZZLE_')),
+};
