@@ -121,7 +121,7 @@ export const renderServerSideApp = async (
   const { helmet } = helmetContext as FilledContext; // now filled
 
   if (location.url) {
-    res.redirect(location.url);
+    res.redirect(location.statusCode ?? 302, location.url);
     return;
   }
 

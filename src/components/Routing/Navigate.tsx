@@ -1,7 +1,11 @@
 import type { Path, To } from 'history';
 import * as React from 'react';
 import { createContext, ReactElement, useContext } from 'react';
-import type { NavigateFunction, NavigateProps } from 'react-router-dom';
+import type {
+  NavigateFunction,
+  NavigateOptions,
+  NavigateProps,
+} from 'react-router-dom';
 import {
   Navigate as ClientNavigate,
   resolvePath,
@@ -9,21 +13,32 @@ import {
   useLocation,
 } from 'react-router-dom';
 
+declare module 'react-router' {
+  interface NavigateProps {
+    /** If this is rendered server side it will return a 301 instead of a 302 */
+    permanent?: boolean;
+  }
+  interface NavigateOptions {
+    /** If this is rendered server side it will return a 301 instead of a 302 */
+    permanent?: boolean;
+  }
+}
+
 const useServerNavigate = (): NavigateFunction => {
   const location = useLocation();
   const serverLocation = useContext(ServerLocationContext);
   if (!serverLocation) {
     throw new Error('Server location context should be provided for SSR');
   }
-  return (
-    to: To | number,
-    _options?: { replace?: boolean; state?: unknown }
-  ) => {
+  return (to: To | number, options?: NavigateOptions) => {
     if (typeof to === 'number') {
       throw new Error('Navigate with delta is not supported with SSR');
     }
     const resolved = resolvePath(to, location.pathname);
     serverLocation.url = stringifyPath(resolved);
+    if (options?.permanent) {
+      serverLocation.statusCode = 301;
+    }
   };
 };
 
