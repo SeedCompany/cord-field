@@ -57,12 +57,14 @@ const modifyWebpackConfig = (opts) => {
         context: () => true,
         target: `http://localhost:${process.env.SERVER_PORT}`,
       };
-      config.devServer.index = '';
+      config.devServer.devMiddleware.index = '';
+      config.devServer.devMiddleware.stats = false;
+      _.set(config, ['infrastructureLogging', 'level'], 'warn');
 
       // Ignore proxy created log message on start to reduce clutter & prevent
       // confusion with ports.
       const proxyLogger =
-        require('http-proxy-middleware/lib/logger').getInstance();
+        require('http-proxy-middleware/dist/logger').getInstance();
       const origInfo = proxyLogger.info;
       proxyLogger.info = function (...args) {
         if (
