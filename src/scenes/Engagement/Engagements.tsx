@@ -38,10 +38,10 @@ const EngagementDetail = () => (
 );
 
 const OldProducts = () => (
-  <Navigate replace to={splicePath(useLocation(), 1, 2)} />
+  <Navigate replace permanent to={splicePath(useLocation(), 1, 2)} />
 );
 
 const OldProgressReportDetail = () => {
   const { reportId = '' } = useParams();
-  return <Navigate replace to={`/progress-reports/${reportId}`} />;
+  return <Navigate replace permanent to={`/progress-reports/${reportId}`} />;
 };
