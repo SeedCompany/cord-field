@@ -149,6 +149,7 @@
     "webpack-dev-server": "^3.11.2"
   },
   "resolutions": {
+    "@babel/parser": "7.17.3",
     "@graphql-codegen/plugin-helpers": "patch:@graphql-codegen/plugin-helpers@2.3.1#.yarn/patches/graphql-codegen-plugin-helpers.patch",
     "@graphql-tools/utils": "patch:@graphql-tools/utils@8.5.3#.yarn/patches/graphql-tools-utils.patch",
     "material-table/@material-ui/pickers": "patch:@material-ui/pickers@4.0.0-alpha.12#.yarn/patches/mui-pickers.patch"
