@@ -1,5 +1,5 @@
 diff --git a/index.js b/index.js
-index f326eeaf71fa2b4df15b1bf485abc0db0fc7331b..f4bab182a76f0dddffc8ef2e12cbc06c9de82e5d 100644
+index e6bd17ff5b3669e1ad6ba4384f64ac777c692ae5..c8d16ef48445896335b37d0046be9a6f6f5e151b 100644
 --- a/index.js
 +++ b/index.js
 @@ -1124,7 +1124,7 @@ function astFromEnumValue(value, schema, pathToDirectivesInExtensions) {
