@@ -1,5 +1,17 @@
-import { Divider, Grid, makeStyles, Tab, Typography } from '@material-ui/core';
-import { Skeleton, TabContext, TabList, TabPanel } from '@material-ui/lab';
+import {
+  type Tabs as __Tabs,
+  Divider,
+  Grid,
+  makeStyles,
+  Tab,
+  Typography,
+} from '@material-ui/core';
+import {
+  TabList as ActualTabList,
+  Skeleton,
+  TabContext,
+  TabPanel,
+} from '@material-ui/lab';
 import React, { FC, useRef } from 'react';
 import { Helmet } from 'react-helmet-async';
 import { User } from '../../../api';
@@ -12,6 +24,8 @@ import { simpleSwitch } from '../../../util';
 import { useUserFilters } from './UserFilterOptions';
 import { UsersDocument } from './users.generated';
 import { UserSortOptions } from './UserSortOptions';
+
+const TabList = ActualTabList as typeof __Tabs;
 
 const useStyles = makeStyles(({ spacing, breakpoints }) => ({
   options: {
