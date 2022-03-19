@@ -175,7 +175,7 @@
     "razzle/react-refresh": "^0.11.0",
     "razzle/@pmmmwh/react-refresh-webpack-plugin": "^0.5.3",
     "react-dev-utils/browserslist": "^4.14.2",
-    "react-dev-utils/immer": "^8.0.1",
+    "react-dev-utils/immer": "^9.0.12",
     "material-table/@material-ui/pickers": "patch:@material-ui/pickers@4.0.0-alpha.12#.yarn/patches/mui-pickers.patch",
     "material-table/jspdf": "^2.1.0"
   },
