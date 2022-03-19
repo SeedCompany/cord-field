@@ -1,6 +1,9 @@
 {
   "presets": ["razzle/babel"],
   "plugins": [
+    ["@babel/plugin-transform-runtime", {
+      "absoluteRuntime": true
+    }],
     "@babel/plugin-proposal-numeric-separator",
     "./src/server/disableSsrByDefault",
     "@loadable/babel-plugin",

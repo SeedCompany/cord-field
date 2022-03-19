@@ -13,7 +13,7 @@ import {
   useLocation,
 } from 'react-router-dom';
 
-declare module 'react-router' {
+declare module 'react-router-dom' {
   interface NavigateProps {
     /** If this is rendered server side it will return a 301 instead of a 302 */
     permanent?: boolean;
