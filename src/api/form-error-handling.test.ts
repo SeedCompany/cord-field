@@ -1,5 +1,6 @@
 import { ApolloError } from '@apollo/client';
 import { createForm, FORM_ERROR, FormApi } from 'final-form';
+import { GraphQLError } from 'graphql';
 import { noop } from 'lodash';
 import { ErrorHandlers, handleFormError } from './form-error-handling';
 
@@ -127,21 +128,18 @@ const createError = ({
 }) => {
   return new ApolloError({
     graphQLErrors: [
-      {
+      new GraphQLError(
         message,
-        extensions: {
+        undefined,
+        undefined,
+        undefined,
+        undefined,
+        undefined,
+        {
           ...extensions,
           codes,
-        },
-        name: 'Error',
-        locations: undefined,
-        stack: undefined,
-        path: undefined,
-        originalError: undefined,
-        nodes: undefined,
-        positions: undefined,
-        source: undefined,
-      },
+        }
+      ),
     ],
   });
 };

@@ -22,8 +22,8 @@ export const generateLists = (
     for (const field of Object.values(typeNode.getFields()).filter(
       isListField
     )) {
-      const { sort, order } =
-        field.args.find((arg) => arg.name === 'input')?.defaultValue ?? {};
+      const { sort, order } = (field.args.find((arg) => arg.name === 'input')
+        ?.defaultValue ?? {}) as { sort?: string; order?: string };
       const defaultSort =
         sort && order ? `{ sort: '${sort}', order: '${order}' }` : '';
 
