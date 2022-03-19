@@ -26,7 +26,7 @@ import { ProjectListItemFragment } from '../../../components/ProjectListItemCard
 import { Redacted } from '../../../components/Redacted';
 import { Sensitivity } from '../../../components/Sensitivity';
 import { TogglePinButton } from '../../../components/TogglePinButton';
-import { CalendarDate, listOrPlaceholders } from '../../../util';
+import { listOrPlaceholders } from '../../../util';
 import { EditLanguage } from '../Edit';
 import { AddLocationToLanguageForm } from '../Edit/AddLocationToLanguageForm';
 import { LanguagesQueryVariables } from '../List/languages.generated';
@@ -221,10 +221,7 @@ export const LanguageDetail = () => {
           />
           <DisplayProperty
             label="Sponsor Estimated End Fiscal Year"
-            value={
-              sponsorEstimatedEndDate?.value &&
-              CalendarDate.toFiscalYear(sponsorEstimatedEndDate.value)
-            }
+            value={sponsorEstimatedEndDate?.value?.fiscalYear}
             loading={!language}
           />
 

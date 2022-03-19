@@ -21,7 +21,7 @@ export const useDateFormatter = () => {
     options?: DateTimeFormatOptions
   ) =>
     date
-      ? date.toLocaleString({ ...(options ?? DateTime.DATE_SHORT), locale })
+      ? date.toLocaleString({ ...(options ?? DateTime.DATE_SHORT) }, { locale })
       : '';
   formatDate.range = rangeFormatter(formatDate);
   return formatDate;
@@ -37,17 +37,21 @@ export const useDateTimeFormatter = () => {
     options?: DateTimeFormatOptions
   ) =>
     date
-      ? date.toLocaleString({
-          ...(options ?? DateTime.DATETIME_SHORT),
-          timeZoneName:
-            options?.timeZoneName ??
-            // If we don't know the timezone, format with the timezone
-            // so the client's current timezone is not assumed.
-            // This will be mitigated once the client hydrates.
-            (!isClient && !timeZone ? 'short' : undefined),
-          locale,
-          timeZone,
-        })
+      ? date.toLocaleString(
+          {
+            ...(options ?? DateTime.DATETIME_SHORT),
+            timeZoneName:
+              options?.timeZoneName ??
+              // If we don't know the timezone, format with the timezone
+              // so the client's current timezone is not assumed.
+              // This will be mitigated once the client hydrates.
+              (!isClient && !timeZone ? 'short' : undefined),
+            timeZone,
+          },
+          {
+            locale,
+          }
+        )
       : '';
 
   formatDateTime.range = rangeFormatter(formatDateTime);

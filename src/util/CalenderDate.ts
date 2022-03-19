@@ -1,24 +1,42 @@
 import {
-  DateObject,
   DateObjectUnits,
   DateTime,
   DateTimeJSOptions,
   DateTimeOptions,
-  Duration,
-  DurationObject,
-  DurationUnit,
+  DateTimeUnit,
+  DurationLike,
   LocaleOptions,
   ToISOTimeOptions,
   Zone,
   ZoneOptions,
 } from 'luxon';
 
+declare module 'luxon/src/datetime' {
+  interface DateTime {
+    fiscalYear: number;
+    fiscalQuarter: number;
+  }
+}
+
+Object.defineProperties(DateTime.prototype, {
+  fiscalYear: {
+    get(this: DateTime) {
+      return this.month >= 10 ? this.year + 1 : this.year;
+    },
+  },
+  fiscalQuarter: {
+    get(this: DateTime) {
+      return this.quarter === 4 ? 1 : this.quarter + 1;
+    },
+  },
+});
+
 /**
  * Calendar Dates have no times or timezones.
  *
  * The main goal of this is to provide an independent Luxon DateTime-like object.
  *
- * Whether or not we need/want it to be type compatible with DateTime has yet to
+ * Whether we need/want it to be type compatible with DateTime has yet to
  * be determined - currently it is.
  */
 export class CalendarDate extends DateTime {
@@ -71,8 +89,11 @@ export class CalendarDate extends DateTime {
     return CalendarDate.fromDateTime(super.fromMillis(ms, options));
   }
 
-  static fromObject(obj: DateObject): CalendarDate {
-    return CalendarDate.fromDateTime(super.fromObject(obj));
+  static fromObject(
+    obj: DateObjectUnits,
+    opts?: DateTimeJSOptions
+  ): CalendarDate {
+    return CalendarDate.fromDateTime(super.fromObject(obj, opts));
   }
 
   static fromRFC2822(text: string, options?: DateTimeOptions): CalendarDate {
@@ -99,8 +120,52 @@ export class CalendarDate extends DateTime {
     return CalendarDate.fromDateTime(super.invalid(reason));
   }
 
-  static local(year?: number, month?: number, day?: number): CalendarDate {
-    return CalendarDate.fromDateTime(super.local(year, month, day));
+  static local(
+    year: number,
+    month: number,
+    day: number,
+    hour: number,
+    minute: number,
+    second: number,
+    millisecond: number,
+    opts?: DateTimeJSOptions
+  ): DateTime;
+  static local(
+    year: number,
+    month: number,
+    day: number,
+    hour: number,
+    minute: number,
+    second: number,
+    opts?: DateTimeJSOptions
+  ): DateTime;
+  static local(
+    year: number,
+    month: number,
+    day: number,
+    hour: number,
+    minute: number,
+    opts?: DateTimeJSOptions
+  ): DateTime;
+  static local(
+    year: number,
+    month: number,
+    day: number,
+    hour: number,
+    opts?: DateTimeJSOptions
+  ): DateTime;
+  static local(
+    year: number,
+    month: number,
+    day: number,
+    opts?: DateTimeJSOptions
+  ): DateTime;
+  static local(year: number, month: number, opts?: DateTimeJSOptions): DateTime;
+  static local(year: number, opts?: DateTimeJSOptions): DateTime;
+  static local(opts?: DateTimeJSOptions): DateTime;
+  static local(...args: any) {
+    const dt = super.local(...args);
+    return CalendarDate.fromDateTime(dt);
   }
 
   static max(): undefined;
@@ -115,20 +180,52 @@ export class CalendarDate extends DateTime {
     return CalendarDate.fromDateTime(super.min(...dateTimes));
   }
 
-  static utc(year?: number, month?: number, day?: number): CalendarDate {
-    return CalendarDate.fromDateTime(super.utc(year, month, day));
+  static utc(
+    year: number,
+    month: number,
+    day: number,
+    hour: number,
+    minute: number,
+    second: number,
+    millisecond: number,
+    options?: LocaleOptions
+  ): DateTime;
+  static utc(
+    year: number,
+    month: number,
+    day: number,
+    hour: number,
+    minute: number,
+    second: number,
+    options?: LocaleOptions
+  ): DateTime;
+  static utc(
+    year: number,
+    month: number,
+    day: number,
+    hour: number,
+    minute: number,
+    options?: LocaleOptions
+  ): DateTime;
+  static utc(
+    year: number,
+    month: number,
+    day: number,
+    hour: number,
+    options?: LocaleOptions
+  ): DateTime;
+  static utc(
+    year: number,
+    month: number,
+    day: number,
+    options?: LocaleOptions
+  ): DateTime;
+  static utc(year: number, month: number, options?: LocaleOptions): DateTime;
+  static utc(year: number, options?: LocaleOptions): DateTime;
+  static utc(options?: LocaleOptions): DateTime;
+  static utc(...args: any) {
+    return CalendarDate.fromDateTime(super.utc(...args));
   }
-
-  get fiscalYear() {
-    return this.month >= 10 ? this.year + 1 : this.year;
-  }
-
-  get fiscalQuarter() {
-    return this.quarter === 4 ? 1 : this.quarter + 1;
-  }
-
-  static toFiscalYear = (dt: DateTime) =>
-    dt.month >= 10 ? dt.year + 1 : dt.year;
 
   static fiscalYearEndToCalendarDate = (year: number | null | undefined) =>
     year
@@ -139,15 +236,15 @@ export class CalendarDate extends DateTime {
         })
       : undefined;
 
-  endOf(unit: DurationUnit): CalendarDate {
+  endOf(unit: DateTimeUnit): CalendarDate {
     return CalendarDate.fromDateTime(super.endOf(unit));
   }
 
-  minus(duration: Duration | number | DurationObject): CalendarDate {
+  minus(duration: DurationLike): CalendarDate {
     return CalendarDate.fromDateTime(super.minus(duration));
   }
 
-  plus(duration: Duration | number | DurationObject): CalendarDate {
+  plus(duration: DurationLike): CalendarDate {
     return CalendarDate.fromDateTime(super.plus(duration));
   }
 
@@ -167,7 +264,7 @@ export class CalendarDate extends DateTime {
     return this; // noop
   }
 
-  startOf(unit: DurationUnit): CalendarDate {
+  startOf(unit: DateTimeUnit): CalendarDate {
     return CalendarDate.fromDateTime(super.startOf(unit));
   }
 

@@ -1,6 +1,6 @@
 import { loadableReady } from '@loadable/component';
 import Cookies from 'js-cookie';
-import { Settings } from 'luxon';
+import { Settings, Zone } from 'luxon';
 import React from 'react';
 import { DndProvider } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
@@ -16,11 +16,10 @@ import { basePathOfUrl } from './util';
 // This isn't great as a change to this or first load will cause the server to
 // render the timezone incorrectly. This will only be fixed once client side
 // code loads and replaces it or on next load from server.
-if (
-  typeof window !== 'undefined' &&
-  Cookies.get().tz !== Settings.defaultZoneName
-) {
-  Cookies.set('tz', Settings.defaultZoneName);
+// eslint-disable-next-line @typescript-eslint/no-unnecessary-type-assertion
+const defaultZone = (Settings.defaultZone as Zone).name;
+if (typeof window !== 'undefined' && Cookies.get().tz !== defaultZone) {
+  Cookies.set('tz', defaultZone);
 }
 
 const setup: Array<Promise<any>> = [];
