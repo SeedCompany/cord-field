@@ -98,6 +98,7 @@ export const EnumField = <
   if (!childrenProp && !options) {
     throw new Error('Either children or options list is required');
   }
+  // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- the linter is right here, we are just trying to be extra safe at runtime
   if (childrenProp && options) {
     throw new Error('Only children or options list can be provided');
   }

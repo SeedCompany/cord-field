@@ -19,7 +19,7 @@ export const plugin = tsMorphPlugin(({ schema, file }) => {
 
     const values = type
       .getValues()
-      .filter((val) => !val.isDeprecated)
+      .filter((val) => !val.deprecationReason)
       .map((val) => val.name);
 
     addExportedConst(file, {

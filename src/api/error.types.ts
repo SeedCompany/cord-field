@@ -80,8 +80,14 @@ export const getErrorInfo = (e: unknown) => {
 
   // For mutations we will assume they will only have one error
   // since they should only be doing one operation.
-  const ext = e.graphQLErrors[0].extensions;
-  const codes: Code[] = [...(ext.codes ?? [ext.code]), 'Default'];
+  const ext = e.graphQLErrors[0].extensions as {
+    codes?: Code[];
+    code?: Code;
+  };
+  const codes: Code[] = [
+    ...(ext.codes ?? (ext.code ? [ext.code] : [])),
+    'Default',
+  ];
   return {
     message: e.message,
     ...ext,

@@ -183,7 +183,7 @@ export const PeriodicReportsTableInContext = ({
               editReport({ ...report, reportFile: undefined });
               editField('skippedReason');
             }}
-            onEditSkipReason={async () => {
+            onEditSkipReason={() => {
               editReport({ ...report, reportFile: undefined });
               editField('skippedReason');
             }}

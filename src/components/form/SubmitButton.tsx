@@ -102,7 +102,7 @@ export const SubmitButton: FC<SubmitButtonProps> = ({
         e.preventDefault();
         form.change('submitAction', action);
 
-        return form.submit();
+        void form.submit();
       }}
       type="submit"
       disabled={

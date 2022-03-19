@@ -5,10 +5,12 @@ import { max, min, required } from '../../../components/form/validators';
 import { useNumberFormatter } from '../../../components/Formatters';
 import { getBookTotalVerses } from '../../../util/biblejs';
 
-interface VersesCountFieldProps
-  extends Except<NumberFieldProps, 'helperText' | 'validate'> {
+type VersesCountFieldProps = Except<
+  NumberFieldProps,
+  'helperText' | 'validate'
+> & {
   book: string;
-}
+};
 
 export const VersesCountField = ({ book, ...props }: VersesCountFieldProps) => {
   const formatNumber = useNumberFormatter();

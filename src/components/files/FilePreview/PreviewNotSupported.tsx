@@ -37,7 +37,7 @@ export const PreviewNotSupported = ({
         size="large"
         startIcon={<CloudDownload />}
         onClick={() =>
-          download(file).then(() => onClose?.({}, 'backdropClick'))
+          void download(file).then(() => onClose?.({}, 'backdropClick'))
         }
       >
         Download

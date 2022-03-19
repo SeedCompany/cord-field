@@ -73,4 +73,6 @@ const ProjectDetails = () => (
   </ChangesetContext>
 );
 
-const Engagements = () => <Navigate to={splicePath(useLocation(), 1, 2)} />;
+const Engagements = () => (
+  <Navigate replace permanent to={splicePath(useLocation(), 1, 2)} />
+);
