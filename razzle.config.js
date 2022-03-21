@@ -132,7 +132,7 @@ const modifyWebpackConfig = (opts) => {
   config.module.rules[1].exclude.push(/\.cjs$/);
 
   // Move cache out of node_modules
-  const terser = opts.webpackConfig.optimization.minimizer.find(
+  const terser = opts.webpackConfig.optimization.minimizer?.find(
     (plugin) => plugin.constructor.name === 'TerserPlugin'
   );
   if (terser) {
