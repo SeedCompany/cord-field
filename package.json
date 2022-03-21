@@ -22,6 +22,7 @@
   "packageManager": "yarn@3.2.0",
   "dependencies": {
     "@apollo/client": "^3.5.10",
+    "@babel/runtime": "^7.17.8",
     "@date-io/core": "^2.13.1",
     "@date-io/luxon": "^2.13.1",
     "@freiraum/msgreader": "patch:@freiraum/msgreader@1.1.1#.yarn/patches/msg-reader.patch",
