@@ -2,6 +2,7 @@
 .*
 !.babelrc
 !.eslintignore
+Dockerfile
 
 # Yarn / NPM
 !.yarnrc.yml

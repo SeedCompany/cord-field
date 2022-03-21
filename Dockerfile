@@ -41,6 +41,8 @@ RUN jq -r '.devDependencies | keys | .[]' package.json | xargs yarn remove
 # run =================================
 FROM node as run
 
-COPY --from=builder /app ./
+COPY --from=builder /app/.yarn ./.yarn
+COPY --from=builder /app/package.json /app/yarn.lock /app/.yarnrc.yml /app/.pnp.* ./
+COPY --from=builder /app/build ./build
 
 CMD ["yarn", "node", "build/server.js"]
