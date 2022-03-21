@@ -32,10 +32,12 @@ export const indexHtml = ({
 <body ${helmet.bodyAttributes.toString()}>
   <div id="root">${markup}</div>
   <script>
-    ${Object.entries(globals).map(
-      ([key, value]) =>
-        `window.${key} = ${JSON.stringify(value).replace(/</g, '\\u003c')}`
-    )}
+${Object.entries(globals)
+  .map(
+    ([key, value]) =>
+      `window.${key} = ${JSON.stringify(value).replace(/</g, '\\u003c')};`
+  )
+  .join('\n')}
   </script>
   ${extractor.getScriptTags()}
 </body>
