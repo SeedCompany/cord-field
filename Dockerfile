@@ -43,4 +43,4 @@ FROM node as run
 
 COPY --from=builder /app ./
 
-CMD ["node", "build/server.js"]
+CMD ["yarn", "node", "build/server.js"]
