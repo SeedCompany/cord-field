@@ -131,6 +131,14 @@ const modifyWebpackConfig = (opts) => {
   // Exclude .cjs files from FileLoader. They should be loaded like other js files.
   config.module.rules[1].exclude.push(/\.cjs$/);
 
+  // Move cache out of node_modules
+  const terser = opts.webpackConfig.optimization.minimizer.find(
+    (plugin) => plugin.constructor.name === 'TerserPlugin'
+  );
+  if (terser) {
+    terser.options.cache = 'cache/terser-webpack-plugin';
+  }
+
   return config;
 };
 
