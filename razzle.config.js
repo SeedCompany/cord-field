@@ -7,6 +7,7 @@ const { BundleAnalyzerPlugin } = require('webpack-bundle-analyzer');
 const DynamicPublicPathPlugin = require('webpack-dynamic-public-path');
 
 const modifyWebpackConfig = (opts) => {
+  /** @type {webpack.Configuration} */
   const config = opts.webpackConfig;
   const { target } = opts.env;
   const isClient = target === 'web';
