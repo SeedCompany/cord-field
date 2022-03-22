@@ -11,6 +11,7 @@ import {
 import { RetryLink } from '@apollo/client/link/retry';
 import fetch from 'cross-fetch';
 import React, { FC, useContext, useState } from 'react';
+import { dedupeFragmentsPrinter } from './dedupeFragmentsPrinter';
 import { possibleTypes } from './fragmentMatcher';
 import { delayLink } from './links/delay.link';
 import { ErrorCache, ErrorCacheLink } from './links/errorCache.link';
@@ -52,6 +53,7 @@ export const ApolloProvider: FC = ({ children }) => {
       uri: (op) => `${serverHost}/graphql/${op.operationName}`,
       credentials: 'include',
       fetch,
+      print: dedupeFragmentsPrinter,
     });
 
     const sessionLink = new SessionLink();
