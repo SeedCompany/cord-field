@@ -1,6 +1,14 @@
 {
   "presets": ["razzle/babel"],
   "plugins": [
+    ["transform-rename-import", {
+      "replacements": [
+        {
+          "original": "(.+)\\.graphql$",
+          "replacement": "$1.graphql.ts"
+        }
+      ]
+    }],
     ["@babel/plugin-transform-runtime", {
       "absoluteRuntime": true
     }],

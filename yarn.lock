@@ -4855,6 +4855,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"babel-plugin-transform-rename-import@npm:^2.3.0":
+  version: 2.3.0
+  resolution: "babel-plugin-transform-rename-import@npm:2.3.0"
+  checksum: 2ed19d3ec4922b4bef5390c60b96d99874ece3e255966556373d5401b261715e5e31863ca1c75db15c6192ce8eeee8ddcb2eb5422c4d25bb073017456c11b438
+  languageName: node
+  linkType: hard
+
 "babel-preset-current-node-syntax@npm:^1.0.0":
   version: 1.0.1
   resolution: "babel-preset-current-node-syntax@npm:1.0.1"
@@ -6461,6 +6468,7 @@ __metadata:
     babel-loader: ^8.2.3
     babel-plugin-import: ^1.13.3
     babel-plugin-mui-make-styles: ^0.1.1
+    babel-plugin-transform-rename-import: ^2.3.0
     babel-preset-razzle: ^4.2.16
     body-parser: ^1.19.2
     circular-dependency-plugin: ^5.2.2
