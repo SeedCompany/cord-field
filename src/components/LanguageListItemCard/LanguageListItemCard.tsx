@@ -9,14 +9,14 @@ import { Skeleton } from '@material-ui/lab';
 import clsx from 'clsx';
 import { FC } from 'react';
 import * as React from 'react';
-import { LanguagesQueryVariables } from '../../scenes/Languages/List/languages.generated';
+import { LanguagesQueryVariables } from '../../scenes/Languages/List/languages.graphql';
 import { DisplaySimpleProperty } from '../DisplaySimpleProperty';
 import { useNumberFormatter } from '../Formatters';
 import { PresetInventoryIconFilled } from '../Icons';
 import { CardActionAreaLink } from '../Routing';
 import { Sensitivity } from '../Sensitivity';
 import { TogglePinButton } from '../TogglePinButton';
-import { LanguageListItemFragment } from './LanguageListItem.generated';
+import { LanguageListItemFragment } from './LanguageListItem.graphql';
 
 const useStyles = makeStyles(({ spacing }) => {
   return {

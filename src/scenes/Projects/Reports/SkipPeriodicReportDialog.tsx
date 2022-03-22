@@ -11,7 +11,7 @@ import {
   SubmitError,
   TextField,
 } from '../../../components/form';
-import { PeriodicReportFragment } from '../../../components/PeriodicReports/PeriodicReport.generated';
+import { PeriodicReportFragment } from '../../../components/PeriodicReports/PeriodicReport.graphql';
 import { useUpdatePeriodicReport } from '../../../components/PeriodicReports/Upload/useUpdatePeriodicReport';
 
 type SkipPeriodicReportFormValues = Pick<

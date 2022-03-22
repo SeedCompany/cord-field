@@ -26,7 +26,7 @@ import { useProjectId } from '../../useProjectId';
 import {
   DeleteProjectChangeRequestDocument as DeleteRequest,
   UpdateProjectChangeRequestDocument as UpdateRequest,
-} from './UpdateProjectChangeRequest.generated';
+} from './UpdateProjectChangeRequest.graphql';
 
 export interface UpdateProjectChangeRequestFormParams {
   project: {

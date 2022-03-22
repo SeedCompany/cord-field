@@ -1,2 +1,2 @@
 export * from './PostForm';
-export * from './PostForm.generated';
+export * from './PostForm.graphql';

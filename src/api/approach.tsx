@@ -6,7 +6,7 @@ import {
 } from '@material-ui/icons';
 import React, { ReactNode } from 'react';
 import { entries, mapFromList } from '../util';
-import { ProductApproach, ProductMethodology } from './schema.generated';
+import { ProductApproach, ProductMethodology } from './schema.graphql';
 
 export const ApproachMethodologies: Record<
   ProductApproach,

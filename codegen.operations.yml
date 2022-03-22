@@ -1,6 +1,6 @@
 schema:
   - ${RAZZLE_API_BASE_URL}/graphql:
-      loader: ./src/api/client-schema.graphql.ts
+      loader: ./src/api/client-schema.graphql-loader.ts
 documents:
   - ./src/**/*.graphql
   - '!./src/api/client-schema.graphql'
@@ -21,18 +21,17 @@ generates:
     config:
       identifierName: GQLOperations
 
-  # Generate types & react hooks for our operations
+  # Generate types & documents for our operations
   ./src/:
     preset: near-operation-file
     presetConfig:
-      extension: .generated.ts
-      baseTypesPath: api/schema.generated.ts
+      extension: .graphql.ts
+      baseTypesPath: api/schema.graphql.ts
     plugins:
       - typescript-operations
       - typed-document-node
     config:
-      gqlImport: graphql-tag
-      documentMode: graphQLTag
+      documentMode: documentNodeImportFragments
       skipTypename: false
       enumsAsTypes: true
       # Instead of Pick-ing from generated schema, redefine shape inline

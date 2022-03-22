@@ -20,7 +20,7 @@ import {
   SortableListInput,
 } from '../../list-caching';
 import { sortingFromArgs } from '../../list-caching/util';
-import { Order } from '../../schema.generated';
+import { Order } from '../../schema.graphql';
 import { unwrapSecured } from '../../secured';
 
 export type PaginatedListArgs = InputArg<PaginatedListInput>;

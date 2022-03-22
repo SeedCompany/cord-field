@@ -6,7 +6,7 @@ import {
   FieldOverviewCardProps,
 } from '../FieldOverviewCard';
 import { useCurrencyFormatter } from '../Formatters/useCurrencyFormatter';
-import { BudgetOverviewFragment } from './BudgetOverview.generated';
+import { BudgetOverviewFragment } from './BudgetOverview.graphql';
 
 export interface BudgetOverviewCardProps extends FieldOverviewCardProps {
   budget?: BudgetOverviewFragment | null;

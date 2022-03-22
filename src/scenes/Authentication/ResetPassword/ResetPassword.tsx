@@ -4,7 +4,7 @@ import { Helmet } from 'react-helmet-async';
 import { useParams } from 'react-router-dom';
 import { Except } from 'type-fest';
 import { handleFormError } from '../../../api';
-import { ResetPasswordDocument } from './ResetPassword.generated';
+import { ResetPasswordDocument } from './ResetPassword.graphql';
 import {
   ResetPasswordFormProps as Props,
   ResetPasswordForm,

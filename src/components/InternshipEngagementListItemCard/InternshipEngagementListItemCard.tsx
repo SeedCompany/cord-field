@@ -14,7 +14,7 @@ import { idForUrl } from '../Changeset';
 import { DisplaySimpleProperty } from '../DisplaySimpleProperty';
 import { FormattedDate } from '../Formatters';
 import { ButtonLink, CardActionAreaLink } from '../Routing';
-import { InternshipEngagementListItemFragment } from './InternshipEngagementListItem.generated';
+import { InternshipEngagementListItemFragment } from './InternshipEngagementListItem.graphql';
 
 const useStyles = makeStyles(({ spacing }) => ({
   root: {

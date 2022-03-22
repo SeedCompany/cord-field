@@ -12,7 +12,7 @@ import {
   UpdateInternshipEngagement,
   UpdateLanguageEngagement,
 } from '../../../api';
-import { DisplayLocationFragment } from '../../../api/fragments/location.generated';
+import { DisplayLocationFragment } from '../../../api/fragments/location.graphql';
 import {
   DialogForm,
   DialogFormProps,
@@ -28,14 +28,14 @@ import {
 } from '../../../components/form';
 import { AutocompleteField } from '../../../components/form/AutocompleteField';
 import { LocationField, UserField } from '../../../components/form/Lookup';
-import { UserLookupItemFragment } from '../../../components/form/Lookup/User/UserLookup.generated';
+import { UserLookupItemFragment } from '../../../components/form/Lookup/User/UserLookup.graphql';
 import { ExtractStrict, many, Many } from '../../../util';
-import { InternshipEngagementDetailFragment as InternshipEngagement } from '../InternshipEngagement/InternshipEngagement.generated';
-import { LanguageEngagementDetailFragment as LanguageEngagement } from '../LanguageEngagement/LanguageEngagementDetail.generated';
+import { InternshipEngagementDetailFragment as InternshipEngagement } from '../InternshipEngagement/InternshipEngagement.graphql';
+import { LanguageEngagementDetailFragment as LanguageEngagement } from '../LanguageEngagement/LanguageEngagementDetail.graphql';
 import {
   UpdateInternshipEngagementDocument,
   UpdateLanguageEngagementDocument,
-} from './EditEngagementDialog.generated';
+} from './EditEngagementDialog.graphql';
 
 export type Engagement = InternshipEngagement | LanguageEngagement;
 

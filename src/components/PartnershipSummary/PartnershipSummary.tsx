@@ -3,7 +3,7 @@ import * as React from 'react';
 import { FC } from 'react';
 import { PeopleJoinedIcon } from '../Icons';
 import { MemberListSummary, MemberSummaryItem } from '../MemberListSummary';
-import { PartnershipSummaryFragment } from './PartnershipSummary.generated';
+import { PartnershipSummaryFragment } from './PartnershipSummary.graphql';
 
 const useStyles = makeStyles(() => ({
   icon: {

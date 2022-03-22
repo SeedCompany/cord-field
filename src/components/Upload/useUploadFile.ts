@@ -3,7 +3,7 @@ import { Dispatch, useCallback } from 'react';
 import { getMimeType } from './getMimeType';
 import * as actions from './Reducer/uploadActions';
 import * as Types from './Reducer/uploadTypings';
-import { DeleteFileNodeDocument } from './Upload.generated';
+import { DeleteFileNodeDocument } from './Upload.graphql';
 
 export const useUploadFile = (
   dispatch: Dispatch<Types.UploadAction>

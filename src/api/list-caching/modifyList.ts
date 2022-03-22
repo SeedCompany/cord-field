@@ -4,7 +4,7 @@ import { Modifier } from '@apollo/client/cache/core/types/common';
 import type { EntityStore } from '@apollo/client/cache/inmemory/entityStore';
 import type { ConditionalKeys } from 'type-fest';
 import { keys, mapFromList, Nullable } from '../../util';
-import type { Query } from '../schema.generated';
+import type { Query } from '../schema.graphql';
 import { typePolicies } from '../typePolicies';
 import {
   Entity,

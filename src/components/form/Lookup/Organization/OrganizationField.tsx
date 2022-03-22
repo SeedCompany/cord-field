@@ -4,7 +4,7 @@ import { LookupField } from '../../index';
 import {
   OrganizationLookupDocument,
   OrganizationLookupItemFragment,
-} from './OrganizationLookup.generated';
+} from './OrganizationLookup.graphql';
 
 export const OrganizationField = LookupField.createFor<
   OrganizationLookupItemFragment,

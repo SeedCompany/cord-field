@@ -23,7 +23,7 @@ import {
 import { FormattedDate, FormattedDateTime } from '../Formatters';
 import { Table } from '../Table';
 import { TableProps } from '../Table/Table';
-import { PeriodicReportFragment } from './PeriodicReport.generated';
+import { PeriodicReportFragment } from './PeriodicReport.graphql';
 import { PeriodicReportRow } from './PeriodicReportRow';
 import { ReportLabel } from './ReportLabel';
 import { useUpdatePeriodicReport } from './Upload/useUpdatePeriodicReport';

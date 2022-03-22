@@ -17,7 +17,7 @@ import React from 'react';
 import { idForUrl } from '../Changeset';
 import { HugeIcon } from '../Icons';
 import { CardActionAreaLink } from '../Routing';
-import { ProductCardFragment } from './ProductCard.generated';
+import { ProductCardFragment } from './ProductCard.graphql';
 
 const useStyles = makeStyles(() => ({
   root: {

@@ -17,7 +17,7 @@ import {
 import { DisplaySimpleProperty } from '../DisplaySimpleProperty';
 import { FormattedDateRange, FormattedDateTime } from '../Formatters';
 import { Redacted } from '../Redacted';
-import { PartnershipCardFragment } from './PartnershipCard.generated';
+import { PartnershipCardFragment } from './PartnershipCard.graphql';
 import { PartnershipPrimaryIcon } from './PartnershipPrimaryIcon';
 
 const useStyles = makeStyles(({ spacing }) => ({

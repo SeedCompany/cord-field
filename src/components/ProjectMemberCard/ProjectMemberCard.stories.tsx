@@ -4,7 +4,7 @@ import { sampleSize } from 'lodash';
 import { DateTime } from 'luxon';
 import React from 'react';
 import { RoleList } from '../../api';
-import { ProjectMemberCardFragment } from './ProjectMember.generated';
+import { ProjectMemberCardFragment } from './ProjectMember.graphql';
 import { ProjectMemberCard as ProjectMemberCardComponent } from './ProjectMemberCard';
 
 export default { title: 'Components' };

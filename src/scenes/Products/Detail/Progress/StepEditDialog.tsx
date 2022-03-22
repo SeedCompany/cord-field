@@ -18,7 +18,7 @@ import {
   ProductProgressFragment,
   StepProgressFragment,
   UpdateStepProgressDocument,
-} from './ProductProgress.generated';
+} from './ProductProgress.graphql';
 
 export interface StepFormValues {
   completed?: number | boolean | null;

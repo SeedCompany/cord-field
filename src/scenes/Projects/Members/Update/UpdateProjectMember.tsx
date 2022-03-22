@@ -20,12 +20,12 @@ import {
 } from '../../../../components/form';
 import { AutocompleteField } from '../../../../components/form/AutocompleteField';
 import { callAll } from '../../../../util';
-import { ProjectMembersQuery } from '../List/ProjectMembers.generated';
+import { ProjectMembersQuery } from '../List/ProjectMembers.graphql';
 import {
   DeleteProjectMemberDocument,
   GetUserRolesDocument,
   UpdateProjectMemberDocument,
-} from './UpdateProjectMember.generated';
+} from './UpdateProjectMember.graphql';
 
 export interface UpdateProjectMemberFormParams {
   project: ProjectMembersQuery['project'];

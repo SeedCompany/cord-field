@@ -14,7 +14,7 @@ import { DisplaySimpleProperty } from '../DisplaySimpleProperty';
 import { useNumberFormatter } from '../Formatters';
 import { PresetInventoryIconFilled } from '../Icons';
 import { ButtonLink, CardActionAreaLink } from '../Routing';
-import { LanguageEngagementListItemFragment } from './LanguageEngagementListItem.generated';
+import { LanguageEngagementListItemFragment } from './LanguageEngagementListItem.graphql';
 
 const useStyles = makeStyles(({ spacing }) => ({
   root: {

@@ -16,8 +16,8 @@ import {
 import { SubmitError } from '../../../../components/form';
 import { AutocompleteField } from '../../../../components/form/AutocompleteField';
 import { UserField, UserLookupItem } from '../../../../components/form/Lookup';
-import { ProjectMembersQuery } from '../List/ProjectMembers.generated';
-import { CreateProjectMemberDocument } from './CreateProjectMember.generated';
+import { ProjectMembersQuery } from '../List/ProjectMembers.graphql';
+import { CreateProjectMemberDocument } from './CreateProjectMember.graphql';
 
 interface FormValues {
   projectMember: Partial<

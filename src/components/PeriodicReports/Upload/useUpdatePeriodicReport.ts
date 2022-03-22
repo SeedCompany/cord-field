@@ -1,7 +1,7 @@
 import { useMutation } from '@apollo/client';
 import { CalendarDate } from '../../../util';
 import { useUploadFiles } from '../../files/hooks';
-import { UpdatePeriodicReportDocument } from './UpdatePeriodicReport.generated';
+import { UpdatePeriodicReportDocument } from './UpdatePeriodicReport.graphql';
 
 export const useUpdatePeriodicReport = () => {
   const uploadFiles = useUploadFiles();

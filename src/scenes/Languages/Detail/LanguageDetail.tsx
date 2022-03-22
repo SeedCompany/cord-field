@@ -22,19 +22,19 @@ import { IconButton } from '../../../components/IconButton';
 import { PresetInventoryIconFilled } from '../../../components/Icons';
 import { LocationCard } from '../../../components/LocationCard';
 import { ProjectListItemCard } from '../../../components/ProjectListItemCard';
-import { ProjectListItemFragment } from '../../../components/ProjectListItemCard/ProjectListItem.generated';
+import { ProjectListItemFragment } from '../../../components/ProjectListItemCard/ProjectListItem.graphql';
 import { Redacted } from '../../../components/Redacted';
 import { Sensitivity } from '../../../components/Sensitivity';
 import { TogglePinButton } from '../../../components/TogglePinButton';
 import { listOrPlaceholders } from '../../../util';
 import { EditLanguage } from '../Edit';
 import { AddLocationToLanguageForm } from '../Edit/AddLocationToLanguageForm';
-import { LanguagesQueryVariables } from '../List/languages.generated';
+import { LanguagesQueryVariables } from '../List/languages.graphql';
 import { FirstScripture } from './FirstScripture';
 import {
   LanguageDocument,
   RemoveLocationFromLanguageDocument,
-} from './LanguageDetail.generated';
+} from './LanguageDetail.graphql';
 import { LanguagePostList } from './LanguagePostList';
 import { LeastOfThese } from './LeastOfThese';
 

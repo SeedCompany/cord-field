@@ -4,7 +4,7 @@ import { groupBy } from 'lodash';
 import React from 'react';
 import Table from '../../../components/Table/Table';
 import { ProductTable } from './ProductTable';
-import { ProgressOfProductForReportFragment } from './ProgressReportDetail.generated';
+import { ProgressOfProductForReportFragment } from './ProgressReportDetail.graphql';
 
 interface ProductTableListProps extends GridProps {
   products?: readonly ProgressOfProductForReportFragment[];

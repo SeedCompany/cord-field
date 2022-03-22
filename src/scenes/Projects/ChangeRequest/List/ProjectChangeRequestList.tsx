@@ -16,7 +16,7 @@ import { ProjectBreadcrumb } from '../../../../components/ProjectBreadcrumb';
 import { ProjectChangeRequestListItem } from '../../../../components/ProjectChangeRequestListItem';
 import { useProjectId } from '../../useProjectId';
 import { CreateProjectChangeRequest } from '../Create';
-import { ProjectChangeRequestListDocument as ChangeRequestList } from './ProjectChangeRequestList.generated';
+import { ProjectChangeRequestListDocument as ChangeRequestList } from './ProjectChangeRequestList.graphql';
 
 const useStyles = makeStyles(({ spacing, breakpoints }) => ({
   root: {

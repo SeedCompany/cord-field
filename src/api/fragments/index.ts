@@ -1,3 +1,3 @@
-export * from './identity.generated';
-export * from './changeset.generated';
-export * from './scripture.generated';
+export * from './identity.graphql';
+export * from './changeset.graphql';
+export * from './scripture.graphql';

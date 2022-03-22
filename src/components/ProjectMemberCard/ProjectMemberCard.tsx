@@ -12,7 +12,7 @@ import * as React from 'react';
 import { displayRoles } from '../../api';
 import { Avatar } from '../Avatar';
 import { useDateTimeFormatter } from '../Formatters';
-import { ProjectMemberCardFragment } from './ProjectMember.generated';
+import { ProjectMemberCardFragment } from './ProjectMember.graphql';
 
 const useStyles = makeStyles(({ spacing }) => ({
   cardContent: {

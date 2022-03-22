@@ -32,7 +32,7 @@ import { SkipPeriodicReportDialog } from '../../Projects/Reports/SkipPeriodicRep
 import { UpdatePeriodicReportDialog } from '../../Projects/Reports/UpdatePeriodicReportDialog';
 import { ProductTableList } from './ProductTableList';
 import { ProgressReportCard } from './ProgressReportCard';
-import { ProgressReportDetailDocument } from './ProgressReportDetail.generated';
+import { ProgressReportDetailDocument } from './ProgressReportDetail.graphql';
 import { ProgressSummaryCard } from './ProgressSummaryCard';
 
 const useStyles = makeStyles(({ spacing, breakpoints }) => ({

@@ -21,7 +21,7 @@ import { PartnerListItemCard as PartnerCard } from '../../../components/PartnerL
 import { SortButtonDialog, useSort } from '../../../components/Sort';
 import { simpleSwitch } from '../../../util';
 import { usePartnerFilters } from './PartnerFilterOptions';
-import { PartnersDocument } from './PartnerList.generated';
+import { PartnersDocument } from './PartnerList.graphql';
 import { PartnerSort, PartnerSortOptions } from './PartnerSortOptions';
 
 const TabList = ActualTabList as typeof __Tabs;

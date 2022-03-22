@@ -12,7 +12,7 @@ import {
 } from '../../../../components/Dialog/DialogForm';
 import { SubmitError } from '../../../../components/form';
 import { UserField, UserLookupItem } from '../../../../components/form/Lookup';
-import { CreateInternshipEngagementDocument } from './CreateInternshipEngagement.generated';
+import { CreateInternshipEngagementDocument } from './CreateInternshipEngagement.graphql';
 
 interface CreateInternshipEngagementFormValues {
   engagement: {

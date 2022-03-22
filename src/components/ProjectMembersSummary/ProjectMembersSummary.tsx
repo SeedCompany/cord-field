@@ -2,7 +2,7 @@ import { Group } from '@material-ui/icons';
 import { FC } from 'react';
 import * as React from 'react';
 import { MemberListSummary, MemberSummaryItem } from '../MemberListSummary';
-import { ProjectMemberListFragment } from './ProjectMembersSummary.generated';
+import { ProjectMemberListFragment } from './ProjectMembersSummary.graphql';
 
 export interface ProjectMembersSummaryProps {
   members?: ProjectMemberListFragment;

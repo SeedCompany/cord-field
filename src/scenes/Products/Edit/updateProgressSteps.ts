@@ -2,13 +2,13 @@ import { ApolloCache, MutationUpdaterFunction } from '@apollo/client';
 import { difference, sortBy, uniqBy } from 'lodash';
 import { IdFragment, readFragment, StepProgress } from '../../../api';
 import { notNullish } from '../../../util';
-import { ProductFormFragment } from '../ProductForm/ProductForm.generated';
+import { ProductFormFragment } from '../ProductForm/ProductForm.graphql';
 import {
   modifyProgressRelatingToEngagement,
   progressRelatingToEngagement,
 } from '../ProgressRefsRelatingToEngagement';
-import { CurrentProgressOfProductFragmentDoc as CurrentProgressOfProduct } from './CurrentProgessOfProduct.generated';
-import { UpdateDirectScriptureProductMutation as UpdateProductMutation } from './EditProduct.generated';
+import { CurrentProgressOfProductFragmentDoc as CurrentProgressOfProduct } from './CurrentProgessOfProduct.graphql';
+import { UpdateDirectScriptureProductMutation as UpdateProductMutation } from './EditProduct.graphql';
 
 export const updateProgressSteps =
   (

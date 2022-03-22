@@ -1,7 +1,7 @@
 import { useApolloClient } from '@apollo/client';
 import { useSnackbar } from 'notistack';
 import { useCallback } from 'react';
-import { FileNodeDownloadUrlDocument } from './DownloadFile.generated';
+import { FileNodeDownloadUrlDocument } from './DownloadFile.graphql';
 
 export const useGetFileDownloadUrl = () => {
   const { enqueueSnackbar } = useSnackbar();

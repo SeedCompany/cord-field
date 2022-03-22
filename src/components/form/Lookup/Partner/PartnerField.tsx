@@ -6,7 +6,7 @@ import { LookupField } from '../../index';
 import {
   PartnerLookupDocument,
   PartnerLookupItemFragment,
-} from './PartnerLookup.generated';
+} from './PartnerLookup.graphql';
 
 export const PartnerField = LookupField.createFor<
   PartnerLookupItemFragment,

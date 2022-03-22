@@ -15,7 +15,7 @@ import { useSearch } from '../Root/Header/HeaderSearch';
 import {
   SearchDocument,
   SearchResultItemFragment as SearchResult,
-} from './Search.generated';
+} from './Search.graphql';
 
 const useStyles = makeStyles(({ spacing, breakpoints }) => ({
   root: {

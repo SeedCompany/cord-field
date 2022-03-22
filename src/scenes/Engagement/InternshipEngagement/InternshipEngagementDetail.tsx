@@ -28,7 +28,7 @@ import {
   Engagement,
 } from '../EditEngagement/EditEngagementDialog';
 import { EngagementWorkflowDialog } from '../EditEngagement/EngagementWorkflowDialog';
-import { EngagementQuery } from '../Engagement.generated';
+import { EngagementQuery } from '../Engagement.graphql';
 import { UploadInternshipEngagementGrowthPlanDocument } from '../Files';
 import { MentorCard } from './MentorCard';
 

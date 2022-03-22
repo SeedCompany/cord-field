@@ -4,7 +4,7 @@ import { LookupField } from '../../index';
 import {
   StoryLookupItemFragment as Story,
   StoryLookupDocument,
-} from './StoryLookup.generated';
+} from './StoryLookup.graphql';
 
 export const StoryField = LookupField.createFor<Story, CreateStoryInput>({
   resource: 'Story',

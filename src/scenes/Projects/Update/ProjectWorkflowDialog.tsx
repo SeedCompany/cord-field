@@ -19,8 +19,8 @@ import {
   SubmitError,
 } from '../../../components/form';
 import { AutocompleteField } from '../../../components/form/AutocompleteField';
-import { ProjectOverviewFragment } from '../Overview/ProjectOverview.generated';
-import { UpdateProjectDocument } from './UpdateProject.generated';
+import { ProjectOverviewFragment } from '../Overview/ProjectOverview.graphql';
+import { UpdateProjectDocument } from './UpdateProject.graphql';
 
 const transitionTypeToColor: Record<
   TransitionType,

@@ -24,14 +24,14 @@ import { Redacted } from '../../../../components/Redacted';
 import { Link } from '../../../../components/Routing';
 import { Many } from '../../../../util';
 import { DeleteEngagement } from '../../Delete';
-import { EngagementToDeleteFragment } from '../../Delete/DeleteEngagement.generated';
+import { EngagementToDeleteFragment } from '../../Delete/DeleteEngagement.graphql';
 import {
   EditableEngagementField,
   EditEngagementDialog,
   Engagement,
 } from '../../EditEngagement/EditEngagementDialog';
 import { EngagementWorkflowDialog } from '../../EditEngagement/EngagementWorkflowDialog';
-import { LanguageEngagementDetailFragment } from '../LanguageEngagementDetail.generated';
+import { LanguageEngagementDetailFragment } from '../LanguageEngagementDetail.graphql';
 
 const useStyles = makeStyles(({ palette, spacing }) => ({
   nameRedacted: {

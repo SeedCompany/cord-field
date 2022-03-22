@@ -4,7 +4,7 @@ import type {
   FieldReadFunction,
   KeyFieldsFunction,
 } from '@apollo/client/cache/inmemory/policies';
-import type { Mutation, Query } from '../schema.generated';
+import type { Mutation, Query } from '../schema.graphql';
 import type { GqlTypeMap } from '../typeMap.generated';
 
 type FieldPolicies<T> = {

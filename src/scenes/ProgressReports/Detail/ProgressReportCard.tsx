@@ -5,8 +5,8 @@ import {
   DefinedFileCardProps,
 } from '../../../components/DefinedFileCard';
 import { FileActionsContextProvider } from '../../../components/files/FileActions';
-import { UploadPeriodicReportFileDocument } from '../../../components/PeriodicReports/Upload/UpdatePeriodicReport.generated';
-import { ProgressReportFragment } from './ProgressReportDetail.generated';
+import { UploadPeriodicReportFileDocument } from '../../../components/PeriodicReports/Upload/UpdatePeriodicReport.graphql';
+import { ProgressReportFragment } from './ProgressReportDetail.graphql';
 
 interface Props extends Pick<DefinedFileCardProps, 'onUpload' | 'disableIcon'> {
   progressReport: ProgressReportFragment;

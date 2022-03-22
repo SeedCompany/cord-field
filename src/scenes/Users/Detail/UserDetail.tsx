@@ -18,8 +18,8 @@ import { PartnerListItemCard } from '../../../components/PartnerListItemCard';
 import { Redacted } from '../../../components/Redacted';
 import { TogglePinButton } from '../../../components/TogglePinButton';
 import { EditUser } from '../Edit';
-import { UsersQueryVariables } from '../List/users.generated';
-import { UserDocument } from './UserDetail.generated';
+import { UsersQueryVariables } from '../List/users.graphql';
+import { UserDocument } from './UserDetail.graphql';
 
 const useStyles = makeStyles(({ spacing, breakpoints }) => ({
   root: {

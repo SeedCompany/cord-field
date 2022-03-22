@@ -12,7 +12,7 @@ import {
 import {
   CreateLocationDocument,
   CreateLocationMutation,
-} from './CreateLocation.generated';
+} from './CreateLocation.graphql';
 
 type FormValues = LocationFormValues<CreateLocationType>;
 type SubmitResult = CreateLocationMutation['createLocation']['location'];

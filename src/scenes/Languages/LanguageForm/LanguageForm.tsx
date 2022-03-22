@@ -28,9 +28,9 @@ import { SelectField } from '../../../components/form/SelectField';
 import { max, minLength, required } from '../../../components/form/validators';
 import { YearField } from '../../../components/form/YearField';
 import { useNumberFormatter } from '../../../components/Formatters';
-import { LanguageListItemFragment } from '../../../components/LanguageListItemCard/LanguageListItem.generated';
+import { LanguageListItemFragment } from '../../../components/LanguageListItemCard/LanguageListItem.graphql';
 import { Nullable } from '../../../util';
-import { LanguageFormFragment } from './LangugeForm.generated';
+import { LanguageFormFragment } from './LangugeForm.graphql';
 
 export interface LanguageFormValues<T extends UpdateLanguage | CreateLanguage> {
   language: Except<T, 'sponsorEstimatedEndDate'> & {

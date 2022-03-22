@@ -3,7 +3,7 @@ import * as React from 'react';
 import { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { AuthWaiting } from '../AuthWaiting';
-import { LogoutDocument } from './logout.generated';
+import { LogoutDocument } from './logout.graphql';
 
 export const Logout = () => {
   const navigate = useNavigate();

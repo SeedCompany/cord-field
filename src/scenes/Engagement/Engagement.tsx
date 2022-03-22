@@ -2,7 +2,7 @@ import { useQuery } from '@apollo/client';
 import React from 'react';
 import { useChangesetAwareIdFromUrl } from '../../components/Changeset';
 import { NotFoundPage } from '../../components/Error';
-import { EngagementDocument } from './Engagement.generated';
+import { EngagementDocument } from './Engagement.graphql';
 import { EngagementDetailLoading } from './EngagementDetailLoading';
 import { InternshipEngagementDetail } from './InternshipEngagement';
 import { LanguageEngagementDetail } from './LanguageEngagement';

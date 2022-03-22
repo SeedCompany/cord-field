@@ -15,7 +15,7 @@ import {
   MethodologyToApproach,
 } from '../../api';
 import { listOrPlaceholders } from '../../util';
-import { MethodologiesCardFragment } from './MethodologiesCard.generated';
+import { MethodologiesCardFragment } from './MethodologiesCard.graphql';
 
 const useStyles = makeStyles(({ palette, spacing }) => ({
   root: {

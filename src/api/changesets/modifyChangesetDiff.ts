@@ -5,7 +5,7 @@ import { updateFragment } from '../updateFragment';
 import {
   ModifyChangesetDiffOnUpdateFragment,
   ModifyChangesetDiffOnUpdateFragmentDoc,
-} from './ModifyChangesetDiffOnUpdate.generated';
+} from './ModifyChangesetDiffOnUpdate.graphql';
 
 interface ModifyChangesetDiff {
   added: readonly Entity[];

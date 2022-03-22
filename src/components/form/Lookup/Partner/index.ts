@@ -1,2 +1,2 @@
 export * from './PartnerField';
-export type { PartnerLookupItemFragment as PartnerLookupItem } from './PartnerLookup.generated';
+export type { PartnerLookupItemFragment as PartnerLookupItem } from './PartnerLookup.graphql';

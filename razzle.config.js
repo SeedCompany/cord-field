@@ -7,6 +7,7 @@ const { BundleAnalyzerPlugin } = require('webpack-bundle-analyzer');
 const DynamicPublicPathPlugin = require('webpack-dynamic-public-path');
 
 const modifyWebpackConfig = (opts) => {
+  /** @type {webpack.Configuration} */
   const config = opts.webpackConfig;
   const { target } = opts.env;
   const isClient = target === 'web';
@@ -129,7 +130,7 @@ const modifyWebpackConfig = (opts) => {
   }
 
   // Exclude .cjs files from FileLoader. They should be loaded like other js files.
-  config.module.rules[1].exclude.push(/\.cjs$/);
+  opts.options.webpackOptions.fileLoaderExclude.push(/\.cjs$/);
 
   // Move cache out of node_modules
   const terser = opts.webpackConfig.optimization.minimizer?.find(

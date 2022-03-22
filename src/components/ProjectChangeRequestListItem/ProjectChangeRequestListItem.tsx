@@ -14,7 +14,7 @@ import { useProjectId } from '../../scenes/Projects/useProjectId';
 import { DisplaySimpleProperty } from '../DisplaySimpleProperty';
 import { FormattedDateTime } from '../Formatters';
 import { useNavigate } from '../Routing';
-import { ProjectChangeRequestListItemFragment as ChangeRequest } from './ProjectChangeRequestListItem.generated';
+import { ProjectChangeRequestListItemFragment as ChangeRequest } from './ProjectChangeRequestListItem.graphql';
 
 const useStyles = makeStyles(({ palette, spacing }) => ({
   titleLoading: {

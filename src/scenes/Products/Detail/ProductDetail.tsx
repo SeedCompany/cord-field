@@ -9,7 +9,7 @@ import { ReportLabel } from '../../../components/PeriodicReports/ReportLabel';
 import { ResponsiveDivider } from '../../../components/ResponsiveDivider';
 import { Link } from '../../../components/Routing';
 import { ProductLoadError } from '../ProductLoadError';
-import { ProductDetailDocument } from './ProductDetail.generated';
+import { ProductDetailDocument } from './ProductDetail.graphql';
 import { ProductDetailHeader } from './ProductDetailHeader';
 import { ProductInfo } from './ProductInfo';
 import { StepsList } from './Progress';

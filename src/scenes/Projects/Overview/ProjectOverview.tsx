@@ -24,9 +24,9 @@ import {
 } from '../../../components/Formatters';
 import { IconButton } from '../../../components/IconButton';
 import { InternshipEngagementListItemCard } from '../../../components/InternshipEngagementListItemCard';
-import { InternshipEngagementListItemFragment } from '../../../components/InternshipEngagementListItemCard/InternshipEngagementListItem.generated';
+import { InternshipEngagementListItemFragment } from '../../../components/InternshipEngagementListItemCard/InternshipEngagementListItem.graphql';
 import { LanguageEngagementListItemCard } from '../../../components/LanguageEngagementListItemCard';
-import { LanguageEngagementListItemFragment } from '../../../components/LanguageEngagementListItemCard/LanguageEngagementListItem.generated';
+import { LanguageEngagementListItemFragment } from '../../../components/LanguageEngagementListItemCard/LanguageEngagementListItem.graphql';
 import { List, useListQuery } from '../../../components/List';
 import { PartnershipSummary } from '../../../components/PartnershipSummary';
 import { PeriodicReportCard } from '../../../components/PeriodicReports';
@@ -40,7 +40,7 @@ import { Many } from '../../../util';
 import { CreateInternshipEngagement } from '../../Engagement/InternshipEngagement/Create/CreateInternshipEngagement';
 import { CreateLanguageEngagement } from '../../Engagement/LanguageEngagement/Create/CreateLanguageEngagement';
 import { useProjectCurrentDirectory, useUploadProjectFiles } from '../Files';
-import { ProjectListQueryVariables } from '../List/projects.generated';
+import { ProjectListQueryVariables } from '../List/projects.graphql';
 import { EditableProjectField, UpdateProjectDialog } from '../Update';
 import { ProjectWorkflowDialog } from '../Update/ProjectWorkflowDialog';
 import { useProjectId } from '../useProjectId';
@@ -49,7 +49,7 @@ import {
   ProjectEngagementListOverviewDocument as EngagementList,
   ProjectOverviewDocument,
   ProjectOverviewFragment,
-} from './ProjectOverview.generated';
+} from './ProjectOverview.graphql';
 import { ProjectPostList } from './ProjectPostList';
 
 type EngagementListItem =

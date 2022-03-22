@@ -15,7 +15,7 @@ import { useProjectId } from '../useProjectId';
 import {
   ProjectBudgetDocument,
   UpdateProjectBudgetUniversalTemplateDocument,
-} from './ProjectBudget.generated';
+} from './ProjectBudget.graphql';
 import { ProjectBudgetRecords } from './ProjectBudgetRecords';
 
 const useStyles = makeStyles(({ breakpoints, spacing }) => ({

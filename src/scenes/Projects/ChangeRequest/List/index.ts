@@ -1,2 +1,2 @@
 export * from './ProjectChangeRequestList';
-export * from './ProjectChangeRequestList.generated';
+export * from './ProjectChangeRequestList.graphql';

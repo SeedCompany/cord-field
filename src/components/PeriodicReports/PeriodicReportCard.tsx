@@ -24,7 +24,7 @@ import {
 import { HugeIcon } from '../Icons';
 import { ButtonLink, CardActionAreaLink } from '../Routing';
 import { DropOverlay } from './DropOverlay';
-import { SecuredPeriodicReportFragment } from './PeriodicReport.generated';
+import { SecuredPeriodicReportFragment } from './PeriodicReport.graphql';
 import { ReportInfo } from './ReportInfo';
 import { ReportLabel } from './ReportLabel';
 

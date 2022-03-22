@@ -9,7 +9,7 @@ import {
 } from '../../scenes/Projects/ChangeRequest/Update';
 import { useDialog } from '../Dialog';
 import { ChangesetBanner } from './ChangesetBanner';
-import { ChangesetDiffDocument } from './ChangesetDiff.generated';
+import { ChangesetDiffDocument } from './ChangesetDiff.graphql';
 import { ChangesetDiffProvider } from './ChangesetDiffContext';
 import { useChangesetAwareIdFromUrl } from './useChangesetAwareIdFromUrl';
 

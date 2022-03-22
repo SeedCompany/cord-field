@@ -17,7 +17,7 @@ import { EnumField, EnumOption } from '../../../../components/form';
 import { PeriodicReportCard } from '../../../../components/PeriodicReports';
 import { entries } from '../../../../util';
 import { UploadLanguageEngagementPnpDocument as UploadPnp } from '../../Files';
-import { ProgressAndPlanningFragment } from './ProgressAndPlanning.generated';
+import { ProgressAndPlanningFragment } from './ProgressAndPlanning.graphql';
 
 export const useStyles = makeStyles(({ spacing, typography }) => ({
   section: {

@@ -20,7 +20,7 @@ import {
   CalculateNewTotalFragmentDoc as CalculateNewTotal,
   ProjectBudgetQuery,
   UpdateProjectBudgetRecordDocument,
-} from './ProjectBudget.generated';
+} from './ProjectBudget.graphql';
 
 const tableComponents: Components = {
   // No toolbar since it's just empty space, we don't use it for anything.

@@ -7,7 +7,7 @@ import { Nullable } from '../../util';
 import { Breadcrumb, BreadcrumbProps } from '../Breadcrumb';
 import { Redacted } from '../Redacted';
 import { SensitivityIcon } from '../Sensitivity';
-import { ProjectBreadcrumbFragment } from './ProjectBreadcrumb.generated';
+import { ProjectBreadcrumbFragment } from './ProjectBreadcrumb.graphql';
 
 export interface ProjectBreadcrumbProps extends Partial<BreadcrumbProps> {
   data?: Nullable<ProjectBreadcrumbFragment>;

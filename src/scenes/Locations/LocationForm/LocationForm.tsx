@@ -22,7 +22,7 @@ import {
   FundingAccountField,
   FundingAccountLookupItem,
 } from '../../../components/form/Lookup/FundingAccount';
-import { LocationFormFragment } from './LocationForm.generated';
+import { LocationFormFragment } from './LocationForm.graphql';
 
 export interface LocationFormValues<
   CreateOrUpdateType extends CreateLocation | UpdateLocation

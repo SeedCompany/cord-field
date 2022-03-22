@@ -17,7 +17,7 @@ import { recalculateSensitivity } from '../LanguageEngagement/Create/recalculate
 import {
   DeleteEngagementDocument,
   EngagementToDeleteFragment,
-} from './DeleteEngagement.generated';
+} from './DeleteEngagement.graphql';
 
 type ProjectIdFragment =
   | TranslationProjectIdFragment

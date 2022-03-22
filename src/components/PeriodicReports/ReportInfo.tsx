@@ -7,7 +7,7 @@ import React, { ReactNode } from 'react';
 import { FormattedDate, FormattedDateTime } from '../Formatters';
 import { PaperTooltip } from '../PaperTooltip';
 import { Redacted } from '../Redacted';
-import { SecuredPeriodicReportFragment } from './PeriodicReport.generated';
+import { SecuredPeriodicReportFragment } from './PeriodicReport.graphql';
 import { ReportLabel } from './ReportLabel';
 
 const useStyles = makeStyles(() => ({

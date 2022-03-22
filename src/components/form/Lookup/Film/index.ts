@@ -1,2 +1,2 @@
 export * from './FilmField';
-export type { FilmLookupItemFragment as FilmLookupItem } from './FilmLookup.generated';
+export type { FilmLookupItemFragment as FilmLookupItem } from './FilmLookup.graphql';

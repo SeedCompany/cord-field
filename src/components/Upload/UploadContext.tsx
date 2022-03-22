@@ -11,7 +11,7 @@ import * as actions from './Reducer/uploadActions';
 import { initialState } from './Reducer/uploadInitialState';
 import { uploadReducer } from './Reducer/uploadReducer';
 import * as Types from './Reducer/uploadTypings';
-import { RequestFileUploadDocument } from './Upload.generated';
+import { RequestFileUploadDocument } from './Upload.graphql';
 import { UploadItems } from './UploadItems';
 import { UploadManager } from './UploadManager';
 import { useUploadManager } from './UploadManagerContext';

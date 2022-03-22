@@ -18,7 +18,7 @@ import {
   TextField,
 } from '../../../components/form';
 import { minLength, required } from '../../form/validators';
-import { PostFormFragment } from './PostForm.generated';
+import { PostFormFragment } from './PostForm.graphql';
 
 export type PostFormProps<T, R = void> = DialogFormProps<T, R> & {
   /** The pre-existing post to edit */

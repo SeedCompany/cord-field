@@ -1,6 +1,6 @@
 schema:
   - ${RAZZLE_API_BASE_URL}/graphql:
-      loader: ./src/api/client-schema.graphql.ts
+      loader: ./src/api/client-schema.graphql-loader.ts
 overwrite: true
 config:
   # Use `import type` which should be default for TS 3.8+
@@ -36,7 +36,7 @@ generates:
       - ./src/api/typeMap.codegen
 
   # Generate TypeScript version of graphql schema
-  ./src/api/schema.generated.ts:
+  ./src/api/schema.graphql.ts:
     plugins:
       - typescript
       - add:

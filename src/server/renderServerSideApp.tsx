@@ -20,6 +20,7 @@ import ReactDOMServer from 'react-dom/server';
 import { FilledContext, HelmetProvider } from 'react-helmet-async';
 import { StaticRouter } from 'react-router-dom/server';
 import { createCache } from '../api';
+import { dedupeFragmentsPrinter } from '../api/dedupeFragmentsPrinter';
 import { ErrorCache, ErrorCacheLink } from '../api/links/errorCache.link';
 import { App } from '../App';
 import { Nest } from '../components/Nest';
@@ -41,6 +42,7 @@ export const createServerApolloClient = (
     uri: (op) => `${serverHost}/graphql/${op.operationName}`,
     credentials: 'include',
     fetch,
+    print: dedupeFragmentsPrinter,
     headers: {
       cookie: req.header('Cookie'),
     },

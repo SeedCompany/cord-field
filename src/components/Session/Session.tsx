@@ -3,9 +3,9 @@ import { pickBy } from 'lodash';
 import LogRocket from 'logrocket';
 import { useEffect } from 'react';
 import { SessionOutput } from '../../api';
-import { LoginMutation } from '../../scenes/Authentication/Login/Login.generated';
-import { RegisterMutation } from '../../scenes/Authentication/Register/register.generated';
-import { LoggedInUserFragment, SessionDocument } from './session.generated';
+import { LoginMutation } from '../../scenes/Authentication/Login/Login.graphql';
+import { RegisterMutation } from '../../scenes/Authentication/Register/register.graphql';
+import { LoggedInUserFragment, SessionDocument } from './session.graphql';
 
 export const useSession = () => {
   const { data, loading: sessionLoading } = useQuery(SessionDocument, {

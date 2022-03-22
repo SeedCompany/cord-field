@@ -2,7 +2,7 @@ import { List, ListItem, Typography } from '@material-ui/core';
 import React from 'react';
 import { displayProductMedium, ProductMedium } from '../../../api';
 import { AutocompleteField } from '../../../components/form';
-import { PartnershipForLabelFragment } from '../Detail/ProductDetail.generated';
+import { PartnershipForLabelFragment } from '../Detail/ProductDetail.graphql';
 import { SectionProps } from './ProductFormFields';
 import { SecuredAccordion } from './SecuredAccordion';
 

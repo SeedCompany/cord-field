@@ -8,7 +8,7 @@ import { useProjectId } from '../useProjectId';
 import {
   FinancialReportsDocument,
   NarrativeReportsDocument,
-} from './ProjectReports.generated';
+} from './ProjectReports.graphql';
 
 export const ProjectReports = ({ type }: { type: ReportType }) => {
   const { projectId, changesetId } = useProjectId();

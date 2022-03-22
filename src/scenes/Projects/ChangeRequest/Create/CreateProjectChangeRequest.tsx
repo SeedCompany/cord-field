@@ -13,12 +13,12 @@ import {
 } from '../../../../components/Dialog/DialogForm';
 import { SubmitError, TextField } from '../../../../components/form';
 import { AutocompleteField } from '../../../../components/form/AutocompleteField';
-import { ProjectOverviewQuery } from '../../Overview/ProjectOverview.generated';
+import { ProjectOverviewQuery } from '../../Overview/ProjectOverview.graphql';
 import { ProjectChangeRequestListQuery as ListQuery } from '../List';
 import {
   CreateProjectChangeRequestDocument as CreateChangeRequest,
   CreateProjectChangeRequestMutation as Mutation,
-} from './CreateProjectChangeRequest.generated';
+} from './CreateProjectChangeRequest.graphql';
 
 type CreateProjectChangeRequestProps = Except<
   DialogFormProps<

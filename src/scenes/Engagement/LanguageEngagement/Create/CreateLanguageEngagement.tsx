@@ -16,7 +16,7 @@ import {
   LanguageLookupItem,
 } from '../../../../components/form/Lookup';
 import { callAll } from '../../../../util';
-import { CreateLanguageEngagementDocument } from './CreateLanguageEngagement.generated';
+import { CreateLanguageEngagementDocument } from './CreateLanguageEngagement.graphql';
 import { recalculateSensitivity } from './recalculateSensitivity';
 
 interface CreateLanguageEngagementFormValues {

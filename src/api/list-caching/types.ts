@@ -1,5 +1,5 @@
 import { Reference } from '@apollo/client';
-import { Order } from '../schema.generated';
+import { Order } from '../schema.graphql';
 import { GqlTypeMap } from '../typeMap.generated';
 
 export interface GqlObject {

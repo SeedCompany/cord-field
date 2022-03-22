@@ -27,7 +27,7 @@ import {
   ProjectFilterOptions,
   useProjectFilters,
 } from './ProjectFilterOptions';
-import { ProjectListDocument } from './projects.generated';
+import { ProjectListDocument } from './projects.graphql';
 import { ProjectSortOptions } from './ProjectSortOptions';
 
 const TabList = ActualTabList as typeof __Tabs;

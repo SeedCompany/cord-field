@@ -22,7 +22,7 @@ import { SortButtonDialog, useSort } from '../../../components/Sort';
 import { UserListItemCardLandscape as UserCard } from '../../../components/UserListItemCard';
 import { simpleSwitch } from '../../../util';
 import { useUserFilters } from './UserFilterOptions';
-import { UsersDocument } from './users.generated';
+import { UsersDocument } from './users.graphql';
 import { UserSortOptions } from './UserSortOptions';
 
 const TabList = ActualTabList as typeof __Tabs;

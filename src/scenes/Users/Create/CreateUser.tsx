@@ -8,7 +8,7 @@ import { UserForm, UserFormProps } from '../UserForm';
 import {
   CreatePersonDocument,
   CreatePersonMutation,
-} from './CreateUser.generated';
+} from './CreateUser.graphql';
 
 type SubmitResult = CreatePersonMutation['createPerson']['user'];
 export type CreateUserProps = Except<

@@ -1,6 +1,6 @@
 import { ApolloClient, fromPromise } from '@apollo/client';
 import { ErrorLink } from '@apollo/client/link/error';
-import { SessionDocument } from '../../components/Session/session.generated';
+import { SessionDocument } from '../../components/Session/session.graphql';
 import { GQLOperations } from '../operations.generated';
 
 /**

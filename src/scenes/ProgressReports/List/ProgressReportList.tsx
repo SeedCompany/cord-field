@@ -10,7 +10,7 @@ import { Error } from '../../../components/Error';
 import { PeriodicReportsList } from '../../../components/PeriodicReports';
 import { ReportRow } from '../../../components/PeriodicReports/PeriodicReportsTable';
 import { ProjectBreadcrumb } from '../../../components/ProjectBreadcrumb';
-import { ProgressReportsDocument } from './ProgressReportList.generated';
+import { ProgressReportsDocument } from './ProgressReportList.graphql';
 
 export const ProgressReportsList = () => {
   const { id: engagementId, changesetId } =

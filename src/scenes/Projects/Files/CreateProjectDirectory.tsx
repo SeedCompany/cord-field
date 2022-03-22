@@ -10,7 +10,7 @@ import {
 import { SubmitError, TextField } from '../../../components/form';
 import { ButtonLink } from '../../../components/Routing';
 import { useProjectId } from '../useProjectId';
-import { CreateProjectDirectoryDocument } from './CreateProjectDirectory.generated';
+import { CreateProjectDirectoryDocument } from './CreateProjectDirectory.graphql';
 import { useProjectCurrentDirectory } from './useProjectCurrentDirectory';
 
 export type CreateProjectDirectoryProps = DialogFormProps<CreateDirectoryInput>;

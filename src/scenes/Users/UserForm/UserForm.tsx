@@ -16,7 +16,7 @@ import {
 } from '../../../components/form';
 import { AutocompleteField } from '../../../components/form/AutocompleteField';
 import { useSession } from '../../../components/Session';
-import { UserFormFragment } from './UserForm.generated';
+import { UserFormFragment } from './UserForm.graphql';
 
 export type UserFormProps<T, R = void> = DialogFormProps<T, R> & {
   /** The pre-existing user to edit */

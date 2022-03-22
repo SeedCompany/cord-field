@@ -13,7 +13,7 @@ import {
 } from '../../../../components/form';
 import { FundingAccountLookupItem } from '../../../../components/form/Lookup/FundingAccount';
 import { max, min, required } from '../../../../components/form/validators';
-import { CreateFundingAccountDocument } from './CreateFundingAccount.generated';
+import { CreateFundingAccountDocument } from './CreateFundingAccount.graphql';
 
 export type CreateFundingAccountProps = Except<
   DialogFormProps<CreateFundingAccountInput, FundingAccountLookupItem>,

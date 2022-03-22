@@ -17,8 +17,8 @@ import { useDialog } from '../../Dialog';
 import { FormattedDateTime } from '../../Formatters';
 import { DeletePost } from '../DeletePost';
 import { EditPost } from '../EditPost';
-import { PostableIdFragment } from '../PostableId.generated';
-import { PostListItemCardFragment } from './PostListItemCard.generated';
+import { PostableIdFragment } from '../PostableId.graphql';
+import { PostListItemCardFragment } from './PostListItemCard.graphql';
 import { PostListItemMenu } from './PostListItemMenu';
 
 const useStyles = makeStyles(({ spacing, typography }) => {

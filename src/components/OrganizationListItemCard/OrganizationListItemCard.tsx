@@ -10,7 +10,7 @@ import clsx from 'clsx';
 import { random } from 'lodash';
 import React, { FC } from 'react';
 import { CardActionAreaLink } from '../Routing';
-import { OrganizationListItemFragment } from './OrganizationListItem.generated';
+import { OrganizationListItemFragment } from './OrganizationListItem.graphql';
 
 const useStyles = makeStyles(({ breakpoints, spacing }) => {
   const cardWidth = breakpoints.values.sm;

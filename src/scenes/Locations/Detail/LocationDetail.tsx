@@ -17,7 +17,7 @@ import { Fab } from '../../../components/Fab';
 import { FormattedDateTime } from '../../../components/Formatters';
 import { Redacted } from '../../../components/Redacted';
 import { EditLocation } from '../Edit';
-import { LocationDocument } from './LocationDetail.generated';
+import { LocationDocument } from './LocationDetail.graphql';
 
 const useStyles = makeStyles(({ spacing, breakpoints }) => ({
   root: {

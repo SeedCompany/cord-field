@@ -8,7 +8,7 @@ import {
 } from '../../../../../../components/Dialog/DialogForm';
 import { SubmitError, TextField } from '../../../../../../components/form';
 import { EthnoArtLookupItem } from '../../../../../../components/form/Lookup/EthnoArt';
-import { CreateEthnoArtDocument } from './CreateEthnoArt.generated';
+import { CreateEthnoArtDocument } from './CreateEthnoArt.graphql';
 
 export type CreateEthnoArtProps = Except<
   DialogFormProps<CreateEthnoArtInput, EthnoArtLookupItem>,
