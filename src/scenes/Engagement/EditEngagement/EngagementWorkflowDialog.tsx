@@ -23,7 +23,7 @@ import { Engagement } from './EditEngagementDialog';
 import {
   UpdateInternshipEngagementDocument,
   UpdateLanguageEngagementDocument,
-} from './EditEngagementDialog.generated';
+} from './EditEngagementDialog.graphql';
 
 const transitionTypeToColor: Record<
   TransitionType,

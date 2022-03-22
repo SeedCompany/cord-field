@@ -2,7 +2,7 @@ import { Grid } from '@material-ui/core';
 import React from 'react';
 import { BooleanProperty } from '../../../../components/BooleanProperty';
 import { PaperTooltip } from '../../../../components/PaperTooltip';
-import { LeastOfTheseFragment } from './LeastOfThese.generated';
+import { LeastOfTheseFragment } from './LeastOfThese.graphql';
 
 interface LeastOfTheseProps {
   language?: LeastOfTheseFragment;

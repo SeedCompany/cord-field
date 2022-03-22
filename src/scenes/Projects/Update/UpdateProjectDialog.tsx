@@ -6,7 +6,7 @@ import { invalidateProps, SensitivityList, UpdateProject } from '../../../api';
 import {
   DisplayFieldRegionFragment,
   DisplayLocationFragment,
-} from '../../../api/fragments/location.generated';
+} from '../../../api/fragments/location.graphql';
 import {
   DialogForm,
   DialogFormProps,
@@ -28,8 +28,8 @@ import {
   updateEngagementDateRanges,
   updatePartnershipsDateRanges,
 } from '../DateRangeCache';
-import { ProjectOverviewFragment } from '../Overview/ProjectOverview.generated';
-import { UpdateProjectDocument } from './UpdateProject.generated';
+import { ProjectOverviewFragment } from '../Overview/ProjectOverview.graphql';
+import { UpdateProjectDocument } from './UpdateProject.graphql';
 
 export type EditableProjectField = ExtractStrict<
   keyof UpdateProject | 'mouRange',

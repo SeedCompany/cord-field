@@ -6,9 +6,9 @@ import { useDialog } from '../Dialog';
 import { Fab } from '../Fab';
 import { List, ListProps } from '../List';
 import { CreatePost } from './CreatePost';
-import { PostableIdFragment } from './PostableId.generated';
+import { PostableIdFragment } from './PostableId.graphql';
 import { PostListItemCard } from './PostListItemCard';
-import { PostListItemCardFragment } from './PostListItemCard/PostListItemCard.generated';
+import { PostListItemCardFragment } from './PostListItemCard/PostListItemCard.graphql';
 
 const useStyles = makeStyles(() => ({
   postListItems: {

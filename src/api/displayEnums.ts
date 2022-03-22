@@ -23,7 +23,7 @@ import {
   ProjectStep,
   Role,
   ScriptureRangeInput,
-} from './schema.generated';
+} from './schema.graphql';
 
 // Helper to display enums in a generic way
 const displayEnum =

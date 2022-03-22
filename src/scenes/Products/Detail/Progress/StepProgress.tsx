@@ -8,7 +8,7 @@ import {
 } from '@material-ui/core';
 import React from 'react';
 import { displayProductStep, ProgressMeasurement } from '../../../../api';
-import { StepProgressFragment } from './ProductProgress.generated';
+import { StepProgressFragment } from './ProductProgress.graphql';
 import { ProgressIcon } from './ProgressIcon';
 
 const useStyles = makeStyles(({ spacing }) => ({

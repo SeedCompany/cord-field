@@ -8,8 +8,8 @@ import {
   FieldGroup,
   SecuredField,
 } from '../../../../components/form';
-import { UpdateLanguageEngagementDocument as UpdateEngagement } from '../../EditEngagement/EditEngagementDialog.generated';
-import { LanguageEngagementDatesFormFragment as Engagement } from './DatesForm.generated';
+import { UpdateLanguageEngagementDocument as UpdateEngagement } from '../../EditEngagement/EditEngagementDialog.graphql';
+import { LanguageEngagementDatesFormFragment as Engagement } from './DatesForm.graphql';
 
 export const DatesForm = ({ engagement }: { engagement: Engagement }) => {
   const [updateEngagement] = useMutation(UpdateEngagement);

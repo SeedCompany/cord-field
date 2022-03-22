@@ -15,7 +15,7 @@ import { Fab } from '../../../components/Fab';
 import { ProjectBreadcrumb } from '../../../components/ProjectBreadcrumb';
 import { Redacted } from '../../../components/Redacted';
 import { Link } from '../../../components/Routing';
-import { ProductDetailFragment as Product } from './ProductDetail.generated';
+import { ProductDetailFragment as Product } from './ProductDetail.graphql';
 
 const useStyles = makeStyles(() => ({
   nameRedacted: {

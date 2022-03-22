@@ -4,7 +4,7 @@ import { CreateEthnoArt } from '../../../../scenes/Engagement/LanguageEngagement
 import {
   EthnoArtLookupItemFragment as EthnoArt,
   EthnoArtLookupDocument,
-} from './EthnoArtLookup.generated';
+} from './EthnoArtLookup.graphql';
 
 export const EthnoArtField = LookupField.createFor<
   EthnoArt,

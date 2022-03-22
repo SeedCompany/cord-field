@@ -5,7 +5,7 @@ import { displayProductStep, ProductStep } from '../../../api';
 import { Link } from '../../../components/Routing';
 import { Table } from '../../../components/Table';
 import { bookIndexFromName } from '../../../util/biblejs';
-import { ProgressOfProductForReportFragment } from './ProgressReportDetail.generated';
+import { ProgressOfProductForReportFragment } from './ProgressReportDetail.graphql';
 
 interface ProductTableProps {
   category: string;

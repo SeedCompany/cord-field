@@ -10,7 +10,7 @@ import { PushPinIconFilled, PushPinIconOutlined } from '../Icons';
 import {
   TogglePinFragment,
   TogglePinnedDocument,
-} from './TogglePinButton.generated';
+} from './TogglePinButton.graphql';
 
 const useStyles = makeStyles<Theme, { pinned?: boolean }>(
   ({ transitions }) => ({

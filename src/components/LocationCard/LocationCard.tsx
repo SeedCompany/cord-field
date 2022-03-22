@@ -14,7 +14,7 @@ import { FormattedDateTime } from '../Formatters';
 import { ProgressButton } from '../ProgressButton';
 import { Redacted } from '../Redacted';
 import { ButtonLink, CardActionAreaLink } from '../Routing';
-import { LocationCardFragment } from './LocationCard.generated';
+import { LocationCardFragment } from './LocationCard.graphql';
 
 const useStyles = makeStyles(({ spacing }) => {
   return {

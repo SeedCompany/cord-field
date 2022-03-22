@@ -1,14 +1,14 @@
 import { useMutation } from '@apollo/client';
 import React from 'react';
 import { Except } from 'type-fest';
-import { DisplayLocationFragment } from '../../../api/fragments/location.generated';
+import { DisplayLocationFragment } from '../../../api/fragments/location.graphql';
 import {
   DialogForm,
   DialogFormProps,
 } from '../../../components/Dialog/DialogForm';
 import { SubmitError } from '../../../components/form';
 import { LocationField } from '../../../components/form/Lookup';
-import { AddLocationToLanguageDocument } from './EditLanguage.generated';
+import { AddLocationToLanguageDocument } from './EditLanguage.graphql';
 
 interface FormValues {
   locationId: DisplayLocationFragment;

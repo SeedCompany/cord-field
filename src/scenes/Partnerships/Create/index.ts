@@ -1,2 +1,2 @@
 export * from './CreatePartnership';
-export * from './CreatePartnership.generated';
+export * from './CreatePartnership.graphql';

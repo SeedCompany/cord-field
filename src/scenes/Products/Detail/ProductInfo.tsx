@@ -19,7 +19,7 @@ import {
 } from '../../../components/DisplaySimpleProperty';
 import { Link } from '../../../components/Routing';
 import { mapFromList } from '../../../util';
-import { ProductDetailFragment as Product } from './ProductDetail.generated';
+import { ProductDetailFragment as Product } from './ProductDetail.graphql';
 
 const useStyles = makeStyles(() => ({
   listItem: {

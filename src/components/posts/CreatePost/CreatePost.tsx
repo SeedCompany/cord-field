@@ -2,9 +2,9 @@ import { useMutation } from '@apollo/client';
 import * as React from 'react';
 import { Except } from 'type-fest';
 import { addItemToList, CreatePostInput } from '../../../api';
-import { PostableIdFragment } from '../PostableId.generated';
+import { PostableIdFragment } from '../PostableId.graphql';
 import { PostForm, PostFormProps } from '../PostForm';
-import { CreatePostDocument } from './CreatePost.generated';
+import { CreatePostDocument } from './CreatePost.graphql';
 
 export type CreatePostProps = Except<
   PostFormProps<CreatePostInput>,

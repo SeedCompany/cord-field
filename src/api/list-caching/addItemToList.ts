@@ -2,7 +2,7 @@ import { ApolloCache, MutationUpdaterFunction } from '@apollo/client';
 import { orderBy } from 'lodash';
 import { Except } from 'type-fest';
 import { modifyChangesetDiff } from '../changesets';
-import type { Order } from '../schema.generated';
+import type { Order } from '../schema.graphql';
 import { unwrapSecured } from '../secured';
 import {
   argsFromStoreFieldName,

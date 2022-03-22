@@ -26,9 +26,9 @@ import { TogglePinButton } from '../../../components/TogglePinButton';
 import { UserListItemCardPortrait } from '../../../components/UserListItemCard';
 import { listOrPlaceholders, square } from '../../../util';
 import { EditablePartnerField, EditPartner } from '../Edit';
-import { PartnersQueryVariables } from '../List/PartnerList.generated';
+import { PartnersQueryVariables } from '../List/PartnerList.graphql';
 import { AddressCard } from './AddressCard';
-import { PartnerDocument } from './PartnerDetail.generated';
+import { PartnerDocument } from './PartnerDetail.graphql';
 import { PartnerPostList } from './PartnerPostList';
 import { PartnerTypesCard } from './PartnerTypesCard';
 

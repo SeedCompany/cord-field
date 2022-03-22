@@ -22,7 +22,7 @@ import {
   getPermittedFileActions,
   useFileActions,
 } from '../files/FileActions';
-import { FileNodeInfo_File_Fragment as FileNode } from '../files/files.generated';
+import { FileNodeInfo_File_Fragment as FileNode } from '../files/files.graphql';
 import { HandleUploadCompletedFunction, useUploadFiles } from '../files/hooks';
 import { FormattedDateTime } from '../Formatters';
 import { HugeIcon, ReportIcon } from '../Icons';

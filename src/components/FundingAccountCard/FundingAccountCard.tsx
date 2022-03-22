@@ -10,7 +10,7 @@ import { FC } from 'react';
 import * as React from 'react';
 import { DisplaySimpleProperty } from '../DisplaySimpleProperty';
 import { FormattedDateTime } from '../Formatters';
-import { FundingAccountCardFragment } from './FundingAccountCard.generated';
+import { FundingAccountCardFragment } from './FundingAccountCard.graphql';
 
 const useStyles = makeStyles(({ spacing }) => {
   return {

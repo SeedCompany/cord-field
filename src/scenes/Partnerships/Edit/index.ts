@@ -1,3 +1,3 @@
 export * from './EditPartnership';
-export * from './EditPartnership.generated';
+export * from './EditPartnership.graphql';
 export * from './UpdateOldPrimaryPartnership';

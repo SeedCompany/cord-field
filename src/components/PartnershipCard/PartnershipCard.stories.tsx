@@ -5,7 +5,7 @@ import { FinancialReportingTypeList, PartnershipStatuses } from '../../api';
 import { csv } from '../../util';
 import { date, dateTime } from '../knobs.stories';
 import { PartnershipCard } from './PartnershipCard';
-import { PartnershipCardFragment } from './PartnershipCard.generated';
+import { PartnershipCardFragment } from './PartnershipCard.graphql';
 
 export default { title: 'Components/Partnership Card' };
 

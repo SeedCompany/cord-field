@@ -3,7 +3,7 @@ import React, { useMemo } from 'react';
 import { Except } from 'type-fest';
 import { Maybe, UpdateUserInput } from '../../../api';
 import { UserForm, UserFormProps } from '../UserForm';
-import { UpdateUserDocument } from './EditUser.generated';
+import { UpdateUserDocument } from './EditUser.graphql';
 
 export type EditUserProps = Except<
   UserFormProps<UpdateUserInput>,

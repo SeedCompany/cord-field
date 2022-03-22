@@ -8,7 +8,7 @@ import {
   SensitivityList,
 } from '../../api/enumLists';
 import { date, dateTime } from '../knobs.stories';
-import { ProjectListItemFragment } from './ProjectListItem.generated';
+import { ProjectListItemFragment } from './ProjectListItem.graphql';
 import { ProjectListItemCard as PIC } from './ProjectListItemCard';
 
 export default { title: 'Components' };

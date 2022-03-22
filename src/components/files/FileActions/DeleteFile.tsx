@@ -4,7 +4,7 @@ import React from 'react';
 import { Except } from 'type-fest';
 import { DialogForm, DialogFormProps } from '../../Dialog/DialogForm';
 import { SubmitError } from '../../form';
-import { DeleteFileNodeDocument } from './FileActions.generated';
+import { DeleteFileNodeDocument } from './FileActions.graphql';
 import { FilesActionItem } from './FileActionsContext';
 
 export type DeleteFileProps = DialogFormProps<{ id: string }> & {

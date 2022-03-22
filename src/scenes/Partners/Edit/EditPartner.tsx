@@ -22,8 +22,8 @@ import {
 import { UserField, UserLookupItem } from '../../../components/form/Lookup';
 import { isLength } from '../../../components/form/validators';
 import { ExtractStrict, many, Many } from '../../../util';
-import { PartnerDetailsFragment } from '../Detail/PartnerDetail.generated';
-import { UpdatePartnerDocument } from './EditPartner.generated';
+import { PartnerDetailsFragment } from '../Detail/PartnerDetail.graphql';
+import { UpdatePartnerDocument } from './EditPartner.graphql';
 
 interface PartnerFormValues {
   partner: Merge<

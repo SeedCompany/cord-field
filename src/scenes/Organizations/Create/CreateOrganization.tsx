@@ -5,7 +5,7 @@ import { Except } from 'type-fest';
 import {
   CreateOrganizationDocument,
   CreateOrganizationMutation,
-} from './CreateOrganization.generated';
+} from './CreateOrganization.graphql';
 import {
   CreateOrganizationForm,
   CreateOrganizationFormProps,

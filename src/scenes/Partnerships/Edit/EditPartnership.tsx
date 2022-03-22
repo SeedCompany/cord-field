@@ -11,9 +11,9 @@ import {
 import { SubmitAction, SubmitButton } from '../../../components/form';
 import { PartnerLookupItem } from '../../../components/form/Lookup';
 import { callAll } from '../../../util';
-import { UpdateProjectDocument } from '../../Projects/Update/UpdateProject.generated';
+import { UpdateProjectDocument } from '../../Projects/Update/UpdateProject.graphql';
 import { invalidateBudgetRecords } from '../InvalidateBudget/invalidateBudgetRecords';
-import { ProjectPartnershipsQuery } from '../List/PartnershipList.generated';
+import { ProjectPartnershipsQuery } from '../List/PartnershipList.graphql';
 import {
   hasManagingType,
   PartnershipForm,
@@ -24,7 +24,7 @@ import {
   DeletePartnershipDocument,
   UpdatePartnershipDocument,
   UpdatePartnershipMutation,
-} from './EditPartnership.generated';
+} from './EditPartnership.graphql';
 import { updateOldPrimaryPartnership } from './UpdateOldPrimaryPartnership';
 
 export type EditPartnershipFormInput = UpdatePartnershipInput &

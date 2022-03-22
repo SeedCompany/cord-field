@@ -27,7 +27,7 @@ import {
   LanguageFilterOptions,
   useLanguageFilters,
 } from './LanguageFilterOptions';
-import { LanguagesDocument as Languages } from './languages.generated';
+import { LanguagesDocument as Languages } from './languages.graphql';
 import { LanguageSortOptions } from './LanguageSortOptions';
 
 const TabList = ActualTabList as typeof __Tabs;

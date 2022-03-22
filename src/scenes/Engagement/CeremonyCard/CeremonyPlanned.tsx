@@ -15,7 +15,7 @@ import { FC } from 'react';
 import {
   CeremonyCardFragment,
   UpdateCeremonyDocument,
-} from './CeremonyCard.generated';
+} from './CeremonyCard.graphql';
 
 const useStyles = makeStyles(() => ({
   root: {

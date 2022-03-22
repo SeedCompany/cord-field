@@ -1,6 +1,6 @@
 export * from './ApolloProvider';
 export * from './form-error-handling';
-export * from './schema.generated';
+export * from './schema.graphql';
 export * from './operations.generated';
 export * from './networkStatus';
 export * from './displayEnums';

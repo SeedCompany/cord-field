@@ -5,7 +5,7 @@ import { useDialog } from '../../../../components/Dialog';
 import {
   ProductProgressFragment as ProductProgress,
   StepProgressFragment as StepProgress,
-} from './ProductProgress.generated';
+} from './ProductProgress.graphql';
 import { StepEditDialog } from './StepEditDialog';
 import { StepProgress as StepProgressCard } from './StepProgress';
 

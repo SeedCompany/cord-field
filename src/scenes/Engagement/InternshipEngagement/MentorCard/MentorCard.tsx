@@ -11,7 +11,7 @@ import { ReactElement, ReactNode } from 'react';
 import { Avatar } from '../../../../components/Avatar';
 import { UserListItemCardPortrait as UserCard } from '../../../../components/UserListItemCard';
 import { square } from '../../../../util';
-import { MentorCardFragment } from './MentorCard.generated';
+import { MentorCardFragment } from './MentorCard.graphql';
 
 const useStyles = makeStyles(({ palette }) => ({
   root: {

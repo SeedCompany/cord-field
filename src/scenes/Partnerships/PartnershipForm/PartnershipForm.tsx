@@ -29,7 +29,7 @@ import {
 import { Nullable } from '../../../util';
 import { CreatePartnershipFormInput } from '../Create';
 import { EditPartnershipFormInput } from '../Edit';
-import { PartnershipFormFragment } from './PartnershipForm.generated';
+import { PartnershipFormFragment } from './PartnershipForm.graphql';
 
 type PartnershipFormValues = Partial<
   CreatePartnershipFormInput | EditPartnershipFormInput

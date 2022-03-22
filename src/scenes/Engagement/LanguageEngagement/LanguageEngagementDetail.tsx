@@ -5,7 +5,7 @@ import { Fab } from '../../../components/Fab';
 import { ResponsiveDivider } from '../../../components/ResponsiveDivider';
 import { Link } from '../../../components/Routing';
 import { ProductList } from '../../Products/List/ProductList';
-import { EngagementQuery } from '../Engagement.generated';
+import { EngagementQuery } from '../Engagement.graphql';
 import { CeremonyForm } from './Ceremony';
 import { DatesForm } from './DatesForm';
 import { LanguageEngagementHeader } from './Header';

@@ -7,7 +7,7 @@ import { DateField, FieldGroup } from '../../../../components/form';
 import {
   CeremonyCardFragment,
   UpdateCeremonyDocument,
-} from '../../CeremonyCard/CeremonyCard.generated';
+} from '../../CeremonyCard/CeremonyCard.graphql';
 import { CeremonyPlanned } from '../../CeremonyCard/CeremonyPlanned';
 
 export const CeremonyForm = ({

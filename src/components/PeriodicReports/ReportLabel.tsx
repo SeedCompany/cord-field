@@ -5,7 +5,7 @@ import { Redacted } from '../Redacted';
 import {
   PeriodicReportFragment,
   SecuredPeriodicReportFragment,
-} from './PeriodicReport.generated';
+} from './PeriodicReport.graphql';
 
 export const ReportLabel = ({
   report,

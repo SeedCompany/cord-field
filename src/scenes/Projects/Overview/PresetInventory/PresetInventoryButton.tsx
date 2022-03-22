@@ -8,11 +8,11 @@ import {
   PresetInventoryIconOutlined,
 } from '../../../../components/Icons';
 import { PaperTooltip } from '../../../../components/PaperTooltip';
-import { ProjectOverviewFragment } from '../ProjectOverview.generated';
+import { ProjectOverviewFragment } from '../ProjectOverview.graphql';
 import {
   RecalculatePresetInventoryFragmentDoc as RecalculatePresetInventory,
   TogglePresetInventoryDocument as TogglePresetInventory,
-} from './TogglePresetInventory.generated';
+} from './TogglePresetInventory.graphql';
 
 export interface PresetInventoryButtonProps {
   project?: ProjectOverviewFragment;

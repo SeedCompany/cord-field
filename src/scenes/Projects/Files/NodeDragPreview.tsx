@@ -1,6 +1,6 @@
 import { makeStyles, Paper } from '@material-ui/core';
 import React from 'react';
-import { FileNodeInfoFragment } from '../../../components/files/files.generated';
+import { FileNodeInfoFragment } from '../../../components/files/files.graphql';
 import { fileIcon } from '../../../components/files/fileTypes';
 import { parseFileNameAndExtension } from '../../../components/Formatters';
 import { isDirectory } from './util';

@@ -8,13 +8,13 @@ import { MediumsSection } from './MediumsSection';
 import { MethodologySection } from './MethodologySection';
 import { OtherProductSection } from './OtherProductSection';
 import { PartnershipProducingMediumsSection } from './PartnershipProducingMediumsSection';
-import { EditPartnershipsProducingMediumsInfoFragment } from './PartnershipsProducingMediums.generated';
+import { EditPartnershipsProducingMediumsInfoFragment } from './PartnershipsProducingMediums.graphql';
 import { ProductFormValues } from './ProductForm';
 import {
   ProductForm_DerivativeScriptureProduct_Fragment as DerivativeScriptureProduct,
   ProductForm_DirectScriptureProduct_Fragment as DirectScriptureProduct,
   ProductFormFragment,
-} from './ProductForm.generated';
+} from './ProductForm.graphql';
 import { ProductSection } from './ProductSection';
 import { ProgressMeasurementSection } from './ProgressMeasurementSection';
 import { ProgressTargetSection } from './ProgressTargetSection';

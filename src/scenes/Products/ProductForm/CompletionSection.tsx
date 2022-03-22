@@ -9,7 +9,7 @@ import {
 import {
   CompletionDescriptionLookupDocument as Lookup,
   CompletionDescriptionLookupQueryVariables as LookupVars,
-} from './CompletionDescriptionLookup.generated';
+} from './CompletionDescriptionLookup.graphql';
 import { SectionProps } from './ProductFormFields';
 import { SecuredAccordion } from './SecuredAccordion';
 

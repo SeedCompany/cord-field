@@ -3,7 +3,7 @@ import { ToggleButton } from '@material-ui/lab';
 import React, { useEffect } from 'react';
 import { displayProductStep } from '../../../api';
 import { EnumField } from '../../../components/form';
-import { AvailableProductStepsDocument as AvailableSteps } from './ProductForm.generated';
+import { AvailableProductStepsDocument as AvailableSteps } from './ProductForm.graphql';
 import { SectionProps } from './ProductFormFields';
 import { SecuredAccordion } from './SecuredAccordion';
 

@@ -10,7 +10,7 @@ import { IdFragment, readFragment } from '../../api';
 import {
   ProgressRefsRelatingToEngagementFragmentDoc as ProgressRefsRelatingToEngagement,
   ProgressReportRefFragment as ProgressReport,
-} from './ProgressRefsRelatingToEngagement.generated';
+} from './ProgressRefsRelatingToEngagement.graphql';
 
 export const modifyProgressRelatingToEngagement =
   <Res>(

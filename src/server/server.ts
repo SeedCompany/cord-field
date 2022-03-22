@@ -5,7 +5,7 @@ import express from 'express';
 import helmet from 'helmet';
 import * as path from 'path';
 import responseTime from 'response-time';
-import { LogoutDocument } from '../scenes/Authentication/Logout/logout.generated';
+import { LogoutDocument } from '../scenes/Authentication/Logout/logout.graphql';
 import { basePathOfUrl, withoutTrailingSlash } from '../util';
 import {
   createServerApolloClient,

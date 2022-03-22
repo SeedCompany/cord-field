@@ -16,7 +16,7 @@ import {
   displayPartnerType,
 } from '../../../api';
 import { Redacted } from '../../../components/Redacted';
-import { PartnerDetailsFragment } from './PartnerDetail.generated';
+import { PartnerDetailsFragment } from './PartnerDetail.graphql';
 
 const useStyles = makeStyles(({ spacing }) => ({
   cardContent: {

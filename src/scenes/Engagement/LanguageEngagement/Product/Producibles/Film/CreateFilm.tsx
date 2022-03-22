@@ -8,7 +8,7 @@ import {
 } from '../../../../../../components/Dialog/DialogForm';
 import { SubmitError, TextField } from '../../../../../../components/form';
 import { FilmLookupItem } from '../../../../../../components/form/Lookup';
-import { CreateFilmDocument } from './CreateFilm.generated';
+import { CreateFilmDocument } from './CreateFilm.graphql';
 
 export type CreateFilmProps = Except<
   DialogFormProps<CreateFilmInput, FilmLookupItem>,

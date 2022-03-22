@@ -8,7 +8,7 @@ import {
   LanguageFormProps,
   LanguageFormValues,
 } from '../LanguageForm';
-import { UpdateLanguageDocument } from './EditLanguage.generated';
+import { UpdateLanguageDocument } from './EditLanguage.graphql';
 
 export type EditLanguageProps = Except<
   LanguageFormProps<LanguageFormValues<UpdateLanguage>>,

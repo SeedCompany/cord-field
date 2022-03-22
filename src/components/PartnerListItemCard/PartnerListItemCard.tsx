@@ -9,10 +9,10 @@ import { Skeleton } from '@material-ui/lab';
 import clsx from 'clsx';
 import { random } from 'lodash';
 import React, { FC } from 'react';
-import { PartnersQueryVariables } from '../../scenes/Partners/List/PartnerList.generated';
+import { PartnersQueryVariables } from '../../scenes/Partners/List/PartnerList.graphql';
 import { CardActionAreaLink } from '../Routing';
 import { TogglePinButton } from '../TogglePinButton';
-import { PartnerListItemFragment } from './PartnerListItemCard.generated';
+import { PartnerListItemFragment } from './PartnerListItemCard.graphql';
 
 const useStyles = makeStyles(({ breakpoints, spacing }) => {
   const cardWidth = breakpoints.values.sm;

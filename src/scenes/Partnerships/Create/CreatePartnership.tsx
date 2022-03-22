@@ -9,12 +9,12 @@ import { PartnerLookupItem } from '../../../components/form/Lookup';
 import { callAll } from '../../../util';
 import { updateOldPrimaryPartnership } from '../Edit';
 import { invalidateBudgetRecords } from '../InvalidateBudget';
-import { ProjectPartnershipsQuery } from '../List/PartnershipList.generated';
+import { ProjectPartnershipsQuery } from '../List/PartnershipList.graphql';
 import { PartnershipForm, PartnershipFormProps } from '../PartnershipForm';
 import {
   CreatePartnershipDocument,
   CreatePartnershipMutation,
-} from './CreatePartnership.generated';
+} from './CreatePartnership.graphql';
 
 export interface CreatePartnershipFormInput {
   partnership: Pick<

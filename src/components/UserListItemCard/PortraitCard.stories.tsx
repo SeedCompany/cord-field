@@ -1,7 +1,7 @@
 import { boolean, text } from '@storybook/addon-knobs';
 import React from 'react';
 import { UserListItemCardPortrait as UserCard } from './PortraitCard';
-import { UserListItemFragment } from './UserListItem.generated';
+import { UserListItemFragment } from './UserListItem.graphql';
 
 export default {
   title: 'Components/User List Item',

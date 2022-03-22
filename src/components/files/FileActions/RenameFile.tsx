@@ -5,7 +5,7 @@ import { RenameFileInput } from '../../../api';
 import { DialogForm, DialogFormProps } from '../../Dialog/DialogForm';
 import { SubmitError, TextField } from '../../form';
 import { parseFileNameAndExtension } from '../../Formatters';
-import { RenameFileNodeDocument } from './FileActions.generated';
+import { RenameFileNodeDocument } from './FileActions.graphql';
 import { FilesActionItem } from './FileActionsContext';
 
 export type RenameFileProps = DialogFormProps<RenameFileInput> & {

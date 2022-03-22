@@ -4,7 +4,7 @@ import { CreateFilm } from '../../../../scenes/Engagement/LanguageEngagement/Pro
 import {
   FilmLookupItemFragment as Film,
   FilmLookupDocument,
-} from './FilmLookup.generated';
+} from './FilmLookup.graphql';
 
 export const FilmField = LookupField.createFor<Film, CreateFilmInput>({
   resource: 'Film',

@@ -1,8 +1,8 @@
 import * as React from 'react';
 import { useListQuery } from '../../../components/List';
-import { PostableIdFragment } from '../../../components/posts/PostableId.generated';
+import { PostableIdFragment } from '../../../components/posts/PostableId.graphql';
 import { PostList } from '../../../components/posts/PostList';
-import { ProjectPostListDocument as PostListQuery } from './ProjectPostList.generated';
+import { ProjectPostListDocument as PostListQuery } from './ProjectPostList.graphql';
 
 interface ProjectPostListProps {
   project: PostableIdFragment;

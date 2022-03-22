@@ -21,7 +21,7 @@ import { Redacted } from '../../../components/Redacted';
 import {
   CeremonyCardFragment,
   UpdateCeremonyDocument,
-} from './CeremonyCard.generated';
+} from './CeremonyCard.graphql';
 import { CeremonyPlanned } from './CeremonyPlanned';
 import { LargeDate } from './LargeDate';
 
