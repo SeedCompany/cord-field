@@ -1,6 +1,6 @@
 schema:
   - ${RAZZLE_API_BASE_URL}/graphql:
-      loader: ./src/api/client-schema.graphql.ts
+      loader: ./src/api/client-schema.graphql-loader.ts
 documents:
   - ./src/**/*.graphql
   - '!./src/api/client-schema.graphql'
@@ -25,8 +25,8 @@ generates:
   ./src/:
     preset: near-operation-file
     presetConfig:
-      extension: .generated.ts
-      baseTypesPath: api/schema.generated.ts
+      extension: .graphql.ts
+      baseTypesPath: api/schema.graphql.ts
     plugins:
       - typescript-operations
       - typed-document-node
