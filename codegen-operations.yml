@@ -21,7 +21,7 @@ generates:
     config:
       identifierName: GQLOperations
 
-  # Generate types & react hooks for our operations
+  # Generate types & documents for our operations
   ./src/:
     preset: near-operation-file
     presetConfig:
@@ -31,8 +31,7 @@ generates:
       - typescript-operations
       - typed-document-node
     config:
-      gqlImport: graphql-tag
-      documentMode: graphQLTag
+      documentMode: documentNodeImportFragments
       skipTypename: false
       enumsAsTypes: true
       # Instead of Pick-ing from generated schema, redefine shape inline
