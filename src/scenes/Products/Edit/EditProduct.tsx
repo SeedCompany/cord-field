@@ -133,6 +133,7 @@ export const EditProduct = () => {
             }
           : undefined,
         title: '',
+        placeholderDescription: product.placeholderDescription.value,
         ...(product.__typename === 'DirectScriptureProduct'
           ? {
               productType: product.__typename,

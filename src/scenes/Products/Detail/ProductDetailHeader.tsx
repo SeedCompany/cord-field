@@ -5,7 +5,7 @@ import {
   Tooltip,
   Typography,
 } from '@material-ui/core';
-import { Edit } from '@material-ui/icons';
+import { CropFreeOutlined, Edit } from '@material-ui/icons';
 import { Skeleton } from '@material-ui/lab';
 import React from 'react';
 import { Helmet } from 'react-helmet-async';
@@ -17,9 +17,12 @@ import { Redacted } from '../../../components/Redacted';
 import { Link } from '../../../components/Routing';
 import { ProductDetailFragment as Product } from './ProductDetail.generated';
 
-const useStyles = makeStyles(() => ({
+const useStyles = makeStyles((theme) => ({
   nameRedacted: {
     width: '50%',
+  },
+  placeholderIcon: {
+    marginLeft: theme.spacing(1),
   },
 }));
 
@@ -29,6 +32,7 @@ export const ProductDetailHeader = ({ product }: { product?: Product }) => {
   const language = product?.engagement.language.value;
   const langName = language?.name.value ?? language?.displayName.value;
   const project = product?.engagement.project;
+  const placeholderDescription = product?.placeholderDescription.value;
 
   return (
     <>
@@ -53,6 +57,9 @@ export const ProductDetailHeader = ({ product }: { product?: Product }) => {
                 info={`You do not have permission to view this product's label`}
                 width="100%"
               />
+            )}
+            {placeholderDescription && (
+              <CropFreeOutlined className={classes.placeholderIcon} />
             )}
           </Typography>
         </Grid>
