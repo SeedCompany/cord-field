@@ -6,7 +6,7 @@ import {
   ProjectStepList,
   ProjectTypeList,
   SensitivityList,
-} from '../../api/enumLists';
+} from '../../api/schema';
 import { date, dateTime } from '../knobs.stories';
 import { ProjectListItemFragment } from './ProjectListItem.graphql';
 import { ProjectListItemCard as PIC } from './ProjectListItemCard';

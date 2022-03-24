@@ -2,11 +2,8 @@ import { useApolloClient, useMutation } from '@apollo/client';
 import { sortBy, sumBy } from 'lodash';
 import { Column, Components } from 'material-table';
 import React, { FC, useMemo } from 'react';
-import {
-  onUpdateChangeFragment,
-  readFragment,
-  RecalculateChangesetDiffFragmentDoc as RecalculateChangesetDiff,
-} from '../../../api';
+import { onUpdateChangeFragment, readFragment } from '~/api';
+import { RecalculateChangesetDiffFragmentDoc as RecalculateChangesetDiff } from '~/common/fragments';
 import {
   PropertyDiff,
   useDeletedItemsOfChangeset,

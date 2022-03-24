@@ -20,8 +20,11 @@ import ReactDOMServer from 'react-dom/server';
 import { FilledContext, HelmetProvider } from 'react-helmet-async';
 import { StaticRouter } from 'react-router-dom/server';
 import { createCache } from '../api';
-import { dedupeFragmentsPrinter } from '../api/dedupeFragmentsPrinter';
-import { ErrorCache, ErrorCacheLink } from '../api/links/errorCache.link';
+import { dedupeFragmentsPrinter } from '../api/client/dedupeFragmentsPrinter';
+import {
+  ErrorCache,
+  ErrorCacheLink,
+} from '../api/client/links/errorCache.link';
 import { App } from '../App';
 import { Nest } from '../components/Nest';
 import { ServerLocation } from '../components/Routing';

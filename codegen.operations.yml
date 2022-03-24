@@ -1,9 +1,9 @@
 schema:
   - ${RAZZLE_API_BASE_URL}/graphql:
-      loader: ./src/api/client-schema.graphql-loader.ts
+      loader: ./src/api/schema/client-schema.graphql-loader.ts
 documents:
   - ./src/**/*.graphql
-  - '!./src/api/client-schema.graphql'
+  - '!./src/api/schema/client-schema.graphql'
 overwrite: true
 config:
   # Use `import type` which should be default for TS 3.8+
@@ -15,9 +15,9 @@ config:
 generates:
   # Generate an object housing all of our operations
   # This allows operations to be cross-referenced (i.e. `refetchQueries`) without needing to rely on magic strings
-  ./src/api/operations.generated.ts:
+  ./src/api/operationsList/operations.generated.ts:
     plugins:
-      - ./src/api/operations.codegen
+      - ./src/api/operationsList/operations.codegen
     config:
       identifierName: GQLOperations
 
@@ -26,7 +26,7 @@ generates:
     preset: near-operation-file
     presetConfig:
       extension: .graphql.ts
-      baseTypesPath: api/schema.graphql.ts
+      baseTypesPath: api/schema
     plugins:
       - typescript-operations
       - typed-document-node

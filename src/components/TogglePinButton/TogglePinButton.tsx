@@ -3,8 +3,7 @@ import { makeStyles, Theme, Tooltip, TooltipProps } from '@material-ui/core';
 import clsx from 'clsx';
 import * as React from 'react';
 import { Except } from 'type-fest';
-import { addItemToList, removeItemFromList } from '../../api';
-import { ListIdentifier } from '../../api/list-caching/modifyList';
+import { addItemToList, ListIdentifier, removeItemFromList } from '~/api';
 import { IconButton, IconButtonProps } from '../IconButton';
 import { PushPinIconFilled, PushPinIconOutlined } from '../Icons';
 import {

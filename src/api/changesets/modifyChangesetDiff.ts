@@ -1,7 +1,7 @@
 import { ApolloCache, Reference } from '@apollo/client';
 import { pickBy } from 'lodash';
-import { Entity } from '../list-caching';
-import { updateFragment } from '../updateFragment';
+import { updateFragment } from '../caching/updateFragment';
+import { Entity } from '../schema';
 import {
   ModifyChangesetDiffOnUpdateFragment,
   ModifyChangesetDiffOnUpdateFragmentDoc,
