@@ -17,7 +17,6 @@ import { ErrorCache } from '../api/client/links/errorCache.link';
 import { App } from '../App';
 import { Nest } from '../components/Nest';
 import { ServerLocation } from '../components/Routing';
-import { ServerData, ServerDataProvider } from '../components/ServerData';
 import { RequestContext } from '../hooks';
 import { basePathOfUrl, trailingSlash } from '../util';
 import { indexHtml } from './indexHtml';
@@ -44,23 +43,8 @@ export const renderServerSideApp = async (
   const sheets = new ServerStyleSheets();
   const location = new ServerLocation();
 
-  // Disabled for now. This was a PoC and it's not used right now.
-  // All server data comes from the GQL API.
-  // const data = await fetchDataForRender(
-  //   location.wrap(<ServerApp req={req} apollo={apollo} />),
-  //   req
-  // );
-  const data = {};
-
   const markup = await getMarkupFromTree({
-    tree: (
-      <ServerApp
-        req={req}
-        data={data}
-        apollo={apollo}
-        helmetContext={helmetContext}
-      />
-    ),
+    tree: <ServerApp req={req} apollo={apollo} helmetContext={helmetContext} />,
     renderFunction: (tree) => {
       resetServerContext();
       return ReactDOMServer.renderToString(
@@ -82,7 +66,6 @@ export const renderServerSideApp = async (
     sheets,
     globals: {
       env: clientEnv,
-      __SERVER_DATA__: data,
       __APOLLO_STATE__: apollo.extract(),
       __APOLLO_ERRORS__: errorCache,
     },
@@ -91,12 +74,10 @@ export const renderServerSideApp = async (
 };
 
 const ServerApp = ({
-  data,
   req,
   helmetContext,
   apollo,
 }: {
-  data?: ServerData;
   req: ExpressRequest;
   helmetContext?: Partial<FilledContext>;
   apollo: ApolloClient<unknown>;
@@ -104,7 +85,6 @@ const ServerApp = ({
   <Nest
     elements={[
       <HelmetProvider context={helmetContext || {}} children={<></>} />,
-      <ServerDataProvider value={data ?? {}} />,
       <RequestContext.Provider value={req} children={<></>} />,
       <StaticRouter basename={basePath} location={req.originalUrl} />,
       <ApolloProvider client={apollo} children={<></>} />,

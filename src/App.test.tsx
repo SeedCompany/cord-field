@@ -12,7 +12,6 @@ import { StaticRouter } from 'react-router-dom/server';
 import { createClient } from './api/client/createClient';
 import { App } from './App';
 import { Nest } from './components/Nest';
-import { ServerDataProvider } from './components/ServerData';
 import { RequestContext } from './hooks';
 
 const TestContext: FC<{ url: string }> = ({ url, children }) => {
@@ -24,7 +23,6 @@ const TestContext: FC<{ url: string }> = ({ url, children }) => {
     <Nest
       elements={[
         <HelmetProvider context={{}} children={<></>} />,
-        <ServerDataProvider value={{}} />,
         <RequestContext.Provider value={req} children={<></>} />,
         <StaticRouter location={req.originalUrl} />,
         <ApolloProvider client={client} children={<></>} />,
