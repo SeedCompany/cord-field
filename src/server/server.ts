@@ -5,12 +5,10 @@ import express from 'express';
 import helmet from 'helmet';
 import * as path from 'path';
 import responseTime from 'response-time';
+import { createClient as createApollo } from '~/api/client/createClient';
 import { LogoutDocument } from '../scenes/Authentication/Logout/logout.graphql';
 import { basePathOfUrl, withoutTrailingSlash } from '../util';
-import {
-  createServerApolloClient,
-  renderServerSideApp,
-} from './renderServerSideApp';
+import { renderServerSideApp } from './renderServerSideApp';
 
 const PUBLIC_URL = withoutTrailingSlash(process.env.PUBLIC_URL || '');
 const BASE_PATH = withoutTrailingSlash(basePathOfUrl(PUBLIC_URL));
@@ -60,7 +58,7 @@ if (process.env.RAZZLE_OPEN_SEARCH === 'true') {
 }
 
 router.get('logout', (req, res, next) => {
-  createServerApolloClient(req, res, {})
+  createApollo({ ssr: { req, res } })
     .mutate({
       mutation: LogoutDocument,
     })

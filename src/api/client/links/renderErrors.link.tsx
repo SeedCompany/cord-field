@@ -1,25 +1,17 @@
-import {
-  onError as createErrorLink,
-  ErrorHandler,
-} from '@apollo/client/link/error';
+import { ErrorHandler } from '@apollo/client/link/error';
 import { IconButton } from '@material-ui/core';
 import { Close } from '@material-ui/icons';
 import { ProviderContext as Snackbar, useSnackbar } from 'notistack';
-import React, { useRef, useState } from 'react';
+import React, { useRef } from 'react';
 
-export const useErrorRendererLink = () => {
+export const useErrorRendererRef = () => {
   // Using ref to store error handler function, so it can be swapped on each
   // render with one that has access to the current snackbar functions.
   // (While still allowing use of the same single link)
   const errorRendererRef = useRef<ErrorHandler>();
   errorRendererRef.current = errorRenderer(useSnackbar());
 
-  // Link is created only once.
-  const [link] = useState(() =>
-    createErrorLink((error) => errorRendererRef.current?.(error))
-  );
-
-  return link;
+  return errorRendererRef;
 };
 
 const errorRenderer =
