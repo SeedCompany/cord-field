@@ -143,6 +143,15 @@ const modifyWebpackConfig = (opts) => {
   return config;
 };
 
+const modifyJestConfig = (opts) => {
+  /** @type {import('@jest/types').Config.InitialOptions} */
+  const config = opts.jestConfig;
+
+  config.moduleNameMapper['~/(.+)'] = '<rootDir>/src/$1';
+
+  return config;
+};
+
 module.exports = {
   plugins: [],
   options: {
@@ -150,4 +159,5 @@ module.exports = {
     forceRuntimeEnvVars: ['HOST', 'PORT', 'PUBLIC_URL', 'RAZZLE_API_BASE_URL'],
   },
   modifyWebpackConfig,
+  modifyJestConfig,
 };
