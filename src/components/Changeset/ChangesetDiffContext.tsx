@@ -1,12 +1,11 @@
 import { useApolloClient } from '@apollo/client';
 import * as React from 'react';
 import { createContext, FC, useCallback, useContext, useMemo } from 'react';
+import { Entity, IdFragment } from '~/api';
 import {
   ChangesetDiffFragment as Diff,
   ChangesetDiffItemFragment as DiffItem,
-  Entity,
-  IdFragment,
-} from '../../api';
+} from '~/common/fragments';
 import { mapFromList, Nullable } from '../../util';
 
 export type DiffMode = 'added' | 'removed' | 'changed';

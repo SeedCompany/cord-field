@@ -3,12 +3,8 @@ import { NetworkStatus } from '@apollo/client/core';
 import { QueryHookOptions } from '@apollo/client/react/types/types';
 import { TypedDocumentNode } from '@graphql-typed-document-node/core';
 import { useMemo } from 'react';
-import {
-  ChangesetDiffItemFragment as DiffItem,
-  InputArg,
-  PaginatedListInput,
-  PaginatedListOutput,
-} from '../../api';
+import { InputArg, PaginatedListInput, PaginatedListOutput } from '../../api';
+import { ChangesetDiffItemFragment as DiffItem } from '../../common/fragments';
 import {
   ChangesetItemFilterFn,
   useDeletedItemsOfChangeset,

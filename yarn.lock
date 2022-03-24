@@ -6567,7 +6567,6 @@ __metadata:
     react-intersection-observer: ^8.33.1
     react-pdf: ^5.7.1
     react-router-dom: ^6.2.2
-    react-ssr-prepass: ^1.5.0
     react-use: ^17.3.2
     response-time: ^2.3.2
     rifm: ^0.12.1
@@ -15780,15 +15779,6 @@ final-form-calculate@1.3.2:
   peerDependencies:
     react: ">=16.8"
   checksum: 1a2e7006d4d56bfae8ff11dd5ec15e8049578864dfb2764652510eb0ce4af26a8949790a3732c4f7beb14bcb6500469ea18841b8cfc953e09828e4e4113922f0
-  languageName: node
-  linkType: hard
-
-"react-ssr-prepass@npm:^1.5.0":
-  version: 1.5.0
-  resolution: "react-ssr-prepass@npm:1.5.0"
-  peerDependencies:
-    react: ^16.8.0 || ^17.0.0 || ^18.0.0
-  checksum: efe89b9f8b2053474613f56dfdbeb41d8ee2e572bf819a39377d95d3e4a9acf8a4a16e28d8d8034cb9ac2b316d11dc9e62217743e4322046d08175eb3b4fed3e
   languageName: node
   linkType: hard
 

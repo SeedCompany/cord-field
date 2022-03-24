@@ -1,0 +1,1 @@
+export * from './typeMap.generated';

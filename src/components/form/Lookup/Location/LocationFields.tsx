@@ -1,9 +1,9 @@
-import { CreateLocation as CreateLocationType } from '../../../../api';
+import { CreateLocation as CreateLocationType } from '~/api/schema';
 import {
   DisplayFieldRegionFragment as FieldRegionLookupItem,
   DisplayFieldZoneFragment as FieldZoneLookupItem,
   DisplayLocationFragment as LocationLookupItem,
-} from '../../../../api/fragments/location.graphql';
+} from '~/common';
 import { CreateLocation } from '../../../../scenes/Locations/Create';
 import { LocationFormValues } from '../../../../scenes/Locations/LocationForm';
 import { LookupField } from '../../Lookup/LookupField';

@@ -1,7 +1,7 @@
 import { useMutation } from '@apollo/client';
 import React from 'react';
 import { Except } from 'type-fest';
-import { DisplayLocationFragment } from '../../../api/fragments/location.graphql';
+import { DisplayLocationFragment } from '~/common';
 import {
   DialogForm,
   DialogFormProps,

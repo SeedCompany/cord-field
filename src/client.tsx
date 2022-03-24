@@ -9,7 +9,6 @@ import { HelmetProvider } from 'react-helmet-async';
 import { BrowserRouter } from 'react-router-dom';
 import { App } from './App';
 import { Nest } from './components/Nest';
-import { ServerDataProvider } from './components/ServerData';
 import { basePathOfUrl } from './util';
 
 // Set current timezone in cookie so server can render with it.
@@ -54,10 +53,8 @@ if (isBrowser) {
 }
 
 const root = document.getElementById('root');
-const serverData = (window as any).__SERVER_DATA__;
 
 const clientOnlyProviders = [
-  <ServerDataProvider value={serverData} />,
   <BrowserRouter basename={basePathOfUrl(process.env.PUBLIC_URL)} />,
   <HelmetProvider children={<></>} />,
   <DndProvider backend={HTML5Backend} />,

@@ -1,6 +1,6 @@
 schema:
   - ${RAZZLE_API_BASE_URL}/graphql:
-      loader: ./src/api/client-schema.graphql-loader.ts
+      loader: ./src/api/schema/client-schema.graphql-loader.ts
 overwrite: true
 config:
   # Use `import type` which should be default for TS 3.8+
@@ -16,34 +16,34 @@ generates:
       - schema-ast
 
   # Generate fragment matcher for Apollo's caching
-  ./src/api/fragmentMatcher/fragmentMatcher.generated.ts:
+  ./src/api/schema/fragmentMatcher/fragmentMatcher.generated.ts:
     plugins:
-      - ./src/api/fragmentMatcher/fragmentMatcher.codegen
+      - ./src/api/schema/fragmentMatcher/fragmentMatcher.codegen
 
   # Generate type policies automatically specific to our API
-  ./src/api/typePolicies/typePolicies.generated.ts:
+  ./src/api/schema/typePolicies/typePolicies.generated.ts:
     plugins:
-      - ./src/api/typePolicies/typePolicies.codegen
+      - ./src/api/schema/typePolicies/typePolicies.codegen
 
   # Generate lists for all of our enums
-  ./src/api/enumLists/enumLists.generated.ts:
+  ./src/api/schema/enumLists/enumLists.generated.ts:
     plugins:
-      - ./src/api/enumLists/enumLists.codegen
+      - ./src/api/schema/enumLists/enumLists.codegen
 
   # Generate a type map for all of our GQL object types
-  ./src/api/typeMap.generated.ts:
+  ./src/api/schema/typeMap/typeMap.generated.ts:
     plugins:
-      - ./src/api/typeMap.codegen
+      - ./src/api/schema/typeMap/typeMap.codegen
 
   # Generate TypeScript version of graphql schema
-  ./src/api/schema.graphql.ts:
+  ./src/api/schema/schema.graphql.ts:
     plugins:
       - typescript
       - add:
           placement: prepend
           content: |
             import { DateTime } from 'luxon';
-            import { CalendarDate } from '../util';
+            import { CalendarDate } from '~/util';
     config:
       scalars:
         Date: CalendarDate

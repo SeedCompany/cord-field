@@ -11,8 +11,8 @@ import {
   MethodologyToApproach,
   UpdateInternshipEngagement,
   UpdateLanguageEngagement,
-} from '../../../api';
-import { DisplayLocationFragment } from '../../../api/fragments/location.graphql';
+} from '~/api';
+import { DisplayLocationFragment } from '~/common';
 import {
   DialogForm,
   DialogFormProps,

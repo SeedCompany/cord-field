@@ -14,7 +14,7 @@
     "gql-gen": "yarn gql-gen:schema \"$@\" && yarn gql-gen:operations \"$@\"",
     "gql-gen:schema": "yarn gql-gen-base -c codegen.schema.yml",
     "gql-gen:operations": "yarn gql-gen-base -c codegen.operations.yml",
-    "gql-gen-base": "TS_NODE_PROJECT=tsconfig.codegen.json graphql-codegen -r ts-node/register -r ./src/api/loadEnv.codegen",
+    "gql-gen-base": "TS_NODE_PROJECT=tsconfig.codegen.json graphql-codegen -r ts-node/register -r ./src/api/schema/codeGenUtil/loadEnv.codegen",
     "postinstall": "patch-typed-document-node || true"
   },
   "engines": {
@@ -70,7 +70,6 @@
     "react-intersection-observer": "^8.33.1",
     "react-pdf": "^5.7.1",
     "react-router-dom": "^6.2.2",
-    "react-ssr-prepass": "^1.5.0",
     "react-use": "^17.3.2",
     "response-time": "^2.3.2",
     "rifm": "^0.12.1",
