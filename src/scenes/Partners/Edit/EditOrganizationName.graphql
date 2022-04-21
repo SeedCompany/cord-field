@@ -1,0 +1,11 @@
+mutation UpdateOrganizationName($id: ID!, $name: String!) {
+  updateOrganization(input: { organization: { id: $id, name: $name } }) {
+    organization {
+      id
+      name {
+        ...securedString
+      }
+      avatarLetters
+    }
+  }
+}
