@@ -135,7 +135,9 @@ export const PartnerDetail = () => {
               <Tooltip title="Edit Partner">
                 <IconButton
                   aria-label="Edit Partner"
-                  onClick={() => editPartner('globalInnovationsClient')}
+                  onClick={() =>
+                    editPartner(['organizationName', 'globalInnovationsClient'])
+                  }
                 >
                   <Edit />
                 </IconButton>

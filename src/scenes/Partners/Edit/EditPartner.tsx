@@ -23,6 +23,7 @@ import { UserField, UserLookupItem } from '../../../components/form/Lookup';
 import { isLength } from '../../../components/form/validators';
 import { ExtractStrict, many, Many } from '../../../util';
 import { PartnerDetailsFragment } from '../Detail/PartnerDetail.graphql';
+import { UpdateOrganizationNameDocument } from './EditOrganizationName.graphql';
 import { UpdatePartnerDocument } from './EditPartner.graphql';
 
 interface PartnerFormValues {
@@ -30,12 +31,13 @@ interface PartnerFormValues {
     UpdatePartner,
     {
       pointOfContactId?: UserLookupItem;
+      organizationName: string;
     }
   >;
 }
 
 export type EditablePartnerField = ExtractStrict<
-  keyof UpdatePartner,
+  keyof UpdatePartner | 'organizationName',
   // Add more fields here as needed
   | 'pointOfContactId'
   | 'globalInnovationsClient'
@@ -44,6 +46,7 @@ export type EditablePartnerField = ExtractStrict<
   | 'types'
   | 'financialReportingTypes'
   | 'address'
+  | 'organizationName'
 >;
 
 type EditPartnerProps = Except<
@@ -103,6 +106,9 @@ const fieldMapping: Record<
       inputProps={{ rowsMin: 2 }}
     />
   ),
+  organizationName: ({ props }) => (
+    <TextField {...props} required label="Organization Name" />
+  ),
 };
 
 const decorators: Array<Decorator<PartnerFormValues>> = [
@@ -127,6 +133,7 @@ export const EditPartner = ({
   ...props
 }: EditPartnerProps) => {
   const [updatePartner] = useMutation(UpdatePartnerDocument);
+  const [updateOrganizationName] = useMutation(UpdateOrganizationNameDocument);
 
   const initialValues = useMemo(
     () => ({
@@ -138,6 +145,7 @@ export const EditPartner = ({
         types: partner.types.value,
         financialReportingTypes: partner.financialReportingTypes.value,
         address: partner.address.value,
+        organizationName: partner.organization.value!.name.value!,
       },
     }),
     [partner]
@@ -154,20 +162,40 @@ export const EditPartner = ({
       {...props}
       decorators={decorators}
       initialValues={initialValues}
-      onSubmit={async ({
-        partner: { pointOfContactId, pmcEntityCode, ...rest },
-      }) => {
-        await updatePartner({
-          variables: {
-            input: {
-              partner: {
-                ...rest,
-                pointOfContactId: pointOfContactId?.id,
-                pmcEntityCode: pmcEntityCode?.toUpperCase(),
-              },
-            },
+      onSubmit={async (
+        {
+          partner: {
+            pointOfContactId,
+            pmcEntityCode,
+            organizationName,
+            ...rest
           },
-        });
+        },
+        form
+      ) => {
+        const { 'partner.organizationName': nameDirty, ...dirty } =
+          form.getState().dirtyFields;
+        await Promise.all([
+          nameDirty &&
+            updateOrganizationName({
+              variables: {
+                id: partner.organization.value!.id,
+                name: organizationName,
+              },
+            }),
+          Object.keys(dirty).length > 0 &&
+            updatePartner({
+              variables: {
+                input: {
+                  partner: {
+                    ...rest,
+                    pointOfContactId: pointOfContactId?.id,
+                    pmcEntityCode: pmcEntityCode?.toUpperCase(),
+                  },
+                },
+              },
+            }),
+        ]);
       }}
       fieldsPrefix="partner"
     >
