@@ -173,8 +173,9 @@ export const EditPartner = ({
         },
         form
       ) => {
-        const dirty = form.getState().dirtyFields;
-        if ('partner.organizationName' in dirty) {
+        const { 'partner.organizationName': nameDirty, ...dirty } =
+          form.getState().dirtyFields;
+        if (nameDirty) {
           await updateOrganizationName({
             variables: {
               id: partner.organization.value!.id,
@@ -182,17 +183,19 @@ export const EditPartner = ({
             },
           });
         }
-        await updatePartner({
-          variables: {
-            input: {
-              partner: {
-                ...rest,
-                pointOfContactId: pointOfContactId?.id,
-                pmcEntityCode: pmcEntityCode?.toUpperCase(),
+        if (Object.keys(dirty).length > 0) {
+          await updatePartner({
+            variables: {
+              input: {
+                partner: {
+                  ...rest,
+                  pointOfContactId: pointOfContactId?.id,
+                  pmcEntityCode: pmcEntityCode?.toUpperCase(),
+                },
               },
             },
-          },
-        });
+          });
+        }
       }}
       fieldsPrefix="partner"
     >
