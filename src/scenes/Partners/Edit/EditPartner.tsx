@@ -107,7 +107,7 @@ const fieldMapping: Record<
     />
   ),
   organizationName: ({ props }) => (
-    <TextField {...props} label="Organization name" />
+    <TextField {...props} required label="Organization Name" />
   ),
 };
 
