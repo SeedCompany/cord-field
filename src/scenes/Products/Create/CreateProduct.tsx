@@ -194,7 +194,7 @@ export const CreateProduct = () => {
     try {
       await Promise.all([createProduct(), updatePpm()]);
 
-      navigate('../../');
+      navigate(`/engagements/${engagementId}`);
     } catch (e) {
       return await handleFormError(e, form);
     }

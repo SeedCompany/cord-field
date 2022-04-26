@@ -177,7 +177,7 @@ export const EditProduct = () => {
         },
       });
 
-      navigate('../../../');
+      navigate(`/engagements/${engagement.id}`);
       return;
     }
     const { dirtyFields } = form.getState();
