@@ -1,7 +1,8 @@
 import { Grid } from '@material-ui/core';
 import { memoize } from 'lodash';
 import React from 'react';
-import { displayRole, RoleList } from '../../../api';
+import { RoleLabels, RoleList } from '~/api/schema';
+import { labelFrom } from '~/common';
 import {
   DialogForm,
   DialogFormProps,
@@ -138,7 +139,7 @@ export const UserForm = <T, R = void>({
             <AutocompleteField
               multiple
               options={RoleList}
-              getOptionLabel={displayRole}
+              getOptionLabel={labelFrom(RoleLabels)}
               label="Roles"
               variant="outlined"
               disabled={!powers?.includes('GrantRole')}

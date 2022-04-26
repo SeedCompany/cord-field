@@ -9,7 +9,7 @@ import { Skeleton } from '@material-ui/lab';
 import clsx from 'clsx';
 import { FC } from 'react';
 import * as React from 'react';
-import { displayStatus } from '../../api';
+import { ProjectStatusLabels } from '~/api/schema';
 import { ProjectListQueryVariables } from '../../scenes/Projects/List/projects.graphql';
 import { getProjectUrl } from '../../scenes/Projects/useProjectId';
 import { DisplaySimpleProperty } from '../DisplaySimpleProperty';
@@ -152,7 +152,7 @@ export const ProjectListItemCard: FC<ProjectListItemCardProps> = ({
               ) : (
                 <DisplaySimpleProperty
                   label="Status"
-                  value={displayStatus(project.projectStatus)}
+                  value={ProjectStatusLabels[project.projectStatus]}
                 />
               )}
             </Grid>

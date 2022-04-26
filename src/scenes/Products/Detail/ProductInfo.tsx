@@ -8,11 +8,8 @@ import {
 } from '@material-ui/core';
 import { Skeleton } from '@material-ui/lab';
 import React, { ReactNode } from 'react';
-import {
-  displayMethodologyWithLabel,
-  displayProductMedium,
-  displayProductStep,
-} from '../../../api';
+import { ProductStepLabels } from '~/api/schema';
+import { displayMethodologyWithLabel, displayProductMedium } from '~/common';
 import {
   DisplaySimpleProperty,
   DisplaySimplePropertyProps,
@@ -130,7 +127,7 @@ export const ProductInfo = ({ product }: { product?: Product }) => {
                 {product.steps.value.map((step) => (
                   <ListItem key={step} disableGutters>
                     <ListItemText
-                      primary={displayProductStep(step)}
+                      primary={ProductStepLabels[step]}
                       className={classes.listItem}
                     />
                   </ListItem>

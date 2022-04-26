@@ -7,7 +7,8 @@ import React, { useState } from 'react';
 import { Helmet } from 'react-helmet-async';
 import { useParams } from 'react-router-dom';
 import { useInterval } from 'react-use';
-import { canEditAny, displayRoles } from '../../../api';
+import { RoleLabels } from '~/api/schema';
+import { canEditAny, labelsFrom } from '~/common';
 import { useDialog } from '../../../components/Dialog';
 import {
   DisplaySimpleProperty,
@@ -108,7 +109,7 @@ export const UserDetail = () => {
           />
           <DisplayProperty
             label="Roles"
-            value={user?.roles.value && displayRoles(user.roles.value)}
+            value={labelsFrom(RoleLabels)(user?.roles.value)}
             loading={!user}
           />
           <DisplayProperty

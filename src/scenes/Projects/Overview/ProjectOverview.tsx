@@ -6,7 +6,8 @@ import clsx from 'clsx';
 import React, { FC } from 'react';
 import { useDropzone } from 'react-dropzone';
 import { Helmet } from 'react-helmet-async';
-import { displayProjectStep } from '../../../api';
+import { ProjectStepLabels } from '~/api/schema';
+import { labelFrom } from '~/common';
 import { BudgetOverviewCard } from '../../../components/BudgetOverviewCard';
 import { CardGroup } from '../../../components/CardGroup';
 import { ChangesetPropertyBadge } from '../../../components/Changeset';
@@ -426,7 +427,7 @@ export const ProjectOverview: FC = () => {
               <ChangesetPropertyBadge
                 current={projectOverviewData?.project}
                 prop="step"
-                labelBy={displayProjectStep}
+                labelBy={labelFrom(ProjectStepLabels)}
               >
                 <DataButton
                   loading={!projectOverviewData}
@@ -437,7 +438,9 @@ export const ProjectOverview: FC = () => {
                     openWorkflow(projectOverviewData.project)
                   }
                 >
-                  {displayProjectStep(projectOverviewData?.project.step.value)}
+                  {labelFrom(ProjectStepLabels)(
+                    projectOverviewData?.project.step.value
+                  )}
                 </DataButton>
               </ChangesetPropertyBadge>
             </Grid>

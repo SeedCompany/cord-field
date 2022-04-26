@@ -4,11 +4,12 @@ import onFieldChange from 'final-form-calculate';
 import React, { ComponentType, useMemo } from 'react';
 import { Except, Merge } from 'type-fest';
 import {
-  displayFinancialReportingType,
+  FinancialReportingTypeLabels,
   FinancialReportingTypeList,
   PartnerTypeList,
   UpdatePartner,
-} from '../../../api';
+} from '~/api/schema';
+import { labelFrom } from '~/common';
 import {
   DialogForm,
   DialogFormProps,
@@ -95,7 +96,7 @@ const fieldMapping: Record<
         options={FinancialReportingTypeList}
         multiple
         {...props}
-        getLabel={displayFinancialReportingType}
+        getLabel={labelFrom(FinancialReportingTypeLabels)}
       />
     ) : null,
   address: ({ props }) => (
