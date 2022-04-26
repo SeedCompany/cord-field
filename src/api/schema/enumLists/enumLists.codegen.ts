@@ -1,5 +1,6 @@
 import { GraphQLEnumType } from 'graphql';
-import { startCase } from 'lodash';
+import { lowerCase } from 'lodash';
+import { titleCase } from 'title-case';
 import {
   addExportedConst,
   tsMorphPlugin,
@@ -39,7 +40,7 @@ export const plugin = tsMorphPlugin(({ schema, file }) => {
                 ? /^\s*@label (.+)$/m.exec(val.description)?.[1]
                 : undefined
               )?.replace(/`/g, '\\`') ??
-              startCase(val.name).replace(/ And /g, ' & ');
+              titleCase(lowerCase(val.name)).replace(/ and /g, ' & ');
             writer.writeLine(`${val.name}: \`${label}\`,`);
           }
         }),
