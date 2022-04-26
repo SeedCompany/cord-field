@@ -38,7 +38,8 @@ export const plugin = tsMorphPlugin(({ schema, file }) => {
               (val.description
                 ? /^\s*@label (.+)$/m.exec(val.description)?.[1]
                 : undefined
-              )?.replace(/`/g, '\\`') ?? startCase(val.name);
+              )?.replace(/`/g, '\\`') ??
+              startCase(val.name).replace(/ And /g, ' & ');
             writer.writeLine(`${val.name}: \`${label}\`,`);
           }
         }),
