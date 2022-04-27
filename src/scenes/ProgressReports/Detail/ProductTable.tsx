@@ -1,7 +1,7 @@
 import { sortBy, uniq } from 'lodash';
 import { Column } from 'material-table';
 import React, { useMemo } from 'react';
-import { displayProductStep, ProductStep } from '../../../api';
+import { ProductStep, ProductStepLabels } from '~/api/schema';
 import { Link } from '../../../components/Routing';
 import { Table } from '../../../components/Table';
 import { bookIndexFromName } from '../../../util/biblejs';
@@ -49,7 +49,7 @@ export const ProductTable = ({ products, category }: ProductTableProps) => {
         step === 'ExegesisAndFirstDraft' ? (
           <>Exegesis&nbsp;& First&nbsp;Draft</>
         ) : (
-          displayProductStep(step)
+          ProductStepLabels[step]
         ),
       field: step,
       render: (row: RowData) =>

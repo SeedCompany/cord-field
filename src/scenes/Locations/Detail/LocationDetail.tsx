@@ -6,7 +6,8 @@ import clsx from 'clsx';
 import React from 'react';
 import { Helmet } from 'react-helmet-async';
 import { useParams } from 'react-router-dom';
-import { canEditAny, displayLocationType } from '../../../api';
+import { LocationTypeLabels } from '~/api/schema';
+import { canEditAny, labelFrom } from '~/common';
 import { useDialog } from '../../../components/Dialog';
 import {
   DisplaySimpleProperty,
@@ -115,7 +116,7 @@ export const LocationDetail = () => {
           </div>
           <DisplayProperty
             label="Type"
-            value={displayLocationType(location?.type.value)}
+            value={labelFrom(LocationTypeLabels)(location?.type.value)}
             loading={!location}
           />
           <DisplayProperty

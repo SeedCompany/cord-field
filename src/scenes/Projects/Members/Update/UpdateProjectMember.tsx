@@ -3,12 +3,9 @@ import { Container } from '@material-ui/core';
 import { Skeleton } from '@material-ui/lab';
 import React from 'react';
 import { Except } from 'type-fest';
-import {
-  displayRole,
-  removeItemFromList,
-  RoleList,
-  UpdateProjectMemberInput,
-} from '../../../../api';
+import { removeItemFromList } from '~/api';
+import { RoleLabels, RoleList, UpdateProjectMemberInput } from '~/api/schema';
+import { labelFrom } from '~/common';
 import {
   DialogForm,
   DialogFormProps,
@@ -117,7 +114,7 @@ export const UpdateProjectMember = ({
             fullWidth
             multiple
             options={RoleList}
-            getOptionLabel={displayRole}
+            getOptionLabel={labelFrom(RoleLabels)}
             name="roles"
             label="Roles"
             getOptionDisabled={(option) => !availableRoles.includes(option)}

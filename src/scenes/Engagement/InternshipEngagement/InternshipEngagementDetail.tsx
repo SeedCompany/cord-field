@@ -2,7 +2,8 @@ import { Breadcrumbs, Grid, makeStyles, Typography } from '@material-ui/core';
 import { DateRange } from '@material-ui/icons';
 import React from 'react';
 import { Helmet } from 'react-helmet-async';
-import { displayEngagementStatus, displayInternPosition } from '../../../api';
+import { EngagementStatusLabels, InternshipPositionLabels } from '~/api/schema';
+import { labelFrom } from '~/common';
 import { DataButton } from '../../../components/DataButton';
 import { DefinedFileCard } from '../../../components/DefinedFileCard';
 import { useDialog } from '../../../components/Dialog';
@@ -133,7 +134,7 @@ export const InternshipEngagementDetail = ({ engagement }: EngagementQuery) => {
                   secured={engagement.status}
                   redacted="You do not have permission to view the engagement's status"
                   onClick={() => openWorkflow(engagement)}
-                  children={displayEngagementStatus}
+                  children={labelFrom(EngagementStatusLabels)}
                 />
               </Grid>
               <Grid item>
@@ -151,7 +152,7 @@ export const InternshipEngagementDetail = ({ engagement }: EngagementQuery) => {
                   secured={engagement.position}
                   empty="Enter Intern Position"
                   redacted="You do not have permission to view intern position"
-                  children={displayInternPosition}
+                  children={labelFrom(InternshipPositionLabels)}
                   onClick={() => show('position')}
                 />
               </Grid>

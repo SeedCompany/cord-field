@@ -9,7 +9,8 @@ import {
 } from '@material-ui/core';
 import { Skeleton } from '@material-ui/lab';
 import * as React from 'react';
-import { displayProjectChangeRequestTypes } from '../../api';
+import { ProjectChangeRequestTypeLabels } from '~/api/schema';
+import { labelsFrom } from '~/common';
 import { useProjectId } from '../../scenes/Projects/useProjectId';
 import { DisplaySimpleProperty } from '../DisplaySimpleProperty';
 import { FormattedDateTime } from '../Formatters';
@@ -70,7 +71,7 @@ export const ProjectChangeRequestListItem = ({
             {!data ? (
               <Skeleton width="100%" />
             ) : (
-              displayProjectChangeRequestTypes(data.types.value)
+              labelsFrom(ProjectChangeRequestTypeLabels)(data.types.value)
             )}
           </Typography>
         </Typography>

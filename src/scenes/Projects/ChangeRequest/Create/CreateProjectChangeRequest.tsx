@@ -1,12 +1,13 @@
 import { useMutation } from '@apollo/client';
 import React from 'react';
 import { Except } from 'type-fest';
+import { addItemToList } from '~/api';
 import {
-  addItemToList,
   CreateProjectChangeRequestInput,
-  displayProjectChangeRequestType,
+  ProjectChangeRequestTypeLabels,
   ProjectChangeRequestTypeList,
-} from '../../../../api';
+} from '~/api/schema';
+import { labelFrom } from '~/common';
 import {
   DialogForm,
   DialogFormProps,
@@ -65,7 +66,7 @@ export const CreateProjectChangeRequest = ({
       <AutocompleteField
         multiple
         options={ProjectChangeRequestTypeList}
-        getOptionLabel={displayProjectChangeRequestType}
+        getOptionLabel={labelFrom(ProjectChangeRequestTypeLabels)}
         name="types"
         label="Types"
         variant="outlined"

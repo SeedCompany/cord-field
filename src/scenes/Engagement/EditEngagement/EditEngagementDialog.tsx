@@ -3,16 +3,19 @@ import { setIn } from 'final-form';
 import { compact, keyBy, pick, startCase } from 'lodash';
 import React, { ComponentType, FC, useMemo } from 'react';
 import { Except, Merge } from 'type-fest';
+import { invalidateProps } from '~/api';
 import {
-  displayInternDomain,
-  displayInternPosition,
-  displayInternProgram,
-  invalidateProps,
-  MethodologyToApproach,
+  InternshipDomainLabels,
+  InternshipPositionLabels,
+  InternshipProgramLabels,
   UpdateInternshipEngagement,
   UpdateLanguageEngagement,
-} from '~/api';
-import { DisplayLocationFragment } from '~/common';
+} from '~/api/schema';
+import {
+  DisplayLocationFragment,
+  labelFrom,
+  MethodologyToApproach,
+} from '~/common';
 import {
   DialogForm,
   DialogFormProps,
@@ -119,11 +122,11 @@ const fieldMapping: Record<
         groupBy={(p) => {
           const option = groups[p];
           return compact([
-            displayInternProgram(option?.program),
-            displayInternDomain(option?.domain),
+            labelFrom(InternshipProgramLabels)(option?.program),
+            labelFrom(InternshipDomainLabels)(option?.domain),
           ]).join(' - ');
         }}
-        getOptionLabel={displayInternPosition}
+        getOptionLabel={labelFrom(InternshipPositionLabels)}
       />
     );
   },

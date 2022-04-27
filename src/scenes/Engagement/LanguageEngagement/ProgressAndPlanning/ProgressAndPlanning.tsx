@@ -3,11 +3,10 @@ import { makeStyles, Tooltip, Typography } from '@material-ui/core';
 import { pick } from 'lodash';
 import React from 'react';
 import {
-  ApproachMethodologies,
-  displayApproach,
-  displayMethodology,
   ProductMethodology as Methodology,
-} from '../../../../api';
+  ProductApproachLabels,
+} from '~/api/schema';
+import { ApproachMethodologies, displayMethodology } from '~/common';
 import { DefinedFileCard } from '../../../../components/DefinedFileCard';
 import { useDialog } from '../../../../components/Dialog';
 import { DialogForm } from '../../../../components/Dialog/DialogForm';
@@ -106,7 +105,7 @@ export const PlanningSpreadsheet = ({ engagement }: Props) => {
             }).map(([approach, methodologies]) => (
               <div key={approach} className={classes.section}>
                 <Typography className={classes.label}>
-                  {displayApproach(approach)}
+                  {ProductApproachLabels[approach]}
                 </Typography>
                 {methodologies.map((option: Methodology) => (
                   <EnumOption

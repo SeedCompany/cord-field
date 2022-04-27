@@ -8,7 +8,8 @@ import {
 } from '@material-ui/core';
 import clsx from 'clsx';
 import * as React from 'react';
-import { displayEngagementStatus } from '../../api';
+import { EngagementStatusLabels } from '~/api/schema';
+import { labelFrom } from '~/common';
 import { idForUrl } from '../Changeset';
 import { DisplaySimpleProperty } from '../DisplaySimpleProperty';
 import { useNumberFormatter } from '../Formatters';
@@ -126,7 +127,7 @@ export const LanguageEngagementListItemCard = (
             />
             <DisplaySimpleProperty
               label="Status"
-              value={displayEngagementStatus(status.value)}
+              value={labelFrom(EngagementStatusLabels)(status.value)}
               wrap={(node) => <Grid item>{node}</Grid>}
             />
           </Grid>

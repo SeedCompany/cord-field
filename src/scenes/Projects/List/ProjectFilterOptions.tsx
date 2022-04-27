@@ -1,11 +1,12 @@
 import { Tooltip } from '@material-ui/core';
 import * as React from 'react';
 import {
-  displayStatus,
+  ProjectStatusLabels,
   ProjectStatusList,
   ProjectTypeList,
   SensitivityList,
-} from '../../../api';
+} from '~/api/schema';
+import { labelFrom } from '~/common';
 import { EnumField, SwitchField } from '../../../components/form';
 import {
   BooleanParam,
@@ -33,7 +34,7 @@ export const ProjectFilterOptions = () => {
         label="Status"
         multiple
         options={ProjectStatusList}
-        getLabel={displayStatus}
+        getLabel={labelFrom(ProjectStatusLabels)}
         defaultOption="Show All"
         layout="two-column"
       />

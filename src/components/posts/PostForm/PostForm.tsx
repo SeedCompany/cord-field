@@ -2,11 +2,12 @@ import { Grid } from '@material-ui/core';
 import { without } from 'lodash';
 import React from 'react';
 import {
-  displayPostShareability,
   PostShareability,
+  PostShareabilityLabels,
   PostShareabilityList,
   PostTypeList,
-} from '../../../api';
+} from '~/api/schema';
+import { labelFrom } from '~/common';
 import {
   DialogForm,
   DialogFormProps,
@@ -61,7 +62,7 @@ export const PostForm = <T, R = void>({
           name="shareability"
           options={shareabilityList(includeMembership)}
           variant="outlined"
-          getOptionLabel={displayPostShareability}
+          getOptionLabel={labelFrom(PostShareabilityLabels)}
           defaultValue={'Internal'}
         />
       </Grid>

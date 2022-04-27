@@ -8,7 +8,8 @@ import {
 import { DateRange, Edit } from '@material-ui/icons';
 import React from 'react';
 import { Helmet } from 'react-helmet-async';
-import { canEditAny, displayEngagementStatus } from '../../../../api';
+import { EngagementStatusLabels } from '~/api/schema';
+import { canEditAny, labelFrom } from '~/common';
 import { BooleanProperty } from '../../../../components/BooleanProperty';
 import { DataButton } from '../../../../components/DataButton';
 import { useDialog } from '../../../../components/Dialog';
@@ -148,7 +149,7 @@ export const LanguageEngagementHeader = ({
             secured={engagement.status}
             redacted="You do not have permission to view the engagement's status"
             onClick={() => openWorkflow(engagement)}
-            children={displayEngagementStatus}
+            children={labelFrom(EngagementStatusLabels)}
           />
         </Grid>
         <Grid item>

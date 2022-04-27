@@ -3,11 +3,12 @@ import { Grid, makeStyles, Tooltip, Typography } from '@material-ui/core';
 import React from 'react';
 import { Except } from 'type-fest';
 import {
-  displayProjectStep,
   ProjectStep,
+  ProjectStepLabels,
   ProjectStepList,
   TransitionType,
-} from '../../../api';
+} from '~/api/schema';
+import { labelFrom } from '~/common';
 import {
   DialogForm,
   DialogFormProps,
@@ -92,9 +93,9 @@ export const ProjectWorkflowDialog = ({
           <Tooltip
             title={
               transition.disabledReason ??
-              `This will change the project step to ${displayProjectStep(
-                transition.to
-              )}`
+              `This will change the project step to ${
+                ProjectStepLabels[transition.to]
+              }`
             }
             key={i}
           >
@@ -132,7 +133,7 @@ export const ProjectWorkflowDialog = ({
               name="project.step"
               label="Override Step"
               options={ProjectStepList}
-              getOptionLabel={displayProjectStep}
+              getOptionLabel={labelFrom(ProjectStepLabels)}
             />
           </>
         ) : (
