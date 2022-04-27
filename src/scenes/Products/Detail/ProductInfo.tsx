@@ -8,8 +8,8 @@ import {
 } from '@material-ui/core';
 import { Skeleton } from '@material-ui/lab';
 import React, { ReactNode } from 'react';
-import { ProductStepLabels } from '~/api/schema';
-import { displayMethodologyWithLabel, displayProductMedium } from '~/common';
+import { ProductMediumLabels, ProductStepLabels } from '~/api/schema';
+import { displayMethodologyWithLabel } from '~/common';
 import {
   DisplaySimpleProperty,
   DisplaySimplePropertyProps,
@@ -52,7 +52,7 @@ export const ProductInfo = ({ product }: { product?: Product }) => {
               {product.mediums.value.map((medium) => (
                 <ListItem key={medium} disableGutters>
                   <ListItemText
-                    primary={displayProductMedium(medium)}
+                    primary={ProductMediumLabels[medium]}
                     secondary={
                       ppm[medium]?.partner.value?.organization.value?.name
                         .value ? (

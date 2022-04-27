@@ -11,7 +11,8 @@ import { MoreVert } from '@material-ui/icons';
 import clsx from 'clsx';
 import { useState } from 'react';
 import * as React from 'react';
-import { canEditAny, displayPostShareability } from '../../../api';
+import { PostShareabilityLabels } from '~/api/schema';
+import { canEditAny } from '~/common';
 import { square } from '../../../util';
 import { useDialog } from '../../Dialog';
 import { FormattedDateTime } from '../../Formatters';
@@ -123,7 +124,7 @@ export const PostListItemCard = ({
                       ? 'PUBLIC'
                       : 'PRIVATE'}
                   </span>
-                  {displayPostShareability(post.shareability)}
+                  {PostShareabilityLabels[post.shareability]}
                 </Typography>
               </div>
             </div>
