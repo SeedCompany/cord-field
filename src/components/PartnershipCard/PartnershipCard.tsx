@@ -11,13 +11,14 @@ import { Skeleton } from '@material-ui/lab';
 import clsx from 'clsx';
 import React, { FC } from 'react';
 import {
-  displayFinancialReportingType,
-  displayPartnershipStatus,
-} from '../../api';
+  FinancialReportingTypeLabels,
+  PartnershipAgreementStatusLabels,
+} from '~/api/schema';
+import { labelFrom } from '~/common';
 import { DisplaySimpleProperty } from '../DisplaySimpleProperty';
 import { FormattedDateRange, FormattedDateTime } from '../Formatters';
 import { Redacted } from '../Redacted';
-import { PartnershipCardFragment } from './PartnershipCard.generated';
+import { PartnershipCardFragment } from './PartnershipCard.graphql';
 import { PartnershipPrimaryIcon } from './PartnershipPrimaryIcon';
 
 const useStyles = makeStyles(({ spacing }) => ({
@@ -87,7 +88,7 @@ export const PartnershipCard: FC<PartnershipCardProps> = ({
           <Grid item>
             <DisplaySimpleProperty
               label="Financial Reporting Type"
-              value={displayFinancialReportingType(
+              value={labelFrom(FinancialReportingTypeLabels)(
                 partnership?.financialReportingType.value
               )}
               loading={!partnership}
@@ -98,7 +99,7 @@ export const PartnershipCard: FC<PartnershipCardProps> = ({
           <Grid item>
             <DisplaySimpleProperty
               label="Agreement Status"
-              value={displayPartnershipStatus(
+              value={labelFrom(PartnershipAgreementStatusLabels)(
                 partnership?.agreementStatus.value
               )}
               loading={!partnership}
@@ -108,7 +109,9 @@ export const PartnershipCard: FC<PartnershipCardProps> = ({
           <Grid item>
             <DisplaySimpleProperty
               label="MOU Status"
-              value={displayPartnershipStatus(partnership?.mouStatus.value)}
+              value={labelFrom(PartnershipAgreementStatusLabels)(
+                partnership?.mouStatus.value
+              )}
               loading={!partnership}
               loadingWidth="40%"
             />

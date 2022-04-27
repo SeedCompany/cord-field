@@ -9,10 +9,11 @@ import {
 import { Skeleton } from '@material-ui/lab';
 import { FC } from 'react';
 import * as React from 'react';
-import { displayRoles } from '../../api';
+import { RoleLabels } from '~/api/schema';
+import { labelsFrom } from '~/common';
 import { Avatar } from '../Avatar';
 import { useDateTimeFormatter } from '../Formatters';
-import { ProjectMemberCardFragment } from './ProjectMember.generated';
+import { ProjectMemberCardFragment } from './ProjectMember.graphql';
 
 const useStyles = makeStyles(({ spacing }) => ({
   cardContent: {
@@ -50,7 +51,6 @@ export const ProjectMemberCard: FC<ProjectMemberCardProps> = ({
   const classes = useStyles();
   const dateTimeFormatter = useDateTimeFormatter();
 
-  const rolesString = displayRoles(projectMember?.roles.value ?? []);
   const createdAtString = dateTimeFormatter(projectMember?.createdAt);
 
   return (
@@ -83,7 +83,7 @@ export const ProjectMemberCard: FC<ProjectMemberCardProps> = ({
             {!projectMember ? (
               <Skeleton variant="text" width="25%" />
             ) : (
-              rolesString
+              labelsFrom(RoleLabels)(projectMember.roles.value)
             )}
           </Typography>
         </div>

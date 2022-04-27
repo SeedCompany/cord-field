@@ -2,7 +2,7 @@ import { Box } from '@material-ui/core';
 import { boolean, number } from '@storybook/addon-knobs';
 import React from 'react';
 import { dateTime } from '../knobs.stories';
-import { BudgetOverviewFragment } from './BudgetOverview.generated';
+import { BudgetOverviewFragment } from './BudgetOverview.graphql';
 import { BudgetOverviewCard as BOC } from './BudgetOverviewCard';
 
 export default { title: 'components' };

@@ -2,14 +2,15 @@ import { Decorator } from 'final-form';
 import onFieldChange from 'final-form-calculate';
 import React from 'react';
 import {
-  displayFinancialReportingType,
-  displayPartnershipStatus,
+  FinancialReportingTypeLabels,
   PartnershipAgreementStatus,
+  PartnershipAgreementStatusLabels,
   PartnershipAgreementStatusList,
   PartnerType,
   PeriodType,
   PeriodTypeList,
-} from '../../../api';
+} from '~/api/schema';
+import { labelFrom } from '~/common';
 import {
   DialogForm,
   DialogFormProps,
@@ -29,7 +30,7 @@ import {
 import { Nullable } from '../../../util';
 import { CreatePartnershipFormInput } from '../Create';
 import { EditPartnershipFormInput } from '../Edit';
-import { PartnershipFormFragment } from './PartnershipForm.generated';
+import { PartnershipFormFragment } from './PartnershipForm.graphql';
 
 type PartnershipFormValues = Partial<
   CreatePartnershipFormInput | EditPartnershipFormInput
@@ -119,7 +120,7 @@ export const PartnershipForm = <T extends PartnershipFormValues>({
                       options={
                         lookupPartnerFinType || currentPartnerFinTypes || []
                       }
-                      getLabel={displayFinancialReportingType}
+                      getLabel={labelFrom(FinancialReportingTypeLabels)}
                       {...props}
                     />
                   )}
@@ -185,6 +186,6 @@ const AgreementStatusField = (
   <EnumField
     {...props}
     options={PartnershipAgreementStatusList}
-    getLabel={displayPartnershipStatus}
+    getLabel={labelFrom(PartnershipAgreementStatusLabels)}
   />
 );

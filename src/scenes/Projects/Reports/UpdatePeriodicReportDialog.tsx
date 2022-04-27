@@ -11,7 +11,7 @@ import {
   DropzoneField,
   SubmitError,
 } from '../../../components/form';
-import { PeriodicReportFragment } from '../../../components/PeriodicReports/PeriodicReport.generated';
+import { PeriodicReportFragment } from '../../../components/PeriodicReports/PeriodicReport.graphql';
 import { useUpdatePeriodicReport } from '../../../components/PeriodicReports/Upload/useUpdatePeriodicReport';
 import { ExtractStrict, many, Many } from '../../../util';
 

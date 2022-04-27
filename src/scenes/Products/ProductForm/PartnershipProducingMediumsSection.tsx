@@ -1,8 +1,8 @@
 import { List, ListItem, Typography } from '@material-ui/core';
 import React from 'react';
-import { displayProductMedium, ProductMedium } from '../../../api';
+import { ProductMedium, ProductMediumLabels } from '~/api/schema';
 import { AutocompleteField } from '../../../components/form';
-import { PartnershipForLabelFragment } from '../Detail/ProductDetail.generated';
+import { PartnershipForLabelFragment } from '../Detail/ProductDetail.graphql';
 import { SectionProps } from './ProductFormFields';
 import { SecuredAccordion } from './SecuredAccordion';
 
@@ -34,7 +34,7 @@ export const PartnershipProducingMediumsSection = ({
             ?.filter((medium) => values.product?.producingMediums?.[medium])
             .map((medium) => (
               <ListItem key={medium}>
-                <Typography>{displayProductMedium(medium)}</Typography>
+                <Typography>{ProductMediumLabels[medium]}</Typography>
                 <Typography variant="caption" color="textSecondary">
                   &nbsp;via&nbsp;
                 </Typography>
@@ -62,7 +62,7 @@ export const PartnershipProducingMediumsSection = ({
               key={medium}
               name={`producingMediums.${medium}`}
               disabled={!engagement.partnershipsProducingMediums.canEdit}
-              label={displayProductMedium(medium)}
+              label={ProductMediumLabels[medium]}
               options={engagement.project.partnerships.items}
               getOptionLabel={(partnership: PartnershipForLabelFragment) =>
                 partnership.partner.value?.organization.value?.name.value ??

@@ -3,7 +3,7 @@ import React, { ReactNode } from 'react';
 import { Helmet } from 'react-helmet-async';
 import { ReportType } from '../../api';
 import { Breadcrumb } from '../Breadcrumb';
-import { PeriodicReportFragment } from './PeriodicReport.generated';
+import { PeriodicReportFragment } from './PeriodicReport.graphql';
 import { PeriodicReportsTable, ReportRow } from './PeriodicReportsTable';
 
 const useStyles = makeStyles(({ spacing, breakpoints }) => ({

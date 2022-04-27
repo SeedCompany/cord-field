@@ -3,49 +3,43 @@ import compression from 'compression';
 import cookieParser from 'cookie-parser';
 import express from 'express';
 import helmet from 'helmet';
+import * as path from 'path';
 import responseTime from 'response-time';
-import { LogoutDocument } from '../scenes/Authentication/Logout/logout.generated';
-import {
-  createServerApolloClient,
-  renderServerSideApp,
-} from './renderServerSideApp';
+import { createClient as createApollo } from '~/api/client/createClient';
+import { LogoutDocument } from '../scenes/Authentication/Logout/logout.graphql';
+import { basePathOfUrl, withoutTrailingSlash } from '../util';
+import { renderServerSideApp } from './renderServerSideApp';
+
+const PUBLIC_URL = withoutTrailingSlash(process.env.PUBLIC_URL || '');
+const BASE_PATH = withoutTrailingSlash(basePathOfUrl(PUBLIC_URL));
 
 export const app = express();
+const router: express.Router = BASE_PATH ? express.Router() : app;
+BASE_PATH && app.use(BASE_PATH, router);
 
-app.disable('x-powered-by');
-app.use(compression());
-app.use(
+router.use(compression());
+router.use(
   helmet({
     contentSecurityPolicy: false,
+    hidePoweredBy: true,
   })
 );
-app.use(bodyParser.json());
-app.use(cookieParser());
-
-const withoutEndingSlash = (url: string) =>
-  url.endsWith('/') ? url.slice(0, -1) : url;
-const PUBLIC_URL = process.env.PUBLIC_URL || '';
-const BASE_PATH = withoutEndingSlash(
-  PUBLIC_URL.startsWith('http') ? new URL(PUBLIC_URL).pathname : PUBLIC_URL
-);
+router.use(bodyParser.json());
+router.use(cookieParser());
 
 // Serve static assets
-app.use(
-  BASE_PATH,
-  express.static(process.env.RAZZLE_PUBLIC_DIR!, {
+router.use(
+  express.static(path.resolve(__dirname, 'public'), {
     maxAge: '30 days',
   })
 );
 
 // Send 404 for not found static assets
-app.use(
-  ['/static/*', '/images/*'].map((path) => `${BASE_PATH}${path}`),
-  (req, res) => res.sendStatus(404)
-);
+router.use(['static/*', 'images/*'], (req, res) => res.sendStatus(404));
 
 // Serve Open Search config
 if (process.env.RAZZLE_OPEN_SEARCH === 'true') {
-  app.get(`${BASE_PATH}/opensearch.xml`, (req, res) => {
+  router.get('opensearch.xml', (req, res) => {
     // language=XML
     const xml = `
 <OpenSearchDescription xmlns="http://a9.com/-/spec/opensearch/1.1/">
@@ -63,20 +57,20 @@ if (process.env.RAZZLE_OPEN_SEARCH === 'true') {
   });
 }
 
-app.get('/logout', (req, res, next) => {
-  createServerApolloClient(req, res, {})
+router.get('logout', (req, res, next) => {
+  createApollo({ ssr: { req, res } })
     .mutate({
       mutation: LogoutDocument,
     })
-    .then(() => res.redirect('/login'))
+    .then(() => res.redirect('login'))
     .catch((e) => next(e));
 });
 
-app.use(
+router.use(
   responseTime((_req, res, time) => {
     res.setHeader('X-Response-Time', `${time.toFixed(2)}ms`);
     res.setHeader('Server-Timing', `renderServerSideApp;dur=${time}`);
   })
 );
 
-app.use(renderServerSideApp);
+router.use(renderServerSideApp);

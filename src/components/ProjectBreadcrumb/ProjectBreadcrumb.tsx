@@ -7,7 +7,7 @@ import { Nullable } from '../../util';
 import { Breadcrumb, BreadcrumbProps } from '../Breadcrumb';
 import { Redacted } from '../Redacted';
 import { SensitivityIcon } from '../Sensitivity';
-import { ProjectBreadcrumbFragment } from './ProjectBreadcrumb.generated';
+import { ProjectBreadcrumbFragment } from './ProjectBreadcrumb.graphql';
 
 export interface ProjectBreadcrumbProps extends Partial<BreadcrumbProps> {
   data?: Nullable<ProjectBreadcrumbFragment>;
@@ -31,7 +31,7 @@ export const ProjectBreadcrumb = ({
 
   return (
     <Breadcrumb
-      to={data ? getProjectUrl(data) : '..'} // assume subpage until data loads
+      to={data ? getProjectUrl(data) : undefined}
       LinkProps={{
         underline: data?.name.canRead ? undefined : 'none',
       }}

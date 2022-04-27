@@ -6,7 +6,8 @@ import clsx from 'clsx';
 import React, { FC } from 'react';
 import { useDropzone } from 'react-dropzone';
 import { Helmet } from 'react-helmet-async';
-import { displayProjectStep } from '../../../api';
+import { ProjectStepLabels } from '~/api/schema';
+import { labelFrom } from '~/common';
 import { BudgetOverviewCard } from '../../../components/BudgetOverviewCard';
 import { CardGroup } from '../../../components/CardGroup';
 import { ChangesetPropertyBadge } from '../../../components/Changeset';
@@ -24,9 +25,9 @@ import {
 } from '../../../components/Formatters';
 import { IconButton } from '../../../components/IconButton';
 import { InternshipEngagementListItemCard } from '../../../components/InternshipEngagementListItemCard';
-import { InternshipEngagementListItemFragment } from '../../../components/InternshipEngagementListItemCard/InternshipEngagementListItem.generated';
+import { InternshipEngagementListItemFragment } from '../../../components/InternshipEngagementListItemCard/InternshipEngagementListItem.graphql';
 import { LanguageEngagementListItemCard } from '../../../components/LanguageEngagementListItemCard';
-import { LanguageEngagementListItemFragment } from '../../../components/LanguageEngagementListItemCard/LanguageEngagementListItem.generated';
+import { LanguageEngagementListItemFragment } from '../../../components/LanguageEngagementListItemCard/LanguageEngagementListItem.graphql';
 import { List, useListQuery } from '../../../components/List';
 import { PartnershipSummary } from '../../../components/PartnershipSummary';
 import { PeriodicReportCard } from '../../../components/PeriodicReports';
@@ -40,7 +41,7 @@ import { Many } from '../../../util';
 import { CreateInternshipEngagement } from '../../Engagement/InternshipEngagement/Create/CreateInternshipEngagement';
 import { CreateLanguageEngagement } from '../../Engagement/LanguageEngagement/Create/CreateLanguageEngagement';
 import { useProjectCurrentDirectory, useUploadProjectFiles } from '../Files';
-import { ProjectListQueryVariables } from '../List/projects.generated';
+import { ProjectListQueryVariables } from '../List/projects.graphql';
 import { EditableProjectField, UpdateProjectDialog } from '../Update';
 import { ProjectWorkflowDialog } from '../Update/ProjectWorkflowDialog';
 import { useProjectId } from '../useProjectId';
@@ -49,7 +50,7 @@ import {
   ProjectEngagementListOverviewDocument as EngagementList,
   ProjectOverviewDocument,
   ProjectOverviewFragment,
-} from './ProjectOverview.generated';
+} from './ProjectOverview.graphql';
 import { ProjectPostList } from './ProjectPostList';
 
 type EngagementListItem =
@@ -426,7 +427,7 @@ export const ProjectOverview: FC = () => {
               <ChangesetPropertyBadge
                 current={projectOverviewData?.project}
                 prop="step"
-                labelBy={displayProjectStep}
+                labelBy={labelFrom(ProjectStepLabels)}
               >
                 <DataButton
                   loading={!projectOverviewData}
@@ -437,7 +438,9 @@ export const ProjectOverview: FC = () => {
                     openWorkflow(projectOverviewData.project)
                   }
                 >
-                  {displayProjectStep(projectOverviewData?.project.step.value)}
+                  {labelFrom(ProjectStepLabels)(
+                    projectOverviewData?.project.step.value
+                  )}
                 </DataButton>
               </ChangesetPropertyBadge>
             </Grid>
@@ -546,12 +549,21 @@ export const ProjectOverview: FC = () => {
               </Typography>
             </Grid>
             <Grid item>
-              {engagements.data?.canCreate && (
-                <Tooltip title={`Add ${engagementTypeLabel} Engagement`}>
+              {(!engagements.data || engagements.data.canCreate) && (
+                <Tooltip
+                  title={
+                    engagementTypeLabel
+                      ? `Add ${engagementTypeLabel} Engagement`
+                      : ''
+                  }
+                >
                   <Fab
                     color="error"
-                    aria-label={`Add ${engagementTypeLabel} Engagement`}
+                    aria-label={`Add ${
+                      engagementTypeLabel ? engagementTypeLabel + ' ' : ''
+                    }Engagement`}
                     onClick={createEngagement}
+                    loading={!engagements.data}
                   >
                     <Add />
                   </Fab>

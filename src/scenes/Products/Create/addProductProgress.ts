@@ -6,7 +6,7 @@ import {
   Storable,
 } from '../../../api';
 import { modifyProgressRelatingToEngagement } from '../ProgressRefsRelatingToEngagement';
-import { CreateDirectScriptureProductMutation as CreateProductMutation } from './CreateProduct.generated';
+import { CreateDirectScriptureProductMutation as CreateProductMutation } from './CreateProduct.graphql';
 
 /**
  * For all related ProgressReports (via Engagement),

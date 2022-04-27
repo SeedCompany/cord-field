@@ -1,6 +1,6 @@
 import { identity } from 'lodash';
 import { ReactNode } from 'react';
-import { ErrorMap, getErrorInfo } from '../../api/error.types';
+import { ErrorMap, getErrorInfo } from '~/api';
 
 export type ErrorRenderers = {
   [Code in keyof ErrorMap]?: ErrorRenderer<ErrorMap[Code]> | undefined;

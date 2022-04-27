@@ -3,11 +3,10 @@ import { makeStyles, Tooltip, Typography } from '@material-ui/core';
 import { pick } from 'lodash';
 import React from 'react';
 import {
-  ApproachMethodologies,
-  displayApproach,
-  displayMethodology,
   ProductMethodology as Methodology,
-} from '../../../../api';
+  ProductApproachLabels,
+} from '~/api/schema';
+import { ApproachMethodologies, displayMethodology } from '~/common';
 import { DefinedFileCard } from '../../../../components/DefinedFileCard';
 import { useDialog } from '../../../../components/Dialog';
 import { DialogForm } from '../../../../components/Dialog/DialogForm';
@@ -17,7 +16,7 @@ import { EnumField, EnumOption } from '../../../../components/form';
 import { PeriodicReportCard } from '../../../../components/PeriodicReports';
 import { entries } from '../../../../util';
 import { UploadLanguageEngagementPnpDocument as UploadPnp } from '../../Files';
-import { ProgressAndPlanningFragment } from './ProgressAndPlanning.generated';
+import { ProgressAndPlanningFragment } from './ProgressAndPlanning.graphql';
 
 export const useStyles = makeStyles(({ spacing, typography }) => ({
   section: {
@@ -106,7 +105,7 @@ export const PlanningSpreadsheet = ({ engagement }: Props) => {
             }).map(([approach, methodologies]) => (
               <div key={approach} className={classes.section}>
                 <Typography className={classes.label}>
-                  {displayApproach(approach)}
+                  {ProductApproachLabels[approach]}
                 </Typography>
                 {methodologies.map((option: Methodology) => (
                   <EnumOption

@@ -1,12 +1,13 @@
 import { Breadcrumbs, Grid, makeStyles, Typography } from '@material-ui/core';
 import { DateRange } from '@material-ui/icons';
-import React, { FC } from 'react';
+import React from 'react';
 import { Helmet } from 'react-helmet-async';
-import { displayEngagementStatus, displayInternPosition } from '../../../api';
-import { Breadcrumb } from '../../../components/Breadcrumb';
+import { EngagementStatusLabels, InternshipPositionLabels } from '~/api/schema';
+import { labelFrom } from '~/common';
 import { DataButton } from '../../../components/DataButton';
 import { DefinedFileCard } from '../../../components/DefinedFileCard';
 import { useDialog } from '../../../components/Dialog';
+import { EngagementBreadcrumb } from '../../../components/EngagementBreadcrumb';
 import { FieldOverviewCard } from '../../../components/FieldOverviewCard';
 import { FileActionsContextProvider } from '../../../components/files/FileActions';
 import {
@@ -28,7 +29,7 @@ import {
   Engagement,
 } from '../EditEngagement/EditEngagementDialog';
 import { EngagementWorkflowDialog } from '../EditEngagement/EngagementWorkflowDialog';
-import { EngagementQuery } from '../Engagement.generated';
+import { EngagementQuery } from '../Engagement.graphql';
 import { UploadInternshipEngagementGrowthPlanDocument } from '../Files';
 import { MentorCard } from './MentorCard';
 
@@ -54,10 +55,7 @@ const useStyles = makeStyles(
   })
 );
 
-export const InternshipEngagementDetail: FC<EngagementQuery> = ({
-  project,
-  engagement,
-}) => {
+export const InternshipEngagementDetail = ({ engagement }: EngagementQuery) => {
   const classes = useStyles();
 
   const [editState, show, editField] =
@@ -76,7 +74,7 @@ export const InternshipEngagementDetail: FC<EngagementQuery> = ({
     <>
       <Helmet
         title={`${name ?? 'An Engagement'} in ${
-          project.name.value ?? 'a project'
+          engagement.project.name.value ?? 'a project'
         }`}
       />
       <div className={classes.root}>
@@ -89,15 +87,8 @@ export const InternshipEngagementDetail: FC<EngagementQuery> = ({
         >
           <Grid item>
             <Breadcrumbs>
-              <ProjectBreadcrumb data={project} />
-              {name ? (
-                <Breadcrumb to=".">{name}</Breadcrumb>
-              ) : (
-                <Redacted
-                  info="You do not have permission to view this engagement's name"
-                  width={200}
-                />
-              )}
+              <ProjectBreadcrumb data={engagement.project} />
+              <EngagementBreadcrumb data={engagement} />
             </Breadcrumbs>
           </Grid>
           <Grid item container spacing={3} alignItems="center">
@@ -120,7 +111,10 @@ export const InternshipEngagementDetail: FC<EngagementQuery> = ({
                 </Typography>
               </Grid>
               <Grid item>
-                <DeleteEngagement project={project} engagement={engagement} />
+                <DeleteEngagement
+                  project={engagement.project}
+                  engagement={engagement}
+                />
               </Grid>
             </Grid>
             <Grid item container spacing={3} alignItems="center">
@@ -140,7 +134,7 @@ export const InternshipEngagementDetail: FC<EngagementQuery> = ({
                   secured={engagement.status}
                   redacted="You do not have permission to view the engagement's status"
                   onClick={() => openWorkflow(engagement)}
-                  children={displayEngagementStatus}
+                  children={labelFrom(EngagementStatusLabels)}
                 />
               </Grid>
               <Grid item>
@@ -158,7 +152,7 @@ export const InternshipEngagementDetail: FC<EngagementQuery> = ({
                   secured={engagement.position}
                   empty="Enter Intern Position"
                   redacted="You do not have permission to view intern position"
-                  children={displayInternPosition}
+                  children={labelFrom(InternshipPositionLabels)}
                   onClick={() => show('position')}
                 />
               </Grid>

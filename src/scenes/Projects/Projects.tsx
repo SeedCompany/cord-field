@@ -1,14 +1,12 @@
 import loadable from '@loadable/component';
 import React from 'react';
-import { Route, Routes } from 'react-router-dom';
+import { Route, Routes, useLocation } from 'react-router-dom';
+import { ChangesetContext } from '../../components/Changeset';
 import { NotFoundRoute } from '../../components/Error';
 import { Navigate } from '../../components/Routing';
 import { useBetaFeatures } from '../../components/Session';
-import { ProjectDetailWrapper } from './DetailWrapper/DetailWrapper';
+import { splicePath } from '../../util';
 
-const Engagements = loadable(() => import('../Engagement'), {
-  resolveComponent: (m) => m.Engagements,
-});
 const PartnershipList = loadable(() => import('../Partnerships/List'), {
   resolveComponent: (m) => m.PartnershipList,
 });
@@ -50,7 +48,7 @@ export const Projects = () => (
 );
 
 const ProjectDetails = () => (
-  <ProjectDetailWrapper>
+  <ChangesetContext>
     <Routes>
       <Route path="" element={<ProjectOverview />} />
       <Route path="files/*" element={<Files />} />
@@ -72,5 +70,9 @@ const ProjectDetails = () => (
       />
       {NotFoundRoute}
     </Routes>
-  </ProjectDetailWrapper>
+  </ChangesetContext>
+);
+
+const Engagements = () => (
+  <Navigate replace permanent to={splicePath(useLocation(), 1, 2)} />
 );

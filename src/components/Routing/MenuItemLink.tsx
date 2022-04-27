@@ -1,5 +1,5 @@
 import { MenuItem, MenuItemProps } from '@material-ui/core';
-import React, { forwardRef, Ref } from 'react';
+import React, { forwardRef } from 'react';
 import { Link, LinkProps } from 'react-router-dom';
 import { assert } from 'ts-essentials';
 import { Merge } from 'type-fest';
@@ -34,13 +34,7 @@ export const MenuItemLink = forwardRef<HTMLAnchorElement, MenuItemLinkProps>(
     }
 
     return (
-      <MenuItem
-        {...props}
-        to={to}
-        button
-        ref={ref as Ref<HTMLLIElement>}
-        component={Link as any}
-      >
+      <MenuItem {...props} to={to} button ref={ref} component={Link}>
         {children}
       </MenuItem>
     );

@@ -7,8 +7,8 @@ import {
   Typography,
 } from '@material-ui/core';
 import React from 'react';
-import { displayProductStep, ProgressMeasurement } from '../../../../api';
-import { StepProgressFragment } from './ProductProgress.generated';
+import { ProductStepLabels, ProgressMeasurement } from '~/api/schema';
+import { StepProgressFragment } from './ProductProgress.graphql';
 import { ProgressIcon } from './ProgressIcon';
 
 const useStyles = makeStyles(({ spacing }) => ({
@@ -48,7 +48,7 @@ export const StepProgress = ({
               className={classes.infoArea}
             >
               <Grid item component={Typography} variant="h4">
-                {displayProductStep(step)}
+                {ProductStepLabels[step]}
               </Grid>
               <Grid item component={Typography} variant="body2">
                 {!completed.canRead

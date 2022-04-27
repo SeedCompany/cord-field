@@ -1,0 +1,69 @@
+query ProgressReportDetail($id: ID!, $changesetId: ID) {
+  periodicReport(id: $id, changeset: $changesetId) {
+    ...ProgressReport
+    parent {
+      ...EngagementBreadcrumb
+    }
+  }
+}
+
+fragment ProgressReport on ProgressReport {
+  ...PeriodicReport
+  cumulativeSummary {
+    ...ProgressSummary
+  }
+  progress {
+    ...ProgressOfProductForReport
+  }
+}
+
+fragment ProgressSummary on ProgressSummary {
+  actual
+  planned
+  variance
+}
+
+fragment ProgressOfProductForReport on ProductProgress {
+  product {
+    ...ProductInfoForProgressReport
+  }
+  report {
+    ...Id
+  }
+  steps {
+    step
+    completed {
+      canRead
+      value
+      canEdit
+    }
+  }
+}
+
+fragment ProductInfoForProgressReport on Product {
+  ...Id
+  label
+  category
+  steps {
+    value
+  }
+  availableSteps
+  progressStepMeasurement {
+    value
+  }
+  progressTarget {
+    value
+  }
+  ... on DirectScriptureProduct {
+    scriptureReferences {
+      value {
+        ...Scripture
+      }
+    }
+    unspecifiedScripture {
+      value {
+        book
+      }
+    }
+  }
+}

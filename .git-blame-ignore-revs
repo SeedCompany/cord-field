@@ -12,3 +12,6 @@
 609660bc46d8a6385703afbc9def02fa463e3ce6
 00ed3389b3142ca779c72a58bbbda749201dc7ef
 70b0a3ca3fa99b70adfb71877c014dd8777b3771
+
+# import change .generated.ts -> .graphql.ts
+8854b7414afc0f646c094ddd9b8bba403d62a02a

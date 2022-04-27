@@ -19,7 +19,7 @@ import {
 } from 'react-final-form';
 import { Except, Promisable } from 'type-fest';
 import { ErrorHandlers, handleFormError, inChangesetVar } from '../../api';
-import { ChangesetModificationWarning } from '../Changeset';
+import { ChangesetModificationWarning } from '../Changeset/ChangesetModificationWarning';
 import {
   blurOnSubmit,
   FieldGroup,

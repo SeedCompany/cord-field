@@ -1,7 +1,7 @@
 import { useQuery } from '@apollo/client';
 import { useParams } from 'react-router-dom';
 import { useProjectId } from '../useProjectId';
-import { ProjectRootDirectoryDocument } from './ProjectFiles.generated';
+import { ProjectRootDirectoryDocument } from './ProjectFiles.graphql';
 
 export const useProjectCurrentDirectory = () => {
   const { projectId, changesetId } = useProjectId();

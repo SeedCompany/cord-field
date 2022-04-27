@@ -5,9 +5,9 @@ import {
 } from './FormattedTextField';
 import { isLength } from './validators';
 
-interface AlphaFieldProps extends FormattedTextFieldProps {
+type AlphaFieldProps = FormattedTextFieldProps & {
   chars: number;
-}
+};
 
 export const AlphaField = ({ chars, ...props }: AlphaFieldProps) => (
   <FormattedTextField

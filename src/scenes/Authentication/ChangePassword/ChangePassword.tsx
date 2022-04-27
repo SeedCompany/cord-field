@@ -10,7 +10,7 @@ import {
   DialogFormProps,
 } from '../../../components/Dialog/DialogForm';
 import { PasswordField, SubmitError } from '../../../components/form';
-import { ChangePasswordDocument } from './ChangePassword.generated';
+import { ChangePasswordDocument } from './ChangePassword.graphql';
 
 type ChangePasswordProps = Except<
   DialogFormProps<ChangePasswordFields>,

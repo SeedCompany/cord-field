@@ -9,12 +9,13 @@ import { Skeleton } from '@material-ui/lab';
 import clsx from 'clsx';
 import { FC } from 'react';
 import * as React from 'react';
-import { displayLocationType } from '../../api';
+import { LocationTypeLabels } from '~/api/schema';
+import { labelFrom } from '~/common';
 import { FormattedDateTime } from '../Formatters';
 import { ProgressButton } from '../ProgressButton';
 import { Redacted } from '../Redacted';
 import { ButtonLink, CardActionAreaLink } from '../Routing';
-import { LocationCardFragment } from './LocationCard.generated';
+import { LocationCardFragment } from './LocationCard.graphql';
 
 const useStyles = makeStyles(({ spacing }) => {
   return {
@@ -69,7 +70,7 @@ export const LocationCard: FC<LocationCardProps> = ({
             {loading ? (
               <Skeleton width="25%" />
             ) : locationType?.canRead === true ? (
-              displayLocationType(locationType.value)
+              labelFrom(LocationTypeLabels)(locationType.value)
             ) : (
               <Redacted
                 info="You don't have permission to view this location's type"

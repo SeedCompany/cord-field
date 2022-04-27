@@ -19,21 +19,14 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v2
-      - uses: actions/setup-node@v1
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
         with:
           node-version: 16
-
-      - name: Yarn cache
-        uses: actions/cache@v1
-        id: yarn-cache
-        with:
-          path: node_modules
-          key: ${{ runner.os }}-yarn-${{ hashFiles('yarn.lock') }}-${{ hashFiles('.yarnrc.yml') }}
+          cache: yarn
 
       - name: Install dependencies
-        run: yarn install --immutable
-        if: steps.yarn-cache.outputs.cache-hit != 'true'
+        run: yarn install && yarn dedupe --check
 
       - name: Match API PR
         uses: actions-ecosystem/action-regex-match@v2

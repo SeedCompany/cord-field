@@ -1,11 +1,13 @@
 /* eslint-disable @typescript-eslint/no-var-requires,@typescript-eslint/no-require-imports */
 const LoadablePlugin = require('@loadable/webpack-plugin');
+const CircularDependencyPlugin = require('circular-dependency-plugin');
 const _ = require('lodash');
 const path = require('path');
 const { BundleAnalyzerPlugin } = require('webpack-bundle-analyzer');
-const CircularDependencyPlugin = require('circular-dependency-plugin');
+const DynamicPublicPathPlugin = require('webpack-dynamic-public-path');
 
 const modifyWebpackConfig = (opts) => {
+  /** @type {webpack.Configuration} */
   const config = opts.webpackConfig;
   const { target } = opts.env;
   const isClient = target === 'web';
@@ -30,9 +32,12 @@ const modifyWebpackConfig = (opts) => {
       })
     );
   } else {
-    define('process.env.LOADABLE_STATS_MANIFEST', opts.env.dev
-      ? `require('path').resolve('build/loadable-stats.json')`
-      : `__dirname + '/loadable-stats.json'`);
+    define(
+      'process.env.LOADABLE_STATS_MANIFEST',
+      opts.env.dev
+        ? `require('path').resolve('build/loadable-stats.json')`
+        : `__dirname + '/loadable-stats.json'`
+    );
   }
 
   // define server port to listen on that may be different than the actual exposed port
@@ -53,11 +58,14 @@ const modifyWebpackConfig = (opts) => {
         context: () => true,
         target: `http://localhost:${process.env.SERVER_PORT}`,
       };
-      config.devServer.index = '';
+      config.devServer.devMiddleware.index = '';
+      config.devServer.devMiddleware.stats = false;
+      _.set(config, ['infrastructureLogging', 'level'], 'warn');
 
       // Ignore proxy created log message on start to reduce clutter & prevent
       // confusion with ports.
-      const proxyLogger = require('http-proxy-middleware/lib/logger').getInstance();
+      const proxyLogger =
+        require('http-proxy-middleware/dist/logger').getInstance();
       const origInfo = proxyLogger.info;
       proxyLogger.info = function (...args) {
         if (
@@ -73,6 +81,15 @@ const modifyWebpackConfig = (opts) => {
   } else if (isServer) {
     // convert SERVER_PORT usage to just PORT since only a single port is used
     define('process.env.SERVER_PORT', 'process.env.PORT');
+  }
+
+  // Change public path to be dynamic based on PUBLIC_URL env
+  if (!opts.env.dev && isClient) {
+    config.plugins.push(
+      new DynamicPublicPathPlugin({
+        externalPublicPath: 'window.env.PUBLIC_URL',
+      })
+    );
   }
 
   if (isClient && process.argv.includes('--analyze')) {
@@ -113,7 +130,24 @@ const modifyWebpackConfig = (opts) => {
   }
 
   // Exclude .cjs files from FileLoader. They should be loaded like other js files.
-  config.module.rules[1].exclude.push(/\.cjs$/);
+  opts.options.webpackOptions.fileLoaderExclude.push(/\.cjs$/);
+
+  // Move cache out of node_modules
+  const terser = opts.webpackConfig.optimization.minimizer?.find(
+    (plugin) => plugin.constructor.name === 'TerserPlugin'
+  );
+  if (terser) {
+    terser.options.cache = 'cache/terser-webpack-plugin';
+  }
+
+  return config;
+};
+
+const modifyJestConfig = (opts) => {
+  /** @type {import('@jest/types').Config.InitialOptions} */
+  const config = opts.jestConfig;
+
+  config.moduleNameMapper['~/(.+)'] = '<rootDir>/src/$1';
 
   return config;
 };
@@ -125,4 +159,5 @@ module.exports = {
     forceRuntimeEnvVars: ['HOST', 'PORT', 'PUBLIC_URL', 'RAZZLE_API_BASE_URL'],
   },
   modifyWebpackConfig,
+  modifyJestConfig,
 };

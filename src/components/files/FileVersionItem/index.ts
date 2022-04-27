@@ -1,2 +1,2 @@
 export * from './FileVersionItem';
-export * from './FileVersionItem.generated';
+export * from './FileVersionItem.graphql';

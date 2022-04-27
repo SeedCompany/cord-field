@@ -8,7 +8,7 @@ import {
   LanguageFormProps,
   LanguageFormValues,
 } from '../LanguageForm';
-import { UpdateLanguageDocument } from './EditLanguage.generated';
+import { UpdateLanguageDocument } from './EditLanguage.graphql';
 
 export type EditLanguageProps = Except<
   LanguageFormProps<LanguageFormValues<UpdateLanguage>>,
@@ -43,10 +43,7 @@ export const EditLanguage = (props: EditLanguageProps) => {
               signLanguageCode: language.signLanguageCode.value,
               sensitivity: language.sensitivity,
               sponsorEstimatedEndFY:
-                language.sponsorEstimatedEndDate.value &&
-                CalendarDate.toFiscalYear(
-                  language.sponsorEstimatedEndDate.value
-                ),
+                language.sponsorEstimatedEndDate.value?.fiscalYear,
               hasExternalFirstScripture:
                 language.hasExternalFirstScripture.value,
             },

@@ -3,10 +3,11 @@ import React from 'react';
 import { Merge } from 'type-fest';
 import {
   CreateLocation,
-  displayLocationType,
+  LocationTypeLabels,
   LocationTypeList,
   UpdateLocation,
-} from '../../../api';
+} from '~/api/schema';
+import { labelFrom } from '~/common';
 import {
   DialogForm,
   DialogFormProps,
@@ -22,7 +23,7 @@ import {
   FundingAccountField,
   FundingAccountLookupItem,
 } from '../../../components/form/Lookup/FundingAccount';
-import { LocationFormFragment } from './LocationForm.generated';
+import { LocationFormFragment } from './LocationForm.graphql';
 
 export interface LocationFormValues<
   CreateOrUpdateType extends CreateLocation | UpdateLocation
@@ -74,7 +75,7 @@ export const LocationForm = <CreateOrUpdateInput, R extends any>({
             <SelectField
               label="Type"
               options={LocationTypeList}
-              getOptionLabel={displayLocationType}
+              getOptionLabel={labelFrom(LocationTypeLabels)}
               defaultValue={LocationTypeList[0]}
               required
               margin="none"

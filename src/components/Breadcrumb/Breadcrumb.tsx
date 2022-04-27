@@ -7,32 +7,34 @@ import { useMatch } from 'react-router-dom';
 import { Link, LinkProps } from '../Routing';
 
 export interface BreadcrumbProps {
-  to: To;
+  to?: To;
   LinkProps?: Partial<LinkProps>;
   children?: ReactNode;
   className?: string;
   style?: React.CSSProperties;
 }
 
-export const Breadcrumb = forwardRef<HTMLAnchorElement, BreadcrumbProps>(
-  ({ to, children, LinkProps, ...rest }, ref) => {
-    const active =
-      useMatch(isString(to) ? to : to.pathname!) ||
-      // RR doesn't think current page is active. maybe a bug?
-      to === '.';
+export const Breadcrumb = forwardRef<
+  HTMLAnchorElement | HTMLElement,
+  BreadcrumbProps
+>(({ to, children, LinkProps, ...rest }, ref) => {
+  const active =
+    useMatch(to == null ? '' : isString(to) ? to : to.pathname!) ||
+    // RR doesn't think current page is active. maybe a bug?
+    to === '.';
 
-    if (active) {
-      return (
-        <Typography ref={ref} variant="h4" {...rest}>
-          {children}
-        </Typography>
-      );
-    } else {
-      return (
-        <Link variant="h4" to={to} {...LinkProps} {...rest} ref={ref}>
-          {children}
-        </Link>
-      );
-    }
+  if (to == null || active) {
+    return (
+      <Typography variant="h4" {...rest} ref={ref}>
+        {children}
+      </Typography>
+    );
+  } else {
+    return (
+      // @ts-expect-error idk man, yeah it's compatible
+      <Link variant="h4" to={to} {...LinkProps} {...rest} ref={ref as any}>
+        {children}
+      </Link>
+    );
   }
-);
+});

@@ -2,11 +2,11 @@ import { useMutation } from '@apollo/client';
 import { Tooltip, Typography } from '@material-ui/core';
 import { DeleteOutline } from '@material-ui/icons';
 import * as React from 'react';
+import { removeItemFromList } from '~/api';
 import {
   Id_InternshipProject_Fragment as InternshipProjectIdFragment,
-  removeItemFromList,
   Id_TranslationProject_Fragment as TranslationProjectIdFragment,
-} from '../../../api';
+} from '~/common/fragments';
 import { useDialog } from '../../../components/Dialog';
 import { DialogForm } from '../../../components/Dialog/DialogForm';
 import { SubmitError } from '../../../components/form';
@@ -17,7 +17,7 @@ import { recalculateSensitivity } from '../LanguageEngagement/Create/recalculate
 import {
   DeleteEngagementDocument,
   EngagementToDeleteFragment,
-} from './DeleteEngagement.generated';
+} from './DeleteEngagement.graphql';
 
 type ProjectIdFragment =
   | TranslationProjectIdFragment

@@ -10,7 +10,7 @@ import { CalendarDate } from '../../../util';
 import {
   PartnershipToCheckBudgetChangeFragment,
   ProjectsBudgetForPartnershipChangeFragmentDoc as ProjectsBudget,
-} from './ProjectsBudget.generated';
+} from './ProjectsBudget.graphql';
 
 type Project = Pick<ProjectShape, 'id'>;
 type Partnership = PartnershipToCheckBudgetChangeFragment | undefined;

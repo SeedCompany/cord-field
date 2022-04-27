@@ -1,9 +1,10 @@
 import { useQuery } from '@apollo/client';
 import { ToggleButton } from '@material-ui/lab';
 import React, { useEffect } from 'react';
-import { displayProductStep } from '../../../api';
+import { ProductStepLabels } from '~/api/schema';
+import { labelFrom } from '~/common';
 import { EnumField } from '../../../components/form';
-import { AvailableProductStepsDocument as AvailableSteps } from './ProductForm.generated';
+import { AvailableProductStepsDocument as AvailableSteps } from './ProductForm.graphql';
 import { SectionProps } from './ProductFormFields';
 import { SecuredAccordion } from './SecuredAccordion';
 
@@ -44,7 +45,7 @@ export const StepsSection = ({
       renderCollapsed={() =>
         steps?.map((step) => (
           <ToggleButton selected key={step} value={step}>
-            {displayProductStep(step)}
+            {ProductStepLabels[step]}
           </ToggleButton>
         ))
       }
@@ -54,7 +55,7 @@ export const StepsSection = ({
           {...props}
           multiple
           options={availableSteps}
-          getLabel={displayProductStep}
+          getLabel={labelFrom(ProductStepLabels)}
           variant="toggle-split"
         />
       )}

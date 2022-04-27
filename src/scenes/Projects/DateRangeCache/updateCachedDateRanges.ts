@@ -1,12 +1,12 @@
 import { ApolloCache } from '@apollo/client';
 import { DeepPartial } from 'ts-essentials';
-import { invalidateProps, Project as ProjectShape } from '../../../api';
-import { SecuredDateRangeFragment } from '../../../api/fragments/secured.generated';
-import { updateFragment } from '../../../api/updateFragment';
+import { invalidateProps, updateFragment } from '~/api';
+import { Project as ProjectShape } from '~/api/schema';
+import { SecuredDateRangeFragment } from '~/common';
 import {
   ProjectCachedEngagementDateRangesFragmentDoc,
   ProjectCachedPartnershipDateRangesFragmentDoc,
-} from './CachedProjectDateRanges.generated';
+} from './CachedProjectDateRanges.graphql';
 
 type Project = Pick<ProjectShape, 'id'>;
 type SecuredDateRange = DeepPartial<SecuredDateRangeFragment>;
@@ -34,7 +34,13 @@ export const updateEngagementDateRanges = (
 
         // Invalidate progress reports as well. These can just be re-fetched when needed.
         if (eng.__typename === 'LanguageEngagement') {
-          invalidateProps(cache, eng, 'progressReports');
+          invalidateProps(
+            cache,
+            eng,
+            'progressReports',
+            'currentProgressReportDue',
+            'nextProgressReportDue'
+          );
         }
       }
     },

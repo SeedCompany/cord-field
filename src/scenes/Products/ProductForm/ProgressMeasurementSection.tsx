@@ -1,7 +1,7 @@
 import { ToggleButton } from '@material-ui/lab';
 import React from 'react';
-import { displayProgressMeasurement } from '../../../api';
-import { ProgressMeasurement } from '../../../api/schema.generated';
+import { ProgressMeasurement, ProgressMeasurementLabels } from '~/api/schema';
+import { labelFrom } from '~/common';
 import { EnumField } from '../../../components/form';
 import { SectionProps } from './ProductFormFields';
 import { SecuredAccordion } from './SecuredAccordion';
@@ -30,7 +30,7 @@ export const ProgressMeasurementSection = ({
       renderCollapsed={() =>
         progressStepMeasurement && (
           <ToggleButton selected value={progressStepMeasurement}>
-            {displayProgressMeasurement(progressStepMeasurement)}
+            {ProgressMeasurementLabels[progressStepMeasurement]}
           </ToggleButton>
         )
       }
@@ -39,7 +39,7 @@ export const ProgressMeasurementSection = ({
         <EnumField
           required
           options={measurementOptions}
-          getLabel={displayProgressMeasurement}
+          getLabel={labelFrom(ProgressMeasurementLabels)}
           variant="toggle-split"
           {...props}
         />

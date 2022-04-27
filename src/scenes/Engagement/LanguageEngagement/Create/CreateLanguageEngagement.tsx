@@ -1,11 +1,11 @@
 import { useMutation } from '@apollo/client';
 import React from 'react';
 import { Except } from 'type-fest';
+import { addItemToList } from '~/api';
 import {
-  addItemToList,
   Id_InternshipProject_Fragment as InternshipProjectIdFragment,
   Id_TranslationProject_Fragment as TranslationProjectIdFragment,
-} from '../../../../api';
+} from '~/common/fragments';
 import {
   DialogForm,
   DialogFormProps,
@@ -16,7 +16,7 @@ import {
   LanguageLookupItem,
 } from '../../../../components/form/Lookup';
 import { callAll } from '../../../../util';
-import { CreateLanguageEngagementDocument } from './CreateLanguageEngagement.generated';
+import { CreateLanguageEngagementDocument } from './CreateLanguageEngagement.graphql';
 import { recalculateSensitivity } from './recalculateSensitivity';
 
 interface CreateLanguageEngagementFormValues {

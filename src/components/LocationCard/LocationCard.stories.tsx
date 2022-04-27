@@ -3,7 +3,7 @@ import { DateTime } from 'luxon';
 import React from 'react';
 import { LocationTypeList } from '../../api';
 import { LocationCard as Card } from './LocationCard';
-import { LocationCardFragment } from './LocationCard.generated';
+import { LocationCardFragment } from './LocationCard.graphql';
 
 export default { title: 'Components' };
 

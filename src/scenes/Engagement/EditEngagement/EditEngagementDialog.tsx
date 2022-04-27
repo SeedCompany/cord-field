@@ -3,16 +3,19 @@ import { setIn } from 'final-form';
 import { compact, keyBy, pick, startCase } from 'lodash';
 import React, { ComponentType, FC, useMemo } from 'react';
 import { Except, Merge } from 'type-fest';
+import { invalidateProps } from '~/api';
 import {
-  displayInternDomain,
-  displayInternPosition,
-  displayInternProgram,
-  invalidateProps,
-  MethodologyToApproach,
+  InternshipDomainLabels,
+  InternshipPositionLabels,
+  InternshipProgramLabels,
   UpdateInternshipEngagement,
   UpdateLanguageEngagement,
-} from '../../../api';
-import { DisplayLocationFragment } from '../../../api/fragments/location.generated';
+} from '~/api/schema';
+import {
+  DisplayLocationFragment,
+  labelFrom,
+  MethodologyToApproach,
+} from '~/common';
 import {
   DialogForm,
   DialogFormProps,
@@ -28,14 +31,14 @@ import {
 } from '../../../components/form';
 import { AutocompleteField } from '../../../components/form/AutocompleteField';
 import { LocationField, UserField } from '../../../components/form/Lookup';
-import { UserLookupItemFragment } from '../../../components/form/Lookup/User/UserLookup.generated';
+import { UserLookupItemFragment } from '../../../components/form/Lookup/User/UserLookup.graphql';
 import { ExtractStrict, many, Many } from '../../../util';
-import { InternshipEngagementDetailFragment as InternshipEngagement } from '../InternshipEngagement/InternshipEngagement.generated';
-import { LanguageEngagementDetailFragment as LanguageEngagement } from '../LanguageEngagement/LanguageEngagementDetail.generated';
+import { InternshipEngagementDetailFragment as InternshipEngagement } from '../InternshipEngagement/InternshipEngagement.graphql';
+import { LanguageEngagementDetailFragment as LanguageEngagement } from '../LanguageEngagement/LanguageEngagementDetail.graphql';
 import {
   UpdateInternshipEngagementDocument,
   UpdateLanguageEngagementDocument,
-} from './EditEngagementDialog.generated';
+} from './EditEngagementDialog.graphql';
 
 export type Engagement = InternshipEngagement | LanguageEngagement;
 
@@ -119,11 +122,11 @@ const fieldMapping: Record<
         groupBy={(p) => {
           const option = groups[p];
           return compact([
-            displayInternProgram(option?.program),
-            displayInternDomain(option?.domain),
+            labelFrom(InternshipProgramLabels)(option?.program),
+            labelFrom(InternshipDomainLabels)(option?.domain),
           ]).join(' - ');
         }}
-        getOptionLabel={displayInternPosition}
+        getOptionLabel={labelFrom(InternshipPositionLabels)}
       />
     );
   },

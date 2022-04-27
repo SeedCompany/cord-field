@@ -1,9 +1,9 @@
 import { useApolloClient, useMutation } from '@apollo/client';
-import { CircularProgress } from '@material-ui/core';
 import * as React from 'react';
 import { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { LogoutDocument } from './logout.generated';
+import { AuthWaiting } from '../AuthWaiting';
+import { LogoutDocument } from './logout.graphql';
 
 export const Logout = () => {
   const navigate = useNavigate();
@@ -19,5 +19,5 @@ export const Logout = () => {
       });
   }, [logout, client, navigate]);
 
-  return <CircularProgress />;
+  return <AuthWaiting />;
 };

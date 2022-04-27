@@ -7,13 +7,14 @@ import {
   Typography,
 } from '@material-ui/core';
 import clsx from 'clsx';
-import { startCase } from 'lodash';
 import * as React from 'react';
-import { displayEngagementStatus } from '../../api';
+import { EngagementStatusLabels, InternshipPositionLabels } from '~/api/schema';
+import { labelFrom } from '~/common';
+import { idForUrl } from '../Changeset';
 import { DisplaySimpleProperty } from '../DisplaySimpleProperty';
 import { FormattedDate } from '../Formatters';
 import { ButtonLink, CardActionAreaLink } from '../Routing';
-import { InternshipEngagementListItemFragment } from './InternshipEngagementListItem.generated';
+import { InternshipEngagementListItemFragment } from './InternshipEngagementListItem.graphql';
 
 const useStyles = makeStyles(({ spacing }) => ({
   root: {
@@ -68,7 +69,7 @@ export const InternshipEngagementListItemCard = (
   return (
     <Card className={clsx(classes.root, props.className)}>
       <CardActionAreaLink
-        to={`engagements/${props.id}`}
+        to={`/engagements/${idForUrl(props)}`}
         className={classes.card}
       >
         <Grid
@@ -85,7 +86,9 @@ export const InternshipEngagementListItemCard = (
           {(country || position) && (
             <Grid item>
               {position && (
-                <Typography variant="body2">{startCase(position)}</Typography>
+                <Typography variant="body2">
+                  {InternshipPositionLabels[position]}
+                </Typography>
               )}
               {country && (
                 <Typography variant="body2" color="primary">
@@ -97,7 +100,7 @@ export const InternshipEngagementListItemCard = (
           <Grid item>
             <DisplaySimpleProperty
               label="Status"
-              value={displayEngagementStatus(props.status.value)}
+              value={labelFrom(EngagementStatusLabels)(props.status.value)}
             />
           </Grid>
           {endDate ? (
@@ -112,7 +115,7 @@ export const InternshipEngagementListItemCard = (
         </Grid>
       </CardActionAreaLink>
       <CardActions>
-        <ButtonLink to={`engagements/${props.id}`} color="primary">
+        <ButtonLink to={`/engagements/${idForUrl(props)}`} color="primary">
           View Details
         </ButtonLink>
       </CardActions>
@@ -125,7 +128,7 @@ const getEndDate = (eng: InternshipEngagementListItemFragment) => {
   const terminal = status !== 'InDevelopment' && status !== 'Active';
   if (terminal && eng.completeDate.value) {
     return {
-      label: displayEngagementStatus(status) + ' Date',
+      label: `${labelFrom(EngagementStatusLabels)(status)} Date`,
       value: eng.completeDate.value,
     };
   }

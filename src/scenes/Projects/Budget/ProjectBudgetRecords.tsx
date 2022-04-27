@@ -2,11 +2,8 @@ import { useApolloClient, useMutation } from '@apollo/client';
 import { sortBy, sumBy } from 'lodash';
 import { Column, Components } from 'material-table';
 import React, { FC, useMemo } from 'react';
-import {
-  onUpdateChangeFragment,
-  readFragment,
-  RecalculateChangesetDiffFragmentDoc as RecalculateChangesetDiff,
-} from '../../../api';
+import { onUpdateChangeFragment, readFragment } from '~/api';
+import { RecalculateChangesetDiffFragmentDoc as RecalculateChangesetDiff } from '~/common/fragments';
 import {
   PropertyDiff,
   useDeletedItemsOfChangeset,
@@ -20,7 +17,7 @@ import {
   CalculateNewTotalFragmentDoc as CalculateNewTotal,
   ProjectBudgetQuery,
   UpdateProjectBudgetRecordDocument,
-} from './ProjectBudget.generated';
+} from './ProjectBudget.graphql';
 
 const tableComponents: Components = {
   // No toolbar since it's just empty space, we don't use it for anything.

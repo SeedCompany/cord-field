@@ -2,11 +2,13 @@
 .*
 !.babelrc
 !.eslintignore
+Dockerfile
 
 # Yarn / NPM
 !.yarnrc.yml
 !.yarn/releases
 !.yarn/plugins
+!.yarn/patches
 node_modules
 
 # Local
@@ -15,3 +17,4 @@ cache
 coverage
 schema.graphql
 *.generated.ts
+*.graphql.ts

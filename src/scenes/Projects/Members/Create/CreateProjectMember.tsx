@@ -3,12 +3,13 @@ import { Decorator } from 'final-form';
 import onFieldChange from 'final-form-calculate';
 import React, { useMemo } from 'react';
 import { Except, Merge } from 'type-fest';
+import { addItemToList } from '~/api';
 import {
-  addItemToList,
   CreateProjectMember as CreateProjectMemberInput,
-  displayRole,
+  RoleLabels,
   RoleList,
-} from '../../../../api';
+} from '~/api/schema';
+import { labelFrom } from '~/common';
 import {
   DialogForm,
   DialogFormProps,
@@ -16,8 +17,8 @@ import {
 import { SubmitError } from '../../../../components/form';
 import { AutocompleteField } from '../../../../components/form/AutocompleteField';
 import { UserField, UserLookupItem } from '../../../../components/form/Lookup';
-import { ProjectMembersQuery } from '../List/ProjectMembers.generated';
-import { CreateProjectMemberDocument } from './CreateProjectMember.generated';
+import { ProjectMembersQuery } from '../List/ProjectMembers.graphql';
+import { CreateProjectMemberDocument } from './CreateProjectMember.graphql';
 
 interface FormValues {
   projectMember: Partial<
@@ -98,7 +99,7 @@ export const CreateProjectMember = ({
               disabled={!canRead || !userRoles}
               multiple
               options={RoleList}
-              getOptionLabel={displayRole}
+              getOptionLabel={labelFrom(RoleLabels)}
               name="roles"
               label="Roles"
               helperText={

@@ -8,12 +8,14 @@ import {
 } from '@material-ui/core';
 import clsx from 'clsx';
 import * as React from 'react';
-import { displayEngagementStatus } from '../../api';
+import { EngagementStatusLabels } from '~/api/schema';
+import { labelFrom } from '~/common';
+import { idForUrl } from '../Changeset';
 import { DisplaySimpleProperty } from '../DisplaySimpleProperty';
 import { useNumberFormatter } from '../Formatters';
 import { PresetInventoryIconFilled } from '../Icons';
 import { ButtonLink, CardActionAreaLink } from '../Routing';
-import { LanguageEngagementListItemFragment } from './LanguageEngagementListItem.generated';
+import { LanguageEngagementListItemFragment } from './LanguageEngagementListItem.graphql';
 
 const useStyles = makeStyles(({ spacing }) => ({
   root: {
@@ -62,14 +64,17 @@ export type LanguageEngagementListItemCardProps =
     className?: string;
   };
 
-export const LanguageEngagementListItemCard = ({
-  id,
-  language: securedLanguage,
-  project,
-  className,
-  status,
-  products,
-}: LanguageEngagementListItemCardProps) => {
+export const LanguageEngagementListItemCard = (
+  props: LanguageEngagementListItemCardProps
+) => {
+  const {
+    language: securedLanguage,
+    project,
+    className,
+    status,
+    products,
+  } = props;
+
   const numberFormatter = useNumberFormatter();
   const classes = useStyles();
 
@@ -81,7 +86,10 @@ export const LanguageEngagementListItemCard = ({
 
   return (
     <Card className={clsx(classes.root, className)}>
-      <CardActionAreaLink to={`engagements/${id}`} className={classes.card}>
+      <CardActionAreaLink
+        to={`/engagements/${idForUrl(props)}`}
+        className={classes.card}
+      >
         <CardContent className={classes.cardContent}>
           <Grid
             container
@@ -119,7 +127,7 @@ export const LanguageEngagementListItemCard = ({
             />
             <DisplaySimpleProperty
               label="Status"
-              value={displayEngagementStatus(status.value)}
+              value={labelFrom(EngagementStatusLabels)(status.value)}
               wrap={(node) => <Grid item>{node}</Grid>}
             />
           </Grid>
@@ -137,7 +145,7 @@ export const LanguageEngagementListItemCard = ({
         </CardContent>
       </CardActionAreaLink>
       <CardActions>
-        <ButtonLink to={`engagements/${id}`} color="primary">
+        <ButtonLink to={`/engagements/${idForUrl(props)}`} color="primary">
           View Details
         </ButtonLink>
       </CardActions>

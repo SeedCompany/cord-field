@@ -6,7 +6,7 @@ import { useNavigate, useSearchParams } from 'react-router-dom';
 import { Except } from 'type-fest';
 import { handleFormError } from '../../../api';
 import { updateSessionCache, useSession } from '../../../components/Session';
-import { RegisterDocument } from './register.generated';
+import { RegisterDocument } from './register.graphql';
 import { RegisterFormProps as Props, RegisterForm } from './RegisterForm';
 
 export const Register = (props: Except<Props, 'onSubmit'>) => {

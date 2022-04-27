@@ -5,16 +5,16 @@ import { Except } from 'type-fest';
 import {
   CreateOrganizationDocument,
   CreateOrganizationMutation,
-} from './CreateOrganization.generated';
+} from './CreateOrganization.graphql';
 import {
   CreateOrganizationForm,
   CreateOrganizationFormProps,
 } from './CreateOrganizationForm';
 
+type SubmitResult =
+  CreateOrganizationMutation['createOrganization']['organization'];
 type CreateOrganizationProps = Except<
-  CreateOrganizationFormProps<
-    CreateOrganizationMutation['createOrganization']['organization']
-  >,
+  CreateOrganizationFormProps<SubmitResult>,
   'onSubmit'
 >;
 
@@ -23,7 +23,7 @@ export const CreateOrganization = (props: CreateOrganizationProps) => {
   const { enqueueSnackbar } = useSnackbar();
 
   return (
-    <CreateOrganizationForm
+    <CreateOrganizationForm<SubmitResult>
       onSuccess={(org) =>
         enqueueSnackbar(`Created organization: ${org.name.value}`, {
           variant: 'success',

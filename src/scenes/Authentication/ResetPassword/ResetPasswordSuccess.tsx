@@ -1,6 +1,7 @@
 import { makeStyles, Typography } from '@material-ui/core';
 import React from 'react';
 import { ButtonLink } from '../../../components/Routing';
+import { AuthContent } from '../AuthContent';
 
 const useStyles = makeStyles(({ spacing }) => ({
   title: {
@@ -11,10 +12,10 @@ const useStyles = makeStyles(({ spacing }) => ({
   },
 }));
 
-export const ResetPasswordSuccess = ({ className }: { className?: string }) => {
+export const ResetPasswordSuccess = () => {
   const classes = useStyles();
   return (
-    <div className={className}>
+    <AuthContent>
       <Typography variant="h3" align="center" className={classes.title}>
         Your Password Has Been Reset
       </Typography>
@@ -31,6 +32,6 @@ export const ResetPasswordSuccess = ({ className }: { className?: string }) => {
       >
         Continue to Log In
       </ButtonLink>
-    </div>
+    </AuthContent>
   );
 };

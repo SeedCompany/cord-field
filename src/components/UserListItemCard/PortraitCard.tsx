@@ -12,7 +12,7 @@ import * as React from 'react';
 import { square } from '../../util';
 import { Avatar } from '../Avatar';
 import { ButtonLink, CardActionAreaLink } from '../Routing';
-import { UserListItemFragment } from './UserListItem.generated';
+import { UserListItemFragment } from './UserListItem.graphql';
 
 const useStyles = makeStyles(({ spacing, typography }) => ({
   root: {

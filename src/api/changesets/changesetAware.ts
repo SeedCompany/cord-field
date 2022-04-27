@@ -1,6 +1,5 @@
 import { Merge } from 'type-fest';
-import { has } from '../../util';
-import { ChangesetIdFragment, IdFragment } from '../fragments';
+import { ChangesetIdFragment, has, IdFragment } from '~/common';
 
 export const hasChangeset = (
   data: IdFragment

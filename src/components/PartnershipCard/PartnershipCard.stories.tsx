@@ -1,11 +1,11 @@
 import { action } from '@storybook/addon-actions';
 import { select, text } from '@storybook/addon-knobs';
 import React from 'react';
-import { FinancialReportingTypeList, PartnershipStatuses } from '../../api';
+import { FinancialReportingTypeList, PartnershipAgreementStatusList } from '~/api/schema';
 import { csv } from '../../util';
 import { date, dateTime } from '../knobs.stories';
 import { PartnershipCard } from './PartnershipCard';
-import { PartnershipCardFragment } from './PartnershipCard.generated';
+import { PartnershipCardFragment } from './PartnershipCard.graphql';
 
 export default { title: 'Components/Partnership Card' };
 
@@ -44,10 +44,10 @@ export const WithData = () => {
       value: csv(text('Types', 'Managing, Funding')),
     },
     mouStatus: {
-      value: select('Mou Status', PartnershipStatuses, 'NotAttached'),
+      value: select('Mou Status', PartnershipAgreementStatusList, 'NotAttached'),
     },
     agreementStatus: {
-      value: select('Mou Status', PartnershipStatuses, 'NotAttached'),
+      value: select('Mou Status', PartnershipAgreementStatusList, 'NotAttached'),
     },
     financialReportingType: {
       value: select(

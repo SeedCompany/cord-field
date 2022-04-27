@@ -29,21 +29,13 @@ fragment UpdateProductResult on Product {
   ...ProductCard
 }
 
-query ProductInfoForEdit(
-  $productId: ID!
-  $projectId: ID!
-  $engagementId: ID!
-  $changeset: ID
-) {
-  project(id: $projectId, changeset: $changeset) {
-    ...ProjectBreadcrumb
-  }
-  engagement(id: $engagementId, changeset: $changeset) {
-    ...EngagementBreadcrumb
-    ...EditPartnershipsProducingMediumsInfo
-  }
-  product(id: $productId) {
+query ProductInfoForEdit($id: ID!, $changesetId: ID) {
+  product(id: $id, changeset: $changesetId) {
     ...ProductForm
+    engagement {
+      ...EngagementBreadcrumb
+      ...EditPartnershipsProducingMediumsInfo
+    }
   }
 }
 

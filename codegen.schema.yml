@@ -1,0 +1,54 @@
+schema:
+  - ${RAZZLE_API_BASE_URL}/graphql:
+      loader: ./src/api/schema/client-schema.graphql-loader.ts
+overwrite: true
+config:
+  # Use `import type` which should be default for TS 3.8+
+  useTypeImports: true
+  # Immutability is great, but Apollo also enforces this at runtime (at least in dev)
+  # so this ensures that invalid code is caught before runtime.
+  immutableTypes: true
+
+generates:
+  # Generate schema file so IDEs can autocomplete graphql documents
+  ./schema.graphql:
+    plugins:
+      - schema-ast
+
+  # Generate fragment matcher for Apollo's caching
+  ./src/api/schema/fragmentMatcher/fragmentMatcher.generated.ts:
+    plugins:
+      - ./src/api/schema/fragmentMatcher/fragmentMatcher.codegen
+
+  # Generate type policies automatically specific to our API
+  ./src/api/schema/typePolicies/typePolicies.generated.ts:
+    plugins:
+      - ./src/api/schema/typePolicies/typePolicies.codegen
+
+  # Generate lists for all of our enums
+  ./src/api/schema/enumLists/enumLists.generated.ts:
+    plugins:
+      - ./src/api/schema/enumLists/enumLists.codegen
+
+  # Generate a type map for all of our GQL object types
+  ./src/api/schema/typeMap/typeMap.generated.ts:
+    plugins:
+      - ./src/api/schema/typeMap/typeMap.codegen
+
+  # Generate TypeScript version of graphql schema
+  ./src/api/schema/schema.graphql.ts:
+    plugins:
+      - typescript
+      - add:
+          placement: prepend
+          content: |
+            import { DateTime } from 'luxon';
+            import { CalendarDate } from '~/util';
+    config:
+      scalars:
+        Date: CalendarDate
+        DateTime: DateTime
+        JSONObject: Record<string, any>
+        URL: string
+      skipTypename: false
+      enumsAsTypes: true

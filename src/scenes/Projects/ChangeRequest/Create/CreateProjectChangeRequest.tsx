@@ -1,24 +1,25 @@
 import { useMutation } from '@apollo/client';
 import React from 'react';
 import { Except } from 'type-fest';
+import { addItemToList } from '~/api';
 import {
-  addItemToList,
   CreateProjectChangeRequestInput,
-  displayProjectChangeRequestType,
+  ProjectChangeRequestTypeLabels,
   ProjectChangeRequestTypeList,
-} from '../../../../api';
+} from '~/api/schema';
+import { labelFrom } from '~/common';
 import {
   DialogForm,
   DialogFormProps,
 } from '../../../../components/Dialog/DialogForm';
 import { SubmitError, TextField } from '../../../../components/form';
 import { AutocompleteField } from '../../../../components/form/AutocompleteField';
-import { ProjectOverviewQuery } from '../../Overview/ProjectOverview.generated';
+import { ProjectOverviewQuery } from '../../Overview/ProjectOverview.graphql';
 import { ProjectChangeRequestListQuery as ListQuery } from '../List';
 import {
   CreateProjectChangeRequestDocument as CreateChangeRequest,
   CreateProjectChangeRequestMutation as Mutation,
-} from './CreateProjectChangeRequest.generated';
+} from './CreateProjectChangeRequest.graphql';
 
 type CreateProjectChangeRequestProps = Except<
   DialogFormProps<
@@ -65,7 +66,7 @@ export const CreateProjectChangeRequest = ({
       <AutocompleteField
         multiple
         options={ProjectChangeRequestTypeList}
-        getOptionLabel={displayProjectChangeRequestType}
+        getOptionLabel={labelFrom(ProjectChangeRequestTypeLabels)}
         name="types"
         label="Types"
         variant="outlined"

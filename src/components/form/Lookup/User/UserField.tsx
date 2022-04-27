@@ -4,7 +4,7 @@ import { LookupField } from '../../index';
 import {
   UserLookupDocument,
   UserLookupItemFragment,
-} from './UserLookup.generated';
+} from './UserLookup.graphql';
 
 export const UserField = LookupField.createFor<
   UserLookupItemFragment,

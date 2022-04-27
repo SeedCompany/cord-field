@@ -1,0 +1,20 @@
+diff --git a/rtf-interpreter.js b/rtf-interpreter.js
+index 09a89dda3b4dc6208f42c4413ad5f0e578d2d064..08f6946939981720d123081cc1e560b08db21440 100644
+--- a/rtf-interpreter.js
++++ b/rtf-interpreter.js
+@@ -1,7 +1,4 @@
+ 'use strict'
+-const assert = require('assert')
+-const util = require('util')
+-
+ const Writable = require('readable-stream').Writable
+ const RTFGroup = require('./rtf-group.js')
+ const RTFParagraph = require('./rtf-paragraph.js')
+@@ -407,7 +404,6 @@ class ColorTable extends RTFGroup {
+     this.green = 0
+   }
+   addContent (text) {
+-    assert(text.value === ';', 'got: ' + util.inspect(text))
+     this.table.push({
+       red: this.red,
+       blue: this.blue,

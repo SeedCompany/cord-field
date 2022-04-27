@@ -10,13 +10,10 @@ import {
 } from '@material-ui/core';
 import { Skeleton } from '@material-ui/lab';
 import React, { FC } from 'react';
-import {
-  canEditAny,
-  displayFinancialReportingType,
-  displayPartnerType,
-} from '../../../api';
+import { FinancialReportingTypeLabels, PartnerTypeLabels } from '~/api/schema';
+import { canEditAny, labelsFrom } from '~/common';
 import { Redacted } from '../../../components/Redacted';
-import { PartnerDetailsFragment } from './PartnerDetail.generated';
+import { PartnerDetailsFragment } from './PartnerDetail.graphql';
 
 const useStyles = makeStyles(({ spacing }) => ({
   cardContent: {
@@ -79,8 +76,7 @@ export const PartnerTypesCard: FC<PartnerTypesCardProps> = ({
                 {!partner ? (
                   <Skeleton width="75%" />
                 ) : partner.types.canRead ? (
-                  partner.types.value.map(displayPartnerType).join(', ') ||
-                  'None'
+                  labelsFrom(PartnerTypeLabels)(partner.types.value) || 'None'
                 ) : (
                   <Redacted
                     info="You don't have permission to view the partner's types"
@@ -99,9 +95,9 @@ export const PartnerTypesCard: FC<PartnerTypesCardProps> = ({
                 </Typography>
                 <Typography variant="h4">
                   {partner.financialReportingTypes.canRead ? (
-                    partner.financialReportingTypes.value
-                      .map(displayFinancialReportingType)
-                      .join(', ')
+                    labelsFrom(FinancialReportingTypeLabels)(
+                      partner.financialReportingTypes.value
+                    )
                   ) : (
                     <Redacted
                       info="You don't have permission to view the partner's financial reporting types"

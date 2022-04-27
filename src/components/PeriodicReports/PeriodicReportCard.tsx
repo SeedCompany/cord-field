@@ -24,7 +24,7 @@ import {
 import { HugeIcon } from '../Icons';
 import { ButtonLink, CardActionAreaLink } from '../Routing';
 import { DropOverlay } from './DropOverlay';
-import { SecuredPeriodicReportFragment } from './PeriodicReport.generated';
+import { SecuredPeriodicReportFragment } from './PeriodicReport.graphql';
 import { ReportInfo } from './ReportInfo';
 import { ReportLabel } from './ReportLabel';
 
@@ -89,7 +89,7 @@ const PeriodicReportCardInContext = (props: PeriodicReportCardProps) => {
     isDragActive,
     open: openFileBrowser,
   } = useDropzone({
-    onDrop: async (files) => {
+    onDrop: (files) => {
       if (!currentFile?.canEdit) {
         return;
       }

@@ -4,7 +4,7 @@ import {
   ProjectMembersSummary,
   ProjectMembersSummaryProps,
 } from './ProjectMembersSummary';
-import { ProjectMemberListFragment } from './ProjectMembersSummary.generated';
+import { ProjectMemberListFragment } from './ProjectMembersSummary.graphql';
 
 export default { title: 'Components/Project Member Summary' };
 

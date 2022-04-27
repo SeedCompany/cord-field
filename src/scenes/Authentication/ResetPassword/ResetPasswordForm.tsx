@@ -10,6 +10,7 @@ import {
   SubmitError,
 } from '../../../components/form';
 import { Link } from '../../../components/Routing';
+import { AuthContent } from '../AuthContent';
 
 const useStyles = makeStyles(({ spacing }) => ({
   title: {
@@ -35,16 +36,13 @@ interface Fields {
 export type ResetPasswordFormProps = Pick<
   FormProps<Fields>,
   'onSubmit' | 'initialValues'
-> & { className?: string };
+>;
 
-export const ResetPasswordForm = ({
-  className,
-  ...props
-}: ResetPasswordFormProps) => {
+export const ResetPasswordForm = (props: ResetPasswordFormProps) => {
   const classes = useStyles();
 
   return (
-    <div className={className}>
+    <AuthContent>
       <Typography variant="h3" align="center" className={classes.title}>
         Password Reset
       </Typography>
@@ -79,7 +77,7 @@ export const ResetPasswordForm = ({
       <Link to="/login" className={classes.loginLink}>
         Login
       </Link>
-    </div>
+    </AuthContent>
   );
 };
 

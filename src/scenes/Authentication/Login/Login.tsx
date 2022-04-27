@@ -9,7 +9,7 @@ import { handleFormError } from '../../../api';
 import { useNavigate } from '../../../components/Routing';
 import { updateSessionCache, useSession } from '../../../components/Session';
 import { useIsomorphicEffect } from '../../../hooks';
-import { LoginDocument } from './Login.generated';
+import { LoginDocument } from './Login.graphql';
 import { LoginForm, LoginFormProps as Props } from './LoginForm';
 
 export const Login = (props: Except<Props, 'onSubmit'>) => {

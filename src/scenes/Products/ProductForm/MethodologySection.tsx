@@ -1,12 +1,12 @@
 import { Typography } from '@material-ui/core';
 import { ToggleButton } from '@material-ui/lab';
 import React from 'react';
+import { ProductApproachLabels } from '~/api/schema';
 import {
   ApproachMethodologies,
-  displayApproach,
   displayMethodology,
   displayMethodologyWithLabel,
-} from '../../../api';
+} from '~/common';
 import { EnumField, EnumOption } from '../../../components/form';
 import { entries } from '../../../util';
 import { useStyles } from './DefaultAccordion';
@@ -36,7 +36,7 @@ export const MethodologySection = ({
           {entries(ApproachMethodologies).map(([approach, methodologies]) => (
             <div key={approach} className={classes.section}>
               <Typography className={classes.label}>
-                {displayApproach(approach)}
+                {ProductApproachLabels[approach]}
               </Typography>
               {methodologies.map((option) => (
                 <EnumOption

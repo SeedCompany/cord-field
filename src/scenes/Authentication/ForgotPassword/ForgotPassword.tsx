@@ -3,7 +3,7 @@ import React, { useState } from 'react';
 import { Helmet } from 'react-helmet-async';
 import { Except } from 'type-fest';
 import { handleFormError } from '../../../api';
-import { ForgotPasswordDocument } from './ForgotPassword.generated';
+import { ForgotPasswordDocument } from './ForgotPassword.graphql';
 import {
   ForgotPasswordForm,
   ForgotPasswordFormProps as Props,
@@ -29,7 +29,7 @@ export const ForgotPassword = (props: Except<Props, 'onSubmit'>) => {
   };
 
   const out = email ? (
-    <ForgotPasswordSuccess email={email} className={props.className} />
+    <ForgotPasswordSuccess email={email} />
   ) : (
     <ForgotPasswordForm {...props} onSubmit={submit} />
   );

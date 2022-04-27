@@ -37,7 +37,7 @@ import { CreateProjectDirectory } from './CreateProjectDirectory';
 import { DirectoryBreadcrumb } from './DirectoryBreadcrumb';
 import { FileRow } from './FileRow';
 import { NodePreviewLayer } from './NodePreviewLayer';
-import { ProjectDirectoryDocument } from './ProjectFiles.generated';
+import { ProjectDirectoryDocument } from './ProjectFiles.graphql';
 import { useProjectCurrentDirectory } from './useProjectCurrentDirectory';
 import { useUploadProjectFiles } from './useUploadProjectFiles';
 import { Directory, FileOrDirectory, isDirectory } from './util';

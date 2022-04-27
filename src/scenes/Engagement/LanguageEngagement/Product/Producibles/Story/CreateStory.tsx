@@ -8,7 +8,7 @@ import {
 } from '../../../../../../components/Dialog/DialogForm';
 import { SubmitError, TextField } from '../../../../../../components/form';
 import { StoryLookupItem } from '../../../../../../components/form/Lookup';
-import { CreateStoryDocument } from './CreateStory.generated';
+import { CreateStoryDocument } from './CreateStory.graphql';
 
 export type CreateStoryProps = Except<
   DialogFormProps<CreateStoryInput, StoryLookupItem>,

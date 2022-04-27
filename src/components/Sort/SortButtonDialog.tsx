@@ -34,7 +34,7 @@ export function SortButtonDialog<T>({
               state.onClose();
               // Allow dialog to render changes and close before
               // preforming navigation
-              setImmediate(() => onChange(newVal), 0);
+              setImmediate(() => onChange(newVal));
             }}
           >
             {children}

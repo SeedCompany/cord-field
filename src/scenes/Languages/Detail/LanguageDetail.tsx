@@ -4,7 +4,7 @@ import { Add, Edit } from '@material-ui/icons';
 import { Skeleton } from '@material-ui/lab';
 import React from 'react';
 import { Helmet } from 'react-helmet-async';
-import { useParams } from 'react-router';
+import { useParams } from 'react-router-dom';
 import { canEditAny, removeItemFromList } from '../../../api';
 import { BooleanProperty } from '../../../components/BooleanProperty';
 import { useDialog } from '../../../components/Dialog';
@@ -22,19 +22,19 @@ import { IconButton } from '../../../components/IconButton';
 import { PresetInventoryIconFilled } from '../../../components/Icons';
 import { LocationCard } from '../../../components/LocationCard';
 import { ProjectListItemCard } from '../../../components/ProjectListItemCard';
-import { ProjectListItemFragment } from '../../../components/ProjectListItemCard/ProjectListItem.generated';
+import { ProjectListItemFragment } from '../../../components/ProjectListItemCard/ProjectListItem.graphql';
 import { Redacted } from '../../../components/Redacted';
 import { Sensitivity } from '../../../components/Sensitivity';
 import { TogglePinButton } from '../../../components/TogglePinButton';
-import { CalendarDate, listOrPlaceholders } from '../../../util';
+import { listOrPlaceholders } from '../../../util';
 import { EditLanguage } from '../Edit';
 import { AddLocationToLanguageForm } from '../Edit/AddLocationToLanguageForm';
-import { LanguagesQueryVariables } from '../List/languages.generated';
+import { LanguagesQueryVariables } from '../List/languages.graphql';
 import { FirstScripture } from './FirstScripture';
 import {
   LanguageDocument,
   RemoveLocationFromLanguageDocument,
-} from './LanguageDetail.generated';
+} from './LanguageDetail.graphql';
 import { LanguagePostList } from './LanguagePostList';
 import { LeastOfThese } from './LeastOfThese';
 
@@ -221,10 +221,7 @@ export const LanguageDetail = () => {
           />
           <DisplayProperty
             label="Sponsor Estimated End Fiscal Year"
-            value={
-              sponsorEstimatedEndDate?.value &&
-              CalendarDate.toFiscalYear(sponsorEstimatedEndDate.value)
-            }
+            value={sponsorEstimatedEndDate?.value?.fiscalYear}
             loading={!language}
           />
 
@@ -271,7 +268,7 @@ export const LanguageDetail = () => {
                     onRemove={() =>
                       language &&
                       location &&
-                      removeLocation({
+                      void removeLocation({
                         variables: {
                           languageId: language.id,
                           locationId: location.id,

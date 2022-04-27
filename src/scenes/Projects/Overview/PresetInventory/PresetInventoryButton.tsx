@@ -8,11 +8,11 @@ import {
   PresetInventoryIconOutlined,
 } from '../../../../components/Icons';
 import { PaperTooltip } from '../../../../components/PaperTooltip';
-import { ProjectOverviewFragment } from '../ProjectOverview.generated';
+import { ProjectOverviewFragment } from '../ProjectOverview.graphql';
 import {
   RecalculatePresetInventoryFragmentDoc as RecalculatePresetInventory,
   TogglePresetInventoryDocument as TogglePresetInventory,
-} from './TogglePresetInventory.generated';
+} from './TogglePresetInventory.graphql';
 
 export interface PresetInventoryButtonProps {
   project?: ProjectOverviewFragment;
@@ -26,7 +26,7 @@ export const PresetInventoryButton = ({
   const [updateProject, { client }] = useMutation(TogglePresetInventory);
   const presetInventory = project?.presetInventory.value;
 
-  const toggle = async () => {
+  const toggle = () => {
     if (!project || !project.presetInventory.canEdit) {
       return;
     }
@@ -38,7 +38,7 @@ export const PresetInventoryButton = ({
       object: project,
     });
 
-    await updateProject({
+    void updateProject({
       variables: {
         input: {
           project: {
@@ -99,7 +99,7 @@ export const PresetInventoryButton = ({
   return (
     <PaperTooltip
       title={
-        <Typography variant="body2">
+        <Typography variant="body2" component="div">
           This project and its associated languages (via engagements) are{' '}
           {presetInventory ? '' : <em>NOT</em>} a part of our{' '}
           <em>Preset&nbsp;Inventory</em> {presetInventory ? '✅' : '❌'}

@@ -1,5 +1,6 @@
 fragment InternshipEngagementDetail on InternshipEngagement {
   ...Id
+  ...EngagementBreadcrumb
   createdAt
   status {
     value

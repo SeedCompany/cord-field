@@ -7,7 +7,7 @@ import { DateField, FieldGroup } from '../../../../components/form';
 import {
   CeremonyCardFragment,
   UpdateCeremonyDocument,
-} from '../../CeremonyCard/CeremonyCard.generated';
+} from '../../CeremonyCard/CeremonyCard.graphql';
 import { CeremonyPlanned } from '../../CeremonyCard/CeremonyPlanned';
 
 export const CeremonyForm = ({
@@ -38,9 +38,9 @@ export const CeremonyForm = ({
           <FieldGroup prefix="ceremony">
             <FormSpy<UpdateCeremonyInput>
               subscription={{ values: true }}
-              onChange={async ({ values: input }) => {
+              onChange={({ values: input }) => {
                 if (!isEqual(initialValues, input)) {
-                  await updateCeremony({ variables: { input } });
+                  void updateCeremony({ variables: { input } });
                 }
               }}
             />

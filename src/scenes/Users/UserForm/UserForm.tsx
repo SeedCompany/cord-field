@@ -1,7 +1,8 @@
 import { Grid } from '@material-ui/core';
 import { memoize } from 'lodash';
 import React from 'react';
-import { displayRole, RoleList } from '../../../api';
+import { RoleLabels, RoleList } from '~/api/schema';
+import { labelFrom } from '~/common';
 import {
   DialogForm,
   DialogFormProps,
@@ -16,7 +17,7 @@ import {
 } from '../../../components/form';
 import { AutocompleteField } from '../../../components/form/AutocompleteField';
 import { useSession } from '../../../components/Session';
-import { UserFormFragment } from './UserForm.generated';
+import { UserFormFragment } from './UserForm.graphql';
 
 export type UserFormProps<T, R = void> = DialogFormProps<T, R> & {
   /** The pre-existing user to edit */
@@ -138,7 +139,7 @@ export const UserForm = <T, R = void>({
             <AutocompleteField
               multiple
               options={RoleList}
-              getOptionLabel={displayRole}
+              getOptionLabel={labelFrom(RoleLabels)}
               label="Roles"
               variant="outlined"
               disabled={!powers?.includes('GrantRole')}

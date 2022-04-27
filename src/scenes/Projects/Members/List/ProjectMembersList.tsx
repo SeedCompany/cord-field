@@ -17,7 +17,7 @@ import { ProjectMemberCard } from '../../../../components/ProjectMemberCard';
 import { useProjectId } from '../../useProjectId';
 import { CreateProjectMember } from '../Create/CreateProjectMember';
 import { UpdateProjectMember, UpdateProjectMemberFormParams } from '../Update';
-import { ProjectMembersDocument } from './ProjectMembers.generated';
+import { ProjectMembersDocument } from './ProjectMembers.graphql';
 
 const useStyles = makeStyles(({ spacing, breakpoints }) => ({
   root: {

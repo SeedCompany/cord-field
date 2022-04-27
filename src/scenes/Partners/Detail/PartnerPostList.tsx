@@ -1,8 +1,8 @@
 import * as React from 'react';
 import { useListQuery } from '../../../components/List';
-import { PostableIdFragment } from '../../../components/posts/PostableId.generated';
+import { PostableIdFragment } from '../../../components/posts/PostableId.graphql';
 import { PostList } from '../../../components/posts/PostList';
-import { PartnerPostListDocument as PostListQuery } from './PartnerPostList.generated';
+import { PartnerPostListDocument as PostListQuery } from './PartnerPostList.graphql';
 
 interface PartnerPostListProps {
   partner: PostableIdFragment;

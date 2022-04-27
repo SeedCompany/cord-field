@@ -13,7 +13,7 @@ import {
   LanguageFormProps,
   LanguageFormValues,
 } from '../LanguageForm';
-import { CreateLanguageDocument } from './CreateLanguage.generated';
+import { CreateLanguageDocument } from './CreateLanguage.graphql';
 
 export type CreateLanguageProps = Except<
   LanguageFormProps<LanguageFormValues<CreateLanguageType>>,

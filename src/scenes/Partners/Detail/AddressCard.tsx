@@ -11,7 +11,7 @@ import { Skeleton } from '@material-ui/lab';
 import React, { FC } from 'react';
 import { canEditAny } from '../../../api';
 import { Redacted } from '../../../components/Redacted';
-import { PartnerDetailsFragment } from './PartnerDetail.generated';
+import { PartnerDetailsFragment } from './PartnerDetail.graphql';
 
 const useStyles = makeStyles(({ spacing }) => ({
   cardContent: {

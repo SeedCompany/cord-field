@@ -19,8 +19,8 @@ import {
   SubmitError,
 } from '../../../components/form';
 import { ProductTypes } from './constants';
-import { EditPartnershipsProducingMediumsInfoFragment } from './PartnershipsProducingMediums.generated';
-import { ProductFormFragment } from './ProductForm.generated';
+import { EditPartnershipsProducingMediumsInfoFragment } from './PartnershipsProducingMediums.graphql';
+import { ProductFormFragment } from './ProductForm.graphql';
 import { ProductFormFields } from './ProductFormFields';
 
 const useStyles = makeStyles(({ spacing, breakpoints }) => ({

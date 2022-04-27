@@ -17,7 +17,7 @@ import { useProjectId } from '../../Projects/useProjectId';
 import { CreatePartnership } from '../Create';
 import { EditPartnership } from '../Edit';
 import { PartnershipFormFragment } from '../PartnershipForm';
-import { ProjectPartnershipsDocument } from './PartnershipList.generated';
+import { ProjectPartnershipsDocument } from './PartnershipList.graphql';
 
 const useStyles = makeStyles(({ spacing, breakpoints }) => ({
   root: {

@@ -7,7 +7,7 @@ import {
   LocationFormProps,
   LocationFormValues,
 } from '../LocationForm';
-import { UpdateLocationDocument } from './EditLocation.generated';
+import { UpdateLocationDocument } from './EditLocation.graphql';
 
 export type EditLocationProps = Except<
   LocationFormProps<LocationFormValues<UpdateLocation>>,

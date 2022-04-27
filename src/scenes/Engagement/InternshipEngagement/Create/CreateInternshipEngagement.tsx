@@ -1,18 +1,18 @@
 import { useMutation } from '@apollo/client';
 import React from 'react';
 import { Except } from 'type-fest';
+import { addItemToList } from '~/api';
 import {
-  addItemToList,
   Id_InternshipProject_Fragment as InternshipProjectIdFragment,
   Id_TranslationProject_Fragment as TranslationProjectIdFragment,
-} from '../../../../api';
+} from '~/common/fragments';
 import {
   DialogForm,
   DialogFormProps,
 } from '../../../../components/Dialog/DialogForm';
 import { SubmitError } from '../../../../components/form';
 import { UserField, UserLookupItem } from '../../../../components/form/Lookup';
-import { CreateInternshipEngagementDocument } from './CreateInternshipEngagement.generated';
+import { CreateInternshipEngagementDocument } from './CreateInternshipEngagement.graphql';
 
 interface CreateInternshipEngagementFormValues {
   engagement: {

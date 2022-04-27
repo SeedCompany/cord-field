@@ -3,7 +3,7 @@ import { Alert } from '@material-ui/lab';
 import { isBoolean } from 'lodash';
 import React, { useMemo } from 'react';
 import { Except } from 'type-fest';
-import { displayProductStep, ProgressMeasurement } from '../../../../api';
+import { ProductStepLabels, ProgressMeasurement } from '~/api/schema';
 import {
   DialogForm,
   DialogFormProps,
@@ -18,7 +18,7 @@ import {
   ProductProgressFragment,
   StepProgressFragment,
   UpdateStepProgressDocument,
-} from './ProductProgress.generated';
+} from './ProductProgress.graphql';
 
 export interface StepFormValues {
   completed?: number | boolean | null;
@@ -54,7 +54,7 @@ export const StepEditDialog = ({
 
   return (
     <DialogForm<StepFormValues>
-      title={displayProductStep(step.step)}
+      title={ProductStepLabels[step.step]}
       {...props}
       initialValues={initialValues}
       onSubmit={async (data) => {

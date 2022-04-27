@@ -1,0 +1,41 @@
+schema:
+  - ${RAZZLE_API_BASE_URL}/graphql:
+      loader: ./src/api/schema/client-schema.graphql-loader.ts
+documents:
+  - ./src/**/*.graphql
+  - '!./src/api/schema/client-schema.graphql'
+overwrite: true
+config:
+  # Use `import type` which should be default for TS 3.8+
+  useTypeImports: true
+  # Immutability is great, but Apollo also enforces this at runtime (at least in dev)
+  # so this ensures that invalid code is caught before runtime.
+  immutableTypes: true
+
+generates:
+  # Generate an object housing all of our operations
+  # This allows operations to be cross-referenced (i.e. `refetchQueries`) without needing to rely on magic strings
+  ./src/api/operationsList/operations.generated.ts:
+    plugins:
+      - ./src/api/operationsList/operations.codegen
+    config:
+      identifierName: GQLOperations
+
+  # Generate types & documents for our operations
+  ./src/:
+    preset: near-operation-file
+    presetConfig:
+      extension: .graphql.ts
+      baseTypesPath: api/schema
+    plugins:
+      - typescript-operations
+      - typed-document-node
+    config:
+      documentMode: documentNodeImportFragments
+      skipTypename: false
+      enumsAsTypes: true
+      # Instead of Pick-ing from generated schema, redefine shape inline
+      # Skipping for now, since schema has docs which IDE can provide when Pick is used.
+      preResolveTypes: false
+      # Removes useless __typename from query/mutation root types which are always "Query" or "Mutation"
+      skipTypeNameForRoot: true

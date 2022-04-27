@@ -3,11 +3,12 @@ import { Grid, makeStyles, Tooltip, Typography } from '@material-ui/core';
 import React from 'react';
 import { Except } from 'type-fest';
 import {
-  displayEngagementStatus,
   EngagementStatus,
+  EngagementStatusLabels,
   EngagementStatusList,
   TransitionType,
-} from '../../../api';
+} from '~/api/schema';
+import { labelFrom } from '~/common';
 import {
   DialogForm,
   DialogFormProps,
@@ -23,7 +24,7 @@ import { Engagement } from './EditEngagementDialog';
 import {
   UpdateInternshipEngagementDocument,
   UpdateLanguageEngagementDocument,
-} from './EditEngagementDialog.generated';
+} from './EditEngagementDialog.graphql';
 
 const transitionTypeToColor: Record<
   TransitionType,
@@ -107,9 +108,9 @@ export const EngagementWorkflowDialog = ({
       <Grid container direction="column" spacing={1}>
         {transitions.map((transition, i) => (
           <Tooltip
-            title={`This will change the engagement status to ${displayEngagementStatus(
-              transition.to
-            )}`}
+            title={`This will change the engagement status to ${
+              EngagementStatusLabels[transition.to]
+            }`}
             key={i}
           >
             <Grid item>
@@ -145,7 +146,7 @@ export const EngagementWorkflowDialog = ({
               name="engagement.status"
               label="Override Status"
               options={EngagementStatusList}
-              getOptionLabel={displayEngagementStatus}
+              getOptionLabel={labelFrom(EngagementStatusLabels)}
             />
           </>
         ) : (

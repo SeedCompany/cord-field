@@ -5,8 +5,9 @@ import { Skeleton } from '@material-ui/lab';
 import clsx from 'clsx';
 import React from 'react';
 import { Helmet } from 'react-helmet-async';
-import { useParams } from 'react-router';
-import { canEditAny, displayLocationType } from '../../../api';
+import { useParams } from 'react-router-dom';
+import { LocationTypeLabels } from '~/api/schema';
+import { canEditAny, labelFrom } from '~/common';
 import { useDialog } from '../../../components/Dialog';
 import {
   DisplaySimpleProperty,
@@ -17,7 +18,7 @@ import { Fab } from '../../../components/Fab';
 import { FormattedDateTime } from '../../../components/Formatters';
 import { Redacted } from '../../../components/Redacted';
 import { EditLocation } from '../Edit';
-import { LocationDocument } from './LocationDetail.generated';
+import { LocationDocument } from './LocationDetail.graphql';
 
 const useStyles = makeStyles(({ spacing, breakpoints }) => ({
   root: {
@@ -115,7 +116,7 @@ export const LocationDetail = () => {
           </div>
           <DisplayProperty
             label="Type"
-            value={displayLocationType(location?.type.value)}
+            value={labelFrom(LocationTypeLabels)(location?.type.value)}
             loading={!location}
           />
           <DisplayProperty

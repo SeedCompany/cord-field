@@ -13,7 +13,7 @@ import {
   useFileActions,
 } from '../FileActions';
 import { fileIcon } from '../fileTypes';
-import { FileVersionItem_FileVersion_Fragment } from './FileVersionItem.generated';
+import { FileVersionItem_FileVersion_Fragment } from './FileVersionItem.graphql';
 
 const useStyles = makeStyles(({ spacing, typography }) => ({
   iconContainer: {

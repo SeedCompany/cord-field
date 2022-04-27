@@ -3,7 +3,7 @@ import React from 'react';
 import { getChangeset, IdFragment } from '../../../api';
 import { List, useListQuery } from '../../../components/List';
 import { ProductCard } from '../../../components/ProductCard';
-import { ProductListDocument } from './ProductList.generated';
+import { ProductListDocument } from './ProductList.graphql';
 
 const useStyles = makeStyles(() => ({
   root: {

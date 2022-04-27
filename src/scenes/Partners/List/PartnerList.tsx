@@ -1,5 +1,17 @@
-import { Divider, Grid, makeStyles, Tab, Typography } from '@material-ui/core';
-import { Skeleton, TabContext, TabList, TabPanel } from '@material-ui/lab';
+import {
+  type Tabs as __Tabs,
+  Divider,
+  Grid,
+  makeStyles,
+  Tab,
+  Typography,
+} from '@material-ui/core';
+import {
+  TabList as ActualTabList,
+  Skeleton,
+  TabContext,
+  TabPanel,
+} from '@material-ui/lab';
 import React, { FC, useRef } from 'react';
 import { Helmet } from 'react-helmet-async';
 import { useNumberFormatter } from '../../../components/Formatters';
@@ -9,8 +21,10 @@ import { PartnerListItemCard as PartnerCard } from '../../../components/PartnerL
 import { SortButtonDialog, useSort } from '../../../components/Sort';
 import { simpleSwitch } from '../../../util';
 import { usePartnerFilters } from './PartnerFilterOptions';
-import { PartnersDocument } from './PartnerList.generated';
+import { PartnersDocument } from './PartnerList.graphql';
 import { PartnerSort, PartnerSortOptions } from './PartnerSortOptions';
+
+const TabList = ActualTabList as typeof __Tabs;
 
 const useStyles = makeStyles(({ spacing, breakpoints }) => ({
   options: {

@@ -9,8 +9,8 @@ import { Skeleton } from '@material-ui/lab';
 import clsx from 'clsx';
 import { FC } from 'react';
 import * as React from 'react';
-import { displayStatus } from '../../api';
-import { ProjectListQueryVariables } from '../../scenes/Projects/List/projects.generated';
+import { ProjectStatusLabels } from '~/api/schema';
+import { ProjectListQueryVariables } from '../../scenes/Projects/List/projects.graphql';
 import { getProjectUrl } from '../../scenes/Projects/useProjectId';
 import { DisplaySimpleProperty } from '../DisplaySimpleProperty';
 import { FormattedDate } from '../Formatters';
@@ -18,7 +18,7 @@ import { PresetInventoryIconFilled } from '../Icons';
 import { CardActionAreaLink } from '../Routing';
 import { Sensitivity } from '../Sensitivity';
 import { TogglePinButton } from '../TogglePinButton';
-import { ProjectListItemFragment } from './ProjectListItem.generated';
+import { ProjectListItemFragment } from './ProjectListItem.graphql';
 
 const useStyles = makeStyles(({ breakpoints, spacing }) => {
   const cardWidth = breakpoints.values.sm;
@@ -152,7 +152,7 @@ export const ProjectListItemCard: FC<ProjectListItemCardProps> = ({
               ) : (
                 <DisplaySimpleProperty
                   label="Status"
-                  value={displayStatus(project.projectStatus)}
+                  value={ProjectStatusLabels[project.projectStatus]}
                 />
               )}
             </Grid>

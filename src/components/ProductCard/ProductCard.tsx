@@ -14,9 +14,10 @@ import {
   SvgIconComponent,
 } from '@material-ui/icons';
 import React from 'react';
+import { idForUrl } from '../Changeset';
 import { HugeIcon } from '../Icons';
 import { CardActionAreaLink } from '../Routing';
-import { ProductCardFragment } from './ProductCard.generated';
+import { ProductCardFragment } from './ProductCard.graphql';
 
 const useStyles = makeStyles(() => ({
   root: {
@@ -55,7 +56,7 @@ export const ProductCard = ({ product }: ProductCardProps) => {
   return (
     <Card className={classes.root}>
       <CardActionAreaLink
-        to={`products/${product.id}`}
+        to={`/products/${idForUrl(product)}`}
         className={classes.actionArea}
       >
         <Grid component={CardContent} container spacing={2} alignItems="center">

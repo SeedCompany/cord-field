@@ -7,6 +7,7 @@ import {
   SubmitError,
 } from '../../../components/form';
 import { Link } from '../../../components/Routing';
+import { AuthContent } from '../AuthContent';
 
 const useStyles = makeStyles(({ spacing }) => ({
   title: {
@@ -27,15 +28,12 @@ const useStyles = makeStyles(({ spacing }) => ({
 export type ForgotPasswordFormProps = Pick<
   FormProps<{ email: string }>,
   'onSubmit' | 'initialValues'
-> & { className?: string };
+>;
 
-export const ForgotPasswordForm = ({
-  className,
-  ...props
-}: ForgotPasswordFormProps) => {
+export const ForgotPasswordForm = (props: ForgotPasswordFormProps) => {
   const classes = useStyles();
   return (
-    <div className={className}>
+    <AuthContent>
       <Typography variant="h3" align="center" className={classes.title}>
         Reset Your Password
       </Typography>
@@ -57,6 +55,6 @@ export const ForgotPasswordForm = ({
       <Link to="/login" className={classes.loginLink}>
         Login
       </Link>
-    </div>
+    </AuthContent>
   );
 };

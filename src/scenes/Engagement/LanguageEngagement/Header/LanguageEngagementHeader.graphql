@@ -1,5 +1,6 @@
 fragment LanguageEngagementHeader on LanguageEngagement {
   ...Id
+  ...EngagementBreadcrumb
   createdAt
   language {
     value {

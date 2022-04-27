@@ -8,7 +8,7 @@ import { useDrag, useDrop } from 'react-dnd';
 import { getEmptyImage } from 'react-dnd-html5-backend';
 import { addItemToList, removeItemFromList } from '../../../api';
 import { callAll } from '../../../util';
-import { MoveFileNodeDocument } from './MoveNode.generated';
+import { MoveFileNodeDocument } from './MoveNode.graphql';
 import {
   Directory,
   DndFileNode,

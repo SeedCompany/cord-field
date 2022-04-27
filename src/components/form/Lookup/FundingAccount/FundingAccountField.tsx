@@ -4,7 +4,7 @@ import { CreateFundingAccount } from '../../../../scenes/Locations/LocationForm/
 import {
   FundingAccountLookupItemFragment as FundingAccount,
   FundingAccountLookupDocument,
-} from './FundingAccountField.generated';
+} from './FundingAccountField.graphql';
 
 export const FundingAccountField = LookupField.createFor<
   FundingAccount,

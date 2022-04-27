@@ -186,12 +186,16 @@ const defaultRange = {
 // Derive format based on locale
 // force two digit days & months since masked input
 // doesn't like variable number of digits
-const inputFormat = CalendarDate.fromObject({
-  year: 1234,
-  month: 11,
-  day: 29,
-  zone: 'utc',
-})
+const inputFormat = CalendarDate.fromObject(
+  {
+    year: 1234,
+    month: 11,
+    day: 29,
+  },
+  {
+    zone: 'utc',
+  }
+)
   .toLocaleString(CalendarDate.DATE_SHORT)
   .replace('1234', 'yyyy')
   .replace('11', 'MM')

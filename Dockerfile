@@ -25,7 +25,7 @@ RUN apk add --no-cache jq
 # Install dependencies (in separate docker layer from app code)
 COPY .yarn .yarn
 COPY package.json yarn.lock .yarnrc.yml ./
-COPY patches ./patches
+ENV VERBOSE_YARN_LOG=discard
 RUN yarn install --immutable
 
 COPY . .
@@ -41,6 +41,8 @@ RUN jq -r '.devDependencies | keys | .[]' package.json | xargs yarn remove
 # run =================================
 FROM node as run
 
-COPY --from=builder /app ./
+COPY --from=builder /app/.yarn ./.yarn
+COPY --from=builder /app/package.json /app/yarn.lock /app/.yarnrc.yml /app/.pnp.* ./
+COPY --from=builder /app/build ./build
 
-CMD ["node", "build/server.js"]
+CMD ["yarn", "node", "build/server.js"]

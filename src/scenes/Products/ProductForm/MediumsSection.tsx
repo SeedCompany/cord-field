@@ -1,6 +1,7 @@
 import { ToggleButton } from '@material-ui/lab';
 import React from 'react';
-import { displayProductMedium, ProductMediumList } from '../../../api';
+import { ProductMediumLabels, ProductMediumList } from '~/api/schema';
+import { labelFrom } from '~/common';
 import { EnumField } from '../../../components/form';
 import { SectionProps } from './ProductFormFields';
 import { SecuredAccordion } from './SecuredAccordion';
@@ -13,7 +14,7 @@ export const MediumsSection = ({ values, accordionState }: SectionProps) => (
     renderCollapsed={() =>
       values.product?.mediums?.map((medium) => (
         <ToggleButton selected key={medium} value={medium}>
-          {displayProductMedium(medium)}
+          {ProductMediumLabels[medium]}
         </ToggleButton>
       ))
     }
@@ -22,7 +23,7 @@ export const MediumsSection = ({ values, accordionState }: SectionProps) => (
       <EnumField
         multiple
         options={ProductMediumList}
-        getLabel={displayProductMedium}
+        getLabel={labelFrom(ProductMediumLabels)}
         variant="toggle-split"
         {...props}
       />

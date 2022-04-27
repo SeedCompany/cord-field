@@ -2,11 +2,8 @@ import { useMutation } from '@apollo/client';
 import { pick } from 'lodash';
 import React, { ComponentType, useMemo } from 'react';
 import { Except, Merge } from 'type-fest';
-import { invalidateProps, SensitivityList, UpdateProject } from '../../../api';
-import {
-  DisplayFieldRegionFragment,
-  DisplayLocationFragment,
-} from '../../../api/fragments/location.generated';
+import { invalidateProps, SensitivityList, UpdateProject } from '~/api';
+import { DisplayFieldRegionFragment, DisplayLocationFragment } from '~/common';
 import {
   DialogForm,
   DialogFormProps,
@@ -28,8 +25,8 @@ import {
   updateEngagementDateRanges,
   updatePartnershipsDateRanges,
 } from '../DateRangeCache';
-import { ProjectOverviewFragment } from '../Overview/ProjectOverview.generated';
-import { UpdateProjectDocument } from './UpdateProject.generated';
+import { ProjectOverviewFragment } from '../Overview/ProjectOverview.graphql';
+import { UpdateProjectDocument } from './UpdateProject.graphql';
 
 export type EditableProjectField = ExtractStrict<
   keyof UpdateProject | 'mouRange',

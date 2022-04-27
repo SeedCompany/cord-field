@@ -5,9 +5,10 @@ import { Skeleton } from '@material-ui/lab';
 import { DateTime } from 'luxon';
 import React, { useState } from 'react';
 import { Helmet } from 'react-helmet-async';
-import { useParams } from 'react-router';
+import { useParams } from 'react-router-dom';
 import { useInterval } from 'react-use';
-import { canEditAny, displayRoles } from '../../../api';
+import { RoleLabels } from '~/api/schema';
+import { canEditAny, labelsFrom } from '~/common';
 import { useDialog } from '../../../components/Dialog';
 import {
   DisplaySimpleProperty,
@@ -18,8 +19,8 @@ import { PartnerListItemCard } from '../../../components/PartnerListItemCard';
 import { Redacted } from '../../../components/Redacted';
 import { TogglePinButton } from '../../../components/TogglePinButton';
 import { EditUser } from '../Edit';
-import { UsersQueryVariables } from '../List/users.generated';
-import { UserDocument } from './UserDetail.generated';
+import { UsersQueryVariables } from '../List/users.graphql';
+import { UserDocument } from './UserDetail.graphql';
 
 const useStyles = makeStyles(({ spacing, breakpoints }) => ({
   root: {
@@ -108,7 +109,7 @@ export const UserDetail = () => {
           />
           <DisplayProperty
             label="Roles"
-            value={user?.roles.value && displayRoles(user.roles.value)}
+            value={labelsFrom(RoleLabels)(user?.roles.value)}
             loading={!user}
           />
           <DisplayProperty

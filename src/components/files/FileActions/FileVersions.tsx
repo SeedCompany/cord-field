@@ -16,7 +16,7 @@ import {
   FileVersionItem_FileVersion_Fragment as FileVersion,
   FileVersionItem,
 } from '../FileVersionItem';
-import { FileVersionsDocument } from './FileActions.generated';
+import { FileVersionsDocument } from './FileActions.graphql';
 
 const useStyles = makeStyles(({ spacing }) => ({
   skeleton: {

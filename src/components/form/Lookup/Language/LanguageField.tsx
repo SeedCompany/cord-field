@@ -5,7 +5,7 @@ import { LookupField } from '../../index';
 import {
   LanguageLookupItemFragment as Language,
   LanguageLookupDocument,
-} from './LanguageLookup.generated';
+} from './LanguageLookup.graphql';
 
 export const LanguageField = LookupField.createFor<
   Language,
