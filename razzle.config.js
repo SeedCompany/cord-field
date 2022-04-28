@@ -161,3 +161,6 @@ module.exports = {
   modifyWebpackConfig,
   modifyJestConfig,
 };
+
+// Disable "are you sure?" check for build command
+process.env.RAZZLE_NONINTERACTIVE = 'true';
