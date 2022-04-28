@@ -1,3 +1,4 @@
+import 'source-map-support/register';
 import { createTerminus } from '@godaddy/terminus';
 import express from 'express';
 import { app } from './server/server';
