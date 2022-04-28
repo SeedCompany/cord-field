@@ -157,6 +157,9 @@ const modifyJestConfig = (opts) => {
   return config;
 };
 
+/**
+ * @see import('razzle/config/createConfigAsync')
+ */
 module.exports = {
   plugins: [],
   options: {
