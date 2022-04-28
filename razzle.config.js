@@ -6,6 +6,22 @@ const path = require('path');
 const { BundleAnalyzerPlugin } = require('webpack-bundle-analyzer');
 const DynamicPublicPathPlugin = require('webpack-dynamic-public-path');
 
+const modifyWebpackOptions = ({
+  options: { webpackOptions: options },
+  env,
+}) => {
+  // Exclude .cjs files from FileLoader. They should be loaded like other js files.
+  options.fileLoaderExclude.push(/\.cjs$/);
+
+  // Move cache out of node_modules
+  options.terserPluginOptions = {
+    ...options.terserPluginOptions,
+    cache: path.resolve(__dirname, 'cache/terser-webpack-plugin'),
+  };
+
+  return options;
+};
+
 const modifyWebpackConfig = (opts) => {
   /** @type {webpack.Configuration} */
   const config = opts.webpackConfig;
@@ -129,17 +145,6 @@ const modifyWebpackConfig = (opts) => {
     define('__DEV__', 'false');
   }
 
-  // Exclude .cjs files from FileLoader. They should be loaded like other js files.
-  opts.options.webpackOptions.fileLoaderExclude.push(/\.cjs$/);
-
-  // Move cache out of node_modules
-  const terser = opts.webpackConfig.optimization.minimizer?.find(
-    (plugin) => plugin.constructor.name === 'TerserPlugin'
-  );
-  if (terser) {
-    terser.options.cache = 'cache/terser-webpack-plugin';
-  }
-
   return config;
 };
 
@@ -158,6 +163,7 @@ module.exports = {
     enableReactRefresh: true,
     forceRuntimeEnvVars: ['HOST', 'PORT', 'PUBLIC_URL', 'RAZZLE_API_BASE_URL'],
   },
+  modifyWebpackOptions,
   modifyWebpackConfig,
   modifyJestConfig,
 };
