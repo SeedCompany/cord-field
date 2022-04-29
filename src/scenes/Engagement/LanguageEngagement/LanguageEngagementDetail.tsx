@@ -99,17 +99,19 @@ export const LanguageEngagementDetail = ({ engagement }: EngagementQuery) => {
                 Goals
               </Grid>
               <Grid item>
-                <Tooltip title="Create Goal">
-                  <Fab
-                    // @ts-expect-error it works. These generics are hard to express.
-                    component={Link}
-                    to="./products/create"
-                    color="error"
-                    size="small"
-                  >
-                    <Add />
-                  </Fab>
-                </Tooltip>
+                {engagement.products.canCreate && (
+                  <Tooltip title="Create Goal">
+                    <Fab
+                      // @ts-expect-error it works. These generics are hard to express.
+                      component={Link}
+                      to="./products/create"
+                      color="error"
+                      size="small"
+                    >
+                      <Add />
+                    </Fab>
+                  </Tooltip>
+                )}
               </Grid>
             </Grid>
             <Grid item container>
