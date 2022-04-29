@@ -13,6 +13,9 @@ import {
   PartnershipAgreementStatusLabels,
 } from '~/api/schema.graphql';
 import { labelFrom } from '~/common';
+import {
+  canEditAny
+} from '../../api';
 import { DisplaySimpleProperty } from '../DisplaySimpleProperty';
 import { FormattedDateRange, FormattedDateTime } from '../Formatters';
 import { Redacted } from '../Redacted';
@@ -50,6 +53,7 @@ export const PartnershipCard = ({
   const { classes, cx } = useStyles();
 
   const name = partnership?.partner.value?.organization.value?.name.value;
+  const editable = canEditAny(partnership);
   return (
     <Card className={cx(classes.root, className)}>
       <CardContent>
@@ -125,7 +129,11 @@ export const PartnershipCard = ({
         </Grid>
       </CardContent>
       <CardActions className={classes.cardActions}>
-        <Button color="primary" disabled={!partnership} onClick={onEdit}>
+        <Button
+          color="primary"
+          disabled={!partnership || !editable}
+          onClick={onEdit}
+        >
           Edit
         </Button>
         <DisplaySimpleProperty
