@@ -145,6 +145,12 @@ const modifyWebpackConfig = (opts) => {
     define('__DEV__', 'false');
   }
 
+  if (!opts.env.dev && isServer) {
+    // There's not much use to this as it's only used in node.js process.
+    // Minimizing makes it hard to interrupt errors.
+    config.optimization.minimize = false;
+  }
+
   return config;
 };
 
