@@ -6,11 +6,12 @@ export const useNumberFormatter = (options?: Intl.NumberFormatOptions) => {
   const req = useContext(RequestContext);
   const locale = useLocale();
   const formatter = useMemo(() => {
+    const normalized = locale === '*' ? undefined : locale;
     try {
-      return new Intl.NumberFormat(locale, options);
+      return new Intl.NumberFormat(normalized, options);
     } catch (e) {
       console.warn('Failed to create number formatter with locale', {
-        locale,
+        locale: normalized,
         ua: req?.headers['user-agent'] ?? navigator.userAgent,
         ssr: typeof window === 'undefined',
       });
