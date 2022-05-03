@@ -4,7 +4,9 @@ import { RequestContext } from './useRequest';
 // Use sparingly. Doing things based on User Agent is unreliable and not recommended.
 export const useUserAgent = () => {
   const req = useContext(RequestContext);
-  const ua = req ? req.header('user-agent')! : window.navigator.userAgent;
+  const ua = req
+    ? req.header('user-agent') ?? 'Unknown'
+    : window.navigator.userAgent;
   useDebugValue(ua);
   return ua;
 };
