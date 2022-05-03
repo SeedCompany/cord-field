@@ -1,4 +1,4 @@
-import { useMemo } from 'react';
+import { useCallback, useMemo } from 'react';
 import { useLocale } from '../../hooks';
 import { Nullable } from '../../util';
 
@@ -8,6 +8,8 @@ export const useNumberFormatter = (options?: Intl.NumberFormatOptions) => {
     () => new Intl.NumberFormat(locale, options),
     [locale, options]
   );
-  return (value: Nullable<number>) =>
-    value != null ? formatter.format(value) : '';
+  return useCallback(
+    (value: Nullable<number>) => (value != null ? formatter.format(value) : ''),
+    [formatter]
+  );
 };
