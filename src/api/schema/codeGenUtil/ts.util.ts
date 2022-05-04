@@ -14,6 +14,7 @@ import {
   ts,
   VariableDeclarationKind,
   VariableDeclarationStructure,
+  WriterFunction,
 } from 'ts-morph';
 import { Promisable } from 'type-fest';
 
@@ -131,13 +132,44 @@ export const writeStringArray = (items: readonly string[]) =>
 export const writeArray =
   (items: ReadonlyArray<ts.Expression | string>) =>
   (writer: CodeBlockWriter) => {
-    writer.writeLine('[');
+    writer.write('[\n');
     for (const item of items) {
       const str = typeof item === 'string' ? item : printNode(item);
       writer.writeLine(str + ',');
     }
     writer.write(']');
   };
+
+export const writeObject =
+  <V>(
+    object: Record<string, V>,
+    writers: {
+      key?: (key: string) => WriterFunction;
+      value: (value: V) => WriterFunction;
+    }
+  ): WriterFunction =>
+  (writer) =>
+    writer.block(() => {
+      const writeKey = writers.key ?? writeRaw;
+      for (const [key, val] of Object.entries(object)) {
+        writeKey(key)(writer);
+        writer.write(`: `);
+        writers.value(val)(writer);
+        writer.write(',\n');
+      }
+    });
+
+export const writeString =
+  (str: string, qoute = "'"): WriterFunction =>
+  (writer) =>
+    writer.write(
+      `${qoute}${str.replace(new RegExp(qoute, 'g'), `\\${qoute}`)}${qoute}`
+    );
+
+const writeRaw =
+  (str: string): WriterFunction =>
+  (writer) =>
+    writer.write(str);
 
 export const createStringLiteral = (text: string, doubleQuote = false) => {
   const literal = ts.createStringLiteral(text);
