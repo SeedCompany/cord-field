@@ -1,4 +1,5 @@
 import { useMutation } from '@apollo/client';
+import { getErrorInfo, isErrorCode } from '../../../api';
 import { CalendarDate } from '../../../util';
 import { useUploadFiles } from '../../files/hooks';
 import { UpdatePeriodicReportDocument } from './UpdatePeriodicReport.graphql';
@@ -23,6 +24,13 @@ export const useUpdatePeriodicReport = () => {
             skippedReason,
           },
           refreshFromPnp: !!uploadId,
+        },
+        onError: (err) => {
+          const info = getErrorInfo(err);
+          if (!isErrorCode(info, 'StepNotPlanned')) {
+            return;
+          }
+          // queue snack bar, maybe fetch product label
         },
       });
     };

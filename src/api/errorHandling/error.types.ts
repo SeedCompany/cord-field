@@ -1,5 +1,6 @@
 import { ApolloError } from '@apollo/client';
 import { assert } from 'ts-essentials';
+import { ProductStep } from '../schema';
 
 /**
  * This is a mapping of error codes to their error object.
@@ -14,6 +15,7 @@ export interface ErrorMap {
   Input: InputError;
   Duplicate: DuplicateError;
   Unauthorized: InputError;
+  StepNotPlanned: StepNotPlannedError;
 
   /**
    * This is a special one that allows a default handler for any
@@ -39,6 +41,7 @@ export type Code = keyof ErrorMap;
  */
 interface ErrorInfo {
   message: string;
+  codes: Code[];
 }
 
 /**
@@ -67,6 +70,18 @@ export interface InputError extends ErrorInfo {
 }
 
 export type DuplicateError = Required<InputError>;
+
+export interface StepNotPlannedError extends InputError {
+  field: string;
+  productId: string;
+  step: ProductStep;
+  index: number;
+}
+
+export const isErrorCode = <K extends keyof ErrorMap>(
+  errorInfo: ReturnType<typeof getErrorInfo>,
+  code: K
+): errorInfo is ErrorMap[K] => errorInfo.codes.includes(code);
 
 export const getErrorInfo = (e: unknown) => {
   if (!(e instanceof ApolloError) || !e.graphQLErrors[0]) {
