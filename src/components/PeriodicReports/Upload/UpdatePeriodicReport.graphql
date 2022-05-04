@@ -16,3 +16,10 @@ mutation UploadPeriodicReportFile(
     ...PeriodicReport
   }
 }
+
+query ProductLabel($id: ID!) {
+  product(id: $id) {
+    ...Id
+    label
+  }
+}
