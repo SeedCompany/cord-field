@@ -5,22 +5,27 @@ import { Picture } from '../../components/Picture';
 import { createTheme } from '../../theme';
 import backgroundImg from './background.png';
 
-const useStyles = makeStyles(({ palette }) => ({
-  '@global': {
-    body: {
-      // Here instead of `root` so overscroll doesn't have an abrupt white background.
-      backgroundColor: palette.background.default,
+const useStyles = makeStyles(
+  ({ palette }) => ({
+    '@global': {
+      body: {
+        // Here instead of `root` so overscroll doesn't have an abrupt white background.
+        backgroundColor: palette.background.default,
+      },
     },
-  },
-  root: {
-    flex: 1,
-    display: 'flex',
-    flexDirection: 'column',
-    justifyContent: 'space-evenly',
-    alignItems: 'center',
-    position: 'relative', // for background
-  },
-}));
+    root: {
+      flex: 1,
+      display: 'flex',
+      flexDirection: 'column',
+      justifyContent: 'space-evenly',
+      alignItems: 'center',
+      position: 'relative', // for background
+    },
+  }),
+  {
+    index: 1, // Higher specificity than baseline
+  }
+);
 
 const authTheme = createTheme({ dark: true });
 
