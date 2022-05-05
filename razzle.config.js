@@ -101,6 +101,9 @@ const modifyWebpackConfig = (opts) => {
 
   // Change public path to be dynamic based on PUBLIC_URL env
   if (!opts.env.dev && isClient) {
+    // Plugin does a string replace matching the public path, so make sure
+    // no other hardcoded strings are matched by using this unique string.
+    config.output.publicPath = '__PUBLIC_PATH_TO_BE_REPLACED_BY_PLUGIN_BELOW__';
     config.plugins.push(
       new DynamicPublicPathPlugin({
         externalPublicPath: 'window.env.PUBLIC_URL',
