@@ -1,15 +1,11 @@
-import { useMutation } from '@apollo/client';
 import { Dispatch, useCallback } from 'react';
 import { getMimeType } from './getMimeType';
 import * as actions from './Reducer/uploadActions';
 import * as Types from './Reducer/uploadTypings';
-import { DeleteFileNodeDocument } from './Upload.graphql';
 
 export const useUploadFile = (
   dispatch: Dispatch<Types.UploadAction>
 ): ((uploadFile: Types.UploadFile, url: string) => void) => {
-  const [deleteFile] = useMutation(DeleteFileNodeDocument);
-
   const setUploadError = useCallback(
     (queueId: Types.UploadFile['queueId'], errorMessage: string) => {
       dispatch({
@@ -35,11 +31,10 @@ export const useUploadFile = (
         } catch (error) {
           setUploadError(file.queueId, 'Failed to save file');
           console.error(error);
-          await deleteFile({ variables: { id: file.uploadId } });
         }
       }
     },
-    [deleteFile, setUploadError, dispatch]
+    [setUploadError, dispatch]
   );
 
   // This should be rare, it's just there for completeness.
