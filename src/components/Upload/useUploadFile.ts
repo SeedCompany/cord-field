@@ -37,67 +37,60 @@ export const useUploadFile = (
     [setUploadError, dispatch]
   );
 
-  // This should be rare, it's just there for completeness.
-  // It only runs if upload is complete but status isn't a "success" status.
-  const handleFileUploadCompleteError = useCallback(
-    (statusText, queueId) => {
-      setUploadError(queueId, statusText);
-    },
-    [setUploadError]
-  );
-
-  // This is the error handler that will actually run on errors
-  const handleUploadError = useCallback(
-    (queueId: Types.UploadFile['queueId']) => {
-      setUploadError(queueId, 'Upload failed');
-    },
-    [setUploadError]
-  );
-
-  const handleFileProgress = useCallback(
-    (queueId: Types.UploadFile['queueId'], event: ProgressEvent) => {
-      const { loaded, total } = event;
-      const percentCompleted = Math.floor((loaded / total) * 1000) / 10;
-      dispatch({
-        type: actions.PERCENT_COMPLETED_UPDATED,
-        queueId,
-        percentCompleted,
-      });
-    },
-    [dispatch]
-  );
-
   const uploadFile = useCallback(
-    (uploadFile: Types.UploadFile, url: string) => {
-      const { queueId, file } = uploadFile;
-
-      void getMimeType(file).then((mimeType) => {
-        const xhr = new XMLHttpRequest();
-        xhr.onreadystatechange = function () {
-          if (xhr.readyState === XMLHttpRequest.DONE) {
-            const { status } = xhr;
-            const success = status >= 200 && status < 400;
-            if (success) {
-              void handleFileUploadSuccess(uploadFile);
-            } else {
-              handleFileUploadCompleteError(xhr.statusText, queueId);
-            }
+    (upload: Types.UploadFile, url: string) => {
+      void putToS3({
+        url,
+        body: upload.file,
+        onProgress: (event) => {
+          dispatch({
+            type: actions.PERCENT_COMPLETED_UPDATED,
+            queueId: upload.queueId,
+            percentCompleted:
+              Math.floor((event.loaded / event.total) * 1000) / 10,
+          });
+        },
+      })
+        .then(() => handleFileUploadSuccess(upload))
+        .catch((e) => {
+          let message = 'Upload failed';
+          if (e instanceof DOMException && e.name === 'NotFoundError') {
+            message = `File not found on your computer`;
           }
-        };
-
-        xhr.upload.onprogress = handleFileProgress.bind(null, queueId);
-        xhr.upload.onerror = () => handleUploadError(queueId);
-        xhr.open('PUT', url);
-        xhr.setRequestHeader('Content-Type', mimeType);
-        xhr.send(file);
-      });
+          setUploadError(upload.queueId, message);
+          console.error(e);
+        });
     },
-    [
-      handleFileUploadSuccess,
-      handleFileUploadCompleteError,
-      handleFileProgress,
-      handleUploadError,
-    ]
+    [handleFileUploadSuccess, setUploadError, dispatch]
   );
   return uploadFile;
+};
+
+const putToS3 = async ({
+  url,
+  body,
+  onProgress,
+}: {
+  url: string;
+  body: File;
+  onProgress: (ev: ProgressEvent) => void;
+}) => {
+  const mimeType = await getMimeType(body);
+  await new Promise<void>((resolve, reject) => {
+    const xhr = new XMLHttpRequest();
+    xhr.onreadystatechange = () => {
+      if (xhr.readyState === XMLHttpRequest.DONE) {
+        if (xhr.status >= 200 && xhr.status < 400) {
+          resolve();
+        } else {
+          reject(new Error(`${xhr.status}: ${xhr.statusText}`));
+        }
+      }
+    };
+    xhr.onprogress = onProgress;
+    xhr.onerror = reject;
+    xhr.open('PUT', url);
+    xhr.setRequestHeader('Content-Type', mimeType);
+    xhr.send(body);
+  });
 };

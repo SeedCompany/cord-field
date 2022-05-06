@@ -17,6 +17,7 @@ import { AppMetadata } from './AppMetadata';
 import { CssBaseline } from './CssBaseline';
 import { MainLayout } from './MainLayout';
 import { useNonProdWarning } from './useNonProdWarning';
+import { useOldChromeWarning } from './useOldChromeWarning';
 
 const Partners = loadable(() => import('../Partners'), {
   resolveComponent: (m) => m.Partners,
@@ -48,6 +49,7 @@ const SearchResults = loadable(() => import('../SearchResults'), {
 
 export const Root = () => {
   useNonProdWarning();
+  useOldChromeWarning();
   useIdentifyInLogRocket();
   const { sessionLoading } = useSession();
 
