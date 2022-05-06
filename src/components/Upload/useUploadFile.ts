@@ -52,8 +52,13 @@ export const useUploadFile = (
         },
       })
         .then(() => handleFileUploadSuccess(upload))
-        .catch(() => {
-          setUploadError(upload.queueId, 'Upload failed');
+        .catch((e) => {
+          let message = 'Upload failed';
+          if (e instanceof DOMException && e.name === 'NotFoundError') {
+            message = `File not found on your computer`;
+          }
+          setUploadError(upload.queueId, message);
+          console.error(e);
         });
     },
     [handleFileUploadSuccess, setUploadError, dispatch]
