@@ -8,7 +8,7 @@ export const useOldChromeWarning = () => {
   useIsomorphicEffect(() => {
     const raw = ua.match(/Chrom(e|ium)\/([0-9]+)\./);
     const chromeVersion = raw?.[2] ? parseInt(raw[2], 10) : undefined;
-    if (chromeVersion && chromeVersion > 90) {
+    if (chromeVersion && chromeVersion > 97) {
       return;
     }
     enqueueSnackbar(
