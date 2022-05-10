@@ -204,13 +204,17 @@ export const humanFormat = inputFormat.toLowerCase();
 
 type DateInput = string | CalendarDate | null | undefined;
 
+const uninitialized = Symbol('uninitialized');
+
 /**
  * Memoizes date objects to prevent re-renders & parses ISO strings
  */
-const useDate = (valIn: DateInput) => {
+const useDate = (valIn: DateInput): CalendarDate | null | undefined => {
   const curr = useRef(valIn);
-  const parsed = useRef<CalendarDate | null>();
-  if (parsed.current !== undefined && isDateEqual(curr.current, valIn)) {
+  const parsed = useRef<CalendarDate | null | undefined | typeof uninitialized>(
+    uninitialized
+  );
+  if (parsed.current !== uninitialized && isDateEqual(curr.current, valIn)) {
     return parsed.current;
   }
   curr.current = valIn;
