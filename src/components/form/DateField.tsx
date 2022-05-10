@@ -215,7 +215,7 @@ const useDate = (valIn: DateInput) => {
   }
   curr.current = valIn;
   parsed.current = !valIn
-    ? null
+    ? undefined
     : typeof valIn === 'string'
     ? CalendarDate.fromISO(valIn)
     : valIn;
