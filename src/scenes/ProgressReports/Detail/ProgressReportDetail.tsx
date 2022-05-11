@@ -55,6 +55,14 @@ const useStyles = makeStyles()(({ spacing }) => ({
   subheader: {
     margin: spacing(2, 0, 4),
   },
+  card: {
+    flex: 1,
+    display: 'flex',
+    flexDirection: 'column',
+  },
+  cardContent: {
+    flex: 1,
+  },
 }));
 
 export const ProgressReportDetail = () => {
@@ -220,6 +228,7 @@ export const ProgressReportDetail = () => {
                   <ProgressSummaryCard
                     loading={!report}
                     summary={report?.cumulativeSummary ?? null}
+                    explanation={report}
                   />
                 </Grid>
                 <Grid item xs={12} md={5} container>

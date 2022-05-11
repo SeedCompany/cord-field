@@ -8,6 +8,12 @@ mutation UpdatePeriodicReport(
   }
 }
 
+mutation UpdateProgressReport($input: UpdateProgressReportInput!) {
+  updateProgressReport(input: $input) {
+    ...ProgressReport
+  }
+}
+
 mutation UploadPeriodicReportFile(
   $id: ID!
   $upload: CreateDefinedFileVersionInput!

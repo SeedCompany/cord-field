@@ -1,0 +1,13 @@
+fragment ExplanationOfVarianceForm on ProgressReport {
+  ...Id
+  varianceExplanation {
+    value
+    canRead
+    canEdit
+  }
+  varianceReasons {
+    value
+    canRead
+    canEdit
+  }
+}

@@ -9,6 +9,7 @@ query ProgressReportDetail($id: ID!, $changesetId: ID) {
 
 fragment ProgressReport on ProgressReport {
   ...PeriodicReport
+  ...ExplanationOfVarianceForm
   cumulativeSummary {
     ...ProgressSummary
   }
