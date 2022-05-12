@@ -3,6 +3,8 @@ import {
   ProductApproachLabels,
   ProductMethodology,
   ProductMethodologyLabels,
+  ProgressVarianceReason,
+  ProgressVarianceReasonGroups,
 } from '~/api/schema.graphql';
 import { ProductTypes } from '../scenes/Products/ProductForm/constants';
 import { MethodologyToApproach } from './approach';
@@ -30,3 +32,12 @@ export const displayMethodologyWithLabel = (methodology: ProductMethodology) =>
 
 export const displayProductTypes = (type: ProductTypes) =>
   type === 'DirectScriptureProduct' ? 'Scripture' : startCase(type);
+
+export const displayGroupOfVarianceReason = (
+  reasons: readonly ProgressVarianceReason[]
+) =>
+  reasons.map((val) =>
+    Object.keys(ProgressVarianceReasonGroups).find((key) =>
+      ProgressVarianceReasonGroups[key]?.includes(val)
+    )
+  );
