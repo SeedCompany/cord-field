@@ -13,9 +13,7 @@ import {
   PartnershipAgreementStatusLabels,
 } from '~/api/schema.graphql';
 import { labelFrom } from '~/common';
-import {
-  canEditAny
-} from '../../api';
+import { canEditAny } from '../../api';
 import { DisplaySimpleProperty } from '../DisplaySimpleProperty';
 import { FormattedDateRange, FormattedDateTime } from '../Formatters';
 import { Redacted } from '../Redacted';
