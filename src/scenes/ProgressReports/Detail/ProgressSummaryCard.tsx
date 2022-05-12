@@ -1,8 +1,16 @@
-import { Card, CardContent, Grid, Typography } from '@material-ui/core';
+import {
+  Card,
+  CardContent,
+  Fab,
+  Grid,
+  Tooltip,
+  Typography,
+} from '@material-ui/core';
+import { Edit } from '@material-ui/icons';
 import { Skeleton } from '@material-ui/lab';
 import { Many } from 'lodash';
 import React, { ReactNode } from 'react';
-import { DataButton } from '~/components/DataButton';
+import { displayGroupOfVarianceReason } from '~/common';
 import { useDialog } from '~/components/Dialog';
 import {
   EditableExplanationField,
@@ -44,18 +52,41 @@ export const ProgressSummaryCard = ({
         <Value loading={loading} value={summary?.variance}>
           Variance
         </Value>
+        <Grid item xs={6} sm={3}>
+          <Typography
+            variant="h2"
+            gutterBottom
+            color={
+              !loading && explanation?.varianceReasons.value?.length === 0
+                ? 'textSecondary'
+                : 'textPrimary'
+            }
+          >
+            {explanation?.varianceReasons.value ? (
+              <>{`${
+                explanation.varianceReasons.value.length > 0
+                  ? displayGroupOfVarianceReason(
+                      explanation.varianceReasons.value
+                    )
+                  : 'N/A'
+              }`}</>
+            ) : (
+              <>N/A</>
+            )}
+          </Typography>
+
+          {explanation?.varianceExplanation.value ?? 'No explanation given'}
+        </Grid>
         {explanation && (
           <Grid item>
-            <DataButton
-              secured={explanation.varianceReasons}
-              redacted="You do not have permission to view the variance explanation"
-              onClick={() => editExplanation('varianceReasons')}
-              children={
-                explanation.varianceReasons.value &&
-                `Variance: ${explanation.varianceReasons.value}`
-              }
-              empty={'Enter Explanation of Variance'}
-            />
+            <Tooltip title="Update variance explanation and reasons">
+              <Fab
+                color="primary"
+                onClick={() => editExplanation('varianceReasons')}
+              >
+                <Edit />
+              </Fab>
+            </Tooltip>
             <ExplanationForm
               progressReport={explanation}
               {...editExplanationState}
