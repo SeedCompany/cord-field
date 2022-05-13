@@ -63,7 +63,9 @@ export const DeleteEngagement = (props: DeleteEngagementProps) => {
       </Tooltip>
       <DialogForm
         {...confirmState}
-        onSubmit={() => deleteEng().then(() => navigate('../..'))}
+        onSubmit={() =>
+          deleteEng().then(() => navigate(`/projects/${project.id}`))
+        }
         sendIfClean
         title="Delete Engagement"
         submitLabel="Delete"
