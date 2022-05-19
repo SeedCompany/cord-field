@@ -69,10 +69,18 @@ export interface PeriodicReportCardProps {
   dueNext?: SecuredPeriodicReportFragment;
   disableIcon?: boolean;
   hasDetailPage?: boolean;
+  metRequirement?: boolean;
 }
 
 const PeriodicReportCardInContext = (props: PeriodicReportCardProps) => {
-  const { type, dueCurrently, dueNext, disableIcon, hasDetailPage } = props;
+  const {
+    type,
+    dueCurrently,
+    dueNext,
+    disableIcon,
+    hasDetailPage,
+    metRequirement = true,
+  } = props;
   const classes = useStyles();
 
   const currentFile = dueCurrently?.value?.reportFile;
@@ -119,63 +127,76 @@ const PeriodicReportCardInContext = (props: PeriodicReportCardProps) => {
             <Typography color="initial" variant="h4" paragraph>
               {`${type} Reports`}
             </Typography>
-            <div className={classes.relevantReports}>
-              <ReportInfo
-                title="Current"
-                report={dueCurrently}
-                className={classes.relevantReport}
-              />
-              <Divider orientation="vertical" flexItem variant="middle" />
-              <ReportInfo
-                title="Next"
-                report={dueNext}
-                className={classes.relevantReport}
-              />
-            </div>
+            {metRequirement ? (
+              <div className={classes.relevantReports}>
+                <ReportInfo
+                  title="Current"
+                  report={dueCurrently}
+                  className={classes.relevantReport}
+                />
+                <Divider orientation="vertical" flexItem variant="middle" />
+                <ReportInfo
+                  title="Next"
+                  report={dueNext}
+                  className={classes.relevantReport}
+                />
+              </div>
+            ) : (
+              <div>
+                <Typography variant="body2">
+                  Not all requirements have been met
+                </Typography>
+                <Typography variant="body2">
+                  Click here to view remaining list
+                </Typography>
+              </div>
+            )}
           </div>
         </CardActionAreaLink>
-        <CardActions>
-          <ButtonLink color="primary" to={link}>
-            View Reports
-          </ButtonLink>
-          {needsUpload ? (
-            <Tooltip
-              title={
-                <>
-                  Upload report for <ReportLabel report={dueCurrently} />
-                </>
-              }
-            >
-              <Button color="primary" onClick={openFileBrowser}>
-                Upload Report
-              </Button>
-            </Tooltip>
-          ) : currentFile?.value ? (
-            hasDetailPage ? (
-              <ButtonLink
-                color="primary"
-                to={`${link}/${dueCurrently!.value!.id}`}
-              >
-                View Report
-              </ButtonLink>
-            ) : (
+        {metRequirement && (
+          <CardActions>
+            <ButtonLink color="primary" to={link}>
+              View Reports
+            </ButtonLink>
+            {needsUpload ? (
               <Tooltip
                 title={
                   <>
-                    Preview report for <ReportLabel report={dueCurrently} />
+                    Upload report for <ReportLabel report={dueCurrently} />
                   </>
                 }
               >
-                <Button
-                  color="primary"
-                  onClick={() => openFilePreview(currentFile.value!)}
-                >
-                  Preview Report
+                <Button color="primary" onClick={openFileBrowser}>
+                  Upload Report
                 </Button>
               </Tooltip>
-            )
-          ) : null}
-        </CardActions>
+            ) : currentFile?.value ? (
+              hasDetailPage ? (
+                <ButtonLink
+                  color="primary"
+                  to={`${link}/${dueCurrently!.value!.id}`}
+                >
+                  View Report
+                </ButtonLink>
+              ) : (
+                <Tooltip
+                  title={
+                    <>
+                      Preview report for <ReportLabel report={dueCurrently} />
+                    </>
+                  }
+                >
+                  <Button
+                    color="primary"
+                    onClick={() => openFilePreview(currentFile.value!)}
+                  >
+                    Preview Report
+                  </Button>
+                </Tooltip>
+              )
+            ) : null}
+          </CardActions>
+        )}
         <DropOverlay report={dueCurrently} show={isDragActive} />
         <input {...getInputProps()} name="report_file_uploader" />
       </Card>

@@ -499,6 +499,10 @@ export const ProjectOverview: FC = () => {
                   projectOverviewData?.project.currentFinancialReportDue
                 }
                 dueNext={projectOverviewData?.project.nextFinancialReportDue}
+                metRequirement={
+                  projectOverviewData?.project.financialReports.canRead &&
+                  projectOverviewData.project.financialReports.total > 0
+                }
               />
             </Grid>
             <Grid item xs={12} md={6}>

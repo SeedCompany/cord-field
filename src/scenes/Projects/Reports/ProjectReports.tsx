@@ -2,8 +2,10 @@ import { useQuery } from '@apollo/client';
 import React from 'react';
 import { ReportType } from '../../../api';
 import { Error } from '../../../components/Error';
+import { FinancialReportCheckList } from '../../../components/PeriodicReports/FinancialReportCheckList';
 import { PeriodicReportsList } from '../../../components/PeriodicReports/PeriodicReportsList';
 import { ProjectBreadcrumb } from '../../../components/ProjectBreadcrumb';
+import { ProjectOverviewDocument } from '../Overview/ProjectOverview.generated';
 import { useProjectId } from '../useProjectId';
 import {
   FinancialReportsDocument,
@@ -18,6 +20,12 @@ export const ProjectReports = ({ type }: { type: ReportType }) => {
       variables: { projectId, changeset: changesetId },
     }
   );
+  const { data: projectOverviewData } = useQuery(ProjectOverviewDocument, {
+    variables: {
+      input: projectId,
+      changeset: changesetId,
+    },
+  });
 
   if (error) {
     return (
@@ -36,6 +44,12 @@ export const ProjectReports = ({ type }: { type: ReportType }) => {
       reports={data?.project.reports.items}
       breadcrumbs={[<ProjectBreadcrumb data={data?.project} />]}
       pageTitleSuffix={data?.project.name.value ?? 'A Project'}
+      children={
+        type === 'Financial' &&
+        projectOverviewData?.project.financialReports.total === 0 ? (
+          <FinancialReportCheckList project={projectOverviewData.project} />
+        ) : null
+      }
     />
   );
 };
