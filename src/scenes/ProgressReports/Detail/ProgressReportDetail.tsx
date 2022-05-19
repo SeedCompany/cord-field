@@ -30,6 +30,7 @@ import { Redacted } from '../../../components/Redacted';
 import { SkipPeriodicReportDialog } from '../../Projects/Reports/SkipPeriodicReportDialog';
 import { UpdatePeriodicReportDialog } from '../../Projects/Reports/UpdatePeriodicReportDialog';
 import { ProductTableList } from './ProductTableList';
+import { ProgressExplanationCard } from './ProgressExplanationCard';
 import { ProgressReportCard } from './ProgressReportCard';
 import { ProgressReportDetailDocument } from './ProgressReportDetail.graphql';
 import { ProgressSummaryCard } from './ProgressSummaryCard';
@@ -228,6 +229,10 @@ export const ProgressReportDetail = () => {
                   <ProgressSummaryCard
                     loading={!report}
                     summary={report?.cumulativeSummary ?? null}
+                  />
+                </Grid>
+                <Grid item xs={6} container>
+                  <ProgressExplanationCard
                     explanation={report}
                   />
                 </Grid>
