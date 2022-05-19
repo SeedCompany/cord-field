@@ -4,8 +4,9 @@ import { useMemo } from 'react';
 import { Helmet } from 'react-helmet-async';
 import { useNavigate } from 'react-router-dom';
 import { makeStyles } from 'tss-react/mui';
-import { addItemToList, handleFormError } from '~/api';
 import { callAll, entries, getFullBookRange, mapFromList } from '~/common';
+import { Error } from '~/components/Error';
+import { addItemToList, handleFormError } from '../../../api';
 import { useChangesetAwareIdFromUrl } from '../../../components/Changeset';
 import { EngagementBreadcrumb } from '../../../components/EngagementBreadcrumb';
 import { ProjectBreadcrumb } from '../../../components/ProjectBreadcrumb';
@@ -41,7 +42,7 @@ export const CreateProduct = () => {
   const { id: engagementId, changesetId } =
     useChangesetAwareIdFromUrl('engagementId');
 
-  const { data, loading } = useQuery(ProductInfoForCreateDocument, {
+  const { data, loading, error } = useQuery(ProductInfoForCreateDocument, {
     variables: {
       engagementId,
       changeset: changesetId,
@@ -207,10 +208,19 @@ export const CreateProduct = () => {
         <EngagementBreadcrumb data={engagement} />
         <Typography variant="h4">Create Goal</Typography>
       </Breadcrumbs>
-      <Typography variant="h2">
-        {loading ? <Skeleton width="50%" variant="text" /> : 'Create Goal'}
-      </Typography>
+      <Error error={error}>
+        {{
+          NotFound: 'Could not find Engagement',
+          Default: 'Error loading Engagement',
+        }}
+      </Error>
+      {!error && (
+        <Typography variant="h2">
+          {loading ? <Skeleton width="50%" variant="text" /> : 'Create Goal'}
+        </Typography>
+      )}
       {!loading &&
+        !error &&
         data &&
         data.engagement.__typename === 'LanguageEngagement' && (
           <ProductForm
