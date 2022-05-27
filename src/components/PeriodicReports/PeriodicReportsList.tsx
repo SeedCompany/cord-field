@@ -27,12 +27,14 @@ export const PeriodicReportsList = ({
   pageTitleSuffix,
   reports,
   onRowClick,
+  disableNewVersionAction,
 }: {
   type: ReportType;
   breadcrumbs?: ReactNode[];
   pageTitleSuffix?: string;
   reports?: readonly PeriodicReportFragment[];
   onRowClick?: (rowData: ReportRow) => void;
+  disableNewVersionAction?: boolean;
 }) => {
   const classes = useStyles();
   const reportTypeName = `${type} Reports`;
@@ -52,7 +54,11 @@ export const PeriodicReportsList = ({
           {reportTypeName}
         </Typography>
 
-        <PeriodicReportsTable data={reports} onRowClick={onRowClick} />
+        <PeriodicReportsTable
+          data={reports}
+          onRowClick={onRowClick}
+          disableNewVersionAction={disableNewVersionAction}
+        />
       </main>
     </div>
   );

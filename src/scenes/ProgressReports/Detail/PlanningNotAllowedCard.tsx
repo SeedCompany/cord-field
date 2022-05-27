@@ -45,8 +45,8 @@ export const PlanningNotAllowedCard = () => {
             <NotInterested className={classes.addIcon} fontSize="large" />
           </Avatar>
           <Typography variant="button" align="center" className={classes.text}>
-            Not allowed to upload a planning file until at least one product is
-            added.
+            Not allowed to upload a planning info file until at least one
+            product is added.
           </Typography>
         </CardActionArea>
       </Card>

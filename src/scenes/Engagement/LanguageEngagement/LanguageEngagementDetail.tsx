@@ -10,7 +10,6 @@ import { CeremonyForm } from './Ceremony';
 import { DatesForm } from './DatesForm';
 import { LanguageEngagementHeader } from './Header';
 import { PlanningSpreadsheet, ProgressReports } from './ProgressAndPlanning';
-import { PlanningNotAllowedCard } from './ProgressAndPlanning/PlanningNotAllowedCard';
 
 const useStyles = makeStyles(({ spacing, breakpoints }) => ({
   root: {
@@ -61,14 +60,13 @@ export const LanguageEngagementDetail = ({ engagement }: EngagementQuery) => {
           <Grid item lg={5} container direction="column" spacing={3}>
             <Grid item container spacing={3}>
               <Grid item container className={classes.details}>
-                <ProgressReports engagement={engagement} />
+                <ProgressReports
+                  engagement={engagement}
+                  hasGoals={engagement.products.total > 0}
+                />
               </Grid>
               <Grid item container className={classes.details}>
-                {engagement.products.total > 0 ? (
-                  <PlanningSpreadsheet engagement={engagement} />
-                ) : (
-                  <PlanningNotAllowedCard />
-                )}
+                <PlanningSpreadsheet engagement={engagement} />
               </Grid>
             </Grid>
             <Grid item container spacing={3}>

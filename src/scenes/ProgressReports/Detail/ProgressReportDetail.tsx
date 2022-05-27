@@ -30,6 +30,7 @@ import { ProjectBreadcrumb } from '../../../components/ProjectBreadcrumb';
 import { Redacted } from '../../../components/Redacted';
 import { SkipPeriodicReportDialog } from '../../Projects/Reports/SkipPeriodicReportDialog';
 import { UpdatePeriodicReportDialog } from '../../Projects/Reports/UpdatePeriodicReportDialog';
+import { PlanningNotAllowedCard } from './PlanningNotAllowedCard';
 import { ProductTableList } from './ProductTableList';
 import { ProgressReportCard } from './ProgressReportCard';
 import { ProgressReportDetailDocument } from './ProgressReportDetail.graphql';
@@ -85,6 +86,7 @@ export const ProgressReportDetail: FC = () => {
       ? data.periodicReport
       : null;
   const engagement = report?.parent;
+  const totalProducts = engagement?.products.total ?? 0;
 
   return (
     <div className={classes.root}>
@@ -220,7 +222,9 @@ export const ProgressReportDetail: FC = () => {
                   />
                 </Grid>
                 <Grid item xs={12} md={5} container>
-                  {report ? (
+                  {totalProducts === 0 ? (
+                    <PlanningNotAllowedCard />
+                  ) : report ? (
                     <ProgressReportCard
                       progressReport={report}
                       disableIcon

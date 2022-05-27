@@ -8,6 +8,9 @@ query ProgressReports($engagementId: ID!, $changeset: ID) {
           ...PeriodicReport
         }
       }
+      products {
+        total
+      }
     }
   }
 }

@@ -69,6 +69,7 @@ export interface PeriodicReportCardProps {
   dueNext?: SecuredPeriodicReportFragment;
   disableIcon?: boolean;
   hasDetailPage?: boolean;
+  hasGoals: boolean;
 }
 
 const PeriodicReportCardInContext = (props: PeriodicReportCardProps) => {
@@ -146,7 +147,11 @@ const PeriodicReportCardInContext = (props: PeriodicReportCardProps) => {
                 </>
               }
             >
-              <Button color="primary" onClick={openFileBrowser}>
+              <Button
+                color="primary"
+                onClick={openFileBrowser}
+                disabled={!props.hasGoals}
+              >
                 Upload Report
               </Button>
             </Tooltip>

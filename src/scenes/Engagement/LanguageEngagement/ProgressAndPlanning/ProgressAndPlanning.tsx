@@ -31,14 +31,16 @@ export const useStyles = makeStyles(({ spacing, typography }) => ({
 
 interface Props {
   engagement: ProgressAndPlanningFragment;
+  hasGoals?: boolean;
 }
 
-export const ProgressReports = ({ engagement }: Props) => (
+export const ProgressReports = ({ engagement, hasGoals }: Props) => (
   <FileActionsContextProvider>
     <PeriodicReportCard
       type="Progress"
       dueCurrently={engagement.currentProgressReportDue}
       dueNext={engagement.nextProgressReportDue}
+      hasGoals={hasGoals ?? false}
       disableIcon
       hasDetailPage
     />
