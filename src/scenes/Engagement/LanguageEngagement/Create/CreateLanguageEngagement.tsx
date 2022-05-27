@@ -1,4 +1,11 @@
 import { useMutation } from '@apollo/client';
+import {
+  List,
+  ListItem,
+  ListItemText,
+  ListSubheader,
+  Paper,
+} from '@material-ui/core';
 import React from 'react';
 import { Except } from 'type-fest';
 import { addItemToList } from '~/api';
@@ -34,10 +41,12 @@ type CreateLanguageEngagementProps = Except<
   'onSubmit'
 > & {
   project: ProjectIdFragment;
+  engagedIds?: string[]; //wish there were a cooler way for this.
 };
 
 export const CreateLanguageEngagement = ({
   project,
+  engagedIds,
   ...props
 }: CreateLanguageEngagementProps) => {
   const [createEngagement] = useMutation(CreateLanguageEngagementDocument);
@@ -69,6 +78,13 @@ export const CreateLanguageEngagement = ({
       ),
     });
   };
+  const sortByWhetherAnEngagedId = <T extends { id: string }>(a: T) => {
+    if (engagedIds?.includes(a.id)) {
+      return 1;
+    } else {
+      return -1;
+    }
+  };
   return (
     <DialogForm
       {...props}
@@ -77,7 +93,41 @@ export const CreateLanguageEngagement = ({
       changesetAware
     >
       <SubmitError />
-      <LanguageField name="engagement.languageId" label="Language" required />
+      <LanguageField
+        name="engagement.languageId"
+        label="Language"
+        required
+        // wrap the options in a List with a subheader
+        PaperComponent={({ children }) => {
+          return (
+            <Paper>
+              <List>
+                <ListSubheader>
+                  <ListItem divider dense>
+                    <ListItemText secondary="NAME" />
+                    <ListItemText secondary="ETH" />
+                    <ListItemText secondary="ROD" />
+                  </ListItem>
+                </ListSubheader>
+                {children}
+              </List>
+            </Paper>
+          );
+        }}
+        sortOptionComparator={sortByWhetherAnEngagedId}
+        getOptionDisabled={(lang) => engagedIds?.includes(lang.id) ?? true}
+        renderOption={(option) => (
+          <ListItem dense>
+            <ListItemText
+              primary={option.name.value ?? option.displayName.value}
+            />
+            <ListItemText primary={option.ethnologue.code.value ?? '-'} />
+            <ListItemText
+              primary={option.registryOfDialectsCode.value ?? '-'}
+            />
+          </ListItem>
+        )}
+      />
     </DialogForm>
   );
 };
