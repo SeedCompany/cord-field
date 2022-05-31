@@ -69,7 +69,7 @@ export interface PeriodicReportCardProps {
   dueNext?: SecuredPeriodicReportFragment;
   disableIcon?: boolean;
   hasDetailPage?: boolean;
-  hasGoals: boolean;
+  hasGoals?: boolean;
 }
 
 const PeriodicReportCardInContext = (props: PeriodicReportCardProps) => {
