@@ -8459,11 +8459,11 @@ __metadata:
   linkType: hard
 
 "eventsource@npm:^1.0.7":
-  version: 1.1.0
-  resolution: "eventsource@npm:1.1.0"
+  version: 1.1.1
+  resolution: "eventsource@npm:1.1.1"
   dependencies:
     original: ^1.0.0
-  checksum: 78338b7e75ec471cb793efb3319e0c4d2bf00fb638a2e3f888ad6d98cd1e3d4492a29f554c0921c7b2ac5130c3a732a1a0056739f6e2f548d714aec685e5da7e
+  checksum: 8de239626900726b4ef5d721ffd37df87c6cd734feb0f8abb85aeb73f1400bdb6afecb0ed412a8b92448bd31d9da79cc2efbfc79aa6efe597ba351cc2e94b01f
   languageName: node
   linkType: hard
 
