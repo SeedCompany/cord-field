@@ -123,10 +123,13 @@ export const CreateProduct = () => {
         const { data } = await createOtherProduct({
           variables: {
             input: {
-              engagementId,
-              title: title || '',
-              description,
-              ...inputs,
+              changeset: changesetId,
+              product: {
+                engagementId,
+                title: title || '',
+                description,
+                ...inputs,
+              },
             },
           },
         });
@@ -135,18 +138,21 @@ export const CreateProduct = () => {
         const { data } = await createDirectScriptureProduct({
           variables: {
             input: {
-              engagementId,
-              scriptureReferences: parsedScriptureReferences,
-              unspecifiedScripture:
-                parsedScriptureReferences.length > 0 ||
-                !unspecifiedScripture?.totalVerses ||
-                !book
-                  ? null
-                  : {
-                      book,
-                      ...unspecifiedScripture,
-                    },
-              ...inputs,
+              changeset: changesetId,
+              product: {
+                engagementId,
+                scriptureReferences: parsedScriptureReferences,
+                unspecifiedScripture:
+                  parsedScriptureReferences.length > 0 ||
+                  !unspecifiedScripture?.totalVerses ||
+                  !book
+                    ? null
+                    : {
+                        book,
+                        ...unspecifiedScripture,
+                      },
+                ...inputs,
+              },
             },
           },
         });
@@ -155,10 +161,13 @@ export const CreateProduct = () => {
         const { data } = await createDerivativeScriptureProduct({
           variables: {
             input: {
-              engagementId,
-              ...inputs,
-              produces: produces!.id,
-              scriptureReferencesOverride: parsedScriptureReferences,
+              changeset: changesetId,
+              product: {
+                engagementId,
+                ...inputs,
+                produces: produces!.id,
+                scriptureReferencesOverride: parsedScriptureReferences,
+              },
             },
           },
         });

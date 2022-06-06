@@ -1,4 +1,6 @@
-mutation UpdateDirectScriptureProduct($input: UpdateDirectScriptureProduct!) {
+mutation UpdateDirectScriptureProduct(
+  $input: UpdateDirectScriptureProductInput!
+) {
   updateProduct: updateDirectScriptureProduct(input: $input) {
     product {
       ...UpdateProductResult
@@ -7,7 +9,7 @@ mutation UpdateDirectScriptureProduct($input: UpdateDirectScriptureProduct!) {
 }
 
 mutation UpdateDerivativeScriptureProduct(
-  $input: UpdateDerivativeScriptureProduct!
+  $input: UpdateDerivativeScriptureProductInput!
 ) {
   updateProduct: updateDerivativeScriptureProduct(input: $input) {
     product {
@@ -16,7 +18,7 @@ mutation UpdateDerivativeScriptureProduct(
   }
 }
 
-mutation UpdateOtherProduct($input: UpdateOtherProduct!) {
+mutation UpdateOtherProduct($input: UpdateOtherProductInput!) {
   updateProduct: updateOtherProduct(input: $input) {
     product {
       ...UpdateProductResult

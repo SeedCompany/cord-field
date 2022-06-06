@@ -217,10 +217,13 @@ export const EditProduct = () => {
         await updateOtherProduct({
           variables: {
             input: {
-              id: product.id,
-              ...input,
-              title,
-              description,
+              changeset: changesetId,
+              product: {
+                id: product.id,
+                ...input,
+                title,
+                description,
+              },
             },
           },
         });
@@ -228,18 +231,21 @@ export const EditProduct = () => {
         await updateDirectScriptureProduct({
           variables: {
             input: {
-              id: product.id,
-              ...input,
-              scriptureReferences: parsedScriptureReferences,
-              unspecifiedScripture:
-                bookSelection !== 'partialUnknown' ||
-                !book ||
-                !unspecifiedScripture?.totalVerses
-                  ? null
-                  : {
-                      book,
-                      ...unspecifiedScripture,
-                    },
+              changeset: changesetId,
+              product: {
+                id: product.id,
+                ...input,
+                scriptureReferences: parsedScriptureReferences,
+                unspecifiedScripture:
+                  bookSelection !== 'partialUnknown' ||
+                  !book ||
+                  !unspecifiedScripture?.totalVerses
+                    ? null
+                    : {
+                        book,
+                        ...unspecifiedScripture,
+                      },
+              },
             },
           },
         });
@@ -247,10 +253,13 @@ export const EditProduct = () => {
         await updateDerivativeScriptureProduct({
           variables: {
             input: {
-              id: product.id,
-              ...input,
-              produces: produces!.id,
-              scriptureReferencesOverride: parsedScriptureReferences,
+              changeset: changesetId,
+              product: {
+                id: product.id,
+                ...input,
+                produces: produces!.id,
+                scriptureReferencesOverride: parsedScriptureReferences,
+              },
             },
           },
         });
