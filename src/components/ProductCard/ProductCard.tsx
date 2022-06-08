@@ -28,6 +28,7 @@ const useStyles = makeStyles()(() => ({
 
 interface ProductCardProps {
   product: ProductCardFragment;
+  className?: string;
 }
 
 const iconMap: Record<string, SvgIconComponent> = {
@@ -38,13 +39,13 @@ const iconMap: Record<string, SvgIconComponent> = {
   Other: HelpOutlined,
 };
 
-export const ProductCard = ({ product }: ProductCardProps) => {
-  const { classes } = useStyles();
+export const ProductCard = ({ product, className }: ProductCardProps) => {
+  const {classes, cx} = useStyles();
 
   const Icon = product.category ? iconMap[product.category] : undefined;
 
   return (
-    <Card className={classes.root}>
+    <Card className={cx(classes.root, className)}>
       <CardActionAreaLink
         to={`/products/${idForUrl(product)}`}
         className={classes.actionArea}
