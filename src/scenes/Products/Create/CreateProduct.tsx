@@ -38,8 +38,11 @@ export const CreateProduct = () => {
   const { classes } = useStyles();
   const navigate = useNavigate();
 
-  const { id: engagementId, changesetId } =
-    useChangesetAwareIdFromUrl('engagementId');
+  const {
+    id: engagementId,
+    changesetId,
+    mergedId,
+  } = useChangesetAwareIdFromUrl('engagementId');
 
   const { data, loading } = useQuery(ProductInfoForCreateDocument, {
     variables: {
@@ -201,8 +204,7 @@ export const CreateProduct = () => {
 
     try {
       await Promise.all([createProduct(), updatePpm()]);
-
-      navigate(`/engagements/${engagementId}`);
+      navigate(`/engagements/${changesetId ? mergedId : engagementId}`);
     } catch (e) {
       return await handleFormError(e, form);
     }
