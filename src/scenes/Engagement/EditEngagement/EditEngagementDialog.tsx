@@ -253,6 +253,46 @@ export const EditEngagementDialog: FC<EditEngagementDialogProps> = ({
       }}
       {...props}
       initialValues={initialValues}
+      validate={(values) => {
+        const start = values.engagement.startDateOverride;
+        const end = values.engagement.endDateOverride;
+
+        if (start && end) {
+          if (start > end) {
+            return {
+              engagement: {
+                startDateOverride: 'Start date should come before end date',
+                endDateOverride: 'End date should come after start date',
+              },
+            };
+          }
+          return undefined;
+        }
+
+        if (
+          start &&
+          engagement.dateRange.value.end &&
+          start > engagement.dateRange.value.end
+        ) {
+          return {
+            engagement: {
+              startDateOverride: `Start date should come before project's end date`,
+            },
+          };
+        }
+
+        if (
+          end &&
+          engagement.dateRange.value.start &&
+          end < engagement.dateRange.value.start
+        ) {
+          return {
+            engagement: {
+              endDateOverride: `End date should come after project's start date`,
+            },
+          };
+        }
+      }}
       onSubmit={async (
         {
           engagement: { mentorId: mentor, countryOfOriginId: country, ...rest },
