@@ -151,6 +151,21 @@ export const UpdateProjectDialog = ({
       // Only simple properties are changeset aware, relationships are not.
       changesetAware={editFields.every((field) => !field.endsWith('Id'))}
       initialValues={initialValues}
+      validate={(values) => {
+        const start = values.project.mouStart;
+        const end = values.project.mouEnd;
+
+        if (start && end && start > end) {
+          return {
+            project: {
+              mouStart: 'Start date should come before end date',
+              mouEnd: 'End date should come after start date',
+            },
+          };
+        }
+
+        return undefined;
+      }}
       onSubmit={async ({ project: data }, form) => {
         const { dirtyFields } = form.getState();
         await updateProject({

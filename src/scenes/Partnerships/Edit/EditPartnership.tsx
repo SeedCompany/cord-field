@@ -125,6 +125,46 @@ export const EditPartnership: FC<EditPartnershipProps> = (props) => {
     <PartnershipForm<EditPartnershipFormInput>
       {...props}
       sendIfClean="delete" // Lets us delete without changing any fields
+      validate={(values) => {
+        const start = values.partnership.mouStartOverride;
+        const end = values.partnership.mouEndOverride;
+
+        if (start && end) {
+          if (start > end) {
+            return {
+              partnership: {
+                mouStartOverride: 'Start date should come before end date',
+                mouEndOverride: 'End date should come after start date',
+              },
+            };
+          }
+
+          return undefined;
+        }
+        if (
+          start &&
+          partnership.mouRange.value.end &&
+          start > partnership.mouRange.value.end
+        ) {
+          return {
+            partnership: {
+              mouStartOverride: `Start date should come before project's end date`,
+            },
+          };
+        }
+
+        if (
+          end &&
+          partnership.mouRange.value.start &&
+          end < partnership.mouRange.value.start
+        ) {
+          return {
+            partnership: {
+              mouEndOverride: `End date should come after project's start date`,
+            },
+          };
+        }
+      }}
       onSubmit={async ({ submitAction, partnership }) => {
         if (submitAction === 'delete') {
           await deletePartnership({
