@@ -169,6 +169,7 @@ export const EditPartner = ({
             pointOfContactId,
             pmcEntityCode,
             organizationName,
+            address,
             ...rest
           },
         },
@@ -190,6 +191,7 @@ export const EditPartner = ({
                 input: {
                   partner: {
                     ...rest,
+                    address: address ?? null,
                     pointOfContactId: pointOfContactId?.id,
                     pmcEntityCode: pmcEntityCode?.toUpperCase(),
                   },
