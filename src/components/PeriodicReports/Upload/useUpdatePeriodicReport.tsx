@@ -21,7 +21,7 @@ export const useUpdatePeriodicReport = () => {
   return async (
     id: string,
     files?: File[],
-    receivedDate?: CalendarDate,
+    receivedDate?: CalendarDate | null,
     skippedReason?: string | null
   ) => {
     const updateReport = async (uploadId?: string, name?: string) => {

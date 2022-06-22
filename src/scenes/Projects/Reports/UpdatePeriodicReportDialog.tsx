@@ -52,7 +52,7 @@ export const UpdatePeriodicReportDialog = ({
   const updatePeriodicReport = useUpdatePeriodicReport();
 
   const initialValues = useMemo(() => {
-    const receivedDate = report.receivedDate.value;
+    const receivedDate = report.receivedDate.value ?? null;
     const fullInitialValuesFields: Except<
       UpdatePeriodicReportFormValues['report'],
       'id'
@@ -85,7 +85,7 @@ export const UpdatePeriodicReportDialog = ({
       // the only time this form will have an initial value for the file field is when adding a new version
       sendIfClean={Boolean(initialValues.report.reportFile)}
       onSubmit={async ({ report: { id, reportFile, receivedDate } }) =>
-        await updatePeriodicReport(id, reportFile, receivedDate ?? undefined)
+        await updatePeriodicReport(id, reportFile, receivedDate)
       }
     >
       <SubmitError />
