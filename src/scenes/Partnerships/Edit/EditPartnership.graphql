@@ -1,9 +1,31 @@
-mutation UpdatePartnership($input: UpdatePartnershipInput!) {
-  updatePartnership(input: $input) {
+mutation UpdatePartnership(
+  $changes: UpdatePartnership!
+  $changeset: ID
+  $financialReportPeriodChanged: Boolean!
+  $projectId: ID!
+  $period: PeriodType
+) {
+  updatePartnership(input: { partnership: $changes, changeset: $changeset }) {
     partnership {
       ...PartnershipCard
       ...PartnershipForm
       ...RecalculateChangesetDiff
+    }
+  }
+
+  updateProject(
+    input: {
+      project: { id: $projectId, financialReportPeriod: $period }
+      changeset: $changeset
+    }
+  ) @include(if: $financialReportPeriodChanged) {
+    project {
+      ...Id
+      ...RecalculateChangesetDiff
+      financialReportPeriod {
+        canRead
+        value
+      }
     }
   }
 }

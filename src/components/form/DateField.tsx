@@ -86,14 +86,16 @@ export const DateField = ({
 
   // Show understood date but invalid selection errors immediately
   // Leave invalid text input to be shown only after touched as usual
-  const error =
+  const hasError =
     showError(meta) ||
     (meta.error && meta.error !== 'invalidDate' && meta.error !== 'Required');
-  const humanError = {
-    ...defaultMessages,
-    ...errorMessages,
-    Required: 'Required',
-  }[meta.error as DateError];
+  const humanError =
+    // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+    {
+      ...defaultMessages,
+      ...errorMessages,
+      Required: 'Required',
+    }[meta.error as DateError] ?? meta.error;
   const helperText = getHelperText(
     {
       ...meta,
@@ -102,7 +104,7 @@ export const DateField = ({
     meta.active && !open.current && !disableFormatHelperText
       ? humanFormat
       : helperTextProp,
-    error
+    hasError
   );
 
   return (
@@ -151,7 +153,7 @@ export const DateField = ({
           }}
           name={input.name}
           helperText={helperText}
-          error={error}
+          error={hasError}
           autoFocus={props.autoFocus}
           // not applying focused prop here because the field is readonly
           // until some kind of setup is complete. Not going to mess with it.

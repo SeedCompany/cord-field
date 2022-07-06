@@ -3,7 +3,7 @@ import { Decorator } from 'final-form';
 import React, { FC, useMemo } from 'react';
 import { Except } from 'type-fest';
 import {
-  invalidateProps,
+  onUpdateInvalidateProps,
   PeriodType,
   removeItemFromList,
   UpdatePartnershipInput,
@@ -11,8 +11,7 @@ import {
 import { SubmitAction, SubmitButton } from '../../../components/form';
 import { PartnerLookupItem } from '../../../components/form/Lookup';
 import { callAll } from '../../../util';
-import { UpdateProjectDocument } from '../../Projects/Update/UpdateProject.graphql';
-import { invalidateBudgetRecords } from '../InvalidateBudget/invalidateBudgetRecords';
+import { invalidateBudgetRecords } from '../InvalidateBudget';
 import { ProjectPartnershipsQuery } from '../List/PartnershipList.graphql';
 import {
   hasManagingType,
@@ -76,12 +75,7 @@ const updatedPartnership = (res: UpdatePartnershipMutation) =>
 export const EditPartnership: FC<EditPartnershipProps> = (props) => {
   const { partnership, project } = props;
 
-  const [updatePartnership] = useMutation(UpdatePartnershipDocument, {
-    update: callAll(
-      invalidateBudgetRecords(project, partnership, updatedPartnership),
-      updateOldPrimaryPartnership(project, updatedPartnership)
-    ),
-  });
+  const [updatePartnership] = useMutation(UpdatePartnershipDocument);
   const [deletePartnership] = useMutation(DeletePartnershipDocument, {
     update: callAll(
       removeItemFromList({
@@ -91,7 +85,6 @@ export const EditPartnership: FC<EditPartnershipProps> = (props) => {
       invalidateBudgetRecords(project, partnership, undefined)
     ),
   });
-  const [updateProject] = useMutation(UpdateProjectDocument);
 
   const initialValues = useMemo(
     () => ({
@@ -125,7 +118,47 @@ export const EditPartnership: FC<EditPartnershipProps> = (props) => {
     <PartnershipForm<EditPartnershipFormInput>
       {...props}
       sendIfClean="delete" // Lets us delete without changing any fields
-      onSubmit={async ({ submitAction, partnership }) => {
+      validate={(values) => {
+        const start = values.partnership.mouStartOverride;
+        const end = values.partnership.mouEndOverride;
+
+        if (start && end) {
+          if (start > end) {
+            return {
+              partnership: {
+                mouStartOverride: 'Start date should come before end date',
+                mouEndOverride: 'End date should come after start date',
+              },
+            };
+          }
+
+          return undefined;
+        }
+        if (
+          start &&
+          partnership.mouRange.value.end &&
+          start > partnership.mouRange.value.end
+        ) {
+          return {
+            partnership: {
+              mouStartOverride: `Start date should come before project's end date`,
+            },
+          };
+        }
+
+        if (
+          end &&
+          partnership.mouRange.value.start &&
+          end < partnership.mouRange.value.start
+        ) {
+          return {
+            partnership: {
+              mouEndOverride: `End date should come after project's start date`,
+            },
+          };
+        }
+      }}
+      onSubmit={async ({ submitAction, partnership: values }) => {
         if (submitAction === 'delete') {
           await deletePartnership({
             variables: {
@@ -135,43 +168,33 @@ export const EditPartnership: FC<EditPartnershipProps> = (props) => {
           });
           return;
         }
-        const { financialReportPeriod, ...rest } = partnership;
-        const {
-          financialReportPeriod: { value: prevFinancialReportPeriod },
-        } = project;
+        const { financialReportPeriod, ...rest } = values;
+        const financialReportPeriodChanged =
+          financialReportPeriod !== project.financialReportPeriod.value;
 
         await updatePartnership({
           variables: {
-            input: {
-              partnership: {
-                ...rest,
-                primary: partnership.primary || undefined,
-              },
-              changeset: props.partnership.changeset?.id,
+            changes: {
+              ...rest,
+              primary: values.primary || undefined,
             },
+            changeset: partnership.changeset?.id,
+            financialReportPeriodChanged,
+            projectId: project.id,
+            period: financialReportPeriod,
           },
-        });
-        if (financialReportPeriod !== prevFinancialReportPeriod) {
-          await updateProject({
-            variables: {
-              input: {
-                project: {
-                  id: project.id,
-                  financialReportPeriod: financialReportPeriod,
-                },
-                changeset: project.changeset?.id,
-              },
-            },
-            update: (cache) => {
-              // Invalidate financial reports as they are now different
-              invalidateProps(cache, project, [
+          update: callAll(
+            invalidateBudgetRecords(project, partnership, updatedPartnership),
+            updateOldPrimaryPartnership(project, updatedPartnership),
+            // Invalidate financial reports as they are now different
+            financialReportPeriodChanged &&
+              onUpdateInvalidateProps(project, [
                 'financialReports',
                 'currentFinancialReportDue',
                 'nextFinancialReportDue',
-              ]);
-            },
-          });
-        }
+              ])
+          ),
+        });
       }}
       title={`Edit Partnership ${name ? `with ${name}` : ''}`}
       leftAction={
