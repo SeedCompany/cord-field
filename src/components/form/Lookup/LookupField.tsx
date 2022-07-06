@@ -54,6 +54,7 @@ export type LookupFieldProps<
     getInitialValues?: (val: string) => Partial<CreateFormValues>;
     getOptionLabel: (option: T) => string | null | undefined;
     createPower?: Power;
+    sortOptionComparator?: (a: T, b: T) => number;
   } & Except<
     AutocompleteProps<T, Multiple, DisableClearable, false>,
     | 'value'
@@ -206,14 +207,18 @@ export function LookupField<
         ))
       }
       // @ts-expect-error our value is readonly array, MUI's is not but it could be.
-      options={options}
+      options={
+        props.sortOptionComparator
+          ? [...options].sort(props.sortOptionComparator)
+          : options
+      }
       getOptionLabel={getOptionLabel}
       freeSolo={freeSolo}
-      renderOption={(option) => {
+      renderOption={(option, state) => {
         if (typeof option === 'string') {
           return `Create "${option}"`;
         }
-        return getOptionLabel(option);
+        return (props.renderOption ?? getOptionLabel)(option, state);
       }}
       filterOptions={(options, params) => {
         // Apply default filtering. Even though the API filters for us, we add

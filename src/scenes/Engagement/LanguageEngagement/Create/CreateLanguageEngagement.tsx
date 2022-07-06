@@ -1,4 +1,13 @@
 import { useMutation } from '@apollo/client';
+import {
+  List,
+  ListItem,
+  ListItemText,
+  ListSubheader,
+  makeStyles,
+  Paper,
+  Typography,
+} from '@material-ui/core';
 import React from 'react';
 import { Except } from 'type-fest';
 import { addItemToList } from '~/api';
@@ -19,6 +28,17 @@ import { callAll } from '../../../../util';
 import { CreateLanguageEngagementDocument } from './CreateLanguageEngagement.graphql';
 import { recalculateSensitivity } from './recalculateSensitivity';
 
+const useStyles = makeStyles(({ palette, spacing }) => ({
+  helperTextKey: {
+    marginRight: spacing(1),
+    color: palette.text.secondary,
+  },
+  helperTextValue: {
+    marginRight: spacing(3),
+    color: palette.text.secondary,
+  },
+}));
+
 interface CreateLanguageEngagementFormValues {
   engagement: {
     languageId: LanguageLookupItem;
@@ -34,12 +54,15 @@ type CreateLanguageEngagementProps = Except<
   'onSubmit'
 > & {
   project: ProjectIdFragment;
+  engagedIds?: string[]; //wish there were a cooler way for this.
 };
 
 export const CreateLanguageEngagement = ({
   project,
+  engagedIds,
   ...props
 }: CreateLanguageEngagementProps) => {
+  const classes = useStyles();
   const [createEngagement] = useMutation(CreateLanguageEngagementDocument);
   const submit = async ({ engagement }: CreateLanguageEngagementFormValues) => {
     const languageRef = {
@@ -69,6 +92,13 @@ export const CreateLanguageEngagement = ({
       ),
     });
   };
+  const sortByWhetherAnEngagedId = <T extends { id: string }>(a: T) => {
+    if (engagedIds?.includes(a.id)) {
+      return 1;
+    } else {
+      return -1;
+    }
+  };
   return (
     <DialogForm
       {...props}
@@ -76,8 +106,87 @@ export const CreateLanguageEngagement = ({
       title="Create Language Engagement"
       changesetAware
     >
-      <SubmitError />
-      <LanguageField name="engagement.languageId" label="Language" required />
+      {({ values }) => {
+        // need to check if the engagement is null or not because not returned from autocomplete yet.
+        // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+        const currentLanguage = values.engagement
+          ? values.engagement.languageId
+          : null;
+        return (
+          <>
+            <SubmitError />
+            <LanguageField
+              name="engagement.languageId"
+              label="Language"
+              required
+              // wrap the options in a List with a subheader
+              PaperComponent={({ children }) => {
+                return (
+                  <Paper>
+                    <List>
+                      <ListSubheader>
+                        <ListItem divider dense>
+                          <ListItemText secondary="NAME" />
+                          <ListItemText secondary="ETH" />
+                          <ListItemText secondary="ROD" />
+                        </ListItem>
+                      </ListSubheader>
+                      {children}
+                    </List>
+                  </Paper>
+                );
+              }}
+              sortOptionComparator={sortByWhetherAnEngagedId}
+              getOptionDisabled={(lang) =>
+                engagedIds?.includes(lang.id) ?? true
+              }
+              helperText={
+                currentLanguage ? (
+                  <>
+                    <Typography
+                      variant="caption"
+                      className={classes.helperTextKey}
+                    >
+                      ETH
+                    </Typography>
+                    <Typography
+                      variant="caption"
+                      className={classes.helperTextValue}
+                    >
+                      {currentLanguage.ethnologue.code.value ?? '-'}
+                    </Typography>
+                    <Typography
+                      variant="caption"
+                      className={classes.helperTextKey}
+                    >
+                      ROD
+                    </Typography>
+                    <Typography
+                      variant="caption"
+                      className={classes.helperTextValue}
+                    >
+                      {currentLanguage.registryOfDialectsCode.value ?? '-'}
+                    </Typography>
+                  </>
+                ) : (
+                  ''
+                )
+              }
+              renderOption={(option) => (
+                <ListItem dense>
+                  <ListItemText
+                    primary={option.name.value ?? option.displayName.value}
+                  />
+                  <ListItemText primary={option.ethnologue.code.value ?? '-'} />
+                  <ListItemText
+                    primary={option.registryOfDialectsCode.value ?? '-'}
+                  />
+                </ListItem>
+              )}
+            />
+          </>
+        );
+      }}
     </DialogForm>
   );
 };

@@ -57,6 +57,10 @@ type EngagementListItem =
   | LanguageEngagementListItemFragment
   | InternshipEngagementListItemFragment;
 
+const isString = (item: string | undefined): item is string => {
+  return !!item;
+};
+
 const useStyles = makeStyles(({ spacing, breakpoints, palette }) => ({
   root: {
     flex: 1,
@@ -607,6 +611,15 @@ export const ProjectOverview: FC = () => {
       {projectOverviewData && (
         <CreateEngagement
           project={projectOverviewData.project}
+          engagedIds={engagements.data?.items
+            .map((i) => {
+              if (i.__typename === 'LanguageEngagement') {
+                return i.language.value?.id;
+              } else {
+                return i.intern.value?.id;
+              }
+            })
+            .filter(isString)}
           {...createEngagementState}
         />
       )}
