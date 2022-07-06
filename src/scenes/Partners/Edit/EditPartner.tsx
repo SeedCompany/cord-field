@@ -17,6 +17,7 @@ import {
 import {
   CheckboxField,
   EnumField,
+  SecuredField,
   SubmitError,
   TextField,
 } from '../../../components/form';
@@ -61,6 +62,7 @@ type EditPartnerProps = Except<
 interface PartnerFieldProps {
   props: {
     name: string;
+    disabled?: boolean;
   };
   partner: PartnerDetailsFragment;
   values: PartnerFormValues;
@@ -206,14 +208,27 @@ export const EditPartner = ({
         <>
           <SubmitError />
           {editFields.map((name) => {
+            if (name === 'organizationName') {
+              const OrganizationNameField = fieldMapping[name];
+              return (
+                <OrganizationNameField
+                  props={{
+                    name: name,
+                    disabled: !partner.organization.value?.name.canEdit,
+                  }}
+                  key={name}
+                  partner={partner}
+                  values={values}
+                />
+              );
+            }
             const Field = fieldMapping[name];
             return (
-              <Field
-                props={{ name }}
-                key={name}
-                partner={partner}
-                values={values}
-              />
+              <SecuredField obj={partner} name={name} key={name}>
+                {(props) => (
+                  <Field props={props} partner={partner} values={values} />
+                )}
+              </SecuredField>
             );
           })}
         </>

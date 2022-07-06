@@ -131,7 +131,7 @@ export const PartnerDetail = () => {
                 <Skeleton width="25ch" />
               )}
             </Typography>
-            {partner && (
+            {partner?.organization.canEdit && (
               <Tooltip title="Edit Partner">
                 <IconButton
                   aria-label="Edit Partner"
