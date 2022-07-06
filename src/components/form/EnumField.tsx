@@ -216,6 +216,11 @@ export const EnumField = <
     [meta.disabled, isChecked, name, onBlur, onFocus, onOptionChange, variant]
   );
 
+  if (options && options.length === 0) {
+    // Don't show label/field without any options.
+    return null;
+  }
+
   let children = childrenProp ?? [
     ...(typeof defaultOption === 'string'
       ? [<EnumOption default label={defaultOption} key="enum default" />]
