@@ -10,15 +10,23 @@ import { Nullable } from './types';
  * paintHouse('white');
  *
  *
- * @example Functions can be null to skip to help with conditionals.
+ * @example Functions can be null/false to skip to help with conditionals.
  * callAll(
- *   ifThing ? conditionalFn : null
+ *   ifThing ? conditionalFn : null,
+ *   ifThing && conditionalFn,
  * )
  */
 export const callAll =
-  <Args extends any[]>(...fns: Array<Nullable<(...args: Args) => void>>) =>
+  <Args extends any[]>(
+    ...fns: Array<Nullable<(...args: Args) => void> | false>
+  ) =>
   (...args: Args) => {
-    fns.forEach((fn) => fn?.(...args));
+    for (const fn of fns) {
+      if (!fn) {
+        continue;
+      }
+      fn(...args);
+    }
   };
 
 /**
@@ -33,14 +41,15 @@ export const callAll =
  * );
  * const maybeError = verifyEmail('');
  *
- * @example Functions can be null to skip to help with conditionals.
+ * @example Functions can be null/false to skip to help with conditionals.
  * callSome(
- *   ifThing ? conditionalFn : null
+ *   ifThing ? conditionalFn : null,
+ *   ifThing && conditionalFn,
  * )
  */
 export const callSome =
   <Args extends any[], Return>(
-    ...fns: Array<Nullable<(...args: Args) => Return>>
+    ...fns: Array<Nullable<(...args: Args) => Return> | false>
   ) =>
   (...args: Args): Return | undefined => {
     for (const fn of fns) {
