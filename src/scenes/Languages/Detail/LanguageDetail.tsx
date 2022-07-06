@@ -317,7 +317,7 @@ export const LanguageDetail = () => {
                 </Typography>
               ) : null}
             </Grid>
-            <Grid>
+            <Grid item xs={12}>
               {!!language && <LanguagePostList language={language} />}
             </Grid>
           </Grid>
