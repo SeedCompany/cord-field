@@ -3,9 +3,6 @@ mutation UpdateProject($input: UpdateProjectInput!) {
     project {
       ...ProjectOverview
       ...RecalculateChangesetDiff
-      financialReportPeriod {
-        value
-      }
     }
   }
 }
