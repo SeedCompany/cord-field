@@ -2,6 +2,7 @@ const LoadablePlugin = require('@loadable/webpack-plugin');
 const CircularDependencyPlugin = require('circular-dependency-plugin');
 const _ = require('lodash');
 const path = require('path');
+const { TsconfigPathsPlugin } = require('tsconfig-paths-webpack-plugin');
 const { BundleAnalyzerPlugin } = require('webpack-bundle-analyzer');
 const DynamicPublicPathPlugin = require('webpack-dynamic-public-path');
 
@@ -27,6 +28,8 @@ const modifyWebpackConfig = (opts) => {
   const { target } = opts.env;
   const isClient = target === 'web';
   const isServer = target === 'node';
+
+  config.resolve.plugins.push(new TsconfigPathsPlugin());
 
   const define = (key, value) => {
     opts.options.webpackOptions.definePluginOptions[key] = value;
