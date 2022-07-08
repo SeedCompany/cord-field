@@ -32,6 +32,11 @@ interface Props<
    */
   renderChange?: (props: { previous: Item; current: Item }) => ReactNode;
   children: ReactNode;
+  /**
+   * Should the badge icon go to the left or right of the content that it wraps?
+   * @default 'left'
+   */
+  iconHorizontalOrigin?: 'left' | 'right';
 }
 
 export const ChangesetPropertyBadge = <
@@ -48,6 +53,7 @@ export const ChangesetPropertyBadge = <
     identifyBy: identifyByProp,
     renderChange,
     children,
+    iconHorizontalOrigin,
   } = props;
   const { previous } = useChangesetDiffItem(current);
 
@@ -66,9 +72,11 @@ export const ChangesetPropertyBadge = <
   const originalProp = unwrapSecured(previous[prop]) as Item;
   const identifyBy = identifyByProp ?? identity;
   const isDiff = identifyBy(currentProp) !== identifyBy(originalProp);
+
   return (
     <ChangesetBadge
       mode={isDiff ? 'changed' : undefined}
+      anchorHorizontal={iconHorizontalOrigin}
       moreInfo={
         isDiff ? (
           renderChange ? (

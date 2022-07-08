@@ -61,6 +61,7 @@ interface ChangesetBadgeOwnProps {
   disableOutline?: boolean;
   moreInfo?: ReactNode;
   TooltipProps?: Omit<TooltipProps, 'title' | 'children'>;
+  anchorHorizontal?: 'right' | 'left';
 }
 
 export interface ChangesetBadgeProps
@@ -68,7 +69,14 @@ export interface ChangesetBadgeProps
     UseStyles<typeof useStyles> {}
 
 export const ChangesetBadge = (props: ChangesetBadgeProps) => {
-  const { mode, disableOutline, children, moreInfo, TooltipProps } = props;
+  const {
+    mode,
+    disableOutline,
+    children,
+    moreInfo,
+    TooltipProps,
+    anchorHorizontal,
+  } = props;
   const outline = !disableOutline;
   const { classes, cx } = useStyles(props, {
     props: { classes: props.classes },
@@ -80,11 +88,16 @@ export const ChangesetBadge = (props: ChangesetBadgeProps) => {
 
   return (
     <Badge
-      anchorOrigin={{ horizontal: 'left', vertical: 'top' }}
+      anchorOrigin={{
+        horizontal: anchorHorizontal ?? 'left',
+        vertical: 'top',
+      }}
       component={BadgeWithTooltip}
       tooltip={(content: ReactElement) => (
         <PaperTooltip
           placement="right"
+          // Assuming more info is given when changedå
+          interactive={mode === 'changed'}
           {...TooltipProps}
           title={
             <Grid container direction="column" alignItems="flex-start">
