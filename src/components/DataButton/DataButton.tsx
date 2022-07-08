@@ -8,7 +8,7 @@ import { Skeleton } from '@material-ui/lab';
 import { isFunction } from 'lodash';
 import * as React from 'react';
 import { ReactNode } from 'react';
-import { SecuredProp } from '../../api';
+import { SecuredProp } from '~/common';
 import { Redacted } from '../Redacted';
 
 const useStyles = makeStyles(() => ({

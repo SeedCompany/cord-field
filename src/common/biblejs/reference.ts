@@ -1,5 +1,6 @@
 import { groupBy, isEqual, sum } from 'lodash';
-import { ScriptureFragment, UnspecifiedScripturePortion } from '../../api';
+import { UnspecifiedScripturePortion } from '~/api';
+import { ScriptureFragment } from '../fragments';
 import { Nullable } from '../types';
 import { books } from './bibleBooks';
 

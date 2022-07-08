@@ -6,7 +6,8 @@ import {
 import { Modifier } from '@apollo/client/cache/core/types/common';
 import { uniqBy } from 'lodash';
 import { DeepPartial } from 'ts-essentials';
-import { IdFragment, readFragment } from '../../api';
+import { readFragment } from '~/api';
+import { IdFragment } from '~/common';
 import {
   ProgressRefsRelatingToEngagementFragmentDoc as ProgressRefsRelatingToEngagement,
   ProgressReportRefFragment as ProgressReport,

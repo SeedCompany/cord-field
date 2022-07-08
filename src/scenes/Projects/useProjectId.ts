@@ -1,4 +1,4 @@
-import { IdFragment } from '../../api';
+import { IdFragment } from '~/common';
 import {
   idForUrl,
   useChangesetAwareIdFromUrl,

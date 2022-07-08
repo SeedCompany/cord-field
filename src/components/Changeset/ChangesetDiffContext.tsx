@@ -1,8 +1,8 @@
 import { useApolloClient } from '@apollo/client';
 import * as React from 'react';
 import { createContext, useCallback, useContext, useMemo } from 'react';
-import { Entity, IdFragment } from '~/api';
-import { ChildrenProp, mapFromList, Nullable } from '~/common';
+import { Entity } from '~/api';
+import { ChildrenProp, IdFragment, mapFromList, Nullable } from '~/common';
 import {
   ChangesetDiffFragment as Diff,
   ChangesetDiffItemFragment as DiffItem,

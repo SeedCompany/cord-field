@@ -1,7 +1,7 @@
 import { ApolloCache, MutationUpdaterFunction } from '@apollo/client';
 import { difference, sortBy, uniqBy } from 'lodash';
-import { IdFragment, readFragment, StepProgress } from '~/api';
-import { notNullish } from '~/common';
+import { readFragment, StepProgress } from '~/api';
+import { IdFragment, notNullish } from '~/common';
 import { ProductFormFragment } from '../ProductForm/ProductForm.graphql';
 import {
   modifyProgressRelatingToEngagement,

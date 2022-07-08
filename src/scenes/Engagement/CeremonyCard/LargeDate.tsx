@@ -3,8 +3,7 @@ import { Skeleton } from '@material-ui/lab';
 import clsx from 'clsx';
 import { useState } from 'react';
 import * as React from 'react';
-import { SecuredProp } from '~/api';
-import { CalendarDate, Nullable } from '~/common';
+import { CalendarDate, Nullable, SecuredProp } from '~/common';
 import { useDateFormatter } from '../../../components/Formatters';
 import { Redacted } from '../../../components/Redacted';
 

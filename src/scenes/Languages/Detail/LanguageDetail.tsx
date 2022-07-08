@@ -5,8 +5,8 @@ import { Skeleton } from '@material-ui/lab';
 import React from 'react';
 import { Helmet } from 'react-helmet-async';
 import { useParams } from 'react-router-dom';
-import { canEditAny, removeItemFromList } from '~/api';
-import { listOrPlaceholders } from '~/common';
+import { removeItemFromList } from '~/api';
+import { canEditAny, listOrPlaceholders } from '~/common';
 import { BooleanProperty } from '../../../components/BooleanProperty';
 import { useDialog } from '../../../components/Dialog';
 import {
