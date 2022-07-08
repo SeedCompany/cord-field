@@ -16,7 +16,7 @@
     "./src/server/disableSsrByDefault",
     "@loadable/babel-plugin",
     "mui-make-styles",
-    ["babel-plugin-transform-import", {
+    ["babel-plugin-transform-imports", {
       "lodash": {
         "transform": "lodash/${member}"
       }
