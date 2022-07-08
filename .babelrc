@@ -16,10 +16,10 @@
     "./src/server/disableSsrByDefault",
     "@loadable/babel-plugin",
     "mui-make-styles",
-    ["babel-plugin-import", {
-      "libraryName": "lodash",
-      "libraryDirectory": "",
-      "camel2DashComponentName": false
-    }, "fix-lodash-imports"]
+    ["babel-plugin-transform-import", {
+      "lodash": {
+        "transform": "lodash/${member}"
+      }
+    }]
   ]
 }
