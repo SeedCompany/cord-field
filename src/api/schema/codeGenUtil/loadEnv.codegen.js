@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-var-requires, @typescript-eslint/no-require-imports */
 const dotEnv = require('dotenv');
 const dotEnvExpand = require('dotenv-expand');
 const fs = require('fs');

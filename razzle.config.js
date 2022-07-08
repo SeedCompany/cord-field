@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-var-requires,@typescript-eslint/no-require-imports */
 const LoadablePlugin = require('@loadable/webpack-plugin');
 const CircularDependencyPlugin = require('circular-dependency-plugin');
 const _ = require('lodash');

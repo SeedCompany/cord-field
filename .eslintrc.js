@@ -1,5 +1,4 @@
 // @ts-check
-// eslint-disable-next-line @typescript-eslint/no-require-imports,@typescript-eslint/no-var-requires
 const fs = require('fs');
 
 const roots = fs
@@ -79,6 +78,15 @@ const config = {
       };
       return override;
     }),
+
+    // Toolchain is still commonjs
+    {
+      files: ['**/*.js'],
+      rules: {
+        '@typescript-eslint/no-var-requires': 'off',
+        '@typescript-eslint/no-require-imports': 'off',
+      },
+    },
   ],
 };
 
