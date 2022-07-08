@@ -31,6 +31,34 @@ fragment ChangesetDiffItem on Resource {
   ...Id
   ...ProjectChangesetDiff
   ...BudgetRecordChangesetDiff
+  ...ProductChangesetDiff
+}
+
+fragment ProductChangesetDiff on Product {
+  scriptureReferences {
+    value {
+      label
+    }
+  }
+  describeCompletion {
+    value
+  }
+  methodology {
+    value
+  }
+  mediums {
+    value
+  }
+  ...OtherProductProps
+}
+
+fragment OtherProductProps on OtherProduct {
+  title {
+    value
+  }
+  description {
+    value
+  }
 }
 
 fragment ProjectChangesetDiff on Project {
