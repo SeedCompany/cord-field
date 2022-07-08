@@ -8,8 +8,12 @@ import {
 } from '@mui/material';
 import { ReactNode } from 'react';
 import { makeStyles } from 'tss-react/mui';
-import { ProductMediumLabels, ProductStepLabels } from '~/api/schema.graphql';
+import { ProductMedium, ProductMediumLabels, ProductStepLabels } from '~/api/schema.graphql';
 import { displayMethodologyWithLabel, mapFromList } from '~/common';
+import {
+  ChangesetPropertyBadge,
+  ChangesetPropList,
+} from '~/components/Changeset';
 import {
   DisplaySimpleProperty,
   DisplaySimplePropertyProps,
@@ -40,6 +44,15 @@ export const ProductInfo = ({ product }: { product?: Product }) => {
           value={product.description.value}
           loading={!product}
           wrap={infoWrapper}
+          propValueWrap={(value) => (
+            <ChangesetPropertyBadge
+              iconHorizontalOrigin="right"
+              current={product}
+              prop="description"
+            >
+              {value}
+            </ChangesetPropertyBadge>
+          )}
         />
       )}
 
@@ -47,34 +60,34 @@ export const ProductInfo = ({ product }: { product?: Product }) => {
         label="Distribution Methods"
         value={
           product && product.mediums.value.length > 0 ? (
-            <List disablePadding>
-              {product.mediums.value.map((medium) => (
-                <ListItem key={medium} disableGutters>
-                  <ListItemText
-                    primary={ProductMediumLabels[medium]}
-                    secondary={
-                      ppm[medium]?.partner.value?.organization.value?.name
-                        .value ? (
-                        <>
-                          <Typography variant="caption" color="inherit">
-                            &nbsp;via&nbsp;
-                          </Typography>
-                          <Link
-                            to={`/partners/${ppm[medium]!.partner.value!.id}`}
-                          >
-                            {
-                              ppm[medium]!.partner.value!.organization.value!
-                                .name.value
-                            }
-                          </Link>
-                        </>
-                      ) : undefined
-                    }
-                    className={classes.listItem}
-                  />
-                </ListItem>
-              ))}
-            </List>
+            <ChangesetPropList
+              current={product}
+              prop="mediums"
+              renderListItem={(medium: ProductMedium) => (
+                <ListItemText
+                  primary={ProductMediumLabels[medium]}
+                  secondary={
+                    ppm[medium]?.partner.value?.organization.value?.name
+                      .value ? (
+                      <>
+                        <Typography variant="caption" color="inherit">
+                          &nbsp;via&nbsp;
+                        </Typography>
+                        <Link
+                          to={`/partners/${ppm[medium]!.partner.value!.id}`}
+                        >
+                          {
+                            ppm[medium]!.partner.value!.organization.value!.name
+                              .value
+                          }
+                        </Link>
+                      </>
+                    ) : undefined
+                  }
+                  className={classes.listItem}
+                />
+              )}
+            />
           ) : null
         }
         loading={!product}
@@ -90,6 +103,15 @@ export const ProductInfo = ({ product }: { product?: Product }) => {
         }
         loading={!product}
         wrap={infoWrapper}
+        propValueWrap={(value) => (
+          <ChangesetPropertyBadge
+            iconHorizontalOrigin="right"
+            current={product}
+            prop="methodology"
+          >
+            {value}
+          </ChangesetPropertyBadge>
+        )}
       />
 
       <DisplayProperty
@@ -98,19 +120,27 @@ export const ProductInfo = ({ product }: { product?: Product }) => {
         loading={!product}
         wrap={infoWrapper}
         className={classes.completionDescription}
+        propValueWrap={(value) => (
+          <ChangesetPropertyBadge
+            iconHorizontalOrigin="right"
+            current={product}
+            prop="describeCompletion"
+          >
+            {value}
+          </ChangesetPropertyBadge>
+        )}
       />
 
       <DisplayProperty
         label="Scripture"
         value={
           product && product.scriptureReferences.value.length > 0 ? (
-            <List disablePadding>
-              {product.scriptureReferences.value.map((ref, i) => (
-                <ListItem key={i} disableGutters>
-                  {ref.label}
-                </ListItem>
-              ))}
-            </List>
+            <ChangesetPropList
+              current={product}
+              prop="scriptureReferences"
+              listItemKey="label"
+              renderListItem={(item) => item.label}
+            />
           ) : null
         }
         loading={!product}
