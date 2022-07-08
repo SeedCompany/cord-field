@@ -17,6 +17,8 @@ fragment ProductDetail on Product {
     value
   }
   scriptureReferences {
+    canRead
+    canEdit
     value {
       ...Scripture
     }

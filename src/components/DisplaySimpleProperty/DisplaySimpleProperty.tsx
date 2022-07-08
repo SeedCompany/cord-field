@@ -9,6 +9,7 @@ export type DisplaySimplePropertyProps = TypographyProps & {
   loading?: boolean | ReactNode;
   loadingWidth?: number | string;
   wrap?: (node: ReactElement) => ReactElement;
+  propValueWrap?: (node: ReactElement) => ReactElement;
 };
 
 export const DisplaySimpleProperty = ({
@@ -19,10 +20,16 @@ export const DisplaySimpleProperty = ({
   loading,
   loadingWidth,
   wrap,
+  propValueWrap,
   ...props
 }: DisplaySimplePropertyProps) => {
   const shouldRenderElement = loading || (label && value);
   if (!shouldRenderElement) return null;
+  const propValue = (
+    <Typography component="span" variant="inherit" color="text.secondary" {...ValueProps}>
+      {value}
+    </Typography>
+  );
   const property = (
     <Typography variant="body2" {...props}>
       {loading === true ? (
@@ -34,14 +41,7 @@ export const DisplaySimpleProperty = ({
           <Typography component="span" variant="inherit" {...LabelProps}>
             {label}:&nbsp;
           </Typography>
-          <Typography
-            component="span"
-            variant="inherit"
-            color="text.secondary"
-            {...ValueProps}
-          >
-            {value}
-          </Typography>
+          {propValueWrap ? propValueWrap(propValue) : propValue}
         </>
       ) : null}
     </Typography>
