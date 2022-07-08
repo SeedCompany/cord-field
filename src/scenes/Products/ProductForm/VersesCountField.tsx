@@ -1,9 +1,9 @@
 import React, { useMemo } from 'react';
 import { Except } from 'type-fest';
+import { getBookTotalVerses } from '../../../common/biblejs';
 import { NumberField, NumberFieldProps } from '../../../components/form';
 import { max, min, required } from '../../../components/form/validators';
 import { useNumberFormatter } from '../../../components/Formatters';
-import { getBookTotalVerses } from '../../../util/biblejs';
 
 type VersesCountFieldProps = Except<
   NumberFieldProps,

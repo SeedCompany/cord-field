@@ -1,8 +1,7 @@
 import { Skeleton } from '@material-ui/lab';
 import * as React from 'react';
 import { Except } from 'type-fest';
-import { SecuredProp } from '../../api';
-import { Nullable } from '../../util';
+import { Nullable, SecuredProp } from '~/common';
 import { Redacted, RedactedProps } from '../Redacted';
 import { Breadcrumb, BreadcrumbProps } from './Breadcrumb';
 

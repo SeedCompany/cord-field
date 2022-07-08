@@ -20,7 +20,7 @@ import {
   ScriptureError,
   ScriptureRange,
   validateScriptureRange,
-} from '../../util/biblejs';
+} from '../../common/biblejs';
 import { FieldConfig, useField } from './useField';
 import {
   areListsDeepEqual,

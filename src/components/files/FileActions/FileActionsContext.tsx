@@ -1,6 +1,6 @@
 import React, { createContext, useContext, useState } from 'react';
 import { GQLOperations } from '~/api';
-import { ChildrenProp, isTypename } from '~/util';
+import { ChildrenProp, isTypename } from '~/common';
 import { useDialog } from '../../Dialog';
 import { FilePreview } from '../FilePreview';
 import {

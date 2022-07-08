@@ -4,7 +4,7 @@ import { Mutator } from 'final-form';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
 import { Except } from 'type-fest';
-import { MutationChangePasswordArgs } from '../../../api';
+import { MutationChangePasswordArgs } from '~/api/schema.graphql';
 import {
   DialogForm,
   DialogFormProps,

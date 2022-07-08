@@ -1,12 +1,9 @@
 import { ApolloCache, MutationUpdaterFunction } from '@apollo/client';
 import { isFunction } from 'lodash';
 import { DateTime, Interval } from 'luxon';
-import {
-  invalidateProps,
-  Project as ProjectShape,
-  SecuredProp,
-} from '../../../api';
-import { CalendarDate } from '../../../util';
+import { invalidateProps } from '~/api';
+import { Project as ProjectShape } from '~/api/schema.graphql';
+import { CalendarDate, SecuredProp } from '~/common';
 import {
   PartnershipToCheckBudgetChangeFragment,
   ProjectsBudgetForPartnershipChangeFragmentDoc as ProjectsBudget,

@@ -2,7 +2,7 @@ import { useMutation } from '@apollo/client';
 import { isEqual, noop } from 'lodash';
 import React, { useMemo } from 'react';
 import { Form, FormSpy } from 'react-final-form';
-import { UpdateCeremonyInput } from '../../../../api';
+import { UpdateCeremonyInput } from '~/api/schema.graphql';
 import { DateField, FieldGroup } from '../../../../components/form';
 import {
   CeremonyCardFragment,

@@ -1,7 +1,7 @@
 import { FieldState } from 'final-form';
 import { Promisable } from 'type-fest';
 import isEmail from 'validator/lib/isEmail';
-import { Nullable } from '../../util';
+import { Nullable } from '~/common';
 
 /**
  * A little stricter than upstream with the return type

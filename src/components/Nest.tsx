@@ -1,5 +1,5 @@
 import React, { cloneElement, ReactElement } from 'react';
-import { ChildrenProp } from '~/util';
+import { ChildrenProp } from '~/common';
 
 export const Nest = ({
   elements,

@@ -1,7 +1,7 @@
 import { action } from '@storybook/addon-actions';
 import React from 'react';
 import { Form } from 'react-final-form';
-import { ChildrenProp } from '~/util';
+import { ChildrenProp } from '~/common';
 import { FieldSpy } from '../../FieldSpy';
 import { UserField as UF } from './UserField';
 

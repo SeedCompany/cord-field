@@ -15,14 +15,14 @@ import {
 import { omit, pickBy } from 'lodash';
 import React, { useRef } from 'react';
 import { Helmet } from 'react-helmet-async';
-import { Language } from '../../../api';
+import { Language } from '~/api/schema.graphql';
+import { simpleSwitch } from '~/common';
 import { FilterButtonDialog } from '../../../components/Filter';
 import { useNumberFormatter } from '../../../components/Formatters';
 import { LanguageListItemCard as LanguageCard } from '../../../components/LanguageListItemCard';
 import { ContentContainer } from '../../../components/Layout';
 import { List, useListQuery } from '../../../components/List';
 import { SortButtonDialog, useSort } from '../../../components/Sort';
-import { simpleSwitch } from '../../../util';
 import {
   LanguageFilterOptions,
   useLanguageFilters,

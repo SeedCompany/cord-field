@@ -8,8 +8,8 @@ import {
   ProjectChangeRequestTypeLabels,
   ProjectChangeRequestTypeList,
   UpdateProjectChangeRequestInput,
-} from '~/api/schema';
-import { labelFrom } from '~/common';
+} from '~/api/schema.graphql';
+import { callAll, labelFrom } from '~/common';
 import {
   DialogForm,
   DialogFormProps,
@@ -22,7 +22,6 @@ import {
 } from '../../../../components/form';
 import { AutocompleteField } from '../../../../components/form/AutocompleteField';
 import { ProjectChangeRequestListItemFragment as ChangeRequest } from '../../../../components/ProjectChangeRequestListItem';
-import { callAll } from '../../../../util';
 import { useProjectId } from '../../useProjectId';
 import {
   DeleteProjectChangeRequestDocument as DeleteRequest,

@@ -1,8 +1,8 @@
 import { noop } from 'lodash';
 import * as React from 'react';
 import { createContext } from 'react';
-import { ChildrenProp } from '~/util';
-import { Power } from '../../../api';
+import { Power } from '~/api/schema.graphql';
+import { ChildrenProp } from '~/common';
 import { useDialog } from '../../../components/Dialog';
 import { creates } from './Creates';
 

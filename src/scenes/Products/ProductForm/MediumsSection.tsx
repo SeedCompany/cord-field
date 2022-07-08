@@ -1,6 +1,6 @@
 import { ToggleButton } from '@material-ui/lab';
 import React from 'react';
-import { ProductMediumLabels, ProductMediumList } from '~/api/schema';
+import { ProductMediumLabels, ProductMediumList } from '~/api/schema.graphql';
 import { labelFrom } from '~/common';
 import { EnumField } from '../../../components/form';
 import { SectionProps } from './ProductFormFields';

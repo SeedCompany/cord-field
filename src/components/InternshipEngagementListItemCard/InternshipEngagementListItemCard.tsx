@@ -8,7 +8,10 @@ import {
 } from '@material-ui/core';
 import clsx from 'clsx';
 import * as React from 'react';
-import { EngagementStatusLabels, InternshipPositionLabels } from '~/api/schema';
+import {
+  EngagementStatusLabels,
+  InternshipPositionLabels,
+} from '~/api/schema.graphql';
 import { labelFrom } from '~/common';
 import { idForUrl } from '../Changeset';
 import { DisplaySimpleProperty } from '../DisplaySimpleProperty';

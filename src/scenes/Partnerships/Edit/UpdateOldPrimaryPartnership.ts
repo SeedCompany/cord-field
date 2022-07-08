@@ -1,5 +1,5 @@
 import { ApolloCache, MutationUpdaterFunction } from '@apollo/client';
-import { Partnership } from '../../../api';
+import { Partnership } from '~/api/schema.graphql';
 import { ProjectPartnershipsQuery } from '../List/PartnershipList.graphql';
 
 export const updateOldPrimaryPartnership =

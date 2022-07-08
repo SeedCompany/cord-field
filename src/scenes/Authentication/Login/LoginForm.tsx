@@ -4,7 +4,7 @@ import { Decorator, Mutator } from 'final-form';
 import { sample } from 'lodash';
 import React, { useState } from 'react';
 import { Form, FormProps } from 'react-final-form';
-import { LoginInput } from '../../../api';
+import { LoginInput } from '~/api/schema.graphql';
 import {
   blurOnSubmit,
   EmailField,

@@ -12,9 +12,9 @@ import React from 'react';
 import {
   ApproachIcons,
   displayMethodology,
+  listOrPlaceholders,
   MethodologyToApproach,
-} from '../../api';
-import { listOrPlaceholders } from '../../util';
+} from '~/common';
 import { MethodologiesCardFragment } from './MethodologiesCard.graphql';
 
 const useStyles = makeStyles(({ palette, spacing }) => ({

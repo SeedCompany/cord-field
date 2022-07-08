@@ -10,7 +10,10 @@ import {
 } from '@material-ui/core';
 import { Skeleton } from '@material-ui/lab';
 import React from 'react';
-import { FinancialReportingTypeLabels, PartnerTypeLabels } from '~/api/schema';
+import {
+  FinancialReportingTypeLabels,
+  PartnerTypeLabels,
+} from '~/api/schema.graphql';
 import { canEditAny, labelsFrom } from '~/common';
 import { Redacted } from '../../../components/Redacted';
 import { PartnerDetailsFragment } from './PartnerDetail.graphql';

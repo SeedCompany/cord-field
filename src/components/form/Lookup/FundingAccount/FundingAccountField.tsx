@@ -1,5 +1,5 @@
+import { CreateFundingAccountInput } from '~/api/schema.graphql';
 import { LookupField } from '../..';
-import { CreateFundingAccountInput } from '../../../../api';
 import { CreateFundingAccount } from '../../../../scenes/Locations/LocationForm/FundingAccount/CreateFundingAccount';
 import {
   FundingAccountLookupItemFragment as FundingAccount,

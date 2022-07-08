@@ -1,10 +1,10 @@
 import { sortBy, uniq } from 'lodash';
 import { Column } from 'material-table';
 import React, { useMemo } from 'react';
-import { ProductStep, ProductStepLabels } from '~/api/schema';
+import { ProductStep, ProductStepLabels } from '~/api/schema.graphql';
+import { bookIndexFromName } from '../../../common/biblejs';
 import { Link } from '../../../components/Routing';
 import { Table } from '../../../components/Table';
-import { bookIndexFromName } from '../../../util/biblejs';
 import { ProgressOfProductForReportFragment } from './ProgressReportDetail.graphql';
 
 interface ProductTableProps {

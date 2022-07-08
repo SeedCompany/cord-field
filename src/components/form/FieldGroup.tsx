@@ -1,6 +1,6 @@
 import { compact } from 'lodash';
 import React, { createContext, useContext } from 'react';
-import { ChildrenProp } from '~/util';
+import { ChildrenProp } from '~/common';
 
 export const FieldGroupContext = createContext('');
 FieldGroupContext.displayName = 'FieldGroupContext';

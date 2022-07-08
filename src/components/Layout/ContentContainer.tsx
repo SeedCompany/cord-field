@@ -1,7 +1,7 @@
 import { makeStyles } from '@material-ui/core';
 import clsx from 'clsx';
 import React from 'react';
-import { ChildrenProp } from '~/util';
+import { ChildrenProp } from '~/common';
 
 const useStyles = makeStyles(({ spacing }) => ({
   root: {

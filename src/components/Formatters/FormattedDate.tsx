@@ -2,8 +2,8 @@ import { Tooltip } from '@material-ui/core';
 import { DateTime, DateTimeFormatOptions } from 'luxon';
 import * as React from 'react';
 import { MergeExclusive } from 'type-fest';
-import { DateRange } from '../../api';
-import { CalendarDate, Nullable } from '../../util';
+import { DateRange } from '~/api/schema.graphql';
+import { CalendarDate, Nullable } from '~/common';
 import { useDateFormatter, useDateTimeFormatter } from './useDateFormatter';
 
 export const FormattedDate = ({

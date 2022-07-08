@@ -1,6 +1,6 @@
 import { Typography } from '@material-ui/core';
 import React, { ComponentType, useEffect } from 'react';
-import { displayProductTypes } from '../../../api';
+import { displayProductTypes } from '~/common';
 import { FieldConfig } from '../../../components/form';
 import {
   EthnoArtField,

@@ -18,8 +18,8 @@ import {
   StringParam,
   QueryParamConfig as UpstreamQueryParamConfig,
 } from 'serialize-query-params';
+import { entries, mapFromList } from '~/common';
 import { areListsEqual, compareNullable } from '../components/form/util';
-import { entries, mapFromList } from '../util';
 
 export { NumberParam, StringParam } from 'serialize-query-params';
 

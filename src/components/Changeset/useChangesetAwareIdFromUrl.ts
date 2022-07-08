@@ -1,5 +1,6 @@
 import { useLocation, useParams } from 'react-router-dom';
-import { hasChangeset, IdFragment } from '../../api';
+import { hasChangeset } from '~/api';
+import { IdFragment } from '~/common';
 import { useNavigate } from '../Routing';
 import { useBetaFeatures } from '../Session';
 

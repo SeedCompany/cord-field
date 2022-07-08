@@ -1,7 +1,8 @@
 import { useMutation } from '@apollo/client';
 import React from 'react';
 import { Except } from 'type-fest';
-import { addItemToList, CreateEthnoArtInput } from '../../../../../../api';
+import { addItemToList } from '~/api';
+import { CreateEthnoArtInput } from '~/api/schema.graphql';
 import {
   DialogForm,
   DialogFormProps,

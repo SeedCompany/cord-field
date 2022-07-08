@@ -1,6 +1,6 @@
 import { ComponentType } from 'react';
 import { Except } from 'type-fest';
-import { Power } from '../../../api';
+import { Power } from '~/api/schema.graphql';
 import { DialogFormProps } from '../../../components/Dialog/DialogForm';
 import { CreateLanguage } from '../../Languages/Create';
 import { CreateLocation } from '../../Locations/Create';

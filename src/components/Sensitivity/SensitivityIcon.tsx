@@ -2,7 +2,7 @@ import { colors, makeStyles, SvgIconProps, Tooltip } from '@material-ui/core';
 import { VerifiedUser } from '@material-ui/icons';
 import clsx from 'clsx';
 import * as React from 'react';
-import { Sensitivity as SensitivityType } from '../../api';
+import { Sensitivity as SensitivityType } from '~/api/schema.graphql';
 
 const useStyles = makeStyles(({ palette }) => ({
   Low: {

@@ -4,7 +4,7 @@ import {
 } from '@apollo/client';
 import * as React from 'react';
 import { useContext, useState } from 'react';
-import { ChildrenProp } from '~/util';
+import { ChildrenProp } from '~/common';
 import { createClient } from './createClient';
 import { useErrorRendererRef } from './links/renderErrors.link';
 

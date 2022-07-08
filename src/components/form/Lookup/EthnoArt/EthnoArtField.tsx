@@ -1,5 +1,5 @@
+import { CreateEthnoArtInput } from '~/api/schema.graphql';
 import { LookupField } from '../..';
-import { CreateEthnoArtInput } from '../../../../api';
 import { CreateEthnoArt } from '../../../../scenes/Engagement/LanguageEngagement/Product/Producibles/EthnoArt/CreateEthnoArt';
 import {
   EthnoArtLookupItemFragment as EthnoArt,

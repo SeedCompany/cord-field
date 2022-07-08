@@ -1,7 +1,8 @@
 import { useMutation } from '@apollo/client';
 import * as React from 'react';
 import { Except } from 'type-fest';
-import { addItemToList, CreatePostInput } from '../../../api';
+import { addItemToList } from '~/api';
+import { CreatePostInput } from '~/api/schema.graphql';
 import { PostableIdFragment } from '../PostableId.graphql';
 import { PostForm, PostFormProps } from '../PostForm';
 import { CreatePostDocument } from './CreatePost.graphql';

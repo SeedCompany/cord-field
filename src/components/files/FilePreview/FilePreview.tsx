@@ -10,7 +10,7 @@ import {
   makeStyles,
 } from '@material-ui/core';
 import React, { Suspense, useCallback, useEffect, useState } from 'react';
-import { saveAs } from '../../../util/FileSaver';
+import { saveAs } from '../../../common/FileSaver';
 import { NonDirectoryActionItem } from '../FileActions';
 import {
   previewableAudioTypes,

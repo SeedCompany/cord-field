@@ -2,7 +2,8 @@ import { useMutation } from '@apollo/client';
 import { useSnackbar } from 'notistack';
 import React from 'react';
 import { Except } from 'type-fest';
-import { addItemToList, CreateDirectoryInput } from '../../../api';
+import { addItemToList } from '~/api';
+import { CreateDirectoryInput } from '~/api/schema.graphql';
 import {
   DialogForm,
   DialogFormProps,

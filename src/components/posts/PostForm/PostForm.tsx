@@ -6,7 +6,7 @@ import {
   PostShareabilityLabels,
   PostShareabilityList,
   PostTypeList,
-} from '~/api/schema';
+} from '~/api/schema.graphql';
 import { labelFrom } from '~/common';
 import {
   DialogForm,

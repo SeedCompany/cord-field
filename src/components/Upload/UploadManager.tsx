@@ -14,7 +14,7 @@ import {
 import clsx from 'clsx';
 import React, { memo, ReactNode, useState } from 'react';
 import { useMountedState } from 'react-use';
-import { ChildrenProp } from '~/util';
+import { ChildrenProp } from '~/common';
 import { useSession } from '../Session';
 import { DraggablePaper } from './DraggablePaper';
 import { useUploadManager } from './UploadManagerContext';

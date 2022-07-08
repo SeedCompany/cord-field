@@ -13,7 +13,7 @@ import React from 'react';
 import {
   FinancialReportingTypeLabels,
   PartnershipAgreementStatusLabels,
-} from '~/api/schema';
+} from '~/api/schema.graphql';
 import { labelFrom } from '~/common';
 import { DisplaySimpleProperty } from '../DisplaySimpleProperty';
 import { FormattedDateRange, FormattedDateTime } from '../Formatters';

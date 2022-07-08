@@ -1,4 +1,4 @@
-import { CreateLanguage as CreateLanguageType } from '../../../../api';
+import { CreateLanguage as CreateLanguageType } from '~/api/schema.graphql';
 import { CreateLanguage } from '../../../../scenes/Languages/Create';
 import { LanguageFormValues } from '../../../../scenes/Languages/LanguageForm';
 import { LookupField } from '../../index';

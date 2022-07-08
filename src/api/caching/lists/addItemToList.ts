@@ -3,7 +3,8 @@ import { orderBy } from 'lodash';
 import { Except } from 'type-fest';
 import { unwrapSecured } from '~/common';
 import { modifyChangesetDiff } from '../../changesets';
-import type { Entity, Order } from '../../schema';
+import type { Entity } from '../../schema';
+import type { Order } from '../../schema.graphql';
 import {
   argsFromStoreFieldName,
   defaultSortingForList,

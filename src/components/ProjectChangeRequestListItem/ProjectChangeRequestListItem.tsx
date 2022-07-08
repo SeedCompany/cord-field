@@ -9,7 +9,7 @@ import {
 } from '@material-ui/core';
 import { Skeleton } from '@material-ui/lab';
 import * as React from 'react';
-import { ProjectChangeRequestTypeLabels } from '~/api/schema';
+import { ProjectChangeRequestTypeLabels } from '~/api/schema.graphql';
 import { labelsFrom } from '~/common';
 import { useProjectId } from '../../scenes/Projects/useProjectId';
 import { DisplaySimpleProperty } from '../DisplaySimpleProperty';
