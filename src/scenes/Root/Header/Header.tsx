@@ -1,5 +1,4 @@
 import { makeStyles } from '@material-ui/core';
-import { FC } from 'react';
 import * as React from 'react';
 import { HeaderSearch } from './HeaderSearch';
 import { ProfileToolbar } from './ProfileToolbar';
@@ -13,7 +12,7 @@ const useStyles = makeStyles(({ spacing }) => ({
   },
 }));
 
-export const Header: FC = () => {
+export const Header = () => {
   const classes = useStyles();
 
   return (

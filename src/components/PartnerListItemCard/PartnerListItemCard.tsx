@@ -8,7 +8,7 @@ import {
 import { Skeleton } from '@material-ui/lab';
 import clsx from 'clsx';
 import { random } from 'lodash';
-import React, { FC } from 'react';
+import React from 'react';
 import { PartnersQueryVariables } from '../../scenes/Partners/List/PartnerList.graphql';
 import { CardActionAreaLink } from '../Routing';
 import { TogglePinButton } from '../TogglePinButton';
@@ -50,10 +50,10 @@ export interface PartnerListItemCardProps {
 // min/max is based on production data
 const randomNameLength = () => random(3, 50);
 
-export const PartnerListItemCard: FC<PartnerListItemCardProps> = ({
+export const PartnerListItemCard = ({
   partner,
   className,
-}) => {
+}: PartnerListItemCardProps) => {
   const classes = useStyles();
 
   return (

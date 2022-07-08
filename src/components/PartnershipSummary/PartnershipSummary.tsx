@@ -1,6 +1,5 @@
 import { makeStyles } from '@material-ui/core';
 import * as React from 'react';
-import { FC } from 'react';
 import { PeopleJoinedIcon } from '../Icons';
 import { MemberListSummary, MemberSummaryItem } from '../MemberListSummary';
 import { PartnershipSummaryFragment } from './PartnershipSummary.graphql';
@@ -16,9 +15,9 @@ export interface PartnershipSummaryProps {
   partnerships?: PartnershipSummaryFragment;
 }
 
-export const PartnershipSummary: FC<PartnershipSummaryProps> = ({
+export const PartnershipSummary = ({
   partnerships,
-}) => {
+}: PartnershipSummaryProps) => {
   const members = partnerships?.items.map(
     (item): MemberSummaryItem => ({
       id: item.id,

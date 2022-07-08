@@ -1,6 +1,6 @@
 import { useMutation } from '@apollo/client';
 import { Decorator } from 'final-form';
-import React, { FC, useMemo } from 'react';
+import React, { useMemo } from 'react';
 import { Except } from 'type-fest';
 import {
   onUpdateInvalidateProps,
@@ -72,7 +72,7 @@ const decorators = [clearFinancialReportingType];
 const updatedPartnership = (res: UpdatePartnershipMutation) =>
   res.updatePartnership.partnership;
 
-export const EditPartnership: FC<EditPartnershipProps> = (props) => {
+export const EditPartnership = (props: EditPartnershipProps) => {
   const { partnership, project } = props;
 
   const [updatePartnership] = useMutation(UpdatePartnershipDocument);

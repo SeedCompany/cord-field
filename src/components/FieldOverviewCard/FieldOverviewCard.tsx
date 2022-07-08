@@ -13,7 +13,7 @@ import { Skeleton } from '@material-ui/lab';
 import clsx from 'clsx';
 import { To } from 'history';
 import { DateTime } from 'luxon';
-import { FC, ReactNode } from 'react';
+import { ReactNode } from 'react';
 import * as React from 'react';
 import { useDateTimeFormatter } from '../Formatters';
 import { HugeIcon, HugeIconProps } from '../Icons';
@@ -59,7 +59,7 @@ interface FieldOverviewCardData {
 export interface FieldOverviewCardProps extends Pick<HugeIconProps, 'icon'> {
   className?: string;
   data?: FieldOverviewCardData;
-  emptyValue?: string;
+  emptyValue?: ReactNode;
   loading?: boolean;
   onButtonClick?: () => void;
   onClick?: () => void;
@@ -71,7 +71,7 @@ export interface FieldOverviewCardProps extends Pick<HugeIconProps, 'icon'> {
 
 const DEFAULT_EMPTY = <>&nbsp;</>;
 
-export const FieldOverviewCard: FC<FieldOverviewCardProps> = ({
+export const FieldOverviewCard = ({
   className,
   data,
   emptyValue = DEFAULT_EMPTY,
@@ -83,7 +83,7 @@ export const FieldOverviewCard: FC<FieldOverviewCardProps> = ({
   redacted,
   title,
   viewLabel: buttonLabel,
-}) => {
+}: FieldOverviewCardProps) => {
   const classes = useStyles();
   const dateTimeFormatter = useDateTimeFormatter();
 

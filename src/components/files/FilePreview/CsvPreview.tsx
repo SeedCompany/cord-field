@@ -1,5 +1,5 @@
 import Papa, { ParseResult } from 'papaparse';
-import React, { FC, useCallback, useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { PreviewerProps } from './FilePreview';
 import { PreviewLoading } from './PreviewLoading';
 import {
@@ -8,7 +8,7 @@ import {
   SpreadsheetView,
 } from './SpreadsheetView';
 
-export const CsvPreview: FC<PreviewerProps> = (props) => {
+export const CsvPreview = (props: PreviewerProps) => {
   const { file, previewLoading, setPreviewLoading, setPreviewError } = props;
   const [csvData, setCsvData] = useState<ParseResult<string[]>['data']>([]);
 

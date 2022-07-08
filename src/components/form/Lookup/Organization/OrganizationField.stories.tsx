@@ -1,12 +1,13 @@
 import { action } from '@storybook/addon-actions';
-import React, { FC } from 'react';
+import React from 'react';
 import { Form } from 'react-final-form';
+import { ChildrenProp } from '~/util';
 import { FieldSpy } from '../../FieldSpy';
 import { OrganizationField as OA } from './OrganizationField';
 
 export default { title: 'Components/Forms/Fields/Lookup/Organization' };
 
-const FF: FC = ({ children }) => (
+const FF = ({ children }: ChildrenProp) => (
   <Form
     onSubmit={action('submit')}
     initialValues={{

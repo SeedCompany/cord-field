@@ -1,5 +1,4 @@
 import { makeStyles, Typography } from '@material-ui/core';
-import { FC } from 'react';
 import * as React from 'react';
 import { CordIcon } from '../../../components/Icons';
 import { SwooshBackground } from './SwooshBackground';
@@ -28,7 +27,7 @@ const useStyles = makeStyles(({ spacing, typography }) => ({
   },
 }));
 
-export const SidebarHeader: FC = () => {
+export const SidebarHeader = () => {
   const classes = useStyles();
 
   return (

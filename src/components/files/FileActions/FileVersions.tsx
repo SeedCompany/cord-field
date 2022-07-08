@@ -10,7 +10,7 @@ import {
   makeStyles,
 } from '@material-ui/core';
 import { Skeleton } from '@material-ui/lab';
-import React, { FC, Fragment } from 'react';
+import React, { Fragment } from 'react';
 import { FileActionItem, PermittedActions } from '../FileActions';
 import {
   FileVersionItem_FileVersion_Fragment as FileVersion,
@@ -29,7 +29,7 @@ type FileVersionsProps = DialogProps & {
   actions: PermittedActions | undefined;
 };
 
-export const FileVersions: FC<FileVersionsProps> = (props) => {
+export const FileVersions = (props: FileVersionsProps) => {
   const { file, actions, ...dialogProps } = props;
   const { onClose } = dialogProps;
 

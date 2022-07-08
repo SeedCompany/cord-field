@@ -1,13 +1,14 @@
 import { action } from '@storybook/addon-actions';
 import { boolean } from '@storybook/addon-knobs';
-import React, { FC } from 'react';
+import React from 'react';
 import { Form } from 'react-final-form';
+import { ChildrenProp } from '~/util';
 import { FieldSpy } from '../../FieldSpy';
 import { EthnoArtField } from './EthnoArtField';
 
 export default { title: 'Components/Forms/Fields/Lookup' };
 
-const FF: FC = ({ children }) => (
+const FF = ({ children }: ChildrenProp) => (
   <Form onSubmit={action('submit')}>
     {({ handleSubmit }) => <form onSubmit={handleSubmit}>{children}</form>}
   </Form>

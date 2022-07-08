@@ -12,7 +12,7 @@ import {
   TabContext,
   TabPanel,
 } from '@material-ui/lab';
-import React, { FC, useRef } from 'react';
+import React, { useRef } from 'react';
 import { Helmet } from 'react-helmet-async';
 import { useNumberFormatter } from '../../../components/Formatters';
 import { ContentContainer } from '../../../components/Layout';
@@ -44,7 +44,7 @@ const useStyles = makeStyles(({ spacing, breakpoints }) => ({
   },
 }));
 
-export const PartnerList: FC = () => {
+export const PartnerList = () => {
   const sort = useSort<PartnerSort>('name');
   const [filters, setFilters] = usePartnerFilters();
   const list = useListQuery(PartnersDocument, {

@@ -1,12 +1,12 @@
 import { useApolloClient } from '@apollo/client';
 import * as React from 'react';
-import { createContext, FC, useCallback, useContext, useMemo } from 'react';
+import { createContext, useCallback, useContext, useMemo } from 'react';
 import { Entity, IdFragment } from '~/api';
 import {
   ChangesetDiffFragment as Diff,
   ChangesetDiffItemFragment as DiffItem,
 } from '~/common/fragments';
-import { mapFromList, Nullable } from '../../util';
+import { ChildrenProp, mapFromList, Nullable } from '~/util';
 
 export type DiffMode = 'added' | 'removed' | 'changed';
 export type EntityFromChangesetDiff<T extends Entity> = Extract<
@@ -48,9 +48,11 @@ export const ChangesetDiffContext = createContext({
     defaultDeterminedDiffItem) as DetermineChangesetDiffItemFn,
 });
 
-export const ChangesetDiffProvider: FC<{
-  value: Diff | null | undefined;
-}> = (props) => {
+export const ChangesetDiffProvider = (
+  props: {
+    value: Diff | null | undefined;
+  } & ChildrenProp
+) => {
   const apollo = useApolloClient();
   const diff: ProcessedDiff = useMemo(() => {
     const toCacheId = (obj: any) => {

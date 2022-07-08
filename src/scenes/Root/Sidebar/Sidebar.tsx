@@ -9,7 +9,7 @@ import {
   ThemeProvider,
 } from '@material-ui/core';
 import { FolderOpen, Language, Person } from '@material-ui/icons';
-import { ComponentType, FC } from 'react';
+import { ComponentType } from 'react';
 import * as React from 'react';
 import { PeopleJoinedIcon } from '../../../components/Icons';
 import { ListItemLink, ListItemLinkProps } from '../../../components/Routing';
@@ -31,7 +31,7 @@ const useStyles = makeStyles(({ spacing }) => ({
   },
 }));
 
-export const Sidebar: FC = () => {
+export const Sidebar = () => {
   const classes = useStyles();
 
   const navList = (

@@ -6,15 +6,16 @@ import {
 } from 'express';
 import { Request } from 'jest-express/lib/request';
 import { Response } from 'jest-express/lib/response';
-import React, { FC, useState } from 'react';
+import React, { useState } from 'react';
 import { HelmetProvider } from 'react-helmet-async';
 import { StaticRouter } from 'react-router-dom/server';
+import { ChildrenProp } from '~/util';
 import { createClient } from './api/client/createClient';
 import { App } from './App';
 import { Nest } from './components/Nest';
 import { RequestContext } from './hooks';
 
-const TestContext: FC<{ url: string }> = ({ url, children }) => {
+const TestContext = ({ url, children }: { url: string } & ChildrenProp) => {
   // @ts-expect-error yes the type doesn't match we are faking it.
   const req: ExpressRequest = new Request(url);
   const res = new Response() as unknown as ExpressResponse;

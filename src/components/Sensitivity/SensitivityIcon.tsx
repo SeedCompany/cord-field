@@ -1,7 +1,6 @@
 import { colors, makeStyles, SvgIconProps, Tooltip } from '@material-ui/core';
 import { VerifiedUser } from '@material-ui/icons';
 import clsx from 'clsx';
-import { FC } from 'react';
 import * as React from 'react';
 import { Sensitivity as SensitivityType } from '../../api';
 
@@ -23,13 +22,13 @@ export interface SensitivityIconProps extends SvgIconProps {
   disableTooltip?: boolean;
 }
 
-export const SensitivityIcon: FC<SensitivityIconProps> = ({
+export const SensitivityIcon = ({
   value,
   loading,
   className,
   disableTooltip,
   ...rest
-}) => {
+}: SensitivityIconProps) => {
   const classes = useStyles();
 
   return (

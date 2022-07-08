@@ -9,7 +9,7 @@ import {
 } from '@material-ui/core';
 import { Skeleton } from '@material-ui/lab';
 import clsx from 'clsx';
-import React, { FC } from 'react';
+import React from 'react';
 import {
   FinancialReportingTypeLabels,
   PartnershipAgreementStatusLabels,
@@ -44,11 +44,11 @@ export interface PartnershipCardProps {
   className?: string;
 }
 
-export const PartnershipCard: FC<PartnershipCardProps> = ({
+export const PartnershipCard = ({
   partnership,
   onEdit,
   className,
-}) => {
+}: PartnershipCardProps) => {
   const classes = useStyles();
 
   const name = partnership?.partner.value?.organization.value?.name.value;

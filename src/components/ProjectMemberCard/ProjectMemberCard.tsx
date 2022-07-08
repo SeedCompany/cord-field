@@ -7,7 +7,6 @@ import {
   Typography,
 } from '@material-ui/core';
 import { Skeleton } from '@material-ui/lab';
-import { FC } from 'react';
 import * as React from 'react';
 import { RoleLabels } from '~/api/schema';
 import { labelsFrom } from '~/common';
@@ -42,12 +41,12 @@ export interface ProjectMemberCardProps {
   className?: string;
 }
 
-export const ProjectMemberCard: FC<ProjectMemberCardProps> = ({
+export const ProjectMemberCard = ({
   projectMember,
   primaryOrganizationName,
   onEdit,
   className,
-}) => {
+}: ProjectMemberCardProps) => {
   const classes = useStyles();
   const dateTimeFormatter = useDateTimeFormatter();
 

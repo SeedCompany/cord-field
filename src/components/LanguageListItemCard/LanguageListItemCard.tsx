@@ -7,7 +7,6 @@ import {
 } from '@material-ui/core';
 import { Skeleton } from '@material-ui/lab';
 import clsx from 'clsx';
-import { FC } from 'react';
 import * as React from 'react';
 import { LanguagesQueryVariables } from '../../scenes/Languages/List/languages.graphql';
 import { DisplaySimpleProperty } from '../DisplaySimpleProperty';
@@ -59,10 +58,10 @@ export interface LanguageListItemCardProps {
   language?: LanguageListItemFragment;
 }
 
-export const LanguageListItemCard: FC<LanguageListItemCardProps> = ({
+export const LanguageListItemCard = ({
   className,
   language,
-}) => {
+}: LanguageListItemCardProps) => {
   const classes = useStyles();
   const formatNumber = useNumberFormatter();
   const population = language?.population.value;

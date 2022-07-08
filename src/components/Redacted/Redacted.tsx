@@ -1,9 +1,9 @@
 import { makeStyles, Tooltip, TooltipProps } from '@material-ui/core';
 import { Skeleton, SkeletonProps } from '@material-ui/lab';
 import clsx from 'clsx';
-import { FC } from 'react';
 import * as React from 'react';
 import { Except } from 'type-fest';
+import { ChildrenProp } from '~/util';
 
 export interface RedactedProps {
   info: TooltipProps['title'];
@@ -18,13 +18,13 @@ const useStyles = makeStyles(() => ({
   },
 }));
 
-export const Redacted: FC<RedactedProps> = ({
+export const Redacted = ({
   info,
   width,
   TooltipProps,
   SkeletonProps,
   children,
-}) => {
+}: RedactedProps & ChildrenProp) => {
   const classes = useStyles();
   return (
     <Tooltip title={info} {...TooltipProps}>

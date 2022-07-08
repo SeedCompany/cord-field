@@ -11,7 +11,6 @@ import { Skeleton } from '@material-ui/lab';
 import clsx from 'clsx';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
-import { FC } from 'react';
 import {
   CeremonyCardFragment,
   UpdateCeremonyDocument,
@@ -45,12 +44,12 @@ type CeremonyCardProps = Partial<CeremonyCardFragment> & {
   flipped?: boolean;
 };
 
-export const CeremonyPlanned: FC<CeremonyCardProps> = ({
+export const CeremonyPlanned = ({
   canRead: canReadCeremony,
   value: ceremony,
   className,
   flipped,
-}) => {
+}: CeremonyCardProps) => {
   const { type, planned } = ceremony || {};
   const loading = canReadCeremony == null;
   const canRead = canReadCeremony && planned?.canRead;

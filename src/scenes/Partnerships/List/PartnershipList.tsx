@@ -5,7 +5,7 @@ import {
   Typography,
 } from '@material-ui/core';
 import { Add } from '@material-ui/icons';
-import React, { FC } from 'react';
+import React from 'react';
 import { Helmet } from 'react-helmet-async';
 import { Breadcrumb } from '../../../components/Breadcrumb';
 import { useDialog } from '../../../components/Dialog';
@@ -35,7 +35,7 @@ const useStyles = makeStyles(({ spacing, breakpoints }) => ({
   },
 }));
 
-export const PartnershipList: FC = () => {
+export const PartnershipList = () => {
   const classes = useStyles();
 
   const { projectId, changesetId, projectUrl } = useProjectId();

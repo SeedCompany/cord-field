@@ -1,6 +1,6 @@
-import React, { createContext, FC, useContext, useState } from 'react';
-import { GQLOperations } from '../../../api';
-import { isTypename } from '../../../util';
+import React, { createContext, useContext, useState } from 'react';
+import { GQLOperations } from '~/api';
+import { ChildrenProp, isTypename } from '~/util';
 import { useDialog } from '../../Dialog';
 import { FilePreview } from '../FilePreview';
 import {
@@ -84,7 +84,7 @@ export const FileActionsContext = createContext<
   typeof initialFileActionsContext
 >(initialFileActionsContext);
 
-export const FileActionsContextProvider: FC = (props) => {
+export const FileActionsContextProvider = (props: ChildrenProp) => {
   const { children } = props;
   const [previewPage, setPreviewPage] = useState(1);
 

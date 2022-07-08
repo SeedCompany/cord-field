@@ -1,6 +1,5 @@
 import { AccountBalance } from '@material-ui/icons';
 import * as React from 'react';
-import { FC } from 'react';
 import {
   FieldOverviewCard,
   FieldOverviewCardProps,
@@ -12,11 +11,11 @@ export interface BudgetOverviewCardProps extends FieldOverviewCardProps {
   budget?: BudgetOverviewFragment | null;
 }
 
-export const BudgetOverviewCard: FC<BudgetOverviewCardProps> = ({
+export const BudgetOverviewCard = ({
   className,
   budget,
   loading,
-}) => {
+}: BudgetOverviewCardProps) => {
   const formatCurrency = useCurrencyFormatter();
 
   return (

@@ -13,7 +13,7 @@ import {
   TabPanel,
 } from '@material-ui/lab';
 import { omit, pickBy } from 'lodash';
-import React, { FC, useRef } from 'react';
+import React, { useRef } from 'react';
 import { Helmet } from 'react-helmet-async';
 import { Project } from '../../../api';
 import { FilterButtonDialog } from '../../../components/Filter';
@@ -51,7 +51,7 @@ const useStyles = makeStyles(({ spacing, breakpoints }) => ({
   },
 }));
 
-export const ProjectList: FC = () => {
+export const ProjectList = () => {
   const sort = useSort<Project>();
   const [filters, setFilters] = useProjectFilters();
   const list = useListQuery(ProjectListDocument, {

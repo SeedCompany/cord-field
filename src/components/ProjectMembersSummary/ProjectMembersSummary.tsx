@@ -1,5 +1,4 @@
 import { Group } from '@material-ui/icons';
-import { FC } from 'react';
 import * as React from 'react';
 import { MemberListSummary, MemberSummaryItem } from '../MemberListSummary';
 import { ProjectMemberListFragment } from './ProjectMembersSummary.graphql';
@@ -8,9 +7,9 @@ export interface ProjectMembersSummaryProps {
   members?: ProjectMemberListFragment;
 }
 
-export const ProjectMembersSummary: FC<ProjectMembersSummaryProps> = ({
+export const ProjectMembersSummary = ({
   members,
-}) => {
+}: ProjectMembersSummaryProps) => {
   const summarizedMembers = members?.items
     .filter(({ user }) => user.canRead && user.value)
     .map(({ user }) => user.value!)

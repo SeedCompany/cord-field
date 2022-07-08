@@ -2,7 +2,7 @@ import { makeStyles } from '@material-ui/core';
 import { Report as ErrorIcon } from '@material-ui/icons';
 import { SnackbarProvider as BaseSnackbarProvider } from 'notistack';
 import * as React from 'react';
-import { FC } from 'react';
+import { ChildrenProp } from '~/util';
 
 const useStyles = makeStyles(({ palette }) => ({
   variantSuccess: {
@@ -23,7 +23,7 @@ const icons = {
   error: <ErrorIcon style={{ fontSize: 20, marginInlineEnd: 8 }} />,
 };
 
-export const SnackbarProvider: FC = ({ children }) => {
+export const SnackbarProvider = ({ children }: ChildrenProp) => {
   const classes = useStyles();
   return (
     <BaseSnackbarProvider

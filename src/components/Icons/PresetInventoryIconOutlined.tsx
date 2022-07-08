@@ -1,8 +1,7 @@
 import { SvgIcon, SvgIconProps } from '@material-ui/core';
 import * as React from 'react';
-import { FC } from 'react';
 
-export const PresetInventoryIconOutlined: FC<SvgIconProps> = (props) => (
+export const PresetInventoryIconOutlined = (props: SvgIconProps) => (
   <SvgIcon {...props} viewBox="0 0 24 24">
     <g>
       <path d="M7.1 15h4.4v2H7.1zM7.1 11h7v2h-7zM7.1 7h7v2h-7z" />

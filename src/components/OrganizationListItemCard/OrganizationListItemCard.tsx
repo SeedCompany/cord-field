@@ -8,7 +8,7 @@ import {
 import { Skeleton } from '@material-ui/lab';
 import clsx from 'clsx';
 import { random } from 'lodash';
-import React, { FC } from 'react';
+import React from 'react';
 import { CardActionAreaLink } from '../Routing';
 import { OrganizationListItemFragment } from './OrganizationListItem.graphql';
 
@@ -42,10 +42,10 @@ export interface OrganizationListItemCardProps {
 // min/max is based on production data
 const randomNameLength = () => random(3, 50);
 
-export const OrganizationListItemCard: FC<OrganizationListItemCardProps> = ({
+export const OrganizationListItemCard = ({
   organization,
   className,
-}) => {
+}: OrganizationListItemCardProps) => {
   const classes = useStyles();
 
   return (

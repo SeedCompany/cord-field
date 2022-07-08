@@ -7,7 +7,6 @@ import {
   PropTypes,
   useTheme,
 } from '@material-ui/core';
-import { FC } from 'react';
 import * as React from 'react';
 import { ErrorButton } from '../ErrorButton';
 
@@ -43,13 +42,13 @@ export interface ProgressButtonProps extends Omit<ButtonProps, 'color'> {
  * This handles the styles for keeping the button a consistent size
  * while hiding the text and showing a progress spinner.
  */
-export const ProgressButton: FC<ProgressButtonProps> = ({
+export const ProgressButton = ({
   progress = false,
   progressProps,
   children,
   color,
   ...rest
-}) => {
+}: ProgressButtonProps) => {
   const { progressWrapper, hidden } = useStyles();
   const theme = useTheme();
   const { MuiButton = {} } = theme.props || {};
