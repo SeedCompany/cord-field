@@ -15,7 +15,7 @@ import { Skeleton } from '@material-ui/lab';
 import { DateTime } from 'luxon';
 import React, { forwardRef, ReactNode } from 'react';
 import { useDropzone } from 'react-dropzone';
-import { CreateDefinedFileVersionInput } from '~/api';
+import { CreateDefinedFileVersionInput } from '~/api/schema.graphql';
 import { SecuredProp } from '~/common';
 import {
   FileActionsPopup as ActionsMenu,

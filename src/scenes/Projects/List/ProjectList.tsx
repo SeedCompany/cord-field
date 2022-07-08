@@ -15,7 +15,7 @@ import {
 import { omit, pickBy } from 'lodash';
 import React, { useRef } from 'react';
 import { Helmet } from 'react-helmet-async';
-import { Project } from '~/api/schema';
+import { Project } from '~/api/schema.graphql';
 import { simpleSwitch } from '~/common';
 import { FilterButtonDialog } from '../../../components/Filter';
 import { useNumberFormatter } from '../../../components/Formatters';

@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { SensitivityList } from '../../../api';
+import { SensitivityList } from '~/api/schema.graphql';
 import { EnumField, SwitchField } from '../../../components/form';
 import {
   BooleanParam,

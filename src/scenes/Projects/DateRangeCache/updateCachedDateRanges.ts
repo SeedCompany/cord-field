@@ -1,7 +1,7 @@
 import { ApolloCache } from '@apollo/client';
 import { DeepPartial } from 'ts-essentials';
 import { invalidateProps, updateFragment } from '~/api';
-import { Project as ProjectShape } from '~/api/schema';
+import { Project as ProjectShape } from '~/api/schema.graphql';
 import { SecuredDateRangeFragment } from '~/common';
 import {
   ProjectCachedEngagementDateRangesFragmentDoc,

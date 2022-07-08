@@ -5,7 +5,7 @@ import React from 'react';
 import {
   ProductMethodology as Methodology,
   ProductApproachLabels,
-} from '~/api/schema';
+} from '~/api/schema.graphql';
 import { ApproachMethodologies, displayMethodology, entries } from '~/common';
 import { DefinedFileCard } from '../../../../components/DefinedFileCard';
 import { useDialog } from '../../../../components/Dialog';

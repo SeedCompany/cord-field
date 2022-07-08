@@ -14,7 +14,7 @@ import {
 } from '@material-ui/lab';
 import React, { useRef } from 'react';
 import { Helmet } from 'react-helmet-async';
-import { User } from '~/api/schema';
+import { User } from '~/api/schema.graphql';
 import { simpleSwitch } from '~/common';
 import { useNumberFormatter } from '../../../components/Formatters';
 import { ContentContainer } from '../../../components/Layout';

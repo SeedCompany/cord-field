@@ -1,6 +1,6 @@
 import { ApolloError } from '@apollo/client';
 import { assert } from 'ts-essentials';
-import { ProductStep } from '../schema';
+import { ProductStep } from '../schema.graphql';
 
 /**
  * This is a mapping of error codes to their error object.

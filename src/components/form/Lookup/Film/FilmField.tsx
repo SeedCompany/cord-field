@@ -1,5 +1,5 @@
+import { CreateFilmInput } from '~/api/schema.graphql';
 import { LookupField } from '../..';
-import { CreateFilmInput } from '../../../../api';
 import { CreateFilm } from '../../../../scenes/Engagement/LanguageEngagement/Product/Producibles/Film/CreateFilm';
 import {
   FilmLookupItemFragment as Film,

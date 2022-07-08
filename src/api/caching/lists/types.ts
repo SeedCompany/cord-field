@@ -1,4 +1,4 @@
-import { Order } from '../../schema';
+import { Order } from '../../schema.graphql';
 
 export interface InputArg<T> {
   input?: T | null;

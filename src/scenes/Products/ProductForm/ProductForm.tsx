@@ -12,7 +12,7 @@ import {
   UpdateDerivativeScriptureProduct,
   UpdateDirectScriptureProduct,
   UpdateOtherProduct,
-} from '../../../api';
+} from '~/api/schema.graphql';
 import {
   SubmitAction,
   SubmitButton,

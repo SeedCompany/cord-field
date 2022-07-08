@@ -7,7 +7,7 @@ import {
   ProjectStepLabels,
   ProjectStepList,
   TransitionType,
-} from '~/api/schema';
+} from '~/api/schema.graphql';
 import { labelFrom } from '~/common';
 import {
   DialogForm,

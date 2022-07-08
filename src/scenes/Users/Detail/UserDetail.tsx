@@ -7,7 +7,7 @@ import React, { useState } from 'react';
 import { Helmet } from 'react-helmet-async';
 import { useParams } from 'react-router-dom';
 import { useInterval } from 'react-use';
-import { RoleLabels } from '~/api/schema';
+import { RoleLabels } from '~/api/schema.graphql';
 import { canEditAny, labelsFrom } from '~/common';
 import { useDialog } from '../../../components/Dialog';
 import {

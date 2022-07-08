@@ -6,7 +6,7 @@ import clsx from 'clsx';
 import React from 'react';
 import { useDropzone } from 'react-dropzone';
 import { Helmet } from 'react-helmet-async';
-import { ProjectStepLabels } from '~/api/schema';
+import { ProjectStepLabels } from '~/api/schema.graphql';
 import { labelFrom, Many } from '~/common';
 import { BudgetOverviewCard } from '../../../components/BudgetOverviewCard';
 import { CardGroup } from '../../../components/CardGroup';

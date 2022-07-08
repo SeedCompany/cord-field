@@ -2,12 +2,8 @@ import { useMutation } from '@apollo/client';
 import { Decorator } from 'final-form';
 import React, { useMemo } from 'react';
 import { Except } from 'type-fest';
-import {
-  onUpdateInvalidateProps,
-  PeriodType,
-  removeItemFromList,
-  UpdatePartnershipInput,
-} from '~/api';
+import { onUpdateInvalidateProps, removeItemFromList } from '~/api';
+import { PeriodType, UpdatePartnershipInput } from '~/api/schema.graphql';
 import { callAll } from '~/common';
 import { SubmitAction, SubmitButton } from '../../../components/form';
 import { PartnerLookupItem } from '../../../components/form/Lookup';

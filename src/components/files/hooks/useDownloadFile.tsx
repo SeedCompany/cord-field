@@ -1,6 +1,6 @@
 import { useSnackbar } from 'notistack';
 import { PartialDeep } from 'type-fest';
-import { Directory, File, FileVersion } from '../../../api';
+import { Directory, File, FileVersion } from '~/api/schema.graphql';
 import { saveAs } from '../../../common/FileSaver';
 import { useGetFileDownloadUrl } from './useGetFileDownloadUrl';
 

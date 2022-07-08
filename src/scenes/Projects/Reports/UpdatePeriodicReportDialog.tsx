@@ -1,7 +1,7 @@
 import { pick } from 'lodash';
 import React, { useMemo } from 'react';
 import { Except } from 'type-fest';
-import { UpdatePeriodicReportInput } from '~/api/schema';
+import { UpdatePeriodicReportInput } from '~/api/schema.graphql';
 import { ExtractStrict, many, Many } from '~/common';
 import {
   DialogForm,

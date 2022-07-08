@@ -2,7 +2,11 @@ import { Grid, makeStyles, Typography } from '@material-ui/core';
 import { setIn } from 'final-form';
 import React, { useMemo } from 'react';
 import { Except } from 'type-fest';
-import { CreateLanguage, SensitivityList, UpdateLanguage } from '~/api';
+import {
+  CreateLanguage,
+  SensitivityList,
+  UpdateLanguage,
+} from '~/api/schema.graphql';
 import { canReadAny, Nullable } from '~/common';
 import {
   DialogForm,

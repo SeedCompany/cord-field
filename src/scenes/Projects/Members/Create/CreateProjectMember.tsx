@@ -8,7 +8,7 @@ import {
   CreateProjectMember as CreateProjectMemberInput,
   RoleLabels,
   RoleList,
-} from '~/api/schema';
+} from '~/api/schema.graphql';
 import { labelFrom } from '~/common';
 import {
   DialogForm,

@@ -12,7 +12,7 @@ import {
 import { Skeleton } from '@material-ui/lab';
 import clsx from 'clsx';
 import React, { useMemo } from 'react';
-import { UpdateCeremonyInput } from '~/api';
+import { UpdateCeremonyInput } from '~/api/schema.graphql';
 import { canEditAny } from '~/common';
 import { useDialog } from '../../../components/Dialog';
 import { DialogForm } from '../../../components/Dialog/DialogForm';

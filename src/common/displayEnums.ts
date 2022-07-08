@@ -3,7 +3,7 @@ import {
   ProductApproachLabels,
   ProductMethodology,
   ProductMethodologyLabels,
-} from '~/api/schema';
+} from '~/api/schema.graphql';
 import { ProductTypes } from '../scenes/Products/ProductForm/constants';
 import { MethodologyToApproach } from './approach';
 import { Nullable } from './types';

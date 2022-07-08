@@ -8,7 +8,7 @@ import {
   ProjectChangeRequestTypeLabels,
   ProjectChangeRequestTypeList,
   UpdateProjectChangeRequestInput,
-} from '~/api/schema';
+} from '~/api/schema.graphql';
 import { callAll, labelFrom } from '~/common';
 import {
   DialogForm,

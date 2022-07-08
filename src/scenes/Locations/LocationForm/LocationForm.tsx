@@ -6,7 +6,7 @@ import {
   LocationTypeLabels,
   LocationTypeList,
   UpdateLocation,
-} from '~/api/schema';
+} from '~/api/schema.graphql';
 import { labelFrom } from '~/common';
 import {
   DialogForm,

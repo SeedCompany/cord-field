@@ -9,7 +9,7 @@ import {
   PartnerType,
   PeriodType,
   PeriodTypeList,
-} from '~/api/schema';
+} from '~/api/schema.graphql';
 import { labelFrom, Nullable } from '~/common';
 import {
   DialogForm,

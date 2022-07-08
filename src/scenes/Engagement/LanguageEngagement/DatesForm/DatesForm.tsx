@@ -2,7 +2,7 @@ import { useMutation } from '@apollo/client';
 import { isEqual, noop } from 'lodash';
 import React, { useMemo } from 'react';
 import { Form, FormSpy } from 'react-final-form';
-import { UpdateLanguageEngagementInput as UpdateEngagementInput } from '../../../../api';
+import { UpdateLanguageEngagementInput as UpdateEngagementInput } from '~/api/schema.graphql';
 import {
   DateField,
   FieldGroup,

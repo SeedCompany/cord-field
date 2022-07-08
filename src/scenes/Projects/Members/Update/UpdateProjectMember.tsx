@@ -4,7 +4,11 @@ import { Skeleton } from '@material-ui/lab';
 import React from 'react';
 import { Except } from 'type-fest';
 import { removeItemFromList } from '~/api';
-import { RoleLabels, RoleList, UpdateProjectMemberInput } from '~/api/schema';
+import {
+  RoleLabels,
+  RoleList,
+  UpdateProjectMemberInput,
+} from '~/api/schema.graphql';
 import { callAll, labelFrom } from '~/common';
 import {
   DialogForm,

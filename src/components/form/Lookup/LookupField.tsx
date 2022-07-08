@@ -22,7 +22,8 @@ import React, {
   useState,
 } from 'react';
 import { Except, SetOptional, SetRequired } from 'type-fest';
-import { isNetworkRequestInFlight, Power } from '../../../api';
+import { isNetworkRequestInFlight } from '~/api';
+import { Power } from '~/api/schema.graphql';
 import { useDialog } from '../../Dialog';
 import { DialogFormProps } from '../../Dialog/DialogForm';
 import { useSession } from '../../Session';

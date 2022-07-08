@@ -8,7 +8,7 @@ import {
   FinancialReportingTypeList,
   PartnerTypeList,
   UpdatePartner,
-} from '~/api/schema';
+} from '~/api/schema.graphql';
 import { ExtractStrict, labelFrom, Many, many } from '~/common';
 import {
   DialogForm,

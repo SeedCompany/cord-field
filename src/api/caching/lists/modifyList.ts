@@ -4,7 +4,8 @@ import { Modifier } from '@apollo/client/cache/core/types/common';
 import type { EntityStore } from '@apollo/client/cache/inmemory/entityStore';
 import type { ConditionalKeys } from 'type-fest';
 import { keys, mapFromList, Nullable } from '~/common';
-import type { Entity, GqlTypeOf, Query } from '../../schema';
+import type { Entity, GqlTypeOf } from '../../schema';
+import type { Query } from '../../schema/schema.graphql';
 import { typePolicies } from '../../schema/typePolicies';
 import { PaginatedListOutput, SortableListInput } from './types';
 

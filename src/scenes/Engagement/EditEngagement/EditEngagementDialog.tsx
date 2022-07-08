@@ -10,7 +10,7 @@ import {
   InternshipProgramLabels,
   UpdateInternshipEngagement,
   UpdateLanguageEngagement,
-} from '~/api/schema';
+} from '~/api/schema.graphql';
 import {
   DisplayLocationFragment,
   ExtractStrict,

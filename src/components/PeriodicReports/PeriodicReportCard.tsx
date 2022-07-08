@@ -10,7 +10,7 @@ import {
 import { AssignmentOutlined, BarChart, ShowChart } from '@material-ui/icons';
 import React, { useState } from 'react';
 import { useDropzone } from 'react-dropzone';
-import { ReportType } from '~/api/schema';
+import { ReportType } from '~/api/schema.graphql';
 import { Many, simpleSwitch } from '~/common';
 import {
   EditablePeriodicReportField,

@@ -2,7 +2,8 @@ import { useMutation } from '@apollo/client';
 import { pick } from 'lodash';
 import React, { ComponentType, useMemo } from 'react';
 import { Except, Merge } from 'type-fest';
-import { invalidateProps, SensitivityList, UpdateProject } from '~/api';
+import { invalidateProps } from '~/api';
+import { SensitivityList, UpdateProject } from '~/api/schema.graphql';
 import {
   DisplayFieldRegionFragment,
   DisplayLocationFragment,

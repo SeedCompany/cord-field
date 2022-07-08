@@ -1,6 +1,9 @@
 import { ToggleButton } from '@material-ui/lab';
 import React from 'react';
-import { ProgressMeasurement, ProgressMeasurementLabels } from '~/api/schema';
+import {
+  ProgressMeasurement,
+  ProgressMeasurementLabels,
+} from '~/api/schema.graphql';
 import { labelFrom } from '~/common';
 import { EnumField } from '../../../components/form';
 import { SectionProps } from './ProductFormFields';

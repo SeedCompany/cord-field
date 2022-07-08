@@ -3,7 +3,7 @@ import { Add } from '@material-ui/icons';
 import { startCase } from 'lodash';
 import * as React from 'react';
 import { useContext, useState } from 'react';
-import { Power } from '../../../api';
+import { Power } from '~/api/schema.graphql';
 import { CreateButton } from '../../../components/CreateButton';
 import { useSession } from '../../../components/Session';
 import { CreateItemContext } from './CreateDialogProviders';

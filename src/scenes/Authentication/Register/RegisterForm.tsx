@@ -2,7 +2,7 @@ import { Grid, makeStyles, Typography } from '@material-ui/core';
 import { Decorator, Mutator } from 'final-form';
 import React from 'react';
 import { Form, FormProps } from 'react-final-form';
-import { RegisterInput } from '../../../api';
+import { RegisterInput } from '~/api/schema.graphql';
 import {
   blurOnSubmit,
   EmailField,

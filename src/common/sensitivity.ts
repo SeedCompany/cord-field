@@ -1,5 +1,5 @@
 import { orderBy } from 'lodash';
-import { Sensitivity } from '~/api/schema';
+import { Sensitivity } from '~/api/schema.graphql';
 
 export const highestSensitivity = (
   sensitivities: Sensitivity[],

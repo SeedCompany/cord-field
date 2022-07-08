@@ -6,7 +6,7 @@ import clsx from 'clsx';
 import React from 'react';
 import { Helmet } from 'react-helmet-async';
 import { useParams } from 'react-router-dom';
-import { LocationTypeLabels } from '~/api/schema';
+import { LocationTypeLabels } from '~/api/schema.graphql';
 import { canEditAny, labelFrom } from '~/common';
 import { useDialog } from '../../../components/Dialog';
 import {
