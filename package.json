@@ -93,7 +93,7 @@
     "@graphql-codegen/near-operation-file-preset": "^2.3.0",
     "@graphql-codegen/plugin-helpers": "^2.5.0",
     "@graphql-codegen/schema-ast": "^2.5.0",
-    "@graphql-codegen/typed-document-node": "^2.3.0",
+    "@graphql-codegen/typed-document-node": "2.2.*",
     "@graphql-codegen/typescript": "^2.7.0",
     "@graphql-codegen/typescript-operations": "^2.5.0",
     "@graphql-tools/graphql-file-loader": "^7.4.0",

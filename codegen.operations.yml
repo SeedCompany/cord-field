@@ -26,7 +26,7 @@ generates:
     preset: near-operation-file
     presetConfig:
       extension: .graphql.ts
-      baseTypesPath: api/schema.graphql.ts
+      baseTypesPath: ~~/api/schema.graphql
     plugins:
       - typescript-operations
       - typed-document-node
