@@ -12,8 +12,9 @@ import {
   Minimize as MinimizeIcon,
 } from '@material-ui/icons';
 import clsx from 'clsx';
-import React, { FC, memo, ReactNode, useState } from 'react';
+import React, { memo, ReactNode, useState } from 'react';
 import { useMountedState } from 'react-use';
+import { ChildrenProp } from '~/util';
 import { useSession } from '../Session';
 import { DraggablePaper } from './DraggablePaper';
 import { useUploadManager } from './UploadManagerContext';
@@ -65,14 +66,14 @@ const useStyles = makeStyles(({ palette, spacing }) => ({
   collapsed: {}, // here to pacify TypeScript
 }));
 
-interface DialogTitleProps {
+interface DialogTitleProps extends ChildrenProp {
   id: string;
   isCollapsed: boolean;
   onClose: (event: React.MouseEvent<HTMLButtonElement>) => void;
   onCollapseClick: (event: React.MouseEvent<HTMLButtonElement>) => void;
 }
 
-const DialogTitle: FC<DialogTitleProps> = (props) => {
+const DialogTitle = (props: DialogTitleProps) => {
   const { children, id, isCollapsed, onClose, onCollapseClick } = props;
   const classes = useStyles();
   const IconComponent = isCollapsed ? MaximizeIcon : MinimizeIcon;

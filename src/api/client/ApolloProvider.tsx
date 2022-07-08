@@ -2,11 +2,13 @@ import {
   ApolloProvider as BaseApolloProvider,
   getApolloContext,
 } from '@apollo/client';
-import React, { FC, useContext, useState } from 'react';
+import * as React from 'react';
+import { useContext, useState } from 'react';
+import { ChildrenProp } from '~/util';
 import { createClient } from './createClient';
 import { useErrorRendererRef } from './links/renderErrors.link';
 
-export const ApolloProvider: FC = ({ children }) => {
+export const ApolloProvider = ({ children }: ChildrenProp) => {
   const parentContext = useContext(getApolloContext());
   const errorRendererRef = useErrorRendererRef();
 

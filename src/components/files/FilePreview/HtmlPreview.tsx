@@ -1,8 +1,8 @@
-import React, { FC, useCallback, useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { PreviewerProps } from './FilePreview';
 import { PreviewLoading } from './PreviewLoading';
 
-export const HtmlPreview: FC<PreviewerProps> = (props) => {
+export const HtmlPreview = (props: PreviewerProps) => {
   const { file, previewLoading, setPreviewLoading } = props;
   const [url, setUrl] = useState('');
 

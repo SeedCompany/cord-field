@@ -2,7 +2,6 @@ import { CardContent, Grid, makeStyles, Typography } from '@material-ui/core';
 import { AvatarGroup, Skeleton } from '@material-ui/lab';
 import { To } from 'history';
 import { compact } from 'lodash';
-import { FC } from 'react';
 import * as React from 'react';
 import { listOrPlaceholders } from '../../util';
 import { Avatar } from '../Avatar';
@@ -48,14 +47,14 @@ export interface MemberListSummaryProps extends Pick<HugeIconProps, 'icon'> {
   to: To;
 }
 
-export const MemberListSummary: FC<MemberListSummaryProps> = ({
+export const MemberListSummary = ({
   members,
   max = 4,
   total,
   title,
   to,
   icon,
-}) => {
+}: MemberListSummaryProps) => {
   const classes = useStyles();
 
   return (

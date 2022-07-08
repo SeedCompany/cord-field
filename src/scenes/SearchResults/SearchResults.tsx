@@ -1,7 +1,7 @@
 import { useQuery } from '@apollo/client';
 import { Card, CardContent, makeStyles, Typography } from '@material-ui/core';
 import { startCase } from 'lodash';
-import { FC, ReactElement } from 'react';
+import { ReactElement } from 'react';
 import * as React from 'react';
 import { Helmet } from 'react-helmet-async';
 import { Error } from '../../components/Error';
@@ -31,7 +31,7 @@ const useStyles = makeStyles(({ spacing, breakpoints }) => ({
   },
 }));
 
-export const SearchResults: FC = () => {
+export const SearchResults = () => {
   const classes = useStyles();
 
   const [{ q: query }] = useSearch();

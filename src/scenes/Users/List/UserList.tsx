@@ -12,7 +12,7 @@ import {
   TabContext,
   TabPanel,
 } from '@material-ui/lab';
-import React, { FC, useRef } from 'react';
+import React, { useRef } from 'react';
 import { Helmet } from 'react-helmet-async';
 import { User } from '../../../api';
 import { useNumberFormatter } from '../../../components/Formatters';
@@ -45,7 +45,7 @@ const useStyles = makeStyles(({ spacing, breakpoints }) => ({
   },
 }));
 
-export const UserList: FC = () => {
+export const UserList = () => {
   const sort = useSort<User>();
   const [filters, setFilters] = useUserFilters();
   const list = useListQuery(UsersDocument, {

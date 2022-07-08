@@ -1,10 +1,11 @@
 import { Typography } from '@material-ui/core';
-import React, { FC } from 'react';
+import React from 'react';
 import { Route } from 'react-router-dom';
+import { ChildrenProp } from '~/util';
 import { StatusCode } from '../Routing';
 import { Error } from './Error';
 
-export const NotFoundPage: FC = ({ children }) => (
+export const NotFoundPage = ({ children }: ChildrenProp) => (
   <Error show page>
     <StatusCode code={404} />
     {!children || typeof children === 'string' ? (

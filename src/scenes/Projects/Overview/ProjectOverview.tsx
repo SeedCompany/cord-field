@@ -3,7 +3,7 @@ import { Grid, makeStyles, Tooltip, Typography } from '@material-ui/core';
 import { Add, DateRange, Edit, Publish } from '@material-ui/icons';
 import { Skeleton } from '@material-ui/lab';
 import clsx from 'clsx';
-import React, { FC } from 'react';
+import React from 'react';
 import { useDropzone } from 'react-dropzone';
 import { Helmet } from 'react-helmet-async';
 import { ProjectStepLabels } from '~/api/schema';
@@ -105,7 +105,7 @@ const useStyles = makeStyles(({ spacing, breakpoints, palette }) => ({
   },
 }));
 
-export const ProjectOverview: FC = () => {
+export const ProjectOverview = () => {
   const classes = useStyles();
   const { projectId, changesetId } = useProjectId();
   const beta = useBetaFeatures();

@@ -1,4 +1,5 @@
-import React, { createContext, FC, useContext, useState } from 'react';
+import React, { createContext, useContext, useState } from 'react';
+import { ChildrenProp } from '~/util';
 
 const initialUploadManagerContext = {
   isManagerOpen: false,
@@ -12,7 +13,7 @@ export const UploadManagerContext = createContext<
 >(initialUploadManagerContext);
 UploadManagerContext.displayName = 'UploadManagerContext';
 
-export const UploadManagerProvider: FC = ({ children }) => {
+export const UploadManagerProvider = ({ children }: ChildrenProp) => {
   const [isManagerOpen, setIsManagerOpen] = useState(false);
   return (
     <UploadManagerContext.Provider value={{ isManagerOpen, setIsManagerOpen }}>

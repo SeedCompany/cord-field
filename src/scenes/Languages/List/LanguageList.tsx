@@ -13,7 +13,7 @@ import {
   TabPanel,
 } from '@material-ui/lab';
 import { omit, pickBy } from 'lodash';
-import React, { FC, useRef } from 'react';
+import React, { useRef } from 'react';
 import { Helmet } from 'react-helmet-async';
 import { Language } from '../../../api';
 import { FilterButtonDialog } from '../../../components/Filter';
@@ -53,7 +53,7 @@ const useStyles = makeStyles(({ spacing, breakpoints }) => ({
   },
 }));
 
-export const LanguageList: FC = () => {
+export const LanguageList = () => {
   const sort = useSort<Language>();
   const [filters, setFilters] = useLanguageFilters();
   const list = useListQuery(Languages, {

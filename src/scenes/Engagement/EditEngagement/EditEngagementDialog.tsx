@@ -1,7 +1,7 @@
 import { useMutation } from '@apollo/client';
 import { setIn } from 'final-form';
 import { compact, keyBy, pick, startCase } from 'lodash';
-import React, { ComponentType, FC, useMemo } from 'react';
+import React, { ComponentType, useMemo } from 'react';
 import { Except, Merge } from 'type-fest';
 import { invalidateProps } from '~/api';
 import {
@@ -166,11 +166,11 @@ export type EditEngagementDialogProps = Except<
   editFields?: Many<EditableEngagementField>;
 };
 
-export const EditEngagementDialog: FC<EditEngagementDialogProps> = ({
+export const EditEngagementDialog = ({
   engagement,
   editFields: editFieldsProp,
   ...props
-}) => {
+}: EditEngagementDialogProps) => {
   const editFields = useMemo(
     () => many(editFieldsProp ?? []),
     [editFieldsProp]

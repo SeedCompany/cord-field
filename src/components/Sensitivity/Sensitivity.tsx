@@ -3,7 +3,6 @@ import { VerifiedUserOutlined } from '@material-ui/icons';
 import { Skeleton } from '@material-ui/lab';
 import clsx from 'clsx';
 import { meanBy } from 'lodash';
-import { FC } from 'react';
 import * as React from 'react';
 import { Sensitivity as SensitivityType } from '../../api';
 
@@ -60,11 +59,11 @@ export interface SensitivityProps {
   className?: string;
 }
 
-export const Sensitivity: FC<SensitivityProps> = ({
+export const Sensitivity = ({
   value,
   loading,
   className,
-}) => {
+}: SensitivityProps) => {
   const classes = useStyles();
 
   return (

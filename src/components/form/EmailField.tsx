@@ -1,4 +1,4 @@
-import React, { FC } from 'react';
+import React from 'react';
 import { Except } from 'type-fest';
 import {
   FormattedTextField,
@@ -18,12 +18,12 @@ export type EmailFieldProps = Except<
   caseSensitive?: boolean;
 };
 
-export const EmailField: FC<EmailFieldProps> = ({
+export const EmailField = ({
   name = 'email',
   required = true,
   caseSensitive,
   ...rest
-}) => (
+}: EmailFieldProps) => (
   <FormattedTextField
     name={name}
     label="Email"

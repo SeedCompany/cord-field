@@ -1,6 +1,7 @@
 import { makeStyles } from '@material-ui/core';
 import clsx from 'clsx';
-import React, { FC } from 'react';
+import React from 'react';
+import { ChildrenProp } from '~/util';
 
 const useStyles = makeStyles(({ spacing }) => ({
   root: {
@@ -12,7 +13,9 @@ const useStyles = makeStyles(({ spacing }) => ({
   },
 }));
 
-export const ContentContainer: FC<{ className?: string }> = (props) => {
+export const ContentContainer = (
+  props: { className?: string } & ChildrenProp
+) => {
   const classes = useStyles();
   return (
     <div className={clsx(classes.root, props.className)}>{props.children}</div>
