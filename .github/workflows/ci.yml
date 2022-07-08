@@ -12,6 +12,7 @@ on:
       - develop
 
 env:
+  NODE_ENV: development
   RAZZLE_API_BASE_URL: ${{ secrets.API_BASE_URL }}
 
 jobs:
