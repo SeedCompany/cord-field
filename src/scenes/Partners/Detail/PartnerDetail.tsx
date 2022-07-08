@@ -15,6 +15,7 @@ import React from 'react';
 import { Helmet } from 'react-helmet-async';
 import { useParams } from 'react-router-dom';
 import { listOrPlaceholders, square } from '~/common';
+import { Redacted } from '~/components/Redacted';
 import { Avatar } from '../../../components/Avatar';
 import { BooleanProperty } from '../../../components/BooleanProperty';
 import { DataButton } from '../../../components/DataButton';
@@ -125,10 +126,13 @@ export const PartnerDetail = () => {
         <div className={classes.main}>
           <header className={classes.header}>
             <Typography variant="h2" className={classes.name}>
-              {partner ? (
-                partner.organization.value?.name.value
+              {partner?.organization.value ? (
+                partner.organization.value.name.value
               ) : (
-                <Skeleton width="25ch" />
+                <Redacted
+                  info="You don't have permission to view this partner's name"
+                  width="25ch"
+                />
               )}
             </Typography>
             {partner && (
