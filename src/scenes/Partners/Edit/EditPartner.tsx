@@ -31,7 +31,7 @@ interface PartnerFormValues {
     UpdatePartner,
     {
       pointOfContactId?: UserLookupItem;
-      organizationName: string;
+      organizationName?: string | null;
     }
   >;
 }
@@ -145,7 +145,7 @@ export const EditPartner = ({
         types: partner.types.value,
         financialReportingTypes: partner.financialReportingTypes.value,
         address: partner.address.value,
-        organizationName: partner.organization.value!.name.value!,
+        organizationName: partner.organization.value?.name.value,
       },
     }),
     [partner]
@@ -181,7 +181,7 @@ export const EditPartner = ({
             updateOrganizationName({
               variables: {
                 id: partner.organization.value!.id,
-                name: organizationName,
+                name: organizationName!,
               },
             }),
           Object.keys(dirty).length > 0 &&
