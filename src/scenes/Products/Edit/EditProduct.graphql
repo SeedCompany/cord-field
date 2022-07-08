@@ -29,6 +29,7 @@ mutation UpdateOtherProduct($input: UpdateOtherProductInput!) {
 fragment UpdateProductResult on Product {
   ...ProductForm
   ...ProductCard
+  ...RecalculateChangesetDiff
 }
 
 query ProductInfoForEdit($id: ID!, $changesetId: ID) {
