@@ -7,7 +7,8 @@ import {
   CreateLanguage,
   SensitivityList,
   UpdateLanguage,
-} from '../../../api';
+} from '~/api';
+import { Nullable } from '~/common';
 import {
   DialogForm,
   DialogFormProps,
@@ -29,7 +30,6 @@ import { max, minLength, required } from '../../../components/form/validators';
 import { YearField } from '../../../components/form/YearField';
 import { useNumberFormatter } from '../../../components/Formatters';
 import { LanguageListItemFragment } from '../../../components/LanguageListItemCard/LanguageListItem.graphql';
-import { Nullable } from '../../../util';
 import { LanguageFormFragment } from './LangugeForm.graphql';
 
 export interface LanguageFormValues<T extends UpdateLanguage | CreateLanguage> {

@@ -6,9 +6,9 @@ import {
   ApproachMethodologies,
   displayMethodology,
   displayMethodologyWithLabel,
+  entries,
 } from '~/common';
 import { EnumField, EnumOption } from '../../../components/form';
-import { entries } from '../../../util';
 import { useStyles } from './DefaultAccordion';
 import { SectionProps } from './ProductFormFields';
 import { SecuredAccordion } from './SecuredAccordion';

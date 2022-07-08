@@ -1,6 +1,6 @@
 import { useCallback, useMemo } from 'react';
-import { useLocale } from '../../hooks';
-import { Nullable } from '../../util';
+import { Nullable } from '~/common';
+import { useLocale } from '~/hooks';
 
 export const useNumberFormatter = (options?: Intl.NumberFormatOptions) => {
   const locale = useLocale();

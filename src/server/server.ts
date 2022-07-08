@@ -6,8 +6,8 @@ import helmet from 'helmet';
 import * as path from 'path';
 import responseTime from 'response-time';
 import { createClient as createApollo } from '~/api/client/createClient';
+import { basePathOfUrl, withoutTrailingSlash } from '~/common';
 import { LogoutDocument } from '../scenes/Authentication/Logout/logout.graphql';
-import { basePathOfUrl, withoutTrailingSlash } from '../util';
 import { renderServerSideApp } from './renderServerSideApp';
 
 const PUBLIC_URL = withoutTrailingSlash(process.env.PUBLIC_URL || '');

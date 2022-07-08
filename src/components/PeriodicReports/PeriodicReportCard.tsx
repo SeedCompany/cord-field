@@ -10,12 +10,12 @@ import {
 import { AssignmentOutlined, BarChart, ShowChart } from '@material-ui/icons';
 import React, { useState } from 'react';
 import { useDropzone } from 'react-dropzone';
-import { ReportType } from '../../api';
+import { ReportType } from '~/api/schema';
+import { Many, simpleSwitch } from '~/common';
 import {
   EditablePeriodicReportField,
   UpdatePeriodicReportDialog,
 } from '../../scenes/Projects/Reports/UpdatePeriodicReportDialog';
-import { Many, simpleSwitch } from '../../util';
 import { useDialog } from '../Dialog';
 import {
   FileActionsContextProvider,

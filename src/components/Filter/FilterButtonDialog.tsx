@@ -1,7 +1,7 @@
 import { Badge, Button } from '@material-ui/core';
 import { ReactNode } from 'react';
 import * as React from 'react';
-import { keys } from '../../util';
+import { keys } from '~/common';
 import { useDialog } from '../Dialog';
 import { DialogForm } from '../Dialog/DialogForm';
 

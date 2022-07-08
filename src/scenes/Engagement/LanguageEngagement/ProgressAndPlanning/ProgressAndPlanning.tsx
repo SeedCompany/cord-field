@@ -6,7 +6,7 @@ import {
   ProductMethodology as Methodology,
   ProductApproachLabels,
 } from '~/api/schema';
-import { ApproachMethodologies, displayMethodology } from '~/common';
+import { ApproachMethodologies, displayMethodology, entries } from '~/common';
 import { DefinedFileCard } from '../../../../components/DefinedFileCard';
 import { useDialog } from '../../../../components/Dialog';
 import { DialogForm } from '../../../../components/Dialog/DialogForm';
@@ -14,7 +14,6 @@ import { FileActionsContextProvider } from '../../../../components/files/FileAct
 import { HandleUploadCompletedFunction } from '../../../../components/files/hooks';
 import { EnumField, EnumOption } from '../../../../components/form';
 import { PeriodicReportCard } from '../../../../components/PeriodicReports';
-import { entries } from '../../../../util';
 import { UploadLanguageEngagementPnpDocument as UploadPnp } from '../../Files';
 import { ProgressAndPlanningFragment } from './ProgressAndPlanning.graphql';
 

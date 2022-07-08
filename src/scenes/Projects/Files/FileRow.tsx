@@ -6,8 +6,8 @@ import { useSnackbar } from 'notistack';
 import React, { useEffect } from 'react';
 import { useDrag, useDrop } from 'react-dnd';
 import { getEmptyImage } from 'react-dnd-html5-backend';
-import { addItemToList, removeItemFromList } from '../../../api';
-import { callAll } from '../../../util';
+import { addItemToList, removeItemFromList } from '~/api';
+import { callAll } from '~/common';
 import { MoveFileNodeDocument } from './MoveNode.graphql';
 import {
   Directory,

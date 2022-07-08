@@ -10,7 +10,7 @@ import {
   PeriodType,
   PeriodTypeList,
 } from '~/api/schema';
-import { labelFrom } from '~/common';
+import { labelFrom, Nullable } from '~/common';
 import {
   DialogForm,
   DialogFormProps,
@@ -27,7 +27,6 @@ import {
   PartnerField,
   PartnerLookupItem,
 } from '../../../components/form/Lookup';
-import { Nullable } from '../../../util';
 import { CreatePartnershipFormInput } from '../Create';
 import { EditPartnershipFormInput } from '../Edit';
 import { PartnershipFormFragment } from './PartnershipForm.graphql';

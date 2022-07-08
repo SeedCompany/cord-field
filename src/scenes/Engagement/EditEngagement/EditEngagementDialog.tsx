@@ -13,7 +13,10 @@ import {
 } from '~/api/schema';
 import {
   DisplayLocationFragment,
+  ExtractStrict,
   labelFrom,
+  Many,
+  many,
   MethodologyToApproach,
 } from '~/common';
 import {
@@ -32,7 +35,6 @@ import {
 import { AutocompleteField } from '../../../components/form/AutocompleteField';
 import { LocationField, UserField } from '../../../components/form/Lookup';
 import { UserLookupItemFragment } from '../../../components/form/Lookup/User/UserLookup.graphql';
-import { ExtractStrict, many, Many } from '../../../util';
 import { InternshipEngagementDetailFragment as InternshipEngagement } from '../InternshipEngagement/InternshipEngagement.graphql';
 import { LanguageEngagementDetailFragment as LanguageEngagement } from '../LanguageEngagement/LanguageEngagementDetail.graphql';
 import {

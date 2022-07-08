@@ -1,6 +1,6 @@
 import React from 'react';
-import { isSecured } from '../../api';
-import { CalendarDate, Nullable } from '../../util';
+import { isSecured } from '~/api';
+import { CalendarDate, Nullable } from '~/common';
 import { Redacted } from '../Redacted';
 import {
   PeriodicReportFragment,

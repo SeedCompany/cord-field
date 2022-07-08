@@ -3,6 +3,7 @@ import { Tooltip, Typography } from '@material-ui/core';
 import { DeleteOutline } from '@material-ui/icons';
 import * as React from 'react';
 import { removeItemFromList } from '~/api';
+import { callAll } from '~/common';
 import {
   Id_InternshipProject_Fragment as InternshipProjectIdFragment,
   Id_TranslationProject_Fragment as TranslationProjectIdFragment,
@@ -12,7 +13,6 @@ import { DialogForm } from '../../../components/Dialog/DialogForm';
 import { SubmitError } from '../../../components/form';
 import { IconButton, IconButtonProps } from '../../../components/IconButton';
 import { useNavigate } from '../../../components/Routing';
-import { callAll } from '../../../util';
 import { recalculateSensitivity } from '../LanguageEngagement/Create/recalculateSensitivity';
 import {
   DeleteEngagementDocument,

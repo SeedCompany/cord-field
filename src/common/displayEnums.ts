@@ -5,8 +5,8 @@ import {
   ProductMethodologyLabels,
 } from '~/api/schema';
 import { ProductTypes } from '../scenes/Products/ProductForm/constants';
-import { Nullable } from '../util';
 import { MethodologyToApproach } from './approach';
+import { Nullable } from './types';
 
 export const labelFrom =
   <T extends keyof any>(labels: Record<T, string>) =>

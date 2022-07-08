@@ -3,7 +3,7 @@ import { AvatarGroup, Skeleton } from '@material-ui/lab';
 import { To } from 'history';
 import { compact } from 'lodash';
 import * as React from 'react';
-import { listOrPlaceholders } from '../../util';
+import { listOrPlaceholders } from '~/common';
 import { Avatar } from '../Avatar';
 import { HugeIcon, HugeIconProps } from '../Icons';
 import { CardActionAreaLink } from '../Routing';

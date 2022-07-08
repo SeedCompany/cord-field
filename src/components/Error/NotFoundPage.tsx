@@ -1,7 +1,7 @@
 import { Typography } from '@material-ui/core';
 import React from 'react';
 import { Route } from 'react-router-dom';
-import { ChildrenProp } from '~/util';
+import { ChildrenProp } from '~/common';
 import { StatusCode } from '../Routing';
 import { Error } from './Error';
 

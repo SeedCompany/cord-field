@@ -9,7 +9,7 @@ import { Response } from 'jest-express/lib/response';
 import React, { useState } from 'react';
 import { HelmetProvider } from 'react-helmet-async';
 import { StaticRouter } from 'react-router-dom/server';
-import { ChildrenProp } from '~/util';
+import { ChildrenProp } from '~/common';
 import { createClient } from './api/client/createClient';
 import { App } from './App';
 import { Nest } from './components/Nest';

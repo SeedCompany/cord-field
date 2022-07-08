@@ -13,8 +13,8 @@ import {
   ApproachIcons,
   displayMethodology,
   MethodologyToApproach,
-} from '../../api';
-import { listOrPlaceholders } from '../../util';
+} from '~/api';
+import { listOrPlaceholders } from '~/common';
 import { MethodologiesCardFragment } from './MethodologiesCard.graphql';
 
 const useStyles = makeStyles(({ palette, spacing }) => ({

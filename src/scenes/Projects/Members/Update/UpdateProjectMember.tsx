@@ -5,7 +5,7 @@ import React from 'react';
 import { Except } from 'type-fest';
 import { removeItemFromList } from '~/api';
 import { RoleLabels, RoleList, UpdateProjectMemberInput } from '~/api/schema';
-import { labelFrom } from '~/common';
+import { callAll, labelFrom } from '~/common';
 import {
   DialogForm,
   DialogFormProps,
@@ -16,7 +16,6 @@ import {
   SubmitError,
 } from '../../../../components/form';
 import { AutocompleteField } from '../../../../components/form/AutocompleteField';
-import { callAll } from '../../../../util';
 import { ProjectMembersQuery } from '../List/ProjectMembers.graphql';
 import {
   DeleteProjectMemberDocument,

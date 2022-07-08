@@ -3,7 +3,7 @@ import { Skeleton, SkeletonProps } from '@material-ui/lab';
 import clsx from 'clsx';
 import * as React from 'react';
 import { Except } from 'type-fest';
-import { ChildrenProp } from '~/util';
+import { ChildrenProp } from '~/common';
 
 export interface RedactedProps {
   info: TooltipProps['title'];

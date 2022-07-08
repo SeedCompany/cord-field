@@ -9,7 +9,7 @@ import {
   PartnerTypeList,
   UpdatePartner,
 } from '~/api/schema';
-import { labelFrom } from '~/common';
+import { ExtractStrict, labelFrom, Many, many } from '~/common';
 import {
   DialogForm,
   DialogFormProps,
@@ -22,7 +22,6 @@ import {
 } from '../../../components/form';
 import { UserField, UserLookupItem } from '../../../components/form/Lookup';
 import { isLength } from '../../../components/form/validators';
-import { ExtractStrict, many, Many } from '../../../util';
 import { PartnerDetailsFragment } from '../Detail/PartnerDetail.graphql';
 import { UpdateOrganizationNameDocument } from './EditOrganizationName.graphql';
 import { UpdatePartnerDocument } from './EditPartner.graphql';

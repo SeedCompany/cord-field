@@ -1,18 +1,19 @@
 import { ToggleButton } from '@material-ui/lab';
 import React from 'react';
-import { UnspecifiedScripturePortion } from '../../../api';
+import { UnspecifiedScripturePortion } from '~/api/schema';
+import {
+  entries,
+  getScriptureRangeDisplay,
+  getUnspecifiedScriptureDisplay,
+  ScriptureRange,
+  scriptureRangeDictionary,
+  simpleSwitch,
+} from '~/common';
 import {
   AutocompleteField,
   EnumField,
   VersesField,
 } from '../../../components/form';
-import { entries, simpleSwitch } from '../../../util';
-import {
-  getScriptureRangeDisplay,
-  getUnspecifiedScriptureDisplay,
-  ScriptureRange,
-  scriptureRangeDictionary,
-} from '../../../util/biblejs';
 import { newTestament, oldTestament } from './constants';
 import { DefaultAccordion, useStyles } from './DefaultAccordion';
 import { SectionProps } from './ProductFormFields';

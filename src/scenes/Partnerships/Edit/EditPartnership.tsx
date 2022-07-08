@@ -7,10 +7,10 @@ import {
   PeriodType,
   removeItemFromList,
   UpdatePartnershipInput,
-} from '../../../api';
+} from '~/api';
+import { callAll } from '~/common';
 import { SubmitAction, SubmitButton } from '../../../components/form';
 import { PartnerLookupItem } from '../../../components/form/Lookup';
-import { callAll } from '../../../util';
 import { invalidateBudgetRecords } from '../InvalidateBudget';
 import { ProjectPartnershipsQuery } from '../List/PartnershipList.graphql';
 import {

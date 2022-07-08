@@ -4,9 +4,9 @@ import { Except } from 'type-fest';
 import {
   addItemToList,
   CreatePartnership as CreatePartnershipType,
-} from '../../../api';
+} from '~/api';
+import { callAll } from '~/common';
 import { PartnerLookupItem } from '../../../components/form/Lookup';
-import { callAll } from '../../../util';
 import { updateOldPrimaryPartnership } from '../Edit';
 import { invalidateBudgetRecords } from '../InvalidateBudget';
 import { ProjectPartnershipsQuery } from '../List/PartnershipList.graphql';

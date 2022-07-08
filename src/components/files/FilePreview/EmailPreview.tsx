@@ -4,7 +4,7 @@ import parseHtml from 'html-react-parser';
 import { DateTime } from 'luxon';
 import * as React from 'react';
 import { useCallback, useEffect, useState } from 'react';
-import { mapFromList } from '../../../util';
+import { mapFromList } from '~/common';
 import { FormattedDateTime } from '../../Formatters';
 import { PreviewerProps } from './FilePreview';
 import { PreviewLoading } from './PreviewLoading';

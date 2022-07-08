@@ -6,7 +6,7 @@ import React, {
   useEffect,
   useReducer,
 } from 'react';
-import { ChildrenProp } from '~/util';
+import { ChildrenProp } from '~/common';
 import * as actions from './Reducer/uploadActions';
 import { initialState } from './Reducer/uploadInitialState';
 import { uploadReducer } from './Reducer/uploadReducer';

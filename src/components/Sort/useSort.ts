@@ -1,7 +1,7 @@
 import { isEmpty } from 'lodash';
-import { Order } from '../../api';
-import { makeQueryHandler, StringParam, withTransform } from '../../hooks';
-import { Nullable } from '../../util';
+import { Order } from '~/api/schema';
+import { Nullable } from '~/common';
+import { makeQueryHandler, StringParam, withTransform } from '~/hooks';
 import { SortValue } from './SortControl';
 
 export const useSort = <T>(

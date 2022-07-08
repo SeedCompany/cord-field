@@ -5,7 +5,8 @@ import { Skeleton } from '@material-ui/lab';
 import React from 'react';
 import { Helmet } from 'react-helmet-async';
 import { useParams } from 'react-router-dom';
-import { canEditAny, removeItemFromList } from '../../../api';
+import { canEditAny, removeItemFromList } from '~/api';
+import { listOrPlaceholders } from '~/common';
 import { BooleanProperty } from '../../../components/BooleanProperty';
 import { useDialog } from '../../../components/Dialog';
 import {
@@ -26,7 +27,6 @@ import { ProjectListItemFragment } from '../../../components/ProjectListItemCard
 import { Redacted } from '../../../components/Redacted';
 import { Sensitivity } from '../../../components/Sensitivity';
 import { TogglePinButton } from '../../../components/TogglePinButton';
-import { listOrPlaceholders } from '../../../util';
 import { EditLanguage } from '../Edit';
 import { AddLocationToLanguageForm } from '../Edit/AddLocationToLanguageForm';
 import { LanguagesQueryVariables } from '../List/languages.graphql';

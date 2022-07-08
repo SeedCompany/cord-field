@@ -1,7 +1,7 @@
 import { groupBy, isEqual, sum } from 'lodash';
 import { ScriptureFragment, UnspecifiedScripturePortion } from '../../api';
+import { Nullable } from '../types';
 import { books } from './bibleBooks';
-import { Nullable } from '..';
 
 interface ScriptureReference {
   book: string;

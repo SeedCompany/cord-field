@@ -1,7 +1,7 @@
 import { makeStyles, ThemeProvider } from '@material-ui/core';
 import React from 'react';
 import { Outlet } from 'react-router-dom';
-import { ChildrenProp } from '~/util';
+import { ChildrenProp } from '~/common';
 import { Picture } from '../../components/Picture';
 import { createTheme } from '../../theme';
 import backgroundImg from './background.png';

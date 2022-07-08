@@ -14,12 +14,12 @@ import {
 } from '@material-ui/lab';
 import React, { useRef } from 'react';
 import { Helmet } from 'react-helmet-async';
+import { simpleSwitch } from '~/common';
 import { useNumberFormatter } from '../../../components/Formatters';
 import { ContentContainer } from '../../../components/Layout';
 import { List, useListQuery } from '../../../components/List';
 import { PartnerListItemCard as PartnerCard } from '../../../components/PartnerListItemCard';
 import { SortButtonDialog, useSort } from '../../../components/Sort';
-import { simpleSwitch } from '../../../util';
 import { usePartnerFilters } from './PartnerFilterOptions';
 import { PartnersDocument } from './PartnerList.graphql';
 import { PartnerSort, PartnerSortOptions } from './PartnerSortOptions';
