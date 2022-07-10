@@ -1,24 +1,29 @@
 import { TextField, TextFieldProps } from '@material-ui/core';
-import {
-  BaseDatePickerProps,
-  DatePicker,
-  useUtils,
-} from '@material-ui/pickers';
-import {
-  DateValidationError,
-  DateValidationProps,
-} from '@material-ui/pickers/_helpers/date-utils';
-import { MuiPickersAdapter } from '@material-ui/pickers/_shared/hooks/useUtils';
-import { ParsableDate } from '@material-ui/pickers/constants/prop-types';
-import type { SharedPickerProps } from '@material-ui/pickers/Picker/makePickerWithState';
-import type { ResponsiveWrapper } from '@material-ui/pickers/wrappers/ResponsiveWrapper';
 import { DateTime } from 'luxon';
 import { useRef } from 'react';
 import { Except } from 'type-fest';
 import { CalendarDate, Nullable } from '~/common';
+import { TextField as StubField } from './TextField';
 import { FieldConfig, useField } from './useField';
 import { getHelperText, showError } from './util';
 import { required as requiredValidator, Validator } from './validators';
+
+type BaseDatePickerProps<_T> = any;
+type DatePicker<_T> = any;
+type DateValidationProps<_T> = any;
+type DateValidationError =
+  | 'invalidDate'
+  | 'minDate'
+  | 'maxDate'
+  | 'disableFuture'
+  | 'disablePast'
+  | 'shouldDisableDate';
+type MuiPickersAdapter<_T> = any;
+type ParsableDate<_T> = any;
+type SharedPickerProps<_T, _S> = any;
+const ResponsiveWrapper = {} as const;
+const DatePicker = <_T,>(...props: any) => <StubField name={props.name} />;
+const useUtils = <_T,>() => ({});
 
 type DatePickerProps = Omit<
   BaseDatePickerProps<CalendarDate>,
@@ -95,7 +100,7 @@ export const DateField = ({
       ...defaultMessages,
       ...errorMessages,
       Required: 'Required',
-    }[meta.error as DateError] ?? meta.error;
+    }[meta.error as string] ?? meta.error;
   const helperText = getHelperText(
     {
       ...meta,
@@ -133,7 +138,7 @@ export const DateField = ({
       onChange={(d: any | DateTime | null) =>
         onChange(d ? CalendarDate.fromDateTime(d) : d)
       }
-      renderInput={(params) => (
+      renderInput={(params: any) => (
         <TextField
           autoComplete="off"
           {...params}
