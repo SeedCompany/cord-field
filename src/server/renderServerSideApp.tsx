@@ -7,7 +7,6 @@ import {
   Response as ExpressResponse,
 } from 'express';
 import { pickBy } from 'lodash';
-import { resetServerContext } from 'react-beautiful-dnd';
 import { renderToString } from 'react-dom/server';
 import { FilledContext, HelmetProvider } from 'react-helmet-async';
 import { StaticRouter } from 'react-router-dom/server';
@@ -45,7 +44,6 @@ export const renderServerSideApp = async (
   const markup = await getMarkupFromTree({
     tree: <ServerApp req={req} apollo={apollo} helmetContext={helmetContext} />,
     renderFunction: (tree) => {
-      resetServerContext();
       return renderToString(
         location.wrap(sheets.collect(extractor.collectChunks(tree)))
       );
