@@ -1,5 +1,4 @@
 import { sortBy, uniq } from 'lodash';
-import { Column } from 'material-table';
 import { useMemo } from 'react';
 import { ProductStep, ProductStepLabels } from '~/api/schema.graphql';
 import { bookIndexFromName } from '../../../common/biblejs';
@@ -31,14 +30,14 @@ export const ProductTable = ({ products, category }: ProductTableProps) => {
     );
   }, [products]);
 
-  const columns: Array<Column<RowData>> = [
+  const columns = [
     {
       title: category,
       field: 'label',
       headerStyle: {
         fontSize: '24px',
       },
-      render: ({ data }) => (
+      render: ({ data }: RowData) => (
         <Link to={`../../../products/${data.product.id}`}>
           {data.product.label}
         </Link>

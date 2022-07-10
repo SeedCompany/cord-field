@@ -1,6 +1,5 @@
 import { useApolloClient, useMutation } from '@apollo/client';
 import { sortBy, sumBy } from 'lodash';
-import { Column, Components } from 'material-table';
 import { useMemo } from 'react';
 import { onUpdateChangeFragment, readFragment } from '~/api';
 import { RecalculateChangesetDiffFragmentDoc as RecalculateChangesetDiff } from '~/common/fragments';
@@ -19,7 +18,7 @@ import {
   UpdateProjectBudgetRecordDocument,
 } from './ProjectBudget.graphql';
 
-const tableComponents: Components = {
+const tableComponents = {
   // No toolbar since it's just empty space, we don't use it for anything.
   Toolbar: () => null,
 };
@@ -80,7 +79,7 @@ export const ProjectBudgetRecords = (props: ProjectBudgetRecordsProps) => {
   );
 
   const blankAmount = 'click to edit';
-  const columns: Array<Column<BudgetRowData>> = useMemo(
+  const columns = useMemo(
     () => [
       {
         field: 'record',
@@ -98,8 +97,9 @@ export const ProjectBudgetRecords = (props: ProjectBudgetRecordsProps) => {
       {
         field: 'amount',
         type: 'currency',
-        editable: (_, rowData) => rowData.record.amount.canEdit,
-        render: (rowData) =>
+        editable: (_: any, rowData: BudgetRowData) =>
+          rowData.record.amount.canEdit,
+        render: (rowData: BudgetRowData) =>
           rowData.amount
             ? formatCurrency(Number(rowData.amount))
             : rowData.record.amount.canEdit
@@ -119,7 +119,11 @@ export const ProjectBudgetRecords = (props: ProjectBudgetRecordsProps) => {
       cellEditable={
         budget?.canEdit
           ? {
-              onCellEditApproved: async (newAmount, _, { record }) => {
+              onCellEditApproved: async (
+                newAmount: any,
+                _: any,
+                { record }: BudgetRowData
+              ) => {
                 if (newAmount === blankAmount || newAmount === '') return;
 
                 // If we have a changeset, fetch (from cache) the additional

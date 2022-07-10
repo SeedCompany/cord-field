@@ -2,7 +2,6 @@ import { makeStyles, useTheme } from '@material-ui/core';
 import { SkipNextRounded as SkipIcon } from '@material-ui/icons';
 import { Many, without } from 'lodash';
 import { DateTime } from 'luxon';
-import { Column } from 'material-table';
 import { useSnackbar } from 'notistack';
 import { useState } from 'react';
 import { Except } from 'type-fest';
@@ -76,30 +75,30 @@ export const PeriodicReportsTableInContext = ({
   const classes = useStyles();
   const theme = useTheme();
 
-  const columns: Array<Column<ReportRow>> = [
+  const columns = [
     {
       title: 'Period',
       defaultSort: 'desc',
-      render: ({ report }) => (
+      render: ({ report }: ReportRow) => (
         <span className={classes.label}>
           <ReportLabel report={report} />
           {report.skippedReason.value && <SkipIcon fontSize="small" />}
         </span>
       ),
-      customSort: (row1, row2) =>
+      customSort: (row1: ReportRow, row2: ReportRow) =>
         row1.period.toMillis() - row2.period.toMillis(),
     },
     {
       title: 'Submitted By',
       field: 'modifiedBy',
-      render: ({ modifiedBy, report }) => {
+      render: ({ modifiedBy, report }: ReportRow) => {
         return report.skippedReason.value ? <>&mdash;</> : modifiedBy;
       },
     },
     {
       title: 'Submitted Date',
       field: 'modifiedAt',
-      render: ({ report }) =>
+      render: ({ report }: ReportRow) =>
         report.skippedReason.value ? (
           <>&mdash;</>
         ) : (
@@ -109,7 +108,7 @@ export const PeriodicReportsTableInContext = ({
     {
       title: 'Received Date',
       field: 'receivedDate',
-      render: ({ report }) =>
+      render: ({ report }: ReportRow) =>
         report.skippedReason.value ? (
           <>&mdash;</>
         ) : (
@@ -121,7 +120,7 @@ export const PeriodicReportsTableInContext = ({
       field: 'item',
       align: 'right',
       sorting: false,
-      render: ({ report }) => {
+      render: ({ report }: ReportRow) => {
         const reportFile = report.reportFile;
         const fileActions = reportFile.value
           ? without(
@@ -215,7 +214,7 @@ export const PeriodicReportsTableInContext = ({
           Row: PeriodicReportRow,
         }}
         columns={columns}
-        onRowClick={(rowData) => {
+        onRowClick={(rowData: ReportRow) => {
           if (props.onRowClick) {
             props.onRowClick(rowData);
           } else {

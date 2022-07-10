@@ -1,7 +1,6 @@
 import { useMutation } from '@apollo/client';
 import { makeStyles, useForkRef } from '@material-ui/core';
 import clsx from 'clsx';
-import { MTableBodyRow } from 'material-table';
 import { useSnackbar } from 'notistack';
 import { useEffect } from 'react';
 import { useDrag, useDrop } from 'react-dnd';
@@ -16,6 +15,9 @@ import {
   FileOrDirectory,
   isDirectory,
 } from './util';
+
+// TODO Reimplement table
+const MTableBodyRow = 'div';
 
 const useStyles = makeStyles(({ palette, transitions }) => ({
   root: {

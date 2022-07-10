@@ -54,7 +54,6 @@
     "logrocket-react": "^5.0.1",
     "luxon": "^2.3.2",
     "mammoth": "^1.4.21",
-    "material-table": "^1.69.3",
     "notistack": "^1.0.10",
     "papaparse": "^5.3.2",
     "query-string": "^7.1.1",
@@ -187,8 +186,6 @@
     "react-dev-utils/browserslist": "^4.14.2",
     "react-dev-utils/immer": "^9.0.12",
     "react-dev-utils/shell-quote": "^1.7",
-    "material-table/@material-ui/pickers": "patch:@material-ui/pickers@4.0.0-alpha.12#.yarn/patches/mui-pickers.patch",
-    "material-table/jspdf": "^2.1.0",
     "watchpack-chokidar2/chokidar": "^3.5.3"
   },
   "dependenciesMeta": {

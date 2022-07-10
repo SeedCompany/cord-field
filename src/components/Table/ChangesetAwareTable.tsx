@@ -1,9 +1,11 @@
 import { makeStyles } from '@material-ui/core';
 import clsx from 'clsx';
-import { Components, MTableBodyRow } from 'material-table';
 import { ReactNode } from 'react';
 import { ChangesetBadge, DiffMode } from '../Changeset';
 import { Cell, Container, Table, TableProps } from './Table';
+
+// TODO Reimplement table
+const MTableBodyRow = (..._props: any) => <div>row</div>;
 
 const useStyles = makeStyles(() => ({
   table: {
@@ -76,7 +78,7 @@ const ChangesetAwareContainer = (props: any) => {
   );
 };
 
-const tableComponents: Components = {
+const tableComponents = {
   Row: ChangesetAwareRow,
   Cell: ChangesetAwareCell,
   Container: ChangesetAwareContainer,
