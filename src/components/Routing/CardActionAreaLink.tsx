@@ -20,7 +20,7 @@ interface ExternalProps extends BaseProps {
 export const CardActionAreaLink = forwardRef<
   HTMLAnchorElement,
   CardActionAreaLinkProps
->(({ external, to, children, ...props }, ref) => {
+>(function CardActionAreaLink({ external, to, children, ...props }, ref) {
   const other: any = {
     ref,
     component: external ? 'a' : Link,

@@ -4,6 +4,7 @@ import React, {
   useCallback,
   useContext,
   useEffect,
+  useMemo,
   useReducer,
 } from 'react';
 import { ChildrenProp } from '~/common';
@@ -94,10 +95,13 @@ export const UploadProvider = ({ children }: ChildrenProp) => {
     }
   }, [submittedFiles, handleFileAdded, setUploadingStatus]);
 
+  const context = useMemo(
+    () => ({ addFilesToUploadQueue, removeCompletedUploads }),
+    [addFilesToUploadQueue, removeCompletedUploads]
+  );
+
   return (
-    <UploadContext.Provider
-      value={{ addFilesToUploadQueue, removeCompletedUploads }}
-    >
+    <UploadContext.Provider value={context}>
       {children}
       <UploadManager removeCompletedUploads={removeCompletedUploads}>
         <UploadItems state={state} removeUpload={removeUpload} />

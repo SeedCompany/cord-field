@@ -23,18 +23,19 @@ interface ExternalProps extends BaseProps {
  * Combines MUI Link with react router for internal routing
  * and <a> for external routing.
  */
-export const Link = forwardRef<HTMLAnchorElement, LinkProps>(
-  ({ external, to, children, ...props }, ref) => {
-    const other: any = {
-      ref,
-      component: external ? 'a' : RRLink,
-      ...(external ? { href: to } : { to }),
-    };
+export const Link = forwardRef<HTMLAnchorElement, LinkProps>(function Link(
+  { external, to, children, ...props },
+  ref
+) {
+  const other: any = {
+    ref,
+    component: external ? 'a' : RRLink,
+    ...(external ? { href: to } : { to }),
+  };
 
-    return (
-      <MUILink {...props} {...other}>
-        {children}
-      </MUILink>
-    );
-  }
-);
+  return (
+    <MUILink {...props} {...other}>
+      {children}
+    </MUILink>
+  );
+});

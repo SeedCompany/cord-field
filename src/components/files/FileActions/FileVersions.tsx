@@ -55,35 +55,33 @@ export const FileVersions = (props: FileVersionsProps) => {
     : [];
 
   return !file ? null : (
-    <>
-      <Dialog {...dialogProps} aria-labelledby="dialog-file-versions">
-        <DialogTitle id="dialog-file-versions">File History</DialogTitle>
-        <List dense>
-          {loading
-            ? [0, 1, 2].map((item) => (
-                <React.Fragment key={item}>
-                  <div className={classes.skeleton}>
-                    <Skeleton variant="rect" width={400} height={50} />
-                  </div>
-                  {item < 2 && <Divider />}
-                </React.Fragment>
-              ))
-            : versions.map((version, index) => (
-                <Fragment key={version.id}>
-                  <FileVersionItem version={version} actions={menuActions} />
-                  {total && index !== total - 1 && <Divider />}
-                </Fragment>
-              ))}
-        </List>
-        <DialogActions>
-          <Button
-            color="secondary"
-            onClick={(e) => onClose?.(e, 'backdropClick')}
-          >
-            Close
-          </Button>
-        </DialogActions>
-      </Dialog>
-    </>
+    <Dialog {...dialogProps} aria-labelledby="dialog-file-versions">
+      <DialogTitle id="dialog-file-versions">File History</DialogTitle>
+      <List dense>
+        {loading
+          ? [0, 1, 2].map((item) => (
+              <React.Fragment key={item}>
+                <div className={classes.skeleton}>
+                  <Skeleton variant="rect" width={400} height={50} />
+                </div>
+                {item < 2 && <Divider />}
+              </React.Fragment>
+            ))
+          : versions.map((version, index) => (
+              <Fragment key={version.id}>
+                <FileVersionItem version={version} actions={menuActions} />
+                {total && index !== total - 1 && <Divider />}
+              </Fragment>
+            ))}
+      </List>
+      <DialogActions>
+        <Button
+          color="secondary"
+          onClick={(e) => onClose?.(e, 'backdropClick')}
+        >
+          Close
+        </Button>
+      </DialogActions>
+    </Dialog>
   );
 };

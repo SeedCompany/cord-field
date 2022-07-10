@@ -23,7 +23,7 @@ interface ExternalProps extends BaseProps {
  * and <a> for external routing.
  */
 export const ButtonLink = forwardRef<HTMLAnchorElement, ButtonLinkProps>(
-  ({ external, to, children, ...props }, ref) => {
+  function ButtonLink({ external, to, children, ...props }, ref) {
     const other: any = {
       ref,
       component: external ? 'a' : Link,

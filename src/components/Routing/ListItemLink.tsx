@@ -33,7 +33,10 @@ interface ExternalProps extends BaseProps {
  * by passing in `selected={false}`.
  */
 export const ListItemLink = forwardRef<HTMLAnchorElement, ListItemLinkProps>(
-  ({ external, to, children, exact = false, ...props }, ref) => {
+  function ListItemLink(
+    { external, to, children, exact = false, ...props },
+    ref
+  ) {
     const path = typeof to === 'string' ? to : to.pathname!;
     const active = useMatch({ path, end: exact });
 

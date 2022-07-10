@@ -92,9 +92,10 @@ export const ProgressReportDetail = () => {
         <Helmet title="Progress Report" />
         <Breadcrumbs
           children={[
-            <ProjectBreadcrumb data={engagement?.project} />,
-            <EngagementBreadcrumb data={engagement} />,
+            <ProjectBreadcrumb key="project" data={engagement?.project} />,
+            <EngagementBreadcrumb key="engagement" data={engagement} />,
             <Breadcrumb
+              key="report-list"
               to={
                 engagement
                   ? `/engagements/${idForUrl(engagement)}/reports/progress`
@@ -103,7 +104,7 @@ export const ProgressReportDetail = () => {
             >
               {!report ? <Skeleton width={200} /> : 'Progress Reports'}
             </Breadcrumb>,
-            <Breadcrumb to=".">
+            <Breadcrumb key="report" to=".">
               {!report ? (
                 <Skeleton width={200} />
               ) : (

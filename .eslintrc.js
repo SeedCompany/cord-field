@@ -49,6 +49,15 @@ const config = {
   plugins: ['@seedcompany'],
   extends: ['plugin:@seedcompany/react'],
   rules: {
+    // TODO Remove with React 18
+    'react/jsx-uses-react': 'warn',
+    'react/react-in-jsx-scope': 'warn',
+
+    // TODO Remove and fix
+    // Allow `extends any` for TSX
+    // This makes the distinction that it's a generic instead of JSX
+    '@typescript-eslint/no-unnecessary-type-constraint': 'off',
+
     'no-restricted-imports': ['error', restrictedImports],
 
     // TODO This needs to be turned on and errors fixed

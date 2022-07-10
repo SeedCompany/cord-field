@@ -105,32 +105,30 @@ export function DropzoneField({
         </Typography>
       </div>
       {currentFiles.length > 0 && (
-        <>
-          <List dense className={classes.files}>
-            {currentFiles.map((file, index) => {
-              const { name, type } = file;
-              const Icon = fileIcon(type);
-              return (
-                <ListItem key={index}>
-                  <ListItemIcon>
-                    <Icon />
-                  </ListItemIcon>
-                  <ListItemText primary={name} />
-                  <ListItemSecondaryAction>
-                    <IconButton
-                      edge="end"
-                      aria-label="remove"
-                      size="small"
-                      onClick={() => handleRemoveFileClick(index)}
-                    >
-                      <ClearIcon />
-                    </IconButton>
-                  </ListItemSecondaryAction>
-                </ListItem>
-              );
-            })}
-          </List>
-        </>
+        <List dense className={classes.files}>
+          {currentFiles.map((file, index) => {
+            const { name, type } = file;
+            const Icon = fileIcon(type);
+            return (
+              <ListItem key={index}>
+                <ListItemIcon>
+                  <Icon />
+                </ListItemIcon>
+                <ListItemText primary={name} />
+                <ListItemSecondaryAction>
+                  <IconButton
+                    edge="end"
+                    aria-label="remove"
+                    size="small"
+                    onClick={() => handleRemoveFileClick(index)}
+                  >
+                    <ClearIcon />
+                  </IconButton>
+                </ListItemSecondaryAction>
+              </ListItem>
+            );
+          })}
+        </List>
       )}
     </div>
   );

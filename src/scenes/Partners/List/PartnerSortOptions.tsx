@@ -9,7 +9,5 @@ export type PartnerSort = Partner & { name: string }; // TODO how to sort across
 const Option = SortOption as ComponentType<SortOptionProps<PartnerSort>>;
 
 export const PartnerSortOptions = () => (
-  <>
-    <Option default value="name" label="Name" asc="A-Z" desc="Z-A" />
-  </>
+  <Option default value="name" label="Name" asc="A-Z" desc="Z-A" />
 );

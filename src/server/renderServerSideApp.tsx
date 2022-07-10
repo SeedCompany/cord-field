@@ -84,10 +84,18 @@ const ServerApp = ({
 }) => (
   <Nest
     elements={[
-      <HelmetProvider context={helmetContext || {}} children={<></>} />,
-      <RequestContext.Provider value={req} children={<></>} />,
-      <StaticRouter basename={basePath} location={req.originalUrl} />,
-      <ApolloProvider client={apollo} children={<></>} />,
+      <HelmetProvider
+        key="helmet"
+        context={helmetContext || {}}
+        children={[]}
+      />,
+      <RequestContext.Provider key="req" value={req} />,
+      <StaticRouter
+        key="router"
+        basename={basePath}
+        location={req.originalUrl}
+      />,
+      <ApolloProvider key="apollo" client={apollo} children={[]} />,
     ]}
   >
     <App />

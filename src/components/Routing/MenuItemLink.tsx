@@ -23,7 +23,7 @@ interface ExternalProps extends BaseProps {
  * Uses `Link` for internal routing and `<a>` for external routing.
  */
 export const MenuItemLink = forwardRef<HTMLAnchorElement, MenuItemLinkProps>(
-  ({ external, to, children, ...props }, ref) => {
+  function MenuItemLink({ external, to, children, ...props }, ref) {
     if (external) {
       assert(typeof to === 'string');
       return (

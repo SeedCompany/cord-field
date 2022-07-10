@@ -170,7 +170,7 @@ export const PartnerDetail = () => {
                 redacted="You do not have permission to view Status"
                 children={partner?.active.value ? 'Active' : 'Inactive'}
                 loading={!partner}
-                empty={'Enter Status'}
+                empty="Enter Status"
               />
             </Grid>
             <Grid item>
@@ -182,7 +182,7 @@ export const PartnerDetail = () => {
                   partner?.pmcEntityCode.value &&
                   `PMC Entity Code: ${partner.pmcEntityCode.value}`
                 }
-                empty={'Enter PMC Entity Code'}
+                empty="Enter PMC Entity Code"
                 loading={!partner}
               />
             </Grid>
