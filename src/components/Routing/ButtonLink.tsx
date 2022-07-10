@@ -1,5 +1,6 @@
 import { Button, ButtonProps } from '@material-ui/core';
 import React, { forwardRef } from 'react';
+// eslint-disable-next-line @seedcompany/no-restricted-imports
 import { Link, LinkProps } from 'react-router-dom';
 import { Merge } from 'type-fest';
 

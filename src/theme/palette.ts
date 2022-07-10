@@ -1,6 +1,7 @@
 import { lighten } from '@material-ui/core';
-// eslint-disable-next-line no-restricted-imports
+// eslint-disable-next-line @seedcompany/no-restricted-imports
 import createMuiPalette, {
+  // eslint-disable-next-line @seedcompany/no-restricted-imports
   PaletteOptions,
 } from '@material-ui/core/styles/createPalette';
 

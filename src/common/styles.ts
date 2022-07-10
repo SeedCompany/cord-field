@@ -1,9 +1,10 @@
-// eslint-disable-next-line no-restricted-imports
 import {
+  // eslint-disable-next-line @seedcompany/no-restricted-imports
   Breakpoint,
+  // eslint-disable-next-line @seedcompany/no-restricted-imports
   Breakpoints,
 } from '@material-ui/core/styles/createBreakpoints';
-// eslint-disable-next-line no-restricted-imports
+// eslint-disable-next-line @seedcompany/no-restricted-imports
 import { CSSProperties } from '@material-ui/styles';
 import { lowerCase } from './case';
 
