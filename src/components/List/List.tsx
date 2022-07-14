@@ -1,4 +1,4 @@
-import { ButtonProps, Grid, GridProps, makeStyles } from '@mui/material';
+import { Grid, GridProps, makeStyles } from '@mui/material';
 import clsx from 'clsx';
 import { times } from 'lodash';
 import { ReactNode, RefObject, useRef } from 'react';
@@ -6,7 +6,7 @@ import { Entity, isNetworkRequestInFlight, PaginatedListOutput } from '~/api';
 import { UseStyles } from '~/common';
 import { usePersistedScroll } from '../../hooks/usePersistedScroll';
 import { ChangesetBadge, useDetermineChangesetDiffItem } from '../Changeset';
-import { ProgressButton } from '../ProgressButton';
+import { ProgressButton, ProgressButtonProps } from '../ProgressButton';
 import { ListQueryResult } from './useListQuery';
 
 const useStyles = makeStyles(({ spacing }) => ({
@@ -36,7 +36,7 @@ export interface ListProps<Item extends Entity>
   SkeletonItemProps?: GridProps;
   CreateItemProps?: GridProps;
   LoadMoreItemProps?: GridProps;
-  LoadMoreButtonProps?: ButtonProps;
+  LoadMoreButtonProps?: ProgressButtonProps;
   /** Reference to the element that is actually scrolling, if it's not this list */
   scrollRef?: RefObject<HTMLElement>;
   className?: string;
