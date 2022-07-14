@@ -1,14 +1,13 @@
-import { lighten } from '@material-ui/core';
-// eslint-disable-next-line @seedcompany/no-restricted-imports
-import createMuiPalette, {
-  // eslint-disable-next-line @seedcompany/no-restricted-imports
-  PaletteOptions,
-} from '@material-ui/core/styles/createPalette';
+import { grey } from '@mui/material/colors';
+import { lighten, PaletteOptions } from '@mui/material/styles';
 
-export const createPalette = (options: PaletteOptions) => {
-  const light = options.type !== 'dark';
+export const createPalette = ({ dark }: { dark?: boolean }) => {
   const mainGreen = '#467f3b';
-  const palette = createMuiPalette({
+  const palette: PaletteOptions = {
+    mode: dark ? 'dark' : 'light',
+    background: {
+      default: dark ? '#303030' : grey[50], // MUI v4 default
+    },
     primary: {
       main: mainGreen,
       contrastText: '#ffffff',
@@ -26,12 +25,10 @@ export const createPalette = (options: PaletteOptions) => {
       main: '#f2994a',
     },
     text: {
-      primary: light ? '#3c444e' : '#f3f4f6',
+      primary: dark ? '#f3f4f6' : '#3c444e',
       secondary: '#8f928b',
     },
-    ...options,
-  });
-  palette.dark = !light;
+  };
 
   return palette;
 };

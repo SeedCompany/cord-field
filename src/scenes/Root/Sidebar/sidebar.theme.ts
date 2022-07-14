@@ -1,27 +1,38 @@
+import { createTheme as createMuiTheme } from '@mui/material/styles';
 import { createTheme } from '../../../theme';
 
-export const sidebarTheme = createTheme({
-  dark: true,
+const base = createTheme();
+export const sidebarTheme = createMuiTheme({
+  ...base,
   palette: {
+    ...base.palette,
     background: {
+      ...base.palette.background,
       paper: '#3c444e',
     },
   },
-  overrides: () => ({
+  components: {
+    ...base.components,
     MuiListSubheader: {
-      root: {
-        color: '#d1dadf',
+      styleOverrides: {
+        root: {
+          color: '#d1dadf',
+        },
       },
     },
     MuiListItem: {
-      root: {
-        borderRadius: 14,
+      styleOverrides: {
+        root: {
+          borderRadius: 14,
+        },
       },
     },
     MuiMenuItem: {
-      root: {
-        borderRadius: 0,
+      styleOverrides: {
+        root: {
+          borderRadius: 0,
+        },
       },
     },
-  }),
+  },
 });

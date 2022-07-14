@@ -1,4 +1,5 @@
 import loadable from '@loadable/component';
+import { CssBaseline } from '@mui/material';
 import { Route, Routes } from 'react-router-dom';
 import { NotFoundRoute } from '../../components/Error';
 import { useIdentifyInLogRocket, useSession } from '../../components/Session';
@@ -13,7 +14,6 @@ import {
 } from '../Authentication';
 import { Home } from '../Home';
 import { AppMetadata } from './AppMetadata';
-import { CssBaseline } from './CssBaseline';
 import { MainLayout } from './MainLayout';
 import { useNonProdWarning } from './useNonProdWarning';
 import { useOldChromeWarning } from './useOldChromeWarning';
