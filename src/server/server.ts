@@ -13,35 +13,36 @@ import { renderServerSideApp } from './renderServerSideApp';
 const PUBLIC_URL = withoutTrailingSlash(process.env.PUBLIC_URL || '');
 const BASE_PATH = withoutTrailingSlash(basePathOfUrl(PUBLIC_URL));
 
-export const app = express();
-const router: express.Router = BASE_PATH ? express.Router() : app;
-BASE_PATH && app.use(BASE_PATH, router);
+export const create = async () => {
+  const app = express();
+  const router: express.Router = BASE_PATH ? express.Router() : app;
+  BASE_PATH && app.use(BASE_PATH, router);
 
-router.use(compression());
-router.use(
-  helmet({
-    contentSecurityPolicy: false,
-    hidePoweredBy: true,
-  })
-);
-router.use(bodyParser.json());
-router.use(cookieParser());
+  router.use(compression());
+  router.use(
+    helmet({
+      contentSecurityPolicy: false,
+      hidePoweredBy: true,
+    })
+  );
+  router.use(bodyParser.json());
+  router.use(cookieParser());
 
-// Serve static assets
-router.use(
-  express.static(path.resolve(__dirname, 'public'), {
-    maxAge: '30 days',
-  })
-);
+  // Serve static assets
+  router.use(
+    express.static(path.resolve(__dirname, 'public'), {
+      maxAge: '30 days',
+    })
+  );
 
-// Send 404 for not found static assets
-router.use(['static/*', 'images/*'], (req, res) => res.sendStatus(404));
+  // Send 404 for not found static assets
+  router.use(['static/*', 'images/*'], (req, res) => res.sendStatus(404));
 
-// Serve Open Search config
-if (process.env.RAZZLE_OPEN_SEARCH === 'true') {
-  router.get('opensearch.xml', (req, res) => {
-    // language=XML
-    const xml = `
+  // Serve Open Search config
+  if (process.env.RAZZLE_OPEN_SEARCH === 'true') {
+    router.get('opensearch.xml', (req, res) => {
+      // language=XML
+      const xml = `
 <OpenSearchDescription xmlns="http://a9.com/-/spec/opensearch/1.1/">
   <ShortName>CORD Field</ShortName>
   <Description>Search CORD Field</Description>
@@ -53,24 +54,27 @@ if (process.env.RAZZLE_OPEN_SEARCH === 'true') {
 </OpenSearchDescription>
 `.trim();
 
-    res.type('application/xml').send(xml);
+      res.type('application/xml').send(xml);
+    });
+  }
+
+  router.get('logout', (req, res, next) => {
+    createApollo({ ssr: { req, res } })
+      .mutate({
+        mutation: LogoutDocument,
+      })
+      .then(() => res.redirect('login'))
+      .catch((e) => next(e));
   });
-}
 
-router.get('logout', (req, res, next) => {
-  createApollo({ ssr: { req, res } })
-    .mutate({
-      mutation: LogoutDocument,
+  router.use(
+    responseTime((_req, res, time) => {
+      res.setHeader('X-Response-Time', `${time.toFixed(2)}ms`);
+      res.setHeader('Server-Timing', `renderServerSideApp;dur=${time}`);
     })
-    .then(() => res.redirect('login'))
-    .catch((e) => next(e));
-});
+  );
 
-router.use(
-  responseTime((_req, res, time) => {
-    res.setHeader('X-Response-Time', `${time.toFixed(2)}ms`);
-    res.setHeader('Server-Timing', `renderServerSideApp;dur=${time}`);
-  })
-);
+  router.use(renderServerSideApp);
 
-router.use(renderServerSideApp);
+  return app;
+};
