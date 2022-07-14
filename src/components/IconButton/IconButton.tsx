@@ -50,7 +50,7 @@ export const IconButton = forwardRef<HTMLButtonElement, IconButtonProps>(
       />
     );
     return loading ? (
-      <Skeleton variant="circle" className={props.className}>
+      <Skeleton variant="circular" className={props.className}>
         {fab}
       </Skeleton>
     ) : (

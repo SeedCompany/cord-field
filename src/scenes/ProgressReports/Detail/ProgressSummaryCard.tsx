@@ -17,7 +17,7 @@ export const ProgressSummaryCard = ({
       alignContent="center"
       container
       spacing={3}
-      justify="space-evenly"
+      justifyContent="space-evenly"
     >
       <Value loading={loading} value={summary?.planned}>
         Planned <br />

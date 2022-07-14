@@ -93,7 +93,7 @@ export const LanguageEngagementListItemCard = (
           <Grid
             container
             direction="column"
-            justify="space-between"
+            justifyContent="space-between"
             spacing={1}
             className={classes.leftContent}
           >

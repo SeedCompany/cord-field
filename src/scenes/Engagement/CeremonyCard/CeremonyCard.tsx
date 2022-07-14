@@ -105,7 +105,7 @@ export const CeremonyCard = ({
           container
           direction="column"
           alignItems="center"
-          justify="space-evenly"
+          justifyContent="space-evenly"
           spacing={2}
           className={classes.cardContent}
         >

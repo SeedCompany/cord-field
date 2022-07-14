@@ -46,5 +46,5 @@ export const Fab = forwardRef<HTMLButtonElement, FabProps>(function Fab(
       )}
     />
   );
-  return loading ? <Skeleton variant="circle">{fab}</Skeleton> : fab;
+  return loading ? <Skeleton variant="circular">{fab}</Skeleton> : fab;
 });

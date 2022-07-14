@@ -42,7 +42,7 @@ export const StepProgress = ({
               item
               container
               alignItems="center"
-              justify="space-between"
+              justifyContent="space-between"
               spacing={1}
               className={classes.infoArea}
             >

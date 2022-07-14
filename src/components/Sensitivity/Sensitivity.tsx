@@ -82,7 +82,7 @@ export const Sensitivity = ({
           loading ? (
             <>
               <div className={classes.skeletonWidth} />
-              <Skeleton variant="rect" className={classes.skeleton} />
+              <Skeleton variant="rectangular" className={classes.skeleton} />
             </>
           ) : (
             value

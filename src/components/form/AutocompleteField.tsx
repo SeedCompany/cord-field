@@ -154,7 +154,7 @@ export function AutocompleteField<
           margin={margin}
         />
       )}
-      getOptionSelected={
+      isOptionEqualToValue={
         compareBy ? (a, b) => compareBy(a) === compareBy(b) : undefined
       }
     />

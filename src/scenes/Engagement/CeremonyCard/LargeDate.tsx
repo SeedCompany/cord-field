@@ -57,12 +57,12 @@ export const LargeDate = ({ date, className }: LargeDateProps) => {
         <>
           <span className={classes.hidden}>{formatDate(placeholderNow)}</span>
           {!date ? (
-            <Skeleton variant="rect" className={classes.skeleton} />
+            <Skeleton variant="rectangular" className={classes.skeleton} />
           ) : !date.canRead ? (
             <Redacted
               info="You don't have permission to view this date"
               SkeletonProps={{
-                variant: 'rect',
+                variant: 'rectangular',
                 className: clsx(classes.skeleton, classes.redacted),
               }}
             />

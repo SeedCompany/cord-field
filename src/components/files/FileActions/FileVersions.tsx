@@ -62,7 +62,7 @@ export const FileVersions = (props: FileVersionsProps) => {
           ? [0, 1, 2].map((item) => (
               <Fragment key={item}>
                 <div className={classes.skeleton}>
-                  <Skeleton variant="rect" width={400} height={50} />
+                  <Skeleton variant="rectangular" width={400} height={50} />
                 </div>
                 {item < 2 && <Divider />}
               </Fragment>

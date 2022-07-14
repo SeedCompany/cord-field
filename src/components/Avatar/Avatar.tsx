@@ -31,7 +31,7 @@ export const Avatar = ({ loading, ...props }: AvatarProps) => {
       }}
     >
       {loading ? (
-        <Skeleton variant="rect" className={classes.skeleton} />
+        <Skeleton variant="rectangular" className={classes.skeleton} />
       ) : (
         children
       )}

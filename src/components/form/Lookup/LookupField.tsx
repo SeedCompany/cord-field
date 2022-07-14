@@ -183,7 +183,7 @@ export function LookupField<
 
   const autocomplete = (
     <Autocomplete<T, Multiple, DisableClearable, typeof freeSolo>
-      getOptionSelected={(a, b) => compareBy(a) === compareBy(b)}
+      isOptionEqualToValue={(a, b) => compareBy(a) === compareBy(b)}
       loadingText={<CircularProgress size={16} />}
       // Otherwise it looks like an item is selected when it's just a search value
       clearOnBlur

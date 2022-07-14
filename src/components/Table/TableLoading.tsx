@@ -10,5 +10,5 @@ const useStyles = makeStyles(({ shape }) => ({
 
 export const TableLoading = () => {
   const classes = useStyles();
-  return <Skeleton variant="rect" className={classes.loading} />;
+  return <Skeleton variant="rectangular" className={classes.loading} />;
 };

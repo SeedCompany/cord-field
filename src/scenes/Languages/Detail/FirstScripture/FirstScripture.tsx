@@ -28,7 +28,7 @@ export const FirstScripture = ({ data }: { data?: FirstScriptureFragment }) => {
     return (
       <div className={classes.root}>
         <Skeleton
-          variant="circle"
+          variant="circular"
           width={24}
           height={24}
           className={classes.icon}
