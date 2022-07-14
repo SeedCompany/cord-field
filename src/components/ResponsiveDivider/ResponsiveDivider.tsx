@@ -9,7 +9,7 @@ export interface ResponsiveDividerProps extends DividerProps {
 export const ResponsiveDivider = withStyles(
   ({ spacing, breakpoints }) => ({
     root: (props: ResponsiveDividerProps) => ({
-      width: `calc(100% - ${spacing(props.spacing ?? 0)}px * 2)`,
+      width: `calc(100% - ${spacing(props.spacing ?? 0)} * 2)`,
       margin: spacing(0, props.spacing ?? 0),
       '.MuiGrid-container > &': {
         marginRight: -1,

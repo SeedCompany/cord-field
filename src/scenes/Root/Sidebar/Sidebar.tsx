@@ -26,7 +26,7 @@ const useStyles = makeStyles(({ spacing }) => ({
   },
   createNewItem: {
     margin: spacing(4, 2, 1),
-    width: `calc(100% - ${spacing(2 * 2)}px)`,
+    width: `calc(100% - ${spacing(2 * 2)})`,
   },
 }));
 
