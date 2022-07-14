@@ -58,7 +58,7 @@
     "logrocket-react": "^5.0.1",
     "luxon": "^2.3.2",
     "mammoth": "^1.4.21",
-    "notistack": "^1.0.10",
+    "notistack": "^2.0.5",
     "papaparse": "^5.3.2",
     "query-string": "^7.1.1",
     "react": "^17.0.2",

@@ -23,7 +23,7 @@ export const useNonProdWarning = () => {
       {
         variant: 'warning',
         autoHideDuration: 30_000,
-        action: (key: string) => (
+        action: (key) => (
           <IconButton color="inherit" onClick={() => closeSnackbar(key)}>
             <Close />
           </IconButton>

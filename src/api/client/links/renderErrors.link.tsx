@@ -44,7 +44,7 @@ const errorRenderer =
       enqueueSnackbar(gqlError.message, {
         variant: 'error',
         persist: true,
-        action: (key: string) => (
+        action: (key) => (
           <IconButton color="inherit" onClick={() => closeSnackbar(key)}>
             <Close />
           </IconButton>
