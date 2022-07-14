@@ -2,12 +2,12 @@ import {
   Checkbox,
   FormControl,
   FormControlLabel,
+  FormControlProps,
   FormGroup,
   FormHelperText,
   FormLabel,
   Grid,
   makeStyles,
-  PropTypes,
   Radio,
   RadioGroup,
   ToggleButton,
@@ -43,7 +43,7 @@ export type EnumFieldProps<
   label?: ReactNode;
   helperText?: ReactNode;
   layout?: 'row' | 'column' | 'two-column';
-  margin?: PropTypes.Margin;
+  margin?: FormControlProps['margin'];
 } & Except<FieldConfig<T, Multiple>, 'type'> &
   MergeExclusive<
     { children: ReactNode },
