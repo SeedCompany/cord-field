@@ -1,5 +1,5 @@
 import LuxonUtils from '@date-io/luxon';
-import { ThemeProvider } from '@material-ui/core';
+import { ThemeProvider } from '@mui/material/styles';
 import LogRocket from 'logrocket';
 import setupLogRocketReact from 'logrocket-react';
 import { ApolloProvider } from './api';
@@ -32,8 +32,6 @@ if (logRocketAppId) {
   }
 }
 
-const theme = createTheme();
-
 /**
  * Register all app providers here in a flat list.
  * These are used client-side, server-side, and in storybook.
@@ -41,7 +39,7 @@ const theme = createTheme();
  * Order still matters (the first is the outer most component)
  */
 export const appProviders = [
-  <ThemeProvider key="theme" theme={theme} children={[]} />,
+  <ThemeProvider key="theme" theme={createTheme()} />,
   <LocalizationProvider key="i10n" dateAdapter={LuxonUtils} />,
   <SnackbarProvider key="snackbar" />, // needed by apollo
   <ApolloProvider key="apollo" />,

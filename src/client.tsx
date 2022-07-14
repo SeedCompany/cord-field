@@ -1,3 +1,4 @@
+import { CacheProvider } from '@emotion/react';
 import { loadableReady } from '@loadable/component';
 import Cookies from 'js-cookie';
 import { Settings, Zone } from 'luxon';
@@ -6,9 +7,11 @@ import { HTML5Backend } from 'react-dnd-html5-backend';
 import { hydrate } from 'react-dom';
 import { HelmetProvider } from 'react-helmet-async';
 import { BrowserRouter } from 'react-router-dom';
+import { TssCacheProvider } from 'tss-react';
 import { basePathOfUrl } from '~/common';
 import { App } from './App';
 import { Nest } from './components/Nest';
+import { createMuiEmotionCache, createTssEmotionCache } from './theme/emotion';
 
 // Set current timezone in cookie so server can render with it.
 // This isn't great as a change to this or first load will cause the server to
@@ -55,7 +58,10 @@ if (isBrowser) {
   setup.push(loadableReady());
 }
 
-const root = document.getElementById('root');
+const root = document.getElementById('root')!;
+
+const emotionCacheMui = createMuiEmotionCache();
+const emotionCacheTss = createTssEmotionCache();
 
 const clientOnlyProviders = [
   <BrowserRouter
@@ -64,6 +70,8 @@ const clientOnlyProviders = [
   />,
   <HelmetProvider key="helmet" children={[]} />,
   <DndProvider key="dnd" backend={HTML5Backend} />,
+  <CacheProvider key="emotion-mui" value={emotionCacheMui} />,
+  <TssCacheProvider key="emotion-tss" value={emotionCacheTss} children={[]} />,
 ];
 
 void Promise.all(setup).then(() => {
@@ -71,10 +79,6 @@ void Promise.all(setup).then(() => {
     <Nest elements={clientOnlyProviders}>
       <App />
     </Nest>,
-    root,
-    () => {
-      const jssStyles = document.getElementById('jss-ssr');
-      jssStyles?.parentNode?.removeChild(jssStyles);
-    }
+    root
   );
 });
