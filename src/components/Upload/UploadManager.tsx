@@ -7,13 +7,13 @@ import {
   Dialog,
   DialogContent,
   IconButton,
-  makeStyles,
   DialogTitle as MuiDialogTitle,
   Typography,
 } from '@mui/material';
 import clsx from 'clsx';
 import { memo, ReactNode, useState } from 'react';
 import { useMountedState } from 'react-use';
+import { makeStyles } from 'tss-react/mui';
 import { ChildrenProp } from '~/common';
 import { useSession } from '../Session';
 import { DraggablePaper } from './DraggablePaper';
@@ -145,8 +145,6 @@ const UploadManagerImpl = (props: UploadManagerProps) => {
   return (
     <Dialog
       classes={{ root: classes.root, paper: classes.paper }}
-      disableBackdropClick
-      disableEscapeKeyDown
       disableEnforceFocus
       disableAutoFocus
       hideBackdrop

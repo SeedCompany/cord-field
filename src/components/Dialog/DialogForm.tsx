@@ -7,7 +7,6 @@ import {
   DialogContent,
   DialogProps,
   DialogTitle,
-  makeStyles,
 } from '@mui/material';
 import { FormApi } from 'final-form';
 import { ReactNode } from 'react';
@@ -17,6 +16,7 @@ import {
   FormRenderProps,
   RenderableProps,
 } from 'react-final-form';
+import { makeStyles } from 'tss-react/mui';
 import { Except, Promisable } from 'type-fest';
 import { ErrorHandlers, handleFormError, inChangesetVar } from '../../api';
 import { ChangesetModificationWarning } from '../Changeset/ChangesetModificationWarning';
@@ -165,23 +165,30 @@ export function DialogForm<T, R = void>({
             {...DialogProps}
             open={open}
             onClose={(e, reason) => {
+              if (submitting) {
+                return;
+              }
               onClose?.(reason, form);
             }}
-            onExited={() => {
-              onExited?.();
-              form.reset();
-            }}
-            disableBackdropClick={
-              DialogProps.disableBackdropClick ?? submitting
-            }
             aria-labelledby={title ? 'dialog-form' : undefined}
-            PaperProps={{ component: 'form', ...DialogProps.PaperProps }}
+            PaperProps={{
+              ...DialogProps.PaperProps,
+              // @ts-expect-error MUI types don't model this correctly.
+              component: 'form',
+            }}
             onSubmit={handleSubmit}
             // This breaks MUI date picker's popup. This I believe is an acceptable
             // compromise. Clicking off the dialog still closes it. It only affects
             // keyboard navigation and accessibility. Maybe this can be removed
             // with MUI v5.
             disableEnforceFocus
+            TransitionProps={{
+              onExited: () => {
+                // TODO migrate onExited prop to TransitionProps
+                onExited?.();
+                form.reset();
+              },
+            }}
           >
             {title ? <DialogTitle id="dialog-form">{title}</DialogTitle> : null}
             <DialogContent>
