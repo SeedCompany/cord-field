@@ -86,7 +86,7 @@ function ActualSortOption<T>({
         // Ignore types and fake event to send to RadioGroup which will convert
         // it back to SortValue. This is so we don't have to use our own context
         // to pass onChange callback from SortControl down to SortOptions.
-        onChange?.(
+        onChange(
           {
             target: {
               value: defaultVal
