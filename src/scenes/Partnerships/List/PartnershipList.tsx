@@ -1,10 +1,5 @@
-import {
-  Breadcrumbs,
-  makeStyles,
-  Tooltip,
-  Typography,
-} from '@material-ui/core';
-import { Add } from '@material-ui/icons';
+import { Add } from '@mui/icons-material';
+import { Breadcrumbs, makeStyles, Tooltip, Typography } from '@mui/material';
 import { Helmet } from 'react-helmet-async';
 import { Breadcrumb } from '../../../components/Breadcrumb';
 import { useDialog } from '../../../components/Dialog';

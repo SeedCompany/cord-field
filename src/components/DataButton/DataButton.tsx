@@ -2,9 +2,9 @@ import {
   Button,
   ButtonProps,
   makeStyles,
+  Skeleton,
   TooltipProps,
-} from '@material-ui/core';
-import { Skeleton } from '@material-ui/lab';
+} from '@mui/material';
 import { isFunction } from 'lodash';
 import { ReactNode } from 'react';
 import { SecuredProp } from '~/common';

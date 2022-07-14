@@ -1,11 +1,11 @@
+import { DateRange, Edit } from '@mui/icons-material';
 import {
   Breadcrumbs,
   Grid,
   makeStyles,
   Tooltip,
   Typography,
-} from '@material-ui/core';
-import { DateRange, Edit } from '@material-ui/icons';
+} from '@mui/material';
 import { Helmet } from 'react-helmet-async';
 import { EngagementStatusLabels } from '~/api/schema.graphql';
 import { canEditAny, labelFrom, Many } from '~/common';

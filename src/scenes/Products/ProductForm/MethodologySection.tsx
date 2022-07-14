@@ -1,5 +1,4 @@
-import { Typography } from '@material-ui/core';
-import { ToggleButton } from '@material-ui/lab';
+import { ToggleButton, Typography } from '@mui/material';
 import { ProductApproachLabels } from '~/api/schema.graphql';
 import {
   ApproachMethodologies,

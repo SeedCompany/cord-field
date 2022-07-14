@@ -8,7 +8,7 @@ import {
   DialogProps,
   DialogTitle,
   makeStyles,
-} from '@material-ui/core';
+} from '@mui/material';
 import { FormApi } from 'final-form';
 import { ReactNode } from 'react';
 import {

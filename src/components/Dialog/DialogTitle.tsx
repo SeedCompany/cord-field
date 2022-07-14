@@ -1,3 +1,4 @@
+import { Cancel } from '@mui/icons-material';
 import {
   createStyles,
   Divider,
@@ -7,8 +8,7 @@ import {
   Typography,
   withStyles,
   WithStyles,
-} from '@material-ui/core';
-import { Cancel } from '@material-ui/icons';
+} from '@mui/material';
 
 const styles = (theme: Theme) =>
   createStyles({

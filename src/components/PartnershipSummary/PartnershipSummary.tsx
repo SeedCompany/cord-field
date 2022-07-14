@@ -1,4 +1,4 @@
-import { makeStyles } from '@material-ui/core';
+import { makeStyles } from '@mui/material';
 import { PeopleJoinedIcon } from '../Icons';
 import { MemberListSummary, MemberSummaryItem } from '../MemberListSummary';
 import { PartnershipSummaryFragment } from './PartnershipSummary.graphql';

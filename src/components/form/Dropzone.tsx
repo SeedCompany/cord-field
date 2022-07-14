@@ -1,3 +1,4 @@
+import { Clear as ClearIcon } from '@mui/icons-material';
 import {
   IconButton,
   List,
@@ -7,8 +8,7 @@ import {
   ListItemText,
   makeStyles,
   Typography,
-} from '@material-ui/core';
-import { Clear as ClearIcon } from '@material-ui/icons';
+} from '@mui/material';
 import clsx from 'clsx';
 import { useDropzone } from 'react-dropzone';
 import { Except } from 'type-fest';

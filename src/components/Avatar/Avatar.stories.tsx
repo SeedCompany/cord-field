@@ -1,5 +1,5 @@
-import { makeStyles } from '@material-ui/core';
-import { CreateNewFolder } from '@material-ui/icons';
+import { makeStyles } from '@mui/material';
+import { CreateNewFolder } from '@mui/icons-material';
 import { select } from '@storybook/addon-knobs';
 import { Avatar as A, AvatarProps } from './Avatar';
 

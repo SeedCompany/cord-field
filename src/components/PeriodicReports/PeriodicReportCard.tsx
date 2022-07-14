@@ -1,3 +1,4 @@
+import { AssignmentOutlined, BarChart, ShowChart } from '@mui/icons-material';
 import {
   Button,
   Card,
@@ -6,8 +7,7 @@ import {
   makeStyles,
   Tooltip,
   Typography,
-} from '@material-ui/core';
-import { AssignmentOutlined, BarChart, ShowChart } from '@material-ui/icons';
+} from '@mui/material';
 import { useState } from 'react';
 import { useDropzone } from 'react-dropzone';
 import { ReportType } from '~/api/schema.graphql';

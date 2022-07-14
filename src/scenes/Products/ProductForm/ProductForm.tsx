@@ -1,4 +1,4 @@
-import { makeStyles } from '@material-ui/core';
+import { makeStyles } from '@mui/material';
 import { Decorator } from 'final-form';
 import onFieldChange from 'final-form-calculate';
 import { Form, FormProps } from 'react-final-form';

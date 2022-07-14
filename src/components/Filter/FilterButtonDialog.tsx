@@ -1,4 +1,4 @@
-import { Badge, Button } from '@material-ui/core';
+import { Badge, Button } from '@mui/material';
 import { ReactNode } from 'react';
 import { keys } from '~/common';
 import { useDialog } from '../Dialog';

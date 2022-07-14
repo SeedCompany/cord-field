@@ -1,5 +1,4 @@
-import { Typography } from '@material-ui/core';
-import { ToggleButton } from '@material-ui/lab';
+import { ToggleButton, Typography } from '@mui/material';
 import { displayProductTypes } from '~/common';
 import { EnumField } from '../../../components/form';
 import { productTypes } from './constants';

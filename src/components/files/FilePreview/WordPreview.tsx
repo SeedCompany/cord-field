@@ -1,4 +1,4 @@
-import { makeStyles } from '@material-ui/core';
+import { makeStyles } from '@mui/material';
 import parse from 'html-react-parser';
 import mammoth, { MammothOptions } from 'mammoth';
 import { useCallback, useEffect, useState } from 'react';

@@ -1,10 +1,6 @@
-import {
-  FormControlLabel,
-  FormLabel,
-  makeStyles,
-  Radio,
-  useRadioGroup,
-} from '@material-ui/core';
+import { FormControlLabel, FormLabel, makeStyles, Radio } from '@mui/material';
+// eslint-disable-next-line @seedcompany/no-restricted-imports
+import { useRadioGroup } from '@mui/material/RadioGroup';
 import { ReactNode } from 'react';
 import { Order } from '~/api/schema.graphql';
 

@@ -3,9 +3,9 @@ import {
   CardContent,
   Grid,
   makeStyles,
+  Skeleton,
   Typography,
-} from '@material-ui/core';
-import { Skeleton } from '@material-ui/lab';
+} from '@mui/material';
 import clsx from 'clsx';
 import { ProjectStatusLabels } from '~/api/schema.graphql';
 import { ProjectListQueryVariables } from '../../scenes/Projects/List/projects.graphql';

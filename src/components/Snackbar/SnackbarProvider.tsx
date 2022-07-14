@@ -1,5 +1,5 @@
-import { makeStyles } from '@material-ui/core';
-import { Report as ErrorIcon } from '@material-ui/icons';
+import { Report as ErrorIcon } from '@mui/icons-material';
+import { makeStyles } from '@mui/material';
 import { SnackbarProvider as BaseSnackbarProvider } from 'notistack';
 import { ChildrenProp } from '~/common';
 

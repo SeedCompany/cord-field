@@ -2,8 +2,8 @@ import {
   makeStyles,
   Avatar as MuiAvatar,
   AvatarProps as MuiAvatarProps,
-} from '@material-ui/core';
-import { Skeleton } from '@material-ui/lab';
+  Skeleton,
+} from '@mui/material';
 
 export interface AvatarProps extends MuiAvatarProps {
   loading?: boolean;

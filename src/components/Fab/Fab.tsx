@@ -2,12 +2,9 @@ import {
   makeStyles,
   Fab as MUIFab,
   FabProps as MUIFabProps,
-} from '@material-ui/core';
-// eslint-disable-next-line @seedcompany/no-restricted-imports
-import { PaletteColor } from '@material-ui/core/styles/createPalette';
-import { Skeleton } from '@material-ui/lab';
-// eslint-disable-next-line @seedcompany/no-restricted-imports
-import { CSSProperties } from '@material-ui/styles';
+  Skeleton,
+} from '@mui/material';
+import { CSSObject as CSSProperties, PaletteColor } from '@mui/material/styles';
 import clsx from 'clsx';
 import { forwardRef } from 'react';
 import { Except } from 'type-fest';

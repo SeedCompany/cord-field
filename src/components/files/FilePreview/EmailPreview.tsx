@@ -1,5 +1,5 @@
 import MsgReader from '@freiraum/msgreader';
-import { makeStyles, Typography } from '@material-ui/core';
+import { makeStyles, Typography } from '@mui/material';
 import parseHtml from 'html-react-parser';
 import { DateTime } from 'luxon';
 import { useCallback, useEffect, useState } from 'react';

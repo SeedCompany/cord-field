@@ -1,5 +1,4 @@
-import { makeStyles } from '@material-ui/core';
-import { Skeleton } from '@material-ui/lab';
+import { makeStyles, Skeleton } from '@mui/material';
 
 const useStyles = makeStyles(({ shape }) => ({
   loading: {

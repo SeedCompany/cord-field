@@ -1,3 +1,4 @@
+import { Delete as DeleteIcon, Edit as EditIcon } from '@mui/icons-material';
 import {
   ListItemIcon,
   ListItemText,
@@ -5,8 +6,7 @@ import {
   Menu,
   MenuItem,
   MenuProps,
-} from '@material-ui/core';
-import { Delete as DeleteIcon, Edit as EditIcon } from '@material-ui/icons';
+} from '@mui/material';
 
 interface PostListItemMenuProps extends Partial<MenuProps> {
   onEdit: () => void;

@@ -1,15 +1,15 @@
 import {
+  Add as AddIcon,
+  ChangeHistory as ChangeIcon,
+  Remove as RemoveIcon,
+} from '@mui/icons-material';
+import {
   Badge,
   Grid,
   makeStyles,
   TooltipProps,
   Typography,
-} from '@material-ui/core';
-import {
-  Add as AddIcon,
-  ChangeHistory as ChangeIcon,
-  Remove as RemoveIcon,
-} from '@material-ui/icons';
+} from '@mui/material';
 import clsx from 'clsx';
 import { startCase } from 'lodash';
 import { cloneElement, isValidElement, ReactElement, ReactNode } from 'react';

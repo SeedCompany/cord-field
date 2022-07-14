@@ -6,10 +6,10 @@ import {
   CardContent,
   Grid,
   makeStyles,
+  Skeleton,
   Tooltip,
   Typography,
-} from '@material-ui/core';
-import { Skeleton } from '@material-ui/lab';
+} from '@mui/material';
 import clsx from 'clsx';
 import { useMemo } from 'react';
 import { UpdateCeremonyInput } from '~/api/schema.graphql';

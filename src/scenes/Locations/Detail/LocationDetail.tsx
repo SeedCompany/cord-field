@@ -1,7 +1,6 @@
 import { useQuery } from '@apollo/client';
-import { makeStyles, Typography } from '@material-ui/core';
-import { Edit } from '@material-ui/icons';
-import { Skeleton } from '@material-ui/lab';
+import { Edit } from '@mui/icons-material';
+import { makeStyles, Skeleton, Typography } from '@mui/material';
 import clsx from 'clsx';
 import { Helmet } from 'react-helmet-async';
 import { useParams } from 'react-router-dom';

@@ -1,6 +1,6 @@
-import { Chip, colors, makeStyles, Typography } from '@material-ui/core';
-import { VerifiedUserOutlined } from '@material-ui/icons';
-import { Skeleton } from '@material-ui/lab';
+import { VerifiedUserOutlined } from '@mui/icons-material';
+import { Chip, makeStyles, Skeleton, Typography } from '@mui/material';
+import { grey } from '@mui/material/colors';
 import clsx from 'clsx';
 import { meanBy } from 'lodash';
 import { Sensitivity as SensitivityType } from '~/api/schema.graphql';
@@ -42,7 +42,7 @@ const useStyles = makeStyles(({ palette, spacing }) => ({
     width: '100%',
   },
   Low: {
-    backgroundColor: colors.grey[400],
+    backgroundColor: grey[400],
   },
   Medium: {
     backgroundColor: palette.warning.main,

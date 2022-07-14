@@ -4,9 +4,9 @@ import {
   CardActions,
   CardContent,
   makeStyles,
+  Skeleton,
   Typography,
-} from '@material-ui/core';
-import { Skeleton } from '@material-ui/lab';
+} from '@mui/material';
 import { RoleLabels } from '~/api/schema.graphql';
 import { labelsFrom } from '~/common';
 import { Avatar } from '../Avatar';

@@ -1,4 +1,4 @@
-import { Group } from '@material-ui/icons';
+import { Group } from '@mui/icons-material';
 import { MemberListSummary, MemberSummaryItem } from '../MemberListSummary';
 import { ProjectMemberListFragment } from './ProjectMembersSummary.graphql';
 

@@ -1,5 +1,5 @@
 import { useMutation } from '@apollo/client';
-import { makeStyles, useForkRef } from '@material-ui/core';
+import { makeStyles, useForkRef } from '@mui/material';
 import clsx from 'clsx';
 import { useSnackbar } from 'notistack';
 import { useEffect } from 'react';

@@ -1,4 +1,4 @@
-import { Grid } from '@material-ui/core';
+import { Grid } from '@mui/material';
 import { BooleanProperty } from '../../../../components/BooleanProperty';
 import { PaperTooltip } from '../../../../components/PaperTooltip';
 import { LeastOfTheseFragment } from './LeastOfThese.graphql';

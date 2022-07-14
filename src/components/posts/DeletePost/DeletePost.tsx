@@ -1,5 +1,5 @@
 import { useMutation } from '@apollo/client';
-import { Typography } from '@material-ui/core';
+import { Typography } from '@mui/material';
 import { Except } from 'type-fest';
 import { removeItemFromList } from '../../../api';
 import { DialogForm, DialogFormProps } from '../../Dialog/DialogForm';

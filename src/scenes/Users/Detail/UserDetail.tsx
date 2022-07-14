@@ -1,7 +1,6 @@
 import { useQuery } from '@apollo/client';
-import { makeStyles, Tooltip, Typography } from '@material-ui/core';
-import { Edit } from '@material-ui/icons';
-import { Skeleton } from '@material-ui/lab';
+import { Edit } from '@mui/icons-material';
+import { makeStyles, Skeleton, Tooltip, Typography } from '@mui/material';
 import { DateTime } from 'luxon';
 import { useState } from 'react';
 import { Helmet } from 'react-helmet-async';

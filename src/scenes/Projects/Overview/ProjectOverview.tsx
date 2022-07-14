@@ -1,7 +1,6 @@
 import { useQuery } from '@apollo/client';
-import { Grid, makeStyles, Tooltip, Typography } from '@material-ui/core';
-import { Add, DateRange, Edit, Publish } from '@material-ui/icons';
-import { Skeleton } from '@material-ui/lab';
+import { Add, DateRange, Edit, Publish } from '@mui/icons-material';
+import { Grid, makeStyles, Skeleton, Tooltip, Typography } from '@mui/material';
 import clsx from 'clsx';
 import { useDropzone } from 'react-dropzone';
 import { Helmet } from 'react-helmet-async';

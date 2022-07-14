@@ -1,3 +1,4 @@
+import { FolderOpen, Language, Person } from '@mui/icons-material';
 import {
   List,
   ListItemIcon,
@@ -6,9 +7,8 @@ import {
   makeStyles,
   Paper,
   SvgIconProps,
-  ThemeProvider,
-} from '@material-ui/core';
-import { FolderOpen, Language, Person } from '@material-ui/icons';
+} from '@mui/material';
+import { ThemeProvider } from '@mui/material/styles';
 import { ComponentType } from 'react';
 import { PeopleJoinedIcon } from '../../../components/Icons';
 import { ListItemLink, ListItemLinkProps } from '../../../components/Routing';

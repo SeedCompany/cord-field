@@ -1,17 +1,13 @@
+import { TabList as ActualTabList, TabContext, TabPanel } from '@mui/lab';
 import {
   type Tabs as __Tabs,
   Divider,
   Grid,
   makeStyles,
+  Skeleton,
   Tab,
   Typography,
-} from '@material-ui/core';
-import {
-  TabList as ActualTabList,
-  Skeleton,
-  TabContext,
-  TabPanel,
-} from '@material-ui/lab';
+} from '@mui/material';
 import { useRef } from 'react';
 import { Helmet } from 'react-helmet-async';
 import { User } from '~/api/schema.graphql';

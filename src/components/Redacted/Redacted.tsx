@@ -1,5 +1,10 @@
-import { makeStyles, Tooltip, TooltipProps } from '@material-ui/core';
-import { Skeleton, SkeletonProps } from '@material-ui/lab';
+import {
+  makeStyles,
+  Skeleton,
+  SkeletonProps,
+  Tooltip,
+  TooltipProps,
+} from '@mui/material';
 import clsx from 'clsx';
 import { Except } from 'type-fest';
 import { ChildrenProp } from '~/common';

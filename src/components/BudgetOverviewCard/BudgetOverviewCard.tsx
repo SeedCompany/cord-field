@@ -1,4 +1,4 @@
-import { AccountBalance } from '@material-ui/icons';
+import { AccountBalance } from '@mui/icons-material';
 import {
   FieldOverviewCard,
   FieldOverviewCardProps,

@@ -1,13 +1,13 @@
 import {
+  Cancel as CancelIcon,
+  CheckCircle as CheckIcon,
+} from '@mui/icons-material';
+import {
   CircularProgress,
   IconButton,
   makeStyles,
   Typography,
-} from '@material-ui/core';
-import {
-  Cancel as CancelIcon,
-  CheckCircle as CheckIcon,
-} from '@material-ui/icons';
+} from '@mui/material';
 import { UploadFile } from './Reducer';
 
 const useStyles = makeStyles(({ palette, spacing }) => ({

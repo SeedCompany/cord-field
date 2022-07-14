@@ -1,4 +1,5 @@
-import { Button, ButtonProps, fade, makeStyles } from '@material-ui/core';
+import { Button, ButtonProps, makeStyles } from '@mui/material';
+import { alpha as fade } from '@mui/material/styles';
 import clsx from 'clsx';
 import { Except } from 'type-fest';
 

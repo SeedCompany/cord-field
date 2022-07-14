@@ -1,3 +1,4 @@
+import { MoreVert } from '@mui/icons-material';
 import {
   Avatar,
   Card,
@@ -6,8 +7,7 @@ import {
   makeStyles,
   MenuProps,
   Typography,
-} from '@material-ui/core';
-import { MoreVert } from '@material-ui/icons';
+} from '@mui/material';
 import clsx from 'clsx';
 import { useState } from 'react';
 import { PostShareabilityLabels } from '~/api/schema.graphql';

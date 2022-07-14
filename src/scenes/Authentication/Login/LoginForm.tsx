@@ -1,4 +1,4 @@
-import { makeStyles, Typography } from '@material-ui/core';
+import { makeStyles, Typography } from '@mui/material';
 import clsx from 'clsx';
 import { Decorator, Mutator } from 'final-form';
 import { sample } from 'lodash';

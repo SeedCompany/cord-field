@@ -1,5 +1,5 @@
 import { useMutation } from '@apollo/client';
-import { Edit } from '@material-ui/icons';
+import { Edit } from '@mui/icons-material';
 import { useSnackbar } from 'notistack';
 import { getErrorInfo, isErrorCode } from '~/api';
 import { ProductStepLabels } from '~/api/schema.graphql';

@@ -1,4 +1,5 @@
-import { fade, makeStyles } from '@material-ui/core';
+import { makeStyles } from '@mui/material';
+import { alpha as fade } from '@mui/material/styles';
 import clsx from 'clsx';
 import { useDrop } from 'react-dnd';
 import { Breadcrumb, BreadcrumbProps } from '../../../components/Breadcrumb';

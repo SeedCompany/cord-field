@@ -5,8 +5,8 @@ import {
   CircularProgressProps,
   makeStyles,
   PropTypes,
-  useTheme,
-} from '@material-ui/core';
+} from '@mui/material';
+import { useTheme } from '@mui/material/styles';
 import { ErrorButton } from '../ErrorButton';
 
 const useStyles = makeStyles({

@@ -1,14 +1,15 @@
 import {
-  fade,
   makeStyles,
   IconButton as MUIIconButton,
   IconButtonProps as MUIIconButtonProps,
-} from '@material-ui/core';
-// eslint-disable-next-line @seedcompany/no-restricted-imports
-import { Palette, PaletteColor } from '@material-ui/core/styles/createPalette';
-import { Skeleton } from '@material-ui/lab';
-// eslint-disable-next-line @seedcompany/no-restricted-imports
-import { CSSProperties } from '@material-ui/styles';
+  Skeleton,
+} from '@mui/material';
+import {
+  alpha as fade,
+  CSSObject as CSSProperties,
+  Palette,
+  PaletteColor,
+} from '@mui/material/styles';
 import clsx from 'clsx';
 import { forwardRef } from 'react';
 import { Except } from 'type-fest';

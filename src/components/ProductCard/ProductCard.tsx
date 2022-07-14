@@ -1,18 +1,12 @@
 import {
-  Card,
-  CardContent,
-  Grid,
-  makeStyles,
-  Typography,
-} from '@material-ui/core';
-import {
   DescriptionOutlined,
   FilterVintage,
   HelpOutlined,
   MenuBook,
   Movie,
   SvgIconComponent,
-} from '@material-ui/icons';
+} from '@mui/icons-material';
+import { Card, CardContent, Grid, makeStyles, Typography } from '@mui/material';
 import { idForUrl } from '../Changeset';
 import { HugeIcon } from '../Icons';
 import { CardActionAreaLink } from '../Routing';

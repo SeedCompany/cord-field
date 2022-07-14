@@ -1,4 +1,4 @@
-import { makeStyles, SvgIconProps } from '@material-ui/core';
+import { makeStyles, SvgIconProps } from '@mui/material';
 import { cloneElement, isValidElement, ReactElement } from 'react';
 import { Avatar, AvatarProps } from '../Avatar';
 

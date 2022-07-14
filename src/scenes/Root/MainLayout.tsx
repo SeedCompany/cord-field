@@ -1,4 +1,4 @@
-import { makeStyles } from '@material-ui/core';
+import { makeStyles } from '@mui/material';
 import { Outlet } from 'react-router-dom';
 import { useAuthRequired } from '../Authentication';
 import { CreateDialogProviders } from './Creates';

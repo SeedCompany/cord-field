@@ -1,11 +1,15 @@
 import {
+  AccountCircle,
+  MoreVert,
+  NotificationsNone,
+} from '@mui/icons-material';
+import {
   Card,
   IconButton,
   makeStyles,
   MenuProps,
   Typography,
-} from '@material-ui/core';
-import { AccountCircle, MoreVert, NotificationsNone } from '@material-ui/icons';
+} from '@mui/material';
 import { useState } from 'react';
 import { useSession } from '../../../../components/Session';
 import { ProfileMenu } from '../ProfileMenu';

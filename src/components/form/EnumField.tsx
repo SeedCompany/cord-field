@@ -10,8 +10,9 @@ import {
   PropTypes,
   Radio,
   RadioGroup,
-} from '@material-ui/core';
-import { ToggleButton, ToggleButtonGroup } from '@material-ui/lab';
+  ToggleButton,
+  ToggleButtonGroup,
+} from '@mui/material';
 import clsx from 'clsx';
 import { sortBy } from 'lodash';
 import {

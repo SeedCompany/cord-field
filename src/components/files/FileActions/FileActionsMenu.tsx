@@ -1,13 +1,4 @@
 import {
-  ListItemIcon,
-  ListItemText,
-  makeStyles,
-  Menu,
-  MenuItem,
-  MenuProps,
-  useTheme,
-} from '@material-ui/core';
-import {
   Add as AddIcon,
   Delete as DeleteIcon,
   CloudDownload as DownloadIcon,
@@ -17,7 +8,16 @@ import {
   BorderColor as RenameIcon,
   SkipNextRounded as Skip,
   Event as UpdateDate,
-} from '@material-ui/icons';
+} from '@mui/icons-material';
+import {
+  ListItemIcon,
+  ListItemText,
+  makeStyles,
+  Menu,
+  MenuItem,
+  MenuProps,
+} from '@mui/material';
+import { useTheme } from '@mui/material/styles';
 import { startCase } from 'lodash';
 import { useState } from 'react';
 import { useDropzone } from 'react-dropzone';

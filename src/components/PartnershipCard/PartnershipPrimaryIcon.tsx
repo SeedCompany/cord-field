@@ -1,5 +1,5 @@
-import { makeStyles, SvgIconProps, Tooltip } from '@material-ui/core';
-import { Star } from '@material-ui/icons';
+import { Star } from '@mui/icons-material';
+import { makeStyles, SvgIconProps, Tooltip } from '@mui/material';
 import clsx from 'clsx';
 
 const useStyles = makeStyles(() => ({

@@ -1,4 +1,4 @@
-import { ListItem, ListItemProps } from '@material-ui/core';
+import { ListItem, ListItemProps } from '@mui/material';
 import { forwardRef } from 'react';
 // eslint-disable-next-line @seedcompany/no-restricted-imports
 import { Link, LinkProps, useMatch } from 'react-router-dom';

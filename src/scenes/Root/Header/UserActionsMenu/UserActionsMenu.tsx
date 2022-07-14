@@ -1,16 +1,16 @@
 import {
+  VisibilityOff as HideIcon,
+  Visibility as ShowIcon,
+} from '@mui/icons-material';
+import {
   ListItemIcon,
   ListItemText,
   makeStyles,
   Menu,
   MenuItem,
   MenuProps,
-  useTheme,
-} from '@material-ui/core';
-import {
-  VisibilityOff as HideIcon,
-  Visibility as ShowIcon,
-} from '@material-ui/icons';
+} from '@mui/material';
+import { useTheme } from '@mui/material/styles';
 import { useUpload, useUploadManager } from '../../../../components/Upload';
 
 const useStyles = makeStyles(({ spacing }) => ({

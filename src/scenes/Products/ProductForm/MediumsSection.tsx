@@ -1,4 +1,4 @@
-import { ToggleButton } from '@material-ui/lab';
+import { ToggleButton } from '@mui/material';
 import { ProductMediumLabels, ProductMediumList } from '~/api/schema.graphql';
 import { labelFrom } from '~/common';
 import { EnumField } from '../../../components/form';

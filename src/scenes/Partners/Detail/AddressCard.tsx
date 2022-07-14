@@ -5,9 +5,9 @@ import {
   CardActions,
   CardContent,
   makeStyles,
+  Skeleton,
   Typography,
-} from '@material-ui/core';
-import { Skeleton } from '@material-ui/lab';
+} from '@mui/material';
 import { canEditAny } from '~/common';
 import { Redacted } from '../../../components/Redacted';
 import { PartnerDetailsFragment } from './PartnerDetail.graphql';

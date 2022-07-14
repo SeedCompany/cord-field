@@ -1,5 +1,5 @@
-import { Grid, makeStyles, Tooltip, Typography } from '@material-ui/core';
-import { Add } from '@material-ui/icons';
+import { Add } from '@mui/icons-material';
+import { Grid, makeStyles, Tooltip, Typography } from '@mui/material';
 import { Except } from 'type-fest';
 import { useDialog } from '../Dialog';
 import { Fab } from '../Fab';

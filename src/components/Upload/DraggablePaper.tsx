@@ -1,4 +1,4 @@
-import { Paper, PaperProps } from '@material-ui/core';
+import { Paper, PaperProps } from '@mui/material';
 import { useCallback, useLayoutEffect, useRef, useState } from 'react';
 import Draggable, { DraggableData, DraggableEvent } from 'react-draggable';
 import { useWindowSize } from 'react-use';

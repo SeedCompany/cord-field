@@ -1,4 +1,4 @@
-import { makeStyles } from '@material-ui/core';
+import { makeStyles } from '@mui/material';
 import { useEffect, useState } from 'react';
 import type { PreviewerProps } from './FilePreview';
 import { PreviewLoading } from './PreviewLoading';

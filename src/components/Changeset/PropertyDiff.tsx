@@ -1,4 +1,5 @@
-import { fade, Grid, makeStyles, Typography } from '@material-ui/core';
+import { Grid, makeStyles, Typography } from '@mui/material';
+import { alpha as fade } from '@mui/material/styles';
 import clsx from 'clsx';
 import { ReactNode } from 'react';
 

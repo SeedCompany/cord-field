@@ -1,16 +1,16 @@
 import {
+  Close as CloseIcon,
+  Maximize as MaximizeIcon,
+  Minimize as MinimizeIcon,
+} from '@mui/icons-material';
+import {
   Dialog,
   DialogContent,
   IconButton,
   makeStyles,
   DialogTitle as MuiDialogTitle,
   Typography,
-} from '@material-ui/core';
-import {
-  Close as CloseIcon,
-  Maximize as MaximizeIcon,
-  Minimize as MinimizeIcon,
-} from '@material-ui/icons';
+} from '@mui/material';
 import clsx from 'clsx';
 import { memo, ReactNode, useState } from 'react';
 import { useMountedState } from 'react-use';

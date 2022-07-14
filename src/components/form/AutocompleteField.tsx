@@ -1,11 +1,13 @@
 import {
+  Autocomplete,
+  AutocompleteProps,
   Chip,
   ChipProps,
   CircularProgress,
   TextField,
   TextFieldProps,
-} from '@material-ui/core';
-import { Autocomplete, AutocompleteProps, Value } from '@material-ui/lab';
+  AutocompleteValue as Value,
+} from '@mui/material';
 import { identity } from 'lodash';
 import { useCallback, useLayoutEffect } from 'react';
 import { Except } from 'type-fest';

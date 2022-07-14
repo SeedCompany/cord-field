@@ -1,5 +1,5 @@
 import { useMutation } from '@apollo/client';
-import { Grid, makeStyles } from '@material-ui/core';
+import { Grid, makeStyles } from '@mui/material';
 import { Mutator } from 'final-form';
 import { useSnackbar } from 'notistack';
 import { Except } from 'type-fest';

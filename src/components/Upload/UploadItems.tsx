@@ -1,4 +1,4 @@
-import { Box, makeStyles, Typography } from '@material-ui/core';
+import { Box, makeStyles, Typography } from '@mui/material';
 import { UploadFile, UploadState } from './Reducer/uploadTypings';
 import { UploadItem } from './UploadItem';
 

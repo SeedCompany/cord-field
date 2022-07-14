@@ -4,7 +4,7 @@ import {
   CardContent,
   makeStyles,
   Typography,
-} from '@material-ui/core';
+} from '@mui/material';
 import clsx from 'clsx';
 import { DisplaySimpleProperty } from '../DisplaySimpleProperty';
 import { FormattedDateTime } from '../Formatters';

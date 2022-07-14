@@ -1,5 +1,4 @@
-import { Grid, GridProps, Typography } from '@material-ui/core';
-import { Skeleton } from '@material-ui/lab';
+import { Grid, GridProps, Skeleton, Typography } from '@mui/material';
 import { groupBy } from 'lodash';
 import Table from '../../../components/Table/Table';
 import { ProductTable } from './ProductTable';

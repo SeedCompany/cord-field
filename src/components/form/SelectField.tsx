@@ -6,7 +6,7 @@ import {
   MenuItem,
   Select,
   SelectProps,
-} from '@material-ui/core';
+} from '@mui/material';
 import { identity } from 'lodash';
 import { ReactNode } from 'react';
 import { Except } from 'type-fest';

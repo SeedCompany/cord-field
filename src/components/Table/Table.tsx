@@ -1,4 +1,4 @@
-import { Paper, withStyles } from '@material-ui/core';
+import { Paper, withStyles } from '@mui/material';
 
 export type TableProps<_RowData extends Record<string, any>> = any;
 

@@ -5,11 +5,11 @@ import {
   CardActions,
   Grid,
   makeStyles,
+  Skeleton,
   Tooltip,
   TooltipProps,
   Typography,
-} from '@material-ui/core';
-import { Skeleton } from '@material-ui/lab';
+} from '@mui/material';
 import clsx from 'clsx';
 import { To } from 'history';
 import { DateTime } from 'luxon';

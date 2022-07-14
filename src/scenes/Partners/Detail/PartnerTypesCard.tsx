@@ -6,9 +6,9 @@ import {
   CardContent,
   Grid,
   makeStyles,
+  Skeleton,
   Typography,
-} from '@material-ui/core';
-import { Skeleton } from '@material-ui/lab';
+} from '@mui/material';
 import {
   FinancialReportingTypeLabels,
   PartnerTypeLabels,

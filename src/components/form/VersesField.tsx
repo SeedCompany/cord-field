@@ -1,15 +1,13 @@
 import {
+  Autocomplete,
+  AutocompleteProps,
+  AutocompleteRenderInputParams,
   Chip,
   ChipProps,
   makeStyles,
   TextField,
   TextFieldProps,
-} from '@material-ui/core';
-import {
-  Autocomplete,
-  AutocompleteProps,
-  AutocompleteRenderInputParams,
-} from '@material-ui/lab';
+} from '@mui/material';
 import { isEqual, uniqWith } from 'lodash';
 import { useState } from 'react';
 import { Except } from 'type-fest';

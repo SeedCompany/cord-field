@@ -1,4 +1,4 @@
-import { Grid } from '@material-ui/core';
+import { Grid } from '@mui/material';
 import { memoize } from 'lodash';
 import { RoleLabels, RoleList } from '~/api/schema.graphql';
 import { labelFrom } from '~/common';

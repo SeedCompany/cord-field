@@ -1,5 +1,4 @@
-import { makeStyles, Typography } from '@material-ui/core';
-import { Skeleton } from '@material-ui/lab';
+import { makeStyles, Skeleton, Typography } from '@mui/material';
 import clsx from 'clsx';
 import { useState } from 'react';
 import { CalendarDate, Nullable, SecuredProp } from '~/common';

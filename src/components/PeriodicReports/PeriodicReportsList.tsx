@@ -1,4 +1,4 @@
-import { Breadcrumbs, makeStyles, Typography } from '@material-ui/core';
+import { Breadcrumbs, makeStyles, Typography } from '@mui/material';
 import { ReactNode } from 'react';
 import { Helmet } from 'react-helmet-async';
 import { ReportType } from '~/api/schema.graphql';

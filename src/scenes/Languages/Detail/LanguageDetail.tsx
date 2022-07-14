@@ -1,7 +1,6 @@
 import { useMutation, useQuery } from '@apollo/client';
-import { Grid, makeStyles, Tooltip, Typography } from '@material-ui/core';
-import { Add, Edit } from '@material-ui/icons';
-import { Skeleton } from '@material-ui/lab';
+import { Add, Edit } from '@mui/icons-material';
+import { Grid, makeStyles, Skeleton, Tooltip, Typography } from '@mui/material';
 import { Helmet } from 'react-helmet-async';
 import { useParams } from 'react-router-dom';
 import { removeItemFromList } from '~/api';

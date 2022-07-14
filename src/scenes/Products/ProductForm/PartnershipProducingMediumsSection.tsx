@@ -1,4 +1,4 @@
-import { List, ListItem, Typography } from '@material-ui/core';
+import { List, ListItem, Typography } from '@mui/material';
 import { ProductMedium, ProductMediumLabels } from '~/api/schema.graphql';
 import { AutocompleteField } from '../../../components/form';
 import { PartnershipForLabelFragment } from '../Detail/ProductDetail.graphql';

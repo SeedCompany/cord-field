@@ -1,6 +1,11 @@
 import { useQuery } from '@apollo/client';
-import { Breadcrumbs, Grid, makeStyles, Typography } from '@material-ui/core';
-import { Skeleton } from '@material-ui/lab';
+import {
+  Breadcrumbs,
+  Grid,
+  makeStyles,
+  Skeleton,
+  Typography,
+} from '@mui/material';
 import { useEffect } from 'react';
 import { Helmet } from 'react-helmet-async';
 import { Breadcrumb } from '../../../components/Breadcrumb';

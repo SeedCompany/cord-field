@@ -1,4 +1,4 @@
-import { makeStyles, Typography } from '@material-ui/core';
+import { makeStyles, Typography } from '@mui/material';
 import { ButtonLink } from '../../../components/Routing';
 import { AuthContent } from '../AuthContent';
 

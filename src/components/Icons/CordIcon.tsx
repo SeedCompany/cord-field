@@ -1,4 +1,4 @@
-import { makeStyles, SvgIcon, SvgIconProps } from '@material-ui/core';
+import { makeStyles, SvgIcon, SvgIconProps } from '@mui/material';
 
 const useStyles = makeStyles(() => ({
   root: {

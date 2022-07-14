@@ -1,5 +1,5 @@
 import { useMutation } from '@apollo/client';
-import { Grid, makeStyles, Tooltip, Typography } from '@material-ui/core';
+import { Grid, makeStyles, Tooltip, Typography } from '@mui/material';
 import { Except } from 'type-fest';
 import {
   ProjectStep,

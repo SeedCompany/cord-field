@@ -1,4 +1,4 @@
-import { Card } from '@material-ui/core';
+import { Card } from '@mui/material';
 import { boolean } from '@storybook/addon-knobs';
 import { PartnershipSummary as PS } from './PartnershipSummary';
 import { PartnershipSummaryFragment } from './PartnershipSummary.graphql';

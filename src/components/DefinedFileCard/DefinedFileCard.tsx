@@ -1,17 +1,17 @@
 import { useMutation } from '@apollo/client';
 import { TypedDocumentNode as DocumentNode } from '@graphql-typed-document-node/core';
 import {
+  Add as AddIcon,
+  NotInterested as NotPermittedIcon,
+} from '@mui/icons-material';
+import {
   Avatar,
   Card,
   CardActionArea,
   makeStyles,
+  Skeleton,
   Typography,
-} from '@material-ui/core';
-import {
-  Add as AddIcon,
-  NotInterested as NotPermittedIcon,
-} from '@material-ui/icons';
-import { Skeleton } from '@material-ui/lab';
+} from '@mui/material';
 import { DateTime } from 'luxon';
 import { forwardRef, ReactNode } from 'react';
 import { useDropzone } from 'react-dropzone';

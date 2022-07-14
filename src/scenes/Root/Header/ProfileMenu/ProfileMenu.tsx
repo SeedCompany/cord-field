@@ -5,8 +5,8 @@ import {
   MenuItem,
   MenuProps,
   Typography,
-  useTheme,
-} from '@material-ui/core';
+} from '@mui/material';
+import { useTheme } from '@mui/material/styles';
 import { useDialog } from '../../../../components/Dialog';
 import { MenuItemLink } from '../../../../components/Routing';
 import { useSession } from '../../../../components/Session';

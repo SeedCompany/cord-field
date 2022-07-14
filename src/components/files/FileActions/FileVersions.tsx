@@ -8,8 +8,8 @@ import {
   Divider,
   List,
   makeStyles,
-} from '@material-ui/core';
-import { Skeleton } from '@material-ui/lab';
+  Skeleton,
+} from '@mui/material';
 import { Fragment } from 'react';
 import { FileActionItem, PermittedActions } from '../FileActions';
 import {

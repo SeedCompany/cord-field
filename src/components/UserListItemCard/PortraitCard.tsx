@@ -3,9 +3,9 @@ import {
   CardActions,
   CardContent,
   makeStyles,
+  Skeleton,
   Typography,
-} from '@material-ui/core';
-import { Skeleton } from '@material-ui/lab';
+} from '@mui/material';
 import clsx from 'clsx';
 import { ReactNode } from 'react';
 import { square } from '~/common';

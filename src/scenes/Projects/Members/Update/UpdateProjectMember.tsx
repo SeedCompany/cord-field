@@ -1,6 +1,5 @@
 import { useMutation, useQuery } from '@apollo/client';
-import { Container } from '@material-ui/core';
-import { Skeleton } from '@material-ui/lab';
+import { Container, Skeleton } from '@mui/material';
 import { Except } from 'type-fest';
 import { onUpdateInvalidateObject, removeItemFromList } from '~/api';
 import {

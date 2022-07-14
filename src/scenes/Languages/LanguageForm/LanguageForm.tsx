@@ -1,4 +1,4 @@
-import { Grid, makeStyles, Typography } from '@material-ui/core';
+import { Grid, makeStyles, Typography } from '@mui/material';
 import { setIn } from 'final-form';
 import { useMemo } from 'react';
 import { Except } from 'type-fest';

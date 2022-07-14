@@ -1,6 +1,5 @@
-import { Grid, makeStyles, Typography } from '@material-ui/core';
-import { SkipNextRounded } from '@material-ui/icons';
-import { Skeleton } from '@material-ui/lab';
+import { SkipNextRounded } from '@mui/icons-material';
+import { Grid, makeStyles, Skeleton, Typography } from '@mui/material';
 import { omit } from 'lodash';
 import { DateTime } from 'luxon';
 import { ReactNode } from 'react';

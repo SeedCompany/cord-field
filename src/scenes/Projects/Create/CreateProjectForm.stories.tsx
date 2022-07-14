@@ -1,4 +1,4 @@
-import { Button } from '@material-ui/core';
+import { Button } from '@mui/material';
 import { action } from '@storybook/addon-actions';
 import { useDialog } from '../../../components/Dialog';
 import { CreateProjectForm as Form } from './CreateProjectForm';

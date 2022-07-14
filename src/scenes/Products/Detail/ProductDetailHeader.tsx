@@ -1,12 +1,12 @@
+import { Edit } from '@mui/icons-material';
 import {
   Breadcrumbs,
   Grid,
   makeStyles,
+  Skeleton,
   Tooltip,
   Typography,
-} from '@material-ui/core';
-import { Edit } from '@material-ui/icons';
-import { Skeleton } from '@material-ui/lab';
+} from '@mui/material';
 import { Helmet } from 'react-helmet-async';
 import { Breadcrumb } from '../../../components/Breadcrumb';
 import { EngagementBreadcrumb } from '../../../components/EngagementBreadcrumb';

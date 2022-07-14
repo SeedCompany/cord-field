@@ -1,5 +1,5 @@
 import { useQuery } from '@apollo/client';
-import { ToggleButton } from '@material-ui/lab';
+import { ToggleButton } from '@mui/material';
 import { useEffect } from 'react';
 import { ProductStepLabels } from '~/api/schema.graphql';
 import { labelFrom } from '~/common';

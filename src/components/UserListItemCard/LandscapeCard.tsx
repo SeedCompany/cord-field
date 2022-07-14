@@ -1,5 +1,10 @@
-import { Card, CardContent, makeStyles, Typography } from '@material-ui/core';
-import { Skeleton } from '@material-ui/lab';
+import {
+  Card,
+  CardContent,
+  makeStyles,
+  Skeleton,
+  Typography,
+} from '@mui/material';
 import clsx from 'clsx';
 import { square } from '~/common';
 import { UsersQueryVariables } from '../../scenes/Users/List/users.graphql';

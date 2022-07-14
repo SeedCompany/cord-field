@@ -1,4 +1,4 @@
-import { Grid, makeStyles, Typography } from '@material-ui/core';
+import { Grid, makeStyles, Typography } from '@mui/material';
 import { Decorator, Mutator } from 'final-form';
 import { Form, FormProps } from 'react-final-form';
 import { RegisterInput } from '~/api/schema.graphql';

@@ -1,4 +1,4 @@
-import { ButtonProps, Grid, GridProps, makeStyles } from '@material-ui/core';
+import { ButtonProps, Grid, GridProps, makeStyles } from '@mui/material';
 import clsx from 'clsx';
 import { times } from 'lodash';
 import { ReactNode, RefObject, useRef } from 'react';

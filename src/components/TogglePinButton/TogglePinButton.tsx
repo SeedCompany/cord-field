@@ -1,5 +1,5 @@
 import { useMutation } from '@apollo/client';
-import { makeStyles, Theme, Tooltip, TooltipProps } from '@material-ui/core';
+import { makeStyles, Theme, Tooltip, TooltipProps } from '@mui/material';
 import clsx from 'clsx';
 import { Except } from 'type-fest';
 import { addItemToList, ListIdentifier, removeItemFromList } from '~/api';

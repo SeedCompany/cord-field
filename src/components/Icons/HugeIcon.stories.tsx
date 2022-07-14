@@ -1,5 +1,5 @@
-import { makeStyles } from '@material-ui/core';
-import { Home } from '@material-ui/icons';
+import { makeStyles } from '@mui/material';
+import { Home } from '@mui/icons-material';
 import { CordIcon } from './CordIcon';
 import { HugeIcon } from './HugeIcon';
 

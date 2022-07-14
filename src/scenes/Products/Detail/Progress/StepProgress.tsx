@@ -5,7 +5,7 @@ import {
   LinearProgress,
   makeStyles,
   Typography,
-} from '@material-ui/core';
+} from '@mui/material';
 import { ProductStepLabels, ProgressMeasurement } from '~/api/schema.graphql';
 import { StepProgressFragment } from './ProductProgress.graphql';
 import { ProgressIcon } from './ProgressIcon';

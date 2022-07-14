@@ -1,15 +1,15 @@
 import { useQuery } from '@apollo/client';
+import { Add, Edit } from '@mui/icons-material';
 import {
   Button,
   CardActionArea,
   CardContent,
   Grid,
   makeStyles,
+  Skeleton,
   Tooltip,
   Typography,
-} from '@material-ui/core';
-import { Add, Edit } from '@material-ui/icons';
-import { Skeleton } from '@material-ui/lab';
+} from '@mui/material';
 import { Many } from 'lodash';
 import { Helmet } from 'react-helmet-async';
 import { useParams } from 'react-router-dom';

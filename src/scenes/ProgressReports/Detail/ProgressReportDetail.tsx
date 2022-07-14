@@ -1,15 +1,15 @@
 import { useQuery } from '@apollo/client';
+import { Edit, SkipNextRounded as SkipIcon } from '@mui/icons-material';
 import {
   Breadcrumbs,
   Card,
   CardContent,
   Grid,
   makeStyles,
+  Skeleton,
   Tooltip,
   Typography,
-} from '@material-ui/core';
-import { Edit, SkipNextRounded as SkipIcon } from '@material-ui/icons';
-import { Skeleton } from '@material-ui/lab';
+} from '@mui/material';
 import { Helmet } from 'react-helmet-async';
 import { useWindowSize } from 'react-use';
 import { Breadcrumb } from '../../../components/Breadcrumb';

@@ -1,4 +1,4 @@
-import { InputAdornment, makeStyles } from '@material-ui/core';
+import { InputAdornment, makeStyles } from '@mui/material';
 import clsx from 'clsx';
 import { Except } from 'type-fest';
 import { Nullable } from '~/common';

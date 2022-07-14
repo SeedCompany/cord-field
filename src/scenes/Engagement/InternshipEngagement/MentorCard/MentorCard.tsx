@@ -1,11 +1,11 @@
+import { Add } from '@mui/icons-material';
 import {
   Button,
   CardActionArea,
   CardContent,
   makeStyles,
   Typography,
-} from '@material-ui/core';
-import { Add } from '@material-ui/icons';
+} from '@mui/material';
 import { ReactElement, ReactNode } from 'react';
 import { square } from '~/common';
 import { Avatar } from '../../../../components/Avatar';

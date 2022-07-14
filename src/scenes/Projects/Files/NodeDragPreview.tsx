@@ -1,4 +1,4 @@
-import { makeStyles, Paper } from '@material-ui/core';
+import { makeStyles, Paper } from '@mui/material';
 import { FileNodeInfoFragment } from '../../../components/files/files.graphql';
 import { fileIcon } from '../../../components/files/fileTypes';
 import { parseFileNameAndExtension } from '../../../components/Formatters';

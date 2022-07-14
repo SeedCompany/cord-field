@@ -1,4 +1,4 @@
-import { Tooltip, withStyles } from '@material-ui/core';
+import { Tooltip, withStyles } from '@mui/material';
 
 export const PaperTooltip = withStyles(
   ({ palette, spacing, typography, shadows }) => ({

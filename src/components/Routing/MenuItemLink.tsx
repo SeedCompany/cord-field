@@ -1,4 +1,4 @@
-import { MenuItem, MenuItemProps } from '@material-ui/core';
+import { MenuItem, MenuItemProps } from '@mui/material';
 import { forwardRef } from 'react';
 // eslint-disable-next-line @seedcompany/no-restricted-imports
 import { Link, LinkProps } from 'react-router-dom';

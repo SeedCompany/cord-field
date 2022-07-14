@@ -1,4 +1,4 @@
-import { makeStyles } from '@material-ui/core';
+import { makeStyles } from '@mui/material';
 import { useDragLayer } from 'react-dnd';
 import { NodeDragPreview } from './NodeDragPreview';
 import { DndFileNode } from './util';

@@ -1,5 +1,5 @@
-import { makeStyles, Typography } from '@material-ui/core';
-import { Cancel, CloudUpload } from '@material-ui/icons';
+import { Cancel, CloudUpload } from '@mui/icons-material';
+import { makeStyles, Typography } from '@mui/material';
 import clsx from 'clsx';
 import { SecuredPeriodicReportFragment } from './PeriodicReport.graphql';
 import { ReportLabel } from './ReportLabel';

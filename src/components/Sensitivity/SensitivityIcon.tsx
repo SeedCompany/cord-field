@@ -1,11 +1,12 @@
-import { colors, makeStyles, SvgIconProps, Tooltip } from '@material-ui/core';
-import { VerifiedUser } from '@material-ui/icons';
+import { VerifiedUser } from '@mui/icons-material';
+import { makeStyles, SvgIconProps, Tooltip } from '@mui/material';
+import { grey } from '@mui/material/colors';
 import clsx from 'clsx';
 import { Sensitivity as SensitivityType } from '~/api/schema.graphql';
 
 const useStyles = makeStyles(({ palette }) => ({
   Low: {
-    color: colors.grey[400],
+    color: grey[400],
   },
   Medium: {
     color: palette.warning.main,

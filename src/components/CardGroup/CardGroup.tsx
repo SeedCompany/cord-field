@@ -1,4 +1,4 @@
-import { Card, CardProps, makeStyles } from '@material-ui/core';
+import { Card, CardProps, makeStyles } from '@mui/material';
 import clsx from 'clsx';
 import { Children, Fragment } from 'react';
 import { applyBreakpoint, BreakpointAt } from '~/common';

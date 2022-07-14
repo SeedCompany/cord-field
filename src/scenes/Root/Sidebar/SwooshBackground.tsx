@@ -1,4 +1,4 @@
-import { makeStyles, SvgIcon, SvgIconProps } from '@material-ui/core';
+import { makeStyles, SvgIcon, SvgIconProps } from '@mui/material';
 import clsx from 'clsx';
 import { useLocation } from 'react-router-dom';
 import { useUserAgent } from '../../../hooks';

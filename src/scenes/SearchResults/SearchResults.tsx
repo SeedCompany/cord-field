@@ -1,5 +1,5 @@
 import { useQuery } from '@apollo/client';
-import { Card, CardContent, makeStyles, Typography } from '@material-ui/core';
+import { Card, CardContent, makeStyles, Typography } from '@mui/material';
 import { startCase } from 'lodash';
 import { ReactElement } from 'react';
 import { Helmet } from 'react-helmet-async';

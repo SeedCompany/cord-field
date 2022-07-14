@@ -1,5 +1,4 @@
-import { Chip, ChipProps, makeStyles } from '@material-ui/core';
-import { Skeleton } from '@material-ui/lab';
+import { Chip, ChipProps, makeStyles, Skeleton } from '@mui/material';
 import { ReactElement } from 'react';
 import { Except, SetRequired } from 'type-fest';
 import { SecuredProp } from '~/common';

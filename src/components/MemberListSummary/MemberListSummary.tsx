@@ -1,5 +1,11 @@
-import { CardContent, Grid, makeStyles, Typography } from '@material-ui/core';
-import { AvatarGroup, Skeleton } from '@material-ui/lab';
+import {
+  AvatarGroup,
+  CardContent,
+  Grid,
+  makeStyles,
+  Skeleton,
+  Typography,
+} from '@mui/material';
 import { To } from 'history';
 import { compact } from 'lodash';
 import { listOrPlaceholders } from '~/common';

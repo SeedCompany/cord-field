@@ -1,13 +1,13 @@
 import { useQuery } from '@apollo/client';
+import { CreateNewFolder, Publish } from '@mui/icons-material';
 import {
   Box,
   Breadcrumbs,
   makeStyles,
+  Skeleton,
   Typography,
-  useTheme,
-} from '@material-ui/core';
-import { CreateNewFolder, Publish } from '@material-ui/icons';
-import { Skeleton } from '@material-ui/lab';
+} from '@mui/material';
+import { useTheme } from '@mui/material/styles';
 import { useEffect } from 'react';
 import { useDropzone } from 'react-dropzone';
 import { Helmet } from 'react-helmet-async';

@@ -3,11 +3,11 @@ import {
   CircularProgress,
   FormControlLabel,
   makeStyles,
+  Skeleton,
   Switch,
   Tooltip,
   Typography,
-} from '@material-ui/core';
-import { Skeleton } from '@material-ui/lab';
+} from '@mui/material';
 import clsx from 'clsx';
 import { useSnackbar } from 'notistack';
 import {

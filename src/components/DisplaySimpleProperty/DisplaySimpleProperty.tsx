@@ -1,5 +1,4 @@
-import { Typography, TypographyProps } from '@material-ui/core';
-import { Skeleton } from '@material-ui/lab';
+import { Skeleton, Typography, TypographyProps } from '@mui/material';
 import { ReactElement, ReactNode } from 'react';
 
 export type DisplaySimplePropertyProps = TypographyProps & {

@@ -1,3 +1,4 @@
+import { ExpandMore } from '@mui/icons-material';
 import {
   Accordion,
   AccordionDetails,
@@ -5,8 +6,7 @@ import {
   AccordionSummary,
   makeStyles,
   Typography,
-} from '@material-ui/core';
-import { ExpandMore } from '@material-ui/icons';
+} from '@mui/material';
 import clsx from 'clsx';
 import { FormState } from 'final-form';
 import { get, startCase } from 'lodash';

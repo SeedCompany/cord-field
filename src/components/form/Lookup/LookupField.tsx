@@ -1,18 +1,19 @@
 import { useLazyQuery } from '@apollo/client';
 import { TypedDocumentNode as DocumentNode } from '@graphql-typed-document-node/core';
 import {
+  Autocomplete,
+  AutocompleteProps,
   Chip,
   ChipProps,
   CircularProgress,
   TextField,
   TextFieldProps,
-} from '@material-ui/core';
+  AutocompleteValue as Value,
+} from '@mui/material';
 import {
-  Autocomplete,
-  AutocompleteProps,
+  // eslint-disable-next-line @seedcompany/no-restricted-imports
   createFilterOptions,
-  Value,
-} from '@material-ui/lab';
+} from '@mui/material/Autocomplete';
 import { camelCase, last, uniqBy, upperFirst } from 'lodash';
 import {
   ComponentType,

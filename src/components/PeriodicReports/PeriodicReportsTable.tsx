@@ -1,5 +1,6 @@
-import { makeStyles, useTheme } from '@material-ui/core';
-import { SkipNextRounded as SkipIcon } from '@material-ui/icons';
+import { SkipNextRounded as SkipIcon } from '@mui/icons-material';
+import { makeStyles } from '@mui/material';
+import { useTheme } from '@mui/material/styles';
 import { Many, without } from 'lodash';
 import { DateTime } from 'luxon';
 import { useSnackbar } from 'notistack';

@@ -1,10 +1,9 @@
-import { makeStyles, Tooltip } from '@material-ui/core';
 import {
   ChangeHistory as ChangeIcon,
   Close as CloseIcon,
   Edit as EditIcon,
-} from '@material-ui/icons';
-import { Alert, AlertTitle } from '@material-ui/lab';
+} from '@mui/icons-material';
+import { Alert, AlertTitle, makeStyles, Tooltip } from '@mui/material';
 import { IconButton } from '../IconButton';
 
 const useStyles = makeStyles(({ spacing, breakpoints }) => ({

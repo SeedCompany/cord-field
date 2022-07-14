@@ -1,10 +1,9 @@
-import { makeStyles, Typography } from '@material-ui/core';
 import {
   Check,
   IndeterminateCheckBox,
   NotInterested,
-} from '@material-ui/icons';
-import { Skeleton } from '@material-ui/lab';
+} from '@mui/icons-material';
+import { makeStyles, Skeleton, Typography } from '@mui/material';
 import { Redacted } from '../../../../components/Redacted';
 import { Link } from '../../../../components/Routing';
 import { FirstScriptureFragment } from './FirstScripture.graphql';

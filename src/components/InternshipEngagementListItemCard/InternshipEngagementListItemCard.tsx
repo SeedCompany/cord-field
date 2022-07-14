@@ -5,7 +5,7 @@ import {
   Grid,
   makeStyles,
   Typography,
-} from '@material-ui/core';
+} from '@mui/material';
 import clsx from 'clsx';
 import {
   EngagementStatusLabels,

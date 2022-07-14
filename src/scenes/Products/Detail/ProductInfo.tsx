@@ -4,9 +4,9 @@ import {
   ListItem,
   ListItemText,
   makeStyles,
+  Skeleton,
   Typography,
-} from '@material-ui/core';
-import { Skeleton } from '@material-ui/lab';
+} from '@mui/material';
 import { ReactNode } from 'react';
 import { ProductMediumLabels, ProductStepLabels } from '~/api/schema.graphql';
 import { displayMethodologyWithLabel, mapFromList } from '~/common';

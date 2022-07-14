@@ -4,7 +4,7 @@ import {
   ListItemSecondaryAction,
   ListItemText,
   makeStyles,
-} from '@material-ui/core';
+} from '@mui/material';
 import { useDateTimeFormatter } from '../../Formatters';
 import {
   FileActionsPopup as ActionsMenu,

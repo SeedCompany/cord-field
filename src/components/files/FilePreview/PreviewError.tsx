@@ -1,4 +1,4 @@
-import { Grid, makeStyles, Typography } from '@material-ui/core';
+import { Grid, makeStyles, Typography } from '@mui/material';
 
 const useStyles = makeStyles(({ breakpoints }) => ({
   text: {
