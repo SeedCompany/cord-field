@@ -4,7 +4,7 @@ import Cookies from 'js-cookie';
 import { Settings, Zone } from 'luxon';
 import { DndProvider } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
-import { hydrate } from 'react-dom';
+import { createRoot } from 'react-dom/client';
 import { HelmetProvider } from 'react-helmet-async';
 import { BrowserRouter } from 'react-router-dom';
 import { TssCacheProvider } from 'tss-react';
@@ -66,10 +66,9 @@ const clientOnlyProviders = [
 ];
 
 void Promise.all(setup).then(() => {
-  hydrate(
+  createRoot(root).render(
     <Nest elements={clientOnlyProviders}>
       <App />
-    </Nest>,
-    root
+    </Nest>
   );
 });
