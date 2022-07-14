@@ -19,7 +19,7 @@ export const LeastOfThese = ({ language }: LeastOfTheseProps) => {
           {!reason ? (
             node
           ) : (
-            <PaperTooltip title={reason} interactive placement="bottom-start">
+            <PaperTooltip title={reason} placement="bottom-start">
               {node}
             </PaperTooltip>
           )}
