@@ -102,7 +102,10 @@ export function LookupField<
 
   const selectOnFocus = props.selectOnFocus ?? true;
   const andSelectOnFocus = useCallback(
-    (el) => selectOnFocus && el.select(),
+    (el: HTMLDivElement) =>
+      selectOnFocus &&
+      el.tagName === 'INPUT' &&
+      (el as unknown as HTMLInputElement).select(),
     [selectOnFocus]
   );
 
@@ -208,16 +211,16 @@ export function LookupField<
           />
         ))
       }
-      // @ts-expect-error our value is readonly array, MUI's is not but it could be.
       options={options}
       getOptionLabel={getOptionLabel}
       freeSolo={freeSolo}
-      renderOption={(option) => {
-        if (typeof option === 'string') {
-          return `Create "${option}"`;
-        }
-        return getOptionLabel(option);
-      }}
+      renderOption={(props, option, _ownerState) => (
+        <li {...props}>
+          {typeof option === 'string'
+            ? `Create "${option}"`
+            : getOptionLabel(option)}
+        </li>
+      )}
       filterOptions={(options, params) => {
         // Apply default filtering. Even though the API filters for us, we add
         // the currently selected options back in because they are still valid

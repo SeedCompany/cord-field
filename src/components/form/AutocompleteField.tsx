@@ -25,7 +25,6 @@ export type AutocompleteFieldProps<
     'helperText' | 'label' | 'required' | 'autoFocus' | 'variant' | 'margin'
   > & {
     ChipProps?: ChipProps;
-    options: readonly T[];
     // Allowed but ignored from useAutocompleteQuery
     root?: unknown;
   } & Except<
@@ -37,7 +36,6 @@ export type AutocompleteFieldProps<
     | 'renderTags'
     | 'filterSelectedOptions'
     | 'ChipProps'
-    | 'options'
   >;
 
 /**
@@ -68,7 +66,10 @@ export function AutocompleteField<
 
   const selectOnFocus = props.selectOnFocus ?? !props.freeSolo;
   const andSelectOnFocus = useCallback(
-    (el) => selectOnFocus && el.select(),
+    (el: HTMLDivElement) =>
+      selectOnFocus &&
+      el.tagName === 'INPUT' &&
+      (el as unknown as HTMLInputElement).select(),
     [selectOnFocus]
   );
 
