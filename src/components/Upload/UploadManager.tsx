@@ -10,7 +10,6 @@ import {
   DialogTitle as MuiDialogTitle,
   Typography,
 } from '@mui/material';
-import clsx from 'clsx';
 import { memo, ReactNode, useState } from 'react';
 import { useMountedState } from 'react-use';
 import { makeStyles } from 'tss-react/mui';
@@ -21,50 +20,52 @@ import { useUploadManager } from './UploadManagerContext';
 
 const PAPER_WIDTH = 360;
 
-const useStyles = makeStyles(({ palette, spacing }) => ({
-  root: {
-    pointerEvents: 'none',
-  },
-  paper: {
-    margin: 0,
-    pointerEvents: 'auto',
-    position: 'absolute',
-    top: 0,
-    left: 0,
-    width: PAPER_WIDTH,
-  },
-  titleContainer: {
-    cursor: 'move',
-    display: 'flex',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    padding: spacing(1),
-    '&$collapsed': {
-      cursor: 'default',
+const useStyles = makeStyles<void, 'collapsed'>()(
+  ({ palette, spacing }, _props, classes) => ({
+    root: {
+      pointerEvents: 'none',
     },
-  },
-  title: {
-    cursor: 'move',
-    paddingLeft: spacing(1),
-    '&$collapsed': {
-      cursor: 'default',
+    paper: {
+      margin: 0,
+      pointerEvents: 'auto',
+      position: 'absolute',
+      top: 0,
+      left: 0,
+      width: PAPER_WIDTH,
     },
-  },
-  titleButtons: {
-    marginLeft: 'auto',
-  },
-  titleButton: {},
-  contentContainer: {
-    padding: spacing(1),
-    '&$collapsed': {
-      display: 'none',
+    titleContainer: {
+      cursor: 'move',
+      display: 'flex',
+      justifyContent: 'space-between',
+      alignItems: 'center',
+      padding: spacing(1),
+      [`&.${classes.collapsed}`]: {
+        cursor: 'default',
+      },
     },
-  },
-  noUploadsText: {
-    color: palette.grey[400],
-  },
-  collapsed: {}, // here to pacify TypeScript
-}));
+    title: {
+      cursor: 'move',
+      paddingLeft: spacing(1),
+      [`&.${classes.collapsed}`]: {
+        cursor: 'default',
+      },
+    },
+    titleButtons: {
+      marginLeft: 'auto',
+    },
+    titleButton: {},
+    contentContainer: {
+      padding: spacing(1),
+      [`&.${classes.collapsed}`]: {
+        display: 'none',
+      },
+    },
+    noUploadsText: {
+      color: palette.grey[400],
+    },
+    collapsed: {}, // here to pacify TypeScript
+  })
+);
 
 interface DialogTitleProps extends ChildrenProp {
   id: string;
@@ -73,20 +74,19 @@ interface DialogTitleProps extends ChildrenProp {
   onCollapseClick: (event: React.MouseEvent<HTMLButtonElement>) => void;
 }
 
-const DialogTitle = (props: DialogTitleProps) => {
+const UploadManagerDialogTitle = (props: DialogTitleProps) => {
   const { children, id, isCollapsed, onClose, onCollapseClick } = props;
-  const classes = useStyles();
+  const { classes, cx } = useStyles();
   const IconComponent = isCollapsed ? MaximizeIcon : MinimizeIcon;
   return (
     <MuiDialogTitle
       id={id}
-      className={clsx(classes.titleContainer, isCollapsed && classes.collapsed)}
-      disableTypography
+      className={cx(classes.titleContainer, isCollapsed && classes.collapsed)}
     >
       <Typography
         variant="body1"
         component="h6"
-        className={clsx(classes.title, isCollapsed && classes.collapsed)}
+        className={cx(classes.title, isCollapsed && classes.collapsed)}
       >
         {children}
       </Typography>
@@ -124,7 +124,7 @@ const UploadManagerImpl = (props: UploadManagerProps) => {
   const { session } = useSession();
   const { isManagerOpen, setIsManagerOpen } = useUploadManager();
   const [isCollapsed, setIsCollapsed] = useState(false);
-  const classes = useStyles();
+  const { classes, cx } = useStyles();
   const isMounted = useMountedState();
 
   function handleClose(event: React.MouseEvent<HTMLButtonElement>) {
@@ -154,16 +154,16 @@ const UploadManagerImpl = (props: UploadManagerProps) => {
       )}
       aria-labelledby="draggable-dialog-title"
     >
-      <DialogTitle
+      <UploadManagerDialogTitle
         id="draggable-dialog-title"
         isCollapsed={isCollapsed}
         onClose={handleClose}
         onCollapseClick={handleCollapse}
       >
         Upload Manager
-      </DialogTitle>
+      </UploadManagerDialogTitle>
       <DialogContent
-        className={clsx(
+        className={cx(
           classes.contentContainer,
           isCollapsed && classes.collapsed
         )}
