@@ -4,11 +4,10 @@ import {
   CardActions,
   CardContent,
   Grid,
-  makeStyles,
   Skeleton,
   Typography,
 } from '@mui/material';
-import clsx from 'clsx';
+import { makeStyles } from 'tss-react/mui';
 import {
   FinancialReportingTypeLabels,
   PartnershipAgreementStatusLabels,
@@ -20,7 +19,7 @@ import { Redacted } from '../Redacted';
 import { PartnershipCardFragment } from './PartnershipCard.graphql';
 import { PartnershipPrimaryIcon } from './PartnershipPrimaryIcon';
 
-const useStyles = makeStyles(({ spacing }) => ({
+const useStyles = makeStyles()(({ spacing }) => ({
   root: {
     flex: 1,
   },
@@ -48,11 +47,11 @@ export const PartnershipCard = ({
   onEdit,
   className,
 }: PartnershipCardProps) => {
-  const classes = useStyles();
+  const { classes, cx } = useStyles();
 
   const name = partnership?.partner.value?.organization.value?.name.value;
   return (
-    <Card className={clsx(classes.root, className)}>
+    <Card className={cx(classes.root, className)}>
       <CardContent>
         <Grid container direction="column" spacing={1}>
           <Grid item container direction="row" alignItems="flex-start">

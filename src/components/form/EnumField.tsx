@@ -7,13 +7,11 @@ import {
   FormHelperText,
   FormLabel,
   Grid,
-  makeStyles,
   Radio,
   RadioGroup,
   ToggleButton,
   ToggleButtonGroup,
 } from '@mui/material';
-import clsx from 'clsx';
 import { sortBy } from 'lodash';
 import {
   createContext,
@@ -25,6 +23,7 @@ import {
   useContext,
   useMemo,
 } from 'react';
+import { makeStyles } from 'tss-react/mui';
 import { Except, MergeExclusive } from 'type-fest';
 import { Many, many } from '~/common';
 import { FieldConfig, useField, Value } from './useField';
@@ -55,7 +54,7 @@ export type EnumFieldProps<
     }
   >;
 
-const useStyles = makeStyles(({ typography, spacing }) => ({
+const useStyles = makeStyles()(({ typography, spacing }) => ({
   fieldLabel: {
     fontWeight: typography.weight.bold,
   },
@@ -145,7 +144,7 @@ export const EnumField = <
     disabled: props.disabled,
   });
 
-  const classes = useStyles();
+  const { classes, cx } = useStyles();
 
   const { name, onChange, onBlur, onFocus } = input;
 
@@ -251,7 +250,7 @@ export const EnumField = <
     variant === 'checkbox' || variant === 'toggle-split' ? (
       <FormGroup
         classes={{
-          root: clsx({
+          root: cx({
             [classes.toggleSplitContainer]: variant === 'toggle-split',
           }),
         }}

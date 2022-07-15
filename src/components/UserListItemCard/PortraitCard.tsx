@@ -2,18 +2,17 @@ import {
   Card,
   CardActions,
   CardContent,
-  makeStyles,
   Skeleton,
   Typography,
 } from '@mui/material';
-import clsx from 'clsx';
 import { ReactNode } from 'react';
+import { makeStyles } from 'tss-react/mui';
 import { square } from '~/common';
 import { Avatar } from '../Avatar';
 import { ButtonLink, CardActionAreaLink } from '../Routing';
 import { UserListItemFragment } from './UserListItem.graphql';
 
-const useStyles = makeStyles(({ spacing, typography }) => ({
+const useStyles = makeStyles()(({ spacing, typography }) => ({
   root: {
     maxWidth: 247,
     flex: 1,
@@ -56,12 +55,12 @@ export const UserListItemCardPortrait = ({
   content,
   action,
 }: UserListItemCardPortraitProps) => {
-  const classes = useStyles();
+  const { classes, cx } = useStyles();
 
   const org = user?.organizations.items[0];
 
   return (
-    <Card className={clsx(classes.root, className)}>
+    <Card className={cx(classes.root, className)}>
       {content !== undefined ? (
         content
       ) : (

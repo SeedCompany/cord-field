@@ -1,10 +1,11 @@
-import { FormControlLabel, FormLabel, makeStyles, Radio } from '@mui/material';
+import { FormControlLabel, FormLabel, Radio } from '@mui/material';
 // eslint-disable-next-line @seedcompany/no-restricted-imports
 import { useRadioGroup } from '@mui/material/RadioGroup';
 import { ReactNode } from 'react';
+import { makeStyles } from 'tss-react/mui';
 import { Order } from '~/api/schema.graphql';
 
-const useStyles = makeStyles(({ typography, spacing }) => ({
+const useStyles = makeStyles()(({ typography, spacing }) => ({
   label: {
     fontWeight: typography.weight.bold,
     margin: spacing(2, 0, 1),
@@ -28,7 +29,7 @@ export function SortOption<T>({
   defaultOrder = 'ASC',
   default: defaultVal = false,
 }: SortOptionProps<T>) {
-  const classes = useStyles();
+  const { classes } = useStyles();
   const ascNode = asc ? (
     <ActualSortOption
       order="ASC"

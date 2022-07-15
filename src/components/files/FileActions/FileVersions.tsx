@@ -7,10 +7,10 @@ import {
   DialogTitle,
   Divider,
   List,
-  makeStyles,
   Skeleton,
 } from '@mui/material';
 import { Fragment } from 'react';
+import { makeStyles } from 'tss-react/mui';
 import { FileActionItem, PermittedActions } from '../FileActions';
 import {
   FileVersionItem_FileVersion_Fragment as FileVersion,
@@ -18,7 +18,7 @@ import {
 } from '../FileVersionItem';
 import { FileVersionsDocument } from './FileActions.graphql';
 
-const useStyles = makeStyles(({ spacing }) => ({
+const useStyles = makeStyles()(({ spacing }) => ({
   skeleton: {
     padding: spacing(1, 3),
   },
@@ -33,7 +33,7 @@ export const FileVersions = (props: FileVersionsProps) => {
   const { file, actions, ...dialogProps } = props;
   const { onClose } = dialogProps;
 
-  const classes = useStyles();
+  const { classes } = useStyles();
 
   const id = file?.id ?? '';
   const { data, loading } = useQuery(FileVersionsDocument, {

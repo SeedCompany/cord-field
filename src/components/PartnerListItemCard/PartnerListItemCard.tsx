@@ -1,19 +1,12 @@
-import {
-  Card,
-  CardContent,
-  Grid,
-  makeStyles,
-  Skeleton,
-  Typography,
-} from '@mui/material';
-import clsx from 'clsx';
+import { Card, CardContent, Grid, Skeleton, Typography } from '@mui/material';
 import { random } from 'lodash';
+import { makeStyles } from 'tss-react/mui';
 import { PartnersQueryVariables } from '../../scenes/Partners/List/PartnerList.graphql';
 import { CardActionAreaLink } from '../Routing';
 import { TogglePinButton } from '../TogglePinButton';
 import { PartnerListItemFragment } from './PartnerListItemCard.graphql';
 
-const useStyles = makeStyles(({ breakpoints, spacing }) => {
+const useStyles = makeStyles()(({ breakpoints, spacing }) => {
   const cardWidth = breakpoints.values.sm;
   return {
     root: {
@@ -53,10 +46,10 @@ export const PartnerListItemCard = ({
   partner,
   className,
 }: PartnerListItemCardProps) => {
-  const classes = useStyles();
+  const { classes, cx } = useStyles();
 
   return (
-    <Card className={clsx(className, classes.root)}>
+    <Card className={cx(className, classes.root)}>
       <CardActionAreaLink
         disabled={!partner}
         to={`/partners/${partner?.id}`}

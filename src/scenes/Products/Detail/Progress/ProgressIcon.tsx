@@ -1,7 +1,7 @@
 import { CheckCircle } from '@mui/icons-material';
-import { makeStyles } from '@mui/material';
+import { makeStyles } from 'tss-react/mui';
 
-const useStyles = makeStyles(({ spacing, palette }) => ({
+const useStyles = makeStyles()(({ spacing, palette }) => ({
   done: {
     // Scale icon to same size as rest
     transform: 'scale(1.2)',
@@ -15,7 +15,7 @@ const useStyles = makeStyles(({ spacing, palette }) => ({
 }));
 
 export const ProgressIcon = ({ complete }: { complete: boolean }) => {
-  const classes = useStyles();
+  const { classes } = useStyles();
 
   return complete ? (
     <CheckCircle color="primary" className={classes.done} />

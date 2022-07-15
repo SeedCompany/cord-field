@@ -3,11 +3,11 @@ import {
   Card,
   CardActions,
   CardContent,
-  makeStyles,
   Skeleton,
   Tooltip,
   Typography,
 } from '@mui/material';
+import { makeStyles } from 'tss-react/mui';
 import { ProjectChangeRequestTypeLabels } from '~/api/schema.graphql';
 import { labelsFrom } from '~/common';
 import { useProjectId } from '../../scenes/Projects/useProjectId';
@@ -16,7 +16,7 @@ import { FormattedDateTime } from '../Formatters';
 import { useNavigate } from '../Routing';
 import { ProjectChangeRequestListItemFragment as ChangeRequest } from './ProjectChangeRequestListItem.graphql';
 
-const useStyles = makeStyles(({ palette, spacing }) => ({
+const useStyles = makeStyles()(({ palette, spacing }) => ({
   titleLoading: {
     display: 'flex',
   },
@@ -42,7 +42,7 @@ export const ProjectChangeRequestListItem = ({
   data,
   className,
 }: ProjectChangeRequestListItemProps) => {
-  const classes = useStyles();
+  const { classes } = useStyles();
   const { projectId, changesetId: currentlyViewing } = useProjectId();
   const navigate = useNavigate();
 

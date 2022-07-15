@@ -4,12 +4,12 @@ import {
   AutocompleteRenderInputParams,
   Chip,
   ChipProps,
-  makeStyles,
   TextField,
   TextFieldProps,
 } from '@mui/material';
 import { isEqual, uniqWith } from 'lodash';
 import { useState } from 'react';
+import { makeStyles } from 'tss-react/mui';
 import { Except } from 'type-fest';
 import {
   formatScriptureRange,
@@ -43,7 +43,7 @@ export type VersesFieldProps = Except<FieldConfig<Val, true>, 'multiple'> & {
     'helperText' | 'label' | 'required' | 'autoFocus' | 'placeholder'
   >;
 
-const useStyles = makeStyles(() => ({
+const useStyles = makeStyles()(() => ({
   chip: {
     color: '#FFFFFF',
     backgroundColor: '#2D9CDB',
@@ -109,7 +109,7 @@ export function VersesField({
     }
   };
 
-  const classes = useStyles();
+  const { classes } = useStyles();
 
   const [inputValue, setInputValue] = useState<string>('');
   const { input, meta, ref, rest } = useField<Val, true>({

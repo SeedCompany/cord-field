@@ -3,8 +3,8 @@ import {
   ListItemIcon,
   ListItemSecondaryAction,
   ListItemText,
-  makeStyles,
 } from '@mui/material';
+import { makeStyles } from 'tss-react/mui';
 import { useDateTimeFormatter } from '../../Formatters';
 import {
   FileActionsPopup as ActionsMenu,
@@ -14,7 +14,7 @@ import {
 import { fileIcon } from '../fileTypes';
 import { FileVersionItem_FileVersion_Fragment } from './FileVersionItem.graphql';
 
-const useStyles = makeStyles(({ spacing, typography }) => ({
+const useStyles = makeStyles()(({ spacing, typography }) => ({
   iconContainer: {
     marginRight: spacing(2),
     minWidth: spacing(4),
@@ -34,7 +34,7 @@ interface FileVersionItemProps {
 }
 
 export const FileVersionItem = (props: FileVersionItemProps) => {
-  const classes = useStyles();
+  const { classes } = useStyles();
   const formatDate = useDateTimeFormatter();
   const { openFilePreview } = useFileActions();
   const { version, actions } = props;

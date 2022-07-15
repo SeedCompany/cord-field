@@ -31,7 +31,7 @@ export const ScriptureReferencesSection = ({
   values,
   accordionState,
 }: SectionProps) => {
-  const classes = useStyles();
+  const { classes } = useStyles();
 
   const { scriptureReferences, book, bookSelection, unspecifiedScripture } =
     values.product ?? {};

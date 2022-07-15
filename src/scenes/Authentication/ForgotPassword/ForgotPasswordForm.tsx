@@ -1,5 +1,6 @@
-import { makeStyles, Typography } from '@mui/material';
+import { Typography } from '@mui/material';
 import { Form, FormProps } from 'react-final-form';
+import { makeStyles } from 'tss-react/mui';
 import {
   EmailField,
   SubmitButton,
@@ -8,7 +9,7 @@ import {
 import { Link } from '../../../components/Routing';
 import { AuthContent } from '../AuthContent';
 
-const useStyles = makeStyles(({ spacing }) => ({
+const useStyles = makeStyles()(({ spacing }) => ({
   title: {
     marginBottom: spacing(3),
   },
@@ -30,7 +31,7 @@ export type ForgotPasswordFormProps = Pick<
 >;
 
 export const ForgotPasswordForm = (props: ForgotPasswordFormProps) => {
-  const classes = useStyles();
+  const { classes } = useStyles();
   return (
     <AuthContent>
       <Typography variant="h3" align="center" className={classes.title}>

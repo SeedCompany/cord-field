@@ -92,7 +92,7 @@ export type DialogFormProps<T, R = void> = Omit<
     | ((props: Except<FormRenderProps<T>, 'handleSubmit'>) => ReactNode);
 };
 
-const useStyles = makeStyles(() => ({
+const useStyles = makeStyles()(() => ({
   spacer: {
     flex: 1,
   },
@@ -128,7 +128,7 @@ export function DialogForm<T, R = void>({
   disableChangesetWarning,
   ...FormProps
 }: DialogFormProps<T, R>) {
-  const classes = useStyles();
+  const { classes } = useStyles();
   const inChangeset = useReactiveVar(inChangesetVar);
 
   return (

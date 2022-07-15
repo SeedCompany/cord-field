@@ -2,11 +2,10 @@ import {
   Card,
   CardActions,
   CardContent,
-  makeStyles,
   Skeleton,
   Typography,
 } from '@mui/material';
-import clsx from 'clsx';
+import { makeStyles } from 'tss-react/mui';
 import { LocationTypeLabels } from '~/api/schema.graphql';
 import { labelFrom } from '~/common';
 import { FormattedDateTime } from '../Formatters';
@@ -15,7 +14,7 @@ import { Redacted } from '../Redacted';
 import { ButtonLink, CardActionAreaLink } from '../Routing';
 import { LocationCardFragment } from './LocationCard.graphql';
 
-const useStyles = makeStyles(({ spacing }) => {
+const useStyles = makeStyles()(({ spacing }) => {
   return {
     root: {
       width: '100%',
@@ -47,9 +46,9 @@ export const LocationCard = ({
   removing,
 }: LocationCardProps) => {
   const { id, name, locationType, createdAt } = location ?? {};
-  const classes = useStyles();
+  const { classes, cx } = useStyles();
   return (
-    <Card className={clsx(classes.root, className)}>
+    <Card className={cx(classes.root, className)}>
       <CardActionAreaLink to={`/locations/${id}`}>
         <CardContent>
           <Typography variant="h4" gutterBottom>

@@ -1,6 +1,7 @@
-import { Grid, makeStyles, Typography } from '@mui/material';
+import { Grid, Typography } from '@mui/material';
 import { setIn } from 'final-form';
 import { useMemo } from 'react';
+import { makeStyles } from 'tss-react/mui';
 import { Except } from 'type-fest';
 import {
   CreateLanguage,
@@ -45,7 +46,7 @@ export type LanguageFormProps<T> = DialogFormProps<
   language?: LanguageFormFragment;
 };
 
-const useStyles = makeStyles(() => ({
+const useStyles = makeStyles()(() => ({
   content: {
     overflow: 'hidden', // prevent scroll bars from negative margins of Grid
   },
@@ -60,7 +61,7 @@ export const LanguageForm = <T extends any>({
   language,
   ...rest
 }: LanguageFormProps<T>) => {
-  const classes = useStyles();
+  const { classes } = useStyles();
   const formatNumber = useNumberFormatter();
   const maxPopulation = useMemo(
     () =>

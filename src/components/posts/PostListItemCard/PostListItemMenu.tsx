@@ -2,18 +2,18 @@ import { Delete as DeleteIcon, Edit as EditIcon } from '@mui/icons-material';
 import {
   ListItemIcon,
   ListItemText,
-  makeStyles,
   Menu,
   MenuItem,
   MenuProps,
 } from '@mui/material';
+import { makeStyles } from 'tss-react/mui';
 
 interface PostListItemMenuProps extends Partial<MenuProps> {
   onEdit: () => void;
   onDelete: () => void;
 }
 
-const useStyles = makeStyles(({ spacing }) => ({
+const useStyles = makeStyles()(({ spacing }) => ({
   listItemIcon: {
     marginRight: spacing(2),
     minWidth: 'unset',
@@ -22,7 +22,7 @@ const useStyles = makeStyles(({ spacing }) => ({
 
 export const PostListItemMenu = (props: PostListItemMenuProps) => {
   const { onEdit, onDelete, ...rest } = props;
-  const classes = useStyles();
+  const { classes } = useStyles();
 
   return (
     <Menu

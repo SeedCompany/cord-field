@@ -1,6 +1,7 @@
 import { Add } from '@mui/icons-material';
-import { Breadcrumbs, makeStyles, Tooltip, Typography } from '@mui/material';
+import { Breadcrumbs, Tooltip, Typography } from '@mui/material';
 import { Helmet } from 'react-helmet-async';
+import { makeStyles } from 'tss-react/mui';
 import { Breadcrumb } from '../../../../components/Breadcrumb';
 import { useDialog } from '../../../../components/Dialog';
 import { Fab } from '../../../../components/Fab';
@@ -12,7 +13,7 @@ import { CreateProjectMember } from '../Create/CreateProjectMember';
 import { UpdateProjectMember, UpdateProjectMemberFormParams } from '../Update';
 import { ProjectMembersDocument } from './ProjectMembers.graphql';
 
-const useStyles = makeStyles(({ spacing, breakpoints }) => ({
+const useStyles = makeStyles()(({ spacing, breakpoints }) => ({
   root: {
     flex: 1,
     overflowY: 'auto',
@@ -29,7 +30,7 @@ const useStyles = makeStyles(({ spacing, breakpoints }) => ({
 }));
 
 export const ProjectMembersList = () => {
-  const classes = useStyles();
+  const { classes } = useStyles();
   const { projectId, changesetId } = useProjectId();
   const { root: data, ...list } = useListQuery(ProjectMembersDocument, {
     listAt: (res) => res.project.team,

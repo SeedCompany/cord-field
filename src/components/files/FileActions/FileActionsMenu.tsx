@@ -12,7 +12,6 @@ import {
 import {
   ListItemIcon,
   ListItemText,
-  makeStyles,
   Menu,
   MenuItem,
   MenuProps,
@@ -21,6 +20,7 @@ import { useTheme } from '@mui/material/styles';
 import { startCase } from 'lodash';
 import { useState } from 'react';
 import { useDropzone } from 'react-dropzone';
+import { makeStyles } from 'tss-react/mui';
 import { IconButton, IconButtonProps } from '../../IconButton';
 import { FileAction } from './FileAction.enum';
 import {
@@ -32,7 +32,7 @@ import {
   VersionActionItem,
 } from './FileActionsContext';
 
-const useStyles = makeStyles(({ spacing }) => ({
+const useStyles = makeStyles()(({ spacing }) => ({
   listItemIcon: {
     marginRight: spacing(2),
     minWidth: 'unset',
@@ -118,7 +118,7 @@ const isFileVersion = (
 ): props is VersionPopupProps => props.item.__typename === 'FileVersion';
 
 export const FileActionsMenu = (props: FileActionsMenuProps) => {
-  const classes = useStyles();
+  const { classes } = useStyles();
   const { spacing } = useTheme();
   const { item, actions, ...rest } = props;
 

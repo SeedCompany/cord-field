@@ -1,8 +1,9 @@
 import { useMutation, useQuery } from '@apollo/client';
-import { Breadcrumbs, makeStyles, Skeleton, Typography } from '@mui/material';
+import { Breadcrumbs, Skeleton, Typography } from '@mui/material';
 import { useMemo } from 'react';
 import { Helmet } from 'react-helmet-async';
 import { useNavigate } from 'react-router-dom';
+import { makeStyles } from 'tss-react/mui';
 import { addItemToList, handleFormError } from '~/api';
 import { callAll, entries, getFullBookRange, mapFromList } from '~/common';
 import { useChangesetAwareIdFromUrl } from '../../../components/Changeset';
@@ -23,7 +24,7 @@ import {
   ProductInfoForCreateDocument,
 } from './CreateProduct.graphql';
 
-const useStyles = makeStyles(({ spacing }) => ({
+const useStyles = makeStyles()(({ spacing }) => ({
   root: {
     overflowY: 'auto',
     padding: spacing(4),
@@ -34,7 +35,7 @@ const useStyles = makeStyles(({ spacing }) => ({
 }));
 
 export const CreateProduct = () => {
-  const classes = useStyles();
+  const { classes } = useStyles();
   const navigate = useNavigate();
 
   const { id: engagementId, changesetId } =

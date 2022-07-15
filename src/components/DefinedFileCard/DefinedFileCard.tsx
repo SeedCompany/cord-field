@@ -8,13 +8,13 @@ import {
   Avatar,
   Card,
   CardActionArea,
-  makeStyles,
   Skeleton,
   Typography,
 } from '@mui/material';
 import { DateTime } from 'luxon';
 import { forwardRef, ReactNode } from 'react';
 import { useDropzone } from 'react-dropzone';
+import { makeStyles } from 'tss-react/mui';
 import { CreateDefinedFileVersionInput } from '~/api/schema.graphql';
 import { SecuredProp } from '~/common';
 import {
@@ -30,7 +30,7 @@ import { HugeIcon, ReportIcon } from '../Icons';
 import { Redacted } from '../Redacted';
 import { DropzoneOverlay } from '../Upload';
 
-const useStyles = makeStyles(({ palette, spacing, typography }) => ({
+const useStyles = makeStyles()(({ palette, spacing, typography }) => ({
   root: {
     flex: 1,
     position: 'relative',
@@ -121,7 +121,7 @@ const FileCardMeta = ({
   resourceType,
   text,
 }: FileCardMetaProps) => {
-  const classes = useStyles();
+  const { classes } = useStyles();
   return (
     <Typography
       className={classes.fileMeta}
@@ -145,7 +145,7 @@ const FileCardMeta = ({
 
 export const DefinedFileCard = forwardRef<any, DefinedFileCardProps>(
   function DefinedFileCard(props, ref) {
-    const classes = useStyles();
+    const { classes } = useStyles();
     const {
       label,
       resourceType,

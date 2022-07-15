@@ -4,18 +4,17 @@ import {
   AccordionDetails,
   AccordionProps,
   AccordionSummary,
-  makeStyles,
   Typography,
 } from '@mui/material';
-import clsx from 'clsx';
 import { FormState } from 'final-form';
 import { get, startCase } from 'lodash';
 import { ReactNode } from 'react';
+import { makeStyles } from 'tss-react/mui';
 import { Except } from 'type-fest';
 import { useFieldName } from '../../../components/form';
 import { ProductKey } from './ProductFormFields';
 
-export const useStyles = makeStyles(({ spacing, typography, palette }) => ({
+export const useStyles = makeStyles()(({ spacing, typography, palette }) => ({
   section: {
     '&:not(:last-child)': {
       marginBottom: spacing(2),
@@ -62,7 +61,7 @@ export const DefaultAccordion = <K extends ProductKey>({
   children,
   AccordionProps,
 }: DefaultAccordionProps<K>) => {
-  const classes = useStyles();
+  const { classes, cx } = useStyles();
   const fullName = useFieldName(name);
   const isError = !!get(errors, fullName);
   const isTouched = !!get(touched, fullName);
@@ -91,7 +90,7 @@ export const DefaultAccordion = <K extends ProductKey>({
       <AccordionSummary
         expandIcon={<ExpandMore />}
         classes={{
-          content: clsx(
+          content: cx(
             classes.accordionSummary,
             showError ? classes.error : undefined
           ),

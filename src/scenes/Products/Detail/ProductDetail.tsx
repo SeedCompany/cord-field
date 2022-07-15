@@ -1,5 +1,6 @@
 import { useQuery } from '@apollo/client';
-import { Grid, makeStyles, Typography } from '@mui/material';
+import { Grid, Typography } from '@mui/material';
+import { makeStyles } from 'tss-react/mui';
 import {
   idForUrl,
   useChangesetAwareIdFromUrl,
@@ -13,7 +14,7 @@ import { ProductDetailHeader } from './ProductDetailHeader';
 import { ProductInfo } from './ProductInfo';
 import { StepsList } from './Progress';
 
-const useStyles = makeStyles(({ spacing, breakpoints }) => ({
+const useStyles = makeStyles()(({ spacing, breakpoints }) => ({
   root: {
     flex: 1,
     overflowY: 'auto',
@@ -31,7 +32,7 @@ const useStyles = makeStyles(({ spacing, breakpoints }) => ({
 }));
 
 export const ProductDetail = () => {
-  const classes = useStyles();
+  const { classes } = useStyles();
 
   const { id, changesetId } = useChangesetAwareIdFromUrl('productId');
   const { data, error } = useQuery(ProductDetailDocument, {

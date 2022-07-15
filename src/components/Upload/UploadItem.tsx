@@ -2,15 +2,11 @@ import {
   Cancel as CancelIcon,
   CheckCircle as CheckIcon,
 } from '@mui/icons-material';
-import {
-  CircularProgress,
-  IconButton,
-  makeStyles,
-  Typography,
-} from '@mui/material';
+import { CircularProgress, IconButton, Typography } from '@mui/material';
+import { makeStyles } from 'tss-react/mui';
 import { UploadFile } from './Reducer';
 
-const useStyles = makeStyles(({ palette, spacing }) => ({
+const useStyles = makeStyles()(({ palette, spacing }) => ({
   container: {
     display: 'flex',
     justifyContent: 'space-between',
@@ -58,7 +54,7 @@ interface UploadItemProps {
 export const UploadItem = (props: UploadItemProps) => {
   const { file, onClear } = props;
   const { error, fileName, percentCompleted, uploadId, completedAt } = file;
-  const classes = useStyles();
+  const { classes } = useStyles();
 
   const progressLabel = error
     ? error.message

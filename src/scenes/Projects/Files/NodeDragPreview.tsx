@@ -1,10 +1,11 @@
-import { makeStyles, Paper } from '@mui/material';
+import { Paper } from '@mui/material';
+import { makeStyles } from 'tss-react/mui';
 import { FileNodeInfoFragment } from '../../../components/files/files.graphql';
 import { fileIcon } from '../../../components/files/fileTypes';
 import { parseFileNameAndExtension } from '../../../components/Formatters';
 import { isDirectory } from './util';
 
-const useStyles = makeStyles(({ palette, spacing }) => ({
+const useStyles = makeStyles()(({ palette, spacing }) => ({
   root: {
     display: 'flex',
     alignItems: 'center',
@@ -17,7 +18,7 @@ const useStyles = makeStyles(({ palette, spacing }) => ({
 }));
 
 export const NodeDragPreview = ({ node }: { node: FileNodeInfoFragment }) => {
-  const classes = useStyles();
+  const { classes } = useStyles();
 
   const Icon = fileIcon(isDirectory(node) ? 'directory' : node.mimeType);
   return (

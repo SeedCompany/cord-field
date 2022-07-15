@@ -1,11 +1,12 @@
-import { Card, makeStyles, Typography } from '@mui/material';
+import { Card, Typography } from '@mui/material';
+import { makeStyles } from 'tss-react/mui';
 import { getChangeset } from '~/api';
 import { IdFragment } from '~/common';
 import { List, useListQuery } from '../../../components/List';
 import { ProductCard } from '../../../components/ProductCard';
 import { ProductListDocument } from './ProductList.graphql';
 
-const useStyles = makeStyles(() => ({
+const useStyles = makeStyles()(() => ({
   root: {
     padding: 0,
     margin: 0,
@@ -15,7 +16,7 @@ const useStyles = makeStyles(() => ({
 }));
 
 export const ProductList = ({ engagement }: { engagement: IdFragment }) => {
-  const classes = useStyles();
+  const { classes } = useStyles();
 
   const list = useListQuery(ProductListDocument, {
     variables: {

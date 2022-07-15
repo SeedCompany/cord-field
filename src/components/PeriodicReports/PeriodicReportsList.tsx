@@ -1,12 +1,13 @@
-import { Breadcrumbs, makeStyles, Typography } from '@mui/material';
+import { Breadcrumbs, Typography } from '@mui/material';
 import { ReactNode } from 'react';
 import { Helmet } from 'react-helmet-async';
+import { makeStyles } from 'tss-react/mui';
 import { ReportType } from '~/api/schema.graphql';
 import { Breadcrumb } from '../Breadcrumb';
 import { PeriodicReportFragment } from './PeriodicReport.graphql';
 import { PeriodicReportsTable, ReportRow } from './PeriodicReportsTable';
 
-const useStyles = makeStyles(({ spacing, breakpoints }) => ({
+const useStyles = makeStyles()(({ spacing, breakpoints }) => ({
   root: {
     flex: 1,
     overflowY: 'auto',
@@ -34,7 +35,7 @@ export const PeriodicReportsList = ({
   reports?: readonly PeriodicReportFragment[];
   onRowClick?: (rowData: ReportRow) => void;
 }) => {
-  const classes = useStyles();
+  const { classes } = useStyles();
   const reportTypeName = `${type} Reports`;
 
   return (

@@ -1,17 +1,12 @@
 import { useQuery } from '@apollo/client';
 import { CreateNewFolder, Publish } from '@mui/icons-material';
-import {
-  Box,
-  Breadcrumbs,
-  makeStyles,
-  Skeleton,
-  Typography,
-} from '@mui/material';
+import { Box, Breadcrumbs, Skeleton, Typography } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
 import { useEffect } from 'react';
 import { useDropzone } from 'react-dropzone';
 import { Helmet } from 'react-helmet-async';
 import { useNavigate } from 'react-router-dom';
+import { makeStyles } from 'tss-react/mui';
 import { useDialog } from '../../../components/Dialog';
 import { Error } from '../../../components/Error';
 import {
@@ -51,7 +46,7 @@ type FileRowData = Pick<FileOrDirectory, 'id' | 'type' | 'name'> & {
   parent: Directory;
 };
 
-const useStyles = makeStyles(({ palette, spacing, breakpoints }) => ({
+const useStyles = makeStyles()(({ palette, spacing, breakpoints }) => ({
   dropzone: {
     overflowY: 'auto',
     position: 'relative',
@@ -87,7 +82,7 @@ const useStyles = makeStyles(({ palette, spacing, breakpoints }) => ({
 }));
 
 const ProjectFilesListWrapped = () => {
-  const classes = useStyles();
+  const { classes } = useStyles();
   const { spacing } = useTheme();
   const navigate = useNavigate();
   const { projectUrl } = useProjectId();

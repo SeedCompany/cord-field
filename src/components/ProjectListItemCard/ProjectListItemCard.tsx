@@ -1,12 +1,5 @@
-import {
-  Card,
-  CardContent,
-  Grid,
-  makeStyles,
-  Skeleton,
-  Typography,
-} from '@mui/material';
-import clsx from 'clsx';
+import { Card, CardContent, Grid, Skeleton, Typography } from '@mui/material';
+import { makeStyles } from 'tss-react/mui';
 import { ProjectStatusLabels } from '~/api/schema.graphql';
 import { ProjectListQueryVariables } from '../../scenes/Projects/List/projects.graphql';
 import { getProjectUrl } from '../../scenes/Projects/useProjectId';
@@ -18,7 +11,7 @@ import { Sensitivity } from '../Sensitivity';
 import { TogglePinButton } from '../TogglePinButton';
 import { ProjectListItemFragment } from './ProjectListItem.graphql';
 
-const useStyles = makeStyles(({ breakpoints, spacing }) => {
+const useStyles = makeStyles()(({ breakpoints, spacing }) => {
   const cardWidth = breakpoints.values.sm;
   return {
     root: {
@@ -84,11 +77,11 @@ export const ProjectListItemCard = ({
   project,
   className,
 }: ProjectListItemCardProps) => {
-  const classes = useStyles();
+  const { classes, cx } = useStyles();
   const location = project?.primaryLocation.value?.name.value;
 
   return (
-    <Card className={clsx(classes.root, className)}>
+    <Card className={cx(classes.root, className)}>
       <CardActionAreaLink
         disabled={!project}
         to={project ? getProjectUrl(project) : ''}

@@ -1,7 +1,7 @@
-import { makeStyles } from '@mui/material';
 import { Decorator } from 'final-form';
 import onFieldChange from 'final-form-calculate';
 import { Form, FormProps } from 'react-final-form';
+import { makeStyles } from 'tss-react/mui';
 import { Except, Merge } from 'type-fest';
 import {
   CreateDerivativeScriptureProduct,
@@ -22,7 +22,7 @@ import { EditPartnershipsProducingMediumsInfoFragment } from './PartnershipsProd
 import { ProductFormFragment } from './ProductForm.graphql';
 import { ProductFormFields } from './ProductFormFields';
 
-const useStyles = makeStyles(({ spacing, breakpoints }) => ({
+const useStyles = makeStyles()(({ spacing, breakpoints }) => ({
   form: {
     maxWidth: breakpoints.values.md,
   },
@@ -105,7 +105,7 @@ export const ProductForm = ({
   engagement,
   ...props
 }: ProductFormProps) => {
-  const classes = useStyles();
+  const { classes } = useStyles();
 
   return (
     <Form<ProductFormValues> decorators={decorators} {...props}>

@@ -1,4 +1,4 @@
-import { makeStyles } from '@mui/material';
+import { makeStyles } from 'tss-react/mui';
 import { Home } from '@mui/icons-material';
 import { CordIcon } from './CordIcon';
 import { HugeIcon } from './HugeIcon';
@@ -9,7 +9,7 @@ export default {
 
 export const IconProperty = () => <HugeIcon icon={Home} />;
 
-const useStyles = makeStyles(() => ({
+const useStyles = makeStyles()(() => ({
   cordIcon: {
     // shift cord icon so circle is even. Human eyes are tricky lol
     marginLeft: -4,
@@ -17,7 +17,7 @@ const useStyles = makeStyles(() => ({
 }));
 
 export const CustomChildren = () => {
-  const classes = useStyles();
+  const { classes } = useStyles();
   return (
     <HugeIcon>
       <CordIcon className={classes.cordIcon} />

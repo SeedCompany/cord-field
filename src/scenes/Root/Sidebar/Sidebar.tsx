@@ -4,19 +4,19 @@ import {
   ListItemIcon,
   ListItemText,
   ListSubheader,
-  makeStyles,
   Paper,
   SvgIconProps,
 } from '@mui/material';
 import { ThemeProvider } from '@mui/material/styles';
 import { ComponentType } from 'react';
+import { makeStyles } from 'tss-react/mui';
 import { PeopleJoinedIcon } from '../../../components/Icons';
 import { ListItemLink, ListItemLinkProps } from '../../../components/Routing';
 import { CreateButtonMenu } from '../Creates';
 import { sidebarTheme } from './sidebar.theme';
 import { SidebarHeader } from './SidebarHeader';
 
-const useStyles = makeStyles(({ spacing }) => ({
+const useStyles = makeStyles()(({ spacing }) => ({
   root: {
     maxWidth: 248,
     overflowY: 'auto',
@@ -31,7 +31,7 @@ const useStyles = makeStyles(({ spacing }) => ({
 }));
 
 export const Sidebar = () => {
-  const classes = useStyles();
+  const { classes } = useStyles();
 
   const navList = (
     <List

@@ -3,10 +3,11 @@ import {
   Close as CloseIcon,
   Edit as EditIcon,
 } from '@mui/icons-material';
-import { Alert, AlertTitle, makeStyles, Tooltip } from '@mui/material';
+import { Alert, AlertTitle, Tooltip } from '@mui/material';
+import { makeStyles } from 'tss-react/mui';
 import { IconButton } from '../IconButton';
 
-const useStyles = makeStyles(({ spacing, breakpoints }) => ({
+const useStyles = makeStyles()(({ spacing, breakpoints }) => ({
   root: {
     maxWidth: breakpoints.values.md,
     margin: spacing(0, 2),
@@ -20,7 +21,7 @@ interface Props {
 }
 
 export const ChangesetBanner = (props: Props) => {
-  const classes = useStyles();
+  const { classes } = useStyles();
 
   if (!props.changesetId) {
     return null;

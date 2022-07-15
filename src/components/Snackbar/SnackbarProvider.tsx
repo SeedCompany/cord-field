@@ -1,9 +1,9 @@
 import { Report as ErrorIcon } from '@mui/icons-material';
-import { makeStyles } from '@mui/material';
 import { SnackbarProvider as BaseSnackbarProvider } from 'notistack';
+import { makeStyles } from 'tss-react/mui';
 import { ChildrenProp } from '~/common';
 
-const useStyles = makeStyles(({ palette }) => ({
+const useStyles = makeStyles()(({ palette }) => ({
   variantSuccess: {
     backgroundColor: palette.success.main,
   },
@@ -23,7 +23,7 @@ const icons = {
 };
 
 export const SnackbarProvider = ({ children }: ChildrenProp) => {
-  const classes = useStyles();
+  const { classes } = useStyles();
   return (
     <BaseSnackbarProvider
       classes={classes}

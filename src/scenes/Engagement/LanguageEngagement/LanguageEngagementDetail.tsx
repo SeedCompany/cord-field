@@ -1,5 +1,6 @@
 import { Add } from '@mui/icons-material';
-import { Card, Grid, makeStyles, Tooltip, Typography } from '@mui/material';
+import { Card, Grid, Tooltip, Typography } from '@mui/material';
+import { makeStyles } from 'tss-react/mui';
 import { Fab } from '../../../components/Fab';
 import { ResponsiveDivider } from '../../../components/ResponsiveDivider';
 import { Link } from '../../../components/Routing';
@@ -10,7 +11,7 @@ import { DatesForm } from './DatesForm';
 import { LanguageEngagementHeader } from './Header';
 import { PlanningSpreadsheet, ProgressReports } from './ProgressAndPlanning';
 
-const useStyles = makeStyles(({ spacing, breakpoints }) => ({
+const useStyles = makeStyles()(({ spacing, breakpoints }) => ({
   root: {
     flex: 1,
     overflowY: 'auto',
@@ -39,7 +40,7 @@ const useStyles = makeStyles(({ spacing, breakpoints }) => ({
 }));
 
 export const LanguageEngagementDetail = ({ engagement }: EngagementQuery) => {
-  const classes = useStyles();
+  const { classes } = useStyles();
 
   if (engagement.__typename !== 'LanguageEngagement') {
     return null; // easiest for typescript

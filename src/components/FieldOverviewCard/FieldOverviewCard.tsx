@@ -4,21 +4,20 @@ import {
   CardActionArea,
   CardActions,
   Grid,
-  makeStyles,
   Skeleton,
   Tooltip,
   TooltipProps,
   Typography,
 } from '@mui/material';
-import clsx from 'clsx';
 import { To } from 'history';
 import { DateTime } from 'luxon';
 import { ReactNode } from 'react';
+import { makeStyles } from 'tss-react/mui';
 import { useDateTimeFormatter } from '../Formatters';
 import { HugeIcon, HugeIconProps } from '../Icons';
 import { ButtonLink, CardActionAreaLink } from '../Routing';
 
-const useStyles = makeStyles(({ spacing, palette }) => ({
+const useStyles = makeStyles()(({ spacing, palette }) => ({
   root: {
     flex: 1,
     height: '100%',
@@ -83,7 +82,7 @@ export const FieldOverviewCard = ({
   title,
   viewLabel: buttonLabel,
 }: FieldOverviewCardProps) => {
-  const classes = useStyles();
+  const { classes, cx } = useStyles();
   const dateTimeFormatter = useDateTimeFormatter();
 
   const showData = !loading && !redacted;
@@ -91,7 +90,7 @@ export const FieldOverviewCard = ({
   const Btn = data?.to ? ButtonLink : Button;
 
   const card = (
-    <Card className={clsx(classes.root, className)}>
+    <Card className={cx(classes.root, className)}>
       <ActionArea
         disabled={!data || redacted}
         to={data?.to ?? ''}
@@ -106,7 +105,7 @@ export const FieldOverviewCard = ({
           <Typography
             color="initial"
             variant="h1"
-            className={clsx({
+            className={cx({
               [classes.emptyValue]: data && !data.value,
             })}
           >

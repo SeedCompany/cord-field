@@ -3,19 +3,14 @@ import {
   MoreVert,
   NotificationsNone,
 } from '@mui/icons-material';
-import {
-  Card,
-  IconButton,
-  makeStyles,
-  MenuProps,
-  Typography,
-} from '@mui/material';
+import { Card, IconButton, MenuProps, Typography } from '@mui/material';
 import { useState } from 'react';
+import { makeStyles } from 'tss-react/mui';
 import { useSession } from '../../../../components/Session';
 import { ProfileMenu } from '../ProfileMenu';
 import { UserActionsMenu } from '../UserActionsMenu';
 
-const useStyles = makeStyles(({ typography, spacing }) => ({
+const useStyles = makeStyles()(({ typography, spacing }) => ({
   card: {
     flexShrink: 0,
     display: 'flex',
@@ -29,7 +24,7 @@ const useStyles = makeStyles(({ typography, spacing }) => ({
 }));
 
 export const ProfileToolbar = () => {
-  const classes = useStyles();
+  const { classes } = useStyles();
   const { session } = useSession();
   const [profileAnchor, setProfileAnchor] = useState<MenuProps['anchorEl']>();
   const [actionsAnchor, setActionsAnchor] = useState<MenuProps['anchorEl']>();

@@ -1,15 +1,16 @@
 import { SkipNextRounded } from '@mui/icons-material';
-import { Grid, makeStyles, Skeleton, Typography } from '@mui/material';
+import { Grid, Skeleton, Typography } from '@mui/material';
 import { omit } from 'lodash';
 import { DateTime } from 'luxon';
 import { ReactNode } from 'react';
+import { makeStyles } from 'tss-react/mui';
 import { FormattedDate, FormattedDateTime } from '../Formatters';
 import { PaperTooltip } from '../PaperTooltip';
 import { Redacted } from '../Redacted';
 import { SecuredPeriodicReportFragment } from './PeriodicReport.graphql';
 import { ReportLabel } from './ReportLabel';
 
-const useStyles = makeStyles(() => ({
+const useStyles = makeStyles()(() => ({
   label: {
     whiteSpace: 'nowrap',
   },
@@ -24,7 +25,7 @@ export const ReportInfo = ({
   report?: SecuredPeriodicReportFragment;
   className?: string;
 }) => {
-  const classes = useStyles();
+  const { classes } = useStyles();
 
   const file = report?.value?.reportFile;
   const section = (

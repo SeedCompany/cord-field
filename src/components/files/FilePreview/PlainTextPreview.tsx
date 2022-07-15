@@ -1,9 +1,9 @@
-import { makeStyles } from '@mui/material';
 import { useCallback, useEffect, useState } from 'react';
+import { makeStyles } from 'tss-react/mui';
 import { PreviewerProps } from './FilePreview';
 import { PreviewLoading } from './PreviewLoading';
 
-const useStyles = makeStyles(() => ({
+const useStyles = makeStyles()(() => ({
   paragraph: {
     whiteSpace: 'pre-wrap',
     fontFamily: "'Roboto Mono', Consolas, Menlo, Monaco, Courier, monospace",
@@ -13,7 +13,7 @@ const useStyles = makeStyles(() => ({
 export const PlainTextPreview = (props: PreviewerProps) => {
   const { file, previewLoading, setPreviewLoading, setPreviewError } = props;
   const [html, setHtml] = useState<JSX.Element | JSX.Element[] | null>(null);
-  const classes = useStyles();
+  const { classes } = useStyles();
 
   const renderHtml = useCallback(
     async (file: File) => {

@@ -4,12 +4,12 @@ import {
   Card,
   CardActions,
   Divider,
-  makeStyles,
   Tooltip,
   Typography,
 } from '@mui/material';
 import { useState } from 'react';
 import { useDropzone } from 'react-dropzone';
+import { makeStyles } from 'tss-react/mui';
 import { ReportType } from '~/api/schema.graphql';
 import { Many, simpleSwitch } from '~/common';
 import {
@@ -28,7 +28,7 @@ import { SecuredPeriodicReportFragment } from './PeriodicReport.graphql';
 import { ReportInfo } from './ReportInfo';
 import { ReportLabel } from './ReportLabel';
 
-const useStyles = makeStyles(({ spacing }) => ({
+const useStyles = makeStyles()(({ spacing }) => ({
   root: {
     flex: 1,
     height: '100%',
@@ -73,7 +73,7 @@ export interface PeriodicReportCardProps {
 
 const PeriodicReportCardInContext = (props: PeriodicReportCardProps) => {
   const { type, dueCurrently, dueNext, disableIcon, hasDetailPage } = props;
-  const classes = useStyles();
+  const { classes } = useStyles();
 
   const currentFile = dueCurrently?.value?.reportFile;
   const needsUpload =

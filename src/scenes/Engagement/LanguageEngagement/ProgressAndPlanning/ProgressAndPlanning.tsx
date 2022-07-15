@@ -1,6 +1,7 @@
 import { useMutation } from '@apollo/client';
-import { makeStyles, Tooltip, Typography } from '@mui/material';
+import { Tooltip, Typography } from '@mui/material';
 import { pick } from 'lodash';
+import { makeStyles } from 'tss-react/mui';
 import {
   ProductMethodology as Methodology,
   ProductApproachLabels,
@@ -16,7 +17,7 @@ import { PeriodicReportCard } from '../../../../components/PeriodicReports';
 import { UploadLanguageEngagementPnpDocument as UploadPnp } from '../../Files';
 import { ProgressAndPlanningFragment } from './ProgressAndPlanning.graphql';
 
-export const useStyles = makeStyles(({ spacing, typography }) => ({
+const useStyles = makeStyles()(({ spacing, typography }) => ({
   section: {
     '&:not(:last-child)': {
       marginBottom: spacing(2),
@@ -48,7 +49,7 @@ export const PlanningSpreadsheet = ({ engagement }: Props) => {
     // Functions cannot be passed directly here so wrap in object
     useDialog<{ submit: (next: HandleUploadCompletedFunction) => void }>();
   const [updateEngagement] = useMutation(UploadPnp);
-  const classes = useStyles();
+  const { classes } = useStyles();
 
   return (
     <FileActionsContextProvider>

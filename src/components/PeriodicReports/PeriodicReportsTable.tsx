@@ -1,10 +1,10 @@
 import { SkipNextRounded as SkipIcon } from '@mui/icons-material';
-import { makeStyles } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
 import { Many, without } from 'lodash';
 import { DateTime } from 'luxon';
 import { useSnackbar } from 'notistack';
 import { useState } from 'react';
+import { makeStyles } from 'tss-react/mui';
 import { Except } from 'type-fest';
 import { CalendarDate } from '~/common';
 import { SkipPeriodicReportDialog } from '../../scenes/Projects/Reports/SkipPeriodicReportDialog';
@@ -35,7 +35,7 @@ export interface ReportRow {
   modifiedAt?: DateTime;
 }
 
-const useStyles = makeStyles(() => ({
+const useStyles = makeStyles()(() => ({
   label: {
     display: 'inline-flex',
     alignItems: 'center',
@@ -73,7 +73,7 @@ export const PeriodicReportsTableInContext = ({
     })
   );
 
-  const classes = useStyles();
+  const { classes } = useStyles();
   const theme = useTheme();
 
   const columns = [

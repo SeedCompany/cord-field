@@ -1,13 +1,8 @@
 import { useQuery } from '@apollo/client';
-import {
-  Breadcrumbs,
-  Grid,
-  makeStyles,
-  Skeleton,
-  Typography,
-} from '@mui/material';
+import { Breadcrumbs, Grid, Skeleton, Typography } from '@mui/material';
 import { useEffect } from 'react';
 import { Helmet } from 'react-helmet-async';
+import { makeStyles } from 'tss-react/mui';
 import { Breadcrumb } from '../../../components/Breadcrumb';
 import { DefinedFileCard } from '../../../components/DefinedFileCard';
 import { Error } from '../../../components/Error';
@@ -23,7 +18,7 @@ import {
 } from './ProjectBudget.graphql';
 import { ProjectBudgetRecords } from './ProjectBudgetRecords';
 
-const useStyles = makeStyles(({ breakpoints, spacing }) => ({
+const useStyles = makeStyles()(({ breakpoints, spacing }) => ({
   root: {
     overflowY: 'auto',
   },
@@ -44,7 +39,7 @@ const useStyles = makeStyles(({ breakpoints, spacing }) => ({
 }));
 
 export const ProjectBudget = () => {
-  const classes = useStyles();
+  const { classes } = useStyles();
   const { projectId, changesetId } = useProjectId();
   const formatCurrency = useCurrencyFormatter();
 

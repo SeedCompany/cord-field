@@ -1,6 +1,7 @@
 import { DateRange } from '@mui/icons-material';
-import { Breadcrumbs, Grid, makeStyles, Typography } from '@mui/material';
+import { Breadcrumbs, Grid, Typography } from '@mui/material';
 import { Helmet } from 'react-helmet-async';
+import { makeStyles } from 'tss-react/mui';
 import {
   EngagementStatusLabels,
   InternshipPositionLabels,
@@ -34,7 +35,7 @@ import { EngagementQuery } from '../Engagement.graphql';
 import { UploadInternshipEngagementGrowthPlanDocument } from '../Files';
 import { MentorCard } from './MentorCard';
 
-const useStyles = makeStyles(
+const useStyles = makeStyles()(
   ({ spacing, breakpoints, palette, typography }) => ({
     root: {
       flex: 1,
@@ -57,7 +58,7 @@ const useStyles = makeStyles(
 );
 
 export const InternshipEngagementDetail = ({ engagement }: EngagementQuery) => {
-  const classes = useStyles();
+  const { classes } = useStyles();
 
   const [editState, show, editField] =
     useDialog<Many<EditableEngagementField>>();

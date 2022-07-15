@@ -3,10 +3,9 @@ import {
   CardActions,
   CardContent,
   Grid,
-  makeStyles,
   Typography,
 } from '@mui/material';
-import clsx from 'clsx';
+import { makeStyles } from 'tss-react/mui';
 import {
   EngagementStatusLabels,
   InternshipPositionLabels,
@@ -18,7 +17,7 @@ import { FormattedDate } from '../Formatters';
 import { ButtonLink, CardActionAreaLink } from '../Routing';
 import { InternshipEngagementListItemFragment } from './InternshipEngagementListItem.graphql';
 
-const useStyles = makeStyles(({ spacing }) => ({
+const useStyles = makeStyles()(({ spacing }) => ({
   root: {
     width: '100%',
   },
@@ -61,7 +60,7 @@ export type InternshipEngagementListItemCardProps =
 export const InternshipEngagementListItemCard = (
   props: InternshipEngagementListItemCardProps
 ) => {
-  const classes = useStyles();
+  const { classes, cx } = useStyles();
 
   const fullName = props.intern.value?.fullName;
   const endDate = getEndDate(props);
@@ -69,7 +68,7 @@ export const InternshipEngagementListItemCard = (
   const country = props.countryOfOrigin.value?.name.value;
 
   return (
-    <Card className={clsx(classes.root, props.className)}>
+    <Card className={cx(classes.root, props.className)}>
       <CardActionAreaLink
         to={`/engagements/${idForUrl(props)}`}
         className={classes.card}

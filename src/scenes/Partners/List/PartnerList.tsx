@@ -3,13 +3,13 @@ import {
   type Tabs as __Tabs,
   Divider,
   Grid,
-  makeStyles,
   Skeleton,
   Tab,
   Typography,
 } from '@mui/material';
 import { useRef } from 'react';
 import { Helmet } from 'react-helmet-async';
+import { makeStyles } from 'tss-react/mui';
 import { simpleSwitch } from '~/common';
 import { useNumberFormatter } from '../../../components/Formatters';
 import { ContentContainer } from '../../../components/Layout';
@@ -22,7 +22,7 @@ import { PartnerSort, PartnerSortOptions } from './PartnerSortOptions';
 
 const TabList = ActualTabList as typeof __Tabs;
 
-const useStyles = makeStyles(({ spacing, breakpoints }) => ({
+const useStyles = makeStyles()(({ spacing, breakpoints }) => ({
   options: {
     margin: spacing(3, 0),
   },
@@ -57,7 +57,7 @@ export const PartnerList = () => {
     },
   });
 
-  const classes = useStyles();
+  const { classes } = useStyles();
   const formatNumber = useNumberFormatter();
   const scrollRef = useRef<HTMLElement>(null);
 

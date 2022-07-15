@@ -6,16 +6,15 @@ import {
   ListItemIcon,
   ListItemSecondaryAction,
   ListItemText,
-  makeStyles,
   Typography,
 } from '@mui/material';
-import clsx from 'clsx';
 import { useDropzone } from 'react-dropzone';
+import { makeStyles } from 'tss-react/mui';
 import { Except } from 'type-fest';
 import { fileIcon } from '../files/fileTypes';
 import { FieldConfig, useField } from './useField';
 
-const useStyles = makeStyles(({ palette, spacing }) => {
+const useStyles = makeStyles()(({ palette, spacing }) => {
   const dropzoneHoverStyle = {
     backgroundColor: palette.grey[200],
     borderColor: palette.primary.main,
@@ -54,7 +53,7 @@ export function DropzoneField({
   name: nameProp,
   className,
 }: DropzoneFieldProps) {
-  const classes = useStyles();
+  const { classes, cx } = useStyles();
 
   const {
     input: { name, onChange, value: currentFiles },
@@ -91,9 +90,9 @@ export function DropzoneField({
   });
 
   return (
-    <div className={clsx(classes.root, className)}>
+    <div className={cx(classes.root, className)}>
       <div
-        className={clsx(classes.dropzone, {
+        className={cx(classes.dropzone, {
           [classes.active]: isDragActive,
         })}
         {...getRootProps()}

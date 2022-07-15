@@ -1,8 +1,9 @@
-import { makeStyles, Typography } from '@mui/material';
+import { Typography } from '@mui/material';
+import { makeStyles } from 'tss-react/mui';
 import { ButtonLink } from '../../../components/Routing';
 import { AuthContent } from '../AuthContent';
 
-const useStyles = makeStyles(({ spacing }) => ({
+const useStyles = makeStyles()(({ spacing }) => ({
   title: {
     marginBottom: spacing(3),
   },
@@ -12,7 +13,7 @@ const useStyles = makeStyles(({ spacing }) => ({
 }));
 
 export const ForgotPasswordSuccess = ({ email }: { email: string }) => {
-  const classes = useStyles();
+  const { classes } = useStyles();
   return (
     <AuthContent>
       <Typography variant="h3" align="center" className={classes.title}>

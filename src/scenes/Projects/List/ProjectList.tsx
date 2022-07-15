@@ -3,7 +3,6 @@ import {
   type Tabs as __Tabs,
   Divider,
   Grid,
-  makeStyles,
   Skeleton,
   Tab,
   Typography,
@@ -11,6 +10,7 @@ import {
 import { omit, pickBy } from 'lodash';
 import { useRef } from 'react';
 import { Helmet } from 'react-helmet-async';
+import { makeStyles } from 'tss-react/mui';
 import { Project } from '~/api/schema.graphql';
 import { simpleSwitch } from '~/common';
 import { FilterButtonDialog } from '../../../components/Filter';
@@ -28,7 +28,7 @@ import { ProjectSortOptions } from './ProjectSortOptions';
 
 const TabList = ActualTabList as typeof __Tabs;
 
-const useStyles = makeStyles(({ spacing, breakpoints }) => ({
+const useStyles = makeStyles()(({ spacing, breakpoints }) => ({
   options: {
     margin: spacing(3, 0),
   },
@@ -66,7 +66,7 @@ export const ProjectList = () => {
     },
   });
 
-  const classes = useStyles();
+  const { classes } = useStyles();
   const formatNumber = useNumberFormatter();
   const scrollRef = useRef<HTMLElement>(null);
 

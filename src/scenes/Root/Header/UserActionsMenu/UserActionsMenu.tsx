@@ -5,15 +5,15 @@ import {
 import {
   ListItemIcon,
   ListItemText,
-  makeStyles,
   Menu,
   MenuItem,
   MenuProps,
 } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
+import { makeStyles } from 'tss-react/mui';
 import { useUpload, useUploadManager } from '../../../../components/Upload';
 
-const useStyles = makeStyles(({ spacing }) => ({
+const useStyles = makeStyles()(({ spacing }) => ({
   menu: {
     minWidth: 200,
   },
@@ -27,7 +27,7 @@ const useStyles = makeStyles(({ spacing }) => ({
 }));
 
 export const UserActionsMenu = (props: Partial<MenuProps>) => {
-  const classes = useStyles();
+  const { classes } = useStyles();
   const { spacing } = useTheme();
   const { isManagerOpen, setIsManagerOpen } = useUploadManager();
   const { removeCompletedUploads } = useUpload();

@@ -1,14 +1,14 @@
 import { VerifiedUserOutlined } from '@mui/icons-material';
-import { Chip, makeStyles, Skeleton, Typography } from '@mui/material';
+import { Chip, Skeleton, Typography } from '@mui/material';
 import { grey } from '@mui/material/colors';
-import clsx from 'clsx';
 import { meanBy } from 'lodash';
+import { makeStyles } from 'tss-react/mui';
 import { Sensitivity as SensitivityType } from '~/api/schema.graphql';
 
 const possible: SensitivityType[] = ['Low', 'Medium', 'High'];
 const avgLength = Math.round(meanBy(possible, (s) => s.length));
 
-const useStyles = makeStyles(({ palette, spacing }) => ({
+const useStyles = makeStyles()(({ palette, spacing }) => ({
   iconWrapper: {
     display: 'flex',
     alignItems: 'center',
@@ -63,7 +63,7 @@ export const Sensitivity = ({
   loading,
   className,
 }: SensitivityProps) => {
-  const classes = useStyles();
+  const { classes, cx } = useStyles();
 
   return (
     <div className={className}>
@@ -73,10 +73,7 @@ export const Sensitivity = ({
       </div>
       <Chip
         classes={{ label: classes.chipLabel }}
-        className={clsx(
-          classes.chip,
-          !loading && value ? classes[value] : null
-        )}
+        className={cx(classes.chip, !loading && value ? classes[value] : null)}
         size="small"
         label={
           loading ? (

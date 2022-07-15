@@ -1,18 +1,13 @@
 import { Add } from '@mui/icons-material';
-import {
-  Button,
-  CardActionArea,
-  CardContent,
-  makeStyles,
-  Typography,
-} from '@mui/material';
+import { Button, CardActionArea, CardContent, Typography } from '@mui/material';
 import { ReactElement, ReactNode } from 'react';
+import { makeStyles } from 'tss-react/mui';
 import { square } from '~/common';
 import { Avatar } from '../../../../components/Avatar';
 import { UserListItemCardPortrait as UserCard } from '../../../../components/UserListItemCard';
 import { MentorCardFragment } from './MentorCard.graphql';
 
-const useStyles = makeStyles(({ palette }) => ({
+const useStyles = makeStyles()(({ palette }) => ({
   root: {
     height: '100%',
     display: 'flex',
@@ -44,7 +39,7 @@ export interface MentorCardProps {
 }
 
 export const MentorCard = ({ data, onEdit, wrap }: MentorCardProps) => {
-  const classes = useStyles();
+  const { classes } = useStyles();
 
   if (data?.canRead === false) {
     return null;

@@ -1,8 +1,9 @@
-import { makeStyles, SvgIconProps } from '@mui/material';
+import { SvgIconProps } from '@mui/material';
 import { cloneElement, isValidElement, ReactElement } from 'react';
+import { makeStyles } from 'tss-react/mui';
 import { Avatar, AvatarProps } from '../Avatar';
 
-const useStyles = makeStyles(({ palette }) => ({
+const useStyles = makeStyles()(({ palette }) => ({
   root: {
     width: 64,
     height: 64,
@@ -19,7 +20,7 @@ export interface HugeIconProps extends AvatarProps {
 }
 
 export const HugeIcon = ({ icon: Icon, children, ...rest }: HugeIconProps) => {
-  const classes = useStyles();
+  const { classes } = useStyles();
   const wrap = (el: ReactElement<SvgIconProps>) =>
     cloneElement(el, {
       fontSize: 'large',

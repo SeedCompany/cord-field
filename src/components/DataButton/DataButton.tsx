@@ -1,16 +1,11 @@
-import {
-  Button,
-  ButtonProps,
-  makeStyles,
-  Skeleton,
-  TooltipProps,
-} from '@mui/material';
+import { Button, ButtonProps, Skeleton, TooltipProps } from '@mui/material';
 import { isFunction } from 'lodash';
 import { ReactNode } from 'react';
+import { makeStyles } from 'tss-react/mui';
 import { SecuredProp } from '~/common';
 import { Redacted } from '../Redacted';
 
-const useStyles = makeStyles(() => ({
+const useStyles = makeStyles()(() => ({
   buttonLoading: {
     maxWidth: 'initial',
   },
@@ -31,7 +26,7 @@ export const DataButton = <T extends any>({
   children: ((value: T) => ReactNode) | ReactNode;
   empty?: ReactNode;
 }) => {
-  const classes = useStyles();
+  const { classes } = useStyles();
   const showData = !loading && (secured ? secured.canRead : true);
 
   const data = isFunction(children)

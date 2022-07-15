@@ -3,12 +3,13 @@ import {
   IndeterminateCheckBox,
   NotInterested,
 } from '@mui/icons-material';
-import { makeStyles, Skeleton, Typography } from '@mui/material';
+import { Skeleton, Typography } from '@mui/material';
+import { makeStyles } from 'tss-react/mui';
 import { Redacted } from '../../../../components/Redacted';
 import { Link } from '../../../../components/Routing';
 import { FirstScriptureFragment } from './FirstScripture.graphql';
 
-const useStyles = makeStyles(({ spacing }) => ({
+const useStyles = makeStyles()(({ spacing }) => ({
   root: {
     display: 'flex',
     alignItems: 'center',
@@ -22,7 +23,7 @@ const useStyles = makeStyles(({ spacing }) => ({
 }));
 
 export const FirstScripture = ({ data }: { data?: FirstScriptureFragment }) => {
-  const classes = useStyles();
+  const { classes } = useStyles();
 
   if (!data) {
     return (

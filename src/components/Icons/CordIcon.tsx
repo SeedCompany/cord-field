@@ -1,13 +1,14 @@
-import { makeStyles, SvgIcon, SvgIconProps } from '@mui/material';
+import { SvgIcon, SvgIconProps } from '@mui/material';
+import { makeStyles } from 'tss-react/mui';
 
-const useStyles = makeStyles(() => ({
+const useStyles = makeStyles()(() => ({
   root: {
     color: '#409E04',
   },
 }));
 
 export const CordIcon = ({ classes: classesProp, ...rest }: SvgIconProps) => {
-  const classes = useStyles();
+  const { classes } = useStyles();
   return (
     <SvgIcon
       classes={{ root: classes.root, ...classesProp }}

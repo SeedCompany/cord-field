@@ -1,11 +1,11 @@
-import { makeStyles, Skeleton, Typography } from '@mui/material';
-import clsx from 'clsx';
+import { Skeleton, Typography } from '@mui/material';
 import { useState } from 'react';
+import { makeStyles } from 'tss-react/mui';
 import { CalendarDate, Nullable, SecuredProp } from '~/common';
 import { useDateFormatter } from '../../../components/Formatters';
 import { Redacted } from '../../../components/Redacted';
 
-const useStyles = makeStyles(({ palette, spacing }) => ({
+const useStyles = makeStyles()(({ palette, spacing }) => ({
   root: {
     padding: spacing(2),
     borderRadius: 100,
@@ -37,7 +37,7 @@ interface LargeDateProps {
 }
 
 export const LargeDate = ({ date, className }: LargeDateProps) => {
-  const classes = useStyles();
+  const { classes, cx } = useStyles();
   const formatDate = useDateFormatter();
   const [placeholderNow] = useState(() => CalendarDate.local());
 
@@ -45,7 +45,7 @@ export const LargeDate = ({ date, className }: LargeDateProps) => {
     <Typography
       color="primary"
       variant="h2"
-      className={clsx(
+      className={cx(
         classes.root,
         !date || !date.canRead ? null : classes.loaded,
         className
@@ -63,7 +63,7 @@ export const LargeDate = ({ date, className }: LargeDateProps) => {
               info="You don't have permission to view this date"
               SkeletonProps={{
                 variant: 'rectangular',
-                className: clsx(classes.skeleton, classes.redacted),
+                className: cx(classes.skeleton, classes.redacted),
               }}
             />
           ) : null}

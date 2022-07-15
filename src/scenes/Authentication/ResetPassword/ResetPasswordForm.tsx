@@ -1,6 +1,7 @@
-import { makeStyles, Typography } from '@mui/material';
+import { Typography } from '@mui/material';
 import { Decorator, Mutator } from 'final-form';
 import { Form, FormProps } from 'react-final-form';
+import { makeStyles } from 'tss-react/mui';
 import {
   blurOnSubmit,
   focusFirstFieldWithSubmitError,
@@ -11,7 +12,7 @@ import {
 import { Link } from '../../../components/Routing';
 import { AuthContent } from '../AuthContent';
 
-const useStyles = makeStyles(({ spacing }) => ({
+const useStyles = makeStyles()(({ spacing }) => ({
   title: {
     marginBottom: spacing(3),
   },
@@ -38,7 +39,7 @@ export type ResetPasswordFormProps = Pick<
 >;
 
 export const ResetPasswordForm = (props: ResetPasswordFormProps) => {
-  const classes = useStyles();
+  const { classes } = useStyles();
 
   return (
     <AuthContent>

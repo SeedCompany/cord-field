@@ -1,9 +1,9 @@
-import { Grid, makeStyles, Typography } from '@mui/material';
+import { Grid, Typography } from '@mui/material';
 import { alpha as fade } from '@mui/material/styles';
-import clsx from 'clsx';
 import { ReactNode } from 'react';
+import { makeStyles } from 'tss-react/mui';
 
-const useStyles = makeStyles(({ palette, shape, spacing }) => ({
+const useStyles = makeStyles()(({ palette, shape, spacing }) => ({
   diff: {
     marginTop: spacing(0.5),
   },
@@ -31,7 +31,7 @@ export const PropertyDiff = <T extends any>({
   current: T;
   labelBy?: (item: T) => ReactNode;
 }) => {
-  const classes = useStyles();
+  const { classes, cx } = useStyles();
   return (
     <Grid
       container
@@ -40,14 +40,14 @@ export const PropertyDiff = <T extends any>({
       className={classes.diff}
     >
       <Typography
-        className={clsx(classes.diffItem, classes.previous)}
+        className={cx(classes.diffItem, classes.previous)}
         gutterBottom
         display="inline"
       >
         {labelBy ? labelBy(previous) : (previous as ReactNode)}
       </Typography>
       <Typography
-        className={clsx(classes.diffItem, classes.current)}
+        className={cx(classes.diffItem, classes.current)}
         display="inline"
       >
         {labelBy ? labelBy(current) : (current as ReactNode)}

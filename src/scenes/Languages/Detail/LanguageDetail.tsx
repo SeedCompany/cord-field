@@ -1,8 +1,9 @@
 import { useMutation, useQuery } from '@apollo/client';
 import { Add, Edit } from '@mui/icons-material';
-import { Grid, makeStyles, Skeleton, Tooltip, Typography } from '@mui/material';
+import { Grid, Skeleton, Tooltip, Typography } from '@mui/material';
 import { Helmet } from 'react-helmet-async';
 import { useParams } from 'react-router-dom';
+import { makeStyles } from 'tss-react/mui';
 import { removeItemFromList } from '~/api';
 import { canEditAny, listOrPlaceholders } from '~/common';
 import { BooleanProperty } from '../../../components/BooleanProperty';
@@ -36,7 +37,7 @@ import {
 import { LanguagePostList } from './LanguagePostList';
 import { LeastOfThese } from './LeastOfThese';
 
-const useStyles = makeStyles(({ spacing, palette }) => ({
+const useStyles = makeStyles()(({ spacing, palette }) => ({
   root: {
     overflowY: 'auto',
     padding: spacing(4),
@@ -70,7 +71,7 @@ const useStyles = makeStyles(({ spacing, palette }) => ({
 }));
 
 export const LanguageDetail = () => {
-  const classes = useStyles();
+  const { classes } = useStyles();
   const { languageId = '' } = useParams();
   const { data, error } = useQuery(LanguageDocument, {
     variables: { languageId },

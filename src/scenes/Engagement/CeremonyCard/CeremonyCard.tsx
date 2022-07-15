@@ -5,13 +5,12 @@ import {
   CardActions,
   CardContent,
   Grid,
-  makeStyles,
   Skeleton,
   Tooltip,
   Typography,
 } from '@mui/material';
-import clsx from 'clsx';
 import { useMemo } from 'react';
+import { makeStyles } from 'tss-react/mui';
 import { UpdateCeremonyInput } from '~/api/schema.graphql';
 import { canEditAny } from '~/common';
 import { useDialog } from '../../../components/Dialog';
@@ -26,7 +25,7 @@ import {
 import { CeremonyPlanned } from './CeremonyPlanned';
 import { LargeDate } from './LargeDate';
 
-const useStyles = makeStyles(({ spacing, typography }) => ({
+const useStyles = makeStyles()(({ spacing, typography }) => ({
   root: {
     height: '100%',
     display: 'flex',
@@ -60,7 +59,7 @@ export const CeremonyCard = ({
   const { id, type, planned, estimatedDate, actualDate } = ceremony || {};
   const loading = canRead == null;
 
-  const classes = useStyles();
+  const { classes, cx } = useStyles();
   const formatDate = useDateFormatter();
   const [updateCeremony] = useMutation(UpdateCeremonyDocument);
   const [dialogState, openDialog] = useDialog();
@@ -129,7 +128,7 @@ export const CeremonyCard = ({
             </Typography>
             <Typography
               variant="body2"
-              className={clsx(
+              className={cx(
                 classes.estimatedDate,
                 loading || !canRead || !ceremony?.estimatedDate.canRead
                   ? classes.halfWidth

@@ -1,8 +1,9 @@
-import { Box, makeStyles, Typography } from '@mui/material';
+import { Box, Typography } from '@mui/material';
+import { makeStyles } from 'tss-react/mui';
 import { UploadFile, UploadState } from './Reducer/uploadTypings';
 import { UploadItem } from './UploadItem';
 
-const useStyles = makeStyles(({ palette }) => ({
+const useStyles = makeStyles()(({ palette }) => ({
   noUploadsText: {
     color: palette.action.disabled,
   },
@@ -19,7 +20,7 @@ export const UploadItems = (props: UploadItemsProps) => {
     removeUpload,
   } = props;
   const areFilesUploading = submittedFiles.length > 0;
-  const classes = useStyles();
+  const { classes } = useStyles();
 
   // const testFile = {
   //   completedAt: undefined,

@@ -2,12 +2,12 @@ import { Edit } from '@mui/icons-material';
 import {
   Breadcrumbs,
   Grid,
-  makeStyles,
   Skeleton,
   Tooltip,
   Typography,
 } from '@mui/material';
 import { Helmet } from 'react-helmet-async';
+import { makeStyles } from 'tss-react/mui';
 import { Breadcrumb } from '../../../components/Breadcrumb';
 import { EngagementBreadcrumb } from '../../../components/EngagementBreadcrumb';
 import { Fab } from '../../../components/Fab';
@@ -16,14 +16,14 @@ import { Redacted } from '../../../components/Redacted';
 import { Link } from '../../../components/Routing';
 import { ProductDetailFragment as Product } from './ProductDetail.graphql';
 
-const useStyles = makeStyles(() => ({
+const useStyles = makeStyles()(() => ({
   nameRedacted: {
     width: '50%',
   },
 }));
 
 export const ProductDetailHeader = ({ product }: { product?: Product }) => {
-  const classes = useStyles();
+  const { classes } = useStyles();
 
   const language = product?.engagement.language.value;
   const langName = language?.name.value ?? language?.displayName.value;

@@ -1,12 +1,7 @@
 import { DateRange, Edit } from '@mui/icons-material';
-import {
-  Breadcrumbs,
-  Grid,
-  makeStyles,
-  Tooltip,
-  Typography,
-} from '@mui/material';
+import { Breadcrumbs, Grid, Tooltip, Typography } from '@mui/material';
 import { Helmet } from 'react-helmet-async';
+import { makeStyles } from 'tss-react/mui';
 import { EngagementStatusLabels } from '~/api/schema.graphql';
 import { canEditAny, labelFrom, Many } from '~/common';
 import { BooleanProperty } from '../../../../components/BooleanProperty';
@@ -32,7 +27,7 @@ import {
 import { EngagementWorkflowDialog } from '../../EditEngagement/EngagementWorkflowDialog';
 import { LanguageEngagementDetailFragment } from '../LanguageEngagementDetail.graphql';
 
-const useStyles = makeStyles(({ palette, spacing }) => ({
+const useStyles = makeStyles()(({ palette, spacing }) => ({
   nameRedacted: {
     width: '50%',
   },
@@ -50,7 +45,7 @@ export const LanguageEngagementHeader = ({
 }: {
   engagement: LanguageEngagementDetailFragment & EngagementToDeleteFragment;
 }) => {
-  const classes = useStyles();
+  const { classes } = useStyles();
 
   const [editState, show, editField] =
     useDialog<Many<EditableEngagementField>>();

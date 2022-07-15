@@ -1,9 +1,9 @@
 import { useQuery } from '@apollo/client';
 import { Add, DateRange, Edit, Publish } from '@mui/icons-material';
-import { Grid, makeStyles, Skeleton, Tooltip, Typography } from '@mui/material';
-import clsx from 'clsx';
+import { Grid, Skeleton, Tooltip, Typography } from '@mui/material';
 import { useDropzone } from 'react-dropzone';
 import { Helmet } from 'react-helmet-async';
+import { makeStyles } from 'tss-react/mui';
 import { ProjectStepLabels } from '~/api/schema.graphql';
 import { labelFrom, Many } from '~/common';
 import { BudgetOverviewCard } from '../../../components/BudgetOverviewCard';
@@ -54,7 +54,7 @@ type EngagementListItem =
   | LanguageEngagementListItemFragment
   | InternshipEngagementListItemFragment;
 
-const useStyles = makeStyles(({ spacing, breakpoints, palette }) => ({
+const useStyles = makeStyles()(({ spacing, breakpoints, palette }) => ({
   root: {
     flex: 1,
     overflowY: 'auto',
@@ -103,7 +103,7 @@ const useStyles = makeStyles(({ spacing, breakpoints, palette }) => ({
 }));
 
 export const ProjectOverview = () => {
-  const classes = useStyles();
+  const { classes, cx } = useStyles();
   const { projectId, changesetId } = useProjectId();
   const beta = useBetaFeatures();
   const formatNumber = useNumberFormatter();
@@ -224,14 +224,14 @@ export const ProjectOverview = () => {
       {!error && (
         <div className={classes.main}>
           <header
-            className={clsx(
+            className={cx(
               classes.header,
               projectOverviewData ? null : classes.headerLoading
             )}
           >
             <Typography
               variant="h2"
-              className={clsx(
+              className={cx(
                 classes.name,
                 projectName ? null : classes.nameLoading
               )}

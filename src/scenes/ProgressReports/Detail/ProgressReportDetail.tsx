@@ -5,13 +5,13 @@ import {
   Card,
   CardContent,
   Grid,
-  makeStyles,
   Skeleton,
   Tooltip,
   Typography,
 } from '@mui/material';
 import { Helmet } from 'react-helmet-async';
 import { useWindowSize } from 'react-use';
+import { makeStyles } from 'tss-react/mui';
 import { Breadcrumb } from '../../../components/Breadcrumb';
 import {
   idForUrl,
@@ -34,7 +34,7 @@ import { ProgressReportCard } from './ProgressReportCard';
 import { ProgressReportDetailDocument } from './ProgressReportDetail.graphql';
 import { ProgressSummaryCard } from './ProgressSummaryCard';
 
-const useStyles = makeStyles(({ spacing, breakpoints }) => ({
+const useStyles = makeStyles()(({ spacing, breakpoints }) => ({
   root: {
     flex: 1,
     overflowY: 'auto',
@@ -54,7 +54,7 @@ const useStyles = makeStyles(({ spacing, breakpoints }) => ({
 }));
 
 export const ProgressReportDetail = () => {
-  const classes = useStyles();
+  const { classes } = useStyles();
   const { id, changesetId } = useChangesetAwareIdFromUrl('reportId');
   const windowSize = useWindowSize();
 

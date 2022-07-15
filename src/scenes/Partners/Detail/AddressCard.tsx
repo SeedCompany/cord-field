@@ -4,15 +4,15 @@ import {
   CardActionArea,
   CardActions,
   CardContent,
-  makeStyles,
   Skeleton,
   Typography,
 } from '@mui/material';
+import { makeStyles } from 'tss-react/mui';
 import { canEditAny } from '~/common';
 import { Redacted } from '../../../components/Redacted';
 import { PartnerDetailsFragment } from './PartnerDetail.graphql';
 
-const useStyles = makeStyles(({ spacing }) => ({
+const useStyles = makeStyles()(({ spacing }) => ({
   cardContent: {
     display: 'flex',
     flex: 1,
@@ -46,7 +46,7 @@ export const AddressCard = ({
   className,
   onEdit,
 }: AddressCardProps) => {
-  const classes = useStyles();
+  const { classes } = useStyles();
 
   // TODO: Implement full address saving and parsing (st, city, state, etc)
 
