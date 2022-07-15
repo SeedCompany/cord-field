@@ -1,19 +1,19 @@
-import { makeStyles } from '@mui/material';
-import clsx from 'clsx';
 import { ReactNode } from 'react';
+import { makeStyles } from 'tss-react/mui';
 import { ChangesetBadge, DiffMode } from '../Changeset';
 import { Cell, Container, Table, TableProps } from './Table';
 
 // TODO Reimplement table
 const MTableBodyRow = (..._props: any) => <div>row</div>;
 
-const useStyles = makeStyles(() => ({
+const useStyles = makeStyles()(() => ({
   table: {
+    // TODO these will probably change with new table implementation anyways
     '& > div': {
-      overflowX: 'unset !important',
+      // overflowX: 'unset !important',
     },
     '& > div > div > div': {
-      overflowY: 'unset !important',
+      // overflowY: 'unset !important',
     },
   },
 
@@ -35,7 +35,7 @@ export interface ChangesetRowData {
 
 const ChangesetAwareCell = (props: any) => {
   const { diffMode, diffInfo } = props.rowData as ChangesetRowData;
-  const classes = useStyles();
+  const { classes } = useStyles();
 
   let children = props.children;
   if (props.columnDef.renderChangesetBadge) {
@@ -56,7 +56,7 @@ const ChangesetAwareCell = (props: any) => {
 };
 
 const ChangesetAwareRow = (props: any) => {
-  const classes = useStyles();
+  const { classes, cx } = useStyles();
 
   const col = props.columns.find(
     (columnDef: any) =>
@@ -67,14 +67,14 @@ const ChangesetAwareRow = (props: any) => {
   }
 
   return (
-    <MTableBodyRow {...props} className={clsx(props.className, classes.row)} />
+    <MTableBodyRow {...props} className={cx(props.className, classes.row)} />
   );
 };
 
 const ChangesetAwareContainer = (props: any) => {
-  const classes = useStyles();
+  const { classes, cx } = useStyles();
   return (
-    <Container {...props} className={clsx(props.className, classes.table)} />
+    <Container {...props} className={cx(props.className, classes.table)} />
   );
 };
 
