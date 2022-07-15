@@ -19,7 +19,7 @@ export const DataButton = <T extends any>({
   children,
   startIcon,
   ...props
-}: ButtonProps & {
+}: Omit<ButtonProps, 'children'> & {
   loading?: boolean;
   secured?: SecuredProp<T>;
   redacted?: TooltipProps['title'];
