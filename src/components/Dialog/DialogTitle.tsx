@@ -1,42 +1,32 @@
 import { Cancel } from '@mui/icons-material';
 import {
-  createStyles,
   Divider,
   IconButton,
   DialogTitle as MuiDialogTitle,
-  Theme,
   Typography,
-  withStyles,
-  WithStyles,
 } from '@mui/material';
 
-const styles = (theme: Theme) =>
-  createStyles({
-    root: {
-      display: 'flex',
-      alignItems: 'center',
-      justifyContent: 'space-between',
-      padding: theme.spacing(2, 2, 2, 3),
-    },
-    title: {},
-  });
-
-export interface DialogTitleProps extends WithStyles<typeof styles> {
+export interface DialogTitleProps {
   id?: string;
   children: React.ReactNode;
   onClose?: () => void;
 }
 
-export const DialogTitle = withStyles(styles, {
-  classNamePrefix: 'DialogTitle',
-})((props: DialogTitleProps) => {
-  const { children, classes, onClose, ...other } = props;
+export const DialogTitle = (props: DialogTitleProps) => {
+  const { children, onClose, ...other } = props;
   return (
     <>
-      <MuiDialogTitle disableTypography className={classes.root} {...other}>
-        <Typography variant="h4" className={classes.title}>
-          {children}
-        </Typography>
+      <MuiDialogTitle
+        sx={{
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'space-between',
+          p: 2,
+          pb: 3,
+        }}
+        {...other}
+      >
+        <Typography variant="h4">{children}</Typography>
         {onClose ? (
           <IconButton size="small" aria-label="close" onClick={onClose}>
             <Cancel />
@@ -46,4 +36,4 @@ export const DialogTitle = withStyles(styles, {
       <Divider />
     </>
   );
-});
+};
