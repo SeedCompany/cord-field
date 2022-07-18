@@ -21,6 +21,10 @@ export const createPalette = ({ dark }: { dark?: boolean }) => {
       main: '#ff5a5f',
       contrastText: '#ffffff',
     },
+    create: {
+      main: '#ff5a5f',
+      contrastText: '#ffffff',
+    },
     warning: {
       main: '#f2994a',
     },
@@ -32,3 +36,12 @@ export const createPalette = ({ dark }: { dark?: boolean }) => {
 
   return palette;
 };
+
+declare module '@mui/material/styles' {
+  interface Palette {
+    create: Palette['primary'];
+  }
+  interface PaletteOptions {
+    create: PaletteOptions['primary'];
+  }
+}
