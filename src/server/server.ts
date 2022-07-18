@@ -10,6 +10,11 @@ import { basePathOfUrl, withoutTrailingSlash } from '~/common';
 import { LogoutDocument } from '../scenes/Authentication/Logout/logout.graphql';
 import { renderServerSideApp } from './renderServerSideApp';
 
+const PUBLIC_DIR = path.resolve(
+  __dirname,
+  process.env.NODE_ENV === 'production' ? '.' : '..',
+  'public'
+);
 const PUBLIC_URL = withoutTrailingSlash(process.env.PUBLIC_URL || '');
 const BASE_PATH = withoutTrailingSlash(basePathOfUrl(PUBLIC_URL));
 
@@ -30,7 +35,7 @@ export const create = async () => {
 
   // Serve static assets
   router.use(
-    express.static(path.resolve(__dirname, 'public'), {
+    express.static(PUBLIC_DIR, {
       maxAge: '30 days',
     })
   );
