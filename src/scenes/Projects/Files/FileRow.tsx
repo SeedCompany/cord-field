@@ -1,10 +1,10 @@
 import { useMutation } from '@apollo/client';
-import { makeStyles, useForkRef } from '@mui/material';
-import clsx from 'clsx';
+import { useForkRef } from '@mui/material/utils';
 import { useSnackbar } from 'notistack';
 import { useEffect } from 'react';
 import { useDrag, useDrop } from 'react-dnd';
 import { getEmptyImage } from 'react-dnd-html5-backend';
+import { makeStyles } from 'tss-react/mui';
 import { addItemToList, removeItemFromList } from '~/api';
 import { callAll } from '~/common';
 import { MoveFileNodeDocument } from './MoveNode.graphql';
@@ -19,31 +19,33 @@ import {
 // TODO Reimplement table
 const MTableBodyRow = 'div';
 
-const useStyles = makeStyles(({ palette, transitions }) => ({
-  root: {
-    '& > *': {
-      transition: transitions.create('all'),
+const useStyles = makeStyles<void, 'isOver'>()(
+  ({ palette, transitions }, _props, classes) => ({
+    root: {
+      '& > *': {
+        transition: transitions.create('all'),
+      },
     },
-  },
-  isDragging: {
-    background: palette.background.default,
-    '& > *': {
-      opacity: 0,
+    isDragging: {
+      background: palette.background.default,
+      '& > *': {
+        opacity: 0,
+      },
     },
-  },
-  isOver: {},
-  acceptsDrop: {
-    '&$isOver': {
-      background: palette.info.light,
+    isOver: {},
+    acceptsDrop: {
+      [`&.${classes.isOver}`]: {
+        background: palette.info.light,
+      },
     },
-  },
-  rejectsDrop: {
-    opacity: 0.2,
-    '&$isOver': {
-      background: palette.error.light,
+    rejectsDrop: {
+      opacity: 0.2,
+      [`&.${classes.isOver}`]: {
+        background: palette.error.light,
+      },
     },
-  },
-}));
+  })
+);
 
 export const FileRow = (props: any) => {
   const parent = props.data.parent as Directory;
@@ -110,18 +112,18 @@ export const FileRow = (props: any) => {
   }, [preview]);
 
   const ref = useForkRef(dropRef, dragRef);
-  const classes = useStyles();
+  const { classes, cx } = useStyles();
 
   return (
     <MTableBodyRow
       {...props}
       innerRef={ref}
-      className={clsx({
+      className={cx({
         [props.className ?? '']: true,
         [classes.root]: true,
         [classes.isDragging]: isDragging,
-        [classes.acceptsDrop]: draggingItem && !isDragging && canDrop,
-        [classes.rejectsDrop]: draggingItem && !isDragging && !canDrop,
+        [classes.acceptsDrop]: Boolean(draggingItem && !isDragging && canDrop),
+        [classes.rejectsDrop]: Boolean(draggingItem && !isDragging && !canDrop),
         [classes.isOver]: isOver && !isDragging,
       })}
     />
