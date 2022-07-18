@@ -1,4 +1,6 @@
-import { Divider, DividerProps, withStyles } from '@mui/material';
+import { Divider, DividerProps } from '@mui/material';
+import { ComponentType } from 'react';
+import { withStyles } from 'tss-react/mui';
 import { applyBreakpoint, BreakpointAt } from '~/common';
 
 export interface ResponsiveDividerProps extends DividerProps {
@@ -7,8 +9,9 @@ export interface ResponsiveDividerProps extends DividerProps {
 }
 
 export const ResponsiveDivider = withStyles(
-  ({ spacing, breakpoints }) => ({
-    root: (props: ResponsiveDividerProps) => ({
+  Divider as ComponentType<ResponsiveDividerProps>,
+  ({ spacing, breakpoints }, props) => ({
+    root: {
       width: `calc(100% - ${spacing(props.spacing ?? 0)} * 2)`,
       margin: spacing(0, props.spacing ?? 0),
       '.MuiGrid-container > &': {
@@ -16,14 +19,12 @@ export const ResponsiveDivider = withStyles(
       },
       ...applyBreakpoint(breakpoints, props.vertical, {
         margin: spacing(props.spacing ?? 0, 0),
+        borderLeftWidth: 'thin',
         // Divider orientation=vertical & flexItem
         width: 1,
         height: 'auto',
         alignSelf: 'stretch',
       }),
-    }),
-  }),
-  {
-    name: 'ResponsiveDivider',
-  }
-)(Divider);
+    },
+  })
+);

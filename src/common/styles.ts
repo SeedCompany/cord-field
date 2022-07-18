@@ -1,8 +1,5 @@
-import {
-  Breakpoint,
-  Breakpoints,
-  CSSObject as CSSProperties,
-} from '@mui/material';
+import { Breakpoint, Breakpoints } from '@mui/material';
+import { CSSObject as CSSProperties } from 'tss-react';
 import { lowerCase } from './case';
 
 export const square = (size: string | number) => ({
