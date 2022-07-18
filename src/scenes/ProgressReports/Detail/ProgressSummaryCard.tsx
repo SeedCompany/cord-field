@@ -1,28 +1,7 @@
-import {
-  Card,
-  CardContent,
-  Fab,
-  Grid,
-  IconButton,
-  makeStyles,
-  Tooltip,
-  Typography,
-} from '@material-ui/core';
-import { Edit } from '@material-ui/icons';
+import { Card, CardContent, Grid, Typography } from '@material-ui/core';
 import { Skeleton } from '@material-ui/lab';
-import { Many } from 'lodash';
-import { relative } from 'path';
 import React, { ReactNode } from 'react';
-import { ProgressVarianceReasonLabels } from '~/api';
-import { displayGroupOfVarianceReason, labelsFrom } from '~/common';
-import { useDialog } from '~/components/Dialog';
-import {
-  EditableExplanationField,
-  ExplanationForm,
-} from '../ExplanationForm/ExplanationForm';
-import { ExplanationOfVarianceFormFragment } from '../ExplanationForm/ExplanationForm.graphql';
 import { ProgressSummaryFragment } from './ProgressReportDetail.graphql';
-
 
 interface ProgressSummaryCardProps {
   summary: ProgressSummaryFragment | null;
@@ -39,6 +18,7 @@ export const ProgressSummaryCard = ({
         component={CardContent}
         alignContent="center"
         container
+        item
         spacing={3}
         justify="space-evenly"
         xs={12}

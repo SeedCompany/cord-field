@@ -1,87 +1,134 @@
 import { useMutation } from '@apollo/client';
-import { Grid } from '@material-ui/core';
-import React, { useMemo } from 'react';
-import { Except } from 'type-fest';
-import { ExtractStrict, labelFrom } from '~/common';
-import { DialogForm, DialogFormProps } from '~/components/Dialog/DialogForm';
+import { Grid, makeStyles, Typography } from '@material-ui/core';
+import React from 'react';
+import { Form } from 'react-final-form';
+import { labelFrom } from '~/common';
 import {
+  ProgressVarianceReason,
+  ProgressVarianceReasonGroups,
   ProgressVarianceReasonLabels,
-  ProgressVarianceReasonList,
-  UpdateProgressReportInput,
 } from '../../../api';
 import {
-  SecuredField,
   SelectField,
+  SubmitButton,
   SubmitError,
   TextField,
 } from '../../../components/form';
 import { UpdateProgressReportDocument as UpdatePeriodicReport } from '../../../components/PeriodicReports/Upload/UpdatePeriodicReport.graphql';
 import { ExplanationOfVarianceFormFragment as ProgressReport } from './ExplanationForm.graphql';
 
-export type EditableExplanationField = ExtractStrict<
-  keyof UpdateProgressReportInput,
-  'varianceReasons' | 'varianceExplanation'
->;
+const useStyles = makeStyles(() => ({
+  saveButton: {
+    display: 'flex',
+    justifyContent: 'flex-end',
+  },
+}));
 
 export interface UpdateExplanationFormParams {
-  progressReport: ProgressReport;
+  progressReport?: ProgressReport;
+  setState: (isEditing: boolean) => void;
 }
 
-export type UpdateVarianceFormProps = Except<
-  DialogFormProps<UpdateProgressReportInput>,
-  'onSubmit' | 'initialValues'
-> &
-  UpdateExplanationFormParams;
+interface FormValues {
+  varianceReasons?: ProgressVarianceReason[];
+  varianceExplanation?: string;
+  id: string;
+}
 
 export const ExplanationForm = ({
   progressReport,
-  ...props
-}: UpdateVarianceFormProps) => {
+  setState,
+}: UpdateExplanationFormParams) => {
+  console.log(setState);
+  const classes = useStyles();
   const [updateProgressReport] = useMutation(UpdatePeriodicReport);
 
-  const initialValues = useMemo(
-    () => ({
-      progressReport: {
-        id: progressReport.id,
-        varianceExplanation: progressReport.varianceExplanation.value,
-        varianceReasons: progressReport.varianceReasons.value,
+  const [selected, setSelected] = React.useState('');
+
+  const changedSelectOptionHandler = (event: any) => {
+    setSelected(event.target.value);
+  };
+
+  const statusGroups = Object.keys(ProgressVarianceReasonGroups);
+
+  const reasons = selected ? ProgressVarianceReasonGroups[selected]! : [];
+
+  const submit = async (values: FormValues) => {
+    await updateProgressReport({
+      variables: {
+        input: {
+          varianceExplanation: values.varianceExplanation,
+          varianceReasons: values.varianceReasons,
+          id: values.id,
+        },
       },
-    }),
-    [progressReport]
-  );
+    });
+    setState(false);
+  };
 
   return (
-    <DialogForm<UpdateProgressReportInput>
-      {...props}
-      title={`Update Variance`}
-      initialValues={initialValues.progressReport}
-      onSubmit={async (input) => {
-        await updateProgressReport({ variables: { input } });
+    <Form
+      onSubmit={submit}
+      initialValues={{
+        varianceReasons: progressReport?.varianceReasons,
+        varianceExplanation: progressReport?.varianceExplanation,
+        id: progressReport?.id,
       }}
     >
-      <SubmitError />
-      <Grid container spacing={2}>
-        <Grid item xs={12}>
-          <SecuredField obj={progressReport} name="varianceReasons">
-            {(props) => (
+      {({ handleSubmit }) => (
+        <form onSubmit={handleSubmit}>
+          <SubmitError />
+          <Grid container spacing={2}>
+            <Grid item xs={4}>
               <SelectField
-                {...props}
-                label="Reasons for Variance"
-                multiple
-                options={ProgressVarianceReasonList}
-                getOptionLabel={labelFrom(ProgressVarianceReasonLabels)}
+                label="Choose a Status"
+                name="status"
+                options={statusGroups}
+                onChange={changedSelectOptionHandler}
               />
-            )}
-          </SecuredField>
-        </Grid>
-        <Grid item xs={12}>
-          <SecuredField obj={progressReport} name="varianceExplanation">
-            {(props) => (
-              <TextField {...props} label="Explanation of Variance" />
-            )}
-          </SecuredField>
-        </Grid>
-      </Grid>
-    </DialogForm>
+            </Grid>
+            <Grid item xs={8}>
+              {reasons.length > 0 && (
+                <SelectField
+                  label="Choose an Explanation"
+                  name="varianceReasons"
+                  options={reasons}
+                  getOptionLabel={labelFrom(ProgressVarianceReasonLabels)}
+                />
+              )}
+            </Grid>
+            <Grid item xs={12}>
+              <TextField
+                name="varianceExplanation"
+                label="OPTIONAL COMMENTS"
+                multiline
+                inputProps={{ rowsMin: 5 }}
+              />
+            </Grid>
+            <Grid item xs={12}>
+              <Grid item xs={10} />
+              <Grid item xs={2}>
+                <SubmitButton
+                  color="primary"
+                  size="medium"
+                  fullWidth={false}
+                  disableElevation
+                >
+                  Save
+                </SubmitButton>
+              </Grid>
+            </Grid>
+            {/* putting this here to pass in the id through the Form element */}
+            <input name="id" value={progressReport?.id} type="hidden" />
+          </Grid>
+        </form>
+      )}
+    </Form>
   );
+};
+
+export const ExplanationInfo = ({
+  progressReport,
+}: UpdateExplanationFormParams) => {
+  return <Typography>{progressReport?.varianceReasons}</Typography>;
 };

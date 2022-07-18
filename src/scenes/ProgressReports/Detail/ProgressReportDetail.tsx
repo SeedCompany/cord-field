@@ -231,12 +231,8 @@ export const ProgressReportDetail = () => {
                     summary={report?.cumulativeSummary ?? null}
                   />
                 </Grid>
-                <Grid item xs={6} container>
-                  <ProgressExplanationCard
-                    explanation={report}
-                  />
-                </Grid>
-                <Grid item xs={12} md={5} container>
+
+                <Grid item xs={4} container>
                   {report ? (
                     <ProgressReportCard
                       progressReport={report}
@@ -248,7 +244,23 @@ export const ProgressReportDetail = () => {
                   )}
                 </Grid>
               </Grid>
-              <ProductTableList products={report?.progress} />
+              <Grid item>
+                {report ? (
+                  <ProgressExplanationCard explanation={report} />
+                ) : (
+                  <FieldOverviewCard />
+                )}
+              </Grid>
+              <ProductTableList
+                products={report?.progress}
+                style={{
+                  maxWidth:
+                    windowSize.width !== Infinity
+                      ? // window - sidebar - margin
+                        windowSize.width - 248 - 8 * 2
+                      : undefined,
+                }}
+              />
             </Stack>
           </>
         )}
